@@ -1,0 +1,1468 @@
+# -*- coding: latin1 -*-
+##############################################################################
+#
+# Copyright (c) 2004-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#
+# $Id: orm.py 1008 2005-07-25 14:03:55Z pinky $
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+##############################################################################
+
+#
+# Object relationnal mapping to postgresql module
+#    . Hierarchical structure
+#    . Constraints consistency, validations
+#    . Object meta Data depends on its status
+#    . Optimised processing by complex query (multiple actions at once)
+#    . Default fields value
+#    . Permissions optimisation
+#    . Multi-company features
+#    . Persistant object: DB postgresql
+#    . Datas conversions
+#    . Multi-level caching system
+#    . 2 different inheritancies
+#    . Fields:
+#         - classicals (varchar, integer, boolean, ...)
+#         - relations (one2many, many2one, many2many)
+#         - functions
+#
+#
+
+from xml import dom
+from xml.parsers import expat
+import string
+import pooler
+import psycopg
+import netsvc
+import re
+
+import fields
+import ir
+import tools
+
+prof = 0
+
+def intersect(la, lb):
+	return filter(lambda x: x in lb, la)
+
+class except_orm(Exception):
+	def __init__(self, name, value):
+		self.name = name
+		self.value = value
+		self.args='no error args'
+
+#class find_fields(object):
+#	def _start_el(self,name, attrs):
+#		if name == 'field' and attrs.get('name', False):
+#			self.datas[str(attrs['name'])] = attrs.get('preload','')
+#	def __init__(self):
+#		self.datas = {}
+#	def parse(self, datas):
+#		p = expat.ParserCreate()
+#		p.StartElementHandler = self._start_el
+#		p.Parse(datas, 1)
+#		return self.datas
+
+#
+# TODO: trigger pour chaque action
+#
+# Readonly python database object browser
+class browse_null(object):
+	def __init__(self):
+		self.id=False
+	def __getitem__(self, name):
+		return False
+	def __int__(self):
+		return False
+	def __str__(self):
+		return ''
+	def __nonzero__(self):
+		return False
+
+#
+# TODO: execute an object method on browse_record_list
+#
+class browse_record_list(list):
+	def __init__(self, lst, context={}):
+		super(browse_record_list, self).__init__(lst)
+		self.context = context
+
+#
+# table : the object (inherited from orm)
+# context : a dictionnary with an optionnal context
+#    default to : browse_record_list
+#
+class browse_record(object):
+	def __init__(self, cr, uid, id, table, cache, context={}, list_class = None):
+		self._list_class = list_class or browse_record_list
+		self._cr = cr
+		self._uid = uid
+		self._id = id
+		self._table = table
+		self._table_name = self._table._name
+		self._context = context
+
+		cache.setdefault(table._name, {})
+		self._data = cache[table._name]
+		if not id in self._data:
+			self._data[id] = {'id':id}
+		self._cache = cache
+
+	def __getitem__(self, name):
+		if name == 'id':
+			return self._id
+		if not self._data[self._id].has_key(name):
+			# build the list of fields we will fetch
+
+			# fetch the definition of the field which was asked for
+			if name in self._table._columns:
+				col = self._table._columns[name]
+			elif name in self._table._inherit_fields:
+				col = self._table._inherit_fields[name][2]
+			elif hasattr(self._table, name):
+				return getattr(self._table, name)
+			else:
+				print "Programming error: field '%s' does not exist in object '%s' !" % (name, self._table._name)
+				return False
+			
+			# if the field is a classic one or a many2one, we'll fetch all classic and many2one fields
+			if col._classic_write:
+				# gen the list of "local" (ie not inherited) fields which are classic or many2one
+				ffields = filter(lambda x: x[1]._classic_write, self._table._columns.items())
+				# gen the list of inherited fields
+				inherits = map(lambda x: (x[0], x[1][2]), self._table._inherit_fields.items())
+				# complete the field list with the inherited fields which are classic or many2one
+				ffields += filter(lambda x: x[1]._classic_write, inherits)
+			# otherwise we fetch only that field
+			else:
+				ffields = [(name,col)]
+				
+			if isinstance(col, fields.function):
+				ids = [self._id]
+			else:
+				# filter out all ids which were already fetched (and are already in _data)
+				ids = filter(lambda id: not self._data[id].has_key(name), self._data.keys())
+			
+			# read the data
+			datas = self._table.read(self._cr, self._uid, ids, map(lambda x: x[0], ffields), context=self._context, load="_classic_write")
+			
+			# create browse records for 'remote' objects
+			for data in datas:
+				for n,f in ffields:
+					if isinstance(f, fields.many2one) or isinstance(f, fields.one2one):
+						if data[n]:
+							obj = self._table.pool.get(f._obj)
+							data[n] = browse_record(self._cr, self._uid, data[n], obj, self._cache, context=self._context, list_class=self._list_class)
+						else:
+							data[n] = browse_null()
+					elif isinstance(f, (fields.one2many, fields.many2many)) and len(data[n]):
+						data[n] = self._list_class([browse_record(self._cr,self._uid,id,self._table.pool.get(f._obj),self._cache, context=self._context, list_class=self._list_class) for id in data[n]], self._context)
+				self._data[data['id']].update(data)
+		return self._data[self._id][name]
+
+	def __getattr__(self, name):
+#		raise an AttributeError exception.
+		return self[name]
+
+	def __int__(self):
+		return self._id
+
+	def __str__(self):
+		return "browse_record(%s, %d)" % (self._table_name, self._id)
+
+	def __eq__(self, other):
+		return (self._table_name, self._id) == (other._table_name, other._id)
+
+	def __ne__(self, other):
+		return (self._table_name, self._id) != (other._table_name, other._id)
+
+	# we need to define __unicode__ even though we've already defined __str__ 
+	# because we have overridden __getattr__
+	def __unicode__(self):
+		return unicode(str(self))
+
+	def __hash__(self):
+		return hash((self._table_name, self._id))
+
+	__repr__ = __str__
+
+
+# returns a tuple (type returned by postgres when the column was created, type expression to create the column)
+def get_pg_type(f):
+	type_dict = {fields.boolean:'bool', fields.integer:'int4', fields.text:'text', fields.date:'date', fields.time:'time', fields.datetime:'timestamp', fields.binary:'bytea', fields.many2one:'int4'}
+
+	if type_dict.has_key(type(f)):
+		f_type = (type_dict[type(f)], type_dict[type(f)])
+	elif isinstance(f, fields.float):
+		if f.digits:
+			f_type = ('numeric', 'NUMERIC(%d,%d)' % (f.digits[0],f.digits[1]))
+		else:
+			f_type = ('float8', 'DOUBLE PRECISION')
+	elif isinstance(f, (fields.char, fields.reference)):
+		f_type = ('varchar', 'VARCHAR(%d)' % (f.size,))
+	elif isinstance(f, fields.selection):
+		if isinstance(f.selection, list) and isinstance(f.selection[0][0], (str, unicode)):
+			f_size = reduce(lambda x,y: max(x,len(y[0])), f.selection, 16)
+		elif isinstance(f.selection, list) and isinstance(f.selection[0][0], int):
+			f_size = -1
+		else:
+			f_size = (hasattr(f,'size') and f.size) or 16
+			
+		if f_size == -1:
+			f_type = ('int4', 'INTEGER')
+		else:
+			f_type = ('varchar', 'VARCHAR(%d)' % f_size)
+	else:
+		print "WARNING: type not supported!"
+		f_type = None
+	return f_type
+
+		
+	
+class orm(object):
+	_columns = {}
+	_sql_constraints = []
+	_constraints = []
+	_defaults = {}
+	_log_access = True
+	_table = None
+	_name = None
+	_rec_name = 'name'
+	_order = 'id'
+	_inherits = {}
+	_sequence = None
+	_description = None
+	_protected = ['read','write','create','default_get','perm_read','perm_write','unlink','fields_get','fields_view_get','search','name_get','distinct_field_get','name_search','copy','import_data']
+	def _field_create(self, cr):
+		cr.execute("SELECT id FROM ir_model WHERE model='%s'" % self._name)
+		if not cr.rowcount:
+			# reference model in order to have a description of its fonctionnality in custom_report
+			cr.execute("INSERT INTO ir_model (model, name, info) VALUES (%s, %s, %s)", (self._name, self._description, self.__doc__)) 
+		cr.commit()
+
+		for k in self._columns:
+			f = self._columns[k]
+			cr.execute("select id from ir_model_fields where model=%s and name=%s", (self._name,k))
+			if not cr.rowcount:
+				cr.execute("select id from ir_model where model='%s'" % self._name)
+				model_id = cr.fetchone()[0]
+				cr.execute("INSERT INTO ir_model_fields (model_id, model, name, field_description, ttype, relate,relation,group_name,view_load) VALUES (%d,%s,%s,%s,%s,%s,%s,%s,%s)", (model_id, self._name, k, f.string.replace("'", " "), f._type, (f.relate and 'True') or 'False', f._obj or 'NULL', f.group_name or '', (f.view_load and 'True') or 'False'))
+		cr.commit()
+
+	def _auto_init(self, cr):
+#		print '*' * 60
+#		print "auto_init", self._name, self._columns
+		create = False
+		self._field_create(cr)
+		if not hasattr(self, "_auto") or self._auto:
+			cr.execute("SELECT relname FROM pg_class WHERE relkind in ('r','v') AND relname='%s'" % self._table)
+			if not cr.rowcount:
+				cr.execute("CREATE TABLE %s(id SERIAL NOT NULL, perm_id INTEGER, PRIMARY KEY(id)) WITH OIDS" % self._table)
+				create = True
+			cr.commit()
+			if self._log_access:
+				logs = {
+					'create_uid': 'INTEGER REFERENCES res_users ON DELETE SET NULL',
+					'create_date': 'TIMESTAMP',
+					'write_uid': 'INTEGER REFERENCES res_users ON DELETE SET NULL',
+					'write_date': 'TIMESTAMP'
+				}
+				for k in logs:
+					cr.execute(
+						"""
+						SELECT c.relname 
+						FROM pg_class c, pg_attribute a
+						WHERE c.relname='%s' AND a.attname='%s' AND c.oid=a.attrelid
+						""" % (self._table, k))
+					if not cr.rowcount:
+						cr.execute("ALTER TABLE %s ADD COLUMN %s %s" % 
+							(self._table, k, logs[k]))
+						cr.commit()
+
+			# iterate on the database columns to drop the NOT NULL constraints
+			# of fields which were required but have been removed
+			cr.execute(
+				"SELECT a.attname, a.attnotnull "\
+				"FROM pg_class c, pg_attribute a "\
+				"WHERE c.oid=a.attrelid AND c.relname='%s'" % self._table)
+			db_columns = cr.dictfetchall()
+			for column in db_columns:
+				if column['attname'] not in ('id', 'oid', 'tableoid', 'ctid', 'xmin', 'xmax', 'cmin', 'cmax'):
+					if column['attnotnull'] and column['attname'] not in self._columns:
+						cr.execute("ALTER TABLE %s ALTER COLUMN %s DROP NOT NULL" % (self._table, column['attname']))
+
+			# iterate on the "object columns"
+			for k in self._columns:
+				if k in ('id','perm_id','write_uid','write_date','create_uid','create_date'):
+					continue
+					#raise 'Can not define a column %s. Reserved keyword !' % (k,)
+				f = self._columns[k]
+
+				if isinstance(f, fields.one2many):
+					cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname='%s'"%f._obj)
+					if cr.fetchone():
+						q = """SELECT count(*) as c FROM pg_class c,pg_attribute a WHERE c.relname='%s' AND a.attname='%s' AND c.oid=a.attrelid"""%(f._obj,f._fields_id)
+						cr.execute(q)
+						res = cr.fetchone()[0]
+						if not res:
+							cr.execute("ALTER TABLE %s ADD FOREIGN KEY (%s) REFERENCES %s ON DELETE SET NULL" % (self._obj, f._fields_id, f._table))
+				elif isinstance(f, fields.many2many):
+					cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname='%s'"%f._rel)
+					if not cr.dictfetchall():
+						#FIXME: Remove this try/except
+						try:
+							ref = self.pool.get(f._obj)._table
+						except AttributeError:
+							ref = f._obj.replace('.','_')
+						cr.execute("CREATE TABLE %s (%s INTEGER NOT NULL REFERENCES %s ON DELETE CASCADE, %s INTEGER NOT NULL REFERENCES %s ON DELETE CASCADE) WITH OIDS"%(f._rel,f._id1,self._table,f._id2,ref))
+						cr.execute("CREATE INDEX %s_%s_index ON %s (%s)" % (f._rel,f._id1,f._rel,f._id1))
+						cr.execute("CREATE INDEX %s_%s_index ON %s (%s)" % (f._rel,f._id2,f._rel,f._id2))
+						cr.commit()
+				else:
+					q = """SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size FROM pg_class c,pg_attribute a,pg_type t WHERE c.relname='%s' AND a.attname='%s' AND c.oid=a.attrelid AND a.atttypid=t.oid""" % (self._table, k)
+					cr.execute(q)
+					res = cr.dictfetchall() 
+					if not res:
+						if not isinstance(f,fields.function):
+
+							# add the missing field
+							cr.execute("ALTER TABLE %s ADD COLUMN %s %s" % (self._table, k, get_pg_type(f)[1]))
+							
+							# initialize it
+							if not create and k in self._defaults:
+								default = self._defaults[k](self, cr, 1, {})
+								if not default:
+									cr.execute("UPDATE %s SET %s=NULL" % (self._table, k))
+								else:
+									cr.execute("UPDATE %s SET %s='%s'" % (self._table, k, default))
+
+							# and add constraints if needed
+							if isinstance(f, fields.many2one):
+								#FIXME: Remove this try/except
+								try:
+									ref = self.pool.get(f._obj)._table
+								except AttributeError:
+									ref = f._obj.replace('.','_')
+								cr.execute("ALTER TABLE %s ADD FOREIGN KEY (%s) REFERENCES %s ON DELETE %s" % (self._table, k, ref, f.ondelete))
+							if f.select:
+								cr.execute("CREATE INDEX %s_%s_index ON %s (%s)" % (self._table, k, self._table, k))
+							if f.required:
+								cr.commit()
+								try:
+									cr.execute("ALTER TABLE %s ALTER COLUMN %s SET NOT NULL" % (self._table, k))
+								except:
+									print '-'*50
+									print 'WARNING: unable to set column %s of table %s not null !' % (k,self._table)
+									print '\tTry to re-run: tinyerp-server.py --update=module'
+									print '\tIf it doesn\'t work, update records and execute manually:'
+									print "\tALTER TABLE %s ALTER COLUMN %s SET NOT NULL" % (self._table, k)
+							cr.commit()
+					elif len(res)==1:
+						f_pg_def = res[0]
+						f_pg_type = f_pg_def['typname']
+						f_pg_size = f_pg_def['size']
+						f_pg_notnull = f_pg_def['attnotnull']
+						if isinstance(f, fields.function):
+							print '-'*60
+							print "WARNING: column %s (%s) in table %s was converted to a function !" % (k, f.string, self._table)
+							print "\tYou should remove this column from your database."
+							f_obj_type = None
+						else:
+							f_obj_type = get_pg_type(f) and get_pg_type(f)[0]
+						
+						if f_obj_type:
+							if f_pg_type != f_obj_type:
+								print "WARNING: column '%s' in table '%s' has changed type (DB = %s, def = %s) !" % (k, self._table, f_pg_type, f._type)
+							if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size != f.size:
+								# columns with the name 'type' cannot be changed for an unknown reason?!
+								if k != 'type':
+									if f_pg_size > f.size:
+										print "WARNING: column '%s' in table '%s' has changed size (DB = %d, def = %d), strings will be truncated !" % (k, self._table, f_pg_size, f.size)
+#TODO: check si y a des donnees qui vont poser probleme (select char_length(...))
+#TODO: issue a log message even if f_pg_size < f.size
+									cr.execute("ALTER TABLE %s RENAME COLUMN %s TO temp_change_size" % (self._table,k))
+									cr.execute("ALTER TABLE %s ADD COLUMN %s VARCHAR(%d)" % (self._table,k,f.size))
+									cr.execute("UPDATE %s SET %s=temp_change_size::VARCHAR(%d)" % (self._table,k,f.size))
+									cr.execute("ALTER TABLE %s DROP COLUMN temp_change_size" % (self._table,))
+									cr.commit()
+							# if the field is required and hasn't got a NOT NULL constraint
+							if f.required and f_pg_notnull == 0:
+								# set the field to the default value if any
+								if self._defaults.has_key(k):
+									default = self._defaults[k](self, cr, 1, {})
+									cr.execute("UPDATE %s SET %s='%s' WHERE %s is NULL" % (self._table, k, default, k))
+									cr.commit()
+								# add the NOT NULL constraint
+								try:
+									cr.execute("ALTER TABLE %s ALTER COLUMN %s SET NOT NULL" % (self._table, k))
+									cr.commit()
+								except:
+#TODO: use the logger								
+									print '-'*50
+									print 'WARNING: unable to set a NOT NULL constraint on column %s of the %s table !' % (k,self._table)
+									print "\tIf you want to have it, you should update the records and execute manually:"
+									print "\tALTER TABLE %s ALTER COLUMN %s SET NOT NULL" % (self._table, k)
+								cr.commit()
+							elif not f.required and f_pg_notnull == 1:
+								cr.execute("ALTER TABLE %s ALTER COLUMN %s DROP NOT NULL" % (self._table,k))
+								cr.commit()
+							cr.execute("SELECT indexname FROM pg_indexes WHERE indexname = '%s_%s_index' and tablename = '%s'" % (self._table, k, self._table))
+							res = cr.dictfetchall()
+							if not res and f.select:
+								cr.execute("CREATE INDEX %s_%s_index ON %s (%s)" % (self._table, k, self._table, k))
+								cr.commit()
+							if res and not f.select:
+								cr.execute("DROP INDEX %s_%s_index" % (self._table, k))
+								cr.commit()
+					else:
+						print "ERROR"
+		else:
+			cr.execute("SELECT relname FROM pg_class WHERE relkind in ('r','v') AND relname='%s'" % self._table)
+			create = not bool(cr.fetchone())
+
+		if create:
+			for (key,con,_) in self._sql_constraints:
+				cr.execute('alter table %s add constraint %s_%s %s' % (self._table,self._table,key, con,))
+				cr.commit()
+
+			if hasattr(self,"_sql"):
+				for line in self._sql.split(';'):
+					line2 = line.replace('\n','').strip()
+					if line2:
+						cr.execute(line2)
+						cr.commit()
+
+	def __init__(self):
+		if not self._table:
+			self._table=self._name.replace('.','_')
+		if not self._description:
+			self._description = self._name
+		for (key,_,msg) in self._sql_constraints:
+			self.pool._sql_error[self._table+'_'+key] = msg
+		
+#		if self.__class__.__name__ != 'fake_class':
+		self._inherits_reload()
+		if not self._sequence:
+			self._sequence = self._table+'_id_seq'
+		for k in self._defaults:
+			assert (k in self._columns) or (k in self._inherit_fields), 'Default function defined but field %s does not exist !' % (k,)
+
+	#
+	# Update objects that uses this one to update their _inherits fields
+	#
+	def _inherits_reload_src(self):
+		for obj in self.pool.obj_pool.values():
+			if self._name in obj._inherits:
+				obj._inherits_reload()
+
+	def _inherits_reload(self):
+		res = {}
+		for table in self._inherits:
+			res.update(self.pool.get(table)._inherit_fields)
+			for col in self.pool.get(table)._columns.keys():
+				res[col]=(table, self._inherits[table], self.pool.get(table)._columns[col])
+			for col in self.pool.get(table)._inherit_fields.keys():
+				res[col]=(table, self._inherits[table], self.pool.get(table)._inherit_fields[col][2])
+		self._inherit_fields=res
+		self._inherits_reload_src()
+
+	def browse(self, cr, uid, select, context={}, list_class=None):
+		self._list_class = list_class or browse_record_list
+		cache = {}
+		# need to accepts ints and longs because ids coming from a method 
+		# launched by button in the interface have a type long...
+		if isinstance(select, (int, long)):
+			return browse_record(cr,uid,select,self,cache, context=context, list_class=self._list_class)
+		elif isinstance(select,list):
+			return self._list_class([browse_record(cr,uid,id,self,cache, context=context, list_class=self._list_class) for id in select], context)
+		else:
+			return []
+
+	# TODO: implement this
+	def __export_row(self, cr, uid, row, fields, prefix, context={}):
+		lines = []
+		data = map(lambda x: '', range(len(fields)))
+		done = []
+		for fpos in range(len(fields)):
+			f = fields[fpos]
+			if f and f[:len(prefix)] == prefix:
+				r = row
+				i = 0
+				while i<len(f):
+					r = r[f[i]]
+					if not r:
+						break
+					if isinstance(r, (browse_record_list, list)):
+						first = True
+						fields2 = map(lambda x: (x[:i+1]==f[:i+1] and x[i+1:]) or [], fields)
+						if fields2 in done:
+							break
+						done.append(fields2)
+						for row2 in r:
+							lines2 = self.__export_row(cr, uid, row2, fields2, f[i+2:], context)
+							if first:
+								for fpos2 in range(len(fields)):
+									if lines2 and lines2[0][fpos2]:
+										data[fpos2] = lines2[0][fpos2]
+								lines+= lines2[1:]
+								first = False
+							else:
+								lines+= lines2
+						break
+					i+=1
+				if i==len(f):
+					data[fpos] = str(r or '')
+		return [data] + lines
+
+	def export_data(self, cr, uid, ids, fields, context={}):
+		fields = map(lambda x: x.split('/'), fields)
+		datas = []
+		for row in self.browse(cr, uid, ids, context):
+			datas += self.__export_row(cr, uid, row, fields, [], context)
+		return datas
+
+	def import_data(self, cr, uid, fields, datas, context={}):
+		fields = map(lambda x: x.split('/'), fields)
+
+		def process_liness(self, datas, prefix, fields_def, position=0):
+			line = datas[position]
+			row = {}
+			todo = []
+			warning = ''
+			#
+			# Import normal fields
+			#
+			for i in range(len(fields)):
+				if i>=len(line):
+					raise 'Please check that all your lines have %d cols.' % (len(fields),)
+				field = fields[i]
+				if (len(field)==len(prefix)+1) and (prefix==field[0:len(prefix)]):
+					if fields_def[field[len(prefix)]]['type']=='integer':
+						res =line[i] and int(line[i])
+					elif fields_def[field[len(prefix)]]['type']=='float':
+						res =line[i] and float(line[i])
+					elif fields_def[field[len(prefix)]]['type']=='selection':
+						res = False
+						for key,val in fields_def[field[len(prefix)]]['selection']:
+							if val==line[i]:
+								res = key
+						if line[i] and not res:
+							print 'WARNING, key',line[i],'not found in selection field', field[len(prefix)]
+					elif fields_def[field[len(prefix)]]['type']=='many2one':
+						res = False
+						if line[i]:
+							relation = fields_def[field[len(prefix)]]['relation']
+							res2 = self.pool.get(relation).name_search(cr, uid, line[i], [],operator='=')
+							res = (res2 and res2[0][0]) or False
+							if not res and line[i]:
+								warning += ('Relation not found: '+line[i]+' on '+relation + ' !\n')
+							if not res:
+								print 'Relation not found: '+line[i]+' on '+relation + ' !\n'
+					elif fields_def[field[len(prefix)]]['type']=='many2many':
+						res = []
+						if line[i]:
+							relation = fields_def[field[len(prefix)]]['relation']
+							for word in line[i].split(','):
+								res2 = self.pool.get(relation).name_search(cr, uid, word, [],operator='=')
+								res3 = (res2 and res2[0][0]) or False
+								if res3:
+									res.append(res3)
+							if len(res):
+								res= [(6,0,res)]
+					else:
+						res = line[i] or False
+					row[field[len(prefix)]] = res
+				elif (prefix==field[0:len(prefix)]):
+					if field[0] not in todo:
+						todo.append(field[len(prefix)])
+
+
+			#
+			# Import one2many fields
+			#
+			nbrmax = 0
+			for field in todo:
+				newfd = self.pool.get(fields_def[field]['relation']).fields_get(cr, uid, context=context)
+				(newrow,max2,w2) = process_liness(self, datas, prefix+[field], newfd, position)
+				nbrmax = max(nbrmax, max2)
+				warning = warning+w2
+				reduce(lambda x,y: x and y, newrow)
+				row[field] = (reduce(lambda x,y: x or y, newrow.values()) and [(0,0,newrow)]) or []
+				i = max2
+				while (position+i)<len(datas):
+					ok = True
+					for j in range(len(fields)):
+						field2 = fields[j]
+						if (len(field2)<=(len(prefix)+1)) and datas[position+i][j]:
+							ok = False
+					if not ok:
+						break
+
+					(newrow,max2,w2) = process_liness(self, datas, prefix+[field], newfd, position+i)
+					warning = warning+w2
+					if reduce(lambda x,y: x or y, newrow.values()):
+						row[field].append((0,0,newrow))
+					i+=max2
+					nbrmax = max(nbrmax, i)
+
+			if len(prefix)==0:
+				for i in range(max(nbrmax,1)):
+					#if datas:
+					datas.pop(0)
+			result = [row, nbrmax+1, warning]
+			return result
+
+		fields_def = self.fields_get(cr, uid, context=context)
+		done = 0
+		while len(datas):
+			(res,other,warning) = process_liness(self, datas, [], fields_def)
+			try:
+				self.create(cr, uid, res, context)
+			except Exception, e:
+				cr.rollback()
+				return (-1, res, e[0], warning)
+			done += 1
+		#
+		# TODO: Send a request with the result and multi-thread !
+		#
+		return (done, 0, 0, 0)
+
+	def read(self, cr, user, ids, fields=None, context={}, load='_classic_read'):
+		self.pool.get('ir.model.access').check(cr, user, self._name, 'read')
+		if not fields:
+			fields = self._columns.keys() + self._inherit_fields.keys()
+		result =  self._read_flat(cr, user, ids, fields, context, load)
+		for r in result:
+			for key,v in r.items():
+				if v == None:
+					r[key]=False
+		return result
+
+	def _read_flat(self, cr, user, ids, fields, context={}, load='_classic_read'):
+		if not ids:
+			return []
+
+		if fields==None:
+			fields = self._columns.keys()
+
+		# all inherited fields + all non inherited fields for which the attribute whose name is in load is True
+		fields_pre = filter(lambda x: x in self._columns and getattr(self._columns[x],'_classic_write'), fields) + self._inherits.values()
+
+		if len(fields_pre):
+			cr.execute('select %s from %s where id = any(array[%s]) order by %s' % (','.join(fields_pre + ['id']), self._table, ','.join([str(x) for x in ids]), self._order))
+		
+			if not cr.rowcount:
+				return []
+			res = cr.dictfetchall()
+		else:
+			res = map(lambda x: {'id':x}, ids)
+
+		if context.get('lang', False):
+			for f in fields_pre:
+				if self._columns[f].translate:
+					ids = map(lambda x: x['id'], res)
+					res_trans = self.pool.get('ir.translation')._get_ids(cr, user, self._name+','+f, 'model', context['lang'], ids)
+					for r in res:
+						r[f] = res_trans.get(r['id'], r[f])
+
+		for table in self._inherits:
+			col = self._inherits[table]
+			cols = intersect(self._inherit_fields.keys(), fields)
+			res2 = self.pool.get(table).read(cr, user, [x[col] for x in res], cols, context, load)
+
+			res3 = {}
+			for r in res2:
+				res3[r['id']] = r
+				del r['id']
+
+			for record in res:
+				record.update(res3[record[col]])
+				if col not in fields:
+					del record[col]
+
+		# all fields which need to be post-processed by a simple function (symbol_get)
+		fields_post = filter(lambda x: x in self._columns and self._columns[x]._symbol_get, fields)
+		if fields_post:
+			# maybe it would be faster to iterate on the fields then on res, so that we wouldn't need
+			# to get the _symbol_get in each occurence
+			for r in res:
+				for f in fields_post:
+					r[f] = self.columns[f]._symbol_get(r[f])
+		ids = map(lambda x: x['id'], res)
+
+		# all non inherited fields for which the attribute whose name is in load is False
+		fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields)
+		for f in fields_post:
+			# get the value of that field for all records/ids
+			res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=res)
+			for record in res:
+				record[f] = res2[record['id']]
+
+		return res
+
+	def _validate(self, cr, uid, ids):
+		field_error = []
+		field_err_str = []
+		for field in self._constraints:
+			if not field[0](self, cr, uid, ids):
+				if len(field)>1:
+					field_error+=field[2]
+				field_err_str.append(field[1])
+		if len(field_err_str):
+			cr.rollback()
+			raise except_orm('ValidateError', ('\n'.join(field_err_str), ','.join(field_error)))
+
+	def default_get(self, cr, uid, fields, context={}):
+		value = {}
+		# get the default values for the inherited fields
+		for t in self._inherits.keys():
+			value.update(self.pool.get(t).default_get(cr, uid, fields, context))
+
+		# get the default values defined in the object
+		for f in fields:
+			if f in self._defaults:
+				value[f] = self._defaults[f](self, cr, uid, context)
+
+		# get the default values set by the user and override the default
+		# values defined in the object
+		res = ir.ir_get(cr, uid, 'default', False, [self._name])
+		for id, field, field_value in res:
+			if field in fields:
+				value[field] = field_value 
+		return value
+
+	def perm_read(self, cr, user, ids, context={}):
+		fields = ', p.level, p.uid, p.gid'
+		if self._log_access:
+			fields +=', u.create_uid, u.create_date, u.write_uid, u.write_date'
+		ids_str = string.join(map(lambda x:str(x), ids),',')
+		cr.execute('select u.id'+fields+' from perm p right join '+self._table+' u on u.perm_id=p.id where u.id=any(array['+ids_str+'])')
+		res = cr.dictfetchall()
+#		for record in res:
+#			for f in ('ox','ux','gx','uid','gid'):
+#				if record[f]==None:
+#					record[f]=False
+		for r in res:
+			for key in r:
+				r[key] = r[key] or False
+				if key in ('write_uid','create_uid','uid'):
+					if r[key]:
+						r[key] = self.pool.get('res.users').name_get(cr, user, [r[key]])[0]
+		return res
+
+	def unlink(self, cr, uid, ids, context={}):
+#CHECKME: wouldn't it be better to check for the write access instead of create?
+#or alternatively, create a new 'delete' permission
+		self.pool.get('ir.model.access').check(cr, uid, self._name, 'create')
+		if not len(ids):
+			return True
+		wf_service = netsvc.LocalService("workflow")
+		for id in ids:
+			wf_service.trg_delete(uid, self._name, id, cr)
+		str_d = string.join(('%d',)*len(ids),',')
+
+		cr.execute('select * from '+self._table+' where id in ('+str_d+')', ids)
+		res = cr.dictfetchall()
+		#for key in self._inherits:
+		#	ids2 = [x[self._inherits[key]] for x in res]
+		#	self.pool.get(key).unlink(cr, uid, ids2)
+		cr.execute('delete from inherit where (obj_type=%s and obj_id in ('+str_d+')) or (inst_type=%s and inst_id in ('+str_d+'))', (self._name,)+tuple(ids)+(self._name,)+tuple(ids))
+		cr.execute('delete from '+self._table+' where id in ('+str_d+')', ids)
+		return True
+
+	#
+	# TODO: Validate
+	#
+	def write(self, cr, user, ids, vals, context={}):
+		self.pool.get('ir.model.access').check(cr, user, self._name, 'write')
+		#for v in self._inherits.values():
+		#	assert v not in vals, (v, vals)
+		if not ids:
+			return
+		ids_str = string.join(map(lambda x:str(x), ids),',')
+		upd0=[]
+		upd1=[]
+		upd_todo=[]
+		updend=[]
+		direct = []
+		totranslate = context.get('lang', False) and (context['lang'] != 'en')
+		for field in vals:
+			if field in self._columns:
+				if self._columns[field]._classic_write:
+					if (not totranslate) or not self._columns[field].translate:
+						upd0.append(field+'='+self._columns[field]._symbol_set[0])
+						upd1.append(self._columns[field]._symbol_set[1](vals[field]))
+					direct.append(field)
+				else:
+					upd_todo.append(field)
+			else:
+				updend.append(field)
+		if self._log_access:
+			upd0.append('write_uid=%d')
+			upd0.append('write_date=current_timestamp(0)')
+			upd1.append(user)
+
+		if len(upd0):
+			cr.execute('update '+self._table+' set '+string.join(upd0,',')+' where id in ('+ids_str+')', upd1)
+
+			if totranslate:
+				for f in direct:
+					if self._columns[f].translate:
+						self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f,'model',  context['lang'], ids,vals[f])
+
+		# call the 'set' method of fields which are not classic_write
+		upd_todo.sort(lambda x,y: self._columns[x].priority-self._columns[y].priority)
+		for field in upd_todo:
+			for id in ids:
+				self._columns[field].set(cr, self, id, field, vals[field], user)
+
+		for table in self._inherits:
+			col = self._inherits[table]
+			cr.execute('select distinct '+col+' from '+self._table+' where id in ('+ids_str+')', upd1)
+			nids = [x[0] for x in cr.fetchall()]
+
+			v = {}
+			for val in updend:
+				if self._inherit_fields[val][0]==table:
+					v[val]=vals[val]
+			self.pool.get(table).write(cr, user, nids, v, context)
+
+		self._validate(cr, user, ids)
+
+		wf_service = netsvc.LocalService("workflow")
+		for id in ids:
+			wf_service.trg_write(user, self._name, id, cr)
+		return True
+
+	#
+	# TODO: Should set perm to user.xxx
+	#
+	def create(self, cr, user, vals, context={}):
+		""" create(cr, user, vals, context) -> int
+		cr = database cursor
+		user = user id
+		vals = dictionary of the form {'field_name':field_value, ...}
+		"""
+		self.pool.get('ir.model.access').check(cr, user, self._name, 'create')
+
+		default = []
+
+		avoid_table = []
+		for (t,c) in self._inherits.items():
+			if c in vals:
+				avoid_table.append(t)
+		for f in self._columns.keys(): # + self._inherit_fields.keys():
+			if not f in vals:
+				default.append(f)
+		for f in self._inherit_fields.keys():
+			if (not f in vals) and (not self._inherit_fields[f][0] in avoid_table):
+				default.append(f)
+
+		if len(default):
+			vals.update(self.default_get(cr, user, default, context))
+
+		tocreate = {}
+		for v in self._inherits:
+			if self._inherits[v] not in vals:
+				tocreate[v] = {}
+
+		#cr.execute('select perm_id from res_users where id=%d', (user,))
+		perm = False #cr.fetchone()[0]
+		(upd0, upd1, upd2) = ('', '', [])
+		upd_todo = []
+
+		for v in vals.keys():
+			if v in self._inherit_fields:
+				(table,col,col_detail) = self._inherit_fields[v]
+				tocreate[table][v] = vals[v]
+				del vals[v]
+
+		cr.execute("select nextval('"+self._sequence+"')")
+		id_new = cr.fetchone()[0]
+		for table in tocreate:
+			id = self.pool.get(table).create(cr, user, tocreate[table])
+			upd0 += ','+self._inherits[table]
+			upd1 += ',%d'
+			upd2.append(id)
+			cr.execute('insert into inherit (obj_type,obj_id,inst_type,inst_id) values (%s,%d,%s,%d)', (table,id,self._name,id_new))
+
+		for field in vals:
+			if self._columns[field]._classic_write:
+				upd0=upd0+','+field
+				upd1=upd1+','+self._columns[field]._symbol_set[0]
+				upd2.append(self._columns[field]._symbol_set[1](vals[field]))
+			else:
+				upd_todo.append(field)
+		if self._log_access:
+			upd0 += ',create_uid,create_date'
+			upd1 += ',%d,current_timestamp(0)'
+			upd2.append(user)
+		cr.execute('insert into '+self._table+' (id,perm_id'+upd0+") values ("+str(id_new)+',NULL'+upd1+')', tuple(upd2))
+		upd_todo.sort(lambda x,y: self._columns[x].priority-self._columns[y].priority)
+		for field in upd_todo:
+			self._columns[field].set(cr, self, id_new, field, vals[field], user, context)
+
+		self._validate(cr, user, [id_new])
+
+		wf_service = netsvc.LocalService("workflow")
+		wf_service.trg_create(user, self._name, id_new, cr)
+		return id_new
+
+	#
+	# TODO: Validate
+	#
+	def perm_write(self, cr, user, ids, fields, context={}):
+		query = []
+		vals = []
+		keys = fields.keys()
+		for x in keys:
+			query.append(x+'=%d')
+			vals.append(fields[x])
+		cr.execute('select id from perm where ' + ' and '.join(query) + ' limit 1', vals)
+		res = cr.fetchone()
+		if res:
+			id = res[0]
+		else:
+			cr.execute("select nextval('perm_id_seq')")
+			id = cr.fetchone()[0]
+			cr.execute('insert into perm (id,' + ','.join(keys) + ') values (' + str(id) + ',' + ('%d,'*(len(keys)-1)+'%d')+')', vals)
+		ids_str = ','.join(map(str, ids))
+		cr.execute('update '+self._table+' set perm_id=%d where id in ('+ids_str+')', (id,))
+		return True
+
+	# returns the definition of each field in the object
+	# the optional fields parameter can limit the result to some fields
+	def fields_get(self, cr, user, fields=None, context={}):
+		res = {}
+		for parent in self._inherits:
+			res.update(self.pool.get(parent).fields_get(cr, user, fields, context))
+		for f in self._columns.keys():
+			res[f] = {'type': self._columns[f]._type}
+			for arg in ('string','readonly','states','size','required','change_default','translate', 'help', 'select'):
+				if getattr(self._columns[f], arg):
+					res[f][arg] = getattr(self._columns[f], arg)
+			for arg in ('digits', 'invisible'):
+				if hasattr(self._columns[f], arg) and getattr(self._columns[f], arg):
+					res[f][arg] = getattr(self._columns[f], arg)
+
+			# translate the field label
+			if context.get('lang', False):
+				res_trans = self.pool.get('ir.translation')._get_source(cr, user, self._name+','+f, 'field', context['lang'])
+				if res_trans:
+					res[f]['string'] = res_trans
+
+			if hasattr(self._columns[f], 'selection'):
+				if isinstance(self._columns[f].selection, (tuple, list)):
+					sel = self._columns[f].selection
+					
+					# translate each selection option
+					if context.get('lang', False):
+						sel2 = []
+						for (key,val) in sel:
+							val2 = self.pool.get('ir.translation')._get_source(cr, user, self._name+','+f, 'selection', context['lang'], val)
+							sel2.append((key, val2 or val))
+						sel = sel2
+					res[f]['selection'] = sel
+				else:
+					# call the 'dynamic selection' function
+					res[f]['selection'] = self._columns[f].selection(self, cr, user, context)
+			if res[f]['type'] in ('one2many', 'many2many', 'many2one', 'one2one'):
+				res[f]['relation'] = self._columns[f]._obj
+				res[f]['domain'] = self._columns[f]._domain
+				res[f]['context'] = self._columns[f]._context
+
+		if fields:
+			# filter out fields which aren't in the fields list
+			for r in res.keys():
+				if r not in fields:
+					del res[r]
+		return res
+
+	#
+	# Overload this method if you need a window title which depends on the context
+	#
+	def view_header_get(self, cr, user, view_id=None, view_type='form', context={}):
+		return False
+
+	def __view_look_dom(self, cr, user, node, context={}):
+		result = False
+		fields = {}
+		childs = True
+		if node.nodeType==node.ELEMENT_NODE and node.localName=='field':
+			if node.hasAttribute('name'):
+				attrs = {}
+				try:
+					if node.getAttribute('name') in self._columns:
+						relation = self._columns[node.getAttribute('name')]._obj
+					else:
+						relation = self._inherit_fields[node.getAttribute('name')][2]._obj
+				except:
+					relation = False
+				if relation:
+					childs = False
+					views = {}
+					for f in node.childNodes:
+						if f.nodeType==f.ELEMENT_NODE and f.localName in ('form','tree'):
+							node.removeChild(f)
+							xarch,xfields = self.pool.get(relation).__view_look_dom_arch(cr, user, f, context)
+							views[str(f.localName)] = {
+								'arch': xarch,
+								'fields': xfields
+							}
+					attrs = {'views': views}
+				fields[node.getAttribute('name')] = attrs
+
+		elif node.nodeType==node.ELEMENT_NODE and node.localName in ('form','tree'):
+			result = self.view_header_get(cr, user, False, node.localName, context)
+			if result:
+				node.setAttribute('string', result)
+
+		if node.nodeType == node.ELEMENT_NODE:
+			# translate view
+			if ('lang' in context) and node.hasAttribute('string') and node.getAttribute('string') and not result:
+				trans = tools.translate(cr, user, self._name, 'view', context['lang'], node.getAttribute('string').encode('utf8'))
+				if trans:
+					node.setAttribute('string', trans.decode('utf8'))
+			#
+			# Add view for properties !
+			#
+			if node.localName=='properties':
+				parent = node.parentNode
+
+				doc = node.ownerDocument
+
+				models = map(lambda x: "'"+x+"'", [self._name] + self._inherits.keys())
+				cr.execute('select id,name,group_name from ir_model_fields where model in ('+','.join(models)+') and view_load order by group_name, id')
+				oldgroup = None
+				res = cr.fetchall()
+				for id, fname, gname in res:
+					if oldgroup != gname:
+						child = doc.createElement('separator')
+						child.setAttribute('string', gname)
+						child.setAttribute('colspan', "4")
+						oldgroup = gname
+						parent.insertBefore(child, node)
+
+					child = doc.createElement('field')
+					child.setAttribute('name', fname)
+					parent.insertBefore(child, node)
+				parent.removeChild(node)
+
+		if childs:
+			for f in node.childNodes:
+				fields.update(self.__view_look_dom(cr, user, f,context))
+		return fields
+
+	def __view_look_dom_arch(self, cr, user, node, context={}):
+		fields_def = self.__view_look_dom(cr, user, node, context=context)
+		arch = node.toxml()
+		fields = self.fields_get(cr, user, fields_def.keys(), context)
+		for field in fields_def:
+			fields[field].update(fields_def[field])
+		return arch,fields
+
+
+	#
+	# if view_id, view_type is not required
+	#
+	def fields_view_get(self, cr, user, view_id=None, view_type='form', context={}, toolbar=False):
+		def _inherit_apply(src, inherit):
+			def _find(node, node2):
+				if node.nodeType==node.ELEMENT_NODE and node.localName==node2.localName:
+					res = True
+					for attr in node2.attributes.keys():
+						if attr=='position':
+							continue
+						if node.hasAttribute(attr):
+							if node.getAttribute(attr)==node2.getAttribute(attr):
+								continue
+						res = False
+					if res:
+						return node
+				for child in node.childNodes:
+					res = _find(child, node2)
+					if res: return res
+				return None
+
+			doc_src = dom.minidom.parseString(src)
+			doc_dest = dom.minidom.parseString(inherit)
+			for node2 in doc_dest.childNodes:
+				if not node2.nodeType==node2.ELEMENT_NODE:
+					continue
+				node = _find(doc_src, node2)
+				if node:
+					pos = 'inside'
+					if node2.hasAttribute('position'):
+						pos = node2.getAttribute('position')
+					if pos=='replace':
+						parent = node.parentNode
+						for child in node2.childNodes:
+							if child.nodeType==child.ELEMENT_NODE:
+								parent.insertBefore(child, node)
+						parent.removeChild(node)
+					else:
+						for child in node2.childNodes:
+							if child.nodeType==child.ELEMENT_NODE:
+								if pos=='inside':
+									node.appendChild(child)
+								elif pos=='after':
+									sib = node.nextSibling
+									if sib:
+										node.parentNode.insertBefore(child, sib)
+									else:
+										node.parentNode.appendChild(child)
+								elif pos=='before':
+									node.parentNode.insertBefore(child, node)
+								else:
+									raise AttributeError, 'Unknown position in inherited view %s !' % pos
+				else:
+					attrs = ''.join([
+						' %s="%s"' % (attr, node2.getAttribute(attr)) 
+						for attr in node2.attributes.keys() 
+						if attr != 'position'
+					])
+					tag = "<%s%s>" % (node2.localName, attrs)
+					raise AttributeError, "Couldn't find tag '%s' in parent view !" % tag
+			return doc_src.toxml()
+
+		result = {'type':view_type, 'model':self._name}
+
+		ok = True
+		model = True
+		while ok:
+			if view_id:
+				where = (model and (" and model='%s'" % (self._name,))) or ''
+				cr.execute('select arch,name,field_parent,id,type,inherit_id from ir_ui_view where id=%d'+where, (view_id,))
+			else:
+				cr.execute('select arch,name,field_parent,id,type,inherit_id from ir_ui_view where model=%s and type=%s order by priority', (self._name,view_type))
+			sql_res = cr.fetchone()
+			if not sql_res:
+				break
+			ok = sql_res[5]
+			view_id = ok or sql_res[3]
+			model = False
+
+		# if a view was found
+		if sql_res:
+			result['type'] = sql_res[4]
+			result['view_id'] = sql_res[3]
+			result['arch'] = sql_res[0]
+
+			# get all views which inherit from (ie modify) this view
+			cr.execute('select arch from ir_ui_view where inherit_id=%d and model=%s order by priority', (sql_res[3], self._name))
+			sql_inherit = cr.fetchall()
+			for (inherit,) in sql_inherit:
+				result['arch'] = _inherit_apply(result['arch'], inherit)
+
+			result['name'] = sql_res[1]
+			result['field_parent'] = sql_res[2] or False
+		else:
+			# otherwise, build some kind of default view
+			if view_type == 'form':
+				res = self.fields_get(cr, user, context=context)
+				xml = '''<?xml version="1.0"?>\n<form string="%s">\n''' % (self._description,)
+				for x in res:
+					if res[x]['type'] not in ('one2many', 'many2many'):
+						xml += '\t<field name="%s"/>\n' % (x,)
+						if res[x]['type'] == 'text':
+							xml += "<newline/>"
+				xml += "</form>"
+			elif view_type == 'tree':
+				xml = '''<?xml version="1.0"?>\n<tree string="%s">\n\t<field name="%s"/>\n</tree>''' % (self._description,self._rec_name)
+			else:
+				xml = ''
+			result['arch'] = xml
+			result['name'] = 'default'
+			result['field_parent'] = False
+			result['view_id'] = 0
+
+		doc = dom.minidom.parseString(result['arch'])
+		xarch, xfields = self.__view_look_dom_arch(cr, user, doc, context=context)
+		result['arch'] = xarch
+		result['fields'] = xfields
+		if toolbar:
+			resprint = self.pool.get('ir.values').get(cr, user, 'action', 'client_print_multi', [(self._name, False)], False, context)
+			resaction = self.pool.get('ir.values').get(cr, user, 'action', 'client_action_multi', [(self._name, False)], False, context)
+			resprint = map(lambda x:x[2], resprint)
+			resaction = map(lambda x:x[2], resaction)
+			resaction = filter(lambda x: not x.get('multi',False), resaction)
+			for x in resprint+resaction:
+				x['string'] = x['name']
+			ids = self.pool.get('ir.model.fields').search(cr, user, [('relation','=',self._name),('relate','=',1)])
+			resrelate = self.pool.get('ir.model.fields').read(cr, user, ids, ['name','model_id'], context)
+			models = self.pool.get('ir.model').read(cr, user, map(lambda x: x['model_id'][0], resrelate), ['name'], context)
+			dmodels = {}
+			for m in models:
+				dmodels[m['id']] = m['name']
+			for x in resrelate:
+				x['string'] = dmodels[x['model_id'][0]]
+			
+			result['toolbar'] = {
+				'print': resprint,
+				'action': resaction,
+				'relate': resrelate
+			}
+
+		return result
+
+	# TODO: ameliorer avec NULL
+	def _where_calc(self, args):
+		qu1, qu2 = [], []
+		for x in args:
+			table=self
+			if len(x) > 3:
+				table=x[3]
+			if x[1] != 'in':
+#FIXME: this replace all (..., '=', False) values with 'is null' and this is 
+# not what we want for real boolean fields. The problem is, we can't change it
+# easily because we use False everywhere instead of None
+# NOTE FAB: we can't use None because it is not accepted by XML-RPC, that's why
+# boolean (0-1), None -> False
+# Ged> boolean fields are not always = 0 or 1
+				if (x[2] is False) and (x[1]=='='):
+					qu1.append(x[0]+' is null')
+				elif (x[2] is False) and (x[1]=='<>' or x[1]=='!='):
+					qu1.append(x[0]+' is not null')
+				else:
+					if x[0]=='id':
+						if x[1]=='join':
+							qu1.append('(%s.%s = %s)' % (table._table, x[0], x[2]))
+						else:
+							qu1.append('(%s.%s %s %%s)' % (table._table, x[0], x[1]))
+							qu2.append(x[2])
+					else:
+						if x[1] in ('like', 'ilike'):
+							if isinstance(x[2], str):
+								str_utf8 = x[2]
+							elif isinstance(x[2], unicode):
+								str_utf8 = x[2].encode('utf-8')
+							else:
+								str_utf8 = str(x[2])
+							qu2.append('%%%s%%' % str_utf8)
+						else:
+							qu2.append(table._columns[x[0]]._symbol_set[1](x[2]))
+						if x[1]=='=like':
+							x1 = 'like'
+						else:
+							x1 = x[1]
+						qu1.append('(%s.%s %s %s)' % (table._table, x[0], x1, table._columns[x[0]]._symbol_set[0]))
+			elif x[1]=='in':
+				if len(x[2])>0:
+					todel = False
+					for xitem in range(len(x[2])):
+						if x[2][xitem]==False and isinstance(x[2][xitem],bool):
+							todel = xitem
+							del x[2][xitem]
+					if x[0]=='id':
+						qu1.append('(id=any(array[%s]))' % (','.join(['%d'] * len(x[2])),))
+					else:
+						qu1.append('(%s.%s in (%s))' % (table._table, x[0], ','.join([table._columns[x[0]]._symbol_set[0]]*len(x[2]))))
+					if todel:
+						qu1[-1] = '('+qu1[-1]+' or '+x[0]+' is null)'
+					qu2+=x[2]
+				else:
+					qu1.append(' (1=0)')
+		return (qu1,qu2)
+
+	def search(self, cr, user, args, offset=0, limit=None, order=None):
+		# if the object has a field named 'active', filter out all inactive 
+		# records unless they were explicitely asked for
+		if 'active' in self._columns:
+			ok = False
+			for a in args:
+				if a[0]=='active':
+					ok = True
+			if not ok:
+				args.append(('active', '=', 1))
+
+		# if the object has a field named 'company_id', filter out all
+		# records which do not concern the current company (the company
+		# of the current user) or its "childs"
+		if 'company_id' in self._columns:
+			compids = self.pool.get('res.company')._get_child_ids(cr, user, user)
+			if compids:
+				compids.append(False)
+				args.append(('company_id','in',compids))
+
+		i = 0
+		tables=[self._table]
+		joins=[]
+		while i<len(args):
+			table=self
+			if args[i][0] in self._inherit_fields:
+				table=self.pool.get(self._inherit_fields[args[i][0]][0])
+				if (table._table not in tables):
+					tables.append(table._table)
+					joins.append(('id', 'join', '%s.%s' % (self._table, self._inherits[table._name]), table))
+			field = table._columns.get(args[i][0],False)
+			if not field:
+				i+=1
+				continue
+			if field._type=='one2many':
+				field_obj = self.pool.get(field._obj)
+
+				# get the ids of the records of the "distant" resource
+				ids2 = [x[0] for x in field_obj.name_search(cr, user, args[i][2], [], args[i][1])]
+				if not ids2:
+					args[i] = ('id','=','0')
+				else:
+					cr.execute('select '+field._fields_id+' from '+field_obj._table+' where id = any(array['+','.join(map(str,ids2))+'])')
+					ids3 = [x[0] for x in cr.fetchall()]
+
+					args[i] = ('id', 'in', ids3)
+				i+=1
+
+			elif field._type=='many2many':
+				if args[i][1]=='child_of':
+					if isinstance(args[i][2], basestring):
+						ids2 = [x[0] for x in self.pool.get(field._obj).name_search(cr, user, args[i][2], [], 'like')]
+					else:
+						ids2 = args[i][2]
+					def _rec_get(ids):
+						if not len(ids): return []
+						cr.execute('select '+field._id1+' from '+field._rel+' where '+field._id2+' in ('+','.join(map(str,ids))+')')
+						ids = [x[0] for x in cr.fetchall()]
+						return ids + _rec_get(ids)
+					args[i] = ('id','in',ids2+_rec_get(ids2))
+				else:
+					if isinstance(args[i][2], basestring):
+						res_ids = [x[0] for x in self.pool.get(field._obj).name_search(cr, user, args[i][2], [], args[i][1])]
+					else:
+						res_ids = args[i][2]
+					if not len(res_ids):
+						return []
+					cr.execute('select '+field._id1+' from '+field._rel+' where '+field._id2+' in ('+','.join(map(str, res_ids))+')')
+					args[i] = ('id', 'in', map(lambda x: x[0], cr.fetchall()))
+				i+=1
+
+			elif field._type=='many2one':
+				if args[i][1]=='child_of':
+					if isinstance(args[i][2], basestring):
+						ids2 = [x[0] for x in self.pool.get(field._obj).name_search(cr, user, args[i][2], [], 'like')]
+					else:
+						ids2 = args[i][2]
+					def _rec_get(ids, table):
+						if not len(ids):
+							return []
+						if 'active' in table._columns:
+							ids2 = table.search(cr, user, [(args[i][0],'in',ids),('active','=',0)])
+							ids2 += table.search(cr, user, [(args[i][0],'in',ids),('active','=',1)])
+						else:
+							ids2 = table.search(cr, user, [(args[i][0], 'in', ids)])
+						return ids + _rec_get(ids2, table)
+					args[i] = ('id','in',ids2+_rec_get(ids2, table), table)
+				else:
+					if isinstance(args[i][2], basestring):
+						res_ids = self.pool.get(field._obj).name_search(cr, user, args[i][2], [], args[i][1])
+						args[i] = (args[i][0],'in',map(lambda x: x[0], res_ids), table)
+					else:
+						args[i] += (table,)
+				i+=1
+			elif field._properties:
+				arg = [args.pop(i)]
+				j = i
+				while j<len(args):
+					if args[j][0]==arg[0][0]:
+						arg.append(args.pop(j))
+					else:
+						j+=1
+				if field._fnct_search:
+					args.extend(field.search(cr, user, self, arg[0][0], arg))
+			else:
+				args[i] += (table,)
+				i+=1
+		args.extend(joins)
+
+		# compute the where, order by, limit and offset clauses
+		(qu1,qu2) = self._where_calc(args)
+		if len(qu1):
+			qu1 = ' where '+string.join(qu1,' and ')
+		else:
+			qu1 = ''
+		order_by = order or self._order
+
+		limit_str = limit and ' limit %d' % limit or ''
+		offset_str = offset and ' offset %d' % offset or ''
+		
+		# execute the "main" query to fetch the ids we were searching for
+		cr.execute('select %s.id from ' % self._table + ','.join(tables) +qu1+' order by '+order_by+limit_str+offset_str, qu2)
+		res = cr.fetchall()
+		return [x[0] for x in res]
+
+	# returns the different values ever entered for one field
+	# this is used, for example, in the client when the user hits enter on 
+	# a char field
+	def distinct_field_get(self, cr, uid, field, value, args=[], offset=0, limit=None):
+		if field in self._inherit_fields:
+			return self.pool.get(self._inherit_fields[field][0]).distinct_field_get(cr, uid,field,value,args,offset,limit)
+		else:
+			return self._columns[field].search(cr, self, args, field, value, offset, limit, uid)
+
+	def name_get(self, cr, user, ids, context={}):
+		if not len(ids):
+			return []
+		return [(r['id'], r[self._rec_name]) for r in self.read(cr, user, ids, [self._rec_name], context, load='_classic_write')]
+
+	def name_search(self, cr, user, name='', args=[], operator='ilike', context={}, limit=80):
+		if name:
+			args += [(self._rec_name,operator,name)]
+		ids = self.search(cr, user, args, limit=limit)
+		res = self.name_get(cr, user, ids, context)
+		return res
+
+	def copy(self, cr, uid, id, default=None, context={}):
+		if not default:
+			default = {}
+		if 'state' not in default:
+			if 'state' in self._defaults:
+				default['state'] = self._defaults['state'](self, cr, uid, context)
+		data = self.read(cr, uid, [id], context=context)[0]
+		fields = self.fields_get(cr, uid)
+		for f in fields:
+			ftype = fields[f]['type']
+			if f in default:
+				data[f] = default[f]
+			elif ftype == 'function':
+				del data[f]
+			elif ftype == 'many2one':
+				try:
+					data[f] = data[f] and data[f][0]
+				except:
+					pass
+			elif ftype in ('one2many', 'one2one'):
+				res = []
+				rel = self.pool.get(fields[f]['relation'])
+				for rel_id in data[f]:
+					# the lines are first duplicated using the wrong (old) 
+					# parent but then are reassigned to the correct one thanks
+					# to the (4, ...)
+					res.append((4, rel.copy(cr, uid, rel_id, context=context)))
+				data[f] = res
+			elif ftype == 'many2many':
+				data[f] = [(6, 0, data[f])]
+		del data['id']
+		for v in self._inherits:
+			del data[self._inherits[v]]
+		return self.create(cr, uid, data)
+
+# vim:noexpandtab:ts=4

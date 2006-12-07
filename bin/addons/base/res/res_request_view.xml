@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<terp>
+<data>
+	<record model="ir.ui.view" id="res_request_tree-view">
+		<field name="name">res.request.tree</field>
+		<field name="model">res.request</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Requests">
+				<field name="create_date" />
+				<field name="act_from"/>
+				<field name="act_to"/>
+				<field name="name"/>
+<!--				
+				<field name="act_title"/>
+-->				
+				<field name="priority"/>
+				<field name="trigger_date"/>
+<!--				
+				<field name="ref_partner_id"/>
+-->				
+				<field name="state"/>
+			</tree>
+		</field>
+	</record>
+	<record model="ir.ui.view" id="res_request-view">
+		<field name="name">res.request.form</field>
+		<field name="model">res.request</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Requests">
+				<notebook>
+				<page string="Request">
+					<separator string="Description" colspan="4"/>
+					<field name="act_from" select="1"/>
+					<field name="act_to" select="1"/>
+					<field name="name" colspan="3" select="1"/>
+					<newline/>
+					<field name="body" colspan="4" select="1"/>
+					<field name="trigger_date" select="1"/>
+					<group col="2" colspan="2">
+						<button name="request_send" states="draft,active" string="Send" type="object"/>
+						<button name="request_reply" states="waiting" string="Reply" type="object"/>
+					</group>
+
+					<separator string="References" colspan="4"/>
+					<field name="ref_partner_id"/>
+					<field name="priority" select="1"/>
+					<field name="ref_doc1" colspan="3"/>
+					<field name="ref_doc2" colspan="3"/>
+					<separator string="Status" colspan="4"/>
+					<field name="state"/>
+					<group col="3" colspan="2">
+						<field name="active" select="1"/>
+						<button name="request_close" states="waiting,draft,active" string="End of Request" type="object"/>
+					</group>
+				</page><page string="History">
+					<field name="history" nolabel="1" colspan="4" widget="one2many_list"/>
+				</page>
+				</notebook>
+			</form>
+		</field>
+	</record>
+	<record model="ir.actions.act_window" id="res_request-act">
+		<field name="name">res.request.form</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">res.request</field>
+		<field name="view_type">form</field>
+		<field name="view_id" ref="res_request-view"/>
+	</record>
+	<menuitem name="Administration/Custom/Low level/Base/Requests/All Requests" action="res_request-act"/>
+
+	<record model="ir.ui.view" id="res_request_link-view">
+		<field name="name">res.request.link.form</field>
+		<field name="model">res.request.link</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Request Link">
+				<field name="name" select="1"/>
+				<field name="object" select="1"/>
+				<field name="priority"/>
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="res_request_link-act">
+		<field name="name">res.request.link.form</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">res.request.link</field>
+		<field name="view_type">form</field>
+		<field name="view_id" ref="res_request_link-view"/>
+	</record>
+	<menuitem name="Administration/Custom/Low level/Base/Requests/Request Links" action="res_request_link-act"/>
+
+
+	<record model="ir.ui.view" id="res_request_history_tree-view">
+		<field name="name">res.request.history.tree</field>
+		<field name="model">res.request.history</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Request History">
+				<field name="act_from"/>
+				<field name="act_to"/>
+				<field name="date_sent"/>
+				<field name="name"/>
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="res_request_history_form-view">
+		<field name="name">res.request.history.form</field>
+		<field name="model">res.request.history</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Request History">
+				<field name="act_from"/>
+				<field name="act_to"/>
+				<field name="date_sent"/>
+				<newline/>
+				<field name="body" colspan="3"/>
+			</form>
+		</field>
+	</record>
+</data>
+</terp>

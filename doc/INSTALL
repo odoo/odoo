@@ -1,0 +1,87 @@
+Tiny ERP Quick Installation Guide
+---------------------------------
+
+This file contains a quick guide to configure and install the Tiny ERP server.
+
+Required dependencies:
+---------------------
+
+You need the following software installed:
+
+    * Python 2.3 or above
+    * Postgresql 7 or above
+    * Psycopg python module for python2.3
+    * libxml2 and python2.3 bindings
+    * libxslt and python2.3 bindings
+    * Reportlab pdf generation library for python2.3 
+
+Some dependencies are only required for specific purposes:
+
+for rendering workflows graphs, you need:
+	
+	* graphviz
+	* pyparsing
+
+for generating reports using non .jpg images, you need:
+
+	* Python Imaging Library for python2.3
+								
+For Debian-based distributions, the required packages can be installed with the 
+following commands:
+
+  apt-get install python2.3 python2.3-xml postgresql postgresql-client libxml2-python2.3
+  apt-get install libxslt1-python2.3 python2.3-psycopg python2.3-reportlab
+  apt-get install python2.3-imaging python2.3-pyparsing graphviz
+
+For Fedora 
+if they are not installed, install:
+python and postgresql
+
+uses yum or you can recover required packages on fedora web site in "core" or "extra" repository :
+postgresql-python-
+libxml2-python
+libxslt-python
+python-imaging
+python-psycopg
+python-reportlab
+graphviz
+You can find pyparsing at http://pyparsing.sourceforge.net/ 
+
+
+Installation Steps
+------------------
+
+1. Check that all the required dependencies are installed.
+
+2. Create a postgresql database.
+
+The default database name is "terp". If you want to use another name, you
+will need to provide it when launching the server (by using the commandline 
+option --database). 
+
+To create a postgresql database named "terp" using the following command:
+    $ createdb --encoding=UNICODE terp
+
+If it is the first time you use postgresql you might need to create a new user
+to the postgres system using the following commands (where myusername is your
+unix user name):
+
+    $ su -
+    # su - postgres
+    $ createuser myusername
+    Shall the new user be allowed to create databases? (y/n) y
+    Shall the new user be allowed to create more new users? (y/n) y
+    CREATE USER
+    $ logout
+    # logout
+
+3. Launch the program "./terp_server.py".
+
+The first time it is run, the server will initialise the database with all the default values.
+
+4. Connect to the server using the GUI client. 
+
+There are two accounts by default:
+    * login: admin, password:admin
+    * login: demo, password:demo
+

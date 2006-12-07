@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<terp>
+	<data>
+		<wizard
+			id="wizard_info_get"
+			string="Request Info"
+			model="ir.module.module"
+			name="module.info_get"/>
+
+		<!--
+		<record model="ir.actions.wizard" id="wizard_update">
+			<field name="name">Download module list</field>
+			<field name="wiz_name">module.module.update</field>
+		</record>
+		<menuitem
+			name="Administration/Module Management/Download module list"
+			action="wizard_update"
+			type="wizard"
+			groups="admin"
+			icon="STOCK_CONVERT"
+			id="menu_module_update"/>
+		-->
+
+		<record model="ir.actions.wizard" id="wizard_upgrade">
+			<field name="name">Apply marked changes</field>
+			<field name="wiz_name">module.upgrade</field>
+		</record>
+		<menuitem
+			name="Administration/Modules Management/Apply Upgrades"
+			action="wizard_upgrade"
+			id="menu_wizard_upgrade"
+			type="wizard"/>
+
+		<record model="ir.actions.wizard" id="wizard_lang_install">
+			<field name="name">Install new language file</field>
+			<field name="wiz_name">module.lang.install</field>
+		</record>
+		<menuitem
+			name="Administration/Translations/Load a new language"
+			action="wizard_lang_install"
+			id="menu_wizard_lang_install"
+			type="wizard"/>
+
+		<record model="ir.actions.wizard" id="wizard_scan_addons">
+			<field name="name">Scan 'addons' path</field>
+			<field name="wiz_name">module.module.scan</field>
+		</record>
+		<menuitem
+			name="Administration/Modules Management/Update modules list"
+			action="wizard_scan_addons"
+			id="menu_wizard_module_scan"
+			type="wizard" />
+
+		<record model="ir.actions.wizard" id="wizard_lang_export">
+			<field name="name">Export a language</field>
+			<field name="wiz_name">module.lang.export</field>
+		</record>
+		<menuitem
+			name="Administration/Translations/Export a language"
+			action="wizard_lang_export"
+			id="menu_wizard_lang_export"
+			type="wizard"/>
+
+		<record model="ir.actions.wizard" id="wizard_lang_import">
+			<field name="name">Import a language</field>
+			<field name="wiz_name">module.lang.import</field>
+		</record>
+		<menuitem
+			name="Administration/Translations/Import a language"
+			action="wizard_lang_import"
+			id="menu_wizard_lang_import"
+			type="wizard"/>
+
+	</data>
+</terp>
+

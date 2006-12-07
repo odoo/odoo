@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<terp>
+<data>
+	==========================================================
+	Properties
+	==========================================================
+
+	<record model="ir.ui.view" id="ir_property_view">
+		<field name="name">ir.property.form</field>
+		<field name="model">ir.property</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Properties">
+				<separator string="Property" colspan="4"/>
+				<field name="name" select="1"/>
+				<field name="company_id" select="1"/>
+				<field name="fields_id" colspan="3" select="1"/>
+				<field name="value" colspan="3"/>
+				<field name="res_id" colspan="3"/>
+			</form>
+		</field>
+	</record>
+	<record model="ir.actions.act_window" id="ir_property_form">
+		<field name="name">ir.property</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">ir.property</field>
+		<field name="view_type">form</field>
+		<field name="domain">[('res_id','=',False)]</field>
+		<field name="view_id" ref="ir_property_view"/>
+	</record>
+	<menuitem name="Administration/Custom/Properties/Default Properties" action="ir_property_form" id="menu_ir_property_form"/>
+
+	<record model="ir.actions.act_window" id="ir_property_form_all">
+		<field name="name">ir.property</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">ir.property</field>
+		<field name="view_type">form</field>
+		<field name="view_id" ref="ir_property_view"/>
+	</record>
+	<menuitem name="Administration/Custom/Properties/All Properties" action="ir_property_form_all" id="menu_ir_property_form_all"/>
+
+	</data>
+</terp>

@@ -1,0 +1,198 @@
+<?xml version="1.0" ?>
+<terp>
+	<data>
+
+	#
+	# Modules Categories
+	#
+
+		<record model="ir.ui.view" id="view_module_category_form">
+			<field name="name">ir.module.category.form</field>
+			<field name="model">ir.module.category</field>
+			<field name="type">form</field>
+			<field name="field_parent">child_ids</field>
+			<field name="arch" type="xml">
+				<form string="Module Category">
+					<field name="name" colspan="3"/>
+					<field name="parent_id" colspan="3"/>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_module_category_tree">
+			<field name="name">ir.module.category.tree</field>
+			<field name="model">ir.module.category</field>
+			<field name="type">tree</field>
+			<field name="field_parent">child_ids</field>
+			<field name="arch" type="xml">
+				<tree string="Module Category">
+					<field name="name"/>
+					<field name="module_nr"/>
+				</tree>
+			</field>
+		</record>
+		<record model="ir.actions.act_window" id="action_module_category_tree">
+			<field name="name">ir.module.category</field>
+			<field name="res_model">ir.module.category</field>
+			<field name="view_type">tree</field>
+			<field name="domain">[('parent_id','=',False)]</field>
+		</record>
+		<menuitem
+			name="Administration/Modules Management/Categories of Modules"
+			action="action_module_category_tree"
+			/>
+
+		#
+		# Click on a category
+		#
+
+		<record model="ir.actions.act_window" id="action_module_open_categ">
+			<field name="name">ir.module.module</field>
+			<field name="res_model">ir.module.module</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('category_id','=',active_id)]</field>
+		</record>
+		<record model="ir.values" id="ir_action_module_category">
+			<field name="key2" eval="'tree_but_open'"/>
+			<field name="model" eval="'ir.module.category'"/>
+			<field name="name">Categorized Modules</field>
+			<field name="value" eval="'ir.actions.act_window,%d'%action_module_open_categ"/>
+			<field name="object" eval="True"/>
+		</record>
+
+
+		<!-- Modules -->
+
+		<record model="ir.ui.view" id="module_form">
+			<field name="name">ir.module.module.form</field>
+			<field name="model">ir.module.module</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Module">
+					<notebook>
+						<page string="Module">
+							<field name="name" select="1"/>
+							<field name="shortdesc" colspan="3"/>
+							<field name="description" colspan="3"/>
+							<field name="installed_version"/>
+							<field name="latest_version"/>
+							<field name="author"/>
+							<field name="website"/>
+							<field name="url"/>
+							<field name="demo" readonly="1"/>
+							<field name="state" readonly="1"/>
+							<group col="7" colspan="2">
+								<button string="Update Infos" name="info_get" type="object" states="uninstalled,installed,to upgrade,to remove"/>
+								<button string="Cancel Install" name="button_install_cancel" type="object" states="to install"/>
+								<button string="Install" name="button_install" type="object" states="uninstalled"/>
+								<!-- 
+								<button string="Cancel Upgrade" name="button_upgrade_cancel" type="object" states="to upgrade"/>
+								<button string="Cancel Remove" name="button_remove_cancel" type="object" states="to remove"/>
+								<button string="Uninstall" name="button_uninstall" type="object" states="installed"/>
+								-->
+								<button string="Upgrade" name="button_upgrade" type="object" states="installed"/>
+								<!-- 
+								<button string="Update translations" name="button_update_translations" type="object" states="installed"/>
+								-->
+							</group>
+						</page>
+						<page string="Dependencies">
+							<field name="dependencies_id" colspan="4" nolabel="1">
+								<tree string="Dependencies">
+									<field name="name"/>
+									<field name="version_pattern"/>
+								</tree>
+							</field>
+						</page>
+					</notebook>
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="module_tree">
+			<field name="name">ir.module.module.tree</field>
+			<field name="model">ir.module.module</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Module list" colors="blue:state=='to upgrade' or state=='to install';grey:state=='uninstalled' or state=='uninstallable'">
+					<field name="name"/>
+					<field name="shortdesc"/>
+					<field name="author"/>
+					<field name="installed_version"/>
+					<field name="latest_version"/>
+					<field name="state"/>
+				</tree>
+			</field>
+		</record>
+		<record model="ir.actions.act_window" id="open_module_tree">
+			<field name="name">ir.module.module</field>
+			<field name="res_model">ir.module.module</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain"></field>
+		</record>
+		<menuitem name="Administration/Modules Management/Modules" action="open_module_tree"/>
+
+		<record model="ir.actions.act_window" id="open_module_tree_install">
+			<field name="name">ir.module.module</field>
+			<field name="res_model">ir.module.module</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('state','=','installed')]</field>
+		</record>
+		<menuitem name="Administration/Modules Management/Modules/Installed Modules" action="open_module_tree_install"/>
+		<record model="ir.actions.act_window" id="open_module_tree_uninstall">
+			<field name="name">ir.module.module</field>
+			<field name="res_model">ir.module.module</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('state','=','uninstalled')]</field>
+		</record>
+		<menuitem name="Administration/Modules Management/Modules/Uninstalled Modules" action="open_module_tree_uninstall"/>
+		<record model="ir.actions.act_window" id="open_module_tree_upgrade">
+			<field name="name">ir.module.module</field>
+			<field name="res_model">ir.module.module</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('state','&lt;&gt;','uninstalled'),('state','&lt;&gt;','installed'),('state','&lt;&gt;','uninstallable'),]</field>
+		</record>
+		<menuitem name="Administration/Modules Management/Modules/Modules to be installed, upgraded or removed" action="open_module_tree_upgrade"/>
+
+		<record model="ir.ui.view" id="repository_form">
+			<field name="name">ir.module.repository.form</field>
+			<field name="model">ir.module.repository</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Repository">
+					<field name="name" colspan="3" select="1"/>
+					<field name="url" colspan="3" select="1"/>
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="repository_tree">
+			<field name="name">ir.module.repository.tree</field>
+			<field name="model">ir.module.repository</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Repository list">
+					<field name="name"/>
+					<field name="url"/>
+				</tree>
+			</field>
+		</record>
+		<record model="ir.actions.act_window" id="open_repository_tree">
+			<field name="name">ir.module.repository</field>
+			<field name="res_model">ir.module.repository</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<!--
+		<menuitem
+			name="Administration/Modules Management/Repositories"
+			action="open_repository_tree"
+			id="menu_module_repository_tree"
+			/>
+		-->
+
+	</data>
+</terp>

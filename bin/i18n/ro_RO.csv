@@ -1,0 +1,1367 @@
+type,name,res_id,src,value
+field,"account.account,code",0,Code,Cont contabil
+field,"account.account,name",0,Name,Nume
+model,"account.account,name",2,Assets,Activ
+model,"account.account,name",25,Results,Rezultate
+model,"account.account,name",61,Liabilities,Lichiditati
+model,"account.account,name",62,Equity,Capitaluri propri
+model,"account.account,name",63,Auction Adjudications,Vinzare Publica
+model,"account.account,name",64,Auction Adjudication Expenses,Cheltuieli Vanzari Public Publici
+model,"account.account,name",3,Fixed,Cont de imobilizari
+model,"account.account,name",4,Constitution,Imobilizari incorporale
+model,"account.account,name",5,Immaterial Assets,Imobilizari corporale
+model,"account.account,name",6,Land Assets,Imobilizari in concesiune
+model,"account.account,name",7,Machines and Tools,Imob. corporale in curs
+model,"account.account,name",8,Mobile Equipment,Echipament Mobil
+model,"account.account,name",9,Financial Investement,Amortizari des imob.
+model,"account.account,name",10,Long Term Recievable,Provizioane
+model,"account.account,name",16,Stock,Stoc
+model,"account.account,name",11,Current,Cont Stoc si  in curs
+model,"account.account,name",17,Merchandise Type A,Marfuri tip A
+model,"account.account,name",18,Merchandise Type B,Marfuri tip B
+model,"account.account,name",19,Receivable,Credite
+model,"account.account,name",20,Main Receivable,Comt de terti
+model,"account.account,name",24,Tax TVA,Taxe TVA
+model,"account.account,name",21,Payable,Debite
+model,"account.account,name",23,Credit Cards,Carte de credit
+model,"account.account,name",22,Main Payable,Debit Principal
+model,"account.account,name",12,Cash,Numerar
+model,"account.account,name",13,Bank Account,Cont de banca
+model,"account.account,name",14,Paypal Account,Cont Plati
+model,"account.account,name",15,Petty Cash, Numerar 
+model,"account.account,name",31,Expense, Cheltuieli
+model,"account.account,name",32,Merchandise,Marfuri
+model,"account.account,name",33,Products Purchase,Cumparari de produse
+model,"account.account,name",34,Accessories Purchase,Cumparari de accesorii
+model,"account.account,name",35,Subcontractor Purchase,Cumparari intermediare
+model,"account.account,name",36,Merchandise Purchase,Cumparari de marfuri
+model,"account.account,name",37,Remises,Remize
+model,"account.account,name",58,Stock Expense,Stoc Chestuieli
+model,"account.account,name",54,Stock,Stoc
+model,"account.account,name",59,Merchandise Type A,Marfuri tip A
+model,"account.account,name",60,Merchandise Type B,Marchandise tip B
+model,"account.account,name",38,Services Purchase,Cumparari de servicii
+model,"account.account,name",39,Loyer and location,Chirie si locatie
+model,"account.account,name",40,Reparations,Reparatii
+model,"account.account,name",41,Water Gaz Electricity,Eau, Gaz Electricite Apa
+model,"account.account,name",42,Phone Post Fax Internet,Telefon Posta Fax Internet
+model,"account.account,name",43,Printed material,Cataloage si imprimate
+model,"account.account,name",44,Food, Alimente
+model,"account.account,name",45,Miscanellous charges,Diverse Cheltuieli
+model,"account.account,name",46,Insurances,Asigurari
+model,"account.account,name",47,Transport Carburant,Transport carburant
+model,"account.account,name",48,Travels, Delegatii (Voiaj)
+model,"account.account,name",49,Publicity,Publicitate
+model,"account.account,name",50,Taxes Charges,Taxe Datorii
+model,"account.account,name",51,TVA non deductible,TVA nedecutibila
+model,"account.account,name",52,Miscanellous Taxes,Taxe diverse
+model,"account.account,name",53,Financial Charges,Datorii financiare
+model,"account.account,name",66,Auction Adjudication Expenses,Chetuieli venzari publice
+model,"account.account,name",68,Auction Seller Costs,Costuri cu vinzarea la licitatie
+model,"account.account,name",26,Income,Venit
+model,"account.account,name",27,Merchandise Sales,Vinzari de marfuri
+model,"account.account,name",28,Products Sales,Vinzari de produse fabricate
+model,"account.account,name",29,Service Sales,Vinzari de servicii
+model,"account.account,name",55,Stock Income,Productie stocata
+model,"account.account,name",56,Merchandise Type A,Marfuri tip A
+model,"account.account,name",57,Merchandise Type B,Marfuri tip B
+model,"account.account,name",30,Financials Interests,Dobinda financiara
+model,"account.account,name",65,Auction Adjudications,Vinzari publice
+model,"account.account,name",67,Auction Buyer Costs,Costuri cu cumparari
+model,"account.account,name",1,PCMN Tree,Plan contabil
+field,"account.account,sign",0,Signe,Semn
+field,"account.account,currency_id",0,Currency,Deviz
+field,"account.account,parent_id",0,Parents,Parinti
+field,"account.account,child_id",0,Children,Copii
+field,"account.account,balance",0,Balance,Sold
+field,"account.account,type",0,Account Type,Tip de cont
+field,"account.currency,digits",0,Digits,Cifre
+field,"account.currency,name",0,Currency,Deviz
+field,"account.currency,priority",0,Usage priority,Prioritati
+field,"account.currency,rate",0,Relative Change rate,Curs de schimb relativ
+field,"account.currency,date",0,Last rate refresh,Ultimul curs
+field,"account.currency,accuracy",0,Computational accuracy,Precizia calculului
+field,"account.invoice,comment",0,Additionnal Information,Informatii suplimentare
+field,"account.invoice,date_due",0,Date Due,Data limita
+field,"account.invoice,reference",0,Invoice Reference,Referinta facturii
+field,"account.invoice,payment_term",0,Payment Term,Conditii de plata
+field,"account.invoice,partner_contact",0,Partner Contact,Contact
+field,"account.invoice,number",0,Invoice Number,Numar factura
+field,"account.invoice,address_invoice_id",0,Billing Address,Adresa de facturare
+field,"account.invoice,partner_id",0,Partner,Partener
+field,"account.invoice,amount_untaxed",0,Untaxed Amount,Total fara taxe
+field,"account.invoice,tax_line",0,Tax Lines,Linii taxe
+field,"account.invoice,amount_tax",0,Tax Amount,Total cu taxe
+field,"account.invoice,state",0,State, Statut(Stare)
+field,"account.invoice,project_id",0,Project,Proiect
+field,"account.invoice,type",0,Type,Tip
+field,"account.invoice,invoice_line",0,Invoice Lines,Linii factura
+field,"account.invoice,account_id",0,Dest Account,Cont destinatie
+field,"account.invoice,partner_insite",0,Insite Contact,Contact intern
+field,"account.invoice,date_invoice",0,Date Invoiced,Data de facturare
+field,"account.invoice,partner_ref",0,Partner Reference,Referinta Partener 
+field,"account.invoice,move_id",0,Invoice Movement,Trazactie Factura
+field,"account.invoice,amount_total",0,Total Amount,Suma totala
+field,"account.invoice,name",0,Invoice Description,Descriere
+field,"account.invoice,address_contact_id",0,Contact Address,Adresa de contact
+field,"account.invoice.line,name",0,Description,Descriere
+field,"account.invoice.line,invoice_id",0,Invoice Ref,Ref. Factura
+field,"account.invoice.line,price_unit",0,Unit Price,Pret unitar
+field,"account.invoice.line,account_id",0,Source Account,Cont sursa
+field,"account.invoice.line,invoice_line_tax_id",0,Taxes,Taxe
+field,"account.invoice.line,quantity",0,Quantity,Cantitate
+field,"account.invoice.tax,invoice_id",0,Invoice Line,Linii factura
+field,"account.invoice.tax,amount",0,Amount,Total
+field,"account.invoice.tax,manual",0,Manual,Manual
+field,"account.invoice.tax,name",0,Tax Description,Descriere
+field,"account.invoice.tax,account_id",0,Taxe Account,Cont de taxe
+field,"account.move,name",0,Move Name,Nume tranzactie
+field,"account.move,type",0,Transaction Type,Tip de tranzactie
+field,"account.move,line_id",0,Transactions,Tranzactii
+field,"account.move,state",0,State,Statut(Stare)
+field,"account.move,date",0,Date,Data
+field,"account.move,project_id",0,Project Ref.,Ref. proiect
+field,"account.move,partner_id",0,Partner Ref.,Ref. Partener
+field,"account.move,change",0,Change transaction,Schimba tranzactia
+field,"account.move.line,reconcile_id",0,Reconcile,Consolidare (Scandentar)
+field,"account.move.line,name",0,Name,Nume
+field,"account.move.line,state",0,State,Statut(Stare)
+field,"account.move.line,amount",0,Amount,Total
+field,"account.move.line,date",0,Date,Data
+field,"account.move.line,balance",0,Balance,Sold
+field,"account.move.line,partner_id",0,Partner Ref.,Ref. Partener
+field,"account.move.line,move_id",0,Move,Tranzactie
+field,"account.move.line,account_id",0,Account,Cont
+field,"account.move.reconcile,line_id",0,Move lines,Linii tranzactie
+field,"account.move.reconcile,type",0,Type,Tip
+field,"account.move.reconcile,name",0,Name,Nume
+field,"account.tax,domain",0,Domain,Domeniu
+field,"account.tax,name",0,Tax Name,Nume taxa
+field,"account.tax,account_collected_id",0,Collected Tax Account,Cont de taxa colectata
+field,"account.tax,child_ids",0,Childs Tax Account,Cont de taxa fiu
+field,"account.tax,account_paid_id",0,Paid Tax Account,Cont de taxe platibila
+field,"account.tax,parent_id",0,Parent Tax Account,Conte de taxe parinte
+field,"account.tax,amount",0,Amount,Total taxe
+field,"account.tax,child_depend",0,Tax depends on its childs,Taxa depinde de cont copiilor
+field,"account.tax,python_compute",0,Python Code,Cod Python
+field,"account.tax,python_applicable",0,Python Code,cod Python
+field,"account.tax,type",0,Tax Type,Tip de taxa
+field,"account.tax,applicable_type",0,Applicable Type,Tip aplicabil
+field,"account.transfer,name",0,Description,Descriere
+field,"account.transfer,reference",0,Reference,Referinta
+field,"account.transfer,partner_id",0,Partner,Partener
+field,"account.transfer,amount",0,Amount,Total
+field,"account.transfer,adjust_account_id",0,Adjustement Account,Cont de ajustare
+field,"account.transfer,state",0,State,Statut(Stare)
+field,"account.transfer,account_dest_id",0,Destination Account,Cont destinatie
+field,"account.transfer,move_id",0,Transactions,Tranzactii
+field,"account.transfer,invoice_id",0,Invoices,Facturi
+field,"account.transfer,date",0,Payment Date,Data platii
+field,"account.transfer,adjust_amount",0,Adjustement amount,Suma de ajustat
+field,"account.transfer,project_id",0,Project,Proiect
+field,"account.transfer,type",0,Transaction Type,Tip de tranzactie
+field,"account.transfer,account_src_id",0,Source Account,Cont de origine
+field,"account.transfer,change",0,Amount Changed,Suma modificata
+field,"campaign.campaign,info",0,Description,Descriere
+field,"campaign.campaign,date_stop",0,Stop Date,Date de sfirsit
+field,"campaign.campaign,name",0,Name,Nume
+field,"campaign.campaign,date_start",0,Start Date,Date de inceput
+field,"campaign.campaign,planned_costs",0,Planned Costs,Costuri planificate
+field,"campaign.campaign,costs",0,Initial Costs,Costuri initiale
+field,"campaign.campaign,step_id",0,Campaign Steps,Etapa de campanie
+field,"campaign.campaign,planned_revenue",0,Planned Revenue,Venituri prevazute
+field,"campaign.partner,part_adr_id",0,Partner Address,Adresa partenerului
+field,"campaign.partner,info",0,Comments,Comentarii
+field,"campaign.partner,state",0,State,Statut(Stare)
+field,"campaign.partner,user_id",0,Attache Commercial,Atasat comercial
+field,"campaign.partner,name",0,Name / Reference,Nume / Referinta
+field,"campaign.partner,date_recall",0,Recall Later,Apeleaza mai tirziu
+field,"campaign.partner,notes",0,Prospect Notes,Note
+field,"campaign.partner,campaign_id",0,Campaign,Campanie
+field,"campaign.partner,priority",0,Priority,Prioritate(i)
+field,"campaign.partner,step",0,Step,Etapa
+field,"campaign.partner,contact",0,Partner Contact,Contact
+field,"campaign.partner,active",0,Active,Activ
+field,"campaign.partner,partner_id",0,Partner,Partener
+field,"campaign.partner,history_id",0,History,Istoric
+field,"campaign.partner.history,info",0,Comments,Commentaires
+field,"campaign.partner.history,name",0,History,Istoric
+field,"campaign.partner.history,camp_partner_id",0,Prospect Fiche,Fisa prospectare
+field,"campaign.partner.history,step_attempt",0,Attempt,Tentativa
+field,"campaign.partner.history,date",0,Date create,Data de creare
+field,"campaign.partner.history,step_id",0,Step,Etapa
+field,"campaign.step,info",0,Description,Descriere
+field,"campaign.step,name",0,Step Name,Nom etapei
+field,"campaign.step,procent",0,Success Rate (0<x<1),Pozitie
+field,"campaign.step,stop_date",0,Stop Date,Data de sfirsit
+field,"campaign.step,campaign_id",0,Campaign,Campanie
+field,"campaign.step,priority",0,Order line,Prioritati
+field,"campaign.step,costs",0,Step Costs,Costuri
+field,"campaign.step,active",0,Active,Activ
+field,"campaign.step,max_try",0,Max Attemps,Numar maxim de tentative
+field,"campaign.step,start_date",0,Start Date,Data de inceput
+field,"crm.case,date_closed",0,Date Closed,Data de inchidere
+field,"crm.case,history_line",0,Case History,Istoric de incidente
+field,"crm.case,partner_id",0,Partner,Partener
+field,"crm.case,user_id",0,User Responsible,Utilisator responsabil
+field,"crm.case,name",0,Case Description,Descriere incident
+field,"crm.case,probability",0,Probability (0.50),Probabilitate (0.50)
+field,"crm.case,canal_id",0,Canal,Canal
+field,"crm.case,categ_id",0,Category,Categorie
+field,"crm.case,planned_cost",0,Planned Costs,Costuri prevazute
+field,"crm.case,som",0,State of Mind,Stare de spirit
+field,"crm.case,state",0,State,Statut(Stare)
+field,"crm.case,date_deadline",0,Date Next Action,Urmatoarea data de actiune
+field,"crm.case,priority",0,Priority,Prioritati
+field,"crm.case,date",0,Date,Data
+field,"crm.case,planned_revenue",0,Planned Revenue,Venituri prevazute
+field,"crm.case,active",0,Active,Activ
+field,"crm.case,document",0,Document,Document
+field,"crm.case,type",0,Case Type,Tip de incident
+field,"crm.case,description",0,Description,Descriere
+field,"crm.case.categ,case_type",0,Case Type,Tip de incident
+field,"crm.case.categ,name",0,Case Category Name,Categorie de incident
+field,"crm.case.history,user_id",0,User Responsible,Utilisator responsabil
+field,"crm.case.history,name",0,Name,Nume
+field,"crm.case.history,canal_id",0,Canal,Canal
+field,"crm.case.history,som",0,State of Mind, Stare de spirit
+field,"crm.case.history,case_id",0,Case,Incident
+field,"crm.case.history,date",0,Date,Data
+field,"crm.case.history,description",0,Description,Descriere
+field,"crm.segmentation,name",0,Segmentation Name,Nume segment
+field,"crm.segmentation,som_interval_max",0,Max Interval for Computation,Interval maxim de calcul
+field,"crm.segmentation,categ_id",0,Partner Category,Categorie partener
+field,"crm.segmentation,som_interval_default",0,Default Factor (0 = None),Factor implicit
+field,"crm.segmentation,segmentation_line",0,Criterions,Criterii
+field,"crm.segmentation,som_interval_decrease",0,Decrease factor (0.0 > 1.0),Factor de descrestere (0.0>1.0)
+field,"crm.segmentation,state",0,Execution State,Starea de executie
+field,"crm.segmentation,exclusif",0,Exclusive Selection,Selectie exclusiva
+field,"crm.segmentation,partner_id",0,Max Partner ID processed,Max ID partener procesat
+field,"crm.segmentation,som_interval",0,Number of day per Periode,Nr. de zile per perioada
+field,"crm.segmentation,description",0,Description,Descriere
+field,"crm.segmentation.line,name",0,Segmentation Name,Nume de segmentare
+field,"crm.segmentation.line,segmentation_id",0,Segmentation,Segmentare
+field,"crm.segmentation.line,expr_name",0,Control Variable,Variabla de control
+field,"crm.segmentation.line,expr_value",0,Value,Valoare
+field,"crm.segmentation.line,operator",0,Mandatory / Optionnal,Obligatoire / Facultativ
+field,"crm.segmentation.line,expr_operator",0,Operator,Operator
+field,"ir.actions.act_window,domain",0,Domain Value,Domeniu
+field,"ir.actions.act_window,name",0,Action Name,Nume actiune
+model,"ir.actions.act_window,name",1,ir.ui.menu.tree.admin,
+model,"ir.actions.act_window,name",2,ir.ui.menu.tree.user,
+model,"ir.actions.act_window,name",3,ir.sequence.type,
+model,"ir.actions.act_window,name",4,ir.sequence,
+model,"ir.actions.act_window,name",5,ir.actions.actions,
+model,"ir.actions.act_window,name",6,ir.actions.execute,
+model,"ir.actions.act_window,name",7,ir.actions.group,
+model,"ir.actions.act_window,name",8,ir.actions.report.custom,
+model,"ir.actions.act_window,name",9,ir.actions.report.xml,
+model,"ir.actions.act_window,name",10,ir.actions.act_window,
+model,"ir.actions.act_window,name",11,ir.actions.wizard,
+model,"ir.actions.act_window,name",12,res.users,
+model,"ir.actions.act_window,name",13,res.groups,
+model,"ir.actions.act_window,name",14,res.roles.tree,
+model,"ir.actions.act_window,name",15,ir.ui.view,
+model,"ir.actions.act_window,name",16,ir.attachment,
+model,"ir.actions.act_window,name",17,ir.report.custom,
+model,"ir.actions.act_window,name",18,ir.translation.view,
+model,"ir.actions.act_window,name",27,Company Architecture,
+model,"ir.actions.act_window,name",29,res.lang,
+model,"ir.actions.act_window,name",112,ir.ui.menu.tree.admin,
+model,"ir.actions.act_window,name",113,ir.ui.menu.tree.user,
+model,"ir.actions.act_window,name",114,ir.sequence.type,
+model,"ir.actions.act_window,name",115,ir.sequence,
+model,"ir.actions.act_window,name",116,ir.actions.actions,
+model,"ir.actions.act_window,name",117,ir.actions.execute,
+model,"ir.actions.act_window,name",118,ir.actions.group,
+model,"ir.actions.act_window,name",119,ir.actions.report.custom,
+model,"ir.actions.act_window,name",120,ir.actions.report.xml,
+model,"ir.actions.act_window,name",121,ir.actions.act_window,
+model,"ir.actions.act_window,name",122,ir.actions.wizard,
+model,"ir.actions.act_window,name",123,res.users,
+model,"ir.actions.act_window,name",124,res.groups,
+model,"ir.actions.act_window,name",125,res.roles.tree,
+model,"ir.actions.act_window,name",126,ir.ui.view,
+model,"ir.actions.act_window,name",127,ir.attachment,
+model,"ir.actions.act_window,name",128,ir.report.custom,
+model,"ir.actions.act_window,name",129,ir.translation.view,
+model,"ir.actions.act_window,name",138,Company Architecture,
+model,"ir.actions.act_window,name",140,res.lang,
+model,"ir.actions.act_window,name",223,ir.ui.menu.tree.admin,
+model,"ir.actions.act_window,name",224,ir.ui.menu.tree.user,
+model,"ir.actions.act_window,name",225,ir.sequence.type,
+model,"ir.actions.act_window,name",226,ir.sequence,
+model,"ir.actions.act_window,name",227,ir.actions.actions,
+model,"ir.actions.act_window,name",228,ir.actions.execute,
+model,"ir.actions.act_window,name",229,ir.actions.group,
+model,"ir.actions.act_window,name",230,ir.actions.report.custom,
+model,"ir.actions.act_window,name",231,ir.actions.report.xml,
+model,"ir.actions.act_window,name",232,ir.actions.act_window,
+model,"ir.actions.act_window,name",233,ir.actions.wizard,
+model,"ir.actions.act_window,name",234,res.users,
+model,"ir.actions.act_window,name",235,res.groups,
+model,"ir.actions.act_window,name",236,res.roles.tree,
+model,"ir.actions.act_window,name",237,ir.ui.view,
+model,"ir.actions.act_window,name",238,ir.attachment,
+model,"ir.actions.act_window,name",239,ir.report.custom,
+model,"ir.actions.act_window,name",240,ir.translation.view,
+model,"ir.actions.act_window,name",241,res.project,
+model,"ir.actions.act_window,name",242,res.request.form,
+model,"ir.actions.act_window,name",245,res.partner,
+model,"ir.actions.act_window,name",246,res.partner.address,
+model,"ir.actions.act_window,name",247,res.partner,
+model,"ir.actions.act_window,name",248,res.partner,
+model,"ir.actions.act_window,name",249,Company Architecture,
+model,"ir.actions.act_window,name",250,res.partner.category,
+model,"ir.actions.act_window,name",251,res.lang,
+model,"ir.actions.act_window,name",254,res.partner.canal.form,
+model,"ir.actions.act_window,name",255,res.partner.som.form,
+model,"ir.actions.act_window,name",256,campaign.campaign.tree,
+model,"ir.actions.act_window,name",257,campaign.campaign.form,
+model,"ir.actions.act_window,name",258,campaign.partner.open,
+model,"ir.actions.act_window,name",259,account.currency,
+model,"ir.actions.act_window,name",260,account.account.form,
+model,"ir.actions.act_window,name",261,account.account.tree,
+model,"ir.actions.act_window,name",262,account.move.line.tree1,
+model,"ir.actions.act_window,name",263,account.move.line.treeform,
+model,"ir.actions.act_window,name",264,account.move.line.form,
+model,"ir.actions.act_window,name",265,account.move.form,
+model,"ir.actions.act_window,name",266,account.tax,
+model,"ir.actions.act_window,name",267,account.invoice,
+model,"ir.actions.act_window,name",268,account.invoice,
+model,"ir.actions.act_window,name",269,account.invoice,
+model,"ir.actions.act_window,name",270,account.invoice,
+model,"ir.actions.act_window,name",271,account.invoice,
+model,"ir.actions.act_window,name",272,account.invoice,
+model,"ir.actions.act_window,name",273,account.invoice,
+model,"ir.actions.act_window,name",274,account.invoice,
+model,"ir.actions.act_window,name",275,account.invoice,
+model,"ir.actions.act_window,name",276,account.invoice,
+model,"ir.actions.act_window,name",277,account.transfer.form,
+model,"ir.actions.act_window,name",284,crm.case.categ.form,
+model,"ir.actions.act_window,name",285,crm.case.form,
+model,"ir.actions.act_window,name",286,crm.case.form,
+model,"ir.actions.act_window,name",287,crm.case.form,
+model,"ir.actions.act_window,name",288,crm.case.form,
+model,"ir.actions.act_window,name",289,crm.case.form,
+model,"ir.actions.act_window,name",290,crm.case.form,
+model,"ir.actions.act_window,name",291,crm.case.form,
+model,"ir.actions.act_window,name",292,crm.case.form,
+model,"ir.actions.act_window,name",293,crm.case.form,
+model,"ir.actions.act_window,name",294,crm.segmentation.form,
+model,"ir.actions.act_window,name",295,crm.segmentation.tree,
+model,"ir.actions.act_window,name",297,product.variant.form,
+model,"ir.actions.act_window,name",298,product.template.form,
+model,"ir.actions.act_window,name",299,product.normal.form,
+model,"ir.actions.act_window,name",300,product.category.form,
+model,"ir.actions.act_window,name",301,product.normal.form,
+model,"ir.actions.act_window,name",302,product.pricelist.form,
+model,"ir.actions.act_window,name",303,product.pricelist.form,
+model,"ir.actions.act_window,name",304,stock.lot.inventory,
+model,"ir.actions.act_window,name",305,stock.lot.form,
+model,"ir.actions.act_window,name",306,stock.location,
+model,"ir.actions.act_window,name",307,stock.location.tree,
+model,"ir.actions.act_window,name",308,stock.warehouse,
+model,"ir.actions.act_window,name",309,stock.packing,
+model,"ir.actions.act_window,name",310,stock.packing,
+model,"ir.actions.act_window,name",311,stock.packing,
+model,"ir.actions.act_window,name",312,stock.packing,
+model,"ir.actions.act_window,name",313,stock.packing,
+model,"ir.actions.act_window,name",314,stock.packing,
+model,"ir.actions.act_window,name",315,stock.packing,
+model,"ir.actions.act_window,name",316,stock.packing,
+model,"ir.actions.act_window,name",317,stock.packing,
+model,"ir.actions.act_window,name",318,stock.packing,
+model,"ir.actions.act_window,name",319,stock.move,
+model,"ir.actions.act_window,name",320,stock.shipping,
+model,"ir.actions.act_window,name",321,stock.shipping,
+model,"ir.actions.act_window,name",322,stock.shipping,
+model,"ir.actions.act_window,name",323,stock.shipping,
+model,"ir.actions.act_window,name",328,purchase.order.form,
+model,"ir.actions.act_window,name",330,sale.shop,
+model,"ir.actions.act_window,name",331,sale.order,
+model,"ir.actions.act_window,name",332,sale.order,
+field,"ir.actions.act_window,view_type",0,Type of view,Tip de view(visualizare)
+field,"ir.actions.act_window,res_model",0,Model,Model
+field,"ir.actions.act_window,view_id",0,View Ref.,Referinta view
+field,"ir.actions.act_window,type",0,Action Type,Tip de actiune
+field,"ir.actions.actions,type",0,Action Type,Tip de actiune
+field,"ir.actions.actions,name",0,Action Name,Nume actiune
+field,"ir.actions.execute,func_name",0,Function Name,Nume functie
+field,"ir.actions.execute,func_arg",0,Function Argument,Argument functie
+field,"ir.actions.execute,type",0,type,tip
+field,"ir.actions.execute,name",0,name,nume
+field,"ir.actions.group,type",0,Action Type,Tip de actiune
+field,"ir.actions.group,name",0,Group Name,Nume grup
+field,"ir.actions.group,exec_type",0,Execution sequence,Secventa de executie
+field,"ir.actions.report.custom,type",0,Report Type,Tip de raport
+field,"ir.actions.report.custom,name",0,Report Name,Nume de raport
+field,"ir.actions.report.custom,report_id",0,Report Ref.,Ref.Raport
+field,"ir.actions.report.xml,report_xsl",0,XML,XML
+field,"ir.actions.report.xml,name",0,XML-Report Name,Nume raport-XML
+model,"ir.actions.report.xml,name",243,Labels,Etichete
+model,"ir.actions.report.xml,name",244,Identifiants,Identifiant
+model,"ir.actions.report.xml,name",278,Invoices List,Lista de facturis
+model,"ir.actions.report.xml,name",279,Recall List,Lista de apel!
+model,"ir.actions.report.xml,name",280,Transfer List,Lista de transfer
+model,"ir.actions.report.xml,name",296,Business Opportunities,Oportunitati de afaceri
+model,"ir.actions.report.xml,name",324,Picking List,Lista pentru impachetat
+model,"ir.actions.report.xml,name",325,Shipping List,Lista de expediere
+model,"ir.actions.report.xml,name",326,Stock Overview,Visualizare stocuri
+model,"ir.actions.report.xml,name",327,Stock Overview (by address),Visualizare stocuri (pe adrese)
+model,"ir.actions.report.xml,name",329,Purchase Orders,Comanda de cumparare
+model,"ir.actions.report.xml,name",333,Sale Orders,Comanda de vinzare
+field,"ir.actions.report.xml,auto",0,Automatic XSL:RML,XSL:RML Automat
+field,"ir.actions.report.xml,report_name",0,XML,XML
+field,"ir.actions.report.xml,model",0,Report Type,Tip de raport
+field,"ir.actions.report.xml,type",0,Report Type,Tip de raport
+field,"ir.actions.report.xml,report_xml",0,XML,XML
+field,"ir.actions.wizard,wiz_name",0,Wizard name,Nume asistent
+field,"ir.actions.wizard,type",0,Action type,Tip de actiune
+field,"ir.actions.wizard,name",0,Wizard info,Informatii despre asistent
+model,"ir.actions.wizard,name",252,Mass Mailing,Posta
+model,"ir.actions.wizard,name",253,Send SMS,Trimite un SMS
+model,"ir.actions.wizard,name",281,Reconcile Transactions,Negociere tranzactie
+model,"ir.actions.wizard,name",282,Split Invoice,Imparte factura
+model,"ir.actions.wizard,name",283,Refund Invoice,Ramburseaza
+field,"ir.attachment,description",0,Description,Descriere
+field,"ir.attachment,res_model",0,Ressource Model,Resursa Model
+field,"ir.attachment,datas_fname",0,Datass Filename,Nume de fisier de date
+field,"ir.attachment,res_id",0,Ressource ID,ID resursa
+field,"ir.attachment,datas",0,Datas,Date
+field,"ir.attachment,name",0,Attachement Name,Nume atasare
+field,"ir.cron,function",0,Function,Functie
+field,"ir.cron,uid",0,User,Utilisator
+field,"ir.cron,multicall",0,Multiple Call,Apeluri multiple
+field,"ir.cron,args",0,Arguments,Argumente
+field,"ir.cron,delete_after",0,Delete after execution,Suprima dupa executie
+field,"ir.cron,interval_max",0,Max Interval Number,Interval maxim
+field,"ir.cron,active",0,Active,Activ
+field,"ir.cron,on_error",0,On Error,In caz de eroare
+field,"ir.cron,interval_int",0,Interval Number,Interval(numar)
+field,"ir.cron,max_repeat",0,Maximum Repetition,Repetare maximum
+field,"ir.cron,date",0,Next Date,Dat urmatoare
+field,"ir.cron,model",0,Model,Model
+field,"ir.cron,interval_uom",0,Interval Unit,Unitate(interval)
+field,"ir.cron,name",0,Name,Nume
+field,"ir.default,uid",0,Users,Utilisatori
+field,"ir.default,ref_table",0,Table Ref.,Tabela de Ref. 
+field,"ir.default,value",0,Default Value,Valoare implicita
+field,"ir.default,ref_id",0,ID Ref.,Referinta ID
+field,"ir.default,field_tbl",0,Model,Model
+field,"ir.default,field_name",0,Model field,Cimp de model
+field,"ir.default,page",0,View,View(Visualizare)
+field,"ir.report.custom,print_format",0,Print format,Format de imprimare
+field,"ir.report.custom,title",0,Report Header,Antet raport
+field,"ir.report.custom,repeat_header",0,Repeat Header,Repetare antet
+field,"ir.report.custom,footer",0,Report Footer,Nota de picior rapport
+field,"ir.report.custom,totalonly",0,Show totals only,Afisare numai  totaluri
+field,"ir.report.custom,fields_id",0,Fields,Cimpuri
+field,"ir.report.custom,sortby",0,Sorted By, Sorteaza 
+field,"ir.report.custom,print_orientation",0,Print orientation,Orientare
+field,"ir.report.custom,model",0,Model,Model
+field,"ir.report.custom,groupby",0,Grouped By,Groupeaza 
+field,"ir.report.custom,name",0,Report Name,Nume raport
+field,"ir.report.custom.fields,calc_sum",0,Calculate Sum,Calculeaza suma
+field,"ir.report.custom.fields,name",0,Name,Nume
+field,"ir.report.custom.fields,calc_avg",0,Calculate Average,Calculeaza media
+field,"ir.report.custom.fields,bgcolor",0,Background Color,Coloare de fond
+field,"ir.report.custom.fields,calc_count",0,Calculate Count,Calculeaza numarul
+field,"ir.report.custom.fields,priority",0,Priority,Prioritate
+field,"ir.report.custom.fields,width",0,Fixed Width,Largime fixa
+field,"ir.report.custom.fields,fontcolor",0,Font color,Coloare fontului
+field,"ir.report.custom.fields,report_id",0,Report Ref,Ref. raportului
+field,"ir.report.custom.fields,alignment",0,Alignment,Aliniere
+field,"ir.report.custom.fields,string",0,String,Sir de caractere
+field,"ir.sequence,code",0,Sequence Code,Cod de numerotare
+field,"ir.sequence,name",0,Sequence Name,Nume numerotare
+field,"ir.sequence,number_next",0,Next Number,Urmatorul numar
+field,"ir.sequence,number_increment",0,Increment Number,Incrementare numar
+field,"ir.sequence,prefix",0,Prefix,Prefix
+field,"ir.sequence,active",0,Active,Activ
+field,"ir.sequence,suffix",0,Suffix,Sufix
+field,"ir.sequence.type,code",0,Sequence Code,Cod de numerotare
+field,"ir.sequence.type,name",0,Sequence Name,Nume de numerotare
+field,"ir.translation,lang",0,Language,Limba
+field,"ir.translation,src",0,Source,Sursa
+field,"ir.translation,name",0,Name Field,Nume cimp
+field,"ir.translation,type",0,Type,Tip
+field,"ir.translation,value",0,Translation Value,Suma tranzactiei
+field,"ir.translation,res_id",0,Ressource ID,Resursa
+field,"ir.ui.menu,parent_id",0,Parent Menu,Meniu parinte
+field,"ir.ui.menu,child_id",0,Childs,Meniu fiu
+field,"ir.ui.menu,name",0,Menu,Meniu
+model,"ir.ui.menu,name",1,Menu,Meniu
+model,"ir.ui.menu,name",3,Operations,Operatii
+model,"ir.ui.menu,name",4,Definitions,Definitii
+model,"ir.ui.menu,name",5,Administration,Administrare
+model,"ir.ui.menu,name",6,Sequences,Numerotare documente
+model,"ir.ui.menu,name",8,Sequences,Numerotare documente
+model,"ir.ui.menu,name",9,Actions,Actiuni
+model,"ir.ui.menu,name",10,Actions,Actiuni
+model,"ir.ui.menu,name",11,Execute,Executa
+model,"ir.ui.menu,name",12,Group,Grupeza
+model,"ir.ui.menu,name",13,Report Custom,Raport personalizat
+model,"ir.ui.menu,name",14,Report Xml,Raport XML
+model,"ir.ui.menu,name",15,Open Window,Deschide ecran(fereastra)
+model,"ir.ui.menu,name",16,Wizard,Asistent
+model,"ir.ui.menu,name",17,Users,Utilizatori
+model,"ir.ui.menu,name",18,Users,Utilizatori
+model,"ir.ui.menu,name",19,Groups,Grupuri
+model,"ir.ui.menu,name",20,Roles,Roluri
+model,"ir.ui.menu,name",21,Interface,Interfete
+model,"ir.ui.menu,name",22,View,View(Vedere)
+model,"ir.ui.menu,name",23,Attachements,Fisiere atasate
+model,"ir.ui.menu,name",24,Report,Raport
+model,"ir.ui.menu,name",25,Report Custom,Raport personalizat
+model,"ir.ui.menu,name",26,Translations,Traduceri
+model,"ir.ui.menu,name",27,Translations,Traduceri
+model,"ir.ui.menu,name",28,Base,Baza
+model,"ir.ui.menu,name",29,Projects,Proiecte
+model,"ir.ui.menu,name",30,Requests,Cereri
+model,"ir.ui.menu,name",31,All Requests,Toate cererile
+model,"ir.ui.menu,name",32,Partners,Parteneri
+model,"ir.ui.menu,name",33,Partner Contacts,Contacte
+model,"ir.ui.menu,name",34,Partners,Parteneri
+model,"ir.ui.menu,name",35,Partners Categories,Categorie parteneri
+model,"ir.ui.menu,name",36,Base,Baza
+model,"ir.ui.menu,name",37,Languages,Limbaje
+model,"ir.ui.menu,name",38,CRM,CRM
+model,"ir.ui.menu,name",39,Canals,Canale
+model,"ir.ui.menu,name",40,States of Mind,Stare de spirit
+model,"ir.ui.menu,name",41,Marketing,Marketing
+model,"ir.ui.menu,name",42,Campaigns,Campanii
+model,"ir.ui.menu,name",43,Marketing,Marketing
+model,"ir.ui.menu,name",44,Campaign Definition,Definire campanie
+model,"ir.ui.menu,name",45,Accounting,Contabilitate
+model,"ir.ui.menu,name",46,Currency,Devize
+model,"ir.ui.menu,name",47,Accounting,Contabilitate 
+model,"ir.ui.menu,name",48,Account Trees,Arborele de conturi
+model,"ir.ui.menu,name",49,Low Level,Nivel Tranzactii
+model,"ir.ui.menu,name",50,Account Move Line,Linii cu tranzactii
+model,"ir.ui.menu,name",51,Account Move,Tranzactii
+model,"ir.ui.menu,name",52,Tax,Taxe
+model,"ir.ui.menu,name",53,All Invoices,Tooate facturile
+model,"ir.ui.menu,name",54,Customers Invoices,Facturi clienti
+model,"ir.ui.menu,name",55,Draft Invoices,Factura deviz
+model,"ir.ui.menu,name",56,PRO-FORMA,Pro-forma
+model,"ir.ui.menu,name",57,Opened Invoices,Factures deschise
+model,"ir.ui.menu,name",58,Suppliers Invoices,Facturi furnizori
+model,"ir.ui.menu,name",59,Draft,Deviz factura
+model,"ir.ui.menu,name",60,Opened,Facturi deschise
+model,"ir.ui.menu,name",61,Customers Refund,Rambursari clienti
+model,"ir.ui.menu,name",62,Draft,Deviz factura
+model,"ir.ui.menu,name",63,Opened,Facturi deschise
+model,"ir.ui.menu,name",64,Suppliers Refund,Rembursari furnizori
+model,"ir.ui.menu,name",65,Draft,Deviz
+model,"ir.ui.menu,name",66,Opened,Facturi deschise
+model,"ir.ui.menu,name",67,Transfers,Tranzactii
+model,"ir.ui.menu,name",68,Case Categories,Categori Tip 
+model,"ir.ui.menu,name",69,Helpdesk,Helpdesk
+model,"ir.ui.menu,name",70,All Cases,Toate cazurile
+model,"ir.ui.menu,name",71,Available Cases,Caz in curs
+model,"ir.ui.menu,name",72,My Cases,  Tipurile mele
+model,"ir.ui.menu,name",73,Sales,Vinzari
+model,"ir.ui.menu,name",74,Business Opportunities,Oportunitati comerciale
+model,"ir.ui.menu,name",75,All Business Opportunities,Toate oportunitatile comerciale
+model,"ir.ui.menu,name",76,Available Business Opportunities,Oportunitati comerciale in curs
+model,"ir.ui.menu,name",77,My Business Opportunities,Mes opportunit√©s commerciales
+model,"ir.ui.menu,name",78,Purchase,Cumparari
+model,"ir.ui.menu,name",79,Purchase Opportunities,Oportunitati de cumparari
+model,"ir.ui.menu,name",80,All Purchase Opportunities,Toate oportunitatile de cumparari
+model,"ir.ui.menu,name",81,Available Purchase Opportunities,Oportunitati de cumparare in curs
+model,"ir.ui.menu,name",82,My Purchase Opportunities,Oportunitatile mele de cumparari
+model,"ir.ui.menu,name",83,Automatic Segmentations,Segmentare automatica
+model,"ir.ui.menu,name",84,CRM,CRM
+model,"ir.ui.menu,name",85,Automatic Segmentations,Segmentare automatica
+model,"ir.ui.menu,name",86,Products,Produse
+model,"ir.ui.menu,name",87,Products With Variations,Produse cu variante
+model,"ir.ui.menu,name",88,Variations,Variante
+model,"ir.ui.menu,name",89,Templates,Modele
+model,"ir.ui.menu,name",90,Products,Produse
+model,"ir.ui.menu,name",91,Categories,Categorii
+model,"ir.ui.menu,name",92,Pricelists,Tarife
+model,"ir.ui.menu,name",93,Pricelists Version,Versioni de tarife
+model,"ir.ui.menu,name",94,Pricelists,Tarife
+model,"ir.ui.menu,name",95,Stock,Stoc
+model,"ir.ui.menu,name",96,Lot Inventory,Inventar des loturi
+model,"ir.ui.menu,name",97,All Lots,Toate loturile
+model,"ir.ui.menu,name",98,Stock,Stoc
+model,"ir.ui.menu,name",99,Location,Locatii (Sedii)
+model,"ir.ui.menu,name",100,Location Tree,Arborescenta de  locatii de stocaj
+model,"ir.ui.menu,name",101,Warehouse,Antrepot
+model,"ir.ui.menu,name",102,All Picking Lists,Punere in colete
+model,"ir.ui.menu,name",103,Sending Goods,Expedirea Marfii
+model,"ir.ui.menu,name",104,Pickings waiting delivery,Colite in asteptare de expediere
+model,"ir.ui.menu,name",105,Draft Pickings for delivery, Avize luate pentru colete
+model,"ir.ui.menu,name",106,Getting Goods,Receptia de marfuri
+model,"ir.ui.menu,name",107,Pickings to process for goods reception,Receptie in curs
+model,"ir.ui.menu,name",108,Draft Pickings for goods reception, Avize pentru receptie de bunuri
+model,"ir.ui.menu,name",109,Internal picking lists,Lista de punere in colete interna
+model,"ir.ui.menu,name",110,Internal pickings,Punerea in colete interna
+model,"ir.ui.menu,name",111,Internal Picking lists to process,Punerea in colet interna in curs
+model,"ir.ui.menu,name",112,Draft Internal Picking lists,Aviz de punere in colet intern
+model,"ir.ui.menu,name",113,Move,Miscare de stoc
+model,"ir.ui.menu,name",114,Shipping,Marfuri in asteptare
+model,"ir.ui.menu,name",115,Goods waiting shipping,Marfuri in asteptare de expedire
+model,"ir.ui.menu,name",116,Goods waiting reception,Marfuri in asteptare de receptie
+model,"ir.ui.menu,name",117,Waiting Internal Shippings,Expedirea interna in asteptare
+model,"ir.ui.menu,name",118,Order,Comenzi
+model,"ir.ui.menu,name",119,Sales,Vinzari
+model,"ir.ui.menu,name",120,Shop,Magasin
+model,"ir.ui.menu,name",121,Order,Comanzi
+model,"ir.ui.menu,name",122,Order POS,Comande de punere in vinzare
+field,"ir.ui.view,name",0,View Name,Nume vedere(view)
+field,"ir.ui.view,type",0,View Type,Tip de vedere view
+field,"ir.ui.view,priority",0,Priority,Prioritate
+field,"ir.ui.view,model",0,Model,Model
+field,"ir.ui.view,arch",0,View Architecture,Architectura vederii (view)
+field,"ir.ui.view,field_parent",0,Childs Field,Cimp copii
+field,"ir.ui.view_sc,resource",0,Resource Name,Nume resursa
+field,"ir.ui.view_sc,user_id",0,User Ref.,Ref. utilisator
+field,"ir.ui.view_sc,res_id",0,Resource Ref.,Ref. resursa
+field,"ir.ui.view_sc,name",0,Shortcut Name,Nume prescurtat
+field,"ir.values,key_id",0,Last Key,Ultima cheie
+field,"ir.values,object",0,Is Object,Obiect
+field,"ir.values,meta",0,Meta Datas,Meta-date
+field,"ir.values,name",0,Name,Nume
+field,"ir.values,value",0,Value,Valoare
+field,"ir.values.keys,parent_id",0,Last Key,Ultima cheie
+field,"ir.values.keys,value",0,Value,Valoare
+field,"ir.values.keys,key",0,Name,Nume
+field,"product.category,parent_id",0,Parent Category,Categorie parinte
+field,"product.category,child_id",0,Childs Categories,Categorie fiu
+field,"product.category,name",0,Name,Nume
+field,"product.pricelist,active",0,Active,Activ
+field,"product.pricelist,name",0,Name,Nume
+field,"product.pricelist,version_id",0,Pricelist Versions,Versiuni de tarife
+field,"product.pricelist.item,limit_price_max_margin",0,Limit Price Max. Margin,Marja pentru Pretul limita
+field,"product.pricelist.item,standard_price_base",0,Standard Price Base,Baza de pret standard
+field,"product.pricelist.item,list_price_surcharge",0,List Price Surcharge,Marirea tarifului
+field,"product.pricelist.item,min_quantity",0,Min. Quantity,Cantitatea minima
+field,"product.pricelist.item,list_price_min_margin",0,List Price Min. Margin,Marja Min. pentru pretul de lista 
+field,"product.pricelist.item,limit_price_discount",0,Limit Price Discount,Limite de reducere a pretului
+field,"product.pricelist.item,standard_price_surcharge",0,Standard Price Surcharge,Depasire Pret standard
+field,"product.pricelist.item,product_tmpl_id",0,Product Template,Produs model
+field,"product.pricelist.item,priority",0,Priority,Prioritate
+field,"product.pricelist.item,standard_price_max_margin",0,Standard Price Max. Margin,Marja Max. pentru pretul standard
+field,"product.pricelist.item,price_version_id",0,Price List Version,Versiuni tarif
+field,"product.pricelist.item,list_price_max_margin",0,List Price Max. Margin,Marja Max. pentru pretul de lista
+field,"product.pricelist.item,limit_price_min_margin",0,Limit Price Min. Margin,Marja Min. pentru pretul de lista
+field,"product.pricelist.item,base",0,Based on,Bazat pe 
+field,"product.pricelist.item,limit_price_surcharge",0,Limit Price Surcharge,Limita de depasire a pretului
+field,"product.pricelist.item,list_price_discount",0,List Price Discount,Limita de reducere a pretului
+field,"product.pricelist.item,categ_id",0,Product Category,Categorii de pret
+field,"product.pricelist.item,standard_price_discount",0,Standard Price Discount,Reducerea pretului standard
+field,"product.pricelist.item,name",0,Name,Nume
+field,"product.pricelist.item,base_pricelist_id",0,Base Price List,Tarif de baza
+field,"product.pricelist.item,list_price_round",0,List Price Rounding,Rotunjire pret de lista
+field,"product.pricelist.item,standard_price_min_margin",0,Standard Price Min. Margin,Marja Min. pentru pretul standard
+field,"product.pricelist.item,list_price_base",0,List Price Base,Baza pretului de lista
+field,"product.pricelist.item,standard_price_round",0,Standard Price Rounding,Rotiunjire pret standard
+field,"product.pricelist.item,limit_price_base",0,Limit Price Base,Baza pret limita
+field,"product.pricelist.item,limit_price_round",0,Limit Price Rounding,Rotunjire pret limita
+field,"product.pricelist.version,items_id",0,Price List Items,Linii de tarif
+field,"product.pricelist.version,name",0,Name,Nume
+field,"product.pricelist.version,date_end",0,End Date,Data de sfirsit
+field,"product.pricelist.version,date_start",0,Start Date,Data de inceput
+field,"product.pricelist.version,active",0,Active,Activ
+field,"product.pricelist.version,pricelist_id",0,Price List,Tarife
+field,"product.product,list_price_extra",0,List Price Extra,Lista de preturi extra
+field,"product.product,code",0,Code,Cod
+field,"product.product,standard_price_extra",0,Standard Price Extra, Pret standard Extra
+field,"product.product,limit_price_extra",0,Limit Price Extra,Limita pret extra
+field,"product.product,price",0,Customer Price,Pret client
+field,"product.product,product_tmpl_id",0,Product Template,Model dede produs
+field,"product.product,list_price_margin",0,List Price Margin, Marja / pret lista
+field,"product.product,limit_price_margin",0,Limit Price Margin,Marja / pret lista
+field,"product.product,active",0,Active,Activ
+field,"product.product,qty_available",0,Qutee disponible,Cantitate disponibla
+field,"product.product,variants",0,Variants,Variante
+field,"product.product,standard_price_margin",0,Standard Price Margin,Marja / pret standard 
+field,"product.template,seller_id",0,Retailer, Vinzator cu amanuntul
+field,"product.template,list_price",0,List Price,Pret lista
+field,"product.template,name",0,Name,Nume
+field,"product.template,type",0,Product Type,Tip de produs
+field,"product.template,standard_price",0,Standard Price,Pret standard
+field,"product.template,limit_price",0,Limit Price,Pret limita
+field,"product.template,taxes_id",0,Product Taxes,Taxe produs
+field,"product.template,cost_method",0,Costing Method,Methoda de cost
+field,"product.template,categ_id",0,Category,Categorie
+field,"product.template,description",0,Description,Descriere
+field,"purchase.order,purchase_rep",0,Purchase Representative,Reprezentant comercial
+field,"purchase.order,partner_ref",0,Partner Reference,Referinta Partener
+field,"purchase.order,name",0,Order Description,Descriere comanda
+field,"purchase.order,date_promise",0,Date Promised,Data promisa
+field,"purchase.order,order_line",0,Order State,Raport de comanda
+field,"purchase.order,partner_id",0,Partner,Partener
+field,"purchase.order,notes",0,Notes,Nota
+field,"purchase.order,partner_address_id",0,Address,Adresa
+field,"purchase.order,shipped",0,Shipped,Livrat
+field,"purchase.order,warehouse_id",0,Warehouse,Depozit
+field,"purchase.order,project_id",0,Project,Proiect
+field,"purchase.order,state",0,Order State,Raport comanda
+field,"purchase.order,contact",0,Partner Contact,Contact partener
+field,"purchase.order,invoiced",0,Invoiced,Facturat
+field,"purchase.order,invoice_id",0,Invoice,Factura
+field,"purchase.order,pricelist_id",0,Pricelist,Tarif
+field,"purchase.order,date_order",0,Date Ordered,Data comenzii
+field,"purchase.order,ref",0,Order Reference,Ref. comanda
+field,"purchase.order,shipping_id",0,Shipping,Livrare
+field,"purchase.order.line,product_id",0,Product,Produs
+field,"purchase.order.line,date_promise",0,Date Promised,Data promisa
+field,"purchase.order.line,order_id",0,Order Ref,Ref. Comanda
+field,"purchase.order.line,price_unit",0,Unit Price,Pret unitar
+field,"purchase.order.line,taxes_id",0,Taxes,Taxe
+field,"purchase.order.line,quantity",0,Quantity,Cantitate
+field,"purchase.order.line,notes",0,Notes,Note
+field,"purchase.order.line,name",0,Description,Descriere
+field,"res.country,code",0,Country Code,Cod tara
+field,"res.country,name",0,Country Name,Nume tara
+field,"res.country.state,code",0,State Code,Stare(statut) Code
+field,"res.country.state,country_id",0,Country,Tara
+field,"res.country.state,name",0,State Name,Nume de raport
+field,"res.groups,name",0,Group Name,Nume grup
+field,"res.lang,active",0,Active,Activ
+field,"res.lang,code",0,Code,Cod
+field,"res.lang,name",0,Name,Nume
+field,"res.partner,lang",0,Langage,Limba
+field,"res.partner,website",0,Website,Situl Web
+field,"res.partner,name",0,Name,Nom
+field,"res.partner,credit",0,Credit,Credit
+field,"res.partner,commercial",0,Commercial,Comercial
+field,"res.partner,debit",0,Debit,Debit
+field,"res.partner,child_ids",0,Partner Ref.,Ref. Partener
+field,"res.partner,comment",0,Notes,Note
+field,"res.partner,parent_id",0,Main Company,Compania mama
+field,"res.partner,name2",0,Corporation Type,Tip de corporatie
+field,"res.partner,bank",0,Bank account,Cont bancar
+field,"res.partner,address",0,Contacts,Adresa
+field,"res.partner,category_id",0,Categories,Categorii
+field,"res.partner,ref",0,Identifiant,Identifiant
+field,"res.partner,events",0,events,Evenimente
+field,"res.partner,vat",0,VAT,TVA
+field,"res.partner.address,city",0,City,Oras
+field,"res.partner.address,fax",0,Fax,Fax
+field,"res.partner.address,name",0,Contact Name,Contact
+field,"res.partner.address,zip",0,Zip,Cod postal
+field,"res.partner.address,title",0,Title,Titlu
+field,"res.partner.address,mobile",0,Mobile,GSM
+field,"res.partner.address,partner_id",0,Partner,Ref. Partener
+field,"res.partner.address,phone",0,Phone,Telefon
+field,"res.partner.address,state",0,State,Stat
+field,"res.partner.address,street",0,Street,Statda
+field,"res.partner.address,country",0,Country,Tara
+field,"res.partner.address,type",0,Address Type,Tip adresa
+field,"res.partner.address,email",0,E-Mail,Email
+field,"res.partner.canal,active",0,Active,Activ
+field,"res.partner.canal,name",0,Canal Name,Nume canal
+field,"res.partner.category,name",0,Category Name,Nume categorie
+field,"res.partner.event,user_id",0,User,Utilisator
+field,"res.partner.event,name",0,Events,Evenimente
+field,"res.partner.event,probability",0,Probability (0.50),Probabilite
+field,"res.partner.event,canal_id",0,Canal,Canal
+field,"res.partner.event,partner_id",0,Partner,Partener
+field,"res.partner.event,planned_cost",0,Planned Cost,Cost estimat
+field,"res.partner.event,som",0,State of Mind,Stare spirit
+field,"res.partner.event,partner_type",0,Partner Relation,Relatie Partener
+field,"res.partner.event,type",0,Type of Event,Tip de eveniment
+field,"res.partner.event,date",0,Date,Data
+field,"res.partner.event,document",0,Document,Document
+field,"res.partner.event,planned_revenue",0,Planned Revenue,Venituri planificate
+field,"res.partner.event,description",0,Description,Description
+field,"res.partner.som,name",0,State of Mind,Stare spirit
+field,"res.partner.som,factor",0,Factor,Factor(Postas)
+field,"res.project,name",0,Name,Nume
+field,"res.project,description",0,Description,Descriere
+field,"res.request,act_title",0,Action Result,Resultat actiune
+field,"res.request,name",0,Request Description,Descriere
+field,"res.request,ref_partner_id",0,Partner Ref.,Ref. Partener
+field,"res.request,ref_doc2",0,Document Ref 2,Ref. document 2
+field,"res.request,act_result",0,Action Result Details,Resultat actiunii (detalii)
+field,"res.request,req_history",0,Request History,Istoric cererii
+field,"res.request,req_priority",0,Priority,Prioritate
+field,"res.request,ref_doc1",0,Document Ref 1,Ref. Document 1
+field,"res.request,state",0,State,Raport
+field,"res.request,act_from",0,Request From,Cerere de 
+field,"res.request,act_to",0,Request To,Cerere pentru
+field,"res.request,req_doc_type",0,Document Type,Tip de documente
+field,"res.request,req_type",0,Request Type,Tip de cerere
+field,"res.request,active",0,Active,Activ
+field,"res.request,req_summary",0,Request Summary,Rezumat al cererii
+field,"res.request,ref_proj_id",0,Project Ref.,Ref. proiet
+field,"res.request,req_doc_ref",0,Document Ref.,Ref. document
+field,"res.request,act_date",0,Action Date,Data actiunii
+field,"res.request.history,name",0,Action Result,Rezultat actiune
+field,"res.request.history,act_result",0,Action Result Details,Rezultat actiune (detalii)
+field,"res.request.history,act_from",0,Request From,Cerere de la
+field,"res.request.history,req_id",0,Request,Cerere
+field,"res.request.history,act_to",0,Request To,Cerere pentru
+field,"res.request.history,act_date",0,Action Date,Data actiunii
+field,"res.roles,parent_id",0,Parent,Parinte
+field,"res.roles,child_id",0,Childs,Fiu
+field,"res.roles,name",0,Role Name,Nume
+field,"res.users,groups_id",0,groups,Grupuri
+field,"res.users,name",0,Name,Nume
+field,"res.users,roles_id",0,Roles,Roluri
+field,"res.users,login",0,Login,Nume utilizator
+field,"res.users,password",0,Password,Parola
+field,"res.users,action_id",0,actions,Actiuni
+field,"sale.order,date_due",0,Date Due Payment,Data datoriei
+field,"sale.order,payment_term",0,Payment Term,Conditii de plata
+field,"sale.order,order_policy",0,Shipping Policy,Metoda de expediere
+field,"sale.order,shop_id",0,Shop,Magazin
+field,"sale.order,date_order",0,Date Ordered,Data comanzii
+field,"sale.order,partner_id",0,Partner,Partener
+field,"sale.order,invoiced",0,Invoiced,Factura
+field,"sale.order,amount_tax",0,Taxes,Taxe
+field,"sale.order,amount_untaxed",0,Untaxed Amount,Total fara taxe
+field,"sale.order,shipping_id",0,Shipping,Expediere
+field,"sale.order,order_line",0,Order Lines,Linii Comanda
+field,"sale.order,note",0,Notes,Note
+field,"sale.order,state",0,Order State,Raport comanda
+field,"sale.order,partner_contact_id",0,Contact Address,Adresa de contact
+field,"sale.order,pricelist_id",0,Pricelist,Tarif
+field,"sale.order,project_id",0,Project,Proiect
+field,"sale.order,payment_line",0,Order Payments,Ordrin de plata
+field,"sale.order,partner_invoice_id",0,Invoice Address,Adresa de facturare
+field,"sale.order,amount_total",0,Total,Total
+field,"sale.order,name",0,Order Description,Descriere
+field,"sale.order,partner_shipping_id",0,Shipping Address,Adresa de expediere
+field,"sale.order,invoice_id",0,Invoice,Factura
+field,"sale.order,shipped",0,Shipped,Expediere
+field,"sale.order,shipping_created",0,Shipping created,Creare colet(pachet)
+field,"sale.order.line,product_id",0,Product,Produs
+field,"sale.order.line,date_promise",0,Date Promised,Date promisa
+field,"sale.order.line,order_id",0,Order Ref,Ref. Comanda
+field,"sale.order.line,price_unit",0,Unit Price,Pret unitar
+field,"sale.order.line,name",0,Description,Descriere
+field,"sale.order.line,quantity",0,Quantity,Cantitate
+field,"sale.order.line,notes",0,Notes,Note
+field,"sale.order.line,tax_id",0,Taxes,Taxe
+field,"sale.order.payment,order_id",0,Order Ref,Ref. Ordre
+field,"sale.order.payment,amount",0,Amount,Suma
+field,"sale.order.payment,name",0,Description,Descriere
+field,"sale.order.payment,account_id",0,Account,Cont
+field,"sale.shop,payment_account_id",0,Account payments,Cont de plata
+field,"sale.shop,name",0,Shop name,Nume magazin
+field,"sale.shop,warehouse_id",0,Available Warehouse,Depozit disponibil
+field,"sale.shop,pricelist_id",0,Pricelist,Tarif
+field,"sale.shop,project_id",0,Project,Proiect
+field,"sale.shop,payment_default_id",0,Default payment,Plata implicita
+field,"stock.location,comment",0,Additionnal Information,Informatii supplimentare
+field,"stock.location,account_id",0,Inventory Account,Cont de inventar
+field,"stock.location,usage",0,Usage,Utilisare
+field,"stock.location,posz",0,Position Z,Positia Z
+field,"stock.location,posx",0,Position X,Positia X
+field,"stock.location,posy",0,Position Y,Positia Y
+field,"stock.location,active",0,Active,Activ
+field,"stock.location,lot_id",0,Lot,Lot
+field,"stock.location,location_child_id",0,Contains,Contine
+field,"stock.lot,address_id",0,Address,Adresa
+field,"stock.lot,tracking",0,Tracking,Trasa(urmarire)
+field,"stock.lot,date",0,Date create,Date de creare
+field,"stock.lot,name",0,Lot,Lot
+field,"stock.lot,lot_line_view_id",0,Contents,Continut
+field,"stock.lot,price",0,Total Costs Price,Prix total
+field,"stock.lot,lot_line_id",0,Movements,Tranzactii
+field,"stock.lot,parent_id",0,Container,Container
+field,"stock.lot,active",0,Active,Activ
+field,"stock.lot,child_id",0,Contains,Contine
+field,"stock.lot,type",0,Type,Tip
+field,"stock.lot,serial",0,Serial,Numar de serie
+field,"stock.lot,product_id",0,Products,Produs
+field,"stock.lot.inventory,name",0,Inventory,Inventar
+field,"stock.lot.inventory,date_done",0,Date create,Data de creare
+field,"stock.lot.inventory,state",0,State,Raport
+field,"stock.lot.inventory,date",0,Date create,Data de creare
+field,"stock.lot.inventory,inventory_line_id",0,Inventories,Inventar
+field,"stock.lot.inventory,lot_line_id",0,Inventories,Inventar
+field,"stock.lot.inventory.line,inventory_id",0,Inventory,Inventar
+field,"stock.lot.inventory.line,lot_id",0,Lot,Lot
+field,"stock.lot.inventory.line,amount",0,Amount,Montant
+field,"stock.lot.inventory.line,product_id",0,Product,Produs
+field,"stock.lot.line,product_id",0,Product,Produs
+field,"stock.lot.line,price_unit",0,Unit Costs Price,Pret unitar
+field,"stock.lot.line,lot_inventory_id",0,Inventory,Inventar
+field,"stock.lot.line,date",0,Date create,Data de creare
+field,"stock.lot.line,amount",0,Amount,Montant
+field,"stock.lot.line,active",0,Active,Actif
+field,"stock.lot.line,lot_id",0,Lot,Lot
+field,"stock.lot.line,name",0,Lot Inventory Line,Linii de inventar
+field,"stock.lot.line.view,lot_id",0,Lot,Lot
+field,"stock.lot.line.view,amount",0,Quantity,Cantitate
+field,"stock.lot.line.view,name",0,Lot Content,Continut lot
+field,"stock.lot.line.view,product_id",0,Product,Produs
+field,"stock.move,address_id",0,Destination Address,Adresa de destinatie
+field,"stock.move,name",0,Movement Description,Descriere Miscare
+field,"stock.move,date_planned",0,Planned Date,Date prevazuta
+field,"stock.move,lot_dest_id",0,Destination Lot,Destination lot
+field,"stock.move,date_moved",0,Actual Date,Data curenta
+field,"stock.move,state",0,State,Raport
+field,"stock.move,active",0,Active,Activ
+field,"stock.move,lot_id",0,Lot,Lot
+field,"stock.move,serial",0,Tracking Number,Numar de miscare
+field,"stock.packing,address_id",0,Shipping Address,Adresa de expeditie
+field,"stock.packing,name",0,Packing Name,Nume de la punere in colet
+field,"stock.packing,lot_pack_id",0,Pack Lot,Colet 
+field,"stock.packing,lot_pack_parent_id",0,Pack Container,Container coletului
+field,"stock.packing,date",0,Date create,Data de creare
+field,"stock.packing,state",0,State,Raport
+field,"stock.packing,active",0,Active,Activ
+field,"stock.packing,packing_line_id",0,Packing Line,Linia de punere in colet
+field,"stock.packing,type",0,Shipping Type,Tip de expediere
+field,"stock.packing,move_id",0,Move Order,Cerere de miscare
+field,"stock.packing,lot_dest_parent_id",0,Shipping Lot,Lot de livrare
+field,"stock.packing.line,product_id",0,Product,Produs
+field,"stock.packing.line,line_dest_id",0,Lot Line Dest,Destinatie lot
+field,"stock.packing.line,lot_src_id",0,Lot Src,Lot sursa
+field,"stock.packing.line,line_src_id",0,Lot Line Src,Sursa
+field,"stock.packing.line,amount",0,Amount,Montant
+field,"stock.packing.line,packing_id",0,Packing,Punere in colet
+field,"stock.packing.line,active",0,Active,Activ
+field,"stock.packing.line,name",0,Name,Nume
+field,"stock.shipping,packing_policy",0,Packaging Policy,Politica de impachetare
+field,"stock.shipping,lot_output_id",0,Intermediary Location,Locul intermediar
+field,"stock.shipping,name",0,Name,Nume
+field,"stock.shipping,lot_stock_id",0,Source Lot/Location,Lot sursa/Loactie
+field,"stock.shipping,lot_shipped_id",0,Destination Location,Destinatie Locatie livrare
+field,"stock.shipping,partner_id",0,Partner,Partener
+field,"stock.shipping,partner_address_id",0,Address,Adresa
+field,"stock.shipping,shipping_policy",0,Shipping Policy,Metoda de expeditiere
+field,"stock.shipping,warehouse_id",0,Warehouse,Depozit
+field,"stock.shipping,priority",0,priority,Prioritate
+field,"stock.shipping,shipping_line_id",0,Shipping Lines,Linii expeditie
+field,"stock.shipping,state",0,State,Raport
+field,"stock.shipping,packing_id",0,Packings,Colete
+field,"stock.shipping,date_promised",0,Date Promised,Data promisa
+field,"stock.shipping,active",0,Active,Activ
+field,"stock.shipping,serial",0,Serial,Numar de serie
+field,"stock.shipping,type",0,Shipping Type,Tip de expeditie
+field,"stock.shipping,date_creation",0,Date Creation,Data de creare
+field,"stock.shipping.line,amount",0,Amount,Montant
+field,"stock.shipping.line,shipping_id",0,Shipping,Expediere
+field,"stock.shipping.line,product_id",0,Product,Produs
+field,"stock.warehouse,lot_input_id",0,Location Input,Loc de intrare
+field,"stock.warehouse,lot_output_id",0,Location Output,Loc de iesire
+field,"stock.warehouse,name",0,Name,Nume
+field,"stock.warehouse,lot_stock_id",0,Location Stock,Loc de stoc
+field,"workflow,on_create",0,On Create,In creare
+field,"workflow,name",0,Name,Nume
+field,"workflow,osv",0,Ressource Model,Model
+field,"workflow.activity,kind",0,Kind,Gen
+field,"workflow.activity,name",0,Name,Nume
+field,"workflow.activity,join_mode",0,Join Mode,Tip de legare(legatura)
+field,"workflow.activity,wkf_id",0,Workflow,Workflow
+field,"workflow.activity,flow_stop",0,Flow Stop,Flux - Sfirsit 
+field,"workflow.activity,subflow_id",0,Subflow,Sub-flux
+field,"workflow.activity,split_mode",0,Split Mode,Mod de separare(tie)
+field,"workflow.activity,action",0,Action,Actiune
+field,"workflow.activity,flow_start",0,Flow Start, Flux - Start
+field,"workflow.instance,res_type",0,Resource Model,Model
+field,"workflow.instance,wkf_id",0,Workflow,Workflow
+field,"workflow.instance,res_id",0,Resource ID,Resursa
+field,"workflow.instance,uid",0,User ID,ID utilisator
+field,"workflow.instance,state",0,State,Raport
+field,"workflow.transition,trigger_model",0,Trigger Type,Tip de actiune
+field,"workflow.transition,role_id",0,Role Required,Rol cerut
+field,"workflow.transition,act_from",0,Source Activity,Activitate sursa
+field,"workflow.transition,act_to",0,Destination Activity,Activitate destinatie
+field,"workflow.transition,val_name",0,Value Button Name,Valoare buton Actiune
+field,"workflow.transition,trigger_expr_id",0,Trigger Expr ID,Expresie
+field,"workflow.transition,condition",0,Condition,Condition
+field,"workflow.triggers,instance_id",0,Destination Instance,Instanta
+field,"workflow.triggers,model",0,Model,Model
+field,"workflow.triggers,res_id",0,Ressource ID,Resursa
+xsl,res.partner.ids,0,Ref.,Ref.
+xsl,res.partner.ids,0,Name,Nume
+xsl,account.invoice.list,0,DRAFT,Aviz
+xsl,account.invoice.list,0,PRO-FORMA INVOICE,Factura Pro-forma
+xsl,account.invoice.list,0,INVOICE,Factura
+xsl,account.invoice.list,0,PURCHASE INVOICE,Facture de cumparare
+xsl,account.invoice.list,0,REFUND INVOICE,Avans
+xsl,account.invoice.list,0,PURCHASE REFUND INVOICE,Avans pe cumparare
+xsl,account.invoice.list,0,Document,Document
+xsl,account.invoice.list,0,Date,Data
+xsl,account.invoice.list,0,Order Ref.,Ref.comanda
+xsl,account.invoice.list,0,Invoice Ref.,Ref. Factura
+xsl,account.invoice.list,0,Tout contrat conclu avec notre societe est exclusivement regi par nos 			conditions generales telles que libellees au verso du present document 			et/ou sur notre site internet.,
+xsl,account.invoice.list,0,Description,Descriere
+xsl,account.invoice.list,0,Qty,Cant.
+xsl,account.invoice.list,0,Unit Price,Pret Unit.
+xsl,account.invoice.list,0,Net Price,Pret Net
+xsl,account.invoice.list,0,SUBTOTAL,Sub-Total
+xsl,account.invoice.list,0,TOTAL:,Total
+xsl,account.tranfer,0,Document,Document
+xsl,account.tranfer,0,Type,Tip
+xsl,account.tranfer,0,Reference,Referinta
+xsl,account.tranfer,0,Partner ID,Partener
+xsl,account.tranfer,0,Date,Data
+xsl,account.tranfer,0,Amount,Montant
+xsl,account.tranfer,0,Change,Transfer
+xsl,stock.packing.list,0,PICKINGLIST,Lista cu punerea in colete
+xsl,stock.packing.list,0,Here is the picking list of this lot. Generated by Tiny ERP.,Lista cu punerea in colete
+xsl,stock.packing.list,0,Shipping Address:,Adresa de expeditie
+xsl,stock.packing.list,0,Recipient,Destinatar
+xsl,stock.packing.list,0,Concerns:,Legat de:
+xsl,stock.packing.list,0,Id Client,ID Client
+xsl,stock.packing.list,0,Id Shipping,Expeditie
+xsl,stock.packing.list,0,Packing Date,Data punerii in colet
+xsl,stock.packing.list,0,Expedition Date,Data de expeditie
+xsl,stock.packing.list,0,Product Ref,Ref.produs
+xsl,stock.packing.list,0,Tracking Nb,Numar de piste
+xsl,stock.packing.list,0,Qty,Cant.
+xsl,stock.packing.list,0,Description,Descriere
+xsl,stock.shipping.list,0,Shipping Address:,Adresa de expeditie
+xsl,stock.shipping.list,0,Recipient,Destinatar
+xsl,stock.shipping.list,0,Concerns:,In legatura cu:
+xsl,stock.shipping.list,0,Id Client,Client
+xsl,stock.shipping.list,0,Id Shipping,Expeditie
+xsl,stock.shipping.list,0,Warehouse,Depozit
+xsl,stock.shipping.list,0,Creation Date,Data de creare
+xsl,stock.shipping.list,0,Promised Date,Data promisa
+xsl,stock.shipping.list,0,Product Ref,Ref. Produs
+xsl,stock.shipping.list,0,Tracking Nb,Numar piste
+xsl,stock.shipping.list,0,Qty,Cant.
+xsl,stock.shipping.list,0,Description,Descriere
+xsl,stock.lot.overview,0,Lot:,Lot
+xsl,stock.lot.overview,0,Product,Produs
+xsl,stock.lot.overview,0,Variants,
+xsl,stock.lot.overview,0,Unit Price,Prit unitar
+xsl,stock.lot.overview,0,Amount,Montant
+xsl,stock.lot.overview,0,Value,Valoare
+xsl,purchase.order,0,PURCHASE ORDER,COMANDA CUMPARARE
+xsl,purchase.order,0,Order ref,Ref. Ordin
+xsl,purchase.order,0,"Dear supplier,","Stimate furnizor
+xsl,purchase.order,0,Here is the detail of your order """""""
+xsl,purchase.order,0,"Here is the detail of your order """,
+xsl,purchase.order,0,""", with the reference """,""", cu referinta """
+xsl,purchase.order,0,""", ordered the",""",Comandata la "
+xsl,purchase.order,0,. 			Thanks to confirm good reception of the following and contact us in case of any trouble. This order should 			be delivered for the,Multumim de confirmarea receptiei acestei comanzi si sa ne contactati in caz de probleme. Aceasta comanda trebuie sa fie livrata pentru data de
+xsl,purchase.order,0,.,
+xsl,purchase.order,0,Status:,Statut(Stare) :
+xsl,purchase.order,0,draft,Aviz
+xsl,purchase.order,0,waiting supplier confirmation,In asteptare confirmare furnizor
+xsl,purchase.order,0,confirmed by the supplier,cofirmat de furnizor
+xsl,purchase.order,0,exception in shipping,Problema de livrare
+xsl,purchase.order,0,exception in invoice,Problema in factura
+xsl,purchase.order,0,done,Terminat
+xsl,purchase.order,0,cancelled,Annulat
+xsl,purchase.order,0,Description,Descriere
+xsl,purchase.order,0,Taxes,Taxe
+xsl,purchase.order,0,Date,Data
+xsl,purchase.order,0,Qty,Cant
+xsl,purchase.order,0,Unit Price,Pret Unit.
+xsl,purchase.order,0,Net Price,Pret net
+xsl,purchase.order,0,TOTAL:,TOTAL :
+xsl,sale.order,0,SALE ORDER,BON DE COMANDA
+xsl,sale.order,0,"Dear customer,",Stimate client
+xsl,sale.order,0,"Here is the detail of your order ""","Lista detaliata a comenzii dvs """
+xsl,sale.order,0,""", with the reference """,""", cu referinta """
+xsl,sale.order,0,""", ordered the",""", """
+xsl,sale.order,0,. 			Thanks to confirm good reception of the following and contact us in case of any trouble. This order should 			be delivered for the,Multumim pentru confirmarea receptiei acestei comenzi si sa ne contactati in caz de probleme. Aceasta comanda trebuie sa fie livrata pentru data:
+xsl,sale.order,0,.,.
+xsl,sale.order,0,Status:,Statut :
+xsl,sale.order,0,draft,Ciorna
+xsl,sale.order,0,In progress,In Curs
+xsl,sale.order,0,exception in shipping,Problema la expeditie
+xsl,sale.order,0,exception in invoice,Problema in factura
+xsl,sale.order,0,done,Terminat
+xsl,sale.order,0,cancelled,Anulat
+xsl,sale.order,0,Description,Descriere
+xsl,sale.order,0,Taxes,Taxe
+xsl,sale.order,0,Date,Data
+xsl,sale.order,0,Qty,Cant.
+xsl,sale.order,0,Unit Price,Pret Unit.
+xsl,sale.order,0,Net Price,Pret Net
+xsl,sale.order,0,TOTAL:,TOTAL :
+view,res.partner,0,Partners,Partener
+view,ir.ui.view,0,User Interface - Views,Interfata utilisator - Visualizare
+view,ir.attachment.view,0,Attachments,Documente atasate
+view,ir.report.custom.fields,0,Report Fields,C‚mpuri raport
+view,ir.report.custom,0,Custom Report,Raport personalizat
+view,res.request.history,0,Request History,Istoric de cereri
+view,res.request.history,0,Request History,Istoric de cereri
+view,ir.ui.view,0,User Interface - Views,Interfata utilisator - Visualizari
+view,ir.attachment.view,0,Attachments,Documente atasate
+view,ir.report.custom.fields,0,Report Fields,C‚mpuri raport
+view,ir.report.custom,0,Custom Report,Raport personalizat
+view,res.request.history,0,Request History,Istoric de cereri
+view,res.request.history,0,Request History,Istoric de cereri
+view,res.lang,0,Language,Limba
+view,res.lang,0,Name,Nume
+view,res.lang,0,Code,Cod
+view,ir.ui.menu,0,Menu,Meniu
+view,ir.ui.menu,0,Names,Nume
+view,res.users,0,Users,Utilisatori
+view,res.users,0,Users,Utilisatori
+view,ir.bas niveausequence,0,Sequences,Numerotare
+view,ir.actions.act_window,0,Open a Window,Deschide o fereastra(ecran)
+view,res.roles,0,Roles,Roluri
+view,ir.ui.view,0,User Interface - Views,Interfata utilisator - Visualizari
+view,ir.attachment.view,0,Attachments,Documente atasate
+view,ir.report.custom.fields,0,Report Fields,C‚mpuri raport
+view,ir.report.custom,0,Custom Report,Raport personalizat
+view,ir.translation,0,Translations,Traducere
+view,ir.translation,0,Translations,Traducere
+view,res.project,0,Project,Proiect
+view,res.request,0,Requests,Cereri
+view,res.request,0,Description,Descriere
+view,res.request,0,Requests,Cereri
+view,res.request,0,Request Status,Statut(stare) Cerere
+view,res.request,0,Status,Statut
+view,res.request,0,Description,Descriere
+view,res.request,0,Action,Actiune
+view,res.request,0,Process Requests,Procesare de cereri
+view,res.request,0,Reply,Raspuns
+view,res.request,0,References,Referinta
+view,res.request,0,References,Referinta
+view,res.request,0,Action History,Istoric de actiuni
+view,res.request.history,0,Request History,Istoric de cereri
+view,res.request.history,0,Request History,Istoric de cereri
+view,res.country,0,Country,Tari
+view,res.partner.address,0,Partner Contacts,Contact partener
+view,res.partner.address,0,Partner Contacts,Contact partener
+view,res.partner.address,0,Partner Contacts,Contact partener
+view,res.partner,0,Partners,Partener
+view,res.partner,0,General,General
+view,res.partner,0,General Information,Informatii generale
+view,res.partner,0,Categories,Categorii
+view,res.partner,0,Extra Info,Informatii suplimentare
+view,res.partner,0,Event History,Istoric de  evenimente
+view,res.partner,0,Partners,Partener
+view,res.partner.category,0,Partner Categories,Categorie de Parteneri
+view,res.partner.canal,0,Canal,Canal
+view,res.partner.som,0,Partner State of Mind,Stare de spirit Partener
+view,res.partner.som,0,Partner State of Mind,Stare de spirit Partener
+view,res.partner.event,0,Partner Events,Evenimente Partener 
+view,res.partner.event,0,General Description,Descriere generala
+view,res.partner.event,0,Description,Descriere
+view,res.partner.event,0,Document Link,Legatura Document (link) 
+view,res.partner.event,0,Partner Events,Evenimente Partener
+view,campaign.campaign,0,Campaigns,Campanii
+view,campaign.campaign,0,Campaign Definition,Definirea campaniei
+view,campaign.step,0,Campaign Steps,Etapele campaniei
+view,campaign.step,0,Marketing Steps,Etape de marketing
+view,campaign.step,0,Fiche Prospect,Fisa prospect
+view,campaign.partner,0,Marketing::Prospects,Marketing::Prospecte
+view,campaign.partner,0,Main Information,Informatii principale
+view,campaign.partner,0,Prospect Information,Informatii prospect
+view,campaign.partner,0,Step Information,Informatii Etapa
+view,campaign.partner,0,Recall Later,Apeleaza mai t‚rziu
+view,campaign.partner,0,Stop Campaign,Oprire campanie
+view,campaign.partner,0,Continue Campaign,Continua campania
+view,campaign.partner,0,History,Istoric
+view,campaign.partner.history,0,Marketing::Prospects::History,Marketing::Prospectare::Istoric
+view,account.currency,0,Currency List,Liste de devize
+view,account.currency,0,Currency,Devize
+view,account.account,0,Account Form,Conturi
+view,account.account,0,Account Trees,Arborescenta de conturi
+view,account.account,0,Names,Nume
+view,account.account,0,CUR,CUR
+view,account.move.line,0,Account Move Line,Linii tranzactii
+view,account.move.line,0,Account Move Line,Linii tranzactii
+view,account.move.line,0,Account Move Line (account),Linii tranzactii(cont)
+view,account.move.line,0,Account Move Line,Linii tranzactii
+view,account.move,0,Account Move,Tranzactie(miscare)
+view,account.move,0,Account Move,Tranzactie(miscare)
+view,account.tax,0,Account Tax,Cont de Taxa
+view,account.tax,0,Compute Code (if type=code),Cod de calcul
+view,account.tax,0,Applicable Code (if type=code),Cod aplicabil
+view,account.invoice.line,0,Invoice Line,Linii factura
+view,account.invoice.line,0,Invoice Line,Linii factura
+view,account.invoice.tax,0,Manual Invoice Taxes,Taxe manuale
+view,account.invoice.tax,0,Manual Invoice Taxes,Taxe manuale
+view,account.invoice,0,Invoice,Factura
+view,account.invoice,0,Invoice,Factura
+view,account.invoice,0,Invoice,Factura
+view,account.invoice,0,Informations Generales,Informatii generale
+view,account.invoice,0,References Clients,Ref. clienti
+view,account.invoice,0,Accounting,Contabilitate
+view,account.invoice,0,States,Rapoarte
+view,account.invoice,0,Create PRO-FORMA,Creare Pro-Forma
+view,account.invoice,0,Create Invoice,Creare Factura
+view,account.invoice,0,Cancel Invoice,Anuleaza Factura
+view,account.invoice,0,Set to Draft,Pune Factura in asteptare
+view,account.invoice,0,Invoice Lines,Linii de factura
+view,account.invoice,0,Tax Lines,Linii de taxe
+view,account.invoice,0,Account Transactions,Tranzactii
+view,account.transfer,0,Transfers,Transferuri
+view,account.transfer,0,Transfers,Transferuri
+view,account.transfer,0,Confirm Payment,Confirma plata
+view,account.transfer,0,Cancel Payment,Anuleaza plata
+view,account.transfer,0,Related Invoices,Facturii relative
+view,account.transfer,0,Adjustement and corrections,Ajustare si corectii
+view,res.partner.events,0,Partner Events,Evenimente Partener
+view,res.partner.events,0,General Description,Descriere generala
+view,crm.case.categ,0,Case Category,Caz Categorie (tip)
+view,crm.case.history,0,Case History,Istoric de tipuri(cazuri)
+view,crm.case.history,0,Cases,Tipuri(cazuri)
+view,crm.case.history,0,Case Description,Descriere cazuri
+view,crm.case,0,Cases,Cazuri(Tipuri)
+view,crm.case,0,Cases,Cazuri(Tipuri)
+view,crm.case,0,General Information,Informatii generale
+view,crm.case,0,General Description,Descriere generale
+view,crm.case,0,Next Action,Urmatoarea Actiune
+view,crm.case,0,Process Action,Proceseaza Actiune
+view,crm.case,0,Financial,Financier
+view,crm.case,0,State,Raport
+view,crm.case,0,Close Case,Inchide caz (tip)
+view,crm.case,0,Open,Deschide
+view,crm.case,0,Reset to Draft,Repune in asteptare
+view,crm.case,0,Requeue Case,Repune in coada cazul
+view,crm.case,0,Request History,Istoric de cereri
+view,crm.segmentation.line,0,Partner Segmentation Lines,Linii de segmentare
+view,crm.segmentation.line,0,Partner Segmentation Lines,Linii de segmentare
+view,crm.segmentation,0,Partner Segmentation,Segmentare partener
+view,crm.segmentation,0,Segmentation Parameters,Parametrare de segmentate
+view,crm.segmentation,0,Segmentation Description,Descriere
+view,crm.segmentation,0,Segmentation Test,Test Segment
+view,crm.segmentation,0,Compute Segmentation,Calculeaza segment
+view,crm.segmentation,0,Stop Process,Opreste proces
+view,crm.segmentation,0,Continue Process,Continua proces
+view,crm.segmentation,0,Computation Parameters,Parametri de calcul
+view,crm.segmentation,0,State of Mind Computation,Calcul starii de sprit
+view,crm.segmentation,0,Partner Segmentations,Segmentare partener
+view,product.product,0,Products,Produse
+view,product.product,0,Product Variant,Variante de produs
+view,product.product,0,Description,Descriere
+view,product.product,0,Variants Prices,Variante de pret
+view,product.template,0,Product Template,Model
+view,product.product,0,Product,Produs
+view,product.product,0,Description,Descriere
+view,product.product,0,Prices,Preturi
+view,product.product,0,Variants,Variante
+view,product.product,0,Taxes,Taxe
+view,product.category,0,Products Categories,Categorii de produse
+view,product.category,0,Products Categories,Categorii de produse
+view,product.category,0,Names,Nume
+view,product.pricelist.version,0,Pricelist Version,Versioni du tarife
+view,product.pricelist.version,0,Pricelist Items,
+view,product.pricelist.item,0,Products Listprices Items,Linii tarife produs
+view,product.pricelist.item,0,Products Listprices Items,Linii tarife produs
+view,product.pricelist.item,0,List prices,Tarife
+view,product.pricelist.item,0,New List Price =,Tarif nou =
+view,product.pricelist.item,0, * ( 1 - ,
+view,product.pricelist.item,0, ) + ,
+view,product.pricelist.item,0,Rounding Method,Metoda de rotunjire
+view,product.pricelist.item,0,Min. Margin,Marja Min.
+view,product.pricelist.item,0,Max. Margin,Marja Max.
+view,product.pricelist.item,0,Standard prices,Preturi standard
+view,product.pricelist.item,0,New Standard Price =,Pret nou standard =
+view,product.pricelist.item,0, * ( 1 - ,
+view,product.pricelist.item,0, ) + ,
+view,product.pricelist.item,0,Rounding Method,Metoda de rotunjire
+view,product.pricelist.item,0,Min. Margin,Marja Min.
+view,product.pricelist.item,0,Max. Margin,Marja Max.
+view,product.pricelist.item,0,Limit prices,Pret limita
+view,product.pricelist.item,0,New Limit Price =,Limita noua de pret =
+view,product.pricelist.item,0, * ( 1 - , * ( 1 -
+view,product.pricelist.item,0, ) + ,0, ) + 
+view,product.pricelist.item,0,Rounding Method,Metoda de rotunjire
+view,product.pricelist.item,0,Min. Margin,Marja Min.
+view,product.pricelist.item,0,Max. Margin,Marja Max.
+view,product.pricelist,0,Products Price List,Lista Tarife de produse
+view,product.pricelist,0,Procelist Name,Nume 
+view,stock.lot.inventory.line,0,Stock Inventory Lines,Linii inventar
+view,stock.lot.inventory.line,0,Stock Inventory Lines,Linii inventar
+view,stock.lot.inventory,0,Lot Inventory,Inventar lot
+view,stock.lot.inventory,0,General Informations,Informatii generale
+view,stock.lot.inventory,0,Items,Linii
+view,stock.lot.inventory,0,Confirm Inventory,Confirma inventar
+view,stock.lot.inventory,0,Posted Inventory,Inventar efectuat(posted)
+view,stock.lot.inventory,0,Items,Linii
+view,stock.lot,0,Stock Lot,Stoc lot
+view,stock.lot,0,General Informations,Informatii generale
+view,stock.lot,0,Content,Continut
+view,stock.lot,0,History,Istoric
+view,stock.lot.line,0,Stock Lots Lines,Linii loturi
+view,stock.lot.line,0,Stock Lots Lines,Linii loturi
+view,stock.lot.line,0,Stock Lots Lines,Linii loturi
+view,stock.lot.line.view,0,Stock Lots View,Vedere Stoc Loturi
+view,stock.location,0,Stock Location,Locatii de stocage
+view,stock.location,0,General Informations,Informatii generale
+view,stock.location,0,Products,Produse
+view,stock.location,0,Stock Location Tree,Arborescenta locatii de stocage
+view,stock.warehouse,0,Stock Warehouse,Antrepozit stoc
+view,stock.packing.line,0,Packing Lines,Linia de impachetare colete
+view,stock.packing.line,0,Packing Lines Tree,Linia de impachetare colete
+view,stock.packing,0,Picking List,lista impachetare (colete)
+view,stock.packing,0,Picking List,lista impachetare (colete)
+view,stock.packing,0,Lines,Linii
+view,stock.packing,0,Move,Deplasare
+view,stock.packing,0,Confirm Packing,Confirma coletele
+view,stock.packing,0,Packing Done,Impachetare colet
+view,stock.packing,0,Cancel Packing,Anulare impachetare colet
+view,stock.packing,0,Reset to Draft,Repunere in asteptare
+view,stock.packing,0,Cancel Packing,Anulare impachetare colet
+view,stock.move,0,Stock Move,Miscare de stoc
+view,stock.move,0,Stock Move,Miscare de stoc
+view,stock.move,0,State,Raport
+view,stock.move,0,Move Lot,Deplasare lot
+view,stock.shipping,0,Delivery Order,Expeditie
+view,stock.shipping,0,Delivery Order,Expeditie
+view,stock.shipping,0,General Informations,Informatii generale
+view,stock.shipping,0,Lines,Linii
+view,stock.shipping,0,Actions,Actiuni
+view,stock.shipping,0,Proces Shipping,Procesare expeditie
+view,stock.shipping,0,Check Packing,Verifica colete
+view,stock.shipping,0,Cancel Shipping,Anulare expeditie
+view,stock.shipping,0,Exception Corrected,Eroare corectata
+view,stock.shipping,0,Packings,Colete
+view,stock.shipping,0,Warehouse,Antrepozit
+view,stock.shipping,0,Warehouse,Antrepozit
+view,stock.shipping,0,Lots,Loturi
+view,stock.shipping.line,0,Shipping Line,Linii de expeditie
+view,stock.shipping.line,0,Shipping Line,Linii de expeditie
+view,purchase.order,0,Purchase Order,Cumparare
+view,purchase.order,0,Purchase Order,Cumparare
+view,purchase.order,0,Order Lines,Linii Bon de comanda
+view,purchase.order,0,Document State,Raport
+view,purchase.order,0,Confirm Purchase Order,Confirma comanda
+view,purchase.order,0,Approved by Retailer,Aprobata de Vinzatorul en-detail
+view,purchase.order,0,Cancel Purchase Order,Anuleaza comanda
+view,purchase.order,0,Cancel Purchase Order,Anuleaza comanda
+view,purchase.order,0,Shipping Done,Livrat
+view,purchase.order,0,Invoice Done,Facturat
+view,purchase.order,0,Notes,Note
+view,purchase.order,0,Purchase Shippings,Bon de livrare
+view,purchase.order,0,Purchase Order,cumparare
+view,purchase.order.line,0,Purchase Order Line,Linii bon comanda
+view,purchase.order.line,0,Order Line,Linii bon comanda
+view,purchase.order.line,0,Notes,Note
+view,purchase.order.line,0,Purchase Order Line,Linii bon comanda
+view,sale.shop,0,Sale Shop,Magazin
+view,sale.shop,0,Accounting,Contabilitate
+view,sale.shop,0,Stock,Stoc
+view,sale.order,0,Sales Orders,Bonuri de comanda 
+view,sale.order,0,Sale Order,Bonuri de comanda
+view,sale.order,0,Order Line,Linii comanda
+view,sale.order,0,Compute,Calculeaza
+view,sale.order,0,Confirm Order,Confirma comanda
+view,sale.order,0,Cancel Order,Anuleaza comanda
+view,sale.order,0,Cancel Order,Anuleaza comanda
+view,sale.order,0,Recreate Invoice,Recreaza Factura
+view,sale.order,0,Invoice Corrected,Factura corectata
+view,sale.order,0,Cancel Order,Anuleaza comanda
+view,sale.order,0,Recreate Delivery,Recreaza livrarea
+view,sale.order,0,Delivery Corrected,Livrare corectata
+view,sale.order,0,Set to Draft,Pune in asteptare (Ciorna)
+view,sale.order,0,Create Invoice,Creare factura
+view,sale.order,0,Payment,Plata
+view,sale.order,0,Notes,Note
+view,sale.order,0,Links,Link-uri(Legaturi)
+view,sale.order,0,Sale Order POS,Tichet (bilet)
+view,sale.order,0,Order Line,Linii comanda
+view,sale.order,0,Direct Sale,V‚nzare directa
+view,sale.order,0,Cancel Sale,Anuleaza Vinzarea
+view,sale.order,0,Notes,Note
+view,sale.order,0,Advanced,Avansat
+view,sale.order,0,Shop,Magazin
+view,sale.order,0,Order type,Tip de (commanda) ordin
+view,sale.order,0,Partner,Partener
+view,sale.order,0,Links,Legaturi(link-uri)
+view,sale.order.line,0,Sale Order Line,Linii bon de comanda
+view,sale.order.line,0,Order Lines,Linii Comanda
+view,sale.order.line,0,Notes,Note
+view,sale.order.line,0,Sale Order Line,Linii bon de comanda

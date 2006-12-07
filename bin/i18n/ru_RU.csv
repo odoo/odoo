@@ -1,0 +1,2670 @@
+type,name,res_id,src,value
+field,"account.account,active",0,Active,Активен
+field,"account.account,balance",0,Balance,Баланс
+field,"account.account,child_id",0,Children,Подчиненные
+field,"account.account,code",0,Code,Код
+field,"account.account,credit",0,Credit,Кредит
+field,"account.account,currency_id",0,Currency,Валюта
+field,"account.account,debit",0,Debit,Дебет
+field,"account.account,name",0,Name,Имя
+field,"account.account,parent_id",0,Parents,Родители
+field,"account.account,protected",0,Protected,Защищенный
+field,"account.account,sign",0,Signe,Подпись
+field,"account.account,type",0,Account Type,Тип счета
+field,"account.currency,accuracy",0,Computational Accuracy,Точность вычислений
+field,"account.currency,active",0,Active,Активна
+field,"account.currency,date",0,Last rate update,Последнее обновление курса
+field,"account.currency,digits",0,Displayed Digits,Отображаемые знаки
+field,"account.currency,name",0,Currency,Валюта
+field,"account.currency,priority",0,Usage priority,Приоритет использования
+field,"account.currency,rate",0,Relative Change rate,Курс обмена
+field,"account.invoice,account_id",0,Dest Account,Счет назначения
+field,"account.invoice,address_contact_id",0,Contact Address,Адрес для контакта
+field,"account.invoice,address_invoice_id",0,Invoice Address,Адрес счета
+field,"account.invoice,amount_tax",0,Tax Amount,Сумма налогов
+field,"account.invoice,amount_total",0,Total Amount,Общая сумма
+field,"account.invoice,amount_untaxed",0,Untaxed Amount,Сумма без налогов
+field,"account.invoice,comment",0,Additionnal Information,Доп. информация
+field,"account.invoice,date_due",0,Due Date,Планируемая дата
+field,"account.invoice,date_invoice",0,Date Invoiced,Дата выписки накладной
+field,"account.invoice,invoice_line",0,Invoice Lines,Строки счета
+field,"account.invoice,move_id",0,Invoice Movement,Движение счета
+field,"account.invoice,name",0,Invoice Description,Описание счета
+field,"account.invoice,number",0,Invoice Number,Номер счета
+field,"account.invoice,origin",0,Origin,Источник
+field,"account.invoice,partner_contact",0,Partner Contact,Контакт
+field,"account.invoice,partner_id",0,Partner,Контрагент
+field,"account.invoice,partner_ref",0,Partner Reference,Ссылка на контрагента
+field,"account.invoice,payment_term",0,Payment Term,Срок оплаты
+field,"account.invoice,project_id",0,Profit/Cost Ctr,Центр выручки/стоимости
+field,"account.invoice,reference",0,Invoice Reference,Ссылка на накладную
+field,"account.invoice,state",0,State,Состояние
+field,"account.invoice,tax_line",0,Tax Lines,Строки налогов
+field,"account.invoice,type",0,Type,Тип
+field,"account.invoice.line,account_id",0,Source Account,Исходный счет
+field,"account.invoice.line,invoice_id",0,Invoice Ref,Ссылка на счет
+field,"account.invoice.line,invoice_line_tax_id",0,Taxes,Налоги
+field,"account.invoice.line,name",0,Description,Описание
+field,"account.invoice.line,price_subtotal",0,Subtotal,Промежуточный итог
+field,"account.invoice.line,price_unit",0,Unit Price,Стоимость комплекта
+field,"account.invoice.line,quantity",0,Quantity,Количество
+field,"account.invoice.tax,account_id",0,Taxe Account,Счет налога
+field,"account.invoice.tax,amount",0,Amount,Сумма
+field,"account.invoice.tax,invoice_id",0,Invoice Line,ошибка счета
+field,"account.invoice.tax,manual",0,Manual,
+field,"account.invoice.tax,name",0,Tax Description,Описание налога
+field,"account.move,change",0,Change transaction,Изменить операцию
+field,"account.move,date",0,Date,Дата
+field,"account.move,line_id",0,Transactions,Операции
+field,"account.move,name",0,Move Name,Наименование перемещения
+field,"account.move,partner_id",0,Partner,Контрагент
+field,"account.move,project_id",0,Profit/Cost center,Центр выручки/стоимости
+field,"account.move,state",0,State,Состояние
+field,"account.move,type",0,Transaction Type,Тип операции
+field,"account.move.line,account_id",0,Account,Счет
+field,"account.move.line,amount",0,Amount,Сумма
+field,"account.move.line,balance",0,Balance,Баланс
+field,"account.move.line,date",0,Date,Дата
+field,"account.move.line,move_id",0,Move,Перемещение
+field,"account.move.line,name",0,Name,Название
+field,"account.move.line,partner_id",0,Partner Ref.,Ссылка на контрагента
+field,"account.move.line,reconcile_id",0,Reconcile,Торговые книги
+field,"account.move.line,state",0,State,Состояние
+field,"account.move.reconcile,line_id",0,Move lines,Строки перемещений
+field,"account.move.reconcile,name",0,Name,Название
+field,"account.move.reconcile,type",0,Type,Тип
+field,"account.project,description",0,Description,Описание
+field,"account.project,name",0,Name,Название
+field,"account.tax,account_collected_id",0,Collected Tax Account,Счет суммарных налогов
+field,"account.tax,account_paid_id",0,Paid Tax Account,Счет уплаченных налогов
+field,"account.tax,active",0,Active,Активен
+field,"account.tax,amount",0,Amount,Сумма
+field,"account.tax,applicable_type",0,Applicable Type,Допустимый тип
+field,"account.tax,child_depend",0,Tax depends on its children,Зависимость налогов от подчиненных налогов
+field,"account.tax,child_ids",0,Childs Tax Account,Счет подчиненных налогов
+field,"account.tax,domain",0,Domain,Область
+field,"account.tax,name",0,Tax Name,Наименование налога
+field,"account.tax,parent_id",0,Parent Tax Account,Счет вышестоящих налогов
+field,"account.tax,python_applicable",0,Python Code,Python Code
+field,"account.tax,python_compute",0,Python Code,Python Code
+field,"account.tax,type",0,Tax Type,Тип налога
+field,"account.transfer,account_dest_id",0,Destination Account,Счет назначения
+field,"account.transfer,account_src_id",0,Source Account,Исходный счет
+field,"account.transfer,adjust_account_id",0,Adjustement Account,Корректировка суммы
+field,"account.transfer,adjust_amount",0,Adjustement amount,Корректировка количества
+field,"account.transfer,amount",0,Amount,Сумма
+field,"account.transfer,change",0,Amount Changed,Сумма изменена
+field,"account.transfer,date",0,Payment Date,Дата оплаты
+field,"account.transfer,invoice_id",0,Invoices,Счета
+field,"account.transfer,move_id",0,Transactions,Операции
+field,"account.transfer,name",0,Description,Описание
+field,"account.transfer,partner_id",0,Partner,Контрагент
+field,"account.transfer,project_id",0,Profit/Cost Ctr,Центр выручки/стоимости
+field,"account.transfer,reference",0,Reference,Ссылка
+field,"account.transfer,state",0,State,Состояние
+field,"account.transfer,type",0,Transaction Type,Тип операции
+field,"campaign.campaign,costs",0,Initial Costs,Начальная стоимость
+field,"campaign.campaign,date_start",0,Start Date,Дата начала
+field,"campaign.campaign,date_stop",0,Stop Date,Дата завершения
+field,"campaign.campaign,info",0,Description,Описание
+field,"campaign.campaign,name",0,Name,Наименование
+field,"campaign.campaign,planned_costs",0,Planned Costs,Планируемые стоимости
+field,"campaign.campaign,planned_revenue",0,Planned Revenue,Планируемая прибыль
+field,"campaign.campaign,step_id",0,Campaign Steps,Шаги компании
+field,"campaign.partner,active",0,Active,Активен
+field,"campaign.partner,campaign_id",0,Campaign,Компания
+field,"campaign.partner,contact",0,Partner Contact,Контакт
+field,"campaign.partner,date_recall",0,Call again on,Позвонить снова
+field,"campaign.partner,history_id",0,History,История
+field,"campaign.partner,info",0,Comments,Комментарии
+field,"campaign.partner,name",0,Name / Reference,Имя / Ссылка
+field,"campaign.partner,notes",0,Prospect Notes,Замечания
+field,"campaign.partner,part_adr_id",0,Partner Address,Адрес контрагента
+field,"campaign.partner,partner_id",0,Partner,Контрагент
+field,"campaign.partner,priority",0,Priority,Приоритет
+field,"campaign.partner,state",0,State,Состояние
+field,"campaign.partner,step",0,Step,Этап
+field,"campaign.partner,user_id",0,Salesman,Продавец
+field,"campaign.partner.history,camp_partner_id",0,Prospect Fiche,
+field,"campaign.partner.history,date",0,Date create,Дата создания
+field,"campaign.partner.history,info",0,Comments,Комментарии
+field,"campaign.partner.history,name",0,History,История
+field,"campaign.partner.history,step_attempt",0,Attempt,Попытка
+field,"campaign.partner.history,step_id",0,Step,Этап
+field,"campaign.step,active",0,Active,Активен
+field,"campaign.step,campaign_id",0,Campaign,Компания
+field,"campaign.step,costs",0,Step Costs,Значимость этапа
+field,"campaign.step,info",0,Description,Описание
+field,"campaign.step,max_try",0,Max Attemps,Макс. кол-во попыток
+field,"campaign.step,name",0,Step Name,Название этапа
+field,"campaign.step,priority",0,Order line,Строка заказа
+field,"campaign.step,procent",0,Success Rate (0<x<1),Степень успеха (0<x<1)
+field,"campaign.step,start_date",0,Start Date,Дата начала
+field,"campaign.step,stop_date",0,Stop Date,Дата завершения
+field,"crm.case,active",0,Active,Активен
+field,"crm.case,canal_id",0,Channel,Канал(источник)
+field,"crm.case,categ_id",0,Category,Категория
+field,"crm.case,date",0,Date,Дата
+field,"crm.case,date_closed",0,Date Closed,Дата завершения
+field,"crm.case,date_deadline",0,Date Next Action,Дата следующей акции
+field,"crm.case,description",0,Description,Описание
+field,"crm.case,document",0,Document,Документ
+field,"crm.case,history_line",0,Case History,История предложений
+field,"crm.case,name",0,Case Description,Описание предложения
+field,"crm.case,partner_id",0,Partner,Контрагент
+field,"crm.case,planned_cost",0,Planned Costs,Планируемые стоимости
+field,"crm.case,planned_revenue",0,Planned Revenue,Планируемая прибыль
+field,"crm.case,priority",0,Priority,Приоритет
+field,"crm.case,probability",0,Probability (0.50),Вероятность (0.5)
+field,"crm.case,ref",0,Reference,Ссылка
+field,"crm.case,som",0,State of Mind,Оценка
+field,"crm.case,state",0,State,Состояние
+field,"crm.case,type",0,Case Type,Тип предложения
+field,"crm.case,user_id",0,User Responsible,Ответственный сотрудник
+field,"crm.case.categ,case_type",0,Case Type,Тип предложения
+field,"crm.case.categ,name",0,Case Category Name,Название типа предложения
+field,"crm.case.history,canal_id",0,Channel,Канал(источник)
+field,"crm.case.history,case_id",0,Case,Предложение
+field,"crm.case.history,date",0,Date,Дата
+field,"crm.case.history,description",0,Description,Описание
+field,"crm.case.history,name",0,Name,Наименование
+field,"crm.case.history,som",0,State of Mind,Оценка
+field,"crm.case.history,user_id",0,User Responsible,Ответственный
+field,"crm.segmentation,categ_id",0,Partner Category,Категория контрагента
+field,"crm.segmentation,description",0,Description,Описание
+field,"crm.segmentation,exclusif",0,Exclusive Selection,Специальная выборка
+field,"crm.segmentation,name",0,Segmentation Name,Наименование сегментации
+field,"crm.segmentation,partner_id",0,Max Partner ID processed,Max Partner ID processed
+field,"crm.segmentation,segmentation_line",0,Criteria,Критерий
+field,"crm.segmentation,som_interval",0,Number of day per Periode,Кол. дней в периоде
+field,"crm.segmentation,som_interval_decrease",0,Decrease factor (0.0 > 1.0),Фактор убывания (0 > 1)
+field,"crm.segmentation,som_interval_default",0,Default Factor (0 = None),Фактор по умолчанию
+field,"crm.segmentation,som_interval_max",0,Max Interval for Computation,Макс. интервал для вычислений
+field,"crm.segmentation,state",0,Execution State,Статус выполнения
+field,"crm.segmentation.line,expr_name",0,Control Variable,Контрольная переменная
+field,"crm.segmentation.line,expr_operator",0,Operator,Оператор
+field,"crm.segmentation.line,expr_value",0,Value,Значение
+field,"crm.segmentation.line,name",0,Segmentation Name,Наименование сегментации
+field,"crm.segmentation.line,operator",0,Mandatory / Optionnal,Обязательный/Необязательный
+field,"crm.segmentation.line,segmentation_id",0,Segmentation,Сегментация
+field,"hr.action.reason,action_type",0,Action's type,Тип действия
+field,"hr.action.reason,name",0,Reason,Основание
+field,"hr.attendance,action",0,Action,Действие
+field,"hr.attendance,action_desc",0,Action reason,Основание
+field,"hr.attendance,employee_id",0,Employee,Сотрудник
+field,"hr.attendance,name",0,Date,Дата
+field,"hr.employee,active",0,Active,Активен
+field,"hr.employee,address_id",0,Contact address,Адрес
+field,"hr.employee,attendances",0,Employee's attendances,Присутствие сотрудника
+field,"hr.employee,expenses",0,Employee's expenses,Расходы сотрудника
+field,"hr.employee,holiday_max",0,Number of holidays,Кол. выходных
+field,"hr.employee,holidays",0,Employee's holidays,Выходные сотрудника
+field,"hr.employee,name",0,Employee's Full Name,Полное имя сотрудника
+field,"hr.employee,notes",0,Notes,Примечания
+field,"hr.employee,partner_id",0,Enterprise,Предприятие
+field,"hr.employee,regime",0,Workhours by week,Рабочих часов в неделю
+field,"hr.employee,started",0,Started on,Начался(запущен)
+field,"hr.employee,state",0,Attendance,Присутствие
+field,"hr.employee,user_id",0,Tiny ERP User,Пользователь Tiny ERP
+field,"hr.employee,workgroups",0,Employee's work team,Отдел
+field,"hr.expense,amount",0,Amount,Сумма
+field,"hr.expense,date",0,Date,Дата
+field,"hr.expense,employee_id",0,Employee,Сотрудник
+field,"hr.expense,name",0,Short Description,Кор. описание
+field,"hr.expense,state",0,State,Состояние
+field,"hr.expense,txt",0,Long Description,Полное описание
+field,"hr.expense,type",0,Expense type,Тип расхода
+field,"hr.expense.type,name",0,Type,Тип
+field,"hr.holidays,date_from",0,Vacation start day,с
+field,"hr.holidays,date_to",0,Vacation end day,по
+field,"hr.holidays,employee_id",0,Employee,Сотрудник
+field,"hr.holidays,holiday_status",0,Holiday's Status,Статус выходных
+field,"hr.holidays,name",0,Description,Описание
+field,"hr.holidays.status,name",0,Holiday Status,Статус выходных
+field,"hr.timesheet,dayofweek",0,Day of week,День недели
+field,"hr.timesheet,hour_from",0,Work from,Работать с
+field,"hr.timesheet,hour_to",0,Work to,Работать до
+field,"hr.timesheet,name",0,Name,Название
+field,"hr.timesheet,tgroup_id",0,Employee's timesheet group,Тип расписания
+field,"hr.timesheet.group,name",0,Group name,Название группы
+field,"hr.timesheet.group,timesheet_id",0,Timesheet,Расписание
+field,"ir.actions.act_window,domain",0,Domain Value,Domain Value
+field,"ir.actions.act_window,name",0,Action Name,Наименование действия
+field,"ir.actions.act_window,res_model",0,Model,Модель
+field,"ir.actions.act_window,type",0,Action Type,Тип действия
+field,"ir.actions.act_window,usage",0,Action Usage,Использование действий
+field,"ir.actions.act_window,view_id",0,View Ref.,
+field,"ir.actions.act_window,view_type",0,Type of view,Тип просмотра
+field,"ir.actions.actions,name",0,Action Name,Наименование действия
+field,"ir.actions.actions,type",0,Action Type,Тип действия
+field,"ir.actions.actions,usage",0,Action Usage,Использование действий
+field,"ir.actions.execute,func_arg",0,Function Argument,Аргумент функции
+field,"ir.actions.execute,func_name",0,Function Name,Название функции
+field,"ir.actions.execute,name",0,name,название
+field,"ir.actions.execute,type",0,type,Тип
+field,"ir.actions.execute,usage",0,Action Usage,Использование действий
+field,"ir.actions.group,exec_type",0,Execution sequence,Выполнение последовательности
+field,"ir.actions.group,name",0,Group Name,Группа
+field,"ir.actions.group,type",0,Action Type,Тип действия
+field,"ir.actions.group,usage",0,Action Usage,Использование действий
+field,"ir.actions.report.custom,model",0,Model,Модель
+field,"ir.actions.report.custom,name",0,Report Name,Название отчета
+field,"ir.actions.report.custom,report_id",0,Report Ref.,Ссылки на отчет
+field,"ir.actions.report.custom,type",0,Report Type,Тип отчета
+field,"ir.actions.report.custom,usage",0,Action Usage,Использование действий
+field,"ir.actions.report.xml,auto",0,Automatic XSL:RML,
+field,"ir.actions.report.xml,model",0,Model,Модель
+field,"ir.actions.report.xml,name",0,Name,Название
+field,"ir.actions.report.xml,report_name",0,Internal Name,Внутреннее имя
+field,"ir.actions.report.xml,report_xml",0,XML path,
+field,"ir.actions.report.xml,report_xsl",0,XSL path,
+field,"ir.actions.report.xml,type",0,Report Type,Тип отчета
+field,"ir.actions.report.xml,usage",0,Action Usage,Использование действий
+field,"ir.actions.wizard,name",0,Wizard info,Инф. о мастере
+field,"ir.actions.wizard,type",0,Action type,Тип действия
+field,"ir.actions.wizard,wiz_name",0,Wizard name,Название мастера
+field,"ir.attachment,datas",0,Data,Данные
+field,"ir.attachment,datas_fname",0,Data Filename,Файл с данными
+field,"ir.attachment,description",0,Description,Описание
+field,"ir.attachment,link",0,Link,Ссылка
+field,"ir.attachment,name",0,Attachment Name,Название приложения
+field,"ir.attachment,res_id",0,Ressource ID,ID ресурса
+field,"ir.attachment,res_model",0,Ressource Model,Модель ресурса
+field,"ir.cron,active",0,Active,Активно
+field,"ir.cron,args",0,Arguments,Аргументы
+field,"ir.cron,doall",0,Repeat all missed,Повторить все пропущенные
+field,"ir.cron,function",0,Function,
+field,"ir.cron,interval_number",0,Interval Number,Номер интервала
+field,"ir.cron,interval_type",0,Interval Unit,Интервал
+field,"ir.cron,model",0,Model,Модель
+field,"ir.cron,name",0,Name,Название
+field,"ir.cron,nextcall",0,Last call date,Дата последнего звонка
+field,"ir.cron,numbercall",0,Number of calls,Количество звонков
+field,"ir.cron,priority",0,Priority (0=Very Urgent),Приоритет (0 - очень срочно)
+field,"ir.cron,user_id",0,User,Пользователь
+field,"ir.default,field_name",0,Model field,Поле модели
+field,"ir.default,field_tbl",0,Model,Модель
+field,"ir.default,page",0,View,Вид
+field,"ir.default,ref_id",0,ID Ref.,ID ссылки
+field,"ir.default,ref_table",0,Table Ref.,Ссылка на таблицу
+field,"ir.default,uid",0,Users,Пользователи
+field,"ir.default,value",0,Default Value,Значение по умолчанию
+field,"ir.model,field_id",0,field ids,
+field,"ir.model,model",0,model,Модель
+field,"ir.model,name",0,Name,Название
+field,"ir.model.fields,field_description",0,Field Description,Описание поля
+field,"ir.model.fields,model",0,Model Name,Название модели
+field,"ir.model.fields,model_id",0,Model id,ID модели
+field,"ir.model.fields,name",0,Name,Наименование
+field,"ir.model.fields,relate",0,Client and Relate,Клиенты и связи
+field,"ir.model.fields,relation",0,Model Relation,Связь моделей
+field,"ir.model.fields,ttype",0,Field Type,Тип поля
+field,"ir.report.custom,action_id",0,Action,Действие
+field,"ir.report.custom,field_parent",0,Child Field,Подчиненное поле
+field,"ir.report.custom,fields_child0",0,Fields,Поля
+field,"ir.report.custom,footer",0,Report Footer,Заголовок
+field,"ir.report.custom,frequency",0,Frequency,Период
+field,"ir.report.custom,limitt",0,Limit,Ограничение
+field,"ir.report.custom,menu_id",0,Menu,Меню
+field,"ir.report.custom,model_id",0,Model,Модель
+field,"ir.report.custom,name",0,Report Name,Название отчета
+field,"ir.report.custom,print_format",0,Print format,Формат печати
+field,"ir.report.custom,print_orientation",0,Print orientation,Ориентация бумаги
+field,"ir.report.custom,repeat_header",0,Repeat Header,Повторить
+field,"ir.report.custom,sortby",0,Sorted By,Сортировать по
+field,"ir.report.custom,state",0,State,Состояние
+field,"ir.report.custom,title",0,Report title,Заголовок отчета
+field,"ir.report.custom,type",0,Report Type,Тип отчета
+field,"ir.report.custom.fields,alignment",0,Alignment,Выравнивание
+field,"ir.report.custom.fields,bgcolor",0,Background Color,Цвет фона
+field,"ir.report.custom.fields,cumulate",0,Cumulate,Аккумулировать
+field,"ir.report.custom.fields,fc0_condition",0,Condition,Условие
+field,"ir.report.custom.fields,fc0_op",0,Relation,Связь
+field,"ir.report.custom.fields,fc0_operande",0,Constraint,Ограничение
+field,"ir.report.custom.fields,fc1_condition",0,condition,условие
+field,"ir.report.custom.fields,fc1_op",0,Relation,Связь
+field,"ir.report.custom.fields,fc1_operande",0,Constraint,Ограничение
+field,"ir.report.custom.fields,fc2_condition",0,condition,условие
+field,"ir.report.custom.fields,fc2_op",0,Relation,Связь
+field,"ir.report.custom.fields,fc2_operande",0,Constraint,Ограничение
+field,"ir.report.custom.fields,fc3_condition",0,condition,условие
+field,"ir.report.custom.fields,fc3_op",0,Relation,Связь
+field,"ir.report.custom.fields,fc3_operande",0,Constraint,Ограничение
+field,"ir.report.custom.fields,field_child0",0,field child0,
+field,"ir.report.custom.fields,field_child1",0,field child1,
+field,"ir.report.custom.fields,field_child2",0,field child2,
+field,"ir.report.custom.fields,field_child3",0,field child3,
+field,"ir.report.custom.fields,fontcolor",0,Font color,Цвет шрифта
+field,"ir.report.custom.fields,groupby",0,Group by,Группировать по
+field,"ir.report.custom.fields,model",0,Name,Название
+field,"ir.report.custom.fields,model_id",0,Model,Модель
+field,"ir.report.custom.fields,name",0,Name,Название
+field,"ir.report.custom.fields,operation",0,unknown,
+field,"ir.report.custom.fields,report_id",0,Report Ref,Ссылки на отчет
+field,"ir.report.custom.fields,sequence",0,Sequence,Последовательность
+field,"ir.report.custom.fields,width",0,Fixed Width,Фиксированной ширины
+field,"ir.sequence,active",0,Active,Активна
+field,"ir.sequence,code",0,Sequence Code,Код последовательности
+field,"ir.sequence,name",0,Sequence Name,Название последовательности
+field,"ir.sequence,number_increment",0,Increment Number,Значение инкремента
+field,"ir.sequence,number_next",0,Next Number,Следующий номер
+field,"ir.sequence,prefix",0,Prefix,Префикс
+field,"ir.sequence,suffix",0,Suffix,Суффикс
+field,"ir.sequence.type,code",0,Sequence Code,Код последовательности
+field,"ir.sequence.type,name",0,Sequence Name,Название последовательности
+field,"ir.translation,lang",0,Language,Язык
+field,"ir.translation,name",0,Name Field,Поле имени
+field,"ir.translation,res_id",0,Ressource ID,ID ресурса
+field,"ir.translation,src",0,Source,Источник
+field,"ir.translation,type",0,Type,Тип
+field,"ir.translation,value",0,Translation Value,Перевод
+field,"ir.ui.menu,child_id",0,Childs,Подчиненные уровни
+field,"ir.ui.menu,child_id2",0,Child ids,Подчиненные id
+field,"ir.ui.menu,complete_name",0,Complete Name,Полное имя
+field,"ir.ui.menu,groups_id",0,Groups,Группы
+field,"ir.ui.menu,icon",0,Icon,
+field,"ir.ui.menu,name",0,Menu,Меню
+field,"ir.ui.menu,parent_id",0,Parent Menu,Родит. меню
+field,"ir.ui.view,arch",0,View Architecture,
+field,"ir.ui.view,field_parent",0,Childs Field,Подчиненные поля
+field,"ir.ui.view,model",0,Model,Модель
+field,"ir.ui.view,name",0,View Name,Название вида
+field,"ir.ui.view,priority",0,Priority,Важность
+field,"ir.ui.view,type",0,View Type,Посмотереть тип
+field,"ir.ui.view_sc,name",0,Shortcut Name,Название ссылки
+field,"ir.ui.view_sc,res_id",0,Resource Ref.,Ссылка на ресурс
+field,"ir.ui.view_sc,resource",0,Resource Name,Название ресурса
+field,"ir.ui.view_sc,user_id",0,User Ref.,Ссылка напользователя
+field,"ir.values,key",0,Name,Имя
+field,"ir.values,key2",0,Value,Значение
+field,"ir.values,meta",0,Meta Datas,Мета дата
+field,"ir.values,model",0,Name,Название
+field,"ir.values,name",0,Name,Имя
+field,"ir.values,object",0,Is Object,
+field,"ir.values,res_id",0,Ressource ID,ID ресурса
+field,"ir.values,user_id",0,User,Пользователь
+field,"ir.values,value",0,Value,Значение
+field,"letter.letter,name",0,Name,Название
+field,"letter.letter,paragraph_ids",0,Letter,Письмо
+field,"letter.letter,partner_id",0,Partner,Контрагент
+field,"letter.letter,state",0,State,Состояние
+field,"letter.letter,template",0,Template,Шаблон
+field,"letter.letter.paragraph,content",0,Content,Содержание
+field,"letter.letter.paragraph,letter_id",0,Letter,Письмо
+field,"letter.letter.paragraph,name",0,Paragraph Name,Название параграфа
+field,"letter.letter.paragraph,sequence",0,Sequence,Последовательность
+field,"letter.letter.paragraph,type_id",0,Paragraph Type,Тип параграфа
+field,"letter.paragraph,content",0,Content,Содержание
+field,"letter.paragraph,name",0,Paragraph Name,Название параграфа
+field,"letter.paragraph,sequence",0,Sequence,Последовательность
+field,"letter.paragraph,type_id",0,Paragraph Type,Тип параграфа
+field,"letter.paragraph.type,name",0,Paragraph Type,Тип параграфа
+field,"letter.paragraph.type,sequence",0,Sequence,Последовательность
+field,"mrp.bom,active",0,Active,Активна
+field,"mrp.bom,bom_id",0,Parent BOM,Вышестоящая спецификация
+field,"mrp.bom,bom_lines",0,BOM Lines,Стока спецификации
+field,"mrp.bom,code",0,Code,Код
+field,"mrp.bom,date_start",0,Valid from,Действителен с
+field,"mrp.bom,date_stop",0,Valid until,Действителен до
+field,"mrp.bom,name",0,Name,Наименование
+field,"mrp.bom,position",0,Position #,Позиция #
+field,"mrp.bom,product_efficiency",0,Product Efficiency,Эффективность продукта
+field,"mrp.bom,product_id",0,Product,Продукт
+field,"mrp.bom,product_qty",0,Product Qty,Кол-во продукции
+field,"mrp.bom,product_rounding",0,Product Rounding,Округления продукта
+field,"mrp.bom,product_uom",0,Product UOM,Ед. изм. продукта
+field,"mrp.bom,property_ids",0,Properties,Свойства
+field,"mrp.bom,revision_ids",0,BOM Revisions,Версии спецификаций
+field,"mrp.bom,routing_id",0,Routing,Маршрутизация
+field,"mrp.bom,sequence",0,Sequence,Последовательность
+field,"mrp.bom,type",0,BOM Type,Тип спецификации
+field,"mrp.bom.revision,bom_id",0,BOM,Спецификация
+field,"mrp.bom.revision,indice",0,Indice,Индекс
+field,"mrp.bom.revision,name",0,Modification,Изменение
+field,"mrp.procurement,date_close",0,Date Closed,Дата завершения
+field,"mrp.procurement,date_planned",0,Date Promised,Ожидаемая дата
+field,"mrp.procurement,location_id",0,Location,Расположение
+field,"mrp.procurement,message",0,Latest error,Последняя ошибка
+field,"mrp.procurement,name",0,Name,Наименование
+field,"mrp.procurement,origin",0,Origin,Источник
+field,"mrp.procurement,priority",0,Priority,Приоритет
+field,"mrp.procurement,procure_method",0,Procurement Method,Способ снабжения
+field,"mrp.procurement,product_id",0,Product,Продукт
+field,"mrp.procurement,product_qty",0,Quantity,Количество
+field,"mrp.procurement,product_uom",0,Product UOM,Ед. изм. продукта
+field,"mrp.procurement,property_ids",0,Properties,Свойства
+field,"mrp.procurement,purchase_id",0,Purchase Order,Закупка
+field,"mrp.procurement,purchase_line_id",0,Purchase Order Line,Строка заказа на закупку
+field,"mrp.procurement,reservation_id",0,Reservation,Резерв
+field,"mrp.procurement,state",0,State,Состояние
+field,"mrp.production,bom_id",0,Bill of Material,Спецификация
+field,"mrp.production,date_finnished",0,End Date,Дата завершения
+field,"mrp.production,date_planned",0,Planned date,Планируемая дата
+field,"mrp.production,date_start",0,Start Date,Дата начала
+field,"mrp.production,location_dest_id",0,Destination Location,Пункт назначения
+field,"mrp.production,location_src_id",0,Source Location,Исходное расположните
+field,"mrp.production,lot_created_id",0,Lot Created,Партия создана
+field,"mrp.production,lot_lines",0,Lots Consummed,
+field,"mrp.production,name",0,Name,Наименование
+field,"mrp.production,origin",0,Origin,Источник
+field,"mrp.production,picking_id",0,Picking list,Список отгрузки
+field,"mrp.production,priority",0,Priority,Приоритет
+field,"mrp.production,product_id",0,Product,Продукт
+field,"mrp.production,product_lines",0,Material Planned,Треб. материалы
+field,"mrp.production,product_qty",0,Product Qty,Кол-во продукции
+field,"mrp.production,product_uom",0,Product UOM,Ед. изм. продукта
+field,"mrp.production,reservation_id",0,Reservation,Резерв
+field,"mrp.production,reservation_lines",0,Lots reserved,Партия зарезервирована
+field,"mrp.production,reservation_prod_id",0,Reservation,Резерв
+field,"mrp.production,state",0,State,Состояние
+field,"mrp.production,workcenter_lines",0,Workcenters Utilisation,Загрузка производства
+field,"mrp.production.lot.line,lot_id",0,Lot,Партия
+field,"mrp.production.lot.line,name",0,Name,Название
+field,"mrp.production.lot.line,product_id",0,Product,Продукт
+field,"mrp.production.lot.line,product_qty",0,Product Qty,Кол-во продукции
+field,"mrp.production.lot.line,product_uom",0,Product UOM,Ед. изм. продукта
+field,"mrp.production.lot.line,production_id",0,Production Order,Заказ на производство
+field,"mrp.production.lot.line,serial",0,Serial,Сер. №
+field,"mrp.production.lot.line,tracking",0,Tracking,Трассировка
+field,"mrp.production.product.line,name",0,Name,Название
+field,"mrp.production.product.line,product_id",0,Product,Продукт
+field,"mrp.production.product.line,product_qty",0,Product Qty,Кол-во продукции
+field,"mrp.production.product.line,product_uom",0,Product UOM,Ед. изм. продукта
+field,"mrp.production.product.line,production_id",0,Production Order,Заказ на производство
+field,"mrp.production.workcenter.line,cycle",0,Nbr of cycle,
+field,"mrp.production.workcenter.line,hour",0,Nbr of hour,
+field,"mrp.production.workcenter.line,name",0,Name,Название
+field,"mrp.production.workcenter.line,production_id",0,Production Order,Заказ на производство
+field,"mrp.production.workcenter.line,sequence",0,Sequence,Последовательность
+field,"mrp.production.workcenter.line,workcenter_id",0,Workcenter,
+field,"mrp.property,composition",0,Properties composition,Сочетание свойств
+field,"mrp.property,description",0,Description,Описание
+field,"mrp.property,group_id",0,Property Group,Группа свойств
+field,"mrp.property,name",0,Name,Название
+field,"mrp.property.group,description",0,Description,Описание
+field,"mrp.property.group,name",0,Property Group,Группа свойств
+field,"mrp.routing,active",0,Active,Активен
+field,"mrp.routing,code",0,Code,Код
+field,"mrp.routing,location_id",0,Production Location,Размещение производства
+field,"mrp.routing,name",0,Name,Название
+field,"mrp.routing,note",0,Description,Описание
+field,"mrp.routing,workcenter_lines",0,Workcenters,
+field,"mrp.routing.workcenter,cycle_nbr",0,Number of cycle,Количество циклов
+field,"mrp.routing.workcenter,name",0,Name,Название
+field,"mrp.routing.workcenter,routing_id",0,Parent Routing,Вышестоящий маршрут
+field,"mrp.routing.workcenter,workcenter_id",0,Workcenter,
+field,"mrp.workcenter,active",0,Active,Активен
+field,"mrp.workcenter,capacity_per_cycle",0,Capacity per Cycle,Произв. на цикл
+field,"mrp.workcenter,code",0,Code,Код
+field,"mrp.workcenter,costs_cycle",0,Cost per cycle,Стоимость цикла
+field,"mrp.workcenter,costs_cycle_account_id",0,Cycle Account,Кол. циклов
+field,"mrp.workcenter,costs_hour",0,Cost per hour,Стоимость в час
+field,"mrp.workcenter,costs_hour_account_id",0,Hour Account,Часовая стоимость
+field,"mrp.workcenter,name",0,Name,Название
+field,"mrp.workcenter,note",0,Description,Описание
+field,"mrp.workcenter,project_id",0,Profit/Cost center,Центр выручки/стоимости
+field,"mrp.workcenter,time_cycle",0,Time for 1 cycle (hour),Время в час. на 1 цикл
+field,"mrp.workcenter,time_efficiency",0,Time Efficiency,Реальное время
+field,"mrp.workcenter,time_start",0,Time before prod.,Время перед запуском
+field,"mrp.workcenter,time_stop",0,Time after prod.,Время после завершения
+field,"mrp.workcenter,timesheet_id",0,Timesheet,Расписание
+field,"mrp.workcenter,type",0,Type,Тип
+field,"network.changes,date",0,Change date,Дата изменения
+field,"network.changes,description",0,Long Description,Полное описание
+field,"network.changes,machine_id",0,Machine,Оборудование
+field,"network.changes,name",0,Short Descritption,Кор. описание
+field,"network.hardware.type,name",0,Type of material,Тип оборудования
+field,"network.hardware.type,networkable",0,Networkable hardware,Сетевое оборудование
+field,"network.material,change_id",0,Changes on this machine,Изменения оборудования
+field,"network.material,child_id",0,Childs Materials,Входящие материалы
+field,"network.material,date",0,Installation Date,Дата установки
+field,"network.material,name",0,Device Name,Имя устройства
+field,"network.material,network_id",0,Network,Сеть
+field,"network.material,note",0,Notes,Примечания
+field,"network.material,parent_id",0,Parent Material,Вышестоящий продукт
+field,"network.material,software_id",0,Installed Software,Установленное ПО
+field,"network.material,supplier",0,Supplier,Поставщик
+field,"network.material,type",0,Hardware type,Тип аппаратного обеспечения
+field,"network.material,warranty",0,Warranty deadline,Дата окончания гарантии
+field,"network.network,contact_id",0,Partner,Контрагент
+field,"network.network,material_ids",0,Members,Члены
+field,"network.network,name",0,Network name,Сетевое имя
+field,"network.network,range",0,Address range,Адрес
+field,"network.network,user_id",0,Insite Contact person,Конт. информация
+field,"network.software,date",0,Installation Date,Дата установки
+field,"network.software,email",0,Contact Email,e-mail
+field,"network.software,logpass",0,Login / Password,Логин / Пароль
+field,"network.software,material_id",0,Material,Оборудование
+field,"network.software,name",0,Composant Name,Подходящее имя
+field,"network.software,note",0,Notes,Примечания
+field,"network.software,type",0,Software Type,Тип ПО
+field,"network.software,version",0,Software version,Версия ПО
+field,"network.software.logpass,name",0,Login,Логин
+field,"network.software.logpass,password",0,Password,Пароль
+field,"network.software.logpass,software_id",0,Software,Прогр. обеспечение
+field,"network.software.type,name",0,Composant Name,Подходящее имя
+field,"network.software.type,note",0,Notes,Примечания
+field,"product.category,child_id",0,Childs Categories,Подчиненные категории
+field,"product.category,name",0,Name,Название
+field,"product.category,parent_id",0,Parent Category,Вышестоящая категория
+field,"product.pricelist,active",0,Active,Активен
+field,"product.pricelist,name",0,Name,Название
+field,"product.pricelist,version_id",0,Pricelist Versions,Версии прайс-листа
+field,"product.pricelist.item,base",0,Based on,На основе
+field,"product.pricelist.item,base_pricelist_id",0,Base Price List,Основной прайс-лист
+field,"product.pricelist.item,categ_id",0,Product Category,Категория продукта
+field,"product.pricelist.item,limit_price_base",0,Limit Price Base,
+field,"product.pricelist.item,limit_price_discount",0,Limit Price Discount,
+field,"product.pricelist.item,limit_price_max_margin",0,Limit Price Max. Margin,
+field,"product.pricelist.item,limit_price_min_margin",0,Limit Price Min. Margin,
+field,"product.pricelist.item,limit_price_round",0,Limit Price Rounding,
+field,"product.pricelist.item,limit_price_surcharge",0,Limit Price Surcharge,
+field,"product.pricelist.item,list_price_base",0,List Price Base,Список базовых цен
+field,"product.pricelist.item,list_price_discount",0,List Price Discount,Список скидок
+field,"product.pricelist.item,list_price_max_margin",0,List Price Max. Margin,
+field,"product.pricelist.item,list_price_min_margin",0,List Price Min. Margin,
+field,"product.pricelist.item,list_price_round",0,List Price Rounding,Округления прайс листа
+field,"product.pricelist.item,list_price_surcharge",0,List Price Surcharge,Список за
+field,"product.pricelist.item,min_quantity",0,Min. Quantity,Мин. количество
+field,"product.pricelist.item,name",0,Name,Название
+field,"product.pricelist.item,price_version_id",0,Price List Version,Версия прайс-листа
+field,"product.pricelist.item,priority",0,Priority,Приоритет
+field,"product.pricelist.item,product_tmpl_id",0,Product Template,Шаблон продукта
+field,"product.pricelist.item,standard_price_base",0,Standard Price Base,Базовая стандартная цена
+field,"product.pricelist.item,standard_price_discount",0,Standard Price Discount,Стандартные скидки
+field,"product.pricelist.item,standard_price_max_margin",0,Standard Price Max. Margin,
+field,"product.pricelist.item,standard_price_min_margin",0,Standard Price Min. Margin,
+field,"product.pricelist.item,standard_price_round",0,Standard Price Rounding,
+field,"product.pricelist.item,standard_price_surcharge",0,Standard Price Surcharge,
+field,"product.pricelist.version,active",0,Active,Активен
+field,"product.pricelist.version,date_end",0,End Date,Дата завершения
+field,"product.pricelist.version,date_start",0,Start Date,Дата начала
+field,"product.pricelist.version,items_id",0,Price List Items,Пункты прайс-листа
+field,"product.pricelist.version,name",0,Name,Название
+field,"product.pricelist.version,pricelist_id",0,Price List,Прайс-лист
+field,"product.product,active",0,Active,Активен
+field,"product.product,code",0,Code,Код
+field,"product.product,default_code",0,Code,Код
+field,"product.product,limit_price_extra",0,Limit Price Extra,
+field,"product.product,limit_price_margin",0,Limit Price Margin,
+field,"product.product,list_price_extra",0,List Price Extra,
+field,"product.product,list_price_margin",0,List Price Margin,
+field,"product.product,lst_price",0,List price,Список цен
+field,"product.product,partner_ref",0,Customer ref,Ссылка на клиента
+field,"product.product,price",0,Customer Price,Цена заказчика
+field,"product.product,product_tmpl_id",0,Product Template,Шаблон продукта
+field,"product.product,qty_available",0,Real Stock,В наличии
+field,"product.product,standard_price_extra",0,Standard Price Extra,
+field,"product.product,standard_price_margin",0,Standard Price Margin,
+field,"product.product,variants",0,Variants,Варианты
+field,"product.product,virtual_available",0,Virtual Stock,Виртуальный склад
+field,"product.template,categ_id",0,Category,Категория
+field,"product.template,cost_method",0,Costing Method,Способ расчета стоимости
+field,"product.template,description",0,Description,Описание
+field,"product.template,description_purchase",0,Purchase Description,Описание заказа
+field,"product.template,description_sale",0,Sale Description,Описание продажи
+field,"product.template,limit_price",0,Limit Price,
+field,"product.template,list_price",0,List Price,Список цен
+field,"product.template,manufacturer",0,Manufacturer,Производитель
+field,"product.template,manufacturer_pname",0,Manufacturer product name,Производитель
+field,"product.template,manufacturer_pref",0,Manufacturer product code,Код продукта у производителя
+field,"product.template,name",0,Name,Название
+field,"product.template,name_ids",0,Names for Partners,Названия партнеров
+field,"product.template,procure_method",0,Procure Method,Способ получения
+field,"product.template,purchase_ok",0,Can be Purchased,М.б. заказан
+field,"product.template,rental",0,Rentable product,Арендуемый продукт
+field,"product.template,sale_delay",0,Procurement lead time,Срок поставки
+field,"product.template,sale_ok",0,Can be sold,Возможна продажа
+field,"product.template,seller_delay",0,Supplier lead time,Срок поставки
+field,"product.template,seller_id",0,Default Supplier,Основной поставщик
+field,"product.template,seller_ids",0,Alternative Suppliers,Прочие поставщики
+field,"product.template,standard_price",0,Standard Price,Стандартная цена
+field,"product.template,state",0,State,Состояние
+field,"product.template,supply_method",0,Supply method,Способ поставки
+field,"product.template,taxes_id",0,Product Taxes,Налоги продукта
+field,"product.template,type",0,Product Type,Тип продукта
+field,"product.template,uom_id",0,Default UOM,Ед. изм. по умолчанию
+field,"product.template,uom_po_id",0,Purchase UOM,Ед. изм.заказа
+field,"product.template,volume",0,Volume,Объем
+field,"product.template,warranty",0,Warranty (months),Гарантия (мес.)
+field,"product.template,weight",0,Weight,Вес
+field,"product.template.name,code",0,Product Code,Код продукта
+field,"product.template.name,name",0,Product Name,Название продукта
+field,"product.template.name,partner_id",0,Partner,Контрагент
+field,"product.template.name,template_id",0,Product Template,Шаблон продукта
+field,"product.uom,active",0,Active,Активен
+field,"product.uom,category_id",0,UOM Category,Категория ед. изм.
+field,"product.uom,factor",0,Factor,Фактор
+field,"product.uom,name",0,Name,Название
+field,"product.uom,rounding",0,Rounding Precision,Точность округления
+field,"product.uom.categ,name",0,Name,Название
+field,"project.project,active",0,Active,Активен
+field,"project.project,category_id",0,Accounting Classification,Классификация учета
+field,"project.project,child_id",0,Subproject,Подчиненный проект
+field,"project.project,contact_id",0,Contact,Контактная информация
+field,"project.project,date_end",0,Project should end on,Проект должен завершиться
+field,"project.project,date_start",0,Project started on,Проект начат
+field,"project.project,effective_hours",0,Hours spent,Потрачено часов
+field,"project.project,manager",0,Project manager,Руководитель проекта
+field,"project.project,members",0,Project members,Участники проекта
+field,"project.project,mode",0,Price setting mode,Способ расчета стоимости
+field,"project.project,name",0,Project name,Название проекта
+field,"project.project,notes",0,Notes,Примечания
+field,"project.project,parent_id",0,Parent project,Вышестоящий проект
+field,"project.project,partner_id",0,Customer,Заказчик
+field,"project.project,planned_hours",0,Hours planned,Планируется часов
+field,"project.project,pricelist_id",0,Pricelist,Прайс-лист
+field,"project.project,priority",0,Priority,Важность
+field,"project.project,shop_id",0,Shop,Магазин
+field,"project.project,state",0,unknown,
+field,"project.project,tariff",0,Sales price,Цена поставки
+field,"project.project,tasks",0,Project tasks,Задачи проекта
+field,"project.project,tax_ids",0,Applicable taxes,Используемые налоги
+field,"project.project,timesheet_id",0,Timesheet,Расписание
+field,"project.project,warn_customer",0,Warn customer,Предупреждение заказчика
+field,"project.project,warn_footer",0,Mail footer,Завершение письма
+field,"project.project,warn_header",0,Mail header,Заголовок письма
+field,"project.project,warn_manager",0,Warn manager,Предупреждение менеджера
+field,"project.task,active",0,Active,Активна
+field,"project.task,billable",0,To be invoiced,Будет выставлен счет
+field,"project.task,comments",0,Task comments,Комментарии
+field,"project.task,cust_desc",0,Description for the customer,Описание для заказчика
+field,"project.task,date_close",0,Date Closed,Дата завершения
+field,"project.task,date_deadline",0,Deadline,Дата сдачи
+field,"project.task,date_start",0,Date Start,Дана начала
+field,"project.task,description",0,Description,Описание
+field,"project.task,effective_hours",0,Effective hours,Использованных часов
+field,"project.task,name",0,Task summary,Кр. итог
+field,"project.task,order_id",0,Sale Order,Предложение о продаже
+field,"project.task,partner_id",0,Customer,Заказчик
+field,"project.task,planned_hours",0,Planned hours,Запланировано (часов)
+field,"project.task,priority",0,Priority,Важность
+field,"project.task,product_id",0,Product,Продукт
+field,"project.task,product_qty",0,Product Quantity,Кол-во продукции
+field,"project.task,product_uom",0,Product UoM,Ед. изм. продукта
+field,"project.task,progress",0,Progress (0-100),Выполнение (0-100)
+field,"project.task,project_id",0,Project,Проект
+field,"project.task,sequence",0,Sequence,Последовательность
+field,"project.task,start_sequence",0,Wait for previous sequences,Ждать предыдущие задачи
+field,"project.task,state",0,State,Состояние
+field,"project.task,type",0,Type,Тип
+field,"project.task,user_id",0,Assigned to,Назначить
+field,"project.task.comment,content",0,Comment,Замечания
+field,"project.task.comment,date",0,Date,Дата
+field,"project.task.comment,name",0,Author,Автор
+field,"project.task.comment,task_id",0,Task,Задача
+field,"project.task.type,description",0,Description,Описание
+field,"project.task.type,name",0,Type,Тип
+field,"purchase.order,date_order",0,Date Ordered,Дата заказа
+field,"purchase.order,dest_address_id",0,Destination Address,Пункт назначения
+field,"purchase.order,invoice_id",0,Invoice,Счет
+field,"purchase.order,invoiced",0,Invoiced & Paid,Выставлено счетов & Оплачено
+field,"purchase.order,location_id",0,Delivery destination,Место доставки
+field,"purchase.order,name",0,Order Description,Описание
+field,"purchase.order,notes",0,Notes,Примечания
+field,"purchase.order,order_line",0,Order State,Статус заказа
+field,"purchase.order,origin",0,Origin,Источник
+field,"purchase.order,partner_address_id",0,Address,Адрес
+field,"purchase.order,partner_id",0,Partner,Контрагент
+field,"purchase.order,partner_ref",0,Partner Reference,Ссылка на контрагента
+field,"purchase.order,picking_id",0,Picking list,Список отгрузки
+field,"purchase.order,pricelist_id",0,Pricelist,Прайс-лист
+field,"purchase.order,project_id",0,Profit/Cost center,Центр выручки/стоимости
+field,"purchase.order,ref",0,Order Reference,Ссылка на заказ
+field,"purchase.order,shipped",0,Shipped,Доставлено
+field,"purchase.order,state",0,Order State,Статус заказа
+field,"purchase.order,validator",0,Validated by,Проверен
+field,"purchase.order,warehouse_id",0,Warehouse,Товарный склад
+field,"purchase.order.line,date_planned",0,Date Promised,Планируемая дата
+field,"purchase.order.line,name",0,Description,Описание
+field,"purchase.order.line,notes",0,Notes,Примечания
+field,"purchase.order.line,order_id",0,Order Ref,Ссылка на заказ
+field,"purchase.order.line,price_subtotal",0,Subtotal,Промежуточный итог
+field,"purchase.order.line,price_unit",0,Unit Price,Стоимость комплекта
+field,"purchase.order.line,product_id",0,Product,Продукт
+field,"purchase.order.line,product_qty",0,Quantity,Количество
+field,"purchase.order.line,product_uom",0,Product UOM,Ед. изм. продукта
+field,"purchase.order.line,reservation_dest_id",0,Reservation Destination,Назначение резерва
+field,"purchase.order.line,reservation_id",0,Reservation,Резерв
+field,"purchase.order.line,taxes_id",0,Taxes,Налоги
+field,"res.country,code",0,Country Code,Код страны
+field,"res.country,name",0,Country Name,Страна
+field,"res.country.state,code",0,State Code,Код штата
+field,"res.country.state,country_id",0,Country,Страна
+field,"res.country.state,name",0,State Name,Штат
+field,"res.groups,name",0,Group Name,Группа
+field,"res.lang,active",0,Active,Активен
+field,"res.lang,code",0,Code,Код
+field,"res.lang,name",0,Name,Название
+field,"res.lang,translatable",0,Translatable,Переводимый
+field,"res.partner,active",0,Active,Активен
+field,"res.partner,address",0,Contacts,Контакты
+field,"res.partner,bank",0,Bank account,Банковский счет
+field,"res.partner,category_id",0,Categories,Категории
+field,"res.partner,child_ids",0,Partner Ref.,Ссылка на контрагента
+field,"res.partner,client_lien",0,Liens,Право удержания
+field,"res.partner,comment",0,Notes,Примечания
+field,"res.partner,commercial",0,Commercial,Коммерческий
+field,"res.partner,credit",0,Credit,Кредит
+field,"res.partner,credit_limit",0,Credit Limit,Величина кредита
+field,"res.partner,debit",0,Debit,Дебет
+field,"res.partner,events",0,events,события
+field,"res.partner,lang",0,Language,Язык
+field,"res.partner,name",0,Name,Название
+field,"res.partner,parent_id",0,Main Company,Головная компания
+field,"res.partner,payment_term",0,Payment term,Срок оплаты
+field,"res.partner,ref",0,Partner ID,ID партнера
+field,"res.partner,responsible",0,Users,Пользователи
+field,"res.partner,title",0,Title,Название
+field,"res.partner,user_id",0,Users,Пользователи
+field,"res.partner,vat",0,VAT,
+field,"res.partner,website",0,Website,Сайт
+field,"res.partner.address,birthdate",0,Birthdate,Дата рождения
+field,"res.partner.address,city",0,City,Город
+field,"res.partner.address,country",0,Country,Страна
+field,"res.partner.address,email",0,E-Mail,e-mail
+field,"res.partner.address,fax",0,Fax,Факс
+field,"res.partner.address,function",0,Function,
+field,"res.partner.address,mobile",0,Mobile,Мобильный
+field,"res.partner.address,name",0,Contact Name,Контакт
+field,"res.partner.address,partner_id",0,Partner,Контрагент
+field,"res.partner.address,phone",0,Phone,Телефон
+field,"res.partner.address,state",0,State,Штат
+field,"res.partner.address,street",0,Street,Адрес
+field,"res.partner.address,street2",0,Street2,Адрес 2
+field,"res.partner.address,title",0,Title,Название
+field,"res.partner.address,type",0,Address Type,Тип адреса
+field,"res.partner.address,zip",0,Zip,Индекс
+field,"res.partner.canal,active",0,Active,Активен
+field,"res.partner.canal,name",0,Canal Name,Название способа связи
+field,"res.partner.category,active",0,Active,Активен
+field,"res.partner.category,child_ids",0,Childs Category,Подчиненные категории
+field,"res.partner.category,complete_name",0,Name,Название
+field,"res.partner.category,name",0,Category Name,Имя категории
+field,"res.partner.category,parent_id",0,Parent Category,Вышестоящие категории
+field,"res.partner.category,type_id",0,Category Type,Тип категории
+field,"res.partner.category.type,name",0,Category Name,Имя категории
+field,"res.partner.event,canal_id",0,Canal,Способ связи
+field,"res.partner.event,date",0,Date,Дата
+field,"res.partner.event,description",0,Description,Описание
+field,"res.partner.event,document",0,Document,Документ
+field,"res.partner.event,name",0,Events,События
+field,"res.partner.event,partner_id",0,Partner,Контрагент
+field,"res.partner.event,partner_type",0,Partner Relation,Взаимосвязи контрагентов
+field,"res.partner.event,planned_cost",0,Planned Cost,Планируемая стоимость
+field,"res.partner.event,planned_revenue",0,Planned Revenue,Планируемая прибыль
+field,"res.partner.event,probability",0,Probability (0.50),Вероятность (0..5)
+field,"res.partner.event,som",0,State of Mind,Оценка
+field,"res.partner.event,type",0,Type of Event,Тип события
+field,"res.partner.event,user_id",0,User,Пользователь
+field,"res.partner.function,code",0,Code,Код
+field,"res.partner.function,name",0,Name,Название
+field,"res.partner.som,factor",0,Factor,Фактор
+field,"res.partner.som,name",0,State of Mind,Оценка
+field,"res.partner.title,domain",0,Domain,Область
+field,"res.partner.title,name",0,Title,Название
+field,"res.partner.title,shortcut",0,Shortcut,Ссылка
+field,"res.payterm,name",0,Payment term (short name),Срок оплаты
+field,"res.request,act_from",0,From,Форма
+field,"res.request,act_to",0,To,
+field,"res.request,active",0,Active,Активен
+field,"res.request,body",0,Request,Запрос
+field,"res.request,date_sent",0,Date,Дата
+field,"res.request,history",0,History,История
+field,"res.request,name",0,Subject,Тема
+field,"res.request,priority",0,Priority,Важность
+field,"res.request,ref_doc1",0,Document Ref 1,Ссылка на документ 1
+field,"res.request,ref_doc2",0,Document Ref 2,Ссылка на документ 2
+field,"res.request,ref_partner_id",0,Partner Ref.,Ссылка на контрагента
+field,"res.request,state",0,State,Состояние
+field,"res.request,trigger_date",0,Trigger Date,Дата выполнения
+field,"res.request.history,act_from",0,From,Форма
+field,"res.request.history,act_to",0,To,
+field,"res.request.history,body",0,Body,Сообщение
+field,"res.request.history,date_sent",0,Date sent,Дата отправки
+field,"res.request.history,name",0,Summary,Резюме
+field,"res.request.history,req_id",0,Request,Запрос
+field,"res.request.link,name",0,Name,Имя
+field,"res.request.link,object",0,Link Object,Прикрепленный объект
+field,"res.request.link,priority",0,Priority,Важность
+field,"res.roles,child_id",0,Childs,Подчиненные уровни
+field,"res.roles,name",0,Role Name,Название роли
+field,"res.roles,parent_id",0,Parent,Вышестоящий уровень
+field,"res.users,action_id",0,Action,Действие
+field,"res.users,address_id",0,Address,Адрес
+field,"res.users,groups_id",0,groups,Группы
+field,"res.users,login",0,Login,Логин
+field,"res.users,name",0,Name,Имя
+field,"res.users,password",0,Password,Пароль
+field,"res.users,roles_id",0,Roles,Роли
+field,"res.users,signature",0,Signature,Подпись
+field,"sale.order,amount_tax",0,Taxes,Налоги
+field,"sale.order,amount_total",0,Total,Итого
+field,"sale.order,amount_untaxed",0,Untaxed Amount,Сумма без налогов
+field,"sale.order,date_order",0,Date Ordered,Дата заказа
+field,"sale.order,incoterm",0,Incoterm,
+field,"sale.order,invoice_id",0,Invoice,Счет
+field,"sale.order,invoiced",0,Paid (reconcilied),Оплачено
+field,"sale.order,name",0,Order Description,Описание заказа
+field,"sale.order,note",0,Notes,Примечания
+field,"sale.order,order_line",0,Order Lines,Строки заказа
+field,"sale.order,order_policy",0,Shipping Policy,Схема доставки
+field,"sale.order,origin",0,Origin,Источник
+field,"sale.order,partner_id",0,Partner,Контрагент
+field,"sale.order,partner_invoice_id",0,Invoice Address,Адрес счета
+field,"sale.order,partner_shipping_id",0,Shipping Address,Адрес доставки
+field,"sale.order,payment_line",0,Order Payments,Оплата заказа
+field,"sale.order,payment_term",0,Payment Term,Срок оплаты
+field,"sale.order,picking_id",0,Picking List,Список отгрузки
+field,"sale.order,picking_policy",0,Picking Policy,Способ отгрузки
+field,"sale.order,pricelist_id",0,Pricelist,Прайс-лист
+field,"sale.order,project_id",0,Profit/Cost Center,Центр выручки/стоимости
+field,"sale.order,shipped",0,Delivered,Доставлено
+field,"sale.order,shop_id",0,Shop,Магазин
+field,"sale.order,state",0,Order State,Статус заказа
+field,"sale.order,user_id",0,Salesman,Продавец
+field,"sale.order.line,date_planned",0,Date Promised,Дата поставки
+field,"sale.order.line,name",0,Description,Описание
+field,"sale.order.line,notes",0,Notes,Примечания
+field,"sale.order.line,order_id",0,Order Ref,Ссылка на заказ
+field,"sale.order.line,price_subtotal",0,Subtotal,Промежуточный итог
+field,"sale.order.line,price_unit",0,Unit Price,Стоимость комплекта
+field,"sale.order.line,procurement_id",0,Procurement,Снабжение
+field,"sale.order.line,product_id",0,Product,Продукт
+field,"sale.order.line,product_qty",0,Quantity,Количество
+field,"sale.order.line,product_uom",0,Unit of Measure,Ед. измерения
+field,"sale.order.line,property_ids",0,Properties,Свойства
+field,"sale.order.line,tax_id",0,Taxes,Налоги
+field,"sale.order.line,type",0,Procure Method,Способ получения
+field,"sale.order.payment,account_id",0,Account,Счет
+field,"sale.order.payment,amount",0,Amount,Сумма
+field,"sale.order.payment,name",0,Description,Описание
+field,"sale.order.payment,order_id",0,Order Ref,Ссылка на заказ
+field,"sale.shop,name",0,Shop name,Название магазина
+field,"sale.shop,payment_account_id",0,Payment accounts,Счета оплаты
+field,"sale.shop,payment_default_id",0,Default payment account,Счет оплаты по умолчанию
+field,"sale.shop,pricelist_id",0,Pricelist,Прайс-лист
+field,"sale.shop,project_id",0,Profit/Cost Center,Центр выручки/стоимости
+field,"sale.shop,warehouse_id",0,Available Warehouse,Доступные склады
+field,"stock.incoterms,active",0,Active,Активен
+field,"stock.incoterms,code",0,Code,Код
+field,"stock.incoterms,name",0,Name,Имя
+field,"stock.location,account_id",0,Inventory Account,Счет инвентаризации
+field,"stock.location,active",0,Active,Активен
+field,"stock.location,allocation_method",0,Allocation Method,Способ размещения
+field,"stock.location,child_ids",0,Contains,Содержит
+field,"stock.location,comment",0,Additional Information,Доп. информация
+field,"stock.location,lot_id",0,Lot,Партия
+field,"stock.location,posx",0,Position X,Позиция X
+field,"stock.location,posy",0,Position Y,Позиция Y
+field,"stock.location,posz",0,Position Z,Позиция Z
+field,"stock.location,usage",0,Location type,Тим места хранения
+field,"stock.lot,active",0,Active,Активен
+field,"stock.lot,location_id",0,Location,Расположение
+field,"stock.lot,lot_ids",0,Lot lines,Строки партии
+field,"stock.lot,name",0,Lot Group,Группа
+field,"stock.lot,tracking",0,Tracking,Трассировка
+field,"stock.lot,type",0,Type,Тип
+field,"stock.lot.inventory,date",0,Date create,Дата создания
+field,"stock.lot.inventory,date_done",0,Date done,Дата выполнения
+field,"stock.lot.inventory,inventory_line_id",0,Inventories,Инвентаризации
+field,"stock.lot.inventory,lot_ids",0,Created Lots,Создать партию(серию)
+field,"stock.lot.inventory,name",0,Inventory,Инвентаризация
+field,"stock.lot.inventory,state",0,State,Состояние
+field,"stock.lot.inventory.line,amount",0,Quantity,Количество
+field,"stock.lot.inventory.line,inventory_id",0,Inventory,Инвентаризация
+field,"stock.lot.inventory.line,lot_id",0,Lot,Партия
+field,"stock.lot.inventory.line,product_id",0,Product,Продукт
+field,"stock.lot.inventory.line,product_uom",0,Product UOM,Ед. изм. продукта
+field,"stock.lot.line,active",0,Active,Активен
+field,"stock.lot.line,address_id",0,Address,Адрес
+field,"stock.lot.line,child_ids",0,Childs,Подчиненные уровни
+field,"stock.lot.line,date",0,Date create,Дата создания
+field,"stock.lot.line,location_id",0,Location,Расположение
+field,"stock.lot.line,lot_id",0,Lot / Location,Партия / Размещение
+field,"stock.lot.line,move_history_lines",0,Lot Line,Строка партии
+field,"stock.lot.line,name",0,Lot,Партия
+field,"stock.lot.line,parent_ids",0,Parents,Родители
+field,"stock.lot.line,product_id",0,Product,Продукт
+field,"stock.lot.line,product_price",0,Unit Costs Price,Ед. изм. цены
+field,"stock.lot.line,product_qty",0,Quantity,Количество
+field,"stock.lot.line,product_uom",0,Product UOM,Ед. изм. продукта
+field,"stock.lot.line,reservation_id",0,Reservation,Резерв
+field,"stock.lot.line,serial",0,Serial,Сер. №
+field,"stock.lot.line,tracking",0,Tracking,Трассировка
+field,"stock.lot.move.history,address_id",0,Address,Адрес
+field,"stock.lot.move.history,date",0,Date create,Дата создания
+field,"stock.lot.move.history,location_id",0,Location,Расположение
+field,"stock.lot.move.history,lot_line_id",0,Lot Line,Строка партии
+field,"stock.lot.move.history,name",0,Lot,Партия
+field,"stock.move,active",0,Active,Активно
+field,"stock.move,address_id",0,Destination Address,Пункт назначения
+field,"stock.move,date_moved",0,Actual Date,Фактическая дата
+field,"stock.move,date_planned",0,Planned Date,Планируемая дата
+field,"stock.move,loc_dest_id",0,Destination Location,Пункт назначения
+field,"stock.move,lot_id",0,Lot,Партия
+field,"stock.move,name",0,Move Description,Описание Перемещения
+field,"stock.move,origin",0,Origin,Источник
+field,"stock.move,serial",0,Tracking Number,Инв. №
+field,"stock.move,state",0,State,Состояние
+field,"stock.picking,active",0,Active,Активно
+field,"stock.picking,address_id",0,Move to Address,Переслать по адресу
+field,"stock.picking,auto_picking",0,Auto-Picking,Авто-отгрузка
+field,"stock.picking,date",0,Date create,Дата создания
+field,"stock.picking,loc_dest_id",0,Location Destination,Разместить в
+field,"stock.picking,loc_move_id",0,Move to Location,Переслать по адресу
+field,"stock.picking,lot_dest_id",0,Lot Destination,Партия поставляется
+field,"stock.picking,lot_line_lines",0,Lot lines used,Строки используются
+field,"stock.picking,lot_lines",0,Lots Created,Партия создана
+field,"stock.picking,move_lines",0,Moves Created,Выполненные перемещения
+field,"stock.picking,move_type",0,Delivery Method,Способ доставки
+field,"stock.picking,name",0,Picking Name,Название отгрузки
+field,"stock.picking,note",0,Notes,Примечания
+field,"stock.picking,origin",0,Origin,Источник
+field,"stock.picking,reservation_lines",0,Reservation Lines,Строки резерва
+field,"stock.picking,state",0,State,Состояние
+field,"stock.picking,type",0,Shipping Type,Тип доставки
+field,"stock.picking,work",0,Work todo,
+field,"stock.picking.lot.line,lot_line_id",0,Reserved Lot,Зарезервированная партия
+field,"stock.picking.lot.line,name",0,Product,Продукт
+field,"stock.picking.lot.line,picking_id",0,Picking List,Список отгрузки
+field,"stock.picking.lot.line,product_id",0,Product,Продукт
+field,"stock.picking.lot.line,product_qty",0,Quantity,Количество
+field,"stock.picking.lot.line,product_uom",0,Product UOM,Ед. изм. продукта
+field,"stock.picking.lot.line,reservation_id",0,Reservation,Резерв
+field,"stock.picking.lot.line,serial",0,New Serial,Новый сер. №
+field,"stock.picking.lot.line,state",0,State,Состояние
+field,"stock.picking.lot.line,tracking",0,New Tracking,Новая трассировка
+field,"stock.reservation,date",0,Date Created,Дата создания
+field,"stock.reservation,date_planned",0,Planned date,Планируемая дата
+field,"stock.reservation,location_dest_id",0,Dest. Location,Пункт назначения
+field,"stock.reservation,location_id",0,Location,Расположение
+field,"stock.reservation,lot_line_ids",0,Reserved Lots,Зарезервированные партии
+field,"stock.reservation,name",0,Name,Название
+field,"stock.reservation,picking_id",0,Product,Продукт
+field,"stock.reservation,priority",0,Priority,Важность
+field,"stock.reservation,product_id",0,Product,Продукт
+field,"stock.reservation,product_qty",0,Quantity,Количество
+field,"stock.reservation,product_uom",0,Product UOM,Ед. изм. продукта
+field,"stock.reservation,reservation_dest_id",0,Dest. Reservation,Назначение резерва
+field,"stock.reservation,state",0,State,Состояние
+field,"stock.warehouse,lot_input_id",0,Location Input,Поступление на склад
+field,"stock.warehouse,lot_output_id",0,Location Output,Отгрузка со склада
+field,"stock.warehouse,lot_stock_id",0,Location Stock,Склад
+field,"stock.warehouse,name",0,Name,Наименование
+field,"stock.warehouse.orderpoint,active",0,Active,Активен
+field,"stock.warehouse.orderpoint,logic",0,Reordering Mode,Способ сортировки
+field,"stock.warehouse.orderpoint,name",0,Name,Название
+field,"stock.warehouse.orderpoint,procurement_id",0,Purchase Order,Закупка
+field,"stock.warehouse.orderpoint,product_id",0,Product,Продукт
+field,"stock.warehouse.orderpoint,product_max_qty",0,Max Quantity,Макс. количество
+field,"stock.warehouse.orderpoint,product_min_qty",0,Min Quantity,Мин. количество
+field,"stock.warehouse.orderpoint,product_uom",0,Product UOM,Ед. изм. продукта
+field,"stock.warehouse.orderpoint,qty_multiple",0,Qty Multiple,кол.
+field,"stock.warehouse.orderpoint,warehouse_id",0,Warehouse,Товарный склад
+field,"subscription.document,active",0,Active,Активен
+field,"subscription.document,field_ids",0,Fields,Поля
+field,"subscription.document,model",0,Model,Модель
+field,"subscription.document,name",0,Name,Название
+field,"subscription.document,workflow_action",0,Workflow Action,Действие процесса
+field,"subscription.document.fields,document_id",0,Subscription Document,Документ подписки
+field,"subscription.document.fields,field",0,Field name,Имя поля
+field,"subscription.document.fields,name",0,Name,Название
+field,"subscription.document.fields,value",0,Default Value,Значение по умолчанию
+field,"subscription.subscription,active",0,Active,Активна
+field,"subscription.subscription,cron_id",0,Cron Job,Назначенное задание
+field,"subscription.subscription,date_init",0,First Date,Дата начала
+field,"subscription.subscription,doc_lines",0,Documents created,Документы созданы
+field,"subscription.subscription,doc_source",0,Source Document,Исходный документ
+field,"subscription.subscription,exec_init",0,Number of documents,Кол. документов
+field,"subscription.subscription,interval_number",0,Interval Qty,Пред. интервала
+field,"subscription.subscription,interval_type",0,Interval Unit,Интервал
+field,"subscription.subscription,name",0,Name,Название
+field,"subscription.subscription,notes",0,Notes,Примечания
+field,"subscription.subscription,partner_id",0,Partner,Контрагент
+field,"subscription.subscription,state",0,State,Состояние
+field,"subscription.subscription,user_id",0,User,Пользователь
+field,"subscription.subscription.history,date",0,Date,Дата
+field,"subscription.subscription.history,document_id",0,Source Document,Исходный документ
+field,"subscription.subscription.history,name",0,Name,Название
+field,"subscription.subscription.history,subscription_id",0,Subscription,Подписка
+field,"workflow,name",0,Name,Название
+field,"workflow,on_create",0,On Create,При создании
+field,"workflow,osv",0,Ressource Model,Модель ресурса
+field,"workflow.activity,action",0,Action,Действие
+field,"workflow.activity,flow_start",0,Flow Start,Запуск процесса
+field,"workflow.activity,flow_stop",0,Flow Stop,Остановка процесса
+field,"workflow.activity,join_mode",0,Join Mode,Тип объединения
+field,"workflow.activity,kind",0,Kind,Вид деятельности
+field,"workflow.activity,name",0,Name,Название
+field,"workflow.activity,signal_send",0,Signal (subflow.*),Сигнал (подпроцесс)
+field,"workflow.activity,split_mode",0,Split Mode,Тип расщепления
+field,"workflow.activity,subflow_id",0,Subflow,Подпроцесс
+field,"workflow.activity,wkf_id",0,Workflow,Процесс
+field,"workflow.instance,res_id",0,Resource ID,ID ресурса
+field,"workflow.instance,res_type",0,Resource Model,Модель ресурсов
+field,"workflow.instance,state",0,State,Состояние
+field,"workflow.instance,uid",0,User ID,ID пользователя
+field,"workflow.instance,wkf_id",0,Workflow,Процесс
+field,"workflow.transition,act_from",0,Source Activity,Исходное действие
+field,"workflow.transition,act_to",0,Destination Activity,Результирующее действие
+field,"workflow.transition,condition",0,Condition,Условие
+field,"workflow.transition,role_id",0,Role Required,Требуемая роль
+field,"workflow.transition,signal",0,Value Button Name,Подпись кнопки
+field,"workflow.transition,trigger_expr_id",0,Trigger Expr ID,ID выражения тригера
+field,"workflow.transition,trigger_model",0,Trigger Type,Тип тригера
+field,"workflow.triggers,instance_id",0,Destination Instance,
+field,"workflow.triggers,model",0,Model,Модель
+field,"workflow.triggers,res_id",0,Ressource ID,ID ресурса
+model,"account.account,name",1,Account chart,План счетов
+model,"account.account,name",10,Long Term Recievable,
+model,"account.account,name",11,Current,Текущий
+model,"account.account,name",12,Cash,Наличные
+model,"account.account,name",13,Bank Account,Банковский счет
+model,"account.account,name",14,Paypal Account,Счет Paypal
+model,"account.account,name",15,Petty Cash,
+model,"account.account,name",16,Stock,Склад
+model,"account.account,name",17,Merchandise Type A,Товары тип А
+model,"account.account,name",18,Merchandise Type B,Товары тип В
+model,"account.account,name",19,Receivable,Дебиторы
+model,"account.account,name",2,Assets,Актив
+model,"account.account,name",20,Main Receivable,Основной для получения
+model,"account.account,name",21,Payable,
+model,"account.account,name",22,Main Payable,Основной платежный
+model,"account.account,name",23,Credit Cards,Кредитные карты
+model,"account.account,name",24,Tax TVA,Налог TVA
+model,"account.account,name",25,Results,Результат
+model,"account.account,name",26,Income,Прибыль
+model,"account.account,name",27,Merchandise Sales,Продажа товаров
+model,"account.account,name",28,Products Sales,Продажа продукции
+model,"account.account,name",29,Service Sales,Продажи услуг
+model,"account.account,name",3,Fixed,Фиксированный
+model,"account.account,name",30,Financials Interests,Ком. интересы
+model,"account.account,name",31,Expense,Расход
+model,"account.account,name",32,Merchandise,Товары
+model,"account.account,name",33,Products Purchase,Закупка продукции
+model,"account.account,name",34,Accessories Purchase,
+model,"account.account,name",35,Subcontractor Purchase,Заказ субподрядчику
+model,"account.account,name",36,Merchandise Purchase,Закупка товаров
+model,"account.account,name",37,Remises,
+model,"account.account,name",38,Services Purchase,Приобретение услуг
+model,"account.account,name",39,Loyer and location,Расположение
+model,"account.account,name",4,Constitution,Устав
+model,"account.account,name",40,Reparations,
+model,"account.account,name",41,Water Gaz Electricity,Вода Газ Электричество
+model,"account.account,name",42,Phone Post Fax Internet,Телефон Факс Интернет
+model,"account.account,name",43,Printed material,Печатная продукция
+model,"account.account,name",44,Food,Продукты питания
+model,"account.account,name",45,Miscanellous charges,Прочие расходы
+model,"account.account,name",46,Insurances,Страховка
+model,"account.account,name",47,Transport Carburant,Топливо
+model,"account.account,name",48,Travels,Путешествия
+model,"account.account,name",49,Publicity,Реклама
+model,"account.account,name",5,Immaterial Assets,Нематериальные активы
+model,"account.account,name",50,Taxes Charges,Уплата налогов
+model,"account.account,name",51,TVA non deductible,TVA не подл. вычетк
+model,"account.account,name",52,Miscanellous Taxes,Прочие налоги
+model,"account.account,name",53,Financial Charges,Расходы
+model,"account.account,name",54,Stock,Склад
+model,"account.account,name",55,Stock Income,Складская прибыль
+model,"account.account,name",56,Merchandise Type A,Товары тип А
+model,"account.account,name",57,Merchandise Type B,Товары тип В
+model,"account.account,name",58,Stock Expense,Складские расходы
+model,"account.account,name",59,Merchandise Type A,Товары тип А
+model,"account.account,name",6,Land Assets,Земельные активы
+model,"account.account,name",60,Merchandise Type B,Товары тип В
+model,"account.account,name",61,Liabilities,Пассив
+model,"account.account,name",62,Equity,Акция
+model,"account.account,name",7,Machines and Tools,Оборудование
+model,"account.account,name",8,Mobile Equipment,Движимое оборудование
+model,"account.account,name",9,Financial Investement,Инвестиции
+model,"ir.actions.act_window,name",1,Administration Menu,Административное меню
+model,"ir.actions.act_window,name",10,ir.actions.act_window,
+model,"ir.actions.act_window,name",100,account.transfer.form,
+model,"ir.actions.act_window,name",107,account.project,
+model,"ir.actions.act_window,name",11,ir.actions.wizard,
+model,"ir.actions.act_window,name",115,product.normal.form,
+model,"ir.actions.act_window,name",116,product.variant.form,
+model,"ir.actions.act_window,name",117,product.template.form,
+model,"ir.actions.act_window,name",118,product.category.form,
+model,"ir.actions.act_window,name",119,product.normal.form,
+model,"ir.actions.act_window,name",12,res.users,
+model,"ir.actions.act_window,name",120,product.pricelist.form,
+model,"ir.actions.act_window,name",121,product.pricelist.form,
+model,"ir.actions.act_window,name",122,product.uom.form,
+model,"ir.actions.act_window,name",123,product.uom.categ.form,
+model,"ir.actions.act_window,name",124,crm.case.categ.form,
+model,"ir.actions.act_window,name",125,crm.case.form,
+model,"ir.actions.act_window,name",126,crm.case.form,
+model,"ir.actions.act_window,name",127,crm.case.form,
+model,"ir.actions.act_window,name",128,crm.case.form,
+model,"ir.actions.act_window,name",129,crm.case.form,
+model,"ir.actions.act_window,name",13,res.groups,
+model,"ir.actions.act_window,name",130,crm.case.form,
+model,"ir.actions.act_window,name",131,crm.case.form,
+model,"ir.actions.act_window,name",132,crm.case.form,
+model,"ir.actions.act_window,name",133,crm.case.form,
+model,"ir.actions.act_window,name",134,crm.segmentation.form,
+model,"ir.actions.act_window,name",135,crm.segmentation.tree,
+model,"ir.actions.act_window,name",14,res.roles.tree,
+model,"ir.actions.act_window,name",145,stock.lot.inventory,
+model,"ir.actions.act_window,name",146,stock.lot.line.form,
+model,"ir.actions.act_window,name",147,Open Articles (Products),Открытые статьи (продукты)
+model,"ir.actions.act_window,name",148,stock.lot.form,
+model,"ir.actions.act_window,name",149,Open Lots,Открытые партии
+model,"ir.actions.act_window,name",15,ir.ui.view,
+model,"ir.actions.act_window,name",150,Tracability: Article Composition,
+model,"ir.actions.act_window,name",151,Tracability: Derived Article,
+model,"ir.actions.act_window,name",152,stock.location,
+model,"ir.actions.act_window,name",153,stock.location.tree,
+model,"ir.actions.act_window,name",154,stock.warehouse,
+model,"ir.actions.act_window,name",155,stock.picking,
+model,"ir.actions.act_window,name",156,stock.picking,
+model,"ir.actions.act_window,name",157,stock.picking,
+model,"ir.actions.act_window,name",158,stock.picking,
+model,"ir.actions.act_window,name",159,stock.picking,
+model,"ir.actions.act_window,name",16,ir.attachment,
+model,"ir.actions.act_window,name",160,stock.picking,
+model,"ir.actions.act_window,name",161,stock.picking,
+model,"ir.actions.act_window,name",162,stock.picking,
+model,"ir.actions.act_window,name",163,stock.picking,
+model,"ir.actions.act_window,name",164,stock.picking,
+model,"ir.actions.act_window,name",165,stock.move,
+model,"ir.actions.act_window,name",166,stock.move,
+model,"ir.actions.act_window,name",167,stock.reservation,
+model,"ir.actions.act_window,name",168,stock.reservation,
+model,"ir.actions.act_window,name",169,stock.reservation,
+model,"ir.actions.act_window,name",17,ir.report.custom,
+model,"ir.actions.act_window,name",170,stock.incoterms,
+model,"ir.actions.act_window,name",171,purchase.order.form,
+model,"ir.actions.act_window,name",172,purchase.order.form,
+model,"ir.actions.act_window,name",173,purchase.order.form,
+model,"ir.actions.act_window,name",174,purchase.order.form,
+model,"ir.actions.act_window,name",176,mrp.property.group.form,
+model,"ir.actions.act_window,name",177,mrp.property.form,
+model,"ir.actions.act_window,name",178,mrp.workcenter.form,
+model,"ir.actions.act_window,name",179,mrp.routing.form,
+model,"ir.actions.act_window,name",18,ir.translation.view,
+model,"ir.actions.act_window,name",180,mrp.bom.form,
+model,"ir.actions.act_window,name",181,mrp.bom.final.tree,
+model,"ir.actions.act_window,name",182,mrp.bom.final.form,
+model,"ir.actions.act_window,name",183,Bill of Materials Architecture,Архитектура спецификаций
+model,"ir.actions.act_window,name",184,mrp.production.form,
+model,"ir.actions.act_window,name",185,mrp.production.form,
+model,"ir.actions.act_window,name",186,mrp.production.form,
+model,"ir.actions.act_window,name",187,mrp.procurement.form,
+model,"ir.actions.act_window,name",188,mrp.procurement.form,
+model,"ir.actions.act_window,name",189,mrp.procurement.form,
+model,"ir.actions.act_window,name",19,ir.ui.menu.form2,
+model,"ir.actions.act_window,name",190,mrp.procurement.form,
+model,"ir.actions.act_window,name",191,stock.warehouse.orderpoint,
+model,"ir.actions.act_window,name",2,User Menu (operations),Меню пользователя
+model,"ir.actions.act_window,name",20,ir.cron.form,
+model,"ir.actions.act_window,name",200,sale.shop,
+model,"ir.actions.act_window,name",201,sale.order,
+model,"ir.actions.act_window,name",202,sale.order,
+model,"ir.actions.act_window,name",203,sale.order,
+model,"ir.actions.act_window,name",204,sale.order,
+model,"ir.actions.act_window,name",205,sale.order,
+model,"ir.actions.act_window,name",21,res.request.form,
+model,"ir.actions.act_window,name",212,project.project,
+model,"ir.actions.act_window,name",213,project.project_edition,
+model,"ir.actions.act_window,name",214,project.project,
+model,"ir.actions.act_window,name",215,project.task,
+model,"ir.actions.act_window,name",216,project.task.unbilled.close,
+model,"ir.actions.act_window,name",217,project.task.unbilled.open,
+model,"ir.actions.act_window,name",218,project.task,
+model,"ir.actions.act_window,name",219,project.task,
+model,"ir.actions.act_window,name",22,res.request.link.form,
+model,"ir.actions.act_window,name",220,project.task,
+model,"ir.actions.act_window,name",221,View project's tasks,Посмотреть задачи проекта
+model,"ir.actions.act_window,name",25,res.country,
+model,"ir.actions.act_window,name",26,res.country.state,
+model,"ir.actions.act_window,name",27,res.partner,
+model,"ir.actions.act_window,name",28,res.partner.address,
+model,"ir.actions.act_window,name",29,res.partner.title,
+model,"ir.actions.act_window,name",3,ir.sequence,
+model,"ir.actions.act_window,name",30,res.partner,
+model,"ir.actions.act_window,name",31,res.payterm,
+model,"ir.actions.act_window,name",32,Company Architecture,Структура компании
+model,"ir.actions.act_window,name",33,res.partner.category,
+model,"ir.actions.act_window,name",34,res.partner.category.type.form,
+model,"ir.actions.act_window,name",35,res.lang,
+model,"ir.actions.act_window,name",39,res.partner.canal.form,
+model,"ir.actions.act_window,name",4,ir.sequence.type,
+model,"ir.actions.act_window,name",40,res.partner.som.form,
+model,"ir.actions.act_window,name",41,letter.letter.form,
+model,"ir.actions.act_window,name",42,letter.letter.form,
+model,"ir.actions.act_window,name",43,letter.letter.form,
+model,"ir.actions.act_window,name",44,letter.letter.form,
+model,"ir.actions.act_window,name",45,letter.paragraph.type.form,
+model,"ir.actions.act_window,name",46,network.material.tree,
+model,"ir.actions.act_window,name",47,network.material.tree_by_network,
+model,"ir.actions.act_window,name",48,network.material.edit_material_2click,
+model,"ir.actions.act_window,name",49,network.software.type,
+model,"ir.actions.act_window,name",5,ir.actions.actions,
+model,"ir.actions.act_window,name",50,network.hardware.type,
+model,"ir.actions.act_window,name",51,network.network.tree,
+model,"ir.actions.act_window,name",52,network.network.form,
+model,"ir.actions.act_window,name",56,hr.employee,
+model,"ir.actions.act_window,name",57,hr.timesheet.group.form.open,
+model,"ir.actions.act_window,name",58,hr.attendance.view,
+model,"ir.actions.act_window,name",59,hr.holidays.ask_form,
+model,"ir.actions.act_window,name",6,ir.actions.execute,
+model,"ir.actions.act_window,name",60,hr.holidays.status,
+model,"ir.actions.act_window,name",61,hr.holidays.type,
+model,"ir.actions.act_window,name",62,hr.expense.open_list,
+model,"ir.actions.act_window,name",63,hr.expense.expense_claim,
+model,"ir.actions.act_window,name",64,hr.expense.type.o_view,
+model,"ir.actions.act_window,name",68,campaign.campaign.tree,
+model,"ir.actions.act_window,name",69,campaign.campaign.form,
+model,"ir.actions.act_window,name",7,ir.actions.group,
+model,"ir.actions.act_window,name",70,campaign.partner.open,
+model,"ir.actions.act_window,name",75,subscription.subscription.form,
+model,"ir.actions.act_window,name",76,subscription.document.form,
+model,"ir.actions.act_window,name",77,account.currency,
+model,"ir.actions.act_window,name",78,account.account.form,
+model,"ir.actions.act_window,name",79,account.account.tree,
+model,"ir.actions.act_window,name",8,ir.actions.report.custom,
+model,"ir.actions.act_window,name",80,account.move.line.tree1,
+model,"ir.actions.act_window,name",81,account.move.line.treeform,
+model,"ir.actions.act_window,name",82,account.move.line.treeform,
+model,"ir.actions.act_window,name",83,account.move.line.form,
+model,"ir.actions.act_window,name",84,account.move.form,
+model,"ir.actions.act_window,name",85,account.tax,
+model,"ir.actions.act_window,name",86,account.invoice,
+model,"ir.actions.act_window,name",87,account.invoice,
+model,"ir.actions.act_window,name",88,account.invoice,
+model,"ir.actions.act_window,name",89,account.invoice,
+model,"ir.actions.act_window,name",9,ir.actions.report.xml,
+model,"ir.actions.act_window,name",90,account.invoice,
+model,"ir.actions.act_window,name",91,account.invoice,
+model,"ir.actions.act_window,name",92,account.invoice,
+model,"ir.actions.act_window,name",93,account.invoice,
+model,"ir.actions.act_window,name",94,account.invoice,
+model,"ir.actions.act_window,name",95,account.invoice,
+model,"ir.actions.act_window,name",96,account.invoice,
+model,"ir.actions.act_window,name",97,account.invoice,
+model,"ir.actions.act_window,name",98,account.invoice,
+model,"ir.actions.act_window,name",99,account.invoice,
+model,"ir.actions.report.custom,name",196,Bom Report,Отчет -спецификация
+model,"ir.actions.report.custom,name",197,Bom Tree,Дерево спецификаций
+model,"ir.actions.report.custom,name",198,Bom Report,Отчет -спецификация
+model,"ir.actions.report.custom,name",199,Bom Tree,Дерево спецификаций
+model,"ir.actions.report.custom,name",207,Monthly sales turnover over one year,Месячные продажи в течении года
+model,"ir.actions.report.custom,name",208,Daily sales turnover over one year,Дневные продажи в течении года
+model,"ir.actions.report.custom,name",209,Monthly cumulated sales turnover over one year,Месячные кумулятивные продажи за год
+model,"ir.actions.report.xml,name",101,Invoices,Счета
+model,"ir.actions.report.xml,name",102,Invoice List,Список счетов
+model,"ir.actions.report.xml,name",103,Recalls,
+model,"ir.actions.report.xml,name",104,Transfers,Переводы
+model,"ir.actions.report.xml,name",105,Journal,Журнал
+model,"ir.actions.report.xml,name",106,IntraCom,
+model,"ir.actions.report.xml,name",136,Business Opportunities,Возможности
+model,"ir.actions.report.xml,name",140,Product Prevision,
+model,"ir.actions.report.xml,name",141,Print Items Labels,
+model,"ir.actions.report.xml,name",142,Picking List,Список отгрузки
+model,"ir.actions.report.xml,name",143,Stock Overview,Обзор склада
+model,"ir.actions.report.xml,name",144,Stock Location Overview,Обзор размещений складов
+model,"ir.actions.report.xml,name",175,Purchase Orders,Заказа на закупку
+model,"ir.actions.report.xml,name",195,Bom Content,Содержание спецификации
+model,"ir.actions.report.xml,name",206,Print order,Распечатать заказ
+model,"ir.actions.report.xml,name",222,Gantt Representation,Представление Гантта
+model,"ir.actions.report.xml,name",223,Gantt Representation,Представление Гантта
+model,"ir.actions.report.xml,name",224,Project Description,Описание проекта
+model,"ir.actions.report.xml,name",23,Labels,Подписи
+model,"ir.actions.report.xml,name",24,Identifiants,
+model,"ir.actions.report.xml,name",53,Print Materials,Распечатать материалы
+model,"ir.actions.report.xml,name",54,Print Network Materials,Распечатать сетевое оборудование
+model,"ir.actions.report.xml,name",55,Print Network List,Распечатать сетевой список
+model,"ir.actions.report.xml,name",65,Timesheet by week,Расписание по неделям
+model,"ir.actions.report.xml,name",66,Timesheet by month,Расписание по месяцам
+model,"ir.actions.wizard,name",108,Reconcile Transactions,
+model,"ir.actions.wizard,name",109,Verify Transactions,Проверить операции
+model,"ir.actions.wizard,name",110,Verify Transactions,Проверить операции
+model,"ir.actions.wizard,name",111,Print Journal,Распечатать журнал
+model,"ir.actions.wizard,name",112,Split Invoice,Разбить счет
+model,"ir.actions.wizard,name",113,Refund Invoice,Вернуть оплату счета
+model,"ir.actions.wizard,name",114,IntraCom,
+model,"ir.actions.wizard,name",137,IntraStat,
+model,"ir.actions.wizard,name",138,Assign Serial/Tracking Number,Назначить серийный/инв. №
+model,"ir.actions.wizard,name",139,Picking Make,Выполнить отгрузку
+model,"ir.actions.wizard,name",192,Procurement Compute,Рассчитать снабжение
+model,"ir.actions.wizard,name",193,Order Point Compute,Подсчитать элемент заказа
+model,"ir.actions.wizard,name",194,Stock Futur,
+model,"ir.actions.wizard,name",210,Make an order,Создать заказ
+model,"ir.actions.wizard,name",211,Make invoices,Создать счета
+model,"ir.actions.wizard,name",225,Bill tasks,Список задач
+model,"ir.actions.wizard,name",226,Copy project,Копировать проект
+model,"ir.actions.wizard,name",227,Deactivate project,Декларативный проект
+model,"ir.actions.wizard,name",36,Send SMS,Отправить SMS
+model,"ir.actions.wizard,name",37,Mass Mailing,Массовая рассылка
+model,"ir.actions.wizard,name",38,Clear IDs,Очистить ID
+model,"ir.actions.wizard,name",67,Sign in / Sign out,Пришел / Ушел
+model,"ir.actions.wizard,name",71,Create a new category,Создать новую категорию
+model,"ir.actions.wizard,name",72,Add a partner,Добавить контрагента
+model,"ir.actions.wizard,name",73,Send an email,Отправить e-mail
+model,"ir.actions.wizard,name",74,Send a SMS,Отправить SMS
+model,"ir.model,name",1,Menu,Меню
+model,"ir.model,name",10,ir.translation,
+model,"ir.model,name",100,Production,Производство
+model,"ir.model,name",101,Production Lots Used,Используется серийное производство
+model,"ir.model,name",102,Production workcenters used,Используемые производственные центры
+model,"ir.model,name",103,Production planned products,Производство запланированных продуктов
+model,"ir.model,name",104,Procurement,Снабжение
+model,"ir.model,name",105,Warehouse Orderpoint,
+model,"ir.model,name",106,Sale Shop,Магазин
+model,"ir.model,name",107,Sale Order,Предложение о продаже
+model,"ir.model,name",108,Sale Order line,Строка предложения
+model,"ir.model,name",109,Sale Order payment,Оплата предложения
+model,"ir.model,name",11,workflow.triggers,
+model,"ir.model,name",110,Project,Проект
+model,"ir.model,name",111,Project task type,Тип задачи
+model,"ir.model,name",112,Task,Задача
+model,"ir.model,name",113,Task comment,Комментарии
+model,"ir.model,name",12,res.country,
+model,"ir.model,name",13,res.partner.function,
+model,"ir.model,name",14,The country state,Штат
+model,"ir.model,name",15,The partner payment term,Сроки оплаты для контрагента
+model,"ir.model,name",16,Partner category types,Типы категорий контрагентов
+model,"ir.model,name",17,Partner Categories,Категории контрагента
+model,"ir.model,name",18,res.partner.title,
+model,"ir.model,name",19,The partner object,Объект контрагент
+model,"ir.model,name",2,ir.sequence.type,
+model,"ir.model,name",20,The partner description,Описание контрагента
+model,"ir.model,name",21,res.partner.canal,
+model,"ir.model,name",22,res.partner.som,
+model,"ir.model,name",23,res.partner.event,
+model,"ir.model,name",24,res.lang,
+model,"ir.model,name",25,res.request,
+model,"ir.model,name",26,res.request.link,
+model,"ir.model,name",27,res.request.history,
+model,"ir.model,name",28,letter.letter,
+model,"ir.model,name",29,letter.paragraph.type,
+model,"ir.model,name",3,ir.sequence,
+model,"ir.model,name",30,letter.letter.paragraph,
+model,"ir.model,name",31,letter.paragraph,
+model,"ir.model,name",32,Hardware type,Тип аппаратного обеспечения
+model,"ir.model,name",33,Network,Сетевое оборудование
+model,"ir.model,name",34,Material,Оборудование
+model,"ir.model,name",35,Network changes,Изменения
+model,"ir.model,name",36,Software type,Тип ПО
+model,"ir.model,name",37,Software,Прогр. обеспечение
+model,"ir.model,name",38,Software login,Логин ПО
+model,"ir.model,name",39,Timesheet,Расписание
+model,"ir.model,name",4,ir.ui.view_sc,
+model,"ir.model,name",40,Employee,Сотрудник
+model,"ir.model,name",41,Timesheet Line,Строка расписания
+model,"ir.model,name",42,Action reason,Основание
+model,"ir.model,name",43,Attendance,Присутствие
+model,"ir.model,name",44,Holidays Status,Статус выходных
+model,"ir.model,name",45,Holidays,Выходные
+model,"ir.model,name",46,Expense type,Тип расхода
+model,"ir.model,name",47,Expense,Расход
+model,"ir.model,name",48,campaign.campaign,
+model,"ir.model,name",49,campaign.step,
+model,"ir.model,name",5,ir.default,
+model,"ir.model,name",50,campaign.partner,
+model,"ir.model,name",51,campaign.partner.history,
+model,"ir.model,name",52,Subscription document,Документ подписки
+model,"ir.model,name",53,Subscription document fields,Поля подписки
+model,"ir.model,name",54,Subscription,Подписка
+model,"ir.model,name",55,Subscription history,История подписки
+model,"ir.model,name",56,account.project,
+model,"ir.model,name",57,Currency,Валюта
+model,"ir.model,name",58,Account,Счет
+model,"ir.model,name",59,Account Move,
+model,"ir.model,name",6,ir.report.custom,
+model,"ir.model,name",60,Account Reconciliation,
+model,"ir.model,name",61,Account Move Entries,
+model,"ir.model,name",62,Tax,Налог
+model,"ir.model,name",63,Invoices,Счета
+model,"ir.model,name",64,Invoice line,Строка счета
+model,"ir.model,name",65,Invoice Tax,Налоги
+model,"ir.model,name",66,Money Transfer,Перевод денег
+model,"ir.model,name",67,Product uom categ,Категория ед. изм.
+model,"ir.model,name",68,Product Unit of Measure,Ед. изм. продукта
+model,"ir.model,name",69,Product Category,Категория продукта
+model,"ir.model,name",7,ir.report.custom.fields,
+model,"ir.model,name",70,Product Template,Шаблон продукта
+model,"ir.model,name",71,Product Template,Шаблон продукта
+model,"ir.model,name",72,Product,Продукт
+model,"ir.model,name",73,Pricelist,Прайс-лист
+model,"ir.model,name",74,Pricelist Version,Версия прайс-листа
+model,"ir.model,name",75,Pricelist item,Пункт прайс-листа
+model,"ir.model,name",76,Category of case,Тип предложения
+model,"ir.model,name",77,Case,Предложение
+model,"ir.model,name",78,Case history,История предложений
+model,"ir.model,name",79,Partner Segmentation,Сегментация контрагентов
+model,"ir.model,name",8,ir.attachment,
+model,"ir.model,name",80,Segmentation line,Строка сегментации
+model,"ir.model,name",81,Incoterms,
+model,"ir.model,name",82,Lot,Партия
+model,"ir.model,name",83,Move,Перемещение
+model,"ir.model,name",84,Picking list,Список отгрузки
+model,"ir.model,name",85,Reservation,Резерв
+model,"ir.model,name",86,Articles - Lot Line,Замечание - строка партии
+model,"ir.model,name",87,Inventory,Инвентаризация
+model,"ir.model,name",88,Inventory line,Строка инвентаризации
+model,"ir.model,name",89,Warehouse,Товарный склад
+model,"ir.model,name",9,ir.cron,
+model,"ir.model,name",90,Picking lot lines,Строки отгрузки партии
+model,"ir.model,name",91,Purchase order,Закупка
+model,"ir.model,name",92,Purchase Order line,Строка заказа на закупку
+model,"ir.model,name",93,Workcenter,
+model,"ir.model,name",94,Property Group,Группа свойств
+model,"ir.model,name",95,Property,Свойство
+model,"ir.model,name",96,Routing,Маршрутизация
+model,"ir.model,name",97,Routing workcenter usage,
+model,"ir.model,name",98,Bill of Material,Спецификация
+model,"ir.model,name",99,Bill of material revisions,Версии спецификаций
+model,"ir.report.custom,name",1,Bom Report,Отчет -спецификация
+model,"ir.report.custom,name",2,Bom Tree,Дерево спецификаций
+model,"ir.report.custom,name",3,Bom Report,Отчет -спецификация
+model,"ir.report.custom,name",4,Monthly sales turnover over one year,Месячные продажи в течении года
+model,"ir.report.custom,name",5,Daily sales turnover over one year,Дневные продажи в течении года
+model,"ir.report.custom,name",6,Monthly cumulated sales turnover over one year,Месячные кумулятивные продажи за год
+model,"ir.report.custom,title",1,BOM Report,Отчет -спецификация
+model,"ir.report.custom,title",2,BOM Tree,Дерево спецификаций
+model,"ir.report.custom,title",3,header,Заголовок
+model,"ir.report.custom,title",4,Monthly sales turnover over one year,Месячные продажи в течении года
+model,"ir.report.custom,title",5,Daily sales turnover over one year,Дневные продажи в течении года
+model,"ir.report.custom,title",6,Monthly cumulated sales turnover over one year,Месячные кумулятивные продажи за год
+model,"ir.ui.menu,name",1,Menu,Меню
+model,"ir.ui.menu,name",10,Actions,Действия
+model,"ir.ui.menu,name",100,Draft Invoices,Черновики счетов
+model,"ir.ui.menu,name",101,PRO-FORMA,Предв. счет
+model,"ir.ui.menu,name",102,Opened Invoices,Открытые счета
+model,"ir.ui.menu,name",103,Draft,Черновик
+model,"ir.ui.menu,name",104,Opened,Открыт
+model,"ir.ui.menu,name",105,Draft,Черновик
+model,"ir.ui.menu,name",106,Opened,Открыт
+model,"ir.ui.menu,name",107,Draft,Черновик
+model,"ir.ui.menu,name",108,Opened,Открыт
+model,"ir.ui.menu,name",109,Transfers,Переводы
+model,"ir.ui.menu,name",11,Execute,Выполнить
+model,"ir.ui.menu,name",110,Accounting Projects,Учет проектов
+model,"ir.ui.menu,name",111,Reports,Отчеты
+model,"ir.ui.menu,name",112,IntraCom,
+model,"ir.ui.menu,name",113,Products,Продукция
+model,"ir.ui.menu,name",114,Products,Продукция
+model,"ir.ui.menu,name",115,Variations,Изменения
+model,"ir.ui.menu,name",116,Templates,Шаблоны
+model,"ir.ui.menu,name",117,Categories,Категории
+model,"ir.ui.menu,name",118,Pricelists,Прайс-листы
+model,"ir.ui.menu,name",119,Pricelists Version,Версии прайс-листов
+model,"ir.ui.menu,name",12,Group,Группа
+model,"ir.ui.menu,name",120,Pricelists,Прайс-листы
+model,"ir.ui.menu,name",121,Unit of Measure,Ед. измерения
+model,"ir.ui.menu,name",122,Unit of Measure categories,Категории единиц измерения
+model,"ir.ui.menu,name",123,Case Categories,Типы предложений
+model,"ir.ui.menu,name",124,Helpdesk,Поддержка пользователей
+model,"ir.ui.menu,name",125,All Cases,Все предложения
+model,"ir.ui.menu,name",126,Available Cases,Имеющиеся заказы
+model,"ir.ui.menu,name",127,My Cases,Личные предложения
+model,"ir.ui.menu,name",128,Sales,Продажи
+model,"ir.ui.menu,name",129,Business Opportunities,Возможности
+model,"ir.ui.menu,name",13,Report Custom,Пользовательский отчет
+model,"ir.ui.menu,name",130,Available Business Opportunities,Имеющиеся возможности продажи
+model,"ir.ui.menu,name",131,My Business Opportunities,Личные возможности
+model,"ir.ui.menu,name",132,Purchase,Закупки
+model,"ir.ui.menu,name",133,Purchase Opportunities,Возможности по закупке
+model,"ir.ui.menu,name",134,Available Purchase Opportunities,Имеющиеся возможности закупки
+model,"ir.ui.menu,name",135,My Purchase Opportunities,Личные закупки
+model,"ir.ui.menu,name",136,Automatic Segmentations,Автомат. сегментация
+model,"ir.ui.menu,name",137,CRM,
+model,"ir.ui.menu,name",138,Automatic Segmentations,Автомат. сегментация
+model,"ir.ui.menu,name",139,IntraStat,
+model,"ir.ui.menu,name",14,Report Xml,Отчет XML
+model,"ir.ui.menu,name",140,Stock,Склад
+model,"ir.ui.menu,name",141,Lot Inventory,Инвентаризация партии
+model,"ir.ui.menu,name",142,All Lots Line,Строка партии
+model,"ir.ui.menu,name",143,All Lots,Все партии
+model,"ir.ui.menu,name",144,Stock,Склад
+model,"ir.ui.menu,name",145,Location,Расположение
+model,"ir.ui.menu,name",146,Location Tree,Места хранения
+model,"ir.ui.menu,name",147,Warehouse,Товарный склад
+model,"ir.ui.menu,name",148,Picking Lists,Списки отгрузки
+model,"ir.ui.menu,name",149,Sending Goods,Отправка продукции
+model,"ir.ui.menu,name",15,Open Window,Открыть окно
+model,"ir.ui.menu,name",150,Pickings waiting delivery,Отгрузки ожидающие доставки
+model,"ir.ui.menu,name",151,Pending Pickings for delivery,Отгрузки ожидающие доставки
+model,"ir.ui.menu,name",152,Getting Goods,Получение продукции
+model,"ir.ui.menu,name",153,Pickings to process for goods reception,Получение продукции to process
+model,"ir.ui.menu,name",154,Internal picking lists,Внутренние отгрузки
+model,"ir.ui.menu,name",155,Internal Picking lists to process,Внутренние отгрузки в процессе выполнения
+model,"ir.ui.menu,name",156,Internal Pending Picking lists,Внутренние незаконченные отгрузки
+model,"ir.ui.menu,name",157,Draft Internal Picking lists,Черновики внутренних отгрузок
+model,"ir.ui.menu,name",158,Move,Перемещение
+model,"ir.ui.menu,name",159,Move Orders to process,Заявки на перемещение до запуска
+model,"ir.ui.menu,name",16,Wizard,Мастер
+model,"ir.ui.menu,name",160,Reservations,Резервы
+model,"ir.ui.menu,name",161,Draft Reservations,Черновики резервирования
+model,"ir.ui.menu,name",162,Assigned Reservations,Зарезервировать
+model,"ir.ui.menu,name",163,Incoterms,
+model,"ir.ui.menu,name",164,Purchase Order,Закупка
+model,"ir.ui.menu,name",165,Draft Purchase Order (Proposals),Черновики заказов на закупку
+model,"ir.ui.menu,name",166,Purchase Order waiting Approval,Заказа на закупку ожид. утверждения
+model,"ir.ui.menu,name",167,Running Purchase Order,Запустить заявку на закупку
+model,"ir.ui.menu,name",168,Production,Производство
+model,"ir.ui.menu,name",169,Properties,Свойства
+model,"ir.ui.menu,name",17,Users,Пользователи
+model,"ir.ui.menu,name",170,Property Groups,Группы свойств
+model,"ir.ui.menu,name",171,Properties,Свойства
+model,"ir.ui.menu,name",172,Workcenters,
+model,"ir.ui.menu,name",173,Routings,Маршрутизации
+model,"ir.ui.menu,name",174,Bill of Materials,Спецификации
+model,"ir.ui.menu,name",175,Final BoMs Trees,Окончательная структура спецификаций
+model,"ir.ui.menu,name",176,Final BoMs,Окончательные спецификации
+model,"ir.ui.menu,name",177,Production,Производство
+model,"ir.ui.menu,name",178,Production Orders,Заказы на производство
+model,"ir.ui.menu,name",179,Production Orders to start,Заказы на производство до запуска
+model,"ir.ui.menu,name",18,Users,Пользователи
+model,"ir.ui.menu,name",180,Production Orders in progress,Заказы на производство в процессе выполнения
+model,"ir.ui.menu,name",181,Procurement Orders,Заказы на снабжение
+model,"ir.ui.menu,name",182,Draft Procurements,Черновики заявок на снабжение
+model,"ir.ui.menu,name",183,Unschedulled Procurements,Заявки на снабжение вне графика
+model,"ir.ui.menu,name",184,Exception Procurements,Ошибки при снабжении
+model,"ir.ui.menu,name",185,Reordering Policy,Тип сортировки
+model,"ir.ui.menu,name",186,Order Point,Элемент заказа
+model,"ir.ui.menu,name",187,MRP,
+model,"ir.ui.menu,name",188,Procurement Scheduling,График снабжений
+model,"ir.ui.menu,name",189,Start Procurement Scheduling,Запустить расписание снабжения
+model,"ir.ui.menu,name",19,Groups,Группы
+model,"ir.ui.menu,name",190,Start Order Point Scheduling,Запустить расписание заявок
+model,"ir.ui.menu,name",191,Reports,Отчеты
+model,"ir.ui.menu,name",192,Stocks,Склады
+model,"ir.ui.menu,name",193,Bom Report,Отчет -спецификация
+model,"ir.ui.menu,name",194,Bom Report,Отчет -спецификация
+model,"ir.ui.menu,name",195,Sales,Продажи
+model,"ir.ui.menu,name",196,Shop,Магазин
+model,"ir.ui.menu,name",197,Sales Order,Предложение о продаже
+model,"ir.ui.menu,name",198,Sales Order in Shipping Exception,Предложения о продаже с ошибкой при доставке
+model,"ir.ui.menu,name",199,Draft Sales Order,Черновики заказов на поставку
+model,"ir.ui.menu,name",20,Roles,Роли
+model,"ir.ui.menu,name",200,Sales Order in Invoice Exception,Предложения о продаже с ошибкой в счете
+model,"ir.ui.menu,name",201,Order POS,Продажи через кассу
+model,"ir.ui.menu,name",202,Sales Reports,Отчеты о продажах
+model,"ir.ui.menu,name",203,Monthly sales turnover over one year,Месячные продажи в течении года
+model,"ir.ui.menu,name",204,Daily sales turnover over one year,Дневные продажи в течении года
+model,"ir.ui.menu,name",205,Monthly cumulated sales turnover over one year,Месячные кумулятивные продажи за год
+model,"ir.ui.menu,name",206,Project,Проект
+model,"ir.ui.menu,name",207,All Projects,Все проекты
+model,"ir.ui.menu,name",208,Edit project,Редактировать проект
+model,"ir.ui.menu,name",209,Your projects,Личные проекты
+model,"ir.ui.menu,name",21,Interface,Интерфейс
+model,"ir.ui.menu,name",210,All Tasks,Все задачи
+model,"ir.ui.menu,name",211,Billable Tasks,Назначенные задания
+model,"ir.ui.menu,name",212,Unbilled closed tasks,
+model,"ir.ui.menu,name",213,Unbilled open tasks,
+model,"ir.ui.menu,name",214,Your tasks,Личные задачи
+model,"ir.ui.menu,name",215,Your open tasks,Личные открытые задачи
+model,"ir.ui.menu,name",216,Open tasks,Открытые задачи
+model,"ir.ui.menu,name",22,View,Вид
+model,"ir.ui.menu,name",23,Attachments,Приложения
+model,"ir.ui.menu,name",24,Report,Отчет
+model,"ir.ui.menu,name",25,Report Custom,Пользовательский отчет
+model,"ir.ui.menu,name",26,Translations,Переводы
+model,"ir.ui.menu,name",27,Translations,Переводы
+model,"ir.ui.menu,name",28,Menus,Меню
+model,"ir.ui.menu,name",29,Grant Access to menu,Определить права доступа к меню
+model,"ir.ui.menu,name",3,Operations,Операции
+model,"ir.ui.menu,name",30,Scheduled Actions,Назначенные задания
+model,"ir.ui.menu,name",31,Requests,Запросы
+model,"ir.ui.menu,name",32,All Requests,Все запросы
+model,"ir.ui.menu,name",33,Request Links,Ссылки запросов
+model,"ir.ui.menu,name",34,Base,База
+model,"ir.ui.menu,name",35,Countries,Страны
+model,"ir.ui.menu,name",36,States,Состояния
+model,"ir.ui.menu,name",37,Partners,Контрагенты
+model,"ir.ui.menu,name",38,Partner Contacts,Контакты
+model,"ir.ui.menu,name",39,Titles,Названия
+model,"ir.ui.menu,name",4,Definitions,Определения
+model,"ir.ui.menu,name",40,Partners,Контрагенты
+model,"ir.ui.menu,name",41,Partners,Контрагенты
+model,"ir.ui.menu,name",42,Payment terms,Сроки оплаты
+model,"ir.ui.menu,name",43,Categories,Категории
+model,"ir.ui.menu,name",44,Type of Categories,Тип категорий
+model,"ir.ui.menu,name",45,Base,База
+model,"ir.ui.menu,name",46,Languages,Языки
+model,"ir.ui.menu,name",47,CRM,
+model,"ir.ui.menu,name",48,Canals,Способы контакта
+model,"ir.ui.menu,name",49,States of Mind,Оценки
+model,"ir.ui.menu,name",5,Administration,Администрирование
+model,"ir.ui.menu,name",50,Letters,Письма
+model,"ir.ui.menu,name",51,Letters,Письма
+model,"ir.ui.menu,name",52,Draft Letters,Черновики писем
+model,"ir.ui.menu,name",53,Confirmed Letters,Подтвержденные письма
+model,"ir.ui.menu,name",54,Letters,Письма
+model,"ir.ui.menu,name",55,Paragraphs,Параграфы
+model,"ir.ui.menu,name",56,Paragraphs Type,Типы параграфов
+model,"ir.ui.menu,name",57,Network,Сетевое оборудование
+model,"ir.ui.menu,name",58,All Materials,Все материалы
+model,"ir.ui.menu,name",59,Network,Сетевое оборудование
+model,"ir.ui.menu,name",6,Sequences,Последовательности
+model,"ir.ui.menu,name",60,Software,Прогр. обеспечение
+model,"ir.ui.menu,name",61,Types,Типы
+model,"ir.ui.menu,name",62,Hardware,Аппаратное обеспечение
+model,"ir.ui.menu,name",63,Types,Типы
+model,"ir.ui.menu,name",64,Network list,Список сетей
+model,"ir.ui.menu,name",65,Networks,Сети
+model,"ir.ui.menu,name",66,Human Ressources,Персонал
+model,"ir.ui.menu,name",67,Employees,Сотрудники
+model,"ir.ui.menu,name",68,Human Ressources,Персонал
+model,"ir.ui.menu,name",69,Workgroups,
+model,"ir.ui.menu,name",7,Sequences,Последовательности
+model,"ir.ui.menu,name",70,Attendances,Посещения
+model,"ir.ui.menu,name",71,Vacation request,
+model,"ir.ui.menu,name",72,Holiday Status,Статус выходных
+model,"ir.ui.menu,name",73,Attendance Reasons,Основания посещения
+model,"ir.ui.menu,name",74,Expenses claims,
+model,"ir.ui.menu,name",75,Expense claim,Требования расходов
+model,"ir.ui.menu,name",76,Expenses types,Типы расходов
+model,"ir.ui.menu,name",77,Sign in/out,Пришел / Ушел
+model,"ir.ui.menu,name",78,Marketing,Маркетинг
+model,"ir.ui.menu,name",79,Campaigns,Кампании
+model,"ir.ui.menu,name",8,Sequence Types,Типы последовательностей
+model,"ir.ui.menu,name",80,Marketing,Маркетинг
+model,"ir.ui.menu,name",81,Campaign Definition,Описание кампании
+model,"ir.ui.menu,name",82,Subscriptions,Подписки
+model,"ir.ui.menu,name",83,All Subscriptions,Все подписки
+model,"ir.ui.menu,name",84,Subscriptions,Подписки
+model,"ir.ui.menu,name",85,Document Types,Типы документов
+model,"ir.ui.menu,name",86,Accounting,Бухгалтерия
+model,"ir.ui.menu,name",87,Currency,Валюта
+model,"ir.ui.menu,name",88,Accounts,Счета
+model,"ir.ui.menu,name",89,Accounting,Бухгалтерия
+model,"ir.ui.menu,name",9,Actions,Действия
+model,"ir.ui.menu,name",90,Account Trees,План счетов
+model,"ir.ui.menu,name",91,Low Level,Низкоуровневые операции
+model,"ir.ui.menu,name",92,Account Move Line,
+model,"ir.ui.menu,name",93,Account Move,
+model,"ir.ui.menu,name",94,Tax,Налог
+model,"ir.ui.menu,name",95,All Invoices,Все счета
+model,"ir.ui.menu,name",96,Customers Invoices,Счета клиентов
+model,"ir.ui.menu,name",97,Suppliers Invoices,Счета поставщиков
+model,"ir.ui.menu,name",98,Customers Refund,Возмещения клиенту
+model,"ir.ui.menu,name",99,Suppliers Refund,
+model,"product.template,description",1,False,
+model,"product.template,description",10,False,
+model,"product.template,description",11,False,
+model,"product.template,description",12,False,
+model,"product.template,description",13,False,
+model,"product.template,description",14,False,
+model,"product.template,description",15,False,
+model,"product.template,description",16,False,
+model,"product.template,description",17,False,
+model,"product.template,description",18,False,
+model,"product.template,description",19,False,
+model,"product.template,description",2,False,
+model,"product.template,description",20,False,
+model,"product.template,description",21,False,
+model,"product.template,description",22,False,
+model,"product.template,description",23,False,
+model,"product.template,description",24,False,
+model,"product.template,description",25,False,
+model,"product.template,description",26,False,
+model,"product.template,description",27,False,
+model,"product.template,description",3,False,
+model,"product.template,description",4,False,
+model,"product.template,description",5,False,
+model,"product.template,description",6,False,
+model,"product.template,description",7,False,
+model,"product.template,description",8,False,
+model,"product.template,description",9,False,
+model,"product.template,description_purchase",1,False,
+model,"product.template,description_purchase",10,False,
+model,"product.template,description_purchase",11,False,
+model,"product.template,description_purchase",12,False,
+model,"product.template,description_purchase",13,False,
+model,"product.template,description_purchase",14,False,
+model,"product.template,description_purchase",15,False,
+model,"product.template,description_purchase",16,False,
+model,"product.template,description_purchase",17,False,
+model,"product.template,description_purchase",18,False,
+model,"product.template,description_purchase",19,False,
+model,"product.template,description_purchase",2,False,
+model,"product.template,description_purchase",20,False,
+model,"product.template,description_purchase",21,False,
+model,"product.template,description_purchase",22,False,
+model,"product.template,description_purchase",23,False,
+model,"product.template,description_purchase",24,False,
+model,"product.template,description_purchase",25,False,
+model,"product.template,description_purchase",26,False,
+model,"product.template,description_purchase",27,False,
+model,"product.template,description_purchase",3,False,
+model,"product.template,description_purchase",4,False,
+model,"product.template,description_purchase",5,False,
+model,"product.template,description_purchase",6,False,
+model,"product.template,description_purchase",7,False,
+model,"product.template,description_purchase",8,False,
+model,"product.template,description_purchase",9,False,
+model,"product.template,description_sale",1,False,
+model,"product.template,description_sale",10,False,
+model,"product.template,description_sale",11,False,
+model,"product.template,description_sale",12,False,
+model,"product.template,description_sale",13,False,
+model,"product.template,description_sale",14,False,
+model,"product.template,description_sale",15,False,
+model,"product.template,description_sale",16,False,
+model,"product.template,description_sale",17,False,
+model,"product.template,description_sale",18,False,
+model,"product.template,description_sale",19,False,
+model,"product.template,description_sale",2,False,
+model,"product.template,description_sale",20,False,
+model,"product.template,description_sale",21,False,
+model,"product.template,description_sale",22,False,
+model,"product.template,description_sale",23,False,
+model,"product.template,description_sale",24,False,
+model,"product.template,description_sale",25,False,
+model,"product.template,description_sale",26,False,
+model,"product.template,description_sale",27,False,
+model,"product.template,description_sale",3,False,
+model,"product.template,description_sale",4,False,
+model,"product.template,description_sale",5,False,
+model,"product.template,description_sale",6,False,
+model,"product.template,description_sale",7,False,
+model,"product.template,description_sale",8,False,
+model,"product.template,description_sale",9,False,
+model,"product.template,name",1,Onsite Senior Intervention,
+model,"product.template,name",10,Processor AMD Athlon 2200+,
+model,"product.template,name",11,HDD Maxtor 80Gb - 7200rpm,
+model,"product.template,name",12,HDD Maxtor 120 Gb - 7200 rpm,
+model,"product.template,name",13,HDD IBM 80 Gb - 5400 rpm,
+model,"product.template,name",14,Regular fan,
+model,"product.template,name",15,Silent fan,
+model,"product.template,name",16,Regular processor config,
+model,"product.template,name",17,RAM 256 Mo 333 Mhz,RAM 256 Mo 333 Mhz
+model,"product.template,name",18,RAM 512 Mo 400Mhz,
+model,"product.template,name",19,High speed processor config,
+model,"product.template,name",2,Onsite Intervention,
+model,"product.template,name",20,ATX Moyen Tour,
+model,"product.template,name",21,HDD on demand,
+model,"product.template,name",22,RAM on demand,
+model,"product.template,name",23,Processor on demand,
+model,"product.template,name",24,Complete PC With Periphericals,
+model,"product.template,name",25,Keyboard,Keyboard
+model,"product.template,name",26,Mouse,Mouse
+model,"product.template,name",27,Kit Keyboard + Mouse,
+model,"product.template,name",3,Basic PC,
+model,"product.template,name",4,Basic+ PC (assembly on order),
+model,"product.template,name",5,Medium PC,
+model,"product.template,name",6,Customizable PC (see properties),
+model,"product.template,name",7,Main board ASUS 1234,
+model,"product.template,name",8,Main board ASUS 4567,
+model,"product.template,name",9,Processor AMD Duron 1800,
+selection,"account.account,type",0,Account Payable,Кредиторская задолженность
+selection,"account.account,type",0,Account Receivable,Дебиторская задолженность
+selection,"account.account,type",0,Asset,Актив
+selection,"account.account,type",0,Capital,Основной
+selection,"account.account,type",0,Cash,Наличные
+selection,"account.account,type",0,Equity,Маржа
+selection,"account.account,type",0,Expense,Расход
+selection,"account.account,type",0,Income,прибыль
+selection,"account.account,type",0,Stock Expense,Складские расходы
+selection,"account.account,type",0,Stock Income,Складская прибыль
+selection,"account.account,type",0,Stock Inventory,Инвентаризация склада
+selection,"account.account,type",0,Tax,Налог
+selection,"account.account,type",0,View,Вид
+selection,"account.invoice,state",0,Canceled,Отменен
+selection,"account.invoice,state",0,Draft,черновик
+selection,"account.invoice,state",0,Open,Открыт
+selection,"account.invoice,state",0,Paid,Оплачен
+selection,"account.invoice,state",0,Pro-forma,Предв. счет
+selection,"account.invoice,type",0,Customer Invoice,Накладная заказчика
+selection,"account.invoice,type",0,Customer Refund,Возмещение клиенту
+selection,"account.invoice,type",0,Supplier Invoice,Счет поставщика
+selection,"account.invoice,type",0,Supplier Refund,Supplier Refund
+selection,"account.move,type",0,Currency Change,Обмен валюты
+selection,"account.move,type",0,Customer Invoice,Customer Invoice
+selection,"account.move,type",0,Customer Refund,Возмещение клиенту
+selection,"account.move,type",0,Direct Expense,Прямые расходы
+selection,"account.move,type",0,Incoming Customer Payment,Платеж заказчика
+selection,"account.move,type",0,Manual Sale,Неавтомат. продажа
+selection,"account.move,type",0,Money Transfer,Перевод денег
+selection,"account.move,type",0,Outgoing Supplier Payment,Оплата поставщику
+selection,"account.move,type",0,Supplier Invoice,Счет поставщика
+selection,"account.move,type",0,Supplier Refund,Supplier Refund
+selection,"account.move,type",0,Undefined,Неопределен
+selection,"account.tax,applicable_type",0,Python Code,Python Code
+selection,"account.tax,applicable_type",0,True,True
+selection,"account.tax,type",0,Fixed,Фиксированный
+selection,"account.tax,type",0,None,None
+selection,"account.tax,type",0,Percent,Процент
+selection,"account.tax,type",0,Python Code,Python Code
+selection,"account.transfer,type",0,Currency Change,Обмен валюты
+selection,"account.transfer,type",0,Customer Refund,Возмещение клиенту
+selection,"account.transfer,type",0,Direct Expense,Прямые расходы
+selection,"account.transfer,type",0,Incoming Customer Payment,Поступление платежа от заказчика
+selection,"account.transfer,type",0,Manual Sale,Неавтомат. продажа
+selection,"account.transfer,type",0,Money Transfer,Перевод денег
+selection,"account.transfer,type",0,Outgoing Supplier Payment,Оплата поставщику
+selection,"account.transfer,type",0,Undefined,Неопределен
+selection,"campaign.partner,priority",0,Good,Высокий
+selection,"campaign.partner,priority",0,Low,Низкий
+selection,"campaign.partner,priority",0,Medium,Средний
+selection,"campaign.partner,priority",0,Very Good,Очень высокий
+selection,"campaign.partner,priority",0,Very Low,Очень низкий
+selection,"campaign.partner,state",0,Normal,Нормальное
+selection,"campaign.partner,state",0,Stopped,остановлено
+selection,"campaign.partner,state",0,Waiting,в ожидании
+selection,"crm.case,priority",0,High,Высокий
+selection,"crm.case,priority",0,Low,Низкий
+selection,"crm.case,priority",0,Medium,Средний
+selection,"crm.case,priority",0,Very High,Очень высокий
+selection,"crm.case,priority",0,Very Low,Очень низкий
+selection,"crm.case,state",0,Closed,Закрыт
+selection,"crm.case,state",0,Draft,Черновик
+selection,"crm.case,state",0,Open,Открыто
+selection,"crm.case,state",0,Success,Успех
+selection,"crm.case,type",0,Purchase Case,Закупка
+selection,"crm.case,type",0,Sale Case,Предложение о продаже
+selection,"crm.case,type",0,Support Case (Helpdesk),Поддержка
+selection,"crm.case.categ,case_type",0,Sale Case,Предложение о продаже
+selection,"crm.case.categ,case_type",0,Support Case (Helpdesk),Поддержка
+selection,"crm.case.categ,case_type",0,Vendor Case,Предложение поставщика
+selection,"crm.segmentation,state",0,Not Running,Не выполняется
+selection,"crm.segmentation,state",0,Running,Выполняется
+selection,"crm.segmentation.line,expr_name",0,Purchase Amount,Количество закупок
+selection,"crm.segmentation.line,expr_name",0,Sale Amount,Количество продаж
+selection,"crm.segmentation.line,expr_name",0,State of Mind,Оценка
+selection,"crm.segmentation.line,expr_operator",0,<,<
+selection,"crm.segmentation.line,expr_operator",0,=,=
+selection,"crm.segmentation.line,expr_operator",0,>,>
+selection,"crm.segmentation.line,operator",0,Mandatory Expression,Обяз. выражение
+selection,"crm.segmentation.line,operator",0,Optional Expression,Необяз. выражение
+selection,"hr.action.reason,action_type",0,Sign in,Пришел
+selection,"hr.action.reason,action_type",0,Sign out,Ушел
+selection,"hr.attendance,action",0,Sign In,Пришел
+selection,"hr.attendance,action",0,Sign Out,Ушел
+selection,"hr.employee,state",0,Absent,Отсутствует
+selection,"hr.employee,state",0,Present,Присутствует
+selection,"hr.expense,state",0,Accepted,Принято
+selection,"hr.expense,state",0,Draft,Черновик
+selection,"hr.expense,state",0,Refused,Отклонено
+selection,"hr.expense,state",0,Waiting confirmation,Ждет подтверждения
+selection,"hr.timesheet,dayofweek",0,Friday,Пятница
+selection,"hr.timesheet,dayofweek",0,Monday,Понедельник
+selection,"hr.timesheet,dayofweek",0,Saturday,Суббота
+selection,"hr.timesheet,dayofweek",0,Sunday,Воскресенье
+selection,"hr.timesheet,dayofweek",0,Thursday,Четверг
+selection,"hr.timesheet,dayofweek",0,Tuesday,Вторник
+selection,"hr.timesheet,dayofweek",0,Wednesday,Среда
+selection,"ir.cron,interval_type",0,Days,Дни
+selection,"ir.cron,interval_type",0,Hours,Часы
+selection,"ir.cron,interval_type",0,Minutes,Минуты
+selection,"ir.cron,interval_type",0,Months,Месяцы
+selection,"ir.cron,interval_type",0,Weeks,Недели
+selection,"ir.report.custom,frequency",0,Daily,Ежедневно
+selection,"ir.report.custom,frequency",0,Monthly,Ежемесячно
+selection,"ir.report.custom,frequency",0,Yearly,Ежегодно
+selection,"ir.report.custom,state",0,Subscribed,Подписан
+selection,"ir.report.custom,state",0,Unsubscribed,Не подписан
+selection,"ir.report.custom,type",0,Bar Chart,Bar Chart
+selection,"ir.report.custom,type",0,Line Plot,Line Plot
+selection,"ir.report.custom,type",0,Pie Chart,Pie Chart
+selection,"ir.report.custom,type",0,Tabular,Табличный
+selection,"ir.ui.menu,icon",0,ABOUT,
+selection,"ir.ui.menu,icon",0,ADD,
+selection,"ir.ui.menu,icon",0,APPLY,
+selection,"ir.ui.menu,icon",0,BOLD,
+selection,"ir.ui.menu,icon",0,CANCEL,
+selection,"ir.ui.menu,icon",0,CDROM,
+selection,"ir.ui.menu,icon",0,CLEAR,
+selection,"ir.ui.menu,icon",0,CLOSE,
+selection,"ir.ui.menu,icon",0,COLOR_PICKER,
+selection,"ir.ui.menu,icon",0,CONNECT,
+selection,"ir.ui.menu,icon",0,CONVERT,
+selection,"ir.ui.menu,icon",0,COPY,
+selection,"ir.ui.menu,icon",0,CUT,
+selection,"ir.ui.menu,icon",0,DELETE,
+selection,"ir.ui.menu,icon",0,DIALOG_AUTHENTICATION,
+selection,"ir.ui.menu,icon",0,DIALOG_ERROR,
+selection,"ir.ui.menu,icon",0,DIALOG_INFO,
+selection,"ir.ui.menu,icon",0,DIALOG_QUESTION,
+selection,"ir.ui.menu,icon",0,DIALOG_WARNING,
+selection,"ir.ui.menu,icon",0,DIRECTORY,
+selection,"ir.ui.menu,icon",0,DISCONNECT,
+selection,"ir.ui.menu,icon",0,DND,
+selection,"ir.ui.menu,icon",0,DND_MULTIPLE,
+selection,"ir.ui.menu,icon",0,EDIT,
+selection,"ir.ui.menu,icon",0,EXECUTE,
+selection,"ir.ui.menu,icon",0,FILE,
+selection,"ir.ui.menu,icon",0,FIND,
+selection,"ir.ui.menu,icon",0,FIND_AND_REPLACE,
+selection,"ir.ui.menu,icon",0,FLOPPY,
+selection,"ir.ui.menu,icon",0,GO_BACK,
+selection,"ir.ui.menu,icon",0,GO_DOWN,
+selection,"ir.ui.menu,icon",0,GO_FORWARD,
+selection,"ir.ui.menu,icon",0,GO_UP,
+selection,"ir.ui.menu,icon",0,GOTO_BOTTOM,
+selection,"ir.ui.menu,icon",0,GOTO_FIRST,
+selection,"ir.ui.menu,icon",0,GOTO_LAST,
+selection,"ir.ui.menu,icon",0,GOTO_TOP,
+selection,"ir.ui.menu,icon",0,HARDDISK,
+selection,"ir.ui.menu,icon",0,HELP,
+selection,"ir.ui.menu,icon",0,HOME,
+selection,"ir.ui.menu,icon",0,INDENT,
+selection,"ir.ui.menu,icon",0,INDEX,
+selection,"ir.ui.menu,icon",0,ITALIC,
+selection,"ir.ui.menu,icon",0,JUMP_TO,
+selection,"ir.ui.menu,icon",0,JUSTIFY_CENTER,
+selection,"ir.ui.menu,icon",0,JUSTIFY_FILL,
+selection,"ir.ui.menu,icon",0,JUSTIFY_LEFT,
+selection,"ir.ui.menu,icon",0,JUSTIFY_RIGHT,
+selection,"ir.ui.menu,icon",0,MEDIA_FORWARD,
+selection,"ir.ui.menu,icon",0,MEDIA_NEXT,
+selection,"ir.ui.menu,icon",0,MEDIA_PAUSE,
+selection,"ir.ui.menu,icon",0,MEDIA_PLAY,
+selection,"ir.ui.menu,icon",0,MEDIA_PREVIOUS,
+selection,"ir.ui.menu,icon",0,MEDIA_RECORD,
+selection,"ir.ui.menu,icon",0,MEDIA_REWIND,
+selection,"ir.ui.menu,icon",0,MEDIA_STOP,
+selection,"ir.ui.menu,icon",0,MISSING_IMAGE,
+selection,"ir.ui.menu,icon",0,NETWORK,
+selection,"ir.ui.menu,icon",0,NEW,
+selection,"ir.ui.menu,icon",0,NO,
+selection,"ir.ui.menu,icon",0,OK,
+selection,"ir.ui.menu,icon",0,OPEN,
+selection,"ir.ui.menu,icon",0,PASTE,
+selection,"ir.ui.menu,icon",0,PREFERENCES,
+selection,"ir.ui.menu,icon",0,PRINT,
+selection,"ir.ui.menu,icon",0,PRINT_PREVIEW,
+selection,"ir.ui.menu,icon",0,PROPERTIES,
+selection,"ir.ui.menu,icon",0,QUIT,
+selection,"ir.ui.menu,icon",0,REDO,
+selection,"ir.ui.menu,icon",0,REFRESH,
+selection,"ir.ui.menu,icon",0,REMOVE,
+selection,"ir.ui.menu,icon",0,REVERT_TO_SAVED,
+selection,"ir.ui.menu,icon",0,SAVE,
+selection,"ir.ui.menu,icon",0,SAVE_AS,
+selection,"ir.ui.menu,icon",0,SELECT_COLOR,
+selection,"ir.ui.menu,icon",0,SELECT_FONT,
+selection,"ir.ui.menu,icon",0,SORT_ASCENDING,
+selection,"ir.ui.menu,icon",0,SORT_DESCENDING,
+selection,"ir.ui.menu,icon",0,SPELL_CHECK,
+selection,"ir.ui.menu,icon",0,STOP,
+selection,"ir.ui.menu,icon",0,STRIKETHROUGH,
+selection,"ir.ui.menu,icon",0,UNDELETE,
+selection,"ir.ui.menu,icon",0,UNDERLINE,
+selection,"ir.ui.menu,icon",0,UNDO,
+selection,"ir.ui.menu,icon",0,UNINDENT,
+selection,"ir.ui.menu,icon",0,YES,
+selection,"ir.ui.menu,icon",0,ZOOM_100,
+selection,"ir.ui.menu,icon",0,ZOOM_FIT,
+selection,"ir.ui.menu,icon",0,ZOOM_IN,
+selection,"ir.ui.menu,icon",0,ZOOM_OUT,
+selection,"letter.letter,state",0,Confirmed,Подтвержден
+selection,"letter.letter,state",0,Draft,Черновик
+selection,"letter.letter,template",0,Default Template,Шаблон по умолчанию
+selection,"mrp.bom,type",0,Normal BOM,Обычная спецификация
+selection,"mrp.bom,type",0,Phantom,Фиктивная
+selection,"mrp.procurement,priority",0,Normal,Обычный
+selection,"mrp.procurement,priority",0,Not urgent,Не срочно
+selection,"mrp.procurement,priority",0,Urgent,Срочно
+selection,"mrp.procurement,priority",0,Very Urgent,Очень срочно
+selection,"mrp.procurement,procure_method",0,from stock,со склада
+selection,"mrp.procurement,procure_method",0,on order,по заказу
+selection,"mrp.procurement,state",0,Cancel,Отменен
+selection,"mrp.procurement,state",0,Confirmed,Подтвержден
+selection,"mrp.procurement,state",0,Done,Выполнен
+selection,"mrp.procurement,state",0,Draft,Черновик
+selection,"mrp.procurement,state",0,Exception,Ошибка
+selection,"mrp.procurement,state",0,Running,В процессе
+selection,"mrp.production,priority",0,Normal,Обычный
+selection,"mrp.production,priority",0,Not urgent,Не срочно
+selection,"mrp.production,priority",0,Urgent,Срочно
+selection,"mrp.production,priority",0,Very Urgent,Очень срочно
+selection,"mrp.production,state",0,Canceled,Отменено
+selection,"mrp.production,state",0,Done,Выполнено
+selection,"mrp.production,state",0,Draft,Черновик
+selection,"mrp.production,state",0,In Production,В производстве
+selection,"mrp.production,state",0,Picking Exception,Ошибка отгрузки
+selection,"mrp.production,state",0,Ready to Produce,Готовы к производству
+selection,"mrp.production,state",0,Waiting Goods,Ожидание продукции
+selection,"mrp.property,composition",0,max,
+selection,"mrp.property,composition",0,min,
+selection,"mrp.property,composition",0,plus,плюс
+selection,"mrp.workcenter,type",0,Human Ressource,Персонал
+selection,"mrp.workcenter,type",0,Machine,Оборудование
+selection,"mrp.workcenter,type",0,Tool,Оборудование
+selection,"product.template,cost_method",0,PMP (Not implemented!),PMP (Not implemented!)
+selection,"product.template,cost_method",0,Standard Price,Стандартная цена
+selection,"product.template,procure_method",0,Make to Order,Произвести по заказу
+selection,"product.template,procure_method",0,Make to Stock,Произвести на склад
+selection,"product.template,state",0,End of lifecycle,Завершение жизненного цикла
+selection,"product.template,state",0,In Development,в разработке
+selection,"product.template,state",0,Obsolete,Устарел
+selection,"product.template,state",0,Sellable,Продаваемый
+selection,"product.template,supply_method",0,Buy,Купить
+selection,"product.template,supply_method",0,Produce,Произвести
+selection,"product.template,type",0,Service,Сервисное обслуживание
+selection,"product.template,type",0,Stockable Product,Отгружаемый продукт
+selection,"project.project,mode",0,By effective hour,Эффективно-почасовая
+selection,"project.project,mode",0,By hour,Почасовая
+selection,"project.project,mode",0,By project,За проект
+selection,"project.project,state",0,Draft,Черновик
+selection,"project.project,state",0,Finished,Завершен
+selection,"project.project,state",0,Inactive,Неактивен
+selection,"project.project,state",0,Opened,Открыт
+selection,"project.task,priority",0,High,Высокая
+selection,"project.task,priority",0,Low,Низкая
+selection,"project.task,priority",0,Normal,Нормальная
+selection,"project.task,priority",0,Very High,Очень высокая
+selection,"project.task,priority",0,Very Low,Очень низкая
+selection,"project.task,state",0,Cancelled,Отменен
+selection,"project.task,state",0,Done,Выполнен
+selection,"project.task,state",0,In progress,В процессе
+selection,"project.task,state",0,Inactive,Неактивен
+selection,"project.task,state",0,Open,Открыта
+selection,"purchase.order,state",0,approved,одобрен
+selection,"purchase.order,state",0,cancel,отменен
+selection,"purchase.order,state",0,confirmed,подтвержден
+selection,"purchase.order,state",0,done,выполнен
+selection,"purchase.order,state",0,draft,черновик
+selection,"purchase.order,state",0,Invoice Exception,ошибка счета
+selection,"purchase.order,state",0,Shipping Exception,Ошибка при доставке
+selection,"res.partner.address,type",0,Contact,Для контактов
+selection,"res.partner.address,type",0,Default,Основной
+selection,"res.partner.address,type",0,Delivery,Для доставки
+selection,"res.partner.address,type",0,Invoice,Счет
+selection,"res.partner.address,type",0,Other,Прочий
+selection,"res.partner.event,partner_type",0,Commercial Prospect,Коммерческий проект
+selection,"res.partner.event,partner_type",0,Customer,Заказчик
+selection,"res.partner.event,partner_type",0,Retailer,Розн. продавец
+selection,"res.partner.event,type",0,Prospect Contact,Посмотреть контакт
+selection,"res.partner.event,type",0,Purchase Offer,Предложение закупки
+selection,"res.partner.event,type",0,Sale Oportunity,Возможность продажи
+selection,"res.partner.title,domain",0,Contact,Контакт
+selection,"res.partner.title,domain",0,Partner,Контрагент
+selection,"res.request,priority",0,High,высокая
+selection,"res.request,priority",0,Low,низкая
+selection,"res.request,priority",0,Normal,обычная
+selection,"res.request,state",0,active,активен
+selection,"res.request,state",0,closed,закрыт
+selection,"res.request,state",0,draft,черновик
+selection,"res.request,state",0,waiting,в ожидании
+selection,"sale.order,order_policy",0,Invoice after delivery,счет после доставки
+selection,"sale.order,order_policy",0,Pay before delivery,оплата перед получением
+selection,"sale.order,order_policy",0,Shipping & Manual Invoice,Доставка & Неавтом. счет
+selection,"sale.order,picking_policy",0,All at once,Все сразу
+selection,"sale.order,picking_policy",0,Direct Delivery,прямая поставка
+selection,"sale.order,state",0,Cancel,отменен
+selection,"sale.order,state",0,Done,выполнен
+selection,"sale.order,state",0,Draft,черновик
+selection,"sale.order,state",0,In progress,в процессе
+selection,"sale.order,state",0,Invoice Exception,ошибка счета
+selection,"sale.order,state",0,Manual in progress,Неавтомат. в процессе
+selection,"sale.order,state",0,Shipping Exception,Ошибка при доставке
+selection,"sale.order,state",0,Waiting Schedule,Ждет запуска
+selection,"sale.order.line,type",0,from stock,со склада
+selection,"sale.order.line,type",0,on order,по заказу
+selection,"stock.location,allocation_method",0,FIFO,FIFO
+selection,"stock.location,allocation_method",0,LIFO,LIFO
+selection,"stock.location,allocation_method",0,Nearest,Ближайший
+selection,"stock.location,usage",0,Customer Location,Находится у заказчика
+selection,"stock.location,usage",0,Internal Location,Находится в организации
+selection,"stock.location,usage",0,Inventory,Инвентаризация
+selection,"stock.location,usage",0,Supplier Location,Находится у поставщика
+selection,"stock.lot,type",0,location,Расположение
+selection,"stock.lot,type",0,lot,партия
+selection,"stock.picking,move_type",0,All at once,Все сразу
+selection,"stock.picking,move_type",0,Direct Delivery,Прямая доставка
+selection,"stock.picking,state",0,assigned,определена
+selection,"stock.picking,state",0,cancel,отменен
+selection,"stock.picking,state",0,confirmed,подтверждена
+selection,"stock.picking,state",0,done,выполнена
+selection,"stock.picking,state",0,draft,черновик
+selection,"stock.picking,state",0,waiting,в ожидании
+selection,"stock.picking,type",0,Getting Goods,Получение продукции
+selection,"stock.picking,type",0,Internal,Внутренняя
+selection,"stock.picking,type",0,Sending Goods,Отправка продукции
+selection,"stock.reservation,priority",0,Not urgent,Не срочно
+selection,"stock.reservation,priority",0,Urgent,Срочно
+selection,"stock.reservation,state",0,Assigned,Зарезервирован
+selection,"stock.reservation,state",0,cancel,отменена
+selection,"stock.reservation,state",0,Confirmed,Подтвержден
+selection,"stock.reservation,state",0,Done,Выполнено
+selection,"stock.reservation,state",0,Draft,Черновик
+selection,"stock.reservation,state",0,Waiting,в ожидании
+selection,"stock.warehouse.orderpoint,logic",0,Best price (not yet active!),Лучшая цена (еще не готово)
+selection,"stock.warehouse.orderpoint,logic",0,Order to Max,По увеличению
+selection,"subscription.document.fields,value",0,/,/
+selection,"subscription.document.fields,value",0,Current Date,Текущая дата
+selection,"subscription.subscription,doc_source",0,Invoice,Счет
+selection,"subscription.subscription,doc_source",0,Sale Order,Предложение о продаже
+selection,"subscription.subscription,interval_type",0,Days,Дни
+selection,"subscription.subscription,interval_type",0,Months,Месяцы
+selection,"subscription.subscription,interval_type",0,Weeks,Недели
+selection,"subscription.subscription,state",0,Done,Выполнена
+selection,"subscription.subscription,state",0,Draft,Черновик
+selection,"subscription.subscription,state",0,Running,Выполняется
+selection,"subscription.subscription.history,document_id",0,Invoice,Счет
+selection,"subscription.subscription.history,document_id",0,Sale Order,Предложение о продаже
+view,"account.account",0,Account Form,Счет, форма
+view,"account.account",0,Account Trees,План счетов
+view,"account.account",0,CUR,Вал.
+view,"account.account",0,Names,Названия
+view,"account.currency",0,Currency List,Список валют
+view,"account.currency",0,Currency,Валюта
+view,"account.invoice",0,Account Transactions,Операции
+view,"account.invoice",0,Accounting,Бухгалтерия
+view,"account.invoice",0,Cancel Invoice,Отменить накладную
+view,"account.invoice",0,Client References,Подчиненные ссылки
+view,"account.invoice",0,Create Invoice,Создать накладную
+view,"account.invoice",0,Create PRO-FORMA,Создать PRO-FORMA
+view,"account.invoice",0,General Information,Основная информация
+view,"account.invoice",0,Invoice Lines,Строки счета
+view,"account.invoice",0,Invoice,Счет
+view,"account.invoice",0,Set to Draft,Сделать черновиком
+view,"account.invoice",0,States,Состояния
+view,"account.invoice",0,Tax Lines,Строки налогов
+view,"account.invoice.line",0,Invoice Line,ошибка счета
+view,"account.invoice.tax",0,Manual Invoice Taxes,
+view,"account.move",0,Account Move,
+view,"account.move.line",0,Account Move Line (account),
+view,"account.move.line",0,Account Move Line,
+view,"account.move.reconcile",0,Account Move Reconcile,
+view,"account.project",0,Project,Проект
+view,"account.tax",0,Account Tax,Налоги
+view,"account.tax",0,Applicable Code (if type=code),Допустимый код
+view,"account.tax",0,Compute Code (if type=code),Вычислить код (если type=code)
+view,"account.transfer",0,Adjustement and corrections,Корректировки
+view,"account.transfer",0,Cancel Payment,Отменить оплату
+view,"account.transfer",0,Confirm Payment,Подтвердить оплату
+view,"account.transfer",0,Related Invoices,Связанные накладные
+view,"account.transfer",0,Transfers,Переводы
+view,"campaign.campaign",0,Campaign Definition,Описание кампании
+view,"campaign.campaign",0,Campaigns,Кампании
+view,"campaign.partner",0,Call again Later,Позвонить позже
+view,"campaign.partner",0,Continue Campaign,Продолжить кампанию
+view,"campaign.partner",0,History,История
+view,"campaign.partner",0,Main Information,Основная информация
+view,"campaign.partner",0,Marketing::Prospects,Маркетинг::Проспекты
+view,"campaign.partner",0,Prospect Information,Посмотреть информацию
+view,"campaign.partner",0,Step Information,Описание этапов
+view,"campaign.partner",0,Stop Campaign,Завершить кампанию
+view,"campaign.partner.history",0,Marketing::Prospects::History,Маркетинг::Проспекты::История
+view,"campaign.step",0,Campaign Steps,Этапы кампании
+view,"campaign.step",0,Fiche Prospect,Рекламный проспект
+view,"campaign.step",0,Marketing Steps,Маркетинговые этапы
+view,"crm.case",0,Cases,Предложения
+view,"crm.case",0,Close Case,Закрыть предложение
+view,"crm.case",0,Financial,Финансовый
+view,"crm.case",0,General Description,Основная информация
+view,"crm.case",0,General Information,Основная информация
+view,"crm.case",0,Next Action,След. действие
+view,"crm.case",0,Open,Открыть
+view,"crm.case",0,Process Action,Выполнить действие
+view,"crm.case",0,Request History,История запросов
+view,"crm.case",0,Requeue Case,Открыть заново
+view,"crm.case",0,Reset to Draft,Сделать черновиком
+view,"crm.case",0,State,Состояние
+view,"crm.case.categ",0,Case Category,Тип предложения
+view,"crm.case.history",0,Case Description,Описание предложения
+view,"crm.case.history",0,Case History,История предложений
+view,"crm.case.history",0,Cases,Предложения
+view,"crm.segmentation",0,Computation Parameters,Вычисление параметров
+view,"crm.segmentation",0,Compute Segmentation,Подсчитать сегментацию
+view,"crm.segmentation",0,Continue Process,Продолжить процесс
+view,"crm.segmentation",0,Partner Segmentation,Сегментация контрагентов
+view,"crm.segmentation",0,Partner Segmentations,Сегментации контрагентов
+view,"crm.segmentation",0,Segmentation Description,Описание сегментации
+view,"crm.segmentation",0,Segmentation Parameters,Параметры сегментации
+view,"crm.segmentation",0,Segmentation Test,Тестирование сегментации
+view,"crm.segmentation",0,State of Mind Computation,Оценка вычисления
+view,"crm.segmentation",0,Stop Process,Завершить процесс
+view,"crm.segmentation.line",0,Partner Segmentation Lines,Строка сегментации
+view,"hr.action.reason",0,Attendance reasons,Основания посещения
+view,"hr.action.reason",0,Define attendance reason,Определить обоснование посещения
+view,"hr.attendance",0,Employee attendance,Присутствие сотрудника
+view,"hr.attendance",0,Employee attendances,Присутствие сотрудника
+view,"hr.employee",0,Address,Адрес
+view,"hr.employee",0,Attendances,Посещения
+view,"hr.employee",0,Employee list,Список сотрудников
+view,"hr.employee",0,Employee,Сотрудник
+view,"hr.employee",0,Expenses,Траты
+view,"hr.employee",0,Holidays,Выходные
+view,"hr.employee",0,Informations,Информация
+view,"hr.employee",0,Notes,Примечания
+view,"hr.employee",0,Sign in !,Пришел !
+view,"hr.employee",0,Sign out !,Ушел !
+view,"hr.employee",0,Timesheet,Расписание
+view,"hr.expense",0,Accept,Принять
+view,"hr.expense",0,Expense claim,Требования расходов
+view,"hr.expense",0,Expenses list,Список расходов
+view,"hr.expense",0,Refuse,Отказать
+view,"hr.expense.type",0,Expenses type,Тип расходов
+view,"hr.holidays",0,Employee holidays,Выходные сотрудника
+view,"hr.holidays",0,Vacations requests,Выходные, (отгулы)
+view,"hr.holidays.status",0,Define holiday status,Задать статус выходных
+view,"hr.holidays.status",0,Holiday status,Статус выходных
+view,"hr.timesheet",0,Timesheet,Расписание
+view,"hr.timesheet.group",0,Timesheet group,Группа расписаний
+view,"hr.timesheet.group",0,Timesheets,Расписания
+view,"ir.actions.act_window",0,Open a Window,Открыть окно
+view,"ir.actions.act_window",0,Window Action,
+view,"ir.attachment",0,Attachments,Приложения
+view,"ir.cron",0,Action to trigger,Действие для запуска
+view,"ir.cron",0,Scheduled Actions,Назначенные задания
+view,"ir.model",0,Model Description,Описание модели
+view,"ir.model.fields",0,Fields Description,Описание полей
+view,"ir.report.custom",0,Custom Report,Польз. отчет
+view,"ir.report.custom",0,Subscribe Report,Подписаться на отчет
+view,"ir.report.custom.fields",0,Report Fields,Поля отчета
+view,"ir.sequence",0,Sequences,Последовательности
+view,"ir.translation",0,Translations,Переводы
+view,"ir.ui.menu",0,Menu,Меню
+view,"ir.ui.view",0,User Interface - Views,Польз. интерфейс - виды
+view,"letter.letter",0,Letter,Письмо
+view,"letter.letter",0,Load Paragraphs,
+view,"letter.letter",0,States,Состояния
+view,"letter.letter.paragraph",0,Letter Paragraph,Параграф письма
+view,"letter.paragraph",0,Letter Paragraph,Параграф письма
+view,"letter.paragraph.type",0,Paragraph Type,Тип параграфа
+view,"mrp.bom",0,Bill of Material Lines - Requirements,Строки спецификации - требуемые
+view,"mrp.bom",0,Bill of Material,Спецификация
+view,"mrp.bom",0,BoM Structure,Структура спецификаций
+view,"mrp.bom",0,General Information,Основная информация
+view,"mrp.bom",0,Product Information,Инф. о продукте
+view,"mrp.bom",0,Properties,Свойства
+view,"mrp.bom",0,Revisions,Версии
+view,"mrp.bom.revision",0,BOM Revisions,Версии спецификаций
+view,"mrp.procurement",0,Cancel,Отменить
+view,"mrp.procurement",0,Confirm,Подтвердить
+view,"mrp.procurement",0,Document State,Сост. документа
+view,"mrp.procurement",0,General Information,Основная информация
+view,"mrp.procurement",0,Procurement Lines,Строка снабжения
+view,"mrp.procurement",0,Procurement,Снабжение
+view,"mrp.procurement",0,Properties,Свойства
+view,"mrp.procurement",0,Retry,Заново
+view,"mrp.procurement",0,Run Procurement,Запустить выполн. снабжения
+view,"mrp.production",0,Cancel,Отменить
+view,"mrp.production",0,Compute Data,Подсчитать данные
+view,"mrp.production",0,Confirm Production,Подтвердить производство
+view,"mrp.production",0,General,Основные
+view,"mrp.production",0,Materials / Lots consummed,Использованные материалы
+view,"mrp.production",0,Others Info,Прочая информация
+view,"mrp.production",0,Planned Materials Consumption,Потребление материалов
+view,"mrp.production",0,Planned Materials,Требуемые материалы
+view,"mrp.production",0,Production done,Производство завершено
+view,"mrp.production",0,Production Orders,Заказы на производство
+view,"mrp.production",0,Recreate Picking,Заново выполнить отгрузку
+view,"mrp.production",0,Start Production,Начать производство
+view,"mrp.production",0,States,Состояния
+view,"mrp.production",0,Workcenters,
+view,"mrp.production.lot.line",0,Production Products Consommation,Завершение выпуска продукции
+view,"mrp.production.lot.line",0,Production Products,Производство продукции
+view,"mrp.production.product.line",0,Production Products Consommation,Завершение выпуска продукции
+view,"mrp.production.product.line",0,Production Products,Производство продукции
+view,"mrp.production.workcenter.line",0,Production Workcenters,Производственные центры
+view,"mrp.property",0,Description,Описание
+view,"mrp.property",0,General Information,Основная информация
+view,"mrp.property",0,Properties,Свойства
+view,"mrp.property.group",0,General Information,Основная информация
+view,"mrp.property.group",0,Property Groups,Группы свойств
+view,"mrp.routing",0,General Information,Основная информация
+view,"mrp.routing",0,Routing,Маршрутизация
+view,"mrp.routing",0,Workcenters,Произв. центры
+view,"mrp.routing.workcenter",0,General Information,Основная информация
+view,"mrp.routing.workcenter",0,Routing Workcenters,
+view,"mrp.workcenter",0,Capacity Information,Инф. о производительности
+view,"mrp.workcenter",0,Costs Information,Инф. о стоимости
+view,"mrp.workcenter",0,General Information,Основная информация
+view,"mrp.workcenter",0,Workcenter,
+view,"network.changes",0,Diary entry,Запись дневника
+view,"network.changes",0,Enter a diary entry,Ввести запись дневника
+view,"network.changes",0,Interventions,Вмешательства
+view,"network.hardware.type",0,Hardware Type,Тип аппаратного обеспечения
+view,"network.material",0,All Network Material,Все сетевое оборудование
+view,"network.material",0,Informations,Информация
+view,"network.material",0,Material in this Network,Оборудование в этой сети
+view,"network.material",0,Material Info,Инф. об оборудовании
+view,"network.material",0,Network Material,Сетевое оборудование
+view,"network.material",0,notes,примечания
+view,"network.material",0,Softwares,Прогр. обеспечение
+view,"network.material",0,Updates,Обновления
+view,"network.network",0,All Networks,Все сети
+view,"network.network",0,Network Definition,Описание сети
+view,"network.network",0,Network Element,Компонент сети
+view,"network.software",0,General Informations,Основная информация
+view,"network.software",0,Login / Password,Логин / Пароль
+view,"network.software",0,Network Softwares,Программное обеспечение
+view,"network.software",0,Notes,Примечания
+view,"network.software.logpass",0,Add a password,Добавить пароль
+view,"network.software.type",0,Software Type,Тип ПО
+view,"product.category",0,Products Categories,Категории продукции
+view,"product.pricelist",0,Procelist Name,Название прайс-листа
+view,"product.pricelist",0,Products Price List,Прайс-лист продукции
+view,"product.pricelist.item",0,) +,
+view,"product.pricelist.item",0,* ( 1 -,
+view,"product.pricelist.item",0,Limit prices,Ограничить цены
+view,"product.pricelist.item",0,List prices,Список цен
+view,"product.pricelist.item",0,Max. Margin,Макс. прибыль
+view,"product.pricelist.item",0,Min. Margin,Мин. прибыль
+view,"product.pricelist.item",0,New Limit Price =,Новое ограничение цены =
+view,"product.pricelist.item",0,New List Price =,Новый прайс лист =
+view,"product.pricelist.item",0,New Standard Price =,Новая стандартная цена =
+view,"product.pricelist.item",0,Products Listprices Items,Пункты прайс-листа продукции
+view,"product.pricelist.item",0,Rounding Method,Способ округления
+view,"product.pricelist.item",0,Standard prices,Стандартные цены
+view,"product.pricelist.version",0,Pricelist Items,Пункты прайс-листа
+view,"product.pricelist.version",0,Pricelist Version,Версия прайс-листа
+view,"product.product",0,Description,Описание
+view,"product.product",0,Descriptions,Описания
+view,"product.product",0,Information,Информация
+view,"product.product",0,Manufacturing data,Производственная информация
+view,"product.product",0,Names,Названия
+view,"product.product",0,Procurement (days),Снабжение (дней)
+view,"product.product",0,Product name,Название продукта
+view,"product.product",0,Product reference,Ссылка на продукт
+view,"product.product",0,Product Variant,Вариант продукта
+view,"product.product",0,Product,Продукт
+view,"product.product",0,Products,Продукция
+view,"product.product",0,Purchase data,Информация заказа
+view,"product.product",0,Purchase Description,Описание заказа
+view,"product.product",0,Sale Description,Описание продажи
+view,"product.product",0,Variants Prices,
+view,"product.template",0,Descriptions,Описания
+view,"product.template",0,Information,Информация
+view,"product.template",0,Manufacturing data,Производственная информация
+view,"product.template",0,Names,Названия
+view,"product.template",0,Procurement (days),Снабжение (дней)
+view,"product.template",0,Product name,Название продукта
+view,"product.template",0,Product reference,Ссылка на продукт
+view,"product.template",0,Product Template,Шаблон продукта
+view,"product.template",0,Purchase data,Информация заказа
+view,"product.template",0,Purchase Description,Описание закупки
+view,"product.template",0,Sale Description,Описание продажи
+view,"product.template.name",0,Product Template Name,Название шаблона
+view,"product.uom",0,Unit of Measure,Ед. измерения
+view,"product.uom.categ",0,Category of Unit of Measure,Категория ед. изм.
+view,"product.uom.categ",0,Unit of Measure categories,Категории единиц измерения
+view,"project.project",0,Administration,Администрирование
+view,"project.project",0,Invoice information,Инф. счета
+view,"project.project",0,Invoicing,Выставление счета
+view,"project.project",0,Mail texts,Текст почт. сообщения
+view,"project.project",0,My projects,Личные проекты
+view,"project.project",0,Notes,Примечания
+view,"project.project",0,Project,Проект
+view,"project.project",0,Project's members,Участники проекта
+view,"project.project",0,Projects,Проекты
+view,"project.project",0,Tasks,Задачи
+view,"project.project",0,Toggle activity,Перекл. действие
+view,"project.task",0,All tasks,Все задачи
+view,"project.task",0,Cancel,Отменить
+view,"project.task",0,Descriptions,Описания
+view,"project.task",0,Finish,Завершена
+view,"project.task",0,Notes,Примечания
+view,"project.task",0,Others Information,Прочая информация
+view,"project.task",0,Others,Прочее
+view,"project.task",0,Products,Продукция
+view,"project.task",0,Re-open,Заново открыть
+view,"project.task",0,Task definition,Описание задачи
+view,"project.task",0,Task edition,Редактирование задачи
+view,"project.task",0,Task Information,Информация
+view,"project.task.comment",0,Comment,Комментарии
+view,"purchase.order",0,Approved by Supplier,Подтвержден поставщиком
+view,"purchase.order",0,Cancel Purchase Order,Отменить заказ на закупку
+view,"purchase.order",0,Confirm Purchase Order,Подтвердить заказ на закупку
+view,"purchase.order",0,Document State,Сост. документа
+view,"purchase.order",0,Invoice Done,Счет выполнен
+view,"purchase.order",0,Notes,Примечания
+view,"purchase.order",0,Order Lines,Строки заказа
+view,"purchase.order",0,Purchase Order,Закупка
+view,"purchase.order",0,Purchase Shippings,Доставка заказа
+view,"purchase.order",0,Shipping Done,Доставка выполнена
+view,"purchase.order.line",0,Notes,Примечания
+view,"purchase.order.line",0,Order Line,Строка заказа
+view,"purchase.order.line",0,Purchase Order Line,Строка заказа на закупку
+view,"res.country",0,Country,Страна
+view,"res.country.state",0,State,Штат
+view,"res.groups",0,Groups,Группы
+view,"res.lang",0,Code,Код
+view,"res.lang",0,Language,Язык
+view,"res.lang",0,Name,Название
+view,"res.partner",0,Categories,Категории
+view,"res.partner",0,Event History,История событий
+view,"res.partner",0,Extra Info,Дополнительная информация
+view,"res.partner",0,General Information,Основная информация
+view,"res.partner",0,General,Основная
+view,"res.partner",0,Notes,Примечания
+view,"res.partner",0,Partners,Контрагенты
+view,"res.partner.address",0,Contacts,Контакты
+view,"res.partner.address",0,Partner Contacts,Контакты
+view,"res.partner.canal",0,Canal,Способ связи
+view,"res.partner.category",0,Partner Categories,Категории контрагента
+view,"res.partner.category.type",0,Partner,Родители
+view,"res.partner.event",0,Description,Описание
+view,"res.partner.event",0,Document Link,Ссылка на документ
+view,"res.partner.event",0,General Description,Основное описание
+view,"res.partner.event",0,Partner Events,События контрагентов
+view,"res.partner.events",0,General Description,Основное описание
+view,"res.partner.events",0,Partner Events,События контрагентов
+view,"res.partner.function",0,Partner Functions,Функции партнера
+view,"res.partner.som",0,Partner State of Mind,Удовлетворенность контрагента
+view,"res.partner.title",0,Partners Titles,Названия контрагентов
+view,"res.payterm",0,Payment term,Условия платежа
+view,"res.request",0,Close,Закрыть
+view,"res.request",0,Description,Описание
+view,"res.request",0,History,История
+view,"res.request",0,References,Ссылки
+view,"res.request",0,Reply,Ответить
+view,"res.request",0,Request,Запрос
+view,"res.request",0,Requests,Запросы
+view,"res.request",0,Send,Отправить
+view,"res.request",0,Status,Статус
+view,"res.request.history",0,Request History,История запросов
+view,"res.request.link",0,Request Link,Ссылка запроса
+view,"res.roles",0,Roles,Роли
+view,"res.users",0,Users,Пользователи
+view,"sale.order",0,Advanced,Дополнительно
+view,"sale.order",0,Cancel Order,Отменить заказ
+view,"sale.order",0,Cancel Sale,Отменить заказ
+view,"sale.order",0,Compute,Вычислить
+view,"sale.order",0,Confirm Order,Подтвердить заказ
+view,"sale.order",0,Create Invoice,Выписать счет
+view,"sale.order",0,Direct Sale,Прямая продажа
+view,"sale.order",0,Invoice Corrected,Счет изменен
+view,"sale.order",0,Links,Ссылки
+view,"sale.order",0,Notes,Примечания
+view,"sale.order",0,Order Line,Строка заказа
+view,"sale.order",0,Order type,Тип заказа
+view,"sale.order",0,Others data,Прочая информация
+view,"sale.order",0,Partner,Контрагент
+view,"sale.order",0,Procurement Corrected,Заказ на снабжение изменен
+view,"sale.order",0,Recreate Invoice,Заново создать счет
+view,"sale.order",0,Recreate Procurement,Заново создать заказ на снабжение
+view,"sale.order",0,Sales Order POS,Продажи через кассу
+view,"sale.order",0,Sales Order,Предложение о продаже
+view,"sale.order",0,Sales Orders,Предложения о продаже
+view,"sale.order",0,Set to Draft,Отправить в черновики
+view,"sale.order",0,Shop,Магазин
+view,"sale.order.line",0,Automatic Declaration,Автомат. декларация
+view,"sale.order.line",0,Manual Designation,Ручное обозначение
+view,"sale.order.line",0,Notes,Примечания
+view,"sale.order.line",0,Order Lines,Строки заказа
+view,"sale.order.line",0,Properties,Свойства
+view,"sale.order.line",0,Sales Order Line,Строка предложения
+view,"sale.shop",0,Accounting,Бухгалтерия
+view,"sale.shop",0,Sale Shop,Магазин
+view,"sale.shop",0,Stock,Склад
+view,"stock.incoterms",0,Incoterms,
+view,"stock.location",0,General Informations,Основная информация
+view,"stock.location",0,Products,Продукция
+view,"stock.location",0,Stock Location Tree,Дерево размещений
+view,"stock.location",0,Stock Location,Расположение склада
+view,"stock.lot",0,Articles,Замечания
+view,"stock.lot",0,Stock Lot,Складская партия
+view,"stock.lot.inventory",0,Confirm Inventory,Подтвердить инвентаризацию
+view,"stock.lot.inventory",0,General Informations,Основная информация
+view,"stock.lot.inventory",0,Items,Пункты
+view,"stock.lot.inventory",0,Lot Inventory,Инвентаризация партии
+view,"stock.lot.inventory",0,Posted Inventory,Отложен. инвентаризация
+view,"stock.lot.inventory.line",0,Stock Inventory Lines,Строка инвентаризации
+view,"stock.lot.line",0,Articles,Замечания
+view,"stock.lot.line",0,general informations,Основная информация
+view,"stock.lot.line",0,Moves history,История перемещений
+view,"stock.lot.line",0,stock lot,Складская партия
+view,"stock.lot.line",0,UOM,Ед. изм.
+view,"stock.lot.move.history",0,Stock Move History,История перемещений
+view,"stock.move",0,General Information,
+view,"stock.move",0,Move Lot,Перемещение партии
+view,"stock.move",0,State,Состояние
+view,"stock.move",0,Stock Move,Складское перемещение
+view,"stock.picking",0,Assign Reservations,Резервировать
+view,"stock.picking",0,Cancel Picking,Отменить отгрузку
+view,"stock.picking",0,Confirm Picking,Подтвердить комплектацию
+view,"stock.picking",0,General Information,Основная информация
+view,"stock.picking",0,Lots produced,Партия произведена
+view,"stock.picking",0,Lots used,Партия использована
+view,"stock.picking",0,Make Picking,Выполнить отгрузку
+view,"stock.picking",0,Move produced,Выполненные перемещения
+view,"stock.picking",0,Move,Перемещение
+view,"stock.picking",0,Notes,Примечания
+view,"stock.picking",0,Others Infos,Прочая информация
+view,"stock.picking",0,Picking List,Список отгрузки
+view,"stock.picking",0,Planned Materials,Требуемые материалы
+view,"stock.picking",0,Reservation Lines,Строки резерва
+view,"stock.picking.lot.line",0,Picking lot lines,Строки отгрузки партии
+view,"stock.reservation",0,Assign,Назначить
+view,"stock.reservation",0,Cancel,Отменить
+view,"stock.reservation",0,Confirm,Подтвердить
+view,"stock.reservation",0,Make Parcel,Создать посылку
+view,"stock.reservation",0,Reservation Information,Инф. резерва
+view,"stock.reservation",0,Reservation State,Статус резерва
+view,"stock.reservation",0,Reservations,Резервы
+view,"stock.reservation",0,Stock Reservation,Складской резерв
+view,"stock.warehouse",0,Stock Warehouse,Складское помещение
+view,"stock.warehouse.orderpoint",0,Warehouse Orderpoint,
+view,"subscription.document",0,Subscription Document,Документ подписки
+view,"subscription.document.fields",0,Subscription Document Fields,Поля подписки
+view,"subscription.subscription",0,Documents created,Созданные документы
+view,"subscription.subscription",0,Process,Выполняется
+view,"subscription.subscription",0,Set to Draft,Сделать черновиком
+view,"subscription.subscription",0,State,Состояние
+view,"subscription.subscription",0,Stop,Остановлена
+view,"subscription.subscription",0,Subscriptions,Подписки
+view,"subscription.subscription",0,Subsription Data,Инф. о подписке
+view,"subscription.subscription.history",0,Subscription History,История подписки
+xsl,"account.invoice",0,Date,Дата
+xsl,"account.invoice",0,Description,Описание
+xsl,"account.invoice",0,Document,Документ
+xsl,"account.invoice",0,DRAFT,Черновик
+xsl,"account.invoice",0,Invoice Ref.,Ссылка на счет
+xsl,"account.invoice",0,INVOICE,
+xsl,"account.invoice",0,Net Price,
+xsl,"account.invoice",0,Ont été soumis à la taxe conformément au régime particulier d'une imposition de la marge, TVA non déductible.,
+xsl,"account.invoice",0,Order Ref.,Ссылка на заказ
+xsl,"account.invoice",0,PRO-FORMA INVOICE,Предв. счет
+xsl,"account.invoice",0,PURCHASE INVOICE,
+xsl,"account.invoice",0,PURCHASE REFUND INVOICE,
+xsl,"account.invoice",0,Qty,кол.
+xsl,"account.invoice",0,REFUND INVOICE,
+xsl,"account.invoice",0,SUBTOTAL,
+xsl,"account.invoice",0,TOTAL:,ИТОГО:
+xsl,"account.invoice",0,Tout contrat conclu avec notre société est exclusivement régi par nos conditions générales telles que libellées au verso du présent document 			et/ou sur notre site internet.,
+xsl,"account.invoice",0,Unit Price,Стоимость комплекта
+xsl,"account.invoice.list",0,Amount,Сумма
+xsl,"account.invoice.list",0,Client,Клиент
+xsl,"account.invoice.list",0,Num,Ном.
+xsl,"account.invoice.list",0,Total,Итого
+xsl,"account.journal",0,Account:,Счет:
+xsl,"account.journal",0,Balance,Баланс
+xsl,"account.journal",0,Credit,Кредит
+xsl,"account.journal",0,Date,Дата
+xsl,"account.journal",0,Debit,Дебет
+xsl,"account.journal",0,Ending Balance:,Окончательный баланс
+xsl,"account.journal",0,Livre de caisse,,
+xsl,"account.journal",0,Partner,Контрагент
+xsl,"account.journal",0,Starting Balance:,Начальный баланс
+xsl,"account.journal",0,Transaction,Операция
+xsl,"account.transfer",0,Amount,Сумма
+xsl,"account.transfer",0,Change,Изменить
+xsl,"account.transfer",0,Date,Дата
+xsl,"account.transfer",0,Document,Документ
+xsl,"account.transfer",0,Partner ID,ID партнера
+xsl,"account.transfer",0,Reference,Ссылка
+xsl,"account.transfer",0,Type,Тип
+xsl,"network.material.list",0,Date,Дата
+xsl,"network.material.list",0,Name,Название
+xsl,"network.material.list",0,Notes,Примечания
+xsl,"network.material.list",0,Type,Тип
+xsl,"network.material.list",0,Your Contact,Личные контакты
+xsl,"network.network.list",0,Date,Дата
+xsl,"network.network.list",0,Name,Название
+xsl,"network.network.list",0,Type,Тип
+xsl,"network.network.list",0,Warranty date,Дата гарантии
+xsl,"network.network.list",0,Your Contact,Личные контакты
+xsl,"purchase.order",0,""", ordered the",
+xsl,"purchase.order",0,""", with the reference """,
+xsl,"purchase.order",0,. 			Thanks to confirm good reception of the following and contact us in case of any trouble. This order should 			be delivered for the,
+xsl,"purchase.order",0,.,
+xsl,"purchase.order",0,cancelled,отменен
+xsl,"purchase.order",0,confirmed by the supplier,подтвержден поставщиком
+xsl,"purchase.order",0,Date,Дата
+xsl,"purchase.order",0,"Dear supplier,","Уважаемый поставщик,"
+xsl,"purchase.order",0,Description,Описание
+xsl,"purchase.order",0,done,выполнен
+xsl,"purchase.order",0,draft,черновик
+xsl,"purchase.order",0,exception in invoice,ошибка в счете
+xsl,"purchase.order",0,exception in shipping,ошибка в доставке
+xsl,"purchase.order",0,"Here is the detail of your order """,
+xsl,"purchase.order",0,Net Price,
+xsl,"purchase.order",0,Order ref,Ссылка на заказ
+xsl,"purchase.order",0,PURCHASE ORDER,
+xsl,"purchase.order",0,Qty,кол.
+xsl,"purchase.order",0,Status:,Статус:
+xsl,"purchase.order",0,Taxes,Налоги
+xsl,"purchase.order",0,TOTAL:,ИТОГО:
+xsl,"purchase.order",0,Unit Price,Стоимость комплекта
+xsl,"purchase.order",0,waiting supplier confirmation,ожидает подтверждения поставщика
+xsl,"res.partner.ids",0,Name,Имя
+xsl,"res.partner.ids",0,Ref.,Ссылка
+xsl,"sale.order.print",0,""", ordered the",
+xsl,"sale.order.print",0,""", with the reference """,
+xsl,"sale.order.print",0,. 			Thanks to confirm good reception of the following and contact us in case of any trouble.,
+xsl,"sale.order.print",0,cancelled,отменен
+xsl,"sale.order.print",0,Date,Дата
+xsl,"sale.order.print",0,"Dear customer,","Уважаемый клиент,"
+xsl,"sale.order.print",0,Description,Описание
+xsl,"sale.order.print",0,done,выполнена
+xsl,"sale.order.print",0,draft,черновик
+xsl,"sale.order.print",0,exception in invoice,ошибка в счете
+xsl,"sale.order.print",0,exception in shipping,ошибка в доставке
+xsl,"sale.order.print",0,"Here is the detail of your order """,
+xsl,"sale.order.print",0,in progress,в процессе
+xsl,"sale.order.print",0,Net Price,
+xsl,"sale.order.print",0,Order,Заказ
+xsl,"sale.order.print",0,Qty,кол.
+xsl,"sale.order.print",0,Quotation,Расценки
+xsl,"sale.order.print",0,SALE ORDER,
+xsl,"sale.order.print",0,Status:,Статус:
+xsl,"sale.order.print",0,TOTAL:,ИТОГО:
+xsl,"sale.order.print",0,Unit Price,Стоимость комплекта
+xsl,"stock.location.overview",0,Amount,Сумма
+xsl,"stock.location.overview",0,Lot:,Партия:
+xsl,"stock.location.overview",0,Product,Продукт
+xsl,"stock.location.overview",0,Unit Price,Стоимость комплекта
+xsl,"stock.location.overview",0,Value,Значение
+xsl,"stock.location.overview",0,Variants,Варианты
+xsl,"stock.lot.overview",0,Amount,Сумма
+xsl,"stock.lot.overview",0,Lot:,Партия:
+xsl,"stock.lot.overview",0,Product,Продукт
+xsl,"stock.lot.overview",0,Unit Price,Стоимость комплекта
+xsl,"stock.lot.overview",0,Value,Значение
+xsl,"stock.lot.overview",0,Variants,Варианты
+xsl,"stock.picking.list",0,Concerns:,Относится к:
+xsl,"stock.picking.list",0,Description,Описание
+xsl,"stock.picking.list",0,Expedition Date,Дата выполнения
+xsl,"stock.picking.list",0,Here is the picking list of this lot. Generated by Tiny ERP.,
+xsl,"stock.picking.list",0,Id Client,ID клиента
+xsl,"stock.picking.list",0,Id Shipping,ID доставки
+xsl,"stock.picking.list",0,Location,Расположение
+xsl,"stock.picking.list",0,Picking Date,Дата отгрузки
+xsl,"stock.picking.list",0,PICKINGLIST,
+xsl,"stock.picking.list",0,Product,Продукт
+xsl,"stock.picking.list",0,Qty,кол.
+xsl,"stock.picking.list",0,Recipient,Получатель
+xsl,"stock.picking.list",0,Shipping Address:,Адрес доставки
+xsl,"stock.picking.list",0,Tracking Nb,

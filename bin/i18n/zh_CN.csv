@@ -1,0 +1,1739 @@
+type,name,res_id,src,value
+field,"account.account,code",0,Code,科目代码
+field,"account.account,name",0,Name,科目名称
+model,"account.account,name",62,Equity,权益
+model,"account.account,name",2,Assets,资产
+model,"account.account,name",61,Liabilities,负债
+model,"account.account,name",25,Results,损益
+model,"account.account,name",1,PCMN Tree,会计科目树
+model,"account.account,name",3,Fixed,固定资产
+model,"account.account,name",4,Constitution,惯例
+model,"account.account,name",5,Immaterial Assets,无形资产
+model,"account.account,name",6,Land Assets,土地资产
+model,"account.account,name",7,Machines and Tools,机器和工具
+model,"account.account,name",8,Mobile Equipment,可移动设备
+model,"account.account,name",9,Financial Investement,金融投资
+model,"account.account,name",10,Long Term Recievable,长期应收
+model,"account.account,name",11,Current,流动资金
+model,"account.account,name",16,Stock,库存
+model,"account.account,name",17,Merchandise Type A,A类商品
+model,"account.account,name",18,Merchandise Type B,B类商品
+model,"account.account,name",19,Receivable,应收
+model,"account.account,name",20,Main Receivable,主营业务应收
+model,"account.account,name",24,Tax TVA,税TVA
+model,"account.account,name",21,Payable,应付
+model,"account.account,name",23,Credit Cards,信用卡
+model,"account.account,name",22,Main Payable,主营业务应付
+model,"account.account,name",12,Cash,现金
+model,"account.account,name",13,Bank Account,银行账号
+model,"account.account,name",14,Paypal Account,应付账号
+model,"account.account,name",15,Petty Cash,零用现金
+model,"account.account,name",31,Expense,费用
+model,"account.account,name",32,Merchandise,商品
+model,"account.account,name",33,Products Purchase,产品采购
+model,"account.account,name",34,Accessories Purchase,附件采购
+model,"account.account,name",35,Subcontractor Purchase,转包采购
+model,"account.account,name",36,Merchandise Purchase,商品采购
+model,"account.account,name",37,Remises,转让
+model,"account.account,name",58,Stock Expense,库存费用
+model,"account.account,name",54,Stock,库存
+model,"account.account,name",59,Merchandise Type A,商品类型A
+model,"account.account,name",60,Merchandise Type B,商品类型B
+model,"account.account,name",38,Services Purchase,服务采购
+model,"account.account,name",39,Loyer and location,租金和位置
+model,"account.account,name",40,Reparations,赔款
+model,"account.account,name",41,Water Gaz Electricity,水电气
+model,"account.account,name",42,Phone Post Fax Internet,邮电通讯因特网
+model,"account.account,name",43,Printed material,印刷品
+model,"account.account,name",44,Food,食品
+model,"account.account,name",45,Miscanellous charges,其它开支
+model,"account.account,name",46,Insurances,保险
+model,"account.account,name",47,Transport Carburant,运输和燃料
+model,"account.account,name",48,Travels,差旅
+model,"account.account,name",49,Publicity,Publicity
+model,"account.account,name",50,Taxes Charges,税费
+model,"account.account,name",51,TVA non deductible,不可扣除的TVA
+model,"account.account,name",52,Miscanellous Taxes,税收滞纳金
+model,"account.account,name",53,Financial Charges,财务费用
+model,"account.account,name",26,Income,收入
+model,"account.account,name",27,Merchandise Sales,商品销售
+model,"account.account,name",28,Products Sales,产品销售
+model,"account.account,name",29,Service Sales,服务销售
+model,"account.account,name",55,Stock Income,库存收入
+model,"account.account,name",56,Merchandise Type A,商品类型A
+model,"account.account,name",57,Merchandise Type B,商品类型B
+model,"account.account,name",30,Financials Interests,金融利息
+field,"account.account,credit",0,Credit,贷方
+field,"account.account,sign",0,Signe,Signe
+field,"account.account,currency_id",0,Currency,币种
+field,"account.account,parent_id",0,Parents,父项
+field,"account.account,protected",0,Protected,被保护的
+field,"account.account,debit",0,Debit,借方
+field,"account.account,active",0,Active,活动的
+field,"account.account,child_id",0,Children,子项
+field,"account.account,balance",0,Balance,余额
+field,"account.account,type",0,Account Type,科目类型
+field,"account.currency,digits",0,Digits,显示小数位数
+field,"account.currency,name",0,Currency,币种
+field,"account.currency,priority",0,Usage priority,使用优先级
+field,"account.currency,active",0,Active,活动的
+field,"account.currency,rate",0,Relative Change rate,相对兑换率
+field,"account.currency,date",0,Last rate refresh,挂牌日期
+field,"account.currency,accuracy",0,Computational accuracy,计算精度
+field,"account.invoice,comment",0,Additionnal Information,附加信息
+field,"account.invoice,date_due",0,Date Due,到期日期
+field,"account.invoice,reference",0,Invoice Reference,发票参照
+field,"account.invoice,payment_term",0,Payment Term,付款条件
+field,"account.invoice,partner_contact",0,Partner Contact,伙伴联系人
+field,"account.invoice,number",0,Invoice Number,发票号码
+field,"account.invoice,address_invoice_id",0,Billing Address,账单地址
+field,"account.invoice,partner_id",0,Partner,伙伴
+field,"account.invoice,amount_untaxed",0,Untaxed Amount,未完税金额
+field,"account.invoice,tax_line",0,Tax Lines,税行
+field,"account.invoice,amount_tax",0,Tax Amount,税金额
+field,"account.invoice,state",0,State,状态
+field,"account.invoice,project_id",0,Project,项目
+field,"account.invoice,type",0,Type,类型
+field,"account.invoice,invoice_line",0,Invoice Lines,发票行
+field,"account.invoice,account_id",0,Dest Account,目标账号
+field,"account.invoice,partner_insite",0,Insite Contact,内部联系人
+field,"account.invoice,date_invoice",0,Date Invoiced,发票日期
+field,"account.invoice,partner_ref",0,Partner Reference,伙伴参照
+field,"account.invoice,move_id",0,Invoice Movement,发票转移
+field,"account.invoice,amount_total",0,Total Amount,总金额
+field,"account.invoice,name",0,Invoice Description,发票说明
+field,"account.invoice,address_contact_id",0,Contact Address,联系人地址
+field,"account.invoice.line,name",0,Description,说明
+field,"account.invoice.line,invoice_id",0,Invoice Ref,发票参照
+field,"account.invoice.line,price_unit",0,Unit Price,单价
+field,"account.invoice.line,account_id",0,Source Account,源账号
+field,"account.invoice.line,invoice_line_tax_id",0,Taxes,税
+field,"account.invoice.line,quantity",0,Quantity,数量
+field,"account.invoice.tax,invoice_id",0,Invoice Line,发票行
+field,"account.invoice.tax,amount",0,Amount,金额
+field,"account.invoice.tax,manual",0,Manual,手工
+field,"account.invoice.tax,name",0,Tax Description,税说明
+field,"account.invoice.tax,account_id",0,Taxe Account,税账号
+field,"account.move,name",0,Move Name,转移名称
+field,"account.move,type",0,Transaction Type,事务类型
+field,"account.move,line_id",0,Transactions,事务
+field,"account.move,state",0,State,状态
+field,"account.move,date",0,Date,日期
+field,"account.move,project_id",0,Project Ref.,项目参照
+field,"account.move,partner_id",0,Partner Ref.,伙伴参照
+field,"account.move,change",0,Change transaction,改变事务
+field,"account.move.line,reconcile_id",0,Reconcile,对账
+field,"account.move.line,name",0,Name,名称
+field,"account.move.line,state",0,State,状态
+field,"account.move.line,amount",0,Amount,金额
+field,"account.move.line,date",0,Date,日期
+field,"account.move.line,balance",0,Balance,余额
+field,"account.move.line,partner_id",0,Partner Ref.,伙伴参照
+field,"account.move.line,move_id",0,Move,转移
+field,"account.move.line,account_id",0,Account,账号
+field,"account.move.reconcile,line_id",0,Move lines,转移行
+field,"account.move.reconcile,type",0,Type,类型
+field,"account.move.reconcile,name",0,Name,名称
+field,"account.tax,domain",0,Domain,所有权
+field,"account.tax,name",0,Tax Name,税名称
+field,"account.tax,account_collected_id",0,Collected Tax Account,汇集税账号
+field,"account.tax,child_ids",0,Childs Tax Account,子项税账号
+field,"account.tax,account_paid_id",0,Paid Tax Account,已付税账号
+field,"account.tax,parent_id",0,Parent Tax Account,父项税账号
+field,"account.tax,amount",0,Amount,金额
+field,"account.tax,child_depend",0,Tax depends on its childs,子项依附税
+field,"account.tax,python_compute",0,Python Code,Python代码
+field,"account.tax,active",0,Active,活动的
+field,"account.tax,python_applicable",0,Python Code,Python代码
+field,"account.tax,type",0,Tax Type,税类型
+field,"account.tax,applicable_type",0,Applicable Type,适用类型
+field,"account.transfer,name",0,Description,说明
+field,"account.transfer,reference",0,Reference,参照
+field,"account.transfer,partner_id",0,Partner,伙伴
+field,"account.transfer,amount",0,Amount,金额
+field,"account.transfer,adjust_account_id",0,Adjustement Account,调整账号
+field,"account.transfer,state",0,State,状态
+field,"account.transfer,account_dest_id",0,Destination Account,目标账号
+field,"account.transfer,move_id",0,Transactions,事务
+field,"account.transfer,invoice_id",0,Invoices,发票
+field,"account.transfer,date",0,Payment Date,付款日期
+field,"account.transfer,adjust_amount",0,Adjustement amount,调整金额
+field,"account.transfer,project_id",0,Project,项目
+field,"account.transfer,type",0,Transaction Type,事务类型
+field,"account.transfer,account_src_id",0,Source Account,源账号
+field,"account.transfer,change",0,Amount Changed,兑换金额
+field,"campaign.campaign,info",0,Description,说明
+field,"campaign.campaign,date_stop",0,Stop Date,终止日期
+field,"campaign.campaign,name",0,Name,名称
+field,"campaign.campaign,date_start",0,Start Date,开始日期
+field,"campaign.campaign,planned_costs",0,Planned Costs,计划成本
+field,"campaign.campaign,costs",0,Initial Costs,起始成本
+field,"campaign.campaign,step_id",0,Campaign Steps,促销活动步骤
+field,"campaign.campaign,planned_revenue",0,Planned Revenue,计划收入
+field,"campaign.partner,part_adr_id",0,Partner Address,伙伴地址
+field,"campaign.partner,info",0,Comments,评论
+field,"campaign.partner,state",0,State,状态
+field,"campaign.partner,user_id",0,Attache Commercial,商业附加
+field,"campaign.partner,name",0,Name / Reference,名称/参照
+field,"campaign.partner,date_recall",0,Recall Later,下次电话回访
+field,"campaign.partner,notes",0,Prospect Notes,前景注释
+field,"campaign.partner,campaign_id",0,Campaign,促销活动
+field,"campaign.partner,priority",0,Priority,优先级
+field,"campaign.partner,step",0,Step,步骤
+field,"campaign.partner,contact",0,Partner Contact,伙伴联系人
+field,"campaign.partner,active",0,Active,活动的
+field,"campaign.partner,partner_id",0,Partner,伙伴
+field,"campaign.partner,history_id",0,History,历史
+field,"campaign.partner.history,info",0,Comments,评论
+field,"campaign.partner.history,name",0,History,历史
+field,"campaign.partner.history,camp_partner_id",0,Prospect Fiche,前景卡片
+field,"campaign.partner.history,step_attempt",0,Attempt,尝试
+field,"campaign.partner.history,date",0,Date create,创建日期
+field,"campaign.partner.history,step_id",0,Step,步骤
+field,"campaign.step,info",0,Description,说明
+field,"campaign.step,name",0,Step Name,步骤名称
+field,"campaign.step,procent",0,Success Rate (0<x<1),成功率(0<x<1)
+field,"campaign.step,stop_date",0,Stop Date,终止日期
+field,"campaign.step,campaign_id",0,Campaign,促销活动
+field,"campaign.step,priority",0,Order line,订单行
+field,"campaign.step,costs",0,Step Costs,步骤成本
+field,"campaign.step,active",0,Active,活动的
+field,"campaign.step,max_try",0,Max Attemps,最大尝试次数
+field,"campaign.step,start_date",0,Start Date,开始日期
+field,"crm.case,date_closed",0,Date Closed,关闭日期
+field,"crm.case,history_line",0,Case History,联系台账历史
+field,"crm.case,partner_id",0,Partner,伙伴
+field,"crm.case,user_id",0,User Responsible,责任人
+field,"crm.case,name",0,Case Description,联系台账说明
+field,"crm.case,probability",0,Probability (0.50),概率(0.50)
+field,"crm.case,canal_id",0,Canal,联系渠道
+field,"crm.case,categ_id",0,Category,类别
+field,"crm.case,planned_cost",0,Planned Costs,计划成本
+field,"crm.case,som",0,State of Mind,满意度
+field,"crm.case,state",0,State,状态
+field,"crm.case,date_deadline",0,Date Next Action,下一日期
+field,"crm.case,priority",0,Priority,优先级
+field,"crm.case,date",0,Date,日期
+field,"crm.case,planned_revenue",0,Planned Revenue,计划收入
+field,"crm.case,active",0,Active,活动的
+field,"crm.case,document",0,Document,文档
+field,"crm.case,type",0,Case Type,联系台账类型
+field,"crm.case,description",0,Description,说明
+field,"crm.case.categ,case_type",0,Case Type,联系台账类型
+field,"crm.case.categ,name",0,Case Category Name,联系台账分类名称
+field,"crm.case.history,user_id",0,User Responsible,责任人
+field,"crm.case.history,name",0,Name,名称
+field,"crm.case.history,canal_id",0,Canal,联系渠道
+field,"crm.case.history,som",0,State of Mind,满意度
+field,"crm.case.history,case_id",0,Case,联系台账
+field,"crm.case.history,date",0,Date,日期
+field,"crm.case.history,description",0,Description,说明
+field,"crm.segmentation,name",0,Segmentation Name,细分名称
+field,"crm.segmentation,som_interval_max",0,Max Interval for Computation,最大计算期间数
+field,"crm.segmentation,categ_id",0,Partner Category,伙伴类别
+field,"crm.segmentation,som_interval_default",0,Default Factor (0 = None),默认因子(0=None)
+field,"crm.segmentation,segmentation_line",0,Criterions,准则
+field,"crm.segmentation,som_interval_decrease",0,Decrease factor (0.0 > 1.0),下降因子(0.0>1.0)
+field,"crm.segmentation,state",0,Execution State,执行状态
+field,"crm.segmentation,exclusif",0,Exclusive Selection,选择性排除
+field,"crm.segmentation,partner_id",0,Max Partner ID processed,已处理最大伙伴ID
+field,"crm.segmentation,som_interval",0,Number of day per Periode,计算间隔天数
+field,"crm.segmentation,description",0,Description,说明
+field,"crm.segmentation.line,name",0,Segmentation Name,细分名称
+field,"crm.segmentation.line,segmentation_id",0,Segmentation,细分
+field,"crm.segmentation.line,expr_name",0,Control Variable,控制变量
+field,"crm.segmentation.line,expr_value",0,Value,价值
+field,"crm.segmentation.line,operator",0,Mandatory / Optionnal,强制的/可选的
+field,"crm.segmentation.line,expr_operator",0,Operator,操作符
+field,"hr.action.reason,name",0,Reason,理由
+field,"hr.action.reason,action_type",0,Action's type,动作类型
+field,"hr.attendance,action",0,Action,动作
+field,"hr.attendance,employee_id",0,Employee,雇员
+field,"hr.attendance,name",0,Date,日期
+field,"hr.attendance,action_desc",0,Action's reason,动作理由
+field,"hr.employee,address_id",0,Address,地址
+field,"hr.employee,attendances",0,Employee's attendances,雇员出勤
+field,"hr.employee,user_id",0,Tiny ERP User,TinyERP用户
+field,"hr.employee,name",0,Employee's Full Name,雇员全名
+field,"hr.employee,started",0,Started on,开始时间
+field,"hr.employee,holiday_max",0,Number of holiday,假期天数
+field,"hr.employee,notes",0,Notes,注解
+field,"hr.employee,holidays",0,Employee's holidays,雇员假期
+field,"hr.employee,state",0,Presence,出席
+field,"hr.employee,active",0,Active,活动的
+field,"hr.employee,expenses",0,Employee's expenses,雇员费用
+field,"hr.employee,partner_id",0,Employee,雇员
+field,"hr.employee,workgroups",0,Employee's work team,雇员工作小组
+field,"hr.employee,regime",0,Workhours by week,周工作时数
+field,"hr.expense,employee_id",0,Employee,雇员
+field,"hr.expense,name",0,Short Description,简短说明
+field,"hr.expense,state",0,State,状态
+field,"hr.expense,amount",0,Amount,金额
+field,"hr.expense,date",0,Date,日期
+field,"hr.expense,txt",0,Long Description,详细说明
+field,"hr.expense,type",0,Expense type,费用类型
+field,"hr.expense.type,name",0,Type,类型
+field,"hr.holidays,employee_id",0,Employee,雇员
+field,"hr.holidays,date_from",0,Holiday start,假期开始
+field,"hr.holidays,holiday_status",0,Holiday's Status,假期状态
+field,"hr.holidays,name",0,Description,说明
+field,"hr.holidays,date_to",0,Holiday end,假期结束
+field,"hr.holidays.status,name",0,Holiday Status,假期状态
+field,"hr.timesheet,dayofweek",0,Day of week,星期
+field,"hr.timesheet,hour_from",0,Work from,工作从
+field,"hr.timesheet,name",0,Name,名称
+field,"hr.timesheet,tgroup_id",0,Employee's timesheet group,雇员工作时间表
+field,"hr.timesheet,hour_to",0,Work to,工作至
+field,"hr.timesheet.group,timesheet_id",0,Timesheet,工作时间表
+field,"hr.timesheet.group,name",0,Group's name,小组名称
+field,"ir.actions.act_window,domain",0,Domain Value,所有权价值
+field,"ir.actions.act_window,name",0,Action Name,动作名称
+model,"ir.actions.act_window,name",1,ir.ui.menu.tree.admin,ir.ui.menu.tree.admin
+model,"ir.actions.act_window,name",2,ir.ui.menu.tree.user,ir.ui.menu.tree.user
+model,"ir.actions.act_window,name",3,ir.sequence,ir.sequence
+model,"ir.actions.act_window,name",4,ir.sequence.type,ir.sequence.type
+model,"ir.actions.act_window,name",5,ir.actions.actions,ir.actions.actions
+model,"ir.actions.act_window,name",6,ir.actions.execute,ir.actions.execute
+model,"ir.actions.act_window,name",7,ir.actions.group,ir.actions.group
+model,"ir.actions.act_window,name",8,ir.actions.report.custom,ir.actions.report.custom
+model,"ir.actions.act_window,name",9,ir.actions.report.xml,ir.actions.report.xml
+model,"ir.actions.act_window,name",10,ir.actions.act_window,ir.actions.act_window
+model,"ir.actions.act_window,name",11,ir.actions.wizard,ir.actions.wizard
+model,"ir.actions.act_window,name",12,res.users,res.users
+model,"ir.actions.act_window,name",13,res.groups,res.groups
+model,"ir.actions.act_window,name",14,res.roles.tree,res.roles.tree
+model,"ir.actions.act_window,name",15,ir.ui.view,ir.ui.view
+model,"ir.actions.act_window,name",16,ir.attachment,ir.attachment
+model,"ir.actions.act_window,name",17,ir.report.custom,ir.report.custom
+model,"ir.actions.act_window,name",18,ir.translation.view,ir.translation.view
+model,"ir.actions.act_window,name",19,ir.ui.menu.form2,ir.ui.menu.form2
+model,"ir.actions.act_window,name",20,ir.cron.form,ir.cron.form
+model,"ir.actions.act_window,name",21,res.project,res.project
+model,"ir.actions.act_window,name",22,res.request.form,res.request.form
+model,"ir.actions.act_window,name",23,res.request.link.form,res.request.link.form
+model,"ir.actions.act_window,name",26,res.country,res.country
+model,"ir.actions.act_window,name",27,res.country.state,res.country.state
+model,"ir.actions.act_window,name",28,res.partner,res.partner
+model,"ir.actions.act_window,name",29,res.partner.address,res.partner.address
+model,"ir.actions.act_window,name",30,res.partner.title,res.partner.title
+model,"ir.actions.act_window,name",31,res.partner,res.partner
+model,"ir.actions.act_window,name",32,Company Architecture,Company Architecture
+model,"ir.actions.act_window,name",33,res.partner.category,res.partner.category
+model,"ir.actions.act_window,name",34,res.lang,res.lang
+model,"ir.actions.act_window,name",38,res.partner.canal.form,res.partner.canal.form
+model,"ir.actions.act_window,name",39,res.partner.som.form,res.partner.som.form
+model,"ir.actions.act_window,name",40,account.currency,account.currency
+model,"ir.actions.act_window,name",41,account.account.form,account.account.form
+model,"ir.actions.act_window,name",42,account.account.tree,account.account.tree
+model,"ir.actions.act_window,name",43,account.move.line.tree1,account.move.line.tree1
+model,"ir.actions.act_window,name",44,account.move.line.treeform,account.move.line.treeform
+model,"ir.actions.act_window,name",45,account.move.line.treeform,account.move.line.treeform
+model,"ir.actions.act_window,name",46,account.move.line.form,account.move.line.form
+model,"ir.actions.act_window,name",47,account.move.form,account.move.form
+model,"ir.actions.act_window,name",48,account.tax,account.tax
+model,"ir.actions.act_window,name",49,account.invoice,account.invoice
+model,"ir.actions.act_window,name",50,account.invoice,account.invoice
+model,"ir.actions.act_window,name",51,account.invoice,account.invoice
+model,"ir.actions.act_window,name",52,account.invoice,account.invoice
+model,"ir.actions.act_window,name",53,account.invoice,account.invoice
+model,"ir.actions.act_window,name",54,account.invoice,account.invoice
+model,"ir.actions.act_window,name",55,account.invoice,account.invoice
+model,"ir.actions.act_window,name",56,account.invoice,account.invoice
+model,"ir.actions.act_window,name",57,account.invoice,account.invoice
+model,"ir.actions.act_window,name",58,account.invoice,account.invoice
+model,"ir.actions.act_window,name",59,account.invoice,account.invoice
+model,"ir.actions.act_window,name",60,account.invoice,account.invoice
+model,"ir.actions.act_window,name",61,account.invoice,account.invoice
+model,"ir.actions.act_window,name",62,account.invoice,account.invoice
+model,"ir.actions.act_window,name",63,account.transfer.form,account.transfer.form
+model,"ir.actions.act_window,name",76,network.material.tree,network.material.tree
+model,"ir.actions.act_window,name",77,network.material.tree_by_network,network.material.tree_by_network
+model,"ir.actions.act_window,name",78,network.material.edit_material_2click,network.material.edit_material_2click
+model,"ir.actions.act_window,name",79,network.software.type,network.software.type
+model,"ir.actions.act_window,name",80,network.hardware.type,network.hardware.type
+model,"ir.actions.act_window,name",81,network.network.tree,network.network.tree
+model,"ir.actions.act_window,name",82,network.network.form,network.network.form
+model,"ir.actions.act_window,name",86,hr.employee,hr.employee
+model,"ir.actions.act_window,name",87,hr.timesheet.group.form.open,hr.timesheet.group.form.open
+model,"ir.actions.act_window,name",88,hr.attendance.view,hr.attendance.view
+model,"ir.actions.act_window,name",89,hr.holidays.ask_form,hr.holidays.ask_form
+model,"ir.actions.act_window,name",90,hr.holidays.status,hr.holidays.status
+model,"ir.actions.act_window,name",91,hr.holidays.type,hr.holidays.type
+model,"ir.actions.act_window,name",92,hr.expense.open_list,hr.expense.open_list
+model,"ir.actions.act_window,name",93,hr.expense.expense_claim,hr.expense.expense_claim
+model,"ir.actions.act_window,name",94,hr.expense.type.o_view,hr.expense.type.o_view
+model,"ir.actions.act_window,name",98,campaign.campaign.tree,campaign.campaign.tree
+model,"ir.actions.act_window,name",99,campaign.campaign.form,campaign.campaign.form
+model,"ir.actions.act_window,name",100,campaign.partner.open,campaign.partner.open
+model,"ir.actions.act_window,name",101,product.variant.form,product.variant.form
+model,"ir.actions.act_window,name",102,product.template.form,product.template.form
+model,"ir.actions.act_window,name",103,product.normal.form,product.normal.form
+model,"ir.actions.act_window,name",104,product.category.form,product.category.form
+model,"ir.actions.act_window,name",105,product.normal.form,product.normal.form
+model,"ir.actions.act_window,name",106,product.pricelist.form,product.pricelist.form
+model,"ir.actions.act_window,name",107,product.pricelist.form,product.pricelist.form
+model,"ir.actions.act_window,name",108,subscription.subscription.form,subscription.subscription.form
+model,"ir.actions.act_window,name",109,subscription.document.form,subscription.document.form
+model,"ir.actions.act_window,name",110,crm.case.categ.form,crm.case.categ.form
+model,"ir.actions.act_window,name",111,crm.case.form,crm.case.form
+model,"ir.actions.act_window,name",112,crm.case.form,crm.case.form
+model,"ir.actions.act_window,name",113,crm.case.form,crm.case.form
+model,"ir.actions.act_window,name",114,crm.case.form,crm.case.form
+model,"ir.actions.act_window,name",115,crm.case.form,crm.case.form
+model,"ir.actions.act_window,name",116,crm.case.form,crm.case.form
+model,"ir.actions.act_window,name",117,crm.case.form,crm.case.form
+model,"ir.actions.act_window,name",118,crm.case.form,crm.case.form
+model,"ir.actions.act_window,name",119,crm.case.form,crm.case.form
+model,"ir.actions.act_window,name",120,crm.segmentation.form,crm.segmentation.form
+model,"ir.actions.act_window,name",121,crm.segmentation.tree,crm.segmentation.tree
+model,"ir.actions.act_window,name",123,stock.lot.inventory,stock.lot.inventory
+model,"ir.actions.act_window,name",124,stock.lot.form,stock.lot.form
+model,"ir.actions.act_window,name",125,stock.location,stock.location
+model,"ir.actions.act_window,name",126,stock.location.tree,stock.location.tree
+model,"ir.actions.act_window,name",127,stock.warehouse,stock.warehouse
+model,"ir.actions.act_window,name",128,stock.packing,stock.packing
+model,"ir.actions.act_window,name",129,stock.packing,stock.packing
+model,"ir.actions.act_window,name",130,stock.packing,stock.packing
+model,"ir.actions.act_window,name",131,stock.packing,stock.packing
+model,"ir.actions.act_window,name",132,stock.packing,stock.packing
+model,"ir.actions.act_window,name",133,stock.packing,stock.packing
+model,"ir.actions.act_window,name",134,stock.packing,stock.packing
+model,"ir.actions.act_window,name",135,stock.packing,stock.packing
+model,"ir.actions.act_window,name",136,stock.packing,stock.packing
+model,"ir.actions.act_window,name",137,stock.packing,stock.packing
+model,"ir.actions.act_window,name",138,stock.move,stock.move
+model,"ir.actions.act_window,name",139,stock.shipping,stock.shipping
+model,"ir.actions.act_window,name",140,stock.shipping,stock.shipping
+model,"ir.actions.act_window,name",141,stock.shipping,stock.shipping
+model,"ir.actions.act_window,name",142,stock.shipping,stock.shipping
+model,"ir.actions.act_window,name",147,purchase.order.form,purchase.order.form
+model,"ir.actions.act_window,name",149,sale.shop,sale.shop
+model,"ir.actions.act_window,name",150,sale.order,sale.order
+model,"ir.actions.act_window,name",151,sale.order,sale.order
+model,"ir.actions.act_window,name",153,project.project,project.project
+model,"ir.actions.act_window,name",154,project.project,project.project
+model,"ir.actions.act_window,name",155,project.task,project.task
+model,"ir.actions.act_window,name",156,project.task.unbilled.close,project.task.unbilled.close
+model,"ir.actions.act_window,name",157,project.task.unbilled.open,project.task.unbilled.open
+model,"ir.actions.act_window,name",158,project.task,project.task
+model,"ir.actions.act_window,name",159,project.task,project.task
+model,"ir.actions.act_window,name",160,project.task,project.task
+model,"ir.actions.act_window,name",161,View project's tasks,项目任务视图
+field,"ir.actions.act_window,view_type",0,Type of view,视图类型
+field,"ir.actions.act_window,res_model",0,Model,模型
+field,"ir.actions.act_window,view_id",0,View Ref.,视图参照
+field,"ir.actions.act_window,type",0,Action Type,动作类型
+field,"ir.actions.actions,type",0,Action Type,动作类型
+field,"ir.actions.actions,name",0,Action Name,动作名称
+field,"ir.actions.execute,func_name",0,Function Name,功能名称
+field,"ir.actions.execute,func_arg",0,Function Argument,功能参数
+field,"ir.actions.execute,type",0,type,类型
+field,"ir.actions.execute,name",0,name,名称
+field,"ir.actions.group,type",0,Action Type,动作类型
+field,"ir.actions.group,name",0,Group Name,组名称
+field,"ir.actions.group,exec_type",0,Execution sequence,执行次序
+field,"ir.actions.report.custom,type",0,Report Type,报告类型
+field,"ir.actions.report.custom,name",0,Report Name,报告名称
+model,"ir.actions.report.custom,name",69,Account Chart Print,账号图表打印
+field,"ir.actions.report.custom,report_id",0,Report Ref.,报告参照
+field,"ir.actions.report.xml,report_xsl",0,XSL path,XSL文件路径
+field,"ir.actions.report.xml,name",0,Name,名称
+model,"ir.actions.report.xml,name",24,Labels,商标
+model,"ir.actions.report.xml,name",25,Identifiants,证明
+model,"ir.actions.report.xml,name",64,Journal,书报杂志
+model,"ir.actions.report.xml,name",65,Invoices,发票
+model,"ir.actions.report.xml,name",66,Invoice List,发票列表
+model,"ir.actions.report.xml,name",67,Recalls,退货
+model,"ir.actions.report.xml,name",68,Transfers,运输
+model,"ir.actions.report.xml,name",83,Print Materials,印刷材料
+model,"ir.actions.report.xml,name",84,Print Network Materials,网络打印材料
+model,"ir.actions.report.xml,name",85,Print Network List,网络打印列表
+model,"ir.actions.report.xml,name",95,Timesheet by week,周工作时间表
+model,"ir.actions.report.xml,name",96,Timesheet by month,月工作时间表
+model,"ir.actions.report.xml,name",122,Business Opportunities,商业机会
+model,"ir.actions.report.xml,name",143,Picking List,发运清单列表
+model,"ir.actions.report.xml,name",144,Shipping List,标价签
+model,"ir.actions.report.xml,name",145,Stock Overview,库存概要
+model,"ir.actions.report.xml,name",146,Stock Location Overview,库存位置概要
+model,"ir.actions.report.xml,name",148,Purchase Orders,采购订单
+model,"ir.actions.report.xml,name",152,Sale Orders,销售订单
+model,"ir.actions.report.xml,name",162,Gantt Representation,甘特图
+model,"ir.actions.report.xml,name",163,Gantt Representation,甘特图
+model,"ir.actions.report.xml,name",164,Project Description,项目说明
+field,"ir.actions.report.xml,auto",0,Automatic XSL:RML,自动XSL:RML
+field,"ir.actions.report.xml,report_name",0,Internal Name,内部名称
+field,"ir.actions.report.xml,model",0,Model,模型
+field,"ir.actions.report.xml,type",0,Report Type,报告类型
+field,"ir.actions.report.xml,report_xml",0,XML path,XML文件路径
+field,"ir.actions.wizard,wiz_name",0,Wizard name,向导名称
+field,"ir.actions.wizard,type",0,Action type,动作类型
+field,"ir.actions.wizard,name",0,Wizard info,向导信息
+model,"ir.actions.wizard,name",35,Send SMS,发送SMS
+model,"ir.actions.wizard,name",36,Mass Mailing,群发邮件
+model,"ir.actions.wizard,name",37,Clear IDs,Clear IDs
+model,"ir.actions.wizard,name",70,Reconcile Transactions,对账事务
+model,"ir.actions.wizard,name",71,Verify Transactions,查证事务
+model,"ir.actions.wizard,name",72,Verify Transactions,查证事务
+model,"ir.actions.wizard,name",73,Print Journal,打印分类账
+model,"ir.actions.wizard,name",74,Split Invoice,分割发票
+model,"ir.actions.wizard,name",75,Refund Invoice,退款发票
+model,"ir.actions.wizard,name",97,Sign in / Sign out,登录/注销
+model,"ir.actions.wizard,name",165,Bill tasks,票据任务
+model,"ir.actions.wizard,name",166,Copy project,取消付款
+model,"ir.actions.wizard,name",167,Deactivate project,发票目标
+field,"ir.attachment,description",0,Description,说明
+field,"ir.attachment,res_model",0,Ressource Model,资源模型
+field,"ir.attachment,datas_fname",0,Data Filename,数据文件名
+field,"ir.attachment,res_id",0,Ressource ID,资源ID
+field,"ir.attachment,datas",0,Data,数据
+field,"ir.attachment,name",0,Attachment Name,附件名称
+field,"ir.cron,function",0,Function,功能
+field,"ir.cron,args",0,Arguments,参数
+field,"ir.cron,user_id",0,User,用户
+field,"ir.cron,name",0,Name,名称
+field,"ir.cron,interval_type",0,Interval Unit,间隔单位
+field,"ir.cron,numbercall",0,Number of calls,呼入号码
+field,"ir.cron,nextcall",0,Last call date,上次呼入日期
+field,"ir.cron,priority",0,Priority (0=Very Urgent),优先级(0=紧急)
+field,"ir.cron,doall",0,Repeat all missed,Repeat all missed
+field,"ir.cron,active",0,Active,活动的
+field,"ir.cron,interval_number",0,Interval Number,内部号码
+field,"ir.cron,model",0,Model,模型
+field,"ir.default,uid",0,Users,用户
+field,"ir.default,ref_table",0,Table Ref.,表参照
+field,"ir.default,value",0,Default Value,默认价值
+field,"ir.default,ref_id",0,ID Ref.,ID参照
+field,"ir.default,field_tbl",0,Model,模型
+field,"ir.default,field_name",0,Model field,模型字段
+field,"ir.default,page",0,View,视图
+field,"ir.report.custom,name",0,Report Name,报告名称
+field,"ir.report.custom,title",0,Report Header,报告头
+field,"ir.report.custom,repeat_header",0,Repeat Header,报告头
+field,"ir.report.custom,footer",0,Report Footer,报告尾
+field,"ir.report.custom,child_ids",0,Childs fields,子项字段
+field,"ir.report.custom,totalonly",0,Show totals only,只显示总计
+field,"ir.report.custom,fields_id",0,Fields,字段
+field,"ir.report.custom,state",0,State,状态
+field,"ir.report.custom,sortby",0,Sorted By,排序项
+field,"ir.report.custom,print_orientation",0,Print orientation,打印方向
+field,"ir.report.custom,model",0,Model,模型
+field,"ir.report.custom,groupby",0,Grouped By,分类项
+field,"ir.report.custom,print_format",0,Print format,打印格式
+field,"ir.report.custom.fields,calc_sum",0,Calculate Sum,合计
+field,"ir.report.custom.fields,name",0,Name,名称
+field,"ir.report.custom.fields,calc_avg",0,Calculate Average,平均
+field,"ir.report.custom.fields,bgcolor",0,Background Color,背景色
+field,"ir.report.custom.fields,calc_count",0,Calculate Count,计数
+field,"ir.report.custom.fields,priority",0,Priority,优先级
+field,"ir.report.custom.fields,width",0,Fixed Width,固定宽度
+field,"ir.report.custom.fields,fontcolor",0,Font color,字体颜色
+field,"ir.report.custom.fields,report_id",0,Report Ref,报告参照
+field,"ir.report.custom.fields,alignment",0,Alignment,对齐方式
+field,"ir.report.custom.fields,string",0,String,字符串
+field,"ir.sequence,code",0,Sequence Code,序列代码
+field,"ir.sequence,name",0,Sequence Name,序列名称
+field,"ir.sequence,number_next",0,Next Number,下一编号
+field,"ir.sequence,number_increment",0,Increment Number,编号增量
+field,"ir.sequence,prefix",0,Prefix,前缀
+field,"ir.sequence,active",0,Active,活动的
+field,"ir.sequence,suffix",0,Suffix,后缀
+field,"ir.sequence.type,code",0,Sequence Code,序列代码
+field,"ir.sequence.type,name",0,Sequence Name,序列名称
+field,"ir.translation,lang",0,Language,语言
+field,"ir.translation,src",0,Source,源
+field,"ir.translation,name",0,Name Field,名称字段
+field,"ir.translation,type",0,Type,类型
+field,"ir.translation,value",0,Translation Value,翻译值
+field,"ir.translation,res_id",0,Ressource ID,资源ID
+field,"ir.ui.menu,parent_id",0,Parent Menu,父项菜单
+field,"ir.ui.menu,child_id",0,Childs,子项
+field,"ir.ui.menu,complete_name",0,Complete Name,完成名称
+field,"ir.ui.menu,name",0,Menu,菜单
+model,"ir.ui.menu,name",1,Menu,主菜单
+model,"ir.ui.menu,name",3,Operations,日常操作
+model,"ir.ui.menu,name",4,Definitions,基础定义
+model,"ir.ui.menu,name",5,Administration,系统管理
+model,"ir.ui.menu,name",6,Sequences,序列
+model,"ir.ui.menu,name",7,Sequences,序列
+model,"ir.ui.menu,name",8,Sequence Types,序列类型
+model,"ir.ui.menu,name",9,Actions,动作
+model,"ir.ui.menu,name",10,Actions,动作
+model,"ir.ui.menu,name",11,Execute,执行
+model,"ir.ui.menu,name",12,Group,组
+model,"ir.ui.menu,name",13,Report Custom,报表自定义
+model,"ir.ui.menu,name",14,Report Xml,报表Xml
+model,"ir.ui.menu,name",15,Open Window,打开窗口
+model,"ir.ui.menu,name",16,Wizard,向导
+model,"ir.ui.menu,name",17,Users,用户
+model,"ir.ui.menu,name",18,Users,用户
+model,"ir.ui.menu,name",19,Groups,用户组
+model,"ir.ui.menu,name",20,Roles,角色
+model,"ir.ui.menu,name",21,Interface,界面
+model,"ir.ui.menu,name",22,View,视图
+model,"ir.ui.menu,name",23,Attachments,附件
+model,"ir.ui.menu,name",24,Report,报表
+model,"ir.ui.menu,name",25,Report Custom,报表自定义
+model,"ir.ui.menu,name",26,Translations,翻译
+model,"ir.ui.menu,name",27,Translations,翻译
+model,"ir.ui.menu,name",28,Menus,菜单访问控制
+model,"ir.ui.menu,name",29,Grant Access to menu,菜单访问控制
+model,"ir.ui.menu,name",30,Scheduled Actions,计划动作
+model,"ir.ui.menu,name",31,Base,基础数据
+model,"ir.ui.menu,name",32,Projects,项目
+model,"ir.ui.menu,name",33,Requests,请求
+model,"ir.ui.menu,name",34,All Requests,所有请求
+model,"ir.ui.menu,name",35,Request Links,请求连接列表
+model,"ir.ui.menu,name",36,Countries,国家
+model,"ir.ui.menu,name",37,States,州/省
+model,"ir.ui.menu,name",38,Partners,伙伴
+model,"ir.ui.menu,name",39,Partner Contacts,伙伴联系人
+model,"ir.ui.menu,name",40,Titles,伙伴称谓
+model,"ir.ui.menu,name",41,Partners,伙伴
+model,"ir.ui.menu,name",42,Partners Categories,伙伴分类
+model,"ir.ui.menu,name",43,Base,基础数据
+model,"ir.ui.menu,name",44,Languages,语言
+model,"ir.ui.menu,name",45,CRM,CRM
+model,"ir.ui.menu,name",46,Canals,联系渠道
+model,"ir.ui.menu,name",47,States of Mind,满意度
+model,"ir.ui.menu,name",48,Accounting,会计
+model,"ir.ui.menu,name",49,Currency,币种
+model,"ir.ui.menu,name",50,Accounts,账号
+model,"ir.ui.menu,name",51,Accounting,会计及账簿
+model,"ir.ui.menu,name",52,Account Trees,会计科目树
+model,"ir.ui.menu,name",53,Low Level,低层
+model,"ir.ui.menu,name",54,Account Move Line,账号转移行
+model,"ir.ui.menu,name",55,Account Move,账号转移
+model,"ir.ui.menu,name",56,Tax,税
+model,"ir.ui.menu,name",57,All Invoices,所有发票
+model,"ir.ui.menu,name",58,Customers Invoices,客户发票
+model,"ir.ui.menu,name",59,Suppliers Invoices,供应商发票
+model,"ir.ui.menu,name",60,Customers Refund,客户退款
+model,"ir.ui.menu,name",61,Suppliers Refund,供应商退款
+model,"ir.ui.menu,name",62,Draft Invoices,单据发票
+model,"ir.ui.menu,name",63,PRO-FORMA,格式发票
+model,"ir.ui.menu,name",64,Opened Invoices,未结发票
+model,"ir.ui.menu,name",65,Draft,单据
+model,"ir.ui.menu,name",66,Opened,未结的
+model,"ir.ui.menu,name",67,Draft,单据
+model,"ir.ui.menu,name",68,Opened,未结的
+model,"ir.ui.menu,name",69,Draft,单据
+model,"ir.ui.menu,name",70,Opened,未结的
+model,"ir.ui.menu,name",71,Transfers,收款/付款/转账
+model,"ir.ui.menu,name",72,Network,网络
+model,"ir.ui.menu,name",73,All Materials,所有材料
+model,"ir.ui.menu,name",74,Network,网络
+model,"ir.ui.menu,name",75,Software,软件
+model,"ir.ui.menu,name",76,Types,类型
+model,"ir.ui.menu,name",77,Hardware,硬件
+model,"ir.ui.menu,name",78,Types,类型
+model,"ir.ui.menu,name",79,Network list,网络列表
+model,"ir.ui.menu,name",80,Networks,网络
+model,"ir.ui.menu,name",81,HR,HR
+model,"ir.ui.menu,name",82,Employees,雇员
+model,"ir.ui.menu,name",83,HR,人力资源
+model,"ir.ui.menu,name",84,Workgroups,工作组
+model,"ir.ui.menu,name",85,Attendances,出勤
+model,"ir.ui.menu,name",86,Ask an holiday,请假
+model,"ir.ui.menu,name",87,Holiday Status,假期状态
+model,"ir.ui.menu,name",88,Attendance Reasons,缺勤原因
+model,"ir.ui.menu,name",89,Expenses claims,费用声明列表
+model,"ir.ui.menu,name",90,Expense claim,费用声明
+model,"ir.ui.menu,name",91,Expenses types,费用类型
+model,"ir.ui.menu,name",92,Sign in/out,签到
+model,"ir.ui.menu,name",93,Marketing,市场
+model,"ir.ui.menu,name",94,Campaigns,促销活动
+model,"ir.ui.menu,name",95,Marketing,市场促销
+model,"ir.ui.menu,name",96,Campaign Definition,促销活动定义
+model,"ir.ui.menu,name",97,Products,产品
+model,"ir.ui.menu,name",98,Products With Variations,产品系列
+model,"ir.ui.menu,name",99,Variations,系列
+model,"ir.ui.menu,name",100,Templates,模板
+model,"ir.ui.menu,name",101,Products,产品
+model,"ir.ui.menu,name",102,Categories,分类
+model,"ir.ui.menu,name",103,Pricelists,价格表
+model,"ir.ui.menu,name",104,Pricelists Version,价格表版本
+model,"ir.ui.menu,name",105,Pricelists,价格表
+model,"ir.ui.menu,name",106,Subscriptions,多次订货
+model,"ir.ui.menu,name",107,All Subscriptions,所有多次订货
+model,"ir.ui.menu,name",108,Subscriptions,多次订货
+model,"ir.ui.menu,name",109,Document Types,单据类型
+model,"ir.ui.menu,name",110,Case Categories,联系台账类型
+model,"ir.ui.menu,name",111,Helpdesk,伙伴联系台账
+model,"ir.ui.menu,name",112,All Cases,所有联系台账
+model,"ir.ui.menu,name",113,Available Cases,可用联系台账
+model,"ir.ui.menu,name",114,My Cases,我的联系台账
+model,"ir.ui.menu,name",115,Sales,销售
+model,"ir.ui.menu,name",116,Business Opportunities,商业机会
+model,"ir.ui.menu,name",117,All Business Opportunities,所有商业机会
+model,"ir.ui.menu,name",118,Available Business Opportunities,可用商业机会
+model,"ir.ui.menu,name",119,My Business Opportunities,我的商业机会
+model,"ir.ui.menu,name",120,Purchase,采购
+model,"ir.ui.menu,name",121,Purchase Opportunities,采购机会
+model,"ir.ui.menu,name",122,All Purchase Opportunities,所有采购机会
+model,"ir.ui.menu,name",123,Available Purchase Opportunities,可用采购机会
+model,"ir.ui.menu,name",124,My Purchase Opportunities,我的采购机会
+model,"ir.ui.menu,name",125,Automatic Segmentations,自动细分
+model,"ir.ui.menu,name",126,CRM,客户关系管理
+model,"ir.ui.menu,name",127,Automatic Segmentations,伙伴细分
+model,"ir.ui.menu,name",128,Stock,库存
+model,"ir.ui.menu,name",129,Lot Inventory,存货清册
+model,"ir.ui.menu,name",130,All Lots,所有存货
+model,"ir.ui.menu,name",131,Stock,仓库/库存
+model,"ir.ui.menu,name",132,Location,位置
+model,"ir.ui.menu,name",133,Location Tree,库存位置树
+model,"ir.ui.menu,name",134,Warehouse,仓库
+model,"ir.ui.menu,name",135,All Picking Lists,所有清单列表
+model,"ir.ui.menu,name",136,Sending Goods,货物出库
+model,"ir.ui.menu,name",137,Pickings waiting delivery,待运货物清单
+model,"ir.ui.menu,name",138,Draft Pickings for delivery,出库货物清单
+model,"ir.ui.menu,name",139,Getting Goods,货物入库
+model,"ir.ui.menu,name",140,Pickings to process for goods reception,待收货物清单
+model,"ir.ui.menu,name",141,Draft Pickings for goods reception,入库货物清单
+model,"ir.ui.menu,name",142,Internal picking lists,内部清单列表
+model,"ir.ui.menu,name",143,Internal pickings,内部清单
+model,"ir.ui.menu,name",144,Internal Picking lists to process,内部清单列表处理
+model,"ir.ui.menu,name",145,Draft Internal Picking lists,内部清单列表
+model,"ir.ui.menu,name",146,Move,转移
+model,"ir.ui.menu,name",147,Shipping,发运
+model,"ir.ui.menu,name",148,Goods waiting shipping,待运货物
+model,"ir.ui.menu,name",149,Goods waiting reception,待收货物
+model,"ir.ui.menu,name",150,Waiting Internal Shippings,待转移货物
+model,"ir.ui.menu,name",151,Purchase Order,采购订单
+model,"ir.ui.menu,name",152,Sales,销售
+model,"ir.ui.menu,name",153,Shop,商店
+model,"ir.ui.menu,name",154,Sale Order,销售订单
+model,"ir.ui.menu,name",155,Order POS,POS订单
+model,"ir.ui.menu,name",156,Project,项目
+model,"ir.ui.menu,name",157,All Projects,所有项目
+model,"ir.ui.menu,name",158,Your projects,你的项目
+model,"ir.ui.menu,name",159,All Tasks,所有任务
+model,"ir.ui.menu,name",160,Unbilled closed tasks,未结的已关闭任务
+model,"ir.ui.menu,name",161,Unbilled open tasks,未结的待处理任务
+model,"ir.ui.menu,name",162,Your tasks,你的任务
+model,"ir.ui.menu,name",163,Your open tasks,你的待处理任务
+model,"ir.ui.menu,name",164,Open tasks,待处理任务
+field,"ir.ui.menu,groups_id",0,Groups,组
+field,"ir.ui.view,name",0,View Name,视图名称
+field,"ir.ui.view,type",0,View Type,视图类型
+field,"ir.ui.view,priority",0,Priority,优先级
+field,"ir.ui.view,model",0,Model,模型
+field,"ir.ui.view,arch",0,View Architecture,视图结构
+field,"ir.ui.view,field_parent",0,Childs Field,子项字段
+field,"ir.ui.view_sc,resource",0,Resource Name,资源名称
+field,"ir.ui.view_sc,user_id",0,User Ref.,用户参照
+field,"ir.ui.view_sc,res_id",0,Resource Ref.,资源参照
+field,"ir.ui.view_sc,name",0,Shortcut Name,快捷键名称
+field,"ir.values,key_id",0,Last Key,Last Key
+field,"ir.values,object",0,Is Object,Is Object
+field,"ir.values,meta",0,Meta Datas,元数据
+field,"ir.values,name",0,Name,名称
+field,"ir.values,value",0,Value,价值
+field,"ir.values.keys,parent_id",0,Last Key,Last Key
+field,"ir.values.keys,value",0,Value,价值
+field,"ir.values.keys,key",0,Name,名称
+field,"network.changes,date",0,Change date,修改日期
+field,"network.changes,machine_id",0,Machine,机器
+field,"network.changes,name",0,Short Descritption,简短说明
+field,"network.changes,description",0,Long Description,详细说明
+field,"network.hardware.type,name",0,Type of material,物料类型
+field,"network.hardware.type,networkable",0,Networkable hardware,网络硬件
+field,"network.material,warranty",0,Warranty date,担保日期
+field,"network.material,name",0,Composant Name,Composant名称
+field,"network.material,parent_id",0,Parent Material,父项物料
+field,"network.material,network_id",0,Network,网络
+field,"network.material,change_id",0,Changes on this machine,机器项修正
+field,"network.material,note",0,Notes,注解
+field,"network.material,date",0,Installation Date,安装日期
+field,"network.material,supplier",0,Supplier,供应商
+field,"network.material,child_id",0,Childs Materials,子项物料
+field,"network.material,type",0,Hardware type,硬件类型
+field,"network.material,software_id",0,Installed Softwares,已安装软件
+field,"network.network,material_ids",0,Members,成员
+field,"network.network,range",0,Address range,地址范围
+field,"network.network,user_id",0,Insite Contact,内部联系人
+field,"network.network,name",0,Network name,网络名称
+field,"network.network,contact_id",0,Partner,伙伴
+field,"network.software,name",0,Composant Name,Composant名称
+field,"network.software,logpass",0,Login / Password,登录名/密码
+field,"network.software,material_id",0,Material,物料
+field,"network.software,note",0,Notes,注解
+field,"network.software,version",0,Software version,软件版本
+field,"network.software,date",0,Installation Date,安装日期
+field,"network.software,type",0,Software Type,软件类型
+field,"network.software,email",0,Contact Email,联系人Email
+field,"network.software.logpass,software_id",0,Software,软件
+field,"network.software.logpass,password",0,Password,密码
+field,"network.software.logpass,name",0,Login,登录
+field,"network.software.type,note",0,Notes,注解
+field,"network.software.type,name",0,Composant Name,Composant名称
+field,"product.category,parent_id",0,Parent Category,父项类别
+field,"product.category,child_id",0,Childs Categories,子项分类
+field,"product.category,name",0,Name,名称
+field,"product.pricelist,active",0,Active,活动的
+field,"product.pricelist,name",0,Name,名称
+field,"product.pricelist,version_id",0,Pricelist Versions,价格表版本
+field,"product.pricelist.item,limit_price_max_margin",0,Limit Price Max. Margin,限制价格最大边标利润
+field,"product.pricelist.item,standard_price_base",0,Standard Price Base,标准价格基础
+field,"product.pricelist.item,list_price_surcharge",0,List Price Surcharge,列表价格附加费
+field,"product.pricelist.item,min_quantity",0,Min. Quantity,最小数量
+field,"product.pricelist.item,list_price_min_margin",0,List Price Min. Margin,列表价格最小边标利润
+field,"product.pricelist.item,limit_price_discount",0,Limit Price Discount,限制价格折扣
+field,"product.pricelist.item,standard_price_surcharge",0,Standard Price Surcharge,标准价格附加费
+field,"product.pricelist.item,product_tmpl_id",0,Product Template,产品模板
+field,"product.pricelist.item,priority",0,Priority,优先级
+field,"product.pricelist.item,standard_price_max_margin",0,Standard Price Max. Margin,标准价格最大边标利润
+field,"product.pricelist.item,price_version_id",0,Price List Version,价格表版本
+field,"product.pricelist.item,list_price_max_margin",0,List Price Max. Margin,列表价格最大边标利润
+field,"product.pricelist.item,limit_price_min_margin",0,Limit Price Min. Margin,限制价格最小边标利润
+field,"product.pricelist.item,base",0,Based on,基于
+field,"product.pricelist.item,limit_price_surcharge",0,Limit Price Surcharge,限制价格附加费
+field,"product.pricelist.item,list_price_discount",0,List Price Discount,列表价格折扣
+field,"product.pricelist.item,categ_id",0,Product Category,产品类别
+field,"product.pricelist.item,standard_price_discount",0,Standard Price Discount,标准价格折扣
+field,"product.pricelist.item,name",0,Name,名称
+field,"product.pricelist.item,base_pricelist_id",0,Base Price List,基础价格表
+field,"product.pricelist.item,list_price_round",0,List Price Rounding,列表价格舍入
+field,"product.pricelist.item,standard_price_min_margin",0,Standard Price Min. Margin,标准价格最小边标利润
+field,"product.pricelist.item,list_price_base",0,List Price Base,列表价格基础
+field,"product.pricelist.item,standard_price_round",0,Standard Price Rounding,标准价格舍入
+field,"product.pricelist.item,limit_price_base",0,Limit Price Base,限制价格基础
+field,"product.pricelist.item,limit_price_round",0,Limit Price Rounding,限制价格舍入
+field,"product.pricelist.version,items_id",0,Price List Items,价格表项
+field,"product.pricelist.version,name",0,Name,名称
+field,"product.pricelist.version,date_end",0,End Date,结束日期
+field,"product.pricelist.version,date_start",0,Start Date,开始日期
+field,"product.pricelist.version,active",0,Active,活动的
+field,"product.pricelist.version,pricelist_id",0,Price List,价格表
+field,"product.product,list_price_extra",0,List Price Extra,列表价格附加
+field,"product.product,code",0,Code,编码
+field,"product.product,virtual_available",0,Virtual Stock,虚拟库存
+field,"product.product,standard_price_extra",0,Standard Price Extra,标准价格附加
+field,"product.product,limit_price_extra",0,Limit Price Extra,限制价格附加
+field,"product.product,price",0,Customer Price,客户价格
+field,"product.product,product_tmpl_id",0,Product Template,产品模板
+field,"product.product,list_price_margin",0,List Price Margin,列表价格边标利润
+field,"product.product,limit_price_margin",0,Limit Price Margin,限制价格边标利润
+field,"product.product,active",0,Active,活动的
+field,"product.product,qty_available",0,Real Stock,真实库存
+field,"product.product,variants",0,Variants,变动
+field,"product.product,standard_price_margin",0,Standard Price Margin,标准价格边标利润
+field,"product.template,seller_id",0,Retailer,零售商
+field,"product.template,list_price",0,List Price,列表价格
+field,"product.template,name",0,Name,名称
+field,"product.template,type",0,Product Type,产品类型
+field,"product.template,standard_price",0,Standard Price,标准价格
+field,"product.template,limit_price",0,Limit Price,限制价格
+field,"product.template,taxes_id",0,Product Taxes,产品税费
+field,"product.template,cost_method",0,Costing Method,成本计算方法
+field,"product.template,categ_id",0,Category,类别
+field,"product.template,description",0,Description,说明
+field,"project.project,tasks",0,Project tasks,项目任务
+field,"project.project,date_end",0,Project should end on,项目计划结束日期
+field,"project.project,contact_id",0,Contact,联系人
+field,"project.project,effective_hours",0,Hours spent,投入小时数
+field,"project.project,manager",0,Project manager,项目经理
+field,"project.project,shop_id",0,Shop,商店
+field,"project.project,child_id",0,Subproject,子项目
+field,"project.project,planned_hours",0,Hours planned,计划小时数
+field,"project.project,partner_id",0,Customer,客户
+field,"project.project,warn_footer",0,Mail footer,Mail尾
+field,"project.project,warn_manager",0,Warn manager,预告经理
+field,"project.project,warn_customer",0,Warn customer,预告客户
+field,"project.project,date_start",0,Project started on,项目开始时间
+field,"project.project,priority",0,Sequence,序列
+field,"project.project,parent_id",0,Parent project,父项项目
+field,"project.project,state",0,unknown,未知
+field,"project.project,timesheet_id",0,Timesheet,工作时间表
+field,"project.project,pricelist_id",0,Pricelist,价格表
+field,"project.project,tax_ids",0,Appliable taxes,适用的税
+field,"project.project,members",0,Project members,项目成员
+field,"project.project,active",0,Active,活动的
+field,"project.project,tariff",0,Tariff,关税
+field,"project.project,name",0,Project's name,项目名称
+field,"project.project,notes",0,Notes,注释
+field,"project.project,warn_header",0,Mail header,Mail头
+field,"project.project,mode",0,Tariff mode,关税模式
+field,"project.project,fullname",0,Name,名称
+field,"project.project,category_id",0,Project Classification,项目分类
+field,"project.task,sequence",0,Sequence,序列
+field,"project.task,active",0,Active,活动的
+field,"project.task,start_sequence",0,Wait Previous Sequences,等待前一序列
+field,"project.task,product_qty",0,Product Quantity,产品数量
+field,"project.task,planned_hours",0,Planned hours,计划小时数
+field,"project.task,partner_id",0,Customer,客户
+field,"project.task,user_id",0,Assigned to,分配给
+field,"project.task,date_start",0,Date Start,开始日期
+field,"project.task,comments",0,Task comments,任务评论
+field,"project.task,priority",0,Priority,优先级
+field,"project.task,state",0,State,状态
+field,"project.task,billable",0,Billable,可支付的
+field,"project.task,project_id",0,Project,项目
+field,"project.task,type",0,Type,类型
+field,"project.task,description",0,Description,说明
+field,"project.task,order_id",0,Sale Order,销售订单
+field,"project.task,effective_hours",0,Effective hours,有效小时数
+field,"project.task,product_id",0,Product,产品
+field,"project.task,name",0,Task summary,任务概述
+field,"project.task,date_deadline",0,Deadline,截止日期
+field,"project.task,cust_desc",0,Description for the customer,客户相关说明
+field,"project.task,date_close",0,Date Closed,关闭日期
+field,"project.task.comment,date",0,Date,日期
+field,"project.task.comment,content",0,Comment,评论
+field,"project.task.comment,name",0,Author,作者
+field,"project.task.comment,task_id",0,Task,任务
+field,"project.task.type,name",0,Type,类型
+field,"project.task.type,description",0,Description,说明
+field,"purchase.order,purchase_rep",0,Purchase Representative,采购代表
+field,"purchase.order,partner_ref",0,Partner Reference,伙伴参照
+field,"purchase.order,name",0,Order Description,订单说明
+field,"purchase.order,date_promise",0,Date Promised,承诺日期
+field,"purchase.order,order_line",0,Order State,订单状态
+field,"purchase.order,partner_id",0,Partner,伙伴
+field,"purchase.order,notes",0,Notes,注释
+field,"purchase.order,partner_address_id",0,Address,地址
+field,"purchase.order,shipped",0,Shipped,已发运
+field,"purchase.order,warehouse_id",0,Warehouse,仓库
+field,"purchase.order,project_id",0,Project,项目
+field,"purchase.order,state",0,Order State,订单状态
+field,"purchase.order,contact",0,Partner Contact,伙伴联系人
+field,"purchase.order,invoiced",0,Invoiced,已开票
+field,"purchase.order,invoice_id",0,Invoice,发票
+field,"purchase.order,pricelist_id",0,Pricelist,价格表
+field,"purchase.order,date_order",0,Date Ordered,多次订货日期
+field,"purchase.order,ref",0,Order Reference,订单参照
+field,"purchase.order,shipping_id",0,Shipping,发运
+field,"purchase.order.line,product_id",0,Product,产品
+field,"purchase.order.line,date_promise",0,Date Promised,承诺日期
+field,"purchase.order.line,order_id",0,Order Ref,订单参照
+field,"purchase.order.line,price_unit",0,Unit Price,单价
+field,"purchase.order.line,taxes_id",0,Taxes,税
+field,"purchase.order.line,quantity",0,Quantity,数量
+field,"purchase.order.line,notes",0,Notes,注解
+field,"purchase.order.line,name",0,Description,说明
+field,"res.country,code",0,Country Code,国家编码
+field,"res.country,name",0,Country Name,国家名称
+field,"res.country.state,code",0,State Code,州/省编码
+field,"res.country.state,country_id",0,Country,国家
+field,"res.country.state,name",0,State Name,州/省名称
+field,"res.groups,name",0,Group Name,组名称
+field,"res.lang,active",0,Active,活动的
+field,"res.lang,code",0,Code,编码
+field,"res.lang,name",0,Name,名称
+field,"res.partner,lang",0,Langage,语言
+field,"res.partner,website",0,Website,网站
+field,"res.partner,client_lien",0,Liens,行
+field,"res.partner,name",0,Name,名称
+field,"res.partner,title",0,Title,头衔
+field,"res.partner,commercial",0,Commercial,商业
+field,"res.partner,credit",0,Credit,贷方
+field,"res.partner,child_ids",0,Partner Ref.,伙伴参照
+field,"res.partner,debit",0,Debit,借方
+field,"res.partner,comment",0,Notes,注解
+field,"res.partner,parent_id",0,Main Company,主要公司
+field,"res.partner,bank",0,Bank account,银行账号
+field,"res.partner,address",0,Contacts,联系人
+field,"res.partner,active",0,Active,活动的
+field,"res.partner,category_id",0,Categories,分类
+field,"res.partner,ref",0,Identifiant,Identifiant
+field,"res.partner,events",0,events,事件
+field,"res.partner,vat",0,VAT,VAT
+field,"res.partner.address,function",0,Function,功能
+field,"res.partner.address,city",0,City,城市
+field,"res.partner.address,fax",0,Fax,传真
+field,"res.partner.address,name",0,Contact Name,联系人名称
+field,"res.partner.address,zip",0,Zip,邮编
+field,"res.partner.address,title",0,Title,头衔
+field,"res.partner.address,mobile",0,Mobile,手机
+field,"res.partner.address,partner_id",0,Partner,伙伴
+field,"res.partner.address,street2",0,Street2,街区地址2
+field,"res.partner.address,phone",0,Phone,电话
+field,"res.partner.address,state",0,State,州/省
+field,"res.partner.address,street",0,Street,街区地址
+field,"res.partner.address,country",0,Country,国家
+field,"res.partner.address,type",0,Address Type,地址类型
+field,"res.partner.address,email",0,E-Mail,Mail-E-Mail
+field,"res.partner.canal,active",0,Active,活动的
+field,"res.partner.canal,name",0,Canal Name,联系渠道
+field,"res.partner.category,active",0,Active,活动的
+field,"res.partner.category,name",0,Category Name,类别名称
+field,"res.partner.event,user_id",0,User,用户
+field,"res.partner.event,name",0,Events,事件
+field,"res.partner.event,probability",0,Probability (0.50),概率(0.50)
+field,"res.partner.event,canal_id",0,Canal,联系渠道
+field,"res.partner.event,partner_id",0,Partner,伙伴
+field,"res.partner.event,planned_cost",0,Planned Cost,计划成本
+field,"res.partner.event,som",0,State of Mind,满意度
+field,"res.partner.event,partner_type",0,Partner Relation,伙伴关系
+field,"res.partner.event,type",0,Type of Event,事件类型
+field,"res.partner.event,date",0,Date,日期
+field,"res.partner.event,document",0,Document,文档
+field,"res.partner.event,planned_revenue",0,Planned Revenue,计划收入
+field,"res.partner.event,description",0,Description,说明
+field,"res.partner.function,code",0,Code,编码
+field,"res.partner.function,name",0,Name,名称
+field,"res.partner.som,name",0,State of Mind,伙伴满意度
+field,"res.partner.som,factor",0,Factor,满意度
+field,"res.partner.title,domain",0,Domain,伙伴类型
+field,"res.partner.title,name",0,Title,称谓
+field,"res.partner.title,shortcut",0,Shortcut,快捷键
+field,"res.project,name",0,Name,名称
+field,"res.project,description",0,Description,说明
+field,"res.request,name",0,Request Description,请求说明
+field,"res.request,ref_doc1",0,Document Ref 1,文档参照1
+field,"res.request,ref_doc2",0,Document Ref 2,文档参照2
+field,"res.request,act_result",0,Action Result Details,动作结果详细
+field,"res.request,req_history",0,Request History,请求历史
+field,"res.request,req_priority",0,Priority,优先级
+field,"res.request,req_ref",0,Reference,参照
+field,"res.request,state",0,State,状态
+field,"res.request,act_from",0,Request From,请求自
+field,"res.request,act_title",0,Action Result,动作结果
+field,"res.request,ref_partner_id",0,Partner Ref.,伙伴参照
+field,"res.request,req_type",0,Request Type,请求类型
+field,"res.request,active",0,Active,活动的
+field,"res.request,req_summary",0,Request Summary,请求简述
+field,"res.request,act_to",0,Request To,请求给
+field,"res.request,act_date",0,Action Date,动作日期
+field,"res.request.history,name",0,Action Result,动作结果
+field,"res.request.history,act_result",0,Action Result Details,动作结果详细
+field,"res.request.history,act_from",0,Request From,请求自
+field,"res.request.history,req_id",0,Request,请求
+field,"res.request.history,act_to",0,Request To,请求给
+field,"res.request.history,act_date",0,Action Date,动作日期
+field,"res.request.link,priority",0,Priority,优先级
+field,"res.request.link,object",0,Link Object,连接对象
+field,"res.request.link,name",0,Name,名称
+field,"res.roles,parent_id",0,Parent,父项
+field,"res.roles,child_id",0,Childs,子项
+field,"res.roles,name",0,Role Name,角色名称
+field,"res.users,groups_id",0,groups,组
+field,"res.users,address_id",0,Address,地址
+field,"res.users,name",0,Name,名称
+field,"res.users,roles_id",0,Roles,角色
+field,"res.users,signature",0,Signature,签名
+field,"res.users,login",0,Login,登录
+field,"res.users,password",0,Password,密码
+field,"res.users,action_id",0,Action,动作
+field,"sale.order,date_due",0,Date Due Payment,到期日期交付
+field,"sale.order,payment_term",0,Payment Term,交付条款
+field,"sale.order,order_policy",0,Shipping Policy,发运策略
+field,"sale.order,shop_id",0,Shop,商店
+field,"sale.order,date_order",0,Date Ordered,多次订货日期
+field,"sale.order,partner_id",0,Partner,伙伴
+field,"sale.order,invoiced",0,Paid,已付
+field,"sale.order,amount_tax",0,Taxes,税
+field,"sale.order,amount_untaxed",0,Untaxed Amount,未完税金额
+field,"sale.order,shipping_id",0,Shipping,发运
+field,"sale.order,order_line",0,Order Lines,订单行
+field,"sale.order,note",0,Notes,注解
+field,"sale.order,state",0,Order State,订单状态
+field,"sale.order,partner_contact_id",0,Contact Address,联系人地址
+field,"sale.order,pricelist_id",0,Pricelist,价格表
+field,"sale.order,project_id",0,Project,项目
+field,"sale.order,payment_line",0,Order Payments,订单付款
+field,"sale.order,partner_invoice_id",0,Invoice Address,发票地址
+field,"sale.order,amount_total",0,Total,总计
+field,"sale.order,name",0,Order Description,订单说明
+field,"sale.order,partner_shipping_id",0,Shipping Address,发运地址
+field,"sale.order,invoice_id",0,Invoice,发票
+field,"sale.order,shipped",0,Shipped,已发运
+field,"sale.order,shipping_created",0,Shipping created,发运创建d
+field,"sale.order.line,product_id",0,Product,产品
+field,"sale.order.line,date_promise",0,Date Promised,承诺日期
+field,"sale.order.line,order_id",0,Order Ref,订单参照
+field,"sale.order.line,price_unit",0,Unit Price,单价
+field,"sale.order.line,name",0,Description,说明
+field,"sale.order.line,quantity",0,Quantity,数量
+field,"sale.order.line,notes",0,Notes,注解
+field,"sale.order.line,tax_id",0,Taxes,税
+field,"sale.order.payment,order_id",0,Order Ref,订单参照
+field,"sale.order.payment,amount",0,Amount,金额
+field,"sale.order.payment,name",0,Description,说明
+field,"sale.order.payment,account_id",0,Account,账号
+field,"sale.shop,payment_account_id",0,Account payments,账号付款
+field,"sale.shop,name",0,Shop name,商店名称
+field,"sale.shop,warehouse_id",0,Available Warehouse,可用的仓库
+field,"sale.shop,pricelist_id",0,Pricelist,价格表
+field,"sale.shop,project_id",0,Project,项目
+field,"sale.shop,payment_default_id",0,Default payment,默认交付
+field,"stock.location,comment",0,Additionnal Information,附加信息
+field,"stock.location,account_id",0,Inventory Account,库存账号
+field,"stock.location,usage",0,Usage,用途
+field,"stock.location,posz",0,Position Z,位置Z
+field,"stock.location,posx",0,Position X,位置X
+field,"stock.location,posy",0,Position Y,位置Y
+field,"stock.location,active",0,Active,活动的
+field,"stock.location,lot_id",0,Lot,批货
+field,"stock.location,location_child_id",0,Contains,内含
+field,"stock.lot,address_id",0,Address,地址
+field,"stock.lot,tracking",0,Tracking,跟踪
+field,"stock.lot,date",0,Date create,创建日期
+field,"stock.lot,name",0,Lot,批货
+field,"stock.lot,lot_line_view_id",0,Contents,内容
+field,"stock.lot,price",0,Total Costs Price,总成本价格
+field,"stock.lot,lot_line_id",0,Movements,移动
+field,"stock.lot,parent_id",0,Container,容器
+field,"stock.lot,move_history_lines",0,Move History,转移历史
+field,"stock.lot,active",0,Active,活动的
+field,"stock.lot,child_id",0,Contains,内含
+field,"stock.lot,type",0,Type,类型
+field,"stock.lot,serial",0,Serial,系列
+field,"stock.lot,product_id",0,Products,产品
+field,"stock.lot.inventory,name",0,Inventory,库存
+field,"stock.lot.inventory,date_done",0,Date done,日期已完成
+field,"stock.lot.inventory,state",0,State,状态
+field,"stock.lot.inventory,date",0,Date create,创建日期
+field,"stock.lot.inventory,inventory_line_id",0,Inventories,存货清册
+field,"stock.lot.inventory,lot_line_id",0,Inventories,存货清册
+field,"stock.lot.inventory,users",0,Utilisateur,Utilisateur
+field,"stock.lot.inventory.line,inventory_id",0,Inventory,库存
+field,"stock.lot.inventory.line,lot_id",0,Lot,批货
+field,"stock.lot.inventory.line,amount",0,Amount,金额
+field,"stock.lot.inventory.line,product_id",0,Product,产品
+field,"stock.lot.line,product_id",0,Product,产品
+field,"stock.lot.line,price_unit",0,Unit Costs Price,单位成本价格
+field,"stock.lot.line,lot_inventory_id",0,Inventory,库存
+field,"stock.lot.line,date",0,Date create,创建日期
+field,"stock.lot.line,amount",0,Amount,金额
+field,"stock.lot.line,active",0,Active,活动的
+field,"stock.lot.line,lot_id",0,Lot,批货
+field,"stock.lot.line,name",0,Lot Inventory Line,批货库存行
+field,"stock.lot.line.view,lot_id",0,Lot,批货
+field,"stock.lot.line.view,amount",0,Quantity,数量
+field,"stock.lot.line.view,name",0,Lot Content,批货内容
+field,"stock.lot.line.view,product_id",0,Product,产品
+field,"stock.lot.move.history,date",0,Date create,创建日期
+field,"stock.lot.move.history,lot_id",0,Container,容器
+field,"stock.lot.move.history,address_id",0,Address,地址
+field,"stock.lot.move.history,location_id",0,Container,容器
+field,"stock.lot.move.history,name",0,Lot,批货
+field,"stock.move,address_id",0,Destination Address,目标地址
+field,"stock.move,name",0,Movement Description,转移说明
+field,"stock.move,date_planned",0,Planned Date,计划日期
+field,"stock.move,lot_dest_id",0,Destination Lot,目标批货
+field,"stock.move,date_moved",0,Actual Date,真实日期
+field,"stock.move,state",0,State,状态
+field,"stock.move,active",0,Active,活动的
+field,"stock.move,lot_id",0,Lot,批货
+field,"stock.move,serial",0,Tracking Number,跟踪号码
+field,"stock.packing,address_id",0,Shipping Address,发运地址
+field,"stock.packing,name",0,Packing Name,包装名称
+field,"stock.packing,lot_pack_id",0,Pack Lot,打包批货
+field,"stock.packing,lot_pack_parent_id",0,Pack Container,打包容器
+field,"stock.packing,date",0,Date create,创建日期
+field,"stock.packing,state",0,State,状态
+field,"stock.packing,active",0,Active,活动的
+field,"stock.packing,packing_line_id",0,Packing Line,包装行
+field,"stock.packing,type",0,Shipping Type,发运类型
+field,"stock.packing,move_id",0,Move Order,转移订单
+field,"stock.packing,lot_dest_parent_id",0,Shipping Lot,发运批货
+field,"stock.packing.line,product_id",0,Product,产品
+field,"stock.packing.line,line_dest_id",0,Lot Line Dest,批货行目标
+field,"stock.packing.line,lot_src_id",0,Lot Src,货物源
+field,"stock.packing.line,line_src_id",0,Lot Line Src,批货行源
+field,"stock.packing.line,amount",0,Amount,金额
+field,"stock.packing.line,packing_id",0,Packing,包装
+field,"stock.packing.line,active",0,Active,活动的
+field,"stock.packing.line,name",0,Name,名称
+field,"stock.shipping,packing_policy",0,Packaging Policy,包装策略
+field,"stock.shipping,lot_output_id",0,Intermediary Location,Intermediary位置
+field,"stock.shipping,name",0,Name,名称
+field,"stock.shipping,lot_stock_id",0,Source Lot/Location,源批货/位置
+field,"stock.shipping,lot_shipped_id",0,Destination Location,目标位置
+field,"stock.shipping,partner_id",0,Partner,伙伴
+field,"stock.shipping,partner_address_id",0,Address,地址
+field,"stock.shipping,shipping_policy",0,Shipping Policy,发运策略
+field,"stock.shipping,warehouse_id",0,Warehouse,仓库
+field,"stock.shipping,priority",0,priority,优先级
+field,"stock.shipping,shipping_line_id",0,Shipping Lines,发运行
+field,"stock.shipping,state",0,State,状态
+field,"stock.shipping,packing_id",0,Packings,包装
+field,"stock.shipping,date_promised",0,Date Promised,承诺日期
+field,"stock.shipping,active",0,Active,活动的
+field,"stock.shipping,serial",0,Serial,序列
+field,"stock.shipping,type",0,Shipping Type,发运类型
+field,"stock.shipping,date_creation",0,Date Creation,创建日期
+field,"stock.shipping.line,amount",0,Amount,金额
+field,"stock.shipping.line,shipping_id",0,Shipping,发运
+field,"stock.shipping.line,product_id",0,Product,产品
+field,"stock.warehouse,lot_input_id",0,Location Input,入库位置
+field,"stock.warehouse,lot_output_id",0,Location Output,出库位置
+field,"stock.warehouse,name",0,Name,名称
+field,"stock.warehouse,lot_stock_id",0,Location Stock,位置库存
+field,"subscription.document,active",0,Active,活动的
+field,"subscription.document,model",0,Model,模式
+field,"subscription.document,workflow_action",0,Workflow Action,工作流动作
+field,"subscription.document,name",0,Name,名称
+field,"subscription.document,field_ids",0,Fields,字段
+field,"subscription.document.fields,field",0,Field name,字段名称
+field,"subscription.document.fields,document_id",0,Subscription Document,多次订货文档
+field,"subscription.document.fields,name",0,Name,名称
+field,"subscription.document.fields,value",0,Default Value,默认价值
+field,"subscription.subscription,cron_id",0,Cron Job,定时作业
+field,"subscription.subscription,user_id",0,User,用户
+field,"subscription.subscription,name",0,Name,名称
+field,"subscription.subscription,date_init",0,First Date,首次日期
+field,"subscription.subscription,notes",0,Notes,注解
+field,"subscription.subscription,interval_type",0,Interval Unit,单位间隔
+field,"subscription.subscription,doc_source",0,Source Document,源单据
+field,"subscription.subscription,exec_init",0,Initial Number of calls,呼入号码
+field,"subscription.subscription,state",0,State,状态
+field,"subscription.subscription,doc_lines",0,Documents created,文档已建立
+field,"subscription.subscription,active",0,Active,活动的
+field,"subscription.subscription,interval_number",0,Interval Number,号码间隔
+field,"subscription.subscription,partner_id",0,Partner,伙伴
+field,"subscription.subscription.history,date",0,Date,日期
+field,"subscription.subscription.history,subscription_id",0,Subscription,多次订货
+field,"subscription.subscription.history,name",0,Name,名称
+field,"subscription.subscription.history,document_id",0,Source Document,源文档
+field,"workflow,on_create",0,On Create,创建
+field,"workflow,name",0,Name,名称
+field,"workflow,osv",0,Ressource Model,资源模式
+field,"workflow.activity,kind",0,Kind,类别
+field,"workflow.activity,name",0,Name,名称
+field,"workflow.activity,join_mode",0,Join Mode,联合模式
+field,"workflow.activity,wkf_id",0,Workflow,工作流
+field,"workflow.activity,flow_stop",0,Flow Stop,工作流停止
+field,"workflow.activity,subflow_id",0,Subflow,子工作流
+field,"workflow.activity,split_mode",0,Split Mode,分割模式
+field,"workflow.activity,action",0,Action,动作
+field,"workflow.activity,flow_start",0,Flow Start,工作流开始
+field,"workflow.instance,res_type",0,Resource Model,资源模式
+field,"workflow.instance,wkf_id",0,Workflow,工作流
+field,"workflow.instance,res_id",0,Resource ID,资源ID
+field,"workflow.instance,uid",0,User ID,用户ID
+field,"workflow.instance,state",0,State,状态
+field,"workflow.transition,trigger_model",0,Trigger Type,触发器类型
+field,"workflow.transition,role_id",0,Role Required,需要的角色
+field,"workflow.transition,act_from",0,Source Activity,源活动
+field,"workflow.transition,act_to",0,Destination Activity,目标活动
+field,"workflow.transition,val_name",0,Value Button Name,价值按键名称
+field,"workflow.transition,trigger_expr_id",0,Trigger Expr ID,触发器ID
+field,"workflow.transition,condition",0,Condition,条件
+field,"workflow.triggers,instance_id",0,Destination Instance,目标实例
+field,"workflow.triggers,model",0,Model,模式
+field,"workflow.triggers,res_id",0,Ressource ID,资源ID
+xsl,res.partner.ids,0,Ref.,参照
+xsl,res.partner.ids,0,Name,名称
+xsl,account.journal,0,Livre de caisse,Livre de caisse
+xsl,account.journal,0,Account:,账号
+xsl,account.journal,0,Date,日期
+xsl,account.journal,0,Transaction,事务
+xsl,account.journal,0,Partner,伙伴
+xsl,account.journal,0,Balance,余额
+xsl,account.journal,0,Credit,贷方
+xsl,account.journal,0,Debit,借方
+xsl,account.journal,0,Starting Balance:,期初余额
+xsl,account.journal,0,Ending Balance:,期末余额
+xsl,account.invoice,0,DRAFT,单据
+xsl,account.invoice,0,PRO-FORMA INVOICE,预设格式发票
+xsl,account.invoice,0,INVOICE,发票
+xsl,account.invoice,0,PURCHASE INVOICE,采购发票
+xsl,account.invoice,0,REFUND INVOICE,退款发票
+xsl,account.invoice,0,PURCHASE REFUND INVOICE,采购退款发票
+xsl,account.invoice,0,Document,文档
+xsl,account.invoice,0,Date,日期
+xsl,account.invoice,0,Order Ref.,订单参照
+xsl,account.invoice,0,Invoice Ref.,发票参照
+xsl,account.invoice,0,Unkown,Unkown
+xsl,account.invoice,0,Unkown,Unkown
+xsl,account.invoice,0,Description,说明
+xsl,account.invoice,0,Qty,数量
+xsl,account.invoice,0,Unit Price,单价
+xsl,account.invoice,0,Net Price,净价格
+xsl,account.invoice,0,SUBTOTAL,小计
+xsl,account.invoice,0,TOTAL:,总
+xsl,account.invoice.list,0,Num,号码
+xsl,account.invoice.list,0,Client,客户
+xsl,account.invoice.list,0,Amount,金额
+xsl,account.invoice.list,0,Total,总
+xsl,account.transfer,0,Document,文档
+xsl,account.transfer,0,Type,类型
+xsl,account.transfer,0,Reference,参照
+xsl,account.transfer,0,Partner ID,伙伴ID
+xsl,account.transfer,0,Date,日期
+xsl,account.transfer,0,Amount,金额
+xsl,account.transfer,0,Change,改变
+xsl,network.material.list,0,Name,名称
+xsl,network.material.list,0,Date,日期
+xsl,network.material.list,0,Type,类型
+xsl,network.material.list,0,Your Contact,您的联系人
+xsl,network.material.list,0,Notes,注解
+xsl,network.network.list,0,Name,名称
+xsl,network.network.list,0,Type,类型
+xsl,network.network.list,0,Date,日期
+xsl,network.network.list,0,Warranty date,担保日期
+xsl,network.network.list,0,Your Contact,您的联系人
+xsl,stock.packing.list,0,PICKINGLIST,发运列表
+xsl,stock.packing.list,0,Here is the picking list of this lot. Generated by Tiny ERP.,这是Tiny ERP生成的发运列表
+xsl,stock.packing.list,0,Shipping Address:,发运地址
+xsl,stock.packing.list,0,Recipient,收件人
+xsl,stock.packing.list,0,Concerns:,经办人
+xsl,stock.packing.list,0,Id Client,客户ID
+xsl,stock.packing.list,0,Id Shipping,发运ID
+xsl,stock.packing.list,0,Packing Date,包装日期
+xsl,stock.packing.list,0,Expedition Date,到货日期
+xsl,stock.packing.list,0,Product Ref,产品参照
+xsl,stock.packing.list,0,Tracking Nb,跟踪号
+xsl,stock.packing.list,0,Qty,数量
+xsl,stock.packing.list,0,Description,说明
+xsl,stock.shipping.list,0,Shipping Address:,发运地址
+xsl,stock.shipping.list,0,Recipient,收件人
+xsl,stock.shipping.list,0,Concerns:,经办人
+xsl,stock.shipping.list,0,Id Client,客户ID
+xsl,stock.shipping.list,0,Id Shipping,发运ID
+xsl,stock.shipping.list,0,Warehouse,仓库
+xsl,stock.shipping.list,0,Creation Date,创建日期
+xsl,stock.shipping.list,0,Promised Date,承诺日期
+xsl,stock.shipping.list,0,Product Ref,产品参照
+xsl,stock.shipping.list,0,Tracking Nb,跟踪号
+xsl,stock.shipping.list,0,Qty,数量
+xsl,stock.shipping.list,0,Description,说明
+xsl,stock.lot.overview,0,Lot:,批货
+xsl,stock.lot.overview,0,Product,产品
+xsl,stock.lot.overview,0,Variants,变动
+xsl,stock.lot.overview,0,Unit Price,单价
+xsl,stock.lot.overview,0,Amount,金额
+xsl,stock.lot.overview,0,Value,价值
+xsl,stock.location.overview,0,Lot:,批货
+xsl,stock.location.overview,0,Product,产品
+xsl,stock.location.overview,0,Variants,变动
+xsl,stock.location.overview,0,Unit Price,单价
+xsl,stock.location.overview,0,Amount,金额
+xsl,stock.location.overview,0,Value,价值
+xsl,purchase.order,0,PURCHASE ORDER,采购订单
+xsl,purchase.order,0,Order ref,订单参照
+xsl,purchase.order,0,Dear supplier,尊敬的供应商：
+xsl,purchase.order,0,Here is the detail of your order ,下述是订单详细
+xsl,purchase.order,0, with the reference ,请参照
+xsl,purchase.order,0, ordered the,多次订货
+xsl,purchase.order,0,". 			Thanks to confirm good reception of the following and contact us in case of any trouble. This order should 			be delivered for the",请予确认。如有疑议，请即同我们联系。
+xsl,purchase.order,0,.,。
+xsl,purchase.order,0,Status:,状态
+xsl,purchase.order,0,draft,单据
+xsl,purchase.order,0,waiting supplier confirmation,等待供应商确认。
+xsl,purchase.order,0,confirmed by the supplier,已被供应商确认。
+xsl,purchase.order,0,exception in shipping,发运免除
+xsl,purchase.order,0,exception in invoice,发票免除
+xsl,purchase.order,0,done,已完成
+xsl,purchase.order,0,cancelled,已取消
+xsl,purchase.order,0,Description,说明
+xsl,purchase.order,0,Taxes,税
+xsl,purchase.order,0,Date,日期
+xsl,purchase.order,0,Qty,数量
+xsl,purchase.order,0,Unit Price,单价
+xsl,purchase.order,0,Net Price,净价格
+xsl,purchase.order,0,TOTAL:,总计
+xsl,sale.order,0,SALE ORDER,销售订单
+xsl,sale.order,0,Quotation,报价单
+xsl,sale.order,0,Order,订单
+xsl,sale.order,0,Dear customer,尊敬的客户：
+xsl,sale.order,0,Here is the detail of your order ,下述是订单详细
+xsl,sale.order,0, with the reference ,请参照
+xsl,sale.order,0, ordered the,多次订货
+xsl,sale.order,0,". 			Thanks to confirm good reception of the following and contact us in case of any trouble.",请予确认。如有疑议，请即同我们联系。
+xsl,sale.order,0,Status:,状态
+xsl,sale.order,0,draft,单据
+xsl,sale.order,0,in progress,处理中
+xsl,sale.order,0,exception in shipping,发运免除
+xsl,sale.order,0,exception in invoice,发票免除
+xsl,sale.order,0,done,已完成
+xsl,sale.order,0,cancelled,已取消
+xsl,sale.order,0,Description,说明
+xsl,sale.order,0,Date,日期
+xsl,sale.order,0,Qty,数量
+xsl,sale.order,0,Unit Price,单价
+xsl,sale.order,0,Net Price,净价格
+xsl,sale.order,0,TOTAL:,总计
+view,network.material,0,Network Material,网络物料
+view,network.material,0,Material Info,物料详情
+view,network.material,0,Informations,信息
+view,network.material,0,Softwares,软件
+view,network.material,0,Updates,更新
+view,network.material,0,notes,注解
+view,project.task,0,All tasks,所有任务
+view,project.task,0,Task edition,任务编辑
+view,project.task,0,Task definition,任务定义
+view,project.task,0,Task Information,任务信息
+view,project.task,0,Descriptions,描述
+view,project.task,0,Finish,完成
+view,project.task,0,Re-open,open-重新打开
+view,project.task,0,Cancel,取消
+view,project.task,0,Others Information,其它信息
+view,project.task,0,Notes,注解
+view,res.partner,0,Partners,父项
+view,res.users,0,Users,用户
+view,ir.actions.act_window,0,Window Action,窗口动作
+view,res.groups,0,Groups,用户组
+view,ir.ui.menu,0,Menu,菜单
+view,ir.ui.menu,0,Names,名称
+view,res.users,0,Users,用户
+view,ir.sequence,0,Sequences,序列
+view,ir.actions.act_window,0,Open a Window,打开窗口
+view,ir.report.custom.fields,0,Report Fields,报告字段
+view,ir.report.custom,0,Custom Report,客户报告
+view,ir.report.custom,0,Subscribe Report,签署报告
+view,ir.translation,0,Translations,翻译
+view,ir.translation,0,Translations,翻译
+view,res.roles,0,Roles,角色
+view,ir.ui.view,0,User Interface - Views,用户界面 - views
+view,ir.cron,0,Scheduled Actions,动作安排
+view,ir.cron,0,Action to trigger,动作触发
+view,res.request,0,Requests,请求
+view,res.request,0,Description,说明
+view,ir.attachment,0,Attachments,附件
+view,ir.ui.menu,0,Menu,菜单
+view,res.request.history,0,Request History,请求历史
+view,res.request.history,0,Request History,请求历史
+view,res.country,0,Country,国家
+view,res.partner.function,0,Partner Functions,伙伴功能
+view,res.country,0,Country,国家
+view,res.country.state,0,State,州/省
+view,res.country.state,0,State,州/省
+view,res.partner.address,0,Partner Contacts,伙伴联系人
+view,res.partner.address,0,Partner Contacts,伙伴联系人
+view,ir.ui.menu,0,Menu,菜单
+view,res.partner.title,0,Partners Titles,伙伴称谓
+view,res.request,0,Requests,请求
+view,res.request,0,Request Status,请求状态
+view,res.request,0,Status,状态
+view,res.request,0,Description,说明
+view,res.request,0,Action,动作
+view,res.request,0,Process Request,处理请求
+view,res.request,0,Reply,回复
+view,res.request,0,Status,状态
+view,res.request,0,Close,关闭
+view,res.request,0,Action History,动作历史
+view,res.partner,0,Partners,伙伴
+view,res.partner,0,General,一般
+view,res.partner,0,General Information,一般信息
+view,res.partner,0,Categories,分类
+view,res.partner,0,Extra Info,追加信息
+view,res.partner,0,Event History,事件历史
+view,res.partner,0,Partners,伙伴
+view,res.partner.category,0,Partner Categories,伙伴分类
+view,res.partner.canal,0,Canal,联系渠道
+view,res.partner.som,0,Partner State of Mind,伙伴满意度
+view,res.partner.som,0,Partner State of Mind,伙伴满意度
+view,res.request.link,0,Request Link,请求连接
+view,res.partner.address,0,Contacts,联系人
+view,account.currency,0,Currency List,币种表
+view,account.currency,0,Currency,币种
+view,account.account,0,Account Form,账号表
+view,account.account,0,Account Trees,会计科目树
+view,account.account,0,Names,名称
+view,account.account,0,CUR,CUR
+view,account.move.line,0,Account Move Line,账号转移行
+view,account.move.line,0,Account Move Line,账号转移行
+view,account.move.line,0,Account Move Line (account),账号转移行（账号）
+view,account.move.line,0,Account Move Line,账号转移行
+view,account.move,0,Account Move,账号转移
+view,account.move,0,Account Move,账号转移
+view,account.tax,0,Account Tax,账号税
+view,account.tax,0,Compute Code (if type=code),计算代码（如果类型=代码）
+view,account.tax,0,Applicable Code (if type=code),适用代码（如果类型=代码）
+view,account.invoice.line,0,Invoice Line,发票行
+view,account.invoice.line,0,Invoice Line,发票行
+view,account.invoice.tax,0,Manual Invoice Taxes,手工发票税
+view,account.invoice.tax,0,Manual Invoice Taxes,手工发票税
+view,account.invoice,0,Invoice,发票
+view,account.invoice,0,Invoice,发票
+view,account.invoice,0,Invoice,发票
+view,account.invoice,0,General Information,一般信息
+view,account.invoice,0,Client References,客户参照
+view,account.invoice,0,Accounting,会计
+view,account.invoice,0,States,状态
+view,account.invoice,0,Create PRO-FORMA,创建预定
+view,account.invoice,0,Create Invoice,创建发票
+view,account.invoice,0,Cancel Invoice,取消发票
+view,account.invoice,0,Set to Draft,设为单据
+view,account.invoice,0,Invoice Lines,发票行
+view,account.invoice,0,Tax Lines,税行
+view,account.invoice,0,Account Transactions,账号事务
+view,account.transfer,0,Transfers,转账
+view,account.transfer,0,Transfers,转账
+view,account.transfer,0,Confirm Payment,付款确认
+view,account.transfer,0,Cancel Payment,取消付款
+view,account.transfer,0,Related Invoices,相关发票
+view,account.transfer,0,Adjustement and corrections,调整和更正
+view,res.partner.event,0,Partner Events,伙伴事件
+view,res.partner.event,0,General Description,一般说明
+view,res.partner.event,0,Description,说明
+view,res.partner.event,0,Document Link,单据连接
+view,network.material,0,Network Material,网络物料
+view,network.material,0,Material Info,物料信息
+view,network.material,0,Informations,信息
+view,network.material,0,Softwares,软件
+view,network.material,0,Updates,更新
+view,network.material,0,notes,注解
+view,network.material,0,All Network Material,所有网络物料
+view,network.material,0,Material in this Network,本网络物料
+view,network.software.type,0,Software Type,软件类型
+view,network.hardware.type,0,Hardware Type,硬件类型
+view,network.software.logpass,0,Add a password,添加密码
+view,network.software,0,Network Softwares,网络软件
+view,network.software,0,General Informations,一般信息
+view,network.software,0,Login / Password,登录 / 密码
+view,network.software,0,Notes,注解
+view,network.software,0,Network Softwares,网络软件
+view,network.network,0,All Networks,所有网络
+view,network.network,0,Network Element,网络元素
+view,network.network,0,Network Definition,网络定义
+view,network.changes,0,Enter a diary entry,日记账
+view,network.changes,0,Diary entry,日记账项
+view,network.changes,0,Interventions,干预
+view,hr.employee,0,Employee,雇员
+view,hr.employee,0,Informations,信息
+view,hr.employee,0,Address,地址
+view,hr.employee,0,Notes,注解
+view,hr.employee,0,Timesheet,工作时间表
+view,hr.employee,0,Sign in !,登录
+view,hr.employee,0,Sign out !,注销
+view,hr.employee,0,Attendances,出勤
+view,hr.employee,0,Holidays,假期
+view,hr.employee,0,Expenses,费用
+view,hr.employee,0,Employee list,雇员表
+view,hr.timesheet.group,0,Timesheet group,工作时间表组
+view,hr.timesheet.group,0,Timesheets,工作时间表
+view,hr.timesheet,0,Timesheet,工作时间表
+view,hr.timesheet,0,Timesheet,工作时间表
+view,hr.attendance,0,Employee attendance,雇员出勤
+view,res.partner.event,0,Partner Events,伙伴事件
+view,hr.attendance,0,Employee attendances,雇员出勤
+view,hr.holidays,0,Employee holidays,雇员假期
+view,res.lang,0,Language,语言
+view,res.lang,0,Name,名称
+view,res.lang,0,Code,编码
+view,hr.holidays,0,Ask an holiday,请求假期
+view,hr.holidays.status,0,Define holiday status,定义假期状态
+view,hr.holidays.status,0,Holiday status,假期状态
+view,hr.action.reason,0,Define attendance reason,定义出勤理由
+view,hr.action.reason,0,Attendance reasons,缺勤理由
+view,hr.expense,0,Expenses list,费用列表
+view,hr.expense,0,Expense claim,费用声明
+view,hr.expense,0,Accept,接收
+view,hr.expense,0,Refuse,拒绝
+view,hr.expense.type,0,Expenses type,费用类型
+view,campaign.campaign,0,Campaigns,促销活动
+view,campaign.campaign,0,Campaign Definition,促销活动定义
+view,campaign.step,0,Campaign Steps,促销活动步骤
+view,campaign.step,0,Marketing Steps,市场步骤
+view,campaign.step,0,Fiche Prospect,Fiche前景
+view,campaign.partner,0,Marketing::Prospects,市场前景
+view,campaign.partner,0,Main Information,主要信息
+view,campaign.partner,0,Prospect Information,前景信息
+view,campaign.partner,0,Step Information,步骤信息
+view,campaign.partner,0,Recall Later,待回电话
+view,campaign.partner,0,Stop Campaign,停止促销活动
+view,campaign.partner,0,Continue Campaign,继续促销活动
+view,campaign.partner,0,History,历史
+view,campaign.partner.history,0,Marketing::Prospects::History,市场::前景::历史
+view,product.product,0,Products,产品
+view,product.product,0,Product Variant,产品系列
+view,product.product,0,Description,说明
+view,product.product,0,Variants Prices,变动价格
+view,product.template,0,Product Template,产品模板
+view,product.product,0,Product,产品
+view,product.product,0,Description,说明
+view,product.product,0,Prices,价格
+view,product.product,0,Variants,变动
+view,product.product,0,Taxes,税
+view,product.category,0,Products Categories,产品分类
+view,product.category,0,Products Categories,产品分类
+view,product.pricelist.version,0,Pricelist Version,价格表版本
+view,product.pricelist.version,0,Pricelist Items,价格表项
+view,product.pricelist.item,0,Products Listprices Items,产品价格表s项
+view,product.pricelist.item,0,Products Listprices Items,产品价格表s项
+view,product.pricelist.item,0,List prices,列表价格
+view,product.pricelist.item,0,New List Price =,新列表价格
+view,product.pricelist.item,0, * ( 1 - , * ( 1 - 
+view,product.pricelist.item,0, ) + , ) + 
+view,product.pricelist.item,0,Rounding Method,舍入方法
+view,product.pricelist.item,0,Min. Margin,最小边标利润
+view,product.pricelist.item,0,Max. Margin,最大边标利润
+view,product.pricelist.item,0,Standard prices,标准价格
+view,product.pricelist.item,0,New Standard Price =,新标准价格=
+view,product.pricelist.item,0, * ( 1 - , * ( 1 - 
+view,product.pricelist.item,0, ) + , ) + 
+view,product.pricelist.item,0,Rounding Method,舍入方法
+view,product.pricelist.item,0,Min. Margin,最小边标利润
+view,product.pricelist.item,0,Max. Margin,最大边标利润
+view,product.pricelist.item,0,Limit prices,限制价格
+view,product.pricelist.item,0,New Limit Price =,新限制价格=
+view,product.pricelist.item,0, * ( 1 - , * ( 1 - 
+view,product.pricelist.item,0, ) + , ) + 
+view,product.pricelist.item,0,Rounding Method,舍入方法
+view,product.pricelist.item,0,Min. Margin,最小边标利润
+view,product.pricelist.item,0,Max. Margin,最大边标利润
+view,product.pricelist,0,Products Price List,产品价格表
+view,product.pricelist,0,Procelist Name,Proce列表名称
+view,subscription.subscription,0,Subscriptions,多次订货
+view,subscription.subscription,0,Subsription Data,多次订货数据
+view,subscription.subscription,0,State,状态
+view,subscription.subscription,0,Process,处理
+view,subscription.subscription,0,Stop,停止
+view,subscription.subscription,0,Set to Draft,报送单据
+view,subscription.subscription,0,Documents created,已建文档
+view,subscription.subscription.history,0,Subscription History,多次订货历史
+view,subscription.subscription.history,0,Subscription History,多次订货历史
+view,subscription.document,0,Subscription Document,多次订货文档
+view,subscription.document.fields,0,Subscription Document Fields,多次订货文档字段
+view,res.partner.events,0,Partner Events,伙伴事件
+view,res.partner.events,0,General Description,一般说明
+view,crm.case.categ,0,Case Category,案例类别
+view,crm.case.history,0,Case History,案例历史
+view,crm.case.history,0,Cases,联系台账历史
+view,crm.case.history,0,Case Description,案例说明
+view,crm.case,0,Cases,联系台账集
+view,crm.case,0,Cases,联系台账集
+view,crm.case,0,General Information,一般信息
+view,crm.case,0,General Description,一般说明
+view,crm.case,0,Next Action,下一动作
+view,crm.case,0,Process Action,处理动作
+view,crm.case,0,Financial,财务
+view,crm.case,0,State,状态
+view,crm.case,0,Close Case,关闭案例
+view,crm.case,0,Open,打开
+view,crm.case,0,Reset to Draft,退回至单据
+view,crm.case,0,Requeue Case,Requeue案例
+view,crm.case,0,Request History,请求历史
+view,crm.segmentation.line,0,Partner Segmentation Lines,伙伴细分行
+view,crm.segmentation.line,0,Partner Segmentation Lines,伙伴细分行
+view,crm.segmentation,0,Partner Segmentation,伙伴细分
+view,crm.segmentation,0,Segmentation Parameters,细分参数
+view,crm.segmentation,0,Segmentation Description,细分说明
+view,crm.segmentation,0,Segmentation Test,细分测试
+view,crm.segmentation,0,Compute Segmentation,计算细分
+view,crm.segmentation,0,Stop Process,停止处理
+view,crm.segmentation,0,Continue Process,继续处理
+view,crm.segmentation,0,Computation Parameters,计算参数
+view,crm.segmentation,0,State of Mind Computation,满意度 计算
+view,crm.segmentation,0,Partner Segmentations,伙伴细分
+view,stock.lot.inventory.line,0,Stock Inventory Lines,库存库存行
+view,stock.lot.inventory.line,0,Stock Inventory Lines,库存库存行
+view,stock.lot.inventory,0,Lot Inventory,批货库存
+view,stock.lot.inventory,0,General Informations,一般信息
+view,stock.lot.inventory,0,Items,项
+view,stock.lot.inventory,0,Confirm Inventory,确认库存
+view,stock.lot.inventory,0,Posted Inventory,已对账库存
+view,stock.lot.inventory,0,Items,项
+view,stock.lot,0,Stock Lot,库存批货
+view,stock.lot,0,General Informations,一般信息
+view,stock.lot,0,Content,内容
+view,stock.lot,0,History,历史
+view,stock.lot,0,Moves History,转移历史
+view,stock.lot.move.history,0,Stock Move History,库存转移历史
+view,stock.lot.line,0,Stock Lots Lines,库存货物行
+view,stock.lot.line,0,Stock Lots Lines,库存货物行
+view,stock.lot.line,0,Stock Lots Lines,库存货物行
+view,stock.lot.line.view,0,Stock Lots View,库存货物视图
+view,stock.location,0,Stock Location,库存位置
+view,stock.location,0,General Informations,一般信息
+view,stock.location,0,Products,产品
+view,stock.location,0,Stock Location Tree,库存位置树
+view,stock.warehouse,0,Stock Warehouse,库存仓库
+view,stock.packing.line,0,Packing Lines,包装行
+view,stock.packing.line,0,Packing Lines Tree,包装行树
+view,stock.packing,0,Picking List,发运清单列表
+view,stock.packing,0,Picking List,发运清单列表
+view,stock.packing,0,Lines,行
+view,stock.packing,0,Move,转移
+view,stock.packing,0,Confirm Packing,确认包装
+view,stock.packing,0,Packing Done,包装已完成
+view,stock.packing,0,Cancel Packing,取消包装
+view,stock.packing,0,Reset to Draft,设置为单据
+view,stock.packing,0,Cancel Packing,取消包装
+view,stock.move,0,Stock Move,库存转移
+view,stock.move,0,Stock Move,库存转移
+view,stock.move,0,State,状态
+view,stock.move,0,Move Lot,转移批货
+view,stock.shipping,0,Delivery Order,发运订单
+view,stock.shipping,0,Delivery Order,发运订单
+view,stock.shipping,0,General Informations,一般信息
+view,stock.shipping,0,Lines,行
+view,stock.shipping,0,Actions,动作
+view,stock.shipping,0,Proces Shipping,处理发运
+view,stock.shipping,0,Check Packing,检查包装
+view,stock.shipping,0,Cancel Shipping,取消发运
+view,stock.shipping,0,Exception Corrected,例外的更正
+view,stock.shipping,0,Packings,包装
+view,stock.shipping,0,Warehouse,仓库
+view,stock.shipping,0,Warehouse,仓库
+view,stock.shipping,0,Lots,货物
+view,stock.shipping.line,0,Shipping Line,发运行
+view,stock.shipping.line,0,Shipping Line,发运行
+view,purchase.order,0,Purchase Order,采购订单
+view,purchase.order,0,Purchase Order,采购订单
+view,purchase.order,0,Order Lines,订单行
+view,purchase.order,0,Document State,文档状态
+view,purchase.order,0,Confirm Purchase Order,确认采购订单
+view,purchase.order,0,Approved by Retailer,零售商已批准
+view,purchase.order,0,Cancel Purchase Order,取消采购订单
+view,purchase.order,0,Cancel Purchase Order,取消采购订单
+view,purchase.order,0,Shipping Done,发运已完成
+view,purchase.order,0,Invoice Done,发票已完成
+view,purchase.order,0,Notes,注解
+view,purchase.order,0,Purchase Shippings,采购发运
+view,purchase.order,0,Purchase Order,采购订单
+view,purchase.order.line,0,Purchase Order Line,采购订单行
+view,purchase.order.line,0,Order Line,订单行
+view,purchase.order.line,0,Notes,注解
+view,purchase.order.line,0,Purchase Order Line,采购订单行
+view,sale.shop,0,Sale Shop,销售商店
+view,sale.shop,0,Accounting,会计
+view,sale.shop,0,Stock,库存
+view,sale.order,0,Sales Orders,销售订单
+view,sale.order,0,Sale Order,销售订单
+view,sale.order,0,Order Line,订单行
+view,sale.order,0,Compute,计算
+view,sale.order,0,Confirm Order,订单确认
+view,sale.order,0,Cancel Order,取消订单
+view,sale.order,0,Cancel Order,取消订单
+view,sale.order,0,Recreate Invoice,重新创建发票
+view,sale.order,0,Invoice Corrected,发票更正
+view,sale.order,0,Cancel Order,取消订单
+view,sale.order,0,Recreate Delivery,重新创建发货单
+view,sale.order,0,Delivery Corrected,发货单更正
+view,sale.order,0,Set to Draft,设置为单据
+view,sale.order,0,Create Invoice,创建发票
+view,sale.order,0,Payment,付款
+view,sale.order,0,Notes,注解
+view,sale.order,0,Links,连接
+view,sale.order,0,Sale Order POS,POS销售订单
+view,sale.order,0,Order Line,订单行
+view,sale.order,0,Direct Sale,直接销售
+view,sale.order,0,Cancel Sale,取消销售
+view,sale.order,0,Notes,注解
+view,sale.order,0,Advanced,高级的
+view,sale.order,0,Shop,商店
+view,sale.order,0,Order type,销售类型
+view,sale.order,0,Partner,伙伴
+view,sale.order,0,Links,连接
+view,sale.order.line,0,Sale Order Line,销售订单行
+view,sale.order.line,0,Order Lines,订单行
+view,sale.order.line,0,Notes,注解
+view,sale.order.line,0,Sale Order Line,销售订单行
+view,project.project,0,Project,项目
+view,project.project,0,Administration,管理
+view,project.project,0,Mail texts,Mail正文
+view,project.project,0,Project's members,项目成员
+view,project.project,0,Billing information,账单信息
+view,project.project,0,Billing,账单
+view,project.project,0,Tasks,任务
+view,project.project,0,Notes,注解
+view,project.project,0,All projects,所有项目
+view,project.project,0,My projects,我的项目
+view,project.task,0,Task edition,任务编辑
+view,project.task,0,Task definition,任务定义
+view,project.task,0,Task Information,任务信息
+view,project.task,0,Descriptions,说明
+view,project.task,0,Finish,完成
+view,project.task,0,Re-open,重新打开
+view,project.task,0,Cancel,取消
+view,project.task,0,Others,其它
+view,project.task,0,Products,产品
+view,project.task,0,Notes,注解
+view,hr.attendance,0,Employee attendance,雇员出勤
+view,project.task,0,All tasks,所有任务
+view,hr.holidays,0,Employee holidays,雇员假期
+view,project.task.comment,0,Comment,评论

@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+<document filename="test.pdf">
+  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+    <pageTemplate id="first">
+      <frame id="first" x1="42.0" y1="42.0" width="511" height="758"/>
+    </pageTemplate>
+  </template>
+  <stylesheet>
+    <blockTableStyle id="Standard_Outline">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table1">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <blockBackground colorName="#e6e6e6" start="0,0" stop="0,0"/>
+      <blockBackground colorName="#e6e6e6" start="1,0" stop="1,0"/>
+      <blockBackground colorName="#e6e6e6" start="2,0" stop="2,0"/>
+      <blockBackground colorName="#e6e6e6" start="0,1" stop="0,1"/>
+      <blockBackground colorName="#e6e6e6" start="1,1" stop="1,1"/>
+      <blockBackground colorName="#e6e6e6" start="2,1" stop="2,1"/>
+    </blockTableStyle>
+    <blockTableStyle id="Tableau1">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="GRID" colorName="black"/>
+      <blockBackground colorName="#ff6633" start="0,0" stop="0,0"/>
+    </blockTableStyle>
+    <blockTableStyle id="Tableau2">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <blockBackground colorName="#e6e6e6" start="0,0" stop="0,0"/>
+      <blockBackground colorName="#e6e6e6" start="1,0" stop="1,0"/>
+      <blockBackground colorName="#e6e6e6" start="0,1" stop="0,1"/>
+      <blockBackground colorName="#e6e6e6" start="1,1" stop="1,1"/>
+    </blockTableStyle>
+    <blockTableStyle id="Tableau3">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="GRID" colorName="black"/>
+      <blockBackground colorName="#ffcc99" start="0,0" stop="0,0"/>
+    </blockTableStyle>
+    <blockTableStyle id="Tableau4">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <initialize>
+      <paraStyle name="all" alignment="justify"/>
+    </initialize>
+    <paraStyle name="P1" fontName="Times-Roman" fontSize="20.0" leading="25" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P2" fontName="Times-Roman" fontSize="10.0" leading="13" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P3" fontName="Times-Roman" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P4" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P5" fontName="Times-Roman" fontSize="16.0" leading="20" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P6" fontName="Times-Roman"/>
+    <paraStyle name="P7" fontName="Times-Roman" fontSize="15.0" leading="19" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P8" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P9" fontName="Times-Roman" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Standard" fontName="Times-Roman"/>
+    <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="List" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Table Contents" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Table Heading" fontName="Times-Roman" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Caption" fontName="Times-Roman" fontSize="12.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="Index" fontName="Times-Roman"/>
+  </stylesheet>
+  <story>
+    <para style="Standard">
+      <font color="white"> </font>
+    </para>
+    <blockTable colWidths="139.0,220.0,152.0" repeatRows="1" style="Table1">
+      <tr>
+        <td>
+          <para style="Table Contents">
+            <font color="white"> </font>
+          </para>
+        </td>
+        <td>
+          <para style="P1">Reference Guide</para>
+        </td>
+        <td>
+          <para style="P2">
+            <font color="white"> </font>
+          </para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="Table Contents">[[ company.name ]]</para>
+        </td>
+        <td>
+          <para style="P3">Introspection report on objects</para>
+        </td>
+        <td>
+          <para style="P4">Printed: [[ time.strftime('%y-%m-%d')]]</para>
+        </td>
+      </tr>
+    </blockTable>
+    <para style="Standard">
+      <font color="white"> </font>
+    </para>
+    <section>
+      <para style="Text body">[[ repeatIn(objects, 'module') ]]</para>
+      <blockTable colWidths="510.0" repeatRows="1" style="Tableau1">
+        <tr>
+          <td>
+            <para style="P5">Module: [[ module.name ]]</para>
+          </td>
+        </tr>
+      </blockTable>
+      <blockTable colWidths="276.0,234.0" repeatRows="1" style="Tableau2">
+        <tr>
+          <td>
+            <para style="Standard">Name: [[ module.shortdesc]]</para>
+          </td>
+          <td>
+            <para style="Standard">Version: [[module.latest_version]]</para>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <para style="Standard">Directory: [[ module.name ]]</para>
+          </td>
+          <td>
+            <para style="Standard">Web: [[ module.website ]]</para>
+          </td>
+        </tr>
+      </blockTable>
+      <para style="P6">[[ module.description ]]</para>
+      <section>
+        <para style="Standard">[[ repeatIn(findobj(module.name) ,'object') ]]</para>
+        <blockTable colWidths="510.0" repeatRows="1" style="Tableau3">
+          <tr>
+            <td>
+              <para style="P7">Object: [[ object.name ]]</para>
+              <pre style="P8">[[ objdoc(object.model) ]]</pre>
+            </td>
+          </tr>
+        </blockTable>
+        <blockTable colWidths="113.0,397.0" repeatRows="1" style="Tableau4">
+          <tr>
+            <td>
+              <para style="P9"><font face="Times-Roman">[[ repeatIn(findflds(object.model), 'field') ]]</font> [[ field[0] ]]</para>
+            </td>
+            <td>
+              <para style="Standard">
+                <font face="Times-Roman">[[ field[1].get('string', 'Unknown') ]], [[ field[1]['type'] ]] [[field[1].get('required',False) and ', required']] [[field[1].get('readonly',False) and ', readonly']] </font>
+              </para>
+              <para style="Standard">[[ field[1].get('help', '') ]]</para>
+            </td>
+          </tr>
+        </blockTable>
+        <para style="Standard">
+          <font color="white"> </font>
+        </para>
+      </section>
+      <para style="Standard">
+        <font color="white"> </font>
+      </para>
+      <para style="Standard">
+        <font color="white"> </font>
+      </para>
+      <para style="Standard">
+        <font color="white"> </font>
+      </para>
+    </section>
+    <para style="Standard">
+      <font color="white"> </font>
+    </para>
+  </story>
+</document>
+

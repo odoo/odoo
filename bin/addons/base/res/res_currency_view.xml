@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<terp>
+<data>
+
+	#---------------------------------------------------------
+	# Currencies
+	#---------------------------------------------------------
+	<record model="ir.ui.view" id="view_currency_tree">
+		<field name="name">res.currency.tree</field>
+		<field name="model">res.currency</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Currencies">
+				<field name="name"/>
+				<field name="code"/>
+				<field name="rate"/>
+				<field name="date"/>
+				<field name="rounding"/>
+				<field name="accuracy"/>
+				<field name="active" />
+			</tree>
+		</field>
+	</record>
+	<record model="ir.ui.view" id="view_currency_form">
+		<field name="name">res.currency.form</field>
+		<field name="model">res.currency</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Currency">
+				<field name="name" select="1" colspan="3"/>
+				<field name="code" select="1"/>
+				<field name="active"  select="1"/>
+				<field name="rate"/>
+				<field name="date" select="1"/>
+				<field name="rounding"/>
+				<field name="accuracy"/>
+			</form>
+		</field>
+	</record>
+	<record model="ir.actions.act_window" id="action_currency_form">
+		<field name="name">res.currency</field>
+		<field name="res_model">res.currency</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+	<menuitem name="Partners/Configuration/Localisation/Currencies" action="action_currency_form" sequence="11"/>
+
+	<menuitem name="Administration/Configuration/Base/Define Currencies" action="action_currency_form" sequence="1" id="menu_currency_def"/>
+
+</data>
+</terp>
+

@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<terp>
+<data>
+
+	<record model="ir.ui.view" id="res_partner_canal-view">
+		<field name="name">res.partner.canal.form</field>
+		<field name="model">res.partner.canal</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Channel">
+				<field name="name" select="1"/>
+				<field name="active" select="1"/>
+			</form>
+		</field>
+	</record>
+	<record model="ir.actions.act_window" id="res_partner_canal-act">
+		<field name="name">res.partner.canal.form</field>
+		<field name="res_model">res.partner.canal</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+	<menuitem name="Partners/Configuration/Partner events/Channels" groups="admin" action="res_partner_canal-act"/>
+
+	<record model="ir.ui.view" id="res_partner_event_type-view">
+		<field name="name">res.partner.event.type.form</field>
+		<field name="model">res.partner.event.type</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Event Type">
+				<field name="name" select="1"/>
+				<field name="active" select="1"/>
+				<field name="key" select="1" readonly="1"/>
+			</form>
+		</field>
+	</record>
+	<record model="ir.actions.act_window" id="res_partner_event_type-act">
+		<field name="name">res.partner.event.type.form</field>
+		<field name="res_model">res.partner.event.type</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+	<menuitem name="Partners/Configuration/Partner events/Active partner events" groups="admin" action="res_partner_event_type-act"/>
+
+	<record model="ir.ui.view" id="res_partner_som_tree-view">
+		<field name="name">res.partner.som.tree</field>
+		<field name="model">res.partner.som</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Partner State of Mind">
+				<field name="name"/>
+				<field name="factor"/>
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="res_partner_som-view">
+		<field name="name">res.partner.som.form</field>
+		<field name="model">res.partner.som</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Partner State of Mind">
+				<field name="name" select="1"/>
+				<field name="factor" select="1"/>
+			</form>
+		</field>
+	</record>
+	<record model="ir.actions.act_window" id="res_partner_som-act">
+		<field name="name">res.partner.som.form</field>
+		<field name="res_model">res.partner.som</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+	<menuitem name="Partners/Configuration/Partner events/States of Mind" groups="admin" action="res_partner_som-act"/>
+
+	<record model="ir.ui.view" id="res_partner_event-wopartner-view_form">
+		<field name="name">res.partner.event.form</field>
+		<field name="model">res.partner.event</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Partner Events">
+				<separator string="General Description" colspan="4"/>
+				<field name="name" select="1"/>
+				<field name="partner_type" select="1"/>
+				<field name="som" select="1"/>
+				<field name="date" select="1"/>
+				<field name="canal_id" select="1"/>
+				<field name="type" select="1"/>
+				<field name="user_id" select="1"/>
+				<field name="probability"/>
+				<field name="planned_revenue"/>
+				<field name="planned_cost"/>
+				<separator string="Description" colspan="4"/>
+				<field name="description" colspan="3"/>
+				<separator string="Document Link" colspan="4"/>
+				<field name="document" colspan="3"/>
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="res_partner_event-wopartner-view_tree">
+		<field name="name">res.partner.event.tree</field>
+		<field name="model">res.partner.event</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Partner Events">
+				<field name="date"/>
+				<field name="name"/>
+				<field name="som"/>
+				<field name="type"/>
+				<field name="partner_type"/>
+				<field name="user_id"/>
+			</tree>
+		</field>
+	</record>
+</data>
+</terp>

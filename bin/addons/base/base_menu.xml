@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<terp>
+<data>
+<!-- 	<menuitem name="Tools" sequence="15" groups="admin" icon="terp-tools"/> -->
+	<menuitem name="Administration" sequence="20" groups="admin" icon="terp-administration"/>
+
+	# Admin config
+
+	<menuitem name="Administration/Configuration/Base" sequence="1"/>
+
+	<record model="ir.actions.act_window" id="open_module_tree_company">
+		<field name="name">res.company</field>
+		<field name="res_model">res.company</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+	<menuitem name="Administration/Configuration/Base/Define Main Company" action="open_module_tree_company" sequence="2" id="menu_company_def"/>
+
+</data>
+</terp>

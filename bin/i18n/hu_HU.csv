@@ -1,0 +1,1538 @@
+type,name,res_id,src,value
+field,"account.account,code",0,Code,Kód
+field,"account.account,name",0,Name,Név
+model,"account.account,name",2,Assets,Követelések
+model,"account.account,name",25,Results,Eredmények
+model,"account.account,name",61,Liabilities,Tartozások
+model,"account.account,name",62,Equity,Egyenleg
+model,"account.account,name",63,Auction Adjudications,
+model,"account.account,name",64,Auction Adjudication Expenses,
+model,"account.account,name",3,Fixed,Fix
+model,"account.account,name",4,Constitution,Szervezet
+model,"account.account,name",5,Immaterial Assets,Immateriális vagyon
+model,"account.account,name",6,Land Assets,
+model,"account.account,name",7,Machines and Tools,Gépek és eszközök
+model,"account.account,name",8,Mobile Equipment,Mobil eszközök
+model,"account.account,name",9,Financial Investement,Anyagi befektetések
+model,"account.account,name",10,Long Term Recievable,
+model,"account.account,name",16,Stock,Raktár
+model,"account.account,name",11,Current,Jelenlegi
+model,"account.account,name",17,Merchandise Type A,A kereskedelmi árutípus
+model,"account.account,name",18,Merchandise Type B,B kereskedelmi árutípus
+model,"account.account,name",19,Receivable,Követelések
+model,"account.account,name",20,Main Receivable,Legfontosabb követelések
+model,"account.account,name",24,Tax TVA,
+model,"account.account,name",21,Payable,Tartozások
+model,"account.account,name",23,Credit Cards,Hitelkártyák
+model,"account.account,name",22,Main Payable,Legfontosabb tartozások
+model,"account.account,name",12,Cash,Készpénz
+model,"account.account,name",13,Bank Account,Bankszámla
+model,"account.account,name",14,Paypal Account,Paypal számla
+model,"account.account,name",15,Petty Cash,Pénztár
+model,"account.account,name",31,Expense,Kiadások
+model,"account.account,name",32,Merchandise,Kereskedelem
+model,"account.account,name",33,Products Purchase,Termékvásárlás
+model,"account.account,name",34,Accessories Purchase,Kiegészítők vásárlása
+model,"account.account,name",35,Subcontractor Purchase,Alvállalkozói költségek
+model,"account.account,name",36,Merchandise Purchase,Áruvásárlás
+model,"account.account,name",37,Remises,Helyiség
+model,"account.account,name",58,Stock Expense,Tőkekiadás
+model,"account.account,name",54,Stock,Tőke
+model,"account.account,name",59,Merchandise Type A,A kereskedelmi árutípus
+model,"account.account,name",60,Merchandise Type B,B kereskedelmi árutípus
+model,"account.account,name",38,Services Purchase,Szolgáltatás vásárlás
+model,"account.account,name",39,Loyer and location,
+model,"account.account,name",40,Reparations,Jóvátétel
+model,"account.account,name",41,Water Gaz Electricity,Víz gáz áram
+model,"account.account,name",42,Phone Post Fax Internet,Telefon Posta Fax Internet
+model,"account.account,name",43,Printed material,Nyomtatott anyagok
+model,"account.account,name",44,Food,Étkezés
+model,"account.account,name",45,Miscanellous charges,Egyéb költségek
+model,"account.account,name",46,Insurances,Biztonsítások
+model,"account.account,name",47,Transport Carburant,
+model,"account.account,name",48,Travels,Utazások
+model,"account.account,name",49,Publicity,Publicitás
+model,"account.account,name",50,Taxes Charges,Adóterhek
+model,"account.account,name",51,TVA non deductible,Nem leírható adóterhek
+model,"account.account,name",52,Miscanellous Taxes,Egyéb adók
+model,"account.account,name",53,Financial Charges,Anyagi terhek
+model,"account.account,name",66,Auction Adjudication Expenses,
+model,"account.account,name",68,Auction Seller Costs,
+model,"account.account,name",26,Income,Bevétel
+model,"account.account,name",27,Merchandise Sales,Kereskedelmi értékesítés
+model,"account.account,name",28,Products Sales,Termék értékesítés
+model,"account.account,name",29,Service Sales,Szolgáltatás értékesítés
+model,"account.account,name",55,Stock Income,Tőke bevétel
+model,"account.account,name",56,Merchandise Type A,A kereskedelmi árutípus
+model,"account.account,name",57,Merchandise Type B,A kereskedelmi árutípus
+model,"account.account,name",30,Financials Interests,Anyagi érdekeltségek
+model,"account.account,name",65,Auction Adjudications,
+model,"account.account,name",67,Auction Buyer Costs,
+model,"account.account,name",1,PCMN Tree,PCMN Fa
+field,"account.account,sign",0,Signe,Aláírás
+field,"account.account,currency_id",0,Currency,Pénznem
+field,"account.account,parent_id",0,Parents,Szülők
+field,"account.account,child_id",0,Children,Gyerekek
+field,"account.account,balance",0,Balance,Egyenleg
+field,"account.account,type",0,Account Type,Számla típusa
+field,"account.currency,digits",0,Digits,Számjegyek
+field,"account.currency,name",0,Currency,Pénznem
+field,"account.currency,priority",0,Usage priority,Használati prioritás
+field,"account.currency,rate",0,Relative Change rate,
+field,"account.currency,date",0,Last rate refresh,
+field,"account.currency,accuracy",0,Computational accuracy,
+field,"account.invoice,comment",0,Additionnal Information,Megjegyzés
+field,"account.invoice,date_due",0,Date Due,Fizetési határidő
+field,"account.invoice,reference",0,Invoice Reference,Számla hivatkozás
+field,"account.invoice,payment_term",0,Payment Term,
+field,"account.invoice,partner_contact",0,Partner Contact,Kapcsolattartó
+field,"account.invoice,number",0,Invoice Number,Számla azonosító
+field,"account.invoice,address_invoice_id",0,Billing Address,Számlázási cím
+field,"account.invoice,partner_id",0,Partner,Partner
+field,"account.invoice,amount_untaxed",0,Untaxed Amount,
+field,"account.invoice,tax_line",0,Tax Lines,Adóbontás
+field,"account.invoice,amount_tax",0,Tax Amount,Adó
+field,"account.invoice,state",0,State,Állapot
+field,"account.invoice,project_id",0,Project,Projekt
+field,"account.invoice,type",0,Type,Típus
+field,"account.invoice,invoice_line",0,Invoice Lines,Tételek
+field,"account.invoice,account_id",0,Dest Account,Számlaszám
+field,"account.invoice,partner_insite",0,Insite Contact,
+field,"account.invoice,date_invoice",0,Date Invoiced,Számla kelte
+field,"account.invoice,partner_ref",0,Partner Reference,Partner hivatkozás
+field,"account.invoice,move_id",0,Invoice Movement,Számla mozgás
+field,"account.invoice,amount_total",0,Total Amount,Teljes mennyiség
+field,"account.invoice,name",0,Invoice Description,Számla leírása
+field,"account.invoice,address_contact_id",0,Contact Address,Cím
+field,"account.invoice.line,name",0,Description,Leírás
+field,"account.invoice.line,invoice_id",0,Invoice Ref,Számla hiv.
+field,"account.invoice.line,price_unit",0,Unit Price,Egységár
+field,"account.invoice.line,account_id",0,Source Account,Forrás számla
+field,"account.invoice.line,invoice_line_tax_id",0,Taxes,Adók
+field,"account.invoice.line,quantity",0,Quantity,Mennyiség
+field,"account.invoice.tax,invoice_id",0,Invoice Line,Számlasor
+field,"account.invoice.tax,amount",0,Amount,Mennyiség
+field,"account.invoice.tax,manual",0,Manual,Manuális
+field,"account.invoice.tax,name",0,Tax Description,Adótípus
+field,"account.invoice.tax,account_id",0,Taxe Account,Adó számla
+field,"account.move,name",0,Move Name,Mozgás neve
+field,"account.move,type",0,Transaction Type,Tranzakció típusa
+field,"account.move,line_id",0,Transactions,Tranzakciók
+field,"account.move,state",0,State,Állapot
+field,"account.move,date",0,Date,Dátum
+field,"account.move,project_id",0,Project Ref.,Projekt Ref.
+field,"account.move,partner_id",0,Partner Ref.,Partner Ref.
+field,"account.move,change",0,Change transaction,Tranzakció megváltoztatása
+field,"account.move.line,reconcile_id",0,Reconcile,Összeegyeztet
+field,"account.move.line,name",0,Name,Név
+field,"account.move.line,state",0,State,Állapot
+field,"account.move.line,amount",0,Amount,Mennyiség
+field,"account.move.line,date",0,Date,Dátum
+field,"account.move.line,balance",0,Balance,Egyenleg
+field,"account.move.line,partner_id",0,Partner Ref.,Partner Ref.
+field,"account.move.line,move_id",0,Move,Mozgatás
+field,"account.move.line,account_id",0,Account,Számla
+field,"account.move.reconcile,line_id",0,Move lines,
+field,"account.move.reconcile,type",0,Type,Típus
+field,"account.move.reconcile,name",0,Name,Név
+field,"account.tax,domain",0,Domain,Tartomány
+field,"account.tax,name",0,Tax Name,Adónév
+field,"account.tax,account_collected_id",0,Collected Tax Account,Gyűjtött adó egyenleg
+field,"account.tax,child_ids",0,Childs Tax Account,
+field,"account.tax,account_paid_id",0,Paid Tax Account,Fizetett adó egyenleg
+field,"account.tax,parent_id",0,Parent Tax Account,Szülő adó egyenleg
+field,"account.tax,amount",0,Amount,Mennyiség
+field,"account.tax,child_depend",0,Tax depends on its childs,Az adó az al-adónemektől függ
+field,"account.tax,python_compute",0,Python Code,Python kód
+field,"account.tax,python_applicable",0,Python Code,Python kód
+field,"account.tax,type",0,Tax Type,Adótípus
+field,"account.tax,applicable_type",0,Applicable Type,Vonatkozó típus
+field,"account.transfer,name",0,Description,Leírás
+field,"account.transfer,reference",0,Reference,Referencia
+field,"account.transfer,partner_id",0,Partner,Partner
+field,"account.transfer,amount",0,Amount,Mennyiség
+field,"account.transfer,adjust_account_id",0,Adjustement Account,
+field,"account.transfer,state",0,State,Állapot
+field,"account.transfer,account_dest_id",0,Destination Account,Célszámla
+field,"account.transfer,move_id",0,Transactions,Tranzakciók
+field,"account.transfer,invoice_id",0,Invoices,Számlák
+field,"account.transfer,date",0,Payment Date,Fizetés dátuma
+field,"account.transfer,adjust_amount",0,Adjustement amount,
+field,"account.transfer,project_id",0,Project,Projekt
+field,"account.transfer,type",0,Transaction Type,Tranzakció típusa
+field,"account.transfer,account_src_id",0,Source Account,Forrás számla
+field,"account.transfer,change",0,Amount Changed,
+field,"auction.artists,birth_death_dates",0,Birth / Death dates,
+field,"auction.artists,pseudo",0,Pseudo,
+field,"auction.artists,name",0,Artist/Author Name,
+field,"auction.artists,biography",0,Biography,
+field,"auction.bid,bid_lines",0,Bid,
+field,"auction.bid,contact_tel",0,Contact,
+field,"auction.bid,auction_id",0,Auction Date,
+field,"auction.bid,partner_id",0,Buyer Name,
+field,"auction.bid,name",0,Bid ID,Licit azonosító
+field,"auction.bid_line,lot_id",0,Lot,Raktár
+field,"auction.bid_line,price",0,Maximum Price,
+field,"auction.bid_line,call",0,To be Called,
+field,"auction.bid_line,name",0,Name,Név
+field,"auction.bid_line,bid_id",0,Bid ID,Licit azonosító
+field,"auction.dates,expo1",0,First Exposition Day,
+field,"auction.dates,acc_expense",0,Compte Expense,
+field,"auction.dates,expo2",0,Last Exposition Day,
+field,"auction.dates,acc_income",0,Compte Income,
+field,"auction.dates,adj_total",0,Total Adjudication,
+field,"auction.dates,state",0,State,
+field,"auction.dates,auction1",0,First Auction Day,
+field,"auction.dates,buyer_costs",0,Buyer Costs,
+field,"auction.dates,auction2",0,Last Auction Day,
+field,"auction.dates,project_id",0,Project,
+field,"auction.dates,seller_costs",0,Seller Costs,
+field,"auction.deposit,info",0,Description,
+field,"auction.deposit,name",0,Depositer Inventory,
+field,"auction.deposit,date_dep",0,Deposit date,
+field,"auction.deposit,lot_id",0,Objects,Objektumok
+field,"auction.deposit,partner_id",0,Seller,Eladó
+field,"auction.deposit,method",0,Withdrawned method,
+field,"auction.deposit,tax_id",0,Expenses,
+field,"auction.lots,vnd_lim",0,Seller limit,
+field,"auction.lots,buy_inv_id",0,Seller Invoice,Eladó számla
+field,"auction.lots,lot_num",0,Lot Number,Raktári szám
+field,"auction.lots,ach_uid",0,Buyer,Vásárló
+field,"auction.lots,tva",0,Tax,Adó
+field,"auction.lots,bord_vnd_id",0,Depositer Inventory,
+field,"auction.lots,ach_pay_id",0,Payment,Fizetési mód
+field,"auction.lots,ach_emp",0,Taken Away,Elvitt
+field,"auction.lots,ach_avance",0,Buyer Advance,
+field,"auction.lots,vnd_lim_net",0,Net ?,
+field,"auction.lots,artist2_id",0,Artist/Author 2,
+field,"auction.lots,obj_comm",0,Commission,
+field,"auction.lots,lot_local",0,Location,Hely
+field,"auction.lots,state",0,State,Állapot
+field,"auction.lots,artist_id",0,Artist/Author,Művész/Szerző
+field,"auction.lots,ach_login",0,Buyer Username,
+field,"auction.lots,lot_type",0,Object Type,Objektum típusa
+field,"auction.lots,important",0,To be Emphatized,
+field,"auction.lots,bid_lines",0,Bids,Licitek
+field,"auction.lots,lot_est1",0,Minimum Estimation,
+field,"auction.lots,lot_est2",0,Maximum Estimation,
+field,"auction.lots,obj_num",0,Number,Szám
+field,"auction.lots,name",0,Short Description,Rövid leírás
+field,"auction.lots,ach_inv_id",0,Invoice,Számla
+field,"auction.lots,obj_price",0,Adjudication price,
+field,"auction.lots,obj_ret",0,Price retired,
+field,"auction.lots,auction_id",0,Auction Date,
+field,"auction.lots,obj_desc",0,Object Description,
+field,"campaign.campaign,info",0,Description,Leírás
+field,"campaign.campaign,date_stop",0,Stop Date,Befejezés dátuma
+field,"campaign.campaign,name",0,Name,Név
+field,"campaign.campaign,date_start",0,Start Date,Kezdés dátuma
+field,"campaign.campaign,planned_costs",0,Planned Costs,Tervezett költségek
+field,"campaign.campaign,costs",0,Initial Costs,Kezdeti költségek
+field,"campaign.campaign,step_id",0,Campaign Steps,Kampány lépései
+field,"campaign.campaign,planned_revenue",0,Planned Revenue,Tervezett bevétel
+field,"campaign.partner,part_adr_id",0,Partner Address,Partner címe
+field,"campaign.partner,info",0,Comments,Megjegyzések
+field,"campaign.partner,state",0,State,Állapot
+field,"campaign.partner,user_id",0,Attache Commercial,
+field,"campaign.partner,name",0,Name / Reference,Név / Hivatkozás
+field,"campaign.partner,date_recall",0,Recall Later,Később visszahívni
+field,"campaign.partner,notes",0,Prospect Notes,Prospektus megjegyzések
+field,"campaign.partner,campaign_id",0,Campaign,Kampány
+field,"campaign.partner,priority",0,Priority,Prioritás
+field,"campaign.partner,step",0,Step,Lépés
+field,"campaign.partner,contact",0,Partner Contact,Partner névjegy
+field,"campaign.partner,active",0,Active,Aktív
+field,"campaign.partner,partner_id",0,Partner,Partner
+field,"campaign.partner,history_id",0,History,Előzmények
+field,"campaign.partner.history,info",0,Comments,Megjegyzések
+field,"campaign.partner.history,name",0,History,Előzmények
+field,"campaign.partner.history,camp_partner_id",0,Prospect Fiche,
+field,"campaign.partner.history,step_attempt",0,Attempt,Próbálkozás
+field,"campaign.partner.history,date",0,Date create,Létrehozás dátuma
+field,"campaign.partner.history,step_id",0,Step,Lépés
+field,"campaign.step,info",0,Description,Leírás
+field,"campaign.step,name",0,Step Name,Lépés neve
+field,"campaign.step,procent",0,Success Rate (0<x<1),Sikerráta (0-tól 1-ig)
+field,"campaign.step,stop_date",0,Stop Date,Befejezés dátuma
+field,"campaign.step,campaign_id",0,Campaign,Kampány
+field,"campaign.step,priority",0,Order line,Megrendelési vonal
+field,"campaign.step,costs",0,Step Costs,Lépés költségei
+field,"campaign.step,active",0,Active,Aktív
+field,"campaign.step,max_try",0,Max Attemps,Maximum próbálkozások száma
+field,"campaign.step,start_date",0,Start Date,Kezdés dátuma
+field,"crm.case,date_closed",0,Date Closed,Lezárás dátuma
+field,"crm.case,history_line",0,Case History,Esettanulságok
+field,"crm.case,partner_id",0,Partner,Partner
+field,"crm.case,user_id",0,User Responsible,Felelős felhasználó
+field,"crm.case,name",0,Case Description,Eset leírása
+field,"crm.case,probability",0,Probability (0.50),Valószínűség (0.50)
+field,"crm.case,canal_id",0,Canal,Csatorna
+field,"crm.case,categ_id",0,Category,Kategória
+field,"crm.case,planned_cost",0,Planned Costs,Tervezett költségek
+field,"crm.case,som",0,State of Mind,
+field,"crm.case,state",0,State,Állapot
+field,"crm.case,date_deadline",0,Date Next Action,Következő művelet dátuma
+field,"crm.case,priority",0,Priority,Prioritás
+field,"crm.case,date",0,Date,Dátum
+field,"crm.case,planned_revenue",0,Planned Revenue,Tervezett bevétel
+field,"crm.case,active",0,Active,Aktív
+field,"crm.case,document",0,Document,Dokumentum
+field,"crm.case,type",0,Case Type,Eset típusa
+field,"crm.case,description",0,Description,Leírás
+field,"crm.case.categ,case_type",0,Case Type,Eset típusa
+field,"crm.case.categ,name",0,Case Category Name,Eset kategóriája
+field,"crm.case.history,user_id",0,User Responsible,Felelős felhasználó
+field,"crm.case.history,name",0,Name,Név
+field,"crm.case.history,canal_id",0,Canal,Csatorna
+field,"crm.case.history,som",0,State of Mind,
+field,"crm.case.history,case_id",0,Case,Eset
+field,"crm.case.history,date",0,Date,Dátum
+field,"crm.case.history,description",0,Description,
+field,"crm.segmentation,name",0,Segmentation Name,
+field,"crm.segmentation,som_interval_max",0,Max Interval for Computation,
+field,"crm.segmentation,categ_id",0,Partner Category,
+field,"crm.segmentation,som_interval_default",0,Default Factor (0 = None),
+field,"crm.segmentation,segmentation_line",0,Criterions,
+field,"crm.segmentation,som_interval_decrease",0,Decrease factor (0.0 > 1.0),
+field,"crm.segmentation,state",0,Execution State,
+field,"crm.segmentation,exclusif",0,Exclusive Selection,
+field,"crm.segmentation,partner_id",0,Max Partner ID processed,
+field,"crm.segmentation,som_interval",0,Number of day per Periode,
+field,"crm.segmentation,description",0,Description,
+field,"crm.segmentation.line,name",0,Segmentation Name,
+field,"crm.segmentation.line,segmentation_id",0,Segmentation,
+field,"crm.segmentation.line,expr_name",0,Control Variable,
+field,"crm.segmentation.line,expr_value",0,Value,
+field,"crm.segmentation.line,operator",0,Mandatory / Optionnal,
+field,"crm.segmentation.line,expr_operator",0,Operator,
+field,"ir.actions.act_window,domain",0,Domain Value,
+field,"ir.actions.act_window,name",0,Action Name,Művelet neve
+model,"ir.actions.act_window,name",1,ir.ui.menu.tree.admin,
+model,"ir.actions.act_window,name",2,ir.ui.menu.tree.user,
+model,"ir.actions.act_window,name",3,ir.actions.actions,
+model,"ir.actions.act_window,name",4,ir.actions.execute,
+model,"ir.actions.act_window,name",5,ir.actions.group,
+model,"ir.actions.act_window,name",6,ir.actions.report.custom,
+model,"ir.actions.act_window,name",7,ir.actions.report.xml,
+model,"ir.actions.act_window,name",8,ir.actions.act_window,
+model,"ir.actions.act_window,name",9,ir.actions.wizard,
+model,"ir.actions.act_window,name",10,res.users,
+model,"ir.actions.act_window,name",11,res.groups,
+model,"ir.actions.act_window,name",12,res.roles,
+model,"ir.actions.act_window,name",13,ir.ui.view,
+model,"ir.actions.act_window,name",14,ir.attachment,
+model,"ir.actions.act_window,name",15,ir.report.custom,
+model,"ir.actions.act_window,name",16,ir.translation.view,
+model,"ir.actions.act_window,name",17,res.project,
+model,"ir.actions.act_window,name",18,res.request.form,
+model,"ir.actions.act_window,name",21,res.partner,
+model,"ir.actions.act_window,name",22,res.partner.address,
+model,"ir.actions.act_window,name",23,res.partner,
+model,"ir.actions.act_window,name",24,res.partner,
+model,"ir.actions.act_window,name",25,Company Architecture,
+model,"ir.actions.act_window,name",26,res.partner.category,
+model,"ir.actions.act_window,name",27,res.lang,
+model,"ir.actions.act_window,name",30,res.partner.canal.form,
+model,"ir.actions.act_window,name",31,res.partner.som.form,
+model,"ir.actions.act_window,name",32,account.currency,
+model,"ir.actions.act_window,name",33,account.account.form,
+model,"ir.actions.act_window,name",34,account.account.tree,
+model,"ir.actions.act_window,name",35,account.move.line.tree1,
+model,"ir.actions.act_window,name",36,account.move.line.treeform,
+model,"ir.actions.act_window,name",37,account.move.line.form,
+model,"ir.actions.act_window,name",38,account.move.form,
+model,"ir.actions.act_window,name",39,account.tax,
+model,"ir.actions.act_window,name",40,account.invoice,
+model,"ir.actions.act_window,name",41,account.invoice,
+model,"ir.actions.act_window,name",42,account.invoice,
+model,"ir.actions.act_window,name",43,account.invoice,
+model,"ir.actions.act_window,name",44,account.invoice,
+model,"ir.actions.act_window,name",45,account.invoice,
+model,"ir.actions.act_window,name",46,account.invoice,
+model,"ir.actions.act_window,name",47,account.invoice,
+model,"ir.actions.act_window,name",48,account.invoice,
+model,"ir.actions.act_window,name",49,account.invoice,
+model,"ir.actions.act_window,name",50,account.transfer.form,
+model,"ir.actions.act_window,name",57,auction.artists,
+model,"ir.actions.act_window,name",58,auction.dates,
+model,"ir.actions.act_window,name",59,auction.dates,
+model,"ir.actions.act_window,name",60,auction.dates,
+model,"ir.actions.act_window,name",61,auction.lots,
+model,"ir.actions.act_window,name",62,auction.lots,
+model,"ir.actions.act_window,name",63,auction.lots.from_a_date,
+model,"ir.actions.act_window,name",64,auction.lots.from_a_date,
+model,"ir.actions.act_window,name",65,auction.deposit,
+model,"ir.actions.act_window,name",66,auction.deposit,
+model,"ir.actions.act_window,name",96,campaign.campaign.tree,
+model,"ir.actions.act_window,name",97,campaign.campaign.form,
+model,"ir.actions.act_window,name",98,campaign.partner.open,
+model,"ir.actions.act_window,name",99,product.variant.form,
+model,"ir.actions.act_window,name",100,product.template.form,
+model,"ir.actions.act_window,name",101,product.normal.form,
+model,"ir.actions.act_window,name",102,product.category.form,
+model,"ir.actions.act_window,name",103,product.normal.form,
+model,"ir.actions.act_window,name",104,product.pricelist.form,
+model,"ir.actions.act_window,name",105,product.pricelist.form,
+model,"ir.actions.act_window,name",106,crm.case.categ.form,
+model,"ir.actions.act_window,name",107,crm.case.form,
+model,"ir.actions.act_window,name",108,crm.case.form,
+model,"ir.actions.act_window,name",109,crm.case.form,
+model,"ir.actions.act_window,name",110,crm.case.form,
+model,"ir.actions.act_window,name",111,crm.case.form,
+model,"ir.actions.act_window,name",112,crm.case.form,
+model,"ir.actions.act_window,name",113,crm.case.form,
+model,"ir.actions.act_window,name",114,crm.case.form,
+model,"ir.actions.act_window,name",115,crm.case.form,
+model,"ir.actions.act_window,name",116,crm.segmentation.form,
+model,"ir.actions.act_window,name",117,crm.segmentation.tree,
+model,"ir.actions.act_window,name",119,stock.lot.inventory,raktárkészlet.raktár.leltár
+model,"ir.actions.act_window,name",120,stock.lot.form,
+model,"ir.actions.act_window,name",121,stock.location,
+model,"ir.actions.act_window,name",122,stock.location.tree,
+model,"ir.actions.act_window,name",123,stock.warehouse,
+model,"ir.actions.act_window,name",124,stock.packing,
+model,"ir.actions.act_window,name",125,stock.move,
+model,"ir.actions.act_window,name",126,stock.shipping,
+model,"ir.actions.act_window,name",131,purchase.order.form,
+model,"ir.actions.act_window,name",133,sale.shop,
+model,"ir.actions.act_window,name",134,sale.order,
+model,"ir.actions.act_window,name",135,sale.order,
+field,"ir.actions.act_window,view_type",0,Type of view,
+field,"ir.actions.act_window,res_model",0,Model,
+field,"ir.actions.act_window,view_id",0,View Ref.,
+field,"ir.actions.act_window,type",0,Action Type,
+field,"ir.actions.actions,type",0,Action Type,
+field,"ir.actions.actions,name",0,Action Name,
+field,"ir.actions.execute,func_name",0,Function Name,
+field,"ir.actions.execute,func_arg",0,Function Argument,
+field,"ir.actions.execute,type",0,type,
+field,"ir.actions.execute,name",0,name,
+field,"ir.actions.group,type",0,Action Type,
+field,"ir.actions.group,name",0,Group Name,
+field,"ir.actions.group,exec_type",0,Execution sequence,
+field,"ir.actions.report.custom,type",0,Report Type,
+field,"ir.actions.report.custom,name",0,Report Name,
+field,"ir.actions.report.custom,report_id",0,Report Ref.,
+field,"ir.actions.report.xml,report_xsl",0,XML,
+field,"ir.actions.report.xml,name",0,XML-Report Name,
+model,"ir.actions.report.xml,name",19,Labels,
+model,"ir.actions.report.xml,name",20,Identifiants,
+model,"ir.actions.report.xml,name",51,Invoices List,Számlák listája
+model,"ir.actions.report.xml,name",52,Recall List,
+model,"ir.actions.report.xml,name",53,Transfer List,
+model,"ir.actions.report.xml,name",67,Artists,
+model,"ir.actions.report.xml,name",68,Bids,
+model,"ir.actions.report.xml,name",69,Deposits,
+model,"ir.actions.report.xml,name",70,Seller Labels,
+model,"ir.actions.report.xml,name",71,Lots Cards,
+model,"ir.actions.report.xml,name",72,Lots List - Landscape,
+model,"ir.actions.report.xml,name",73,Lots List,
+model,"ir.actions.report.xml,name",74,Lots List Inventory,Raktár lista leltár
+model,"ir.actions.report.xml,name",75,Lots Tickets,Raktári jegyek
+model,"ir.actions.report.xml,name",76,Fiches Lots,
+model,"ir.actions.report.xml,name",77,Bordereau Achat + Photos,
+model,"ir.actions.report.xml,name",78,Bordereau Achat,
+model,"ir.actions.report.xml,name",79,Bordereau Vente,
+model,"ir.actions.report.xml,name",80,Results,
+model,"ir.actions.report.xml,name",81,Catalog,
+model,"ir.actions.report.xml,name",82,Buyer List,
+model,"ir.actions.report.xml,name",83,Seller List,
+model,"ir.actions.report.xml,name",84,Bids per lot (phone),
+model,"ir.actions.report.xml,name",85,Deposit Letters,
+model,"ir.actions.report.xml,name",86,Totals,
+model,"ir.actions.report.xml,name",118,Business Opportunities,
+model,"ir.actions.report.xml,name",127,Picking List,Szállítmány
+model,"ir.actions.report.xml,name",128,Shipping List,Szállítólevél
+model,"ir.actions.report.xml,name",129,Stock Overview,Raktár adatok
+model,"ir.actions.report.xml,name",130,Stock Overview (by address),Raktár adatok (címek szerint)
+model,"ir.actions.report.xml,name",132,Purchase Orders,Megrendelések
+model,"ir.actions.report.xml,name",136,Sale Orders,Ajánlatkérések
+field,"ir.actions.report.xml,auto",0,Automatic XSL:RML,
+field,"ir.actions.report.xml,report_name",0,XML,
+field,"ir.actions.report.xml,model",0,Report Type,
+field,"ir.actions.report.xml,type",0,Report Type,
+field,"ir.actions.report.xml,report_xml",0,XML,
+field,"ir.actions.wizard,wiz_name",0,Wizard name,
+field,"ir.actions.wizard,type",0,Action type,
+field,"ir.actions.wizard,name",0,Wizard info,
+model,"ir.actions.wizard,name",28,Mass Mailing,
+model,"ir.actions.wizard,name",29,Send SMS,
+model,"ir.actions.wizard,name",54,Reconcile Transactions,
+model,"ir.actions.wizard,name",55,Split Invoice,
+model,"ir.actions.wizard,name",56,Refund Invoice,
+model,"ir.actions.wizard,name",87,Send objects to Auction-in-europe.com,
+model,"ir.actions.wizard,name",88,Map buyer username to Partners,
+model,"ir.actions.wizard,name",89,Cancel payment,
+model,"ir.actions.wizard,name",90,Invoice objects,
+model,"ir.actions.wizard,name",91,Numerotation (per lot),
+model,"ir.actions.wizard,name",92,Numerotation (automatic),
+model,"ir.actions.wizard,name",93,Pay objects,
+model,"ir.actions.wizard,name",94,SMS Send,
+model,"ir.actions.wizard,name",95,Send results to Auction-in-Europe.com,
+field,"ir.attachment,description",0,Description,
+field,"ir.attachment,res_model",0,Ressource Model,
+field,"ir.attachment,datas_fname",0,Datass Filename,
+field,"ir.attachment,res_id",0,Ressource ID,
+field,"ir.attachment,datas",0,Datas,
+field,"ir.attachment,name",0,Attachement Name,
+field,"ir.cron,function",0,Function,
+field,"ir.cron,uid",0,User,
+field,"ir.cron,multicall",0,Multiple Call,
+field,"ir.cron,args",0,Arguments,
+field,"ir.cron,delete_after",0,Delete after execution,
+field,"ir.cron,interval_max",0,Max Interval Number,
+field,"ir.cron,active",0,Active,
+field,"ir.cron,on_error",0,On Error,
+field,"ir.cron,interval_int",0,Interval Number,
+field,"ir.cron,max_repeat",0,Maximum Repetition,
+field,"ir.cron,date",0,Next Date,
+field,"ir.cron,model",0,Model,
+field,"ir.cron,interval_uom",0,Interval Unit,
+field,"ir.cron,name",0,Name,
+field,"ir.default,uid",0,Users,
+field,"ir.default,ref_table",0,Table Ref.,
+field,"ir.default,value",0,Default Value,
+field,"ir.default,ref_id",0,ID Ref.,
+field,"ir.default,field_tbl",0,Model,
+field,"ir.default,field_name",0,Model field,
+field,"ir.default,page",0,View,
+field,"ir.report.custom,print_format",0,Print format,
+field,"ir.report.custom,title",0,Report Header,
+field,"ir.report.custom,repeat_header",0,Repeat Header,
+field,"ir.report.custom,footer",0,Report Footer,
+field,"ir.report.custom,totalonly",0,Show totals only,
+field,"ir.report.custom,fields_id",0,Fields,
+field,"ir.report.custom,sortby",0,Sorted By,
+field,"ir.report.custom,print_orientation",0,Print orientation,
+field,"ir.report.custom,model",0,Model,
+field,"ir.report.custom,groupby",0,Grouped By,
+field,"ir.report.custom,name",0,Report Name,
+field,"ir.report.custom.fields,calc_sum",0,Calculate Sum,
+field,"ir.report.custom.fields,name",0,Name,
+field,"ir.report.custom.fields,calc_avg",0,Calculate Average,
+field,"ir.report.custom.fields,bgcolor",0,Background Color,
+field,"ir.report.custom.fields,calc_count",0,Calculate Count,
+field,"ir.report.custom.fields,priority",0,Priority,
+field,"ir.report.custom.fields,width",0,Fixed Width,
+field,"ir.report.custom.fields,fontcolor",0,Font color,
+field,"ir.report.custom.fields,report_id",0,Report Ref,
+field,"ir.report.custom.fields,alignment",0,Alignment,
+field,"ir.report.custom.fields,string",0,String,
+field,"ir.translation,lang",0,Language,
+field,"ir.translation,src",0,Source,
+field,"ir.translation,name",0,Name Field,
+field,"ir.translation,type",0,Type,
+field,"ir.translation,value",0,Translation Value,
+field,"ir.translation,res_id",0,Ressource ID,
+field,"ir.ui.menu,parent_id",0,Parent Menu,Szülő menü
+field,"ir.ui.menu,child_id",0,Childs,Gyerekek
+field,"ir.ui.menu,name",0,Menu,Menü
+model,"ir.ui.menu,name",1,Menu,Menü
+model,"ir.ui.menu,name",3,Operations,Műveletek
+model,"ir.ui.menu,name",4,Definitions,Definíciók
+model,"ir.ui.menu,name",5,Administration,Adminisztráció
+model,"ir.ui.menu,name",6,Actions,Műveletek
+model,"ir.ui.menu,name",7,Actions,Műveletek
+model,"ir.ui.menu,name",8,Execute,Futtatás
+model,"ir.ui.menu,name",9,Group,Csoport
+model,"ir.ui.menu,name",10,Report Custom,Egyedi jelentés
+model,"ir.ui.menu,name",11,Report Xml,XML jelentés
+model,"ir.ui.menu,name",12,Act Window,Akció ablak
+model,"ir.ui.menu,name",13,Wizard,Varázsló
+model,"ir.ui.menu,name",14,Users,Felhasználók
+model,"ir.ui.menu,name",15,Users,Felhasználók
+model,"ir.ui.menu,name",16,Groups,Csoportok
+model,"ir.ui.menu,name",17,Roles,Szerepek
+model,"ir.ui.menu,name",18,Interface,Felület
+model,"ir.ui.menu,name",19,View,Nézet
+model,"ir.ui.menu,name",20,Attachements,Mellékletek
+model,"ir.ui.menu,name",21,Report,Jelentés
+model,"ir.ui.menu,name",22,Report Custom,Egyedi jelentés
+model,"ir.ui.menu,name",23,Translations,Fordítások
+model,"ir.ui.menu,name",24,Translations,Fordítások
+model,"ir.ui.menu,name",25,Projects,Projektek
+model,"ir.ui.menu,name",26,Requests,Kérelmek
+model,"ir.ui.menu,name",27,All Requests,Minden kérelem
+model,"ir.ui.menu,name",28,Partners,Partnerek
+model,"ir.ui.menu,name",29,Partner Contacts,Névjegyek
+model,"ir.ui.menu,name",30,Partners,Partnerek
+model,"ir.ui.menu,name",31,Partners,Partnerek
+model,"ir.ui.menu,name",32,Categories,Kategóriák
+model,"ir.ui.menu,name",33,Languages,Nyelvek
+model,"ir.ui.menu,name",34,CRM,CRM
+model,"ir.ui.menu,name",35,Canals,Csatornák
+model,"ir.ui.menu,name",36,States of Mind,Lelkiállapotok
+model,"ir.ui.menu,name",37,Accounting,Könyvelés
+model,"ir.ui.menu,name",38,Currency,Pénznem
+model,"ir.ui.menu,name",39,Accounting,Könyvelés
+model,"ir.ui.menu,name",40,Account Trees,Könyvelési fák
+model,"ir.ui.menu,name",41,Low Level,Alacsony szintű
+model,"ir.ui.menu,name",42,Account Move Line,Számla mozgások sora
+model,"ir.ui.menu,name",43,Account Move,Számla mozgások
+model,"ir.ui.menu,name",44,Tax,Adó
+model,"ir.ui.menu,name",45,Invoices,Számlák
+model,"ir.ui.menu,name",46,All Invoices,Minden számla
+model,"ir.ui.menu,name",47,Customers Invoices,Vásárló számlák
+model,"ir.ui.menu,name",48,Draft Invoices,Számla piszkozatok
+model,"ir.ui.menu,name",49,PRO-FORMA,PRO-FORMA
+model,"ir.ui.menu,name",50,Opened Invoices,Nyitott számlák
+model,"ir.ui.menu,name",51,Suppliers Invoices,Beszállítói számlák
+model,"ir.ui.menu,name",52,Draft,Piszkozat
+model,"ir.ui.menu,name",53,Opened,Nyitott
+model,"ir.ui.menu,name",54,Customers Refund,Vásárlói visszatérítések
+model,"ir.ui.menu,name",55,Draft,Piszkozat
+model,"ir.ui.menu,name",56,Opened,Nyitott
+model,"ir.ui.menu,name",57,Suppliers Refund,Szállítói visszatérítések
+model,"ir.ui.menu,name",58,Draft,Piszkozat
+model,"ir.ui.menu,name",59,Opened,Nyitott
+model,"ir.ui.menu,name",60,Transfers,Mozgások
+model,"ir.ui.menu,name",61,Auction,Aukció
+model,"ir.ui.menu,name",62,Artists,Művészek
+model,"ir.ui.menu,name",63,Auction Dates,Számlamozgások
+model,"ir.ui.menu,name",64,Next Auction Dates,Következő aukció dátumok
+model,"ir.ui.menu,name",65,Old Auction Dates,Régi aukció dátumok
+model,"ir.ui.menu,name",66,New Auction Dates,Új aukció dátumok
+model,"ir.ui.menu,name",67,Objects,Objektumok
+model,"ir.ui.menu,name",68,All objects,Minden objektum
+model,"ir.ui.menu,name",69,Unclassified objects,Osztályozatlan objektumok
+model,"ir.ui.menu,name",70,Deposit Border,Előleg határ
+model,"ir.ui.menu,name",71,Bids,Licitek
+model,"ir.ui.menu,name",72,Marketing,Marketing
+model,"ir.ui.menu,name",73,Campaigns,Kampányok
+model,"ir.ui.menu,name",74,Marketing,Marketing
+model,"ir.ui.menu,name",75,Campaign Definition,Kampány definíciók
+model,"ir.ui.menu,name",76,Products,Termékek
+model,"ir.ui.menu,name",77,Products With Variations,Termék változatokkal
+model,"ir.ui.menu,name",78,Variations,Változatok
+model,"ir.ui.menu,name",79,Templates,Sablonok
+model,"ir.ui.menu,name",80,Products,Termékek
+model,"ir.ui.menu,name",81,Categories,Kategóriák
+model,"ir.ui.menu,name",82,Pricelists,Árlisták
+model,"ir.ui.menu,name",83,Pricelists Version,Árlista verziók
+model,"ir.ui.menu,name",84,Pricelists,Árlisták
+model,"ir.ui.menu,name",85,Case Categories,Esetkategóriák
+model,"ir.ui.menu,name",86,Helpdesk,Helpdesk
+model,"ir.ui.menu,name",87,All Cases,Minden eset
+model,"ir.ui.menu,name",88,Available Cases,Elérhető esetek
+model,"ir.ui.menu,name",89,My Cases,Saját esetek
+model,"ir.ui.menu,name",90,Sales,Eladás
+model,"ir.ui.menu,name",91,Business Opportunities,Üzleti lehetőségek
+model,"ir.ui.menu,name",92,All Business Opportunities,Minden üzleti lehetőség
+model,"ir.ui.menu,name",93,Available Business Opportunities,Elérhető üzleti lehetőségek
+model,"ir.ui.menu,name",94,My Business Opportunities,Saját üzleti lehetőségek
+model,"ir.ui.menu,name",95,Purchase,Beszerzés
+model,"ir.ui.menu,name",96,Purchase Opportunities,Beszerzési lehetőségek
+model,"ir.ui.menu,name",97,All Purchase Opportunities,Minden beszerzési lehetőség
+model,"ir.ui.menu,name",98,Available Purchase Opportunities,Elérhető beszerzési lehetőségek
+model,"ir.ui.menu,name",99,My Purchase Opportunities,Saját beszerzési lehetőségek
+model,"ir.ui.menu,name",100,Automatic Segmentations,Automatikus szegmentációk
+model,"ir.ui.menu,name",101,CRM,CRM
+model,"ir.ui.menu,name",102,Automatic Segmentations,Automatikus szegmentációk
+model,"ir.ui.menu,name",103,Stock,Raktárkészlet
+model,"ir.ui.menu,name",104,Lot Inventory,Leltárazás
+model,"ir.ui.menu,name",105,All Lots,Raktárak
+model,"ir.ui.menu,name",106,Stock,Raktárkészlet
+model,"ir.ui.menu,name",107,Location,Hely
+model,"ir.ui.menu,name",108,Location Tree,Raktárszerveződés
+model,"ir.ui.menu,name",109,Warehouse,Raktárépület
+model,"ir.ui.menu,name",110,Picking List,Szállítmányok
+model,"ir.ui.menu,name",111,Move,Mozgások
+model,"ir.ui.menu,name",112,Shipping,Szállítmányozás
+model,"ir.ui.menu,name",113,Order,Rendelés
+model,"ir.ui.menu,name",114,Sales,Eladás
+model,"ir.ui.menu,name",115,Shop,Bolt
+model,"ir.ui.menu,name",116,Order,Ajánlatkészítés
+model,"ir.ui.menu,name",117,Order POS,Ajánlatkészítés POS
+field,"ir.ui.view,name",0,View Name,Nézet neve
+field,"ir.ui.view,type",0,View Type,Nézet típusa
+field,"ir.ui.view,priority",0,Priority,Prioritás
+field,"ir.ui.view,model",0,Model,Modell
+field,"ir.ui.view,arch",0,View Architecture,Architektúra nézet
+field,"ir.ui.view,field_parent",0,Childs Field,Gyerek mezői
+field,"ir.ui.view_sc,resource",0,Resource Name,Elem neve
+field,"ir.ui.view_sc,user_id",0,User Ref.,Felhasználó ref.
+field,"ir.ui.view_sc,res_id",0,Resource Ref.,Elem ref.
+field,"ir.ui.view_sc,name",0,Shortcut Name,Billentyűkombináció neve
+field,"ir.values,key_id",0,Last Key,Utolsó kulcs
+field,"ir.values,object",0,Is Object,Objektum-e
+field,"ir.values,meta",0,Meta Datas,Metaadatok
+field,"ir.values,name",0,Name,Név
+field,"ir.values,value",0,Value,Érték
+field,"ir.values.keys,parent_id",0,Last Key,Utolsó kulcs
+field,"ir.values.keys,value",0,Value,Érték
+field,"ir.values.keys,key",0,Name,Név
+field,"product.category,parent_id",0,Parent Category,Szülő kategória
+field,"product.category,child_id",0,Childs Categories,Gyerek kategóriák
+field,"product.category,name",0,Name,Név
+field,"product.pricelist,active",0,Active,Aktív
+field,"product.pricelist,name",0,Name,Név
+field,"product.pricelist,version_id",0,Pricelist Versions,
+field,"product.pricelist.item,limit_price_max_margin",0,Limit Price Max. Margin,
+field,"product.pricelist.item,standard_price_base",0,Standard Price Base,
+field,"product.pricelist.item,list_price_surcharge",0,List Price Surcharge,
+field,"product.pricelist.item,min_quantity",0,Min. Quantity,
+field,"product.pricelist.item,list_price_min_margin",0,List Price Min. Margin,
+field,"product.pricelist.item,limit_price_discount",0,Limit Price Discount,
+field,"product.pricelist.item,standard_price_surcharge",0,Standard Price Surcharge,
+field,"product.pricelist.item,product_tmpl_id",0,Product Template,
+field,"product.pricelist.item,priority",0,Priority,
+field,"product.pricelist.item,standard_price_max_margin",0,Standard Price Max. Margin,
+field,"product.pricelist.item,price_version_id",0,Price List Version,
+field,"product.pricelist.item,list_price_max_margin",0,List Price Max. Margin,
+field,"product.pricelist.item,limit_price_min_margin",0,Limit Price Min. Margin,
+field,"product.pricelist.item,base",0,Based on,
+field,"product.pricelist.item,limit_price_surcharge",0,Limit Price Surcharge,
+field,"product.pricelist.item,list_price_discount",0,List Price Discount,Listaár kedvezmény
+field,"product.pricelist.item,categ_id",0,Product Category,Termék kategória
+field,"product.pricelist.item,standard_price_discount",0,Standard Price Discount,Standard ár kedvezmény
+field,"product.pricelist.item,name",0,Name,Név
+field,"product.pricelist.item,base_pricelist_id",0,Base Price List,Alapárlista
+field,"product.pricelist.item,list_price_round",0,List Price Rounding,Listár kerekítés
+field,"product.pricelist.item,standard_price_min_margin",0,Standard Price Min. Margin,
+field,"product.pricelist.item,list_price_base",0,List Price Base,
+field,"product.pricelist.item,standard_price_round",0,Standard Price Rounding,
+field,"product.pricelist.item,limit_price_base",0,Limit Price Base,
+field,"product.pricelist.item,limit_price_round",0,Limit Price Rounding,
+field,"product.pricelist.version,items_id",0,Price List Items,
+field,"product.pricelist.version,name",0,Name,Név
+field,"product.pricelist.version,date_end",0,End Date,Befejezés dátuma
+field,"product.pricelist.version,date_start",0,Start Date,Kezdés dátuma
+field,"product.pricelist.version,active",0,Active,Aktív
+field,"product.pricelist.version,pricelist_id",0,Price List,Árlista
+field,"product.product,list_price_extra",0,List Price Extra,Árlista extra
+field,"product.product,code",0,Code,Kód
+field,"product.product,standard_price_extra",0,Standard Price Extra,
+field,"product.product,limit_price_extra",0,Limit Price Extra,
+field,"product.product,price",0,Customer Price,
+field,"product.product,product_tmpl_id",0,Product Template,
+field,"product.product,list_price_margin",0,List Price Margin,
+field,"product.product,limit_price_margin",0,Limit Price Margin,
+field,"product.product,active",0,Active,
+field,"product.product,qty_available",0,Qutee disponible,
+field,"product.product,variants",0,Variants,
+field,"product.product,standard_price_margin",0,Standard Price Margin,
+field,"product.template,seller_id",0,Retailer,Forgalmazó
+field,"product.template,list_price",0,List Price,Listaár
+field,"product.template,name",0,Name,Név
+field,"product.template,type",0,Product Type,Termék típus
+field,"product.template,standard_price",0,Standard Price,
+field,"product.template,limit_price",0,Limit Price,
+field,"product.template,taxes_id",0,Product Taxes,Termék adói
+field,"product.template,cost_method",0,Costing Method,Árképzési metódus
+field,"product.template,categ_id",0,Category,Kategória
+field,"product.template,description",0,Description,Leírás
+field,"purchase.order,purchase_rep",0,Purchase Representative,
+field,"purchase.order,partner_ref",0,Partner Reference,Partner hivatkozás
+field,"purchase.order,name",0,Order Description,Rendelés leírása
+field,"purchase.order,date_promise",0,Date Promised,Vállalt dátum
+field,"purchase.order,order_line",0,Order State,Rendelés állapota
+field,"purchase.order,partner_id",0,Partner,Partner
+field,"purchase.order,notes",0,Notes,Jegyzetek
+field,"purchase.order,partner_address_id",0,Address,Cím
+field,"purchase.order,shipped",0,Shipped,Szállítva
+field,"purchase.order,warehouse_id",0,Warehouse,Raktár
+field,"purchase.order,project_id",0,Project,Projekt
+field,"purchase.order,state",0,Order State,Rendelés állapota
+field,"purchase.order,contact",0,Partner Contact,Partner névjegy
+field,"purchase.order,invoiced",0,Invoiced,Számlázott
+field,"purchase.order,invoice_id",0,Invoice,Számla
+field,"purchase.order,pricelist_id",0,Pricelist,Árlista
+field,"purchase.order,date_order",0,Date Ordered,Rendelés dátuma
+field,"purchase.order,ref",0,Order Reference,Rendelés hivatkozás
+field,"purchase.order,shipping_id",0,Shipping,Szállítás
+field,"purchase.order.line,product_id",0,Product,Termék
+field,"purchase.order.line,date_promise",0,Date Promised,Vállalt dátum
+field,"purchase.order.line,order_id",0,Order Ref,Rendelési hiv.
+field,"purchase.order.line,price_unit",0,Unit Price,Egységár
+field,"purchase.order.line,taxes_id",0,Taxes,Adók
+field,"purchase.order.line,quantity",0,Quantity,Mennyiség
+field,"purchase.order.line,notes",0,Notes,Jegyzetek
+field,"purchase.order.line,name",0,Description,Leírás
+field,"res.country,code",0,Country Code,Országkód
+field,"res.country,name",0,Country Name,Ország
+field,"res.country.state,code",0,State Code,Megyekód
+field,"res.country.state,country_id",0,Country,Ország
+field,"res.country.state,name",0,State Name,Megye
+field,"res.groups,name",0,Group Name,Csoport
+field,"res.lang,active",0,Active,Aktív
+field,"res.lang,code",0,Code,Kód
+field,"res.lang,name",0,Name,Név
+field,"res.partner,lang",0,Langage,Nyelv
+field,"res.partner,website",0,Website,Web
+field,"res.partner,name",0,Name,Név
+field,"res.partner,credit",0,Credit,Követelés
+field,"res.partner,commercial",0,Commercial,Kereskedelmi
+field,"res.partner,debit",0,Debit,Tartozás
+field,"res.partner,child_ids",0,Partner Ref.,Partner hiv.
+field,"res.partner,comment",0,Notes,Jegyzetek
+field,"res.partner,parent_id",0,Main Company,Anyagcég
+field,"res.partner,name2",0,Corporation Type,Cégforma
+field,"res.partner,bank",0,Bank account,Bankszámlaszám
+field,"res.partner,address",0,Contacts,Névjegyek
+field,"res.partner,category_id",0,Categories,Kategóriák
+field,"res.partner,ref",0,Identifiant,Azonosító
+field,"res.partner,events",0,events,események
+field,"res.partner,vat",0,VAT,ÁFA
+field,"res.partner.address,city",0,City,Város
+field,"res.partner.address,fax",0,Fax,Fax
+field,"res.partner.address,name",0,Contact Name,Kapcsolat neve
+field,"res.partner.address,zip",0,Zip,Irányítószám
+field,"res.partner.address,title",0,Title,Pozíció
+field,"res.partner.address,mobile",0,Mobile,Mobil
+field,"res.partner.address,partner_id",0,Partner,Partner
+field,"res.partner.address,phone",0,Phone,Telefon
+field,"res.partner.address,state",0,State,Megye
+field,"res.partner.address,street",0,Street,Utca
+field,"res.partner.address,country",0,Country,Ország
+field,"res.partner.address,type",0,Address Type,Cím típusa
+field,"res.partner.address,email",0,E-Mail,E-mail
+field,"res.partner.canal,active",0,Active,Aktív
+field,"res.partner.canal,name",0,Canal Name,Csatorna neve
+field,"res.partner.category,name",0,Category Name,Kategória neve
+field,"res.partner.event,user_id",0,User,Felhasználó
+field,"res.partner.event,name",0,Events,Események
+field,"res.partner.event,probability",0,Probability (0.50),Valószínűség (0.50)
+field,"res.partner.event,canal_id",0,Canal,Csatorna
+field,"res.partner.event,partner_id",0,Partner,Partner
+field,"res.partner.event,planned_cost",0,Planned Cost,Tervezett költség
+field,"res.partner.event,som",0,State of Mind,
+field,"res.partner.event,partner_type",0,Partner Relation,Partneri kapcsolat
+field,"res.partner.event,type",0,Type of Event,Esemény típusa
+field,"res.partner.event,date",0,Date,Dátum
+field,"res.partner.event,document",0,Document,Dokumentum
+field,"res.partner.event,planned_revenue",0,Planned Revenue,Tervezett jövedelem
+field,"res.partner.event,description",0,Description,Leírás
+field,"res.partner.som,name",0,State of Mind,
+field,"res.partner.som,factor",0,Factor,
+field,"res.project,name",0,Name,Név
+field,"res.project,description",0,Description,Leírás
+field,"res.request,act_title",0,Action Result,Művelet eredménye
+field,"res.request,name",0,Request Description,
+field,"res.request,ref_partner_id",0,Partner Ref.,
+field,"res.request,ref_doc2",0,Document Ref 2,
+field,"res.request,act_result",0,Action Result Details,
+field,"res.request,req_history",0,Request History,
+field,"res.request,req_priority",0,Priority,
+field,"res.request,ref_doc1",0,Document Ref 1,
+field,"res.request,state",0,State,
+field,"res.request,act_from",0,Request From,
+field,"res.request,act_to",0,Request To,
+field,"res.request,req_doc_type",0,Document Type,
+field,"res.request,req_type",0,Request Type,
+field,"res.request,active",0,Active,
+field,"res.request,req_summary",0,Request Summary,
+field,"res.request,ref_proj_id",0,Project Ref.,
+field,"res.request,req_doc_ref",0,Document Ref.,
+field,"res.request,act_date",0,Action Date,
+field,"res.request.history,name",0,Action Result,
+field,"res.request.history,act_result",0,Action Result Details,
+field,"res.request.history,act_from",0,Request From,
+field,"res.request.history,req_id",0,Request,
+field,"res.request.history,act_to",0,Request To,
+field,"res.request.history,act_date",0,Action Date,
+field,"res.roles,parent_id",0,Parent,
+field,"res.roles,child_id",0,Childs,
+field,"res.roles,name",0,Role Name,
+field,"res.users,groups_id",0,groups,
+field,"res.users,name",0,Name,
+field,"res.users,roles_id",0,Roles,
+field,"res.users,login",0,Login,
+field,"res.users,password",0,Password,
+field,"res.users,action_id",0,actions,
+field,"sale.order,date_due",0,Date Due Payment,
+field,"sale.order,payment_term",0,Payment Term,
+field,"sale.order,order_policy",0,Shipping Policy,
+field,"sale.order,shop_id",0,Shop,
+field,"sale.order,date_order",0,Date Ordered,
+field,"sale.order,partner_id",0,Partner,
+field,"sale.order,invoiced",0,Invoiced,
+field,"sale.order,amount_tax",0,Taxes,
+field,"sale.order,amount_untaxed",0,Untaxed Amount,
+field,"sale.order,shipping_id",0,Shipping,
+field,"sale.order,order_line",0,Order Lines,
+field,"sale.order,note",0,Notes,
+field,"sale.order,state",0,Order State,
+field,"sale.order,partner_contact_id",0,Contact Address,
+field,"sale.order,pricelist_id",0,Pricelist,
+field,"sale.order,project_id",0,Project,
+field,"sale.order,payment_line",0,Order Payments,
+field,"sale.order,partner_invoice_id",0,Invoice Address,
+field,"sale.order,amount_total",0,Total,
+field,"sale.order,name",0,Order Description,
+field,"sale.order,partner_shipping_id",0,Shipping Address,
+field,"sale.order,invoice_id",0,Invoice,
+field,"sale.order,shipped",0,Shipped,
+field,"sale.order,shipping_created",0,Shipping created,
+field,"sale.order.line,product_id",0,Product,
+field,"sale.order.line,date_promise",0,Date Promised,
+field,"sale.order.line,order_id",0,Order Ref,
+field,"sale.order.line,price_unit",0,Unit Price,
+field,"sale.order.line,name",0,Description,
+field,"sale.order.line,quantity",0,Quantity,
+field,"sale.order.line,notes",0,Notes,
+field,"sale.order.line,tax_id",0,Taxes,
+field,"sale.order.payment,order_id",0,Order Ref,
+field,"sale.order.payment,amount",0,Amount,
+field,"sale.order.payment,name",0,Description,
+field,"sale.order.payment,account_id",0,Account,
+field,"sale.shop,payment_account_id",0,Account payments,
+field,"sale.shop,name",0,Shop name,
+field,"sale.shop,warehouse_id",0,Available Warehouse,
+field,"sale.shop,pricelist_id",0,Pricelist,
+field,"sale.shop,project_id",0,Project,Projekt
+field,"sale.shop,payment_default_id",0,Default payment,
+field,"stock.location,comment",0,Additionnal Information,Egyéb információ
+field,"stock.location,name",0,Name,Név
+field,"stock.location,usage",0,Usage,
+field,"stock.location,posz",0,Position Z,Z pozíció
+field,"stock.location,posx",0,Position X,X pozíció
+field,"stock.location,posy",0,Position Y,Y pozíció
+field,"stock.location,active",0,Active,Aktív
+field,"stock.location,lot_id",0,Lot,Raktár
+field,"stock.location,location_child_id",0,Contains,Tartalmazza
+field,"stock.location,account_id",0,Inventory Account,Leltári egyenleg
+field,"stock.lot,address_id",0,Address,Cím
+field,"stock.lot,tracking",0,Tracking,Követés
+field,"stock.lot,date",0,Date create,Létrehozás dátuma
+field,"stock.lot,name",0,Lot,Raktár
+field,"stock.lot,lot_line_view_id",0,Contents,Tartalom
+field,"stock.lot,price",0,Total Costs Price,Teljes ár
+field,"stock.lot,lot_line_id",0,Movements,Mozgások
+field,"stock.lot,parent_id",0,Container,Alrészlege a következőnek:
+field,"stock.lot,active",0,Active,Aktív
+field,"stock.lot,child_id",0,Contains,Tartalmaz
+field,"stock.lot,type",0,Type,Típus
+field,"stock.lot,serial",0,Serial,Sorozatszám
+field,"stock.lot,product_id",0,Products,Termékek
+field,"stock.lot.inventory,name",0,Inventory,Leltár
+field,"stock.lot.inventory,date_done",0,Date create,
+field,"stock.lot.inventory,state",0,State,Állapot
+field,"stock.lot.inventory,date",0,Date create,Létrehozás dátuma
+field,"stock.lot.inventory,inventory_line_id",0,Inventories,Leltárak
+field,"stock.lot.inventory,lot_line_id",0,Inventories,Leltárak
+field,"stock.lot.inventory.line,inventory_id",0,Inventory,Leltár
+field,"stock.lot.inventory.line,lot_id",0,Lot,Raktár
+field,"stock.lot.inventory.line,amount",0,Amount,Mennyiség
+field,"stock.lot.inventory.line,product_id",0,Product,Termék
+field,"stock.lot.line,product_id",0,Product,Termék
+field,"stock.lot.line,price_unit",0,Unit Costs Price,Egységár
+field,"stock.lot.line,lot_inventory_id",0,Inventory,Leltár
+field,"stock.lot.line,date",0,Date create,Létrehozás dátuma
+field,"stock.lot.line,amount",0,Amount,Mennyiség
+field,"stock.lot.line,active",0,Active,Aktív
+field,"stock.lot.line,lot_id",0,Lot,Raktár
+field,"stock.lot.line,name",0,Lot Inventory Line,Raktár leltári tételek
+field,"stock.lot.line.view,lot_id",0,Lot,Raktár
+field,"stock.lot.line.view,amount",0,Quantity,Mennyiség
+field,"stock.lot.line.view,name",0,Lot Content,Raktártartalom
+field,"stock.lot.line.view,product_id",0,Product,Termék
+field,"stock.move,address_id",0,Destination Address,Cél cím
+field,"stock.move,name",0,Movement Description,Mozgás leírása
+field,"stock.move,date_planned",0,Planned Date,Tervezett dátum
+field,"stock.move,lot_dest_id",0,Destination Lot,Célraktár
+field,"stock.move,date_moved",0,Actual Date,Valódi dátum
+field,"stock.move,state",0,State,Állapot
+field,"stock.move,active",0,Active,Aktív
+field,"stock.move,lot_id",0,Lot,Raktár
+field,"stock.move,serial",0,Tracking Number,Követési szám
+field,"stock.packing,address_id",0,Shipping Address,Szállítási cím
+field,"stock.packing,name",0,Packing Name,Csomag neve
+field,"stock.packing,lot_pack_id",0,Pack Lot,Raktár csomagolás
+field,"stock.packing,date",0,Date create,Létrehozás dátuma
+field,"stock.packing,state",0,State,Állapot
+field,"stock.packing,active",0,Active,Aktív
+field,"stock.packing,packing_line_id",0,Packing Line,
+field,"stock.packing,lot_pack_parent_id",0,Pack Container,
+field,"stock.packing,move_id",0,Move Order,
+field,"stock.packing,lot_dest_parent_id",0,Shipping Lot,Szállítási raktár
+field,"stock.packing.line,product_id",0,Product,Termék
+field,"stock.packing.line,line_dest_id",0,Lot Line Dest,Raktár sor cél
+field,"stock.packing.line,lot_src_id",0,Lot Src,Forrásraktár
+field,"stock.packing.line,line_src_id",0,Lot Line Src,Raktár sor forrás
+field,"stock.packing.line,amount",0,Amount,Mennyiség
+field,"stock.packing.line,packing_id",0,Packing,Csomagolás
+field,"stock.packing.line,active",0,Active,Aktív
+field,"stock.packing.line,name",0,Name,Név
+field,"stock.shipping,packing_policy",0,Packaging Policy,
+field,"stock.shipping,lot_output_id",0,Intermediary Location,
+field,"stock.shipping,name",0,Name,
+field,"stock.shipping,lot_stock_id",0,Source Lot/Location,Forrás raktár/hely
+field,"stock.shipping,lot_shipped_id",0,Destination Location,
+field,"stock.shipping,partner_id",0,Partner,
+field,"stock.shipping,partner_address_id",0,Address,
+field,"stock.shipping,shipping_policy",0,Shipping Policy,
+field,"stock.shipping,warehouse_id",0,Warehouse,
+field,"stock.shipping,priority",0,priority,
+field,"stock.shipping,shipping_line_id",0,Shipping Lines,
+field,"stock.shipping,state",0,State,
+field,"stock.shipping,packing_id",0,Packings,
+field,"stock.shipping,date_promised",0,Date Promised,
+field,"stock.shipping,active",0,Active,
+field,"stock.shipping,serial",0,Serial,
+field,"stock.shipping,type",0,Shipping Type,
+field,"stock.shipping,date_creation",0,Date Creation,
+field,"stock.shipping.line,amount",0,Amount,
+field,"stock.shipping.line,shipping_id",0,Shipping,
+field,"stock.shipping.line,product_id",0,Product,
+field,"stock.warehouse,lot_input_id",0,Location Input,
+field,"stock.warehouse,lot_output_id",0,Location Output,
+field,"stock.warehouse,name",0,Name,
+field,"stock.warehouse,lot_stock_id",0,Location Stock,
+field,"workflow,on_create",0,On Create,
+field,"workflow,name",0,Name,
+field,"workflow,osv",0,Ressource Model,
+field,"workflow.activity,kind",0,Kind,
+field,"workflow.activity,name",0,Name,
+field,"workflow.activity,join_mode",0,Join Mode,
+field,"workflow.activity,wkf_id",0,Workflow,
+field,"workflow.activity,flow_stop",0,Flow Stop,
+field,"workflow.activity,subflow_id",0,Subflow,
+field,"workflow.activity,split_mode",0,Split Mode,
+field,"workflow.activity,action",0,Action,
+field,"workflow.activity,flow_start",0,Flow Start,
+field,"workflow.instance,res_type",0,Resource Model,
+field,"workflow.instance,wkf_id",0,Workflow,
+field,"workflow.instance,res_id",0,Resource ID,
+field,"workflow.instance,uid",0,User ID,
+field,"workflow.instance,state",0,State,
+field,"workflow.transition,trigger_model",0,Trigger Type,
+field,"workflow.transition,role_id",0,Role Required,
+field,"workflow.transition,act_from",0,Source Activity,
+field,"workflow.transition,act_to",0,Destination Activity,
+field,"workflow.transition,val_name",0,Value Button Name,
+field,"workflow.transition,trigger_expr_id",0,Trigger Expr ID,
+field,"workflow.transition,condition",0,Condition,
+field,"workflow.triggers,instance_id",0,Destination Instance,
+field,"workflow.triggers,model",0,Model,
+field,"workflow.triggers,res_id",0,Ressource ID,
+xsl,res.partner.ids,0,Ref.,
+xsl,res.partner.ids,0,Name,
+xsl,account.invoice.list,0,DRAFT,PISZKOZAT
+xsl,account.invoice.list,0,PRO-FORMA INVOICE,
+xsl,account.invoice.list,0,INVOICE,SZÁMLA
+xsl,account.invoice.list,0,PURCHASE INVOICE,MEGRENDELŐLAP
+xsl,account.invoice.list,0,REFUND INVOICE,
+xsl,account.invoice.list,0,PURCHASE REFUND INVOICE,
+xsl,account.invoice.list,0,Document,Dokumentum
+xsl,account.invoice.list,0,Date,Dátum
+xsl,account.invoice.list,0,Order Ref.,
+xsl,account.invoice.list,0,Invoice Ref.,
+xsl,account.invoice.list,0,Tout contrat conclu avec notre societe est exclusivement regi par nos 			conditions generales telles que libellees au verso du present document 			et/ou sur notre site internet.,
+xsl,account.invoice.list,0,Description,Leírás
+xsl,account.invoice.list,0,Qty,
+xsl,account.invoice.list,0,Unit Price,
+xsl,account.invoice.list,0,Net Price,
+xsl,account.invoice.list,0,SUBTOTAL,
+xsl,account.invoice.list,0,TOTAL:,
+xsl,account.tranfer,0,Document,
+xsl,account.tranfer,0,Type,
+xsl,account.tranfer,0,Reference,
+xsl,account.tranfer,0,Partner ID,
+xsl,account.tranfer,0,Date,
+xsl,account.tranfer,0,Amount,
+xsl,account.tranfer,0,Change,
+xsl,report.auction.bid,0,Title:,
+xsl,report.auction.bid,0,Contact:,
+xsl,report.auction.bid,0,Item:,
+xsl,report.auction.bid,0,"BID,",
+xsl,report.auction.bid,0,Ref.,
+xsl,report.auction.bid,0,Description,
+xsl,report.auction.bid,0,Price,
+xsl,report.auction.bid,0,Tel?,
+xsl,report.auction.bid,0,yes,
+xsl,report.auction.bid,0,no,
+xsl,report.auction.deposit,0,"Title, Inventory",
+xsl,report.auction.deposit,0,Document type,
+xsl,report.auction.deposit,0,Deposit Form,
+xsl,report.auction.deposit,0,Document Number,
+xsl,report.auction.deposit,0,Date,
+xsl,report.auction.deposit,0,Tout contrat conclu avec notre societe est exclusivement regi par nos 			conditions generales telles que libellees au verso du present document 			et/ou sur notre site internet.,
+xsl,report.auction.deposit,0,VAT,
+xsl,report.auction.deposit,0,Number,
+xsl,report.auction.deposit,0,Description,
+xsl,report.auction.deposit,0,Limit,
+xsl,report.auction.lots.cards,0,Ref.,
+xsl,report.auction.lots.cards,0,Seller:,
+xsl,report.auction.lots.cards,0,Min. Estimate:,
+xsl,report.auction.lots.cards,0,Limit:,
+xsl,report.auction.lots.cards,0,Artist:,
+xsl,report.auction.lots.cards,0,Max. Estimate:,
+xsl,report.auction.lots.cards,0,Description :,
+xsl,report.auction.lots.cards,0,Bids,
+xsl,report.auction.lots.cards,0,Auctions,
+xsl,report.auction.lots.cards,0,Tel?,
+xsl,report.auction.lots.list.landscape,0,Ref.,
+xsl,report.auction.lots.list.landscape,0,Description,
+xsl,report.auction.lots.list.landscape,0,Est.,
+xsl,report.auction.lots.list.landscape,0,Limit,
+xsl,report.auction.lots.list.landscape,0,Orders,
+xsl,report.auction.lots.list.landscape,0,"Inv, Name",
+xsl,report.auction.lots.list.landscape,0,"Buyer, Price",
+xsl,report.auction.lots.list.landscape,0,TEL:,
+xsl,report.auction.lots.list.landscape,0,BID:,
+xsl,report.auction.lots.list.landscape,0,", TEL:",
+xsl,report.auction.lots.list,0,Ref.,
+xsl,report.auction.lots.list,0,Desc + bids,
+xsl,report.auction.lots.list,0,Est.,
+xsl,report.auction.lots.list,0,Limit,
+xsl,report.auction.lots.list,0,"Inv, Name",
+xsl,report.auction.lots.list,0,"Buyer, Price",
+xsl,report.auction.lots.list,0,TEL:,
+xsl,report.auction.lots.list,0,BID:,
+xsl,report.auction.lots.list,0,", TEL:",
+xsl,report.auction.lots.list.inventory,0,Inv,Leltár
+xsl,report.auction.lots.list.inventory,0,Lot,Raktár
+xsl,report.auction.lots.list.inventory,0,Desc,
+xsl,report.auction.lots.list.inventory,0,Num,
+xsl,report.auction.lots.tickets,0,Buyer,
+xsl,report.auction.lots.tickets,0,Item,
+xsl,report.auction.lots.tickets,0,Price,
+xsl,report.auction.lots.tickets,0,(PAID),
+xsl,report.auction.lots.tickets,0,Enlevement: imperativement dans les 2 jours ouvrables apres la vente de 9h a 18h. Les lots non retires apres 15 jours seront majores de 3eur/jour,
+xsl,report.auction.ach_bordereau.photo,0,Document,
+xsl,report.auction.ach_bordereau.photo,0,Auction,
+xsl,report.auction.ach_bordereau.photo,0,Contact,
+xsl,report.auction.ach_bordereau.photo,0,Reference,
+xsl,report.auction.ach_bordereau.photo,0,Ref,
+xsl,report.auction.ach_bordereau.photo,0,Descriptie,
+xsl,report.auction.ach_bordereau.photo,0,Bet.?,
+xsl,report.auction.ach_bordereau.photo,0,Adj.(EUR),
+xsl,report.auction.ach_bordereau.photo,0,Subtotal:,
+xsl,report.auction.ach_bordereau.photo,0,Total:,
+xsl,report.auction.ach_bordereau,0,Document,
+xsl,report.auction.ach_bordereau,0,Auction,
+xsl,report.auction.ach_bordereau,0,Customer Contact,
+xsl,report.auction.ach_bordereau,0,Customer Reference,
+xsl,report.auction.ach_bordereau,0,Ref,
+xsl,report.auction.ach_bordereau,0,Description,
+xsl,report.auction.ach_bordereau,0,Paid,
+xsl,report.auction.ach_bordereau,0,Adj.(EUR),
+xsl,report.auction.ach_bordereau,0,Subtotal:,
+xsl,report.auction.ach_bordereau,0,Total:,
+xsl,report.auction.vnd_bordereau,0,Document,
+xsl,report.auction.vnd_bordereau,0,Inventory,
+xsl,report.auction.vnd_bordereau,0,Bank Account,
+xsl,report.auction.vnd_bordereau,0,Customer Contact,
+xsl,report.auction.vnd_bordereau,0,Ref,
+xsl,report.auction.vnd_bordereau,0,Num,
+xsl,report.auction.vnd_bordereau,0,Description,
+xsl,report.auction.vnd_bordereau,0,Adj.(EUR),
+xsl,report.auction.vnd_bordereau,0,Subtotal:,
+xsl,report.auction.vnd_bordereau,0,Total:,
+xsl,report.auction.results,0,Ref,
+xsl,report.auction.results,0,Adj.,
+xsl,report.auction.catalog,0,Ref,
+xsl,report.auction.catalog,0,Description,
+xsl,report.auction.catalog,0,Estimate,
+xsl,report.auction.buyer.list,0,Buyer,
+xsl,report.auction.buyer.list,0,Adj.,
+xsl,report.auction.buyer.list,0,To pay,
+xsl,report.auction.buyer.list,0,Already paid,
+xsl,report.auction.buyer.list,0,Total:,
+xsl,report.auction.seller.list,0,Inv.,
+xsl,report.auction.seller.list,0,Seller,
+xsl,report.auction.seller.list,0,#,
+xsl,report.auction.seller.list,0,Adj.,
+xsl,report.auction.seller.list,0,To pay,
+xsl,report.auction.seller.list,0,Total:,
+xsl,report.auction.lots.bids.phone,0,Ref.,
+xsl,report.auction.lots.bids.phone,0,Description,
+xsl,report.auction.lots.bids.phone,0,Est.,
+xsl,report.auction.lots.bids.phone,0,Limit,
+xsl,report.auction.lots.bids.phone,0,Orders,
+xsl,report.auction.lots.bids.phone,0,", TEL:",
+xsl,report.auction.lots.deposit,0,"Madame, Monsieur,",
+xsl,report.auction.lots.deposit,0,Veuillez trouver - ci-dessous - la liste des articles que vous avez déposés pour la vente publique du,
+xsl,report.auction.lots.deposit,0,.,
+xsl,report.auction.lots.deposit,0,"En restant à votre disposition, je vous prie d'agréer, Madame, Monsieur, l'assurance de mes sentiments distingués.",
+xsl,report.auction.lots.deposit,0,VAT,
+xsl,report.auction.lots.deposit,0,Number,
+xsl,report.auction.lots.deposit,0,Description,
+xsl,report.auction.lots.deposit,0,Limit,
+xsl,stock.packing.list,0,PICKINGLIST,SZÁLLÍTMÁNY
+xsl,stock.packing.list,0,Here is the picking list of this lot. Generated by Tiny ERP.,
+xsl,stock.packing.list,0,Shipping Address:,Szállítási cím:
+xsl,stock.packing.list,0,Recipient,Címzett
+xsl,stock.packing.list,0,Concerns:,
+xsl,stock.packing.list,0,Id Client,Ügyfélazonosító
+xsl,stock.packing.list,0,Id Shipping,Szállítmány azonosító
+xsl,stock.packing.list,0,Packing Date,Csomagolás dátuma
+xsl,stock.packing.list,0,Expedition Date,
+xsl,stock.packing.list,0,Product Ref,
+xsl,stock.packing.list,0,Tracking Nb,
+xsl,stock.packing.list,0,Qty,Menny
+xsl,stock.packing.list,0,Description,Leírás
+xsl,stock.shipping.list,0,Shipping Address:,Szállítási cím
+xsl,stock.shipping.list,0,Recipient,Címzett
+xsl,stock.shipping.list,0,Concerns:,
+xsl,stock.shipping.list,0,Id Client,Ügyfélazonosító
+xsl,stock.shipping.list,0,Id Shipping,Szállítmány azonosító
+xsl,stock.shipping.list,0,Warehouse,
+xsl,stock.shipping.list,0,Creation Date,
+xsl,stock.shipping.list,0,Promised Date,
+xsl,stock.shipping.list,0,Product Ref,
+xsl,stock.shipping.list,0,Tracking Nb,
+xsl,stock.shipping.list,0,Qty,
+xsl,stock.shipping.list,0,Description,
+xsl,stock.lot.overview,0,Lot:,Raktár:
+xsl,stock.lot.overview,0,Product,Termék
+xsl,stock.lot.overview,0,Unit Price,Egységár
+xsl,stock.lot.overview,0,Amount,Mennyiség
+xsl,stock.lot.overview,0,Value,Érték
+xsl,purchase.order,0,PURCHASE ORDER,
+xsl,purchase.order,0,Order ref,
+xsl,purchase.order,0,"Dear supplier,",
+xsl,purchase.order,0,"Here is the detail of your order """,
+xsl,purchase.order,0,""", with the reference """,
+xsl,purchase.order,0,""", ordered the",
+xsl,purchase.order,0,. 			Thanks to confirm good reception of the following and contact us in case of any trouble. This order should 			be delivered for the,
+xsl,purchase.order,0,.,
+xsl,purchase.order,0,Status:,Státusz:
+xsl,purchase.order,0,draft,piszkozat
+xsl,purchase.order,0,waiting supplier confirmation,beszállítói visszaigazolásra vár
+xsl,purchase.order,0,confirmed by the supplier,beszállító által visszaigazolva
+xsl,purchase.order,0,exception in shipping,
+xsl,purchase.order,0,exception in invoice,
+xsl,purchase.order,0,done,kész
+xsl,purchase.order,0,cancelled,megszakított
+xsl,purchase.order,0,Description,Leírás
+xsl,purchase.order,0,Taxes,Adók
+xsl,purchase.order,0,Date,Dátum
+xsl,purchase.order,0,Qty,Menny.
+xsl,purchase.order,0,Unit Price,Egységár
+xsl,purchase.order,0,Net Price,Nettó ár
+xsl,purchase.order,0,TOTAL:,ÖSSZESEN:
+xsl,sale.order,0,SALE ORDER,
+xsl,sale.order,0,"Dear customer,",
+xsl,sale.order,0,"Here is the detail of your order """,
+xsl,sale.order,0,""", with the reference """,
+xsl,sale.order,0,""", ordered the",
+xsl,sale.order,0,. 			Thanks to confirm good reception of the following and contact us in case of any trouble. This order should 			be delivered for the,
+xsl,sale.order,0,.,
+xsl,sale.order,0,Status:,Státusz:
+xsl,sale.order,0,draft,piszkozat
+xsl,sale.order,0,In progress,Folyamatban
+xsl,sale.order,0,exception in shipping,
+xsl,sale.order,0,exception in invoice,
+xsl,sale.order,0,done,kész
+xsl,sale.order,0,cancelled,megszakítva
+xsl,sale.order,0,Description,Leírás
+xsl,sale.order,0,Taxes,Adók
+xsl,sale.order,0,Date,Dátum
+xsl,sale.order,0,Qty,Menny
+xsl,sale.order,0,Unit Price,
+xsl,sale.order,0,Net Price,
+xsl,sale.order,0,TOTAL:,
+view,auction.lots,0,Catalog,Katalógus
+view,auction.lots,0,Ref,Ref
+view,res.partner,0,Partners,Partnerek
+view,res.lang,0,Language,Nyelv
+view,res.lang,0,Name,Név
+view,res.lang,0,Code,Kód
+view,ir.ui.menu,0,Menu,Menü
+view,ir.ui.menu,0,Names,Nevek
+view,res.users,0,Users,Felhasználók
+view,res.users,0,Users,Felhasználók
+view,ir.ui.view,0,User Interface - Views,Felhasználói felület - Nézetek
+view,ir.attachment.view,0,Attachments,Mellékletek
+view,ir.report.custom.fields,0,Report Fields,Jelentés mezők
+view,ir.report.custom,0,Custom Report,Egyedi jelentés
+view,ir.translation,0,Translations,Fordítások
+view,ir.translation,0,Translations,Fordítások
+view,res.project,0,Project,Projekt
+view,res.request,0,Requests,Kérések
+view,res.request,0,Description,Leírás
+view,res.request,0,Requests,Kérések
+view,res.request,0,Request Status,Kérés állapota
+view,res.request,0,Status,Státusz
+view,res.request,0,Description,Leírás
+view,res.request,0,Action,Művelet
+view,res.request,0,Process Requests,Kérések feldolgozása
+view,res.request,0,Reply,Válasz
+view,res.request,0,References,Hivatkozások
+view,res.request,0,References,Hivatkozások
+view,res.request,0,Action History,Művelet előzmények
+view,res.request.history,0,Request History,Kérés előzmények
+view,res.request.history,0,Request History,Kérés előzmények
+view,res.country,0,Country,Ország
+view,res.partner.address,0,Partner Contacts,Partner kapcsolattartók
+view,res.partner.address,0,Partner Contacts,Partner kapcsolattartók
+view,res.partner.address,0,Partner Contacts,Partner kapcsolattartók
+view,res.partner,0,Partners,Partnerek
+view,res.partner,0,General,Általános
+view,res.partner,0,General Information,Általános információ
+view,res.partner,0,Categories,Kategóriák
+view,res.partner,0,Extra Info,Extra információ
+view,res.partner,0,Event History,Eseménynapló
+view,res.partner,0,Partners,Partnerek
+view,res.partner.category,0,Partner Categories,Partner kategóriák
+view,res.partner.canal,0,Canal,Csatorna
+view,res.partner.som,0,Partner State of Mind,Partner állapota
+view,res.partner.som,0,Partner State of Mind,Partner állapota
+view,res.partner.event,0,Partner Events,Partner események
+view,res.partner.event,0,General Description,Általános leírás
+view,res.partner.event,0,Description,Leírás
+view,res.partner.event,0,Document Link,Dokumentum hivatkozás
+view,res.partner.event,0,Partner Events,Partner események
+view,account.currency,0,Currency List,Pénznem lista
+view,account.currency,0,Currency,Pénznem
+view,account.account,0,Account Form,Számla űrlap
+view,account.account,0,Account Trees,Számlafa
+view,account.account,0,Names,Nevek
+view,account.account,0,CUR,Pénznem
+view,account.move.line,0,Account Move Line,
+view,account.move.line,0,Account Move Line,
+view,account.move.line,0,Account Move Line (account),
+view,account.move.line,0,Account Move Line,
+view,account.move,0,Account Move,
+view,account.move,0,Account Move,
+view,account.tax,0,Account Tax,
+view,account.tax,0,Compute Code (if type=code),
+view,account.tax,0,Applicable Code (if type=code),
+view,account.invoice.line,0,Invoice Line,Tételsor
+view,account.invoice.line,0,Invoice Line,Tételsor
+view,account.invoice.tax,0,Manual Invoice Taxes,
+view,account.invoice.tax,0,Manual Invoice Taxes,
+view,account.invoice,0,Invoice,Számla
+view,account.invoice,0,Invoice,Számla
+view,account.invoice,0,Invoice,Számla
+view,account.invoice,0,Informations Generales,Általános információ
+view,account.invoice,0,References Clients,Ügyfél hivatkozások
+view,account.invoice,0,Accounting,Elszámolás
+view,account.invoice,0,States,Állapotok
+view,account.invoice,0,Create PRO-FORMA,PRO-FORMA számla készítése
+view,account.invoice,0,Create Invoice,Számla készítése
+view,account.invoice,0,Cancel Invoice,Számla megszakítása
+view,account.invoice,0,Set to Draft,Piszkozat
+view,account.invoice,0,Invoice Lines,Tételsorok
+view,account.invoice,0,Tax Lines,Adóösszesítő
+view,account.invoice,0,Account Transactions,Számla mozgások
+view,account.transfer,0,Transfers,Mozgások
+view,account.transfer,0,Transfers,Mozgások
+view,account.transfer,0,Confirm Payment,Fizetés elfogadása
+view,account.transfer,0,Cancel Payment,Fizetés elutasítása
+view,account.transfer,0,Related Invoices,Kapcsolódó számlák
+view,account.transfer,0,Adjustement and corrections,
+view,auction.artists,0,Artists,
+view,auction.artists,0,Artistes,
+view,auction.dates,0,Auction Dates,
+view,auction.dates,0,Auction 1,
+view,auction.dates,0,Auction 2,
+view,auction.dates,0,Names,
+view,auction.dates,0,Auctions,
+view,auction.dates,0,General,
+view,auction.dates,0,Dates,
+view,auction.dates,0,Commissions,
+view,auction.dates,0,Accounting,
+view,auction.dates,0,State,
+view,auction.dates,0,Close + Create all invoices,
+view,auction.dates,0,Results,
+view,auction.lots,0,Auction Objects,
+view,auction.lots,0,Catalog,
+view,auction.lots,0,Catalog,
+view,auction.lots,0,General Informations,
+view,auction.lots,0,Object,
+view,auction.lots,0,relieur,
+view,auction.lots,0,Results,
+view,auction.lots,0,State,
+view,auction.lots,0,Partner Informations,
+view,auction.lots,0,Seller,
+view,auction.lots,0,Buyer,
+view,auction.lots,0,Auction,
+view,auction.deposit,0,Deposit Border,
+view,auction.deposit,0,Deposit Border Form,
+view,auction.bid_line,0,Bids,
+view,auction.bid_line,0,ref,
+view,auction.bid_line,0,Bids,
+view,auction.bid_line,0,Bids,
+view,auction.bid_line,0,Bids,
+view,auction.bid,0,Bids,
+view,auction.bid,0,Bids,
+view,auction.bid,0,General Info,
+view,auction.bid,0,Bids,
+view,campaign.campaign,0,Campaigns,Kampányok
+view,campaign.campaign,0,Campaign Definition,Kampány definicíó
+view,campaign.step,0,Campaign Steps,Kampány lépések
+view,campaign.step,0,Marketing Steps,Marketing lépések
+view,campaign.step,0,Fiche Prospect,
+view,campaign.partner,0,Marketing::Prospects,Prospektusok
+view,campaign.partner,0,Main Information,Legfontosabb információ
+view,campaign.partner,0,Prospect Information,Prospektus információ
+view,campaign.partner,0,Step Information,Lépés információ
+view,campaign.partner,0,Recall Later,Később visszahívni
+view,campaign.partner,0,Stop Campaign,Kampány leállítása
+view,campaign.partner,0,Continue Campaign,Kampány folytatása
+view,campaign.partner,0,History,Előzmények
+view,campaign.partner.history,0,Marketing::Prospects::History,
+view,product.product,0,Products,Termékek
+view,product.product,0,Product Variant,Termékváltozat 
+view,product.product,0,Description,Leírás
+view,product.product,0,Variants Prices,Változatok árai
+view,product.template,0,Product Template,Termék sablon
+view,product.product,0,Product,Termék
+view,product.product,0,Description,Leírás
+view,product.product,0,Prices,Árak
+view,product.product,0,Variants,Változatok
+view,product.product,0,Taxes,Adók
+view,product.category,0,Products Categories,Termék kategóriák
+view,product.category,0,Names,Nevek
+view,product.pricelist.version,0,Pricelist Version,
+view,product.pricelist.version,0,Pricelist Items,
+view,product.pricelist.item,0,Products Listprices Items,
+view,product.pricelist.item,0,Products Listprices Items,
+view,product.pricelist.item,0,List prices,
+view,product.pricelist.item,0,New List Price =,
+view,product.pricelist.item,0, * ( 1 - ,
+view,product.pricelist.item,0, ) + ,
+view,product.pricelist.item,0,Rounding Method,
+view,product.pricelist.item,0,Min. Margin,
+view,product.pricelist.item,0,Max. Margin,
+view,product.pricelist.item,0,Standard prices,
+view,product.pricelist.item,0,New Standard Price =,
+view,product.pricelist.item,0, * ( 1 - ,
+view,product.pricelist.item,0, ) + ,
+view,product.pricelist.item,0,Rounding Method,
+view,product.pricelist.item,0,Min. Margin,
+view,product.pricelist.item,0,Max. Margin,
+view,product.pricelist.item,0,Limit prices,
+view,product.pricelist.item,0,New Limit Price =,
+view,product.pricelist.item,0, * ( 1 - ,
+view,product.pricelist.item,0, ) + ,
+view,product.pricelist.item,0,Rounding Method,Kerekítési metódus
+view,product.pricelist.item,0,Min. Margin,Minimum margó
+view,product.pricelist.item,0,Max. Margin,Maximum margó
+view,product.pricelist,0,Products Price List,
+view,product.pricelist,0,Procelist Name,
+view,res.partner.events,0,Partner Events,Partner események
+view,res.partner.events,0,General Description,Általános leírás
+view,crm.case.categ,0,Case Category,Eset kategória
+view,crm.case.history,0,Case History,Eset előzmények
+view,crm.case.history,0,Cases,Esetek
+view,crm.case.history,0,Case Description,Esetleírás
+view,crm.case,0,Cases,Esetek
+view,crm.case,0,Cases,Esetek
+view,crm.case,0,General Information,Általános információ
+view,crm.case,0,General Description,Általános leírás
+view,crm.case,0,Next Action,
+view,crm.case,0,Process Action,
+view,crm.case,0,Financial,
+view,crm.case,0,State,
+view,crm.case,0,Close Case,
+view,crm.case,0,Open,
+view,crm.case,0,Reset to Draft,
+view,crm.case,0,Requeue Case,
+view,crm.case,0,Request History,
+view,crm.segmentation.line,0,Partner Segmentation Lines,
+view,crm.segmentation.line,0,Partner Segmentation Lines,
+view,crm.segmentation,0,Partner Segmentation,
+view,crm.segmentation,0,Segmentation Parameters,
+view,crm.segmentation,0,Segmentation Description,
+view,crm.segmentation,0,Segmentation Test,
+view,crm.segmentation,0,Compute Segmentation,
+view,crm.segmentation,0,Stop Process,
+view,crm.segmentation,0,Continue Process,
+view,crm.segmentation,0,Computation Parameters,
+view,crm.segmentation,0,State of Mind Computation,
+view,crm.segmentation,0,Partner Segmentations,
+view,stock.lot.inventory.line,0,Stock Inventory Lines,
+view,stock.lot.inventory.line,0,Stock Inventory Lines,
+view,stock.lot.inventory,0,Lot Inventory,Leltár
+view,stock.lot.inventory,0,General Informations,
+view,stock.lot.inventory,0,Items,
+view,stock.lot.inventory,0,Confirm Inventory,
+view,stock.lot.inventory,0,Posted Inventory,
+view,stock.lot.inventory,0,Items,Elemek
+view,stock.lot,0,Stock Lot,Raktár
+view,stock.lot,0,General Informations,Általános információ
+view,stock.lot,0,Content,Tartalom
+view,stock.lot,0,History,Előzmények
+view,stock.lot.line,0,Stock Lots Lines,
+view,stock.lot.line,0,Stock Lots Lines,
+view,stock.lot.line,0,Stock Lots Lines,
+view,stock.lot.line.view,0,Stock Lots View,
+view,stock.location,0,Stock Location,Raktárhelyiség
+view,stock.location,0,General Informations,Általános információ
+view,stock.location,0,Products,Termékek
+view,stock.location,0,Stock Location Tree,Raktárszerveződés (fa nézet)
+view,stock.warehouse,0,Stock Warehouse,Raktárház
+view,stock.packing.line,0,Packing Lines,Csomagolósorok
+view,stock.packing.line,0,Packing Lines Tree,Csomagolósorok fája
+view,stock.packing,0,Szállítmányok,
+view,stock.packing,0,Szállítmányok,
+view,stock.packing,0,Lines,Sorok
+view,stock.packing,0,Move,Mozgás
+view,stock.packing,0,Confirm Packing,Csomagolás visszaigazolása
+view,stock.packing,0,Packing Done,Csomagolva
+view,stock.packing,0,Cancel Packing,Csomagolás visszavonása
+view,stock.packing,0,Reset to Draft,Visszaalakítás piszkozattá
+view,stock.packing,0,Cancel Packing,Csomagolás visszavonása
+view,stock.move,0,Stock Move,Raktári mozgás
+view,stock.move,0,Stock Move,Raktári mozgás
+view,stock.move,0,State,Állapot
+view,stock.move,0,Move Lot,Raktár mozgatása
+view,stock.shipping,0,Delivery Order,Szállítási rendelés
+view,stock.shipping,0,Delivery Order,Szállítási rendelés
+view,stock.shipping,0,General Informations,Általános információ
+view,stock.shipping,0,Lines,Sorok
+view,stock.shipping,0,Actions,Műveletek
+view,stock.shipping,0,Proces Shipping,Szállítás megkezdése
+view,stock.shipping,0,Check Packing,Csomagolás ellenőrzése
+view,stock.shipping,0,Cancel Shipping,Szállítás megszakítása
+view,stock.shipping,0,Exception Corrected,
+view,stock.shipping,0,Packings,Csomagolások
+view,stock.shipping,0,Warehouse,Raktárépület
+view,stock.shipping,0,Warehouse,Raktárépület
+view,stock.shipping,0,Lots,Raktárak
+view,stock.shipping.line,0,Shipping Line,Szállítási sor
+view,stock.shipping.line,0,Shipping Line,Szállítási sor
+view,purchase.order,0,Purchase Order,Megrendelés
+view,purchase.order,0,Purchase Order,Megrendelés
+view,purchase.order,0,Order Lines,
+view,purchase.order,0,Document State,Dokumentum állapota
+view,purchase.order,0,Confirm Purchase Order,Megrendelés elindítása
+view,purchase.order,0,Approved by Retailer,
+view,purchase.order,0,Cancel Purchase Order,Megrendelés megszakítása
+view,purchase.order,0,Cancel Purchase Order,Megrendelés megszakítása
+view,purchase.order,0,Shipping Done,Leszállítva
+view,purchase.order,0,Invoice Done,Számlázva
+view,purchase.order,0,Notes,Jegyzetek
+view,purchase.order,0,Purchase Shippings,Megrendelések szállításai
+view,purchase.order,0,Purchase Order,Megrendelések
+view,purchase.order.line,0,Purchase Order Line,
+view,purchase.order.line,0,Order Line,
+view,purchase.order.line,0,Notes,Jegyzetek
+view,purchase.order.line,0,Purchase Order Line,
+view,sale.shop,0,Sale Shop,
+view,sale.shop,0,Accounting,Elszámolás
+view,sale.shop,0,Stock,Készlet
+view,sale.order,0,Sales Orders,Ajánlatok
+view,sale.order,0,Sale Order,Ajánlat
+view,sale.order,0,Order Line,
+view,sale.order,0,Compute,Számítás
+view,sale.order,0,Confirm Order,Rendelés visszaigazolása
+view,sale.order,0,Cancel Order,Rendelés megszakítása
+view,sale.order,0,Cancel Order,Rendelés megszakítása
+view,sale.order,0,Recreate Invoice,Számla újrakészítése
+view,sale.order,0,Invoice Corrected,
+view,sale.order,0,Cancel Order,Rendelés megszakítása
+view,sale.order,0,Recreate Delivery,
+view,sale.order,0,Delivery Corrected,
+view,sale.order,0,Set to Draft,Piszkozat
+view,sale.order,0,Create Invoice,Számla készítése
+view,sale.order,0,Payment,Fizetési mód
+view,sale.order,0,Notes,Jegyzetek
+view,sale.order,0,Links,
+view,sale.order,0,Sale Order POS,
+view,sale.order,0,Order Line,
+view,sale.order,0,Direct Sale,Direkt eladás
+view,sale.order,0,Cancel Sale,Eladás megszakítása
+view,sale.order,0,Notes,Jegyzetek
+view,sale.order,0,Advanced,
+view,sale.order,0,Shop,Bolt
+view,sale.order,0,Order type,Rendelés típusa
+view,sale.order,0,Partner,Partner
+view,sale.order,0,Links,Hivatkozások
+view,sale.order.line,0,Sale Order Line,
+view,sale.order.line,0,Order Lines,
+view,sale.order.line,0,Notes,Jegyzetek
+view,sale.order.line,0,Sale Order Line,
