@@ -105,7 +105,7 @@ class report_custom(report_int):
 #TODO:
 #-group by "categorie de probabilites ds graphe du haut"
 #-echelle variable
-		
+
 		pdf_string = StringIO.StringIO()
 		can = canvas.init(fname=pdf_string, format='pdf')
 		
@@ -114,15 +114,16 @@ class report_custom(report_int):
 		xaxis = axis.X(label=None, format="%d%%", tic_interval=20)
 		yaxis = axis.Y()
 
-		ar = area.T(size = (300,200),
-					y_grid_interval = 10000,
-					y_grid_style=None,
-					x_range = (0,100),
-					y_range = (minbenef, maxbenef),
-        		    x_axis = xaxis,
-		            y_axis = None,
-		            legend = legend.T()
-					)
+		ar = area.T(
+			size = (300,200),
+			y_grid_interval = 10000,
+			y_grid_style=None,
+			x_range = (0,100),
+			y_range = (minbenef, maxbenef),
+			x_axis = xaxis,
+			y_axis = None,
+			legend = legend.T()
+		)
 
 		for k, d in responsible_data.iteritems():
 			fill = fill_style.Plain(bgcolor=color.T(r=random.random(), g=random.random(), b=random.random()))
@@ -135,7 +136,7 @@ class report_custom(report_int):
 		ar = area.T(legend = legend.T(),
 					size = (200,100),
 					loc=(100,250),
-		            x_grid_interval = lambda min, max: [40,60,80,100], 
+					x_grid_interval = lambda min, max: [40,60,80,100], 
 					x_grid_style=line_style.gray70_dash1,
 					x_range = (33, 100),
 					x_axis = axis.X(label=None, minor_tic_interval=lambda min,max: [50, 70, 90], format=lambda x: ""),

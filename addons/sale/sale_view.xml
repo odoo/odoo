@@ -72,7 +72,7 @@
 						<field name="pricelist_id"  domain="[('type','=','sale')]"/>
 						<field name="project_id" select="1"/>
 						<newline/>
-						<field name="order_line" widget="one2many_list" colspan="4" nolabel="1">
+						<field name="order_line" widget="one2many_list" colspan="4" nolabel="1" mode="tree,graph">
 			<form string="Sale Order Lines">
 				<notebook>
 				<page string="Order Line">
@@ -324,6 +324,19 @@
 		<field name="view_id" ref="view_order_pos_form"/>
 	</record>
 	<!-- <menuitem name="Sales Management/Order POS" action="action_order_pos_form"/> -->
+
+	<record model="ir.ui.view" id="view_order_line_graph">
+		<field name="name">sale.order.line.graph</field>
+		<field name="model">sale.order.line</field>
+		<field name="type">graph</field>
+		<field name="arch" type="xml">
+			<graph string="Sales Order Lines">
+				<field name="product_id"/>
+				<field name="price_unit"/>
+			</graph>
+		</field>
+	</record>
+
 
 	<record model="ir.ui.view" id="view_order_line_tree">
 		<field name="name">sale.order.line.tree</field>
