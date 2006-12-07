@@ -130,8 +130,7 @@ CREATE TABLE ir_ui_view (
 	arch text NOT NULL,
 	field_parent varchar(64),
 	priority integer DEFAULT 5 NOT NULL,
-	primary key(id),
-	CONSTRAINT ir_ui_view_type CHECK (((("type")::text = ('form'::varchar)::text) OR (("type")::text = ('tree'::varchar)::text)))
+	primary key(id)
 );
 
 CREATE TABLE ir_ui_menu (
