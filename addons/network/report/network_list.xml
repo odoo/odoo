@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<networks>
+	<network type="fields" name="id">
+		<network-name type="field" name="name" />
+		<network-range type="field" name="range" />
+		<partner type="zoom" name="contact_id">
+			<name type="field" name="name" />
+			<address type="zoom" name="address">
+				<name type="field" name="name" />
+				<street type="field" name="street" />
+				<postcode type="field" name="zip" />
+				<city type="field" name="city" />
+				<country type="field" name="country_id.name" />
+			</address>
+		</partner>
+		<onsite type="zoom" name="user_id">
+			<name type="field" name="name" />
+		</onsite>
+	</network>
+</networks>
+

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<terp>
+<data>
+
+	<record model="ir.ui.view" id="account_tax_view_price">
+		<field name="name">account.tax.exlcuded.view.form</field>
+		<field name="type">form</field>
+		<field name="model">account.tax</field>
+		<field name="inherit_id" ref="account.view_tax_form" />
+		<field name="arch" type="xml">
+			<field name="python_compute" position="after">
+				<field name="python_compute_inv" colspan="4" nolabel="1"/>
+				<separator string="Compute Code for Taxes included prices" colspan="4"/>
+			</field>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="account_invoice_view_price">
+		<field name="name">account.invoice.vat.exlcuded.view.form</field>
+		<field name="type">form</field>
+		<field name="model">account.invoice</field>
+		<field name="inherit_id" ref="account.invoice_form" />
+		<field name="arch" type="xml">
+			<field name="journal_id" position="after">
+				<field name="price_type"/>
+			</field>
+		</field>
+	</record>
+
+</data>
+</terp>
+

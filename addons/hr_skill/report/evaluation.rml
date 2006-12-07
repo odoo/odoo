@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+<document filename="test.pdf">
+  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+    <pageTemplate id="first">
+      <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
+    </pageTemplate>
+  </template>
+  <stylesheet>
+    <blockTableStyle id="Standard_Outline">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Tableau2">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="GRID" colorName="black"/>
+      <blockBackground colorName="#c0c0c0" start="0,0" stop="0,0"/>
+      <blockBackground colorName="#c0c0c0" start="1,0" stop="1,0"/>
+      <blockBackground colorName="#c0c0c0" start="2,0" stop="2,0"/>
+      <blockBackground colorName="#c0c0c0" start="0,1" stop="0,1"/>
+      <blockBackground colorName="#c0c0c0" start="1,1" stop="1,1"/>
+      <blockBackground colorName="#c0c0c0" start="2,1" stop="2,1"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table1">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="GRID" colorName="black"/>
+      <blockBackground colorName="#c0c0c0" start="0,0" stop="0,0"/>
+      <blockBackground colorName="#c0c0c0" start="1,0" stop="1,0"/>
+      <blockBackground colorName="#c0c0c0" start="2,0" stop="2,0"/>
+      <blockBackground colorName="#c0c0c0" start="0,1" stop="0,1"/>
+      <blockBackground colorName="#c0c0c0" start="1,1" stop="1,1"/>
+      <blockBackground colorName="#c0c0c0" start="2,1" stop="2,1"/>
+    </blockTableStyle>
+    <initialize>
+      <paraStyle name="all" alignment="justify"/>
+    </initialize>
+    <paraStyle name="P1" fontName="Helvetica-Bold" fontSize="13.0" leading="16" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="P2" fontName="Times-Roman"/>
+    <paraStyle name="P3" fontName="Times-Roman" alignment="CENTER"/>
+    <paraStyle name="P4" fontName="Times-Roman" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P5" fontName="Times-Roman" alignment="CENTER"/>
+    <paraStyle name="Standard" fontName="Times-Roman"/>
+    <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="Heading 1" fontName="Helvetica-Bold" fontSize="115%" leading="NaN" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="Heading 2" fontName="Helvetica-BoldOblique" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="Heading 3" fontName="Helvetica-Bold" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="List" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Table Contents" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Table Heading" fontName="Times-Roman" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Caption" fontName="Times-Roman" fontSize="10.0" leading="13" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="Index" fontName="Times-Roman"/>
+    <paraStyle name="Horizontal Line" fontName="Times-Roman" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="14.0"/>
+  </stylesheet>
+  <story>
+    <para style="Standard">
+      <font color="white"> </font>
+    </para>
+    <para style="Standard">
+      <font color="white"> </font>
+    </para>
+    <para style="Standard">
+      <font color="white"> </font>
+    </para>
+    <para style="Heading 1">Evaluation Report</para>
+    <para style="P1">Evaluated Peoples :</para>
+    <section>
+      <para style="Standard">
+        <font face="Times-Roman">[[ repeatIn(objects, 'o') ]] </font>
+      </para>
+      <para style="P2"><font face="Times-Roman">  •  </font>[[o.interviewee_name ]]</para>
+      <para style="Standard">
+        <font color="white"> </font>
+      </para>
+    </section>
+    <para style="Standard">
+      <font color="white"> </font>
+    </para>
+    <para style="Standard">
+      <font color="white"> </font>
+    </para>
+    <para style="Standard">
+      <font color="white"> </font>
+    </para>
+    <section>
+      <para style="Standard">
+        <font face="Times-Roman">[[ repeatIn(objects, 'o') ]]</font>
+      </para>
+      <para style="P3">
+        <font face="Times-Roman">Evaluated people : [[ o.interviewee_name ]]</font>
+      </para>
+      <blockTable colWidths="161.0,161.0,161.0" repeatRows="1" style="Tableau2">
+        <tr>
+          <td>
+            <para style="Table Heading">
+              <font color="white"> </font>
+            </para>
+          </td>
+          <td>
+            <para style="Table Heading">Experiences</para>
+          </td>
+          <td>
+            <para style="Table Heading">
+              <font color="white"> </font>
+            </para>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <para style="Table Heading">Expérience</para>
+          </td>
+          <td>
+            <para style="Table Heading">level</para>
+          </td>
+          <td>
+            <para style="Table Heading">Note</para>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <para style="Table Contents"><font face="Times-Roman" size="10.0">[[repeatIn(o.experience_ids, 'e') ]]</font> [[ e.experience_id.name ]] </para>
+          </td>
+          <td>
+            <para style="Table Contents">[[ e.weight_id.name ]]</para>
+          </td>
+          <td>
+            <para style="Table Contents">[[ e.name ]]</para>
+          </td>
+        </tr>
+      </blockTable>
+      <para style="Standard">
+        <font color="white"> </font>
+      </para>
+      <para style="Standard">
+        <font color="white"> </font>
+      </para>
+      <blockTable colWidths="161.0,161.0,161.0" style="Table1">
+        <tr>
+          <td>
+            <para style="Table Contents">
+              <font color="white"> </font>
+            </para>
+          </td>
+          <td>
+            <para style="P4">Specific skills</para>
+          </td>
+          <td>
+            <para style="Table Contents">
+              <font color="white"> </font>
+            </para>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <para style="P4">Skill</para>
+          </td>
+          <td>
+            <para style="P4">Level</para>
+          </td>
+          <td>
+            <para style="P4">Note</para>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <para style="Table Contents"><font face="Times-Roman" size="10.0">[[repeatIn(o.skill_ids, 's') ]]</font> [[ s.name ]] </para>
+          </td>
+          <td>
+            <para style="Table Contents">[[ s.weight_id.name ]]</para>
+          </td>
+          <td>
+            <para style="Table Contents">[[ s.name ]]</para>
+          </td>
+        </tr>
+      </blockTable>
+      <para style="Standard">
+        <font color="white"> </font>
+      </para>
+      <para style="Standard">
+        <font color="white"> </font>
+      </para>
+      <para style="P5">
+        <font face="Times-Roman"/>
+      </para>
+    </section>
+    <para style="Standard">
+      <font color="white"> </font>
+    </para>
+  </story>
+</document>
+

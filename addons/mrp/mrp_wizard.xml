@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<terp>
+	<data>
+		<record model="ir.actions.wizard" id="wiz_mrp_proc0">
+			<field name="name">Compute all schedulers</field>
+			<field name="wiz_name">mrp.procurement.compute.all</field>
+		</record>
+		<menuitem name="Production/Start all schedulers" action="wiz_mrp_proc0" type="wizard"/>
+
+		<record model="ir.actions.wizard" id="wiz_mrp_proc1">
+			<field name="name">Compute procurement</field>
+			<field name="wiz_name">mrp.procurement.compute</field>
+		</record>
+		<menuitem name="Production/Start all schedulers/Start Procurement Scheduling" action="wiz_mrp_proc1" type="wizard"/>
+
+		<record model="ir.actions.wizard" id="wiz_mrp_proc2">
+			<field name="name">Compute Orderpoint</field>
+			<field name="wiz_name">mrp.procurement.orderpoint.compute</field>
+		</record>
+		<menuitem name="Production/Start all schedulers/Start Order Point Scheduling" action="wiz_mrp_proc2" type="wizard"/>
+
+		<wizard 
+			string="Workcenter load" 
+			model="mrp.workcenter" 
+			name="mrp.workcenter.load" 
+			keyword="client_print_multi" 
+			id="wizard_workcenter_load"/>
+		
+	</data>
+</terp>
+

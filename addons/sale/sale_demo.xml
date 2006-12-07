@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<terp>
+<data noupdate="1">
+
+	<!--
+	Resource: sale.order
+	-->
+	
+	<record model="sale.order" id="order">
+		<field name="shop_id" ref="shop"/>
+		<field name="pricelist_id" search="[]" model="product.pricelist"/>
+		<field name="partner_id" search="[]" model="res.partner"/>
+		<field name="partner_invoice_id" search="[]" model="res.partner.address"/>
+		<field name="partner_shipping_id" search="[]" model="res.partner.address"/>
+		<field name="partner_order_id" search="[]" model="res.partner.address"/>
+	</record>
+	
+	<!--
+	Resource: sale.order.line
+	-->
+	
+	<record model="sale.order.line" id="line">
+		<field name="order_id" ref="order"/>
+		<field name="name">New server config + material</field>
+		<field name="product_id" search="[]" model="product.product"/>
+		<field name="product_uom" search="[]" model="product.uom"/>
+		<field name="price_unit">123</field>
+		<field name="type">make_to_stock</field>
+	</record>
+</data>
+</terp>

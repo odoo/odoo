@@ -1,0 +1,50 @@
+<?xml version="1.0" ?>
+<terp>
+	<data>
+
+		<record model="ir.ui.view" id="view_product_form_expiry">
+			<field name="name">product.normal.form</field>
+			<field name="model">product.product</field>
+			<field name="inherit_id" ref="product.product_normal_form_view" />
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<notebook position="inside">
+					<page string="Manufacturing Data">
+						<separator string="Manufacturing data" colspan="4" />
+						<field name="manufacturer_pname" string="Product name" colspan="4" />
+						<field name="manufacturer" />
+						<field name="manufacturer_pref" string="Product reference"/>
+
+						<separator string="Attributes" colspan="4"/>
+						<field name="attribute_ids" colspan="4" nolabel="1" widget="one2many_list" />
+					</page>
+				</notebook>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="product_electronic_attribute_tree_view">
+			<field name="name">product.electronic.attribute.tree</field>
+			<field name="model">product.electronic.attribute</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Product Template Name">
+					<field name="name"/>
+					<field name="value"/>
+				</tree>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="product_electronic_attribute_form_view">
+			<field name="name">product.electronic.attribute.form</field>
+			<field name="model">product.electronic.attribute</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Product Template Name">
+					<field name="name" select="1"/>
+					<field name="value" select="1"/>
+				</form>
+			</field>
+		</record>
+
+	</data>
+</terp>
+

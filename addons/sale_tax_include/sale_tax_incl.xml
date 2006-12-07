@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<terp>
+<data>
+
+	<record model="ir.ui.view" id="account_tax_view_price">
+		<field name="name">sale.order.exlcuded.view.form</field>
+		<field name="type">form</field>
+		<field name="model">sale.order</field>
+		<field name="inherit_id" ref="sale.view_order_form" />
+		<field name="arch" type="xml">
+			<field name="client_order_ref" position="after">
+				<field name="price_type"/>
+			</field>
+		</field>
+	</record>
+
+</data>
+</terp>
+

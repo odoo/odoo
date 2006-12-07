@@ -1,0 +1,85 @@
+# -*- encoding: utf-8 -*-
+##############################################################################
+#
+# Copyright (c) 2004-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#
+# $Id: account.py 1005 2005-07-25 08:41:42Z nicoe $
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+##############################################################################
+
+import time
+import netsvc
+from osv import fields, osv
+
+class product_category(osv.osv):
+	_inherit = "product.category"
+	_columns = {
+		'property_account_income_categ': fields.property(
+		  'account.account',
+		  type='many2one', 
+		  relation='account.account', 
+		  string="Income Account", 
+		  method=True,
+		  view_load=True,
+		  group_name="Accounting Properties",
+		  help="This account will be used, instead of the default one, to value incoming stock for the current product category"),
+		'property_account_expense_categ': fields.property(
+		  'account.account',
+		  type='many2one', 
+		  relation='account.account', 
+		  string="Expense Account", 
+		  method=True,
+		  view_load=True,
+		  group_name="Accounting Properties",
+		  help="This account will be used, instead of the default one, to value outgoing stock for the current product category"),
+	}
+product_category()
+
+#----------------------------------------------------------
+# Products
+#----------------------------------------------------------
+class product_template(osv.osv):
+	_inherit = "product.template"
+	_columns = {
+		'taxes_id': fields.many2many('account.tax', 'product_taxes_rel', 'prod_id', 'tax_id', 'Product Taxes', domain=[('parent_id','=',False)]),
+		'property_account_income': fields.property(
+		  'account.account',
+		  type='many2one', 
+		  relation='account.account', 
+		  string="Income Account", 
+		  method=True,
+		  view_load=True,
+		  group_name="Accounting Properties",
+		  help="This account will be used, instead of the default one, to value incoming stock for the current product"),
+		'property_account_expense': fields.property(
+		  'account.account',
+		  type='many2one', 
+		  relation='account.account', 
+		  string="Expense Account", 
+		  method=True,
+		  view_load=True,
+		  group_name="Accounting Properties",
+		  help="This account will be used, instead of the default one, to value outgoing stock for the current product"),
+	}
+product_template()

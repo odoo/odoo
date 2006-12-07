@@ -1,0 +1,421 @@
+<?xml version="1.0"?>
+<terp>
+<data>
+	<menuitem name="Sales Management" icon="terp-sale" id="menu_sale_root"/>
+
+	<record model="ir.ui.view" id="view_shop_form">
+		<field name="name">sale.shop</field>
+		<field name="model">sale.shop</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Sale Shop">
+				<field name="name" select="1"/>
+				<newline/>
+				<separator string="Accounting" colspan="4"/>
+				<field name="pricelist_id" domain="[('type','=','sale')]" colspan="4" select="1"/>
+				<field name="project_id"  colspan="4" select="1"/>
+				<field name="payment_default_id" colspan="4"/>
+				<field name="payment_account_id" colspan="4"/>
+				<separator string="Stock" colspan="4"/>
+				<field name="warehouse_id" colspan="4" select="1" required="1"/>
+			</form>
+		</field>
+	</record>
+	<record model="ir.actions.act_window" id="action_shop_form">
+		<field name="name">sale.shop</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">sale.shop</field>
+		<field name="view_type">form</field>
+		<field name="view_id" ref="view_shop_form"/>
+	</record>
+	<menuitem name="Sales Management/Configuration" groups="admin" sequence="1"/>
+	<menuitem name="Sales Management/Configuration/Shop" id="menu_action_shop_form" action="action_shop_form"/>
+
+	<record model="ir.ui.view" id="view_order_tree">
+		<field name="name">sale.order.tree</field>
+		<field name="model">sale.order</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Sales Orders">
+				<field name="date_order"/>
+				<field name="name"/>
+				<field name="partner_id"/>
+				<field name="partner_shipping_id"/>
+				<field name="shipped"/>
+				<field name="invoiced"/>
+				<field name="amount_untaxed"/>
+				<field name="state"/>
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="view_order_form">
+		<field name="name">sale.order.form</field>
+		<field name="model">sale.order</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Sales Order">
+				<notebook>
+					<page string="Sale Order">
+						<field name="name" select="1"/>
+						<group colspan="2" col="4">
+							<field name="shipped" select="1"/>
+							<field name="invoiced" select="1"/>
+						</group>
+						<newline/>
+						<field name="date_order" select="1"/>
+						<field name="shop_id" select="1" on_change="onchange_shop_id(shop_id)"/>
+						<field name="partner_id" select="1" on_change="onchange_partner_id(partner_id)" required="1"/>
+						<field name="partner_order_id" domain="[('partner_id','=',partner_id)]"/>
+						<field name="partner_invoice_id" domain="[('partner_id','=',partner_id)]"/>
+						<field name="partner_shipping_id" domain="[('partner_id','=',partner_id)]"/>
+						<field name="pricelist_id"  domain="[('type','=','sale')]"/>
+						<field name="project_id" select="1"/>
+						<newline/>
+						<field name="order_line" widget="one2many_list" colspan="4" nolabel="1">
+			<form string="Sale Order Lines">
+				<notebook>
+				<page string="Order Line">
+					<separator string="Automatic Declaration" colspan="4"/>
+					<field name="product_uom_qty" on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id)" context="partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom" select="1"/>
+					<field name="product_uom"/>
+					<field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'])" context="partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom" colspan="3" select="1"/>
+
+					<separator string="Manual Description" colspan="4"/>
+					<field name="name" colspan="3" select="1"/>
+					<field name="price_unit" select="1"/>
+					<field name="discount"/>
+					<field name="type"/>
+					<field name="date_planned" select="1"/>
+					<newline/>
+					<field name="tax_id" colspan="3"/>
+					<separator string="States" colspan="4"/>
+					<field name="state" select="1"/>
+					<field name="invoiced" select="1"/>
+				</page><page string="Extra Info">
+					<field name="product_uos_qty" on_change="uos_change(product_uos, product_uos_qty, product_id)"/>
+					<field name="product_uos"  />
+					<field name="product_packaging" />
+					<field name="address_allotment_id" select="1"/>
+					<separator string="Properties" colspan="4"/>
+					<field name="property_ids" colspan="4" nolabel="1"/>
+				</page><page string="Notes">
+					<field name="notes" colspan="4" nolabel="1"/>
+				</page><page string="History">
+					<separator string="Invoice Lines" colspan="4"/>
+					<field name="invoice_lines" colspan="4" nolabel="1"/>
+					<separator string="Inventory Moves" colspan="4"/>
+					<field name="move_ids" colspan="4" nolabel="1"/>
+				</page>
+				</notebook>
+			</form>
+						</field>
+						<newline/>
+						<group colspan="4" col="7">
+							<field name="amount_untaxed"/>
+							<field name="amount_tax"/>
+							<field name="amount_total"/>
+							<button name="button_dummy" string="Compute" states="draft" type="object"/>
+						</group>
+						<group colspan="4" col="13">
+							<field name="state" select="1"/>
+							<button name="order_confirm" string="Confirm Order" states="draft"/>
+							<button name="invoice_recreate" string="Recreate Invoice" states="invoice_except"/>
+							<button name="invoice_corrected" string="Invoice Corrected" states="invoice_except"/>
+							<button name="ship_recreate" string="Recreate Procurement" states="shipping_except"/>
+							<button name="ship_corrected" string="Procurement Corrected" states="shipping_except"/>
+							<button name="manual_invoice" states="manual" string="Create Invoice"/>
+							<button name="ship_cancel" string="Cancel Order" states="shipping_except"/>
+							<button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
+							<button name="action_cancel" string="Cancel Order" states="manual,progress" type="object"/>
+							<button name="cancel" string="Cancel Order" states="draft"/>
+							<button name="invoice_cancel" string="Cancel Order" states="invoice_except"/>
+						</group>
+					</page>
+					<page string="Other data">
+						<field name="incoterm"/>
+						<field name="picking_policy" required="True"/>
+						<field name="user_id"/>
+						<field name="order_policy" />
+						<field name="origin"/>
+						<field name="invoice_quantity"/>
+						<field name="client_order_ref" />
+						<separator string="Notes" colspan="4"/>
+						<field name="note" colspan="4" nolabel="1"/>
+					</page><page string="History">
+						<separator string="Generated Invoices" colspan="4"/>
+						<field name="invoice_ids" colspan="4" nolabel="1"/>
+						<separator string="Generated Pickings" colspan="4"/>
+						<field name="picking_ids" colspan="4" nolabel="1"/>
+					</page>
+				</notebook>
+			</form>
+		</field>
+	</record>
+	<record model="ir.actions.act_window" id="action_order_form">
+		<field name="name">sale.order</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">sale.order</field>
+		<field name="view_type">form</field>
+		<field name="view_id" ref="view_order_form"/>
+	</record>
+	<menuitem name="Sales Management/Sales Order" action="action_order_form" id="menu_sale_order"/>
+
+	<record model="ir.actions.act_window" id="action_order_tree">
+		<field name="name">sale.order</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">sale.order</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[('user_id','=',uid)]</field>
+	</record>
+	<menuitem name="Sales Management/Sales Order/Your Sales Order" id="menu_action_order_tree" action="action_order_tree"/>
+
+	<record model="ir.actions.act_window" id="action_order_tree2">
+		<field name="name">sale.order</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">sale.order</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[('state','=','shipping_except')]</field>
+	</record>
+	<menuitem name="Sales Management/Sales Order/Sales Order in Shipping Exception" id="menu_action_order_tree2" action="action_order_tree2"/>
+
+	<record model="ir.actions.act_window" id="action_order_tree3">
+		<field name="name">sale.order</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">sale.order</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[('state','=','manual')]</field>
+	</record>
+	<menuitem name="Sales Management/Sales Order/Sales Order waiting Invoice" id="menu_action_order_tree3" action="action_order_tree3"/>
+
+	<record model="ir.actions.act_window" id="action_order_tree4">
+		<field name="name">sale.order</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">sale.order</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[('state','=','progress')]</field>
+	</record>
+	<menuitem name="Sales Management/Sales Order/Sales Order in Progress" id="menu_action_order_tree4" action="action_order_tree4"/>
+
+
+	<record model="ir.actions.act_window" id="action_order_tree5">
+		<field name="name">sale.order</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">sale.order</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[('state','=','draft')]</field>
+	</record>
+	<menuitem name="Sales Management/Sales Order/Requests For Quotation" id="menu_action_order_tree5" action="action_order_tree5"/>
+
+	<record model="ir.actions.act_window" id="action_order_tree6">
+		<field name="name">sale.order</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">sale.order</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[('state','=','invoice_except')]</field>
+	</record>
+	<menuitem name="Sales Management/Sales Order/Sales Order in Invoice Exception" id="menu_action_order_tree6" action="action_order_tree6"/>
+
+
+
+	<record model="ir.actions.act_window" id="action_order_tree7">
+		<field name="name">sale.order</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">sale.order</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[('state','=','shipping_except'),('user_id','=',uid)]</field>
+	</record>
+	<menuitem name="Sales Management/Sales Order/Your Sales Order/Sales Order in Shipping Exception" id="menu_action_order_tree7" action="action_order_tree7"/>
+
+	<record model="ir.actions.act_window" id="action_order_tree8">
+		<field name="name">sale.order</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">sale.order</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[('state','=','manual'),('user_id','=',uid)]</field>
+	</record>
+	<menuitem name="Sales Management/Sales Order/Your Sales Order/Sales Order waiting Invoice" id="menu_action_order_tree8" action="action_order_tree8"/>
+
+	<record model="ir.actions.act_window" id="action_order_tree9">
+		<field name="name">sale.order</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">sale.order</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[('state','=','progress'),('user_id','=',uid)]</field>
+	</record>
+	<menuitem name="Sales Management/Sales Order/Your Sales Order/Sales Order in Progress" id="menu_action_order_tree9" action="action_order_tree9"/>
+
+
+	<record model="ir.actions.act_window" id="action_order_tree10">
+		<field name="name">sale.order</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">sale.order</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[('state','=','draft'),('user_id','=',uid)]</field>
+	</record>
+	<menuitem name="Sales Management/Sales Order/Your Sales Order/Your Requests For Quotation" id="menu_action_order_tree10" action="action_order_tree10"/>
+
+
+	<record model="ir.ui.view" id="view_order_pos_form">
+		<field name="name">sale.order.pos</field>
+		<field name="model">sale.order</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Sales Order POS">
+				<notebook>
+					<page string="Order Line">
+						<field name="order_line" widget="one2many_list" colspan="4" nolabel="1"/>
+						<group colspan="4" col="7">
+							<field name="amount_untaxed"/>
+							<field name="amount_tax"/>
+							<field name="amount_total"/>
+							<button name="button_dummy" string="Compute" states="draft" type="object"/>
+						</group>
+						<field name="state" select="1"/>
+						<group colspan="2" col="3">
+							<button name="action_direct_sale" string="Direct Sale" states="draft" type="object"/>
+							<button name="cancel" string="Cancel Sale" states="draft"/>
+						</group>
+					</page>
+					<page string="Notes">
+						<field name="note" colspan="3" nolabel="1"/>
+					</page>
+					<page string="Advanced">
+						<separator string="Shop" colspan="4"/>
+						<field name="name" select="1"/>
+						<field name="shop_id" select="1" on_change="onchange_shop_id(shop_id)"/>
+						<field name="date_order" select="1"/>
+						<group colspan="2" col="4">
+							<field name="shipped" select="1"/>
+							<field name="invoiced" select="1"/>
+						</group>
+						<separator string="Order type" colspan="4"/>
+						<field name="order_policy" />
+						<field name="pricelist_id" />
+						<field name="project_id" select="1"/>
+						<separator string="Partner" colspan="4"/>
+						<field name="partner_id" select="1" on_change="onchange_partner_id(partner_id)"/>
+						<field name="partner_order_id" domain="[('partner_id','=',partner_id)]"/>
+						<field name="partner_invoice_id" domain="[('partner_id','=',partner_id)]"/>
+						<field name="partner_shipping_id" domain="[('partner_id','=',partner_id)]"/>
+						<separator string="Links" colspan="4"/>
+						<field name="invoice_ids" select="1" colspan="4"/>
+						<field name="picking_ids" colspan="4"/>
+					</page>
+				</notebook>
+			</form>
+		</field>
+	</record>
+	<record model="ir.actions.act_window" id="action_order_pos_form">
+		<field name="name">sale.order</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">sale.order</field>
+		<field name="view_type">form</field>
+		<field name="view_id" ref="view_order_pos_form"/>
+	</record>
+	<!-- <menuitem name="Sales Management/Order POS" action="action_order_pos_form"/> -->
+
+	<record model="ir.ui.view" id="view_order_line_tree">
+		<field name="name">sale.order.line.tree</field>
+		<field name="model">sale.order.line</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Sales Order Lines">
+				<field name="name" colspan="3"/>
+				<field name="product_id"/>
+				<field name="product_uom_qty" string="Qty"/>
+				<field name="product_uom" string="UoM"/>
+				<field name="discount"/>
+				<field name="price_unit"/>
+				<field name="date_planned"/>
+				<field name="price_net"/>
+				<field name="price_subtotal"/>
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="view_order_line_form2">
+		<field name="name">sale.order.line.form2</field>
+		<field name="model">sale.order.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Sales Order Lines">
+				<notebook>
+				<page string="Order Lines">
+					<separator string="Automatic Declaration" colspan="4"/>
+					<field name="order_id" select="1"/>
+					<field name="invoiced" select="1"/>
+					<field name="product_uom_qty" readonly="1" select="1"/>
+					<field name="product_uom" readonly="1"/>
+					<field name="product_id" readonly="1" select="1"/>
+
+					<separator string="Manual Designation" colspan="4"/>
+					<field name="name" colspan="3" select="1"/>
+					<field name="price_unit" select="1"/>
+					<field name="discount"/>
+					<field name="type"/>
+					<field name="date_planned" select="1"/>
+					<field name="price_subtotal"/>
+					<field name="tax_id" colspan="3"/>
+					<separator string="States" colspan="4"/>
+					<field name="state" select="1"/>
+					<group colspan="2" col="2">
+						<button string="Done" name="button_done" states="confirmed"/>
+
+					</group>
+				</page><page string="Properties">
+					<field name="property_ids"/>
+				</page><page string="Notes">
+					<field name="notes" colspan="4" nolabel="1"/>
+				</page><page string="Invoice Lines">
+					<field name="invoice_lines" colspan="3"/>
+				</page>
+				</notebook>
+			</form>
+		</field>
+	</record>
+
+
+	<record model="ir.actions.act_window" id="action_order_line_tree1">
+		<field name="name">sale.order.line.tree</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">sale.order.line</field>
+		<field name="view_type">form</field>
+		<field name="view_id" ref="view_order_line_form2"/>
+	</record>
+	<menuitem name="Sales Management/Sales Order Lines" id="menu_action_order_line_tree1" action="action_order_line_tree1"/>
+
+	<record model="ir.actions.act_window" id="action_order_line_tree2">
+		<field name="name">sale.order.line.tree</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">sale.order.line</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[('invoiced','&lt;&gt;', 1)]</field>
+	</record>
+	<menuitem name="Sales Management/Sales Order Lines/Uninvoiced lines" id="menu_action_order_line_tree2" action="action_order_line_tree2"/>
+
+	<record model="ir.actions.act_window" id="action_order_line_tree3">
+		<field name="name">sale.order.line.tree</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">sale.order.line</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[('invoiced','&lt;&gt;', 1),('state','=','done')]</field>
+	</record>
+	<menuitem name="Sales Management/Sales Order Lines/Uninvoiced lines/Uninvoiced lines done" id="menu_action_order_line_tree3" action="action_order_line_tree3"/>
+
+
+
+</data>
+</terp>

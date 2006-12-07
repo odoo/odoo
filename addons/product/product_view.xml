@@ -1,0 +1,393 @@
+<?xml version="1.0"?>
+<terp>
+	<data>
+
+		<menuitem name="Products" icon="terp-product" id="menu_main_product"/>
+		<menuitem name="Products/Configuration" groups="admin" sequence="1"/>
+
+		<record model="ir.ui.view" id="product_product_tree_view">
+			<field name="name">product.product.tree</field>
+			<field name="model">product.product</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Products" colors="red:virtual_available&lt;0;blue:state in ['draft', 'end', 'obsolete']">
+					<field name="default_code"/>
+					<field name="name"/>
+					<field name="variants"/>
+					<field name="qty_available"/>
+					<field name="virtual_available"/>
+					<field name="price"/>
+					<field name="lst_price"/>
+					<field name="standard_price" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="product_normal_form_view">
+			<field name="name">product.normal.form</field>
+			<field name="model">product.product</field>
+			<field name="type">form</field>
+			<field name="priority" eval="7"/>
+			<field name="arch" type="xml">
+				<form string="Product">
+					<notebook>
+						<page string="Information">
+							<field name="name" select="1"/>
+							<field name="default_code" select="1"/>
+							<field name="variants" select="1"/>
+							<field name="ean13" select="1"/>
+							<newline/>
+							<field name="categ_id" select="1"/>
+							<field name="type" select="1"/>
+							<field name="volume"/>
+							<field name="weight"/>
+							<field name="procure_method" select="1"/>
+							<field name="state"/>
+							<field name="uom_id"/>
+							<field name="uom_po_id"/>
+							<field name="product_manager"/>
+						</page>
+						<page string="Procurement (days)">
+							<field name="supply_method" select="1"/>
+							<field name="active" select="1"/>
+							<newline/>
+							<field name="sale_delay" select="1"/>
+							<field name="sale_ok" select="1"/>
+							<field name="produce_delay" select="1"/>
+							<field name="purchase_ok" select="1"/>
+							<field name="warranty"/>
+							<field name="rental" select="1"/>
+							<field name="list_price"/>
+							<field name="standard_price"/>
+							<!-- 
+							<field name="price_margin"/>
+							<field name="price_extra"/>
+							-->
+							<field name="uos_id" />
+							<field name="uos_coeff" />
+							<field name="cost_method"/>
+							<newline />
+							<field name="seller_ids" colspan="4" select="1" nolabel="1" widget="one2many_list"/>
+						</page>
+						<page string="Descriptions">
+							<separator string="Description" />
+							<field name="description" colspan="4" nolabel="1" />
+							<separator string="Sale Description"/>
+							<field name="description_sale" colspan="4" nolabel="1"/>
+							<separator string="Purchase Description"/>
+							<field name="description_purchase" colspan="4" nolabel="1"/>
+						</page>
+						<page string="Packaging">
+							<field name="mes_type" />
+							<field name="tracking" />
+							<field name="packaging" colspan="4" nolabel="1" widget="one2many_list" />
+						</page>
+						<page string="Properties">
+							<properties/>
+						</page>
+					</notebook>
+				</form>
+			</field>
+		</record>
+		<record model="ir.actions.act_window" id="product_normal_action">
+			<field name="name">product.normal.form</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">product.product</field>
+			<field name="view_type">form</field>
+			<field name="view_id" ref="product_normal_form_view"/>
+		</record>
+
+		<menuitem name="Products" groups="admin"/>
+		<menuitem name="Products/Products" action="product_normal_action" id="menu_products"/>
+
+
+		<record model="ir.ui.view" id="product_variant_form_view">
+			<field name="name">product.variant.form</field>
+			<field name="model">product.product</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Product Variant">
+					<separator string="Description" colspan="4"/>
+					<field name="product_tmpl_id" select="1"/>
+					<field name="active" select="1"/>
+					<field name="variants" select="1"/>
+					<field name="default_code" select="1"/>
+					<field name="price_margin" select="1"/>
+					<field name="price_extra" select="1"/>
+				</form>
+			</field>
+		</record>
+		<record model="ir.actions.act_window" id="product_variant_action">
+			<field name="name">product.variant.form</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">product.product</field>
+			<field name="view_type">form</field>
+			<field name="view_id" ref="product_variant_form_view"/>
+		</record>
+		<menuitem name="Products/Products/Variants" id="menu_product_variant_action" action="product_variant_action"/>
+
+		<record model="ir.ui.view" id="product_template_form_view">
+			<field name="name">product.template.product.form</field>
+			<field name="model">product.template</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Product Template">
+					<notebook>
+						<page string="Information">
+							<field name="name" colspan="3" select="1"/>
+							<field name="categ_id" select="1"/>
+							<field name="type" select="1"/>
+							<field name="volume"/>
+							<field name="weight"/>
+							<field name="procure_method"/>
+							<field name="state"/>
+							<field name="uom_id"/>
+							<field name="uom_po_id"/>
+							<field name="description" colspan="3"/>
+							<newline/>
+							<field name="list_price"/>
+							<field name="standard_price"/>
+							<field name="product_manager"/>
+							<field name="cost_method"/>
+							</page><page string="Procurement (days)">
+							<field name="supply_method" select="1"/>
+							<field name="rental" select="1"/>
+							<newline/>
+							<field name="sale_delay" select="1"/>
+							<field name="sale_ok" select="1"/>
+							<field name="purchase_ok" select="1"/>
+							<field name="produce_delay" select="1"/>
+							<field name="warranty"/>
+							<field name="intrastat" />
+							</page><page string="Descriptions">
+							<separator string="Sale Description"/>
+							<field name="description_sale" colspan="4" nolabel="1"/>
+							<separator string="Purchase Description"/>
+							<field name="description_purchase" colspan="4" nolabel="1"/>
+						</page>
+						<page string="Properties">
+							<properties/>
+						</page>
+					</notebook>
+				</form>
+			</field>
+		</record>
+		<record model="ir.actions.act_window" id="product_template_action">
+			<field name="name">product.template.form</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">product.template</field>
+			<field name="view_type">form</field>
+			<field name="view_id" ref="product_template_form_view"/>
+		</record>
+		<menuitem name="Products/Products/Templates" id="menu_product_template_action" action="product_template_action" groups="admin"/>
+
+		<record model="ir.ui.view" id="product_category_form_view">
+			<field name="name">product.category.form</field>
+			<field name="model">product.category</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Products Categories">
+					<field name="name" select="1"/>
+					<field name="parent_id" />
+					<field name="sequence"/>
+					<properties/>
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="product_category_tree_view">
+			<field name="name">product.category.tree</field>
+			<field name="model">product.category</field>
+			<field name="type">tree</field>
+			<field name="field_parent">child_id</field>
+			<field name="arch" type="xml">
+				<tree string="Products Categories">
+					<field name="complete_name"/>
+				</tree>
+			</field>
+		</record>
+		<record model="ir.actions.act_window" id="product_category_action">
+			<field name="name">product.category.form</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">product.category</field>
+			<field name="domain">[('parent_id','=',False)]</field>
+			<field name="view_type">tree</field>
+			<field name="view_id" ref="product_category_tree_view"/>
+		</record>
+		<menuitem name="Products/Products categories" id="menu_product_category_action" action="product_category_action"/>
+
+		<record model="ir.actions.act_window" id="product_category_action_form">
+			<field name="name">product.category.form</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">product.category</field>
+			<field name="view_type">form</field>
+			<field name="view_id" ref="product_category_form_view"/>
+		</record>
+		<menuitem name="Products/Configuration/Products categories" id="menu_product_category_action_form" action="product_category_action_form"/>
+
+
+		<record model="ir.actions.act_window" id="product_normal_action_tree">
+			<field name="name">product.normal.form</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">product.product</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('categ_id','=',active_id)]</field>
+		</record>
+		<record model="ir.values" id="ir_product_category_open">
+			<field name="key2" eval="'tree_but_open'"/>
+			<field name="model" eval="'product.category'"/>
+			<field name="name">Products by Categories</field>
+			<field name="value" eval="'ir.actions.act_window,%d'%product_normal_action_tree"/>
+			<field name="object" eval="True"/>
+		</record>
+
+
+		# -----------------------------------------------------------------
+		# Unit of Measure
+		# -----------------------------------------------------------------
+
+		<record model="ir.ui.view" id="product_uom_tree_view">
+			<field name="name">product.uom.tree</field>
+			<field name="model">product.uom</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Unit of Measure">
+					<field name="name"/>
+					<field name="category_id"/>
+					<field name="factor"/>
+					<field name="rounding"/>
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="product_uom_form_view">
+			<field name="name">product.uom.form</field>
+			<field name="model">product.uom</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Unit of Measure">
+					<field name="name" select="1"/>
+					<newline/>
+					<field name="category_id" select="1"/>
+					<field name="factor" select="1"/>
+					<field name="rounding" />
+					<field name="active"/>
+				</form>
+			</field>
+		</record>
+		<record model="ir.actions.act_window" id="product_uom_form_action">
+			<field name="name">product.uom.form</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">product.uom</field>
+			<field name="view_type">form</field>
+			<field name="view_id" ref="product_uom_form_view"/>
+		</record>
+		<menuitem name="Products/Configuration/Unit of Measure/Unit of Measure" id="menu_product_uom_form_action" action="product_uom_form_action"/>
+
+		<record model="ir.ui.view" id="product_uom_categ_form_view">
+			<field name="name">product.uom.categ.form</field>
+			<field name="model">product.uom.categ</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Unit of Measure categories">
+					<field name="name" colspan="3" select="1"/>
+				</form>
+			</field>
+		</record>
+		<record model="ir.actions.act_window" id="product_uom_categ_form_action">
+			<field name="name">product.uom.categ.form</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">product.uom.categ</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem name="Products/Configuration/Unit of Measure/Unit of Measure categories" id="menu_product_uom_categ_form_action" action="product_uom_categ_form_action"/>
+
+		<record model="ir.ui.view" id="product_ul_form_view">
+			<field name="name">product.ul.form.view</field>
+			<field name="model">product.ul</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Logisitcal Unit">
+					<field name="name" />
+					<field name="type" />
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="product_packaging_tree_view">
+			<field name="name">product.packaging.form.view</field>
+			<field name="model">product.packaging</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Packaging">
+					<field name="name" />
+					<field name="ean" />
+					<field name="ul" />
+					<field name="qty" />
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="product_packaging_form_view">
+			<field name="name">product.packaging.form.view</field>
+			<field name="model">product.packaging</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Packaging">
+					<field name="name" select="1"/>
+					<field name="ean" select="1" />
+					<field name="ul" />
+					<field name="qty" select="1" on_change="on_change_qty(parent.weight, qty)" />
+					<field name="weight_ul" />
+					<separator string="Palletization" colspan="4" />
+					<field name="ul_qty" />
+					<field name="rows" on_change="on_change_rows(parent.weight, ul_qty, rows, qty)" />
+					<field name="weight" />
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="product_supplierinfo_form_view">
+			<field name="name">product.supplierinfo.form.view</field>
+			<field name="model">product.supplierinfo</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Partner Information">
+					<field name="name"/>
+					<field name="sequence"/>
+					<field name="product_name" />
+					<field name="product_code" />
+					<field name="delay"/>
+					<field name="qty"/>
+					<field name="pricelist_ids" widget="one2many_list" colspan="4" nolabel="1">
+						<tree string="Pricelist" editable="bottom">
+							<field name="min_quantity" />
+							<field name="price" />
+						</tree>
+						<form>
+							<field name="min_quantity" />
+							<field name="price" />
+						</form>
+					</field>
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="product_supplierinfo_tree_view">
+			<field name="name">product.supplierinfo.tree.view</field>
+			<field name="model">product.supplierinfo</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Partner Information">
+					<field name="sequence" string="Seq"/>
+					<field name="name" />
+					<field name="delay" />
+					<field name="qty" />
+					<field name="product_code" />
+				</tree>
+			</field>
+		</record>
+
+
+	</data>
+</terp>

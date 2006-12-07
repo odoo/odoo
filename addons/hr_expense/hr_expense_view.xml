@@ -1,0 +1,187 @@
+<?xml version="1.0" ?>
+<terp>
+	<data>
+		<!-- Expenses -->
+		<record model="ir.ui.view" id="view_expenses_line_tree">
+			<field name="name">hr.expense.line.tree</field>
+			<field name="type">tree</field>
+			<field name="model">hr.expense.line</field>
+			<field name="arch" type="xml">
+				<tree string="Expense Lines">
+					<field name="date_value"/>
+					<field name="name"/>
+					<field name="ref"/>
+					<field name="analytic_account"/>
+					<field name="unit_amount"/>
+					<field name="unit_quantity"/>
+					<field name="total_amount"/>
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_expenses_tree">
+			<field name="name">hr.expense.expense.tree</field>
+			<field name="model">hr.expense.expense</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Expenses">
+					<field name="date" />
+					<field name="employee_id" />
+					<field name="name" />
+					<field name="ref" />
+					<field name="amount" />
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="view_expenses_form">
+			<field name="name">hr.expense.form</field>
+			<field name="type">form</field>
+			<field name="model">hr.expense.expense</field>
+			<field name="arch" type="xml">
+				<form string="Expenses Sheet">
+					<notebook>
+					<page string="Expense Sheet">
+						<field name="name" select="1"/>
+						<field name="id" select="1"/>
+						<field name="employee_id" select="1"/>
+						<field name="date" select="1"/>
+						<field name="ref" select="1"/>
+						<field name="amount"/>
+						<separator string="Lines" colspan="4"/>
+						<field name="line_ids" colspan="3">
+							<form string="Expense Lines">
+								<field name="product_id" select="1" on_change="onchange_product_id(product_id, uom_id)"/>
+								<field name="uom_id" select="1" on_change="onchange_product_id(product_id, uom_id)"/>
+								<field name="unit_quantity" select="1"/>
+								<field name="date_value" select="1"/>
+								<field name="name" select="1" colspan="3"/>
+								<field name="unit_amount" select="1"/>
+								<field name="total_amount"/>
+								<field name="ref" select="1"/>
+								<field name="analytic_account"/>
+							</form>
+						</field>
+						<field name="state" select="1"/>
+						<group col="6" colspan="2">
+							<button string="Confirm" name="confirm" states="draft" type="workflow"/>
+							<button string="Cancel" name="cancel" states="cancel" type="workflow"/>
+							<button string="Accept" name="validate" states="confirm" type="workflow"/>
+							<button string="Paid" name="paid" states="accepted" type="workflow"/>
+							<button string="Set to Draft" name="draft" states="confirm" type="workflow"/>
+							<button string="Refuse" name="refuse" states="confirm,draft,accepted" type="workflow"/>
+						</group>
+					</page><page string="Other Info">
+						<separator string="Accounting data" colspan="4"/>
+						<field name="journal_id"/>
+						<field name="account_id"/>
+						<field name="analytic_journal_id"/>
+						<separator string="Validation" colspan="4"/>
+						<field name="date_confirm" select="1"/>
+						<field name="date_valid" select="1"/>
+						<field name="user_valid" select="1"/>
+						<field name="move_id" select="1"/>
+						<separator string="Notes" colspan="4"/>
+						<field name="note" colspan="4" nolabel="1"/>
+					</page>
+					</notebook>
+				</form>
+			</field>
+		</record>
+		<record model="ir.actions.act_window" id="expense_all">
+			<field name="name">hr.expense.expense_all</field>
+			<field name="res_model">hr.expense.expense</field>
+			<field name="view_type">form</field>
+		</record>
+		<menuitem
+			name="Human Resources/Expenses/All Expenses"
+			id="menu_expense_all"
+			action="expense_all"/>
+		<record model="ir.actions.act_window" id="expense_all_draft">
+			<field name="name">hr.expense.expense_all</field>
+			<field name="res_model">hr.expense.expense</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('state','=','draft')]</field>
+		</record>
+		<menuitem
+			name="Human Resources/Expenses/All Expenses/Draft expenses"
+			id="menu_expense_all_draft"
+			action="expense_all_draft"/>
+		<record model="ir.actions.act_window" id="expense_all_confirm">
+			<field name="name">hr.expense.expense.all.confirm</field>
+			<field name="res_model">hr.expense.expense</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('state','=','confirmed')]</field>
+		</record>
+		<menuitem
+			name="Human Resources/Expenses/All Expenses/Expenses waiting validation"
+			id="menu_expense_all_confirm"
+			action="expense_all_confirm"/>
+		<record model="ir.actions.act_window" id="expense_all_valid">
+			<field name="name">hr.expense.expense.all.valid</field>
+			<field name="res_model">hr.expense.expense</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('state','=','valid')]</field>
+		</record>
+		<menuitem
+			name="Human Resources/Expenses/All Expenses/Expenses waiting payment"
+			id="menu_expense_all_valid"
+			action="expense_all_valid"/>
+
+		#
+		# My expenses menu
+		#
+		<record model="ir.actions.act_window" id="expense_my">
+			<field name="name">hr.expense.expense_my</field>
+			<field name="res_model">hr.expense.expense</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form,tree</field>
+			<field name="domain">[('user_id','=',uid)]</field>
+		</record>
+		<menuitem
+			name="Human Resources/Expenses/My Expenses"
+			id="menu_expense_my"
+			action="expense_my"/>
+		<record model="ir.actions.act_window" id="expense_my_draft">
+			<field name="name">hr.expense.expense_my</field>
+			<field name="res_model">hr.expense.expense</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('user_id','=',uid),('state','=','draft')]</field>
+		</record>
+		<menuitem
+			name="Human Resources/Expenses/My Expenses/My draft expenses"
+			id="menu_expense_my_draft"
+			action="expense_my_draft"/>
+		<record model="ir.actions.act_window" id="expense_my_confirm">
+			<field name="name">hr.expense.expense_my</field>
+			<field name="res_model">hr.expense.expense</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('user_id','=',uid),('state','=','confirm')]</field>
+		</record>
+		<menuitem
+			name="Human Resources/Expenses/My Expenses/My expenses waiting validation"
+			id="menu_expense_my_confirm"
+			action="expense_my_confirm"/>
+
+		# ---------------------------------------------------------------
+		# Expense Type
+		# ---------------------------------------------------------------
+
+		<record model="ir.actions.act_window" id="open_expenses_type">
+			<field name="name">hr.expense.type.tree.view</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">product.product</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem
+			name="Human Resources/Configuration/Expenses/Expenses types"
+			id="menu_open_expenses_type"
+			action="open_expenses_type"/>
+	</data>
+</terp>

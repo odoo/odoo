@@ -1,0 +1,65 @@
+##############################################################################
+#
+# Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+##############################################################################
+
+from report.interface import report_rml
+from report.interface import toxml
+
+import pooler
+#FIXME: we should use toxml
+
+class report_custom(report_rml):
+	def create_xml(self, cr, uid, ids, datas, context={}):
+		products = pooler.get_pool(cr.dbname).get('product.product').read(cr, uid, ids, ['name','uom_id'])
+		cr.execute('select id from stock_location where usage=%s', ('internal',))
+		location_ids = [ x[0] for x in cr.fetchall() ]
+		location_ids.sort()
+		locs_info = {}
+		locs_name = dict( pooler.get_pool(cr.dbname).get('stock.location').name_get(cr, uid, location_ids) )
+		for location_id in locs_name.keys():
+			locs_info[location_id] = pooler.get_pool(cr.dbname).get('stock.location')._product_get(cr, uid, location_id, ids)
+
+		xml = '<?xml version="1.0" ?><report>'
+		for p in products:
+			xml += '''<product>
+				<name>%s</name>
+				<unit>%s</unit>
+				<locations>
+			''' % (p['name'],p['uom_id'][1])
+			for loc_id in locs_info.keys():
+				if locs_info[loc_id].get(p['id']):
+					xml += '<location>'
+					xml += '<loc_name>%s</loc_name>' % locs_name[loc_id]
+					xml += '<loc_qty>%s</loc_qty>' % str(locs_info[loc_id].get(p['id']))
+					xml += '</location>'
+			xml += '''
+				</locations>
+			</product>'''
+		xml += '</report>'
+		return self.post_process_xml_data(cr, uid, xml, context)
+
+report_custom('report.stock.product.location', 'stock.location', '', 'addons/stock/report/product_location.xsl')
+

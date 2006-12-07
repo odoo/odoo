@@ -1,0 +1,138 @@
+# -*- encoding: utf-8 -*-
+##############################################################################
+#
+# Copyright (c) 2004-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#
+# $Id: account.py 1005 2005-07-25 08:41:42Z nicoe $
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+##############################################################################
+
+import time
+import netsvc
+from osv import fields, osv
+import ir
+
+class account_invoice(osv.osv):
+	def _amount_untaxed(self, cr, uid, ids, prop, unknow_none,unknow_dict):
+		ti = []
+		for inv in self.read(cr, uid, ids, ['price_type']):
+			if inv['price_type']=='tax_included':
+				ti.append(inv['id'])
+		id_set=",".join(map(str,ids))
+		cr.execute("SELECT s.id,COALESCE(SUM(l.price_unit*l.quantity*(100.0-l.discount))/100.0,0)::decimal(16,2) AS amount FROM account_invoice s LEFT OUTER JOIN account_invoice_line l ON (s.id=l.invoice_id) WHERE s.id IN ("+id_set+") GROUP BY s.id ")
+		res=dict(cr.fetchall())
+		if len(ti):
+			tax = self._amount_tax(cr, uid, ti, prop, unknow_none,unknow_dict)
+			for id in ti:
+				res[id] = res[id] - tax.get(id,0.0)
+		return res
+
+	def _amount_total(self, cr, uid, ids, prop, unknow_none,unknow_dict):
+		ti = []
+		for inv in self.read(cr, uid, ids, ['price_type']):
+			if inv['price_type']=='tax_excluded':
+				ti.append(inv['id'])
+		id_set=",".join(map(str,ids))
+		cr.execute("SELECT s.id,COALESCE(SUM(l.price_unit*l.quantity*(100.0-l.discount))/100.0,0)::decimal(16,2) AS amount FROM account_invoice s LEFT OUTER JOIN account_invoice_line l ON (s.id=l.invoice_id) WHERE s.id IN ("+id_set+") GROUP BY s.id ")
+		res=dict(cr.fetchall())
+		if len(ti):
+			tax = self._amount_tax(cr, uid, ti, prop, unknow_none,unknow_dict)
+			for id in ti:
+				res[id] = res[id] + tax.get(id,0.0)
+		return res
+
+	_inherit = "account.invoice"
+	_columns = {
+		'price_type': fields.selection([
+			('tax_included','Tax included'),
+			('tax_excluded','Tax excluded')
+		], 'Price method', required=True),
+		'amount_untaxed': fields.function(_amount_untaxed, method=True, string='Untaxed Amount'),
+		'amount_total': fields.function(_amount_total, method=True, string='Total'),
+	}
+	_defaults = {
+		'price_type': lambda *a: 'tax_excluded',
+	}
+account_invoice()
+
+class account_invoice_line(osv.osv):
+	_inherit = "account.invoice.line"
+
+	#
+	# Compute with VAT invluded in the price
+	#
+	def move_line_get(self, cr, uid, invoice_id, context={}):
+		inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id)
+		if inv.price_type=='tax_excluded':
+			return super(account_invoice_line,self).move_line_get(cr, uid, invoice_id)
+
+		res = []
+		tax_grouped = {}
+		tax_obj = self.pool.get('account.tax')
+		for line in inv.invoice_line:
+			res.append( {
+				'type':'src', 
+				'name':line.name, 
+				'price_unit':line.price_unit, 
+				'quantity':line.quantity, 
+				'price':round(line.quantity*line.price_unit * (1.0- (line.discount or 0.0)/100.0),2),
+				'account_id':line.account_id.id,
+				'tax_amount': 0.0
+			})
+			for tax2 in line.invoice_line_tax_id:
+				for tax in tax_obj.compute_inv(cr, uid, [tax2.id], line.price_unit, line.quantity, inv.address_invoice_id.id):
+					tax['amount'] = round(tax['amount']*(1.0- (line['discount'] or 0.0)/100.0),2)
+					tax['sequence'] = tax2.sequence
+
+					res[-1]['tax_amount'] += (line['price_unit'] * line['quantity'] * (1.0- (line['discount'] or 0.0)/100.0) * tax2.base_sign)
+					#
+					# Setting the tax account and amount for the line
+					#
+					if inv.type in ('out_invoice','in_refund'):
+						res[-1]['tax_code_id'] = tax2.base_code_id.id
+					else:
+						res[-1]['tax_code_id'] = tax2.ref_base_code_id.id
+
+					if inv.type in ('out_invoice','in_refund'):
+						tax['account_id'] = tax['account_collected_id'] or line.account_id.id
+					else:
+						tax['account_id'] = tax['account_paid_id'] or line.account_id.id
+					#
+					# Revoir la clé: tax.id ?
+					#
+					key = (tax['id'], tax['account_id'])
+
+					res[-1]['price'] -= tax['amount']
+					res[-1]['tax_amount'] -= (tax['amount']* tax2.base_sign)
+					if not key in tax_grouped:
+						tax_grouped[key] = tax
+						tax_grouped[key]['base'] = res[-1]['price']
+					else:
+						tax_grouped[key]['amount'] += tax['amount']
+						tax_grouped[key]['base'] += res[-1]['price']
+		# delete automatic tax lines for this invoice
+		cr.execute("DELETE FROM account_invoice_tax WHERE NOT manual AND invoice_id=%d", (invoice_id,))
+		self.move_line_tax_create(cr, uid, inv, tax_grouped, context)
+		return res
+account_invoice_line()

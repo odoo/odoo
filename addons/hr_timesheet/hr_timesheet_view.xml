@@ -1,0 +1,103 @@
+<?xml version="1.0" ?>
+<terp>
+	<data>
+		<record model="ir.ui.view" id="hr_timesheet_line_tree">
+			<field name="name">hr.analytic.timesheet.tree</field>
+			<field name="model">hr.analytic.timesheet</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Timesheet Line" editable="bottom">
+					<field name="user_id" required="1"/>
+					<field name="date" />
+					<field name="account_id" on_change="on_change_account_id(account_id)" domain="[('type','=','normal')]"/>
+                    <field name="name" />
+					<field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" />
+					<field name="product_id"/>
+					<field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" />
+					<field name="amount" />
+				</tree>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="hr_timesheet_line_form">
+			<field name="name">hr.analytic.timesheet.form</field>
+			<field name="model">hr.analytic.timesheet</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Timesheet Line">
+					<field name="name" colspan="3"/>
+					<field name="user_id" select="1" required="1"/>
+					<field name="date" select="1"/>
+					<field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" />
+					<newline/>
+					<field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
+					<field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" />
+
+					<field name="account_id" on_change="on_change_account_id(account_id)" domain="[('type','=','normal')]" select="1"/>
+					<field name="amount"  select="1"/>
+                    <field name="general_account_id"  select="1"/>
+                    <field name="journal_id"/>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="act_hr_timesheet_line_today_form">
+			<field name="name">hr.analytic.timesheet.form</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">hr.analytic.timesheet</field>
+			<field name="view_type">form</field>
+			<field name="view_id" ref="hr_timesheet_line_form" />
+		</record>
+        <menuitem name="Human Resources/Hours encoding" id="menu_act_hr_timesheet_line_today_form" action="act_hr_timesheet_line_today_form" />
+
+		<record model="ir.actions.act_window" id="act_hr_timesheet_line_me_today_form">
+			<field name="name">hr.analytic.timesheet.form</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">hr.analytic.timesheet</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+            <field name="domain">[('date', '=', time.strftime('%Y-%m-%d')),('user_id','=',uid)]</field>
+		</record>
+		<menuitem name="Human Resources/Hours encoding/For me/My works of the day" id="menu_act_hr_timesheet_line_me_today_form" action="act_hr_timesheet_line_me_today_form" />
+
+		<record model="ir.actions.act_window" id="act_hr_timesheet_line_me_all_form">
+			<field name="name">hr.analytic.timesheet.form</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">hr.analytic.timesheet</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+            <field name="domain">[('user_id','=',uid)]</field>
+		</record>
+		<menuitem name="Human Resources/Hours encoding/For me/All my works" id="menu_act_hr_timesheet_line_me_all_form" action="act_hr_timesheet_line_me_all_form" />
+
+		<record model="ir.actions.act_window" id="act_hr_timesheet_line_evry1_today_form">
+			<field name="name">hr.analytic.timesheet.form</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">hr.analytic.timesheet</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+            <field name="domain">[('date', '=',	time.strftime('%Y-%m-%d'))]</field>
+		</record>
+		<menuitem name="Human Resources/Hours encoding/For everyone/All works of the day" id="menu_act_hr_timesheet_line_evry1_today_form" action="act_hr_timesheet_line_evry1_today_form" />
+		
+		<record model="ir.actions.act_window" id="act_hr_timesheet_line_evry1_all_form">
+			<field name="name">hr.analytic.timesheet.form</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">hr.analytic.timesheet</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem name="Human Resources/Hours encoding/For everyone/All works" id="menu_act_hr_timesheet_line_evry1_all_form" action="act_hr_timesheet_line_evry1_all_form" />
+
+		<record model="ir.ui.view" id="hr_timesheet_employee_extd_form">
+			<field name="name">hr.timesheet.employee.extd_form</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_form" />
+			<field name="arch" type="xml">
+				<field name="notes" position="after">
+					<field name="product_id" />
+					<field name="journal_id" />
+				</field>
+			</field>
+		</record>
+	</data>
+</terp>

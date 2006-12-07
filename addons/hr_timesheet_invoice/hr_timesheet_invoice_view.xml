@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<terp>
+	<data>
+	<record model="ir.ui.view" id="account_analytic_account_form_form">
+		<field name="name">account.analytic.account.invoice.form</field>
+		<field name="model">account.analytic.account</field>
+		<field name="type">form</field>
+		<field name="inherit_id" ref="account.view_account_analytic_account_form" />
+		<field name="arch" type="xml">
+			<field name="quantity_max" position="before">
+				<separator string="Invoicing Data" colspan="4"/>
+				<field name="pricelist_id"/>
+				<field name="to_invoice"/>
+				<field name="amount_max"/>
+				<field name="amount_invoiced"/>
+				<field name="state"/>
+			</field>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="hr_timesheet_line_form">
+		<field name="name">hr.analytic.timesheet.form</field>
+		<field name="model">hr.analytic.timesheet</field>
+		<field name="type">form</field>
+		<field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form" />
+		<field name="arch" type="xml">
+			<field name="journal_id" position="after">
+				<field name="to_invoice" select="1"/>
+				<field name="invoice_id"/>
+			</field>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="hr_timesheet_line_tree">
+		<field name="name">hr.analytic.timesheet.tree</field>
+		<field name="model">hr.analytic.timesheet</field>
+		<field name="type">tree</field>
+		<field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree" />
+		<field name="arch" type="xml">
+			<field name="amount" position="after">
+				<field name="to_invoice"/>
+			</field>
+		</field>
+	</record>
+
+	#
+	# Inherits for account analytic lines
+	#
+
+	<record model="ir.ui.view" id="view_account_analytic_line_tree_inherit">
+		<field name="name">account.analytic.line.tree.to_invoice</field>
+		<field name="model">account.analytic.line</field>
+		<field name="type">tree</field>
+		<field name="inherit_id" ref="account.view_account_analytic_line_tree" />
+		<field name="arch" type="xml">
+			<field name="journal_id" position="after">
+				<field name="to_invoice"/>
+			</field>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="view_account_analytic_line_form_inherit">
+		<field name="name">account.analytic.line.form.to_invoice</field>
+		<field name="model">account.analytic.line</field>
+		<field name="type">form</field>
+		<field name="inherit_id" ref="account.view_account_analytic_line_form" />
+		<field name="arch" type="xml">
+			<field name="product_uom_id" position="after">
+				<field name="to_invoice"/>
+			</field>
+		</field>
+	</record>
+
+	#
+	# Menus
+	#
+	<record model="ir.actions.act_window" id="action_hr_analytic_timesheet_open_tree">
+		<field name="name">account.analytic.line.tree</field>
+		<field name="res_model">account.analytic.line</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[('to_invoice','&lt;&gt;',False)]</field>
+	</record>
+	<menuitem name="Financial Management/Periodical Processing/Invoice on Entries"
+		id="menu_hr_analytic_timesheet_tree"
+		action="action_hr_analytic_timesheet_open_tree"/> 
+
+
+	<record model="ir.actions.act_window" id="action_hr_analytic_timesheet_tree_invoiced">
+		<field name="name">account.analytic.line.tree</field>
+		<field name="res_model">account.analytic.line</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[('invoice_id','=',False),('to_invoice','!=',False)]</field>
+	</record>
+	<menuitem name="Financial Management/Periodical Processing/Invoice on Entries/Uninvoiced Entries"
+		id="menu_hr_analytic_timesheet_tree_invoiced"
+		action="action_hr_analytic_timesheet_tree_invoiced"/> 
+
+
+	<record model="ir.ui.view" id="view_hr_timesheet_invoice_factor_form">
+			<field name="name">hr_timesheet_invoice.factor.form</field>
+			<field name="model">hr_timesheet_invoice.factor</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Type of invoicing">
+					<field name="name" select="1" colspan="1"/>
+					<field name="customer_name" select="1" colspan="1"/>
+					<field name="factor" colspan="1"/>
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="view_hr_timesheet_invoice_factor_tree">
+			<field name="name">hr_timesheet_invoice.factor.tree</field>
+			<field name="model">hr_timesheet_invoice.factor</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Types of invoicing">
+					<field name="name"/>
+					<field name="customer_name"/>
+					<field name="factor"/>
+				</tree>
+			</field>
+		</record>
+		<record model="ir.actions.act_window" id="action_hr_timesheet_invoice_factor_form">
+			<field name="name">action.hr_timesheet_invoice.factor.form</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">hr_timesheet_invoice.factor</field>
+			<field name="view_type">form</field>
+			<field name="view_id" ref="view_hr_timesheet_invoice_factor_form"/>
+		</record>
+		<menuitem
+			name="Financial Management/Configuration/Analytic Accounts/Types of invoicing"
+			id="hr_timesheet_invoice_factor_view"
+			action="action_hr_timesheet_invoice_factor_form" />
+
+
+	</data>
+</terp>

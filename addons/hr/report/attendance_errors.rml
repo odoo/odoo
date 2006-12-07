@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<document filename="test.pdf">
+  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+    <pageTemplate id="first">
+      <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
+    </pageTemplate>
+  </template>
+  <stylesheet>
+    <blockTableStyle id="Standard_Outline">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Tableau1">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <blockBackground colorName="#c0c0c0" start="0,0" stop="0,0"/>
+      <blockBackground colorName="#c0c0c0" start="1,0" stop="1,0"/>
+      <blockBackground colorName="#c0c0c0" start="2,0" stop="2,0"/>
+    </blockTableStyle>
+    <blockTableStyle id="Tableau2">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="GRID" colorName="black"/>
+      <blockBackground colorName="#ff9966" start="0,0" stop="0,0"/>
+    </blockTableStyle>
+    <blockTableStyle id="Tableau3">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="GRID" colorName="black"/>
+      <blockBackground colorName="#ffcc99" start="0,0" stop="0,0"/>
+      <blockBackground colorName="#ffcc99" start="1,0" stop="1,0"/>
+      <blockBackground colorName="#ffcc99" start="2,0" stop="2,0"/>
+      <blockBackground colorName="#ffcc99" start="3,0" stop="3,0"/>
+      <blockBackground colorName="#ffcc99" start="4,0" stop="4,0"/>
+    </blockTableStyle>
+    <blockTableStyle id="Tableau4">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="GRID" colorName="black"/>
+      <blockBackground colorName="#e6e6ff" start="1,0" stop="1,0"/>
+      <blockBackground colorName="#e6e6ff" start="2,0" stop="2,0"/>
+    </blockTableStyle>
+    <initialize>
+      <paraStyle name="all" alignment="justify"/>
+    </initialize>
+    <paraStyle name="P1" fontName="Times-Roman" fontSize="22.0" leading="27" alignment="CENTER"/>
+    <paraStyle name="P2" fontName="Times-Roman" alignment="RIGHT"/>
+    <paraStyle name="P3" fontName="Times-Roman" fontSize="14.0" leading="17" alignment="CENTER"/>
+    <paraStyle name="Standard" fontName="Times-Roman"/>
+    <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="List" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Table Contents" fontName="Times-Roman"/>
+    <paraStyle name="Caption" fontName="Times-Roman" fontSize="12.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="Index" fontName="Times-Roman"/>
+  </stylesheet>
+  <story>
+    <blockTable colWidths="122.0,269.0,91.0" style="Tableau1">
+      <tr>
+        <td>
+          <para style="Table Contents">Report</para>
+          <para style="Table Contents">From: [[ data['form']['init_date'] ]]</para>
+          <para style="Table Contents">To: [[ data['form']['end_date'] ]]</para>
+        </td>
+        <td>
+          <para style="P1">Attendance Errors</para>
+        </td>
+        <td>
+          <para style="P2">Date Printed:</para>
+          <para style="P2">[[ time.strftime('%Y/%m/%d') ]]</para>
+        </td>
+      </tr>
+    </blockTable>
+    <para style="Standard">
+      <font color="white"> </font>
+    </para>
+    <section>
+      <para style="Standard">[[ repeatIn(objects, 'employee') ]]</para>
+      <blockTable colWidths="482.0" repeatRows="1" style="Tableau2">
+        <tr>
+          <td>
+            <para style="P3">[[ employee.name ]]</para>
+          </td>
+        </tr>
+      </blockTable>
+      <blockTable colWidths="67.0,106.0,134.0,85.0,90.0" style="Tableau3">
+        <tr>
+          <td>
+            <para style="Table Contents">Operation</para>
+          </td>
+          <td>
+            <para style="Table Contents">Date Signed</para>
+          </td>
+          <td>
+            <para style="Table Contents">Date Recorded</para>
+          </td>
+          <td>
+            <para style="Table Contents">Delay</para>
+          </td>
+          <td>
+            <para style="Table Contents">Avg Delay</para>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <para style="Table Contents"><font face="Times-Roman">[[repeatIn(lst(employee.id,data['form']['init_date'], data['form']['end_date'], data['form']['max_delay']), 'att') ]]</font> [[att['action'] ]]</para>
+          </td>
+          <td>
+            <para style="Table Contents">[[ att['date'] ]]</para>
+          </td>
+          <td>
+            <para style="Table Contents">[[ att['create_date'] ]]</para>
+          </td>
+          <td>
+            <para style="Table Contents">[[ att['delay'] ]]</para>
+          </td>
+          <td>
+            <para style="Table Contents">[[ att['delay2'] ]]</para>
+          </td>
+        </tr>
+      </blockTable>
+      <blockTable colWidths="307.0,85.0,90.0" style="Tableau4">
+        <tr>
+          <td>
+            <para style="Table Contents">Total period:</para>
+          </td>
+          <td>
+            <para style="Table Contents">
+              <font face="Times-Roman">[[total(employee.id,data['form']['init_date'], data['form']['end_date'], data['form']['max_delay'])[0] ]]</font>
+            </para>
+          </td>
+          <td>
+            <para style="Table Contents">
+              <font face="Times-Roman">[[total(employee.id,data['form']['init_date'], data['form']['end_date'], data['form']['max_delay'])[1] ]]</font>
+            </para>
+          </td>
+        </tr>
+      </blockTable>
+      <para style="Standard">
+        <font color="white"> </font>
+      </para>
+    </section>
+    <para style="Standard">
+      <font color="white"> </font>
+    </para>
+    <para style="Standard">(*) A positive delay means that the employee worked less than recorded.</para>
+    <para style="Standard">(*) A negative delay means that the employee worked more than encoded.</para>
+  </story>
+</document>
+

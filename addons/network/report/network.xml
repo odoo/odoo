@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<networks>
+	<network type="fields" name="id">
+		<network-name type="field" name="name" />
+		<network-range type="field" name="range" />
+		<partner type="zoom" name="contact_id">
+			<name type="field" name="name" />
+			<title type="field" name="title" />
+			<address type="zoom" name="address">
+				<name type="field" name="name" />
+				<street type="field" name="street" />
+				<postcode type="field" name="zip" />
+				<city type="field" name="city" />
+				<country type="field" name="country_id.name" />
+			</address>
+		</partner>
+		<materials>
+			<material type="zoom" name="material_ids">
+				<material-name type="field" name="name"/>
+				<material-date type="field" name="date"/>
+				<material-type type="field" name="type.name"/>
+				<material-note type="field" name="note"/>
+				<material-supplier type="field" name="supplier" />
+				<material-warranty type="field" name="warranty" />
+				<softwares>
+					<software type="zoom" name="software_id">
+						<soft-name type="field" name="name"/>
+						<soft-type type="field" name="type.name"/>
+						<soft-date type="field" name="date"/>
+						<soft-version type="field" name="version" />
+						<acces type="zoom" name="logpass">
+							<username type="field" name="login" />
+							<password type="field" name="password" />
+						</acces>
+					</software>
+				</softwares>
+			</material>
+		</materials>
+	</network>
+</networks>
+

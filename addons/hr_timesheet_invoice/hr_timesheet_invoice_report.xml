@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<terp>
+	<data>
+
+		<report
+			id="account_analytic_account_cost_ledger"
+			string="Cost Ledger"
+			model="account.analytic.account"
+			name="account.analytic.account.cost_ledger"
+			rml="account/project/report/cost_ledger.rml"
+			auto="False"
+			menu="False"/>
+
+		<wizard
+			id="account_analytic_account_cost_ledger_report"
+			string="Cost Ledger"
+			model="account.analytic.account"
+			name="account.analytic.account.cost_ledger.report"
+			keyword="client_print_multi"/>
+
+		<report
+			id="report_analytical_profit"
+			string="Timesheet profit"
+			model="account.analytic.line"
+			name="account.analytic.profit"
+			rml="hr_timesheet_invoice/report/account_analytic_profit.rml"
+			auto="False"
+			menu="False"/>
+
+		<wizard id="account_analytic_profit"
+			string="Timesheet profit"
+			model="account.analytic.line"
+			name="account.analytic.profit"
+			menu="False"/>
+		<menuitem id="print_account_analytic_profit" name="Financial Management/Reporting/Invoice rate by user" action="account_analytic_profit" type="wizard"/>
+
+	</data>
+</terp>
+

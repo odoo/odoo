@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<terp>
+<data noupdate="1">
+	<record model="account.invoice" id="ceci_est_une_facture">
+		<field name="currency_id" ref="base.EUR"/>
+		<field name="address_invoice_id" ref="base.res_partner_address_tang"/>
+		<field name="partner_id" ref="base.res_partner_asus"/>
+		<field name="journal_id" ref="account.sales_journal"/>
+		<field name="state">draft</field>
+		<field name="type">out_invoice</field>
+		<field name="account_id" ref="account.a_recv"/>
+		<field name="date_invoice">2006-03-30</field>
+		<field name="name">Invoice for the order of company Buzz+, 2006-03-31</field>
+		<field name="address_contact_id" ref="base.res_partner_address_tang"/>
+	</record>
+	<record model="account.invoice.line">
+		<field name="name">Basic computer with Dvorak keyboard and left-handed mouse</field>
+		<field name="invoice_id" ref="ceci_est_une_facture"/>
+		<field name="price_unit">250</field>
+		<field name="quantity">1</field>
+		<field name="account_id" ref="account.a_sale"/>
+	</record>
+	<record model="account.invoice.line">
+		<field name="name">Little server with raid 1 and 512ECC ram</field>
+		<field name="invoice_id" ref="ceci_est_une_facture"/>
+		<field name="price_unit">800</field>
+		<field name="quantity">2</field>
+		<field name="account_id" ref="account.a_sale"/>
+	</record>
+
+</data>
+</terp>

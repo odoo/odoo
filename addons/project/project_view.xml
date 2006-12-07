@@ -1,0 +1,387 @@
+<?xml version="1.0" ?>
+<terp>
+	<data>
+		<menuitem name="Project" id="menu_main" icon="terp-project"/>
+		<menuitem name="Project/Configuration" groups="admin" sequence="1" id="menu_definitions"/>
+
+		<!-- Project -->
+		<record model="ir.ui.view" id="edit_project">
+			<field name="name">project.project.form</field>
+			<field name="model">project.project</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Project">
+					<notebook>
+						<page string="Administration">
+							<field name="name" select="1" />
+							<group colspan="2" col="3">
+								<field name="active" select="1" />
+								<button string="Toggle activity" name="toggleActive" type="object" />
+							</group>
+							<field name="manager" select="1"/>
+							<field name="warn_manager" />
+							<newline />
+							<field name="priority" />
+							<field name="parent_id" />
+							<field name="date_start" />
+							<field name="date_end" />
+							<field name="planned_hours"/>
+							<field name="effective_hours"/>
+							<field name="timesheet_id"/>
+							<separator string="Project's members" colspan="4" />
+							<field name="members" colspan="4" nolabel="1"/>
+						</page>
+						<page string="Partner Info">
+							<field name="partner_id" select="1" colspan="3" on_change="onchange_partner_id(partner_id)"/>
+							<field name="contact_id" select="1" domain="[('partner_id','=',partner_id)]"/>
+							<field name="category_id"/>
+							<field name="pricelist_id"/>
+							<field name="warn_customer"/>
+							<field name="mode"/>
+							<field name="tariff"/>
+							<separator string="Mail texts" colspan="4" />
+							<field name="warn_header" />
+							<field name="warn_footer" />
+							<group colspan="4" col="3">
+								<label string="Task: %%(name)s"/>
+								<label string="User: %%(user_id)s"/>
+								<label string="ID: %%(task_id)s"/>
+								<label string="Status: %%(state)s"/>
+								<label string="Date Start: %%(date_start)s"/>
+								<label string="Date Stop: %%(date_stop)s"/>
+							</group>
+							<separator string="Taxes" colspan="4" />
+							<field name="tax_ids" colspan="3"/>
+						</page>
+						<page string="Tasks">
+							<field name="tasks" nolabel="1" colspan="4" widget="one2many_list">
+								<form string="Task edition">
+									<notebook>
+										<page string="Task definition">
+											<separator string="Task Information" colspan="4"/>
+											<field name="name" select="1"/>
+											<field name="active" select="1"/>
+											<field name="sequence"/>
+											<field name="priority" select="1"/>
+											<field name="user_id" select="1"/>
+											<field name="date_deadline" select="1"/>
+											<field name="date_close" select="1"/>
+											<field name="progress"/>
+											<newline />
+											<field name="planned_hours"/>
+											<field name="effective_hours"/>
+											<separator string="Description" colspan="4"/>
+											<field name="description" colspan="4" nolabel="1"/>
+											<field name="state" select="1"/>
+											<group colspan="2" col="4">
+												<button string="Finish" name="%(wizard_close_task)d" states="open,progress" type="action"/>
+												<button string="Re-open" name="do_reopen" states="done,cancel" type="object"/>
+												<button string="Cancel" name="do_cancel" states="open,progress" type="object"/>
+											</group>
+										</page>
+										<page string="Work done">
+											<separator string="Work done" colspan="4"/>
+											<field name="work_ids" colspan="4" nolabel="1"/>
+										</page>
+										<page string="Others">
+											<separator string="Notes" colspan="4"/>
+											<field name="invoice_id" readonly="True" colspan="3"/>
+											<field name="notes" colspan="4" nolabel="1"/>
+											<separator string="Customer Description" colspan="4"/>
+											<field name="cust_desc" colspan="4"  nolabel="1"/>
+											<newline/>
+											<field name="type" />
+											<field name="billable" select="1"/>
+											<field name="start_sequence"/>
+										</page>
+									</notebook>
+								</form>
+								<tree string="All tasks" colors="red:date_deadline&lt;current_date and state=='draft';blue:date_deadline==current_date and state=='draft';grey:state=='cancel' or state=='close'">
+									<field name="sequence"/>
+									<field name="name" />
+									<field name="user_id" />
+									<field name="date_deadline" />
+									<field name="planned_hours" />
+									<field name="effective_hours" />
+									<field name="state" />
+								</tree>
+							</field>
+						</page>
+						<page string="Notes">
+							<field name="notes" nolabel="1" colspan="4" />
+						</page>
+					</notebook>
+					<newline />
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="view_project">
+			<field name="name">project.project.tree</field>
+			<field name="model">project.project</field>
+			<field name="type">tree</field>
+			<field name="field_parent">child_id</field>
+			<field name="arch" type="xml">
+				<tree string="Projects">
+					<field name="name" />
+					<field name="manager" />
+					<field name="partner_id" />
+					<field name="planned_hours" />
+					<field name="effective_hours" />
+				</tree>
+			</field>
+		</record>
+		<record model="ir.actions.act_window" id="open_view_all_project">
+			<field name="name">project.project</field>
+			<field name="res_model">project.project</field>
+			<field name="view_type">tree</field>
+			<field name="domain">[('parent_id','=',False)]</field>
+			<field name="view_id" ref="view_project" />
+		</record>
+		<menuitem name="Project/All Projects" action="open_view_all_project" id="menu_all_project"/>
+
+		<record model="ir.actions.act_window" id="open_view_project">
+			<field name="name">project.project_edition</field>
+			<field name="res_model">project.project</field>
+			<field name="view_type">form</field>
+			<field name="domain"></field>
+			<field name="view_id" ref="edit_project" />
+		</record>
+		<menuitem name="Project/All Projects/Edit project" id="menu_open_view_project" action="open_view_project"/>
+
+		<record model="ir.ui.view" id="view_task_work_form">
+			<field name="name">project.task.work.form</field>
+			<field name="model">project.task.work</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Task Work">
+					<field name="name" select="1" colspan="3"/>
+					<field name="hours" select="1"/>
+					<field name="date" select="1"/>
+					<field name="user_id" select="1"/>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_task_work_tree">
+			<field name="name">project.task.work.tree</field>
+			<field name="model">project.task.work</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Task Work" editable="top">
+					<field name="date"/>
+					<field name="name"/>
+					<field name="hours"/>
+					<field name="user_id"/>
+				</tree>
+			</field>
+		</record>
+		
+		<record model="ir.ui.view" id="view_my_project">
+			<field name="name">project.project.tree</field>
+			<field name="model">project.project</field>
+			<field name="type">tree</field>
+			<field name="field_parent">child_id</field>
+			<field name="arch" type="xml">
+				<tree string="My projects">
+					<field name="name" />
+					<field name="partner_id" />
+					<field name="planned_hours" />
+					<field name="effective_hours" />
+				</tree>
+			</field>
+		</record>
+		<record model="ir.actions.act_window" id="open_view_my_project">
+			<field name="name">project.project</field>
+			<field name="res_model">project.project</field>
+			<field name="view_type">tree</field>
+			<field name="domain">[('parent_id','=',False), ('manager', '=', uid)]</field>
+			<field name="view_id" ref="view_my_project" />
+		</record>
+		<menuitem name="Project/All Projects/Your projects" id="menu_open_view_my_project" action="open_view_my_project" />
+
+		<!-- Task -->
+		<record model="ir.ui.view" id="view_task_form2">
+			<field name="name">project.task.form</field>
+			<field name="model">project.task</field>
+			<field name="type">form</field>
+			<field name="priority" eval="2"/>
+			<field name="arch" type="xml">
+				<form string="Task edition">
+					<notebook>
+						<page string="Task definition">
+							<separator string="Task Information" colspan="4"/>
+							<field name="name" select="1"/>
+							<field name="project_id" required="1" select="1"/>
+							<field name="priority" select="1"/>
+							<field name="date_deadline" select="1"/>
+							<field name="user_id" select="1"/>
+							<field name="progress"/>
+							<field name="planned_hours"/>
+							<field name="effective_hours"/>
+							<field name="type" />
+							<separator string="Description" colspan="4"/>
+							<field name="description" colspan="4" nolabel="1"/>
+							<field name="work_ids" colspan="4" nolabel="1"/>
+							<newline/>
+							<field name="state" select="1" />
+							<group colspan="2" col="4">
+								<button string="Finish" name="%(wizard_close_task)d" states="open,progress" type="action"/>
+								<button string="Re-open" name="do_reopen" states="done,cancelled" type="object" />
+								<button string="Cancel" name="do_cancel" states="open,progress" type="object" />
+							</group>
+						</page>
+						<page string="Other Information">
+							<field name="sequence"/>
+							<field name="active" select="1"/>
+							<field name="start_sequence"/>
+							<field name="date_close" select="1" />
+							<field name="partner_id" select="1"/>
+							<newline/>
+							<field name="invoice_id" />
+							<field name="billable" select="1"/>
+							<separator string="Notes" colspan="4"/>
+							<field name="notes" colspan="4" nolabel="1"/>
+							<separator string="Customer Description" colspan="4"/>
+							<field name="cust_desc" colspan="4"  nolabel="1"/>
+						</page>
+					</notebook>
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="view_task_tree2">
+			<field name="name">project.task.tree</field>
+			<field name="model">project.task</field>
+			<field name="type">tree</field>
+			<field name="priority" eval="2"/>
+			<field name="arch" type="xml">
+				<tree string="All tasks" colors="red:date_deadline&lt;current_date and state=='draft';blue:date_deadline==current_date and state=='draft';grey:state=='cancel'">
+					<field name="sequence"/>
+					<field name="name"/>
+					<field name="project_id"/>
+					<field name="user_id"/>
+					<field name="date_deadline"/>
+					<field name="planned_hours"/>
+					<field name="effective_hours"/>
+					<field name="priority"/>
+					<field name="state"/>
+				</tree>
+			</field>
+		</record>
+		<record model="ir.actions.act_window" id="action_view_task">
+			<field name="name">project.task</field>
+			<field name="res_model">project.task</field>
+			<field name="view_type">form</field>
+			<field name="domain">[]</field>
+			<field name="view_id" ref="view_task_form2" />
+		</record>
+		<menuitem name="Project/All Tasks" id="menu_action_view_task" action="action_view_task" />
+
+		<record model="ir.actions.act_window" id="action_view_task2">
+			<field name="name">project.task.unbilled.close</field>
+			<field name="res_model">project.task</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('state','=','done'), ('billable','=',True), ('invoice_id','=',False)]</field>
+		</record>
+		<menuitem name="Project/All Tasks/Billable Tasks/Unbilled closed tasks" id="menu_action_view_task2" action="action_view_task2" />
+
+		<record model="ir.actions.act_window" id="action_view_task3">
+			<field name="name">project.task.unbilled.open</field>
+			<field name="res_model">project.task</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('state','=','open'), ('billable','=',True), ('invoice_id','=',False)]</field>
+		</record>
+		<menuitem name="Project/All Tasks/Billable Tasks/Unbilled open tasks" id="menu_action_view_task3" action="action_view_task3" />
+
+		<record model="ir.actions.act_window" id="action_view_task4">
+			<field name="name">project.task</field>
+			<field name="res_model">project.task</field>
+			<field name="view_type">form</field>
+			<field name="domain">[('user_id', '=', uid)]</field>
+			<field name="view_id" ref="view_task_form2" />
+		</record>
+		<menuitem name="Project/All Tasks/Your tasks" id="menu_action_view_task4" action="action_view_task4" />
+		
+		<record model="ir.actions.act_window" id="action_view_task5">
+			<field name="name">project.task</field>
+			<field name="res_model">project.task</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('user_id', '=', uid),('state','=','open')]</field>
+		</record>
+		<menuitem name="Project/All Tasks/Your tasks/Your open tasks" action="action_view_task5" id="menu_tasks_yours" />
+
+		<record model="ir.actions.act_window" id="action_view_task5_prog">
+			<field name="name">project.task</field>
+			<field name="res_model">project.task</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('user_id', '=', uid),('state','=','open')]</field>
+		</record>
+		<menuitem name="Project/All Tasks/Your tasks/Your tasks in progress" action="action_view_task5_prog" id="menu_tasks_yours_prog" />
+		
+		<record model="ir.actions.act_window" id="action_view_task6">
+			<field name="name">project.task</field>
+			<field name="res_model">project.task</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('state', '=', 'open')]</field>
+		</record>
+		<menuitem name="Project/All Tasks/Open tasks" id="menu_action_view_task6" action="action_view_task6" />
+
+		<record model="ir.actions.act_window" id="action_view_task6_prog">
+			<field name="name">project.task</field>
+			<field name="res_model">project.task</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('state', '=', 'progress')]</field>
+		</record>
+		<menuitem name="Project/All Tasks/Tasks in Progress" id="menu_action_view_task6_prog" action="action_view_task6_prog" />
+
+		<record model="ir.actions.act_window" id="action_view_task7">
+			<field name="name">project.task</field>
+			<field name="res_model">project.task</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('user_id', '=', False)]</field>
+		</record>
+		<menuitem name="Project/All Tasks/Unassigned tasks" id="menu_action_view_task7" action="action_view_task7" />
+
+		<!-- Opening task when double clicking on project -->
+		<record model="ir.actions.act_window" id="dblc_proj">
+			<field name="res_model">project.task</field>
+			<field name="name">View project's tasks</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('project_id', '=', active_id)]</field>
+		</record>
+		<record model="ir.values" id="ir_project_task_open">
+			<field name="key2" eval=" 'tree_but_open'" />
+			<field name="model" eval="'project.project'" />
+			<field name="name">View project's tasks</field>
+			<field name="value" eval="'ir.actions.act_window,'+str(dblc_proj)" />
+			<field name="object" eval="True" />
+		</record>
+
+		<!-- Task types -->
+		<record model="ir.ui.view" id="task_type_edit">
+			<field name="name">project.task.type.form</field>
+			<field name="model">project.task.type</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Task type">
+					<field name="name" colspan="4" select="1"/>
+					<field name="description" colspan="4"  select="1"/>
+				</form>
+			</field>
+		</record>
+		<record model="ir.actions.act_window" id="open_task_type_form">
+			<field name="name">project.task.type.form</field>
+			<field name="res_model">project.task.type</field>
+			<field name="view_type">form</field>
+			<field name="view_id" ref="task_type_edit"/>
+		</record>
+		<menuitem name="Project/Configuration/Task types" id="menu_task_types" action="open_task_type_form"/>
+	</data>
+</terp>

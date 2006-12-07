@@ -1,0 +1,458 @@
+<?xml version="1.0"?>
+<terp>
+<data>
+	<menuitem name="CRM &amp; SRM" icon="terp-crm" id="menu_crm_root"/>
+
+	<record model="ir.ui.view" id="res_partner_events-wopartner-view">
+		<field name="name">res.partner.events.form</field>
+		<field name="model">res.partner.events</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Partner Events">
+				<separator string="General Description"/>
+				<field name="date" select="1"/>
+				<field name="name" select="1"/>
+				<field name="som" select="1"/>
+				<field name="type" select="1"/>
+				<field name="partner_type" select="1"/>
+			</tree>
+		</field>
+	</record>
+
+	<menuitem name="CRM &amp; SRM" id="menu_crm" icon="terp-crm"/>
+
+	# ------------------------------------------------------
+	# Case Sections
+	# ------------------------------------------------------
+
+	<record model="ir.ui.view" id="crm_case_section_view_form">
+		<field name="name">crm.case.section.form</field>
+		<field name="model">crm.case.section</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Case Section">
+				<notebook>
+				<page string="Case section">
+				<field name="name" select="1"/>
+				<field name="code" select="1"/>
+				<field name="sequence"/>
+				<field name="active" select="1"/>
+				<field name="user_id" select="1"/>
+				<field name="parent_id" select="1"/>
+				<field name="reply_to" select="1"/>
+				<label string="Complete this if you use the mail gateway." colspan="2"/>
+				</page>
+				</notebook>
+			</form>
+		</field>
+	</record>
+	<record model="ir.ui.view" id="crm_case_section_view_tree">
+		<field name="name">crm.case.section.tree</field>
+		<field name="model">crm.case.section</field>
+		<field name="type">tree</field>
+		<field name="field_parent">child_ids</field>
+		<field name="arch" type="xml">
+			<tree string="Case Section">
+				<field name="name" select="1"/>
+				<field name="code" select="1"/>
+				<field name="user_id" select="1"/>
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="crm_case_section_act">
+		<field name="name">crm.case.section.form</field>
+		<field name="res_model">crm.case.section</field>
+		<field name="view_type">form</field>
+		<field name="view_id" ref="crm_case_section_view_form"/>
+	</record>
+	<menuitem name="CRM &amp; SRM/Configuration/Cases/Sections" id="menu_crm_case_section_act" action="crm_case_section_act" groups="admin"/>
+
+	<record model="ir.actions.act_window" id="crm_case_section_act_tree">
+		<field name="name">crm.case.section.tree</field>
+		<field name="res_model">crm.case.section</field>
+		<field name="domain">[('parent_id','=',False)]</field>
+		<field name="view_type">tree</field>
+		<field name="view_id" ref="crm_case_section_view_tree"/>
+	</record>
+	<menuitem name="CRM &amp; SRM/Cases/Cases by section" id="menu_crm_case_section_act_tree" action="crm_case_section_act_tree" groups="admin"/>
+
+
+
+	# ------------------------------------------------------
+	# Case Categories
+	# ------------------------------------------------------
+
+	<record model="ir.ui.view" id="crm_case_categ-view">
+		<field name="name">crm.case.categ.form</field>
+		<field name="model">crm.case.categ</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Case Category">
+				<field name="name" select="1"/>
+				<field name="section_id" select="1"/>
+			</form>
+		</field>
+	</record>
+	<record model="ir.actions.act_window" id="crm_case_categ-act">
+		<field name="name">crm.case.categ.form</field>
+		<field name="res_model">crm.case.categ</field>
+		<field name="view_type">form</field>
+		<field name="view_id" ref="crm_case_categ-view"/>
+	</record>
+	<menuitem name="CRM &amp; SRM/Configuration/Cases/Categories" id="menu_crm_case_categ-act" action="crm_case_categ-act" groups="admin"/>
+
+	# ------------------------------------------------------
+	# Case rules
+	# ------------------------------------------------------
+
+	<record model="ir.ui.view" id="crm_case_rule-view">
+		<field name="name">crm.case.rule.form</field>
+		<field name="model">crm.case.rule</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Case Rule">
+				<notebook>
+				<page string="Rule Information">
+					<separator string="General Information" colspan="4"/>
+					<field name="name" select="1"/>
+					<field name="active" select="1"/>
+
+					<separator string="Criterions to be checked" colspan="4"/>
+					<field name="trg_state_from" select="1"/>
+					<field name="trg_state_to" select="1"/>
+
+					<field name="trg_section_id" select="1"/>
+					<field name="trg_categ_id"/>
+					<field name="trg_user_id" select="1"/>
+
+					<newline/>
+					<field name="trg_priority_from"/>
+					<field name="trg_priority_to"/>
+
+					<field name="trg_partner_id"/>
+					<field name="trg_partner_categ_id"/>
+
+					<field name="trg_date_type"/>
+					<label string="Delay after trigger date:" align="1.0"/>
+					<group colspan="1" col="2">
+					<field name="trg_date_range" nolabel="1"/>
+					<field name="trg_date_range_type" nolabel="1"/>
+					</group>
+
+					<separator string="Actions to execute" colspan="4"/>
+					<field name="act_state"/>
+					<field name="act_section_id"/>
+					<field name="act_user_id"/>
+					<field name="act_priority"/>
+					<field name="act_remind_user"/>
+					<field name="act_remind_partner"/>
+					<field name="act_email_cc" colspan="3"/>
+					<!--
+					<field name="act_method" colspan="3" readonly="1"/>
+					-->
+
+				</page><page string="E-Mail Information">
+					<separator string="Email to send"/>
+					<field name="act_mail_to_user"/>
+					<field name="act_mail_to_partner"/>
+					<field name="act_mail_to_watchers"/>
+					<field name="act_mail_to_email" colspan="3"/>
+					<field name="act_mail_body" colspan="3"/>
+					<group col="2" colspan="4" string="Special Keywords">
+						<label align="0.0" string="%%(case_id)s = Case ID"/>
+						<label align="0.0" string="%%(case_subject)s = Case subject"/>
+						<label align="0.0" string="%%(case_date)s = Creation date"/>
+						<label align="0.0" string="%%(email_from)s = Partner email"/>
+						<label align="0.0" string="%%(partner)s = Partner name"/>
+						<label align="0.0" string="%%(partner_email)s = Partner email"/>
+						<label align="0.0" string="%%(case_user)s = Responsible name"/>
+						<label align="0.0" string="%%(case_user_email)s = Responsible email"/>
+						<label align="0.0" string="%%(case_user_phone)s = Responsible phone"/>
+					</group>
+				</page>
+				</notebook>
+			</form>
+		</field>
+	</record>
+	<record model="ir.actions.act_window" id="crm_case_rule-act">
+		<field name="name">crm.case.rule.form</field>
+		<field name="res_model">crm.case.rule</field>
+		<field name="view_type">form</field>
+		<field name="view_id" ref="crm_case_rule-view"/>
+	</record>
+	<menuitem name="CRM &amp; SRM/Configuration/Cases/Rules" id="menu_crm_case_rule-act" action="crm_case_rule-act" groups="admin"/>
+
+
+	# ------------------------------------------------------
+	# Cases
+	# ------------------------------------------------------
+
+	<record model="ir.ui.view" id="crm_case_history_tree-view">
+		<field name="name">crm.case.history.tree</field>
+		<field name="model">crm.case.history</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Case History">
+				<field name="date"/>
+				<field name="name"/>
+				<field name="som"/>
+				<field name="user_id"/>
+				<field name="canal_id"/>
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="crm_case_tree-view">
+		<field name="name">crm.case.tree</field>
+		<field name="model">crm.case</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Cases"  colors="red:date_deadline&lt;current_date and state=='open'">
+				<field name="id"/>
+				<field name="date"/>
+				<field name="date_deadline"/>
+				<field name="name"/>
+				<field name="partner_id"/>
+				<field name="user_id"/>
+				<field name="priority"/>
+				<field name="planned_revenue"/>
+				<field name="planned_cost"/>
+				<field name="state"/>
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="crm_case-view">
+		<field name="name">crm.case.form</field>
+		<field name="model">crm.case</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Cases">
+				<notebook>
+				<page string="General Information">
+					<field name="name" select="1"/>
+					<field name="id" select="1"/>
+					<field name="section_id"/>
+					<field name="categ_id" select="1"/>
+					<field name="date" select="1"/>
+					<field name="priority"/>
+					<field name="partner_id" select="1" on_change="onchange_partner_id(partner_id, email_from)"/>
+					<field name="partner_address_id" select="1" on_change="onchange_partner_address_id(partner_address_id, email_from)"/>
+					<field name="user_id" select="1"/>
+					<group col="2" colspan="2">
+						<button name="remind_user" string="Send Reminder" states="open,pending" type="object"/>
+					</group>
+					<field name="email_from" select="1"/>
+					<group col="2" colspan="2">
+						<button name="remind_partner" string="Send Reminder" states="open,pending" type="object"/>
+					</group>
+					<separator string="Next Action" colspan="4"/>
+					<field name="description" colspan="3" select="1"/>
+					<field name="som" select="1"/>
+					<field name="canal_id"/>
+					<field name="date_deadline" select="1"/>
+
+					<group col="2" colspan="2">
+					<button name="case_log" string="Silent Process" states="open" type="object"/>
+					<button name="case_log_reply" string="Reply &amp; Process" states="open" type="object"/>
+					</group>
+
+					<field name="state" select="1"/>
+					<group col="5" colspan="2">
+						<button name="case_close" string="Close" states="open,draft,pending" type="object"/>
+						<button name="case_open" string="Open" states="draft,pending" type="object"/>
+						<button name="case_cancel" string="Cancel" states="draft,open,pending" type="object"/>
+						<button name="case_pending" string="Pending" states="draft,open" type="object"/>
+						<button name="case_reset" string="Reset to Draft" states="done,cancel" type="object"/>
+					</group>
+				</page><page string="References">
+					<field name="date_closed"/>
+					<field name="active" select="1"/>
+					<field name="ref" colspan="3"/>
+					<field name="ref2" colspan="3"/>
+					<field name="planned_revenue"/>
+					<field name="planned_cost"/>
+					<field name="probability"/>
+					<newline/>
+					<field name="date_action_last"/>
+					<field name="date_action_next"/>
+
+					<field name="email_cc" colspan="3"/>
+					<field name="email_last" colspan="3"/>
+				</page><page string="History">
+					<field name="history_line" nolabel="1" colspan="4" widget="one2many_list">
+						<form string="Actions">
+							<separator string="Action Information" colspan="4"/>
+							<field name="name" colspan="3"/>
+							<field name="date" select="1"/>
+							<field name="user_id" select="1"/>
+							<field name="som" select="1"/>
+							<field name="canal_id"/>
+							<field name="description" colspan="3"/>
+						</form>
+					</field>
+				</page>
+				</notebook>
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="crm_case_categ0-act">
+		<field name="name">crm.case.form</field>
+		<field name="res_model">crm.case</field>
+		<field name="view_type">form</field>
+		<field name="view_id" ref="crm_case-view"/>
+	</record>
+	<menuitem name="CRM &amp; SRM/Cases/All Cases" id="menu_crm_case_categ0-act" action="crm_case_categ0-act"/>
+
+
+	<record model="ir.actions.act_window" id="crm_case_section_open_act">
+		<field name="name">crm.case.section.open.tree</field>
+		<field name="res_model">crm.case</field>
+		<field name="domain">[('section_id','=',active_id)]</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+	<record model="ir.values" id="ir_open_section_case">
+		<field name="key2" eval="'tree_but_open'"/>
+		<field name="model" eval="'crm.case.section'"/>
+		<field name="name">Open Cases</field>
+		<field name="value" eval="'ir.actions.act_window,%d'%crm_case_section_open_act"/>
+		<field name="object" eval="True"/>
+	</record>
+
+
+	<record model="ir.ui.view" id="crm_case_history-view">
+		<field name="name">crm.case.history.form</field>
+		<field name="model">crm.case.history</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Cases">
+				<separator string="Case Description" colspan="4"/>
+				<field name="name" colspan="3" select="1"/>
+				<field name="date" select="1"/>
+				<field name="user_id" select="1"/>
+				<field name="case_id" select="1"/>
+				<field name="som" select="1"/>
+				<field name="canal_id" select="1"/>
+				<field name="description" colspan="3" select="1"/>
+			</form>
+		</field>
+	</record>
+	<record model="ir.actions.act_window" id="crm_case_history-act">
+		<field name="name">crm.case.history.form</field>
+		<field name="res_model">crm.case.history</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">form,tree</field>
+		<field name="view_id" ref="crm_case_history-view"/>
+	</record>
+	<menuitem name="CRM &amp; SRM/Cases/Cases Actions" id="menu_crm_case_history-act_main" groups="admin"/>
+	<menuitem name="CRM &amp; SRM/Cases/Cases Actions/All Actions" id="menu_crm_case_history-act" action="crm_case_history-act" groups="admin"/>
+	<record model="ir.actions.act_window" id="crm_case_history_my-act">
+		<field name="name">crm.case.history.form</field>
+		<field name="res_model">crm.case.history</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[('user_id','=',uid)]</field>
+	</record>
+	<menuitem name="CRM &amp; SRM/Cases/Cases Actions/All Actions/My Actions" id="menu_crm_case_history_my-act" action="crm_case_history_my-act" groups="admin"/>
+
+	<record model="ir.ui.view" id="crm_segmentation_line_tree-view">
+		<field name="name">crm.segmentation.line.tree</field>
+		<field name="model">crm.segmentation.line</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Partner Segmentation Lines">
+				<field name="name"/>
+				<field name="expr_name"/>
+				<field name="expr_operator"/>
+				<field name="expr_value"/>
+				<field name="operator"/>
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="crm_segmentation_line-view">
+		<field name="name">crm.segmentation.line.form</field>
+		<field name="model">crm.segmentation.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Partner Segmentation Lines">
+				<field name="name" select="1" colspan="4"/>
+				<group colspan="4" col="2">
+					<field name="expr_name" select="1"/>
+					<field name="expr_operator" select="1"/>
+					<field name="expr_value" select="1"/>
+				</group>
+				<newline/>
+				<field name="operator"/>
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="crm_segmentation-view">
+		<field name="name">crm.segmentation.form</field>
+		<field name="model">crm.segmentation</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Partner Segmentation">
+				<notebook>
+				<page string="Segmentation Parameters">
+					<separator string="Segmentation Description" colspan="4"/>
+					<field name="name" select="1"/>
+					<field name="exclusif"/>
+					<field name="description" select="1" colspan="3"/>
+					<field name="categ_id" select="1" colspan="3"/>
+					<separator string="Segmentation Test" colspan="4"/>
+					<field name="segmentation_line" widget="one2many_list" colspan="3"/>
+					<field name="state"/>
+					<group col="3" colspan="2">
+						<button name="process_start" states="not running" string="Compute Segmentation" type="object"/>
+						<button name="process_stop" states="running" string="Stop Process" type="object"/>
+						<button name="process_continue" states="running" string="Continue Process" type="object"/>
+					</group>
+				</page><page string="Computation Parameters">
+					<separator string="State of Mind Computation" colspan="4"/>
+					<field name="som_interval"/>
+					<field name="som_interval_max"/>
+					<field name="som_interval_decrease"/>
+					<field name="som_interval_default"/>
+				</page>
+				</notebook>
+			</form>
+		</field>
+	</record>
+	<record model="ir.ui.view" id="crm_segmentation_tree-view">
+		<field name="name">crm.segmentation.tree</field>
+		<field name="model">crm.segmentation</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Partner Segmentations">
+				<field name="name"/>
+				<field name="description"/>
+				<field name="categ_id"/>
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="crm_segmentation-act">
+		<field name="name">crm.segmentation.form</field>
+		<field name="res_model">crm.segmentation</field>
+		<field name="view_type">form</field>
+		<field name="view_id" ref="crm_segmentation-view"/>
+	</record>
+
+	<record model="ir.actions.act_window" id="crm_segmentation_tree-act">
+		<field name="name">crm.segmentation.tree</field>
+		<field name="res_model">crm.segmentation</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+	<menuitem name="CRM &amp; SRM/Configuration" groups="admin"/>
+	<menuitem name="CRM &amp; SRM/Configuration/Segmentations/Segmentations rules" id="menu_crm_segmentation-act" action="crm_segmentation-act"/>
+	<menuitem name="CRM &amp; SRM/Automatic Segmentations" id="menu_crm_segmentation_tree-act" action="crm_segmentation_tree-act"/>
+
+
+</data>
+</terp>

@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<document filename="test.pdf">
+  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+    <pageTemplate id="first">
+      <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
+    </pageTemplate>
+  </template>
+  <stylesheet>
+    <blockTableStyle id="Standard_Outline">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table1">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="GRID" colorName="black"/>
+      <blockBackground colorName="#9999cc" start="1,0" stop="1,0"/>
+      <blockBackground colorName="#ccccff" start="0,1" stop="0,1"/>
+      <blockBackground colorName="#ccccff" start="1,1" stop="1,1"/>
+    </blockTableStyle>
+    <initialize>
+      <paraStyle name="all" alignment="justify"/>
+    </initialize>
+    <paraStyle name="P1" fontName="Times-Roman" fontSize="14.0" leading="17" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P2" fontName="Times-Roman" fontSize="14.0" leading="17" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P3" fontName="Times-Roman" fontSize="14.0" leading="17" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P4" fontName="Times-Roman" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P5" fontName="Times-Roman" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P6" fontName="Times-Roman" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P7" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P8" fontName="Times-Roman" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Standard" fontName="Times-Roman"/>
+    <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="List" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Table Contents" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Table Heading" fontName="Times-Roman" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Caption" fontName="Times-Roman" fontSize="10.0" leading="13" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="Index" fontName="Times-Roman"/>
+  </stylesheet>
+  <story>
+    <para style="Standard">[[ repeatIn(objects,'o') ]]</para>
+    <para style="Standard">
+      <font color="white"> </font>
+    </para>
+    <para style="Standard">
+      <font color="white"> </font>
+    </para>
+    <blockTable colWidths="241.0,241.0" repeatRows="1" style="Table1">
+      <tr>
+        <td>
+          <illustration height="75.0" width="235.0">
+            <image x="0" y="0" file="1000000000000144000000689888B27C.gif" height="75.0" width="235.0"/>
+          </illustration>
+        </td>
+        <td>
+          <para style="P1">TO: [[ o.partner_id.name ]]</para>
+          <para style="P2">[[ o.partner_id.address[0].name ]]</para>
+          <para style="P3">
+            <font color="white"> </font>
+          </para>
+          <para style="P4">
+            <font color="white"> </font>
+          </para>
+          <para style="P5">This ticket can be be reimbursed.See sales</para>
+          <para style="P5">conditions in your travel agency contract.</para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P6">Departure:</para>
+          <para style="P7">[[ o.airport_from.name ]]</para>
+          <para style="P7">[[ o.airport_from.country_id.name ]]</para>
+        </td>
+        <td>
+          <para style="P8">Arrival:</para>
+          <para style="P7">[[ o.airport_to.name ]]</para>
+          <para style="P7">[[ o.airport_to.country_id.name ]]</para>
+        </td>
+      </tr>
+    </blockTable>
+    <para style="Standard">
+      <font color="white"> </font>
+    </para>
+  </story>
+</document>
+

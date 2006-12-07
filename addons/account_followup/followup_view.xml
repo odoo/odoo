@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<terp>
+	<data>
+
+		<record model="ir.ui.view" id="view_account_followup_followup_line_form">
+			<field name="name">account_followup.followup.line.form</field>
+			<field name="model">account_followup.followup.line</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Follow-Up lines">
+					<field name="sequence" select="1"/>
+					<field name="name" select="1"/>
+					<field name="delay" select="1"/>
+					<field name="start" select="1"/>
+					<newline/>
+					<field name="description" select="1" colspan="4"/>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_account_followup_followup_form">
+			<field name="name">account_followup.followup.form</field>
+			<field name="model">account_followup.followup</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Follow-Up">
+					<field name="name" select="1"/>
+					<separator string="Description" colspan="4"/>
+					<field name="description" colspan="4" nolabel="1"/>
+					<separator string="Lines" colspan="4"/>
+					<field name="followup_line" colspan="4" nolabel="1" widget="one2many_list"/>
+				</form>
+			</field>
+		</record>
+		<record model="ir.actions.act_window" id="action_account_followup_definition_form">
+			<field name="name">account_followup.followup</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">account_followup.followup</field>
+			<field name="view_type">form</field>
+			<field name="view_id" ref="view_account_followup_followup_form"/>
+		</record>
+		<menuitem 
+			name="Financial Management/Configuration/Payment Terms/Follow-Ups" 
+			action="action_account_followup_definition_form"
+			id="Financial_Management/Configuration/Payment_Terms/Follow-Ups"/>
+
+		<report id="account_followup_followup_report"
+			string="Followup Report"
+			model="account_followup.followup"
+			name="account_followup.followup.print"
+			rml="account_followup/report/rappel.rml"
+			auto="False"
+			menu="False"/>
+
+		<record model="ir.actions.wizard" id="action_account_followup_all_wizard">
+			<field name="name">Print followups</field>
+			<field name="wiz_name">account_followup.followup.print.all</field>
+		</record>
+		<menuitem 
+			name="Financial Management/Periodical Processing/Print Follow-Ups" 
+			action="action_account_followup_all_wizard" 
+			type="wizard"
+			id="Financial_Management/Periodical_Processing/Print_Follow-Ups"/>
+
+	</data>
+</terp>

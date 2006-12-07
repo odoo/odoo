@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<terp>
+	<data noupdate="1">
+		<record model="network.hardware.type" id="demo_hard_type0">
+			<field name="name">Computer</field>
+			<field name="networkable">True</field>
+		</record>
+		<record model="network.hardware.type" id="demo_hard_type1">
+			<field name="name">Hub</field>
+			<field name="networkable">True</field>
+		</record>
+		<record model="network.hardware.type" id="demo_hard_type2">
+			<field name="name">Switch</field>
+			<field name="networkable">True</field>
+		</record>
+		<record model="network.hardware.type" id="demo_hard_type3">
+			<field name="name">Screen</field>
+		</record>
+		<record model="network.hardware.type" id="demo_hard_type4">
+			<field name="name">Network Printer</field>
+			<field name="networkable">True</field>
+		</record>
+
+		<record model="network.network" id="net1">
+			<field name="name">Production network</field>
+			<field name="range">192.168.1.0/24</field>
+			<field name="contact_id" search="[('name', 'ilike', 'Tiny')]"
+				model="res.partner" />
+		</record>
+	
+		<record model="network.material" id="pc1">
+			<field name="name">PC1</field>
+			<field name="type" ref="demo_hard_type0"/>
+			<field name="network_id" ref="net1"/>
+		</record>
+		<record model="network.material" id="pc2">
+			<field name="name">PC2</field>
+			<field name="type" ref="demo_hard_type0"/>
+			<field name="network_id" ref="net1"/>
+		</record>
+		<record model="network.material" id="pc3">
+			<field name="name">PC3</field>
+			<field name="type" ref="demo_hard_type0"/>
+			<field name="network_id" ref="net1"/>
+		</record>
+
+		<record model="network.material" id="screen1">
+			<field name="name">Eizo F56</field>
+			<field name="type" ref="demo_hard_type3"/>
+			<field name="parent_id" ref="pc1"/>
+		</record>
+		<record model="network.material" id="screen2">
+			<field name="name">Acer 1617</field>
+			<field name="type" ref="demo_hard_type3"/>
+			<field name="parent_id" ref="pc2"/>
+		</record>
+		<record model="network.material" id="printer1">
+			<field name="name">HP LaserJet 8150N Network Printer</field>
+			<field name="type" ref="demo_hard_type4"/>
+			<field name="network_id" ref="net1"/>
+		</record>
+
+		<record model="network.software.type" id="demo_soft_type0">
+			<field name="name">LDAP</field>
+		</record>
+		<record model="network.software.type" id="demo_soft_type1">
+			<field name="name">Database</field>
+		</record>
+		<record model="network.software.type" id="demo_soft_type2">
+			<field name="name">DNS Server</field>
+		</record>
+
+		<record model="network.software" id="openldap">
+			<field name="name">OpenLDAP</field>
+			<field name="material_id" ref="pc1"/>
+			<field name="version">2.2.23-1</field>
+			<field name="type" ref="demo_soft_type0"/>
+		</record>
+		<record model="network.software" id="postgresql">
+			<field name="name">PostGreSQL</field>
+			<field name="material_id" ref="pc1"/>
+			<field name="version">7.4.7-3</field>
+			<field name="type" ref="demo_soft_type1"/>
+		</record>
+		<record model="network.software" id="bind">
+			<field name="name">Bind</field>
+			<field name="material_id" ref="pc2"/>
+			<field name="version">1:9.2.4-1</field>
+			<field name="type" ref="demo_soft_type2"/>
+		</record>
+		
+		<record model="network.software.logpass">
+			<field name="login">john</field>
+			<field name="password">the-ripper</field>
+			<field name="software_id" ref="openldap"/>
+		</record>
+		<record model="network.software.logpass">
+			<field name="login">suzan</field>
+			<field name="password">nazus</field>
+			<field name="software_id" ref="openldap"/>
+		</record>
+		<record model="network.software.logpass">
+			<field name="login">stevie</field>
+			<field name="password">wonder</field>
+			<field name="software_id" ref="postgresql"/>
+		</record>
+	</data>
+</terp>

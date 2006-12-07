@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<terp>
+	<data>
+		<report id="account_ledger"
+			string="General Ledger"
+			model="account.account"
+			name="account.grand.livre"
+			rml="account/report/grand_livre.rml"
+			auto="False"
+			menu="False"/>
+		<report id="account_3rdparty_ledger"
+			string="Third party ledger"
+			model="res.partner"
+			name="account.grand.livre.tiers"
+			rml="account/report/grand_livre_tiers.rml"
+			auto="False"
+			menu="False"/>
+		<report id="account_account_balance"
+			string="Account balance"
+			model="account.account"
+			name="account.account.balance"
+			rml="account/report/account_balance.rml"
+			auto="False"
+			menu="False"/>
+		<report id="account_3rdparty_account_balance"
+			string="Third party balance"
+			model="account.account"
+			name="account.partner.balance"
+			rml="account/report/partner_balance.rml"
+			auto="False"
+			menu="False"/>
+		<report id="account_budget"
+			string="Print Budget"
+			model="account.budget.post"
+			name="account.budget"
+			rml="account/report/budget_report.rml"
+			auto="False"
+			menu="False"/>
+		<report id="account_central_journal"
+			string="Print Central Journal"
+			model="account.journal.period"
+			name="account.central.journal"
+			rml="account/report/central_journal.rml"
+			auto="False"/>
+		<report id="account_general_journal"
+			string="Print General Journal"
+			model="account.journal.period"
+			name="account.general.journal"
+			rml="account/report/general_journal.rml"
+			auto="False"/>
+		<report id="account_journal"
+			string="Print Journal"
+			model="account.journal.period"
+			name="account.journal.period.print"
+			rml="account/report/account_journal.rml"
+			auto="False"/>
+		<report id="account_overdue" 
+			string="Overdue payments" 
+			model="res.partner" 
+			name="account.rappel" 
+			rml="account/report/rappel.rml" 
+			auto="False" />
+		<report id="account_invoices" 
+			string="Invoices" 
+			model="account.invoice" 
+			name="account.invoice" 
+			rml="account/report/invoice.rml"
+			auto="False"/>
+		<report id="account_transfers" 
+			string="Transfers" 
+			model="account.transfer" 
+			name="account.transfer" 
+			xml="account/report/transfer.xml" 
+			xsl="account/report/transfer.xsl"/>
+		<report id="account_intracom" 
+			string="IntraCom" 
+			model="account.move.line" 
+			name="account.intracom" 
+			menu="False" 
+			auto="False" />
+
+		<report id="account_move_line_list"
+			string="All Entries"
+			model="account.tax.code"
+			name="account.tax.code.entries"
+			rml="account/report/account_tax_code.rml"
+			/>
+
+
+		<report id="account_vat_declaration"
+			string="VAT Declaration"
+			model="account.tax.code"
+			name="account.vat.declaration"
+			rml="account/report/tax_report.rml"
+			auto="False"
+			menu="False"/>
+
+		<wizard 
+			string="Wizard VAT Declaration"
+			model="account.tax.code"
+			name="account.vat.declaration"
+			menu="False"
+			id="wizard_vat_declaration"/>
+
+		<menuitem
+			name="Financial Management/Reporting/VAT Declaration"
+			action="wizard_vat_declaration"
+			type="wizard"
+			id="menu_wizard_vat_declaration"/>
+
+
+		<!--
+
+		<report id="analytic_journal"
+			string="Analytic journal"
+			model="account.analytic.account"
+			name="account.analytic.journal"
+			xml="account/report/analytic_journal.rml"
+			auto="False" />
+		-->
+	</data>
+</terp>

@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<terp>
+	<data>
+		<report
+			id="analytic_journal_print"
+			string="Analytic Journal"
+			model="account.analytic.journal"
+			name="account.analytic.account.journal"
+			rml="account/project/report/analytic_journal.rml"
+			auto="False"
+			menu="False"/>
+			
+		<wizard
+			id="account_analytic_account_journal_report"
+			string="Analytic Journal"
+			model="account.analytic.journal"
+			name="account.analytic.account.journal.report"
+			keyword="client_print_multi"/>
+
+
+		<report
+			id="account_analytic_account_balance"
+			string="Analytic Balance"
+			model="account.analytic.account"
+			name="account.analytic.account.balance"
+			rml="account/project/report/analytic_balance.rml"
+			auto="False"
+			menu="False"/>
+
+		<wizard
+			id="account_analytic_account_balance_report"
+			string="Analytic Balance"
+			model="account.analytic.account"
+			name="account.analytic.account.balance.report"
+			keyword="client_print_multi"/>
+
+
+		<report
+			id="account_analytic_account_inverted_balance"
+			string="Inverted Analytic Balance"
+			model="account.analytic.account"
+			name="account.analytic.account.inverted.balance"
+			rml="account/project/report/inverted_analytic_balance.rml"
+			auto="False"
+			menu="False"/>
+
+		<wizard
+			id="account_analytic_account_inverted_balance_report"
+			string="Inverted Analytic Balance"
+			model="account.analytic.account"
+			name="account.analytic.account.inverted.balance.report"
+			keyword="client_print_multi"/>
+
+
+		<report
+			id="account_analytic_account_cost_ledger"
+			string="Cost Ledger"
+			model="account.analytic.account"
+			name="account.analytic.account.cost_ledger"
+			rml="account/project/report/cost_ledger.rml"
+			auto="False"
+			menu="False"/>
+
+		<wizard
+			id="account_analytic_account_cost_ledger_report"
+			string="Cost Ledger"
+			model="account.analytic.account"
+			name="account.analytic.account.cost_ledger.report"
+			keyword="client_print_multi"/>
+
+
+		<report
+			id="account_analytic_account_quantity_cost_ledger"
+			string="Cost Ledger (Only quantities)"
+			model="account.analytic.account"
+			name="account.analytic.account.quantity_cost_ledger"
+			rml="account/project/report/quantity_cost_ledger.rml"
+			auto="False"
+			menu="False"/>
+
+		<wizard
+			id="account_analytic_account_quantity_cost_ledger_report"
+			string="Cost Ledger (Only quantities)"
+			model="account.analytic.account"
+			name="account.analytic.account.quantity_cost_ledger.report"
+			keyword="client_print_multi"/>
+
+
+		<report
+			id="account_analytic_account_year_to_date_check"
+			string="Year to Date Check"
+			model="account.analytic.account"
+			name="account.analytic.account.year.to.date.check"
+			rml="account/project/report/year_to_date_check.rml"
+			auto="False"
+			menu="False"/>
+
+		<wizard
+			id="account_analytic_account_year_to_date_report"
+			string="Year to Date Check"
+			model="account.analytic.account"
+			name="account.analytic.account.year_to_date_check.report"
+			keyword="client_print_multi"/>
+	</data>
+</terp>
+
