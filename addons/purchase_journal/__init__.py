@@ -26,5 +26,6 @@
 #
 ##############################################################################
 
-import bvr
-import dta
+import purchase_journal
+import purchase_journal_inherit
+import purchase_journal_report

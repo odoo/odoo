@@ -1,7 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2004 TINY SPRL. (http://tiny.be) All Rights Reserved.
-#                    Fabien Pinckaers <fp@tiny.Be>
+# Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -26,5 +25,34 @@
 #
 ##############################################################################
 
-import bvr
-import dta
+import time
+from report import report_sxw
+
+class account_invoice_bvr(report_sxw.rml_parse):
+	def __init__(self, cr, uid, name, context):
+		super(account_invoice_bvr, self).__init__(cr, uid, name, context)
+		self.localcontext.update({
+			'time': time,
+			'user':self.pool.get("res.users").browse(cr,uid,uid),
+			'mod10r': self._mod10r,
+		})
+
+	def _mod10r(self,nbr):
+		"""
+		Input arg : account or invoice number
+		Output return: the same number completed with the recursive mod10
+		key
+		"""
+
+		codec=[0,9,4,6,8,2,7,1,3,5]
+		report = 0
+		result=""
+		for chiffre in nbr:
+			
+			if not chiffre.isdigit():
+				continue
+			
+			report = codec[ (int(chiffre) +report) % 10 ] 
+			result += chiffre
+		return result + str((10-report) % 10)
+report_sxw.report_sxw('report.l10n_ch.bvr', 'account.invoice', 'addons/l10n_ch_bvr/bvr/bvr.rml', parser=account_invoice_bvr)

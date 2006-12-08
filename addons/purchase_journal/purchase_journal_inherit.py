@@ -26,5 +26,12 @@
 #
 ##############################################################################
 
-import bvr
-import dta
+from osv import osv, fields
+
+
+class purchase(osv.osv):
+	_inherit="purchase.order"
+	_columns = {
+		'journal_id': fields.many2one('purchase_journal.purchase.journal', 'Journal', relate=True),
+	}
+purchase()
