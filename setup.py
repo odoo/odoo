@@ -89,7 +89,7 @@ def data_files():
               ['man/terp_serverrc.5']),
              (opj('share','doc', 'tinyerp-server-%s' % version), 
               [f for f in glob.glob('doc/*') if os.path.isfile(f)]),
-             (opj('lib','python%s' % py_short_version, 'site-package', 'tinyerp-server', 'i18n'), 
+             (opj('lib','python%s' % py_short_version, 'site-packagess', 'tinyerp-server', 'i18n'), 
               glob.glob('bin/i18n/*')),
              (opj('lib', 'python%s' % py_short_version, 'site-packages', 'tinyerp-server', 'addons', 'custom'),
               glob.glob('bin/addons/custom/*xml') + 
