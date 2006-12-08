@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2004 TINY SPRL. (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2004-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #                    Fabien Pinckaers <fp@tiny.Be>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -26,17 +26,15 @@
 #
 ##############################################################################
 
-import ir_sequence
-import ir_ui_menu
-import ir_ui_view
-import ir_actions
-import ir_default
-import ir_model
-import ir_report_custom
-import ir_attachment
-import ir_cron
-import ir_values
-import ir_translation
-import ir_exports
-import workflow
-import ir_board
+from osv import fields,osv
+
+class board(osv.osv):
+	_name = 'ir.board'
+	def create(self, cr, user, vals, context={}):
+		return False
+	def copy(self, cr, uid, id, default=None, context={}):
+		return False
+	_columns = {
+		'name': fields.char('Board', size=64),
+	}
+board()
