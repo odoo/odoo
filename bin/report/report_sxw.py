@@ -274,20 +274,22 @@ class rml_parse(object):
 		self.ids = ids
 		self.objects = objects
 
-	def _parse(self, rml_dom, objects, data):
+	def _parse(self, rml_dom, objects, data, header=False):
 		self.node_context = {}
 		self.dom = rml_dom
 		self._node = self.dom.documentElement
-		self._add_header(self._node)
+		if header:
+			self._add_header(self._node)
 		self._parse_node()
 		res = self.dom.documentElement.toxml('utf-8')
 		return res
 
 class report_sxw(report_rml):
-	def __init__(self, name, table, rml, parser=rml_parse):
+	def __init__(self, name, table, rml, parser=rml_parse, header=True):
 		report_rml.__init__(self, name, table, rml, '')
 		self.name = name
 		self.parser = parser
+		self.header = header
 
 	def getObjects(self, cr, uid, ids, context):
 		table_obj = pooler.get_pool(cr.dbname).get(self.table)
@@ -302,7 +304,7 @@ class report_sxw(report_rml):
 		
 		rml_dom = xml.dom.minidom.parseString(rml)
 		
-		rml2 = rml_parser._parse(rml_dom, objs, data)
+		rml2 = rml_parser._parse(rml_dom, objs, data, header=self.header)
 		f = file("/tmp/debug.rml", "w")
 		f.write(rml2)
 		f.close()
