@@ -97,6 +97,17 @@
 		</field>
 	</record>
 
+	<record model="ir.ui.view" id="view_order_category_graph">
+		<field name="name">report.sale.order.category.graph</field>
+		<field name="model">report.sale.order.category</field>
+		<field name="type">graph</field>
+		<field name="arch" type="xml">
+			<graph string="Sales Orders by category" type="pie">
+				<field name="category_id"/>
+				<field name="price_average"/>
+			</graph>
+		</field>
+	</record>
 	<record model="ir.actions.act_window" id="action_order_category_tree">
 		<field name="name">report.sale.order.category.tree</field>
 		<field name="res_model">report.sale.order.category</field>
@@ -109,7 +120,7 @@
 		<field name="name">report.sale.order.category.tree</field>
 		<field name="res_model">report.sale.order.category</field>
 		<field name="view_type">form</field>
-		<field name="view_mode">tree</field>
+		<field name="view_mode">tree,graph</field>
 	</record>
 	<menuitem name="Sales Management/Reporting/All Months/Sales by Category of Product" action="action_order_category_tree_all" id="menu_report_order_category_all"/>
 

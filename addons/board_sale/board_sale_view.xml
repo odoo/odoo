@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<terp>
+	<data>
+
+		<record model="ir.ui.view" id="board_sales_manager_form">
+			<field name="name">board.sales.manager.form</field>
+			<field name="model">ir.board</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Sales manager board">
+					<hpaned>
+						<child1>
+							<action string="Your open request quotation" name="%(sale.action_order_tree10)d" colspan="3"/>
+							<action string="Top ten sales of the month" name="%(report_sale.action_order_sale_list)d" colspan="3"/>
+							<action string="Sales of the month" name="%(sale.action_order_tree5)d" colspan="3"/>
+						</child1>
+
+						<child2>
+							<action string="Sales by Category of the month" name="%(report_sale.action_order_category_tree_all)d"
+								view_mode="graph,tree" colspan="3"/>
+							<action string="Cases of the month" name="%(report_crm.action_report_crm_case_user_tree_month)d" view_mode="graph,tree" colspan="3"/>
+						</child2>
+					</hpaned>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="open_board_sales_manager">
+			<field name="name">board.sales.manager</field>
+			<field name="res_model">ir.board</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="board_sales_manager_form"/>
+		</record>
+
+		<menuitem name="Board/Sales Manager" action="open_board_sales_manager" sequence="1" id="menu_board_sales_manager"/>
+	</data>
+</terp>
