@@ -559,6 +559,13 @@ class _rml_flowable(object):
 			return platypus.NextPageTemplate(str(node.getAttribute('name')))
 		elif node.localName=='nextFrame':
 			return platypus.CondPageBreak(1000)           # TODO: change the 1000 !
+		elif node.localName == 'currentFrame':
+			#return platypus.CondPageBreak(1000)           # TODO: change the 1000 !
+			from reportlab.platypus.doctemplate import CurrentFrameFlowable
+			return CurrentFrameFlowable(str(node.getAttribute('name')))
+		elif node.localName == 'frameEnd':
+			return False
+			return EndFrameFlowable()
 		else:
 			sys.stderr.write('Warning: flowable not yet implemented: %s !\n' % (node.localName,))
 			return None
@@ -577,6 +584,31 @@ class _rml_flowable(object):
 			node = node.nextSibling
 		return story
 
+from reportlab.platypus.doctemplate import ActionFlowable
+
+class EndFrameFlowable(ActionFlowable):
+	def __init__(self,resume=0):
+		ActionFlowable.__init__(self,('frameEnd',resume))
+
+class TinyDocTemplate(platypus.BaseDocTemplate):
+
+	def handle_pageBegin(self):
+		self.page = self.page + 1
+		self.pageTemplate.beforeDrawPage(self.canv,self)
+		self.pageTemplate.checkPageSize(self.canv,self)
+		self.pageTemplate.onPage(self.canv,self)
+		for f in self.pageTemplate.frames: f._reset()
+		self.beforePage()
+		#keep a count of flowables added to this page.  zero indicates bad stuff
+		self._curPageFlowableCount = 0
+		if hasattr(self,'_nextFrameIndex'):
+			del self._nextFrameIndex
+		for f in self.pageTemplate.frames:
+			if f.id == 'first':
+				self.frame = f
+				break
+		self.handle_frameBegin()
+
 class _rml_template(object):
 	def __init__(self, out, node, doc, images={}, path='.'):
 		self.images= images
@@ -587,7 +619,7 @@ class _rml_template(object):
 			ps = map(lambda x:x.strip(), node.getAttribute('pageSize').replace(')', '').replace('(', '').split(','))
 			pageSize = ( utils.unit_get(ps[0]),utils.unit_get(ps[1]) )
 		cm = reportlab.lib.units.cm
-		self.doc_tmpl = platypus.BaseDocTemplate(out, pagesize=pageSize, **utils.attr_get(node, ['leftMargin','rightMargin','topMargin','bottomMargin'], {'allowSplitting':'int','showBoundary':'bool','title':'str','author':'str'}))
+		self.doc_tmpl = TinyDocTemplate(out, pagesize=pageSize, **utils.attr_get(node, ['leftMargin','rightMargin','topMargin','bottomMargin'], {'allowSplitting':'int','showBoundary':'bool','title':'str','author':'str'}))
 		self.page_templates = []
 		self.styles = doc.styles
 		self.doc = doc
@@ -595,7 +627,7 @@ class _rml_template(object):
 		for pt in pts:
 			frames = []
 			for frame_el in pt.getElementsByTagName('frame'):
-				frame = platypus.Frame( **(utils.attr_get(frame_el, ['x1','y1', 'width','height', 'leftPadding', 'rightPadding', 'bottomPadding', 'topPadding'], {'id':'text', 'showBoundary':'bool'})) )
+				frame = platypus.Frame( **(utils.attr_get(frame_el, ['x1','y1', 'width','height', 'leftPadding', 'rightPadding', 'bottomPadding', 'topPadding'], {'id':'str', 'showBoundary':'bool'})) )
 				frames.append( frame )
 			gr = pt.getElementsByTagName('pageGraphics')
 			if len(gr):
