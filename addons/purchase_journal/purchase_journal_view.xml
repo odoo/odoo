@@ -113,9 +113,8 @@
 		<field name="model">purchase.order</field>
 		<field name="inherit_id" ref="purchase.purchase_order_form" />
 		<field name="arch" type="xml">
-			<field name="client_order_ref" position="after">
+			<field name="date_approve" position="after">
 				<field name="journal_id" select="1"/>
-				<field name="invoice_type_id" select="1"/>
 			</field>
 		</field>
 	</record>
@@ -127,7 +126,6 @@
 		<field name="arch" type="xml">
 			<field name="state" position="after">
 				<field name="journal_id"/>
-				<field name="invoice_type_id"/>
 			</field>
 		</field>
 	</record>

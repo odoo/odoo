@@ -36,15 +36,14 @@ class report_purchase_journal_purchase(osv.osv):
 	_columns = {
 		'name': fields.date('Month', readonly=True),
 		'state': fields.selection([
-			('draft','Quotation'),
-			('waiting_date','Waiting Schedule'),
-			('manual','Manual in progress'),
-			('progress','In progress'),
-			('shipping_except','Shipping Exception'),
-			('invoice_except','Invoice Exception'),
-			('done','Done'),
-			('cancel','Cancel')
-		], 'Order State', readonly=True),
+			('draft', 'Request for Quotation'),
+			('wait', 'Waiting'),
+			('confirmed', 'Confirmed'),
+			('approved', 'Approved'),
+			('except_ship', 'Shipping Exception'),
+			('except_invoice', 'Invoice Exception'),
+			('done', 'Done'), ('cancel', 'Cancelled')], 'Order State', readonly=True,
+			select=True),
 		'journal_id':fields.many2one('purchase_journal.purchase.journal', 'Journal', readonly=True, relate=True),
 		'quantity': fields.float('Quantities', readonly=True),
 		'price_total': fields.float('Total Price', readonly=True),

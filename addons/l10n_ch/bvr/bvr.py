@@ -55,4 +55,10 @@ class account_invoice_bvr(report_sxw.rml_parse):
 			report = codec[ (int(chiffre) +report) % 10 ] 
 			result += chiffre
 		return result + str((10-report) % 10)
-report_sxw.report_sxw('report.l10n_ch.bvr', 'account.invoice', 'addons/l10n_ch_bvr/bvr/bvr.rml', parser=account_invoice_bvr)
+
+report_sxw.report_sxw(
+	'report.l10n_ch.bvr',
+	'account.invoice',
+	'addons/l10n_ch/bvr/bvr.rml',
+	parser=account_invoice_bvr,
+	header=False)

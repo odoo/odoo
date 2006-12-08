@@ -1,7 +1,9 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004 TINY SPRL. (http://tiny.be) All Rights Reserved.
-#                    Fabien Pinckaers <fp@tiny.Be>
+# Copyright (c) 2004-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#
+# $Id: account.py 1005 2005-07-25 08:41:42Z nicoe $
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -26,4 +28,13 @@
 #
 ##############################################################################
 
-import bvr
+import netsvc
+from osv import fields, osv
+
+class res_company(osv.osv):
+	_inherit = "res.company"
+	_columns = {
+		'bvr_number': fields.char('BVR Number', size=9)
+	}
+res_company()
+

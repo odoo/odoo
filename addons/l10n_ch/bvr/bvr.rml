@@ -2,8 +2,8 @@
 <document filename="test.pdf">
   <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
     <pageTemplate id="first">
-      <frame id="Frame1" x1="33.0" y1="7" width="527.0" height="68.0"/>
-      <frame id="first" x1="34.0" y1="28.0" width="527" height="786"/>
+      <frame id="Frame1" x1="33.0" y1="32" width="527.0" height="210.0"/>
+      <frame id="first" x1="34.0" y1="28.0" width="527" height="706"/>
     </pageTemplate>
   </template>
   <stylesheet>
@@ -14,21 +14,25 @@
     <blockTableStyle id="Table1">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <lineStyle kind="GRID" colorName="black"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table2">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
     </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
-    <paraStyle name="P1" fontName="Courier-Bold" fontSize="12.0" leading="15" alignment="LEFT"/>
-    <paraStyle name="P2" fontName="Courier" fontSize="9.0" leading="11" alignment="LEFT"/>
-    <paraStyle name="P3" fontName="Courier" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P4" fontName="Courier" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P5" fontName="Courier" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P6" fontName="Courier" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P1" fontName="Times-Roman" fontSize="11.0" leading="14"/>
+    <paraStyle name="P2" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="LEFT"/>
+    <paraStyle name="P3" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P4" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P5" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P6" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P7" fontName="Courier-Bold" fontSize="12.0" leading="15" alignment="LEFT"/>
     <paraStyle name="P8" fontName="Times-Roman" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P9" fontName="Times-Roman" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P10" fontName="Times-Roman" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P9" fontName="Times-Roman" fontSize="12.0" leading="15" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P10" fontName="Times-Roman" fontSize="11.0" leading="14"/>
+    <paraStyle name="P11" fontName="Times-Roman" fontSize="11.0" leading="14" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="List" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -40,75 +44,73 @@
   </stylesheet>
   <story>
     <para style="P8">[[ repeatIn(objects,'o') ]]<font face="Times-Roman">[[ setLang(o.partner_id.lang) ]]</font></para>
-    <para style="P9">Header of Document</para>
-    <para style="P9">
+    <blockTable colWidths="264.0,264.0" style="Table2">
+      <tr>
+        <td>
+          <para style="P9">
+            <font color="white"> </font>
+          </para>
+        </td>
+        <td>
+          <para style="P10">[[ o.partner_id.title or '' ]] [[ o.partner_id.name ]]</para>
+          <para style="P10">[[ o.address_invoice_id.title or '' ]] [[ o.address_invoice_id.name ]]</para>
+          <para style="P10">[[ o.address_invoice_id.street ]]</para>
+          <para style="P10">[[ o.address_invoice_id.street2 or '' ]]</para>
+          <para style="P10">[[ o.address_invoice_id.zip or '' ]] [[ o.address_invoice_id.city or '' ]]</para>
+          <para style="P10">[[ o.address_invoice_id.state_id and o.address_invoice_id.state_id.name or '' ]]</para>
+          <para style="P10">[[ o.address_invoice_id.country_id and o.address_invoice_id.country_id.name or '' ]]</para>
+        </td>
+      </tr>
+    </blockTable>
+    <para style="P11">
       <font color="white"> </font>
     </para>
-    <para style="P9">
+    <para style="P11"><font face="Helvetica-Bold">Subject: </font>Invoice - [[ o.number ]]</para>
+    <para style="P11">
       <font color="white"> </font>
     </para>
-    <para style="P9">
+    <para style="P11">Dear customer,</para>
+    <para style="P11">Here is the BVR to allow you to pay the invoice ' <font face="Times-Roman">[[ o.name ]]</font>', reference:<font face="Times-Roman"> [[ o.number ]].</font></para>
+    <para style="P11">Thanks,</para>
+    <para style="P11">
       <font color="white"> </font>
     </para>
-    <para style="P10">
-      <font color="white"> </font>
-    </para>
+    <para style="P11">[[ user.signature ]]</para>
     <currentFrame name="Frame1"/>
-    <para style="P1">
-      <font color="white"> </font>
-    </para>
-    <blockTable colWidths="126.0,135.0,167.0,90.0" style="Table1">
+    <blockTable colWidths="144.0,151.0,243.0" style="Table1">
       <tr>
         <td>
-          <para style="P2">Versement pour :</para>
-          <para style="P2">Banque Cantonale Vaudoise</para>
-          <para style="P2">1001 Lausanne</para>
+          <para style="P1">[[ user.company_id.partner_id.name ]]</para>
+          <para style="P1">[[ user.company_id.partner_id.address[0].name ]]</para>
+          <para style="P1">[[ user.company_id.partner_id.address[0].street ]]</para>
+          <para style="P1">[[ user.company_id.partner_id.address[0].street2 ]]</para>
+          <para style="P1">[[ user.company_id.partner_id.address[0].zip ]] [[ user.company_id.partner_id.address[0].country_id.name ]]</para>
         </td>
         <td>
-          <para style="P2">Versement pour :</para>
-          <para style="P2">Banque Cantonale Vaudoise</para>
-          <para style="P2">1001 Lausanne</para>
-        </td>
-        <td>
-          <para style="P3">Motif :</para>
+          <para style="P1">[[ user.company_id.partner_id.name ]]</para>
+          <para style="P1">[[ user.company_id.partner_id.address[0].name ]]</para>
+          <para style="P1">[[ user.company_id.partner_id.address[0].street ]]</para>
+          <para style="P1">[[ user.company_id.partner_id.address[0].street2 ]]</para>
+          <para style="P2">[[ user.company_id.partner_id.address[0].zip ]] [[ user.company_id.partner_id.address[0].country_id.name ]]</para>
         </td>
         <td>
           <para style="P3">
             <font color="white"> </font>
           </para>
+          <para style="P3">
+            <font color="white"> </font>
+          </para>
+          <para style="P3">[[ mod10r(o.number).rjust(27,'0') ]]</para>
         </td>
       </tr>
       <tr>
         <td>
-          <para style="P3">En faveur de :</para>
-          <para style="P3">ALCO SA</para>
-          <para style="P4">1022 Chavanne-Lausanne</para>
-        </td>
-        <td>
-          <para style="P3">En faveur de :</para>
-          <para style="P3">ALCO SA</para>
-          <para style="P3">1022 Chavanne-Lausanne</para>
-        </td>
-        <td>
-          <para style="P3">
+          <para style="P4">
             <font color="white"> </font>
           </para>
         </td>
         <td>
-          <para style="P3">
-            <font color="white"> </font>
-          </para>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <para style="P3">compte : <font face="Times-Roman">[[mod10r(user.company_id.partner_id.bank_ids[0].iban) or '']]</font></para>
-        </td>
-        <td>
-          <para style="P3">compte : <font face="Times-Roman">[[mod10r(user.company_id.partner_id.bank_ids[0].iban) or '']]</font></para>
-        </td>
-        <td>
-          <para style="P3">
+          <para style="P4">
             <font color="white"> </font>
           </para>
         </td>
@@ -120,13 +122,10 @@
       </tr>
       <tr>
         <td>
-          <para style="P5">CHF [[ '%.2f' % o.amount_total ]]</para>
+          <para style="P4">[[ ('%.2f' % o.amount_total)[:-3] +' . '+ ('%.2f' % o.amount_total)[-2:] ]]</para>
         </td>
         <td>
-          <para style="P5">CHF [[ '%.2f' % o.amount_total ]]</para>
-        </td>
-        <td>
-          <para style="P4">[[ mod10r(o.number).rjust(27,'0')]]</para>
+          <para style="P4">[[ ('%.2f' % o.amount_total)[:-3] +' . '+ ('%.2f' % o.amount_total)[-2:] ]]</para>
         </td>
         <td>
           <para style="P3">
@@ -136,51 +135,35 @@
       </tr>
       <tr>
         <td>
-          <para style="P2">Versé par</para>
-          <para style="P2">[[ o.partner_id.title or '' ]] [[ o.partner_id.name ]]</para>
-          <para style="P2">[[ o.address_invoice_id.zip or '' ]] [[ o.address_invoice_id.city or '' ]]</para>
-        </td>
-        <td>
-          <para style="P2">
+          <para style="P5">
             <font color="white"> </font>
           </para>
         </td>
         <td>
-          <para style="P3">Versé par</para>
-          <para style="P2">[[ o.partner_id.title or '' ]] [[ o.partner_id.name ]]</para>
-          <para style="P3">[[ o.address_invoice_id.zip or '' ]] [[ o.address_invoice_id.city or '' ]]</para>
+          <para style="P5">
+            <font color="white"> </font>
+          </para>
         </td>
         <td>
-          <para style="P3">
+          <para style="P5">
             <font color="white"> </font>
           </para>
         </td>
       </tr>
+	  <tr>
+        <td>
+          <para style="P5">
+            <font color="white"> </font>
+          </para>
+        </td>
+        <td>
+        </td>
+        <td>
+        </td>
+	  </tr>
       <tr>
         <td>
-          <para style="P3">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="P3">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="P3">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="P3">
-            <font color="white"> </font>
-          </para>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <para style="P3">
+          <para style="P5">
             <font color="white"> </font>
           </para>
         </td>
@@ -188,10 +171,7 @@
           <para style="P6">01<font face="Times-Roman">[[mod10r('%.2f' % o.amount_total).rjust(11,'0')]]&gt;</font></para>
         </td>
         <td>
-          <para style="P4">[[ mod10r(o.number).rjust(27,'0')]]+</para>
-        </td>
-        <td>
-          <para style="P4">[[mod10r(user.company_id.partner_id.bank_ids[0].iban)]]&gt;</para>
+          <para style="P3">[[ mod10r(o.number).rjust(27,'0')]]+ [[user.company_id.bvr_number]]&gt;</para>
         </td>
       </tr>
     </blockTable>
@@ -199,7 +179,6 @@
       <font color="white"> </font>
     </para>
     <frameEnd/>
-    <pageBreak/>
   </story>
 </document>
 
