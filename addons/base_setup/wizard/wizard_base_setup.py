@@ -30,6 +30,7 @@ import wizard
 import pooler
 import time
 import tools
+import os
 
 view_form_profit = """<?xml version="1.0"?>
 <form string="Setup">
@@ -218,7 +219,7 @@ class wizard_base_setup(wizard.interface):
 		langs=lang_obj.browse(cr, uid, lang_ids)
 		for lang in langs:
 			if lang.code and lang.code != 'en_EN':
-				filename=tools.config["root_path"]+"/i18n/" + lang.code + ".csv"
+				filename=os.path.join(tools.config["root_path"], "i18n", lang.code + ".csv")
 				tools.trans_load(cr.dbname, filename, lang.code)
 		return {}
 	def _menu(self, cr, uid, data, context):
