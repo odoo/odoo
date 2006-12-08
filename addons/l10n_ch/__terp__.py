@@ -7,11 +7,10 @@
 	"author" : "Camptocamp",
 	"category" : "Localisation/Europe",
 	"website": "http://www.tinyerp.com",
-	"depends" : ["base", "account"],#l10n_ch
-	"init_xml" : [],
-	"demo_xml" : [],#"zip_code_default.xml"
+	"depends" : ["base", "account"],
+	"init_xml" : ["zip_code_default.xml"],
+	"demo_xml" : ["vaudtax_data_demo.xml"],
 	"update_xml" : ["vaudtax_data.xml","account_vat.xml","base_config.xml","account_config.xml"],
-	#"update_xml" : ["vaudtax_data.xml"],
 	"active": False,
 	"installable": True
 }
