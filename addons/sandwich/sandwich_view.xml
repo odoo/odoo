@@ -158,16 +158,16 @@
 			<field name="arch" type="xml">
 				<form string="Ordering of this day sandwich">
 					<notebook>
-						<page string="Order of the day">
+						<page string="Sandwich Order">
 							<separator string="Informations" colspan="4"/>
 							<field name="name" colspan="3" select="1"/>
 							<field name="partner" select="1"/>
 							<field name="date" select="1"/>
 							<separator string="Order lines" colspan="4"/>
-							<field name="order_lines" colspan="3" select="1"/>
+							<field name="order_lines" colspan="3"/>
 						</page>
 						<page string="notes">
-							<field name="note" colspan="3" select="1"/>
+							<field name="note" colspan="4" nolabel="1" select="1"/>
 						</page>
 					</notebook>
 				</form>

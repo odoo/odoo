@@ -60,5 +60,5 @@ class report_account_analytic_line_to_invoice(osv.osv):
 				GROUP BY SUBSTRING(date for 7), product_id, product_uom_id, account_id
 			)
 		""")
-report_account_analytic_line_to_invoice()
+#report_account_analytic_line_to_invoice()
 
