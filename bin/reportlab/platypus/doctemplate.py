@@ -478,7 +478,7 @@ class BaseDocTemplate:
         else:
             raise TypeError, "argument fx should be string or integer"
 
-    def handle_currentFrame(self,fx):
+    def handle_currentFrame(self, fx, resume=0):
         '''chenge to the frame with name or index fx'''
         if type(fx) is StringType:
             for f in self.pageTemplate.frames:

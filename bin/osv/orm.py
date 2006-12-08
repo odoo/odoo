@@ -639,6 +639,7 @@ class orm(object):
 			try:
 				self.create(cr, uid, res, context)
 			except Exception, e:
+				print e
 				cr.rollback()
 				return (-1, res, e[0], warning)
 			done += 1
