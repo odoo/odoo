@@ -236,6 +236,7 @@ def trans_generate(lang, modules):
 
 def trans_load(db_name, filename, lang, strict=False):
 	logger = netsvc.Logger()
+	data=''
 	try:
 		data=file(filename,'r').read().split('\n')
 	except IOError:
