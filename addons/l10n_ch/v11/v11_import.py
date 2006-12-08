@@ -28,7 +28,6 @@ import pooler
 import time
 import wizard
 import ir
-from osv.osv import  except_osv 
 import netsvc
 from time import sleep
 from base64 import b64decode
@@ -55,99 +54,110 @@ test_fields = {
 
 def _v11_parsing(self, cr, uid, data, context):
 
-	# TODO:
-	# - verifier que la ligne de somme coincide avec le reste
-	# - verifier que chaque est au bon format : que des num,
-	#   bin nbre de num, ... ex: "123".isdigit()
-	# Attention : p-e dependant de la banque ...
-	
-	# TODO (trunk) :
-	
 	pool = pooler.get_pool(cr.dbname)
-	v11 = pool.get('account.v11').browse(cr, uid, data['ids'])[0]
+	v11_obj = pool.get('account.v11')
+	
+	for v11 in v11_obj.browse(cr, uid, data['ids']):
 
-	line=""
-	record={}
-	total={}
-	total_compute= 0
-	rec_list=[]
-
-	for char  in b64decode(v11.file):
-
-		if not char == '\n':
-			line += char
-
-		else :
-			
-			record['genre'] = line[0:3]
-
-			print line
-			print line[0:]
-			print record['genre']
-			print 
-			if record['genre'] == '999':
+		line=""
+		record={}
+		total={}
+		total_compute= 0
+		rec_list=[]
+		log=''
 
 
+		# v11 parsing :
+		for char  in b64decode(v11.file):
 
-				total={'n_postal': line[3:12],
-				  'cle': line[12:39],
-				  'tot_montant': line[39:51],
-				  'nb_rec': line[51:63],
-				  'date_etabl': line[63:69],
-				  'tot_frais_encaissement': line[69:78],
-				}
+			if not char == '\n':
+				line += char
 
 			else :
 
+				record['genre'] = line[0:3]
 
-				record={'n_postal': line[3:12],
-						'n_ref': line[12:39],
-						'montant': line[39:49],
-						'reserve': line[49:59],
-						'date_remise': line[59:65],
-						'date_comptable': line[65:71],
-						'date_valeur': line[71:77],
-						'internal_ref': line[77:87],
-						'reserve2': line[87:96],
-						'frais_encaissement': line[96:100],
-				}
-				
-				total_compute+= int(record['montant'])
-				rec_list.append( record )
-
-			line=""
-
-			#for key in sorted(record.keys()):
-			#print key," : ", record[key]
+				if record['genre'] == '999':
 
 
-	# TODO : raise a correct error message
-	if not total_compute == int(total['tot_montant']):
-		raise except_osv('warning', 'Incoherent v11 file !')
-	else:
+
+					total={'n_postal': line[3:12],
+					  'cle': line[12:39],
+					  'tot_montant': line[39:51],
+					  'nb_rec': line[51:63],
+					  'date_etabl': line[63:69],
+					  'tot_frais_encaissement': line[69:78],
+					}
+
+				else :
+
+					record={'n_postal': line[3:12],
+							'n_ref': line[12:39],
+							'montant': line[39:49],
+							'reserve': line[49:59],
+							'date_remise': line[59:65],
+							'date_comptable': line[65:71],
+							'date_valeur': line[71:77],
+							'internal_ref': line[77:87],
+							'reserve2': line[87:96],
+							'frais_encaissement': line[96:100],
+							'line':line,
+					}
+
+					total_compute+= int(record['montant'])
+					rec_list.append( record )
+
+				line=""
+
+
+		# check the amounts :
+		if not total_compute == int(total['tot_montant']):
+			raise wizard.except_wizard('warning', 'Incoherent v11 file !')
+			continue
+		
+
 
 		period_id = pool.get('account.period').find(cr,uid, context=context)
 		if not period_id:
-			raise osv.except_osv('No period found !', 'Unable to find a valid period !')
+			raise wizard.except_wizard('No period found !', 'Unable to find a valid period !')
 		period_id = period_id[0]
-		invoice_obj= pool.browse('account.invoice')
+		invoice_obj= pool.get('account.invoice')
 		for rec in rec_list:
 
+
+
+			# recherche sur l'id (pr garder un num absolu):
+			# implique de mettre l'id sur le bvr..
+			invoice_id= invoice_obj.search(cr,uid,[ ('id','=',int(rec['internal_ref'])) ])[0]
+			print invoice_id
+			invoice = invoice_obj.browse(cr, uid, invoice_id)
+			invoice_obj.write(cr,uid,[invoice_id],{'state':'paid'})
+
+
+
+			# TODO feedbacker en log les erreurs
+			acc2 = pool.get('account.journal').browse(cr,uid,data['form']['journal_id'],context).default_debit_account_id.id
+			if not 	acc2:
+				raise wizard.except_wizard('Warning !', 'No debit account specified for this journal !')
+				continue
+
+			# TODO idem
+			try:
+				acc1 = invoice.partner_id.property_account_receivable[0]
+			except:
+				raise wizard.except_wizard('Warning !','invoice with number '+str(int(rec['internal_ref'])) +' has no partner !')
+				continue
+
+
+
 			move_id = pool.get('account.move').create(cr, uid, {
- 				'name': 'Imported from v11',
+				'name': 'Imported from v11',
 				'period_id': period_id,
 				'journal_id': data['form']['journal_id']
 			})
 
-			invoice_id= invoice_obj.search(cr,uid,[ ('number','=',rec['internal_ref']) ])
-			invoice = invoice_obj.browse(cr, uid, invoice_id)
-			acc1 = invoice.partner_id.property_account_receivable
-			acc2 = journal.default_debit_account_id
-			
-			#
-			# Vérifier que tu recois bien un int, sinon [0]
-			#
 
+			
 			pool.get('account.move.line').create(cr,uid,{
 				'name': 'v11',
 				'debit': 0,
@@ -158,7 +168,7 @@ def _v11_parsing(self, cr, uid, data, context):
 				'date': time.strftime('%Y-%m-%d'),
 				'period_id': period_id,
 				'journal_id': data['form']['journal_id']
-				
+
 				})
 			pool.get('account.move.line').create(cr,uid,{
 				'name': 'v11',
@@ -170,14 +180,17 @@ def _v11_parsing(self, cr, uid, data, context):
 				'date': time.strftime('%Y-%m-%d'),
 				'period_id': period_id,
 				'journal_id': data['form']['journal_id']
-				
+
 				})
-		
-
-	#print total
-	#print rec_list
 
 
+
+		log= log + 'Number of parsed lines : '+ str(len(rec_list)) +'\nTotal amount for this bvr : '+ str(int(total['tot_montant']))+' '+invoice.currency_id.name
+
+
+		v11.write(cr,uid,[v11.id],{'note': log })
+
+		# peut-etre retourner un nouvel onglet avec la liste des ecritures generee :
 	return {}
 
 

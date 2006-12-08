@@ -12,9 +12,10 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="V11">
-				<field name="file"/>
-				<newline/>
-				<field name="note"/>
+				<field name="name" />
+				<field name="file" />
+				<separator colspan="3" />
+				<field name="note" colspan="4" select="1"/>
 			</form>
 		</field>
 	</record>
