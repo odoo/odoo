@@ -331,8 +331,8 @@
 		<field name="type">graph</field>
 		<field name="arch" type="xml">
 			<graph string="Sales Order Lines">
-				<field name="product_id"/>
-				<field name="price_unit"/>
+				<field name="product_id" group="True"/>
+				<field name="price_unit" operator="+"/>
 			</graph>
 		</field>
 	</record>
