@@ -50,7 +50,14 @@ def _eval_xml(self,node, pool, cr, uid, idref):
 				idref['ref'] = lambda x: self.id_get(cr, False, x)
 				return eval(a_eval, idref)
 			if t == 'xml':
+				#def _process(s):
+				#	groups = re.search
+				#	%(.*?)d
+				#	for group
+				#	replace(group(0), self.id_get(cr, False, group(0))
+				#txt = '<?xml version="1.0"?>\n'+_process("".join([i.toxml().encode("utf8") for i in node.childNodes]))
 				txt = '<?xml version="1.0"?>\n'+"".join([i.toxml().encode("utf8") for i in node.childNodes]) % idref
+
 				return txt
 			if t in ('char', 'int', 'float'):
 				d = ""
