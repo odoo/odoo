@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<terp>
+<data>
+
+	<record model="ir.ui.view" id="account_dta_from">
+		<field name="name">account.dta</field>
+		<field name="model">account.dta</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="DTA">
+				<field name="name" colspan="2"/>
+				<newline/>
+				<field name="note" colspan="2"/>
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="action_account_dta_form">
+		<field name="name">account.dta</field>
+		<field name="res_model">account.dta</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">form,tree</field>
+	</record>
+
+
+	<menuitem name="Financial Management/Create dta file" id="menu_account_dta_form" action="action_account_dta_form"/>
+</data>
+</terp>

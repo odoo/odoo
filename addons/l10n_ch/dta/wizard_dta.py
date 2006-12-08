@@ -1,7 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2004 TINY SPRL. (http://tiny.be) All Rights Reserved.
-#                    Fabien Pinckaers <fp@tiny.Be>
+# Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -25,4 +24,19 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-import dta
+
+import wizard
+
+
+
+
+
+
+class wizard_invoice_dta_create(wizard.interface):
+	states = {
+		'init': {
+			'actions': [], 
+			'result': {'type':'state', 'state':'end'}
+		}
+	}
+wizard_invoice_confirm('account.invoice.dta.create')

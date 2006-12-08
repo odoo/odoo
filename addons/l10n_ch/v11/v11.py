@@ -25,4 +25,16 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-import dta
+
+
+from osv import osv, fields
+
+class account_v11(osv.osv):
+	_name ='account.v11'
+	_columns = {
+		'file': fields.binary('V11 file'),
+		'note': fields.text('Import log'),
+		}
+
+account_v11()
+
