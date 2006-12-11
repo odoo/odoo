@@ -332,6 +332,7 @@ class sale_order(osv.osv):
 			picking_id = False
 			for line in order.order_line:
 				proc_id=False
+				date_planned = (DateTime.now() + DateTime.RelativeDateTime(days=line.delay or 0.0)).strftime('%Y-%m-%d')
 				if line.state == 'done':
 					continue
 				if line.product_id and line.product_id.product_tmpl_id.type in ('product', 'consu'):
@@ -355,7 +356,7 @@ class sale_order(osv.osv):
 						'name':'SO:'+order.name,
 						'picking_id': picking_id,
 						'product_id': line.product_id.id,
-						'date_planned': line.date_planned,
+						'date_planned': date_planned,
 						'product_qty': line.product_uom_qty,
 						'product_uom': line.product_uom.id,
 						'product_uos_qty': line.product_uos_qty,
@@ -372,7 +373,7 @@ class sale_order(osv.osv):
 					proc_id = self.pool.get('mrp.procurement').create(cr, uid, {
 						'name': order.name,
 						'origin': order.name,
-						'date_planned': line.date_planned,
+						'date_planned': date_planned,
 						'product_id': line.product_id.id,
 						'product_qty': line.product_uom_qty,
 						'product_uom': line.product_uom.id,
@@ -387,7 +388,7 @@ class sale_order(osv.osv):
 					proc_id = self.pool.get('mrp.procurement').create(cr, uid, {
 						'name': line.name,
 						'origin': order.name,
-						'date_planned': line.date_planned,
+						'date_planned': date_planned,
 						'product_id': line.product_id.id,
 						'product_qty': line.product_uom_qty,
 						'product_uom': line.product_uom.id,
@@ -487,7 +488,7 @@ class sale_order_line(osv.osv):
 		'order_id': fields.many2one('sale.order', 'Order Ref', required=True, ondelete='cascade', select=True),
 		'name': fields.char('Description', size=256, required=True, select=True),
 		'sequence': fields.integer('Sequence'),
-		'date_planned': fields.date('Date Promised', required=True),
+		'delay': fields.float('Delay', required=True),
 		'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok','=',True)], change_default=True, relate=True),
 		'invoice_lines': fields.many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id','invoice_id', 'Invoice Lines', readonly=True),
 		'invoiced': fields.boolean('Paid', readonly=True, select=True),
@@ -516,7 +517,7 @@ class sale_order_line(osv.osv):
 	_order = 'sequence'
 	_defaults = {
 		'discount': lambda *a: 0.0,
-		'date_planned': lambda *a: time.strftime('%Y-%m-%d'),
+		'delay': lambda *a: 0.0,
 		'product_uom_qty': lambda *a: 1,
 		'product_uos_qty': lambda *a: 1,
 		'sequence': lambda *a: 10,
@@ -598,9 +599,9 @@ class sale_order_line(osv.osv):
 		if price is False:
 			raise osv.except_osv('No valid pricelist line found !', "Couldn't find a pricelist line matching this product and quantity.\nYou have to change either the product, the quantity or the pricelist.")
 		res = self.pool.get('product.product').read(cr, uid, [product], context=context)[0]
-		dt = (DateTime.now() + DateTime.RelativeDateTime(days=res['sale_delay'] or 0.0)).strftime('%Y-%m-%d')
+#		dt = (DateTime.now() + DateTime.RelativeDateTime(days=res['sale_delay'] or 0.0)).strftime('%Y-%m-%d')
 
-		result = {'price_unit': price, 'type':res['procure_method'], 'date_planned':dt, 'notes':res['description_sale']}
+		result = {'price_unit': price, 'type':res['procure_method'], 'delay':(res['sale_delay'] or 0.0), 'notes':res['description_sale']}
 
 		taxes = self.pool.get('account.tax').browse(cr, uid, res['taxes_id'])
 		taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_tax

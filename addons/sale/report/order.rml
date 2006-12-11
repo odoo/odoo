@@ -145,7 +145,7 @@
           <para style="P14">Applicable Taxes</para>
         </td>
         <td>
-          <para style="P13">Date Promised</para>
+          <para style="P13">Delay</para>
         </td>
         <td>
           <para style="P13">Qty</para>
@@ -172,7 +172,7 @@
             <para style="P17">[[ ', '.join(map(lambda x: x.name, line.tax_id))]]</para>
           </td>
           <td>
-            <para style="P17">[[ time.strftime('%d/%m/%Y', time.strptime( line.date_planned, '%Y-%m-%d')) ]]</para>
+            <para style="P17">[[ line.delay ]]</para>
           </td>
           <td>
             <para style="P18">[[ line.product_uos_qty or line.product_uom_qty ]] [[ line.product_uos and line.product_uos.name or line.product_uom.name ]]</para>
