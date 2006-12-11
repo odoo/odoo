@@ -15,7 +15,22 @@
 			model="hr.employee"
 			name="hr.analytical.timesheet"
 			menu="False" />
-		<menuitem name="Human Resources/Hours encoding/Print timesheet" action="wizard_hr_timesheet" type="wizard" />
+		<menuitem
+			name="Human Resources/Hours encoding/Print a user timesheet"
+			action="wizard_hr_timesheet"
+			type="wizard"
+			id="menu_wizard_hr_timesheet"/>
+
+		<wizard id="wizard_hr_timesheet_my"
+			string="Print my timesheet"
+			model="hr.employee"
+			name="hr.analytical.timesheet.my"
+			menu="False" />
+		<menuitem
+			name="Human Resources/Hours encoding/Print my timesheet"
+			id="menu_wizard_hr_timesheet_my"
+			action="wizard_hr_timesheet_my"
+			type="wizard" />
 
 		<report id="report_users_timesheet"
 				string="Employees timesheet"

@@ -32,6 +32,8 @@ import datetime
 from report.interface import report_rml
 from report.interface import toxml 
 
+import pooler
+
 def lengthmonth(year, month):
 	if month == 2 and ((year % 4 == 0) and ((year % 100 != 0) or (year % 400 == 0))):
 		return 29
@@ -74,6 +76,9 @@ class report_custom(report_rml):
 		account_xml = []
 		for account, telems in accounts.iteritems():
 			aid, aname = account
+			aname = pooler.get_pool(cr.dbname).get('account.analytic.account').name_get(cr, uid, [aid], context)
+			aname = aname[0][1]
+
 			account_xml.append('<account id="%d" name="%s">' % (aid, toxml(aname)))
 			account_xml.append('\n'.join([xml % (day, amount) for day, amount in telems.iteritems()]))
 			account_xml.append('</account>')
