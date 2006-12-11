@@ -178,8 +178,8 @@
 			<field name="res_model">sandwich.order</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-			<field name="domain">[]</field>
 			<field name="view_id" eval="False"/>
+			<field name="domain">[('date','=',time.strftime('%Y-%m-%d'))]</field>
 		</record>
 		<menuitem name="Sandwich/Today's orders" id="menu_action_sandwich_order" action="action_sandwich_order"/>
 	</data>
