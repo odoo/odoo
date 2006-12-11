@@ -93,4 +93,13 @@ def change_column(cr, table, column, new_type, copy):
 change_column(cr, 'crm_case', 'date_closed', 'timestamp', True)
 cr.commit()
 
+# ----------------------------------------------------- #
+# add some fields (which cannot be added automatically) #
+# ----------------------------------------------------- #
+
+for line in (
+		"ALTER TABLE ir_module_module ADD demo BOOLEAN SET DEFAULT False",
+	):
+	cr.execute(line)
+
 cr.close()
