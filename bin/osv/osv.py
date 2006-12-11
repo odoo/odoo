@@ -49,10 +49,10 @@ class except_osv(Exception):
 		self.args = (exc_type,name)
 
 class osv_pool(netsvc.Service):
-	obj_pool = {}
-	module_object_list = {}
 
 	def __init__(self):
+		self.obj_pool = {}
+		self.module_object_list = {}
 		self.created = []
 		self._sql_error = {}
 		netsvc.Service.__init__(self, 'object_proxy', audience='')
