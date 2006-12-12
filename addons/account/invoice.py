@@ -182,17 +182,18 @@ class account_invoice(osv.osv):
 	# Workflow stuff
 	#################
 
-	# return the id of the first move line which has the same account than the invoice
+	# return the ids of the move lines which has the same account than the invoice
 	# whose id is in ids
 	def move_line_id_payment_get(self, cr, uid, ids, *args):
 		ml = self.pool.get('account.move.line')
+		res = []
 		for inv in self.read(cr, uid, ids, ['move_id','account_id']):
 			if inv['move_id']:
 				move_line_ids = ml.search(cr, uid, [('move_id', '=', inv['move_id'][0])])
 				for line in ml.read(cr, uid, move_line_ids, ['account_id']):
 					if line['account_id']==inv['account_id']:
-						return [line['id']]
-		return []
+						res.append(line['id'])
+		return res
 
 	def copy(self, cr, uid, id, default=None, context={}):
 		if not default: default = {}

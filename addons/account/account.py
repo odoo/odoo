@@ -1085,6 +1085,12 @@ class account_move_line(osv.osv):
 				val['account_id'] =  id1
 		return {'value':val}
 
+	#
+	# type: the type if reconciliation (no logic behind this field, for infà)
+	#
+	# writeoff; entry generated for the difference between the lines
+	#
+
 	def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context={}):
 		id_set = ','.join(map(str, ids))
 		lines = self.read(cr, uid, ids, context=context)
