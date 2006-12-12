@@ -138,7 +138,7 @@ class report_custom(report_int):
 
 			f = fill_style.Plain()
 			f.bgcolor = colors[user_id]
-			ar.add_plot(bar_plot.T(label=users_name.get(user,'Unknown'), data=data, hcol=user_id+1, cluster=(user_id, len(datas['users_id'])), fill_style=f ))
+			ar.add_plot(bar_plot.T(label=users_name.get(user,'Unknown').replace('/', '//'), data=data, hcol=user_id+1, cluster=(user_id, len(datas['users_id'])), fill_style=f ))
 
 		ar.draw(can)
 		can.close()

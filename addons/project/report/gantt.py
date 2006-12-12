@@ -17,6 +17,10 @@ class GanttCanvas(object):
 		self._max = 0
 
 	def add(self, user, name, datas):
+		if hasattr(user, 'replace'):
+			user=user.replace('/', '//')
+		if hasattr(name, 'replace'):
+			name=name.replace('/', '//')
 		if user not in self._datas:
 			self._datas[user] = []
 		for f in datas:

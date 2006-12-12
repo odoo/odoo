@@ -17,6 +17,8 @@ class stock_graph(object):
 		self.val_max = ''
 
 	def add(self, product_id, product_name, datas):
+		if hasattr(product_name, 'replace'):
+			product_name=product_name.replace('/', '//')
 		if product_id not in self._datas:
 			self._datas[product_id] = {}
 		self._names[product_id] = product_name
