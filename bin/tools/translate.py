@@ -105,10 +105,12 @@ def in_modules(object_name, modules):
 	module = module_dict.get(module, module)
 	return module in modules
 
-def trans_generate(lang, modules):
-	pool = pooler.get_pool(tools.config['db_name'])
+def trans_generate(lang, modules, dbname=None):
+	if not dbname:
+		dbname=tools.config['db_name']
+	pool = pooler.get_pool(dbname)
 	trans_obj = pool.get('ir.translation')
-	cr = pooler.get_db(tools.config['db_name']).cursor()
+	cr = pooler.get_db(dbname).cursor()
 	uid = 1
 	l = pool.obj_pool.items()
 	l.sort()

@@ -62,7 +62,7 @@ class wizard_export_lang(wizard.interface):
 		return [(lang.code, lang.translatable and lang.name or 'New language') for lang in langs]
 
 	def _get_file(self, cr, uid, data, context):
-		file=tools.trans_generate(data['form']['lang'], 'all')
+		file=tools.trans_generate(data['form']['lang'], 'all', dbname=cr.dbname)
 		buf=StringIO.StringIO()
 		writer=csv.writer(buf)
 		for row in file:
