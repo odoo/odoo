@@ -690,6 +690,7 @@ class stock_move(osv.osv):
 	#
 	def check_assign(self, cr, uid, ids, context={}):
 		done = []
+		count=0
 		pickings = {}
 		for move in self.browse(cr, uid, ids):
 			if move.product_id.type == 'consu':
@@ -708,13 +709,16 @@ class stock_move(osv.osv):
 						move_id = self.copy(cr, uid, move.id, {'product_qty':r[0], 'location_id':r[1]})
 						done.append(move_id)
 						#cr.execute('insert into stock_move_history_ids values (%d,%d)', (move.id,move_id))
+			if done:
+				count += len(done)
+				self.write(cr, uid, done, {'state':'assigned'})
+				done = []
 
-		if done:
-			self.write(cr, uid, done, {'state':'assigned'})
+		if count:
 			for pick_id in pickings:
 				wf_service = netsvc.LocalService("workflow")
 				wf_service.trg_write(uid, 'stock.picking', pick_id, cr)
-		return len(done)
+		return count
 
 	#
 	# Cancel move => cancel others move and pickings
