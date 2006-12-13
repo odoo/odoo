@@ -35,11 +35,17 @@ class account_v11(osv.osv):
 	_columns = {
 		'name': fields.char('Date', size=64), # pe mettre une sequence
 		'file': fields.binary('V11 file'),
+		'state': fields.selection([('new','New'),         # completely new file
+								   ('partial','Partial'), # file with unknown lines
+								   ('error','Error'),     # file completely wrong
+								   ('done','Done')],      # file ok even if some lines were ignored
+								  'State',readonly= True),
 		'note': fields.text('Import log'),
 		}
 
 	_defaults= {
 		'name': lambda *a : time.strftime('%Y-%m-%d'),
+		'state': lambda *a : 'new',
 		}
 account_v11()
 

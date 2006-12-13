@@ -4,11 +4,12 @@
 
 		<wizard 
 		string="Import V11 data" 
-		model="account.v11" 
+		model="account.bank.statement" 
 		name="account.v11_import" 
 		id="wizard_account_v11_import"
 		/>
 
+		<menuitem name="Financial Management/Import V11" action="wizard_account_v11_import" type="wizard"  id="menu_account_v11" sequence="15"/>
 
 
 	</data>
