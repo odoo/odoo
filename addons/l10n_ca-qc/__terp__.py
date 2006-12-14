@@ -1,5 +1,5 @@
 {
-	"name" : "Localisation for Quebec",
+	"name" : "Canada - Quebec",
 	"version" : "1.0",
 	"author" : "Tiny",
 	"category" : "Localisation/Account charts",

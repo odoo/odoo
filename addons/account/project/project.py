@@ -114,6 +114,7 @@ class account_analytic_account(osv.osv):
 		'quantity_max': fields.float('Maximal quantity'),
 		'partner_id' : fields.many2one('res.partner', 'Associated partner'),
 		'contact_id' : fields.many2one('res.partner.address', 'Contact'),
+		'user_id' : fields.many2one('res.users', 'Account Manager'),
 		'date_start': fields.date('Date Start'),
 		'date': fields.date('Date End'),
 		'stats_ids': fields.one2many('report.hr.timesheet.invoice.journal', 'account_id', string='Statistics', readonly=True),

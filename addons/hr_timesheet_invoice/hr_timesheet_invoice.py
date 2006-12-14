@@ -32,7 +32,7 @@ from osv import fields, osv
 
 class hr_timesheet_invoice_factor(osv.osv):
 	_name = "hr_timesheet_invoice.factor"
-	_description = "This class handle the types of invoicing, like 50% for customer"
+	_description = "Invoice rate"
 	_columns = {
 		'name': fields.char('Internal name', size=128, required=True),
 		'customer_name': fields.char('Visible name', size=128),

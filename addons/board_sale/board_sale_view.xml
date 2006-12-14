@@ -8,9 +8,14 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Sales manager board">
-					<hpaned>
+					<hpaned position="100">
 						<child1>
-							<action string="Your open request quotation" name="%(sale.action_order_tree10)d" colspan="3"/>
+							<action
+								string="Your open request quotation"
+								name="%(sale.action_order_tree10)d"
+								colspan="3"
+								height="200"
+								width="510"/>
 							<action string="Top ten sales of the month" name="%(report_sale.action_order_sale_list)d" colspan="3"/>
 							<action string="Sales of the month" name="%(sale.action_order_tree5)d" colspan="3"/>
 						</child1>
@@ -33,6 +38,6 @@
 			<field name="view_id" ref="board_sales_manager_form"/>
 		</record>
 
-		<menuitem name="Board/Sales Manager" action="open_board_sales_manager" sequence="1" id="menu_board_sales_manager"/>
+		<menuitem name="Dashboards/Sales Manager" action="open_board_sales_manager" sequence="1" id="menu_board_sales_manager"/>
 	</data>
 </terp>

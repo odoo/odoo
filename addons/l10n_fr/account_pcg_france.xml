@@ -2553,33 +2553,33 @@
 	<field name="type">payable</field>
 	<field name="parent_id" eval="[(6,0,[plan363])]"/>
 </record>
-<record model="account.account" id="account.a_pay">
+<record model="account.account" id="plan400">
 	<field name="code">400</field>
 	<field name="name">Fournisseurs et comptes rattachés </field>
 	<field name="currency_id" ref="base.EUR"/>
 	<field name="type">payable</field>
 	<field name="parent_id" eval="[(6,0,[plan364])]"/>
 </record>
-<record model="account.account" id="plan366">
+<record model="account.account" id="plan401">
 	<field name="code">401</field>
 	<field name="name">Fournisseurs</field>
 	<field name="currency_id" ref="base.EUR"/>
 	<field name="type">payable</field>
-	<field name="parent_id" eval="[(6,0,[plan364])]"/>
+	<field name="parent_id" eval="[(6,0,[plan400])]"/>
 </record>
-<record model="account.account" id="plan367">
+<record model="account.account" id="account.a_pay">
 	<field name="code">4011</field>
 	<field name="name">Fournisseurs - Achats de biens et prestations de services</field>
 	<field name="currency_id" ref="base.EUR"/>
 	<field name="type">payable</field>
-	<field name="parent_id" eval="[(6,0,[plan366])]"/>
+	<field name="parent_id" eval="[(6,0,[plan401])]"/>
 </record>
 <record model="account.account" id="plan368">
 	<field name="code">4017</field>
 	<field name="name">Fournisseurs - Retenues de garantie</field>
 	<field name="currency_id" ref="base.EUR"/>
 	<field name="type">payable</field>
-	<field name="parent_id" eval="[(6,0,[plan366])]"/>
+	<field name="parent_id" eval="[(6,0,[plan400])]"/>
 </record>
 <record model="account.account" id="plan369">
 	<field name="code">403</field>
@@ -2700,33 +2700,33 @@
 	<field name="type">receivable</field>
 	<field name="parent_id" eval="[(6,0,[plan363])]"/>
 </record>
-<record model="account.account" id="account.a_recv">
+<record model="account.account" id="plan410">
 	<field name="code">410</field>
 	<field name="name">Clients et comptes rattachés </field>
 	<field name="currency_id" ref="base.EUR"/>
 	<field name="type">receivable</field>
 	<field name="parent_id" eval="[(6,0,[plan385])]"/>
 </record>
-<record model="account.account" id="plan387">
+<record model="account.account" id="plan411">
 	<field name="code">411</field>
 	<field name="name">Clients</field>
 	<field name="currency_id" ref="base.EUR"/>
 	<field name="type">receivable</field>
-	<field name="parent_id" eval="[(6,0,[plan385])]"/>
+	<field name="parent_id" eval="[(6,0,[plan410])]"/>
 </record>
-<record model="account.account" id="plan388">
+<record model="account.account" id="account.a_recv">
 	<field name="code">4111</field>
 	<field name="name">Clients - Ventes de biens ou de prestations de services</field>
 	<field name="currency_id" ref="base.EUR"/>
 	<field name="type">receivable</field>
-	<field name="parent_id" eval="[(6,0,[plan387])]"/>
+	<field name="parent_id" eval="[(6,0,[plan411])]"/>
 </record>
 <record model="account.account" id="plan389">
 	<field name="code">4117</field>
 	<field name="name">Clients - Retenues de garantie</field>
 	<field name="currency_id" ref="base.EUR"/>
 	<field name="type">receivable</field>
-	<field name="parent_id" eval="[(6,0,[plan387])]"/>
+	<field name="parent_id" eval="[(6,0,[plan411])]"/>
 </record>
 <record model="account.account" id="plan390">
 	<field name="code">413</field>
@@ -2805,7 +2805,7 @@
 	<field name="type">receivable</field>
 	<field name="parent_id" eval="[(6,0,[plan363])]"/>
 </record>
-<record model="account.account" id="plan401">
+<record model="account.account" id="plan421pp">
 	<field name="code">421</field>
 	<field name="name">Personnel - Rémunérations dues</field>
 	<field name="currency_id" ref="base.EUR"/>
@@ -2875,7 +2875,7 @@
 	<field name="type">receivable</field>
 	<field name="parent_id" eval="[(6,0,[plan409])]"/>
 </record>
-<record model="account.account" id="plan411">
+<record model="account.account" id="plan411b">
 	<field name="code">4284</field>
 	<field name="name">Dettes provisionnées pour participation des salariés aux résultats</field>
 	<field name="currency_id" ref="base.EUR"/>

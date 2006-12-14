@@ -1,5 +1,5 @@
 {
-	"name" : "Localisation for France",
+	"name" : "France",
 	"version" : "1.0",
 	"author" : "Tiny",
 	"category" : "Localisation/Account charts",
