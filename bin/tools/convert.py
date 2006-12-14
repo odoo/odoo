@@ -335,11 +335,12 @@ class xml_import(object):
 			for rec in n.childNodes:
 				if rec.nodeType == rec.ELEMENT_NODE:
 					if rec.nodeName in self._tags:
-						try:
-							self._tags[rec.nodeName](self.cr, rec, n)
-						except:
-							print rec.toxml()
-							raise
+						self._tags[rec.nodeName](self.cr, rec, n)
+						#try:
+						#	self._tags[rec.nodeName](self.cr, rec, n)
+						#except:
+						#	#print rec.toxml().decode('latin1')
+						#	raise
 		self.cr.commit()
 		return True
 

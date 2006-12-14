@@ -56,7 +56,7 @@ class report_int(netsvc.Service):
 	def __init__(self, name, audience='*'):
 		super(report_int, self).__init__(name, audience)
 		if name[0:7]<>'report.':
-			raise 'ConceptionError, bad report name'
+			raise 'ConceptionError, bad report name, should start with "report."'
 		self.name = name
 		self.id = 0
 		self.name2 = '.'.join(name.split('.')[1:])
