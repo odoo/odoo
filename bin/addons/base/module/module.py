@@ -114,33 +114,23 @@ class module(osv.osv):
 	def state_change(self, cr, uid, ids, newstate, context={}, level=50):
 		if level<1:
 			raise 'Recursion error in modules dependencies !'
-		ids_dest = []
+		demo = True
 		for module in self.browse(cr, uid, ids):
+			mdemo = True
 			for dep in module.dependencies_id:
 				ids2 = self.search(cr, uid, [('name','=',dep.name)])
-				for id in ids2:
-					if (id not in ids_dest):
-						ids_dest.append(id)
-			if module.state=='uninstalled':
-				self.write(cr, uid, [module.id], {'state': newstate})
-		if ids_dest:
-			self.state_change(cr, uid, ids_dest, newstate, context, level-1)
-
-		for module in self.browse(cr, uid, ids):
-			if module.state!='installed':
-				demo=True
-				for dep in module.dependencies_id:
-					ids2 = self.search(cr, uid, [('name', '=', dep.name)])
-					for module2 in self.browse(cr, uid, ids2):
-						demo = demo and module2.demo
-				self.write(cr, uid, [module.id], {'demo':demo})
-		return True
+				mdemo = mdemo and self.state_change(cr, uid, ids2, newstate, context, level-1)
+			if not module.dependencies_id:
+				mdemo = module.demo
+			self.write(cr, uid, [module.id], {'state': newstate, 'demo':mdemo})
+			demo = demo and mdemo
+		return demo
 
 	def button_install(self, cr, uid, ids, context={}):
 		return self.state_change(cr, uid, ids, 'to install', context)
 
 	def button_install_cancel(self, cr, uid, ids, context={}):
-		self.write(cr, uid, ids, {'state': 'uninstalled'})
+		self.write(cr, uid, ids, {'state': 'uninstalled', 'demo':False})
 		return True
 
 	def button_uninstall(self, cr, uid, ids, context={}):
