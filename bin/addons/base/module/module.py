@@ -122,7 +122,8 @@ class module(osv.osv):
 				mdemo = mdemo and self.state_change(cr, uid, ids2, newstate, context, level-1)
 			if not module.dependencies_id:
 				mdemo = module.demo
-			self.write(cr, uid, [module.id], {'state': newstate, 'demo':mdemo})
+			if module.state=='uninstalled':
+				self.write(cr, uid, [module.id], {'state': newstate, 'demo':mdemo})
 			demo = demo and mdemo
 		return demo
 
