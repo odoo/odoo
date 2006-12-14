@@ -102,9 +102,14 @@ for line in (
 		"alter table ir_model_fields add group_name varchar(64)",
 		"alter table ir_model_fields add view_load boolean",
 		"alter table ir_model_fields alter group_name set default ''",
-		"alter table ir_model_fields alter view_load set default False"
+		"alter table ir_model_fields alter view_load set default False",
+		"delete from ir_values where value like '%,False'",
 	):
-	cr.execute(line)
+	try:
+		cr.execute(line)
+	except psycopg.ProgrammingError, e:
+		cr.commit()
+		print e
 
 cr.commit()
 cr.close()

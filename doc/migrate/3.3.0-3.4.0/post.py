@@ -85,9 +85,13 @@ cr.execute("select company_id from res_users where company_id is not null limit 
 company_id = cr.fetchone()[0]
 
 # get partners
-
-cr.execute("select id, payment_term from res_partner where payment_term is not null")
-partners = cr.dictfetchall()
+cr.execute("SELECT c.relname FROM pg_class c, pg_attribute a WHERE c.relname='res_partner' AND a.attname='payment_term' AND c.oid=a.attrelid")
+partners=[]
+drop_payment_term=False
+if cr.rowcount:
+	drop_payment_term=True
+	cr.execute("select id, payment_term from res_partner where payment_term is not null")
+	partners = cr.dictfetchall()
 
 # loop over them
 
@@ -100,7 +104,9 @@ for partner in partners:
 		('property_payment_term', value, res_id, company_id, fields_id))
 
 # remove the field
-cr.execute("alter table res_partner drop column payment_term")
+if drop_payment_term:
+	cr.execute("alter table res_partner drop column payment_term")
+cr.execute("delete from ir_model_fields where model = 'res.partner' and name = 'payment_term'")
 
 cr.commit()
 
