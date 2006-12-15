@@ -82,7 +82,10 @@ class report_projects(report_int):
 		for user_id in tasks.keys():
 			for t in tasks[user_id]:
 				gt.add(t[3], t[2], [(t[0],t[1])])
-		gt.draw()
+		try:
+			gt.draw()
+		except:
+			pass
 		gt.close()
 		self.obj = external_pdf(io.getvalue())
 		self.obj.render()
