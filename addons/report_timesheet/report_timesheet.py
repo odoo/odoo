@@ -58,6 +58,35 @@ class report_timesheet_user(osv.osv):
 		""")
 report_timesheet_user()
 
+class report_timesheet_account(osv.osv):
+	_name = "report_timesheet.account"
+	_description = "Timesheet per account"
+	_auto = False
+	_columns = {
+		'name': fields.date('Month', readonly=True),
+		'user_id':fields.many2one('res.users', 'User', readonly=True, relate=True),
+		'account_id':fields.many2one('account.analytic.account', 'User', readonly=True, relate=True),
+		'quantity': fields.float('Quantity', readonly=True),
+	}
+	_order = 'name desc,user_id desc'
+	def init(self, cr):
+		cr.execute("""
+			create or replace view report_timesheet_account as (
+				select
+					min(id) as id,
+					substring(create_date for 7)||'-01' as name,
+					user_id,
+					account_id,
+					sum(unit_amount) as quantity
+				from
+					account_analytic_line
+				group by
+					substring(create_date for 7), user_id, account_id
+			)
+		""")
+report_timesheet_account()
+
+
 class report_timesheet_invoice(osv.osv):
 	_name = "report_timesheet.invoice"
 	_description = "Costs to invoice"
@@ -96,4 +125,3 @@ class report_timesheet_invoice(osv.osv):
 			)
 		""")
 report_timesheet_invoice()
-

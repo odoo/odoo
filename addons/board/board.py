@@ -1,8 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2004-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
-#
-# $Id: sale.py 1005 2005-07-25 08:41:42Z nicoe $
+#                    Fabien Pinckaers <fp@tiny.Be>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,5 +26,47 @@
 #
 ##############################################################################
 
-import report_analytic_line
-import report_analytic_planning
+import time
+from osv import fields,osv
+
+class board(osv.osv):
+	_name = 'board.board'
+	def create(self, cr, user, vals, context={}):
+		return False
+	def copy(self, cr, uid, id, default=None, context={}):
+		return False
+	_columns = {
+		'name': fields.char('Board', size=64),
+	}
+board()
+
+
+class board_note_type(osv.osv):
+	_name = 'board.note.type'
+	_columns = {
+		'name': fields.char('Note Type', size=64, required=True),
+	}
+board_note_type()
+
+def _type_get(self, cr, uid, context={}):
+	obj = self.pool.get('board.note.type')
+	ids = obj.search(cr, uid, [])
+	res = obj.read(cr, uid, ids, ['name'], context)
+	res = [(r['name'], r['name']) for r in res]
+	return res
+
+class board_note(osv.osv):
+	_name = 'board.note'
+	_columns = {
+		'name': fields.char('Subject', size=128, required=True),
+		'note': fields.text('Note'),
+		'user_id': fields.many2one('res.users', 'Author', size=64),
+		'date': fields.date('Date', size=64, required=True),
+		'type': fields.char('Note type', size=64),
+		'type': fields.selection(_type_get, 'Note type', size=64),
+	}
+	_defaults = {
+		'user_id': lambda object,cr,uid,context: uid,
+		'date': lambda object,cr,uid,context: time.strftime('%Y-%m-%d'),
+	}
+board_note()

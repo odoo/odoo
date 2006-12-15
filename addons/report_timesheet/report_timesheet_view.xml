@@ -47,10 +47,10 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="action_timesheet_user_stat">
-		<field name="name">report_timesheet.user.tree</field>
+		<field name="name">report_timesheet.user.graph</field>
 		<field name="res_model">report_timesheet.user</field>
 		<field name="view_type">form</field>
-		<field name="view_mode">tree,graph</field>
+		<field name="view_mode">graph,tree</field>
 		<field name="domain">[('name','&gt;=',time.strftime('%Y-%m-01'))]</field>
 	</record>
 	<menuitem 

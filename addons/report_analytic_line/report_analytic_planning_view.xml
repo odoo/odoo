@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<terp>
+	<data>
+		<record model="ir.ui.view" id="account_analytic_planning_view_tree">
+			<field name="name">report.account.analytic.planning.tree</field>
+			<field name="model">report_account_analytic.planning</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Planning by account">
+					<field name="name"/>
+					<field name="user_id"/>
+					<field name="date_from"/>
+					<field name="date_to"/>
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="account_analytic_planning_view_form">
+			<field name="name">report.account.analytic.planning.form</field>
+			<field name="model">report_account_analytic.planning</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Planning by account">
+					<notebook>
+					<page string="Planning">
+						<field name="name" select="1"/>
+						<field name="user_id" select="1"/>
+						<field name="date_from"/>
+						<field name="date_to"/>
+						<field name="line_ids" colspan="4" nolabel="1">
+							<tree string="Planning line" editable="bottom">
+								<field name="user_id"/>
+								<field name="account_id"/>
+								<field name="amount"/>
+								<field name="amount_unit"/>
+							</tree>
+						</field>
+					</page><page string="Analysis">
+						<field name="stat_ids" colspan="4" nolabel="1" readonly="1">
+							<tree string="Planning line" editable="bottom">
+								<field name="user_id"/>
+								<field name="account_id"/>
+								<field name="sum_amount"/>
+								<field name="sum_amount_real"/>
+							</tree>
+						</field>
+					</page><page string="Time by user">
+						<field name="stat_user_ids" colspan="4" nolabel="1">
+							<tree string="Quantities by user">
+								<field name="user_id"/>
+								<field name="quantity"/>
+							</tree>
+						</field>
+					</page><page string="Time by account">
+						<field name="stat_account_ids" colspan="4" nolabel="1">
+							<tree string="Quantities by account">
+								<field name="account_id"/>
+								<field name="quantity"/>
+							</tree>
+						</field>
+					</page>
+					</notebook>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="action_account_analytic_planning_form">
+			<field name="name">report_account_analytic.planning.form</field>
+			<field name="res_model">report_account_analytic.planning</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form,tree</field>
+		</record>
+		<menuitem
+			name="Human Resources/Planning/Planning"
+			id="menu_report_account_analytic_planning"
+			action="action_account_analytic_planning_form" />
+
+<!--
+	Planning statistics
+-->
+		<record model="ir.ui.view" id="account_analytic_planning_stat_view_form">
+			<field name="name">report.account.analytic.planning.stat.form</field>
+			<field name="model">report_account_analytic.planning.stat</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Planning statistics">
+					<field name="planning_id" select="1"/>
+					<field name="user_id" select="1"/>
+					<field name="account_id" select="1"/>
+				</form>
+			</field>
+		</record>
+
+
+		<record model="ir.ui.view" id="account_analytic_planning_stat_view_tree">
+			<field name="name">report.account.analytic.planning.stat.tree</field>
+			<field name="model">report_account_analytic.planning.stat</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Planning statistics">
+					<field name="planning_id"/>
+					<field name="user_id"/>
+					<field name="account_id"/>
+					<field name="sum_amount"/>
+					<field name="sum_amount_real"/>
+					<field name="sum_amount_tasks"/>
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="account_analytic_planning_stat_view_graph">
+			<field name="name">report.account.analytic.planning.stat.graph</field>
+			<field name="model">report_account_analytic.planning.stat</field>
+			<field name="type">graph</field>
+			<field name="arch" type="xml">
+				<graph string="Planning statistics" type="bar">
+					<field name="account_id" group="True"/>
+					<field name="sum_amount" operator="+"/>
+					<field name="sum_amount_real" operator="+"/>
+					<field name="sum_amount_tasks" operator="+"/>
+				</graph>
+			</field>
+		</record>
+
+
+
+		<record model="ir.actions.act_window" id="action_account_analytic_planning_stat_form">
+			<field name="name">report_account_analytic.planning.stat.graph</field>
+			<field name="res_model">report_account_analytic.planning.stat</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">graph,tree</field>
+		</record>
+		<menuitem
+			name="Human Resources/Planning/Planning statistics for all users"
+			id="menu_report_account_analytic_planning_stat"
+			action="action_account_analytic_planning_stat_form" />
+
+		<record model="ir.actions.act_window" id="action_account_analytic_planning_stat_my_form">
+			<field name="name">report_account_analytic.planning.stat.graph</field>
+			<field name="res_model">report_account_analytic.planning.stat</field>
+			<field name="view_type">form</field>
+			<field name="domain">[('user_id','=',uid)]</field>
+			<field name="view_mode">graph,tree</field>
+		</record>
+		<menuitem
+			name="Human Resources/Planning/My planning statistics"
+			id="menu_report_account_analytic_planning_stat_my"
+			action="action_account_analytic_planning_stat_my_form" />
+
+
+
+	</data>
+</terp>
