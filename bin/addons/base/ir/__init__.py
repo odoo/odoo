@@ -39,4 +39,3 @@ import ir_values
 import ir_translation
 import ir_exports
 import workflow
-import ir_board
