@@ -53,29 +53,29 @@ class report_custom(report_rml):
 			main_strd_price = ''
 			if prod.seller_ids and prod.seller_ids[0] :
 				main_sp_name = '<b>' + prod.seller_ids[0].name.name + '</b>\r\n'
-				pricelist = ir.ir_get(cr,uid,'meta','product.pricelist.purchase',[('res.partner',prod.seller_ids[0].name.id)])
+				pricelist = prod.seller_ids[0].name.property_product_pricelist_purchase
 				if pricelist:
-					pricelist_id = pricelist[0][2]
-					price = pooler.get_pool(cr.dbname).get('product.pricelist').price_get(cr,uid,[pricelist_id], prod.id, number*prod_qtty or 1.0)[pricelist_id]
+					pricelist_id = pricelist[0]
+					price = pooler.get_pool(cr.dbname).get('product.pricelist').price_get(cr,uid,[pricelist_id], prod.id, number*prod_qtty or 1.0).setdefault(pricelist_id, 0)
 				else:
 					price = 0
-				main_sp_price = str(price) + '\r\n'
+				main_sp_price = '%.2f' % price + '\r\n'
 				sum += prod_qtty*price
 
-			main_strd_price = str(prod.standard_price) + '\r\n'
+			main_strd_price = '%.2f' % prod.standard_price + '\r\n'
 			sum_strd = prod_qtty*prod.standard_price
 
 			sellers = ''
 			sellers_price = ''
 			for seller_id in prod.seller_ids:
 				sellers +=  '- <i>'+ seller_id.name.name +'</i>\r\n'
-				pricelist = ir.ir_get(cr,uid,'meta','product.pricelist.purchase',[('res.partner',seller_id.name.id)])
+				pricelist = seller_id.name.property_product_pricelist_purchase
 				if pricelist:
-					pricelist_id = pricelist[0][2]
-					price = pooler.get_pool(cr.dbname).get('product.pricelist').price_get(cr,uid,[pricelist_id], prod.id, number*prod_qtty or 1.0)[pricelist_id]
+					pricelist_id = pricelist[0]
+					price = pooler.get_pool(cr.dbname).get('product.pricelist').price_get(cr,uid,[pricelist_id], prod.id, number*prod_qtty or 1.0).setdefault(pricelist_id, 0)
 				else:
 					price = 0
-				sellers_price += '-' + str(price) + '\r\n'
+				sellers_price += '%.2f' % price + '\r\n'
 
 			xml += "<col para='yes'>" + prod_name + '</col>'
 			xml += "<col para='no'>" + main_sp_name +  sellers + '</col>'
@@ -174,7 +174,7 @@ class report_custom(report_rml):
 				if not first:
 					xml += prod_header
 				xml += "<lines style='lines'>" + xml_tmp + '</lines>'
-				xml += "<lines style='sub_total'><row><col>SUBTOTAL : </col><col>(for " + str(number) + " products)</col><col/><col/><col>" + str(total_strd) + '</col><col>' + str(total)  + '</col></row></lines>'
+				xml += "<lines style='sub_total'><row><col>SUBTOTAL : </col><col>(for " + str(number) + " products)</col><col/><col/><col>" + '%.2f' % total_strd + '</col><col>' + '%.2f' % total  + '</col></row></lines>'
 
 				total2 = 0
 				xml_tmp = ''
@@ -185,8 +185,8 @@ class report_custom(report_rml):
 				if xml_tmp:
 					xml += workcenter_header
 					xml += "<lines style='lines'>" + xml_tmp + '</lines>'
-					xml += "<lines style='sub_total'><row><col>SUBTOTAL : </col><col>(for " + str(number) + " products)</col><col/><col/><col/><col>" + str(total2) + '</col></row></lines>'
-				xml += "<lines style='total'><row><col>TOTAL : </col><col>(for " + str(number) + " products)</col><col/><col/><col>" + str(total_strd+total2) + "</col><col>" + str(total+total2) + '</col></row></lines>'
+					xml += "<lines style='sub_total'><row><col>SUBTOTAL : </col><col>(for " + str(number) + " products)</col><col/><col/><col/><col>" + '%.2f' % total2 + '</col></row></lines>'
+				xml += "<lines style='total'><row><col>TOTAL : </col><col>(for " + str(number) + " products)</col><col/><col/><col>" + '%.2f' % (total_strd+total2) + "</col><col>" + '%.2f' % (total+total2) + '</col></row></lines>'
 				first = False
 
 		xml = '<?xml version="1.0" ?><report>' + config_start + '<report-header>Product Cost Structure\n\r' + prod.name  + '</report-header>'+ config_stop +  header + xml + '</report>'

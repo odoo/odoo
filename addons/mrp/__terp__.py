@@ -4,7 +4,7 @@
 	"author" : "Tiny",
 	"website" : "http://tinyerp.com/module_mrp.html",
 	"category" : "Generic Modules/Production",
-	"depends" : ["stock", "hr", "purchase"],
+	"depends" : ["stock", "hr", "purchase", "product"],
 	"description": "Manage the manufacturing process: procurement, scheduler computation, bill of materials, routings, procurements, production orders, workcenters, eso.",
 	"init_xml" : [],
 	"demo_xml" : ["mrp_demo.xml","mrp_order_point.xml"],
