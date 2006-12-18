@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-import threading
 import time
 from osv import fields,osv
 
@@ -61,33 +60,27 @@ class ir_sequence(osv.osv):
 		'padding' : lambda *a : 0,
 	}
 
-	sequence_semaphore = threading.Semaphore()
-
 	def _process(self, s):
 		return (s or '') % {'year':time.strftime('%Y'), 'month': time.strftime('%m'), 'day':time.strftime('%d')}
 
 	def get_id(self, cr, uid, sequence_id, test='id=%d'):
-		self.sequence_semaphore.acquire()
-		cr.execute('select id,number_next,number_increment,prefix,suffix,padding from ir_sequence where '+test+' and active=True', (sequence_id,))
-		res = cr.dictfetchone()
-		if res:
-			cr.execute('update ir_sequence set number_next=number_next+number_increment where id=%d and active=True', (res['id'],))
-			self.sequence_semaphore.release()
-			if res['number_next']:
-				return self._process(res['prefix']) + '%%0%sd' % res['padding'] % res['number_next'] + self._process(res['suffix'])
-			else:
-				return self._process(res['prefix']) + self._process(res['suffix'])
-		else:
-			self.sequence_semaphore.release()
+		try:
+			cr.execute('lock table ir_sequence')
+			cr.execute('select id,number_next,number_increment,prefix,suffix,padding from ir_sequence where '+test+' and active=True', (sequence_id,))
+			res = cr.dictfetchone()
+			if res:
+				cr.execute('update ir_sequence set number_next=number_next+number_increment where id=%d and active=True', (res['id'],))
+				if res['number_next']:
+					return self._process(res['prefix']) + '%%0%sd' % res['padding'] % res['number_next'] + self._process(res['suffix'])
+				else:
+					return self._process(res['prefix']) + self._process(res['suffix'])
+			cr.commit()
+		except:
+			cr.rollback()
+			return False
 		return False
 
 	def get(self, cr, uid, code):
 		return self.get_id(cr, uid, code, test='code=%s')
-
-	def set(self, cr, uid, code, next_number):
-		self.sequence_semaphore.acquire()
-		cr.execute('update ir_sequence set number_next=%d where code=%s and active=True', (next_number, code,))
-		self.sequence_semaphore.release()
-		return True
 ir_sequence()
 
