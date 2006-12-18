@@ -30,6 +30,8 @@
 import wizard
 import pooler
 from tools.misc import UpdateableStr
+
+import netsvc
 import time
 
 arch=UpdateableStr()
@@ -41,7 +43,8 @@ def make_default(val):
 	return fct
 
 def _get_returns(self, cr, uid, data, context):
-	pick_obj=pooler.get_pool(cr.dbname).get('stock.picking')
+	pool = pooler.get_pool(cr.dbname)
+	pick_obj=pool.get('stock.picking')
 	pick=pick_obj.browse(cr, uid, [data['id']])[0]
 	res={}
 	fields.clear()
@@ -87,6 +90,11 @@ def _create_returns(self, cr, uid, data, context):
 				'picking_id':new_picking, 'state':'draft',
 				'location_id':new_location, 'location_dest_id':move.location_id.id,
 				'date':date_cur, 'date_planned':date_cur,})
+	if new_picking:
+		wf_service = netsvc.LocalService("workflow")
+		if new_picking:
+			wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_confirm', cr)
+		pick_obj.force_assign(cr, uid, [new_picking], context)
 	return new_picking
 
 def _action_open_window(self, cr, uid, data, context):

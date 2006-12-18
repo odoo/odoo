@@ -93,7 +93,7 @@ class purchase_order(osv.osv):
 		'validator' : fields.many2one('res.users', 'Validated by', readonly=True),
 		'notes': fields.text('Notes'),
 		'invoice_id': fields.many2one('account.invoice', 'Invoice', readonly=True),
-		'picking_id': fields.many2one('stock.picking', 'Picking list', readonly=True),
+		'picking_ids': fields.one2many('stock.picking', 'purchase_id', 'Picking List', readonly=True, help="This is the list of picking list that have been generated for this invoice"),
 		'shipped':fields.boolean('Received', readonly=True, select=True),
 		'invoiced':fields.boolean('Invoiced & Paid', readonly=True, select=True),
 		'invoice_method': fields.selection([('manual','Manual'),('order','From order'),('picking','From picking')], 'Invoicing method', required=True),
@@ -227,10 +227,11 @@ class purchase_order(osv.osv):
 			if order.invoice_method=='picking':
 				istate = '2binvoiced'
 			picking_id = self.pool.get('stock.picking').create(cr, uid, {
-				'origin': order.name+':'+(order.origin or ''),
+				'origin': order.name+((order.origin and (':'+order.origin)) or ''),
 				'type': 'in',
 				'address_id': order.dest_address_id.id or order.partner_address_id.id,
-				'invoice_state': istate
+				'invoice_state': istate,
+				'purchase_id': order.id
 			})
 			for order_line in order.order_line:
 				if not order_line.product_id:
@@ -253,7 +254,6 @@ class purchase_order(osv.osv):
 					})
 					if order_line.move_dest_id:
 						self.pool.get('stock.move').write(cr, uid, [order_line.move_dest_id.id], {'location_id':order.location_id.id})
-			self.write(cr,uid,[order.id],{'picking_id':picking_id})
 			wf_service = netsvc.LocalService("workflow")
 			wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
 		return picking_id
@@ -265,7 +265,7 @@ class purchase_order(osv.osv):
 			'shipped':False,
 			'invoiced':False,
 			'invoice_id':False,
-			'picking_id':False,
+			'picking_ids':[],
 			'name': self.pool.get('ir.sequence').get(cr, uid, 'purchase.order'),
 		})
 		return super(purchase_order, self).copy(cr, uid, id, default, context)

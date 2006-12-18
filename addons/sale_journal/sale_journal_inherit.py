@@ -48,6 +48,7 @@ class picking(osv.osv):
 	_inherit="stock.picking"
 	_columns = {
 		'journal_id': fields.many2one('sale_journal.picking.journal', 'Journal', relate=True),
+		'sale_journal_id': fields.many2one('sale_journal.sale.journal', 'Sale Journal', relate=True),
 		'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type', relate=True, readonly=True)
 	}
 picking()
@@ -62,7 +63,10 @@ class sale(osv.osv):
 		result = super(sale, self).action_ship_create(cr, uid, ids, *args)
 		for order in self.browse(cr, uid, ids, context={}):
 			pids = [ x.id for x in order.picking_ids]
-			self.pool.get('stock.picking').write(cr, uid, pids, {'invoice_type_id': order.invoice_type_id.id})
+			self.pool.get('stock.picking').write(cr, uid, pids, {
+				'invoice_type_id': order.invoice_type_id.id,
+				'sale_journal_id': order.journal_id.id
+			})
 		return result
 
 	def onchange_partner_id(self, cr, uid, ids, part):

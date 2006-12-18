@@ -406,7 +406,7 @@ class stock_picking(osv.osv):
 			for move in pick.move_lines:
 				if (move.state in ('confirmed','draft')) and (mt=='one'):
 					return False
-				if (mt=='direct') and move.state=='assigned':
+				if (mt=='direct') and (move.state=='assigned') and (move.product_qty):
 					return True
 				ok = ok and (move.state in ('cancel','done','assigned'))
 		return ok
@@ -530,6 +530,7 @@ class stock_picking(osv.osv):
 					'product_id': line.product_id.id,
 					'account_id': account_id,
 					'price_unit': line.sale_line_id and line.sale_line_id.price_unit or line.product_id.list_price,
+					'discount': line.sale_line_id and line.sale_line_id.discount or 0.0,
 					'quantity': line.product_uos_qty,
 					'invoice_line_tax_id': [(6,0,tax_ids)]
 				})

@@ -48,8 +48,7 @@ invoice_fields = {
 		'string':'Destination Journal',
 		'type':'many2one',
 		'relation':'account.journal',
-		'required':True,
-		'domain':[('type','=','sale')]
+		'required':True
 	},
 	'group' : {'string':'Group by partner', 'type':'boolean'}
 }

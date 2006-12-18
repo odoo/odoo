@@ -26,8 +26,8 @@
 #
 ##############################################################################
 
-import tools
 import purchase
 import partner
+import stock
 import wizard
 import report

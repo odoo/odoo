@@ -1,5 +1,17 @@
 <terp>
 <data>
+	<record model="ir.ui.view" id="purchase_journal_picking_order">
+		<field name="name">stock.picking.journal.view.form</field>
+		<field name="type">form</field>
+		<field name="model">stock.picking</field>
+		<field name="inherit_id" ref="stock.view_picking_form" />
+		<field name="arch" type="xml">
+			<field name="origin" position="after">
+				<field name="purchase_journal_id" select="1"/>
+			</field>
+		</field>
+	</record>
+
 	<record model="ir.ui.view" id="view_purchase_journal_form">
 		<field name="name">purchase_journal.purchase.journal.form</field>
 		<field name="model">purchase_journal.purchase.journal</field>

@@ -7,7 +7,15 @@
 	"category" : "Generic Modules/Sales & Purchases",
 	"init_xml" : [],
 	"demo_xml" : ["purchase_demo.xml"],
-	"update_xml" : ["purchase_workflow.xml", "purchase_sequence.xml", "purchase_data.xml", "purchase_view.xml", "purchase_report.xml", "purchase_wizard.xml"],
+	"update_xml" : [
+		"purchase_workflow.xml", 
+		"purchase_sequence.xml", 
+		"purchase_data.xml", 
+		"purchase_view.xml", 
+		"purchase_report.xml", 
+		"purchase_wizard.xml",
+		"stock_view.xml"
+	],
 	"active": False,
 	"installable": True
 }

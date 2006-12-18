@@ -130,8 +130,6 @@ class sale_order(osv.osv):
 		'payment_line': fields.one2many('sale.order.payment', 'order_id', 'Order Payments', readonly=True, states={'draft':[('readonly',False)]}),
 
 		'invoice_ids': fields.many2many('account.invoice', 'sale_order_invoice_rel', 'order_id', 'invoice_id', 'Invoice', readonly=True, help="This is the list of invoices that have been generated for this sale order. The same sale order may have been invoiced in several times (by line for example)."),
-		#'picking_ids': fields.many2many('stock.picking', 'sale_order_picking_rel', 'order_id','picking_id', 'Picking List', readonly=True, help="This is the list of picking list that have been generated for this invoice"),
-
 		'picking_ids': fields.one2many('stock.picking', 'sale_id', 'Picking List', readonly=True, help="This is the list of picking list that have been generated for this invoice"),
 
 		'shipped':fields.boolean('Picked', readonly=True),

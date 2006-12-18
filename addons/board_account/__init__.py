@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2004 TINY SPRL. (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #                    Fabien Pinckaers <fp@tiny.Be>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -26,27 +26,3 @@
 #
 ##############################################################################
 
-from osv import osv, fields
-
-
-class purchase(osv.osv):
-	_inherit="purchase.order"
-	_columns = {
-		'journal_id': fields.many2one('purchase_journal.purchase.journal', 'Journal', relate=True),
-	}
-	def action_picking_create(self, cr, uid, ids, *args):
-		result = super(purchase, self).action_picking_create(cr, uid, ids, *args)
-		for order in self.browse(cr, uid, ids, context={}):
-			pids = [ x.id for x in (order.picking_ids or [])]
-			self.pool.get('stock.picking').write(cr, uid, pids, {
-				'purchase_journal_id': order.journal_id.id
-			})
-		return result
-purchase()
-
-class picking(osv.osv):
-	_inherit="stock.picking"
-	_columns = {
-		'purchase_journal_id': fields.many2one('purchase_journal.purchase.journal', 'Purchase Journal', select=True, relate=True),
-	}
-picking()

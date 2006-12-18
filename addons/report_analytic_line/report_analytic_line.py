@@ -34,7 +34,6 @@ class report_account_analytic_line_to_invoice(osv.osv):
 	_description = "Analytic lines to invoice report"
 	_auto = False
 	_columns = {
-		# a quoi sert le relate=True ?
 		'name': fields.date('Month', readonly=True),
 		'product_id':fields.many2one('product.product', 'Product', readonly=True, relate=True),
 		'account_id':fields.many2one('account.analytic.account', 'Analytic account', readonly=True, relate=True),
@@ -61,4 +60,3 @@ class report_account_analytic_line_to_invoice(osv.osv):
 			)
 		""")
 #report_account_analytic_line_to_invoice()
-
