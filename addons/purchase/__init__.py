@@ -31,3 +31,4 @@ import partner
 import stock
 import wizard
 import report
+import stock

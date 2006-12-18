@@ -28,6 +28,16 @@
 
 from osv import osv, fields
 
+class stock_move(osv.osv):
+	_inherit = 'stock.move'
+	_columns = {
+		'purchase_line_id': fields.many2one('purchase.order.line', 'Purchase Order Line', ondelete='set null', select=True),
+	}
+	_defaults = {
+		'purchase_line_id': lambda *a:False
+	}
+stock_move()
+
 #
 # Inherit of picking to add the link to the PO
 #

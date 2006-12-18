@@ -56,8 +56,20 @@ def _get_moves(self, cr, uid, data, context):
 		quantity = m.product_qty
 		if m.state<>'assigned':
 			quantity = 0
-		_moves_arch_lst.append('<field name="move%s" />\n<newline />' % (m.id,))
+		_moves_arch_lst.append('<field name="move%s" />' % (m.id,))
 		_moves_fields['move%s' % m.id] = {'string' : '%s - %s' % (m.product_id.code, m.product_id.name), 'type' : 'float', 'required' : True, 'default' : make_default(quantity)}
+		if (pick.type == 'in') and (m.product_id.cost_method == 'average'):
+			price=0
+			if hasattr(m, 'purchase_line_id') and m.purchase_line_id:
+				price=m.purchase_line_id.price_unit
+			currency=0
+			if hasattr(pick, 'purchase_id') and pick.purchase_id:
+				currency=pick.purchase_id.pricelist_id.currency_id.id
+			_moves_arch_lst.append('<group><field name="price%s"/>' % (m.id,))
+			_moves_fields['price%s' % m.id] = {'string': 'Unit Price', 'type': 'float', 'required': True, 'default': make_default(price)}
+			_moves_arch_lst.append('<field name="currency%d"/></group>' % (m.id,))
+			_moves_fields['currency%s' % m.id] = {'string': 'Currency', 'type': 'many2one', 'relation': 'res.currency', 'required': True, 'default': make_default(currency)}
+		_moves_arch_lst.append('<newline/>')
 		res.setdefault('moves', []).append(m.id)
 	_moves_arch_lst.append('</form>')
 	_moves_arch.string = '\n'.join(_moves_arch_lst)
@@ -78,6 +90,21 @@ def _do_split(self, cr, uid, data, context):
 			too_few.append(move)
 		else:
 			too_many.append(move)
+		if (pick.type == 'in') and (move.product_id.cost_method == 'average'):
+			product_obj = pooler.get_pool(cr.dbname).get('product.product')
+			currency_obj = pooler.get_pool(cr.dbname).get('res.currency')
+			users_obj = pooler.get_pool(cr.dbname).get('res.users')
+
+			product = product_obj.browse(cr, uid, [move.product_id.id])[0]
+			user = users_obj.browse(cr, uid, [uid])[0]
+
+			qty = data['form']['move%s' % move.id]
+			price = data['form']['price%s' % move.id]
+			currency = data['form']['currency%s' % move.id]
+
+			new_price = currency_obj.compute(cr, uid, currency, user.company_id.currency_id.id, price)
+			new_std_price = ((product.standard_price * product.qty_available) + (new_price * qty))/(product.qty_available + qty)
+			product_obj.write(cr, uid, [product.id], {'standard_price': new_std_price})
 
 	for move in too_few:
 		if not new_picking:
