@@ -1110,7 +1110,7 @@ class account_move_line(osv.osv):
 		r = cr.fetchall()
 #TODO: move this check to a constraint in the account_move_reconcile object
 		if len(r) != 1:
-			raise Exception('Entries are not of the same account !')
+			raise Exception('Entries are not of the same account or already reconciled ! ')
 		if r[0][1] != None:
 			raise Exception('Some entries are already reconciled !')
 		if writeoff != 0:

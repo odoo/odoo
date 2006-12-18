@@ -87,7 +87,7 @@ class account_invoice(osv.osv):
 			('in_refund','Supplier Refund'),
 		],'Type', readonly=True, states={'draft':[('readonly',False)]}, select=True),
 
-		'number': fields.char('Invoice Number', size=32), # readonly=True
+		'number': fields.char('Invoice Number', size=32,readonly=True),  
 		'reference': fields.char('Invoice Reference', size=64),
 		'project_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft':[('readonly',False)]}),
 		'comment': fields.text('Additionnal Information'),
