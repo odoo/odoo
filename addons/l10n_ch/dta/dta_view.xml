@@ -2,27 +2,39 @@
 <terp>
 <data>
 
-	<record model="ir.ui.view" id="account_dta_from">
-		<field name="name">account.dta</field>
-		<field name="model">account.dta</field>
-		<field name="type">form</field>
+	<record model="ir.ui.view" id="invoice_tree">
+		<field name="name">account.invoice.tree.inherit</field>
+		<field name="model">account.invoice</field>
+		<field name="inherit_id" ref="account.invoice_tree"/>
+		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<form string="DTA">
-				<field name="name" colspan="2"/>
-				<newline/>
-				<field name="note" colspan="2"/>
-			</form>
+			<field name="state" position="after">
+				<field name="dta_state" select="1"/>
+		    </field>
 		</field>
 	</record>
 
-	<record model="ir.actions.act_window" id="action_account_dta_form">
-		<field name="name">account.dta</field>
-		<field name="res_model">account.dta</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">form,tree</field>
+	<record model="ir.ui.view" id="invoice_form">
+		<field name="name">account.invoice.form</field>
+		<field name="model">account.invoice</field>
+		<field name="type">form</field>
+		<field name="inherit_id" ref="account.invoice_form"/>
+		<field name="arch" type="xml">
+			<field name="journal_id" position="after">
+				<field name="dta_state" select="1"/>
+		    </field>
+		</field>
 	</record>
 
+	<record model="ir.actions.act_window" id="action_invoice_with_dta">
+		<field name="name">account.invoice.dta</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">account.invoice</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[('state','!=','paid'),('dta_state','=','2bpaid') ]</field>
+	</record>
 
-	<menuitem name="Financial Management/Create dta file" id="menu_account_dta_form" action="action_account_dta_form"/>
+	<menuitem name="Financial Management/Invoices/DTA invoices to pay" id="menu_account_dta_form" action="action_invoice_with_dta"/>
 </data>
 </terp>
