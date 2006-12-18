@@ -7,7 +7,7 @@
 			<field name="model">report.account.analytic.line.to.invoice</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<tree string="Analytic lines to invoice per month, product and analytic account">
+				<tree string="Costs to invoice">
 					<field name="name" select="1"/>
 					<field name="account_id" select="1"/>
 					<newline/>
@@ -25,22 +25,36 @@
 			<field name="model">report.account.analytic.line.to.invoice</field>
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
-				<tree string="Analytic lines to invoice per month, product and analytic account">
+				<tree string="Costs to invoice">
 					<field name="name"/>
 					<field name="product_id"/>
 					<field name="account_id"/>
 					<field name="amount"/>
+					<field name="sale_price"/>
 					<field name="unit_amount"/>
 					<field name="product_uom_id"/>
 				</tree>
 			</field>
 		</record>
 
+		<record model="ir.ui.view" id="account_analytic_line_to_invoice_view_graph">
+			<field name="name">report.account.analytic.line.to.invoice.graph</field>
+			<field name="model">report.account.analytic.line.to.invoice</field>
+			<field name="type">graph</field>
+			<field name="arch" type="xml">
+				<graph type="bar" string="Costs to invoice">
+					<field name="name" group="True"/>
+					<field name="sale_price" operator="+"/>
+				</graph>
+			</field>
+		</record>
+
+
 		<record model="ir.actions.act_window" id="action_account_analytic_line_to_invoice">
 			<field name="name">report.account.analytic.line.tree</field>
 			<field name="res_model">report.account.analytic.line.to.invoice</field>
 			<field name="view_type">form</field>
-			<field name="view_mode">tree</field>
+			<field name="view_mode">tree,graph</field>
 		</record>
 		<menuitem name="Financial Management/Entries/Analytic lines to invoice" id="account_analytic_lines_to_invoice_report" action="action_account_analytic_line_to_invoice" />
 

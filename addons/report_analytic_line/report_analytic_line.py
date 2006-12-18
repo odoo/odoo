@@ -30,33 +30,42 @@
 from osv import fields,osv
 
 class report_account_analytic_line_to_invoice(osv.osv):
-	_name = "report.account.analytic.line.to.invoice"
-	_description = "Analytic lines to invoice report"
-	_auto = False
-	_columns = {
-		'name': fields.date('Month', readonly=True),
-		'product_id':fields.many2one('product.product', 'Product', readonly=True, relate=True),
-		'account_id':fields.many2one('account.analytic.account', 'Analytic account', readonly=True, relate=True),
-		'product_uom_id':fields.many2one('product.uom', 'UoM', readonly=True),
-		'unit_amount': fields.float('Units', readonly=True),
-		'amount': fields.float('Amount', readonly=True),
-	}
-	_order = 'name desc, product_id asc, account_id asc'
+    _name = "report.account.analytic.line.to.invoice"
+    _description = "Analytic lines to invoice report"
+    _auto = False
+    _columns = {
+        'name': fields.date('Month', readonly=True),
+        'product_id':fields.many2one('product.product', 'Product', readonly=True, relate=True),
+        'account_id':fields.many2one('account.analytic.account', 'Analytic account', readonly=True, relate=True),
+        'product_uom_id':fields.many2one('product.uom', 'UoM', readonly=True),
+        'unit_amount': fields.float('Units', readonly=True),
+        'sale_price': fields.float('Sale price', readonly=True),
+        'amount': fields.float('Amount', readonly=True),
+    }
+    _order = 'name desc, product_id asc, account_id asc'
 
-	def init(self, cr):
-		cr.execute("""
-			CREATE OR REPLACE VIEW report_account_analytic_line_to_invoice AS (
-				SELECT
-					DISTINCT(SUBSTRING(date for 7))||'-'||'01' AS name,
-					MIN(id) AS id,
-					product_id,
-					account_id,
-					SUM(amount) AS amount,
-					SUM(unit_amount) AS unit_amount,
-					product_uom_id
-				FROM account_analytic_line
-				WHERE (invoice_id IS NULL) and (to_invoice IS NOT NULL)
-				GROUP BY SUBSTRING(date for 7), product_id, product_uom_id, account_id
-			)
-		""")
-#report_account_analytic_line_to_invoice()
+    def init(self, cr):
+        cr.execute("""
+            CREATE OR REPLACE VIEW report_account_analytic_line_to_invoice AS (
+                SELECT
+                    DISTINCT(SUBSTRING(l.date for 7))||'-'||'01' AS name,
+                    MIN(l.id) AS id,
+                    l.product_id,
+                    l.account_id,
+                    SUM(l.amount) AS amount,
+                    SUM(l.unit_amount*t.list_price) AS sale_price,
+                    SUM(l.unit_amount) AS unit_amount,
+                    l.product_uom_id
+                FROM
+                    account_analytic_line l
+                left join
+                    product_product p on (l.product_id=p.id)
+                left join
+                    product_template t on (p.product_tmpl_id=t.id)
+                WHERE
+                    (invoice_id IS NULL) and (to_invoice IS NOT NULL)
+                GROUP BY
+                    SUBSTRING(date for 7), product_id, product_uom_id, account_id
+            )
+        """)
+report_account_analytic_line_to_invoice()

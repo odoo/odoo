@@ -3,64 +3,57 @@
 <data>
 
 	#
-	# Cases by user and section
+	# Balance by account type
 	#
 
+	<record model="ir.ui.view" id="view_crm_case_user_graph">
+		<field name="name">report.account.receivable.graph</field>
+		<field name="model">report.account.receivable</field>
+		<field name="type">graph</field>
+		<field name="arch" type="xml">
+			<graph string="Accounts by type" type="bar">
+				<field name="name" group="True"/>
+				<field name="balance" operator="+"/>
+			</graph>
+		</field>
+	</record>
 	<record model="ir.ui.view" id="view_crm_case_user_tree">
-		<field name="name">report.crm.case.user.tree</field>
-		<field name="model">report.crm.case.user</field>
+		<field name="name">report.account.receivable.tree</field>
+		<field name="model">report.account.receivable</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Cases by User and Section">
+			<tree string="Accounts by type">
 				<field name="name"/>
-				<field name="user_id"/>
-				<field name="section_id"/>
-				<field name="nbr"/>
-				<field name="delay_close"/>
-				<field name="amount_revenue"/>
-				<field name="amount_costs"/>
-				<field name="amount_revenue_prob"/>
-				<field name="probability"/>
-				<field name="state"/>
+				<field name="type"/>
+				<field name="balance"/>
+				<field name="credit"/>
+				<field name="debit"/>
 			</tree>
 		</field>
 	</record>
 	<record model="ir.ui.view" id="view_crm_case_user_form">
-		<field name="name">report.crm.case.user.form</field>
-		<field name="model">report.crm.case.user</field>
+		<field name="name">report.account.receivable.form</field>
+		<field name="model">report.account.receivable</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Cases by User and Section">
+			<form string="Accounts by type">
 				<field name="name" select="1"/>
-				<field name="user_id" select="1"/>
-				<field name="section_id" select="1"/>
-				<field name="nbr" select="1"/>
-				<field name="state" select="1"/>
+				<field name="type" select="1"/>
 			</form>
 		</field>
 	</record>
 
-	<record model="ir.ui.view" id="view_crm_case_user_graph">
-		<field name="name">report.crm.case.user.graph</field>
-		<field name="model">report.crm.case.user</field>
-		<field name="type">graph</field>
-		<field name="arch" type="xml">
-			<graph string="Cases by User and Section" type="bar">
-				<field name="user_id" group="True"/>
-				<field name="nbr" operator="+"/>
-			</graph>
-		</field>
-	</record>
-
-
-	<record model="ir.actions.act_window" id="action_report_crm_case_user_tree_month">
-		<field name="name">report.crm.case.user.tree</field>
-		<field name="res_model">report.crm.case.user</field>
+	<record model="ir.actions.act_window" id="action_account_receivable_graph">
+		<field name="name">report.account.receivable.graph</field>
+		<field name="res_model">report.account.receivable</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,graph</field>
-		<field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
+		<!-- <field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field> -->
 	</record>
-	<menuitem name="CRM &amp; SRM/Reporting/This Month/Cases by user and section" action="action_report_crm_case_user_tree_month" id="menu_crm_case_user_tree_month"/>
+	<menuitem 
+		name="Financial Management/Reporting/This Month/Balance by type of account"
+		action="action_account_receivable_graph"
+		id="menu_account_receivable_graph"/>
 
 	</data>
 </terp>

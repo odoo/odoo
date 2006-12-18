@@ -29,40 +29,45 @@
 
 from osv import fields,osv
 
+def _code_get(self, cr, uid, context={}):
+	acc_type_obj = self.pool.get('account.account.type')
+	ids = acc_type_obj.search(cr, uid, [])
+	res = acc_type_obj.read(cr, uid, ids, ['code', 'name'], context)
+	return [(r['code'], r['name']) for r in res]
+
+
 class report_account_receivable(osv.osv):
 	_name = "report.account.receivable"
 	_description = "Receivable accounts"
 	_auto = False
 	_columns = {
-		'name': fields.date('Month', readonly=True),
-		'user_id':fields.many2one('res.users', 'User', readonly=True, relate=True),
-		'section_id':fields.many2one('crm.case.section', 'Section', readonly=True, relate=True),
-		'amount_revenue': fields.float('Est.Revenue', readonly=True),
-		'amount_costs': fields.float('Est.Cost', readonly=True),
-		'amount_revenue_prob': fields.float('Est. Rev*Prob.', readonly=True),
-		'nbr': fields.integer('# of Cases', readonly=True),
-		'probability': fields.float('Avg. Probability', readonly=True),
-		'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
-		'delay_close': fields.integer('Delay to close', readonly=True),
+		'name': fields.char('Week of Year', size=7, readonly=True),
+		'type': fields.selection(_code_get, 'Account Type', required=True),
+		'balance':fields.float('Balance', readonly=True),
+		'debit':fields.float('Debit', readonly=True),
+		'credit':fields.float('Credit', readonly=True),
 	}
-	_order = 'name desc, user_id, section_id'
+	_order = 'name desc'
 	def init(self, cr):
 		cr.execute("""
-			create or replace view report_crm_case_user as (
+			create or replace view report_account_receivable as (
 				select
-					min(c.id) as id,
-					substring(c.create_date for 7)||'-01' as name,
-					c.state,
-					c.user_id,
-					c.section_id,
-					count(*) as nbr,
-					sum(planned_revenue) as amount_revenue,
-					sum(planned_cost) as amount_costs,
-					sum(planned_revenue*probability)::decimal(16,2) as amount_revenue_prob,
-					avg(probability)::decimal(16,2) as probability,
-					to_char(avg(date_closed-c.create_date), 'DD"d" HH12:MI:SS') as delay_close
+					min(l.id) as id,
+					to_char(date,'YYYY:IW') as name,
+					sum(l.debit-l.credit) as balance,
+					sum(l.debit) as debit,
+					sum(l.credit) as credit,
+					a.type
 				from
-					crm_case c
-				group by substring(c.create_date for 7), c.state, c.user_id, c.section_id
+					account_move_line l
+				left join
+					account_account a on (l.account_id=a.id)
+				where
+					l.state <> 'draft'
+				group by
+					to_char(date,'YYYY:IW'), a.type
 			)""")
-report_crm_case_user()
+report_account_receivable()
+
+					#a.type in ('receivable','payable')
+

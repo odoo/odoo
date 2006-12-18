@@ -35,6 +35,7 @@ class report_analytic_account_close(osv.osv):
 	_auto = False
 	_columns = {
 		'name': fields.many2one('account.analytic.account', 'Analytic account', readonly=True),
+		'state': fields.char('State', size=32, readonly=True),
 		'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
 		'quantity': fields.float('Quantity', readonly=True),
 		'quantity_max': fields.float('Max. Quantity', readonly=True),
@@ -47,6 +48,7 @@ class report_analytic_account_close(osv.osv):
 				select
 					a.id as id,
 					a.id as name,
+					a.state as state,
 					sum(l.unit_amount) as quantity,
 					sum(l.amount) as balance,
 					a.partner_id as partner_id,
@@ -57,7 +59,7 @@ class report_analytic_account_close(osv.osv):
 				right join
 					account_analytic_account a on (l.account_id=a.id)
 				group by
-					a.id,a.quantity_max,a.date,a.partner_id
+					a.id,a.state, a.quantity_max,a.date,a.partner_id
 				having
 					(a.quantity_max>0 and (sum(l.unit_amount)>=a.quantity_max)) or
 					a.date <= current_date

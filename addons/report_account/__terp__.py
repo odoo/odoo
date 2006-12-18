@@ -8,7 +8,7 @@
 	"description": "A module that adds new reports based on the account module.",
 	"init_xml" : [],
 	"demo_xml" : [],
-	"update_xml" : ["report_account_view.xml"],
+	"update_xml" : ["report_receivable_view.xml"],
 	"active": False,
 	"installable": True
 }
