@@ -16,7 +16,7 @@
 			name="hr.analytical.timesheet"
 			menu="False" />
 		<menuitem
-			name="Human Resources/Hours encoding/Print a user timesheet"
+			name="Human Resources/Reporting/Timesheet/Print a user timesheet"
 			action="wizard_hr_timesheet"
 			type="wizard"
 			id="menu_wizard_hr_timesheet"/>
@@ -27,7 +27,7 @@
 			name="hr.analytical.timesheet.my"
 			menu="False" />
 		<menuitem
-			name="Human Resources/Hours encoding/Print my timesheet"
+			name="Human Resources/Reporting/Timesheet/Print my timesheet"
 			id="menu_wizard_hr_timesheet_my"
 			action="wizard_hr_timesheet_my"
 			type="wizard" />
@@ -45,7 +45,11 @@
 			model="hr.employee"
 			name="hr.analytical.timesheet_users"
 			menu="False"/>
-		<menuitem name="Human Resources/Hours encoding/Print users timesheet" action="wizard_hr_timesheet_users" type="wizard"/>
+		<menuitem
+			name="Human Resources/Reporting/Timesheet/Print summary timesheet"
+			action="wizard_hr_timesheet_users"
+			type="wizard"
+			id="menu_wizard_hr_timesheet_users"/>
 
 	</data>
 </terp>

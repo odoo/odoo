@@ -11,7 +11,7 @@
 		<field name="model">report.analytic.account.close</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Expirated analytic accounts">
+			<form string="Expired analytic accounts">
 				<field name="name" select="1"/>
 				<field name="partner_id" select="1"/>
 				<field name="quantity" select="1"/>
@@ -29,7 +29,7 @@
 		<field name="model">report.analytic.account.close</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Expirated analytic accounts">
+			<tree string="Expired analytic accounts">
 				<field name="name"/>
 				<field name="partner_id"/>
 				<field name="state"/>
@@ -46,7 +46,7 @@
 		<field name="model">report.analytic.account.close</field>
 		<field name="type">graph</field>
 		<field name="arch" type="xml">
-			<graph string="Analytic accounts to close">
+			<graph string="Expired analytic accounts">
 				<field name="partner_id" group="True"/>
 				<field name="quantity" operator="+"/>
 				<field name="quantity_max" operator="+"/>
@@ -61,7 +61,7 @@
 		<field name="view_mode">tree,graph</field>
 		<field name="domain">[('state','=','open')]</field>
 	</record>
-	<menuitem name="Financial Management/Reporting/All Months/Analytic accounts to close"
+	<menuitem name="Financial Management/Reporting/Analytic/All Months/Expired analytic accounts"
 		action="action_analytic_account_tree"
 		id="menu_action_analytic_account_tree"/>
 

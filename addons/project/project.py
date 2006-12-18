@@ -162,7 +162,7 @@ class task(osv.osv):
 		'date_start': fields.datetime('Date Start'),
 		'date_deadline': fields.datetime('Deadline'),
 		'date_close': fields.datetime('Date Closed', readonly=True),
-		'project_id': fields.many2one('project.project', 'Project', ondelete='cascade'),
+		'project_id': fields.many2one('project.project', 'Project', ondelete='cascade', relate=True),
 		'notes': fields.text('Notes'),
 		'start_sequence': fields.boolean('Wait for previous sequences'),
 		'planned_hours': fields.float('Planned hours'),
