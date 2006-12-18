@@ -182,41 +182,41 @@ def _create_dta(self,cr,uid,data,context):
 
 		#header
 		try:
-			hdr= header('000000','',creation_date,company_iban,'idfi',seq,'836','0')
+			hdr= header('000000','',creation_date,company_iban,'idfi',seq,'836','0') # TODO id_file
 		except Exception,e :
 			log= log +'\n'+ str(e)
-			raise
-		# header, id_dta, num_invoice, iban, amount :
+			#raise
+		# segment 01:
 		try:
 			dta = dta + segment_01(hdr,company_dta ,
 								   number,company_iban,valeur,currency,str(i.amount_total))
 		except Exception,e :
 			log= log +'\n'+ str(e)
-			raise
+			#raise
 		# adresse donneur d'ordre
 		try: 
 			dta = dta + segment_02(company.name,co_addr.street,co_addr.zip,co_addr.city,country,cours='')
 		except Exception,e :
 			log= log +'\n'+ str(e)
-			raise
+			#raise
 		# donnees de la banque
 		try: 
-			dta = dta + segment_03(data['form']['bank'],'',data['form']['bank_iban']) # city = blank
+			dta = dta + segment_03(data['form']['bank'],'',data['form']['bank_iban']) 
 		except Exception,e :
 			log= log +'\n'+ str(e)
-			raise
+			#raise
 		# adresse du beneficiaire
 		try: 
 			dta = dta + segment_04(partner_name,partner_street,partner_zip,partner_city,partner_country,cours='')
 		except Exception,e :
 			log= log +'\n'+ str(e)
-			raise
+			#raise
 		# communication & reglement des frais
 		try: 
-			dta = dta + segment_05(motif='I',ref1='',ref2=i.reference or '',ref3='',format='0') #FIXME !
+			dta = dta + segment_05(motif='I',ref1='',ref2=i.reference or '',ref3='',format='0') #FIXME : motif
 		except Exception,e :
 			log= log +'\n'+ str(e)
-			raise
+			#raise
 
 		amount_tot += i.amount_total
 		inv_obj.write(cr,uid,[i.id],{'dta_state':  'paid'})
@@ -224,12 +224,13 @@ def _create_dta(self,cr,uid,data,context):
 
 
 	# total
-	try: 
-		dta = dta + total(header('000000','',creation_date,company_iban,'idfi',seq,'890','0')\
+	try:
+		if dta :
+			dta = dta + total(header('000000','',creation_date,company_iban,'idfi',seq,'890','0')\
 						  , str(amount_tot))
 	except Exception,e :
 		log= log +'\n'+ str(e)
-		raise
+		#raise
 		
 	log = log and  log +'\nCORRUPTED FILE !'or 'DONE'
 	return {'note':log+skip, 'dta': b64encode(dta)}
