@@ -106,14 +106,15 @@ def _do_split(self, cr, uid, data, context):
 			price = data['form']['price%s' % move.id]
 			currency = data['form']['currency%s' % move.id]
 
-			new_price = currency_obj.compute(cr, uid, currency, user.company_id.currency_id.id, price)
-			new_std_price = ((product.standard_price * product.qty_available) + (new_price * qty))/(product.qty_available + qty)
-			product_obj.write(cr, uid, [product.id], {'standard_price': new_std_price})
+			if qty > 0:
+				new_price = currency_obj.compute(cr, uid, currency, user.company_id.currency_id.id, price)
+				new_std_price = ((product.standard_price * product.qty_available) + (new_price * qty))/(product.qty_available + qty)
+				product_obj.write(cr, uid, [product.id], {'standard_price': new_std_price})
 
 	for move in too_few:
 		if not new_picking:
 			new_picking = pick_obj.copy(cr, uid, pick.id, {'name' : '%s (splitted)' % pick.name, 'move_lines' : [], 'state':'draft'})
-		new_obj = move_obj.copy(cr, uid, move.id, {'product_qty' : data['form']['move%s' % move.id], 'product_uos_qty':data['form']['move%s' % move.id], 'picking_id' : new_picking, 'state': move.state, 'move_dest_id': False})
+		new_obj = move_obj.copy(cr, uid, move.id, {'product_qty' : data['form']['move%s' % move.id], 'product_uos_qty':data['form']['move%s' % move.id], 'picking_id' : new_picking, 'state': 'assigned', 'move_dest_id': False})
 		move_obj.write(cr, uid, [move.id], {'product_qty' : move.product_qty - data['form']['move%s' % move.id], 'product_uos_qty':move.product_qty - data['form']['move%s' % move.id]})
 
 	if new_picking:
@@ -126,9 +127,13 @@ def _do_split(self, cr, uid, data, context):
 	if new_picking:
 		wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_confirm', cr)
 	# Then we finish the good picking
-	picking_toclose = new_picking or pick.id
-	pick_obj.action_move(cr, uid, [picking_toclose])
-	wf_service.trg_validate(uid, 'stock.picking', picking_toclose, 'button_done', cr)
+	if new_picking:
+		pick_obj.action_move(cr, uid, [new_picking])
+		wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_done', cr)
+		wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
+	else:
+		pick_obj.action_move(cr, uid, [pick.id])
+		wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_done', cr)
 	return {}
 
 class partial_picking(wizard.interface):

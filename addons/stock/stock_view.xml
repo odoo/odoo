@@ -461,17 +461,22 @@
 
 							<separator string="Move State" colspan="4"/>
 							<field name="state" select="1"/>
+							<group>
+								<button name="force_assign" string="Force assignation" states="confirmed" type="object"/>
+								<button name="cancel_assign" string="Cancel assignation" states="assigned" type="object"/>
+							</group>
 						</form>
 					</field>
 					<group colspan="4" col="7">
 						<label colspan="6"/>
 						<button type="action" name="%(move_split)d" string="Split move lines in two"/>
 					</group>
-					<group colspan="4" col="7">
+					<group colspan="4" col="8">
 						<field name="state" readonly="1"/>
 						<button name="button_confirm" string="Confirm Picking" states="draft"/>
-						<button name="action_assign" string="Assign Reservations" states="confirmed" type="object"/>
-						<button name="force_assign" string="Force Reservations" states="confirmed" type="object"/>
+						<button name="action_assign" string="Assign" states="confirmed" type="object"/>
+						<button name="force_assign" string="Force assignations" states="confirmed" type="object"/>
+						<button name="cancel_assign" string="Cancel assignations" states="assigned" type="object"/>
 						<button type="action" name="%(partial_picking)d" string="Make Picking" states="assigned"/>
 						<button name="button_cancel" string="Cancel Picking" states="assigned,confirmed,draft"/>
 					</group>

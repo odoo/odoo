@@ -388,6 +388,14 @@ class stock_picking(osv.osv):
 			wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
 		return True
 
+	def cancel_assign(self, cr, uid, ids, *args):
+		wf_service = netsvc.LocalService("workflow")
+		for pick in self.browse(cr, uid, ids):
+			move_ids = [x.id for x in pick.move_lines]
+			self.pool.get('stock.move').cancel_assign(cr, uid, move_ids)
+			wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
+		return True
+
 	def action_assign_wkf(self, cr, uid, ids):
 		self.write(cr, uid, ids, {'state':'assigned'})
 		return True
@@ -686,6 +694,10 @@ class stock_move(osv.osv):
 
 	def force_assign(self, cr, uid, ids, context={}):
 		self.write(cr, uid, ids, {'state' : 'assigned'})
+		return True
+
+	def cancel_assign(self, cr, uid, ids, context={}):
+		self.write(cr, uid, ids, {'state': 'confirmed'})
 		return True
 
 	#
