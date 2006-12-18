@@ -6,12 +6,12 @@
 	# Analytic accounts to close
 	#
 
-	<record model="ir.ui.view" id="view_analytic_account_form">
-		<field name="name">report.analytic.account.form</field>
-		<field name="model">report.analytic.account</field>
+	<record model="ir.ui.view" id="view_analytic_account_close_form">
+		<field name="name">report.analytic.account.close.form</field>
+		<field name="model">report.analytic.account.close</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Sales Orders by product">
+			<form string="Expirated analytic accounts">
 				<field name="name" select="1"/>
 				<field name="partner_id" select="1"/>
 				<field name="quantity" select="1"/>
@@ -23,12 +23,12 @@
 	</record>
 
 
-	<record model="ir.ui.view" id="view_analytic_account_tree">
-		<field name="name">report.analytic.account.tree</field>
-		<field name="model">report.analytic.account</field>
+	<record model="ir.ui.view" id="view_analytic_account_close_tree">
+		<field name="name">report.analytic.account.close.tree</field>
+		<field name="model">report.analytic.account.close</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Sales Orders by product">
+			<tree string="Expirated analytic accounts">
 				<field name="name"/>
 				<field name="partner_id"/>
 				<field name="quantity"/>
@@ -40,8 +40,8 @@
 	</record>
 
 	<record model="ir.ui.view" id="view_analytic_account_graph">
-		<field name="name">report.analytic.account.graph</field>
-		<field name="model">report.analytic.account</field>
+		<field name="name">report.analytic.account.close.graph</field>
+		<field name="model">report.analytic.account.close</field>
 		<field name="type">graph</field>
 		<field name="arch" type="xml">
 			<graph string="Analytic accounts to close">
@@ -53,15 +53,14 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="action_analytic_account_tree">
-		<field name="name">report.analytic.account.tree</field>
-		<field name="res_model">report.analytic.account</field>
+		<field name="name">report.analytic.account.close.tree</field>
+		<field name="res_model">report.analytic.account.close</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,graph</field>
 	</record>
 	<menuitem name="Financial Management/Reporting/All Months/Analytic accounts to close"
 		action="action_analytic_account_tree"
 		id="menu_action_analytic_account_tree"/>
-
 
 	</data>
 </terp>
