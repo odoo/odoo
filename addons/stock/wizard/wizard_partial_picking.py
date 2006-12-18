@@ -90,6 +90,10 @@ def _do_split(self, cr, uid, data, context):
 			too_few.append(move)
 		else:
 			too_many.append(move)
+
+		#
+		# Average price computation
+		#
 		if (pick.type == 'in') and (move.product_id.cost_method == 'average'):
 			product_obj = pooler.get_pool(cr.dbname).get('product.product')
 			currency_obj = pooler.get_pool(cr.dbname).get('res.currency')

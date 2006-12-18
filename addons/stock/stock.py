@@ -356,6 +356,7 @@ class stock_picking(osv.osv):
 	}
 
 	def action_confirm(self, cr, uid, ids, *args):
+		print 'Confirmed', ids
 		self.write(cr, uid, ids, {'state': 'confirmed'})
 		todo = []
 		for picking in self.browse(cr, uid, ids):
@@ -671,6 +672,7 @@ class stock_move(osv.osv):
 		return {'value':result}
 
 	def action_confirm(self, cr, uid, ids, context={}):
+		print 'Confirmed state', ids
 		self.write(cr, uid, ids, {'state':'confirmed'})
 		return True
 
