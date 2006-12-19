@@ -32,6 +32,7 @@ import time
 import netsvc
 from osv import fields, osv
 import ir
+import pooler
 
 class account_invoice(osv.osv):
 	def _amount_untaxed(self, cr, uid, ids, prop, unknow_none,unknow_dict):
@@ -61,9 +62,7 @@ class account_invoice(osv.osv):
 		return cr.fetchone()[0]
 	
 	def _get_currency(self, cr, uid, context):
-		cr.execute("select id from res_currency where rate=1.0")
-		res = cr.fetchone()
-		return res and res[0] or False
+		return pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, [uid])[0].company_id.currency_id.id
 
 	def _get_journal_analytic(self, cr, uid, type_inv, context={}):
 		type2journal = {'out_invoice': 'sale', 'in_invoice': 'purchase', 'out_refund': 'sale', 'in_refund': 'purchase'}
