@@ -556,6 +556,13 @@ class orm(object):
 				if i>=len(line):
 					raise 'Please check that all your lines have %d cols.' % (len(fields),)
 				field = fields[i]
+				if len(field) == 1 and field[0].endswith(':id'):
+					module, xml_id = line[i].rsplit('.', 1)
+					ir_model_data_obj = self.pool.get('ir.model.data')
+					id=ir_model_data_obj._get_id(cr, uid, module, xml_id)
+					res_id=ir_model_data_obj.read(cr, uid, [id], ['res_id'])[0]['res_id']
+					row[field[0][:-3]] = res_id or False
+					continue
 				if (len(field)==len(prefix)+1) and (prefix==field[0:len(prefix)]):
 					if fields_def[field[len(prefix)]]['type']=='integer':
 						res =line[i] and int(line[i])
