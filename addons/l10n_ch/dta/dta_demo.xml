@@ -2,7 +2,6 @@
 <terp>
 <data>
 
-
 	<record model="res.partner.bank" id="main_bank">
 		<field name="name">FORTIS BANK</field>
 		<field name="iban">1234567</field>
@@ -17,14 +16,9 @@
 		<field name="partner_id" ref="base.res_partner_agrolait"/>
 	</record>
 
-
-
 	<record model="res.company" id="base.main_company">
 		<field name="dta_number">Co01</field>
 		<field name="bvr_number">Co01</field>
-	</record>
-	<record model="res.partner" id="base.main_partner">
-		<field name="bank_id" ref="main_bank"/>
 	</record>
 
 

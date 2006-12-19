@@ -32,17 +32,17 @@ from base64 import b64decode
 from osv import osv
 
 ask_form = """<?xml version="1.0"?>
-<form string="V11 parsing">
-<separator colspan="4" string="Extract V11 data :" />
-	<field name="journal_id" colspan="1"/>
-	<newline/>
+<form string="V11 file import">
+<separator colspan="4" string="Select your bank journal :" />
+	<field name="journal_id" colspan="1" domain="[('type','=','cash')]" />
+	<separator string="Clic on 'New' to select your file :" colspan="4"/>
 	<field name="v11"/>
 </form>
 """
 
 ask_fields = {
 	'journal_id' : {
-		'string':'Destination Journal',
+		'string':'Bank Journal',
 		'type':'many2one',
 		'relation':'account.journal',
 		'required':True,
@@ -56,28 +56,24 @@ ask_fields = {
 }
 
 res_form = """<?xml version="1.0"?>
-<form string="V11 parsing">
+<form string="Import V11 file">
 <separator colspan="4" string="Results :" />
-	<field name="journal_id"/>
-	<newline/>
-	<field name="v11"/>
-	<separator string="Logs" colspan="4"/>
-	<field name="note" colspan="4" nolabel="1"/>
+	<field name="note" colspan="4" nolabel="1" width="500"/>
 </form>
 """
 
 res_fields = {
-	'journal_id' : {
-		'string':'Destination Journal',
-		'type':'many2one',
-		'relation':'account.journal',
-		'required':True,
-	},
-	'v11' : {
-		'string':'V11 file',
-		'type':'binary',
-		'required':True,
-	},
+# 	'journal_id' : {
+# 		'string':'Destination Journal',
+# 		'type':'many2one',
+# 		'relation':'account.journal',
+# 		'required':True,
+# 	},
+# 	'v11' : {
+# 		'string':'V11 file',
+# 		'type':'binary',
+# 		'required':True,
+# 	},
 
 	'note' : {'string':'Log','type':'text'}
 
@@ -90,8 +86,8 @@ def _v11_parsing(self, cr, uid, data, context):
 	pool = pooler.get_pool(cr.dbname)
 	v11 = data['form']['v11']
 	
-
 	line=""
+	lnb=1
 	record={}
 	total={}
 	total_compute= 0
@@ -133,31 +129,31 @@ def _v11_parsing(self, cr, uid, data, context):
 						'invoice_ref': line[77:87],
 						'reserve2': line[87:96],
 						'frais_encaissement': line[96:100],
-						'line':line,
+						'line_number': str(lnb),
 				}
 
 				total_compute+= int(record['montant'])
 				rec_list.append( record )
 
+			lnb+=1
 			line=""
-
 
 	# check the amounts :
 	if not total_compute == int(total['tot_montant']):
-		return {'note': 'Incoherent V11 file  ! IMPORT ABORTED.' }
+		return {'note': 'Incorrect total amount V11 file, import aborted.' }
 
 
 
 	period_id = pool.get('account.period').find(cr,uid, context=context)
 	if not period_id:
-		return {'note': 'No period found  ! IMPORT ABORTED.' }
+		return {'note': 'No period found, import aborted.' }
 
 	period_id = period_id[0]
 	invoice_obj= pool.get('account.invoice')
 
 	acc2 = pool.get('account.journal').browse(cr,uid,data['form']['journal_id'],context).default_debit_account_id.id
 	if not 	acc2:
-		return {'note': 'No debit account specified for this journal ! IMPORT ABORTED.' }
+		return {'note': 'No debit account specified for this journal, import aborted.' }
 
 
 
@@ -225,25 +221,28 @@ def _v11_parsing(self, cr, uid, data, context):
 			cr.rollback() 
 			nb_err+=1
 			if e.value.startswith('You have to provide an account for the write off entry !'):
-				log= log +'\n * Error amount mismatch for invoice '+ rec['invoice_ref'].lstrip('0')+\
+				log= log +'\n * Line '+rec['line_number'] +', invoice '+rec['invoice_ref'].lstrip('0')+\
+					 ' : Amount mismatch for invoice '+ rec['invoice_ref'].lstrip('0')+\
 					'( expected amount: '+str(invoice.amount_total)+' got :'+rec['montant'].lstrip('0')+\
-					').\n  line : '+rec['line']
+					').'
 			else:
-				log= log +'\n * '+str(e.value)+  ' :\n  line : '+rec['line']
+				log= log +'\n * Line '+rec['line_number'] +', invoice '+rec['invoice_ref'].lstrip('0')+\
+				' : '+str(e.value)
 			#raise # REMOVEME
 
 		except Exception, e:
 			cr.rollback()
 			nb_err+=1
-			log= log +'\n * '+str(e)+  ' :\n  line : '+rec['line'] 
+			log= log +'\n * Line '+rec['line_number'] +', invoice '+rec['invoice_ref'].lstrip('0')+\
+				 ' : '+str(e)
 			#raise # REMOVEME
 		except :
 			cr.rollback()
 			nb_err+=1
-			log= log +'\n * Reconciliation Error\n  line : '+rec['line'] 
+			log= log +'\n * Line '+rec['line_number'] +', invoice '+rec['invoice_ref'].lstrip('0')+' : Reconciliation Error.'
 			#raise
 
-	log= log + '-'*5 +'\nNumber of parsed lines : '+ str(len(rec_list)) +'\nNumber of error : '+ str(nb_err)
+	log= log + '\n\n --' +'\nNumber of parsed lines : '+ str(len(rec_list)) +'\nNumber of error : '+ str(nb_err)
 
 	return {'note':log,'journal_id': data['form']['journal_id'], 'v11': data['form']['v11']}
 
@@ -267,7 +266,7 @@ class v11_import(wizard.interface):
 			'result' : {'type' : 'form',
 						'arch' : res_form,
 						'fields' : res_fields,
-						'state' : [('extraction', 'Retry') ,('end', 'Quit') ]}
+						'state' : [('end', 'Quit') ]}
 		},
 
 	}

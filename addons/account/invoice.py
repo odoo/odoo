@@ -102,9 +102,9 @@ class account_invoice(osv.osv):
 		'date_invoice': fields.date('Date Invoiced', required=True, states={'open':[('readonly',True)],'close':[('readonly',True)]}),
 		'date_due': fields.date('Due Date', states={'open':[('readonly',True)],'close':[('readonly',True)]}),
 
-		'partner_id': fields.many2one('res.partner', 'Partner', change_default=True, readonly=True, states={'draft':[('readonly',False)]}, relate=True),
+		'partner_id': fields.many2one('res.partner', 'Partner', change_default=True, readonly=True, required=True, states={'draft':[('readonly',False)]}, relate=True),
 		'address_contact_id': fields.many2one('res.partner.address', 'Contact Address', readonly=True, states={'draft':[('readonly',False)]}),
-		'address_invoice_id': fields.many2one('res.partner.address', 'Invoice Address', readonly=True, states={'draft':[('readonly',False)]}),
+		'address_invoice_id': fields.many2one('res.partner.address', 'Invoice Address', readonly=True, required=True, states={'draft':[('readonly',False)]}),
 
 		'partner_contact': fields.char('Partner Contact', size=64),
 		'partner_ref': fields.char('Partner Reference', size=64),

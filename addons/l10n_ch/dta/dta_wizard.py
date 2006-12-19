@@ -29,20 +29,32 @@ import wizard
 from base64 import b64encode
 from osv import osv
 import time
+import pooler
+
+def _bank_get(self, cr, uid, context={}):
+	pool = pooler.get_pool(cr.dbname)
+	partner_id = pool.get('res.users').browse(cr,uid,[uid])[0].company_id.partner_id
+
+	obj = pool.get('res.partner.bank')
+	ids = obj.search(cr, uid, [('partner_id','=',partner_id.id)])
+	res = obj.read(cr, uid, ids, ['active', 'name'], context)
+	res = [(r['active'], r['name']) for r in res]
+	return res 
+
 
 ask_form = """<?xml version="1.0"?>
-<form string="DTA file creation wizard">
-<separator colspan="4" string="Create DTA file :" />
+<form string="DTA file creation">
+<separator colspan="4" string="Choose a bank account :" />
 	<field name="bank" colspan="3"/>
-	<newline/>
-	<field name="bank_iban" colspan="3"/>
 </form>
 """
 
 ask_fields = {
 	'bank' : {
-		'string':'Bank',
-		'type':'char',
+		'string':'Bank Account',
+		'type':'selection',
+		'selection':_bank_get,
+		'required': True,
 	},
 
 # 	'city' : {
@@ -50,17 +62,12 @@ ask_fields = {
 # 		'type':'char',
 # 	},
 
-	'bank_iban' : {
-		'string':'Iban',
-		'type':'char',
-		'required':True,
-	},
 }
 
 
 res_form = """<?xml version="1.0"?>
-<form string="DTA file creation wizard">
-<separator colspan="4" string="Results :" />
+<form string="DTA file creation - Results">
+<separator colspan="4" string="Clic on 'Save as' to save the DTA file :" />
 	<field name="dta"/>
 	<separator string="Logs" colspan="4"/>
 	<field name="note" colspan="4" nolabel="1"/>
@@ -69,9 +76,10 @@ res_form = """<?xml version="1.0"?>
 
 res_fields = {
 	'dta' : {
-		'string':'DTA file',
+		'string':'DTA File',
 		'type':'binary',
 		'required':True,
+		'readonly':True,
 	},
 
 	'note' : {'string':'Log','type':'text'}
@@ -126,6 +134,8 @@ def header(date,cpt_benef,creation_date,cpt_donneur,id_fich,num_seq,trans,type):
 def total(header,tot):
 	return '01'+c_ljust(header,51)+c_ljust(tot,16)+''.ljust(59)
 def _create_dta(self,cr,uid,data,context):
+
+	
 	# cree des gt836
 
 	creation_date= time.strftime('%y%m%d')
@@ -134,6 +144,11 @@ def _create_dta(self,cr,uid,data,context):
 	dta=''
 	valeur=''
 	pool = pooler.get_pool(cr.dbname)
+	bank= pool.get('res.partner.bank').browse(cr,uid,[data['form']['bank']])[0]
+	bank_name= bank.name or ''
+	bank_iban = bank.iban or ''
+	if not bank_name and bank_iban :
+		log= log +'\nBank account not well defined.' 
 	user = pool.get('res.users').browse(cr,uid,[uid])[0]
 	company= user.company_id
 	co_addr= company.partner_id.address[0]
@@ -151,7 +166,7 @@ def _create_dta(self,cr,uid,data,context):
 	seq= 1
 	amount_tot= 0
 	for i in inv_obj.browse(cr,uid,data['ids']):
-		if i.dta_state != '2bpaid' or i.state == 'draft':
+		if i.dta_state != '2bpaid' or i.state in ['draft','cancel','paid']:
 			skip= skip +'\n Invoice '+ (i.number or '??')+ ' ignored.'
 			continue
 		
@@ -201,7 +216,7 @@ def _create_dta(self,cr,uid,data,context):
 			#raise
 		# donnees de la banque
 		try: 
-			dta = dta + segment_03(data['form']['bank'],'',data['form']['bank_iban']) 
+			dta = dta + segment_03(bank_name,'',bank_iban) 
 		except Exception,e :
 			log= log +'\n'+ str(e)
 			#raise
@@ -218,15 +233,16 @@ def _create_dta(self,cr,uid,data,context):
 			log= log +'\n'+ str(e)
 			#raise
 
+
 		amount_tot += i.amount_total
-		inv_obj.write(cr,uid,[i.id],{'dta_state':  'paid'})
+		inv_obj.write(cr,uid,[i.id],{'dta_state':'paid'})
 		seq += 1
 
 
 	# total
 	try:
 		if dta :
-			dta = dta + total(header('000000','',creation_date,company_iban,'idfi',seq,'890','0')\
+			dta = dta + total(header('000000','',creation_date,company_iban,str(uid),seq,'890','0')\
 						  , str(amount_tot))
 	except Exception,e :
 		log= log +'\n'+ str(e)

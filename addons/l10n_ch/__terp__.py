@@ -8,14 +8,15 @@
 	"category" : "Localisation/Europe",
 	"website": "http://www.tinyerp.com",
 	"depends" : ["base", "account"],
-	"init_xml" : [],
-#	"init_xml" : ["zip_code_default.xml"],
+#	"init_xml" : [],
+	"init_xml" : ["zip_code_default.xml"],
 	"demo_xml" : ["vaudtax_data_demo.xml","dta/dta_demo.xml"],
-	"update_xml" : ["dta/dta_view.xml","dta/dta_wizard.xml","dta/dta_demo.xml",
-					"v11/v11_wizard.xml",
-					"account_vat.xml","base_config.xml","account_config.xml",
-					"company_view.xml"],
-
+	"update_xml" : [
+		"dta/dta_view.xml","dta/dta_wizard.xml",
+		"v11/v11_wizard.xml","v11/v11_view.xml",
+		"account_vat.xml","base_config.xml","account_config.xml",
+		"company_view.xml"
+	],
 	"active": False,
 	"installable": True,
 }
