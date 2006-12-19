@@ -215,17 +215,19 @@ def _v11_parsing(self, cr, uid, data, context):
 				raise Exception("No moves associated to invoice number "+ rec['invoice_ref'].lstrip('0'))
 			account_move_lines.append(line_id )
 			pool.get('account.move.line').reconcile(cr,uid,account_move_lines,
-													writeoff_acc_id=0,#FIXME
-													writeoff_journal_id=0,#FIXME
+													writeoff_acc_id=0,
+													writeoff_journal_id=0,
 													writeoff_period_id= 0,
 													)
 			cr.commit()
 
 		except osv.except_osv, e:
-			cr.rollback()
+			cr.rollback() 
 			nb_err+=1
 			if e.value.startswith('You have to provide an account for the write off entry !'):
-				log= log +'\n * Error amount mismatch for invoice '+ rec['invoice_ref'].lstrip('0')+ ':\n  line : '+rec['line']
+				log= log +'\n * Error amount mismatch for invoice '+ rec['invoice_ref'].lstrip('0')+\
+					'( expected amount: '+str(invoice.amount_total)+' got :'+rec['montant'].lstrip('0')+\
+					').\n  line : '+rec['line']
 			else:
 				log= log +'\n * '+str(e.value)+  ' :\n  line : '+rec['line']
 			#raise # REMOVEME

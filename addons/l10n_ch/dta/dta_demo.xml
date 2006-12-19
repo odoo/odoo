@@ -31,20 +31,37 @@
 	<record model="account.invoice" id="dta_invoice">
 		<field name="name">DTA invoice</field>
 		<field name="dta_state">2bpaid</field>
-		<field name="number">200602</field>
+		<field name="type">in_invoice</field>
 		<field name="partner_id" ref="base.res_partner_agrolait"/>
-		<field name="account_id" ref="account.a_recv"/>
+		<field name="address_invoice_id" ref="base.res_partner_address_8"/>
+		<field name="account_id" ref="account.a_pay"/>
 	</record>
+	<record model="account.invoice.line" id="dta_invoice_line">
+		<field name="name">Dummy product</field>
+		<field name="price_unit">54150</field>
+		<field name="quantity">1</field>
+		<field name="account_id" ref="account.a_expense"/>
+		<field name="invoice_id" ref="dta_invoice"/>
+	</record>
+
+
 
 	<record model="account.invoice" id="v11_invoice">
 		<field name="name">V11 invoice</field>
 		<field name="amount_total">54150</field>
 		<field name="number">1</field>
+
 		<field name="partner_id" ref="base.res_partner_agrolait"/>
+		<field name="address_invoice_id" ref="base.res_partner_address_8"/>
 		<field name="account_id" ref="account.a_recv"/>
 	</record>
-
-<!-- need a invoice line ! -->
+	<record model="account.invoice.line" id="v11_invoice_line">
+		<field name="name">Dummy product</field>
+		<field name="price_unit">54150</field>
+		<field name="quantity">1</field>
+		<field name="account_id" ref="account.a_sale"/>
+		<field name="invoice_id" ref="v11_invoice"/>
+	</record>
 
 	<record model="account.journal" id="account.sales_journal">
 		<field name="default_debit_account_id" ref="account.a_recv"/>

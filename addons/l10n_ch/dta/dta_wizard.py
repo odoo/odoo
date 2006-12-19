@@ -69,7 +69,7 @@ res_form = """<?xml version="1.0"?>
 
 res_fields = {
 	'dta' : {
-		'string':'V11 file',
+		'string':'DTA file',
 		'type':'binary',
 		'required':True,
 	},
