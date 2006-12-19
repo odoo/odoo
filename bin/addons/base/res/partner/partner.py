@@ -295,6 +295,30 @@ class res_partner(osv.osv):
 		return True
 res_partner()
 
+
+
+class res_partner_category_type(osv.osv):
+	_description='Partner category types'
+	_name = 'res.partner.category.type'
+	_columns = {
+		'name': fields.char('Category Name', required=True, size=64),
+	}
+	_order = 'name'
+res_partner_category_type()
+
+
+class res_partner_bank_type(osv.osv):
+	_description='Bank Type'
+	_name = "res.partner.bank.type"
+	_columns = {
+		'name': fields.char('Account Type', size=64, required=True),
+		'code': fields.char('Account Type Code', size=8),
+		'elect_pay': fields.char('Electronic Payment',size=64),
+
+		}
+res_partner_bank_type()
+
+
 class res_partner_bank(osv.osv):
 	_description='Bank Details'
 	_name = "res.partner.bank"
@@ -302,19 +326,20 @@ class res_partner_bank(osv.osv):
 	_columns = {
 		'name': fields.char('Account Name', size=64, required=True),
 		'sequence': fields.integer('Sequence'),
-		'iban': fields.char('Account number', size=64),
+		'iban': fields.char('Account Number', size=64),
 		'swift': fields.char('Swift', size=64),
 		'bank_name': fields.char('Bank Name', size=64),
 		'bank_guichet': fields.char('Branch', size=64),
 		'partner_id': fields.many2one('res.partner', 'Partner', required=True, ondelete='cascade', select=True),
 		'active': fields.boolean('Active'),
+		'type_id': fields.many2one('res.partner.bank.type', 'Type'),
 	}
 	_defaults = {
 		'active': lambda *a: 1,
 	}
 res_partner_bank()
 
-
+	
 class res_partner_address(osv.osv):
 	_description ='Partner Contact'
 	_name = 'res.partner.address'

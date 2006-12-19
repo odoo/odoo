@@ -334,13 +334,18 @@
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_payterm_form"/>
 	</record>
+	<!--
+	======================
+	Bank and bank type
+	======================
+	-->
 
 	<record model="ir.ui.view" id="view_partner_bank_form">
 		<field name="name">res.partner.bank.form</field>
 		<field name="model">res.partner.bank</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Bank Details">
+			<form string="Bank Account Details">
 				<field name="name" select="1" colspan="3"/>
 				<field name="sequence"/>
 				<field name="active" select="1"/>
@@ -348,6 +353,7 @@
 				<field name="swift" select="1"/>
 				<field name="bank_name" select="1"/>
 				<field name="bank_guichet" select="1"/>
+				<field name="type_id" select="1"/>
 			</form>
 		</field>
 	</record>
@@ -356,20 +362,62 @@
 		<field name="model">res.partner.bank</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Bank Details">
+			<tree string="Bank Account Details">
 				<field name="sequence"/>
 				<field name="name"/>
 				<field name="iban"/>
 				<field name="swift"/>
+				<field name="type_id"/>
 			</tree>
 		</field>
 	</record>
+	<record model="ir.actions.act_window" id="action_res_partner_bank">
+		<field name="name">res.partner.bank</field>
+		<field name="res_model">res.partner.bank</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">form,tree</field>
+	</record>
+	<menuitem name="Partners/Configuration/Bank Account" action="action_res_partner_bank" id="menu_res_partner_bank"/>
+
+
+	<record model="ir.ui.view" id="view_partner_bank_type_form">
+		<field name="name">res.partner.bank.type.form</field>
+		<field name="model">res.partner.bank.type</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Bank Account Type">
+				<field name="name" />
+				<field name="code" />
+				<field name="elect_pay" />			
+			</form>
+		</field>
+	</record>
+	<record model="ir.ui.view" id="view_partner_bank_type_tree">
+		<field name="name">res.partner.bank.type.tree</field>
+		<field name="model">res.partner.bank.type</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Bank Account Type">
+				<field name="name" />
+				<field name="code" />
+				<field name="elect_pay" />
+			</tree>
+		</field>
+	</record>
+	<record model="ir.actions.act_window" id="action_res_partner_bank_type">
+		<field name="name">res.partner.bank.type</field>
+		<field name="res_model">res.partner.bank.type</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">form,tree</field>
+	</record>
+	<menuitem name="Partners/Configuration/Bank Account/Bank Account Type" action="action_res_partner_bank_type" id="menu_res_partner_bank_type"/>
 
 	<!--
 	======================
 	Company Architecture
 	======================
 	-->
+
 	<record model="ir.ui.view" id="view_partner_tree2">
 		<field name="name">res.partner.tree</field>
 		<field name="model">res.partner</field>
@@ -499,6 +547,7 @@
 		<field name="view_mode">tree,form</field>
 	</record>
 	<menuitem name="Administration/Configuration/Partner/Define Partners" action="open_module_def_partenaire" sequence="2" id="menu_partenaire_def"/>
+
 
 </data>
 </terp>
