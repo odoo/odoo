@@ -183,7 +183,7 @@ def trans_generate(lang, modules, dbname=None):
 				if 'result' in state_def:
 					result = state_def['result']
 					if result['type'] != 'form':
-						break
+						continue
 
 					name = obj.wiz_name + ',' + state_name
 
