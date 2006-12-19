@@ -14,7 +14,6 @@
 				<field name="name"/>
 				<field name="code"/>
 				<field name="rate"/>
-				<field name="date"/>
 				<field name="rounding"/>
 				<field name="accuracy"/>
 				<field name="active" />
@@ -29,11 +28,20 @@
 			<form string="Currency">
 				<field name="name" select="1" colspan="3"/>
 				<field name="code" select="1"/>
-				<field name="active"  select="1"/>
 				<field name="rate"/>
-				<field name="date" select="1"/>
 				<field name="rounding"/>
 				<field name="accuracy"/>
+				<field name="active"  select="1"/>
+				<field name="rate_ids" colspan="4" nolabel="1" mode="tree,form">
+					<form string="Rates">
+						<field name="name"/>
+						<field name="rate"/>
+					</form>
+					<tree string="Rates">
+						<field name="name"/>
+						<field name="rate"/>
+					</tree>
+				</field>
 			</form>
 		</field>
 	</record>

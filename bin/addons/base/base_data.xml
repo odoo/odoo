@@ -1026,9 +1026,12 @@
 	<record model="res.currency" id="EUR">
 		<field name="name">EUR</field>
 		<field name="code">EUR</field>
-		<field name="rate">1.0</field>
 		<field name="rounding">2</field>
 		<field name="accuracy">4</field>
+	</record>
+	<record model="res.currency.rate" id="rateEUR">
+		<field name="rate">1.0</field>
+		<field name="currency_id" ref="EUR"/>
 	</record>
 
 	<record model="res.company" id="main_company">
