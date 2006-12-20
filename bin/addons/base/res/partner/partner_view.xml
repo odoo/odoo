@@ -548,6 +548,47 @@
 	</record>
 	<menuitem name="Administration/Configuration/Partner/Define Partners" action="open_module_def_partenaire" sequence="2" id="menu_partenaire_def"/>
 
+	<!--
+	======================
+	Lang
+	======================
+	-->
+
+ 	<record model="ir.ui.view" id="view_res_lang_form">
+		<field name="name">res.lang</field>
+		<field name="model">res.lang</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Lang">
+				<field name="name" select="1"/>
+				<field name="code" select="1"/>
+				<field name="translatable" select="1"/>
+			</form>
+		</field>
+	</record>
+ 	<record model="ir.ui.view" id="view_res_lang_tree">
+		<field name="name">res.lang</field>
+		<field name="model">res.lang</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Lang">
+				<field name="name" select="1"/>
+				<field name="code" select="1"/>
+				<field name="translatable" select="1"/>
+			</tree>
+		</field>
+	</record>
+
+
+	<record model="ir.actions.act_window" id="action_res_lang">
+		<field name="name">res.lang</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">res.lang</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+	<menuitem name="Partners/Definitions/Localisation/Lang"  action="action_res_lang" id="menu_res_lang"/>
+
 
 </data>
 </terp>
