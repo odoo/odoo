@@ -14,5 +14,5 @@
 		"report_analytic_planning_report.xml"
 	],
 	"active": False,
-	"installable": True
+	"installable": False
 }

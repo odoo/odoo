@@ -29,6 +29,7 @@
 		<field name="partner_id" ref="base.res_partner_agrolait"/>
 		<field name="address_invoice_id" ref="base.res_partner_address_8"/>
 		<field name="account_id" ref="account.a_pay"/>
+		<field name="currency_id" ref="base.EUR"/>		
 	</record>
 	<record model="account.invoice.line" id="dta_invoice_line">
 		<field name="name">Dummy product</field>
@@ -44,10 +45,10 @@
 		<field name="name">V11 invoice</field>
 		<field name="amount_total">54150</field>
 		<field name="number">1</field>
-
 		<field name="partner_id" ref="base.res_partner_agrolait"/>
 		<field name="address_invoice_id" ref="base.res_partner_address_8"/>
 		<field name="account_id" ref="account.a_recv"/>
+		<field name="currency_id" ref="base.EUR"/>
 	</record>
 	<record model="account.invoice.line" id="v11_invoice_line">
 		<field name="name">Dummy product</field>
