@@ -8,7 +8,11 @@
 	"description": "A report on analytic lines, costs by products, months and accounts.",
 	"init_xml" : [],
 	"demo_xml" : [],
-	"update_xml" : ["report_analytic_line_view.xml", "report_analytic_planning_view.xml"],
+	"update_xml" : [
+		"report_analytic_line_view.xml",
+		"report_analytic_planning_view.xml",
+		"report_analytic_planning_report.xml"
+	],
 	"active": False,
 	"installable": True
 }
