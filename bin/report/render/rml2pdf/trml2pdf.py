@@ -592,7 +592,7 @@ class EndFrameFlowable(ActionFlowable):
 
 class TinyDocTemplate(platypus.BaseDocTemplate):
 
-	def handle_pageBegin(self):
+	def ___handle_pageBegin(self):
 		self.page = self.page + 1
 		self.pageTemplate.beforeDrawPage(self.canv,self)
 		self.pageTemplate.checkPageSize(self.canv,self)
