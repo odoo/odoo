@@ -135,6 +135,15 @@ def total(header,tot):
 	return '01'+c_ljust(header,51)+c_ljust(tot,16)+''.ljust(59)
 def _create_dta(self,cr,uid,data,context):
 
+	# pour generaliser (plus) facilement : utiliser un design patern
+	# transaction :
+	# def trans(methode)
+	#    def capsule(a,*a,**a)
+	#        try methode
+	#        except ...
+	#    return capsule
+	# on peut ensuite l'utiliser via @trans
+	# devant la methode concernee
 	
 	# cree des gt836
 
