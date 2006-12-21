@@ -113,7 +113,7 @@
 			<field name="res_model">hr.expense.expense</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-			<field name="domain">[('state','=','confirmed')]</field>
+			<field name="domain">[('state','=','confirm')]</field>
 		</record>
 		<menuitem
 			name="Human Resources/Expenses/All Expenses/Expenses waiting validation"
@@ -124,7 +124,7 @@
 			<field name="res_model">hr.expense.expense</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-			<field name="domain">[('state','=','valid')]</field>
+			<field name="domain">[('state','=','accepted')]</field>
 		</record>
 		<menuitem
 			name="Human Resources/Expenses/All Expenses/Expenses waiting payment"
