@@ -64,7 +64,9 @@ class hr_analytic_timesheet(osv.osv):
 		emp_obj = self.pool.get('hr.employee')
 		emp_id = emp_obj.search(cr, uid, [('user_id', '=', uid)])
 		if emp_id:
-			return emp_obj.browse(cr, uid, emp_id[0], context).product_id.id
+			emp=emp_obj.browse(cr, uid, emp_id[0], context)
+			if emp.product_id:
+				return emp.product_id.id
 		return False
 
 	def _getEmployeeUnit(self, cr, uid, context):
@@ -72,9 +74,8 @@ class hr_analytic_timesheet(osv.osv):
 		emp_id = emp_obj.search(cr, uid, [('user_id', '=', uid)])
 		if emp_id:
 			emp=emp_obj.browse(cr, uid, emp_id[0], context)
-			if not emp.product_id:
-				raise osv.except_osv('No product !', "The employee haven't an associated product")
-			return emp.product_id.uom_id.id
+			if emp.product_id:
+				return emp.product_id.uom_id.id
 		return False
 
 	def _getGeneralAccount(self, cr, uid, context):
