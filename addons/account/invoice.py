@@ -62,7 +62,11 @@ class account_invoice(osv.osv):
 		return cr.fetchone()[0]
 	
 	def _get_currency(self, cr, uid, context):
-		return pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, [uid])[0].company_id.currency_id.id
+		user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, [uid])[0]
+		if user.company:
+			return user.company_id.currency_id.id
+		else
+			return pooler.get_pool(cr.dbname).get('res.currency').search(cr, uid, [('rate','=',1.0)])[0]
 
 	def _get_journal_analytic(self, cr, uid, type_inv, context={}):
 		type2journal = {'out_invoice': 'sale', 'in_invoice': 'purchase', 'out_refund': 'sale', 'in_refund': 'purchase'}
