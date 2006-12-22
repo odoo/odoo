@@ -93,6 +93,17 @@ def change_column(cr, table, column, new_type, copy):
 change_column(cr, 'crm_case', 'date_closed', 'timestamp', True)
 cr.commit()
 
+# -------------------- #
+# add module if needed #
+# -------------------- #
+
+cr.execute("SELECT name FROM ir_module_module")
+if not cr.rowcount:
+	for module in ('base', 'marketing', 'subscription', 'account', 'base_partner_relation', 'audittrail', 'account_followup', 'product', 'hr', 'l10n_simple', 'crm', 'stock', 'hr_timesheet', 'purchase', 'report_purchase', 'mrp', 'sale', 'report_sale', 'delivery', 'project', 'sale_crm', 'hr_timesheet_project', 'scrum', 'report_project'):
+		cr.execute("INSERT INTO ir_module_module (name, state) VALUES ('%s', 'installed')" % module)
+	cr.commit()
+
+
 # ----------------------------------------------------- #
 # add some fields (which cannot be added automatically) #
 # ----------------------------------------------------- #
