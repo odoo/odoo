@@ -311,10 +311,14 @@ class purchase_order_line(osv.osv):
 			raise osv.except_osv('No Pricelist !', 'You have to select a pricelist in the sale form !\n Please set one before choosing a product.')
 		if not product:
 			return {'value': {'price_unit': 0.0, 'name':'','notes':''}, 'domain':{'product_uom':[]}}
+		lang=False
+		if partner_id:
+			lang=self.pool.get('res.partner').read(cr, uid, [partner_id])[0]['lang']
+		context={'lang':lang}
 		price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist], product, qty or 1.0, partner_id, {'uom': uom})[pricelist]
 		prod = self.pool.get('product.product').read(cr, uid, [product], ['taxes_id','name','seller_delay','uom_po_id','description_purchase'])[0]
 		dt = (DateTime.now() + DateTime.RelativeDateTime(days=prod['seller_delay'] or 0.0)).strftime('%Y-%m-%d')
-		prod_name = self.pool.get('product.product').name_get(cr, uid, [product])[0][1]
+		prod_name = self.pool.get('product.product').name_get(cr, uid, [product], context=context)[0][1]
 		res = {'value': {'price_unit': price, 'name':prod_name, 'taxes_id':prod['taxes_id'], 'date_planned': dt,'notes':prod['description_purchase']}}
 		domain = {}
 		if not uom:

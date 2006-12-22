@@ -588,6 +588,8 @@ class sale_order_line(osv.osv):
 		return super(sale_order_line, self).copy(cr, uid, id, default, context)
 
 	def product_id_change(self, cr, uid, ids, pricelist, product, qty=0, uom=False, qty_uos=0, uos=False, name='', partner_id=False, lang=False):
+		if partner_id:
+			lang=self.pool.get('res.partner').read(cr, uid, [partner_id])[0]['lang']
 		context = {'lang':lang}
 		if not product:
 			return {'value': {'price_unit': 0.0, 'notes':'', 'weight' : 0}, 'domain':{'product_uom':[]}}
