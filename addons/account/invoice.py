@@ -253,7 +253,7 @@ class account_invoice(osv.osv):
 				if inv['currency_id'] != company_currency:
 					i['currency_id'] = inv['currency_id']
 					i['amount_currency'] = i['price']
-					i['price'] = round(self.pool.get('res.currency').compute(cr, uid, inv['currency_id'], company_currency, i['price']),2)
+					i['price'] = self.pool.get('res.currency').compute(cr, uid, inv['currency_id'], company_currency, i['price'])
 				else:
 					i['amount_currency'] = False
 					i['currency_id'] = False
@@ -270,8 +270,21 @@ class account_invoice(osv.osv):
 			name = inv['name']
 			if inv['payment_term']:
 				totlines = self.pool.get('account.payment.term').compute(cr, uid, inv['payment_term'], total)
+				res_amount_currency = total_currency
+				i = 0
 				for t in totlines:
-					iml.append({ 'type':'dest', 'name':name, 'price': t[1], 'date_maturity': t[0], 'account_id':acc_id, 'ref': inv['number']})
+					if inv['currency_id'] != company_currency:
+						amount_currency = self.pool.get('res.currency').compute(cr, uid, company_currency, inv['currency_id'], t[1])
+					else:
+						amount_currency = False
+
+					# last line add the diff
+					res_amount_currency -= amount_currency or 0
+					i += 1
+					if i == len(totlines):
+						amount_currency += res_amount_currency
+
+					iml.append({ 'type':'dest', 'name':name, 'price': t[1], 'account_id':acc_id, 'date_maturity': t[0], 'amount_currency': amount_currency, 'currency_id': inv['currency_id'], 'ref': inv['number']})
 			else:
 				iml.append({ 'type':'dest', 'name':name, 'price': total, 'account_id':acc_id, 'date_maturity' : inv['date_due'] or False, 'amount_currency': total_currency, 'currency_id': inv['currency_id'], 'ref': inv['number']})
 
