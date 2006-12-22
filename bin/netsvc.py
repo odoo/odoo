@@ -7,6 +7,7 @@ import SimpleXMLRPCServer,signal,sys,xmlrpclib
 import SocketServer
 import socket
 import logging
+import os
 
 try:
 	from ssl import *
@@ -125,14 +126,11 @@ def init_logger():
 				os.makedirs(os.path.dirname(logf))
 			try:
 				fd = open(logf, 'a')
-				print 'OK'
 				handler = logging.StreamHandler(fd)
 			except IOError:
-				print 'H1'
 				sys.stderr.write("ERROR: couldn't open the logfile\n")
 				handler = logging.StreamHandler(sys.stdout)
 		except OSError:
-			print 'H2'
 			sys.stderr.write("ERROR: couldn't create the logfile directory\n")
 			handler = logging.StreamHandler(sys.stdout)
 	else:
@@ -259,20 +257,22 @@ class HttpDaemon(object):
 		pass
 
 	def handler(self,signum, frame):
+		from tools import config
 		self.server.socket.close()
 		self.server.socket.close()
 		Agent.quit()
-#		if tools.config['pidfile']:
-#			os.unlink(tools.config['pidfile'])
+		if config['pidfile']:
+			os.unlink(config['pidfile'])
 		del self.server
 		sys.exit(0)
 
 	def start(self):
-#		if tools.config['pidfile']:
-#			fd=open(tools.config['pidfile'], 'w')
-#			pidtext="%d" % (os.getpid())
-#			fd.write(pidtext)
-#			fd.close()
+		from tools import config
+		if config['pidfile']:
+			fd=open(config['pidfile'], 'w')
+			pidtext="%d" % (os.getpid())
+			fd.write(pidtext)
+			fd.close()
 		signal.signal(signal.SIGINT, self.handler)
 		signal.signal(signal.SIGTERM, self.handler)
 		self.server.register_introspection_functions()

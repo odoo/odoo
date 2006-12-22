@@ -136,7 +136,7 @@ if cr:
 	cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname='perm'")
 	if len(cr.fetchall())==0:
 #if False:
-		print "init db"
+		logger.notifyChannel("init", netsvc.LOG_INFO, "init db")
 		tools.init_db(cr)
 		# in that case, force --init=all
 		tools.config["init"]["all"] = 1
