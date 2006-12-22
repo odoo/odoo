@@ -65,7 +65,7 @@ class account_invoice(osv.osv):
 		user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, [uid])[0]
 		if user.company:
 			return user.company_id.currency_id.id
-		else
+		else:
 			return pooler.get_pool(cr.dbname).get('res.currency').search(cr, uid, [('rate','=',1.0)])[0]
 
 	def _get_journal_analytic(self, cr, uid, type_inv, context={}):
