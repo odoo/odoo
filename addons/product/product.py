@@ -444,7 +444,7 @@ class pricelist_partnerinfo(osv.osv):
 	_name = 'pricelist.partnerinfo'
 	_columns = {
 		'name': fields.char('Description', size=64),
-		'suppinfo_id': fields.many2one('product.supplierinfo', 'Partner Information', required=True, ondelete='cascade', select=True),
+		'suppinfo_id': fields.many2one('product.supplierinfo', 'Partner Information', required=True, ondelete='cascade'),
 		'min_quantity': fields.float('Minimal quantity', required=True),
 		'price': fields.float('price', required=True),
 	}
