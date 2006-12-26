@@ -84,9 +84,10 @@ class ir_model_access(osv.osv):
 		'perm_read': fields.boolean('Read Access'),
 		'perm_write': fields.boolean('Write Access'),
 		'perm_create': fields.boolean('Create Access'),
+		'perm_unlink': fields.boolean('Delete Permission'),
 	}
 	def check(self, cr, uid, model_name, mode='read'):
-		assert mode in ['read','write','create'], 'Invalid access mode for security'
+		assert mode in ['read','write','create','unlink'], 'Invalid access mode for security'
 
 		# fetch the list of rules for this "permission type" on this model
 		cr.execute('select group_id, perm_'+mode+' from ir_model_access a left join ir_model m on (a.model_id=m.id) where m.model=%s', (model_name,))

@@ -779,9 +779,7 @@ class orm(object):
 		return res
 
 	def unlink(self, cr, uid, ids, context={}):
-#CHECKME: wouldn't it be better to check for the write access instead of create?
-#or alternatively, create a new 'delete' permission
-		self.pool.get('ir.model.access').check(cr, uid, self._name, 'create')
+		self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink')
 		if not len(ids):
 			return True
 		wf_service = netsvc.LocalService("workflow")
