@@ -75,6 +75,45 @@
 			id="menu_report_account_analytic_planning"
 			action="action_account_analytic_planning_form" />
 
+		<record model="ir.actions.act_window" id="action_account_analytic_planning_form_my">
+			<field name="name">report_account_analytic.planning.form</field>
+			<field name="res_model">report_account_analytic.planning</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('user_id','=',uid)]</field>
+		</record>
+		<menuitem
+			name="Human Resources/Planning/Planning/My planning"
+			id="menu_report_account_analytic_planning_my2"
+			action="action_account_analytic_planning_form_my" />
+
+		<record model="ir.actions.act_window" id="action_account_analytic_planning_form_current_my">
+			<field name="name">report_account_analytic.planning.my.current</field>
+			<field name="res_model">report_account_analytic.planning</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('user_id','=',uid),('date_from','&lt;=',time.strftime('%Y-%m-%d')), ('date_to','&gt;=',time.strftime('%Y-%m-%d'))]</field>
+		</record>
+		<menuitem
+			name="Human Resources/Planning/Planning/My current planning"
+			id="menu_report_account_analytic_planning_current_my"
+			action="action_account_analytic_planning_form_current_my" />
+
+
+		<record model="ir.actions.act_window" id="action_account_analytic_planning_form_current">
+			<field name="name">report_account_analytic.planning.form</field>
+			<field name="res_model">report_account_analytic.planning</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('date_from','&lt;=',time.strftime('%Y-%m-%d')), ('date_to','&gt;=',time.strftime('%Y-%m-%d'))]</field>
+		</record>
+		<menuitem
+			name="Human Resources/Planning/Planning/Current planning"
+			id="menu_report_account_analytic_planning_current"
+			action="action_account_analytic_planning_form_current" />
+
+
+
 <!--
 	Planning statistics
 -->
