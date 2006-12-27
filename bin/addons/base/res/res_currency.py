@@ -64,6 +64,9 @@ class res_currency(osv.osv):
 	}
 	_order = "code"
 
+	def round(self, cr, uid, currency, amount):
+		return round(amount, currency.rouding)
+
 	def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount):
 		if to_currency_id==from_currency_id:
 			return from_amount
@@ -72,8 +75,6 @@ class res_currency(osv.osv):
 		if from_currency['rate'] == 0 or to_currency['rate'] == 0:
 			raise osv.except_osv('Error', 'No rate found for the currency')
 		return currency(from_amount * from_currency['rate']/to_currency['rate'], to_currency['accuracy'], to_currency['rounding'])
-					
-			
 res_currency()
 
 class res_currency_rate(osv.osv):
