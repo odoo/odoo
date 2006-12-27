@@ -278,7 +278,7 @@ class wizard_base_setup(wizard.interface):
 			'size': 128,
 		},
 		'zip':{
-			'string': 'Zip',
+			'string': 'Zip code',
 			'type': 'char',
 			'size': 24,
 		},
