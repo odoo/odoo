@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <terp>
 	<data>
+		<menuitem name="Dashboards" icon="terp-account" id="dashboard_menu"/>
+
 		<record model="ir.ui.view" id="view_board_note_tree">
 			<field name="name">board.note.tree</field>
 			<field name="model">board.note</field>
@@ -31,6 +33,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">form,tree</field>
 		</record>
+
 		<menuitem
 			name="Dashboards/Notes"
 			action="action_view_board_note_form"

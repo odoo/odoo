@@ -253,7 +253,7 @@ class project_work(osv.osv):
 	_description = "Task Work"
 	_columns = {
 		'name': fields.char('Work summary', size=128),
-		'date': fields.datetime('Date start'),
+		'date': fields.datetime('Date'),
 		'task_id': fields.many2one('project.task', 'Task', ondelete='cascade'),
 		'hours': fields.float('Hours spent'),
 		'user_id': fields.many2one('res.users', 'Done by', required=True, relate=True),
