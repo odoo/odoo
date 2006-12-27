@@ -102,17 +102,23 @@ class sync_ldap(wizard.interface):
 							        LDAP_TERP_MAPPER.keys()))
 		address = pooler.get_pool(cr.dbname).get('res.partner.address')
 		terp_objs = dict([(x['id'], x) for x in address.read(cr, uid, address.search(cr, uid, []))])
-		ldap_set = set([int(x['uid'][0]) for x in ldap_objs.values()])
-		terp_set = set(terp_objs.keys())
-		for to_delete in ldap_set - terp_set:
+		ldap_set = [int(x['uid'][0]) for x in ldap_objs.values()]
+		terp_set = terp_objs.keys()
+		for to_delete in ldap_set:
+			if to_delete in terp_set:
+				continue
 			l.delete_s('uid=%s,%s' % (to_delete, BASE_DN))
-		for to_add in terp_set - ldap_set:
+		for to_add in terp_set:
+			if to_add in ldap_set:
+				continue
 			new_dn = 'uid=%s,%s' % (to_add, BASE_DN)
 			ldap_data = {'objectclass' : ['organizationalPerson', 'inetOrgPerson']}
 			ldap_data.update(terp2ldap(terp_objs[to_add]))
 			l.add_s(new_dn, ldap.modlist.addModlist(ldap_data))
 			address.write(cr, uid, [to_add], {'dn' : new_dn})
-		for to_update in terp_set.intersection(ldap_set):
+		for to_update in terp_set:
+			if to_update not in ldap_set:
+				continue
 			current_dn = 'uid=%s,%s' % (to_update, BASE_DN)
 			modlist = ldap.modlist.modifyModlist(ldap_objs[current_dn], terp2ldap(terp_objs[to_update]))
 			if modlist:
