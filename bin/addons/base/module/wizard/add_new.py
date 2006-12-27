@@ -60,11 +60,12 @@ class wizard_install_module(wizard.interface):
 	def watch_dir(self, cr, uid, data, context):
 		mod_obj = pooler.get_pool(cr.dbname).get('ir.module.module')
 		all_mods = mod_obj.read(cr, uid, mod_obj.search(cr, uid, []), ['name', 'state'])
-		known_modules = set([x['name'] for x in all_mods])
+		known_modules = [x['name'] for x in all_mods]
 		ls_ad = glob.glob(os.path.join(tools.config['addons_path'], '*', '__terp__.py'))
-		modules = set([module_name_re.match(name).group(1) for name in ls_ad])
-		new_modules = modules - known_modules
-		for module in new_modules:
+		modules = [module_name_re.match(name).group(1) for name in ls_ad]
+		for module in modules:
+			if module in known_modules:
+				continue
 			terp = get_module_info(module)
 			if not terp.get('installable', True):
 				continue
