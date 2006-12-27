@@ -390,6 +390,9 @@ class product_packaging(osv.osv):
 		'weight': fields.float('Weight Palette'),
 		'weight_ul': fields.float('Weight UL'),
 		'active' : fields.boolean('Active'),
+		'height': fields.float('Height'),
+		'width': fields.float('Width'),
+		'length': fields.float('Length'),
 	}
 
 	def _get_1st_ul(self, cr, uid, context={}):
