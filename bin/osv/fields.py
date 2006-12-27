@@ -525,14 +525,14 @@ class property(function):
 		return res
 
 	def _field_get(self, self2, cr, uid, prop):
-		if not self.field_id:
+		if not self.field_id.get(cr.dbname):
 			cr.execute('select id from ir_model_fields where name=%s and model=%s', (prop, self2._name))
 			res = cr.fetchone()
-			self.field_id = res and res[0]
-		return self.field_id
+			self.field_id[cr.dbname] = res and res[0]
+		return self.field_id[cr.dbname]
 
 	def __init__(self, obj_prop, **args):
-		self.field_id = False
+		self.field_id = {}
 		function.__init__(self,
 		  self._fnct_read, False,
 		  self._fnct_write, (obj_prop, ),
