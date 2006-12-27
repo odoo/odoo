@@ -129,7 +129,7 @@ class sale_order(osv.osv):
 		'order_line': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft':[('readonly',False)]}),
 		'payment_line': fields.one2many('sale.order.payment', 'order_id', 'Order Payments', readonly=True, states={'draft':[('readonly',False)]}),
 
-		'invoice_ids': fields.many2many('account.invoice', 'sale_order_invoice_rel', 'order_id', 'invoice_id', 'Invoice', readonly=True, help="This is the list of invoices that have been generated for this sale order. The same sale order may have been invoiced in several times (by line for example)."),
+		'invoice_ids': fields.many2many('account.invoice', 'sale_order_invoice_rel', 'order_id', 'invoice_id', 'Invoice', help="This is the list of invoices that have been generated for this sale order. The same sale order may have been invoiced in several times (by line for example)."),
 		'picking_ids': fields.one2many('stock.picking', 'sale_id', 'Picking List', readonly=True, help="This is the list of picking list that have been generated for this invoice"),
 
 		'shipped':fields.boolean('Picked', readonly=True),
@@ -204,6 +204,11 @@ class sale_order(osv.osv):
 				pay_term = order.partner_id.property_payment_term[0]
 			else:
 				pay_term = False
+			for preinv in order.invoice_ids:
+				if preinv.state in ('open','paid','proforma'):
+					for preline in preinv.invoice_line:
+						inv_line_id = self.pool.get('account.invoice.line').copy(cr, uid, preline.id, {'invoice_id':False, 'price_unit':-preline.price_unit})
+						lines.append(inv_line_id)
 			inv = {
 				'name': order.name,
 				'origin': order.name,
