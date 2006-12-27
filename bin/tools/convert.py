@@ -208,8 +208,13 @@ class xml_import(object):
 						action_type,action_mode = cr.fetchone()
 						if action_type=='tree':
 							values['icon'] = 'STOCK_INDENT'
+							print 'INDENT'
 						elif action_mode and action_mode.startswith('tree'):
 							values['icon'] = 'STOCK_JUSTIFY_FILL'
+							print 'FILL'
+						elif action_mode and action_mode.startswith('graph'):
+							values['icon'] = 'terp-account'
+							print 'COLOR'
 				if rec.hasAttribute('sequence'):
 					values['sequence'] = int(rec.getAttribute('sequence'))
 				if rec.hasAttribute('icon'):
@@ -221,6 +226,7 @@ class xml_import(object):
 						g_ids.extend(self.pool.get('res.groups').search(cr, self.uid, [('name', '=', group)]))
 					values['groups_id'] = [(6, 0, g_ids)]
 				xml_id = rec.getAttribute('id').encode('utf8')
+				print values
 				pid = self.pool.get('ir.model.data')._update(cr, self.uid, 'ir.ui.menu', self.module, values, xml_id, idx==len(m_l)-1, mode=self.mode, res_id=res and res[0] or False)
 			elif res:
 				# the menuitem already exists
