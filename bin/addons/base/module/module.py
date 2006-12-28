@@ -30,7 +30,7 @@ import re
 import urllib
 import os
 import tools
-from osv import fields, osv 
+from osv import fields, osv, orm
 
 class module_repository(osv.osv):
 	_name = "ir.module.repository"
@@ -135,6 +135,20 @@ class module(osv.osv):
 		return True
 
 	def button_uninstall(self, cr, uid, ids, context={}):
+		for module in self.browse(cr, uid, ids):
+			cr.execute('''select m.state,m.name
+				from
+					ir_module_module_dependency d 
+				join 
+					ir_module_module m on (d.module_id=m.id)
+				where
+					d.name=%s and
+					m.state not in ('uninstalled','uninstallable','to remove')''', (module.name,))
+			res = cr.fetchall()
+			if res:
+				print 'Error !'
+				print 'The module you are trying to remove depends on installed modules :\n' + '\n'.join(map(lambda x: '\t%s: %s' % (x[0], x[1]), res))
+				raise orm.except_orm('Error', 'The module you are trying to remove depends on installed modules :\n' + '\n'.join(map(lambda x: '\t%s: %s' % (x[0], x[1]), res)))
 		self.write(cr, uid, ids, {'state': 'to remove'})
 		return True
 

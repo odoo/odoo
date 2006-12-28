@@ -233,10 +233,10 @@ def register_classes():
 		imp.load_module(m, *imp.find_module(m))
 
 def load_modules(db, force_demo=False, status={}, update_module=False):
+	cr = db.cursor()
 	force = []
 	if force_demo:
 		force.append('demo')
-	cr = db.cursor()
 	if update_module:
 		cr.execute("select name from ir_module_module where state in ('installed', 'to install', 'to upgrade')")
 	else:
@@ -244,6 +244,28 @@ def load_modules(db, force_demo=False, status={}, update_module=False):
 	module_list = [name for (name,) in cr.fetchall()]
 	graph = create_graph(module_list, force)
 	load_module_graph(cr, graph, status)
+	pool = pooler.get_pool(cr.dbname)
+	if update_module:
+		cr.execute("select id,name from ir_module_module where state in ('to remove')")
+		for mod_id, mod_name in cr.fetchall():
+			cr.execute('select model,res_id from ir_model_data where not noupdate and module=%s order by id desc', (mod_name,))
+			for rmod,rid in cr.fetchall():
+				mod_table = pool.get(rmod)._table
+				print rmod, mod_table
+				cr.execute('delete from '+mod_table+' where id=%d', (rid,))
+			cr.commit()
+		#
+		# TODO: remove menu without actions of childs
+		#
+		cr.execute('''delete from
+				ir_ui_menu
+			where
+				(id not in (select parent_id from ir_ui_menu where parent_id is not null))
+			and
+				(id not in (select res_id from ir_values where model='ir.ui.menu'))''')
+
+		cr.execute("update ir_module_module set state=%s where state in ('to remove')", ('uninstalled', ))
+		cr.commit()
 	cr.commit()
 	cr.close()
 
