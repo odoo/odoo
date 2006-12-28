@@ -705,10 +705,7 @@ class account_bank_statement(osv.osv):
 	def _default_journal_id(self, cr, uid, context={}):
 		if context.get('journal_id', False):
 			return context['journal_id']
-		if  context.get('journal_id', False):
-			# TODO: write this
-			return False
-		return False
+		return 0
 
 	def _default_balance_start(self, cr, uid, context={}):
 		cr.execute('select id from account_bank_statement where journal_id=%d order by date desc limit 1', (1,))
