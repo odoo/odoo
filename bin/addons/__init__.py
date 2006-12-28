@@ -238,16 +238,18 @@ def load_modules(db, force_demo=False, status={}, update_module=False):
 	if force_demo:
 		force.append('demo')
 	if update_module:
-		cr.execute("select name from ir_module_module where state in ('installed', 'to install', 'to upgrade')")
+		cr.execute("select name from ir_module_module where state in ('installed', 'to install', 'to upgrade','to remove')")
 	else:
-		cr.execute("select name from ir_module_module where state = 'installed'")
+		cr.execute("select name from ir_module_module where state in ('installed', 'to upgrade', 'to remove')")
 	module_list = [name for (name,) in cr.fetchall()]
 	graph = create_graph(module_list, force)
 	load_module_graph(cr, graph, status)
-	pool = pooler.get_pool(cr.dbname)
+
+	cr.commit()
 	if update_module:
 		cr.execute("select id,name from ir_module_module where state in ('to remove')")
 		for mod_id, mod_name in cr.fetchall():
+			pool = pooler.get_pool(cr.dbname)
 			cr.execute('select model,res_id from ir_model_data where not noupdate and module=%s order by id desc', (mod_name,))
 			for rmod,rid in cr.fetchall():
 				#
@@ -255,10 +257,9 @@ def load_modules(db, force_demo=False, status={}, update_module=False):
 				#   I can not use the class_pool has _table could be defined in __init__
 				#   and I can not use the pool has the module could not be loaded in the pool
 				#
-				mod_table = pool.get(rmod)._table
-				if not mod_table:
-					raise 'Error, could not find the _table of the object '+rmod
-				cr.execute('delete from '+mod_table+' where id=%d', (rid,))
+				uid = 1
+				print rmod
+				pool.get(rmod).unlink(cr, uid, [rid])
 			cr.commit()
 		#
 		# TODO: remove menu without actions of childs
@@ -272,6 +273,6 @@ def load_modules(db, force_demo=False, status={}, update_module=False):
 
 		cr.execute("update ir_module_module set state=%s where state in ('to remove')", ('uninstalled', ))
 		cr.commit()
-	cr.commit()
+		pooler.restart_pool(cr.dbname)
 	cr.close()
 

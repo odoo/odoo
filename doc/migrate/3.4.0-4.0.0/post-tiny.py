@@ -72,27 +72,19 @@ password = hasattr(options, 'db_password') and "password=%s" % options.db_passwo
 db = psycopg.connect('%s %s %s %s %s' % (host, port, name, user, password), serialize=0)
 cr = db.cursor()
 
-# ------------------------ #
-# change currency rounding #
-# ------------------------ #
+# --------------- #
+# remove old menu #
+# --------------- #
 
-cr.execute("""SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size FROM pg_class c,pg_attribute a,pg_type t WHERE c.relname='res_currency' AND a.attname='rounding' AND c.oid=a.attrelid AND a.atttypid=t.oid""")
-res = cr.dictfetchall()
-if res[0]['typname'] != 'float':
-	for line in (
-		"ALTER TABLE res_currency RENAME rounding TO rounding_bak",
-		"ALTER TABLE res_currency ADD rounding NUMERIC(12,6)",
-		"UPDATE res_currency SET rounding = power(10, - rounding_bak)",
-		"ALTER TABLE res_currency DROP rounding_bak",
-		):
-		cr.execute(line)
+cr.execute("delete from ir_ui_menu where (id not in (select parent_id from ir_ui_menu where parent_id is not null)) and (id not in (select res_id from ir_values where model='ir.ui.menu'))")
 cr.commit()
 
-# ----------------------------- #
-# drop constraint on ir_ui_view #
-# ----------------------------- #
+# --------------- #
+# remove ir_value #
+# --------------- #
 
-cr.execute('ALTER TABLE ir_ui_view DROP CONSTRAINT ir_ui_view_type')
+cr.execute("delete from ir_values where model = 'ir.ui.menu' and res_id is null")
 cr.commit()
 
-cr.close
+cr.close()
+

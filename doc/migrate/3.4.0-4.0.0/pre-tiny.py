@@ -72,27 +72,77 @@ password = hasattr(options, 'db_password') and "password=%s" % options.db_passwo
 db = psycopg.connect('%s %s %s %s %s' % (host, port, name, user, password), serialize=0)
 cr = db.cursor()
 
-# ------------------------ #
-# change currency rounding #
-# ------------------------ #
+# ------------------------- #
+# change some columns types #
+# ------------------------- #
 
-cr.execute("""SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size FROM pg_class c,pg_attribute a,pg_type t WHERE c.relname='res_currency' AND a.attname='rounding' AND c.oid=a.attrelid AND a.atttypid=t.oid""")
-res = cr.dictfetchall()
-if res[0]['typname'] != 'float':
-	for line in (
-		"ALTER TABLE res_currency RENAME rounding TO rounding_bak",
-		"ALTER TABLE res_currency ADD rounding NUMERIC(12,6)",
-		"UPDATE res_currency SET rounding = power(10, - rounding_bak)",
-		"ALTER TABLE res_currency DROP rounding_bak",
-		):
-		cr.execute(line)
+def change_column(cr, table, column, new_type, copy):
+	commands = [
+		"ALTER TABLE %s RENAME COLUMN %s TO temp_column" % (table, column),
+		"ALTER TABLE %s ADD COLUMN %s %s" % (table, column, new_type),
+		"ALTER TABLE %s DROP COLUMN temp_column" % table
+	]
+	if copy:
+		commands.insert(
+			2, 
+			"UPDATE %s SET %s=temp_column::%s" % (table, column, new_type))
+
+	for command in commands:
+		cr.execute(command)
+
+#change_column(cr, 'crm_case', 'date_closed', 'timestamp', True)
 cr.commit()
 
-# ----------------------------- #
-# drop constraint on ir_ui_view #
-# ----------------------------- #
+# -------------------- #
+# add module if needed #
+# -------------------- #
 
-cr.execute('ALTER TABLE ir_ui_view DROP CONSTRAINT ir_ui_view_type')
+cr.execute("SELECT name FROM ir_module_module")
+if not cr.rowcount:
+	for module in set(['base', 'marketing', 'subscription', 'account', 'base_partner_relation', 'audittrail', 'account_followup', 'product', 'hr', 'l10n_simple', 'crm', 'stock', 'hr_timesheet', 'purchase', 'report_purchase', 'mrp', 'sale', 'report_sale', 'delivery', 'project', 'sale_crm', 'hr_timesheet_project', 'scrum', 'report_project',
+'account_followup',
+'account',
+'audittrail',
+'base_partner_relation',
+'crm',
+'delivery',
+'edi',
+'hr_evaluation',
+'hr_expense',
+'hr',
+'hr_timesheet_invoice',
+'hr_timesheet_project',
+'hr_timesheet',
+'l10n_simple',
+'marketing',
+'mrp',
+'network',
+'product',
+'project',
+'purchase',
+'report_crm',
+'report_project',
+'report_purchase',
+'report_sale',
+'sale_crm',
+'sale',
+'sandwich',
+'scrum',
+'stock']):
+		cr.execute("INSERT INTO ir_module_module (name, state) VALUES ('%s', 'installed')" % module)
+	cr.commit()
+
+
+# ----------------------------------------------------- #
+# add some fields (which cannot be added automatically) #
+# ----------------------------------------------------- #
+
+for line in (
+		"ALTER TABLE ir_module_module ADD demo BOOLEAN DEFAULT False",
+		"delete from ir_values where value like '%,False'",
+		"""UPDATE ir_ui_view set arch='<?xml version="1.0"?><tree string="Menu" toolbar="1"><field icon="icon" name="name"/></tree>' where name='ir.ui.menu.tree' and type='tree' and field_parent='child_id'""",
+	):
+	cr.execute(line)
+
 cr.commit()
-
-cr.close
+cr.close()

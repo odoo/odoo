@@ -410,8 +410,9 @@ class orm(object):
 								# set the field to the default value if any
 								if self._defaults.has_key(k):
 									default = self._defaults[k](self, cr, 1, {})
-									cr.execute("UPDATE %s SET %s='%s' WHERE %s is NULL" % (self._table, k, default, k))
-									cr.commit()
+									if not (default is False):
+										cr.execute("UPDATE %s SET %s='%s' WHERE %s is NULL" % (self._table, k, default, k))
+										cr.commit()
 								# add the NOT NULL constraint
 								try:
 									cr.execute("ALTER TABLE %s ALTER COLUMN %s SET NOT NULL" % (self._table, k))
