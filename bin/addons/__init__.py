@@ -250,8 +250,14 @@ def load_modules(db, force_demo=False, status={}, update_module=False):
 		for mod_id, mod_name in cr.fetchall():
 			cr.execute('select model,res_id from ir_model_data where not noupdate and module=%s order by id desc', (mod_name,))
 			for rmod,rid in cr.fetchall():
+				#
+				# TO BE Improved:
+				#   I can not use the class_pool has _table could be defined in __init__
+				#   and I can not use the pool has the module could not be loaded in the pool
+				#
 				mod_table = pool.get(rmod)._table
-				print rmod, mod_table
+				if not mod_table:
+					raise 'Error, could not find the _table of the object '+rmod
 				cr.execute('delete from '+mod_table+' where id=%d', (rid,))
 			cr.commit()
 		#
