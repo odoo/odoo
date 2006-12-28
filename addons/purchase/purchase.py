@@ -33,6 +33,7 @@ import netsvc
 import ir
 from mx import DateTime
 import pooler
+from tools import config
 
 #
 # Model definition
@@ -48,27 +49,37 @@ class purchase_order(osv.osv):
 
 	def _amount_untaxed(self, cr, uid, ids, field_name, arg, context):
 		id_set = ",".join(map(str, ids))
-		cr.execute("SELECT s.id,COALESCE(SUM(l.price_unit*l.product_qty),0)::decimal(16,2) AS amount FROM purchase_order s LEFT OUTER JOIN purchase_order_line l ON (s.id=l.order_id) WHERE s.id IN ("+id_set+") GROUP BY s.id ")
+		cr.execute("SELECT s.id,COALESCE(SUM(l.price_unit*l.product_qty),0) AS amount FROM purchase_order s LEFT OUTER JOIN purchase_order_line l ON (s.id=l.order_id) WHERE s.id IN ("+id_set+") GROUP BY s.id ")
 		res = dict(cr.fetchall())
+		cur_obj=self.pool.get('res.currency')
+		for id in res.keys():
+			order=self.browse(cr, uid, [id])[0]
+			cur=order.pricelist_id.currency_id
+			res[id]=cur_obj.round(cr, uid, cur, res[id])
 		return res
 
 	def _amount_tax(self, cr, uid, ids, field_name, arg, context):
 		res = {}
+		cur_obj=self.pool.get('res.currency')
 		for order in self.browse(cr, uid, ids):
 			val = 0.0
+			cur=order.pricelist_id.currency_id
 			for line in order.order_line:
 				for tax in line.taxes_id:
 					for c in self.pool.get('account.tax').compute(cr, uid, [tax.id], line.price_unit, line.product_qty, order.partner_address_id.id):
-						val+=c['amount']
-			res[order.id]=round(val,2)
+						val+= cur_obj.round(cr, uid, cur, c['amount'])
+			res[order.id]=cur_obj.round(cr, uid, cur, val)
 		return res
 
 	def _amount_total(self, cr, uid, ids, field_name, arg, context):
 		res = {}
 		untax = self._amount_untaxed(cr, uid, ids, field_name, arg, context) 
 		tax = self._amount_tax(cr, uid, ids, field_name, arg, context)
+		cur_obj=self.pool.get('res.currency')
 		for id in ids:
-			res[id] = untax.get(id, 0.0) + tax.get(id, 0.0)
+			order=self.browse(cr, uid, [id])[0]
+			cur=order.pricelist_id.currency_id
+			res[id] = cur_obj.round(cr, uid, cur, untax.get(id, 0.0) + tax.get(id, 0.0))
 		return res
 
 	_columns = {
@@ -277,7 +288,8 @@ class purchase_order_line(osv.osv):
 	def _amount_line(self, cr, uid, ids, prop, unknow_none,unknow_dict):
 		res = {}
 		for line in self.browse(cr, uid, ids):
-			res[line.id] = line.price_unit * line.product_qty
+			cur = line.order_id.pricelist_id.currency_id
+			res[line.id] = float(currency(line.price_unit * line.product_qty, cur.accuracy, cur.rounding))
 		return res
 	
 	_columns = {
@@ -289,7 +301,7 @@ class purchase_order_line(osv.osv):
 		'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok','=',True)], change_default=True, relate=True),
 		'move_id': fields.many2one('stock.move', 'Reservation', ondelete='set null'),
 		'move_dest_id': fields.many2one('stock.move', 'Reservation Destination', ondelete='set null'),
-		'price_unit': fields.float('Unit Price', required=True),
+		'price_unit': fields.float('Unit Price', required=True, digits=(16, int(config['price_accuracy']))),
 		'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal'),
 		'notes': fields.text('Notes'),
 		'order_id': fields.many2one('purchase.order', 'Order Ref', select=True)

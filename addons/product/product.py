@@ -33,6 +33,8 @@ import pooler
 import math
 from _common import rounding
 
+from tools import config
+
 def is_pair(x):
 	return not x%2
 
@@ -177,8 +179,8 @@ class product_template(osv.osv):
 		'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procure Method', required=True),
 		'rental': fields.boolean('Rentable product'),
 		'categ_id': fields.many2one('product.category','Category', required=True, change_default=True),
-		'list_price': fields.float('List Price'),
-		'standard_price': fields.float('Cost Price', required=True, digit=(12,6)),
+		'list_price': fields.float('List Price', digits=(16, int(config['price_accuracy']))),
+		'standard_price': fields.float('Cost Price', required=True, digits=(16, int(config['price_accuracy']))),
 		'volume': fields.float('Volume'),
 		'weight': fields.float('Weight'),
 		'cost_method': fields.selection([('standard','Standard Price'), ('average','Average Price')], 'Costing Method', required=True),
@@ -299,8 +301,8 @@ class product_product(osv.osv):
 		'virtual_available': fields.function(_product_virtual_available, method=True, type='float', string='Virtual Stock'),
 		'incoming_qty': fields.function(_product_incoming_qty, method=True, type='float', string='Incoming'),
 		'outgoing_qty': fields.function(_product_outgoing_qty, method=True, type='float', string='Outgoing'),
-		'price': fields.function(_product_price, method=True, type='float', string='Customer Price'),
-		'lst_price' : fields.function(_product_lst_price, method=True, type='float', string='List price'),
+		'price': fields.function(_product_price, method=True, type='float', string='Customer Price', digits=(16, int(config['price_accuracy']))),
+		'lst_price' : fields.function(_product_lst_price, method=True, type='float', string='List price', digits=(16, int(config['price_accuracy']))),
 		'code': fields.function(_product_code, method=True, type='char', string='Code'),
 		'partner_ref' : fields.function(_product_partner_ref, method=True, type='char', string='Customer ref'),
 		'default_code' : fields.char('Code', size=64),
@@ -309,8 +311,8 @@ class product_product(osv.osv):
 		'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True),
 		'ean13': fields.char('EAN13', size=13),
 		'packaging' : fields.one2many('product.packaging', 'product_id', 'Palettization', help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
-		'price_extra': fields.float('Price Extra'),
-		'price_margin': fields.float('Price Margin'),
+		'price_extra': fields.float('Price Extra', digits=(16, int(config['price_accuracy']))),
+		'price_margin': fields.float('Price Margin', digits=(16, int(config['price_accuracy']))),
 	}
 
 	def _check_ean_key(self, cr, uid, ids):
@@ -449,7 +451,7 @@ class pricelist_partnerinfo(osv.osv):
 		'name': fields.char('Description', size=64),
 		'suppinfo_id': fields.many2one('product.supplierinfo', 'Partner Information', required=True, ondelete='cascade'),
 		'min_quantity': fields.float('Minimal quantity', required=True),
-		'price': fields.float('price', required=True),
+		'price': fields.float('price', required=True, digits=(16, int(config['price_accuracy']))),
 	}
 	_order = 'min_quantity asc'
 pricelist_partnerinfo()
