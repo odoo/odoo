@@ -56,7 +56,7 @@ class res_currency(osv.osv):
 		'rate': fields.function(_current_rate, method=True, string='Current rate',digits=(12,6)),
 		'rate_ids': fields.one2many('res.currency.rate', 'currency_id', 'Rates'),
 		'accuracy': fields.integer('Computational Accuracy'),
-		'rounding': fields.float('Rounding factor'),
+		'rounding': fields.float('Rounding factor', digits=(12,6)),
 		'active': fields.boolean('Active'),
 	}
 	_defaults = {
@@ -65,7 +65,7 @@ class res_currency(osv.osv):
 	_order = "code"
 
 	def round(self, cr, uid, currency, amount):
-		return round(amount, currency.rouding)
+		return round(amount / currency.rounding) * currency.rounding
 
 	def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount):
 		if to_currency_id==from_currency_id:
@@ -74,7 +74,7 @@ class res_currency(osv.osv):
 		[to_currency] = self.read(cr, uid, [to_currency_id])
 		if from_currency['rate'] == 0 or to_currency['rate'] == 0:
 			raise osv.except_osv('Error', 'No rate found for the currency')
-		return currency(from_amount * from_currency['rate']/to_currency['rate'], to_currency['accuracy'], to_currency['rounding'])
+		return self.round(cr, uid, to_currency, from_amount * from_currency['rate']/to_currency['rate'])
 res_currency()
 
 class res_currency_rate(osv.osv):

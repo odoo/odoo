@@ -58,6 +58,7 @@ class configmanager(object):
 			'secure': False,
 			'smtp_server': 'localhost',
 			'stop_after_init': False,   # this will stop the server after initialization
+			'price_accuracy': 2,
 		}
 
 		parser = optparse.OptionParser(version=tinyerp_version_string)
@@ -79,6 +80,7 @@ class configmanager(object):
 		parser.add_option('--debug', dest='debug_mode', action='store_true', default=False, help='enable debug mode')
 		parser.add_option("-S", "--secure", dest="secure", action="store_true", help="launch server over https instead of http", default=False)
 		parser.add_option('--smtp', dest='smtp_server', default='', help='specify the SMTP server for sending mail')
+		parser.add_option('--price_accuracy', dest='price_accuracy', default='2', help='specify the price accuracy')
 		
 		group = optparse.OptionGroup(parser, "Modules related options")
 		group.add_option("-g", "--upgrade", action="store_true", dest="upgrade", default=False, help="Upgrade/install/uninstall modules")
@@ -129,7 +131,7 @@ class configmanager(object):
                     self.options['pidfile'] = False
 		
 		for arg in ('interface', 'port', 'db_name', 'db_user', 'db_password', 'db_host',
-				'db_port', 'logfile', 'pidfile', 'secure', 'smtp_server'):
+				'db_port', 'logfile', 'pidfile', 'secure', 'smtp_server', 'price_accuracy'):
 			if getattr(opt, arg):
 				self.options[arg] = getattr(opt, arg)
 

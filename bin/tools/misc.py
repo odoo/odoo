@@ -205,6 +205,7 @@ class UpdateableStr(local):
 	def __nonzero__(self):
 		return bool(self.string)
 
+# Don't use ! Use res.currency.round()
 class currency(float):	
 
 	def __init__(self, value, accuracy=2, rounding=None):
