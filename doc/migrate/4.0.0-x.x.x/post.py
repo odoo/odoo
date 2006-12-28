@@ -79,5 +79,12 @@ cr = db.cursor()
 cr.execute("update sale_order_line set delay = pt.sale_delay from product_product as po, product_template as pt where product_id = po.id and po.product_tmpl_id = pt.id")
 cr.commit()
 
+# --------------- #
+# remove old menu #
+# --------------- #
+
+cr.execute("delete from ir_ui_menu where (id not in (select parent_id from ir_ui_menu where parent_id is not null)) and (id not in (select res_id from ir_values where model='ir.ui.menu'))")
+cr.commit()
+
 cr.close()
 
