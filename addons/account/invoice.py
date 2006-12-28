@@ -525,12 +525,11 @@ class account_invoice_line(osv.osv):
 			result['account_id'] = a[0]
 
 		domain = {}
-		if not uom:
-			result['product_uom'] = res.uom_id.id or False
-			if result['product_uom']:
-				res2 = self.pool.get('product.uom').read(cr, uid, [result['product_uom']], ['category_id'])
-				if res2 and res2[0]['category_id']:
-					domain = {'product_uom':[('category_id','=',res2[0]['category_id'][0])]}
+		result['uos_id'] = uom or res.uom_id.id or False
+		if result['uos_id']:
+			res2 = res.uom_id.category_id.id
+			if res2 :
+				domain = {'uos_id':[('category_id','=',res2 )]}
 		return {'value':result, 'domain':domain}
 
 	def move_line_get(self, cr, uid, invoice_id, context={}):

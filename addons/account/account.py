@@ -36,6 +36,18 @@ from tools.misc import currency
 import mx.DateTime
 from mx.DateTime import RelativeDateTime, now, DateTime, localtime
 
+class account_cash_discount(osv.osv):
+	_name = "account.cash.discount"
+	_description = "Cash Discount" #A reduction in the price of an item for sale allowed if payment is made within a stipulated period.
+	_columns = {
+		'name': fields.char('Name', size=32),
+		'date': fields.date('Date', required=True),
+		'discount': fields.float('Discount (%)', digits=(16,2)),
+		'payment_id': fields.many2one('account.payment.term','Associated Payment Term'),
+	}
+account_cash_discount()
+
+
 class account_payment_term(osv.osv):
 	_name = "account.payment.term"
 	_description = "Payment Term"
@@ -43,7 +55,8 @@ class account_payment_term(osv.osv):
 		'name': fields.char('Payment Term', size=32),
 		'active': fields.boolean('Active'),
 		'note': fields.text('Description'),
-		'line_ids': fields.one2many('account.payment.term.line', 'payment_id', 'Terms')
+		'line_ids': fields.one2many('account.payment.term.line', 'payment_id', 'Terms'),
+		'cash_discount_ids': fields.one2many('account.cash.discount', 'payment_id', 'Cash Discount'),
 	}
 	_defaults = {
 		'active': lambda *a: 1,
