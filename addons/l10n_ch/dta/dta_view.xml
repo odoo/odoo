@@ -14,6 +14,7 @@
 		</field>
 	</record>
 
+
 	<record model="ir.ui.view" id="invoice_form">
 		<field name="name">account.invoice.form</field>
 		<field name="model">account.invoice</field>
@@ -36,5 +37,65 @@
 	</record>
 
 	<menuitem name="Financial Management/Invoices/DTA invoices to pay" id="menu_account_dta_form" action="action_invoice_with_dta"/>
+
+
+	<record model="ir.ui.view" id="dta_line_tree">
+		<field name="name">account.dta.line.tree</field>
+		<field name="model">account.dta.line</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="DTA lines">
+			<field name="name" />
+			<field name="partner_id" />
+			<field name="due_date" />
+			<field name="amount_invoice" />
+			<field name="cashdisc_date" />
+			<field name="amount_cashdisc" />
+			<field name="amount_to_pay" />
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="account_dta_form">
+		<field name="name">account.dta.form</field>
+		<field name="model">account.dta</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="DTA">
+			<field name="name" />
+			<field name="bank" />
+			<field name="date" />
+			<field name="user_id" />
+			<field name="dta_line_ids" colspan="3"/>
+			<field name="note" colspan="3"/>
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="account_dta_tree">
+		<field name="name">account.dta.tree</field>
+		<field name="model">account.dta</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="DTA">
+			<field name="bank" />
+			<field name="date" />
+			<field name="user_id" />
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="action_account_dta">
+		<field name="name">account.dta</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">account.dta</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+
+	<menuitem name="Financial Management/Invoices/Generated DTA" id="menu_dta" action="action_account_dta"/>
+
+
+
 </data>
 </terp>

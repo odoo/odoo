@@ -24,6 +24,12 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+
+
+# TODO : accepter les ligne meme si le payement est trop bas
+# definir un try-catch ligne 221 et re-raiser si l'on le souhaite
+
+
 import pooler
 import time
 import wizard
@@ -92,7 +98,8 @@ def _v11_parsing(self, cr, uid, data, context):
 	total={}
 	total_compute= 0
 	rec_list=[]
-	log=''
+	err_log=''
+	std_log=''
 	nb_err=0
 
 	# v11 parsing :
@@ -132,14 +139,14 @@ def _v11_parsing(self, cr, uid, data, context):
 						'line_number': str(lnb),
 				}
 
-				total_compute+= int(record['montant'])
+				total_compute+= float(record['montant'])
 				rec_list.append( record )
 
 			lnb+=1
 			line=""
 
 	# check the amounts :
-	if not total_compute == int(total['tot_montant']):
+	if not total_compute == float(total['tot_montant']):
 		return {'note': 'Incorrect total amount V11 file, import aborted.' }
 
 
@@ -163,15 +170,15 @@ def _v11_parsing(self, cr, uid, data, context):
 		try:
 			invoice_id= invoice_obj.search(cr,uid,[ ('number','=',int(rec['invoice_ref'])) ])[0]
 		except:
-			log = log + '\n * No invoice with invoice number '+ rec['invoice_ref'].lstrip('0') + '.\n  line : '+rec['line']
+			err_log = err_log + '\n * No invoice with invoice number '+ rec['invoice_ref'].lstrip('0') + '.\n  line : '+rec['line_number']
 			nb_err+=1
 			continue
-		invoice = invoice_obj.browse(cr, uid, invoice_id)
+		i = invoice_obj.browse(cr, uid, invoice_id)
 
 		try:
-			acc1 = invoice.partner_id.property_account_receivable[0]
+			acc1 = i.partner_id.property_account_receivable[0]
 		except:
-			log = log + '\n * invoice with number '+ rec['invoice_ref'].lstrip('0') +' has no partner !'+ '\n  line : '+rec['line']
+			err_log = err_log + '\n * invoice with number '+ rec['invoice_ref'].lstrip('0') +' has no partner !'+ '\n  line : '+rec['line_number']
 			nb_err+=1
 			continue
 
@@ -187,7 +194,7 @@ def _v11_parsing(self, cr, uid, data, context):
 				'credit': rec['montant'],
 				'account_id': acc1,
 				'move_id': move_id,
-				'partner_id': invoice.partner_id.id,
+				'partner_id': i.partner_id.id,
 				'date': time.strftime('%Y-%m-%d'),
 				'period_id': period_id,
 				'journal_id': data['form']['journal_id']
@@ -199,52 +206,67 @@ def _v11_parsing(self, cr, uid, data, context):
 				'credit': 0,
 				'account_id': acc2,
 				'move_id': move_id,
-				'partner_id': invoice.partner_id.id,
+				'partner_id': i.partner_id.id,
 				'date': time.strftime('%Y-%m-%d'),
 				'period_id': period_id,
 				'journal_id': data['form']['journal_id']
 
 				})
-			account_move_lines = invoice.move_line_id_payment_get(cr,uid,[invoice.id])
+			account_move_lines = i.move_line_id_payment_get(cr,uid,[i.id])
 
 			if not account_move_lines:
 				raise Exception("No moves associated to invoice number "+ rec['invoice_ref'].lstrip('0'))
 			account_move_lines.append(line_id )
-			pool.get('account.move.line').reconcile(cr,uid,account_move_lines,
-													writeoff_acc_id=0,
-													writeoff_journal_id=0,
-													writeoff_period_id= 0,
-													)
+
+ 			pool.get('account.move.line').reconcile(cr,uid,account_move_lines,
+ 													writeoff_acc_id=0,
+ 													writeoff_journal_id=0,
+ 													writeoff_period_id= 0,
+ 													)
 			cr.commit()
 
+			std_log = std_log + """
+--			
+ Invoice : %s
+ Date Due : %s
+ Amount received : %.2f
+ """%(i.name, i.date_due or 'undefined', float(rec['montant']))
+			if i.payment_term and i.payment_term.cash_discount_ids and i.payment_term.cash_discount_ids[0]:
+				if discount and rec['date_remise'] <= discount.date :
+					amount_to_pay = i.amount_total*(1-discount.discount)
+				else :
+					amount_to_pay = i.amount_total
+					
+				std_log = std_log + " Amount expected : %d"% amount_to_pay
+			
 		except osv.except_osv, e:
 			cr.rollback() 
 			nb_err+=1
 			if e.value.startswith('You have to provide an account for the write off entry !'):
-				log= log +'\n * Line '+rec['line_number'] +', invoice '+rec['invoice_ref'].lstrip('0')+\
+				err_log= err_log +'\n * Line '+rec['line_number'] +', invoice '+rec['invoice_ref'].lstrip('0')+\
 					 ' : Amount mismatch for invoice '+ rec['invoice_ref'].lstrip('0')+\
-					'( expected amount: '+str(invoice.amount_total)+' got :'+rec['montant'].lstrip('0')+\
+					'( expected amount: '+str(i.amount_total)+' got :'+rec['montant'].lstrip('0')+\
 					').'
 			else:
-				log= log +'\n * Line '+rec['line_number'] +', invoice '+rec['invoice_ref'].lstrip('0')+\
+				err_log= err_log +'\n * Line '+rec['line_number'] +', invoice '+rec['invoice_ref'].lstrip('0')+\
 				' : '+str(e.value)
 			#raise # REMOVEME
 
 		except Exception, e:
 			cr.rollback()
 			nb_err+=1
-			log= log +'\n * Line '+rec['line_number'] +', invoice '+rec['invoice_ref'].lstrip('0')+\
+			err_log= err_log +'\n * Line '+rec['line_number'] +', invoice '+rec['invoice_ref'].lstrip('0')+\
 				 ' : '+str(e)
 			#raise # REMOVEME
 		except :
 			cr.rollback()
 			nb_err+=1
-			log= log +'\n * Line '+rec['line_number'] +', invoice '+rec['invoice_ref'].lstrip('0')+' : Reconciliation Error.'
+			err_log= err_log +'\n * Line '+rec['line_number'] +', invoice '+rec['invoice_ref'].lstrip('0')+' : Reconciliation Error.'
 			#raise
 
-	log= log + '\n\n --' +'\nNumber of parsed lines : '+ str(len(rec_list)) +'\nNumber of error : '+ str(nb_err)
+	err_log= err_log + '\n\n --' +'\nNumber of parsed lines : '+ str(len(rec_list)) +'\nNumber of error : '+ str(nb_err)
 
-	return {'note':log,'journal_id': data['form']['journal_id'], 'v11': data['form']['v11']}
+	return {'note':err_log+ std_log,'journal_id': data['form']['journal_id'], 'v11': data['form']['v11']}
 
 
 # def _init(self, cr, uid, data, context):

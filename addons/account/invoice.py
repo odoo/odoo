@@ -507,7 +507,6 @@ class account_invoice_line(osv.osv):
 		if partner_id:
 			lang=self.pool.get('res.partner').read(cr, uid, [partner_id])[0]['lang']
 		context={'lang': lang}
-		print context
 		res = self.pool.get('product.product').browse(cr, uid, product, context=context)
 		result = {'price_unit': res.list_price, 'invoice_line_tax_id':map(lambda x: x.id, res.taxes_id)}
 		if not name:

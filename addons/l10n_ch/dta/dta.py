@@ -30,9 +30,30 @@ from osv import osv,fields
 
 class account_dta(osv.osv):
 	_name = "account.dta"
-	_description = "DTA Management"
+	_description = "DTA History"
 	_columns = {
 		'name': fields.binary('DTA file', readonly=True),
-		'note': fields.text('Error log'),
+		'dta_line_ids': fields.one2many('account.dta.line','dta_id','DTA lines', readonly=True), 
+		'note': fields.text('Creation log', readonly=True),
+		'bank': fields.many2one('res.partner.bank','Bank', readonly=True),
+		'date': fields.date('Creation Date', readonly=True),
+		'user_id': fields.many2one('res.users','User', readonly=True),
 	}
 account_dta()
+
+class account_dta_line(osv.osv):
+	_name = "account.dta.line"
+	_description = "DTA line"
+	_columns = {
+		'name' : fields.many2one('account.invoice','Invoice'),
+		'partner_id' : fields.many2one('res.partner','Partner'),
+		'due_date' : fields.date('Due date'),
+		'cashdisc_date' : fields.date('Cash Discount date'),
+		'amount_to_pay' : fields.float('Amount to pay'),
+		'amount_invoice': fields.float('Invoiced Amount'),
+		'amount_cashdisc': fields.float('Cash Discount Amount'),
+		'dta_id': fields.many2one('account.dta','Associated DTA', required=True, ondelete='cascade'),
+	}
+account_dta_line()
+
+
