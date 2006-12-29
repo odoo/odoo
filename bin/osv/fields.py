@@ -329,6 +329,8 @@ class one2many(_column):
 		return res
 
 	def set(self, cr, obj, id, field, values, user=None, context={}):
+		if not values:
+			return
 		_table = obj.pool.get(self._obj)._table
 		obj = obj.pool.get(self._obj)
 		for act in values:
@@ -387,6 +389,8 @@ class many2many(_column):
 		return res
 
 	def set(self, cr, obj, id, name, values, user=None, context={}):
+		if not values:
+			return
 		obj = obj.pool.get(self._obj)
 		for act in values:
 			if act[0]==0:
