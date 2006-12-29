@@ -65,7 +65,7 @@ class report_sale_order_product(osv.osv):
 					sum(l.product_uom_qty*l.price_unit) as price_total,
 					(sum(l.product_uom_qty*l.price_unit)/sum(l.product_uom_qty*u.factor))::decimal(16,2) as price_average
 				from sale_order s
-					left join sale_order_line l on (s.id=l.order_id)
+					right join sale_order_line l on (s.id=l.order_id)
 					left join product_uom u on (u.id=l.product_uom)
 				group by l.product_id, substring(s.date_order for 7),s.state
 			)
@@ -117,7 +117,7 @@ class report_sale_order_category(osv.osv):
 					sum(l.product_uom_qty*l.price_unit) as price_total,
 					(sum(l.product_uom_qty*l.price_unit)/sum(l.product_uom_qty*u.factor))::decimal(16,2) as price_average
 				from sale_order s
-					left join sale_order_line l on (s.id=l.order_id)
+					right join sale_order_line l on (s.id=l.order_id)
 					left join product_product p on (p.id=l.product_id)
 					left join product_template t on (t.id=p.product_tmpl_id)
 					left join product_uom u on (u.id=l.product_uom)
