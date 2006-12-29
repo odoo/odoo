@@ -287,9 +287,10 @@ purchase_order()
 class purchase_order_line(osv.osv):
 	def _amount_line(self, cr, uid, ids, prop, unknow_none,unknow_dict):
 		res = {}
+		cur_obj=self.pool.get('res.currency')
 		for line in self.browse(cr, uid, ids):
 			cur = line.order_id.pricelist_id.currency_id
-			res[line.id] = float(currency(line.price_unit * line.product_qty, cur.accuracy, cur.rounding))
+			res[line.id] = cur_obj.round(cr, uid, cur, line.price_unit * line.product_qty)
 		return res
 	
 	_columns = {
