@@ -157,8 +157,6 @@ def create_graph(module_list, force=[]):
 	for package in later:
 		logger.notifyChannel('init', netsvc.LOG_ERROR, 'addon:%s:Unmet dependency' % package)
 	
-	for kind in ('init', 'demo', 'update'):
-		tools.config[kind]={}
 	return graph
 
 def init_module_objects(cr, module_name, obj_list):
@@ -246,6 +244,9 @@ def load_modules(db, force_demo=False, status={}, update_module=False):
 	module_list = [name for (name,) in cr.fetchall()]
 	graph = create_graph(module_list, force)
 	load_module_graph(cr, graph, status)
+
+	for kind in ('init', 'demo', 'update'):
+		tools.config[kind]={}
 
 	cr.commit()
 	if update_module:
