@@ -72,6 +72,13 @@ password = hasattr(options, 'db_password') and "password=%s" % options.db_passwo
 db = psycopg.connect('%s %s %s %s %s' % (host, port, name, user, password), serialize=0)
 cr = db.cursor()
 
+# ---------------------------------------------------------------- #
+# move user id from hr_analytic_timesheet to account_analytic_line #
+# ---------------------------------------------------------------- #
+
+cr.execute("UPDATE account_analytic_line SET user_id = hr_analytic_timesheet.user_id FROM hr_analytic_timesheet WHERE hr_analytic_timesheet.line_id = account_analytic_line.id")
+cr.commit()
+
 # --------------- #
 # remove old menu #
 # --------------- #
