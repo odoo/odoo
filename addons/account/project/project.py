@@ -100,7 +100,7 @@ class account_analytic_account(osv.osv):
 	_columns = {
 		'name' : fields.char('Account name', size=64, required=True),
 		'complete_name': fields.function(_complete_name_calc, method=True, type='char', string='Account Name'),
-		'code' : fields.char('Account code', size=8),
+		'code' : fields.char('Account code', size=24),
 		'active' : fields.boolean('Active'),
 		'type': fields.selection([('view','View'), ('normal','Normal')], 'type'),
 		'description' : fields.text('Description'),
@@ -131,24 +131,21 @@ class account_analytic_account(osv.osv):
 		parent_id = vals.get('parent_id', 0)
 		if ('code' not in vals or not vals['code']) and not parent_id:
 			vals['code'] = self.pool.get('ir.sequence').get(cr, uid, 'account.analytic.account')
-		elif parent_id:
-			parent = self.read(cr, uid, [parent_id], ['code'])[0]
-			childs = self.search(cr, uid, [('parent_id', '=', parent_id), ('active', '=', 1)]) + self.search(cr, uid, [('parent_id', '=', parent_id), ('active', '=', 0)])
-			vals['code'] = '%03d.%03d' % (parent,len(childs) + 1)
 		return super(account_analytic_account, self).create(cr, uid, vals, ctx)
 
 
 	def on_change_parent(self, cr, uid, id, parent_id):
 		if not parent_id:
 			return {'value': {'code': False, 'partner_id': ''}}
-		parent = self.read(cr, uid, [parent_id], ['partner_id'])[0]
+		parent = self.read(cr, uid, [parent_id], ['partner_id','code'])[0]
 		childs = self.search(cr, uid, [('parent_id', '=', parent_id), ('active', '=', 1)]) + self.search(cr, uid, [('parent_id', '=', parent_id), ('active', '=', 0)])
 		numchild = len(childs)
 		if parent['partner_id']:
 			partner = parent['partner_id'][0]
 		else:
 			partner = False
-		return {'value' : {'code' : '%03d' % (numchild + 1,), 'partner_id' : partner}}
+		res = {'value' : {'code' : '%s - %03d' % (parent['code'] or '', numchild + 1), 'partner_id' : partner}}
+		return res
 
 	def name_search(self, cr, uid, name, args=[], operator='ilike', context={}):
 		codes = name.split('.')
