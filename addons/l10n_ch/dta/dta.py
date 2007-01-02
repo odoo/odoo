@@ -35,9 +35,9 @@ class account_dta(osv.osv):
 		'name': fields.binary('DTA file', readonly=True),
 		'dta_line_ids': fields.one2many('account.dta.line','dta_id','DTA lines', readonly=True), 
 		'note': fields.text('Creation log', readonly=True),
-		'bank': fields.many2one('res.partner.bank','Bank', readonly=True),
-		'date': fields.date('Creation Date', readonly=True),
-		'user_id': fields.many2one('res.users','User', readonly=True),
+		'bank': fields.many2one('res.partner.bank','Bank', readonly=True,select=True),
+		'date': fields.date('Creation Date', readonly=True,select=True),
+		'user_id': fields.many2one('res.users','User', readonly=True, select=True),
 	}
 account_dta()
 
@@ -45,7 +45,7 @@ class account_dta_line(osv.osv):
 	_name = "account.dta.line"
 	_description = "DTA line"
 	_columns = {
-		'name' : fields.many2one('account.invoice','Invoice'),
+		'name' : fields.many2one('account.invoice','Invoice', required=True),
 		'partner_id' : fields.many2one('res.partner','Partner'),
 		'due_date' : fields.date('Due date'),
 		'cashdisc_date' : fields.date('Cash Discount date'),
@@ -53,7 +53,11 @@ class account_dta_line(osv.osv):
 		'amount_invoice': fields.float('Invoiced Amount'),
 		'amount_cashdisc': fields.float('Cash Discount Amount'),
 		'dta_id': fields.many2one('account.dta','Associated DTA', required=True, ondelete='cascade'),
+		'state' : fields.selection([('draft','Draft'),('cancel','Canceled'),('done','Done')],'State')
 	}
+	_defaults = {
+		'state' : lambda *a :'draft',
+		}
 account_dta_line()
 
 

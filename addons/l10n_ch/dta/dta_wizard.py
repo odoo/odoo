@@ -61,7 +61,7 @@ ask_fields = {
 check_form = """<?xml version="1.0"?>
 <form string="DTA file creation">
 <separator colspan="4" string="DTA Details :" />
-	<field name="dta_line_ids" nolabel="1" widget="one2many_list" colspan="4"/>
+	<field name="dta_line_ids" nolabel="1"  colspan="4" />
 </form>
 """
 check_fields = {
@@ -143,7 +143,7 @@ def _get_dta_lines(self,cr,uid,data,context):
 			'dta_id': id_dta,
 			}))
 
-	return {'dta_line_ids': lines}
+	return {'dta_line_ids': lines,'dta_id': id_dta}
 
 def c_ljust(s, size):
 	"""
@@ -197,7 +197,6 @@ def _create_dta(self,cr,uid,data,context):
 
 	creation_date= time.strftime('%y%m%d')
 	err_log=''
-	std_log=''
 	dta=''
 	valeur=''
 	pool = pooler.get_pool(cr.dbname)
@@ -205,41 +204,47 @@ def _create_dta(self,cr,uid,data,context):
 	bank_name= bank.name or ''
 	bank_iban = bank.iban or ''
 	if not bank_name and bank_iban :
-		err_log= err_log +'\nBank account not well defined.' 
+		return {'note':'Bank account not well defined.'}
+	
 	user = pool.get('res.users').browse(cr,uid,[uid])[0]
 	company= user.company_id
 	co_addr= company.partner_id.address[0]
 
 	company_dta = company.dta_number or ''
 	if not company.dta_number :
-		err_log= err_log +'\nNo dta number for the company.' 
-
+		return {'note':'No dta number for the company.' }
 
 	company_iban = company.partner_id and company.partner_id.bank_ids and company.partner_id.bank_ids[0]\
 				   and company.partner_id.bank_ids[0].iban or ''
 	if not company_iban :
-		err_log= err_log +'\nNo iban number for the company.' 
+		return {'note':'No iban number for the company.'}
+	
 	inv_obj = pool.get('account.invoice')
 	dta_line_obj = pool.get('account.dta.line')
 	seq= 1
 	amount_tot= 0
+	th_amount_tot= 0
+	dta_id=data['form']['dta_id']
 
+	count = 0 
+	for line in data['form']['dta_line_ids']:
+		if not line[1]:
+			del data['form']['dta_line_ids'][count]
+		else:
+			dta_line_obj.write(cr, uid, [line[1]] , line[2] )
+		count += 1
+		th_amount_tot += line[2]['amount_to_pay']
 
+	if not dta_id :
+		return {'note':'No dta line'}
+
+		
 	for dtal in dta_line_obj.browse(cr,uid,[ line[1] for line in data['form']['dta_line_ids'] ]):
 
+		dta_line = ""
 		i = dtal.name #dta_line.name = invoice's id
 
-		std_log = std_log + '''
---
- Invoice : %s
- Partner : %s
- Invoice amount : %d
- Amount Paid : %d
-''' % (i.name, i.partner_id.name,i.amount_total, dtal.amount_to_pay )
 
-		if dtal.cashdisc_date: 
-			std_log =  std_log + " Cash Discount : %d if paid before %s" % (dtal.amount_cashdisc, dtal.cashdisc_date)
-		
 		number = i.number or ''
 		currency = i.currency_id.code or ''
 		country = co_addr.country_id and co_addr.country_id.name or ''
@@ -259,52 +264,60 @@ def _create_dta(self,cr,uid,data,context):
 			partner_city= ''
 			partner_zip= ''
 			partner_country= ''
-			err_log= err_log +'\nNo address for the invoice partner.' 
+			err_log= err_log +'\nNo address for the invoice partner. (invoice '+ (i.number or '??')+')' 
 		
 		if not partner_bank_account:
 			err_log= err_log +'\nNo bank account for the invoice partner. (invoice '+ (i.number or '??')+')' 
-
+			continue
 
 		#header
 		try:
 			hdr= header('000000','',creation_date,company_iban,'idfi',seq,'836','0') # TODO id_file
 		except Exception,e :
-			err_log= err_log +'\n'+ str(e)
-			#raise
+			err_log= err_log +'\n'+ str(e)+'(invoice '+ (i.number or '??')+')' 
+			dtal_line_obj.write(cr,uid,[dtal.id],{'state':'cancel'})
+			continue
 		# segment 01:
 		try:
-			dta = dta + segment_01(hdr,company_dta ,
+			dta_line = dta_line + segment_01(hdr,company_dta ,
 								   number,company_iban,valeur,currency,str(dtal.amount_to_pay))
 		except Exception,e :
-			err_log= err_log +'\n'+ str(e)
-			#raise
+			err_log= err_log +'\n'+ str(e)+'(invoice '+ (i.number or '??')+')' 
+			dtal_line_obj.write(cr,uid,[dtal.id],{'state':'cancel'})			
+			continue
 		# adresse donneur d'ordre
 		try: 
-			dta = dta + segment_02(company.name,co_addr.street,co_addr.zip,co_addr.city,country,cours='')
+			dta_line = dta_line + segment_02(company.name,co_addr.street,co_addr.zip,co_addr.city,country,cours='')
 		except Exception,e :
-			err_log= err_log +'\n'+ str(e)
-			#raise
+			err_log= err_log +'\n'+ str(e)+'(invoice '+ (i.number or '??')+')' 
+			dtal_line_obj.write(cr,uid,[dtal.id],{'state':'cancel'})			
+			continue
 		# donnees de la banque
 		try: 
-			dta = dta + segment_03(bank_name,'',bank_iban) 
+			dta_line = dta_line + segment_03(bank_name,'',bank_iban) 
 		except Exception,e :
-			err_log= err_log +'\n'+ str(e)
-			#raise
+			err_log= err_log +'\n'+ str(e)+'(invoice '+ (i.number or '??')+')' 
+			dtal_line_obj.write(cr,uid,[dtal.id],{'state':'cancel'})			
+			continue
 		# adresse du beneficiaire
 		try: 
-			dta = dta + segment_04(partner_name,partner_street,partner_zip,partner_city,partner_country,cours='')
+			dta_line = dta_line + segment_04(partner_name,partner_street,partner_zip,partner_city,partner_country,cours='')
 		except Exception,e :
-			err_log= err_log +'\n'+ str(e)
-			#raise
+			err_log= err_log +'\n'+ str(e)+'(invoice '+ (i.number or '??')+')' 
+			dtal_line_obj.write(cr,uid,[dtal.id],{'state':'cancel'})			
+			continue
 		# communication & reglement des frais
 		try: 
-			dta = dta + segment_05(motif='I',ref1='',ref2=i.reference or '',ref3='',format='0') #FIXME : motif
+			dta_line = dta_line + segment_05(motif='I',ref1='',ref2=i.reference or '',ref3='',format='0') #FIXME : motif
 		except Exception,e :
-			err_log= err_log +'\n'+ str(e)
-			#raise
+			err_log= err_log +'\n'+ str(e)+'(invoice '+ (i.number or '??')+')' 
+			dtal_line_obj.write(cr,uid,[dtal.id],{'state':'cancel'})			
+			continue
 
+		dta = dta + dta_line
 		amount_tot += dtal.amount_to_pay
 		inv_obj.write(cr,uid,[i.id],{'dta_state':'paid'})
+		dta_line_obj.write(cr,uid,[dtal.id],{'state':'done'})
 		seq += 1
 
 
@@ -314,14 +327,12 @@ def _create_dta(self,cr,uid,data,context):
 			dta = dta + total(header('000000','',creation_date,company_iban,str(uid),seq,'890','0')\
 						  , str(amount_tot))
 	except Exception,e :
-		err_log= err_log +'\n'+ str(e)
+		err_log= err_log +'\n'+ str(e) + 'CORRUPTED FILE !\n'
 		#raise
 		
 
-	err_log = err_log and  'CORRUPTED FILE !\n'+err_log or 'OK'
-
-	err_log = err_log + '\nParsed DTA lines :\n' + std_log
-	pool.get('account.dta').write(cr,uid,[dtal.dta_id.id],{'note':err_log,'name':b64encode(dta)})
+	err_log = err_log + "\nSummary :\nTotal amount paid : %.2f\nTotal amount expected : %.2f"%(amount_tot,th_amount_tot) 
+	pool.get('account.dta').write(cr,uid,[dta_id],{'note':err_log,'name':b64encode(dta or "")})
 	
 	return {'note':err_log, 'dta': b64encode(dta)}
 
