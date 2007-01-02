@@ -148,18 +148,14 @@ class account_analytic_account(osv.osv):
 		return res
 
 	def name_search(self, cr, uid, name, args=[], operator='ilike', context={}):
-		codes = name.split('.')
-		codes.reverse()
-		parent_code = False
-		while codes:
-			current_code = codes.pop()
-			account = self.search(cr, uid, [('parent_id', '=', parent_code), ('code', '=', current_code)]+args)
-			if account:
-				parent_code = account[0]
-			else:
-				account = self.search(cr, uid, [('name', 'ilike', '%%%s%%' % name)]+args)
-				break
-		return self.name_get(cr, uid, account)
+		account = self.search(cr, uid, [('code', '=', name)]+args)
+		if not account:
+			account = self.search(cr, uid, [('name', 'ilike', '%%%s%%' % name)]+args)
+		newacc = account
+		while newacc:
+			newacc = self.search(cr, uid, [('parent_id', 'in', newacc)]+args)
+			account+=newacc
+		return self.name_get(cr, uid, account, context=context)
 
 account_analytic_account()
 
