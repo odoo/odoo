@@ -151,10 +151,10 @@ class account_analytic_account(osv.osv):
 		account = self.search(cr, uid, [('code', '=', name)]+args)
 		if not account:
 			account = self.search(cr, uid, [('name', 'ilike', '%%%s%%' % name)]+args)
-		newacc = account
-		while newacc:
-			newacc = self.search(cr, uid, [('parent_id', 'in', newacc)]+args)
-			account+=newacc
+			newacc = account
+			while newacc:
+				newacc = self.search(cr, uid, [('parent_id', 'in', newacc)]+args)
+				account+=newacc
 		return self.name_get(cr, uid, account, context=context)
 
 account_analytic_account()

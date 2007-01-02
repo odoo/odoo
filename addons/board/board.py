@@ -62,7 +62,6 @@ class board_note(osv.osv):
 		'note': fields.text('Note'),
 		'user_id': fields.many2one('res.users', 'Author', size=64),
 		'date': fields.date('Date', size=64, required=True),
-		'type': fields.char('Note type', size=64),
 		'type': fields.selection(_type_get, 'Note type', size=64),
 	}
 	_defaults = {
