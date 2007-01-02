@@ -256,7 +256,7 @@ class account_invoice(osv.osv):
 				if inv['currency_id'] != company_currency:
 					i['currency_id'] = inv['currency_id']
 					i['amount_currency'] = i['price']
-					i['price'] = self.pool.get('res.currency').compute(cr, uid, inv['currency_id'], company_currency, i['price'])
+					i['price'] = self.pool.get('res.currency').compute(cr, uid, inv['currency_id'], company_currency, i['price'], context={'date': inv['date_invoice']})
 				else:
 					i['amount_currency'] = False
 					i['currency_id'] = False
