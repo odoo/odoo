@@ -132,9 +132,9 @@ class account_analytic_account(osv.osv):
 		if ('code' not in vals or not vals['code']) and not parent_id:
 			vals['code'] = self.pool.get('ir.sequence').get(cr, uid, 'account.analytic.account')
 		elif parent_id:
-			parent = self.read(cr, uid, [parent_id], ['parent_id'])[0]
+			parent = self.read(cr, uid, [parent_id], ['code'])[0]
 			childs = self.search(cr, uid, [('parent_id', '=', parent_id), ('active', '=', 1)]) + self.search(cr, uid, [('parent_id', '=', parent_id), ('active', '=', 0)])
-			vals['code'] = '%03d' % (len(childs) + 1,)
+			vals['code'] = '%03d.%03d' % (parent,len(childs) + 1)
 		return super(account_analytic_account, self).create(cr, uid, vals, ctx)
 
 
