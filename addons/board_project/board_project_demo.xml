@@ -9,12 +9,12 @@
 		//
 		<record model="ir.ui.view_sc" id="sc_account_dash">
 			<field name="name">project dashboard</field>
-			<field name="user_id" ref="base.user_admin"/>
+			<field name="user_id" ref="base.user_demo"/>
 			<field name="resource">ir.ui.menu</field>
 			<field name="sequence">3</field>
 			<field name="res_id" ref="menu_board_project"/>
 		</record>
-		<record model="res.users" id="base.user_demo">
+		<record model="res.users" id="base.user_admin">
 			<field name="action_id" ref="open_board_project"/>
 		</record>
 
