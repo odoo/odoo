@@ -4,7 +4,7 @@
 	"author":"Tiny",
 	"category":"Board",
 	"depends":["project","report_timesheet","board","report_analytic_line"],
-	"demo_xml":[],
+	"demo_xml":["board_project_demo.xml"],
 	"update_xml":["board_project_view.xml"],
 	"active":False,
 	"installable":True,

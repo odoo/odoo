@@ -73,14 +73,8 @@
 							<action
 								string="Public notes"
 								name="%(action_view_board_note_tree)d"
-								colspan="2"
+								colspan="4"
 								height="150"/>
-							<action
-								string="Public notes"
-								name="%(action_view_board_note_tree)d"
-								colspan="2"
-								height="150"/>
-
 
 						</child1>
 
@@ -109,7 +103,7 @@
 			</field>
 		</record>
 
-		<record model="ir.actions.act_window" id="open_board_sales_manager">
+		<record model="ir.actions.act_window" id="open_board_project">
 			<field name="name">Dashboard project member</field>
 			<field name="res_model">board.board</field>
 			<field name="view_type">form</field>
@@ -120,8 +114,9 @@
 
 		<menuitem
 			name="Dashboards/Project member"
-			action="open_board_sales_manager"
+			action="open_board_project"
 			sequence="1"
-			id="menu_board_sales_manager"/>
-	</data>
+			id="menu_board_project"/>
+
+</data>
 </terp>

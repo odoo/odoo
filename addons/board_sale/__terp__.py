@@ -4,7 +4,7 @@
 	"author":"Tiny",
 	"category":"Sales dashboard",
 	"depends":["board","sale", "report_crm", "report_sale"],
-	"demo_xml":[],
+	"demo_xml":["board_sale_demo.xml"],
 	"update_xml":["board_sale_view.xml"],
 	"active":False,
 	"installable":True,
