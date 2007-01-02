@@ -38,10 +38,14 @@ import mx.DateTime
 from mx.DateTime import RelativeDateTime, now, DateTime, localtime
 
 class res_currency(osv.osv):
-	def _current_rate(self, cr, uid, ids, name, arg, context):
+	def _current_rate(self, cr, uid, ids, name, arg, context={}):
 		res={}
+		if 'date' in context:
+			date=context['date']
+		else:
+			date=time.strftime('%Y-%m-%d')
 		for id in ids:
-			cr.execute("SELECT currency_id, rate FROM res_currency_rate WHERE currency_id = %d AND name <= '%s' ORDER BY name desc LIMIT 1" % (id, time.strftime('%Y-%m-%d')))
+			cr.execute("SELECT currency_id, rate FROM res_currency_rate WHERE currency_id = %d AND name <= '%s' ORDER BY name desc LIMIT 1" % (id, date))
 			if cr.rowcount:
 				id, rate=cr.fetchall()[0]
 				res[id]=rate
@@ -67,11 +71,11 @@ class res_currency(osv.osv):
 	def round(self, cr, uid, currency, amount):
 		return round(amount / currency.rounding) * currency.rounding
 
-	def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount, round=True):
+	def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount, round=True, context={}):
 		if to_currency_id==from_currency_id:
 			return from_amount
-		from_currency=self.browse(cr, uid, [from_currency_id])[0]
-		to_currency = self.browse(cr, uid, [to_currency_id])[0]
+		from_currency=self.browse(cr, uid, [from_currency_id], context=context)[0]
+		to_currency = self.browse(cr, uid, [to_currency_id], context=context)[0]
 		if from_currency['rate'] == 0 or to_currency['rate'] == 0:
 			raise osv.except_osv('Error', 'No rate found for the currency')
 		if round:
