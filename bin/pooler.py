@@ -51,7 +51,7 @@ def get_db_and_pool(db_name, force_demo=False, status={}, update_module=False):
 		import report
 		report.interface.register_all(db)
 
-#		pool.get('ir.cron')._poolJobs(db.dbname)
+		pool.get('ir.cron')._poolJobs(db.dbname)
 	return db, pool
 
 def restart_pool(db_name, force_demo=False, update_module=False):
