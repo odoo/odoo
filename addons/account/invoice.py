@@ -33,6 +33,8 @@ import netsvc
 from osv import fields, osv
 import ir
 import pooler
+import mx.DateTime
+from mx.DateTime import RelativeDateTime
 
 class account_invoice(osv.osv):
 	def _amount_untaxed(self, cr, uid, ids, prop, unknow_none,unknow_dict):
@@ -150,7 +152,6 @@ class account_invoice(osv.osv):
 #	def get_invoice_address(self, cr, uid, ids):
 #		res = self.pool.get('res.partner').address_get(cr, uid, [part], ['invoice'])
 #		return [{}]
-
 	def onchange_partner_id(self, cr, uid, ids, type, partner_id):
 		invoice_addr_id = False
 		contact_addr_id = False
@@ -173,7 +174,19 @@ class account_invoice(osv.osv):
 
 	def onchange_currency_id(self, cr, uid, ids, curr_id):
 		return {}
-
+	
+	def onchange_payment_term(self, cr, uid, ids, payment_term):
+		if not payment_term:
+			return {}
+		invoice= self.pool.get('account.invoice').browse(cr, uid, ids)[0]
+		pterm_list= self.pool.get('account.payment.term').compute(cr, uid, payment_term, value=1, date_ref=invoice.date_invoice)
+		if not pterm_list:
+			return {}
+		pterm_list = [line[0] for line in pterm_list]
+		pterm_list.sort()
+		return {'value':{'date_due': pterm_list[-1]}}
+		
+	
 	# go from canceled state to draft state
 	def action_cancel_draft(self, cr, uid, ids, *args):
 		self.write(cr, uid, ids, {'state':'draft'})

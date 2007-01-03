@@ -30,6 +30,8 @@ from base64 import b64encode
 from osv import osv
 import time
 import pooler
+import mx.DateTime
+from mx.DateTime import RelativeDateTime, DateTime
 
 def _bank_get(self, cr, uid, context={}):
 	pool = pooler.get_pool(cr.dbname)
@@ -41,26 +43,21 @@ def _bank_get(self, cr, uid, context={}):
 	res = [(r['active'], r['name']) for r in res]
 	return res 
 
+def _journal_get(self, cr, uid, context={}):
+	pool= pooler.get_pool(cr.dbname)
+	obj= pool.get('account.journal')
+	ids= obj.search(cr, uid, [('type','=','cash')])
+	res= obj.read(cr, uid, ids, ['active', 'name'], context)
+	res= [(r['active'], r['name']) for r in res]
+	return res 
 
-ask_form = """<?xml version="1.0"?>
-<form string="DTA file creation">
-<separator colspan="4" string="Choose a bank account :" />
-	<field name="bank" colspan="3"/>
-</form>
-"""
 
-ask_fields = {
-	'bank' : {
-		'string':'Bank Account',
-		'type':'selection',
-		'selection':_bank_get,
-		'required': True,
-	},
-}
 
 check_form = """<?xml version="1.0"?>
 <form string="DTA file creation">
 <separator colspan="4" string="DTA Details :" />
+	<field name="bank"/>
+	<field name="journal"/>
 	<field name="dta_line_ids" nolabel="1"  colspan="4" />
 </form>
 """
@@ -70,6 +67,19 @@ check_fields = {
 		'type':'one2many',
 		'relation':'account.dta.line',
 		},
+	'bank' : {
+		'string':'Bank Account',
+		'type':'selection',
+		'selection':_bank_get,
+		'required': True,
+	},
+
+	'journal' : {
+		'string':'Journal',
+		'type':'selection',
+		'selection':_journal_get,
+		'required': True,
+	},
 }
 
 
@@ -112,11 +122,21 @@ def _cleaning(self,cr,uid,data,context):
 
 def _get_dta_lines(self,cr,uid,data,context):
 	pool = pooler.get_pool(cr.dbname)
+
+	res= {}
+
+	user = pool.get('res.users').browse(cr,uid,[uid])[0]
+	company= user.company_id
+	
+	if company.partner_id.bank_ids:
+		bank = company.partner_id.bank_ids[0]
+		res.update({'bank':bank.bank_name,'bank_iban':bank.iban or ''}) # 'city':'',
+
+
 	dta_line_obj = pool.get('account.dta.line')
 	lines=[]
 
 	id_dta= pool.get('account.dta').create(cr,uid,{
-		'bank':data['form']['bank'],
 		'date':time.strftime('%Y-%m-%d'),
 		'user_id':uid,
 		})
@@ -126,24 +146,31 @@ def _get_dta_lines(self,cr,uid,data,context):
 		if i.dta_state != '2bpaid' or i.state in ['draft','cancel','paid']:
 			continue
 
-		discount = i.payment_term and i.payment_term.cash_discount_ids and i.payment_term.cash_discount_ids[0] or False 
-		if discount and time.strftime('%Y-%m-%d') <= discount.date :
-			amount_to_pay = i.amount_total*(1-discount.discount)
-		else :
-			amount_to_pay = i.amount_total
-			
+		discount_ids= i.payment_term and i.payment_term.cash_discount_ids and i.payment_term.cash_discount_ids
+		discount= ""
+		cash_disc_date=""
+		if discount_ids:
+			for d in discount_ids: # TODO a mettre en fct dans l'objet payment term
+				cash_disc_date= mx.DateTime.strptime(i.date_invoice,'%Y-%m-%d') +\
+								 RelativeDateTime(days=d.delay+1) 
+				if cash_disc_date >= mx.DateTime.now():
+					discount= d 
+					break
+		
 		lines.append(dta_line_obj.create(cr,uid,{
-			'name':i.id,
-			'partner_id':i.partner_id.id,
-			'due_date':i.date_due,
-			'cashdisc_date': discount and discount.date,
-			'amount_to_pay': amount_to_pay,
-			'amount_invoice':i.amount_total,
+			'name': i.id,
+			'partner_id': i.partner_id.id,
+			'due_date': i.date_due,
+			'invoice_date': i.date_invoice,
+			'cashdisc_date': discount and cash_disc_date.strftime('%Y-%m-%d') or None,
+			'amount_to_pay': discount and i.amount_total*(1-discount.discount) or i.amount_total,
+			'amount_invoice': i.amount_total,
 			'amount_cashdisc': discount and i.amount_total*(1-discount.discount),
 			'dta_id': id_dta,
 			}))
-
-	return {'dta_line_ids': lines,'dta_id': id_dta}
+		
+	res.update({'dta_line_ids': lines,'dta_id': id_dta})
+	return res
 
 def c_ljust(s, size):
 	"""
@@ -181,6 +208,7 @@ def header(date,cpt_benef,creation_date,cpt_donneur,id_fich,num_seq,trans,type):
 
 def total(header,tot):
 	return '01'+c_ljust(header,51)+c_ljust(tot,16)+''.ljust(59)
+
 def _create_dta(self,cr,uid,data,context):
 
 	# pour generaliser (plus) facilement : utiliser un design patern
@@ -196,9 +224,8 @@ def _create_dta(self,cr,uid,data,context):
 	# cree des gt836
 
 	creation_date= time.strftime('%y%m%d')
-	err_log=''
+	log=''
 	dta=''
-	valeur=''
 	pool = pooler.get_pool(cr.dbname)
 	bank= pool.get('res.partner.bank').browse(cr,uid,[data['form']['bank']])[0]
 	bank_name= bank.name or ''
@@ -226,6 +253,9 @@ def _create_dta(self,cr,uid,data,context):
 	th_amount_tot= 0
 	dta_id=data['form']['dta_id']
 
+	# write the bank account for the dta object
+	pool.get('account.dta').write(cr,uid,[dta_id],{'bank':data['form']['bank']})
+
 	count = 0 
 	for line in data['form']['dta_line_ids']:
 		if not line[1]:
@@ -238,10 +268,17 @@ def _create_dta(self,cr,uid,data,context):
 	if not dta_id :
 		return {'note':'No dta line'}
 
-		
+
+	# creation of a bank statement : TODO ajouter le partner 
+ 	bk_st_id = pool.get('account.bank.statement').create(cr,uid,{
+ 		'journal_id':data['form']['journal'],
+ 		'balance_start':0,
+ 		'balance_end_real':0, 
+ 		'state':'draft',
+ 		})
+
 	for dtal in dta_line_obj.browse(cr,uid,[ line[1] for line in data['form']['dta_line_ids'] ]):
 
-		dta_line = ""
 		i = dtal.name #dta_line.name = invoice's id
 
 
@@ -264,55 +301,52 @@ def _create_dta(self,cr,uid,data,context):
 			partner_city= ''
 			partner_zip= ''
 			partner_country= ''
-			err_log= err_log +'\nNo address for the invoice partner. (invoice '+ (i.number or '??')+')' 
+			log= log +'\nNo address for the invoice partner. (invoice '+ (i.number or '??')+')' 
 		
 		if not partner_bank_account:
-			err_log= err_log +'\nNo bank account for the invoice partner. (invoice '+ (i.number or '??')+')' 
+			log= log +'\nNo bank account for the invoice partner. (invoice '+ (i.number or '??')+')' 
 			continue
 
-		#header
+
+		
+		date_value = dtal.cashdisc_date or dtal.due_date or ""
+		date_value = date_value and mx.DateTime.strptime( date_value,'%Y-%m-%d') or  mx.DateTime.now()
+		#date_value = date_value.strftime("%y%m%d")
+		
+
 		try:
+			#header
 			hdr= header('000000','',creation_date,company_iban,'idfi',seq,'836','0') # TODO id_file
+			# segment 01:
+			dta_line = ''.join([segment_01(hdr,company_dta,
+								   number,company_iban,date_value.strftime("%y%m%d")
+											 ,currency,str(dtal.amount_to_pay)),							   # adresse donneur d'ordre
+							   segment_02(company.name,co_addr.street,co_addr.zip,co_addr.city,country,cours=''),# donnees de la banque
+							   segment_03(bank_name,'',bank_iban),# adresse du beneficiaire							   
+							   segment_04(partner_name,partner_street,partner_zip,partner_city,partner_country,cours=''),# communication
+								                                                                                   #& reglement des frais							   
+							   segment_05(motif='I',ref1='',ref2=i.reference or '',ref3='',format='0') ])#FIXME : motif
+
 		except Exception,e :
-			err_log= err_log +'\n'+ str(e)+'(invoice '+ (i.number or '??')+')' 
-			dtal_line_obj.write(cr,uid,[dtal.id],{'state':'cancel'})
+			log= log +'\nERROR:'+ str(e)+'(invoice '+ (i.number or '??')+')' 
+			dta_line_obj.write(cr,uid,[dtal.id],{'state':'cancel'})			
+			#raise
 			continue
-		# segment 01:
-		try:
-			dta_line = dta_line + segment_01(hdr,company_dta ,
-								   number,company_iban,valeur,currency,str(dtal.amount_to_pay))
-		except Exception,e :
-			err_log= err_log +'\n'+ str(e)+'(invoice '+ (i.number or '??')+')' 
-			dtal_line_obj.write(cr,uid,[dtal.id],{'state':'cancel'})			
-			continue
-		# adresse donneur d'ordre
-		try: 
-			dta_line = dta_line + segment_02(company.name,co_addr.street,co_addr.zip,co_addr.city,country,cours='')
-		except Exception,e :
-			err_log= err_log +'\n'+ str(e)+'(invoice '+ (i.number or '??')+')' 
-			dtal_line_obj.write(cr,uid,[dtal.id],{'state':'cancel'})			
-			continue
-		# donnees de la banque
-		try: 
-			dta_line = dta_line + segment_03(bank_name,'',bank_iban) 
-		except Exception,e :
-			err_log= err_log +'\n'+ str(e)+'(invoice '+ (i.number or '??')+')' 
-			dtal_line_obj.write(cr,uid,[dtal.id],{'state':'cancel'})			
-			continue
-		# adresse du beneficiaire
-		try: 
-			dta_line = dta_line + segment_04(partner_name,partner_street,partner_zip,partner_city,partner_country,cours='')
-		except Exception,e :
-			err_log= err_log +'\n'+ str(e)+'(invoice '+ (i.number or '??')+')' 
-			dtal_line_obj.write(cr,uid,[dtal.id],{'state':'cancel'})			
-			continue
-		# communication & reglement des frais
-		try: 
-			dta_line = dta_line + segment_05(motif='I',ref1='',ref2=i.reference or '',ref3='',format='0') #FIXME : motif
-		except Exception,e :
-			err_log= err_log +'\n'+ str(e)+'(invoice '+ (i.number or '??')+')' 
-			dtal_line_obj.write(cr,uid,[dtal.id],{'state':'cancel'})			
-			continue
+
+		#logging
+		log = log + "Invoice : %s, Amount paid : %d %s, Value date : %s, State : Paid."%\
+			  (i.number,dtal.amount_to_pay,currency,date_value.strftime('%Y-%m-%d'))
+
+
+		pool.get('account.bank.statement.line').create(cr,uid,{
+			'name':i.number,
+			'date':date_value.strftime('%Y-%m-%d'), 
+			'amount':dtal.amount_to_pay,
+			'type':{'out_invoice':'customer','in_invoice':'supplier','out_refund':'customer','in_refund':'supplier'}[i.type],
+			'partner_id':i.partner_id.id,
+			'account_id':i.account_id.id,
+			'statement_id': bk_st_id,
+			})
 
 		dta = dta + dta_line
 		amount_tot += dtal.amount_to_pay
@@ -321,34 +355,30 @@ def _create_dta(self,cr,uid,data,context):
 		seq += 1
 
 
-	# total
+	# bank statement updated with the total amount :
+	pool.get('account.bank.statement').write(cr,uid,[bk_st_id],{'balance_end_real': amount_tot})
+
+	# segment total 
 	try:
 		if dta :
 			dta = dta + total(header('000000','',creation_date,company_iban,str(uid),seq,'890','0')\
 						  , str(amount_tot))
 	except Exception,e :
-		err_log= err_log +'\n'+ str(e) + 'CORRUPTED FILE !\n'
+		log= log +'\n'+ str(e) + 'CORRUPTED FILE !\n'
 		#raise
 		
 
-	err_log = err_log + "\nSummary :\nTotal amount paid : %.2f\nTotal amount expected : %.2f"%(amount_tot,th_amount_tot) 
-	pool.get('account.dta').write(cr,uid,[dta_id],{'note':err_log,'name':b64encode(dta or "")})
+	log = log + "\n--\nSummary :\nTotal amount paid : %.2f\nTotal amount expected : %.2f"%(amount_tot,th_amount_tot) 
+	pool.get('account.dta').write(cr,uid,[dta_id],{'note':log,'name':b64encode(dta or "")})
 	
-	return {'note':err_log, 'dta': b64encode(dta)}
+	return {'note':log, 'dta': b64encode(dta)}
 
 
 
 class wizard_dta_create(wizard.interface):
 	states = {
-		'init' : {
-			'actions' : [_get_bank],
-			'result' : {'type' : 'form',
-				    'arch' : ask_form,
-				    'fields' : ask_fields,
-				    'state' : [('end', 'Cancel'),('check', 'Yes') ]}
-		},
 		
-		'check':{
+		'init':{
 		'actions' : [_get_dta_lines],
 		'result' : {'type' : 'form',
 				    'arch' : check_form,

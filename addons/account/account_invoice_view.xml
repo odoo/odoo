@@ -136,7 +136,7 @@
 					<field name="account_id"/>
 					<field name="project_id"/>
 
-					<field name="payment_term"/>
+					<field name="payment_term" on_change="onchange_payment_term(payment_term)" />
 					<field name="date_due" select="1"/>
 
 					<field name="journal_id" select="1"/>

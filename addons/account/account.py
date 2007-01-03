@@ -98,7 +98,7 @@ class account_cash_discount(osv.osv):
 	_description = "Cash Discount" #A reduction in the price  if payment is made within a stipulated period.
 	_columns = {
 		'name': fields.char('Name', size=32),
-		'date': fields.date('Date', required=True),
+		'delay': fields.integer('Number of Days', required=True),
 		'discount': fields.float('Discount (%)',required=True),
 		'payment_id': fields.many2one('account.payment.term','Associated Payment Term'),
 	}
@@ -746,7 +746,12 @@ class account_bank_statement(osv.osv):
 		'line_ids': fields.one2many('account.bank.statement.line', 'statement_id', 'Statement lines', states={'confirm':[('readonly',True)]}),
 		'move_line_ids': fields.one2many('account.move.line', 'statement_id', 'Entry lines', states={'confirm':[('readonly',True)]}),
 		'state': fields.selection([('draft','Draft'),('confirm','Confirm')], 'State', required=True, states={'confirm':[('readonly',True)]}, readonly="1"),
+		#'partner_id': fields.many2one('res.partner', 'Partner', states={'confirm':[('readonly',True)]}),
+		#'invoice_id': fields.many2one('account.invoice', 'Invoice', states={'confirm':[('readonly',True)]}),
+		#write-off account
+		#selection: partiel/total
 	}
+	
 	_defaults = {
 		'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement'),
 		'date': lambda *a: time.strftime('%Y-%m-%d'),

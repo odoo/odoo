@@ -218,6 +218,7 @@ def _v11_parsing(self, cr, uid, data, context):
 				raise Exception("No moves associated to invoice number "+ rec['invoice_ref'].lstrip('0'))
 			account_move_lines.append(line_id )
 
+			# TODO accpeter les reconciliation qui ne marche pas.
  			pool.get('account.move.line').reconcile(cr,uid,account_move_lines,
  													writeoff_acc_id=0,
  													writeoff_journal_id=0,

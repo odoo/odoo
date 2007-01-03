@@ -1103,7 +1103,7 @@
 		<field name="arch" type="xml">
 			<form string="Cash Discount">
 				<field name="name" select="1"/>
-				<field name="date" select="1"/>
+				<field name="delay" select="1"/>
 				<field name="discount" select="1"/>
 			</form>
 		</field>
@@ -1114,9 +1114,9 @@
 		<field name="model">account.cash.discount</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Cash Discount">
+			<tree string="Cash Discount" editable="bottom">
 				<field name="name" select="1"/>
-				<field name="date" select="1"/>
+				<field name="delay" select="1"/>
 				<field name="discount" select="1"/>
 			</tree>
 		</field>

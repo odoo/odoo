@@ -48,12 +48,13 @@ class account_dta_line(osv.osv):
 		'name' : fields.many2one('account.invoice','Invoice', required=True),
 		'partner_id' : fields.many2one('res.partner','Partner'),
 		'due_date' : fields.date('Due date'),
+		'invoice_date' : fields.date('Invoice date'),
 		'cashdisc_date' : fields.date('Cash Discount date'),
 		'amount_to_pay' : fields.float('Amount to pay'),
 		'amount_invoice': fields.float('Invoiced Amount'),
 		'amount_cashdisc': fields.float('Cash Discount Amount'),
 		'dta_id': fields.many2one('account.dta','Associated DTA', required=True, ondelete='cascade'),
-		'state' : fields.selection([('draft','Draft'),('cancel','Canceled'),('done','Done')],'State')
+		'state' : fields.selection([('draft','Draft'),('cancel','Error'),('done','Paid')],'State')
 	}
 	_defaults = {
 		'state' : lambda *a :'draft',
