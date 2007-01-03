@@ -93,13 +93,13 @@ class report_timesheet_invoice(osv.osv):
 	_auto = False
 	_columns = {
 		'user_id':fields.many2one('res.users', 'User', readonly=True, relate=True),
-		'project_id':fields.many2one('res.users', 'User', readonly=True, relate=True),
-		'manager_id':fields.many2one('res.users', 'User', readonly=True, relate=True),
+		'project_id':fields.many2one('res.users', 'Project', readonly=True, relate=True),
+		'manager_id':fields.many2one('res.users', 'Manager', readonly=True, relate=True),
 		'quantity': fields.float('Quantity', readonly=True),
 		'amount_invoice': fields.float('To invoice', readonly=True)
 	}
 	_rec_name = 'user_id'
-	_order = 'name desc,user_id desc'
+	_order = 'user_id desc'
 	def init(self, cr):
 		cr.execute("""
 			create or replace view report_timesheet_invoice as (
