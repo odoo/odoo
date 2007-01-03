@@ -557,11 +557,25 @@ class orm(object):
 				if i>=len(line):
 					raise 'Please check that all your lines have %d cols.' % (len(fields),)
 				field = fields[i]
-				if len(field) == 1 and field[0].endswith(':id'):
-					module, xml_id = line[i].rsplit('.', 1)
-					ir_model_data_obj = self.pool.get('ir.model.data')
-					id=ir_model_data_obj._get_id(cr, uid, module, xml_id)
-					res_id=ir_model_data_obj.read(cr, uid, [id], ['res_id'])[0]['res_id']
+				if (len(field)==len(prefix)+1) and field[len(prefix)].endswith(':id'):
+					res_id = False
+					if line[i]:
+						if fields_def[field[len(prefix)][:-3]]['type']=='many2many':
+							res_id = []
+							for word in line[i].split(','):
+								module, xml_id = word.rsplit('.', 1)
+								ir_model_data_obj = self.pool.get('ir.model.data')
+								id=ir_model_data_obj._get_id(cr, uid, module, xml_id)
+								res_id2=ir_model_data_obj.read(cr, uid, [id], ['res_id'])[0]['res_id']
+								if res_id2:
+									res_id.append(res_id2)
+							if len(res_id):
+								res_id=[(6,0,res_id)]
+						else:
+							module, xml_id = line[i].rsplit('.', 1)
+							ir_model_data_obj = self.pool.get('ir.model.data')
+							id=ir_model_data_obj._get_id(cr, uid, module, xml_id)
+							res_id=ir_model_data_obj.read(cr, uid, [id], ['res_id'])[0]['res_id']
 					row[field[0][:-3]] = res_id or False
 					continue
 				if (len(field)==len(prefix)+1) and (prefix==field[0:len(prefix)]):
