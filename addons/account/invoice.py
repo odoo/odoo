@@ -107,6 +107,8 @@ class account_invoice(osv.osv):
 
 		'date_invoice': fields.date('Date Invoiced', required=True, states={'open':[('readonly',True)],'close':[('readonly',True)]}),
 		'date_due': fields.date('Due Date', states={'open':[('readonly',True)],'close':[('readonly',True)]}),
+		'date_discount': fields.date('Discount Date', states={'open':[('readonly',True)],'close':[('readonly',True)]},
+									 help='The date of the first cash discount'),		
 
 		'partner_id': fields.many2one('res.partner', 'Partner', change_default=True, readonly=True, required=True, states={'draft':[('readonly',False)]}, relate=True),
 		'address_contact_id': fields.many2one('res.partner.address', 'Contact Address', readonly=True, states={'draft':[('readonly',False)]}),
@@ -175,16 +177,32 @@ class account_invoice(osv.osv):
 	def onchange_currency_id(self, cr, uid, ids, curr_id):
 		return {}
 	
-	def onchange_payment_term(self, cr, uid, ids, payment_term):
-		if not payment_term:
+	def onchange_payment_term(self, cr, uid, ids, payment_term_id):
+		if not payment_term_id:
 			return {}
-		invoice= self.pool.get('account.invoice').browse(cr, uid, ids)[0]
-		pterm_list= self.pool.get('account.payment.term').compute(cr, uid, payment_term, value=1, date_ref=invoice.date_invoice)
-		if not pterm_list:
-			return {}
-		pterm_list = [line[0] for line in pterm_list]
-		pterm_list.sort()
-		return {'value':{'date_due': pterm_list[-1]}}
+		res={}
+		pt_obj= self.pool.get('account.payment.term')
+
+		if ids :
+			invoice= self.pool.get('account.invoice').browse(cr, uid, ids)[0]
+			date_invoice= invoice.date_invoice
+		else:
+			date_invoice= time.strftime('%Y-%m-%d')
+			
+		pterm_list= pt_obj.compute(cr, uid, payment_term_id, value=1, date_ref=date_invoice)
+
+		if pterm_list:
+			pterm_list = [line[0] for line in pterm_list]
+			pterm_list.sort()
+			res= {'value':{'date_due': pterm_list[-1]}}
+
+
+		disc_list= pt_obj.get_discounts(cr,uid,payment_term_id,date_invoice)
+		if disc_list :
+			res = res or {'value':{}}
+			res['value'].update({'date_discount': disc_list[0][0] })
+
+		return res
 		
 	
 	# go from canceled state to draft state

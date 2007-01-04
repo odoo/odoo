@@ -105,11 +105,13 @@
 				<field name="name"/>
 				<field name="type"/>
 				<field name="number"/>
-				<field name="date_invoice"/>
 				<field name="partner_id"/>
 				<field name="amount_untaxed"/>
 				<field name="amount_total"/>
 				<field name="currency_id"/>
+				<field name="date_invoice"/>
+				<field name="date_discount" select="1"/>
+				<field name="date_due" select="1"/>
 				<field name="state"/>
 			</tree>
 		</field>
@@ -138,6 +140,7 @@
 
 					<field name="payment_term" on_change="onchange_payment_term(payment_term)" />
 					<field name="date_due" select="1"/>
+					<field name="date_discount" select="1"/>
 
 					<field name="journal_id" select="1"/>
 

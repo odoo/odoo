@@ -43,15 +43,6 @@ def _bank_get(self, cr, uid, context={}):
 	res = [(r['active'], r['name']) for r in res]
 	return res 
 
-def _journal_get(self, cr, uid, context={}):
-	pool= pooler.get_pool(cr.dbname)
-	obj= pool.get('account.journal')
-	ids= obj.search(cr, uid, [('type','=','cash')])
-	res= obj.read(cr, uid, ids, ['active', 'name'], context)
-	res= [(r['active'], r['name']) for r in res]
-	return res 
-
-
 
 check_form = """<?xml version="1.0"?>
 <form string="DTA file creation">
@@ -61,6 +52,7 @@ check_form = """<?xml version="1.0"?>
 	<field name="dta_line_ids" nolabel="1"  colspan="4" />
 </form>
 """
+
 check_fields = {
 	'dta_line_ids' : {
 		'string':'DTA lines',
@@ -76,9 +68,11 @@ check_fields = {
 
 	'journal' : {
 		'string':'Journal',
-		'type':'selection',
-		'selection':_journal_get,
+		'type':'many2one',
+		'relation':'account.journal',
+		'domain':"[('type','=','cash')]",
 		'required': True,
+		'help':'The journal used for the bank statement',
 	},
 }
 
@@ -146,26 +140,25 @@ def _get_dta_lines(self,cr,uid,data,context):
 		if i.dta_state != '2bpaid' or i.state in ['draft','cancel','paid']:
 			continue
 
-		discount_ids= i.payment_term and i.payment_term.cash_discount_ids and i.payment_term.cash_discount_ids
-		discount= ""
 		cash_disc_date=""
-		if discount_ids:
-			for d in discount_ids: # TODO a mettre en fct dans l'objet payment term
-				cash_disc_date= mx.DateTime.strptime(i.date_invoice,'%Y-%m-%d') +\
-								 RelativeDateTime(days=d.delay+1) 
-				if cash_disc_date >= mx.DateTime.now():
-					discount= d 
+		discount=""
+		if i.payment_term :
+			disc_list= pool.get('account.payment.term').get_discounts(cr,uid,i.payment_term.id, i.date_invoice)
+
+			for (cash_disc_date,discount) in disc_list:
+				if cash_disc_date >= time.strftime('%Y-%m-%d'):
 					break
+
 		
 		lines.append(dta_line_obj.create(cr,uid,{
 			'name': i.id,
 			'partner_id': i.partner_id.id,
 			'due_date': i.date_due,
 			'invoice_date': i.date_invoice,
-			'cashdisc_date': discount and cash_disc_date.strftime('%Y-%m-%d') or None,
-			'amount_to_pay': discount and i.amount_total*(1-discount.discount) or i.amount_total,
+			'cashdisc_date': cash_disc_date and cash_disc_date or None,
+			'amount_to_pay': discount and i.amount_total*(1-discount) or i.amount_total,
 			'amount_invoice': i.amount_total,
-			'amount_cashdisc': discount and i.amount_total*(1-discount.discount),
+			'amount_cashdisc': discount and i.amount_total*(1-discount),
 			'dta_id': id_dta,
 			}))
 		
@@ -311,14 +304,13 @@ def _create_dta(self,cr,uid,data,context):
 		
 		date_value = dtal.cashdisc_date or dtal.due_date or ""
 		date_value = date_value and mx.DateTime.strptime( date_value,'%Y-%m-%d') or  mx.DateTime.now()
-		#date_value = date_value.strftime("%y%m%d")
 		
 
 		try:
 			#header
 			hdr= header('000000','',creation_date,company_iban,'idfi',seq,'836','0') # TODO id_file
-			# segment 01:
-			dta_line = ''.join([segment_01(hdr,company_dta,
+			
+			dta_line = ''.join([segment_01(hdr,company_dta,# segment 01:
 								   number,company_iban,date_value.strftime("%y%m%d")
 											 ,currency,str(dtal.amount_to_pay)),							   # adresse donneur d'ordre
 							   segment_02(company.name,co_addr.street,co_addr.zip,co_addr.city,country,cours=''),# donnees de la banque
@@ -346,6 +338,7 @@ def _create_dta(self,cr,uid,data,context):
 			'partner_id':i.partner_id.id,
 			'account_id':i.account_id.id,
 			'statement_id': bk_st_id,
+			'invoice_id': i.id,
 			})
 
 		dta = dta + dta_line
