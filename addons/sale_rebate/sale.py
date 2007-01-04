@@ -64,13 +64,14 @@ class sale_order_rebate(osv.osv):
 		
 	def _amount_tax(self, cr, uid, ids, field_name, arg, context):
 		res = {}
+		cur_obj=self.pool.get('res.currency')
 		for order in self.browse(cr, uid, ids):
 			val = 0.0
+			cur=order.pricelist_id.currency_id
 			for line in order.order_line:
-				for tax in line.tax_id:
-					for c in self.pool.get('account.tax').compute(cr, uid, [tax.id], line.price_unit, line.product_uom_qty, order.partner_invoice_id.id):
-						val += c['amount'] * (100.0 - order.rebate_percent) / 100.0
-			res[order.id] = val
+				for c in self.pool.get('account.tax').compute(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty, order.partner_invoice_id.id):
+					val += cur_obj.round(cr, uid, cur, (c['amount'] * (100.0 - order.rebate_percent) / 100.0))
+			res[order.id] = cur_obj.round(cr, uid, cur, val)
 		return res
 
 	_columns = {

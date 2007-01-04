@@ -95,20 +95,18 @@ class account_move_line(osv.osv):
 
 		data['partner_id'] = partner_id
 
-		print taxes
 		for t in taxes:
 			if not taxes[t] and t[0]:
 				s=0
 				for l in move.line_id:
-					for tax in l.account_id.tax_ids:
-						taxes = self.pool.get('account.tax').compute(cr, uid, [tax.id], l.debit or l.credit, 1, False)
-						key = (l.debit and 'account_paid_id') or 'account_collected_id'
-						for t2 in taxes:
-							if (t2[key] == t[0]) and (tax.tax_code_id.id==t[1]):
-								if l.debit:
-									s += t2['amount']
-								else:
-									s -= t2['amount']
+					taxes = self.pool.get('account.tax').compute(cr, uid, l.account_id.tax_ids, l.debit or l.credit, 1, False)
+					key = (l.debit and 'account_paid_id') or 'account_collected_id'
+					for t2 in taxes:
+						if (t2[key] == t[0]) and (t2['tax_code_id']==t[1]):
+							if l.debit:
+								s += t2['amount']
+							else:
+								s -= t2['amount']
 				data['debit'] = s>0  and s or 0.0
 				data['credit'] = s<0  and -s or 0.0
 

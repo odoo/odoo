@@ -50,17 +50,18 @@ class purchase_order(osv.osv):
 
 	def _amount_tax(self, cr, uid, ids, field_name, arg, context):
 		res = {}
+		cur_obj=self.pool.get('res.currency')
 		for order in self.browse(cr, uid, ids):
 			val = 0.0
+			cur=order.pricelist_id.currency_id
 			for line in order.order_line:
-				for tax in line.taxes_id:
-					if order.price_type=='tax_included':
-						ttt = self.pool.get('account.tax').compute_inv(cr, uid, [tax.id], line.price_unit, line.product_qty, order.partner_address_id.id)
-					else:
-						ttt = self.pool.get('account.tax').compute(cr, uid, [tax.id], line.price_unit, line.product_qty, order.partner_address_id.id)
-					for c in ttt:
-						val += round(c['amount'], 2)
-			res[order.id]=round(val,2)
+				if order.price_type=='tax_included':
+					ttt = self.pool.get('account.tax').compute_inv(cr, uid, line.taxes_id, line.price_unit, line.product_qty, order.partner_address_id.id)
+				else:
+					ttt = self.pool.get('account.tax').compute(cr, uid, line.taxes_id, line.price_unit, line.product_qty, order.partner_address_id.id)
+				for c in ttt:
+					val += cur_obj.round(cr, uid, cur, c['amount'])
+			res[order.id]=cur_obj.round(cr, uid, cur, val)
 		return res
 	_inherit = "purchase.order"
 	_columns = {

@@ -85,9 +85,8 @@ class sale_order(osv.osv):
 			val = 0.0
 			cur=order.pricelist_id.currency_id
 			for line in order.order_line:
-				for tax in line.tax_id:
-					for c in self.pool.get('account.tax').compute(cr, uid, [tax.id], line.price_unit * (1-(line.discount or 0.0)/100.0), line.product_uom_qty, order.partner_invoice_id.id):
-						val+= cur_obj.round(cr, uid, cur, c['amount'])
+				for c in self.pool.get('account.tax').compute(cr, uid, line.tax_id, line.price_unit * (1-(line.discount or 0.0)/100.0), line.product_uom_qty, order.partner_invoice_id.id):
+					val+= cur_obj.round(cr, uid, cur, c['amount'])
 			res[order.id]=cur_obj.round(cr, uid, cur, val)
 		return res
 
