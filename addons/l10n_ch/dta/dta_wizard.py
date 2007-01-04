@@ -108,10 +108,11 @@ def _get_bank(self,cr,uid,data,context):
 
 	return {}
 
-def _cleaning(self,cr,uid,data,context):
-	pool = pooler.get_pool(cr.dbname)
-	pool.get('account.dta').unlink(cr, uid, [ line[1] for line in data['form']['dta_line_ids'] ])
-	return {}
+# def _cleaning(self,cr,uid,data,context):
+# 	pool = pooler.get_pool(cr.dbname)
+# 	print [ line[1] for line in data['form']['dta_line_ids']]
+# 	pool.get('account.dta').unlink(cr, uid, [ line[1] for line in data['form']['dta_line_ids'] ])
+# 	return {}
 
 
 def _get_dta_lines(self,cr,uid,data,context):
@@ -246,20 +247,20 @@ def _create_dta(self,cr,uid,data,context):
 	th_amount_tot= 0
 	dta_id=data['form']['dta_id']
 
+	if not dta_id :
+		return {'note':'No dta line'}
+
 	# write the bank account for the dta object
 	pool.get('account.dta').write(cr,uid,[dta_id],{'bank':data['form']['bank']})
 
-	count = 0 
-	for line in data['form']['dta_line_ids']:
-		if not line[1]:
-			del data['form']['dta_line_ids'][count]
-		else:
-			dta_line_obj.write(cr, uid, [line[1]] , line[2] )
-		count += 1
-		th_amount_tot += line[2]['amount_to_pay']
+	#print data['form']['dta_line_ids']
+	dta_line_ids= []
 
-	if not dta_id :
-		return {'note':'No dta line'}
+	for line in data['form']['dta_line_ids']:
+		if  line[1]!=0 and  line[2]['partner_id']:
+			dta_line_ids.append(line[1])
+			th_amount_tot += line[2]['amount_to_pay']
+			dta_line_obj.write(cr, uid, [line[1]] , line[2] )
 
 
 	# creation of a bank statement : TODO ajouter le partner 
@@ -270,7 +271,7 @@ def _create_dta(self,cr,uid,data,context):
  		'state':'draft',
  		})
 
-	for dtal in dta_line_obj.browse(cr,uid,[ line[1] for line in data['form']['dta_line_ids'] ]):
+	for dtal in dta_line_obj.browse(cr,uid,dta_line_ids):
 
 		i = dtal.name #dta_line.name = invoice's id
 
@@ -376,13 +377,7 @@ class wizard_dta_create(wizard.interface):
 		'result' : {'type' : 'form',
 				    'arch' : check_form,
 				    'fields' : check_fields,
-				    'state' : [('clean', 'Cancel'),('creation', 'Yes') ]}
-		},
-
-		'clean':{
-		'actions' : [_cleaning],
-		'result' : {'type' : 'state',
-				    'state' : 'end',}
+				    'state' : [('end', 'Cancel'),('creation', 'Yes') ]}
 		},
 
 		'creation' : {
