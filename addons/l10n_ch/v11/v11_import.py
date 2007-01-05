@@ -90,7 +90,7 @@ res_fields = {
 def _v11_parsing(self, cr, uid, data, context):
 
 	pool = pooler.get_pool(cr.dbname)
-	v11 = data['form']['v11']
+	v11file = data['form']['v11']
 	
 	line=""
 	lnb=1
@@ -103,7 +103,7 @@ def _v11_parsing(self, cr, uid, data, context):
 	nb_err=0
 
 	# v11 parsing :
-	for char  in b64decode(v11):
+	for char  in b64decode(v11file):
 
 		if not char == '\n':
 			line += char
@@ -162,7 +162,7 @@ def _v11_parsing(self, cr, uid, data, context):
 	if not 	acc2:
 		return {'note': 'No debit account specified for this journal, import aborted.' }
 
-
+	move_list=[]
 
 	for rec in rec_list:
 
@@ -219,19 +219,16 @@ def _v11_parsing(self, cr, uid, data, context):
 			account_move_lines.append(line_id )
 
 			# TODO accpeter les reconciliation qui ne marche pas.
- 			pool.get('account.move.line').reconcile(cr,uid,account_move_lines,
- 													writeoff_acc_id=0,
- 													writeoff_journal_id=0,
- 													writeoff_period_id= 0,
- 													)
+#  			pool.get('account.move.line').reconcile(cr,uid,account_move_lines,
+#  													writeoff_acc_id=0,
+#  													writeoff_journal_id=0,
+#  													writeoff_period_id= 0,
+#  													)
 			cr.commit()
 
-			std_log = std_log + """
---			
- Invoice : %s
- Date Due : %s
- Amount received : %.2f
- """%(i.name, i.date_due or 'undefined', float(rec['montant']))
+			std_log = std_log + " Invoice : %s, Date Due : %s, Amount received : %.2f."\
+					  %(i.name, i.date_due or 'undefined', float(rec['montant']))
+			
 			if i.payment_term and i.payment_term.cash_discount_ids and i.payment_term.cash_discount_ids[0]:
 				if discount and rec['date_remise'] <= discount.date :
 					amount_to_pay = i.amount_total*(1-discount.discount)
@@ -265,7 +262,18 @@ def _v11_parsing(self, cr, uid, data, context):
 			err_log= err_log +'\n * Line '+rec['line_number'] +', invoice '+rec['invoice_ref'].lstrip('0')+' : Reconciliation Error.'
 			#raise
 
+	move_list.append(move_id)
+
 	err_log= err_log + '\n\n --' +'\nNumber of parsed lines : '+ str(len(rec_list)) +'\nNumber of error : '+ str(nb_err)
+
+	pool.get('account.v11').create(cr, uid,{
+		'name':v11file,
+		'move_ids':[(6,0,move_list)],
+		'note':err_log+ std_log,
+		'journal_id':data['form']['journal_id'],
+		'date':time.strftime("%Y-%m-%d"),
+		'user_id':uid,
+		})
 
 	return {'note':err_log+ std_log,'journal_id': data['form']['journal_id'], 'v11': data['form']['v11']}
 

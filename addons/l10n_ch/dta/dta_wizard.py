@@ -253,11 +253,9 @@ def _create_dta(self,cr,uid,data,context):
 	# write the bank account for the dta object
 	pool.get('account.dta').write(cr,uid,[dta_id],{'bank':data['form']['bank']})
 
-	#print data['form']['dta_line_ids']
 	dta_line_ids= []
-
 	for line in data['form']['dta_line_ids']:
-		if  line[1]!=0 and  line[2]['partner_id']:
+		if  line[1]!=0 and line[2] and line[2]['partner_id']:
 			dta_line_ids.append(line[1])
 			th_amount_tot += line[2]['amount_to_pay']
 			dta_line_obj.write(cr, uid, [line[1]] , line[2] )
