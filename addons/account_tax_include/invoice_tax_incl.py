@@ -102,7 +102,7 @@ class account_invoice_line(osv.osv):
 				'account_id':line.account_id.id,
 				'tax_amount': 0.0
 			})
-			for tax in tax_obj.compute_inv(cr, uid, line.invoice_line_tax_id, (line.price_unit *(1.0-(line['discount'] or 0.0)/100.0)), line.quantity, inv.address_invoice_id.id):
+			for tax in tax_obj.compute_inv(cr, uid, line.invoice_line_tax_id, (line.price_unit *(1.0-(line['discount'] or 0.0)/100.0)), line.quantity, inv.address_invoice_id.id, line.product_id):
 				tax['amount'] = cur_obj.round(cr, uid, cur, tax['amount'])
 				tax['sequence'] = tax['sequence']
 
