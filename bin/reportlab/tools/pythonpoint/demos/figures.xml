@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 3 U (http://www.xmlspy.com) by Andy Robinson (ReportLab Europe Ltd.) -->
+<!DOCTYPE presentation SYSTEM "../pythonpoint.dtd">
+<presentation filename="figures.xml" pageDuration="10">
+  <stylesheet module="standard" function="getParagraphStyles"/>
+  <title>New Feature Tests</title>
+  <author>
+        Andy Robinson
+    </author>
+  <subject>
+        Reportlab Sample Applications
+    </subject>
+  <section name="Main">
+    <!-- any graphics in the section go on all its pages as a backdrop -->
+    <rectangle height="555" fill="ReportLabBlue" x="20" width="96" y="20"/>
+    <!--fixedimage height="64" filename="leftlogo.gif" x="20" width="96" y="510"/-->
+    <customshape module="customshapes" class="Logo" initargs="(20,510,96,64)"/>
+    <!--infostring size="14" align="right" x="800" y="36">
+            &#187;%(title)s, page %(page)s&#171;
+        </infostring-->
+    <!-- Now for the slides -->
+    <slide title="Introduction" id="Slide001" effectname="Box" effectduration="2">
+      <frame height="468" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading1">
+                    New Feature Test Cases - Figures, Drawings and Included Pages
+                </para>
+        <para style="BodyText">
+                    especially images and pagecatcher stuff...
+                </para>
+        <para style="BodyText">
+          <i>
+                        PythonPoint
+                    </i>
+                    lets you create attractive and consistent presentation slides
+                on any platform.  It is a demo app built on top of the PDFgen PDF library
+                and the PLATYPUS Page Layout library.  Essentially, it converts slides
+                in an XML format to PDF.
+                </para>
+        <para style="BodyText">
+                    It can be used right now to create slide shows, but will
+                    undoubtedly change and evolve.  Read on for a tutorial...
+                </para>
+      </frame>
+    </slide>
+    <slide title="Test Drawing Tag" id="Slide002" effectname="Dissolve" effectduration="2">
+      <frame height="468" x="120" y="72" rightmargin="36" width="700" leftmargin="36" border="true">
+        <para style="Heading1">
+                    Drawing Tag In Action within story context
+                </para>
+        <para style="BodyText">
+                    especially images and pagecatcher stuff...
+                </para>
+        <para style="BodyText">Hope that came out right-aligned with a box around it...</para>
+        <drawing module="slidebox" constructor="SlideBoxDrawing" showBoundary="1" hAlign="CENTER"/>
+      </frame>
+    </slide>
+    <slide title="Test PageFigure Tag" id="Slide002" effectname="Glitter" effectduration="2">
+      <frame height="468" x="120" y="72" rightmargin="36" width="300" leftmargin="36" border="true">
+        <para style="Heading1">PageFigure</para>
+        <para style="BodyText">This imports a page and displays it.  Since this will typically be used to show
+        A4/Letter pages, it does a 'shrink to fit' based on frame width.  The scaleFactor attribute can override this,
+        as I did below...
+        </para>
+        <pageCatcherFigure filename="../../../../rlextra/pageCatcher/test/ir684.pdf" pageNo="0" caption="IR684 - Authorizing your Agent" scaleFactor="0.1"/>
+      </frame>
+      <frame height="468" x="450" y="72" width="325" border="true">
+        <pageCatcherFigure filename="../../../rlextra/pageCatcher/test/ir684.pdf" pageNo="0" caption="IR684 - Authorizing your Agent"/>
+      </frame>
+    </slide>
+  </section>
+</presentation>

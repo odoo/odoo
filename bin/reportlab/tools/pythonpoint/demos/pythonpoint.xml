@@ -1,0 +1,1051 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="no"?>
+<!DOCTYPE presentation SYSTEM "../pythonpoint.dtd">
+<presentation filename="pythonpoint.pdf" pageDuration="3">
+  <stylesheet module="standard" function="getParagraphStyles"/>
+  <title>PythonPoint Demonstration</title>
+  <author>Andy Robinson</author>
+  <subject>Reportlab Sample Applications</subject>
+  <section name="Main">
+    <!-- any graphics in the section go on all its pages as a backdrop -->
+    <rectangle height="555" fill="ReportLabBlue" x="20" width="96" y="20"/>
+    <!--fixedimage height="64" filename="leftlogo.gif" x="20" width="96" y="510"/-->
+    <customshape module="customshapes" class="Logo" initargs="(20,510,96,64)"/>
+    <!--infostring size="14" align="right" x="800" y="36">
+            &#187;%(title)s, page %(page)s&#171;
+        </infostring-->
+    <!-- Now for the slides -->
+    <slide title="Introduction" id="Slide001" effectname="Wipe">
+      <frame height="468" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading1">
+                    Welcome to PythonPoint
+                </para>
+        <para style="BodyText">
+                    ...a library for creating presentation slides.
+                </para>
+        <para style="BodyText">
+          <i>
+                        PythonPoint
+                    </i>
+                    lets you create attractive and consistent presentation slides
+                on any platform.  It is a demo app built on top of the PDFgen PDF library
+                and the PLATYPUS Page Layout library.  Essentially, it converts slides
+                in an XML format to PDF.
+                </para>
+        <para style="BodyText">
+                    It can be used right now to create slide shows, but will
+                    undoubtedly change and evolve.  Read on for a tutorial...
+                </para>
+      </frame>
+      <notes>
+        <para>
+                    Smile and look them in the eye!
+                </para>
+      </notes>
+    </slide>
+    <slide title="Part 1" id="Part1" effectname="Blinds" effectdirection="0">
+      <frame height="468" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para/>
+        <para/>
+        <para/>
+        <para style="Heading1">
+                    Part 1 &#150; Feature Overview
+                </para>
+      </frame>
+    </slide>
+    <slide title="XML Notation" id="Slide002" effectname="Blinds" effectdirection="0" outlinelevel="1">
+      <frame height="468" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading1">
+                    XML Notation
+                </para>
+        <para style="BodyText">
+                    You create slides in a text editor with a basic
+                    XML syntax looking like this:
+                </para>
+        <prefmt style="Code"><![CDATA[
+<frame x="160" y="72" width="600" height="468"
+    leftmargin="36" rightmargin="36">
+    <para style='Heading1'>
+        Welcome to PythonPoint
+    </para>
+    <para style='BodyText'>
+        ...a library for creating presentation slides.
+    </para>
+</frame> ]]></prefmt>
+        <para style="BodyText">
+                    Pythonpoint then converts these into slides.  Just enter
+                    "pythonpoint.py myfile.xml" to create a PDF document
+                    (usually called "myfile.pdf", but you specify that in the XML).
+                </para>
+      </frame>
+    </slide>
+    <slide title="Page Layout" id="Slide003" effectname="Box" outlinelevel="1">
+      <frame height="468" border="true" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading1">
+                    Page Layout Model
+                </para>
+        <para style="BodyText">
+                    The Page Layout model comes from PLATYPUS (Page Layout and Typography Using Scripts),
+                a key component of the toolkit.  This covers concepts such as:
+                </para>
+        <para style="Bullet">
+                    Reusable 'Drawable Objects'
+                </para>
+        <para style="Bullet">
+                    Frames into which objects flow (like this one, around which we have drawn a border)
+                </para>
+        <para style="Bullet">
+                    Style Sheets for text, table cells, line styles etc.
+                </para>
+        <para style="Bullet">
+                    Wrapping, page breaking an document management logic
+                </para>
+        <para style="BodyText">
+                    Everything is open and extensible.  I hope a library of
+                    reusable objects such as charts and diagrams will grow up.
+                </para>
+      </frame>
+    </slide>
+    <slide title="Reuse" id="Slide004" effectname="Wipe" outlinelevel="1">
+      <frame height="468" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading1">
+                    Reuse and Consistency &#150; Sections
+                </para>
+        <para style="BodyText">
+                    You can create a 'section' spanning some or all tags in the presentation 
+                    and place graphics on this. The blue border and title come from the 
+                    section. Here's how we did the border:
+                </para>
+        <prefmt style="Code"><![CDATA[
+<presentation filename='pythonpoint.pdf'>
+  <section name = 'Main'>
+    <!-- any graphics in the section go on all its pages as a backdrop -->
+    <rectangle x="20" y="510" width="800" height="65" fill="(0,0,1)"/>
+    <rectangle x="20" y="20" width="65" height="555" fill="(0,0,1)"/>
+      ...all slides go here...
+  </section>
+</presentation>
+]]></prefmt>
+        <para style="BodyText">
+                    Thus you can re-brand an entire presentation for 
+                    a new audience in seconds.
+                </para>
+      </frame>
+    </slide>
+    <slide title="Styles" id="Slide005" effectname="Dissolve" outlinelevel="1">
+      <frame height="468" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading1">
+                    Style Sheets
+                </para>
+        <para style="BodyText">
+                    Paragraph styles are defined externally.  You may specify a filename
+                    from which to load a stylesheet with the stylesheet tag.
+                </para>
+        <para style="BodyText">
+                    Thus you can have different sizes and formats by switching
+                    stylesheets, or colour and black-and-white options.
+                </para>
+        <para style="BodyText">
+                    When they are added, tables will be driven by line and cell
+                    styles in a similar way.
+                </para>
+      </frame>
+    </slide>
+    <slide title="Special Effects" id="Slide006" effectname="Dissolve" outlinelevel="1">
+      <frame height="468" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading1">
+                    Special Effects
+                </para>
+        <para style="BodyText">
+                    Acrobat Reader supports tags to define page transition effects.
+                    If you are reading this on screen, you should have seen a selection
+                    of these:
+                </para>
+        <para style="Bullet">
+                    Split
+                </para>
+        <para style="Bullet">
+                    Blinds
+                </para>
+        <para style="Bullet">
+                    Box
+                </para>
+        <para style="Bullet">
+                    Wipe
+                </para>
+        <para style="Bullet">
+                    Dissolve
+                </para>
+        <para style="Bullet">
+                    Glitter
+                </para>
+        <para style="BodyText">
+                    Each has a range of options to fine-tune.
+                </para>
+        <para style="BodyText">
+                    When they are added, tables will be driven by line and cell
+                    styles in a similar way.
+                </para>
+      </frame>
+    </slide>
+    <slide title="Outlines and Hyperlinks" id="Slide007" effectname="Wipe" outlinelevel="1">
+      <frame height="468" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading1">
+                    Outlines and Hyperlinks
+                </para>
+        <para style="BodyText">
+                    By default, we generate an outline view in the left pane to
+                help you navigate.  Hyperlinks within documents are also
+                possible.
+                </para>
+        <para style="BodyText">
+                    As far as we know, this is the first PDF library to expose
+                these features.
+                </para>
+      </frame>
+    </slide>
+    <slide title="Basic Shapes" id="Slide008" effectname="Wipe" outlinelevel="1">
+      <frame height="468" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading1">
+                    Basic Shapes
+                </para>
+        <para>
+                    Here are some of the basic shapes available for decorating pages...
+                </para>
+      </frame>
+      <rectangle height="50" fill="(0,1,1)" x="200" width="100" y="300"/>
+      <roundrect height="50" x="350" y="300" radius="15" fill="(0,1,1)" width="100"/>
+      <line y1="300" y2="350" x1="500" x2="600"/>
+      <ellipse fill="(0,1,1)" y1="300" y2="350" x1="650" x2="750"/>
+      <polygon points="(200,200),(300,200),(350,180),(250,150)" fill="(0,1,1)"/>
+      <string size="14" color="(1,0,0)" align="center" x="500" y="200">
+                This is a\nmulti-line string\nplaced directly on the page.\n\nIt can be left-aligned,\ncentred,\nor right-aligned.
+            </string>
+      <customshape module="customshapes" class="Jigsaw" initargs="(700,200,1)"/>
+    </slide>
+    <slide title="Tables" id="Slide008a" effectname="Glitter" outlinelevel="1">
+      <frame height="468" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading1">
+                    Tables
+                </para>
+        <para>
+                    The Table tag lets you paste in bulk data and format it attractively:
+                </para>
+        <spacer height="24"/>
+        <table heights="(28,28,28,28,28)" style="table1" widths="(144,72,72,72,108)">
+                    Division,Jan,Feb,Mar,Q1 Total
+				North,100,115,120,335
+				South,215,145,180,540
+				East,75,90,135,300
+				West,100,120,115,335
+                </table>
+      </frame>
+    </slide>
+    <slide title="Future Features" id="Slide009" effectname="Glitter" outlinelevel="1">
+      <frame height="468" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading1">
+                    Features Coming Soon
+                </para>
+        <para style="BodyText">
+                    This is the first version that runs.  A lot can now be added fairly easily:
+                </para>
+        <para style="Bullet">
+                    Preprocessor to let you enter paragraphs and
+                    bullets as one block of text, with less tag typing!
+                </para>
+        <para style="Bullet">
+                    PIDDLE drawings
+                </para>
+        <para style="Bullet">
+                    PINGO drawings &#150; 'Object Graphics' tags with grouping and coordinate transformations
+                </para>
+        <para style="Bullet">
+                    Speaker notes and a mode to print them
+                </para>
+        <para style="Bullet">
+                    Tools to archive slides in a database and build presentations to order
+                </para>
+        <para style="Italic">
+                    ...what else can YOU think of?
+                </para>
+      </frame>
+    </slide>
+    <slide title="Part 2" id="Part2" effectname="Blinds" effectdirection="0" outlinelevel="0">
+      <frame height="468" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para/>
+        <para/>
+        <para/>
+        <para style="Heading1">
+                    Part 2 &#150; Reference
+                </para>
+        <para/>
+        <para style="Centered">
+                    This section covers all command line options
+                    and tags currently in use.
+                </para>
+      </frame>
+    </slide>
+    <slide title="Command Line Options" id="Slide200" effectname="Blinds" effectdirection="0" outlinelevel="1">
+      <frame height="510" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading2">
+                    Command Line Options
+                </para>
+        <para>
+                    Usage (NT, or executable Unix script):
+                </para>
+        <para>
+          <i>
+                        pythonpoint.py [/notes] myslides.xml
+                    </i>
+        </para>
+        <para>
+                    or (Win9x or non-executable script)
+                </para>
+        <para>
+          <i>
+                        python pythonpoint.py [/notes] myslides.xml
+                    </i>
+        </para>
+        <para style="BodyText">
+                    Notes:
+                </para>
+        <para style="Bullet">
+                    The resulting PDF file has the same
+                    name as the input file.
+                </para>
+        <para style="Bullet">
+                    The Speaker Notes mode prints a shrunken canvas with
+                    room for notes around the edge.  To create notes, make
+                    an extra frame off the page.  See the source of
+                    Pythonpoint.xml slide 001 for an example.
+                </para>
+      </frame>
+    </slide>
+    <slide title="Tag: Presentation" id="Slide201" effectname="Blinds" effectdirection="0" outlinelevel="1">
+      <frame height="510" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading2">
+                    Tag "presentation"
+                </para>
+        <para style="BodyText">
+                    This is the outermost tag in an XML file and is always required.
+                </para>
+        <para style="Italic">
+                    Attributes:
+                </para>
+        <para style="Indent">
+                    filename (required)
+                </para>
+        <para style="Italic">
+                    Can Contain:
+                </para>
+        <para style="Indent">
+                    section, stylesheet, slides
+                </para>
+        <para/>
+        <para style="Italic">
+                    To Do:
+                </para>
+        <para style="Indent">
+                    Support for page sizes, opening modes
+                </para>
+      </frame>
+    </slide>
+    <slide title="Tag: Stylesheet" id="Slide202" effectname="Blinds" effectdirection="0" outlinelevel="1">
+      <frame height="510" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading2">
+                    Tag "stylesheet"
+                </para>
+        <para style="BodyText">
+                    This defines an external style sheet full of paragraph styles.
+                    For now, these are Python modules conforming to a common interface,
+                    and examples are given.  If not declared, a default style sheet is
+                    used.  You are strongly advised to define your own style sheet,
+                    as the built-in one will change a few more times.
+                </para>
+        <para style="Italic">
+                    Attributes:
+                </para>
+        <para style="Indent">
+                    path, module, function
+                </para>
+        <para style="Italic">
+                    Contained By:
+                </para>
+        <para style="Indent">
+                    Presentation, Section
+                </para>
+        <para style="Italic">
+                    Can Contain:
+                </para>
+        <para style="Indent">
+                    nothing
+                </para>
+        <para style="Italic">
+                    Example
+                </para>
+        <prefmt style="Code"><![CDATA[
+<stylesheet module="modern" function="getParagraphStyles"/>
+]]></prefmt>
+      </frame>
+    </slide>
+    <slide title="Tag: Section" id="Slide203" effectname="Blinds" effectdirection="0" outlinelevel="1">
+      <frame height="510" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading2">
+                    Tag "section"
+                </para>
+        <para style="BodyText">
+                    A Section spans across a number of slides and can apply an
+                    overall background to them.  Place graphics directly within
+                    the section tag, either before or after slides. This lets
+                    you re-brand a presentation very quickly.  Documents
+                    may contain multiple sections; nesting of sections is
+                    not (yet) permitted.
+                </para>
+        <para style="Italic">
+                    Attributes:
+                </para>
+        <para style="Indent">
+                    name (required, but not used yet)
+                </para>
+        <para style="Italic">
+                    Contained By:
+                </para>
+        <para style="Indent">
+                    Presentation
+                </para>
+        <para style="Italic">
+                    Can Contain:
+                </para>
+        <para style="Indent">
+                    all graphic shapes; slides
+                </para>
+      </frame>
+    </slide>
+    <slide title="Tag: Slide" id="Slide204" effectname="Blinds" effectdirection="0" outlinelevel="1">
+      <frame height="510" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading2">
+                    Tag "slide"
+                </para>
+        <para style="BodyText">
+                    Defines a single slide.  The presentation effects are defined
+                    in the PDF reference; best to just try the combinations.
+                </para>
+        <para style="Italic">
+                    Attributes (with defaults):
+                </para>
+        <para style="Indent">
+                    id (required)
+                </para>
+        <para style="Indent">
+                    title (required)
+                </para>
+        <para style="Indent">
+                    effectname: one of Split, Blinds, Box, Wipe, Dissolve, Glitter
+                </para>
+        <para style="Indent">
+                    effectdirection: '0','90','180' or '270'
+                </para>
+        <para style="Indent">
+                    effectdimension: 'H' or 'V' (Horiz./Vert.)
+                </para>
+        <para style="Indent">
+                    effectmotion: 'I' for inwards or 'O' for outwards
+                </para>
+        <para style="Indent">
+                    effectduration: time in seconds
+                </para>
+        <para style="Italic">
+                    Contained By:
+                </para>
+        <para style="Indent">
+                    Presentation
+                </para>
+        <para style="Italic">
+                    Can Contain:
+                </para>
+        <para style="Indent">
+                    all graphic shapes; frames
+                </para>
+      </frame>
+    </slide>
+    <slide title="Tag: Frame" id="Slide205" effectname="Blinds" effectdirection="0" outlinelevel="1">
+      <frame height="510" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading2">
+                    Tag "frame"
+                </para>
+        <para style="BodyText">
+                    Defines a frame on the page which can hold content.  You may have
+                    as many frames as you like, to allow multi-column text or flow  
+                    around pictures.
+                </para>
+        <para style="Italic">
+                    Attributes:
+                </para>
+        <para style="Indent">
+                    x, y, width, height (all required): in points
+                </para>
+        <para style="Indent">
+                    leftmargin, rightmargin, topmargin, bottommargin 
+                    (optional, default to zero) &#150; define the 'inner rectangle' within
+                    which content flows
+                </para>
+        <para style="Indent">
+                    border (defaults to 'false'): whether to show
+                    a frame border &#150; useful when designing pages.
+                </para>
+        <para style="Italic">
+                    Contained By:
+                </para>
+        <para style="Indent">
+                    Slide
+                </para>
+        <para style="Italic">
+                    Can Contain:
+                </para>
+        <para style="Indent">
+                    all 'flowable objects' &#150; paragraphs, images
+                </para>
+      </frame>
+    </slide>
+    <slide title="Flowable Objects" id="Slide206" effectname="Blinds" effectdirection="0" outlinelevel="1">
+      <frame height="510" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading2">
+                    Tag family &#150; "Flowable Objects"
+                </para>
+        <para style="BodyText">
+                    Flowable Objects currently include Paragraphs, Preformatted text
+                    (used for code printing, where the line breaks and spaces matter)
+                    and inline Images.  More will be added in future.  
+                    They negotiate with their containing frame about height and
+                    width; paragraphs do what you would expect, while images are centred.
+                </para>
+        <para style="Italic">
+                    Contained By:
+                </para>
+        <para style="Indent">
+                    Slide
+                </para>
+        <para style="Italic">
+                    Can Contain:
+                </para>
+        <para style="Indent">
+                    The three instances so far contain nothing.
+                </para>
+      </frame>
+    </slide>
+    <slide title="Tag: para" id="Slide207" effectname="Blinds" effectdirection="0" outlinelevel="2">
+      <frame height="510" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading2">
+                    Tag "para" &#150; Paragraphs
+                </para>
+        <para style="BodyText">
+                    Paragraphs are used for wrapping text.  They are very simple 
+                    &#150; they have a style attribute,
+                    and the stylesheet defines most attributes externally. 
+                    Currently we use a hack to handle 'bullets', which may be in
+                    a different font (such as 'ZapfDingbats, specified in style) 
+                    and offset to the left.  These are used
+                    for bullets, numbering and definition lists 
+                    This will vanish as soon as one can
+                    switch fonts in mid-paragraph (due mid April).
+                </para>
+        <para style="Italic">
+                    Attributes:
+                </para>
+        <para style="Indent">
+                    style (defaults to 'Normal') &#150; 
+                    reference to stylesheet
+                </para>
+        <para style="Indent">
+                    bullettext &#150; 
+                    text for the optional 'bullet' section. To be deprecated.
+                </para>
+        <para style="Italic">
+                    Contained By:
+                </para>
+        <para style="Indent">
+                    Frame
+                </para>
+        <para style="Italic">
+                    Can Contain:
+                </para>
+        <para style="Indent">
+                    Their text
+                </para>
+      </frame>
+    </slide>
+    <slide title="Tag: prefmt" id="Slide207" effectname="Blinds" effectdirection="0" outlinelevel="2">
+      <frame height="510" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading2">
+                    Tag "prefmt"
+                </para>
+        <para style="BodyText">
+                    This is used for printing code, or other text which contains
+                    line breaks.
+                </para>
+        <para style="Italic">
+                    Attributes:
+                </para>
+        <para style="Indent">
+                    style (defaults to 'Normal') &#150; 
+                    reference to stylesheet
+                </para>
+        <para style="Italic">
+                    Contained By:
+                </para>
+        <para style="Indent">
+                    Frame
+                </para>
+        <para style="Italic">
+                    Can Contain:
+                </para>
+        <para style="Indent">
+                    The text to be displayed
+                </para>
+      </frame>
+    </slide>
+    <slide title="Tag: image" id="Slide208" effectname="Blinds" effectdirection="0" outlinelevel="2">
+      <frame height="510" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading2">
+                    Tag "image" &#150; flowing images
+                </para>
+        <para style="BodyText">
+                    This is used for an image to be displayed inline within
+                    the frame.  It will be drawn at a scale of 1 pixel to
+                    1 point, and centred in the frame.
+                </para>
+        <para style="Italic">
+                    Attributes:
+                </para>
+        <para style="Indent">
+                    filename (required)
+                </para>
+        <para style="Italic">
+                    Contained By:
+                </para>
+        <para style="Indent">
+                    Frame
+                </para>
+        <para style="Italic">
+                    Can Contain:
+                </para>
+        <para style="Indent">
+                    Nothing
+                </para>
+        <para style="Italic">
+                    To do
+                </para>
+        <para style="Indent">
+                    Rename it 'flowing image'?  Control
+                    over alignment and size if needed.  Image caching.
+                </para>
+      </frame>
+    </slide>
+    <slide title="Tag: table" id="Slide208a" effectname="Blinds" effectdirection="0" outlinelevel="2">
+      <frame height="510" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading2">
+                    Tag "table" &#150; tables
+                </para>
+        <para style="BodyText">
+                    This lets you draw tables with a wide variety of formatting
+                    options.
+                </para>
+        <para style="Italic">
+                    Attributes:
+                </para>
+        <para style="Indent">
+          <b>
+                        widths
+                    </b>
+                    (optional) in points (auto-sizes if not given)
+                </para>
+        <para style="Indent">
+          <b>
+                        heights
+                    </b>
+                    (optional) in points (auto-sizes if not given)
+                </para>
+        <para style="Indent">
+          <b>
+                        style
+                    </b>
+                    (optional) &#150; name of a ReportLab
+                        tablestyle  defined in the stylesheet.
+                </para>
+        <para style="Indent">
+          <b>
+                        colDelim
+                    </b>
+                    (optional) &#150; the column
+                      delimiter string for bulk data; defaults to a comma.
+                </para>
+        <para style="Indent">
+          <b>
+                        rowDelim
+                    </b>
+                    (optional) &#150; the line
+                      delimiter string for bulk data; defaults to a carriage 
+                    return.
+                </para>
+        <para style="Italic">
+                    Contained By:
+                </para>
+        <para style="Indent">
+                    Frame
+                </para>
+        <para style="Italic">
+                    Can Contain:
+                </para>
+        <para style="Indent">
+                    Bulk data, with the row and column delimiters
+                    specified
+                </para>
+      </frame>
+    </slide>
+    <slide title="Drawable Objects" id="Slide209" effectname="Blinds" effectdirection="0" outlinelevel="1">
+      <frame height="510" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading2">
+                    Tag family &#150; "Drawable Objects"
+                </para>
+        <para style="BodyText">
+                    These are objects which know how to draw themselves directly on
+                    the page (or section template).  Use them for designing the backdrop,
+                    and for custom graphics.
+                </para>
+        <para style="Italic">
+                    Contained By:
+                </para>
+        <para style="Indent">
+                    Slide, Section
+                </para>
+        <para style="Italic">
+                    Can Contain:
+                </para>
+        <para style="Indent">
+                    Varies.
+                </para>
+        <para style="Italic">
+                    To Do:
+                </para>
+        <para style="Indent">
+                    Will include the full PINGO object
+                    model &#150; a subset of SVG &#150; allowing any vector graphics
+                    at all.
+                </para>
+      </frame>
+    </slide>
+    <slide title="Tag: FixedImage" id="Slide210" effectname="Blinds" effectdirection="0" outlinelevel="2">
+      <frame height="510" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading2">
+                    Tag "fixedimage"
+                </para>
+        <para style="BodyText">
+                    This is an image draw directly at a fixed position &#150; 
+                    for example, the logo at top left of the page.
+                </para>
+        <para style="Italic">
+                    Attributes:
+                </para>
+        <para style="Indent">
+                    filename: required
+                </para>
+        <para style="Indent">
+                    x, y: required
+                </para>
+        <para style="Indent">
+                    width, height: optional, stretches image 
+                    to fit box if present.
+                </para>
+        <para style="Italic">
+                    Contained By:
+                </para>
+        <para style="Indent">
+                    Slide, Section
+                </para>
+        <para style="Italic">
+                    Can Contain:
+                </para>
+        <para style="Indent">
+                    Nothing
+                </para>
+      </frame>
+    </slide>
+    <slide title="Tag: Rectangle" id="Slide211" effectname="Blinds" effectdirection="0" outlinelevel="2">
+      <frame height="510" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading2">
+                    Tag "rectangle"
+                </para>
+        <para style="Italic">
+                    Attributes:
+                </para>
+        <para style="Indent">
+                    x, y, width, height: required
+                </para>
+        <para style="Indent">
+                    fill, stroke: either 'None', or an
+                    (r,g,b) tuple.
+                </para>
+        <para style="Indent">
+                    linewidth: defaults to 0 (hairline)
+                </para>
+        <para style="Italic">
+                    Contained By:
+                </para>
+        <para style="Indent">
+                    Slide, Section
+                </para>
+        <para style="Italic">
+                    Can Contain:
+                </para>
+        <para style="Indent">
+                    Nothing
+                </para>
+      </frame>
+    </slide>
+    <slide title="Tag: RoundRect" id="Slide212" effectname="Blinds" effectdirection="0" outlinelevel="2">
+      <frame height="510" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading2">
+                    Tag "roundrect"
+                </para>
+        <para style="BodyText">
+                    This is exactly like Rectangle,
+                    but with an extra 'radius' attribute defining the corner
+                    radius in points &#150; default is 6 points.
+                </para>
+      </frame>
+    </slide>
+    <slide title="Tag: Ellipse" id="Slide213" effectname="Blinds" effectdirection="0" outlinelevel="2">
+      <frame height="510" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading2">
+                    Tag "ellipse"
+                </para>
+        <para style="BodyText">
+                    Draws an ellipse, defined by its
+                    bounding box.  Note that it can
+                    create circles if height and width are equal.
+                </para>
+        <para style="Italic">
+                    Attributes:
+                </para>
+        <para style="Indent">
+                    x1, y1, x2, y2: required
+                </para>
+        <para style="Indent">
+                    fill, stroke: either 'None', or an
+                    (r,g,b) tuple.
+                </para>
+        <para style="Indent">
+                    linewidth: defaults to 0 (hairline)
+                </para>
+        <para style="Italic">
+                    Contained By:
+                </para>
+        <para style="Indent">
+                    Slide, Section
+                </para>
+        <para style="Italic">
+                    Can Contain:
+                </para>
+        <para style="Indent">
+                    Nothing
+                </para>
+      </frame>
+    </slide>
+    <slide title="Tag: Polygon" id="Slide214" effectname="Blinds" effectdirection="0" outlinelevel="2">
+      <frame height="510" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading2">
+                    Tag "polygon"
+                </para>
+        <para style="BodyText">
+                    Draws a polygon from a list
+                    of points you provide.
+                </para>
+        <para style="Italic">
+                    Attributes:
+                </para>
+        <para style="Indent">
+                    points: list such as "(0,0),(50,0),(25,25)"
+                </para>
+        <para style="Indent">
+                    fill, stroke: either 'None', or an
+                    (r,g,b) tuple.
+                </para>
+        <para style="Indent">
+                    linewidth: defaults to 0 (hairline)
+                </para>
+        <para style="Italic">
+                    Contained By:
+                </para>
+        <para style="Indent">
+                    Slide, Section
+                </para>
+        <para style="Italic">
+                    Can Contain:
+                </para>
+        <para style="Indent">
+                    Nothing
+                </para>
+      </frame>
+    </slide>
+    <slide title="Tag: Line" id="Slide215" effectname="Blinds" effectdirection="0" outlinelevel="2">
+      <frame height="510" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading2">
+                    Tag "line"
+                </para>
+        <para style="BodyText">
+                    Draws a line.
+                </para>
+        <para style="Italic">
+                    Attributes:
+                </para>
+        <para style="Indent">
+                    x1, y1, x2, y2
+                </para>
+        <para style="Indent">
+                    stroke: either 'None', or an
+                    (r,g,b) tuple.
+                </para>
+        <para style="Indent">
+                    width: defaults to 0 (hairline)
+                </para>
+        <para style="Italic">
+                    Contained By:
+                </para>
+        <para style="Indent">
+                    Slide, Section
+                </para>
+        <para style="Italic">
+                    Can Contain:
+                </para>
+        <para style="Indent">
+                    Nothing
+                </para>
+      </frame>
+    </slide>
+    <slide title="Tag: String" id="Slide215" effectname="Blinds" effectdirection="0" outlinelevel="2">
+      <frame height="510" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading2">
+                    Tag "string"
+                </para>
+        <para style="BodyText">
+                    This places strings directly on the page.  They may have
+                    embedded newlines (use a '\n' in the XML), in which
+                    case multi-line strings are printed. Left, right
+                    and centre alignment are allowed.
+                </para>
+        <para style="Italic">
+                    Attributes:
+                </para>
+        <para style="Indent">
+                    x, y: required
+                </para>
+        <para style="Indent">
+                    color:  RGB colour tuple such as '(0,1,0)'
+                </para>
+        <para style="Indent">
+                    font: default is 'Times-Roman'
+                </para>
+        <para style="Indent">
+                    size: default 12
+                </para>
+        <para style="Indent">
+                    align: default 'left', allows 
+                    also 'right' or 'center'
+                </para>
+        <para style="Italic">
+                    Contained By:
+                </para>
+        <para style="Indent">
+                    Slide, Section
+                </para>
+        <para style="Italic">
+                    Can Contain:
+                </para>
+        <para style="Indent">
+                    The text of the string
+                </para>
+      </frame>
+    </slide>
+    <slide title="Tag: CustomShape" id="Slide216" effectname="Blinds" effectdirection="0" outlinelevel="2">
+      <frame height="510" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading2">
+                    Tag "customshape"
+                </para>
+        <para style="BodyText">
+                    This looks in a specified Python module for a 
+                    'drawable object' you write, and initialises
+                    it with arguments you provide before drawing.
+                    This must provide a 'self.drawOn(canvas)' method.
+                </para>
+        <para style="Italic">
+                    Attributes:
+                </para>
+        <para style="Indent">
+                    path:  where to look; searches Python path 
+                    if None
+                </para>
+        <para style="Indent">
+                    module: module name
+                </para>
+        <para style="Indent">
+                    class: class name to create
+                </para>
+        <para style="Indent">
+                    initargs: tuple of arguments with which
+                    to initialize the class.
+                </para>
+        <para style="Indent">
+                    align: default 'left', allows 
+                    also 'right' or 'center'
+                </para>
+        <para style="Italic">
+                    Contained By:
+                </para>
+        <para style="Indent">
+                    Slide, Section
+                </para>
+        <para style="Italic">
+                    Can Contain:
+                </para>
+        <para style="Indent">
+                    Nothing
+                </para>
+      </frame>
+    </slide>
+    <slide title="To Do" id="Part3" effectname="Blinds" effectdirection="0">
+      <frame height="468" x="120" y="72" rightmargin="36" width="700" leftmargin="36">
+        <para style="Heading1">
+                    Part 3 &#150; To Do
+                </para>
+        <para style="Bullet">
+                    Lots of testing
+                </para>
+        <para style="Bullet">
+                    Text preprocessor to let you input text, styles and images
+                     in something easier to type
+                </para>
+        <para style="Bullet">
+                    Support for Pingo (http://pingo.sourceforge.net/) drawings using
+                    the Scalable Vector Graphics imaging model
+                </para>
+        <para style="Bullet">
+                    Proper caching of flowing images
+                </para>
+        <para style="Bullet">
+                    Basic Tables and Charts
+                </para>
+        <para style="Bullet">
+                    Use new XML parsers as wel as xmllib
+                </para>
+        <para style="Bullet">
+                    Slide indexing and database search tools
+                </para>
+        <para style="Bullet">
+                    Speaker Notes mode
+                </para>
+        <para>
+                    Naturally, help is extremely welcome :-)
+                </para>
+      </frame>
+    </slide>
+  </section>
+</presentation>

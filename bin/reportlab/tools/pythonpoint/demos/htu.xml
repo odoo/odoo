@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE presentation SYSTEM "../pythonpoint.dtd">
+<presentation filename="htu.pdf">
+  <stylesheet module="htu" function="getParagraphStyles"/>
+  <section name="Main">
+    <rectangle x="20" width="96" y="20" height="555" fill="ReportLabBlue"/>
+    <infostring size="14" align="right" x="800" y="36">
+        &#169; 2002, H. Turgut UYAR
+    </infostring>
+    <slide title="New Features" id="Slide000">
+      <frame x="120" y="72" width="700" height="418" leftmargin="36" rightmargin="36">
+        <image filename="pplogo.gif" width="200" height="150"/>
+        <spacer height="30"/>
+        <para style="Title">New features in PythonPoint</para>
+        <para style="Author">H. Turgut Uyar</para>
+        <para style="EMail">uyar@cs.itu.edu.tr</para>
+      </frame>
+    </slide>
+    <slide title="TrueType Support" id="Slide002">
+      <frame x="120" y="515" width="700" height="60" leftmargin="36" rightmargin="36">
+        <para style="Heading1">TrueType Support</para>
+      </frame>
+      <frame x="120" y="72" width="700" height="418" leftmargin="36" rightmargin="36">
+        <para>PythonPoint can read UTF-8 encoded input files and produce
+            correct output (provided your font has all necessary
+            characters). That enables you, for example, to have native (in my
+            case, Turkish) characters in your document:</para>
+        <para style="Indent">
+          <!--  if you have any trouble with these, execute the lines below
+            to find out what we really intended 
+            >>> turkishChars =  u"\u011e \u011f \u0130 \u0131 \u015e \u015f"
+            >>> print turkishChars
+            >>> print turkishChars.encode("utf-8")
+            þ ø İ ı ľ ĸ
+            >>> 
+            -->
+          <font name="Serif" size="32"> 0 ^  1 _</font>
+        </para>
+      </frame>
+    </slide>
+    <slide title="Effects" id="Slide003">
+      <frame x="120" y="515" width="700" height="60" leftmargin="36" rightmargin="36">
+        <para style="Heading1">Effects</para>
+      </frame>
+      <frame x="120" y="72" width="700" height="418" leftmargin="36" rightmargin="36">
+        <para>Paragraphs, images, tables and geometric shapes can now have
+            effectname, effectdirection, effectdimension, effectmotion and
+            effectduration attributes:</para>
+        <para style="Indent" effectname="Dissolve">A paragraph</para>
+        <image filename="pplogo.gif" width="80" height="60" effectname="Box"/>
+        <table style="table1" effectname="Split">
+            Col1,Col2,Col3
+            Row1Col1,Row1Col2,Row1Col3
+            Row2Col1,Row2Col2,Row2Col3
+        </table>
+      </frame>
+      <roundrect x="180" y="150" width="110" height="50" radius="15" fill="(0,1,0)" effectname="Glitter"/>
+      <string font="Helvetica" size="32" x="200" y="165" align="left" color="(1,0,0)" effectname="Blinds">String</string>
+      <line x1="248" y1="84" x2="520" y2="84" stroke="(1,0,1)" effectname="Wipe"/>
+    </slide>
+    <slide title="Printing" id="Slide004" outlinelevel="1">
+      <frame x="120" y="515" width="700" height="60" leftmargin="36" rightmargin="36">
+        <para style="Heading1">Printing</para>
+      </frame>
+      <frame x="120" y="72" width="700" height="418" leftmargin="36" rightmargin="36">
+        <para>Be careful when using effects: A new slide is created for
+            each effect, so DON'T print the resulting PDF file.</para>
+        <para effectname="Box">new command-line option: --printout</para>
+        <para style="Indent">produces printable PDF</para>
+      </frame>
+    </slide>
+    <slide title="New Paragraph Styles" id="Slide005">
+      <frame x="120" y="515" width="700" height="60" leftmargin="36" rightmargin="36">
+        <para style="Heading1">New Paragraph Styles</para>
+      </frame>
+      <frame x="120" y="72" width="700" height="418" leftmargin="36" rightmargin="36">
+        <para style="Bullet">Bullet2 - Second level bullets</para>
+        <para style="Bullet2">Here's an example</para>
+        <para style="Bullet2">Or an example with a longer text to see
+            how it wraps at the end of each line</para>
+        <para style="Bullet">Author and EMail</para>
+        <para style="Bullet2">See the cover page for examples</para>
+        <para style="Bullet">They have to be in the style file, so either use
+            the htu style file or edit your style file</para>
+      </frame>
+    </slide>
+    <slide title="ToDo" id="Slide006">
+      <frame x="120" y="515" width="700" height="60" leftmargin="36" rightmargin="36">
+        <para style="Heading1">ToDo</para>
+      </frame>
+      <frame x="120" y="72" width="700" height="418" leftmargin="36" rightmargin="36">
+        <para style="Bullet">Unicode chars in the outline</para>
+      </frame>
+    </slide>
+  </section>
+</presentation>

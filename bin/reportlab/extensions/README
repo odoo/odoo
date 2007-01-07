@@ -1,0 +1,25 @@
+This directory is intended to act as a placeholder for extending ReportLab
+with extra extensions. It has been packagised with an empty __init__.py.
+
+So a typical extender should add his package extension as
+
+    reportlab/extensions/great_extension/__init__.py
+                                        /dingo.py
+                                        /etc etc
+
+and single modules as
+
+    reportlab/extensions/my_module.py
+
+Then client code can do
+
+    from reportlab.extensions.great_extension import dingo
+
+if you extend with just a single module it might be simpler to add that
+into extensions so that you could do
+
+    from reportlab.extensions import my_module.
+
+
+ReportLab can take no responsibility for name clashes and problems caused by
+modules and packages in reportlab/extensions.

@@ -1,0 +1,59 @@
+Symbologies Currently Supported
+===============================
+
+The following have, at a minimum, been verified to scan with a WASP
+CCD barcode scanner (found one bug in my code, two in the scanner!).
+Some have had more extensive testing:
+
+	Interleaved 2 of 5
+	MSI
+	Codabar
+	Code 39 (Standard Character Set)
+	Code 39 (Extended Character Set)
+	Code 93 (Standard Character Set)
+	Code 93 (Extended Character Set)
+	Code 128 (Automatic use of A, B, C, with some optimizations -- 
+		more coming)
+
+The following have been tested by sending a fair number of mailpieces
+with them:
+
+	USPS FIM
+	USPS POSTNET
+
+The following have not been tested, as none of the scanners I have
+access to support them:
+
+	Code 11
+
+
+Future Plans, Consulting
+========================
+
+Soon:
+
+I plan to implement the following linear codes soon:
+
+	UPC/EAN(/JAN)
+
+The following are in progress, but I lack a way to verify them
+(scanners I have access to don't read them), and I don't have complete
+specs for the UK style.
+
+	Royal Mail 4-State (UK/NL/etc style, and Australian style)
+
+Down the road, I'd like to do some 2D symbologies. Likely first candidate
+is PDF417. MaxiCode, Aztec Code, and some of the stacked symbologies are
+also good candidates.
+
+I am available to do implementation of additional symbologies for hire. 
+Because I enjoy hacking barcodes, my rates for work in this particular
+area are very low and are mainly to help offset costs associated with
+obtaining related documents and/or to buy or gain access to scanning
+equipment for symbologies if I don't already have a scanner that
+supports them.  Loans of equipment are also accepted. 
+
+For more information, contact:
+
+Ty Sarna
+tsarna@sarna.org
