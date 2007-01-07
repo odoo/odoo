@@ -254,17 +254,17 @@ class rml_parse(object):
 	def _add_header(self, node):
 		rml_head = tools.file_open('custom/corporate_rml_header.rml').read()
 		head_dom = xml.dom.minidom.parseString(rml_head)
-		for frame in head_dom.getElementsByTagName('frame'):
-			frame.parentNode.removeChild(frame)
+		#for frame in head_dom.getElementsByTagName('frame'):
+		#	frame.parentNode.removeChild(frame)
 		node2 = head_dom.documentElement
 		for tag in node2.childNodes:
 			if tag.nodeType==tag.ELEMENT_NODE:
 				found = self._find_node(node, tag.localName)
-				rml_frames = found.getElementsByTagName('frame')
+		#		rml_frames = found.getElementsByTagName('frame')
 				if found:
 					found.parentNode.replaceChild(tag, found)
-				for frame in rml_frames:
-					tag.appendChild(frame)
+		#		for frame in rml_frames:
+		#			tag.appendChild(frame)
 		return True
 
 	def preprocess(self, objects, data, ids):
