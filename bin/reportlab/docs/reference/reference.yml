@@ -1,0 +1,217 @@
+.t ReportLab API Reference
+
+.nextPageTemplate Normal
+
+.h1 Introduction
+
+This is the API reference for the ReportLab library.  All public
+classes, functions and methods are documented here.
+
+Most of the reference text is built automatically from the
+documentation strings in each class, method and function.
+That's why it uses preformatted text and doesn't look very
+pretty.
+
+Please note the following points:
+.bu <seqdefault id='list'/><bullet>(<seq/>)</bullet>Items with one leading underscore are considered private
+to the modules they are defined in; they are not documented
+here and we make no commitment to their maintenance.
+.bu <bullet>(<seq/>)</bullet>Items ending in a digit (usually zero) are experimental;
+they are released to allow widespread testing, but are
+guaranteed to be broken in future (if only by dropping the
+zero).  By all means play with these and give feedback, but
+do not use them in production scripts.
+
+.h2 Package Architecture
+
+The reportlab package is broken into a number of subpackages.
+These are as follows:
+
+.df <font name="Courier"><b>reportlab.pdfgen</b></font>
+- this is the programming
+interface to the PDF file format.  The Canvas (and its co-workers,
+TextObject and PathObject) provide everything you need to
+create PDF output working at a low level - individual shapes
+and lines of text.  Internally, it constructs blocks of
+<i>page marking operators</i> which match your drawing commands,
+and hand them over to the <font name="Courier">pdfbase</font>
+package for drawing.
+
+.df <font name="Courier"><b>reportlab.pdfbase</b></font>
+- this is not part of the
+public interface.  It contains code to handle the 'outer
+structure' of PDF files, and utilities to handle text metrics
+and compressed streams.
+
+.df <font name="Courier"><b>reportlab.platypus</b></font>
+- PLATYPUS stands for
+"Page Layout and Typography Using Scripts".  It provides a
+higher level of abstraction dealing with paragraphs, frames
+on the page, and document templates.  This is used for multi-
+page documents such as this reference.
+
+.df <font name="Courier"><b>reportlab.lib</b></font>
+- this contains code of
+interest to application developers which cuts across
+both of our libraries, such as standard colors, units, and
+page sizes.  It will also contain more drawable and flowable
+objects in future.
+
+There is also a demos directory containing various demonstrations,
+and a docs directory.  These can be accessed with package
+notation but should not be thought of as packages.
+
+Each package is documented in turn.
+
+.pageBreak
+.h1 <i>reportlab.pdfgen</i> subpackage
+
+This package contains three modules, canvas.py, textobject.py
+and pathobject.py, which define three classes of corresponding 
+names.  The only class users should construct directly is
+the Canvas, defined in reportlab.pdfgen.canvas; it provides
+methods to obtain PathObjects and TextObjects.
+
+
+.getClassDoc reportlab.pdfgen.canvas Canvas
+.pageBreak
+The method Canvas.beginPath allows users to construct
+a PDFPathObject, which is defined in reportlab/pdfgen/pathobject.py.
+
+.getClassDoc reportlab.pdfgen.pathobject PDFPathObject
+.pageBreak
+The method Canvas.beginText allows users to construct
+a PDFTextObject, which is defined in reportlab/pdfgen/textobject.py.
+
+.getClassDoc reportlab.pdfgen.textobject PDFTextObject
+
+.pageBreak
+.h1 <i>reportlab.platypus</i> subpackage
+
+The platypus package defines our high-level page layout API.
+The division into modules is far from final and has been
+based more on balancing the module lengths than on any
+particular programming interface.  The __init__ module
+imports the key classes into the top level of the package.
+
+.h2 Overall Structure
+
+Abstractly Platypus currently can be thought of has having four
+levels: documents, pages, frames and flowables (things which can fit into frames in some way).
+In practice there is a fifth level, the canvas, so that if you want
+you can do anything that pdfgen's canvas allows.
+
+.h2 Document Templates
+.h3 BaseDocTemplate
+
+The basic document template class; it provides for initialisation and 
+rendering of documents. A whole bunch of methods 
+<b><font name=courier>handle_XXX</font></b> handle document
+rendering events. These event routines all contain some
+significant semantics so while these may be overridden that
+may require some detailed knowledge. Some other methods are
+completely virtual and are designed to be overridden.
+.h3 BaseDocTemplate
+.getClassDoc reportlab.platypus.doctemplate BaseDocTemplate
+
+.pageBreak
+A simple document processor can be made using derived class,
+<b><font name=courier>SimpleDocTemplate</font></b>.
+
+.pageBreak
+.h3 SimpleDocTemplate
+.getClassDoc reportlab.platypus.doctemplate SimpleDocTemplate
+
+.pageBreak
+.h2 Flowables
+.getClassDoc reportlab.platypus.paragraph Paragraph
+.getClassDoc reportlab.platypus.flowables Flowable
+.getClassDoc reportlab.platypus.flowables XBox
+.getClassDoc reportlab.platypus.flowables Preformatted
+.getClassDoc reportlab.platypus.flowables Image
+.getClassDoc reportlab.platypus.flowables Spacer
+.getClassDoc reportlab.platypus.flowables PageBreak
+.getClassDoc reportlab.platypus.flowables CondPageBreak
+.getClassDoc reportlab.platypus.flowables KeepTogether
+.getClassDoc reportlab.platypus.flowables Macro
+.getClassDoc reportlab.platypus.xpreformatted XPreformatted
+.getClassDoc reportlab.platypus.xpreformatted PythonPreformatted
+
+.pageBreak
+.h1 <i>reportlab.lib</i> subpackage
+
+This package contains a number of modules which either add utility
+to pdfgen and platypus, or which are of general use in graphics
+applications.
+
+.h2 <i>reportlab.lib.colors</i> module
+.getModuleDoc reportlab.lib.colors
+
+.h2 <i>reportlab.lib.corp</i> module
+.getModuleDoc reportlab.lib.corp
+
+.h2 <i>reportlab.lib.enums</i> module
+.getModuleDoc reportlab.lib.enums
+
+.h2 <i>reportlab.lib.fonts</i> module
+.getModuleDoc reportlab.lib.fonts
+
+.h2 <i>reportlab.lib.pagesizes</i> module
+.getModuleDoc reportlab.lib.pagesizes
+
+.h2 <i>reportlab.lib.sequencer</i> module
+.getModuleDoc reportlab.lib.sequencer
+
+
+
+
+.pageBreak
+.h1 Appendix A - CVS Revision History
+.beginPre Code
+$Log: reference.yml,v $
+Revision 1.1  2001/10/05 12:33:33  rgbecker
+Moved from original project docs, history lost
+
+Revision 1.13  2001/08/30 10:32:38  dinu_gherman
+Added missing flowables.
+
+Revision 1.12  2001/07/11 09:21:27  rgbecker
+Typo fix from Jerome Alet
+
+Revision 1.11  2000/07/10 23:56:09  andy_robinson
+Paragraphs chapter pretty much complete.  Fancy cover.
+
+Revision 1.10  2000/07/03 15:39:51  rgbecker
+Documentation fixes
+
+Revision 1.9  2000/06/28 14:52:43  rgbecker
+Documentation changes
+
+Revision 1.8  2000/06/19 23:52:31  andy_robinson
+rltemplate now simple, based on UserDocTemplate
+
+Revision 1.7  2000/06/17 07:46:45  andy_robinson
+Small text changes
+
+Revision 1.6  2000/06/14 21:22:52  andy_robinson
+Added docs for library
+
+Revision 1.5  2000/06/12 11:26:34  andy_robinson
+Numbered list added
+
+Revision 1.4  2000/06/12 11:13:09  andy_robinson
+Added sequencer tags to paragraph parser
+
+Revision 1.3  2000/06/09 01:44:24  aaron_watters
+added automatic generation for pathobject and textobject modules.
+
+Revision 1.2  2000/06/07 13:39:22  andy_robinson
+Added some text to the first page of reference, and a build batch file
+
+Revision 1.1.1.1  2000/06/05 16:39:04  andy_robinson
+initial import
+
+.endPre
+
+
+
