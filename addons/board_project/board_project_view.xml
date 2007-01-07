@@ -26,7 +26,7 @@
 			<field name="name">My open tasks</field>
 			<field name="res_model">project.task</field>
 			<field name="view_type">form</field>
-			<field name="view_mode">tree,graph</field>
+			<field name="view_mode">tree,form</field>
 			<field name="domain">[('user_id','=',uid),('state','=','open')]</field>
 			<field name="view_id" ref="view_task_tree" />
 		</record>
@@ -34,7 +34,7 @@
 			<field name="name">My task's deadlines</field>
 			<field name="res_model">project.task</field>
 			<field name="view_type">form</field>
-			<field name="view_mode">tree,graph</field>
+			<field name="view_mode">tree,form</field>
 			<field name="domain">[('user_id','=',uid),('state','=','open'),('date_deadline','&lt;&gt;',False)]</field>
 			<field name="view_id" ref="view_task_tree" />
 		</record>

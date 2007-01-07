@@ -65,10 +65,10 @@ class report_timesheet_account(osv.osv):
 	_columns = {
 		'name': fields.date('Month', readonly=True),
 		'user_id':fields.many2one('res.users', 'User', readonly=True, relate=True),
-		'account_id':fields.many2one('account.analytic.account', 'User', readonly=True, relate=True),
+		'account_id':fields.many2one('account.analytic.account', 'Analytic Account', readonly=True, relate=True),
 		'quantity': fields.float('Quantity', readonly=True),
 	}
-	_order = 'name desc,user_id desc'
+	_order = 'name desc,account_id desc,user_id desc'
 	def init(self, cr):
 		cr.execute("""
 			create or replace view report_timesheet_account as (
