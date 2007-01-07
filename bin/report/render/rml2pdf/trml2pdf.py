@@ -37,7 +37,7 @@ import os
 # Change this to UTF-8 if you plan tu use Reportlab's UTF-8 support
 #
 # reportlab use "code page 1252" encoding by default. cfr reportlab user guide p.46
-encoding = 'cp1252'
+encoding = 'utf-8'
 
 def str2xml(s):
 	return s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')

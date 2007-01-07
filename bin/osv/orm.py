@@ -1244,6 +1244,7 @@ class orm(object):
 				'relate': resrelate
 			}
 
+		print result
 		return result
 
 	# TODO: ameliorer avec NULL
