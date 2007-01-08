@@ -65,7 +65,7 @@ class account_invoice(osv.osv):
 	
 	def _get_currency(self, cr, uid, context):
 		user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, [uid])[0]
-		if user.company:
+		if user.company_id:
 			return user.company_id.currency_id.id
 		else:
 			return pooler.get_pool(cr.dbname).get('res.currency').search(cr, uid, [('rate','=',1.0)])[0]
