@@ -35,8 +35,7 @@ class res_company(osv.osv):
 	_inherit = "res.company"
 	_columns = {
 		'bvr_number': fields.char('BVR Number', size=9),
-		'dta_number': fields.char('DTA Number', size=9),	
-
+		'dta_number': fields.char('DTA Number', size=9),
 	}
 res_company()
 
