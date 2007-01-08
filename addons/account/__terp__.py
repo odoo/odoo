@@ -32,6 +32,7 @@
 		"data/account_minimal.xml",
 		"data/account_data2.xml",
 		"account_invoice_workflow.xml",
+		"project/project_wizard.xml",
 		"project/project_view.xml",
 		"project/project_report.xml",
 		"product_data.xml",
@@ -40,6 +41,6 @@
 #	"translations" : {
 #		"fr": "i18n/french_fr.csv"
 #	},
-	"active": False,
+	"active": True,
 	"installable": True
 }
