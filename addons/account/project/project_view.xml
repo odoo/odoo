@@ -180,7 +180,6 @@
 			<field name="view_id" ref="account_analytic_line_extended_form" />
 		</record>
 
-
 	#
 	# Analytic Journal
 	#
@@ -302,6 +301,80 @@
 	<menuitem name="Financial Management/Reporting/Analytic/This Month/Account Cost and Revenue by journal"
 		id="report_account_analytic_journal_print_month"
 		action="report_account_analytic_journal_tree_month"/> 
+
+	# ---------------------------------------------------------
+	# Budgets
+	# ---------------------------------------------------------
+	<record model="ir.ui.view" id="view_account_analytic_budget_post_form">
+		<field name="name">account.analytic.budget.post.form</field>
+		<field name="model">account.analytic.budget.post</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Analytic Budget item">
+				<notebook>
+					<page string="Definition">
+						<field name="code" select="1"/>
+						<field name="name" select="1"/>
+						<field name="sens"/>
+					</page><page string="Dotations">
+						<button string="Spread" name="%(wizard_account_analytic_budget_spread)d" type="action"/>
+						<field name="dotation_ids" colspan="4" nolabel="1"/>
+					</page><page string="Accounts">
+						<field name="account_ids" colspan="4" nolabel="1"/>
+					</page>
+				</notebook>
+			</form>
+		</field>
+	</record>
 	
+	<record model="ir.ui.view" id="view_account_analytic_budget_post_tree">
+		<field name="name">account.analytic.budget.post.tree</field>
+		<field name="model">account.analytic.budget.post</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Analytic Budget item">
+				<field name="code"/>
+				<field name="name"/>
+			</tree>
+		</field>
+	</record>
+
+
+	<record model="ir.ui.view" id="view_account_analytic_budget_post_dotation_form">
+		<field name="name">account.analytic.budget.post.dotation.form</field>
+		<field name="model">account.analytic.budget.post.dotation</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Analytic Budget items expenses">
+				<field name="period_id"/>
+				<newline/>
+				<field name="quantity"/>
+				<field name="amount"/>
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="view_analytic_budget_post_dotation_tree">
+		<field name="name">account.analytic.budget.post.dotation.tree</field>
+		<field name="model">account.analytic.budget.post.dotation</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Analytic Budget items expenses">
+				<field name="period_id"/>
+				<field name="quantity"/>
+				<field name="amount"/>
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="open_account_analytic_budget_post_form">
+		<field name="name">account.analytic.budget.post.form</field>
+		<field name="res_model">account.analytic.budget.post</field>
+		<field name="view_type">form</field>
+		<field name="view_id" ref="view_account_analytic_budget_post_form"/>
+	</record>
+
+	<menuitem name="Financial Management/Configuration/Analytic Accounts Budgets/Budget items" id="menu_account_analytic_budget_post_form" action="open_account_analytic_budget_post_form"/>
+
 	</data>
 </terp>
