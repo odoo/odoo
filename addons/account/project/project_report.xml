@@ -101,6 +101,16 @@
 			model="account.analytic.account"
 			name="account.analytic.account.year_to_date_check.report"
 			keyword="client_print_multi"/>
+
+		<!--Budget -->
+		<report id="account_analytic_budget_print"
+			string="Print Budget"
+			model="account.analytic.budget.post"
+			name="account.analytic.budget.print"
+			rml="account/project/report/account_analytic_budget_report.rml"
+			auto="False"
+			menu="False"/>
+
 	</data>
 </terp>
 
