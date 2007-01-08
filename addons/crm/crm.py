@@ -345,7 +345,7 @@ class crm_case(osv.osv):
 						if action.act_mail_to_email:
 							emails += (action.act_mail_to_email or '').split(',')
 						emails = filter(None, emails)
-						if len(emails):
+						if len(emails) and action.act_mail_body:
 							self.email_send(cr, uid, case, emails, action.act_mail_body)
 						break
 			action_ids = newactions

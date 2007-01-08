@@ -28,21 +28,24 @@ priorities = {
 }
 
 class rpc_proxy(object):
-	def __init__(self, uid, passwd, host='localhost', port=8069, path='object'):
+	def __init__(self, uid, passwd, host='localhost', port=8069, path='object', dbname='terp'):
 		self.rpc = xmlrpclib.ServerProxy('http://%s:%s/%s' % (host, port, path))
 		self.user_id = uid
 		self.passwd = passwd
+		self.dbname = dbname
 	
 	def __call__(self, *request):
-		return self.rpc.execute(self.user_id, self.passwd, *request)
+		print self.dbname, self.user_id, self.passwd
+		return self.rpc.execute(self.dbname, self.user_id, self.passwd, *request)
 
 class email_parser(object):
-	def __init__(self, uid, password, section, email, email_default=None):
-		self.rpc = rpc_proxy(uid, password)
+	def __init__(self, uid, password, section, email, email_default, dbname):
+		self.rpc = rpc_proxy(uid, password, dbname=dbname)
 		try:
 			self.section_id = int(section)
 		except:
 			self.section_id = self.rpc('crm.case.section', 'search', [('code','=',section)])[0]
+		print 'Section ID', self.section_id
 		self.email = email
 		self.email_default = email_default
 		self.canal_id = False
@@ -219,10 +222,11 @@ if __name__ == '__main__':
 	parser.add_option("-p", "--password", dest="password", help="Password of the user in Tiny ERP", default='admin')
 	parser.add_option("-e", "--email", dest="email", help="Email address used in the From field of outgoing messages")
 	parser.add_option("-s", "--section", dest="section", help="ID or code of the case section", default="support")
-	parser.add_option("-d", "--default", dest="default", help="Default eMail in case of any trouble.", default=None)
+	parser.add_option("-m", "--default", dest="default", help="Default eMail in case of any trouble.", default=None)
+	parser.add_option("-d", "--dbname", dest="dbname", help="Database name (default: terp)", default='terp')
 
 	(options, args) = parser.parse_args()
-	parser = email_parser(options.userid, options.password, options.section, options.email, options.default)
+	parser = email_parser(options.userid, options.password, options.section, options.email, options.default, dbname=options.dbname)
 	msg_txt = email.message_from_file(sys.stdin)
 	print 'Mail Sent to ', parser.parse(msg_txt)
 
