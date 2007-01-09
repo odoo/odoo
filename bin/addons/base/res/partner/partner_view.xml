@@ -166,7 +166,11 @@
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_partner_address_form1"/>
 	</record>
-	<menuitem name="Partners/Partner Contacts" action="action_partner_address_form" id="menu_partner_address_form"/>
+	<menuitem 
+		name="Partners/Partner Contacts"
+		action="action_partner_address_form" 
+		id="menu_partner_address_form"
+		sequence="15"/>
 	
 	<!--
 	=========================================
@@ -317,6 +321,16 @@
 		<field name="view_id" ref="view_partner_form"/>
 	</record>
 	<menuitem name="Partners/Partners" action="action_partner_form" id="menu_partner_form"/>
+
+	<record model="ir.actions.act_window" id="action_partner_tree">
+		<field name="name">res.partner</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">res.partner</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+	<menuitem name="Partners/Partners/Partners list" action="action_partner_tree" id="menu_partner_tree"/>
+
 
 	<record model="ir.ui.view" id="view_payterm_form">
 		<field name="name">res.payterm</field>
