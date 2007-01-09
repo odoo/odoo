@@ -48,14 +48,8 @@ view_form="""<?xml version="1.0"?>
 class wizard_import_lang(wizard.interface):
 	def _import_lang(self, cr, uid, data, context):
 		form=data['form']
-		lang_obj=pooler.get_pool(cr.dbname).get('res.lang')
-		ids=lang_obj.search(cr, uid, [('code', '=', form['code'])])
-		if ids:
-			lang_obj.write(cr, uid, ids, {'name': form['name']})
-		else:
-			lang_obj.create(cr, uid, {'code': form['code'], 'name': form['name']})
 		buf=base64.decodestring(data['form']['data']).split('\n')
-		tools.trans_load_data(cr.dbname, buf, data['form']['code'])
+		tools.trans_load_data(cr.dbname, buf, form['code'], lang_name=form['name'])
 		return {}
 	fields_form={
 		'name':{'string':'Language name', 'type':'char', 'size':64, 'required':True},

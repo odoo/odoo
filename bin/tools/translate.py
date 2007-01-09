@@ -245,7 +245,7 @@ def trans_load(db_name, filename, lang, strict=False):
 		logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't read file")
 	return trans_load_data(db_name, data, lang, strict=False)
 
-def trans_load_data(db_name, data, lang, strict=False):
+def trans_load_data(db_name, data, lang, strict=False, lang_name=None):
 	logger = netsvc.Logger()
 	logger.notifyChannel("init", netsvc.LOG_INFO, 'loading translation file for language %s' % (lang))
 	pool = pooler.get_pool(db_name)
@@ -257,10 +257,11 @@ def trans_load_data(db_name, data, lang, strict=False):
 
 		ids = lang_obj.search(cr, uid, [('code','=',lang)])
 		if not ids:
-			lang_name=lang
-			languages=tools.get_languages()
-			if lang in languages:
-				lang_name=languages[lang]
+			if not lang_name:
+				lang_name=lang
+				languages=tools.get_languages()
+				if lang in languages:
+					lang_name=languages[lang]
 			ids = lang_obj.create(cr, uid, {'code':lang, 'name':lang_name, 'translatable':1})
 		else:
 			lang_obj.write(cr, uid, ids, {'translatable':1})
