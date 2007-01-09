@@ -231,7 +231,7 @@ class res_partner(osv.osv):
 			
 		res = [(r['id'], r[rec_name]) for r in self.read(cr, uid, ids, [rec_name], context)]
 		return res
-		
+
 	def name_search(self, cr, uid, name, args=[], operator='ilike', context={}, limit=80):
 		if name:
 			ids = self.search(cr, uid, [('ref', '=', name)] + args, limit=limit)
@@ -389,8 +389,7 @@ class res_partner_address(osv.osv):
 			ids = self.search(cr, user, [('zip','=',name)] + args, limit=limit)
 			if not ids: 
 				ids = self.search(cr, user, [('city',operator,name)] + args, limit=limit)
-			if not ids:
-				ids = self.search(cr, user, [('name',operator,name)] + args, limit=limit)
+			ids += self.search(cr, user, [('name',operator,name)] + args, limit=limit)
 		return self.name_get(cr, user, ids)
 res_partner_address()
 
