@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -25,11 +25,31 @@
 #
 ##############################################################################
 
-import wizard_account_analytic_journal_report
-import wizard_account_analytic_balance_report
-import wizard_account_analytic_inverted_balance_report
-import wizard_account_analytic_cost_ledger_report
-import wizard_account_analytic_cost_ledger_for_journal_report
-import wizard_account_analytic_year_to_date_check
-import wizard_account_analytic_budget_spread
-import wizard_account_analytic_budget_report
+import time
+import wizard
+
+dates_form = '''<?xml version="1.0"?>
+<form string="Select period">
+	<field name="date1"/>
+	<field name="date2"/>
+</form>'''
+
+dates_fields = {
+	'date1': {'string':'Start of period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-01-01')},
+	'date2': {'string':'End of period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
+}
+
+class wizard_report(wizard.interface):
+	states = {
+		'init': {
+			'actions': [], 
+			'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('end','Cancel'),('report','Print')]}
+		},
+		'report': {
+			'actions': [],
+			'result': {'type':'print', 'report':'account.analytic.budget.print', 'state':'end'}
+		}
+	}
+wizard_report('account.analytic.budget.report')
+
+
