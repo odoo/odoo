@@ -41,6 +41,6 @@
 #	"translations" : {
 #		"fr": "i18n/french_fr.csv"
 #	},
-	"active": True,
+	"active": False,
 	"installable": True
 }

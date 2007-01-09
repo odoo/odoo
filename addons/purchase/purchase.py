@@ -304,7 +304,8 @@ class purchase_order_line(osv.osv):
 		'price_unit': fields.float('Unit Price', required=True, digits=(16, int(config['price_accuracy']))),
 		'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal'),
 		'notes': fields.text('Notes'),
-		'order_id': fields.many2one('purchase.order', 'Order Ref', select=True)
+		# May be we can set this field as required ?
+		'order_id': fields.many2one('purchase.order', 'Order Ref', select=True, ondelete='cascade')
 	}
 	_defaults = {
 		'product_qty': lambda *a: 1.0
