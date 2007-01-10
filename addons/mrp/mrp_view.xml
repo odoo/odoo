@@ -540,6 +540,7 @@
 				<field name="product_uom" string="UOM"/>
 				<field name="date_planned"/>
 				<field name="procure_method"/>
+				<field name="origin"/>
 				<field name="state"/>
 				<field name="message"/>
 			</tree>
@@ -563,14 +564,14 @@
 				<field name="product_id" select="1"/>
 				<field name="location_id" select="1"/>
 				<newline/>
-				<field name="origin"/>
+				<field name="origin" select="1"/>
 				<field name="move_id"/>
 				<newline/>
 				<field name="message" colspan="3"/>
 				<separator string="Properties" colspan="4"/>
 				<field name="property_ids" colspan="3"/>
 				<separator string="Document State" colspan="4"/>
-				<field name="state" readonly="1"/>
+				<field name="state" readonly="1" select="1"/>
 				<group col="5" colspan="2">
 					<button string="Confirm" name="button_confirm" states="draft"/>
 					<button string="Retry" name="button_restart" states="exception"/>
