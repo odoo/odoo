@@ -231,7 +231,7 @@ class res_partner(osv.osv):
 			
 		res = [(r['id'], r[rec_name]) for r in self.read(cr, uid, ids, [rec_name], context)]
 		return res
-
+		
 	def name_search(self, cr, uid, name, args=[], operator='ilike', context={}, limit=80):
 		if name:
 			ids = self.search(cr, uid, [('ref', '=', name)] + args, limit=limit)
@@ -295,6 +295,17 @@ class res_partner(osv.osv):
 		return True
 res_partner()
 
+
+class res_partner_bank_type(osv.osv):
+	_description='Bank Account Type'
+	_name = 'res.partner.bank.type'
+	_columns = {
+		'name': fields.char('Name', size=64, required=True),
+		'code': fields.char('Code', size=64),
+		'elec_pay': fields.char('Electronic Payment', size=64),
+	}
+res_partner_bank_type()
+
 class res_partner_bank(osv.osv):
 	_description='Bank Details'
 	_name = "res.partner.bank"
@@ -302,9 +313,10 @@ class res_partner_bank(osv.osv):
 	_columns = {
 		'name': fields.char('Account Name', size=64, required=True),
 		'sequence': fields.integer('Sequence'),
-		'iban': fields.char('Account number', size=64),
-		'swift': fields.char('Swift', size=64),
+		'number': fields.char('Account Number', size=64), #TODO : plan migration because of fields modifications
+		'type_id' : fields.many2one('res.partner.bank.type', 'Account Type', required=True),
 		'bank_name': fields.char('Bank Name', size=64),
+		'bank_code': fields.char('Bank Code', size=64, help="For example : Swift number or Clearing number."),
 		'bank_guichet': fields.char('Branch', size=64),
 		'partner_id': fields.many2one('res.partner', 'Partner', required=True, ondelete='cascade', select=True),
 		'active': fields.boolean('Active'),
@@ -364,7 +376,8 @@ class res_partner_address(osv.osv):
 			ids = self.search(cr, user, [('zip','=',name)] + args, limit=limit)
 			if not ids: 
 				ids = self.search(cr, user, [('city',operator,name)] + args, limit=limit)
-			ids += self.search(cr, user, [('name',operator,name)] + args, limit=limit)
+			if not ids:
+				ids = self.search(cr, user, [('name',operator,name)] + args, limit=limit)
 		return self.name_get(cr, user, ids)
 res_partner_address()
 
