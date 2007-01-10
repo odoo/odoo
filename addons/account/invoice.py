@@ -111,6 +111,7 @@ class account_invoice(osv.osv):
 									 help='The date of the first cash discount'),		
 
 		'partner_id': fields.many2one('res.partner', 'Partner', change_default=True, readonly=True, required=True, states={'draft':[('readonly',False)]}, relate=True),
+		'partner_bank_id': fields.many2one('res.partner.bank', 'Partner bank', states={'draft':[('readonly',False)]}),
 		'address_contact_id': fields.many2one('res.partner.address', 'Contact Address', readonly=True, states={'draft':[('readonly',False)]}),
 		'address_invoice_id': fields.many2one('res.partner.address', 'Invoice Address', readonly=True, required=True, states={'draft':[('readonly',False)]}),
 
@@ -154,12 +155,17 @@ class account_invoice(osv.osv):
 #	def get_invoice_address(self, cr, uid, ids):
 #		res = self.pool.get('res.partner').address_get(cr, uid, [part], ['invoice'])
 #		return [{}]
+
 	def onchange_partner_id(self, cr, uid, ids, type, partner_id):
 		invoice_addr_id = False
 		contact_addr_id = False
+		partner_bank_id = False
+		payment_term = False
 		acc_id = False
+		
 		opt = [('uid', str(uid))]
 		if partner_id:
+			
 			opt.insert(0, ('id', partner_id))
 			res = self.pool.get('res.partner').address_get(cr, uid, [partner_id], ['contact', 'invoice'])
 			contact_addr_id = res['contact']
@@ -169,7 +175,14 @@ class account_invoice(osv.osv):
 				acc_id = p.property_account_receivable
 			else:
 				acc_id = p.property_account_payable
-		result = {'value': {'address_contact_id': contact_addr_id, 'address_invoice_id': invoice_addr_id, 'account_id': acc_id}}
+				
+			partner_bank_id = p.bank_ids and p.bank_ids[0] and p.bank_ids[0].id
+			payment_term = p.property_payment_term and p.property_payment_term or False
+
+		result = {'value': {'address_contact_id': contact_addr_id, 'address_invoice_id': invoice_addr_id,
+							'account_id': acc_id,'partner_bank_id':partner_bank_id,
+							'payment_term':payment_term}}
+
 		if partner_id and p.property_payment_term:
 			result['value']['payment_term'] = p.property_payment_term
 		return result
