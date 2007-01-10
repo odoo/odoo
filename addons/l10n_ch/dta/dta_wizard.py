@@ -104,7 +104,7 @@ def _get_bank(self,cr,uid,data,context):
 	
 	if company.partner_id.bank_ids:
 		bank = company.partner_id.bank_ids[0]
-		return {'bank':bank.bank_name,'bank_iban':bank.iban or ''} # 'city':'',
+		return {'bank':bank.bank_name,'bank_code':bank.bank_code or ''} # 'city':'',
 
 	return {}
 
@@ -125,7 +125,7 @@ def _get_dta_lines(self,cr,uid,data,context):
 	
 	if company.partner_id.bank_ids:
 		bank = company.partner_id.bank_ids[0]
-		res.update({'bank':bank.bank_name,'bank_iban':bank.iban or ''}) # 'city':'',
+		res.update({'bank':bank.bank_name,'bank_code':bank.bank_code or ''}) # 'city':'',
 
 
 	dta_line_obj = pool.get('account.dta.line')
@@ -138,7 +138,7 @@ def _get_dta_lines(self,cr,uid,data,context):
 
 
 	for i in pool.get('account.invoice').browse(cr,uid,data['ids']):
-		if i.dta_state != '2bpaid' or i.state in ['draft','cancel','paid']:
+		if i.dta_state in ['none','paid'] or i.state in ['draft','cancel','paid']:
 			continue
 
 		cash_disc_date=""
@@ -166,6 +166,132 @@ def _get_dta_lines(self,cr,uid,data,context):
 	res.update({'dta_line_ids': lines,'dta_id': id_dta})
 	return res
 
+
+
+class record:
+	def __init__(self,global_context_dict):
+		self.fields = []
+		self.global_values = global_context_dict
+		self.pre={'padding':'','seg_num1':'01','seg_num2':'02',
+						   'seg_num3':'03','seg_num4':'04','seg_num5':'05',
+						   'type_paiement':'0', 'flag':'0', 'zero5':'00000'
+						   }
+		self.post={}
+		self.init_local_context()
+
+	def init_local_context(self):
+		"""
+		Must instanciate a fields list, field = (name,size)
+		and update a local_values dict.
+		"""
+		raise "not implemented"
+
+	def generate(self):
+		res=''
+		for field in self.fields :
+			if self.pre.has_key(field[0]):
+				value = self.pre[field[0]]
+			elif self.global_values.has_key(field[0]):
+				value = self.global_values[field[0]]
+			elif self.post.has_key(field[0]):
+				value = self.post[field[0]]
+			else :
+				print "ERROR field not found >>", field[0]
+				#raise Exception(field[0]+' not found !')
+
+			try:
+				res = res + c_ljust(value, field[1])
+			except :
+				print "ERROR ljust >>",field[0], value , field[1]
+			
+		return res
+
+class record_gt826(record):
+	# -> bvr
+	def init_local_context(self):
+		print "gt826"
+		self.fields=[
+			('seg_num1',2),
+			#header
+			('date_value',6),('partner_bank_clearing',12),('zero5',5),('creation_date',6),
+			('comp_bank_clearing',7), ('uid',5), 
+			('sequence',5),
+			('genre_trans',3),
+			('type_paiement',1),('flag',1),
+			#seg1
+			('comp_dta',5),('invoice_number',11),('comp_iban',24),('date_value',6),
+			('invoice_currency',3),('amount_to_pay',12),('padding',14),
+			#seg2
+			('seg_num2',2),('comp_name',20),('comp_street',20),('comp_zip',10),
+			('comp_city',10),('comp_country',20),('padding',46),
+			#seg3
+			('seg_num3',2),('partner_bvr',12),#numero d'adherent bvr
+			('padding',80),('invoice_reference',27),#communication structuree
+			('padding',2)]
+
+		self.pre.update({'partner_bank_clearing':'','partner_cpt_benef':'',
+						 'type_paiement':'1', 'genre_trans':'836',
+						 'comp_iban': '', # PAS DE IBAN SANS ACCORD BANQUE
+						 'conv_cours':'', 'option_id_bank':'D',
+						 'ref2':'','ref3':'', 
+						 'partner_iban':self.global_values['partner_bank_number'],
+						 'format':'0'})
+
+
+class record_gt836(record):
+	# -> iban
+	def init_local_context(self):
+		print "gt836"
+		self.fields=[
+			('seg_num1',2),
+			#header
+			('date_value',6),('partner_bank_clearing',12),('zero5',5),('creation_date',6),
+			('comp_bank_clearing',7), ('uid',5), 
+			('sequence',5),
+			('genre_trans',3),
+			('type_paiement',1),('flag',1),
+			#seg1
+			('comp_dta',5),('invoice_number',11),('comp_iban',24),('date_value',6),
+			('invoice_currency',3),('amount_to_pay',15),('padding',11),
+			#seg2
+			('seg_num2',2),('conv_cours',12),('comp_name',35),('comp_street',35),('comp_zip',10),
+			('comp_city',15),('comp_country',10),('padding',9),
+			#seg3
+			('seg_num3',2),('option_id_bank',1),('partner_bank_name',35),('partner_bank_city',35),
+			('partner_iban',34),('padding',21),
+			#seg4	
+			('seg_num4',2),('partner_name',35),('partner_street',35),('partner_zip',10),('partner_city',15),
+			('partner_country',10),('padding',21),
+			#seg5										
+			('seg_num5',2),('option_motif',1),('ref1',35),('ref2',35),('ref3',35),('format',1)]
+
+		self.pre.update({'partner_bank_clearing':'','partner_cpt_benef':'',
+						 'type_paiement':'1', 'genre_trans':'836',
+						 'comp_iban': '','conv_cours':'', 'option_id_bank':'D',
+						 'ref1': self.global_values['invoice_reference'],
+						 'ref2':'','ref3':'', 
+						 'partner_iban': self.global_values['partner_bank_number'],
+						 'format':'0'})
+		self.post.update({'option_motif':'U'})
+
+class record_gt890(record):
+	# -> total
+	def init_local_context(self):
+		print "gt890"
+		self.fields=[
+			('seg_num1',2),
+			#header
+			('date_value',6),('partner_bank_clearing',12),('zero5',5),('creation_date',6),
+			('comp_bank_clearing',7), ('uid',5), 
+			('sequence',5),
+			('genre_trans',3),
+			('type_paiement',1),('flag',1),
+			#total
+			('amount_total',16)]
+
+		self.pre.update({'partner_bank_clearing':'','partner_cpt_benef':'',
+							  'company_bank_clearing':'','genre_trans':'890'})
+			
 def c_ljust(s, size):
 	"""
 	check before calling ljust
@@ -176,74 +302,79 @@ def c_ljust(s, size):
 	return s.decode('utf-8').encode('latin1','replace').ljust(size)
 
 
-def segment_01(header,iddta,inv_num,iban,value,currency,amount):
-	return '01'+c_ljust(header,51)+c_ljust(iddta,5)+c_ljust(inv_num,11)+c_ljust(iban,24)+c_ljust(value,6)\
-		   +c_ljust(currency,3)+c_ljust(amount,15)+''.ljust(11)
+# def segment_01(header,iddta,inv_num,iban,value,currency,amount):
+# 	return '01'+c_ljust(header,51)+c_ljust(iddta,5)+c_ljust(inv_num,11)+c_ljust(iban,24)+c_ljust(value,6)\
+# 		   +c_ljust(currency,3)+c_ljust(amount,15)+''.ljust(11)
 
-def segment_02(name,street,zip,city,country,cours='', num_seg='02'):
-	zip = zip or ''
-	country = country or ''
-	city = city or ''
-	add = ' '.join([zip,city,country])
-	return c_ljust(cours,12)+c_ljust(name,35)+c_ljust(street,35)+ c_ljust(add,35)+''.ljust(9)
+# def segment_02(name,street,zip,city,country,cours='', num_seg='02'):
+# 	zip = zip or ''
+# 	country = country or ''
+# 	city = city or ''
+# 	add = ' '.join([zip,city,country])
+# 	return c_ljust(cours,12)+c_ljust(name,35)+c_ljust(street,35)+ c_ljust(add,35)+''.ljust(9)
 
-def segment_03(bank_name,bank_city,iban):
-	return "03"+"D"+c_ljust(bank_name,35)+c_ljust(bank_city,35)+c_ljust(iban,34)+''.ljust(21)
+# def segment_03(bank_name,bank_city,iban):
+# 	return "03"+"D"+c_ljust(bank_name,35)+c_ljust(bank_city,35)+c_ljust(iban,34)+''.ljust(21)
 
-def segment_04(name,street,zip,city,country,cours='', num_seg='04'):
-	return segment_02(name,street,zip,city,country,cours, num_seg)
+# def segment_04(name,street,zip,city,country,cours='', num_seg='04'):
+# 	return segment_02(name,street,zip,city,country,cours, num_seg)
 
-def segment_05(motif='I',ref1='',ref2='',ref3='',format='0'):
-	return '05'+c_ljust(ref1,35)+c_ljust(ref2,35)+c_ljust(ref3,35)+c_ljust(format,1)+''.ljust(19)
+# def segment_05(motif='I',ref1='',ref2='',ref3='',format='0'):
+# 	return '05'+c_ljust(ref1,35)+c_ljust(ref2,35)+c_ljust(ref3,35)+c_ljust(format,1)+''.ljust(19)
 
-def header(date,cpt_benef,creation_date,cpt_donneur,id_fich,num_seq,trans,type):
-	return c_ljust(date,6)+c_ljust(cpt_benef,12)+c_ljust('00000',5)+c_ljust(creation_date,6)+c_ljust(cpt_donneur,7)\
-		   +c_ljust(id_fich,5)+ str(num_seq).rjust(5,'0')+ c_ljust(trans,3) + c_ljust(type,1)+'0'
+# def header(date,cpt_benef,creation_date,cpt_donneur,id_fich,num_seq,trans,type):
+# 	return c_ljust(date,6)+c_ljust(cpt_benef,12)+c_ljust('00000',5)+c_ljust(creation_date,6)+c_ljust(cpt_donneur,7)\
+# 		   +c_ljust(id_fich,5)+ str(num_seq).rjust(5,'0')+ c_ljust(trans,3) + c_ljust(type,1)+'0'
 
-def total(header,tot):
-	return '01'+c_ljust(header,51)+c_ljust(tot,16)+''.ljust(59)
+# def total(header,tot):
+# 	return '01'+c_ljust(header,51)+c_ljust(tot,16)+''.ljust(59)
 
 def _create_dta(self,cr,uid,data,context):
 
-	# pour generaliser (plus) facilement : utiliser un design patern
-	# transaction :
-	# def trans(methode)
-	#    def capsule(a,*a,**a)
-	#        try methode
-	#        except ...
-	#    return capsule
-	# on peut ensuite l'utiliser via @trans
-	# devant la methode concernee
-	
 	# cree des gt836
-
-	creation_date= time.strftime('%y%m%d')
+	v={}
+	v['uid'] = str(uid)
+	v['creation_date']= time.strftime('%y%m%d')
 	log=''
 	dta=''
+
+	record_table={'bvr':record_gt826,'iban':record_gt836}
+	
 	pool = pooler.get_pool(cr.dbname)
 	bank= pool.get('res.partner.bank').browse(cr,uid,[data['form']['bank']])[0]
-	bank_name= bank.name or ''
-	bank_iban = bank.iban or ''
-	if not bank_name and bank_iban :
-		return {'note':'Bank account not well defined.'}
+
+ 	v['comp_bank_name']= bank.name or False
+ 	v['comp_bank_clearing'] = bank.bank_code or False # clearing or swift
+
+ 	if not v['comp_bank_name'] and v['comp_bank_iban'] :
+ 		return {'note':'Bank account not well defined.'}
 	
 	user = pool.get('res.users').browse(cr,uid,[uid])[0]
 	company= user.company_id
 	co_addr= company.partner_id.address[0]
-
-	company_dta = company.dta_number or ''
+	v['comp_country'] = co_addr.country_id and co_addr.country_id.name or ''
+	v['comp_street'] = co_addr.street or ''
+	v['comp_zip'] = co_addr.zip
+	v['comp_city'] = co_addr.city
+	v['comp_name'] = co_addr.name
+	
+	v['comp_dta'] = company.dta_number or ''
+	v['partner_bvr']= company.bvr_number or '' # FIXME
 	if not company.dta_number :
 		return {'note':'No dta number for the company.' }
 
-	company_iban = company.partner_id and company.partner_id.bank_ids and company.partner_id.bank_ids[0]\
-				   and company.partner_id.bank_ids[0].iban or ''
-	if not company_iban :
-		return {'note':'No iban number for the company.'}
+
+	v['comp_account_number'] = company.partner_id and company.partner_id.bank_ids and company.partner_id.bank_ids[0]\
+				   and company.partner_id.bank_ids[0].number or ''
+
+	if not v['comp_account_number'] : # ex iban
+		return {'note':'No account number for the company bank account.'}
 	
 	inv_obj = pool.get('account.invoice')
 	dta_line_obj = pool.get('account.dta.line')
+
 	seq= 1
-	amount_tot= 0
+	amount_tot = 0
 	th_amount_tot= 0
 	dta_id=data['form']['dta_id']
 
@@ -254,6 +385,7 @@ def _create_dta(self,cr,uid,data,context):
 	pool.get('account.dta').write(cr,uid,[dta_id],{'bank':data['form']['bank']})
 
 	dta_line_ids= []
+
 	for line in data['form']['dta_line_ids']:
 		if  line[1]!=0 and line[2] and line[2]['partner_id']:
 			dta_line_ids.append(line[1])
@@ -270,68 +402,95 @@ def _create_dta(self,cr,uid,data,context):
  		})
 
 	for dtal in dta_line_obj.browse(cr,uid,dta_line_ids):
-
 		i = dtal.name #dta_line.name = invoice's id
-
-
-		number = i.number or ''
-		currency = i.currency_id.code or ''
-		country = co_addr.country_id and co_addr.country_id.name or ''
-
-		partner_bank_account = i.partner_id and i.partner_id.bank_ids and i.partner_id.bank_ids[0]\
-							   and i.partner_id.bank_ids[0].iban or ''
-
-		partner_name = i.partner_id and i.partner_id.name or ''
-		if i.partner_id and i.partner_id.address and i.partner_id.address[0]:
-			partner_street = i.partner_id.address[0].street
-			partner_city= i.partner_id.address[0].city
-			partner_zip= i.partner_id.address[0].zip
-			partner_country= i.partner_id.address[0].country_id.name
-
-		else:
-			partner_street =''
-			partner_city= ''
-			partner_zip= ''
-			partner_country= ''
-			log= log +'\nNo address for the invoice partner. (invoice '+ (i.number or '??')+')' 
+		invoice_number = i.number or '??'
+		if not i.partner_bank_id:
+			log= log +'\nNo partner bank defined. (invoice '+ invoice_number +')' 
+			continue
 		
-		if not partner_bank_account:
-			log= log +'\nNo bank account for the invoice partner. (invoice '+ (i.number or '??')+')' 
+		if i.dta_state in ['bv','bvr']:
+			v['option_motif']= {'bv':'U','bvr':'I'}
+		
+		
+		v['sequence'] = str(seq).rjust(5,'0')
+		v['amount_to_pay']= str(dtal.amount_to_pay)
+		v['invoice_number'] = invoice_number
+		v['invoice_currency'] = i.currency_id.code or ''
+
+		v['partner_bank_name'] =  i.partner_bank_id.bank_name or False
+		v['partner_bank_clearing'] =  i.partner_bank_id.bank_code or False
+		if not v['partner_bank_name'] and v['partner_bank_clearing']:
+			log= log +'\nPartner bank account not well defined. (invoice '+ invoice_number +')' 
 			continue
 
+		v['partner_bank_number']=  i.partner_bank_id.number or False
+		if not v['partner_bank_number']:
+			log= log +'\nNo account number for the partner bank. (invoice '+ invoice_number +')' 
+			continue
+
+		v['partner_bank_city']= 'FIXME'
+		v['invoice_reference']= i.reference
+		
+		v['partner_name'] = i.partner_id and i.partner_id.name or ''
+		if i.partner_id and i.partner_id.address and i.partner_id.address[0]:
+			v['partner_street'] = i.partner_id.address[0].street
+			v['partner_city']= i.partner_id.address[0].city
+			v['partner_zip']= i.partner_id.address[0].zip
+			v['partner_country']= i.partner_id.address[0].country_id.name
+		else:
+			v['partner_street'] =''
+			v['partner_city']= ''
+			v['partner_zip']= ''
+			v['partner_country']= ''
+			log= log +'\nNo address for the invoice partner. (invoice '+ invoice_number+')' 
+		
+
 
 		
-		date_value = dtal.cashdisc_date or dtal.due_date or ""
-		date_value = date_value and mx.DateTime.strptime( date_value,'%Y-%m-%d') or  mx.DateTime.now()
-		
+		date_value = dtal.cashdisc_date or dtal.due_date
+		if date_value :
+			date_value = mx.DateTime.strptime( date_value,'%Y-%m-%d') or  mx.DateTime.now()
+			v['date_value'] = date_value.strftime("%y%m%d")
+		else:
+			v['date_value'] = "000000"
+
+
+			# TODO : check sur le champ elec_pay
+
+		if not record_table.has_key(i.dta_state):
+			log= log +'\nPayment mode not supported. (invoice '+ invoice_number +')' 
+			continue
 
 		try:
-			#header
-			hdr= header('000000','',creation_date,company_iban,'idfi',seq,'836','0') # TODO id_file
 			
-			dta_line = ''.join([segment_01(hdr,company_dta,# segment 01:
-								   number,company_iban,date_value.strftime("%y%m%d")
-											 ,currency,str(dtal.amount_to_pay)),							   # adresse donneur d'ordre
-							   segment_02(company.name,co_addr.street,co_addr.zip,co_addr.city,country,cours=''),# donnees de la banque
-							   segment_03(bank_name,'',bank_iban),# adresse du beneficiaire							   
-							   segment_04(partner_name,partner_street,partner_zip,partner_city,partner_country,cours=''),# communication
-								                                                                                   #& reglement des frais							   
-							   segment_05(motif='I',ref1='',ref2=i.reference or '',ref3='',format='0') ])#FIXME : motif
+			dta_line = record_table[i.dta_state](v).generate()
+
+# 			#header
+# 			hdr= header('000000','',creation_date,comp_iban,'idfi',sequence,'836','0') # TODO id_file
+			
+# 			dta_line = ''.join([segment_01(hdr,comp_dta,# segment 01:
+# 								   invoice_number,comp_iban,date_value
+# 											 ,invoice_currency,amount_to_pay),							   # adresse donneur d'ordre
+# 							   segment_02(company_name,comp_street,comp_zip,comp_city,comp_country,cours=''),# donnees de la banque
+# 							   segment_03(partner_bank_account_name,'',partner_iban),# adresse du beneficiaire							   
+# 							   segment_04(partner_name,partner_street,partner_zip,partner_city,partner_country,cours=''),# communication
+# 								                                                                                   #& reglement des frais							   
+# 							   segment_05(motif='I',ref1='',ref2=i.reference or '',ref3='',format='0') ])#FIXME : motif
 
 		except Exception,e :
-			log= log +'\nERROR:'+ str(e)+'(invoice '+ (i.number or '??')+')' 
+			log= log +'\nERROR:'+ str(e)+'(invoice '+ invoice_number+')' 
 			dta_line_obj.write(cr,uid,[dtal.id],{'state':'cancel'})			
-			#raise
+			raise
 			continue
 
 		#logging
 		log = log + "Invoice : %s, Amount paid : %d %s, Value date : %s, State : Paid."%\
-			  (i.number,dtal.amount_to_pay,currency,date_value.strftime('%Y-%m-%d'))
+			  (invoice_number,dtal.amount_to_pay,v['invoice_currency'],date_value and date_value.strftime("%Y-%m-%d") or 'Empty date')
 
 
 		pool.get('account.bank.statement.line').create(cr,uid,{
 			'name':i.number,
-			'date':date_value.strftime('%Y-%m-%d'), 
+			'date':date_value,
 			'amount':dtal.amount_to_pay,
 			'type':{'out_invoice':'customer','in_invoice':'supplier','out_refund':'customer','in_refund':'supplier'}[i.type],
 			'partner_id':i.partner_id.id,
@@ -345,19 +504,19 @@ def _create_dta(self,cr,uid,data,context):
 		inv_obj.write(cr,uid,[i.id],{'dta_state':'paid'})
 		dta_line_obj.write(cr,uid,[dtal.id],{'state':'done'})
 		seq += 1
-
-
+	
+		
 	# bank statement updated with the total amount :
 	pool.get('account.bank.statement').write(cr,uid,[bk_st_id],{'balance_end_real': amount_tot})
-
+	
 	# segment total 
+	v['amount_total'] = str(amount_tot)
 	try:
 		if dta :
-			dta = dta + total(header('000000','',creation_date,company_iban,str(uid),seq,'890','0')\
-						  , str(amount_tot))
+			dta = dta + record_gt890(v).generate()
 	except Exception,e :
 		log= log +'\n'+ str(e) + 'CORRUPTED FILE !\n'
-		#raise
+		raise
 		
 
 	log = log + "\n--\nSummary :\nTotal amount paid : %.2f\nTotal amount expected : %.2f"%(amount_tot,th_amount_tot) 

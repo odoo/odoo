@@ -36,7 +36,11 @@ import ir
 class account_invoice(osv.osv):
 	_inherit = "account.invoice"
 	_columns = {
-		'dta_state': fields.selection([('none','None'),('2bpaid','To be paid'),('paid','Paid')],
+		'dta_state': fields.selection([('none','None'),
+#									   ('bv','To be paid with BV'),
+									   ('bvr','To be paid with BVR'),
+									   ('iban','To be paid with IBAN'),
+									   ('paid','Paid')],
 									  'DTA state',readonly=True,select=True, states={'draft':[('readonly',False)]}),
 	}
 

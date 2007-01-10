@@ -28,12 +28,13 @@
 import time
 from osv import osv,fields
 
+
 class account_v11(osv.osv):
 	_name = "account.v11"
 	_description = "V11 History"
 	_columns = {
 		'name': fields.binary('V11 file', readonly=True),
-		'move_ids': fields.one2many('account.move','id','Generated Moves', readonly=True), 
+		'move_ids': fields.one2many('account.move','v11_id','Generated Moves', readonly=True), 
 		'note': fields.text('Import log', readonly=True),
 		'journal_id': fields.many2one('account.journal','Bank Journal', readonly=True,select=True),
 		'date': fields.date('Import Date', readonly=True,select=True),
@@ -41,3 +42,11 @@ class account_v11(osv.osv):
 	}
 account_v11()
 
+
+
+class account_move(osv.osv):
+	_inherit = "account.move"
+	_columns = {
+		'v11_id':fields.many2one('account.v11','V11'),
+	}
+account_move()

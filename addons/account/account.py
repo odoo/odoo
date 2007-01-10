@@ -901,7 +901,9 @@ class account_tax(osv.osv):
 				cur_price_unit+=amount2
 		return res
 
+
 	def compute(self, cr, uid, taxes, price_unit, quantity, address_id=None, product_id=None):
+
 		"""
 		Compute tax values for given PRICE_UNIT, QUANTITY and a buyer/seller ADDRESS_ID.
 

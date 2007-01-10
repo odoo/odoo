@@ -197,7 +197,7 @@ def _v11_parsing(self, cr, uid, data, context):
 				'partner_id': i.partner_id.id,
 				'date': time.strftime('%Y-%m-%d'),
 				'period_id': period_id,
-				'journal_id': data['form']['journal_id']
+				'journal_id': data['form']['journal_id'],
 
 				})
 			pool.get('account.move.line').create(cr,uid,{
@@ -218,15 +218,15 @@ def _v11_parsing(self, cr, uid, data, context):
 				raise Exception("No moves associated to invoice number "+ rec['invoice_ref'].lstrip('0'))
 			account_move_lines.append(line_id )
 
-			# TODO accpeter les reconciliation qui ne marche pas.
-#  			pool.get('account.move.line').reconcile(cr,uid,account_move_lines,
-#  													writeoff_acc_id=0,
-#  													writeoff_journal_id=0,
-#  													writeoff_period_id= 0,
-#  													)
+			# TODO accpeter les reconciliation qui ne marchent pas.
+  			pool.get('account.move.line').reconcile(cr,uid,account_move_lines,
+  													writeoff_acc_id=0,
+  													writeoff_journal_id=0,
+  													writeoff_period_id= 0,
+  													)
 			cr.commit()
 
-			std_log = std_log + " Invoice : %s, Date Due : %s, Amount received : %.2f."\
+			std_log = std_log + "\nInvoice : %s, Date Due : %s, Amount received : %.2f."\
 					  %(i.name, i.date_due or 'undefined', float(rec['montant']))
 			
 			if i.payment_term and i.payment_term.cash_discount_ids and i.payment_term.cash_discount_ids[0]:
@@ -269,13 +269,13 @@ def _v11_parsing(self, cr, uid, data, context):
 	pool.get('account.v11').create(cr, uid,{
 		'name':v11file,
 		'move_ids':[(6,0,move_list)],
-		'note':err_log+ std_log,
+		'note':std_log+err_log,
 		'journal_id':data['form']['journal_id'],
 		'date':time.strftime("%Y-%m-%d"),
 		'user_id':uid,
 		})
 
-	return {'note':err_log+ std_log,'journal_id': data['form']['journal_id'], 'v11': data['form']['v11']}
+	return {'note':std_log + err_log ,'journal_id': data['form']['journal_id'], 'v11': data['form']['v11']}
 
 
 # def _init(self, cr, uid, data, context):

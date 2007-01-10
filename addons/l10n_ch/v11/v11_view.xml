@@ -2,7 +2,50 @@
 <terp>
 <data>
 
-		<menuitem name="Financial Management/Periodical Processing/Import V11" action="wizard_account_v11_import" type="wizard"  id="menu_account_v11" sequence="15"/>
+	<record model="ir.ui.view" id="view_v11_form">
+		<field name="name">account.v11.form</field>
+		<field name="model">account.v11</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="V11">
+				<field name="name" />
+				<field name="journal_id" />
+				<field name="date" />
+				<field name="user_id" />
+				<field name="move_ids" colspan="4"/>
+				<field name="note" colspan="4"/>
+
+			</form>
+		</field>
+	</record>
+
+
+	<record model="ir.ui.view" id="view_v11_tree">
+		<field name="name">account.v11.tree</field>
+		<field name="model">account.v11</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="V11">
+				<field name="journal_id" />
+				<field name="date" />
+				<field name="user_id" />
+			</tree>
+		</field>
+	</record>
+
+
+	<record model="ir.actions.act_window" id="action_account_v11">
+		<field name="name">account.v11</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">account.v11</field>
+		<field name="view_type">form</field> 
+		<field name="view_mode">form,tree</field>
+	</record>
+
+	<menuitem name="Financial Management/Imported V11" id="menu_account_v11" action="action_account_v11"/>
+
+	<menuitem name="Financial Management/Periodical Processing/Import V11" action="wizard_account_v11_import" 
+	type="wizard"  id="menu_account_v11_wizard" sequence="15"/>
 
 
 	</data>

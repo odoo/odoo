@@ -2,18 +2,26 @@
 <terp>
 <data>
 
+	<record model="res.partner.bank.type" id="bank_type_gt836">
+		<field name="name">With Iban (GT 836)</field>
+		<field name="code"></field>
+		<field name="elec_pay">gt836</field>
+	</record>
+
 	<record model="res.partner.bank" id="main_bank">
 		<field name="name">FORTIS BANK</field>
-		<field name="iban">1234567</field>
+		<field name="number">1234567</field>
 		<field name="bank_name">Fortis Banque</field>
 		<field name="partner_id" ref="base.main_partner"/>
+		<field name="type_id" ref="bank_type_gt836"/>
 	</record>
 
 	<record model="res.partner.bank" id="agrolait_bank">
 		<field name="name">DEXIA BANK</field>
-		<field name="iban">7654321</field>
+		<field name="number">7654321</field>
 		<field name="bank_name">Dexia Banque</field>
 		<field name="partner_id" ref="base.res_partner_agrolait"/>
+		<field name="type_id" ref="bank_type_gt836"/>
 	</record>
 
 	<record model="res.company" id="base.main_company">
