@@ -59,6 +59,9 @@ def _mergeOrders(self, cr, uid, data, context):
 		list_key = []
 		for field in fields:
 			field_val = getattr(br, field)
+			if field in ('product_id','move_dest_id'):
+				if not field_val:
+					field_val = False
 			if isinstance(field_val, browse_record):
 				field_val = field_val.id
 			elif isinstance(field_val, list):
