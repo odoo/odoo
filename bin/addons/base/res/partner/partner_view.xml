@@ -117,7 +117,6 @@
 				<field name="zip"/>
 				<field name="city"/>
 				<field name="country_id"/>
-				<field name="type"/>
 			</tree>
 		</field>
 	</record>
@@ -166,11 +165,7 @@
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_partner_address_form1"/>
 	</record>
-	<menuitem 
-		name="Partners/Partner Contacts"
-		action="action_partner_address_form" 
-		id="menu_partner_address_form"
-		sequence="15"/>
+	<menuitem name="Partners/Partner Contacts" action="action_partner_address_form" id="menu_partner_address_form"/>
 	
 	<!--
 	=========================================
@@ -322,16 +317,6 @@
 	</record>
 	<menuitem name="Partners/Partners" action="action_partner_form" id="menu_partner_form"/>
 
-	<record model="ir.actions.act_window" id="action_partner_tree">
-		<field name="name">res.partner</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">res.partner</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-	</record>
-	<menuitem name="Partners/Partners/Partners list" action="action_partner_tree" id="menu_partner_tree"/>
-
-
 	<record model="ir.ui.view" id="view_payterm_form">
 		<field name="name">res.payterm</field>
 		<field name="model">res.payterm</field>
@@ -350,6 +335,33 @@
 		<field name="view_id" ref="view_payterm_form"/>
 	</record>
 
+	<record model="ir.ui.view" id="view_partner_bank_type_form">
+		<field name="name">res.partner.bank.type.form</field>
+		<field name="model">res.partner.bank.type</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Bank Account Type">
+				<field name="name" select="1"/>
+				<field name="code" />
+				<field name="elec_pay" select="1"/>
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="view_partner_bank_type_tree">
+		<field name="name">res.partner.bank.type.tree</field>
+		<field name="model">res.partner.bank.type</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Bank Account Type">
+				<field name="name" select="1"/>
+				<field name="code" />
+				<field name="elec_pay" select="1"/>
+			</tree>
+		</field>
+	</record>
+
+
 	<record model="ir.ui.view" id="view_partner_bank_form">
 		<field name="name">res.partner.bank.form</field>
 		<field name="model">res.partner.bank</field>
@@ -357,11 +369,12 @@
 		<field name="arch" type="xml">
 			<form string="Bank Details">
 				<field name="name" select="1" colspan="3"/>
-				<field name="sequence"/>
-				<field name="active" select="1"/>
-				<field name="iban" select="1"/>
-				<field name="swift" select="1"/>
+				<field name="number" select="1"/>
+				<field name="type_id" select="1"/>
+				<newline/>
 				<field name="bank_name" select="1"/>
+				<field name="bank_code" select="1"/>
+				<field name="sequence"/>
 				<field name="bank_guichet" select="1"/>
 			</form>
 		</field>
@@ -374,8 +387,8 @@
 			<tree string="Bank Details">
 				<field name="sequence"/>
 				<field name="name"/>
-				<field name="iban"/>
-				<field name="swift"/>
+				<field name="type_id"/>
+				<field name="number"/>
 			</tree>
 		</field>
 	</record>
