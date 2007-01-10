@@ -1244,7 +1244,6 @@ class orm(object):
 				'relate': resrelate
 			}
 
-		print result
 		return result
 
 	# TODO: ameliorer avec NULL
@@ -1307,15 +1306,19 @@ class orm(object):
 		return (qu1,qu2)
 
 	def search(self, cr, user, args, offset=0, limit=None, order=None):
-		# if the object has a field named 'active', filter out all inactive 
+		# if the object has a field named 'active', filter out all inactive
 		# records unless they were explicitely asked for
 		if 'active' in self._columns:
-			ok = False
-			for a in args:
-				if a[0]=='active':
-					ok = True
-			if not ok:
+			i = 0
+			while i<len(args):
+				if args[i][0]=='active':
+					if not args[i][2]:
+						del args[i]
+					break
+				i += 1
+			if i==len(args):
 				args.append(('active', '=', 1))
+
 
 		# if the object has a field named 'company_id', filter out all
 		# records which do not concern the current company (the company
