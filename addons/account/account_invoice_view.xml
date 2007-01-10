@@ -134,9 +134,10 @@
 
 					<field name="partner_id" on_change="onchange_partner_id(type,partner_id)" select="1"/>
 					<field name="address_invoice_id" domain="[('partner_id','=',partner_id)]"/>
+					<field name="partner_bank_id" domain="[('partner_id','=',partner_id)]"/>
 
-					<field name="account_id"/>
-					<field name="project_id"/>
+					<field name="account_id" domain="[('type','&lt;&gt;','view')]" />
+					<field name="project_id" domain="[('type','&lt;&gt;','view')]" />
 
 					<field name="payment_term" on_change="onchange_payment_term(payment_term)" />
 					<field name="date_due" select="1"/>
