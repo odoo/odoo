@@ -60,12 +60,22 @@ class account_analytic_budget_report(report_sxw.rml_parse):
 				res[k] += r[k]
 		return [res]
 		
+	def lines_rec(self, post_obj, date1, date2):
+		res = []
+		for a in post_obj.account_ids:
+	 		self.cr.execute("SELECT COALESCE(SUM(debit-credit), 0) FROM account_move_line WHERE account_id=%d AND date>=%s AND date<=%s and state<>'draft'", (a.id, date1, date2))
+			achievements = float(self.cr.fetchone()[0]) * (post_obj.sens=='produit' and -1 or 1)
+			res.append({'name': a.name, 'code': a.code, 'achievements': achievements})
+			for c in a.child_ids:  # FIXME : JUST AN IDEA doesn't work
+				res.extend(lines_rec(post_obj, date1, date2))
+
 	def lines(self, post_obj, date1, date2):
 		res = []
 		for a in post_obj.account_ids:
 	 		self.cr.execute("SELECT COALESCE(SUM(debit-credit), 0) FROM account_move_line WHERE account_id=%d AND date>=%s AND date<=%s and state<>'draft'", (a.id, date1, date2))
 			achievements = float(self.cr.fetchone()[0]) * (post_obj.sens=='produit' and -1 or 1)
 			res.append({'name': a.name, 'code': a.code, 'achievements': achievements})
+		
 		return res
 	
 report_sxw.report_sxw('report.account.analytic.budget.print', 'account.analytic.budget.post', 'addons/account/project/report/account_analytic_budget_report.rml',parser=account_analytic_budget_report)
