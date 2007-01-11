@@ -30,3 +30,4 @@ import bvr
 import dta
 import v11
 import company
+import partner

@@ -108,12 +108,6 @@ def _get_bank(self,cr,uid,data,context):
 
 	return {}
 
-# def _cleaning(self,cr,uid,data,context):
-# 	pool = pooler.get_pool(cr.dbname)
-# 	print [ line[1] for line in data['form']['dta_line_ids']]
-# 	pool.get('account.dta').unlink(cr, uid, [ line[1] for line in data['form']['dta_line_ids'] ])
-# 	return {}
-
 
 def _get_dta_lines(self,cr,uid,data,context):
 	pool = pooler.get_pool(cr.dbname)
@@ -219,7 +213,7 @@ class record_gt826(record):
 			('genre_trans',3),
 			('type_paiement',1),('flag',1),
 			#seg1
-			('comp_dta',5),('invoice_number',11),('comp_iban',24),('date_value',6),
+			('comp_dta',5),('invoice_number',11),('comp_bank_number',24),('date_value',6),
 			('invoice_currency',3),('amount_to_pay',12),('padding',14),
 			#seg2
 			('seg_num2',2),('comp_name',20),('comp_street',20),('comp_zip',10),
@@ -230,11 +224,9 @@ class record_gt826(record):
 			('padding',2)]
 
 		self.pre.update({'partner_bank_clearing':'','partner_cpt_benef':'',
-						 'type_paiement':'1', 'genre_trans':'836',
-						 'comp_iban': '', # PAS DE IBAN SANS ACCORD BANQUE
+						 'type_paiement':'1', 'genre_trans':'826',
 						 'conv_cours':'', 'option_id_bank':'D',
 						 'ref2':'','ref3':'', 
-						 'partner_iban':self.global_values['partner_bank_number'],
 						 'format':'0'})
 
 
@@ -251,7 +243,7 @@ class record_gt836(record):
 			('genre_trans',3),
 			('type_paiement',1),('flag',1),
 			#seg1
-			('comp_dta',5),('invoice_number',11),('comp_iban',24),('date_value',6),
+			('comp_dta',5),('invoice_number',11),('comp_bank_number',24),('date_value',6),
 			('invoice_currency',3),('amount_to_pay',15),('padding',11),
 			#seg2
 			('seg_num2',2),('conv_cours',12),('comp_name',35),('comp_street',35),('comp_zip',10),
@@ -267,7 +259,7 @@ class record_gt836(record):
 
 		self.pre.update({'partner_bank_clearing':'','partner_cpt_benef':'',
 						 'type_paiement':'1', 'genre_trans':'836',
-						 'comp_iban': '','conv_cours':'', 'option_id_bank':'D',
+						 'conv_cours':'', 'option_id_bank':'D',
 						 'ref1': self.global_values['invoice_reference'],
 						 'ref2':'','ref3':'', 
 						 'partner_iban': self.global_values['partner_bank_number'],
@@ -302,32 +294,6 @@ def c_ljust(s, size):
 	return s.decode('utf-8').encode('latin1','replace').ljust(size)
 
 
-# def segment_01(header,iddta,inv_num,iban,value,currency,amount):
-# 	return '01'+c_ljust(header,51)+c_ljust(iddta,5)+c_ljust(inv_num,11)+c_ljust(iban,24)+c_ljust(value,6)\
-# 		   +c_ljust(currency,3)+c_ljust(amount,15)+''.ljust(11)
-
-# def segment_02(name,street,zip,city,country,cours='', num_seg='02'):
-# 	zip = zip or ''
-# 	country = country or ''
-# 	city = city or ''
-# 	add = ' '.join([zip,city,country])
-# 	return c_ljust(cours,12)+c_ljust(name,35)+c_ljust(street,35)+ c_ljust(add,35)+''.ljust(9)
-
-# def segment_03(bank_name,bank_city,iban):
-# 	return "03"+"D"+c_ljust(bank_name,35)+c_ljust(bank_city,35)+c_ljust(iban,34)+''.ljust(21)
-
-# def segment_04(name,street,zip,city,country,cours='', num_seg='04'):
-# 	return segment_02(name,street,zip,city,country,cours, num_seg)
-
-# def segment_05(motif='I',ref1='',ref2='',ref3='',format='0'):
-# 	return '05'+c_ljust(ref1,35)+c_ljust(ref2,35)+c_ljust(ref3,35)+c_ljust(format,1)+''.ljust(19)
-
-# def header(date,cpt_benef,creation_date,cpt_donneur,id_fich,num_seq,trans,type):
-# 	return c_ljust(date,6)+c_ljust(cpt_benef,12)+c_ljust('00000',5)+c_ljust(creation_date,6)+c_ljust(cpt_donneur,7)\
-# 		   +c_ljust(id_fich,5)+ str(num_seq).rjust(5,'0')+ c_ljust(trans,3) + c_ljust(type,1)+'0'
-
-# def total(header,tot):
-# 	return '01'+c_ljust(header,51)+c_ljust(tot,16)+''.ljust(59)
 
 def _create_dta(self,cr,uid,data,context):
 
@@ -338,16 +304,20 @@ def _create_dta(self,cr,uid,data,context):
 	log=''
 	dta=''
 
-	record_table={'bvr':record_gt826,'iban':record_gt836}
+	record_table = {'gt826':record_gt826,'gt836':record_gt836}
 	
 	pool = pooler.get_pool(cr.dbname)
 	bank= pool.get('res.partner.bank').browse(cr,uid,[data['form']['bank']])[0]
+
+	if not bank:
+ 		return {'note':'No bank account for the company.'}
+	
 
  	v['comp_bank_name']= bank.name or False
  	v['comp_bank_clearing'] = bank.bank_code or False # clearing or swift
 
  	if not v['comp_bank_name'] and v['comp_bank_iban'] :
- 		return {'note':'Bank account not well defined.'}
+ 		return {'note':'Bank account of the company not well defined.'}
 	
 	user = pool.get('res.users').browse(cr,uid,[uid])[0]
 	company= user.company_id
@@ -359,15 +329,13 @@ def _create_dta(self,cr,uid,data,context):
 	v['comp_name'] = co_addr.name
 	
 	v['comp_dta'] = company.dta_number or ''
-	v['partner_bvr']= company.bvr_number or '' # FIXME
 	if not company.dta_number :
 		return {'note':'No dta number for the company.' }
 
 
-	v['comp_account_number'] = company.partner_id and company.partner_id.bank_ids and company.partner_id.bank_ids[0]\
-				   and company.partner_id.bank_ids[0].number or ''
+	v['comp_bank_number'] = bank.number or ''
 
-	if not v['comp_account_number'] : # ex iban
+	if not v['comp_bank_number'] : # ex iban
 		return {'note':'No account number for the company bank account.'}
 	
 	inv_obj = pool.get('account.invoice')
@@ -428,6 +396,8 @@ def _create_dta(self,cr,uid,data,context):
 			log= log +'\nNo account number for the partner bank. (invoice '+ invoice_number +')' 
 			continue
 
+		v['partner_bvr']= i.partner_id.bvr_number or ''
+
 		v['partner_bank_city']= 'FIXME'
 		v['invoice_reference']= i.reference
 		
@@ -455,28 +425,16 @@ def _create_dta(self,cr,uid,data,context):
 			v['date_value'] = "000000"
 
 
-			# TODO : check sur le champ elec_pay
-
-		if not record_table.has_key(i.dta_state):
-			log= log +'\nPayment mode not supported. (invoice '+ invoice_number +')' 
+		elec_pay = i.partner_bank_id.type_id.elec_pay
+		if not elec_pay:
+			log= log +'\nNo payment mode defined for the partner bank. (invoice '+ invoice_number +')' 
+			continue
+		if not record_table.has_key( elec_pay ):
+			log= log +'\nPayment mode '+str(elec_pay)+' not supported. (invoice '+ invoice_number +')' 
 			continue
 
 		try:
-			
-			dta_line = record_table[i.dta_state](v).generate()
-
-# 			#header
-# 			hdr= header('000000','',creation_date,comp_iban,'idfi',sequence,'836','0') # TODO id_file
-			
-# 			dta_line = ''.join([segment_01(hdr,comp_dta,# segment 01:
-# 								   invoice_number,comp_iban,date_value
-# 											 ,invoice_currency,amount_to_pay),							   # adresse donneur d'ordre
-# 							   segment_02(company_name,comp_street,comp_zip,comp_city,comp_country,cours=''),# donnees de la banque
-# 							   segment_03(partner_bank_account_name,'',partner_iban),# adresse du beneficiaire							   
-# 							   segment_04(partner_name,partner_street,partner_zip,partner_city,partner_country,cours=''),# communication
-# 								                                                                                   #& reglement des frais							   
-# 							   segment_05(motif='I',ref1='',ref2=i.reference or '',ref3='',format='0') ])#FIXME : motif
-
+			dta_line = record_table[ elec_pay ](v).generate()
 		except Exception,e :
 			log= log +'\nERROR:'+ str(e)+'(invoice '+ invoice_number+')' 
 			dta_line_obj.write(cr,uid,[dtal.id],{'state':'cancel'})			
