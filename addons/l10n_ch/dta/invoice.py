@@ -40,10 +40,12 @@ class account_invoice(osv.osv):
 									   ('2bp','To be paid'),
 									   ('paid','Paid')],
 									  'DTA state',readonly=True,select=True, states={'draft':[('readonly',False)]}),
+		'structured_ref': fields.boolean('Structured Reference'),
 	}
 
 	_defaults = {
 		'dta_state': lambda *a: 'none',
+		'structured_ref': lambda *a: False,
 	}
 	
 account_invoice()

@@ -15,6 +15,9 @@
 	</record>
 
 
+
+
+<!-- these two record applies t othe same parent -->
 	<record model="ir.ui.view" id="invoice_form">
 		<field name="name">account.invoice.form</field>
 		<field name="model">account.invoice</field>
@@ -22,10 +25,15 @@
 		<field name="inherit_id" ref="account.invoice_form"/>
 		<field name="arch" type="xml">
 			<field name="journal_id" position="after">
+			<newline/>
 				<field name="dta_state" select="1"/>
+				<field name="structured_ref" />
 		    </field>
 		</field>
+
 	</record>
+
+
 
 	<record model="ir.actions.act_window" id="action_invoice_with_dta">
 		<field name="name">account.invoice.dta</field>

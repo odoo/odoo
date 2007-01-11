@@ -229,6 +229,12 @@ class record_gt826(record):
 						 'ref2':'','ref3':'', 
 						 'format':'0'})
 
+class record_gt827(record):
+	# -> interne suisse
+	def init_local_context(self):
+		raise Exception("Record gt827 not yet available") 
+
+
 
 class record_gt836(record):
 	# -> iban
@@ -265,6 +271,7 @@ class record_gt836(record):
 						 'partner_iban': self.global_values['partner_bank_number'],
 						 'format':'0'})
 		self.post.update({'option_motif':'U'})
+
 
 class record_gt890(record):
 	# -> total
@@ -304,8 +311,6 @@ def _create_dta(self,cr,uid,data,context):
 	log=''
 	dta=''
 
-	record_table = {'gt826':record_gt826,'gt836':record_gt836}
-	
 	pool = pooler.get_pool(cr.dbname)
 	bank= pool.get('res.partner.bank').browse(cr,uid,[data['form']['bank']])[0]
 
@@ -370,6 +375,8 @@ def _create_dta(self,cr,uid,data,context):
  		})
 
 	for dtal in dta_line_obj.browse(cr,uid,dta_line_ids):
+
+
 		i = dtal.name #dta_line.name = invoice's id
 		invoice_number = i.number or '??'
 		if not i.partner_bank_id:
@@ -425,16 +432,24 @@ def _create_dta(self,cr,uid,data,context):
 			v['date_value'] = "000000"
 
 
+
+		# si compte iban -> iban (836)
+		# si payment structure  -> bvr (826)
+		# si non -> (827) 
+
+
 		elec_pay = i.partner_bank_id.type_id.elec_pay
-		if not elec_pay:
-			log= log +'\nNo payment mode defined for the partner bank. (invoice '+ invoice_number +')' 
-			continue
-		if not record_table.has_key( elec_pay ):
-			log= log +'\nPayment mode '+str(elec_pay)+' not supported. (invoice '+ invoice_number +')' 
-			continue
+		if elec_pay and elec_pay == 'iban':
+			record_type = record_gt836
+			if i.structured_ref :
+				v['option_motif']='I'
+		elif i.structured_ref :
+			record_type = record_gt826
+		else:
+			record_type = record_gt827
 
 		try:
-			dta_line = record_table[ elec_pay ](v).generate()
+			dta_line = record_type(v).generate()
 		except Exception,e :
 			log= log +'\nERROR:'+ str(e)+'(invoice '+ invoice_number+')' 
 			dta_line_obj.write(cr,uid,[dtal.id],{'state':'cancel'})			
