@@ -259,21 +259,25 @@ class record_gt827(record):
 			('genre_trans',3),
 			('type_paiement',1),('flag',1),
 			#seg1
-			('comp_dta',5),('invoice_number',11),('comp_bank_number',24),('date_value',6),
+			('comp_dta',5),('invoice_number',11),('comp_bank_iban',24),('date_value',6),
 			('invoice_currency',3),('amount_to_pay',12),('padding',14),
 			#seg2
 			('seg_num2',2),('comp_name',20),('comp_street',20),('comp_zip',10),
 			('comp_city',10),('comp_country',20),('padding',46),
 			#seg3
-			('seg_num3',2),('partner_bvr',12),#numero d'adherent bvr
-			('padding',80),('invoice_reference',27),#communication structuree
-			('padding',2)
+			('seg_num3',2),('partner_bank_number',30),
+			('comp_name',24),('comp_street',24),('comp_zip',12),
+			('comp_city',12),('comp_country',24),
+			#seg4
+			('seg_num4',2),('invoice_reference',28),('padding',98),
+			#seg5
+			#('padding',128)
 			]
 
 		self.pre.update({'date_value_hdr': self.global_values['date_value'],
 						 'date_value':'',						 
 						 'partner_cpt_benef':'',
-						 'type_paiement':'1', 'genre_trans':'826',
+						 'type_paiement':'0', 'genre_trans':'827',
 						 'conv_cours':'', 'option_id_bank':'D',
 						 'ref2':'','ref3':'', 
 						 'format':'0'})
@@ -434,7 +438,11 @@ def _create_dta(self,cr,uid,data,context):
 		v['amount_to_pay']= str(dtal.amount_to_pay).replace('.',',')
 		v['invoice_number'] = invoice_number or ''
 		v['invoice_currency'] = i.currency_id.code or ''
+		if not v['invoice_currency'] :
+			log= log +'\nPartner bank account not well defined. (invoice '+ invoice_number +')' 
+			continue
 
+		
 		v['partner_bank_name'] =  i.partner_bank_id.bank_name or False
 		v['partner_bank_clearing'] =  i.partner_bank_id.bank_clearing or False
 		if not v['partner_bank_name'] :
@@ -523,9 +531,12 @@ def _create_dta(self,cr,uid,data,context):
 			
 			
  		elif elec_pay == 'bvbank':
-			if not v['partner_bank_number']:
-				log= log +'\nYou must provide a bank number in the partner bank. (invoice '+ invoice_number +')' 
-				continue
+			if not v['partner_bank_number'] :
+				if  v['partner_bank_iban'] :
+					v['partner_bank_number']= v['partner_bank_iban'] 
+				else:
+					log= log +'\nYou must provide a bank number in the partner bank. (invoice '+ invoice_number +')' 
+					continue
 
 			if not  v['partner_bank_clearing']:
 				log= log +'\nPartner bank must have a Clearing Number for a BV Bank operation. (invoice '+ invoice_number +')' 
