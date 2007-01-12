@@ -31,17 +31,10 @@
 import netsvc
 from osv import fields, osv
 
-class res_partner(osv.osv):
-	_inherit = "res.partner"
-	_columns = {
-		'bvr_number': fields.char('BVR Number', size=9),
-	}
-res_partner()
-
-
 class res_partner_bank(osv.osv):
 	_inherit = "res.partner.bank"
 	_columns = {
+		'bvr_number': fields.char('BVR Reference Number', size=9),
 		'bank_code': fields.char('Bank Code', size=64, help='Swift or BIC number'),
 		'bank_clearing': fields.char('Bank Clearing Number', size=64),		
 		}

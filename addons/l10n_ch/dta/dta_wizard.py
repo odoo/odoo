@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -436,11 +437,7 @@ def _create_dta(self,cr,uid,data,context):
 
 		v['partner_bank_iban']=  i.partner_bank_id.iban or False
 		v['partner_bank_number']=  i.partner_bank_id.number or False
-		if not (v['partner_bank_number'] or v['partner_bank_iban']):
-			log= log +'\nNo account number for the partner bank. (invoice '+ invoice_number +')' 
-			continue
-
-		v['partner_bvr']= i.partner_id.bvr_number or ''
+		v['partner_bvr']= i.partner_bank_id.bvr_number or ''
 
 		v['partner_bank_city']= i.partner_bank_id.city or False
 		v['partner_bank_street']= i.partner_bank_id.street or ''
@@ -484,12 +481,14 @@ def _create_dta(self,cr,uid,data,context):
 
 		if elec_pay == 'iban':
 			record_type = record_gt836
+			if not v['partner_bank_iban']:
+				log= log +'\nNo iban number for the partner bank. (invoice '+ invoice_number +')' 
+				continue
+
 			if v['partner_bank_code'] :
-				print "IF1"
 				v['option_id_bank']= 'A'
 				v['partner_bank_ident']= v['partner_bank_code'] 
 			elif v['partner_bank_city']:
-				print "IF2"
 				v['option_id_bank']= 'D'
 				v['partner_bank_ident']= v['partner_bank_name'] +' '+v['partner_bank_street']\
 										 +' '+v['partner_bank_zip']+' '+v['partner_bank_city']\
@@ -497,21 +496,33 @@ def _create_dta(self,cr,uid,data,context):
 			else:
 				log= log +'\nYou must provide the bank city or the bank code. (invoice '+ invoice_number +')' 
 				continue
-			
- 		elif elec_pay == 'bvrbank':
- 			record_type = record_gt826
 
- 		elif elec_pay == 'bvrpost':
+			
+ 		elif elec_pay == 'bvrbank' or elec_pay == 'bvrpost':
+			if not v['partner_bvr']:
+				log= log +'\nYou must provide a BVR reference number in the partner bank. (invoice '+ invoice_number +')' 
+				continue
  			record_type = record_gt826
+			v['partner_bvr'] = '/C/'+v['partner_bvr']
+			
 			
  		elif elec_pay == 'bvbank':
+			if not v['partner_bank_number']:
+				log= log +'\nYou must provide a bank number in the partner bank. (invoice '+ invoice_number +')' 
+				continue
 			if not  v['partner_bank_clearing']:
 				log= log +'\nPartner bank must have a Clearing Number for a BV Bank operation. (invoice '+ invoice_number +')' 
 				continue
+			v['partner_bank_number'] = '/C/'+v['partner_bank_number']
  			record_type = record_gt827
+
 			
  		elif elec_pay == 'bvpost':
+			if not v['partner_bank_number']:
+				log= log +'\nYou must provide a post number in the partner bank. (invoice '+ invoice_number +')' 
+				continue
 			v['partner_bank_clearing']= ''
+			v['partner_bank_number'] = '/C/'+v['partner_bank_number']
  			record_type = record_gt827
 			
 		else:
