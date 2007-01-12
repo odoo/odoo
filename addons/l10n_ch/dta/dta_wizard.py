@@ -167,8 +167,8 @@ class record:
 		self.fields = []
 		self.global_values = global_context_dict
 		self.pre={'padding':'','seg_num1':'01','seg_num2':'02',
-						   'seg_num3':'03','seg_num4':'04','seg_num5':'05',
-						   'type_paiement':'0', 'flag':'0', 'zero5':'00000'
+				  'seg_num3':'03','seg_num4':'04','seg_num5':'05',
+				  'type_paiement':'0', 'flag':'0', 'zero5':'00000'
 						   }
 		self.post={}
 		self.init_local_context()
@@ -232,7 +232,32 @@ class record_gt826(record):
 class record_gt827(record):
 	# -> interne suisse
 	def init_local_context(self):
-		raise Exception("Record gt827 not yet available") 
+		print "gt826"
+		self.fields=[
+			('seg_num1',2),
+			#header
+			('date_value',6),('partner_bank_clearing',12),('zero5',5),('creation_date',6),
+			('comp_bank_clearing',7), ('uid',5), 
+			('sequence',5),
+			('genre_trans',3),
+			('type_paiement',1),('flag',1),
+			#seg1
+			('comp_dta',5),('invoice_number',11),('comp_bank_number',24),('date_value',6),
+			('invoice_currency',3),('amount_to_pay',12),('padding',14),
+			#seg2
+			('seg_num2',2),('comp_name',20),('comp_street',20),('comp_zip',10),
+			('comp_city',10),('comp_country',20),('padding',46),
+			#seg3
+			('seg_num3',2),('partner_bvr',12),#numero d'adherent bvr
+			('padding',80),('invoice_reference',27),#communication structuree
+			('padding',2)]
+
+		self.pre.update({'partner_cpt_benef':'',
+						 'type_paiement':'1', 'genre_trans':'826',
+						 'conv_cours':'', 'option_id_bank':'D',
+						 'ref2':'','ref3':'', 
+						 'format':'0'})
+
 
 
 
@@ -255,22 +280,22 @@ class record_gt836(record):
 			('seg_num2',2),('conv_cours',12),('comp_name',35),('comp_street',35),('comp_zip',10),
 			('comp_city',15),('comp_country',10),('padding',9),
 			#seg3
-			('seg_num3',2),('option_id_bank',1),('partner_bank_name',35),('partner_bank_city',35),
+			('seg_num3',2),('option_id_bank',1),('partner_bank_ident',70),
 			('partner_iban',34),('padding',21),
 			#seg4	
 			('seg_num4',2),('partner_name',35),('partner_street',35),('partner_zip',10),('partner_city',15),
 			('partner_country',10),('padding',21),
 			#seg5										
-			('seg_num5',2),('option_motif',1),('ref1',35),('ref2',35),('ref3',35),('format',1)]
+			('seg_num5',2),('option_motif',1),('ref1',35),('ref2',35),('ref3',35),('format',1),('padding',19)]
 
 		self.pre.update({'partner_bank_clearing':'','partner_cpt_benef':'',
 						 'type_paiement':'1', 'genre_trans':'836',
-						 'conv_cours':'', 'option_id_bank':'D',
+						 'conv_cours':'', 
 						 'ref1': self.global_values['invoice_reference'],
 						 'ref2':'','ref3':'', 
 						 'partner_iban': self.global_values['partner_bank_number'],
 						 'format':'0'})
-		self.post.update({'option_motif':'U'})
+		self.post.update({'comp_dta':'','option_motif':'U'})
 
 
 class record_gt890(record):
@@ -286,7 +311,7 @@ class record_gt890(record):
 			('genre_trans',3),
 			('type_paiement',1),('flag',1),
 			#total
-			('amount_total',16)]
+			('amount_total',16),('padding',59)]
 
 		self.pre.update({'partner_bank_clearing':'','partner_cpt_benef':'',
 							  'company_bank_clearing':'','genre_trans':'890'})
@@ -319,10 +344,11 @@ def _create_dta(self,cr,uid,data,context):
 	
 
  	v['comp_bank_name']= bank.name or False
- 	v['comp_bank_clearing'] = bank.bank_code or False # clearing or swift
+ 	v['comp_bank_clearing'] = bank.bank_clearing or False # clearing 
+	v['comp_bank_code'] = bank.bank_code or False # swift or BIC
 
- 	if not v['comp_bank_name'] and v['comp_bank_iban'] :
- 		return {'note':'Bank account of the company not well defined.'}
+ 	if not v['comp_bank_clearing']:
+ 		return {'note':'You must provide a Clearing Number for your bank account.'}
 	
 	user = pool.get('res.users').browse(cr,uid,[uid])[0]
 	company= user.company_id
@@ -339,9 +365,10 @@ def _create_dta(self,cr,uid,data,context):
 
 
 	v['comp_bank_number'] = bank.number or ''
-
 	if not v['comp_bank_number'] : # ex iban
 		return {'note':'No account number for the company bank account.'}
+
+	v['comp_bank_iban'] = bank.iban or ''
 	
 	inv_obj = pool.get('account.invoice')
 	dta_line_obj = pool.get('account.dta.line')
@@ -376,7 +403,7 @@ def _create_dta(self,cr,uid,data,context):
 
 	for dtal in dta_line_obj.browse(cr,uid,dta_line_ids):
 
-
+		print "BCL SUR LES I"
 		i = dtal.name #dta_line.name = invoice's id
 		invoice_number = i.number or '??'
 		if not i.partner_bank_id:
@@ -388,7 +415,7 @@ def _create_dta(self,cr,uid,data,context):
 		
 		
 		v['sequence'] = str(seq).rjust(5,'0')
-		v['amount_to_pay']= str(dtal.amount_to_pay)
+		v['amount_to_pay']= str(dtal.amount_to_pay).replace('.',',')
 		v['invoice_number'] = invoice_number
 		v['invoice_currency'] = i.currency_id.code or ''
 
@@ -405,7 +432,11 @@ def _create_dta(self,cr,uid,data,context):
 
 		v['partner_bvr']= i.partner_id.bvr_number or ''
 
-		v['partner_bank_city']= 'FIXME'
+		v['partner_bank_city']= i.partner_bank_id.city or False
+		v['partner_bank_street']= i.partner_bank_id.street or ''
+		v['partner_bank_zip']= i.partner_bank_id.zip or ''
+		v['partner_bank_country']= i.partner_bank_id.country_id  and i.partner_bank_id.country_id.name or ''
+		v['partner_bank_code']= i.partner_bank_id.bank_code or False
 		v['invoice_reference']= i.reference
 		
 		v['partner_name'] = i.partner_id and i.partner_id.name or ''
@@ -413,7 +444,7 @@ def _create_dta(self,cr,uid,data,context):
 			v['partner_street'] = i.partner_id.address[0].street
 			v['partner_city']= i.partner_id.address[0].city
 			v['partner_zip']= i.partner_id.address[0].zip
-			v['partner_country']= i.partner_id.address[0].country_id.name
+			v['partner_country']= i.partner_id.address[0].country_id and i.partner_id.address[0].country_id.name or ''
 		else:
 			v['partner_street'] =''
 			v['partner_city']= ''
@@ -439,14 +470,38 @@ def _create_dta(self,cr,uid,data,context):
 
 
 		elec_pay = i.partner_bank_id.type_id.elec_pay
-		if elec_pay and elec_pay == 'iban':
+		if not elec_pay :
+			log= log +'\nBank type does not support DTA. (invoice '+ invoice_number +')' 
+			continue
+
+		if elec_pay == 'iban':
 			record_type = record_gt836
-			if i.structured_ref :
-				v['option_motif']='I'
-		elif i.structured_ref :
-			record_type = record_gt826
+			if v['partner_bank_code'] :
+				print "IF1"
+				v['option_id_bank']= 'A'
+				v['partner_bank_ident']= v['partner_bank_code'] 
+			elif v['partner_bank_city']:
+				print "IF2"
+				v['option_id_bank']= 'D'
+				v['partner_bank_ident']= v['partner_bank_name'] +' '+v['partner_bank_street']\
+										 +' '+v['partner_bank_zip']+' '+v['partner_bank_city']\
+										 +' '+v['partner_bank_country']    
+			else:
+				log= log +'\nYou must provide the bank city or the bank code. (invoice '+ invoice_number +')' 
+				continue
+			
+# 		elif elec_pay == 'bvrbank':
+# 			record_type = record_gt826
+# 		elif elec_pay == 'bvrpost':
+# 			record_type = record_gt827
+# 		elif elec_pay == 'bvbank':
+# 			record_type = record_gt827
+# 		elif elec_pay == 'bvpost':
+# 			record_type = record_gt827
 		else:
-			record_type = record_gt827
+			log= log +'\nBank type not supported. (invoice '+ invoice_number +')' 
+			continue
+
 
 		try:
 			dta_line = record_type(v).generate()
@@ -483,7 +538,7 @@ def _create_dta(self,cr,uid,data,context):
 	pool.get('account.bank.statement').write(cr,uid,[bk_st_id],{'balance_end_real': amount_tot})
 	
 	# segment total 
-	v['amount_total'] = str(amount_tot)
+	v['amount_total'] = str(amount_tot).replace('.',',')
 	try:
 		if dta :
 			dta = dta + record_gt890(v).generate()

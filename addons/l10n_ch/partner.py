@@ -38,3 +38,11 @@ class res_partner(osv.osv):
 	}
 res_partner()
 
+
+class res_partner_bank(osv.osv):
+	_inherit = "res.partner.bank"
+	_columns = {
+		'bank_code': fields.char('Bank Code', size=64, help='Swift or BIC number'),
+		'bank_clearing': fields.char('Bank Clearing Number', size=64),		
+		}
+res_partner_bank()

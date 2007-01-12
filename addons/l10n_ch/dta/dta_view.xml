@@ -16,8 +16,21 @@
 
 
 
+	<record model="ir.ui.view" id="view_partner_bank_form">
+		<field name="name">res.partner.bank.form</field>
+		<field name="model">res.partner.bank</field>
+		<field name="type">form</field>
+		<field name="inherit_id" ref="base.view_partner_bank_form"/>
+		<field name="arch" type="xml">
+			<field name="bank_code" position="after">
+			<newline/>
+				<field name="bank_clearing" />
+		    </field>
+		</field>
 
-<!-- these two record applies t othe same parent -->
+	</record>
+
+
 	<record model="ir.ui.view" id="invoice_form">
 		<field name="name">account.invoice.form</field>
 		<field name="model">account.invoice</field>
@@ -27,7 +40,6 @@
 			<field name="journal_id" position="after">
 			<newline/>
 				<field name="dta_state" select="1"/>
-				<field name="structured_ref" />
 		    </field>
 		</field>
 

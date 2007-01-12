@@ -8,7 +8,7 @@
 	"category" : "Localisation/Europe",
 	"website": "http://www.tinyerp.com",
 	"depends" : ["base", "account"],
-	"init_xml" : [],
+	"init_xml" : ["dta/dta_data.xml"],
 #	"init_xml" : ["zip_code_default.xml"],
 	"demo_xml" : ["vaudtax_data_demo.xml","dta/dta_demo.xml"],
 	"update_xml" : [
