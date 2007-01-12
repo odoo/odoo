@@ -444,8 +444,8 @@ def _create_dta(self,cr,uid,data,context):
 		v['partner_bank_iban']=  i.partner_bank_id.iban or False
 		v['partner_bank_number']=  i.partner_bank_id.number or False
 		v['partner_bvr']= i.partner_bank_id.bvr_number or ''
-
-		if v['partner_bvr']
+		
+		#if v['partner_bvr']
 
 
 		v['partner_bank_city']= i.partner_bank_id.city or False
