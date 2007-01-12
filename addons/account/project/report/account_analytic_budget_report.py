@@ -49,7 +49,10 @@ class account_analytic_budget_report(report_sxw.rml_parse):
 		for d in post_obj.dotation_ids:
 			i = interval(d.period_id.date_start, d.period_id.date_stop)
 		total_days = reduce(lambda x,d: x+interval(d.period_id.date_start, d.period_id.date_stop), post_obj.dotation_ids, 0)
+		#OLD <==>
 		achievements = reduce(lambda x,l: x+l['achievements'], self.lines(post_obj, date1, date2), 0.0)
+		##node_achievements = reduce(operator.add, [
+			
 		return [{'prev': prev, 'prev_period': prev * period_days / total_days, 'achievements': achievements}]
 
 	def budget_total(self, post_objs, date1, date2):
@@ -59,37 +62,31 @@ class account_analytic_budget_report(report_sxw.rml_parse):
 			for k in r:
 				res[k] += r[k]
 		return [res]
-		
 
-#NEW
-# 	def lines_rec(self, a, post_obj, date1, date2):
-# 		self.cr.execute("SELECT COALESCE(SUM(debit-credit), 0) FROM account_move_line WHERE account_id=%d AND date>=%s AND date<=%s and state<>'draft'", (a.id, date1, date2))
-# 		achievements = float(self.cr.fetchone()[0]) * (post_obj.sens=='produit' and -1 or 1)
-# 		res= {'name': a.name, 'code': a.code, 'achievements': achievements}
+	#NEW recursive method
+	def lines(self, post_obj, date1, date2):
+		def compute_achievements(a):
+			self.cr.execute("SELECT COALESCE(SUM(debit-credit), 0) FROM account_move_line WHERE account_id=%d AND date>=%s AND date<=%s and state<>'draft'", (a.id, date1, date2))
+			node_achievements = float(self.cr.fetchone()[0]) * (post_obj.sens=='produit' and -1 or 1)
+			childs_achievements = reduce(operator.add, [compute_achievements(c) for c in a.child_ids])
+			return node_achievements + childs_achievements
+			
+		res = []
+		for a in post_obj.account_ids:
+			achievements = account_achievements(a, date1, date2)
+			res.append({'name': a.name, 'code': a.code, 'achievements': compute_achievements(a)})
 
-# 		for c in a.child_ids:  
-# 			res.extend(lines_rec(child, post_obj, date1, date2))
+		return res
 
-# 		return res
-
-
-
-#OLD
+# OLD, nonrecursive method !		
+# 	def lines(self, post_obj, date1, date2):
+# 		res = []
 # 		for a in post_obj.account_ids:
 # 	 		self.cr.execute("SELECT COALESCE(SUM(debit-credit), 0) FROM account_move_line WHERE account_id=%d AND date>=%s AND date<=%s and state<>'draft'", (a.id, date1, date2))
 # 			achievements = float(self.cr.fetchone()[0]) * (post_obj.sens=='produit' and -1 or 1)
 # 			res.append({'name': a.name, 'code': a.code, 'achievements': achievements})
-# 			for c in a.child_ids:  # FIXME : JUST AN IDEA doesn't work
-# 				res.extend(lines_rec(post_obj, date1, date2))
-
-	def lines(self, post_obj, date1, date2):
-		res = []
-		for a in post_obj.account_ids:
-	 		self.cr.execute("SELECT COALESCE(SUM(debit-credit), 0) FROM account_move_line WHERE account_id=%d AND date>=%s AND date<=%s and state<>'draft'", (a.id, date1, date2))
-			achievements = float(self.cr.fetchone()[0]) * (post_obj.sens=='produit' and -1 or 1)
-			res.append({'name': a.name, 'code': a.code, 'achievements': achievements})
 		
-		return res
+# 		return res
 	
 report_sxw.report_sxw('report.account.analytic.budget.print', 'account.analytic.budget.post', 'addons/account/project/report/account_analytic_budget_report.rml',parser=account_analytic_budget_report)
 
