@@ -436,7 +436,7 @@ def _create_dta(self,cr,uid,data,context):
 		v['invoice_currency'] = i.currency_id.code or ''
 
 		v['partner_bank_name'] =  i.partner_bank_id.bank_name or False
-		v['partner_bank_clearing'] =  i.partner_bank_id.bank_code or False
+		v['partner_bank_clearing'] =  i.partner_bank_id.bank_clearing or False
 		if not v['partner_bank_name'] :
 			log= log +'\nPartner bank account not well defined. (invoice '+ invoice_number +')' 
 			continue
@@ -445,7 +445,11 @@ def _create_dta(self,cr,uid,data,context):
 		v['partner_bank_number']=  i.partner_bank_id.number or False
 		v['partner_bvr']= i.partner_bank_id.bvr_number or ''
 		
-		#if v['partner_bvr']
+		if v['partner_bvr']:
+			v['partner_bvr']= v['partner_bvr'].replace('-','')
+			if len(v['partner_bvr']) < 9:
+				v['partner_bvr']= v['partner_bvr'][:2]+ '0'*(len(v['partner_bvr'])-9) +v['partner_bvr'][:2]
+				print v['partner_bvr']
 
 
 		v['partner_bank_city']= i.partner_bank_id.city or False
@@ -508,6 +512,9 @@ def _create_dta(self,cr,uid,data,context):
 
 			
  		elif elec_pay == 'bvrbank' or elec_pay == 'bvrpost':
+			if not v['invoice_reference']:
+				log= log +'\nYou must provide an invoice reference. (invoice '+ invoice_number +')' 
+
 			if not v['partner_bvr']:
 				log= log +'\nYou must provide a BVR reference number in the partner bank. (invoice '+ invoice_number +')' 
 				continue
@@ -516,11 +523,10 @@ def _create_dta(self,cr,uid,data,context):
 			
 			
  		elif elec_pay == 'bvbank':
-			if not v['invoice_reference']:
-				log= log +'\nYou must provide an invoice reference. (invoice '+ invoice_number +')' 
 			if not v['partner_bank_number']:
 				log= log +'\nYou must provide a bank number in the partner bank. (invoice '+ invoice_number +')' 
 				continue
+
 			if not  v['partner_bank_clearing']:
 				log= log +'\nPartner bank must have a Clearing Number for a BV Bank operation. (invoice '+ invoice_number +')' 
 				continue
