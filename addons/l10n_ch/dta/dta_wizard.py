@@ -450,7 +450,7 @@ def _create_dta(self,cr,uid,data,context):
 		v['invoice_number'] = invoice_number or ''
 		v['invoice_currency'] = i.currency_id.code or ''
 		if not v['invoice_currency'] :
-			log= log +'\nPartner bank account not well defined. (invoice '+ invoice_number +')' 
+			log= log +'\nInvoice currency code undefined. (invoice '+ invoice_number +')' 
 			continue
 
 		
