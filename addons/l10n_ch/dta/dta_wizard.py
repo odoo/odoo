@@ -250,7 +250,7 @@ class record_gt826(record):
 			]
 
 		self.pre.update({'date_value_hdr': self.global_values['date_value'],
-						 'date_value':'',						 
+						 'date_value':'',
 						 'partner_bank_clearing':'','partner_cpt_benef':'',
 						 'genre_trans':'826',
 						 'conv_cours':'', 'option_id_bank':'D',
@@ -317,18 +317,21 @@ class record_gt836(record):
 			#seg3
 			('seg_num3',2),('option_id_bank',1),('partner_bank_ident',70),
 			('partner_bank_iban',34),('padding',21),
-			#seg4	
+			#seg4
 			('seg_num4',2),('partner_name',35),('partner_street',35),('partner_zip',10),('partner_city',15),
 			('partner_country',10),('padding',21),
-			#seg5										
-			('seg_num5',2),('option_motif',1),('ref1',35),('ref2',35),('ref3',35),('format',1),('padding',19)]
+			#seg5
+			('seg_num5',2),('option_motif',1),('ref1',35),('ref2',35),('ref3',35),('format',1),('padding',19)
+		]
 
-		self.pre.update({'partner_bank_clearing':'','partner_cpt_benef':'',
-						 'type_paiement':'1','genre_trans':'836',
-						 'conv_cours':'', 
-						 'ref1': self.global_values['invoice_reference'],
-						 'ref2':'','ref3':'', 
-						 'format':'0'})
+		self.pre.update( {
+			'partner_bank_clearing':'','partner_cpt_benef':'',
+			'type_paiement':'1','genre_trans':'836',
+			'conv_cours':'',
+			'ref1': self.global_values['invoice_reference'],
+			'ref2':'','ref3':'',
+			'format':'0'
+		})
 		self.post.update({'comp_dta':'','option_motif':'U'})
 
 
@@ -519,29 +522,35 @@ def _create_dta(self,cr,uid,data,context):
 
 			if v['partner_bank_code'] :
 				v['option_id_bank']= 'A'
-				v['partner_bank_ident']= v['partner_bank_code'] 
+				v['partner_bank_ident']= v['partner_bank_code']
 			elif v['partner_bank_city']:
+				#
+				# added by fabien
+				#
+				log= log +'\nCode IBAN or Swift code doesn t exist. (invoice '+ invoice_number +')' 
+				continue
+
 				v['option_id_bank']= 'D'
 				v['partner_bank_ident']= v['partner_bank_name'] +' '+v['partner_bank_street']\
-										 +' '+v['partner_bank_zip']+' '+v['partner_bank_city']\
-										 +' '+v['partner_bank_country']    
+					+' '+v['partner_bank_zip']+' '+v['partner_bank_city']\
+					+' '+v['partner_bank_country']
 			else:
 				log= log +'\nYou must provide the bank city or the bank code. (invoice '+ invoice_number +')' 
 				continue
 
 			
- 		elif elec_pay == 'bvrbank' or elec_pay == 'bvrpost':
+		elif elec_pay == 'bvrbank' or elec_pay == 'bvrpost':
 			if not v['invoice_reference']:
 				log= log +'\nYou must provide an invoice reference. (invoice '+ invoice_number +')' 
 
 			if not v['partner_bvr']:
 				log= log +'\nYou must provide a BVR reference number in the partner bank. (invoice '+ invoice_number +')' 
 				continue
- 			record_type = record_gt826
+			record_type = record_gt826
 			v['partner_bvr'] = '/C/'+v['partner_bvr']
 			
 			
- 		elif elec_pay == 'bvbank':
+		elif elec_pay == 'bvbank':
 			if not v['partner_bank_number'] :
 				if  v['partner_bank_iban'] :
 					v['partner_bank_number']= v['partner_bank_iban'] 
