@@ -163,8 +163,8 @@ def _get_dta_lines(self,cr,uid,data,context):
 
 
 
-trans={'é':'e','è':'e','à':'a',
-	   'î':'i','ï':'i','â':'a',}
+trans={'é':'e','è':'e','à':'a','ê':'e',
+	   'î':'i','ï':'i','â':'a','ä':'a'}
 def tr(s):
 	res = ''
 	for c in s:
@@ -373,9 +373,7 @@ def _create_dta(self,cr,uid,data,context):
 	v['comp_city'] = co_addr.city
 	v['comp_name'] = co_addr.name
 	
-	v['comp_dta'] = company.dta_number or ''
-	if not company.dta_number :
-		return {'note':'No dta number for the company.' }
+	v['comp_dta'] = ''#FIXME
 
 
 	v['comp_bank_number'] = bank.number or ''
