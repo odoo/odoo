@@ -170,8 +170,11 @@ def tr(s):
 	for c in s:
 		if trans.has_key(c): res = res + trans[c]
 		else: res = res + c
-	return res.encode('ascii','replace')
-
+		try:
+			return res.encode('ascii','replace')
+		except:
+			return res
+		
 class record:
 	def __init__(self,global_context_dict):
 
@@ -454,9 +457,10 @@ def _create_dta(self,cr,uid,data,context):
 		v['partner_bvr']= i.partner_bank_id.bvr_number or ''
 		
 		if v['partner_bvr']:
+			print '-'+v['partner_bvr']+'-'
 			v['partner_bvr']= v['partner_bvr'].replace('-','')
 			if len(v['partner_bvr']) < 9:
-				v['partner_bvr']= v['partner_bvr'][:2]+ '0'*(len(v['partner_bvr'])-9) +v['partner_bvr'][:2]
+				v['partner_bvr']= v['partner_bvr'][:2]+ '0'*(9-len(v['partner_bvr'])) +v['partner_bvr'][2:]
 				print v['partner_bvr']
 
 
