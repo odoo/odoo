@@ -162,15 +162,27 @@ def _get_dta_lines(self,cr,uid,data,context):
 
 
 
+trans={'é':'e','è':'e','à':'a',
+	   'î':'i','ï':'i','â':'a',}
+def tr(s):
+	res = ''
+	for c in s:
+		if trans.has_key(c): res = res + trans[c]
+		else: res = res + c
+	return res.encode('ascii','replace')
+
 class record:
 	def __init__(self,global_context_dict):
+
+		for i in global_context_dict:
+			global_context_dict[i]= global_context_dict[i] and tr(global_context_dict[i])
 		self.fields = []
 		self.global_values = global_context_dict
 		self.pre={'padding':'','seg_num1':'01','seg_num2':'02',
 				  'seg_num3':'03','seg_num4':'04','seg_num5':'05',
-				  'type_paiement':'0', 'flag':'0', 'zero5':'00000'
+				   'flag':'0', 'zero5':'00000'
 						   }
-		self.post={}
+		self.post={'date_value_hdr':'000000','type_paiement':'0'}
 		self.init_local_context()
 
 	def init_local_context(self):
@@ -207,7 +219,7 @@ class record_gt826(record):
 		self.fields=[
 			('seg_num1',2),
 			#header
-			('date_value',6),('partner_bank_clearing',12),('zero5',5),('creation_date',6),
+			('date_value_hdr',6),('partner_bank_clearing',12),('zero5',5),('creation_date',6),
 			('comp_bank_clearing',7), ('uid',5), 
 			('sequence',5),
 			('genre_trans',3),
@@ -223,8 +235,9 @@ class record_gt826(record):
 			('padding',80),('invoice_reference',27),#communication structuree
 			('padding',2)]
 
-		self.pre.update({'partner_bank_clearing':'','partner_cpt_benef':'',
-						 'type_paiement':'1', 'genre_trans':'826',
+		self.pre.update({'date_value_hdr': self.global_values['date_value'],
+						 'partner_bank_clearing':'','partner_cpt_benef':'',
+						 'genre_trans':'826',
 						 'conv_cours':'', 'option_id_bank':'D',
 						 'ref2':'','ref3':'', 
 						 'format':'0'})
@@ -236,7 +249,7 @@ class record_gt827(record):
 		self.fields=[
 			('seg_num1',2),
 			#header
-			('date_value',6),('partner_bank_clearing',12),('zero5',5),('creation_date',6),
+			('date_value_hdr',6),('partner_bank_clearing',12),('zero5',5),('creation_date',6),
 			('comp_bank_clearing',7), ('uid',5), 
 			('sequence',5),
 			('genre_trans',3),
@@ -252,7 +265,8 @@ class record_gt827(record):
 			('padding',80),('invoice_reference',27),#communication structuree
 			('padding',2)]
 
-		self.pre.update({'partner_cpt_benef':'',
+		self.pre.update({'date_value_hdr': self.global_values['date_value'],
+						 'partner_cpt_benef':'',
 						 'type_paiement':'1', 'genre_trans':'826',
 						 'conv_cours':'', 'option_id_bank':'D',
 						 'ref2':'','ref3':'', 
@@ -268,7 +282,7 @@ class record_gt836(record):
 		self.fields=[
 			('seg_num1',2),
 			#header
-			('date_value',6),('partner_bank_clearing',12),('zero5',5),('creation_date',6),
+			('date_value_hdr',6),('partner_bank_clearing',12),('zero5',5),('creation_date',6),
 			('comp_bank_clearing',7), ('uid',5), 
 			('sequence',5),
 			('genre_trans',3),
@@ -281,7 +295,7 @@ class record_gt836(record):
 			('comp_city',15),('comp_country',10),('padding',9),
 			#seg3
 			('seg_num3',2),('option_id_bank',1),('partner_bank_ident',70),
-			('partner_iban',34),('padding',21),
+			('partner_bank_iban',34),('padding',21),
 			#seg4	
 			('seg_num4',2),('partner_name',35),('partner_street',35),('partner_zip',10),('partner_city',15),
 			('partner_country',10),('padding',21),
@@ -289,11 +303,10 @@ class record_gt836(record):
 			('seg_num5',2),('option_motif',1),('ref1',35),('ref2',35),('ref3',35),('format',1),('padding',19)]
 
 		self.pre.update({'partner_bank_clearing':'','partner_cpt_benef':'',
-						 'type_paiement':'1', 'genre_trans':'836',
+						 'type_paiement':'1','genre_trans':'836',
 						 'conv_cours':'', 
 						 'ref1': self.global_values['invoice_reference'],
 						 'ref2':'','ref3':'', 
-						 'partner_iban': self.global_values['partner_bank_number'],
 						 'format':'0'})
 		self.post.update({'comp_dta':'','option_motif':'U'})
 
@@ -305,7 +318,7 @@ class record_gt890(record):
 		self.fields=[
 			('seg_num1',2),
 			#header
-			('date_value',6),('partner_bank_clearing',12),('zero5',5),('creation_date',6),
+			('date_value_hdr',6),('partner_bank_clearing',12),('zero5',5),('creation_date',6),
 			('comp_bank_clearing',7), ('uid',5), 
 			('sequence',5),
 			('genre_trans',3),
@@ -365,7 +378,7 @@ def _create_dta(self,cr,uid,data,context):
 
 
 	v['comp_bank_number'] = bank.number or ''
-	if not v['comp_bank_number'] : # ex iban
+	if not v['comp_bank_number'] : 
 		return {'note':'No account number for the company bank account.'}
 
 	v['comp_bank_iban'] = bank.iban or ''
@@ -403,30 +416,27 @@ def _create_dta(self,cr,uid,data,context):
 
 	for dtal in dta_line_obj.browse(cr,uid,dta_line_ids):
 
-		print "BCL SUR LES I"
-		i = dtal.name #dta_line.name = invoice's id
+		i = dtal.name #dta_line.name is the invoice id
 		invoice_number = i.number or '??'
 		if not i.partner_bank_id:
 			log= log +'\nNo partner bank defined. (invoice '+ invoice_number +')' 
 			continue
-		
-		if i.dta_state in ['bv','bvr']:
-			v['option_motif']= {'bv':'U','bvr':'I'}
-		
+				
 		
 		v['sequence'] = str(seq).rjust(5,'0')
 		v['amount_to_pay']= str(dtal.amount_to_pay).replace('.',',')
-		v['invoice_number'] = invoice_number
+		v['invoice_number'] = invoice_number or ''
 		v['invoice_currency'] = i.currency_id.code or ''
 
 		v['partner_bank_name'] =  i.partner_bank_id.bank_name or False
 		v['partner_bank_clearing'] =  i.partner_bank_id.bank_code or False
-		if not v['partner_bank_name'] and v['partner_bank_clearing']:
+		if not v['partner_bank_name'] :
 			log= log +'\nPartner bank account not well defined. (invoice '+ invoice_number +')' 
 			continue
 
+		v['partner_bank_iban']=  i.partner_bank_id.iban or False
 		v['partner_bank_number']=  i.partner_bank_id.number or False
-		if not v['partner_bank_number']:
+		if not v['partner_bank_number'] or v['partner_bank_iban']:
 			log= log +'\nNo account number for the partner bank. (invoice '+ invoice_number +')' 
 			continue
 
@@ -451,8 +461,6 @@ def _create_dta(self,cr,uid,data,context):
 			v['partner_zip']= ''
 			v['partner_country']= ''
 			log= log +'\nNo address for the invoice partner. (invoice '+ invoice_number+')' 
-		
-
 
 		
 		date_value = dtal.cashdisc_date or dtal.due_date
@@ -490,14 +498,22 @@ def _create_dta(self,cr,uid,data,context):
 				log= log +'\nYou must provide the bank city or the bank code. (invoice '+ invoice_number +')' 
 				continue
 			
-# 		elif elec_pay == 'bvrbank':
-# 			record_type = record_gt826
-# 		elif elec_pay == 'bvrpost':
-# 			record_type = record_gt827
-# 		elif elec_pay == 'bvbank':
-# 			record_type = record_gt827
-# 		elif elec_pay == 'bvpost':
-# 			record_type = record_gt827
+ 		elif elec_pay == 'bvrbank':
+ 			record_type = record_gt826
+
+ 		elif elec_pay == 'bvrpost':
+ 			record_type = record_gt826
+			
+ 		elif elec_pay == 'bvbank':
+			if not  v['partner_bank_clearing']:
+				log= log +'\nPartner bank must have a Clearing Number for a BV Bank operation. (invoice '+ invoice_number +')' 
+				continue
+ 			record_type = record_gt827
+			
+ 		elif elec_pay == 'bvpost':
+			v['partner_bank_clearing']= ''
+ 			record_type = record_gt827
+			
 		else:
 			log= log +'\nBank type not supported. (invoice '+ invoice_number +')' 
 			continue
