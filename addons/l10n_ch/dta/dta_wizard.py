@@ -234,11 +234,12 @@ class record_gt826(record):
 			#seg3
 			('seg_num3',2),('partner_bvr',12),#numero d'adherent bvr
 			('padding',80),('invoice_reference',27),#communication structuree
-			('padding',2)#cle de controle
+			('padding',2),#cle de controle
 			('padding',5)
 			]
 
 		self.pre.update({'date_value_hdr': self.global_values['date_value'],
+						 'date_value':'',						 
 						 'partner_bank_clearing':'','partner_cpt_benef':'',
 						 'genre_trans':'826',
 						 'conv_cours':'', 'option_id_bank':'D',
@@ -270,7 +271,7 @@ class record_gt827(record):
 			]
 
 		self.pre.update({'date_value_hdr': self.global_values['date_value'],
-						 'date_value'='',
+						 'date_value':'',						 
 						 'partner_cpt_benef':'',
 						 'type_paiement':'1', 'genre_trans':'826',
 						 'conv_cours':'', 'option_id_bank':'D',
