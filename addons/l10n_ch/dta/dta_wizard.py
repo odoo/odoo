@@ -226,7 +226,7 @@ class record_gt826(record):
 			('genre_trans',3),
 			('type_paiement',1),('flag',1),
 			#seg1
-			('comp_dta',5),('invoice_number',11),('comp_bank_number',24),('date_value',6),
+			('comp_dta',5),('invoice_number',11),('comp_bank_iban',24),('date_value',6),
 			('invoice_currency',3),('amount_to_pay',12),('padding',14),
 			#seg2
 			('seg_num2',2),('comp_name',20),('comp_street',20),('comp_zip',10),
@@ -259,7 +259,7 @@ class record_gt827(record):
 			('genre_trans',3),
 			('type_paiement',1),('flag',1),
 			#seg1
-			('comp_dta',5),('invoice_number',11),('comp_bank_iban',24),('date_value',6),
+			('comp_dta',5),('invoice_number',11),('comp_bank_number',24),('date_value',6),
 			('invoice_currency',3),('amount_to_pay',12),('padding',14),
 			#seg2
 			('seg_num2',2),('comp_name',20),('comp_street',20),('comp_zip',10),
@@ -444,6 +444,9 @@ def _create_dta(self,cr,uid,data,context):
 		v['partner_bank_iban']=  i.partner_bank_id.iban or False
 		v['partner_bank_number']=  i.partner_bank_id.number or False
 		v['partner_bvr']= i.partner_bank_id.bvr_number or ''
+
+		if v['partner_bvr']
+
 
 		v['partner_bank_city']= i.partner_bank_id.city or False
 		v['partner_bank_street']= i.partner_bank_id.street or ''
