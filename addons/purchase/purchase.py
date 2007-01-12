@@ -328,10 +328,10 @@ class purchase_order_line(osv.osv):
 			lang=self.pool.get('res.partner').read(cr, uid, [partner_id])[0]['lang']
 		context={'lang':lang}
 		price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist], product, qty or 1.0, partner_id, {'uom': uom})[pricelist]
-		prod = self.pool.get('product.product').read(cr, uid, [product], ['taxes_id','name','seller_delay','uom_po_id','description_purchase'])[0]
+		prod = self.pool.get('product.product').read(cr, uid, [product], ['supplier_taxes_id','name','seller_delay','uom_po_id','description_purchase'])[0]
 		dt = (DateTime.now() + DateTime.RelativeDateTime(days=prod['seller_delay'] or 0.0)).strftime('%Y-%m-%d')
 		prod_name = self.pool.get('product.product').name_get(cr, uid, [product], context=context)[0][1]
-		res = {'value': {'price_unit': price, 'name':prod_name, 'taxes_id':prod['taxes_id'], 'date_planned': dt,'notes':prod['description_purchase']}}
+		res = {'value': {'price_unit': price, 'name':prod_name, 'taxes_id':prod['supplier_taxes_id'], 'date_planned': dt,'notes':prod['description_purchase']}}
 		domain = {}
 		if not uom:
 			res['value']['product_uom'] = prod['uom_po_id'][0]

@@ -62,24 +62,25 @@ product_category()
 class product_template(osv.osv):
 	_inherit = "product.template"
 	_columns = {
-		'taxes_id': fields.many2many('account.tax', 'product_taxes_rel', 'prod_id', 'tax_id', 'Product Taxes', domain=[('parent_id','=',False)]),
+		'taxes_id': fields.many2many('account.tax', 'product_taxes_rel', 'prod_id', 'tax_id', 'Customer Taxes', domain=[('parent_id','=',False)]),
+		'supplier_taxes_id': fields.many2many('account.tax', 'product_supplier_taxes_rel', 'prod_id', 'tax_id', 'Supplier Taxes', domain=[('parent_id', '=', False)]),
 		'property_account_income': fields.property(
-		  'account.account',
-		  type='many2one', 
-		  relation='account.account', 
-		  string="Income Account", 
-		  method=True,
-		  view_load=True,
-		  group_name="Accounting Properties",
-		  help="This account will be used, instead of the default one, to value incoming stock for the current product"),
+			'account.account',
+			type='many2one', 
+			relation='account.account', 
+			string="Income Account", 
+			method=True,
+			view_load=True,
+			group_name="Accounting Properties",
+			help="This account will be used, instead of the default one, to value incoming stock for the current product"),
 		'property_account_expense': fields.property(
-		  'account.account',
-		  type='many2one', 
-		  relation='account.account', 
-		  string="Expense Account", 
-		  method=True,
-		  view_load=True,
-		  group_name="Accounting Properties",
-		  help="This account will be used, instead of the default one, to value outgoing stock for the current product"),
+			'account.account',
+			type='many2one', 
+			relation='account.account', 
+			string="Expense Account", 
+			method=True,
+			view_load=True,
+			group_name="Accounting Properties",
+			help="This account will be used, instead of the default one, to value outgoing stock for the current product"),
 	}
 product_template()

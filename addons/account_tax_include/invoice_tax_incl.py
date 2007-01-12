@@ -91,7 +91,9 @@ class account_invoice_line(osv.osv):
 		tax_grouped = {}
 		tax_obj = self.pool.get('account.tax')
 		cur_obj = self.pool.get('res.currency')
+		ait_obj = self.pool.get('account.invoice.tax')
 		cur = inv.currency_id
+
 		for line in inv.invoice_line:
 			res.append( {
 				'type':'src', 
@@ -100,45 +102,46 @@ class account_invoice_line(osv.osv):
 				'quantity':line.quantity, 
 				'price':round(line.quantity*line.price_unit * (1.0- (line.discount or 0.0)/100.0),2),
 				'account_id':line.account_id.id,
-				'tax_amount': 0.0
 			})
 			for tax in tax_obj.compute_inv(cr, uid, line.invoice_line_tax_id, (line.price_unit *(1.0-(line['discount'] or 0.0)/100.0)), line.quantity, inv.address_invoice_id.id, line.product_id):
-				tax['amount'] = cur_obj.round(cr, uid, cur, tax['amount'])
-				tax['sequence'] = tax['sequence']
+				val={}
+				val['invoice_id'] = inv.id
+				val['name'] = tax['name']
+				val['amount'] = cur_obj.round(cr, uid, cur, tax['amount'])
+				val['manual'] = False
+				val['sequence'] = tax['sequence']
+				val['base'] = tax['price_unit'] * line['quantity']
 
-				#res[-1]['tax_amount'] += (line['price_unit'] * line['quantity'] * (1.0- (line['discount'] or 0.0)/100.0) * tax2.base_sign)
 				#
 				# Setting the tax account and amount for the line
 				#
-				if inv.type in ('out_invoice','out_refund'):
-					res[-1]['tax_code_id'] = tax['base_code_id']
-					res[-1]['tax_amount'] = tax['amount'] * tax['base_sign']
+				if inv.type in ('out_invoice','in_invoice'):
+					val['base_code_id'] = tax['base_code_id']
+					val['tax_code_id'] = tax['tax_code_id']
+					val['base_amount'] = tax['base'] * tax['base_sign']
+					val['tax_amount'] = tax['amount'] * tax['tax_sign']
+					val['account_id'] = tax['account_collected_id'] or line.account_id.id
 				else:
-					res[-1]['tax_code_id'] = tax['ref_base_code_id']
-					res[-1]['tax_amount'] = tax['amount'] * tax['ref_base_sign']
-				if inv.type in ('out_refund','in_refund'):
-					res[-1]['tax_amount'] = -res[-1]['tax_amount']
+					val['base_code_id'] = tax['ref_base_code_id']
+					val['tax_code_id'] = tax['ref_tax_code_id']
+					val['base_amount'] = val['base'] * tax['ref_base_sign']
+					val['tax_amount'] = val['amount'] * tax['ref_tax_sign']
+					val['account_id'] = tax['account_paid_id'] or line.account_id.id
 
-				if inv.type in ('out_invoice','out_refund'):
-					tax['account_id'] = tax['account_collected_id'] or line.account_id.id
-				else:
-					tax['account_id'] = tax['account_paid_id'] or line.account_id.id
-				#
-				# Revoir la clé: tax.id ?
-				#
-				key = (res[-1]['tax_code_id'], tax['account_id'])
-				#res[-1]['price'] -= tax['amount']
-				#res[-1]['tax_amount'] -= (tax['amount']* tax2.base_sign)
+				res[-1]['tax_code_id'] = val['base_code_id']
+				res[-1]['tax_amount'] = val['base_amount']
+
+				key = (val['tax_code_id'], val['base_code_id'], val['account_id'])
 				if not key in tax_grouped:
-					tax_grouped[key] = tax
-					#tax_grouped[key]['base'] = res[-1]['price']
-					tax_grouped[key]['base'] = tax['price_unit'] * line['quantity']
+					tax_grouped[key] = val
 				else:
-					tax_grouped[key]['amount'] += tax['amount']
-					#tax_grouped[key]['base'] += res[-1]['price']
-					tax_grouped[key]['base'] += tax['price_unit'] * line['quantity']
+					tax_grouped[key]['amount'] += val['amount']
+					tax_grouped[key]['base'] += val['base']
+					tax_grouped[key]['base_amount'] += val['base_amount']
+					tax_grouped[key]['tax_amount'] += val['tax_amount']
 		# delete automatic tax lines for this invoice
 		cr.execute("DELETE FROM account_invoice_tax WHERE NOT manual AND invoice_id=%d", (invoice_id,))
-		self.move_line_tax_create(cr, uid, inv, tax_grouped, context)
+		for t in tax_grouped.values():
+			ait_obj.create(cr, uid, t)
 		return res
 account_invoice_line()
