@@ -234,7 +234,9 @@ class record_gt826(record):
 			#seg3
 			('seg_num3',2),('partner_bvr',12),#numero d'adherent bvr
 			('padding',80),('invoice_reference',27),#communication structuree
-			('padding',2)]
+			('padding',2)#cle de controle
+			('padding',5)
+			]
 
 		self.pre.update({'date_value_hdr': self.global_values['date_value'],
 						 'partner_bank_clearing':'','partner_cpt_benef':'',
@@ -256,7 +258,7 @@ class record_gt827(record):
 			('genre_trans',3),
 			('type_paiement',1),('flag',1),
 			#seg1
-			('comp_dta',5),('invoice_number',11),('comp_bank_number',24),('date_value',6),
+			('comp_dta',5),('invoice_number',11),('comp_bank_iban',24),('date_value',6),
 			('invoice_currency',3),('amount_to_pay',12),('padding',14),
 			#seg2
 			('seg_num2',2),('comp_name',20),('comp_street',20),('comp_zip',10),
@@ -264,9 +266,11 @@ class record_gt827(record):
 			#seg3
 			('seg_num3',2),('partner_bvr',12),#numero d'adherent bvr
 			('padding',80),('invoice_reference',27),#communication structuree
-			('padding',2)]
+			('padding',2)
+			]
 
 		self.pre.update({'date_value_hdr': self.global_values['date_value'],
+						 'date_value'='',
 						 'partner_cpt_benef':'',
 						 'type_paiement':'1', 'genre_trans':'826',
 						 'conv_cours':'', 'option_id_bank':'D',
@@ -381,6 +385,9 @@ def _create_dta(self,cr,uid,data,context):
 		return {'note':'No account number for the company bank account.'}
 
 	v['comp_bank_iban'] = bank.iban or ''
+	if not v['comp_bank_iban'] : 
+		return {'note':'No iban number for the company bank account.'}
+
 	
 	inv_obj = pool.get('account.invoice')
 	dta_line_obj = pool.get('account.dta.line')
@@ -505,6 +512,8 @@ def _create_dta(self,cr,uid,data,context):
 			
 			
  		elif elec_pay == 'bvbank':
+			if not v['invoice_reference']:
+				log= log +'\nYou must provide an invoice reference. (invoice '+ invoice_number +')' 
 			if not v['partner_bank_number']:
 				log= log +'\nYou must provide a bank number in the partner bank. (invoice '+ invoice_number +')' 
 				continue
