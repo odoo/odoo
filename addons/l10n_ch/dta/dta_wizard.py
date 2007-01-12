@@ -174,9 +174,8 @@ def tr(s):
 		try:
 			res= res.encode('ascii','replace')
 		except:
-			print 'ascii error'
-			
-		return res
+			pass
+	return res
 		
 class record:
 	def __init__(self,global_context_dict):
