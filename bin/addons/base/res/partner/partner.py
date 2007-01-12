@@ -314,10 +314,17 @@ class res_partner_bank(osv.osv):
 		'name': fields.char('Account Name', size=64, required=True),
 		'sequence': fields.integer('Sequence'),
 		'number': fields.char('Account Number', size=64), #TODO : plan migration because of fields modifications
+		'iban': fields.char('Account Iban', size=64), 
 		'type_id' : fields.many2one('res.partner.bank.type', 'Account Type', required=True),
 		'bank_name': fields.char('Bank Name', size=64),
-		'bank_code': fields.char('Bank Code', size=64, help="For example : Swift number or Clearing number."),
+		'bank_code': fields.char('Bank Code', size=64),
 		'bank_guichet': fields.char('Branch', size=64),
+
+		'street': fields.char('Street', size=128),
+		'zip': fields.char('Zip', change_default=True, size=24),
+		'city': fields.char('City', size=128),
+		'country_id': fields.many2one('res.country', 'Country'),
+		
 		'partner_id': fields.many2one('res.partner', 'Partner', required=True, ondelete='cascade', select=True),
 		'active': fields.boolean('Active'),
 	}

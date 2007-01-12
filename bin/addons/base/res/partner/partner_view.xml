@@ -369,11 +369,19 @@
 		<field name="arch" type="xml">
 			<form string="Bank Details">
 				<field name="name" select="1" colspan="3"/>
+
 				<field name="number" select="1"/>
-				<field name="type_id" select="1"/>
-				<newline/>
+				<field name="iban" select="1"/>
+
 				<field name="bank_name" select="1"/>
 				<field name="bank_code" select="1"/>
+				<field name="type_id" select="1"/>
+				<newline/>
+				<field name="street"/>
+				<field name="city"/>
+				<field name="zip"/>
+				<field name="country_id"/>
+
 				<field name="sequence"/>
 				<field name="bank_guichet" select="1"/>
 			</form>
