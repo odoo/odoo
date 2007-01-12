@@ -436,7 +436,7 @@ def _create_dta(self,cr,uid,data,context):
 
 		v['partner_bank_iban']=  i.partner_bank_id.iban or False
 		v['partner_bank_number']=  i.partner_bank_id.number or False
-		if not v['partner_bank_number'] or v['partner_bank_iban']:
+		if not (v['partner_bank_number'] or v['partner_bank_iban']):
 			log= log +'\nNo account number for the partner bank. (invoice '+ invoice_number +')' 
 			continue
 
