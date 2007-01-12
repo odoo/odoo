@@ -17,7 +17,7 @@
 		"account_vat.xml","base_config.xml","account_config.xml",
 		"bvr/bvr_report.xml",
 		#"company_view.xml",
-		"partner_view.xml",
+		#"partner_view.xml",
 	],
 	"active": False,
 	"installable": True,
