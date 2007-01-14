@@ -336,7 +336,7 @@ class stock_picking(osv.osv):
 		'auto_picking': fields.boolean('Auto-Picking'),
 		'work': fields.boolean('Work todo'),
 		'loc_move_id': fields.many2one('stock.location', 'Move to Location'),
-		'address_id': fields.many2one('res.partner.address', 'Partner Address'),
+		'address_id': fields.many2one('res.partner.address', 'Partner'),
 		'lot_id': fields.many2one('stock.lot', 'Consumer Lot Created'),
 		'move_lot_id': fields.many2one('stock.move.lot', 'Moves Created'),
 		'invoice_state':fields.selection([
@@ -500,7 +500,6 @@ class stock_picking(osv.osv):
 				'name': p.name,
 				'origin': p.name+':'+p.origin,
 				'type': type,
-				'reference': "P%dSO%d"%(p.address_id.partner_id.id,p.id),
 				'account_id': a,
 				'partner_id': p.address_id.partner_id.id,
 				'address_invoice_id': pinv_id,
@@ -533,7 +532,7 @@ class stock_picking(osv.osv):
 				if type in ('in_invoice','in_refund'):
 					punit = line.product_id.standard_price
 				iline_id = self.pool.get('account.invoice.line').create(cr, uid, {
-					'name': p.name + ' - ' + line.name,
+					'name': ((group and (p.name + ' - ')) or '') + line.name,
 					'invoice_id': invoice_id,
 					'uos_id': line.product_uos.id,
 					'product_id': line.product_id.id,

@@ -314,7 +314,7 @@ class account_journal(osv.osv):
 	_description = "Journal"
 	_columns = {
 		'name': fields.char('Journal Name', size=64, required=True),
-		'code': fields.char('Code', size=9),
+		'code': fields.char('Code', size=16),
 		'type': fields.selection([('sale','Sale'), ('purchase','Purchase'), ('cash','Cash'), ('general','General'), ('situation','Situation')], 'Type', size=32, required=True),
 		'type_control_ids': fields.many2many('account.account.type', 'account_journal_type_rel', 'journal_id','type_id', 'Type Controls', domain=[('code','<>','view')]),
 		'active': fields.boolean('Active'),
