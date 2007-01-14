@@ -238,7 +238,6 @@ class rml_parse(object):
 #				else:
 #					self.already[self._node] = 0
 				self._parse_text(self._node.data, level)
-				
 		return True
 
 	def _find_node(self, node, localname):
