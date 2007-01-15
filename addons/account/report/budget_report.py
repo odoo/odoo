@@ -28,6 +28,7 @@
 import time
 from report import report_sxw
 import datetime
+import operator
 
 class budget_report(report_sxw.rml_parse):
 	def __init__(self, cr, uid, name, context):
