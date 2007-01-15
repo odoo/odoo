@@ -186,7 +186,7 @@
       <blockTable colWidths="194.0,65.0,52.0,65.0,64.0,69.0" style="Tableau3">
         <tr>
           <td>
-            <para style="P16">[[ line.product_id and line.product_id.default_code or '' ]]</para>
+            <para style="P16">[[ line.product_id and get_product_code(line.product_id.id, o.partner_id.id) or '' ]]</para>
             <para style="P16">[[ line.name ]]</para>
           </td>
           <td>

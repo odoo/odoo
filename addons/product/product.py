@@ -269,7 +269,6 @@ class product_product(osv.osv):
 		product = self.browse(cr, uid, [product_id], context)[0]
 		for supinfo in product.seller_ids:
 			if supinfo.name.id == partner_id:
-				print {'code': supinfo.product_code, 'name': supinfo.product_name}
 				return {'code': supinfo.product_code, 'name': supinfo.product_name}
 		return {'code' : product.default_code, 'name' : product.name}
 
