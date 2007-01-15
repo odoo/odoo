@@ -96,10 +96,11 @@ class osv_pool(netsvc.Service):
 
 
 	def execute(self, db, uid, obj, method, *args, **kw):
-		cr = pooler.get_db(db).cursor()
+		db, pool = pooler.get_db_and_pool(db)
+		cr = db.cursor()
 		try:
 			try:
-				res = self.execute_cr(cr, uid, obj, method, *args, **kw)
+				res = pool.execute_cr(cr, uid, obj, method, *args, **kw)
 				cr.commit()
 			except Exception:
 				cr.rollback()
