@@ -58,12 +58,13 @@ check_fields = {
 
 def _check(self, cr, uid, data, context):
 	for invoice in pooler.get_pool(cr.dbname).get('account.invoice').browse(cr, uid, data['ids'], context):
-		if not invoice.bank_id:
-			raise wizard.except_wizard('UserError','The invoice "%s" has no bank associated !' % (invoice.number,))
-		if not re.compile('[0-9][0-9]?\-[0-9]+-[0-9]+').match(invoice.bank_id.bvr_number or ''):
-			raise wizard.except_wizard('UserError','Your bank BVR number should be of the form 0X-XXX-X !\nSee invoice "%s".' % (invoice.number,))
-		if invoice.bank_id.bank_code and not re.compile('^[0-9]+$').match(invoice.bank_id.bank_code):
-			raise wizard.except_wizard('UserError','Your bank code should be a number !\nSee invoice "%s".' % (invoice.number,))
+		bank = pooler.get_pool(cr.dbname).get('res.partner.bank').browse(cr, uid, data['form']['bank'], context)
+		if not data['form']['bank']:
+			raise wizard.except_wizard('UserError','No bank specified !')
+		if not re.compile('[0-9][0-9]?\-[0-9]+-[0-9]+').match(bank.bvr_number or ''):
+			raise wizard.except_wizard('UserError','Your bank BVR number should be of the form 0X-XXX-X !')
+		if bank.bank_code and not re.compile('^[0-9]+$').match(bank.bank_code):
+			raise wizard.except_wizard('UserError','Your bank code must be a number !')
 	return {}
 
 class wizard_report(wizard.interface):
