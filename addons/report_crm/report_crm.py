@@ -68,7 +68,7 @@ class report_crm_case_user(osv.osv):
 					sum(planned_cost) as amount_costs,
 					sum(planned_revenue*probability)::decimal(16,2) as amount_revenue_prob,
 					avg(probability)::decimal(16,2) as probability,
-					to_char(avg(date_closed-c.create_date), 'DD"d" HH12:MI:SS') as delay_close
+					to_char(avg(date_closed-c.create_date), 'DD"d" HH24:MI:SS') as delay_close
 				from
 					crm_case c
 				group by substring(c.create_date for 7), c.state, c.user_id, c.section_id
@@ -106,7 +106,7 @@ class report_crm_case_categ(osv.osv):
 					sum(planned_cost) as amount_costs,
 					sum(planned_revenue*probability)::decimal(16,2) as amount_revenue_prob,
 					avg(probability)::decimal(16,2) as probability,
-					to_char(avg(date_closed-c.create_date), 'DD"d" HH12:MI:SS') as delay_close
+					to_char(avg(date_closed-c.create_date), 'DD"d" HH24:MI:SS') as delay_close
 				from
 					crm_case c
 				group by substring(c.create_date for 7), c.state, c.categ_id, c.section_id

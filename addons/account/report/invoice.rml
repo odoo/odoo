@@ -36,6 +36,9 @@
     <blockTableStyle id="Tableau3">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
+      <blockBackground colorName="#e6e6e6" start="0,1" stop="0,1"/>
+      <blockBackground colorName="#e6e6e6" start="1,1" stop="1,1"/>
+      <blockBackground colorName="#e6e6e6" start="2,1" stop="2,1"/>
     </blockTableStyle>
     <blockTableStyle id="Tableau4">
       <blockAlignment value="LEFT"/>
@@ -105,9 +108,9 @@
           <para style="Standard">
             <font color="white"> </font>
           </para>
-          <para style="Standard">Tél. : [[ o.address_invoice_id.phone or '' ]]</para>
+          <para style="Standard">Tel. : [[ o.address_invoice_id.phone or '' ]]</para>
           <para style="Standard">Fax : [[ o.address_invoice_id.fax or '' ]]</para>
-          <para style="Standard">TVA : [[ o.partner_id.vat or '' ]]</para>
+          <para style="Standard">VAT : [[ o.partner_id.vat or '' ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -152,10 +155,10 @@
           <para style="P9">Unit Price</para>
         </td>
         <td>
-          <para style="P9">Disc.</para>
+          <para style="P9">Disc. (%)</para>
         </td>
         <td>
-          <para style="P9">Net Price</para>
+          <para style="P9">Price</para>
         </td>
       </tr>
     </blockTable>
@@ -170,13 +173,13 @@
             <para style="P11">[[ ', '.join([lt.name for lt in l.invoice_line_tax_id]) ]]</para>
           </td>
           <td>
-            <para style="P12">[[ l.quantity ]] [[l.uos_id and l.uos_id.name or '' ]]</para>
+            <para style="P12">[[ '%.2f' % l.quantity ]] [[l.uos_id and l.uos_id.name or '' ]]</para>
           </td>
           <td>
             <para style="P12">[[ '%.2f' % l.price_unit ]]</para>
           </td>
           <td>
-            <para style="P12">[[ '%.3f' % (l.discount or 0.0) ]] </para>
+            <para style="P12">[[ '%.2f' % (l.discount or 0.0) ]] </para>
           </td>
           <td>
             <para style="P12">[[ '%.2f' %l.price_subtotal ]] [[o.currency_id.code ]]</para>
@@ -229,7 +232,7 @@
           <blockTable colWidths="214.0,95.0" style="Tableau5">
             <tr>
               <td>
-                <para style="P18">Subtotal :</para>
+                <para style="P18">Total (excl. taxes):</para>
               </td>
               <td>
                 <para style="P19">[[ '%.2f' % o.amount_untaxed ]] [[o.currency_id.code ]]</para>
@@ -237,7 +240,7 @@
             </tr>
             <tr>
               <td>
-                <para style="P18">Taxes :</para>
+                <para style="P18">Taxes:</para>
               </td>
               <td>
                 <para style="P19">[[ '%.2f' % o.amount_tax ]] [[o.currency_id.code ]]</para>
@@ -245,7 +248,7 @@
             </tr>
             <tr>
               <td>
-                <para style="P20">Total :</para>
+                <para style="P20">Total <font face="Times-Roman">(incl. taxes):</font></para>
               </td>
               <td>
                 <para style="P21">[[ '%.2f' % o.amount_total ]] [[o.currency_id.code ]]</para>

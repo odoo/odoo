@@ -196,7 +196,7 @@
             <para style="P17">[[ time.strftime('%d/%m/%Y', time.strptime( line.date_planned, '%Y-%m-%d')) ]]</para>
           </td>
           <td>
-            <para style="P18">[[ line.product_qty ]] [[ line.product_uom.name ]]</para>
+            <para style="P18">[[ '%.2f' % line.product_qty ]] [[ line.product_uom.name ]]</para>
           </td>
           <td>
             <para style="P18">[[ '%.2f' % line.price_unit ]]</para>
