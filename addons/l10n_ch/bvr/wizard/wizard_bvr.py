@@ -54,8 +54,6 @@ check_fields = {
 	},
 }
 
-
-
 def _check(self, cr, uid, data, context):
 	for invoice in pooler.get_pool(cr.dbname).get('account.invoice').browse(cr, uid, data['ids'], context):
 		bank = pooler.get_pool(cr.dbname).get('res.partner.bank').browse(cr, uid, data['form']['bank'], context)
