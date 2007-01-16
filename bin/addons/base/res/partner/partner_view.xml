@@ -293,23 +293,7 @@
 					<field name="parent_id" select="1"/>
 					<field name="website" widget="url"/>
 					<field name="date" select="1"/>
-					<field name="bank_ids" colspan="4" nolabel="1">
-						<form string="Bank Details">
-							<field name="name" select="1" colspan="3"/>
-							<field name="bank_name" select="1"/>
-							<field name="bank_guichet" select="1"/>
-							<field name="street"/>
-							<field name="city"/>
-							<field name="zip"/>
-							<field name="country_id"/>
-							<newline/>
-							<field name="type_id" select="1"/>
-							<field name="number" select="1"/>
-							<field name="iban" select="1"/>
-							<field name="bank_code" select="1"/>
-							<field name="sequence"/>
-						</form>
-					</field>
+					<field name="bank_ids" colspan="4" nolabel="1"/>
 					<separator string="Notes" colspan="4"/>
 					<field name="comment" colspan="4" nolabel="1"/>
 				</page>
@@ -384,7 +368,6 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Bank Details">
-				<field name="partner_id" select="1" colspan="3"/>
 				<field name="name" select="1" colspan="3"/>
 				<field name="bank_name" select="1"/>
 				<field name="bank_guichet" select="1"/>
@@ -397,9 +380,6 @@
 				<field name="number" select="1"/>
 				<field name="iban" select="1"/>
 				<field name="bank_code" select="1"/>
-
-
-
 				<field name="sequence"/>
 			</form>
 		</field>
