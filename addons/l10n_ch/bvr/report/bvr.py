@@ -49,12 +49,13 @@ class account_invoice_bvr(report_sxw.rml_parse):
 		return res
 
 	def _bank_get(self, bid):
-		return self.pool.get("res.partner.bank").browse(cr,uid,bid)
+		return self.pool.get("res.partner.bank").browse(self.cr,self.uid,bid)
 
-	def _get_ref(self, o):
+	def _get_ref(self, o, bid):
+		bank = self._bank_get(bid)
 		res = ''
-		if o.bank_id.bank_code:
-			res = o.bank_id.bank_code
+		if bank.bank_code:
+			res = bank.bank_code
 		return self._mod10r(res+o.number.rjust(26-len(res), '0'))
 
 	def _mod10r(self,nbr):
