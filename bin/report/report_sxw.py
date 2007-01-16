@@ -219,10 +219,11 @@ class rml_parse(object):
 	def _parse_node(self):
 		level = []
 		while True:
-			#
-			# Si attr_expr dans attributes, override
-			#
-			#
+			if self._node.nodeType==self._node.ELEMENT_NODE:
+				if self._node.hasAttribute('expr'):
+					newattrs = self._eval(self._node.getAttribute('expr'))
+					for key,val in newattrs.items():
+						self._node.setAttribute(key,val)
 
 			if self._node.hasChildNodes():
 				self._node = self._node.firstChild
