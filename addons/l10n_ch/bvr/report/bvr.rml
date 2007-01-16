@@ -28,6 +28,7 @@
 
       <frame id="first" x1="24.0" y1="110mm" width="537" height="142mm"/>
       <frame id="Frame1"
+	  	expr="{'height':str(111+(company.bvr_delta_vert or 0.0))+'mm', 'x1': str(2.5+(company.bvr_delta_horz or 0.0))+'mm'}"
 		x1="2.5mm"
 		y1="0.5mm"
 		width="200mm"
@@ -153,7 +154,6 @@
 
 		<!--
 			Exact value: y=17.6mm
-
 		-->
 
 		<setFont name="ocrb" size="11.5"/>
