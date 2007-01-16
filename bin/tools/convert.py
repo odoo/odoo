@@ -93,6 +93,7 @@ def _eval_xml(self,node, pool, cr, uid, idref):
 			args = []
 			a_eval = node.getAttribute('eval')
 			if len(a_eval):
+				idref['ref'] = lambda x: self.id_get(cr, False, x)
 				args = eval(a_eval, idref)
 			for n in [i for i in node.childNodes if (i.nodeType == i.ELEMENT_NODE)]:
 				args.append(_eval_xml(self,n, pool, cr, uid, idref))
