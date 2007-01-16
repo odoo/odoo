@@ -165,6 +165,7 @@
 					<field name="tax_line" nolabel="1" widget="one2many_list" colspan="4"/>
 				</page>
 				<page string="Other Information">
+					<field name="bank_id"/>
 					<field name="reference" select="1"/>
 					<field name="origin"/>
 					<field name="address_contact_id" domain="[('partner_id','=',partner_id)]" colspan="3"/>

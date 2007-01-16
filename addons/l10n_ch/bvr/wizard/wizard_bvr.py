@@ -26,10 +26,16 @@
 ##############################################################################
 
 import wizard
+import pooler
+import re
 
 def _check(self, cr, uid, data, context):
-	for invoice in self.pool.get('account.invoice').browse(cr, uid, data['ids'], context):
-		pass
+	for invoice in pooler.get_pool(cr.dbname).get('account.invoice').browse(cr, uid, data['ids'], context):
+		if not invoice.bank_id:
+			raise wizard.except_wizard('UserError','The invoice "%s" has no bank associated !' % (invoice.number,))
+		if not re.compile('[0-9][0-9]?\-[0-9]+-[0-9]+').match(invoice.bank_id.bvr_number or ''):
+			raise wizard.except_wizard('UserError','Your bank BVR number should be of the form 0X-XXX-X !\nSee invoice "%s".' % (invoice.number,))
+
 	return {}
 
 class wizard_report(wizard.interface):

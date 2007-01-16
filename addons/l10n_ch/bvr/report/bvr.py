@@ -31,12 +31,27 @@ from report import report_sxw
 class account_invoice_bvr(report_sxw.rml_parse):
 	def __init__(self, cr, uid, name, context):
 		super(account_invoice_bvr, self).__init__(cr, uid, name, context)
-		raise 'a'
 		self.localcontext.update({
 			'time': time,
 			'user':self.pool.get("res.users").browse(cr,uid,uid),
 			'mod10r': self._mod10r,
+			'_space': self._space,
+			'_get_ref': self._get_ref,
 		})
+
+	def _space(self,nbr, nbrspc=5):
+		res = ''
+		for i in range(len(nbr)):
+			res = res + nbr[i]
+			if not (i-1) % nbrspc:
+				res = res + ' '
+		return res
+
+	def _get_ref(self, o):
+		res = ''
+		if o.bank_id.bank_code:
+			res = o.bank_id.bank_code
+		return self._mod10r(res+o.number.rjust(26-len(res), '0'))
 
 	def _mod10r(self,nbr):
 		"""

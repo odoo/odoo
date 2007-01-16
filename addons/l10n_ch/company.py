@@ -34,10 +34,8 @@ from osv import fields, osv
 class res_company(osv.osv):
 	_inherit = "res.company"
 	_columns = {
-		'bvr_number': fields.char('BVR Number', size=9),
 		'bvr_delta_horz': fields.float('BVR Horz. Delta (mm)', size=(16,2)),
 		'bvr_delta_vert': fields.float('BVR Vert. Delta (mm)', size=(16,2)),
-		'dta_number': fields.char('DTA Number', size=9),
 	}
 res_company()
 

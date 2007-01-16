@@ -115,10 +115,10 @@
 	-->
 	<illustration width="200mm" height="106mm">
 		<setFont name="Times-Roman" size="11"/>
-		<drawString x="6mm" y="79mm">[[ user.company_id.partner_id.name ]]</drawString>
-		<drawString x="6mm" y="74mm">[[ user.company_id.partner_id.address[0].street ]]</drawString>
-		<drawString x="6mm" y="69mm">[[ (user.company_id.partner_id.address[0].street2 or '')]]</drawString>
-		<drawString x="6mm" y="64mm">[[ user.company_id.partner_id.address[0].zip ]] [[ user.company_id.partner_id.address[0].city ]]</drawString>
+		<drawString x="5.5mm" y="79mm">[[ user.company_id.partner_id.name ]]</drawString>
+		<drawString x="5.5mm" y="74mm">[[ user.company_id.partner_id.address[0].street ]]</drawString>
+		<drawString x="5.5mm" y="69mm">[[ (user.company_id.partner_id.address[0].street2 or '')]]</drawString>
+		<drawString x="5.5mm" y="64mm">[[ user.company_id.partner_id.address[0].zip ]] [[ user.company_id.partner_id.address[0].city ]]</drawString>
 
 		<drawString x="62mm" y="79mm">[[ user.company_id.partner_id.name ]]</drawString>
 		<drawString x="62mm" y="74mm">[[ user.company_id.partner_id.address[0].street ]]</drawString>
@@ -127,20 +127,22 @@
 
 		<setFont name="ocrb" size="9"/>
 
-		<drawString x="6mm" y="34mm">[[ o.partner_id.name ]]</drawString>
-		<drawString x="6mm" y="30mm">[[ o.address_invoice_id.street ]]</drawString>
-		<drawString x="6mm" y="26mm">[[ (o.address_invoice_id.street2 or '')]]</drawString>
-		<drawString x="6mm" y="22mm">[[ o.address_invoice_id.zip ]] [[ o.address_invoice_id.city ]]</drawString>
+		<drawString x="5.5mm" y="34mm">[[ o.partner_id.name ]]</drawString>
+		<drawString x="5.5mm" y="30mm">[[ o.address_invoice_id.street ]]</drawString>
+		<drawString x="5.5mm" y="26mm">[[ (o.address_invoice_id.street2 or '')]]</drawString>
+		<drawString x="5.5mm" y="22mm">[[ o.address_invoice_id.zip ]] [[ o.address_invoice_id.city ]]</drawString>
 
-		<drawString x="6mm" y="40mm">[[ mod10r(o.number).rjust(27,'0')]]</drawString>
+		<drawString x="5.5mm" y="40mm">[[ _get_ref(o) ]]</drawString>
 
 		<drawString x="126mm" y="51mm">[[ o.partner_id.name ]]</drawString>
 		<drawString x="126mm" y="47mm">[[ o.address_invoice_id.street ]]</drawString>
 		<drawString x="126mm" y="43mm">[[ (o.address_invoice_id.street2 or '')]]</drawString>
 		<drawString x="126mm" y="39mm">[[ o.address_invoice_id.zip ]] [[ o.address_invoice_id.city ]]</drawString>
 
+		<setFont name="ocrb" size="11"/>
+		<drawString x="124mm" y="67.5mm">[[ _space(_get_ref(o)) ]]</drawString>
+
 		<setFont name="ocrb" size="12"/>
-		<drawString x="126mm" y="67.5mm">[[ mod10r(o.number).rjust(27,'0') ]]</drawString>
 
 		<drawRightString x="39mm" y="50mm">[[ ('%.2f' % o.amount_total)[:-3] ]]</drawRightString>
 		<drawRightString x="100mm" y="50mm">[[ ('%.2f' % o.amount_total)[:-3] ]]</drawRightString>
@@ -154,104 +156,10 @@
 
 		-->
 
-		<drawString x="66.72mm" y="16.20mm">01[[mod10r('%.2f' % o.amount_total).rjust(11,'0')]]&gt;[[ mod10r(o.number).rjust(27,'0')]]+ [[o.partner_bank_id.bvr_number.split('-')[0]+(o.partner_bank_id.bvr_number.split('-')[1]).rjust(6,'0')+o.partner_bank_id.bvr_number.split('-')[2] ]]&gt;</drawString>
-
+		<setFont name="ocrb" size="11.5"/>
+		<drawString x="66.72mm" y="16.20mm">01[[mod10r('%.2f' % o.amount_total).rjust(11,'0')]]&gt;[[ _get_ref(o) ]]+ [[o.bank_id.bvr_number.split('-')[0]+(o.bank_id.bvr_number.split('-')[1]).rjust(6,'0')+o.bank_id.bvr_number.split('-')[2] ]]&gt;</drawString>
 
 	</illustration>
-   <!--
-   <blockTable colWidths="144.0,151.0,243.0" rowheights="3cm,1cm,1cm,1cm,3cm,1cm" style="Table1">
-      <tr>
-        <td>
-          <para style="PBVR"></para>
-          <para style="PBVR"></para>
-          <para style="PBVR"></para>
-          <para style="PBVR"></para>
-        </td>
-        <td>
-          <para style="PBVR">[[ user.company_id.partner_id.name ]]</para>
-          <para style="PBVR">[[ user.company_id.partner_id.address[0].street ]]</para>
-          <para style="PBVR">[[ user.company_id.partner_id.address[0].street2 or '' ]]</para>
-          <para style="PBVR">[[ user.company_id.partner_id.address[0].zip ]] [[ user.company_id.partner_id.address[0].city ]]</para>
-        </td>
-        <td>
-          <para style="PBVR">
-            <font color="white"> </font>
-          </para>
-          <para style="PBVR">
-            <font color="white"> </font>
-          </para>
-          <para style="PBVR"></para>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <para style="PBVR">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="P4">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="PBVR">
-            <font color="white"> </font>
-          </para>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <para style="PBVR">[[ ('%.2f' % o.amount_total)[:-3] +' . '+ ('%.2f' % o.amount_total)[-2:] ]]</para>
-        </td>
-        <td>
-          <para style="PBVR">[[ ('%.2f' % o.amount_total)[:-3] +' . '+ ('%.2f' % o.amount_total)[-2:] ]]</para>
-        </td>
-        <td>
-          <para style="PBVR">
-            <font color="white"> </font>
-          </para>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <para style="PBVR">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="PBVR">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="PBVR">
-            <font color="white"> </font>
-          </para>
-        </td>
-      </tr>
-	  <tr>
-        <td>
-          <para style="PBVR">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-        </td>
-        <td>
-        </td>
-	  </tr>
-      <tr>
-        <td>
-          <para style="PBVR">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-        </td>
-      </tr>
-    </blockTable>
-	-->
     <frameEnd/>
   </story>
 </document>
