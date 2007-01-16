@@ -157,7 +157,7 @@
 		-->
 
 		<setFont name="ocrb" size="11.5"/>
-		<drawString x="66.72mm" y="16.20mm">01[[mod10r('%.2f' % o.amount_total).rjust(11,'0')]]&gt;[[ _get_ref(o) ]]+ [[o.bank_id.bvr_number.split('-')[0]+(o.bank_id.bvr_number.split('-')[1]).rjust(6,'0')+o.bank_id.bvr_number.split('-')[2] ]]&gt;</drawString>
+		<drawString x="66.72mm" y="16.20mm">01[[mod10r('%.2f' % o.amount_total).rjust(11,'0')]]&gt;[[ _get_ref(o) ]]+ [[_bank_get(data['form']['bank']).bvr_number.split('-')[0]+(o.bank_id.bvr_number.split('-')[1]).rjust(6,'0')+o.bank_id.bvr_number.split('-')[2] ]]&gt;</drawString>
 
 	</illustration>
     <frameEnd/>

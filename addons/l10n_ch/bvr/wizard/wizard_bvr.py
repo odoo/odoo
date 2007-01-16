@@ -29,6 +29,33 @@ import wizard
 import pooler
 import re
 
+def _bank_get(self, cr, uid, context={}):
+	pool = pooler.get_pool(cr.dbname)
+	partner_id = pool.get('res.users').browse(cr,uid,[uid])[0].company_id.partner_id
+	obj = pool.get('res.partner.bank')
+	ids = obj.search(cr, uid, [('partner_id','=',partner_id.id)])
+	res = obj.read(cr, uid, ids, ['active', 'name'], context)
+	res = [(r['id'], r['name']) for r in res]
+	return res 
+
+check_form = """<?xml version="1.0"?>
+<form string="BVR Print">
+	<separator colspan="4" string="BVR Infos" />
+	<field name="bank"/>
+</form>
+"""
+
+check_fields = {
+	'bank' : {
+		'string':'Bank Account',
+		'type':'selection',
+		'selection':_bank_get,
+		'required': True,
+	},
+}
+
+
+
 def _check(self, cr, uid, data, context):
 	for invoice in pooler.get_pool(cr.dbname).get('account.invoice').browse(cr, uid, data['ids'], context):
 		if not invoice.bank_id:
@@ -41,7 +68,16 @@ def _check(self, cr, uid, data, context):
 
 class wizard_report(wizard.interface):
 	states = {
-		'init': {
+		'init':{
+			'actions' : [],
+			'result' : {
+				'type' : 'form',
+				'arch' : check_form,
+				'fields' : check_fields,
+				'state' : [('end', 'Cancel'),('bvr_print', 'Print') ]
+			}
+		},
+		'bvr_print': {
 			'actions': [_check], 
 			'result': {'type':'print', 'report':'l10n_ch.bvr', 'state':'end'}
 		}

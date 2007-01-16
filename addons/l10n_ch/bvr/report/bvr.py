@@ -37,6 +37,7 @@ class account_invoice_bvr(report_sxw.rml_parse):
 			'mod10r': self._mod10r,
 			'_space': self._space,
 			'_get_ref': self._get_ref,
+			'_bank_get': self._bank_get,
 		})
 
 	def _space(self,nbr, nbrspc=5):
@@ -46,6 +47,9 @@ class account_invoice_bvr(report_sxw.rml_parse):
 			if not (i-1) % nbrspc:
 				res = res + ' '
 		return res
+
+	def _bank_get(self, bid):
+		return self.pool.get("res.partner.bank").browse(cr,uid,bid)
 
 	def _get_ref(self, o):
 		res = ''

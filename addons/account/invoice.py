@@ -112,7 +112,6 @@ class account_invoice(osv.osv):
 
 		'partner_id': fields.many2one('res.partner', 'Partner', change_default=True, readonly=True, required=True, states={'draft':[('readonly',False)]}, relate=True),
 		'partner_bank_id': fields.many2one('res.partner.bank', 'Partner bank'),
-		'bank_id': fields.many2one('res.partner.bank', 'Company bank'),
 		'address_contact_id': fields.many2one('res.partner.address', 'Contact Address', readonly=True, states={'draft':[('readonly',False)]}),
 		'address_invoice_id': fields.many2one('res.partner.address', 'Invoice Address', readonly=True, required=True, states={'draft':[('readonly',False)]}),
 
