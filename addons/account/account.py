@@ -44,7 +44,6 @@ class account_payment_term(osv.osv):
 		'active': fields.boolean('Active'),
 		'note': fields.text('Description'),
 		'line_ids': fields.one2many('account.payment.term.line', 'payment_id', 'Terms'),
-		'cash_discount_ids': fields.one2many('account.cash.discount', 'payment_id', 'Cash Discounts'),
 	}
 	_defaults = {
 		'active': lambda *a: 1,
@@ -70,30 +69,6 @@ class account_payment_term(osv.osv):
 				result.append( (next_date.strftime('%Y-%m-%d'), amt) )
 				amount -= amt
 		return result
-
-	def get_discounts(self,cr,uid,id,base_date, context={}):
-		"""
-		return the list of (date,percentage) ordered by date for the
-		payment term with the corresponding id. return [] if no cash
-		discount are defined. base_date is the date from where the
-		discounts are computed.
-		"""
-		
-		pt = self.browse(cr, uid, id, context)
-		
-		if not pt.cash_discount_ids:
-			return []
-
-		res=[]
-		for d in pt.cash_discount_ids: 
-			res.append(
-				((mx.DateTime.strptime(base_date,'%Y-%m-%d') +\
-				  RelativeDateTime(days=d.delay+1)).strftime("%Y-%m-%d"),
-				 d.discount)
-				)
-			
-		res.sort(cmp=lambda x,y: cmp(x[0],y[0]))
-		return res
 
 account_payment_term()
 
@@ -260,20 +235,6 @@ class account_account(osv.osv):
 			res.append((record['id'],name ))
 		return res
 account_account()
-
-
-class account_cash_discount(osv.osv):
-	_name = "account.cash.discount"
-	_description = "Cash Discount" #A reduction in the price  if payment is made within a stipulated period.
-	_columns = {
-		'name': fields.char('Name', size=32),
-		'delay': fields.integer('Number of Days', required=True),
-		'discount': fields.float('Discount (%)',digits=(16,6),required=True),
-		'payment_id': fields.many2one('account.payment.term','Associated Payment Term'),
-		'credit_account_id': fields.many2one('account.account', 'Credit Account'),
-		'debit_account_id': fields.many2one('account.account', 'Debit Account'),
-	}
-account_cash_discount()
 
 
 class account_journal_view(osv.osv):

@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<terp>
+	<data>
+
+		<!-- cash discount -->
+
+
+		<record model="ir.ui.view" id="view_cash_discount_form">
+			<field name="name">account.cash.discount.form</field>
+			<field name="model">account.cash.discount</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Cash Discount">
+					<field name="name" select="1"/>
+					<field name="delay" select="1"/>
+					<field name="discount" select="1"/>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_cash_discount_tree">
+			<field name="name">account.cash.discount.tree</field>
+			<field name="model">account.cash.discount</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Cash Discount" editable="bottom">
+					<field name="name" select="1"/>
+					<field name="delay" select="1"/>
+					<field name="discount" select="1"/>
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_payment_term_form">
+			<field name="name">account.payment.term.form</field>
+			<field name="model">account.payment.term</field>
+			<field name="inherit_id" ref="account.view_payment_term_form"/>
+			<field name="arch" type="xml">
+				<field name="line_ids" position="after">
+					<field name="cash_discount_ids" colspan="3"/>
+					<separator string="Cash Discount" colspan="4"/>
+				</field>
+			</field>
+		</record>
+
+	</data>
+</terp>

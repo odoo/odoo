@@ -100,7 +100,7 @@ class account_invoice_line(osv.osv):
 				'name':line.name, 
 				'price_unit':line.price_unit, 
 				'quantity':line.quantity, 
-				'price':round(line.quantity*line.price_unit * (1.0- (line.discount or 0.0)/100.0),2),
+				'price':cur_obj.round(cr, uid, cur, line.quantity*line.price_unit * (1.0- (line.discount or 0.0)/100.0)),
 				'account_id':line.account_id.id,
 			})
 			for tax in tax_obj.compute_inv(cr, uid, line.invoice_line_tax_id, (line.price_unit *(1.0-(line['discount'] or 0.0)/100.0)), line.quantity, inv.address_invoice_id.id, line.product_id):
@@ -118,8 +118,8 @@ class account_invoice_line(osv.osv):
 				if inv.type in ('out_invoice','in_invoice'):
 					val['base_code_id'] = tax['base_code_id']
 					val['tax_code_id'] = tax['tax_code_id']
-					val['base_amount'] = tax['base'] * tax['base_sign']
-					val['tax_amount'] = tax['amount'] * tax['tax_sign']
+					val['base_amount'] = val['base'] * tax['base_sign']
+					val['tax_amount'] = val['amount'] * tax['tax_sign']
 					val['account_id'] = tax['account_collected_id'] or line.account_id.id
 				else:
 					val['base_code_id'] = tax['ref_base_code_id']

@@ -107,8 +107,6 @@ class account_invoice(osv.osv):
 
 		'date_invoice': fields.date('Date Invoiced', required=True, states={'open':[('readonly',True)],'close':[('readonly',True)]}),
 		'date_due': fields.date('Due Date', states={'open':[('readonly',True)],'close':[('readonly',True)]}),
-		'date_discount': fields.date('Discount Date', states={'open':[('readonly',True)],'close':[('readonly',True)]},
-									 help='The date of the first cash discount'),		
 
 		'partner_id': fields.many2one('res.partner', 'Partner', change_default=True, readonly=True, required=True, states={'draft':[('readonly',False)]}, relate=True),
 		'partner_bank_id': fields.many2one('res.partner.bank', 'Partner bank'),
@@ -209,11 +207,6 @@ class account_invoice(osv.osv):
 			pterm_list.sort()
 			res= {'value':{'date_due': pterm_list[-1]}}
 
-
-		disc_list= pt_obj.get_discounts(cr,uid,payment_term_id,date_invoice)
-		if disc_list :
-			res = res or {'value':{}}
-			res['value'].update({'date_discount': disc_list[0][0] })
 
 		return res
 		
@@ -586,8 +579,6 @@ class account_invoice_line(osv.osv):
 		tax_obj = self.pool.get('account.tax')
 		cur_obj = self.pool.get('res.currency')
 		ait_obj = self.pool.get('account.invoice.tax')
-#TODO: rewrite using browse instead of the manual SQL queries
-#		cr.execute('SELECT id FROM account_invoice_line WHERE invoice_id=%d', (invoice_id,))
 		inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id)
 		cur = inv.currency_id
 
@@ -597,7 +588,7 @@ class account_invoice_line(osv.osv):
 				'name':line.name, 
 				'price_unit':line.price_unit, 
 				'quantity':line.quantity, 
-				'price':round(line.quantity*line.price_unit * (1.0- (line.discount or 0.0)/100.0),2),
+				'price':cur_obj.round(cr, uid, cur, line.quantity*line.price_unit * (1.0- (line.discount or 0.0)/100.0)),
 				'account_id':line.account_id.id
 			})
 			for tax in tax_obj.compute(cr, uid, line.invoice_line_tax_id, (line.price_unit *(1.0-(line['discount'] or 0.0)/100.0)), line.quantity, inv.address_invoice_id.id, line.product_id):

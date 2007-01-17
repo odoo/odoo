@@ -1096,35 +1096,6 @@
 	<menuitem name="Financial Management/Configuration/Models/Models Definition" id="menu_action_model_form" action="action_model_form"/>
 
 
-<!-- cash discount -->
-
-
-	<record model="ir.ui.view" id="view_cash_discount_form">
-		<field name="name">account.cash.discount.form</field>
-		<field name="model">account.cash.discount</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Cash Discount">
-				<field name="name" select="1"/>
-				<field name="delay" select="1"/>
-				<field name="discount" select="1"/>
-			</form>
-		</field>
-	</record>
-
-	<record model="ir.ui.view" id="view_cash_discount_tree">
-		<field name="name">account.cash.discount.tree</field>
-		<field name="model">account.cash.discount</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Cash Discount" editable="bottom">
-				<field name="name" select="1"/>
-				<field name="delay" select="1"/>
-				<field name="discount" select="1"/>
-			</tree>
-		</field>
-	</record>
-
 <!--
 	# Payment Terms
 -->
@@ -1175,8 +1146,6 @@
 				<field name="note" colspan="3"/>
 				<separator string="Computation" colspan="4"/>
 				<field name="line_ids" colspan="3"/>
-				<separator string="Cash Discount" colspan="4"/>
-				<field name="cash_discount_ids" colspan="3"/>
 			</form>
 		</field>
 	</record>
