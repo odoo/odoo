@@ -21,7 +21,7 @@ from stat import ST_MODE
 opj = os.path.join
 
 name = 'tinyerp-server'
-version = '4.0.0'
+version = '4.1.0'
 
 # get python short version
 py_short_version = '%s.%s' % sys.version_info[:2]
@@ -89,6 +89,10 @@ def data_files():
               ['man/terp_serverrc.5']),
              (opj('share','doc', 'tinyerp-server-%s' % version), 
               [f for f in glob.glob('doc/*') if os.path.isfile(f)]),
+             (opj('share','doc', 'tinyerp-server-%s' % version, 'migrate', '3.3.0-3.4.0'), 
+              [f for f in glob.glob('doc/migrate/3.3.0-3.4.0/*') if os.path.isfile(f)]),
+             (opj('share','doc', 'tinyerp-server-%s' % version, 'migrate', '3.4.0-4.0.0'), 
+              [f for f in glob.glob('doc/migrate/3.4.0-4.0.0/*') if os.path.isfile(f)]),
              (opj('lib','python%s' % py_short_version, 'site-packagess', 'tinyerp-server', 'i18n'), 
               glob.glob('bin/i18n/*')),
              (opj('lib', 'python%s' % py_short_version, 'site-packages', 'tinyerp-server', 'addons', 'custom'),
