@@ -53,7 +53,7 @@ class account_invoice(osv.osv):
 		return True
 	
 	_constraints = [
-		(_check_bvr, 'Error ! Invalid Bvr Number.', ['bvr_ref_num'])
+		(_check_bvr, 'Error ! Invalid Bvr Number.', [''])
 	]
 
 	
