@@ -187,7 +187,7 @@ def _v11_parsing(self, cr, uid, data, context):
 			bk_st_id = pool.get('account.bank.statement').create(cr,uid,{
 				'journal_id': data['form']['journal_id'],
 				'balance_start': 0,
-				'balance_end_real': i.amount_total,, 
+				'balance_end_real': i.amount_total, 
 				'state':'draft',
 			})
 			pool.get('account.bank.statement.line').create(cr,uid,{
