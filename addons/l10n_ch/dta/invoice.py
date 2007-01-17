@@ -75,7 +75,6 @@ class account_invoice(osv.osv):
 		invoices = self.browse(cr,uid,ids)
 		for invoice in invoices:
 			if invoice.bvr_ref_num and self._mod10r(invoice.bvr_ref_num[:-1]) != invoice.bvr_ref_num:
-				print self._mod10r(invoice.bvr_ref_num[:-1]),"  ",invoice.bvr_ref_num
 				return False
 		return True
 	
