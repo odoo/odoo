@@ -28,7 +28,6 @@
 				<field name="bvr_number"/>
 		    </field>
 		</field>
-
 	</record>
 
 
@@ -41,9 +40,22 @@
 			<field name="journal_id" position="after">
 			<newline/>
 				<field name="dta_state" select="1"/>
+				<field name="bvr_ref_num" select="1"/>
 		    </field>
 		</field>
+	</record>
 
+	<record model="ir.ui.view" id="invoice_form2">
+		<field name="name">account.invoice.form</field>
+		<field name="model">account.invoice</field>
+		<field name="type">form</field>
+		<field name="inherit_id" ref="account.invoice_form"/>
+		<field name="arch" type="xml">
+			<field name="origin" position="after">
+			<newline/>
+				<field name="partner_comment" colspan= "4"/>
+		    </field>
+		</field>
 	</record>
 
 
@@ -116,7 +128,7 @@
 		<field name="view_mode">tree,form</field>
 	</record>
 
-	<menuitem name="Financial Management/Invoices/Generated DTA" id="menu_dta" action="action_account_dta"/>
+	<menuitem name="Financial Management/Reporting/Generated DTA" id="menu_dta" action="action_account_dta" sequence="10"/>
 
 
 

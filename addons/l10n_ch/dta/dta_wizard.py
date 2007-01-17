@@ -227,7 +227,6 @@ class record:
 class record_gt826(record):
 	# -> bvr
 	def init_local_context(self):
-		print "gt826"
 		self.fields=[
 			('seg_num1',2),
 			#header
@@ -244,7 +243,7 @@ class record_gt826(record):
 			('comp_city',10),('comp_country',20),('padding',46),
 			#seg3
 			('seg_num3',2),('partner_bvr',12),#numero d'adherent bvr
-			('padding',80),('invoice_reference',27),#communication structuree
+			('padding',80),('invoice_bvr_num',27),#communication structuree
 			('padding',2),#cle de controle
 			('padding',5)
 			]
@@ -254,13 +253,13 @@ class record_gt826(record):
 						 'partner_bank_clearing':'','partner_cpt_benef':'',
 						 'genre_trans':'826',
 						 'conv_cours':'', 'option_id_bank':'D',
+						 'partner_bvr' : '/C/'+ self.global_values['partner_bvr'],
 						 'ref2':'','ref3':'', 
 						 'format':'0'})
 
 class record_gt827(record):
 	# -> interne suisse
 	def init_local_context(self):
-		print "gt826"
 		self.fields=[
 			('seg_num1',2),
 			#header
@@ -280,7 +279,7 @@ class record_gt827(record):
 			('comp_name',24),('comp_street',24),('comp_zip',12),
 			('comp_city',12),('comp_country',24),
 			#seg4
-			('seg_num4',2),('invoice_reference',28),('padding',98),
+			('seg_num4',2),('partner_comment',28),('padding',98),
 			#seg5
 			#('padding',128)
 			]
@@ -299,7 +298,6 @@ class record_gt827(record):
 class record_gt836(record):
 	# -> iban
 	def init_local_context(self):
-		print "gt836"
 		self.fields=[
 			('seg_num1',2),
 			#header
@@ -321,14 +319,14 @@ class record_gt836(record):
 			('seg_num4',2),('partner_name',35),('partner_street',35),('partner_zip',10),('partner_city',15),
 			('partner_country',10),('padding',21),
 			#seg5
-			('seg_num5',2),('option_motif',1),('ref1',35),('ref2',35),('ref3',35),('format',1),('padding',19)
+			('seg_num5',2),('option_motif',1),('invoice_reference',105),('format',1),('padding',19)
 		]
 
 		self.pre.update( {
 			'partner_bank_clearing':'','partner_cpt_benef':'',
 			'type_paiement':'1','genre_trans':'836',
 			'conv_cours':'',
-			'ref1': self.global_values['invoice_reference'],
+			'invoice_reference': self.global_values['invoice_reference'] or self.global_values['partner_comment'],
 			'ref2':'','ref3':'',
 			'format':'0'
 		})
@@ -338,7 +336,6 @@ class record_gt836(record):
 class record_gt890(record):
 	# -> total
 	def init_local_context(self):
-		print "gt890"
 		self.fields=[
 			('seg_num1',2),
 			#header
@@ -359,7 +356,8 @@ def c_ljust(s, size):
 	"""
 	s= s or ''
 	if len(s) > size:
-		raise Exception("Too long data ! %s exceed %d character." % (s, size))
+		s= s[:len(a)]
+		print "Too long data ! %s exceed %d character." % (s, size)
 	return s.decode('utf-8').encode('latin1','replace').ljust(size)
 
 
@@ -465,6 +463,8 @@ def _create_dta(self,cr,uid,data,context):
 
 		v['partner_bank_iban']=  i.partner_bank_id.iban or False
 		v['partner_bank_number']=  i.partner_bank_id.number or False
+		v['partner_bank_number']= v['partner_bank_number'].replace('.','').replace('-','')
+		
 		v['partner_bvr']= i.partner_bank_id.bvr_number or ''
 		
 		if v['partner_bvr']:
@@ -480,6 +480,8 @@ def _create_dta(self,cr,uid,data,context):
 		v['partner_bank_country']= i.partner_bank_id.country_id  and i.partner_bank_id.country_id.name or ''
 		v['partner_bank_code']= i.partner_bank_id.bank_code or False
 		v['invoice_reference']= i.reference
+		v['invoice_bvr_num']= i.bvr_ref_num
+		v['partner_comment']= i.partner_comment
 		
 		v['partner_name'] = i.partner_id and i.partner_id.name or ''
 		if i.partner_id and i.partner_id.address and i.partner_id.address[0]:
@@ -507,7 +509,6 @@ def _create_dta(self,cr,uid,data,context):
 		# si compte iban -> iban (836)
 		# si payment structure  -> bvr (826)
 		# si non -> (827) 
-
 
 		elec_pay = i.partner_bank_id.type_id.elec_pay
 		if not elec_pay :
@@ -540,14 +541,14 @@ def _create_dta(self,cr,uid,data,context):
 
 			
 		elif elec_pay == 'bvrbank' or elec_pay == 'bvrpost':
-			if not v['invoice_reference']:
-				log= log +'\nYou must provide an invoice reference. (invoice '+ invoice_number +')' 
-
+			if not v['invoice_bvr_num']:
+				log= log +'\nYou must provide an Bvr reference number. (invoice '+ invoice_number +')' 
+				continue
 			if not v['partner_bvr']:
 				log= log +'\nYou must provide a BVR reference number in the partner bank. (invoice '+ invoice_number +')' 
 				continue
 			record_type = record_gt826
-			v['partner_bvr'] = '/C/'+v['partner_bvr']
+			
 			
 			
 		elif elec_pay == 'bvbank':

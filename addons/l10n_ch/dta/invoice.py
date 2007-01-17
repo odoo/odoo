@@ -34,17 +34,28 @@ from osv import fields, osv
 import ir
 
 class account_invoice(osv.osv):
+	
 	_inherit = "account.invoice"
 	_columns = {
 		'dta_state': fields.selection([('none','None'),
 									   ('2bp','To be paid'),
 									   ('paid','Paid')],
 									  'DTA state',readonly=True,select=True, states={'draft':[('readonly',False)]}),
+		'bvr_ref_num': fields.char('Bvr Reference Number', size=64,readonly=True, states={'draft':[('readonly',False)]}),
+		'partner_comment':fields.char('Partner Comment', size=112, readonly=True, states={'draft':[('readonly',False)]}),
 	}
 
 	_defaults = {
 		'dta_state': lambda *a: 'none',
 	}
+
+	def _check_bvr(self, cr, uid, ids):
+		return True
+	
+	_constraints = [
+		(_check_bvr, 'Error ! Invalid Bvr Number.', ['bvr_ref_num'])
+	]
+
 	
 account_invoice()
 

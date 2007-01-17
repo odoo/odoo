@@ -83,7 +83,7 @@ class account_invoice(osv.osv):
 	_description = 'Invoice'
 	_order = "number"
 	_columns = {
-		'name': fields.char('Invoice Description', size=64, required=True, select=True),
+		'name': fields.char('Invoice Description', size=64, required=True, select=True,readonly=True, states={'draft':[('readonly',False)]}),
 		'origin': fields.char('Origin', size=64),
 		'type': fields.selection([
 			('out_invoice','Customer Invoice'),
@@ -116,7 +116,7 @@ class account_invoice(osv.osv):
 		'partner_contact': fields.char('Partner Contact', size=64),
 		'partner_ref': fields.char('Partner Reference', size=64),
 
-		'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
+		'payment_term': fields.many2one('account.payment.term', 'Payment Term',readonly=True, states={'draft':[('readonly',False)]} ),
 
 		'period_id': fields.many2one('account.period', 'Force Period', help="Keep empty to use the period of the validation date."),
 
@@ -128,8 +128,9 @@ class account_invoice(osv.osv):
 		'amount_untaxed': fields.function(_amount_untaxed, method=True, digits=(16,2),string='Untaxed Amount'),
 		'amount_tax': fields.function(_amount_tax, method=True, string='Tax'),
 		'amount_total': fields.function(_amount_total, method=True, string='Total'),
-		'currency_id': fields.many2one('res.currency', 'Currency', required=True),
-		'journal_id': fields.many2one('account.journal', 'Journal', required=True, relate=True),
+		'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+		'journal_id': fields.many2one('account.journal', 'Journal', required=True, relate=True,readonly=True,
+									  states={'draft':[('readonly',False)]}),
 	}
 	_defaults = {
 		'type': lambda *a: 'out_invoice',
