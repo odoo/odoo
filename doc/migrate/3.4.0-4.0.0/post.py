@@ -86,5 +86,12 @@ cr.commit()
 cr.execute("delete from ir_ui_menu where (id not in (select parent_id from ir_ui_menu where parent_id is not null)) and (id not in (select res_id from ir_values where model='ir.ui.menu'))")
 cr.commit()
 
+# ----------------------------------------- #
+# add default value for discount in invoice #
+# ----------------------------------------- #
+
+cr.execute("update account_invoice_line set discount=0.0 where discount is null;")
+cr.commit()
+
 cr.close()
 
