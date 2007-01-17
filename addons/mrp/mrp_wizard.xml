@@ -5,7 +5,11 @@
 			<field name="name">Compute all schedulers</field>
 			<field name="wiz_name">mrp.procurement.compute.all</field>
 		</record>
-		<menuitem name="Production/Start all schedulers" action="wiz_mrp_proc0" type="wizard"/>
+		<menuitem
+			name="Production/Start all schedulers" 
+			action="wiz_mrp_proc0" 
+			type="wizard"
+			id="mrp_Sched_all"/>
 
 		<record model="ir.actions.wizard" id="wiz_mrp_proc1">
 			<field name="name">Compute procurement</field>

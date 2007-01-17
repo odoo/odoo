@@ -103,7 +103,7 @@ class account_invoice(osv.osv):
 			('open','Open'),
 			('paid','Paid'),
 			('cancel','Canceled')
-		],'State', readonly=True, select=True),
+		],'State', select=True, readonly=True),
 
 		'date_invoice': fields.date('Date Invoiced', required=True, states={'open':[('readonly',True)],'close':[('readonly',True)]}),
 		'date_due': fields.date('Due Date', states={'open':[('readonly',True)],'close':[('readonly',True)]}),

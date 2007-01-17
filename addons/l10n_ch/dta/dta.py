@@ -58,7 +58,7 @@ class account_dta_line(osv.osv):
 	}
 	_defaults = {
 		'state' : lambda *a :'draft',
-		}
+	}
 account_dta_line()
 
 
