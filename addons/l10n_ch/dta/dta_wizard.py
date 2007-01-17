@@ -27,7 +27,7 @@
 ##############################################################################
 import pooler
 import wizard
-from base64 import b64encode
+import base64 
 from osv import osv
 import time
 import pooler
@@ -624,9 +624,9 @@ def _create_dta(self,cr,uid,data,context):
 		
 
 	log = log + "\n--\nSummary :\nTotal amount paid : %.2f\nTotal amount expected : %.2f"%(amount_tot,th_amount_tot) 
-	pool.get('account.dta').write(cr,uid,[dta_id],{'note':log,'name':b64encode(dta or "")})
+	pool.get('account.dta').write(cr,uid,[dta_id],{'note':log,'name':base64.encodestring(dta or "")})
 	
-	return {'note':log, 'dta': b64encode(dta)}
+	return {'note':log, 'dta': base64.encodestring(dta)}
 
 
 

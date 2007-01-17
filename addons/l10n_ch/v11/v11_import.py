@@ -34,7 +34,7 @@ import pooler
 import time
 import wizard
 import netsvc
-from base64 import b64decode
+import base64 
 from osv import osv
 
 ask_form = """<?xml version="1.0"?>
@@ -103,7 +103,7 @@ def _v11_parsing(self, cr, uid, data, context):
 	nb_err=0
 
 	# v11 parsing :
-	for char  in b64decode(v11file):
+	for char  in base64.decodestring(v11file):
 
 		if not char == '\n':
 			line += char
