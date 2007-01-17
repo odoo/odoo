@@ -50,10 +50,10 @@ class account_invoice(osv.osv):
 	}
 
 	def _check_bvr(self, cr, uid, ids):
-		return True
+		return False
 	
 	_constraints = [
-		(_check_bvr, 'Error ! Invalid Bvr Number.', [''])
+		(_check_bvr, 'Error : Invalid Bvr Number.', [''])
 	]
 
 	
