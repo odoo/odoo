@@ -162,7 +162,7 @@ def _v11_parsing(self, cr, uid, data, context):
 	if not 	acc2:
 		return {'note': 'No debit account specified for this journal, import aborted.' }
 
-	move_list=[]
+	bkst_list=[]
 
 	for rec in rec_list:
 
@@ -178,52 +178,30 @@ def _v11_parsing(self, cr, uid, data, context):
 		try:
 			acc1 = i.partner_id.property_account_receivable[0]
 		except:
-			err_log = err_log + '\n * invoice with number '+ rec['invoice_ref'].lstrip('0') +' has no partner !'+ '\n  line : '+rec['line_number']
+			err_log = err_log + '\n * invoice with number '+ rec['invoice_ref'].lstrip('0') +\
+					  ' has no partner !'+ '\n  line : '+rec['line_number']
 			nb_err+=1
 			continue
 
 		try:
-			move_id = pool.get('account.move').create(cr, uid, {
-				'name': 'Imported from v11',
-				'period_id': period_id,
-				'journal_id': data['form']['journal_id']
-				})
-			line_id = pool.get('account.move.line').create(cr,uid,{
-				'name': 'v11', # maybe a better name ..
-				'debit': 0,
-				'credit': rec['montant'],
-				'account_id': acc1,
-				'move_id': move_id,
-				'partner_id': i.partner_id.id,
-				'date': time.strftime('%Y-%m-%d'),
-				'period_id': period_id,
+			bk_st_id = pool.get('account.bank.statement').create(cr,uid,{
 				'journal_id': data['form']['journal_id'],
-
-				})
-			pool.get('account.move.line').create(cr,uid,{
-				'name': 'v11',
-				'debit': rec['montant'],
-				'credit': 0,
-				'account_id': acc2,
-				'move_id': move_id,
-				'partner_id': i.partner_id.id,
+				'balance_start': 0,
+				'balance_end_real': i.amount_total,, 
+				'state':'draft',
+			})
+			pool.get('account.bank.statement.line').create(cr,uid,{
+				'name':i.number,
 				'date': time.strftime('%Y-%m-%d'),
-				'period_id': period_id,
-				'journal_id': data['form']['journal_id']
+				'amount': i.amount_total,
+				'type':{'out_invoice':'customer','in_invoice':'supplier','out_refund':'customer','in_refund':'supplier'}[i.type],
+				'partner_id':i.partner_id.id,
+				'account_id':i.account_id.id,
+				'statement_id': bk_st_id,
+				'invoice_id': i.id,
+			})
 
-				})
-			account_move_lines = i.move_line_id_payment_get(cr,uid,[i.id])
 
-			if not account_move_lines:
-				raise Exception("No moves associated to invoice number "+ rec['invoice_ref'].lstrip('0'))
-			account_move_lines.append(line_id )
-
-			# TODO accpeter les reconciliation qui ne marchent pas.
-  			pool.get('account.move.line').reconcile(cr,uid,account_move_lines,
-  													writeoff_acc_id=0,
-  													writeoff_journal_id=0,
-  													writeoff_period_id= 0,
-  													)
 			cr.commit()
 
 			std_log = std_log + "\nInvoice : %s, Date Due : %s, Amount received : %.2f."\
@@ -240,35 +218,29 @@ def _v11_parsing(self, cr, uid, data, context):
 		except osv.except_osv, e:
 			cr.rollback() 
 			nb_err+=1
-			if e.value.startswith('You have to provide an account for the write off entry !'):
-				err_log= err_log +'\n * Line '+rec['line_number'] +', invoice '+rec['invoice_ref'].lstrip('0')+\
-					 ' : Amount mismatch for invoice '+ rec['invoice_ref'].lstrip('0')+\
-					'( expected amount: '+str(i.amount_total)+' got :'+rec['montant'].lstrip('0')+\
-					').'
-			else:
-				err_log= err_log +'\n * Line '+rec['line_number'] +', invoice '+rec['invoice_ref'].lstrip('0')+\
-				' : '+str(e.value)
-			#raise # REMOVEME
+			err_log= err_log +'\n * Line '+rec['line_number'] +', invoice '+rec['invoice_ref'].lstrip('0')+\
+					 ' : '+str(e.value)
+			raise # REMOVEME
 
 		except Exception, e:
 			cr.rollback()
 			nb_err+=1
 			err_log= err_log +'\n * Line '+rec['line_number'] +', invoice '+rec['invoice_ref'].lstrip('0')+\
 				 ' : '+str(e)
-			#raise # REMOVEME
+			raise # REMOVEME
 		except :
 			cr.rollback()
 			nb_err+=1
-			err_log= err_log +'\n * Line '+rec['line_number'] +', invoice '+rec['invoice_ref'].lstrip('0')+' : Reconciliation Error.'
-			#raise
+			err_log= err_log +'\n * Line '+rec['line_number'] +', invoice '+rec['invoice_ref'].lstrip('0')
+			raise
 
-	move_list.append(move_id)
+	bkst_list.append(bk_st_id)
 
 	err_log= err_log + '\n\n --' +'\nNumber of parsed lines : '+ str(len(rec_list)) +'\nNumber of error : '+ str(nb_err)
 
 	pool.get('account.v11').create(cr, uid,{
 		'name':v11file,
-		'move_ids':[(6,0,move_list)],
+		'statement_ids':[(6,0,bkst_list)],
 		'note':std_log+err_log,
 		'journal_id':data['form']['journal_id'],
 		'date':time.strftime("%Y-%m-%d"),

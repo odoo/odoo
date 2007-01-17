@@ -116,6 +116,7 @@ class account_bank_statement(osv.osv):
 					'statement_id': st.id,
 					'journal_id': st.journal_id.id,
 					'period_id': st.period_id.id,
+					'ref': move.invoice_id and move.invoice_id.number or '' 
 				}, context=context)
 				if not st.journal_id.centralisation:
 					c = context.copy()

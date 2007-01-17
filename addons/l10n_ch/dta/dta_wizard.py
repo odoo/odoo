@@ -41,7 +41,7 @@ def _bank_get(self, cr, uid, context={}):
 	obj = pool.get('res.partner.bank')
 	ids = obj.search(cr, uid, [('partner_id','=',partner_id.id)])
 	res = obj.read(cr, uid, ids, ['active', 'name'], context)
-	res = [(r['active'], r['name']) for r in res]
+	res = [(r['id'], r['name']) for r in res]
 	return res 
 
 
@@ -593,7 +593,7 @@ def _create_dta(self,cr,uid,data,context):
 
 		pool.get('account.bank.statement.line').create(cr,uid,{
 			'name':i.number,
-			'date':date_value,
+			'date': time.strftime('%Y-%m-%d'),
 			'amount':dtal.amount_to_pay,
 			'type':{'out_invoice':'customer','in_invoice':'supplier','out_refund':'customer','in_refund':'supplier'}[i.type],
 			'partner_id':i.partner_id.id,
