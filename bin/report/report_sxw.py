@@ -150,9 +150,6 @@ class rml_parse(object):
 			if res is False or res is None:
 				res = ''
 		except Exception,e:
-			print e.args
-			print e
-			print dir(e)
 			res = 'Error'
 		return res
 
@@ -310,9 +307,11 @@ class report_sxw(report_rml):
 		rml_dom = xml.dom.minidom.parseString(rml)
 		
 		rml2 = rml_parser._parse(rml_dom, objs, data, header=self.header)
-		f = file("/tmp/debug.rml", "w")
-		f.write(rml2)
-		f.close()
+		#import os
+		#if os.name != "nt":
+		#	f = file("/tmp/debug.rml", "w")
+		#	f.write(rml2)
+		#	f.close()
 		report_type= data.get('report_type','pdf')
 		create_doc = self.generators[report_type]
 		pdf = create_doc(rml2)
