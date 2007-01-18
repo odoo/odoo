@@ -314,7 +314,7 @@ class res_partner_bank(osv.osv):
 		'name': fields.char('Account Name', size=64, required=True),
 		'sequence': fields.integer('Sequence'),
 		'number': fields.char('Account Number', size=64), #TODO : plan migration because of fields modifications
-		'iban': fields.char('Account Iban', size=64), 
+		'iban': fields.char('Account Iban', size=21), 
 		'type_id' : fields.many2one('res.partner.bank.type', 'Account Type', required=True),
 		'bank_name': fields.char('Bank Name', size=64),
 		'bank_code': fields.char('Bank Code', size=64),
