@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<terp>
+	<data>
+		<!-- Country -->
+		<record model="ir.ui.view" id="view_country_tree">
+			<field name="name">res.country.tree</field>
+			<field name="model">res.country</field>
+			<field name="inherit_id" ref="base.view_country_tree"/>
+			<field name="arch" type="xml">
+				<field name="code" position="after">
+					<field name="intrastat"/>
+				</field>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_country_form">
+			<field name="name">res.country.form</field>
+			<field name="model">res.country</field>
+			<field name="inherit_id" ref="base.view_country_form"/>
+			<field name="arch" type="xml">
+				<field name="code" position="after">
+					<field name="intrastat" select="1"/>
+				</field>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="product_normal_form_view">
+			<field name="name">product.normal.form</field>
+			<field name="model">product.product</field>
+			<field name="inherit_id" ref="product.product_normal_form_view"/>
+			<field name="arch" type="xml">
+				<field name="product_manager" position="after">
+					<field name="intrastat"/>
+				</field>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_report_intrastat_tree">
+			<field name="name">report.intrastat.view</field>
+			<field name="model">report.intrastat</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Intrastat Data">
+					<field name="name"/>
+					<field name="code"/>
+					<field name="intrastat"/>
+					<field name="weight"/>
+					<field name="value"/>
+					<field name="type"/>
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="action_report_intrastat_tree">
+			<field name="name">report.intrastat</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">report.intrastat</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree</field>
+			<field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
+		</record>
+
+		<menuitem name="Inventory Control/Reporting/This Month/Intrastat" action="action_report_intrastat_tree" id="menu_report_intrastat"/>
+
+		<record model="ir.actions.act_window" id="action_report_intrastat_tree_all">
+			<field name="name">report.intrastat</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">report.intrastat</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree</field>
+		</record>
+
+		<menuitem name="Inventory Control/Reporting/All Months/Intrastat" action="action_report_intrastat_tree_all" id="menu_report_intrastat_all"/>
+	</data>
+</terp>
