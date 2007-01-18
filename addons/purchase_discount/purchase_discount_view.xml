@@ -1,0 +1,27 @@
+<terp>
+<data>
+	<record model="ir.ui.view" id="purchase_discount_order_line_form">
+		<field name="name">purchase_discount.order.line.form</field>
+		<field name="model">purchase.order.line</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="purchase.purchase_order_line_form"/>
+        <field name="arch" type="xml">
+			<field name="price_unit" position="after">
+				<field name="discount"/>
+			</field>
+		</field>
+	</record>
+	<record model="ir.ui.view" id="purchase_discount_order_line_tree">
+		<field name="name">purchase_discount.order.line.tree</field>
+		<field name="model">purchase.order.line</field>
+        <field name="type">tree</field>
+        <field name="inherit_id" ref="purchase.purchase_order_line_tree"/>
+        <field name="arch" type="xml">
+			<field name="price_unit" position="after">
+				<field name="discount"/>
+			</field>
+		</field>
+	</record>
+
+</data>
+</terp>
