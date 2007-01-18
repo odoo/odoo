@@ -446,7 +446,7 @@ def _create_dta(self,cr,uid,data,context):
 			continue
 				
 		
-		v['sequence'] = str(seq).rjust(5,'0')
+		v['sequence'] = str(seq).rjust(5).replace(' ','0')
 		v['amount_to_pay']= str(dtal.amount_to_pay).replace('.',',')
 		v['invoice_number'] = invoice_number or ''
 		v['invoice_currency'] = i.currency_id.code or ''
@@ -608,13 +608,13 @@ def _create_dta(self,cr,uid,data,context):
 		inv_obj.write(cr,uid,[i.id],{'dta_state':'paid'})
 		dta_line_obj.write(cr,uid,[dtal.id],{'state':'done'})
 		seq += 1
-	
 		
 	# bank statement updated with the total amount :
 	pool.get('account.bank.statement').write(cr,uid,[bk_st_id],{'balance_end_real': amount_tot})
 	
-	# segment total 
+	# segment total
 	v['amount_total'] = str(amount_tot).replace('.',',')
+	v['sequence'] = str(seq).rjust(5).replace(' ','0')	
 	try:
 		if dta :
 			dta = dta + record_gt890(v).generate()

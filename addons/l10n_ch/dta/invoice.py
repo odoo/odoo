@@ -70,7 +70,7 @@ class account_invoice(osv.osv):
 		return result + str((10-report) % 10)
 
 
-# 0100054150009>132000000000000000000000014+ 1300132412>
+	# 0100054150009>132000000000000000000000014+ 1300132412>
 	def _check_bvr(self, cr, uid, ids):
 		invoices = self.browse(cr,uid,ids)
 		for invoice in invoices:
