@@ -3,12 +3,20 @@
 <data>
 
 	<record model="res.partner.bank" id="main_bank">
-		<field name="name">FORTIS BANK</field>
-		<field name="number">1234567</field>
+		<field name="name">BCV</field>
+		<field name="number">H 5022.9886</field>
 		<field name="bank_name">Fortis Banque</field>
+		<field name="bank_code">BCVLCH2LXX</field>
+		<field name="bvr_number">007740</field>
+		<field name="bank_clearing">767</field>
+		<field name="iban">CH350076700H50229886</field>
+		<field name="city">Lausanne</field>
+		<field name="zip">1000</field>
+		<field name="bank_guichet">Lausanne</field>
 		<field name="partner_id" ref="base.main_partner"/>
 		<field name="type_id" ref="bank_type_notype"/>
 	</record>
+
 
 	<record model="res.partner.bank" id="agrolait_bank_iban">
 		<field name="name">Dexia (with iban)</field>
