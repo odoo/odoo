@@ -40,11 +40,20 @@ class res_country(osv.osv):
 	}
 res_country()
 
+class report_intrastat_code(osv.osv):
+	_name = "report.intrastat.code"
+	_description = "Intrastat code"
+	_columns = {
+		'name': fields.char('Intrastat Code', size=16),
+		'description': fields.char('Description', size=64),
+	}
+report_intrastat_code()
+
 class product_template(osv.osv):
 	_name = "product.template"
 	_inherit = "product.template"
 	_columns = {
-		'intrastat': fields.char('Intrastat code', size=16),
+		'intrastat_id': fields.many2one('report.intrastat.code', 'Intrastat code'),
 	}
 product_template()
 
@@ -55,7 +64,7 @@ class report_intrastat(osv.osv):
 	_columns = {
 		'name': fields.date('Month', readonly=True),
 		'code': fields.char('Country code', size="2", readonly=True),
-		'intrastat': fields.char('Intratstat number', size=16, readonly=True),
+		'intrastat_id': fields.many2one('report.intrastat.code', 'Intrastat code', readonly=True),
 		'weight': fields.float('Weight', readonly=True),
 		'value': fields.float('Value', readonly=True),
 		'type': fields.selection([('import', 'Import'), ('export', 'Export')], 'Type')
@@ -66,7 +75,7 @@ class report_intrastat(osv.osv):
 				select
 					substring(m.create_date for 7)||'-01' as name,
 					min(m.id) as id,
-					pt.intrastat as intrastat,
+					pt.intrastat_id as intrastat_id,
 					case when l.usage in ('supplier', 'customer') then pc.code else c.code end as code,
 					sum(case when pol.price_unit is not null
 						then pol.price_unit * m.product_qty 
@@ -100,7 +109,7 @@ class report_intrastat(osv.osv):
 					and ((l.usage in ('supplier', 'customer') and dl.usage not in ('supplier', 'customer'))
 						or (dl.usage in ('supplier', 'customer') and l.usage not in ('supplier', 'customer')))
 					and (c.intrastat is not null or pc.intrastat is not null)
-				group by substring(m.create_date for 7), pt.intrastat, c.code, pc.code, l.usage, dl.usage
+				group by substring(m.create_date for 7), pt.intrastat_id, c.code, pc.code, l.usage, dl.usage
  			)""")
 report_intrastat()
 

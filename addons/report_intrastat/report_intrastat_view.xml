@@ -24,16 +24,51 @@
 			</field>
 		</record>
 
+		<!-- Product -->
 		<record model="ir.ui.view" id="product_normal_form_view">
 			<field name="name">product.normal.form</field>
 			<field name="model">product.product</field>
 			<field name="inherit_id" ref="product.product_normal_form_view"/>
 			<field name="arch" type="xml">
 				<field name="product_manager" position="after">
-					<field name="intrastat"/>
+					<field name="intrastat_id"/>
 				</field>
 			</field>
 		</record>
+
+		<!-- Intrastat code -->
+		<record model="ir.ui.view" id="view_report_intrastat_code_tree">
+			<field name="name">report.intrastat.code.tree</field>
+			<field name="model">report.intrastat.code</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Intrastat code">
+					<field name="name"/>
+					<field name="description"/>
+				</tree>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="view_report_intrastat_code_form">
+			<field name="name">report.intrastat.code.form</field>
+			<field name="model">report.intrastat.code</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Intrastat code">
+					<field name="name" select="1"/>
+					<field name="description" select="1"/>
+				</form>
+			</field>
+		</record>
+		<record model="ir.actions.act_window" id="action_report_intrastat_code_tree">
+			<field name="name">report.intrastat.code</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">report.intrastat.code</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem name="Products/Configuration/Intrastat code" action="action_report_intrastat_code_tree" id="menu_report_intrastat_code"/>
+
 
 		<record model="ir.ui.view" id="view_report_intrastat_tree">
 			<field name="name">report.intrastat.view</field>
@@ -43,7 +78,7 @@
 				<tree string="Intrastat Data">
 					<field name="name"/>
 					<field name="code"/>
-					<field name="intrastat"/>
+					<field name="intrastat_id"/>
 					<field name="weight"/>
 					<field name="value"/>
 					<field name="type"/>
