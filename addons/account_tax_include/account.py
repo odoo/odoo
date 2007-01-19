@@ -40,8 +40,8 @@ class account_tax(osv.osv):
 	_defaults = {
 		'python_compute_inv': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or False\n\nresult = price_unit * 0.10''',
 	}
-	def _unit_compute_inv(self, cr, uid, taxes, price_unit, address_id=None, product=None):
-		taxes = self._applicable(cr, uid, taxes, price_unit, address_id)
+	def _unit_compute_inv(self, cr, uid, taxes, price_unit, address_id=None, product=None, partner=None):
+		taxes = self._applicable(cr, uid, taxes, price_unit, address_id, product, partner)
 
 		res = []
 		taxes.reverse()
@@ -55,7 +55,7 @@ class account_tax(osv.osv):
 				res.append({'id':tax.id, 'name':tax.name, 'amount':tax.amount, 'account_collected_id':tax.account_collected_id.id, 'account_paid_id':tax.account_paid_id.id, 'base_code_id': tax.base_code_id.id, 'ref_base_code_id': tax.ref_base_code_id.id, 'sequence': tax.sequence, 'base_sign': tax.base_sign, 'tax_sign': tax.tax_sign, 'ref_base_sign': tax.ref_base_sign, 'ref_tax_sign': tax.ref_tax_sign, 'price_unit': 1, 'tax_code_id': tax.tax_code_id.id, 'ref_tax_code_id': tax.ref_tax_code_id.id,})
 			elif tax.type=='code':
 				address = address_id and self.pool.get('res.partner.address').browse(cr, uid, address_id) or None
-				localdict = {'price_unit':cur_price_unit, 'address':address, 'product':product,}
+				localdict = {'price_unit':cur_price_unit, 'address':address, 'product':product, 'partner':partner}
 				exec tax.python_compute_inv in localdict
 				amount = localdict['result']
 				res.append({
@@ -90,7 +90,7 @@ class account_tax(osv.osv):
 		taxes.reverse()
 		return res
 
-	def compute_inv(self, cr, uid, taxes, price_unit, quantity, address_id=None, product=None):
+	def compute_inv(self, cr, uid, taxes, price_unit, quantity, address_id=None, product=None, partner=None):
 		"""
 		Compute tax values for given PRICE_UNIT, QUANTITY and a buyer/seller ADDRESS_ID.
 		Price Unit is a VAT included price
@@ -100,7 +100,7 @@ class account_tax(osv.osv):
 			tax = {'name':'', 'amount':0.0, 'account_collected_id':1, 'account_paid_id':2}
 			one tax for each tax id in IDS and their childs
 		"""
-		res = self._unit_compute_inv(cr, uid, taxes, price_unit, address_id, product)
+		res = self._unit_compute_inv(cr, uid, taxes, price_unit, address_id, product, partner=None)
 		for r in res:
 			r['amount'] *= quantity
 		return res

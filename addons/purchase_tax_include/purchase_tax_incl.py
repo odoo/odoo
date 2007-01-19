@@ -56,9 +56,9 @@ class purchase_order(osv.osv):
 			cur=order.pricelist_id.currency_id
 			for line in order.order_line:
 				if order.price_type=='tax_included':
-					ttt = self.pool.get('account.tax').compute_inv(cr, uid, line.taxes_id, line.price_unit, line.product_qty, order.partner_address_id.id, line.product_id)
+					ttt = self.pool.get('account.tax').compute_inv(cr, uid, line.taxes_id, line.price_unit, line.product_qty, order.partner_address_id.id, line.product_id, order.partner_id)
 				else:
-					ttt = self.pool.get('account.tax').compute(cr, uid, line.taxes_id, line.price_unit, line.product_qty, order.partner_address_id.id, line.product_id)
+					ttt = self.pool.get('account.tax').compute(cr, uid, line.taxes_id, line.price_unit, line.product_qty, order.partner_address_id.id, line.product_id, order.partner_id)
 				for c in ttt:
 					val += cur_obj.round(cr, uid, cur, c['amount'])
 			res[order.id]=cur_obj.round(cr, uid, cur, val)

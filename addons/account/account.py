@@ -790,7 +790,7 @@ class account_tax(osv.osv):
 		'include_base_amount': fields.boolean('Include in base amount', help="Indicate if the amount of tax must be included in the base amount for the computation of the next taxes"),
 	}
 	_defaults = {
-		'python_compute': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n\nresult = price_unit * 0.10''',
+		'python_compute': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or None\n# partner : res.partner object or None\n\nresult = price_unit * 0.10''',
 		'applicable_type': lambda *a: 'true',
 		'type': lambda *a: 'percent',
 		'amount': lambda *a: 0.196,
@@ -805,11 +805,11 @@ class account_tax(osv.osv):
 	}
 	_order = 'sequence'
 	
-	def _applicable(self, cr, uid, taxes, price_unit, address_id=None):
+	def _applicable(self, cr, uid, taxes, price_unit, address_id=None, product=None, address=None):
 		res = []
 		for tax in taxes:
 			if tax.applicable_type=='code':
-				localdict = {'price_unit':price_unit, 'address':self.pool.get('res.partner.address').browse(cr, uid, address_id)}
+				localdict = {'price_unit':price_unit, 'address':self.pool.get('res.partner.address').browse(cr, uid, address_id), 'product':product, 'partner':partner}
 				exec tax.python_applicable in localdict
 				if localdict.get('result', False):
 					res.append(tax)
@@ -817,8 +817,8 @@ class account_tax(osv.osv):
 				res.append(tax)
 		return res
 
-	def _unit_compute(self, cr, uid, taxes, price_unit, address_id=None):
-		taxes = self._applicable(cr, uid, taxes, price_unit, address_id)
+	def _unit_compute(self, cr, uid, taxes, price_unit, address_id=None, product=None, partner=None):
+		taxes = self._applicable(cr, uid, taxes, price_unit, address_id, product, partner)
 
 		res = []
 		cur_price_unit=price_unit
@@ -831,7 +831,7 @@ class account_tax(osv.osv):
 				res.append({'id':tax.id, 'name':tax.name, 'amount':tax.amount, 'account_collected_id':tax.account_collected_id.id, 'account_paid_id':tax.account_paid_id.id, 'base_code_id': tax.base_code_id.id, 'ref_base_code_id': tax.ref_base_code_id.id, 'sequence': tax.sequence, 'base_sign': tax.base_sign, 'tax_sign': tax.tax_sign, 'ref_base_sign': tax.ref_base_sign, 'ref_tax_sign': tax.ref_tax_sign, 'price_unit': 1, 'tax_code_id': tax.tax_code_id.id, 'ref_tax_code_id': tax.ref_tax_code_id.id,})
 			elif tax.type=='code':
 				address = address_id and self.pool.get('res.partner.address').browse(cr, uid, address_id) or None
-				localdict = {'price_unit':cur_price_unit, 'address':address}
+				localdict = {'price_unit':cur_price_unit, 'address':address, 'product':product, 'partner':partner}
 				exec tax.python_compute in localdict
 				amount = localdict['result']
 				res.append({
@@ -866,7 +866,7 @@ class account_tax(osv.osv):
 		return res
 
 
-	def compute(self, cr, uid, taxes, price_unit, quantity, address_id=None, product_id=None):
+	def compute(self, cr, uid, taxes, price_unit, quantity, address_id=None, product=None, partner=None):
 
 		"""
 		Compute tax values for given PRICE_UNIT, QUANTITY and a buyer/seller ADDRESS_ID.
@@ -876,7 +876,7 @@ class account_tax(osv.osv):
 			tax = {'name':'', 'amount':0.0, 'account_collected_id':1, 'account_paid_id':2}
 			one tax for each tax id in IDS and their childs
 		"""
-		res = self._unit_compute(cr, uid, taxes, price_unit, address_id)
+		res = self._unit_compute(cr, uid, taxes, price_unit, address_id, product, partner)
 		for r in res:
 			r['amount'] *= quantity
 		return res
