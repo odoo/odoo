@@ -805,7 +805,7 @@ class account_tax(osv.osv):
 	}
 	_order = 'sequence'
 	
-	def _applicable(self, cr, uid, taxes, price_unit, address_id=None, product=None, address=None):
+	def _applicable(self, cr, uid, taxes, price_unit, address_id=None, product=None, partner=None):
 		res = []
 		for tax in taxes:
 			if tax.applicable_type=='code':
