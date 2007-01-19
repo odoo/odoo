@@ -21,7 +21,7 @@ from stat import ST_MODE
 opj = os.path.join
 
 name = 'tinyerp-server'
-version = '4.1.0'
+version = '4.1.1'
 
 # get python short version
 py_short_version = '%s.%s' % sys.version_info[:2]
