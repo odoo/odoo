@@ -1,0 +1,11 @@
+{
+	"name" : "Sale Order Line With Categories",
+	"author" : "Tiny",
+	"version" : "1.0",
+	"category" : "Generic Modules/Sales & Purchases",
+	"depends" : ["sale"],
+	"demo_xml" : [],
+	"update_xml" : ["sale_category_report.xml"],
+	"active": True,
+	"installable": True
+}
