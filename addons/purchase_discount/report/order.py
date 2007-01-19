@@ -33,6 +33,7 @@ import pooler
 
 class order(report_sxw.rml_parse):
 	def __init__(self, cr, uid, name, context):
+		print "foo"
 		super(order, self).__init__(cr, uid, name, context)
 		self.localcontext.update({
 			'time': time,
@@ -84,4 +85,4 @@ class order(report_sxw.rml_parse):
 		product_obj=pooler.get_pool(self.cr.dbname).get('product.product')
 		return product_obj._product_code(self.cr, self.uid, [product_id], name=None, arg=None, context={'partner_id': partner_id})[product_id]
 
-report_sxw.report_sxw('report.purchase.order','purchase.order','addons/purchase/report/order.rml',parser=order)
+report_sxw.report_sxw('report.purchase.order','purchase.order','addons/purchase_discount/report/order.rml',parser=order)
