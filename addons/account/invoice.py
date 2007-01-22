@@ -94,7 +94,7 @@ class account_invoice(osv.osv):
 
 		'number': fields.char('Invoice Number', size=32,readonly=True),  
 		'reference': fields.char('Invoice Reference', size=64),
-		'project_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft':[('readonly',False)]}),
+		'project_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft':[('readonly',False)]}, relate=True),
 		'comment': fields.text('Additionnal Information'),
 
 		'state': fields.selection([
