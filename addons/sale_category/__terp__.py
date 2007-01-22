@@ -6,6 +6,6 @@
 	"depends" : ["sale"],
 	"demo_xml" : [],
 	"update_xml" : ["sale_category_report.xml"],
-	"active": True,
+	"active": False,
 	"installable": True
 }
