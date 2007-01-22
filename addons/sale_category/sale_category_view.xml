@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<terp>
+<data>
+	<record model="ir.ui.view" id="view_order_withtopnotes_form">
+		<field name="name">sale_category.sale.order_withtopnotes.form.view</field>
+		<field name="type">form</field>
+		<field name="model">sale.order</field>
+		<field name="inherit_id" ref="sale.view_order_form"/>
+		<field name="arch" type="xml">
+			<field name="notes" position="before">
+				<separator string="Top notes" colspan="4"/> 				
+ 				<field name="topnotes" colspan="4" nolabel="1"/>
+				<separator string="Bottom notes" colspan="4"/>				
+			</field>
+		</field>
+	</record>
+</data>
+</terp>
