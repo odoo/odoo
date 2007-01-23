@@ -58,7 +58,7 @@ class ir_values(osv.osv):
 			else:
 				res_id=False
 			if replace:
-				ids = self.search(cr, uid, [('key','=',key),('key2','=',key2),('name','=',name),('model','=',model),('res_id','=',res_id)])
+				ids = self.search(cr, uid, [('key','=',key),('key2','=',key2),('name','=',name),('model','=',model),('res_id','=',res_id), ('user_id','=',preserve_user and uid)])
 				self.unlink(cr, uid, ids)
 			vals = {
 				'name': name,
@@ -75,9 +75,6 @@ class ir_values(osv.osv):
 			ids_res.append(self.create(cr, uid, vals))
 		return ids_res
 
-	#
-	# Improve to add user_id check
-	# 
 	def get(self, cr, uid, key, key2, models, meta=False, context={}, res_id_req=False, without_user=True, key2_req=True):
 		result = []
 		for m in models:
@@ -111,8 +108,8 @@ class ir_values(osv.osv):
 					else:
 						where1.append('res_id=%d' % (res_id,))
 
-			if not without_user:
-				where_opt.append('user_id=%d' % (uid,))
+#			if not without_user:
+			where_opt.append('user_id=%d' % (uid,))
 
 			result = []
 			ok = True
