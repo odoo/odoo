@@ -29,6 +29,7 @@ import sql_db
 import osv.osv
 import tools
 import addons
+import netsvc
 
 db_dic = {}
 pool_dic = {}
@@ -37,7 +38,8 @@ def get_db_and_pool(db_name, force_demo=False, status={}, update_module=False):
 	if db_name in db_dic:
 		db = db_dic[db_name]
 	else:
-		print 'Pooler Connecting to', db_name
+		logger = netsvc.Logger()
+		logger.notifyChannel('pooler', netsvc.LOG_INFO, 'Connecting to %s' % (db_name))
 		db = sql_db.db_connect(db_name)
 		db_dic[db_name] = db
 	

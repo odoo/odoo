@@ -73,9 +73,9 @@ class db(netsvc.Service):
 		self.actions[id] = {'clean': False}
 
 		if tools.config['db_user']:
-			res = tools.exec_pg_command('createdb', '--encoding=unicode', '--username='+tools.config['db_user'], db_name)
+			res = tools.exec_pg_command('createdb', '--quiet', '--encoding=unicode', '--username='+tools.config['db_user'], db_name)
 		else:
-			res = tools.exec_pg_command('createdb', '--encoding=unicode', db_name)
+			res = tools.exec_pg_command('createdb', '--quiet', '--encoding=unicode', db_name)
 		if not res:
 			class DBInitialize(object):
 				def __call__(self, serv, id, db_name, demo, lang):
@@ -109,6 +109,8 @@ class db(netsvc.Service):
 						traceback_str = e_str.getvalue()
 						e_str.close()
 						serv.actions[id]['traceback'] = traceback_str
+			logger = netsvc.Logger()
+			logger.notifyChannel("web-services", netsvc.LOG_INFO, 'CREATE DB: %s' % (db_name))
 
 			dbi = DBInitialize()
 			create_thread = threading.Thread(target=dbi, args=(self, id, db_name, demo, lang))
@@ -138,12 +140,14 @@ class db(netsvc.Service):
 		security.check_super(password)
 		pooler.close_db(db_name)
 		if tools.config['db_user']:
-			res = tools.exec_pg_command('dropdb', '--username='+tools.config['db_user'], db_name)
+			res = tools.exec_pg_command('dropdb', '--quiet', '--username='+tools.config['db_user'], db_name)
 		else:
-			res = tools.exec_pg_command('dropdb', db_name)
+			res = tools.exec_pg_command('dropdb', '--quiet', db_name)
 		if res:
 			raise "Couldn't drop database"
 		else:
+			logger = netsvc.Logger()
+			logger.notifyChannel("web-services", netsvc.LOG_INFO, 'DROP DB: %s' % (db_name))
 			return True
 
 	def dump(self, password, db_name):
@@ -156,6 +160,8 @@ class db(netsvc.Service):
 		stdin.close()
 		res = stdout.read()
 		stdout.close()
+		logger = netsvc.Logger()
+		logger.notifyChannel("web-services", netsvc.LOG_INFO, 'DUMP DB: %s' % (db_name))
 		return base64.encodestring(res)
 
 	def restore(self, password, db_name, data):
@@ -165,10 +171,10 @@ class db(netsvc.Service):
 			raise "Database already exists"
 		else:
 			if tools.config['db_user']:
-				args = ('createdb', '--encoding=unicode', '--username='+tools.config['db_user'], db_name)
+				args = ('createdb', '--quiet', '--encoding=unicode', '--username='+tools.config['db_user'], db_name)
 				args2 = ('pg_restore', '-U', tools.config['db_user'], '-d %s' % db_name)
 			else:
-				args = ('createdb', '--encoding=unicode', db_name)
+				args = ('createdb', '--quiet', '--encoding=unicode', db_name)
 				args2 = ('pg_restore', '-d %s' % db_name)
 			res = tools.exec_pg_command(*args)
 		if not res:
@@ -185,6 +191,8 @@ class db(netsvc.Service):
 				stdin.write(base64.decodestring(data))
 			stdin.close()
 			stdout.close()
+			logger = netsvc.Logger()
+			logger.notifyChannel("web-services", netsvc.LOG_INFO, 'RESTORE DB: %s' % (db_name))
 			return True
 		raise "Couldn't create database"
 		
