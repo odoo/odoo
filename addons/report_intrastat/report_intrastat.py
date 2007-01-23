@@ -83,7 +83,7 @@ class report_intrastat(osv.osv):
 						else
 							case when sol.price_unit is not null
 							then sol.price_unit * m.product_qty 
-							else pt.standard_price * m.product_qty 
+							else 0 
 							end
 						end) as value,
 					sum(pt.weight_net * m.product_qty) as weight,
