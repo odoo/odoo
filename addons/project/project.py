@@ -63,6 +63,16 @@ class project(osv.osv):
 					res[proj.id] += task.planned_hours
 		return res
 
+	def _check_recursion(self, cr, uid, ids):
+		level = 100
+		while len(ids):
+			cr.execute('select distinct parent_id from project_project where id in ('+','.join(map(str, ids))+')')
+			ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+			if not level:
+				return False
+			level -= 1
+		return True
+
 	def onchange_partner_id(self, cr, uid, ids, part):
 		if not part:
 			return {'value':{'contact_id': False, 'pricelist_id': False}}
@@ -109,6 +119,9 @@ class project(osv.osv):
 	}
 	
 	_order = "priority"
+	_constraints = [
+		(_check_recursion, 'Error ! You can not create recursive projects.', ['parent_id'])
+	]
 
 	# toggle activity of projects, their sub projects and their tasks
 #CHECKME: it might be better to simply override the write method
