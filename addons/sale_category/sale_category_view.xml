@@ -7,11 +7,11 @@
 		<field name="model">sale.order</field>
 		<field name="inherit_id" ref="sale.view_order_form"/>
 		<field name="arch" type="xml">
-			<field name="notes" position="before">
+			<separator string="Notes" colspan="4" position="replace">
 				<separator string="Top notes" colspan="4"/> 				
  				<field name="topnotes" colspan="4" nolabel="1"/>
 				<separator string="Bottom notes" colspan="4"/>				
-			</field>
+			</separator>
 		</field>
 	</record>
 </data>

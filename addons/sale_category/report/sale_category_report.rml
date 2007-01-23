@@ -57,7 +57,7 @@
     <paraStyle name="P10" fontName="Times-Roman" fontSize="8.0" leading="10"/>
     <paraStyle name="P11" fontName="Times-Roman" fontSize="16.0" leading="20"/>
     <paraStyle name="P12" fontName="Times-Roman" fontSize="11.0" leading="14"/>
-    <paraStyle name="P13" fontName="Times-Roman" fontSize="10.0" leading="13"/>
+    <paraStyle name="P13" fontName="Times-Roman" fontSize="10.0" leading="13" alignment="LEFT"/>
     <paraStyle name="P14" fontName="Times-Bold" fontSize="8.0" leading="10"/>
     <paraStyle name="P15" fontName="Times-Bold" fontSize="8.0" leading="10" alignment="CENTER"/>
     <paraStyle name="P16" fontName="Times-BoldItalic" fontSize="6.0" leading="8" alignment="LEFT"/>
@@ -137,7 +137,7 @@
     <para style="P12">Your order reference : [[ o.client_order_ref or '' ]]</para>
     <para style="P12">Date ordered : [[ time.strftime('%d/%m/%Y', time.strptime(o.date_order, '%Y-%m-%d')) ]]</para>
     <para style="P12">Our salesman : [[ o.user_id.name ]]</para>
-    <para style="P13">[[o.topnote or '']]</para>
+    <para style="P13">[[ o.topnotes or '' ]] </para>
     <blockTable colWidths="218.0,66.0,50.0,57.0,28.0,54.0,55.0" repeatRows="1" style="Tableau2">
       <tr>
         <td>
