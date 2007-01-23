@@ -62,7 +62,7 @@ class invoice_create(wizard.interface):
 		for account in pool.get('account.analytic.account').browse(cr, uid, account_ids, context):
 			partner = account.partner_id
 			if (not partner) or not (account.pricelist_id):
-				raise wizard.except_wizard('Analytic account incomplete', 'Plese fill in the partner and pricelist field in the analytic account:\n%s' % (account.name,))
+				raise wizard.except_wizard('Analytic account incomplete', 'Please fill in the partner and pricelist field in the analytic account:\n%s' % (account.name,))
 
 			curr_invoice = {
 				'name': time.strftime('%D')+' - '+account.name,
@@ -77,11 +77,13 @@ class invoice_create(wizard.interface):
 			last_invoice = pool.get('account.invoice').create(cr, uid, curr_invoice)
 			invoices.append(last_invoice)
 
+			context2=context.copy()
+			context2['lang'] = partner.lang
 			cr.execute("SELECT product_id,to_invoice,sum(unit_amount) FROM account_analytic_line as line WHERE account_id = %d and id IN (%s) GROUP BY product_id,to_invoice" % (account.id, ','.join(map(str,data['ids']))))
 			for product_id,factor_id,qty in cr.fetchall():
-				product = pool.get('product.product').browse(cr, uid, product_id, context)
+				product = pool.get('product.product').browse(cr, uid, product_id, context2)
 				factor_name = ''
-				factor = pool.get('hr_timesheet_invoice.factor').browse(cr, uid, factor_id, context)
+				factor = pool.get('hr_timesheet_invoice.factor').browse(cr, uid, factor_id, context2)
 				if factor.customer_name:
 					factor_name = product.name+' - '+factor.customer_name
 				else:
