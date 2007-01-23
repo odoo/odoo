@@ -119,7 +119,7 @@ class module(osv.osv):
 			mdemo = True
 			for dep in module.dependencies_id:
 				ids2 = self.search(cr, uid, [('name','=',dep.name)])
-				mdemo = mdemo and self.state_change(cr, uid, ids2, newstate, context, level-1)
+				mdemo = self.state_change(cr, uid, ids2, newstate, context, level-1) and mdemo
 			if not module.dependencies_id:
 				mdemo = module.demo
 			if module.state=='uninstalled':
