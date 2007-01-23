@@ -95,4 +95,11 @@ cr.commit()
 cr.execute('ALTER TABLE ir_ui_view DROP CONSTRAINT ir_ui_view_type')
 cr.commit()
 
+# ------------------------ #
+# update res.partner.bank  #
+# ------------------------ #
+
+cr.execute("ALTER TABLE res_partner_bank RENAME iban TO number")
+cr.commit()
+
 cr.close
