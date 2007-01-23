@@ -345,7 +345,7 @@ class stock_picking(osv.osv):
 			("none","No invoice")], "Invoice state"),
 	}
 	_defaults = {
-		'name': lambda *a: 'Unconfirmed picking',
+		'name': lambda *a: '/',
 		'work': lambda *a: 0,
 		'active': lambda *a: 1,
 		'state': lambda *a: 'draft',
@@ -356,7 +356,6 @@ class stock_picking(osv.osv):
 	}
 
 	def action_confirm(self, cr, uid, ids, *args):
-		print 'Confirmed', ids
 		self.write(cr, uid, ids, {'state': 'confirmed'})
 		todo = []
 		for picking in self.browse(cr, uid, ids):
