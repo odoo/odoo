@@ -330,6 +330,7 @@ class res_partner_bank(osv.osv):
 	}
 	_defaults = {
 		'active': lambda *a: 1,
+		'type_id': lambda self,cr,uid,context : self.pool.get('res.partner.bank.type').search(cr, uid, [('name','=','Other')])[0],
 	}
 res_partner_bank()
 
