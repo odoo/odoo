@@ -3,27 +3,19 @@ import time
 from report import report_sxw
 
 class analytic_partners_report(report_sxw.rml_parse):
-	# o must be an instance of
-	# analytic_partners_account_analytic_account.
-	def _init_dict(self, o):
-		self.partners_by_account.clear()
- 		for a in o.address_ids:
-			p = a.partner_id
- 			for c in p.category_id:
- 				self.partners_by_account.setdefault(c.name, []).append(p)
- 			if not p.category_id:
- 				self.partners_by_account.setdefault('Non classifie', []).append(p)
-
-
+	# o must be an instance of analytic_partners_account_analytic_account.
+	# contacts_by_partners_by_account returns a list of categories. Each
+	# category contains a list of partner names, each partner name contains
+	# a list of partner contacts. This list reflects the selected partners
+	# contacts for the selected analytic account.
+	def contacts_by_partners_by_categories(self, o):
+		categs = {} 
+		
 	def __init__(self, cr, uid, name, context):
-		# self.partners_by_account is a dictionnary where keys are category
-		# names and values are lists of partner_id.
-		self.partners_by_account={}
 		super(analytic_partners_report, self).__init__(cr, uid, name, context)
 		self.localcontext.update( {
 			'time' : time,
-			'_init_dict' : self._init_dict,
-			'partners_by_account' : self.partners_by_account,
+			'contacts_by_partners_by_categories' : self.contacts_by_partners_by_categories,
 		} )
 
 report_sxw.report_sxw(
