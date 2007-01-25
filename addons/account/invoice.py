@@ -278,8 +278,8 @@ class account_invoice(osv.osv):
 						'account_id': inv['project_id'],
 						'unit_amount': il['quantity'],
 						'amount': il['price'] * sign,
-						#'product_id': il['product_id']  and il['product_id'][0],
-						#'product_uom_id': il['uos_id']  and il['uos_id'][0],
+						'product_id': il['product_id']  and il['product_id'][0],
+						'product_uom_id': il['uos_id']  and il['uos_id'][0],
 						'general_account_id': il['account_id'],
 						'journal_id': self._get_journal_analytic(cr, uid, inv['type'])
 					})]
