@@ -114,6 +114,7 @@ class browse_record_list(list):
 #
 class browse_record(object):
 	def __init__(self, cr, uid, id, table, cache, context={}, list_class = None):
+		assert id, 'Wrong ID for the browse record, got '+str(id)+ ', expected an integer.'
 		self._list_class = list_class or browse_record_list
 		self._cr = cr
 		self._uid = uid
