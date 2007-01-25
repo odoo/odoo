@@ -590,7 +590,9 @@ class account_invoice_line(osv.osv):
 				'price_unit':line.price_unit, 
 				'quantity':line.quantity, 
 				'price':cur_obj.round(cr, uid, cur, line.quantity*line.price_unit * (1.0- (line.discount or 0.0)/100.0)),
-				'account_id':line.account_id.id
+				'account_id':line.account_id.id,
+				'product_id':line.product_id.id,
+				'uos_id':line.uos_id.id,
 			})
 			for tax in tax_obj.compute(cr, uid, line.invoice_line_tax_id, (line.price_unit *(1.0-(line['discount'] or 0.0)/100.0)), line.quantity, inv.address_invoice_id.id, line.product_id, inv.partner_id):
 				val={}
