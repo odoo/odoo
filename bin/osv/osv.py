@@ -222,7 +222,7 @@ class osv(orm.orm):
 			#obj.__class__ += (parent_class,)
 			#res = type.__new__(cls, name, bases, d)
 			name = hasattr(cls,'_name') and cls._name or cls._inherit
-			name = str(cls)
+			#name = str(cls)
 			cls = type(name, (cls, parent_class), ndict)
 
 		obj = object.__new__(cls)
