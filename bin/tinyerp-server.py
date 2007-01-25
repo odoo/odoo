@@ -196,6 +196,7 @@ if tools.config["translate_in"]:
 if tools.config["stop_after_init"]:
     sys.exit(0)
 
+
 #----------------------------------------------------------
 # Launch Server
 #----------------------------------------------------------
@@ -225,8 +226,29 @@ if not (netsvc.HAS_SSL and tools.config['secure']):
 else:
 	logger.notifyChannel("web-services", netsvc.LOG_INFO, "You are using the SSL Layer")
 
+
+tinySocket = netsvc.TinySocketDaemon(interface, 8085, False)
+logger.notifyChannel("web-services", netsvc.LOG_INFO, "starting TinySocket service, port "+str(8085))
+
+def handler(signum, frame):
+	from tools import config
+	tinySocket.stop()
+	httpd.stop()
+	netsvc.Agent.quit()
+	if config['pidfile']:
+		os.unlink(config['pidfile'])
+	sys.exit(0)
+
+from tools import config
+if config['pidfile']:
+	fd=open(config['pidfile'], 'w')
+	pidtext="%d" % (os.getpid())
+	fd.write(pidtext)
+	fd.close()
+signal.signal(signal.SIGINT, handler)
+signal.signal(signal.SIGTERM, handler)
+
 logger.notifyChannel("web-services", netsvc.LOG_INFO, 'the server is running, waiting for connections...')
-
-
+tinySocket.start()
 httpd.start()
 dispatcher.run()

@@ -9,9 +9,10 @@ class mysocket:
 			socket.AF_INET, socket.SOCK_STREAM)
 		else:
 			self.sock = sock
+		self.sock.settimeout(50)
 	def connect(self, host, port):
 		self.sock.connect((host, port))
-	def mysend(self, msg):
+	def mysend(self, msg, exception=False):
 		msg = cPickle.dumps(msg)
 		size = len(msg)
 		self.sock.send('%8d' % size)
@@ -22,7 +23,13 @@ class mysocket:
 				raise RuntimeError, "socket connection broken"
 			totalsent = totalsent + sent
 	def myreceive(self):
-		size = int(self.sock.recv(8))
+		buf=''
+		while len(buf) < 8:
+			chunk = self.sock.recv(8 - len(buf))
+			if chunk == '':
+				raise RuntimeError, "socket connection broken"
+			buf += chunk
+		size = int(buf)
 		msg = ''
 		while len(msg) < size:
 			chunk = self.sock.recv(size-len(msg))

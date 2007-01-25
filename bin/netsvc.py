@@ -256,25 +256,12 @@ class HttpDaemon(object):
 	def attach(self,path,gw):
 		pass
 
-	def handler(self,signum, frame):
-		from tools import config
+	def stop(self):
 		self.server.socket.close()
 		self.server.socket.close()
-		Agent.quit()
-		if config['pidfile']:
-			os.unlink(config['pidfile'])
 		del self.server
-		sys.exit(0)
 
 	def start(self):
-		from tools import config
-		if config['pidfile']:
-			fd=open(config['pidfile'], 'w')
-			pidtext="%d" % (os.getpid())
-			fd.write(pidtext)
-			fd.close()
-		signal.signal(signal.SIGINT, self.handler)
-		signal.signal(signal.SIGTERM, self.handler)
 		self.server.register_introspection_functions()
 
 		self.server.serve_forever()
@@ -286,6 +273,91 @@ class HttpDaemon(object):
 		#while True:
 		#	self.server.handle_request()
 		#signal.alarm(0)          # Disable the alarm
+
+import tiny_socket
+class TinySocketClientThread(threading.Thread):
+	def __init__(self, sock):
+		threading.Thread.__init__(self)
+		self.sock = sock
+
+	def run(self):
+		import traceback
+		try:
+			self.running = True
+			ts = tiny_socket.mysocket(self.sock)
+			while self.running:
+				msg = ts.myreceive()
+
+				try:
+					s=LocalService(msg[0])
+					m=getattr(s,msg[1])
+					s._service._response=None
+					r=m(*msg[2:])
+					res=s._service._response
+					if res!=None:
+						r=res
+					result = r
+				except Exception, e:
+					print "Exception in call:"
+					print '-'*60
+					traceback.print_exc(file=sys.stdout)
+					print '-'*60
+					s=str(e)
+					import tools
+					if tools.config['debug_mode']:
+						import pdb
+						tb = sys.exc_info()[2]
+						pdb.post_mortem(tb)
+					ts.mysend(s, exception=True)
+				ts.mysend(result)
+		except Exception, e:
+			return False
+	def stop(self):
+		self.running = False
+		self.sock.shutdown(socket.SHUT_RDWR)
+
+class TinySocketServerThread(threading.Thread):
+	def __init__(self, socket):
+		threading.Thread.__init__(self)
+		self.socket = socket
+		self.threads = []
+
+	def run(self):
+		try:
+			self.running = True
+			while self.running:
+				#accept connections from outside
+				(clientsocket, address) = self.socket.accept()
+				#now do something with the clientsocket
+				#in this case, we'll pretend this is a threaded server
+				ct = TinySocketClientThread(clientsocket)
+				ct.start()
+				self.threads.append(ct)
+		except Exception, e:
+			return False
+
+	def stop(self):
+		self.running=False
+		for t in self.threads:
+			t.stop()
+		self.socket.shutdown(socket.SHUT_RDWR)
+
+class TinySocketDaemon(object):
+	def __init__(self, interface, port, secure=False):
+		self.__port=port
+		self.__interface=interface
+		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		self.socket.bind((self.__interface, self.__port))
+		self.socket.listen(10)
+	def attach(self,path,gw):
+		pass
+
+	def stop(self):
+		self.st.stop()
+
+	def start(self):
+		self.st = TinySocketServerThread(self.socket)
+		self.st.start()
 
 # vim:noexpandtab:
 

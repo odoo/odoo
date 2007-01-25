@@ -236,8 +236,8 @@ class HttpDaemon(object):
 
 	def handler(self,signum, frame):
 		from tools import config
-		self.server.socket.close()
-		self.server.socket.close()
+		self.server.close()
+		self.server.close()
 		Agent.quit()
 		if config['pidfile']:
 			os.unlink(config['pidfile'])
