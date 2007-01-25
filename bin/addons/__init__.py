@@ -194,7 +194,7 @@ def load_module_graph(cr, graph, status={}):
 					logger.notifyChannel('init', netsvc.LOG_INFO, 'addon:%s:loading %s' % (m, filename))
 					name, ext = os.path.splitext(filename)
 					if ext == '.csv':
-						tools.convert_csv_import(cr, m, filename, tools.file_open(opj(m, filename)).read(), idref, mode=mode)
+						tools.convert_csv_import(cr, m, os.path.basename(filename), tools.file_open(opj(m, filename)).read(), idref, mode=mode)
 					elif ext == '.sql':
 						queries = tools.file_open(opj(m, filename)).read().split(';')
 						for query in queries:
