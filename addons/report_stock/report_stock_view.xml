@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<terp>
+	<data>
+
+		<record model="ir.ui.view" id="report_stock_prodlots_tree">
+			<field name="name">report.stock.prodlots.view</field>
+			<field name="model">report.stock.prodlots</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Stock by production lots">
+					<field name="location_id" select="1"/>
+					<field name="product_id" select="1"/>
+					<field name="prodlot_id" select="1"/>
+					<field name="name"/>
+				</tree>
+			</field>
+		</record>
+
+	</data>
+</terp>
