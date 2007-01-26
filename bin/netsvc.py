@@ -282,11 +282,14 @@ class TinySocketClientThread(threading.Thread):
 
 	def run(self):
 		import traceback
+		import time
 		try:
 			self.running = True
 			ts = tiny_socket.mysocket(self.sock)
 			while self.running:
+				c = time.time()
 				msg = ts.myreceive()
+				print time.time() - c
 
 				try:
 					s=LocalService(msg[0])
@@ -311,15 +314,21 @@ class TinySocketClientThread(threading.Thread):
 					ts.mysend(s, exception=True)
 				ts.mysend(result)
 		except Exception, e:
+			print "exception", e
+			self.sock.close()
 			return False
 	def stop(self):
 		self.running = False
 		self.sock.shutdown(socket.SHUT_RDWR)
 
 class TinySocketServerThread(threading.Thread):
-	def __init__(self, socket):
+	def __init__(self, interface, port, secure=False):
 		threading.Thread.__init__(self)
-		self.socket = socket
+		self.__port=port
+		self.__interface=interface
+		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		self.socket.bind((self.__interface, self.__port))
+		self.socket.listen(5)
 		self.threads = []
 
 	def run(self):
@@ -333,31 +342,16 @@ class TinySocketServerThread(threading.Thread):
 				ct = TinySocketClientThread(clientsocket)
 				ct.start()
 				self.threads.append(ct)
+#				print "threads size:", len(self.threads)
 		except Exception, e:
 			return False
 
 	def stop(self):
 		self.running=False
 		for t in self.threads:
-			t.stop()
+			if t:
+				t.stop()
 		self.socket.shutdown(socket.SHUT_RDWR)
-
-class TinySocketDaemon(object):
-	def __init__(self, interface, port, secure=False):
-		self.__port=port
-		self.__interface=interface
-		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		self.socket.bind((self.__interface, self.__port))
-		self.socket.listen(10)
-	def attach(self,path,gw):
-		pass
-
-	def stop(self):
-		self.st.stop()
-
-	def start(self):
-		self.st = TinySocketServerThread(self.socket)
-		self.st.start()
 
 # vim:noexpandtab:
 

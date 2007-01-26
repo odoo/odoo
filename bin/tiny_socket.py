@@ -9,7 +9,7 @@ class mysocket:
 			socket.AF_INET, socket.SOCK_STREAM)
 		else:
 			self.sock = sock
-		self.sock.settimeout(50)
+		self.sock.settimeout(60)
 	def connect(self, host, port):
 		self.sock.connect((host, port))
 	def mysend(self, msg, exception=False):

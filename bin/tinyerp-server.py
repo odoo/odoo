@@ -227,7 +227,7 @@ else:
 	logger.notifyChannel("web-services", netsvc.LOG_INFO, "You are using the SSL Layer")
 
 
-tinySocket = netsvc.TinySocketDaemon(interface, 8085, False)
+tinySocket = netsvc.TinySocketServerThread(interface, 8085, False)
 logger.notifyChannel("web-services", netsvc.LOG_INFO, "starting TinySocket service, port "+str(8085))
 
 def handler(signum, frame):
