@@ -667,7 +667,7 @@ class account_move(osv.osv):
 					'journal_id': move.journal_id.id,
 					'period_id': move.period_id.id,
 					#'tax_code_id': False,
-					'tax_amount': False,
+					#'tax_amount': False,
 					'state': 'draft'
 				}, context, check=False)
 				ok = False
@@ -739,6 +739,7 @@ class account_tax_code(osv.osv):
 		'child_ids': fields.one2many('account.tax.code', 'parent_id', 'Childs Codes'),
 		'line_ids': fields.one2many('account.move.line', 'tax_code_id', 'Lines')
 	}
+	_order = 'name'
 account_tax_code()
 
 class account_tax(osv.osv):
