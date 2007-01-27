@@ -12,6 +12,9 @@ class mysocket:
 		self.sock.settimeout(60)
 	def connect(self, host, port):
 		self.sock.connect((host, port))
+	def disconnect(self):
+		self.sock.shutdown(socket.SHUT_RDWR)
+		self.sock.close()
 	def mysend(self, msg, exception=False):
 		msg = cPickle.dumps(msg)
 		size = len(msg)
@@ -36,4 +39,8 @@ class mysocket:
 			if chunk == '':
 				raise RuntimeError, "socket connection broken"
 			msg = msg + chunk
-		return cPickle.loads(msg)
+		res = cPickle.loads(msg)
+		if isinstance(res,Exception):
+			raise res
+		else:
+			return res

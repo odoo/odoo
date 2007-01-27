@@ -276,20 +276,20 @@ class HttpDaemon(object):
 
 import tiny_socket
 class TinySocketClientThread(threading.Thread):
-	def __init__(self, sock):
+	def __init__(self, sock, threads):
 		threading.Thread.__init__(self)
 		self.sock = sock
+		self.threads = threads
 
 	def run(self):
 		import traceback
 		import time
+		import select
 		try:
 			self.running = True
 			ts = tiny_socket.mysocket(self.sock)
 			while self.running:
-				c = time.time()
 				msg = ts.myreceive()
-				print time.time() - c
 
 				try:
 					s=LocalService(msg[0])
@@ -300,6 +300,7 @@ class TinySocketClientThread(threading.Thread):
 					if res!=None:
 						r=res
 					result = r
+					ts.mysend(result)
 				except Exception, e:
 					print "Exception in call:"
 					print '-'*60
@@ -311,8 +312,10 @@ class TinySocketClientThread(threading.Thread):
 						import pdb
 						tb = sys.exc_info()[2]
 						pdb.post_mortem(tb)
-					ts.mysend(s, exception=True)
-				ts.mysend(result)
+					ts.mysend(e, exception=True)
+				self.sock.shutdown(socket.SHUT_RDWR)
+				self.threads.remove(self)
+				return True
 		except Exception, e:
 			print "exception", e
 			self.sock.close()
@@ -332,6 +335,7 @@ class TinySocketServerThread(threading.Thread):
 		self.threads = []
 
 	def run(self):
+		import select
 		try:
 			self.running = True
 			while self.running:
@@ -339,18 +343,19 @@ class TinySocketServerThread(threading.Thread):
 				(clientsocket, address) = self.socket.accept()
 				#now do something with the clientsocket
 				#in this case, we'll pretend this is a threaded server
-				ct = TinySocketClientThread(clientsocket)
+				ct = TinySocketClientThread(clientsocket, self.threads)
 				ct.start()
 				self.threads.append(ct)
 #				print "threads size:", len(self.threads)
 		except Exception, e:
+			print "exception", e
 			return False
 
 	def stop(self):
 		self.running=False
 		for t in self.threads:
-			if t:
-				t.stop()
+			print "threads"
+			t.join()
 		self.socket.shutdown(socket.SHUT_RDWR)
 
 # vim:noexpandtab:
