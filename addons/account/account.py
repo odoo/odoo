@@ -332,7 +332,7 @@ class account_bank_account(osv.osv):
 	_columns = {
 		'name': fields.char('Bank Account', size=64, required=True),
 		'code': fields.char('Code', size=6),
-		'iban': fields.char('IBAN', size=21),
+		'iban': fields.char('IBAN', size=34),
 		'swift': fields.char('Swift Code', size=24),
 		'currency_id': fields.many2one('res.currency', 'Currency', required=True),
 		'journal_id': fields.many2one('account.journal', 'Journal', required=True),
