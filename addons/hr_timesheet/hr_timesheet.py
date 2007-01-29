@@ -46,6 +46,7 @@ class hr_analytic_timesheet(osv.osv):
 	_name = "hr.analytic.timesheet"
 	_table = 'hr_analytic_timesheet'
 	_inherits = {'account.analytic.line': 'line_id'}
+	_order = "id desc"
 	_columns = {
 		'line_id' : fields.many2one('account.analytic.line', 'Analytic line', ondelete='cascade'),
 	}

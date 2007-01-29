@@ -161,6 +161,7 @@ class sale_order(osv.osv):
 		'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'sale.order'),
 		'invoice_quantity': lambda *a: 'order'
 	}
+	_order = 'name desc'
 
 	# Form filling
 	def onchange_shop_id(self, cr, uid, ids, shop_id):

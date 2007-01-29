@@ -122,6 +122,7 @@ class purchase_order(osv.osv):
 	}
 	_name = "purchase.order"
 	_description = "Purchase order"
+	_order = "name desc"
 
 	def button_dummy(self, cr, uid, ids, context={}):
 		return True
