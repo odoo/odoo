@@ -313,7 +313,7 @@ class TinySocketClientThread(threading.Thread):
 						tb = sys.exc_info()[2]
 						pdb.post_mortem(tb)
 					ts.mysend(e, exception=True)
-				self.sock.shutdown(socket.SHUT_RDWR)
+				self.sock.close()
 				self.threads.remove(self)
 				return True
 		except Exception, e:
@@ -322,7 +322,8 @@ class TinySocketClientThread(threading.Thread):
 			return False
 	def stop(self):
 		self.running = False
-		self.sock.shutdown(socket.SHUT_RDWR)
+#		self.sock.shutdown(socket.SHUT_RDWR)
+#		self.sock.close()
 
 class TinySocketServerThread(threading.Thread):
 	def __init__(self, interface, port, secure=False):
@@ -347,16 +348,19 @@ class TinySocketServerThread(threading.Thread):
 				ct.start()
 				self.threads.append(ct)
 #				print "threads size:", len(self.threads)
+			self.socket.close()
 		except Exception, e:
-			print "exception", e
+			print "exception server", e
+			self.socket.close()
 			return False
 
 	def stop(self):
 		self.running=False
 		for t in self.threads:
-			print "threads"
-			t.join()
+			print "thread"
+			t.stop()
 		self.socket.shutdown(socket.SHUT_RDWR)
+		self.socket.close()
 
 # vim:noexpandtab:
 

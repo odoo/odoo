@@ -233,7 +233,6 @@ logger.notifyChannel("web-services", netsvc.LOG_INFO, "starting TinySocket servi
 def handler(signum, frame):
 	from tools import config
 	tinySocket.stop()
-	tinySocket.join()
 	httpd.stop()
 	netsvc.Agent.quit()
 	if config['pidfile']:
