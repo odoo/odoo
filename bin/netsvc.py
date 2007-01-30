@@ -210,10 +210,8 @@ class GenericXMLRPCRequestHandler:
 #			print "TERP-RETURN :",r
 			return r
 		except Exception,e:
-			print "Exception in call:"
-			print '-'*60
-			traceback.print_exc(file=sys.stdout)
-			print '-'*60
+			logger = Logger()
+			logger.notifyChannel("web-services", LOG_ERROR, 'Exception in call: %s' % traceback.format_exc())
 			s=str(e)
 			import tools
 			if tools.config['debug_mode']:
@@ -302,10 +300,8 @@ class TinySocketClientThread(threading.Thread):
 					result = r
 					ts.mysend(result)
 				except Exception, e:
-					print "Exception in call:"
-					print '-'*60
-					traceback.print_exc(file=sys.stdout)
-					print '-'*60
+					logger = Logger()
+					logger.notifyChannel("web-services", LOG_ERROR, 'Exception in call: %s' % traceback.format_exc())
 					s=str(e)
 					import tools
 					if tools.config['debug_mode']:
@@ -317,7 +313,6 @@ class TinySocketClientThread(threading.Thread):
 				self.threads.remove(self)
 				return True
 		except Exception, e:
-			print "exception", e
 			self.sock.close()
 			return False
 	def stop(self):
@@ -331,6 +326,7 @@ class TinySocketServerThread(threading.Thread):
 		self.__port=port
 		self.__interface=interface
 		self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		self.socket.bind((self.__interface, self.__port))
 		self.socket.listen(5)
 		self.threads = []
