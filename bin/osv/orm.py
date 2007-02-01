@@ -549,6 +549,7 @@ class orm(object):
 		def process_liness(self, datas, prefix, fields_def, position=0):
 			line = datas[position]
 			row = {}
+			translate = {}
 			todo = []
 			warning = ''
 			#
@@ -578,6 +579,10 @@ class orm(object):
 							id=ir_model_data_obj._get_id(cr, uid, module, xml_id)
 							res_id=ir_model_data_obj.read(cr, uid, [id], ['res_id'])[0]['res_id']
 					row[field[0][:-3]] = res_id or False
+					continue
+				if (len(field)==len(prefix)+1) and len(field[len(prefix)].split(':lang=')) == 2:
+					f, lang = field[len(prefix)].split(':lang=')
+					translate.setdefault(lang, {})[f]=line[i] or False
 					continue
 				if (len(field)==len(prefix)+1) and (prefix==field[0:len(prefix)]):
 					if fields_def[field[len(prefix)]]['type']=='integer':
@@ -626,7 +631,7 @@ class orm(object):
 			nbrmax = 0
 			for field in todo:
 				newfd = self.pool.get(fields_def[field]['relation']).fields_get(cr, uid, context=context)
-				(newrow,max2,w2) = process_liness(self, datas, prefix+[field], newfd, position)
+				(newrow,max2,w2, translate2) = process_liness(self, datas, prefix+[field], newfd, position)
 				nbrmax = max(nbrmax, max2)
 				warning = warning+w2
 				reduce(lambda x,y: x and y, newrow)
@@ -641,7 +646,7 @@ class orm(object):
 					if not ok:
 						break
 
-					(newrow,max2,w2) = process_liness(self, datas, prefix+[field], newfd, position+i)
+					(newrow,max2,w2, translate2) = process_liness(self, datas, prefix+[field], newfd, position+i)
 					warning = warning+w2
 					if reduce(lambda x,y: x or y, newrow.values()):
 						row[field].append((0,0,newrow))
@@ -652,15 +657,19 @@ class orm(object):
 				for i in range(max(nbrmax,1)):
 					#if datas:
 					datas.pop(0)
-			result = [row, nbrmax+1, warning]
+			result = [row, nbrmax+1, warning, translate]
 			return result
 
 		fields_def = self.fields_get(cr, uid, context=context)
 		done = 0
 		while len(datas):
-			(res,other,warning) = process_liness(self, datas, [], fields_def)
+			(res,other,warning,translate) = process_liness(self, datas, [], fields_def)
 			try:
-				self.create(cr, uid, res, context)
+				id=self.create(cr, uid, res, context)
+				for lang in translate:
+					context2=context.copy()
+					context2['lang']=lang
+					self.write(cr, uid, [id], translate[lang], context2)
 			except Exception, e:
 				print e
 				cr.rollback()
