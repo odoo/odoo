@@ -66,10 +66,10 @@ logger = netsvc.Logger()
 # import the tools module so that the commandline parameters are parsed
 #-----------------------------------------------------------------------
 import tools
+import time
 
 if sys.platform=='win32':
 	import mx.DateTime
-	import time
 	mx.DateTime.strptime = lambda x,y: mx.DateTime.mktime(time.strptime(x, y))
 
 #os.chdir(tools.file_path_root)
@@ -200,35 +200,44 @@ if tools.config["stop_after_init"]:
 #----------------------------------------------------------
 # Launch Server
 #----------------------------------------------------------
-try:
-	port = int(tools.config["port"])
-except Exception:
-	logger.notifyChannel("init", netsvc.LOG_ERROR, "invalid port '%s'!" % (tools.config["port"],))
-	sys.exit(1)
-interface = tools.config["interface"]
-secure = tools.config["secure"]
 
-httpd = netsvc.HttpDaemon(interface,port, secure)
+if tools.config['xmlrpc']:
+	try:
+		port = int(tools.config["port"])
+	except Exception:
+		logger.notifyChannel("init", netsvc.LOG_ERROR, "invalid port '%s'!" % (tools.config["port"],))
+		sys.exit(1)
+	interface = tools.config["interface"]
+	secure = tools.config["secure"]
+	
+	httpd = netsvc.HttpDaemon(interface,port, secure)
+	
+	if tools.config["xmlrpc"]:
+		xml_gw = netsvc.xmlrpc.RpcGateway('web-services')
+		httpd.attach("/xmlrpc", xml_gw )
+		logger.notifyChannel("web-services", netsvc.LOG_INFO, "starting XML-RPC services, port "+str(port))
+	
+	#
+	#if tools.config["soap"]:
+	#	soap_gw = netsvc.xmlrpc.RpcGateway('web-services')
+	#	httpd.attach("/soap", soap_gw )
+	#	logger.notifyChannel("web-services", netsvc.LOG_INFO, 'starting SOAP services, port '+str(port))
+	#
+	if not (netsvc.HAS_SSL and tools.config['secure']):
+		logger.notifyChannel("web-services", netsvc.LOG_INFO, "You are not using the SSL layer")
+	else:
+		logger.notifyChannel("web-services", netsvc.LOG_INFO, "You are using the SSL Layer")
 
-if tools.config["xmlrpc"]:
-	xml_gw = netsvc.xmlrpc.RpcGateway('web-services')
-	httpd.attach("/xmlrpc", xml_gw )
-	logger.notifyChannel("web-services", netsvc.LOG_INFO, "starting XML-RPC services, port "+str(port))
-
-#
-#if tools.config["soap"]:
-#	soap_gw = netsvc.xmlrpc.RpcGateway('web-services')
-#	httpd.attach("/soap", soap_gw )
-#	logger.notifyChannel("web-services", netsvc.LOG_INFO, 'starting SOAP services, port '+str(port))
-#
-if not (netsvc.HAS_SSL and tools.config['secure']):
-	logger.notifyChannel("web-services", netsvc.LOG_INFO, "You are not using the SSL layer")
-else:
-	logger.notifyChannel("web-services", netsvc.LOG_INFO, "You are using the SSL Layer")
-
-
-tinySocket = netsvc.TinySocketServerThread(interface, 8085, False)
-logger.notifyChannel("web-services", netsvc.LOG_INFO, "starting TinySocket service, port "+str(8085))
+if tools.config['netrpc']:
+	try:
+		netport = int(tools.config["netport"])
+	except Exception:
+		logger.notifyChannel("init", netsvc.LOG_ERROR, "invalid port '%s'!" % (tools.config["netport"],))
+		sys.exit(1)
+	netinterface = tools.config["netinterface"]
+	
+	tinySocket = netsvc.TinySocketServerThread(netinterface, netport, False)
+	logger.notifyChannel("web-services", netsvc.LOG_INFO, "starting netrpc service, port "+str(netport))
 
 def handler(signum, frame):
 	from tools import config
@@ -245,10 +254,16 @@ if config['pidfile']:
 	pidtext="%d" % (os.getpid())
 	fd.write(pidtext)
 	fd.close()
+
 signal.signal(signal.SIGINT, handler)
 signal.signal(signal.SIGTERM, handler)
 
 logger.notifyChannel("web-services", netsvc.LOG_INFO, 'the server is running, waiting for connections...')
-tinySocket.start()
-httpd.start()
-dispatcher.run()
+if tools.config['netrpc']:
+	tinySocket.start()
+if tools.config['xmlrpc']:
+	httpd.start()
+#dispatcher.run()
+
+while True:
+	time.sleep(1)

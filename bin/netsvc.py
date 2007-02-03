@@ -242,8 +242,9 @@ if HAS_SSL:
 else:
 	pass
 
-class HttpDaemon(object):
+class HttpDaemon(threading.Thread):
 	def __init__(self, interface,port, secure=False):
+		threading.Thread.__init__(self)
 		self.__port=port
 		self.__interface=interface
 		if secure and HAS_SSL:
@@ -255,14 +256,20 @@ class HttpDaemon(object):
 		pass
 
 	def stop(self):
+		self.running = False
+		self.server.socket.shutdown(socket.SHUT_RDWR)
 		self.server.socket.close()
-		self.server.socket.close()
-		del self.server
+#		self.server.socket.close()
+#		del self.server
 
-	def start(self):
+	def run(self):
 		self.server.register_introspection_functions()
 
-		self.server.serve_forever()
+#		self.server.serve_forever()
+		self.running = True
+		while self.running:
+			self.server.handle_request()
+		return True
 
 		# If the server need to be run recursively
 		#
@@ -346,7 +353,6 @@ class TinySocketServerThread(threading.Thread):
 #				print "threads size:", len(self.threads)
 			self.socket.close()
 		except Exception, e:
-			print "exception server", e
 			self.socket.close()
 			return False
 

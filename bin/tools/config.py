@@ -36,6 +36,8 @@ class configmanager(object):
 			'verbose': False,
 			'interface': '',	# this will bind the server to all interfaces
 			'port': '8069',
+			'netinterface': '',
+			'netport': '8070',
 			'db_host': False,
 			'db_port': False,
 			'db_name': 'terp',
@@ -71,6 +73,10 @@ class configmanager(object):
 		
 		parser.add_option("-n", "--interface", dest="interface", help="specify the TCP IP address")
 		parser.add_option("-p", "--port", dest="port", help="specify the TCP port")
+		parser.add_option("--net_interface", dest="netinterface", help="specify the TCP IP address for netrpc")
+		parser.add_option("--net_port", dest="netport", help="specify the TCP port for netrpc")
+		parser.add_option("--no-netrpc", dest="netrpc", action="store_false", default=True, help="disable netrpc")
+		parser.add_option("--no-xmlrpc", dest="xmlrpc", action="store_false", default=True, help="disable xmlrpc")
 		
 		parser.add_option("-i", "--init", dest="init", help="init a module (use \"all\" for all modules)")
 		parser.add_option("--without-demo", dest="without_demo", help="load demo data for a module (use \"all\" for all modules)", default=False)
@@ -131,13 +137,13 @@ class configmanager(object):
                     self.options['pidfile'] = False
 		
 		for arg in ('interface', 'port', 'db_name', 'db_user', 'db_password', 'db_host',
-				'db_port', 'logfile', 'pidfile', 'secure', 'smtp_server', 'price_accuracy'):
+				'db_port', 'logfile', 'pidfile', 'secure', 'smtp_server', 'price_accuracy', 'netinterface', 'netport'):
 			if getattr(opt, arg):
 				self.options[arg] = getattr(opt, arg)
 
 		for arg in ('language', 'translate_out', 'translate_in', 
 			'upgrade', 'verbose', 'debug_mode', 
-			'stop_after_init', 'without_demo'):
+			'stop_after_init', 'without_demo', 'netrpc', 'xmlrpc'):
 			self.options[arg] = getattr(opt, arg)
 			
 		if not self.options['root_path'] or self.options['root_path']=='None':

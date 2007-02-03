@@ -40,13 +40,13 @@ def login(db, login, password):
 	if res:
 		return res[0]
 	else:
-		raise _('Bad username or password')
+		raise Exception('Bad username or password')
 
 def check_super(passwd):
 	if passwd == tools.config['admin_passwd']:
 		return True
 	else:
-		raise 'AccessDenied'
+		raise Exception('AccessDenied')
 	
 def check(db, uid, passwd):
 	#FIXME: this should be db dependent
@@ -57,7 +57,7 @@ def check(db, uid, passwd):
 	res = cr.fetchone()[0]
 	cr.close()
 	if not bool(res):
-		raise 'AccessDenied'
+		raise Exception('AccessDenied')
 	if res:
 		_uid_cache[uid] = passwd
 	return bool(res)
@@ -68,5 +68,5 @@ def access(db, uid, passwd, sec_level, ids):
 	res = cr.fetchone()
 	cr.close()
 	if not res:
-		raise _('Bad username or password')
+		raise Exception('Bad username or password')
 	return res[0]
