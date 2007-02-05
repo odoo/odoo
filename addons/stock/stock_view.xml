@@ -82,6 +82,17 @@
 	</record>
 	<menuitem name="Inventory Control/Lot Inventory" id="menu_action_inventory_form" action="action_inventory_form"/>
 
+	<record model="ir.actions.act_window" id="action_inventory_line_form">
+		<field name="name">stock.inventory.line.form</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">stock.inventory.line</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="view_id" ref="stock_inventory_line_tree"/>
+	</record>
+	<menuitem name="Inventory Control/Lot Inventory Line" id="menu_action_inventory_line_form" action="action_inventory_line_form"/>
+
+
 	=============================
 	Lot
 	=============================

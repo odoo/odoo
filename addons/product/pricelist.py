@@ -207,7 +207,7 @@ class product_pricelist_item(osv.osv):
 
 	_name = "product.pricelist.item"
 	_description = "Pricelist item"
-	_order = "sequence"
+	_order = "sequence, min_quantity desc"
 	_defaults = {
 		'base': lambda *a: -1,
 		'min_quantity': lambda *a: 1,
@@ -222,7 +222,7 @@ class product_pricelist_item(osv.osv):
 		'categ_id': fields.many2one('product.category', 'Product Category'),
 
 		'min_quantity': fields.integer('Min. Quantity', required=True),
-		'sequence': fields.integer('Priority', required=True),
+		'sequence': fields.integer('Sequence', required=True),
 		'base': fields.selection(_price_field_get, 'Based on', required=True, size=-1),
 		#'base':	fields.many2one('product.price.type', 'Based on', required=True),
 		'base_pricelist_id': fields.many2one('product.pricelist', 'If Other Pricelist'),
