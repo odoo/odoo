@@ -273,7 +273,7 @@ class account_invoice(osv.osv):
 			if inv['project_id']:
 				for il in iml:
 					il['analytic_lines'] = [(0,0, {
-						'name': il['name'],
+						'name': inv['number']+' - '+il['name'],
 						'date': time.strftime('%Y-%m-%d'),
 						'account_id': inv['project_id'],
 						'unit_amount': il['quantity'],

@@ -179,7 +179,7 @@
             <para style="P12">[[ '%.2f' % l.price_unit ]]</para>
           </td>
           <td>
-            <para style="P12">[[ '%.2f' % (l.discount or 0.0) ]] </para>
+            <para style="P12">[[ l.discount and '%.2f' % (l.discount) or '' ]] </para>
           </td>
           <td>
             <para style="P12">[[ '%.2f' %l.price_subtotal ]] [[o.currency_id.code ]]</para>
