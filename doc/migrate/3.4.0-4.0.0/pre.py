@@ -109,7 +109,8 @@ if not cr.rowcount:
 # ----------------------------------------------------- #
 
 for line in (
-		"ALTER TABLE ir_module_module ADD demo BOOLEAN DEFAULT False",
+		"ALTER TABLE ir_module_module ADD demo BOOLEAN",
+		"ALTER TABLE ir_module_module SET demo DEFAULT False",
 		"DELETE FROM ir_values WHERE VALUE LIKE '%,False'",
 		"""UPDATE ir_ui_view set arch='<?xml version="1.0"?><tree string="Menu" toolbar="1"><field icon="icon" name="name"/></tree>' where name='ir.ui.menu.tree' and type='tree' and field_parent='child_id'""",
 	):
