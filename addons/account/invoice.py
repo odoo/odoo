@@ -273,7 +273,7 @@ class account_invoice(osv.osv):
 			if inv['project_id']:
 				for il in iml:
 					il['analytic_lines'] = [(0,0, {
-						'name': inv['number']+' - '+il['name'],
+						'name': il['name'],
 						'date': time.strftime('%Y-%m-%d'),
 						'account_id': inv['project_id'],
 						'unit_amount': il['quantity'],
@@ -372,6 +372,8 @@ class account_invoice(osv.osv):
 				number = self.pool.get('ir.sequence').get(cr, uid, 'account.invoice.'+invtype)
 				cr.execute('UPDATE account_invoice SET number=%s WHERE id=%d', (number, id))
 				cr.execute('UPDATE account_move_line SET ref=%s WHERE move_id=%d and ref is null', (number, move_id))
+				cr.execute('UPDATE account_analytic_line SET name=%s||account_analytic_line.name FROM account_move_line WHERE account_move_line.move_id=%d AND account_analytic_line.move_id=account_move_line.id', (number+' - ', move_id))
+				print "move_id:", move_id
 		return True
 
 	def action_cancel(self, cr, uid, ids, *args):
