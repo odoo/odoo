@@ -217,7 +217,7 @@ class purchase_order(osv.osv):
 				'origin': o.name,
 				'invoice_line': il,
 			}
-			inv_id = self.pool.get('account.invoice').create(cr, uid, inv)
+			inv_id = self.pool.get('account.invoice').create(cr, uid, inv, {'type':'in_invoice'})
 
 			self.write(cr, uid, [o.id], {'invoice_id': inv_id})
 			res = inv_id
