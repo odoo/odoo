@@ -526,6 +526,8 @@ class property(function):
 		for r in res.keys():
 			if res[r]:
 				res[r] = (res[r], names.get(res[r], False))
+			else:
+				res[r] = (False, False)
 		return res
 
 	def _field_get(self, self2, cr, uid, prop):
