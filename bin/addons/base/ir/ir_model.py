@@ -198,7 +198,6 @@ class ir_model_data(osv.osv):
 			if xml_id:
 				self.create(cr, uid, {'name':xml_id, 'model':model, 'module':module, 'res_id':res_id, 'noupdate':noupdate})
 		else:
-			if model == 'ir.ui.menu' and not xml_id:
 			if mode=='init' or (mode=='update' and xml_id):
 				res_id = self.pool.get(model).create(cr, uid, values)
 				if xml_id:
