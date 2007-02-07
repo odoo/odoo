@@ -191,7 +191,9 @@ class email_parser(object):
 					self.msg_partner(msg, case_id)
 			else:
 				case_id = self.msg_new(msg)
-				msg['subject'] = '['+str(case_id)+'] '+self._decode_header(msg['subject'])
+				if msg.get('Subject', ''):
+					del msg['Subject']
+				msg['Subject'] = '['+str(case_id)+'] '+self._decode_header(msg['subject'])
 				print 'Case', case_id, 'created...'
 
 			emails = self.rpc('crm.case', 'emails_get', case_id)
