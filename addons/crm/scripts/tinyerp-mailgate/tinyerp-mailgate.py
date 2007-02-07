@@ -40,6 +40,7 @@ class rpc_proxy(object):
 
 class email_parser(object):
 	def __init__(self, uid, password, section, email, email_default, dbname):
+		print '* Email parser'
 		self.rpc = rpc_proxy(uid, password, dbname=dbname)
 		try:
 			self.section_id = int(section)
@@ -68,7 +69,7 @@ class email_parser(object):
 	def _decode_header(self, s):
 		from email.Header import decode_header
 		s = decode_header(s)
-		return ''.join(map(lambda x:x[0].decode(x[1] or 'ascii'), s))
+		return ''.join(map(lambda x:x[0].decode(x[1] or 'ascii', 'replace'), s))
 
 	def msg_new(self, msg):
 		description = self.msg_body_get(msg)
@@ -139,6 +140,7 @@ class email_parser(object):
 		if not len(emails):
 			return False
 		del msg['To']
+		print '0'
 		msg['To'] = emails[0]
 		if len(emails)>1:
 			if 'Cc' in msg:
@@ -148,9 +150,13 @@ class email_parser(object):
 		if priority:
 			msg['X-Priority'] = priorities.get(priority, '3 (Normal)')
 		s = smtplib.SMTP()
+		print '1'
 		s.connect()
+		print '2'
 		s.sendmail(self.email, emails[0], msg.as_string())
+		print '3'
 		s.close()
+		print '4'
 		print 'Email Sent To', emails[0], emails[1:]
 		return True
 
@@ -227,8 +233,8 @@ if __name__ == '__main__':
 
 	(options, args) = parser.parse_args()
 	parser = email_parser(options.userid, options.password, options.section, options.email, options.default, dbname=options.dbname)
+	print 
+	print '-.- ICI'
 	msg_txt = email.message_from_file(sys.stdin)
 	print 'Mail Sent to ', parser.parse(msg_txt)
-
-
 
