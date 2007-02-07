@@ -48,9 +48,9 @@ class fake_cursor:
 		self.con = con
 		self.dbname = dbname
 
-	def execute(self,*args):
-		if not fake_cursor.nbr % 1:
-			print 'sql: ',fake_cursor.nbr, args
+	def execute_not_run(self,*args):
+		#if not fake_cursor.nbr % 1:
+		#	print 'sql: ',fake_cursor.nbr, args
 		res = re.match('^select.* from ([a-zA-Z_]+) .*$', args[0], re.I)
 		if res:
 			fake_cursor._tables.setdefault(res.group(1), 0)
