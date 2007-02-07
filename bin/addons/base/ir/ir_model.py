@@ -198,6 +198,7 @@ class ir_model_data(osv.osv):
 			if xml_id:
 				self.create(cr, uid, {'name':xml_id, 'model':model, 'module':module, 'res_id':res_id, 'noupdate':noupdate})
 		else:
+			if model == 'ir.ui.menu' and not xml_id:
 			if mode=='init' or (mode=='update' and xml_id):
 				res_id = self.pool.get(model).create(cr, uid, values)
 				if xml_id:
@@ -262,19 +263,15 @@ class ir_model_data(osv.osv):
 		cr.commit()
 		for (model,id) in self.unlink_mark.keys():
 			if self.pool.get(model):
-				print 'Deleting %s@%s' % (id, model),
+				logger = netsvc.Logger()
+				logger.notifyChannel('init', netsvc.LOG_INFO, 'Deleting %s@%s' % (id, model))
 				try:
 					self.pool.get(model).unlink(cr, uid, [id])
 					if self.unlink_mark[(model,id)]:
 						self.unlink(cr, uid, [self.unlink_mark[(model,id)]])
 					cr.commit()
-					print '... ok'
 				except:
-					print '... ko'
-					print '-'*60
-					print 'WARNING: Could not delete id', id, 'of model', model
-					print '\tThere should be some relation that points to this resource'
-					print '\tYou should manually fix this and restart --update=module'
+					logger.notifyChannel('init', netsvc.LOG_ERROR, 'Could not delete id: %d of model %s\tThere should be some relation that points to this resource\tYou should manually fix this and restart --update=module' % (id, model))
 		return True
 ir_model_data()
 

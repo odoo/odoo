@@ -24,7 +24,7 @@
 		<field name="res_model">res.lang</field>
 		<field name="view_type">form</field>
 	</record>
-	<menuitem name="Administration/Custom/Interface/Languages" action="action_lang"/>
+	<menuitem name="Administration/Custom/Interface/Languages" action="action_lang" id="menu_action_lang"/>
 	
 	<ir_set>
 		<field name="key" eval="'meta'"/>
@@ -154,7 +154,7 @@
 
 	# Admin config
 
-	<menuitem name="Administration/Configuration/User" sequence="4"/>
+	<menuitem name="Administration/Configuration/User" sequence="4" id="menu_adm_conf_user"/>
 
 	<record model="ir.actions.act_window" id="open_module_users_list">
 		<field name="name">res.users.list</field>

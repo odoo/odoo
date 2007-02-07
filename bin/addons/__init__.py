@@ -217,12 +217,10 @@ def load_module_graph(cr, graph, status={}):
 			cr.execute("update ir_module_module set state='installed', demo=%s where state in ('to upgrade', 'to install') and name=%s", (str(hasattr(package, 'demo')) or package_demo, package.name))
 			cr.commit()
 		statusi+=1
-	cr.commit()
 
-#	pool = osv.osv.FakePool('base')
-#	pool = pooler.get_pool(cr.dbname)
-#	pool.get('ir.model.data')._process_end(cr, 1, package_todo)
-#	cr.commit()
+	pool = pooler.get_pool(cr.dbname)
+	pool.get('ir.model.data')._process_end(cr, 1, package_todo)
+	cr.commit()
 
 def register_classes():
 	module_list = os.listdir(ad)

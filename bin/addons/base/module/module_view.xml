@@ -40,6 +40,7 @@
 		<menuitem
 			name="Administration/Modules Management/Categories of Modules"
 			action="action_module_category_tree"
+			id="menu_action_module_category_tree"
 			/>
 
 		#
@@ -131,7 +132,7 @@
 			<field name="view_mode">tree,form</field>
 			<field name="domain"></field>
 		</record>
-		<menuitem name="Administration/Modules Management/Modules" action="open_module_tree"/>
+		<menuitem name="Administration/Modules Management/Modules" action="open_module_tree" id="menu_module_tree"/>
 
 		<record model="ir.actions.act_window" id="open_module_tree_install">
 			<field name="name">ir.module.module</field>
@@ -140,7 +141,7 @@
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('state','=','installed')]</field>
 		</record>
-		<menuitem name="Administration/Modules Management/Modules/Installed Modules" action="open_module_tree_install"/>
+		<menuitem name="Administration/Modules Management/Modules/Installed Modules" action="open_module_tree_install" id="menu_module_tree_install"/>
 		<record model="ir.actions.act_window" id="open_module_tree_uninstall">
 			<field name="name">ir.module.module</field>
 			<field name="res_model">ir.module.module</field>
@@ -148,7 +149,7 @@
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('state','=','uninstalled')]</field>
 		</record>
-		<menuitem name="Administration/Modules Management/Modules/Uninstalled Modules" action="open_module_tree_uninstall"/>
+		<menuitem name="Administration/Modules Management/Modules/Uninstalled Modules" action="open_module_tree_uninstall" id="menu_module_tree_uninstall"/>
 		<record model="ir.actions.act_window" id="open_module_tree_upgrade">
 			<field name="name">ir.module.module</field>
 			<field name="res_model">ir.module.module</field>
@@ -156,7 +157,7 @@
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('state','&lt;&gt;','uninstalled'),('state','&lt;&gt;','installed'),('state','&lt;&gt;','uninstallable'),]</field>
 		</record>
-		<menuitem name="Administration/Modules Management/Modules/Modules to be installed, upgraded or removed" action="open_module_tree_upgrade"/>
+		<menuitem name="Administration/Modules Management/Modules/Modules to be installed, upgraded or removed" action="open_module_tree_upgrade" id="menu_module_tree_upgrade"/>
 
 		<record model="ir.ui.view" id="repository_form">
 			<field name="name">ir.module.repository.form</field>

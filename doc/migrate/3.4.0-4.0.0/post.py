@@ -83,7 +83,11 @@ cr.commit()
 # remove old menu #
 # --------------- #
 
-cr.execute("delete from ir_ui_menu where (id not in (select parent_id from ir_ui_menu where parent_id is not null)) and (id not in (select res_id from ir_values where model='ir.ui.menu'))")
+while True:
+	cr.execute("select id from ir_ui_menu where (id not in (select parent_id from ir_ui_menu where parent_id is not null)) and (id not in (select res_id from ir_values where model='ir.ui.menu'))")
+	if not cr.rowcount:
+		break
+	cr.execute("delete from ir_ui_menu where (id not in (select parent_id from ir_ui_menu where parent_id is not null)) and (id not in (select res_id from ir_values where model='ir.ui.menu'))")
 cr.commit()
 
 # ----------------------------------------- #
