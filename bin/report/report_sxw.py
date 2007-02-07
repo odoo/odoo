@@ -105,10 +105,12 @@ class rml_parse(object):
 		self._node = None
 #		self.already = {}
 	
-	def setTag(self, oldtag, newtag):
+	def setTag(self, oldtag, newtag, attrs={}):
 		node = self._find_parent(self._node, [oldtag])
 		if node:
 			node.tagName = newtag
+			for key, val in attrs.items():
+				node.setAttribute(key, val)
 		return None
 
 	def removeParentNode(self, tag):
@@ -264,7 +266,10 @@ class rml_parse(object):
 				found = self._find_node(node, tag.localName)
 		#		rml_frames = found.getElementsByTagName('frame')
 				if found:
-					found.parentNode.replaceChild(tag, found)
+					if tag.hasAttribute('position') and (tag.getAttribute('position')=='inside'):
+						found.appendChild(tag)
+					else:
+						found.parentNode.replaceChild(tag, found)
 		#		for frame in rml_frames:
 		#			tag.appendChild(frame)
 		return True
