@@ -32,26 +32,26 @@ import pooler
 import time
 
 #
-# Create an invoice based on selected timesheet lines
+# Create an final invoice based on selected timesheet lines
 #
 
 #
 # TODO: check unit of measure !!!
 #
-class invoice_create(wizard.interface):
-	def _get_accounts(self, cr, uid, data, context):
-		if not len(data['ids']):
+class final_invoice_create(wizard.interface):
+	def _get_defaults(self, cr, uid, data, context):
+		if not data['ids']:
 			return {}
-		cr.execute("SELECT distinct(account_id) from account_analytic_line where id IN (%s)"% (','.join(map(str,data['ids'])),))
-		account_ids = cr.fetchall()
-		return {'accounts': [x[0] for x in account_ids]}
+		account = pooler.get_pool(cr.dbname).get('account.analytic.account').browse(cr, uid, data['ids'], context)[0]
+		return {'use_amount_max': bool(account.amount_max)}
 
 	def _do_create(self, cr, uid, data, context):
 		pool = pooler.get_pool(cr.dbname)
-		account_ids = data['form']['accounts'][0][2]
+		account_ids = data['ids']
 		invoices = []
 		for account in pool.get('account.analytic.account').browse(cr, uid, account_ids, context):
 			partner = account.partner_id
+			amount_total=0.0
 			if (not partner) or not (account.pricelist_id):
 				raise wizard.except_wizard('Analytic account incomplete', 'Please fill in the partner and pricelist field in the analytic account:\n%s' % (account.name,))
 
@@ -70,7 +70,7 @@ class invoice_create(wizard.interface):
 
 			context2=context.copy()
 			context2['lang'] = partner.lang
-			cr.execute("SELECT product_id,to_invoice,sum(unit_amount) FROM account_analytic_line as line WHERE account_id = %d and id IN (%s) GROUP BY product_id,to_invoice" % (account.id, ','.join(map(str,data['ids']))))
+			cr.execute("SELECT product_id,to_invoice,sum(unit_amount) FROM account_analytic_line as line WHERE account_id = %d AND to_invoice IS NOT NULL GROUP BY product_id,to_invoice" % (account.id,))
 			for product_id,factor_id,qty in cr.fetchall():
 				product = pool.get('product.product').browse(cr, uid, product_id, context2)
 				factor_name = ''
@@ -105,16 +105,17 @@ class invoice_create(wizard.interface):
 					'invoice_line_tax_id': [(6,0,tax )],
 					'invoice_id': last_invoice,
 					'name': factor_name,
-					'product_id': data['form']['product'] or product_id,
-					'invoice_line_tax_id': [(6,0,tax)],
+					'product_id': product_id,
 					'uos_id': product.uom_id.id,
 					'account_id': account_id[0],
 				}
 
+				amount_total += round((price * ( 1.0 - (factor.factor or 0.0)/100.0)), 2) * qty
+
 				#
 				# Compute for lines
 				#
-				cr.execute("SELECT * FROM account_analytic_line WHERE account_id = %d and id IN (%s) AND product_id=%d and to_invoice=%d" % (account.id, ','.join(map(str,data['ids'])), product_id, factor_id))
+				cr.execute("SELECT * FROM account_analytic_line WHERE account_id = %d AND product_id=%d and to_invoice=%d" % (account.id, product_id, factor_id))
 				line_ids = cr.dictfetchall()
 				note = []
 				for line in line_ids:
@@ -132,7 +133,72 @@ class invoice_create(wizard.interface):
 
 				curr_line['note'] = "\n".join(map(str,note))
 				pool.get('account.invoice.line').create(cr, uid, curr_line)
-				cr.execute("update account_analytic_line set invoice_id=%d WHERE account_id = %d and id IN (%s)" % (last_invoice,account.id, ','.join(map(str,data['ids']))))
+				cr.execute("update account_analytic_line set invoice_id=%d WHERE account_id = %d and invoice_id is null" % (last_invoice,account.id,))
+
+			cr.execute("SELECT line.product_id, sum(line.amount), line.account_id, line.product_uom_id, move_line.ref FROM account_analytic_line as line, account_move_line as move_line WHERE line.account_id = %d AND line.move_id IS NOT NULL AND move_line.id = line.move_id GROUP BY line.product_id, line.account_id, line.product_uom_id, move_line.ref" % (account.id))
+			for product_id, amount, account_id, product_uom_id, ref in cr.fetchall():
+				product = pool.get('product.product').browse(cr, uid, product_id, context2)
+
+				if product:
+					taxes = product.taxes_id
+				else:
+					taxes = []
+				taxep = account.partner_id.property_account_tax
+				if not taxep:
+					tax = [x.id for x in taxes or []]
+				else:
+					tax = [taxep[0]]
+					tp = pool.get('account.tax').browse(cr, uid, taxep[0])
+					for t in taxes:
+						if not t.tax_group==tp.tax_group:
+							tax.append(t.id)
+
+				curr_line = {
+					'price_unit': -amount,
+					'quantity': 1.0,
+					'discount': 0.0,
+					'invoice_line_tax_id': [(6,0,tax)],
+					'invoice_id': last_invoice,
+					'name': ref+(product and ' - '+product.name or ''),
+					'product_id': product_id,
+					'uos_id': product_uom_id,
+					'account_id': account_id,
+				}
+				pool.get('account.invoice.line').create(cr, uid, curr_line)
+
+			if data['form']['use_amount_max']:
+				if abs(account.amount_max - amount_total) > data['form']['balance_amount'] :
+					if not data['form']['balance_product']:
+						raise wizard.except_wizard('Balance product needed', 'Please fill a Balance product in the wizard')
+					product = pool.get('product.product').browse(cr, uid, data['form']['balance_product'], context2)
+
+					taxes = product.taxes_id
+					taxep = account.partner_id.property_account_tax
+					if not taxep:
+						tax = [x.id for x in taxes or []]
+					else:
+						tax = [taxep[0]]
+						tp = pool.get('account.tax').browse(cr, uid, taxep[0])
+						for t in taxes:
+							if not t.tax_group==tp.tax_group:
+								tax.append(t.id)
+	
+					account_id = product.product_tmpl_id.property_account_income or product.categ_id.property_account_income_categ
+
+					curr_line = {
+						'price_unit': account.amount_max - amount_total,
+						'quantity': 1.0,
+						'discount': 0.0,
+						'invoice_line_tax_id': [(6,0,tax)],
+						'invoice_id': last_invoice,
+						'name': product.name,
+						'product_id': product_id,
+						'uos_id': product.uom_id.id,
+						'account_id': account_id[0],
+					}
+					pool.get('account.invoice.line').create(cr, uid, curr_line)
+					if account.amount_max < amount_total:
+						pool.get('account.invoice').write(cr, uid, [last_invoice], {'type': 'out_refund',})
 
 		return {
 			'domain': "[('id','in', ["+','.join(map(str,invoices))+"])]",
@@ -147,30 +213,31 @@ class invoice_create(wizard.interface):
 
 
 	_create_form = """<?xml version="1.0"?>
-	<form title="Invoice on analytic entries">
+	<form title="Final invoice for analytic account">
 		<separator string="Do you want details for each line of the invoices ?" colspan="4"/>
 		<field name="date"/>
 		<field name="time"/>
 		<field name="name"/>
 		<field name="price"/>
-		<separator string="Choose accounts you want to invoice" colspan="4"/>
-		<field name="accounts" colspan="4"/>
-		<separator string="Choose a product for intermediary invoice" colspan="4"/>
-		<field name="product"/>
+		<separator string="Invoice Balance amount" colspan="4"/>
+		<field name="use_amount_max"/>
+		<field name="balance_amount"/>
+		<field name="balance_product"/>
 	</form>"""
 
 	_create_fields = {
-		'accounts': {'string':'Analytic Accounts', 'type':'many2many', 'required':'true', 'relation':'account.analytic.account'},
 		'date': {'string':'Date', 'type':'boolean'},
 		'time': {'string':'Time spent', 'type':'boolean'},
 		'name': {'string':'Name of entry', 'type':'boolean'},
 		'price': {'string':'Cost', 'type':'boolean'},
-		'product': {'string':'Product', 'type':'many2one', 'relation': 'product.product'},
+		'use_amount_max': {'string':'Use Max. Invoice Price', 'type':'boolean'},
+		'balance_amount': {'string':'Balance amount', 'type': 'float'},
+		'balance_product': {'string':'Balance product', 'type': 'many2one', 'relation':'product.product'},
 	}
 
 	states = {
 		'init' : {
-			'actions' : [_get_accounts], 
+			'actions' : [_get_defaults], 
 			'result' : {'type':'form', 'arch':_create_form, 'fields':_create_fields, 'state': [('end','Cancel'),('create','Create invoices')]},
 		},
 		'create' : {
@@ -178,4 +245,4 @@ class invoice_create(wizard.interface):
 			'result' : {'type':'action', 'action':_do_create, 'state':'end'},
 		},
 	}
-invoice_create('hr.timesheet.invoice.create')
+final_invoice_create('hr.timesheet.final.invoice.create')

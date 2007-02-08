@@ -48,6 +48,7 @@ class account_analytic_line(osv.osv):
 		'journal_id' : fields.many2one('account.analytic.journal', 'Analytic journal', required=True, ondelete='cascade', select=True),
 		'code' : fields.char('Code', size=8),
 		'user_id' : fields.many2one('res.users', 'User',),
+		'ref': fields.char('Ref.', size=32),
 	}
 		
 	_defaults = {
