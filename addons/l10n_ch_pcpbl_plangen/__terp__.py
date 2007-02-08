@@ -5,7 +5,7 @@
 	"category" : "Localisation/Account charts",
 	"depends" : ["base", "account","l10n_ch"],
 	"init_xml" : [],
-#	"update_xml" : ["account_ch_plangen.xml"],
+	"update_xml" : ["account_ch_plangen.xml"],
 	"demo_xml" : [],
 	"active": False
 }
