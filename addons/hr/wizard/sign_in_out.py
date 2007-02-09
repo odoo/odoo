@@ -29,6 +29,7 @@
 
 import wizard
 import netsvc
+import time
 
 si_so_form ='''<?xml version="1.0"?> 
 <form string="Sign in / Sign out">
@@ -56,7 +57,7 @@ so_form = '''<?xml version="1.0" ?>
 <form string="Sign in status">
 	<seperator string="This is the status of your sign out request. Check it out maybe you were already signed out." colspan="4" />
 	<field name="success" readonly="True" />
-</form>'''
+</for>'''
 
 so_fields = {
 	'success' : {'string' : "Sign out's status", 'type' : 'char', 'required' : True, 'readonly' : True}, 
@@ -73,7 +74,10 @@ def _get_empid(self, cr, uid, data, context):
 def _sign_in(self, cr, uid, data, context):
 	service = netsvc.LocalService('object_proxy')
 	emp_id = data['form']['emp_id']
-	if 'last_time' in data['form']:
+	if 'last_time' in data['form'] :
+		if data['form']['last_time'] > time.strftime('%Y-%m-%d'):
+			raise wizard.except_wizard('UserError', 'The sign-out date must be in the past')
+			return {'success': False}
 		service.execute(cr.dbname, uid, 'hr.attendance', 'create', {
 			'name': data['form']['last_time'], 
 			'action': 'sign_out',
@@ -81,6 +85,7 @@ def _sign_in(self, cr, uid, data, context):
 		})
 	try:
 		success = service.execute(cr.dbname, uid, 'hr.employee', 'sign_in', [emp_id])
+		print success
 	except:
 		raise wizard.except_wizard('UserError', 'A sign-in must be right after a sign-out !')
 	return {'success': success}
@@ -88,7 +93,10 @@ def _sign_in(self, cr, uid, data, context):
 def _sign_out(self, cr, uid, data, context):
 	service = netsvc.LocalService('object_proxy')
 	emp_id = data['form']['emp_id']
-	if 'last_time' in data['form']:
+	if 'last_time' in data['form'] :
+		if data['form']['last_time'] > time.strftime('%Y-%m-%d'):
+			raise wizard.except_wizard('UserError', 'The Sign-in date must be in the past')
+			return {'success': False}
 		service.execute(cr.dbname, uid, 'hr.attendance', 'create', {'name':data['form']['last_time'], 'action':'sign_in',  'employee_id':emp_id})
 	try:
 		success = service.execute(cr.dbname, uid, 'hr.employee', 'sign_out', [emp_id])
