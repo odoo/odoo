@@ -92,8 +92,10 @@ class ir_cron(osv.osv, netsvc.Agent):
 
 	def _callback(self, cr, uid, model, func, args):
 		args = (args or []) and eval(args)
-		f = getattr(self.pool.get(model), func)
-		f(cr, uid, *args)
+		m=self.pool.get(model)
+		if m and hasattr(func, m):
+			f = getattr(m, func)
+			f(cr, uid, *args)
 
 	def _poolJobs(self, db_name, check=False):
 		now = DateTime.now()
@@ -122,8 +124,7 @@ class ir_cron(osv.osv, netsvc.Agent):
 				addsql=''
 				if not numbercall:
 					addsql = ', active=False'
-				cr.execute("update ir_cron set nextcall=%s, numbercall=%d"+addsql+" where id=%d",
-				  (nextcall.strftime('%Y-%m-%d %H:%M:%S'), numbercall, job['id']))
+				cr.execute("update ir_cron set nextcall=%s, numbercall=%d"+addsql+" where id=%d", (nextcall.strftime('%Y-%m-%d %H:%M:%S'), numbercall, job['id']))
 				cr.commit()
 		finally:
 			cr.close()
