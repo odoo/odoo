@@ -93,7 +93,7 @@ class ir_cron(osv.osv, netsvc.Agent):
 	def _callback(self, cr, uid, model, func, args):
 		args = (args or []) and eval(args)
 		m=self.pool.get(model)
-		if m and hasattr(func, m):
+		if m and hasattr(m, func):
 			f = getattr(m, func)
 			f(cr, uid, *args)
 
