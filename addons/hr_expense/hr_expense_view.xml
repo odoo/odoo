@@ -11,7 +11,7 @@
 					<field name="date_value"/>
 					<field name="name"/>
 					<field name="ref"/>
-					<field name="analytic_account"/>
+					<field name="analytic_account" domain="[('type','=','normal')]"/>
 					<field name="unit_amount"/>
 					<field name="unit_quantity"/>
 					<field name="total_amount"/>
@@ -59,7 +59,7 @@
 								<field name="unit_amount" select="1"/>
 								<field name="total_amount"/>
 								<field name="ref" select="1"/>
-								<field name="analytic_account"/>
+								<field name="analytic_account" domain="[('type','=','normal')]"/>
 							</form>
 						</field>
 						<field name="state" select="1"/>
