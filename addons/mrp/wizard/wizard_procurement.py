@@ -55,7 +55,7 @@ parameter_fields = {
 def _procure_calculation(self, cr, uid, data, context):
 	#CHECKME: I wonder if it would be a good idea to pass the cursor...
 	# in doubt, I didn't
-	threaded_calculation = threading.Thread(target=_procure_confirm, args=(self, uid, data, context))
+	threaded_calculation = threading.Thread(target=_procure_confirm, args=(self, cr.dbname, uid, data, context))
 	threaded_calculation.start()
 	return {}
 
