@@ -543,7 +543,7 @@ class stock_picking(osv.osv):
 				})
 				if line.sale_line_id:
 					self.pool.get('sale.order.line').write(cr, uid, [line.sale_line_id.id], {
-						'invoice_line_ids': [(6, 0, [iline_id])]
+						'invoice_lines': [(6, 0, [iline_id])]
 					})
 
 			self.pool.get('stock.picking').write(cr, uid, [p.id], {'invoice_state': 'invoiced'})
