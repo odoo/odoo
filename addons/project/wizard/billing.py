@@ -94,7 +94,7 @@ def _do_orders(self, cr, uid, data, context):
 
 			a = partner.property_account_receivable[0]
 			if partner.property_payment_term:
-				pay_term = p.address_id.partner_id.property_payment_term[0]
+				pay_term = partner.property_payment_term[0]
 			else:
 				pay_term = False
 
