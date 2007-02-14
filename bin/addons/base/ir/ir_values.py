@@ -47,6 +47,8 @@ class ir_values(osv.osv):
 		'key2': lambda *a: 'tree_but_open',
 	}
 	def set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=False, preserve_user=False):
+		if type(value)==type(u''):
+			value = value.encode('utf8')
 		if not isobject:
 			value = pickle.dumps(value)
 		if meta:
