@@ -35,7 +35,7 @@ class res_partner(osv.osv):
 	_name = 'res.partner'
 	_inherit = 'res.partner'
 	_description = 'Partner'
-	def _credit_get(self, cr, uid, ids, prop, unknow_none, context):
+	def _credit_get(self, cr, uid, ids, name, arg, context):
 		res={}
 		try:
 			for partner in self.browse(cr, uid, ids, context):
@@ -48,7 +48,7 @@ class res_partner(osv.osv):
 				res[id]=0.0
 		return res
 
-	def _debit_get(self, cr, uid, ids, prop, unknow_none, unknow_dict):
+	def _debit_get(self, cr, uid, ids, name, arg, context):
 		res={}
 		try:
 			for partner in self.browse(cr, uid, ids, context):
@@ -96,7 +96,7 @@ class res_partner(osv.osv):
 		  group_name="Accounting Properties",
 		  help="This account will be used, instead of the default one, as the payable account for the current partner"),
 		'property_account_receivable': fields.property(
-		  'account.account',
+		'account.account',
 		  type='many2one', 
 		  relation='account.account', 
 		  string="Account Receivable", 
