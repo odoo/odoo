@@ -522,7 +522,10 @@ class stock_picking(osv.osv):
 			res[p.id]= invoice_id
 
 			for line in p.move_lines:
-				tax_ids = map(lambda x: x.id, line.product_id.taxes_id)
+				if line.sale_line_id:
+					tax_ids = map(lambda x: x.id, line.sale_line_id.tax_id)
+				else:
+					tax_ids = map(lambda x: x.id, line.product_id.taxes_id)
 				a =  line.product_id.product_tmpl_id.property_account_income
 				if not a:
 					a = line.product_id.categ_id.property_account_income_categ
