@@ -40,7 +40,7 @@ class subscription_document(osv.osv):
 	_columns = {
 		'name': fields.char('Name', size=60, required=True),
 		'active': fields.boolean('Active'),
-		'model': fields.char('Model', size=40),
+		'model': fields.char('Model', size=40, required=True),
 		'workflow_action': fields.char('Workflow Action', size=40),
 		'field_ids': fields.one2many('subscription.document.fields', 'document_id', 'Fields')
 	}
