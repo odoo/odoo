@@ -72,7 +72,7 @@
 			<field name="wkf_id" ref="wkf_sale"/>
 			<field name="name">invoice_except</field>
 			<field name="kind">function</field>
-			<field name="action">write({'state':'invoice_except', 'invoice_id':False})</field>
+			<field name="action">action_invoice_cancel()</field>
 		</record>
 		<record model="workflow.activity" id="act_invoice_end">
 			<field name="wkf_id" ref="wkf_sale"/>
