@@ -56,7 +56,7 @@ def emp_create_xml(cr, id, som, eom):
 	
 	xml = '''
 	<time-element date="%s">
-		<amount>%s</amount>
+		<amount>%.2f</amount>
 	</time-element>
 	'''
 	time_xml = ([xml % (day, amount) for day, amount in month.iteritems()])

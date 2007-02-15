@@ -70,7 +70,7 @@ class report_custom(report_rml):
 		
 		xml = '''
 		<time-element date="%s">
-			<amount>%s</amount>
+			<amount>%.2f</amount>
 		</time-element>
 		'''
 		account_xml = []
