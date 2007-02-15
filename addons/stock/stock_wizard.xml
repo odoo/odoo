@@ -20,5 +20,15 @@
 		<wizard string="Replace element" model="stock.tracking" name="stock.move.replace" id="move_replace" />
 		-->
 		<wizard string="Return picking" model="stock.picking" name="stock.return.picking" id="return_picking"/>
+
+		<wizard
+		string="Create invoice"
+		model="stock.picking"
+		name="stock.invoice_onshipping"
+		keyword="client_action_multi"
+		id="wizard_invoice_onshipping"
+		/>
+
+
 	</data>
 </terp>
