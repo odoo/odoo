@@ -202,6 +202,11 @@ class res_partner(osv.osv):
 	_sql_constraints = [
 		('name_uniq', 'unique (name)', 'The name of the partner must be unique !')
 	]
+
+	def copy(self, cr, uid, id, default=None, context={}):
+		name = self.read(cr, uid, [id], ['name'])[0]['name']
+		default.update({'name': name+' (copy)'})
+		return super(res_partner, self).copy(cr, uid, id, default, context)
 	
 	def _check_ean_key(self, cr, uid, ids):
 		for partner_o in pooler.get_pool(cr.dbname).get('res.partner').read(cr, uid, ids, ['ean13',]):
