@@ -44,11 +44,9 @@
 			<field name="priority">3</field>
 			<field name="inherit_id" ref="product.product_normal_form_view" />
 			<field name="arch" type="xml">
-				<field name="uos_coeff" position="after">
-					<group col="3" colspan="2">
-						<field name="calculate_price" />
-						<button name="compute_price" type="object" string="Compute standard price"/>
-					</group>
+				<field name="seller_ids" position="before">
+					<field name="calculate_price" />
+					<button name="compute_price" type="object" string="Compute standard price"/>
 				</field>
 			</field>
 		</record>
