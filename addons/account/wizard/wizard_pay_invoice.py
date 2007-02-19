@@ -86,6 +86,8 @@ def _get_period(self, cr, uid, data, context={}):
 	if len(ids):
 		period_id = ids[0]
 	invoice = pool.get('account.invoice').browse(cr, uid, data['id'], context)
+	if invoice.state == 'draft':
+		raise wizard.except_wizard('Error !', 'Can not pay draft invoice.')
 	return {'period_id': period_id, 'amount': invoice.amount_total}
 
 class wizard_pay_invoice(wizard.interface):
