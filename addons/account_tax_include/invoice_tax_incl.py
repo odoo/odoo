@@ -100,7 +100,7 @@ class account_invoice_line(osv.osv):
 				'name':line.name, 
 				'price_unit':line.price_unit, 
 				'quantity':line.quantity, 
-				'price':cur_obj.round(cr, uid, cur, line.quantity*line.price_unit * (1.0- (line.discount or 0.0)/100.0)),
+				'price':line.quantity*line.price_unit * (1.0- (line.discount or 0.0)/100.0),
 				'account_id':line.account_id.id,
 				'product_id':line.product_id.id,
 				'uos_id':line.uos_id.id,
@@ -113,6 +113,8 @@ class account_invoice_line(osv.osv):
 				val['manual'] = False
 				val['sequence'] = tax['sequence']
 				val['base'] = tax['price_unit'] * line['quantity']
+
+				res[-1]['price']-=tax['amount']
 
 				#
 				# Setting the tax account and amount for the line
@@ -141,6 +143,7 @@ class account_invoice_line(osv.osv):
 					tax_grouped[key]['base'] += val['base']
 					tax_grouped[key]['base_amount'] += val['base_amount']
 					tax_grouped[key]['tax_amount'] += val['tax_amount']
+			res[-1]['price']=cur_obj.round(cr, uid, cur, res[-1]['price'])
 		# delete automatic tax lines for this invoice
 		cr.execute("DELETE FROM account_invoice_tax WHERE NOT manual AND invoice_id=%d", (invoice_id,))
 		for t in tax_grouped.values():
