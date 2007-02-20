@@ -167,20 +167,6 @@ class rml_parse(object):
 	def _parse_text(self, text, level=[]):
 		res = self._regex.findall(text)
 		todo = []
-		for key in res:
-			newtext = self._eval(key)
-			for i in range(len(level)):
-				if isinstance(newtext, list):
-					newtext = newtext[level[i]]
-			if isinstance(newtext, list):
-				todo.append((key, newtext))
-			else:
-				if not isinstance(newtext, basestring):
-					newtext = str(newtext)
-				# if there are two [[]] blocks the same, it will replace both
-				# but it's ok because it should evaluate to the same thing 
-				# anyway
-				text = text.replace('[['+key+']]', newtext.decode('utf8'))
 		# translate the text
 		# the "split [[]] if not match [[]]" is not very nice, but I 
 		# don't see how I could do it better...
@@ -200,6 +186,20 @@ class rml_parse(object):
 							if translated_string:
 								piece_list[pn] = piece_list[pn].replace(source_string, translated_string.decode('utf8'))
 				text = ''.join(piece_list)
+		for key in res:
+			newtext = self._eval(key)
+			for i in range(len(level)):
+				if isinstance(newtext, list):
+					newtext = newtext[level[i]]
+			if isinstance(newtext, list):
+				todo.append((key, newtext))
+			else:
+				if not isinstance(newtext, basestring):
+					newtext = str(newtext)
+				# if there are two [[]] blocks the same, it will replace both
+				# but it's ok because it should evaluate to the same thing 
+				# anyway
+				text = text.replace('[['+key+']]', newtext.decode('utf8'))
 		self._node.data = text
 		if len(todo):
 			for key, newtext in todo:
