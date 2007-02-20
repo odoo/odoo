@@ -279,6 +279,8 @@ class many2one(_column):
 		for r in res.keys():
 			if res[r]:
 				res[r] = (res[r], names.get(res[r], False))
+			else:
+				res[r] = None
 		return res
 
 	def set(self, cr, obj_src, id, field, values, user=None, context={}):
@@ -527,7 +529,7 @@ class property(function):
 			if res[r]:
 				res[r] = (res[r], names.get(res[r], False))
 			else:
-				res[r] = (0, False)
+				res[r] = None
 		return res
 
 	def _field_get(self, self2, cr, uid, prop):
