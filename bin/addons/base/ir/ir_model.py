@@ -88,6 +88,8 @@ class ir_model_access(osv.osv):
 	}
 	def check(self, cr, uid, model_name, mode='read'):
 		assert mode in ['read','write','create','unlink'], 'Invalid access mode for security'
+		if uid==1:
+			return True
 
 		# fetch the list of rules for this "permission type" on this model
 		cr.execute('select group_id, perm_'+mode+' from ir_model_access a left join ir_model m on (a.model_id=m.id) where m.model=%s', (model_name,))
