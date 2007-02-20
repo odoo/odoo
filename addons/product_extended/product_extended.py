@@ -123,9 +123,6 @@ class product_product(osv.osv):
 				if no_child_bom:
 					other_bom = bom_obj.browse(cr, uid, no_child_bom)[0]
 					price += bom.product_qty * self._calc_price(cr, uid, other_bom)
-				elif bom.product_id.seller_ids:
-					pricelist_id = bom.product_id.seller_ids[0].name.property_product_pricelist_purchase[0]
-					price += pooler.get_pool(cr.dbname).get('product.pricelist').price_get(cr, uid, [pricelist_id], bom.product_id.id, bom.product_qty, 'standard')[pricelist_id]
 				else:
 					price += bom.product_qty * bom.product_id.standard_price
 				
