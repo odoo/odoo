@@ -108,7 +108,7 @@ class account_invoice(osv.osv):
 		'date_invoice': fields.date('Date Invoiced', required=True, states={'open':[('readonly',True)],'close':[('readonly',True)]}),
 		'date_due': fields.date('Due Date', states={'open':[('readonly',True)],'close':[('readonly',True)]}),
 
-		'partner_id': fields.many2one('res.partner', 'Partner', change_default=True, readonly=True, required=True, states={'draft':[('readonly',False)]}, relate=True),
+		'partner_id': fields.many2one('res.partner', 'Partner', change_default=True, readonly=True, required=True, states={'draft':[('readonly',False)]}, relate=False),
 		'partner_bank_id': fields.many2one('res.partner.bank', 'Partner bank'),
 		'address_contact_id': fields.many2one('res.partner.address', 'Contact Address', readonly=True, states={'draft':[('readonly',False)]}),
 		'address_invoice_id': fields.many2one('res.partner.address', 'Invoice Address', readonly=True, required=True, states={'draft':[('readonly',False)]}),

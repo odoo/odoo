@@ -51,10 +51,7 @@ ack_fields = {}
 
 def _makeInvoices(self, cr, uid, data, context):
 	order_obj = pooler.get_pool(cr.dbname).get('sale.order')
-	invoices = {}
-	for o in order_obj.browse(cr, uid, data['ids'], context):
-		for i in o.invoice_ids:
-			invoices[i.id] = False
+	newinv = []
 
 	order_obj.action_invoice_create(cr, uid, data['ids'], data['form']['grouped'])
 	for id in data['ids']:
@@ -63,12 +60,7 @@ def _makeInvoices(self, cr, uid, data, context):
 
 	for o in order_obj.browse(cr, uid, data['ids'], context):
 		for i in o.invoice_ids:
-			invoices.setdefault(i.id, True)
-
-	newinv = []
-	for key,val in invoices.items():
-	#	if val:
-		newinv.append(key)
+			newinv.append(i.id)
 	return {
 		'domain': "[('id','in', ["+','.join(map(str,newinv))+"])]",
 		'name': 'Invoices',

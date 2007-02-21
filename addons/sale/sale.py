@@ -250,6 +250,12 @@ class sale_order(osv.osv):
 			if created_lines:
 				invoices.setdefault(o.partner_id.id, []).append((o, created_lines))
 
+		if not invoices:
+			for o in self.browse(cr, uid, ids):
+				for i in o.invoice_ids:
+					if i.state == 'draft':
+						return i.id
+
 		for val in invoices.values():
 			if grouped:
 				res = make_invoice(val[0][0], reduce(lambda x,y: x + y, [l for o,l in val], []))
