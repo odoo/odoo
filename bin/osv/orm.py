@@ -263,11 +263,15 @@ class orm(object):
 
 		for k in self._columns:
 			f = self._columns[k]
-			cr.execute("select id from ir_model_fields where model=%s and name=%s", (self._name,k))
+			cr.execute("select id, relate from ir_model_fields where model=%s and name=%s", (self._name,k))
 			if not cr.rowcount:
 				cr.execute("select id from ir_model where model='%s'" % self._name)
 				model_id = cr.fetchone()[0]
 				cr.execute("INSERT INTO ir_model_fields (model_id, model, name, field_description, ttype, relate,relation,group_name,view_load) VALUES (%d,%s,%s,%s,%s,%s,%s,%s,%s)", (model_id, self._name, k, f.string.replace("'", " "), f._type, (f.relate and 'True') or 'False', f._obj or 'NULL', f.group_name or '', (f.view_load and 'True') or 'False'))
+			else:
+				id, relate = cr.fetchone()
+				if relate != f.relate:
+					cr.execute("UPDATE ir_model_fields SET relate=%s WHERE id=%d", ((f.relate and 'True') or 'False', id))
 		cr.commit()
 
 	def _auto_init(self, cr):
