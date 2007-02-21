@@ -37,7 +37,7 @@ class report_custom(report_rml):
 	def create_xml(self, cr, uid, ids, datas, context={}):
 		number = (datas.get('form', False) and datas['form']['number']) or 1
 		
-		def process_bom(bom):
+		def process_bom(bom, currency_id):
 			xml = '<row>'
 			sum = 0
 			sum_strd = 0
@@ -56,7 +56,9 @@ class report_custom(report_rml):
 				pricelist = prod.seller_ids[0].name.property_product_pricelist_purchase
 				if pricelist:
 					pricelist_id = pricelist[0]
-					price = pooler.get_pool(cr.dbname).get('product.pricelist').price_get(cr,uid,[pricelist_id], prod.id, number*prod_qtty or 1.0).setdefault(pricelist_id, 0)
+					pricelist_obj = pooler.get_pool(cr.dbname).get('product.pricelist')
+					price = pricelist_obj.price_get(cr,uid,[pricelist_id], prod.id, number*prod_qtty or 1.0).setdefault(pricelist_id, 0)
+					price = pooler.get_pool(cr.dbname).get('res.currency').compute(cr, uid, pricelist_obj.browse(cr, uid, pricelist_id).currency_id.id, currency_id, price)
 				else:
 					price = 0
 				main_sp_price = '%.2f' % price + '\r\n'
@@ -72,7 +74,9 @@ class report_custom(report_rml):
 				pricelist = seller_id.name.property_product_pricelist_purchase
 				if pricelist:
 					pricelist_id = pricelist[0]
-					price = pooler.get_pool(cr.dbname).get('product.pricelist').price_get(cr,uid,[pricelist_id], prod.id, number*prod_qtty or 1.0).setdefault(pricelist_id, 0)
+					pricelist_obj = pooler.get_pool(cr.dbname).get('product.pricelist')
+					price = pricelist_obj.price_get(cr,uid,[pricelist_id], prod.id, number*prod_qtty or 1.0).setdefault(pricelist_id, 0)
+					price = pooler.get_pool(cr.dbname).get('res.currency').compute(cr, uid, pricelist_obj.browse(cr, uid, pricelist_id).currency_id.id, currency_id, price)
 				else:
 					price = 0
 				sellers_price += '%.2f' % price + '\r\n'
@@ -153,6 +157,7 @@ class report_custom(report_rml):
 			</lines>
 		"""
 
+		company_currency = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid).company_id.currency_id.id
 		first = True
 		for prod_id in ids:
 			bom_ids = pooler.get_pool(cr.dbname).get('mrp.bom').search(cr, uid, [('product_id','=',prod_id)])
@@ -167,7 +172,7 @@ class report_custom(report_rml):
 				parent_bom = {'product_qty': bom.product_qty, 'name': bom.product_id.name, 'product_uom': bom.product_id.uom_id.factor, 'product_id': bom.product_id.id}
 				xml_tmp = ''
 				for sub_bom in (sub_boms and sub_boms[0]) or [parent_bom]:
-					txt, sum, sum_strd = process_bom(sub_bom)
+					txt, sum, sum_strd = process_bom(sub_bom, company_currency)
 					xml_tmp +=  txt
 					total += sum
 					total_strd += sum_strd
