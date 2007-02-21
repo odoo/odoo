@@ -59,9 +59,9 @@ def _check(self, cr, uid, data, context):
 		bank = pooler.get_pool(cr.dbname).get('res.partner.bank').browse(cr, uid, data['form']['bank'], context)
 		if not data['form']['bank']:
 			raise wizard.except_wizard('UserError','No bank specified !')
-		if not re.compile('[0-9][0-9]?\-[0-9]+-[0-9]+').match(bank.bvr_number or ''):
+		if not re.compile('[0-9][0-9]-[0-9]{3,6}-[0-9]').match(bank.bvr_number or ''):
 			raise wizard.except_wizard('UserError','Your bank BVR number should be of the form 0X-XXX-X !\nPlease check your company information.')
-		if bank.bank_code and not re.compile('^[0-9]+$').match(bank.bank_code):
+		if bank.bank_code and not re.compile('[0-9A-Z]{8,11}$').match(bank.bank_code):
 			raise wizard.except_wizard('UserError','Your bank code must be a number !\nPlease check your company information.')
 	return {}
 
