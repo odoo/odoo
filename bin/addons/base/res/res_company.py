@@ -97,9 +97,23 @@ class res_company(osv.osv):
 		except:
 			return 1
 	
+	def _check_recursion(self, cr, uid, ids):
+		level = 100
+		while len(ids):
+			cr.execute('select distinct parent_id from res_company where id in ('+','.join(map(str,ids))+')')
+			ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+			if not level:
+				return False
+			level -= 1
+		return True
+	
 	_defaults = {
 		'currency_id': _get_euro,
 	}
+
+	_constraints = [
+		(_check_recursion, 'Error! You can not create recursive companies.', ['parent_id'])
+	]
 
 res_company()
 
