@@ -6,6 +6,7 @@ import StringIO,xml.dom.minidom
 import osv,ir,pooler
 
 import csv
+import os.path
 
 from config import config
 
@@ -377,6 +378,10 @@ def convert_csv_import(cr, module, fname, csvcontent, idref={}, mode='init'):
 		return
 	model = ('.'.join(fname.split('.')[:-1]).split('-'))[0]
 	#model = fname.split('.')[0].replace('_', '.')
+
+	#remove folder path from model
+	head, model = os.path.split(model)
+
 	pool = pooler.get_pool(cr.dbname)
 #	pool = osv.osv.FakePool(module)
 
