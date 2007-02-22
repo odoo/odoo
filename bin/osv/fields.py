@@ -277,10 +277,10 @@ class many2one(_column):
 		# build a dictionary of the form {'id_of_distant_resource': name_of_distant_resource}
 		names = dict(obj.name_get(cr, user, filter(None, res.values()), context))
 		for r in res.keys():
-			if res[r]:
-				res[r] = (res[r], names.get(res[r], False))
+			if res[r] and res[r] in names:
+				res[r] = (res[r], names[res[r]])
 			else:
-				res[r] = None
+				res[r] = False
 		return res
 
 	def set(self, cr, obj_src, id, field, values, user=None, context={}):
@@ -526,10 +526,10 @@ class property(function):
 		obj = self.pool.get(self2._obj)
 		names = dict(obj.name_get(cr, uid, filter(None, res.values()), context))
 		for r in res.keys():
-			if res[r]:
-				res[r] = (res[r], names.get(res[r], False))
+			if res[r] and res[r] in names:
+				res[r] = (res[r], names[res[r]])
 			else:
-				res[r] = None
+				res[r] = False
 		return res
 
 	def _field_get(self, self2, cr, uid, prop):
