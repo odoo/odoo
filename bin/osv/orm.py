@@ -233,6 +233,11 @@ def get_pg_type(f):
 			f_type = ('int4', 'INTEGER')
 		else:
 			f_type = ('varchar', 'VARCHAR(%d)' % f_size)
+	elif isinstance(f, fields.function) and type_dict.has_key(type(locals().get('fields.'+(f._type)))):
+		t=type(locals().get('fields.'+(f._type)))
+		f_type = (type_dict[t], type_dict[t])
+	elif isinstance(f, fields.function) and f._type == 'float':
+		f_type = ('float8', 'DOUBLE PRECISION')
 	else:
 		print "WARNING: type not supported!"
 		f_type = None
@@ -348,7 +353,7 @@ class orm(object):
 					cr.execute(q)
 					res = cr.dictfetchall() 
 					if not res:
-						if not isinstance(f,fields.function):
+						if not isinstance(f,fields.function) or f.store:
 
 							# add the missing field
 							cr.execute("ALTER TABLE %s ADD COLUMN %s %s" % (self._table, k, get_pg_type(f)[1]))
@@ -387,7 +392,7 @@ class orm(object):
 						f_pg_type = f_pg_def['typname']
 						f_pg_size = f_pg_def['size']
 						f_pg_notnull = f_pg_def['attnotnull']
-						if isinstance(f, fields.function):
+						if isinstance(f, fields.function) and not f.store:
 							print '-'*60
 							print "WARNING: column %s (%s) in table %s was converted to a function !" % (k, f.string, self._table)
 							print "\tYou should remove this column from your database."
@@ -887,6 +892,7 @@ class orm(object):
 		wf_service = netsvc.LocalService("workflow")
 		for id in ids:
 			wf_service.trg_write(user, self._name, id, cr)
+		self._update_function_stored(cr, user, ids, context=context)
 		return True
 
 	#
@@ -961,7 +967,24 @@ class orm(object):
 
 		wf_service = netsvc.LocalService("workflow")
 		wf_service.trg_create(user, self._name, id_new, cr)
+		self._update_function_stored(cr, user, [id_new], context=context)
 		return id_new
+
+	def _update_function_stored(self, cr, user, ids, context={}):
+		f=filter(lambda a: isinstance(self._columns[a], fields.function) and self._columns[a].store, self._columns)
+		if f:
+			result=self.read(cr, user, ids, fields=f, context=context)
+			for res in result:
+				upd0=[]
+				upd1=[]
+				for field in res:
+					if field not in f:
+						continue
+					upd0.append(field+'='+self._columns[field]._symbol_set[0])
+					upd1.append(self._columns[field]._symbol_set[1](res[field]))
+				upd1.append(res['id'])
+				cr.execute('update '+self._table+' set '+string.join(upd0,',')+ ' where id = %d', upd1)
+		return True
 
 	#
 	# TODO: Validate

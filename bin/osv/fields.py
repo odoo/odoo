@@ -429,7 +429,7 @@ class function(_column):
 	_type = 'function'
 	_properties = True
 	
-	def __init__(self, fnct, arg=None, fnct_inv=None, fnct_inv_arg=None, type='float', fnct_search=None, obj=None, method=False, **args):
+	def __init__(self, fnct, arg=None, fnct_inv=None, fnct_inv_arg=None, type='float', fnct_search=None, obj=None, method=False, store=False, **args):
 		_column.__init__(self, **args)
 		self._obj = obj
 		self._method = method
@@ -443,6 +443,11 @@ class function(_column):
 			self.readonly = 1
 		self._type = type
 		self._fnct_search = fnct_search
+		self.store = store
+		if type == 'float':
+			self._symbol_c = '%f'
+			self._symbol_f = lambda x: __builtin__.float(x or 0.0)
+			self._symbol_set = (self._symbol_c, self._symbol_f)
 		
 	def search(self, cr, uid, obj, name, args):
 		if not self._fnct_search:
