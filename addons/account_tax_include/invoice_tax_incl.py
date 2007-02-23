@@ -69,7 +69,7 @@ class account_invoice(osv.osv):
 			('tax_excluded','Tax excluded')
 		], 'Price method', required=True),
 		'amount_untaxed': fields.function(_amount_untaxed, method=True, string='Untaxed Amount'),
-		'amount_total': fields.function(_amount_total, method=True, string='Total'),
+		'amount_total': fields.function(_amount_total, method=True, string='Total', store=True),
 	}
 	_defaults = {
 		'price_type': lambda *a: 'tax_excluded',
