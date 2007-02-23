@@ -99,14 +99,13 @@ class account_move_line(osv.osv):
 			if not taxes[t] and t[0]:
 				s=0
 				for l in move.line_id:
-					taxes = self.pool.get('account.tax').compute(cr, uid, l.account_id.tax_ids, l.debit or l.credit, 1, False)
 					key = (l.debit and 'account_paid_id') or 'account_collected_id'
-					for t2 in taxes:
-						if (t2[key] == t[0]) and (t2['tax_code_id']==t[1]):
+					for tax in self.pool.get('account.tax').compute(cr, uid, l.account_id.tax_ids, l.debit or l.credit, 1, False):
+						if (tax[key] == t[0]) and (tax['tax_code_id']==t[1]):
 							if l.debit:
-								s += t2['amount']
+								s += tax['amount']
 							else:
-								s -= t2['amount']
+								s -= tax['amount']
 				data['debit'] = s>0  and s or 0.0
 				data['credit'] = s<0  and -s or 0.0
 
