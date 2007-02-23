@@ -95,28 +95,32 @@ class account_move_line(osv.osv):
 
 		data['partner_id'] = partner_id
 
-		for t in taxes:
-			if not taxes[t] and t[0]:
-				s=0
-				for l in move.line_id:
-					key = (l.debit and 'account_paid_id') or 'account_collected_id'
-					for tax in self.pool.get('account.tax').compute(cr, uid, l.account_id.tax_ids, l.debit or l.credit, 1, False):
-						if (tax[key] == t[0]) and (tax['tax_code_id']==t[1]):
-							if l.debit:
-								s += tax['amount']
-							else:
-								s -= tax['amount']
-				data['debit'] = s>0  and s or 0.0
-				data['credit'] = s<0  and -s or 0.0
-
-				data['tax_code_id'] = t[1]
-
-				data['account_id'] = t[0]
-
-				#
-				# Compute line for tax T
-				#
-				return data
+		if move.journal_id.type in ('purchase', 'sale'):
+			field_base=''
+			if move.journal_id.type=='purchase':
+				field_base='ref_'
+			for t in taxes:
+				if not taxes[t] and t[0]:
+					s=0
+					for l in move.line_id:
+						key = (l.debit and 'account_paid_id') or 'account_collected_id'
+						for tax in self.pool.get('account.tax').compute(cr, uid, l.account_id.tax_ids, l.debit or l.credit, 1, False):
+							if (tax[key] == t[0]) and (tax[field_base+'tax_code_id']==t[1]):
+								if l.debit:
+									s += tax['amount']
+								else:
+									s -= tax['amount']
+					data['debit'] = s>0  and s or 0.0
+					data['credit'] = s<0  and -s or 0.0
+	
+					data['tax_code_id'] = t[1]
+	
+					data['account_id'] = t[0]
+	
+					#
+					# Compute line for tax T
+					#
+					return data
 
 		#
 		# Compute latest line
@@ -130,6 +134,7 @@ class account_move_line(osv.osv):
 		if data['account_id']:
 			account = self.pool.get('account.account').browse(cr, uid, data['account_id'])
 			data['tax_code_id'] = self._default_get_tax(cr, uid, account )
+		print "data:", data
 		return data
 
 	def _default_get_tax(self, cr, uid, account, debit=0, credit=0, context={}):
@@ -369,9 +374,6 @@ class account_move_line(osv.osv):
 				self.pool.get('account.move').validate(cr, uid, [line.move_id.id], context=context)
 		return result
 
-	#
-	# TO VERIFY: check if try to write journal of only one line ???
-	#
 	def write(self, cr, uid, ids, vals, context={}, check=True, update_check=True):
 		if update_check:
 			self._update_check(cr, uid, ids, context)
