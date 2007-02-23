@@ -1303,11 +1303,12 @@ class orm(object):
 						qu1.append('(%s.%s %s %s)' % (table._table, x[0], x1, table._columns[x[0]]._symbol_set[0]))
 			elif x[1]=='in':
 				if len(x[2])>0:
-					todel = False
+					todel = []
 					for xitem in range(len(x[2])):
 						if x[2][xitem]==False and isinstance(x[2][xitem],bool):
-							todel = xitem
-							del x[2][xitem]
+							todel.append(xitem)
+					for xitem in todel[::-1]:
+						del x[2][xitem]
 					if x[0]=='id':
 						qu1.append('(id=any(array[%s]))' % (','.join(['%d'] * len(x[2])),))
 					else:
