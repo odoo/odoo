@@ -23,7 +23,6 @@
 						<field name="partner_id" select="1" on_change="onchange_partner_id(partner_id)"/>
 						<field name="partner_address_id"/>
 						<field name="pricelist_id" domain="[('type','=','purchase')]"/>
-						<field name="project_id" select="1"/>
 						<field name="ref" select="1"/>
 						<field name="partner_ref" select="1"/>
 						<newline/>
@@ -129,6 +128,8 @@
 			<form string="Purchase Order Line">
 				<notebook>
 					<page string="Order Line">
+						<field name="account_analytic_id"/>
+						<newline/>
 						<field name="product_qty"/>
 						<field name="product_uom"/>
 						<field name="product_id" colspan="3" on_change="product_id_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id)" context="partner_id=parent.partner_id,quantity=product_qty,pricelist=parent.pricelist_id,uom=product_uom,warehouse=parent.warehouse_id"/>

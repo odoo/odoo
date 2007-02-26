@@ -94,7 +94,6 @@ class purchase_order(osv.osv):
 		'dest_address_id':fields.many2one('res.partner.address', 'Destination Address', states={'posted':[('readonly',True)]}),
 		'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', states={'posted':[('readonly',True)]}, relate=True),
 		'location_id': fields.many2one('stock.location', 'Delivery destination', required=True),
-		'project_id':fields.many2one('account.analytic.account', 'Analytic Account', states={'posted':[('readonly',True)]}),
 
 		'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}),
 
@@ -200,7 +199,8 @@ class purchase_order(osv.osv):
 					'quantity': ol.product_qty,
 					'product_id': ol.product_id.id or False,
 					'uos_id': ol.product_uom.id or False,
-					'invoice_line_tax_id': [(6, 0, [x.id for x in ol.taxes_id])]
+					'invoice_line_tax_id': [(6, 0, [x.id for x in ol.taxes_id])],
+					'account_analytic_id': ol.account_analytic_id.id,
 				}))
 
 			a = o.partner_id.property_account_payable[0]
@@ -211,7 +211,6 @@ class purchase_order(osv.osv):
 				'type': 'in_invoice',
 				'partner_id': o.partner_id.id,
 				'currency_id': o.pricelist_id.currency_id.id,
-				'project_id': o.project_id.id,
 				'address_invoice_id': o.partner_address_id.id,
 				'address_contact_id': o.partner_address_id.id,
 				'origin': o.name,
@@ -305,7 +304,8 @@ class purchase_order_line(osv.osv):
 		'price_unit': fields.float('Unit Price', required=True, digits=(16, int(config['price_accuracy']))),
 		'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal'),
 		'notes': fields.text('Notes'),
-		'order_id': fields.many2one('purchase.order', 'Order Ref', select=True, required=True, ondelete='cascade')
+		'order_id': fields.many2one('purchase.order', 'Order Ref', select=True, required=True, ondelete='cascade'),
+		'account_analytic_id':fields.many2one('account.analytic.account', 'Analytic Account',),
 	}
 	_defaults = {
 		'product_qty': lambda *a: 1.0

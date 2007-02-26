@@ -94,7 +94,6 @@ class account_invoice(osv.osv):
 
 		'number': fields.char('Invoice Number', size=32,readonly=True),  
 		'reference': fields.char('Invoice Reference', size=64),
-		'project_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft':[('readonly',False)]}, relate=True),
 		'comment': fields.text('Additionnal Information'),
 
 		'state': fields.selection([
@@ -270,16 +269,17 @@ class account_invoice(osv.osv):
 				sign = -1
 			# one move line per invoice line
 			iml = self.pool.get('account.invoice.line').move_line_get(cr, uid, inv['id'])
-			if inv['project_id']:
-				for il in iml:
+			for il in iml:
+				print "il:", il
+				if il['account_analytic_id']:
 					il['analytic_lines'] = [(0,0, {
 						'name': il['name'],
 						'date': time.strftime('%Y-%m-%d'),
-						'account_id': inv['project_id'],
+						'account_id': il['account_analytic_id'],
 						'unit_amount': il['quantity'],
 						'amount': il['price'] * sign,
-						'product_id': il['product_id']  and il['product_id'][0],
-						'product_uom_id': il['uos_id']  and il['uos_id'][0],
+						'product_id': il['product_id'],
+						'product_uom_id': il['uos_id'],
 						'general_account_id': il['account_id'],
 						'journal_id': self._get_journal_analytic(cr, uid, inv['type'])
 					})]
@@ -426,7 +426,7 @@ class account_invoice(osv.osv):
 		return self.name_get(cr, user, ids)
 
 	def refund(self, cr, uid, ids):
-		invoices = self.read(cr, uid, ids, ['name', 'type', 'number', 'reference', 'project_id', 'comment', 'date_due', 'partner_id', 'address_contact_id', 'address_invoice_id', 'partner_contact', 'partner_insite', 'partner_ref', 'payment_term', 'account_id', 'currency_id', 'invoice_line', 'tax_line'])
+		invoices = self.read(cr, uid, ids, ['name', 'type', 'number', 'reference', 'comment', 'date_due', 'partner_id', 'address_contact_id', 'address_invoice_id', 'partner_contact', 'partner_insite', 'partner_ref', 'payment_term', 'account_id', 'currency_id', 'invoice_line', 'tax_line'])
 
 		new_ids = []
 		for invoice in invoices:
@@ -467,7 +467,7 @@ class account_invoice(osv.osv):
 		
 			# take the id part of the tuple returned for many2one fields
 			for field in ('address_contact_id', 'address_invoice_id', 'partner_id', 
-					'project_id', 'account_id', 'currency_id', 'payment_term'):
+					'account_id', 'currency_id', 'payment_term'):
 				invoice[field] = invoice[field] and invoice[field][0]
 
 			# create the new invoice
@@ -535,6 +535,7 @@ class account_invoice_line(osv.osv):
 		'discount': fields.float('Discount (%)', digits=(16,2)),
 		'invoice_line_tax_id': fields.many2many('account.tax', 'account_invoice_line_tax', 'invoice_line_id', 'tax_id', 'Taxes', domain=[('parent_id','=',False)]),
 		'note': fields.text('Notes'),
+		'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account', relate=True),
 	}
 	_defaults = {
 		'quantity': lambda *a: 1,
@@ -611,6 +612,7 @@ class account_invoice_line(osv.osv):
 				'account_id':line.account_id.id,
 				'product_id':line.product_id.id,
 				'uos_id':line.uos_id.id,
+				'account_analytic_id':line.account_analytic_id.id,
 			})
 			for tax in tax_obj.compute(cr, uid, line.invoice_line_tax_id, (line.price_unit *(1.0-(line['discount'] or 0.0)/100.0)), line.quantity, inv.address_invoice_id.id, line.product_id, inv.partner_id):
 				val={}
