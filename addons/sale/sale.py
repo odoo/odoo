@@ -338,7 +338,7 @@ class sale_order(osv.osv):
 		write_cancel_ids = []
 		for order in self.browse(cr, uid, ids, context={}):
 			for line in order.order_line:
-				if line.procurement_id and line.procurement_id.state != 'done':
+				if line.procurement_id and (line.procurement_id.state != 'done') and (line.state!='done'):
 					finished = False
 				if line.procurement_id and line.procurement_id.state == 'cancel':
 					canceled = True
@@ -602,7 +602,12 @@ class sale_order_line(osv.osv):
 		return self.write(cr, uid, ids, {'state':'confirmed'})
 
 	def button_done(self, cr, uid, ids, context={}):
-		return self.write(cr, uid, ids, {'state':'done'})
+		wf_service = netsvc.LocalService("workflow")
+		res = self.write(cr, uid, ids, {'state':'done'})
+		for line in self.browse(cr,uid,ids,context):
+			wf_service.trg_write(uid, 'sale.order', line.order_id.id, cr)
+
+		return res
 
 	def uos_change(self, cr, uid, ids, product_uos, product_uos_qty=0, product_id=None):
 		if not product_id:

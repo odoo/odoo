@@ -42,6 +42,7 @@ class mrp_procurement(osv.osv):
 				'state': 'open',
 				'planned_hours': procurement.product_qty,
 				'user_id': procurement.product_id.product_manager.id,
+				'notes': procurement.origin,
 				'procurement_id': procurement.id
 			})
 		return task_id

@@ -146,5 +146,3 @@ class make_invoice_onshipping(wizard.interface):
 	}
 make_invoice_onshipping("delivery.invoice_onshipping")
 
-
-
