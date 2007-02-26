@@ -540,19 +540,36 @@ class account_invoice_line(osv.osv):
 		'quantity': lambda *a: 1,
 		'discount': lambda *a: 0.0
 	}
-	def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=None):
+	def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False):
 		if not product:
 			return {'value': {'price_unit': 0.0}, 'domain':{'product_uom':[]}}
 		lang=False
-		if partner_id:
-			lang=self.pool.get('res.partner').read(cr, uid, [partner_id])[0]['lang']
 		context={'lang': lang}
 		res = self.pool.get('product.product').browse(cr, uid, product, context=context)
-
+		taxep=None
+		if partner_id:
+			lang=self.pool.get('res.partner').read(cr, uid, [partner_id])[0]['lang']
+			taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_tax
 		if type in ('out_invoice', 'out_refund'):
-			result = {'price_unit': res.list_price, 'invoice_line_tax_id':map(lambda x: x.id, res.taxes_id)}
+			if not taxep or not taxep[0]:
+				tax_id = map(lambda x: x.id, res.taxes_id)
+			else:
+				tax_id = [taxep[0]]
+				tp = self.pool.get('account.tax').browse(cr, uid, taxep[0])
+				for t in res.taxes_id:
+					if not t.tax_group==tp.tax_group:
+						tax_id.append(t.id)
 		else:
-			result = {'price_unit': res.list_price, 'invoice_line_tax_id':map(lambda x: x.id, res.supplier_taxes_id)}
+			if not taxep or not taxep[0]:
+				tax_id = map(lambda x: x.id, res.supplier_taxes_id)
+			else:
+				tax_id = [taxep[0]]
+				tp = self.pool.get('account.tax').browse(cr, uid, taxep[0])
+				for t in res.supplier_taxes_id:
+					if not t.tax_group==tp.tax_group:
+						tax_id.append(t.id)
+		result = {'price_unit': res.list_price, 'invoice_line_tax_id': tax_id}
+
 		if not name:
 			result['name'] = res.name
 
