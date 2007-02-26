@@ -79,6 +79,21 @@ cr = db.cursor()
 cr.execute("update sale_order_line set delay = pt.sale_delay from product_product as po, product_template as pt where product_id = po.id and po.product_tmpl_id = pt.id")
 cr.commit()
 
+# --------------------------------------------------------------------------- #
+# move account_invoice.project_id to account_invoice_line.account_analytic_id #
+# --------------------------------------------------------------------------- #
+
+cr.execute("update account_invoice_line set account_analytic_id = ai.project_id from account_invoice as ai where invoice_id = ai.id")
+cr.commit()
+
+# ------------------------------------------------------------------------- #
+# move purchase_order.project_id to purchase_order_line.account_analytic_id #
+# ------------------------------------------------------------------------- #
+
+cr.execute("update purchase_order_line set account_analytic_id = po.project_id from purchase_order as po where order_id = po.id")
+cr.commit()
+
+
 # --------------- #
 # remove old menu #
 # --------------- #
