@@ -185,10 +185,10 @@
       <blockTable colWidths="52.0,366.0,110.0" style="Tableau5">
         <tr>
           <td>
-            <para style="P20">[[ repeatIn((line.notes and [line.notes]) or [], 'l') ]]</para>
+            <para style="P20">[[ repeatIn((line.notes and line.notes.splitlines()) or [], 'l') ]]</para>
           </td>
           <td>
-            <para style="P21">[[ l ]] [[ setTag('para','xpre') ]]</para>
+            <para style="P21">[[ l or removeParentNode('table') ]]</para>
           </td>
           <td>
             <para style="P20">
@@ -198,7 +198,7 @@
         </tr>
       </blockTable>
     </section>
-    <blockTable colWidths="349.0,69.0,110.0" style="Tableau6">
+    <blockTable colWidths="348.0,69.0,110.0" style="Tableau6">
       <tr>
         <td>
           <para style="P22">

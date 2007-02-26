@@ -185,7 +185,7 @@
       <blockTable colWidths="96.0,332.0,82.0" style="Tableau5">
         <tr>
           <td>
-            <para style="P20">[[ repeatIn((line.notes and [line.notes]) or [], 'l') ]]</para>
+            <para style="P20">[[ repeatIn((line.notes and line.notes.splitlines()) or [], 'l') ]]</para>
           </td>
           <td>
             <para style="P21">[[ l or removeParentNode('table') ]]</para>

@@ -206,18 +206,13 @@
           </td>
         </tr>
       </blockTable>
-      <blockTable colWidths="43.0,333.0,135.0" style="Tableau5">
+      <blockTable colWidths="43.0,468.0" style="Tableau5">
         <tr>
           <td>
-            <para style="P19">[[ repeatIn((line.notes and [line.notes]) or [], 'l') ]]</para>
+            <para style="P19">[[ repeatIn((line.notes and line.notes.splitlines()) or [], 'l') ]]</para>
           </td>
           <td>
             <para style="P20">[[ l or removeParentNode('table') ]]</para>
-          </td>
-          <td>
-            <para style="P19">
-              <font color="white"> </font>
-            </para>
           </td>
         </tr>
       </blockTable>
