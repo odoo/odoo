@@ -312,7 +312,6 @@ class report_sxw(report_rml):
 		rml_dom = xml.dom.minidom.parseString(rml)
 		
 		rml2 = rml_parser._parse(rml_dom, objs, data, header=self.header)
-		#import os
 		#if os.name != "nt":
 		#	f = file("/tmp/debug.rml", "w")
 		#	f.write(rml2)
