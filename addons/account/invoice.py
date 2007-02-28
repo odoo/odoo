@@ -274,7 +274,7 @@ class account_invoice(osv.osv):
 				if il['account_analytic_id']:
 					il['analytic_lines'] = [(0,0, {
 						'name': il['name'],
-						'date': time.strftime('%Y-%m-%d'),
+						'date': inv['date_invoice'],
 						'account_id': il['account_analytic_id'],
 						'unit_amount': il['quantity'],
 						'amount': il['price'] * sign,
