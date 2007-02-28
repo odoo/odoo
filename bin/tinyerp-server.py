@@ -241,8 +241,10 @@ if tools.config['netrpc']:
 
 def handler(signum, frame):
 	from tools import config
-	tinySocket.stop()
-	httpd.stop()
+	if tools.config['netrpc']:
+		tinySocket.stop()
+	if tools.config['xmlrpc']:
+		httpd.stop()
 	netsvc.Agent.quit()
 	if config['pidfile']:
 		os.unlink(config['pidfile'])

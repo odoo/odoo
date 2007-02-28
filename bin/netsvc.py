@@ -359,10 +359,12 @@ class TinySocketServerThread(threading.Thread):
 	def stop(self):
 		self.running=False
 		for t in self.threads:
-			print "thread"
 			t.stop()
-		self.socket.shutdown(socket.SHUT_RDWR)
-		self.socket.close()
+		try:
+			self.socket.shutdown(socket.SHUT_RDWR)
+			self.socket.close()
+		except:
+			return False
 
 # vim:noexpandtab:
 

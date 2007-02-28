@@ -1528,4 +1528,42 @@ class orm(object):
 			del data[self._inherits[v]]
 		return self.create(cr, uid, data)
 
+	def read_string(self, cr, uid, id, langs, fields=None, context={}):
+		res = {}
+		res2 = {}
+		self.pool.get('ir.model.access').check(cr, uid, self._name, 'read')
+		if not fields:
+			fields = self._columns.keys() + self._inherit_fields.keys()
+		for lang in langs:
+			res[lang] = {'code': lang}
+			for f in fields:
+				if f in self._columns:
+					res_trans = self.pool.get('ir.translation')._get_source(cr, uid, self._name+','+f, 'field', lang)
+					if res_trans:
+						res[lang][f]=res_trans
+					else:
+						print "columns:", self._columns[f].string
+						res[lang][f]=self._columns[f].string
+		for table in self._inherits:
+			cols = intersect(self._inherit_fields.keys(), fields)
+			res2 = self.pool.get(table).read_string(cr, uid, id, langs, cols, context)
+		for lang in res2:
+			if lang in res:
+				res[lang]={'code': lang}
+			for f in res2[lang]:
+				res[lang][f]=res2[lang][f]
+		return res
+
+	def write_string(self, cr, uid, id, langs, vals, context={}):
+		self.pool.get('ir.model.access').check(cr, uid, self._name, 'write')
+		for lang in langs:
+			for field in vals:
+				if field in self._columns:
+					self.pool.get('ir.translation')._set_ids(cr, uid, self._name+','+field, 'field', lang, [0], vals[field])
+		for table in self._inherits:
+			cols = intersect(self._inherit_fields.keys(), vals)
+			if cols:
+				self.pool.get(table).write_string(cr, uid, id, langs, vals, context)
+		return True
+
 # vim:noexpandtab:ts=4
