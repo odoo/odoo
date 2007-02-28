@@ -8,6 +8,7 @@
 			<field name="model">hr.expense.line</field>
 			<field name="arch" type="xml">
 				<tree string="Expense Lines">
+					<field name="sequence"/>
 					<field name="date_value"/>
 					<field name="name"/>
 					<field name="ref"/>
@@ -60,6 +61,7 @@
 								<field name="total_amount"/>
 								<field name="ref" select="1"/>
 								<field name="analytic_account" domain="[('type','=','normal')]"/>
+								<field name="sequence"/>
 							</form>
 						</field>
 						<field name="state" select="1"/>

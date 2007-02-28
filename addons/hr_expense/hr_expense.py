@@ -190,11 +190,13 @@ class hr_expense_line(osv.osv):
 		'description': fields.text('Description'),
 		'analytic_account': fields.many2one('account.analytic.account','Analytic account'),
 		'ref': fields.char('Reference', size=32),
+		'sequence' : fields.integer('Sequence'),
 	}
 	_defaults = {
 		'unit_quantity': lambda *a: 1,
 		'date_value' : lambda *a: time.strftime('%Y-%m-%d'),
 	}
+	_order = "sequence"
 	def onchange_product_id(self, cr, uid, ids, product_id, uom_id, context={}):
 		v={}
 		if product_id:
