@@ -42,7 +42,7 @@ def _action_line_create(self, cr, uid, data, context):
 	for work in tw.browse(cr, uid, ids, context):
 		if work.task_id.project_id.category_id:
 			unit_id = ts._getEmployeeUnit(cr, uid, context)
-			product_id = ts._getEmployeeUnit(cr, uid, context)
+			product_id = ts._getEmployeeProduct(cr, uid, context)
 			res = {
 				'name': work.name,
 				'date': time.strftime('%Y-%m-%d'),
