@@ -54,8 +54,8 @@ class account_invoice_bvr(report_sxw.rml_parse):
 	def _get_ref(self, o, bid):
 		bank = self._bank_get(bid)
 		res = ''
-		if bank.bank_code:
-			res = bank.bank_code
+		if bank.bvr_adherent_num:
+			res = bank.bvr_adherent_num
 		return self._mod10r(res+o.number.rjust(26-len(res), '0'))
 
 	def _mod10r(self,nbr):

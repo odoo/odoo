@@ -34,6 +34,7 @@ from osv import fields, osv
 class res_partner_bank(osv.osv):
 	_inherit = "res.partner.bank"
 	_columns = {
+		'bvr_adherent_num': fields.char('BVR adherent number', size=11),
 		'bvr_number': fields.char('BVR Reference Number', size=11),
 		'bank_code': fields.char('Bank Code', size=64, help='Swift or BIC number'),
 		'bank_clearing': fields.char('Bank Clearing Number', size=64),
