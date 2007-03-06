@@ -128,6 +128,7 @@ class hr_employee(osv.osv):
 		return True
 
 	def sign_out(self, cr, uid, ids, context={}, dt=False, *args):
+		id = False
 		for emp in self.browse(cr, uid, ids):
 			if not self._action_check(cr, uid, emp.id, dt, context):
 				raise osv.except_osv('Warning', 'You tried to sign out with a date anterior to another event !\nTry to contact the administrator to correct attendances.')
@@ -136,7 +137,8 @@ class hr_employee(osv.osv):
 				res['name'] = dt
 			att_id = self.pool.get('hr.attendance').create(cr, uid, res)
 			self.write(cr, uid, [emp.id], {'state':'absent'})
-		return True
+			id = att_id
+		return id
 
 	def _action_check(self, cr, uid, emp_id, dt=False,context={}):
 		cr.execute('select max(name) from hr_attendance where employee_id=%d', (emp_id,))
@@ -144,15 +146,16 @@ class hr_employee(osv.osv):
 		return not (res and (res[0]>=(dt or time.strftime('%Y-%m-%d %H:%M:%S'))))
 
 	def sign_in(self, cr, uid, ids, context={}, dt=False, *args):
+		id = False
 		for emp in self.browse(cr, uid, ids):
 			if not self._action_check(cr, uid, emp.id, dt, context):
 				raise osv.except_osv('Warning', 'You tried to sign in with a date anterior to another event !\nTry to contact the administrator to correct attendances.')
 			res = {'action':'sign_in', 'employee_id':emp.id}
 			if dt:
 				res['name'] = dt
-			self.pool.get('hr.attendance').create(cr, uid, res)
+			id = self.pool.get('hr.attendance').create(cr, uid, res)
 			self.write(cr, uid, [emp.id], {'state':'present'})
-		return True
+		return id
 
 hr_employee()
 
@@ -192,10 +195,10 @@ class hr_attendance(osv.osv):
 	_name = "hr.attendance"
 	_description = "Attendance"
 	_columns = {
-		'name' : fields.datetime('Date'),
-		'action' : fields.selection([('sign_in', 'Sign In'), ('sign_out', 'Sign Out'),('action','Action')], 'Action'),
+		'name' : fields.datetime('Date', required=True),
+		'action' : fields.selection([('sign_in', 'Sign In'), ('sign_out', 'Sign Out'),('action','Action')], 'Action', required=True),
 		'action_desc' : fields.many2one("hr.action.reason", "Action reason", domain="[('action_type', '=', action)]"),
-		'employee_id' : fields.many2one('hr.employee', 'Employee',required=True, select=True),
+		'employee_id' : fields.many2one('hr.employee', 'Employee', required=True, select=True),
 	}
 	_defaults = {
 		'name' : lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
