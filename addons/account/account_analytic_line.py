@@ -35,6 +35,7 @@ from osv import osv
 
 class account_analytic_line(osv.osv):
 	_name = 'account.analytic.line'
+	_description = 'Analytic lines'
 	_columns = {
 		'name' : fields.char('Description', size=128, required=True),
 		'date' : fields.date('Date', required=True),
