@@ -42,7 +42,7 @@ class wiz_timesheet_open(wizard.interface):
 			view_type = 'tree,form'
 			domain = "[('id','in',["+','.join(map(str,ids))+"])]"
 		elif len(ids)==1:
-			ts.write(cr, uid, ids, {'date_current': time.strftime('%y-%m-%d')})
+			ts.write(cr, uid, ids, {'date_current': time.strftime('%Y-%m-%d')})
 			domain = "[]"
 		else:
 			domain = "[]"
@@ -57,8 +57,6 @@ class wiz_timesheet_open(wizard.interface):
 		}
 		if len(ids) == 1:
 			value['res_id'] = ids[0]
-		print '-'*50
-		print value
 		return value
 
 	states = {

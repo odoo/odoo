@@ -20,6 +20,21 @@
 		</record>
 
 
+		<record model="ir.ui.view" id="hr_timesheet_account_tree">
+			<field name="name">hr.timesheet.account.tree</field>
+			<field name="model">hr_timesheet_sheet.sheet.account</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Timesheet by accounts">
+					<field name="sheet_id"/>
+					<field name="name"/>
+					<field name="total"/>
+				</tree>
+			</field>
+		</record>
+
+
+
 		<record model="ir.ui.view" id="hr_timesheet_sheet_form">
 			<field name="name">hr.timesheet.sheet.form</field>
 			<field name="model">hr_timesheet_sheet.sheet</field>
@@ -36,19 +51,19 @@
 						<group col="4" colspan="2">
 							<field name="date_current" nolabel="1"/>
 							<button icon="STOCK_MEDIA_PREVIOUS" string="" name="date_previous" type="object"/>
-							<button icon="STOCK_JUMP_TO" string="" name="reload"/>
+							<button icon="STOCK_JUMP_TO" string="" name="date_today" type="object"/>
 							<button icon="STOCK_MEDIA_NEXT" string="" name="date_next" type="object"/>
 						</group>
 						<button string="Sign In" name="sign_in" type="object"/>
 						<button string="Sign Out" name="sign_out" type="object"/>
 						<field name="attendances_ids" colspan="4" nolabel="1">
-							<tree string="Attendances" editable="bottom">
+							<tree string="Attendances">
 								<field name="employee_id"/>
 								<field name="name"/>
 								<field name="action"/>
 							</tree>
 						</field>
-						<label string=" " colspan="2"/>
+						<field name="state_attendance"/>
 						<field name="total_attendance_day"/>
 						<field name="timesheet_ids" colspan="4" nolabel="1" domain="[('name','=',date_current)]">
 							<tree string="Timesheet" editable="top">
@@ -69,11 +84,11 @@
 						<field name="state"/>
 						<group col="4" colspan="2">
 							<button string="Confirm" name="confirm" states="draft"/>
-							<button string="Cancel" name="cancel" states="draft"/>
+							<button string="Cancel" name="cancel" states="done"/>
 							<button string="Refuse" name="cancel" states="confirm"/>
 							<button string="Accept" name="done" states="confirm"/>
 						</group>
-					</page><page string="Global view">
+					</page><page string="By day">
 						<field name="period_ids" colspan="4" nolabel="1">
 							<tree string="Period" colors="red:total_difference&lt;=0.1;blue:total_difference&gt;=0.1">
 								<field name="name"/>
@@ -85,6 +100,13 @@
 						<field name="total_attendance"/>
 						<field name="total_timesheet"/>
 						<field name="total_difference"/>
+					</page><page string="By account">
+						<field name="account_ids" colspan="4" nolabel="1">
+							<tree string="Analytic accounts">
+								<field name="name"/>
+								<field name="total"/>
+							</tree>
+						</field>
 					</page>
 					</notebook>
 				</form>
@@ -158,8 +180,6 @@
 		<menuitem name="Human Resources/Timesheets/All timesheets/Timesheets to validate"
 			id="menu_act_hr_timesheet_sheet_form_all_valid"
 			action="act_hr_timesheet_sheet_form_all_valid" />
-
-
 
 
 	</data>

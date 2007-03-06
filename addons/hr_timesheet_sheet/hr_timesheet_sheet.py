@@ -138,6 +138,23 @@ class hr_timesheet_sheet(osv.osv):
 				result[day.id] += o.total_difference
 		return result
 
+	def _state_attendance(self, cr, uid, ids, name, args, context):
+		result = {}
+		for day in self.browse(cr, uid, ids, context):
+			emp_obj = self.pool.get('hr.employee')
+			emp_ids = emp_obj.search(cr, uid, [('user_id', '=', day.user_id.id)])
+			if emp_ids:
+				result[day.id] = emp_obj.browse(cr, uid, emp_ids[0], context).state
+			else:
+				result[day.id] = 'none'
+		return result
+
+	def date_today(self, cr, uid, ids, context):
+		for sheet in self.browse(cr, uid, ids, context):
+			self.write(cr, uid, [sheet.id], {
+				'date_current': DateTime.strptime(sheet.date_current, '%Y-%m-%d')
+			})
+		return True
 	def date_previous(self, cr, uid, ids, context):
 		for sheet in self.browse(cr, uid, ids, context):
 			self.write(cr, uid, [sheet.id], {
@@ -165,7 +182,6 @@ class hr_timesheet_sheet(osv.osv):
 		self.pool.get('hr.attendance').write(cr, uid, [success], {'sheet_id': ids[0]})
 		return True
 
-
 	_columns = {
 		'name': fields.char('Description', size=64, select=1),
 		'user_id': fields.many2one('res.users', 'User', required=True, select=1),
@@ -175,6 +191,7 @@ class hr_timesheet_sheet(osv.osv):
 		'timesheet_ids' : one2many_mod('hr.analytic.timesheet', 'sheet_id', 'Timesheets', domain=[('date','=',time.strftime('%Y-%m-%d'))], readonly=True, states={'draft':[('readonly',False)]}),
 		'attendances_ids' : one2many_mod2('hr.attendance', 'sheet_id', 'Attendances', readonly=True, states={'draft':[('readonly',False)]}),
 		'state' : fields.selection([('draft','Draft'),('confirm','Confirmed'),('done','Done')], 'state', select=True, required=True, readonly=True),
+		'state_attendance' : fields.function(_state_attendance, method=True, type='selection', selection=[('absent', 'Absent'), ('present', 'Present'),('none','No employee defined')], string='Current state'),
 		'total_attendance_day': fields.function(_total_attendance_day, method=True, string='Total Attendance'),
 		'total_timesheet_day': fields.function(_total_timesheet_day, method=True, string='Total Timesheet'),
 		'total_difference_day': fields.function(_total_difference_day, method=True, string='Difference'),
@@ -182,6 +199,7 @@ class hr_timesheet_sheet(osv.osv):
 		'total_timesheet': fields.function(_total_timesheet, method=True, string='Total Timesheet'),
 		'total_difference': fields.function(_total_difference, method=True, string='Difference'),
 		'period_ids': fields.one2many('hr_timesheet_sheet.sheet.day', 'sheet_id', 'Period', readonly=True),
+		'account_ids': fields.one2many('hr_timesheet_sheet.sheet.account', 'sheet_id', 'Analytic accounts', readonly=True),
 	}
 	_defaults = {
 		'user_id': lambda self,cr,uid,c: uid,
@@ -195,7 +213,7 @@ hr_timesheet_sheet()
 class hr_timesheet_line(osv.osv):
 	_inherit = "account.analytic.line"
 	_columns = {
-		'sheet_id': fields.many2one('hr_timesheet_sheet.sheet', 'Sheet', ondelete='set null')
+		'sheet_id': fields.many2one('hr_timesheet_sheet.sheet', 'Sheet', ondelete='set null', relate=True)
 	}
 	_default = {
 		'sheet_id': lambda *a: False
@@ -224,7 +242,7 @@ hr_timesheet_line()
 class hr_attendance(osv.osv):
 	_inherit = "hr.attendance"
 	_columns = {
-		'sheet_id': fields.many2one('hr_timesheet_sheet.sheet', 'Sheet', ondelete='set null')
+		'sheet_id': fields.many2one('hr_timesheet_sheet.sheet', 'Sheet', ondelete='set null', relate=True)
 	}
 	_default = {
 		'sheet_id': lambda *a: False
@@ -268,14 +286,16 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
 			if attendences and attendences[0]['action'] == 'sign_out':
 				attendences.insert(0, {'name': day.name+' 00:00:00', 'action':'sign_in'})
 			if attendences and attendences[-1]['action'] == 'sign_in':
-				attendences.append({'name': day.name+' 23:59:59', 'action':'sign_out'})
+				if day.name==time.strftime('%Y-%m-%d'):
+					attendences.append({'name': time.strftime('%Y-%m-%d %H:%M:%S'), 'action':'sign_out'})
+				else:
+					attendences.append({'name': day.name+' 23:59:59', 'action':'sign_out'})
 			for att in attendences:
 				dt = DateTime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')
 				if att['action'] == 'sign_out':
 					wh += (dt - ldt).hours
 				ldt = dt
-			result[day.id] = wh
-		print result
+			result[day.id] = round(wh,2)
 		return result
 	_order='name'
 	_columns = {
@@ -309,3 +329,38 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
 			)""")
 hr_timesheet_sheet_sheet_day()
 
+
+class hr_timesheet_sheet_sheet_account(osv.osv):
+	_name = "hr_timesheet_sheet.sheet.account"
+	_description = "Timesheets by period"
+	_auto = False
+	_order='name'
+	_columns = {
+		'name': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
+		'sheet_id': fields.many2one('hr_timesheet_sheet.sheet', 'Sheet', readonly=True, relate=True),
+		'total': fields.float('Total Time', digits=(16,2), readonly=True),
+	}
+	def init(self, cr):
+		cr.execute("""create or replace view hr_timesheet_sheet_sheet_account as (
+			select
+				min(id) as id,
+				account_id as name,
+				sheet_id as sheet_id,
+				sum(unit_amount) as total
+			from
+				account_analytic_line
+			group by account_id, sheet_id
+		)""")
+hr_timesheet_sheet_sheet_account()
+
+class res_company(osv.osv):
+	_inherit = 'res.company'
+	_columns = {
+		'timesheet_range': fields.selection([('day','Day'),('week','Week'),('month','Month')], 'Timeshet range', required=True),
+		'timesheet_max_difference': fields.float('Maximum difference'),
+	}
+	_defaults = {
+		'timesheet_range': lambda *args: 'month',
+		'timesheet_max_difference': lambda *args: 1.0
+	}
+res_company()
