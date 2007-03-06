@@ -12,6 +12,7 @@
 					<field name="date_to" />
 					<field name="name" />
 					<field name="total_attendance"/>
+					<field name="total_timesheet"/>
 					<field name="total_difference"/>
 					<field name="state"/>
 				</tree>
@@ -34,9 +35,9 @@
 					<page string="Daily view">
 						<group col="4" colspan="2">
 							<field name="date_current" nolabel="1"/>
-							<button string="&lt;&lt;" name="date_previous" type="object"/>
-							<button string="GO" name="reload"/>
-							<button string="&gt;&gt;" name="date_next" type="object"/>
+							<button icon="STOCK_MEDIA_PREVIOUS" string="" name="date_previous" type="object"/>
+							<button icon="STOCK_JUMP_TO" string="" name="reload"/>
+							<button icon="STOCK_MEDIA_NEXT" string="" name="date_next" type="object"/>
 						</group>
 						<button string="Sign In" name="sign_in" type="object"/>
 						<button string="Sign Out" name="sign_out" type="object"/>
