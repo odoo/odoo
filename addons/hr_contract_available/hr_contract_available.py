@@ -1,13 +1,46 @@
+# -*- encoding: utf-8 -*-
+##############################################################################
+#
+# Copyright (c) 2004-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#
+# $Id: account.py 1005 2005-07-25 08:41:42Z nicoe $
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+##############################################################################
+
 from osv import fields, osv
+import time
 
 class hr_employee(osv.osv):
 	_inherit = "hr.employee"
 	def _get_state(self, cr, uid, ids, name, args, context):
 		result = {}
+		t = time.strftime('%Y-%m-%d')
 		for emp in self.browse(cr, uid, ids, context):
 			result[emp.id] = 'no'
+
 			for alloc in emp.allocation_ids:
-				if ((not alloc.date_end) or (alloc.date_end>='%Y-%m-%d')) and (alloc.date_start<='%Y-%m-%d'):
+				if ((not alloc.date_end) or (alloc.date_end>=t)) and (alloc.date_start<=t):
 					result[emp.id] = alloc.state
 		return result
 	def _get_date_end(self, cr, uid, ids, name, args, context):
@@ -19,10 +52,11 @@ class hr_employee(osv.osv):
 		return result
 	def _get_department_id(self, cr, uid, ids, name, args, context):
 		result = {}
+		t = time.strftime('%Y-%m-%d')
 		for emp in self.browse(cr, uid, ids, context):
-			result[emp.id] = time.strftime('%Y-%m-%d')
+			result[emp.id] = False
 			for alloc in emp.allocation_ids:
-				if ((not alloc.date_end) or (alloc.date_end>='%Y-%m-%d')) and (alloc.date_start<='%Y-%m-%d'):
+				if ((not alloc.date_end) or (alloc.date_end>=t)) and (alloc.date_start<=t):
 					result[emp.id] = alloc.department_id.id
 		return result
 	_columns = {
@@ -41,7 +75,7 @@ class hr_allocation(osv.osv):
 	_name = 'hr.allocation'
 	_description = 'Allocations'
 	_columns = {
-		'name' : fields.char('Contract Name', size=30, required=True),
+		'name' : fields.char('Allocation Name', size=30, required=True),
 		'employee_id' : fields.many2one('hr.employee', 'Employee', required=True, relate=True),
 		'department_id' : fields.many2one('res.company', 'Department', required=True, relate=True),
 		'function' : fields.many2one('res.partner.function', 'Function'),
@@ -51,9 +85,9 @@ class hr_allocation(osv.osv):
 	}
 	_order = 'date_start'
 	_defaults = {
-		'date_start' : lambda *a : DateTime.now().strftime("%Y-%m-%d"),
+		'date_start' : lambda *a : time.strftime("%Y-%m-%d"),
 		'state' : lambda *a : 'ondemand',
 		'department_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id
 	}
-hr_contract()
+hr_allocation()
 

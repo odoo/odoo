@@ -12,9 +12,8 @@
 						<field name="allocation_date_end"/>
 						<field name="allocation_department_id"/>
 						<newline/>
-						<separator string="Allocations"/>
 						<field name="allocation_ids" colspan="4" nolabel="1">
-							<tree string="Contracts">
+							<tree string="Allocations">
 								<field name="department_id"/>
 								<field name="function"/>
 								<field name="date_start"/>
@@ -23,7 +22,7 @@
 							</tree>
 
 							<form string="Allocations">
-								<field name="name"/>
+								<field name="name" colspan="3"/>
 								<field name="department_id"/>
 								<field name="function"/>
 								<field name="date_start"/>
@@ -40,7 +39,7 @@
 			<field name="name">hr.employee.available.tree</field>
 			<field name="model">hr.employee</field>
 			<field name="type">tree</field>
-			<field name="inherit_id">hr.view_employee_list</field>
+			<field name="inherit_id" ref="hr.view_employee_list"/>
 			<field name="arch" type="xml">
 				<field name="parent_id" position="replace">
 					<field name="allocation_state"/>
