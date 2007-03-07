@@ -68,7 +68,7 @@
 			<field name="view_id" ref="view_employee_tree"/>
 			<field name="domain">[('parent_id','=',False)]</field>
 		</record>
-		<menuitem name="Human Resources/Hierarchical view of Employees" id="menu_open_view_employee_tree" action="open_view_employee_tree" groups="admin"/>
+		<menuitem name="Human Resources/Employees" id="menu_open_view_employee_tree" action="open_view_employee_tree" groups="admin"/>
 
 		<record model="ir.ui.view" id="view_employee_list">
 			<field name="name">hr.employee.tree</field>
@@ -91,7 +91,16 @@
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="view_employee_list"/>
 		</record>
-		<menuitem name="Human Resources/List of Employees" id="menu_open_view_employee_list" action="open_view_employee_list" groups="admin"/>
+		<menuitem name="Human Resources/Employees/List of Employees" id="menu_open_view_employee_list" action="open_view_employee_list" groups="admin"/>
+
+		<record model="ir.actions.act_window" id="open_view_employee_new">
+			<field name="name">hr.employee</field>
+			<field name="res_model">hr.employee</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form,tree</field>
+		</record>
+		<menuitem name="Human Resources/Employees/New employee" id="menu_open_view_employee_new" action="open_view_employee_new" groups="admin"/>
+
 
 		<!--
 		=======================
