@@ -4,7 +4,7 @@
 
 		<record model="ir.ui.view" id="edit_project_multicompany">
 			<field name="name">project.project.form.multicompany</field>
-			<field name="model">project.project.form</field>
+			<field name="model">project.project</field>
 			<field name="inherit_id" ref="project.edit_project"/>
 			<field name="arch" type="xml">
 				<field name="warn_manager" position="after">
@@ -15,7 +15,7 @@
 
 		<record model="ir.ui.view" id="view_task_form2_multicompany">
 			<field name="name">project.task.form.multicompany</field>
-			<field name="model">project.task.form</field>
+			<field name="model">project.task</field>
 			<field name="inherit_id" ref="project.view_task_form2"/>
 			<field name="arch" type="xml">
 				<field name="type" position="after">

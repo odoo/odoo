@@ -1,0 +1,41 @@
+<terp>
+    <data noupdate="1">
+
+<!-- Contract Period Names -->
+	<record model="hr.contract.wage.type.period" id="hr_contract_wage_type_period_daily">
+		<field name="name">daily</field>
+	</record>
+	<record model="hr.contract.wage.type.period" id="hr_contract_wage_type_period_weekly">
+		<field name="name">weekly</field>
+	</record>
+	<record model="hr.contract.wage.type.period" id="hr_contract_wage_type_period_monthly">
+		<field name="name">monthly</field>
+	</record>
+
+<!-- Contract Wage Types -->
+	<record model="hr.contract.wage.type" id="hr_contract_monthly_gross">
+		<field name="name">Monthly Gross Wage</field>
+		<field name="type">gross</field>
+		<field name="period_id" ref="hr_contract_wage_type_period_monthly"/>
+	</record>
+	<record model="hr.contract.wage.type" id="hr_contract_monthly_net">
+		<field name="name">Monthly Net Wage</field>
+		<field name="type">net</field>
+		<field name="period_id" ref="hr_contract_wage_type_period_monthly"/>
+	</record>
+
+<!-- Employee Marital Statusses -->
+	<record model="hr.employee.marital.status" id="hr_employee_marital_status_single">
+		<field name="name">Single</field>
+	</record>
+	<record model="hr.employee.marital.status" id="hr_employee_marital_status_married">
+		<field name="name">Married</field>
+	</record>
+	<record model="hr.employee.marital.status" id="hr_employee_marital_status_divorced">
+		<field name="name">Divorced</field>
+	</record>
+	<record model="hr.employee.marital.status" id="hr_employee_marital_status_widower">
+		<field name="name">Widower</field>
+	</record>
+</data>
+</terp>
