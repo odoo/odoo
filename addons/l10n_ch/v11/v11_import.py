@@ -215,6 +215,8 @@ def _v11_parsing(self, cr, uid, data, context):
 					
 				std_log = std_log + " Amount expected : %d"% amount_to_pay
 			
+			bkst_list.append(bk_st_id)
+
 		except osv.except_osv, e:
 			cr.rollback() 
 			nb_err+=1
@@ -233,8 +235,6 @@ def _v11_parsing(self, cr, uid, data, context):
 			nb_err+=1
 			err_log= err_log +'\n * Line '+rec['line_number'] +', invoice '+rec['invoice_ref'].lstrip('0')
 			raise
-
-	bkst_list.append(bk_st_id)
 
 	err_log= err_log + '\n\n --' +'\nNumber of parsed lines : '+ str(len(rec_list)) +'\nNumber of error : '+ str(nb_err)
 
