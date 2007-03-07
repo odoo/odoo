@@ -34,13 +34,13 @@ _uid_cache = {}
 
 def login(db, login, password):
 	cr = pooler.get_db(db).cursor()
-	cr.execute('select id from res_users where login=%s and password=%s and active', (login, password))
+	cr.execute('select id from res_users where login=%s and password=%s and active', (login.encode('utf-8'), password.encode('utf-8')))
 	res = cr.fetchone()
 	cr.close()
 	if res:
 		return res[0]
 	else:
-		raise Exception('Bad username or password')
+		return False
 
 def check_super(passwd):
 	if passwd == tools.config['admin_passwd']:

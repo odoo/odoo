@@ -285,16 +285,11 @@ class common(netsvc.Service):
 		return res
 
 	def login(self, db, login, password):
+		res = security.login(db, login, password)
 		logger = netsvc.Logger()
-		cr = pooler.get_db(db).cursor()
-#FIXME: this is a temporary fix for the crash on login/password with non ASCII chars. 
-#We should fix this in a better way (ie somewhere else)
-		cr.execute('select id from res_users where login=%s and password=%s', (login.encode('utf-8'), password.encode('utf-8')))
-		res = cr.fetchone()
 		msg = res and 'successful login' or 'bad login or password'
 		logger.notifyChannel("web-service", netsvc.LOG_INFO, "%s from '%s' using database '%s'" % (msg, login, db))
-		cr.close()
-		return (res and res[0]) or False
+		return res or False
 
 	def about(self):
 		return tools.version_string + _('''
