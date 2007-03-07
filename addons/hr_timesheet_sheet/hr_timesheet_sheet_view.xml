@@ -64,14 +64,14 @@
 							</tree>
 						</field>
 						<field name="state_attendance"/>
-						<field name="total_attendance_day"/>
+						<field name="total_attendance_day" widget="float_time"/>
 						<field name="timesheet_ids" colspan="4" nolabel="1" domain="[('name','=',date_current)]">
 							<tree string="Timesheet" editable="top">
 								<field name="user_id" required="1"/>
 								<field name="date" />
 								<field name="account_id" on_change="on_change_account_id(account_id)" domain="[('type','=','normal')]"/>
 								<field name="name" />
-								<field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" />
+								<field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" widget="float_time"/>
 								<field name="product_id" invisible="True"/>
 								<field name="product_uom_id" invisible="True" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" />
 								<field name="amount" invisible="True"/>
@@ -79,11 +79,11 @@
 								<field name="to_invoice"/>
 							</tree>
 						</field>
-						<field name="total_difference_day"/>
-						<field name="total_timesheet_day"/>
+						<field name="total_difference_day" widget="float_time"/>
+						<field name="total_timesheet_day" widget="float_time"/>
 						<field name="state"/>
 						<group col="4" colspan="2">
-							<button string="Confirm" name="confirm" states="draft"/>
+							<button string="Confirm" name="button_confirm" states="draft" type="object"/>
 							<button string="Cancel" name="cancel" states="done"/>
 							<button string="Refuse" name="cancel" states="confirm"/>
 							<button string="Accept" name="done" states="confirm"/>
@@ -92,19 +92,19 @@
 						<field name="period_ids" colspan="4" nolabel="1">
 							<tree string="Period" colors="red:total_difference&lt;=0.1;blue:total_difference&gt;=0.1">
 								<field name="name"/>
-								<field name="total_attendance"/>
-								<field name="total_timesheet"/>
-								<field name="total_difference"/>
+								<field name="total_attendance" widget="float_time"/>
+								<field name="total_timesheet" widget="float_time"/>
+								<field name="total_difference" widget="float_time"/>
 							</tree>
 						</field>
-						<field name="total_attendance"/>
-						<field name="total_timesheet"/>
-						<field name="total_difference"/>
+						<field name="total_attendance" widget="float_time"/>
+						<field name="total_timesheet" widget="float_time"/>
+						<field name="total_difference" widget="float_time"/>
 					</page><page string="By account">
 						<field name="account_ids" colspan="4" nolabel="1">
 							<tree string="Analytic accounts">
 								<field name="name"/>
-								<field name="total"/>
+								<field name="total" widget="float_time"/>
 							</tree>
 						</field>
 					</page>
@@ -181,6 +181,24 @@
 			id="menu_act_hr_timesheet_sheet_form_all_valid"
 			action="act_hr_timesheet_sheet_form_all_valid" />
 
+		<!--
+			Company inheritancy
+		-->
+
+		<record model="ir.ui.view" id="hr_timesheet_sheet_company">
+			<field name="name">res.company.sheet</field>
+			<field name="model">res.company</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="base.view_company_form"/>
+			<field name="arch" type="xml">
+				<field name="rml_footer2" position="after">
+					<newline/>
+					<field name="timesheet_range"/>
+					<field name="timesheet_max_difference"/>
+					<newline/>
+				</field>
+			</field>
+		</record>
 
 	</data>
 </terp>

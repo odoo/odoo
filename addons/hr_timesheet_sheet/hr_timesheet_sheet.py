@@ -30,6 +30,7 @@
 import time
 from osv import fields
 from osv import osv
+import netsvc
 
 from mx import DateTime
 
@@ -149,11 +150,20 @@ class hr_timesheet_sheet(osv.osv):
 				result[day.id] = 'none'
 		return result
 
-	def date_today(self, cr, uid, ids, context):
+	def button_confirm(self, cr, uid, ids, context):
 		for sheet in self.browse(cr, uid, ids, context):
-			self.write(cr, uid, [sheet.id], {
-				'date_current': DateTime.strptime(sheet.date_current, '%Y-%m-%d')
-			})
+			di = sheet.user_id.company_id.timesheet_max_difference
+			if (abs(sheet.total_difference) < di) or not di:
+				wf_service = netsvc.LocalService("workflow")
+				wf_service.trg_validate(uid, 'hr_timesheet_sheet.sheet', sheet.id, 'confirm', cr)
+			else:
+				raise osv.except_osv('Warning !', 'Please verify that the total difference of the sheet is lower than %.2f !' %(di,))
+		return True
+
+	def date_today(self, cr, uid, ids, context):
+		self.write(cr, uid, ids, {
+			'date_current': time.strftime('%Y-%m-%d')
+		})
 		return True
 	def date_previous(self, cr, uid, ids, context):
 		for sheet in self.browse(cr, uid, ids, context):
@@ -201,11 +211,31 @@ class hr_timesheet_sheet(osv.osv):
 		'period_ids': fields.one2many('hr_timesheet_sheet.sheet.day', 'sheet_id', 'Period', readonly=True),
 		'account_ids': fields.one2many('hr_timesheet_sheet.sheet.account', 'sheet_id', 'Analytic accounts', readonly=True),
 	}
+	def _default_date_from(self,cr, uid, context={}):
+		user = self.pool.get('res.users').browse(cr, uid, uid, context)
+		r = user.company_id.timesheet_range
+		if r=='month':
+			return time.strftime('%Y-%m-01')
+		elif r=='week':
+			return (DateTime.now() + DateTime.RelativeDateTime(weekday=(DateTime.Monday,0))).strftime('%Y-%m-%d')
+		elif r=='year':
+			return time.strftime('%Y-01-01')
+		return time.strftime('%Y-%m-%d')
+	def _default_date_to(self,cr, uid, context={}):
+		user = self.pool.get('res.users').browse(cr, uid, uid, context)
+		r = user.company_id.timesheet_range
+		if r=='month':
+			return (DateTime.now() + DateTime.RelativeDateTime(months=+1,day=1,days=-1)).strftime('%Y-%m-%d')
+		elif r=='week':
+			return (DateTime.now() + DateTime.RelativeDateTime(weekday=(DateTime.Sunday,0))).strftime('%Y-%m-%d')
+		elif r=='year':
+			return time.strftime('%Y-12-31')
+		return time.strftime('%Y-%m-%d')
 	_defaults = {
 		'user_id': lambda self,cr,uid,c: uid,
-		'date_from' : lambda *a:time.strftime('%Y-%m-01'),
-		'date_current' : lambda *a:time.strftime('%Y-%m-%d'),
-		'date_to' : lambda *a: (DateTime.now() + DateTime.RelativeDateTime(months=+1,day=1,days=-1)).strftime('%Y-%m-%d'),
+		'date_from' : _default_date_from,
+		'date_current' : lambda *a: time.strftime('%Y-%m-%d'),
+		'date_to' : _default_date_to,
 		'state': lambda *a: 'draft'
 	}
 hr_timesheet_sheet()
@@ -356,11 +386,11 @@ hr_timesheet_sheet_sheet_account()
 class res_company(osv.osv):
 	_inherit = 'res.company'
 	_columns = {
-		'timesheet_range': fields.selection([('day','Day'),('week','Week'),('month','Month')], 'Timeshet range', required=True),
-		'timesheet_max_difference': fields.float('Maximum difference'),
+		'timesheet_range': fields.selection([('day','Day'),('week','Week'),('month','Month'),('year','Year')], 'Timeshet range', required=True),
+		'timesheet_max_difference': fields.float('Timesheet allowed difference', help="Allowed difference between the sign in/out and the timesheet computation for one sheet. Set this to 0 if you do not want any control."),
 	}
 	_defaults = {
 		'timesheet_range': lambda *args: 'month',
-		'timesheet_max_difference': lambda *args: 1.0
+		'timesheet_max_difference': lambda *args: 0.0
 	}
 res_company()
