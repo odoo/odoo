@@ -54,7 +54,7 @@
 			<field name="inherit_id" ref="hr.view_employee_form"/>
 			<field name="arch" type="xml">
 				<notebook position="inside">
-					<page string="Associated Contracts">
+					<page string="Contracts">
 						<field name="contract_ids" colspan="4" nolabel="1">
 							<tree string="Contracts">
 								<field name="name"/>
@@ -85,7 +85,7 @@
 							</form>
 						</field>
 					</page>
-					<page string="Misc">
+					<page string="Miscelleanous">
 						<field name="manager" select="1"/>
 						<field name="soc_security" select="1"/>
 						<field name="medic_exam" select="1"/>

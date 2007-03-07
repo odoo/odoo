@@ -1,0 +1,56 @@
+<terp>
+	<data>
+
+		<record model="ir.ui.view" id="hr_hr_employee_view_form2">
+			<field name="name">hr.hr.employee.view.form2</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_form"/>
+			<field name="arch" type="xml">
+				<notebook position="inside">
+					<page string="Availabilities">
+						<field name="allocation_state"/>
+						<field name="allocation_date_end"/>
+						<field name="allocation_department_id"/>
+						<newline/>
+						<separator string="Allocations"/>
+						<field name="allocation_ids" colspan="4" nolabel="1">
+							<tree string="Contracts">
+								<field name="department_id"/>
+								<field name="function"/>
+								<field name="date_start"/>
+								<field name="date_end"/>
+								<field name="state"/>
+							</tree>
+
+							<form string="Allocations">
+								<field name="name"/>
+								<field name="department_id"/>
+								<field name="function"/>
+								<field name="date_start"/>
+								<field name="date_end"/>
+								<field name="state"/>
+							</form>
+						</field>
+					</page>
+				</notebook>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_employee_list_available">
+			<field name="name">hr.employee.available.tree</field>
+			<field name="model">hr.employee</field>
+			<field name="type">tree</field>
+			<field name="inherit_id">hr.view_employee_list</field>
+			<field name="arch" type="xml">
+				<field name="parent_id" position="replace">
+					<field name="allocation_state"/>
+					<field name="allocation_date_end"/>
+					<field name="allocation_department_id"/>
+				</field>
+			</field>
+		</record>
+
+	</data>
+</terp>
+
+

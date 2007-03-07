@@ -62,6 +62,7 @@ class hr_contract(osv.osv):
 		'working_hours_per_day' : fields.integer('Working hours per day'),
 		'wage_type_id' : fields.many2one('hr.contract.wage.type', 'Wage Type', required=True),
 		'wage' : fields.float('Wage', required=True),
+		'notes' : fields.text('Notes'),
 	}
 	_defaults = {
 		'date_start' : lambda *a : DateTime.now().strftime("%Y-%m-%d"),
