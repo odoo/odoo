@@ -53,41 +53,43 @@ res_company()
 def ldap_login(oldfnc):
 	def _ldap_login(db, login, passwd):
 		cr = pooler.get_db(db).cursor()
-		cr.execute("select id, name, ldap_server, ldap_binddn, ldap_password, ldap_filter, ldap_base from res_company where ldap_server != '' and ldap_binddn != ''")
-		for res_company in cr.dictfetchall():
-			try:
-				l = ldap.open(res_company['ldap_server'])
-				if l.simple_bind_s(res_company['ldap_binddn'], res_company['ldap_password']):
-					base = res_company['ldap_base']
-					scope = ldap.SCOPE_SUBTREE
-					filter = res_company['ldap_filter']%(login,)
-					retrieve_attributes = None
-					result_id = l.search(base, scope, filter, retrieve_attributes)
-					timeout = 60
-					result_type, result_data = l.result(result_id, timeout)
-					if not result_data:
+		module_obj = pooler.get_pool(cr.dbname).get('ir.module.module')
+		module_ids = module_obj.search(cr, 1, [('name', '=', 'users_ldap')])
+		if module_ids:
+			state = module_obj.read(cr, 1, module_ids, ['state'])[0]['state']
+			if state in ('installed', 'to upgrade', 'to remove'):
+				cr.execute("select id, name, ldap_server, ldap_binddn, ldap_password, ldap_filter, ldap_base from res_company where ldap_server != '' and ldap_binddn != ''")
+				for res_company in cr.dictfetchall():
+					try:
+						l = ldap.open(res_company['ldap_server'])
+						if l.simple_bind_s(res_company['ldap_binddn'], res_company['ldap_password']):
+							base = res_company['ldap_base']
+							scope = ldap.SCOPE_SUBTREE
+							filter = res_company['ldap_filter']%(login,)
+							retrieve_attributes = None
+							result_id = l.search(base, scope, filter, retrieve_attributes)
+							timeout = 60
+							result_type, result_data = l.result(result_id, timeout)
+							if not result_data:
+								continue
+							if result_type == ldap.RES_SEARCH_RESULT and len(result_data) == 1:
+								dn=result_data[0][0]
+								name=result_data[0][1]['cn']
+								if l.bind_s(dn, passwd):
+									cr.execute("select id from res_users where login=%s",(login.encode('utf-8'),))
+									res = cr.fetchone()
+									if res:
+										cr.close()
+										return res[0]
+									users_obj = pooler.get_pool(cr.dbname).get('res.users')
+									action_obj = pooler.get_pool(cr.dbname).get('ir.actions.actions')
+									action_id = action_obj.search(cr, 1, [('usage', '=', 'menu')])[0]
+									res = users_obj.create(cr, 1, {'name': name, 'login': login.encode('utf-8'), 'company_id': res_company['id'], 'action_id': action_id})
+									cr.commit()
+									cr.close()
+									return res
+					except Exception, e:
 						continue
-					if result_type == ldap.RES_SEARCH_RESULT and len(result_data) == 1:
-						dn=result_data[0][0]
-						name=result_data[0][1]['cn']
-						if l.bind_s(dn, passwd):
-							cr.execute("select id from res_users where login=%s",(login.encode('utf-8'),))
-							res = cr.fetchone()
-							if res:
-								cr.close()
-								return res[0]
-							users_obj = pooler.get_pool(cr.dbname).get('res.users')
-							action_obj = pooler.get_pool(cr.dbname).get('ir.actions.actions')
-							action_id = action_obj.search(cr, 1, [('usage', '=', 'menu')])[0]
-							res = users_obj.create(cr, 1, {'name': name, 'login': login.encode('utf-8'), 'company_id': res_company['id'], 'action_id': action_id})
-							cr.commit()
-							cr.close()
-							return res
-				else:
-					print "failed"
-			except Exception, e:
-				print e
-				continue
 		cr.close()
 		return oldfnc(db, login, passwd)
 	return _ldap_login
@@ -99,29 +101,34 @@ def ldap_check(oldfnc):
 		if security._uid_cache.has_key(uid) and (security._uid_cache[uid]==passwd):
 			return True
 		cr = pooler.get_db(db).cursor()
-		users_obj = pooler.get_pool(cr.dbname).get('res.users')
-		user = users_obj.browse(cr, 1, uid)
-		if user and user.company_id.ldap_server and user.company_id.ldap_binddn:
-			company = user.company_id
-			try:
-				l = ldap.open(company.ldap_server)
-				if l.simple_bind_s(company.ldap_binddn, company.ldap_password):
-					base = company['ldap_base']
-					scope = ldap.SCOPE_SUBTREE
-					filter = company['ldap_filter']%(user.login,)
-					retrieve_attributes = None
-					result_id = l.search(base, scope, filter, retrieve_attributes)
-					timeout = 60
-					result_type, result_data = l.result(result_id, timeout)
-					if result_data and result_type == ldap.RES_SEARCH_RESULT and len(result_data) == 1:
-						dn=result_data[0][0]
-						name=result_data[0][1]['cn']
-						if l.bind_s(dn, passwd):
-							security._uid_cache[uid] = passwd
-							cr.close()
-							return True
-			except Exception, e:
-				print e
+		module_obj = pooler.get_pool(cr.dbname).get('ir.module.module')
+		module_ids = module_obj.search(cr, 1, [('name', '=', 'users_ldap')])
+		if module_ids:
+			state = module_obj.read(cr, 1, module_ids, ['state'])[0]['state']
+			if state in ('installed', 'to upgrade', 'to remove'):
+				users_obj = pooler.get_pool(cr.dbname).get('res.users')
+				user = users_obj.browse(cr, 1, uid)
+				if user and user.company_id.ldap_server and user.company_id.ldap_binddn:
+					company = user.company_id
+					try:
+						l = ldap.open(company.ldap_server)
+						if l.simple_bind_s(company.ldap_binddn, company.ldap_password):
+							base = company['ldap_base']
+							scope = ldap.SCOPE_SUBTREE
+							filter = company['ldap_filter']%(user.login,)
+							retrieve_attributes = None
+							result_id = l.search(base, scope, filter, retrieve_attributes)
+							timeout = 60
+							result_type, result_data = l.result(result_id, timeout)
+							if result_data and result_type == ldap.RES_SEARCH_RESULT and len(result_data) == 1:
+								dn=result_data[0][0]
+								name=result_data[0][1]['cn']
+								if l.bind_s(dn, passwd):
+									security._uid_cache[uid] = passwd
+									cr.close()
+									return True
+					except Exception, e:
+						pass
 		cr.close()
 		return oldfnc(db, uid, passwd)
 	return _ldap_check
