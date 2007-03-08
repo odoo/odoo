@@ -211,7 +211,7 @@ class GenericXMLRPCRequestHandler:
 			return r
 		except Exception,e:
 			logger = Logger()
-			logger.notifyChannel("web-services", LOG_ERROR, 'Exception in call: %s' % traceback.format_exc())
+			logger.notifyChannel("web-services", LOG_ERROR, 'Exception in call: %s' % traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
 			s=str(e)
 			import tools
 			if tools.config['debug_mode']:
@@ -311,7 +311,7 @@ class TinySocketClientThread(threading.Thread):
 					ts.mysend(result)
 				except Exception, e:
 					logger = Logger()
-					logger.notifyChannel("web-services", LOG_ERROR, 'Exception in call: %s' % traceback.format_exc())
+					logger.notifyChannel("web-services", LOG_ERROR, 'Exception in call: %s' % traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
 					s=str(e)
 					import tools
 					if tools.config['debug_mode']:
