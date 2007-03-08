@@ -1531,7 +1531,7 @@ class orm(object):
 	def read_string(self, cr, uid, id, langs, fields=None, context={}):
 		res = {}
 		res2 = {}
-		self.pool.get('ir.model.access').check(cr, uid, self._name, 'read')
+		self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'read')
 		if not fields:
 			fields = self._columns.keys() + self._inherit_fields.keys()
 		for lang in langs:
@@ -1555,7 +1555,7 @@ class orm(object):
 		return res
 
 	def write_string(self, cr, uid, id, langs, vals, context={}):
-		self.pool.get('ir.model.access').check(cr, uid, self._name, 'write')
+		self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'write')
 		for lang in langs:
 			for field in vals:
 				if field in self._columns:

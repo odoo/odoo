@@ -257,7 +257,10 @@ class HttpDaemon(threading.Thread):
 
 	def stop(self):
 		self.running = False
-		self.server.socket.shutdown(socket.SHUT_RDWR)
+		if hasattr(socket, 'SHUT_RDWR'):
+			self.server.socket.shutdown(socket.SHUT_RDWR)
+		else:
+			self.server.socket.shutdown(2)
 		self.server.socket.close()
 #		self.server.socket.close()
 #		del self.server
@@ -361,7 +364,10 @@ class TinySocketServerThread(threading.Thread):
 		for t in self.threads:
 			t.stop()
 		try:
-			self.socket.shutdown(socket.SHUT_RDWR)
+			if hasattr(socket, 'SHUT_RDWR'):
+				self.socket.shutdown(socket.SHUT_RDWR)
+			else:
+				self.socket.shutdown(2)
 			self.socket.close()
 		except:
 			return False
