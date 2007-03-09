@@ -58,6 +58,10 @@
 			<field name="action">write({'invoiced':1})</field>
 			<field name="kind">function</field>
 		</record>
+		<record model="workflow.activity" id="act_invoice_end">
+			<field name="wkf_id" ref="purchase_order"/>
+			<field name="name">invoice_end</field>
+		</record>
 		<record model="workflow.activity" id="act_picking">
 			<field name="wkf_id" ref="purchase_order"/>
 			<field name="name">picking</field>
@@ -118,7 +122,7 @@
 		</record>
 		<record model="workflow.transition" id="trans_router_invoice_no_order">
 			<field name="act_from" ref="act_router"/>
-			<field name="act_to" ref="act_invoice_done"/>
+			<field name="act_to" ref="act_invoice_end"/>
 			<field name="condition">invoice_method&lt;&gt;'order'</field>
 		</record>
 		<record model="workflow.transition" id="trans_except_picking_picking_done">
@@ -167,7 +171,12 @@
 		</record>
 		<record model="workflow.transition" id="trans_invoice_done_done">
 			<field name="act_from" ref="act_invoice_done"/>
+			<field name="act_to" ref="act_invoice_end"/>
+		</record>
+		<record model="workflow.transition" id="trans_invoice_end_done">
+			<field name="act_from" ref="act_invoice_end"/>
 			<field name="act_to" ref="act_done"/>
 		</record>
+
 	</data>
 </terp>
