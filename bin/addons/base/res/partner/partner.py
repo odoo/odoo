@@ -318,7 +318,7 @@ class res_partner_bank(osv.osv):
 	_columns = {
 		'name': fields.char('Account Name', size=64, required=True),
 		'sequence': fields.integer('Sequence'),
-		'number': fields.char('Account Number', size=64), #TODO : plan migration because of fields modifications
+		'number': fields.char('Account Number', size=64),
 		'iban': fields.char('Account Iban', size=34), 
 		'type_id' : fields.many2one('res.partner.bank.type', 'Account Type', required=True),
 		'bank_name': fields.char('Bank Name', size=64),
@@ -333,9 +333,13 @@ class res_partner_bank(osv.osv):
 		'partner_id': fields.many2one('res.partner', 'Partner', required=True, ondelete='cascade', select=True),
 		'active': fields.boolean('Active'),
 	}
+	def _default_type_id(self, cr, uid, context={}):
+		ids = self.pool.get('res.partner.bank.type').search(cr, uid, [('name','=','Other')])
+		return ids and ids[0] or False
+
 	_defaults = {
 		'active': lambda *a: 1,
-		'type_id': lambda self,cr,uid,context : self.pool.get('res.partner.bank.type').search(cr, uid, [('name','=','Other')])[0],
+		'type_id': _default_type_id,
 	}
 res_partner_bank()
 

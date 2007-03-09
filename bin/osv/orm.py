@@ -239,7 +239,8 @@ def get_pg_type(f):
 	elif isinstance(f, fields.function) and f._type == 'float':
 		f_type = ('float8', 'DOUBLE PRECISION')
 	else:
-		print "WARNING: type not supported!"
+		logger = netsvc.Logger()
+		logger.notifyChannel("init", netsvc.LOG_WARNING, '%s type not supported!' % (f_type))
 		f_type = None
 	return f_type
 
@@ -280,8 +281,7 @@ class orm(object):
 		cr.commit()
 
 	def _auto_init(self, cr):
-#		print '*' * 60
-#		print "auto_init", self._name, self._columns
+		logger = netsvc.Logger()
 		create = False
 		self._field_create(cr)
 		if not hasattr(self, "_auto") or self._auto:
@@ -381,11 +381,7 @@ class orm(object):
 								try:
 									cr.execute("ALTER TABLE %s ALTER COLUMN %s SET NOT NULL" % (self._table, k))
 								except:
-									print '-'*50
-									print 'WARNING: unable to set column %s of table %s not null !' % (k,self._table)
-									print '\tTry to re-run: tinyerp-server.py --update=module'
-									print '\tIf it doesn\'t work, update records and execute manually:'
-									print "\tALTER TABLE %s ALTER COLUMN %s SET NOT NULL" % (self._table, k)
+									logger.notifyChannel('init', netsvc.LOG_WARNING, 'WARNING: unable to set column %s of table %s not null !\nTry to re-run: tinyerp-server.py --update=module\nIf it doesn\'t work, update records and execute manually:\nALTER TABLE %s ALTER COLUMN %s SET NOT NULL' % (k, self._table, self._table, k))
 							cr.commit()
 					elif len(res)==1:
 						f_pg_def = res[0]
@@ -393,21 +389,19 @@ class orm(object):
 						f_pg_size = f_pg_def['size']
 						f_pg_notnull = f_pg_def['attnotnull']
 						if isinstance(f, fields.function) and not f.store:
-							print '-'*60
-							print "WARNING: column %s (%s) in table %s was converted to a function !" % (k, f.string, self._table)
-							print "\tYou should remove this column from your database."
+							logger.notifyChannel('init', netsvc.LOG_WARNING, 'column %s (%s) in table %s was converted to a function !\nYou should remove this column from your database.' % (k, f.string, self._table))
 							f_obj_type = None
 						else:
 							f_obj_type = get_pg_type(f) and get_pg_type(f)[0]
 						
 						if f_obj_type:
 							if f_pg_type != f_obj_type:
-								print "WARNING: column '%s' in table '%s' has changed type (DB = %s, def = %s) !" % (k, self._table, f_pg_type, f._type)
+								logger.notifyChannel('init', netsvc.LOG_WARNING, "column '%s' in table '%s' has changed type (DB = %s, def = %s) !" % (k, self._table, f_pg_type, f._type))
 							if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size != f.size:
 								# columns with the name 'type' cannot be changed for an unknown reason?!
 								if k != 'type':
 									if f_pg_size > f.size:
-										print "WARNING: column '%s' in table '%s' has changed size (DB = %d, def = %d), strings will be truncated !" % (k, self._table, f_pg_size, f.size)
+										logger.notifyChannel('init', netsvc.LOG_WARNING, "column '%s' in table '%s' has changed size (DB = %d, def = %d), strings will be truncated !" % (k, self._table, f_pg_size, f.size))
 #TODO: check si y a des donnees qui vont poser probleme (select char_length(...))
 #TODO: issue a log message even if f_pg_size < f.size
 									cr.execute("ALTER TABLE %s RENAME COLUMN %s TO temp_change_size" % (self._table,k))
@@ -428,11 +422,7 @@ class orm(object):
 									cr.execute("ALTER TABLE %s ALTER COLUMN %s SET NOT NULL" % (self._table, k))
 									cr.commit()
 								except:
-#TODO: use the logger								
-									print '-'*50
-									print 'WARNING: unable to set a NOT NULL constraint on column %s of the %s table !' % (k,self._table)
-									print "\tIf you want to have it, you should update the records and execute manually:"
-									print "\tALTER TABLE %s ALTER COLUMN %s SET NOT NULL" % (self._table, k)
+									logger.notifyChannel('init', netsvc.LOG_WARNING, 'unable to set a NOT NULL constraint on column %s of the %s table !\nIf you want to have it, you should update the records and execute manually:\nALTER TABLE %s ALTER COLUMN %s SET NOT NULL' % (k, self._table, self._table, k))
 								cr.commit()
 							elif not f.required and f_pg_notnull == 1:
 								cr.execute("ALTER TABLE %s ALTER COLUMN %s DROP NOT NULL" % (self._table,k))
@@ -604,7 +594,8 @@ class orm(object):
 							if val==line[i]:
 								res = key
 						if line[i] and not res:
-							print 'WARNING, key',line[i],'not found in selection field', field[len(prefix)]
+							logger = netsvc.Logger()
+							logger.notifyChannel("import", netsvc.LOG_WARNING, "key '%s' not found in selection field '%s'" %(line[i], field[len(prefix)]))
 					elif fields_def[field[len(prefix)]]['type']=='many2one':
 						res = False
 						if line[i]:
