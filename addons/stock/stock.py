@@ -711,6 +711,7 @@ class stock_move(osv.osv):
 		for move in self.browse(cr, uid, ids):
 			if move.product_id.type == 'consu':
 				done.append(move.id)
+				pickings[move.picking_id.id] = 1
 				continue
 			if move.state in ('confirmed','waiting'):
 				res = self.pool.get('stock.location')._product_reserve(cr, uid, [move.location_id.id], move.product_id.id, move.product_qty, {'uom': move.product_uom.id})
@@ -725,10 +726,9 @@ class stock_move(osv.osv):
 						move_id = self.copy(cr, uid, move.id, {'product_qty':r[0], 'location_id':r[1]})
 						done.append(move_id)
 						#cr.execute('insert into stock_move_history_ids values (%d,%d)', (move.id,move_id))
-			if done:
-				count += len(done)
-				self.write(cr, uid, done, {'state':'assigned'})
-				done = []
+		if done:
+			count += len(done)
+			self.write(cr, uid, done, {'state':'assigned'})
 
 		if count:
 			for pick_id in pickings:
