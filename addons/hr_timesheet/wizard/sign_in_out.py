@@ -69,7 +69,7 @@ so_fields = {
 	'name': {'string':"Employee's name", 'type':'char', 'required':True, 'readonly':True},
 	'state': {'string':"Current state", 'type':'char', 'required':True, 'readonly':True},
 	'account_id': {'string':"Analytic Account", 'type':'many2one', 'relation':'account.analytic.account', 'required':True, 'domain':"[('type','=','normal')]"},
-	'info': {'string':"Work Description", 'type':'char', 'size':64, 'required':True},
+	'info': {'string':"Work Description", 'type':'char', 'size':256, 'required':True},
 	'date': {'string':"Closing Date", 'type':'datetime'},
 	'date_start': {'string':"Starting Date", 'type':'datetime', 'readonly':True},
 	'server_date': {'string':"Current Server Date", 'type':'datetime', 'readonly':True},

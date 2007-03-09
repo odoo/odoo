@@ -37,7 +37,7 @@ class account_analytic_line(osv.osv):
 	_name = 'account.analytic.line'
 	_description = 'Analytic lines'
 	_columns = {
-		'name' : fields.char('Description', size=128, required=True),
+		'name' : fields.char('Description', size=256, required=True),
 		'date' : fields.date('Date', required=True),
 		'amount' : fields.float('Amount', required=True),
 		'unit_amount' : fields.float('Quantity'),
