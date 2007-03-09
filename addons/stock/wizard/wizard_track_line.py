@@ -60,6 +60,7 @@ def _track_lines(self, cr, uid, data, context):
 	prodlot_obj = pooler.get_pool(cr.dbname).get('stock.production.lot')
 	move_obj = pooler.get_pool(cr.dbname).get('stock.move')
 	sequence = pooler.get_pool(cr.dbname).get('ir.sequence').get(cr, uid, 'stock.lot.serial')
+	production_obj = pooler.get_pool(cr.dbname).get('mrp.production')
 	if data['form']['tracking_prefix']:
 		sequence=data['form']['tracking_prefix']+'/'+(sequence or '')
 	if not sequence:
@@ -78,14 +79,17 @@ def _track_lines(self, cr, uid, data, context):
 		'product_qty': quantity,
 		'product_uos_qty': uos_qty,
 	}
+	new_move = []
 	for idx in range(int(move.product_qty//quantity)):
 		if idx:
 			current_move = move_obj.copy(cr, uid, move.id, {'state': move.state, 'production_id': move.production_id.id})
+			new_move.append(current_move)
 		else:
 			current_move = move.id
 		new_prodlot = prodlot_obj.create(cr, uid, {'name': sequence, 'ref': '%d'%idx})
 		update_val['prodlot_id'] = new_prodlot
 		move_obj.write(cr, uid, [current_move], update_val)
+		production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
 	
 	if quantity_rest > 0:
 		idx = int(move.product_qty//quantity)
@@ -93,11 +97,19 @@ def _track_lines(self, cr, uid, data, context):
 		update_val['product_uos_qty']=uos_qty_rest
 		if idx:
 			current_move = move_obj.copy(cr, uid, move.id, {'state': move.state, 'production_id': move.production_id.id})
+			new_move.append(current_move)
 		else:
 			current_move = move.id
 		new_prodlot = prodlot_obj.create(cr, uid, {'name': sequence, 'ref': '%d'%idx})
 		update_val['prodlot_id'] = new_prodlot
 		move_obj.write(cr, uid, [current_move], update_val)
+
+	products = production_obj.read(cr, uid, production_ids, ['move_lines'])
+	for p in products:
+		for new in new_move:
+			if new not in p['move_lines']:
+				p['move_lines'].append(new)
+		production_obj.write(cr, uid, [p['id']], {'move_lines': [(6, 0, p['move_lines'])]})
 
 	return {}
 
