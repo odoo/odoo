@@ -52,7 +52,7 @@ class roles(osv.osv):
 		cr.execute('select parent_id from res_roles where id=%d', (role_id,))
 		roles = cr.fetchone()[0]
 		if roles:
-			return self.check(cr, uid, ids, roles[0])
+			return self.check(cr, uid, ids, roles)
 		return False
 roles()
 
