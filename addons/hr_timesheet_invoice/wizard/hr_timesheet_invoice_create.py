@@ -63,7 +63,7 @@ class invoice_create(wizard.interface):
 				'payment_term': (partner.property_payment_term and partner.property_payment_term[0]) or False,
 				'account_id': partner.property_account_receivable[0],
 				'currency_id': account.pricelist_id.currency_id.id,
-				'project_id': account.id
+				#'project_id': account.id
 			}
 			last_invoice = pool.get('account.invoice').create(cr, uid, curr_invoice)
 			invoices.append(last_invoice)

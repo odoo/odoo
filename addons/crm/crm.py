@@ -135,7 +135,11 @@ class crm_case_categ(osv.osv):
 	_description = "Category of case"
 	_columns = {
 		'name': fields.char('Case Category Name', size=64, required=True),
+		'probability': fields.float('Probability', required=True),
 		'section_id': fields.many2one('crm.case.section', 'Case Section'),
+	}
+	_defaults = {
+		'probability': lambda *args: 0.0
 	}
 crm_case_categ()
 
@@ -256,6 +260,8 @@ class crm_case(osv.osv):
 		'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
 	}
 	_order = 'priority, date_deadline, id'
+
+
 	def _action(self, cr, uid, cases, state_to, scrit=[], context={}):
 		action_ids = self.pool.get('crm.case.rule').search(cr, uid, scrit)
 		level = MAX_LEVEL
@@ -452,6 +458,13 @@ class crm_case(osv.osv):
 		if addr['contact'] and not email:
 			data['email_from'] = self.pool.get('res.partner.address').browse(cr, uid, addr['contact']).email
 		return {'value':data}
+
+	def onchange_categ_id(self, cr, uid, ids, categ, context={}):
+		if not categ:
+			return {'value':{}}
+		cat = self.pool.get('crm.case.categ').browse(cr, uid, categ, context).probability
+		return {'value':{'probability':cat}}
+
 
 	def onchange_partner_address_id(self, cr, uid, ids, part, email=False):
 		if not part:

@@ -91,6 +91,7 @@
 			<form string="Case Category">
 				<field name="name" select="1"/>
 				<field name="section_id" select="1"/>
+				<field name="probability"/>
 			</form>
 		</field>
 	</record>
@@ -234,7 +235,7 @@
 					<field name="name" select="1"/>
 					<field name="id" select="1"/>
 					<field name="section_id"/>
-					<field name="categ_id" select="1"/>
+					<field name="categ_id" select="1" on_change="onchange_categ_id(categ_id)"/>
 					<field name="date" select="1"/>
 					<field name="priority"/>
 					<field name="partner_id" select="1" on_change="onchange_partner_id(partner_id, email_from)"/>
