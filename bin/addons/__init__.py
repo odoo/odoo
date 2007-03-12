@@ -163,8 +163,6 @@ def init_module_objects(cr, module_name, obj_list):
 	pool = pooler.get_pool(cr.dbname)
 	logger.notifyChannel('init', netsvc.LOG_INFO, 'addon:%s:creating or updating database tables' % module_name)
 	for obj in obj_list:
-		#CHECKME: is this test useful? all objects are supposed to have an _auto_init method, right?
-		#if hasattr(obj, '_auto_init'):
 		if hasattr(obj, 'init'):
 			obj.init(cr)
 		obj._auto_init(cr)
