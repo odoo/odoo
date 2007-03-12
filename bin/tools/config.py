@@ -32,6 +32,8 @@ import ConfigParser,optparse,os,sys
 
 class configmanager(object):
 	def __init__(self, fname=None):
+		import netsvc
+		logger = netsvc.Logger()
 		self.options = {
 			'verbose': False,
 			'interface': '',	# this will bind the server to all interfaces
@@ -113,7 +115,7 @@ class configmanager(object):
 		(opt, args) = parser.parse_args()
 
 		if (opt.translate_in or opt.translate_out) and (not opt.language or not opt.db_name):
-			print "Error: the i18n-import and i18n-export options cannot be used without the language (-l) and database (-d) options"
+			logger.notifyChannel("init", netsvc.LOG_ERROR, "the i18n-import and i18n-export options cannot be used without the language (-l) and database (-d) options")
 			sys.exit(2)
 
 		# place/search the config file on Win32 near the server installation
@@ -192,7 +194,6 @@ class configmanager(object):
 		p = ConfigParser.ConfigParser()
 		p.add_section('options')
 		for o in [opt for opt in self.options.keys() if opt not in ('version','language','translate_out','translate_in','init','update')]:
-			print o, self.options[o]
 			p.set('options', o, self.options[o])
 
 		# try to create the directories and write the file
