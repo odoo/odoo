@@ -258,12 +258,10 @@ class hr_timesheet_line(osv.osv):
 		self._check(cr, uid, ids)
 		return super(hr_timesheet_line,self).unlink(cr, uid, ids,*args, **kwargs)
 	def write(self, cr, uid, ids, *args, **kwargs):
-		print '2', args, kwargs
 		self._check(cr, uid, ids)
 		return super(hr_timesheet_line,self).write(cr, uid, ids,*args, **kwargs)
 	def _check(self, cr, uid, ids):
 		for att in self.browse(cr, uid, ids):
-			print att.sheet_id
 			if att.sheet_id and att.sheet_id.state<>'draft':
 				raise osv.except_osv('Error !', 'You can not modify an entry in a confirmed timesheet !')
 		return True
@@ -287,7 +285,6 @@ class hr_attendance(osv.osv):
 		self._check(cr, uid, ids)
 		return super(hr_attendance,self).unlink(cr, uid, ids,*args, **kwargs)
 	def write(self, cr, uid, ids, *args, **kwargs):
-		print '1'
 		self._check(cr, uid, ids)
 		return super(hr_attendance,self).write(cr, uid, ids,*args, **kwargs)
 	def _check(self, cr, uid, ids):
