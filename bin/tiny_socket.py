@@ -2,6 +2,11 @@ import socket
 import cPickle
 import marshal
 
+class Myexception(Exception):
+	def __init__(self, faultCode, faultString):
+		self.faultCode = faultCode
+		self.faultString = faultString
+
 class mysocket:
 	def __init__(self, sock=None):
 		if sock is None:
@@ -10,8 +15,11 @@ class mysocket:
 		else:
 			self.sock = sock
 		self.sock.settimeout(60)
-	def connect(self, host, port):
-		self.sock.connect((host, port))
+	def connect(self, host, port=False):
+		if not port:
+			protocol, buf = host.split('//')
+			host, port = buf.split(':')
+		self.sock.connect((host, int(port)))
 	def disconnect(self):
 		self.sock.shutdown(socket.SHUT_RDWR)
 		self.sock.close()
@@ -19,6 +27,7 @@ class mysocket:
 		msg = cPickle.dumps(msg)
 		size = len(msg)
 		self.sock.send('%8d' % size)
+		self.sock.send(exception and "1" or "0")
 		totalsent = 0
 		while totalsent < size:
 			sent = self.sock.send(msg[totalsent:])
@@ -33,6 +42,11 @@ class mysocket:
 				raise RuntimeError, "socket connection broken"
 			buf += chunk
 		size = int(buf)
+		buf = self.sock.recv(1)
+		if buf != "0":
+			exception = buf
+		else:
+			exception = False
 		msg = ''
 		while len(msg) < size:
 			chunk = self.sock.recv(size-len(msg))
@@ -41,6 +55,8 @@ class mysocket:
 			msg = msg + chunk
 		res = cPickle.loads(msg)
 		if isinstance(res,Exception):
+			if exception:
+				raise Myexception(exception, str(res))
 			raise res
 		else:
 			return res

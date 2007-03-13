@@ -198,16 +198,13 @@ class GenericXMLRPCRequestHandler:
 		import traceback
 		try:
 			n=self.path.split("/")[-1]
-#			print "TERP-CALLING:",n,method,params
 			s=LocalService(n)
 			m=getattr(s,method)
 			s._service._response=None
 			r=m(*params)
 			res=s._service._response
 			if res!=None:
-#				print "RESPONSE FOUND"
 				r=res
-#			print "TERP-RETURN :",r
 			return r
 		except Exception,e:
 			logger = Logger()
@@ -262,13 +259,10 @@ class HttpDaemon(threading.Thread):
 		else:
 			self.server.socket.shutdown(2)
 		self.server.socket.close()
-#		self.server.socket.close()
-#		del self.server
 
 	def run(self):
 		self.server.register_introspection_functions()
 
-#		self.server.serve_forever()
 		self.running = True
 		while self.running:
 			self.server.handle_request()
@@ -307,8 +301,7 @@ class TinySocketClientThread(threading.Thread):
 					res=s._service._response
 					if res!=None:
 						r=res
-					result = r
-					ts.mysend(result)
+					ts.mysend(r)
 				except Exception, e:
 					logger = Logger()
 					logger.notifyChannel("web-services", LOG_ERROR, 'Exception in call: ' + reduce(lambda x, y: x+y, traceback.format_exc()))
@@ -327,8 +320,6 @@ class TinySocketClientThread(threading.Thread):
 			return False
 	def stop(self):
 		self.running = False
-#		self.sock.shutdown(socket.SHUT_RDWR)
-#		self.sock.close()
 
 class TinySocketServerThread(threading.Thread):
 	def __init__(self, interface, port, secure=False):
@@ -346,14 +337,10 @@ class TinySocketServerThread(threading.Thread):
 		try:
 			self.running = True
 			while self.running:
-				#accept connections from outside
 				(clientsocket, address) = self.socket.accept()
-				#now do something with the clientsocket
-				#in this case, we'll pretend this is a threaded server
 				ct = TinySocketClientThread(clientsocket, self.threads)
 				ct.start()
 				self.threads.append(ct)
-#				print "threads size:", len(self.threads)
 			self.socket.close()
 		except Exception, e:
 			self.socket.close()
