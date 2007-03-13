@@ -42,7 +42,7 @@ class account_analytic_line(osv.osv):
 		'amount' : fields.float('Amount', required=True),
 		'unit_amount' : fields.float('Quantity'),
 		'product_uom_id' : fields.many2one('product.uom', 'UoM'),
-		'product_id' : fields.many2one('product.product', 'Product', required=True),
+		'product_id' : fields.many2one('product.product', 'Product'),
 		'account_id' : fields.many2one('account.analytic.account', 'Analytic Account', required=True, ondelete='cascade', select=True),
 		'general_account_id' : fields.many2one('account.account', 'General account', required=True, ondelete='cascade'),
 		'move_id' : fields.many2one('account.move.line', 'General entry', ondelete='cascade', select=True),
