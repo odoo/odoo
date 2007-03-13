@@ -97,5 +97,14 @@ cr.commit()
 cr.execute("update account_invoice_line set discount=0.0 where discount is null;")
 cr.commit()
 
+
+# -------------------------------------------------------------------------- #
+# update constraint account_invoice_line_uos_id_fkey on account_invoice_line #
+# -------------------------------------------------------------------------- #
+
+cr.execute("ALTER TABLE account_invoice_line DROP CONSTRAINT account_invoice_line_uos_id_fkey")
+cr.execute("ALTER TABLE account_invoice_line ADD FOREIGN KEY (uos_id) REFERENCES product_uom(id) ON DELETE SET NULL")
+cr.commit()
+
 cr.close()
 
