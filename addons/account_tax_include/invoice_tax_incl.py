@@ -64,10 +64,7 @@ class account_invoice(osv.osv):
 
 	_inherit = "account.invoice"
 	_columns = {
-		'price_type': fields.selection([
-			('tax_included','Tax included'),
-			('tax_excluded','Tax excluded')
-		], 'Price method', required=True),
+		'price_type': fields.selection([('tax_included','Tax included'), ('tax_excluded','Tax excluded')], 'Price method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
 		'amount_untaxed': fields.function(_amount_untaxed, method=True, string='Untaxed Amount'),
 		'amount_total': fields.function(_amount_total, method=True, string='Total', store=True),
 	}
@@ -104,6 +101,7 @@ class account_invoice_line(osv.osv):
 				'account_id':line.account_id.id,
 				'product_id':line.product_id.id,
 				'uos_id':line.uos_id.id,
+				'account_analytic_id':line.account_analytic_id.id,
 			})
 			for tax in tax_obj.compute_inv(cr, uid, line.invoice_line_tax_id, (line.price_unit *(1.0-(line['discount'] or 0.0)/100.0)), line.quantity, inv.address_invoice_id.id, line.product_id, inv.partner_id):
 				val={}
