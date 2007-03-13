@@ -270,7 +270,6 @@ class account_invoice(osv.osv):
 			# one move line per invoice line
 			iml = self.pool.get('account.invoice.line').move_line_get(cr, uid, inv['id'])
 			for il in iml:
-				print "il:", il
 				if il['account_analytic_id']:
 					il['analytic_lines'] = [(0,0, {
 						'name': il['name'],

@@ -134,7 +134,6 @@ class account_move_line(osv.osv):
 		if data['account_id']:
 			account = self.pool.get('account.account').browse(cr, uid, data['account_id'])
 			data['tax_code_id'] = self._default_get_tax(cr, uid, account )
-		print "data:", data
 		return data
 
 	def _default_get_tax(self, cr, uid, account, debit=0, credit=0, context={}):
