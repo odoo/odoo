@@ -106,5 +106,14 @@ cr.execute("ALTER TABLE account_invoice_line DROP CONSTRAINT account_invoice_lin
 cr.execute("ALTER TABLE account_invoice_line ADD FOREIGN KEY (uos_id) REFERENCES product_uom(id) ON DELETE SET NULL")
 cr.commit()
 
+print """
+WARNING: account_uos has been replaced by product_uom.
+It is not possible to migrate the data automatically so you need to create the old account_uos in the new product_uom.
+And then update the field uos_id of the table account_invoice to match the new id of product_uom.
+
+EXAMPLE:
+	UPDATE account_invoice SET uos_id = new_id WHERE uos_id = old_id;
+"""
+
 cr.close()
 
