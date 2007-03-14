@@ -1324,7 +1324,7 @@ class orm(object):
 					for xitem in todel[::-1]:
 						del x[2][xitem]
 					if x[0]=='id':
-						qu1.append('(id=any(array[%s]))' % (','.join(['%d'] * len(x[2])),))
+						qu1.append('(%s.id=any(array[%s]))' % (table._table, ','.join(['%d'] * len(x[2])),))
 					else:
 						qu1.append('(%s.%s in (%s))' % (table._table, x[0], ','.join([table._columns[x[0]]._symbol_set[0]]*len(x[2]))))
 					if todel:
