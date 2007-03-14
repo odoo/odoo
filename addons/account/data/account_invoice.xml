@@ -57,7 +57,7 @@
 	<!--
 	Sequences types for analytic account 
 	-->
-	<record model="ir.sequence.type">
+	<record model="ir.sequence.type" id="seq_type_analytic_account">
 		<field name="name">Analytic account</field>
 		<field name="code">account.analytic.account</field>
 	</record>
@@ -65,7 +65,7 @@
 	<!-- 
 	Sequence for analytic account 
 	-->
-	<record model="ir.sequence">
+	<record model="ir.sequence" id="seq_analytic_account">
 		<field name="name">Analytic account sequence</field>
 		<field name="code">account.analytic.account</field>
 		<field name="padding" eval="3" />
