@@ -211,8 +211,9 @@ def load_module_graph(cr, graph, status={}):
 						tools.convert_csv_import(cr, m, os.path.basename(xml), tools.file_open(opj(m, xml)).read(), idref)
 					else:
 						tools.convert_xml_import(cr, m, tools.file_open(opj(m, xml)).read(), idref)
+				cr.execute('update ir_module_module set demo=%s where name=%s', (True, package.name))
 			package_todo.append(package.name)
-			cr.execute("update ir_module_module set state='installed', demo=%s where state in ('to upgrade', 'to install') and name=%s", (str(hasattr(package, 'demo')) or package_demo, package.name))
+			cr.execute("update ir_module_module set state='installed' where state in ('to upgrade', 'to install') and name=%s", (package.name,))
 			cr.commit()
 		statusi+=1
 
