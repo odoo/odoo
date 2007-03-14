@@ -143,7 +143,8 @@ class report_graph_instance(object):
 1.5 inch 15 inch moveto
 (No workflow available) show
 showpage'''
-		input, output = os.popen2('ps2pdf -sPAPERSIZE=a4 - -')
+		args = ('ps2pdf', '-sPAPERSIZE=a4', '-', '-')
+		input, output = tools.exec_pg_command_pipe(*args)
 		input.write(ps_string)
 		input.close()
 		self.result = output.read()
