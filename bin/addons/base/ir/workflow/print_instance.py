@@ -144,10 +144,10 @@ class report_graph_instance(object):
 (No workflow available) show
 showpage'''
 		if os.name == "nt":
-			prog = "ps2pdf.bat"
+			prog = 'ps2pdf.bat'
 		else:
-			prog = "ps2pdffoo"
-		args = (prog, '-sPAPERSIZE=a4', '-', '-')
+			prog = 'ps2pdf'
+		args = (prog, '-', '-')
 		try:
 			input, output = tools.exec_command_pipe(*args)
 		except:
