@@ -104,7 +104,11 @@ def init_db(cr):
 			cr.commit()
 
 def find_in_path(name):
-	path = [dir for dir in os.environ['PATH'].split(':')
+	if os.name == "nt":
+		sep = ';'
+	else:
+		sep = ':'
+	path = [dir for dir in os.environ['PATH'].split(sep)
 			if os.path.isdir(dir)]
 	for dir in path:
 		if name in os.listdir(dir):
@@ -121,7 +125,6 @@ def exec_pg_command(name, *args):
 	prog = find_pg_tool(name)
 	args2 = (os.path.basename(prog),) + args
 	return os.spawnv(os.P_WAIT, prog, args2)
-#	os.spawnv(os.P_WAIT, prog, ([os.path.basename(prog)] + args))
 
 def exec_pg_command_pipe(name, *args):
 	prog = find_pg_tool(name)
@@ -129,6 +132,16 @@ def exec_pg_command_pipe(name, *args):
 		cmd = '"' + prog + '" ' + ' '.join(args)
 	else:
 		cmd = prog + ' ' + ' '.join(args)
+	return os.popen2(cmd, 'b')
+
+def exec_command_pipe(name, *args):
+	prog = find_in_path(name)
+	if not prog:
+		raise
+	if os.name == "nt":
+		cmd = '"'+prog+'" '+' '.join(args)
+	else:
+		cmd = prog+' '+' '.join(args)
 	return os.popen2(cmd, 'b')
 
 #----------------------------------------------------------

@@ -431,7 +431,8 @@ class report_spool(netsvc.Service):
 					res2 = result['result'].encode('latin1', 'replace')
 				else:
 					res2 = result['result']
-			res['result'] = base64.encodestring(res2)
+			if res2:
+				res['result'] = base64.encodestring(res2)
 			res['format'] = result['format']
 			del self._reports[report_id]
 		return res

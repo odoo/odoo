@@ -143,8 +143,15 @@ class report_graph_instance(object):
 1.5 inch 15 inch moveto
 (No workflow available) show
 showpage'''
-		args = ('ps2pdf', '-sPAPERSIZE=a4', '-', '-')
-		input, output = tools.exec_pg_command_pipe(*args)
+		if os.name == "nt":
+			prog = "ps2pdf.bat"
+		else:
+			prog = "ps2pdffoo"
+		args = (prog, '-sPAPERSIZE=a4', '-', '-')
+		try:
+			input, output = tools.exec_command_pipe(*args)
+		except:
+			return
 		input.write(ps_string)
 		input.close()
 		self.result = output.read()
