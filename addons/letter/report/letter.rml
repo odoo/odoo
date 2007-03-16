@@ -98,7 +98,8 @@
     <paraStyle name="subsection" fontName="Times-Roman" fontSize="12.0" leading="15" spaceBefore="14.0" spaceAfter="14.0"/>
   </stylesheet>
   <story>
-    <blockTable colWidths="227.0,228.0" style="Tableau4">
+    <para style="P1">[[ repeatIn(objects,'o') ]]</para>
+    <!--blockTable colWidths="227.0,228.0" style="Tableau4">
       <tr>
         <td>
           <illustration height="41.0" width="171.0">
@@ -111,7 +112,7 @@
           </illustration>
         </td>
       </tr>
-    </blockTable>
+    </blockTable-->
     <para style="P2">Paris, le 26 septembre 2005</para>
     <para style="P3">
       <font color="white"> </font>
@@ -134,9 +135,9 @@
         </td>
         <td>
           <para style="Table Contents">[[ o.partner_id.name ]]</para>
-          <para style="Table Contents">[[ o.partner_id.address[0].name ]]</para>
-          <para style="Table Contents">[[ o.partner_id.address[0].zip ]] [[o.partner_id.address[0].city ]]</para>
-          <para style="Table Contents">[[ o.partner_id.address[0].country_id.name ]]</para>
+          <para style="Table Contents">[[ o.partner_id.address and o.partner_id.address[0].name ]]</para>
+          <para style="Table Contents">[[ o.partner_id.address and o.partner_id.address[0].zip ]] [[ o.partner_id.address and o.partner_id.address[0].city ]]</para>
+          <para style="Table Contents">[[ o.partner_id.address and o.partner_id.address[0].country_id and o.partner_id.address[0].country_id.name ]]</para>
           <para style="Table Contents">
             <font color="white"> </font>
           </para>
@@ -273,8 +274,9 @@
     </para>
     <blockTable colWidths="454.0" style="Tableau5">
       <tr>
+        [[ repeatIn(o.paragraph_ids, 'x') ]]
         <td>
-          <para style="P14">[[ [x.content for x in o.paragraph_ids if x.type_id.name=='keys'] ]]</para>
+          <para style="P14">[[ x.type_id and x.type_id.name=='keys' and x.content or removeParentNode('tr') ]]</para>
           <para style="P14">
             <font color="white"> </font>
           </para>
@@ -400,8 +402,9 @@
     </para>
     <blockTable colWidths="454.0" style="Tableau6">
       <tr>
+        [[ repeatIn(o.paragraph_ids, 'x') ]]
         <td>
-          <para style="P14">[[ [x.content for x in o.paragraph_ids if x.type_id.name=='modules'] ]]</para>
+          <para style="P14">[[ x.type_id and x.type_id.name=='modules' and x.content or removeParentNode('tr') ]]</para>
           <para style="P14">
             <font color="white"> </font>
           </para>
@@ -458,8 +461,9 @@
     </para>
     <blockTable colWidths="454.0" style="Tableau7">
       <tr>
+        [[ repeatIn(o.paragraph_ids, 'x') ]]
         <td>
-          <para style="P14">[[ [x.content for x in o.paragraph_ids if x.type_id.name=='specific'] ]]</para>
+          <para style="P14">[[ x.type_id and x.type_id.name=='specific' and x.content or removeParentNode('tr') ]]</para>
           <para style="P14">
             <font color="white"> </font>
           </para>
@@ -508,8 +512,9 @@
     </para>
     <blockTable colWidths="454.0" style="Tableau8">
       <tr>
+        [[ repeatIn(o.paragraph_ids, 'x') ]]
         <td>
-          <para style="P14">[[ [x.content for x in o.paragraph_ids if x.type_id.name=='price'] ]]</para>
+          <para style="P14">[[ x.type_id and x.type_id.name=='price' and x.content or removeParentNode('tr') ]]</para>
           <para style="P14">
             <font color="white"> </font>
           </para>

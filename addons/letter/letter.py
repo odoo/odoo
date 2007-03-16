@@ -76,7 +76,7 @@ class letter_letter(osv.osv):
 
 	def onchange_type_id(self, cr, uid, ids, type_id):
 		if type_id:
-			letter = pooler.get_pool(cr.dbname).get('letter.letter.type').browse(cr, uid, type_id)[0]
+			letter = pooler.get_pool(cr.dbname).get('letter.letter.type').browse(cr, uid, type_id)
 			return {'value':{'paragraph_ids': [x.id for x in letter.paragraph_ids]}}
 		else:
 			return  {'value':{'paragraph_ids': []}}
