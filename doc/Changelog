@@ -1,3 +1,99 @@
+16/03/2007
+4.0.3
+	Summary:
+		Improve the migration scripts
+		Some bugfixes
+		Print workflow on win32 (with ghostscript)
+
+	Bugfixes:
+		BASE: Fix "set default value"
+		HR_TIMESHEET_INVOICE: Improve invoice on timesheet
+		ACCOUNT: Fix tax amount
+		KERNEL: correct the delete for property
+		PURCHASE: fix the journal for invoice created by PO
+		KERNEL: fix the migration for id removed
+		Add id to some menuitem
+		BASE: prevent exception in ir_cron when the DB is dropped
+		HR: Fix sign-in/sign-out, the user is now allowed to provide a date in
+			the future
+		SALE: fix uos for the tax amount
+		MRP: fix wrong dbname in _procure_confirm
+		HR_EXPENSE: add domain to analytic_account
+		ACCOUNT: fix debit_get
+		SUBSCRIPTION: model is required now
+		HR_TIMESHEET: add rounding value to report
+		SALE: Fix cancel and recreate invoice, now cancel also the order lines
+		STOCK: use the tax define in sale for the invoice
+		ACCOUNT: add test to pay only if invoice not in state draft
+		KERNEL: root have access to all records
+		REPORT: fix rml translation to translate before the eval
+		ACCOUNT_TAX_INCLUDE: Use the right amount in account mmove generate
+			with tax_include
+		BASE: Improve the workflow print
+		SALE: Fix workflow error when creating invoice from the wizard
+		PRODUCT_EXTENDED: don't use pricelist to compute standard price
+		MRP: Use company currency for product cost structure
+		KERNEL: fix where clause when deleting false items
+		ACCOUNT: product source account depend on the invoice type now
+		ACCOUNT: use the property account tax for the on_change_product
+		ACCOUNT: use the invoice date for the date of analytic line
+		ACCOUNT: Fix the pay invoice when multi-currency
+		HR_TIMESHEET_PROJECT: use the right product
+		STOCK: Fix to assign picking with product consumable and call the
+			workflow
+		STOCK: Fix the split lot production
+		PURCHASE: fix workflow for purchase with manual invoice to not set
+			invoice and paid
+		DELIVERY: can use any type of journal for invoice
+		KERNEL: fix search on xxx2many
+		ACCOUNT: add id to sequence record
+		KERNEL: set properly the demo flag for module installed
+		KERNEL: Fix print workflow on win32
+		LETTER: fix print letter
+
+	Migration:
+		Fix migration for postreSQL 7.4
+		Fix the default value of demo in module
+		Fix migration of account_uos to product_uos
+
+Wed Jan 17 15:06:07 CET 2007
+4.0.2
+	Summary:
+		Improve the migration
+		Some bugfixes
+		Improve tax
+
+	Bugfixes:
+		Fix tax for invoice, refund, etc
+		SALE: fix view priority
+		PURCHASE: wizard may crash on some data
+		BASE: Fix import the same lang
+		BASE: start the cron
+		PURCHASE: fix domain for pricelist
+		KERNEL: fix object set without values
+		REPORT_SALE: fix for sale without line
+		KERNEL: add pidfile
+		BASE: remove 'set' for python2.3 compliant
+	Migration:
+		Migrate hr_timesheet user_id
+
+Fri Dec 22 12:01:26 CET 2006
+4.0.1
+	Summary:
+		Improve the migration
+		Some bugfixes
+	
+	Bugfixes:
+		HR_EXPENSE: Fix domain
+		HR_TIMESHEET: Fix employee without product
+		TOOLS: Fix export translate
+		BASE: fix for concurrency of sequence number
+		MRP: fix report
+		CRM: fix graph report
+		KERNEL: fix instance of osv_pool
+		KERNEL: fix setup.py
+
+
 Mon Dec 4 18:01:55 CET 2006
 4.0.0
 	Summary:
