@@ -37,6 +37,7 @@ included_addons = [
     'productivity_analysis', 'product_variant', 'profile_accounting',
     'profile_manufacturing', 'profile_service', 'project', 'purchase',
     'purchase_tax_include', 'report_analytic_line', 'report_crm',
+    'report_intrastat',
     'report_project', 'report_purchase', 'report_sale', 'sale', 'sale_crm',
     'sale_journal', 'sale_rebate', 'sale_tax_include', 'sandwich', 'scrum',
     'stock', 'subscription', 'travel',
@@ -54,7 +55,9 @@ included_addons = [
     'l10n_chart_sw_church', 'l10n_chart_sw_food', 'l10n_chart_uk',
     'l10n_chart_us_general', 'l10n_chart_us_manufacturing',
     'l10n_chart_us_service', 'l10n_chart_us_ucoa', 'l10n_chart_us_ucoa_ez',
-    'l10n_chart_ve',]
+    'l10n_chart_ve',
+    'users_ldap',
+    ]
 
 required_modules = [('psycopg', 'PostgreSQL module'),
                     ('xml', 'XML Tools for python'),
