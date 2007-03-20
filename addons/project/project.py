@@ -108,7 +108,7 @@ class project(osv.osv):
 		 'warn_footer': fields.text('Mail footer'),
 		 'notes': fields.text('Notes'),
 		 'timesheet_id': fields.many2one('hr.timesheet.group', 'Timesheet'),
- 		 'state': fields.selection([('draft', 'Draft'), ('finished', 'Finished'), ('open', 'Opened')]),
+ 		 'state': fields.selection([('draft', 'Open'), ('pending', 'Pending'), ('done', 'Done')]),
 	 }
 	
 	_defaults = {
