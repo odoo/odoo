@@ -1217,11 +1217,16 @@ class orm(object):
 			result['view_id'] = sql_res[3]
 			result['arch'] = sql_res[0]
 
-			# get all views which inherit from (ie modify) this view
-			cr.execute('select arch from ir_ui_view where inherit_id=%d and model=%s order by priority', (sql_res[3], self._name))
-			sql_inherit = cr.fetchall()
-			for (inherit,) in sql_inherit:
-				result['arch'] = _inherit_apply(result['arch'], inherit)
+			def _inherit_apply_rec(result, inherit_id):
+				# get all views which inherit from (ie modify) this view
+				cr.execute('select arch,id from ir_ui_view where inherit_id=%d and model=%s order by priority', (inherit_id, self._name))
+				sql_inherit = cr.fetchall()
+				for (inherit,id) in sql_inherit:
+					result = _inherit_apply(result, inherit)
+					result = _inherit_apply_rec(result,id)
+				return result
+
+			result['arch'] = _inherit_apply_rec(result['arch'], sql_res[3])
 
 			result['name'] = sql_res[1]
 			result['field_parent'] = sql_res[2] or False
@@ -1343,10 +1348,10 @@ class orm(object):
 				if args[i][0]=='active':
 					if not args[i][2]:
 						del args[i]
-					break
 				i += 1
 			if i==len(args):
 				args.append(('active', '=', 1))
+
 
 
 		# if the object has a field named 'company_id', filter out all
@@ -1533,7 +1538,6 @@ class orm(object):
 					if res_trans:
 						res[lang][f]=res_trans
 					else:
-						print "columns:", self._columns[f].string
 						res[lang][f]=self._columns[f].string
 		for table in self._inherits:
 			cols = intersect(self._inherit_fields.keys(), fields)
