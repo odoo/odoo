@@ -56,7 +56,7 @@
 	</xsl:template>
 
 	<xsl:template match="address" mode="story">
-		<para style="nospace"><xsl:value-of select="company-title"/><xsl:text> </xsl:text><xsl:value-of select="company-name"/></para>
+		<para style="nospace"><xsl:value-of select="company-name"/><xsl:text> </xsl:text><xsl:value-of select="company-title"/></para>
 		<xsl:choose>
 			<xsl:when test="count(contact[type='default']) >= 1">
 				<!-- apply the first 'contact' node with the type 'default' -->
