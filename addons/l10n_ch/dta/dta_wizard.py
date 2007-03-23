@@ -243,7 +243,9 @@ class record_gt826(record):
 			('comp_city',10),('comp_country',20),('padding',46),
 			#seg3
 			('seg_num3',2),('partner_bvr',12),#numero d'adherent bvr
-			('padding',80),('invoice_bvr_num',27),#communication structuree
+			('partner_name',20),('partner_street',20),('partner_zip',10),
+			('partner_city',10),('partner_country',20),
+			('invoice_bvr_num',27),#communication structuree
 			('padding',2),#cle de controle
 			('padding',5)
 			]
@@ -272,14 +274,14 @@ class record_gt827(record):
 			('comp_dta',5),('invoice_number',11),('comp_bank_iban',24),('date_value',6),
 			('invoice_currency',3),('amount_to_pay',12),('padding',14),
 			#seg2
-			('seg_num2',2),('comp_name',20),('comp_street',20),('comp_zip',10),
+			('seg_num2',2),('comp_name',20),('comp_street',20),('comp_zip',10), 
 			('comp_city',10),('comp_country',20),('padding',46),
 			#seg3
 			('seg_num3',2),('partner_bank_number',30),
-			('comp_name',24),('comp_street',24),('comp_zip',12),
-			('comp_city',12),('comp_country',24),
+			('partner_name',24),('partner_street',24),('partner_zip',12),
+			('partner_city',12),('partner_country',24),
 			#seg4
-			('seg_num4',2),('partner_comment',28),('padding',98),
+			('seg_num4',2),('partner_comment',112),('padding',14),
 			#seg5
 			#('padding',128)
 			]
@@ -356,7 +358,7 @@ def c_ljust(s, size):
 	"""
 	s= s or ''
 	if len(s) > size:
-		s= s[:len(a)]
+		s= s[:size]
 		print "Too long data ! %s exceed %d character." % (s, size)
 	return s.decode('utf-8').encode('latin1','replace').ljust(size)
 
@@ -398,8 +400,6 @@ def _create_dta(self,cr,uid,data,context):
 
 
 	v['comp_bank_number'] = bank.number or ''
-	if not v['comp_bank_number'] : 
-		return {'note':'No account number for the company bank account.'}
 
 	v['comp_bank_iban'] = bank.iban or ''
 	if not v['comp_bank_iban'] : 
@@ -462,8 +462,7 @@ def _create_dta(self,cr,uid,data,context):
 			continue
 
 		v['partner_bank_iban']=  i.partner_bank_id.iban or False
-		v['partner_bank_number']=  i.partner_bank_id.number or False
-		v['partner_bank_number']= v['partner_bank_number'].replace('.','').replace('-','')
+		v['partner_bank_number']=  i.partner_bank_id.number  and i.partner_bank_id.number.replace('.','').replace('-','') or  False
 		
 		v['partner_bvr']= i.partner_bank_id.bvr_number or ''
 		
