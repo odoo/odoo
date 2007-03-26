@@ -466,7 +466,7 @@ class orm(object):
 		if not self._sequence:
 			self._sequence = self._table+'_id_seq'
 		for k in self._defaults:
-			assert (k in self._columns) or (k in self._inherit_fields), 'Default function defined but field %s does not exist !' % (k,)
+			assert (k in self._columns) or (k in self._inherit_fields), 'Default function defined in %s but field %s does not exist !' % (self._name, k,)
 
 	#
 	# Update objects that uses this one to update their _inherits fields
