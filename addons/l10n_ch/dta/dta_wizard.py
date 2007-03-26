@@ -480,6 +480,10 @@ def _create_dta(self,cr,uid,data,context):
 		v['partner_bank_code']= i.partner_bank_id.bank_code or False
 		v['invoice_reference']= i.reference
 		v['invoice_bvr_num']= i.bvr_ref_num
+		if v['invoice_bvr_num']:
+			v['invoice_bvr_num'] = v['invoice_bvr_num'].rjust(27,'0')
+			print len(v['invoice_bvr_num']), v['invoice_bvr_num']
+			
 		v['partner_comment']= i.partner_comment
 		
 		v['partner_name'] = i.partner_id and i.partner_id.name or ''
