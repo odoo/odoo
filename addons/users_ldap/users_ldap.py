@@ -74,7 +74,7 @@ def ldap_login(oldfnc):
 								continue
 							if result_type == ldap.RES_SEARCH_RESULT and len(result_data) == 1:
 								dn=result_data[0][0]
-								name=result_data[0][1]['cn']
+								name=result_data[0][1]['cn'][0]
 								if l.bind(dn, passwd):
 									cr.execute("select id from res_users where login=%s",(login.encode('utf-8'),))
 									res = cr.fetchone()
