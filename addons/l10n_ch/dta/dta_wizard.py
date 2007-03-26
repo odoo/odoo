@@ -482,7 +482,6 @@ def _create_dta(self,cr,uid,data,context):
 		v['invoice_bvr_num']= i.bvr_ref_num
 		if v['invoice_bvr_num']:
 			v['invoice_bvr_num'] = v['invoice_bvr_num'].rjust(27,'0')
-			print len(v['invoice_bvr_num']), v['invoice_bvr_num']
 			
 		v['partner_comment']= i.partner_comment
 		
