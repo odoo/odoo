@@ -76,6 +76,7 @@ def ldap_login(oldfnc):
 								dn=result_data[0][0]
 								name=result_data[0][1]['cn'][0]
 								if l.bind(dn, passwd):
+									l.unbind()
 									cr.execute("select id from res_users where login=%s",(login.encode('utf-8'),))
 									res = cr.fetchone()
 									if res:
@@ -88,6 +89,7 @@ def ldap_login(oldfnc):
 									cr.commit()
 									cr.close()
 									return res
+							l.unbind()
 					except Exception, e:
 						continue
 		cr.close()
@@ -124,9 +126,11 @@ def ldap_check(oldfnc):
 								dn=result_data[0][0]
 								name=result_data[0][1]['cn']
 								if l.bind(dn, passwd):
+									l.unbind()
 									security._uid_cache[uid] = passwd
 									cr.close()
 									return True
+							l.unbind()
 					except Exception, e:
 						pass
 		cr.close()
