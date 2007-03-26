@@ -124,7 +124,7 @@ class hr_employee(osv.osv):
 			res = {'action':'action', 'employee_id':emp.id}
 			if dt:
 				res['name'] = dt
-			att_id = self.pool.get('hr.attendance').create(cr, uid, res)
+			att_id = self.pool.get('hr.attendance').create(cr, uid, res, context=context)
 		return True
 
 	def sign_out(self, cr, uid, ids, context={}, dt=False, *args):
@@ -135,8 +135,8 @@ class hr_employee(osv.osv):
 			res = {'action':'sign_out', 'employee_id':emp.id}
 			if dt:
 				res['name'] = dt
-			att_id = self.pool.get('hr.attendance').create(cr, uid, res)
-			self.write(cr, uid, [emp.id], {'state':'absent'})
+			att_id = self.pool.get('hr.attendance').create(cr, uid, res, context=context)
+			self.write(cr, uid, [emp.id], {'state':'absent'}, context=context)
 			id = att_id
 		return id
 
@@ -153,8 +153,8 @@ class hr_employee(osv.osv):
 			res = {'action':'sign_in', 'employee_id':emp.id}
 			if dt:
 				res['name'] = dt
-			id = self.pool.get('hr.attendance').create(cr, uid, res)
-			self.write(cr, uid, [emp.id], {'state':'present'})
+			id = self.pool.get('hr.attendance').create(cr, uid, res, context=context)
+			self.write(cr, uid, [emp.id], {'state':'present'}, context=context)
 		return id
 
 hr_employee()

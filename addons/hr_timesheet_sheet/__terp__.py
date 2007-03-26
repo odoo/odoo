@@ -7,7 +7,7 @@
 	"description": "Timesheet by sheets",
 	"depends" : ["hr_timesheet", "hr_timesheet_project", "hr_timesheet_invoice"],
 	"init_xml" : [],
-	"demo_xml" : [],
+	"demo_xml" : ["hr_timesheet_sheet_demo.xml",],
 	"update_xml" : ["hr_timesheet_sheet_view.xml", "hr_timesheet_workflow.xml"],
 	"active": False,
 	"installable": True

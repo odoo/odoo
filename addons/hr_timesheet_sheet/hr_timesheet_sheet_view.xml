@@ -56,7 +56,7 @@
 						</group>
 						<button string="Sign In" name="sign_in" type="object"/>
 						<button string="Sign Out" name="sign_out" type="object"/>
-						<field name="attendances_ids" colspan="4" nolabel="1">
+						<field name="attendances_ids" colspan="4" nolabel="1" context="name=date_current">
 							<tree string="Attendances">
 								<field name="employee_id"/>
 								<field name="name"/>
@@ -65,7 +65,7 @@
 						</field>
 						<field name="state_attendance"/>
 						<field name="total_attendance_day" widget="float_time"/>
-						<field name="timesheet_ids" colspan="4" nolabel="1" domain="[('name','=',date_current)]">
+						<field name="timesheet_ids" colspan="4" nolabel="1" domain="[('name','=',date_current)]" context="date=date_current">
 							<tree string="Timesheet" editable="top">
 								<field name="user_id" required="1"/>
 								<field name="date" />
@@ -196,6 +196,60 @@
 					<field name="timesheet_range"/>
 					<field name="timesheet_max_difference"/>
 					<newline/>
+				</field>
+			</field>
+		</record>
+
+		<!--
+			hr.analytic.timesheet inheritancy
+		-->
+
+		<record model="ir.ui.view" id="hr_timesheet_line_tree">
+			<field name="name">hr.analytic.timesheet.tree</field>
+			<field name="model">hr.analytic.timesheet</field>
+			<field name="type">tree</field>
+			<field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
+			<field name="arch" type="xml">
+				<field name="date" position="after">
+					<field name="sheet_id"/>
+				</field>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="hr_timesheet_line_form">
+			<field name="name">hr.analytic.timesheet.form</field>
+			<field name="model">hr.analytic.timesheet</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
+			<field name="arch" type="xml">
+				<field name="date" position="after">
+					<field name="sheet_id"/>
+				</field>
+			</field>
+		</record>
+
+		<!--
+			hr.attendance inheritancy
+		-->
+
+		<record model="ir.ui.view" id="view_attendance_form">
+			<field name="name">hr.attendance.form</field>
+			<field name="model">hr.attendance</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="hr.view_attendance_form"/>
+			<field name="arch" type="xml">
+				<field name="action_desc" position="after">
+					<field name="sheet_id"/>
+				</field>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="view_attendance_tree">
+			<field name="name">hr.attendance.tree</field>
+			<field name="model">hr.attendance</field>
+			<field name="type">tree</field>
+			<field name="inherit_id" ref="hr.view_attendance_tree"/>
+			<field name="arch" type="xml">
+				<field name="action_desc" position="after">
+					<field name="sheet_id"/>
 				</field>
 			</field>
 		</record>

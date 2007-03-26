@@ -31,5 +31,115 @@
 			<field name="product_id" ref="product_consultant"/>
 			<field name="journal_id" ref="analytic_journal"/>
 		</record>
+
+		<record model="hr.analytic.timesheet" id="analytic_timesheet1">
+			<field name="amount">-240.0</field>
+			<field name="date">2005-05-04</field>
+			<field name="name">Letters</field>
+			<field name="unit_amount">8.0</field>
+			<field name="account_id" search="[('name','=', 'Administratif')]" model="account.analytic.account"/>
+			<field name="product_id" ref="hr_timesheet.product_consultant"/>
+			<field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
+			<field name="user_id" ref="base.user_admin"/>
+			<field name="journal_id" ref="analytic_journal"/>
+			<field name="general_account_id" ref="account.a_recv"/>
+		</record>
+		<record model="hr.analytic.timesheet" id="analytic_timesheet2">
+			<field name="amount">-120.0</field>
+			<field name="date">2005-05-05</field>
+			<field name="name">Support by phone</field>
+			<field name="unit_amount">4.0</field>
+			<field name="account_id" search="[('name','=', 'Seagate P1')]" model="account.analytic.account"/>
+			<field name="product_id" ref="hr_timesheet.product_consultant"/>
+			<field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
+			<field name="user_id" ref="base.user_admin"/>
+			<field name="journal_id" ref="analytic_journal"/>
+			<field name="general_account_id" ref="account.a_recv"/>
+		</record>
+		<record model="hr.analytic.timesheet" id="analytic_timesheet3">
+			<field name="amount">-120.0</field>
+			<field name="date">2005-05-05</field>
+			<field name="name">Support</field>
+			<field name="unit_amount">4.0</field>
+			<field name="account_id" search="[('name','=', 'Seagate P2')]" model="account.analytic.account"/>
+			<field name="product_id" ref="hr_timesheet.product_consultant"/>
+			<field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
+			<field name="user_id" ref="base.user_admin"/>
+			<field name="journal_id" ref="analytic_journal"/>
+			<field name="general_account_id" ref="account.a_recv"/>
+		</record>
+		<record model="hr.analytic.timesheet" id="analytic_timesheet4">
+			<field name="amount">-240.0</field>
+			<field name="date">2005-05-06</field>
+			<field name="name">Repport on this</field>
+			<field name="unit_amount">8.0</field>
+			<field name="account_id" search="[('name','=', 'Seagate P1')]" model="account.analytic.account"/>
+			<field name="product_id" ref="hr_timesheet.product_consultant"/>
+			<field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
+			<field name="user_id" ref="base.user_admin"/>
+			<field name="journal_id" ref="analytic_journal"/>
+			<field name="general_account_id" ref="account.a_recv"/>
+		</record>
+		<record model="hr.analytic.timesheet" id="analytic_timesheet5">
+			<field name="amount">-240.0</field>
+			<field name="date">2005-05-06</field>
+			<field name="name">Repport on that</field>
+			<field name="unit_amount">8.0</field>
+			<field name="account_id" search="[('name','=', 'Seagate P1')]" model="account.analytic.account"/>
+			<field name="product_id" ref="hr_timesheet.product_consultant"/>
+			<field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
+			<field name="user_id" ref="base.user_admin"/>
+			<field name="journal_id" ref="analytic_journal"/>
+			<field name="general_account_id" ref="account.a_recv"/>
+		</record>
+		<record model="hr.analytic.timesheet" id="analytic_timesheet6">
+			<field name="amount">-240.0</field>
+			<field name="date">2005-05-07</field>
+			<field name="name">Phone support</field>
+			<field name="unit_amount">8.0</field>
+			<field name="account_id" search="[('name','=', 'Sednacom')]" model="account.analytic.account"/>
+			<field name="product_id" ref="hr_timesheet.product_consultant"/>
+			<field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
+			<field name="user_id" ref="base.user_admin"/>
+			<field name="journal_id" ref="analytic_journal"/>
+			<field name="general_account_id" ref="account.a_recv"/>
+		</record>
+		<record model="hr.analytic.timesheet" id="analytic_timesheet7">
+			<field name="amount">-210.0</field>
+			<field name="date">2005-05-08</field>
+			<field name="name">Phone support on reporting engine</field>
+			<field name="unit_amount">7.0</field>
+			<field name="account_id" search="[('name','=', 'Camp To Camp')]" model="account.analytic.account"/>
+			<field name="product_id" ref="hr_timesheet.product_consultant"/>
+			<field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
+			<field name="user_id" ref="base.user_admin"/>
+			<field name="journal_id" ref="analytic_journal"/>
+			<field name="general_account_id" ref="account.a_recv"/>
+		</record>
+		<record model="hr.analytic.timesheet" id="analytic_timesheet8">
+			<field name="amount">-210.0</field>
+			<field name="date">2005-05-09</field>
+			<field name="name">Quotation 234 done</field>
+			<field name="unit_amount">8.0</field>
+			<field name="account_id" search="[('name','=', 'Agrolait')]" model="account.analytic.account"/>
+			<field name="product_id" ref="hr_timesheet.product_consultant"/>
+			<field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
+			<field name="user_id" ref="base.user_admin"/>
+			<field name="journal_id" ref="analytic_journal"/>
+			<field name="general_account_id" ref="account.a_recv"/>
+		</record>
+		<record model="hr.analytic.timesheet" id="analytic_timesheet9">
+			<field name="amount">-210.0</field>
+			<field name="date">2005-05-10</field>
+			<field name="name">Quotation 356</field>
+			<field name="unit_amount">8.0</field>
+			<field name="account_id" search="[('name','=', 'Agrolait')]" model="account.analytic.account"/>
+			<field name="product_id" ref="hr_timesheet.product_consultant"/>
+			<field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
+			<field name="user_id" ref="base.user_admin"/>
+			<field name="journal_id" ref="analytic_journal"/>
+			<field name="general_account_id" ref="account.a_recv"/>
+		</record>
+
 	</data>
 </terp>

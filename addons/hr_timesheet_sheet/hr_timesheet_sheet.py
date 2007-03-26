@@ -161,46 +161,56 @@ class hr_timesheet_sheet(osv.osv):
 		return True
 
 	def date_today(self, cr, uid, ids, context):
-		self.write(cr, uid, ids, {
-			'date_current': time.strftime('%Y-%m-%d')
-		})
+		for sheet in self.browse(cr, uid, ids, context):
+			if DateTime.now() <= DateTime.strptime(sheet.date_from, '%Y-%m-%d'):
+				self.write(cr, uid, [sheet.id], {'date_current': sheet.date_from,})
+			elif DateTime.now() >= DateTime.strptime(sheet.date_to, '%Y-%m-%d'):
+				self.write(cr, uid, [sheet.id], {'date_current': sheet.date_to,})
+			else:
+				self.write(cr, uid, [sheet.id], {'date_current': time.strftime('%Y-%m-%d')})
 		return True
 	def date_previous(self, cr, uid, ids, context):
 		for sheet in self.browse(cr, uid, ids, context):
-			self.write(cr, uid, [sheet.id], {
-				'date_current': (DateTime.strptime(sheet.date_current, '%Y-%m-%d') + DateTime.RelativeDateTime(days=-1)).strftime('%Y-%m-%d'),
-			})
+			if DateTime.strptime(sheet.date_current, '%Y-%m-%d') <= DateTime.strptime(sheet.date_from, '%Y-%m-%d'):
+				self.write(cr, uid, [sheet.id], {'date_current': sheet.date_from,})
+			else:
+				self.write(cr, uid, [sheet.id], {
+					'date_current': (DateTime.strptime(sheet.date_current, '%Y-%m-%d') + DateTime.RelativeDateTime(days=-1)).strftime('%Y-%m-%d'),
+				})
 		return True
 	def date_next(self, cr, uid, ids, context):
 		for sheet in self.browse(cr, uid, ids, context):
-			self.write(cr, uid, [sheet.id], {
-				'date_current': (DateTime.strptime(sheet.date_current, '%Y-%m-%d') + DateTime.RelativeDateTime(days=1)).strftime('%Y-%m-%d'),
-			})
+			if DateTime.strptime(sheet.date_current, '%Y-%m-%d') >= DateTime.strptime(sheet.date_to, '%Y-%m-%d'):
+				self.write(cr, uid, [sheet.id], {'date_current': sheet.date_to,})
+			else:
+				self.write(cr, uid, [sheet.id], {
+					'date_current': (DateTime.strptime(sheet.date_current, '%Y-%m-%d') + DateTime.RelativeDateTime(days=1)).strftime('%Y-%m-%d'),
+				})
 		return True
 
 	def sign_in(self, cr, uid, ids, context):
 		emp_obj = self.pool.get('hr.employee')
 		emp_id = emp_obj.search(cr, uid, [('user_id', '=', uid)])
-		success = emp_obj.sign_in(cr, uid, emp_id)
-		self.pool.get('hr.attendance').write(cr, uid, [success], {'sheet_id': ids[0]})
+		context['sheet_id']=ids[0]
+		success = emp_obj.sign_in(cr, uid, emp_id, context=context)
 		return True
 
 	def sign_out(self, cr, uid, ids, context):
 		emp_obj = self.pool.get('hr.employee')
 		emp_id = emp_obj.search(cr, uid, [('user_id', '=', uid)])
-		success = emp_obj.sign_out(cr, uid, emp_id)
-		self.pool.get('hr.attendance').write(cr, uid, [success], {'sheet_id': ids[0]})
+		context['sheet_id']=ids[0]
+		success = emp_obj.sign_out(cr, uid, emp_id, context=context)
 		return True
 
 	_columns = {
 		'name': fields.char('Description', size=64, select=1),
 		'user_id': fields.many2one('res.users', 'User', required=True, select=1),
-		'date_from': fields.date('Date from', required=True, select=1),
-		'date_to': fields.date('Date to', required=True, select=1),
+		'date_from': fields.date('Date from', required=True, select=1, readonly=True, states={'new':[('readonly', False)]}),
+		'date_to': fields.date('Date to', required=True, select=1, readonly=True, states={'new':[('readonly', False)]}),
 		'date_current': fields.date('Current date', required=True),
-		'timesheet_ids' : one2many_mod('hr.analytic.timesheet', 'sheet_id', 'Timesheets', domain=[('date','=',time.strftime('%Y-%m-%d'))], readonly=True, states={'draft':[('readonly',False)]}),
-		'attendances_ids' : one2many_mod2('hr.attendance', 'sheet_id', 'Attendances', readonly=True, states={'draft':[('readonly',False)]}),
-		'state' : fields.selection([('draft','Draft'),('confirm','Confirmed'),('done','Done')], 'state', select=True, required=True, readonly=True),
+		'timesheet_ids' : one2many_mod('hr.analytic.timesheet', 'sheet_id', 'Timesheets', domain=[('date','=',time.strftime('%Y-%m-%d'))], readonly=True, states={'draft':[('readonly',False)],'new':[('readonly',False)]}),
+		'attendances_ids' : one2many_mod2('hr.attendance', 'sheet_id', 'Attendances', readonly=True, states={'draft':[('readonly',False)],'new':[('readonly',False)]}),
+		'state' : fields.selection([('new', 'New'),('draft','Draft'),('confirm','Confirmed'),('done','Done')], 'state', select=True, required=True, readonly=True),
 		'state_attendance' : fields.function(_state_attendance, method=True, type='selection', selection=[('absent', 'Absent'), ('present', 'Present'),('none','No employee defined')], string='Current state'),
 		'total_attendance_day': fields.function(_total_attendance_day, method=True, string='Total Attendance'),
 		'total_timesheet_day': fields.function(_total_timesheet_day, method=True, string='Total Timesheet'),
@@ -236,18 +246,50 @@ class hr_timesheet_sheet(osv.osv):
 		'date_from' : _default_date_from,
 		'date_current' : lambda *a: time.strftime('%Y-%m-%d'),
 		'date_to' : _default_date_to,
-		'state': lambda *a: 'draft'
+		'state': lambda *a: 'new',
 	}
+	def create(self, cr, uid, vals, *args, **kwargs):
+		if 'state' in vals and vals['state'] == 'new':
+			vals['state']='draft'
+		cr.execute('select id from hr_timesheet_sheet_sheet where (date_from < %s and %s < date_to) or (date_from < %s and %s <date_to) or (date_from >= %s and date_to <= %s)', (vals['date_from'], vals['date_from'], vals['date_to'], vals['date_to'], vals['date_from'], vals['date_to']))
+		if cr.fetchall():
+			raise osv.except_osv('Error !', 'A timesheet sheet already exists in this period')
+		return super(hr_timesheet_sheet, self).create(cr, uid, vals, *args, **kwargs)
 hr_timesheet_sheet()
 
+def _get_current_sheet(self, cr, uid, context={}):
+	ts=self.pool.get('hr_timesheet_sheet.sheet')
+	ids = ts.search(cr, uid, [('user_id','=',uid),('state','=','draft'),('date_from','<=',time.strftime('%Y-%m-%d')), ('date_to','>=',time.strftime('%Y-%m-%d'))])
+	if ids:
+		return ids[0]
+	return False
+
+
 class hr_timesheet_line(osv.osv):
-	_inherit = "account.analytic.line"
+	_inherit = "hr.analytic.timesheet"
+
+	def _get_default_date(self, cr, uid, context={}):
+		if 'date' in context:
+			return context['date']
+		return time.strftime('%Y-%m-%d')
+
+	def _sheet_date(self, cr, uid, ids):
+		timesheet_lines = self.browse(cr, uid, ids)
+		for l in timesheet_lines:
+			if l.date < l.sheet_id.date_from:
+				return False
+			if l.date > l.sheet_id.date_to:
+				return False
+		return True
+
 	_columns = {
-		'sheet_id': fields.many2one('hr_timesheet_sheet.sheet', 'Sheet', ondelete='set null', relate=True)
+		'sheet_id': fields.many2one('hr_timesheet_sheet.sheet', 'Sheet', ondelete='set null', required=True, relate=True)
 	}
-	_default = {
-		'sheet_id': lambda *a: False
+	_defaults = {
+		'sheet_id': _get_current_sheet,
+		'date': _get_default_date,
 	}
+	_constraints = [(_sheet_date, 'Error: the timesheet line date must be in the sheet\'s dates', ['date'])]
 	def create(self, cr, uid, vals, *args, **kwargs):
 		if 'sheet_id' in vals:
 			ts = self.pool.get('hr_timesheet_sheet.sheet').browse(cr, uid, vals['sheet_id'])
@@ -269,24 +311,45 @@ hr_timesheet_line()
 
 class hr_attendance(osv.osv):
 	_inherit = "hr.attendance"
+
+	def _get_default_date(self, cr, uid, context={}):
+		if 'name' in context:
+			return context['name'] + time.strftime(' %H:%M:%S')
+		return time.strftime('%Y-%m-%d %H:%M:%S')
+
+	def _sheet_date(self, cr, uid, ids):
+		attendances = self.browse(cr, uid, ids)
+		for att in attendances:
+			if att.name < att.sheet_id.date_from:
+				return False
+			if att.name > att.sheet_id.date_to:
+				return False
+		return True
+
 	_columns = {
-		'sheet_id': fields.many2one('hr_timesheet_sheet.sheet', 'Sheet', ondelete='set null', relate=True)
+		'sheet_id': fields.many2one('hr_timesheet_sheet.sheet', 'Sheet', ondelete='set null', required=True, relate=True)
 	}
-	_default = {
-		'sheet_id': lambda *a: False
+	_defaults = {
+		'sheet_id': _get_current_sheet,
+		'name': _get_default_date,
 	}
-	def create(self, cr, uid, vals, *args, **kwargs):
+	_constraints = [(_sheet_date, 'Error: the attendance date must be in the sheet\'s dates', ['name'])]
+	def create(self, cr, uid, vals, context={}):
+		if 'sheet_id' in context:
+			vals['sheet_id']=context['sheet_id']
 		if 'sheet_id' in vals:
 			ts = self.pool.get('hr_timesheet_sheet.sheet').browse(cr, uid, vals['sheet_id'])
 			if ts.state<>'draft':
 				raise osv.except_osv('Error !', 'You can not modify an entry in a confirmed timesheet !')
-		return super(hr_attendance,self).create(cr, uid, vals, *args, **kwargs)
+		return super(hr_attendance,self).create(cr, uid, vals, context=context)
 	def unlink(self, cr, uid, ids, *args, **kwargs):
 		self._check(cr, uid, ids)
 		return super(hr_attendance,self).unlink(cr, uid, ids,*args, **kwargs)
-	def write(self, cr, uid, ids, *args, **kwargs):
+	def write(self, cr, uid, ids, vals, context={}):
+		if 'sheet_id' in context:
+			vals['sheet_id']=context['sheet_id']
 		self._check(cr, uid, ids)
-		return super(hr_attendance,self).write(cr, uid, ids,*args, **kwargs)
+		return super(hr_attendance,self).write(cr, uid, ids, vals, context=context)
 	def _check(self, cr, uid, ids):
 		for att in self.browse(cr, uid, ids):
 			if att.sheet_id and att.sheet_id.state<>'draft':
@@ -307,7 +370,7 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
 	def _total_attendance(self, cr, uid, ids, name, args, context):
 		result = {}
 		for day in self.browse(cr, uid, ids, context):
-			cr.execute('select name,action from hr_attendance where name>=%s and name<=%s order by name', (day.name, day.name+' 23:59:59'))
+			cr.execute('select name,action from hr_attendance where name>=%s and name<=%s and sheet_id=%d order by name', (day.name, day.name+' 23:59:59', day.sheet_id))
 			attendences = cr.dictfetchall()
 			wh = 0
 			if attendences and attendences[0]['action'] == 'sign_out':
@@ -336,13 +399,14 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
 		cr.execute("""create or replace view hr_timesheet_sheet_sheet_day as
 			(
 				select
-					min(l.oid) as id,
+					min(hrt.id) as id,
 					l.date as name,
-					l.sheet_id as sheet_id,
+					hrt.sheet_id as sheet_id,
 					sum(l.unit_amount) as total_timesheet
 				from
-					account_analytic_line l
-				group by l.date, l.sheet_id
+					hr_analytic_timesheet hrt
+					left join account_analytic_line l on (l.id = hrt.line_id)
+				group by l.date, hrt.sheet_id
 			) union (
 				select
 					min(a.oid) as id,
@@ -370,13 +434,14 @@ class hr_timesheet_sheet_sheet_account(osv.osv):
 	def init(self, cr):
 		cr.execute("""create or replace view hr_timesheet_sheet_sheet_account as (
 			select
-				min(id) as id,
-				account_id as name,
-				sheet_id as sheet_id,
-				sum(unit_amount) as total
+				min(hrt.id) as id,
+				l.account_id as name,
+				hrt.sheet_id as sheet_id,
+				sum(l.unit_amount) as total
 			from
-				account_analytic_line
-			group by account_id, sheet_id
+				hr_analytic_timesheet hrt
+				left join account_analytic_line l on (l.id = hrt.line_id)
+			group by l.account_id, hrt.sheet_id
 		)""")
 hr_timesheet_sheet_sheet_account()
 
