@@ -180,7 +180,6 @@ class account_account(osv.osv):
 		'shortcut': fields.char('Shortcut', size=12),
 		'close_method': fields.selection([('none','None'), ('balance','Balance'), ('detail','Detail'),('unreconciled','Unreconciled')], 'Deferral Method', required=True, help="Tell Tiny ERP how to process the entries of this account when you close a fiscal year. None removes all entries to start with an empty account for the new fiscal year. Balance creates only one entry to keep the balance for the new fiscal year. Detail keeps the detail of all entries of the preceeding years. Unreconciled keeps the detail of unreconciled entries only."),
 		'tax_ids': fields.many2many('account.tax', 'account_account_tax_default_rel', 'account_id','tax_id', 'Default Taxes'),
-		'company_id': fields.many2one('res.company', 'Company'),
 
 		'active': fields.boolean('Active'),
 		'note': fields.text('Note')
@@ -349,7 +348,6 @@ class account_fiscalyear(osv.osv):
 	_columns = {
 		'name': fields.char('Fiscal Year', size=64, required=True),
 		'code': fields.char('Code', size=6, required=True),
-		'company_id': fields.many2one('res.company', 'Company'),
 		'date_start': fields.date('Start date', required=True),
 		'date_stop': fields.date('End date', required=True),
 		'period_ids': fields.one2many('account.period', 'fiscalyear_id', 'Periods'),
@@ -771,7 +769,6 @@ class account_tax(osv.osv):
 		'child_depend':fields.boolean('Tax on Childs', help="Indicate if the tax computation is based on the value computed for the computation of child taxes or based on the total amount."),
 		'python_compute':fields.text('Python Code'),
 		'python_applicable':fields.text('Python Code'),
-		'company_id': fields.many2one('res.company', 'Company'),
 		'tax_group': fields.selection([('vat','VAT'),('other','Other')], 'Tax Group', help="If a default tax if given in the partner it only override taxes from account (or product) of the same group."),
 
 		#
