@@ -74,8 +74,11 @@ class res_currency(osv.osv):
 	def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount, round=True, context={}):
 		if to_currency_id==from_currency_id:
 			return from_amount
-		from_currency=self.browse(cr, uid, [from_currency_id], context=context)[0]
-		to_currency = self.browse(cr, uid, [to_currency_id], context=context)[0]
+		if not from_currency_id:
+			from_currency_id = to_currency_id
+		xc=self.browse(cr, uid, [from_currency_id,to_currency_id], context=context)
+		from_currency = xc[0].id == from_currency_id and xc[0] or xc[1]
+		to_currency = xc[0].id == to_currency_id and xc[0] or xc[1]
 		if from_currency['rate'] == 0 or to_currency['rate'] == 0:
 			raise osv.except_osv('Error', 'No rate found for the currency')
 		if round:
