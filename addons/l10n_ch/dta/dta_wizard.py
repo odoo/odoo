@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- encoding: latin-1 -*-
 ##############################################################################
 #
 # Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -163,24 +163,25 @@ def _get_dta_lines(self,cr,uid,data,context):
 
 
 
-trans={'é':'e',
-	   'è':'e',
-	   'à':'a',
-	   'ê':'e',
-	   'î':'i',
-	   'ï':'i',
-	   'â':'a',
-	   'ä':'a'}
+trans=[(u'é','e'),
+	   (u'è','e'),
+	   (u'à','a'),
+	   (u'ê','e'),
+	   (u'î','i'),
+	   (u'ï','i'),
+	   (u'â','a'),
+	   (u'ä','a')]
 def tr(s):
-	res = ''
-	for c in s:
-		if trans.has_key(c): res = res + trans[c]
-		else: res = res + c
+	s= s.decode('utf-8')
 
-		try:
-			res= res.encode('ascii','replace')
-		except:
-			pass
+	for k in trans:
+		s = s.replace(k[0],k[1])
+
+	try:
+		res= s.encode('ascii','replace')
+	except:
+		res = s
+	print res
 	return res
 		
 class record:
@@ -358,9 +359,10 @@ def c_ljust(s, size):
 	"""
 	s= s or ''
 	if len(s) > size:
-		s= s[:size]
 		print "Too long data ! %s exceed %d character." % (s, size)
-	return s.decode('utf-8').encode('latin1','replace').ljust(size)
+		s= s[:size]
+	s = s.decode('utf-8').encode('latin1','replace').ljust(size)
+	return s
 
 
 
@@ -505,8 +507,6 @@ def _create_dta(self,cr,uid,data,context):
 			v['date_value'] = date_value.strftime("%y%m%d")
 		else:
 			v['date_value'] = "000000"
-
-
 
 		# si compte iban -> iban (836)
 		# si payment structure  -> bvr (826)
