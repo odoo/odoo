@@ -54,3 +54,4 @@ import wizard_fiscalyear_close
 import wizard_vat
 
 import wizard_invoice_state
+import wizard_account_duplicate

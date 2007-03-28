@@ -51,6 +51,7 @@ class account_analytic_account(osv.osv):
 		return res
 
 	def _debit_calc(self, cr, uid, ids, name, arg, context={}):
+		# XXX to be improved like in account.account
 		res = {}
 		for account in self.browse(cr, uid, ids):
 			node_balance = reduce(operator.add, [line.amount for line in account.line_ids if line.amount>0], 0)
@@ -64,7 +65,11 @@ class account_analytic_account(osv.osv):
 		res = {}
 		for account in self.browse(cr, uid, ids):
 			node_balance = reduce(operator.add, [line.amount for line in account.line_ids], 0)
-			child_balance = reduce(operator.add, [child.balance for child in account.child_ids], 0)
+			child_balance = reduce(operator.add,
+				[self.pool.get('res.currency').compute(cr, uid, 
+					child.company_id.currency_id.id, 
+					account.company_id.currency_id.id, child.balance, context=context)
+				for child in account.child_ids], 0)
 			res[account.id] = node_balance + child_balance
 		for id in ids:
 			res[id] = round(res.get(id, 0.0),2)
@@ -96,6 +101,11 @@ class account_analytic_account(osv.osv):
 		res = self.name_get(cr, uid, ids)
 		return dict(res)
 
+	def _get_company_currency(self, cr, uid, ids, field_name, arg, context={}):
+		result = {}
+		for rec in self.browse(cr, uid, ids, context):
+			result[rec.id] = (rec.company_id.currency_id.id,rec.company_id.currency_id.code) or False
+		return result
 
 	_columns = {
 		'name' : fields.char('Account name', size=64, required=True),
@@ -108,8 +118,8 @@ class account_analytic_account(osv.osv):
 		'child_ids': fields.one2many('account.analytic.account', 'parent_id', 'Childs Accounts'),
 		'line_ids': fields.one2many('account.analytic.line', 'account_id', 'Analytic entries'),
 		'balance' : fields.function(_balance_calc, method=True, type='float', string='Balance'),
-		'debit' : fields.function(_debit_calc, method=True, type='float', string='Balance'),
-		'credit' : fields.function(_credit_calc, method=True, type='float', string='Balance'),
+		'debit' : fields.function(_debit_calc, method=True, type='float', string='Debit'),
+		'credit' : fields.function(_credit_calc, method=True, type='float', string='Credit'),
 		'quantity': fields.function(_quantity_calc, method=True, type='float', string='Quantity'),
 		'quantity_max': fields.float('Maximal quantity'),
 		'partner_id' : fields.many2one('res.partner', 'Associated partner'),
@@ -118,11 +128,19 @@ class account_analytic_account(osv.osv):
 		'date_start': fields.date('Date Start'),
 		'date': fields.date('Date End'),
 		'stats_ids': fields.one2many('report.hr.timesheet.invoice.journal', 'account_id', string='Statistics', readonly=True),
+		'company_id': fields.many2one('res.company', 'Company', required=True),
+		'company_currency_id': fields.function(_get_company_currency, method=True, type='many2one', relation='res.currency', string='Currency'),
 	}
 
+	def _default_company(self, cr, uid, context={}):
+		user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+		if user.company_id:
+			return user.company_id.id
+		return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
 	_defaults = {
 		'active' : lambda *a : True,
 		'type' : lambda *a : 'normal',
+		'company_id': _default_company,
 	}
 
 	_order = 'parent_id desc,code'

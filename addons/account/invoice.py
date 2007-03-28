@@ -128,8 +128,8 @@ class account_invoice(osv.osv):
 		'amount_tax': fields.function(_amount_tax, method=True, string='Tax', store=True),
 		'amount_total': fields.function(_amount_total, method=True, string='Total', store=True),
 		'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-		'journal_id': fields.many2one('account.journal', 'Journal', required=True, relate=True,readonly=True,
-									  states={'draft':[('readonly',False)]}),
+		'journal_id': fields.many2one('account.journal', 'Journal', required=True, relate=True,readonly=True, states={'draft':[('readonly',False)]}),
+		'company_id': fields.many2one('res.company', 'Company', required=True),
 	}
 	_defaults = {
 		'type': lambda *a: 'out_invoice',
@@ -137,6 +137,7 @@ class account_invoice(osv.osv):
 		'state': lambda *a: 'draft',
 		'journal_id': _get_journal,
 		'currency_id': _get_currency,
+		'company_id': lambda self, cr, uid, context: self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id,
 	}
 	
 	def unlink(self, cr, uid, ids):
@@ -256,19 +257,21 @@ class account_invoice(osv.osv):
 		return True
 
 	def action_move_create(self, cr, uid, ids, *args):
-		company_currency = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id.id
-		id_set = ','.join([str(i) for i in ids])
-		cr.execute('SELECT * FROM account_invoice WHERE move_id IS NULL AND id IN ('+id_set+')')
-		for inv in cr.dictfetchall():
+		cur_obj = self.pool.get('res.currency')
+		for inv in self.browse(cr, uid, ids):
+			if inv.move_id:
+				continue
+
+			company_currency = inv.account_id.company_id.currency_id.id
 			# create the analytical lines
-			line_ids = self.read(cr, uid, [inv['id']], ['invoice_line'])[0]['invoice_line']
+			line_ids = self.read(cr, uid, [inv.id], ['invoice_line'])[0]['invoice_line']
 			ils = self.pool.get('account.invoice.line').read(cr, uid, line_ids)
-			if inv['type'] in ('out_invoice', 'in_refund'):
+			if inv.type in ('out_invoice', 'in_refund'):
 				sign = 1
 			else:
 				sign = -1
 			# one move line per invoice line
-			iml = self.pool.get('account.invoice.line').move_line_get(cr, uid, inv['id'])
+			iml = self.pool.get('account.invoice.line').move_line_get(cr, uid, inv.id)
 			for il in iml:
 				if il['account_analytic_id']:
 					il['analytic_lines'] = [(0,0, {
@@ -276,46 +279,46 @@ class account_invoice(osv.osv):
 						'date': inv['date_invoice'],
 						'account_id': il['account_analytic_id'],
 						'unit_amount': il['quantity'],
-						'amount': il['price'] * sign,
+						'amount': cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, il['price'], context={'date': inv.date_invoice}) * sign,
 						'product_id': il['product_id'],
 						'product_uom_id': il['uos_id'],
 						'general_account_id': il['account_id'],
-						'journal_id': self._get_journal_analytic(cr, uid, inv['type'])
+						'journal_id': self._get_journal_analytic(cr, uid, inv.type)
 					})]
 
 			# one move line per tax line
-			iml += self.pool.get('account.invoice.tax').move_line_get(cr, uid, inv['id'])
+			iml += self.pool.get('account.invoice.tax').move_line_get(cr, uid, inv.id)
 
 			
 			# create one move line for the total and possibly adjust the other lines amount
 			total = 0
 			total_currency = 0
 			for i in iml:
-				if inv['currency_id'] != company_currency:
-					i['currency_id'] = inv['currency_id']
+				if inv.currency_id.id != company_currency:
+					i['currency_id'] = inv.currency_id.id
 					i['amount_currency'] = i['price']
-					i['price'] = self.pool.get('res.currency').compute(cr, uid, inv['currency_id'], company_currency, i['price'], context={'date': inv['date_invoice']})
+					i['price'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, i['price'], context={'date': inv.date_invoice})
 				else:
 					i['amount_currency'] = False
 					i['currency_id'] = False
-				i['ref'] = inv['number']
-				if inv['type'] in ('out_invoice','in_refund'):
+				i['ref'] = inv.number
+				if inv.type in ('out_invoice','in_refund'):
 					total += i['price']
 					total_currency += i['amount_currency'] or i['price']
 					i['price'] = - i['price']
 				else:
 					total -= i['price']
 					total_currency -= i['amount_currency'] or i['price']
-			acc_id = inv['account_id']
+			acc_id = inv.account_id.id
 
 			name = inv['name']
-			if inv['payment_term']:
-				totlines = self.pool.get('account.payment.term').compute(cr, uid, inv['payment_term'], total)
+			if inv.payment_term:
+				totlines = self.pool.get('account.payment.term').compute(cr, uid, inv.payment_term.id, total)
 				res_amount_currency = total_currency
 				i = 0
 				for t in totlines:
-					if inv['currency_id'] != company_currency:
-						amount_currency = self.pool.get('res.currency').compute(cr, uid, company_currency, inv['currency_id'], t[1])
+					if inv.currency_id.id != company_currency:
+						amount_currency = cur_obj.compute(cr, uid, company_currency, inv.currency_id.id, t[1])
 					else:
 						amount_currency = False
 
@@ -325,12 +328,12 @@ class account_invoice(osv.osv):
 					if i == len(totlines):
 						amount_currency += res_amount_currency
 
-					iml.append({ 'type':'dest', 'name':name, 'price': t[1], 'account_id':acc_id, 'date_maturity': t[0], 'amount_currency': amount_currency, 'currency_id': inv['currency_id'], 'ref': inv['number']})
+					iml.append({ 'type':'dest', 'name':name, 'price': t[1], 'account_id':acc_id, 'date_maturity': t[0], 'amount_currency': amount_currency, 'currency_id': inv.currency_id.id, 'ref': inv.number})
 			else:
-				iml.append({ 'type':'dest', 'name':name, 'price': total, 'account_id':acc_id, 'date_maturity' : inv['date_due'] or False, 'amount_currency': total_currency, 'currency_id': inv['currency_id'], 'ref': inv['number']})
+				iml.append({ 'type':'dest', 'name':name, 'price': total, 'account_id':acc_id, 'date_maturity' : inv.date_due or False, 'amount_currency': total_currency, 'currency_id': inv.currency_id.id, 'ref': inv.number})
 
-			date = inv['date_invoice']
-			part = inv['partner_id']
+			date = inv.date_invoice
+			part = inv.partner_id.id
 			line = map(lambda x:(0,0,{
 				'date':date,
 				'date_maturity': x.get('date_maturity', False),
@@ -346,20 +349,20 @@ class account_invoice(osv.osv):
 				'tax_amount': x.get('tax_amount', False),
 				'ref':x.get('ref',False) }) ,iml)
 
-			journal_id = inv['journal_id'] #self._get_journal(cr, uid, {'type': inv['type']})
+			journal_id = inv.journal_id.id #self._get_journal(cr, uid, {'type': inv['type']})
 			journal = self.pool.get('account.journal').browse(cr, uid, journal_id)
 			if journal.sequence_id:
 				name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
 
 			move = {'name': name, 'line_id': line, 'journal_id': journal_id}
-			if inv['period_id']:
-				move['period_id'] = inv['period_id']
+			if inv.period_id:
+				move['period_id'] = inv.period_id.id
 				for i in line:
-					i[2]['period_id'] = inv['period_id']
+					i[2]['period_id'] = inv.period_id.id
 			move_id = self.pool.get('account.move').create(cr, uid, move)
 
 			# make the invoice point to that move
-			self.write(cr, uid, [inv['id']], {'move_id': move_id})
+			self.write(cr, uid, [inv.id], {'move_id': move_id})
 
 		self._log_event(cr, uid, ids)
 		return True

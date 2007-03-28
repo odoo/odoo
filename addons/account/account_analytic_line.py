@@ -51,11 +51,19 @@ class account_analytic_line(osv.osv):
 		'user_id' : fields.many2one('res.users', 'User',),
 		'ref': fields.char('Ref.', size=32),
 	}
-		
 	_defaults = {
 		'date': lambda *a: time.strftime('%Y-%m-%d'),
 	}
 	_order = 'date'
+	def _check_company(self, cr, uid, ids):
+		lines = self.browse(cr, uid, ids)
+		for l in lines:
+			if l.move_id and not l.account_id.company_id.id == l.move_id.account_id.company_id.id:
+				return False
+		return True
+	_constraints = [
+		(_check_company, 'You can not create analytic line that is not in the same company than the account line', ['account_id'])
+	]
 	
 	def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount, unit=False, context={}):
 		if unit_amount and prod_id:

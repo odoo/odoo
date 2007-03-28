@@ -200,6 +200,18 @@ class account_move_line(osv.osv):
 		('credit_debit1', 'CHECK (credit*debit=0)',  'Wrong credit or debit value in accounting entry !'),
 		('credit_debit2', 'CHECK (credit+debit>=0)', 'Wrong credit or debit value in accounting entry !'),
 	]
+
+	def _check_no_view(self, cr, uid, ids):
+		lines = self.browse(cr, uid, ids)
+		for l in lines:
+			if l.account_id.type == 'view':
+				return False
+		return True
+
+	_constraints = [
+		(_check_no_view, 'You can not create move line on view account.', ['account_id'])
+	]
+
 	def onchange_partner_id(self, cr, uid, ids, move_id, partner_id, account_id=None, debit=0, credit=0, journal=False):
 		if (not partner_id) or account_id:
 			return {}

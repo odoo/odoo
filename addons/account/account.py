@@ -155,15 +155,30 @@ class account_account(osv.osv):
 		res = {}
 		for account_id, sum in cr.fetchall():
 			res[account_id] = round(sum,2)
+		cr.execute("SELECT a.id, a.company_id FROM account_account a where id in (%s)" % acc_set)
+		resc = dict(cr.fetchall())
+		cr.execute("SELECT id, currency_id FROM res_company")
+		rescur = dict(cr.fetchall())
 		for id in ids:
 			ids3 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
+			to_currency_id = rescur[resc[id]]
 			for idx in ids3:
 				if idx <> id:
 					res.setdefault(id, 0.0)
-					res[id] += res.get(idx, 0.0)
+					if resc[idx]<>resc[id] and resc[idx] and resc[id]:
+						from_currency_id = rescur[resc[idx]]
+						res[id] += self.pool.get('res.currency').compute(cr, uid, from_currency_id, to_currency_id, res.get(idx, 0.0), context=context)
+					else:
+						res[id] += res.get(idx, 0.0)
 		for id in ids:
 			res[id] = round(res.get(id,0.0), 2)
 		return res
+
+	def _get_company_currency(self, cr, uid, ids, field_name, arg, context={}):
+		result = {}
+		for rec in self.browse(cr, uid, ids, context):
+			result[rec.id] = (rec.company_id.currency_id.id,rec.company_id.currency_id.code)
+		return result
 
 	_columns = {
 		'name': fields.char('Name', size=128, required=True, translate=True, select=True),
@@ -182,14 +197,23 @@ class account_account(osv.osv):
 		'tax_ids': fields.many2many('account.tax', 'account_account_tax_default_rel', 'account_id','tax_id', 'Default Taxes'),
 
 		'active': fields.boolean('Active'),
-		'note': fields.text('Note')
+		'note': fields.text('Note'),
+		'company_currency_id': fields.function(_get_company_currency, method=True, type='many2one', relation='res.currency', string='Currency'),
+		'company_id': fields.many2one('res.company', 'Company', required=True),
 	}
+
+	def _default_company(self, cr, uid, context={}):
+		user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+		if user.company_id:
+			return user.company_id.id
+		return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
 	_defaults = {
 		'sign': lambda *a: 1,
 		'type': lambda *a: 'view',
 		'active': lambda *a: True,
 		'reconcile': lambda *a: False,
 		'close_method': lambda *a: 'balance',
+		'company_id': _default_company,
 	}
 	def _check_recursion(self, cr, uid, ids):
 		level = 100
@@ -233,6 +257,18 @@ class account_account(osv.osv):
 				name = record['code']+' - '+name
 			res.append((record['id'],name ))
 		return res
+
+	def copy(self, cr, uid, id, default=None, context={}):
+		account = self.browse(cr, uid, id, context=context)
+		new_child_ids = []
+		default['parent_id'] = False
+		if account:
+			for child in account.child_id:
+				new_child_ids.append(self.copy(cr, uid, child.id, default, context=context))
+			default['child_id'] = [(6, 0, new_child_ids)]
+		else:
+			default['child_id'] = False
+		return super(account_account, self).copy(cr, uid, id, default, context=context)
 account_account()
 
 
@@ -351,10 +387,18 @@ class account_fiscalyear(osv.osv):
 		'date_start': fields.date('Start date', required=True),
 		'date_stop': fields.date('End date', required=True),
 		'period_ids': fields.one2many('account.period', 'fiscalyear_id', 'Periods'),
-		'state': fields.selection([('draft','Draft'), ('done','Done')], 'State', redonly=True)
+		'state': fields.selection([('draft','Draft'), ('done','Done')], 'State', redonly=True),
+		'company_id': fields.many2one('res.company', 'Company', required=True),
 	}
+
+	def _default_company(self, cr, uid, context={}):
+		user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+		if user.company_id:
+			return user.company_id.id
+		return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
 	_defaults = {
 		'state': lambda *a: 'draft',
+		'company_id': _default_company,
 	}
 	_order = "code"
 	def create_period3(self,cr, uid, ids, context={}):
@@ -595,11 +639,18 @@ class account_move(osv.osv):
 			amount = 0
 			line_ids = []
 			line_draft_ids = []
+			company_id=None
 			for line in move.line_id:
 				amount += line.debit - line.credit
 				line_ids.append(line.id)
 				if line.state=='draft':
 					line_draft_ids.append(line.id)
+
+				if not company_id:
+					company_id = line.account_id.company_id.id
+				if not company_id == line.account_id.company_id.id:
+					raise osv.except_osv('Error', 'Couldn\'t create move between different companies')
+
 			if abs(amount) < 0.0001:
 				if not len(line_draft_ids):
 					continue
@@ -735,7 +786,16 @@ class account_tax_code(osv.osv):
 		'sum_period': fields.function(_sum_period, method=True, string="Period Sum"),
 		'parent_id': fields.many2one('account.tax.code', 'Parent Code', select=True),
 		'child_ids': fields.one2many('account.tax.code', 'parent_id', 'Childs Codes'),
-		'line_ids': fields.one2many('account.move.line', 'tax_code_id', 'Lines')
+		'line_ids': fields.one2many('account.move.line', 'tax_code_id', 'Lines'),
+		'company_id': fields.many2one('res.company', 'Company', required=True),
+	}
+	def _default_company(self, cr, uid, context={}):
+		user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+		if user.company_id:
+			return user.company_id.id
+		return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
+	_defaults = {
+		'company_id': _default_company,
 	}
 	_order = 'name'
 account_tax_code()
@@ -786,7 +846,14 @@ class account_tax(osv.osv):
 		'ref_base_sign': fields.float('Base Code Sign', help="Usualy 1 or -1."),
 		'ref_tax_sign': fields.float('Tax Code Sign', help="Usualy 1 or -1."),
 		'include_base_amount': fields.boolean('Include in base amount', help="Indicate if the amount of tax must be included in the base amount for the computation of the next taxes"),
+		'company_id': fields.many2one('res.company', 'Company', required=True),
 	}
+
+	def _default_company(self, cr, uid, context={}):
+		user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+		if user.company_id:
+			return user.company_id.id
+		return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
 	_defaults = {
 		'python_compute': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or None\n# partner : res.partner object or None\n\nresult = price_unit * 0.10''',
 		'applicable_type': lambda *a: 'true',
@@ -800,6 +867,7 @@ class account_tax(osv.osv):
 		'tax_sign': lambda *a: 1,
 		'base_sign': lambda *a: 1,
 		'include_base_amount': lambda *a: False,
+		'company_id': _default_company,
 	}
 	_order = 'sequence'
 	

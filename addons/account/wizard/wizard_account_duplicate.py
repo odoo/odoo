@@ -1,8 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
-#
-# $Id: product_extended.py 5702 2007-02-20 15:33:28Z ced $
+# Copyright (c) 2007 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,15 +25,32 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+import wizard
+import pooler
 
-class account_analytic_account(osv.osv):
-	_inherit = 'account.analytic.account'
-	_columns = {
-		'company_id': fields.many2one('res.company', 'Company', required=True),
-	}
-	_defaults = {
-		'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id
-	}
-account_analytic_account()
+duplicate_form = '''<?xml version="1.0"?>
+<form string="Duplicate account charts">
+	<field name="company_id"/>
+</form>'''
 
+duplicate_fields = {
+	'company_id': {'string': 'Company', 'type': 'many2one', 'relation': 'res.company', 'required': True},
+}
+
+def _do_duplicate(self, cr, uid, data, context):
+	account_obj = pooler.get_pool(cr.dbname).get('account.account')
+	account_obj.copy(cr, uid, data['id'], data['form'], context=context)
+	return {}
+
+class wizard_account_duplicate(wizard.interface):
+	states = {
+		'init': {
+			'actions': [],
+			'result': {'type': 'form', 'arch': duplicate_form, 'fields': duplicate_fields, 'state': (('end', 'Cancel'), ('duplicate', 'Duplicate'))},
+		},
+		'duplicate': {
+			'actions': [_do_duplicate],
+			'result': {'type': 'state', 'state': 'end'},
+		},
+	}
+wizard_account_duplicate('account.wizard.account.duplicate')

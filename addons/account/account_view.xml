@@ -105,6 +105,8 @@
 				<notebook>
 				<page string="General Information">
 					<field name="name" select="1" colspan="3"/>
+					<field name="company_id" select="1"/>
+					<newline/>
 					<field name="type" select="1"/>
 					<field name="code" select="1"/>
 					<field name="shortcut"/>
@@ -141,7 +143,7 @@
 			<tree string="Account Chart">
 				<field name="name"/>
 				<field name="code"/>
-				<field name="currency_id" string="CUR"/>
+				<field name="company_currency_id"/>
 				<field name="debit"/>
 				<field name="credit"/>
 				<field name="balance"/>
@@ -529,7 +531,8 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Account Tax Code">
-				<field name="name" select="1" colspan="3"/>
+				<field name="name" select="1"/>
+				<field name="company_id"/>
 				<field name="code" select="1"/>
 				<field name="parent_id" select="1"/>
 				<newline/>
@@ -582,7 +585,8 @@
 			<form string="Account Tax">
 				<notebook>
 				<page string="Tax Definition">
-				<field name="name" select="1" colspan="3"/>
+				<field name="name" select="1"/>
+				<field name="company_id"/>
 				<field name="tax_group" select="1"/>
 				<field name="active" select="1" />
 				<field name="type" select="1"/>
