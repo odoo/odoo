@@ -158,11 +158,13 @@ class db(netsvc.Service):
 			args = ('pg_dump', '--format=c', db_name)
 		stdin, stdout = tools.exec_pg_command_pipe(*args)
 		stdin.close()
-		res = stdout.read()
-		stdout.close()
+		data = stdout.read()
+		res = stdout.close()
+		if res:
+			raise "Couldn't dump database"
 		logger = netsvc.Logger()
 		logger.notifyChannel("web-services", netsvc.LOG_INFO, 'DUMP DB: %s' % (db_name))
-		return base64.encodestring(res)
+		return base64.encodestring(data)
 
 	def restore(self, password, db_name, data):
 		security.check_super(password)
@@ -190,7 +192,9 @@ class db(netsvc.Service):
 			if not os.name == "nt":
 				stdin.write(base64.decodestring(data))
 			stdin.close()
-			stdout.close()
+			res = stdout.close()
+			if res:
+				raise "Couldn't restore database"
 			logger = netsvc.Logger()
 			logger.notifyChannel("web-services", netsvc.LOG_INFO, 'RESTORE DB: %s' % (db_name))
 			return True
