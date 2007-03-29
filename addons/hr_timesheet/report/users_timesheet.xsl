@@ -21,9 +21,9 @@
 				<paraStyle name="normal-title" fontName="Helvetica" fontSize="6" />
 				<paraStyle name="title" fontName="Helvetica" fontSize="18" alignment="center" />
 				<paraStyle name="employee" fontName="Helvetica-Oblique" fontSize="10" textColor="blue" />
-				<paraStyle name="glande" textColor="purple" />
+				<paraStyle name="glande" textColor="red" />
 				<paraStyle name="normal_people" textColor="green" />
-				<paraStyle name="esclave" textColor="red" />
+				<paraStyle name="esclave" textColor="purple" />
 				<blockTableStyle id="month">
 					<blockAlignment value="CENTER" start="1,0" stop="-1,-1" />
 					<blockFont name="Helvetica" size="8" start="0,0" stop="-1,1"/>
