@@ -503,7 +503,6 @@ class stock_picking(osv.osv):
 				'partner_id': p.address_id.partner_id.id,
 				'address_invoice_id': pinv_id,
 				'address_contact_id': pcon_id,
-				'project_id': (p.sale_id and p.sale_id.project_id.id) or False,
 				'comment': (p.note or '') + '\n' + (p.sale_id and p.sale_id.note or ''),
 				'payment_term': pay_term,
 			}
@@ -542,7 +541,8 @@ class stock_picking(osv.osv):
 					'price_unit': line.sale_line_id and line.sale_line_id.price_unit or line.product_id.list_price,
 					'discount': line.sale_line_id and line.sale_line_id.discount or 0.0,
 					'quantity': line.product_uos_qty,
-					'invoice_line_tax_id': [(6,0,tax_ids)]
+					'invoice_line_tax_id': [(6,0,tax_ids)],
+					'account_analytic_id': (p.sale_id and p.sale_id.project_id.id) or False,
 				})
 				if line.sale_line_id:
 					self.pool.get('sale.order.line').write(cr, uid, [line.sale_line_id.id], {
