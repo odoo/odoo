@@ -102,4 +102,12 @@ cr.commit()
 cr.execute("ALTER TABLE res_partner_bank RENAME iban TO number")
 cr.commit()
 
+# ------------------------------------------- #
+# Add perm_id to ir_model and ir_model_fields #
+# ------------------------------------------- #
+
+cr.execute("ALTER TABLE ir_model ADD perm_id int references perm on delete set null")
+cr.execute("ALTER TABLE ir_model_fields ADD perm_id int references perm on delete set null")
+cr.commit()
+
 cr.close

@@ -42,6 +42,7 @@ create table ir_values
 
 CREATE TABLE ir_model (
   id serial,
+  perm_id int references perm on delete set null,
   model varchar(64) DEFAULT ''::varchar NOT NULL,
   name varchar(64),
   info text,
@@ -50,6 +51,7 @@ CREATE TABLE ir_model (
 
 CREATE TABLE ir_model_fields (
   id serial,
+  perm_id int references perm on delete set null,
   model varchar(64) DEFAULT ''::varchar NOT NULL,
   model_id int references ir_model,
   name varchar(64) DEFAULT ''::varchar NOT NULL,

@@ -411,7 +411,15 @@
 				<field name="model" select="1"/>
 				<field name="info" select="1" colspan="3"/>
 				<separator string="Fields" colspan="4"/>
-				<field name="field_id" colspan="4" nolabel="1"/>
+				<field name="field_id" colspan="4" nolabel="1">
+					<form string="Fields Description">
+					<field name="name" select="1"/>
+					<field name="field_description" select="1" colspan="4"/>
+					<field name="ttype" select="1"/>
+					<field name="relation" select="1"/>
+					<field name="relate" select="1"/>
+					</form>
+				</field>
 			</form>
 		</field>
 	</record>

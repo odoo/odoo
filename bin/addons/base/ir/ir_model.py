@@ -67,7 +67,7 @@ class ir_model_fields(osv.osv):
 		'view_load': fields.boolean('View Auto-Load'),
 	}
 	_defaults = {
-		'relate': lambda *a: 1,
+		'relate': lambda *a: 0,
 		'view_load': lambda *a: 0,
 		'name': lambda *a: 'No Name',
 		'field_description': lambda *a: 'No description available',
