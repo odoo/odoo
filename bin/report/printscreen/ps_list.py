@@ -94,7 +94,6 @@ class report_printscreen_list(report_int):
 		_append_node('PageHeight', '%.2f' %(pageSize[1] * 2.8346,))
 
 		_append_node('report-header', title)
-
 		l = []
 		t = 0
 		rowcount=0;
@@ -122,6 +121,7 @@ class report_printscreen_list(report_int):
 			if not l[pos]:
 				s = fields[fields_order[pos]].get('size', 80) / 28 + 1
 				l[pos] = strmax * s / t
+
 		_append_node('tableSize', ','.join(map(str,l)) )
 		new_doc.childNodes[0].appendChild(config)
 		header = new_doc.createElement("header")
@@ -152,6 +152,7 @@ class report_printscreen_list(report_int):
 				if fields[f]['type'] in ('one2many','many2many') and line[f]:
 					line[f] = '( '+str(len(line[f])) + ' )'
 				col = new_doc.createElement("col")
+				col.setAttribute('para','yes')
 				col.setAttribute('tree','no')
 				if line[f] != None:
 					txt = new_doc.createTextNode(str(line[f] or ''))
@@ -168,6 +169,7 @@ class report_printscreen_list(report_int):
 		node_line = new_doc.createElement("row")
 		for f in range(0,count):
 			col = new_doc.createElement("col")
+			col.setAttribute('para','yes')
 			col.setAttribute('tree','no')
 			if tsum[f] != None:
 				txt = new_doc.createTextNode(str(tsum[f] or ''))
@@ -187,7 +189,6 @@ class report_printscreen_list(report_int):
 		doc = libxml2.parseDoc(new_doc.toxml())
 		rml_obj = style.applyStylesheet(doc, None)
 		rml = style.saveResultToString(rml_obj)
-
 		self.obj = render.rml(rml)
 		self.obj.render()
 		return True
