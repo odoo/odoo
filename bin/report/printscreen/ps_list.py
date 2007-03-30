@@ -72,11 +72,8 @@ class report_printscreen_list(report_int):
 
 
 	def _create_table(self, uid, ids, fields, fields_order, results, context, title=''):
-	
-		print "-------------------------fields",fields
-		print "-------------------------fields_order",fields_order
-		print "-------------------------------results",results;
-		print "amount untaxed/////////////////////////////////",results[0]['amount_untaxed'];
+
+
 		pageSize=[297.0,210.0]
 
 		impl = minidom.getDOMImplementation()
@@ -106,7 +103,7 @@ class report_printscreen_list(report_int):
 		count = len(fields_order)
 		for i in range(0,count):
 			temp.append(0)
-		print temp;
+
 		ince = -1;
 		for f in fields_order:
 			s = 0
@@ -120,8 +117,7 @@ class report_printscreen_list(report_int):
 				t += fields[f].get('size', 80) / 28 + 1
 
 			l.append(s)
-		print "**********************************rowcount ",rowcount;
-		print temp;
+
 		for pos in range(len(l)):
 			if not l[pos]:
 				s = fields[fields_order[pos]].get('size', 80) / 28 + 1
@@ -135,20 +131,20 @@ class report_printscreen_list(report_int):
 			field_txt = new_doc.createTextNode('%s' % (fields[f]['string'],))
 			field.appendChild(field_txt)
 			header.appendChild(field)
-		
+
 		new_doc.childNodes[0].appendChild(header)
 
 		lines = new_doc.createElement("lines")
-		print "----------------------",lines
-		tsum = [] 
+
+		tsum = []
 		count = len(fields_order)
 		for i in range(0,count):
 			tsum.append(0)
 
 		for line in results:
 			node_line = new_doc.createElement("row")
-			print "+++++++++++++++++++++++++++++=",node_line
-			count = -1 
+
+			count = -1
 			for f in fields_order:
 				count += 1
 				if fields[f]['type']=='many2one' and line[f]:
@@ -161,7 +157,7 @@ class report_printscreen_list(report_int):
 					txt = new_doc.createTextNode(str(line[f] or ''))
 					if temp[count] == 1:
 						tsum[count] = tsum[count] + line[f];
-						print "---------------------------------------",tsum;
+
 				else:
 					txt = new_doc.createTextNode('/')
 				col.appendChild(txt)
@@ -179,18 +175,18 @@ class report_printscreen_list(report_int):
 				txt = new_doc.createTextNode('/')
 			if f == 0:
 				txt = new_doc.createTextNode('Total')
-				
+
 			col.appendChild(txt)
 			node_line.appendChild(col)
 		lines.appendChild(node_line)
-		
+
 		new_doc.childNodes[0].appendChild(lines)
 
 		styledoc = libxml2.parseFile(os.path.join(tools.config['root_path'],'addons/base/report/custom_new.xsl'))
 		style = libxslt.parseStylesheetDoc(styledoc)
 		doc = libxml2.parseDoc(new_doc.toxml())
 		rml_obj = style.applyStylesheet(doc, None)
-		rml = style.saveResultToString(rml_obj) 
+		rml = style.saveResultToString(rml_obj)
 
 		self.obj = render.rml(rml)
 		self.obj.render()
