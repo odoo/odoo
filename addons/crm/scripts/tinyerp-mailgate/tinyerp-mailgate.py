@@ -7,6 +7,7 @@ import email, mimetypes
 from email.Header import decode_header
 from email.MIMEText import MIMEText
 import xmlrpclib
+import os
 
 email_re = re.compile(r"""
 	([a-zA-Z][\w\.-]*[a-zA-Z0-9]     # username part
@@ -33,7 +34,7 @@ class rpc_proxy(object):
 		self.user_id = uid
 		self.passwd = passwd
 		self.dbname = dbname
-	
+
 	def __call__(self, *request):
 		print self.dbname, self.user_id, self.passwd
 		return self.rpc.execute(self.dbname, self.user_id, self.passwd, *request)
@@ -88,9 +89,17 @@ class email_parser(object):
 	def msg_body_get(self, msg):
 		body = ''
 		if msg.is_multipart():
+			counter = 1;
 			for part in msg.get_payload():
-				if (part.get_content_maintype()=='text') and (part.get_content_subtype()=='plain'):
+				if(part.get_content_maintype()=='application'):
+					filename = part.get_filename();
+					#fp = open(os.path.join('/home/admin/Desktop/', filename), 'wb')
+					fp.write(part.get_payload(decode=1))
+					#fp.close()
+				elif (part.get_content_maintype()=='text') and (part.get_content_subtype()=='plain'):
 					body += part.get_payload(decode=1).decode(part.get_charsets()[0])
+				#end if
+			#end for
 		else:
 			body = msg.get_payload(decode=1).decode(msg.get_charsets()[0])
 		return body
@@ -235,8 +244,11 @@ if __name__ == '__main__':
 
 	(options, args) = parser.parse_args()
 	parser = email_parser(options.userid, options.password, options.section, options.email, options.default, dbname=options.dbname)
-	print 
+	print
 	print '-.- ICI'
-	msg_txt = email.message_from_file(sys.stdin)
+	#msg_txt = email.message_from_file(sys.stdin)
+	fp = open('/home/admin/Desktop/test1.eml');
+	msg_txt = email.message_from_file(fp)
+	fp.close()
 	print 'Mail Sent to ', parser.parse(msg_txt)
 
