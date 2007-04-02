@@ -276,9 +276,11 @@ if __name__ == '__main__':
 	parser = email_parser(options.userid, options.password, options.section, options.email, options.default, dbname=options.dbname)
 	print
 	print '-.- ICI'
-	#msg_txt = email.message_from_file(sys.stdin)
-	fp = open('/home/admin/Desktop/test1.eml');
-	msg_txt = email.message_from_file(fp)
+	msg_txt = email.message_from_file(sys.stdin)
+	msg_txt = email.message_from_file(msg_txt)
+
+	#fp = open('/home/admin/Desktop/test1.eml');
+	#msg_txt = email.message_from_file(fp)
 	fp.close()
 	print 'Mail Sent to ', parser.parse(msg_txt)
 
