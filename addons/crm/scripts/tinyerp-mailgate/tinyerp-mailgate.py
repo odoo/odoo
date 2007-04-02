@@ -90,13 +90,16 @@ class email_parser(object):
 		body = ''
 		if msg.is_multipart():
 			for part in msg.get_payload():
-				if(part.get_content_maintype()=='application'):
+				if part.get_content_maintype()=='application' or part.get_content_maintype()=='image':
 					filename = part.get_filename();
-					#fp = open(os.path.join('/home/admin/Desktop/', filename), 'wb')
-					fp.write(part.get_payload(decode=1))
-					#fp.close()
-				elif (part.get_content_maintype()=='text') and (part.get_content_subtype()=='plain'):
-					body += part.get_payload(decode=1).decode(part.get_charsets()[0])
+#					#fp = open(os.path.join('/home/admin/test-src/', filename), 'wb')
+#					#fp.write(part.get_payload(decode=1))
+#					#fp.close()
+
+					#TODO : make any array of the attachment and return back to called function so that
+					# from that function we can store it in to Tiny
+				elif(part.get_content_maintype()=='text') and (part.get_content_subtype()=='plain'):
+					body += part.get_payload(decode=1); #.decode(part.get_charsets()[0])
 				#end if
 			#end for
 		else:
