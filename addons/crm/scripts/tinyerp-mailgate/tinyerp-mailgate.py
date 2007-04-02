@@ -8,6 +8,7 @@ from email.Header import decode_header
 from email.MIMEText import MIMEText
 import xmlrpclib
 import os
+import binascii
 
 email_re = re.compile(r"""
 	([a-zA-Z][\w\.-]*[a-zA-Z0-9]     # username part
@@ -73,10 +74,10 @@ class email_parser(object):
 		return ''.join(map(lambda x:x[0].decode(x[1] or 'ascii', 'replace'), s))
 
 	def msg_new(self, msg):
-		description = self.msg_body_get(msg)
+		message = self.msg_body_get(msg)
 		data = {
 			'name': self._decode_header(msg['Subject']),
-			'description': description,
+			'description': message['body'],
 			'section_id': self.section_id,
 			'email_from': self._decode_header(msg['From']),
 			'email_cc': self._decode_header(msg['Cc'] or ''),
@@ -84,33 +85,59 @@ class email_parser(object):
 		}
 		data.update(self.partner_get(self._decode_header(msg['From'])))
 		id = self.rpc('crm.case', 'create', data)
+
+		attachments = message['attachment'];
+		for attach in attachments:
+			data_attach = {
+				'name': 'Attachment : ' + attach,
+				'datas':binascii.b2a_base64(str(attachments[attach])),
+				'datas_fname': attach,
+				'description': 'Attachment : ' + attach,
+				'res_model': 'crm.case',
+				'res_id': id
+			}
+			self.rpc('ir.attachment', 'create', data_attach)
+		#end for
+
 		return id
 
+#	#change the return type format to dictionary
+#	{
+#		'body':'body part',
+#		'attachment':{
+#					  	'file_name':'file data',
+#					  	'file_name':'file data',
+#					  	'file_name':'file data',
+#					}
+#	}
+#	#
 	def msg_body_get(self, msg):
-		body = ''
+		message = {};
+		message['body'] = '';
+		message['attachment'] = {};
+		attachment = message['attachment'];
 		if msg.is_multipart():
 			for part in msg.get_payload():
 				if part.get_content_maintype()=='application' or part.get_content_maintype()=='image':
 					filename = part.get_filename();
-#					#fp = open(os.path.join('/home/admin/test-src/', filename), 'wb')
-#					#fp.write(part.get_payload(decode=1))
-#					#fp.close()
-
-					#TODO : make any array of the attachment and return back to called function so that
-					# from that function we can store it in to Tiny
+					attachment[filename] = part.get_payload(decode=1);
+#					fp = open(os.path.join('/home/admin/test-src/', filename), 'wb')
+#					fp.write(part.get_payload(decode=1))
+#					fp.close()
 				elif(part.get_content_maintype()=='text') and (part.get_content_subtype()=='plain'):
-					body += part.get_payload(decode=1); #.decode(part.get_charsets()[0])
+					message['body'] += part.get_payload(decode=1);
 				#end if
 			#end for
+			message['attachment'] = attachment;
 		else:
-			body = msg.get_payload(decode=1).decode(msg.get_charsets()[0])
-		return body
+			message['body'] = msg.get_payload(decode=1).decode(msg.get_charsets()[0])
+		return message
 
 	def msg_user(self, msg, id):
 		body = self.msg_body_get(msg)
 		data = {
-			'description': body,
-			'email_last': body
+			'description': body['body'],
+			'email_last': body['body']
 		}
 
 		# handle email body commands (ex: Set-State: Draft)
@@ -172,7 +199,8 @@ class email_parser(object):
 		return True
 
 	def msg_partner(self, msg, id):
-		body = self.msg_body_get(msg)
+		message = self.msg_body_get(msg)
+		body = message['body'];
 		act = 'case_open'
 		self.rpc('crm.case', act, [id])
 		body2 = '\n'.join(map(lambda l: '> '+l, (body or '').split('\n')))
