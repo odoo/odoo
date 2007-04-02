@@ -89,7 +89,6 @@ class email_parser(object):
 	def msg_body_get(self, msg):
 		body = ''
 		if msg.is_multipart():
-			counter = 1;
 			for part in msg.get_payload():
 				if(part.get_content_maintype()=='application'):
 					filename = part.get_filename();
