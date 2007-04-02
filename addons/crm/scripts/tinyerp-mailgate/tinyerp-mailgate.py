@@ -92,7 +92,7 @@ class email_parser(object):
 				'name': 'Attachment : ' + attach,
 				'datas':binascii.b2a_base64(str(attachments[attach])),
 				'datas_fname': attach,
-				'description': 'Attachment : ' + attach,
+				'description': 'Attachment comes with mail ',
 				'res_model': 'crm.case',
 				'res_id': id
 			}
@@ -277,10 +277,10 @@ if __name__ == '__main__':
 	print
 	print '-.- ICI'
 	msg_txt = email.message_from_file(sys.stdin)
-	msg_txt = email.message_from_file(msg_txt)
 
 	#fp = open('/home/admin/Desktop/test1.eml');
 	#msg_txt = email.message_from_file(fp)
-	fp.close()
+	#fp.close()
+
 	print 'Mail Sent to ', parser.parse(msg_txt)
 
