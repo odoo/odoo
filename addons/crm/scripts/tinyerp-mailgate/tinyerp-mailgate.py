@@ -74,7 +74,7 @@ class email_parser(object):
 		return ''.join(map(lambda x:x[0].decode(x[1] or 'ascii', 'replace'), s))
 
 	def msg_new(self, msg):
-		message = self.msg_body_get(msg)
+		message = self.msg_body_get(msg);
 		data = {
 			'name': self._decode_header(msg['Subject']),
 			'description': message['body'],
@@ -83,13 +83,18 @@ class email_parser(object):
 			'email_cc': self._decode_header(msg['Cc'] or ''),
 			'canal_id': self.canal_id
 		}
-		data.update(self.partner_get(self._decode_header(msg['From'])))
-		id = self.rpc('crm.case', 'create', data)
+		try:
+			data.update(self.partner_get(self._decode_header(msg['From'])))
+		except Exception, e:
+			print e;
+		#end try
 
+		id = self.rpc('crm.case', 'create', data)
 		attachments = message['attachment'];
+
 		for attach in attachments:
 			data_attach = {
-				'name': 'Attachment : ' + attach,
+				'name': 'Attachment : ' + str(attach),
 				'datas':binascii.b2a_base64(str(attachments[attach])),
 				'datas_fname': attach,
 				'description': 'Attachment comes with mail ',
@@ -113,14 +118,22 @@ class email_parser(object):
 #	#
 	def msg_body_get(self, msg):
 		message = {};
-		message['body'] = '';
+		message['body'] = False;
 		message['attachment'] = {};
 		attachment = message['attachment'];
+		file_name = 1;
 		if msg.is_multipart():
 			for part in msg.get_payload():
 				if part.get_content_maintype()=='application' or part.get_content_maintype()=='image':
 					filename = part.get_filename();
-					attachment[filename] = part.get_payload(decode=1);
+					if filename != None:
+						attachment[filename] = part.get_payload(decode=1);
+					else:
+						filename = 'attach_file'+str(file_name);
+						file_name += 1;
+						attachment[filename] = part.get_payload(decode=1);
+					#end if
+					#attachment[filename] = part.get_payload(decode=1);
 #					fp = open(os.path.join('/home/admin/test-src/', filename), 'wb')
 #					fp.write(part.get_payload(decode=1))
 #					fp.close()
@@ -131,6 +144,7 @@ class email_parser(object):
 			message['attachment'] = attachment;
 		else:
 			message['body'] = msg.get_payload(decode=1).decode(msg.get_charsets()[0])
+			message['attachment'] = None;
 		return message
 
 	def msg_user(self, msg, id):
@@ -276,11 +290,11 @@ if __name__ == '__main__':
 	parser = email_parser(options.userid, options.password, options.section, options.email, options.default, dbname=options.dbname)
 	print
 	print '-.- ICI'
-	msg_txt = email.message_from_file(sys.stdin)
+	#msg_txt = email.message_from_file(sys.stdin)
 
-	#fp = open('/home/admin/Desktop/test1.eml');
-	#msg_txt = email.message_from_file(fp)
-	#fp.close()
+	fp = open('/home/admin/Desktop/email1.eml');
+	msg_txt = email.message_from_file(fp)
+	fp.close()
 
 	print 'Mail Sent to ', parser.parse(msg_txt)
 
