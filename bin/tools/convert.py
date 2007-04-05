@@ -395,15 +395,15 @@ def convert_csv_import(cr, module, fname, csvcontent, idref={}, mode='init'):
 
 	uid = 1
 	datas = []
-	for line in data:
+	for line in reader:
 		datas.append( map(lambda x:x.decode('utf8').encode('utf8'), line))
 		if len(datas) > COMMIT_STEP:
-			pool.get(model).import_data(cr, uid, data[0], datas[1:])
+			pool.get(model).import_data(cr, uid, fields, datas)
 			cr.commit()
 			datas=[]
 
 	if datas:
-		pool.get(model).import_data(cr, uid, data[0], datas[1:])
+		pool.get(model).import_data(cr, uid, fields, datas)
 		cr.commit()
 
 #
