@@ -10,6 +10,11 @@ import os.path
 
 from config import config
 
+
+# Number of imported lines between two commit (see convert_csv_import()):
+COMMIT_STEP = 500 
+
+
 class ConvertError(Exception):
 	def __init__(self, doc, orig_excpt):
 		self.d = doc
@@ -388,13 +393,18 @@ def convert_csv_import(cr, module, fname, csvcontent, idref={}, mode='init'):
 	input=StringIO.StringIO(csvcontent)
 	data = list(csv.reader(input, quotechar='"', delimiter=','))
 
+	uid = 1
 	datas = []
 	for line in data:
 		datas.append( map(lambda x:x.decode('utf8').encode('utf8'), line))
+		if len(datas) > COMMIT_STEP:
+			pool.get(model).import_data(cr, uid, data[0], datas[1:])
+			cr.commit()
+			datas=[]
 
-	uid = 1
-	pool.get(model).import_data(cr, uid, data[0], datas[1:])
-	cr.commit()
+	if datas:
+		pool.get(model).import_data(cr, uid, data[0], datas[1:])
+		cr.commit()
 
 #
 # xml import/export
