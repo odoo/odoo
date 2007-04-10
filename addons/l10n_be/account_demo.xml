@@ -3,6 +3,7 @@
 <data noupdate="1">
 	<record model="account.invoice" id="ceci_est_une_facture">
 		<field name="currency_id" ref="base.EUR"/>
+		<field name="company_id" ref="base.main_company"/>
 		<field name="address_invoice_id" ref="base.res_partner_address_tang"/>
 		<field name="partner_id" ref="base.res_partner_asus"/>
 		<field name="journal_id" ref="account.sales_journal"/>
