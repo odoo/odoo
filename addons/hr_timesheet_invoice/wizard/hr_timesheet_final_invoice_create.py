@@ -108,6 +108,7 @@ class final_invoice_create(wizard.interface):
 					'product_id': product_id,
 					'uos_id': product.uom_id.id,
 					'account_id': account_id[0],
+					'account_analytic_id': account.id,
 				}
 
 				amount_total += round((price * ( 1.0 - (factor.factor or 0.0)/100.0)), 2) * qty
