@@ -391,7 +391,8 @@ def convert_csv_import(cr, module, fname, csvcontent, idref={}, mode='init'):
 #	pool = osv.osv.FakePool(module)
 
 	input=StringIO.StringIO(csvcontent)
-	data = list(csv.reader(input, quotechar='"', delimiter=','))
+	reader = csv.reader(input, quotechar='"', delimiter=',')
+	fields = reader.next()
 
 	uid = 1
 	datas = []
