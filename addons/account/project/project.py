@@ -154,7 +154,7 @@ class account_analytic_account(osv.osv):
 
 	def on_change_parent(self, cr, uid, id, parent_id):
 		if not parent_id:
-			return {'value': {'code': False, 'partner_id': ''}}
+			return {}
 		parent = self.read(cr, uid, [parent_id], ['partner_id','code'])[0]
 		childs = self.search(cr, uid, [('parent_id', '=', parent_id), ('active', '=', 1)]) + self.search(cr, uid, [('parent_id', '=', parent_id), ('active', '=', 0)])
 		numchild = len(childs)
@@ -162,7 +162,9 @@ class account_analytic_account(osv.osv):
 			partner = parent['partner_id'][0]
 		else:
 			partner = False
-		res = {'value' : {'code' : '%s - %03d' % (parent['code'] or '', numchild + 1), 'partner_id' : partner}}
+		res = {'value' : {'code' : '%s - %03d' % (parent['code'] or '', numchild + 1),}}
+		if partner:
+			res['value']['partner_id'] = partner
 		return res
 
 	def name_search(self, cr, uid, name, args=[], operator='ilike', context={}):
