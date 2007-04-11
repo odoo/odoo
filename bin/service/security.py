@@ -49,7 +49,7 @@ def check_super(passwd):
 		raise Exception('AccessDenied')
 	
 def check(db, uid, passwd):
-	#FIXME: this should be db dependent
+	# XXX FIXME: this should be db dependent
 	if _uid_cache.has_key(uid) and (_uid_cache[uid]==passwd):
 		return True
 	cr = pooler.get_db(db).cursor()
