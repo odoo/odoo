@@ -1344,12 +1344,13 @@ class orm(object):
 		# records unless they were explicitely asked for
 		if 'active' in self._columns:
 			i = 0
+			active_found = False
 			while i<len(args):
 				if args[i][0]=='active':
 					if not args[i][2]:
-						del args[i]
+						active_found = True
 				i += 1
-			if i==len(args):
+			if not active_found:
 				args.append(('active', '=', 1))
 
 
