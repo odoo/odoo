@@ -454,7 +454,7 @@ class stock_picking(osv.osv):
 			if len(todo):
 				self.pool.get('stock.move').action_done(cr, uid, todo)
 
-				lot_id = self.pool.get('stock.lot').create(cr, uid, {'name':'PICK:'+pick.name})
+				lot_id = self.pool.get('stock.lot').create(cr, uid, {'name':pick.name})
 				self.pool.get('stock.move').write(cr,uid, todo, {'lot_id':lot_id})
 				self.write(cr, uid, [pick.id], {'lot_id':lot_id})
 
@@ -582,7 +582,7 @@ class stock_production_lot(osv.osv):
 	_description = 'Production lot'
 
 	_columns = {
-		'name': fields.char('Code', size=64, required=True),
+		'name': fields.char('Serial', size=64, required=True),
 		'ref': fields.char('Reference', size=64),
 		'date': fields.datetime('Date create', required=True),
 		'revisions': fields.one2many('stock.production.lot.revision','lot_id','Revisions'),
@@ -591,6 +591,9 @@ class stock_production_lot(osv.osv):
 		'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
 		'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'stock.lot.serial'),
 	}
+	_sql_constraints = [
+		('name_uniq', 'unique (name)', 'The serial must be unique !'),
+	]
 stock_production_lot()
 
 class stock_production_lot_revision(osv.osv):
@@ -642,13 +645,13 @@ class stock_move(osv.osv):
 		'product_uos': fields.many2one('product.uom', 'Product UOS'),
 		'product_packaging' : fields.many2one('product.packaging', 'Product packaging'),
 
-		'location_id': fields.many2one('stock.location', 'Location', required=True),
+		'location_id': fields.many2one('stock.location', 'Source Location', required=True),
 		'location_dest_id': fields.many2one('stock.location', 'Dest. Location', required=True),
 		'address_id' : fields.many2one('res.partner.address', 'Dest. Address'),
 
-		'prodlot_id' : fields.many2one('stock.production.lot', 'Production lot'),
-		'tracking_id': fields.many2one('stock.tracking', 'Lot Tracking', select=True),
-		'lot_id': fields.many2one('stock.lot', 'Lot', select=True),
+		'prodlot_id' : fields.many2one('stock.production.lot', 'Production lot', help="Production lot is used to put a serial number on the production"),
+		'tracking_id': fields.many2one('stock.tracking', 'Tracking lot', select=True, help="Tracking lot is the code that will be put on the logistic unit/pallet"),
+		'lot_id': fields.many2one('stock.lot', 'Consumer lot', select=True, readonly=True),
 
 		'move_dest_id': fields.many2one('stock.move', 'Dest. Move'),
 		'move_history_ids': fields.many2many('stock.move', 'stock_move_history_ids', 'parent_id', 'child_id', 'Move History'),
