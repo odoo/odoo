@@ -38,6 +38,7 @@ class rpc_proxy(object):
 
 	def __call__(self, *request):
 		print self.dbname, self.user_id, self.passwd
+		print request
 		return self.rpc.execute(self.dbname, self.user_id, self.passwd, *request)
 
 class email_parser(object):
@@ -74,10 +75,10 @@ class email_parser(object):
 		return ''.join(map(lambda x:x[0].decode(x[1] or 'ascii', 'replace'), s))
 
 	def msg_new(self, msg):
-		message = self.msg_body_get(msg);
+		message = self.msg_body_get(msg)
 		data = {
 			'name': self._decode_header(msg['Subject']),
-			'description': message['body'],
+			'description': '> '+message['body'].replace('\n','\n> '),
 			'section_id': self.section_id,
 			'email_from': self._decode_header(msg['From']),
 			'email_cc': self._decode_header(msg['Cc'] or ''),
@@ -86,18 +87,18 @@ class email_parser(object):
 		try:
 			data.update(self.partner_get(self._decode_header(msg['From'])))
 		except Exception, e:
-			print e;
+			print e
 		#end try
 
 		id = self.rpc('crm.case', 'create', data)
-		attachments = message['attachment'];
+		attachments = message['attachment']
 
-		for attach in attachments:
+		for attach in attachments or []:
 			data_attach = {
-				'name': 'Attachment : ' + str(attach),
+				'name': str(attach),
 				'datas':binascii.b2a_base64(str(attachments[attach])),
 				'datas_fname': attach,
-				'description': 'Attachment comes with mail ',
+				'description': 'Mail attachment',
 				'res_model': 'crm.case',
 				'res_id': id
 			}
@@ -117,46 +118,46 @@ class email_parser(object):
 #	}
 #	#
 	def msg_body_get(self, msg):
-		message = {};
-		message['body'] = False;
-		message['attachment'] = {};
-		attachment = message['attachment'];
-		file_name = 1;
+		message = {}
+		message['body'] = ''
+		message['attachment'] = {}
+		attachment = message['attachment']
+		file_name = 1
 		if msg.is_multipart():
 			for part in msg.get_payload():
 				if part.get_content_maintype()=='application' or part.get_content_maintype()=='image':
-					filename = part.get_filename();
+					filename = part.get_filename()
 					if filename != None:
-						attachment[filename] = part.get_payload(decode=1);
+						attachment[filename] = part.get_payload(decode=1)
 					else:
-						filename = 'attach_file'+str(file_name);
-						file_name += 1;
-						attachment[filename] = part.get_payload(decode=1);
+						filename = 'attach_file'+str(file_name)
+						file_name += 1
+						attachment[filename] = part.get_payload(decode=1)
 					#end if
-					#attachment[filename] = part.get_payload(decode=1);
+					#attachment[filename] = part.get_payload(decode=1)
 #					fp = open(os.path.join('/home/admin/test-src/', filename), 'wb')
 #					fp.write(part.get_payload(decode=1))
 #					fp.close()
 				elif(part.get_content_maintype()=='text') and (part.get_content_subtype()=='plain'):
-					message['body'] += part.get_payload(decode=1);
+					message['body'] += part.get_payload(decode=1).decode(part.get_charsets()[0])
 				#end if
 			#end for
-			message['attachment'] = attachment;
+			message['attachment'] = attachment
 		else:
 			message['body'] = msg.get_payload(decode=1).decode(msg.get_charsets()[0])
-			message['attachment'] = None;
+			message['attachment'] = None
 		return message
 
 	def msg_user(self, msg, id):
 		body = self.msg_body_get(msg)
 		data = {
-			'description': body['body'],
+			'description': '> '+body['body'].replace('\n','\n> '),
 			'email_last': body['body']
 		}
 
 		# handle email body commands (ex: Set-State: Draft)
 		actions = {}
-		for line in body.split('\n'):
+		for line in body['body'].split('\n'):
 			res = command_re.match(line)
 			if res:
 				actions[res.group(1).lower()] = res.group(2).lower()
@@ -198,23 +199,19 @@ class email_parser(object):
 			if 'Cc' in msg:
 				del msg['Cc']
 			msg['Cc'] = ','.join(emails[1:])
-		msg['Reply-To'] = msg['From'] + ',' + self.email
+		msg['Reply-To'] = self.email
 		if priority:
 			msg['X-Priority'] = priorities.get(priority, '3 (Normal)')
 		s = smtplib.SMTP()
-		print '1'
 		s.connect()
-		print '2'
 		s.sendmail(self.email, emails[0], msg.as_string())
-		print '3'
 		s.close()
-		print '4'
-		print 'Email Sent To', emails[0], emails[1:]
+		print 'Email Sent To', emails[0], emails
 		return True
 
 	def msg_partner(self, msg, id):
 		message = self.msg_body_get(msg)
-		body = message['body'];
+		body = message['body']
 		act = 'case_open'
 		self.rpc('crm.case', act, [id])
 		body2 = '\n'.join(map(lambda l: '> '+l, (body or '').split('\n')))
@@ -232,33 +229,35 @@ class email_parser(object):
 		return (int(case_str), emails)
 
 	def parse(self, msg):
-		try:
-			case_str = project_re.search(msg.get('Subject', ''))
-			(case_id, emails) = self.msg_test(msg, case_str and case_str.group(1))
-			if case_id:
-				if emails[0] and self.email_get(emails[0])==self.email_get(self._decode_header(msg['From'])):
-					print 'From User', case_id
-					self.msg_user(msg, case_id)
-				else:
-					print 'From Partner', case_id
-					self.msg_partner(msg, case_id)
+		case_str = project_re.search(msg.get('Subject', ''))
+		(case_id, emails) = self.msg_test(msg, case_str and case_str.group(1))
+		if case_id:
+			if emails[0] and self.email_get(emails[0])==self.email_get(self._decode_header(msg['From'])):
+				print 'From User', case_id
+				self.msg_user(msg, case_id)
 			else:
-				case_id = self.msg_new(msg)
-				if msg.get('Subject', ''):
-					del msg['Subject']
-				msg['Subject'] = '['+str(case_id)+'] '+self._decode_header(msg['subject'])
-				print 'Case', case_id, 'created...'
+				print 'From Partner', case_id
+				self.msg_partner(msg, case_id)
+		else:
+			case_id = self.msg_new(msg)
+			subject = self._decode_header(msg['subject'])
+			if msg.get('Subject', ''):
+				del msg['Subject']
+			msg['Subject'] = '['+str(case_id)+'] '+subject
+			print 'Case', case_id, 'created...'
 
-			emails = self.rpc('crm.case', 'emails_get', case_id)
-			priority = emails[3]
-			em = [emails[0], emails[1]] + (emails[2] or '').split(',')
-			emails = map(self.email_get, filter(None, em))
+		emails = self.rpc('crm.case', 'emails_get', case_id)
+		priority = emails[3]
+		em = [emails[0], emails[1]] + (emails[2] or '').split(',')
+		emails = map(self.email_get, filter(None, em))
 
-			mm = [self._decode_header(msg['From']), self._decode_header(msg['To'])]+self._decode_header(msg.get('Cc','')).split(',')
-			msg_mails = map(self.email_get, filter(None, mm))
+		mm = [self._decode_header(msg['From']), self._decode_header(msg['To'])]+self._decode_header(msg.get('Cc','')).split(',')
+		msg_mails = map(self.email_get, filter(None, mm))
 
-			emails = filter(lambda m: m and m not in msg_mails, emails)
-			self.msg_send(msg, emails, priority)
+		emails = filter(lambda m: m and m not in msg_mails, emails)
+		self.msg_send(msg, emails, priority)
+		try:
+			pass
 		except:
 			print 'Sending mail to default address', self.email_default
 			if self.email_default:
@@ -288,13 +287,11 @@ if __name__ == '__main__':
 
 	(options, args) = parser.parse_args()
 	parser = email_parser(options.userid, options.password, options.section, options.email, options.default, dbname=options.dbname)
-	print
-	print '-.- ICI'
-	#msg_txt = email.message_from_file(sys.stdin)
+	msg_txt = email.message_from_file(sys.stdin)
 
-	fp = open('/home/admin/Desktop/email1.eml');
-	msg_txt = email.message_from_file(fp)
-	fp.close()
+	#fp = open('/home/admin/Desktop/email1.eml')
+	#msg_txt = email.message_from_file(fp)
+	#fp.close()
 
 	print 'Mail Sent to ', parser.parse(msg_txt)
 

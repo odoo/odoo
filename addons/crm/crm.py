@@ -30,6 +30,7 @@ import tools
 from osv import fields,osv,orm
 
 import mx.DateTime
+import base64
 
 MAX_LEVEL = 15
 AVAILABLE_STATES = [
@@ -182,6 +183,7 @@ class crm_case_rule(osv.osv):
 
 		'act_remind_partner': fields.boolean('Remind partner'),
 		'act_remind_user': fields.boolean('Remind responsible'),
+		'act_remind_attach': fields.boolean('Remind with attachment'),
 
 		'act_mail_to_user': fields.boolean('Mail to responsible'),
 		'act_mail_to_partner': fields.boolean('Mail to partner'),
@@ -333,9 +335,9 @@ class crm_case(osv.osv):
 						self.write(cr, uid, [case.id], write, context)
 						caseobj = self.pool.get('crm.case')
 						if action.act_remind_user:
-							caseobj.remind_user(cr, uid, [case.id], context)
+							caseobj.remind_user(cr, uid, [case.id], context, attach=action.act_remind_attach)
 						if action.act_remind_partner:
-							caseobj.remind_partner(cr, uid, [case.id], context)
+							caseobj.remind_partner(cr, uid, [case.id], context, attach=action.act_remind_attach)
 						if action.act_method:
 							getattr(caseobj, 'act_method')(cr, uid, [case.id], action, context)
 						emails = []
@@ -408,26 +410,35 @@ class crm_case(osv.osv):
 		self._action(cr,uid, cases, 'draft')
 		return res
 
-	def remind_partner(self, cr, uid, ids, *args):
-		for case in self.browse(cr, uid, ids):
-			if case.user_id and case.user_id.address_id and case.user_id.address_id.email and case.email_from:
-				tools.email_send(
-					case.user_id.address_id.email,
-					[case.email_from],
-					'Reminder: '+'['+str(case.id)+']'+' '+case.name,
-					case.email_last or case.description, reply_to=case.section_id.reply_to
-					)
-		return True
+	def remind_partner(self, cr, uid, ids, context={}, attach=False):
+		return self.remind_user(cr, uid, ids, context, attach, destination=False)
 
-	def remind_user(self, cr, uid, ids, *args):
+	def remind_user(self, cr, uid, ids, context={}, attach=False, destination=True):
 		for case in self.browse(cr, uid, ids):
 			if case.user_id and case.user_id.address_id and case.user_id.address_id.email and case.email_from:
-				tools.email_send(
-					case.email_from,
-					[case.user_id.address_id.email],
-					'Reminder: '+'['+str(case.id)+']'+' '+case.name,
-					case.email_last or case.description, reply_to=case.section_id.reply_to
-					)
+				src = case.email_from
+				dest = case.user_id.address_id.email
+				if not destination:
+					src,dest = dest,src
+				dest = [dest]
+				if not attach:
+					tools.email_send(
+						src,
+						dest,
+						'Reminder: '+'['+str(case.id)+']'+' '+case.name,
+						case.email_last or case.description, reply_to=case.section_id.reply_to
+						)
+				else:
+					attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model','=','crm.case'),('res_id','=',case.id)])
+					res = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname','datas'])
+					res = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), res)
+					tools.email_send_attach(
+						src,
+						dest,
+						'Reminder: '+'['+str(case.id)+']'+' '+case.name,
+						case.email_last or case.description, reply_to=case.section_id.reply_to,
+						attach=res
+						)
 		return True
 
 	def case_log(self, cr, uid, ids, *args):
