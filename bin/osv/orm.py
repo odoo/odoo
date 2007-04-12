@@ -715,7 +715,7 @@ class orm(object):
 		else:
 			res = map(lambda x: {'id':x}, ids)
 
-		if context.get('lang', False):
+		if context.get('lang', False) and context['lang'] != 'en_EN':
 			for f in fields_pre:
 				if self._columns[f].translate:
 					ids = map(lambda x: x['id'], res)
@@ -841,7 +841,7 @@ class orm(object):
 		upd_todo=[]
 		updend=[]
 		direct = []
-		totranslate = context.get('lang', False) and (context['lang'] != 'en')
+		totranslate = context.get('lang', False) and (context['lang'] != 'en_EN')
 		for field in vals:
 			if field in self._columns:
 				if self._columns[field]._classic_write:
@@ -1020,7 +1020,7 @@ class orm(object):
 					res[f][arg] = getattr(self._columns[f], arg)
 
 			# translate the field label
-			if context.get('lang', False):
+			if context.get('lang', False) and context['lang'] != 'en_EN':
 				res_trans = self.pool.get('ir.translation')._get_source(cr, user, self._name+','+f, 'field', context['lang'])
 				if res_trans:
 					res[f]['string'] = res_trans
@@ -1030,7 +1030,7 @@ class orm(object):
 					sel = self._columns[f].selection
 					
 					# translate each selection option
-					if context.get('lang', False):
+					if context.get('lang', False) and context['lang'] != 'en_EN':
 						sel2 = []
 						for (key,val) in sel:
 							val2 = self.pool.get('ir.translation')._get_source(cr, user, self._name+','+f, 'selection', context['lang'], val)
