@@ -111,6 +111,7 @@ class hr_analytic_timesheet(osv.osv):
 		'product_id' : _getEmployeeProduct,
 		'general_account_id' : _getGeneralAccount,
 		'journal_id' : _getAnalyticJournal,
+		'date' : lambda self,cr,uid,ctx: ctx.get('date', time.strftime('%Y-%m-%d')),
 		'user_id' : lambda obj, cr, uid, ctx : ctx.get('user_id', uid),
 	}
 
