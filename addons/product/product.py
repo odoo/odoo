@@ -381,7 +381,7 @@ class product_packaging(osv.osv):
 	_description = "Conditionnement"
 	_columns = {
 		'name' : fields.char('Description', size=64),
-		'qty' : fields.float('Quantity by UL', help="The total number of products you can put on one transport unit (box or palet)."),
+		'qty' : fields.float('Quantity by UL', help="The total number of products you can put on one transport unit (box or pallet)."),
 		'ul' : fields.many2one('product.ul', 'Type of UL', required=True),
 		'ul_qty' : fields.integer('UL by row'),
 		'rows' : fields.integer('# of rows', required=True),
