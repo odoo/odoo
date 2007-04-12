@@ -441,11 +441,16 @@ class orm(object):
 			cr.execute("SELECT relname FROM pg_class WHERE relkind in ('r','v') AND relname='%s'" % self._table)
 			create = not bool(cr.fetchone())
 
-		if create:
-			for (key,con,_) in self._sql_constraints:
-				cr.execute('alter table %s add constraint %s_%s %s' % (self._table,self._table,key, con,))
-				cr.commit()
+		for (key,con,_) in self._sql_constraints:
+			cr.execute("SELECT conname FROM pg_constraint where conname='%s_%s'" % (self._table, key))
+			if not cr.dictfetchall():
+				try:
+					cr.execute('alter table %s add constraint %s_%s %s' % (self._table,self._table,key, con,))
+					cr.commit()
+				except:
+					logger.notifyChannel('init', netsvc.LOG_WARNING, 'unable to add \'%s\' constraint on table %s !\n If you want to have it, you should update the records and execute manually:\nALTER table %s ADD CONSTRAINT %s_%s %s' % (con, self._table, self._table,self._table,key, con,))
 
+		if create:
 			if hasattr(self,"_sql"):
 				for line in self._sql.split(';'):
 					line2 = line.replace('\n','').strip()
