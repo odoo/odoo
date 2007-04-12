@@ -65,7 +65,6 @@ class hr_analytic_timesheet(osv.osv):
 		return res
 
 	def _getEmployeeProduct(self, cr, uid, context):
-		print context
 		emp_obj = self.pool.get('hr.employee')
 		emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))])
 		if emp_id:
@@ -96,7 +95,6 @@ class hr_analytic_timesheet(osv.osv):
 		return False
 
 	def _getAnalyticJournal(self, cr, uid, context):
-		print 'CONTEXT', context
 		emp_obj = self.pool.get('hr.employee')
 		emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))])
 		if emp_id:
