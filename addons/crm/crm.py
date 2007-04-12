@@ -151,8 +151,8 @@ class crm_case_rule(osv.osv):
 		'active': fields.boolean('Active'),
 		'sequence': fields.integer('Sequence'),
 
-		'trg_state_from': fields.selection([('','')]+AVAILABLE_STATES, 'Case state from', size=16),
-		'trg_state_to': fields.selection([('','')]+AVAILABLE_STATES, 'Case state to', size=16),
+		'trg_state_from': fields.selection([('',''),('escalate','Escalate')]+AVAILABLE_STATES, 'Case state from', size=16),
+		'trg_state_to': fields.selection([('',''),('escalate','Escalate')]+AVAILABLE_STATES, 'Case state to', size=16),
 
 		'trg_date_type':  fields.selection([
 			('none','None'),
@@ -260,8 +260,6 @@ class crm_case(osv.osv):
 		'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
 	}
 	_order = 'priority, date_deadline, id'
-
-
 	def _action(self, cr, uid, cases, state_to, scrit=[], context={}):
 		action_ids = self.pool.get('crm.case.rule').search(cr, uid, scrit)
 		level = MAX_LEVEL
@@ -484,6 +482,20 @@ class crm_case(osv.osv):
 		#
 		self._action(cr,uid, cases, 'done')
 		return True
+
+	def case_escalate(self, cr, uid, ids, *args):
+		cases = self.browse(cr, uid, ids)
+		for case in cases:
+			data = {'active':True, 'user_id': False}
+			if case.section_id.parent_id:
+				data['section_id'] = case.section_id.parent_id.id
+			else:
+				raise osv.except_osv('Error !', 'You can not escalate this case.\nYou are already at the top level.')
+			self.write(cr, uid, ids, data)
+		self.__history(cr, uid, cases, 'escalate')
+		self._action(cr, uid, cases, 'escalate')
+		return True
+
 
 	def case_open(self, cr, uid, ids, *args):
 		cases = self.browse(cr, uid, ids)
