@@ -169,22 +169,23 @@ class osv_pool(netsvc.Service):
 #
 # See if we can use the pool var instead of the class_pool one
 #
-class inheritor(type):
-	def __new__(cls, name, bases, d):
-		parent_name = d.get('_inherit', None)
-		if parent_name:
-			parent_class = class_pool.get(parent_name)
-			assert parent_class, "parent class %s does not exist !" % parent_name
-			for s in ('_columns', '_defaults', '_inherits'):
-				new_dict = copy.copy(getattr(parent_class, s))
-				new_dict.update(d.get(s, {}))
-				d[s] = new_dict
-			bases = (parent_class,)
-		res = type.__new__(cls, name, bases, d)
-		#
-		# update _inherits of others objects
-		#
-		return res
+# XXX no more used
+#class inheritor(type):
+#	def __new__(cls, name, bases, d):
+#		parent_name = d.get('_inherit', None)
+#		if parent_name:
+#			parent_class = class_pool.get(parent_name)
+#			assert parent_class, "parent class %s does not exist !" % parent_name
+#			for s in ('_columns', '_defaults', '_inherits'):
+#				new_dict = copy.copy(getattr(parent_class, s))
+#				new_dict.update(d.get(s, {}))
+#				d[s] = new_dict
+#			bases = (parent_class,)
+#		res = type.__new__(cls, name, bases, d)
+#		#
+#		# update _inherits of others objects
+#		#
+#		return res
 
 
 
@@ -213,17 +214,20 @@ class osv(orm.orm):
 		if parent_name:
 			parent_class = pool.get(parent_name).__class__
 			assert parent_class, "parent class %s does not exist !" % parent_name
-			ndict = {}
-			for s in ('_columns', '_defaults', '_inherits'):
-				new_dict = copy.copy(getattr(pool.get(parent_name), s))
-				new_dict.update(cls.__dict__.get(s, {}))
-				ndict[s] = new_dict
+			nattr = {}
+			for s in ('_columns', '_defaults', '_inherits', '_constraints', '_sql_constraints'):
+				new = copy.copy(getattr(pool.get(parent_name), s))
+				if hasattr(new, 'update'):
+					new.update(cls.__dict__.get(s, {}))
+				else:
+					new.extend(cls.__dict__.get(s, []))
+				nattr[s] = new
 			#bases = (parent_class,)
 			#obj.__class__ += (parent_class,)
 			#res = type.__new__(cls, name, bases, d)
 			name = hasattr(cls,'_name') and cls._name or cls._inherit
 			#name = str(cls)
-			cls = type(name, (cls, parent_class), ndict)
+			cls = type(name, (cls, parent_class), nattr)
 
 		obj = object.__new__(cls)
 		obj.__init__(pool)
