@@ -125,7 +125,6 @@ class email_parser(object):
 		for part in msg.walk():
 			if part.get_content_maintype() == 'multipart':
 				continue
-			print part.get_content_maintype() ,' - ', part.get_content_subtype();
 
 			if part.get_content_maintype()=='text' and part.get_content_subtype() == 'plain':
 				message['body'] += part.get_payload(decode=True).decode(part.get_charsets()[0])
