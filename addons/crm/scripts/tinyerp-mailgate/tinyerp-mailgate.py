@@ -116,6 +116,29 @@ class email_parser(object):
 #	}
 #	#
 	def msg_body_get(self, msg):
+<<<<<<< .mine
+		message = {};
+		message['body'] = u'';
+		message['attachment'] = {};
+		attachment = message['attachment'];
+		counter = 1;
+
+		for part in msg.walk():
+			if part.get_content_maintype() == 'multipart':
+				continue
+			print part.get_content_maintype() ,' - ', part.get_content_subtype();
+
+			if part.get_content_maintype()=='text' and part.get_content_subtype() == 'plain':
+				message['body'] += part.get_payload(decode=True).decode(part.get_charsets()[0])
+			elif part.get_content_maintype()=='application' or part.get_content_maintype()=='image' or part.get_content_maintype()=='text':
+				filename = part.get_filename();
+				if filename :
+					attachment[filename] = part.get_payload(decode=True);
+				else:
+					filename = 'attach_file'+str(counter);
+					counter += 1;
+					attachment[filename] = part.get_payload(decode=True);
+=======
 		message = {}
 		message['body'] = ''
 		message['attachment'] = {}
@@ -140,13 +163,19 @@ class email_parser(object):
 #					fp.write(part.get_payload(decode=1))
 #					fp.close()
 
+>>>>>>> .r6012
 				#end if
-			#end for
+			#end if
 			message['attachment'] = attachment
+<<<<<<< .mine
+		#end for
+=======
 		else:
 			message['body'] = msg.get_payload(decode=1).decode(msg.get_charsets()[0])
 			message['attachment'] = None
+>>>>>>> .r6012
 		return message
+	#end def
 
 	def msg_user(self, msg, id):
 		body = self.msg_body_get(msg)
@@ -287,11 +316,23 @@ if __name__ == '__main__':
 
 	(options, args) = parser.parse_args()
 	parser = email_parser(options.userid, options.password, options.section, options.email, options.default, dbname=options.dbname)
-	msg_txt = email.message_from_file(sys.stdin)
+<<<<<<< .mine
+	print
+	print '-.- ICI'
 
+	#msg_txt = email.message_from_file(sys.stdin)
+=======
+	msg_txt = email.message_from_file(sys.stdin)
+>>>>>>> .r6012
+
+<<<<<<< .mine
+	fp = open('/home/admin/sample.eml');
+	msg_txt = email.message_from_file(fp)
+	fp.close()
+=======
 	#fp = open('/home/admin/Desktop/email1.eml')
 	#msg_txt = email.message_from_file(fp)
 	#fp.close()
+>>>>>>> .r6012
 
-	print 'Mail Sent to ', parser.parse(msg_txt)
-
+	parser.parse(msg_txt)
