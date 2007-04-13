@@ -206,7 +206,7 @@ def email_send_attach(email_from, email_to, subject, body, email_cc=[], email_bc
 	msg['Subject'] = Header(subject.decode('utf8'), 'utf-8')
 	msg['From'] = email_from
 	if reply_to:
-		msg['Reply-To'] = msg['From']+', '+reply_to
+		msg['Reply-To'] = reply_to
 	msg['To'] = COMMASPACE.join(email_to)
 	if email_cc:
 		msg['Cc'] = COMMASPACE.join(email_cc)
