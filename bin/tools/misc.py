@@ -187,6 +187,49 @@ def email_send(email_from, email_to, subject, body, email_cc=[], email_bcc=[], o
 		logging.getLogger().info(str(e))
 	return True
 
+
+#----------------------------------------------------------
+# Emails
+#----------------------------------------------------------
+def email_send_attach(email_from, email_to, subject, body, email_cc=[], email_bcc=[], on_error=False, reply_to=False, attach=[]):
+	"""Send an email."""
+	import smtplib
+	from email.MIMEText import MIMEText
+	from email.MIMEBase import MIMEBase
+	from email.MIMEMultipart import MIMEMultipart
+	from email.Header import Header
+	from email.Utils import formatdate, COMMASPACE
+	from email import Encoders
+
+	msg = MIMEMultipart()
+
+	msg['Subject'] = Header(subject.decode('utf8'), 'utf-8')
+	msg['From'] = email_from
+	if reply_to:
+		msg['Reply-To'] = msg['From']+', '+reply_to
+	msg['To'] = COMMASPACE.join(email_to)
+	if email_cc:
+		msg['Cc'] = COMMASPACE.join(email_cc)
+	if email_bcc:
+		msg['Bcc'] = COMMASPACE.join(email_bcc)
+	msg['Date'] = formatdate(localtime=True)
+	msg.attach( MIMEText(body or '', _charset='utf-8') )
+	for (fname,fcontent) in attach:
+		part = MIMEBase('application', "octet-stream")
+		part.set_payload( fcontent )
+		Encoders.encode_base64(part)
+		part.add_header('Content-Disposition', 'attachment; filename="%s"' % (fname,))
+		msg.attach(part)
+	try:
+		s = smtplib.SMTP()
+		s.connect(config['smtp_server'])
+		s.sendmail(email_from, email_to + email_cc + email_bcc, msg.as_string())
+		s.quit()
+	except Exception, e:
+		import logging
+		logging.getLogger().info(str(e))
+	return True
+
 #----------------------------------------------------------
 # SMS
 #----------------------------------------------------------
