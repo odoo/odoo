@@ -205,9 +205,9 @@ class email_parser(object):
 			msg['X-Priority'] = priorities.get(priority, '3 (Normal)')
 		s = smtplib.SMTP()
 		s.connect()
-		s.sendmail(self.email, emails[0], msg.as_string())
+		s.sendmail(self.email, emails, msg.as_string())
 		s.close()
-		print 'Email Sent To', emails[0], emails
+		print 'Email Sent To', emails
 		return True
 
 	def msg_partner(self, msg, id):
