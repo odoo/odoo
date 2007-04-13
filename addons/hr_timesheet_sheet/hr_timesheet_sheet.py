@@ -251,10 +251,17 @@ class hr_timesheet_sheet(osv.osv):
 	def create(self, cr, uid, vals, *args, **kwargs):
 		if 'state' in vals and vals['state'] == 'new':
 			vals['state']='draft'
-		cr.execute('select id from hr_timesheet_sheet_sheet where (date_from < %s and %s < date_to) or (date_from < %s and %s <date_to) or (date_from >= %s and date_to <= %s)', (vals['date_from'], vals['date_from'], vals['date_to'], vals['date_to'], vals['date_from'], vals['date_to']))
-		if cr.fetchall():
-			raise osv.except_osv('Error !', 'A timesheet sheet already exists in this period')
 		return super(hr_timesheet_sheet, self).create(cr, uid, vals, *args, **kwargs)
+
+	def _sheet_date(self, cr, uid, ids):
+		for sheet in self.browse(cr, uid, ids):
+			cr.execute('select id from hr_timesheet_sheet_sheet where (date_from<%s and %s<date_to) and user_id=%d and id<>%d', (sheet.date_to, sheet.date_from, sheet.user_id.id, sheet.id))
+			if cr.fetchall():
+				return False
+		return True
+	_constraints = [
+		(_sheet_date, 'You can not have 2 timesheets that overlaps !', ['date_from','date_to'])
+	]
 hr_timesheet_sheet()
 
 def _get_current_sheet(self, cr, uid, context={}):
