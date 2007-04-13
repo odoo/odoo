@@ -38,18 +38,15 @@ class rpc_proxy(object):
 
 	def __call__(self, *request):
 		print self.dbname, self.user_id, self.passwd
-		print request
 		return self.rpc.execute(self.dbname, self.user_id, self.passwd, *request)
 
 class email_parser(object):
 	def __init__(self, uid, password, section, email, email_default, dbname):
-		print '* Email parser'
 		self.rpc = rpc_proxy(uid, password, dbname=dbname)
 		try:
 			self.section_id = int(section)
 		except:
 			self.section_id = self.rpc('crm.case.section', 'search', [('code','=',section)])[0]
-		print 'Section ID', self.section_id
 		self.email = email
 		self.email_default = email_default
 		self.canal_id = False
@@ -126,7 +123,10 @@ class email_parser(object):
 		file_name = 1
 		if msg.is_multipart():
 			for part in msg.get_payload():
-				if part.get_content_maintype()=='application' or part.get_content_maintype()=='image':
+				if(part.get_content_maintype()=='text') and (part.get_content_subtype()=='plain'):
+					message['body'] += part.get_payload(decode=1).decode(part.get_charsets()[0])
+#				if part.get_content_maintype()=='application' or part.get_content_maintype()=='image':
+				else:
 					filename = part.get_filename()
 					if filename != None:
 						attachment[filename] = part.get_payload(decode=1)
@@ -139,8 +139,7 @@ class email_parser(object):
 #					fp = open(os.path.join('/home/admin/test-src/', filename), 'wb')
 #					fp.write(part.get_payload(decode=1))
 #					fp.close()
-				elif(part.get_content_maintype()=='text') and (part.get_content_subtype()=='plain'):
-					message['body'] += part.get_payload(decode=1).decode(part.get_charsets()[0])
+
 				#end if
 			#end for
 			message['attachment'] = attachment
