@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <terp>
 	<data>
-		
+
 		<report
 			id="report_product_history"
 			string="Future stock forecast"
@@ -33,12 +33,13 @@
 			name="stock.location.overview"
 			xml="stock/report/lot_overview.xml"
 			xsl="stock/report/lot_overview.xsl"/>
-		
+
 		<report
 			id="report_lot_location"
 			string="Lots by location"
 			model="stock.location"
-			name="stock.lot.location"
+			name="lot.by.location"
+			rml="stock/report/lot_by_location.rml"/>
 			auto="False"/>
 
 		<report
