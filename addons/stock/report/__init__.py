@@ -29,5 +29,6 @@
 #import lot_overview
 import product_stock
 import product_location
-import stock_by_location
+#import stock_by_locatio
+import lot_by_location
 import ups
