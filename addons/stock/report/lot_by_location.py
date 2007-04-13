@@ -33,12 +33,11 @@ from osv import osv
 class lot_by_location(report_sxw.rml_parse):
 	def __init__(self, cr, uid, name, context):
 		super(lot_by_location, self).__init__(cr, uid, name, context)
+		print "Init report";
 		self.localcontext.update({
 			'time': time,
 			'stock' : self.stock,
 		})
-
-
 # 													from the stock move
 
 	def stock(self,location_id):
