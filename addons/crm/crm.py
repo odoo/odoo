@@ -365,15 +365,19 @@ class crm_case(osv.osv):
 			'case_date': case.date,
 
 			'case_user': case.user_id.name or '/',
-			'case_user_email': case.user_id.address_id.email,
-			'case_user_phone': case.user_id.address_id.phone,
+			'case_user_email': (case.user_id and case.user_id.address_id and case.user_id.address_id.email) or '/',
+			'case_user_phone': (case.user_id and case.user_id.address_id and case.user_id.address_id.phone) or '/',
 
 			'email_from': case.email_from,
 			'partner': (case.partner_id and case.partner_id.name) or '/',
 			'partner_email': (case.partner_address_id and case.partner_address_id.email) or '/',
 		}
 		body = body % data
-		tools.email_send(case.user_id.address_id.email, emails, '['+str(case.id)+'] '+case.name, body, reply_to=case.section_id.reply_to)
+		if case.user_id and case.user_id.address_id and case.user_id.address_id.email:
+			emailfrom = case.user_id.address_id.email
+		else:
+			emailfrom = case.section_id.reply_to
+		tools.email_send(emailfrom, emails, '['+str(case.id)+'] '+case.name, body, reply_to=case.section_id.reply_to)
 		return True
 	def __log(self, cr, uid, cases, keyword, context={}):
 		if not self.pool.get('res.partner.event.type').check(cr, uid, 'crm_case_'+keyword):
