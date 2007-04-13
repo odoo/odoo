@@ -82,7 +82,8 @@ class email_parser(object):
 			'section_id': self.section_id,
 			'email_from': self._decode_header(msg['From']),
 			'email_cc': self._decode_header(msg['Cc'] or ''),
-			'canal_id': self.canal_id
+			'canal_id': self.canal_id,
+			'user_id': False
 		}
 		try:
 			data.update(self.partner_get(self._decode_header(msg['From'])))
