@@ -248,10 +248,6 @@ class hr_timesheet_sheet(osv.osv):
 		'date_to' : _default_date_to,
 		'state': lambda *a: 'new',
 	}
-	def create(self, cr, uid, vals, *args, **kwargs):
-		if 'state' in vals and vals['state'] == 'new':
-			vals['state']='draft'
-		return super(hr_timesheet_sheet, self).create(cr, uid, vals, *args, **kwargs)
 
 	def _sheet_date(self, cr, uid, ids):
 		for sheet in self.browse(cr, uid, ids):
