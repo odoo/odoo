@@ -93,7 +93,7 @@ class report_xml(osv.osv):
 		'report_rml': fields.char('RML path', size=256),
 		'auto': fields.boolean('Automatic XSL:RML', required=True),
 		'usage': fields.char('Action Usage', size=32),
-		'header': fields.boolean('Add RML header'),
+		'header': fields.boolean('Add RML header', help="Add or not the coporate RML header"),
 	}
 	_defaults = {
 		'type': lambda *a: 'ir.actions.report.xml',
