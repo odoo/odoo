@@ -49,12 +49,12 @@ class Service(object):
 		self._response_process=None
 		self._response_process_id=None
 		self._response=None
-		
+
 	def joinGroup(self,name):
 		if not name in _group:
 			_group[name]={}
 		_group[name][self.__name]=self
-		
+
 	def exportMethod(self, m):
 		if callable(m):
 			self._method[m.__name__]=m
@@ -198,6 +198,7 @@ class GenericXMLRPCRequestHandler:
 		import traceback
 		try:
 			n=self.path.split("/")[-1]
+			print "TERP-CALLING:",n,method,params
 			s=LocalService(n)
 			m=getattr(s,method)
 			s._service._response=None
