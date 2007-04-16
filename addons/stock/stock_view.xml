@@ -534,7 +534,7 @@
 		<field name="domain">[('state','=','assigned'),('type','=','out')]</field>
 		<field name="context">{'contact_display': 'partner'}</field>
 	</record>
-	<menuitem name="Inventory Control/Picking Lists/Sending Goods/Pickings waiting delivery" action="action_picking_tree2" id="menu_picking_waiting"/>
+	<menuitem name="Inventory Control/Picking Lists/Sending Goods/Assigned Pickings" action="action_picking_tree2" id="menu_picking_waiting"/>
 	<record model="ir.actions.act_window" id="action_picking_tree3">
 		<field name="name">stock.picking</field>
 		<field name="res_model">stock.picking</field>
@@ -544,7 +544,7 @@
 		<field name="domain">[('state','=','confirmed'),('type','=','out')]</field>
 		<field name="context">{'contact_display': 'partner'}</field>
 	</record>
-	<menuitem name="Inventory Control/Picking Lists/Sending Goods/Pending Pickings for delivery" id="menu_action_picking_tree3" action="action_picking_tree3"/>
+	<menuitem name="Inventory Control/Picking Lists/Sending Goods/Confirmed Pickings" id="menu_action_picking_tree3" action="action_picking_tree3"/>
 
 
 	<record model="ir.actions.act_window" id="action_picking_tree4">
@@ -577,7 +577,7 @@
 		<field name="domain">[('type','=','internal')]</field>
 		<field name="context">{'contact_display': 'partner'}</field>
 	</record>
-	<menuitem name="Inventory Control/Picking Lists/Internal picking lists" id="menu_action_picking_tree6" action="action_picking_tree6"/>
+	<menuitem name="Inventory Control/Picking Lists/Internal" id="menu_action_picking_tree6" action="action_picking_tree6"/>
 	<record model="ir.actions.act_window" id="action_picking_tree7">
 		<field name="name">stock.picking</field>
 		<field name="res_model">stock.picking</field>
@@ -587,7 +587,7 @@
 		<field name="domain">[('state','=','assigned'),('type','=','internal')]</field>
 		<field name="context">{'contact_display': 'partner'}</field>
 	</record>
-	<menuitem name="Inventory Control/Picking Lists/Internal picking lists/Internal Picking lists to process" id="menu_action_picking_tree7" action="action_picking_tree7"/>
+	<menuitem name="Inventory Control/Picking Lists/Internal/Assigned Pickings" id="menu_action_picking_tree7" action="action_picking_tree7"/>
 	<record model="ir.actions.act_window" id="action_picking_tree8">
 		<field name="name">stock.picking</field>
 		<field name="res_model">stock.picking</field>
@@ -597,7 +597,7 @@
 		<field name="domain">[('state','=','confirmed'),('type','=','internal')]</field>
 		<field name="context">{'contact_display': 'partner'}</field>
 	</record>
-	<menuitem name="Inventory Control/Picking Lists/Internal picking lists/Internal Pending Picking lists" id="menu_action_picking_tree8" action="action_picking_tree8"/>
+	<menuitem name="Inventory Control/Picking Lists/Internal/Confirmed Pickings" id="menu_action_picking_tree8" action="action_picking_tree8"/>
 	<record model="ir.actions.act_window" id="action_picking_tree9">
 		<field name="name">stock.picking</field>
 		<field name="res_model">stock.picking</field>
@@ -607,7 +607,7 @@
 		<field name="domain">[('state','=','draft'),('type','=','internal')]</field>
 		<field name="context">{'contact_display': 'partner'}</field>
 	</record>
-	<menuitem name="Inventory Control/Picking Lists/Internal picking lists/Draft Internal Picking lists" id="menu_action_picking_tree9" action="action_picking_tree9"/>
+	<menuitem name="Inventory Control/Picking Lists/Internal/Draft Pickings" id="menu_action_picking_tree9" action="action_picking_tree9"/>
 
 	=============================
 	Move Tracking
