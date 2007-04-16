@@ -23,8 +23,8 @@ class mysocket:
 	def disconnect(self):
 		self.sock.shutdown(socket.SHUT_RDWR)
 		self.sock.close()
-	def mysend(self, msg, exception=False):
-		msg = cPickle.dumps(msg)
+	def mysend(self, msg, exception=False, traceback=None):
+		msg = cPickle.dumps([msg,traceback])
 		size = len(msg)
 		self.sock.send('%8d' % size)
 		self.sock.send(exception and "1" or "0")
@@ -54,9 +54,10 @@ class mysocket:
 				raise RuntimeError, "socket connection broken"
 			msg = msg + chunk
 		res = cPickle.loads(msg)
-		if isinstance(res,Exception):
+		if isinstance(res[0],Exception):
 			if exception:
-				raise Myexception(exception, str(res))
-			raise res
+				raise Myexception(exception, str(res[0]), str(res[1]))
+			raise res[0]
 		else:
-			return res
+			return res[0]
+

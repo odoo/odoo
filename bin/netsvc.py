@@ -209,14 +209,15 @@ class GenericXMLRPCRequestHandler:
 			return r
 		except Exception,e:
 			logger = Logger()
-			logger.notifyChannel("web-services", LOG_ERROR, 'Exception in call: ' + reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback)))
+			tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
+			logger.notifyChannel("web-services", LOG_ERROR, 'Exception in call: ' + tb_s)
 			s=str(e)
 			import tools
 			if tools.config['debug_mode']:
 				import pdb
 				tb = sys.exc_info()[2]
 				pdb.post_mortem(tb)
-			raise xmlrpclib.Fault(1,s)
+			raise xmlrpclib.Fault(s, tb_s)
 
 class SimpleXMLRPCRequestHandler(GenericXMLRPCRequestHandler, SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
 	pass
@@ -305,14 +306,15 @@ class TinySocketClientThread(threading.Thread):
 					ts.mysend(r)
 				except Exception, e:
 					logger = Logger()
-					logger.notifyChannel("web-services", LOG_ERROR, 'Exception in call: ' + reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback)))
+					tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
+					logger.notifyChannel("web-services", LOG_ERROR, 'Exception in call: ' + tb_s)
 					s=str(e)
 					import tools
 					if tools.config['debug_mode']:
 						import pdb
 						tb = sys.exc_info()[2]
 						pdb.post_mortem(tb)
-					ts.mysend(e, exception=True)
+					ts.mysend(e, exception=True, traceback=tb_s)
 				self.sock.close()
 				self.threads.remove(self)
 				return True
