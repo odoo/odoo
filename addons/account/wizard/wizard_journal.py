@@ -31,11 +31,11 @@ from osv import osv
 import pooler
 
 _journal_form = '''<?xml version="1.0"?>
-<form string="%s">
+<form string="Standard entries">
 	<field name="journal_id"/>
 	<newline/>
 	<field name="period_id"/>
-</form>''' % ('Saisies des ecritures',)
+</form>'''
 
 _journal_fields = {
 	'journal_id': {'string':'Journal', 'type':'many2one', 'relation':'account.journal', 'required':True},
@@ -56,7 +56,7 @@ def _action_open_window(self, cr, uid, data, context):
 		jp.create(cr, uid, {'name':name, 'period_id': form['period_id'], 'journal_id':form['journal_id']})
 	return {
 		'domain': "[('journal_id','=',%d), ('period_id','=',%d)]" % (form['journal_id'],form['period_id']),
-		'name': 'Saisie Standard',
+		'name': 'Standard entries',
 		'view_type': 'form',
 		'view_mode': 'tree,form',
 		'res_model': 'account.move.line',
