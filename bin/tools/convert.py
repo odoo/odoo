@@ -132,6 +132,8 @@ class xml_import(object):
 				res[dest] = rec.getAttribute(field).encode('utf8')
 		if rec.hasAttribute('auto'):
 			res['auto'] = eval(rec.getAttribute('auto'))
+		if rec.hasAttribute('header'):
+			res['header'] = eval(rec.getAttribute('header'))
 		xml_id = rec.getAttribute('id').encode('utf8')
 		id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.report.xml", self.module, res, xml_id, mode=self.mode)
 		self.idref[xml_id] = id

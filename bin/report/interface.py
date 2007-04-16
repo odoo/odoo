@@ -189,7 +189,7 @@ def register_all(db):
 	cr.close()
 	for r in result:
 		if r['report_rml']:
-			report_sxw('report.'+r['report_name'], r['model'], opj('addons',r['report_rml']))
+			report_sxw('report.'+r['report_name'], r['model'], opj('addons',r['report_rml']), header=r['header'])
 		if r['report_xsl']:
 			report_rml('report.'+r['report_name'], r['model'], opj('addons',r['report_xml']), r['report_xsl'] and opj('addons',r['report_xsl']))
 
