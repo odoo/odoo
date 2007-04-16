@@ -283,9 +283,9 @@ class hr_timesheet_line(osv.osv):
 	def _sheet_date(self, cr, uid, ids):
 		timesheet_lines = self.browse(cr, uid, ids)
 		for l in timesheet_lines:
-			if l.date < l.sheet_id.date_from:
+			if l.date[:10] < l.sheet_id.date_from:
 				return False
-			if l.date > l.sheet_id.date_to:
+			if l.date[:10] > l.sheet_id.date_to:
 				return False
 		return True
 
@@ -327,9 +327,9 @@ class hr_attendance(osv.osv):
 	def _sheet_date(self, cr, uid, ids):
 		attendances = self.browse(cr, uid, ids)
 		for att in attendances:
-			if att.name < att.sheet_id.date_from:
+			if att.name[:10] < att.sheet_id.date_from:
 				return False
-			if att.name > att.sheet_id.date_to:
+			if att.name[:10] > att.sheet_id.date_to:
 				return False
 		return True
 
