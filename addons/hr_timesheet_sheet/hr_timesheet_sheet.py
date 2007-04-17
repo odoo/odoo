@@ -433,6 +433,7 @@ class hr_timesheet_sheet_sheet_account(osv.osv):
 		'name': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
 		'sheet_id': fields.many2one('hr_timesheet_sheet.sheet', 'Sheet', readonly=True, relate=True),
 		'total': fields.float('Total Time', digits=(16,2), readonly=True),
+		'invoice_rate': fields.many2one('hr_timesheet_invoice.factor', 'Invoice rate', readonly=True),
 	}
 	def init(self, cr):
 		cr.execute("""create or replace view hr_timesheet_sheet_sheet_account as (
@@ -440,11 +441,12 @@ class hr_timesheet_sheet_sheet_account(osv.osv):
 				min(hrt.id) as id,
 				l.account_id as name,
 				hrt.sheet_id as sheet_id,
-				sum(l.unit_amount) as total
+				sum(l.unit_amount) as total,
+				l.to_invoice as invoice_rate
 			from
 				hr_analytic_timesheet hrt
 				left join account_analytic_line l on (l.id = hrt.line_id)
-			group by l.account_id, hrt.sheet_id
+			group by l.account_id, hrt.sheet_id, l.to_invoice
 		)""")
 hr_timesheet_sheet_sheet_account()
 
