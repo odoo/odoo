@@ -483,7 +483,7 @@ def _create_dta(self,cr,uid,data,context):
 		v['invoice_reference']= i.reference
 		v['invoice_bvr_num']= i.bvr_ref_num
 		if v['invoice_bvr_num']:
-			v['invoice_bvr_num'] = v['invoice_bvr_num'].rjust(27,'0')
+			v['invoice_bvr_num'] = v['invoice_bvr_num'].replace(' ', '').rjust(27).replace(' ','0')
 			
 		v['partner_comment']= i.partner_comment
 		
