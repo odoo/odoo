@@ -45,12 +45,12 @@ class wiz_timesheet_open(wizard.interface):
 		view_type = 'form,tree'
 		if len(ids) > 1:
 			view_type = 'tree,form'
-			domain = "[('id','in',["+','.join(map(str,ids))+"])]"
+			domain = "[('id','in',["+','.join(map(str,ids))+"]),('user_id', '=', uid)]"
 		elif len(ids)==1:
 			ts.write(cr, uid, ids, {'date_current': time.strftime('%Y-%m-%d')})
-			domain = "[]"
+			domain = "[('user_id', '=', uid)]"
 		else:
-			domain = "[]"
+			domain = "[('user_id', '=', uid)]"
 		value = {
 			'domain': domain,
 			'name': 'Open timesheet',
