@@ -90,6 +90,7 @@ class crm_case_section(osv.osv):
 				(13,'Open ',"[('section_id','=',"+str(section.id)+"),('state','=','open')]", 12),
 				(14,'Pending ',"[('section_id','=',"+str(section.id)+"),('state','=','pending')]", 12),
 				(15,'Draft ',"[('section_id','=',"+str(section.id)+"),('state','=','draft')]", 12),
+				(16,'Unassigned ',"[('section_id','=',"+str(section.id)+"),('user_id','=',False),('state','<>','cancel'),('state','<>','close')]", 12),
 			]:
 				view_mode = 'tree,form'
 				icon = 'STOCK_JUSTIFY_FILL'
