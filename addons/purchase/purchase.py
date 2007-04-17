@@ -328,18 +328,32 @@ class purchase_order_line(osv.osv):
 		if partner_id:
 			lang=self.pool.get('res.partner').read(cr, uid, [partner_id])[0]['lang']
 		context={'lang':lang}
-		price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist], product, qty or 1.0, partner_id, {'uom': uom})[pricelist]
+
 		prod = self.pool.get('product.product').read(cr, uid, [product], ['supplier_taxes_id','name','seller_delay','uom_po_id','description_purchase'])[0]
+		prod_uom_po = prod['uom_po_id'][0]
+		if not uom:
+			uom = prod_uom_po
+		price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist], product, qty or 1.0, partner_id, {'uom': uom})[pricelist]
 		dt = (DateTime.now() + DateTime.RelativeDateTime(days=prod['seller_delay'] or 0.0)).strftime('%Y-%m-%d')
 		prod_name = self.pool.get('product.product').name_get(cr, uid, [product], context=context)[0][1]
-		res = {'value': {'price_unit': price, 'name':prod_name, 'taxes_id':prod['supplier_taxes_id'], 'date_planned': dt,'notes':prod['description_purchase']}}
+
+		res = {'value': {'price_unit': price, 'name':prod_name, 'taxes_id':prod['supplier_taxes_id'], 'date_planned': dt,'notes':prod['description_purchase'], 'product_uom': uom}}
 		domain = {}
-		if not uom:
-			res['value']['product_uom'] = prod['uom_po_id'][0]
-			if res['value']['product_uom']:
-				res2 = self.pool.get('product.uom').read(cr, uid, [res['value']['product_uom']], ['category_id'])
-				if res2 and res2[0]['category_id']:
-					domain = {'product_uom':[('category_id','=',res2[0]['category_id'][0])]}
+
+		res2 = self.pool.get('product.uom').read(cr, uid, [uom], ['category_id'])
+		res3 = self.pool.get('product.uom').read(cr, uid, [prod_uom_po], ['category_id'])
+		domain = {'product_uom':[('category_id','=',res2[0]['category_id'][0])]}
+		if res2[0]['category_id'] != res3[0]['category_id']:
+			raise osv.except_osv('Wrong Product UOM !', 'You have to select a product UOM in the same category than the purchase UOM of the product')
+
 		res['domain'] = domain
+		return res
+
+	def product_uom_change(self, cr, uid, ids, pricelist, product, qty, uom, partner_id):
+		res = self.product_id_change(cr, uid, ids, pricelist, product, qty, uom, partner_id)
+		if 'product_uom' in res['value']:
+			del res['value']['product_uom']
+		if not uom:
+			res['value']['price_unit'] = 0.0
 		return res
 purchase_order_line()
