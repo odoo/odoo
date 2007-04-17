@@ -194,7 +194,7 @@
 			<field name="name">project.project</field>
 			<field name="res_model">project.project</field>
 			<field name="view_type">tree</field>
-			<field name="domain">[('parent_id','=',False), ('manager', '=', uid)]</field>
+			<field name="domain">[('manager', '=', uid)]</field>
 			<field name="view_id" ref="view_my_project" />
 		</record>
 		<menuitem name="Project/All Projects/Your projects" id="menu_open_view_my_project" action="open_view_my_project" />
