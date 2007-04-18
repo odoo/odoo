@@ -68,20 +68,19 @@
 							<button string="Confirm" name="confirm" states="draft" type="workflow"/>
 							<button string="Cancel" name="cancel" states="cancel" type="workflow"/>
 							<button string="Accept" name="validate" states="confirm" type="workflow"/>
-							<button string="Paid" name="paid" states="accepted" type="workflow"/>
+							<button string="Invoice" name="invoice" states="accepted" type="workflow"/>
 							<button string="Set to Draft" name="draft" states="confirm" type="workflow"/>
 							<button string="Refuse" name="refuse" states="confirm,draft,accepted" type="workflow"/>
 						</group>
 					</page><page string="Other Info">
 						<separator string="Accounting data" colspan="4"/>
 						<field name="journal_id"/>
-						<field name="account_id"/>
 						<field name="analytic_journal_id"/>
 						<separator string="Validation" colspan="4"/>
 						<field name="date_confirm" select="1"/>
 						<field name="date_valid" select="1"/>
 						<field name="user_valid" select="1"/>
-						<field name="move_id" select="1"/>
+						<field name="invoice_id" select="1"/>
 						<separator string="Notes" colspan="4"/>
 						<field name="note" colspan="4" nolabel="1"/>
 					</page>
@@ -128,9 +127,20 @@
 			<field name="domain">[('state','=','accepted')]</field>
 		</record>
 		<menuitem
-			name="Human Resources/Expenses/All Expenses/Expenses waiting payment"
+			name="Human Resources/Expenses/All Expenses/Expenses waiting invoice"
 			id="menu_expense_all_valid"
 			action="expense_all_valid"/>
+		<record model="ir.actions.act_window" id="expense_all_invoiced">
+			<field name="name">hr.expense.expense.all.valid</field>
+			<field name="res_model">hr.expense.expense</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('state','=','invoiced')]</field>
+		</record>
+		<menuitem
+			name="Human Resources/Expenses/All Expenses/Expenses waiting payment"
+			id="menu_expense_all_invoiced"
+			action="expense_all_invoiced"/>
 
 		#
 		# My expenses menu

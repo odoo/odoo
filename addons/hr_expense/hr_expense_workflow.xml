@@ -47,6 +47,13 @@
 			<field name="action">expense_canceled()</field>
 			<field name="flow_stop">True</field>
 		</record>
+		<record model="workflow.activity" id="act_invoice">
+			<field name="wkf_id" ref="wkf_expenses"/>
+			<field name="name">invoice</field>
+			<field name="kind">subflow</field>
+			<field name="subflow_id" ref="account.wkf"/>
+			<field name="action">action_invoice_create()</field>
+		</record>
 
 		<record model="workflow.transition" id="t1">
 			<field name="act_from" ref="act_draft" />
@@ -59,12 +66,12 @@
 			<field name="signal">validate</field>
 			<field name="role_id" ref="HR"/>
 		</record>
-		<record model="workflow.transition" id="t3">
+		<!--record model="workflow.transition" id="t3">
 			<field name="act_from" ref="act_accepted" />
 			<field name="act_to" ref="act_paid" />
 			<field name="signal">paid</field>
 			<field name="role_id" ref="HR"/>
-		</record>
+		</record-->
 		<record model="workflow.transition" id="t4">
 			<field name="act_from" ref="act_confirm" />
 			<field name="act_to" ref="act_refused" />
@@ -89,5 +96,22 @@
 			<field name="signal">draft</field>
 			<field name="role_id" ref="HR"/>
 		</record>
+		<record model="workflow.transition" id="t8">
+			<field name="act_from" ref="act_accepted" />
+			<field name="act_to" ref="act_invoice" />
+			<field name="signal">invoice</field>
+			<field name="role_id" ref="HR"/>
+		</record>
+		<record model="workflow.transition" id="t9">
+			<field name="act_from" ref="act_invoice" />
+			<field name="act_to" ref="act_paid" />
+			<field name="signal">subflow.paid</field>
+		</record>
+		<record model="workflow.transition" id="t10">
+			<field name="act_from" ref="act_invoice" />
+			<field name="act_to" ref="act_refused" />
+			<field name="signal">subflow.cancel</field>
+		</record>
+
 	</data>
 </terp>

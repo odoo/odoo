@@ -52,9 +52,8 @@ class hr_expense_expense(osv.osv):
 		'id': fields.integer('Sheet ID', readonly=True),
 		'ref': fields.char('Reference', size=32),
 		'date': fields.date('Date'),
-		'account_id': fields.many2one('account.account', 'Payable Account'),
-		'journal_id': fields.many2one('account.journal', 'Journal'),
-		'analytic_journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal'),
+		'journal_id': fields.many2one('account.journal', 'Force Journal'),
+		'analytic_journal_id': fields.many2one('account.analytic.journal', 'Force Analytic Journal'),
 		'employee_id': fields.many2one('hr.employee', 'Employee', required=True),
 		'user_id': fields.many2one('res.users', 'User', required=True),
 		'date_confirm': fields.date('Date Confirmed'),
@@ -67,12 +66,13 @@ class hr_expense_expense(osv.osv):
 
 		# fields.function
 		'amount': fields.function(_amount, method=True, string='Total Amount'),
-		'move_id': fields.many2one('account.move','Accounting Entries'),
+		'invoice_id': fields.many2one('account.invoice', 'Invoice'),
 
 		'state': fields.selection([
 			('draft', 'Draft'),
 			('confirm', 'Waiting confirmation'),
 			('accepted', 'Accepted'),
+			('invoiced', 'Invoiced'),
 			('paid', 'Reimbursed'),
 			('canceled', 'Canceled')],
 			'State', readonly=True),
@@ -92,68 +92,10 @@ class hr_expense_expense(osv.osv):
 		return True
 
 	def expense_accept(self, cr, uid, ids, *args):
-		for exp in self.browse(cr, uid, ids):
-			if not (exp.journal_id and exp.account_id):
-				raise osv.except_osv('No account or journal defined !', 'You have to define a journal and an account to validate this expense note.')
-			lines = []
-			total = 0
-			for line in exp.line_ids:
-				if line.product_id:
-					acc = line.product_id.product_tmpl_id.property_account_expense
-					if not acc:
-						acc = line.product_id.categ_id.property_account_expense_categ
-					acc = acc[0]
-					lines.append({
-						'name': line.name,
-						'date': line.date_value or time.strftime('%Y-%m-%d'),
-						'quantity': line.unit_quantity,
-						'ref': line.ref,
-						'debit': (line.total_amount>0 and line.total_amount) or 0,
-						'credit': (line.total_amount<0 and -line.total_amount) or 0,
-						'account_id': acc,
-					})
-					total += line.total_amount
-					if line.analytic_account:
-						if not exp.analytic_journal_id:
-							raise osv.except_osv('No analytic journal defined !', 'You have to define an analytic journal to validate this expense note.')
-
-
-						self.pool.get('account.analytic.line').create(cr, uid, {
-							'name': line.name,
-							'date': line.date_value,
-							'product_id': line.product_id.id,
-							'product_uom_id': line.uom_id.id,
-							'unit_amount': line.unit_quantity,
-							'code': line.ref,
-							'amount': -line.total_amount,
-							'journal_id': exp.analytic_journal_id.id,
-							'general_account_id': acc,
-							'account_id': line.analytic_account.id
-						})
-			move_id = False
-			if lines:
-				lines.append({
-					'name': exp.name+'['+str(exp.id)+']',
-					'date': exp.date or time.strftime('%Y-%m-%d'),
-					'ref': exp.ref,
-					'debit': (total<0 and -total) or 0,
-					'credit': (total>0 and total) or 0,
-					'account_id': exp.account_id.id,
-				})
-				if exp.journal_id.sequence_id:
-					name = self.pool.get('ir.sequence').get_id(cr, uid, exp.journal_id.sequence_id.id)
-				else:
-					name = "EXP "+time.strftime('%Y-%m-%d')
-				move_id = self.pool.get('account.move').create(cr, uid, {
-					'name': name,
-					'journal_id': exp.journal_id.id,
-					'line_id': map(lambda x: (0,0,x), lines)
-				})
-			self.write(cr, uid, [exp.id], {
-				'move_id': move_id,
-				'state':'accepted',
-				'date_valid': time.strftime('%Y-%m-%d'),
-				'user_valid': uid
+		self.write(cr, uid, ids, {
+			'state':'accepted',
+			'date_valid':time.strftime('%Y-%m-%d'),
+			'user_valid': uid,
 			})
 		return True
 
@@ -164,6 +106,51 @@ class hr_expense_expense(osv.osv):
 	def expense_paid(self, cr, uid, ids, *args):
 		self.write(cr, uid, ids, {'state':'paid'})
 		return True
+
+	def action_invoice_create(self, cr, uid, ids):
+		res = False
+		for exp in self.browse(cr, uid, ids):
+			lines = []
+			for l in exp.line_ids:
+				tax_id = []
+				if l.product_id:
+					acc = l.product_id.product_tmpl_id.property_account_expense
+					if not acc:
+						acc = l.product_id.categ_id.property_account_expense_categ[0]
+					else:
+						acc = acc[0]
+					tax_id = [x.id for x in l.product_id.supplier_taxes_id]
+				else:
+					acc = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category')
+				lines.append((0, False, {
+					'name': l.name,
+					'account_id': acc,
+					'price_unit': l.unit_amount,
+					'quantity': l.unit_quantity,
+					'uos_id': l.uom_id.id,
+					'invoice_line_tax_id': tax_id and [(6, 0, tax_id)] or False,
+					'account_analytic_id': l.analytic_account.id,
+				}))
+			if not exp.employee_id.address_id:
+				raise osv.except_osv('Error !', 'The employee must have a contact address')
+			acc = exp.employee_id.address_id.partner_id.property_account_payable[0]
+			inv = {
+				'name': exp.name,
+				'reference': "EMP%dEXP%d" % (exp.employee_id.id, exp.id),
+				'account_id': acc,
+				'type': 'in_invoice',
+				'partner_id': exp.employee_id.address_id.partner_id.id,
+				'address_invoice_id': exp.employee_id.address_id.id,
+				'address_contact_id': exp.employee_id.address_id.id,
+				'origin': exp.name,
+				'invoice_line': lines,
+				'price_type': 'tax_included',
+				'journal_id': exp.journal_id and exp.journal_id.id or False,
+			}
+			inv_id = self.pool.get('account.invoice').create(cr, uid, inv, {'type':'in_invoice'})
+			self.write(cr, uid, [exp.id], {'invoice_id': inv_id, 'state': 'invoiced'})
+			res = inv_id
+		return res
 hr_expense_expense()
 
 
