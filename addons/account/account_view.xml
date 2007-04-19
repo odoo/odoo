@@ -436,6 +436,15 @@
 		<field name="view_mode">form,tree</field>
 	</record>
 	<menuitem name="Financial Management/Entries/Statements" id="menu_bank_statement_tree" action="action_bank_statement_tree"/>
+	<record model="ir.actions.act_window" id="action_bank_statement_draft_tree">
+		<field name="name">Draft statements</field>
+		<field name="res_model">account.bank.statement</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[('state','=','draft')]</field>
+	</record>
+	<menuitem name="Financial Management/Entries/Statements/Draft statements" id="menu_bank_statement_draft_tree" action="action_bank_statement_draft_tree"/>
+
 
 
 	<record model="ir.ui.view" id="view_bank_statement_reconcile">

@@ -43,7 +43,7 @@
 				<notebook>
 					<page string="Line">
 						<field name="name" select="1" colspan="3"/>
-						<field name="account_id" on_change="onchange_account_id(parent.partner_id,account_id)" domain="[('company_id', '=', parent.company_id)]"/>
+						<field name="account_id" on_change="onchange_account_id(parent.partner_id,account_id)" domain="[('company_id', '=', parent.company_id),('journal_id','=',parent.journal_id)]"/>
 						<field name="account_analytic_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)]" />
 						<newline/>
 						<field name="product_id" select="1" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id)"/>
@@ -137,7 +137,7 @@
 					<field name="address_invoice_id" domain="[('partner_id','=',partner_id)]"/>
 					<field name="partner_bank_id" domain="[('partner_id','=',partner_id)]"/>
 
-					<field name="account_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id)]" />
+					<field name="account_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" />
 
 					<field name="payment_term" on_change="onchange_payment_term(payment_term)" />
 					<field name="date_due" select="1"/>
