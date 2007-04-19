@@ -104,32 +104,63 @@ class account_bank_statement(osv.osv):
 			if (not st.journal_id.default_credit_account_id) or (not st.journal_id.default_debit_account_id):
 				raise osv.except_osv('Configration Error !', 'Please verify that an account is defined in the journal.')
 			for move in st.line_ids:
+				move_id = self.pool.get('account.move').create(cr, uid, {
+					'journal_id': st.journal_id.id,
+					'period_id': st.period_id.id,
+				}, context=context)
 				if not move.amount:
 					continue
-				self.pool.get('account.move.line').create(cr, uid, {
+				torec = []
+				amount = move.amount
+				if move.reconcile_id and move.reconcile_id.line_new_ids:
+					for newline in move.reconcile_id.line_new_ids:
+						amount += newline.amount
+				torec.append(self.pool.get('account.move.line').create(cr, uid, {
 					'name': move.name,
 					'date': move.date,
+					'move_id': move_id,
 					'partner_id': ((move.partner_id) and move.partner_id.id) or False,
 					'account_id': (move.account_id) and move.account_id.id,
-					'credit': ((move.amount>0) and move.amount) or 0.0,
-					'debit': ((move.amount<0) and -move.amount) or 0.0,
+					'credit': ((amount>0) and amount) or 0.0,
+					'debit': ((amount<0) and -amount) or 0.0,
 					'statement_id': st.id,
 					'journal_id': st.journal_id.id,
 					'period_id': st.period_id.id,
-					'ref': move.invoice_id and move.invoice_id.number or '' 
-				}, context=context)
-				if not st.journal_id.centralisation:
-					c = context.copy()
-					c['journal_id'] = st.journal_id.id
-					c['period_id'] = st.period_id.id
-					fields = ['move_id','name','date','partner_id','account_id','credit','debit']
-					default = self.pool.get('account.move.line').default_get(cr, uid, fields, context=c)
-					default.update({
-						'statement_id': st.id,
-						'journal_id': st.journal_id.id,
-						'period_id': st.period_id.id,
-					})
-					self.pool.get('account.move.line').create(cr, uid, default, context=context)
+				}, context=context))
+				if move.reconcile_id and move.reconcile_id.line_new_ids:
+					for newline in move.reconcile_id.line_new_ids:
+						self.pool.get('account.move.line').create(cr, uid, {
+							'name': newline.name or move.name,
+							'date': move.date,
+							'move_id': move_id,
+							'partner_id': ((move.partner_id) and move.partner_id.id) or False,
+							'account_id': (newline.account_id) and newline.account_id.id,
+							'debit': newline.amount>0 and newline.amount or 0.0,
+							'credit': newline.amount<0 and -newline.amount or 0.0,
+							'statement_id': st.id,
+							'journal_id': st.journal_id.id,
+							'period_id': st.period_id.id,
+						}, context=context)
+
+				c = context.copy()
+				c['journal_id'] = st.journal_id.id
+				c['period_id'] = st.period_id.id
+				fields = ['move_id','name','date','partner_id','account_id','credit','debit']
+				default = self.pool.get('account.move.line').default_get(cr, uid, fields, context=c)
+				default.update({
+					'statement_id': st.id,
+					'journal_id': st.journal_id.id,
+					'period_id': st.period_id.id,
+					'move_id': move_id,
+				})
+				self.pool.get('account.move.line').create(cr, uid, default, context=context)
+				if move.reconcile_id and move.reconcile_id.line_ids:
+					torec += map(lambda x: x.id, move.reconcile_id.line_ids)
+					try:
+						self.pool.get('account.move.line').reconcile(cr, uid, torec, 'statement', context)
+					except:
+						raise osv.except_osv('Error !', 'Unable to reconcile entry "%s": %.2f'%(move.name, move.amount))
+
 			done.append(st.id)
 		self.write(cr, uid, done, {'state':'confirm'}, context=context)
 		return True
@@ -152,6 +183,69 @@ class account_bank_statement(osv.osv):
 			return {'value': {'balance_start': res[0] or 0.0}}
 		return {}
 account_bank_statement()
+
+class account_bank_statement_reconcile(osv.osv):
+	_name = "account.bank.statement.reconcile"
+	_description = "Statement reconcile"
+	def _total_entry(self, cr, uid, ids, prop, unknow_none, context={}):
+		result = {}
+		for o in self.browse(cr, uid, ids, context):
+			result[o.id] = 0.0
+			for line in o.line_ids:
+				result[o.id] += line.debit - line.credit
+		return result
+
+	def _total_new(self, cr, uid, ids, prop, unknow_none, context={}):
+		result = {}
+		for o in self.browse(cr, uid, ids, context):
+			result[o.id] = 0.0
+			for line in o.line_new_ids:
+				result[o.id] += line.amount
+		return result
+
+	def _total_balance(self, cr, uid, ids, prop, unknow_none, context={}):
+		result = {}
+		for o in self.browse(cr, uid, ids, context):
+			result[o.id] = o.total_new-o.total_entry+o.total_amount
+		return result
+
+	def _total_amount(self, cr, uid, ids, prop, unknow_none, context={}):
+		return dict(map(lambda x: (x,context.get('amount', 0.0)), ids))
+
+	def name_get(self, cr, uid, ids, context):
+		res= []
+		for o in self.browse(cr, uid, ids, context):
+			res.append((o.id, '[%.2f/%.2f]' % (o.total_entry, o.total_new)))
+		return res
+
+	_columns = {
+		'name': fields.char('Date', size=64, required=True),
+		'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
+		'line_new_ids': fields.one2many('account.bank.statement.reconcile.line', 'line_id', 'Write-Off'),
+
+		'total_entry': fields.function(_total_entry, method=True, string='Total entries'),
+		'total_new': fields.function(_total_new, method=True, string='Total write-off'),
+		'total_amount': fields.function(_total_amount, method=True, string='Payment amount'),
+		'total_balance': fields.function(_total_balance, method=True, string='Balance'),
+	}
+	_defaults = {
+		'name': lambda *a:time.strftime('%Y-%m-%d'),
+		'partner_id': lambda s,cr,u,c={}: c.get('partner', False),
+		'total_amount': lambda s,cr,u,c={}: c.get('amount', 0.0)
+	}
+account_bank_statement_reconcile()
+
+class account_bank_statement_reconcile_line(osv.osv):
+	_name = "account.bank.statement.reconcile.line"
+	_description = "Statement reconcile line"
+	_columns = {
+		'name': fields.char('Description', size=64),
+		'account_id': fields.many2one('account.account', 'Account', required=True),
+		'line_id': fields.many2one('account.bank.statement.reconcile', 'Reconcile'),
+		'amount': fields.float('Amount', required=True),
+	}
+account_bank_statement_reconcile_line()
+
 
 class account_bank_statement_line(osv.osv):
 	def onchange_partner_id(self, cr, uid, id, partner_id, type, context={}):
@@ -177,9 +271,8 @@ class account_bank_statement_line(osv.osv):
 		'partner_id': fields.many2one('res.partner', 'Partner'),
 		'account_id': fields.many2one('account.account','Account', required=True),
 		'statement_id': fields.many2one('account.bank.statement', 'Statement', select=True),
-		'invoice_id': fields.many2one('account.invoice', 'Invoice', states={'confirm':[('readonly',True)]}),
 
-
+		'reconcile_id': fields.many2one('account.bank.statement.reconcile', 'Reconcile', states={'confirm':[('readonly',True)]}),
 	}
 	_defaults = {
 		'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line'),
@@ -187,7 +280,5 @@ class account_bank_statement_line(osv.osv):
 		'type': lambda *a: 'general',
 	}
 account_bank_statement_line()
-
-
 
 

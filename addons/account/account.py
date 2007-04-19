@@ -126,6 +126,21 @@ class account_account(osv.osv):
 	_name = "account.account"
 	_description = "Account"
 
+	def search(self, cr, uid, args, offset=0, limit=None, order=None):
+		pos = 0
+		while pos<len(args):
+			if args[pos][0]=='journal_id':
+				jour = self.pool.get('account.journal').browse(cr, uid, args[pos][2])
+				if (not (jour.account_control_ids or jour.type_control_ids)) or not args[pos][2]:
+					del args[pos]
+					continue
+				ids3 = map(lambda x: x.code, jour.type_control_ids)
+				ids1 = super(account_account,self).search(cr, uid, [('type','in',ids3)])
+				ids1 += map(lambda x: x.id, jour.account_control_ids)
+				args[pos] = ('id','in',ids1)
+			pos+=1
+		return super(account_account,self).search(cr, uid, args, offset, limit, order)
+
 	def _credit(self, cr, uid, ids, field_name, arg, context={}):
 		acc_set = ",".join(map(str, ids))
 		cr.execute("SELECT a.id, COALESCE(SUM(l.credit*a.sign),0) FROM account_account a LEFT JOIN account_move_line l ON (a.id=l.account_id) WHERE a.type!='view' AND a.id IN (%s) AND l.active AND l.state<>'draft' GROUP BY a.id" % acc_set)
@@ -312,7 +327,10 @@ class account_journal(osv.osv):
 		'name': fields.char('Journal Name', size=64, required=True),
 		'code': fields.char('Code', size=16),
 		'type': fields.selection([('sale','Sale'), ('purchase','Purchase'), ('cash','Cash'), ('general','General'), ('situation','Situation')], 'Type', size=32, required=True),
+
 		'type_control_ids': fields.many2many('account.account.type', 'account_journal_type_rel', 'journal_id','type_id', 'Type Controls', domain=[('code','<>','view')]),
+		'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id','account_id', 'Account', domain=[('type','<>','view')]),
+
 		'active': fields.boolean('Active'),
 		'view_id': fields.many2one('account.journal.view', 'View', required=True, help="Gives the view used when writing or browsing entries in this journal. The view tell Tiny ERP which fields should be visible, required or readonly and in which order. You can create your own view for a faster encoding in each journal."),
 		'default_credit_account_id': fields.many2one('account.account', 'Default Credit Account'),
@@ -561,6 +579,12 @@ class account_move(osv.osv):
 						l[2]['period_id'] = default_period
 				context['period_id'] = default_period
 
+		if not 'name' in vals:
+			journal = self.pool.get('account.journal').browse(cr, uid, context.get('journal_id', vals.get('journal_id', False)))
+			if journal.sequence_id:
+				vals['name'] = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
+			else:
+				raise osv.except_osv('Error', 'No sequence defined in the journal !')
 		if 'line_id' in vals:
 			c = context.copy()
 			c['novalidate'] = True

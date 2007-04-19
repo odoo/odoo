@@ -358,6 +358,8 @@ class account_move_line(osv.osv):
 			for field in journal.view_id.columns_id:
 				fields.append(field.field)
 				attrs = []
+				if field.field=='account_id' and journal.id:
+					attrs.append('domain="[(\'journal_id\', \'=\', '+str(journal.id)+'),(\'type\',\'&lt;&gt;\',\'view\')]"')
 				if field.readonly:
 					attrs.append('readonly="1"')
 				if field.required:
@@ -474,3 +476,13 @@ class account_move_line(osv.osv):
 			self.pool.get('account.move').validate(cr, uid, [vals['move_id']], context)
 		return result
 account_move_line()
+
+
+class account_bank_statement_reconcile(osv.osv):
+	_inherit = "account.bank.statement.reconcile"
+	_columns = {
+		'line_ids': fields.many2many('account.move.line', 'account_bank_statement_line_rel', 'statement_id', 'line_id', 'Entries'),
+	}
+account_bank_statement_reconcile()
+
+

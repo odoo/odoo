@@ -403,14 +403,14 @@
 					<field name="balance_end_real"/>
 					<separator string="Entry Lines" colspan="4"/>
 					<field name="line_ids" colspan="4" nolabel="1">
-						<tree string="Statement Lines" editable="bottom">
+						<tree string="Statement lines" editable="bottom">
 							<field name="date"/>
 							<field name="name"/>
 							<field name="type"/>
 							<field name="partner_id" on_change="onchange_partner_id(partner_id,type)"/>
-							<field name="invoice_id" select="1" domain="[('partner_id','=',partner_id),('state','=','open')]"/> 
-							<field name="account_id"/>
+							<field name="account_id" domain="[('journal_id','=',parent.journal_id)]"/>
 							<field name="amount"/>
+							<field name="reconcile_id" context="{'partner_id':partner_id,'amount':amount,'account_id':account_id}"/> 
 						</tree>
 					</field>
 					<group col="7" colspan="4">
@@ -435,6 +435,34 @@
 	</record>
 	<menuitem name="Financial Management/Entries/Statements" id="menu_bank_statement_tree" action="action_bank_statement_tree"/>
 
+
+	<record model="ir.ui.view" id="view_bank_statement_reconcile">
+		<field name="name">account.bank.statement.reconcile.form</field>
+		<field name="model">account.bank.statement.reconcile</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Reconcile">
+				<field name="name" select="1"/>
+				<field name="total_amount"/>
+				<separator colspan="4" string="Entries"/>
+				<field name="line_ids" view_mode="tree" colspan="4" nolabel="1" domain="[('partner_id','=',context.get('partner_id', False)),('state','=','valid'),('account_id','=',context.get('account_id', False))]">
+				</field>
+				<field name="line_new_ids" colspan="4" nolabel="1">
+					<tree string="Write-Off" editable="bottom">
+						<field name="account_id"/>
+						<field name="amount"/>
+						<field name="name"/>
+					</tree>
+				</field>
+				<group colspan="4" col="5">
+					<field name="total_entry"/>
+					<field name="total_new"/>
+					<field name="total_balance"/>
+					<button name="dummy" string="Compute" colspan="2"/>
+				</group>
+			</form>
+		</field>
+	</record>
 	#---------------------------------------------------------
 	# Account Types
 	#---------------------------------------------------------
@@ -695,11 +723,10 @@
 			<tree string="Account Entry Line">
 				<field name="date"/>
 				<field name="move_id"/>
-				<field name="statement_id" string="St."/>
+				<field name="ref"/>
 				<field name="name"/>
 				<field name="partner_id"/>
 				<field name="account_id"/>
-				<field name="date_maturity"/>
 				<field name="debit"/>
 				<field name="credit"/>
 				<field name="state"/>
@@ -719,6 +746,8 @@
 				<separator string="General Information" colspan="4"/>
 				<field name="name" select="1"/>
 				<field name="date" select="1"/>
+				<field name="ref" select="1"/>
+				<newline/>
 				<field name="account_id" select="1"/>
 				<field name="partner_id" select="1"/>
 
