@@ -374,7 +374,7 @@
 		<field name="model">account.bank.statement</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Bank Statement" colors="red:balance_end_real!=balance_end;grey:balance_end_real==balance_end">
+			<tree string="Statement" colors="red:balance_end_real!=balance_end;grey:balance_end_real==balance_end">
 				<field name="date"/>
 				<field name="name"/>
 				<field name="journal_id"/>
@@ -392,7 +392,7 @@
 		<field name="model">account.bank.statement</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Bank Statement">
+			<form string="Statement">
 				<notebook>
 				<page string="Statement">
 					<field name="name" select="1"/>
@@ -433,7 +433,7 @@
 		<field name="view_type">form</field>
 		<field name="view_mode">form,tree</field>
 	</record>
-	<menuitem name="Financial Management/Entries/Bank statements" id="menu_bank_statement_tree" action="action_bank_statement_tree"/>
+	<menuitem name="Financial Management/Entries/Statements" id="menu_bank_statement_tree" action="action_bank_statement_tree"/>
 
 	#---------------------------------------------------------
 	# Account Types
