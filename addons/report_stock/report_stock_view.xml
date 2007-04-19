@@ -16,5 +16,15 @@
 			</field>
 		</record>
 
+		<record model="ir.actions.act_window" id="action_report_stock_prodlots_form">
+			<field name="name">Stock by production lots</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">report.stock.prodlots</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form,tree</field>
+		</record>
+
+		<menuitem name="Inventory Control/Reporting/Traceability/Stock by production lots" action="action_report_stock_prodlots_form" id="menu_report_stock_prodlots"/>
+
 	</data>
 </terp>
