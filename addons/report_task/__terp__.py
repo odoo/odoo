@@ -14,7 +14,7 @@
 	'update_xml': [
 		'report_task_view.xml',
 	],
-	'active': True,
+	'active': False,
 	'installable': True
 }
 
