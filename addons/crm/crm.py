@@ -230,7 +230,7 @@ class crm_case(osv.osv):
 		'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
 		'active': fields.boolean('Active'),
 		'description': fields.text('Description'),
-		'section_id': fields.many2one('crm.case.section', 'Case Section', required=True),
+		'section_id': fields.many2one('crm.case.section', 'Case Section', required=True, select=True),
 		'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id)]", relate=True),
 		'planned_revenue': fields.float('Planned Revenue'),
 		'planned_cost': fields.float('Planned Costs'),
@@ -320,12 +320,16 @@ class crm_case(osv.osv):
 					if ok:
 						write = {}
 						if action.act_state:
+							case.state = action.act_state
 							write['state'] = action.act_state
 						if action.act_section_id:
+							case.section_id = action.act_section_id
 							write['section_id'] = action.act_section_id.id
 						if action.act_user_id:
+							case.user_id = action.act_user_id
 							write['user_id'] = action.act_user_id.id
 						if action.act_priority:
+							case.priority = action.act_priority
 							write['priority'] = action.act_priority
 						if action.act_email_cc:
 							if '@' in (case.email_cc or ''):
