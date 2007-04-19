@@ -492,14 +492,16 @@ class account_invoice(osv.osv):
 			'debit': direction == 1 and pay_amount,
 			'credit': direction == -1 and pay_amount,
 			'account_id': src_account_id,
-			'partner_id': invoice.partner_id.id
+			'partner_id': invoice.partner_id.id,
+			'date': time.strftime('%Y-%m-%d'),
 		}
 		l2 = {
 			'name':name,
 			'debit': direction == -1 and pay_amount,
 			'credit': direction == 1 and pay_amount,
 			'account_id': pay_account_id,
-			'partner_id': invoice.partner_id.id
+			'partner_id': invoice.partner_id.id,
+			'date': time.strftime('%Y-%m-%d'),
 		}
 		lines = [(0, 0, l1), (0, 0, l2)]
 		move = {'name': name, 'line_id': lines, 'journal_id': pay_journal_id}
