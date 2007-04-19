@@ -135,7 +135,7 @@ class hr_expense_expense(osv.osv):
 			acc = exp.employee_id.address_id.partner_id.property_account_payable[0]
 			inv = {
 				'name': exp.name,
-				'reference': "EMP%dEXP%d" % (exp.employee_id.id, exp.id),
+				'reference': self.pool.get('ir.sequence').get(cr, uid, 'hr.expense.invoice'),
 				'account_id': acc,
 				'type': 'in_invoice',
 				'partner_id': exp.employee_id.address_id.partner_id.id,
@@ -144,8 +144,9 @@ class hr_expense_expense(osv.osv):
 				'origin': exp.name,
 				'invoice_line': lines,
 				'price_type': 'tax_included',
-				'journal_id': exp.journal_id and exp.journal_id.id or False,
 			}
+			if exp.journal_id:
+				inv['journal_id']=exp.journal_id.id
 			inv_id = self.pool.get('account.invoice').create(cr, uid, inv, {'type':'in_invoice'})
 			self.write(cr, uid, [exp.id], {'invoice_id': inv_id, 'state': 'invoiced'})
 			res = inv_id

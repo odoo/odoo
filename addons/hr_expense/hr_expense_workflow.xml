@@ -8,6 +8,10 @@
 			<field name="name">Human Resources - Expenses</field>
 		</record>
 
+		<record model="res.roles" id="HR_INV">
+			<field name="name">Human Resources - Expenses invoice</field>
+		</record>
+
 		<!-- Workflow definition -->
 
 		<record model="workflow" id="wkf_expenses">
@@ -100,7 +104,7 @@
 			<field name="act_from" ref="act_accepted" />
 			<field name="act_to" ref="act_invoice" />
 			<field name="signal">invoice</field>
-			<field name="role_id" ref="HR"/>
+			<field name="role_id" ref="HR_INV"/>
 		</record>
 		<record model="workflow.transition" id="t9">
 			<field name="act_from" ref="act_invoice" />
