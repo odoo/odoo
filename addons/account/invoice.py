@@ -92,7 +92,7 @@ class account_invoice(osv.osv):
 			('in_refund','Supplier Refund'),
 		],'Type', readonly=True, states={'draft':[('readonly',False)]}, select=True),
 
-		'number': fields.char('Invoice Number', size=32,readonly=True),  
+		'number': fields.char('Invoice Number', size=32, readonly=True),
 		'reference': fields.char('Invoice Reference', size=64),
 		'comment': fields.text('Additionnal Information'),
 
@@ -104,6 +104,7 @@ class account_invoice(osv.osv):
 			('cancel','Canceled')
 		],'State', select=True, readonly=True),
 
+		'check_total': fields.float('Total', digits=(16,2)),
 		'date_invoice': fields.date('Date Invoiced', required=True, states={'open':[('readonly',True)],'close':[('readonly',True)]}),
 		'date_due': fields.date('Due Date', states={'open':[('readonly',True)],'close':[('readonly',True)]}),
 
@@ -124,7 +125,7 @@ class account_invoice(osv.osv):
 		'tax_line': fields.one2many('account.invoice.tax', 'invoice_id', 'Tax Lines', readonly=True, states={'draft':[('readonly',False)]}),
 
 		'move_id': fields.many2one('account.move', 'Invoice Movement', readonly=True),
-		'amount_untaxed': fields.function(_amount_untaxed, method=True, digits=(16,2),string='Untaxed Amount'),
+		'amount_untaxed': fields.function(_amount_untaxed, method=True, digits=(16,2),string='Untaxed'),
 		'amount_tax': fields.function(_amount_tax, method=True, string='Tax', store=True),
 		'amount_total': fields.function(_amount_total, method=True, string='Total', store=True),
 		'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -261,6 +262,9 @@ class account_invoice(osv.osv):
 		for inv in self.browse(cr, uid, ids):
 			if inv.move_id:
 				continue
+			print inv.check_amount, inv.amount_total
+			if inv.check_total <> inv.amount_total:
+				raise osv.except_osv('Bad total !', 'Please verify the price of the invoice !\nThe real total does not match the computed total.')
 
 			company_currency = inv.account_id.company_id.currency_id.id
 			# create the analytical lines
@@ -696,6 +700,10 @@ class account_invoice_tax(osv.osv):
 		'tax_code_id': fields.many2one('account.tax.code', 'Tax Code'),
 		'tax_amount': fields.float('Tax Code Amount', digits=(16,2)),
 	}
+	def base_change(self, cr, uid, ids, base):
+		return {'value': {'base_amount':base}}
+	def amount_change(self, cr, uid, ids, amount):
+		return {'value': {'tax_amount':amount}}
 	_order = 'sequence'
 	_defaults = {
 		'manual': lambda *a: 1,
@@ -719,4 +727,9 @@ class account_invoice_tax(osv.osv):
 		return res
 account_invoice_tax()
 
+class account_invoice_supplier(osv.osv):
+	_inherit = 'account.invoice'
+	_columns = {
+	}
+account_invoice_supplier()
 
