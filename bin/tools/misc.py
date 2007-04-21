@@ -40,6 +40,8 @@ import netsvc
 from config import config
 #import tools
 
+import zipfile
+
 if sys.version_info[:2] < (2, 4):
 	from threadinglocal import local
 else:
@@ -58,8 +60,15 @@ def init_db(cr):
 
 	for i in os.listdir(ad):
 		terp_file = opj(ad, i, '__terp__.py')
+		mod_path = opj(ad, i)
+		info = False
 		if os.path.isfile(terp_file):
 			info = eval(file(terp_file).read())
+		elif zipfile.is_zipfile(mod_path):
+			zfile = zipfile.ZipFile(mod_path)
+			i = os.path.splitext(i)[0]
+			info = eval(zfile.read(opj(i, '__terp__.py')))
+		if info:
 			categs = info.get('category', 'Uncategorized').split('/')
 			p_id = None
 			while categs:
@@ -152,8 +161,29 @@ def exec_command_pipe(name, *args):
 
 def file_open(name, mode="r", subdir='addons'):
 	"""Open a file from the Tiny ERP root, using a subdir folder."""
-	name = os.path.join(config['root_path'], subdir, name)
-	return file(name, mode)
+	if subdir:
+		name = os.path.join(config['root_path'], subdir, name)
+	else:
+		name = os.path.join(config['root_path'], name)
+	if os.path.isfile(name):
+		return file(name, mode)
+
+	# Check for a zipfile in the path
+	head = name
+	name = False
+	while True:
+		head, tail = os.path.split(head)
+		if not tail:
+			break
+		if name:
+			name = os.path.join(tail, name)
+		else:
+			name = tail
+		if zipfile.is_zipfile(head):
+			import StringIO
+			zfile = zipfile.ZipFile(head)
+			return StringIO.StringIO(zfile.read(os.path.join(os.path.basename(head), name)))
+	return None
 
 #----------------------------------------------------------
 # Emails

@@ -31,6 +31,7 @@ import urllib
 import os
 import tools
 from osv import fields, osv, orm
+import zipfile
 
 class module_repository(osv.osv):
 	_name = "ir.module.repository"
@@ -40,16 +41,6 @@ class module_repository(osv.osv):
 		'url': fields.char('Url', size=256, required=True),
 	}
 module_repository()
-
-def get_module_info(name):
-	try:
-		f = file(os.path.join(tools.config['addons_path'], name, '__terp__.py'), 'r')
-		data = f.read()
-		info = eval(data)
-		f.close()
-	except:
-		return {}
-	return info
 
 class module_category(osv.osv):
 	_name = "ir.module.category"
@@ -76,11 +67,21 @@ module_category()
 class module(osv.osv):
 	_name = "ir.module.module"
 	_description = "Module"
-	
+
+	def get_module_info(self, name):
+		try:
+			f = tools.file_open(os.path.join(tools.config['addons_path'], name, '__terp__.py'))
+			data = f.read()
+			info = eval(data)
+			f.close()
+		except:
+			return {}
+		return info
+
 	def _get_installed_version(self, cr, uid, ids, field_name=None, arg=None, context={}):
 		res = {}
 		for m in self.browse(cr, uid, ids):
-			res[m.id] = get_module_info(m.name).get('version', False)
+			res[m.id] = self.get_module_info(m.name).get('version', False)
 		return res
 
 	_columns = {
@@ -166,7 +167,7 @@ class module(osv.osv):
 		langs = [l[0] for l in cr.fetchall()]
 		modules = self.read(cr, uid, ids, ['name'])
 		for module in modules: 
-			files = get_module_info(module['name']).get('translations', {})
+			files = self.get_module_info(module['name']).get('translations', {})
 			for lang in langs:
 				if files.has_key(lang):
 					filepath = files[lang]
@@ -183,18 +184,37 @@ class module(osv.osv):
 
 		# iterate through installed modules and mark them as being so
 		for name in os.listdir(adp):
-			if os.path.isdir(os.path.join(adp, name)):
-				version = get_module_info(name).get('version', False)
-				if version:
-					ids = self.search(cr, uid, [('name','=',name)])
-					if not ids:
-						id = self.create(cr, uid, {
-							'name': name,
-							'latest_version': version,
-							'state': 'installed',
-						})
-					else:
-						self.write(cr, uid, ids, {'state': 'installed'})
+			ids = self.search(cr, uid, [('name','=',name)])
+			if ids:
+				terp = self.get_module_info(name)
+				if terp.get('installable', True) and self.read(cr, uid, ids, ['state'])[0]['state'] == 'uninstallable':
+					self.write(cr, uid, [ids], {'state': 'uninstalled'})
+				continue
+			terp_file = os.path.join(adp, name, '__terp__.py')
+			mod_path = os.path.join(adp, name)
+			if os.path.isdir(mod_path) or zipfile.is_zipfile(mod_path):
+				terp = self.get_module_info(name)
+				if not terp or not terp.get('installable', True):
+					continue
+				try:
+					import imp
+					# XXX must restrict to only addons paths
+					imp.load_module(name, *imp.find_module(name))
+				except ImportError:
+					import zipimport
+					mod_path = os.path.join(adp, name)
+					zimp = zipimport.zipimporter(mod_path)
+					zimp.load_module(name)
+				version = terp.get('version', False)
+				id = self.create(cr, uid, {
+					'name': name,
+					'state': 'uninstalled',
+					'description': terp.get('description', ''),
+					'shortdesc': terp.get('name', ''),
+					'author': terp.get('author', 'Unknown')
+				})
+				for d in terp.get('depends', []):
+					cr.execute('INSERT INTO ir_module_module_dependency (module_id, name) values (%s, %s)', (id, d))
 		
 		# make the list of all installable modules
 		for repository in robj.browse(cr, uid, robj.search(cr, uid, [])):
@@ -233,7 +253,7 @@ class module(osv.osv):
 					if tarinfo.name.endswith('__terp__.py'):
 						info = eval(tar.extractfile(tarinfo).read())
 			elif os.path.isdir(os.path.join(adp, module.name)):
-				info = get_module_info(module.name)
+				info = self.get_module_info(module.name)
 			if info:
 				categ = info.get('category', 'Unclassified')
 				parent = False

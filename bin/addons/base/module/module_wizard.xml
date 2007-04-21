@@ -7,19 +7,17 @@
 			model="ir.module.module"
 			name="module.info_get"/>
 
-		<!--
 		<record model="ir.actions.wizard" id="wizard_update">
 			<field name="name">Download module list</field>
 			<field name="wiz_name">module.module.update</field>
 		</record>
 		<menuitem
-			name="Administration/Module Management/Download module list"
+			name="Administration/Modules Management/Update modules list"
 			action="wizard_update"
 			type="wizard"
 			groups="admin"
 			icon="STOCK_CONVERT"
 			id="menu_module_update"/>
-		-->
 
 		<record model="ir.actions.wizard" id="wizard_upgrade">
 			<field name="name">Apply marked changes</field>
@@ -41,7 +39,7 @@
 			id="menu_wizard_lang_install"
 			type="wizard"/>
 
-		<record model="ir.actions.wizard" id="wizard_scan_addons">
+		<!--record model="ir.actions.wizard" id="wizard_scan_addons">
 			<field name="name">Scan 'addons' path</field>
 			<field name="wiz_name">module.module.scan</field>
 		</record>
@@ -49,7 +47,7 @@
 			name="Administration/Modules Management/Update modules list"
 			action="wizard_scan_addons"
 			id="menu_wizard_module_scan"
-			type="wizard" />
+			type="wizard" /-->
 
 		<record model="ir.actions.wizard" id="wizard_lang_export">
 			<field name="name">Export a language</field>

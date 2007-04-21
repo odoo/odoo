@@ -29,26 +29,38 @@
 
 import wizard
 import netsvc
+import pooler
 
 class wizard_update_module(wizard.interface):
+
+	arch = '''<?xml version="1.0"?>
+<form string="Scan for new modules">
+  <label string="This function will check for new modules in the 'addons' path and on module repository." colspan="4" />
+</form>
+	'''
+	fields = {}
+
 	def _update_module(self, cr, uid, data, context):
-		service = netsvc.LocalService("object_proxy")
-		service.execute(cr.dbname, uid, 'ir.module.module', 'update_list')
+		pooler.get_pool(cr.dbname).get('ir.module.module').update_list(cr, uid)
 		return {}
 
 	def _action_module_open(self, cr, uid, data, context):
 		return {
 			'domain': "[]",
 			'name': 'Open Module List',
-			'view_type': 'form',
-			'view_mode': 'tree,form',
-			'res_model': 'ir.module.module',
+			'view_type': 'tree',
+			'res_model': 'ir.module.category',
+			'domain': "[('parent_id', '=', False)]",
 			'view_id': False,
 			'type': 'ir.actions.act_window'
 		}
 
 	states = {
 		'init': {
+			'actions': [],
+			'result': {'type': 'form', 'arch': arch, 'fields': fields, 'state': [('end', 'Cancel', 'gtk-cancel'), ('update', 'Check new modules', 'gtk-ok')]}
+		},
+		'update': {
 			'actions': [_update_module], 
 			'result': {'type':'state', 'state':'open_window'}
 		},

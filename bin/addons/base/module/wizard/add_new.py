@@ -46,16 +46,6 @@ _info_arch = '''<?xml version="1.0"?>
 '''
 _info_fields = {}
 
-def get_module_info(name):
-	try:
-		f = file(os.path.join(tools.config['addons_path'], name, '__terp__.py'), 'r')
-		data = f.read()
-		info = eval(data)
-		f.close()
-	except:
-		return {}
-	return info
-
 class wizard_install_module(wizard.interface):
 	def watch_dir(self, cr, uid, data, context):
 		mod_obj = pooler.get_pool(cr.dbname).get('ir.module.module')
@@ -66,7 +56,7 @@ class wizard_install_module(wizard.interface):
 		for module in modules:
 			if module in known_modules:
 				continue
-			terp = get_module_info(module)
+			terp = mod_obj.get_module_info(module)
 			if not terp.get('installable', True):
 				continue
 			imp.load_module(module, *imp.find_module(module))
@@ -80,7 +70,7 @@ class wizard_install_module(wizard.interface):
 			for d in dependencies:
 				cr.execute('insert into ir_module_module_dependency (module_id,name) values (%s, %s)', (mod_id, d))
 		for module in known_modules:
-			terp = get_module_info(module)
+			terp = mod_obj.get_module_info(module)
 			if terp.get('installable', True):
 				for mod in all_mods:
 					if mod['name'] == module and mod['state'] == 'uninstallable':

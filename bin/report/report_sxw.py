@@ -303,7 +303,7 @@ class report_sxw(report_rml):
 		return table_obj.browse(cr, uid, ids, list_class=browse_record_list, context=context)
 
 	def create(self, cr, uid, ids, data, context={}):
-		rml = file(os.path.join(tools.config['root_path'], self.tmpl)).read()
+		rml = tools.file_open(self.tmpl, subdir=None).read()
 
 		rml_parser = self.parser(cr, uid, self.name2, context)
 		objs = self.getObjects(cr, uid, ids, context)
