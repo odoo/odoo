@@ -57,7 +57,7 @@ class report_printscreen_list(report_int):
 		return result
 
 	def _parse_string(self, view):
-		dom = minidom.parseString(view)
+		dom = minidom.parseString(view.encode('utf-8'))
 		return self._parse_node(dom)
 
 	def create(self, cr, uid, ids, datas, context={}):
