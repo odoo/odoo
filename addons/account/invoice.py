@@ -83,7 +83,7 @@ class account_invoice(osv.osv):
 	_description = 'Invoice'
 	_order = "number"
 	_columns = {
-		'name': fields.char('Invoice Description', size=64, required=True, select=True,readonly=True, states={'draft':[('readonly',False)]}),
+		'name': fields.char('Description', size=64, select=True,readonly=True, states={'draft':[('readonly',False)]}),
 		'origin': fields.char('Origin', size=64),
 		'type': fields.selection([
 			('out_invoice','Customer Invoice'),
@@ -104,7 +104,6 @@ class account_invoice(osv.osv):
 			('cancel','Canceled')
 		],'State', select=True, readonly=True),
 
-		'check_total': fields.float('Total', digits=(16,2)),
 		'date_invoice': fields.date('Date Invoiced', required=True, states={'open':[('readonly',True)],'close':[('readonly',True)]}),
 		'date_due': fields.date('Due Date', states={'open':[('readonly',True)],'close':[('readonly',True)]}),
 
@@ -131,6 +130,8 @@ class account_invoice(osv.osv):
 		'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
 		'journal_id': fields.many2one('account.journal', 'Journal', required=True, relate=True,readonly=True, states={'draft':[('readonly',False)]}),
 		'company_id': fields.many2one('res.company', 'Company', required=True),
+
+		'check_total': fields.float('Total', digits=(16,2)),
 	}
 	_defaults = {
 		'type': lambda *a: 'out_invoice',
@@ -262,7 +263,6 @@ class account_invoice(osv.osv):
 		for inv in self.browse(cr, uid, ids):
 			if inv.move_id:
 				continue
-			print inv.check_amount, inv.amount_total
 			if inv.check_total <> inv.amount_total:
 				raise osv.except_osv('Bad total !', 'Please verify the price of the invoice !\nThe real total does not match the computed total.')
 
@@ -315,7 +315,7 @@ class account_invoice(osv.osv):
 					total_currency -= i['amount_currency'] or i['price']
 			acc_id = inv.account_id.id
 
-			name = inv['name']
+			name = inv['name'] or '/'
 			if inv.payment_term:
 				totlines = self.pool.get('account.payment.term').compute(cr, uid, inv.payment_term.id, total)
 				res_amount_currency = total_currency
@@ -726,10 +726,4 @@ class account_invoice_tax(osv.osv):
 			})
 		return res
 account_invoice_tax()
-
-class account_invoice_supplier(osv.osv):
-	_inherit = 'account.invoice'
-	_columns = {
-	}
-account_invoice_supplier()
 

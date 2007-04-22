@@ -126,29 +126,31 @@
 			<form string="Supplier invoice">
 			<notebook>
 				<page string="Invoice">
-					<field name="name" select="1"/>
+					<field name="journal_id" select="1"/>
 					<field name="type" select="1"/>
 					<field name="partner_id" on_change="onchange_partner_id(type,partner_id)" select="1"/>
 					<field name="address_invoice_id" domain="[('partner_id','=',partner_id)]"/>
 					<field name="account_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" />
 					<field name="date_due" select="1"/>
 
-					<field name="journal_id" select="1"/>
-					<field name="number" select="1"/>
 
 					<field name="check_total"/>
 					<field name="currency_id" on_change="onchange_currency_id(currency_id)" select="1"/>
 
+					<field name="name" select="1"/>
+					<field name="number" select="1"/>
+
 					<field name="invoice_line" nolabel="1" colspan="4">
 						<tree string="Invoice lines" editable="bottom">
-							<field name="name"/>
- 
+							<field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id)"/>
 							<field name="account_id" on_change="onchange_account_id(parent.partner_id,account_id)" domain="[('company_id', '=', parent.company_id),('journal_id','=',parent.journal_id)]"/>
-							<field name="invoice_line_tax_id"/>
+							<field name="invoice_line_tax_id" view_mode="2"/>
 							<field name="account_analytic_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)]" />
 							<field name="quantity"/>
-							<field name="price_unit"/>
+							<field name="price_unit"/> <!-- Removed if subtotal is set -->
 							<field name="price_subtotal"/>
+							<field name="name"/>
+							<field name="uos_id" invisible="True"/>
 						</tree>
 					</field>
 					<group col="2" colspan="2">
@@ -165,8 +167,8 @@
 					</group>
 					<group col="4" colspan="2">
 						<field name="amount_untaxed"/>
-						<field name="amount_total"/>
 						<field name="amount_tax"/>
+						<field name="amount_total"/>
 						<button name="button_compute" string="Compute taxes" states="draft" type="object" colspan="2"/>
 						<field name="state" select="1" colspan="3"/>
 						<newline/>
@@ -282,7 +284,7 @@
 	<menuitem name="Financial Management/Invoices/Customers Invoices" id="menu_action_invoice_tree1" action="action_invoice_tree1"/>
 	
 	<record model="ir.actions.act_window" id="action_invoice_tree2">
-		<field name="name">account.invoice</field>
+		<field name="name">account.invoice.supplier</field>
 		<field name="res_model">account.invoice</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">form,tree</field>
