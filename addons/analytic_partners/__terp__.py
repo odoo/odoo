@@ -15,7 +15,7 @@
 
 	It's usefull to give to all members of a project, so that they
 	get the contacts of all suppliers in this project.
-	"""
+	""",
 	"demo_xml" : [],
 	"update_xml" : ["analytic_partners_view.xml",
                         "analytic_partners_report.xml"],

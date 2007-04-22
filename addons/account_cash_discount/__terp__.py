@@ -12,7 +12,7 @@
 		* A number of days,
 		* A discount (%),
 		* A debit and a credit account
-	"""
+	""",
 	"init_xml" : [
 	],
 	"demo_xml" : [
