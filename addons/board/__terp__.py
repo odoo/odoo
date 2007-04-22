@@ -6,6 +6,7 @@
 	"depends":["base"],
 	"demo_xml":[],
 	"update_xml":["board_view.xml"],
+	"description": "Base module for all dashboards.",
 	"active":False,
 	"installable":True,
 }
