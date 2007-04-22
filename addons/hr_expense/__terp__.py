@@ -5,7 +5,20 @@
 	"category" : "Generic Modules/Human Resources",
 	"website" : "http://tinyerp.com/module_hr.html",
 	"depends" : ["hr","account", "account_tax_include",],
-	"module": "This module manage the whole expenses flow. It also uses the cost accounting to put costs on analytic accounts.",
+	"description": """
+	This module aims to manage employee's expenses.
+
+	The whole workflow is implemented:
+	* Draft expense
+	* Confirmation of the sheet by the employee
+	* Validation by his manager
+	* Validation by the accountant and invoice creation
+	* Payment of the invoice to the employee
+
+	This module also use the analytic accounting and is compatible with
+	the invoice on timesheet module so that you will be able to automatcally
+	re-invoice your customer's expenses if your work by project.
+	""",
 	"init_xml" : [],
 	"demo_xml" : [],
 	#"demo_xml" : ["hr_expense_demo.xml", "hr.expense.expense.csv"],
