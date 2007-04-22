@@ -3,7 +3,7 @@
 	"version" : "1.0",
 	"depends" : ["account"],
 	"author" : "Tiny",
-	"description": "
+	"description": """
 	Modules to automate letters for unpaid invoices, with multi-level recalls.
 
 	You can define your multiple levels of recall through the menu:
@@ -15,7 +15,7 @@
 
 	It will generate a PDF with all the letters according the the
 	different levels of recall defined. You can define different policies
-	for different companies.",
+	for different companies.""",
 	"website" : "http://tinyerp.com/module_account.html",
 	"category" : "Generic Modules/Accounting",
 	"init_xml" : [],

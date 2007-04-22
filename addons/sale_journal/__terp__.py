@@ -33,7 +33,7 @@
 	* monthly invoicing, ...
 
 	Some statistics by journals are provided.
-	"""
+	""",
 	"active": False,
 	"installable": True
 }
