@@ -7,6 +7,13 @@
 	"category" : "Generic Modules/Sales & Purchases",
 	"init_xml" : [],
 	"demo_xml" : ["sale_demo.xml"],
+	"description": """
+	The base module to manage quotations and sales orders.
+
+	* Workflow
+	* Invoicing methods
+	* Delivery methods
+	""",
 	"update_xml" : [
 		"sale_workflow.xml",
 		"sale_sequence.xml",
