@@ -6,6 +6,13 @@
 	"website" : "http://tinyerp.com/module_hr.html",
 	"depends" : ["hr_contract"],
 	"module": "",
+	"description": """
+	This module is a reservation system on employees.
+
+	You can assign an employee to a poste or a department for a
+	defined period. This module is used to track availability and
+	reservations on human ressources.
+	""",
 	"init_xml" : [],
 	"demo_xml" : [],
 	"update_xml" : ["hr_contract_available_view.xml"],

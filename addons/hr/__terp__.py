@@ -4,7 +4,15 @@
 	"author" : "Tiny",
 	"category" : "Generic Modules/Human Resources",
 	"website" : "http://tinyerp.com/module_hr.html",
-	"description": "Module for human ressource management",
+	"description": """
+	Module for human ressource management. You can manage:
+	* Employees and hyerarchies
+	* Work hours sheets
+	* Attendances and sign in/out system
+	* Holidays
+
+	Different reports are also provided, mainly for attendance statistics.
+	""",
 	"depends" : ["base"],
 	"init_xml" : [],
 	"demo_xml" : ["hr_demo.xml", "hr_bel_holidays_2005.xml"],
