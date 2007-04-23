@@ -63,10 +63,12 @@ class lang(osv.osv):
 		'code': fields.char('Code', size=5, required=True),
 		'translatable': fields.boolean('Translatable'),
 		'active': fields.boolean('Active'),
+		'direction': fields.selection([('ltr', 'Left-to-right'), ('rtl', 'Right-to-left')], 'Direction',resuired=True),
 	}
 	_defaults = {
 		'active': lambda *a: 1,
 		'translatable': lambda *a: 0,
+		'direction': lambda *a: 'ltr',
 	}
 lang()
 
