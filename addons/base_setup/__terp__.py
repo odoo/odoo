@@ -4,7 +4,19 @@
 	"author" : "Tiny",
 	"website" : "http://tinyerp.com",
 	"category" : "Generic Modules/Base",
-	"description": "This module adds a wizard when the user connects for the first time in the system. If you do not want this setup wizard at first connection, just desactivate this module.",
+	"description": """
+	This module implements a configuration system that helps user
+	to configure the system at the installation of a new database.
+
+	It allows you to select between a list of profiles to install:
+	* Minimal profile
+	* Accounting only
+	* Services companies
+	* Manufacturing companies
+
+	It also asks screens to help easily configure your company, the header and
+	footer, the account chart to install and the language.
+	""",
 	"depends" : ["base"],
 	"init_xml" : [
 		"base_setup_data.xml",

@@ -10,9 +10,18 @@
 	"description": """
 	The base module to manage quotations and sales orders.
 
-	* Workflow
-	* Invoicing methods
-	* Delivery methods
+	* Workflow with validation steps:
+		- Quotation -> Sale order -> Invoice
+	* Invoicing methods:
+		- Invoice on order (before or after shipping)
+		- Invoice on delivery
+		- Invoice on timesheets
+		- Advance invoice
+	* Partners preferences (shipping, invoicing, incoterm, ...)
+	* Products stocks and prices
+	* Delivery methods:
+		- all at once, multi-parcel
+		- delivery costs
 	""",
 	"update_xml" : [
 		"sale_workflow.xml",

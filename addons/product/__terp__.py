@@ -9,10 +9,20 @@
 	"description": """
 	This is the base module to manage products and pricelists in Tiny ERP.
 
-	To detail: products
-	To detail: pricelists
+	Products support variants, different pricing methods, suppliers
+	information, make to stock/order, different unit of measures,
+	packagins and properties.
 
-	Reports: ...
+	Pricelists supports:
+	* Multiple-level of discount (by product, category, quantities)
+	* Compute price based on different criterions:
+		* Other pricelist,
+		* Cost price,
+		* List price,
+		* Supplier price, ...
+	Pricelists preferences by product and/or partners.
+
+	Print product labels with barcodes.
 	""",
 	"update_xml" : ["product_data.xml","product_report.xml", "product_wizard.xml","product_view.xml", "pricelist_view.xml"],
 	"active": False,

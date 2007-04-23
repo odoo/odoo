@@ -262,7 +262,7 @@ class crm_case(osv.osv):
 		'priority': lambda *a: AVAILABLE_PRIORITIES[1][0],
 		'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
 	}
-	_order = 'priority, date_deadline, id'
+	_order = 'priority, date_deadline desc, id desc'
 	def _action(self, cr, uid, cases, state_to, scrit=[], context={}):
 		action_ids = self.pool.get('crm.case.rule').search(cr, uid, scrit)
 		level = MAX_LEVEL
