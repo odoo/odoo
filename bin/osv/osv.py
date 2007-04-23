@@ -86,7 +86,7 @@ class osv_pool(netsvc.Service):
 			return res
 		except orm.except_orm, inst:
 			#self.abortResponse(1, inst.value[0], inst.name, inst.value[1])
-			self.abortResponse(1, inst.value[0], 'warning', inst.value[1])
+			self.abortResponse(1, inst.name, 'warning', inst.value)
 		except except_osv, inst:
 			self.abortResponse(1, inst.name, inst.exc_type, inst.value)
 		except psycopg.IntegrityError, inst:

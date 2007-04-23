@@ -56,13 +56,11 @@ class res_company(osv.osv):
 	_get_company_children = tools.cache()(_get_company_children)
 
 	def _get_partner_hierarchy(self, cr, uid, company_id, context={}):
-		print "Company ID is %s: Looking for parent..." % company_id
 		if company_id:
 			parent_id = self.browse(cr, uid, company_id)['parent_id']
 			if parent_id:
 				return self._get_partner_hierarchy(cr, uid, parent_id.id, context)
 			else:
-				print "No parent: starting descendance search!"
 				return self._get_partner_descendance(cr, uid, company_id, [], context)
 		return []
 
@@ -70,7 +68,6 @@ class res_company(osv.osv):
 		descendance.append(self.browse(cr, uid, company_id).partner_id.id)
 		for child_id in self._get_company_children(cr, uid, company_id):
 			if child_id != company_id:
-				print "Hello, I'm %s, child of %s" % (child_id, company_id)
 				descendance = self._get_partner_descendance(cr, uid, child_id, descendance)
 		return descendance
 

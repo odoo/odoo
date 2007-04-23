@@ -380,4 +380,18 @@ def scan_languages():
 	lang_dict = get_languages()
 	return [(lang, lang_dict.get(lang, lang)) for lang in file_list]
 
+
+def get_user_companies(cr, user):
+	def _get_company_children(cr, ids):
+		if not ids:
+			return []
+		cr.execute('SELECT id FROM res_company WHERE parent_id = any(array[%s])' %(','.join([str(x) for x in ids]),))
+		res=[x[0] for x in cr.fetchall()]
+		res.extend(_get_company_children(cr, res))
+		return res
+	cr.execute('SELECT comp.id FROM res_company AS comp, res_users AS u WHERE u.id = %d AND comp.id = u.company_id' % (user,))
+	compids=[cr.fetchone()[0]]
+	compids.extend(_get_company_children(cr, compids))
+	return compids
+
 # vim:noexpandtab

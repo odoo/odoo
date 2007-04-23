@@ -173,6 +173,13 @@ class browse_record(object):
 					if isinstance(f, fields.many2one) or isinstance(f, fields.one2one):
 						if data[n]:
 							obj = self._table.pool.get(f._obj)
+							compids=False
+							if 'company_id' in obj._columns and not self._uid == 1:
+								compids = tools.get_user_companies(self._cr, self._uid)
+								if compids:
+									self._cr.execute('SELECT id FROM '+obj._table+' where id = %d AND  (company_id in ('+','.join(map(str,compids))+') or company_id is null)', (data[n],))
+									if not self._cr.fetchall():
+										raise except_orm('BrowseError', 'Object %s (id:%d) is linked to the object %s (id:%d) that is not in your company' %(self._table._description, self._id, obj._description, data[n]))
 							data[n] = browse_record(self._cr, self._uid, data[n], obj, self._cache, context=self._context, list_class=self._list_class)
 						else:
 							data[n] = browse_null()
@@ -703,14 +710,25 @@ class orm(object):
 		if fields==None:
 			fields = self._columns.keys()
 
+		# if the object has a field named 'company_id', filter out all
+		# records which do not concern the current company (the company
+		# of the current user) or its "childs"
+		company_clause='true'
+		compids=False
+		if 'company_id' in self._columns and not user == 1:
+			compids = tools.get_user_companies(cr, user)
+			if compids:
+				company_clause = '(company_id in ('+','.join(map(str,compids))+') or company_id is null)'
+
 		# all inherited fields + all non inherited fields for which the attribute whose name is in load is True
 		fields_pre = filter(lambda x: x in self._columns and getattr(self._columns[x],'_classic_write'), fields) + self._inherits.values()
 
-		if len(fields_pre):
-			cr.execute('select %s from %s where id = any(array[%s]) order by %s' % (','.join(fields_pre + ['id']), self._table, ','.join([str(x) for x in ids]), self._order))
-		
-			if not cr.rowcount:
-				return []
+		if len(fields_pre) or compids:
+			cr.execute('select %s from %s where id = any(array[%s]) and %s order by %s' % (','.join(fields_pre + ['id']), self._table, ','.join([str(x) for x in ids]), company_clause, self._order))
+			uniq_id = []
+			[uniq_id.append(i) for i in ids if not uniq_id.count(i)]
+			if not cr.rowcount == len(uniq_id) and compids:
+				raise except_orm('ReadError', 'You try to read objects (%s) that is not in your company' % self._description)
 			res = cr.dictfetchall()
 		else:
 			res = map(lambda x: {'id':x}, ids)
@@ -1363,8 +1381,8 @@ class orm(object):
 		# if the object has a field named 'company_id', filter out all
 		# records which do not concern the current company (the company
 		# of the current user) or its "childs"
-		if 'company_id' in self._columns:
-			compids = self.pool.get('res.company')._get_child_ids(cr, user, user)
+		if 'company_id' in self._columns and not user == 1:
+			compids = tools.get_user_companies(cr, user)
 			if compids:
 				compids.append(False)
 				args.append(('company_id','in',compids))
