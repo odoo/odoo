@@ -19,7 +19,14 @@
 				<field name="date_start"/>
 				<field name="date_stop"/>
 				<separator string="Periods" colspan="4"/>
-				<field name="period_ids" colspan="3" widget="one2many_list"/>
+				<field name="period_ids" colspan="3" widget="one2many_list">
+					<form string="Period">
+						<field name="name" select="1"/>
+						<field name="code" select="1"/>
+						<field name="date_start"/>
+						<field name="date_stop"/>
+					</form>
+				</field>
 				<separator string="States" colspan="4"/>
 				<field name="state" select="1"/>
 				<group col="2" colspan="2">

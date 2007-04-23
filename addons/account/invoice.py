@@ -60,8 +60,12 @@ class account_invoice(osv.osv):
 	def _get_journal(self, cr, uid, context):
 		type_inv = context.get('type', 'out_invoice')
 		type2journal = {'out_invoice': 'sale', 'in_invoice': 'purchase', 'out_refund': 'sale', 'in_refund': 'purchase'}
-		cr.execute("select id from account_journal where type=%s limit 1", (type2journal.get(type_inv, 'sale'),))
-		return cr.fetchone()[0]
+		journal_obj = self.pool.get('account.journal')
+		res = journal_obj.search(cr, uid, [('type', '=', type2journal.get(type_inv, 'sale'))], limit=1)
+		if res:
+			return res[0]
+		else:
+			return False
 	
 	def _get_currency(self, cr, uid, context):
 		user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, [uid])[0]
@@ -131,7 +135,6 @@ class account_invoice(osv.osv):
 		'journal_id': fields.many2one('account.journal', 'Journal', required=True, relate=True,readonly=True, states={'draft':[('readonly',False)]}),
 		'company_id': fields.many2one('res.company', 'Company', required=True),
 
-		'check_total': fields.float('Total', digits=(16,2)),
 	}
 	_defaults = {
 		'type': lambda *a: 'out_invoice',
@@ -263,8 +266,6 @@ class account_invoice(osv.osv):
 		for inv in self.browse(cr, uid, ids):
 			if inv.move_id:
 				continue
-			if inv.check_total <> inv.amount_total:
-				raise osv.except_osv('Bad total !', 'Please verify the price of the invoice !\nThe real total does not match the computed total.')
 
 			company_currency = inv.account_id.company_id.currency_id.id
 			# create the analytical lines
@@ -522,6 +523,24 @@ class account_invoice(osv.osv):
 		self.pool.get('account.move.line').reconcile(cr, uid, line_ids, 'manual', writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context)
 		return True
 account_invoice()
+
+class account_invoice_supplier(osv.osv):
+	_name = "account.invoice.supplier"
+	_description = "Supplier invoice"
+	_inherits = {'account.invoice': 'account_invoice_id'}
+	_columns = {
+		'account_invoice_id': fields.many2one('account.invoice', 'Account invoice', required=True),
+		'check_total': fields.float('Total', digits=(16,2)),
+	}
+
+	def action_move_create(self, cr, uid, ids, context={}):
+		for inv in self.browse(cr, uid, ids):
+			if inv.move_id:
+				continue
+			if inv.check_total <> inv.amount_total:
+				raise osv.except_osv('Bad total !', 'Please verify the price of the invoice !\nThe real total does not match the computed total.')
+		return super(account_invoice_supplier, self).action_move_create(cr, uid, ids, context=context)
+account_invoice_supplier()
 
 class account_invoice_line(osv.osv):
 	def _amount_line(self, cr, uid, ids, prop, unknow_none,unknow_dict):

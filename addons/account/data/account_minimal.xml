@@ -12,6 +12,7 @@
 			<field name="type">receivable</field>
 			<field name="currency_id" ref="base.EUR"/>
 			<field name="parent_id" eval="[(6,0,[])]"/>
+			<field name="company_id" ref="base.main_company"/>
 		</record>
 		<record model="account.account" id="a_pay">
 			<field name="name">Main Payable</field>
@@ -19,6 +20,7 @@
 			<field name="type">payable</field>
 			<field name="currency_id" ref="base.EUR"/>
 			<field name="parent_id" eval="[(6,0,[])]"/>
+			<field name="company_id" ref="base.main_company"/>
 		</record>
 
 		<record model="account.account" id="cash">
@@ -27,22 +29,25 @@
 			<field name="type">cash</field>
 			<field name="currency_id" ref="base.EUR"/>
 			<field name="parent_id" eval="[(6,0,[])]"/>
+			<field name="company_id" ref="base.main_company"/>
 		</record>
 
-			<record model="account.account" id="a_expense">
-				<field name="name">Products Purchase</field>
-				<field name="code">600</field>
-				<field name="type">expense</field>
-				<field name="currency_id" ref="base.EUR"/>
-				<field name="parent_id" eval="[(6,0,[])]"/>
-			</record>
-			<record model="account.account" id="a_sale">
-				<field name="name">Products Sales</field>
-				<field name="code">701</field>
-				<field name="type">income</field>
-				<field name="currency_id" ref="base.EUR"/>
-				<field name="parent_id" eval="[(6,0,[])]"/>
-			</record>
+		<record model="account.account" id="a_expense">
+			<field name="name">Products Purchase</field>
+			<field name="code">600</field>
+			<field name="type">expense</field>
+			<field name="currency_id" ref="base.EUR"/>
+			<field name="parent_id" eval="[(6,0,[])]"/>
+			<field name="company_id" ref="base.main_company"/>
+		</record>
+		<record model="account.account" id="a_sale">
+			<field name="name">Products Sales</field>
+			<field name="code">701</field>
+			<field name="type">income</field>
+			<field name="currency_id" ref="base.EUR"/>
+			<field name="parent_id" eval="[(6,0,[])]"/>
+			<field name="company_id" ref="base.main_company"/>
+		</record>
 
 	<record model="ir.property" id="property_account_receivable" forcecreate="True">
 		<field name="name">property_account_receivable</field>

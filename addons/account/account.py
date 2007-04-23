@@ -406,17 +406,10 @@ class account_fiscalyear(osv.osv):
 		'date_stop': fields.date('End date', required=True),
 		'period_ids': fields.one2many('account.period', 'fiscalyear_id', 'Periods'),
 		'state': fields.selection([('draft','Draft'), ('done','Done')], 'State', redonly=True),
-		'company_id': fields.many2one('res.company', 'Company', required=True),
 	}
 
-	def _default_company(self, cr, uid, context={}):
-		user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-		if user.company_id:
-			return user.company_id.id
-		return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
 	_defaults = {
 		'state': lambda *a: 'draft',
-		'company_id': _default_company,
 	}
 	_order = "code"
 	def create_period3(self,cr, uid, ids, context={}):

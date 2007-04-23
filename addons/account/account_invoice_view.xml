@@ -120,7 +120,7 @@
 
 	<record model="ir.ui.view" id="invoice_supplier_form">
 		<field name="name">account.invoice.supplier.form</field>
-		<field name="model">account.invoice</field>
+		<field name="model">account.invoice.supplier</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Supplier invoice">
@@ -285,7 +285,7 @@
 	
 	<record model="ir.actions.act_window" id="action_invoice_tree2">
 		<field name="name">account.invoice.supplier</field>
-		<field name="res_model">account.invoice</field>
+		<field name="res_model">account.invoice.supplier</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">form,tree</field>
 		<field name="view_id" eval="invoice_supplier_form"/>

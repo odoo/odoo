@@ -574,9 +574,10 @@ class sale_order_line(osv.osv):
 				if line.product_id:
 					a =  line.product_id.product_tmpl_id.property_account_income
 					if not a:
-						a = line.product_id.categ_id.property_account_income_categ[0]
-					else:
-						a = a[0]
+						a = line.product_id.categ_id.property_account_income_categ
+					if not a:
+						raise osv.except_osv('Error !', 'There is no income account define for this product: "%s" (id:%d)' % (line.product_id.name, line.product_id.id,))
+					a = a[0]
 				else:
 					a = self.pool.get('ir.property').get(cr, uid, 'property_account_income_categ', 'product.category', context=context)
 				uosqty = _get_line_qty(line)
