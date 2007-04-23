@@ -179,7 +179,7 @@ class browse_record(object):
 								if compids:
 									self._cr.execute('SELECT id FROM '+obj._table+' where id = %d AND  (company_id in ('+','.join(map(str,compids))+') or company_id is null)', (data[n],))
 									if not self._cr.fetchall():
-										raise except_orm('BrowseError', 'Object %s (id:%d) is linked to the object %s (id:%d) that is not in your company' %(self._table._description, self._id, obj._description, data[n]))
+										raise except_orm('BrowseError', 'Object %s (id:%d) is linked to the object %s (id:%d) which is not in your company' %(self._table._description, self._id, obj._description, data[n]))
 							data[n] = browse_record(self._cr, self._uid, data[n], obj, self._cache, context=self._context, list_class=self._list_class)
 						else:
 							data[n] = browse_null()

@@ -286,7 +286,7 @@ class many2one(_column):
 				try:
 					names[id] = dict(obj.name_get(cr, user, [id], context))[id]
 				except except_orm:
-					names[id] = "===Access error==="
+					names[id] = "== Access denied =="
 		for r in res.keys():
 			if res[r] and res[r] in names:
 				res[r] = (res[r], names[res[r]])
