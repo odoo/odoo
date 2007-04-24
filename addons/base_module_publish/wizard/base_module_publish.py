@@ -87,11 +87,17 @@ upload_info_form = '''<?xml version="1.0"?>
 	<label align="0.0" colspan="2" string="(Keep empty for an auto upload of the module)"/>
 </form>'''
 
+def _get_selection(*Args):
+	import urllib
+	a = urllib.urlopen('http://www.tinyerp.com/mtree_interface.php')
+	res = filter(None, a.read().split('\n'))
+	return map(lambda x:x.split('='), res)
+
 upload_info_fields = {
 	'login': {'string':'Login', 'type':'char', 'size':32, 'required':True},
 	'password': {'string':'Password', 'type':'char', 'size':32, 'required':True},
 	'category': {'string':'Category', 'type':'selection', 'size':64, 'required':True,
-		'selection': [(0, 'Selection 1'), (1,'Selcetion 2')]
+		'selection': _get_selection
 	},
 	'licence': {
 		'string':'Licence', 'type':'selection', 'size':64, 'required':True,
