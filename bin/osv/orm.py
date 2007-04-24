@@ -603,7 +603,7 @@ class orm(object):
 					elif fields_def[field[len(prefix)]]['type']=='selection':
 						res = False
 						for key,val in fields_def[field[len(prefix)]]['selection']:
-							if val==line[i]:
+							if key==line[i]:             #val==line[i] if from the client !
 								res = key
 						if line[i] and not res:
 							logger = netsvc.Logger()
