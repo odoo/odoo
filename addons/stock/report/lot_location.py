@@ -6,16 +6,11 @@ class lot_location(report_sxw.rml_parse):
 	def __init__(self, cr, uid, name, context):
 		super(lot_location, self).__init__(cr, uid, name, context)
 		self.ret_list=[]
-		print "Init Repot::",
 		self.localcontext.update({
 			'time': time,
 			'process':self.process,
 
 		})
-		#self.context = context
-	def preprocess(self, objects, data, ids):
-		print "Records for process ............",ids;
-		super(lot_location, self).preprocess(objects, data, ids)
 
 	def process(self,location_id):
 		ret_dict = {'location_name':''};
@@ -44,11 +39,6 @@ class lot_location(report_sxw.rml_parse):
 				self.process(child_id)
 
 		return self.ret_list
-
-#		for location_id in self.ids:
-#			process(location_id, 0,[])
-#		print "Last ret::",self.ret_list
-#		return self.ret_list
 
 report_sxw.report_sxw('report.lot.location', 'stock.location', 'addons/stock/report/lot_location.rml', parser=lot_location)
 
