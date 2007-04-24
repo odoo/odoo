@@ -1523,6 +1523,10 @@ class orm(object):
 		fields = self.fields_get(cr, uid)
 		for f in fields:
 			ftype = fields[f]['type']
+
+ 			if self._log_access and f in ('create_date', 'create_uid', 'write_date', 'write_uid'):
+ 				del data[f]
+
 			if f in default:
 				data[f] = default[f]
 			elif ftype == 'function':
