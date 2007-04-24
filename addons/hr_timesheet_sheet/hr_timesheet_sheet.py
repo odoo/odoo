@@ -189,6 +189,8 @@ class hr_timesheet_sheet(osv.osv):
 		return True
 
 	def sign_in(self, cr, uid, ids, context):
+		if not self.browse(cr, uid, ids, context)[0].date_current == time.strftime('%Y-%m-%d'):
+			raise osv.except_osv('Error !', 'You can not sign in from an other date than today')
 		emp_obj = self.pool.get('hr.employee')
 		emp_id = emp_obj.search(cr, uid, [('user_id', '=', uid)])
 		context['sheet_id']=ids[0]
@@ -196,6 +198,8 @@ class hr_timesheet_sheet(osv.osv):
 		return True
 
 	def sign_out(self, cr, uid, ids, context):
+		if not self.browse(cr, uid, ids, context)[0].date_current == time.strftime('%Y-%m-%d'):
+			raise osv.except_osv('Error !', 'You can not sign out from an other date than today')
 		emp_obj = self.pool.get('hr.employee')
 		emp_id = emp_obj.search(cr, uid, [('user_id', '=', uid)])
 		context['sheet_id']=ids[0]
@@ -208,7 +212,7 @@ class hr_timesheet_sheet(osv.osv):
 		'date_from': fields.date('Date from', required=True, select=1, readonly=True, states={'new':[('readonly', False)]}),
 		'date_to': fields.date('Date to', required=True, select=1, readonly=True, states={'new':[('readonly', False)]}),
 		'date_current': fields.date('Current date', required=True),
-		'timesheet_ids' : one2many_mod('hr.analytic.timesheet', 'sheet_id', 'Timesheets', domain=[('date','=',time.strftime('%Y-%m-%d'))], readonly=True, states={'draft':[('readonly',False)],'new':[('readonly',False)]}),
+		'timesheet_ids' : one2many_mod('hr.analytic.timesheet', 'sheet_id', 'Timesheet lines', domain=[('date','=',time.strftime('%Y-%m-%d'))], readonly=True, states={'draft':[('readonly',False)],'new':[('readonly',False)]}),
 		'attendances_ids' : one2many_mod2('hr.attendance', 'sheet_id', 'Attendances', readonly=True, states={'draft':[('readonly',False)],'new':[('readonly',False)]}),
 		'state' : fields.selection([('new', 'New'),('draft','Draft'),('confirm','Confirmed'),('done','Done')], 'state', select=True, required=True, readonly=True),
 		'state_attendance' : fields.function(_state_attendance, method=True, type='selection', selection=[('absent', 'Absent'), ('present', 'Present'),('none','No employee defined')], string='Current state'),
