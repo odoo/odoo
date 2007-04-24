@@ -377,7 +377,7 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
 	def _total_attendance(self, cr, uid, ids, name, args, context):
 		result = {}
 		for day in self.browse(cr, uid, ids, context):
-			cr.execute('select name,action from hr_attendance where name>=%s and name<=%s and sheet_id=%d order by name', (day.name, day.name+' 23:59:59', day.sheet_id))
+			cr.execute('select name,action from hr_attendance where name>=%s and name<=%s and sheet_id=%d and action in (\'sign_in\', \'sign_out\') order by name', (day.name, day.name+' 23:59:59', day.sheet_id))
 			attendences = cr.dictfetchall()
 			wh = 0
 			if attendences and attendences[0]['action'] == 'sign_out':
