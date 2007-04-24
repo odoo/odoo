@@ -95,6 +95,8 @@ def _create_invoice(self, cr, uid, data, context):
 		if not picking.carrier_id:
 			continue
 		grid_id = pool.get('delivery.carrier').grid_get(cr, uid, [picking.carrier_id.id], picking.address_id.id, context)
+		if not grid_id:
+			raise wizard.except_wizard('Warning', 'The carrier %s (id: %d) as no delivery grid.'% (picking.carrier_id.name, picking.carrier_id.id) )
 		price = pool.get('delivery.grid').get_price_from_picking(cr, uid, grid_id, 
 			invoice.amount_untaxed, picking.weight,
 			picking.volume, context) or 0.0
