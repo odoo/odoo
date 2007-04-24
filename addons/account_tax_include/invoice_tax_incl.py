@@ -148,7 +148,6 @@ class account_invoice_line(osv.osv):
 		cur_obj = self.pool.get('res.currency')
 		ait_obj = self.pool.get('account.invoice.tax')
 		cur = inv.currency_id
-
 		for line in inv.invoice_line:
 			price_unit = line.price_unit
 			if line.product_id:
