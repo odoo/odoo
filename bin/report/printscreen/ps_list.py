@@ -35,7 +35,8 @@ from report import render
 from xml.dom import minidom
 import libxml2
 import libxslt
-
+import csv;
+import sys;
 import time, os
 
 class report_printscreen_list(report_int):
@@ -64,7 +65,6 @@ class report_printscreen_list(report_int):
 		datas['ids'] = ids
 		model = pooler.get_pool(cr.dbname).get(datas['model'])
 		result = model.fields_view_get(cr, uid, view_type='tree', context=context)
-
 		fields_order = self._parse_string(result['arch'])
 		rows = model.read(cr, uid, datas['ids'], result['fields'].keys() )
 		res = self._create_table(uid, datas['ids'], result['fields'], fields_order, rows, context, model._description)
@@ -72,8 +72,27 @@ class report_printscreen_list(report_int):
 
 
 	def _create_table(self, uid, ids, fields, fields_order, results, context, title=''):
-
-
+		if context['lang']=='fr_FR':
+			index = 0
+			for result in results:
+				translate_field=[]
+				french_field = []
+				i=0;
+				for f in fields_order:
+					if fields[f].has_key('translate') and fields[f]['translate']:
+						translate_field.append({f:result[f]})
+				while i<8:
+					french_field.append(str(i))
+					i+=1
+				file_ptr= open('./i18n/fr_FR.csv','r');
+				french_data=csv.DictReader(file_ptr,french_field,delimiter=';');
+				count = 0
+				for tf in translate_field:
+					for french_dt in french_data:
+						if french_dt['7'] and french_dt['6'].strip().startswith(tf.items()[0][1].strip()):
+							result[tf.items()[0][0]] = french_dt['7'].rstrip(',"')
+				results[index] = result
+				index+=1;
 		pageSize=[297.0,210.0]
 
 		impl = minidom.getDOMImplementation()
