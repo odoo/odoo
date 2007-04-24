@@ -29,8 +29,8 @@
 
 
 import wizard
-import netsvc
 import time
+import pooler
 
 si_form ='''<?xml version="1.0"?> 
 <form string="Sign in / Sign out">
@@ -77,10 +77,10 @@ so_fields = {
 }
 
 def _get_empid(self, cr, uid, data, context):
-	service = netsvc.LocalService('object_proxy')
-	emp_id = service.execute(cr.dbname, uid, 'hr.employee', 'search', [('user_id', '=', uid)])
+	emp_obj = pooler.get_pool(cr.dbname).get('hr.employee')
+	emp_id = emp_obj.search(cr, uid, [('user_id', '=', uid)])
 	if emp_id:
-		employee = service.execute(cr.dbname, uid, 'hr.employee', 'read', emp_id)[0]
+		employee = emp_obj.read(cr, uid, emp_id)[0]
 		return {'name': employee['name'], 'state': employee['state'], 'emp_id': emp_id[0], 'date':False, 'server_date':time.strftime('%Y-%m-%d %H:%M:%S')}
 	raise wizard.except_wizard('UserError', 'No employee defined for your user !')
 
@@ -94,45 +94,46 @@ def _get_empid2(self, cr, uid, data, context):
 	return res
 
 def _sign_in_result(self, cr, uid, data, context):
-	service = netsvc.LocalService('object_proxy')
+	emp_obj = pooler.get_pool(cr.dbname).get('hr.employee')
 	emp_id = data['form']['emp_id']
+	from osv.osv import except_osv
 	try:
-		success = service.execute(cr.dbname, uid, 'hr.employee', 'sign_in', [emp_id], dt=data['form']['date'] or False)
-	except:
-		raise wizard.except_wizard('UserError', 'You tried to sign in with a date anterior to another event !\nTry to contact the administrator to correct attendances.')
+		success = emp_obj.sign_in(cr, uid, [emp_id], dt=data['form']['date'] or False)
+	except except_osv, e:
+		raise wizard.except_wizard(e.name, e.value)
 	return {}
 
 def _write(self, cr, uid, data, emp_id, context):
-	service = netsvc.LocalService('object_proxy')
+	timesheet_obj = pooler.get_pool(cr.dbname).get('hr.analytic.timesheet')
 	hour = (time.mktime(time.strptime(data['form']['date'] or time.strftime('%Y-%m-%d %H:%M:%S'), '%Y-%m-%d %H:%M:%S')) -
 	    time.mktime(time.strptime(data['form']['date_start'], '%Y-%m-%d %H:%M:%S'))) / 3600.0
 	minimum = data['form']['analytic_amount']
 	if minimum:
 		hour = round(round((hour + minimum / 2) / minimum) * minimum, 2)
-	res = service.execute(cr.dbname, uid, 'hr.analytic.timesheet', 'default_get', ['product_id','product_uom_id'])
+	res = timesheet_obj.default_get(cr, uid, ['product_id','product_uom_id'])
 	if not res['product_uom_id']:
 		raise wizard.except_wizard('UserError', 'No cost unit defined for this employee !')
-	up = service.execute(cr.dbname, uid, 'hr.analytic.timesheet', 'on_change_unit_amount', False, res['product_id'], hour, res['product_uom_id'])['value']
+	up = timesheet_obj.on_change_unit_amount(cr, uid, False, res['product_id'], hour, res['product_uom_id'])['value']
 	res['name'] = data['form']['info']
 	res['account_id'] = data['form']['account_id']
 	res['unit_amount'] = hour
 	res.update(up)
-	return service.execute(cr.dbname, uid, 'hr.analytic.timesheet', 'create', res, context)
+	return timesheet_obj.create(cr, uid, res, context)
 
 def _sign_out_result_end(self, cr, uid, data, context):
-	service = netsvc.LocalService('object_proxy')
+	emp_obj = pooler.get_pool(cr.dbname).get('hr.employee')
 	emp_id = data['form']['emp_id']
 	try:
-		service.execute(cr.dbname, uid, 'hr.employee', 'sign_out', [emp_id], dt=data['form']['date'])
-	except:
-		raise wizard.except_wizard('UserError', 'You tried to sign in with a date anterior to another event !\nTry to contact the administrator to correct attendances.')
+		emp_obj.sign_out(cr, uid, [emp_id], dt=data['form']['date'])
+	except except_osv, e:
+		raise wizard.except_wizard(e.name, e.value)
 	_write(self, cr, uid, data, emp_id, context)
 	return {}
 
 def _sign_out_result(self, cr, uid, data, context):
-	service = netsvc.LocalService('object_proxy')
+	emp_obj = pooler.get_pool(cr.dbname).get('hr.employee')
 	emp_id = data['form']['emp_id']
-	service.execute(cr.dbname, uid, 'hr.employee', 'sign_change', [emp_id], dt=data['form']['date'])
+	emp_obj.sign_change(cr, uid, [emp_id], dt=data['form']['date'])
 	_write(self, cr, uid, data, emp_id, context)
 	return {}
 
