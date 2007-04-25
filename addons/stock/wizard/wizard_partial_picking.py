@@ -121,7 +121,10 @@ def _do_split(self, cr, uid, data, context):
 		move_obj.write(cr, uid, [c.id for c in complete], {'picking_id': new_picking})
 		for move in too_many:
 			move_obj.write(cr, uid, [move.id], {'product_qty' : data['form']['move%s' % move.id],'product_uos_qty':data['form']['move%s' % move.id] , 'picking_id': new_picking})
-	
+	else:
+		for move in too_many:
+			move_obj.write(cr, uid, [move.id], {'product_qty' : data['form']['move%s' % move.id],'product_uos_qty':data['form']['move%s' % move.id]})
+
 	# At first we confirm the new picking (if necessary)
 	wf_service = netsvc.LocalService("workflow")
 	if new_picking:

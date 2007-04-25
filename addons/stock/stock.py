@@ -77,7 +77,7 @@ class stock_location(osv.osv):
 		'usage': fields.selection([('supplier','Supplier Location'),('internal','Internal Location'),('customer','Customer Location'),('inventory','Inventory'),('procurement','Procurement'),('production','Production')], 'Location type'),
 		'allocation_method': fields.selection([('fifo','FIFO'),('lifo','LIFO'),('nearest','Nearest')], 'Allocation Method', required=True),
 
-		'account_id': fields.many2one('account.account', string='Inventory Account', domain=[('type','=','stock_inventory')]),
+		'account_id': fields.many2one('account.account', string='Inventory Account', domain=[('type','!=','view')]),
 		'location_id': fields.many2one('stock.location', 'Parent Location', select=True),
 		'child_ids': fields.one2many('stock.location', 'location_id', 'Contains'),
 
@@ -687,7 +687,6 @@ class stock_move(osv.osv):
 		return {'value':result}
 
 	def action_confirm(self, cr, uid, ids, context={}):
-		print 'Confirmed state', ids
 		self.write(cr, uid, ids, {'state':'confirmed'})
 		return True
 
@@ -787,27 +786,41 @@ class stock_move(osv.osv):
 			#
 			# Accounting Entries
 			#
-#			acc_src = None
-#			acc_dest = None
-#			if move.location_id.account_id:
-#				acc_src =  move.location_id.account_id.id
-#			if move.location_dest_id.account_id:
-#				acc_dest =  move.location_dest_id.account_id.id
-#			if acc_src or acc_dest:
-#				test = [('product.product', move.product_id.id)]
-#				if move.product_id.categ_id:
-#					test.append( ('product.category', move.product_id.categ_id.id) )
-#				if not acc_src:
-#					acc_src = move.product_id.product_tmpl_id.property_account_expense[0]
-#				if not acc_dest:
-#					acc_dest = move.product_id.product_tmpl_id.property_account_income[0]
-#				if acc_src != acc_dest:
-#					amount = move.product_qty * move.product_id.standard_price
-#					lines = [
-#						(0,0,{'name': 'Stock', 'amount': -amount, 'account_id': acc_src}),
-#						(0,0,{'name': 'Stock', 'amount': amount, 'account_id': acc_dest})
-#					]
-#					self.pool.get('account.move').create(cr, uid, {'name': 'Stock', 'type':'undefined', 'line_id': lines})
+			acc_src = None
+			acc_dest = None
+			if move.location_id.account_id:
+				acc_src =  move.location_id.account_id.id
+			if move.location_dest_id.account_id:
+				acc_dest =  move.location_dest_id.account_id.id
+			if acc_src or acc_dest:
+				test = [('product.product', move.product_id.id)]
+				if move.product_id.categ_id:
+					test.append( ('product.category', move.product_id.categ_id.id) )
+				if not acc_src:
+					a = move.product_id.product_tmpl_id.property_account_expense
+					if not a:
+						a = move.product_id.categ_id.property_account_expense_categ
+					if not a:
+						raise osv.except_osv('Error !', 'There is no expense account defined for this product: "%s" (id:%d)' % (move.product_id.name, move.product_id.id,))
+					acc_src = a[0]
+				if not acc_dest:
+					b = move.product_id.product_tmpl_id.property_account_income
+					if not b:
+						b = move.product_id.categ_id.property_account_income_categ
+					if not b:
+						raise osv.except_osv('Error !', 'There is no income account defined for this product: "%s" (id:%d)' % (move.product_id.name, move.product_id.id,))
+					acc_dest = b[0]
+				if not move.product_id.categ_id.property_stock_journal:
+					raise osv.except_osv('Error !', 'There is no journal define on the product category: "%s" (id:%d)' % (move.product_id.categ_id.name, move.product_id.categ_id.id,))
+				journal_id = move.product_id.categ_id.property_stock_journal[0]
+				if acc_src != acc_dest:
+					ref = move.picking_id and move.picking_id.name or False
+					amount = move.product_qty * move.product_id.standard_price
+					lines = [
+							(0,0,{'name': move.name, 'quantity': move.product_qty, 'debit': amount, 'account_id': acc_src, 'ref': ref}),
+							(0,0,{'name': move.name, 'quantity': move.product_qty, 'credit': amount, 'account_id': acc_dest, 'ref': ref})
+					]
+					self.pool.get('account.move').create(cr, uid, {'name': move.name, 'journal_id': journal_id, 'line_id': lines, 'ref': ref})
 		self.write(cr, uid, ids, {'state':'done'})
 
 		wf_service = netsvc.LocalService("workflow")

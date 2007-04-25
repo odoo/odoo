@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<terp>
+	<data>
+
+		<record model="ir.property" id="property_stock_journal">
+			<field name="name">property_stock_journal</field>
+			<field name="fields_id" search="[('model', '=', 'product.category'), ('name', '=', 'property_stock_journal')]"/>
+			<field name="value" eval="'account.journal,'+str(ref('account.stock_journal'))" model="account.journal"/>
+		</record>
+
+	</data>
+</terp>
