@@ -149,18 +149,18 @@
 					<field name="act_remind_user"/>
 					<field name="act_remind_partner"/>
 					<field name="act_remind_attach"/>
-					<field name="act_email_cc" colspan="3"/>
+					<field name="act_email_cc" colspan="4"/>
 					<!--
-					<field name="act_method" colspan="3" readonly="1"/>
+					<field name="act_method" colspan="4" readonly="1"/>
 					-->
 
 				</page><page string="E-Mail Information">
-					<separator string="Email to send" colspan="3"/>
+					<separator string="Email to send" colspan="4"/>
 					<field name="act_mail_to_user"/>
 					<field name="act_mail_to_partner"/>
 					<field name="act_mail_to_watchers"/>
-					<field name="act_mail_to_email" colspan="3"/>
-					<field name="act_mail_body" colspan="3"/>
+					<field name="act_mail_to_email" colspan="4"/>
+					<field name="act_mail_body" colspan="4"/>
 					<group col="2" colspan="4" string="Special Keywords">
 						<label align="0.0" string="%%(case_id)s = Case ID"/>
 						<label align="0.0" string="%%(case_subject)s = Case subject"/>
@@ -248,7 +248,7 @@
 						<button name="remind_partner" string="Send Reminder" states="open,pending" type="object"/>
 					</group>
 					<separator string="Next Action" colspan="4"/>
-					<field name="description" colspan="3" select="1"/>
+					<field name="description" colspan="4" select="1"/>
 					<field name="som" select="1"/>
 					<field name="canal_id"/>
 					<field name="date_deadline" select="1"/>
@@ -272,8 +272,8 @@
 					<field name="categ_id" select="1" on_change="onchange_categ_id(categ_id)"/>
 					<field name="date_closed"/>
 					<field name="active" select="1"/>
-					<field name="ref" colspan="3"/>
-					<field name="ref2" colspan="3"/>
+					<field name="ref" colspan="4"/>
+					<field name="ref2" colspan="4"/>
 					<field name="planned_revenue"/>
 					<field name="planned_cost"/>
 					<field name="probability"/>
@@ -281,18 +281,18 @@
 					<field name="date_action_last"/>
 					<field name="date_action_next"/>
 
-					<field name="email_cc" colspan="3"/>
-					<field name="email_last" colspan="3"/>
+					<field name="email_cc" colspan="4"/>
+					<field name="email_last" colspan="4"/>
 				</page><page string="History">
 					<field name="history_line" nolabel="1" colspan="4" widget="one2many_list">
 						<form string="Actions">
 							<separator string="Action Information" colspan="4"/>
-							<field name="name" colspan="3"/>
+							<field name="name" colspan="4"/>
 							<field name="date" select="1"/>
 							<field name="user_id" select="1"/>
 							<field name="som" select="1"/>
 							<field name="canal_id"/>
-							<field name="description" colspan="3"/>
+							<field name="description" colspan="4"/>
 						</form>
 					</field>
 				</page>
@@ -352,13 +352,13 @@
 		<field name="arch" type="xml">
 			<form string="Cases">
 				<separator string="Case Description" colspan="4"/>
-				<field name="name" colspan="3" select="1"/>
+				<field name="name" colspan="4" select="1"/>
 				<field name="date" select="1"/>
 				<field name="user_id" select="1"/>
 				<field name="case_id" select="1"/>
 				<field name="som" select="1"/>
 				<field name="canal_id" select="1"/>
-				<field name="description" colspan="3" select="1"/>
+				<field name="description" colspan="4" select="1"/>
 			</form>
 		</field>
 	</record>
@@ -424,10 +424,10 @@
 					<separator string="Segmentation Description" colspan="4"/>
 					<field name="name" select="1"/>
 					<field name="exclusif"/>
-					<field name="description" select="1" colspan="3"/>
-					<field name="categ_id" select="1" colspan="3"/>
+					<field name="description" select="1" colspan="4"/>
+					<field name="categ_id" select="1" colspan="4"/>
 					<separator string="Segmentation Test" colspan="4"/>
-					<field name="segmentation_line" widget="one2many_list" colspan="3"/>
+					<field name="segmentation_line" widget="one2many_list" colspan="4"/>
 					<field name="state"/>
 					<group col="3" colspan="2">
 						<button name="process_start" states="not running" string="Compute Segmentation" type="object"/>

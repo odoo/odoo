@@ -79,16 +79,16 @@
 					<separator string="Automatic Declaration" colspan="4"/>
 					<field name="product_uom_qty" on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id)" context="partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom" select="1"/>
 					<field name="product_uom"/>
-					<field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'])" context="partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom" colspan="3" select="1"/>
+					<field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'])" context="partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom" colspan="4" select="1"/>
 
 					<separator string="Manual Description" colspan="4"/>
-					<field name="name" colspan="3" select="1"/>
+					<field name="name" colspan="4" select="1"/>
 					<field name="price_unit" select="1"/>
 					<field name="discount"/>
 					<field name="type"/>
 					<field name="delay" select="1"/>
 					<newline/>
-					<field name="tax_id" colspan="3"/>
+					<field name="tax_id" colspan="4"/>
 					<separator string="States" colspan="4"/>
 					<field name="state" select="1"/>
 					<field name="invoiced" select="1"/>
@@ -110,7 +110,7 @@
 				</notebook>
 			</form>
 			<tree string="Sales Order Lines">
-				<field name="name" colspan="3"/>
+				<field name="name" colspan="4"/>
 				<field name="product_id"/>
 				<field name="product_uom_qty" string="Qty"/>
 				<field name="product_uom" string="UoM"/>
@@ -299,7 +299,7 @@
 						</group>
 					</page>
 					<page string="Notes">
-						<field name="note" colspan="3" nolabel="1"/>
+						<field name="note" colspan="4" nolabel="1"/>
 					</page>
 					<page string="Advanced">
 						<separator string="Shop" colspan="4"/>
@@ -356,7 +356,7 @@
 		<field name="arch" type="xml">
 			<tree string="Sales Order Lines">
 				<field name="order_id"/>
-				<field name="name" colspan="3"/>
+				<field name="name" colspan="4"/>
 				<field name="product_id"/>
 				<field name="product_uom_qty" string="Qty"/>
 				<field name="product_uom" string="UoM"/>
@@ -384,13 +384,13 @@
 					<field name="product_id" readonly="1" select="1"/>
 
 					<separator string="Manual Designation" colspan="4"/>
-					<field name="name" colspan="3" select="1"/>
+					<field name="name" colspan="4" select="1"/>
 					<field name="price_unit" select="1"/>
 					<field name="discount"/>
 					<field name="type"/>
 					<field name="delay" select="1"/>
 					<field name="price_subtotal"/>
-					<field name="tax_id" colspan="3"/>
+					<field name="tax_id" colspan="4"/>
 					<separator string="States" colspan="4"/>
 					<field name="state" select="1"/>
 					<group colspan="2" col="2">
@@ -402,7 +402,7 @@
 				</page><page string="Notes">
 					<field name="notes" colspan="4" nolabel="1"/>
 				</page><page string="Invoice Lines">
-					<field name="invoice_lines" colspan="3"/>
+					<field name="invoice_lines" colspan="4"/>
 				</page>
 				</notebook>
 			</form>

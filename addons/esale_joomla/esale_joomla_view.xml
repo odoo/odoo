@@ -10,7 +10,7 @@
 				<notebook>
 					<page string="General Informations">
 						<separator string="Web Shop Info" colspan="4"/>
-						<field name="name" select="1" colspan="3"/>
+						<field name="name" select="1" colspan="4"/>
 						<field name="url" widget="url" required="1"/>
 						<field name="active" select="1"/>
 						<field name="shop_id" select="1" required="1"/>
@@ -110,8 +110,8 @@
 						<button type="object" name="order_cancel" states="draft" string="Cancel Order"/>
 					</page>
 					<page string="Others data">
-						<field name="order_id" colspan="3"/>
-						<field name="note" colspan="3"/>
+						<field name="order_id" colspan="4"/>
+						<field name="note" colspan="4"/>
 					</page>
 				</notebook>
 			</form>
@@ -143,8 +143,8 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="eSales Order Line">
-				<field name="name" colspan="3"/>
-				<field name="product_id" colspan="3"/>
+				<field name="name" colspan="4"/>
+				<field name="product_id" colspan="4"/>
 				<field name="product_qty"/>
 				<field name="product_uom_id"/>
 				<field name="price_unit"/>

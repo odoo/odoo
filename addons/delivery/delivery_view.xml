@@ -71,8 +71,8 @@
 					<separator colspan="4" string="Grid Lines"/>
 					<field name="line_ids" select="1" colspan="4" nolabel="1"/>
 				</page><page string="Destination">
-					<field name="country_ids" colspan="3"/>
-					<field name="state_ids" colspan="3"/>
+					<field name="country_ids" colspan="4"/>
+					<field name="state_ids" colspan="4"/>
 					<field name="zip_from"/>
 					<field name="zip_to"/>
 				</page>
@@ -96,7 +96,7 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Grid Lines">
-				<field name="name" select="1" colspan="3"/>
+				<field name="name" select="1" colspan="4"/>
 				<field name="type" string="Condition"/>
 				<field name="operator" nolabel="1"/>
 				<field name="max_value" nolabel="1"/>

@@ -12,7 +12,7 @@
 			<form string="Pricelist Version">
 				<field name="name" select="1"/>
 				<field name="active" select="1"/>
-				<field name="pricelist_id" colspan="3"/>
+				<field name="pricelist_id" colspan="4"/>
 				<field name="date_start" select="1"/>
 				<field name="date_end" select="1"/>
 				<field name="items_id" colspan="4" nolabel="1" widget="one2many_list"/>
@@ -35,7 +35,7 @@
 		<field name="arch" type="xml">
 			<tree string="Products Listprices Items">
 				<field name="sequence"/>
-				<field name="name" colspan="3" select="1"/>
+				<field name="name" colspan="4" select="1"/>
 				<field name="product_tmpl_id" select="1"/>
 				<field name="categ_id" select="1"/>
 				<field name="min_quantity"/>
@@ -51,7 +51,7 @@
 		<field name="arch" type="xml">
 			<form string="Products Listprices Items">
 				<separator string="Rules Test Match" colspan="4"/>
-				<field name="name" select="1" colspan="3"/>
+				<field name="name" select="1" colspan="4"/>
 				<field name="product_id" select="1" on_change="product_id_change(product_tmpl_id)"/>
 				<field name="product_tmpl_id" select="1"/>
 				<field name="categ_id" select="1"/>
@@ -98,7 +98,7 @@
 		<field name="arch" type="xml">
 			<form string="Products Price List">
 				<separator string="Pricelist Name" colspan="4"/>
-				<field name="name" colspan="3" select="1"/>
+				<field name="name" colspan="4" select="1"/>
 				<field name="type" select="1"/>
 				<field name="currency_id" select="1"/>
 				<field name="active" select="1"/>

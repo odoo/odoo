@@ -7,7 +7,7 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Evalution Quote">
-					<field name="name" select="1" colspan="3"/>
+					<field name="name" select="1" colspan="4"/>
 					<field name="type_id" select="1"/>
 					<field name="value_id" select="1"/>
 				</form>
@@ -131,7 +131,7 @@
 						<separator string="To Improve" colspan="2"/>
 						<separator string="Employee Response" colspan="2"/>
 						<field name="info_improve" colspan="2" nolabel="1" readonly="1"/>
-						<field name="info_employee" colspan="3" nolabel="1" readonly="1"/>
+						<field name="info_employee" colspan="4" nolabel="1" readonly="1"/>
 						<separator string="Status" colspan="4"/>
 						<field name="state" search="1"/>
 						<button string="Done" states="draft"/>

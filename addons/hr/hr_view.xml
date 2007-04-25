@@ -22,7 +22,7 @@
 							<field name="company_id"/>
 							<field name="user_id"/>
 							<field name="address_id"/>
-							<field name="notes" colspan="3"/>
+							<field name="notes" colspan="4"/>
 							<separator string="Working Data" colspan="4" />
 							<field name="regime" />
 							<field name="active" select="1" />
@@ -38,7 +38,7 @@
 							</group>
 						</page>
 						<page string="Holidays">
-							<field name="holidays" colspan="3"
+							<field name="holidays" colspan="4"
 								widget="one2many_list"
 								nolabel="1" />
 						</page>
@@ -187,7 +187,7 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Timesheet">
-					<field name="name" colspan="3" select="1"/>
+					<field name="name" colspan="4" select="1"/>
 					<field name="date_from" />
 					<field name="dayofweek" select="1" />
 					<field name="hour_from"/>
@@ -204,7 +204,7 @@
 			<field name="arch" type="xml">
 				<form string="Employee attendance">
 					<field name="employee_id" select="1"/>
-					<field name="name" colspan="3" select="1"/>
+					<field name="name" colspan="4" select="1"/>
 					<field name="action" select="1"/>
 					<field name="action_desc"  select="1"/>
 				</form>
@@ -305,7 +305,7 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Employee holidays">
-					<field name="name" colspan="3" select="1"/>
+					<field name="name" colspan="4" select="1"/>
 					<field name="date_from"  select="1"/>
 					<field name="date_to"  select="1"/>
 					<newline />
@@ -335,7 +335,7 @@
 				<form string="Vacations requests">
 					<field name="name" select="1"/>
 					<field name="holiday_status"/>
-					<field name="employee_id" colspan="3" select="1"/>
+					<field name="employee_id" colspan="4" select="1"/>
 					<newline />
 					<field name="date_from"  select="1"/>
 					<field name="date_to"  select="1"/>
@@ -359,7 +359,7 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Define holiday status">
-					<field name="name" colspan="3"  select="1"/>
+					<field name="name" colspan="4"  select="1"/>
 				</form>
 			</field>
 		</record>
@@ -390,7 +390,7 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Define attendance reason">
-					<field name="name" colspan="3"  select="1"/>
+					<field name="name" colspan="4"  select="1"/>
 					<field name="action_type"  select="1"/>
 				</form>
 			</field>

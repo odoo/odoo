@@ -8,9 +8,9 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Letter Type">
-				<field name="name" colspan="3" select="1"/>
+				<field name="name" colspan="4" select="1"/>
 				<field name="template" select="1"/>
-				<field name="paragraph_ids" colspan="3"/>
+				<field name="paragraph_ids" colspan="4"/>
 			</form>
 		</field>
 	</record>
@@ -23,11 +23,11 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Letter">
-				<field name="name" colspan="3" select="1"/>
+				<field name="name" colspan="4" select="1"/>
 				<field name="partner_id" select="1"/>
 				<field name="type_id" on_change="onchange_type_id(type_id)"/>
 				<newline/>
-				<field name="paragraph_ids" colspan="3" widget="one2many_list"/>
+				<field name="paragraph_ids" colspan="4" widget="one2many_list"/>
 				<separator string="States" colspan="4"/>
 				<field name="state" select="1"/>
 				<group col="2" colspan="2">
@@ -83,10 +83,10 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Letter Paragraph">
-				<field name="name" select="1" colspan="3"/>
+				<field name="name" select="1" colspan="4"/>
 				<field name="sequence"/>
 				<field name="type_id"/>
-				<field name="content" colspan="3" widget="text_tag"/>
+				<field name="content" colspan="4" widget="text_tag"/>
 			</form>
 		</field>
 	</record>
@@ -101,10 +101,10 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Letter Paragraph">
-				<field name="name" select="1" colspan="3"/>
+				<field name="name" select="1" colspan="4"/>
 				<field name="type_id" select="1"/>
 				<field name="sequence"/>
-				<field name="content" colspan="3" widget="text_tag"/>
+				<field name="content" colspan="4" widget="text_tag"/>
 			</form>
 		</field>
 	</record>
@@ -127,7 +127,7 @@
 			<form string="Letter type">
 				<field name="name"/>
 				<field name="template" />
-				<field name="paragraph_ids" colspan="3"/>
+				<field name="paragraph_ids" colspan="4"/>
 			</form>
 		</field>
 	</record>

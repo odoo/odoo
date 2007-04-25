@@ -25,7 +25,7 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Timesheet Lines">
-					<field name="name" colspan="3"/>
+					<field name="name" colspan="4"/>
 					<field name="user_id" select="1" required="1"/>
 					<field name="date" select="1"/>
 					<field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" />

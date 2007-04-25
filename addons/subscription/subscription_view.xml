@@ -25,8 +25,8 @@
 					<field name="interval_type"/>
 					<field name="exec_init"/>
 					<field name="date_init"/>
-					<field name="doc_source" colspan="3" widget="reference"/>
-					<field name="notes" colspan="3"/>
+					<field name="doc_source" colspan="4" widget="reference"/>
+					<field name="notes" colspan="4"/>
 					<separator string="State" colspan="4"/>
 					<field name="cron_id" colspan="4" readonly="1"/>
 					<field name="state" readonly="1"/>
@@ -72,7 +72,7 @@
 				<field name="name"/>
 				<field name="date"/>
 				<newline/>
-				<field name="document_id" colspan="3" widget="reference"/>
+				<field name="document_id" colspan="4" widget="reference"/>
 			</form>
 		</field>
 	</record>
@@ -88,7 +88,7 @@
 				<field name="model" select="1"/>
 				<field name="workflow_action"/>
 				<newline/>
-				<field name="field_ids" colspan="3" widget="one2many_list"/>
+				<field name="field_ids" colspan="4" widget="one2many_list"/>
 			</form>
 		</field>
 	</record>

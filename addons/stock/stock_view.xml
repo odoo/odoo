@@ -26,7 +26,7 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Stock Inventory Lines">
-				<field name="location_id" colspan="3" select="1" domain="[('usage','=','internal')]"/>
+				<field name="location_id" colspan="4" select="1" domain="[('usage','=','internal')]"/>
 				<field name="product_id" select="1"  on_change="on_change_product_id(location_id,product_id,product_uom)" context="location=location_id,uom=product_uom"/>
 				<field name="product_uom"/>
 				<field name="product_qty"/>
@@ -164,7 +164,7 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Stock Lot">
-				<field name="name" colspan="3" select="1"/>
+				<field name="name" colspan="4" select="1"/>
 				<field name="active" select="1"/>
 				<field name="tracking" select="1"/>
 				<newline/>
@@ -340,7 +340,7 @@
 						<field name="account_id" select="1"/>
 						<field name="location_id"/>
 						<newline/>
-						<field name="comment" colspan="3"/>
+						<field name="comment" colspan="4"/>
 					</page>
 					<page string="Localisation">
 						<field name="posx"/>
@@ -418,7 +418,7 @@
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
 			<tree string="Picking List" color="red:state=='cancel'">
-				<field name="name" select="1" colspan="3"/>
+				<field name="name" select="1" colspan="4"/>
 				<field name="date" select="1"/>
 				<field name="origin" select="1"/>
 				<field name="loc_move_id" select="1"/>
@@ -498,8 +498,8 @@
 					<field name="active" select="1"/>
 					<field name="auto_picking"/>
 					<newline/>
-					<field name="lot_id" colspan="3"/>
-					<field name="move_lot_id" colspan="3"/>
+					<field name="lot_id" colspan="4"/>
+					<field name="move_lot_id" colspan="4"/>
 				</page>
 				</notebook>
 			</form>
@@ -705,10 +705,10 @@
 		<field name="arch" type="xml">
 			<form string="Stock Moves">
 				<separator string="Move Information" colspan="4"/>
-				<field name="name" select="1" colspan="3"/>
+				<field name="name" select="1" colspan="4"/>
 				<field name="date"/>
 				<field name="date_planned"/>
-				<field name="product_id" colspan="3" select="1"/>
+				<field name="product_id" colspan="4" select="1"/>
 				<field name="product_uom" select="1"/>
 				<field name="product_qty" select="1"/>
 				<field name="location_id" select="1"/>
@@ -773,7 +773,7 @@
 		<field name="arch" type="xml">
 			<tree string="Incoterms">
 				<field name="code"/>
-				<field name="name" select="1" colspan="3"/>
+				<field name="name" select="1" colspan="4"/>
 			</tree>
 		</field>
 	</record>
@@ -783,7 +783,7 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Incoterms">
-				<field name="name" select="1" colspan="3"/>
+				<field name="name" select="1" colspan="4"/>
 				<field name="code" select="1"/>
 				<field name="active" select="1"/>
 			</form>

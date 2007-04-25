@@ -19,7 +19,7 @@
 				<field name="date_start"/>
 				<field name="date_stop"/>
 				<separator string="Periods" colspan="4"/>
-				<field name="period_ids" colspan="3" widget="one2many_list">
+				<field name="period_ids" colspan="4" widget="one2many_list">
 					<form string="Period">
 						<field name="name" select="1"/>
 						<field name="code" select="1"/>
@@ -111,7 +111,7 @@
 			<form string="Account Form">
 				<notebook>
 				<page string="General Information">
-					<field name="name" select="1" colspan="3"/>
+					<field name="name" select="1" colspan="4"/>
 					<field name="company_id" select="1"/>
 					<newline/>
 					<field name="type" select="1"/>
@@ -124,8 +124,8 @@
 					<field name="reconcile"/>
 					<field name="active" select="1" />
 					<newline/>
-					<field name="parent_id" colspan="3"/>
-					<field name="tax_ids" colspan="3"/>
+					<field name="parent_id" colspan="4"/>
+					<field name="tax_ids" colspan="4"/>
 				</page><page string="Notes">
 					<field name="note" colspan="4" nolabel="1"/>
 				</page>
@@ -200,7 +200,7 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Journal Column">
-				<field name="name" select="1" colspan="3"/>
+				<field name="name" select="1" colspan="4"/>
 				<field name="field" select="1"/>
 				<field name="sequence"/>
 				<newline/>
@@ -229,8 +229,8 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Journal View">
-				<field name="name" colspan="3" select="1"/>
-				<field name="columns_id" colspan="3" widget="one2many_list"/>
+				<field name="name" colspan="4" select="1"/>
+				<field name="columns_id" colspan="4" widget="one2many_list"/>
 			</form>
 		</field>
 	</record>
@@ -323,11 +323,11 @@
 				<page string="General">
 					<field name="name" select="1"/>
 					<field name="code" select="1"/>
-					<field name="partner_id" colspan="3"/>
+					<field name="partner_id" colspan="4"/>
 					<newline/>
-					<field name="bank_account_ids" colspan="3">
+					<field name="bank_account_ids" colspan="4">
 						<form string="Bank">
-							<field name="name" colspan="3" select="1"/>
+							<field name="name" colspan="4" select="1"/>
 							<field name="code" select="1"/>
 							<field name="currency_id"/>
 							<field name="iban"/>
@@ -358,7 +358,7 @@
 		<field name="priority" eval="8"/>
 		<field name="arch" type="xml">
 			<form string="Bank">
-				<field name="name" colspan="3" select="1"/>
+				<field name="name" colspan="4" select="1"/>
 				<field name="bank_id" select="1"/>
 				<field name="code" select="1"/>
 				<field name="iban"/>
@@ -549,7 +549,7 @@
 			<form string="Account Entry Reconcile">
 				<field name="name" select="1"/>
 				<field name="type" select="1"/>
-				<field name="line_id" colspan="3"/>
+				<field name="line_id" colspan="4"/>
 			</form>
 		</field>
 	</record>
@@ -585,7 +585,7 @@
 				<field name="sum"/>
 				<field name="sum_period"/>
 				<newline/>
-				<field name="info" colspan="3"/>
+				<field name="info" colspan="4"/>
 			</form>
 		</field>
 	</record>
@@ -648,7 +648,7 @@
 				<field name="child_depend"/>
 				<field name="sequence" />
 				<newline/>
-				<field name="child_ids" colspan="3"/>
+				<field name="child_ids" colspan="4"/>
 				</page><page string="Tax Declaration">
 					<separator colspan="4" string="Invoices"/>
 					<field name="base_code_id"/>
@@ -875,7 +875,7 @@
 				<field name="journal_id" select="1"/>
 
 				<separator string="Entry Lines" colspan="4"/>
-				<field name="line_id" colspan="3" widget="one2many_list" readonly="1">
+				<field name="line_id" colspan="4" widget="one2many_list" readonly="1">
 					<form string="Account Entry Line">
 						<separator string="General Information" colspan="4"/>
 						<field name="name" select="1"/>
@@ -1095,7 +1095,7 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Entry Model Line">
-				<field name="name" select="1" colspan="3"/>
+				<field name="name" select="1" colspan="4"/>
 				<field name="sequence"/>
 				<field name="ref" select="1"/>
 				<field name="account_id"/>
@@ -1119,7 +1119,7 @@
 				<field name="name" select="1"/>
 				<field name="ref" select="1"/>
 				<field name="journal_id" select="1"/>
-				<field name="lines_id" colspan="3" widget="one2many_list"/>
+				<field name="lines_id" colspan="4" widget="one2many_list"/>
 				<group col="1" colspan="4">
 					<button name="generate" string="Generate Entries" type="object"/>
 				</group>
@@ -1193,9 +1193,9 @@
 				<field name="name" select="1"/>
 				<field name="active" select="1"/>
 				<separator string="Description on invoices" colspan="4"/>
-				<field name="note" colspan="3"/>
+				<field name="note" colspan="4"/>
 				<separator string="Computation" colspan="4"/>
-				<field name="line_ids" colspan="3"/>
+				<field name="line_ids" colspan="4"/>
 			</form>
 		</field>
 	</record>
@@ -1269,7 +1269,7 @@
 					<button string="Remove Lines" name="remove_line" type="object" states="running"/>
 				</group>
 				<separator string="Subscription Lines" colspan="4"/>
-				<field name="lines_id" colspan="3" widget="one2many_list"/>
+				<field name="lines_id" colspan="4" widget="one2many_list"/>
 
 				<separator string="State" colspan="4"/>
 				<field name="state" select="1"/>

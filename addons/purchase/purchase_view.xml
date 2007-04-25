@@ -52,8 +52,8 @@
 						<field name="location_id"/>
 						<field name="invoice_method"/>
 						<newline/>
-						<field name="invoice_id" colspan="3"/>
-						<field name="picking_ids" colspan="3"/>
+						<field name="invoice_id" colspan="4"/>
+						<field name="picking_ids" colspan="4"/>
 					</page>
 					<page string="Notes">
 						<field name="validator" />
@@ -132,14 +132,14 @@
 						<newline/>
 						<field name="product_qty"/>
 						<field name="product_uom" on_change="product_uom_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id)"/>
-						<field name="product_id" colspan="3" on_change="product_id_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id)" context="partner_id=parent.partner_id,quantity=product_qty,pricelist=parent.pricelist_id,uom=product_uom,warehouse=parent.warehouse_id"/>
-						<field name="name" colspan="3"/>
+						<field name="product_id" colspan="4" on_change="product_id_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id)" context="partner_id=parent.partner_id,quantity=product_qty,pricelist=parent.pricelist_id,uom=product_uom,warehouse=parent.warehouse_id"/>
+						<field name="name" colspan="4"/>
 						<field name="date_planned"/>
 						<field name="price_unit"/>
 						<field name="price_subtotal" readonly="1" />
-						<field name="taxes_id" colspan="3"/>
+						<field name="taxes_id" colspan="4"/>
 					</page><page string="Notes">
-						<field name="notes" colspan="3" nolabel="1"/>
+						<field name="notes" colspan="4" nolabel="1"/>
 					</page>
 				</notebook>
 			</form>

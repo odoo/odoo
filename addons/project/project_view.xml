@@ -32,7 +32,7 @@
 							<field name="members" colspan="4" nolabel="1"/>
 						</page>
 						<page string="Partner Info">
-							<field name="partner_id" select="1" colspan="3" on_change="onchange_partner_id(partner_id)"/>
+							<field name="partner_id" select="1" colspan="4" on_change="onchange_partner_id(partner_id)"/>
 							<field name="contact_id" select="1" domain="[('partner_id','=',partner_id)]"/>
 							<field name="category_id"/>
 							<field name="pricelist_id"/>
@@ -51,7 +51,7 @@
 								<label string="Date Stop: %%(date_stop)s"/>
 							</group>
 							<separator string="Taxes" colspan="4" />
-							<field name="tax_ids" colspan="3"/>
+							<field name="tax_ids" colspan="4"/>
 						</page>
 						<page string="Tasks">
 							<field name="tasks" nolabel="1" colspan="4" widget="one2many_list">
@@ -85,7 +85,7 @@
 										</page>
 										<page string="Others">
 											<separator string="Notes" colspan="4"/>
-											<field name="invoice_id" readonly="True" colspan="3"/>
+											<field name="invoice_id" readonly="True" colspan="4"/>
 											<field name="notes" colspan="4" nolabel="1"/>
 											<separator string="Customer Description" colspan="4"/>
 											<field name="cust_desc" colspan="4"  nolabel="1"/>
@@ -154,7 +154,7 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Task Work">
-					<field name="name" select="1" colspan="3"/>
+					<field name="name" select="1" colspan="4"/>
 					<field name="hours" select="1"/>
 					<field name="date" select="1"/>
 					<field name="user_id" select="1"/>

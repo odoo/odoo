@@ -23,8 +23,8 @@
 				<field name="active" select="1"/>
 				<field name="shop_id" select="1"/>
 				<field name="product_all"/>
-				<field name="partner_anonymous_id" colspan="3"/>
-				<field name="product_ids" colspan="3"/>
+				<field name="partner_anonymous_id" colspan="4"/>
+				<field name="product_ids" colspan="4"/>
 			</form>
 		</field>
 	</record>
@@ -60,7 +60,7 @@
 			<form string="eSale Order">
 				<notebook>
 					<page string="Order Line">
-						<field name="name" select="1" colspan="3"/>
+						<field name="name" select="1" colspan="4"/>
 						<field name="partner_id" select="1"/>
 						<field name="date_order" select="1"/>
 						<field name="web_id" select="1"/>
@@ -72,8 +72,8 @@
 						<button type="object" name="order_cancel" states="draft" string="Cancel Order"/>
 					</page>
 					<page string="Others data">
-						<field name="order_id" colspan="3"/>
-						<field name="note" colspan="3"/>
+						<field name="order_id" colspan="4"/>
+						<field name="note" colspan="4"/>
 					</page>
 				</notebook>
 			</form>
@@ -105,8 +105,8 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="eSales Order Line">
-				<field name="name" colspan="3"/>
-				<field name="product_id" colspan="3"/>
+				<field name="name" colspan="4"/>
+				<field name="product_id" colspan="4"/>
 				<field name="product_qty"/>
 				<field name="product_uom"/>
 
@@ -150,8 +150,8 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="eSale user">
-				<field name="name" select="1" colspan="3"/>
-				<field name="partner_id" select="1" colspan="3"/>
+				<field name="name" select="1" colspan="4"/>
+				<field name="partner_id" select="1" colspan="4"/>
 				<field name="web_id"/>
 				<field name="web_ref"/>
 				<field name="picking_policy"/>

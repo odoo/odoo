@@ -21,15 +21,15 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Campaign Definition">
-				<field name="name" colspan="3" select="1"/>
+				<field name="name" colspan="4" select="1"/>
 				<field name="costs"/>
 				<newline/>
 				<field name="date_start"/>
 				<field name="date_stop"/>
 				<field name="planned_costs"/>
 				<field name="planned_revenue"/>
-				<field name="info" colspan="3"/>
-				<field name="step_id" colspan="3" widget="one2many_list"/>
+				<field name="info" colspan="4"/>
+				<field name="step_id" colspan="4" widget="one2many_list"/>
 			</form>
 		</field>
 	</record>
@@ -75,7 +75,7 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Marketing Steps">
-				<field name="name" select="1" colspan="3"/>
+				<field name="name" select="1" colspan="4"/>
 				<field name="priority" select="1"/>
 				<field name="active" select="1"/>
 				<field name="start_date" select="1"/>
@@ -84,7 +84,7 @@
 				<field name="costs"/>
 				<field name="max_try"/>
 				<newline/>
-				<field name="info" colspan="3"/>
+				<field name="info" colspan="4"/>
 			</form>
 		</field>
 	</record>
@@ -95,7 +95,7 @@
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
 			<tree string="Marketing Prospects">
-				<field name="partner_id" colspan="3"/>
+				<field name="partner_id" colspan="4"/>
 				<field name="contact"/>
 				<field name="step" select="1"/>
 				<field name="user_id" select="1"/>
@@ -114,21 +114,21 @@
 				<notebook>
 				<page string="Main Information">
 					<separator string="Prospect Information" colspan="4"/>
-					<field name="name" select="1" colspan="3"/>
+					<field name="name" select="1" colspan="4"/>
 					<field name="user_id" select="1"/>
 					<field name="active" select="1"/>
 					<field name="partner_id" select="1"/>
 					<field name="campaign_id"/>
 					<field name="part_adr_id"/>
 					<field name="contact"/>
-					<field name="notes" colspan="3"/>
+					<field name="notes" colspan="4"/>
 					<separator string="Step Information" colspan="4"/>
 					<field name="step" select="1" domain="[('campaign_id','=',campaign_id)]"/>
 					<field name="priority" select="1"/>
 					<field name="date_recall" colspan="2"/>
 					<button name="recall" type="object" string="Call again Later" states="draft"/>
 					<newline/>
-					<field name="info" colspan="3"/>
+					<field name="info" colspan="4"/>
 					<field name="state" select="1"/>
 					<group col="2" colspan="2">
 						<button name="stop_camp" type="object" string="Stop Campaign" states="draft,wait"/>
@@ -149,7 +149,7 @@
 		<field name="arch" type="xml">
 			<form string="History">
 <!--
-				<field name="name" colspan="3"/>
+				<field name="name" colspan="4"/>
 -->				
 				<field name="step_id"/>
 				<field name="date"/>

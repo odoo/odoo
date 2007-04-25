@@ -86,14 +86,14 @@
 			<form string="Scrum Product Backlog">
 				<notebook>
 				<page string="Product Backlog">
-					<field name="name" select="1" colspan="3"/>
+					<field name="name" select="1" colspan="4"/>
 					<field name="priority"/>
 					<field name="sequence"/>
 					<field name="project_id" select="1" />
 					<field name="sprint_id" select="1" />
 					<field name="user_id" select="1" />
 					<field name="active" select="1" />
-					<field name="note" colspan="3"/>
+					<field name="note" colspan="4"/>
 					<field name="state" select="1"/>
 					<field name="progress"/>
 					<field name="effective_hours"/>
@@ -160,7 +160,7 @@
 			<form string="Scrum Sprint">
 				<notebook>
 				<page string="Sprint Info">
-					<field name="name" select="1" colspan="3"/>
+					<field name="name" select="1" colspan="4"/>
 					<newline/>
 					<field name="project_id" on_change="onchange_project_id(project_id)"/>
 					<newline/>

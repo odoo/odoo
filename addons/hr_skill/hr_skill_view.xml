@@ -65,8 +65,8 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Positions">
-				<field name="name" select="1" colspan="3"/>
-				<field name="profile_ids" colspan="3"> 
+				<field name="name" select="1" colspan="4"/>
+				<field name="profile_ids" colspan="4"> 
 					<tree string="Profiles" editable="top">
 						<field name="profile_id" on_change="onchange_profile_id(profile_id)"/>
 						<field name="weight_id"/>
@@ -95,8 +95,8 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Profile">
-				<field name="name" select="1" colspan="3"/>
-				<field name="skill_ids" colspan="3"> 
+				<field name="name" select="1" colspan="4"/>
+				<field name="skill_ids" colspan="4"> 
 					<tree string="Skills" editable="top">
 						<field name="skill_id" on_change="onchange_skill_id(skill_id)"/>
 						<field name="weight_id"/>
@@ -211,7 +211,7 @@
 			<form string="Experiences">
 				<field name="name" select="1" />
 				<field name="category_id" select="1" />
-				<field name="skill_ids" colspan="3"> 
+				<field name="skill_ids" colspan="4"> 
 					<tree string="Skills" editable="top">
 					        <field name="skill_id" on_change="onchange_skill_id(skill_id)"/>
 						<field name="weight_id"/>
@@ -258,12 +258,12 @@
 					<field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
 					<field name="reference" />
 					<field name="category_id" />
-					<field name="note" colspan="3"/>
+					<field name="note" colspan="4"/>
 
 
 			   </page>
 			   <page string="Skill and experiences">
-					<field name="experience_ids" colspan="3" nolanel="1">
+					<field name="experience_ids" colspan="4" nolanel="1">
 					  <tree string="Experiences"
 					editable="top" nolabel="1" >
 						 <field name="experience_id" on_change="onchange_experience_id(experience_id)"/>
@@ -271,7 +271,7 @@
 						 <field name="name"/>
 					  </tree>
 					</field>
-					<field name="skill_ids" colspan="3" nolanel="1">
+					<field name="skill_ids" colspan="4" nolanel="1">
 					  <tree string="Skills"
 						 editable="top" nolabel="1" >
 						 <field name="skill_id" on_change="onchange_skill_id(skill_id)"/>

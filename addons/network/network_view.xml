@@ -14,7 +14,7 @@
 					<notebook>
 					<page string="Material Info">
 						<separator string="Informations" colspan="4"/>
-						<field name="name" colspan="3" select="1"/>
+						<field name="name" colspan="4" select="1"/>
 						<field name="type" select="1"/>
 						<field name="supplier" select="1" />
 						<field name="date" select="1"/>
@@ -123,8 +123,8 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Software Type">
-					<field name="name" colspan="3" select="1"/>
-					<field name="note" colspan="3"/>
+					<field name="name" colspan="4" select="1"/>
+					<field name="note" colspan="4"/>
 				</form>
 			</field>
 		</record>
@@ -163,8 +163,8 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Add a password">
-					<field name="login" colspan="3"/>
-					<field name="password" colspan="3"/>
+					<field name="login" colspan="4"/>
+					<field name="password" colspan="4"/>
 				</form>
 			</field>
 		</record>
@@ -187,7 +187,7 @@
 			<field name="arch" type="xml">
 				<form string="Network Softwares">
 					<separator string="General Informations" colspan="4"/>
-					<field name="name" colspan="3" select="1"/>
+					<field name="name" colspan="4" select="1"/>
 					<field name="type"/>
 					<field name="date" select="1"/>
 					<field name="email" select="1"/>
@@ -239,16 +239,16 @@
 			<field name="arch" type="xml">
 				<form string="Network Element">
 					<separator string="Network Definition" colspan="4"/>
-					<field name="name" colspan="3" select="1"/>
-					<field name="range" colspan="3" select="1"/>
-					<field name="user_id" colspan="3"  select="1"/>
-					<field name="contact_id" colspan="3" select="1"/>
+					<field name="name" colspan="4" select="1"/>
+					<field name="range" colspan="4" select="1"/>
+					<field name="user_id" colspan="4"  select="1"/>
+					<field name="contact_id" colspan="4" select="1"/>
 					<field name="material_ids" nolabel="1" colspan="4" widget="one2many_list">
 						<form string="Network Material">
 							<notebook>
 							<page string="Material Info">
 								<separator string="Informations" colspan="4"/>
-								<field name="name" colspan="3" select="1"/>
+								<field name="name" colspan="4" select="1"/>
 								<field name="type" select="1"/>
 								<field name="supplier" select="1" />
 								<field name="date" select="1"/>
@@ -283,9 +283,9 @@
 			<field name="arch" type="xml">
 				<form string="Enter a diary entry">
 					<separator string="Diary entry" colspan="4" />
-					<field name="name" colspan="3" select="1" />
-					<field name="date" colspan="3" select="1"/>
-					<field name="description" colspan="3" />
+					<field name="name" colspan="4" select="1" />
+					<field name="date" colspan="4" select="1"/>
+					<field name="description" colspan="4" />
 				</form>
 			</field>
 		</record>
