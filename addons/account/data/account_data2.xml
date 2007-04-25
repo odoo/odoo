@@ -232,5 +232,13 @@
 		<field name="default_credit_account_id" model="account.account" search="[('type','=','cash')]"/>
 	</record>
 
+		<record model="account.journal" id="stock_journal">
+			<field name="name">Stock Journal</field>
+			<field name="code">STJ</field>
+			<field name="type">general</field>
+			<field name="view_id" ref="account_journal_view"/>
+			<field name="sequence_id" ref="sequence_journal"/>
+		</record>
+
 </data>
 </terp>
