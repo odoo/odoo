@@ -187,7 +187,9 @@ class hr_timesheet_sheet(osv.osv):
 					'date_current': (DateTime.strptime(sheet.date_current, '%Y-%m-%d') + DateTime.RelativeDateTime(days=1)).strftime('%Y-%m-%d'),
 				})
 		return True
-
+	def button_dummy(self, cr, uid, ids, context):
+		return True
+	
 	def sign_in(self, cr, uid, ids, context):
 		if not self.browse(cr, uid, ids, context)[0].date_current == time.strftime('%Y-%m-%d'):
 			raise osv.except_osv('Error !', 'You can not sign in from an other date than today')

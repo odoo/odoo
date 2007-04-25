@@ -49,21 +49,28 @@
 
 					<notebook colspan="4">
 					<page string="Daily view">
-						<group col="4" colspan="2">
+						<group col="6" colspan="4">
+							<button name="button_dummy" string="Go to:" type="object"/>
 							<field name="date_current" nolabel="1"/>
+							<label string=""/>
 							<button icon="gtk-media-previous" string="" name="date_previous" type="object"/>
-							<button icon="gtk-jump-to" string="" name="date_today" type="object"/>
+							<button  string="Today" name="date_today" type="object"/>
 							<button icon="gtk-media-next" string="" name="date_next" type="object"/>
 						</group>
-						<button string="Sign In" name="sign_in" type="object"/>
-						<button string="Sign Out" name="sign_out" type="object"/>
-						<field name="attendances_ids" colspan="4" nolabel="1" context="name=date_current,user_id=user_id" height="100">
+
+						<field name="attendances_ids" colspan="3" nolabel="1" context="name=date_current,user_id=user_id" height="100">
 							<tree string="Attendances">
 								<field name="name"/>
 								<field name="action"/>
 								<field name="employee_id" invisible="True"/>
 							</tree>
 						</field>
+						<group col="1" colspan="1">
+						<button string="Sign In" name="sign_in" type="object"/>
+						<button string="Sign Out" name="sign_out" type="object"/>
+						</group>
+
+
 						<field name="state_attendance"/>
 						<field name="total_attendance_day" widget="float_time"/>
 						<field name="timesheet_ids" colspan="4" nolabel="1" domain="[('name','=',date_current)]" context="date=date_current,user_id=user_id">
@@ -84,13 +91,6 @@
 						</field>
 						<field name="total_difference_day" widget="float_time"/>
 						<field name="total_timesheet_day" widget="float_time"/>
-						<field name="state"/>
-						<group col="4" colspan="2">
-							<button string="Confirm" name="button_confirm" states="draft" type="object"/>
-							<button string="Cancel" name="cancel" states="done"/>
-							<button string="Refuse" name="cancel" states="confirm"/>
-							<button string="Accept" name="done" states="confirm"/>
-						</group>
 					</page><page string="By day">
 						<field name="period_ids" colspan="4" nolabel="1">
 							<tree string="Period" colors="red:total_difference&lt;=0.1;blue:total_difference&gt;=0.1">
@@ -113,6 +113,13 @@
 						</field>
 					</page>
 					</notebook>
+						<field name="state"/>
+						<group col="4" colspan="2">
+							<button string="Confirm" name="button_confirm" states="draft" type="object"/>
+							<button string="Cancel" name="cancel" states="done"/>
+							<button string="Refuse" name="cancel" states="confirm"/>
+							<button string="Accept" name="done" states="confirm"/>
+						</group>
 				</form>
 			</field>
 		</record>
