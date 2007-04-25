@@ -13,8 +13,8 @@
 			<field name="field_parent">child_ids</field>
 			<field name="arch" type="xml">
 				<form string="Module Category">
-					<field name="name" colspan="3"/>
-					<field name="parent_id" colspan="3"/>
+					<field name="name" colspan="4"/>
+					<field name="parent_id" colspan="4"/>
 				</form>
 			</field>
 		</record>
@@ -74,8 +74,8 @@
 					<notebook>
 						<page string="Module">
 							<field name="name" select="1"/>
-							<field name="shortdesc" colspan="3"/>
-							<field name="description" colspan="3"/>
+							<field name="shortdesc" colspan="4"/>
+							<field name="description" colspan="4"/>
 							<field name="installed_version"/>
 							<field name="latest_version"/>
 							<field name="author"/>
@@ -165,8 +165,8 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Repository">
-					<field name="name" colspan="3" select="1"/>
-					<field name="url" colspan="3" select="1"/>
+					<field name="name" colspan="4" select="1"/>
+					<field name="url" colspan="4" select="1"/>
 				</form>
 			</field>
 		</record>

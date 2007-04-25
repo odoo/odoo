@@ -135,7 +135,7 @@
 		<field name="priority" eval="8"/>
 		<field name="arch" type="xml">
 			<form string="Partner Contacts">
-				<field name="partner_id" colspan="3" select="1"/>
+				<field name="partner_id" colspan="4" select="1"/>
 				<newline/>
 				<field name="name" select="1"/>
 				<field name="title" domain="[('domain', '=', 'contact')]"/>
@@ -367,7 +367,7 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Bank Details">
-				<field name="name" select="1" colspan="3"/>
+				<field name="name" select="1" colspan="4"/>
 				<field name="bank_name" select="1"/>
 				<field name="bank_guichet" select="1"/>
 				<field name="street"/>

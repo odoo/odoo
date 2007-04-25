@@ -12,7 +12,7 @@
 		<field name="arch" type="xml">
 			<form string="Sequences">
 				<separator string="Configuration" colspan="4"/>
-				<field name="name" colspan="3" select="1"/>
+				<field name="name" colspan="4" select="1"/>
 				<field name="code" select="1"/>
 				<field name="active" select="1"/>
 				<field name="prefix"/>
@@ -126,12 +126,12 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Open a Window">
-				<field name="name" colspan="3" select="1"/>
+				<field name="name" colspan="4" select="1"/>
 				<field name="type" readonly="1"/>
 				<field name="view_id"/>
 				<field name="res_model"/>
 				<field name="view_type"/>
-				<field name="domain" colspan="3"/>
+				<field name="domain" colspan="4"/>
 			</form>
 		</field>
 	</record>
@@ -209,8 +209,8 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Role">
-				<field name="name" colspan="3" select="1"/>
-				<field name="parent_id" colspan="3"/>
+				<field name="name" colspan="4" select="1"/>
+				<field name="parent_id" colspan="4"/>
 			</form>
 		</field>
 	</record>
@@ -256,7 +256,7 @@
 				<field name="field_parent"/>
 				<field name="priority"/>
 				<field name="inherit_id"/>
-				<field name="arch" colspan="3" select="1"/>
+				<field name="arch" colspan="4" select="1"/>
 			</form>
 		</field>
 	</record>
@@ -278,9 +278,9 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Attachments">
-				<field name="name" colspan="3" select="1"/>
-				<field name="description" colspan="3"/>
-				<field name="datas" colspan="3"/>
+				<field name="name" colspan="4" select="1"/>
+				<field name="description" colspan="4"/>
+				<field name="datas" colspan="4"/>
 				<field name="datas_fname"/>
 				<newline/>
 				<field name="res_model" select="1"/>
@@ -378,7 +378,7 @@
 				<field name="frequency"/>
 				<field name="limitt"/>
 				<field name="menu_id" />
-				<field name="fields_child0" widget="one2many_list" colspan="3"/>
+				<field name="fields_child0" widget="one2many_list" colspan="4"/>
 				<field name="state" readonly="1" select="1"/>
 				<group col="2" colspan="2">
 					<button name="subscribe" string="Subscribe Report" states="unsubscribed" type="object"/>
@@ -409,7 +409,7 @@
 			<form string="Model Description">
 				<field name="name" select="1"/>
 				<field name="model" select="1"/>
-				<field name="info" select="1" colspan="3"/>
+				<field name="info" select="1" colspan="4"/>
 				<separator string="Fields" colspan="4"/>
 				<field name="field_id" colspan="4" nolabel="1">
 					<form string="Fields Description">
@@ -498,10 +498,10 @@
 			<form string="Translations">
 				<field name="name" select="1"/>
 				<field name="lang" select="1"/>
-				<field name="src" colspan="3" select="1"/>
+				<field name="src" colspan="4" select="1"/>
 				<field name="type" select="1"/>
 				<field name="res_id" select="1"/>
-				<field name="value" colspan="3" select="1"/>
+				<field name="value" colspan="4" select="1"/>
 			</form>
 		</field>
 	</record>
@@ -554,8 +554,8 @@
 				<field name="complete_name"/>
 				<field name="name" select="1"/>
 				<field name="sequence"/>
-				<field name="parent_id" colspan="3" select="1"/>
-				<field name="groups_id" colspan="3"/>
+				<field name="parent_id" colspan="4" select="1"/>
+				<field name="groups_id" colspan="4"/>
 				<field name="icon"/>
 			</form>
 		</field>
@@ -608,7 +608,7 @@
 				<newline/>
 				<field name="model"  readonly="1"/>
 				<field name="function" readonly="1"/>
-				<field name="args" colspan="3" readonly="1"/>
+				<field name="args" colspan="4" readonly="1"/>
 			</form>
 		</field>
 	</record>
@@ -640,7 +640,7 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Access Controls">
-				<field name="name" select="1" colspan="3"/>
+				<field name="name" select="1" colspan="4"/>
 				<field name="model_id" select="1"/>
 				<field name="group_id" select="1"/>
 				<newline/>

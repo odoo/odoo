@@ -46,9 +46,9 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Activity">
-				<field name="name" colspan="3" select="1"/>
+				<field name="name" colspan="4" select="1"/>
 				<field name="kind" select="1"/>
-				<field name="action" colspan="3" select="1"/>
+				<field name="action" colspan="4" select="1"/>
 				<field name="subflow_id"/>
 				<field name="signal_send"/>
 				<newline/>
@@ -107,7 +107,7 @@
 			<form string="Transition">
 				<field name="act_from" select="1"/>
 				<field name="act_to" select="1"/>
-				<field name="condition" colspan="3"/>
+				<field name="condition" colspan="4"/>
 				<field name="signal"/>
 				<field name="role_id"/>
 				<field name="trigger_model"/>

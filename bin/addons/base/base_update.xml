@@ -48,7 +48,7 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Groups">
-				<field name="name" colspan="3" select="1"/>
+				<field name="name" colspan="4" select="1"/>
 			</form>
 		</field>
 	</record>
@@ -65,12 +65,12 @@
 		<field name="priority" eval="10"/>
 		<field name="arch" type="xml">
 			<form string="Users">
-				<field name="name" colspan="3" select="1"/>
+				<field name="name" colspan="4" select="1"/>
 				<field name="login" readonly="1" select="1"/>
 				<field name="password"/>
 				<label string="Please note that you will have to logout and relog if you change your password." colspan="4"/>
 				<newline/>
-				<field name="signature" colspan="3"/>
+				<field name="signature" colspan="4"/>
 			</form>
 		</field>
 	</record>
@@ -81,11 +81,11 @@
 		<field name="priority" eval="8"/>
 		<field name="arch" type="xml">
 			<form string="Users">
-				<field name="name" readonly="1" colspan="3" select="1"/>
+				<field name="name" readonly="1" colspan="4" select="1"/>
 				<field name="login" readonly="1" select="1"/>
 				<field name="active" readonly="1" select="1"/>
 				<newline/>
-				<field name="signature" readonly="1" colspan="3"/>
+				<field name="signature" readonly="1" colspan="4"/>
 			</form>
 		</field>
 	</record>
@@ -132,7 +132,7 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Company">
-				<field name="name" colspan="3" select="1"/>
+				<field name="name" colspan="4" select="1"/>
 				<field name="partner_id" select="1"/>
 				<field name="parent_id" select="1"/>
 				<field name="rml_header1"/>
