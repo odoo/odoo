@@ -67,7 +67,7 @@ def graph_get(cr, graph, wkf_id, nested=False, workitem={}):
 	transitions = cr.dictfetchall()
 	for t in transitions:
 		args = {}
-		args['label'] = str(t['condition'])
+		args['label'] = str(t['condition']).replace(' or ', '\\nor ').replace(' and ', '\\nand ')
 		if t['signal']:
 			args['label'] += '\\n'+str(t['signal'])
 			args['style'] = 'bold'
