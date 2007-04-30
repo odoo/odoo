@@ -44,7 +44,7 @@ class view(osv.osv):
 		'name': fields.char('View Name',size=64,  required=True),
 		'model': fields.char('Model', size=64, required=True),
 		'priority': fields.integer('Priority', required=True),
-		'type': fields.selection((('tree','Tree'),('form','Form')), 'View Type', required=True),
+		'type': fields.selection((('tree','Tree'),('form','Form'),('graph', 'Graph')), 'View Type', required=True),
 		'arch': fields.text('View Architecture', required=True),
 		'inherit_id': fields.many2one('ir.ui.view', 'Inherited View'),
 		'field_parent': fields.char('Childs Field',size=64)

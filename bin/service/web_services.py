@@ -263,6 +263,7 @@ class common(netsvc.Service):
 		self.exportMethod(self.ir_del)
 		self.exportMethod(self.about)
 		self.exportMethod(self.login)
+		self.exportMethod(self.timezone_get)
 
 	def ir_set(self, db, uid, password, keys, args, name, value, replace=True, isobject=False):
 		security.check(db, uid, password)
@@ -304,6 +305,9 @@ The whole source code is distributed under the terms of the
 GNU Public Licence.
 
 (c) 2003-TODAY, Fabien Pinckaers - Tiny sprl''')
+
+	def timezone_get(self, db, login, password):
+		return time.tzname[0]
 common()
 
 class objects_proxy(netsvc.Service):

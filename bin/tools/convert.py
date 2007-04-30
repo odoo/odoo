@@ -54,6 +54,16 @@ def _eval_xml(self,node, pool, cr, uid, idref):
 				import time
 				idref['time'] = time
 				idref['ref'] = lambda x: self.id_get(cr, False, x)
+				try:
+					import pytz
+				except:
+					import netsvc
+					logger = netsvc.Logger()
+					logger.notifyChannel("init", netsvc.LOG_INFO, 'could not find pytz library')
+					class pytzclass(object):
+						all_timezones=[]
+					pytz=pytzclass()
+				idref['pytz'] = pytz
 				return eval(a_eval, idref)
 			if t == 'xml':
 				def _process(s, idref):

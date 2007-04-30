@@ -33,7 +33,17 @@
 		<field name="models" eval="['res.users']"/>
 		<field name="name">lang</field>
 		<field name="value" eval="False"/>
-		<field name="meta" eval="{'type':'selection', 'string':'Language', 'selection':[(False,'en')]}"/>
+		<field name="meta" eval="{'type':'selection', 'string':'Language', 'selection':[('en_EN', 'English')]}"/>
+		<field name="replace" eval="True"/>
+	</ir_set>
+
+	<ir_set>
+		<field name="key" eval="'meta'"/>
+		<field name="key2" eval="'tz'"/>
+		<field name="models" eval="['res.users']"/>
+		<field name="name">tz</field>
+		<field name="value" eval="False"/>
+		<field name="meta" eval="{'type':'selection', 'string':'Timezone', 'selection': [(x, x) for x in pytz.all_timezones] }"/>
 		<field name="replace" eval="True"/>
 	</ir_set>
 
