@@ -1362,7 +1362,7 @@ class orm(object):
 					qu1.append(' (1=0)')
 		return (qu1,qu2)
 
-	def search(self, cr, user, args, offset=0, limit=None, order=None):
+	def search(self, cr, user, args, offset=0, limit=None, order=None, context={}, translate=False):
 		# if the object has a field named 'active', filter out all inactive
 		# records unless they were explicitely asked for
 		if 'active' in self._columns:
@@ -1472,7 +1472,16 @@ class orm(object):
 				if field._fnct_search:
 					args.extend(field.search(cr, user, self, arg[0][0], arg))
 			else:
-				args[i] += (table,)
+				if field.translate and translate and context.get('lang', False) and context['lang'] != 'en_EN':
+					if args[i][1] in ('like', 'ilike'):
+						args[i][2] = '%%%s%%' % args[i][2]
+					cr.execute('select res_id from ir_translation where name = %s and lang = %s and type = %s and value '+args[i][1]+' %s', (table._name+','+args[i][0], context['lang'], 'model', args[i][2]))
+					ids = map(lambda x: x[0], cr.fetchall())
+					cr.execute('select id from '+table._table+' where '+args[i][0]+' '+args[i][1]+' %s', (args[i][2],))
+					ids += map(lambda x: x[0], cr.fetchall())
+					args[i] = ('id', 'in', ids, table)
+				else:
+					args[i] += (table,)
 				i+=1
 		args.extend(joins)
 
