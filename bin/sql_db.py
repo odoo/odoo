@@ -116,7 +116,8 @@ def db_connect(db_name):
 	name = "dbname=%s" % db_name
 	user = tools.config['db_user'] and "user=%s" % tools.config['db_user'] or ''
 	password = tools.config['db_password'] and "password=%s" % tools.config['db_password'] or ''
-	tdb = psycopg.connect('%s %s %s %s %s' % (host, port, name, user, password), serialize=0)
+	maxconn = int(tools.config['db_maxconn']) or 64
+	tdb = psycopg.connect('%s %s %s %s %s' % (host, port, name, user, password), serialize=0, maxconn=maxconn)
 	fdb = fakedb(tdb, db_name)
 	return fdb
 

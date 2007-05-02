@@ -45,6 +45,7 @@ class configmanager(object):
 			'db_name': 'terp',
 			'db_user': False,
 			'db_password': False,
+			'db_maxconn': 64,
 			'reportgz': False,
 			'netrpc': True,
 			'xmlrpc': True,
@@ -100,6 +101,7 @@ class configmanager(object):
 		group.add_option("--pg_path", dest="pg_path", help="specify the pg executable path") 
 		group.add_option("--db_host", dest="db_host", help="specify the database host") 
 		group.add_option("--db_port", dest="db_port", help="specify the database port") 
+		group.add_option("--db_maxconn", dest="db_maxconn", default='64', help="specify the the maximum number of physical connections to posgresql")
 		parser.add_option_group(group)
 
 		group = optparse.OptionGroup(parser, "Internationalisation options",
@@ -139,7 +141,7 @@ class configmanager(object):
                     self.options['pidfile'] = False
 		
 		for arg in ('interface', 'port', 'db_name', 'db_user', 'db_password', 'db_host',
-				'db_port', 'logfile', 'pidfile', 'secure', 'smtp_server', 'price_accuracy', 'netinterface', 'netport'):
+				'db_port', 'logfile', 'pidfile', 'secure', 'smtp_server', 'price_accuracy', 'netinterface', 'netport', 'db_maxconn'):
 			if getattr(opt, arg):
 				self.options[arg] = getattr(opt, arg)
 
