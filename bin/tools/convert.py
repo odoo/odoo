@@ -356,12 +356,14 @@ class xml_import(object):
 			for rec in n.childNodes:
 				if rec.nodeType == rec.ELEMENT_NODE:
 					if rec.nodeName in self._tags:
-						self._tags[rec.nodeName](self.cr, rec, n)
-						#try:
-						#	self._tags[rec.nodeName](self.cr, rec, n)
-						#except:
-						#	#print rec.toxml().decode('latin1')
-						#	raise
+						try:
+							self._tags[rec.nodeName](self.cr, rec, n)
+						except:
+							import netsvc
+							logger = netsvc.Logger()
+							logger.notifyChannel("init", netsvc.LOG_INFO, '\n'+rec.toxml())
+							self.cr.rollback()
+							raise
 		self.cr.commit()
 		return True
 
