@@ -33,3 +33,4 @@ import wizard_module_lang_install
 import add_new
 import wizard_export_lang
 import wizard_import_lang
+import move_module_wizard
