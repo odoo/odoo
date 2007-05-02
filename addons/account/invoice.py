@@ -194,18 +194,15 @@ class account_invoice(osv.osv):
 	def onchange_currency_id(self, cr, uid, ids, curr_id):
 		return {}
 	
-	def onchange_payment_term(self, cr, uid, ids, payment_term_id):
+	def onchange_payment_term_date_invoice(self, cr, uid, ids, payment_term_id, date_invoice):
 		if not payment_term_id:
 			return {}
 		res={}
 		pt_obj= self.pool.get('account.payment.term')
 
-		if ids :
-			invoice= self.pool.get('account.invoice').browse(cr, uid, ids)[0]
-			date_invoice= invoice.date_invoice
-		else:
+		if not date_invoice :
 			date_invoice= time.strftime('%Y-%m-%d')
-			
+
 		pterm_list= pt_obj.compute(cr, uid, payment_term_id, value=1, date_ref=date_invoice)
 
 		if pterm_list:
@@ -213,10 +210,8 @@ class account_invoice(osv.osv):
 			pterm_list.sort()
 			res= {'value':{'date_due': pterm_list[-1]}}
 
-
 		return res
-		
-	
+
 	# go from canceled state to draft state
 	def action_cancel_draft(self, cr, uid, ids, *args):
 		self.write(cr, uid, ids, {'state':'draft'})
