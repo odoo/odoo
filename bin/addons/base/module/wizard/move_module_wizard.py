@@ -15,10 +15,6 @@ move_module_form = '''<?xml version="1.0"?>
     <field name="module_name" colspan="4"/>
     <newline/>
     <newline/>
-    <field name="tourl" colspan="4"/>
-    <newline/>
-    <label/>
-    <label> Give full path with zip file name and .zip extension </label>
 </form>'''
 
 finish_form ='''<?xml version="1.0"?>
@@ -87,17 +83,14 @@ class move_module_wizard(wizard.interface):
 
     #end def createzip(self, cr, uid, data, context):
 
-    def _init_wizard(self, cr, uid, data, context):
-        return {'tourl':os.getcwd()}
-
     move_module_fields = {
         'module_name': {'string':'Module Name', 'type':'selection', 'selection':_get_module,'required':True},
-        'tourl': {'string':'Server URL', 'type':'char', 'size':128 },
+
     }
 
     states = {
         'init': {
-            'actions': [_init_wizard],
+            'actions': [],
             'result': {'type':'form', 'arch':move_module_form, 'fields':move_module_fields, 'state':[('end','Cancel'),('makezip','Create Zip')]}
         },
         'makezip': {
