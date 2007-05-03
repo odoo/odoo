@@ -183,7 +183,8 @@ def file_open(name, mode="r", subdir='addons'):
 			import StringIO
 			zfile = zipfile.ZipFile(head)
 			return StringIO.StringIO(zfile.read(os.path.join(os.path.basename(head), name)))
-	return None
+	raise IOError, 'File not found : '+str(name)	
+
 
 #----------------------------------------------------------
 # Emails
