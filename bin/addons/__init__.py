@@ -193,7 +193,6 @@ def load_module_graph(cr, graph, status={}):
 				for filename in package.datas.get('%s_xml' % kind, []):
 					mode = 'update'
 					if hasattr(package, 'init') or package_state=='to install':
-						print 'Mode', mode, filename
 						mode = 'init'
 					logger.notifyChannel('init', netsvc.LOG_INFO, 'addon:%s:loading %s' % (m, filename))
 					name, ext = os.path.splitext(filename)
@@ -271,7 +270,6 @@ def load_modules(db, force_demo=False, status={}, update_module=False):
 				#   and I can not use the pool has the module could not be loaded in the pool
 				#
 				uid = 1
-				print rmod
 				pool.get(rmod).unlink(cr, uid, [rid])
 			cr.commit()
 		#
