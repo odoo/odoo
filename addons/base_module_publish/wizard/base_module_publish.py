@@ -77,7 +77,7 @@ check_form = '''<?xml version="1.0"?>
 		<field name="demourl"/> <label colspan="2" string="(empty to keep existing value)"/>
 		<field name="image"/> <label colspan="2" string="(support only .png files)"/>
 	</page><page string="Description">
-		<field name="description" colspan="3"/>
+		<field name="description" colspan="4" nolabel="1"/>
 	</page>
 	</notebook>
 </form>'''
@@ -88,7 +88,7 @@ check_fields = {
 	'author': {'string':'Author', 'type':'char', 'size':128, 'readonly':True},
 	'website': {'string':'Website', 'type':'char', 'size':200, 'readonly':True},
 	'url': {'string':'Download URL', 'type':'char', 'size':200, 'readonly':True},
-	'image': {'string':'Image file', 'type':'binary'},
+	'image': {'string':'Image file', 'type':'image'},
 	'description': {'string':'Description', 'type':'text', 'readonly':True},
 	'version': {'string':'Version', 'type':'char', 'readonly':True},
 	'demourl': {'string':'Demo URL', 'type':'char', 'size':100},
@@ -201,7 +201,7 @@ def post_multipart(host, selector, fields, files):
 
 
 def _upload(self, cr, uid, datas, context):
-	download = datas['form']['downloadurl'] or ''
+	download = datas['form']['url_download'] or ''
 	if not download:
 		# Create a .ZIP file and send them online
 		# Set the download url to this .ZIP file
@@ -233,7 +233,7 @@ def _upload(self, cr, uid, datas, context):
 	files = []
 	if datas['form']['image']:
 		files.append(('link_image', datas['form']['image']))
-	result = post_multipart('www.tinyerp.com', '/index.php', updata.items(), [])
+	result = post_multipart('www.tinyerp.com', '/index.php', updata.items(), files)
 	return {'result': result}
 
 def module_check(self, cr, uid, data, context):
