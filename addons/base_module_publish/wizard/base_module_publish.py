@@ -31,6 +31,8 @@ import osv
 import pooler
 import urllib
 
+import module_zip
+
 intro_form = '''<?xml version="1.0"?>
 <form string="Module publication">
 	<separator string="Publication information" colspan="4"/>
@@ -174,9 +176,9 @@ def post_multipart(host, selector, fields, files):
 			L.append('Content-Disposition: form-data; name="%s"' % key)
 			L.append('')
 			L.append(value)
-		for (key,value) in files:
+		for (key,fname,value) in files:
 			L.append('--' + BOUNDARY)
-			L.append('Content-Disposition: form-data; name="%s"; filename="%s"' % (key, key+'.png'))
+			L.append('Content-Disposition: form-data; name="%s"; filename="%s"' % (key, fname))
 			L.append('Content-Type: application/octet-stream')
 			L.append('')
 			L.append(value)
@@ -203,10 +205,21 @@ def post_multipart(host, selector, fields, files):
 def _upload(self, cr, uid, datas, context):
 	download = datas['form']['url_download'] or ''
 	if not download:
-		# Create a .ZIP file and send them online
-		# Set the download url to this .ZIP file
-		download = '/'
-	lpool = pooler.get_pool(cr.dbname)
+		res = module_zip.createzip(cr, uid, datas['id'], context, b64enc=False)
+
+		download = 'http://tinyerp.com/download/modules/'+res['module_filename']
+
+		result = post_multipart('www.tinyerp.com', '/mtree_upload.php', 
+			[
+				('login',datas['form']['login']),
+				('password',datas['form']['password'])
+			], [
+				('module', res['module_filename'], res['module_file'])
+			])
+
+		# module_file & module_filename
+
+	pool = pooler.get_pool(cr.dbname)
 	mod = pool.get('ir.module.module').browse(cr, uid, datas['id'])
 	updata = {
 		'link_name': mod.shortdesc or '',
@@ -232,7 +245,7 @@ def _upload(self, cr, uid, datas, context):
 	}
 	files = []
 	if datas['form']['image']:
-		files.append(('link_image', datas['form']['image']))
+		files.append(('link_image', 'link_image.png', datas['form']['image']))
 	result = post_multipart('www.tinyerp.com', '/index.php', updata.items(), files)
 	return {'result': result}
 

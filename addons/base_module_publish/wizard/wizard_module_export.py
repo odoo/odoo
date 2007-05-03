@@ -1,7 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
-#                    Fabien Pinckaers <fp@tiny.Be>
+# Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -26,5 +25,39 @@
 #
 ##############################################################################
 
-import base_module_publish
-import wizard_module_export
+
+import wizard
+import pooler
+
+import module_zip
+
+finish_form ='''<?xml version="1.0"?>
+<form string="Finish">
+	<separator string="Module successfully exported !" colspan="4"/>
+	<field name="module_file"/>
+	<newline/>
+	<field name="module_filename"/>
+</form>
+'''
+
+finish_fields = {
+	'module_file': {'string': 'Module .zip file', 'type':'binary', 'readonly':True},
+	'module_filename': {'string': 'Filename', 'type':'char', 'size': 64, 'readonly':True},
+}
+
+class move_module_wizard(wizard.interface):
+	def createzip(self, cr, uid, data, context):
+		return module_zip.createzip(cr, uid, data['id'], context)
+
+	states = {
+		'init': {
+			'actions': [createzip],
+			'result': {
+				'type':'form',
+				'arch':finish_form,
+				'fields':finish_fields,
+				'state':[('end','Close')]
+			}
+		}
+	}
+move_module_wizard('base.module.export')
