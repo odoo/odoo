@@ -41,39 +41,64 @@ class account_analytic_account(osv.osv):
 	_name = 'account.analytic.account'
 
 	def _credit_calc(self, cr, uid, ids, name, arg, context={}):
-		res = {}
-		for account in self.browse(cr, uid, ids):
-			node_balance = reduce(operator.add, [-line.amount for line in account.line_ids if line.amount<0], 0)
-			child_balance = reduce(operator.add, [child.credit for child in account.child_ids], 0)
-			res[account.id] = node_balance + child_balance
-		for id in ids:
-			res[id] = round(res.get(id, 0.0),2)
-		return res
+		acc_set = ",".join(map(str, ids))
+		cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id) WHERE l.amount<0 and a.id IN (%s) GROUP BY a.id" % acc_set)
+		return dict(cr.fetchall())
+# 		res = {}
+# 		for account in self.browse(cr, uid, ids):
+# 			node_balance = reduce(operator.add, [-line.amount for line in account.line_ids if line.amount<0], 0)
+# 			child_balance = reduce(operator.add, [child.credit for child in account.child_ids], 0)
+# 			res[account.id] = node_balance + child_balance
+# 		for id in ids:
+# 			res[id] = round(res.get(id, 0.0),2)
+# 		return res
 
 	def _debit_calc(self, cr, uid, ids, name, arg, context={}):
-		# XXX to be improved like in account.account
-		res = {}
-		for account in self.browse(cr, uid, ids):
-			node_balance = reduce(operator.add, [line.amount for line in account.line_ids if line.amount>0], 0)
-			child_balance = reduce(operator.add, [child.debit for child in account.child_ids], 0)
-			res[account.id] = node_balance + child_balance
-		for id in ids:
-			res[id] = round(res.get(id, 0.0),2)
-		return res
+		acc_set = ",".join(map(str, ids))
+		cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id) WHERE l.amount>0 and a.id IN (%s) GROUP BY a.id" % acc_set)
+		return dict(cr.fetchall())
+
+
+			
+# 		print res
+# 		res = {}
+# 		for account in self.browse(cr, uid, ids):
+# 			node_balance = reduce(operator.add, [line.amount for line in account.line_ids if line.amount>0], 0)
+# 			child_balance = reduce(operator.add, [child.debit for child in account.child_ids], 0)
+# 			res[account.id] = node_balance + child_balance
+# 		for id in ids:
+# 			res[id] = round(res.get(id, 0.0),2)
+# 		print res
+
 
 	def _balance_calc(self, cr, uid, ids, name, arg, context={}):
+		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+		acc_set = ",".join(map(str, ids2))
+		cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id) WHERE a.id IN (%s) GROUP BY a.id" % acc_set)
 		res = {}
-		for account in self.browse(cr, uid, ids):
-			node_balance = reduce(operator.add, [line.amount for line in account.line_ids], 0)
-			child_balance = reduce(operator.add,
-				[self.pool.get('res.currency').compute(cr, uid, 
-					child.company_id.currency_id.id, 
-					account.company_id.currency_id.id, child.balance, context=context)
-				for child in account.child_ids], 0)
-			res[account.id] = node_balance + child_balance
+		for account_id, sum in cr.fetchall():
+			res[account_id] = sum
+			
+		cr.execute("SELECT a.id, r.currency_id FROM account_analytic_account a INNER JOIN res_company r ON (a.company_id = r.id) where a.id in (%s)" % acc_set)
+
+		currency= dict(cr.fetchall())
+
+		res_currency= self.pool.get('res.currency')
 		for id in ids:
-			res[id] = round(res.get(id, 0.0),2)
-		return res
+			for child in self.search(cr, uid, [('parent_id', 'child_of', [id])]):
+				if child <> id:
+					res.setdefault(id, 0.0)
+					if  currency[child]<>currency[id] :
+						res[id] += res_currency.compute(cr, uid, currency[child], currency[id], res.get(child, 0.0), context=context)
+					else:
+						res[id] += res.get(child, 0.0)
+
+		cur_obj = res_currency.browse(cr,uid,currency.values(),context)
+		cur_obj = dict([(o.id, o) for o in cur_obj])
+		for id in ids:
+			res[id] = res_currency.round(cr,uid,cur_obj[currency[id]],res.get(id,0.0)) 
+
+		return dict([(i, res[i]) for i in ids ])
 
 	def _quantity_calc(self, cr, uid, ids, name, arg, context={}):
 		res = {}
