@@ -68,8 +68,8 @@ icons = map(lambda x: (x,x), ['STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_
 
 class ir_ui_menu(osv.osv):
 	_name = 'ir.ui.menu'
-	def search(self, cr, uid, args, offset=0, limit=2000, order=None):
-		ids = osv.orm.orm.search(self, cr, uid, args, offset, limit, order)
+	def search(self, cr, uid, args, offset=0, limit=2000, order=None, context={}):
+		ids = osv.orm.orm.search(self, cr, uid, args, offset, limit, order, context=context)
 		user_groups = self.pool.get('res.users').read(cr, uid, [uid])[0]['groups_id']
 		result = []
 		for menu in self.browse(cr, uid, ids):
