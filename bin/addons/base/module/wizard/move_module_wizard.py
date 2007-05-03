@@ -33,6 +33,8 @@ class move_module_wizard(wizard.interface):
     def zippy(self,path, archive):
         paths = os.listdir(path)
         for p in paths:
+            if p=='.svn':
+                continue
             p = os.path.join(path, p) # Make the path relative
             if os.path.isdir(p): # Recursive case
                 self.zippy(p, archive)
