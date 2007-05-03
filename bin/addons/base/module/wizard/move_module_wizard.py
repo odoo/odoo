@@ -1,107 +1,98 @@
+##############################################################################
+#
+# Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+##############################################################################
+
+
 import wizard
 import osv
-from datetime import date
-import time
 import pooler
-import xmlrpclib
-import re
 import os
-import sys
-import string
-from zipfile import ZipFile, ZIP_DEFLATED
+import tools
 
-move_module_form = '''<?xml version="1.0"?>
-<form string="Transfer Module">
-    <field name="module_name" colspan="4"/>
-    <newline/>
-    <newline/>
-</form>'''
+from zipfile import PyZipFile, ZIP_DEFLATED
+import StringIO
+import base64
 
 finish_form ='''<?xml version="1.0"?>
 <form string="Finish">
-    <label string="Module Zipped successfully !!!" colspan="4"/>
+	<separator string="Module successfully exported !" colspan="4"/>
+	<field name="module_file"/>
+	<newline/>
+	<field name="module_filename"/>
 </form>
 '''
 
+finish_fields = {
+	'module_file': {'string': 'Module .ZIP file', 'type':'binary', 'readonly':True},
+	'module_filename': {'string': 'Filename', 'type':'char', 'size': 64, 'readonly':True},
+}
+
 class move_module_wizard(wizard.interface):
-    def _get_module(self, cr, uid, context):
-        module_obj=pooler.get_pool(cr.dbname).get('ir.module.module')
-        ids=module_obj.search(cr, uid, [])
-        modules=module_obj.browse(cr, uid, ids)
-        return [(modules_rec.name,modules_rec.name) for modules_rec in modules]
+	def zippy(self, archive, fromurl, path):
+		url = os.path.join(fromurl, path)
+		if os.path.isdir(url):
+			if path.split('/')[-1]=='.svn':
+				return False
+			for fname in os.listdir(url):
+				self.zippy(archive, fromurl, path and os.path.join(path, fname) or fname)
+		else:
+			if (path.split('.')[-1] not in ['py','pyo','pyc']) or (os.path.basename(path)=='__terp__.py'):
+				print 'Adding', os.path.join(fromurl, path), 'as', path
+				archive.write(os.path.join(fromurl, path), path)
+		return True
 
-    def zippy(self,path, archive):
-        paths = os.listdir(path)
-        for p in paths:
-            if p=='.svn':
-                continue
-            p = os.path.join(path, p) # Make the path relative
-            if os.path.isdir(p): # Recursive case
-                self.zippy(p, archive)
-            else:
-                ext=p.split('/')
-                if ext[len(ext)-1]=='__terp__.py':
-                    archive.write(p)
-                    continue
-                ext=p.split('.')[1]
-                if ext=='py':
-                    continue
-                archive.write(p) # Write the file to the zipfile
-        return
+	def createzip(self, cr, uid, data, context):
+		module_obj=pooler.get_pool(cr.dbname).get('ir.module.module')
+		module_name = module_obj.browse(cr, uid, data['id']).name
 
-    def zipit(self,path, archname):
-        # Create a ZipFile Object primed to write
-        archive = ZipFile(archname, "w", ZIP_DEFLATED) # "a" to append, "r" to read
-        # Recurse or not, depending on what path is
-        if os.path.isdir(path):
-            self.zippy(path, archive)
-        else:
-            archive.write(path)
-        archive.close()
-        return "Compression of \""+path+"\" was successful!"
+		ad = tools.config['addons_path']
+		if os.path.isdir(os.path.join(ad,module_name)):
+			archname = StringIO.StringIO('wb')
+			archive = PyZipFile(archname, "w", ZIP_DEFLATED)
+			archive.writepy(os.path.join(ad,module_name))
+			self.zippy(archive, ad, module_name)
+			archive.close()
+			val =base64.encodestring(archname.getvalue())
+			archname.close()
+		elif os.path.isfile(os.path.join(ad,module_name+'.zip')):
+			val = file(os.path.join(ad,module_name+'.zip'),'rb').read()
+			val =base64.encodestring(val)
+		else:
+			raise wizard.except_wizard('Error !', 'Could not find the module to export !')
+		return {'module_file':val, 'module_filename': module_name+'.zip'}
 
-    def createzip(self, cr, uid, data, context):
-        try:
-            fromurl=os.getcwd()
-            fromurl=fromurl+'/addons/'+data['form']['module_name']
-            tourl = fromurl+'.zip'
-            status=self.zipit(fromurl,tourl)
-
-        except Exception,e:
-
-            if hasattr(e,'args'):
-                print "Items::",e.args;
-                if len(e.args) == 2:
-                    if e.args[0] == -2:
-                        return 'wrong_server_name'
-                    #end if e.args[0] == -2:
-                else:
-                    return 'wrong_server_name'
-                #end if len(e.args) == 2:
-            #end if hasattr(e,'args'):
-
-            return 'wrong_server_name'
-        return 'finish'
-
-    #end def createzip(self, cr, uid, data, context):
-
-    move_module_fields = {
-        'module_name': {'string':'Module Name', 'type':'selection', 'selection':_get_module,'required':True},
-
-    }
-
-    states = {
-        'init': {
-            'actions': [],
-            'result': {'type':'form', 'arch':move_module_form, 'fields':move_module_fields, 'state':[('end','Cancel'),('makezip','Create Zip')]}
-        },
-        'makezip': {
-            'actions': [],
-            'result':{'type':'choice', 'next_state': createzip}
-        },
-        'finish':{
-            'actions': [],
-            'result':{'type':'form', 'arch':finish_form,'fields':{},'state':[('end','OK')]}
-                  }
-    }
+	states = {
+		'init': {
+			'actions': [createzip],
+			'result': {
+				'type':'form',
+				'arch':finish_form,
+				'fields':finish_fields,
+				'state':[('end','Close')]
+			}
+		}
+	}
 move_module_wizard('tmp.wizard')
