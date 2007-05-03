@@ -185,7 +185,7 @@ class res_partner(osv.osv):
 		'lang': fields.selection(_lang_get, 'Language', size=5),
 		'user_id': fields.many2one('res.users', 'Salesman'),
 		'responsible': fields.many2one('res.users', 'Users'),
-		'vat': fields.char('VAT',size=32),
+		'vat': fields.char('VAT',size=32 ,help="Value Added Tax number"),
 		'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
 		'website': fields.char('Website',size=64),
 		'comment': fields.text('Notes'),
