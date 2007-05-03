@@ -198,6 +198,7 @@ class GenericXMLRPCRequestHandler:
 		import traceback
 		try:
 			n=self.path.split("/")[-1]
+			print "TERP-CALLING:",n,method,params
 			s=LocalService(n)
 			m=getattr(s,method)
 			s._service._response=None

@@ -63,16 +63,16 @@ class report_printscreen_list(report_int):
 	def create(self, cr, uid, ids, datas, context={}):
 		pool = pooler.get_pool(cr.dbname)
 		model = pool.get(datas['model'])
-
 		model_id = pool.get('ir.model').search(cr, uid, [('model','=',model._name)])
 		if model_id:
 			model_desc = pool.get('ir.model').browse(cr, uid, model_id[0], context).name
 		else:
 			model_desc = model._description
+
 		datas['ids'] = ids
 		model = pooler.get_pool(cr.dbname).get(datas['model'])
-		result = model.fields_view_get(cr, uid, view_type='tree', context=context)
 
+		result = model.fields_view_get(cr, uid, view_type='tree', context=context)
 		fields_order = self._parse_string(result['arch'])
 		rows = model.read(cr, uid, datas['ids'], result['fields'].keys(), context )
 		res = self._create_table(uid, datas['ids'], result['fields'], fields_order, rows, context, model_desc)

@@ -8,13 +8,12 @@ import re
 import os
 import sys
 import string
+from zipfile import ZipFile, ZIP_DEFLATED
 
 move_module_form = '''<?xml version="1.0"?>
 <form string="Transfer Module">
-    <field name="fromurl" colspan="4"/>
+    <field name="module_name" colspan="4"/>
     <newline/>
-    <label/>
-    <label> Give full path of Directory </label>
     <newline/>
     <field name="tourl" colspan="4"/>
     <newline/>
@@ -22,10 +21,6 @@ move_module_form = '''<?xml version="1.0"?>
     <label> Give full path with zip file name and .zip extension </label>
 </form>'''
 
-move_module_fields = {
-    'fromurl': {'string':'Model Name', 'type':'char', 'size':128, 'required':True },
-    'tourl': {'string':'Server URL', 'type':'char', 'size':128 , 'required':True},
-}
 finish_form ='''<?xml version="1.0"?>
 <form string="Finish">
     <label string="Module Zipped successfully !!!" colspan="4"/>
@@ -33,26 +28,46 @@ finish_form ='''<?xml version="1.0"?>
 '''
 
 class move_module_wizard(wizard.interface):
+    def _get_module(self, cr, uid, context):
+        module_obj=pooler.get_pool(cr.dbname).get('ir.module.module')
+        ids=module_obj.search(cr, uid, [])
+        modules=module_obj.browse(cr, uid, ids)
+        return [(modules_rec.name,modules_rec.name) for modules_rec in modules]
+
+    def zippy(self,path, archive):
+        paths = os.listdir(path)
+        for p in paths:
+            p = os.path.join(path, p) # Make the path relative
+            if os.path.isdir(p): # Recursive case
+                self.zippy(p, archive)
+            else:
+                ext=p.split('/')
+                if ext[len(ext)-1]=='__terp__.py':
+                    archive.write(p)
+                    continue
+                ext=p.split('.')[1]
+                if ext=='py':
+                    continue
+                archive.write(p) # Write the file to the zipfile
+        return
+
+    def zipit(self,path, archname):
+        # Create a ZipFile Object primed to write
+        archive = ZipFile(archname, "w", ZIP_DEFLATED) # "a" to append, "r" to read
+        # Recurse or not, depending on what path is
+        if os.path.isdir(path):
+            self.zippy(path, archive)
+        else:
+            archive.write(path)
+        archive.close()
+        return "Compression of \""+path+"\" was successful!"
+
     def createzip(self, cr, uid, data, context):
         try:
-            fromurl = data['form']['fromurl']
-            tourl = data['form']['tourl'];
-            if (sys.platform.startswith('win')):
-                include_terp="pkzip -r '%s' %s  -i \*terp*.*" % (tourl, ''.join(fromurl))
-                exclude_py="pkzip -r '%s' %s  -x \*.py \*.svn*" % (tourl, ''.join(fromurl))
-            elif (sys.platform.startswith('linux')):
-                include_terp="zip -r '%s' %s  -i \*terp*.*" % (tourl, ''.join(fromurl))
-                exclude_py="zip -r '%s' %s  -x \*.py \*.svn*" % (tourl, ''.join(fromurl))
-
-            if os.system(include_terp) == 0:
-                    print 'Successful backup to', tourl
-            else:
-                    print 'Backup FAILED'
-
-            if os.system(exclude_py) == 0:
-                    print 'Successful backup to', tourl
-            else:
-                    print 'Backup FAILED'
+            fromurl=os.getcwd()
+            fromurl=fromurl+'/addons/'+data['form']['module_name']
+            tourl = fromurl+'.zip'
+            status=self.zipit(fromurl,tourl)
 
         except Exception,e:
 
@@ -72,10 +87,13 @@ class move_module_wizard(wizard.interface):
 
     #end def createzip(self, cr, uid, data, context):
 
-
     def _init_wizard(self, cr, uid, data, context):
-        return {'fromurl':'/home/admin/Desktop/project','tourl':'/home/admin/Desktop/supportzip/myzip.zip'}
+        return {'tourl':os.getcwd()}
 
+    move_module_fields = {
+        'module_name': {'string':'Module Name', 'type':'selection', 'selection':_get_module,'required':True},
+        'tourl': {'string':'Server URL', 'type':'char', 'size':128 },
+    }
 
     states = {
         'init': {
