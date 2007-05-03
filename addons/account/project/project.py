@@ -43,32 +43,20 @@ class account_analytic_account(osv.osv):
 	def _credit_calc(self, cr, uid, ids, name, arg, context={}):
 		acc_set = ",".join(map(str, ids))
 		cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id) WHERE l.amount<0 and a.id IN (%s) GROUP BY a.id" % acc_set)
-		return dict(cr.fetchall())
-# 		res = {}
-# 		for account in self.browse(cr, uid, ids):
-# 			node_balance = reduce(operator.add, [-line.amount for line in account.line_ids if line.amount<0], 0)
-# 			child_balance = reduce(operator.add, [child.credit for child in account.child_ids], 0)
-# 			res[account.id] = node_balance + child_balance
-# 		for id in ids:
-# 			res[id] = round(res.get(id, 0.0),2)
-# 		return res
+		r= dict(cr.fetchall())
+		for i in ids:
+			r.setdefault(i,0.0)
+		return r
 
 	def _debit_calc(self, cr, uid, ids, name, arg, context={}):
+		
 		acc_set = ",".join(map(str, ids))
 		cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id) WHERE l.amount>0 and a.id IN (%s) GROUP BY a.id" % acc_set)
-		return dict(cr.fetchall())
+		r= dict(cr.fetchall())
+		for i in ids:
+			r.setdefault(i,0.0)
+		return r
 
-
-			
-# 		print res
-# 		res = {}
-# 		for account in self.browse(cr, uid, ids):
-# 			node_balance = reduce(operator.add, [line.amount for line in account.line_ids if line.amount>0], 0)
-# 			child_balance = reduce(operator.add, [child.debit for child in account.child_ids], 0)
-# 			res[account.id] = node_balance + child_balance
-# 		for id in ids:
-# 			res[id] = round(res.get(id, 0.0),2)
-# 		print res
 
 
 	def _balance_calc(self, cr, uid, ids, name, arg, context={}):
