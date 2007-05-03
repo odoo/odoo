@@ -131,9 +131,11 @@ def create_graph(module_list, force=[]):
 	packages = []
 
 	for module in module_list:
+		if module[-4:]=='.zip':
+			module = module[:-4]
 		terp_file = opj(ad, module, '__terp__.py')
 		mod_path = opj(ad, module)
-		if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path):
+		if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path+'.zip'):
 			info = eval(tools.file_open(terp_file).read())
 			if info.get('installable', True):
 				packages.append((module, info.get('depends', []), info))
@@ -191,6 +193,7 @@ def load_module_graph(cr, graph, status={}):
 				for filename in package.datas.get('%s_xml' % kind, []):
 					mode = 'update'
 					if hasattr(package, 'init') or package_state=='to install':
+						print 'Mode', mode, filename
 						mode = 'init'
 					logger.notifyChannel('init', netsvc.LOG_INFO, 'addon:%s:loading %s' % (m, filename))
 					name, ext = os.path.splitext(filename)
@@ -235,7 +238,7 @@ def register_classes():
 			imp.load_module(m, *imp.find_module(m))
 		except ImportError:
 			import zipimport
-			mod_path = opj(ad, m)
+			mod_path = opj(ad, m+'.zip')
 			zimp = zipimport.zipimporter(mod_path)
 			zimp.load_module(m)
 

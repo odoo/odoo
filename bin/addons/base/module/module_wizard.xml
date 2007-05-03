@@ -9,15 +9,21 @@
 			name="module.info_get"/>
 		-->
 		<wizard
-			string="Module Transfer Wizard"
+			string="Export module"
 			model="ir.module.module"
-			name="tmp.wizard"
-			id="move_module_wizard"/>
+			name="base.module.export"
+			id="wizard_base_module_export"/>
+
+		<wizard
+			string="Import module"
+			model="ir.module.module"
+			name="base.module.import"
+			id="wizard_base_module_import"/>
 		<menuitem
-			name="Administration/Modules Management/Transfer Module"
-			action="move_module_wizard"
+			name="Administration/Modules Management/Import a new module"
+			action="wizard_base_module_import"
 			type="wizard"
-			id="menu_wizard_move_module"/>
+			id="menu_wizard_module_import"/>
 
 		<record model="ir.actions.wizard" id="wizard_update">
 			<field name="name">Download module list</field>

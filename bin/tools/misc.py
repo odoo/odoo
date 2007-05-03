@@ -67,6 +67,7 @@ def init_db(cr):
 		elif zipfile.is_zipfile(mod_path):
 			zfile = zipfile.ZipFile(mod_path)
 			i = os.path.splitext(i)[0]
+			print i
 			info = eval(zfile.read(opj(i, '__terp__.py')))
 		if info:
 			categs = info.get('category', 'Uncategorized').split('/')
@@ -179,11 +180,11 @@ def file_open(name, mode="r", subdir='addons'):
 			name = os.path.join(tail, name)
 		else:
 			name = tail
-		if zipfile.is_zipfile(head):
+		if zipfile.is_zipfile(head+'.zip'):
 			import StringIO
-			zfile = zipfile.ZipFile(head)
+			zfile = zipfile.ZipFile(head+'.zip')
 			return StringIO.StringIO(zfile.read(os.path.join(os.path.basename(head), name)))
-	raise IOError, 'File not found : '+str(name)	
+	raise IOError, 'File not found : '+str(name)
 
 
 #----------------------------------------------------------
