@@ -20,7 +20,7 @@
 	* Easy analysis of troubles or needs
 	* Very flexible
 
-	It support complete integration and plannification of stockable goods,
+	It supports complete integration and planification of stockable goods,
 	consumable of services. Services are completly integrated with the rest
 	of the software. For instance, you can set up a sub-contracting service
 	in a BoM to automatically purchase on order the assembly of your production.
