@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<document filename="test.pdf">
+  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+    <pageTemplate id="first">
+      <frame id="first" x1="34.0" y1="28.0" width="527" height="786"/>
+    </pageTemplate>
+  </template>
+  <stylesheet>
+    <blockTableStyle id="Standard_Outline">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table2">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="GRID" colorName="black"/>
+      <blockBackground colorName="#e6e6e6" start="0,0" stop="0,0"/>
+      <blockBackground colorName="#e6e6e6" start="1,0" stop="1,0"/>
+      <blockBackground colorName="#e6e6e6" start="2,0" stop="2,0"/>
+      <blockBackground colorName="#e6e6e6" start="3,0" stop="3,0"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table1">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <initialize>
+      <paraStyle name="all" alignment="justify"/>
+    </initialize>
+    <paraStyle name="P1" fontName="Times-Roman" fontSize="10.0" leading="13" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P2" fontName="Times-Bold" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P3" fontName="Times-Bold" fontSize="10.0" leading="13" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P4" fontName="Times-Bold" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Standard" fontName="Times-Roman"/>
+    <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="List" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Table Contents" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Table Heading" fontName="Times-Roman" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Caption" fontName="Times-Roman" fontSize="10.0" leading="13" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="Index" fontName="Times-Roman"/>
+  </stylesheet>
+  <story>
+    <para style="P1">[[repeatIn(objects,'o')]]</para>
+    <section>
+      <blockTable colWidths="165.0,81.0,87.0,195.0" repeatRows="1" style="Table2">
+        <tr>
+          <td>
+            <para style="P2">Name</para>
+          </td>
+          <td>
+            <para style="P2">Code </para>
+          </td>
+          <td>
+            <para style="P2">Amount</para>
+          </td>
+          <td>
+            <para style="P2">Notes</para>
+          </td>
+        </tr>
+      </blockTable>
+      <blockTable colWidths="165.0,81.0,87.0,195.0" repeatRows="1" style="Table1">
+        <tr>
+          <td>
+            <para style="P3">[[ repeatIn(childs(o.id),'obj') ]]</para>
+            <para style="P3">[[ obj['name'] ]]</para>
+          </td>
+          <td>
+            <para style="P3">[[ obj['code'] ]]</para>
+          </td>
+          <td>
+            <para style="P3">[[ obj['amount'] ]]</para>
+          </td>
+          <td>
+            <para style="P4">[[ obj['note'] ]]</para>
+          </td>
+        </tr>
+      </blockTable>
+      <para style="P1">
+        <font color="white"> </font>
+      </para>
+    </section>
+  </story>
+</document>
+
