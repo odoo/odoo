@@ -17,7 +17,7 @@
 	* Multi-pos, multi-warehouse
 	* Different reordering policies
 	* Cost method by product: standard price, average price
-	* Easy analyse of troubles or needs
+	* Easy analysis of troubles or needs
 	* Very flexible
 
 	It support complete integration and plannification of stockable goods,
