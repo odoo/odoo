@@ -86,7 +86,7 @@ class ir_values(osv.osv):
 				res_id=False
 			
 			where1 = ['key=%s','model=%s']
-			where2 = [key,m]
+			where2 = [key,str(m)]
 			where_opt = []
 			if key2:
 				where1.append('key2=%s')
