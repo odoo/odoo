@@ -542,7 +542,6 @@ class sale_order_line(osv.osv):
 		'product_uos': fields.many2one('product.uom', 'Product UOS'),
 		'product_packaging': fields.many2one('product.packaging', 'Packaging used'),
 		'move_ids': fields.one2many('stock.move', 'sale_line_id', 'Inventory Moves', readonly=True),
-		'property_ids': fields.many2many('mrp.property', 'sale_order_line_property_rel', 'order_id', 'property_id', 'Properties'),
 		'discount': fields.float('Discount (%)', digits=(16,2)),
 		'number_packages': fields.function(_number_packages, method=True, type='integer', string='Number packages'),
 		'notes': fields.text('Notes'),
@@ -683,17 +682,3 @@ class sale_order_line(osv.osv):
 			result['weight'] = result['product_uom_qty'] * res['weight']
 		return {'value':result, 'domain':domain}
 sale_order_line()
-
-class sale_payment_line(osv.osv):
-	_name = 'sale.order.payment'
-	_description = 'Sale Order payment'
-	_columns = {
-		'order_id': fields.many2one('sale.order', 'Order Ref', select=True),
-		'name': fields.char('Description', size=64, required=True),
-		'account_id': fields.many2one('account.account', 'Account'),
-		'amount': fields.float('Amount', required=True),
-	}
-	_defaults = {
-	}
-sale_payment_line()
-
