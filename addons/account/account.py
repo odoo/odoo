@@ -78,7 +78,7 @@ class account_payment_term_line(osv.osv):
 	_columns = {
 		'name': fields.char('Line Name', size=32,required=True),
 		'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the payment term lines from the lowest sequences to the higher ones"),
-		'value': fields.selection([('procent','Procent'),('balance','Balance'),('fixed','Fixed Amount')], 'Value',required=True),
+		'value': fields.selection([('procent','Percent'),('balance','Balance'),('fixed','Fixed Amount')], 'Value',required=True),
 		'value_amount': fields.float('Value Amount'),
 		'days': fields.integer('Number of Days',required=True),
 		'condition': fields.selection([('net days','Net Days'),('end of month','End of Month')], 'Condition', required=True, help="The payment delay condition id a number of days expressed in 2 ways: net days or end of the month. The 'net days' condition implies that the paiment arrive after 'Number of Days' calendar days. The 'end of the month' condition requires that the paiement arrives before the end of the month that is that is after 'Number of Days' calendar days."),
