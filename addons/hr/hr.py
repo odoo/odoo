@@ -94,12 +94,24 @@ hr_employee_category()
 class hr_employee(osv.osv):
 	_name = "hr.employee"
 	_description = "Employee"
+
+	def _state(self, cr, uid, ids, name, args, context={}):
+		result = {}
+		for id in ids:
+			cr.execute('select action from hr_attendance where employee_id=%d and action in (\'sign_in\', \'sign_out\') order by name desc limit 1', (id,))
+			res = cr.fetchone()
+			if res:
+				result[id] = res[0] == 'sign_in' and 'present' or 'absent'
+			else:
+				result[id] = 'absent'
+		return result
+
 	_columns = {
 		'name' : fields.char("Employee", size=128, required=True),
 		'active' : fields.boolean('Active'),
 		'company_id': fields.many2one('res.company', 'Company'),
 		'address_id': fields.many2one('res.partner.address', 'Contact address'),
-		'state' : fields.selection([('absent', 'Absent'), ('present', 'Present')], 'Attendance', readonly=True),
+		'state': fields.function(_state, method=True, type='selection', selection=[('absent', 'Absent'), ('present', 'Present')], string='Attendance'),
 		'started' : fields.date("Started on"),
 		'notes': fields.text('Notes'),
 		'attendances' : fields.one2many('hr.attendance', 'employee_id', "Employee's attendances"),
@@ -136,7 +148,6 @@ class hr_employee(osv.osv):
 			if dt:
 				res['name'] = dt
 			att_id = self.pool.get('hr.attendance').create(cr, uid, res, context=context)
-			self.write(cr, uid, [emp.id], {'state':'absent'}, context=context)
 			id = att_id
 		return id
 
@@ -154,7 +165,6 @@ class hr_employee(osv.osv):
 			if dt:
 				res['name'] = dt
 			id = self.pool.get('hr.attendance').create(cr, uid, res, context=context)
-			self.write(cr, uid, [emp.id], {'state':'present'}, context=context)
 		return id
 
 hr_employee()
