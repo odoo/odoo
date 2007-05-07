@@ -188,6 +188,11 @@ class hr_timesheet_sheet(osv.osv):
 				})
 		return True
 	def button_dummy(self, cr, uid, ids, context):
+		for sheet in self.browse(cr, uid, ids, context):
+			if DateTime.strptime(sheet.date_current, '%Y-%m-%d') <= DateTime.strptime(sheet.date_from, '%Y-%m-%d'):
+				self.write(cr, uid, [sheet.id], {'date_current': sheet.date_from,})
+			elif DateTime.strptime(sheet.date_current, '%Y-%m-%d') >= DateTime.strptime(sheet.date_to, '%Y-%m-%d'):
+				self.write(cr, uid, [sheet.id], {'date_current': sheet.date_to,})
 		return True
 	
 	def sign_in(self, cr, uid, ids, context):
