@@ -1,6 +1,6 @@
 {
 	"name" : "Project Management",
-	"version": "0.1",
+	"version": "1.0",
 	"author" : "Tiny",
 	"website" : "http://tinyerp.com/module_project.html",
 	"category" : "Generic Modules/Projects & Services",
