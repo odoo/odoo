@@ -34,7 +34,7 @@ _journal_form = '''<?xml version="1.0"?>
 </form>''' % ('Reconciliation',)
 
 _journal_fields = {
-	'account_id': {'string':'Account', 'type':'many2one', 'relation':'account.account', 'required':True},
+	'account_id': {'string':'Account', 'type':'many2one', 'relation':'account.account','domain': [('reconcile','=',1)], 'required':True},
 }
 
 def _action_open_window(self, cr, uid, data, context):
