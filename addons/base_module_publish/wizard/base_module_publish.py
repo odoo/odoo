@@ -30,6 +30,7 @@ import wizard
 import osv
 import pooler
 import urllib
+import base64
 
 import module_zip
 
@@ -53,11 +54,13 @@ Thank you for contributing !
 """},
 }
 
-def _get_selection(*Args):
+def _get_selection(self, cr, uid, datas, *args):
 	a = urllib.urlopen('http://www.tinyerp.com/mtree_interface.php')
 	contents = a.read()
 	content = filter(None, contents.split('\n'))
-	return map(lambda x:x.split('='), content)
+	result = map(lambda x:x.split('='), content)
+
+	return result
 
 
 check_form = '''<?xml version="1.0"?>
@@ -93,8 +96,8 @@ check_fields = {
 	'image': {'string':'Image file', 'type':'image'},
 	'description': {'string':'Description', 'type':'text', 'readonly':True},
 	'version': {'string':'Version', 'type':'char', 'readonly':True},
-	'demourl': {'string':'Demo URL', 'type':'char', 'size':100},
-	'docurl': {'string':'Documentation URL', 'type':'char', 'size':100},
+	'demourl': {'string':'Demo URL', 'type':'char', 'size':128},
+	'docurl': {'string':'Documentation URL', 'type':'char', 'size':128},
 	'category': {'string':'Category', 'type':'selection', 'size':64, 'required':True,
 		'selection': _get_selection
 	},
@@ -111,7 +114,6 @@ check_fields = {
 	},
 	'url_download': {'string':'Download URL', 'type':'char', 'size':128},
 }
-
 
 upload_info_form = '''<?xml version="1.0"?>
 <form string="Module publication">
@@ -133,7 +135,7 @@ def _get_edit(self, cr, uid, datas, *args):
 		email = self.pool.get('res.users').browse(cr, uid, uid).address.email or ''
 	except:
 		email =''
-	return {'operation': content[0], 'email':email}
+	return {'operation': ((content[0]=='0') and '0') or '1', 'email':email}
 
 
 upload_info_fields = {
@@ -196,13 +198,13 @@ def post_multipart(host, selector, fields, files):
 	response = conn.getresponse()
 	val = response.status
 	res = response.read()
-	print res
-	print host, selector, val
 	conn.close()
 	return res
 
 
 def _upload(self, cr, uid, datas, context):
+	pool = pooler.get_pool(cr.dbname)
+	mod = pool.get('ir.module.module').browse(cr, uid, datas['id'])
 	download = datas['form']['url_download'] or ''
 	if not download:
 		res = module_zip.createzip(cr, uid, datas['id'], context, b64enc=False)
@@ -212,15 +214,14 @@ def _upload(self, cr, uid, datas, context):
 		result = post_multipart('www.tinyerp.com', '/mtree_upload.php', 
 			[
 				('login',datas['form']['login']),
-				('password',datas['form']['password'])
+				('password',datas['form']['password']),
+				('module_name',mod.name)
 			], [
 				('module', res['module_filename'], res['module_file'])
 			])
 
 		# module_file & module_filename
 
-	pool = pooler.get_pool(cr.dbname)
-	mod = pool.get('ir.module.module').browse(cr, uid, datas['id'])
 	updata = {
 		'link_name': mod.shortdesc or '',
 		'new_cat_id': datas['form']['category'],
@@ -243,9 +244,16 @@ def _upload(self, cr, uid, datas, context):
 		'auto_login': datas['form']['login'],
 		'auto_password': datas['form']['password']
 	}
+	name = mod.name
+	a = urllib.urlopen('http://www.tinyerp.com/mtree_interface.php?module=%s' % (name,))
+	aa = a.read()
+	if aa[0]<>'0':
+		updata['link_id']=aa.split('\n')[0]
+		updata['option'] = 'mtree'
+
 	files = []
 	if datas['form']['image']:
-		files.append(('link_image', 'link_image.png', datas['form']['image']))
+		files.append(('link_image', 'link_image.png', base64.decodestring(datas['form']['image'])))
 	result = post_multipart('www.tinyerp.com', '/index.php', updata.items(), files)
 	return {'result': result}
 
