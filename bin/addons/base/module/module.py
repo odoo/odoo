@@ -69,7 +69,6 @@ class module(osv.osv):
 	_description = "Module"
 
 	def get_module_info(self, name):
-		print 'NFO', name
 		try:
 			f = tools.file_open(os.path.join(tools.config['addons_path'], name, '__terp__.py'))
 			data = f.read()
@@ -148,8 +147,6 @@ class module(osv.osv):
 					m.state not in ('uninstalled','uninstallable','to remove')''', (module.name,))
 			res = cr.fetchall()
 			if res:
-				print 'Error !'
-				print 'The module you are trying to remove depends on installed modules :\n' + '\n'.join(map(lambda x: '\t%s: %s' % (x[0], x[1]), res))
 				raise orm.except_orm('Error', 'The module you are trying to remove depends on installed modules :\n' + '\n'.join(map(lambda x: '\t%s: %s' % (x[0], x[1]), res)))
 		self.write(cr, uid, ids, {'state': 'to remove'})
 		return True
@@ -197,23 +194,18 @@ class module(osv.osv):
 			terp_file = os.path.join(adp, name, '__terp__.py')
 			mod_path = os.path.join(adp, name)
 			if os.path.isdir(mod_path) or zipfile.is_zipfile(mod_path):
-				print 'Working on ', name
 				terp = self.get_module_info(mod_name)
-				print 'WOEND', terp
 				if not terp or not terp.get('installable', True):
 					continue
 				try:
-					print 'Test imp'
 					import imp
 					# XXX must restrict to only addons paths
 					imp.load_module(name, *imp.find_module(name))
 				except ImportError:
-					print 'Test imp zip'
 					import zipimport
 					mod_path = os.path.join(adp, name)
 					zimp = zipimport.zipimporter(mod_path)
 					zimp.load_module(mod_name)
-					print 'Test imp zip and'
 				version = terp.get('version', False)
 				id = self.create(cr, uid, {
 					'name': mod_name,
@@ -222,10 +214,8 @@ class module(osv.osv):
 					'shortdesc': terp.get('name', ''),
 					'author': terp.get('author', 'Unknown')
 				})
-				print 'Inserted normal'
 				for d in terp.get('depends', []):
 					cr.execute('INSERT INTO ir_module_module_dependency (module_id, name) values (%s, %s)', (id, d))
-				print 'Inserted dependencies'
 		
 		# make the list of all installable modules
 		for repository in robj.browse(cr, uid, robj.search(cr, uid, [])):
@@ -301,7 +291,6 @@ class module_dependency(osv.osv):
 		res = {}
 		for o in objs:
 			pattern = o.version_pattern and eval(o.version_pattern) or []
-			print "pattern", pattern
 			res[o.id] = vobj.search(cr, uid, [('module','=',o.module.id)]+pattern)
 		#TODO: add smart dependencies resolver here
 		# it should compute the best version for each module
