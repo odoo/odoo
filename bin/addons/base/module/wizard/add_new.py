@@ -37,6 +37,8 @@ import tools
 import wizard
 import pooler
 
+import zipfile
+
 module_name_re = re.compile('.*addons.(.*?).__terp__.py$')
 
 _info_arch = '''<?xml version="1.0"?>
@@ -53,6 +55,9 @@ class wizard_install_module(wizard.interface):
 		known_modules = [x['name'] for x in all_mods]
 		ls_ad = glob.glob(os.path.join(tools.config['addons_path'], '*', '__terp__.py'))
 		modules = [module_name_re.match(name).group(1) for name in ls_ad]
+		for fname in os.listdir(tools.config['addons_path']):
+			if zipfile.is_zipfile(fname):
+				modules.append( fname.split('.')[0])
 		for module in modules:
 			if module in known_modules:
 				continue

@@ -69,6 +69,7 @@ class module(osv.osv):
 	_description = "Module"
 
 	def get_module_info(self, name):
+		print 'NFO', name
 		try:
 			f = tools.file_open(os.path.join(tools.config['addons_path'], name, '__terp__.py'))
 			data = f.read()
@@ -184,37 +185,47 @@ class module(osv.osv):
 
 		# iterate through installed modules and mark them as being so
 		for name in os.listdir(adp):
-			ids = self.search(cr, uid, [('name','=',name)])
+			mod_name = name
+			if name[-4:]=='.zip':
+				mod_name=name[:-4]
+			ids = self.search(cr, uid, [('name','=',mod_name)])
 			if ids:
-				terp = self.get_module_info(name)
+				terp = self.get_module_info(mod_name)
 				if terp.get('installable', True) and self.read(cr, uid, ids, ['state'])[0]['state'] == 'uninstallable':
 					self.write(cr, uid, [ids], {'state': 'uninstalled'})
 				continue
 			terp_file = os.path.join(adp, name, '__terp__.py')
 			mod_path = os.path.join(adp, name)
 			if os.path.isdir(mod_path) or zipfile.is_zipfile(mod_path):
-				terp = self.get_module_info(name)
+				print 'Working on ', name
+				terp = self.get_module_info(mod_name)
+				print 'WOEND', terp
 				if not terp or not terp.get('installable', True):
 					continue
 				try:
+					print 'Test imp'
 					import imp
 					# XXX must restrict to only addons paths
 					imp.load_module(name, *imp.find_module(name))
 				except ImportError:
+					print 'Test imp zip'
 					import zipimport
 					mod_path = os.path.join(adp, name)
 					zimp = zipimport.zipimporter(mod_path)
-					zimp.load_module(name)
+					zimp.load_module(mod_name)
+					print 'Test imp zip and'
 				version = terp.get('version', False)
 				id = self.create(cr, uid, {
-					'name': name,
+					'name': mod_name,
 					'state': 'uninstalled',
 					'description': terp.get('description', ''),
 					'shortdesc': terp.get('name', ''),
 					'author': terp.get('author', 'Unknown')
 				})
+				print 'Inserted normal'
 				for d in terp.get('depends', []):
 					cr.execute('INSERT INTO ir_module_module_dependency (module_id, name) values (%s, %s)', (id, d))
+				print 'Inserted dependencies'
 		
 		# make the list of all installable modules
 		for repository in robj.browse(cr, uid, robj.search(cr, uid, [])):
