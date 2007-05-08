@@ -80,6 +80,13 @@ class fake_cursor:
 		fake_cursor.nbr += 1
 		return self.obj.execute(*args)
 
+	def execute(self, sql, params=()):
+		def base_string(s):
+			if isinstance(s, unicode):
+				return s.encode('utf-8')
+			return s
+		return self.obj.execute(sql, [base_string(s) for s in params])
+
 	def close(self):
 #		print "close cursors fno:", [i.fileno() for i in self.db.cursors]
 		self.obj.close()
