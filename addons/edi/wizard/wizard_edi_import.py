@@ -175,7 +175,6 @@ def _prepare_import(self, cr, uid, data, context):
 											'logdesc': "Couldn't move %s to erreur" % filename,
 										})
 		cr.commit()
-	cr.close()
 	return {}
 
 def _do_import(self, cr, uid, data, context):
