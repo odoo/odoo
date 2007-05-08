@@ -848,12 +848,19 @@ class orm(object):
 	# TODO: Validate
 	#
 	def write(self, cr, user, ids, vals, context={}):
+		delta= context.get('read_delta',False)
+		if delta: 
+			cr.execute("select  (now() - '%s'::interval - min(write_date)) >= '0'::interval from %s where id in (%s)"% (delta,self._table,",".join(map(str, ids))) )
+			res= cr.fetchall()
+			if res and (res.pop()[0] == 0):
+				raise except_orm('ConcurrencyException', 'This record was modified in the meanwhile')
+
 		self.pool.get('ir.model.access').check(cr, user, self._name, 'write')
 		#for v in self._inherits.values():
 		#	assert v not in vals, (v, vals)
 		if not ids:
 			return
-		ids_str = string.join(map(lambda x:str(x), ids),',')
+		ids_str = string.join(map(str, ids),',')
 		upd0=[]
 		upd1=[]
 		upd_todo=[]
