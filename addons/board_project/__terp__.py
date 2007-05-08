@@ -6,6 +6,14 @@
 	"depends":["project","report_timesheet","board","report_analytic_line"],
 	"demo_xml":["board_project_demo.xml"],
 	"update_xml":["board_project_view.xml"],
+	"description": """
+This module implements a dashboard for project member that includes:
+	* List of my open tasks
+	* List of my next deadlines
+	* List of public notes
+	* Graph of my timesheet
+	* Graph of my work analysis
+	""",
 	"active":False,
 	"installable":True,
 }
