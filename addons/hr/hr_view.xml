@@ -263,7 +263,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">form,tree</field>
 		</record>
-		<menuitem name="Human Resources/Configuration/Categories of Employee" id="menu_view_employee_category_form" action="open_view_categ_form"/>
+		<menuitem name="Human Resources/Configuration/Categories of Employee" id="menu_view_employee_category_form" action="open_view_categ_form" groups="admin"/>
 
 		<record model="ir.actions.act_window" id="open_view_categ_tree">
 			<field name="name">hr.employee.category.form.view</field>
@@ -272,7 +272,7 @@
 			<field name="view_id" ref="view_employee_category_tree"/>
 			<field name="domain">[('parent_id','=',False)]</field>
 		</record>
-		<menuitem name="Human Resources/Configuration/Categories of Employee/Categories Tree" id="menu_view_employee_category_tree" action="open_view_categ_tree"/>
+		<menuitem name="Human Resources/Configuration/Categories of Employee/Categories Tree" id="menu_view_employee_category_tree" action="open_view_categ_tree" groups="admin"/>
 
 		<record model="ir.ui.view" id="view_attendance_who">
 			<field name="name">hr.attendance.tree</field>
@@ -382,7 +382,7 @@
 			<field name="view_id" ref="view_holiday_status" />
 		</record>
 		<menuitem name="Human Resources/Configuration/Holiday Status"
-			id="menu_open_view_holiday_status" action="open_view_holiday_status"/>
+			id="menu_open_view_holiday_status" action="open_view_holiday_status" groups="admin"/>
 
 		<record model="ir.ui.view" id="edit_attendance_reason">
 			<field name="name">hr.action.reason.form</field>
