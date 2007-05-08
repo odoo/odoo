@@ -135,7 +135,10 @@ def _get_edit(self, cr, uid, datas, *args):
 		email = self.pool.get('res.users').browse(cr, uid, uid).address.email or ''
 	except:
 		email =''
-	return {'operation': ((content[0]=='0') and '0') or '1', 'email':email}
+	result = {'operation': ((content[0]=='0') and '0') or '1', 'email':email}
+	if (content[0]<>'0'):
+		result['category'] =  content.split('\n')[1]
+	return result
 
 
 upload_info_fields = {
