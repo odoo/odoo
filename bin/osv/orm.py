@@ -849,7 +849,7 @@ class orm(object):
 	#
 	def write(self, cr, user, ids, vals, context={}):
 		delta= context.get('read_delta',False)
-		if delta: 
+		if delta and self._log_access:
 			cr.execute("select  (now() - '%s'::interval - min(write_date)) >= '0'::interval from %s where id in (%s)"% (delta,self._table,",".join(map(str, ids))) )
 			res= cr.fetchall()
 			if res and (res.pop()[0] == 0):
