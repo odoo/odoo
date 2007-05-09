@@ -5,8 +5,8 @@
 	"category" : "Generic Modules/Human Resources",
 	"website" : "http://tinyerp.com/module_hr.html",
 	"description": """
-	Module for human ressource management. You can manage:
-	* Employees and hyerarchies
+	Module for human resource management. You can manage:
+	* Employees and hierarchies
 	* Work hours sheets
 	* Attendances and sign in/out system
 	* Holidays
