@@ -3,7 +3,11 @@
 	"version" : "1.0",
 	"depends" : ["account"],
 	"author" : "Tiny",
-	"description": "Add a field in invoices to be able to work with prices included taxes.",
+	"description": """Allow the user to work tax included prices.
+Especially useful for b2c businesses.
+	
+This module implement the modification on the invoice form.
+""",
 	"website" : "http://tinyerp.com/module_account.html",
 	"category" : "Generic Modules/Accounting",
 	"init_xml" : [ ],
