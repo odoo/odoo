@@ -853,7 +853,6 @@ class orm(object):
 			cr.execute("select  (now()  - min(write_date)) <= '%s'::interval  from %s where id in (%s)"% (delta,self._table,",".join(map(str, ids))) )
 			res= cr.fetchone()
 			if res and res[0]:
-				print res
 				raise except_orm('ConcurrencyException', 'This record was modified in the meanwhile')
 
 		self.pool.get('ir.model.access').check(cr, user, self._name, 'write')
