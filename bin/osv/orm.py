@@ -850,9 +850,10 @@ class orm(object):
 	def write(self, cr, user, ids, vals, context={}):
 		delta= context.get('read_delta',False)
 		if delta and self._log_access:
-			cr.execute("select  (now() - '%s'::interval - min(write_date)) >= '0'::interval from %s where id in (%s)"% (delta,self._table,",".join(map(str, ids))) )
-			res= cr.fetchall()
-			if res and (res.pop()[0] == 0):
+			cr.execute("select  (now() - '%s'::interval - min(write_date)) > '0'::interval  from %s where id in (%s)"% (delta,self._table,",".join(map(str, ids))) )
+			res= cr.fetchone()
+			if res and (not res[0]):
+				print res
 				raise except_orm('ConcurrencyException', 'This record was modified in the meanwhile')
 
 		self.pool.get('ir.model.access').check(cr, user, self._name, 'write')
@@ -880,7 +881,7 @@ class orm(object):
 				updend.append(field)
 		if self._log_access:
 			upd0.append('write_uid=%d')
-			upd0.append('write_date=current_timestamp(0)')
+			upd0.append('write_date=now()')
 			upd1.append(user)
 
 		if len(upd0):
@@ -910,6 +911,9 @@ class orm(object):
 
 		self._validate(cr, user, ids)
 
+		if context.has_key('read_delta'):
+			del context['read_delta']
+		
 		wf_service = netsvc.LocalService("workflow")
 		for id in ids:
 			wf_service.trg_write(user, self._name, id, cr)
@@ -977,7 +981,7 @@ class orm(object):
 				upd_todo.append(field)
 		if self._log_access:
 			upd0 += ',create_uid,create_date'
-			upd1 += ',%d,current_timestamp(0)'
+			upd1 += ',%d,now()'
 			upd2.append(user)
 		cr.execute('insert into '+self._table+' (id,perm_id'+upd0+") values ("+str(id_new)+',NULL'+upd1+')', tuple(upd2))
 		upd_todo.sort(lambda x,y: self._columns[x].priority-self._columns[y].priority)
