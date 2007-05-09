@@ -850,9 +850,9 @@ class orm(object):
 	def write(self, cr, user, ids, vals, context={}):
 		delta= context.get('read_delta',False)
 		if delta and self._log_access:
-			cr.execute("select  (now()  - min(write_date)) > '%s'::interval  from %s where id in (%s)"% (delta,self._table,",".join(map(str, ids))) )
+			cr.execute("select  (now()  - min(write_date)) <= '%s'::interval  from %s where id in (%s)"% (delta,self._table,",".join(map(str, ids))) )
 			res= cr.fetchone()
-			if res and (not res[0]):
+			if res and res[0]:
 				print res
 				raise except_orm('ConcurrencyException', 'This record was modified in the meanwhile')
 
@@ -980,8 +980,8 @@ class orm(object):
 			else:
 				upd_todo.append(field)
 		if self._log_access:
-			upd0 += ',create_uid,create_date,write_date'
-			upd1 += ',%d,now(),now()'
+			upd0 += ',create_uid,create_date'
+			upd1 += ',%d,now()'
 			upd2.append(user)
 		cr.execute('insert into '+self._table+' (id,perm_id'+upd0+") values ("+str(id_new)+',NULL'+upd1+')', tuple(upd2))
 		upd_todo.sort(lambda x,y: self._columns[x].priority-self._columns[y].priority)
