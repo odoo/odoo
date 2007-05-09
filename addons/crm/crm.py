@@ -75,22 +75,22 @@ class crm_case_section(osv.osv):
 			for (index, mname, mdomain, latest) in [
 				(0,'',"[('section_id','=',"+str(section.id)+")]", -1),
 				(1,'My ',"[('section_id','=',"+str(section.id)+"),('user_id','=',uid)]", 0),
-				(2,'My Unclosed ',"[('section_id','=',"+str(section.id)+"),('user_id','=',uid), ('state','<>','cancel'), ('state','<>','close')]", 1),
+				(2,'My Unclosed ',"[('section_id','=',"+str(section.id)+"),('user_id','=',uid), ('state','<>','cancel'), ('state','<>','done')]", 1),
 				(5,'My Open ',"[('section_id','=',"+str(section.id)+"),('user_id','=',uid), ('state','=','open')]", 2),
 				(6,'My Pending ',"[('section_id','=',"+str(section.id)+"),('user_id','=',uid), ('state','=','pending')]", 2),
 				(7,'My Draft ',"[('section_id','=',"+str(section.id)+"),('user_id','=',uid), ('state','=','draft')]", 2),
 
-				(3,'My Late ',"[('section_id','=',"+str(section.id)+"),('user_id','=',uid), ('date_deadline','<=',time.strftime('%Y-%m-%d')), ('state','<>','cancel'), ('state','<>','close')]", 1),
+				(3,'My Late ',"[('section_id','=',"+str(section.id)+"),('user_id','=',uid), ('date_deadline','<=',time.strftime('%Y-%m-%d')), ('state','<>','cancel'), ('state','<>','done')]", 1),
 				(4,'My Canceled ',"[('section_id','=',"+str(section.id)+"),('user_id','=',uid), ('state','=','cancel')]", 1),
 				(8,'All ',"[('section_id','=',"+str(section.id)+"),]", 0),
 				(9,'Unassigned ',"[('section_id','=',"+str(section.id)+"),('user_id','=',False)]", 8),
-				(10,'Late ',"[('section_id','=',"+str(section.id)+"),('user_id','=',uid), ('date_deadline','<=',time.strftime('%Y-%m-%d')), ('state','<>','cancel'), ('state','<>','close')]", 8),
+				(10,'Late ',"[('section_id','=',"+str(section.id)+"),('user_id','=',uid), ('date_deadline','<=',time.strftime('%Y-%m-%d')), ('state','<>','cancel'), ('state','<>','done')]", 8),
 				(11,'Canceled ',"[('section_id','=',"+str(section.id)+"),('state','=','cancel')]", 8),
-				(12,'Unclosed ',"[('section_id','=',"+str(section.id)+"),('state','<>','cancel'), ('state','<>','close')]", 8),
+				(12,'Unclosed ',"[('section_id','=',"+str(section.id)+"),('state','<>','cancel'), ('state','<>','done')]", 8),
 				(13,'Open ',"[('section_id','=',"+str(section.id)+"),('state','=','open')]", 12),
 				(14,'Pending ',"[('section_id','=',"+str(section.id)+"),('state','=','pending')]", 12),
 				(15,'Draft ',"[('section_id','=',"+str(section.id)+"),('state','=','draft')]", 12),
-				(16,'Unassigned ',"[('section_id','=',"+str(section.id)+"),('user_id','=',False),('state','<>','cancel'),('state','<>','close')]", 12),
+				(16,'Unassigned ',"[('section_id','=',"+str(section.id)+"),('user_id','=',False),('state','<>','cancel'),('state','<>','done')]", 12),
 			]:
 				view_mode = 'tree,form'
 				icon = 'STOCK_JUSTIFY_FILL'
@@ -494,7 +494,7 @@ class crm_case(osv.osv):
 
 	def case_close(self, cr, uid, ids, *args):
 		cases = self.browse(cr, uid, ids)
-		self.__log(cr,uid, cases, 'close')
+		self.__log(cr,uid, cases, 'done')
 		self.__history(cr, uid, cases, 'Close')
 		self.write(cr, uid, ids, {'state':'done', 'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
 		#
