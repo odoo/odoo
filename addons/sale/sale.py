@@ -545,7 +545,6 @@ class sale_order_line(osv.osv):
 		'notes': fields.text('Notes'),
 		'th_weight' : fields.float('Weight'),
 		'state': fields.selection([('draft','Draft'),('confirmed','Confirmed'),('done','Done'),('cancel','Canceled')], 'State', required=True, readonly=True),
-		'price_unit_customer': fields.float('Customer Unit Price', digits=(16, int(config['price_accuracy']))),
 	}
 	_order = 'sequence'
 	_defaults = {
