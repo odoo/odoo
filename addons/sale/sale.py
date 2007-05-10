@@ -628,7 +628,7 @@ class sale_order_line(osv.osv):
 		default.update({'state':'draft', 'move_ids':[], 'invoiced':False, 'invoice_lines':[]})
 		return super(sale_order_line, self).copy(cr, uid, id, default, context)
 
-	def product_id_change(self, cr, uid, ids, pricelist, product, qty=0, uom=False, qty_uos=0, uos=False, name='', partner_id=False, lang=False):
+	def product_id_change(self, cr, uid, ids, pricelist, product, qty=0, uom=False, qty_uos=0, uos=False, name='', partner_id=False, lang=False, update_tax=True):
 		if partner_id:
 			lang=self.pool.get('res.partner').read(cr, uid, [partner_id])[0]['lang']
 		context = {'lang':lang}
@@ -644,17 +644,18 @@ class sale_order_line(osv.osv):
 
 		result = {'price_unit': price, 'type':res['procure_method'], 'delay':(res['sale_delay'] or 0.0), 'notes':res['description_sale']}
 
-		taxes = self.pool.get('account.tax').browse(cr, uid, res['taxes_id'])
-		taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_tax
-		if not taxep:
-			result['tax_id'] = res['taxes_id']
-		else:
-			res5 = [taxep[0]]
-			tp = self.pool.get('account.tax').browse(cr, uid, taxep[0])
-			for t in taxes:
-				if not t.tax_group==tp.tax_group:
-					res5.append(t.id)
-			result['tax_id'] = res5
+		if update_tax:
+			taxes = self.pool.get('account.tax').browse(cr, uid, res['taxes_id'])
+			taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_tax
+			if not taxep:
+				result['tax_id'] = res['taxes_id']
+			else:
+				res5 = [taxep[0]]
+				tp = self.pool.get('account.tax').browse(cr, uid, taxep[0])
+				for t in taxes:
+					if not t.tax_group==tp.tax_group:
+						res5.append(t.id)
+				result['tax_id'] = res5
 
 		result['name'] = res['partner_ref']
 		domain = {}
@@ -677,5 +678,6 @@ class sale_order_line(osv.osv):
 			result['product_uom'] = res['uom_id'] and res['uom_id'][0]
 			result['product_uom_qty'] = qty_uos / res['uos_coeff']
 			result['weight'] = result['product_uom_qty'] * res['weight']
+		print result
 		return {'value':result, 'domain':domain}
 sale_order_line()
