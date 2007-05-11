@@ -73,15 +73,15 @@
 											<field name="effective_hours"/>
 											<separator string="Description" colspan="4"/>
 											<field name="description" colspan="4" nolabel="1"/>
-											<field name="state" select="1"/>
-											<group colspan="2" col="4">
-												<button string="Finish" name="%(wizard_close_task)d" states="open,progress" type="action"/>
-												<button string="Re-open" name="do_reopen" states="done,cancel" type="object"/>
-												<button string="Cancel" name="do_cancel" states="open,progress" type="object"/>
-												<button string="Open task" name="do_open" states="draft" type="object"/>
-												<button string="Set to draft" name="do_draft" states="open" type="object"/>
-												<button string="Start of work" name="do_start" states="open" type="object"/>
-												<button string="End of work" name="do_end" states="progress" type="object"/>
+
+											<group col="11" colspan="4">
+											 <field name="state" select="1"/>
+											 <button name="do_draft" string="Set to draft" states="open" type="object"/>
+											 <button name="do_open" string="Open task" states="pending,draft" type="object"/>
+											 <button name="do_reopen" string="Re-open" states="done,cancelled" type="object"/>
+											 <button name="do_pending" states="open" string="Set pending" type="object"/>
+											 <button name="%(wizard_close_task)d" states="pending,open" string="Done" type="action"/>
+											 <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object"/>
 											</group>
 										</page>
 										<page string="Work done">

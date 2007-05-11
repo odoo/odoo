@@ -69,7 +69,7 @@ def email_send(cr, uid, ids, to_adr, description, context={}):
 class wizard_close(wizard.interface):
 	def _check_complete(self, cr, uid, data, context):
 		task = pooler.get_pool(cr.dbname).get('project.task').browse(cr, uid, data['ids'])[0]
-		if not task.project_id.warn_customer:
+		if not (task.project_id and task.project_id.warn_customer):
 			return 'close'
 		return 'mail_ask'
 

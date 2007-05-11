@@ -228,7 +228,7 @@ class task(osv.osv):
 		tasks = self.browse(cr, uid, ids)
 		for task in tasks:
 			project = task.project_id
-			if project.warn_manager and project.manager.id and (project.manager.id != uid):
+			if project and project.warn_manager and project.manager.id and (project.manager.id != uid):
 				request.create(cr, uid, {
 					'name': "Task '%s' reopened" % task.name,
 					'state': 'waiting',
