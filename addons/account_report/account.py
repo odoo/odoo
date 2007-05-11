@@ -120,6 +120,8 @@ class account_report(osv.osv):
 			string='Status'
 		),
 		'style': fields.selection([('1','Header 1'), ('2','Header 2'), ('3','Header 3'), ('4','Header 4'), ('5','Normal'), ('6', 'Small')], 'Style', required=True),
+		'color_font' : fields.selection([('green','Green'),('red','Red')], 'Font Color')
+		#color_font and color_background
 	}
 	_defaults = {
 		'style': lambda *args: '5',
