@@ -393,7 +393,9 @@
 		<field name="type">form</field>
 		<field name="inherit_id" ref="project.view_task_form2"/>
 		<field name="arch" type="xml">
-			<field name="type" position="after">
+			<field name="project_id" position="replace">
+			    <newline/>			
+				<field name="project_id" select="1" required="1"/>
 				<field name="product_backlog_id" select="1" domain="[('project_id','=',project_id)]"/>
 			</field>
 		</field>

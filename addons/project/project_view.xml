@@ -65,6 +65,7 @@
 											<field name="priority" select="1"/>
 											<field name="user_id" select="1"/>
 											<field name="date_deadline" select="1"/>
+											<field name="date_start" select="1"/>
 											<field name="date_close" select="1"/>
 											<field name="progress"/>
 											<newline />
@@ -77,6 +78,10 @@
 												<button string="Finish" name="%(wizard_close_task)d" states="open,progress" type="action"/>
 												<button string="Re-open" name="do_reopen" states="done,cancel" type="object"/>
 												<button string="Cancel" name="do_cancel" states="open,progress" type="object"/>
+												<button string="Open task" name="do_open" states="draft" type="object"/>
+												<button string="Set to draft" name="do_draft" states="open" type="object"/>
+												<button string="Start of work" name="do_start" states="open" type="object"/>
+												<button string="End of work" name="do_end" states="progress" type="object"/>
 											</group>
 										</page>
 										<page string="Work done">
@@ -209,40 +214,44 @@
 				<form string="Task edition">
 					<notebook>
 						<page string="Task definition">
-							<separator string="Task Information" colspan="4"/>
 							<field name="name" select="1"/>
 							<field name="project_id" required="1" select="1"/>
+							<field name="user_id" select="1"/>
 							<field name="priority" select="1"/>
 							<field name="date_deadline" select="1"/>
-							<field name="user_id" select="1"/>
-							<field name="progress"/>
 							<field name="planned_hours"/>
+							<separator colspan="4" string="Description"/>
+							<field colspan="4" name="description" nolabel="1"/>
 							<field name="effective_hours"/>
-							<field name="type" />
-							<separator string="Description" colspan="4"/>
-							<field name="description" colspan="4" nolabel="1"/>
-							<field name="work_ids" colspan="4" nolabel="1"/>
+							<field name="progress"/>
+							<field colspan="4" name="work_ids" nolabel="1"/>
 							<newline/>
-							<field name="state" select="1" />
-							<group colspan="2" col="4">
-								<button string="Finish" name="%(wizard_close_task)d" states="open,progress" type="action"/>
-								<button string="Re-open" name="do_reopen" states="done,cancelled" type="object" />
-								<button string="Cancel" name="do_cancel" states="open,progress" type="object" />
+							<group col="11" colspan="4">
+								<field name="state" select="1"/>
+								<button name="do_draft" string="Set to draft" states="open" type="object"/>
+								<button name="do_open" string="Open task" states="pending,draft" type="object"/>
+								<button name="do_reopen" string="Re-open" states="done,cancelled" type="object"/>
+								<button name="do_pending" states="open" string="Set pending" type="object"/>
+								<button name="%(wizard_close_task)d" states="pending,open" string="Done" type="action"/>
+								<button name="do_cancel" states="draft,open,pending" string="Cancel" type="object"/>
+
 							</group>
 						</page>
 						<page string="Other Information">
+							<field name="date_start" select="1"/>
+							<field name="date_close" select="1"/>
+							<field name="type"/>
 							<field name="sequence"/>
 							<field name="active" select="1"/>
 							<field name="start_sequence"/>
-							<field name="date_close" select="1" />
 							<field name="partner_id" select="1"/>
 							<newline/>
-							<field name="invoice_id" />
+							<field name="invoice_id"/>
 							<field name="billable" select="1"/>
-							<separator string="Notes" colspan="4"/>
-							<field name="notes" colspan="4" nolabel="1"/>
-							<separator string="Customer Description" colspan="4"/>
-							<field name="cust_desc" colspan="4"  nolabel="1"/>
+							<separator colspan="4" string="Notes"/>
+							<field colspan="4" name="notes" nolabel="1"/>
+							<separator colspan="4" string="Customer Description"/>
+							<field colspan="4" name="cust_desc" nolabel="1"/>
 						</page>
 					</notebook>
 				</form>

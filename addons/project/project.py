@@ -174,8 +174,8 @@ class task(osv.osv):
 		'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Priority'),
 		'sequence': fields.integer('Sequence'),
 		'type': fields.many2one('project.task.type', 'Type'),
-		'state': fields.selection([('open', 'Open'), ('progress', 'In progress'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True),
-		'date_start': fields.datetime('Date Start'),
+		'state': fields.selection([('draft', 'Draft'),('open', 'Open'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True),
+		'date_start': fields.datetime('Date Start',readonly=True),
 		'date_deadline': fields.datetime('Deadline'),
 		'date_close': fields.datetime('Date Closed', readonly=True),
 		'project_id': fields.many2one('project.project', 'Project', ondelete='cascade', relate=True),
@@ -262,6 +262,23 @@ class task(osv.osv):
 				wf_service = netsvc.LocalService("workflow")
 				wf_service.trg_validate(uid, 'mrp.procurement', task.procurement_id.id, 'subflow.cancel', cr)
 		return True
+
+	def do_open(self, cr, uid, ids, *args):
+		tasks= self.browse(cr,uid,ids)
+		for t in tasks:
+			self.write(cr, uid, [t.id], {'state': 'open','date_start':t.date_start or time.strftime('%Y-%m-%d %H:%M:%S')})
+		return True
+
+	def do_draft(self, cr, uid, ids, *args):
+		self.write(cr, uid, ids, {'state': 'draft'})
+		return True
+
+
+	def do_pending(self, cr, uid, ids, *args):
+		self.write(cr, uid, ids, {'state': 'pending'})
+		return True
+
+		
 task()
 
 class project_work(osv.osv):
