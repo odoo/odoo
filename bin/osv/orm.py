@@ -724,7 +724,7 @@ class orm(object):
 		fields_pre = filter(lambda x: x in self._columns and getattr(self._columns[x],'_classic_write'), fields) + self._inherits.values()
 
 		if len(fields_pre) or compids:
-			cr.execute('select %s from %s where id = any(array[%s]) and %s order by %s' % (','.join(fields_pre + ['id']), self._table, ','.join([str(x) for x in ids]), company_clause, self._order))
+			cr.execute('select %s from %s where id in (%s) and %s order by %s' % (','.join(fields_pre + ['id']), self._table, ','.join([str(x) for x in ids]), company_clause, self._order))
 			uniq_id = []
 			[uniq_id.append(i) for i in ids if not uniq_id.count(i)]
 			if not cr.rowcount == len(uniq_id) and compids:
@@ -812,7 +812,7 @@ class orm(object):
 		if self._log_access:
 			fields +=', u.create_uid, u.create_date, u.write_uid, u.write_date'
 		ids_str = string.join(map(lambda x:str(x), ids),',')
-		cr.execute('select u.id'+fields+' from perm p right join '+self._table+' u on u.perm_id=p.id where u.id=any(array['+ids_str+'])')
+		cr.execute('select u.id'+fields+' from perm p right join '+self._table+' u on u.perm_id=p.id where u.id in ('+ids_str+')')
 		res = cr.dictfetchall()
 #		for record in res:
 #			for f in ('ox','ux','gx','uid','gid'):
@@ -1362,7 +1362,7 @@ class orm(object):
 					for xitem in todel[::-1]:
 						del x[2][xitem]
 					if x[0]=='id':
-						qu1.append('(%s.id=any(array[%s]))' % (table._table, ','.join(['%d'] * len(x[2])),))
+						qu1.append('(%s.id in (%s))' % (table._table, ','.join(['%d'] * len(x[2])),))
 					else:
 						qu1.append('(%s.%s in (%s))' % (table._table, x[0], ','.join([table._columns[x[0]]._symbol_set[0]]*len(x[2]))))
 					if todel:
@@ -1419,7 +1419,7 @@ class orm(object):
 				if not ids2:
 					args[i] = ('id','=','0')
 				else:
-					cr.execute('select '+field._fields_id+' from '+field_obj._table+' where id = any(array['+','.join(map(str,ids2))+'])')
+					cr.execute('select '+field._fields_id+' from '+field_obj._table+' where id in ('+','.join(map(str,ids2))+')')
 					ids3 = [x[0] for x in cr.fetchall()]
 
 					args[i] = ('id', 'in', ids3)
