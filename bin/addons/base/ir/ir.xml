@@ -533,6 +533,29 @@
 	=============================================================
 	-->
 
+	<record model="ir.ui.view" id="shortcut_form">
+		<field name="name">ir.ui.view_sc</field>
+		<field name="model">ir.ui.view_sc</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Shortcut">
+				<field name="name" colspan="4" select="1"/>
+				<field name="sequence"/>
+			</form>
+		</field>
+	</record>
+	<record model="ir.ui.view" id="shortcut_tree">
+		<field name="name">ir.ui.view_sc</field>
+		<field name="model">ir.ui.view_sc</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Shortcut">
+				<field name="sequence"/>
+				<field name="name"/>
+			</tree>
+		</field>
+	</record>
+
 	<record model="ir.ui.view" id="edit_menu">
 		<field name="name">ir.ui.menu.tree</field>
 		<field name="model">ir.ui.menu</field>
