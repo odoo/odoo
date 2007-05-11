@@ -88,7 +88,7 @@
 				<field name="account_id" select="1"/>
 				<field name="manual" select="1"/>
 				<field name="amount" select="1"/>
-				<field name="base"/>
+				<field name="base" readonly="0"/>
 				<separator string="Tax codes" colspan="4"/>
 				<field name="base_code_id"/>
 				<field name="base_amount"/>
@@ -120,29 +120,30 @@
 
 	<record model="ir.ui.view" id="invoice_supplier_form">
 		<field name="name">account.invoice.supplier.form</field>
-		<field name="model">account.invoice.supplier</field>
+		<field name="model">account.invoice</field>
 		<field name="type">form</field>
+		<field name="priority">2</field>
 		<field name="arch" type="xml">
 			<form string="Supplier invoice">
 			<notebook>
 				<page string="Invoice">
-					<field name="journal_id" select="1"/>
-					<field name="type" select="1"/>
+					<field name="journal_id" domain="[('type', '=', 'purchase')]" select="1"/>
+					<field name="type" select="1" readonly="1"/>
 					<field name="partner_id" on_change="onchange_partner_id(type,partner_id)" select="1"/>
 					<field name="address_invoice_id" domain="[('partner_id','=',partner_id)]"/>
 					<field name="account_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" />
 					<field name="date_due" select="1"/>
 
 
-					<field name="check_total"/>
-					<field name="currency_id" on_change="onchange_currency_id(currency_id)" select="1"/>
 
 					<field name="name" select="1"/>
-					<field name="number" select="1"/>
+					<field name="reference" select="1"/>
 
-					<field name="invoice_line" nolabel="1" colspan="4">
+					<field name="check_total" required="1"/>
+					<field name="currency_id" on_change="onchange_currency_id(currency_id)" select="1"/>
+					<field name="invoice_line" nolabel="1" colspan="4" default_get="{'check_total': check_total, 'invoice_line': invoice_line, 'address_invoice_id': address_invoice_id, 'partner_id': partner_id, 'price_type': 'price_type' in dir() and price_type or False}">
 						<tree string="Invoice lines" editable="bottom">
-							<field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id)"/>
+							<field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, price_unit, parent.address_invoice_id)"/>
 							<field name="account_id" on_change="onchange_account_id(parent.partner_id,account_id)" domain="[('company_id', '=', parent.company_id),('journal_id','=',parent.journal_id)]"/>
 							<field name="invoice_line_tax_id" view_mode="2"/>
 							<field name="account_analytic_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)]" />
@@ -153,11 +154,11 @@
 							<field name="uos_id" invisible="True"/>
 						</tree>
 					</field>
-					<group col="2" colspan="2">
-						<field name="tax_line" nolabel="1" colspan="2">
+					<group col="1" colspan="2">
+						<field name="tax_line" nolabel="1">
 							<tree string="Taxes" editable="bottom">
 								<field name="name"/>
-								<field name="base" on_change="base_change(base)"/>
+								<field name="base" on_change="base_change(base)" readonly="1"/>
 								<field name="amount" on_change="amount_change(amount)"/>
 
 								<field name="base_amount" invisible="True"/>
@@ -165,14 +166,16 @@
 							</tree>
 						</field>
 					</group>
-					<group col="4" colspan="2">
+					<group col="3" colspan="2">
+						<label/>
 						<field name="amount_untaxed"/>
+						<button name="button_reset_taxes" string="Reset taxes" states="draft" type="object"/>
 						<field name="amount_tax"/>
+						<button name="button_compute" string="Compute" states="draft" type="object"/>
 						<field name="amount_total"/>
-						<button name="button_compute" string="Compute taxes" states="draft" type="object" colspan="2"/>
-						<field name="state" select="1" colspan="4"/>
-						<newline/>
-						<group col="3" colspan="4">
+						<label/>
+						<field name="state" select="1"/>
+						<group col="3" colspan="3">
 							<button name="invoice_open" states="draft,proforma" string="Create"/>
 							<button name="invoice_cancel" states="draft,proforma,sale,open" string="Cancel"/>
 							<button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
@@ -184,11 +187,9 @@
 					<newline/>
 					<field name="partner_bank_id" domain="[('partner_id','=',partner_id)]"/>
 					<field name="payment_term" on_change="onchange_payment_term_date_invoice(payment_term, date_invoice)" />
-					<field name="reference" select="1"/>
+					<field name="number" select="1"/>
 					<field name="origin"/>
 					<field name="address_contact_id" domain="[('partner_id','=',partner_id)]" colspan="4"/>
-					<field name="partner_ref"/>
-					<field name="partner_contact"/>
 					<field name="move_id"/>
 					<field name="date_invoice" on_change="onchange_payment_term_date_invoice(payment_term, date_invoice)" select="1"/>
 					<field name="period_id"/><label string="(keep empty to use the current period)" align="0.0" colspan="2"/>
@@ -202,58 +203,62 @@
 
 
 	<record model="ir.ui.view" id="invoice_form">
-		<field name="name">account.invoice.form1</field>
+		<field name="name">account.invoice.form</field>
 		<field name="model">account.invoice</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Invoice">
 			<notebook>
 				<page string="Invoice">
-					<field name="name" select="1"/>
-					<field name="currency_id" on_change="onchange_currency_id(currency_id)" select="1"/>
-					<newline/>
-					<field name="type" select="1"/>
-					<field name="number" select="1"/>
-					<newline/>
-
+					<field name="journal_id" select="1"/>
+					<field name="type" select="1" readonly="1"/>
 					<field name="partner_id" on_change="onchange_partner_id(type,partner_id)" select="1"/>
 					<field name="address_invoice_id" domain="[('partner_id','=',partner_id)]"/>
-					<field name="partner_bank_id" domain="[('partner_id','=',partner_id)]"/>
-
 					<field name="account_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" />
-
 					<field name="payment_term" on_change="onchange_payment_term_date_invoice(payment_term, date_invoice)" />
-					<field name="date_due" select="1"/>
-
-					<field name="journal_id" select="1"/>
+					<field name="name" select="1"/>
+					<field name="number" select="1"/>
+					<field name="currency_id" on_change="onchange_currency_id(currency_id)" select="1"/>
 
 					<field name="invoice_line" nolabel="1" widget="one2many_list" colspan="4"/>
-					<group colspan="4" col="7">
-						<field name="amount_untaxed"/>
-						<field name="amount_tax"/>
-						<field name="amount_total"/>
-						<button name="button_compute" string="Compute" states="draft" type="object"/>
-					</group>
 
-					<group col="6" colspan="4">
-						<field name="state" select="1"/>
-						<button name="invoice_proforma" states="draft" string="Create PRO-FORMA"/>
-						<button name="invoice_open" states="draft,proforma" string="Create Invoice"/>
-						<button name="invoice_cancel" states="draft,proforma,sale,open" string="Cancel Invoice"/>
-						<button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
+					<group col="1" colspan="2">
+						<field name="tax_line" nolabel="1">
+							<tree string="Taxes" editable="bottom">
+								<field name="name"/>
+								<field name="base" on_change="base_change(base)" readonly="1"/>
+								<field name="amount" on_change="amount_change(amount)"/>
+
+								<field name="base_amount" invisible="True"/>
+								<field name="tax_amount" invisible="True"/>
+							</tree>
+						</field>
 					</group>
-				</page>
-				<page string="Tax Lines">
-					<field name="tax_line" nolabel="1" widget="one2many_list" colspan="4"/>
+					<group col="3" colspan="2">
+						<label/>
+						<field name="amount_untaxed"/>
+						<button name="button_reset_taxes" string="Reset taxes" states="draft" type="object"/>
+						<field name="amount_tax"/>
+						<button name="button_compute" string="Compute" states="draft" type="object"/>
+						<field name="amount_total"/>
+						<label/>
+						<field name="state" select="1"/>
+						<group col="4" colspan="3" expand="1">
+							<button name="invoice_proforma" states="draft" string="PRO-FORMA"/>
+							<button name="invoice_open" states="draft,proforma" string="Create"/>
+							<button name="invoice_cancel" states="draft,proforma,sale,open" string="Cancel"/>
+							<button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
+						</group>
+					</group>
 				</page>
 				<page string="Other Information">
 					<field name="company_id"/>
 					<newline/>
+					<field name="partner_bank_id" domain="[('partner_id','=',partner_id)]"/>
+					<field name="date_due" select="1"/>
 					<field name="reference" select="1"/>
 					<field name="origin"/>
 					<field name="address_contact_id" domain="[('partner_id','=',partner_id)]" colspan="4"/>
-					<field name="partner_ref"/>
-					<field name="partner_contact"/>
 					<field name="move_id"/>
 					<field name="date_invoice" on_change="onchange_payment_term_date_invoice(payment_term, date_invoice)" select="1"/>
 					<field name="period_id"/><label string="(keep empty to use the current period)" align="0.0" colspan="2"/>
@@ -271,13 +276,14 @@
 		<field name="view_type">form</field>
 		<field name="view_id" ref="invoice_form"/>
 	</record>
-	<menuitem name="Financial Management/Invoices" id="menu_action_invoice_form" action="action_invoice_form" sequence="6"/>
+	<menuitem name="Financial Management/Invoices" sequence="6"/>
 
 	<record model="ir.actions.act_window" id="action_invoice_tree1">
 		<field name="name">account.invoice</field>
 		<field name="res_model">account.invoice</field>
 		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
+		<field name="view_mode">form,tree</field>
+		<field name="view_id" eval="invoice_form"/>
 		<field name="domain">[('type','=','out_invoice')]</field>
 		<field name="context">{'type':'out_invoice'}</field>
 	</record>
@@ -285,7 +291,7 @@
 	
 	<record model="ir.actions.act_window" id="action_invoice_tree2">
 		<field name="name">account.invoice.supplier</field>
-		<field name="res_model">account.invoice.supplier</field>
+		<field name="res_model">account.invoice</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">form,tree</field>
 		<field name="view_id" eval="invoice_supplier_form"/>
@@ -298,17 +304,19 @@
 		<field name="name">account.invoice</field>
 		<field name="res_model">account.invoice</field>
 		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
+		<field name="view_mode">form,tree</field>
+		<field name="view_id" eval="invoice_form"/>
 		<field name="domain">[('type','=','out_refund')]</field>
 		<field name="context">{'type':'out_refund'}</field>
 	</record>
 	<menuitem name="Financial Management/Invoices/Customers Refund" id="menu_action_invoice_tree3" action="action_invoice_tree3"/>
 
 	<record model="ir.actions.act_window" id="action_invoice_tree4">
-		<field name="name">account.invoice</field>
+		<field name="name">account.invoice.supplier</field>
 		<field name="res_model">account.invoice</field>
 		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
+		<field name="view_mode">form,tree</field>
+		<field name="view_id" eval="invoice_supplier_form"/>
 		<field name="domain">[('type','=','in_refund')]</field>
 		<field name="context">{'type':'in_refund'}</field>
 	</record>
@@ -352,7 +360,7 @@
 		<field name="domain">[('state','=','draft'),('type','=','in_invoice')]</field>
 		<field name="context">{'type':'in_invoice'}</field>
 	</record>
-	<menuitem name="Financial Management/Invoices/Suppliers Invoices/Draft" id="menu_action_invoice_tree8" action="action_invoice_tree8"/>
+	<menuitem name="Financial Management/Invoices/Suppliers Invoices/Draft Invoices" id="menu_action_invoice_tree8" action="action_invoice_tree8"/>
 
 	<record model="ir.actions.act_window" id="action_invoice_tree9">
 		<field name="name">account.invoice</field>
@@ -362,7 +370,7 @@
 		<field name="domain">[('state','=','open'),('type','=','in_invoice')]</field>
 		<field name="context">{'type':'in_invoice'}</field>
 	</record>
-	<menuitem name="Financial Management/Invoices/Suppliers Invoices/Opened" id="menu_action_invoice_tree9" action="action_invoice_tree9"/>
+	<menuitem name="Financial Management/Invoices/Suppliers Invoices/Opened Invoices" id="menu_action_invoice_tree9" action="action_invoice_tree9"/>
 
 	<record model="ir.actions.act_window" id="action_invoice_tree10">
 		<field name="name">account.invoice</field>
@@ -372,7 +380,7 @@
 		<field name="domain">[('state','=','draft'),('type','=','out_refund')]</field>
 		<field name="context">{'type':'out_refund'}</field>
 	</record>
-	<menuitem name="Financial Management/Invoices/Customers Refund/Draft" id="menu_action_invoice_tree10" action="action_invoice_tree10"/>
+	<menuitem name="Financial Management/Invoices/Customers Refund/Draft Invoices" id="menu_action_invoice_tree10" action="action_invoice_tree10"/>
 	
 	<record model="ir.actions.act_window" id="action_invoice_tree11">
 		<field name="name">account.invoice</field>
@@ -382,7 +390,7 @@
 		<field name="domain">[('state','=','open'),('type','=','out_refund')]</field>
 		<field name="context">{'type':'out_refund'}</field>
 	</record>
-	<menuitem name="Financial Management/Invoices/Customers Refund/Opened" id="menu_action_invoice_tree11" action="action_invoice_tree11"/>
+	<menuitem name="Financial Management/Invoices/Customers Refund/Opened Invoices" id="menu_action_invoice_tree11" action="action_invoice_tree11"/>
 
 	<record model="ir.actions.act_window" id="action_invoice_tree12">
 		<field name="name">account.invoice</field>
@@ -392,7 +400,7 @@
 		<field name="domain">[('state','=','draft'),('type','=','in_refund')]</field>
 		<field name="context">{'type':'in_refund'}</field>
 	</record>
-	<menuitem name="Financial Management/Invoices/Suppliers Refund/Draft" id="menu_action_invoice_tree12" action="action_invoice_tree12"/>
+	<menuitem name="Financial Management/Invoices/Suppliers Refund/Draft Invoices" id="menu_action_invoice_tree12" action="action_invoice_tree12"/>
 	
 	<record model="ir.actions.act_window" id="action_invoice_tree13">
 		<field name="name">account.invoice</field>
@@ -402,7 +410,7 @@
 		<field name="domain">[('state','=','open'),('type','=','in_refund')]</field>
 		<field name="context">{'type':'in_refund'}</field>
 	</record>
-	<menuitem name="Financial Management/Invoices/Suppliers Refund/Opened" id="menu_action_invoice_tree13" action="action_invoice_tree13"/>
+	<menuitem name="Financial Management/Invoices/Suppliers Refund/Opened Invoices" id="menu_action_invoice_tree13" action="action_invoice_tree13"/>
 
 </data>
 </terp>

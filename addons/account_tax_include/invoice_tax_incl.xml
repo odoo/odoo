@@ -21,8 +21,44 @@
 		<field name="model">account.invoice</field>
 		<field name="inherit_id" ref="account.invoice_form" />
 		<field name="arch" type="xml">
-			<field name="journal_id" position="after">
+			<field name="invoice_line" position="before">
 				<field name="price_type"/>
+			</field>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="invoice_supplier_form_tax_include">
+		<field name="name">account.invoice.supplier.tax_include</field>
+		<field name="type">form</field>
+		<field name="model">account.invoice</field>
+		<field name="inherit_id" ref="account.invoice_supplier_form" />
+		<field name="arch" type="xml">
+			<field name="invoice_line" position="before">
+				<field name="price_type"/>
+			</field>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="invoice_supplier_form_tax_include2">
+		<field name="name">account.invoice.supplier.tax_include2</field>
+		<field name="type">form</field>
+		<field name="model">account.invoice</field>
+		<field name="inherit_id" ref="account.invoice_supplier_form" />
+		<field name="arch" type="xml">
+			<field name="price_subtotal" position="after">
+				<field name="price_subtotal_incl"/>
+			</field>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="invoice_supplier_form_tax_include3">
+		<field name="name">account.invoice.supplier.tax_include3</field>
+		<field name="type">form</field>
+		<field name="model">account.invoice</field>
+		<field name="inherit_id" ref="account.invoice_supplier_form" />
+		<field name="arch" type="xml">
+			<field name="product_id" position="replace">
+				<field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, price_unit, parent.address_invoice_id, parent.price_type)"/>
 			</field>
 		</field>
 	</record>

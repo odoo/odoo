@@ -845,6 +845,7 @@ class account_tax(osv.osv):
 		'child_ids':fields.one2many('account.tax', 'parent_id', 'Childs Tax Account'),
 		'child_depend':fields.boolean('Tax on Childs', help="Indicate if the tax computation is based on the value computed for the computation of child taxes or based on the total amount."),
 		'python_compute':fields.text('Python Code'),
+		'python_compute_inv':fields.text('Python Code (reverse)'),
 		'python_applicable':fields.text('Python Code'),
 		'tax_group': fields.selection([('vat','VAT'),('other','Other')], 'Tax Group', help="If a default tax if given in the partner it only override taxes from account (or product) of the same group."),
 
@@ -873,9 +874,10 @@ class account_tax(osv.osv):
 		return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
 	_defaults = {
 		'python_compute': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or None\n# partner : res.partner object or None\n\nresult = price_unit * 0.10''',
+		'python_compute_inv': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or False\n\nresult = price_unit * 0.10''',
 		'applicable_type': lambda *a: 'true',
 		'type': lambda *a: 'percent',
-		'amount': lambda *a: 0.196,
+		'amount': lambda *a: 0,
 		'active': lambda *a: 1,
 		'sequence': lambda *a: 1,
 		'tax_group': lambda *a: 'vat',
@@ -948,7 +950,6 @@ class account_tax(osv.osv):
 				cur_price_unit+=amount2
 		return res
 
-
 	def compute(self, cr, uid, taxes, price_unit, quantity, address_id=None, product=None, partner=None):
 
 		"""
@@ -960,6 +961,71 @@ class account_tax(osv.osv):
 			one tax for each tax id in IDS and their childs
 		"""
 		res = self._unit_compute(cr, uid, taxes, price_unit, address_id, product, partner)
+		for r in res:
+			r['amount'] *= quantity
+		return res
+
+	def _unit_compute_inv(self, cr, uid, taxes, price_unit, address_id=None, product=None, partner=None):
+		taxes = self._applicable(cr, uid, taxes, price_unit, address_id, product, partner)
+
+		res = []
+		taxes.reverse()
+		cur_price_unit=price_unit
+		for tax in taxes:
+			# we compute the amount for the current tax object and append it to the result
+			if tax.type=='percent':
+				amount = cur_price_unit - (cur_price_unit / (1 + tax.amount))
+				res.append({'id':tax.id, 'name':tax.name, 'amount':amount, 'account_collected_id':tax.account_collected_id.id, 'account_paid_id':tax.account_paid_id.id, 'base_code_id': tax.base_code_id.id, 'ref_base_code_id': tax.ref_base_code_id.id, 'sequence': tax.sequence, 'base_sign': tax.base_sign, 'tax_sign': tax.tax_sign, 'ref_base_sign': tax.ref_base_sign, 'ref_tax_sign': tax.ref_tax_sign, 'price_unit': cur_price_unit - amount, 'tax_code_id': tax.tax_code_id.id, 'ref_tax_code_id': tax.ref_tax_code_id.id,})
+			elif tax.type=='fixed':
+				res.append({'id':tax.id, 'name':tax.name, 'amount':tax.amount, 'account_collected_id':tax.account_collected_id.id, 'account_paid_id':tax.account_paid_id.id, 'base_code_id': tax.base_code_id.id, 'ref_base_code_id': tax.ref_base_code_id.id, 'sequence': tax.sequence, 'base_sign': tax.base_sign, 'tax_sign': tax.tax_sign, 'ref_base_sign': tax.ref_base_sign, 'ref_tax_sign': tax.ref_tax_sign, 'price_unit': 1, 'tax_code_id': tax.tax_code_id.id, 'ref_tax_code_id': tax.ref_tax_code_id.id,})
+			elif tax.type=='code':
+				address = address_id and self.pool.get('res.partner.address').browse(cr, uid, address_id) or None
+				localdict = {'price_unit':cur_price_unit, 'address':address, 'product':product, 'partner':partner}
+				exec tax.python_compute_inv in localdict
+				amount = localdict['result']
+				res.append({
+					'id': tax.id,
+					'name': tax.name,
+					'amount': amount,
+					'account_collected_id': tax.account_collected_id.id,
+					'account_paid_id': tax.account_paid_id.id,
+					'base_code_id': tax.base_code_id.id,
+					'ref_base_code_id': tax.ref_base_code_id.id,
+					'sequence': tax.sequence,
+					'base_sign': tax.base_sign,
+					'tax_sign': tax.tax_sign,
+					'ref_base_sign': tax.ref_base_sign,
+					'ref_tax_sign': tax.ref_tax_sign,
+					'price_unit': cur_price_unit - amount,
+					'tax_code_id': tax.tax_code_id.id,
+					'ref_tax_code_id': tax.ref_tax_code_id.id,
+				})
+			amount2 = res[-1]['amount']
+			if len(tax.child_ids):
+				if tax.child_depend:
+					del res[-1]
+					amount = amount2
+				else:
+					amount = amount2
+			for t in tax.child_ids:
+				parent_tax = self._unit_compute_inv(cr, uid, [t], amount, address_id)
+				res.extend(parent_tax)
+			if tax.include_base_amount:
+				cur_price_unit-=amount
+		taxes.reverse()
+		return res
+
+	def compute_inv(self, cr, uid, taxes, price_unit, quantity, address_id=None, product=None, partner=None):
+		"""
+		Compute tax values for given PRICE_UNIT, QUANTITY and a buyer/seller ADDRESS_ID.
+		Price Unit is a VAT included price
+
+		RETURN:
+			[ tax ]
+			tax = {'name':'', 'amount':0.0, 'account_collected_id':1, 'account_paid_id':2}
+			one tax for each tax id in IDS and their childs
+		"""
+		res = self._unit_compute_inv(cr, uid, taxes, price_unit, address_id, product, partner=None)
 		for r in res:
 			r['amount'] *= quantity
 		return res
