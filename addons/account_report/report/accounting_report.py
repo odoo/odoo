@@ -47,6 +47,7 @@ class accounting_report(report_sxw.rml_parse):
 				  'note':res[0]['note'],
 				  'level': level,
 				  'color_font':res[0]['color_font'],
+				  'color_back':res[0]['color_back']
 				  }
 
 		self.ret_list.append(ret_dict)
