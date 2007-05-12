@@ -114,16 +114,19 @@
     </para>
     <section>
       <para style="P9">[[repeatIn(childs(o.id),'obj')]]</para>
+
       <blockTable colWidths="362.0,73.0,93.0" repeatRows="1" style="Table3">
+
         <tr>
           <td>
-            <para style="P10">[[ "        "*(obj['level']) + obj['name'] ]][[ setTag('para','xpre') ]]</para>
+            <para style="P10"><font>[[ "        "*(obj['level']) + obj['name'] ]][[setTag('para','xpre') ]]  [[ obj['color_font'] and ( setTag('font','font',{'color':obj['color_font']}))  ]]</font></para>
+          </td>
+          <td >
+          <para style="P10"><font>
+            [[obj['code'] ]] [[ obj['color_font'] and ( setTag('font','font',{'color':obj['color_font']}))  ]]</font></para>
           </td>
           <td>
-            <para style="P10">[[obj['code'] ]]</para>
-          </td>
-          <td>
-            <para style="P11">[['%.2f' % obj['amount'] ]]</para>
+            <para style="P11"><font>[['%.2f' % obj['amount'] ]] [[ obj['color_font'] and ( setTag('font','font',{'color':obj['color_font']}))  ]]</font> </para>
           </td>
         </tr>
         <tr>
@@ -142,7 +145,9 @@
             </para>
           </td>
         </tr>
+
       </blockTable>
+
       <para style="P1">
         <font color="white"> </font>
       </para>
