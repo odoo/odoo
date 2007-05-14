@@ -114,7 +114,8 @@ class act_window(osv.osv):
 		'context': fields.char('Context Value', size=250),
 		'res_model': fields.char('Model', size=64),
 		'view_type': fields.selection((('tree','Tree'),('form','Form')),string='Type of view'),
-		'view_mode': fields.selection((('form,list','Form - List'),('list,form','List - Form')), string='Mode of view'),
+#		'view_mode': fields.selection((('form,list','Form - List'),('list,form','List - Form')), string='Mode of view'),
+		'view_mode': fields.char('Mode of view', size=250),
 		'usage': fields.char('Action Usage', size=32)
 	}
 	_defaults = {

@@ -65,43 +65,123 @@
 	Actions
 	==========================================================
 
+	<record model="ir.ui.view" id="action_view">
+		<field name="name">ir.actions.actions</field>
+		<field name="model">ir.actions.actions</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Action">
+				<field name="name" select="1"/>
+				<field name="type" select="1"/>
+				<field name="usage"/>
+			</form>
+		</field>
+	</record>
+
 	<record model="ir.actions.act_window" id="ir_sequence_actions">
 		<field name="name">ir.actions.actions</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">ir.actions.actions</field>
 		<field name="view_type">form</field>
+		<field name="view_id" ref="action_view"/>
 	</record>
 	<menuitem name="Administration/Custom/Low level/Base/Actions/Actions" action="ir_sequence_actions" id="menu_ir_sequence_actions"/>
+
+	<record model="ir.ui.view" id="act_execute_view">
+		<field name="name">ir.actions.execute</field>
+		<field name="model">ir.actions.execute</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Execute">
+				<field name="name" select="1"/>
+				<field name="type" select="1"/>
+				<field name="func_name"/>
+				<field name="func_arg"/>
+				<field name="usage"/>
+			</form>
+		</field>
+	</record>
 
 	<record model="ir.actions.act_window" id="ir_action_execute">
 		<field name="name">ir.actions.execute</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">ir.actions.execute</field>
 		<field name="view_type">form</field>
+		<field name="view_id" ref="act_execute_view"/>
 	</record>
 	<menuitem name="Administration/Custom/Low level/Base/Actions/Execute" action="ir_action_execute" id="menu_ir_action_execute"/>
+
+	<record model="ir.ui.view" id="act_group_view">
+		<field name="name">ir.actions.group</field>
+		<field name="model">ir.actions.group</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Group">
+				<field name="name" select="1"/>
+				<field name="type" select="1"/>
+				<field name="exec_type"/>
+				<field name="usage"/>
+			</form>
+		</field>
+	</record>
 
 	<record model="ir.actions.act_window" id="ir_action_group">
 		<field name="name">ir.actions.group</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">ir.actions.group</field>
 		<field name="view_type">form</field>
+		<field name="view_id" ref="act_group_view"/>
 	</record>
 	<menuitem name="Administration/Custom/Low level/Base/Actions/Group" action="ir_action_group" id="menu_ir_action_group"/>
+
+	<record model="ir.ui.view" id="act_report_custom_view">
+		<field name="name">ir.actions.report.custom</field>
+		<field name="model">ir.actions.report.custom</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Report custom">
+				<field name="name" select="1"/>
+				<field name="type" select="1"/>
+				<field name="report_id"/>
+				<field name="usage"/>
+			</form>
+		</field>
+	</record>
 
 	<record model="ir.actions.act_window" id="ir_action_report_custom">
 		<field name="name">ir.actions.report.custom</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">ir.actions.report.custom</field>
 		<field name="view_type">form</field>
+		<field name="view_id" ref="act_report_custom_view"/>
 	</record>
 	<menuitem name="Administration/Custom/Low level/Base/Actions/Report Custom" action="ir_action_report_custom" id="menu_ir_action_report_custom"/>
+
+	<record model="ir.ui.view" id="act_report_xml_view">
+		<field name="name">ir.actions.report.xml</field>
+		<field name="model">ir.actions.report.xml</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Report xml">
+				<field name="name" select="1"/>
+				<field name="type" select="1"/>
+				<field name="report_name" select="1"/>
+				<field name="report_xsl"/>
+				<field name="report_xml"/>
+				<field name="report_rml"/>
+				<field name="auto"/>
+				<field name="usage"/>
+				<field name="header"/>
+			</form>
+		</field>
+	</record>
 
 	<record model="ir.actions.act_window" id="ir_action_report_xml">
 		<field name="name">ir.actions.report.xml</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">ir.actions.report.xml</field>
 		<field name="view_type">form</field>
+		<field name="view_id" ref="act_report_xml_view"/>
 	</record>
 	<menuitem name="Administration/Custom/Low level/Base/Actions/Report Xml" action="ir_action_report_xml" id="menu_ir_action_report_xml"/>
 
@@ -130,7 +210,9 @@
 				<field name="type" readonly="1"/>
 				<field name="view_id"/>
 				<field name="res_model"/>
+				<field name="usage"/>
 				<field name="view_type"/>
+				<field name="view_mode"/>
 				<field name="domain" colspan="4"/>
 			</form>
 		</field>
@@ -143,6 +225,20 @@
 		<field name="view_id" ref="view_window_action_form"/>
 	</record>
 	<menuitem name="Administration/Custom/Low level/Base/Actions/Open Window" action="ir_action_window" id="menu_ir_action_window"/>
+
+	<record model="ir.ui.view" id="act_wizard_view">
+		<field name="name">ir.actions.wizard</field>
+		<field name="model">ir.actions.wizard</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Wizard">
+				<field name="name" select="1"/>
+				<field name="type" select="1"/>
+				<field name="wiz_name" select="1"/>
+				<field name="multi"/>
+			</form>
+		</field>
+	</record>
 
 	<record model="ir.actions.act_window" id="ir_action_wizard">
 		<field name="name">ir.actions.wizard</field>
@@ -411,7 +507,7 @@
 				<field name="model" select="1"/>
 				<field name="info" select="1" colspan="4"/>
 				<separator string="Fields" colspan="4"/>
-				<field name="field_id" colspan="4" nolabel="1">
+				<field name="field_id" colspan="4" nolabel="1" readonly="1">
 					<form string="Fields Description">
 					<field name="name" select="1"/>
 					<field name="field_description" select="1" colspan="4"/>
@@ -448,7 +544,7 @@
 		<field name="arch" type="xml">
 			<form string="Fields Description">
 				<field name="name" select="1"/>
-				<field name="model_id"/>
+				<field name="model_id" readonly="1"/>
 				<field name="field_description" select="1" colspan="4"/>
 				<field name="ttype" select="1"/>
 				<field name="relation" select="1"/>
