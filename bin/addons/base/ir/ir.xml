@@ -190,7 +190,7 @@
 		<field name="model">ir.actions.act_window</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Window Action">
+			<tree string="Open Window">
 				<field name="name"/>
 				<field name="res_model"/>
 				<field name="view_type"/>
@@ -209,7 +209,7 @@
 				<field name="name" colspan="4" select="1"/>
 				<field name="type" readonly="1"/>
 				<field name="view_id"/>
-				<field name="res_model"/>
+				<field name="res_model" select="1"/>
 				<field name="usage"/>
 				<field name="view_type"/>
 				<field name="view_mode"/>
