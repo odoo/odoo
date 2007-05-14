@@ -133,13 +133,11 @@ class sale_order(osv.osv):
 			('postpaid','Automatic Invoice after delivery'),
 			('picking','Invoice from the pickings'),
 		], 'Shipping Policy', required=True, readonly=True, states={'draft':[('readonly',False)]},
-					help="""
-The Shipping Policy is used to synchronise invoice and delivery operations.
+					help="""The Shipping Policy is used to synchronise invoice and delivery operations.
   - The 'Pay before delivery' choice will first generate the invoice and then generate the picking order after the payment of this invoice.
   - The 'Shipping & Manual Invoice' will create the picking order directly and wait for the user to manually click on the 'Invoice' button to generate the draft invoice.
   - The 'Invoice after delivery' choice will generate the draft invoice after the picking list have been finished.
-  - The 'Invoice from the pickings' choice is used to create an invoice during the picking process.
-  """),
+  - The 'Invoice from the pickings' choice is used to create an invoice during the picking process."""),
 		'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', required=True, readonly=True, states={'draft':[('readonly',False)]}),
 		'project_id':fields.many2one('account.analytic.account', 'Profit/Cost Center', readonly=True, states={'draft':[('readonly', False)]}),
 
