@@ -211,7 +211,6 @@ class account_account(osv.osv):
 		'close_method': fields.selection([('none','None'), ('balance','Balance'), ('detail','Detail'),('unreconciled','Unreconciled')], 'Deferral Method', required=True, help="Tell Tiny ERP how to process the entries of this account when you close a fiscal year. None removes all entries to start with an empty account for the new fiscal year. Balance creates only one entry to keep the balance for the new fiscal year. Detail keeps the detail of all entries of the preceeding years. Unreconciled keeps the detail of unreconciled entries only."),
 		'tax_ids': fields.many2many('account.tax', 'account_account_tax_default_rel', 'account_id','tax_id', 'Default Taxes'),
 
-		'active': fields.boolean('Active'),
 		'note': fields.text('Note'),
 		'company_currency_id': fields.function(_get_company_currency, method=True, type='many2one', relation='res.currency', string='Company Currency'),
 		'company_id': fields.many2one('res.company', 'Company', required=True),
@@ -225,7 +224,6 @@ class account_account(osv.osv):
 	_defaults = {
 		'sign': lambda *a: 1,
 		'type': lambda *a: 'view',
-		'active': lambda *a: True,
 		'reconcile': lambda *a: False,
 		'close_method': lambda *a: 'balance',
 		'company_id': _default_company,
@@ -328,8 +326,8 @@ class account_journal(osv.osv):
 		'code': fields.char('Code', size=16),
 		'type': fields.selection([('sale','Sale'), ('purchase','Purchase'), ('cash','Cash'), ('general','General'), ('situation','Situation')], 'Type', size=32, required=True),
 
-		'type_control_ids': fields.many2many('account.account.type', 'account_journal_type_rel', 'journal_id','type_id', 'Type Controls', domain=[('code','<>','view')]),
-		'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id','account_id', 'Account', domain=[('type','<>','view')]),
+		'type_control_ids': fields.many2many('account.account.type', 'account_journal_type_rel', 'journal_id','type_id', 'Type Controls', domain=[('code','<>','view'), ('code', '<>', 'closed')]),
+		'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id','account_id', 'Account', domain=[('type','<>','view'), ('type', '<>', 'closed')]),
 
 		'active': fields.boolean('Active'),
 		'view_id': fields.many2one('account.journal.view', 'View', required=True, help="Gives the view used when writing or browsing entries in this journal. The view tell Tiny ERP which fields should be visible, required or readonly and in which order. You can create your own view for a faster encoding in each journal."),

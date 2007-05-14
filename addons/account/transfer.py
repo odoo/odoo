@@ -100,7 +100,7 @@ class account_transfer(osv.osv):
 			'refund':   ('receivable','income'),
 			'sale':     ('income','cash'),
 		}
-		d = {'account_src_id': [('type','<>','view')], 'account_dest_id': [('type','<>','view')]}
+		d = {'account_src_id': [('type','<>','view'), ('type', '<>', 'closed')], 'account_dest_id': [('type','<>','view'), ('type', '<>', 'closed')]}
 		if type_acc.has_key(type):
 			d['account_src_id'].append(('type','=',type_acc[type][0]))
 			d['account_dest_id'].append(('type','=',type_acc[type][1]))

@@ -160,7 +160,7 @@ class account_move_line(osv.osv):
 		'quantity': fields.float('Quantity', digits=(16,2), help="The optionnal quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very usefull for some reports."),
 		'debit': fields.float('Debit', digits=(16,2), states={'reconciled':[('readonly',True)]}),
 		'credit': fields.float('Credit', digits=(16,2), states={'reconciled':[('readonly',True)]}),
-		'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade", states={'reconciled':[('readonly',True)]}, domain=[('type','<>','view')]),
+		'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade", states={'reconciled':[('readonly',True)]}, domain=[('type','<>','view'), ('type', '<>', 'closed')]),
 
 		'move_id': fields.many2one('account.move', 'Entry', required=True, ondelete="cascade", states={'reconciled':[('readonly',True)]}, help="The entry of this entry line.", select=True),
 
@@ -208,8 +208,16 @@ class account_move_line(osv.osv):
 				return False
 		return True
 
+	def _check_no_closed(self, cr, uid, ids):
+		lines = self.browse(cr, uid, ids)
+		for l in lines:
+			if l.account_id.type == 'closed':
+				return False
+		return True
+
 	_constraints = [
-		(_check_no_view, 'You can not create move line on view account.', ['account_id'])
+		(_check_no_view, 'You can not create move line on view account.', ['account_id']),
+		(_check_no_closed, 'You can not create move line on closed account.', ['account_id']),
 	]
 
 	def onchange_partner_id(self, cr, uid, ids, move_id, partner_id, account_id=None, debit=0, credit=0, journal=False):
@@ -359,7 +367,7 @@ class account_move_line(osv.osv):
 				fields.append(field.field)
 				attrs = []
 				if field.field=='account_id' and journal.id:
-					attrs.append('domain="[(\'journal_id\', \'=\', '+str(journal.id)+'),(\'type\',\'&lt;&gt;\',\'view\')]"')
+					attrs.append('domain="[(\'journal_id\', \'=\', '+str(journal.id)+'),(\'type\',\'&lt;&gt;\',\'view\'), (\'type\',\'&lt;&gt;\',\'closed\')]"')
 				if field.readonly:
 					attrs.append('readonly="1"')
 				if field.required:

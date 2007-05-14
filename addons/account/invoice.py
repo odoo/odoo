@@ -605,7 +605,7 @@ class account_invoice_line(osv.osv):
 		'invoice_id': fields.many2one('account.invoice', 'Invoice Ref', ondelete='cascade', select=True),
 		'uos_id': fields.many2one('product.uom', 'Unit', ondelete='set null'),
 		'product_id': fields.many2one('product.product', 'Product', ondelete='set null'),
-		'account_id': fields.many2one('account.account', 'Source Account', required=True, domain=[('type','<>','view')]),
+		'account_id': fields.many2one('account.account', 'Source Account', required=True, domain=[('type','<>','view'), ('type', '<>', 'closed')]),
 		'price_unit': fields.float('Unit Price', required=True, digits=(16, int(config['price_accuracy']))),
 		'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal'),
 		'quantity': fields.float('Quantity', required=True),
@@ -742,7 +742,7 @@ class account_invoice_tax(osv.osv):
 	_columns = {
 		'invoice_id': fields.many2one('account.invoice', 'Invoice Line', ondelete='cascade', select=True),
 		'name': fields.char('Tax Description', size=64, required=True),
-		'account_id': fields.many2one('account.account', 'Tax Account', required=True, domain=[('type','<>','view'),('type','<>','income')]),
+		'account_id': fields.many2one('account.account', 'Tax Account', required=True, domain=[('type','<>','view'),('type','<>','income'), ('type', '<>', 'closed')]),
 		'base': fields.float('Base', digits=(16,2)),
 		'amount': fields.float('Amount', digits=(16,2)),
 		'manual': fields.boolean('Manual'),
