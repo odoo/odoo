@@ -875,7 +875,7 @@
 				<field name="journal_id" select="1"/>
 
 				<separator string="Entry Lines" colspan="4"/>
-				<field name="line_id" colspan="4" widget="one2many_list" readonly="1">
+				<field name="line_id" colspan="4" widget="one2many_list" readonly="1" nolabel="1">
 					<form string="Account Entry Line">
 						<separator string="General Information" colspan="4"/>
 						<field name="name" select="1"/>
@@ -912,7 +912,6 @@
 					</tree>
 				</field>
 
-				<separator string="States" colspan="4"/>
 				<field name="state" select="1"/>
 				<group col="2" colspan="2">
 					<button string="Validate" name="button_validate" states="draft" type="object"/>
