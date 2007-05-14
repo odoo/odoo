@@ -56,7 +56,7 @@ class account_invoice_bvr(report_sxw.rml_parse):
 		res = ''
 		if bank.bvr_adherent_num:
 			res = bank.bvr_adherent_num
-		return self._mod10r(res+o.number.rjust(27-len(res), '0'))
+		return self._mod10r(res+o.number.rjust(26-len(res), '0'))
 
 	def _mod10r(self,nbr):
 		"""

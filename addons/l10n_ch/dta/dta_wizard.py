@@ -313,21 +313,21 @@ class record_gt836(record):
 			('comp_dta',5),('invoice_number',11),('comp_bank_iban',24),('date_value',6),
 			('invoice_currency',3),('amount_to_pay',15),('padding',11),
 			#seg2
-			('seg_num2',2),('conv_cours',12),('comp_name',35),('comp_street',35),('comp_zip',10),
-			('comp_city',15),('comp_country',10),('padding',9),
+			('seg_num2',2),('conv_cours',12),('comp_name',35),('comp_street',35),('comp_country',3),('comp_zip',10),
+			('comp_city',22),('padding',9),
 			#seg3
 			('seg_num3',2),('option_id_bank',1),('partner_bank_ident',70),
 			('partner_bank_iban',34),('padding',21),
 			#seg4
-			('seg_num4',2),('partner_name',35),('partner_street',35),('partner_zip',10),('partner_city',15),
-			('partner_country',10),('padding',21),
+			('seg_num4',2),('partner_name',35),('partner_street',35),('partner_country',3),('partner_zip',10),('partner_city',22),
+			('padding',21),
 			#seg5
 			('seg_num5',2),('option_motif',1),('invoice_reference',105),('format',1),('padding',19)
 		]
 
 		self.pre.update( {
 			'partner_bank_clearing':'','partner_cpt_benef':'',
-			'type_paiement':'1','genre_trans':'836',
+			'type_paiement':'0','genre_trans':'836',
 			'conv_cours':'',
 			'invoice_reference': self.global_values['invoice_reference'] or self.global_values['partner_comment'],
 			'ref2':'','ref3':'',
@@ -492,7 +492,12 @@ def _create_dta(self,cr,uid,data,context):
 			v['partner_street'] = i.partner_id.address[0].street
 			v['partner_city']= i.partner_id.address[0].city
 			v['partner_zip']= i.partner_id.address[0].zip
-			v['partner_country']= i.partner_id.address[0].country_id and i.partner_id.address[0].country_id.name or ''
+			# If iban => country=country code for space reason
+			elec_pay = i.partner_bank_id.type_id.elec_pay
+			if elec_pay == 'iban':
+				v['partner_country']= i.partner_id.address[0].country_id and i.partner_id.address[0].country_id.code+'-' or ''
+			else:
+				v['partner_country']= i.partner_id.address[0].country_id and i.partner_id.address[0].country_id.name or ''
 		else:
 			v['partner_street'] =''
 			v['partner_city']= ''
@@ -518,6 +523,8 @@ def _create_dta(self,cr,uid,data,context):
 			continue
 
 		if elec_pay == 'iban':
+			# If iban => country=country code for space reason
+			v['comp_country'] = co_addr.country_id and co_addr.country_id.code+'-' or ''
 			record_type = record_gt836
 			if not v['partner_bank_iban']:
 				log= log +'\nNo iban number for the partner bank. (invoice '+ invoice_number +')' 
