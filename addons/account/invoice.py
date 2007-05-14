@@ -263,7 +263,9 @@ class account_invoice(osv.osv):
 
 	def button_compute(self, cr, uid, ids, context={}):
 		ait_obj = self.pool.get('account.invoice.tax')
+		cur_obj = self.pool.get('res.currency')
 		for inv in self.browse(cr, uid, ids):
+			company_currency = inv.company_id.currency_id.id
 			compute_taxes = ait_obj.compute(cr, uid, inv.id)
 			if not inv.tax_line:
 				for tax in compute_taxes.values():
@@ -278,7 +280,8 @@ class account_invoice(osv.osv):
 					if not key in compute_taxes:
 						ait_obj.unlink(cr, uid, [tax.id])
 						continue
-					if compute_taxes[key]['base'] != tax.base:
+					compute_taxes[key]['base'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, compute_taxes[key]['base'], context={'date': inv.date_invoice})
+					if abs(compute_taxes[key]['base'] - tax.base) > inv.company_id.currency_id.rounding:
 						ait_obj.write(cr, uid, [tax.id], compute_taxes[key])
 				for key in compute_taxes:
 					if not key in tax_key:
@@ -334,7 +337,7 @@ class account_invoice(osv.osv):
 						raise osv.except_osv('Warning !', 'Too much taxes !')
 					base = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, compute_taxes[key]['base'], context={'date': inv.date_invoice})
 					if abs(base - tax.base) > inv.company_id.currency_id.rounding:
-						raise osv.except_osv('Warning !', 'Base different !')
+						raise osv.except_osv('Warning !', 'Tax base different !\nClick on compute to update tax base')
 				for key in compute_taxes:
 					if not key in tax_key:
 						raise osv.except_osv('Warning !', 'Taxes missing !')
