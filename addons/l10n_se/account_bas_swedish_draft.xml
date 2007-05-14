@@ -4,3570 +4,3570 @@
 	<record model="account.account" id="root">
 		<field name="name">BAS Account Chart</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="code">0</field>
 	</record>
 	<record model="account.account" id="1">
 		<field name="name">Tillgångar</field>
 		<field name="code">1</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="root"/></field>
 	</record>
 	<record model="account.account" id="10">
 		<field name="name">Immateriella anläggningstillgångar</field>
 		<field name="code">10</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="1"/></field>
 	</record>
 	<record model="account.account" id="101">
 		<field name="name">Balanserade utgifter</field>
 		<field name="code">101</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="10"/></field>
 	</record>
 	<record model="account.account" id="102">
 		<field name="name">Koncessioner m.m.</field>
 		<field name="code">102</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="10"/></field>
 	</record>
 	<record model="account.account" id="103">
 		<field name="name">Patent</field>
 		<field name="code">103</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="10"/></field>
 	</record>
 	<record model="account.account" id="104">
 		<field name="name">Licenser</field>
 		<field name="code">104</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="10"/></field>
 	</record>
 	<record model="account.account" id="105">
 		<field name="name">Varumärken</field>
 		<field name="code">105</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="10"/></field>
 	</record>
 	<record model="account.account" id="106">
 		<field name="name">Hyresrätter</field>
 		<field name="code">106</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="10"/></field>
 	</record>
 	<record model="account.account" id="107">
 		<field name="name">Goodwill</field>
 		<field name="code">107</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="10"/></field>
 	</record>
 	<record model="account.account" id="108">
 		<field name="name">Pågående projekt och förskott för</field>
 		<field name="code">108</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="10"/></field>
 	</record>
 	<record model="account.account" id="109">
 		<field name="name">Övriga immateriella</field>
 		<field name="code">109</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="10"/></field>
 	</record>
 	<record model="account.account" id="11">
 		<field name="name">Byggnader och mark</field>
 		<field name="code">11</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="1"/></field>
 	</record>
 	<record model="account.account" id="111">
 		<field name="name">Byggnader</field>
 		<field name="code">111</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="11"/></field>
 	</record>
 	<record model="account.account" id="113">
 		<field name="name">Mark</field>
 		<field name="code">113</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="11"/></field>
 	</record>
 	<record model="account.account" id="114">
 		<field name="name">Tomter och obebyggda</field>
 		<field name="code">114</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="11"/></field>
 	</record>
 	<record model="account.account" id="115">
 		<field name="name">Markanläggningar</field>
 		<field name="code">115</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="11"/></field>
 	</record>
 	<record model="account.account" id="118">
 		<field name="name">Pågående nyanläggningar och</field>
 		<field name="code">118</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="11"/></field>
 	</record>
 	<record model="account.account" id="119">
 		<field name="name">Övriga byggnader och mark</field>
 		<field name="code">119</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="11"/></field>
 	</record>
 	<record model="account.account" id="12">
 		<field name="name">Maskiner och inventarier</field>
 		<field name="code">12</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="1"/></field>
 	</record>
 	<record model="account.account" id="120">
 		<field name="name">Maskiner och inventarier</field>
 		<field name="code">120</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="12"/></field>
 	</record>
 	<record model="account.account" id="121">
 		<field name="name">Maskiner och andra tekniska</field>
 		<field name="code">121</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="12"/></field>
 	</record>
 	<record model="account.account" id="122">
 		<field name="name">Inventarier och verktyg</field>
 		<field name="code">122</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="12"/></field>
 	</record>
 	<record model="account.account" id="123">
 		<field name="name">Installationer</field>
 		<field name="code">123</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="12"/></field>
 	</record>
 	<record model="account.account" id="124">
 		<field name="name">Bilar och andra transportmedel</field>
 		<field name="code">124</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="12"/></field>
 	</record>
 	<record model="account.account" id="125">
 		<field name="name">Datorer</field>
 		<field name="code">125</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="12"/></field>
 	</record>
 	<record model="account.account" id="126">
 		<field name="name">Leasingavtal</field>
 		<field name="code">126</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="12"/></field>
 	</record>
 	<record model="account.account" id="128">
 		<field name="name">Pågående nyanläggningar och</field>
 		<field name="code">128</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="12"/></field>
 	</record>
 	<record model="account.account" id="129">
 		<field name="name">Övriga maskiner och inventarier</field>
 		<field name="code">129</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="12"/></field>
 	</record>
 	<record model="account.account" id="13">
 		<field name="name">Finansiella anläggningstillgångar</field>
 		<field name="code">13</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="1"/></field>
 	</record>
 	<record model="account.account" id="131">
 		<field name="name">Andelar i koncernföretag</field>
 		<field name="code">131</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="13"/></field>
 	</record>
 	<record model="account.account" id="132">
 		<field name="name">Långfristiga fordringar hos</field>
 		<field name="code">132</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="13"/></field>
 	</record>
 	<record model="account.account" id="133">
 		<field name="name">Andelar i intresseföretag</field>
 		<field name="code">133</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="13"/></field>
 	</record>
 	<record model="account.account" id="134">
 		<field name="name">Långfristiga fordringar hos</field>
 		<field name="code">134</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="13"/></field>
 	</record>
 	<record model="account.account" id="135">
 		<field name="name">Andelar och värdepapper i andra</field>
 		<field name="code">135</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="13"/></field>
 	</record>
 	<record model="account.account" id="136">
 		<field name="name">Övriga finansiella instrument</field>
 		<field name="code">136</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="13"/></field>
 	</record>
 	<record model="account.account" id="137">
 		<field name="name">Uppskjuten skattefordran</field>
 		<field name="code">137</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="13"/></field>
 	</record>
 	<record model="account.account" id="138">
 		<field name="name">Andra långfristiga fordringar</field>
 		<field name="code">138</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="13"/></field>
 	</record>
 	<record model="account.account" id="139">
 		<field name="name">Ackumulerade nedskrivningar av</field>
 		<field name="code">139</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="13"/></field>
 	</record>
 	<record model="account.account" id="14">
 		<field name="name">Lager, produkter i arbete och pågående arbeten</field>
 		<field name="code">14</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="1"/></field>
 	</record>
 	<record model="account.account" id="140">
 		<field name="name">Lager (gruppkonto)</field>
 		<field name="code">140</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="14"/></field>
 	</record>
 	<record model="account.account" id="141">
 		<field name="name">Lager av råvaror</field>
 		<field name="code">141</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="14"/></field>
 	</record>
 	<record model="account.account" id="142">
 		<field name="name">Lager av tillsatsmaterial och</field>
 		<field name="code">142</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="14"/></field>
 	</record>
 	<record model="account.account" id="143">
 		<field name="name">Lager av halvfabrikat</field>
 		<field name="code">143</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="14"/></field>
 	</record>
 	<record model="account.account" id="144">
 		<field name="name">Produkter i arbete</field>
 		<field name="code">144</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="14"/></field>
 	</record>
 	<record model="account.account" id="145">
 		<field name="name">Lager av färdiga varor</field>
 		<field name="code">145</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="14"/></field>
 	</record>
 	<record model="account.account" id="146">
 		<field name="name">Lager av handelsvaror</field>
 		<field name="code">146</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="14"/></field>
 	</record>
 	<record model="account.account" id="147">
 		<field name="name">Pågående arbeten</field>
 		<field name="code">147</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="14"/></field>
 	</record>
 	<record model="account.account" id="148">
 		<field name="name">Förskott för varor och tjänster</field>
 		<field name="code">148</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="14"/></field>
 	</record>
 	<record model="account.account" id="149">
 		<field name="name">Förändring av lager, produkter i</field>
 		<field name="code">149</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="14"/></field>
 	</record>
 	<record model="account.account" id="15">
 		<field name="name">Kundfordringar</field>
 		<field name="code">15</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="1"/></field>
 	</record>
 	<record model="account.account" id="150">
 		<field name="name">Kundfordringar (gruppkonto)</field>
 		<field name="code">150</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="15"/></field>
 	</record>
 	<record model="account.account" id="151">
 		<field name="name">Kundfordringar</field>
 		<field name="code">151</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="15"/></field>
 	</record>
 	<record model="account.account" id="152">
 		<field name="name">Växelfordringar</field>
 		<field name="code">152</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="15"/></field>
 	</record>
 	<record model="account.account" id="153">
 		<field name="name">Kontraktsfordringar</field>
 		<field name="code">153</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="15"/></field>
 	</record>
 	<record model="account.account" id="155">
 		<field name="name">Konsignationsfordringar</field>
 		<field name="code">155</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="15"/></field>
 	</record>
 	<record model="account.account" id="156">
 		<field name="name">Kundfordringar hos</field>
 		<field name="code">156</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="15"/></field>
 	</record>
 	<record model="account.account" id="157">
 		<field name="name">Kundfordringar hos</field>
 		<field name="code">157</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="15"/></field>
 	</record>
 	<record model="account.account" id="158">
 		<field name="name">Fordringar för kontokort och</field>
 		<field name="code">158</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="15"/></field>
 	</record>
 	<record model="account.account" id="159">
 		<field name="name">Nedskrivning av kundfordringar</field>
 		<field name="code">159</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="15"/></field>
 	</record>
 	<record model="account.account" id="16">
 		<field name="name">Övriga kortfristiga fordringar</field>
 		<field name="code">16</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="1"/></field>
 	</record>
 	<record model="account.account" id="160">
 		<field name="name">Övriga kortfristiga fordringar</field>
 		<field name="code">160</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="16"/></field>
 	</record>
 	<record model="account.account" id="161">
 		<field name="name">Kortfristiga fordringar hos</field>
 		<field name="code">161</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="16"/></field>
 	</record>
 	<record model="account.account" id="163">
 		<field name="name">Avräkning för skatter och avgifter</field>
 		<field name="code">163</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="16"/></field>
 	</record>
 	<record model="account.account" id="164">
 		<field name="name">Skattefordringar</field>
 		<field name="code">164</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="16"/></field>
 	</record>
 	<record model="account.account" id="165">
 		<field name="name">Momsfordran</field>
 		<field name="code">165</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="16"/></field>
 	</record>
 	<record model="account.account" id="166">
 		<field name="name">Kortfristiga fordringar hos</field>
 		<field name="code">166</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="16"/></field>
 	</record>
 	<record model="account.account" id="167">
 		<field name="name">Kortfristiga fordringar hos</field>
 		<field name="code">167</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="16"/></field>
 	</record>
 	<record model="account.account" id="168">
 		<field name="name">Andra kortfristiga fordringar</field>
 		<field name="code">168</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="16"/></field>
 	</record>
 	<record model="account.account" id="169">
 		<field name="name">Nedskrivning av kortfristiga</field>
 		<field name="code">169</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="16"/></field>
 	</record>
 	<record model="account.account" id="17">
 		<field name="name">Förutbetalda kostnader och upplupna intäkter</field>
 		<field name="code">17</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="1"/></field>
 	</record>
 	<record model="account.account" id="170">
 		<field name="name">Förutbetalda kostnader och</field>
 		<field name="code">170</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="17"/></field>
 	</record>
 	<record model="account.account" id="171">
 		<field name="name">Förutbetalda hyreskostnader</field>
 		<field name="code">171</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="17"/></field>
 	</record>
 	<record model="account.account" id="172">
 		<field name="name">Förutbetalda leasingavgifter,</field>
 		<field name="code">172</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="17"/></field>
 	</record>
 	<record model="account.account" id="173">
 		<field name="name">Förutbetalda försäkringspremier</field>
 		<field name="code">173</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="17"/></field>
 	</record>
 	<record model="account.account" id="174">
 		<field name="name">Förutbetalda räntekostnader</field>
 		<field name="code">174</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="17"/></field>
 	</record>
 	<record model="account.account" id="175">
 		<field name="name">Upplupna hyresintäkter</field>
 		<field name="code">175</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="17"/></field>
 	</record>
 	<record model="account.account" id="176">
 		<field name="name">Upplupna ränteintäkter</field>
 		<field name="code">176</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="17"/></field>
 	</record>
 	<record model="account.account" id="177">
 		<field name="name">Tillgångar av kostnadsnatur</field>
 		<field name="code">177</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="17"/></field>
 	</record>
 	<record model="account.account" id="178">
 		<field name="name">Upplupna avtalsintäkter</field>
 		<field name="code">178</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="17"/></field>
 	</record>
 	<record model="account.account" id="179">
 		<field name="name">Övriga förutbetalda kostnader och</field>
 		<field name="code">179</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="17"/></field>
 	</record>
 	<record model="account.account" id="18">
 		<field name="name">Unknown</field>
 		<field name="code">18</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="1"/></field>
 	</record>
 	<record model="account.account" id="180">
 		<field name="name">Kortfristiga placeringar</field>
 		<field name="code">180</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="18"/></field>
 	</record>
 	<record model="account.account" id="181">
 		<field name="name">Andelar i börsnoterade företag</field>
 		<field name="code">181</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="18"/></field>
 	</record>
 	<record model="account.account" id="182">
 		<field name="name">Obligationer</field>
 		<field name="code">182</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="18"/></field>
 	</record>
 	<record model="account.account" id="183">
 		<field name="name">Konvertibla skuldebrev</field>
 		<field name="code">183</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="18"/></field>
 	</record>
 	<record model="account.account" id="186">
 		<field name="name">Övriga finansiella instrument</field>
 		<field name="code">186</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="18"/></field>
 	</record>
 	<record model="account.account" id="188">
 		<field name="name">Andra kortfristiga placeringar</field>
 		<field name="code">188</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="18"/></field>
 	</record>
 	<record model="account.account" id="189">
 		<field name="name">Nedskrivning av kortfristiga</field>
 		<field name="code">189</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="18"/></field>
 	</record>
 	<record model="account.account" id="19">
 		<field name="name">Kassa och bank</field>
 		<field name="code">19</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="1"/></field>
 	</record>
 	<record model="account.account" id="191">
 		<field name="name">Kassa</field>
 		<field name="code">191</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="19"/></field>
 	</record>
 	<record model="account.account" id="192">
 		<field name="name">Bank 1</field>
 		<field name="code">192</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="19"/></field>
 	</record>
 	<record model="account.account" id="194">
 		<field name="name">Bank</field>
 		<field name="code">194</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="19"/></field>
 	</record>
 	<record model="account.account" id="195">
 		<field name="name">Bankcertifikat</field>
 		<field name="code">195</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="19"/></field>
 	</record>
 	<record model="account.account" id="196">
 		<field name="name">Koncernkonto moderföretag</field>
 		<field name="code">196</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="19"/></field>
 	</record>
 	<record model="account.account" id="197">
 		<field name="name">Särskilda bankkonton</field>
 		<field name="code">197</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="19"/></field>
 	</record>
 	<record model="account.account" id="198">
 		<field name="name">Valutakonton</field>
 		<field name="code">198</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="19"/></field>
 	</record>
 	<record model="account.account" id="2">
 		<field name="name">Eget kapital och skulder</field>
 		<field name="code">2</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="root"/></field>
 	</record>
 	<record model="account.account" id="20">
 		<field name="name">Eget kapital</field>
 		<field name="code">20</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="2"/></field>
 	</record>
 	<record model="account.account" id="201">
 		<field name="name">Eget kapital, delägare 1</field>
 		<field name="code">201</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="20"/></field>
 	</record>
 	<record model="account.account" id="202">
 		<field name="name">Eget kapital, delägare</field>
 		<field name="code">202</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="20"/></field>
 	</record>
 	<record model="account.account" id="205">
 		<field name="name">Avsättning till expansionsfond</field>
 		<field name="code">205</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="20"/></field>
 	</record>
 	<record model="account.account" id="206">
 		<field name="name">Eget kapital i ideella föreningar,</field>
 		<field name="code">206</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="20"/></field>
 	</record>
 	<record model="account.account" id="207">
 		<field name="name">Ändamålsbestämda medel</field>
 		<field name="code">207</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="20"/></field>
 	</record>
 	<record model="account.account" id="208">
 		<field name="name">Bundet eget kapital</field>
 		<field name="code">208</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="20"/></field>
 	</record>
 	<record model="account.account" id="209">
 		<field name="name">Fritt eget kapital</field>
 		<field name="code">209</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="20"/></field>
 	</record>
 	<record model="account.account" id="21">
 		<field name="name">Obeskattade reserver</field>
 		<field name="code">21</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="2"/></field>
 	</record>
 	<record model="account.account" id="211">
 		<field name="name">Periodiseringsfonder</field>
 		<field name="code">211</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="21"/></field>
 	</record>
 	<record model="account.account" id="212">
 		<field name="name">Periodiseringsfond vid</field>
 		<field name="code">212</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="21"/></field>
 	</record>
 	<record model="account.account" id="216">
 		<field name="name">Ersättningsfond</field>
 		<field name="code">216</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="21"/></field>
 	</record>
 	<record model="account.account" id="218">
 		<field name="name">Obeskattade intäkter</field>
 		<field name="code">218</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="21"/></field>
 	</record>
 	<record model="account.account" id="219">
 		<field name="name">Övriga obeskattade reserver</field>
 		<field name="code">219</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="21"/></field>
 	</record>
 	<record model="account.account" id="22">
 		<field name="name">Avsättningar</field>
 		<field name="code">22</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="2"/></field>
 	</record>
 	<record model="account.account" id="221">
 		<field name="name">Avsättningar för pensioner</field>
 		<field name="code">221</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="22"/></field>
 	</record>
 	<record model="account.account" id="222">
 		<field name="name">Avsättningar för garantier</field>
 		<field name="code">222</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="22"/></field>
 	</record>
 	<record model="account.account" id="225">
 		<field name="name">Avsättningar för skatter</field>
 		<field name="code">225</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="22"/></field>
 	</record>
 	<record model="account.account" id="229">
 		<field name="name">Övriga avsättningar</field>
 		<field name="code">229</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="22"/></field>
 	</record>
 	<record model="account.account" id="23">
 		<field name="name">Långfristiga skulder</field>
 		<field name="code">23</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="2"/></field>
 	</record>
 	<record model="account.account" id="231">
 		<field name="name">Obligations- och förlagslån</field>
 		<field name="code">231</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="23"/></field>
 	</record>
 	<record model="account.account" id="232">
 		<field name="name">Konvertibla lån och liknande</field>
 		<field name="code">232</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="23"/></field>
 	</record>
 	<record model="account.account" id="233">
 		<field name="name">Checkräkningskredit</field>
 		<field name="code">233</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="23"/></field>
 	</record>
 	<record model="account.account" id="234">
 		<field name="name">Byggnadskreditiv</field>
 		<field name="code">234</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="23"/></field>
 	</record>
 	<record model="account.account" id="235">
 		<field name="name">Andra långfristiga skulder till</field>
 		<field name="code">235</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="23"/></field>
 	</record>
 	<record model="account.account" id="236">
 		<field name="name">Långfristiga skulder till</field>
 		<field name="code">236</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="23"/></field>
 	</record>
 	<record model="account.account" id="237">
 		<field name="name">Långfristiga skulder till</field>
 		<field name="code">237</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="23"/></field>
 	</record>
 	<record model="account.account" id="239">
 		<field name="name">Övriga långfristiga skulder</field>
 		<field name="code">239</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="23"/></field>
 	</record>
 	<record model="account.account" id="24">
 		<field name="name">Kortfristiga skulder till kreditinstitut, kunder och leverantörer</field>
 		<field name="code">24</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="2"/></field>
 	</record>
 	<record model="account.account" id="241">
 		<field name="name">Kortfristiga låneskulder till</field>
 		<field name="code">241</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="24"/></field>
 	</record>
 	<record model="account.account" id="242">
 		<field name="name">Förskott från kunder</field>
 		<field name="code">242</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="24"/></field>
 	</record>
 	<record model="account.account" id="243">
 		<field name="name">Pågående arbeten</field>
 		<field name="code">243</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="24"/></field>
 	</record>
 	<record model="account.account" id="244">
 		<field name="name">Leverantörsskulder</field>
 		<field name="code">244</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="24"/></field>
 	</record>
 	<record model="account.account" id="245">
 		<field name="name">Avräkning spelarrangörer</field>
 		<field name="code">245</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="24"/></field>
 	</record>
 	<record model="account.account" id="246">
 		<field name="name">Leverantörsskulder till</field>
 		<field name="code">246</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="24"/></field>
 	</record>
 	<record model="account.account" id="247">
 		<field name="name">Leverantörsskulder till</field>
 		<field name="code">247</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="24"/></field>
 	</record>
 	<record model="account.account" id="249">
 		<field name="name">Övriga kortfristiga skulder till</field>
 		<field name="code">249</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="24"/></field>
 	</record>
 	<record model="account.account" id="25">
 		<field name="name">Skatteskulder</field>
 		<field name="code">25</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="2"/></field>
 	</record>
 	<record model="account.account" id="251">
 		<field name="name">Skatteskulder</field>
 		<field name="code">251</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="25"/></field>
 	</record>
 	<record model="account.account" id="26">
 		<field name="name">Moms och särskilda punktskatter</field>
 		<field name="code">26</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="2"/></field>
 	</record>
 	<record model="account.account" id="261">
 		<field name="name">Utgående moms, oreducerad</field>
 		<field name="code">261</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="26"/></field>
 	</record>
 	<record model="account.account" id="262">
 		<field name="name">Utgående moms, reducerad 1</field>
 		<field name="code">262</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="26"/></field>
 	</record>
 	<record model="account.account" id="263">
 		<field name="name">Utgående moms, reducerad</field>
 		<field name="code">263</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="26"/></field>
 	</record>
 	<record model="account.account" id="264">
 		<field name="name">Ingående moms</field>
 		<field name="code">264</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="26"/></field>
 	</record>
 	<record model="account.account" id="265">
 		<field name="name">Redovisningskonto för moms</field>
 		<field name="code">265</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="26"/></field>
 	</record>
 	<record model="account.account" id="266">
 		<field name="name">Särskilda punktskatter</field>
 		<field name="code">266</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="26"/></field>
 	</record>
 	<record model="account.account" id="27">
 		<field name="name">Personalens skatter, avgifter och löneavdrag</field>
 		<field name="code">27</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="2"/></field>
 	</record>
 	<record model="account.account" id="271">
 		<field name="name">Personalskatt</field>
 		<field name="code">271</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="27"/></field>
 	</record>
 	<record model="account.account" id="273">
 		<field name="name">Lagstadgade sociala avgifter och</field>
 		<field name="code">273</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="27"/></field>
 	</record>
 	<record model="account.account" id="274">
 		<field name="name">Avtalade sociala avgifter</field>
 		<field name="code">274</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="27"/></field>
 	</record>
 	<record model="account.account" id="275">
 		<field name="name">Utmätning i lön m.m.</field>
 		<field name="code">275</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="27"/></field>
 	</record>
 	<record model="account.account" id="276">
 		<field name="name">Semestermedel</field>
 		<field name="code">276</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="27"/></field>
 	</record>
 	<record model="account.account" id="279">
 		<field name="name">Övriga löneavdrag</field>
 		<field name="code">279</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="27"/></field>
 	</record>
 	<record model="account.account" id="28">
 		<field name="name">Övriga kortfristiga skulder</field>
 		<field name="code">28</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="2"/></field>
 	</record>
 	<record model="account.account" id="281">
 		<field name="name">Avräkning för factoring och</field>
 		<field name="code">281</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="28"/></field>
 	</record>
 	<record model="account.account" id="282">
 		<field name="name">Kortfristiga skulder till anställda</field>
 		<field name="code">282</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="28"/></field>
 	</record>
 	<record model="account.account" id="283">
 		<field name="name">Avräkning för annans räkning</field>
 		<field name="code">283</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="28"/></field>
 	</record>
 	<record model="account.account" id="284">
 		<field name="name">Kortfristiga låneskulder</field>
 		<field name="code">284</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="28"/></field>
 	</record>
 	<record model="account.account" id="285">
 		<field name="name">Avräkning för skatter och avgifter</field>
 		<field name="code">285</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="28"/></field>
 	</record>
 	<record model="account.account" id="286">
 		<field name="name">Kortfristiga skulder till</field>
 		<field name="code">286</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="28"/></field>
 	</record>
 	<record model="account.account" id="287">
 		<field name="name">Kortfristiga skulder till</field>
 		<field name="code">287</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="28"/></field>
 	</record>
 	<record model="account.account" id="288">
 		<field name="name">Skuld erhållna bidrag</field>
 		<field name="code">288</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="28"/></field>
 	</record>
 	<record model="account.account" id="289">
 		<field name="name">Övriga kortfristiga skulder</field>
 		<field name="code">289</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="28"/></field>
 	</record>
 	<record model="account.account" id="29">
 		<field name="name">Upplupna kostnader och förutbetalda intäkter</field>
 		<field name="code">29</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="2"/></field>
 	</record>
 	<record model="account.account" id="290">
 		<field name="name">Upplupna kostnader och</field>
 		<field name="code">290</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="29"/></field>
 	</record>
 	<record model="account.account" id="291">
 		<field name="name">Upplupna löner</field>
 		<field name="code">291</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="29"/></field>
 	</record>
 	<record model="account.account" id="292">
 		<field name="name">Upplupna semesterlöner</field>
 		<field name="code">292</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="29"/></field>
 	</record>
 	<record model="account.account" id="293">
 		<field name="name">Upplupna pensionskostnader</field>
 		<field name="code">293</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="29"/></field>
 	</record>
 	<record model="account.account" id="294">
 		<field name="name">Upplupna lagstadgade sociala och</field>
 		<field name="code">294</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="29"/></field>
 	</record>
 	<record model="account.account" id="295">
 		<field name="name">Upplupna avtalade sociala</field>
 		<field name="code">295</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="29"/></field>
 	</record>
 	<record model="account.account" id="296">
 		<field name="name">Upplupna räntekostnader</field>
 		<field name="code">296</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="29"/></field>
 	</record>
 	<record model="account.account" id="297">
 		<field name="name">Förutbetalda intäkter</field>
 		<field name="code">297</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="29"/></field>
 	</record>
 	<record model="account.account" id="298">
 		<field name="name">Upplupna avtalskostnader</field>
 		<field name="code">298</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="29"/></field>
 	</record>
 	<record model="account.account" id="299">
 		<field name="name">Övriga upplupna kostnader och</field>
 		<field name="code">299</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="29"/></field>
 	</record>
 	<record model="account.account" id="3">
 		<field name="name">Rörelsens inkomster/intäkter</field>
 		<field name="code">3</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="root"/></field>
 	</record>
 	<record model="account.account" id="35">
 		<field name="name">Fakturerade kostnader</field>
 		<field name="code">35</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="3"/></field>
 	</record>
 	<record model="account.account" id="350">
 		<field name="name">Fakturerade kostnader</field>
 		<field name="code">350</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="35"/></field>
 	</record>
 	<record model="account.account" id="351">
 		<field name="name">Fakturerat emballage</field>
 		<field name="code">351</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="35"/></field>
 	</record>
 	<record model="account.account" id="352">
 		<field name="name">Fakturerade frakter</field>
 		<field name="code">352</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="35"/></field>
 	</record>
 	<record model="account.account" id="353">
 		<field name="name">Fakturerade tull- och</field>
 		<field name="code">353</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="35"/></field>
 	</record>
 	<record model="account.account" id="354">
 		<field name="name">Faktureringsavgifter</field>
 		<field name="code">354</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="35"/></field>
 	</record>
 	<record model="account.account" id="355">
 		<field name="name">Fakturerade resekostnader</field>
 		<field name="code">355</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="35"/></field>
 	</record>
 	<record model="account.account" id="356">
 		<field name="name">Fakturerade kostnader till</field>
 		<field name="code">356</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="35"/></field>
 	</record>
 	<record model="account.account" id="357">
 		<field name="name">Fakturerade kostnader till</field>
 		<field name="code">357</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="35"/></field>
 	</record>
 	<record model="account.account" id="359">
 		<field name="name">Övriga fakturerade kostnader</field>
 		<field name="code">359</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="35"/></field>
 	</record>
 	<record model="account.account" id="36">
 		<field name="name">Rörelsens sidointäkter</field>
 		<field name="code">36</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="3"/></field>
 	</record>
 	<record model="account.account" id="360">
 		<field name="name">Rörelsens sidointäkter</field>
 		<field name="code">360</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="36"/></field>
 	</record>
 	<record model="account.account" id="361">
 		<field name="name">Försäljning av material</field>
 		<field name="code">361</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="36"/></field>
 	</record>
 	<record model="account.account" id="362">
 		<field name="name">Tillfällig uthyrning av personal</field>
 		<field name="code">362</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="36"/></field>
 	</record>
 	<record model="account.account" id="363">
 		<field name="name">Tillfällig uthyrning av</field>
 		<field name="code">363</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="36"/></field>
 	</record>
 	<record model="account.account" id="367">
 		<field name="name">Intäkter från värdepapper</field>
 		<field name="code">367</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="36"/></field>
 	</record>
 	<record model="account.account" id="368">
 		<field name="name">Management fees</field>
 		<field name="code">368</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="36"/></field>
 	</record>
 	<record model="account.account" id="369">
 		<field name="name">Övriga sidointäkter</field>
 		<field name="code">369</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="36"/></field>
 	</record>
 	<record model="account.account" id="37">
 		<field name="name">Intäktskorrigeringar</field>
 		<field name="code">37</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="3"/></field>
 	</record>
 	<record model="account.account" id="370">
 		<field name="name">Intäktskorrigeringar (gruppkonto)</field>
 		<field name="code">370</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="37"/></field>
 	</record>
 	<record model="account.account" id="371">
 		<field name="name">Ofördelade intäktsreduktioner</field>
 		<field name="code">371</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="37"/></field>
 	</record>
 	<record model="account.account" id="373">
 		<field name="name">Lämnade rabatter</field>
 		<field name="code">373</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="37"/></field>
 	</record>
 	<record model="account.account" id="374">
 		<field name="name">Öres- och kronutjämning</field>
 		<field name="code">374</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="37"/></field>
 	</record>
 	<record model="account.account" id="375">
 		<field name="name">Punktskatter</field>
 		<field name="code">375</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="37"/></field>
 	</record>
 	<record model="account.account" id="379">
 		<field name="name">Övriga intäktskorrigeringar</field>
 		<field name="code">379</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="37"/></field>
 	</record>
 	<record model="account.account" id="38">
 		<field name="name">Aktiverat arbete för egen räkning</field>
 		<field name="code">38</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="3"/></field>
 	</record>
 	<record model="account.account" id="380">
 		<field name="name">Aktiverat arbete för egen räkning</field>
 		<field name="code">380</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="38"/></field>
 	</record>
 	<record model="account.account" id="384">
 		<field name="name">Aktiverat arbete (material)</field>
 		<field name="code">384</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="38"/></field>
 	</record>
 	<record model="account.account" id="385">
 		<field name="name">Aktiverat arbete (omkostnader)</field>
 		<field name="code">385</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="38"/></field>
 	</record>
 	<record model="account.account" id="387">
 		<field name="name">Aktiverat arbete (personal)</field>
 		<field name="code">387</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="38"/></field>
 	</record>
 	<record model="account.account" id="39">
 		<field name="name">Övriga rörelseintäkter</field>
 		<field name="code">39</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="3"/></field>
 	</record>
 	<record model="account.account" id="390">
 		<field name="name">Övriga rörelseintäkter</field>
 		<field name="code">390</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="39"/></field>
 	</record>
 	<record model="account.account" id="391">
 		<field name="name">Hyres- och arrendeintäkter</field>
 		<field name="code">391</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="39"/></field>
 	</record>
 	<record model="account.account" id="392">
 		<field name="name">Provisionsintäkter, licensintäkter</field>
 		<field name="code">392</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="39"/></field>
 	</record>
 	<record model="account.account" id="395">
 		<field name="name">Återvunna, tidigare avskrivna</field>
 		<field name="code">395</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="39"/></field>
 	</record>
 	<record model="account.account" id="396">
 		<field name="name">Valutakursvinster på fordringar</field>
 		<field name="code">396</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="39"/></field>
 	</record>
 	<record model="account.account" id="397">
 		<field name="name">Vinst vid avyttring av</field>
 		<field name="code">397</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="39"/></field>
 	</record>
 	<record model="account.account" id="398">
 		<field name="name">Erhållna bidrag</field>
 		<field name="code">398</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="39"/></field>
 	</record>
 	<record model="account.account" id="399">
 		<field name="name">Övriga ersättningar och intäkter</field>
 		<field name="code">399</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="39"/></field>
 	</record>
 	<record model="account.account" id="4">
 		<field name="name">Utgifter/kostnader för varor, material och vissa köpta</field>
 		<field name="code">4</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="root"/></field>
 	</record>
 	<record model="account.account" id="46">
 		<field name="name">Legoarbeten, underentreprenader</field>
 		<field name="code">46</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="4"/></field>
 	</record>
 	<record model="account.account" id="460">
 		<field name="name">Legoarbeten och under</field>
 		<field name="code">460</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="46"/></field>
 	</record>
 	<record model="account.account" id="47">
 		<field name="name">Unknown</field>
 		<field name="code">47</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="4"/></field>
 	</record>
 	<record model="account.account" id="470">
 		<field name="name">Reduktion av inköpspriser</field>
 		<field name="code">470</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="47"/></field>
 	</record>
 	<record model="account.account" id="473">
 		<field name="name">Erhållna rabatter</field>
 		<field name="code">473</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="47"/></field>
 	</record>
 	<record model="account.account" id="479">
 		<field name="name">Övriga reduktioner av</field>
 		<field name="code">479</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="47"/></field>
 	</record>
 	<record model="account.account" id="49">
 		<field name="name">Unknown</field>
 		<field name="code">49</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="4"/></field>
 	</record>
 	<record model="account.account" id="490">
 		<field name="name">Förändring av lager (gruppkonto)</field>
 		<field name="code">490</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="49"/></field>
 	</record>
 	<record model="account.account" id="491">
 		<field name="name">Förändring av lager av råvaror</field>
 		<field name="code">491</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="49"/></field>
 	</record>
 	<record model="account.account" id="492">
 		<field name="name">Förändring av lager av</field>
 		<field name="code">492</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="49"/></field>
 	</record>
 	<record model="account.account" id="493">
 		<field name="name">Förändring av lager av</field>
 		<field name="code">493</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="49"/></field>
 	</record>
 	<record model="account.account" id="494">
 		<field name="name">Förändring av produkter i arbete</field>
 		<field name="code">494</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="49"/></field>
 	</record>
 	<record model="account.account" id="495">
 		<field name="name">Förändring av lager av färdiga</field>
 		<field name="code">495</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="49"/></field>
 	</record>
 	<record model="account.account" id="496">
 		<field name="name">Förändring av lager av</field>
 		<field name="code">496</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="49"/></field>
 	</record>
 	<record model="account.account" id="497">
 		<field name="name">Förändring av pågående arbeten,</field>
 		<field name="code">497</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="49"/></field>
 	</record>
 	<record model="account.account" id="498">
 		<field name="name">Förändring av lager av</field>
 		<field name="code">498</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="49"/></field>
 	</record>
 	<record model="account.account" id="499">
 		<field name="name">Förändring av lager och pågående</field>
 		<field name="code">499</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="49"/></field>
 	</record>
 	<record model="account.account" id="5">
 		<field name="name">Unknown</field>
 		<field name="code">5</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="root"/></field>
 	</record>
 	<record model="account.account" id="50">
 		<field name="name">Unknown</field>
 		<field name="code">50</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="5"/></field>
 	</record>
 	<record model="account.account" id="500">
 		<field name="name">Lokalkostnader (gruppkonto)</field>
 		<field name="code">500</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="50"/></field>
 	</record>
 	<record model="account.account" id="501">
 		<field name="name">Lokalhyra</field>
 		<field name="code">501</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="50"/></field>
 	</record>
 	<record model="account.account" id="502">
 		<field name="name">El för belysning</field>
 		<field name="code">502</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="50"/></field>
 	</record>
 	<record model="account.account" id="503">
 		<field name="name">Värme</field>
 		<field name="code">503</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="50"/></field>
 	</record>
 	<record model="account.account" id="504">
 		<field name="name">Vatten och avlopp</field>
 		<field name="code">504</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="50"/></field>
 	</record>
 	<record model="account.account" id="505">
 		<field name="name">Lokaltillbehör</field>
 		<field name="code">505</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="50"/></field>
 	</record>
 	<record model="account.account" id="506">
 		<field name="name">Städning och renhållning</field>
 		<field name="code">506</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="50"/></field>
 	</record>
 	<record model="account.account" id="507">
 		<field name="name">Reparation och underhåll av</field>
 		<field name="code">507</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="50"/></field>
 	</record>
 	<record model="account.account" id="509">
 		<field name="name">Övriga lokalkostnader</field>
 		<field name="code">509</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="50"/></field>
 	</record>
 	<record model="account.account" id="51">
 		<field name="name">Fastighetskostnader</field>
 		<field name="code">51</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="5"/></field>
 	</record>
 	<record model="account.account" id="510">
 		<field name="name">Fastighetskostnader (gruppkonto)</field>
 		<field name="code">510</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="51"/></field>
 	</record>
 	<record model="account.account" id="511">
 		<field name="name">Tomträttsavgäld/arrende</field>
 		<field name="code">511</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="51"/></field>
 	</record>
 	<record model="account.account" id="512">
 		<field name="name">El för belysning</field>
 		<field name="code">512</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="51"/></field>
 	</record>
 	<record model="account.account" id="513">
 		<field name="name">Värme</field>
 		<field name="code">513</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="51"/></field>
 	</record>
 	<record model="account.account" id="514">
 		<field name="name">Vatten och avlopp</field>
 		<field name="code">514</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="51"/></field>
 	</record>
 	<record model="account.account" id="516">
 		<field name="name">Städning och renhållning</field>
 		<field name="code">516</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="51"/></field>
 	</record>
 	<record model="account.account" id="517">
 		<field name="name">Reparation och underhåll av</field>
 		<field name="code">517</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="51"/></field>
 	</record>
 	<record model="account.account" id="519">
 		<field name="name">Övriga fastighetskostnader</field>
 		<field name="code">519</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="51"/></field>
 	</record>
 	<record model="account.account" id="52">
 		<field name="name">Hyra av anläggningstillgångar</field>
 		<field name="code">52</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="5"/></field>
 	</record>
 	<record model="account.account" id="520">
 		<field name="name">Hyra av anläggningstillgångar</field>
 		<field name="code">520</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="52"/></field>
 	</record>
 	<record model="account.account" id="521">
 		<field name="name">Hyra av maskiner och andra</field>
 		<field name="code">521</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="52"/></field>
 	</record>
 	<record model="account.account" id="522">
 		<field name="name">Hyra av inventarier och verktyg</field>
 		<field name="code">522</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="52"/></field>
 	</record>
 	<record model="account.account" id="525">
 		<field name="name">Hyra av datorer</field>
 		<field name="code">525</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="52"/></field>
 	</record>
 	<record model="account.account" id="529">
 		<field name="name">Övriga hyreskostnader för</field>
 		<field name="code">529</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="52"/></field>
 	</record>
 	<record model="account.account" id="53">
 		<field name="name">Energikostnader</field>
 		<field name="code">53</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="5"/></field>
 	</record>
 	<record model="account.account" id="530">
 		<field name="name">Energikostnader (gruppkonto)</field>
 		<field name="code">530</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="53"/></field>
 	</record>
 	<record model="account.account" id="531">
 		<field name="name">El för drift</field>
 		<field name="code">531</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="53"/></field>
 	</record>
 	<record model="account.account" id="532">
 		<field name="name">Gas</field>
 		<field name="code">532</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="53"/></field>
 	</record>
 	<record model="account.account" id="533">
 		<field name="name">Eldningsolja</field>
 		<field name="code">533</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="53"/></field>
 	</record>
 	<record model="account.account" id="534">
 		<field name="name">Stenkol och koks</field>
 		<field name="code">534</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="53"/></field>
 	</record>
 	<record model="account.account" id="535">
 		<field name="name">Torv, träkol, ved och annat</field>
 		<field name="code">535</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="53"/></field>
 	</record>
 	<record model="account.account" id="536">
 		<field name="name">Bensin, fotogen och</field>
 		<field name="code">536</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="53"/></field>
 	</record>
 	<record model="account.account" id="537">
 		<field name="name">Fjärrvärme, kyla och ånga</field>
 		<field name="code">537</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="53"/></field>
 	</record>
 	<record model="account.account" id="538">
 		<field name="name">Vatten</field>
 		<field name="code">538</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="53"/></field>
 	</record>
 	<record model="account.account" id="539">
 		<field name="name">Övriga energikostnader</field>
 		<field name="code">539</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="53"/></field>
 	</record>
 	<record model="account.account" id="54">
 		<field name="name">Förbrukningsinventarier och förbrukningsmaterial</field>
 		<field name="code">54</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="5"/></field>
 	</record>
 	<record model="account.account" id="540">
 		<field name="name">Förbrukningsinventarier och</field>
 		<field name="code">540</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="54"/></field>
 	</record>
 	<record model="account.account" id="541">
 		<field name="name">Förbrukningsinventarier</field>
 		<field name="code">541</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="54"/></field>
 	</record>
 	<record model="account.account" id="542">
 		<field name="name">Programvaror</field>
 		<field name="code">542</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="54"/></field>
 	</record>
 	<record model="account.account" id="543">
 		<field name="name">Transportinventarier</field>
 		<field name="code">543</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="54"/></field>
 	</record>
 	<record model="account.account" id="544">
 		<field name="name">Förbrukningsemballage</field>
 		<field name="code">544</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="54"/></field>
 	</record>
 	<record model="account.account" id="546">
 		<field name="name">Förbrukningsmaterial</field>
 		<field name="code">546</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="54"/></field>
 	</record>
 	<record model="account.account" id="548">
 		<field name="name">Arbetskläder och skyddsmaterial</field>
 		<field name="code">548</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="54"/></field>
 	</record>
 	<record model="account.account" id="549">
 		<field name="name">Övriga förbrukningsinventarier</field>
 		<field name="code">549</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="54"/></field>
 	</record>
 	<record model="account.account" id="55">
 		<field name="name">Reparation och underhåll</field>
 		<field name="code">55</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="5"/></field>
 	</record>
 	<record model="account.account" id="550">
 		<field name="name">Reparation och underhåll</field>
 		<field name="code">550</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="55"/></field>
 	</record>
 	<record model="account.account" id="551">
 		<field name="name">Reparation och underhåll av</field>
 		<field name="code">551</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="55"/></field>
 	</record>
 	<record model="account.account" id="552">
 		<field name="name">Reparation och underhåll av</field>
 		<field name="code">552</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="55"/></field>
 	</record>
 	<record model="account.account" id="553">
 		<field name="name">Reparation och underhåll av</field>
 		<field name="code">553</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="55"/></field>
 	</record>
 	<record model="account.account" id="555">
 		<field name="name">Reparation och underhåll av</field>
 		<field name="code">555</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="55"/></field>
 	</record>
 	<record model="account.account" id="558">
 		<field name="name">Underhåll och tvätt av</field>
 		<field name="code">558</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="55"/></field>
 	</record>
 	<record model="account.account" id="559">
 		<field name="name">Övriga kostnader för reparation</field>
 		<field name="code">559</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="55"/></field>
 	</record>
 	<record model="account.account" id="56">
 		<field name="name">Kostnader för transportmedel</field>
 		<field name="code">56</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="5"/></field>
 	</record>
 	<record model="account.account" id="560">
 		<field name="name">Kostnader för transportmedel</field>
 		<field name="code">560</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="56"/></field>
 	</record>
 	<record model="account.account" id="561">
 		<field name="name">Personbilskostnader</field>
 		<field name="code">561</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="56"/></field>
 	</record>
 	<record model="account.account" id="562">
 		<field name="name">Lastbilskostnader</field>
 		<field name="code">562</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="56"/></field>
 	</record>
 	<record model="account.account" id="563">
 		<field name="name">Truckkostnader</field>
 		<field name="code">563</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="56"/></field>
 	</record>
 	<record model="account.account" id="564">
 		<field name="name">Kostnader för arbetsmaskiner</field>
 		<field name="code">564</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="56"/></field>
 	</record>
 	<record model="account.account" id="565">
 		<field name="name">Traktorkostnader</field>
 		<field name="code">565</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="56"/></field>
 	</record>
 	<record model="account.account" id="566">
 		<field name="name">Motorcykel-, moped- och</field>
 		<field name="code">566</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="56"/></field>
 	</record>
 	<record model="account.account" id="567">
 		<field name="name">Båt-, flygplans- och</field>
 		<field name="code">567</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="56"/></field>
 	</record>
 	<record model="account.account" id="569">
 		<field name="name">Övriga kostnader för</field>
 		<field name="code">569</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="56"/></field>
 	</record>
 	<record model="account.account" id="57">
 		<field name="name">Frakter och transporter</field>
 		<field name="code">57</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="5"/></field>
 	</record>
 	<record model="account.account" id="570">
 		<field name="name">Frakter och transporter</field>
 		<field name="code">570</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="57"/></field>
 	</record>
 	<record model="account.account" id="571">
 		<field name="name">Frakter, transporter och</field>
 		<field name="code">571</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="57"/></field>
 	</record>
 	<record model="account.account" id="572">
 		<field name="name">Tull- och speditionskostnader</field>
 		<field name="code">572</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="57"/></field>
 	</record>
 	<record model="account.account" id="573">
 		<field name="name">Arbetstransporter</field>
 		<field name="code">573</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="57"/></field>
 	</record>
 	<record model="account.account" id="579">
 		<field name="name">Övriga kostnader för frakter och</field>
 		<field name="code">579</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="57"/></field>
 	</record>
 	<record model="account.account" id="58">
 		<field name="name">Resekostnader</field>
 		<field name="code">58</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="5"/></field>
 	</record>
 	<record model="account.account" id="580">
 		<field name="name">Resekostnader (gruppkonto)</field>
 		<field name="code">580</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="58"/></field>
 	</record>
 	<record model="account.account" id="581">
 		<field name="name">Biljetter</field>
 		<field name="code">581</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="58"/></field>
 	</record>
 	<record model="account.account" id="582">
 		<field name="name">Hyrbilskostnader</field>
 		<field name="code">582</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="58"/></field>
 	</record>
 	<record model="account.account" id="583">
 		<field name="name">Kost och logi</field>
 		<field name="code">583</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="58"/></field>
 	</record>
 	<record model="account.account" id="589">
 		<field name="name">Övriga resekostnader</field>
 		<field name="code">589</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="58"/></field>
 	</record>
 	<record model="account.account" id="59">
 		<field name="name">Reklam och PR</field>
 		<field name="code">59</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="5"/></field>
 	</record>
 	<record model="account.account" id="590">
 		<field name="name">Reklam och PR (gruppkonto)</field>
 		<field name="code">590</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="59"/></field>
 	</record>
 	<record model="account.account" id="591">
 		<field name="name">Annonsering</field>
 		<field name="code">591</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="59"/></field>
 	</record>
 	<record model="account.account" id="592">
 		<field name="name">Utomhus- och trafikreklam</field>
 		<field name="code">592</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="59"/></field>
 	</record>
 	<record model="account.account" id="593">
 		<field name="name">Reklamtrycksaker och</field>
 		<field name="code">593</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="59"/></field>
 	</record>
 	<record model="account.account" id="594">
 		<field name="name">Utställningar och mässor</field>
 		<field name="code">594</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="59"/></field>
 	</record>
 	<record model="account.account" id="595">
 		<field name="name">Butiksreklam och</field>
 		<field name="code">595</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="59"/></field>
 	</record>
 	<record model="account.account" id="596">
 		<field name="name">Varuprover, reklamgåvor,</field>
 		<field name="code">596</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="59"/></field>
 	</record>
 	<record model="account.account" id="597">
 		<field name="name">Film-, radio-, TV- och Internet-</field>
 		<field name="code">597</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="59"/></field>
 	</record>
 	<record model="account.account" id="598">
 		<field name="name">PR, institutionell reklam och</field>
 		<field name="code">598</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="59"/></field>
 	</record>
 	<record model="account.account" id="599">
 		<field name="name">Övriga kostnader för reklam och</field>
 		<field name="code">599</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="59"/></field>
 	</record>
 	<record model="account.account" id="6">
 		<field name="name">Unknown</field>
 		<field name="code">6</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="root"/></field>
 	</record>
 	<record model="account.account" id="60">
 		<field name="name">Övriga försäljningskostnader</field>
 		<field name="code">60</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="6"/></field>
 	</record>
 	<record model="account.account" id="600">
 		<field name="name">Övriga försäljningskostnader</field>
 		<field name="code">600</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="60"/></field>
 	</record>
 	<record model="account.account" id="601">
 		<field name="name">Kataloger, prislistor m.m.</field>
 		<field name="code">601</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="60"/></field>
 	</record>
 	<record model="account.account" id="602">
 		<field name="name">Egna facktidskrifter</field>
 		<field name="code">602</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="60"/></field>
 	</record>
 	<record model="account.account" id="603">
 		<field name="name">Speciella orderkostnader</field>
 		<field name="code">603</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="60"/></field>
 	</record>
 	<record model="account.account" id="604">
 		<field name="name">Kontokortsavgifter</field>
 		<field name="code">604</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="60"/></field>
 	</record>
 	<record model="account.account" id="605">
 		<field name="name">Försäljningsprovisioner</field>
 		<field name="code">605</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="60"/></field>
 	</record>
 	<record model="account.account" id="606">
 		<field name="name">Kreditförsäljningskostnader</field>
 		<field name="code">606</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="60"/></field>
 	</record>
 	<record model="account.account" id="607">
 		<field name="name">Representation</field>
 		<field name="code">607</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="60"/></field>
 	</record>
 	<record model="account.account" id="608">
 		<field name="name">Bankgarantier</field>
 		<field name="code">608</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="60"/></field>
 	</record>
 	<record model="account.account" id="609">
 		<field name="name">Övriga försäljningskostnader</field>
 		<field name="code">609</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="60"/></field>
 	</record>
 	<record model="account.account" id="61">
 		<field name="name">Kontorsmateriel och trycksaker</field>
 		<field name="code">61</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="6"/></field>
 	</record>
 	<record model="account.account" id="610">
 		<field name="name">Kontorsmateriel och trycksaker</field>
 		<field name="code">610</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="61"/></field>
 	</record>
 	<record model="account.account" id="611">
 		<field name="name">Kontorsmateriel</field>
 		<field name="code">611</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="61"/></field>
 	</record>
 	<record model="account.account" id="615">
 		<field name="name">Trycksaker</field>
 		<field name="code">615</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="61"/></field>
 	</record>
 	<record model="account.account" id="62">
 		<field name="name">Tele och post</field>
 		<field name="code">62</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="6"/></field>
 	</record>
 	<record model="account.account" id="620">
 		<field name="name">Tele och post (gruppkonto)</field>
 		<field name="code">620</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="62"/></field>
 	</record>
 	<record model="account.account" id="621">
 		<field name="name">Telekommunikation</field>
 		<field name="code">621</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="62"/></field>
 	</record>
 	<record model="account.account" id="623">
 		<field name="name">Datakommunikation</field>
 		<field name="code">623</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="62"/></field>
 	</record>
 	<record model="account.account" id="625">
 		<field name="name">Postbefordran</field>
 		<field name="code">625</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="62"/></field>
 	</record>
 	<record model="account.account" id="63">
 		<field name="name">Företagsförsäkringar och övriga riskkostnader</field>
 		<field name="code">63</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="6"/></field>
 	</record>
 	<record model="account.account" id="630">
 		<field name="name">Företagsförsäkringar och övriga</field>
 		<field name="code">630</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="63"/></field>
 	</record>
 	<record model="account.account" id="631">
 		<field name="name">Företagsförsäkringar</field>
 		<field name="code">631</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="63"/></field>
 	</record>
 	<record model="account.account" id="632">
 		<field name="name">Självrisker vid skada</field>
 		<field name="code">632</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="63"/></field>
 	</record>
 	<record model="account.account" id="633">
 		<field name="name">Förluster i pågående arbeten</field>
 		<field name="code">633</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="63"/></field>
 	</record>
 	<record model="account.account" id="634">
 		<field name="name">Lämnade skadestånd</field>
 		<field name="code">634</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="63"/></field>
 	</record>
 	<record model="account.account" id="635">
 		<field name="name">Förluster på kundfordringar</field>
 		<field name="code">635</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="63"/></field>
 	</record>
 	<record model="account.account" id="636">
 		<field name="name">Garantikostnader</field>
 		<field name="code">636</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="63"/></field>
 	</record>
 	<record model="account.account" id="637">
 		<field name="name">Kostnader för bevakning och larm</field>
 		<field name="code">637</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="63"/></field>
 	</record>
 	<record model="account.account" id="638">
 		<field name="name">Förluster på övriga kortfristiga</field>
 		<field name="code">638</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="63"/></field>
 	</record>
 	<record model="account.account" id="639">
 		<field name="name">Övriga riskkostnader</field>
 		<field name="code">639</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="63"/></field>
 	</record>
 	<record model="account.account" id="64">
 		<field name="name">Förvaltningskostnader</field>
 		<field name="code">64</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="6"/></field>
 	</record>
 	<record model="account.account" id="640">
 		<field name="name">Förvaltningskostnader</field>
 		<field name="code">640</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="64"/></field>
 	</record>
 	<record model="account.account" id="641">
 		<field name="name">Styrelsearvoden</field>
 		<field name="code">641</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="64"/></field>
 	</record>
 	<record model="account.account" id="642">
 		<field name="name">Revisionsarvoden</field>
 		<field name="code">642</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="64"/></field>
 	</record>
 	<record model="account.account" id="643">
 		<field name="name">Management fees</field>
 		<field name="code">643</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="64"/></field>
 	</record>
 	<record model="account.account" id="644">
 		<field name="name">Årsredovisning och</field>
 		<field name="code">644</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="64"/></field>
 	</record>
 	<record model="account.account" id="645">
 		<field name="name">Bolagsstämma/års- eller</field>
 		<field name="code">645</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="64"/></field>
 	</record>
 	<record model="account.account" id="649">
 		<field name="name">Övriga förvaltningskostnader</field>
 		<field name="code">649</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="64"/></field>
 	</record>
 	<record model="account.account" id="65">
 		<field name="name">Övriga externa tjänster</field>
 		<field name="code">65</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="6"/></field>
 	</record>
 	<record model="account.account" id="650">
 		<field name="name">Övriga externa tjänster</field>
 		<field name="code">650</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="65"/></field>
 	</record>
 	<record model="account.account" id="651">
 		<field name="name">Mätningskostnader</field>
 		<field name="code">651</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="65"/></field>
 	</record>
 	<record model="account.account" id="652">
 		<field name="name">Ritnings- och kopieringskostnader</field>
 		<field name="code">652</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="65"/></field>
 	</record>
 	<record model="account.account" id="653">
 		<field name="name">Redovisningstjänster</field>
 		<field name="code">653</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="65"/></field>
 	</record>
 	<record model="account.account" id="654">
 		<field name="name">IT-tjänster</field>
 		<field name="code">654</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="65"/></field>
 	</record>
 	<record model="account.account" id="655">
 		<field name="name">Konsultarvoden</field>
 		<field name="code">655</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="65"/></field>
 	</record>
 	<record model="account.account" id="656">
 		<field name="name">Serviceavgifter till</field>
 		<field name="code">656</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="65"/></field>
 	</record>
 	<record model="account.account" id="657">
 		<field name="name">Bankkostnader</field>
 		<field name="code">657</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="65"/></field>
 	</record>
 	<record model="account.account" id="658">
 		<field name="name">Advokat- och rättegångskostnader</field>
 		<field name="code">658</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="65"/></field>
 	</record>
 	<record model="account.account" id="659">
 		<field name="name">Övriga externa tjänster</field>
 		<field name="code">659</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="65"/></field>
 	</record>
 	<record model="account.account" id="68">
 		<field name="name">Inhyrd personal</field>
 		<field name="code">68</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="6"/></field>
 	</record>
 	<record model="account.account" id="680">
 		<field name="name">Inhyrd personal (gruppkonto)</field>
 		<field name="code">680</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="68"/></field>
 	</record>
 	<record model="account.account" id="681">
 		<field name="name">Inhyrd produktionspersonal</field>
 		<field name="code">681</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="68"/></field>
 	</record>
 	<record model="account.account" id="682">
 		<field name="name">Inhyrd lagerpersonal</field>
 		<field name="code">682</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="68"/></field>
 	</record>
 	<record model="account.account" id="683">
 		<field name="name">Inhyrd transportpersonal</field>
 		<field name="code">683</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="68"/></field>
 	</record>
 	<record model="account.account" id="684">
 		<field name="name">Inhyrd kontors- och</field>
 		<field name="code">684</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="68"/></field>
 	</record>
 	<record model="account.account" id="685">
 		<field name="name">Inhyrd IT-personal</field>
 		<field name="code">685</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="68"/></field>
 	</record>
 	<record model="account.account" id="686">
 		<field name="name">Inhyrd marknads- och</field>
 		<field name="code">686</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="68"/></field>
 	</record>
 	<record model="account.account" id="687">
 		<field name="name">Inhyrd restaurang- och</field>
 		<field name="code">687</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="68"/></field>
 	</record>
 	<record model="account.account" id="688">
 		<field name="name">Inhyrda företagsledare</field>
 		<field name="code">688</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="68"/></field>
 	</record>
 	<record model="account.account" id="689">
 		<field name="name">Övrig inhyrd personal</field>
 		<field name="code">689</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="68"/></field>
 	</record>
 	<record model="account.account" id="69">
 		<field name="name">Övriga externa kostnader</field>
 		<field name="code">69</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="6"/></field>
 	</record>
 	<record model="account.account" id="690">
 		<field name="name">Övriga externa kostnader</field>
 		<field name="code">690</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="69"/></field>
 	</record>
 	<record model="account.account" id="691">
 		<field name="name">Licensavgifter och royalties</field>
 		<field name="code">691</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="69"/></field>
 	</record>
 	<record model="account.account" id="692">
 		<field name="name">Kostnader för egna patent</field>
 		<field name="code">692</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="69"/></field>
 	</record>
 	<record model="account.account" id="693">
 		<field name="name">Kostnader för varumärken m.m.</field>
 		<field name="code">693</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="69"/></field>
 	</record>
 	<record model="account.account" id="694">
 		<field name="name">Kontroll-, provnings- och</field>
 		<field name="code">694</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="69"/></field>
 	</record>
 	<record model="account.account" id="695">
 		<field name="name">Tillsynsavgifter myndigheter</field>
 		<field name="code">695</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="69"/></field>
 	</record>
 	<record model="account.account" id="697">
 		<field name="name">Tidningar, tidskrifter och</field>
 		<field name="code">697</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="69"/></field>
 	</record>
 	<record model="account.account" id="698">
 		<field name="name">Föreningsavgifter</field>
 		<field name="code">698</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="69"/></field>
 	</record>
 	<record model="account.account" id="699">
 		<field name="name">Övriga externa kostnader</field>
 		<field name="code">699</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="69"/></field>
 	</record>
 	<record model="account.account" id="7">
 		<field name="name">Utgifter/kostnader för personal, avskrivningar m.m.</field>
 		<field name="code">7</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="root"/></field>
 	</record>
 	<record model="account.account" id="70">
 		<field name="name">Löner till kollektivanställda</field>
 		<field name="code">70</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="7"/></field>
 	</record>
 	<record model="account.account" id="700">
 		<field name="name">Löner till kollektivanställda</field>
 		<field name="code">700</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="70"/></field>
 	</record>
 	<record model="account.account" id="701">
 		<field name="name">Löner till kollektivanställda</field>
 		<field name="code">701</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="70"/></field>
 	</record>
 	<record model="account.account" id="708">
 		<field name="name">Löner till kollektivanställda för ej</field>
 		<field name="code">708</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="70"/></field>
 	</record>
 	<record model="account.account" id="709">
 		<field name="name">Förändring av semesterlöneskuld</field>
 		<field name="code">709</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="70"/></field>
 	</record>
 	<record model="account.account" id="72">
 		<field name="name">Löner till tjänstemän och företagsledare</field>
 		<field name="code">72</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="7"/></field>
 	</record>
 	<record model="account.account" id="720">
 		<field name="name">Löner till tjänstemän och</field>
 		<field name="code">720</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="72"/></field>
 	</record>
 	<record model="account.account" id="721">
 		<field name="name">Löner till tjänstemän</field>
 		<field name="code">721</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="72"/></field>
 	</record>
 	<record model="account.account" id="722">
 		<field name="name">Löner till företagsledare</field>
 		<field name="code">722</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="72"/></field>
 	</record>
 	<record model="account.account" id="728">
 		<field name="name">Löner till tjänstemän och</field>
 		<field name="code">728</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="72"/></field>
 	</record>
 	<record model="account.account" id="729">
 		<field name="name">Förändring av semesterlöneskuld</field>
 		<field name="code">729</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="72"/></field>
 	</record>
 	<record model="account.account" id="73">
 		<field name="name">Kostnadsersättningar och förmåner</field>
 		<field name="code">73</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="7"/></field>
 	</record>
 	<record model="account.account" id="730">
 		<field name="name">Kostnadsersättningar och</field>
 		<field name="code">730</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="73"/></field>
 	</record>
 	<record model="account.account" id="731">
 		<field name="name">Kontanta extraersättningar</field>
 		<field name="code">731</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="73"/></field>
 	</record>
 	<record model="account.account" id="732">
 		<field name="name">Traktamenten vid tjänsteresa</field>
 		<field name="code">732</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="73"/></field>
 	</record>
 	<record model="account.account" id="733">
 		<field name="name">Bilersättningar</field>
 		<field name="code">733</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="73"/></field>
 	</record>
 	<record model="account.account" id="735">
 		<field name="name">Ersättningar för föreskrivna</field>
 		<field name="code">735</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="73"/></field>
 	</record>
 	<record model="account.account" id="737">
 		<field name="name">Representationsersättningar</field>
 		<field name="code">737</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="73"/></field>
 	</record>
 	<record model="account.account" id="738">
 		<field name="name">Kostnader för förmåner till</field>
 		<field name="code">738</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="73"/></field>
 	</record>
 	<record model="account.account" id="739">
 		<field name="name">Övriga kostnadsersättningar och</field>
 		<field name="code">739</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="73"/></field>
 	</record>
 	<record model="account.account" id="74">
 		<field name="name">Pensionskostnader</field>
 		<field name="code">74</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="7"/></field>
 	</record>
 	<record model="account.account" id="740">
 		<field name="name">Pensionskostnader (gruppkonto)</field>
 		<field name="code">740</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="74"/></field>
 	</record>
 	<record model="account.account" id="741">
 		<field name="name">Pensionsförsäkringspremier</field>
 		<field name="code">741</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="74"/></field>
 	</record>
 	<record model="account.account" id="742">
 		<field name="name">Förändring av pensionsskuld</field>
 		<field name="code">742</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="74"/></field>
 	</record>
 	<record model="account.account" id="743">
 		<field name="name">Avdrag för räntedel i</field>
 		<field name="code">743</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="74"/></field>
 	</record>
 	<record model="account.account" id="744">
 		<field name="name">Förändring av</field>
 		<field name="code">744</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="74"/></field>
 	</record>
 	<record model="account.account" id="746">
 		<field name="name">Pensionsutbetalningar</field>
 		<field name="code">746</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="74"/></field>
 	</record>
 	<record model="account.account" id="747">
 		<field name="name">Förvaltnings- och</field>
 		<field name="code">747</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="74"/></field>
 	</record>
 	<record model="account.account" id="749">
 		<field name="name">Övriga pensionskostnader</field>
 		<field name="code">749</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="74"/></field>
 	</record>
 	<record model="account.account" id="75">
 		<field name="name">Sociala och andra avgifter enligt lag och avtal</field>
 		<field name="code">75</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="7"/></field>
 	</record>
 	<record model="account.account" id="750">
 		<field name="name">Sociala och andra avgifter enligt</field>
 		<field name="code">750</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="75"/></field>
 	</record>
 	<record model="account.account" id="751">
 		<field name="name">Lagstadgade sociala avgifter</field>
 		<field name="code">751</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="75"/></field>
 	</record>
 	<record model="account.account" id="752">
 		<field name="name">Arbetsgivaravgifter (nya</field>
 		<field name="code">752</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="75"/></field>
 	</record>
 	<record model="account.account" id="753">
 		<field name="name">Särskild löneskatt</field>
 		<field name="code">753</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="75"/></field>
 	</record>
 	<record model="account.account" id="755">
 		<field name="name">Avkastningsskatt på</field>
 		<field name="code">755</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="75"/></field>
 	</record>
 	<record model="account.account" id="757">
 		<field name="name">Premier för</field>
 		<field name="code">757</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="75"/></field>
 	</record>
 	<record model="account.account" id="758">
 		<field name="name">Gruppförsäkringspremier</field>
 		<field name="code">758</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="75"/></field>
 	</record>
 	<record model="account.account" id="759">
 		<field name="name">Övriga sociala och andra avgifter</field>
 		<field name="code">759</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="75"/></field>
 	</record>
 	<record model="account.account" id="76">
 		<field name="name">Övriga personalkostnader</field>
 		<field name="code">76</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="7"/></field>
 	</record>
 	<record model="account.account" id="760">
 		<field name="name">Övriga personalkostnader</field>
 		<field name="code">760</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="76"/></field>
 	</record>
 	<record model="account.account" id="761">
 		<field name="name">Utbildning</field>
 		<field name="code">761</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="76"/></field>
 	</record>
 	<record model="account.account" id="762">
 		<field name="name">Sjuk- och hälsovård</field>
 		<field name="code">762</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="76"/></field>
 	</record>
 	<record model="account.account" id="763">
 		<field name="name">Personalrepresentation</field>
 		<field name="code">763</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="76"/></field>
 	</record>
 	<record model="account.account" id="765">
 		<field name="name">Sjuklöneförsäkring</field>
 		<field name="code">765</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="76"/></field>
 	</record>
 	<record model="account.account" id="767">
 		<field name="name">Förändring av</field>
 		<field name="code">767</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="76"/></field>
 	</record>
 	<record model="account.account" id="769">
 		<field name="name">Övriga personalkostnader och</field>
 		<field name="code">769</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="76"/></field>
 	</record>
 	<record model="account.account" id="77">
 		<field name="name">Nedskrivningar och återföring av nedskrivningar</field>
 		<field name="code">77</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="7"/></field>
 	</record>
 	<record model="account.account" id="771">
 		<field name="name">Nedskrivningar av immateriella</field>
 		<field name="code">771</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="77"/></field>
 	</record>
 	<record model="account.account" id="772">
 		<field name="name">Nedskrivningar av byggnader och</field>
 		<field name="code">772</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="77"/></field>
 	</record>
 	<record model="account.account" id="773">
 		<field name="name">Nedskrivningar av maskiner och</field>
 		<field name="code">773</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="77"/></field>
 	</record>
 	<record model="account.account" id="774">
 		<field name="name">Nedskrivningar av vissa</field>
 		<field name="code">774</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="77"/></field>
 	</record>
 	<record model="account.account" id="776">
 		<field name="name">Återföring av nedskrivningar av</field>
 		<field name="code">776</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="77"/></field>
 	</record>
 	<record model="account.account" id="777">
 		<field name="name">Återföring av nedskrivningar av</field>
 		<field name="code">777</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="77"/></field>
 	</record>
 	<record model="account.account" id="778">
 		<field name="name">Återföring av nedskrivningar av</field>
 		<field name="code">778</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="77"/></field>
 	</record>
 	<record model="account.account" id="779">
 		<field name="name">Återföring av nedskrivningar av</field>
 		<field name="code">779</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="77"/></field>
 	</record>
 	<record model="account.account" id="78">
 		<field name="name">Avskrivningar enligt plan</field>
 		<field name="code">78</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="7"/></field>
 	</record>
 	<record model="account.account" id="781">
 		<field name="name">Avskrivningar på immateriella</field>
 		<field name="code">781</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="78"/></field>
 	</record>
 	<record model="account.account" id="782">
 		<field name="name">Avskrivningar på byggnader och</field>
 		<field name="code">782</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="78"/></field>
 	</record>
 	<record model="account.account" id="783">
 		<field name="name">Avskrivningar på maskiner och</field>
 		<field name="code">783</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="78"/></field>
 	</record>
 	<record model="account.account" id="79">
 		<field name="name">Unknown</field>
 		<field name="code">79</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="7"/></field>
 	</record>
 	<record model="account.account" id="796">
 		<field name="name">Valutakursförluster på fordringar</field>
 		<field name="code">796</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="79"/></field>
 	</record>
 	<record model="account.account" id="797">
 		<field name="name">Förlust vid avyttring av</field>
 		<field name="code">797</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="79"/></field>
 	</record>
 	<record model="account.account" id="799">
 		<field name="name">Övriga rörelsekostnader</field>
 		<field name="code">799</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="79"/></field>
 	</record>
 	<record model="account.account" id="8">
 		<field name="name">Finansiella och andra inkomster/intäkter och</field>
 		<field name="code">8</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="root"/></field>
 	</record>
 	<record model="account.account" id="80">
 		<field name="name">Resultat från andelar i koncernföretag</field>
 		<field name="code">80</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="8"/></field>
 	</record>
 	<record model="account.account" id="801">
 		<field name="name">Utdelning på andelar i koncernföretag</field>
 		<field name="code">801</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="80"/></field>
 	</record>
 	<record model="account.account" id="802">
 		<field name="name">Resultat vid försäljning av andelar i</field>
 		<field name="code">802</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="80"/></field>
 	</record>
 	<record model="account.account" id="803">
 		<field name="name">Resultatandelar från handelsbolag</field>
 		<field name="code">803</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="80"/></field>
 	</record>
 	<record model="account.account" id="807">
 		<field name="name">Nedskrivningar av andelar i och</field>
 		<field name="code">807</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="80"/></field>
 	</record>
 	<record model="account.account" id="808">
 		<field name="name">Återföringar av nedskrivningar av</field>
 		<field name="code">808</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="80"/></field>
 	</record>
 	<record model="account.account" id="81">
 		<field name="name">Resultat från andelar i intresseföretag</field>
 		<field name="code">81</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="8"/></field>
 	</record>
 	<record model="account.account" id="811">
 		<field name="name">Utdelning på andelar i intresseföretag</field>
 		<field name="code">811</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="81"/></field>
 	</record>
 	<record model="account.account" id="812">
 		<field name="name">Resultat vid försäljning av andelar i</field>
 		<field name="code">812</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="81"/></field>
 	</record>
 	<record model="account.account" id="813">
 		<field name="name">Resultatandelar från handelsbolag</field>
 		<field name="code">813</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="81"/></field>
 	</record>
 	<record model="account.account" id="817">
 		<field name="name">Nedskrivningar av andelar ifrån och</field>
 		<field name="code">817</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="81"/></field>
 	</record>
 	<record model="account.account" id="818">
 		<field name="name">Återföringar av nedskrivningar av</field>
 		<field name="code">818</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="81"/></field>
 	</record>
 	<record model="account.account" id="82">
 		<field name="name">Resultat från övriga värdepapper och långfristiga fordringar (anläggningstillgångar)</field>
 		<field name="code">82</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="8"/></field>
 	</record>
 	<record model="account.account" id="820">
 		<field name="name">Ränteintäkter från</field>
 		<field name="code">820</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="82"/></field>
 	</record>
 	<record model="account.account" id="821">
 		<field name="name">Utdelning på andelar i andra företag</field>
 		<field name="code">821</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="82"/></field>
 	</record>
 	<record model="account.account" id="822">
 		<field name="name">Resultat vid försäljning av</field>
 		<field name="code">822</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="82"/></field>
 	</record>
 	<record model="account.account" id="823">
 		<field name="name">Valutakursdifferenser på långfristiga</field>
 		<field name="code">823</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="82"/></field>
 	</record>
 	<record model="account.account" id="824">
 		<field name="name">Resultatandelar från handelsbolag</field>
 		<field name="code">824</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="82"/></field>
 	</record>
 	<record model="account.account" id="826">
 		<field name="name">Ränteintäkter från långfristiga</field>
 		<field name="code">826</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="82"/></field>
 	</record>
 	<record model="account.account" id="827">
 		<field name="name">Nedskrivningar av innehav av andelar</field>
 		<field name="code">827</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="82"/></field>
 	</record>
 	<record model="account.account" id="828">
 		<field name="name">Återföringar av nedskrivningar av</field>
 		<field name="code">828</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="82"/></field>
 	</record>
 	<record model="account.account" id="83">
 		<field name="name">Övriga ränteintäkter och liknande resultatposter</field>
 		<field name="code">83</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="8"/></field>
 	</record>
 	<record model="account.account" id="830">
 		<field name="name">Ränteintäkter från</field>
 		<field name="code">830</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="83"/></field>
 	</record>
 	<record model="account.account" id="831">
 		<field name="name">Ränteintäkter från</field>
 		<field name="code">831</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="83"/></field>
 	</record>
 	<record model="account.account" id="833">
 		<field name="name">Valutakursdifferenser på kortfristiga</field>
 		<field name="code">833</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="83"/></field>
 	</record>
 	<record model="account.account" id="834">
 		<field name="name">Utdelningar på kortfristiga</field>
 		<field name="code">834</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="83"/></field>
 	</record>
 	<record model="account.account" id="835">
 		<field name="name">Resultat vid försäljning av</field>
 		<field name="code">835</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="83"/></field>
 	</record>
 	<record model="account.account" id="836">
 		<field name="name">Övriga ränteintäkter från</field>
 		<field name="code">836</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="83"/></field>
 	</record>
 	<record model="account.account" id="837">
 		<field name="name">Nedskrivningar av kortfristiga</field>
 		<field name="code">837</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="83"/></field>
 	</record>
 	<record model="account.account" id="838">
 		<field name="name">Återföringar av nedskrivningar av</field>
 		<field name="code">838</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="83"/></field>
 	</record>
 	<record model="account.account" id="839">
 		<field name="name">Övriga finansiella intäkter</field>
 		<field name="code">839</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="83"/></field>
 	</record>
 	<record model="account.account" id="84">
 		<field name="name">Räntekostnader och liknande resultatposter</field>
 		<field name="code">84</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="8"/></field>
 	</record>
 	<record model="account.account" id="840">
 		<field name="name">Räntekostnader (gruppkonto)</field>
 		<field name="code">840</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="84"/></field>
 	</record>
 	<record model="account.account" id="841">
 		<field name="name">Räntekostnader för långfristiga</field>
 		<field name="code">841</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="84"/></field>
 	</record>
 	<record model="account.account" id="842">
 		<field name="name">Räntekostnader för kortfristiga</field>
 		<field name="code">842</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="84"/></field>
 	</record>
 	<record model="account.account" id="843">
 		<field name="name">Valutakursdifferenser på skulder</field>
 		<field name="code">843</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="84"/></field>
 	</record>
 	<record model="account.account" id="844">
 		<field name="name">Erhållna räntebidrag</field>
 		<field name="code">844</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="84"/></field>
 	</record>
 	<record model="account.account" id="846">
 		<field name="name">Räntekostnader till</field>
 		<field name="code">846</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="84"/></field>
 	</record>
 	<record model="account.account" id="848">
 		<field name="name">Aktiverade ränteutgifter</field>
 		<field name="code">848</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="84"/></field>
 	</record>
 	<record model="account.account" id="849">
 		<field name="name">Övriga skuldrelaterade poster</field>
 		<field name="code">849</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="84"/></field>
 	</record>
 	<record model="account.account" id="87">
 		<field name="name">Unknown</field>
 		<field name="code">87</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="8"/></field>
 	</record>
 	<record model="account.account" id="871">
 		<field name="name">Extraordinära intäkter</field>
 		<field name="code">871</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="87"/></field>
 	</record>
 	<record model="account.account" id="875">
 		<field name="name">Extraordinära kostnader</field>
 		<field name="code">875</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="87"/></field>
 	</record>
 	<record model="account.account" id="88">
 		<field name="name">Bokslutsdispositioner</field>
 		<field name="code">88</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="8"/></field>
 	</record>
 	<record model="account.account" id="881">
 		<field name="name">Förändring av periodiseringsfond</field>
 		<field name="code">881</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="88"/></field>
 	</record>
 	<record model="account.account" id="885">
 		<field name="name">Förändring av överavskrivningar</field>
 		<field name="code">885</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="88"/></field>
 	</record>
 	<record model="account.account" id="886">
 		<field name="name">Förändring av ersättningsfond</field>
 		<field name="code">886</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="88"/></field>
 	</record>
 	<record model="account.account" id="888">
 		<field name="name">Förändring av obeskattade</field>
 		<field name="code">888</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="88"/></field>
 	</record>
 	<record model="account.account" id="889">
 		<field name="name">Övriga bokslutsdispositioner</field>
 		<field name="code">889</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="88"/></field>
 	</record>
 	<record model="account.account" id="89">
 		<field name="name">Skatter och årets resultat</field>
 		<field name="code">89</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="8"/></field>
 	</record>
 	<record model="account.account" id="891">
 		<field name="name">Skatt på årets beskattningsbara</field>
 		<field name="code">891</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="89"/></field>
 	</record>
 	<record model="account.account" id="892">
 		<field name="name">Skatt på grund av ändrad taxering</field>
 		<field name="code">892</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="89"/></field>
 	</record>
 	<record model="account.account" id="893">
 		<field name="name">Restituerad skatt</field>
 		<field name="code">893</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="89"/></field>
 	</record>
 	<record model="account.account" id="894">
 		<field name="name">Uppskjuten skatt</field>
 		<field name="code">894</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="89"/></field>
 	</record>
 	<record model="account.account" id="898">
 		<field name="name">Övriga skatter</field>
 		<field name="code">898</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="89"/></field>
 	</record>
 	<record model="account.account" id="899">
 		<field name="name">Resultat</field>
 		<field name="code">899</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" type="list"><value eval="89"/></field>
 	</record>
 </data>

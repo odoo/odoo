@@ -11,7 +11,7 @@
 	<field name="close_method">none</field>
 	<field name="parent_id" eval="[]"/>
 	<field name="type">view</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1" model="account.account">
 	<field name="code">1</field>
@@ -20,7 +20,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Ilgtermiòa ieguldîjumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2" model="account.account">
 	<field name="code">2</field>
@@ -29,7 +29,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Apgrozâmie lîdzekïi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3" model="account.account">
 	<field name="code">3</field>
@@ -38,7 +38,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Paðu kapitâls</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4" model="account.account">
 	<field name="code">4</field>
@@ -47,7 +47,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Uzkrâjumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5" model="account.account">
 	<field name="code">5</field>
@@ -56,7 +56,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Kreditori</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6" model="account.account">
 	<field name="code">6</field>
@@ -65,7 +65,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Ieòçmumi no uzòçmuma saimnieciskâs darbîbas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7" model="account.account">
 	<field name="code">7</field>
@@ -74,7 +74,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Saimnieciskâs darbîbas izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8" model="account.account">
 	<field name="code">8</field>
@@ -83,7 +83,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Daþâdi ieòçmumi un izdevumi, peïòa un zaudçjumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart11" model="account.account">
 	<field name="code">11</field>
@@ -92,7 +92,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">view</field>
 	<field name="name">Nemateriâlie ieguldîjumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart12" model="account.account">
 	<field name="code">12</field>
@@ -101,7 +101,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">view</field>
 	<field name="name">Pamatlîdzekïi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart13" model="account.account">
 	<field name="code">13</field>
@@ -110,7 +110,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">view</field>
 	<field name="name">Ilgtermiòa finansu ieguldîjumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart21" model="account.account">
 	<field name="code">21</field>
@@ -119,7 +119,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2')])]"/>
 	<field name="type">view</field>
 	<field name="name">Krâjumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart22" model="account.account">
 	<field name="code">22</field>
@@ -128,7 +128,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2')])]"/>
 	<field name="type">view</field>
 	<field name="name">Produktîvie un darba dzîvnieki</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart23" model="account.account">
 	<field name="code">23</field>
@@ -137,7 +137,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2')])]"/>
 	<field name="type">view</field>
 	<field name="name">Norçíini par prasîbâm (ar debitoriem)</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart24" model="account.account">
 	<field name="code">24</field>
@@ -146,7 +146,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2')])]"/>
 	<field name="type">view</field>
 	<field name="name">Nâkamo periodu izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart25" model="account.account">
 	<field name="code">25</field>
@@ -155,7 +155,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2')])]"/>
 	<field name="type">view</field>
 	<field name="name">Vçrtspapîri apgrozâmo lîdzekïu sastâvâ un îstermiòa lîdzdalîba kapitâlos</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart26" model="account.account">
 	<field name="code">26</field>
@@ -164,7 +164,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2')])]"/>
 	<field name="type">view</field>
 	<field name="name">Naudas lîdzekïi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart32" model="account.account">
 	<field name="code">32</field>
@@ -173,7 +173,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">view</field>
 	<field name="name">Privâtkonti</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart33" model="account.account">
 	<field name="code">33</field>
@@ -182,7 +182,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">view</field>
 	<field name="name">Rezerves </field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart34" model="account.account">
 	<field name="code">34</field>
@@ -191,7 +191,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">view</field>
 	<field name="name">Nesadalîtâ peïòa vai nesegtie zaudçjumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart41" model="account.account">
 	<field name="code">41</field>
@@ -200,7 +200,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">view</field>
 	<field name="name">Uzkrâjumi pensijâm pielîdzinâmâtâm saistîbâm</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart42" model="account.account">
 	<field name="code">42</field>
@@ -209,7 +209,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">view</field>
 	<field name="name">Uzkrâjumi paredzamiem nodokïiem</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart43" model="account.account">
 	<field name="code">43</field>
@@ -218,7 +218,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">view</field>
 	<field name="name">Citi uzkrâjumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart51" model="account.account">
 	<field name="code">51</field>
@@ -227,7 +227,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5')])]"/>
 	<field name="type">view</field>
 	<field name="name">Norçíini par aizòçmumiem</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart52" model="account.account">
 	<field name="code">52</field>
@@ -236,7 +236,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5')])]"/>
 	<field name="type">view</field>
 	<field name="name">Norçíini par saòemtajiem avansiem</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart53" model="account.account">
 	<field name="code">53</field>
@@ -245,7 +245,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5')])]"/>
 	<field name="type">view</field>
 	<field name="name">Norçíini par piegâdâtâjiem un darbuzòçmçjiem</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart54" model="account.account">
 	<field name="code">54</field>
@@ -254,7 +254,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5')])]"/>
 	<field name="type">view</field>
 	<field name="name">Maksâjamie vekseïi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart55" model="account.account">
 	<field name="code">55</field>
@@ -263,7 +263,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5')])]"/>
 	<field name="type">view</field>
 	<field name="name">Norçíini ar uzòçmumiem, dalîbniekiem un personâlu</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart56" model="account.account">
 	<field name="code">56</field>
@@ -272,7 +272,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5')])]"/>
 	<field name="type">view</field>
 	<field name="name">Norçíini  par darba samaksu  un ieturçjumiem (izòemot nodokïus)</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart57" model="account.account">
 	<field name="code">57</field>
@@ -281,7 +281,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5')])]"/>
 	<field name="type">view</field>
 	<field name="name">Norçíini par nodokïiem</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart58" model="account.account">
 	<field name="code">58</field>
@@ -290,7 +290,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5')])]"/>
 	<field name="type">view</field>
 	<field name="name">Norçíini par  dividendçm</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart59" model="account.account">
 	<field name="code">59</field>
@@ -299,7 +299,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5')])]"/>
 	<field name="type">view</field>
 	<field name="name">Nâkamo periodu ieòçmumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart61" model="account.account">
 	<field name="code">61</field>
@@ -308,7 +308,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart6')])]"/>
 	<field name="type">view</field>
 	<field name="name">Ieòçmumi no pârdoðanas, kas apliekami ar nodokïiem vispârçjâ kârtîbâ</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart62" model="account.account">
 	<field name="code">62</field>
@@ -317,7 +317,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart6')])]"/>
 	<field name="type">view</field>
 	<field name="name">Ieòçmumi no pârdoðanas, kas citâdi  apliekami ar nodokïiem</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart63" model="account.account">
 	<field name="code">63</field>
@@ -326,7 +326,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart6')])]"/>
 	<field name="type">view</field>
 	<field name="name">Komisijas, starpniecîbas un citi ieòçmumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart64" model="account.account">
 	<field name="code">64</field>
@@ -335,7 +335,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart6')])]"/>
 	<field name="type">view</field>
 	<field name="name">Ieòçmumus samazinoðas atlaides</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart65" model="account.account">
 	<field name="code">65</field>
@@ -344,7 +344,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart6')])]"/>
 	<field name="type">view</field>
 	<field name="name">Pârçjie uzòçmuma ieòçmumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart66" model="account.account">
 	<field name="code">66</field>
@@ -353,7 +353,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart6')])]"/>
 	<field name="type">view</field>
 	<field name="name">Gatavâs produkcijas  un nepabeigto  raþojumu krâjumu un vçrtîbas  izmaiòas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart67" model="account.account">
 	<field name="code">67</field>
@@ -362,7 +362,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart6')])]"/>
 	<field name="type">view</field>
 	<field name="name">Citu periodu ieòçmumi, kas attiecas uz pârskata periodu</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart69" model="account.account">
 	<field name="code">69</field>
@@ -371,7 +371,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart6')])]"/>
 	<field name="type">view</field>
 	<field name="name">Sociâlâs infrastruktûras iestâþu un pasâkumu ieòçmumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart71" model="account.account">
 	<field name="code">71</field>
@@ -380,7 +380,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">view</field>
 	<field name="name">Izdevumi izejvielu, materiâlu un preèu iepirkðanai</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart72" model="account.account">
 	<field name="code">72</field>
@@ -389,7 +389,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">view</field>
 	<field name="name">Personâla izmaksas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart73" model="account.account">
 	<field name="code">73</field>
@@ -398,7 +398,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">view</field>
 	<field name="name">Sociâlâs nodevas un izmaksas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart74" model="account.account">
 	<field name="code">74</field>
@@ -407,7 +407,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">view</field>
 	<field name="name">Pamatlîdzekïu nolietojums un citu ieguldîjumu vçrtîbas norakstîjumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart75" model="account.account">
 	<field name="code">75</field>
@@ -416,7 +416,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">view</field>
 	<field name="name">Pârçjie saimnieciskâs darbîbas  izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart76" model="account.account">
 	<field name="code">76</field>
@@ -425,7 +425,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">view</field>
 	<field name="name">Preèu pârdoðanas izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart77" model="account.account">
 	<field name="code">77</field>
@@ -434,7 +434,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">view</field>
 	<field name="name">Administrâcijas izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart78" model="account.account">
 	<field name="code">78</field>
@@ -443,7 +443,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">view</field>
 	<field name="name">Pârskata periodâ iekïaujamie iepriekðçjo periodu izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart79" model="account.account">
 	<field name="code">79</field>
@@ -452,7 +452,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">view</field>
 	<field name="name">Sociâlâs  infrastruktûras uzturçðanas izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart81" model="account.account">
 	<field name="code">81</field>
@@ -461,7 +461,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart8')])]"/>
 	<field name="type">view</field>
 	<field name="name">Daþâdi ieòçmumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart82" model="account.account">
 	<field name="code">82</field>
@@ -470,7 +470,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart8')])]"/>
 	<field name="type">view</field>
 	<field name="name">Daþâdi izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart83" model="account.account">
 	<field name="code">83</field>
@@ -479,7 +479,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart8')])]"/>
 	<field name="type">view</field>
 	<field name="name">Ârkârtas ieòçmumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart84" model="account.account">
 	<field name="code">84</field>
@@ -488,7 +488,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart8')])]"/>
 	<field name="type">view</field>
 	<field name="name">Ârkârtas izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart86" model="account.account">
 	<field name="code">86</field>
@@ -497,7 +497,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart8')])]"/>
 	<field name="type">view</field>
 	<field name="name">Peïòa vai zaudçjumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart87" model="account.account">
 	<field name="code">87</field>
@@ -506,7 +506,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart8')])]"/>
 	<field name="type">view</field>
 	<field name="name">Peïòas izlietojums (bez nodokïiem)</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart88" model="account.account">
 	<field name="code">88</field>
@@ -515,7 +515,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart8')])]"/>
 	<field name="type">view</field>
 	<field name="name">Nodoïi no peïòas un citi saimnieciskâs darbîbas izdevumos neiekïaujamie nodokïi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_cash" model="account.account">
 	<field name="code">1110</field>
@@ -524,7 +524,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart11')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Pçtniecîbas un uzòçmuma attîstîbas izmaksas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1120" model="account.account">
 	<field name="code">1120</field>
@@ -533,7 +533,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart11')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Koncesijas, patenti, licences, tirdzniecîbas zîmes un lîdzîgas tiesîbas; datoru programmas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1130" model="account.account">
 	<field name="code">1130</field>
@@ -542,7 +542,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart11')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Uzòçmuma nemateriâlâ vçrtîba</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1180" model="account.account">
 	<field name="code">1180</field>
@@ -551,7 +551,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart11')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Avansa maksâjumi par nemateriâliem aktîviem</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1190" model="account.account">
 	<field name="code">1190</field>
@@ -560,7 +560,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart11')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Nemateriâlo ieguldîjumu vçrtîbas norakstîtâ daïa (pasîvâ)</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1210" model="account.account">
 	<field name="code">1210</field>
@@ -569,7 +569,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart12')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Zemes gabali, çkas, bûves, ilggadîgie stâdîjumi un citi nekustamâ îpaðuma objekti</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1220" model="account.account">
 	<field name="code">1220</field>
@@ -578,7 +578,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart12')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Tehnoloìiskâs  iekârtas un maðînas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1230" model="account.account">
 	<field name="code">1230</field>
@@ -587,7 +587,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart12')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Pârçjie pamatlîdzekïi un inventârs</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1240" model="account.account">
 	<field name="code">1240</field>
@@ -596,7 +596,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart12')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Pamatlîdzekïu izveidoðana un nepabeigto celtniecîbas objektu izmaksas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1290" model="account.account">
 	<field name="code">1290</field>
@@ -605,7 +605,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart12')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Pamatlîdzekïu nolietojums (pasîvâ)</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1310" model="account.account">
 	<field name="code">1310</field>
@@ -614,7 +614,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart13')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Lîdzdalîba meitas uzòçmumu kapitâlâ</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1320" model="account.account">
 	<field name="code">1320</field>
@@ -623,7 +623,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart13')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Aizdevumi meitas uzòçmumam</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1330" model="account.account">
 	<field name="code">1330</field>
@@ -632,7 +632,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart13')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Lîdzdalîbas saistîto uzòçmumu kapitâlâ</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1340" model="account.account">
 	<field name="code">1340</field>
@@ -641,7 +641,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart13')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Aizdevumi saistîtajiem uzòçmumiem</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1350" model="account.account">
 	<field name="code">1350</field>
@@ -650,7 +650,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart13')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Pârçjie vçrtspapîri</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1360" model="account.account">
 	<field name="code">1360</field>
@@ -659,7 +659,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart13')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Pârçjie aizdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1370" model="account.account">
 	<field name="code">1370</field>
@@ -668,7 +668,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart13')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Paðu akcijas un daïas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1380" model="account.account">
 	<field name="code">1380</field>
@@ -677,7 +677,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart13')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Aizdevumi uzòçmuma dalîbniekiem un valdei</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2110" model="account.account">
 	<field name="code">2110</field>
@@ -686,7 +686,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart21')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Izejvielas un materiâli</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2120" model="account.account">
 	<field name="code">2120</field>
@@ -695,7 +695,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart21')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Nepabeigtie raþojumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2130" model="account.account">
 	<field name="code">2130</field>
@@ -704,7 +704,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart21')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Gatavâs preces pârdoðanai</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2140" model="account.account">
 	<field name="code">2140</field>
@@ -713,7 +713,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart21')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Nepabeigtie pasûtîjumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2190" model="account.account">
 	<field name="code">2190</field>
@@ -722,7 +722,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart21')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Avansa maksâjumi par precçm</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2210" model="account.account">
 	<field name="code">2210</field>
@@ -731,7 +731,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart22')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Pieauguðie produktîvie lopi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2220" model="account.account">
 	<field name="code">2220</field>
@@ -740,7 +740,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart22')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Jaunlopi un sîkie dzîvnieki</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2230" model="account.account">
 	<field name="code">2230</field>
@@ -749,7 +749,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart22')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Darba lopi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2290" model="account.account">
 	<field name="code">2290</field>
@@ -758,7 +758,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart22')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Darba lopu norakstîtâ vçrtîba (pasîvâ)</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2310" model="account.account">
 	<field name="code">2310</field>
@@ -767,7 +767,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart23')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Norçíini ar pircçjiem un pasûtîtâjiem</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2320" model="account.account">
 	<field name="code">2320</field>
@@ -776,7 +776,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart23')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Par piegâdçm un pasûtîjumiem saòemtie vekseïi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2330" model="account.account">
 	<field name="code">2330</field>
@@ -785,7 +785,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart23')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Meitas uzòçmumu parâdi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2340" model="account.account">
 	<field name="code">2340</field>
@@ -794,7 +794,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart23')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Saistîto uzòçmumu parâdi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2350" model="account.account">
 	<field name="code">2350</field>
@@ -803,7 +803,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart23')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Norçíini ar citiem debitoriem</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2352" model="account.account">
 	<field name="code">2352</field>
@@ -812,7 +812,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart23')])]"/>
 	<field name="type">cash</field>
 	<field name="name">PVN ieòemtais 18%</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2354" model="account.account">
 	<field name="code">2354</field>
@@ -821,7 +821,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart23')])]"/>
 	<field name="type">expense</field>
 	<field name="name">PVN samaksâts 18%</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2360" model="account.account">
 	<field name="code">2360</field>
@@ -830,7 +830,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart23')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Norçíini par parakstîtâ sabiedrîbas kapitâlâ neiemaksâtâm summâm</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2370" model="account.account">
 	<field name="code">2370</field>
@@ -839,7 +839,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart23')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Îstermiòa aizdevumi sabiedrîbâm dalîbniekiem un vadîbai</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2380" model="account.account">
 	<field name="code">2380</field>
@@ -848,7 +848,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart23')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Norçíini par prasîbâm pret personâlu un îstermiòa aizdevumi personâlam</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2390" model="account.account">
 	<field name="code">2390</field>
@@ -857,7 +857,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart23')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Pârmaksâtie nodokïi, iepriekð samaksâtie nodokïi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2410" model="account.account">
 	<field name="code">2410</field>
@@ -866,7 +866,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart24')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Nâkamo periodu izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2420" model="account.account">
 	<field name="code">2420</field>
@@ -875,7 +875,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart24')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Akciju emisijas  nocenojums (disagio)</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2510" model="account.account">
 	<field name="code">2510</field>
@@ -884,7 +884,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart25')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Meitas  uzòçmuma akcijas un daïas </field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2520" model="account.account">
 	<field name="code">2520</field>
@@ -893,7 +893,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart25')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Saistîto uzòçmuma akcijas un daïas </field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2530" model="account.account">
 	<field name="code">2530</field>
@@ -902,7 +902,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart25')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Paðu  uzòçmuma akcijas un daïas </field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2540" model="account.account">
 	<field name="code">2540</field>
@@ -911,7 +911,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart25')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Pârçjie vçrtspapîri un lîdzdalîba kapitâlos</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2610" model="account.account">
 	<field name="code">2610</field>
@@ -920,7 +920,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart26')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Kase</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2620" model="account.account">
 	<field name="code">2620</field>
@@ -929,7 +929,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart26')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Norçíinu konti bankâ</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2640" model="account.account">
 	<field name="code">2640</field>
@@ -938,7 +938,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart26')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Akreditîvi, èeki un îpaðu norçíina  formu konti</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2650" model="account.account">
 	<field name="code">2650</field>
@@ -947,7 +947,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart26')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Citi konti bankâs</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2670" model="account.account">
 	<field name="code">2670</field>
@@ -956,7 +956,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart26')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Pârçjie naudas lîdzekïi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3110" model="account.account">
 	<field name="code">3110</field>
@@ -965,7 +965,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Pamatkapitâls vai lîdzdalîbas kapitâls</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3120" model="account.account">
 	<field name="code">3120</field>
@@ -974,7 +974,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Akciju emisijas uzcenojums (agio)</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3130" model="account.account">
 	<field name="code">3130</field>
@@ -983,7 +983,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Ilgtermiòa ieguldîjuma pârvçrtçðanas rezerve</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3210" model="account.account">
 	<field name="code">3210</field>
@@ -992,7 +992,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart32')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Privâtiem nolûkiem izòemtie lîdzekïi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3220" model="account.account">
 	<field name="code">3220</field>
@@ -1001,7 +1001,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart32')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Privâtie ieguldîjumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3310" model="account.account">
 	<field name="code">3310</field>
@@ -1010,7 +1010,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart33')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Rezerves kapitâls</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3330" model="account.account">
 	<field name="code">3330</field>
@@ -1019,7 +1019,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart33')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Citas likumâ paredzçtâs  rezerves</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3340" model="account.account">
 	<field name="code">3340</field>
@@ -1028,7 +1028,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart33')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Rezerves paðu akcijâm un daïâm</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3350" model="account.account">
 	<field name="code">3350</field>
@@ -1037,7 +1037,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart33')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Statûtos paredzçtâs rezerves</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3360" model="account.account">
 	<field name="code">3360</field>
@@ -1046,7 +1046,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart33')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Pârçjâs rezerves</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3410" model="account.account">
 	<field name="code">3410</field>
@@ -1055,7 +1055,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart34')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Pârskata gada nesadalîtâ peïòa</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3420" model="account.account">
 	<field name="code">3420</field>
@@ -1064,7 +1064,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart34')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Iepriekðçjo gadu nesadalîtâ peïòa</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4110" model="account.account">
 	<field name="code">4110</field>
@@ -1073,7 +1073,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart41')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Uzkrâjumi pensijâm pielîdzinâtâm saistîbâm</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4210" model="account.account">
 	<field name="code">4210</field>
@@ -1082,7 +1082,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart42')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Uzkrâjumi paredzamiem nodokïiem</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4310" model="account.account">
 	<field name="code">4310</field>
@@ -1091,7 +1091,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart43')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Citi uzkrâjumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5110" model="account.account">
 	<field name="code">5110</field>
@@ -1100,7 +1100,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart51')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Aizòçmumi pret obligâcijâm</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5120" model="account.account">
 	<field name="code">5120</field>
@@ -1109,7 +1109,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart51')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Akcijâs pârvçðamie aizòçmumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5130" model="account.account">
 	<field name="code">5130</field>
@@ -1118,7 +1118,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart51')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Aizòçmumi ar lîdzdalîbu peïòâ</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5140" model="account.account">
 	<field name="code">5140</field>
@@ -1127,7 +1127,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart51')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Citi aizòçmumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5150" model="account.account">
 	<field name="code">5150</field>
@@ -1136,7 +1136,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart51')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Îstermiòa aizòçmumi  no kredîtiestâdçm</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5160" model="account.account">
 	<field name="code">5160</field>
@@ -1145,7 +1145,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart51')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Ilgtermiòa aizòçmumi no kredîtiestâdçm</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5170" model="account.account">
 	<field name="code">5170</field>
@@ -1154,7 +1154,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart51')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Aizòçmumi no kredîtiestâdçm bez norâdîtâ termiòa</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5210" model="account.account">
 	<field name="code">5210</field>
@@ -1163,7 +1163,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart52')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Norçíini par saòemtiem avansiem</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5310" model="account.account">
 	<field name="code">5310</field>
@@ -1172,7 +1172,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart53')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Norçíini par piegâdâtâjiem un darbuzòçmçjiem</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5410" model="account.account">
 	<field name="code">5410</field>
@@ -1181,7 +1181,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart54')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Norçíini par paðu izdotajiem vekseïiem</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5510" model="account.account">
 	<field name="code">5510</field>
@@ -1190,7 +1190,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart55')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Norçíini par parâdiem meitas uzòçmumiem</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5520" model="account.account">
 	<field name="code">5520</field>
@@ -1199,7 +1199,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart55')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Norçíini par parâdiem saistîtiem uzòçmumiem</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5530" model="account.account">
 	<field name="code">5530</field>
@@ -1208,7 +1208,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart55')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Norçíini par parâdiem uzòçmumiem, ar kuriem ir lîgums par lîdzdalîbu</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5540" model="account.account">
 	<field name="code">5540</field>
@@ -1217,7 +1217,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart55')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Norçíini par parâdiem citiem uzòçmumiem un dalîbniekiem</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5550" model="account.account">
 	<field name="code">5550</field>
@@ -1226,7 +1226,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart55')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Norçíini par parâdiem personâlam</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5610" model="account.account">
 	<field name="code">5610</field>
@@ -1235,7 +1235,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart56')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Norçíini par darba algu</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5620" model="account.account">
 	<field name="code">5620</field>
@@ -1244,7 +1244,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart56')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Norçíini par ieturçjumiem no darba algas (izòemot nodokïus)</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5710" model="account.account">
 	<field name="code">5710</field>
@@ -1253,7 +1253,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart57')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Norçíini par peïòas nodokli</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5720" model="account.account">
 	<field name="code">5720</field>
@@ -1262,7 +1262,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart57')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Norçíini par citiem nodokïiem, nodevâm un maksâjumiem budþetam</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5810" model="account.account">
 	<field name="code">5810</field>
@@ -1271,7 +1271,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart58')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Norçíini par pârskata gada dividendçm</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5820" model="account.account">
 	<field name="code">5820</field>
@@ -1280,7 +1280,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart58')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Norçíini par iepriekðçjo gadu neizmaksâtajâm dividendçm</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5910" model="account.account">
 	<field name="code">5910</field>
@@ -1289,7 +1289,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart59')])]"/>
 	<field name="type">income</field>
 	<field name="name">Nâkamo periodu ieòçmumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_income" model="account.account">
 	<field name="code">6110</field>
@@ -1298,7 +1298,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart61')])]"/>
 	<field name="type">income</field>
 	<field name="name">Ieòçmumi no pamatdarbîbas  produkcijas un pakalpojumu pârdoðanas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6210" model="account.account">
 	<field name="code">6210</field>
@@ -1307,7 +1307,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart62')])]"/>
 	<field name="type">income</field>
 	<field name="name">Ar nodokïiem neapliekamie pârdoðanas ieòçmumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6220" model="account.account">
 	<field name="code">6220</field>
@@ -1316,7 +1316,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart62')])]"/>
 	<field name="type">income</field>
 	<field name="name">Ar îpaðiem nodokïiem apliekamie pârdoðanas ieòçmumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6310" model="account.account">
 	<field name="code">6310</field>
@@ -1325,7 +1325,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart63')])]"/>
 	<field name="type">income</field>
 	<field name="name">Komisijas un starpniecîbas ieòçmumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6320" model="account.account">
 	<field name="code">6320</field>
@@ -1334,7 +1334,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart63')])]"/>
 	<field name="type">income</field>
 	<field name="name">Ieòçmumi no atkritumu pârstrâdes un realizâcijas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6330" model="account.account">
 	<field name="code">6330</field>
@@ -1343,7 +1343,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart63')])]"/>
 	<field name="type">income</field>
 	<field name="name">Ieòçmumi no taras realizâcijas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6340" model="account.account">
 	<field name="code">6340</field>
@@ -1352,7 +1352,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart63')])]"/>
 	<field name="type">income</field>
 	<field name="name">Ar nodokïiem neapliekamie apgrozîjumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6410" model="account.account">
 	<field name="code">6410</field>
@@ -1361,7 +1361,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart64')])]"/>
 	<field name="type">income</field>
 	<field name="name">Pieðíirtâs skonto atlaides</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6420" model="account.account">
 	<field name="code">6420</field>
@@ -1370,7 +1370,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart64')])]"/>
 	<field name="type">income</field>
 	<field name="name">Pieðíirtie bonusi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6430" model="account.account">
 	<field name="code">6430</field>
@@ -1379,7 +1379,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart64')])]"/>
 	<field name="type">income</field>
 	<field name="name">Pieðíirtie rabati un citas tirdzniecîbas  atlaides</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6510" model="account.account">
 	<field name="code">6510</field>
@@ -1388,7 +1388,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart65')])]"/>
 	<field name="type">income</field>
 	<field name="name">Ieòçmumi no vçrtspapîru kursa paaugstinâðanâs</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6530" model="account.account">
 	<field name="code">6530</field>
@@ -1397,7 +1397,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart65')])]"/>
 	<field name="type">income</field>
 	<field name="name">Ieòçmumi no zemes gabalu iznomâðanas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6540" model="account.account">
 	<field name="code">6540</field>
@@ -1406,7 +1406,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart65')])]"/>
 	<field name="type">income</field>
 	<field name="name">Ieòçmumi no apgrozâmo lîdzekïu pârdoðanas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6550" model="account.account">
 	<field name="code">6550</field>
@@ -1415,7 +1415,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart65')])]"/>
 	<field name="type">income</field>
 	<field name="name">Ieòçmumi no pamatlîdzekïu iznomâðanas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6560" model="account.account">
 	<field name="code">6560</field>
@@ -1424,7 +1424,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart65')])]"/>
 	<field name="type">income</field>
 	<field name="name">Ieòçmumos pârskaitîtais rezervju un uzkrâjumu samazinâjums</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6570" model="account.account">
 	<field name="code">6570</field>
@@ -1433,7 +1433,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart65')])]"/>
 	<field name="type">income</field>
 	<field name="name">Iepriekðçjo gadu nodokïu samazinâjums</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6580" model="account.account">
 	<field name="code">6580</field>
@@ -1442,7 +1442,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart65')])]"/>
 	<field name="type">income</field>
 	<field name="name">Papildus  ieguldîjumi un citi ieòçmumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6590" model="account.account">
 	<field name="code">6590</field>
@@ -1451,7 +1451,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart65')])]"/>
 	<field name="type">income</field>
 	<field name="name">Paðu uzòçmuma kapitâlieguldîjumiem izpildîtie darbi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6610" model="account.account">
 	<field name="code">6610</field>
@@ -1460,7 +1460,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart66')])]"/>
 	<field name="type">income</field>
 	<field name="name">Gatavâs produkcijas krâjumu un vçrtîbas izmaiòas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6620" model="account.account">
 	<field name="code">6620</field>
@@ -1469,7 +1469,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart66')])]"/>
 	<field name="type">income</field>
 	<field name="name">Nepabeigto raþojumu krâjumu un vçrtîbas  izmaiòas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6630" model="account.account">
 	<field name="code">6630</field>
@@ -1478,7 +1478,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart66')])]"/>
 	<field name="type">income</field>
 	<field name="name">Nepabeigto pasûtîjumu atlikumu un vçtîbas izmaiòas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6640" model="account.account">
 	<field name="code">6640</field>
@@ -1487,7 +1487,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart66')])]"/>
 	<field name="type">income</field>
 	<field name="name">Produktîvo  un darba dzîvnieku ganâmpulka vçrtîbas izmaiòas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6710" model="account.account">
 	<field name="code">6710</field>
@@ -1496,7 +1496,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart67')])]"/>
 	<field name="type">income</field>
 	<field name="name">Citu periodu ieòçmumi, kas attiecas uz pârskata periodu</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6910" model="account.account">
 	<field name="code">6910</field>
@@ -1505,7 +1505,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart69')])]"/>
 	<field name="type">income</field>
 	<field name="name">Dzîvokïu saimniecîbas ieòçmumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6920" model="account.account">
 	<field name="code">6920</field>
@@ -1514,7 +1514,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart69')])]"/>
 	<field name="type">income</field>
 	<field name="name">Komunâlâs  saimniecîbas ieòçmumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6930" model="account.account">
 	<field name="code">6930</field>
@@ -1523,7 +1523,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart69')])]"/>
 	<field name="type">income</field>
 	<field name="name">Sadzîves paklpojumu ieòçmumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6940" model="account.account">
 	<field name="code">6940</field>
@@ -1532,7 +1532,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart69')])]"/>
 	<field name="type">income</field>
 	<field name="name">Sabiedriskâs çdinâðanas ieòçmumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6950" model="account.account">
 	<field name="code">6950</field>
@@ -1541,7 +1541,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart69')])]"/>
 	<field name="type">income</field>
 	<field name="name">Izglîtîbas iestâþu ieòçmumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6960" model="account.account">
 	<field name="code">6960</field>
@@ -1550,7 +1550,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart69')])]"/>
 	<field name="type">income</field>
 	<field name="name">Medicînas iestâþu ieòçmumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6970" model="account.account">
 	<field name="code">6970</field>
@@ -1559,7 +1559,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart69')])]"/>
 	<field name="type">income</field>
 	<field name="name">Kultûras un sporta ietâþu un pasâkumu ieòçmumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6980" model="account.account">
 	<field name="code">6980</field>
@@ -1568,7 +1568,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart69')])]"/>
 	<field name="type">income</field>
 	<field name="name">Pârçjie sociâlâs infrastruktûras iestâþu un pasâkumu ieòçmumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_expense" model="account.account">
 	<field name="code">7110</field>
@@ -1577,7 +1577,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart71')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Izejvielu un materiâlu iepirkðanas un piegâdes izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7120" model="account.account">
 	<field name="code">7120</field>
@@ -1586,7 +1586,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart71')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Preèu iepirkðanas un piegâdes izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7130" model="account.account">
 	<field name="code">7130</field>
@@ -1595,7 +1595,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart71')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Saòemtâs atlaides</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7140" model="account.account">
 	<field name="code">7140</field>
@@ -1604,7 +1604,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart71')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Taras izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7150" model="account.account">
 	<field name="code">7150</field>
@@ -1613,7 +1613,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart71')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Muitas un ievednodevas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7160" model="account.account">
 	<field name="code">7160</field>
@@ -1622,7 +1622,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart71')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Pârçjie ârçjie izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7170" model="account.account">
 	<field name="code">7170</field>
@@ -1631,7 +1631,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart71')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Samaksa par darbiem un pakalpojumiem no ârienes</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7180" model="account.account">
 	<field name="code">7180</field>
@@ -1640,7 +1640,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart71')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Pârçjie materiâlie izdevumi (nodoklis par dabas resursu izmantoðanu, celmu nauda u.c.)</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7190" model="account.account">
 	<field name="code">7190</field>
@@ -1649,7 +1649,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart71')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Pirkto materiâlu un preèu krâjumu un vçrtîbas izmaiòas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7210" model="account.account">
 	<field name="code">7210</field>
@@ -1658,7 +1658,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart72')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Strâdnieku algas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7220" model="account.account">
 	<field name="code">7220</field>
@@ -1667,7 +1667,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart72')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Pârvaldes personâla un administratîvâ personâla algas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7230" model="account.account">
 	<field name="code">7230</field>
@@ -1676,7 +1676,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart72')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Sociâlâs  infrastruktûras  iestâþu un pasâkumu darbinieku algas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7240" model="account.account">
 	<field name="code">7240</field>
@@ -1685,7 +1685,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart72')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Pârçjâs personâla izmaksas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7310" model="account.account">
 	<field name="code">7310</field>
@@ -1694,7 +1694,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart73')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Sociâlais nodoklis</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7320" model="account.account">
 	<field name="code">7320</field>
@@ -1703,7 +1703,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart73')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Pârçjâs sociâlâs izmaksas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7410" model="account.account">
 	<field name="code">7410</field>
@@ -1712,7 +1712,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart74')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Nemateriâlo ieguldîjumu vçrtîbas norakstîðana</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7420" model="account.account">
 	<field name="code">7420</field>
@@ -1721,7 +1721,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart74')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Pamatlîdzekïu nolietojums</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7440" model="account.account">
 	<field name="code">7440</field>
@@ -1730,7 +1730,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart74')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Apgrozâmo lîdzekïu vçrtîbas norakstîðana</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7510" model="account.account">
 	<field name="code">7510</field>
@@ -1739,7 +1739,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart75')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Dabas aizsardzîbas izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7530" model="account.account">
 	<field name="code">7530</field>
@@ -1748,7 +1748,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart75')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Nodevas par raþoðanâ izmantotiem zemes gabaliem</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7540" model="account.account">
 	<field name="code">7540</field>
@@ -1757,7 +1757,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart75')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Apdroðinnâðanas maksâjumi (izòemot darbinieku apdroðinâðanu)</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7550" model="account.account">
 	<field name="code">7550</field>
@@ -1766,7 +1766,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart75')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Pârçjie saimnieciskâs darbîbas izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7560" model="account.account">
 	<field name="code">7560</field>
@@ -1775,7 +1775,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart75')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Strâdnieku vervçðanas un apmâcîbas izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7570" model="account.account">
 	<field name="code">7570</field>
@@ -1784,7 +1784,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart75')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Komandçjuma izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7610" model="account.account">
 	<field name="code">7610</field>
@@ -1793,7 +1793,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart76')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Iesaiòojamais materiâls, tara</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7620" model="account.account">
 	<field name="code">7620</field>
@@ -1802,7 +1802,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart76')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Preèu transporta izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7630" model="account.account">
 	<field name="code">7630</field>
@@ -1811,7 +1811,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart76')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Preèu transporta apdroðinâðana</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7640" model="account.account">
 	<field name="code">7640</field>
@@ -1820,7 +1820,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart76')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Samaksâtâs komisijas naudas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7650" model="account.account">
 	<field name="code">7650</field>
@@ -1829,7 +1829,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart76')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Citi pârdoðanas izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7710" model="account.account">
 	<field name="code">7710</field>
@@ -1838,7 +1838,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart77')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Sakaru izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7720" model="account.account">
 	<field name="code">7720</field>
@@ -1847,7 +1847,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart77')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Kantora (biroja) izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7730" model="account.account">
 	<field name="code">7730</field>
@@ -1856,7 +1856,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart77')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Juristu pakalpojumu apmaksa</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7740" model="account.account">
 	<field name="code">7740</field>
@@ -1865,7 +1865,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart77')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Gada pârskata un revîzijas izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7750" model="account.account">
 	<field name="code">7750</field>
@@ -1874,7 +1874,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart77')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Naudas apgrozîjuma blakus izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7760" model="account.account">
 	<field name="code">7760</field>
@@ -1883,7 +1883,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart77')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Transporta izdevumi administrâcijas vajadzîbâm</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7770" model="account.account">
 	<field name="code">7770</field>
@@ -1892,7 +1892,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart77')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Citi vadîðanas un administrâcijas izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7810" model="account.account">
 	<field name="code">7810</field>
@@ -1901,7 +1901,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart78')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Pârskata periodâ iekïaujamie iepriekðçjo periodu izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7910" model="account.account">
 	<field name="code">7910</field>
@@ -1910,7 +1910,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart79')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Dzîvokïu saimniecîbas izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7920" model="account.account">
 	<field name="code">7920</field>
@@ -1919,7 +1919,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart79')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Komuâlâs saimniecîbas izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7930" model="account.account">
 	<field name="code">7930</field>
@@ -1928,7 +1928,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart79')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Sadzîves pakalpojumu izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7940" model="account.account">
 	<field name="code">7940</field>
@@ -1937,7 +1937,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart79')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Sabiedriskâs çdinâðanas izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7950" model="account.account">
 	<field name="code">7950</field>
@@ -1946,7 +1946,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart79')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Izglîtîbas iestâþu izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7960" model="account.account">
 	<field name="code">7960</field>
@@ -1955,7 +1955,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart79')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Medicîniskâs apkalpoðanas izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7970" model="account.account">
 	<field name="code">7970</field>
@@ -1964,7 +1964,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart79')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Kultûras un sporta iestâþu un pasâkumu izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7980" model="account.account">
 	<field name="code">7980</field>
@@ -1973,7 +1973,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart79')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Pârçjie sociâlâs infrastruktûras uzturçðanas izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8110" model="account.account">
 	<field name="code">8110</field>
@@ -1982,7 +1982,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart81')])]"/>
 	<field name="type">income</field>
 	<field name="name">Ieòçmumi no lîdzdalîbas, vçrtspapîriem un aizdevumiem</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8120" model="account.account">
 	<field name="code">8120</field>
@@ -1991,7 +1991,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart81')])]"/>
 	<field name="type">income</field>
 	<field name="name">Pârçjie ieòçmumi no procentiem un tiem pielîdzinâmi ieòçmumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8130" model="account.account">
 	<field name="code">8130</field>
@@ -2000,7 +2000,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart81')])]"/>
 	<field name="type">income</field>
 	<field name="name">Vekseïu diskonta ieòçmumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8140" model="account.account">
 	<field name="code">8140</field>
@@ -2009,7 +2009,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart81')])]"/>
 	<field name="type">income</field>
 	<field name="name">Ziedojumi un citi tiem pielîdzinâmi ieòçmumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8150" model="account.account">
 	<field name="code">8150</field>
@@ -2018,7 +2018,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart81')])]"/>
 	<field name="type">income</field>
 	<field name="name">Ienâkumi no valûtas kursa paaugstinâðanâs</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8160" model="account.account">
 	<field name="code">8160</field>
@@ -2027,7 +2027,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart81')])]"/>
 	<field name="type">income</field>
 	<field name="name">Saòemtâs soda naudas un lîgumsodi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_recv" model="account.account">
 	<field name="code">8170</field>
@@ -2036,7 +2036,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart81')])]"/>
 	<field name="type">income</field>
 	<field name="name">Peïòa no ârzemju valûtas pârdoðanas vai pirkðanas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8190" model="account.account">
 	<field name="code">8190</field>
@@ -2045,7 +2045,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart81')])]"/>
 	<field name="type">income</field>
 	<field name="name">Citi ieòçmumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8210" model="account.account">
 	<field name="code">8210</field>
@@ -2054,7 +2054,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart82')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Îstermiòa finansu ieguldîjumu vçrtîbas norakstîðana</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8220" model="account.account">
 	<field name="code">8220</field>
@@ -2063,7 +2063,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart82')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Samaksâtie procenti un tiem pielîdzinâmie izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8230" model="account.account">
 	<field name="code">8230</field>
@@ -2072,7 +2072,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart82')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Vekseïu diskonta izmaksas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8240" model="account.account">
 	<field name="code">8240</field>
@@ -2081,7 +2081,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart82')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Ilgtermiòa aizdevumu procentu samaksa</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8250" model="account.account">
 	<field name="code">8250</field>
@@ -2090,7 +2090,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart82')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Zaudçjumi no valûtu  kursa pazeminâðanâs</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8260" model="account.account">
 	<field name="code">8260</field>
@@ -2099,7 +2099,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart82')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Samaksâtâs soda naudas un lîgumsodi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_pay" model="account.account">
 	<field name="code">8270</field>
@@ -2108,7 +2108,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart82')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Zaudçjumi no ârzemju valûtas pirkðanas un pârdoðanas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8290" model="account.account">
 	<field name="code">8290</field>
@@ -2117,7 +2117,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart82')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Citi izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8310" model="account.account">
 	<field name="code">8310</field>
@@ -2126,7 +2126,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart83')])]"/>
 	<field name="type">income</field>
 	<field name="name">Ârkârtas ieòçmumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8410" model="account.account">
 	<field name="code">8410</field>
@@ -2135,7 +2135,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart84')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Ârkârtas izdevumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8610" model="account.account">
 	<field name="code">8610</field>
@@ -2144,7 +2144,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart86')])]"/>
 	<field name="type">income</field>
 	<field name="name">Peïòa vai zaudçjumi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8710" model="account.account">
 	<field name="code">8710</field>
@@ -2153,7 +2153,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart87')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Peïòas izlietojums</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8810" model="account.account">
 	<field name="code">8810</field>
@@ -2162,7 +2162,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart88')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Nodoklis no peïòas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8820" model="account.account">
 	<field name="code">8820</field>
@@ -2171,7 +2171,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart88')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Nodoklis par dabas resursu izmantoðanu no peïòas  maksâjamâ daïâ</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8830" model="account.account">
 	<field name="code">8830</field>
@@ -2180,7 +2180,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart88')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Nodoklis par zemi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8840" model="account.account">
 	<field name="code">8840</field>
@@ -2189,7 +2189,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart88')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Citi saimnieciskâs darbîbas izmaksâs neiekïaujamie nodokïi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 </data>
 </terp>

@@ -11,7 +11,7 @@
 	<field name="close_method">none</field>
 	<field name="parent_id" eval="[]"/>
 	<field name="type">view</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1" model="account.account">
 	<field name="code">1</field>
@@ -20,7 +20,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">BEFEKTETETT ESZKÖZÖK</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2" model="account.account">
 	<field name="code">2</field>
@@ -29,7 +29,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">KÉSZLETEK</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3" model="account.account">
 	<field name="code">3</field>
@@ -38,7 +38,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">KÖVETELÉSEK</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4" model="account.account">
 	<field name="code">4</field>
@@ -47,7 +47,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">KÖTELEZETTSÉGEK</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5" model="account.account">
 	<field name="code">5</field>
@@ -56,7 +56,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">KÖLTSÉGEK</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8" model="account.account">
 	<field name="code">8</field>
@@ -65,7 +65,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">RÁFORDÍTÁSOK</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart9" model="account.account">
 	<field name="code">9</field>
@@ -74,7 +74,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">BEVÉTELEK</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_cash" model="account.account">
 	<field name="code">1140</field>
@@ -83,7 +83,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Irodai eszközök</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1199" model="account.account">
 	<field name="code">1199</field>
@@ -92,7 +92,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Irodai eszközök ÉCS</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2610" model="account.account">
 	<field name="code">2610</field>
@@ -101,7 +101,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Áruk </field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3110" model="account.account">
 	<field name="code">3110</field>
@@ -110,7 +110,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Vevõk</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3111" model="account.account">
 	<field name="code">3111</field>
@@ -119,7 +119,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Külföldi vevõk</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3810" model="account.account">
 	<field name="code">3810</field>
@@ -128,7 +128,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Pénztár 1</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3811" model="account.account">
 	<field name="code">3811</field>
@@ -137,7 +137,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Pénztár 2</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3840" model="account.account">
 	<field name="code">3840</field>
@@ -146,7 +146,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Bank 1</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3841" model="account.account">
 	<field name="code">3841</field>
@@ -155,7 +155,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Bank 2</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4540" model="account.account">
 	<field name="code">4540</field>
@@ -164,7 +164,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Belföldi Szállítók</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4541" model="account.account">
 	<field name="code">4541</field>
@@ -173,7 +173,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Külföldi szállítók</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4660" model="account.account">
 	<field name="code">4660</field>
@@ -182,7 +182,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Visszaigényelhetõ ÁFA 25%</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4661" model="account.account">
 	<field name="code">4661</field>
@@ -191,7 +191,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Visszaigényelhetõ ÁFA 12%</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4662" model="account.account">
 	<field name="code">4662</field>
@@ -200,7 +200,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Visszaigényelhetõ ÁFA 5%</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4663" model="account.account">
 	<field name="code">4663</field>
@@ -209,7 +209,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Visszaigényelhetõ ÁFA adómentes</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4670" model="account.account">
 	<field name="code">4670</field>
@@ -218,7 +218,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Fizetendõ ÁFA 25%</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4671" model="account.account">
 	<field name="code">4671</field>
@@ -227,7 +227,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Fizetendõ ÁFA 15%</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4672" model="account.account">
 	<field name="code">4672</field>
@@ -236,7 +236,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Fizetendõ ÁFA 5%</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4673" model="account.account">
 	<field name="code">4673</field>
@@ -245,7 +245,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Fizetendõ ÁFA adómentes</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5200" model="account.account">
 	<field name="code">5200</field>
@@ -254,7 +254,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Bérleti díj</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5210" model="account.account">
 	<field name="code">5210</field>
@@ -263,7 +263,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Telefon</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5990" model="account.account">
 	<field name="code">5990</field>
@@ -272,7 +272,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Költségek</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_expense" model="account.account">
 	<field name="code">8140</field>
@@ -281,7 +281,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart8')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Eladott áruk beszerzési értéke</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_pay" model="account.account">
 	<field name="code">8700</field>
@@ -290,7 +290,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart8')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Árfolyamveszteség</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_income" model="account.account">
 	<field name="code">9110</field>
@@ -299,7 +299,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart9')])]"/>
 	<field name="type">income</field>
 	<field name="name">Belföldi árbevétel</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart9111" model="account.account">
 	<field name="code">9111</field>
@@ -308,7 +308,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart9')])]"/>
 	<field name="type">income</field>
 	<field name="name">Külföldi árbevétel</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_recv" model="account.account">
 	<field name="code">9700</field>
@@ -317,7 +317,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart9')])]"/>
 	<field name="type">income</field>
 	<field name="name">Árfolyamnyereség</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 </data>
 </terp>

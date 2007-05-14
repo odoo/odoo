@@ -11,7 +11,7 @@
 	<field name="close_method">none</field>
 	<field name="parent_id" eval="[]"/>
 	<field name="type">view</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1000" model="account.account">
 	<field name="code">1000</field>
@@ -20,7 +20,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">流動資產</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_cash" model="account.account">
 	<field name="code">1061</field>
@@ -29,7 +29,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">支票戶頭</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1065" model="account.account">
 	<field name="code">1065</field>
@@ -38,7 +38,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">零用金</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1200" model="account.account">
 	<field name="code">1200</field>
@@ -47,7 +47,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">應收帳款</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1205" model="account.account">
 	<field name="code">1205</field>
@@ -56,7 +56,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">呆帳備抵</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1500" model="account.account">
 	<field name="code">1500</field>
@@ -65,7 +65,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">存貨資產</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1520" model="account.account">
 	<field name="code">1520</field>
@@ -74,7 +74,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">庫存 / 硬體</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1530" model="account.account">
 	<field name="code">1530</field>
@@ -83,7 +83,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">庫存 / 軟體</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1540" model="account.account">
 	<field name="code">1540</field>
@@ -92,7 +92,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">庫存 / 二級市場零件</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1800" model="account.account">
 	<field name="code">1800</field>
@@ -101,7 +101,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">資本資產</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1820" model="account.account">
 	<field name="code">1820</field>
@@ -110,7 +110,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">辦公室裝璜及設備</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1825" model="account.account">
 	<field name="code">1825</field>
@@ -119,7 +119,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">累計分期付款 - 裝璜及設備.</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1840" model="account.account">
 	<field name="code">1840</field>
@@ -128,7 +128,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">運輸工具</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1845" model="account.account">
 	<field name="code">1845</field>
@@ -137,7 +137,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">累計分期付款 - 運輸工具</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2000" model="account.account">
 	<field name="code">2000</field>
@@ -146,7 +146,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">流動負債</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2100" model="account.account">
 	<field name="code">2100</field>
@@ -155,7 +155,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">應付帳款</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2160" model="account.account">
 	<field name="code">2160</field>
@@ -164,7 +164,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">應付公司稅</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2190" model="account.account">
 	<field name="code">2190</field>
@@ -173,7 +173,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">應付所得稅</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2310" model="account.account">
 	<field name="code">2310</field>
@@ -182,7 +182,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">商品服務稅</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2311" model="account.account">
 	<field name="code">2311</field>
@@ -191,7 +191,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">地方稅</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2600" model="account.account">
 	<field name="code">2600</field>
@@ -200,7 +200,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">長期負債</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2620" model="account.account">
 	<field name="code">2620</field>
@@ -209,7 +209,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">銀行借款</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2680" model="account.account">
 	<field name="code">2680</field>
@@ -218,7 +218,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">股東貸款</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3300" model="account.account">
 	<field name="code">3300</field>
@@ -227,7 +227,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">股份資本</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3350" model="account.account">
 	<field name="code">3350</field>
@@ -236,7 +236,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">tax</field>
 	<field name="name">普通股份</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3500" model="account.account">
 	<field name="code">3500</field>
@@ -245,7 +245,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">保留盈餘</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3590" model="account.account">
 	<field name="code">3590</field>
@@ -254,7 +254,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">tax</field>
 	<field name="name">保留盈餘 - 去年度</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3600" model="account.account">
 	<field name="code">3600</field>
@@ -263,7 +263,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">tax</field>
 	<field name="name">流動盈餘</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4000" model="account.account">
 	<field name="code">4000</field>
@@ -272,7 +272,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">銷售盈餘</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_income" model="account.account">
 	<field name="code">4020</field>
@@ -281,7 +281,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">銷售 / 硬體</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4030" model="account.account">
 	<field name="code">4030</field>
@@ -290,7 +290,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">銷售 / 軟體</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4040" model="account.account">
 	<field name="code">4040</field>
@@ -299,7 +299,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">銷售 / 二級市場零件</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4300" model="account.account">
 	<field name="code">4300</field>
@@ -308,7 +308,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">諮詢盈餘</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4320" model="account.account">
 	<field name="code">4320</field>
@@ -317,7 +317,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">諮詢</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4330" model="account.account">
 	<field name="code">4330</field>
@@ -326,7 +326,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">程式設計</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4400" model="account.account">
 	<field name="code">4400</field>
@@ -335,7 +335,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">其它盈餘</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4430" model="account.account">
 	<field name="code">4430</field>
@@ -344,7 +344,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">運銷費</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4440" model="account.account">
 	<field name="code">4440</field>
@@ -353,7 +353,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">利息</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_recv" model="account.account">
 	<field name="code">4450</field>
@@ -362,7 +362,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Foreign Exchange Gain</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5000" model="account.account">
 	<field name="code">5000</field>
@@ -371,7 +371,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">貨銷成本</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_expense" model="account.account">
 	<field name="code">5010</field>
@@ -380,7 +380,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">採購</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5020" model="account.account">
 	<field name="code">5020</field>
@@ -389,7 +389,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">貨銷成本 / 硬體</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5030" model="account.account">
 	<field name="code">5030</field>
@@ -398,7 +398,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">貨銷成本 / 軟體</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5040" model="account.account">
 	<field name="code">5040</field>
@@ -407,7 +407,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">貨銷成本 / 二級市場零件</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5100" model="account.account">
 	<field name="code">5100</field>
@@ -416,7 +416,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">運費</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5400" model="account.account">
 	<field name="code">5400</field>
@@ -425,7 +425,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">薪資支出</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5410" model="account.account">
 	<field name="code">5410</field>
@@ -434,7 +434,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">薪資</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5420" model="account.account">
 	<field name="code">5420</field>
@@ -443,7 +443,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">保險支出</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5430" model="account.account">
 	<field name="code">5430</field>
@@ -452,7 +452,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">退休金支出</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5440" model="account.account">
 	<field name="code">5440</field>
@@ -461,7 +461,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">補償金支出</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5470" model="account.account">
 	<field name="code">5470</field>
@@ -470,7 +470,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">員工福利</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5600" model="account.account">
 	<field name="code">5600</field>
@@ -479,7 +479,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">日常及管理支出</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5610" model="account.account">
 	<field name="code">5610</field>
@@ -488,7 +488,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">會計法務</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5615" model="account.account">
 	<field name="code">5615</field>
@@ -497,7 +497,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">廣告行銷</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5620" model="account.account">
 	<field name="code">5620</field>
@@ -506,7 +506,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">壞帳</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5660" model="account.account">
 	<field name="code">5660</field>
@@ -515,7 +515,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">分期支出</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5680" model="account.account">
 	<field name="code">5680</field>
@@ -524,7 +524,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">所得稅</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5685" model="account.account">
 	<field name="code">5685</field>
@@ -533,7 +533,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">保險</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5690" model="account.account">
 	<field name="code">5690</field>
@@ -542,7 +542,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">利息及銀行手續費</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5700" model="account.account">
 	<field name="code">5700</field>
@@ -551,7 +551,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">辦公用品</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5760" model="account.account">
 	<field name="code">5760</field>
@@ -560,7 +560,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">租金</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5765" model="account.account">
 	<field name="code">5765</field>
@@ -569,7 +569,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">維修管理費</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5780" model="account.account">
 	<field name="code">5780</field>
@@ -578,7 +578,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">電信費</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5781" model="account.account">
 	<field name="code">5781</field>
@@ -587,7 +587,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">網路連線費</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5785" model="account.account">
 	<field name="code">5785</field>
@@ -596,7 +596,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">旅費及娛樂</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5790" model="account.account">
 	<field name="code">5790</field>
@@ -605,7 +605,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">工具</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5795" model="account.account">
 	<field name="code">5795</field>
@@ -614,7 +614,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">註冊費</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5800" model="account.account">
 	<field name="code">5800</field>
@@ -623,7 +623,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">權利金</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_pay" model="account.account">
 	<field name="code">5810</field>
@@ -632,7 +632,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Foreign Exchange Loss</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 </data>
 </terp>

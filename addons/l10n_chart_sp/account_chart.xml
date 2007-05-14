@@ -11,7 +11,7 @@
 	<field name="close_method">none</field>
 	<field name="parent_id" eval="[]"/>
 	<field name="type">view</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1" model="account.account">
 	<field name="code">1</field>
@@ -20,7 +20,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Grupo 1: financiación básica</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2" model="account.account">
 	<field name="code">2</field>
@@ -29,7 +29,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Grupo 2: inmovilizado</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3" model="account.account">
 	<field name="code">3</field>
@@ -38,7 +38,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Grupo 3: existencias</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4" model="account.account">
 	<field name="code">4</field>
@@ -47,7 +47,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Grupo 4: acreedores y deudores por operaciones de tráfico</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5" model="account.account">
 	<field name="code">5</field>
@@ -56,7 +56,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Grupo 5: cuentas financieras</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6" model="account.account">
 	<field name="code">6</field>
@@ -65,7 +65,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Grupo 6: compras y gastos</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7" model="account.account">
 	<field name="code">7</field>
@@ -74,7 +74,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Grupo 7: ventas e ingresos</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_cash" model="account.account">
 	<field name="code">100000000</field>
@@ -83,7 +83,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Capital</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart110000000" model="account.account">
 	<field name="code">110000000</field>
@@ -92,7 +92,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Reservas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart120000000" model="account.account">
 	<field name="code">120000000</field>
@@ -101,7 +101,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Resultados pendientes de aplicación</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart130000000" model="account.account">
 	<field name="code">130000000</field>
@@ -110,7 +110,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Ingresos a distribuir en varios ejercicios</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart140000000" model="account.account">
 	<field name="code">140000000</field>
@@ -119,7 +119,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Provisiones para riesgos y gastos</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart150000000" model="account.account">
 	<field name="code">150000000</field>
@@ -128,7 +128,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Empréstitos y otras emisiones análogas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart160000000" model="account.account">
 	<field name="code">160000000</field>
@@ -137,7 +137,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Deudas a largo plazo con empresas del grupo y asociadas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart170000000" model="account.account">
 	<field name="code">170000000</field>
@@ -146,7 +146,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Deudas a largo plazo por prestamos recibidos y otros conceptos</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart180000000" model="account.account">
 	<field name="code">180000000</field>
@@ -155,7 +155,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Fianzas y depósitos recibidos a largo plazo</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart190000000" model="account.account">
 	<field name="code">190000000</field>
@@ -164,7 +164,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Situaciones transitorias de financiación</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart200000000" model="account.account">
 	<field name="code">200000000</field>
@@ -173,7 +173,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Gastos de establecimiento</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart210000000" model="account.account">
 	<field name="code">210000000</field>
@@ -182,7 +182,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Inmovilizaciones inmateriales</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart220000000" model="account.account">
 	<field name="code">220000000</field>
@@ -191,7 +191,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Inmovilizaciones materiales</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart230000000" model="account.account">
 	<field name="code">230000000</field>
@@ -200,7 +200,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Inmovilizaciones materiales en curso</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart240000000" model="account.account">
 	<field name="code">240000000</field>
@@ -209,7 +209,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Inversiones financieras en empresas del grupo y asociadas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart250000000" model="account.account">
 	<field name="code">250000000</field>
@@ -218,7 +218,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Otras inversiones financieras permanentes</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart260000000" model="account.account">
 	<field name="code">260000000</field>
@@ -227,7 +227,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Fianzas y depósitos constituidos a largo plazo</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart270000000" model="account.account">
 	<field name="code">270000000</field>
@@ -236,7 +236,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Gastos a distribuir en varios ejercicios</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart280000000" model="account.account">
 	<field name="code">280000000</field>
@@ -245,7 +245,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Amortización acumulada del inmovilizado</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart290000000" model="account.account">
 	<field name="code">290000000</field>
@@ -254,7 +254,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Provisiones de inmovilizado</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart300000000" model="account.account">
 	<field name="code">300000000</field>
@@ -263,7 +263,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Comerciales</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart310000000" model="account.account">
 	<field name="code">310000000</field>
@@ -272,7 +272,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Materias primas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart320000000" model="account.account">
 	<field name="code">320000000</field>
@@ -281,7 +281,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Otros aprovisionamientos</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart330000000" model="account.account">
 	<field name="code">330000000</field>
@@ -290,7 +290,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Productos en curso</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart340000000" model="account.account">
 	<field name="code">340000000</field>
@@ -299,7 +299,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Productos semiterminados</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart350000000" model="account.account">
 	<field name="code">350000000</field>
@@ -308,7 +308,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Productos terminados</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart360000000" model="account.account">
 	<field name="code">360000000</field>
@@ -317,7 +317,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Subproductos, residuos y materiales recuperados</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart390000000" model="account.account">
 	<field name="code">390000000</field>
@@ -326,7 +326,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Provisiones por depreciación de existencias</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart400000000" model="account.account">
 	<field name="code">400000000</field>
@@ -335,7 +335,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">view</field>
 	<field name="name">Proveedores</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart410000000" model="account.account">
 	<field name="code">410000000</field>
@@ -344,7 +344,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">view</field>
 	<field name="name">Acreedores varios</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart430000000" model="account.account">
 	<field name="code">430000000</field>
@@ -353,7 +353,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">view</field>
 	<field name="name">Clientes</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart431000000" model="account.account">
 	<field name="code">431000000</field>
@@ -362,7 +362,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">view</field>
 	<field name="name">Clientes, efectos comerciales a cobrar</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart440000000" model="account.account">
 	<field name="code">440000000</field>
@@ -371,7 +371,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">view</field>
 	<field name="name">Deudores varios</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart460000000" model="account.account">
 	<field name="code">460000000</field>
@@ -380,7 +380,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">view</field>
 	<field name="name">Personal</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart470000000" model="account.account">
 	<field name="code">470000000</field>
@@ -389,7 +389,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">view</field>
 	<field name="name">Administraciones públicas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart472000000" model="account.account">
 	<field name="code">472000000</field>
@@ -398,7 +398,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">view</field>
 	<field name="name">Hacienda Pública, IVA soportado</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart472000001" model="account.account">
 	<field name="code">472000001</field>
@@ -407,7 +407,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">view</field>
 	<field name="name">IVA soportado 4%</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart472000002" model="account.account">
 	<field name="code">472000002</field>
@@ -416,7 +416,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">view</field>
 	<field name="name">IVA soportado 7%</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart472000003" model="account.account">
 	<field name="code">472000003</field>
@@ -425,7 +425,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">view</field>
 	<field name="name">IVA soportado 16%</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart473000000" model="account.account">
 	<field name="code">473000000</field>
@@ -434,7 +434,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">view</field>
 	<field name="name">Hacienda Pública, retenciones y pagos a cuenta</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart475100000" model="account.account">
 	<field name="code">475100000</field>
@@ -443,7 +443,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">view</field>
 	<field name="name">Hacienda Pública, acreedor por retenciones practicadas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart477000000" model="account.account">
 	<field name="code">477000000</field>
@@ -452,7 +452,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">view</field>
 	<field name="name">Hacienda Pública, IVA repercutido</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart477000001" model="account.account">
 	<field name="code">477000001</field>
@@ -461,7 +461,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">view</field>
 	<field name="name">IVA repercutido 4%</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart477000002" model="account.account">
 	<field name="code">477000002</field>
@@ -470,7 +470,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">view</field>
 	<field name="name">IVA repercutido 7%</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart477000003" model="account.account">
 	<field name="code">477000003</field>
@@ -479,7 +479,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">view</field>
 	<field name="name">IVA repercutido 16%</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart480000000" model="account.account">
 	<field name="code">480000000</field>
@@ -488,7 +488,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">view</field>
 	<field name="name">Ajustes por periodificación</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart490000000" model="account.account">
 	<field name="code">490000000</field>
@@ -497,7 +497,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">view</field>
 	<field name="name">Provisiones por operaciones de tráfico</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart500000000" model="account.account">
 	<field name="code">500000000</field>
@@ -506,7 +506,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Empréstitos y otras emisiones análogas a corto plazo</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart510000000" model="account.account">
 	<field name="code">510000000</field>
@@ -515,7 +515,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5')])]"/>
 	<field name="type">view</field>
 	<field name="name">Deudas a corto plazo con empresas del grupo y asociadas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart520000000" model="account.account">
 	<field name="code">520000000</field>
@@ -524,7 +524,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5')])]"/>
 	<field name="type">view</field>
 	<field name="name">Deudas a corto plazo por préstamos recibidos y otros conceptos</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart530000000" model="account.account">
 	<field name="code">530000000</field>
@@ -533,7 +533,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Inversiones financieras a corto plazo en empresas del grupo y asociadas</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart540000000" model="account.account">
 	<field name="code">540000000</field>
@@ -542,7 +542,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Otras inversiones financieras temporales</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart550000000" model="account.account">
 	<field name="code">550000000</field>
@@ -551,7 +551,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Otras cuentas no bancarias</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart560000000" model="account.account">
 	<field name="code">560000000</field>
@@ -560,7 +560,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Fianzas y depósitos recibidos y constituidos a corto plazo</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart569000000" model="account.account">
 	<field name="code">569000000</field>
@@ -569,7 +569,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Tesorería</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart570000000" model="account.account">
 	<field name="code">570000000</field>
@@ -578,7 +578,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Caja, euros</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart571000000" model="account.account">
 	<field name="code">571000000</field>
@@ -587,7 +587,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Caja, moneda extranjera</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart572000000" model="account.account">
 	<field name="code">572000000</field>
@@ -596,7 +596,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Bancos e instituciones de crédito, c/c. vista, euros</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart573000000" model="account.account">
 	<field name="code">573000000</field>
@@ -605,7 +605,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Bancos e instituciones de crédito, c/c. vista, moneda extranjera</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart574000000" model="account.account">
 	<field name="code">574000000</field>
@@ -614,7 +614,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Bancos e instituciones de crédito, cuentas de ahorro, euros</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart575000000" model="account.account">
 	<field name="code">575000000</field>
@@ -623,7 +623,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Bancos e instituciones de crédito, cuentas de ahorro, moneda extranjera</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart580000000" model="account.account">
 	<field name="code">580000000</field>
@@ -632,7 +632,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Ajustes por periodificación</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart590000000" model="account.account">
 	<field name="code">590000000</field>
@@ -641,7 +641,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5')])]"/>
 	<field name="type">view</field>
 	<field name="name">Provisiones financieras</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_expense" model="account.account">
 	<field name="code">600000000</field>
@@ -650,7 +650,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart6')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Compras</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart608000000" model="account.account">
 	<field name="code">608000000</field>
@@ -659,7 +659,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart6')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Devoluciones de compras y operaciones similares</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart610000000" model="account.account">
 	<field name="code">610000000</field>
@@ -668,7 +668,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart6')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Variación de existencias</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart620000000" model="account.account">
 	<field name="code">620000000</field>
@@ -677,7 +677,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart6')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Servicios exteriores</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart630000000" model="account.account">
 	<field name="code">630000000</field>
@@ -686,7 +686,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart6')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Tributos</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart640000000" model="account.account">
 	<field name="code">640000000</field>
@@ -695,7 +695,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart6')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Gastos de personal</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart650000000" model="account.account">
 	<field name="code">650000000</field>
@@ -704,7 +704,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart6')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Otros gastos de gestión</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart660000000" model="account.account">
 	<field name="code">660000000</field>
@@ -713,7 +713,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart6')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Gastos financieros</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart665000000" model="account.account">
 	<field name="code">665000000</field>
@@ -722,7 +722,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart6')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Descuentos sobre ventas por pronto pago</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_pay" model="account.account">
 	<field name="code">668000000</field>
@@ -731,7 +731,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart6')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Diferencias negativas de cambio</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart670000000" model="account.account">
 	<field name="code">670000000</field>
@@ -740,7 +740,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart6')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Pérdidas procedentes del inmovilizado y gastos excepcionales</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart680000000" model="account.account">
 	<field name="code">680000000</field>
@@ -749,7 +749,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart6')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Dotaciones para amortizaciones</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart690000000" model="account.account">
 	<field name="code">690000000</field>
@@ -758,7 +758,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart6')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Dotaciones a las provisiones</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_income" model="account.account">
 	<field name="code">700000000</field>
@@ -767,7 +767,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">income</field>
 	<field name="name">Ventas de mercaderías, de producción propia, de servicios, etc.</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart708000000" model="account.account">
 	<field name="code">708000000</field>
@@ -776,7 +776,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">income</field>
 	<field name="name">Devoluciones de ventas y operaciones similares</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart710000000" model="account.account">
 	<field name="code">710000000</field>
@@ -785,7 +785,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">income</field>
 	<field name="name">Variación de existencias</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart730000000" model="account.account">
 	<field name="code">730000000</field>
@@ -794,7 +794,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">income</field>
 	<field name="name">Trabajos realizados para la empresa</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart740000000" model="account.account">
 	<field name="code">740000000</field>
@@ -803,7 +803,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">income</field>
 	<field name="name">Subvenciones a la explotación</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart750000000" model="account.account">
 	<field name="code">750000000</field>
@@ -812,7 +812,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">income</field>
 	<field name="name">Otros ingresos de gestión</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart760000000" model="account.account">
 	<field name="code">760000000</field>
@@ -821,7 +821,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">income</field>
 	<field name="name">Ingresos financieros</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart765000000" model="account.account">
 	<field name="code">765000000</field>
@@ -830,7 +830,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">income</field>
 	<field name="name">Descuentos sobre compras por pronto pago</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_recv" model="account.account">
 	<field name="code">768000000</field>
@@ -839,7 +839,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">income</field>
 	<field name="name">Diferencias positivas de cambio</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart770000000" model="account.account">
 	<field name="code">770000000</field>
@@ -848,7 +848,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">income</field>
 	<field name="name">Beneficios procedentes de inmovilizados e ingresos excepcionales</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart790000000" model="account.account">
 	<field name="code">790000000</field>
@@ -857,7 +857,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">income</field>
 	<field name="name">Excesos y aplicaciones de provisiones</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 </data>
 </terp>

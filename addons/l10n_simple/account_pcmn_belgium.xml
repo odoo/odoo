@@ -9,266 +9,266 @@
 	<record model="account.account" id="a0">
 		<field name="name">Account chart</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="code">0</field>
 	</record>
 	<record model="account.account" id="a1">
 		<field name="name">Balance Sheet</field>
 		<field name="code">1-5</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" eval="[(6,0,[a0])]"></field>
 	</record>
 	<record model="account.account" id="a01">
 		<field name="name">Equity</field>
 		<field name="code">1</field>
 		<field name="type">equity</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" eval="[(6,0,[a1])]"></field>
 	</record>
 	<record model="account.account" id="a2">
 		<field name="name">Long Term Assets</field>
 		<field name="code">2*</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" eval="[(6,0,[a1])]"/>
 	</record>
 		<record model="account.account">
 			<field name="name">Incorporation expenses</field>
 			<field name="code">20</field>
 			<field name="type">asset</field>
-			<field name="currency_id" ref="base.EUR"/>
+
 			<field name="parent_id" eval="[(6,0,[a2])]"/>
 		</record>
 		<record model="account.account">
 			<field name="name">Intangible assets</field>
 			<field name="code">21</field>
 			<field name="type">asset</field>
-			<field name="currency_id" ref="base.EUR"/>
+
 			<field name="parent_id" eval="[(6,0,[a2])]"/>
 		</record>
 		<record model="account.account">
 			<field name="name">Lands and buildings</field>
 			<field name="code">22</field>
 			<field name="type">asset</field>
-			<field name="currency_id" ref="base.EUR"/>
+
 			<field name="parent_id" eval="[(6,0,[a2])]"/>
 		</record>
 		<record model="account.account">
 			<field name="name">Facilities, machines and tools</field>
 			<field name="code">23</field>
 			<field name="type">asset</field>
-			<field name="currency_id" ref="base.EUR"/>
+
 			<field name="parent_id" eval="[(6,0,[a2])]"/>
 		</record>
 		<record model="account.account">
 			<field name="name">Office supplies and mobile equipment</field>
 			<field name="code">24</field>
 			<field name="type">asset</field>
-			<field name="currency_id" ref="base.EUR"/>
+
 			<field name="parent_id" eval="[(6,0,[a2])]"/>
 		</record>
 		<record model="account.account">
 			<field name="name">Financial assets</field>
 			<field name="code">28</field>
 			<field name="type">asset</field>
-			<field name="currency_id" ref="base.EUR"/>
+
 			<field name="parent_id" eval="[(6,0,[a2])]"/>
 		</record>
 		<record model="account.account">
 			<field name="name">Long Term Receivables</field>
 			<field name="code">29</field>
 			<field name="type">asset</field>
-			<field name="currency_id" ref="base.EUR"/>
+
 			<field name="parent_id" eval="[(6,0,[a2])]"/>
 		</record>
 	<record model="account.account" id="a3">
 		<field name="name">Current</field>
 		<field name="code">3-5*</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" eval="[(6,0,[a1])]"/>
 	</record>
 			<record model="account.account" id="a7">
 				<field name="name">Inventory and goods in process</field>
 				<field name="code">3*</field>
 				<field name="type">view</field>
-				<field name="currency_id" ref="base.EUR"/>
+
 				<field name="parent_id" eval="[(6,0,[a3])]"/>
 			</record>
 				<record model="account.account" id="a04a">
 					<field name="name">Raw material procurement</field>
 					<field name="code">30</field>
 					<field name="type">asset</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[a7])]"/>
 				</record>
 				<record model="account.account" id="a04b">
 					<field name="name">Other procurements</field>
 					<field name="code">31</field>
 					<field name="type">asset</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[a7])]"/>
 				</record>
 				<record model="account.account" id="a04c">
 					<field name="name">Goods in process</field>
 					<field name="code">32</field>
 					<field name="type">asset</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[a7])]"/>
 				</record>
 				<record model="account.account" id="a04d">
 					<field name="name">Finished goods</field>
 					<field name="code">33</field>
 					<field name="type">asset</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[a7])]"/>
 				</record>
 				<record model="account.account" id="a04e">
 					<field name="name">Merchandise</field>
 					<field name="code">34</field>
 					<field name="type">view</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[a7])]"/>
 				</record>
 					<record model="account.account" id="a04e1">
 						<field name="name">Merchandise Type A</field>
 						<field name="code">3400</field>
 						<field name="type">asset</field>
-						<field name="currency_id" ref="base.EUR"/>
+
 						<field name="parent_id" eval="[(6,0,[a04e])]"/>
 					</record>
 					<record model="account.account" id="a04e2">
 						<field name="name">Merchandise Type B</field>
 						<field name="code">3401</field>
 						<field name="type">asset</field>
-						<field name="currency_id" ref="base.EUR"/>
+
 						<field name="parent_id" eval="[(6,0,[a04e])]"/>
 					</record>
 				<record model="account.account" id="a04_35">
 					<field name="name">Assets for sales</field>
 					<field name="code">35</field>
 					<field name="type">asset</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[a7])]"/>
 				</record>
 				<record model="account.account" id="a04_36">
 					<field name="name">Prepayment paid for stocked goods</field>
 					<field name="code">36</field>
 					<field name="type">asset</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[a7])]"/>
 				</record>
 				<record model="account.account" id="a04_37">
 					<field name="name">Orders in progress</field>
 					<field name="code">37</field>
 					<field name="type">asset</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[a7])]"/>
 				</record>
 			<record model="account.account" id="a5_b">
 				<field name="name">Short term receivables and payables</field>
 				<field name="code">4*</field>
 				<field name="type">view</field>
-				<field name="currency_id" ref="base.EUR"/>
+
 				<field name="parent_id" eval="[(6,0,[a3])]"/>
 			</record>
 			<record model="account.account" id="a5">
 				<field name="name">Account receivable</field>
 				<field name="code">40-41*</field>
 				<field name="type">view</field>
-				<field name="currency_id" ref="base.EUR"/>
+
 				<field name="parent_id" eval="[(6,0,[a5_b])]"/>
 			</record>
 				<record model="account.account" id="account.a_recv">
 					<field name="name">Main Receivable</field>
 					<field name="code">40</field>
 					<field name="type">receivable</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[a5])]"/>
 				</record>
 				<record model="account.account" id="a_recv2">
 					<field name="name">Other Receivables</field>
 					<field name="code">41</field>
 					<field name="type">view</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[a5])]"/>
 				</record>
 					<record model="account.account" id="vat_refund">
 						<field name="name">Refundable VAT</field>
 						<field name="code">41100</field>
 						<field name="type">tax</field>
-						<field name="currency_id" ref="base.EUR"/>
+
 						<field name="parent_id" eval="[(6,0,[a_recv2])]"/>
 					</record>
 					<record model="account.account" id="vat_refund6">
 						<field name="name">Refundable VAT (6%)</field>
 						<field name="code">41101</field>
 						<field name="type">tax</field>
-						<field name="currency_id" ref="base.EUR"/>
+
 						<field name="parent_id" eval="[(6,0,[a_recv2])]"/>
 					</record>
 			<record model="account.account" id="a6">
 				<field name="name">Payable</field>
 				<field name="code">42-49*</field>
 				<field name="type">view</field>
-				<field name="currency_id" ref="base.EUR"/>
+
 				<field name="parent_id" eval="[(6,0,[a5_b])]"/>
 			</record>
 				<record model="account.account" id="account.a_pay">
 					<field name="name">Main Payable</field>
 					<field name="code">440</field>
 					<field name="type">payable</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[a6])]"/>
 				</record>
 				<record model="account.account">
 					<field name="name">Credit Cards</field>
 					<field name="code">430</field>
 					<field name="type">payable</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[a6])]"/>
 				</record>
 			<record model="account.account" id="a_45">
 				<field name="name">Tax liabilities</field>
 				<field name="code">45</field>
 				<field name="type">view</field>
-				<field name="currency_id" ref="base.EUR"/>
+
 				<field name="parent_id" eval="[(6,0,[a5_b])]"/>
 			</record>
 			<record model="account.account" id="vat_payable">
 				<field name="name">Payable VAT</field>
 				<field name="code">45100</field>
 				<field name="type">tax</field>
-				<field name="currency_id" ref="base.EUR"/>
+
 				<field name="parent_id" eval="[(6,0,[a_45])]"/>
 			</record>
 			<record model="account.account" id="vat_payable6">
 				<field name="name">Payable VAT (6%)</field>
 				<field name="code">45101</field>
 				<field name="type">tax</field>
-				<field name="currency_id" ref="base.EUR"/>
+
 				<field name="parent_id" eval="[(6,0,[a_45])]"/>
 			</record>
 			<record model="account.account" id="a4">
 				<field name="name">Cash Accounts</field>
 				<field name="code">5*</field>
 				<field name="type">view</field>
-				<field name="currency_id" ref="base.EUR"/>
+
 				<field name="parent_id" eval="[(6,0,[a3])]"/>
 			</record>
 				<record model="account.account" id="bank">
 					<field name="name">Bank Account</field>
 					<field name="code">55001</field>
 					<field name="type">cash</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[a4])]"/>
 				</record>
 				<record model="account.account" id="account.cash">
 					<field name="name">Petty Cash</field>
 					<field name="code">57</field>
 					<field name="type">cash</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[a4])]"/>
 				</record>
 	<record model="account.account" id="a10">
@@ -276,7 +276,7 @@
 		<field name="sign">1</field>
 		<field name="code">6-7</field>
 		<field name="type">view</field>
-		<field name="currency_id" ref="base.EUR"/>
+
 		<field name="parent_id" eval="[(6,0,[a0])]"/>
 	</record>
 		<record model="account.account" id="a11">
@@ -284,35 +284,35 @@
 			<field name="sign">-1</field>
 			<field name="code">7</field>
 			<field name="type">view</field>
-			<field name="currency_id" ref="base.EUR"/>
+
 			<field name="parent_id" eval="[(6,0,[a10])]"/>
 		</record>
 			<record model="account.account" id="account_a_sale2">
 				<field name="name">Merchandise Sales</field>
 				<field name="code">700</field>
 				<field name="type">income</field>
-				<field name="currency_id" ref="base.EUR"/>
+
 				<field name="parent_id" eval="[(6,0,[a11])]"/>
 			</record>
 			<record model="account.account" id="account.a_sale">
 				<field name="name">Products Sales</field>
 				<field name="code">701</field>
 				<field name="type">income</field>
-				<field name="currency_id" ref="base.EUR"/>
+
 				<field name="parent_id" eval="[(6,0,[a11])]"/>
 			</record>
 			<record model="account.account">
 				<field name="name">Service Sales</field>
 				<field name="code">705</field>
 				<field name="type">income</field>
-				<field name="currency_id" ref="base.EUR"/>
+
 				<field name="parent_id" eval="[(6,0,[a11])]"/>
 			</record>
 			<record model="account.account">
 				<field name="name">Financials Interests</field>
 				<field name="code">751</field>
 				<field name="type">income</field>
-				<field name="currency_id" ref="base.EUR"/>
+
 				<field name="parent_id" eval="[(6,0,[a11])]"/>
 			</record>
 
@@ -321,182 +321,182 @@
 			<field name="sign">-1</field>
 			<field name="code">6</field>
 			<field name="type">view</field>
-			<field name="currency_id" ref="base.EUR"/>
+
 			<field name="parent_id" eval="[(6,0,[a10])]"/>
 		</record>
 			<record model="account.account" id="amerch">
 				<field name="name">Merchandise</field>
 				<field name="code">60</field>
 				<field name="type">view</field>
-				<field name="currency_id" ref="base.EUR"/>
+
 				<field name="parent_id" eval="[(6,0,[a12])]"/>
 			</record>
 				<record model="account.account" id="account.a_expense">
 					<field name="name">Products Purchase</field>
 					<field name="code">600</field>
 					<field name="type">expense</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[amerch])]"/>
 				</record>
 				<record model="account.account">
 					<field name="name">Accessories Purchase</field>
 					<field name="code">601</field>
 					<field name="type">expense</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[amerch])]"/>
 				</record>
 				<record model="account.account">
 					<field name="name">Subcontractor Purchase</field>
 					<field name="code">602</field>
 					<field name="type">expense</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[amerch])]"/>
 				</record>
 				<record model="account.account">
 					<field name="name">Merchandise Purchase</field>
 					<field name="code">604</field>
 					<field name="type">expense</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[amerch])]"/>
 				</record>
 				<record model="account.account">
 					<field name="name">Discounts</field>
 					<field name="code">608</field>
 					<field name="type">expense</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[amerch])]"/>
 				</record>
 			<record model="account.account" id="a13">
 				<field name="name">Services Purchase</field>
 				<field name="code">61</field>
 				<field name="type">view</field>
-				<field name="currency_id" ref="base.EUR"/>
+
 				<field name="parent_id" eval="[(6,0,[a12])]"/>
 			</record>
 				<record model="account.account">
 					<field name="name">Rent and lease</field>
 					<field name="code">610</field>
 					<field name="type">expense</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[a13])]"/>
 				</record>
 				<record model="account.account">
 					<field name="name">Repairs</field>
 					<field name="code">611</field>
 					<field name="type">expense</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[a13])]"/>
 				</record>
 				<record model="account.account">
 					<field name="name">Water Gas Electricity</field>
 					<field name="code">6120</field>
 					<field name="type">expense</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[a13])]"/>
 				</record>
 				<record model="account.account">
 					<field name="name">Phone Post Fax Internet</field>
 					<field name="code">6121</field>
 					<field name="type">expense</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[a13])]"/>
 				</record>
 				<record model="account.account">
 					<field name="name">Printed material</field>
 					<field name="code">6123</field>
 					<field name="type">expense</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[a13])]"/>
 				</record>
 				<record model="account.account" id="expense_food">
 					<field name="name">Food</field>
 					<field name="code">6124??1</field>
 					<field name="type">expense</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[a13])]"/>
 				</record>
 				<record model="account.account">
 					<field name="name">Miscellaneous charges</field>
 					<field name="code">6124??2</field>
 					<field name="type">expense</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[a13])]"/>
 				</record>
 				<record model="account.account" id="expense_insurance">
 					<field name="name">Insurances</field>
 					<field name="code">6131</field>
 					<field name="type">expense</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[a13])]"/>
 				</record>
 				<record model="account.account" id="fuel_transport">
 					<field name="name">Fuel and transportation</field>
 					<field name="code">61330</field>
 					<field name="type">expense</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[a13])]"/>
 				</record>
 				<record model="account.account">
 					<field name="name">Travels</field>
 					<field name="code">61331</field>
 					<field name="type">expense</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[a13])]"/>
 				</record>
 				<record model="account.account">
 					<field name="name">Publicity</field>
 					<field name="code">614</field>
 					<field name="type">expense</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[a13])]"/>
 				</record>
 			<record model="account.account" id="a14b">
 				<field name="name">Salaries, payroll taxes, pensions</field>
 				<field name="code">62</field>
 				<field name="type">expense</field>
-				<field name="currency_id" ref="base.EUR"/>
+
 				<field name="parent_id" eval="[(6,0,[a12])]"/>
 			</record>
 			<record model="account.account" id="a14">
 				<field name="name">Taxes Charges</field>
 				<field name="code">64</field>
 				<field name="type">view</field>
-				<field name="currency_id" ref="base.EUR"/>
+
 				<field name="parent_id" eval="[(6,0,[a12])]"/>
 			</record>
 				<record model="account.account">
 					<field name="name">Non-refundable VAT</field>
 					<field name="code">64012</field>
 					<field name="type">expense</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[a14])]"/>
 				</record>
 				<record model="account.account">
 					<field name="name">Miscellaneous Taxes</field>
 					<field name="code">6403</field>
 					<field name="type">expense</field>
-					<field name="currency_id" ref="base.EUR"/>
+
 					<field name="parent_id" eval="[(6,0,[a14])]"/>
 				</record>
 			<record model="account.account" id="a15">
 				<field name="name">Financial Charges</field>
 				<field name="code">65</field>
 				<field name="type">expense</field>
-				<field name="currency_id" ref="base.EUR"/>
+
 				<field name="parent_id" eval="[(6,0,[a12])]"/>
 			</record>
 			<record model="account.account" id="income_stock">
 				<field name="name">Stock Income</field>
 				<field name="code">71</field>
 				<field name="type">view</field>
-				<field name="currency_id" ref="base.EUR"/>
+
 				<field name="parent_id" eval="[(6,0,[a11])]"/>
 			</record>
 			<record model="account.account" id="expense_stock">
 				<field name="name">Stock Expense</field>
 				<field name="code">609</field>
 				<field name="type">view</field>
-				<field name="currency_id" ref="base.EUR"/>
+
 				<field name="parent_id" eval="[(6,0,[amerch])]"/>
 			</record>
 

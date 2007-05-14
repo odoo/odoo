@@ -7,7 +7,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[])]" name="parent_id"/>
 </record>
 <record id="a5_1_2" model="account.account">
@@ -17,7 +17,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a_root])]" name="parent_id"/>
 </record>
 <record id="a5_3_9" model="account.account">
@@ -27,7 +27,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a_root])]" name="parent_id"/>
 </record>
 <record id="a5_1" model="account.account">
@@ -37,7 +37,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_1_2])]" name="parent_id"/>
 </record>
 <record id="a5_10" model="account.account">
@@ -47,7 +47,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_1])]" name="parent_id"/>
 </record>
 <record id="a5_100" model="account.account">
@@ -57,7 +57,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_10])]" name="parent_id"/>
 </record>
 <record id="account.a_cash" model="account.account">
@@ -67,7 +67,7 @@
 <field name="note"></field>
 <field name="close_method">balance</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_100])]" name="parent_id"/>
 </record>
 <record id="a5_1010" model="account.account">
@@ -77,7 +77,7 @@
 <field name="note"></field>
 <field name="close_method">balance</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_100])]" name="parent_id"/>
 </record>
 <record id="a5_1020" model="account.account">
@@ -87,7 +87,7 @@
 <field name="note"></field>
 <field name="close_method">balance</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_100])]" name="parent_id"/>
 </record>
 <record id="a5_110" model="account.account">
@@ -97,7 +97,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_10])]" name="parent_id"/>
 </record>
 <record id="account.a_recv" model="account.account">
@@ -107,7 +107,7 @@
 <field name="note"></field>
 <field name="close_method">unreconciled</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_110])]" name="parent_id"/>
 </record>
 <record id="a5_117" model="account.account">
@@ -117,7 +117,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_10])]" name="parent_id"/>
 </record>
 <record id="a5_1170" model="account.account">
@@ -127,7 +127,7 @@
 <field name="note"></field>
 <field name="close_method">balance</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_117])]" name="parent_id"/>
 </record>
 <record id="a5_1171" model="account.account">
@@ -137,7 +137,7 @@
 <field name="note"></field>
 <field name="close_method">balance</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_117])]" name="parent_id"/>
 </record>
 <record id="a5_130" model="account.account">
@@ -147,7 +147,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_10])]" name="parent_id"/>
 </record>
 <record id="a5_1300" model="account.account">
@@ -157,7 +157,7 @@
 <field name="note"></field>
 <field name="close_method">balance</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_130])]" name="parent_id"/>
 </record>
 <record id="a5_1310" model="account.account">
@@ -167,7 +167,7 @@
 <field name="note"></field>
 <field name="close_method">balance</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_130])]" name="parent_id"/>
 </record>
 <record id="a5_14" model="account.account">
@@ -177,7 +177,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_1])]" name="parent_id"/>
 </record>
 <record id="a5_151" model="account.account">
@@ -187,7 +187,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_14])]" name="parent_id"/>
 </record>
 <record id="a5_1510" model="account.account">
@@ -197,7 +197,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76_invest')])]"/>
 <field name="close_method">balance</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_151])]" name="parent_id"/>
 </record>
 <record id="a5_1511" model="account.account">
@@ -207,7 +207,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76_invest')])]"/>
 <field name="close_method">balance</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_151])]" name="parent_id"/>
 </record>
 <record id="a5_1519" model="account.account">
@@ -216,7 +216,7 @@
 <field name="type">asset</field>
 <field name="close_method">balance</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_151])]" name="parent_id"/>
 </record>
 <record id="a5_152" model="account.account">
@@ -226,7 +226,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_14])]" name="parent_id"/>
 </record>
 <record id="a5_1520" model="account.account">
@@ -236,7 +236,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76_invest')])]"/>
 <field name="close_method">balance</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_152])]" name="parent_id"/>
 </record>
 <record id="a5_1521" model="account.account">
@@ -246,7 +246,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76_invest')])]"/>
 <field name="close_method">balance</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_152])]" name="parent_id"/>
 </record>
 <record id="a5_1529" model="account.account">
@@ -255,7 +255,7 @@
 <field name="type">asset</field>
 <field name="close_method">balance</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_152])]" name="parent_id"/>
 </record>
 <record id="a5_153" model="account.account">
@@ -265,7 +265,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_14])]" name="parent_id"/>
 </record>
 <record id="a5_1530" model="account.account">
@@ -275,7 +275,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76_invest')])]"/>
 <field name="close_method">balance</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_153])]" name="parent_id"/>
 </record>
 <record id="a5_1531" model="account.account">
@@ -285,7 +285,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76_invest')])]"/>
 <field name="close_method">balance</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_153])]" name="parent_id"/>
 </record>
 <record id="a5_1539" model="account.account">
@@ -294,7 +294,7 @@
 <field name="type">asset</field>
 <field name="close_method">balance</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_153])]" name="parent_id"/>
 </record>
 <record id="a5_2" model="account.account">
@@ -304,7 +304,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_1_2])]" name="parent_id"/>
 </record>
 <record id="a5_20" model="account.account">
@@ -314,7 +314,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_2])]" name="parent_id"/>
 </record>
 <record id="a5_200" model="account.account">
@@ -324,7 +324,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_20])]" name="parent_id"/>
 </record>
 <record id="account.a_pay" model="account.account">
@@ -334,7 +334,7 @@
 <field name="note"></field>
 <field name="close_method">unreconciled</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_200])]" name="parent_id"/>
 </record>
 <record id="a5_2001" model="account.account">
@@ -344,7 +344,7 @@
 <field name="note"></field>
 <field name="close_method">unreconciled</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_200])]" name="parent_id"/>
 </record>
 <record id="a5_220" model="account.account">
@@ -354,7 +354,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_20])]" name="parent_id"/>
 </record>
 <record id="a5_2200" model="account.account">
@@ -364,7 +364,7 @@
 <field name="note"></field>
 <field name="close_method">balance</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_220])]" name="parent_id"/>
 </record>
 <record id="a5_2205" model="account.account">
@@ -374,7 +374,7 @@
 <field name="note"></field>
 <field name="close_method">balance</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_220])]" name="parent_id"/>
 </record>
 <record id="a5_2206" model="account.account">
@@ -384,7 +384,7 @@
 <field name="note"></field>
 <field name="close_method">balance</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_220])]" name="parent_id"/>
 </record>
 <record id="a5_230" model="account.account">
@@ -394,7 +394,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_20])]" name="parent_id"/>
 </record>
 <record id="a5_2300" model="account.account">
@@ -404,7 +404,7 @@
 <field name="note"></field>
 <field name="close_method">balance</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_230])]" name="parent_id"/>
 </record>
 <record id="a5_2301" model="account.account">
@@ -414,7 +414,7 @@
 <field name="note"></field>
 <field name="close_method">balance</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_230])]" name="parent_id"/>
 </record>
 <record id="a5_28" model="account.account">
@@ -424,7 +424,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_2])]" name="parent_id"/>
 </record>
 <record id="a5_280" model="account.account">
@@ -434,7 +434,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_28])]" name="parent_id"/>
 </record>
 <record id="a5_2800" model="account.account">
@@ -444,7 +444,7 @@
 <field name="note"></field>
 <field name="close_method">balance</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_280])]" name="parent_id"/>
 </record>
 <record id="a5_299" model="account.account">
@@ -454,7 +454,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_28])]" name="parent_id"/>
 </record>
 <record id="a5_2990" model="account.account">
@@ -464,7 +464,7 @@
 <field name="note"></field>
 <field name="close_method">balance</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_299])]" name="parent_id"/>
 </record>
 <record id="a5_2991" model="account.account">
@@ -474,7 +474,7 @@
 <field name="note"></field>
 <field name="close_method">balance</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_299])]" name="parent_id"/>
 </record>
 <record id="a5_3" model="account.account">
@@ -484,7 +484,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_3_9])]" name="parent_id"/>
 </record>
 <record id="a5_30" model="account.account">
@@ -494,7 +494,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_3])]" name="parent_id"/>
 </record>
 <record id="a5_300" model="account.account">
@@ -504,7 +504,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_30])]" name="parent_id"/>
 </record>
 <record id="account.a_sale" model="account.account">
@@ -515,7 +515,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76')])]"/>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_300])]" name="parent_id"/>
 </record>
 <record id="a5_3001" model="account.account">
@@ -526,7 +526,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76')])]"/>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_300])]" name="parent_id"/>
 </record>
 <record id="a5_3003" model="account.account">
@@ -537,7 +537,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76')])]"/>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_300])]" name="parent_id"/>
 </record>
 <record id="a5_310" model="account.account">
@@ -547,7 +547,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_30])]" name="parent_id"/>
 </record>
 <record id="a5_3100" model="account.account">
@@ -558,7 +558,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76')])]"/>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_310])]" name="parent_id"/>
 </record>
 <record id="a5_3101" model="account.account">
@@ -569,7 +569,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76')])]"/>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_310])]" name="parent_id"/>
 </record>
 <record id="a5_320" model="account.account">
@@ -579,7 +579,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_30])]" name="parent_id"/>
 </record>
 <record id="a5_3200" model="account.account">
@@ -590,7 +590,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76')])]"/>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_320])]" name="parent_id"/>
 </record>
 <record id="a5_3201" model="account.account">
@@ -601,7 +601,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76')])]"/>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_320])]" name="parent_id"/>
 </record>
 <record id="a5_330" model="account.account">
@@ -611,7 +611,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_30])]" name="parent_id"/>
 </record>
 <record id="a5_3300" model="account.account">
@@ -622,7 +622,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76')])]"/>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_330])]" name="parent_id"/>
 </record>
 <record id="a5_3301" model="account.account">
@@ -633,7 +633,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76')])]"/>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_330])]" name="parent_id"/>
 </record>
 <record id="a5_340" model="account.account">
@@ -643,7 +643,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_30])]" name="parent_id"/>
 </record>
 <record id="a5_3400" model="account.account">
@@ -654,7 +654,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76')])]"/>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_340])]" name="parent_id"/>
 </record>
 <record id="a5_3401" model="account.account">
@@ -665,7 +665,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76')])]"/>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_340])]" name="parent_id"/>
 </record>
 <record id="a5_350" model="account.account">
@@ -675,7 +675,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_30])]" name="parent_id"/>
 </record>
 <record id="a5_3500" model="account.account">
@@ -686,7 +686,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76')])]"/>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_350])]" name="parent_id"/>
 </record>
 <record id="a5_3501" model="account.account">
@@ -696,7 +696,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_350])]" name="parent_id"/>
 </record>
 <record id="a5_3505" model="account.account">
@@ -706,7 +706,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_350])]" name="parent_id"/>
 </record>
 <record id="a5_360" model="account.account">
@@ -717,7 +717,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76')])]"/>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_30])]" name="parent_id"/>
 </record>
 <record id="a5_3600" model="account.account">
@@ -727,7 +727,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_360])]" name="parent_id"/>
 </record>
 <record id="a5_3602" model="account.account">
@@ -737,7 +737,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_360])]" name="parent_id"/>
 </record>
 <record id="a5_6" model="account.account">
@@ -747,7 +747,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_3_9])]" name="parent_id"/>
 </record>
 <record id="a5_60" model="account.account">
@@ -757,7 +757,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_6])]" name="parent_id"/>
 </record>
 <record id="a5_600" model="account.account">
@@ -767,7 +767,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_60])]" name="parent_id"/>
 </record>
 <record id="account.a_expense" model="account.account">
@@ -777,7 +777,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_600])]" name="parent_id"/>
 </record>
 <record id="a5_6001" model="account.account">
@@ -787,7 +787,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_600])]" name="parent_id"/>
 </record>
 <record id="a5_6002" model="account.account">
@@ -797,7 +797,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_600])]" name="parent_id"/>
 </record>
 <record id="a5_61" model="account.account">
@@ -807,7 +807,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_6])]" name="parent_id"/>
 </record>
 <record id="a5_610" model="account.account">
@@ -817,7 +817,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_61])]" name="parent_id"/>
 </record>
 <record id="a5_6100" model="account.account">
@@ -827,7 +827,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76')])]"/>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_610])]" name="parent_id"/>
 </record>
 <record id="a5_6102" model="account.account">
@@ -837,7 +837,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76')])]"/>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_610])]" name="parent_id"/>
 </record>
 <record id="a5_6103" model="account.account">
@@ -847,7 +847,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76')])]"/>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_610])]" name="parent_id"/>
 </record>
 <record id="a5_613" model="account.account">
@@ -857,7 +857,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_61])]" name="parent_id"/>
 </record>
 <record id="a5_6130" model="account.account">
@@ -867,7 +867,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76')])]"/>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_613])]" name="parent_id"/>
 </record>
 <record id="a5_6131" model="account.account">
@@ -877,7 +877,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76')])]"/>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_613])]" name="parent_id"/>
 </record>
 <record id="a5_62" model="account.account">
@@ -887,7 +887,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_6])]" name="parent_id"/>
 </record>
 <record id="a5_620" model="account.account">
@@ -897,7 +897,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_62])]" name="parent_id"/>
 </record>
 <record id="a5_6200" model="account.account">
@@ -907,7 +907,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76')])]"/>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_620])]" name="parent_id"/>
 </record>
 <record id="a5_6210" model="account.account">
@@ -917,7 +917,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76')])]"/>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_620])]" name="parent_id"/>
 </record>
 <record id="a5_6220" model="account.account">
@@ -927,7 +927,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_620])]" name="parent_id"/>
 </record>
 <record id="a5_63" model="account.account">
@@ -937,7 +937,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_6])]" name="parent_id"/>
 </record>
 <record id="a5_630" model="account.account">
@@ -947,7 +947,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_63])]" name="parent_id"/>
 </record>
 <record id="a5_6300" model="account.account">
@@ -957,7 +957,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_630])]" name="parent_id"/>
 </record>
 <record id="a5_6310" model="account.account">
@@ -967,7 +967,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_630])]" name="parent_id"/>
 </record>
 <record id="a5_65" model="account.account">
@@ -977,7 +977,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_6])]" name="parent_id"/>
 </record>
 <record id="a5_650" model="account.account">
@@ -987,7 +987,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_65])]" name="parent_id"/>
 </record>
 <record id="a5_6500" model="account.account">
@@ -997,7 +997,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76')])]"/>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_650])]" name="parent_id"/>
 </record>
 <record id="a5_6501" model="account.account">
@@ -1007,7 +1007,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76')])]"/>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_650])]" name="parent_id"/>
 </record>
 <record id="a5_6502" model="account.account">
@@ -1017,7 +1017,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76')])]"/>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_650])]" name="parent_id"/>
 </record>
 <record id="a5_651" model="account.account">
@@ -1027,7 +1027,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_65])]" name="parent_id"/>
 </record>
 <record id="a5_6510" model="account.account">
@@ -1037,7 +1037,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76')])]"/>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_651])]" name="parent_id"/>
 </record>
 <record id="a5_6512" model="account.account">
@@ -1047,7 +1047,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76')])]"/>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_651])]" name="parent_id"/>
 </record>
 <record id="a5_6513" model="account.account">
@@ -1057,7 +1057,7 @@
 <field name="tax_ids" eval="[(6,0,[ref('l10n_ch.vat_76')])]"/>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_651])]" name="parent_id"/>
 </record>
 <record id="a5_68" model="account.account">
@@ -1067,7 +1067,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_6])]" name="parent_id"/>
 </record>
 <record id="a5_680" model="account.account">
@@ -1077,7 +1077,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_68])]" name="parent_id"/>
 </record>
 <record id="a5_6800" model="account.account">
@@ -1087,7 +1087,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_680])]" name="parent_id"/>
 </record>
 <record id="a5_6801" model="account.account">
@@ -1097,7 +1097,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_680])]" name="parent_id"/>
 </record>
 <record id="a5_684" model="account.account">
@@ -1107,7 +1107,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_68])]" name="parent_id"/>
 </record>
 <record id="a5_6840" model="account.account">
@@ -1117,7 +1117,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_684])]" name="parent_id"/>
 </record>
 <record id="a5_6841" model="account.account">
@@ -1127,7 +1127,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_684])]" name="parent_id"/>
 </record>
 <record id="a5_6842" model="account.account">
@@ -1137,7 +1137,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_684])]" name="parent_id"/>
 </record>
 <record id="a5_685" model="account.account">
@@ -1147,7 +1147,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_68])]" name="parent_id"/>
 </record>
 <record id="a5_6850" model="account.account">
@@ -1157,7 +1157,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_685])]" name="parent_id"/>
 </record>
 <record id="a5_6851" model="account.account">
@@ -1167,7 +1167,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_685])]" name="parent_id"/>
 </record>
 <record id="a5_6880" model="account.account">
@@ -1177,7 +1177,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_685])]" name="parent_id"/>
 </record>
 <record id="a5_689" model="account.account">
@@ -1187,7 +1187,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_68])]" name="parent_id"/>
 </record>
 <record id="a5_6890" model="account.account">
@@ -1197,7 +1197,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_689])]" name="parent_id"/>
 </record>
 <record id="a5_6891" model="account.account">
@@ -1207,7 +1207,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_689])]" name="parent_id"/>
 </record>
 <record id="a5_6892" model="account.account">
@@ -1217,7 +1217,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_689])]" name="parent_id"/>
 </record>
 <record id="a5_69" model="account.account">
@@ -1227,7 +1227,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_6])]" name="parent_id"/>
 </record>
 <record id="a5_692" model="account.account">
@@ -1237,7 +1237,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_69])]" name="parent_id"/>
 </record>
 <record id="a5_6921" model="account.account">
@@ -1247,7 +1247,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_692])]" name="parent_id"/>
 </record>
 <record id="a5_6922" model="account.account">
@@ -1257,7 +1257,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_692])]" name="parent_id"/>
 </record>
 <record id="a5_6923" model="account.account">
@@ -1267,7 +1267,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_692])]" name="parent_id"/>
 </record>
 <record id="a5_9" model="account.account">
@@ -1277,7 +1277,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_3_9])]" name="parent_id"/>
 </record>
 <record id="a5_90" model="account.account">
@@ -1287,7 +1287,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_9])]" name="parent_id"/>
 </record>
 <record id="a5_9000" model="account.account">
@@ -1297,7 +1297,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_90])]" name="parent_id"/>
 </record>
 <record id="a5_91" model="account.account">
@@ -1307,7 +1307,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_9])]" name="parent_id"/>
 </record>
 <record id="a5_910" model="account.account">
@@ -1317,7 +1317,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_91])]" name="parent_id"/>
 </record>
 <record id="a5_9100" model="account.account">
@@ -1327,7 +1327,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_910])]" name="parent_id"/>
 </record>
 <record id="a5_9101" model="account.account">
@@ -1337,7 +1337,7 @@
 <field name="note"></field>
 <field name="close_method">none</field>
 <field name="sign">-1</field>
-<field name="currency_id" ref="base.EUR"/>
+
 <field eval="[(6,0,[a5_910])]" name="parent_id"/>
 </record>
 <!--

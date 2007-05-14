@@ -11,7 +11,7 @@
 	<field name="close_method">none</field>
 	<field name="parent_id" eval="[]"/>
 	<field name="type">view</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1" model="account.account">
 	<field name="code">1</field>
@@ -20,7 +20,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Tillgångar</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2" model="account.account">
 	<field name="code">2</field>
@@ -29,7 +29,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Eget kapital och skulder</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3" model="account.account">
 	<field name="code">3</field>
@@ -38,7 +38,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Intäkter</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4" model="account.account">
 	<field name="code">4</field>
@@ -47,7 +47,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Utgifter</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7" model="account.account">
 	<field name="code">7</field>
@@ -56,7 +56,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Avskrivningar och engångskostn</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8" model="account.account">
 	<field name="code">8</field>
@@ -65,7 +65,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Financiella intäkter o kostnader</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart10" model="account.account">
 	<field name="code">10</field>
@@ -74,7 +74,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">view</field>
 	<field name="name">Immateriella anläggningstillgångar</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart11" model="account.account">
 	<field name="code">11</field>
@@ -83,7 +83,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">view</field>
 	<field name="name">Byggnader och mark</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart12" model="account.account">
 	<field name="code">12</field>
@@ -92,7 +92,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">view</field>
 	<field name="name">Maskiner och inventarier</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart13" model="account.account">
 	<field name="code">13</field>
@@ -101,7 +101,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">view</field>
 	<field name="name">Finansiella anläggningstillgångar</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart15" model="account.account">
 	<field name="code">15</field>
@@ -110,7 +110,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">view</field>
 	<field name="name">Kundfordringar</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart16" model="account.account">
 	<field name="code">16</field>
@@ -119,7 +119,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">view</field>
 	<field name="name">Övriga kortfristiga fordringar</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart19" model="account.account">
 	<field name="code">19</field>
@@ -128,7 +128,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">view</field>
 	<field name="name">Kassa och Bank</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart20" model="account.account">
 	<field name="code">20</field>
@@ -137,7 +137,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2')])]"/>
 	<field name="type">view</field>
 	<field name="name">Eget kapital</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart22" model="account.account">
 	<field name="code">22</field>
@@ -146,7 +146,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2')])]"/>
 	<field name="type">view</field>
 	<field name="name">Avsättningar</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart23" model="account.account">
 	<field name="code">23</field>
@@ -155,7 +155,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2')])]"/>
 	<field name="type">view</field>
 	<field name="name">Skulder</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart30" model="account.account">
 	<field name="code">30</field>
@@ -164,7 +164,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">view</field>
 	<field name="name">Allmänna gåvor</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart31" model="account.account">
 	<field name="code">31</field>
@@ -173,7 +173,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">view</field>
 	<field name="name">Öronmärkta gåvor</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart33" model="account.account">
 	<field name="code">33</field>
@@ -182,7 +182,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">view</field>
 	<field name="name">Försäljningsintäkter</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart34" model="account.account">
 	<field name="code">34</field>
@@ -191,7 +191,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">view</field>
 	<field name="name">Medlemsavgifter</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart35" model="account.account">
 	<field name="code">35</field>
@@ -200,7 +200,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">view</field>
 	<field name="name">Bidrag</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart36" model="account.account">
 	<field name="code">36</field>
@@ -209,7 +209,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">view</field>
 	<field name="name">Övriga intäkter</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart41" model="account.account">
 	<field name="code">41</field>
@@ -218,7 +218,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">view</field>
 	<field name="name">Utgifter öronmärkta gåvor</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart43" model="account.account">
 	<field name="code">43</field>
@@ -227,7 +227,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">view</field>
 	<field name="name">Inköpskostnader mm</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart50" model="account.account">
 	<field name="code">50</field>
@@ -236,7 +236,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Lokalkostnader hyrd lokal</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart51" model="account.account">
 	<field name="code">51</field>
@@ -245,7 +245,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Lokalkostnader egen lokal</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart52" model="account.account">
 	<field name="code">52</field>
@@ -254,7 +254,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Övriga kostnader</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart64" model="account.account">
 	<field name="code">64</field>
@@ -263,7 +263,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Förvaltningskostnader</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart65" model="account.account">
 	<field name="code">65</field>
@@ -272,7 +272,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Bankkostnader</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart83" model="account.account">
 	<field name="code">83</field>
@@ -281,7 +281,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart8')])]"/>
 	<field name="type">view</field>
 	<field name="name">Ränteintäkter</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart84" model="account.account">
 	<field name="code">84</field>
@@ -290,7 +290,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart8')])]"/>
 	<field name="type">view</field>
 	<field name="name">Räntekostnader</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart345" model="account.account">
 	<field name="code">345</field>
@@ -299,7 +299,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart34')])]"/>
 	<field name="type">view</field>
 	<field name="name">Hyresintäkter</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart658" model="account.account">
 	<field name="code">658</field>
@@ -308,7 +308,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart65')])]"/>
 	<field name="type">view</field>
 	<field name="name">Främmande tjänster</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart891" model="account.account">
 	<field name="code">891</field>
@@ -317,7 +317,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart8')])]"/>
 	<field name="type">view</field>
 	<field name="name">Skatter</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart899" model="account.account">
 	<field name="code">899</field>
@@ -326,7 +326,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart8')])]"/>
 	<field name="type">view</field>
 	<field name="name">Redovisat resultat</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_cash" model="account.account">
 	<field name="code">1010</field>
@@ -335,7 +335,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart10')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Balanserade utgifter</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1019" model="account.account">
 	<field name="code">1019</field>
@@ -344,7 +344,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart10')])]"/>
 	<field name="type">view</field>
 	<field name="name">Ack avskriningar balanserade utg</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1060" model="account.account">
 	<field name="code">1060</field>
@@ -353,7 +353,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart10')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Hyresrätt</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1069" model="account.account">
 	<field name="code">1069</field>
@@ -362,7 +362,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart10')])]"/>
 	<field name="type">view</field>
 	<field name="name">Ack avskrivn hyresrätt</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1110" model="account.account">
 	<field name="code">1110</field>
@@ -371,7 +371,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart11')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Byggnader</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1119" model="account.account">
 	<field name="code">1119</field>
@@ -380,7 +380,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart11')])]"/>
 	<field name="type">view</field>
 	<field name="name">Ack avskrivn byggnader</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1130" model="account.account">
 	<field name="code">1130</field>
@@ -389,7 +389,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart11')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Mark</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1140" model="account.account">
 	<field name="code">1140</field>
@@ -398,7 +398,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart11')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Tomter, markomr obebyggda</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1150" model="account.account">
 	<field name="code">1150</field>
@@ -407,7 +407,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart11')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Markanläggningar</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1159" model="account.account">
 	<field name="code">1159</field>
@@ -416,7 +416,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart11')])]"/>
 	<field name="type">view</field>
 	<field name="name">Ack avskrivn markanläggn</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1190" model="account.account">
 	<field name="code">1190</field>
@@ -425,7 +425,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart11')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Övriga byggnader och mark</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1230" model="account.account">
 	<field name="code">1230</field>
@@ -434,7 +434,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart12')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Installationer</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1238" model="account.account">
 	<field name="code">1238</field>
@@ -443,7 +443,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart12')])]"/>
 	<field name="type">view</field>
 	<field name="name">Ack nedskrivn installationer</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1239" model="account.account">
 	<field name="code">1239</field>
@@ -452,7 +452,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart12')])]"/>
 	<field name="type">view</field>
 	<field name="name">Ack avskrivn installationer</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1250" model="account.account">
 	<field name="code">1250</field>
@@ -461,7 +461,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart12')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Datorer</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1259" model="account.account">
 	<field name="code">1259</field>
@@ -470,7 +470,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart12')])]"/>
 	<field name="type">view</field>
 	<field name="name">Ack avskrivn datorer</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1370" model="account.account">
 	<field name="code">1370</field>
@@ -479,7 +479,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart13')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Uppskjuten skattefordran</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1380" model="account.account">
 	<field name="code">1380</field>
@@ -488,7 +488,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart13')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Långfristiga fordringar</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1400" model="account.account">
 	<field name="code">1400</field>
@@ -497,7 +497,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Fordran hos EFS Gafsele</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1405" model="account.account">
 	<field name="code">1405</field>
@@ -506,7 +506,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Fordran hos EFS Hälla</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1500" model="account.account">
 	<field name="code">1500</field>
@@ -515,7 +515,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart15')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Kundfordringar</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1600" model="account.account">
 	<field name="code">1600</field>
@@ -524,7 +524,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart16')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Övr kortfristiga fordr</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1710" model="account.account">
 	<field name="code">1710</field>
@@ -533,7 +533,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Förutbetalda hyror</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1730" model="account.account">
 	<field name="code">1730</field>
@@ -542,7 +542,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Förutbet försäkringspremier</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1740" model="account.account">
 	<field name="code">1740</field>
@@ -551,7 +551,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Förutbet ränteutgifter</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1750" model="account.account">
 	<field name="code">1750</field>
@@ -560,7 +560,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Upplupna hyresinkomster</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1760" model="account.account">
 	<field name="code">1760</field>
@@ -569,7 +569,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Upplupna inkomsträntor</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1790" model="account.account">
 	<field name="code">1790</field>
@@ -578,7 +578,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Övr interimsfordringar</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1910" model="account.account">
 	<field name="code">1910</field>
@@ -587,7 +587,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart19')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Kassa</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1920" model="account.account">
 	<field name="code">1920</field>
@@ -596,7 +596,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart19')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Postgiro</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1930" model="account.account">
 	<field name="code">1930</field>
@@ -605,7 +605,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart19')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Checkräkningskonto</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1940" model="account.account">
 	<field name="code">1940</field>
@@ -614,7 +614,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart19')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Övriga bankkonto</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1941" model="account.account">
 	<field name="code">1941</field>
@@ -623,7 +623,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart19')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Nordea värdepappersfond</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1942" model="account.account">
 	<field name="code">1942</field>
@@ -632,7 +632,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart19')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Nordea girokapitalkonto</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2000" model="account.account">
 	<field name="code">2000</field>
@@ -641,7 +641,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart20')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Eget kapital EFS Åsele</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2005" model="account.account">
 	<field name="code">2005</field>
@@ -650,7 +650,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart20')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Eget kapital EFS Gafsele</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2010" model="account.account">
 	<field name="code">2010</field>
@@ -659,7 +659,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart20')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Eget kapital EFS Hälla</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2070" model="account.account">
 	<field name="code">2070</field>
@@ -668,7 +668,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart20')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Ändamålsbestämda medel</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2091" model="account.account">
 	<field name="code">2091</field>
@@ -677,7 +677,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart20')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Balanserad vinst/förlust</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2098" model="account.account">
 	<field name="code">2098</field>
@@ -686,7 +686,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart20')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Vinst/förlust föreg år</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2099" model="account.account">
 	<field name="code">2099</field>
@@ -695,7 +695,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart20')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Redovisat resultat</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2250" model="account.account">
 	<field name="code">2250</field>
@@ -704,7 +704,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart22')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Avsättning för skatter</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2290" model="account.account">
 	<field name="code">2290</field>
@@ -713,7 +713,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart22')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Övriga avsättningar</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2300" model="account.account">
 	<field name="code">2300</field>
@@ -722,7 +722,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart23')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Skuld till EFS Gafsele</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2310" model="account.account">
 	<field name="code">2310</field>
@@ -731,7 +731,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart23')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Skuld till EFS Hälla</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2320" model="account.account">
 	<field name="code">2320</field>
@@ -740,7 +740,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart23')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Skuld till fam Norlin</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2330" model="account.account">
 	<field name="code">2330</field>
@@ -749,7 +749,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart23')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Checkräkningskredit</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2399" model="account.account">
 	<field name="code">2399</field>
@@ -758,7 +758,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart23')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Övr långfristiga skulder</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2440" model="account.account">
 	<field name="code">2440</field>
@@ -767,7 +767,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Leverantörsskulder</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2499" model="account.account">
 	<field name="code">2499</field>
@@ -776,7 +776,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Övr kortfristiga skulder</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2960" model="account.account">
 	<field name="code">2960</field>
@@ -785,7 +785,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Upplupna utgiftsräntor</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2971" model="account.account">
 	<field name="code">2971</field>
@@ -794,7 +794,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Förutbetalda hyresintäkter</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2972" model="account.account">
 	<field name="code">2972</field>
@@ -803,7 +803,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Förutbetalda medlemsavgifter</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2979" model="account.account">
 	<field name="code">2979</field>
@@ -812,7 +812,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Övriga förutbetalda intäkter</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2990" model="account.account">
 	<field name="code">2990</field>
@@ -821,7 +821,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Övr interimsskulder</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2999" model="account.account">
 	<field name="code">2999</field>
@@ -830,7 +830,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Övr uppl kostn/förutbet intäkter</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3000" model="account.account">
 	<field name="code">3000</field>
@@ -839,7 +839,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart30')])]"/>
 	<field name="type">income</field>
 	<field name="name">Gåvor via konto</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3005" model="account.account">
 	<field name="code">3005</field>
@@ -848,7 +848,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart30')])]"/>
 	<field name="type">income</field>
 	<field name="name">Minnesgåvor</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3010" model="account.account">
 	<field name="code">3010</field>
@@ -857,7 +857,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart30')])]"/>
 	<field name="type">income</field>
 	<field name="name">Gudstjänstkollekter</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3015" model="account.account">
 	<field name="code">3015</field>
@@ -866,7 +866,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart30')])]"/>
 	<field name="type">income</field>
 	<field name="name">Fika/kaffe/fester - gåvor</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3100" model="account.account">
 	<field name="code">3100</field>
@@ -875,7 +875,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart31')])]"/>
 	<field name="type">income</field>
 	<field name="name">Öronmärkta gåvor</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3101" model="account.account">
 	<field name="code">3101</field>
@@ -884,7 +884,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart31')])]"/>
 	<field name="type">income</field>
 	<field name="name">Gåvor barnarbete</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3102" model="account.account">
 	<field name="code">3102</field>
@@ -893,7 +893,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart31')])]"/>
 	<field name="type">income</field>
 	<field name="name">Gåvor körsång</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3103" model="account.account">
 	<field name="code">3103</field>
@@ -902,7 +902,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart31')])]"/>
 	<field name="type">income</field>
 	<field name="name">Gåvor bönegrupper</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3104" model="account.account">
 	<field name="code">3104</field>
@@ -911,7 +911,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart31')])]"/>
 	<field name="type">income</field>
 	<field name="name">Gåvor Alfa-grupper</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3105" model="account.account">
 	<field name="code">3105</field>
@@ -920,7 +920,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart31')])]"/>
 	<field name="type">income</field>
 	<field name="name">Övrigt lokalt arbete</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3106" model="account.account">
 	<field name="code">3106</field>
@@ -929,7 +929,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart31')])]"/>
 	<field name="type">income</field>
 	<field name="name">Gåvor till fastighet mm</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3109" model="account.account">
 	<field name="code">3109</field>
@@ -938,7 +938,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart31')])]"/>
 	<field name="type">income</field>
 	<field name="name">Gåvor Åsele allkristna gemenskap</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3110" model="account.account">
 	<field name="code">3110</field>
@@ -947,7 +947,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart31')])]"/>
 	<field name="type">income</field>
 	<field name="name">Gåvor EFS Västerbotten</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3111" model="account.account">
 	<field name="code">3111</field>
@@ -956,7 +956,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart31')])]"/>
 	<field name="type">income</field>
 	<field name="name">Gåvor distriktskonferens</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3112" model="account.account">
 	<field name="code">3112</field>
@@ -965,7 +965,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart31')])]"/>
 	<field name="type">income</field>
 	<field name="name">Gåvor Scoutverksamhet</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3120" model="account.account">
 	<field name="code">3120</field>
@@ -974,7 +974,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart31')])]"/>
 	<field name="type">income</field>
 	<field name="name">Gåvor EFS riks</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3121" model="account.account">
 	<field name="code">3121</field>
@@ -983,7 +983,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart31')])]"/>
 	<field name="type">income</field>
 	<field name="name">Gåvor EFS riks konferens</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3122" model="account.account">
 	<field name="code">3122</field>
@@ -992,7 +992,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart31')])]"/>
 	<field name="type">income</field>
 	<field name="name">Gåvor EFS Inre mission</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3123" model="account.account">
 	<field name="code">3123</field>
@@ -1001,7 +1001,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart31')])]"/>
 	<field name="type">income</field>
 	<field name="name">Gåvor EFS Yttre mission</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3130" model="account.account">
 	<field name="code">3130</field>
@@ -1010,7 +1010,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart31')])]"/>
 	<field name="type">income</field>
 	<field name="name">Gåvor Barn i alla länder</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3131" model="account.account">
 	<field name="code">3131</field>
@@ -1019,7 +1019,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart31')])]"/>
 	<field name="type">income</field>
 	<field name="name">Gåvor Johannelundsinsamling</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3132" model="account.account">
 	<field name="code">3132</field>
@@ -1028,7 +1028,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart31')])]"/>
 	<field name="type">income</field>
 	<field name="name">Gåvor Påskinsamling</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3133" model="account.account">
 	<field name="code">3133</field>
@@ -1037,7 +1037,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart31')])]"/>
 	<field name="type">income</field>
 	<field name="name">Gåvor Flodvågens offer</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3300" model="account.account">
 	<field name="code">3300</field>
@@ -1046,7 +1046,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart33')])]"/>
 	<field name="type">income</field>
 	<field name="name">Försäljning bokbordet</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3350" model="account.account">
 	<field name="code">3350</field>
@@ -1055,7 +1055,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart33')])]"/>
 	<field name="type">income</field>
 	<field name="name">Försäljning fika mm</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_income" model="account.account">
 	<field name="code">3400</field>
@@ -1064,7 +1064,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart34')])]"/>
 	<field name="type">income</field>
 	<field name="name">Medlemsavgifter</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3405" model="account.account">
 	<field name="code">3405</field>
@@ -1073,7 +1073,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart34')])]"/>
 	<field name="type">income</field>
 	<field name="name">Medlemsavgifter Solglimten</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3450" model="account.account">
 	<field name="code">3450</field>
@@ -1082,7 +1082,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart345')])]"/>
 	<field name="type">income</field>
 	<field name="name">Hyresintäkter, hyreskontrakt</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3460" model="account.account">
 	<field name="code">3460</field>
@@ -1091,7 +1091,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart34')])]"/>
 	<field name="type">income</field>
 	<field name="name">Hyresintäkter, enstaka tillfälle</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3470" model="account.account">
 	<field name="code">3470</field>
@@ -1100,7 +1100,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart34')])]"/>
 	<field name="type">income</field>
 	<field name="name">Hyresint Ersättning telefonkostnad</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3510" model="account.account">
 	<field name="code">3510</field>
@@ -1109,7 +1109,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart35')])]"/>
 	<field name="type">income</field>
 	<field name="name">Erhållna statliga bidrag</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3520" model="account.account">
 	<field name="code">3520</field>
@@ -1118,7 +1118,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart35')])]"/>
 	<field name="type">income</field>
 	<field name="name">Erhållna kommunala bidrag</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3530" model="account.account">
 	<field name="code">3530</field>
@@ -1127,7 +1127,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart35')])]"/>
 	<field name="type">income</field>
 	<field name="name">Bidrag Svenska kyrkan</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3590" model="account.account">
 	<field name="code">3590</field>
@@ -1136,7 +1136,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart35')])]"/>
 	<field name="type">income</field>
 	<field name="name">Övriga erhållna bidrag</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3690" model="account.account">
 	<field name="code">3690</field>
@@ -1145,7 +1145,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart36')])]"/>
 	<field name="type">income</field>
 	<field name="name">Övriga sidointäker</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3731" model="account.account">
 	<field name="code">3731</field>
@@ -1154,7 +1154,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">income</field>
 	<field name="name">Kassarabatter</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3740" model="account.account">
 	<field name="code">3740</field>
@@ -1163,7 +1163,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">income</field>
 	<field name="name">Öresutjämning</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_recv" model="account.account">
 	<field name="code">3960</field>
@@ -1172,7 +1172,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">income</field>
 	<field name="name">Valuta kursvinst</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3972" model="account.account">
 	<field name="code">3972</field>
@@ -1181,7 +1181,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">income</field>
 	<field name="name">Vinst avyttr fastigheter</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3973" model="account.account">
 	<field name="code">3973</field>
@@ -1190,7 +1190,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">income</field>
 	<field name="name">Vinst avyttr maskiner/inv</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3990" model="account.account">
 	<field name="code">3990</field>
@@ -1199,7 +1199,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">income</field>
 	<field name="name">Övr ersättn och intäker</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3994" model="account.account">
 	<field name="code">3994</field>
@@ -1208,7 +1208,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3')])]"/>
 	<field name="type">income</field>
 	<field name="name">Försäkringsersättningar</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4000" model="account.account">
 	<field name="code">4000</field>
@@ -1217,7 +1217,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Kostnad för predikant</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4050" model="account.account">
 	<field name="code">4050</field>
@@ -1226,7 +1226,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Reskostnader för predikant</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4100" model="account.account">
 	<field name="code">4100</field>
@@ -1235,7 +1235,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart41')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Kostnad öronmärkta gåvor</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4101" model="account.account">
 	<field name="code">4101</field>
@@ -1244,7 +1244,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart41')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Kostnad barnarbete</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4102" model="account.account">
 	<field name="code">4102</field>
@@ -1253,7 +1253,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart41')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Kostnad körer</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4103" model="account.account">
 	<field name="code">4103</field>
@@ -1262,7 +1262,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart41')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Kostnad bönegrupper</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4104" model="account.account">
 	<field name="code">4104</field>
@@ -1271,7 +1271,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart41')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Kostnad Alfa</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4105" model="account.account">
 	<field name="code">4105</field>
@@ -1280,7 +1280,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart41')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Kostnad Övrigt lokalt arbete</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4106" model="account.account">
 	<field name="code">4106</field>
@@ -1289,7 +1289,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart41')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Kostnad Fastighet (särskilt)</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4107" model="account.account">
 	<field name="code">4107</field>
@@ -1298,7 +1298,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart41')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Kostnad scouting barnarbete</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4109" model="account.account">
 	<field name="code">4109</field>
@@ -1307,7 +1307,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart41')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Åsele allkristna gemenskap</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4110" model="account.account">
 	<field name="code">4110</field>
@@ -1316,7 +1316,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart41')])]"/>
 	<field name="type">expense</field>
 	<field name="name">EFS Västerbotten</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4111" model="account.account">
 	<field name="code">4111</field>
@@ -1325,7 +1325,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart41')])]"/>
 	<field name="type">expense</field>
 	<field name="name">distriktskonferens</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4120" model="account.account">
 	<field name="code">4120</field>
@@ -1334,7 +1334,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart41')])]"/>
 	<field name="type">expense</field>
 	<field name="name">EFS riks</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4121" model="account.account">
 	<field name="code">4121</field>
@@ -1343,7 +1343,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart41')])]"/>
 	<field name="type">expense</field>
 	<field name="name">EFS riks konferensinsamling</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4122" model="account.account">
 	<field name="code">4122</field>
@@ -1352,7 +1352,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart41')])]"/>
 	<field name="type">expense</field>
 	<field name="name">EFS inre mission</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4123" model="account.account">
 	<field name="code">4123</field>
@@ -1361,7 +1361,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart41')])]"/>
 	<field name="type">expense</field>
 	<field name="name">EFS yttre mission</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4130" model="account.account">
 	<field name="code">4130</field>
@@ -1370,7 +1370,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart41')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Barn i alla länder</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4131" model="account.account">
 	<field name="code">4131</field>
@@ -1379,7 +1379,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart41')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Johannelundinsamling</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4132" model="account.account">
 	<field name="code">4132</field>
@@ -1388,7 +1388,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart41')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Påskinsamling</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4133" model="account.account">
 	<field name="code">4133</field>
@@ -1397,7 +1397,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart41')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Till Flodvågens offer</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4300" model="account.account">
 	<field name="code">4300</field>
@@ -1406,7 +1406,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart43')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Inköp bokbord</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4350" model="account.account">
 	<field name="code">4350</field>
@@ -1415,7 +1415,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart43')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Inköp matr fika mm</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_expense" model="account.account">
 	<field name="code">4400</field>
@@ -1424,7 +1424,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Pren Vårt budskap (distr tidning)</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4600" model="account.account">
 	<field name="code">4600</field>
@@ -1433,7 +1433,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Inhyrda predikanter/föreläsare</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4700" model="account.account">
 	<field name="code">4700</field>
@@ -1442,7 +1442,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Tidningar, facklitteratur</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4900" model="account.account">
 	<field name="code">4900</field>
@@ -1451,7 +1451,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Föreningsavgifter</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5010" model="account.account">
 	<field name="code">5010</field>
@@ -1460,7 +1460,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart50')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Lokalhyra</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5020" model="account.account">
 	<field name="code">5020</field>
@@ -1469,7 +1469,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart50')])]"/>
 	<field name="type">expense</field>
 	<field name="name">El</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5030" model="account.account">
 	<field name="code">5030</field>
@@ -1478,7 +1478,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart50')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Värme hyrd lokal</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5050" model="account.account">
 	<field name="code">5050</field>
@@ -1487,7 +1487,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart50')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Lokaltillbehör hyrd lokal</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5060" model="account.account">
 	<field name="code">5060</field>
@@ -1496,7 +1496,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart50')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Städning, renhållning hyrd lokal</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5070" model="account.account">
 	<field name="code">5070</field>
@@ -1505,7 +1505,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart50')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Reparationer hyrd lokal</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5090" model="account.account">
 	<field name="code">5090</field>
@@ -1514,7 +1514,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart50')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Övr kostnader hyrd lokal</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5120" model="account.account">
 	<field name="code">5120</field>
@@ -1523,7 +1523,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart51')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Belysning</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5130" model="account.account">
 	<field name="code">5130</field>
@@ -1532,7 +1532,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart51')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Värme</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5132" model="account.account">
 	<field name="code">5132</field>
@@ -1541,7 +1541,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart51')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Sotning</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5140" model="account.account">
 	<field name="code">5140</field>
@@ -1550,7 +1550,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart51')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Vatten och avlopp</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5160" model="account.account">
 	<field name="code">5160</field>
@@ -1559,7 +1559,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart51')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Renhålln och städning</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5170" model="account.account">
 	<field name="code">5170</field>
@@ -1568,7 +1568,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart51')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Rep och underhåll fastighet</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5191" model="account.account">
 	<field name="code">5191</field>
@@ -1577,7 +1577,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart51')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Fastighetsskatt</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5192" model="account.account">
 	<field name="code">5192</field>
@@ -1586,7 +1586,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart51')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Försäkringsprem fastighet</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5193" model="account.account">
 	<field name="code">5193</field>
@@ -1595,7 +1595,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart51')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Fastighetsskötsel och förvaltning</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5199" model="account.account">
 	<field name="code">5199</field>
@@ -1604,7 +1604,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart51')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Övr fastighetskostnader</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5210" model="account.account">
 	<field name="code">5210</field>
@@ -1613,7 +1613,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart52')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Hyra arbetsmaskiner</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5220" model="account.account">
 	<field name="code">5220</field>
@@ -1622,7 +1622,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart52')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Hyra inventarier</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5290" model="account.account">
 	<field name="code">5290</field>
@@ -1631,7 +1631,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart52')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Övr hyreskostn anl tillg</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5390" model="account.account">
 	<field name="code">5390</field>
@@ -1640,7 +1640,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Övriga bränslen</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5410" model="account.account">
 	<field name="code">5410</field>
@@ -1649,7 +1649,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Förbrukningsinventarier</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5460" model="account.account">
 	<field name="code">5460</field>
@@ -1658,7 +1658,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Förbrukningsmaterial</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5480" model="account.account">
 	<field name="code">5480</field>
@@ -1667,7 +1667,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Arbetskläder o skyddsmtrl</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5500" model="account.account">
 	<field name="code">5500</field>
@@ -1676,7 +1676,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Reparation och underhåll</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5710" model="account.account">
 	<field name="code">5710</field>
@@ -1685,7 +1685,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Frakt och transport</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5800" model="account.account">
 	<field name="code">5800</field>
@@ -1694,7 +1694,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Resekostnader</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5910" model="account.account">
 	<field name="code">5910</field>
@@ -1703,7 +1703,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Annonsering</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5930" model="account.account">
 	<field name="code">5930</field>
@@ -1712,7 +1712,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Reklamtrycksaker</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5990" model="account.account">
 	<field name="code">5990</field>
@@ -1721,7 +1721,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Övrig reklam</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6110" model="account.account">
 	<field name="code">6110</field>
@@ -1730,7 +1730,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Kontorsmaterial</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6150" model="account.account">
 	<field name="code">6150</field>
@@ -1739,7 +1739,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Trycksaker</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6210" model="account.account">
 	<field name="code">6210</field>
@@ -1748,7 +1748,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Telefon</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6250" model="account.account">
 	<field name="code">6250</field>
@@ -1757,7 +1757,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Porto</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6310" model="account.account">
 	<field name="code">6310</field>
@@ -1766,7 +1766,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Försäkringar</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6320" model="account.account">
 	<field name="code">6320</field>
@@ -1775,7 +1775,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Självrisker</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6340" model="account.account">
 	<field name="code">6340</field>
@@ -1784,7 +1784,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Lämnade skadestånd</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6490" model="account.account">
 	<field name="code">6490</field>
@@ -1793,7 +1793,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart64')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Övr förvaltningskostnader</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6530" model="account.account">
 	<field name="code">6530</field>
@@ -1802,7 +1802,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart65')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Redovisningstjänster</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6540" model="account.account">
 	<field name="code">6540</field>
@@ -1811,7 +1811,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart65')])]"/>
 	<field name="type">expense</field>
 	<field name="name">IT-tjänster</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6550" model="account.account">
 	<field name="code">6550</field>
@@ -1820,7 +1820,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart65')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Konsultarvoden</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6570" model="account.account">
 	<field name="code">6570</field>
@@ -1829,7 +1829,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart65')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Bankkostnader, Nordea</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6571" model="account.account">
 	<field name="code">6571</field>
@@ -1838,7 +1838,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart65')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Bankkostnader, Postgirot</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6572" model="account.account">
 	<field name="code">6572</field>
@@ -1847,7 +1847,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart65')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Bankkostnader, Bankgiro</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6573" model="account.account">
 	<field name="code">6573</field>
@@ -1856,7 +1856,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart65')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Bankkostnader, Föreningssparbank</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6580" model="account.account">
 	<field name="code">6580</field>
@@ -1865,7 +1865,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart658')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Advokatkostnader</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6590" model="account.account">
 	<field name="code">6590</field>
@@ -1874,7 +1874,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart65')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Övr främmande tjänster</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7780" model="account.account">
 	<field name="code">7780</field>
@@ -1883,7 +1883,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Avskrivningar enligt plan</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7811" model="account.account">
 	<field name="code">7811</field>
@@ -1892,7 +1892,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Avskrivningar balanserade utgifter</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7820" model="account.account">
 	<field name="code">7820</field>
@@ -1901,7 +1901,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Avskrivningar byggnader/mark</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7821" model="account.account">
 	<field name="code">7821</field>
@@ -1910,7 +1910,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Avskrivn byggnader</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7822" model="account.account">
 	<field name="code">7822</field>
@@ -1919,7 +1919,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Avskrivn byggnadsinv</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7824" model="account.account">
 	<field name="code">7824</field>
@@ -1928,7 +1928,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Avskrivn markanläggn</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7829" model="account.account">
 	<field name="code">7829</field>
@@ -1937,7 +1937,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Avskrivningar övr byggnader</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7832" model="account.account">
 	<field name="code">7832</field>
@@ -1946,7 +1946,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Avskrivn inventarier</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7833" model="account.account">
 	<field name="code">7833</field>
@@ -1955,7 +1955,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Avskrivningar installationer</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7835" model="account.account">
 	<field name="code">7835</field>
@@ -1964,7 +1964,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Avskrivningar datorer</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7921" model="account.account">
 	<field name="code">7921</field>
@@ -1973,7 +1973,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Kostn av engångskaraktär </field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_pay" model="account.account">
 	<field name="code">7960</field>
@@ -1982,7 +1982,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Valutakursförlust</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8300" model="account.account">
 	<field name="code">8300</field>
@@ -1991,7 +1991,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart83')])]"/>
 	<field name="type">income</field>
 	<field name="name">Ränteintäkter </field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8390" model="account.account">
 	<field name="code">8390</field>
@@ -2000,7 +2000,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart83')])]"/>
 	<field name="type">income</field>
 	<field name="name">Övr finansiella intäkter</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8400" model="account.account">
 	<field name="code">8400</field>
@@ -2009,7 +2009,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart84')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Räntekostnader</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8490" model="account.account">
 	<field name="code">8490</field>
@@ -2018,7 +2018,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart84')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Övr finansiella kostnader</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8910" model="account.account">
 	<field name="code">8910</field>
@@ -2027,7 +2027,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart891')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Årets skattekostnad</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8999" model="account.account">
 	<field name="code">8999</field>
@@ -2036,7 +2036,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart899')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Redovisat resultat</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 </data>
 </terp>

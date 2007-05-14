@@ -198,7 +198,7 @@ class account_account(osv.osv):
 	_columns = {
 		'name': fields.char('Name', size=128, required=True, translate=True, select=True),
 		'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign', required=True, help='Allows to change the displayed amount of the balance to see positive results instead of negative ones in expenses accounts'),
-		'currency_id': fields.many2one('res.currency', 'Currency', required=True),
+		'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Force all moves for this account to have this secondary currency."),
 		'code': fields.char('Code', size=64),
 		'type': fields.selection(_code_get, 'Account Type', required=True),
 		'parent_id': fields.many2many('account.account', 'account_account_rel', 'child_id', 'parent_id', 'Parents'),
@@ -213,7 +213,7 @@ class account_account(osv.osv):
 
 		'active': fields.boolean('Active'),
 		'note': fields.text('Note'),
-		'company_currency_id': fields.function(_get_company_currency, method=True, type='many2one', relation='res.currency', string='Currency'),
+		'company_currency_id': fields.function(_get_company_currency, method=True, type='many2one', relation='res.currency', string='Company Currency'),
 		'company_id': fields.many2one('res.company', 'Company', required=True),
 	}
 
@@ -667,6 +667,10 @@ class account_move(osv.osv):
 					company_id = line.account_id.company_id.id
 				if not company_id == line.account_id.company_id.id:
 					raise osv.except_osv('Error', 'Couldn\'t create move between different companies')
+
+				if line.account_id.currency_id:
+					if line.account_id.currency_id.id != line.currency_id.id and (line.account_id.currency_id.id != line.account_id.company_id.currency_id.id or line.currency_id):
+							raise osv.except_osv('Error', 'Couldn\'t create move with currency different than the secondary currency of the account')
 
 			if abs(amount) < 0.0001:
 				if not len(line_draft_ids):

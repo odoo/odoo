@@ -11,7 +11,7 @@
 	<field name="close_method">none</field>
 	<field name="parent_id" eval="[]"/>
 	<field name="type">view</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_cash" model="account.account">
 	<field name="code">1000</field>
@@ -20,7 +20,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Dlouhodobý nehmotný majetek</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1100" model="account.account">
 	<field name="code">1100</field>
@@ -29,7 +29,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Zøizovací výdaje</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1200" model="account.account">
 	<field name="code">1200</field>
@@ -38,7 +38,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Nehmotné výsledky výzkumu a vývoje</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1300" model="account.account">
 	<field name="code">1300</field>
@@ -47,7 +47,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Software</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1400" model="account.account">
 	<field name="code">1400</field>
@@ -56,7 +56,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Ocenitelná práva</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1800" model="account.account">
 	<field name="code">1800</field>
@@ -65,7 +65,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Drobný dlouhodobý nehmotný majetek</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart1900" model="account.account">
 	<field name="code">1900</field>
@@ -74,7 +74,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Ostatní dlouhodobý nehmotný majetek</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2000" model="account.account">
 	<field name="code">2000</field>
@@ -83,7 +83,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Dlouhodobý Hmotný majetek odpisovaný</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2100" model="account.account">
 	<field name="code">2100</field>
@@ -92,7 +92,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Stavby</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2200" model="account.account">
 	<field name="code">2200</field>
@@ -101,7 +101,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Samostatné movité vìci a soubory movitých vìcí</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2500" model="account.account">
 	<field name="code">2500</field>
@@ -110,7 +110,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Pìstitelské celky trvalých porostù</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2600" model="account.account">
 	<field name="code">2600</field>
@@ -119,7 +119,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Základní stádo a ta¾ná zvíøata</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2800" model="account.account">
 	<field name="code">2800</field>
@@ -128,7 +128,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Drobný dlouhodobý hmotný majetek</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart2900" model="account.account">
 	<field name="code">2900</field>
@@ -137,7 +137,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Ostatní dlouhodobý hmotný majetek</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3000" model="account.account">
 	<field name="code">3000</field>
@@ -146,7 +146,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Dlouhodobý hmotný majetek neodpisovaný</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3100" model="account.account">
 	<field name="code">3100</field>
@@ -155,7 +155,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Pozemky</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart3200" model="account.account">
 	<field name="code">3200</field>
@@ -164,7 +164,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Umìlecká díla a sbírky</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4000" model="account.account">
 	<field name="code">4000</field>
@@ -173,7 +173,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Poøízení dlouhodobého nehmotného a hmotného majetku</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4100" model="account.account">
 	<field name="code">4100</field>
@@ -182,7 +182,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Poøízení dlouhodobého nehmotného majetku</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart4200" model="account.account">
 	<field name="code">4200</field>
@@ -191,7 +191,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Poøízení dlouhodobého hmotného majetku</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5000" model="account.account">
 	<field name="code">5000</field>
@@ -200,7 +200,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Poskytnuté zálohy na dlouhodobý nehmotný a hmotný majetek</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5100" model="account.account">
 	<field name="code">5100</field>
@@ -209,7 +209,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Poskytnuté zálohy na dlouhodobý nehmotný majetek</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart5200" model="account.account">
 	<field name="code">5200</field>
@@ -218,7 +218,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Poskytnuté zálohy na dlouhodobý hmotný majetek</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6000" model="account.account">
 	<field name="code">6000</field>
@@ -227,7 +227,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Dlouhodobý finanèní majetek</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6100" model="account.account">
 	<field name="code">6100</field>
@@ -236,7 +236,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Podílové cenné papíry a vklady v podnicích s rozhodujícím</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6200" model="account.account">
 	<field name="code">6200</field>
@@ -245,7 +245,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Podílové cenné papíry a vklady v podnicích s podstatným</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6300" model="account.account">
 	<field name="code">6300</field>
@@ -254,7 +254,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Ostatní dlouhodobé cenné papíry a vklady</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6600" model="account.account">
 	<field name="code">6600</field>
@@ -263,7 +263,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Pùjèky podnikùm ve skupinì</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6700" model="account.account">
 	<field name="code">6700</field>
@@ -272,7 +272,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Ostatní pùjèky</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart6900" model="account.account">
 	<field name="code">6900</field>
@@ -281,7 +281,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Ostatní dlouhodobý finanèní majetek</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7000" model="account.account">
 	<field name="code">7000</field>
@@ -290,7 +290,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Oprávky k dlouhodobému nehmotnému majetku</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7100" model="account.account">
 	<field name="code">7100</field>
@@ -299,7 +299,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Oprávky ke zøizovacím výdajùm</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7200" model="account.account">
 	<field name="code">7200</field>
@@ -308,7 +308,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Oprávky k nehmotným výsledkùm výzkumu a vývoje</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7300" model="account.account">
 	<field name="code">7300</field>
@@ -317,7 +317,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Oprávky k softwaru</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7400" model="account.account">
 	<field name="code">7400</field>
@@ -326,7 +326,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Oprávky k ocenitelným právùm</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7800" model="account.account">
 	<field name="code">7800</field>
@@ -335,7 +335,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Oprávky k drobnému dlouhodobému nehmotnému majetku</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart7900" model="account.account">
 	<field name="code">7900</field>
@@ -344,7 +344,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Oprávky k ostatnímu dlouhodobému nehmotnému majetku</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8000" model="account.account">
 	<field name="code">8000</field>
@@ -353,7 +353,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Oprávky k dlouhodobému hmotnému majetku</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8100" model="account.account">
 	<field name="code">8100</field>
@@ -362,7 +362,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Oprávky ke stavbám</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8200" model="account.account">
 	<field name="code">8200</field>
@@ -371,7 +371,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Oprávky k samostatným movitým vìcem a souborùm movitých vìcí</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8500" model="account.account">
 	<field name="code">8500</field>
@@ -380,7 +380,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Oprávky k pìstitelským celkùm trvalých porostù</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8600" model="account.account">
 	<field name="code">8600</field>
@@ -389,7 +389,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Oprávky k základnímu stádu a ta¾ným zvíøatùm</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8800" model="account.account">
 	<field name="code">8800</field>
@@ -398,7 +398,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Oprávky k drobnému dlouhodobému hmotnému majetku</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart8900" model="account.account">
 	<field name="code">8900</field>
@@ -407,7 +407,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Oprávky k ostatnímu dlouhodobému hmotnému majetku</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_recv" model="account.account">
 	<field name="code">9000</field>
@@ -416,7 +416,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Opravné polo¾ky k dlouhodobému majetku</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart9100" model="account.account">
 	<field name="code">9100</field>
@@ -425,7 +425,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Opravná polo¾ka k dlouhodobému nehmotnému majetku</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart9200" model="account.account">
 	<field name="code">9200</field>
@@ -434,7 +434,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Opravná polo¾ka k dlouhodobému hmotnému majetku</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart9300" model="account.account">
 	<field name="code">9300</field>
@@ -443,7 +443,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Opravná polo¾ka k dlouhodobému nedokonèenému nehmotnému</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart9400" model="account.account">
 	<field name="code">9400</field>
@@ -452,7 +452,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Opravná polo¾ka k dlouhodobému nedokonèenému hmotnému</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart9500" model="account.account">
 	<field name="code">9500</field>
@@ -461,7 +461,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Opravná polo¾ka k poskytnutým zálohám</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart9600" model="account.account">
 	<field name="code">9600</field>
@@ -470,7 +470,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Opravná polo¾ka k dlouhodobému finanènímu majetku</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart9700" model="account.account">
 	<field name="code">9700</field>
@@ -479,7 +479,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Opravná polo¾ka k nabytému majetku</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_pay" model="account.account">
 	<field name="code">9800</field>
@@ -488,7 +488,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Oprávky k opravné polo¾ce k nabytému majetku</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart10000" model="account.account">
 	<field name="code">10000</field>
@@ -497,7 +497,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('account.a_cash')])]"/>
 	<field name="type">view</field>
 	<field name="name">Zásoby</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart11000" model="account.account">
 	<field name="code">11000</field>
@@ -506,7 +506,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1100')])]"/>
 	<field name="type">view</field>
 	<field name="name">Materiál</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart11100" model="account.account">
 	<field name="code">11100</field>
@@ -515,7 +515,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Poøízení materiálu</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart11200" model="account.account">
 	<field name="code">11200</field>
@@ -524,7 +524,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Materiál na skladì</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart11900" model="account.account">
 	<field name="code">11900</field>
@@ -533,7 +533,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Materiál na cestì</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart12000" model="account.account">
 	<field name="code">12000</field>
@@ -542,7 +542,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1200')])]"/>
 	<field name="type">view</field>
 	<field name="name">Zásoby vlastní výroby</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart12100" model="account.account">
 	<field name="code">12100</field>
@@ -551,7 +551,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Nedokonèená výroba</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart12200" model="account.account">
 	<field name="code">12200</field>
@@ -560,7 +560,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Polotovary vlastní výroby</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart12300" model="account.account">
 	<field name="code">12300</field>
@@ -569,7 +569,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Výrobky</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart12400" model="account.account">
 	<field name="code">12400</field>
@@ -578,7 +578,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Zvíøata</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart13000" model="account.account">
 	<field name="code">13000</field>
@@ -587,7 +587,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1300')])]"/>
 	<field name="type">view</field>
 	<field name="name">Zbo¾í</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart13100" model="account.account">
 	<field name="code">13100</field>
@@ -596,7 +596,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Poøízení zbo¾í</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart13200" model="account.account">
 	<field name="code">13200</field>
@@ -605,7 +605,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Zbo¾í na skladì a v prodejnách</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart13900" model="account.account">
 	<field name="code">13900</field>
@@ -614,7 +614,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Zbo¾í na cestì</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart19000" model="account.account">
 	<field name="code">19000</field>
@@ -623,7 +623,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart1900')])]"/>
 	<field name="type">view</field>
 	<field name="name">Opravné polo¾ky k zásobám</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart19100" model="account.account">
 	<field name="code">19100</field>
@@ -632,7 +632,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Opravná polo¾ka k materiálu</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart19200" model="account.account">
 	<field name="code">19200</field>
@@ -641,7 +641,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Opravná polo¾ka k nedokonèené výrobì</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart19300" model="account.account">
 	<field name="code">19300</field>
@@ -650,7 +650,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Opravná polo¾ka k polotovarùm vlastní výroby</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart19400" model="account.account">
 	<field name="code">19400</field>
@@ -659,7 +659,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Opravná polo¾ka k výrobkùm</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart19500" model="account.account">
 	<field name="code">19500</field>
@@ -668,7 +668,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Opravná polo¾ka ke zvíøatùm</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart19600" model="account.account">
 	<field name="code">19600</field>
@@ -677,7 +677,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Opravná polo¾ka ke zbo¾í</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart20000" model="account.account">
 	<field name="code">20000</field>
@@ -686,7 +686,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2000')])]"/>
 	<field name="type">view</field>
 	<field name="name">Finanèní úèty</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart21000" model="account.account">
 	<field name="code">21000</field>
@@ -695,7 +695,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2100')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Peníze</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart21100" model="account.account">
 	<field name="code">21100</field>
@@ -704,7 +704,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Pokladna</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart21300" model="account.account">
 	<field name="code">21300</field>
@@ -713,7 +713,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Ceniny</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart22000" model="account.account">
 	<field name="code">22000</field>
@@ -722,7 +722,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2200')])]"/>
 	<field name="type">view</field>
 	<field name="name">Úèty v bankách</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart22100" model="account.account">
 	<field name="code">22100</field>
@@ -731,7 +731,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Bankovní úèty</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart22200" model="account.account">
 	<field name="code">22200</field>
@@ -740,7 +740,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Bankovní úèty klientù</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart23000" model="account.account">
 	<field name="code">23000</field>
@@ -749,7 +749,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Bì¾né bankovní úvìry</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart23100" model="account.account">
 	<field name="code">23100</field>
@@ -758,7 +758,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Krátkodobé bankovní úvìry</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart23200" model="account.account">
 	<field name="code">23200</field>
@@ -767,7 +767,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Eskontní úvìry</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart24000" model="account.account">
 	<field name="code">24000</field>
@@ -776,7 +776,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Jiné krátkodobé finanèní výpomoci</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart24100" model="account.account">
 	<field name="code">24100</field>
@@ -785,7 +785,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Emitované krátkodobé dluhopisy</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart24900" model="account.account">
 	<field name="code">24900</field>
@@ -794,7 +794,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Ostatní krátkodobé finanèní výpomoci</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart25000" model="account.account">
 	<field name="code">25000</field>
@@ -803,7 +803,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2500')])]"/>
 	<field name="type">view</field>
 	<field name="name">Krátkodobý finanèní majetek</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart25100" model="account.account">
 	<field name="code">25100</field>
@@ -812,7 +812,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Majetkové cenné papíry</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart25200" model="account.account">
 	<field name="code">25200</field>
@@ -821,7 +821,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Vlastní akcie a vlastní obchodní podíly</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart25300" model="account.account">
 	<field name="code">25300</field>
@@ -830,7 +830,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Dlu¾né cenné papíry</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart25500" model="account.account">
 	<field name="code">25500</field>
@@ -839,7 +839,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Vlastní dluhopisy</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart25600" model="account.account">
 	<field name="code">25600</field>
@@ -848,7 +848,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Ostatní cenné papíry</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart26000" model="account.account">
 	<field name="code">26000</field>
@@ -857,7 +857,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2600')])]"/>
 	<field name="type">view</field>
 	<field name="name">Pøevody mezi finanèními úèty</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart26100" model="account.account">
 	<field name="code">26100</field>
@@ -866,7 +866,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Peníze na cestì</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart29000" model="account.account">
 	<field name="code">29000</field>
@@ -875,7 +875,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart2900')])]"/>
 	<field name="type">view</field>
 	<field name="name">Opravné polo¾ky ke krátkodobému finanènímu majetku</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart29100" model="account.account">
 	<field name="code">29100</field>
@@ -884,7 +884,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Opravná polo¾ka k majetkovým cenným papírùm</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart29300" model="account.account">
 	<field name="code">29300</field>
@@ -893,7 +893,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Opravná polo¾ka k dlu¾ným cenným papírùm</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart30000" model="account.account">
 	<field name="code">30000</field>
@@ -902,7 +902,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3000')])]"/>
 	<field name="type">view</field>
 	<field name="name">Zúètovací vztahy</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart31000" model="account.account">
 	<field name="code">31000</field>
@@ -911,7 +911,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3100')])]"/>
 	<field name="type">view</field>
 	<field name="name">Pohledávky</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart31100" model="account.account">
 	<field name="code">31100</field>
@@ -920,7 +920,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Odbìratelé</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart31200" model="account.account">
 	<field name="code">31200</field>
@@ -929,7 +929,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Smìnky k inkasu</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart31300" model="account.account">
 	<field name="code">31300</field>
@@ -938,7 +938,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Pohledávky za eskontované cenné papíry</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart31400" model="account.account">
 	<field name="code">31400</field>
@@ -947,7 +947,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Poskytnuté provozní zálohy</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart31500" model="account.account">
 	<field name="code">31500</field>
@@ -956,7 +956,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Ostatní pohledávky</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart32000" model="account.account">
 	<field name="code">32000</field>
@@ -965,7 +965,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart3200')])]"/>
 	<field name="type">view</field>
 	<field name="name">Závazky</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart32100" model="account.account">
 	<field name="code">32100</field>
@@ -974,7 +974,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Dodavatelé</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart32200" model="account.account">
 	<field name="code">32200</field>
@@ -983,7 +983,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Smìnky k úhradì</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart32400" model="account.account">
 	<field name="code">32400</field>
@@ -992,7 +992,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Pøijaté zálohy</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart32500" model="account.account">
 	<field name="code">32500</field>
@@ -1001,7 +1001,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Ostatní závazky</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart32600" model="account.account">
 	<field name="code">32600</field>
@@ -1010,7 +1010,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name"> Závazky vùèi klientùm</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart32700" model="account.account">
 	<field name="code">32700</field>
@@ -1019,7 +1019,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name"> Závazky vùèi trhùm</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart33000" model="account.account">
 	<field name="code">33000</field>
@@ -1028,7 +1028,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Zúètování se zamìstnanci a institucemi</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart33100" model="account.account">
 	<field name="code">33100</field>
@@ -1037,7 +1037,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Zamìstnanci</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart33300" model="account.account">
 	<field name="code">33300</field>
@@ -1046,7 +1046,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Ostatní závazky vùèi zamìstnancùm</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart33500" model="account.account">
 	<field name="code">33500</field>
@@ -1055,7 +1055,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Pohledávky za zamìstnanci</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart33600" model="account.account">
 	<field name="code">33600</field>
@@ -1064,7 +1064,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Zúètování s institucemi sociálního zabezpeèení a zdravotního</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart34000" model="account.account">
 	<field name="code">34000</field>
@@ -1073,7 +1073,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Zúètování daní a dotací</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart34100" model="account.account">
 	<field name="code">34100</field>
@@ -1082,7 +1082,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Daò z pøíjmù</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart34200" model="account.account">
 	<field name="code">34200</field>
@@ -1091,7 +1091,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Ostatní pøímé danì</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart34300" model="account.account">
 	<field name="code">34300</field>
@@ -1100,7 +1100,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Daò z pøidané hodnoty - zúètování</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart34311" model="account.account">
 	<field name="code">34311</field>
@@ -1109,7 +1109,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">DPH 5% vstup</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart34312" model="account.account">
 	<field name="code">34312</field>
@@ -1118,7 +1118,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">DPH 22% vstup</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart34321" model="account.account">
 	<field name="code">34321</field>
@@ -1127,7 +1127,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">DPH 5% výstup</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart34322" model="account.account">
 	<field name="code">34322</field>
@@ -1136,7 +1136,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">DPH 22% výstup</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart34500" model="account.account">
 	<field name="code">34500</field>
@@ -1145,7 +1145,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Ostatní danì a poplatky</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart34600" model="account.account">
 	<field name="code">34600</field>
@@ -1154,7 +1154,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Dotace ze státního rozpoètu</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart34700" model="account.account">
 	<field name="code">34700</field>
@@ -1163,7 +1163,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Ostatní dotace</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart35000" model="account.account">
 	<field name="code">35000</field>
@@ -1172,7 +1172,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Pohledávky ke spoleèníkùm a sdru¾ení</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart35100" model="account.account">
 	<field name="code">35100</field>
@@ -1181,7 +1181,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Pohledávky k podnikùm ve skupinì</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart35300" model="account.account">
 	<field name="code">35300</field>
@@ -1190,7 +1190,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Pohledávky za upsaný vlastní kapitál</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart35400" model="account.account">
 	<field name="code">35400</field>
@@ -1199,7 +1199,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Pohledávky za spoleèníky pøi úhradì ztráty</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart35500" model="account.account">
 	<field name="code">35500</field>
@@ -1208,7 +1208,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Ostatní pohledávky za spoleèníky</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart35800" model="account.account">
 	<field name="code">35800</field>
@@ -1217,7 +1217,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Pohledávky k úèastníkùm sdru¾ení</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart36000" model="account.account">
 	<field name="code">36000</field>
@@ -1226,7 +1226,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Závazky ke spoleèníkùm a sdru¾ení</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart36100" model="account.account">
 	<field name="code">36100</field>
@@ -1235,7 +1235,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Závazky k podnikùm ve skupinì</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart36400" model="account.account">
 	<field name="code">36400</field>
@@ -1244,7 +1244,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Závazky ke spoleèníkùm pøi rozdìlování zisku</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart36500" model="account.account">
 	<field name="code">36500</field>
@@ -1253,7 +1253,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Ostatní závazky ke spoleèníkùm</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart36600" model="account.account">
 	<field name="code">36600</field>
@@ -1262,7 +1262,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Závazky ke spoleèníkùm a èlenùm dru¾stva ze závislé</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart36700" model="account.account">
 	<field name="code">36700</field>
@@ -1271,7 +1271,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Závazky z upsaných nesplacených cenných papírù a vkladù</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart36800" model="account.account">
 	<field name="code">36800</field>
@@ -1280,7 +1280,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Závazky k úèastníkùm sdru¾ení</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart37000" model="account.account">
 	<field name="code">37000</field>
@@ -1289,7 +1289,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Jiné pohledávky a závazky</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart37100" model="account.account">
 	<field name="code">37100</field>
@@ -1298,7 +1298,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Odlo¾ená daòová pohledávka a závazek</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart37300" model="account.account">
 	<field name="code">37300</field>
@@ -1307,7 +1307,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Nakoupené opce</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart37400" model="account.account">
 	<field name="code">37400</field>
@@ -1316,7 +1316,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Prodané opce</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart37500" model="account.account">
 	<field name="code">37500</field>
@@ -1325,7 +1325,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Pohledávky z emitovaných dluhopisù</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart37700" model="account.account">
 	<field name="code">37700</field>
@@ -1334,7 +1334,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name"> Zúètování obchodù</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart37800" model="account.account">
 	<field name="code">37800</field>
@@ -1343,7 +1343,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Jiné pohledávky</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart37900" model="account.account">
 	<field name="code">37900</field>
@@ -1352,7 +1352,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Jiné závazky</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart38000" model="account.account">
 	<field name="code">38000</field>
@@ -1361,7 +1361,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Pøechodné úèty aktiv a pasív</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart38100" model="account.account">
 	<field name="code">38100</field>
@@ -1370,7 +1370,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Náklady pøí¹tích období</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart38200" model="account.account">
 	<field name="code">38200</field>
@@ -1379,7 +1379,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Komplexní náklady pøí¹tích období</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart38300" model="account.account">
 	<field name="code">38300</field>
@@ -1388,7 +1388,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Výdaje pøí¹tích období</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart38400" model="account.account">
 	<field name="code">38400</field>
@@ -1397,7 +1397,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Výnosy pøí¹tích období</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart38500" model="account.account">
 	<field name="code">38500</field>
@@ -1406,7 +1406,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Pøíjmy pøí¹tích období</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart38600" model="account.account">
 	<field name="code">38600</field>
@@ -1415,7 +1415,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Kursové rozdíly aktivní</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart38700" model="account.account">
 	<field name="code">38700</field>
@@ -1424,7 +1424,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Kursové rozdíly pasívní</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart38800" model="account.account">
 	<field name="code">38800</field>
@@ -1433,7 +1433,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Dohadné úèty aktivní</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart38900" model="account.account">
 	<field name="code">38900</field>
@@ -1442,7 +1442,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Dohadné úèty pasívní</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart39000" model="account.account">
 	<field name="code">39000</field>
@@ -1451,7 +1451,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Opravná polo¾ka k zúètovacím vztahùm a vnitøní zúètování</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart39100" model="account.account">
 	<field name="code">39100</field>
@@ -1460,7 +1460,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Opravná polo¾ka k pohledávkám</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart39500" model="account.account">
 	<field name="code">39500</field>
@@ -1469,7 +1469,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Vnitøní zúètování</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart39800" model="account.account">
 	<field name="code">39800</field>
@@ -1478,7 +1478,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Spojovací úèet pøi sdru¾ení</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart40000" model="account.account">
 	<field name="code">40000</field>
@@ -1487,7 +1487,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4000')])]"/>
 	<field name="type">view</field>
 	<field name="name">Kapitálové úèty a dlouhodobé závazky</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart41000" model="account.account">
 	<field name="code">41000</field>
@@ -1496,7 +1496,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4100')])]"/>
 	<field name="type">view</field>
 	<field name="name">Základní kapitál a kapitálové fondy</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart41100" model="account.account">
 	<field name="code">41100</field>
@@ -1505,7 +1505,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Základní kapitál</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart41200" model="account.account">
 	<field name="code">41200</field>
@@ -1514,7 +1514,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Emisní á¾io</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart41300" model="account.account">
 	<field name="code">41300</field>
@@ -1523,7 +1523,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Ostatní kapitálové fondy</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart41400" model="account.account">
 	<field name="code">41400</field>
@@ -1532,7 +1532,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Oceòovací rozdíly z pøecenìní majetku a závazkù</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart42000" model="account.account">
 	<field name="code">42000</field>
@@ -1541,7 +1541,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart4200')])]"/>
 	<field name="type">view</field>
 	<field name="name">Fondy ze zisku a pøevedené hospodáøské výsledky</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart42100" model="account.account">
 	<field name="code">42100</field>
@@ -1550,7 +1550,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Zákonný rezervní fond</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart42200" model="account.account">
 	<field name="code">42200</field>
@@ -1559,7 +1559,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Nedìlitelný fond</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart42300" model="account.account">
 	<field name="code">42300</field>
@@ -1568,7 +1568,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Statutární fondy</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart42700" model="account.account">
 	<field name="code">42700</field>
@@ -1577,7 +1577,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Ostatní fondy</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart42800" model="account.account">
 	<field name="code">42800</field>
@@ -1586,7 +1586,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Nerozdìlený zisk minulých let</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart42900" model="account.account">
 	<field name="code">42900</field>
@@ -1595,7 +1595,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Neuhrazená ztráta minulých let</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart43000" model="account.account">
 	<field name="code">43000</field>
@@ -1604,7 +1604,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Hospodáøský výsledek</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart43100" model="account.account">
 	<field name="code">43100</field>
@@ -1613,7 +1613,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Hospodáøský výsledek ve schvalovacím øízení</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart45000" model="account.account">
 	<field name="code">45000</field>
@@ -1622,7 +1622,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Rezervy</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart45100" model="account.account">
 	<field name="code">45100</field>
@@ -1631,7 +1631,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Rezervy zákonné</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart45400" model="account.account">
 	<field name="code">45400</field>
@@ -1640,7 +1640,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Rezerva na kursové ztráty</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart45900" model="account.account">
 	<field name="code">45900</field>
@@ -1649,7 +1649,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Ostatní rezervy</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart46000" model="account.account">
 	<field name="code">46000</field>
@@ -1658,7 +1658,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Bankovní úvìry</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart46100" model="account.account">
 	<field name="code">46100</field>
@@ -1667,7 +1667,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Bankovní úvìry</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart47000" model="account.account">
 	<field name="code">47000</field>
@@ -1676,7 +1676,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Dlouhodobé závazky</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart47100" model="account.account">
 	<field name="code">47100</field>
@@ -1685,7 +1685,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Dlouhodobé závazky k podnikùm ve skupinì</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart47300" model="account.account">
 	<field name="code">47300</field>
@@ -1694,7 +1694,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Emitované dluhopisy</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart47400" model="account.account">
 	<field name="code">47400</field>
@@ -1703,7 +1703,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Závazky z pronájmu</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart47500" model="account.account">
 	<field name="code">47500</field>
@@ -1712,7 +1712,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Dlouhodobé pøijaté zálohy</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart47800" model="account.account">
 	<field name="code">47800</field>
@@ -1721,7 +1721,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Dlouhodobé smìnky k úhradì</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart47900" model="account.account">
 	<field name="code">47900</field>
@@ -1730,7 +1730,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">cash</field>
 	<field name="name">Ostatní dlouhodobé závazky</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart49000" model="account.account">
 	<field name="code">49000</field>
@@ -1739,7 +1739,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Individuální podnikatel</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart49100" model="account.account">
 	<field name="code">49100</field>
@@ -1748,7 +1748,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">tax</field>
 	<field name="name">Úèet individuálního podnikatele</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_expense" model="account.account">
 	<field name="code">50000</field>
@@ -1757,7 +1757,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5000')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Spotøebované nákupy</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart50100" model="account.account">
 	<field name="code">50100</field>
@@ -1766,7 +1766,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Spotøeba materiálu</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart50200" model="account.account">
 	<field name="code">50200</field>
@@ -1775,7 +1775,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Spotøeba energie</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart50300" model="account.account">
 	<field name="code">50300</field>
@@ -1784,7 +1784,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Spotøeba ostatních neskladovatelných dodávek</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart50400" model="account.account">
 	<field name="code">50400</field>
@@ -1793,7 +1793,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Prodané zbo¾í</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart51000" model="account.account">
 	<field name="code">51000</field>
@@ -1802,7 +1802,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5100')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Slu¾by</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart51100" model="account.account">
 	<field name="code">51100</field>
@@ -1811,7 +1811,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Opravy a udr¾ování</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart51200" model="account.account">
 	<field name="code">51200</field>
@@ -1820,7 +1820,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Cestovné</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart51300" model="account.account">
 	<field name="code">51300</field>
@@ -1829,7 +1829,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Náklady na reprezentaci</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart51800" model="account.account">
 	<field name="code">51800</field>
@@ -1838,7 +1838,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Ostatní slu¾by</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart52000" model="account.account">
 	<field name="code">52000</field>
@@ -1847,7 +1847,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart5200')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Osobní náklady</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart52100" model="account.account">
 	<field name="code">52100</field>
@@ -1856,7 +1856,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Mzdové náklady</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart52200" model="account.account">
 	<field name="code">52200</field>
@@ -1865,7 +1865,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Pøíjmy spoleèníkù a èlenù dru¾stva ze závislé èinnosti</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart52300" model="account.account">
 	<field name="code">52300</field>
@@ -1874,7 +1874,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Odmìny èlenùm orgánù spoleènosti a dru¾stva</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart52400" model="account.account">
 	<field name="code">52400</field>
@@ -1883,7 +1883,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Zákonné sociální poji¹tìní</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart52500" model="account.account">
 	<field name="code">52500</field>
@@ -1892,7 +1892,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Ostatní sociální poji¹tìní</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart52600" model="account.account">
 	<field name="code">52600</field>
@@ -1901,7 +1901,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Sociální náklady individuálního podnikatele</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart52700" model="account.account">
 	<field name="code">52700</field>
@@ -1910,7 +1910,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Zákonné sociální náklady</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart52800" model="account.account">
 	<field name="code">52800</field>
@@ -1919,7 +1919,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Ostatní sociální náklady</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart53000" model="account.account">
 	<field name="code">53000</field>
@@ -1928,7 +1928,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Danì a poplatky</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart53100" model="account.account">
 	<field name="code">53100</field>
@@ -1937,7 +1937,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Daò silnièní</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart53200" model="account.account">
 	<field name="code">53200</field>
@@ -1946,7 +1946,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Daò z nemovitostí</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart53800" model="account.account">
 	<field name="code">53800</field>
@@ -1955,7 +1955,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Ostatní danì a poplatky</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart54000" model="account.account">
 	<field name="code">54000</field>
@@ -1964,7 +1964,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Jiné provozní náklady</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart54100" model="account.account">
 	<field name="code">54100</field>
@@ -1973,7 +1973,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Zùstatková cena prodaného dlouhodobého nehmotného a hmotného</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart54200" model="account.account">
 	<field name="code">54200</field>
@@ -1982,7 +1982,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Prodaný materiál</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart54300" model="account.account">
 	<field name="code">54300</field>
@@ -1991,7 +1991,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Dary</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart54400" model="account.account">
 	<field name="code">54400</field>
@@ -2000,7 +2000,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Smluvní pokuty a úroky z prodlení</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart54500" model="account.account">
 	<field name="code">54500</field>
@@ -2009,7 +2009,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Ostatní pokuty a penále</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart54600" model="account.account">
 	<field name="code">54600</field>
@@ -2018,7 +2018,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Odpis pohledávky</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart54800" model="account.account">
 	<field name="code">54800</field>
@@ -2027,7 +2027,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Ostatní provozní náklady</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart55000" model="account.account">
 	<field name="code">55000</field>
@@ -2036,7 +2036,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Odpisy, rezervy a opravné polo¾ky provozních nákladù</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart55100" model="account.account">
 	<field name="code">55100</field>
@@ -2045,7 +2045,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Odpisy dlouhodobého nehmotného a hmotného majetku</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart55200" model="account.account">
 	<field name="code">55200</field>
@@ -2054,7 +2054,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Tvorba zákonných rezerv</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart55400" model="account.account">
 	<field name="code">55400</field>
@@ -2063,7 +2063,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Tvorba ostatních rezerv</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart55500" model="account.account">
 	<field name="code">55500</field>
@@ -2072,7 +2072,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Zúètování komplexních nákladù pøí¹tích období</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart55700" model="account.account">
 	<field name="code">55700</field>
@@ -2081,7 +2081,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Zúètování oprávky k opravné polo¾ce k nabytému majetku</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart55800" model="account.account">
 	<field name="code">55800</field>
@@ -2090,7 +2090,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Tvorba zákonných opravných polo¾ek</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart55900" model="account.account">
 	<field name="code">55900</field>
@@ -2099,7 +2099,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Tvorba opravných polo¾ek</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart56000" model="account.account">
 	<field name="code">56000</field>
@@ -2108,7 +2108,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Finanèní náklady</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart56100" model="account.account">
 	<field name="code">56100</field>
@@ -2117,7 +2117,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Prodané cenné papíry a vklady</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart56200" model="account.account">
 	<field name="code">56200</field>
@@ -2126,7 +2126,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Úroky</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart56300" model="account.account">
 	<field name="code">56300</field>
@@ -2135,7 +2135,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Kursové ztráty</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart56800" model="account.account">
 	<field name="code">56800</field>
@@ -2144,7 +2144,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Ostatní finanèní náklady</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart57000" model="account.account">
 	<field name="code">57000</field>
@@ -2153,7 +2153,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Rezervy a opravné polo¾ky finanèních nákladù</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart57400" model="account.account">
 	<field name="code">57400</field>
@@ -2162,7 +2162,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Tvorba rezerv</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart57900" model="account.account">
 	<field name="code">57900</field>
@@ -2171,7 +2171,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Tvorba opravných polo¾ek</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart58000" model="account.account">
 	<field name="code">58000</field>
@@ -2180,7 +2180,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Mimoøádné náklady</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart58100" model="account.account">
 	<field name="code">58100</field>
@@ -2189,7 +2189,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Náklady na zmìnu metody</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart58200" model="account.account">
 	<field name="code">58200</field>
@@ -2198,7 +2198,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Manka a ¹kody</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart58400" model="account.account">
 	<field name="code">58400</field>
@@ -2207,7 +2207,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Tvorba rezerv</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart58800" model="account.account">
 	<field name="code">58800</field>
@@ -2216,7 +2216,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Ostatní mimoøádné náklady</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart58900" model="account.account">
 	<field name="code">58900</field>
@@ -2225,7 +2225,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Tvorba opravných polo¾ek</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart59000" model="account.account">
 	<field name="code">59000</field>
@@ -2234,7 +2234,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Danì z pøíjmù a pøevodové úèty</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart59100" model="account.account">
 	<field name="code">59100</field>
@@ -2243,7 +2243,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Daò z pøíjmù z bì¾né èinnosti - splatná</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart59200" model="account.account">
 	<field name="code">59200</field>
@@ -2252,7 +2252,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Daò z pøíjmù z bì¾né èinnosti - odlo¾ená</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart59300" model="account.account">
 	<field name="code">59300</field>
@@ -2261,7 +2261,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Daò z pøíjmù z mimoøádné èinnosti - splatná</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart59400" model="account.account">
 	<field name="code">59400</field>
@@ -2270,7 +2270,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Daò z pøíjmù z mimoøádné èinnosti - odlo¾ené</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart59500" model="account.account">
 	<field name="code">59500</field>
@@ -2279,7 +2279,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Dodateèné odvody danì z pøíjmù</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart59600" model="account.account">
 	<field name="code">59600</field>
@@ -2288,7 +2288,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Pøevod podílu na hospodáøském výsledku spoleèníkùm</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart59700" model="account.account">
 	<field name="code">59700</field>
@@ -2297,7 +2297,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Pøevod provozních nákladù</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart59800" model="account.account">
 	<field name="code">59800</field>
@@ -2306,7 +2306,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">expense</field>
 	<field name="name">Pøevod finanèních nákladù</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="account.a_income" model="account.account">
 	<field name="code">60000</field>
@@ -2315,7 +2315,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart6000')])]"/>
 	<field name="type">income</field>
 	<field name="name">Tr¾by za vlastní výkony a zbo¾í</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart60100" model="account.account">
 	<field name="code">60100</field>
@@ -2324,7 +2324,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Tr¾by za vlastní výrobky</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart60200" model="account.account">
 	<field name="code">60200</field>
@@ -2333,7 +2333,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Tr¾by z prodeje slu¾eb</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart60400" model="account.account">
 	<field name="code">60400</field>
@@ -2342,7 +2342,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Tr¾by za zbo¾í</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart61000" model="account.account">
 	<field name="code">61000</field>
@@ -2351,7 +2351,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart6100')])]"/>
 	<field name="type">income</field>
 	<field name="name">Zmìny stavu vnitropodnikových zásob</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart61100" model="account.account">
 	<field name="code">61100</field>
@@ -2360,7 +2360,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Zmìna stavu nedokonèené výroby</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart61200" model="account.account">
 	<field name="code">61200</field>
@@ -2369,7 +2369,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Zmìna stavu polotovarù</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart61300" model="account.account">
 	<field name="code">61300</field>
@@ -2378,7 +2378,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Zmìna stavu výrobkù</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart61400" model="account.account">
 	<field name="code">61400</field>
@@ -2387,7 +2387,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Zmìna stavu zvíøat</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart62000" model="account.account">
 	<field name="code">62000</field>
@@ -2396,7 +2396,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart6200')])]"/>
 	<field name="type">income</field>
 	<field name="name">Aktivace</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart62100" model="account.account">
 	<field name="code">62100</field>
@@ -2405,7 +2405,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Aktivace materiálu a zbo¾í</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart62200" model="account.account">
 	<field name="code">62200</field>
@@ -2414,7 +2414,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Aktivace vnitropodnikových slu¾eb</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart62300" model="account.account">
 	<field name="code">62300</field>
@@ -2423,7 +2423,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Aktivace dlouhodobého nehmotného majetku</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart62400" model="account.account">
 	<field name="code">62400</field>
@@ -2432,7 +2432,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Aktivace dlouhodobého hmotného majetku</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart64000" model="account.account">
 	<field name="code">64000</field>
@@ -2441,7 +2441,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Jiné provozní výnosy.</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart64100" model="account.account">
 	<field name="code">64100</field>
@@ -2450,7 +2450,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Tr¾by z prodeje dlouhodobého nehmotného a hmotného majetku</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart64200" model="account.account">
 	<field name="code">64200</field>
@@ -2459,7 +2459,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Tr¾by z prodeje materiálu</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart64400" model="account.account">
 	<field name="code">64400</field>
@@ -2468,7 +2468,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Smluvní pokuty a úroky z prodlení</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart64600" model="account.account">
 	<field name="code">64600</field>
@@ -2477,7 +2477,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Výnosy z odepsaných pohledávek</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart64800" model="account.account">
 	<field name="code">64800</field>
@@ -2486,7 +2486,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Jiné provozní výnosy</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart65000" model="account.account">
 	<field name="code">65000</field>
@@ -2495,7 +2495,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">view</field>
 	<field name="name">Zúètování rezerv a opravných polo¾ek provozních výnosù</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart65200" model="account.account">
 	<field name="code">65200</field>
@@ -2504,7 +2504,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Zúètování zákonných rezerv</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart65400" model="account.account">
 	<field name="code">65400</field>
@@ -2513,7 +2513,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Zúètování ostatních rezerv</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart65500" model="account.account">
 	<field name="code">65500</field>
@@ -2522,7 +2522,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Zúètování komplexních nákladù pøí¹tích období</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart65700" model="account.account">
 	<field name="code">65700</field>
@@ -2531,7 +2531,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Zúètování oprávky k opravné polo¾ce k nabytému majetku</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart65800" model="account.account">
 	<field name="code">65800</field>
@@ -2540,7 +2540,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Zúètování zákonných opravných polo¾ek</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart65900" model="account.account">
 	<field name="code">65900</field>
@@ -2549,7 +2549,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Zúètování opravných polo¾ek</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart66000" model="account.account">
 	<field name="code">66000</field>
@@ -2558,7 +2558,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart6600')])]"/>
 	<field name="type">income</field>
 	<field name="name">Finanèní výnosy</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart66100" model="account.account">
 	<field name="code">66100</field>
@@ -2567,7 +2567,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Tr¾by z prodeje cenných papírù a vkladù</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart66200" model="account.account">
 	<field name="code">66200</field>
@@ -2576,7 +2576,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Úroky</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart66300" model="account.account">
 	<field name="code">66300</field>
@@ -2585,7 +2585,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Kursové zisky</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart66500" model="account.account">
 	<field name="code">66500</field>
@@ -2594,7 +2594,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Výnosy z dlouhodobého finanèního majetku</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart66600" model="account.account">
 	<field name="code">66600</field>
@@ -2603,7 +2603,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Výnosy z krátkodobého finanèního majetku</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart66800" model="account.account">
 	<field name="code">66800</field>
@@ -2612,7 +2612,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Ostatní finanèní výnosy</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart67000" model="account.account">
 	<field name="code">67000</field>
@@ -2621,7 +2621,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart6700')])]"/>
 	<field name="type">view</field>
 	<field name="name">Zúètování rezerv a opravných polo¾ek finanèních výnosù</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart67400" model="account.account">
 	<field name="code">67400</field>
@@ -2630,7 +2630,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Zúètování rezerv</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart67900" model="account.account">
 	<field name="code">67900</field>
@@ -2639,7 +2639,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Zúètování opravných polo¾ek</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart68000" model="account.account">
 	<field name="code">68000</field>
@@ -2648,7 +2648,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Mimoøádné výnosy</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart68100" model="account.account">
 	<field name="code">68100</field>
@@ -2657,7 +2657,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Výnosy ze zmìny metody</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart68400" model="account.account">
 	<field name="code">68400</field>
@@ -2666,7 +2666,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Zúètování rezerv</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart68800" model="account.account">
 	<field name="code">68800</field>
@@ -2675,7 +2675,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Ostatní mimoøádné výnosy</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart68900" model="account.account">
 	<field name="code">68900</field>
@@ -2684,7 +2684,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Zúètování opravných polo¾ek</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart69000" model="account.account">
 	<field name="code">69000</field>
@@ -2693,7 +2693,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart6900')])]"/>
 	<field name="type">view</field>
 	<field name="name">Pøevodové úèty</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart69700" model="account.account">
 	<field name="code">69700</field>
@@ -2702,7 +2702,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Pøevod provozních výnosù</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart69800" model="account.account">
 	<field name="code">69800</field>
@@ -2711,7 +2711,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">income</field>
 	<field name="name">Pøevod finanèních výnosù</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart70000" model="account.account">
 	<field name="code">70000</field>
@@ -2720,7 +2720,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7000')])]"/>
 	<field name="type">view</field>
 	<field name="name">Úèty rozva¾né</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart70100" model="account.account">
 	<field name="code">70100</field>
@@ -2729,7 +2729,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Poèáteèní úèet rozva¾ný</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart70200" model="account.account">
 	<field name="code">70200</field>
@@ -2738,7 +2738,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart0')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Koneèný úèet rozva¾ný</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 <record id="chart71000" model="account.account">
 	<field name="code">71000</field>
@@ -2747,7 +2747,7 @@
 	<field name="parent_id" eval="[(6, 0, [ref('chart7100')])]"/>
 	<field name="type">asset</field>
 	<field name="name">Úèet ziskù a ztrát</field>
-	<field name="currency_id" ref="base.EUR"/>
+
 </record>
 </data>
 </terp>
