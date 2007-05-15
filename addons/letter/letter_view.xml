@@ -37,7 +37,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_letter_form">
-		<field name="name">letter.letter.form</field>
 		<field name="res_model">letter.letter</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -46,7 +45,7 @@
 	<menuitem name="Tools/Letters/Letters" id="menu_action_letter_form" action="action_letter_form"/>
 
 	<record model="ir.actions.act_window" id="action_letter_form_draft">
-		<field name="name">letter.letter.form</field>
+		<field name="name">Draft Letters</field>
 		<field name="res_model">letter.letter</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="domain">[('state','=','draft')]</field>
@@ -55,7 +54,7 @@
 	</record>
 	<menuitem name="Tools/Letters/Letters/Draft Letters" id="menu_action_letter_form_draft" action="action_letter_form_draft"/>
 	<record model="ir.actions.act_window" id="action_letter_form_confirm">
-		<field name="name">letter.letter.form</field>
+		<field name="name">Confirmed Letters</field>
 		<field name="res_model">letter.letter</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="domain">[('state','=','confirmed')]</field>
@@ -109,7 +108,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_paragraph_form">
-		<field name="name">letter.paragraph.form</field>
 		<field name="res_model">letter.paragraph</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -132,7 +130,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_letter_type_form">
-		<field name="name">letter.letter.type.form</field>
 		<field name="res_model">letter.letter.type</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -164,7 +161,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_paragraph_type_form">
-		<field name="name">letter.paragraph.type.form</field>
 		<field name="res_model">letter.paragraph.type</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>

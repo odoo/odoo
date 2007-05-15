@@ -11,7 +11,7 @@
 		<field name="model">report.purchase.order.product</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Purchases Orders by products">
+			<form string="Purchases by products">
 				<field name="name" select="1"/>
 				<field name="product_id" select="1"/>
 				<field name="count"/>
@@ -28,7 +28,7 @@
 		<field name="model">report.purchase.order.product</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Purchases Orders by products">
+			<tree string="Purchases by products">
 				<field name="name"/>
 				<field name="product_id"/>
 				<field name="count"/>
@@ -41,20 +41,19 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="action_order_product_tree">
-		<field name="name">report.purchase.order.product.tree</field>
+		<field name="name">Purchases by Products (this month)</field>
 		<field name="res_model">report.purchase.order.product</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree</field>
 		<field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
 	</record>
-	<menuitem name="Purchase Management/Reporting/This Month/Purchases by Product" action="action_order_product_tree" id="menu_report_order_product"/>
+	<menuitem name="Purchase Management/Reporting/This Month/Purchases by Products" action="action_order_product_tree" id="menu_report_order_product"/>
 	<record model="ir.actions.act_window" id="action_order_product_tree_all">
-		<field name="name">report.purchase.order.product.tree</field>
 		<field name="res_model">report.purchase.order.product</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree</field>
 	</record>
-	<menuitem name="Purchase Management/Reporting/All Months/Purchases by Product" action="action_order_product_tree_all" id="menu_report_order_product_all"/>
+	<menuitem name="Purchase Management/Reporting/All Months/Purchases by Products" action="action_order_product_tree_all" id="menu_report_order_product_all"/>
 
 	#
 	# Purchases by category by month
@@ -65,7 +64,7 @@
 		<field name="model">report.purchase.order.category</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Purchases Orders by categories">
+			<form string="Purchases by Category of Products">
 				<field name="name" select="1"/>
 				<field name="category_id" select="1"/>
 				<field name="count"/>
@@ -82,7 +81,7 @@
 		<field name="model">report.purchase.order.category</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Purchases Orders by categories">
+			<tree string="Purchases by Category of Products">
 				<field name="name"/>
 				<field name="category_id"/>
 				<field name="count"/>
@@ -95,20 +94,19 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="action_order_category_tree">
-		<field name="name">report.purchase.order.category.tree</field>
+		<field name="name">Purchases by Category of Product (this month)</field>
 		<field name="res_model">report.purchase.order.category</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree</field>
 		<field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
 	</record>
-	<menuitem name="Purchase Management/Reporting/This Month/Purchases by Category of Product" action="action_order_category_tree" id="menu_report_order_category"/>
+	<menuitem name="Purchase Management/Reporting/This Month/Purchases by Category of Products" action="action_order_category_tree" id="menu_report_order_category"/>
 	<record model="ir.actions.act_window" id="action_order_category_tree_all">
-		<field name="name">report.purchase.order.category.tree</field>
 		<field name="res_model">report.purchase.order.category</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree</field>
 	</record>
-	<menuitem name="Purchase Management/Reporting/All Months/Purchases by Category of Product" action="action_order_category_tree_all" id="menu_report_order_category_all"/>
+	<menuitem name="Purchase Management/Reporting/All Months/Purchases by Category of Products" action="action_order_category_tree_all" id="menu_report_order_category_all"/>
 
 
 </data>

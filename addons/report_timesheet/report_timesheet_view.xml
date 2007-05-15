@@ -47,7 +47,7 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="action_timesheet_user_stat">
-		<field name="name">report_timesheet.user.graph</field>
+		<field name="name">Timesheet by user (this month)</field>
 		<field name="res_model">report_timesheet.user</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">graph,tree</field>
@@ -59,7 +59,6 @@
 		id="menu_report_timesheet_user"/>
 
 	<record model="ir.actions.act_window" id="action_timesheet_user_stat_all">
-		<field name="name">report_timesheet.user.tree.all</field>
 		<field name="res_model">report_timesheet.user</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">graph,tree</field>
@@ -116,7 +115,6 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="action_timesheet_invoice_stat_all">
-		<field name="name">report_timesheet.invoice.tree.all</field>
 		<field name="res_model">report_timesheet.invoice</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">graph,tree</field>
@@ -127,7 +125,7 @@
 		id="menu_report_timesheet_invoice_all"/>
 
 	<record model="ir.actions.act_window" id="action_timesheet_invoice_stat_my">
-		<field name="name">report_timesheet.invoice.tree</field>
+		<field name="name">My timesheets to invoice</field>
 		<field name="res_model">report_timesheet.invoice</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">graph,tree</field>
@@ -184,7 +182,6 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="action_timesheet_account_stat_all">
-		<field name="name">report_timesheet.account.tree.all</field>
 		<field name="res_model">report_timesheet.account</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">graph,tree</field>
@@ -195,7 +192,7 @@
 		id="menu_report_timesheet_account_all"/>
 
 	<record model="ir.actions.act_window" id="action_timesheet_account_stat_my">
-		<field name="name">report_timesheet.account.tree</field>
+		<field name="name">My timesheets by account</field>
 		<field name="res_model">report_timesheet.account</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">graph,tree</field>

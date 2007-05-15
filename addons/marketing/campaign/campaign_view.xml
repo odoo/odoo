@@ -35,7 +35,6 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="view_campaign_tree">
-		<field name="name">campaign.campaign.tree</field>
 		<field name="res_model">campaign.campaign</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">tree</field>
@@ -44,7 +43,6 @@
 	<menuitem name="Marketing Operations/Campaigns" action="view_campaign_tree" groups="admin" id="menu_marketing_operations_campaigns"/>
 
 	<record model="ir.actions.act_window" id="view_campaign_form">
-		<field name="name">campaign.campaign.form</field>
 		<field name="res_model">campaign.campaign</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -171,7 +169,6 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="action_campaign_open">
-		<field name="name">campaign.partner.open</field>
 		<field name="res_model">campaign.partner</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="domain">[('campaign_id','=',active_id)]</field>

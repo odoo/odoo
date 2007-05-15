@@ -56,7 +56,6 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="action_account_report_form">
-		<field name="name">account.report.report.form</field>
 		<field name="res_model">account.report.report</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">form,tree</field>
@@ -66,7 +65,7 @@
 		id="menu_action_account_report_form"
 		action="action_account_report_form"/>
 	<record model="ir.actions.act_window" id="action_account_report_tree">
-		<field name="name">account.report.report.tree</field>
+		<field name="name">Structured reporting</field>
 		<field name="res_model">account.report.report</field>
 		<field name="view_type">tree</field>
 	</record>
@@ -92,7 +91,7 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="action_account_report_tree_view">
-		<field name="name">account.report.report.tree</field>
+		<field name="name">Structured reporting</field>
 		<field name="res_model">account.fiscalyear</field>
 		<field name="view_type">tree</field>
 		<field name="view_id" ref="view_account_report_tree"/>
@@ -105,7 +104,7 @@
 
 
 	<record model="ir.actions.act_window" id="action_account_report_tree_view_fiscal">
-		<field name="name">account.report.report.tree</field>
+		<field name="name">Fiscal Statements reporting</field>
 		<field name="res_model">account.fiscalyear</field>
 		<field name="view_type">tree</field>
 		<field name="view_id" ref="view_account_report_tree"/>
@@ -117,7 +116,7 @@
 		action="action_account_report_tree_view_fiscal"/>
 
 	<record model="ir.actions.act_window" id="action_account_report_tree_view_indicator">
-		<field name="name">account.report.report.tree</field>
+		<field name="name">Indicators reporting</field>
 		<field name="res_model">account.fiscalyear</field>
 		<field name="view_type">tree</field>
 		<field name="view_id" ref="view_account_report_tree"/>
@@ -129,7 +128,7 @@
 		action="action_account_report_tree_view_indicator"/>
 
 	<record model="ir.actions.act_window" id="action_account_report_tree_view_other">
-		<field name="name">account.report.report.tree</field>
+		<field name="name">Others reportings</field>
 		<field name="res_model">account.fiscalyear</field>
 		<field name="view_type">tree</field>
 		<field name="view_id" ref="view_account_report_tree"/>

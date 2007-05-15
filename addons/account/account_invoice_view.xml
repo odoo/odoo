@@ -271,7 +271,6 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="action_invoice_form">
-		<field name="name">account.invoice</field>
 		<field name="res_model">account.invoice</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="invoice_form"/>
@@ -279,7 +278,7 @@
 	<menuitem name="Financial Management/Invoices" sequence="6"/>
 
 	<record model="ir.actions.act_window" id="action_invoice_tree1">
-		<field name="name">account.invoice</field>
+		<field name="name">Customers Invoice</field>
 		<field name="res_model">account.invoice</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">form,tree</field>
@@ -287,10 +286,10 @@
 		<field name="domain">[('type','=','out_invoice')]</field>
 		<field name="context">{'type':'out_invoice'}</field>
 	</record>
-	<menuitem name="Financial Management/Invoices/Customers Invoices" id="menu_action_invoice_tree1" action="action_invoice_tree1"/>
+	<menuitem name="Financial Management/Invoices/" id="menu_action_invoice_tree1" action="action_invoice_tree1"/>
 	
 	<record model="ir.actions.act_window" id="action_invoice_tree2">
-		<field name="name">account.invoice.supplier</field>
+		<field name="name">Suppliers Invoice</field>
 		<field name="res_model">account.invoice</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">form,tree</field>
@@ -298,10 +297,10 @@
 		<field name="domain">[('type','=','in_invoice')]</field>
 		<field name="context">{'type':'in_invoice'}</field>
 	</record>
-	<menuitem name="Financial Management/Invoices/Suppliers Invoices" id="menu_action_invoice_tree2" action="action_invoice_tree2"/>
+	<menuitem name="Financial Management/Invoices/" id="menu_action_invoice_tree2" action="action_invoice_tree2"/>
 
 	<record model="ir.actions.act_window" id="action_invoice_tree3">
-		<field name="name">account.invoice</field>
+		<field name="name">Customers Refund</field>
 		<field name="res_model">account.invoice</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">form,tree</field>
@@ -309,10 +308,10 @@
 		<field name="domain">[('type','=','out_refund')]</field>
 		<field name="context">{'type':'out_refund'}</field>
 	</record>
-	<menuitem name="Financial Management/Invoices/Customers Refund" id="menu_action_invoice_tree3" action="action_invoice_tree3"/>
+	<menuitem name="Financial Management/Invoices/" id="menu_action_invoice_tree3" action="action_invoice_tree3"/>
 
 	<record model="ir.actions.act_window" id="action_invoice_tree4">
-		<field name="name">account.invoice.supplier</field>
+		<field name="name">Suppliers Refund</field>
 		<field name="res_model">account.invoice</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">form,tree</field>
@@ -320,97 +319,97 @@
 		<field name="domain">[('type','=','in_refund')]</field>
 		<field name="context">{'type':'in_refund'}</field>
 	</record>
-	<menuitem name="Financial Management/Invoices/Suppliers Refund" id="menu_action_invoice_tree4" action="action_invoice_tree4"/>
+	<menuitem name="Financial Management/Invoices/" id="menu_action_invoice_tree4" action="action_invoice_tree4"/>
 
 	<record model="ir.actions.act_window" id="action_invoice_tree5">
-		<field name="name">account.invoice</field>
+		<field name="name">Draft Customers Invoices</field>
 		<field name="res_model">account.invoice</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','draft'),('type','=','out_invoice')]</field>
 		<field name="context">{'type':'out_invoice'}</field>
 	</record>
-	<menuitem name="Financial Management/Invoices/Customers Invoices/Draft Invoices" action="action_invoice_tree5" id="menu_invoice_draft"/>
+	<menuitem name="Financial Management/Invoices/Customers Invoice/Draft" action="action_invoice_tree5" id="menu_invoice_draft"/>
 
 	<record model="ir.actions.act_window" id="action_invoice_tree6">
-		<field name="name">account.invoice</field>
+		<field name="name">PRO-FORMA Customers Invoices</field>
 		<field name="res_model">account.invoice</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','proforma'),('type','=','out_invoice')]</field>
 		<field name="context">{'type':'out_invoice'}</field>
 	</record>
-	<menuitem name="Financial Management/Invoices/Customers Invoices/PRO-FORMA" id="menu_action_invoice_tree6" action="action_invoice_tree6"/>
+	<menuitem name="Financial Management/Invoices/Customers Invoice/PRO-FORMA" id="menu_action_invoice_tree6" action="action_invoice_tree6"/>
 
 	<record model="ir.actions.act_window" id="action_invoice_tree7">
-		<field name="name">account.invoice</field>
+		<field name="name">Opened Customers Invoices</field>
 		<field name="res_model">account.invoice</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','open'),('type','=','out_invoice')]</field>
 		<field name="context">{'type':'out_invoice'}</field>
 	</record>
-	<menuitem name="Financial Management/Invoices/Customers Invoices/Opened Invoices" id="menu_action_invoice_tree7" action="action_invoice_tree7"/>
+	<menuitem name="Financial Management/Invoices/Customers Invoice/Opened" id="menu_action_invoice_tree7" action="action_invoice_tree7"/>
 
 	<record model="ir.actions.act_window" id="action_invoice_tree8">
-		<field name="name">account.invoice</field>
+		<field name="name">Draft Suppliers Invoices</field>
 		<field name="res_model">account.invoice</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','draft'),('type','=','in_invoice')]</field>
 		<field name="context">{'type':'in_invoice'}</field>
 	</record>
-	<menuitem name="Financial Management/Invoices/Suppliers Invoices/Draft Invoices" id="menu_action_invoice_tree8" action="action_invoice_tree8"/>
+	<menuitem name="Financial Management/Invoices/Suppliers Invoice/Draft" id="menu_action_invoice_tree8" action="action_invoice_tree8"/>
 
 	<record model="ir.actions.act_window" id="action_invoice_tree9">
-		<field name="name">account.invoice</field>
+		<field name="name">Opened Suppliers Invoices</field>
 		<field name="res_model">account.invoice</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','open'),('type','=','in_invoice')]</field>
 		<field name="context">{'type':'in_invoice'}</field>
 	</record>
-	<menuitem name="Financial Management/Invoices/Suppliers Invoices/Opened Invoices" id="menu_action_invoice_tree9" action="action_invoice_tree9"/>
+	<menuitem name="Financial Management/Invoices/Suppliers Invoice/Opened" id="menu_action_invoice_tree9" action="action_invoice_tree9"/>
 
 	<record model="ir.actions.act_window" id="action_invoice_tree10">
-		<field name="name">account.invoice</field>
+		<field name="name">Draft Customers Refund</field>
 		<field name="res_model">account.invoice</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','draft'),('type','=','out_refund')]</field>
 		<field name="context">{'type':'out_refund'}</field>
 	</record>
-	<menuitem name="Financial Management/Invoices/Customers Refund/Draft Invoices" id="menu_action_invoice_tree10" action="action_invoice_tree10"/>
+	<menuitem name="Financial Management/Invoices/Customers Refund/Draft" id="menu_action_invoice_tree10" action="action_invoice_tree10"/>
 	
 	<record model="ir.actions.act_window" id="action_invoice_tree11">
-		<field name="name">account.invoice</field>
+		<field name="name">Opened Customers Refund</field>
 		<field name="res_model">account.invoice</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','open'),('type','=','out_refund')]</field>
 		<field name="context">{'type':'out_refund'}</field>
 	</record>
-	<menuitem name="Financial Management/Invoices/Customers Refund/Opened Invoices" id="menu_action_invoice_tree11" action="action_invoice_tree11"/>
+	<menuitem name="Financial Management/Invoices/Customers Refund/Opened" id="menu_action_invoice_tree11" action="action_invoice_tree11"/>
 
 	<record model="ir.actions.act_window" id="action_invoice_tree12">
-		<field name="name">account.invoice</field>
+		<field name="name">Draft Suppliers Refund</field>
 		<field name="res_model">account.invoice</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','draft'),('type','=','in_refund')]</field>
 		<field name="context">{'type':'in_refund'}</field>
 	</record>
-	<menuitem name="Financial Management/Invoices/Suppliers Refund/Draft Invoices" id="menu_action_invoice_tree12" action="action_invoice_tree12"/>
+	<menuitem name="Financial Management/Invoices/Suppliers Refund/Draft" id="menu_action_invoice_tree12" action="action_invoice_tree12"/>
 	
 	<record model="ir.actions.act_window" id="action_invoice_tree13">
-		<field name="name">account.invoice</field>
+		<field name="name">Opened Suppliers Refund</field>
 		<field name="res_model">account.invoice</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','open'),('type','=','in_refund')]</field>
 		<field name="context">{'type':'in_refund'}</field>
 	</record>
-	<menuitem name="Financial Management/Invoices/Suppliers Refund/Opened Invoices" id="menu_action_invoice_tree13" action="action_invoice_tree13"/>
+	<menuitem name="Financial Management/Invoices/Suppliers Refund/Opened" id="menu_action_invoice_tree13" action="action_invoice_tree13"/>
 
 </data>
 </terp>

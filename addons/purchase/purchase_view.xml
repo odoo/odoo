@@ -67,14 +67,13 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="purchase_form_action">
-		<field name="name">purchase.order.form</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">purchase.order</field>
 		<field name="view_mode">form,tree</field>
 	</record>
 	<menuitem name="Purchase Management/Purchase Order" id="menu_purchase_form_action" action="purchase_form_action"/>
 	<record model="ir.actions.act_window" id="purchase_form_action2">
-		<field name="name">purchase.order.form</field>
+		<field name="name">Draft Purchase Order</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">purchase.order</field>
 		<field name="domain">[('state','=','draft')]</field>
@@ -83,7 +82,7 @@
 	</record>
 	<menuitem name="Purchase Management/Purchase Order/Draft Purchase Order (RFQ)" action="purchase_form_action2" id="menu_purchase_order_draft"/>
 	<record model="ir.actions.act_window" id="purchase_form_action3">
-		<field name="name">purchase.order.form</field>
+		<field name="name">Purchase Order waiting Approval</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">purchase.order</field>
 		<field name="view_type">form</field>
@@ -92,7 +91,7 @@
 	</record>
 	<menuitem name="Purchase Management/Purchase Order/Purchase Order waiting Approval" id="menu_purchase_form_action3" action="purchase_form_action3"/>
 	<record model="ir.actions.act_window" id="purchase_form_action4">
-		<field name="name">purchase.order.form</field>
+		<field name="name">Running Purchase Order</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">purchase.order</field>
 		<field name="view_type">form</field>

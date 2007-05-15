@@ -8,21 +8,20 @@
 
 
 		<record model="ir.actions.act_window" id="action_account_analytic_line_to_invoice">
-			<field name="name">report.account.analytic.line.tree</field>
 			<field name="res_model">report.account.analytic.line.to.invoice</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">graph,tree</field>
 		</record>
 
 		<record model="ir.actions.act_window" id="action_aged_receivable">
-			<field name="name">report.account.receivable.graph</field>
+			<field name="name">Receivable Accounts</field>
 			<field name="res_model">report.account.receivable</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">graph,tree</field>
 			<field name="domain">[('type','=','receivable')]</field>
 		</record>
 		<record model="ir.actions.act_window" id="action_aged_income">
-			<field name="name">report.account.income.graph</field>
+			<field name="name">Income Accounts</field>
 			<field name="res_model">report.account.receivable</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">graph,tree</field>

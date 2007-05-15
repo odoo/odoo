@@ -74,7 +74,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_inventory_form">
-		<field name="name">stock.inventory.form</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">stock.inventory</field>
 		<field name="view_type">form</field>
@@ -83,7 +82,6 @@
 	<menuitem name="Inventory Control/Lot Inventory" id="menu_action_inventory_form" action="action_inventory_form"/>
 
 	<record model="ir.actions.act_window" id="action_inventory_line_form">
-		<field name="name">stock.inventory.line.form</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">stock.inventory.line</field>
 		<field name="view_type">form</field>
@@ -123,7 +121,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_tracking_form">
-		<field name="name">stock.tracking.form</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">stock.tracking</field>
 		<field name="view_type">form</field>
@@ -173,7 +170,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_lot_form">
-		<field name="name">stock.lot.form</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">stock.lot</field>
 		<field name="view_type">form</field>
@@ -224,7 +220,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_production_lot_form">
-		<field name="name">stock.production.lot.form</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">stock.production.lot</field>
 		<field name="view_type">form</field>
@@ -352,7 +347,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_location_form">
-		<field name="name">stock.location</field>
 		<field name="res_model">stock.location</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -372,7 +366,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_location_tree">
-		<field name="name">stock.location.tree</field>
 		<field name="res_model">stock.location</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="domain">[('location_id','=',False)]</field>
@@ -401,7 +394,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_warehouse_form">
-		<field name="name">stock.warehouse</field>
 		<field name="res_model">stock.warehouse</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -506,7 +498,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_picking_form">
-		<field name="name">stock.picking</field>
 		<field name="res_model">stock.picking</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -516,7 +507,7 @@
 	<menuitem name="Inventory Control/Picking Lists" id="menu_action_picking_form" action="action_picking_form"/>
 
 	<record model="ir.actions.act_window" id="action_picking_tree">
-		<field name="name">stock.picking</field>
+		<field name="name">Sending Goods</field>
 		<field name="res_model">stock.picking</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -526,7 +517,7 @@
 	</record>
 	<menuitem name="Inventory Control/Picking Lists/Sending Goods" id="menu_action_picking_tree" action="action_picking_tree"/>
 	<record model="ir.actions.act_window" id="action_picking_tree2">
-		<field name="name">stock.picking</field>
+		<field name="name">Assigned Pickings (sending goods)</field>
 		<field name="res_model">stock.picking</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -536,7 +527,7 @@
 	</record>
 	<menuitem name="Inventory Control/Picking Lists/Sending Goods/Assigned Pickings" action="action_picking_tree2" id="menu_picking_waiting"/>
 	<record model="ir.actions.act_window" id="action_picking_tree3">
-		<field name="name">stock.picking</field>
+		<field name="name">Confirmed Pickings (sending goods)</field>
 		<field name="res_model">stock.picking</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -548,7 +539,7 @@
 
 
 	<record model="ir.actions.act_window" id="action_picking_tree4">
-		<field name="name">stock.picking</field>
+		<field name="name">Getting Goods</field>
 		<field name="res_model">stock.picking</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -558,7 +549,7 @@
 	</record>
 	<menuitem name="Inventory Control/Picking Lists/Getting Goods" id="menu_action_picking_tree4" action="action_picking_tree4"/>
 	<record model="ir.actions.act_window" id="action_picking_tree5">
-		<field name="name">stock.picking</field>
+		<field name="name">Pickings to process (getting goods)</field>
 		<field name="res_model">stock.picking</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -566,10 +557,10 @@
 		<field name="domain">[('state','=','assigned'),('type','=','in')]</field>
 		<field name="context">{'contact_display': 'partner'}</field>
 	</record>
-	<menuitem name="Inventory Control/Picking Lists/Getting Goods/Pickings to process for goods reception" id="menu_action_picking_tree5" action="action_picking_tree5"/>
+	<menuitem name="Inventory Control/Picking Lists/Getting Goods/Pickings to process" id="menu_action_picking_tree5" action="action_picking_tree5"/>
 
 	<record model="ir.actions.act_window" id="action_picking_tree6">
-		<field name="name">stock.picking</field>
+		<field name="name">Internal picking lists</field>
 		<field name="res_model">stock.picking</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -579,7 +570,7 @@
 	</record>
 	<menuitem name="Inventory Control/Picking Lists/Internal" id="menu_action_picking_tree6" action="action_picking_tree6"/>
 	<record model="ir.actions.act_window" id="action_picking_tree7">
-		<field name="name">stock.picking</field>
+		<field name="name">Assigned Pickings (internal)</field>
 		<field name="res_model">stock.picking</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -589,7 +580,7 @@
 	</record>
 	<menuitem name="Inventory Control/Picking Lists/Internal/Assigned Pickings" id="menu_action_picking_tree7" action="action_picking_tree7"/>
 	<record model="ir.actions.act_window" id="action_picking_tree8">
-		<field name="name">stock.picking</field>
+		<field name="name">Confirmed Pickings (internal)</field>
 		<field name="res_model">stock.picking</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -599,7 +590,7 @@
 	</record>
 	<menuitem name="Inventory Control/Picking Lists/Internal/Confirmed Pickings" id="menu_action_picking_tree8" action="action_picking_tree8"/>
 	<record model="ir.actions.act_window" id="action_picking_tree9">
-		<field name="name">stock.picking</field>
+		<field name="name">Draft Pickings (internal)</field>
 		<field name="res_model">stock.picking</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -659,7 +650,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_move_form">
-		<field name="name">stock.move.lot</field>
 		<field name="res_model">stock.move.lot</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -667,7 +657,7 @@
 	</record>
 	<menuitem name="Inventory Control/Move" id="menu_action_move_form" action="action_move_form"/>
 	<record model="ir.actions.act_window" id="action_move_tree">
-		<field name="name">stock.move.lot</field>
+		<field name="name">Move Orders to process</field>
 		<field name="res_model">stock.move.lot</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -734,7 +724,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_move_form2">
-		<field name="name">stock.move</field>
 		<field name="res_model">stock.move</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -743,7 +732,7 @@
 	<menuitem name="Inventory Control/Traceability/Low Level/Moves" id="menu_action_move_form2" action="action_move_form2"/>
 
 	<record model="ir.actions.act_window" id="action_move_form3">
-		<field name="name">stock.move</field>
+		<field name="name">Draft Moves</field>
 		<field name="res_model">stock.move</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -753,7 +742,7 @@
 	<menuitem name="Inventory Control/Traceability/Low Level/Moves/Draft Moves" id="menu_action_move_form3" action="action_move_form3"/>
 
 	<record model="ir.actions.act_window" id="action_move_form4">
-		<field name="name">stock.move</field>
+		<field name="name">Assigned Moves</field>
 		<field name="res_model">stock.move</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -790,7 +779,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_incoterms_tree">
-		<field name="name">stock.incoterms</field>
 		<field name="res_model">stock.incoterms</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>

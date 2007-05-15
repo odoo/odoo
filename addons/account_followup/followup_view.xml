@@ -33,7 +33,6 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="action_account_followup_definition_form">
-			<field name="name">account_followup.followup</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">account_followup.followup</field>
 			<field name="view_type">form</field>
@@ -42,7 +41,7 @@
 		<menuitem 
 			name="Financial Management/Configuration/Payment Terms/Follow-Ups" 
 			action="action_account_followup_definition_form"
-			id="Financial_Management/Configuration/Payment_Terms/Follow-Ups"/>
+			id="account_followup_menu"/>
 
 		<report id="account_followup_followup_report"
 			string="Followup Report"
@@ -60,7 +59,7 @@
 			name="Financial Management/Periodical Processing/Print Follow-Ups" 
 			action="action_account_followup_all_wizard" 
 			type="wizard"
-			id="Financial_Management/Periodical_Processing/Print_Follow-Ups"/>
+			id="account_followup_wizard_menu"/>
 
 	</data>
 </terp>

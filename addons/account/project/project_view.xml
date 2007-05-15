@@ -74,7 +74,6 @@
 		</record>
 
 		<record model="ir.actions.act_window" id="action_account_analytic_account_form">
-			<field name="name">account.analytic.account</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">account.analytic.account</field>
 			<field name="view_type">form</field>
@@ -84,19 +83,17 @@
 		   	action="action_account_analytic_account_form"/>
 
 		<record model="ir.actions.act_window" id="action_account_analytic_account_tree2">
-			<field name="name">account.analytic.account</field>
+			<field name="name">Analytic Accounts Charts</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">account.analytic.account</field>
 			<field name="domain">[('parent_id','=',False)]</field>
 			<field name="view_type">tree</field>
 			<field name="view_id" ref="view_account_analytic_account_tree"/>
 		</record>
-		<menuitem name="Financial Management/Configuration/Analytic Accounts/Analytic Accounts Charts" id="account_analytic_def_chart"
-		   	action="action_account_analytic_account_tree2"/>
-		<menuitem name="Financial Management/Charts/Analytic Accounts Charts" id="account_analytic_chart"
-		   	action="action_account_analytic_account_tree2"/>
-		<menuitem name="Financial Management/Reporting/Analytic/Analytic Balance" id="account_analytic_chart_balance"
-		   	action="action_account_analytic_account_tree2"/>
+		<menuitem name="Financial Management/Configuration/Analytic Accounts/" id="account_analytic_def_chart" action="action_account_analytic_account_tree2"/>
+		<menuitem name="Financial Management/Charts/" id="account_analytic_chart" action="action_account_analytic_account_tree2"/>
+
+		<menuitem name="Financial Management/Reporting/Analytic/Analytic Balance" id="account_analytic_chart_balance" action="action_account_analytic_account_tree2"/>
 
 		<record model="ir.ui.view" id="view_account_analytic_line_form">
 			<field name="name">account.analytic.line.form</field>
@@ -137,7 +134,6 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="action_account_analytic_line_form">
-			<field name="name">action.account.analytic.line.form</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">account.analytic.line</field>
 			<field name="view_type">form</field>
@@ -147,7 +143,6 @@
 
 
 		<record model="ir.actions.act_window" id="action_account_tree1">
-			<field name="name">account.account.tree1</field>
 			<field name="res_model">account.analytic.line</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
@@ -180,7 +175,6 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="action_account_analytic_account_line_extended_form">
-			<field name="name">account.analytic.line.form_extended</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">account.analytic.line</field>
 			<field name="view_type">form</field>
@@ -218,7 +212,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_account_analytic_journal_form">
-		<field name="name">account.analytic.journal.form</field>
 		<field name="res_model">account.analytic.journal</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
@@ -231,7 +224,6 @@
 	#
 
 	<record model="ir.actions.act_window" id="action_account_analytic_journal_open_form">
-		<field name="name">account.analytic.line.form</field>
 		<field name="res_model">account.analytic.line</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
@@ -250,17 +242,15 @@
 	#
 
 	<record model="ir.actions.act_window" id="action_account_analytic_journal_tree">
-		<field name="name">account.analytic.journal.tree</field>
 		<field name="res_model">account.analytic.journal</field>
 		<field name="view_type">tree</field>
 	</record>
 	<menuitem name="Financial Management/Reporting/Analytic/Print analytic journals"
 		id="account_analytic_journal_print"
-	   	action="action_account_analytic_journal_tree"/> 
+		action="action_account_analytic_journal_tree"/> 
 
 
 	<record model="ir.actions.act_window" id="action_account_analytic_journal_tree2">
-		<field name="name">account.analytic.journal.tree</field>
 		<field name="res_model">account.analytic.journal</field>
 		<field name="view_type">tree</field>
 		<field name="view_id" ref="view_account_analytic_journal_tree"/>
@@ -290,7 +280,7 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="report_account_analytic_journal_tree">
-		<field name="name">report.hr.timesheet.invoice.journal</field>
+		<field name="name">Account Cost and Revenue by journal</field>
 		<field name="res_model">report.hr.timesheet.invoice.journal</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree</field>
@@ -298,8 +288,9 @@
 	<menuitem name="Financial Management/Reporting/Analytic/All Months/Account Cost and Revenue by journal"
 		id="report_account_analytic_journal_print"
 		action="report_account_analytic_journal_tree"/> 
+
 	<record model="ir.actions.act_window" id="report_account_analytic_journal_tree_month">
-		<field name="name">report.hr.timesheet.invoice.journal</field>
+		<field name="name">Account Cost and Revenue by journal (This Month)</field>
 		<field name="res_model">report.hr.timesheet.invoice.journal</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree</field>
@@ -375,7 +366,7 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="open_account_analytic_budget_post_form">
-		<field name="name">account.analytic.budget.post.form</field>
+		<field name="name">Budget items</field>
 		<field name="res_model">account.analytic.budget.post</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_account_analytic_budget_post_form"/>

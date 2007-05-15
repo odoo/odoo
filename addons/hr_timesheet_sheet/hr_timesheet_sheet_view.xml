@@ -125,7 +125,6 @@
 		</record>
 
 		<record model="ir.actions.act_window" id="act_hr_timesheet_sheet_form">
-			<field name="name">hr.timesheet.sheet.form</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">hr_timesheet_sheet.sheet</field>
 			<field name="view_type">form</field>
@@ -136,7 +135,7 @@
 			action="act_hr_timesheet_sheet_form" />
 
 		<record model="ir.actions.act_window" id="act_hr_timesheet_sheet_form_my">
-			<field name="name">hr.timesheet.sheet.form</field>
+			<field name="name">My timesheets</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">hr_timesheet_sheet.sheet</field>
 			<field name="domain">[('user_id','=',uid)]</field>
@@ -148,7 +147,7 @@
 			action="act_hr_timesheet_sheet_form_my" />
 
 		<record model="ir.actions.act_window" id="act_hr_timesheet_sheet_form_my_confirm">
-			<field name="name">hr.timesheet.sheet.form</field>
+			<field name="name">My timesheets to confirm</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">hr_timesheet_sheet.sheet</field>
 			<field name="domain">[('user_id','=',uid),('state','=','draft'),('date_to','&lt;=',time.strftime('%Y-%m-%d'))]</field>
@@ -169,7 +168,7 @@
 			type="wizard"/>
 
 		<record model="ir.actions.act_window" id="act_hr_timesheet_sheet_form_all_confirm">
-			<field name="name">hr.timesheet.sheet.form</field>
+			<field name="name">Timesheets to confirm</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">hr_timesheet_sheet.sheet</field>
 			<field name="domain">[('state','=','draft'),('date_to','&lt;=',time.strftime('%Y-%m-%d'))]</field>
@@ -181,7 +180,7 @@
 			action="act_hr_timesheet_sheet_form_all_confirm" />
 
 		<record model="ir.actions.act_window" id="act_hr_timesheet_sheet_form_all_valid">
-			<field name="name">hr.timesheet.sheet.form</field>
+			<field name="name">Timesheets to validate</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">hr_timesheet_sheet.sheet</field>
 			<field name="domain">[('state','=','confirm')]</field>

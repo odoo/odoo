@@ -54,7 +54,7 @@
 
 
 	<record model="ir.actions.act_window" id="action_report_crm_case_user_tree_month">
-		<field name="name">report.crm.case.user.tree</field>
+		<field name="name">Cases by user and section (this month)</field>
 		<field name="res_model">report.crm.case.user</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,graph</field>
@@ -62,7 +62,6 @@
 	</record>
 	<menuitem name="CRM &amp; SRM/Reporting/This Month/Cases by user and section" action="action_report_crm_case_user_tree_month" id="menu_crm_case_user_tree_month"/>
 	<record model="ir.actions.act_window" id="action_report_crm_case_user_tree">
-		<field name="name">report.crm.case.user.tree</field>
 		<field name="res_model">report.crm.case.user</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree</field>
@@ -70,16 +69,16 @@
 	<menuitem name="CRM &amp; SRM/Reporting/All Months/Cases by user and section" action="action_report_crm_case_user_tree" id="menu_crm_case_user_tree"/>
 
 	<record model="ir.actions.act_window" id="action_report_crm_case_user_tree_month_my">
-		<field name="name">report.crm.case.user.tree.my</field>
+		<field name="name">My cases by section (this month)</field>
 		<field name="res_model">report.crm.case.user</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree</field>
 		<field name="domain">[('user_id','=',uid),('name','=',time.strftime('%Y-%m-01'))]</field>
 	</record>
-	<menuitem name="CRM &amp; SRM/Reporting/This Month/My cases of the month by section" action="action_report_crm_case_user_tree_month_my" id="menu_crm_case_user_tree_month_my"/>
+	<menuitem name="CRM &amp; SRM/Reporting/This Month/My cases by section" action="action_report_crm_case_user_tree_month_my" id="menu_crm_case_user_tree_month_my"/>
 
 	<record model="ir.actions.act_window" id="action_report_crm_case_user_tree_my">
-		<field name="name">report.crm.case.user.tree.my</field>
+		<field name="name">My cases by section</field>
 		<field name="res_model">report.crm.case.user</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree</field>
@@ -127,7 +126,7 @@
 
 
 	<record model="ir.actions.act_window" id="action_report_crm_case_categ_tree_month">
-		<field name="name">report.crm.case.categ.tree</field>
+		<field name="name">Cases by categories and section (this month)</field>
 		<field name="res_model">report.crm.case.categ</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree</field>
@@ -135,7 +134,6 @@
 	</record>
 	<menuitem name="CRM &amp; SRM/Reporting/This Month/Cases by categories and section" action="action_report_crm_case_categ_tree_month" id="menu_crm_case_categ_tree_month"/>
 	<record model="ir.actions.act_window" id="action_report_crm_case_categ_tree">
-		<field name="name">report.crm.case.categ.tree</field>
 		<field name="res_model">report.crm.case.categ</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree</field>

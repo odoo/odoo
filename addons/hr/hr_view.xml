@@ -61,7 +61,7 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="open_view_employee_tree">
-			<field name="name">hr.employee</field>
+			<field name="name">Employees Structure</field>
 			<field name="res_model">hr.employee</field>
 			<field name="view_type">tree</field>
 			<field name="view_mode">tree,form</field>
@@ -85,16 +85,14 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="open_view_employee_list">
-			<field name="name">hr.employee</field>
 			<field name="res_model">hr.employee</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="view_employee_list"/>
 		</record>
-		<menuitem name="Human Resources/Employees/List of Employees" id="menu_open_view_employee_list" action="open_view_employee_list" groups="admin"/>
+		<menuitem name="Human Resources/Employees/Employees" id="menu_open_view_employee_list" action="open_view_employee_list" groups="admin"/>
 
 		<record model="ir.actions.act_window" id="open_view_employee_new">
-			<field name="name">hr.employee</field>
 			<field name="res_model">hr.employee</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">form,tree</field>
@@ -161,7 +159,6 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="edit_workgroup">
-			<field name="name">hr.timesheet.group.form.open</field>
 			<field name="res_model">hr.timesheet.group</field>
 			<field name="view_type">form</field>
 			<field name="view_id" ref="create_group" />
@@ -258,7 +255,6 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="open_view_categ_form">
-			<field name="name">hr.employee.category.form.view</field>
 			<field name="res_model">hr.employee.category</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">form,tree</field>
@@ -266,7 +262,7 @@
 		<menuitem name="Human Resources/Configuration/Categories of Employee" id="menu_view_employee_category_form" action="open_view_categ_form" groups="admin"/>
 
 		<record model="ir.actions.act_window" id="open_view_categ_tree">
-			<field name="name">hr.employee.category.form.view</field>
+			<field name="name">Categories Tree</field>
 			<field name="res_model">hr.employee.category</field>
 			<field name="view_type">tree</field>
 			<field name="view_id" ref="view_employee_category_tree"/>
@@ -289,7 +285,6 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="open_view_attendance">
-			<field name="name">hr.attendance.view</field>
 			<field name="res_model">hr.attendance</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">form,tree</field>
@@ -343,7 +338,6 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="open_ask_holidays">
-			<field name="name">hr.holidays.ask_form</field>
 			<field name="res_model">hr.holidays</field>
 			<field name="view_type">form</field>
 			<field name="view_id" ref="ask_holiday" />
@@ -374,7 +368,6 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="open_view_holiday_status">
-			<field name="name">hr.holidays.status</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">hr.holidays.status</field>
 			<field name="view_type">form</field>
@@ -407,7 +400,6 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="open_view_attendance_reason">
-			<field name="name">hr.action.reason.tree</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">hr.action.reason</field>
 			<field name="view_type">form</field>

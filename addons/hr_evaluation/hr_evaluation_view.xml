@@ -72,7 +72,6 @@
 		</record>
 
 		<record model="ir.actions.act_window" id="open_view_employee_evaluation_form">
-			<field name="name">hr_evaluation.evaluation</field>
 			<field name="res_model">hr_evaluation.evaluation</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">form,tree</field>
@@ -83,7 +82,7 @@
 			action="open_view_employee_evaluation_form"/>
 
 		<record model="ir.actions.act_window" id="open_view_employee_evaluation_next_list">
-			<field name="name">hr_evaluation.evaluation.next.list</field>
+			<field name="name">Next Employee Evaluation</field>
 			<field name="res_model">hr_evaluation.evaluation</field>
 			<field name="domain">[('date','&lt;=',time.strftime('%Y-%m-%d'))]</field>
 			<field name="view_type">form</field>
@@ -95,7 +94,7 @@
 			action="open_view_employee_evaluation_next_list"/>
 
 		<record model="ir.actions.act_window" id="open_view_employee_evaluation_next_my_list">
-			<field name="name">hr_evaluation.evaluation.next.list</field>
+			<field name="name">My Next Evaluation</field>
 			<field name="res_model">hr_evaluation.evaluation</field>
 			<field name="domain">[('date','&lt;=',time.strftime('%Y-%m-%d')),('user_id','=',uid)]</field>
 			<field name="view_type">form</field>
@@ -144,7 +143,6 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="open_view_employee_evaluation_my_old_list">
-			<field name="name">hr_evaluation.evaluation.next.list</field>
 			<field name="res_model">hr_evaluation.evaluation</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">form,tree</field>
@@ -196,7 +194,6 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="open_view_evaluation_type_form">
-			<field name="name">hr_evaluation.type.form</field>
 			<field name="res_model">hr_evaluation.type</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">form,tree</field>

@@ -75,7 +75,7 @@
 	# Menus
 	#
 	<record model="ir.actions.act_window" id="action_hr_analytic_timesheet_open_tree">
-		<field name="name">account.analytic.line.tree</field>
+		<field name="name">Entries to invoice</field>
 		<field name="res_model">account.analytic.line</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
@@ -87,7 +87,7 @@
 
 
 	<record model="ir.actions.act_window" id="action_hr_analytic_timesheet_tree_invoiced">
-		<field name="name">account.analytic.line.tree</field>
+		<field name="name">Uninvoiced Entries</field>
 		<field name="res_model">account.analytic.line</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
@@ -123,7 +123,6 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="action_hr_timesheet_invoice_factor_form">
-			<field name="name">action.hr_timesheet_invoice.factor.form</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">hr_timesheet_invoice.factor</field>
 			<field name="view_type">form</field>

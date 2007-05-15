@@ -49,12 +49,12 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_account_fiscalyear_form">
-		<field name="name">account.fiscalyear.form</field>
+		<field name="name">Fiscal Years</field>
 		<field name="res_model">account.fiscalyear</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	<menuitem name="Financial Management/Configuration/Periods/Fiscal Years" id="menu_action_account_fiscalyear_form" action="action_account_fiscalyear_form"/>
+	<menuitem name="Financial Management/Configuration/Periods/" id="menu_action_account_fiscalyear_form" action="action_account_fiscalyear_form"/>
 
 	#---------------------------------------------------------
 	# Period
@@ -91,12 +91,12 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_account_period_form">
-		<field name="name">account.period.form</field>
+		<field name="name">Periods</field>
 		<field name="res_model">account.period</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	<menuitem name="Financial Management/Configuration/Periods/Periods" id="menu_action_account_period_form" action="action_account_period_form"/>
+	<menuitem name="Financial Management/Configuration/Periods/" id="menu_action_account_period_form" action="action_account_period_form"/>
 
 
 	#---------------------------------------------------------
@@ -108,7 +108,7 @@
 		<field name="model">account.account</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Account Form">
+			<form string="Account">
 				<notebook>
 				<page string="General Information">
 					<field name="name" select="1" colspan="4"/>
@@ -133,7 +133,7 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_account_form">
-		<field name="name">account.account.form</field>
+		<field name="name">Accounts</field>
 		<field name="res_model">account.account</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
@@ -157,13 +157,13 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_account_tree">
-		<field name="name">account.account.tree</field>
+		<field name="name">Account Charts</field>
 		<field name="res_model">account.account</field>
 		<field name="view_type">tree</field>
 		<field name="view_id" ref="view_account_tree"/>
 		<field name="domain">[('code','=','0')]</field>
 	</record>
-	<menuitem name="Financial Management/Configuration/General Accounts/Account Charts" id="menu_action_account_tree" action="action_account_tree"/>
+	<menuitem name="Financial Management/Configuration/General Accounts/" id="menu_action_account_tree" action="action_account_tree"/>
 
 	<record model="ir.ui.view" id="view_account_list">
 		<field name="name">account.account.list</field>
@@ -179,7 +179,7 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_account_tree2">
-		<field name="name">account.account.tree.fast</field>
+		<field name="name">Account Charts Fast</field>
 		<field name="res_model">account.account</field>
 		<field name="view_type">tree</field>
 		<field name="view_id" ref="view_account_list"/>
@@ -278,7 +278,7 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_account_journal_form">
-		<field name="name">account.journal.form</field>
+		<field name="name">Account Journal</field>
 		<field name="res_model">account.journal</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
@@ -342,7 +342,7 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_bank_form">
-		<field name="name">account.bank</field>
+		<field name="name">Banks</field>
 		<field name="res_model">account.bank</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
@@ -368,7 +368,7 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_bank_account_form">
-		<field name="name">account.bank.account</field>
+		<field name="name">Bank Accounts</field>
 		<field name="res_model">account.bank.account</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
@@ -435,12 +435,13 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_bank_statement_tree">
-		<field name="name">account.bank.statement.tree</field>
+		<field name="name">Statements</field>
 		<field name="res_model">account.bank.statement</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">form,tree</field>
 	</record>
 	<menuitem name="Financial Management/Entries/Statements" id="menu_bank_statement_tree" action="action_bank_statement_tree"/>
+
 	<record model="ir.actions.act_window" id="action_bank_statement_draft_tree">
 		<field name="name">Draft statements</field>
 		<field name="res_model">account.bank.statement</field>
@@ -512,12 +513,12 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_account_type_form">
-		<field name="name">account.account.type</field>
+		<field name="name">Account Types</field>
 		<field name="res_model">account.account.type</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	<menuitem name="Financial Management/Configuration/General Accounts/Account types" id="menu_action_account_type_form" action="action_account_type_form"/>
+	<menuitem name="Financial Management/Configuration/General Accounts/" id="menu_action_account_type_form" action="action_account_type_form"/>
 
 	#---------------------------------------------------------
 	# Entries
@@ -588,21 +589,21 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_tax_code_list">
-		<field name="name">account.tax.code.tree</field>
+		<field name="name">Tax codes</field>
 		<field name="res_model">account.tax.code</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="view_id" ref="view_tax_code_tree"/>
 	</record>
 	<record model="ir.actions.act_window" id="action_tax_code_tree">
-		<field name="name">account.tax.code.tree</field>
+		<field name="name">Tax Codes Structure</field>
 		<field name="res_model">account.tax.code</field>
 		<field name="domain">[('parent_id','=',False)]</field>
 		<field name="view_type">tree</field>
 		<field name="view_id" ref="view_tax_code_tree"/>
 	</record>
-	<menuitem name="Financial Management/Configuration/Taxes/Tax Codes" id="menu_action_tax_code_list" action="action_tax_code_list" sequence="12"/>
-	<menuitem name="Financial Management/Periodical Processing/Taxes/Tax Code Structure" id="menu_action_tax_code_tree" action="action_tax_code_tree" sequence="12"/>
+	<menuitem name="Financial Management/Configuration/Taxes/" id="menu_action_tax_code_list" action="action_tax_code_list" sequence="12"/>
+	<menuitem name="Financial Management/Periodical Processing/Taxes/" id="menu_action_tax_code_tree" action="action_tax_code_tree" sequence="12"/>
 
 
 	#---------------------------------------------------------
@@ -670,21 +671,21 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_tax_tree">
-		<field name="name">account.tax.tree</field>
+		<field name="name">Taxes Structure</field>
 		<field name="res_model">account.tax</field>
 		<field name="view_type">tree</field>
 		<field name="domain">[('parent_id','=',False)]</field>
 		<field name="view_id" ref="view_tax_tree"/>
 	</record>
-	<menuitem name="Financial Management/Configuration/Taxes" id="menu_action_tax_tree" action="action_tax_tree" sequence="12"/>
+	<menuitem name="Financial Management/Configuration/Taxes/" id="menu_action_tax_tree" action="action_tax_tree" sequence="12"/>
 
 	<record model="ir.actions.act_window" id="action_tax_form">
-		<field name="name">account.tax.form</field>
+		<field name="name">Taxes</field>
 		<field name="res_model">account.tax</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_tax_form"/>
 	</record>
-	<menuitem name="Financial Management/Configuration/Taxes/Edit Taxes" id="menu_action_tax_form" action="action_tax_form"/>
+	<menuitem name="Financial Management/Configuration/Taxes/" id="menu_action_tax_form" action="action_tax_form"/>
 
 
 	<menuitem name="Financial Management/Entries" sequence="2"/>
@@ -718,12 +719,12 @@
 	<menuitem name="Financial Management/Entries/Standard entry" id="menu_action_move_journal_line_form" action="action_move_journal_line_form" type="wizard"/>
 
 	<record model="ir.actions.act_window" id="action_move_journal_period_line_form">
-		<field name="name">account.journal.period.tree</field>
+		<field name="name">Open journals</field>
 		<field name="res_model">account.journal.period</field>
 		<field name="view_type">tree</field>
 		<field name="domain">[('state','&lt;&gt;','done')]</field>
 	</record>
-	<menuitem name="Financial Management/Entries/Standard entry/Open journals" id="menu_action_move_journal_period_line_form" action="action_move_journal_period_line_form"/>
+	<menuitem name="Financial Management/Entries/Standard entry/" id="menu_action_move_journal_period_line_form" action="action_move_journal_period_line_form"/>
 
 
 	#---------------------------------------------------------
@@ -920,22 +921,22 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="action_move_line_form">
-		<field name="name">account.move.form</field>
+		<field name="name">Voucher entry</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">account.move</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_move_form"/>
 	</record>
-	<menuitem name="Financial Management/Entries/Entry lookup/Voucher entry" id="menu_action_move_line_form" action="action_move_line_form"/>
+	<menuitem name="Financial Management/Entries/Entry lookup/" id="menu_action_move_line_form" action="action_move_line_form"/>
 
 	<record model="ir.actions.act_window" id="action_move_line_search">
-		<field name="name">account.move.line.form</field>
+		<field name="name">Entry line</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">account.move.line</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_move_line_form"/>
 	</record>
-	<menuitem name="Financial Management/Entries/Entry lookup/Entry lines" id="menu_action_move_line_search" action="action_move_line_search"/>
+	<menuitem name="Financial Management/Entries/Entry lookup/" id="menu_action_move_line_search" action="action_move_line_search"/>
 
 	<menuitem name="Financial Management/Charts" sequence="7"/>
 	<menuitem name="Financial Management/Charts/Accounts Charts" id="menu_action_account_tree2" action="action_account_tree"/>
@@ -945,7 +946,6 @@
 
 	# Wizard, Period
 	<record model="ir.actions.act_window" id="action_account_bank_tree">
-		<field name="name">account.bank.tree</field>
 		<field name="res_model">account.bank</field>
 		<field name="view_type">tree</field>
 		<field name="view_id" ref="view_bank_tree"/>
@@ -981,14 +981,14 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_account_journal_period_tree">
-		<field name="name">account.journal.period.tree</field>
+		<field name="name">Journals</field>
 		<field name="res_model">account.journal.period</field>
 		<field name="view_type">tree</field>
 	</record>
 	<menuitem name="Financial Management/Reporting/Print journals" id="menu_action_account_journal_period_tree" action="action_account_journal_period_tree"/> 
 
 	<record model="ir.actions.act_window" id="action_account_budget_post_tree">
-		<field name="name">account.budget.post.tree</field>
+		<field name="name">Budgets</field>
 		<field name="res_model">account.budget.post</field>
 		<field name="view_type">tree</field>
 	</record>
@@ -1056,7 +1056,6 @@
 	</record>
 	
 	<record model="ir.actions.act_window" id="open_budget_post_form">
-		<field name="name">account.budget.post.form</field>
 		<field name="res_model">account.budget.post</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_budget_post_form"/>
@@ -1135,7 +1134,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_model_form">
-		<field name="name">account.model.form</field>
 		<field name="res_model">account.model</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
@@ -1197,7 +1195,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_payment_term_form">
-		<field name="name">account.payment.term.form</field>
 		<field name="res_model">account.payment.term</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
@@ -1277,21 +1274,21 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_subscription_form">
-		<field name="name">account.subscription.form</field>
+		<field name="name">Subscription entries</field>
 		<field name="res_model">account.subscription</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_subscription_form"/>
 	</record>
-	<menuitem name="Financial Management/Entries/Subscription entries" id="menu_action_subscription_form" action="action_subscription_form"/>
+	<menuitem name="Financial Management/Entries/" id="menu_action_subscription_form" action="action_subscription_form"/>
 
 	<record model="ir.actions.act_window" id="action_subscription_form_running">
-		<field name="name">account.subscription.form</field>
+		<field name="name">Running subscriptions</field>
 		<field name="res_model">account.subscription</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','running')]</field>
 	</record>
-	<menuitem name="Financial Management/Entries/Subscription entries/Running subscriptions" id="menu_action_subscription_form_running" action="action_subscription_form_running"/>
+	<menuitem name="Financial Management/Entries/Subscription entries/" id="menu_action_subscription_form_running" action="action_subscription_form_running"/>
 
 	<record model="ir.ui.view" id="view_subscription_line_form_complete">
 		<field name="name">account.subscription.line.form</field>
@@ -1307,17 +1304,16 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_subscription_line_form_running">
-		<field name="name">account.subscription.line.list</field>
+		<field name="name">Next entries</field>
 		<field name="res_model">account.subscription.line</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('move_id','=',False)]</field>
 	</record>
-	<menuitem name="Financial Management/Entries/Subscription entries/Next entries" id="menu_action_subscription_line_form_running" action="action_subscription_line_form_running"/>
+	<menuitem name="Financial Management/Entries/Subscription entries/" id="menu_action_subscription_line_form_running" action="action_subscription_line_form_running"/>
 
 
 	<record model="ir.actions.act_window" id="action_move_line_tree1">
-		<field name="name">account.move.line.tree1</field>
 		<field name="res_model">account.move.line</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
@@ -1355,7 +1351,6 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="action_tax_code_line_open">
-		<field name="name">account.move.line.tax.code</field>
 		<field name="res_model">account.move.line</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
@@ -1376,7 +1371,7 @@
 	<menuitem name="Administration/Configuration/Account" sequence="2"/>
 
 	<record model="ir.actions.act_window" id="open_module_tree_accounting">
-		<field name="name">ir.module.module</field>
+		<field name="name">Account Charts</field>
 		<field name="res_model">ir.module.module</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
@@ -1386,7 +1381,7 @@
 	<menuitem name="Administration/Configuration/Account/Choose Account charts" action="open_module_tree_accounting" sequence="1" id="menu_accounting_modules"/>
 
 	<record model="ir.actions.act_window" id="open_module_tree_tva">
-		<field name="name">ir.module.module</field>
+		<field name="name">VAT mode</field>
 		<field name="res_model">ir.module.module</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
@@ -1402,7 +1397,6 @@
 	<menuitem name="Administration/Configuration/Account/Apply Account charts and VAT mode" action="account_wizard_upgrade" sequence="3" type="wizard" id="menu_install_module"/>
 
 	<record model="ir.actions.act_window" id="open_module_plan_ctbl">
-		<field name="name">account.account</field>
 		<field name="res_model">account.account</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
@@ -1410,7 +1404,6 @@
 	<menuitem name="Administration/Configuration/Account/Modify Account charts" action="open_module_plan_ctbl" sequence="4" id="menu_plan_ctbl"/>
 
 	<record model="ir.actions.act_window" id="open_module_fiscal">
-		<field name="name">account.fiscalyear</field>
 		<field name="res_model">account.fiscalyear</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
@@ -1418,7 +1411,6 @@
 	<menuitem name="Administration/Configuration/Account/Set Fiscal year" action="open_module_fiscal" sequence="5" id="menu_fiscal_def"/>
 
 	<record model="ir.actions.act_window" id="open_module_journal">
-		<field name="name">account.journal</field>
 		<field name="res_model">account.journal</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>

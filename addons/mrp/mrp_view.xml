@@ -21,7 +21,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="mrp_property_group_action">
-		<field name="name">mrp.property.group.form</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">mrp.property.group</field>
 		<field name="view_type">form</field>
@@ -58,7 +57,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="mrp_property_action">
-		<field name="name">mrp.property.form</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">mrp.property</field>
 		<field name="view_type">form</field>
@@ -117,7 +115,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="mrp_workcenter_action">
-		<field name="name">mrp.workcenter.form</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">mrp.workcenter</field>
 		<field name="view_type">form</field>
@@ -189,7 +186,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="mrp_routing_action">
-		<field name="name">mrp.routing.form</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">mrp.routing</field>
 		<field name="view_type">form</field>
@@ -257,7 +253,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="mrp_bom_form_action">
-		<field name="name">mrp.bom.final.form</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">mrp.bom</field>
 		<field name="view_type">form</field>
@@ -267,7 +262,6 @@
 	<menuitem name="Production/Configuration/Bill of Materials" id="menu_mrp_bom_form_action" action="mrp_bom_form_action"/>
 
 	<record model="ir.actions.act_window" id="mrp_bom_tree_action">
-		<field name="name">mrp.bom.final.tree</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">mrp.bom</field>
 		<field name="view_type">tree</field>
@@ -277,7 +271,6 @@
 	<menuitem name="Production/Configuration/Bill of Materials/BoMs Structure" action="mrp_bom_tree_action" id="menu_bom_tree"/>
 
 	<record model="ir.actions.act_window" id="mrp_bom_form_action2">
-		<field name="name">mrp.bom.form</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">mrp.bom</field>
 		<field name="view_type">form</field>
@@ -403,7 +396,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="mrp_production_action">
-		<field name="name">mrp.production.form</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">mrp.production</field>
 		<field name="view_type">form</field>
@@ -411,7 +403,7 @@
 	</record>
 	<menuitem name="Production/Production Orders" id="menu_mrp_production_action" action="mrp_production_action"/>
 	<record model="ir.actions.act_window" id="mrp_production_action2">
-		<field name="name">mrp.production.form</field>
+		<field name="name">Production Orders to start</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">mrp.production</field>
 		<field name="view_type">form</field>
@@ -420,7 +412,7 @@
 	</record>
 	<menuitem name="Production/Production Orders/Production Orders to start" action="mrp_production_action2" id="menu_production_orders_start"/>
 	<record model="ir.actions.act_window" id="mrp_production_action3">
-		<field name="name">mrp.production.form</field>
+		<field name="name">Production Orders in progress</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">mrp.production</field>
 		<field name="view_type">form</field>
@@ -429,7 +421,7 @@
 	</record>
 	<menuitem name="Production/Production Orders/Production Orders in progress" id="menu_mrp_production_action3" action="mrp_production_action3"/>
 	<record model="ir.actions.act_window" id="mrp_production_action4">
-		<field name="name">mrp.production.confirmed.form</field>
+		<field name="name">Production Orders waiting Goods</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">mrp.production</field>
 		<field name="view_type">form</field>
@@ -583,7 +575,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="mrp_procurement_action">
-		<field name="name">mrp.procurement.form</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">mrp.procurement</field>
 		<field name="view_type">form</field>
@@ -592,7 +583,7 @@
 	<menuitem name="Production/Procurement Orders" id="menu_mrp_procurement_action" action="mrp_procurement_action"/>
 
 	<record model="ir.actions.act_window" id="mrp_procurement_action2">
-		<field name="name">mrp.procurement.form</field>
+		<field name="name">Draft Procurements</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">mrp.procurement</field>
 		<field name="view_type">form</field>
@@ -601,7 +592,7 @@
 	</record>
 	<menuitem name="Production/Procurement Orders/Draft Procurements" id="menu_mrp_procurement_action2" action="mrp_procurement_action2"/>
 	<record model="ir.actions.act_window" id="mrp_procurement_action3">
-		<field name="name">mrp.procurement.form</field>
+		<field name="name">Unschedulled Procurements</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">mrp.procurement</field>
 		<field name="view_type">form</field>
@@ -610,7 +601,7 @@
 	</record>
 	<menuitem name="Production/Procurement Orders/Unschedulled Procurements" id="menu_mrp_procurement_action3" action="mrp_procurement_action3"/>
 	<record model="ir.actions.act_window" id="mrp_procurement_action4">
-		<field name="name">mrp.procurement.form</field>
+		<field name="name">Exceptions Procurements to fix</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">mrp.procurement</field>
 		<field name="view_type">form</field>
@@ -619,7 +610,7 @@
 	</record>
 	<menuitem name="Production/Procurement Orders/All exceptions/Exceptions to fix" id="menu_mrp_procurement_action4" action="mrp_procurement_action4"/>
 	<record model="ir.actions.act_window" id="mrp_procurement_action5">
-		<field name="name">mrp.procurement.form</field>
+		<field name="name">Exceptions Procurements</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">mrp.procurement</field>
 		<field name="view_type">form</field>
@@ -670,7 +661,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_orderpoint_form">
-		<field name="name">stock.warehouse.orderpoint</field>
 		<field name="res_model">stock.warehouse.orderpoint</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>

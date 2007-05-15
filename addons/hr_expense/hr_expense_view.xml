@@ -88,7 +88,6 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="expense_all">
-			<field name="name">hr.expense.expense_all</field>
 			<field name="res_model">hr.expense.expense</field>
 			<field name="view_type">form</field>
 		</record>
@@ -97,7 +96,7 @@
 			id="menu_expense_all"
 			action="expense_all"/>
 		<record model="ir.actions.act_window" id="expense_all_draft">
-			<field name="name">hr.expense.expense_all</field>
+			<field name="name">Draft expenses</field>
 			<field name="res_model">hr.expense.expense</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
@@ -108,7 +107,7 @@
 			id="menu_expense_all_draft"
 			action="expense_all_draft"/>
 		<record model="ir.actions.act_window" id="expense_all_confirm">
-			<field name="name">hr.expense.expense.all.confirm</field>
+			<field name="name">Expenses waiting validation</field>
 			<field name="res_model">hr.expense.expense</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
@@ -119,7 +118,7 @@
 			id="menu_expense_all_confirm"
 			action="expense_all_confirm"/>
 		<record model="ir.actions.act_window" id="expense_all_valid">
-			<field name="name">hr.expense.expense.all.valid</field>
+			<field name="name">Expenses waiting invoice</field>
 			<field name="res_model">hr.expense.expense</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
@@ -130,7 +129,7 @@
 			id="menu_expense_all_valid"
 			action="expense_all_valid"/>
 		<record model="ir.actions.act_window" id="expense_all_invoiced">
-			<field name="name">hr.expense.expense.all.valid</field>
+			<field name="name">Expenses waiting payment</field>
 			<field name="res_model">hr.expense.expense</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
@@ -145,7 +144,7 @@
 		# My expenses menu
 		#
 		<record model="ir.actions.act_window" id="expense_my">
-			<field name="name">hr.expense.expense_my</field>
+			<field name="name">My Expenses</field>
 			<field name="res_model">hr.expense.expense</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">form,tree</field>
@@ -156,7 +155,7 @@
 			id="menu_expense_my"
 			action="expense_my"/>
 		<record model="ir.actions.act_window" id="expense_my_draft">
-			<field name="name">hr.expense.expense_my</field>
+			<field name="name">My Draft expenses</field>
 			<field name="res_model">hr.expense.expense</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
@@ -167,7 +166,7 @@
 			id="menu_expense_my_draft"
 			action="expense_my_draft"/>
 		<record model="ir.actions.act_window" id="expense_my_confirm">
-			<field name="name">hr.expense.expense_my</field>
+			<field name="name">My expenses waiting validation</field>
 			<field name="res_model">hr.expense.expense</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
@@ -183,7 +182,6 @@
 		# ---------------------------------------------------------------
 
 		<record model="ir.actions.act_window" id="open_expenses_type">
-			<field name="name">hr.expense.type.tree.view</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">product.product</field>
 			<field name="view_type">form</field>

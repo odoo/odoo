@@ -26,7 +26,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_definition_journal_invoice_type">
-		<field name="name">sale_journal.invoice.type.tree</field>
 		<field name="res_model">sale_journal.invoice.type</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
@@ -95,7 +94,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_definition_journal">
-		<field name="name">sale_journal.sale.journal.tree</field>
 		<field name="res_model">sale_journal.sale.journal</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
@@ -107,7 +105,6 @@
 
 
 	<record model="ir.actions.act_window" id="action_definition_journal_tree">
-		<field name="name">sale_journal.sale.journal.tree</field>
 		<field name="res_model">sale_journal.sale.journal</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
@@ -119,26 +116,26 @@
 		action="action_definition_journal_tree"/>
 
 	<record model="ir.actions.act_window" id="action_definition_journal_tree_my">
-		<field name="name">sale_journal.sale.journal.tree.my</field>
+		<field name="name">My open Journals</field>
 		<field name="res_model">sale_journal.sale.journal</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('user_id','=',uid),('state','=','open')]</field>
 	</record>
 	<menuitem
-		name="Sales Management/Sales by Journal/My open Journals"
+		name="Sales Management/Sales by Journal/My opened Journals"
 		id="menu_definition_journal_sales_my_open"
 		action="action_definition_journal_tree_my"/>
 
 	<record model="ir.actions.act_window" id="action_definition_journal_tree_all">
-		<field name="name">sale_journal.sale.journal.tree.all</field>
+		<field name="name">Opened Journals</field>
 		<field name="res_model">sale_journal.sale.journal</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','open')]</field>
 	</record>
 	<menuitem
-		name="Sales Management/Sales by Journal/All open Journals"
+		name="Sales Management/Sales by Journal/All opened Journals"
 		id="menu_definition_journal_sales_all_open"
 		action="action_definition_journal_tree_all"/>
 
@@ -233,7 +230,7 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="action_sale_sale_stats_open_menu_month">
-		<field name="name">sale_journal.sale.stats.open</field>
+		<field name="name">Sales by journal (this month)</field>
 		<field name="res_model">sale_journal.sale.stats</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -246,7 +243,6 @@
 		id="menu_sale_sale_stats_open_menu"/>
 
 	<record model="ir.actions.act_window" id="action_sale_sale_stats_open_menu_all">
-		<field name="name">sale_journal.sale.stats.open</field>
 		<field name="res_model">sale_journal.sale.stats</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>

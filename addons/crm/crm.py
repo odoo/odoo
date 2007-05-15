@@ -104,7 +104,7 @@ class crm_case_section(osv.osv):
 				})
 				menus[index] = menu_id
 				action_id = self.pool.get('ir.actions.act_window').create(cr,uid, {
-					'name': 'Action '+mname+name+' Cases',
+					'name': mname+name+' Cases',
 					'res_model': 'crm.case',
 					'domain': mdomain,
 					'view_type': 'form',
