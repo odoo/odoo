@@ -140,21 +140,21 @@
 				<field name="name" select="1"/>
 				<field name="title" domain="[('domain', '=', 'contact')]"/>
 				<field name="function"/>
-				<field name="type" select="1"/>
-				<field name="street" select="1"/>
+				<field name="type" select="2"/>
+				<field name="street" select="2"/>
 				<field name="street2"/>
 				<newline/>
-				<field name="zip" select="1"/>
-				<field name="city" select="1"/>
+				<field name="zip" select="2"/>
+				<field name="city" select="2"/>
 				<newline/>
 				<field name="country_id" select="1"/>
-				<field name="state_id" select="1"/>
+				<field name="state_id" select="2"/>
 				<newline/>
-				<field name="phone" select="1"/>
+				<field name="phone" select="2"/>
 				<field name="fax"/>
 				<newline/>
-				<field name="mobile" select="1"/>
-				<field name="email" select="1"/>
+				<field name="mobile" select="2"/>
+				<field name="email" select="2"/>
 			</form>
 		</field>
 	</record>
@@ -182,14 +182,14 @@
 				<field name="title" domain="[('domain', '=', 'contact')]"/>
 				<field name="street"/>
 				<field name="street2"/>
-				<field name="type" select="1"/>
+				<field name="type" select="2"/>
 				<field name="function"/>
 				<newline/>
-				<field name="zip" select="1"/>
-				<field name="city" select="1"/>
+				<field name="zip" select="2"/>
+				<field name="city" select="2"/>
 				<newline/>
 				<field name="country_id" select="1"/>
-				<field name="state_id" select="1"/>
+				<field name="state_id" select="2"/>
 				<newline/>
 				<field name="phone"/>
 				<field name="fax"/>
@@ -257,41 +257,41 @@
 					<field name="name" select="1"/>
 					<field name="title" domain="[('domain', '=', 'partner')]"/>
 					<field name="ref" select="1"/>
-					<field name="lang" select="1"/>
+					<field name="lang" select="2"/>
 					<newline/>
 					<field name="address" mode="form,tree" colspan="4" nolabel="1" select="1">
 						<form string="Partner Contacts">
-							<field name="name" select="1"/>
+							<field name="name" select="2"/>
 							<field name="title" domain="[('domain', '=', 'contact')]"/>
 							<field name="function"/>
-							<field name="type" select="1"/>
-							<field name="street" select="1"/>
+							<field name="type" select="2"/>
+							<field name="street" select="2"/>
 							<field name="street2"/>
 							<newline/>
-							<field name="zip" select="1"/>
-							<field name="city" select="1"/>
+							<field name="zip" select="2"/>
+							<field name="city" select="2"/>
 							<newline/>
-							<field name="country_id" select="1"/>
-							<field name="state_id" select="1"/>
+							<field name="country_id" select="2"/>
+							<field name="state_id" select="2"/>
 							<newline/>
 							<field name="phone"/>
 							<field name="fax"/>
 							<newline/>
 							<field name="mobile"/>
-							<field name="email" select="1" widget="email" />
+							<field name="email" select="2" widget="email" />
 						</form>
 					</field>
 					<separator string="Categories" colspan="4"/>
-					<field name="category_id" colspan="4" select="1" nolabel="1"/>
+					<field name="category_id" colspan="4" select="2" nolabel="1"/>
 				</page>
 				<page string="Extra Info">
-					<field name="vat" select="1"/>
-					<field name="active" select="1" />
+					<field name="vat" select="2"/>
+					<field name="active" select="2" />
 					<field name="credit_limit"/>
-					<field name="user_id" select="1"/>
+					<field name="user_id" select="2"/>
 					<field name="parent_id"/>
 					<field name="website" widget="url"/>
-					<field name="date" select="1"/>
+					<field name="date" select="2"/>
 					<field name="bank_ids" colspan="4" nolabel="1"/>
 					<separator string="Notes" colspan="4"/>
 					<field name="comment" colspan="4" nolabel="1"/>
@@ -369,16 +369,16 @@
 			<form string="Bank Details">
 				<field name="name" select="1" colspan="4"/>
 				<field name="bank_name" select="1"/>
-				<field name="bank_guichet" select="1"/>
+				<field name="bank_guichet" select="2"/>
 				<field name="street"/>
 				<field name="city"/>
 				<field name="zip"/>
 				<field name="country_id"/>
 				<newline/>
-				<field name="type_id" select="1"/>
+				<field name="type_id" select="2"/>
 				<field name="number" select="1"/>
-				<field name="iban" select="1"/>
-				<field name="bank_code" select="1"/>
+				<field name="iban" select="2"/>
+				<field name="bank_code" select="2"/>
 				<field name="sequence"/>
 			</form>
 		</field>
