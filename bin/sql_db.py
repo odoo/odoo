@@ -85,7 +85,7 @@ class fake_cursor:
 			if isinstance(s, unicode):
 				return s.encode('utf-8')
 			return s
-		p=map(s, params)
+		p=map(base_string, params)
 		if isinstance(sql, unicode):
 			sql = sql.encode('utf-8')
 		if p:
