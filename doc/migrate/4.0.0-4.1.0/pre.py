@@ -110,4 +110,11 @@ cr.execute("ALTER TABLE ir_model ADD perm_id int references perm on delete set n
 cr.execute("ALTER TABLE ir_model_fields ADD perm_id int references perm on delete set null")
 cr.commit()
 
+
+# --------------------------------- #
+# remove name for all ir_act_window #
+# --------------------------------- #
+
+cr.execute("UPDATE ir_act_window SET name = ''")
+
 cr.close

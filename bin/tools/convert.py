@@ -223,14 +223,16 @@ class xml_import(object):
 					values['icon'] = icons.get(a_type,'STOCK_NEW')
 					if a_type=='act_window':
 						a_id = self.id_get(cr, 'ir.actions.%s'% a_type, a_action)
-						cr.execute('select view_type,view_mode from ir_act_window where id=%d', (int(a_id),))
-						action_type,action_mode = cr.fetchone()
+						cr.execute('select view_type,view_mode,name from ir_act_window where id=%d', (int(a_id),))
+						action_type,action_mode,action_name = cr.fetchone()
 						if action_type=='tree':
 							values['icon'] = 'STOCK_INDENT'
 						elif action_mode and action_mode.startswith('tree'):
 							values['icon'] = 'STOCK_JUSTIFY_FILL'
 						elif action_mode and action_mode.startswith('graph'):
 							values['icon'] = 'terp-account'
+						if not values['name']:
+							values['name'] = action_name
 				if rec.hasAttribute('sequence'):
 					values['sequence'] = int(rec.getAttribute('sequence'))
 				if rec.hasAttribute('icon'):

@@ -32,7 +32,7 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="action_module_category_tree">
-			<field name="name">ir.module.category</field>
+			<field name="name">Categories of Modules</field>
 			<field name="res_model">ir.module.category</field>
 			<field name="view_type">tree</field>
 			<field name="domain">[('parent_id','=',False)]</field>
@@ -48,7 +48,6 @@
 		#
 
 		<record model="ir.actions.act_window" id="action_module_open_categ">
-			<field name="name">ir.module.module</field>
 			<field name="res_model">ir.module.module</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
@@ -126,7 +125,7 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="open_module_tree">
-			<field name="name">ir.module.module</field>
+			<field name="name">Modules</field>
 			<field name="res_model">ir.module.module</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
@@ -135,7 +134,7 @@
 		<menuitem name="Administration/Modules Management/Modules" action="open_module_tree" id="menu_module_tree"/>
 
 		<record model="ir.actions.act_window" id="open_module_tree_install">
-			<field name="name">ir.module.module</field>
+			<field name="name">Installed Modules</field>
 			<field name="res_model">ir.module.module</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
@@ -143,7 +142,7 @@
 		</record>
 		<menuitem name="Administration/Modules Management/Modules/Installed Modules" action="open_module_tree_install" id="menu_module_tree_install"/>
 		<record model="ir.actions.act_window" id="open_module_tree_uninstall">
-			<field name="name">ir.module.module</field>
+			<field name="name">Uninstalled Modules</field>
 			<field name="res_model">ir.module.module</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
@@ -151,7 +150,7 @@
 		</record>
 		<menuitem name="Administration/Modules Management/Modules/Uninstalled Modules" action="open_module_tree_uninstall" id="menu_module_tree_uninstall"/>
 		<record model="ir.actions.act_window" id="open_module_tree_upgrade">
-			<field name="name">ir.module.module</field>
+			<field name="name">Modules to be installed, upgraded or removed</field>
 			<field name="res_model">ir.module.module</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
@@ -182,7 +181,6 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="open_repository_tree">
-			<field name="name">ir.module.repository</field>
 			<field name="res_model">ir.module.repository</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>

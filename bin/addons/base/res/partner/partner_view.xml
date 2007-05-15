@@ -21,7 +21,7 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_partner_function_form">
-		<field name="name">res.partner.function.form</field>
+		<field name="name">Partner Functions</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">res.partner.function</field>
 		<field name="view_type">form</field>
@@ -56,7 +56,7 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_country">
-		<field name="name">res.country.form</field>
+		<field name="name">Country</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">res.country</field>
 		<field name="view_type">form</field>
@@ -93,7 +93,7 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_country_state">
-		<field name="name">res.country.state</field>
+		<field name="name">State</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">res.country.state</field>
 		<field name="view_type">form</field>
@@ -121,7 +121,7 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_partner_addess_tree">
-		<field name="name">res.partner.address.tree</field>
+		<field name="name">Partner Contacts</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">res.partner.address</field>
 		<field name="view_type">tree</field>
@@ -159,13 +159,13 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_partner_address_form">
-		<field name="name">res.partner.address</field>
+		<field name="name">Partner Contacts</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">res.partner.address</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_partner_address_form1"/>
 	</record>
-	<menuitem name="Partners/Partner Contacts" action="action_partner_address_form" id="menu_partner_address_form"/>
+	<menuitem name="Partners/" action="action_partner_address_form" id="menu_partner_address_form"/>
 	
 	<!--
 	=========================================
@@ -218,7 +218,7 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_partner_title">
-		<field name="name">res.partner.title</field>
+		<field name="name">Partners Titles</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">res.partner.title</field>
 		<field name="view_type">form</field>
@@ -308,13 +308,13 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="action_partner_form">
-		<field name="name">res.partner</field>
+		<field name="name">Partner</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">res.partner</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_partner_form"/>
 	</record>
-	<menuitem name="Partners/Partners" action="action_partner_form" id="menu_partner_form"/>
+	<menuitem name="Partners/" action="action_partner_form" id="menu_partner_form"/>
 
 	<record model="ir.ui.view" id="view_payterm_form">
 		<field name="name">res.payterm</field>
@@ -327,7 +327,7 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_payterm_form">
-		<field name="name">res.payterm</field>
+		<field name="name">Payment term</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">res.payterm</field>
 		<field name="view_type">form</field>
@@ -473,7 +473,7 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_partner_category">
-		<field name="name">res.partner.category</field>
+		<field name="name">Partner Categories Architecture</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">res.partner.category</field>
 		<field name="view_type">tree</field>
@@ -483,7 +483,7 @@
 	<menuitem name="Partners/Configuration/Categories" action="action_partner_category" id="menu_partner_category"/>
 
 	<record model="ir.actions.act_window" id="action_partner_category_form">
-		<field name="name">res.partner.category</field>
+		<field name="name">Partner Categories</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">res.partner.category</field>
 		<field name="view_type">form</field>
@@ -497,13 +497,13 @@
 		<field name="model">res.partner.category.type</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Partner Type of Categories">
+			<form string="Type of Partner Categories">
 				<field name="name" select="1"/>
 			</form>
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_partner_category_type_form">
-		<field name="name">res.partner.category.type.form</field>
+		<field name="name">Type of Partner Categories</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">res.partner.category.type</field>
 		<field name="view_type">form</field>
@@ -516,7 +516,7 @@
 	<menuitem name="Administration/Configuration/Partner" sequence="3"/>
 
 	<record model="ir.actions.act_window" id="open_module_type_partenaire">
-		<field name="name">res.partner.category</field>
+		<field name="name">Partner Categories</field>
 		<field name="res_model">res.partner.category</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
@@ -525,7 +525,7 @@
 	<menuitem name="Administration/Configuration/Partner/Define Partners categories" action="open_module_type_partenaire" sequence="1" id="menu_type_partenaire"/>
 
 	<record model="ir.actions.act_window" id="open_module_def_partenaire">
-		<field name="name">res.partner</field>
+		<field name="name">Partner</field>
 		<field name="res_model">res.partner</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>

@@ -107,7 +107,7 @@ class act_window(osv.osv):
 	_table = 'ir_act_window'
 	_sequence = 'ir_actions_id_seq'
 	_columns = {
-		'name': fields.char('Action Name', size=64, required=True, translate=True),
+		'name': fields.char('Action Name', size=64, translate=True),
 		'type': fields.char('Action Type', size=32, required=True),
 		'view_id': fields.many2one('ir.ui.view', 'View Ref.', ondelete='cascade'),
 		'domain': fields.char('Domain Value', size=250),
