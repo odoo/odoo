@@ -270,11 +270,6 @@
 		</field>
 	</record>
 
-	<record model="ir.actions.act_window" id="action_invoice_form">
-		<field name="res_model">account.invoice</field>
-		<field name="view_type">form</field>
-		<field name="view_id" ref="invoice_form"/>
-	</record>
 	<menuitem name="Financial Management/Invoices" sequence="6"/>
 
 	<record model="ir.actions.act_window" id="action_invoice_tree1">
@@ -410,6 +405,15 @@
 		<field name="context">{'type':'in_refund'}</field>
 	</record>
 	<menuitem name="Financial Management/Invoices/Suppliers Refund/Opened" id="menu_action_invoice_tree13" action="action_invoice_tree13"/>
+
+	<record model="ir.actions.act_window" id="action_invoice_tree">
+		<field name="res_model">account.invoice</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="view_id" ref="invoice_tree"/>
+		<field name="context">{'type':'out_invoice'}</field>
+	</record>
+	<menuitem name="Financial Management/Invoices/All invoices" id="menu_action_invoice_tree" action="action_invoice_tree"/>
 
 </data>
 </terp>

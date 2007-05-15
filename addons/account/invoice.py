@@ -85,6 +85,10 @@ class account_invoice(osv.osv):
 			raise osv.except_osv('No Analytic Journal !', "You have to define an analytic journal of type '%s' !" % (tt,))
 		return result[0]
 
+	def _get_type(self, cr, uid, context={}):
+		type = context.get('type', 'out_invoice')
+		return type
+
 	_name = "account.invoice"
 	_description = 'Invoice'
 	_order = "number"
@@ -96,7 +100,7 @@ class account_invoice(osv.osv):
 			('in_invoice','Supplier Invoice'),
 			('out_refund','Customer Refund'),
 			('in_refund','Supplier Refund'),
-			],'Type', readonly=True, states={'draft':[('readonly', False)]}, select=True),
+			],'Type', readonly=True, select=True),
 
 		'number': fields.char('Invoice Number', size=32, readonly=True),
 		'reference': fields.char('Invoice Reference', size=64),
@@ -136,7 +140,7 @@ class account_invoice(osv.osv):
 		'check_total': fields.float('Total', digits=(16,2)),
 	}
 	_defaults = {
-		'type': lambda *a: 'out_invoice',
+		'type': _get_type,
 		'date_invoice': lambda *a: time.strftime('%Y-%m-%d'),
 		'state': lambda *a: 'draft',
 		'journal_id': _get_journal,
