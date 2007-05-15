@@ -106,6 +106,13 @@ class act_window(osv.osv):
 	_name = 'ir.actions.act_window'
 	_table = 'ir_act_window'
 	_sequence = 'ir_actions_id_seq'
+
+	def _views_get_fnc(self, cr, uid, ids, name, arg, context={}):
+		res={}
+		for act in self.browse(cr, uid, ids):
+			res[act.id]=[(view.view_id.id, view.view_mode) for view in act.view_ids]
+		return res
+
 	_columns = {
 		'name': fields.char('Action Name', size=64, translate=True),
 		'type': fields.char('Action Type', size=32, required=True),
@@ -114,9 +121,10 @@ class act_window(osv.osv):
 		'context': fields.char('Context Value', size=250),
 		'res_model': fields.char('Model', size=64),
 		'view_type': fields.selection((('tree','Tree'),('form','Form')),string='Type of view'),
-#		'view_mode': fields.selection((('form,list','Form - List'),('list,form','List - Form')), string='Mode of view'),
 		'view_mode': fields.char('Mode of view', size=250),
-		'usage': fields.char('Action Usage', size=32)
+		'usage': fields.char('Action Usage', size=32),
+		'view_ids': fields.one2many('ir.actions.act_window.view', 'act_window_id', 'Views'),
+		'views': fields.function(_views_get_fnc, method=True, type='binary', string='Views'),
 	}
 	_defaults = {
 		'type': lambda *a: 'ir.actions.act_window',
@@ -125,6 +133,19 @@ class act_window(osv.osv):
 		'context': lambda *a: '{}'
 	}
 act_window()
+
+class act_window_view(osv.osv):
+	_name = 'ir.actions.act_window.view'
+	_table = 'ir_act_window_view'
+	_rec_name = 'view_id'
+	_columns = {
+		'sequence': fields.integer('Sequence'),
+		'view_id': fields.many2one('ir.ui.view', 'View'),
+		'view_mode': fields.selection((('tree', 'Tree'),('form', 'Form'),('graph', 'Graph')), string='Type of view', required=True),
+		'act_window_id': fields.many2one('ir.actions.act_window', 'Action'),
+	}
+	_order = 'sequence'
+act_window_view()
 
 class act_wizard(osv.osv):
 	_name = 'ir.actions.wizard'
