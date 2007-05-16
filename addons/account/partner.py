@@ -65,7 +65,7 @@ class res_partner(osv.osv):
 		if not len(args):
 			return []
 		where = ' and '.join(map(lambda x: '(sum(debit-credit)'+x[1]+str(x[2])+')',args))
-		cr.execute('select partner_id from account_move_line where account_id in (select id from account_account where type=%s) and reconcile_id is null and state<>\'draft\' group by partner_id having '+where, ('receivable',) )
+		cr.execute('select partner_id from account_move_line where account_id in (select id from account_account where type=%s) and reconcile_id is null and state<>\'draft\' and partner_id is not null group by partner_id having '+where, ('receivable',) )
 		res = cr.fetchall()
 		if not len(res):
 			return [('id','=','0')]
@@ -75,7 +75,7 @@ class res_partner(osv.osv):
 		if not len(args):
 			return []
 		where = ' and '.join(map(lambda x: '(sum(debit-credit)'+x[1]+str(x[2])+')',args))
-		cr.execute('select partner_id from account_move_line where account_id in (select id from account_account where type=%s) and reconcile_id is null and state<>\'draft\' group by partner_id having '+where, ('payable',) )
+		cr.execute('select partner_id from account_move_line where account_id in (select id from account_account where type=%s) and reconcile_id is null and state<>\'draft\'and partner_id is not null group by partner_id having '+where, ('payable',) )
 		res = cr.fetchall()
 		if not len(res):
 			return [('id','=','0')]
