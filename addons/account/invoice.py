@@ -505,10 +505,14 @@ class account_invoice(osv.osv):
 				for line in lines:
 					del line['id']
 					del line['invoice_id']
-					line['account_id'] = line['account_id'] and line['account_id'][0]
-					line['product_id'] = line['product_id'] and line['product_id'][0]
-					line['uos_id'] = line['uos_id'] and line['uos_id'][0]
-					line['invoice_line_tax_id'] = [(6,0, line.get('invoice_line_tax_id', [])) ]
+					if 'account_id' in line:
+						line['account_id'] = line.get('account_id', False) and line['account_id'][0]
+					if 'product_id' in line:
+						line['product_id'] = line.get('product_id', False) and line['product_id'][0]
+					if 'uos_id' in line:
+						line['uos_id'] = line.get('uos_id', False) and line['uos_id'][0]
+					if 'invoice_line_tax_id' in line:
+						line['invoice_line_tax_id'] = [(6,0, line.get('invoice_line_tax_id', [])) ]
 				return map(lambda x: (0,0,x), lines)
 				
 			invoice_lines = self.pool.get('account.invoice.line').read(cr, uid, invoice['invoice_line'])
