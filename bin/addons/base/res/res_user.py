@@ -33,7 +33,13 @@ class groups(osv.osv):
 	_name = "res.groups"
 	_columns = {
 		'name': fields.char('Group Name', size=64, required=True),
+		'rule_ids': fields.many2many('ir.rule', 'group_rule_rel', 'group_id', 'rule_id', 'Acces Rules'),
 	}
+	def write(self, cr, uid, *args, **argv):
+		res = super(groups, self).write(cr, uid, *args, **argv)
+		# Restart the cache on the company_get method
+		self.pool.get('ir.rule').domain_get()
+		return res
 groups()
 
 
@@ -86,6 +92,7 @@ class users(osv.osv):
 		'groups_id': fields.many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', 'groups'),
 		'roles_id': fields.many2many('res.roles', 'res_roles_users_rel', 'uid', 'rid', 'Roles'),
 		'company_id': fields.many2one('res.company', 'Company'),
+		'rule_ids': fields.many2many('ir.rule', 'user_rule_rel', 'users_id', 'rule_id', 'Acces Rules'),
 	}
 	_sql_constraints = [
 		('login_key', 'UNIQUE (login)', 'You can not have two users with the same login !')
@@ -101,8 +108,8 @@ class users(osv.osv):
 
 	def write(self, cr, uid, *args, **argv):
 		res = super(users, self).write(cr, uid, *args, **argv)
-		# Restart the cache on the company_get method
 		self.company_get()
+		self.pool.get('ir.rule').domain_get()
 		return res
 
 	def unlink(self, cr, uid, ids):
@@ -120,5 +127,7 @@ class users(osv.osv):
 		login = self.read(cr, uid, [id], ['login'])[0]['login']
 		default.update({'login': login+' (copy)'})
 		return super(users, self).copy(cr, uid, id, default, context)
+
+
 users()
 

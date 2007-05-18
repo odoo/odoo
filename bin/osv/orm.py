@@ -174,12 +174,15 @@ class browse_record(object):
 						if data[n]:
 							obj = self._table.pool.get(f._obj)
 							compids=False
-							if 'company_id' in obj._columns and not self._uid == 1:
-								compids = tools.get_user_companies(self._cr, self._uid)
-								if compids:
-									self._cr.execute('SELECT id FROM '+obj._table+' where id = %d AND  (company_id in ('+','.join(map(str,compids))+') or company_id is null)', (data[n],))
-									if not self._cr.fetchall():
-										raise except_orm('BrowseError', 'Object %s (id:%d) is linked to the object %s (id:%d) which is not in your company' %(self._table._description, self._id, obj._description, data[n]))
+							#
+							# Removed for performance sake. (Bug may arise) [20070516]
+							#
+# 							if 'company_id' in obj._columns :
+# 								compids = tools.get_user_companies(self._cr, self._uid)
+# 								if compids:
+# 									self._cr.execute('SELECT id FROM '+obj._table+' where id = %d AND  (company_id in ('+','.join(map(str,compids))+') or company_id is null)', (data[n],))
+# 									if not self._cr.fetchall():
+# 										raise except_orm('BrowseError', 'Object %s (id:%d) is linked to the object %s (id:%d) which is not in your company' %(self._table._description, self._id, obj._description, data[n]))
 							data[n] = browse_record(self._cr, self._uid, data[n], obj, self._cache, context=self._context, list_class=self._list_class)
 						else:
 							data[n] = browse_null()
@@ -479,7 +482,19 @@ class orm(object):
 			self._sequence = self._table+'_id_seq'
 		for k in self._defaults:
 			assert (k in self._columns) or (k in self._inherit_fields), 'Default function defined in %s but field %s does not exist !' % (self._name, k,)
+		if self._log_access:
+			self._columns.update({
+				'create_uid': fields.many2one('res.users','Creation user',required=True, readonly=True),
+				'create_date': fields.datetime('Creation date',required=True, readonly=True),
+				'write_uid': fields.many2one('res.users','Last modification by', readonly=True),
+				'write_date': fields.datetime('Last modification date', readonly=True),
+				})
 
+			#FIXME : does not work :
+# 			self._defaults.update({
+# 				'create_uid': lambda self,cr,uid,context : uid,
+# 				'create_date': lambda *a : time.strftime("%Y-%m-%d %H:%M:%S")
+# 				})
 	#
 	# Update objects that uses this one to update their _inherits fields
 	#
@@ -710,25 +725,20 @@ class orm(object):
 		if fields==None:
 			fields = self._columns.keys()
 
-		# if the object has a field named 'company_id', filter out all
-		# records which do not concern the current company (the company
-		# of the current user) or its "childs"
-		company_clause='true'
-		compids=False
-		if 'company_id' in self._columns and not user == 1:
-			compids = tools.get_user_companies(cr, user)
-			if compids:
-				company_clause = '(company_id in ('+','.join(map(str,compids))+') or company_id is null)'
+		# construct a clause for the rules :
+		d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
 
 		# all inherited fields + all non inherited fields for which the attribute whose name is in load is True
 		fields_pre = filter(lambda x: x in self._columns and getattr(self._columns[x],'_classic_write'), fields) + self._inherits.values()
 
-		if len(fields_pre) or compids:
-			cr.execute('select %s from %s where id in (%s) and %s order by %s' % (','.join(fields_pre + ['id']), self._table, ','.join([str(x) for x in ids]), company_clause, self._order))
-			uniq_id = []
-			[uniq_id.append(i) for i in ids if not uniq_id.count(i)]
-			if not cr.rowcount == len(uniq_id) and compids:
-				raise except_orm('ReadError', 'You try to read objects (%s) that is not in your company' % self._description)
+		if len(fields_pre) :
+			if d1:
+				cr.execute('select %s from %s where id in (%s) and %s order by %s' % (','.join(fields_pre + ['id']), self._table, ','.join([str(x) for x in ids]), d1, self._order),d2)
+				if not cr.rowcount == len({}.fromkeys(ids)):
+					raise except_orm('AccessError', 'You try to bypass an access rule (Document type : %s).' % self._description)
+			else:
+				cr.execute('select %s from %s where id in (%s) order by %s' % (','.join(fields_pre + ['id']), self._table, ','.join([str(x) for x in ids]), self._order))
+
 			res = cr.dictfetchall()
 		else:
 			res = map(lambda x: {'id':x}, ids)
@@ -835,19 +845,26 @@ class orm(object):
 			wf_service.trg_delete(uid, self._name, id, cr)
 		str_d = string.join(('%d',)*len(ids),',')
 
-		cr.execute('select * from '+self._table+' where id in ('+str_d+')', ids)
-		res = cr.dictfetchall()
+		#cr.execute('select * from '+self._table+' where id in ('+str_d+')', ids)
+		#res = cr.dictfetchall()
 		#for key in self._inherits:
 		#	ids2 = [x[self._inherits[key]] for x in res]
 		#	self.pool.get(key).unlink(cr, uid, ids2)
-		cr.execute('delete from inherit where (obj_type=%s and obj_id in ('+str_d+')) or (inst_type=%s and inst_id in ('+str_d+'))', (self._name,)+tuple(ids)+(self._name,)+tuple(ids))
-		cr.execute('delete from '+self._table+' where id in ('+str_d+')', ids)
+
+		d1, d2 = self.pool.get('ir.rule').domain_get(cr, uid, self._name)
+		if d1:
+			d1 = ' and '+d1
+
+		cr.execute('delete from inherit where (obj_type=%s and obj_id in ('+str_d+'))'+d1+' or (inst_type=%s and inst_id in ('+str_d+')'+d1+')', [self._name]+ids+d2+[self._name]+ids+d2)
+		cr.execute('delete from '+self._table+' where id in ('+str_d+')'+d1, ids+d2)
 		return True
 
 	#
 	# TODO: Validate
 	#
 	def write(self, cr, user, ids, vals, context={}):
+		if not ids:
+			return True
 		delta= context.get('read_delta',False)
 		if delta and self._log_access:
 			cr.execute("select  (now()  - min(write_date)) <= '%s'::interval  from %s where id in (%s)"% (delta,self._table,",".join(map(str, ids))) )
@@ -856,10 +873,9 @@ class orm(object):
 				raise except_orm('ConcurrencyException', 'This record was modified in the meanwhile')
 
 		self.pool.get('ir.model.access').check(cr, user, self._name, 'write')
+
 		#for v in self._inherits.values():
 		#	assert v not in vals, (v, vals)
-		if not ids:
-			return
 		ids_str = string.join(map(str, ids),',')
 		upd0=[]
 		upd1=[]
@@ -884,7 +900,11 @@ class orm(object):
 			upd1.append(user)
 
 		if len(upd0):
-			cr.execute('update '+self._table+' set '+string.join(upd0,',')+' where id in ('+ids_str+')', upd1)
+
+			d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
+			if d1:
+				d1 = ' and '+d1
+			cr.execute('update '+self._table+' set '+string.join(upd0,',')+' where id in ('+ids_str+')'+d1, upd1+ d2)
 
 			if totranslate:
 				for f in direct:
@@ -1391,11 +1411,11 @@ class orm(object):
 		# if the object has a field named 'company_id', filter out all
 		# records which do not concern the current company (the company
 		# of the current user) or its "childs"
-		if 'company_id' in self._columns and not user == 1:
-			compids = tools.get_user_companies(cr, user)
-			if compids:
-				compids.append(False)
-				args.append(('company_id','in',compids))
+# 		if 'company_id' in self._columns and not user == 1:
+# 			compids = tools.get_user_companies(cr, user)
+# 			if compids:
+# 				compids.append(False)
+# 				args.append(('company_id','in',compids))
 
 		i = 0
 		tables=[self._table]
@@ -1497,6 +1517,7 @@ class orm(object):
 
 		# compute the where, order by, limit and offset clauses
 		(qu1,qu2) = self._where_calc(args)
+
 		if len(qu1):
 			qu1 = ' where '+string.join(qu1,' and ')
 		else:
@@ -1505,7 +1526,13 @@ class orm(object):
 
 		limit_str = limit and ' limit %d' % limit or ''
 		offset_str = offset and ' offset %d' % offset or ''
-		
+
+
+		# construct a clause for the rules :
+		d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
+		if d1:
+			qu1 = qu1 and qu1+' and '+d1 or ' where '+d1
+			qu2 += d2
 		# execute the "main" query to fetch the ids we were searching for
 		cr.execute('select %s.id from ' % self._table + ','.join(tables) +qu1+' order by '+order_by+limit_str+offset_str, qu2)
 		res = cr.fetchall()

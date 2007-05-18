@@ -59,6 +59,8 @@
 		<field name="arch" type="xml">
 			<form string="Groups">
 				<field name="name" colspan="4" select="1"/>
+				<field name="rule_ids" />
+
 			</form>
 		</field>
 	</record>
@@ -116,6 +118,7 @@
 				<newline/>
 				<field name="groups_id"/>
 				<field name="roles_id"/>
+				<field name="rule_ids"/>
 			</form>
 		</field>
 	</record>

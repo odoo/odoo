@@ -285,8 +285,11 @@ class many2one(_column):
 			for id in filter(None, res.values()):
 				try:
 					names[id] = dict(obj.name_get(cr, user, [id], context))[id]
-				except except_orm:
-					names[id] = "== Access denied =="
+				except except_orm, e:
+					if e.name == 'AccessError':
+						names[id] = "== Access denied =="
+					else :
+						raise
 		for r in res.keys():
 			if res[r] and res[r] in names:
 				res[r] = (res[r], names[res[r]])
@@ -397,11 +400,12 @@ class many2many(_column):
 		ids_s = ','.join(map(str,ids))
 		limit_str = self._limit is not None and ' limit %d' % self._limit or ''
 		obj = obj.pool.get(self._obj)
-		if 'company_id' in obj._columns:
-			compids = tools.get_user_companies(cr, user)
-			cr.execute('SELECT r.'+self._id2+', r.'+self._id1+' FROM '+self._rel+' AS r, '+obj._table+' AS o WHERE r.'+self._id1+' in ('+ids_s+') AND r.'+self._id2+' = o.id AND (o.company_id IN ('+','.join(map(str,compids))+') OR o.company_id IS NULL)'+limit_str+' OFFSET %d', (offset,))
-		else:
-			cr.execute('select '+self._id2+','+self._id1+' from '+self._rel+' where '+self._id1+' in ('+ids_s+')'+limit_str+' offset %d', (offset,))
+
+		d1, d2 = obj.pool.get('ir.rule').domain_get(cr, user, obj._name)
+		if d1:
+			d1 = ' and '+d1
+
+		cr.execute('SELECT '+self._rel+'.'+self._id2+','+self._rel+'.'+self._id1+' FROM '+self._rel+' , '+obj._table+' where '+self._rel+'.'+self._id1+' in ('+ids_s+') AND '+self._rel+'.'+self._id2+' = '+obj._table+'.id ' +d1+limit_str+' offset %d', d2+[offset])
 		for r in cr.fetchall():
 			res[r[1]].append(r[0])
 		return res
@@ -425,12 +429,13 @@ class many2many(_column):
 			elif act[0]==5:
 				cr.execute('update '+self._rel+' set '+self._id2+'=null where '+self._id2+'=%d', (id,))
 			elif act[0]==6:
-				if 'company_id' in obj._columns and not user == 1:
-					compids = tools.get_user_companies(cr, user)
-					cr.execute('delete from '+self._rel+' where '+self._id1+'=%d AND '+self._id2+' IN (SELECT r.'+self._id2+' FROM '+self._rel+' AS r, '+obj._table+' AS o WHERE r.'+self._id1+'=%d AND r.'+self._id2+' = o.id AND (o.company_id IN ('+','.join(map(str,compids))+') OR o.company_id IS NULL))', (id, id, ))
-				else:
-					cr.execute('delete from '+self._rel+' where '+self._id1+'=%d', (id, ))
-				for act_nbr in act[2]:
+
+				d1, d2 = obj.pool.get('ir.rule').domain_get(cr, user, obj._name) 
+				if d1:
+					d1 = ' and '+d1
+				cr.execute('delete from '+self._rel+' where '+self._id1+'=%d AND '+self._id2+' IN (SELECT '+self._rel+'.'+self._id2+' FROM '+self._rel+', '+obj._table+' WHERE '+self._rel+'.'+self._id1+'=%d AND '+self._rel+'.'+self._id2+' = '+obj._table+'.id '+ d1 +')', [id, id]+d2 )
+
+				for act_nbr in act[2]: # XXX add clause ? [bch 20070518]
 					cr.execute('insert into '+self._rel+' ('+self._id1+','+self._id2+') values (%d, %d)', (id, act_nbr))
 
 	#
