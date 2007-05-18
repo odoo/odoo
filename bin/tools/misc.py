@@ -340,11 +340,6 @@ class cache(object):
 				mintime = time.time() - self.timeout
 				if self.timeout <= 0 or mintime <= last_time:
 					return value
-				else:
-					pass
-					#
-					# Clear Cache at this point ?
-					#
 
 			# Work out new value, cache it and return it
 			# Should copy() this value to avoid futur modf of the cacle ?
