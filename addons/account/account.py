@@ -142,8 +142,11 @@ class account_account(osv.osv):
 		return super(account_account,self).search(cr, uid, args, offset, limit, order, context=context)
 
 	def _credit(self, cr, uid, ids, field_name, arg, context={}):
+		if not 'fiscalyear' in context:
+			context['fiscalyear'] = self.pool.get('account.fiscalyear').find(cr, uid)
+
 		acc_set = ",".join(map(str, ids))
-		cr.execute("SELECT a.id, COALESCE(SUM(l.credit*a.sign),0) FROM account_account a LEFT JOIN account_move_line l ON (a.id=l.account_id) WHERE a.type!='view' AND a.id IN (%s) AND l.active AND l.state<>'draft' GROUP BY a.id" % acc_set)
+		cr.execute("SELECT a.id, COALESCE(SUM(l.credit*a.sign),0) FROM account_account a LEFT JOIN account_move_line l ON (a.id=l.account_id) WHERE a.type!='view' AND a.id IN (%s) AND l.active AND l.state<>'draft' AND l.period_id in (SELECT id from account_period WHERE fiscalyear_id=%d) GROUP BY a.id" % (acc_set, context['fiscalyear']))
 		res2 = cr.fetchall()
 		res = {}
 		for id in ids:
@@ -153,8 +156,11 @@ class account_account(osv.osv):
 		return res
 
 	def _debit(self, cr, uid, ids, field_name, arg, context={}):
+		if not 'fiscalyear' in context:
+			context['fiscalyear'] = self.pool.get('account.fiscalyear').find(cr, uid)
+
 		acc_set = ",".join(map(str, ids))
-		cr.execute("SELECT a.id, COALESCE(SUM(l.debit*a.sign),0) FROM account_account a LEFT JOIN account_move_line l ON (a.id=l.account_id) WHERE a.type!='view' AND a.id IN (%s) and l.active AND l.state<>'draft' GROUP BY a.id" % acc_set)
+		cr.execute("SELECT a.id, COALESCE(SUM(l.debit*a.sign),0) FROM account_account a LEFT JOIN account_move_line l ON (a.id=l.account_id) WHERE a.type!='view' AND a.id IN (%s) and l.active AND l.state<>'draft' AND l.period_id in (SELECT id from account_period WHERE fiscalyear_id=%d) GROUP BY a.id" % (acc_set, context['fiscalyear']))
 		res2 = cr.fetchall()
 		res = {}
 		for id in ids:
@@ -164,9 +170,12 @@ class account_account(osv.osv):
 		return res
 
 	def _balance(self, cr, uid, ids, field_name, arg, context={}):
+		if not 'fiscalyear' in context:
+			context['fiscalyear'] = self.pool.get('account.fiscalyear').find(cr, uid)
+
 		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
 		acc_set = ",".join(map(str, ids2))
-		cr.execute("SELECT a.id, COALESCE(SUM((l.debit-l.credit)),0) FROM account_account a LEFT JOIN account_move_line l ON (a.id=l.account_id) WHERE a.id IN (%s) and l.active AND l.state<>'draft' GROUP BY a.id" % acc_set)
+		cr.execute("SELECT a.id, COALESCE(SUM((l.debit-l.credit)),0) FROM account_account a LEFT JOIN account_move_line l ON (a.id=l.account_id) WHERE a.id IN (%s) and l.active AND l.state<>'draft' AND l.period_id in (SELECT id from account_period WHERE fiscalyear_id=%d) GROUP BY a.id" % (acc_set, context['fiscalyear']))
 		res = {}
 		for account_id, sum in cr.fetchall():
 			res[account_id] = round(sum,2)
@@ -409,7 +418,7 @@ class account_fiscalyear(osv.osv):
 	_defaults = {
 		'state': lambda *a: 'draft',
 	}
-	_order = "code"
+	_order = "date_start"
 	def create_period3(self,cr, uid, ids, context={}):
 		return self.create_period(cr, uid, ids, context, 3)
 
@@ -428,6 +437,14 @@ class account_fiscalyear(osv.osv):
 				})
 				ds = ds + RelativeDateTime(months=interval)
 		return True
+
+	def find(self, cr, uid, dt=None, context={}):
+		if not dt:
+			dt = time.strftime('%Y-%m-%d')
+		ids = self.search(cr, uid, [('date_start', '<=', dt), ('date_stop', '>=', dt)])
+		if not ids:
+			raise osv.except_osv('Error !', 'No fiscal year defined for this date !\nPlease create one.')
+		return ids[0]
 account_fiscalyear()
 
 class account_period(osv.osv):

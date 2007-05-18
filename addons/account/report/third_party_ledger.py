@@ -29,9 +29,9 @@ import pooler
 import time
 from report import report_sxw
 
-class grand_livre_tiers(report_sxw.rml_parse):
+class third_party_ledger(report_sxw.rml_parse):
 	def __init__(self, cr, uid, name, context):
-		super(grand_livre_tiers, self).__init__(cr, uid, name, context)
+		super(third_party_ledger, self).__init__(cr, uid, name, context)
 		self.localcontext.update( {
 			'time': time,
 			'lines': self.lines,
@@ -45,8 +45,8 @@ class grand_livre_tiers(report_sxw.rml_parse):
 		self.cr.execute(
 			"SELECT DISTINCT partner_id " \
 			"FROM account_move_line " \
-			"WHERE partner_id IS NOT NULL AND date>=%s AND date<=%s AND state<>'draft'", 
-			(data['form']['date1'], data['form']['date2']))
+			"WHERE partner_id IS NOT NULL AND date>=%s AND date<=%s AND state<>'draft' AND period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)", 
+			(data['form']['date1'], data['form']['date2'], data['form']['fiscalyear']))
 		new_ids = [id for (id,) in self.cr.fetchall()]
 		self.cr.execute(
 			"SELECT a.id " \
@@ -55,7 +55,7 @@ class grand_livre_tiers(report_sxw.rml_parse):
 		self.account_ids = ','.join([str(a) for (a,) in self.cr.fetchall()])
 		self.partner_ids = ','.join(map(str, new_ids))
 		objects = self.pool.get('res.partner').browse(self.cr, self.uid, new_ids)
-		super(grand_livre_tiers, self).preprocess(objects, data, new_ids)
+		super(third_party_ledger, self).preprocess(objects, data, new_ids)
 
 	def lines(self, partner):
 		self.cr.execute(
@@ -63,9 +63,10 @@ class grand_livre_tiers(report_sxw.rml_parse):
 			"FROM account_move_line l LEFT JOIN account_journal j ON (l.journal_id=j.id) " \
 			"WHERE l.partner_id=%d " \
 			"AND l.account_id IN (" + self.account_ids + ") " \
-			"AND l.date>=%s AND l.date<=%s  AND state<>'draft'" \
+			"AND l.date>=%s AND l.date<=%s  AND state<>'draft' " \
+			"AND l.period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d) "\
 			"ORDER BY l.id", 
-			(partner.id, self.datas['form']['date1'], self.datas['form']['date2']))
+			(partner.id, self.datas['form']['date1'], self.datas['form']['date2'], self.datas['form']['fiscalyear']))
 		res = self.cr.dictfetchall()
 		sum = 0.0
 		for r in res:
@@ -79,8 +80,9 @@ class grand_livre_tiers(report_sxw.rml_parse):
 			"FROM account_move_line " \
 			"WHERE partner_id=%d " \
 			"AND account_id IN (" + self.account_ids + ") " \
-			"AND date>=%s AND date<=%s AND state<>'draft'",
-			(partner.id, self.datas['form']['date1'], self.datas['form']['date2']))
+			"AND date>=%s AND date<=%s AND state<>'draft' " \
+			"AND period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)",
+			(partner.id, self.datas['form']['date1'], self.datas['form']['date2'], self.datas['form']['fiscalyear']))
 		return self.cr.fetchone()[0] or 0.0
 		
 	def _sum_credit_partner(self, partner):
@@ -89,8 +91,9 @@ class grand_livre_tiers(report_sxw.rml_parse):
 			"FROM account_move_line " \
 			"WHERE partner_id=%d " \
 			"AND account_id IN (" + self.account_ids + ") " \
-			"AND date>=%s AND date<=%s AND state<>'draft'",
-			(partner.id, self.datas["form"]["date1"], self.datas["form"]["date2"]))
+			"AND date>=%s AND date<=%s AND state<>'draft' " \
+			"AND period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)",
+			(partner.id, self.datas["form"]["date1"], self.datas["form"]["date2"], self.datas['form']['fiscalyear']))
 		return self.cr.fetchone()[0] or 0.0
 		
 	def _sum_debit(self):
@@ -102,8 +105,9 @@ class grand_livre_tiers(report_sxw.rml_parse):
 			"FROM account_move_line " \
 			"WHERE partner_id IN (" + self.partner_ids + ") " \
 			"AND account_id IN (" + self.account_ids + ") " \
-			"AND date>=%s AND date<=%s AND state<>'draft'", 
-			(self.datas['form']['date1'], self.datas['form']['date2']))
+			"AND date>=%s AND date<=%s AND state<>'draft'" \
+			"AND period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)",
+			(self.datas['form']['date1'], self.datas['form']['date2'], self.datas['form']['fiscalyear']))
 		return self.cr.fetchone()[0] or 0.0
 		
 	def _sum_credit(self):
@@ -115,8 +119,9 @@ class grand_livre_tiers(report_sxw.rml_parse):
 			"FROM account_move_line " \
 			"WHERE partner_id IN (" + self.partner_ids + ") " \
 			"AND account_id IN (" + self.account_ids + ") " \
-			"AND date>=%s AND date<=%s AND state<>'draft'", 
-			(self.datas['form']['date1'], self.datas['form']['date2']))
+			"AND date>=%s AND date<=%s AND state<>'draft'" \
+			"AND period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)",
+			(self.datas['form']['date1'], self.datas['form']['date2'], self.datas['form']['fiscalyear']))
 		return self.cr.fetchone()[0] or 0.0
-report_sxw.report_sxw('report.account.grand.livre.tiers', 'res.partner', 'addons/account/report/grand_livre_tiers.rml',parser=grand_livre_tiers)
+report_sxw.report_sxw('report.account.third_party_ledger', 'res.partner', 'addons/account/report/third_party_ledger.rml',parser=third_party_ledger)
 

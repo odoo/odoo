@@ -19,7 +19,7 @@
 				<field name="date_start"/>
 				<field name="date_stop"/>
 				<separator string="Periods" colspan="4"/>
-				<field name="period_ids" colspan="4" widget="one2many_list">
+				<field name="period_ids" colspan="4" widget="one2many_list" nolable="1">
 					<form string="Period">
 						<field name="name" select="1"/>
 						<field name="code" select="1"/>
@@ -939,7 +939,8 @@
 	<menuitem name="Financial Management/Entries/Entry lookup/" id="menu_action_move_line_search" action="action_move_line_search"/>
 
 	<menuitem name="Financial Management/Charts" sequence="7"/>
-	<menuitem name="Financial Management/Charts/Accounts Charts" id="menu_action_account_tree2" action="action_account_tree"/>
+	<wizard string="Accounts Charts" menu="False" model="account.account" name="account.chart" id="wizard_account_chart"/>
+	<menuitem name="Financial Management/Charts/Accounts Charts" id="menu_action_account_tree2" action="wizard_account_chart" type="wizard"/>
 	<menuitem name="Financial Management/Charts/Accounts Charts/Fast Account Chart" id="menu_action_account_tree3" action="action_account_tree2"/>
 
 	<menuitem name="Financial Management/Periodical Processing" sequence="3"/>
@@ -1319,11 +1320,12 @@
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('account_id','=',active_id),('state','&lt;&gt;','draft')]</field>
 	</record>
+	<wizard string="Move line select" menu="False" model="account.move.line" name="account.move.line.select" id="wizard_move_line_select"/>
 	<record model="ir.values" id="ir_open_account_account">
 		<field name="key2" eval="'tree_but_open'"/>
 		<field name="model" eval="'account.account'"/>
 		<field name="name">Open all entries lines</field>
-		<field name="value" eval="'ir.actions.act_window,%d'%action_move_line_tree1"/>
+		<field name="value" eval="'ir.actions.wizard,%d'%wizard_move_line_select"/>
 		<field name="object" eval="True"/>
 	</record>
 

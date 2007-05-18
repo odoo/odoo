@@ -1,6 +1,7 @@
 ##############################################################################
 #
-# Copyright (c) 2004-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2005-2007 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#                    Fabien Pinckaers <fp@tiny.Be>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -25,15 +26,33 @@
 #
 ##############################################################################
 
-import budget_report
-import central_journal
-import general_journal
-import account_journal
-import account_balance
-import partner_balance
-import grand_livre
-import third_party_ledger
-import invoice
-import rappel
-import aged_trial_balance
-import tax_report
+import wizard
+import pooler
+
+class wizard_move_line_select(wizard.interface):
+	def _open_window(self, cr, uid, data, context):
+		mod_obj = pooler.get_pool(cr.dbname).get('ir.model.data')
+		act_obj = pooler.get_pool(cr.dbname).get('ir.actions.act_window')
+		fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
+
+		if not 'fiscalyear' in context:
+			context['fiscalyear'] = fiscalyear_obj.find(cr, uid)
+
+		fy = fiscalyear_obj.browse(cr, uid, [context['fiscalyear']])[0]
+		domain = str(('period_id', 'in', [x.id for x in fy.period_ids]))
+
+		result = mod_obj._get_id(cr, uid, 'account', 'action_move_line_tree1')
+		id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
+		result = act_obj.read(cr, uid, [id])[0]
+		result['context'] = str({'fiscalyear': context['fiscalyear']})
+		result['domain']=result['domain'][0:-1]+','+domain+result['domain'][-1]
+		return result
+
+	states = {
+		'init': {
+			'actions': [],
+			'result': {'type': 'action', 'action': _open_window, 'state': 'end'}
+		}
+	}
+wizard_move_line_select('account.move.line.select')
+

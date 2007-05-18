@@ -5,7 +5,6 @@
 	<menuitem name="Financial Management/End of year treatments" sequence="20"/>
 
 	<record model="ir.actions.act_window" id="action_account_period_tree">
-		<field name="name">account.period.tree</field>
 		<field name="res_model">account.period</field>
 		<field name="view_type">tree</field>
 		<field name="domain">[('state','=','draft')]</field>
@@ -16,7 +15,7 @@
 		action="action_account_period_tree" />
 
 	<record model="ir.actions.act_window" id="action_account_fiscalyear_tree">
-		<field name="name">account.fiscalyear.tree</field>
+		<field name="name">Old fiscal years</field>
 		<field name="res_model">account.fiscalyear</field>
 		<field name="view_type">tree</field>
 		<field name="domain">[('state','=','done')]</field>

@@ -43,7 +43,7 @@ import wizard_subscription_generate
 import wizard_aged_trial_balance
 import wizard_budget_report
 import wizard_grand_livre_report
-import wizard_grand_livre_tiers_report
+import wizard_third_party_ledger
 import wizard_account_balance_report
 import wizard_partner_balance_report
 
@@ -55,3 +55,5 @@ import wizard_vat
 
 import wizard_invoice_state
 import wizard_account_duplicate
+import wizard_account_chart
+import wizard_move_line_select

@@ -27,29 +27,38 @@
 
 import time
 import wizard
+import pooler
 
 dates_form = '''<?xml version="1.0"?>
 <form string="Select period">
+	<field name="fiscalyear"/>
+	<newline/>
 	<field name="date1"/>
 	<field name="date2"/>
 </form>'''
 
 dates_fields = {
+	'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear', 'required': True},
 	'date1': {'string':'Start of period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-01-01')},
 	'date2': {'string':'End of period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
 }
 
 class wizard_report(wizard.interface):
+	def _get_defaults(self, cr, uid, data, context):
+		fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
+		data['form']['fiscalyear'] = fiscalyear_obj.find(cr, uid)
+		return data['form']
+
 	states = {
 		'init': {
-			'actions': [], 
+			'actions': [_get_defaults], 
 			'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('end','Cancel'),('report','Print') ]}
 		},
 		'report': {
 			'actions': [],
-			'result': {'type':'print', 'report':'account.grand.livre.tiers', 'state':'end'}
+			'result': {'type':'print', 'report':'account.third_party_ledger', 'state':'end'}
 		}
 	}
-wizard_report('account.grand.livre.tiers.report')
+wizard_report('account.third_party_ledger.report')
 
 

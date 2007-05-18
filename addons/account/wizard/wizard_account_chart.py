@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2005-2007 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #                    Fabien Pinckaers <fp@tiny.Be>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -27,56 +27,42 @@
 ##############################################################################
 
 import wizard
-import time
-import datetime
 import pooler
 
-from mx.DateTime import *
+class wizard_account_chart(wizard.interface):
+	_account_chart_arch = '''<?xml version="1.0"?>
+	<form string="Account charts">
+		<field name="fiscalyear"/>
+	</form>'''
+	
+	_account_chart_fields = {
+			'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear', 'required': True },
+	}
 
-_aged_trial_form = """<?xml version="1.0"?>
-<form string="Aged Trial Balance">
-	<field name="fiscalyear"/>
-	<newline/>
-	<field name="period_length"/>
-</form>"""
-
-_aged_trial_fields = {
-		'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear', 'required': True},
-	'period_length': {'string': 'Period length (days)', 'type': 'integer', 'required': True, 'default': lambda *a:30},
-}
-
-def _calc_dates(self, cr, uid, data, context):
-	res = {}
-	period_length = data['form']['period_length']
-	if period_length<=0:
-		raise wizard.except_wizard('UserError', 'You must enter a period length that cannot be 0 or below !')
-	start = now()
-	for i in range(5)[::-1]:
-		stop = start-RelativeDateTime(days=period_length)
-		res[str(i)] = {
-			'name' : 'over '+str((5-i)*period_length)+' days',
-			'stop': start.strftime('%Y-%m-%d'),
-			'start' : stop.strftime('%Y-%m-%d'),
-		}
-		start = stop - RelativeDateTime(days=1)
-	return res
-
-class wizard_report(wizard.interface):
 	def _get_defaults(self, cr, uid, data, context):
 		fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
 		data['form']['fiscalyear'] = fiscalyear_obj.find(cr, uid)
 		return data['form']
 
+
+	def _account_chart_open_window(self, cr, uid, data, context):
+		mod_obj = pooler.get_pool(cr.dbname).get('ir.model.data')
+		act_obj = pooler.get_pool(cr.dbname).get('ir.actions.act_window')
+
+		result = mod_obj._get_id(cr, uid, 'account', 'action_account_tree')
+		id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
+		result = act_obj.read(cr, uid, [id])[0]
+		result['context'] = str({'fiscalyear': data['form']['fiscalyear']})
+		return result
+
 	states = {
 		'init': {
 			'actions': [_get_defaults],
-			'result': {'type':'form', 'arch':_aged_trial_form, 'fields':_aged_trial_fields, 'state':[('end','Cancel'),('print','Print Aged Trial Balance')]},
+			'result': {'type': 'form', 'arch':_account_chart_arch, 'fields':_account_chart_fields, 'state': [('end', 'Cancel'), ('open', 'Open Charts')]}
 		},
-		'print': {
-			'actions': [_calc_dates],
-			'result': {'type':'print', 'report':'account.aged.trial.balance', 'state':'end'},
-		},
+		'open': {
+			'actions': [],
+			'result': {'type': 'action', 'action':_account_chart_open_window, 'state':'end'}
+		}
 	}
-
-wizard_report('account.aged.trial.balance')
-
+wizard_account_chart('account.chart')

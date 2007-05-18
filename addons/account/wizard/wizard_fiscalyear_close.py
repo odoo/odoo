@@ -62,16 +62,12 @@ def _data_save(self, cr, uid, data, context):
 	pool = pooler.get_pool(cr.dbname)
 
 	fy_id = data['form']['fy_id']
-	cr.execute('update account_journal_period set state=%s where period_id in (select id from account_period where fiscalyear_id=%d)', ('done',fy_id))
-	cr.execute('update account_period set state=%s where fiscalyear_id=%d', ('done',fy_id))
-	cr.execute('update account_fiscalyear set state=%s where id=%d', ('done',fy_id))
-
 	if data['form']['report_new']:
 		period = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy2_id']).period_ids[0]
 		cr.execute('select id from account_account')
 		ids = map(lambda x: x[0], cr.fetchall())
 		for account in pool.get('account.account').browse(cr, uid, ids):
-			if account.close_method=='none':
+			if account.close_method=='none' or account.type == 'view':
 				continue
 			if account.close_method=='balance':
 				if abs(account.balance)>0.0001:
@@ -117,7 +113,9 @@ def _data_save(self, cr, uid, data, context):
 						pool.get('account.move.line').create(cr, uid, move)
 					offset += limit
 
-	cr.execute('update account_move_line set active=False where period_id in (select id from account_period where fiscalyear_id=%d)', (fy_id,))
+	cr.execute('update account_journal_period set state=%s where period_id in (select id from account_period where fiscalyear_id=%d)', ('done',fy_id))
+	cr.execute('update account_period set state=%s where fiscalyear_id=%d', ('done',fy_id))
+	cr.execute('update account_fiscalyear set state=%s where id=%d', ('done',fy_id))
 	return {}
 
 class wiz_journal_close(wizard.interface):

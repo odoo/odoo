@@ -45,7 +45,7 @@ class partner_balance(report_sxw.rml_parse):
 		})
 
 	def preprocess(self, objects, data, ids):
-		self.cr.execute('select distinct partner_id from account_move_line where partner_id is not null and date>=%s and date<=%s', (data['form']['date1'], data['form']['date2']))
+		self.cr.execute('select distinct partner_id from account_move_line where partner_id is not null and date>=%s and date<=%s and period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)', (data['form']['date1'], data['form']['date2'], data['form']['fiscalyear']))
 		new_ids = [id for (id,) in self.cr.fetchall()]
 		self.cr.execute("SELECT a.id FROM account_account a LEFT JOIN account_account_type t ON (a.type=t.code) WHERE t.partner_account=TRUE")
 		self.account_ids = ','.join([str(a) for (a,) in self.cr.fetchall()])
@@ -58,18 +58,18 @@ class partner_balance(report_sxw.rml_parse):
 			return []
 
 #TODO: use an SQL CASE to compute sdebit and scredit
-#CHECKME: est-ce que les "enlitige", il fautdrait pas tester l etat de la ligne aussi?
 		self.cr.execute(
 			"SELECT p.ref, p.name, sum(debit) as debit, sum(credit) as credit, " \
-			"(SELECT sum(debit-credit) FROM account_move_line WHERE partner_id=p.id AND date>=%s AND date<=%s AND blocked=TRUE) as enlitige " \
+			"(SELECT sum(debit-credit) FROM account_move_line WHERE partner_id=p.id AND date>=%s AND date<=%s AND blocked=TRUE AND state <>'draft' AND period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)) as enlitige " \
 			"FROM account_move_line l LEFT JOIN res_partner p ON (l.partner_id=p.id) " \
 			"WHERE partner_id IN (" + self.partner_ids + ") " \
 			"AND account_id IN (" + self.account_ids + ") " \
 			"AND l.date>=%s AND l.date<=%s " \
 			"AND l.state<>'draft' " \
+			"AND l.period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d) " \
 			"GROUP BY p.id, p.ref, p.name " \
 			"ORDER BY p.ref, p.name",
-			(self.datas['form']['date1'], self.datas['form']['date2'], self.datas['form']['date1'], self.datas['form']['date2']))
+			(self.datas['form']['date1'], self.datas['form']['date2'], self.datas['form']['fiscalyear'], self.datas['form']['date1'], self.datas['form']['date2'], self.datas['form']['fiscalyear']))
 		res = self.cr.dictfetchall()
 		for r in res:
 			r['sdebit'] = r['debit'] > r['credit'] and r['debit'] - r['credit']
@@ -86,8 +86,9 @@ class partner_balance(report_sxw.rml_parse):
 			'WHERE partner_id IN (' + self.partner_ids + ') ' \
 			'AND account_id IN (' + self.account_ids + ') ' \
 			"AND state<>'draft' " \
-			'AND date>=%s AND date<=%s', 
-			(self.datas['form']['date1'], self.datas['form']['date2']))
+			'AND date>=%s AND date<=%s ' \
+			"AND period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)",
+			(self.datas['form']['date1'], self.datas['form']['date2'], self.datas['form']['fiscalyear']))
 		return self.cr.fetchone()[0] or 0.0
 		
 	def _sum_credit(self):
@@ -100,8 +101,9 @@ class partner_balance(report_sxw.rml_parse):
 			'WHERE partner_id IN (' + self.partner_ids + ') ' \
 			'AND account_id IN (' + self.account_ids + ') ' \
 			"AND state<>'draft' " \
-			'AND date>=%s AND date<=%s', 
-			(self.datas['form']['date1'], self.datas['form']['date2']))
+			'AND date>=%s AND date<=%s ' \
+			'AND period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)',
+			(self.datas['form']['date1'], self.datas['form']['date2'], self.datas['form']['fiscalyear']))
 		return self.cr.fetchone()[0] or 0.0
 
 	def _sum_litige(self):
@@ -114,8 +116,9 @@ class partner_balance(report_sxw.rml_parse):
 			'WHERE partner_id IN (' + self.partner_ids + ') ' \
 			'AND account_id IN (' + self.account_ids + ') ' \
 			"AND state<>'draft' " \
-			'AND date>=%s AND date<=%s AND blocked=TRUE', 
-			(self.datas['form']['date1'], self.datas['form']['date2']))
+			'AND date>=%s AND date<=%s AND blocked=TRUE ' \
+			'AND period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)',
+			(self.datas['form']['date1'], self.datas['form']['date2'], self.datas['form']['fiscalyear']))
 		return self.cr.fetchone()[0] or 0.0
 	
 	def _sum_sdebit(self):
@@ -131,10 +134,11 @@ class partner_balance(report_sxw.rml_parse):
 				'AND account_id IN (' + self.account_ids + ') ' \
 				'AND date>=%s AND date<=%s ' \
 				"AND state<>'draft' " \
+				"AND period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d) " \
 				'GROUP BY partner_id' \
 			') AS dc (debit,credit) ' \
 			'WHERE debit>credit', 
-			(self.datas['form']['date1'], self.datas['form']['date2']))
+			(self.datas['form']['date1'], self.datas['form']['date2'], self.datas['form']['fiscalyear']))
 		return self.cr.fetchone()[0] or 0.0
 		
 	def _sum_scredit(self):
@@ -150,10 +154,11 @@ class partner_balance(report_sxw.rml_parse):
 				'AND account_id IN (' + self.account_ids + ') ' \
 				'AND date>=%s AND date<=%s ' \
 				"AND state<>'draft' " \
+				"AND period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d) " \
 				'GROUP BY partner_id' \
 			') AS dc (debit,credit) ' \
 			'WHERE credit>debit', 
-			(self.datas['form']['date1'], self.datas['form']['date2']))
+			(self.datas['form']['date1'], self.datas['form']['date2'], self.datas['form']['fiscalyear']))
 		return self.cr.fetchone()[0] or 0.0
 
 	def _solde_balance_debit(self):
