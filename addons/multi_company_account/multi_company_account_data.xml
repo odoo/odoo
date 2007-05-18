@@ -12,5 +12,112 @@
 			<field name="company_id" ref="base.main_company"/>
 		</record>
 
+		<record model="ir.rule" id="journal_comp_rule">
+			<field name="name">Journal multi-company</field>
+			<field name="type">sub</field>
+			<field name="model_id" search="[('model','=','account.journal')]" model="ir.model"/>
+			<field name="field_id" search="[('model','=','account.journal'),('name','=','company_id')]" model="ir.model.fields"/>
+			<field name="operator">=</field>
+			<field name="operand">user.company_id.id</field>
+			<field name="domain">[('company_id', '=', user.company_id.id)]</field>
+		</record>
+
+		<record model="ir.rule" id="analytic_journal_comp_rule">
+			<field name="name">Analytic journal multi-company</field>
+			<field name="type">sub</field>
+			<field name="model_id" search="[('model','=','account.analytic.journal')]" model="ir.model"/>
+			<field name="field_id" search="[('model','=','account.analytic.journal'),('name','=','company_id')]" model="ir.model.fields"/>
+			<field name="operator">=</field>
+			<field name="operand">user.company_id.id</field>
+			<field name="domain">[('company_id', '=', user.company_id.id)]</field>
+		</record>
+
+		<record model="ir.rule" id="budget_post_comp_rule">
+			<field name="name">Budget post multi-company</field>
+			<field name="type">sub</field>
+			<field name="model_id" search="[('model','=','account.budget.post')]" model="ir.model"/>
+			<field name="field_id" search="[('model','=','account.budget.post'),('name','=','company_id')]" model="ir.model.fields"/>
+			<field name="operator">=</field>
+			<field name="operand">user.company_id.id</field>
+			<field name="domain">[('company_id', '=', user.company_id.id)]</field>
+		</record>
+
+
+
+		<record model="ir.rule" id="period_comp_rule">
+			<field name="name">Period multi-company</field>
+			<field name="type">sub</field>
+			<field name="model_id" search="[('model','=','account.period')]" model="ir.model"/>
+			<field name="field_id" search="[('model','=','account.period'),('name','=','company_id')]" model="ir.model.fields"/>
+			<field name="operator">=</field>
+			<field name="operand">user.company_id.id</field>
+			<field name="domain">[('company_id', '=', user.company_id.id)]</field>
+		</record>
+
+
+		<record model="ir.rule" id="fiscal_year_comp_rule">
+			<field name="name">Fiscal year multi-company</field>
+			<field name="type">sub</field>
+			<field name="model_id" search="[('model','=','account.fiscalyear')]" model="ir.model"/>
+			<field name="field_id" search="[('model','=','account.fiscalyear'),('name','=','company_id')]" model="ir.model.fields"/>
+			<field name="operator">=</field>
+			<field name="operand">user.company_id.id</field>
+			<field name="domain">[('company_id', '=', user.company_id.id)]</field>
+		</record>
+
+
+		<record model="ir.rule" id="account_comp_rule">
+			<field name="name">Account multi-company</field>
+			<field name="type">sub</field>
+			<field name="model_id" search="[('model','=','account.account')]" model="ir.model"/>
+			<field name="field_id" search="[('model','=','account.account'),('name','=','company_id')]" model="ir.model.fields"/>
+			<field name="operator">=</field>
+			<field name="operand">user.company_id.id</field>
+			<field name="domain">[('company_id', '=', user.company_id.id)]</field>
+		</record>
+
+		<record model="ir.rule" id="tax_comp_rule">
+			<field name="name">Tax multi-company</field>
+			<field name="type">sub</field>
+			<field name="model_id" search="[('model','=','account.tax')]" model="ir.model"/>
+			<field name="field_id" search="[('model','=','account.tax'),('name','=','company_id')]" model="ir.model.fields"/>
+			<field name="operator">=</field>
+			<field name="operand">user.company_id.id</field>
+			<field name="domain">[('company_id', '=', user.company_id.id)]</field>
+		</record>
+
+
+		<record model="ir.rule" id="tax_code_comp_rule">
+			<field name="name">Tax code multi-company</field>
+			<field name="type">sub</field>
+			<field name="model_id" search="[('model','=','account.tax.code')]" model="ir.model"/>
+			<field name="field_id" search="[('model','=','acount.tax.code'),('name','=','company_id')]" model="ir.model.fields"/>
+			<field name="operator">=</field>
+			<field name="operand">user.company_id.id</field>
+			<field name="domain">[('company_id', '=', user.company_id.id)]</field>
+		</record>
+		<record model="ir.rule" id="invoice_comp_rule">
+			<field name="name">Invoice multi-company</field>
+			<field name="type">sub</field>
+			<field name="model_id" search="[('model','=','account.invoice')]" model="ir.model"/>
+			<field name="field_id" search="[('model','=','account.invoice'),('name','=','company_id')]" model="ir.model.fields"/>
+			<field name="operator">=</field>
+			<field name="operand">user.company_id.id</field>
+			<field name="domain">[('company_id', '=', user.company_id.id)]</field>
+		</record>
+
+
+<!-- 		<record model="ir.rule" id="_comp_rule"> -->
+<!-- 			<field name="name"> multi-company</field> -->
+<!-- 			<field name="type">sub</field> -->
+<!-- 			<field name="model_id" search="[('model','=','')]" model="ir.model"/> -->
+<!-- 			<field name="field_id" search="[('model','=',''),('name','=','company_id')]" model="ir.model.fields"/> -->
+<!-- 			<field name="operator">=</field> -->
+<!-- 			<field name="operand">user.company_id.id</field> -->
+<!-- 			<field name="domain">[('company_id', '=', user.company_id.id)]</field> -->
+<!-- 		</record> -->
+
+		
+
 	</data>
 </terp>

@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<terp>
+	<data>
+
+		<record model="ir.rule" id="project_comp_rule">
+			<field name="name">Project multi-company</field>
+			<field name="type">sub</field>
+			<field name="model_id" search="[('model','=','project.project')]" model="ir.model"/>
+			<field name="field_id" search="[('model','=','project.project'),('name','=','company_id')]" model="ir.model.fields"/>
+			<field name="operator">=</field>
+			<field name="operand">user.company_id.id</field>
+			<field name="domain">[('company_id', '=', user.company_id.id)]</field>
+		</record>
+
+		<record model="ir.rule" id="task_comp_rule">
+			<field name="name" >Task multi-company</field>
+			<field name="type">sub</field>
+			<field name="model_id" search="[('model','=','project.task')]" model="ir.model"/>
+			<field name="field_id" search="[('model','=','project.task'),('name','=','company_id')]" model="ir.model.fields"/>
+			<field name="operator">=</field>
+			<field name="operand">user.company_id.id</field>
+			<field name="domain">[('company_id', '=', user.company_id.id)]</field>
+		</record>
+
+	</data>
+</terp>

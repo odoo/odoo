@@ -6,7 +6,7 @@
 	"depends" : ["hr_timesheet_sheet","base", 'multi_company',],
 	"init_xml" : [],
 	"demo_xml" : [],
-	"update_xml" : ["multi_company_hr_timesheet_sheet_view.xml",],
+	"update_xml" : ["multi_company_hr_timesheet_sheet_view.xml","multi_company_hr_timesheet_sheet_data.xml",],
 	"active": False,
 	"installable": True
 }
