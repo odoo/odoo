@@ -101,6 +101,7 @@ class report_account_analytic_planning_stat(osv.osv):
 	_description = "Planning stat"
 	_rec_name = 'user_id'
 	_auto = False
+	_log_access = False
 	def _sum_amount_real(self, cr, uid, ids, name, args, context):
 		result = {}
 		for line in self.browse(cr, uid, ids, context):
