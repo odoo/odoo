@@ -482,15 +482,14 @@ class orm(object):
 			self._sequence = self._table+'_id_seq'
 		for k in self._defaults:
 			assert (k in self._columns) or (k in self._inherit_fields), 'Default function defined in %s but field %s does not exist !' % (self._name, k,)
-		if self._log_access:
-			self._columns.update({
-				'create_uid': fields.many2one('res.users','Creation user',required=True, readonly=True),
-				'create_date': fields.datetime('Creation date',required=True, readonly=True),
-				'write_uid': fields.many2one('res.users','Last modification by', readonly=True),
-				'write_date': fields.datetime('Last modification date', readonly=True),
-				})
-
-			#FIXME : does not work :
+		# FIXME: does not work at all
+#		if self._log_access:
+#			self._columns.update({
+#				'create_uid': fields.many2one('res.users','Creation user',required=True, readonly=True),
+#				'create_date': fields.datetime('Creation date',required=True, readonly=True),
+#				'write_uid': fields.many2one('res.users','Last modification by', readonly=True),
+#				'write_date': fields.datetime('Last modification date', readonly=True),
+#				})
 # 			self._defaults.update({
 # 				'create_uid': lambda self,cr,uid,context : uid,
 # 				'create_date': lambda *a : time.strftime("%Y-%m-%d %H:%M:%S")
