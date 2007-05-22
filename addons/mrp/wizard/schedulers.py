@@ -130,23 +130,29 @@ def create_automatic_op(cr, uid, data, context):
 		v_stock = product_obj._product_virtual_available(cr, uid, products_id, "What the fuck", {'warehouse': warehouse})
 		cr.execute("select lot_stock_id from stock_warehouse")
 		location_ids_str = ','.join([str(id) for id, in cr.fetchall()])
-		dest_location = warehouse_obj.read(cr, uid, [warehouse], ['lot_input_id'])[0]['lot_input_id'][0]
+		stock_locations = warehouse_obj.read(cr, uid, [warehouse], ['lot_input_id', 'lot_stock_id'])[0]
 		for prod_id, available in v_stock.items():
 			if available >= 0:
 				continue
-			cr.execute('select date_planned from stock_move where location_id in ('+location_ids_str+') and location_dest_id not in ('+location_ids_str+') and product_id=%d order by date_planned asc limit 1', (prod_id,))
-			newdate, = cr.fetchone()
+			newdate = DateTime.now() + DateTime.RelativeDateTime(days=products[prod_id].seller_delay)
+			if products[prod_id].supply_method == 'buy':
+				location_id = stock_locations['lot_input_id'][0]
+			elif products[prod_id].supply_method == 'produce':
+				location_id = stock_locations['lot_stock_id'][0]
+			else:
+				continue
 			proc_id = proc_obj.create(cr, uid, {
 				'name': 'PROC:Automatic OP for product:%s' % products[prod_id].name,
 				'origin': 'SCHEDULER',
-				'date_planned': newdate,
+				'date_planned': newdate.strftime('%Y-%m-%d'),
 				'product_id': prod_id,
 				'product_qty': -available,
 				'product_uom': products[prod_id].uom_id.id,
-				'location_id': dest_location,
-				'procure_method': products[prod_id].procure_method,
+				'location_id': location_id,
+				'procure_method': 'make_to_order',
 				})
 			wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
+			wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_check', cr)
 
 
 def _procure_orderpoint_confirm(self, db_name, uid, data, context):
@@ -177,6 +183,12 @@ def _procure_orderpoint_confirm(self, db_name, uid, data, context):
 				if reste>0:
 					qty += op.qty_multiple-reste
 				newdate = DateTime.now() + DateTime.RelativeDateTime(days=op.product_id.seller_delay)
+				if op.product_id.supply_method == 'buy':
+					location_id = op.warehouse_id.lot_input_id
+				elif op.product_id.supply_method == 'produce':
+					location_id = op.warehouse_id.lot_stock_id
+				else:
+					continue
 				proc_id = pooler.get_pool(cr.dbname).get('mrp.procurement').create(cr, uid, {
 					'name': 'OP:'+str(op.id),
 					'date_planned': newdate.strftime('%Y-%m-%d'),
