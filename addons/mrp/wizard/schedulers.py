@@ -127,7 +127,7 @@ def create_automatic_op(cr, uid, data, context):
 	products_id = [x for x, in cr.fetchall()]
 	products = dict(zip(products_id, product_obj.browse(cr, uid, products_id, context)))
 	for warehouse in warehouses:
-		v_stock = product_obj._product_virtual_available(cr, uid, products_id, "What the fuck", {'warehouse': warehouse})
+		v_stock = product_obj._product_virtual_available(cr, uid, products_id, None, {'warehouse': warehouse})
 		cr.execute("select lot_stock_id from stock_warehouse")
 		location_ids_str = ','.join([str(id) for id, in cr.fetchall()])
 		stock_locations = warehouse_obj.read(cr, uid, [warehouse], ['lot_input_id', 'lot_stock_id'])[0]
