@@ -423,9 +423,9 @@ class many2many(_column):
 			elif act[0]==2:
 				obj.unlink(cr, user, [act[1]], context=context)
 			elif act[0]==3:
-				cr.execute('update '+self._rel+' set '+self._id2+'=null where ' +  self._id1 + '=%d', (act[1],))
+				cr.execute('delete from '+self._rel+' where ' +  self._id1 + '=%d and '+ self._id2 + '=%d', (id,act[1]))
 			elif act[0]==4:
-				cr.execute('update '+self._rel+' set '+self._id2+'=%d where ' + self._id1 + '=%d and ' + self._id2 + '=%d', (act[1], id, act[1]))
+				cr.execute('insert into '+self._rel+' ('+self._id1+','+self._id2+') values (%d,%d)', (id,act[1]))
 			elif act[0]==5:
 				cr.execute('update '+self._rel+' set '+self._id2+'=null where '+self._id2+'=%d', (id,))
 			elif act[0]==6:
@@ -435,7 +435,7 @@ class many2many(_column):
 					d1 = ' and '+d1
 				cr.execute('delete from '+self._rel+' where '+self._id1+'=%d AND '+self._id2+' IN (SELECT '+self._rel+'.'+self._id2+' FROM '+self._rel+', '+obj._table+' WHERE '+self._rel+'.'+self._id1+'=%d AND '+self._rel+'.'+self._id2+' = '+obj._table+'.id '+ d1 +')', [id, id]+d2 )
 
-				for act_nbr in act[2]: # XXX add clause ? [bch 20070518]
+				for act_nbr in act[2]: 
 					cr.execute('insert into '+self._rel+' ('+self._id1+','+self._id2+') values (%d, %d)', (id, act_nbr))
 
 	#
