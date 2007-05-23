@@ -269,7 +269,7 @@ class sale_order(osv.osv):
 					res = make_invoice(order, il)
 					invoice_ids.append(res)
 					self.write(cr, uid, [order.id], {'state' : 'progress'})
-					cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%d,%d)', (o.id, res))
+					cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%d,%d)', (order.id, res))
 		return res
 
 	def action_invoice_cancel(self, cr, uid, ids, context={}):
