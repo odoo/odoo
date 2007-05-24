@@ -677,8 +677,15 @@
 
 	<act_window name="Warehouse Orderpoint"
 		domain="[('product_id', '=', active_id)]"
+		context="{'product_uom': uom_id}"
 		res_model="stock.warehouse.orderpoint"
 		src_model="product.product"
 		id="act_product_product_2_stock_warehouse_orderpoint"/>
+
+	<act_window name="Bill of Material"
+		domain="[('product_id', '=', active_id)]"
+		res_model="mrp.bom"
+		src_model="product.product"
+		id="act_product_product_2_mrp_bom"/>
 </data>
 </terp>

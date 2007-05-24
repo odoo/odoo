@@ -916,6 +916,7 @@ class stock_warehouse_orderpoint(osv.osv):
 		'logic': lambda *a: 'max',
 		'qty_multiple': lambda *a: 1,
 		'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'mrp.warehouse.orderpoint') or '',
+		'product_uom': lambda sel, cr, uid, context: context.get('product_uom', False),
 	}
 	def onchange_product_id(self, cr, uid, ids, product_id, context={}):
 		if product_id:
