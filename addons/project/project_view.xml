@@ -388,5 +388,38 @@
 			<field name="view_id" ref="task_type_edit"/>
 		</record>
 		<menuitem name="Project/Configuration/Task types" id="menu_task_types" action="open_task_type_form"/>
+
+		<act_window name="User's projects"
+			domain="[('manager', '=', active_id)]"
+			res_model="project.project"
+			src_model="res.users"
+			view_type="form"
+			view_mode="tree,form"
+			id="act_res_users_2_project_project"/>
+
+		<act_window name="Opened tasks"
+			domain="[('project_id', '=', active_id),('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]"
+			res_model="project.task"
+			src_model="project.project"
+			view_type="form"
+			view_mode="tree,form"
+			id="act_project_project_2_project_task_opened"/>
+
+		<act_window name="Assigned tasks"
+			domain="[('user_id', '=', active_id),('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]"
+			res_model="project.task"
+			src_model="res.users"
+			view_type="form"
+			view_mode="tree,form"
+			id="act_res_users_2_project_task_opened"/>
+
+		<act_window name="Month works"
+			domain="[('user_id', '=', active_id),('date', '&gt;=', time.strftime('%Y-%m-01'))]"
+			res_model="project.task.work"
+			src_model="res.users"
+			view_type="form"
+			view_mode="tree,form"
+			id="act_res_users_2_project_task_work_month"/>
+
 	</data>
 </terp>

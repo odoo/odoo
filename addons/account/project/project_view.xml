@@ -374,5 +374,11 @@
 
 	<menuitem name="Financial Management/Configuration/Analytic Accounts Budgets/Budget items" id="menu_account_analytic_budget_post_form" action="open_account_analytic_budget_post_form"/>
 
+	<act_window name="Costs & revenues"
+		domain="[('account_id', '=', active_id)]"
+		res_model="report.hr.timesheet.invoice.journal"
+		src_model="account.analytic.account"
+		id="act_account_analytic_account_2_report_hr_timesheet_invoice_journal"/>
+
 	</data>
 </terp>

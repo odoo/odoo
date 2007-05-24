@@ -26,5 +26,23 @@
 
 		<menuitem name="Inventory Control/Reporting/Traceability/Stock by production lots" action="action_report_stock_prodlots_form" id="menu_report_stock_prodlots"/>
 
+		<act_window name="Stock by production lots"
+			domain="[('location_id', '=', active_id)]"
+			res_model="report.stock.prodlots"
+			src_model="stock.location"
+			id="act_stock_location_2_report_stock_prodlots"/>
+
+		<act_window name="Stock by production lots"
+			domain="[('product_id', '=', active_id)]"
+			res_model="report.stock.prodlots"
+			src_model="product.product"
+			id="act_product_product_2_report_stock_prodlots"/>
+
+		<act_window name="Stock"
+			domain="[('prodlot_id', '=', active_id)]"
+			res_model="report.stock.prodlots"
+			src_model="stock.production.lot"
+			id="act_stock_production_lot_2_report_stock_prodlots"/>
+
 	</data>
 </terp>

@@ -43,8 +43,8 @@ class report_crm_case_user(osv.osv):
 	_auto = False
 	_columns = {
 		'name': fields.date('Month', readonly=True),
-		'user_id':fields.many2one('res.users', 'User', readonly=True, relate=True),
-		'section_id':fields.many2one('crm.case.section', 'Section', readonly=True, relate=True),
+		'user_id':fields.many2one('res.users', 'User', readonly=True),
+		'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
 		'amount_revenue': fields.float('Est.Revenue', readonly=True),
 		'amount_costs': fields.float('Est.Cost', readonly=True),
 		'amount_revenue_prob': fields.float('Est. Rev*Prob.', readonly=True),
@@ -81,8 +81,8 @@ class report_crm_case_categ(osv.osv):
 	_auto = False
 	_columns = {
 		'name': fields.date('Month', readonly=True),
-		'categ_id':fields.many2one('crm.case.categ', 'Category', readonly=True, relate=True),
-		'section_id':fields.many2one('crm.case.section', 'Section', readonly=True, relate=True),
+		'categ_id':fields.many2one('crm.case.categ', 'Category', readonly=True),
+		'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
 		'amount_revenue': fields.float('Est.Revenue', readonly=True),
 		'amount_costs': fields.float('Est.Cost', readonly=True),
 		'amount_revenue_prob': fields.float('Est. Rev*Prob.', readonly=True),

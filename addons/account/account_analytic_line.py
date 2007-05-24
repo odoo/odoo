@@ -89,7 +89,7 @@ class timesheet_invoice(osv.osv):
 	_auto = False
 	_columns = {
 		'name': fields.date('Month', readonly=True),
-		'account_id':fields.many2one('account.analytic.account', 'Analytic Account', readonly=True, relate=True, select=True),
+		'account_id':fields.many2one('account.analytic.account', 'Analytic Account', readonly=True, select=True),
 		'journal_id': fields.many2one('account.analytic.journal', 'Journal', readonly=True),
 		'quantity': fields.float('Quantities', readonly=True),
 		'cost': fields.float('Credit', readonly=True),

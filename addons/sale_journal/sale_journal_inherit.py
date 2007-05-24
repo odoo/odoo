@@ -47,17 +47,17 @@ res_partner()
 class picking(osv.osv):
 	_inherit="stock.picking"
 	_columns = {
-		'journal_id': fields.many2one('sale_journal.picking.journal', 'Journal', relate=True),
-		'sale_journal_id': fields.many2one('sale_journal.sale.journal', 'Sale Journal', relate=True),
-		'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type', relate=True, readonly=True)
+		'journal_id': fields.many2one('sale_journal.picking.journal', 'Journal'),
+		'sale_journal_id': fields.many2one('sale_journal.sale.journal', 'Sale Journal'),
+		'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type', readonly=True)
 	}
 picking()
 
 class sale(osv.osv):
 	_inherit="sale.order"
 	_columns = {
-		'journal_id': fields.many2one('sale_journal.sale.journal', 'Journal', relate=True),
-		'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type', relate=True)
+		'journal_id': fields.many2one('sale_journal.sale.journal', 'Journal'),
+		'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type')
 	}
 	def action_ship_create(self, cr, uid, ids, *args):
 		result = super(sale, self).action_ship_create(cr, uid, ids, *args)

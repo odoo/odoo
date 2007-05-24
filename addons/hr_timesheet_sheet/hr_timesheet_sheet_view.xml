@@ -264,5 +264,17 @@
 			</field>
 		</record>
 
+		<act_window name="Timesheet lines"
+			domain="[('sheet_id', '=', active_id)]"
+			res_model="hr.analytic.timesheet"
+			src_model="hr_timesheet_sheet.sheet"
+			id="act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet"/>
+
+		<act_window name="Attendances"
+			domain="[('sheet_id', '=', active_id)]"
+			res_model="hr.attendance"
+			src_model="hr_timesheet_sheet.sheet"
+			id="act_hr_timesheet_sheet_sheet_2_hr_attendance"/>
+
 	</data>
 </terp>

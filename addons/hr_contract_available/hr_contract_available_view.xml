@@ -49,6 +49,18 @@
 			</field>
 		</record>
 
+		<act_window name="Allocations"
+			domain="[('employee_id', '=', active_id)]"
+			res_model="hr.allocation"
+			src_model="hr.employee"
+			id="act_hr_employee_2_hr_allocation"/>
+
+		<act_window name="Allocations"
+			domain="[('department_id', '=', active_id)]"
+			res_model="hr.allocation"
+			src_model="hr.company"
+			id="act_hr_company_2_hr_allocation"/>
+
 	</data>
 </terp>
 

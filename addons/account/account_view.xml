@@ -1419,5 +1419,23 @@
 	</record>
 	<menuitem name="Administration/Configuration/Account/Add Account journal" action="open_module_journal" sequence="6" id="menu_journal_def"/>
 
+	<act_window name="Bank statements"
+		domain="[('journal_id', '=', active_id)]"
+		res_model="account.bank.statement"
+		src_model="account.journal"
+		id="act_account_journal_2_account_bank_statement"/>
+
+	<act_window name="Entry lines"
+		domain="[('journal_id', '=', active_id)]"
+		res_model="account.move.line"
+		src_model="account.journal"
+		id="act_account_journal_2_account_move_line"/>
+
+	<act_window name="Account entries"
+		domain="[('journal_id', '=', active_id)]"
+		res_model="account.move"
+		src_model="account.journal"
+		id="act_account_journal_2_account_move"/>
+
 </data>
 </terp>

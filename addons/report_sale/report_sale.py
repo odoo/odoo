@@ -45,7 +45,7 @@ class report_sale_order_product(osv.osv):
 			('done','Done'),
 			('cancel','Cancel')
 		], 'Order State', readonly=True),
-		'product_id':fields.many2one('product.product', 'Product', readonly=True, relate=True),
+		'product_id':fields.many2one('product.product', 'Product', readonly=True),
 		'quantity': fields.float('# of Products', readonly=True),
 		'price_total': fields.float('Total Price', readonly=True),
 		'price_average': fields.float('Average Price', readonly=True),
@@ -97,7 +97,7 @@ class report_sale_order_category(osv.osv):
 			('done','Done'),
 			('cancel','Cancel')
 		], 'Order State', readonly=True),
-		'category_id': fields.many2one('product.category', 'Categories', readonly=True, relate=True),
+		'category_id': fields.many2one('product.category', 'Categories', readonly=True),
 		'quantity': fields.float('# of Products', readonly=True),
 		'price_total': fields.float('Total Price', readonly=True),
 		'price_average': fields.float('Average Price', readonly=True),

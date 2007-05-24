@@ -45,7 +45,7 @@ class report_sale_journal_sale(osv.osv):
 			('done','Done'),
 			('cancel','Cancel')
 		], 'Order State', readonly=True),
-		'journal_id':fields.many2one('sale_journal.sale.journal', 'Journal', readonly=True, relate=True),
+		'journal_id':fields.many2one('sale_journal.sale.journal', 'Journal', readonly=True),
 		'quantity': fields.float('Quantities', readonly=True),
 		'price_total': fields.float('Total Price', readonly=True),
 		'price_average': fields.float('Average Price', readonly=True),

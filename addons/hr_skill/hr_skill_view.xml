@@ -308,8 +308,11 @@
 <!-- defini l'entree evaluations ds le menu principal -->
 	<menuitem name="Human Resources/Configuration/Skills Management/Evaluations" id="menu_open_view_evaluation_form" action="open_view_evaluation_form"/>
 
-
-
+	<act_window name="Skill weight"
+		domain="[('category_id', '=', active_id)]"
+		res_model="hr_skill.weight"
+		src_model="hr_skill.weight.category"
+		id="act_hr_skill_weight_category_2_hr_skill_weight"/>
 
 
 </data>

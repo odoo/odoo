@@ -35,9 +35,9 @@ class report_stock_prodlots(osv.osv):
 	_auto = False
 	_columns = {
 			'name': fields.float('Quantity', readonly=True),
-			'location_id': fields.many2one('stock.location', 'Location', readonly=True, relate=True, select=True),
-			'product_id': fields.many2one('product.product', 'Product', readonly=True, relate=True, select=True),
-			'prodlot_id': fields.many2one('stock.production.lot', 'Production lot', readonly=True, relate=True, select=True),
+			'location_id': fields.many2one('stock.location', 'Location', readonly=True, select=True),
+			'product_id': fields.many2one('product.product', 'Product', readonly=True, select=True),
+			'prodlot_id': fields.many2one('stock.production.lot', 'Production lot', readonly=True, select=True),
 	}
 	def init(self, cr):
 		cr.execute("""

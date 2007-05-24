@@ -31,7 +31,7 @@ from osv import fields,osv
 
 class report_purchase_journal_purchase(osv.osv):
 	_name = "purchase_journal.purchase.stats"
-	_description = "purchases Orders by Journal"
+	_description = "Purchases Orders by Journal"
 	_auto = False
 	_columns = {
 		'name': fields.date('Month', readonly=True),
@@ -44,7 +44,7 @@ class report_purchase_journal_purchase(osv.osv):
 			('except_invoice', 'Invoice Exception'),
 			('done', 'Done'), ('cancel', 'Cancelled')], 'Order State', readonly=True,
 			select=True),
-		'journal_id':fields.many2one('purchase_journal.purchase.journal', 'Journal', readonly=True, relate=True),
+		'journal_id':fields.many2one('purchase_journal.purchase.journal', 'Journal', readonly=True),
 		'quantity': fields.float('Quantities', readonly=True),
 		'price_total': fields.float('Total Price', readonly=True),
 		'price_average': fields.float('Average Price', readonly=True),

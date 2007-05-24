@@ -253,6 +253,47 @@
 		action="action_sale_sale_stats_open_menu_all"
 		id="menu_sale_sale_stats_open_all"/>
 
+	<act_window name="Monthly sales"
+		domain="[('journal_id', '=', active_id)]"
+		res_model="sale_journal.sale.stats"
+		src_model="sale_journal.sale.journal"
+		id="act_sale_journal_sale_journal_2_sale_journal_sale_stats"/>
+
+	<act_window name="Assigned pickings"
+		domain="[('journal_id', '=', active_id),('state', '=', 'assigned')]"
+		res_model="stock.picking"
+		src_model="sale_journal.picking.journal"
+		id="act_sale_journal_picking_journal_2_stock_picking_assigned"/>
+
+	<act_window name="Confirmed pickings"
+		domain="[('journal_id', '=', active_id),('state', '=', 'confirmed')]"
+		res_model="stock.picking"
+		src_model="sale_journal.picking.journal"
+		id="act_sale_journal_picking_journal_2_stock_picking_confirmed"/>
+
+	<act_window name="Assigned pickings"
+		domain="[('sale_journal_id', '=', active_id),('state', '=', 'assigned')]"
+		res_model="stock.picking"
+		src_model="sale_journal.sale.journal"
+		id="act_sale_journal_sale_journal_2_stock_picking_assigned"/>
+
+	<act_window name="Confirmed pickings"
+		domain="[('sale_journal_id', '=', active_id),('state', '=', 'confirmed')]"
+		res_model="stock.picking"
+		src_model="sale_journal.sale.journal"
+		id="act_sale_journal_sale_journal_2_stock_picking_confirmed"/>
+
+	<act_window name="Draft sales"
+		domain="[('journal_id', '=', active_id),('state', '=', 'draft')]"
+		res_model="sale.order"
+		src_model="sale_journal.sale.journal"
+		id="act_sale_journal_sale_journal_2_sale_order_draft"/>
+
+	<act_window name="Approved sales"
+		domain="[('journal_id', '=', active_id),('state', '=', 'approved')]"
+		res_model="sale.order"
+		src_model="sale_journal.sale.journal"
+		id="act_sale_journal_sale_journal_2_sale_order_approved"/>
 
 
 </data>

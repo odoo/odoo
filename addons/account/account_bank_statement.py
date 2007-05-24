@@ -76,7 +76,7 @@ class account_bank_statement(osv.osv):
 	_columns = {
 		'name': fields.char('Name', size=64, required=True),
 		'date': fields.date('Date', required=True, states={'confirm':[('readonly',True)]}),
-		'journal_id': fields.many2one('account.journal', 'Journal', required=True, states={'confirm':[('readonly',True)]}, domain=[('type','=','cash')], relate=True),
+		'journal_id': fields.many2one('account.journal', 'Journal', required=True, states={'confirm':[('readonly',True)]}, domain=[('type','=','cash')]),
 		'period_id': fields.many2one('account.period', 'Period', required=True, states={'confirm':[('readonly',True)]}),
 		'balance_start': fields.float('Starting Balance', digits=(16,2), states={'confirm':[('readonly',True)]}),
 		'balance_end_real': fields.float('Ending Balance', digits=(16,2), states={'confirm':[('readonly',True)]}),

@@ -35,7 +35,7 @@ class report_timesheet_user(osv.osv):
 	_auto = False
 	_columns = {
 		'name': fields.date('Date', readonly=True),
-		'user_id':fields.many2one('res.users', 'User', readonly=True, relate=True),
+		'user_id':fields.many2one('res.users', 'User', readonly=True),
 		'quantity': fields.float('Quantity', readonly=True),
 		'cost': fields.float('Cost', readonly=True)
 	}
@@ -64,8 +64,8 @@ class report_timesheet_account(osv.osv):
 	_auto = False
 	_columns = {
 		'name': fields.date('Month', readonly=True),
-		'user_id':fields.many2one('res.users', 'User', readonly=True, relate=True),
-		'account_id':fields.many2one('account.analytic.account', 'Analytic Account', readonly=True, relate=True),
+		'user_id':fields.many2one('res.users', 'User', readonly=True),
+		'account_id':fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
 		'quantity': fields.float('Quantity', readonly=True),
 	}
 	_order = 'name desc,account_id desc,user_id desc'
@@ -92,9 +92,9 @@ class report_timesheet_invoice(osv.osv):
 	_description = "Costs to invoice"
 	_auto = False
 	_columns = {
-		'user_id':fields.many2one('res.users', 'User', readonly=True, relate=True),
-		'project_id':fields.many2one('res.users', 'Project', readonly=True, relate=True),
-		'manager_id':fields.many2one('res.users', 'Manager', readonly=True, relate=True),
+		'user_id':fields.many2one('res.users', 'User', readonly=True),
+		'account_id':fields.many2one('account.analytic.account', 'Project', readonly=True),
+		'manager_id':fields.many2one('res.users', 'Manager', readonly=True),
 		'quantity': fields.float('Quantity', readonly=True),
 		'amount_invoice': fields.float('To invoice', readonly=True)
 	}

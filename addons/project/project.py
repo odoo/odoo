@@ -87,7 +87,7 @@ class project(osv.osv):
 		 'active': fields.boolean('Active'),
 		 'category_id': fields.many2one('account.analytic.account','Analytic Account'),
 		 'priority': fields.integer('Priority'),
-		 'manager': fields.many2one('res.users', 'Project manager', relate=True),
+		 'manager': fields.many2one('res.users', 'Project manager'),
 		 'warn_manager': fields.boolean('Warn manager'),
 		 'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project members'),
 		 'tasks': fields.one2many('project.task', 'project_id', "Project tasks"),
@@ -178,7 +178,7 @@ class task(osv.osv):
 		'date_start': fields.datetime('Date Start',readonly=True),
 		'date_deadline': fields.datetime('Deadline'),
 		'date_close': fields.datetime('Date Closed', readonly=True),
-		'project_id': fields.many2one('project.project', 'Project', ondelete='cascade', relate=True),
+		'project_id': fields.many2one('project.project', 'Project', ondelete='cascade'),
 		'notes': fields.text('Notes'),
 		'start_sequence': fields.boolean('Wait for previous sequences'),
 		'planned_hours': fields.float('Planned hours'),
@@ -186,7 +186,7 @@ class task(osv.osv):
 		'progress': fields.integer('Progress (0-100)'),
 		'billable': fields.boolean('To be invoiced'),
 		'invoice_id': fields.many2one('account.invoice','Generated Invoice'),
-		'user_id': fields.many2one('res.users', 'Assigned to', relate=True),
+		'user_id': fields.many2one('res.users', 'Assigned to'),
 		'partner_id': fields.many2one('res.partner', 'Customer'),
 		'work_ids': fields.one2many('project.task.work', 'task_id', 'Work done'),
 		'procurement_id': fields.many2one('mrp.procurement', 'Procurement', ondelete='set null')
@@ -289,7 +289,7 @@ class project_work(osv.osv):
 		'date': fields.datetime('Date'),
 		'task_id': fields.many2one('project.task', 'Task', ondelete='cascade'),
 		'hours': fields.float('Hours spent'),
-		'user_id': fields.many2one('res.users', 'Done by', required=True, relate=True),
+		'user_id': fields.many2one('res.users', 'Done by', required=True),
 	}
 	_defaults = {
 		'user_id': lambda obj,cr,uid,context: uid,

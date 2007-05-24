@@ -88,11 +88,11 @@ class purchase_order(osv.osv):
 		'partner_ref': fields.char('Partner Reference', size=64),
 		'date_order':fields.date('Date Ordered', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}),
 		'date_approve':fields.date('Date Approved'),
-		'partner_id':fields.many2one('res.partner', 'Partner', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, change_default=True, relate=True),
+		'partner_id':fields.many2one('res.partner', 'Partner', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, change_default=True),
 		'partner_address_id':fields.many2one('res.partner.address', 'Address', required=True, states={'posted':[('readonly',True)]}),
 
 		'dest_address_id':fields.many2one('res.partner.address', 'Destination Address', states={'posted':[('readonly',True)]}),
-		'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', states={'posted':[('readonly',True)]}, relate=True),
+		'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', states={'posted':[('readonly',True)]}),
 		'location_id': fields.many2one('stock.location', 'Delivery destination', required=True),
 
 		'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}),
@@ -299,7 +299,7 @@ class purchase_order_line(osv.osv):
 		'date_planned': fields.date('Date Promised', required=True),
 		'taxes_id': fields.many2many('account.tax', 'purchase_order_taxe', 'ord_id', 'tax_id', 'Taxes'),
 		'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
-		'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok','=',True)], change_default=True, relate=True),
+		'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok','=',True)], change_default=True),
 		'move_id': fields.many2one('stock.move', 'Reservation', ondelete='set null'),
 		'move_dest_id': fields.many2one('stock.move', 'Reservation Destination', ondelete='set null'),
 		'price_unit': fields.float('Unit Price', required=True, digits=(16, int(config['price_accuracy']))),

@@ -435,7 +435,11 @@
 	</record>
 	<menuitem name="Sales Management/Sales Order Lines/Uninvoiced lines/Uninvoiced lines done" id="menu_action_order_line_tree3" action="action_order_line_tree3"/>
 
-
+	<act_window name="Sales"
+		domain="[('partner_id', '=', active_id)]"
+		res_model="sale.order"
+		src_model="res.partner"
+		id="act_res_partner_2_sale_order"/>
 
 </data>
 </terp>

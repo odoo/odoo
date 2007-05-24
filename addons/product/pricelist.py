@@ -185,7 +185,7 @@ class product_pricelist_version(osv.osv):
 	_name = "product.pricelist.version"
 	_description = "Pricelist Version"
 	_columns = {
-		'pricelist_id': fields.many2one('product.pricelist', 'Price List', required=True, select=True, relate=True),
+		'pricelist_id': fields.many2one('product.pricelist', 'Price List', required=True, select=True),
 		'name': fields.char('Name', size=64, required=True),
 		'active': fields.boolean('Active'),
 		'items_id': fields.one2many('product.pricelist.item', 'price_version_id', 'Price List Items', required=True),

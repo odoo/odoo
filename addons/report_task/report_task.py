@@ -34,7 +34,7 @@ class  report_task_user_pipeline_open (osv.osv):
 	_description = "Tasks by user and project"
 	_auto = False
 	_columns = {
-		'user_id':fields.many2one('res.users', 'User', readonly=True, relate=True),
+		'user_id':fields.many2one('res.users', 'User', readonly=True),
 		'task_nbr': fields.float('Task Number', readonly=True),
 		'task_hrs': fields.float('Task Hours', readonly=True),
 		'task_progress': fields.float('Task Progress', readonly=True),

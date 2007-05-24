@@ -52,7 +52,7 @@ class hr_skill_weight(osv.osv):
 	_columns = {
 		'name': fields.char('Name', size=64,required=True),
 		'value': fields.float('Numerical value', required=True), 
-		'category_id': fields.many2one('hr_skill.weight.category', 'Category', required=True, ondelete='cascade', relate=True), # relate -> click droit dispo
+		'category_id': fields.many2one('hr_skill.weight.category', 'Category', required=True, ondelete='cascade'),
 		}# hr_skill.category ne passe pas (cad creation des tables) la premiere fois (hr_skill_category bien)
 
 hr_skill_weight()

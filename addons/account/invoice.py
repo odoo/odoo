@@ -117,7 +117,7 @@ class account_invoice(osv.osv):
 		'date_invoice': fields.date('Date Invoiced', required=True, states={'open':[('readonly',True)],'close':[('readonly',True)]}),
 		'date_due': fields.date('Due Date', states={'open':[('readonly',True)],'close':[('readonly',True)]}),
 
-		'partner_id': fields.many2one('res.partner', 'Partner', change_default=True, readonly=True, required=True, states={'draft':[('readonly',False)]}, relate=True),
+		'partner_id': fields.many2one('res.partner', 'Partner', change_default=True, readonly=True, required=True, states={'draft':[('readonly',False)]}),
 		'partner_bank_id': fields.many2one('res.partner.bank', 'Partner bank'),
 		'address_contact_id': fields.many2one('res.partner.address', 'Contact Address', readonly=True, states={'draft':[('readonly',False)]}),
 		'address_invoice_id': fields.many2one('res.partner.address', 'Invoice Address', readonly=True, required=True, states={'draft':[('readonly',False)]}),
@@ -135,7 +135,7 @@ class account_invoice(osv.osv):
 		'amount_tax': fields.function(_amount_tax, method=True, string='Tax', store=True),
 		'amount_total': fields.function(_amount_total, method=True, string='Total', store=True),
 		'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-		'journal_id': fields.many2one('account.journal', 'Journal', required=True, relate=True,readonly=True, states={'draft':[('readonly',False)]}),
+		'journal_id': fields.many2one('account.journal', 'Journal', required=True,readonly=True, states={'draft':[('readonly',False)]}),
 		'company_id': fields.many2one('res.company', 'Company', required=True),
 		'check_total': fields.float('Total', digits=(16,2)),
 	}
@@ -620,7 +620,7 @@ class account_invoice_line(osv.osv):
 		'discount': fields.float('Discount (%)', digits=(16,2)),
 		'invoice_line_tax_id': fields.many2many('account.tax', 'account_invoice_line_tax', 'invoice_line_id', 'tax_id', 'Taxes', domain=[('parent_id','=',False)]),
 		'note': fields.text('Notes'),
-		'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account', relate=True),
+		'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account'),
 	}
 	_defaults = {
 		'quantity': lambda *a: 1,

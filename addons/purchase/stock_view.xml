@@ -13,5 +13,11 @@
 		</field>
 	</record>
 
+	<act_window name="Pickings"
+		domain="[('purchase_id', '=', active_id)]"
+		res_model="stock.picking"
+		src_model="purchase.order"
+		id="act_purchase_order_2_stock_picking"/>
+
 </data>
 </terp>

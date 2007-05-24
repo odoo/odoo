@@ -171,7 +171,7 @@ class account_move_line(osv.osv):
 		'currency_id': fields.many2one('res.currency', 'Currency', help="The optionnal other currency if it is a multi-currency entry."),
 
 		'period_id': fields.many2one('account.period', 'Period', required=True),
-		'journal_id': fields.many2one('account.journal', 'Journal', required=True, relate=True),
+		'journal_id': fields.many2one('account.journal', 'Journal', required=True),
 		'blocked': fields.boolean('Litigation', help="You can check this box to mark the entry line as a litigation with the associated partner"),
 
 		'partner_id': fields.many2one('res.partner', 'Partner Ref.', states={'reconciled':[('readonly',True)]}),

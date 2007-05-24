@@ -32,7 +32,7 @@ from osv import osv, fields
 class purchase(osv.osv):
 	_inherit="purchase.order"
 	_columns = {
-		'journal_id': fields.many2one('purchase_journal.purchase.journal', 'Journal', relate=True),
+		'journal_id': fields.many2one('purchase_journal.purchase.journal', 'Journal'),
 	}
 	def action_picking_create(self, cr, uid, ids, *args):
 		result = super(purchase, self).action_picking_create(cr, uid, ids, *args)
@@ -47,6 +47,6 @@ purchase()
 class picking(osv.osv):
 	_inherit="stock.picking"
 	_columns = {
-		'purchase_journal_id': fields.many2one('purchase_journal.purchase.journal', 'Purchase Journal', select=True, relate=True),
+		'purchase_journal_id': fields.many2one('purchase_journal.purchase.journal', 'Purchase Journal', select=True),
 	}
 picking()

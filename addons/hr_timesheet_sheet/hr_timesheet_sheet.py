@@ -297,7 +297,7 @@ class hr_timesheet_line(osv.osv):
 		return True
 
 	_columns = {
-		'sheet_id': fields.many2one('hr_timesheet_sheet.sheet', 'Sheet', ondelete='set null', required=True, relate=True)
+		'sheet_id': fields.many2one('hr_timesheet_sheet.sheet', 'Sheet', ondelete='set null', required=True)
 	}
 	_defaults = {
 		'sheet_id': _get_current_sheet,
@@ -341,7 +341,7 @@ class hr_attendance(osv.osv):
 		return True
 
 	_columns = {
-		'sheet_id': fields.many2one('hr_timesheet_sheet.sheet', 'Sheet', ondelete='set null', required=True, relate=True)
+		'sheet_id': fields.many2one('hr_timesheet_sheet.sheet', 'Sheet', ondelete='set null', required=True)
 	}
 	_defaults = {
 		'sheet_id': _get_current_sheet,
@@ -442,7 +442,7 @@ class hr_timesheet_sheet_sheet_account(osv.osv):
 	_order='name'
 	_columns = {
 		'name': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
-		'sheet_id': fields.many2one('hr_timesheet_sheet.sheet', 'Sheet', readonly=True, relate=True),
+		'sheet_id': fields.many2one('hr_timesheet_sheet.sheet', 'Sheet', readonly=True),
 		'total': fields.float('Total Time', digits=(16,2), readonly=True),
 		'invoice_rate': fields.many2one('hr_timesheet_invoice.factor', 'Invoice rate', readonly=True),
 	}

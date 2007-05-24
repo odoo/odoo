@@ -20,7 +20,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="product_pricelist_action">
-		<field name="name">product.pricelist.version.form</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">product.pricelist.version</field>
 		<field name="view_type">form</field>
@@ -106,7 +105,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="product_pricelist_action2">
-		<field name="name">product.pricelist.form</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">product.pricelist</field>
 		<field name="view_type">form</field>
@@ -128,7 +126,6 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="product_price_type_action">
-		<field name="name">product.price.type.form</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">product.price.type</field>
 		<field name="view_type">form</field>
@@ -148,13 +145,18 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="product_pricelist_type_action">
-		<field name="name">product.pricelist.type.form</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">product.pricelist.type</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
 	<menuitem name="Products/Configuration/Pricelists Types" id="menu_product_pricelist_type_action" action="product_pricelist_type_action"/>
+
+	<act_window name="Pricelist versions"
+		domain="[('pricelist_id', '=', active_id)]"
+		res_model="product.pricelist.version"
+		src_model="product.pricelist"
+		id="act_product_pricelist_2_product_pricelist_version"/>
 
 </data>
 </terp>

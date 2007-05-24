@@ -16,7 +16,7 @@ class airport_flight(osv.osv):
 	_table = 'product_product'
 	_columns = {
 		'date': fields.datetime('Departure Date'),
-		'partner_id': fields.many2one('res.partner', 'Customer', relate=True),
+		'partner_id': fields.many2one('res.partner', 'Customer'),
 		'airport_from': fields.many2one('airport.airport', 'Airport Departure'),
 		'airport_to': fields.many2one('airport.airport', 'Airport Arrival'),
 	}

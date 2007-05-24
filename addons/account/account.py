@@ -533,7 +533,7 @@ class account_move(osv.osv):
 		'name': fields.char('Entry Name', size=64, required=True),
 		'ref': fields.char('Ref', size=64),
 		'period_id': fields.many2one('account.period', 'Period', required=True, states={'posted':[('readonly',True)]}),
-		'journal_id': fields.many2one('account.journal', 'Journal', required=True, states={'posted':[('readonly',True)]}, relate=True),
+		'journal_id': fields.many2one('account.journal', 'Journal', required=True, states={'posted':[('readonly',True)]}),
 		'state': fields.selection([('draft','Draft'), ('posted','Posted')], 'State', required=True, readonly=True),
 		'line_id': fields.one2many('account.move.line', 'move_id', 'Entries', states={'posted':[('readonly',True)]}),
 	}

@@ -108,6 +108,17 @@
 	</record>
 	<menuitem name="Purchase Management/Reporting/All Months/Purchases by Category of Products" action="action_order_category_tree_all" id="menu_report_order_category_all"/>
 
+	<act_window name="Monthly purchases"
+		domain="[('product_id', '=', active_id)]"
+		res_model="report.purchase.order.product"
+		src_model="product.product"
+		id="act_product_product_2_report_purchases_order_product"/>
+
+	<act_window name="Monthly purchases"
+		domain="[('category_id', '=', active_id)]"
+		res_model="report.purchase.order.category"
+		src_model="product.category"
+		id="act_product_category_2_report_purchase_order_category"/>
 
 </data>
 </terp>

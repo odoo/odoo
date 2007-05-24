@@ -525,5 +525,23 @@
 
 	<menuitem name="Financial Management/Invoices/All invoices" id="menu_action_invoice_tree" action="action_invoice_tree"/>
 
+	<act_window name="Opened invoices"
+		domain="[('partner_id', '=', active_id),('state', '=', 'open')]"
+		res_model="account.invoice"
+		src_model="res.partner"
+		id="act_res_partner_2_account_invoice_opened"/>
+
+	<act_window name="Opened invoices"
+		domain="[('journal_id', '=', active_id),('state', '=', 'open')]"
+		res_model="account.invoice"
+		src_model="account.journal"
+		id="act_account_journal_2_account_invoice_opened"/>
+
+	<act_window name="Invoice lines"
+		domain="[('account_analytic_id', '=', active_id)]"
+		res_model="account.invoice.line"
+		src_model="account.analytic.account"
+		id="act_account_analytic_account_2_account_invoice_line"/>
+
 </data>
 </terp>

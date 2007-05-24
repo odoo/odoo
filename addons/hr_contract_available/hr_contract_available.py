@@ -76,8 +76,8 @@ class hr_allocation(osv.osv):
 	_description = 'Allocations'
 	_columns = {
 		'name' : fields.char('Allocation Name', size=30, required=True),
-		'employee_id' : fields.many2one('hr.employee', 'Employee', required=True, relate=True),
-		'department_id' : fields.many2one('res.company', 'Department', required=True, relate=True),
+		'employee_id' : fields.many2one('hr.employee', 'Employee', required=True),
+		'department_id' : fields.many2one('res.company', 'Department', required=True),
 		'function' : fields.many2one('res.partner.function', 'Function'),
 		'date_start' : fields.date('Start Date', required=True),
 		'date_end' : fields.date('End Date', help="Keep empty for unlimited allocation."),

@@ -35,8 +35,8 @@ class report_project_task_user(osv.osv):
     _auto = False
     _columns = {
         'name': fields.date('Month', readonly=True),
-        'user_id':fields.many2one('res.users', 'User', readonly=True, relate=True),
-        'project_id':fields.many2one('project.project', 'Project', readonly=True, relate=True),
+        'user_id':fields.many2one('res.users', 'User', readonly=True),
+        'project_id':fields.many2one('project.project', 'Project', readonly=True),
         'hours_planned': fields.float('Planned Hours', readonly=True),
         'hours_effective': fields.float('Effective Hours', readonly=True),
         'hours_delay': fields.float('Avg. Plan.-Eff.', readonly=True),
@@ -74,7 +74,7 @@ class report_project_task(osv.osv):
     _auto = False
     _columns = {
         'name': fields.date('Month', readonly=True),
-        'project_id':fields.many2one('project.project', 'Project', readonly=True, relate=True),
+        'project_id':fields.many2one('project.project', 'Project', readonly=True),
         'hours_planned': fields.float('Planned Hours', readonly=True),
         'hours_effective': fields.float('Effective Hours', readonly=True),
         'hours_delay': fields.float('Avg. Plan.-Eff.', readonly=True),
