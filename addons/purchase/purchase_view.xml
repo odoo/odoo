@@ -164,6 +164,7 @@
 
 	<act_window name="Purchases"
 		domain="[('partner_id', '=', active_id)]"
+		context="{'partner_id': active_id}"
 		res_model="purchase.order"
 		src_model="res.partner"
 		id="act_res_partner_2_purchase_order"/>

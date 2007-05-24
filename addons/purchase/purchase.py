@@ -117,7 +117,9 @@ class purchase_order(osv.osv):
 		'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'purchase.order'),
 		'shipped': lambda *a: 0,
 		'invoice_method': lambda *a: 'order',
-		'invoiced': lambda *a: 0
+		'invoiced': lambda *a: 0,
+		'partner_address_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['default'])['default'],
+		'pricelist_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').browse(cr, uid, context['partner_id']).property_product_pricelist_purchase[0],
 	}
 	_name = "purchase.order"
 	_description = "Purchase order"
