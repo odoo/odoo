@@ -1309,20 +1309,14 @@ class orm(object):
 		if toolbar:
 			resprint = self.pool.get('ir.values').get(cr, user, 'action', 'client_print_multi', [(self._name, False)], False, context)
 			resaction = self.pool.get('ir.values').get(cr, user, 'action', 'client_action_multi', [(self._name, False)], False, context)
+			resrelate = self.pool.get('ir.values').get(cr, user, 'action', 'client_action_relate', [(self._name, False)], False, context)
 			resprint = map(lambda x:x[2], resprint)
 			resaction = map(lambda x:x[2], resaction)
 			resaction = filter(lambda x: not x.get('multi',False), resaction)
-			for x in resprint+resaction:
+			resrelate = map(lambda x:x[2], resrelate)
+			for x in resprint+resaction+resrelate:
 				x['string'] = x['name']
-			ids = self.pool.get('ir.model.fields').search(cr, user, [('relation','=',self._name),('relate','=',1)])
-			resrelate = self.pool.get('ir.model.fields').read(cr, user, ids, ['name','model_id'], context)
-			models = self.pool.get('ir.model').read(cr, user, map(lambda x: x['model_id'][0], resrelate), ['name'], context)
-			dmodels = {}
-			for m in models:
-				dmodels[m['id']] = m['name']
-			for x in resrelate:
-				x['string'] = dmodels[x['model_id'][0]]
-			
+
 			result['toolbar'] = {
 				'print': resprint,
 				'action': resaction,

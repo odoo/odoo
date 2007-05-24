@@ -351,7 +351,7 @@ class res_partner_address(osv.osv):
 	_columns = {
 		'partner_id': fields.many2one('res.partner', 'Partner', required=True, ondelete='cascade', select=True),
 		'type': fields.selection( [ ('default','Default'),('invoice','Invoice'), ('delivery','Delivery'), ('contact','Contact'), ('other','Other') ],'Address Type'),
-		'function': fields.many2one('res.partner.function', 'Function', relate=True),
+		'function': fields.many2one('res.partner.function', 'Function'),
 		'title': fields.selection(_contact_title_get, 'Title', size=32),
 		'name': fields.char('Contact Name', size=64),
 		'street': fields.char('Street', size=128),

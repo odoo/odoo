@@ -86,6 +86,9 @@ class _column(object):
 		for a in args:
 			if args[a]:
 				setattr(self, a, args[a])
+		if self.relate:
+			warnings.warn("The relate attribute doesn't work anymore, use act_window tag instead", DeprecationWarning)
+
 
 	def set(self, cr, obj, id, name, value, user=None, context={}):
 		cr.execute('update '+obj._table+' set '+name+'='+self._symbol_set[0]+' where id=%d', (self._symbol_set[1](value),id) )

@@ -120,6 +120,7 @@ class act_window(osv.osv):
 		'domain': fields.char('Domain Value', size=250),
 		'context': fields.char('Context Value', size=250),
 		'res_model': fields.char('Model', size=64),
+		'src_model': fields.char('Source model', size=64),
 		'view_type': fields.selection((('tree','Tree'),('form','Form')),string='Type of view'),
 		'view_mode': fields.char('Mode of view', size=250),
 		'usage': fields.char('Action Usage', size=32),

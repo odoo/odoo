@@ -178,6 +178,34 @@ class xml_import(object):
 			self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, string, [model], value, replace=replace, isobject=True)
 		return False
 
+	def _tag_act_window(self, cr, rec, data_node=None):
+		name = rec.hasAttribute('name') and rec.getAttribute('name').encode('utf-8')
+		xml_id = rec.getAttribute('id').encode('utf8')
+		type = rec.hasAttribute('type') and rec.getAttribute('type').encode('utf-8') or 'ir.actions.act_window'
+		view_id = False
+		if rec.hasAttribute('view'):
+			view_id = self.id_get(cr, 'ir.actions.act_window', rec.getAttribute('view').encode('utf-8'))
+		domain = rec.hasAttribute('domain') and rec.getAttribute('domain').encode('utf-8')
+		context = rec.hasAttribute('context') and rec.getAttribute('context').encode('utf-8') or '{}'
+		res_model = rec.getAttribute('res_model').encode('utf-8')
+		src_model = rec.hasAttribute('src_model') and rec.getAttribute('src_model').encode('utf-8')
+		view_type = rec.hasAttribute('view_type') and rec.getAttribute('view_type').encode('utf-8') or 'form'
+		view_mode = rec.hasAttribute('view_mode') and rec.getAttribute('view_mode').encode('utf-8') or 'tree,form'
+		usage = rec.hasAttribute('usage') and rec.getAttribute('usage').encode('utf-8')
+
+		res = {'name': name, 'type': type, 'view_id': view_id, 'domain': domain, 'context': context, 'res_model': res_model, 'src_model': src_model, 'view_type': view_type, 'view_mode': view_mode, 'usage': usage }
+
+		id = self.pool.get('ir.model.data')._update(cr, self.uid, 'ir.actions.act_window', self.module, res, xml_id, mode=self.mode)
+		self.idref[xml_id] = id
+
+		if src_model:
+			keyword = 'client_action_relate'
+			keys = [('action', keyword), ('res_model', res_model)]
+			value = 'ir.actions.act_window,'+str(id)
+			replace = rec.hasAttribute('replace') and rec.getAttribute('replace')
+			self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, xml_id, [src_model], value, replace=replace, isobject=True)
+		return False
+
 	def _tag_ir_set(self, cr, rec, data_node=None):
 		if not self.mode=='init':
 			return False
@@ -386,6 +414,7 @@ class xml_import(object):
 			'ir_set': self._tag_ir_set,
 			'function': self._tag_function,
 			'workflow': self._tag_workflow,
+			'act_window': self._tag_act_window,
 		}
 
 #
