@@ -117,4 +117,14 @@ cr.commit()
 
 cr.execute("UPDATE ir_act_window SET name = ''")
 
+
+# ------------------------------------------------------------------------ #
+# Create a "allow none" default access to keep the behaviour of the system #
+# ------------------------------------------------------------------------ #
+
+cr.execute('SELECT model_id FROM ir_model_access')
+res= cr.fetchall()
+for r in res:
+	cr.execute("INSERT into ir_model_access (name,model_id,group_id) VALUES ('Auto-generated access by migration',%d,%s)",(r[0],None))
+cr.commit()
 cr.close

@@ -90,31 +90,17 @@ class ir_model_access(osv.osv):
 		assert mode in ['read','write','create','unlink'], 'Invalid access mode for security'
 		if uid==1:
 			return True
+		cr.execute('select bool_or(perm_'+mode+') from ir_model_access a join ir_model m on (a.model_id=m.id) join res_groups_users_rel gu on (gu.gid = a.group_id) where m.model= %s and gu.uid= %s',(model_name,uid,))
+		r= cr.fetchall()
+		if r[0][0] == None:
+			cr.execute(' select bool_or(perm_'+mode+') from ir_model_access a join ir_model m on (a.model_id=m.id) where a.group_id is null and m.model=%s',(model_name,))
+			r= cr.fetchall()
+			if r[0][0] == None : return True
 
-		# fetch the list of rules for this "permission type" on this model
-		cr.execute('select group_id, perm_'+mode+' from ir_model_access a left join ir_model m on (a.model_id=m.id) where m.model=%s', (model_name,))
-
-		# if no rule is found, grant the access
-		if not cr.rowcount:
-			return True
-
-		# if group None, ok for this user
-		ids = filter(lambda x: x[1], cr.fetchall())
-		for i in ids:
-			if not i:
-				return True
-
-		# compute the list of groups which have the right we are looking for
-		ids = map(lambda x: str(x[0]), ids)
-		if not ids:
+		if not r[0][0]:
 			raise osv.except_osv('Access denied !', 'You can not %s this resource !' % mode)
-		ids_str = ','.join(ids)
-
-		# check if the user is part of one of those groups
-		cr.execute('select count(*) from res_groups_users_rel where uid=%d and gid in ('+ids_str+')', (uid,))
-		if cr.fetchone()[0]:
-			return True
-		raise osv.except_osv('Access denied !', 'You can not %s this resource !' % mode)
+		return True
+		
 	check = tools.cache()(check)
 
 	#
