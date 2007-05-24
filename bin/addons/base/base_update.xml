@@ -107,18 +107,23 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Users">
-				<field name="name" select="1"/>
-				<field name="active" select="1"/>
-				<field name="login" select="1"/>
-				<field name="password"/>
-				<field name="signature"/>
-				<field name="address_id"/>
-				<field name="company_id" required="1"/>
-				<field name="action_id" domain="[('usage','=','menu')]" required="True"/>
-				<newline/>
-				<field name="groups_id"/>
-				<field name="roles_id"/>
-				<field name="rule_ids"/>
+				<notebook>
+					<page string="User">
+						<field name="name" select="1"/>
+						<field name="active" select="1"/>
+						<field name="login" select="1"/>
+						<field name="password"/>
+						<field name="address_id"/>
+						<field name="company_id" required="1"/>
+						<field name="action_id" domain="[('usage','=','menu')]" required="True"/>
+						<field name="signature" colspan="4"/>
+					</page>
+					<page string="Security">
+						<field name="groups_id" colspan="4"/>
+						<field name="roles_id" colspan="4"/>
+						<field name="rule_ids" colspan="4"/>
+					</page>
+				</notebook>
 			</form>
 		</field>
 	</record>
