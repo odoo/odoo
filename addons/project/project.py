@@ -40,27 +40,33 @@ class project(osv.osv):
 	_description = "Project"
 
 	def _calc_effective(self, cr, uid, ids, name, args, context):
-		res = {}
-		projs = self.browse(cr, uid, ids)
-		for proj in projs:
-			if proj.id not in res:
-				res[proj.id] = 0
-				for child in proj.child_id:
-					res[proj.id] += child.effective_hours
-				for task in proj.tasks:
-					res[proj.id] += task.effective_hours
-		return res	
+		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+		proj_set = ','.join(map(str, ids2))
+		cr.execute(("SELECT t.project_id, COALESCE(SUM(w.hours),0) FROM project_task t LEFT JOIN project_task_work w on (w.task_id = t.id) WHERE t.project_id in (%s) GROUP BY project_id") % (proj_set,))
+		res_sum = {}
+		for project_id, sum in cr.fetchall():
+			res_sum[project_id] = sum
+		res={}
+		for id in ids:
+			ids3 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
+			res.setdefault(id, 0.0)
+			for idx in ids3:
+				res[id] += res_sum.get(idx, 0.0)
+		return res
 
 	def _calc_planned(self, cr, uid, ids, name, args, context):
+		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+		proj_set = ','.join(map(str, ids2))
+		cr.execute(("SELECT project_id, COALESCE(SUM(planned_hours),0) FROM project_task WHERE project_id IN (%s) GROUP BY project_id") % (proj_set,))
+		res_sum = {}
+		for project_id, sum in cr.fetchall():
+			res_sum[project_id] = sum
 		res = {}
-		projs = self.browse(cr, uid, ids)
-		for proj in projs:
-			if proj.id not in res:
-				res[proj.id] = 0
-				for child in proj.child_id:
-					res[proj.id] += child.planned_hours
-				for task in proj.tasks:
-					res[proj.id] += task.planned_hours
+		for id in ids:
+			ids3 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
+			res.setdefault(id, 0.0)
+			for idx in ids3:
+				res[id] += res_sum.get(idx, 0.0)
 		return res
 
 	def _check_recursion(self, cr, uid, ids):
@@ -124,7 +130,6 @@ class project(osv.osv):
 	]
 
 	# toggle activity of projects, their sub projects and their tasks
-#CHECKME: it might be better to simply override the write method
 	def toggleActive(self, cr, uid, ids, context={}):
 		for proj in self.browse(cr, uid, ids, context):
 			self.setActive(cr, uid, proj.id, not proj.active, context)
@@ -158,12 +163,13 @@ class task(osv.osv):
 	_name = "project.task"
 	_description = "Task"
 	def _hours_effect(self, cr, uid, ids, name, args, context):
+		task_set = ','.join(map(str, ids))
+		cr.execute(("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id in (%s) GROUP BY task_id") % (task_set,))
 		res = {}
-		for task in self.browse(cr, uid, ids, context=context):
-			tot = 0
-			for work in task.work_ids:
-				tot += work.hours
-			res[task.id] = tot
+		for id in ids:
+			res[id] = 0.0
+		for task_id, sum in cr.fetchall():
+			res[task_id] = sum
 		return res
 
 	_columns = {
