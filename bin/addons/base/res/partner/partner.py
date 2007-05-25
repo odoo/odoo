@@ -383,7 +383,7 @@ class res_partner_address(osv.osv):
 				if r['name'] and (r['zip'] or r['city']):
 					addr += ', '
 				addr += str(r['zip'] or '') + ' ' + str(r['city'] or '')
-				res.append((r['id'], addr))
+				res.append((r['id'], addr or '/'))
 		return res
 
 	def name_search(self, cr, user, name, args=[], operator='ilike', context={}, limit=80):
