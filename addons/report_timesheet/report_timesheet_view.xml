@@ -78,7 +78,7 @@
 		<field name="type">graph</field>
 		<field name="arch" type="xml">
 			<graph string="Timesheet by invoice">
-				<field name="project_id" group="True"/>
+				<field name="account_id" group="True"/>
 				<field name="amount_invoice" operator="+"/>
 			</graph>
 		</field>
@@ -91,7 +91,7 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Timesheet by invoice">
-				<field name="project_id" select="1"/>
+				<field name="account_id" select="1"/>
 				<field name="manager_id" select="1"/>
 				<field name="user_id" select="1"/>
 			</form>
