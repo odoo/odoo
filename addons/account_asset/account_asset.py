@@ -234,16 +234,16 @@ class account_asset_property(osv.osv):
 	_description = 'Asset property'
 	_columns = {
 		'name': fields.char('Method name', size=64, select=1),
-		'type': fields.selection([('direct','Direct'),('indirect','Indirect')], 'Asset type', select=2, required=True),
+		'type': fields.selection([('direct','Direct'),('indirect','Indirect')], 'Depr. method type', select=2, required=True),
 		'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True),
 		'account_asset_id': fields.many2one('account.account', 'Asset account', required=True),
-		'account_actif_id': fields.many2one('account.account', 'Actif account', required=True),
+		'account_actif_id': fields.many2one('account.account', 'Depreciation account', required=True),
 		'journal_id': fields.many2one('account.journal', 'Journal', required=True),
 		'journal_analytic_id': fields.many2one('account.analytic.journal', 'Analytic journal'),
-		'account_analytic_id': fields.many2one('account.analytic.journal', 'Analytic journal'),
+		'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'),
 
-		'method': fields.selection([('linear','Linear'),('progressif','Progressive')], 'Assesment method', required=True),
-		'method_time': fields.selection([('delay','Delay'),('end','Ending period')], 'Time Method', required=True),
+		'method': fields.selection([('linear','Linear'),('progressif','Progressive')], 'Computation method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+		'method_time': fields.selection([('delay','Delay'),('end','Ending period')], 'Time method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
 		'method_delay': fields.integer('Number of interval', readonly=True, states={'draft':[('readonly',False)]}),
 		'method_period': fields.integer('Period per interval', readonly=True, states={'draft':[('readonly',False)]}),
 		'method_end': fields.date('Ending date'),
@@ -254,7 +254,7 @@ class account_asset_property(osv.osv):
 		'entry_actif_ids': fields.many2many('account.move.line', 'account_move_asset_actif_entry_rel', 'asset_property_id', 'move_id', 'Asset Entries'),
 		'board_ids': fields.one2many('account.asset.board', 'asset_id', 'Asset board'),
 
-		'value_total': fields.function(_amount_total, method=True, digits=(16,2),string='Total value'),
+		'value_total': fields.function(_amount_total, method=True, digits=(16,2),string='Gross value'),
 		'value_residual': fields.function(_amount_residual, method=True, digits=(16,2), string='Residual value'),
 		'state': fields.selection([('draft','Draft'), ('open','Open'), ('close','Close')], 'State', required=True),
 		'history_ids': fields.one2many('account.asset.property.history', 'asset_property_id', 'History', readonly=True)
@@ -284,7 +284,7 @@ class account_asset_property_history(osv.osv):
 		'name': fields.char('History name', size=64, select=1),
 		'user_id': fields.many2one('res.users', 'User', required=True),
 		'date': fields.date('Date', required=True),
-		'asset_property_id': fields.many2one('account.asset.property', 'Property', required=True),
+		'asset_property_id': fields.many2one('account.asset.property', 'Method', required=True),
 		'method_delay': fields.integer('Number of interval'),
 		'method_period': fields.integer('Period per interval'),
 		'method_end': fields.date('Ending date'),

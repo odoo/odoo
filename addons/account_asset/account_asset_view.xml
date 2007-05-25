@@ -69,39 +69,40 @@
 					<field name="period_id" select="2"/>
 					<field name="category_id" select="1"/>
 					<field name="property_ids" colspan="4" nolabel="1" mode="form,tree">
-						<form string="Properties">
-							<notebook string="Properties" tabpos="up">
-							<page string="General info">
+						<form string="Depreciation methods">
+							<field name="name" select="1" colspan="4"/>
+							<notebook string="Methods" tabpos="up" colspan="4">
+							<page string="Depreciation">
+								<separator string="Accounts information" colspan="4"/>
 								<field name="account_asset_id"/>
 								<field name="account_actif_id"/>
 								<field name="journal_id"/>
 								<field name="type"/>
 								<field name="account_analytic_id"/>
 								<field name="journal_analytic_id"/>
-								<field name="name" colspan="4"/>
-								<separator string="Asset method" colspan="4"/>
-								<field name="method" readonly="True"/>
-								<field name="method_time" readonly="True"/>
+								<separator string="Depreciation duration" colspan="3"/>
+								<button name="%(wizard_asset_modify)d" states="open" string="Change duration" type="action"/>
+								<field name="method"/>
+								<field name="method_time"/>
 								<newline/>
 								<field name="method_delay"/>
 								<field name="method_period"/>
 								<!-- <field name="method_end"/> -->
-								<field name="value_total"/>
-								<field name="value_residual"/>
-								<field name="state" readonly="1"/>
-								<group colspan="2" col="2">
-									<button name="%(wizard_asset_modify)d" states="open" string="Modify method" type="action"/>
-									<button name="%(wizard_asset_close)d" states="open" string="Close method" type="action"/>
-								</group>
 							</page>
-							<page string="Entries">
+							<page string="Depreciation entries">
 								<field name="entry_asset_ids" colspan="4" nolabel="1" readonly="1"/>
 								<field name="entry_actif_ids" colspan="4" nolabel="1" readonly="1"/>
 							</page>
 							<page string="Change history">
 								<field name="history_ids" colspan="4" nolabel="1" readonly="1"/>
 							</page>
+							<page string="Depreciation board">
+								<field name="value_total"/>
+								<field name="value_residual"/>
+							</page>
 							</notebook>
+							<field name="state" readonly="1"/>
+								<button name="%(wizard_asset_close)d" states="open" string="Close method" type="action"/>
 						</form>
 					</field>
 					<field name="state" readonly="1"/>

@@ -45,12 +45,12 @@ def _state_simul_get(self, cr, uid, context={}):
 	obj = self.pool.get('account.journal.simulation')
 	ids = obj.search(cr, uid, [])
 	res = obj.read(cr, uid, ids, ['code', 'name'], context)
-	return [('valid','Valid')]+ [(r['code'], r['name']) for r in res]
+	return [('valid','Base')]+ [(r['code'], r['name']) for r in res]
 
 class account_journal(osv.osv):
 	_inherit = "account.journal"
 	_columns = {
-		'state': fields.selection(_state_simul_get, 'State', required=True),
+		'state': fields.selection(_state_simul_get, 'Status', required=True),
 		'parent_ids': fields.many2many('account.journal', 'account_journal_simulation_rel', 'journal_src_id', 'journal_dest_id', 'Childs journal'),
 		'child_ids': fields.many2many('account.journal', 'account_journal_simulation_rel', 'journal_dest_id', 'journal_src_id', 'Parent journal'),
 	}
@@ -61,7 +61,7 @@ account_journal()
 
 class account_move_line(osv.osv):
 	_inherit = "account.move.line"
-	def search(self, cr, uid, crit, offset=0, limit=None, order=None, context={}):
+	def search_not_run(self, cr, uid, crit, offset=0, limit=None, order=None, context={}):
 		if not 'fiscalyear' in context:
 			context['fiscalyear'] = self.pool.get('account.fiscalyear').find(cr, uid)
 		ok = True
