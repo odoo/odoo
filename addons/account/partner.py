@@ -37,30 +37,22 @@ class res_partner(osv.osv):
 	_description = 'Partner'
 	def _credit_get(self, cr, uid, ids, name, arg, context):
 		res={}
-		try:
-			for partner in self.browse(cr, uid, ids, context):
-				id = partner.id
-				acc = partner.property_account_receivable[0]
-				query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-				cr.execute(("select sum(debit-credit) from account_move_line l where account_id=%d and partner_id=%d and reconcile_id is null and "+query), (acc, id))
-				res[id]=cr.fetchone()[0] or 0.0
-		except:
-			for id in ids:
-				res[id]=0.0
+		for partner in self.browse(cr, uid, ids, context):
+			id = partner.id
+			acc = partner.property_account_receivable[0]
+			query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
+			cr.execute(("select sum(debit-credit) from account_move_line l where account_id=%d and partner_id=%d and reconcile_id is null and "+query), (acc, id))
+			res[id]=cr.fetchone()[0] or 0.0
 		return res
 
 	def _debit_get(self, cr, uid, ids, name, arg, context):
 		res={}
-		try:
-			for partner in self.browse(cr, uid, ids, context):
-				id = partner.id
-				acc = partner.property_account_payable[0]
-				query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-				cr.execute(("select sum(debit-credit) from account_move_line where account_id=%d and partner_id=%d and reconcile_id is null and "+query), (acc, id))
-				res[id]=cr.fetchone()[0] or 0.0
-		except:
-			for id in ids:
-				res[id]=0.0
+		for partner in self.browse(cr, uid, ids, context):
+			id = partner.id
+			acc = partner.property_account_payable[0]
+			query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
+			cr.execute(("select sum(debit-credit) from account_move_line l where account_id=%d and partner_id=%d and reconcile_id is null and "+query), (acc, id))
+			res[id]=cr.fetchone()[0] or 0.0
 		return res
 
 	def _credit_search(self, cr, uid, obj, name, args):
