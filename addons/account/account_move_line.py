@@ -36,6 +36,11 @@ class account_move_line(osv.osv):
 	_name = "account.move.line"
 	_description = "Entry lines"
 
+	def _query_get(self, cr, uid, obj='l', context={}):
+		if not 'fiscalyear' in context:
+			context['fiscalyear'] = self.pool.get('account.fiscalyear').find(cr, uid)
+		return "l.active AND l.state<>'draft' AND l.period_id in (SELECT id from account_period WHERE fiscalyear_id=%d)" % (context['fiscalyear'] ,)
+
 	def default_get(self, cr, uid, fields, context={}):
 		data = self._default_get(cr, uid, fields, context)
 		for f in data.keys():

@@ -394,20 +394,7 @@ class account_invoice(osv.osv):
 
 			date = inv.date_invoice
 			part = inv.partner_id.id
-			line = map(lambda x:(0,0,{
-				'date':date,
-				'date_maturity': x.get('date_maturity', False),
-				'partner_id':part,
-				'name':x['name'],
-				'debit':x['price']>0 and x['price'],
-				'credit':x['price']<0 and -x['price'],
-				'account_id':x['account_id'],
-				'analytic_lines':x.get('analytic_lines', []),
-				'amount_currency':x.get('amount_currency', False),
-				'currency_id':x.get('currency_id', False),
-				'tax_code_id': x.get('tax_code_id', False),
-				'tax_amount': x.get('tax_amount', False),
-				'ref':x.get('ref',False) }) ,iml)
+			line = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, part, date, context={})) ,iml)
 
 			journal_id = inv.journal_id.id #self._get_journal(cr, uid, {'type': inv['type']})
 			journal = self.pool.get('account.journal').browse(cr, uid, journal_id)
@@ -426,6 +413,23 @@ class account_invoice(osv.osv):
 
 		self._log_event(cr, uid, ids)
 		return True
+
+	def line_get_convert(self, cr, uid, x, part, date, context={}):
+		return {
+			'date':date,
+			'date_maturity': x.get('date_maturity', False),
+			'partner_id':part,
+			'name':x['name'],
+			'debit':x['price']>0 and x['price'],
+			'credit':x['price']<0 and -x['price'],
+			'account_id':x['account_id'],
+			'analytic_lines':x.get('analytic_lines', []),
+			'amount_currency':x.get('amount_currency', False),
+			'currency_id':x.get('currency_id', False),
+			'tax_code_id': x.get('tax_code_id', False),
+			'tax_amount': x.get('tax_amount', False),
+			'ref':x.get('ref',False)
+		}
 
 	def action_number(self, cr, uid, ids, *args):
 		cr.execute('SELECT id, type, number, move_id FROM account_invoice WHERE id IN ('+','.join(map(str,ids))+')')
@@ -705,17 +709,7 @@ class account_invoice_line(osv.osv):
 		cur = inv.currency_id
 
 		for line in inv.invoice_line:
-			res.append( {
-				'type':'src',
-				'name':line.name,
-				'price_unit':line.price_unit,
-				'quantity':line.quantity,
-				'price':line.price_subtotal,
-				'account_id':line.account_id.id,
-				'product_id':line.product_id.id,
-				'uos_id':line.uos_id.id,
-				'account_analytic_id':line.account_analytic_id.id,
-			})
+			res.append( self.move_line_get_item(cr, uid, line, context))
 			for tax in tax_obj.compute(cr, uid, line.invoice_line_tax_id, (line.price_unit *(1.0-(line['discount'] or 0.0)/100.0)), line.quantity, inv.address_invoice_id.id, line.product_id, inv.partner_id):
 				if inv.type in ('out_invoice', 'in_invoice'):
 					res[-1]['tax_code_id'] = tax['base_code_id']
@@ -725,6 +719,18 @@ class account_invoice_line(osv.osv):
 					res[-1]['tax_amount'] = tax['price_unit'] * line['quantity'] * tax['ref_base_sign']
 		return res
 
+	def move_line_get_item(self, cr, uid, line, context={}):
+		return {
+				'type':'src',
+				'name':line.name,
+				'price_unit':line.price_unit,
+				'quantity':line.quantity,
+				'price':line.price_subtotal,
+				'account_id':line.account_id.id,
+				'product_id':line.product_id.id,
+				'uos_id':line.uos_id.id,
+				'account_analytic_id':line.account_analytic_id.id,
+			}
 	#
 	# Set the tax field according to the account and the partner
 	# 

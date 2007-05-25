@@ -138,7 +138,8 @@ class account_transfer(osv.osv):
 				value['account_dest_id'] = False
 				
 				# compute the amount this partner owe us (the sum of all move lines which have not been matched)
-				cr.execute("SELECT COALESCE(SUM(debit-credit),0) from account_move_line where account_id=%d and partner_id=%d and reconcile_id is null and state<>'draft'", (a, partner_id))
+				query = self.pool.get('account.move.line')._query_get(cr, uid, context={})
+				cr.execute(("SELECT COALESCE(SUM(debit-credit),0) from account_move_line l where account_id=%d and partner_id=%d and reconcile_id is null and "+query), (a, partner_id))
 				value['amount'] = cr.fetchone()[0]
 				
 				d = self._onchange_account_domain(cr,uid,ids,type, value['account_src_id'], value['account_dest_id'])
@@ -150,7 +151,8 @@ class account_transfer(osv.osv):
 				value['account_dest_id'] = a
 				
 				# compute the amount we owe this partner (the sum of all move lines which have not been matched)
-				cr.execute("SELECT COALESCE(SUM(debit-credit),0) from account_move_line where account_id=%d and partner_id=%d and reconcile_id is null and state<>'draft'", (a,partner_id))
+				query = self.pool.get('account.move.line')._query_get(cr, uid, context={})
+				cr.execute(("SELECT COALESCE(SUM(debit-credit),0) from account_move_line where account_id=%d and partner_id=%d and reconcile_id is null and "+query), (a,partner_id))
 				value['amount'] = -cr.fetchone()[0]
 
 				# get the new domain

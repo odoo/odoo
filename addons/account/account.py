@@ -144,9 +144,9 @@ class account_account(osv.osv):
 	def _credit(self, cr, uid, ids, field_name, arg, context={}):
 		if not 'fiscalyear' in context:
 			context['fiscalyear'] = self.pool.get('account.fiscalyear').find(cr, uid)
-
 		acc_set = ",".join(map(str, ids))
-		cr.execute("SELECT a.id, COALESCE(SUM(l.credit*a.sign),0) FROM account_account a LEFT JOIN account_move_line l ON (a.id=l.account_id) WHERE a.type!='view' AND a.id IN (%s) AND l.active AND l.state<>'draft' AND l.period_id in (SELECT id from account_period WHERE fiscalyear_id=%d) GROUP BY a.id" % (acc_set, context['fiscalyear']))
+		query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
+		cr.execute(("SELECT a.id, COALESCE(SUM(l.credit*a.sign),0) FROM account_account a LEFT JOIN account_move_line l ON (a.id=l.account_id) WHERE a.type!='view' AND a.id IN (%s) AND "+query+" GROUP BY a.id") % (acc_set, ))
 		res2 = cr.fetchall()
 		res = {}
 		for id in ids:
@@ -160,7 +160,8 @@ class account_account(osv.osv):
 			context['fiscalyear'] = self.pool.get('account.fiscalyear').find(cr, uid)
 
 		acc_set = ",".join(map(str, ids))
-		cr.execute("SELECT a.id, COALESCE(SUM(l.debit*a.sign),0) FROM account_account a LEFT JOIN account_move_line l ON (a.id=l.account_id) WHERE a.type!='view' AND a.id IN (%s) and l.active AND l.state<>'draft' AND l.period_id in (SELECT id from account_period WHERE fiscalyear_id=%d) GROUP BY a.id" % (acc_set, context['fiscalyear']))
+		query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
+		cr.execute(("SELECT a.id, COALESCE(SUM(l.debit*a.sign),0) FROM account_account a LEFT JOIN account_move_line l ON (a.id=l.account_id) WHERE a.type!='view' AND a.id IN (%s) and "+query+" GROUP BY a.id") % (acc_set, ))
 		res2 = cr.fetchall()
 		res = {}
 		for id in ids:
@@ -175,7 +176,8 @@ class account_account(osv.osv):
 
 		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
 		acc_set = ",".join(map(str, ids2))
-		cr.execute("SELECT a.id, COALESCE(SUM((l.debit-l.credit)),0) FROM account_account a LEFT JOIN account_move_line l ON (a.id=l.account_id) WHERE a.id IN (%s) and l.active AND l.state<>'draft' AND l.period_id in (SELECT id from account_period WHERE fiscalyear_id=%d) GROUP BY a.id" % (acc_set, context['fiscalyear']))
+		query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
+		cr.execute(("SELECT a.id, COALESCE(SUM((l.debit-l.credit)),0) FROM account_account a LEFT JOIN account_move_line l ON (a.id=l.account_id) WHERE a.id IN (%s) and "+query+" GROUP BY a.id") % (acc_set, ))
 		res = {}
 		for account_id, sum in cr.fetchall():
 			res[account_id] = round(sum,2)
@@ -293,7 +295,6 @@ class account_account(osv.osv):
 		return super(account_account, self).copy(cr, uid, id, default, context=context)
 account_account()
 
-
 class account_journal_view(osv.osv):
 	_name = "account.journal.view"
 	_description = "Journal View"
@@ -325,7 +326,6 @@ class account_journal_column(osv.osv):
 	}
 	_order = "sequence"
 account_journal_column()
-
 
 class account_journal(osv.osv):
 	_name = "account.journal"
@@ -462,6 +462,11 @@ class account_period(osv.osv):
 		'state': lambda *a: 'draft',
 	}
 	_order = "date_start"
+	def next(self, cr, uid, period, step, context={}):
+		ids = self.search(cr, uid, [('date_start','>',period.date_start)])
+		if len(ids)>=step:
+			return ids[step-1]
+		return False
 
 	def find(self, cr, uid, dt=None, context={}):
 		if not dt:

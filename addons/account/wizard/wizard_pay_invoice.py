@@ -27,8 +27,6 @@
 
 import wizard
 import netsvc
-import osv
-import time
 import pooler
 
 pay_form = '''<?xml version="1.0"?>

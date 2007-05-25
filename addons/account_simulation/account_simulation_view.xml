@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<terp>
+<data>
+
+	<record model="ir.ui.view" id="view_account_journal_simulation_tree">
+		<field name="name">account.journal.simulation.tree</field>
+		<field name="model">account.journal.simulation</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Journal simulation">
+				<field name="name" select="1"/>
+				<field name="code" select="1"/>
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="view_account_journal_simulation_form">
+		<field name="name">account.journal.simulation.form</field>
+		<field name="model">account.journal.simulation</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Journal simulation">
+				<field name="name" select="1"/>
+				<field name="code" select="1"/>
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="action_view_account_journal_simulation_form">
+		<field name="name">Journal simulations</field>
+		<field name="res_model">account.journal.simulation</field>
+		<field name="view_type">form</field>
+	</record>
+	<menuitem 
+		name="Financial Management/Configuration/Journal/" 
+		id="menu_action_view_account_journal_simulation_form" 
+		action="action_view_account_journal_simulation_form"/>
+
+	<record model="ir.ui.view" id="view_account_journal_form_inherit_simul">
+		<field name="name">account.journal.simulation.form.inherit</field>
+		<field name="model">account.journal</field>
+		<field name="inherit_id" ref="account.view_account_journal_form"/>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<field name="update_posted" position="after">
+				<field name="state"/>
+				<separator string="Child journals" colspan="4"/>
+				<field name="child_ids" colspan="4"/>
+			</field>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="view_account_journal_tree">
+		<field name="name">account.journal.tree</field>
+		<field name="model">account.journal</field>
+		<field name="type">tree</field>
+		<field name="field_parent">child_ids</field>
+		<field name="arch" type="xml">
+			<tree string="Account Journal">
+				<field name="code"/>
+				<field name="name"/>
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="action_account_journal_tree">
+		<field name="name">Account Journal</field>
+		<field name="res_model">account.journal</field>
+		<field name="view_type">tree</field>
+	</record>
+	<menuitem
+		name="Financial Management/Configuration/Journal/Journal architecture"
+		id="menu_action_account_journal_tree"
+		action="action_account_journal_tree"/>
+
+
+</data>
+</terp>
+

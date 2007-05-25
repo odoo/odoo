@@ -145,7 +145,18 @@ class account_invoice_line(osv.osv):
 		cur = inv.currency_id
 
 		for line in inv.invoice_line:
-			res.append( {
+			res.append( self.move_line_get_item(cr, uid, line, context))
+			for tax in tax_obj.compute(cr, uid, line.invoice_line_tax_id, (line.price_unit *(1.0-(line['discount'] or 0.0)/100.0)), line.quantity, inv.address_invoice_id.id, line.product_id, inv.partner_id):
+				if inv.type in ('out_invoice', 'in_invoice'):
+					res[-1]['tax_code_id'] = tax['base_code_id']
+					res[-1]['tax_amount'] = tax['price_unit'] * line['quantity'] * tax['base_sign']
+				else:
+					res[-1]['ta_code_id'] = tax['ref_base_code_id']
+					res[-1]['tax_amount'] = tax['price_unit'] * line['quantity'] * tax['ref_base_sign']
+		return res
+
+	def move_line_get_item(self, cr, uid, line, context={}):
+		return {
 				'type':'src',
 				'name':line.name,
 				'price_unit':line.price_unit,
@@ -155,15 +166,7 @@ class account_invoice_line(osv.osv):
 				'product_id': line.product_id.id,
 				'uos_id':line.uos_id.id,
 				'account_analytic_id':line.account_analytic_id.id,
-			})
-			for tax in tax_obj.compute(cr, uid, line.invoice_line_tax_id, (line.price_unit *(1.0-(line['discount'] or 0.0)/100.0)), line.quantity, inv.address_invoice_id.id, line.product_id, inv.partner_id):
-				if inv.type in ('out_invoice', 'in_invoice'):
-					res[-1]['tax_code_id'] = tax['base_code_id']
-					res[-1]['tax_amount'] = tax['price_unit'] * line['quantity'] * tax['base_sign']
-				else:
-					res[-1]['ta_code_id'] = tax['ref_base_code_id']
-					res[-1]['tax_amount'] = tax['price_unit'] * line['quantity'] * tax['ref_base_sign']
-		return res
+			}
 
 	def product_id_change_unit_price_inv(self, cr, uid, tax_id, price_unit, qty, address_invoice_id, product, partner_id, context={}):
 		if context.get('price_type', False) == 'tax_included':
