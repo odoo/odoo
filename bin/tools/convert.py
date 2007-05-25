@@ -251,8 +251,14 @@ class xml_import(object):
 					values['icon'] = icons.get(a_type,'STOCK_NEW')
 					if a_type=='act_window':
 						a_id = self.id_get(cr, 'ir.actions.%s'% a_type, a_action)
-						cr.execute('select view_type,view_mode,name from ir_act_window where id=%d', (int(a_id),))
-						action_type,action_mode,action_name = cr.fetchone()
+						cr.execute('select view_type,view_mode,name,view_id from ir_act_window where id=%d', (int(a_id),))
+						action_type,action_mode,action_name,view_id = cr.fetchone()
+						if view_id:
+							cr.execute('SELECT type FROM ir_ui_view WHERE id=%d', (int(view_id),))
+							action_mode, = cr.fetchone()
+						cr.execute('SELECT view_mode FROM ir_act_window_view WHERE view_id=%d ORDER BY sequence LIMIT 1', (int(a_id),))
+						if cr.rowcount:
+							action_mode, = cr.fetchone()
 						if action_type=='tree':
 							values['icon'] = 'STOCK_INDENT'
 						elif action_mode and action_mode.startswith('tree'):
