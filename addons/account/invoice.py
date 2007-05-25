@@ -401,7 +401,7 @@ class account_invoice(osv.osv):
 			if journal.sequence_id:
 				name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
 
-			move = {'name': name, 'line_id': line, 'journal_id': journal_id}
+			move = {'name': name, 'line_id': line, 'journal_id': journal_id} #, 'state':'posted'}
 			if inv.period_id:
 				move['period_id'] = inv.period_id.id
 				for i in line:
@@ -411,6 +411,7 @@ class account_invoice(osv.osv):
 			# make the invoice point to that move
 			self.write(cr, uid, [inv.id], {'move_id': move_id})
 
+			#self.pool.get('account.move').write(cr, uid, [move_id], {'state':'posted'})
 		self._log_event(cr, uid, ids)
 		return True
 
