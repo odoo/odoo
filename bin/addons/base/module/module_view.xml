@@ -73,15 +73,15 @@
 					<notebook>
 						<page string="Module">
 							<field name="name" select="1"/>
-							<field name="shortdesc" colspan="4"/>
-							<field name="description" colspan="4"/>
+							<field name="shortdesc" colspan="4" select="2"/>
+							<field name="description" colspan="4" select="2"/>
 							<field name="installed_version"/>
 							<field name="latest_version"/>
-							<field name="author"/>
-							<field name="website"/>
+							<field name="author" select="2"/>
+							<field name="website" select="2"/>
 							<field name="url"/>
 							<field name="demo" readonly="1"/>
-							<field name="state" readonly="1"/>
+							<field name="state" readonly="1" select="1"/>
 							<group col="7" colspan="2">
 								<button string="Update Infos" name="info_get" type="object" states="uninstalled,installed,to upgrade,to remove"/>
 								<button string="Cancel Install" name="button_install_cancel" type="object" states="to install"/>
