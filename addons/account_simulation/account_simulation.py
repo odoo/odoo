@@ -69,6 +69,8 @@ class account_move_line(osv.osv):
 			if c[0]=='journal_id':
 				ok = False
 				break
+		if 'journal_id' in context:
+			ok=False
 		if ok:
 			plus = ''
 			for state in context.get('journal_state', []):

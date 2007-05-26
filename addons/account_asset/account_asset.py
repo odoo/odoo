@@ -105,7 +105,7 @@ class account_asset_asset(osv.osv):
 		'period_id': _get_period,
 	}
 	def _compute_period(self, cr, uid, property, context={}):
-		if len(property.entry_asset_ids or [])>=property.method_delay:
+		if (len(property.entry_asset_ids or [])/2)>=property.method_delay:
 			return False
 		if len(property.entry_asset_ids):
 			cp = property.entry_asset_ids[-1].period_id
@@ -122,12 +122,16 @@ class account_asset_asset(osv.osv):
 		for move in property.asset_id.entry_ids:
 			total += move.debit-move.credit
 		for move in property.entry_asset_ids:
-			total += move.debit-move.credit
-		periods = len(property.entry_asset_ids) - property.method_delay
-		if property.method == 'linear':
-			amount = total / periods
+			if move.account_id == property.account_asset_ids:
+				total += move.debit-move.credit
+		periods = (len(property.entry_asset_ids)/2) - property.method_delay
+		if periods==1:
+			amount = total
 		else:
-			amount = total / periods
+			if property.method == 'linear':
+				amount = total / periods
+			else:
+				amount = total * property.method_progress_factor
 
 		move_id = self.pool.get('account.move').create(cr, uid, {
 			'journal_id': property.journal_id.id,
@@ -148,10 +152,7 @@ class account_asset_asset(osv.osv):
 			'partner_id': property.asset_id.partner_id.id,
 			'date': time.strftime('%Y-%m-%d'),
 		})
-		self.pool.get('account.asset.property').write(cr, uid, [property.id], {
-			'entry_asset_ids': [(4, id, [])]
-		})
-		id = self.pool.get('account.move.line').create(cr, uid, {
+		id2 = self.pool.get('account.move.line').create(cr, uid, {
 			'name': property.name or property.asset_id.name,
 			'move_id': move_id,
 			'account_id': property.account_actif_id.id,
@@ -164,9 +165,9 @@ class account_asset_asset(osv.osv):
 			'date': time.strftime('%Y-%m-%d'),
 		})
 		self.pool.get('account.asset.property').write(cr, uid, [property.id], {
-			'entry_actif_ids': [(4, id, False)]
+			'entry_asset_ids': [(4, id2, False),(4,id,False)]
 		})
-		if property.method_delay - len(property.entry_asset_ids)<=1:
+		if property.method_delay - (len(property.entry_asset_ids)/2)<=1:
 			self.pool.get('account.asset.property')._close(cr, uid, property, context)
 			return result
 		return result
@@ -202,7 +203,7 @@ class account_asset_property(osv.osv):
 	def _amount_residual(self, cr, uid, ids, name, args, context={}):
 		id_set=",".join(map(str,ids))
 		cr.execute("""SELECT 
-				r.asset_property_id,abs(SUM(l.debit-l.credit)) AS amount
+				r.asset_property_id,SUM(abs(l.debit-l.credit)) AS amount
 			FROM
 				account_move_asset_entry_rel r
 			LEFT JOIN
@@ -243,6 +244,7 @@ class account_asset_property(osv.osv):
 		'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'),
 
 		'method': fields.selection([('linear','Linear'),('progressif','Progressive')], 'Computation method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+		'method_progress_factor': fields.float('Progressif factor', readonly=True, states={'draft':[('readonly',False)]}),
 		'method_time': fields.selection([('delay','Delay'),('end','Ending period')], 'Time method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
 		'method_delay': fields.integer('Number of interval', readonly=True, states={'draft':[('readonly',False)]}),
 		'method_period': fields.integer('Period per interval', readonly=True, states={'draft':[('readonly',False)]}),
@@ -251,7 +253,6 @@ class account_asset_property(osv.osv):
 		'date': fields.date('Date created'),
 
 		'entry_asset_ids': fields.many2many('account.move.line', 'account_move_asset_entry_rel', 'asset_property_id', 'move_id', 'Asset Entries'),
-		'entry_actif_ids': fields.many2many('account.move.line', 'account_move_asset_actif_entry_rel', 'asset_property_id', 'move_id', 'Asset Entries'),
 		'board_ids': fields.one2many('account.asset.board', 'asset_id', 'Asset board'),
 
 		'value_total': fields.function(_amount_total, method=True, digits=(16,2),string='Gross value'),
@@ -264,6 +265,7 @@ class account_asset_property(osv.osv):
 		'state': lambda obj, cr, uid, context: 'draft',
 		'method': lambda obj, cr, uid, context: 'linear',
 		'method_time': lambda obj, cr, uid, context: 'delay',
+		'method_progress_factor': lambda obj, cr, uid, context: 0.3,
 		'method_delay': lambda obj, cr, uid, context: 5,
 		'method_period': lambda obj, cr, uid, context: 12,
 		'date': lambda obj, cr, uid, context: time.strftime('%Y-%m-%d')
@@ -273,7 +275,7 @@ account_asset_property()
 class account_move_line(osv.osv):
 	_inherit = 'account.move.line'
 	_columns = {
-		'asset_id': fields.many2one('account.asset.asset', 'Asset', relate=True),
+		'asset_id': fields.many2one('account.asset.asset', 'Asset'),
 	}
 account_move_line()
 

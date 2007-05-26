@@ -80,18 +80,22 @@
 								<field name="type"/>
 								<field name="account_analytic_id"/>
 								<field name="journal_analytic_id"/>
-								<separator string="Depreciation duration" colspan="3"/>
-								<button name="%(wizard_asset_modify)d" states="open" string="Change duration" type="action"/>
+								<separator string="Depreciation duration" colspan="4"/>
 								<field name="method"/>
+								<field name="method_progress_factor"/>
 								<field name="method_time"/>
-								<newline/>
 								<field name="method_delay"/>
 								<field name="method_period"/>
+								<button 
+									name="%(wizard_asset_modify)d" 
+									states="open" 
+									string="Change duration" 
+									type="action" 
+									colspan="2"/>
 								<!-- <field name="method_end"/> -->
 							</page>
 							<page string="Depreciation entries">
 								<field name="entry_asset_ids" colspan="4" nolabel="1" readonly="1"/>
-								<field name="entry_actif_ids" colspan="4" nolabel="1" readonly="1"/>
 							</page>
 							<page string="Change history">
 								<field name="history_ids" colspan="4" nolabel="1" readonly="1"/>

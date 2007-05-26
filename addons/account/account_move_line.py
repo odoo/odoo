@@ -167,11 +167,11 @@ class account_move_line(osv.osv):
 		'credit': fields.float('Credit', digits=(16,2), states={'reconciled':[('readonly',True)]}),
 		'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade", states={'reconciled':[('readonly',True)]}, domain=[('type','<>','view'), ('type', '<>', 'closed')]),
 
-		'move_id': fields.many2one('account.move', 'Entry', required=True, ondelete="cascade", states={'reconciled':[('readonly',True)]}, help="The entry of this entry line.", select=True),
+		'move_id': fields.many2one('account.move', 'Entry', required=True, ondelete="cascade", states={'reconciled':[('readonly',True)]}, help="The entry of this entry line.", select=2),
 
 		'ref': fields.char('Ref.', size=32),
 		'statement_id': fields.many2one('account.bank.statement', 'Statement', help="The bank statement used for bank reconciliation", select=True),
-		'reconcile_id': fields.many2one('account.move.reconcile', 'Reconcile', readonly=True, ondelete='set null', select=True),
+		'reconcile_id': fields.many2one('account.move.reconcile', 'Reconcile', readonly=True, ondelete='set null', select=2),
 		'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optionnal other currency if it is a multi-currency entry."),
 		'currency_id': fields.many2one('res.currency', 'Currency', help="The optionnal other currency if it is a multi-currency entry."),
 
