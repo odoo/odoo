@@ -660,8 +660,9 @@ class mrp_procurement(osv.osv):
 	def check_move_cancel(self, cr, uid, ids, context={}):
 		res = True
 		for procurement in self.browse(cr, uid, ids, context):
-			if not procurement.move_id.state=='cancel':
-				res = False
+			if procurement.move_id:
+				if not procurement.move_id.state=='cancel':
+					res = False
 		return res
 
 	def check_move_done(self, cr, uid, ids, context={}):
