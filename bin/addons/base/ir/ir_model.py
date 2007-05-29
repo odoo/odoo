@@ -90,10 +90,10 @@ class ir_model_access(osv.osv):
 		assert mode in ['read','write','create','unlink'], 'Invalid access mode for security'
 		if uid==1:
 			return True
-		cr.execute('select bool_or(perm_'+mode+') from ir_model_access a join ir_model m on (a.model_id=m.id) join res_groups_users_rel gu on (gu.gid = a.group_id) where m.model= %s and gu.uid= %s',(model_name,uid,))
+		cr.execute('select max(perm_'+mode+'::integer) from ir_model_access a join ir_model m on (a.model_id=m.id) join res_groups_users_rel gu on (gu.gid = a.group_id) where m.model= %s and gu.uid= %s',(model_name,uid,))
 		r= cr.fetchall()
 		if r[0][0] == None:
-			cr.execute(' select bool_or(perm_'+mode+') from ir_model_access a join ir_model m on (a.model_id=m.id) where a.group_id is null and m.model=%s',(model_name,))
+			cr.execute('select max(perm_'+mode+'::integer) from ir_model_access a join ir_model m on (a.model_id=m.id) where a.group_id is null and m.model=%s',(model_name,))
 			r= cr.fetchall()
 			if r[0][0] == None : return True
 
