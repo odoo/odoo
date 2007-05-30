@@ -174,7 +174,7 @@ class product_template(osv.osv):
 		'description_sale': fields.text('Sale Description'),
 		'type': fields.selection([('product','Stockable Product'),('consu', 'Consumable'),('service','Service')], 'Product Type', required=True),
 		'supply_method': fields.selection([('produce','Produce'),('buy','Buy')], 'Supply method', required=True),
-		'sale_delay': fields.float('Procurement lead time', help="This is the average time between the confirmation of the customer order and the delivery of the finnished products. It's the time you promise to your customers."),
+		'sale_delay': fields.float('Customer lead time', help="This is the average time between the confirmation of the customer order and the delivery of the finnished products. It's the time you promise to your customers."),
 		'produce_delay': fields.float('Manufacturing lead time', help="Average time to produce this product. This is only for the production order and, if it is a multi-level bill of material, it's only for the level of this product. Different delays will be summed for all levels and purchase orders."),
 		'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procure Method', required=True),
 		'rental': fields.boolean('Rentable product'),

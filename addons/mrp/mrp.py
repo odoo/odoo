@@ -786,7 +786,7 @@ class mrp_procurement(osv.osv):
 				ok = ok and self.pool.get('stock.move').action_assign(cr, uid, [id])
 				cr.execute('select count(id) from stock_warehouse_orderpoint where product_id=%d', (procurement.product_id.id,))
 				if not cr.fetchone()[0]:
-					cr.execute('update mrp_procurement set message=%s where id=%d', ('MTS and no orderpoint defined', procurement.id))
+					cr.execute('update mrp_procurement set message=%s where id=%d', ('MTS and no minimum orderpoint rule defined', procurement.id))
 		return ok
 
 	def action_produce_assign_service(self, cr, uid, ids, context={}):
@@ -899,7 +899,7 @@ mrp_procurement()
 #CHECKME: why the **** is this object defined here and not in stock???
 class stock_warehouse_orderpoint(osv.osv):
 	_name = "stock.warehouse.orderpoint"
-	_description = "Warehouse Orderpoint"
+	_description = "Orderpoint minimum rule"
 	_columns = {
 		'name': fields.char('Name', size=32, required=True),
 		'active': fields.boolean('Active'),

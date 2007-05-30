@@ -58,6 +58,19 @@
 		action="action_timesheet_user_stat"
 		id="menu_report_timesheet_user"/>
 
+	<record model="ir.actions.act_window" id="action_timesheet_user_stat_my">
+		<field name="name">My timesheet of the month</field>
+		<field name="res_model">report_timesheet.user</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">graph,tree</field>
+		<field name="domain">[('name','&gt;=',time.strftime('%Y-%m-01')), ('user_id','=',uid)]</field>
+	</record>
+	<menuitem 
+		name="Human Resources/Reporting/This Month/"
+		action="action_timesheet_user_stat_my"
+		id="menu_report_timesheet_user_my"/>
+
+
 	<record model="ir.actions.act_window" id="action_timesheet_user_stat_all">
 		<field name="res_model">report_timesheet.user</field>
 		<field name="view_type">form</field>
@@ -135,6 +148,73 @@
 		name="Human Resources/Reporting/This Month/My timesheets to invoice"
 		action="action_timesheet_invoice_stat_my"
 		id="menu_report_timesheet_invoice_my"/>
+
+	#
+	# Statistics report on daily timesheets per account
+	#
+
+	<record model="ir.ui.view" id="view_timesheet_account_date_tree">
+		<field name="name">report_timesheet.account.date.tree</field>
+		<field name="model">report_timesheet.account.date</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Daily timesheet per account">
+				<field name="name"/>
+				<field name="account_id"/>
+				<field name="user_id"/>
+				<field name="quantity"/>
+			</tree>
+		</field>
+	</record>
+	<record model="ir.ui.view" id="view_timesheet_account_date_graph">
+		<field name="name">report_timesheet.account.date.graph</field>
+		<field name="model">report_timesheet.account.date</field>
+		<field name="type">graph</field>
+		<field name="arch" type="xml">
+			<graph string="Daily timesheet per account">
+				<field name="account_id" group="True"/>
+				<field name="quantity" operator="+"/>
+			</graph>
+		</field>
+	</record>
+
+
+
+	<record model="ir.ui.view" id="view_timesheet_account_date_form">
+		<field name="name">report_timesheet.timesheet.account.date.form</field>
+		<field name="model">report_timesheet.account.date</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Daily timesheet by account">
+				<field name="name" select="1"/>
+				<field name="account_id" select="1"/>
+				<field name="user_id" select="1"/>
+				<field name="quantity"/>
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="action_timesheet_account_date_stat_all">
+		<field name="res_model">report_timesheet.account.date</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">graph,tree</field>
+	</record>
+	<menuitem 
+		name="Human Resources/Reporting/All Months/Daily timesheet by account"
+		action="action_timesheet_account_date_stat_all"
+		id="menu_report_timesheet_account_date_all"/>
+
+	<record model="ir.actions.act_window" id="action_timesheet_account_date_stat_my">
+		<field name="name">My daily timesheets by account</field>
+		<field name="res_model">report_timesheet.account.date</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">graph,tree</field>
+		<field name="domain">[('user_id','=',uid)]</field>
+	</record>
+	<menuitem 
+		name="Human Resources/Reporting/This Month/My daily timesheets by account"
+		action="action_timesheet_account_date_stat_my"
+		id="menu_report_timesheet_account_date_my"/>
 
 	#
 	# Statistics report on timesheets per account
