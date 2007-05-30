@@ -11,19 +11,33 @@
 		<field name="arch" type="xml">
 			<form string="Pricelist Version">
 				<field name="name" select="1"/>
-				<field name="active" select="1"/>
-				<field name="pricelist_id" colspan="4"/>
+				<field name="active" select="2"/>
+				<field name="pricelist_id" colspan="4" select="1"/>
 				<field name="date_start" select="1"/>
 				<field name="date_end" select="1"/>
 				<field name="items_id" colspan="4" nolabel="1" widget="one2many_list"/>
 			</form>
 		</field>
 	</record>
+	<record model="ir.ui.view" id="product_pricelist_version_tree_view">
+		<field name="name">product.pricelist.version.tree</field>
+		<field name="model">product.pricelist.version</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Pricelist Version">
+				<field name="name"/>
+				<field name="pricelist_id"/>
+				<field name="date_start"/>
+				<field name="date_end"/>
+			</tree>
+		</field>
+	</record>
+
 	<record model="ir.actions.act_window" id="product_pricelist_action">
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">product.pricelist.version</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="product_pricelist_version_form_view"/>
+		<field name="view_id" ref="product_pricelist_version_tree_view"/>
 	</record>
 	<menuitem name="Products/Pricelists/Pricelists Version" id="menu_product_pricelist_action" action="product_pricelist_action"/>
 

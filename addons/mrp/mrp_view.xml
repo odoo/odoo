@@ -88,19 +88,23 @@
 				<notebook>
 				<page string="Workcenter">
 					<separator string="General Information" colspan="4"/>
-					<field name="name" colspan="4" select="1"/>
+					<field name="name" select="1"/>
+					<field name="active" select="2"/>
 					<field name="code" select="1"/>
-					<field name="active" select="1"/>
+					<newline/>
 					<field name="type"/>
 					<field name="timesheet_id"/>
-					<field name="note" colspan="4"/>
+					<separator string="Description" colspan="4"/>
+					<field name="note" colspan="4" nolabel="1"/>
 					<separator string="Capacity Information" colspan="4"/>
-					<field name="capacity_per_cycle"/>
-					<newline/>
-					<field name="time_cycle"/>
-					<field name="time_start"/>
-					<field name="time_stop"/>
-					<field name="time_efficiency"/>
+					<group colspan="4" col="4">
+						<field name="capacity_per_cycle"/>
+						<newline/>
+						<field name="time_cycle"/>
+						<field name="time_start"/>
+						<field name="time_stop"/>
+						<field name="time_efficiency"/>
+					</group>
 				</page>
 				<page string="Cost Accounting">
 					<field name="costs_hour"/>
@@ -118,7 +122,7 @@
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">mrp.workcenter</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="mrp_workcenter_view"/>
+		<field name="view_id" ref="mrp_workcenter_tree_view"/>
 	</record>
 	<menuitem name="Production/Configuration/Workcenters" id="menu_mrp_workcenter_action" action="mrp_workcenter_action"/>
 
@@ -164,11 +168,12 @@
 		<field name="arch" type="xml">
 			<form string="Routing">
 				<separator string="General Information" colspan="4"/>
-				<field name="name" colspan="4" select="1"/>
-				<field name="code" select="1"/>
+				<field name="name" select="1"/>
 				<field name="active" select="1"/>
+				<field name="code" select="1"/>
 				<field name="location_id"/>
-				<field name="note" colspan="4"/>
+				<separator string="Description" colspan="4"/>
+				<field name="note" colspan="4" nolabel="1"/>
 				<separator string="Workcenter Operations" colspan="4"/>
 				<field name="workcenter_lines" widget="one2many_list" colspan="4" nolabel="1"/>
 			</form>
@@ -182,6 +187,7 @@
 			<tree string="Routing">
 				<field name="code"/>
 				<field name="name"/>
+				<field name="location_id"/>
 			</tree>
 		</field>
 	</record>
@@ -189,7 +195,7 @@
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">mrp.routing</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="mrp_routing_form_view"/>
+		<field name="view_id" ref="mrp_routing_tree_view"/>
 	</record>
 	<menuitem name="Production/Configuration/Routings" id="menu_mrp_routing_action" action="mrp_routing_action"/>
 
@@ -205,13 +211,12 @@
 			<form string="Bill of Material">
 				<notebook>
 					<page string="General Information">
-						<separator string="General Information" colspan="4"/>
 						<field name="name" select="1"/>
 						<field name="code" select="1"/>
 						<field name="product_id" select="1" on_change="onchange_product_id(product_id, name)"/>
 						<field name="product_uom"/>
 						<field name="product_qty"/>
-						<field name="routing_id" select="1"/>
+						<field name="routing_id" select="2"/>
 						<field name="type"/>
 
 						<field name="bom_lines" colspan="4" nolabel="1" widget="one2many_list"/>
@@ -220,16 +225,16 @@
 						<field name="revision_ids" colspan="4" nolabel="1" widget="one2many_list"/>
 					</page>
 					<page string="Properties">
-						<field name="position" select="1" />
-						<field name="active" select="1"/>
+						<field name="position" select="2" />
+						<field name="active" select="2"/>
 						<field name="sequence"/>
 						<field name="bom_id"/>
 
-						<field name="date_start" select="1"/>
-						<field name="date_stop" select="1"/>
+						<field name="date_start" select="2"/>
+						<field name="date_stop" select="2"/>
 						<field name="product_rounding"/>
 						<field name="product_efficiency"/>
-						<field name="property_ids" colspan="4" nolabel="1"/>
+						<field name="property_ids" colspan="4" nolabel="2"/>
 					</page>
 				</notebook>
 			</form>
@@ -257,7 +262,7 @@
 		<field name="res_model">mrp.bom</field>
 		<field name="view_type">form</field>
 		<field name="domain">[('bom_id','=',False)]</field>
-		<field name="view_id" ref="mrp_bom_form_view"/>
+		<field name="view_id" ref="mrp_bom_tree_view"/>
 	</record>
 	<menuitem name="Production/Configuration/Bill of Materials" id="menu_mrp_bom_form_action" action="mrp_bom_form_action"/>
 
@@ -274,7 +279,7 @@
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">mrp.bom</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="mrp_bom_form_view"/>
+		<field name="view_id" ref="mrp_bom_tree_view"/>
 	</record>
 	<menuitem name="Production/Configuration/Bill of Materials/BoMs Components" id="menu_mrp_bom_form_action2" action="mrp_bom_form_action2"/>
 
@@ -361,15 +366,15 @@
 					<field name="product_id" on_change="product_id_change(product_id)" select="1"/>
 					<field name="product_qty"/>
 					<field name="product_uom"/>
-					<field name="bom_id" select="1"/>
+					<field name="bom_id" select="2"/>
 
 					<newline/>
-					<field name="location_src_id" select="1"/>
+					<field name="location_src_id" select="2"/>
 					<field name="location_dest_id"/>
 
 					<field name="move_lines" colspan="4" nolabel="1" widget="one2many_list"/>
-					<field name="state" select="1"/>
-					<group colspan="2" col="7">
+					<group colspan="4" col="9">
+						<field name="state" select="2"/>
 						<button name="action_compute" string="Compute Data" states="draft" type="object"/>
 						<button name="button_confirm" string="Confirm Production" states="draft"/>
 						<button name="button_produce" string="Start Production" states="ready"/>
@@ -383,7 +388,7 @@
 				</page><page string="Workcenters">
 					<field name="workcenter_lines" colspan="4" nolabel="1" widget="one2many_list"/>
 				</page><page string="Others Info">
-					<field name="date_start" select="1"/>
+					<field name="date_start" select="2"/>
 					<field name="date_finnished"/>
 					<field name="picking_id"/>
 					<field name="origin"/>
@@ -548,23 +553,22 @@
 				<field name="name" colspan="4" select="1"/>
 				<field name="priority"/>
 				<field name="date_planned" select="1"/>
-				<field name="procure_method" select="1"/>
-				<field name="date_close" select="1"/>
+				<field name="procure_method" select="2"/>
+				<field name="date_close" select="2"/>
 				<newline/>
 				<field name="product_qty"/>
 				<field name="product_uom"/>
 				<field name="product_id" select="1"/>
-				<field name="location_id" select="1"/>
+				<field name="location_id" select="2"/>
 				<newline/>
-				<field name="origin" select="1"/>
+				<field name="origin" select="2"/>
 				<field name="move_id"/>
 				<newline/>
 				<field name="message" colspan="4"/>
 				<separator string="Properties" colspan="4"/>
-				<field name="property_ids" colspan="4"/>
-				<separator string="Document State" colspan="4"/>
-				<field name="state" readonly="1" select="1"/>
-				<group col="5" colspan="2">
+				<field name="property_ids" colspan="4" nolabel="1"/>
+				<group col="7" colspan="4">
+					<field name="state" readonly="1" select="2"/>
 					<button string="Confirm" name="button_confirm" states="draft"/>
 					<button string="Retry" name="button_restart" states="exception"/>
 					<button string="Cancel" name="button_cancel" states="exception"/>
@@ -664,10 +668,10 @@
 		<field name="res_model">stock.warehouse.orderpoint</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="view_warehouse_orderpoint_form"/>
+		<field name="view_id" ref="view_warehouse_orderpoint_tree"/>
 	</record>
-	<menuitem name="Inventory Control/Reordering Policy" sequence="4"/>
-	<menuitem name="Inventory Control/Reordering Policy/Order Point" id="menu_action_orderpoint_form" action="action_orderpoint_form"/>
+	<menuitem name="Inventory Control/Ordering Policy" sequence="4"/>
+	<menuitem name="Inventory Control/Ordering Policy/Order Point" id="menu_action_orderpoint_form" action="action_orderpoint_form"/>
 
 	<act_window name="Orderpoint"
 		domain="[('warehouse_id', '=', active_id)]"

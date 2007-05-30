@@ -287,7 +287,7 @@
 		<record model="ir.actions.act_window" id="open_view_attendance">
 			<field name="res_model">hr.attendance</field>
 			<field name="view_type">form</field>
-			<field name="view_mode">form,tree</field>
+			<field name="view_mode">tree,form</field>
 		</record>
 		<menuitem name="Human Resources/Attendances" id="menu_hr_attendance"/>
 		<menuitem name="Human Resources/Attendances/Attendances" id="menu_open_view_attendance" action="open_view_attendance" groups="admin"/>
@@ -340,7 +340,7 @@
 		<record model="ir.actions.act_window" id="open_ask_holidays">
 			<field name="res_model">hr.holidays</field>
 			<field name="view_type">form</field>
-			<field name="view_id" ref="ask_holiday" />
+			<field name="view_id" ref="view_holiday" />
 		</record>
 		<menuitem name="Human Resources/Attendances/Vacation request"
 			id="menu_open_ask_holidays" action="open_ask_holidays" groups="admin"/>

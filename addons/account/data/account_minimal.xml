@@ -1,23 +1,31 @@
 <?xml version="1.0"?>
 <terp>
-<data noupdate="True">
+<data fakenoupdate="True">
 
 	<!--
 	Minimal Tiny ERP Account Chart
 	-->
 
+	<record id="minimal_0" model="account.account">
+		<field name="code">0</field>
+		<field name="name">Minimal account chart</field>
+		<field name="close_method">none</field>
+		<field name="parent_id" eval="[]"/>
+		<field name="type">view</field>
+	</record>
+
 		<record model="account.account" id="a_recv">
 			<field name="name">Main Receivable</field>
 			<field name="code">40</field>
 			<field name="type">receivable</field>
-			<field name="parent_id" eval="[(6,0,[])]"/>
+			<field name="parent_id" eval="[(6,0,[ref('minimal_0')])]"/>
 			<field name="company_id" ref="base.main_company"/>
 		</record>
 		<record model="account.account" id="a_pay">
 			<field name="name">Main Payable</field>
 			<field name="code">440</field>
 			<field name="type">payable</field>
-			<field name="parent_id" eval="[(6,0,[])]"/>
+			<field name="parent_id" eval="[(6,0,[ref('minimal_0')])]"/>
 			<field name="company_id" ref="base.main_company"/>
 		</record>
 
@@ -25,7 +33,7 @@
 			<field name="name">Petty Cash</field>
 			<field name="code">57</field>
 			<field name="type">cash</field>
-			<field name="parent_id" eval="[(6,0,[])]"/>
+			<field name="parent_id" eval="[(6,0,[ref('minimal_0')])]"/>
 			<field name="company_id" ref="base.main_company"/>
 		</record>
 
@@ -33,14 +41,14 @@
 			<field name="name">Products Purchase</field>
 			<field name="code">600</field>
 			<field name="type">expense</field>
-			<field name="parent_id" eval="[(6,0,[])]"/>
+			<field name="parent_id" eval="[(6,0,[ref('minimal_0')])]"/>
 			<field name="company_id" ref="base.main_company"/>
 		</record>
 		<record model="account.account" id="a_sale">
 			<field name="name">Products Sales</field>
 			<field name="code">701</field>
 			<field name="type">income</field>
-			<field name="parent_id" eval="[(6,0,[])]"/>
+			<field name="parent_id" eval="[(6,0,[ref('minimal_0')])]"/>
 			<field name="company_id" ref="base.main_company"/>
 		</record>
 

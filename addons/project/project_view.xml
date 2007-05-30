@@ -15,7 +15,7 @@
 						<page string="Administration">
 							<field name="name" select="1" />
 							<group colspan="2" col="3">
-								<field name="active" select="1" />
+								<field name="active" select="2"/>
 								<button string="Toggle activity" name="toggleActive" type="object" />
 							</group>
 							<field name="manager" select="1"/>
@@ -33,8 +33,8 @@
 						</page>
 						<page string="Partner Info">
 							<field name="partner_id" select="1" colspan="4" on_change="onchange_partner_id(partner_id)"/>
-							<field name="contact_id" select="1" domain="[('partner_id','=',partner_id)]"/>
-							<field name="category_id"/>
+							<field name="contact_id" select="2" domain="[('partner_id','=',partner_id)]"/>
+							<field name="category_id" select="2"/>
 							<field name="pricelist_id"/>
 							<field name="warn_customer"/>
 							<field name="mode"/>
@@ -51,7 +51,7 @@
 								<label string="Date Stop: %%(date_stop)s"/>
 							</group>
 							<separator string="Taxes" colspan="4" />
-							<field name="tax_ids" colspan="4"/>
+							<field name="tax_ids" colspan="4" nolabel="1"/>
 						</page>
 						<page string="Tasks">
 							<field name="tasks" nolabel="1" colspan="4" widget="one2many_list">
@@ -147,7 +147,7 @@
 			<field name="res_model">project.project</field>
 			<field name="view_type">form</field>
 			<field name="domain"></field>
-			<field name="view_id" ref="edit_project" />
+			<field name="view_id" ref="view_project" />
 		</record>
 		<menuitem name="Project/All Projects/Edit project" id="menu_open_view_project" action="open_view_project"/>
 
@@ -215,8 +215,8 @@
 							<field name="name" select="1"/>
 							<field name="project_id" required="1" select="1"/>
 							<field name="user_id" select="1"/>
-							<field name="priority" select="1"/>
-							<field name="date_deadline" select="1"/>
+							<field name="priority" select="2"/>
+							<field name="date_deadline" select="2"/>
 							<field name="planned_hours"/>
 							<separator colspan="4" string="Description"/>
 							<field colspan="4" name="description" nolabel="1"/>
@@ -225,7 +225,7 @@
 							<field colspan="4" name="work_ids" nolabel="1"/>
 							<newline/>
 							<group col="11" colspan="4">
-								<field name="state" select="1"/>
+								<field name="state" select="2"/>
 								<button name="do_draft" string="Set to draft" states="open" type="object"/>
 								<button name="do_open" string="Open task" states="pending,draft" type="object"/>
 								<button name="do_reopen" string="Re-open" states="done,cancelled" type="object"/>
@@ -236,16 +236,16 @@
 							</group>
 						</page>
 						<page string="Other Information">
-							<field name="date_start" select="1"/>
-							<field name="date_close" select="1"/>
+							<field name="date_start" select="2"/>
+							<field name="date_close" select="2"/>
 							<field name="type"/>
 							<field name="sequence"/>
-							<field name="active" select="1"/>
+							<field name="active" select="2"/>
 							<field name="start_sequence"/>
-							<field name="partner_id" select="1"/>
+							<field name="partner_id" select="2"/>
 							<newline/>
 							<field name="invoice_id"/>
-							<field name="billable" select="1"/>
+							<field name="billable" select="2"/>
 							<separator colspan="4" string="Notes"/>
 							<field colspan="4" name="notes" nolabel="1"/>
 							<separator colspan="4" string="Customer Description"/>
@@ -261,7 +261,7 @@
 			<field name="type">tree</field>
 			<field name="priority" eval="2"/>
 			<field name="arch" type="xml">
-				<tree string="All tasks" colors="red:date_deadline&lt;current_date and state=='draft';blue:date_deadline==current_date and state=='draft';grey:state=='cancel'">
+				<tree string="Tasks" colors="red:date_deadline&lt;current_date and state=='draft';blue:date_deadline==current_date and state=='draft';grey:state=='cancel'">
 					<field name="sequence"/>
 					<field name="name"/>
 					<field name="project_id"/>
@@ -277,8 +277,7 @@
 		<record model="ir.actions.act_window" id="action_view_task">
 			<field name="res_model">project.task</field>
 			<field name="view_type">form</field>
-			<field name="domain">[]</field>
-			<field name="view_id" ref="view_task_form2" />
+			<field name="view_id" ref="view_task_tree2" />
 		</record>
 		<menuitem name="Project/All Tasks" id="menu_action_view_task" action="action_view_task" />
 
@@ -382,10 +381,20 @@
 				</form>
 			</field>
 		</record>
+		<record model="ir.ui.view" id="task_type_tree">
+			<field name="name">project.task.type.tree</field>
+			<field name="model">project.task.type</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Task type">
+					<field name="name"/>
+				</tree>
+			</field>
+		</record>
 		<record model="ir.actions.act_window" id="open_task_type_form">
 			<field name="res_model">project.task.type</field>
 			<field name="view_type">form</field>
-			<field name="view_id" ref="task_type_edit"/>
+			<field name="view_id" ref="task_type_tree"/>
 		</record>
 		<menuitem name="Project/Configuration/Task types" id="menu_task_types" action="open_task_type_form"/>
 

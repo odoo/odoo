@@ -27,7 +27,7 @@
 			string="Close Fiscal Year"
 			model="account.fiscalyear"
 			name="account.fiscalyear.close"
-			keyword="tree_but_action"
+			menu="False"
 			id="wizard_fiscalyear_close"/>
 		<menuitem
 			name="Financial Management/End of year treatments/Close a fiscal year"
@@ -39,16 +39,7 @@
 			string="Close Period"
 			model="account.period"
 			name="account.period.close"
-			keyword="tree_but_action"
 			id="wizard_period_close"/>
-
-		<wizard
-			string="Close Journal"
-			model="account.journal.period"
-			name="account.journal.period.close"
-			keyword="tree_but_action"
-			id="wizard_journal_period_close"
-			auto="False"/>
 
 		<!-- automatic reconcile -->
 		<wizard

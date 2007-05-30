@@ -34,31 +34,31 @@
 						<page string="Information">
 							<field name="name" select="1"/>
 							<field name="default_code" select="1"/>
-							<field name="variants" select="1"/>
-							<field name="ean13" select="1"/>
+							<field name="variants" select="2"/>
+							<field name="ean13" select="2"/>
 							<newline/>
 							<field name="categ_id" select="1"/>
-							<field name="type" select="1"/>
+							<field name="type" select="2"/>
 							<field name="volume" digits="(14, 3)"/>
 							<newline/>
 							<field name="weight" digits="(14, 3)"/>
 							<field name="weight_net" digits="(14, 3)"/>
-							<field name="procure_method" select="1"/>
+							<field name="procure_method" select="2"/>
 							<field name="state"/>
 							<field name="uom_id"/>
 							<field name="uom_po_id"/>
 							<field name="product_manager"/>
 						</page>
 						<page string="Procurement (days)">
-							<field name="supply_method" select="1"/>
-							<field name="active" select="1"/>
+							<field name="supply_method" select="2"/>
+							<field name="active" select="2"/>
 							<newline/>
-							<field name="sale_delay" select="1"/>
-							<field name="sale_ok" select="1"/>
-							<field name="produce_delay" select="1"/>
-							<field name="purchase_ok" select="1"/>
+							<field name="sale_delay" select="2"/>
+							<field name="sale_ok" select="2"/>
+							<field name="produce_delay" select="2"/>
+							<field name="purchase_ok" select="2"/>
 							<field name="warranty"/>
-							<field name="rental" select="1"/>
+							<field name="rental" select="2"/>
 							<field name="list_price"/>
 							<newline/>
 							<field name="standard_price"/>
@@ -96,22 +96,11 @@
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">product.product</field>
 			<field name="view_type">form</field>
-			<field name="view_id" ref="product_normal_form_view"/>
+			<field name="view_id" ref="product_product_tree_view"/>
 		</record>
 
 		<menuitem name="Products" groups="admin"/>
 		<menuitem name="Products/Products" action="product_normal_action" id="menu_products"/>
-
-		<record model="ir.actions.act_window" id="product_normal_action_list">
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">product.product</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-			<field name="view_id" ref="product_normal_form_view"/>
-		</record>
-		<menuitem name="Products/Products/Products list" action="product_normal_action_list" id="menu_products_list"/>
-
-
 
 		<record model="ir.ui.view" id="product_variant_form_view">
 			<field name="name">product.variant.form</field>
@@ -133,9 +122,34 @@
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">product.product</field>
 			<field name="view_type">form</field>
+		</record>
+		<record model="ir.actions.act_window.view" id="product_variant_action_view1">
+			<field name="sequence" eval="10"/>
+			<field name="view_mode">tree</field>
+			<field name="view_id" ref="product_product_tree_view"/>
+			<field name="act_window_id" ref="product_variant_action"/>
+		</record>
+		<record model="ir.actions.act_window.view" id="product_variant_action_view2">
+			<field name="sequence" eval="20"/>
+			<field name="view_mode">form</field>
 			<field name="view_id" ref="product_variant_form_view"/>
+			<field name="act_window_id" ref="product_variant_action"/>
 		</record>
 		<menuitem name="Products/Products/Variants" id="menu_product_variant_action" action="product_variant_action"/>
+
+		<record model="ir.ui.view" id="product_template_tree_view">
+			<field name="name">product.template.product.tree</field>
+			<field name="model">product.template</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Product Template">
+					<field name="name"/>
+					<field name="categ_id"/>
+					<field name="type"/>
+					<field name="state" />
+				</tree>
+			</field>
+		</record>
 
 		<record model="ir.ui.view" id="product_template_form_view">
 			<field name="name">product.template.product.form</field>
@@ -163,13 +177,13 @@
 							<field name="product_manager"/>
 							<field name="cost_method"/>
 							</page><page string="Procurement (days)">
-							<field name="supply_method" select="1"/>
-							<field name="rental" select="1"/>
+							<field name="supply_method" select="2"/>
+							<field name="rental" select="2"/>
 							<newline/>
-							<field name="sale_delay" select="1"/>
-							<field name="sale_ok" select="1"/>
-							<field name="purchase_ok" select="1"/>
-							<field name="produce_delay" select="1"/>
+							<field name="sale_delay" select="2"/>
+							<field name="sale_ok" select="2"/>
+							<field name="purchase_ok" select="2"/>
+							<field name="produce_delay" select="2"/>
 							<field name="warranty"/>
 							</page><page string="Descriptions">
 							<separator string="Sale Description"/>
@@ -188,7 +202,18 @@
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">product.template</field>
 			<field name="view_type">form</field>
+		</record>
+		<record model="ir.actions.act_window.view" id="product_template_action_view1">
+			<field name="sequence" eval="10"/>
+			<field name="view_mode">tree</field>
+			<field name="view_id" ref="product_template_tree_view"/>
+			<field name="act_window_id" ref="product_template_action"/>
+		</record>
+		<record model="ir.actions.act_window.view" id="product_template_action_view2">
+			<field name="sequence" eval="20"/>
+			<field name="view_mode">form</field>
 			<field name="view_id" ref="product_template_form_view"/>
+			<field name="act_window_id" ref="product_template_action"/>
 		</record>
 		<menuitem name="Products/Products/Templates" id="menu_product_template_action" action="product_template_action" groups="admin"/>
 
@@ -229,7 +254,7 @@
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">product.category</field>
 			<field name="view_type">form</field>
-			<field name="view_id" ref="product_category_form_view"/>
+			<field name="view_id" ref="product_category_tree_view"/>
 		</record>
 		<menuitem name="Products/Configuration/Products categories" id="menu_product_category_action_form" action="product_category_action_form"/>
 
@@ -287,7 +312,7 @@
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">product.uom</field>
 			<field name="view_type">form</field>
-			<field name="view_id" ref="product_uom_form_view"/>
+			<field name="view_id" ref="product_uom_tree_view"/>
 		</record>
 		<menuitem name="Products/Configuration/Unit of Measure/Unit of Measure" id="menu_product_uom_form_action" action="product_uom_form_action"/>
 

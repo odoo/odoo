@@ -10,22 +10,35 @@
 		<field name="arch" type="xml">
 			<form string="Sale Shop">
 				<field name="name" select="1"/>
-				<newline/>
+				<field name="warehouse_id" select="1" required="1"/>
 				<separator string="Accounting" colspan="4"/>
-				<field name="pricelist_id" domain="[('type','=','sale')]" colspan="4" select="1"/>
-				<field name="project_id"  colspan="4" select="1"/>
-				<field name="payment_default_id" colspan="4"/>
-				<field name="payment_account_id" colspan="4"/>
-				<separator string="Stock" colspan="4"/>
-				<field name="warehouse_id" colspan="4" select="1" required="1"/>
+				<field name="payment_default_id"/>
+				<field name="pricelist_id" domain="[('type','=','sale')]" select="1"/>
+				<field name="project_id" select="1"/>
+				<separator string="Payment accounts" colspan="4"/>
+				<field name="payment_account_id" colspan="4" nolabel="1"/>
 			</form>
 		</field>
 	</record>
+	<record model="ir.ui.view" id="view_shop_tree">
+		<field name="name">sale.shop</field>
+		<field name="model">sale.shop</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Sale Shop">
+				<field name="name"/>
+				<field name="pricelist_id"/>
+				<field name="project_id"/>
+				<field name="warehouse_id"/>
+			</tree>
+		</field>
+	</record>
+
 	<record model="ir.actions.act_window" id="action_shop_form">
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">sale.shop</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="view_shop_form"/>
+		<field name="view_id" ref="view_shop_tree"/>
 	</record>
 	<menuitem name="Sales Management/Configuration" groups="admin" sequence="1"/>
 	<menuitem name="Sales Management/Configuration/Shop" id="menu_action_shop_form" action="action_shop_form"/>
@@ -58,67 +71,70 @@
 					<page string="Sale Order">
 						<field name="name" select="1"/>
 						<group colspan="2" col="4">
-							<field name="shipped" select="1"/>
-							<field name="invoiced" select="1"/>
+							<field name="shipped" select="2"/>
+							<field name="invoiced" select="2"/>
 						</group>
 						<newline/>
 						<field name="date_order" select="1"/>
-						<field name="shop_id" select="1" on_change="onchange_shop_id(shop_id)"/>
+						<field name="shop_id" select="2" on_change="onchange_shop_id(shop_id)"/>
 						<field name="partner_id" select="1" on_change="onchange_partner_id(partner_id)" required="1"/>
 						<field name="partner_order_id" domain="[('partner_id','=',partner_id)]"/>
 						<field name="partner_invoice_id" domain="[('partner_id','=',partner_id)]"/>
 						<field name="partner_shipping_id" domain="[('partner_id','=',partner_id)]"/>
 						<field name="pricelist_id"  domain="[('type','=','sale')]"/>
-						<field name="project_id" select="1"/>
+						<field name="project_id" select="2"/>
 						<newline/>
 						<field name="order_line" widget="one2many_list" colspan="4" nolabel="1" mode="tree,graph">
-			<form string="Sale Order Lines">
-				<notebook>
-				<page string="Order Line">
-					<separator string="Automatic Declaration" colspan="4"/>
-					<field name="product_uom_qty" on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False)" context="partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom" select="1"/>
-					<field name="product_uom"/>
-					<field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], True)" context="partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom" colspan="4" select="1"/>
-
-					<separator string="Manual Description" colspan="4"/>
-					<field name="name" colspan="4" select="1"/>
-					<field name="price_unit" select="1"/>
-					<field name="discount"/>
-					<field name="type"/>
-					<field name="delay" select="1"/>
-					<newline/>
-					<field name="tax_id" colspan="4"/>
-					<separator string="States" colspan="4"/>
-					<field name="state" select="1"/>
-					<field name="invoiced" select="1"/>
-				</page><page string="Extra Info">
-					<field name="product_uos_qty" on_change="uos_change(product_uos, product_uos_qty, product_id)"/>
-					<field name="product_uos"  />
-					<field name="product_packaging" />
-					<field name="address_allotment_id" select="1"/>
-					<separator string="Properties" colspan="4"/>
-					<field name="property_ids" colspan="4" nolabel="1"/>
-				</page><page string="Notes">
-					<field name="notes" colspan="4" nolabel="1"/>
-				</page><page string="History">
-					<separator string="Invoice Lines" colspan="4"/>
-					<field name="invoice_lines" colspan="4" nolabel="1"/>
-					<separator string="Inventory Moves" colspan="4"/>
-					<field name="move_ids" colspan="4" nolabel="1"/>
-				</page>
-				</notebook>
-			</form>
-			<tree string="Sales Order Lines">
-				<field name="name" colspan="4"/>
-				<field name="product_id"/>
-				<field name="product_uom_qty" string="Qty"/>
-				<field name="product_uom" string="UoM"/>
-				<field name="discount"/>
-				<field name="price_unit"/>
-				<field name="price_net"/>
-				<field name="price_subtotal"/>
-			</tree>
-					</field>
+							<form string="Sale Order Lines">
+								<notebook>
+									<page string="Order Line">
+										<separator string="Automatic Declaration" colspan="4"/>
+										<field name="product_uom_qty" on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False)" context="partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom" select="1"/>
+										<field name="product_uom"/>
+										<field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], True)" context="partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom" colspan="4" select="1"/>
+					
+										<separator string="Manual Description" colspan="4"/>
+										<field name="name" colspan="4" select="2"/>
+										<field name="price_unit" select="2"/>
+										<field name="discount"/>
+										<field name="type"/>
+										<field name="delay" select="2"/>
+										<newline/>
+										<field name="tax_id" colspan="4"/>
+										<separator string="States" colspan="4"/>
+										<field name="state" select="2"/>
+										<field name="invoiced" select="2"/>
+									</page>
+									<page string="Extra Info">
+										<field name="product_uos_qty" on_change="uos_change(product_uos, product_uos_qty, product_id)"/>
+										<field name="product_uos"  />
+										<field name="product_packaging" />
+										<field name="address_allotment_id" select="2"/>
+										<separator string="Properties" colspan="4"/>
+										<field name="property_ids" colspan="4" nolabel="1"/>
+									</page>
+									<page string="Notes">
+										<field name="notes" colspan="4" nolabel="1"/>
+									</page>
+									<page string="History">
+										<separator string="Invoice Lines" colspan="4"/>
+										<field name="invoice_lines" colspan="4" nolabel="1"/>
+										<separator string="Inventory Moves" colspan="4"/>
+										<field name="move_ids" colspan="4" nolabel="1"/>
+									</page>
+								</notebook>
+							</form>
+							<tree string="Sales Order Lines">
+								<field name="name" colspan="4"/>
+								<field name="product_id"/>
+								<field name="product_uom_qty" string="Qty"/>
+								<field name="product_uom" string="UoM"/>
+								<field name="discount"/>
+								<field name="price_unit"/>
+								<field name="price_net"/>
+								<field name="price_subtotal"/>
+							</tree>
+						</field>
 						<newline/>
 						<group colspan="4" col="7">
 							<field name="amount_untaxed"/>
@@ -127,7 +143,7 @@
 							<button name="button_dummy" string="Compute" states="draft" type="object"/>
 						</group>
 						<group colspan="4" col="13">
-							<field name="state" select="1"/>
+							<field name="state" select="2"/>
 							<button name="order_confirm" string="Confirm Order" states="draft"/>
 							<button name="invoice_recreate" string="Recreate Invoice" states="invoice_except"/>
 							<button name="invoice_corrected" string="Invoice Corrected" states="invoice_except"/>
@@ -151,7 +167,8 @@
 						<field name="client_order_ref" />
 						<separator string="Notes" colspan="4"/>
 						<field name="note" colspan="4" nolabel="1"/>
-					</page><page string="History">
+					</page>
+					<page string="History">
 						<separator string="Generated Invoices" colspan="4"/>
 						<field name="invoice_ids" colspan="4" nolabel="1"/>
 						<separator string="Generated Pickings" colspan="4"/>
@@ -274,65 +291,6 @@
 	<menuitem name="Sales Management/Sales Order/My Sales Order/Requests For Quotation" id="menu_action_order_tree10" action="action_order_tree10"/>
 
 
-	<record model="ir.ui.view" id="view_order_pos_form">
-		<field name="name">sale.order.pos</field>
-		<field name="model">sale.order</field>
-		<field name="type">form</field>
-		<field name="priority" eval="32"/>
-		<field name="arch" type="xml">
-			<form string="Sales Order POS">
-				<notebook>
-					<page string="Order Line">
-						<field name="order_line" widget="one2many_list" colspan="4" nolabel="1"/>
-						<group colspan="4" col="7">
-							<field name="amount_untaxed"/>
-							<field name="amount_tax"/>
-							<field name="amount_total"/>
-							<button name="button_dummy" string="Compute" states="draft" type="object"/>
-						</group>
-						<field name="state" select="1"/>
-						<group colspan="2" col="3">
-							<button name="action_direct_sale" string="Direct Sale" states="draft" type="object"/>
-							<button name="cancel" string="Cancel Sale" states="draft"/>
-						</group>
-					</page>
-					<page string="Notes">
-						<field name="note" colspan="4" nolabel="1"/>
-					</page>
-					<page string="Advanced">
-						<separator string="Shop" colspan="4"/>
-						<field name="name" select="1"/>
-						<field name="shop_id" select="1" on_change="onchange_shop_id(shop_id)"/>
-						<field name="date_order" select="1"/>
-						<group colspan="2" col="4">
-							<field name="shipped" select="1"/>
-							<field name="invoiced" select="1"/>
-						</group>
-						<separator string="Order type" colspan="4"/>
-						<field name="order_policy" />
-						<field name="pricelist_id" />
-						<field name="project_id" select="1"/>
-						<separator string="Partner" colspan="4"/>
-						<field name="partner_id" select="1" on_change="onchange_partner_id(partner_id)"/>
-						<field name="partner_order_id" domain="[('partner_id','=',partner_id)]"/>
-						<field name="partner_invoice_id" domain="[('partner_id','=',partner_id)]"/>
-						<field name="partner_shipping_id" domain="[('partner_id','=',partner_id)]"/>
-						<separator string="Links" colspan="4"/>
-						<field name="invoice_ids" select="1" colspan="4"/>
-						<field name="picking_ids" colspan="4"/>
-					</page>
-				</notebook>
-			</form>
-		</field>
-	</record>
-	<record model="ir.actions.act_window" id="action_order_pos_form">
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">sale.order</field>
-		<field name="view_type">form</field>
-		<field name="view_id" ref="view_order_pos_form"/>
-	</record>
-	<!-- <menuitem name="Sales Management/Order POS" action="action_order_pos_form"/> -->
-
 	<record model="ir.ui.view" id="view_order_line_graph">
 		<field name="name">sale.order.line.graph</field>
 		<field name="model">sale.order.line</field>
@@ -372,35 +330,37 @@
 		<field name="arch" type="xml">
 			<form string="Sales Order Lines">
 				<notebook>
-				<page string="Order Lines">
-					<separator string="Automatic Declaration" colspan="4"/>
-					<field name="order_id" select="1"/>
-					<field name="invoiced" select="1"/>
-					<field name="product_uom_qty" readonly="1" select="1"/>
-					<field name="product_uom" readonly="1"/>
-					<field name="product_id" readonly="1" select="1"/>
-
-					<separator string="Manual Designation" colspan="4"/>
-					<field name="name" colspan="4" select="1"/>
-					<field name="price_unit" select="1"/>
-					<field name="discount"/>
-					<field name="type"/>
-					<field name="delay" select="1"/>
-					<field name="price_subtotal"/>
-					<field name="tax_id" colspan="4"/>
-					<separator string="States" colspan="4"/>
-					<field name="state" select="1"/>
-					<group colspan="2" col="2">
-						<button string="Done" name="button_done" type="object" states="confirmed"/>
-
-					</group>
-				</page><page string="Properties">
-					<field name="property_ids"/>
-				</page><page string="Notes">
-					<field name="notes" colspan="4" nolabel="1"/>
-				</page><page string="Invoice Lines">
-					<field name="invoice_lines" colspan="4"/>
-				</page>
+					<page string="Order Lines">
+						<separator string="Automatic Declaration" colspan="4"/>
+						<field name="order_id" select="1"/>
+						<field name="invoiced" select="1"/>
+						<field name="product_uom_qty" readonly="1" select="2"/>
+						<field name="product_uom" readonly="2"/>
+						<field name="product_id" readonly="1" select="1"/>
+	
+						<separator string="Manual Designation" colspan="4"/>
+						<field name="name" colspan="4" select="2"/>
+						<field name="price_unit" select="2"/>
+						<field name="discount"/>
+						<field name="type"/>
+						<field name="delay" select="2"/>
+						<field name="price_subtotal"/>
+						<field name="tax_id" colspan="4"/>
+						<separator string="States" colspan="4"/>
+						<field name="state" select="2"/>
+						<group colspan="2" col="2">
+							<button string="Done" name="button_done" type="object" states="confirmed"/>
+						</group>
+					</page>
+					<page string="Properties">
+						<field name="property_ids" nolabel="1"/>
+					</page>
+					<page string="Notes">
+						<field name="notes" colspan="4" nolabel="1"/>
+					</page>
+					<page string="Invoice Lines">
+						<field name="invoice_lines" colspan="4" nolabel="1"/>
+					</page>
 				</notebook>
 			</form>
 		</field>

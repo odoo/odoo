@@ -127,8 +127,8 @@
 			<form string="Supplier invoice">
 			<notebook>
 				<page string="Invoice">
-					<field name="journal_id" domain="[('type', '=', 'purchase')]" select="1"/>
-					<field name="type" select="1" readonly="1"/>
+					<field name="journal_id" domain="[('type', '=', 'purchase')]" select="2"/>
+					<field name="type" select="2" readonly="1"/>
 					<field name="partner_id" on_change="onchange_partner_id(type,partner_id)" select="1"/>
 					<field name="address_invoice_id" domain="[('partner_id','=',partner_id)]"/>
 					<field name="account_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" />
@@ -136,11 +136,11 @@
 
 
 
-					<field name="name" select="1"/>
+					<field name="name" select="2"/>
 					<field name="reference" select="1"/>
 
-					<field name="check_total" required="1"/>
-					<field name="currency_id" on_change="onchange_currency_id(currency_id)" select="1"/>
+					<field name="check_total" required="2"/>
+					<field name="currency_id" on_change="onchange_currency_id(currency_id)" select="2"/>
 					<field name="invoice_line" nolabel="1" colspan="4" default_get="{'check_total': check_total, 'invoice_line': invoice_line, 'address_invoice_id': address_invoice_id, 'partner_id': partner_id, 'price_type': 'price_type' in dir() and price_type or False}">
 						<tree string="Invoice lines" editable="bottom">
 							<field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, price_unit, parent.address_invoice_id)"/>
@@ -174,7 +174,7 @@
 						<button name="button_compute" string="Compute" states="draft" type="object"/>
 						<field name="amount_total"/>
 						<label/>
-						<field name="state" select="1"/>
+						<field name="state" select="2"/>
 						<group col="3" colspan="3">
 							<button name="invoice_open" states="draft,proforma" string="Create"/>
 							<button name="invoice_cancel" states="draft,proforma,sale,open" string="Cancel"/>
@@ -187,7 +187,7 @@
 					<newline/>
 					<field name="partner_bank_id" domain="[('partner_id','=',partner_id)]"/>
 					<field name="payment_term" on_change="onchange_payment_term_date_invoice(payment_term, date_invoice)" />
-					<field name="number" select="1"/>
+					<field name="number" select="2"/>
 					<field name="origin"/>
 					<field name="address_contact_id" domain="[('partner_id','=',partner_id)]" colspan="4"/>
 					<field name="move_id"/>
@@ -210,15 +210,15 @@
 			<form string="Invoice">
 			<notebook>
 				<page string="Invoice">
-					<field name="journal_id" select="1"/>
-					<field name="type" select="1" readonly="1"/>
+					<field name="journal_id" select="2"/>
+					<field name="type" select="2" readonly="1"/>
 					<field name="partner_id" on_change="onchange_partner_id(type,partner_id)" select="1"/>
 					<field name="address_invoice_id" domain="[('partner_id','=',partner_id)]"/>
 					<field name="account_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" />
 					<field name="payment_term" on_change="onchange_payment_term_date_invoice(payment_term, date_invoice)" />
-					<field name="name" select="1"/>
+					<field name="name" select="2"/>
 					<field name="number" select="1"/>
-					<field name="currency_id" on_change="onchange_currency_id(currency_id)" select="1"/>
+					<field name="currency_id" on_change="onchange_currency_id(currency_id)" select="2"/>
 
 					<field name="invoice_line" nolabel="1" widget="one2many_list" colspan="4"/>
 
@@ -242,7 +242,7 @@
 						<button name="button_compute" string="Compute" states="draft" type="object"/>
 						<field name="amount_total"/>
 						<label/>
-						<field name="state" select="1"/>
+						<field name="state" select="2"/>
 						<group col="4" colspan="3" expand="1">
 							<button name="invoice_proforma" states="draft" string="PRO-FORMA"/>
 							<button name="invoice_open" states="draft,proforma" string="Create"/>
@@ -256,7 +256,7 @@
 					<newline/>
 					<field name="partner_bank_id" domain="[('partner_id','=',partner_id)]"/>
 					<field name="date_due" select="1"/>
-					<field name="reference" select="1"/>
+					<field name="reference" select="2"/>
 					<field name="origin"/>
 					<field name="address_contact_id" domain="[('partner_id','=',partner_id)]" colspan="4"/>
 					<field name="move_id"/>

@@ -112,14 +112,14 @@
 				<notebook>
 				<page string="General Information">
 					<field name="name" select="1" colspan="4"/>
-					<field name="company_id" select="1"/>
+					<field name="company_id" select="2"/>
 					<newline/>
 					<field name="type" select="1"/>
 					<field name="code" select="1"/>
 					<field name="shortcut"/>
 					<field name="sign"/>
 
-					<field name="currency_id" select="1"/>
+					<field name="currency_id" select="2"/>
 					<field name="close_method"/>
 					<field name="reconcile"/>
 					<newline/>
@@ -421,7 +421,7 @@
 						</tree>
 					</field>
 					<group col="7" colspan="4">
-						<field name="state" select="1"/>
+						<field name="state" select="2"/>
 						<field name="balance_end" />
 						<button name="button_dummy" string="Compute" states="draft"/>
 						<button name="button_confirm" string="Confirm" states="draft" type="object"/>
@@ -635,10 +635,10 @@
 				<field name="name" select="1"/>
 				<field name="company_id"/>
 				<field name="tax_group" select="1"/>
-				<field name="active" select="1" />
+				<field name="active" select="2" />
 				<field name="type" select="1"/>
 				<field name="applicable_type"/>
-				<field name="amount" select="1"/>
+				<field name="amount" select="2"/>
 				<field name="include_base_amount"/>
 				<field name="domain"/>
 				<newline/>
@@ -685,7 +685,7 @@
 		<field name="name">Taxes</field>
 		<field name="res_model">account.tax</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="view_tax_form"/>
+		<field name="view_id" ref="view_tax_tree"/>
 	</record>
 	<menuitem name="Financial Management/Configuration/Taxes/" id="menu_action_tax_form" action="action_tax_form"/>
 
@@ -928,7 +928,7 @@
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">account.move</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="view_move_form"/>
+		<field name="view_id" ref="view_move_tree"/>
 	</record>
 	<menuitem name="Financial Management/Entries/Entry lookup/" id="menu_action_move_line_form" action="action_move_line_form"/>
 
@@ -937,8 +937,21 @@
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">account.move.line</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="view_move_line_form"/>
+		<field name="view_id" ref="view_move_line_tree"/>
 	</record>
+	<record model="ir.actions.act_window.view" id="action_move_line_search_view1">
+		<field name="sequence" eval="10"/>
+		<field name="view_mode">tree</field>
+		<field name="view_id" ref="view_move_line_tree"/>
+		<field name="act_window_id" ref="action_move_line_search"/>
+	</record>
+	<record model="ir.actions.act_window.view" id="action_move_line_search_view2">
+		<field name="sequence" eval="20"/>
+		<field name="view_mode">form</field>
+		<field name="view_id" ref="view_move_line_form"/>
+		<field name="act_window_id" ref="action_move_line_search"/>
+	</record>
+
 	<menuitem name="Financial Management/Entries/Entry lookup/" id="menu_action_move_line_search" action="action_move_line_search"/>
 
 	<menuitem name="Financial Management/Charts" sequence="7"/>
@@ -1066,7 +1079,7 @@
 	<record model="ir.actions.act_window" id="open_budget_post_form">
 		<field name="res_model">account.budget.post</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="view_budget_post_form"/>
+		<field name="view_id" ref="view_budget_post_tree"/>
 	</record>
 	<menuitem name="Financial Management/Configuration/Budgets/Budget items" id="menu_budget_post_form" action="open_budget_post_form"/>
 
@@ -1261,7 +1274,7 @@
 
 				<separator string="Subscription Periods" colspan="4"/>
 				<field name="date_start" select="1"/>
-				<field name="period_total" select="1"/>
+				<field name="period_total" select="2"/>
 
 				<field name="period_nbr"/>
 				<field name="period_type"/>
@@ -1274,7 +1287,7 @@
 				<field name="lines_id" colspan="4" widget="one2many_list"/>
 
 				<separator string="State" colspan="4"/>
-				<field name="state" select="1"/>
+				<field name="state" select="2"/>
 				<group col="1" colspan="2">
 					<button string="Set to Draft" name="state_draft" type="object" states="done"/>
 				</group>

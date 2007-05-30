@@ -77,7 +77,7 @@
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">stock.inventory</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="view_inventory_form"/>
+		<field name="view_id" ref="view_inventory_tree"/>
 	</record>
 	<menuitem name="Inventory Control/Lot Inventory" id="menu_action_inventory_form" action="action_inventory_form"/>
 
@@ -88,25 +88,13 @@
 		<field name="view_mode">tree,form</field>
 		<field name="view_id" ref="stock_inventory_line_tree"/>
 	</record>
-	<menuitem name="Inventory Control/Lot Inventory Line" id="menu_action_inventory_line_form" action="action_inventory_line_form"/>
+	<menuitem name="Inventory Control/Lot Inventory/Lot Inventory Line" id="menu_action_inventory_line_form" action="action_inventory_line_form"/>
 
 
 	=============================
 	Lot
 	=============================
 
-	<record model="ir.ui.view" id="prodlot_form">
-		<field name="name">stock.production.lot.form</field>
-		<field name="model">stock.production.lot</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Lot">
-				<field name="name" select="1"/>
-				<field name="ref"/>
-				<field name="date" />
-			</form>
-		</field>
-	</record>
 	<record model="ir.ui.view" id="view_tracking_form">
 		<field name="name">stock.tracking.form</field>
 		<field name="model">stock.tracking</field>
@@ -120,14 +108,27 @@
 			</form>
 		</field>
 	</record>
+	<record model="ir.ui.view" id="view_tracking_tree">
+		<field name="name">stock.tracking.tree</field>
+		<field name="model">stock.tracking</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Tracking/Serial">
+				<field name="name"/>
+				<field name="serial"/>
+				<field name="date"/>
+				<field name="active"/>
+			</tree>
+		</field>
+	</record>
 	<record model="ir.actions.act_window" id="action_tracking_form">
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">stock.tracking</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="view_tracking_form"/>
+		<field name="view_id" ref="view_tracking_tree"/>
 	</record>
 	<menuitem name="Inventory Control/Traceability" sequence="2"/>
-	<menuitem name="Inventory Control/Traceability/Tracking Numbers" id="menu_action_tracking_form" action="action_tracking_form"/>
+	<menuitem name="Inventory Control/Traceability/Tracking Serial " id="menu_action_tracking_form" action="action_tracking_form"/>
 
 	<record model="ir.ui.view" id="lot_line_tree">
 		<field name="name">stock.tracking.tree</field>
@@ -173,7 +174,7 @@
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">stock.lot</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="view_lot_form"/>
+		<field name="view_id" ref="view_lot_tree"/>
 	</record>
 	<menuitem name="Inventory Control/Traceability/Consumer lots" id="menu_action_lot_form" action="action_lot_form"/>
 	
@@ -213,17 +214,30 @@
 		<field name="arch" type="xml">
 			<form string="Production Lot">
 				<field name="name" select="1"/>
-				<field name="ref"/>
+				<field name="ref" select="1"/>
 				<field name="date" select="1"/>
 				<field name="revisions" colspan="4" widget="one2many_list"/>
 			</form>
+		</field>
+	</record>
+	<record model="ir.ui.view" id="view_production_lot_tree">
+		<field name="name">stock.production.lot.tree</field>
+		<field name="model">stock.production.lot</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Production Lot">
+				<field name="name"/>
+				<field name="ref"/>
+				<field name="date"/>
+				<field name="revisions"/>
+			</tree>
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_production_lot_form">
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">stock.production.lot</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="view_production_lot_form"/>
+		<field name="view_id" ref="view_production_lot_tree"/>
 	</record>
 	<menuitem name="Inventory Control/Traceability/Production lots" id="menu_action_production_lot_form" action="action_production_lot_form"/>
 
@@ -330,7 +344,7 @@
 				<notebook>
 					<page string="General Informations">
 						<field name="name" select="1"/>
-						<field name="active" select="1"/>
+						<field name="active" select="2"/>
 						<field name="usage" select="1"/>
 						<field name="account_id" select="1"/>
 						<field name="location_id"/>
@@ -346,13 +360,27 @@
 			</form>
 		</field>
 	</record>
+	<record model="ir.ui.view" id="view_location_tree2">
+		<field name="name">stock.location.tree</field>
+		<field name="model">stock.location</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Stock Location">
+				<field name="name"/>
+				<field name="usage"/>
+				<field name="account_id"/>
+				<field name="active"/>
+			</tree>
+		</field>
+	</record>
+
 	<record model="ir.actions.act_window" id="action_location_form">
 		<field name="res_model">stock.location</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="view_location_form"/>
+		<field name="view_id" ref="view_location_tree2"/>
 	</record>
-	<menuitem name="Inventory Control/Configuration/Location" id="menu_action_location_form" action="action_location_form"/>
+	<menuitem name="Inventory Control/Configuration/Stock Location" id="menu_action_location_form" action="action_location_form"/>
 
 	<record model="ir.ui.view" id="view_location_tree">
 		<field name="name">stock.location.tree</field>
@@ -381,9 +409,8 @@
 		<field name="name">stock.warehouse</field>
 		<field name="model">stock.warehouse</field>
 		<field name="type">form</field>
-<!--		<field name="parent_field">child_id</field> -->
 		<field name="arch" type="xml">
-			<form string="Stock Warehouse">
+			<form string="Warehouse">
 				<field name="name" select="1" colspan="4"/>
 				<field name="lot_input_id"/>
 				<field name="lot_stock_id"/>
@@ -393,11 +420,25 @@
 			</form>
 		</field>
 	</record>
+	<record model="ir.ui.view" id="view_warehouse_tree">
+		<field name="name">stock.warehouse.tree</field>
+		<field name="model">stock.warehouse</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Warehouse">
+				<field name="name"/>
+				<field name="lot_input_id"/>
+				<field name="lot_stock_id"/>
+				<field name="lot_output_id"/>
+				<field name="partner_address_id"/>
+			</tree>
+		</field>
+	</record>
 	<record model="ir.actions.act_window" id="action_warehouse_form">
 		<field name="res_model">stock.warehouse</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="view_warehouse"/>
+		<field name="view_id" ref="view_warehouse_tree"/>
 	</record>
 	<menuitem name="Inventory Control/Configuration/Warehouse" id="menu_action_warehouse_form" action="action_warehouse_form"/>
 
@@ -727,7 +768,7 @@
 		<field name="res_model">stock.move</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="view_move_form"/>
+		<field name="view_id" ref="view_move_tree"/>
 	</record>
 	<menuitem name="Inventory Control/Traceability/Low Level/Moves" id="menu_action_move_form2" action="action_move_form2"/>
 
@@ -737,7 +778,7 @@
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
 		<field name="domain">[('state','=','draft')]</field>
-		<field name="view_id" ref="view_move_form"/>
+		<field name="view_id" ref="view_move_tree"/>
 	</record>
 	<menuitem name="Inventory Control/Traceability/Low Level/Moves/Draft Moves" id="menu_action_move_form3" action="action_move_form3"/>
 
@@ -747,7 +788,7 @@
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
 		<field name="domain">[('state','=','assigned')]</field>
-		<field name="view_id" ref="view_move_form"/>
+		<field name="view_id" ref="view_move_tree"/>
 	</record>
 	<menuitem name="Inventory Control/Traceability/Low Level/Moves/Assigned Moves" id="menu_action_move_form4" action="action_move_form4"/>
 

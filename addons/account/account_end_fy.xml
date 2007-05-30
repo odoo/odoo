@@ -6,24 +6,13 @@
 
 	<record model="ir.actions.act_window" id="action_account_period_tree">
 		<field name="res_model">account.period</field>
-		<field name="view_type">tree</field>
+		<field name="view_type">form</field>
 		<field name="domain">[('state','=','draft')]</field>
 		<field name="view_id" ref="view_account_period_tree"/>
 	</record>
 	<menuitem name="Financial Management/End of year treatments/Close a period"
 		id="menu_action_account_period_close_tree"
 		action="action_account_period_tree" />
-
-	<record model="ir.actions.act_window" id="action_account_fiscalyear_tree">
-		<field name="name">Old fiscal years</field>
-		<field name="res_model">account.fiscalyear</field>
-		<field name="view_type">tree</field>
-		<field name="domain">[('state','=','done')]</field>
-		<field name="view_id" ref="view_account_fiscalyear_tree"/>
-	</record>
-	<menuitem name="Financial Management/End of year treatments/Old fiscal years"
-		id="menu_action_account_fiscalyear_close_tree"
-		action="action_account_fiscalyear_tree"/>
 
 </data>
 </terp>

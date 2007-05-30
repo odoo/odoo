@@ -127,7 +127,7 @@ class account_analytic_account(osv.osv):
 		'active' : fields.boolean('Active'),
 		'type': fields.selection([('view','View'), ('normal','Normal')], 'type'),
 		'description' : fields.text('Description'),
-		'parent_id': fields.many2one('account.analytic.account', 'Parent Cost account', select=True),
+		'parent_id': fields.many2one('account.analytic.account', 'Parent Cost account', select=2),
 		'child_ids': fields.one2many('account.analytic.account', 'parent_id', 'Childs Accounts'),
 		'line_ids': fields.one2many('account.analytic.line', 'account_id', 'Analytic entries'),
 		'balance' : fields.function(_balance_calc, method=True, type='float', string='Balance'),
