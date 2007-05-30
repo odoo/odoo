@@ -26,6 +26,37 @@
 			view_id="view_account_analytic_simplified"
 			id="act_my_account"/>
 
+	<record model="ir.actions.act_window" id="action_project_pipeline_user">
+		<field name="name">Pipeline of tasks</field>
+		<field name="res_model">report.task.user.pipeline.open</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">graph,tree</field>
+		<field name="domain">[('task_state','&lt;&gt;','cancelled'),('task_state','&lt;&gt;','done')]</field>
+	</record>
+
+		<record model="ir.ui.view" id="hr_timesheet_sheet_tree">
+			<field name="name">hr.timesheet.sheet.tree.simplified.board</field>
+			<field name="model">hr_timesheet_sheet.sheet</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Timesheets">
+					<field name="date_from" />
+					<field name="user_id"/>
+					<field name="name" />
+					<field name="total_attendance"/>
+					<field name="total_timesheet"/>
+					<field name="state"/>
+				</tree>
+			</field>
+		</record>
+		<record model="ir.actions.act_window" id="act_hr_timesheet_sheet">
+			<field name="name">Timesheets</field>
+			<field name="res_model">hr_timesheet_sheet.sheet</field>
+			<field name="domain">[('state','&lt;&gt;','done')]</field>
+			<field name="view_type">form</field>
+			<field name="view_id" ref="hr_timesheet_sheet_tree"/>
+		</record>
+
 
 		<record model="ir.ui.view" id="board_project_manager_form">
 			<field name="name">board.project.manager.form</field>
@@ -48,13 +79,11 @@
 								height="150"
 								colspan="4"/>
 
-							<!--
 							<action
-								string="Last 20 tasks closed"
-								name="%(action_view_board_note_tree)d"
+								string="User's timesheets"
+								name="%(act_hr_timesheet_sheet)d"
 								colspan="4"
 								height="150"/>
-							-->
 
 						</child1>
 						<child2>
@@ -64,6 +93,13 @@
 								icon="gtk-ok"
 								type="action"
 								colspan="4"/>
+							<button
+								string="My tasks board"
+								name="%(open_board_project)d"
+								icon="gtk-ok"
+								type="action"
+								colspan="4"/>
+
 
 							<action
 								string="My user's work"
@@ -71,8 +107,8 @@
 								colspan="4"/>
 
 							<action
-								string="My timesheet"
-								name="%(report_timesheet.action_timesheet_user_stat_my)d"
+								string="My user's pipeline"
+								name="%(action_project_pipeline_user)d"
 								colspan="4"/>
 
 						</child2>

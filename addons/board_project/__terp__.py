@@ -3,7 +3,14 @@
 	"version":"1.0",
 	"author":"Tiny",
 	"category":"Board",
-	"depends":["project","report_timesheet","board","report_analytic_line"],
+	"depends":[
+		"project",
+		"report_timesheet",
+		"board",
+		"report_analytic_line",
+		"report_task",
+		"hr_timesheet_sheet"
+	],
 	"demo_xml":["board_project_demo.xml"],
 	"update_xml":["board_project_view.xml", "board_project_manager_view.xml"],
 	"description": """
