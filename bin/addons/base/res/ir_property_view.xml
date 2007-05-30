@@ -20,13 +20,26 @@
 			</form>
 		</field>
 	</record>
+	<record model="ir.ui.view" id="ir_property_view_tree">
+		<field name="name">ir.property.tree</field>
+		<field name="model">ir.property</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Properties">
+				<field name="name"/>
+				<field name="company_id"/>
+				<field name="fields_id"/>
+			</tree>
+		</field>
+	</record>
+
 	<record model="ir.actions.act_window" id="ir_property_form">
 		<field name="name">Default Properties</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">ir.property</field>
 		<field name="view_type">form</field>
 		<field name="domain">[('res_id','=',False)]</field>
-		<field name="view_id" ref="ir_property_view"/>
+		<field name="view_id" ref="ir_property_view_tree"/>
 	</record>
 	<menuitem name="Administration/Custom/Properties/Default Properties" action="ir_property_form" id="menu_ir_property_form"/>
 
@@ -34,7 +47,7 @@
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">ir.property</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="ir_property_view"/>
+		<field name="view_id" ref="ir_property_view_tree"/>
 	</record>
 	<menuitem name="Administration/Custom/Properties/All Properties" action="ir_property_form_all" id="menu_ir_property_form_all"/>
 

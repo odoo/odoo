@@ -27,12 +27,25 @@
 			</form>
 		</field>
 	</record>
+	<record model="ir.ui.view" id="sequence_view_tree">
+		<field name="name">ir.sequence.tree</field>
+		<field name="model">ir.sequence</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Sequences">
+				<field name="name"/>
+				<field name="code"/>
+				<field name="active"/>
+			</tree>
+		</field>
+	</record>
+
 	<record model="ir.actions.act_window" id="ir_sequence_form">
 		<field name="name">Sequences</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">ir.sequence</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="sequence_view"/>
+		<field name="view_id" ref="sequence_view_tree"/>
 	</record>
 	<menuitem name="Administration/Custom/Sequences/" action="ir_sequence_form" id="menu_ir_sequence_form"/>
 
@@ -77,13 +90,24 @@
 			</form>
 		</field>
 	</record>
+	<record model="ir.ui.view" id="action_view_tree">
+		<field name="name">ir.actions.actions.tree</field>
+		<field name="model">ir.actions.actions</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Action">
+				<field name="name"/>
+				<field name="type"/>
+			</tree>
+		</field>
+	</record>
 
 	<record model="ir.actions.act_window" id="ir_sequence_actions">
 		<field name="name">Actions</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">ir.actions.actions</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="action_view"/>
+		<field name="view_id" ref="action_view_tree"/>
 	</record>
 	<menuitem name="Administration/Custom/Low level/Base/Actions/" action="ir_sequence_actions" id="menu_ir_sequence_actions"/>
 
@@ -101,27 +125,48 @@
 			</form>
 		</field>
 	</record>
+	<record model="ir.ui.view" id="act_execute_view_tree">
+		<field name="name">ir.actions.execute.tree</field>
+		<field name="model">ir.actions.execute</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Execute">
+				<field name="name"/>
+				<field name="type"/>
+			</tree>
+		</field>
+	</record>
+
 
 	<record model="ir.actions.act_window" id="ir_action_execute">
 		<field name="name">Execute</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">ir.actions.execute</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="act_execute_view"/>
+		<field name="view_id" ref="act_execute_view_tree"/>
 	</record>
 	<menuitem name="Administration/Custom/Low level/Base/Actions/" action="ir_action_execute" id="menu_ir_action_execute"/>
 
-	<record model="ir.ui.view" id="act_group_view">
-		<field name="name">ir.actions.group</field>
+	<record model="ir.ui.view" id="act_group_view_form">
+		<field name="name">ir.actions.group.form</field>
 		<field name="model">ir.actions.group</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Group">
 				<field name="name" select="1"/>
 				<field name="type" select="1"/>
-				<field name="exec_type"/>
-				<field name="usage"/>
 			</form>
+		</field>
+	</record>
+	<record model="ir.ui.view" id="act_group_view_tree">
+		<field name="name">ir.actions.group.tree</field>
+		<field name="model">ir.actions.group</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Group">
+				<field name="name"/>
+				<field name="type"/>
+			</tree>
 		</field>
 	</record>
 
@@ -130,7 +175,7 @@
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">ir.actions.group</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="act_group_view"/>
+		<field name="view_id" ref="act_group_view_tree"/>
 	</record>
 	<menuitem name="Administration/Custom/Low level/Base/Actions/" action="ir_action_group" id="menu_ir_action_group"/>
 
@@ -147,13 +192,24 @@
 			</form>
 		</field>
 	</record>
+	<record model="ir.ui.view" id="act_report_custom_view_tree">
+		<field name="name">ir.actions.report.custom.tree</field>
+		<field name="model">ir.actions.report.custom</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Report custom">
+				<field name="name"/>
+				<field name="type"/>
+			</tree>
+		</field>
+	</record>
 
 	<record model="ir.actions.act_window" id="ir_action_report_custom">
 		<field name="name">Report Custom</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">ir.actions.report.custom</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="act_report_custom_view"/>
+		<field name="view_id" ref="act_report_custom_view_tree"/>
 	</record>
 	<menuitem name="Administration/Custom/Low level/Base/Actions/" action="ir_action_report_custom" id="menu_ir_action_report_custom"/>
 
@@ -175,13 +231,25 @@
 			</form>
 		</field>
 	</record>
+	<record model="ir.ui.view" id="act_report_xml_view_tree">
+		<field name="name">ir.actions.report.xml.tree</field>
+		<field name="model">ir.actions.report.xml</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Report xml">
+				<field name="name"/>
+				<field name="type"/>
+				<field name="report_name"/>
+			</tree>
+		</field>
+	</record>
 
 	<record model="ir.actions.act_window" id="ir_action_report_xml">
 		<field name="name">Report Xml</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">ir.actions.report.xml</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="act_report_xml_view"/>
+		<field name="view_id" ref="act_report_xml_view_tree"/>
 	</record>
 	<menuitem name="Administration/Custom/Low level/Base/Actions/" action="ir_action_report_xml" id="menu_ir_action_report_xml"/>
 
@@ -234,7 +302,18 @@
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">ir.actions.act_window</field>
 		<field name="view_type">form</field>
+	</record>
+	<record model="ir.actions.act_window.view" id="ir_action_window_view1">
+		<field name="sequence" eval="1"/>
+		<field name="view_mode">tree</field>
+		<field name="view_id" ref="view_window_action_tree"/>
+		<field name="act_window_id" ref="ir_action_window"/>
+	</record>
+	<record model="ir.actions.act_window.view" id="ir_action_window_view2">
+		<field name="sequence" eval="2"/>
+		<field name="view_mode">form</field>
 		<field name="view_id" ref="view_window_action_form"/>
+		<field name="act_window_id" ref="ir_action_window"/>
 	</record>
 	<menuitem name="Administration/Custom/Low level/Base/Actions/" action="ir_action_window" id="menu_ir_action_window"/>
 
@@ -258,6 +337,7 @@
 		<field name="res_model">ir.actions.wizard</field>
 		<field name="view_type">form</field>
 	</record>
+
 	<menuitem name="Administration/Custom/Low level/Base/Actions/" action="ir_action_wizard" id="menu_ir_action_wizard"/>
 
 	==========================================================
@@ -279,7 +359,7 @@
 		<field name="res_model">res.company</field>
 		<field name="view_type">form</field>
 	</record>
-	<menuitem name="Administration/Users/Company Structure/Define Companies" action="action_res_company_form" id="menu_action_res_company_form"/>
+	<menuitem name="Administration/Users/Companies Structure/Define Companies" action="action_res_company_form" id="menu_action_res_company_form"/>
 
 	==========================================================
 	User Roles
@@ -290,7 +370,7 @@
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">res.users</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="view_users_form"/>
+		<field name="view_id" ref="view_users_tree"/>
 	</record>
 	<menuitem name="Administration/Users/Users" action="action_res_users" id="menu_action_res_users"/>
 
@@ -301,9 +381,19 @@
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('id','=',uid)]</field>
-		<field name="view_id" ref="view_users_form_simple_modif"/>
 	</record>
-	<menuitem name="Administration/Users/Users/My password" action="action_res_users_my" id="menu_action_res_users_my"/>
+	<record model="ir.actions.act_window.view" id="action_res_users_my_view1">
+		<field name="sequence" eval="10"/>
+		<field name="view_mode">tree</field>
+		<field name="act_window_id" ref="action_res_users_my"/>
+	</record>
+	<record model="ir.actions.act_window.view" id="action_res_users_my_view2">
+		<field name="sequence" eval="20"/>
+		<field name="view_mode">form</field>
+		<field name="view_id" ref="view_users_form_simple_modif"/>
+		<field name="act_window_id" ref="action_res_users_my"/>
+	</record>
+	<menuitem name="Administration/Users/Users/" action="action_res_users_my" id="menu_action_res_users_my"/>
 
 	<record model="ir.actions.act_window" id="action_res_groups">
 		<field name="name">Groups</field>
@@ -350,7 +440,7 @@
 		<field name="res_model">res.roles</field>
 		<field name="view_type">form</field>
 	</record>
-	<menuitem name="Administration/Users/Roles structure/Define Roles" action="action_res_roles_form" id="menu_action_res_roles_form"/>
+	<menuitem name="Administration/Users/Roles Structure/Define Roles" action="action_res_roles_form" id="menu_action_res_roles_form"/>
 
 	==========================================================
 	View
@@ -362,21 +452,32 @@
 		<field name="arch" type="xml">
 			<form string="User Interface - Views">
 				<field name="name" select="1"/>
-				<field name="type"/>
+				<field name="type" select="1"/>
 				<field name="model" select="1"/>
 				<field name="field_parent"/>
 				<field name="priority"/>
 				<field name="inherit_id"/>
-				<field name="arch" colspan="4" select="1"/>
+				<field name="arch" colspan="4"/>
 			</form>
+		</field>
+	</record>
+	<record model="ir.ui.view" id="view_view_tree">
+		<field name="name">ir.ui.view.tree</field>
+		<field name="model">ir.ui.view</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree>
+				<field name="name"/>
+				<field name="type"/>
+				<field name="model"/>
+			</tree>
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_ui_view">
 		<field name="name">View</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">ir.ui.view</field>
-		<field name="view_type">form</field>
-		<field name="view_id" ref="view_view_form"/>
+		<field name="view_id" ref="view_view_tree"/>
 	</record>
 	<menuitem name="Administration/Custom/Interface/View" action="action_ui_view" id="menu_action_ui_view"/>
 
@@ -390,21 +491,35 @@
 		<field name="arch" type="xml">
 			<form string="Attachments">
 				<field name="name" colspan="4" select="1"/>
-				<field name="description" colspan="4"/>
 				<field name="datas" colspan="4"/>
 				<field name="datas_fname"/>
 				<newline/>
 				<field name="res_model" select="1"/>
 				<field name="res_id"/>
+				<separator string="Description" colspan="4"/>
+				<field name="description" colspan="4" nolabel="1"/>
 			</form>
 		</field>
 	</record>
+	<record model="ir.ui.view" id="view_attachment_tree">
+		<field name="name">ir.attachment.view.tree</field>
+		<field name="model">ir.attachment</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Attachments">
+				<field name="name"/>
+				<field name="res_model"/>
+				<field name="res_id"/>
+			</tree>
+		</field>
+	</record>
+
 	<record model="ir.actions.act_window" id="action_attachment">
 		<field name="name">Attachments</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">ir.attachment</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="view_attachment_form"/>
+		<field name="view_id" ref="view_attachment_tree"/>
 	</record>
 	<menuitem name="Administration/Custom/Low level/Base/Attachments" action="action_attachment" id="menu_action_attachment"/>
 
@@ -520,7 +635,8 @@
 			<form string="Model Description">
 				<field name="name" select="1"/>
 				<field name="model" select="1"/>
-				<field name="info" select="1" colspan="4"/>
+				<separator string="Information"/>
+				<field name="info" select="1" colspan="4" nolabel="1"/>
 				<separator string="Fields" colspan="4"/>
 				<field name="field_id" colspan="4" nolabel="1" readonly="1">
 					<form string="Fields Description">
@@ -557,26 +673,25 @@
 		<field name="model">ir.model.fields</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Fields Description">
+			<form string="Fields">
 				<field name="name" select="1"/>
 				<field name="model_id" readonly="1"/>
-				<field name="field_description" select="1" colspan="4"/>
-				<field name="ttype" select="1"/>
-				<field name="relation" select="1"/>
-				<field name="relate" select="1"/>
+				<field name="field_description" select="2" colspan="4"/>
+				<field name="ttype" select="2"/>
+				<field name="relation" select="2"/>
 			</form>
 		</field>
 	</record>
 
 
-	<record model="ir.ui.view" id="ir_model_fields_tree">
+	<record model="ir.ui.view" id="view_model_fields_tree">
 		<field name="name">ir.model.fields.tree</field>
 		<field name="model">ir.model.fields</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Fields Description">
-				<field name="name" select="1"/>
-				<field name="field_description" select="1"/>
+			<tree string="Fields">
+				<field name="name"/>
+				<field name="field_description"/>
 			</tree>
 		</field>
 	</record>
@@ -585,7 +700,7 @@
 		<field name="name">Objects</field>
 		<field name="res_model">ir.model</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="view_model_form"/>
+		<field name="view_id" ref="view_model_tree"/>
 	</record>
 	<menuitem name="Administration/Custom/Low level/Base/Database Structure/Objects" action="action_model_model" id="ir_model_model_menu"/>
 
@@ -593,7 +708,7 @@
 		<field name="name">Fields</field>
 		<field name="res_model">ir.model.fields</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="view_model_fields_form"/>
+		<field name="view_id" ref="view_model_fields_tree"/>
 	</record>
 	<menuitem name="Administration/Custom/Low level/Base/Database Structure/Fields" action="action_model_fields" id="ir_model_model_fields"/>
 
@@ -616,14 +731,6 @@
 			</form>
 		</field>
 	</record>
-	<record model="ir.actions.act_window" id="action_translation">
-		<field name="name">All terms</field>
-		<field name="res_model">ir.translation</field>
-		<field name="view_type">form</field>
-		<field name="view_id" ref="view_translation_form"/>
-	</record>
-	<menuitem name="Administration/Translations/All terms" action="action_translation" id="menu_action_translation"/>
-
 	<record model="ir.ui.view" id="view_translation_tree">
 		<field name="name">Translations</field>
 		<field name="model">ir.translation</field>
@@ -637,6 +744,14 @@
 			</tree>
 		</field>
 	</record>
+
+	<record model="ir.actions.act_window" id="action_translation">
+		<field name="name">All terms</field>
+		<field name="res_model">ir.translation</field>
+		<field name="view_type">form</field>
+		<field name="view_id" ref="view_translation_tree"/>
+	</record>
+	<menuitem name="Administration/Translations/All terms" action="action_translation" id="menu_action_translation"/>
 	
 	<!--
 	=============================================================
@@ -698,7 +813,7 @@
 		<field name="name">Grant Access to menu</field>
 		<field name="res_model">ir.ui.menu</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="edit_menu_access"/>
+		<field name="view_id" ref="edit_menu"/>
 	</record>
 	<menuitem name="Administration/Security/Grant Access to menu"
 		action="grant_menu_access" id="menu_grant_menu_access"/>
@@ -750,7 +865,7 @@
 		<field name="name">Scheduled Actions</field>
 		<field name="res_model">ir.cron</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="ir_cron_view"/>
+		<field name="view_id" ref="ir_cron_view_tree"/>
 	</record>
 	<menuitem name="Administration/Custom/Low level/Base/Actions/Scheduled Actions"
 		action="ir_cron_act" id="menu_ir_cron_act"/>
@@ -789,7 +904,7 @@
 		<field name="name">Access Controls</field>
 		<field name="res_model">ir.model.access</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="ir_access_view_form"/>
+		<field name="view_id" ref="ir_access_view_tree"/>
 	</record>
 	<menuitem name="Administration/Security/Access Controls" action="ir_access_act" id="menu_ir_access_act"/>
 	==========================================================
@@ -830,7 +945,7 @@
 		<field name="name">Rule</field>
 		<field name="res_model">ir.rule</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="view_rule_form"/>
+		<field name="view_id" ref="view_rule_tree"/>
 	</record>
 	<menuitem name="Administration/Security/Rules" action="action_rule" id="menu_action_rule"/>
 

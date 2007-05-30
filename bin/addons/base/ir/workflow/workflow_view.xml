@@ -23,11 +23,23 @@
 			</form>
 		</field>
 	</record>
+	<record model="ir.ui.view" id="view_workflow_tree">
+		<field name="name">workflow.tree</field>
+		<field name="model">workflow</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Workflow">
+				<field name="name"/>
+				<field name="osv"/>
+				<field name="on_create"/>
+			</tree>
+		</field>
+	</record>
+
 	<record model="ir.actions.act_window" id="action_workflow_form">
-		<field name="name">workflow.form</field>
 		<field name="res_model">workflow</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="view_workflow_form"/>
+		<field name="view_id" ref="view_workflow_tree"/>
 	</record>
 	<menuitem
 		name="Administration/Custom/Low level/Base/Workflows/Workflows"
@@ -76,16 +88,29 @@
 						<field name="condition"/>
 						<field name="trigger_model"/>
 						<field name="trigger_expr_id"/>
-					</tree>				
+					</tree>
 				</field>
 			</form>
 		</field>
 	</record>
+	<record model="ir.ui.view" id="view_workflow_activity_tree">
+		<field name="model">workflow.activity</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Activity">
+				<field name="name"/>
+				<field name="kind"/>
+				<field name="action"/>
+				<field name="flow_start"/>
+				<field name="flow_stop"/>
+			</tree>
+		</field>
+	</record>
+
 	<record model="ir.actions.act_window" id="action_workflow_activity_form">
-		<field name="name">workflow.activity.form</field>
 		<field name="res_model">workflow.activity</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="view_workflow_activity_form"/>
+		<field name="view_id" ref="view_workflow_activity_tree"/>
 	</record>
 	<menuitem
 		name="Administration/Custom/Low level/Base/Workflows/Activities"
@@ -134,10 +159,9 @@
 
 
 	<record model="ir.actions.act_window" id="action_workflow_transition_form">
-		<field name="name">workflow.transition.form</field>
 		<field name="res_model">workflow.transition</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="view_workflow_transition_form"/>
+		<field name="view_id" ref="view_workflow_transition_tree"/>
 	</record>
 	<menuitem
 		name="Administration/Custom/Low level/Base/Workflows/Transitions"
@@ -157,18 +181,32 @@
 		<field name="arch" type="xml">
 			<form string="Workflow Instances">
 				<field name="wkf_id" select="1"/>
-				<field name="uid" select="1"/>
+				<field name="uid" select="2"/>
 				<field name="res_id"  select="1"/>
 				<field name="res_type"  select="1"/>
-				<field name="state" select="1"/>
+				<field name="state" select="2"/>
 			</form>
 		</field>
 	</record>
+	<record model="ir.ui.view" id="view_workflow_instance_tree">
+		<field name="name">workflow.instance.tree</field>
+		<field name="model">workflow.instance</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Workflow Instances">
+				<field name="wkf_id"/>
+				<field name="uid"/>
+				<field name="res_id"/>
+				<field name="res_type"/>
+				<field name="state"/>
+			</tree>
+		</field>
+	</record>
+
 	<record model="ir.actions.act_window" id="action_workflow_instance_form">
-		<field name="name">workflow.instance.form</field>
 		<field name="res_model">workflow.instance</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="view_workflow_instance_form"/>
+		<field name="view_id" ref="view_workflow_instance_tree"/>
 	</record>
 	<menuitem 
 		name="Administration/Custom/Low level/Base/Workflows/Instances"
@@ -190,15 +228,28 @@
 				<field name="act_id" select="1"/>
 				<field name="subflow_id" select="1"/>
 				<field name="inst_id"  select="1"/>
-				<field name="state" select="1"/>
+				<field name="state" select="2"/>
 			</form>
 		</field>
 	</record>
+	<record model="ir.ui.view" id="view_workflow_workitem_tree">
+		<field name="name">workflow.workitem.tree</field>
+		<field name="model">workflow.workitem</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Workflow Workitems">
+				<field name="act_id"/>
+				<field name="subflow_id"/>
+				<field name="inst_id"/>
+				<field name="state"/>
+			</tree>
+		</field>
+	</record>
+
 	<record model="ir.actions.act_window" id="action_workflow_workitem_form">
-		<field name="name">workflow.workitem.form</field>
 		<field name="res_model">workflow.workitem</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="view_workflow_workitem_form"/>
+		<field name="view_id" ref="view_workflow_workitem_tree"/>
 	</record>
 	<menuitem
 		name="Administration/Custom/Low level/Base/Workflows/Workitems"
