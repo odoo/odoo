@@ -2,7 +2,7 @@
 <terp>
 	<data>
 
-		<record model="board.note.type" id="note_project_type">
+		<record model="board.note.type" id="note_project_manager_type">
 			<field name="name">Project</field>
 		</record>
 
@@ -52,7 +52,7 @@
 			<field name="model">board.board</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Project">
+				<form string="My board">
 					<hpaned>
 
 						<child1>
@@ -87,7 +87,7 @@
 								colspan="4"/>
 
 							<action
-								string="My work"
+								string="My planning"
 								name="%(report_analytic_line.action_account_analytic_planning_stat_my_form)d"
 								colspan="4"/>
 
@@ -103,7 +103,7 @@
 		</record>
 
 		<record model="ir.actions.act_window" id="open_board_project">
-			<field name="name">Dashboard project member</field>
+			<field name="name">Project board</field>
 			<field name="res_model">board.board</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">form</field>
@@ -112,7 +112,7 @@
 		</record>
 
 		<menuitem
-			name="Dashboards/Project member"
+			name="Dashboards/Projects/Project member"
 			action="open_board_project"
 			sequence="1"
 			id="menu_board_project"/>

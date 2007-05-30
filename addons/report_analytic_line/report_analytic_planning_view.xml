@@ -180,6 +180,18 @@
 			id="menu_report_account_analytic_planning_stat_my"
 			action="action_account_analytic_planning_stat_my_form" />
 
+		<record model="ir.actions.act_window" id="action_account_analytic_planning_stat_my_manager_form">
+			<field name="res_model">report_account_analytic.planning.stat</field>
+			<field name="view_type">form</field>
+			<field name="domain">[('manager_id','=',uid)]</field>
+			<field name="view_mode">graph,tree</field>
+		</record>
+		<menuitem
+			name="Human Resources/Reporting/Planning/Planning statistics of my projects"
+			id="menu_report_account_analytic_planning_stat_my_manager"
+			action="action_account_analytic_planning_stat_my_manager_form" />
+
+
 
 
 	</data>

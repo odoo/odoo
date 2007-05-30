@@ -9,10 +9,8 @@
 			<field name="priority" eval="8"/>
 			<field name="arch" type="xml">
 				<tree string="Analytic Account" colors="red:date and (date&lt;=current_date); red:quantity_max and (quantity_max&gt;quantity)">
-				<!--<tree string="Analytic Account" colors="red:date and (date&lt;=current_date)">-->
 					<field name="code" />
 					<field name="complete_name"/>
-					<field name="partner_id" />
 					<field name="quantity" />
 					<field name="quantity_max" />
 					<field name="date" />
@@ -29,7 +27,6 @@
 				<tree string="Analytic Account" colors="red:date and (date&lt;=current_date); red:quantity_max and (quantity_max&gt;quantity)">
 					<field name="name"/>
 					<field name="code"/>
-					<field name="partner_id" />
 					<field name="date" />
 					<field name="company_currency_id"/>
 					<field name="debit" />
@@ -53,7 +50,7 @@
 							<field name="code" select="1"/>
 							<field name="parent_id" on_change="on_change_parent(parent_id)" />
 							<field name="company_id" select="2"/>
-							<field name="type" select="1" />
+							<field name="type" select="2" />
 							<field name="partner_id" select="1"/>
 							<newline/>
 							<field name="date_start" />
@@ -105,7 +102,7 @@
 					<field name="amount"  select="2"/>
 					<field name="date" select="1"/>
 					<field name="account_id" select="1"/>
-					<field name="journal_id" select="1"/>
+					<field name="journal_id" select="2"/>
 					<field name="general_account_id" select="2"/>
 					<field name="move_id" select="2"/>
 					<field name="unit_amount" select="2"/>
@@ -206,8 +203,8 @@
 			<form string="Analytic Journal">
 				<field name="name" select="1"/>
 				<field name="code" select="1"/>
-				<field name="type" select="1" />
-				<field name="active" select="1" />
+				<field name="type" select="2" />
+				<field name="active" select="2" />
 			</form>
 		</field>
 	</record>

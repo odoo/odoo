@@ -130,6 +130,7 @@ class report_account_analytic_planning_stat(osv.osv):
 	_columns = {
 		'planning_id': fields.many2one('report_account_analytic.planning', 'Planning'),
 		'user_id': fields.many2one('res.users', 'User', required=True),
+		'manager_id': fields.many2one('res.users', 'Manager'),
 		'account_id': fields.many2one('account.analytic.account', 'Account', required=True),
 		'sum_amount': fields.float('Planned Work', required=True),
 		'sum_amount_real': fields.function(_sum_amount_real, method=True, string='Work made'),
@@ -142,15 +143,18 @@ class report_account_analytic_planning_stat(osv.osv):
 				select
 					min(l.id) as id,
 					l.user_id as user_id,
+					a.user_id as manager_id,
 					l.account_id as account_id,
 					sum(l.amount*u.factor) as sum_amount,
 					l.planning_id
 				from
 					report_account_analytic_planning_line l
 				left join
+					account_analytic_account a on (a.id = l.account_id)
+				left join
 					product_uom u on (l.amount_unit = u.id)
 				group by
-					planning_id, user_id, account_id
+					l.planning_id, l.user_id, l.account_id, a.user_id
 			)
 		""")
 report_account_analytic_planning_stat()

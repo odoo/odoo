@@ -64,7 +64,7 @@ view_form_company = """<?xml version="1.0"?>
 	<group>
 		<separator string="Define main company" colspan="4"/>
 		<newline/>
-		<field name="name" align="0.0" colspan="3" required="True"/>
+		<field name="name" align="0.0" colspan="4" required="True"/>
 		<newline/>
 		<field name="street" align="0.0"/>
 		<field name="street2" align="0.0"/>
@@ -76,9 +76,9 @@ view_form_company = """<?xml version="1.0"?>
 		<field name="phone" align="0.0"/>
 		<separator string="Report header" colspan="4"/>
 		<newline/>
-		<field name="rml_header1" align="0.0" colspan="3"/>
-		<field name="rml_footer1" align="0.0" colspan="3"/>
-		<field name="rml_footer2" align="0.0" colspan="3"/>
+		<field name="rml_header1" align="0.0" colspan="4"/>
+		<field name="rml_footer1" align="0.0" colspan="4"/>
+		<field name="rml_footer2" align="0.0" colspan="4"/>
 	</group>
 </form>"""
 
