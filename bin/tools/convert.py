@@ -256,7 +256,7 @@ class xml_import(object):
 						if view_id:
 							cr.execute('SELECT type FROM ir_ui_view WHERE id=%d', (int(view_id),))
 							action_mode, = cr.fetchone()
-						cr.execute('SELECT view_mode FROM ir_act_window_view WHERE view_id=%d ORDER BY sequence LIMIT 1', (int(a_id),))
+						cr.execute('SELECT view_mode FROM ir_act_window_view WHERE act_window_id=%d ORDER BY sequence LIMIT 1', (int(a_id),))
 						if cr.rowcount:
 							action_mode, = cr.fetchone()
 						if action_type=='tree':
