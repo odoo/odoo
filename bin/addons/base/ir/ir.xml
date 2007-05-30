@@ -372,6 +372,19 @@
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_users_tree"/>
 	</record>
+	<record model="ir.actions.act_window.view" id="action_res_users_view1">
+		<field name="sequence" eval="10"/>
+		<field name="view_mode">tree</field>
+		<field name="view_id" ref="view_users_tree"/>
+		<field name="act_window_id" ref="action_res_users"/>
+	</record>
+	<record model="ir.actions.act_window.view" id="action_res_users_view2">
+		<field name="sequence" eval="20"/>
+		<field name="view_mode">form</field>
+		<field name="view_id" ref="view_users_form"/>
+		<field name="act_window_id" ref="action_res_users"/>
+	</record>
+
 	<menuitem name="Administration/Users/Users" action="action_res_users" id="menu_action_res_users"/>
 
 	<record model="ir.actions.act_window" id="action_res_users_my">

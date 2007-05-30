@@ -383,7 +383,9 @@ class orm(object):
 									ref = self.pool.get(f._obj)._table
 								except AttributeError:
 									ref = f._obj.replace('.','_')
-								cr.execute("ALTER TABLE %s ADD FOREIGN KEY (%s) REFERENCES %s ON DELETE %s" % (self._table, k, ref, f.ondelete))
+								# ir_actions is inherited so foreign key doesn't work on it
+								if ref <> 'ir_actions':
+									cr.execute("ALTER TABLE %s ADD FOREIGN KEY (%s) REFERENCES %s ON DELETE %s" % (self._table, k, ref, f.ondelete))
 							if f.select:
 								cr.execute("CREATE INDEX %s_%s_index ON %s (%s)" % (self._table, k, self._table, k))
 							if f.required:
