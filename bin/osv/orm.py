@@ -233,7 +233,7 @@ def get_pg_type(f):
 		f_type = ('varchar', 'VARCHAR(%d)' % (f.size,))
 	elif isinstance(f, fields.selection):
 		if isinstance(f.selection, list) and isinstance(f.selection[0][0], (str, unicode)):
-			f_size = reduce(lambda x,y: max(x,len(y[0])), f.selection, 16)
+			f_size = reduce(lambda x,y: max(x,len(y[0])), f.selection, f.size or 16)
 		elif isinstance(f.selection, list) and isinstance(f.selection[0][0], int):
 			f_size = -1
 		else:
