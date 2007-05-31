@@ -47,7 +47,7 @@ import wizard_third_party_ledger
 import wizard_account_balance_report
 import wizard_partner_balance_report
 
-import wizard_journal_close
+#import wizard_journal_close
 import wizard_period_close
 import wizard_fiscalyear_close
 
