@@ -18,7 +18,7 @@
 			id="act_my_project"/>
 
 		<act_window name="My accounts to invoice"
-			domain="[('user_id', '=', uid)]"
+			domain="[('user_id','=',uid),('state','&ltk&gt;','close'),('partner_id','&lt;&gt;',False)]"
 			res_model="account.analytic.account"
 			src_model="res.users"
 			view_type="form"

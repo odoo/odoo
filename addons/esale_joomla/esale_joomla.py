@@ -126,7 +126,7 @@ class esale_joomla_product(osv.osv):
 	_name = "esale_joomla.product"
 	_description = "eSale Product"
 	_columns = {
-		'web_id'			: fields.many2one('esale_joomla.web', 'Web Ref', relate=True),
+		'web_id'			: fields.many2one('esale_joomla.web', 'Web Ref'),
 		'name'				: fields.char('Name', size=64, required=True),
 		'product_id'		: fields.many2one('product.product', 'Product', required=True),
 		'esale_joomla_id'		: fields.integer('eSale product id'),

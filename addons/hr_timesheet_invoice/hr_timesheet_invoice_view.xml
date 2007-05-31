@@ -25,7 +25,7 @@
 		<field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form" />
 		<field name="arch" type="xml">
 			<field name="journal_id" position="after">
-				<field name="to_invoice" select="1"/>
+				<field name="to_invoice" select="2"/>
 				<field name="invoice_id"/>
 			</field>
 		</field>
@@ -105,8 +105,8 @@
 			<field name="arch" type="xml">
 				<form string="Type of invoicing">
 					<field name="name" select="1" colspan="1"/>
-					<field name="customer_name" select="1" colspan="1"/>
-					<field name="factor" colspan="1"/>
+					<field name="customer_name" select="2" colspan="1"/>
+					<field name="factor" colspan="2"/>
 				</form>
 			</field>
 		</record>
