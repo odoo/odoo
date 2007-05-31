@@ -111,16 +111,16 @@ class act_window(osv.osv):
 		res={}
 		for act in self.browse(cr, uid, ids):
 			res[act.id]=[(view.view_id.id, view.view_mode) for view in act.view_ids]
-			if (not act.view_ids) and act.view_id.id:
+			if (not act.view_ids):
 				modes = act.view_mode.split(',')
-				if act.view_id.type <> modes[0]:
+				find = False
+				if act.view_id.id:
 					res[act.id].append((act.view_id.id, act.view_id.type))
-					find = False
-					for t in modes:
-						if t == act.view_id.type and not find:
-							find = True
-							continue
-						res[act.id].append((False, t))
+				for t in modes:
+					if act.view_id and (t == act.view_id.type) and not find:
+						find = True
+						continue
+					res[act.id].append((False, t))
 		return res
 
 	_columns = {
