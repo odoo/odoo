@@ -4,7 +4,7 @@
 	"author" : "Tiny",
 	"category" : "Interfaces/CMS & eCommerce",
 	"website" : "http://tinyerp.com",
-	"depends" : ["product", "stock", "sale"],
+	"depends" : ["product", "stock", "sale", "account", "account_tax_include",],
 	"description": """Joomla (Virtuemart) eCommerce interface synchronisation.
 Users can order on the website, orders are automatically imported in Tiny
 ERP.

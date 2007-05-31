@@ -32,6 +32,8 @@ import netsvc
 import xmlrpclib
 import netsvc
 import pooler
+import urllib
+import base64
 
 import wizard
 from osv import osv
@@ -49,93 +51,121 @@ _export_done_fields = {
 	'prod_update': {'string':'Updated products', 'type':'float', 'readonly': True},
 }
 
+def _product_id_to_joomla_id(cr,uid,pool,product,website):
+	esale_joomla_id2 = pool.get('esale_joomla.product').search(cr, uid, [('web_id','=',website.id),('product_id','=',product.id)])
+	esale_joomla_id = 0
+	if esale_joomla_id2:
+		esale_joomla_id = pool.get('esale_joomla.product').read(cr, uid, [esale_joomla_id2[0]],["esale_joomla_id"])[0]["esale_joomla_id"]
+	return esale_joomla_id
+	
 def _do_export(self, cr, uid, data, context):
-	self.pool = pooler.get_pool(cr.dbname)
-	ids = self.pool.get('esale_joomla.web').search(cr, uid, [])
-	for website in self.pool.get('esale_joomla.web').browse(cr, uid, ids):
+	pool = pooler.get_pool(cr.dbname)
+	ids = pool.get('esale_joomla.web').search(cr, uid, [])
+	prod_new = 0
+	prod_update = 0
+	for website in pool.get('esale_joomla.web').browse(cr, uid, ids):
+
 		pricelist = website.shop_id.pricelist_id.id
 		if not pricelist:
 			raise wizard.except_wizard('UserError', 'You must define a pricelist in your shop !')
 		server = xmlrpclib.ServerProxy("%s/tinyerp-synchro.php" % website.url)
-		print 'SERVER', "%s/tinyerp-synchro.php" % website.url
+		context['lang']=website.language_id.code
+		categ_processed = []
 
-		prod_new = 0
-		prod_update = 0
-
+		## delete book if necessary : 
+		cr.execute("select jp.id, esale_joomla_id from esale_joomla_product jp inner join product_template pt  on pt.id = jp.product_id where pt.categ_id not in (select category_id from esale_joomla_category) ")
+		esale_ids= []
+		joomla_ids= []
+		for res in cr.fetchall():
+			esale_ids.append(res[0])
+			joomla_ids.append(res[1])
+		if joomla_ids : server.unpublish_product(joomla_ids)
+		pool.get('esale_joomla.product').unlink(cr,uid,esale_ids)
+			
 		for categ in website.category_ids:
-			if not categ.category_id:
-				print 'Skipping Category', categ.name, categ.id
+			if not categ.category_id: continue
+			## for product already uploaded via another category we
+			## just update the current category :
+			if categ.category_id.id in categ_processed :
+				prod_ids = pool.get('product.product').search(cr, uid, [('categ_id','in',cat_ids)])
+				product_ids = []
+				for product in pool.get('product.product').browse(cr, uid, prod_ids, context=context):
+					product_ids.append( _product_id_to_joomla_id(cr,uid,pool,product,website))
+				server.set_product_category(categ.esale_joomla_id ,product_ids)
 				continue
+				
 			cat_ids = [categ.category_id.id]
 			if categ.include_childs:
-				pass
-			#
-			# Use cat_ids and compute for childs
-			#
-			prod_ids = self.pool.get('product.product').search(cr, uid, [('categ_id','=',categ.category_id.id)])
-			for product in self.pool.get('product.product').browse(cr, uid, prod_ids):
+				def _add_child(cat_ids, categ):
+					for child in categ.child_id:
+						if child.id not in cat_ids:
+							cat_ids.append(child.id)
+							_add_child(cat_ids, child)
+				_add_child(cat_ids, categ.category_id)
+			categ_processed.extend(cat_ids)
 
-				category_id=categ.id
+			prod_ids = pool.get('product.product').search(cr, uid, [('categ_id','in',cat_ids)])
+			for product in pool.get('product.product').browse(cr, uid, prod_ids, context=context):
+				
+				esale_joomla_id= _product_id_to_joomla_id(cr,uid,pool,product,website)
 
-				esale_joomla_id2 = self.pool.get('esale_joomla.product').search(cr, uid, [('web_id','=',website.id),('product_id','=',product.id)])
-				esale_joomla_id = 0
-				if esale_joomla_id2:
-					esale_joomla_id = self.pool.get('esale_joomla.product').browse(cr, uid, esale_joomla_id2[0]).esale_joomla_id
+				price = pool.get('product.pricelist').price_get(cr, uid, [pricelist], product.id, 1, 'list')[pricelist]
+
+				taxes_included=[]
+				taxes_name=[]
+				for taxe in product.taxes_id:
+					for t in website.taxes_included_ids:
+						if t.id == taxe.id:
+							taxes_included.append(taxe)
+				for c in pool.get('account.tax').compute(cr, uid, taxes_included, price, 1): # DELETED product = product 
+					price+=c['amount']
+					taxes_name.append(c['name'])
 
 				tax_class_id = 1
-				print [pricelist], product.id, 1, 'list'
 				webproduct={
-					'esale_joomla_id'	: esale_joomla_id or 0,
-					'quantity'		: self.pool.get('product.product')._product_virtual_available(cr, uid, [product.id], '', False, {'shop':website.shop_id.id})[product.id],
-					'model'			: product.code or '',
-					'price'			: 10.0, #self.pool.get('product.pricelist').price_get(cr, uid, [pricelist], product.id, 1, 'list')[pricelist],
-					'weight'		: float(product.weight),
-					'tax_class_id'	: tax_class_id,
-					'category_id'	: category_id,
+					'esale_joomla_id': esale_joomla_id,
+					'quantity': pool.get('product.product')._product_virtual_available(cr, uid, [product.id], '', False, {'shop':website.shop_id.id})[product.id],
+					'model': product.code or '',
+					'price': price,
+					'weight': float(0.0),
+					'length': float(0.0),
+					'width': float(0.0),
+					'height': float(0.0),
+					'tax_class_id': tax_class_id,
+					'category_id': categ.esale_joomla_id,
 				}
 
-				attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model','=','product.product'), ('res_id', '=',product.id)])
-				data = self.pool.get('ir.attachment').read(cr, uid, attach_ids)
+
+				attach_ids = pool.get('ir.attachment').search(cr, uid, [('res_model','=','product.product'), ('res_id', '=',product.id)])
+				data = pool.get('ir.attachment').read(cr, uid, attach_ids)
 				if len(data):
 					webproduct['haspic'] = 1
-					webproduct['picture'] = data[0]['datas']
+					if not data[0]['link']:
+						webproduct['picture'] = data[0]['datas']
+					else:
+						try:
+							webproduct['picture'] = base64.encodestring(urllib.urlopen(data[0]['link']).read())
+						except:
+							webproduct['haspic'] = 0
 					webproduct['fname'] = data[0]['datas_fname']
 				else:
 					webproduct['haspic'] =0
 				
-				langs={}
-				products_pool=pooler.get_pool(cr.dbname).get('product.product')
-				for lang in website.language_ids:
-					if lang.language_id and lang.language_id.translatable:
-						langs[str(lang.esale_joomla_id)] = {
-							'name': products_pool.read(cr, uid, [osc_product.product_id.id], ['name'], {'lang': lang.language_id.code})[0]['name'] or '',
-							'description': products_pool.read(cr, uid, [osc_product.product_id.id], ['description_sale'], {'lang': lang.language_id.code})[0]['description_sale'] or ''
-						}
-
-				webproduct['langs'] = langs
 				webproduct['name'] = str(product.name or '')
-				webproduct['description'] = str(product.description_sale or '')
-
-				print webproduct
+				webproduct['description'] = str((product.description_sale or '') + (len(taxes_name) and ("\n(" + (', '.join(taxes_name)) + ')') or ''))
+				webproduct['short_description'] = str(product.description_sale or '')
 
 				osc_id=server.set_product(webproduct)
 
-				print osc_id
-				if osc_id!=webproduct['esale_joomla_id']:
-					if esale_joomla_id2:
-						self.pool.get('esale_joomla.product').write(cr, uid, [esale_joomla_id2[0]], {'esale_joomla_id': osc_id})
-						print 'Changing', webproduct['esale_joomla_id'], 'to', osc_id
+				if osc_id!=esale_joomla_id:
+					if esale_joomla_id:
+						pool.get('esale_joomla.product').write(cr, uid, [esale_joomla_id], {'esale_joomla_id': osc_id})
 						prod_update += 1
 					else:
-						self.pool.get('esale_joomla.product').create(cr, uid, {
-							'product_id': product.id,
-							'web_id': website.id,
-							'esale_joomla_id': osc_id,
-							'name': product.name
-						})
+						pool.get('esale_joomla.product').create(cr, uid, {'product_id': product.id, 'web_id': website.id, 'esale_joomla_id': osc_id, 'name': product.name })
 						prod_new += 1
 				else:
-					prod_update += 1
+					prod_update += 1 
 	return {'prod_new':prod_new, 'prod_update':prod_update}
 
 class wiz_esale_joomla_products(wizard.interface):
@@ -146,3 +176,4 @@ class wiz_esale_joomla_products(wizard.interface):
 		}
 	}
 wiz_esale_joomla_products('esale_joomla.products');
+

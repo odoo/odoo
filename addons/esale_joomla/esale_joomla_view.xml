@@ -10,15 +10,17 @@
 				<notebook>
 					<page string="General Informations">
 						<separator string="Web Shop Info" colspan="4"/>
-						<field name="name" select="1" colspan="4"/>
+						<field name="name" select="1" colspan="3"/>
 						<field name="url" widget="url" required="1"/>
 						<field name="active" select="1"/>
 						<field name="shop_id" select="1" required="1"/>
+						<field name="language_id" select="1" required="1"/>
 						<separator string="Configuration Instructions" colspan="4"/>
 						<label string="After having completed the above data, proceed to the taxes, languages and categories mapping. Go to the next tabs, import data form the website and complete the third column." align="0.0" colspan="4"/>
 					</page>
 					<page string="Taxes Mapping">
 						<button type="object" string="Initial Import of Taxes" colspan="4" name="tax_import"/>
+						<separator string="Taxes" colspan="4"/>
 						<field colspan="4" name="tax_ids" nolabel="1">
 							<tree editable="bottom">
 								<field name="name"/>
@@ -26,16 +28,8 @@
 								<field name="tax_id"/>
 							</tree>
 						</field>
-					</page>
-					<page string="Languages Mapping">
-						<button type="object" string="Initial Import of Languages" colspan="4" name="lang_import"/>
-						<field colspan="4" name="language_ids" nolabel="1">
-							<tree editable="bottom">
-								<field name="name"/>
-								<field name="esale_joomla_id" readonly="1"/>
-								<field name="language_id"/>
-							</tree>
-						</field>
+						<separator string="Taxes included" colspan="4"/>
+						<field colspan="4" name="taxes_included_ids" nolabel="1"/>
 					</page>
 					<page string="Categories Mapping">
 						<button type="object" string="Synchronise products categories" colspan="4" name="category_import"/>
@@ -48,26 +42,55 @@
 							</tree>
 						</field>
 					</page>
-					<page string="Active Products">
-						<field name="product_ids" colspan="4" nolabel="1">
-							<tree>
-								<field name="name"/>
-								<field name="esale_joomla_id"/>
-								<field name="product_id"/>
-							</tree>
-						</field>
-					</page>
 				</notebook>
 			</form>
 		</field>
 	</record>
+
 	<record model="ir.actions.act_window" id="action_esale_joomla_form">
+		<field name="name">esale_joomla.web</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">esale_joomla.web</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_esale_joomla_form"/>
 	</record>
 	<menuitem name="Sales Management/eSale/Definition/Web Shop" id="menu_action_esale_joomla_web" action="action_esale_joomla_form" groups="admin"/>
+
+	<record model="ir.ui.view" id="view_esale_joomla_product_form">
+		<field name="name">esale_joomla.product.form</field>
+		<field name="model">esale_joomla.product</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="eSale product">
+				<field name="name" select="1"/>
+				<field name="esale_joomla_id" select="1"/>
+				<field name="product_id" select="1"/>
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="view_esale_joomla_product_tree">
+		<field name="name">esale_joomla.product.tree</field>
+		<field name="model">esale_joomla.product</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="eSale product">
+				<field name="name" select="1"/>
+				<field name="esale_joomla_id" select="1"/>
+				<field name="product_id" select="1"/>
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="action_esale_joomla_product_form">
+		<field name="name">esale_joomla.product</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">esale_joomla.product</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="view_id" ref="view_esale_joomla_product_tree"/>
+	</record>
+	<menuitem name="Sales Management/eSale/Definition/Web Product" id="menu_action_esale_joomla_product" action="action_esale_joomla_product_form" groups="admin"/>
 
 	<record model="ir.ui.view" id="view_order_tree">
 		<field name="name">esale_joomla.order.tree</field>
@@ -109,14 +132,15 @@
 						<button type="object" name="order_cancel" states="draft" string="Cancel Order"/>
 					</page>
 					<page string="Others data">
-						<field name="order_id" colspan="4"/>
-						<field name="note" colspan="4"/>
+						<field name="order_id" colspan="3"/>
+						<field name="note" colspan="3"/>
 					</page>
 				</notebook>
 			</form>
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_order_form">
+		<field name="name">esale_joomla.order</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">esale_joomla.order</field>
 		<field name="view_type">form</field>
@@ -125,7 +149,7 @@
 	<menuitem name="Sales Management/eSale/eSale Orders" id="menu_action_order_form" action="action_order_form" groups="admin"/>
 
 	<record model="ir.actions.act_window" id="action_order_tree">
-		<field name="name">Draft eSale Orders</field>
+		<field name="name">esale_joomla.order</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">esale_joomla.order</field>
 		<field name="view_type">form</field>
@@ -141,8 +165,8 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="eSales Order Line">
-				<field name="name" colspan="4"/>
-				<field name="product_id" colspan="4"/>
+				<field name="name" colspan="3"/>
+				<field name="product_id" colspan="3"/>
 				<field name="product_qty"/>
 				<field name="product_uom_id"/>
 				<field name="price_unit"/>

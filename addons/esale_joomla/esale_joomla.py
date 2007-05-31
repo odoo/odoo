@@ -39,15 +39,17 @@ from mx import DateTime
 class esale_joomla_web(osv.osv):
 	_name = "esale_joomla.web"
 	_description = "eCommerce Website"
+
 	_columns = {
 		'name': fields.char('Name',size=64, required=True),
 		'url': fields.char('URL', size=64, required=True),
 		'shop_id': fields.many2one('sale.shop', 'Sale Shop', required=True),
 		'active': fields.boolean('Active'),
 		'product_ids': fields.one2many('esale_joomla.product', 'web_id', string='Products'),
-		'language_ids': fields.one2many('esale_joomla.lang', 'web_id', string='Languages'),
 		'tax_ids': fields.one2many('esale_joomla.tax', 'web_id', string='Taxes'),
+		'taxes_included_ids': fields.many2many('account.tax', 'esale_joomla_web_taxes_included_rel', 'esale_joomla_web_id', 'tax_id', 'Taxes included', domain=[('parent_id', '=', False)]),
 		'category_ids': fields.one2many('esale_joomla.category', 'web_id', string='Categories'),
+		'language_id'	: fields.many2one('res.lang', 'Language'),
 	}
 	_defaults = {
 		'active': lambda *a: 1
@@ -112,10 +114,10 @@ class esale_joomla_category(osv.osv):
 	_name = "esale_joomla.category"
 	_description = "eSale Category"
 	_columns = {
-		'name': fields.char('Name', size=64, reuired=True),
-		'esale_joomla_id': fields.integer('Web ID', required=True),
+		'name': fields.char('Name', size=64, required=True),
+		'esale_joomla_id': fields.integer('Web ID', readonly=True, required=True),
 		'web_id': fields.many2one('esale_joomla.web', 'Website'),
-		'category_id': fields.many2one('product.category', 'Category'),
+		'category_id': fields.many2one('product.category', 'Category', required=True),
 		'include_childs': fields.boolean('Include Childs', help="If checked, Tiny ERP will also export products from categories that are childs of this one."),
 	}
 esale_joomla_category()
@@ -124,7 +126,7 @@ class esale_joomla_product(osv.osv):
 	_name = "esale_joomla.product"
 	_description = "eSale Product"
 	_columns = {
-		'web_id'			: fields.many2one('esale_joomla.web', 'Web Ref'),
+		'web_id'			: fields.many2one('esale_joomla.web', 'Web Ref', relate=True),
 		'name'				: fields.char('Name', size=64, required=True),
 		'product_id'		: fields.many2one('product.product', 'Product', required=True),
 		'esale_joomla_id'		: fields.integer('eSale product id'),
