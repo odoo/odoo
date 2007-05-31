@@ -12,9 +12,9 @@
 				<separator string="General Description"/>
 				<field name="date" select="1"/>
 				<field name="name" select="1"/>
-				<field name="som" select="1"/>
-				<field name="type" select="1"/>
-				<field name="partner_type" select="1"/>
+				<field name="som" select="2"/>
+				<field name="type" select="2"/>
+				<field name="partner_type" select="2"/>
 			</tree>
 		</field>
 	</record>
@@ -36,10 +36,10 @@
 				<field name="name" select="1"/>
 				<field name="code" select="1"/>
 				<field name="sequence"/>
-				<field name="active" select="1"/>
-				<field name="user_id" select="1"/>
-				<field name="parent_id" select="1"/>
-				<field name="reply_to" select="1"/>
+				<field name="active" select="2"/>
+				<field name="user_id" select="2"/>
+				<field name="parent_id" select="2"/>
+				<field name="reply_to" select="2"/>
 				<label string="Complete this if you use the mail gateway." colspan="2"/>
 				</page>
 				</notebook>
@@ -115,15 +115,15 @@
 				<page string="Rule Information">
 					<separator string="General Information" colspan="4"/>
 					<field name="name" select="1"/>
-					<field name="active" select="1"/>
+					<field name="active" select="2"/>
 
 					<separator string="Criterions to be checked" colspan="4"/>
-					<field name="trg_state_from" select="1"/>
-					<field name="trg_state_to" select="1"/>
+					<field name="trg_state_from" select="2"/>
+					<field name="trg_state_to" select="2"/>
 
 					<field name="trg_section_id" select="1"/>
 					<field name="trg_categ_id"/>
-					<field name="trg_user_id" select="1"/>
+					<field name="trg_user_id" select="2"/>
 
 					<newline/>
 					<field name="trg_priority_from"/>
@@ -235,20 +235,20 @@
 					<field name="date" select="1"/>
 					<field name="priority"/>
 					<field name="partner_id" select="1" on_change="onchange_partner_id(partner_id, email_from)"/>
-					<field name="partner_address_id" select="1" on_change="onchange_partner_address_id(partner_address_id, email_from)"/>
+					<field name="partner_address_id" select="2" on_change="onchange_partner_address_id(partner_address_id, email_from)"/>
 					<field name="user_id" select="1"/>
 					<group col="2" colspan="2">
 						<button name="remind_user" string="Send Reminder" states="open,pending" type="object"/>
 					</group>
-					<field name="email_from" select="1"/>
+					<field name="email_from" select="2"/>
 					<group col="2" colspan="2">
 						<button name="remind_partner" string="Send Reminder" states="open,pending" type="object"/>
 					</group>
 					<separator string="Next Action" colspan="4"/>
-					<field name="description" colspan="4" select="1"/>
-					<field name="som" select="1"/>
+					<field name="description" colspan="4" select="2"/>
+					<field name="som" select="2"/>
 					<field name="canal_id"/>
-					<field name="date_deadline" select="1"/>
+					<field name="date_deadline" select="2"/>
 
 					<group col="2" colspan="2">
 					<button name="case_log_reply" string="Send" states="open" type="object"/>
@@ -266,9 +266,9 @@
 					</group>
 				</page><page string="References">
 					<field name="id" select="1"/>
-					<field name="categ_id" select="1" on_change="onchange_categ_id(categ_id)"/>
+					<field name="categ_id" select="2" on_change="onchange_categ_id(categ_id)"/>
 					<field name="date_closed"/>
-					<field name="active" select="1"/>
+					<field name="active" select="2"/>
 					<field name="ref" colspan="4"/>
 					<field name="ref2" colspan="4"/>
 					<field name="planned_revenue"/>
@@ -285,9 +285,9 @@
 						<form string="Actions">
 							<separator string="Action Information" colspan="4"/>
 							<field name="name" colspan="4"/>
-							<field name="date" select="1"/>
-							<field name="user_id" select="1"/>
-							<field name="som" select="1"/>
+							<field name="date" select="2"/>
+							<field name="user_id" select="2"/>
+							<field name="som" select="2"/>
 							<field name="canal_id"/>
 							<field name="description" colspan="4"/>
 						</form>
@@ -350,10 +350,10 @@
 				<field name="name" colspan="4" select="1"/>
 				<field name="date" select="1"/>
 				<field name="user_id" select="1"/>
-				<field name="case_id" select="1"/>
-				<field name="som" select="1"/>
-				<field name="canal_id" select="1"/>
-				<field name="description" colspan="4" select="1"/>
+				<field name="case_id" select="2"/>
+				<field name="som" select="2"/>
+				<field name="canal_id" select="2"/>
+				<field name="description" colspan="4" select="2"/>
 			</form>
 		</field>
 	</record>
@@ -397,9 +397,9 @@
 			<form string="Partner Segmentation Lines">
 				<field name="name" select="1" colspan="4"/>
 				<group colspan="4" col="2">
-					<field name="expr_name" select="1"/>
-					<field name="expr_operator" select="1"/>
-					<field name="expr_value" select="1"/>
+					<field name="expr_name" select="2"/>
+					<field name="expr_operator" select="2"/>
+					<field name="expr_value" select="2"/>
 				</group>
 				<newline/>
 				<field name="operator"/>
@@ -418,8 +418,8 @@
 					<separator string="Segmentation Description" colspan="4"/>
 					<field name="name" select="1"/>
 					<field name="exclusif"/>
-					<field name="description" select="1" colspan="4"/>
-					<field name="categ_id" select="1" colspan="4"/>
+					<field name="description" select="2" colspan="4"/>
+					<field name="categ_id" select="2" colspan="4"/>
 					<separator string="Segmentation Test" colspan="4"/>
 					<field name="segmentation_line" widget="one2many_list" colspan="4"/>
 					<field name="state"/>

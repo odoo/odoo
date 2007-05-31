@@ -187,6 +187,19 @@
 	Account Statement Sequences
 	-->
 
+	<record model="ir.sequence.type" id="sequence_reconcile">
+		<field name="name">Account reconcile sequence</field>
+		<field name="code">account.reconcile</field>
+	</record>
+	<record model="ir.sequence" id="sequence_reconcile_seq">
+		<field name="name">Account reconcile sequence</field>
+		<field name="code">account.reconcile</field>
+		<field name="prefix">A</field>
+		<field name="number_next" eval="1"/>
+		<field name="number_increment" eval="0"/>
+	</record>
+
+
 	<record model="ir.sequence.type" id="sequence_statement_type">
 		<field name="name">Bank Statement</field>
 		<field name="code">account.bank.statement</field>

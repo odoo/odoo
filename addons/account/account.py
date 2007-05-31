@@ -773,11 +773,9 @@ class account_move_reconcile(osv.osv):
 		'line_id': fields.one2many('account.move.line', 'reconcile_id', 'Entry lines'),
 	}
 	_defaults = {
-		'name': lambda *a: 'reconcile '+time.strftime('%Y-%m-%d')
+		'name': lambda self,cr,uid,ctx={}: self.pool.get('ir.sequence').get(cr, uid, 'account.reconcile') or '/'
 	}
 account_move_reconcile()
-
-
 
 #----------------------------------------------------------
 # Tax
