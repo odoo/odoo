@@ -46,3 +46,20 @@ class wiz_unreconcile(wizard.interface):
 	}
 wiz_unreconcile('account.move.line.unreconcile')
 
+
+def _trans_unrec_reconcile(self, cr, uid, data, context):
+	rec_ids = data['ids']
+	if len(rec_ids):
+		cr.execute('update account_move_line set state=\'valid\' where reconcile_id in ('+','.join(map(str,rec_ids))+')')
+		pooler.get_pool(cr.dbname).get('account.move.reconcile').unlink(cr, uid, rec_ids)
+	return {}
+
+class wiz_unreconcile_reconcile(wizard.interface):
+	states = {
+		'init': {
+			'actions': [_trans_unrec_reconcile],
+			'result': {'type': 'state', 'state':'end'}
+		}
+	}
+wiz_unreconcile_reconcile('account.reconcile.unreconcile')
+

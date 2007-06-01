@@ -1037,7 +1037,22 @@
 		type="wizard"
 		/>
 
+	<act_window name="Entries"
+		domain="[('account_id', '=', active_id)]"
+		res_model="account.move.line"
+		src_model="account.account"
+		id="act_account_acount_move_line_open"/>
+	<act_window name="Unreconciled entries"
+		domain="[('account_id', '=', active_id),('reconcile_id','=',False)]"
+		res_model="account.move.line"
+		src_model="account.account"
+		id="act_account_acount_move_line_open_unreconciled"/>
 
+	<act_window name="Reconciled entries"
+		domain="[('reconcile_id', '=', active_id)]"
+		res_model="account.move.line"
+		src_model="account.move.reconcile"
+		id="act_account_acount_move_line_reconcile_open"/>
 
 	<menuitem name="Financial Management/Reporting" sequence="8"/>
 
@@ -1509,11 +1524,25 @@
 		src_model="account.journal"
 		id="act_account_journal_2_account_move_line"/>
 
-	<act_window name="Account entries"
-		domain="[('journal_id', '=', active_id)]"
-		res_model="account.move"
-		src_model="account.journal"
-		id="act_account_journal_2_account_move"/>
+	<act_window name="Unreconciled account entries"
+		domain="[('partner_id', '=', active_id),('account_id','=','partner:'+str(active_id)),('reconcile_id','=',False)]"
+		res_model="account.move.line"
+		src_model="res.partner"
+		id="act_account_partner_account_move_unreconciled"/>
+
+	<act_window name="All account entries"
+		domain="[('partner_id', '=', active_id)]"
+		res_model="account.move.line"
+		src_model="res.partner"
+		id="act_account_partner_account_move"/>
+
+	<act_window name="Statement entries"
+		domain="[('statement_id', '=', active_id)]"
+		res_model="account.move.line"
+		src_model="account.bank.statement"
+		id="act_account_bank_statement_account_move_unreconciled"/>
+
+
 
 </data>
 </terp>
