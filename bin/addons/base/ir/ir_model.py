@@ -86,7 +86,7 @@ class ir_model_access(osv.osv):
 		'perm_create': fields.boolean('Create Access'),
 		'perm_unlink': fields.boolean('Delete Permission'),
 	}
-	def check(self, cr, uid, model_name, mode='read'):
+	def check(self, cr, uid, model_name, mode='read',raise_exception=True):
 		assert mode in ['read','write','create','unlink'], 'Invalid access mode for security'
 		if uid==1:
 			return True
@@ -98,7 +98,10 @@ class ir_model_access(osv.osv):
 			if r[0][0] == None : return True
 
 		if not r[0][0]:
-			raise osv.except_osv('Access denied !', 'You can not %s this resource !' % mode)
+			if raise_exception:
+				raise osv.except_osv('Access denied !', 'You can not %s this resource !' % mode)
+			else:
+				return False
 		return True
 		
 	check = tools.cache()(check)

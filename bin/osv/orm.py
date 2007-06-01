@@ -1059,11 +1059,14 @@ class orm(object):
 		res = {}
 		for parent in self._inherits:
 			res.update(self.pool.get(parent).fields_get(cr, user, fields, context))
+		read_access= self.pool.get('ir.model.access').check(cr, user, self._name,'write',raise_exception=False)
 		for f in self._columns.keys():
 			res[f] = {'type': self._columns[f]._type}
 			for arg in ('string','readonly','states','size','required','change_default','translate', 'help', 'select'):
 				if getattr(self._columns[f], arg):
 					res[f][arg] = getattr(self._columns[f], arg)
+			if not read_access:
+				res[f]['readonly']= True
 			for arg in ('digits', 'invisible'):
 				if hasattr(self._columns[f], arg) and getattr(self._columns[f], arg):
 					res[f][arg] = getattr(self._columns[f], arg)
