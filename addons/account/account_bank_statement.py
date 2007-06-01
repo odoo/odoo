@@ -57,8 +57,17 @@ class account_bank_statement(osv.osv):
 		statements = self.browse(cr, uid, ids)
 		for statement in statements:
 			res[statement.id] = statement.balance_start
-			for line in statement.line_ids:
-				res[statement.id] += line.amount
+			if statement.journal_id:
+				for line in statement.move_line_ids:
+					if line.debit>0:
+						if line.account_id.id == (statement.journal_id.default_debit_account_id.id):
+							res[statement.id]+=line.debit
+					else:
+						if line.account_id.id == (statement.journal_id.default_credit_account_id.id):
+							res[statement.id]+=line.credit
+			if statement.state=='draft':
+				for line in statement.line_ids:
+					res[statement.id] += line.amount
 		for r in res:
 			res[r] = round(res[r], 2)
 		return res
@@ -108,6 +117,9 @@ class account_bank_statement(osv.osv):
 					'journal_id': st.journal_id.id,
 					'period_id': st.period_id.id,
 				}, context=context)
+				self.pool.get('account.bank.statement.line').write(cr, uid, [move.id], {
+					'move_ids': [(4,move_id, False)]
+				})
 				if not move.amount:
 					continue
 				torec = []
@@ -169,7 +181,9 @@ class account_bank_statement(osv.osv):
 		for st in self.browse(cr, uid, ids, context):
 			if st.state=='draft':
 				continue
-			ids = [x.move_id.id for x in st.move_line_ids]
+			ids = []
+			for line in st.line_ids:
+				ids += [x.id for x in line.move_ids]
 			self.pool.get('account.move').unlink(cr, uid, ids, context)
 			done.append(st.id)
 		self.write(cr, uid, done, {'state':'draft'}, context=context)
@@ -273,6 +287,7 @@ class account_bank_statement_line(osv.osv):
 		'statement_id': fields.many2one('account.bank.statement', 'Statement', select=True),
 
 		'reconcile_id': fields.many2one('account.bank.statement.reconcile', 'Reconcile', states={'confirm':[('readonly',True)]}),
+		'move_ids': fields.many2many('account.move', 'account_bank_statement_line_move_rel', 'move_id','statement_id', 'Moves'),
 	}
 	_defaults = {
 		'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line'),

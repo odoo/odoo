@@ -381,7 +381,7 @@
 		<field name="model">account.bank.statement</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Statement" colors="red:balance_end_real!=balance_end;grey:balance_end_real==balance_end">
+			<tree string="Statement" colors="red:balance_end_real!=balance_end;blue:state=='draft' and (balance_end_real==balance_end)">
 				<field name="date"/>
 				<field name="name"/>
 				<field name="journal_id"/>
@@ -400,15 +400,14 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Statement">
-				<notebook>
-				<page string="Statement">
-					<field name="name" select="1"/>
-					<field name="date" select="1"/>
-					<field name="journal_id" select="1" on_change="onchange_journal_id(journal_id)"/>
-					<field name="period_id" select="1"/>
- <field name="balance_start"/>
-					<field name="balance_end_real"/>
-					<separator string="Entry Lines" colspan="4"/>
+				<field name="name" select="1"/>
+				<field name="date" select="1"/>
+				<field name="journal_id" select="1" on_change="onchange_journal_id(journal_id)"/>
+				<field name="period_id" select="2"/>
+				<field name="balance_start"/>
+				<field name="balance_end_real"/>
+				<notebook colspan="4">
+				<page string="Entry encoding">
 					<field name="line_ids" colspan="4" nolabel="1">
 						<tree string="Statement lines" editable="bottom">
 							<field name="date"/>
@@ -420,17 +419,17 @@
 							<field name="reconcile_id" context="{'partner_id':partner_id,'amount':amount,'account_id':account_id}"/> 
 						</tree>
 					</field>
-					<group col="7" colspan="4">
-						<field name="state" select="2"/>
-						<field name="balance_end" />
-						<button name="button_dummy" string="Compute" states="draft"/>
-						<button name="button_confirm" string="Confirm" states="draft" type="object"/>
-						<button name="button_cancel" string="Cancel" states="confirm" type="object"/>
-					</group>
-				</page><page string="Entries">
+				</page><page string="Real Entries">
 					<field name="move_line_ids" colspan="4" nolabel="1"/>
 				</page>
 				</notebook>
+				<group col="7" colspan="4">
+					<field name="state" select="2"/>
+					<field name="balance_end" />
+					<button name="button_dummy" string="Compute" states="draft"/>
+					<button name="button_confirm" string="Confirm" states="draft" type="object"/>
+					<button name="button_cancel" string="Cancel" states="confirm" type="object"/>
+				</group>
 			</form>
 		</field>
 	</record>
@@ -969,17 +968,75 @@
 		<field name="view_id" ref="view_bank_tree"/>
 	</record>
 
+
+	<record model="ir.ui.view" id="view_bank_statement_reconcile_form">
+		<field name="name">account.bank.statement.reconcile.form</field>
+		<field name="model">account.bank.statement</field>
+		<field name="priority" eval="30"/>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Statement">
+				<field name="name" select="1"/>
+				<field name="date" select="1"/>
+				<field name="journal_id" select="1" on_change="onchange_journal_id(journal_id)"/>
+				<newline/>
+				<field name="balance_start"/>
+				<field name="balance_end_real"/>
+				<notebook colspan="4">
+				<page string="Select entries">
+					<field name="move_line_ids" colspan="4" nolabel="1" domain="[('statement_id','=',False),('journal_id','=',journal_id)]" widget="many2many"/>
+				</page>
+				<page string="Entry encoding">
+					<separator string="Entry Lines" colspan="4"/>
+					<field name="period_id"/>
+					<field name="line_ids" colspan="4" nolabel="1">
+						<tree string="Statement lines" editable="bottom">
+							<field name="date"/>
+							<field name="name"/>
+							<field name="type"/>
+							<field name="partner_id" on_change="onchange_partner_id(partner_id,type)"/>
+							<field name="account_id" domain="[('journal_id','=',parent.journal_id)]"/>
+							<field name="amount"/>
+							<field name="reconcile_id" context="{'partner_id':partner_id,'amount':amount,'account_id':account_id}"/> 
+						</tree>
+					</field>
+				</page>
+				</notebook>
+				<group col="7" colspan="4">
+					<field name="state" select="2"/>
+					<field name="balance_end" />
+					<button name="button_dummy" string="Compute" states="draft"/>
+					<button name="button_confirm" string="Confirm" states="draft" type="object"/>
+					<button name="button_cancel" string="Cancel" states="confirm" type="object"/>
+				</group>
+			</form>
+		</field>
+	</record>
+	<record model="ir.actions.act_window" id="action_bank_statement_reconciliation_form">
+		<field name="name">Statements reconciliation</field>
+		<field name="res_model">account.bank.statement</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">form,tree</field>
+		<field name="view_id" ref="view_bank_statement_reconcile_form"/>
+	</record>
+	<menuitem 
+		name="Financial Management/Periodical Processing/Bank reconciliation/Create statement importing entries"
+		id="menu_action_account_bank_reconcile_tree" 
+		action="action_bank_statement_reconciliation_form" 
+		/>
 	<wizard
 		string="Bank reconciliation"
 		model="account.move.line"
 		name="account.move.bank.reconcile"
 		menu="False"
 		id="action_account_bank_reconcile_tree" />
-	<menuitem 
-		name="Financial Management/Periodical Processing/Reconciliation/Bank reconciliation"
-		id="menu_action_account_bank_reconcile_tree" 
-		action="action_account_bank_reconcile_tree" 
-		type="wizard"/>
+	<menuitem
+		name="Financial Management/Periodical Processing/Bank reconciliation/Check in bank journal"
+		id="menu_action_account_bank_reconcile_check_tree"
+		action="action_account_bank_reconcile_tree"
+		type="wizard"
+		/>
+
 
 
 	<menuitem name="Financial Management/Reporting" sequence="8"/>

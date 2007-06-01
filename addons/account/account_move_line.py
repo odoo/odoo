@@ -322,7 +322,7 @@ class account_move_line(osv.osv):
 			
 		self.write(cr, uid, ids, {'state': 'reconciled'}, update_check=False)
 		r_id = self.pool.get('account.move.reconcile').create(cr, uid, {
-			'name': date, 
+			#'name': date, 
 			'type': type, 
 			'line_id': map(lambda x: (4,x,False), ids)
 		})
