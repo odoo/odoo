@@ -40,13 +40,15 @@ class ir_values(osv.osv):
 		'key2': fields.char('Value', size=256),
 		'meta': fields.text('Meta Datas'),
 		'res_id': fields.integer('Resource ID'),
-		'user_id': fields.many2one('res.users', 'User', ondelete='cascade')
+		'user_id': fields.many2one('res.users', 'User', ondelete='cascade'),
+		'company_id': fields.many2one('res.company', 'Company')
 	}
 	_defaults = {
 		'key': lambda *a: 'action',
 		'key2': lambda *a: 'tree_but_open',
+		'company_id': lambda *a: False
 	}
-	def set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=False, preserve_user=False):
+	def set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=False, preserve_user=False, company=False):
 		if type(value)==type(u''):
 			value = value.encode('utf8')
 		if not isobject:
@@ -72,6 +74,9 @@ class ir_values(osv.osv):
 				'meta': meta,
 				'user_id': preserve_user and uid,
 			}
+			if company:
+				cid = self.pool.get('res.users').browse(cr, uid, uid, context={}).company_id.id
+				vals['company_id']=cid
 			if res_id:
 				vals['res_id']= res_id
 			ids_res.append(self.create(cr, uid, vals))
@@ -113,6 +118,7 @@ class ir_values(osv.osv):
 #			if not without_user:
 			where_opt.append('user_id=%d' % (uid,))
 
+
 			result = []
 			ok = True
 			while ok and len(result)==0:
@@ -128,7 +134,8 @@ class ir_values(osv.osv):
 
 		if not result:
 			return []
-		cr.execute('select id,name,value,object,meta from ir_values where id in ('+','.join(map(str,result))+')')
+		cid = self.pool.get('res.users').browse(cr, uid, uid, context={}).company_id.id
+		cr.execute('select id,name,value,object,meta from ir_values where id in ('+','.join(map(str,result))+') and (company_id is null or company_id='+str(cid)+')')
 		result = cr.fetchall()
 
 		def _result_get(x):
