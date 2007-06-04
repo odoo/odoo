@@ -43,27 +43,29 @@
 					<notebook>
 					<page string="Expense Sheet">
 						<field name="name" select="1"/>
-						<field name="id" select="1"/>
+						<field name="id" select="2"/>
 						<field name="employee_id" select="1"/>
 						<field name="date" select="1"/>
-						<field name="ref" select="1"/>
+						<field name="ref" select="2"/>
+						<newline/>
 						<field name="amount"/>
+						<field name="currency_id"/>
 						<field name="line_ids" colspan="4" nolabel="1">
 							<form string="Expense Lines">
 								<field name="name" select="1"/>
 								<field name="date_value" select="1"/>
-								<field name="unit_quantity" select="1"/>
-								<field name="unit_amount" select="1"/>
-								<field name="product_id" select="1" on_change="onchange_product_id(product_id, uom_id)"/>
-								<field name="uom_id" select="1" on_change="onchange_product_id(product_id, uom_id)"/>
-								<field name="ref" select="1"/>
+								<field name="unit_quantity" select="2"/>
+								<field name="unit_amount" select="2"/>
+								<field name="product_id" select="2" on_change="onchange_product_id(product_id, uom_id)"/>
+								<field name="uom_id" select="2" on_change="onchange_product_id(product_id, uom_id)"/>
+								<field name="ref" select="2"/>
 								<field name="sequence"/>
 								<field name="analytic_account" domain="[('type','=','normal')]"/>
 								<newline/>
 								<field name="total_amount"/>
 							</form>
 						</field>
-						<field name="state" select="1"/>
+						<field name="state" select="2"/>
 						<group col="6" colspan="2">
 							<button string="Confirm" name="confirm" states="draft" type="workflow"/>
 							<button string="Cancel" name="cancel" states="cancel" type="workflow"/>
@@ -76,10 +78,10 @@
 						<separator string="Accounting data" colspan="4"/>
 						<field name="journal_id"/>
 						<separator string="Validation" colspan="4"/>
-						<field name="date_confirm" select="1"/>
-						<field name="date_valid" select="1"/>
-						<field name="user_valid" select="1"/>
-						<field name="invoice_id" select="1"/>
+						<field name="date_confirm" select="2"/>
+						<field name="date_valid" select="2"/>
+						<field name="user_valid" select="2"/>
+						<field name="invoice_id" select="2"/>
 						<separator string="Notes" colspan="4"/>
 						<field name="note" colspan="4" nolabel="1"/>
 					</page>

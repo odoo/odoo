@@ -45,6 +45,13 @@ class hr_expense_expense(osv.osv):
 		res = dict(cr.fetchall())
 		return res
 
+	def _get_currency(self, cr, uid, context):
+		user = self.pool.get('res.users').browse(cr, uid, [uid])[0]
+		if user.company_id:
+			return user.company_id.currency_id.id
+		else:
+			return self.pool.get('res.currency').search(cr, uid, [('rate','=',1.0)])[0]
+
 	_name = "hr.expense.expense"
 	_description = "Expense"
 	_columns = {
@@ -58,14 +65,12 @@ class hr_expense_expense(osv.osv):
 		'date_confirm': fields.date('Date Confirmed'),
 		'date_valid': fields.date('Date Valided'),
 		'user_valid': fields.many2one('res.users', 'Validation User'),
-
 		'account_move_id': fields.many2one('account.move', 'Account Move'),
 		'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines'),
 		'note': fields.text('Note'),
-
-		# fields.function
 		'amount': fields.function(_amount, method=True, string='Total Amount'),
 		'invoice_id': fields.many2one('account.invoice', 'Invoice'),
+		'currency_id': fields.many2one('res.currency', 'Currency', required=True),
 
 		'state': fields.selection([
 			('draft', 'Draft'),
@@ -80,7 +85,8 @@ class hr_expense_expense(osv.osv):
 		'date' : lambda *a: time.strftime('%Y-%m-%d'),
 		'state': lambda *a: 'draft',
 		'employee_id' : _employee_get,
-		'user_id' : lambda cr,uid,id,c={}: id
+		'user_id' : lambda cr,uid,id,c={}: id,
+		'currency_id': _get_currency,
 	}
 	def expense_confirm(self, cr, uid, ids, *args):
 		#for exp in self.browse(cr, uid, ids):
@@ -144,6 +150,7 @@ class hr_expense_expense(osv.osv):
 				'origin': exp.name,
 				'invoice_line': lines,
 				'price_type': 'tax_included',
+				'currency_id': exp.currency_id.id,
 			}
 			if exp.journal_id:
 				inv['journal_id']=exp.journal_id.id
