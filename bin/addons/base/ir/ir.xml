@@ -962,6 +962,16 @@
 	</record>
 	<menuitem name="Administration/Security/Rules" action="action_rule" id="menu_action_rule"/>
 
+	<record model="ir.rule" id="property_rule">
+		<field name="name">Property multi-company</field>
+		<field name="type">sub</field>
+		<field name="model_id" search="[('model', '=', 'ir.property')]" model="ir.model"/>
+		<field name="field_id" search="[('model', '=', 'ir.property'), ('name', '=', 'company_id')]" model="ir.model.fields"/>
+		<field name="operator">=</field>
+		<field name="operand">user.company_id.id</field>
+		<field name="domain">[('company_id', '=', user.company_id.id)]</field>
+	</record>
+
 
 </data>
 </terp>
