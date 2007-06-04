@@ -1390,6 +1390,9 @@ class orm(object):
 					qu1.append(' (1=0)')
 		return (qu1,qu2)
 
+	def search_count(self, cr, user, args, context={}):
+		return 128
+
 	def search(self, cr, user, args, offset=0, limit=None, order=None, context={}):
 		# if the object has a field named 'active', filter out all inactive
 		# records unless they were explicitely asked for
