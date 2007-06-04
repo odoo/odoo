@@ -89,10 +89,10 @@ class account_invoice_line(osv.osv):
 		for line in self.browse(cr, uid, ids):
 			if line.invoice_id.price_type == 'tax_included':
 				if line.product_id:
-					for tax in tax_obj.compute_inv(cr, uid,line.product_id.taxes_id, res[line.id], line.quantity):
+					for tax in tax_obj.compute_inv(cr, uid,line.product_id.taxes_id, line.price_unit, line.quantity):
 						res[line.id] = res[line.id] - tax['amount']
 				else:
-					for tax in tax_obj.compute_inv(cr, uid,line.invoice_line_tax_id, res[line.id], line.quantity):
+					for tax in tax_obj.compute_inv(cr, uid,line.invoice_line_tax_id, line.price_unit, line.quantity):
 						res[line.id] = res[line.id] - tax['amount']
 			if name == 'price_subtotal_incl':
 				if line.product_id and line.invoice_id.price_type == 'tax_included':
@@ -103,7 +103,7 @@ class account_invoice_line(osv.osv):
 				if line.product_id and line.invoice_id.price_type == 'tax_included' and prod_taxe_ids == line_taxe_ids:
 					res[line.id] = res2[line.id]
 				else:
-					for tax in tax_obj.compute(cr, uid, line.invoice_line_tax_id, res[line.id], line.quantity):
+					for tax in tax_obj.compute(cr, uid, line.invoice_line_tax_id, line.price_unit, line.quantity):
 						res[line.id] = res[line.id] + tax['amount']
 			res[line.id]= round(res[line.id], 2)
 		return res
@@ -178,3 +178,52 @@ class account_invoice_line(osv.osv):
 		context.update({'price_type': price_type})
 		return super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, price_unit, address_invoice_id, context=context)
 account_invoice_line()
+
+class account_invoice_tax(osv.osv):
+	_inherit = "account.invoice.tax"
+
+	def compute(self, cr, uid, invoice_id):
+		tax_grouped = {}
+		tax_obj = self.pool.get('account.tax')
+		cur_obj = self.pool.get('res.currency')
+		inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id)
+		cur = inv.currency_id
+
+		if inv.price_type=='tax_excluded':
+			return super(account_invoice_tax,self).compute(cr, uid, invoice_id)
+
+		for line in inv.invoice_line:
+			for tax in tax_obj.compute_inv(cr, uid, line.invoice_line_tax_id, line.price_unit, line.quantity, inv.address_invoice_id.id, line.product_id, inv.partner_id):
+				val={}
+				val['invoice_id'] = inv.id
+				val['name'] = tax['name']
+				val['amount'] = cur_obj.round(cr, uid, cur, tax['amount'])
+				val['manual'] = False
+				val['sequence'] = tax['sequence']
+				val['base'] = tax['price_unit'] * line['quantity']
+
+				if inv.type in ('out_invoice','in_invoice'):
+					val['base_code_id'] = tax['base_code_id']
+					val['tax_code_id'] = tax['tax_code_id']
+					val['base_amount'] = val['base'] * tax['base_sign']
+					val['tax_amount'] = val['amount'] * tax['tax_sign']
+					val['account_id'] = tax['account_collected_id'] or line.account_id.id
+				else:
+					val['base_code_id'] = tax['ref_base_code_id']
+					val['tax_code_id'] = tax['ref_tax_code_id']
+					val['base_amount'] = val['base'] * tax['ref_base_sign']
+					val['tax_amount'] = val['amount'] * tax['ref_tax_sign']
+					val['account_id'] = tax['account_paid_id'] or line.account_id.id
+
+				key = (val['tax_code_id'], val['base_code_id'], val['account_id'])
+				if not key in tax_grouped:
+					tax_grouped[key] = val
+				else:
+					tax_grouped[key]['amount'] += val['amount']
+					tax_grouped[key]['base'] += val['base']
+					tax_grouped[key]['base_amount'] += val['base_amount']
+					tax_grouped[key]['tax_amount'] += val['tax_amount']
+
+		return tax_grouped
+account_invoice_tax()
+
