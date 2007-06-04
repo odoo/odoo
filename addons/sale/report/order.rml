@@ -98,8 +98,8 @@
             <font color="white"> </font>
           </para>
           <para style="P6">Invoice address :</para>
-          <para style="P4">[[ o.partner_invoice_id.street ]][[ o.partner_invoice_id.street2 and ', %s' % o.partner_invoice_id.street2 or '' ]]</para>
-          <para style="P4">[[ o.partner_invoice_id.zip or '' ]] [[ o.partner_invoice_id.city or '' ]] [[ ', %s' % (o.partner_invoice_id.country_id and o.partner_invoice_id.country_id.name or '') ]]</para>
+          <para style="P4">[[ o.partner_invoice_id.street ]][[ o.partner_invoice_id.street2 and (', %s' % o.partner_invoice_id.street2 or '') ]]</para>
+          <para style="P4">[[ o.partner_invoice_id.zip or '' ]] [[ o.partner_invoice_id.city or '' ]] [[ o.partner_invoice_id.country_id and (', %s' % (o.partner_invoice_id.country_id and o.partner_invoice_id.country_id.name or '')) ]]</para>
         </td>
         <td>
           <para style="P7">
@@ -126,7 +126,8 @@
     <para style="P10">
       <font color="white"> </font>
     </para>
-    <para style="P11">[[ o.state=='draft' and 'Quotation ' or 'Order ' ]] N° : [[ o.name ]]</para>
+    <para style="P11">[[ o.state&lt;&gt;'draft' and removeParentNode('para') ]] Quotation N° : [[ o.name ]]</para>
+    <para style="P11">[[ o.state=='draft' and removeParentNode('para') ]] Order N° : [[ o.name ]]</para>
     <para style="P11">
       <font color="white"> </font>
     </para>
