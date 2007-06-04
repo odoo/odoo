@@ -39,6 +39,9 @@ class res_partner(osv.osv):
 		res={}
 		for partner in self.browse(cr, uid, ids, context):
 			id = partner.id
+			if not partner.property_account_receivable:
+				res[id] = 0.0
+				continue
 			acc = partner.property_account_receivable[0]
 			query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
 			cr.execute(("select sum(debit-credit) from account_move_line l where account_id=%d and partner_id=%d and reconcile_id is null and "+query), (acc, id))
@@ -49,6 +52,9 @@ class res_partner(osv.osv):
 		res={}
 		for partner in self.browse(cr, uid, ids, context):
 			id = partner.id
+			if not partner.property_account_payable:
+				res[id] = 0.0
+				continue
 			acc = partner.property_account_payable[0]
 			query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
 			cr.execute(("select sum(debit-credit) from account_move_line l where account_id=%d and partner_id=%d and reconcile_id is null and "+query), (acc, id))
