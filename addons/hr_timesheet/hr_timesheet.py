@@ -92,7 +92,8 @@ class hr_analytic_timesheet(osv.osv):
 				a =  emp.product_id.product_tmpl_id.property_account_income
 				if not a:
 					a = emp.product_id.categ_id.property_account_income_categ
-				return a[0]
+				if a:
+					return a[0]
 		return False
 
 	def _getAnalyticJournal(self, cr, uid, context):

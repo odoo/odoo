@@ -143,6 +143,7 @@ class account_analytic_account(osv.osv):
 		'stats_ids': fields.one2many('report.hr.timesheet.invoice.journal', 'account_id', string='Statistics', readonly=True),
 		'company_id': fields.many2one('res.company', 'Company', required=True),
 		'company_currency_id': fields.function(_get_company_currency, method=True, type='many2one', relation='res.currency', string='Currency'),
+		'state': fields.selection([('draft','Draft'), ('open','Open'), ('pending','Pending'), ('close','Close'),], 'State', required=True),
 	}
 
 	def _default_company(self, cr, uid, context={}):
@@ -154,6 +155,7 @@ class account_analytic_account(osv.osv):
 		'active' : lambda *a : True,
 		'type' : lambda *a : 'normal',
 		'company_id': _default_company,
+		'state' : lambda *a : 'draft',
 	}
 
 	_order = 'parent_id desc,code'

@@ -63,15 +63,6 @@ class account_analytic_account(osv.osv):
 		'amount_max': fields.float('Max. Invoice Price'),
 		'amount_invoiced': fields.function(_invoiced_calc, method=True, string='Invoiced Amount'),
 		'to_invoice': fields.many2one('hr_timesheet_invoice.factor','Invoicing'),
-		'state': fields.selection([
-			('draft','Draft'),
-			('open','Open'),
-			('pending','Pending'),
-			('close','Close'),
-			], 'State', required=True),
-	}
-	_defaults = {
-		'state' : lambda *a : 'draft',
 	}
 account_analytic_account()
 
