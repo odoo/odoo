@@ -166,6 +166,12 @@ class account_analytic_account(osv.osv):
 			vals['code'] = self.pool.get('ir.sequence').get(cr, uid, 'account.analytic.account')
 		return super(account_analytic_account, self).create(cr, uid, vals, ctx)
 
+	def copy(self, cr, uid, id, default=None, context={}):
+		if not default:
+			default = {}
+		default['code'] = False
+		return super(account_analytic_account, self).copy(cr, uid, id, default, context=context)
+
 
 	def on_change_parent(self, cr, uid, id, parent_id):
 		if not parent_id:
