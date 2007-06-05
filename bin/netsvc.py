@@ -220,13 +220,11 @@ class GenericXMLRPCRequestHandler:
 			raise xmlrpclib.Fault(s, tb_s)
 
 class SimpleXMLRPCRequestHandler(GenericXMLRPCRequestHandler, SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
-	pass
+	SimpleXMLRPCServer.SimpleXMLRPCRequestHandler.rpc_paths = ('/xmlrpc/db', '/xmlrpc/common', '/xmlrpc/object', '/xmlrpc/report', '/xmlrpc/wizard')
 
 if HAS_SSL:
 	class SecureXMLRPCRequestHandler(GenericXMLRPCRequestHandler, SecureXMLRPCServer.SecureXMLRPCRequestHandler):
-		pass
-else:
-	pass
+		SecureXMLRPCServer.SecureXMLRPCRequestHandler.rpc_paths = ('/xmlrpc/db', '/xmlrpc/common', '/xmlrpc/object', '/xmlrpc/report', '/xmlrpc/wizard')
 
 class SimpleThreadedXMLRPCServer(SocketServer.ThreadingMixIn, SimpleXMLRPCServer.SimpleXMLRPCServer):
 	def server_bind(self):
@@ -256,10 +254,11 @@ class HttpDaemon(threading.Thread):
 
 	def stop(self):
 		self.running = False
-		if hasattr(socket, 'SHUT_RDWR'):
-			self.server.socket.shutdown(socket.SHUT_RDWR)
-		else:
-			self.server.socket.shutdown(2)
+		if os.name <> 'nt':
+			if hasattr(socket, 'SHUT_RDWR'):
+				self.server.socket.shutdown(socket.SHUT_RDWR)
+			else:
+				self.server.socket.shutdown(2)
 		self.server.socket.close()
 
 	def run(self):
