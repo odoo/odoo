@@ -999,6 +999,12 @@
 		<field name="operand">user.company_id.id</field>
 		<field name="rule_group" ref="property_rule_group"/>
 	</record>
+	<record model="ir.rule" id="property_rule">
+		<field name="field_id" search="[('model', '=', 'ir.property'), ('name', '=', 'company_id')]" model="ir.model.fields"/>
+		<field name="operator">=</field>
+		<field name="operand">False</field>
+		<field name="rule_group" ref="property_rule_group"/>
+	</record>
 
 
 </data>
