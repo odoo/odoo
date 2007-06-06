@@ -66,8 +66,8 @@
 							</tree>
 						</field>
 						<group col="1" colspan="1">
-						<button string="Sign In" name="sign_in" type="object"/>
-						<button string="Sign Out" name="sign_out" type="object"/>
+							<button string="Sign In" name="sign_in" type="object"/>
+							<button string="Sign Out" name="sign_out" type="object"/>
 						</group>
 
 
@@ -91,7 +91,8 @@
 						</field>
 						<field name="total_difference_day" widget="float_time"/>
 						<field name="total_timesheet_day" widget="float_time"/>
-					</page><page string="By day">
+					</page>
+					<page string="By day">
 						<field name="period_ids" colspan="4" nolabel="1">
 							<tree string="Period" colors="red:total_difference&lt;=0.1;blue:total_difference&gt;=0.1">
 								<field name="name"/>
@@ -103,7 +104,8 @@
 						<field name="total_attendance" widget="float_time"/>
 						<field name="total_timesheet" widget="float_time"/>
 						<field name="total_difference" widget="float_time"/>
-					</page><page string="By account">
+					</page>
+					<page string="By account">
 						<field name="account_ids" colspan="4" nolabel="1">
 							<tree string="Analytic accounts">
 								<field name="name"/>
