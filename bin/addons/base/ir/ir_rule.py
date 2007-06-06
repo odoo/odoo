@@ -29,6 +29,25 @@
 from osv import fields,osv
 import time
 import tools
+class ir_rule_group(osv.osv):
+	_name = 'ir.rule.group'
+
+	_columns = {
+		'name': fields.char('Name', size=128, select=1),
+		'model_id': fields.many2one('ir.model', 'Model',select=1, required=True),
+		'global': fields.boolean('Global', select=1, help="Make the rule global or it needs to be put on a group or user"),
+		'rules': fields.one2many('ir.rule', 'rule_group', 'Tests', help="The rule is satisfied if at least one test is True"),
+		'groups': fields.many2many('res.groups', 'group_rule_group_rel', 'rule_group_id', 'group_id', 'Groups'),
+		'users': fields.many2many('res.users', 'user_rule_group_rel', 'rule_group_id', 'user_id', 'Users'),
+	}
+
+	_order = 'model_id, global DESC'
+
+	_defaults={
+		'global': lambda *a: True,
+	}
+ir_rule_group()
+
 
 class ir_rule(osv.osv):
 	_name = 'ir.rule'
@@ -46,70 +65,65 @@ class ir_rule(osv.osv):
 				if fields[k]['type'] in recur:
 					res.append((root_tech+'.'+k+'.id',root+'/'+fields[k]['string']))
 				if (fields[k]['type'] in recur) and (level>0):
-					res.extend(get(fields[k]['relation'], level-1, ending,
-								   ending_excl, recur, root_tech+'.'+k, root+'/'+fields[k]['string']))
+					res.extend(get(fields[k]['relation'], level-1, ending, ending_excl, recur, root_tech+'.'+k, root+'/'+fields[k]['string']))
 			return res
-		res = [("False", "False"),("user.id","User")]+get('res.users', level=1,ending_excl=['one2many','many2one','many2many','reference'],
-														  recur=['many2one'],root_tech='user',root='User')
+		res = [("False", "False"), ("True", "True"), ("user.id", "User")]+get('res.users', level=1,ending_excl=['one2many','many2one','many2many','reference'], recur=['many2one'],root_tech='user',root='User')
 		return res
 		
 	_columns = {
-		'name': fields.char('Name',size=128, required=True, select=True),
-		'type': fields.selection( (('add','Additive'),('sub','Subtractive')),'Type',required=True, select=True),
-		'model_id': fields.many2one('ir.model', 'Model',select=True, required=True),
-		'field_id': fields.many2one('ir.model.fields', 'Field',domain= "[('model_id','=',model_id)]",select=True),
+		'field_id': fields.many2one('ir.model.fields', 'Field',domain= "[('model_id','=', parent.model_id)]",select=1),
 		'operator':fields.selection( (('=','='),('<>','<>'),('<=','<='),('>=','>=')),'Operator'),
 		'operand':fields.selection(_operand,'Operand', size=64),
-		'domain': fields.char('Domain', size=256, required=True)
+		'rule_group': fields.many2one('ir.rule.group', 'Group', select=2, required=True, ondelete="cascade")
 	}
-
-	_defaults={
-		'type': lambda *a : 'add'
-		}
-
 
 	def domain_get(self, cr, uid, model_name):
 		# root user above constraint
 		if uid == 1:
 			return '', []
 		
-		cr.execute("select r.id from ir_rule r join ir_model m on (r.model_id = m.id ) where m.model = %s and r.id in ( select rule_id from user_rule_rel where users_id = %d union select rule_id from group_rule_rel g join res_groups_users_rel u on (g.group_id = u.gid) where u.uid = %d )", (model_name,uid,uid))
+		cr.execute("""SELECT r.id FROM
+			ir_rule r
+				JOIN (ir_rule_group g
+					JOIN ir_model m ON (g.model_id = m.id))
+					ON (g.id = r.rule_group)
+				WHERE m.model = %s
+				AND (g.id IN ( SELECT rule_group_id FROM user_rule_group_rel WHERE user_id = %d
+						UNION SELECT rule_group_id FROM group_rule_group_rel g_rel
+							JOIN res_groups_users_rel u_rel ON (g_rel.group_id = u_rel.gid)
+							WHERE u_rel.uid = %d) OR g.global)""", (model_name, uid, uid))
 		ids = map(lambda x:x[0], cr.fetchall())
+		if not ids:
+			return '', []
 		obj = self.pool.get(model_name)
 		add = []
 		add_str = []
 		sub = []
 		sub_str = []
-		for rule in self.browse(cr, uid, ids):
-			dom = eval(rule.domain, {'user': self.pool.get('res.users').browse(cr, uid, uid), 'time':time})
-			d1,d2 = obj._where_calc(dom)
-			if rule.type=='add':
-				add_str += d1
-				add +=d2
-			else:
-				sub_str += d1
-				sub += d2
-		add_str = ' or '.join(add_str)
-		sub_str = ' and '.join(sub_str)
-
-		if not (add or  sub):
-			return '', []
-		if add and sub:
-			return '((%s) and (%s))' % (add_str, sub_str), add+sub
-		if add:
-			return '%s' % (add_str,), add
-		if sub:
-			return '%s' % (sub_str,),sub
+		clause={}
+		# Use root user to prevent recursion
+		for rule in self.browse(cr, 1, ids):
+			dom = eval("[('%s', '%s', %s)]"%(rule.field_id.name, rule.operator, rule.operand), {'user': self.pool.get('res.users').browse(cr, 1, uid), 'time':time})
+			clause.setdefault(rule.rule_group.id, [])
+			clause[rule.rule_group.id].append(obj._where_calc(dom))
+		str = ''
+		val = []
+		for g in clause.values():
+			if not g:
+				continue
+			if len(str):
+				str += ' AND '
+			str += '('
+			first = True
+			for c in g:
+				if not first:
+					str += ' OR '
+				first = False
+				str += '('+c[0][0]+')'
+				val += c[1]
+			str += ')'
+		return str, val
 	domain_get = tools.cache()(domain_get) 
-
-	def onchange_rule(self, cr, uid, context, model_id, field_id, operator, operand):
-
-		if not ( field_id and  operator and operand): return {}
-
-		field_names= self.pool.get('ir.model.fields').read(cr,uid,[field_id], ["name"])
-		if not field_names : return {}
-
-		return {'value':{'domain': "[('%s', '%s', %s)]"%(field_names[0]['name'], operator, operand)}}
 
 	def write(self, cr, uid, *args, **argv):
 		res = super(ir_rule, self).write(cr, uid, *args, **argv)

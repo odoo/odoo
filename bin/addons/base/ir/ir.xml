@@ -923,52 +923,81 @@
 	Rules
 	==========================================================
 
+	<record model="ir.ui.view" id="view_rule_group_form">
+		<field name="name">Rules</field>
+		<field name="model">ir.rule.group</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Rules">
+				<field name="model_id"/>
+				<field name="global"/>
+				<field name="name" colspan="4"/>
+				<group colspan="4" col="6" expand="1">
+					<field name="rules" nolabel="1" colspan="6"/>
+					<label string="The rule is satisfied if at least one test is True" colspan="6" align="0.0"/>
+					<!--field name="groups" colspan="2"/>
+					<field name="users" colspan="2"/-->
+				</group>
+			</form>
+		</field>
+	</record>
+	<record model="ir.ui.view" id="view_rule_group_tree">
+		<field name="name">Rules</field>
+		<field name="model">ir.rule.group</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Rules">
+				<field name="model_id"/>
+				<field name="name"/>
+				<field name="global"/>
+			</tree>
+		</field>
+	</record>
+
 	<record model="ir.ui.view" id="view_rule_form">
-		<field name="name">Rule</field>
+		<field name="name">Test</field>
 		<field name="model">ir.rule</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="rule">
-				<field name="name"/>
-				<field name="type" />
-				<field name="model_id" />
-				<field name="field_id" on_change="onchange_rule(model_id,field_id, operator, operand)"/>
-				<field name="operator" on_change="onchange_rule(model_id,field_id, operator, operand)"/>
-				<field name="operand"  on_change="onchange_rule(model_id,field_id, operator, operand)"/>
-				<field name="domain" colspan="4"/>
+			<form string="Test">
+				<group colspan="4" col="6">
+					<field name="field_id"/>
+					<field name="operator"/>
+					<field name="operand"/>
+				</group>
 			</form>
 		</field>
 	</record>
 
 	<record model="ir.ui.view" id="view_rule_tree">
-		<field name="name">Rule</field>
+		<field name="name">Test</field>
 		<field name="model">ir.rule</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Rules">
-				<field name="name"/>
-				<field name="type"/>
-				<field name="model_id"/>
-				<field name="domain"/>
+			<tree string="Test">
+				<field name="field_id"/>
+				<field name="operator"/>
+				<field name="operand"/>
 			</tree>
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_rule">
-		<field name="name">Rule</field>
-		<field name="res_model">ir.rule</field>
+		<field name="res_model">ir.rule.group</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="view_rule_tree"/>
+		<field name="view_id" ref="view_rule_group_tree"/>
 	</record>
 	<menuitem name="Administration/Security/Rules" action="action_rule" id="menu_action_rule"/>
 
-	<record model="ir.rule" id="property_rule">
+	<record model="ir.rule.group" id="property_rule_group">
 		<field name="name">Property multi-company</field>
-		<field name="type">sub</field>
 		<field name="model_id" search="[('model', '=', 'ir.property')]" model="ir.model"/>
+		<field name="global" eval="True"/>
+	</record>
+	<record model="ir.rule" id="property_rule">
 		<field name="field_id" search="[('model', '=', 'ir.property'), ('name', '=', 'company_id')]" model="ir.model.fields"/>
 		<field name="operator">=</field>
 		<field name="operand">user.company_id.id</field>
-		<field name="domain">[('company_id', '=', user.company_id.id)]</field>
+		<field name="rule_group" ref="property_rule_group"/>
 	</record>
 
 

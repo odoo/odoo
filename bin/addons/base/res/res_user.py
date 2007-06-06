@@ -33,7 +33,7 @@ class groups(osv.osv):
 	_name = "res.groups"
 	_columns = {
 		'name': fields.char('Group Name', size=64, required=True),
-		'rule_ids': fields.many2many('ir.rule', 'group_rule_rel', 'group_id', 'rule_id', 'Acces Rules'),
+		'rule_groups': fields.many2many('ir.rule.group', 'group_rule_group_rel', 'group_id', 'rule_group_id', 'Rules', domain="[('global', '<>', True)]"),
 	}
 	def write(self, cr, uid, *args, **argv):
 		res = super(groups, self).write(cr, uid, *args, **argv)
@@ -93,7 +93,7 @@ class users(osv.osv):
 		'groups_id': fields.many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', 'groups'),
 		'roles_id': fields.many2many('res.roles', 'res_roles_users_rel', 'uid', 'rid', 'Roles'),
 		'company_id': fields.many2one('res.company', 'Company'),
-		'rule_ids': fields.many2many('ir.rule', 'user_rule_rel', 'users_id', 'rule_id', 'Acces Rules'),
+		'rule_groups': fields.many2many('ir.rule.group', 'user_rule_group_rel', 'user_id', 'rule_group_id', 'Rules', domain="[('global', '<>', True)]"),
 	}
 	_sql_constraints = [
 		('login_key', 'UNIQUE (login)', 'You can not have two users with the same login !')
@@ -110,6 +110,7 @@ class users(osv.osv):
 	def write(self, cr, uid, *args, **argv):
 		res = super(users, self).write(cr, uid, *args, **argv)
 		self.company_get()
+		# Restart the cache on the company_get method
 		self.pool.get('ir.rule').domain_get()
 		return res
 
