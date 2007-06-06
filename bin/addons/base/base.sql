@@ -334,3 +334,10 @@ CREATE TABLE ir_module_module_dependency (
     primary key(id)
 );
 
+CREATE TABLE res_company (
+    id serial NOT NULL,
+    perm_id integer,
+    name character varying(64) not null,
+    parent_id integer references res_company on delete set null,
+    primary key(id)
+);

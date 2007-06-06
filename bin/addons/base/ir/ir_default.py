@@ -38,6 +38,10 @@ class ir_default(osv.osv):
 		'page': fields.char('View',size=64),
 		'ref_table': fields.char('Table Ref.',size=64),
 		'ref_id': fields.integer('ID Ref.',size=64),
+		'company_id': fields.many2one('res.company','Company')
+	}
+	_defaults = {
+		'company_id': lambda self, cr, uid, context: self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id,
 	}
 ir_default()
 
