@@ -736,7 +736,7 @@ class orm(object):
 			if d1:
 				cr.execute('select %s from %s where id in (%s) and %s order by %s' % (','.join(fields_pre + ['id']), self._table, ','.join([str(x) for x in ids]), d1, self._order),d2)
 				if not cr.rowcount == len({}.fromkeys(ids)):
-					raise except_orm('AccessError', 'You try to bypass an access rule (Document type : %s).' % self._description)
+					raise except_orm('AccessError', 'You try to bypass an access rule (Document type: %s).' % self._description)
 			else:
 				cr.execute('select %s from %s where id in (%s) order by %s' % (','.join(fields_pre + ['id']), self._table, ','.join([str(x) for x in ids]), self._order))
 
@@ -854,9 +854,12 @@ class orm(object):
 
 		d1, d2 = self.pool.get('ir.rule').domain_get(cr, uid, self._name)
 		if d1:
-			d1 = ' and '+d1
+			d1 = ' AND '+d1
+			cr.execute('SELECT id FROM '+self._table+' WHERE id IN ('+str_d+')'+d1, ids+d2)
+			if not cr.rowcount == len({}.fromkeys(ids)):
+				raise except_orm('AccessError', 'You try to bypass an access rule (Document type: %s).'%self._description)
 
-		cr.execute('delete from inherit where (obj_type=%s and obj_id in ('+str_d+'))'+d1+' or (inst_type=%s and inst_id in ('+str_d+')'+d1+')', [self._name]+ids+d2+[self._name]+ids+d2)
+		cr.execute('delete from inherit where (obj_type=%s and obj_id in ('+str_d+')) or (inst_type=%s and inst_id in ('+str_d+'))', (self._name,)+tuple(ids)+(self._name,)+tuple(ids))
 		cr.execute('delete from '+self._table+' where id in ('+str_d+')'+d1, ids+d2)
 		return True
 
@@ -905,6 +908,9 @@ class orm(object):
 			d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
 			if d1:
 				d1 = ' and '+d1
+				cr.execute('SELECT id FROM '+self._table+' WHERE id IN ('+ids_str+')'+d1, d2)
+				if not cr.rowcount == len({}.fromkeys(ids)):
+					raise except_orm('AccessError', 'You try to bypass an access rule (Document type: %s).'%self._description)
 			cr.execute('update '+self._table+' set '+string.join(upd0,',')+' where id in ('+ids_str+')'+d1, upd1+ d2)
 
 			if totranslate:
