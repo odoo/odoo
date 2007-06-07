@@ -265,6 +265,7 @@ class orm(object):
 	_table = None
 	_name = None
 	_rec_name = 'name'
+	_parent_name = 'parent_id'
 	_order = 'id'
 	_inherits = {}
 	_sequence = None
@@ -1337,69 +1338,7 @@ class orm(object):
 		return result
 
 	# TODO: ameliorer avec NULL
-	def _where_calc(self, args):
-		qu1, qu2 = [], []
-		for x in args:
-			table=self
-			if len(x) > 3:
-				table=x[3]
-			if x[1] != 'in':
-#FIXME: this replace all (..., '=', False) values with 'is null' and this is 
-# not what we want for real boolean fields. The problem is, we can't change it
-# easily because we use False everywhere instead of None
-# NOTE FAB: we can't use None because it is not accepted by XML-RPC, that's why
-# boolean (0-1), None -> False
-# Ged> boolean fields are not always = 0 or 1
-				if (x[2] is False) and (x[1]=='='):
-					qu1.append(x[0]+' is null')
-				elif (x[2] is False) and (x[1]=='<>' or x[1]=='!='):
-					qu1.append(x[0]+' is not null')
-				else:
-					if x[0]=='id':
-						if x[1]=='join':
-							qu1.append('(%s.%s = %s)' % (table._table, x[0], x[2]))
-						else:
-							qu1.append('(%s.%s %s %%s)' % (table._table, x[0], x[1]))
-							qu2.append(x[2])
-					else:
-						if x[1] in ('like', 'ilike'):
-							if isinstance(x[2], str):
-								str_utf8 = x[2]
-							elif isinstance(x[2], unicode):
-								str_utf8 = x[2].encode('utf-8')
-							else:
-								str_utf8 = str(x[2])
-							qu2.append('%%%s%%' % str_utf8)
-						else:
-							qu2.append(table._columns[x[0]]._symbol_set[1](x[2]))
-						if x[1]=='=like':
-							x1 = 'like'
-						else:
-							x1 = x[1]
-						qu1.append('(%s.%s %s %s)' % (table._table, x[0], x1, table._columns[x[0]]._symbol_set[0]))
-			elif x[1]=='in':
-				if len(x[2])>0:
-					todel = []
-					for xitem in range(len(x[2])):
-						if x[2][xitem]==False and isinstance(x[2][xitem],bool):
-							todel.append(xitem)
-					for xitem in todel[::-1]:
-						del x[2][xitem]
-					if x[0]=='id':
-						qu1.append('(%s.id in (%s))' % (table._table, ','.join(['%d'] * len(x[2])),))
-					else:
-						qu1.append('(%s.%s in (%s))' % (table._table, x[0], ','.join([table._columns[x[0]]._symbol_set[0]]*len(x[2]))))
-					if todel:
-						qu1[-1] = '('+qu1[-1]+' or '+x[0]+' is null)'
-					qu2+=x[2]
-				else:
-					qu1.append(' (1=0)')
-		return (qu1,qu2)
-
-	def search_count(self, cr, user, args, context={}):
-		return 128
-
-	def search(self, cr, user, args, offset=0, limit=None, order=None, context={}):
+	def _where_calc(self, cr, user, args):
 		# if the object has a field named 'active', filter out all inactive
 		# records unless they were explicitely asked for
 		if 'active' in self._columns:
@@ -1412,17 +1351,6 @@ class orm(object):
 				i += 1
 			if not active_found:
 				args.append(('active', '=', 1))
-
-
-
-		# if the object has a field named 'company_id', filter out all
-		# records which do not concern the current company (the company
-		# of the current user) or its "childs"
-# 		if 'company_id' in self._columns and not user == 1:
-# 			compids = tools.get_user_companies(cr, user)
-# 			if compids:
-# 				compids.append(False)
-# 				args.append(('company_id','in',compids))
 
 		i = 0
 		tables=[self._table]
@@ -1481,16 +1409,18 @@ class orm(object):
 						ids2 = [x[0] for x in self.pool.get(field._obj).name_search(cr, user, args[i][2], [], 'like')]
 					else:
 						ids2 = args[i][2]
-					def _rec_get(ids, table):
-						if not len(ids):
+					def _rec_get(ids, table, parent):
+						if not ids:
 							return []
 						if 'active' in table._columns:
-							ids2 = table.search(cr, user, [(args[i][0],'in',ids),('active','=',0)])
-							ids2 += table.search(cr, user, [(args[i][0],'in',ids),('active','=',1)])
+							ids2 = table.search(cr, user, [(parent,'in',ids),('active','in', [True, False])])
 						else:
-							ids2 = table.search(cr, user, [(args[i][0], 'in', ids)])
-						return ids + _rec_get(ids2, table)
-					args[i] = ('id','in',ids2+_rec_get(ids2, table), table)
+							ids2 = table.search(cr, user, [(parent, 'in', ids)])
+						return ids + _rec_get(ids2, table, parent)
+					if field._obj <> table._name:
+						args[i] = (args[i][0],'in',ids2+_rec_get(ids2, self.pool.get(field._obj), table._parent_name), table)
+					else:
+						args[i] = ('id','in',ids2+_rec_get(ids2, table, args[i][0]), table)
 				else:
 					if isinstance(args[i][2], basestring):
 						res_ids = self.pool.get(field._obj).name_search(cr, user, args[i][2], [], args[i][1])
@@ -1522,8 +1452,71 @@ class orm(object):
 				i+=1
 		args.extend(joins)
 
+		qu1, qu2 = [], []
+		for x in args:
+			table=self
+			if len(x) > 3:
+				table=x[3]
+			if x[1] != 'in':
+#FIXME: this replace all (..., '=', False) values with 'is null' and this is 
+# not what we want for real boolean fields. The problem is, we can't change it
+# easily because we use False everywhere instead of None
+# NOTE FAB: we can't use None because it is not accepted by XML-RPC, that's why
+# boolean (0-1), None -> False
+# Ged> boolean fields are not always = 0 or 1
+				if (x[2] is False) and (x[1]=='='):
+					qu1.append(x[0]+' is null')
+				elif (x[2] is False) and (x[1]=='<>' or x[1]=='!='):
+					qu1.append(x[0]+' is not null')
+				else:
+					if x[0]=='id':
+						if x[1]=='join':
+							qu1.append('(%s.%s = %s)' % (table._table, x[0], x[2]))
+						else:
+							qu1.append('(%s.%s %s %%s)' % (table._table, x[0], x[1]))
+							qu2.append(x[2])
+					else:
+						if x[1] in ('like', 'ilike'):
+							if isinstance(x[2], str):
+								str_utf8 = x[2]
+							elif isinstance(x[2], unicode):
+								str_utf8 = x[2].encode('utf-8')
+							else:
+								str_utf8 = str(x[2])
+							qu2.append('%%%s%%' % str_utf8)
+						else:
+							qu2.append(table._columns[x[0]]._symbol_set[1](x[2]))
+						if x[1]=='=like':
+							x1 = 'like'
+						else:
+							x1 = x[1]
+						qu1.append('(%s.%s %s %s)' % (table._table, x[0], x1, table._columns[x[0]]._symbol_set[0]))
+			elif x[1]=='in':
+				if len(x[2])>0:
+					todel = []
+					for xitem in range(len(x[2])):
+						if x[2][xitem]==False and isinstance(x[2][xitem],bool):
+							todel.append(xitem)
+					for xitem in todel[::-1]:
+						del x[2][xitem]
+					if x[0]=='id':
+						qu1.append('(%s.id in (%s))' % (table._table, ','.join(['%d'] * len(x[2])),))
+					else:
+						qu1.append('(%s.%s in (%s))' % (table._table, x[0], ','.join([table._columns[x[0]]._symbol_set[0]]*len(x[2]))))
+					if todel:
+						qu1[-1] = '('+qu1[-1]+' or '+x[0]+' is null)'
+					qu2+=x[2]
+				else:
+					qu1.append(' (1=0)')
+		return (qu1,qu2,tables)
+
+	def search_count(self, cr, user, args, context={}):
+		return 128
+
+	def search(self, cr, user, args, offset=0, limit=None, order=None, context={}):
+
 		# compute the where, order by, limit and offset clauses
-		(qu1,qu2) = self._where_calc(args)
+		(qu1,qu2,tables) = self._where_calc(cr, user, args)
 
 		if len(qu1):
 			qu1 = ' where '+string.join(qu1,' and ')

@@ -86,6 +86,8 @@ class res_company(osv.osv):
 
 	def write(self, *args, **argv):
 		self.cache_restart()
+		# Restart the cache on the company_get method
+		self.pool.get('ir.rule').domain_get()
 		return super(res_company, self).write(*args, **argv)
 
 	def _get_euro(self, cr, uid, context={}):

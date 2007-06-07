@@ -51,6 +51,7 @@ ir_rule_group()
 
 class ir_rule(osv.osv):
 	_name = 'ir.rule'
+	_rec_name = 'field_id'
 
 	def _operand(self,cr,uid,context):
 		def get(object, level=3, ending=[], ending_excl=[], recur=[], root_tech='', root=''):
@@ -71,9 +72,9 @@ class ir_rule(osv.osv):
 		return res
 		
 	_columns = {
-		'field_id': fields.many2one('ir.model.fields', 'Field',domain= "[('model_id','=', parent.model_id)]",select=1),
-		'operator':fields.selection( (('=','='),('<>','<>'),('<=','<='),('>=','>=')),'Operator'),
-		'operand':fields.selection(_operand,'Operand', size=64),
+		'field_id': fields.many2one('ir.model.fields', 'Field',domain= "[('model_id','=', parent.model_id)]", select=1, required=True),
+		'operator':fields.selection((('=', '='), ('<>', '<>'), ('<=', '<='), ('>=', '>='), ('in', 'in'), ('child_of', 'child_of')), 'Operator', required=True),
+		'operand':fields.selection(_operand,'Operand', size=64, required=True),
 		'rule_group': fields.many2one('ir.rule.group', 'Group', select=2, required=True, ondelete="cascade")
 	}
 
@@ -103,9 +104,12 @@ class ir_rule(osv.osv):
 		clause={}
 		# Use root user to prevent recursion
 		for rule in self.browse(cr, 1, ids):
-			dom = eval("[('%s', '%s', %s)]"%(rule.field_id.name, rule.operator, rule.operand), {'user': self.pool.get('res.users').browse(cr, 1, uid), 'time':time})
+			if rule.operator in ('in', 'child_of'):
+				dom = eval("[('%s', '%s', [%s])]"%(rule.field_id.name, rule.operator, rule.operand), {'user': self.pool.get('res.users').browse(cr, 1, uid), 'time':time})
+			else:
+				dom = eval("[('%s', '%s', %s)]"%(rule.field_id.name, rule.operator, rule.operand), {'user': self.pool.get('res.users').browse(cr, 1, uid), 'time':time})
 			clause.setdefault(rule.rule_group.id, [])
-			clause[rule.rule_group.id].append(obj._where_calc(dom))
+			clause[rule.rule_group.id].append(obj._where_calc(cr, uid, dom))
 		str = ''
 		val = []
 		for g in clause.values():
