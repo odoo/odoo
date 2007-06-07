@@ -50,8 +50,9 @@ def get_db_and_pool(db_name, force_demo=False, status={}, update_module=False):
 		pool_dic[db_name] = pool
 		addons.load_modules(db, force_demo, status, update_module)
 
-		import report
-		report.interface.register_all(db)
+		if not update_module:
+			import report
+			report.interface.register_all(db)
 
 		pool.get('ir.cron')._poolJobs(db.dbname)
 	return db, pool

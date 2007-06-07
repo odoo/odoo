@@ -108,6 +108,9 @@ class LocalService(Service):
 class ServiceUnavailable(Exception):
 	pass
 
+def service_exist(name):
+	return (name in _service)
+
 LOG_DEBUG='debug'
 LOG_INFO='info'
 LOG_WARNING='warn'

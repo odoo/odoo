@@ -43,6 +43,7 @@ class interface(netsvc.Service):
 	states = {}
 	
 	def __init__(self, name):
+		assert not netsvc.service_exist('wizard.'+name), 'The wizard "%s" already exist!'%name
 		super(interface, self).__init__('wizard.'+name)
 		self.exportMethod(self.execute)
 		self.wiz_name = name

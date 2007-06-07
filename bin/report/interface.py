@@ -54,6 +54,7 @@ def toxml(val):
 
 class report_int(netsvc.Service):
 	def __init__(self, name, audience='*'):
+		assert not netsvc.service_exist(name), 'The report "%s" already exist!'%name
 		super(report_int, self).__init__(name, audience)
 		if name[0:7]<>'report.':
 			raise 'ConceptionError, bad report name, should start with "report."'
@@ -188,6 +189,8 @@ def register_all(db):
 	result = cr.dictfetchall()
 	cr.close()
 	for r in result:
+		if netsvc.service_exist('report.'+r['report_name']):
+			continue
 		if r['report_rml']:
 			report_sxw('report.'+r['report_name'], r['model'], opj('addons',r['report_rml']), header=r['header'])
 		if r['report_xsl']:
