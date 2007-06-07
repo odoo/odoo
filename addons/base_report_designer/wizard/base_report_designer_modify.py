@@ -44,8 +44,7 @@ intro_fields = {
 		'string':'Introduction', 
 		'type':'text', 
 		'readonly':True, 
-		'default': lambda *args: """
-This system must be used with the Tiny OpenOffice plugin. If you
+		'default': lambda *args: """This system must be used with the Tiny OpenOffice plugin. If you
 did not installed yet, you can find this package on:
 	http://tinyerp.com
 
@@ -165,7 +164,7 @@ class base_report_designer_modify(wizard.interface):
 				'fields':intro_fields, 
 				'state':[
 					('end','Cancel'),
-					('get_form','Get a .SXW')
+					('get_form','Modify a report')
 				]
 			}
 		},
