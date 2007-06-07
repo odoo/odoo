@@ -1338,7 +1338,7 @@ class orm(object):
 		return result
 
 	# TODO: ameliorer avec NULL
-	def _where_calc(self, cr, user, args):
+	def _where_calc(self, cr, user, args, context={}):
 		# if the object has a field named 'active', filter out all inactive
 		# records unless they were explicitely asked for
 		if 'active' in self._columns:
@@ -1381,6 +1381,7 @@ class orm(object):
 				i+=1
 
 			elif field._type=='many2many':
+				#XXX Fixme
 				if args[i][1]=='child_of':
 					if isinstance(args[i][2], basestring):
 						ids2 = [x[0] for x in self.pool.get(field._obj).name_search(cr, user, args[i][2], [], 'like')]
@@ -1516,7 +1517,7 @@ class orm(object):
 	def search(self, cr, user, args, offset=0, limit=None, order=None, context={}):
 
 		# compute the where, order by, limit and offset clauses
-		(qu1,qu2,tables) = self._where_calc(cr, user, args)
+		(qu1,qu2,tables) = self._where_calc(cr, user, args, context)
 
 		if len(qu1):
 			qu1 = ' where '+string.join(qu1,' and ')

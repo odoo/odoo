@@ -110,23 +110,30 @@ class ir_rule(osv.osv):
 				dom = eval("[('%s', '%s', %s)]"%(rule.field_id.name, rule.operator, rule.operand), {'user': self.pool.get('res.users').browse(cr, 1, uid), 'time':time})
 			clause.setdefault(rule.rule_group.id, [])
 			clause[rule.rule_group.id].append(obj._where_calc(cr, uid, dom))
-		str = ''
+		query = ''
 		val = []
 		for g in clause.values():
 			if not g:
 				continue
-			if len(str):
-				str += ' AND '
-			str += '('
+			if len(query):
+				query += ' AND '
+			query += '('
 			first = True
 			for c in g:
 				if not first:
-					str += ' OR '
+					query += ' OR '
 				first = False
-				str += '('+c[0][0]+')'
+				query += '('
+				first2 = True
+				for clause in c[0]:
+					if not first2:
+						query += ' AND '
+					first2 = False
+					query += clause
+				query += ')'
 				val += c[1]
-			str += ')'
-		return str, val
+			query += ')'
+		return query, val
 	domain_get = tools.cache()(domain_get) 
 
 	def write(self, cr, uid, *args, **argv):
