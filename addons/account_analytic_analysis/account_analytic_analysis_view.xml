@@ -75,6 +75,7 @@
 					<field name="quantity" position="replace">
 						<field name="hours_quantity"/>
 						<field name="hours_qtt_non_invoiced"/>
+						<field name="remaining_hours"/>
 					</field>
 			</field>
 		</record>
@@ -91,16 +92,15 @@
 			</field> 
 		</record>
 
-
 		<record model="ir.ui.view" id="view_account_analytic_simplified">
 			<field name="name">account.analytic.account.simplified.tree</field>
 			<field name="model">account.analytic.account</field>
 			<field name="type">tree</field>
-			<field name="priority" eval="5"/>
+			<field name="priority" eval="20"/>
 			<field name="arch" type="xml">
 				<tree string="Analytic accounts">
 					<field name="code"/>
-					<field name="name"/>
+					<field name="complete_name"/>
 					<field name="hours_qtt_non_invoiced"/>
 					<field name="remaining_hours"/>
 					<field name="ca_to_invoice"/>
