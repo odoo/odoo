@@ -9,7 +9,7 @@
 		</record>
 		<record model="ir.rule" id="project_comp_rule">
 			<field name="field_id" search="[('model','=','project.project'),('name','=','company_id')]" model="ir.model.fields"/>
-			<field name="operator">=</field>
+			<field name="operator">child_of</field>
 			<field name="operand">user.company_id.id</field>
 			<field name="rule_group" ref="project_comp_rule_group"/>
 		</record>
@@ -21,7 +21,7 @@
 		</record>
 		<record model="ir.rule" id="task_comp_rule">
 			<field name="field_id" search="[('model','=','project.task'),('name','=','company_id')]" model="ir.model.fields"/>
-			<field name="operator">=</field>
+			<field name="operator">child_of</field>
 			<field name="operand">user.company_id.id</field>
 			<field name="rule_group" ref="task_comp_rule_group"/>
 		</record>

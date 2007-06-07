@@ -71,6 +71,7 @@ stock_lot()
 class stock_location(osv.osv):
 	_name = "stock.location"
 	_description = "Location"
+	_parent_name = "location_id"
 	_columns = {
 		'name': fields.char('Location Name', size=64, required=True),
 		'active': fields.boolean('Active'),
