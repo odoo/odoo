@@ -325,7 +325,7 @@ class cache(object):
 			if cr is None:
 				self.cache = {}
 				return True
-			
+
 			# Update named arguments with positional argument values
 			kwargs.update(dict(zip(arg_names, args)))
 			kwargs = kwargs.items()
