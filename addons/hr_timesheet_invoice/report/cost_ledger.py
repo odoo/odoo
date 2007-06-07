@@ -94,5 +94,5 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
 				result[line.general_account_id.id][word] += (result[line.general_account_id.id]['lines'][-1][word] or 0.0)
 		return result
 
-report_sxw.report_sxw('report.account.analytic.account.cost_ledger', 'account.analytic.account', 'addons/hr_timesheet_invoice/report/cost_ledger.rml',parser=account_analytic_cost_ledger)
+report_sxw.report_sxw('report.hr.timesheet.invoice.account.analytic.account.cost_ledger', 'account.analytic.account', 'addons/hr_timesheet_invoice/report/cost_ledger.rml',parser=account_analytic_cost_ledger)
 

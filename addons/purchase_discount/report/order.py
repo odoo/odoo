@@ -85,4 +85,4 @@ class order(report_sxw.rml_parse):
 		product_obj=pooler.get_pool(self.cr.dbname).get('product.product')
 		return product_obj._product_code(self.cr, self.uid, [product_id], name=None, arg=None, context={'partner_id': partner_id})[product_id]
 
-report_sxw.report_sxw('report.purchase.order','purchase.order','addons/purchase_discount/report/order.rml',parser=order)
+report_sxw.report_sxw('report.purchase.discount.order','purchase.order','addons/purchase_discount/report/order.rml',parser=order)

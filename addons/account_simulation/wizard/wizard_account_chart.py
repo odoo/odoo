@@ -78,4 +78,4 @@ class wizard_account_chart(wizard.interface):
 			'result': {'type': 'action', 'action':_account_chart_open_window, 'state':'end'}
 		}
 	}
-wizard_account_chart('account.chart')
+wizard_account_chart('account.simulation.chart')
