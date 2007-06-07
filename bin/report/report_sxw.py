@@ -303,7 +303,12 @@ class report_sxw(report_rml):
 		return table_obj.browse(cr, uid, ids, list_class=browse_record_list, context=context)
 
 	def create(self, cr, uid, ids, data, context={}):
-		rml = tools.file_open(self.tmpl, subdir=None).read()
+		cr.execute('select report_rml_content from ir_act_report_xml where report_name=%s', (self.name[7:],))
+		result = cr.fetchone()
+		if result and result[0]:
+			rml = result[0]
+		else:
+			rml = tools.file_open(self.tmpl, subdir=None).read()
 
 		rml_parser = self.parser(cr, uid, self.name2, context)
 		objs = self.getObjects(cr, uid, ids, context)

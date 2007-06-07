@@ -7,6 +7,7 @@ import osv,ir,pooler
 
 import csv
 import os.path
+import misc
 
 from config import config
 
@@ -142,6 +143,9 @@ class xml_import(object):
 				res[dest] = rec.getAttribute(field).encode('utf8')
 		if rec.hasAttribute('auto'):
 			res['auto'] = eval(rec.getAttribute('auto'))
+		if rec.hasAttribute('sxw'):
+			sxw_content = misc.file_open(rec.getAttribute('sxw')).read()
+			res['report_sxw_content'] = sxw_content
 		if rec.hasAttribute('header'):
 			res['header'] = eval(rec.getAttribute('header'))
 		xml_id = rec.getAttribute('id').encode('utf8')

@@ -1319,22 +1319,26 @@ class orm(object):
 		result['arch'] = xarch
 		result['fields'] = xfields
 		if toolbar:
+			def clean(x):
+				x = x[2]
+				for key in ('report_sxw_content','report_rml_content','report_sxw','report_rml'):
+					if key in x:
+						del x[key]
+				return x
 			resprint = self.pool.get('ir.values').get(cr, user, 'action', 'client_print_multi', [(self._name, False)], False, context)
 			resaction = self.pool.get('ir.values').get(cr, user, 'action', 'client_action_multi', [(self._name, False)], False, context)
 			resrelate = self.pool.get('ir.values').get(cr, user, 'action', 'client_action_relate', [(self._name, False)], False, context)
-			resprint = map(lambda x:x[2], resprint)
-			resaction = map(lambda x:x[2], resaction)
+			resprint = map(clean, resprint)
+			resaction = map(clean, resaction)
 			resaction = filter(lambda x: not x.get('multi',False), resaction)
 			resrelate = map(lambda x:x[2], resrelate)
 			for x in resprint+resaction+resrelate:
 				x['string'] = x['name']
-
 			result['toolbar'] = {
 				'print': resprint,
 				'action': resaction,
 				'relate': resrelate
 			}
-
 		return result
 
 	# TODO: ameliorer avec NULL

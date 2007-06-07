@@ -160,6 +160,20 @@ class _rml_doc(object):
 				addMapping(name, 1, 0, name)    #bold
 				addMapping(name, 1, 1, name)    #italic and bold
 
+	def _textual_image(self, node):
+		import base64
+		rc = ''
+		for n in node.childNodes:
+			if n.nodeType in (node.CDATA_SECTION_NODE, node.TEXT_NODE):
+				rc += n.data
+		return base64.decodestring(rc)
+
+	def _images(self, el):
+		result = {}
+		for node in el.getElementsByTagName('image'):
+			result[node.getAttribute('name')] = self._textual_image(node)
+		return result
+
 	def render(self, out):
 		el = self.dom.documentElement.getElementsByTagName('docinit')
 		if el:
@@ -167,6 +181,10 @@ class _rml_doc(object):
 
 		el = self.dom.documentElement.getElementsByTagName('stylesheet')
 		self.styles = _rml_styles(el)
+
+		el = self.dom.documentElement.getElementsByTagName('images')
+		if el:
+			self.images.update( self._images(el[0]) )
 
 		el = self.dom.documentElement.getElementsByTagName('template')
 		if len(el):
@@ -285,12 +303,15 @@ class _rml_canvas(object):
 		if not node.hasAttribute('file'):
 			s = self.images[node.getAttribute('name')]
 		else:
-			try:
-				u = urllib.urlopen(str(node.getAttribute('file')))
-				s = StringIO.StringIO(u.read())
-			except:
-				u = file(os.path.join(self.path,str(node.getAttribute('file'))), 'rb')
-				s = StringIO.StringIO(u.read())
+			if node.getAttribute('file') in self.images:
+				s = StringIO.StringIO(self.images[node.getAttribute('file')])
+			else:
+				try:
+					u = urllib.urlopen(str(node.getAttribute('file')))
+					s = StringIO.StringIO(u.read())
+				except:
+					u = file(os.path.join(self.path,str(node.getAttribute('file'))), 'rb')
+					s = StringIO.StringIO(u.read())
 		img = ImageReader(s)
 		(sx,sy) = img.getSize()
 

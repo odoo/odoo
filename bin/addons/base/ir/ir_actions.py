@@ -90,7 +90,9 @@ class report_xml(osv.osv):
 		'report_name': fields.char('Internal Name', size=64, required=True),
 		'report_xsl': fields.char('XSL path', size=256),
 		'report_xml': fields.char('XML path', size=256),
-		'report_rml': fields.char('RML path', size=256),
+		'report_rml': fields.char('RML path', size=256, help="The .rml path of the file or NULL if the content is in report_rml_content"),
+		'report_sxw_content': fields.binary('SXW content'),
+		'report_rml_content': fields.binary('RML content'),
 		'auto': fields.boolean('Automatic XSL:RML', required=True),
 		'usage': fields.char('Action Usage', size=32),
 		'header': fields.boolean('Add RML header', help="Add or not the coporate RML header"),
@@ -99,6 +101,7 @@ class report_xml(osv.osv):
 		'type': lambda *a: 'ir.actions.report.xml',
 		'auto': lambda *a: True,
 		'header': lambda *a: True,
+		'report_sxw_content': lambda *a: False,
 	}
 report_xml()
 
