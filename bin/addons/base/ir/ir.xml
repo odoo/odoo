@@ -924,11 +924,11 @@
 	==========================================================
 
 	<record model="ir.ui.view" id="view_rule_group_form">
-		<field name="name">Rules</field>
+		<field name="name">Record Rules</field>
 		<field name="model">ir.rule.group</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Rules">
+			<form string="Record Rules">
 				<field name="model_id"/>
 				<field name="global"/>
 				<field name="name" colspan="4"/>
@@ -942,11 +942,11 @@
 		</field>
 	</record>
 	<record model="ir.ui.view" id="view_rule_group_tree">
-		<field name="name">Rules</field>
+		<field name="name">Record Rules</field>
 		<field name="model">ir.rule.group</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Rules">
+			<tree string="Record Rules">
 				<field name="model_id"/>
 				<field name="name"/>
 				<field name="global"/>
@@ -986,7 +986,7 @@
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_rule_group_tree"/>
 	</record>
-	<menuitem name="Administration/Security/Rules" action="action_rule" id="menu_action_rule"/>
+	<menuitem name="Administration/Security/Record Rules" action="action_rule" id="menu_action_rule"/>
 
 	<record model="ir.rule.group" id="property_rule_group">
 		<field name="name">Property multi-company</field>
