@@ -32,7 +32,7 @@ from osv import osv, fields
 class account_analytic_account(osv.osv):
 	_name = "account.analytic.account"
 	_inherit = "account.analytic.account"
-	# OK !!!
+
 	def _ca_invoiced_calc(self, cr, uid, ids, name, arg, context={}):
 		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
 		acc_set = ",".join(map(str, ids2))
@@ -43,10 +43,10 @@ class account_analytic_account(osv.osv):
  		for id in ids:
 			res[id] = round(res.get(id, 0.0),2)
 		return res
-	# OK !!!
+
 	def _ca_to_invoice_calc(self, cr, uid, ids, name, arg, context={}):
 		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-		# Montant des heures non-facturÃ©es Ã  facturer au prix de vente :
+		# Amount uninvoiced hours to invoice at sale price
 		acc_set = ",".join(map(str, ids2))
 		cr.execute("""SELECT account_analytic_account.id,(sum (product_template.list_price *  account_analytic_line.unit_amount) 
 								- sum(product_template.list_price *  account_analytic_line.unit_amount * (hr_timesheet_invoice_factor.factor/100))) 
@@ -64,9 +64,9 @@ class account_analytic_account(osv.osv):
 		for account_id, sum in cr.fetchall():
 			res[account_id] = round(sum,2)
 
-		# Montant des expense et facture d'achat :
+		# Expense amount and purchase invoice
 		acc_set = ",".join(map(str, ids2))
-		cr.execute ("select account_analytic_line.account_id,sum(amount) from account_analytic_line join account_analytic_journal on account_analytic_line.journal_id = account_analytic_journal.id  where account_analytic_line.account_id IN (%s) and (account_analytic_journal.type = 'purchase' OR lower(account_analytic_journal.name) like 'expense%%') GROUP BY account_analytic_line.account_id;"%acc_set)
+		cr.execute ("select account_analytic_line.account_id,sum(amount) from account_analytic_line join account_analytic_journal on account_analytic_line.journal_id = account_analytic_journal.id  where account_analytic_line.account_id IN (%s) and account_analytic_journal.type = 'purchase' GROUP BY account_analytic_line.account_id;"%acc_set)
 		res2 = {}
 		for account_id, sum in cr.fetchall():
 			res2[account_id] = round(sum,2)
@@ -74,7 +74,7 @@ class account_analytic_account(osv.osv):
 		for id in ids:
 			res[id] = round(res.get(id, 0.0),2) + round(res2.get(id, 0.0),2)
 		return res
-	# OK !!!!
+
 	def _hours_qtt_non_invoiced_calc (self, cr, uid, ids, name, arg, context={}):
 		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
 		acc_set = ",".join(map(str, ids2))
@@ -86,7 +86,6 @@ class account_analytic_account(osv.osv):
 			res[id] = round(res.get(id, 0.0),2)
 		return res			
 
-	# OK !!!!
 	def _hours_quantity_calc(self, cr, uid, ids, name, arg, context={}):
 		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
 		acc_set = ",".join(map(str, ids2))
@@ -97,9 +96,7 @@ class account_analytic_account(osv.osv):
 		for id in ids:
 			res[id] = round(res.get(id, 0.0),2)
 		return res
-		
-		
-	# OK !!!
+
 	def _total_cost_calc(self, cr, uid, ids, name, arg, context={}):
 		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
 		acc_set = ",".join(map(str, ids2))
@@ -117,7 +114,7 @@ class account_analytic_account(osv.osv):
 		for id in ids:
 			res[id] = round(res.get(id, 0.0),2)
 		return res
-	# OK !!!
+
 	def _ca_theorical_calc(self, cr, uid, ids, name, arg, context={}):
 		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
 		acc_set = ",".join(map(str, ids2))
@@ -127,7 +124,7 @@ class account_analytic_account(osv.osv):
 					from 
 						account_analytic_line join account_analytic_journal on account_analytic_line.journal_id = account_analytic_journal.id 
 					where 
-						account_analytic_line.account_id IN (%s) and (lower(account_analytic_journal.name) like 'expense%%' or account_analytic_journal.type like 'purchase') 
+						account_analytic_line.account_id IN (%s) and account_analytic_journal.type = 'purchase'
 					GROUP BY
 						account_analytic_line.account_id"""%acc_set)
 		res = {}
@@ -155,8 +152,7 @@ class account_analytic_account(osv.osv):
 		for id in ids:
 			res[id] = round(res.get(id, 0.0),2) + round(res2.get(id, 0.0),2)
 		return res
-	
-	# OK !!!
+
 	def _last_worked_date_calc (self, cr, uid, ids, name, arg, context={}):
 		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
 		acc_set = ",".join(map(str, ids2))
@@ -167,8 +163,7 @@ class account_analytic_account(osv.osv):
 		for id in ids:
 			res[id] = res.get(id, '')
 		return res
-		
-	# OK !!!
+
 	def _last_invoice_date_calc (self, cr, uid, ids, name, arg, context={}):
 		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
 		acc_set = ",".join(map(str, ids2))
@@ -180,7 +175,6 @@ class account_analytic_account(osv.osv):
 			res[id] = res.get(id, '')
 		return res
 
-	# OK !!!
 	def _last_worked_invoiced_date_calc (self, cr, uid, ids, name, arg, context={}):
 		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
 		acc_set = ",".join(map(str, ids2))
