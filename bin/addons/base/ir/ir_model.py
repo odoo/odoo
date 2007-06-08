@@ -28,6 +28,7 @@
 from osv import fields,osv
 import ir
 import netsvc
+from osv.orm import except_orm
 
 import time
 import tools
@@ -99,7 +100,7 @@ class ir_model_access(osv.osv):
 
 		if not r[0][0]:
 			if raise_exception:
-				raise osv.except_osv('Access denied !', 'You can not %s this resource !' % mode)
+				raise except_orm('AccessError', 'You can not %s this resource !' % mode)
 			else:
 				return False
 		return True
