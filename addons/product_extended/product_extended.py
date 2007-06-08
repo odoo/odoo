@@ -94,7 +94,7 @@ class product_product(osv.osv):
 	_columns = {
 		'calculate_price': fields.boolean('Compute price'),
 		'orderpoint_ids': fields.one2many('stock.warehouse.orderpoint', 'product_id', 'Orderpoints'),
-		'qty_dispo': fields.function(_product_dispo, method=True, type='float', string='Stock disponible'),
+		'qty_dispo': fields.function(_product_dispo, method=True, type='float', string='Stock available'),
 	}
 
 	_defaults = {
