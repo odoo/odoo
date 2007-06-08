@@ -57,7 +57,7 @@ class account_payment_term(osv.osv):
 		result = []
 		for line in pt.line_ids:
 			if line.value=='fixed':
-				amt = line.value_amount
+				amt = round(line.value_amount, 2)
 			elif line.value=='procent':
 				amt = round(amount * line.value_amount,2)
 			elif line.value=='balance':
