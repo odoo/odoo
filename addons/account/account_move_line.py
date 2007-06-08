@@ -256,7 +256,7 @@ class account_move_line(osv.osv):
 		return {'value':val}
 
 	#
-	# type: the type if reconciliation (no logic behind this field, for infà)
+	# type: the type if reconciliation (no logic behind this field, for info)
 	#
 	# writeoff; entry generated for the difference between the lines
 	#
@@ -280,7 +280,9 @@ class account_move_line(osv.osv):
 		r = cr.fetchall()
 #TODO: move this check to a constraint in the account_move_reconcile object
 		if len(r) != 1:
-			raise Exception('Entries are not of the same account or already reconciled ! ')
+			raise osv.except_osv('Error', 'Entries are not of the same account or already reconciled ! ')
+		if not self.pool.get('account.account').read(cr, uid, [account_id], ['reconcile'], context=context)[0]['reconcile']:
+			raise osv.except_osv('Error', 'The account is not defined to be reconcile !')
 		if r[0][1] != None:
 			raise Exception('Some entries are already reconciled !')
 		if writeoff != 0:

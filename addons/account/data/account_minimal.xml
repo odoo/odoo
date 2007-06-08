@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <terp>
-<data fakenoupdate="True">
+<data noupdate="True">
 
 	<!--
 	Minimal Tiny ERP Account Chart
@@ -20,6 +20,7 @@
 			<field name="type">receivable</field>
 			<field name="parent_id" eval="[(6,0,[ref('minimal_0')])]"/>
 			<field name="company_id" ref="base.main_company"/>
+			<field name="reconcile" eval="True"/>
 		</record>
 		<record model="account.account" id="a_pay">
 			<field name="name">Main Payable</field>
@@ -27,6 +28,7 @@
 			<field name="type">payable</field>
 			<field name="parent_id" eval="[(6,0,[ref('minimal_0')])]"/>
 			<field name="company_id" ref="base.main_company"/>
+			<field name="reconcile" eval="True"/>
 		</record>
 
 		<record model="account.account" id="cash">
