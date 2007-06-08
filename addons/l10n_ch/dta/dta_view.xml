@@ -33,12 +33,12 @@
 
 
 	<record model="ir.ui.view" id="invoice_form">
-		<field name="name">account.invoice.form</field>
+		<field name="name">account.invoice.supplier.form.inherit</field>
 		<field name="model">account.invoice</field>
 		<field name="type">form</field>
-		<field name="inherit_id" ref="account.invoice_form"/>
+		<field name="inherit_id" ref="account.invoice_supplier_form"/>
 		<field name="arch" type="xml">
-			<field name="journal_id" position="after">
+			<field name="currency_id" position="after">
 			<newline/>
 				<field name="dta_state" select="1"/>
 				<field name="bvr_ref_num" select="1"/>
@@ -47,12 +47,12 @@
 	</record>
 
 	<record model="ir.ui.view" id="invoice_form2">
-		<field name="name">account.invoice.form</field>
+		<field name="name">account.invoice.supplier.form.inherit</field>
 		<field name="model">account.invoice</field>
 		<field name="type">form</field>
-		<field name="inherit_id" ref="account.invoice_form"/>
+		<field name="inherit_id" ref="account.invoice_supplier_form"/>
 		<field name="arch" type="xml">
-			<field name="origin" position="after">
+			<field name="comment" position="before">
 			<newline/>
 				<field name="partner_comment" colspan= "4"/>
 		    </field>
@@ -62,15 +62,24 @@
 
 
 	<record model="ir.actions.act_window" id="action_invoice_with_dta">
-		<field name="name">account.invoice.dta</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">account.invoice</field>
 		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','!=','paid'),('dta_state','=','2bp') ]</field>
 	</record>
+	<record model="ir.actions.act_window.view" id="action_invoice_with_dta_view1">
+		<field name="sequence" eval="10"/>
+		<field name="view_mode">tree</field>
+		<field name="act_window_id" ref="action_invoice_with_dta"/>
+	</record>
+	<record model="ir.actions.act_window.view" id="action_invoice_with_dta_view2">
+		<field name="sequence" eval="20"/>
+		<field name="view_mode">form</field>
+		<field name="view_id" ref="account.invoice_supplier_form"/>
+		<field name="act_window_id" ref="action_invoice_with_dta"/>
+	</record>
 
-	<menuitem name="Financial Management/Invoices/DTA invoices to pay" id="menu_account_dta_form" action="action_invoice_with_dta"/>
+	<menuitem name="Financial Management/Invoices/Suppliers Invoice/DTA invoices to pay" id="menu_account_dta_form" action="action_invoice_with_dta"/>
 
 
 	<record model="ir.ui.view" id="dta_line_tree">
