@@ -385,6 +385,11 @@
   </xsl:if>
 </xsl:template>
 
+<xsl:template match="text:drop-down">
+    <xsl:value-of select="text:label[2]/@text:value" />
+</xsl:template>
+
+
 <xsl:template match="text:p|text:h">
 	<xsl:param name="skip_draw" select="1" />
   <xsl:if test="boolean(key('page_break_before',@text:style-name))" >
