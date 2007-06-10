@@ -17,18 +17,21 @@
 		<field name="priority">10</field>
 		<field name="parent_id" ref="project_project_9"/>
 		<field name="name">Study + Prototype</field>
+		<field name="category_id" search="[('name','=', 'Seagate P1')]" model="account.analytic.account"/>
 	</record>
 	<record id="project_project_22" model="project.project">
 		<field name="planned_hours">264.0</field>
 		<field name="priority">20</field>
 		<field name="parent_id" ref="project_project_9"/>
 		<field name="name">Specific Developements</field>
+		<field name="category_id" search="[('name','=', 'Seagate P1')]" model="account.analytic.account"/>
 	</record>
 	<record id="project_project_23" model="project.project">
 		<field name="planned_hours">104.0</field>
 		<field name="priority">30</field>
 		<field name="parent_id" ref="project_project_9"/>
 		<field name="name">Install, data import, configuration</field>
+		<field name="category_id" search="[('name','=', 'Seagate P1')]" model="account.analytic.account"/>
 	</record>
 
 	<record id="project_task_116" model="project.task">
@@ -98,10 +101,12 @@
 	</record>
 	<record id="project_task_193" model="project.task">
 		<field name="sequence">29</field>
-		<field name="planned_hours">48.0</field>
+		<field name="planned_hours">24.0</field>
 		<field name="user_id" model="res.users" search="[('login','=','admin')]"/>
 		<field name="project_id" ref="project_project_21"/>
 		<field name="name">MRP; functionnal layer</field>
+		<field name="state">done</field>
+		<field name="date_close" eval="time.strftime('%Y-%m-%d 12:12')"/>
 	</record>
 	<record id="project_task_194" model="project.task">
 		<field name="sequence">30</field>

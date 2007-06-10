@@ -12,8 +12,9 @@
 		<field name="type">graph</field>
 		<field name="arch" type="xml">
 			<graph string="Timesheet by user" type="bar">
-				<field name="name" group="True"/>
+				<field name="name"/>
 				<field name="quantity" operator="+"/>
+				<field name="user_id" group="True"/>
 			</graph>
 		</field>
 	</record>
@@ -58,11 +59,27 @@
 		action="action_timesheet_user_stat"
 		id="menu_report_timesheet_user"/>
 
+	<record model="ir.ui.view" id="view_timesheet_account_date_graph_account">
+		<field name="name">report_timesheet.account.date.graph</field>
+		<field name="model">report_timesheet.account.date</field>
+		<field name="type">graph</field>
+		<field name="arch" type="xml">
+			<graph string="Daily timesheet per account" orientation="horizontal" type="bar">
+				<field name="name"/>
+				<field name="quantity" operator="+"/>
+				<field name="account_id" group="True"/>
+			</graph>
+		</field>
+	</record>
+
+
+
 	<record model="ir.actions.act_window" id="action_timesheet_user_stat_my">
 		<field name="name">My timesheet of the month</field>
-		<field name="res_model">report_timesheet.user</field>
+		<field name="res_model">report_timesheet.account.date</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">graph,tree</field>
+		<field name="view_id" ref="view_timesheet_account_date_graph_account"/>
 		<field name="domain">[('name','&gt;=',time.strftime('%Y-%m-01')), ('user_id','=',uid)]</field>
 	</record>
 	<menuitem 
@@ -91,7 +108,7 @@
 		<field name="type">graph</field>
 		<field name="arch" type="xml">
 			<graph string="Timesheet by invoice">
-				<field name="account_id" group="True"/>
+				<field name="account_id"/>
 				<field name="amount_invoice" operator="+"/>
 			</graph>
 		</field>
@@ -171,13 +188,13 @@
 		<field name="model">report_timesheet.account.date</field>
 		<field name="type">graph</field>
 		<field name="arch" type="xml">
-			<graph string="Daily timesheet per account">
-				<field name="account_id" group="True"/>
+			<graph string="Daily timesheet per account" orientation="horizontal">
+				<field name="account_id"/>
 				<field name="quantity" operator="+"/>
+				<field name="user_id" group="True"/>
 			</graph>
 		</field>
 	</record>
-
 
 
 	<record model="ir.ui.view" id="view_timesheet_account_date_form">
@@ -239,8 +256,9 @@
 		<field name="type">graph</field>
 		<field name="arch" type="xml">
 			<graph string="Timesheet per account">
-				<field name="account_id" group="True"/>
+				<field name="account_id"/>
 				<field name="quantity" operator="+"/>
+				<field name="user_id" group="True"/>
 			</graph>
 		</field>
 	</record>

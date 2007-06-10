@@ -4,9 +4,11 @@
 		<record model="hr_timesheet_sheet.sheet" id="sheet1">
 			<field name="name">Sheet 1</field>
 			<field name="user_id" search="[('login','=','admin')]" model="res.users"/>
+			<!--
 			<field name="date_from">2005-05-01</field>
 			<field name="date_to">2005-05-31</field>
-			<field name="date_current">2005-05-04</field>
+			-->
+			<field name="date_current" eval="time.strftime('%Y-%m-%d')"/>
 		</record>
 
 		<record model="hr.attendance" id="hr.attendance1">

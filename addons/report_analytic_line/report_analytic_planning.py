@@ -133,8 +133,8 @@ class report_account_analytic_planning_stat(osv.osv):
 		'manager_id': fields.many2one('res.users', 'Manager'),
 		'account_id': fields.many2one('account.analytic.account', 'Account', required=True),
 		'sum_amount': fields.float('Planned Work', required=True),
-		'sum_amount_real': fields.function(_sum_amount_real, method=True, string='Work made'),
-		'sum_amount_tasks': fields.function(_sum_amount_tasks, method=True, string='Tasks made'),
+		'sum_amount_real': fields.function(_sum_amount_real, method=True, string='Timesheet'),
+		'sum_amount_tasks': fields.function(_sum_amount_tasks, method=True, string='Tasks'),
 	}
 	_order = 'planning_id,user_id'
 	def init(self, cr):

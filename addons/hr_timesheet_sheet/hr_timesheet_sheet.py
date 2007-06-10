@@ -234,7 +234,7 @@ class hr_timesheet_sheet(osv.osv):
 	}
 	def _default_date_from(self,cr, uid, context={}):
 		user = self.pool.get('res.users').browse(cr, uid, uid, context)
-		r = user.company_id.timesheet_range
+		r = user.company_id and user.company_id.timesheet_range or 'month'
 		if r=='month':
 			return time.strftime('%Y-%m-01')
 		elif r=='week':
@@ -244,7 +244,7 @@ class hr_timesheet_sheet(osv.osv):
 		return time.strftime('%Y-%m-%d')
 	def _default_date_to(self,cr, uid, context={}):
 		user = self.pool.get('res.users').browse(cr, uid, uid, context)
-		r = user.company_id.timesheet_range
+		r = user.company_id and user.company_id.timesheet_range or 'month'
 		if r=='month':
 			return (DateTime.now() + DateTime.RelativeDateTime(months=+1,day=1,days=-1)).strftime('%Y-%m-%d')
 		elif r=='week':

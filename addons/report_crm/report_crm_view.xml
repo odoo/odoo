@@ -45,9 +45,10 @@
 		<field name="model">report.crm.case.user</field>
 		<field name="type">graph</field>
 		<field name="arch" type="xml">
-			<graph string="Cases by User and Section" type="bar">
-				<field name="user_id" group="True"/>
+			<graph string="Cases by User and Section" type="bar" orientation="horizontal">
+				<field name="state"/>
 				<field name="nbr" operator="+"/>
+				<field name="user_id" group="True"/>
 			</graph>
 		</field>
 	</record>

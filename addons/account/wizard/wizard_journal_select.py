@@ -35,7 +35,7 @@ def _action_open_window(self, cr, uid, data, context):
 	journal_id,period_id = cr.fetchone()
 	return {
 		'domain': "[('journal_id','=',%d), ('period_id','=',%d)]" % (journal_id,period_id),
-		'name': 'Saisie Standard',
+		#'name': 'Saisie Standard',
 		'view_type': 'form',
 		'view_mode': 'tree,form',
 		'res_model': 'account.move.line',

@@ -103,14 +103,14 @@ class report_timesheet_account_date(osv.osv):
 			create or replace view report_timesheet_account_date as (
 				select
 					min(id) as id,
-					create_date as name,
+					date as name,
 					user_id,
 					account_id,
 					sum(unit_amount) as quantity
 				from
 					account_analytic_line
 				group by
-					create_date, user_id, account_id
+					date, user_id, account_id
 			)
 		""")
 report_timesheet_account_date()
