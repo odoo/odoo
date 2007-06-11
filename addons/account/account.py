@@ -618,6 +618,8 @@ class account_move(osv.osv):
 	def unlink(self, cr, uid, ids, context={}, check=True):
 		toremove = []
 		for move in self.browse(cr, uid, ids, context):
+			if move['state'] <> 'draft':
+				raise osv.except_osv('Error', 'You must first cancel the invoice movement: %s !' % move['name'])
 			line_ids = map(lambda x: x.id, move.line_id)
 			context['journal_id'] = move.journal_id.id
 			context['period_id'] = move.period_id.id
