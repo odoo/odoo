@@ -104,7 +104,7 @@ Section "TinyERP Server" SecTinyERPServer
     CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Start service.lnk" "$INSTDIR\service\start.bat"
     CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Stop service.lnk" "$INSTDIR\service\stop.bat"
     CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Edit config.lnk" "notepad.exe" "$INSTDIR\tinyerp-server.conf"
-    CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Edit log.lnk" "notepad.exe" "$INSTDIR\tinyerp-server.log"
+    CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\View log.lnk" "notepad.exe" "$INSTDIR\tinyerp-server.log"
   
   !insertmacro MUI_STARTMENU_WRITE_END
 
