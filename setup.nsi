@@ -52,6 +52,10 @@
   !insertmacro MUI_PAGE_INSTFILES
 
   !define MUI_FINISHPAGE_NOAUTOCLOSE
+  !define MUI_FINISHPAGE_RUN
+  !define MUI_FINISHPAGE_RUN_CHECKED
+  !define MUI_FINISHPAGE_RUN_TEXT "Start TinyERP Server"
+  !define MUI_FINISHPAGE_RUN_FUNCTION "LaunchLink"
   !define MUI_FINISHPAGE_SHOWREADME_NOTCHECKED
   !define MUI_FINISHPAGE_SHOWREADME $INSTDIR\README.txt
   !insertmacro MUI_PAGE_FINISH
@@ -71,10 +75,18 @@
 
 Section "TinyERP Server" SecTinyERPServer
 
+  nsExec::Exec "net stop tinyerp-service"
+  sleep 2
+
   SetOutPath "$INSTDIR"
   
   ;ADD YOUR OWN FILES HERE...
   File /r "dist\\*"
+
+  SetOutPath "$INSTDIR\service"
+  File /r "win32\\dist\\*"
+  File "win32\\start.bat"
+  File "win32\\stop.bat"
 
   ;Store installation folder
   WriteRegStr HKCU "Software\TinyERP Server" "" $INSTDIR
@@ -82,14 +94,22 @@ Section "TinyERP Server" SecTinyERPServer
   ;Create uninstaller
   WriteUninstaller "$INSTDIR\Uninstall.exe"
   
+
   !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
     
     ;Create shortcuts
     CreateDirectory "$SMPROGRAMS\$STARTMENU_FOLDER"
     CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\TinyERP Server.lnk" "$INSTDIR\tinyerp-server.exe"
     CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
+    CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Start service.lnk" "$INSTDIR\service\start.bat"
+    CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Stop service.lnk" "$INSTDIR\service\stop.bat"
+    CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Edit config.lnk" "notepad.exe" "$INSTDIR\tinyerp-server.conf"
+    CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Edit log.lnk" "notepad.exe" "$INSTDIR\tinyerp-server.log"
   
   !insertmacro MUI_STARTMENU_WRITE_END
+
+  nsExec::Exec '"$INSTDIR\\tinyerp-server.exe" --stop-after-init --logfile "$INSTDIR\\tinyerp-server.log" -s'
+  nsExec::Exec '"$INSTDIR\\service\\TinyERPServerService.exe" -auto -install'
 
 SectionEnd
 
@@ -108,11 +128,17 @@ SectionEnd
 
 Section "Uninstall"
 
+  nsExec::Exec "net stop tinyerp-service"
+  sleep 2
+  nsExec::Exec '"$INSTDIR\\service\\TinyERPServerService.exe" -remove'
+  sleep 2
+
   ;ADD YOUR OWN FILES HERE...
   Delete "$INSTDIR\Uninstall.exe"
   Push "$INSTDIR\addons"
   Push ""
   Call un.RmFilesButOne
+  Delete "$INSTDIR\service\*"
   Delete "$INSTDIR\*"
   Delete "$INSTDIR\Uninstall.exe"
 
@@ -120,12 +146,15 @@ Section "Uninstall"
   Push ""
   Call un.RmDirsButOne
   RMDir "$INSTDIR\addons"
+  RMDir "$INSTDIR\service"
   RMDir "$INSTDIR"
   
   !insertmacro MUI_STARTMENU_GETFOLDER Application $MUI_TEMP
     
   Delete "$SMPROGRAMS\$MUI_TEMP\TinyERP Server.lnk"
   Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall.lnk"
+  Delete "$SMPROGRAMS\$MUI_TEMP\Start service.lnk"
+  Delete "$SMPROGRAMS\$MUI_TEMP\Stop service.lnk"
   
   ;Delete empty start menu parent diretories
   StrCpy $MUI_TEMP "$SMPROGRAMS\$MUI_TEMP"
@@ -143,6 +172,10 @@ Section "Uninstall"
   DeleteRegKey /ifempty HKCU "Software\TinyERP Server"
 
 SectionEnd
+
+Function LaunchLink
+  nsExec::Exec "net start tinyerp-service"
+FunctionEnd
 
 Function un.RmDirsButOne
  Exch $R0 ; exclude dir

@@ -125,7 +125,7 @@ class configmanager(object):
 		# if the server is run by an unprivileged user, he has to specify location of a config file where he has the rights to write,
 		# else he won't be able to save the configurations, or even to start the server...
 		if os.name == 'nt':
-			rcfilepath = os.path.join(os.path.split(os.path.split(os.path.abspath(sys.argv[0]))[0])[0], 'etc', 'tinyerp-server.conf')
+			rcfilepath = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), 'tinyerp-server.conf')
 		else:
 			rcfilepath = os.path.expanduser('~/.terp_serverrc')
 
