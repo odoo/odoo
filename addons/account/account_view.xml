@@ -418,6 +418,15 @@
 							<field name="amount"/>
 							<field name="reconcile_id" context="{'partner_id':partner_id,'amount':amount,'account_id':account_id}"/> 
 						</tree>
+						<form string="Statement lines">
+							<field name="date"/>
+							<field name="name"/>
+							<field name="type"/>
+							<field name="partner_id" on_change="onchange_partner_id(partner_id,type)"/>
+							<field name="account_id" domain="[('journal_id','=',parent.journal_id)]"/>
+							<field name="amount"/>
+							<field name="reconcile_id" context="{'partner_id':partner_id,'amount':amount,'account_id':account_id}"/> 
+						</form>
 					</field>
 				</page><page string="Real Entries">
 					<field name="move_line_ids" colspan="4" nolabel="1"/>
@@ -808,39 +817,46 @@
 		<field name="arch" type="xml">
 			<form string="Account Entry Line">
 				<notebook>
-				<page string="Information">
-				<separator string="General Information" colspan="4"/>
-				<field name="name" select="1"/>
-				<field name="date" select="2"/>
-				<field name="journal_id" select="1" readonly="False"/>
-				<field name="period_id" select="2" readonly="False"/>
-				<field name="account_id" select="1"/>
-				<field name="partner_id" select="2"/>
-				<newline/>
-				<field name="debit" select="2"/>
-				<field name="credit" select="2"/>
+					<page string="Information">
+						<separator string="General Information" colspan="4"/>
+						<field name="name" select="1"/>
+						<field name="date" select="2"/>
+						<field name="journal_id" select="1" readonly="False"/>
+						<field name="period_id" select="2" readonly="False"/>
+						<field name="account_id" select="1"/>
+						<field name="partner_id" select="2"/>
+						<newline/>
+						<field name="debit" select="2"/>
+						<field name="credit" select="2"/>
 
-				<separator string="Optional Information" colspan="4"/>
-				<field name="currency_id"/>
-				<field name="amount_currency"/>
-				<field name="quantity" select="3"/>
-				<field name="move_id" required="False"/>
-				<newline/>
-				<field name="date_maturity"/>
-				<field name="date_created"/>
-				<field name="date_created"/>
-				<field name="blocked" select="3"/>
+						<separator string="Optional Information" colspan="4"/>
+						<field name="currency_id"/>
+						<field name="amount_currency"/>
+						<field name="quantity" select="3"/>
+						<field name="move_id" required="False"/>
+						<newline/>
+						<field name="date_maturity"/>
+						<field name="date_created"/>
+						<field name="date_created"/>
+						<field name="blocked" select="3"/>
 
-
-				<separator string="State" colspan="4"/>
-				<field name="state" select="2"/>
-				<field name="reconcile_id"/>
-				</page><page string="Analytic Lines">
-					<field name="analytic_lines" colspan="4" nolabel="1"/>
-				</page>
+						<separator string="State" colspan="4"/>
+						<field name="state" select="2"/>
+						<field name="reconcile_id"/>
+					</page>
+					<page string="Analytic Lines">
+						<field name="analytic_lines" colspan="4" nolabel="1"/>
+					</page>
 				</notebook>
 			</form>
 		</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="action_move_line_select">
+		<field name="res_model">account.move.line</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="view_id" ref="view_move_line_tree"/>
 	</record>
 
 	# --------------------------------------------------------
@@ -883,7 +899,7 @@
 						<field name="name" select="1"/>
 						<field name="date"/>
 						<field name="account_id"/>
-						<field name="partner_id"/>
+						<field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit)"/>
 
 						<field name="debit" select="1"/>
 						<field name="credit" select="1"/>
@@ -999,6 +1015,15 @@
 							<field name="amount"/>
 							<field name="reconcile_id" context="{'partner_id':partner_id,'amount':amount,'account_id':account_id}"/> 
 						</tree>
+						<form string="Statement lines">
+							<field name="date"/>
+							<field name="name"/>
+							<field name="type"/>
+							<field name="partner_id" on_change="onchange_partner_id(partner_id,type)"/>
+							<field name="account_id" domain="[('journal_id','=',parent.journal_id)]"/>
+							<field name="amount"/>
+							<field name="reconcile_id" context="{'partner_id':partner_id,'amount':amount,'account_id':account_id}"/> 
+						</form>
 					</field>
 				</page>
 				</notebook>

@@ -27,22 +27,22 @@
 ##############################################################################
 
 import wizard
+import pooler
 
 def _action_open_window(self, cr, uid, data, context):
-	cr.execute('select id,name from ir_ui_view where model=%s and type=%s', ('account.move.line', 'form'))
-	view_res = cr.fetchone()
+	mod_obj = pooler.get_pool(cr.dbname).get('ir.model.data')
+	act_obj = pooler.get_pool(cr.dbname).get('ir.actions.act_window')
+
+	result = mod_obj._get_id(cr, uid, 'account', 'action_move_line_select')
+	id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
+	result = act_obj.read(cr, uid, [id])[0]
+
 	cr.execute('select journal_id,period_id from account_journal_period where id=%d', (data['id'],))
 	journal_id,period_id = cr.fetchone()
-	return {
-		'domain': "[('journal_id','=',%d), ('period_id','=',%d)]" % (journal_id,period_id),
-		#'name': 'Saisie Standard',
-		'view_type': 'form',
-		'view_mode': 'tree,form',
-		'res_model': 'account.move.line',
-		'view_id': view_res,
-		'context': "{'journal_id':%d, 'period_id':%d}" % (journal_id,period_id),
-		'type': 'ir.actions.act_window'
-	}
+
+	result['domain'] = str([('journal_id', '=', journal_id), ('period_id', '=', period_id)])
+	result['context'] = str({'journal_id': journal_id, 'period_id': period_id})
+	return result
 
 class wiz_journal(wizard.interface):
 	states = {
