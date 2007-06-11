@@ -79,7 +79,7 @@ class report_printscreen_list(report_int):
 
 
 	def _create_table(self, uid, ids, fields, fields_order, results, context, title=''):
-		pageSize=[297.0,210.0]
+		pageSize=[210.0,297.0]
 
 		impl = minidom.getDOMImplementation()
 		new_doc = impl.createDocument(None, "report", None)
@@ -145,8 +145,6 @@ class report_printscreen_list(report_int):
 				node_line.appendChild(col)
 			lines.appendChild(node_line)
 		new_doc.childNodes[0].appendChild(lines)
-
-		file('/tmp/terp.xml','w+').write(new_doc.toxml())
 
 		styledoc = libxml2.parseFile(os.path.join(tools.config['root_path'],'addons/base/report/custom_new.xsl'))
 		style = libxslt.parseStylesheetDoc(styledoc)

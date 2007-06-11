@@ -145,7 +145,12 @@ class ir_values(osv.osv):
 				if not len(datas):
 					#ir_del(cr, uid, x[0])
 					return False
-				datas = datas[0]
+				def clean(x):
+					for key in ('report_sxw_content', 'report_rml_content', 'report_sxw', 'report_rml'):
+						if key in x:
+							del x[key]
+					return x
+				datas = clean(datas[0])
 			else:
 				datas = pickle.loads(x[2])
 			if meta:
