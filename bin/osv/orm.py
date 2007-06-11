@@ -69,7 +69,7 @@ class except_orm(Exception):
 	def __init__(self, name, value):
 		self.name = name
 		self.value = value
-		self.args='no error args'
+		self.args = (name, value)
 
 #class find_fields(object):
 #	def _start_el(self,name, attrs):
