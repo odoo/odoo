@@ -280,7 +280,9 @@ def load_modules(db, force_demo=False, status={}, update_module=False):
 			where
 				(id not in (select parent_id from ir_ui_menu where parent_id is not null))
 			and
-				(id not in (select res_id from ir_values where model='ir.ui.menu'))''')
+				(id not in (select res_id from ir_values where model='ir.ui.menu'))
+			and
+				(id not in (select res_id from ir_model_data where model='ir.ui.menu'))''')
 
 		cr.execute("update ir_module_module set state=%s where state in ('to remove')", ('uninstalled', ))
 		cr.commit()
