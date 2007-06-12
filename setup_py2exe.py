@@ -24,7 +24,7 @@ os.chdir('..')
 
 setup(
 	name="tinyerp-server",
-	console = [{"script":"bin\\tinyerp-server.py", "icon_resources":[(1,"tinyerp-icon.ico")]}],
+	console = [{"script":"bin\\tinyerp-server.py", "icon_resources":[(1,"pixmaps\\tinyerp.ico")]}],
 	data_files = data_files,
 	options = options
 	)
