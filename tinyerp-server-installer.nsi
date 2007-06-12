@@ -38,6 +38,7 @@
 ;Pages
 
   !define MUI_ICON ".\pixmaps\tinyerp.ico"
+  !define MUI_UNICON ".\pixmaps\tinyerp.ico"
   !define MUI_WELCOMEFINISHPAGE_BITMAP ".\pixmaps\tinyerp-intro.bmp"
   !define MUI_HEADERIMAGE
   !define MUI_HEADERIMAGE_BITMAP ".\pixmaps\tinyerp-header.bmp"
@@ -97,6 +98,8 @@ Section "TinyERP Server" SecTinyERPServer
   WriteRegStr HKCU "Software\TinyERP Server" "" $INSTDIR
   
   ;Create uninstaller
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\TinyERP Server" "DisplayName" "TinyERP Server (remove only)"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\TinyERP Server" "UninstallString" "$INSTDIR\Uninstall.exe"
   WriteUninstaller "$INSTDIR\Uninstall.exe"
   
 
@@ -105,7 +108,6 @@ Section "TinyERP Server" SecTinyERPServer
     ;Create shortcuts
     CreateDirectory "$SMPROGRAMS\$STARTMENU_FOLDER"
     CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\TinyERP Server.lnk" "$INSTDIR\tinyerp-server.exe"
-    CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
     CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Start service.lnk" "$INSTDIR\service\start.bat"
     CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Stop service.lnk" "$INSTDIR\service\stop.bat"
     CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Edit config.lnk" "notepad.exe" "$INSTDIR\tinyerp-server.conf"
@@ -174,6 +176,7 @@ Section "Uninstall"
     StrCmp $MUI_TEMP $SMPROGRAMS startMenuDeleteLoopDone startMenuDeleteLoop
   startMenuDeleteLoopDone:
 
+  DeleteRegKey HKEY_LOCAL_MACHINE "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\TinyERP Server"
   DeleteRegKey /ifempty HKCU "Software\TinyERP Server"
 
 SectionEnd
