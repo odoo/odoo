@@ -175,6 +175,8 @@ Section "Uninstall"
   Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall.lnk"
   Delete "$SMPROGRAMS\$MUI_TEMP\Start service.lnk"
   Delete "$SMPROGRAMS\$MUI_TEMP\Stop service.lnk"
+  Delete "$SMPROGRAMS\$MUI_TEMP\Edit config.lnk"
+  Delete "$SMPROGRAMS\$MUI_TEMP\View log.lnk"
   
   ;Delete empty start menu parent diretories
   StrCpy $MUI_TEMP "$SMPROGRAMS\$MUI_TEMP"
