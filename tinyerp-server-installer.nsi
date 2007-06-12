@@ -160,6 +160,7 @@ Section "Uninstall"
   Call un.RmDirsButOne
   Push "$INSTDIR\i18n"
   Push ""
+  RMDir "$INSTDIR\i18n"
   Call un.RmDirsButOne
   Push "$INSTDIR\doc"
   Push ""
