@@ -642,7 +642,7 @@ class sale_order_line(osv.osv):
 			lang=self.pool.get('res.partner').read(cr, uid, [partner_id])[0]['lang']
 		context = {'lang':lang}
 		if not product:
-			return {'value': {'price_unit': 0.0, 'notes':'', 'weight' : 0}, 'domain':{'product_uom':[]}}
+			return {'value': {'price_unit': 0.0, 'notes':'', 'weight' : 0, 'product_uos_qty': qty}, 'domain':{'product_uom':[]}}
 		if not pricelist:
 			raise osv.except_osv('No Pricelist !', 'You have to select a pricelist in the sale form !\nPlease set one before choosing a product.')
 		price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist], product, qty or 1.0, partner_id, {'uom': uom})[pricelist]
