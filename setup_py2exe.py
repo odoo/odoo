@@ -16,11 +16,19 @@ options = {"py2exe": {"compressed": 0,
 data_files = []
 
 os.chdir('bin')
-for (dp,dn,names) in os.walk('addons', 'i18n'):
+for (dp,dn,names) in os.walk('addons'):
+	if '.svn' in dn:
+		dn.remove('.svn')
+	data_files.append((dp, map(lambda x: os.path.join('bin', dp,x), names)))
+for (dp,dn,names) in os.walk('i18n'):
 	if '.svn' in dn:
 		dn.remove('.svn')
 	data_files.append((dp, map(lambda x: os.path.join('bin', dp,x), names)))
 os.chdir('..')
+for (dp,dn,names) in os.walk('doc'):
+	if '.svn' in dn:
+		dn.remove('.svn')
+	data_files.append((dp, map(lambda x: os.path.join(dp,x), names)))
 
 setup(
 	name="tinyerp-server",

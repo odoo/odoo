@@ -145,13 +145,26 @@ Section "Uninstall"
   Push "$INSTDIR\addons"
   Push ""
   Call un.RmFilesButOne
+  Push "$INSTDIR\i18n"
+  Push ""
+  Call un.RmFilesButOne
   Delete "$INSTDIR\service\*"
+  Push "$INSTDIR\doc"
+  Push ""
+  Call un.RmFilesButOne
   Delete "$INSTDIR\*"
   Delete "$INSTDIR\Uninstall.exe"
 
   Push "$INSTDIR\addons"
   Push ""
   Call un.RmDirsButOne
+  Push "$INSTDIR\i18n"
+  Push ""
+  Call un.RmDirsButOne
+  Push "$INSTDIR\doc"
+  Push ""
+  Call un.RmDirsButOne
+  RMDir "$INSTDIR\doc"
   RMDir "$INSTDIR\addons"
   RMDir "$INSTDIR\service"
   RMDir "$INSTDIR"
