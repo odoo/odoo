@@ -38,7 +38,6 @@
 ;Pages
 
   !define MUI_ICON ".\pixmaps\tinyerp.ico"
-  !define MUI_UNICON ".\pixmaps\tinyerp.ico"
   !define MUI_WELCOMEFINISHPAGE_BITMAP ".\pixmaps\tinyerp-intro.bmp"
   !define MUI_HEADERIMAGE
   !define MUI_HEADERIMAGE_BITMAP ".\pixmaps\tinyerp-header.bmp"
