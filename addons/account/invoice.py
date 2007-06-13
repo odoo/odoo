@@ -338,7 +338,7 @@ class account_invoice(osv.osv):
 					key = (tax.tax_code_id.id, tax.base_code_id.id, tax.account_id.id)
 					tax_key.append(key)
 					if not key in compute_taxes:
-						raise osv.except_osv('Warning !', 'Too much taxes !')
+						raise osv.except_osv('Warning !', 'Global taxes defined, but not in invoice lines !')
 					base = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, compute_taxes[key]['base'], context={'date': inv.date_invoice})
 					if abs(base - tax.base) > inv.company_id.currency_id.rounding:
 						raise osv.except_osv('Warning !', 'Tax base different !\nClick on compute to update tax base')
