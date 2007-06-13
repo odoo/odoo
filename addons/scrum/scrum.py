@@ -52,6 +52,7 @@ class scrum_project(osv.osv):
 		'tasks': fields.one2many('scrum.task', 'project_id', 'Scrum Tasks'),
 		'sprint_size': fields.integer('Sprint Days'),
 		'scrum': fields.integer('Is Scrum'),
+		'parent_id': fields.many2one('scrum.project', 'Parent project'),
 	}
 	_defaults = {
 		'product_owner_id': lambda self,cr,uid,context={}: uid,
