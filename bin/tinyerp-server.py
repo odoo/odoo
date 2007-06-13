@@ -38,9 +38,9 @@ GNU Public Licence.
 
 (c) 2003-TODAY, Fabien Pinckaers - Tiny sprl
 """
-
-__author__ = 'Fabien Pinckaers, <fp@tiny.be>'
-__version__ = '4.1.1'
+import release
+__author__ = release.author
+__version__ = release.version
 
 import __builtin__
 __builtin__.__dict__['tinyerp_version'] = __version__
@@ -51,7 +51,7 @@ __builtin__.__dict__['tinyerp_version_string'] = "Tiny ERP Server " + __version_
 #----------------------------------------------------------
 # python imports
 #----------------------------------------------------------
-import os, signal, sys
+import sys,os,signal
 
 #----------------------------------------------------------
 # get logger
