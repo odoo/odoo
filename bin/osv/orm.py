@@ -1074,6 +1074,7 @@ class orm(object):
 					res[f][arg] = getattr(self._columns[f], arg)
 			if not read_access:
 				res[f]['readonly']= True
+				res[f]['states']={}
 			for arg in ('digits', 'invisible'):
 				if hasattr(self._columns[f], arg) and getattr(self._columns[f], arg):
 					res[f][arg] = getattr(self._columns[f], arg)
