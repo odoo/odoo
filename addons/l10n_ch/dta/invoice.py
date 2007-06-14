@@ -72,12 +72,11 @@ class account_invoice(osv.osv):
 		invoices = self.browse(cr,uid,ids)
 		for invoice in invoices:
 			if invoice.bvr_ref_num and self._mod10r(invoice.bvr_ref_num[:-1]) != invoice.bvr_ref_num:
-				print self._mod10r(invoice.bvr_ref_num[:-1])
 				return False
 		return True
 	
 	_constraints = [
-		(_check_bvr, 'Error : Invalid Bvr Number (wrong checksum).', [''])
+		(_check_bvr, 'Error : Invalid Bvr Number (wrong checksum).', ['bvr_ref_num'])
 	]
 
 	

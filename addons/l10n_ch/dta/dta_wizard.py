@@ -600,16 +600,20 @@ def _create_dta(self,cr,uid,data,context):
 		log = log + "Invoice : %s, Amount paid : %d %s, Value date : %s, State : Paid."%\
 			  (invoice_number,dtal.amount_to_pay,v['invoice_currency'],date_value and date_value.strftime("%Y-%m-%d") or 'Empty date')
 
+		reconcile_id = pool.get('account.bank.statement.reconcile').create(cr, uid, {
+			'name': time.strftime('%Y-%m-%d'),
+			'line_ids': [(6, 0, i.move_line_id_payment_get(cr, uid, [i.id]))],
+			})
 
 		pool.get('account.bank.statement.line').create(cr,uid,{
 			'name':i.number,
 			'date': time.strftime('%Y-%m-%d'),
-			'amount':dtal.amount_to_pay,
+			'amount': -dtal.amount_to_pay,
 			'type':{'out_invoice':'customer','in_invoice':'supplier','out_refund':'customer','in_refund':'supplier'}[i.type],
 			'partner_id':i.partner_id.id,
 			'account_id':i.account_id.id,
 			'statement_id': bk_st_id,
-			'invoice_id': i.id,
+			'reconcile_id': reconcile_id,
 			})
 
 		dta = dta + dta_line
@@ -619,7 +623,7 @@ def _create_dta(self,cr,uid,data,context):
 		seq += 1
 		
 	# bank statement updated with the total amount :
-	pool.get('account.bank.statement').write(cr,uid,[bk_st_id],{'balance_end_real': amount_tot})
+	pool.get('account.bank.statement').write(cr,uid,[bk_st_id],{'balance_end_real': -amount_tot})
 	
 	# segment total
 	v['amount_total'] = str(amount_tot).replace('.',',')
