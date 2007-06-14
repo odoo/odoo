@@ -181,7 +181,6 @@ def tr(s):
 		res= s.encode('ascii','replace')
 	except:
 		res = s
-	print res
 	return res
 		
 class record:
@@ -215,13 +214,13 @@ class record:
 			elif self.post.has_key(field[0]):
 				value = self.post[field[0]]
 			else :
-				print "ERROR field not found >>", field[0]
+				pass
 				#raise Exception(field[0]+' not found !')
 
 			try:
 				res = res + c_ljust(value, field[1])
 			except :
-				print "ERROR ljust >>",field[0], value , field[1]
+				pass
 			
 		return res
 
@@ -359,7 +358,6 @@ def c_ljust(s, size):
 	"""
 	s= s or ''
 	if len(s) > size:
-		print "Too long data ! %s exceed %d character." % (s, size)
 		s= s[:size]
 	s = s.decode('utf-8').encode('latin1','replace').ljust(size)
 	return s
