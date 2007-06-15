@@ -73,6 +73,7 @@ class report_account_analytic_planning_stat_account(osv.osv):
 	_description = "Planning account stat"
 	_rec_name = 'account_id'
 	_auto = False
+	_log_access = False
 	_columns = {
 		'planning_id': fields.many2one('report_account_analytic.planning', 'Planning'),
 		'account_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True),
@@ -164,6 +165,7 @@ class report_account_analytic_planning_stat_user(osv.osv):
 	_description = "Planning user stat"
 	_rec_name = 'user_id'
 	_auto = False
+	_log_access = False
 	_columns = {
 		'planning_id': fields.many2one('report_account_analytic.planning', 'Planning'),
 		'user_id': fields.many2one('res.users', 'User', required=True),
