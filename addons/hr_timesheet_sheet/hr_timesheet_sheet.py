@@ -110,34 +110,17 @@ class hr_timesheet_sheet(osv.osv):
 		return result
 
 	def _total_attendance(self, cr, uid, ids, name, args, context):
-		result = {}
-		for day in self.browse(cr, uid, ids, context):
-			result[day.id] = 0.0
-			obj = self.pool.get('hr_timesheet_sheet.sheet.day')
-			ids = obj.search(cr, uid, [('sheet_id','=',day.id)])
-			for o in obj.browse(cr, uid, ids, context):
-				result[day.id] += o.total_attendance
-		return result
+		cr.execute('SELECT s.id, COALESCE(SUM(d.total_attendance),0) FROM hr_timesheet_sheet_sheet s LEFT JOIN hr_timesheet_sheet_sheet_day d ON (s.id = d.sheet_id) WHERE s.id in (%s) GROUP BY s.id'%','.join(map(str, ids)))
+		return dict(cr.fetchall())
 
 	def _total_timesheet(self, cr, uid, ids, name, args, context):
-		result = {}
-		for day in self.browse(cr, uid, ids, context):
-			result[day.id] = 0.0
-			obj = self.pool.get('hr_timesheet_sheet.sheet.day')
-			ids = obj.search(cr, uid, [('sheet_id','=',day.id)])
-			for o in obj.browse(cr, uid, ids, context):
-				result[day.id] += o.total_timesheet
-		return result
+		cr.execute('SELECT s.id, COALESCE(SUM(d.total_timesheet),0) FROM hr_timesheet_sheet_sheet s LEFT JOIN hr_timesheet_sheet_sheet_day d ON (s.id = d.sheet_id) WHERE s.id in (%s) GROUP BY s.id'%','.join(map(str, ids)))
+		return dict(cr.fetchall())
 
 	def _total_difference(self, cr, uid, ids, name, args, context):
-		result = {}
-		for day in self.browse(cr, uid, ids, context):
-			result[day.id] = 0.0
-			obj = self.pool.get('hr_timesheet_sheet.sheet.day')
-			ids = obj.search(cr, uid, [('sheet_id','=',day.id)])
-			for o in obj.browse(cr, uid, ids, context):
-				result[day.id] += o.total_difference
-		return result
+		cr.execute('SELECT s.id, COALESCE(SUM(d.total_difference),0) FROM hr_timesheet_sheet_sheet s LEFT JOIN hr_timesheet_sheet_sheet_day d ON (s.id = d.sheet_id) WHERE s.id in (%s) GROUP BY s.id'%','.join(map(str, ids)))
+		return dict(cr.fetchall())
+
 
 	def _state_attendance(self, cr, uid, ids, name, args, context):
 		result = {}
@@ -375,63 +358,53 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
 	_name = "hr_timesheet_sheet.sheet.day"
 	_description = "Timesheets by period"
 	_auto = False
-	def _total_difference(self, cr, uid, ids, name, args, context):
-		result = {}
-		for day in self.browse(cr, uid, ids, context):
-			result[day.id] = day.total_attendance-day.total_timesheet
-		return result
-
-	def _total_attendance(self, cr, uid, ids, name, args, context):
-		result = {}
-		for day in self.browse(cr, uid, ids, context):
-			cr.execute('select name,action from hr_attendance where name>=%s and name<=%s and sheet_id=%d and action in (\'sign_in\', \'sign_out\') order by name', (day.name, day.name+' 23:59:59', day.sheet_id))
-			attendences = cr.dictfetchall()
-			wh = 0
-			if attendences and attendences[0]['action'] == 'sign_out':
-				attendences.insert(0, {'name': day.name+' 00:00:00', 'action':'sign_in'})
-			if attendences and attendences[-1]['action'] == 'sign_in':
-				if day.name==time.strftime('%Y-%m-%d'):
-					attendences.append({'name': time.strftime('%Y-%m-%d %H:%M:%S'), 'action':'sign_out'})
-				else:
-					attendences.append({'name': day.name+' 23:59:59', 'action':'sign_out'})
-			for att in attendences:
-				dt = DateTime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')
-				if att['action'] == 'sign_out':
-					wh += (dt - ldt).hours
-				ldt = dt
-			result[day.id] = round(wh,2)
-		return result
 	_order='name'
 	_columns = {
 		'name': fields.date('Date', readonly=True),
 		'sheet_id': fields.many2one('hr_timesheet_sheet.sheet', 'Sheet', readonly=True, select="1"),
 		'total_timesheet': fields.float('Project Timesheet', readonly=True),
-		'total_attendance': fields.function(_total_attendance, method=True, string='Attendance', readonly=True),
-		'total_difference': fields.function(_total_difference, method=True, string='Difference', readonly=True),
+		'total_attendance': fields.float('Attendance', readonly=True),
+		'total_difference': fields.float('Difference', readonly=True),
 	}
 	def init(self, cr):
 		cr.execute("""create or replace view hr_timesheet_sheet_sheet_day as
-			(
-				select
-					min(hrt.id) as id,
-					l.date as name,
-					hrt.sheet_id as sheet_id,
-					sum(l.unit_amount) as total_timesheet
-				from
-					hr_analytic_timesheet hrt
-					left join account_analytic_line l on (l.id = hrt.line_id)
-				group by l.date, hrt.sheet_id
-			) union (
-				select
-					min(a.oid) as id,
-					a.name::date as name,
-					a.sheet_id as sheet_id,
-					0.0 as total_timesheet
-				from
-					hr_attendance a
-				where a.name::date not in (select distinct date from account_analytic_line)
-				group by a.name::date, a.sheet_id
-			)""")
+			SELECT
+				id,
+				name,
+				sheet_id,
+				total_timesheet,
+				total_attendance,
+				(total_attendance - total_timesheet) as total_difference
+			FROM
+				((
+					select
+						min(hrt.id) as id,
+						l.date as name,
+						hrt.sheet_id as sheet_id,
+						sum(l.unit_amount) as total_timesheet,
+						0.0 as total_attendance
+					from
+						hr_analytic_timesheet hrt
+						left join account_analytic_line l on (l.id = hrt.line_id)
+					group by l.date, hrt.sheet_id
+				) union (
+					select
+						min(a.oid) as id,
+						a.name::date as name,
+						a.sheet_id as sheet_id,
+						0.0 as total_timesheet,
+						COALESCE(
+							CASE WHEN SUM(((EXTRACT(hour FROM a.name) * 60) + EXTRACT(minute FROM a.name)) * (CASE WHEN a.action = 'sign_in' THEN -1 ELSE 1 END)) < 0
+								THEN SUM(((EXTRACT(hour FROM a.name) * 60) + EXTRACT(minute FROM a.name)) * (CASE WHEN a.action = 'sign_in' THEN -1 ELSE 1 END)) + 24 * 60
+								ELSE SUM(((EXTRACT(hour FROM a.name) * 60) + EXTRACT(minute FROM a.name)) * (CASE WHEN a.action = 'sign_in' THEN -1 ELSE 1 END))
+							END,
+							0)/60
+						as total_attendance
+					from
+						hr_attendance a
+					where a.name::date not in (select distinct date from account_analytic_line)
+					group by a.name::date, a.sheet_id
+				)) AS foo""")
 hr_timesheet_sheet_sheet_day()
 
 
