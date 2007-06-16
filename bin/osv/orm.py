@@ -270,7 +270,7 @@ class orm(object):
 	_inherits = {}
 	_sequence = None
 	_description = None
-	_protected = ['read','write','create','default_get','perm_read','perm_write','unlink','fields_get','fields_view_get','search','name_get','distinct_field_get','name_search','copy','import_data']
+	_protected = ['read','write','create','default_get','perm_read','perm_write','unlink','fields_get','fields_view_get','search','name_get','distinct_field_get','name_search','copy','import_data','search_count']
 	def _field_create(self, cr):
 		cr.execute("SELECT id FROM ir_model WHERE model='%s'" % self._name)
 		if not cr.rowcount:
