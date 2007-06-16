@@ -58,9 +58,6 @@ def _delivery_set(self, cr, uid, data, context):
 
 	for order in order_objs:		
 		dt = time.strftime('%Y-%m-%d')
-		for line in order.order_line:
-			if line.date_planned > dt:
-				dt = line.date_planned
 
 		grid_id = pooler.get_pool(cr.dbname).get('delivery.carrier').grid_get(cr, uid, [data['form']['carrier_id']],order.partner_shipping_id.id)
 		if not grid_id: 
