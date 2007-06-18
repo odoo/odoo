@@ -37,9 +37,22 @@ _journal_form = '''<?xml version="1.0"?>
 	<field name="period_id"/>
 </form>'''
 
+def _period_get(self, cr, uid, datas, ctx={}):
+	try:
+		pool = pooler.get_pool(cr.dbname)
+		ids = pool.get('account.period').find(cr, uid, context=ctx)
+		return {'period_id': ids[0]}
+	except:
+		return {}
+
 _journal_fields = {
 	'journal_id': {'string':'Journal', 'type':'many2one', 'relation':'account.journal', 'required':True},
-	'period_id': {'string':'Period', 'type':'many2one', 'relation':'account.period', 'required':True}
+	'period_id': {
+		'string':'Period', 
+		'type':'many2one', 
+		'relation':'account.period', 
+		'required':True,
+	}
 }
 
 def _action_open_window(self, cr, uid, data, context):
@@ -68,7 +81,7 @@ def _action_open_window(self, cr, uid, data, context):
 class wiz_journal(wizard.interface):
 	states = {
 		'init': {
-			'actions': [],
+			'actions': [_period_get],
 			'result': {'type': 'form', 'arch':_journal_form, 'fields':_journal_fields, 'state':[('end','Cancel'),('open','Open Journal')]}
 		},
 		'open': {
