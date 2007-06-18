@@ -56,14 +56,11 @@ def _delivery_set(self, cr, uid, data, context):
 	line_obj = pooler.get_pool(cr.dbname).get('sale.order.line')
 	order_objs = order_obj.browse(cr, uid, data['ids'], context)
 
-	for order in order_objs:		
-		dt = time.strftime('%Y-%m-%d')
-
+	for order in order_objs:
 		grid_id = pooler.get_pool(cr.dbname).get('delivery.carrier').grid_get(cr, uid, [data['form']['carrier_id']],order.partner_shipping_id.id)
 		if not grid_id: 
 			raise except_osv('No grid avaible !', 'No grid matching for this carrier !')
 		grid = pooler.get_pool(cr.dbname).get('delivery.grid').browse(cr, uid, [grid_id])[0]
-
 
 		line_obj.create(cr, uid, {
 			'order_id': order.id,
@@ -71,9 +68,7 @@ def _delivery_set(self, cr, uid, data, context):
 			'product_uom_qty': 1,
 			'product_uom': grid.carrier_id.product_id.uom_id.id,
 			'product_id': grid.carrier_id.product_id.id,
-#			'price_unit': pooler.get_pool(cr.dbname).get('delivery.grid').get_price(cr, uid, order, data, dt),
-			'price_unit': grid.get_price(cr, uid, grid.id, order, dt, context), 
-			'date_planned': dt,
+			'price_unit': grid.get_price(cr, uid, grid.id, order, time.strftime('%Y-%m-%d'), context), 
 			'tax_id': [(6,0,[ x.id for x in grid.carrier_id.product_id.taxes_id])],
 			'type': 'make_to_stock'
 			})
