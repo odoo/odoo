@@ -657,7 +657,7 @@ class orm(object):
 			#
 			# Import one2many fields
 			#
-			nbrmax = 0
+			nbrmax = 1
 			for field in todo:
 				newfd = self.pool.get(fields_def[field]['relation']).fields_get(cr, uid, context=context)
 				(newrow,max2,w2, translate2) = process_liness(self, datas, prefix+[field], newfd, position)
@@ -686,7 +686,7 @@ class orm(object):
 				for i in range(max(nbrmax,1)):
 					#if datas:
 					datas.pop(0)
-			result = [row, nbrmax+1, warning, translate]
+			result = [row, nbrmax, warning, translate]
 			return result
 
 		fields_def = self.fields_get(cr, uid, context=context)
