@@ -369,42 +369,44 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
 	def init(self, cr):
 		cr.execute("""create or replace view hr_timesheet_sheet_sheet_day as
 			SELECT
-				id,
+				MAX(id) as id,
 				name,
 				sheet_id,
-				total_timesheet,
-				total_attendance,
-				(total_attendance - total_timesheet) as total_difference
+				SUM(total_timesheet) as total_timesheet,
+				CASE WHEN SUM(total_attendance) < 0
+					THEN (SUM(total_attendance) +
+						CASE WHEN current_date <> name
+							THEN 1440
+							ELSE (EXTRACT(hour FROM current_time) * 60) + EXTRACT(minute FROM current_time)
+						END
+						)
+					ELSE SUM(total_attendance)
+				END /60  as total_attendance,
+				(SUM(total_attendance) - SUM(total_timesheet)) as total_difference
 			FROM
 				((
 					select
 						min(hrt.id) as id,
-						l.date as name,
+						l.date::date as name,
 						hrt.sheet_id as sheet_id,
 						sum(l.unit_amount) as total_timesheet,
 						0.0 as total_attendance
 					from
 						hr_analytic_timesheet hrt
 						left join account_analytic_line l on (l.id = hrt.line_id)
-					group by l.date, hrt.sheet_id
+					group by l.date::date, hrt.sheet_id
 				) union (
 					select
-						min(a.oid) as id,
+						-min(a.id) as id,
 						a.name::date as name,
 						a.sheet_id as sheet_id,
 						0.0 as total_timesheet,
-						COALESCE(
-							CASE WHEN SUM(((EXTRACT(hour FROM a.name) * 60) + EXTRACT(minute FROM a.name)) * (CASE WHEN a.action = 'sign_in' THEN -1 ELSE 1 END)) < 0
-								THEN SUM(((EXTRACT(hour FROM a.name) * 60) + EXTRACT(minute FROM a.name)) * (CASE WHEN a.action = 'sign_in' THEN -1 ELSE 1 END)) + 24 * 60
-								ELSE SUM(((EXTRACT(hour FROM a.name) * 60) + EXTRACT(minute FROM a.name)) * (CASE WHEN a.action = 'sign_in' THEN -1 ELSE 1 END))
-							END,
-							0)/60
-						as total_attendance
+						SUM(((EXTRACT(hour FROM a.name) * 60) + EXTRACT(minute FROM a.name)) * (CASE WHEN a.action = 'sign_in' THEN -1 ELSE 1 END)) as total_attendance
 					from
 						hr_attendance a
-					where a.name::date not in (select distinct date from account_analytic_line)
 					group by a.name::date, a.sheet_id
-				)) AS foo""")
+				)) AS foo
+				GROUP BY name, sheet_id""")
 hr_timesheet_sheet_sheet_day()
 
 
