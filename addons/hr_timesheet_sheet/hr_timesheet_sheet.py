@@ -252,6 +252,14 @@ class hr_timesheet_sheet(osv.osv):
 	_constraints = [
 		(_sheet_date, 'You can not have 2 timesheets that overlaps !', ['date_from','date_to'])
 	]
+
+	def action_set_to_draft(self, cr, uid, ids, *args):
+		self.write(cr, uid, ids, {'state': 'draft'})
+		wf_service = netsvc.LocalService('workflow')
+		for id in ids:
+			wf_service.trg_create(uid, self._name, id, cr)
+		return True
+
 hr_timesheet_sheet()
 
 def _get_current_sheet(self, cr, uid, context={}):
