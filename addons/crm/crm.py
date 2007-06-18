@@ -229,7 +229,7 @@ class crm_case(osv.osv):
 		'name': fields.char('Case Description',size=64, required=True),
 		'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
 		'active': fields.boolean('Active'),
-		'description': fields.text('Description'),
+		'description': fields.text('Your action'),
 		'section_id': fields.many2one('crm.case.section', 'Case Section', required=True, select=True),
 		'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id)]"),
 		'planned_revenue': fields.float('Planned Revenue'),
@@ -247,7 +247,8 @@ class crm_case(osv.osv):
 		'date_closed': fields.datetime('Date Closed', readonly=True),
 		'canal_id': fields.many2one('res.partner.canal', 'Channel'),
 		'user_id': fields.many2one('res.users', 'User Responsible'),
-		'history_line': fields.one2many('crm.case.history', 'case_id', 'Case History'),
+		'history_line': fields.one2many('crm.case.history', 'case_id', 'Communication'),
+		'log_ids': fields.one2many('crm.case.log', 'case_id', 'Logs History'),
 		'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
 		'ref' : fields.reference('Reference', selection=_links_get, size=128),
 		'ref2' : fields.reference('Reference 2', selection=_links_get, size=128),
@@ -400,16 +401,21 @@ class crm_case(osv.osv):
 				})
 		return True
 
-	def __history(self, cr, uid, cases, keyword, context={}):
+	def __history(self, cr, uid, cases, keyword, history=False, email=False, context={}):
 		for case in cases:
-			self.pool.get('crm.case.history').create(cr, uid, {
+			data = {
 				'name': keyword,
-				'description': case.description,
 				'som': False,
 				'canal_id': False,
 				'user_id': uid,
 				'case_id': case.id
-			})
+			}
+			obj = self.pool.get('crm.case.log')
+			if history:
+				obj = self.pool.get('crm.case.history')
+				data['description'] = case.description
+				data['email'] = False
+			obj.create(cr, uid, data, context)
 		return True
 
 	def create(self, cr, uid, *args, **argv):
@@ -450,17 +456,17 @@ class crm_case(osv.osv):
 						)
 		return True
 
-	def case_log(self, cr, uid, ids, *args):
+	def case_log(self, cr, uid, ids, email=False, *args):
 		cases = self.browse(cr, uid, ids)
-		self.__history(cr, uid, cases, '')
+		self.__history(cr, uid, cases, 'Communication', history=True, email=email)
 		return self.write(cr, uid, ids, {'description':False, 'som':False, 'canal_id': False})
 
-	def case_log_reply(self, cr, uid, ids, *args):
+	def case_log_reply(self, cr, uid, ids, email=False, *args):
 		cases = self.browse(cr, uid, ids)
 		for case in cases:
 			if not case.email_from:
 				raise osv.except_osv('Error !', 'You must put a Partner eMail to use this action !')
-		self.__history(cr, uid, cases, '')
+		self.__history(cr, uid, cases, 'Communication', history=True, email=False)
 		for case in cases:
 			self.write(cr, uid, [case.id], {'description':False, 'som':False, 'canal_id': False, 'email_last':case.description})
 			emails = [case.email_from] + (case.email_cc or '').split(',')
@@ -558,20 +564,32 @@ class crm_case(osv.osv):
 		return True
 crm_case()
 
-class crm_case_history(osv.osv):
-	_name = "crm.case.history"
-	_description = "Case history"
+class crm_case_log(osv.osv):
+	_name = "crm.case.log"
+	_description = "Case communication history"
+	_order = "id desc"
 	_columns = {
 		'name': fields.char('Name', size=64),
-		'description': fields.text('Description'),
 		'som': fields.many2one('res.partner.som', 'State of Mind'),
-		'date': fields.date('Date'),
+		'date': fields.datetime('Date'),
 		'canal_id': fields.many2one('res.partner.canal', 'Channel'),
 		'user_id': fields.many2one('res.users', 'User Responsible', readonly=True),
 		'case_id': fields.many2one('crm.case', 'Case', required=True, ondelete='cascade')
 	}
 	_defaults = {
-		'date': lambda *a: time.strftime('%Y-%m-%d'),
+		'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+	}
+crm_case_log()
+
+class crm_case_history(osv.osv):
+	_name = "crm.case.history"
+	_description = "Case history"
+	_order = "id desc"
+	_inherits = {'crm.case.log':"log_id"}
+	_columns = {
+		'description': fields.text('Description'),
+		'email': fields.char('Email', size=84),
+		'log_id': fields.many2one('crm.case.log','Log'),
 	}
 crm_case_history()
 
