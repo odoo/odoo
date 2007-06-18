@@ -20,8 +20,7 @@
 	re-invoice your customer's expenses if your work by project.
 	""",
 	"init_xml" : [],
-	"demo_xml" : [],
-	#"demo_xml" : ["hr_expense_demo.xml", "hr.expense.expense.csv"],
+	"demo_xml" : ["hr_expense_demo.xml", "hr.expense.expense.csv"],
 	"update_xml" : ["hr_expense_sequence.xml", "hr_expense_workflow.xml", "hr_expense_view.xml", "hr_expense_report.xml",],
 	"active": False,
 	"installable": True
