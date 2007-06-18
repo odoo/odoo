@@ -41,7 +41,7 @@ class ir_default(osv.osv):
 		'company_id': fields.many2one('res.company','Company')
 	}
 	_defaults = {
-		'company_id': lambda self, cr, uid, context: self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id,
+		'company_id': lambda self, cr, uid, context: self.pool.get('res.users').read(cr, uid, uid, ['company_id'], context=context)['company_id'],
 	}
 ir_default()
 
