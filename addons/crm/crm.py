@@ -414,7 +414,8 @@ class crm_case(osv.osv):
 			if history:
 				obj = self.pool.get('crm.case.history')
 				data['description'] = case.description
-				data['email'] = False
+				print case, case.user_id, case.user_id.address_id
+				data['email'] = email or (case.user_id and case.user_id.address_id and case.user_id.address_id.email) or False
 			obj.create(cr, uid, data, context)
 		return True
 
@@ -456,17 +457,17 @@ class crm_case(osv.osv):
 						)
 		return True
 
-	def case_log(self, cr, uid, ids, email=False, *args):
+	def case_log(self, cr, uid, ids,context={}, email=False, *args):
 		cases = self.browse(cr, uid, ids)
-		self.__history(cr, uid, cases, 'Communication', history=True, email=email)
+		self.__history(cr, uid, cases, 'Historize', history=True, email=email)
 		return self.write(cr, uid, ids, {'description':False, 'som':False, 'canal_id': False})
 
-	def case_log_reply(self, cr, uid, ids, email=False, *args):
+	def case_log_reply(self, cr, uid, ids, context={}, email=False, *args):
 		cases = self.browse(cr, uid, ids)
 		for case in cases:
 			if not case.email_from:
 				raise osv.except_osv('Error !', 'You must put a Partner eMail to use this action !')
-		self.__history(cr, uid, cases, 'Communication', history=True, email=False)
+		self.__history(cr, uid, cases, 'Send', history=True, email=False)
 		for case in cases:
 			self.write(cr, uid, [case.id], {'description':False, 'som':False, 'canal_id': False, 'email_last':case.description})
 			emails = [case.email_from] + (case.email_cc or '').split(',')

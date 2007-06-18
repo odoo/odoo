@@ -260,12 +260,23 @@
 						<button name="remind_partner" string="Send Reminder" states="open,pending" type="object"/>
 					</group>
 
-					<field name="description" colspan="4" select="2"/>
+					<field name="history_line" colspan="4" nolabel="1" mode="form,tree">
+						<form string="Communication">
+							<group col="6" colspan="4">
+								<field name="date" select="1"/>
+								<field name="email" select="1"/>
+								<field name="canal_id" select="2"/>
+							</group>
+							<newline/>
+							<field name="description" colspan="4" nolabel="1" select="2"/>
+						</form>
+					</field>
+					<field name="description" colspan="4" select="2" nolabel="1"/>
 					<field name="date_deadline" select="2"/>
 
 					<group col="2" colspan="2">
 					<button name="case_log_reply" string="Send" states="open" type="object"/>
-					<button name="case_log" string="Clear" states="open" type="object"/>
+					<button name="case_log" string="Historize" states="open" type="object"/>
 					</group>
 
 					<field name="state" select="1"/>
@@ -277,15 +288,6 @@
 						<button name="case_escalate" string="Escalate" states="open,draft,pending" type="object"/>
 						<button name="case_reset" string="Reset to Draft" states="done,cancel" type="object"/>
 					</group>
-					<field name="history_line" colspan="4" nolabel="1" mode="form,tree">
-						<form string="Communication">
-							<field name="user_id" select="2"/>
-							<field name="date" select="2"/>
-							<field name="email" select="2"/>
-							<newline/>
-							<field name="description" colspan="4" nolabel="1"/>
-						</form>
-					</field>
 				</page><page string="References">
 					<field name="id" select="1"/>
 					<field name="categ_id" select="2" on_change="onchange_categ_id(categ_id)"/>
