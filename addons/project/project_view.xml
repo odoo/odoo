@@ -359,7 +359,7 @@
 			<field name="name">Project's tasks</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-			<field name="domain">[('project_id', 'child_of', active_id)]</field>
+			<field name="domain">[('project_id', 'child_of', [active_id])]</field>
 		</record>
 		<record model="ir.values" id="ir_project_task_open">
 			<field name="key2" eval=" 'tree_but_open'" />

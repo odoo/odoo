@@ -1436,7 +1436,7 @@
 		<field name="res_model">account.move.line</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
-		<field name="domain">[('account_id','=',active_id),('state','&lt;&gt;','draft')]</field>
+		<field name="domain">[('account_id','child_of', [active_id]),('state','&lt;&gt;','draft')]</field>
 	</record>
 	<wizard string="Move line select" menu="False" model="account.move.line" name="account.move.line.select" id="wizard_move_line_select"/>
 	<record model="ir.values" id="ir_open_account_account">
