@@ -82,7 +82,6 @@ class res_request(osv.osv):
 	}
 	_defaults = {
 		'act_from': lambda obj,cr,uid,context={}: uid,
-		'act_to': lambda obj,cr,uid,context={}: uid,
 		'state': lambda obj,cr,uid,context={}: 'draft',
 		'active': lambda obj,cr,uid,context={}: True,
 		'priority': lambda obj,cr,uid,context={}: '1',
