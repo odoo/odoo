@@ -16,7 +16,12 @@
 	"depends" : ["base"],
 	"init_xml" : [],
 	"demo_xml" : ["hr_demo.xml", "hr_bel_holidays_2005.xml"],
-	"update_xml" : ["hr_view.xml", "hr_report.xml", "hr_wizard.xml"],
+	"update_xml" : [
+		"hr_view.xml", 
+		"hr_report.xml", 
+		"hr_wizard.xml",
+		"hr_department_view.xml"
+	],
 	"active": False,
 	"installable": True
 }

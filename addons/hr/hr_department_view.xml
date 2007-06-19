@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<terp>
+<data>
+
+	<!--
+	======================
+	department
+	======================
+	-->
+	<record model="ir.ui.view" id="view_department_form">
+		<field name="name">hr.department.form</field>
+		<field name="model">hr.department</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="department">
+				<notebook>
+				<page string="Department">
+					<field name="name" colspan="4" select="1"/>
+					<field name="company_id" select="1"/>
+					<field name="parent_id" select="2"/>
+					<field name="manager_id" select="1" colspan="4"/>
+					<field name="member_ids" colspan="4"/>
+				</page><page string="Notes">
+					<field name="note" colspan="4" nolabel="1"/>
+				</page>
+				</notebook>
+			</form>
+		</field>
+	</record>
+	<record model="ir.ui.view" id="view_department_tree">
+		<field name="name">hr.department.tree</field>
+		<field name="model">hr.department</field>
+		<field name="type">tree</field>
+		<field name="field_parent">child_ids</field>
+		<field name="arch" type="xml">
+			<tree string="Companies">
+				<field name="name"/>
+				<field name="company_id"/>
+				<field name="manager_id"/>
+			</tree>
+		</field>
+	</record>
+	<record model="ir.actions.act_window" id="open_module_tree_department_tree">
+		<field name="name">Departments</field>
+		<field name="res_model">hr.department</field>
+		<field name="view_type">tree</field>
+		<field name="domain">[('parent_id','=',False)]</field>
+	</record>
+	<menuitem name="Human Resources/Configuration/Departments"
+		action="open_module_tree_department_tree" 
+		id="menu_department_tree"/>
+
+	<record model="ir.actions.act_window" id="open_module_tree_department">
+		<field name="name">Departments</field>
+		<field name="res_model">hr.department</field>
+		<field name="view_type">form</field>
+	</record>
+
+	<menuitem name="Human Resources/Configuration/Departments/Define departments"
+		action="open_module_tree_department" 
+		id="menu_department_def"/>
+
+</data>
+</terp>

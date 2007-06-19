@@ -160,6 +160,40 @@
 			id="menu_act_hr_timesheet_sheet_form_my_confirm"
 			action="act_hr_timesheet_sheet_form_my_confirm" />
 
+		<wizard string="My department's timesheet"
+			model="hr.employee"
+			name="hr_timesheet_sheet.department.open"
+			id="act_hr_timesheet_sheet_form_department_current"/>
+		<menuitem name="Human Resources/Timesheets/My department's timesheets"
+			id="menu_act_hr_timesheet_sheet_form_department_current"
+			action="act_hr_timesheet_sheet_form_department_current"
+			icon="STOCK_JUSTIFY_FILL"
+			type="wizard"/>
+
+		<wizard string="My department's timesheet"
+			model="hr.employee"
+			name="hr_timesheet_sheet.department.validate.open"
+			id="act_hr_timesheet_sheet_form_department_validate"/>
+		<menuitem name="Human Resources/Timesheets/My department's timesheets/Timesheets to validate"
+			id="menu_act_hr_timesheet_sheet_form_department_validate"
+			action="act_hr_timesheet_sheet_form_department_validate"
+			icon="STOCK_JUSTIFY_FILL"
+			type="wizard"/>
+
+
+		<wizard string="My department's timesheet"
+			model="hr.employee"
+			name="hr_timesheet_sheet.department.confirm.open"
+			id="act_hr_timesheet_sheet_form_department_confirm"/>
+		<menuitem name="Human Resources/Timesheets/My department's timesheets/Timesheets to confirm"
+			id="menu_act_hr_timesheet_sheet_form_department_confirm"
+			action="act_hr_timesheet_sheet_form_department_confirm"
+			icon="STOCK_JUSTIFY_FILL"
+			type="wizard"/>
+
+
+
+
 		<wizard string="My current timesheet"
 			model="hr.employee"
 			name="hr_timesheet_sheet.current.open"
@@ -167,6 +201,7 @@
 		<menuitem name="Human Resources/Timesheets/My timesheets/My current timesheet"
 			id="menu_act_hr_timesheet_sheet_form_my_current"
 			action="act_hr_timesheet_sheet_form_my_current"
+			icon="STOCK_NEW"
 			type="wizard"/>
 
 		<record model="ir.actions.act_window" id="act_hr_timesheet_sheet_form_all_confirm">

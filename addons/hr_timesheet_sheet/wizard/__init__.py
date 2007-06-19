@@ -28,3 +28,4 @@
 ##############################################################################
 
 import wizard_timesheet_current
+import wizard_timesheet_department
