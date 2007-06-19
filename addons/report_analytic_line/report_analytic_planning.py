@@ -61,7 +61,7 @@ class report_account_analytic_planning_line(osv.osv):
 	_columns = {
 		'account_id':fields.many2one('account.analytic.account', 'Analytic account', required=True),
 		'planning_id': fields.many2one('report_account_analytic.planning', 'Planning', required=True, ondelete='cascade'),
-		'user_id': fields.many2one('res.users', 'User', required=True),
+		'user_id': fields.many2one('res.users', 'User'),
 		'amount': fields.float('Quantity', required=True),
 		'amount_unit':fields.many2one('product.uom', 'Qty UoM', required=True),
 	}
@@ -130,7 +130,7 @@ class report_account_analytic_planning_stat(osv.osv):
 		return result
 	_columns = {
 		'planning_id': fields.many2one('report_account_analytic.planning', 'Planning'),
-		'user_id': fields.many2one('res.users', 'User', required=True),
+		'user_id': fields.many2one('res.users', 'User'),
 		'manager_id': fields.many2one('res.users', 'Manager'),
 		'account_id': fields.many2one('account.analytic.account', 'Account', required=True),
 		'sum_amount': fields.float('Planned Work', required=True),
@@ -167,8 +167,8 @@ class report_account_analytic_planning_stat_user(osv.osv):
 	_auto = False
 	_log_access = False
 	_columns = {
-		'planning_id': fields.many2one('report_account_analytic.planning', 'Planning'),
-		'user_id': fields.many2one('res.users', 'User', required=True),
+		'planning_id': fields.many2one('report_account_analytic.planning', 'Planning', required=True),
+		'user_id': fields.many2one('res.users', 'User'),
 		'quantity': fields.float('Quantity', required=True)
 	}
 	def init(self, cr):
