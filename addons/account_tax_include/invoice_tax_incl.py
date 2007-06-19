@@ -68,8 +68,8 @@ class account_invoice(osv.osv):
 										'Price method', required=True, readonly=True,
 										states={'draft':[('readonly',False)]}),
 		'amount_untaxed': fields.function(_amount_untaxed, digits=(16,2), method=True,string='Untaxed Amount'),
-		'amount_tax': fields.function(_amount_tax, method=True, string='Tax'),
-		'amount_total': fields.function(_amount_total, method=True, string='Total'),
+		'amount_tax': fields.function(_amount_tax, method=True, string='Tax', store=True),
+		'amount_total': fields.function(_amount_total, method=True, string='Total', store=True),
 	}
 	_defaults = {
 		'price_type': lambda *a: 'tax_excluded',
@@ -88,22 +88,32 @@ class account_invoice_line(osv.osv):
 		res2 = res.copy()
 		for line in self.browse(cr, uid, ids):
 			if line.invoice_id.price_type == 'tax_included':
+				product_taxes = None
 				if line.product_id:
-					for tax in tax_obj.compute_inv(cr, uid,line.product_id.taxes_id, line.price_unit, line.quantity):
+					if line.invoice_id.type in ('out_invoice', 'out_refund'):
+						product_taxes = line.product_id.taxes_id
+					else:
+						product_taxes = line.product_id.supplier_taxes_id
+				if product_taxes:
+					for tax in tax_obj.compute_inv(cr, uid, product_taxes, res[line.id]/line.quantity, line.quantity):
 						res[line.id] = res[line.id] - tax['amount']
 				else:
-					for tax in tax_obj.compute_inv(cr, uid,line.invoice_line_tax_id, line.price_unit, line.quantity):
+					for tax in tax_obj.compute_inv(cr, uid,line.invoice_line_tax_id, res[line.id]/line.quantity, line.quantity):
 						res[line.id] = res[line.id] - tax['amount']
-			if name == 'price_subtotal_incl':
-				if line.product_id and line.invoice_id.price_type == 'tax_included':
-					prod_taxe_ids = [ t.id for t in line.product_id.taxes_id ]
+			if name == 'price_subtotal_incl' and line.invoice_id.price_type == 'tax_included':
+				prod_taxe_ids = None
+				line_taxe_ids = None
+				if product_taxes:
+					prod_taxe_ids = [ t.id for t in product_taxes ]
 					prod_taxe_ids.sort()
 					line_taxe_ids = [ t.id for t in line.invoice_line_tax_id ]
 					line_taxe_ids.sort()
-				if line.product_id and line.invoice_id.price_type == 'tax_included' and prod_taxe_ids == line_taxe_ids:
+				if product_taxes and prod_taxe_ids == line_taxe_ids:
+					res[line.id] = res2[line.id]
+				elif not line.product_id:
 					res[line.id] = res2[line.id]
 				else:
-					for tax in tax_obj.compute(cr, uid, line.invoice_line_tax_id, line.price_unit, line.quantity):
+					for tax in tax_obj.compute(cr, uid, line.invoice_line_tax_id, res[line.id]/line.quantity, line.quantity):
 						res[line.id] = res[line.id] + tax['amount']
 			res[line.id]= round(res[line.id], 2)
 		return res
@@ -193,7 +203,7 @@ class account_invoice_tax(osv.osv):
 			return super(account_invoice_tax,self).compute(cr, uid, invoice_id)
 
 		for line in inv.invoice_line:
-			for tax in tax_obj.compute_inv(cr, uid, line.invoice_line_tax_id, line.price_unit, line.quantity, inv.address_invoice_id.id, line.product_id, inv.partner_id):
+			for tax in tax_obj.compute_inv(cr, uid, line.invoice_line_tax_id, (line.price_unit * (1-(line.discount or 0.0)/100.0)), line.quantity, inv.address_invoice_id.id, line.product_id, inv.partner_id):
 				val={}
 				val['invoice_id'] = inv.id
 				val['name'] = tax['name']

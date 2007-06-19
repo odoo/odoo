@@ -14,6 +14,18 @@
 		</field>
 	</record>
 
+	<record model="ir.ui.view" id="account_tax_view_price_subtotal_incl">
+		<field name="name">purchase.order.line.tree</field>
+		<field name="type">tree</field>
+		<field name="model">purchase.order.line</field>
+		<field name="inherit_id" ref="purchase.purchase_order_line_tree" />
+		<field name="arch" type="xml">
+			<field name="price_subtotal" position="after">
+				<field name="price_subtotal_incl"/>
+			</field>
+		</field>
+	</record>
+
 </data>
 </terp>
 

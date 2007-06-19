@@ -784,14 +784,14 @@ class account_invoice_tax(osv.osv):
 		cur = inv.currency_id
 
 		for line in inv.invoice_line:
-			for tax in tax_obj.compute(cr, uid, line.invoice_line_tax_id, line.price_unit, line.quantity, inv.address_invoice_id.id, line.product_id, inv.partner_id):
+			for tax in tax_obj.compute(cr, uid, line.invoice_line_tax_id, (line.price_unit* (1-(line.discount or 0.0)/100.0)), line.quantity, inv.address_invoice_id.id, line.product_id, inv.partner_id):
 				val={}
 				val['invoice_id'] = inv.id
 				val['name'] = tax['name']
 				val['amount'] = cur_obj.round(cr, uid, cur, tax['amount'])
 				val['manual'] = False
 				val['sequence'] = tax['sequence']
-				val['base'] = tax['price_unit'] * line['quantity']
+				val['base'] = tax['price_unit'] * line['quantity'] * (1-(line.discount or 0.0)/100.0)
 
 				if inv.type in ('out_invoice','in_invoice'):
 					val['base_code_id'] = tax['base_code_id']

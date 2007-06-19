@@ -34,20 +34,7 @@ from osv import fields, osv
 import ir
 
 class purchase_order(osv.osv):
-	def _amount_untaxed(self, cr, uid, ids, prop, unknow_none,unknow_dict):
-		ti = []
-		for inv in self.read(cr, uid, ids, ['price_type']):
-			if inv['price_type']=='tax_included':
-				ti.append(inv['id'])
-		id_set=",".join(map(str,ids))
-		cr.execute("SELECT s.id,COALESCE(SUM(l.price_unit*l.product_qty),0)::decimal(16,2) AS amount FROM purchase_order s LEFT OUTER JOIN purchase_order_line l ON (s.id=l.order_id) WHERE s.id IN ("+id_set+") GROUP BY s.id ")
-		res=dict(cr.fetchall())
-		if len(ti):
-			tax = self._amount_tax(cr, uid, ti, prop, unknow_none,unknow_dict)
-			for id in ti:
-				res[id] = res[id] - tax.get(id, 0.0)
-		return res
-
+	_inherit = "purchase.order"
 	def _amount_tax(self, cr, uid, ids, field_name, arg, context):
 		res = {}
 		cur_obj=self.pool.get('res.currency')
@@ -63,13 +50,11 @@ class purchase_order(osv.osv):
 					val += cur_obj.round(cr, uid, cur, c['amount'])
 			res[order.id]=cur_obj.round(cr, uid, cur, val)
 		return res
-	_inherit = "purchase.order"
 	_columns = {
 		'price_type': fields.selection([
 			('tax_included','Tax included'),
 			('tax_excluded','Tax excluded')
 		], 'Price method', required=True),
-		'amount_untaxed': fields.function(_amount_untaxed, method=True, string='Untaxed Amount'),
 		'amount_tax': fields.function(_amount_tax, method=True, string='Taxes'),
 	}
 	_defaults = {
@@ -81,3 +66,40 @@ class purchase_order(osv.osv):
 		}
 purchase_order()
 
+class purchase_order_line(osv.osv):
+	_inherit = 'purchase.order.line'
+	def _amount_line(self, cr, uid, ids, name, arg, context):
+		res = {}
+		cur_obj=self.pool.get('res.currency')
+		tax_obj = self.pool.get('account.tax')
+		res = super(purchase_order_line, self)._amount_line(cr, uid, ids, name, arg, context)
+		res2 = res.copy()
+		for line in self.browse(cr, uid, ids):
+			if line.order_id.price_type == 'tax_included':
+				if line.product_id:
+					for tax in tax_obj.compute_inv(cr, uid, line.product_id.supplier_taxes_id, res[line.id]/line.product_qty, line.product_qty):
+						res[line.id] = res[line.id] - tax['amount']
+				else:
+					for tax in tax_obj.compute_inv(cr, uid, line.taxes_id, res[line.id]/line.product_qty, line.product_qty):
+						res[line.id] = res[line.id] - tax['amount']
+			if name == 'price_subtotal_incl' and line.order_id.price_type == 'tax_included':
+				if line.product_id:
+					prod_taxe_ids = [ t.id for t in line.product_id.supplier_taxes_id ]
+					prod_taxe_ids.sort()
+					line_taxe_ids = [ t.id for t in line.taxes_id ]
+					line_taxe_ids.sort()
+				if line.product_id and prod_taxe_ids == line_taxe_ids:
+					res[line.id] = res2[line.id]
+				elif not line.product_id:
+					res[line.id] = res2[line.id]
+				else:
+					for tax in tax_obj.compute(cr, uid, line.taxes_id, res[line.id]/line.product_qty, line.product_qty):
+						res[line.id] = res[line.id] + tax['amount']
+			cur = line.order_id.pricelist_id.currency_id
+			res[line.id] = cur_obj.round(cr, uid, cur, res[line.id])
+		return res
+	_columns = {
+		'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal w/o tax'),
+		'price_subtotal_incl': fields.function(_amount_line, method=True, string='Subtotal'),
+	}
+purchase_order_line()

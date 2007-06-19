@@ -48,14 +48,15 @@ class purchase_order(osv.osv):
 		return res
 
 	def _amount_untaxed(self, cr, uid, ids, field_name, arg, context):
-		id_set = ",".join(map(str, ids))
-		cr.execute("SELECT s.id,COALESCE(SUM(l.price_unit*l.product_qty),0) AS amount FROM purchase_order s LEFT OUTER JOIN purchase_order_line l ON (s.id=l.order_id) WHERE s.id IN ("+id_set+") GROUP BY s.id ")
-		res = dict(cr.fetchall())
+		res = {}
 		cur_obj=self.pool.get('res.currency')
-		for id in res.keys():
-			order=self.browse(cr, uid, [id])[0]
-			cur=order.pricelist_id.currency_id
-			res[id]=cur_obj.round(cr, uid, cur, res[id])
+		for purchase in self.browse(cr, uid, ids):
+			res[purchase.id] = 0.0
+			for line in purchase.order_line:
+				res[purchase.id] += line.price_subtotal
+			cur = purchase.pricelist_id.currency_id
+			res[purchase.id] = cur_obj.round(cr, uid, cur, res[purchase.id])
+
 		return res
 
 	def _amount_tax(self, cr, uid, ids, field_name, arg, context):
