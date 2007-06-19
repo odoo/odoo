@@ -87,6 +87,10 @@ def trans_parse_view(de):
 		s = de.getAttribute('string')
 		if s:
 			res.append(s.encode("utf8"))
+	if de.hasAttribute("sum"):
+		s = de.getAttribute('sum')
+		if s:
+			res.append(s.encode("utf8"))
 	for n in [i for i in de.childNodes if (i.nodeType == i.ELEMENT_NODE)]:
 		res.extend(trans_parse_view(n))
 	return res

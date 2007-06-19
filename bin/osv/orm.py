@@ -1157,10 +1157,15 @@ class orm(object):
 
 		if node.nodeType == node.ELEMENT_NODE:
 			# translate view
-			if ('lang' in context) and node.hasAttribute('string') and node.getAttribute('string') and not result:
-				trans = tools.translate(cr, user, self._name, 'view', context['lang'], node.getAttribute('string').encode('utf8'))
-				if trans:
-					node.setAttribute('string', trans.decode('utf8'))
+			if ('lang' in context) and not result:
+				if node.hasAttribute('string') and node.getAttribute('string'):
+					trans = tools.translate(cr, user, self._name, 'view', context['lang'], node.getAttribute('string').encode('utf8'))
+					if trans:
+						node.setAttribute('string', trans.decode('utf8'))
+				if node.hasAttribute('sum') and node.getAttribute('sum'):
+					trans = tools.translate(cr, user, self._name, 'view', context['lang'], node.getAttribute('sum').encode('utf8'))
+					if trans:
+						node.setAttribute('sum', trans.decode('utf8'))
 			#
 			# Add view for properties !
 			#
