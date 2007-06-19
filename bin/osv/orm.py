@@ -1376,10 +1376,19 @@ class orm(object):
 				if (table._table not in tables):
 					tables.append(table._table)
 					joins.append(('id', 'join', '%s.%s' % (self._table, self._inherits[table._name]), table))
-			field = table._columns.get(args[i][0],False)
+			fargs = args[i][0].split('.', 1)
+			field = table._columns.get(fargs[0],False)
 			if not field:
 				i+=1
 				continue
+			if len(fargs) > 1:
+				if field._type == 'many2one':
+					args[i] = (fargs[0], 'in', self.pool.get(field._obj).search(cr, user, [(fargs[1], args[i][1], args[i][2])], context=context))
+					i+=1
+					continue
+				else:
+					i+=1
+					continue
 			if field._type=='one2many':
 				field_obj = self.pool.get(field._obj)
 
@@ -1395,7 +1404,7 @@ class orm(object):
 				i+=1
 
 			elif field._type=='many2many':
-				#XXX Fixme
+				#FIXME
 				if args[i][1]=='child_of':
 					if isinstance(args[i][2], basestring):
 						ids2 = [x[0] for x in self.pool.get(field._obj).name_search(cr, user, args[i][2], [], 'like')]
