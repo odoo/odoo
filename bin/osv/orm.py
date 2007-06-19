@@ -734,12 +734,13 @@ class orm(object):
 		fields_pre = filter(lambda x: x in self._columns and getattr(self._columns[x],'_classic_write'), fields) + self._inherits.values()
 
 		if len(fields_pre) :
+			fields_pre2 = map(lambda x: (x in ('create_date', 'write_date')) and ('date_trunc(\'second\', '+x+') as '+x) or x, fields_pre)
 			if d1:
-				cr.execute('select %s from %s where id in (%s) and %s order by %s' % (','.join(fields_pre + ['id']), self._table, ','.join([str(x) for x in ids]), d1, self._order),d2)
+				cr.execute('select %s from %s where id in (%s) and %s order by %s' % (','.join(fields_pre2 + ['id']), self._table, ','.join([str(x) for x in ids]), d1, self._order),d2)
 				if not cr.rowcount == len({}.fromkeys(ids)):
 					raise except_orm('AccessError', 'You try to bypass an access rule (Document type: %s).' % self._description)
 			else:
-				cr.execute('select %s from %s where id in (%s) order by %s' % (','.join(fields_pre + ['id']), self._table, ','.join([str(x) for x in ids]), self._order))
+				cr.execute('select %s from %s where id in (%s) order by %s' % (','.join(fields_pre2 + ['id']), self._table, ','.join([str(x) for x in ids]), self._order))
 
 			res = cr.dictfetchall()
 		else:
