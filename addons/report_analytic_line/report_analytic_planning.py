@@ -64,6 +64,7 @@ class report_account_analytic_planning_line(osv.osv):
 		'user_id': fields.many2one('res.users', 'User'),
 		'amount': fields.float('Quantity', required=True),
 		'amount_unit':fields.many2one('product.uom', 'Qty UoM', required=True),
+		'note':fields.text('Note', size=64),
 	}
 	_order = 'user_id,account_id'
 report_account_analytic_planning_line()
@@ -106,18 +107,24 @@ class report_account_analytic_planning_stat(osv.osv):
 	def _sum_amount_real(self, cr, uid, ids, name, args, context):
 		result = {}
 		for line in self.browse(cr, uid, ids, context):
-			cr.execute('select sum(unit_amount) from account_analytic_line where user_id=%d and account_id=%d and date>=%s and date<=%s', (line.user_id.id,line.account_id.id,line.planning_id.date_from,line.planning_id.date_to))
+			if line.user_id:
+				cr.execute('select sum(unit_amount) from account_analytic_line where user_id=%d and account_id=%d and date>=%s and date<=%s', (line.user_id.id,line.account_id.id,line.planning_id.date_from,line.planning_id.date_to))
+			else:
+				cr.execute('select sum(unit_amount) from account_analytic_line where account_id=%d and date>=%s and date<=%s', (line.account_id.id,line.planning_id.date_from,line.planning_id.date_to))
 			result[line.id] = cr.fetchone()[0]
 		return result
 	def _sum_amount_tasks(self, cr, uid, ids, name, args, context):
 		result = {}
 		for line in self.browse(cr, uid, ids, context):
+			where = ''
+			if line.user_id:
+				where='user_id='+str(line.user_id.id)+' and '
 			cr.execute('''select
 					sum(planned_hours)
 				from
 					project_task
 				where
-					user_id=%d and
+				'''+where+'''
 					project_id in (select id from project_project where category_id=%d) and
 					date_close>=%s and
 					date_close<=%s''', (
