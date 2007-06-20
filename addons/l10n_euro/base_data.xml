@@ -48,5 +48,11 @@
 		<field name="required" eval="True"/>
 		<field name="readonly" eval="False"/>
 	</record>
+	<record model="res.partner.bank.type.field" id="bank_acc_number_field">
+		<field name="name">acc_number</field>
+		<field name="bank_type_id" ref="bank_iban"/>
+		<field name="required" eval="False"/>
+		<field name="readonly" eval="True"/>
+	</record>
 </data>
 </terp>
