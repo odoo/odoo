@@ -1390,7 +1390,18 @@ class orm(object):
 				else:
 					i+=1
 					continue
-			if field._type=='one2many':
+			if field._properties:
+				arg = [args.pop(i)]
+				j = i
+				while j<len(args):
+					if args[j][0]==arg[0][0]:
+						arg.append(args.pop(j))
+					else:
+						j+=1
+				if field._fnct_search:
+					args.extend(field.search(cr, user, self, arg[0][0], arg))
+
+			elif field._type=='one2many':
 				field_obj = self.pool.get(field._obj)
 
 				# get the ids of the records of the "distant" resource
@@ -1453,16 +1464,6 @@ class orm(object):
 					else:
 						args[i] += (table,)
 				i+=1
-			elif field._properties:
-				arg = [args.pop(i)]
-				j = i
-				while j<len(args):
-					if args[j][0]==arg[0][0]:
-						arg.append(args.pop(j))
-					else:
-						j+=1
-				if field._fnct_search:
-					args.extend(field.search(cr, user, self, arg[0][0], arg))
 			else:
 				if field.translate and context.get('lang', False) and context['lang'] != 'en_US':
 					if args[i][1] in ('like', 'ilike'):
