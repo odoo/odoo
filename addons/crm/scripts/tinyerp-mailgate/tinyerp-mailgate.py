@@ -127,7 +127,9 @@ class email_parser(object):
 				continue
 
 			if part.get_content_maintype()=='text' and part.get_content_subtype() == 'plain':
-				message['body'] += part.get_payload(decode=True).decode(part.get_charsets()[0])
+				buf = part.get_payload(decode=True)
+				if buf:
+					message['body'] += buf.decode(part.get_charsets()[0] or 'ascii', 'replace')
 			elif part.get_content_maintype()=='application' or part.get_content_maintype()=='image' or part.get_content_maintype()=='text':
 				filename = part.get_filename();
 				if filename :
