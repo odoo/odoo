@@ -300,50 +300,6 @@ class res_partner(osv.osv):
 		return True
 res_partner()
 
-
-class res_partner_bank_type(osv.osv):
-	_description='Bank Account Type'
-	_name = 'res.partner.bank.type'
-	_columns = {
-		'name': fields.char('Name', size=64, required=True),
-		'code': fields.char('Code', size=64),
-		'elec_pay': fields.char('Electronic Payment', size=64),
-	}
-res_partner_bank_type()
-
-class res_partner_bank(osv.osv):
-	_description='Bank Details'
-	_name = "res.partner.bank"
-	_order = "sequence"
-	_columns = {
-		'name': fields.char('Account Name', size=64, required=True),
-		'sequence': fields.integer('Sequence'),
-		'number': fields.char('Account Number', size=64),
-		'iban': fields.char('Account Iban', size=27),
-		'type_id' : fields.many2one('res.partner.bank.type', 'Account Type', required=True),
-		'bank_name': fields.char('Bank Name', size=64, required= True),
-		'bank_code': fields.char('Bank Code', size=64),
-		'bank_guichet': fields.char('Branch', size=64),
-
-		'street': fields.char('Street', size=128),
-		'zip': fields.char('Zip', change_default=True, size=24),
-		'city': fields.char('City', size=128),
-		'country_id': fields.many2one('res.country', 'Country'),
-		
-		'partner_id': fields.many2one('res.partner', 'Partner', required=True, ondelete='cascade', select=True),
-		'active': fields.boolean('Active'),
-	}
-	def _default_type_id(self, cr, uid, context={}):
-		ids = self.pool.get('res.partner.bank.type').search(cr, uid, [('name','=','Other')])
-		return ids and ids[0] or False
-
-	_defaults = {
-		'active': lambda *a: 1,
-		'type_id': _default_type_id,
-	}
-res_partner_bank()
-
-
 class res_partner_address(osv.osv):
 	_description ='Partner Contact'
 	_name = 'res.partner.address'
@@ -398,5 +354,73 @@ class res_partner_address(osv.osv):
 				ids += self.search(cr, user, [('partner_id',operator,name)] + args, limit=limit)
 		return self.name_get(cr, user, ids)
 res_partner_address()
+
+class res_partner_bank_type(osv.osv):
+	_description='Bank Account Type'
+	_name = 'res.partner.bank.type'
+	_columns = {
+		'name': fields.char('Name', size=64, required=True),
+		'code': fields.char('Code', size=64, required=True),
+		'elec_pay': fields.char('Electronic Payment', size=64),
+		'field_ids': fields.one2many('res.partner.bank.type.field', 'bank_type_id', 'Type fields'),
+	}
+res_partner_bank_type()
+
+class res_partner_bank_type_fields(osv.osv):
+	_description='Bank type fields'
+	_name = 'res.partner.bank.type.field'
+	_columns = {
+		'name': fields.char('Field name', size=64, required=True),
+		'bank_type_id': fields.many2one('res.partner.bank.type', 'Bank type', required=True, ondelete='cascade'),
+		'required': fields.boolean('Required'),
+		'readonly': fields.boolean('Readonly'),
+		'size': fields.integer('Max. Size'),
+	}
+res_partner_bank_type_fields()
+
+
+class res_partner_bank(osv.osv):
+	_description='Bank Details'
+	_name = "res.partner.bank"
+	def _bank_type_get(self, cr, uid, *args):
+		result = []
+		type_ids = self.pool.get('res.partner.bank.type').search(cr, uid, [])
+		res = self.pool.get('res.partner.bank.type').read(cr, uid, type_ids, ['code','name'])
+		for r in res:
+			result.append((r['code'], r['name']))
+		return result
+
+	_columns = {
+		'name': fields.char('Account Name', size=64, required=True),
+		'acc_number': fields.char('Account Number', size=64, required=False),
+		'bank_id': fields.many2one('res.partner', 'Bank'),
+		'bank_address_id': fields.many2one('res.partner.address', 'Bank address'),
+
+		'owner_name': fields.char('Account owner', size=64),
+		'street': fields.char('Street', size=128),
+		'zip': fields.char('Zip', change_default=True, size=24),
+		'city': fields.char('City', size=128),
+		'country_id': fields.many2one('res.country', 'Country'),
+		
+		'partner_id': fields.many2one('res.partner', 'Partner', required=True, ondelete='cascade', select=True),
+		'state': fields.selection(_bank_type_get, 'Bank type', required=True)
+	}
+	def fields_get(self, cr, uid, *args):
+		res = super(res_partner_bank, self).fields_get(cr, uid, *args)
+		type_ids = self.pool.get('res.partner.bank.type').search(cr, uid, [])
+		types = self.pool.get('res.partner.bank.type').browse(cr, uid, type_ids)
+		for t in types:
+			for f in t.field_ids:
+				if f.name in res:
+					res[f.name].setdefault('states',{})
+					res[f.name]['states'][t.code] = [('readonly',f.readonly),('required',f.required)]
+					print 'Change', f.name
+				else:
+					print 'Noe Change', f.name
+		print res
+		return res
+
+res_partner_bank()
+
 
 # vim:noexpandtab:

@@ -388,20 +388,20 @@
 		<field name="model">res.partner.bank</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Bank Details">
-				<field name="name" select="1" colspan="4"/>
-				<field name="bank_name" select="1"/>
-				<field name="bank_guichet" select="2"/>
-				<field name="street"/>
+			<form string="Bank account">
+				<field name="name" select="1"/>
+				<field name="state" select="2"/>
+				<newline/>
+				<field name="acc_number" select="1"/>
+				<newline/>
+				<field name="bank_id"/>
+				<field name="bank_address_id" domain="[('partner_id','=',bank_id)]"/>
+				<separator string="Bank account owner" colspan="4"/>
+				<field name="owner_name" colspan="4"/>
+				<field name="street" colspan="4"/>
 				<field name="city"/>
 				<field name="zip"/>
 				<field name="country_id"/>
-				<newline/>
-				<field name="type_id" select="2"/>
-				<field name="number" select="1"/>
-				<field name="iban" select="2"/>
-				<field name="bank_code" select="2"/>
-				<field name="sequence"/>
 			</form>
 		</field>
 	</record>
@@ -411,10 +411,8 @@
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
 			<tree string="Bank Details">
-				<field name="sequence"/>
 				<field name="name"/>
-				<field name="type_id"/>
-				<field name="number"/>
+				<field name="state"/>
 			</tree>
 		</field>
 	</record>
