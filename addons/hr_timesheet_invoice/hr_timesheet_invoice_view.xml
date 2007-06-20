@@ -98,6 +98,55 @@
 		action="action_hr_analytic_timesheet_tree_invoiced"/> 
 
 
+	<record model="ir.actions.act_window" id="action_open_analytic_accounts">
+		<field name="name">Open analytic accounts</field>
+		<field name="res_model">account.analytic.account</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[('state','&lt;&gt;','close'),('type','&lt;&gt;','view')]</field>
+	</record>
+	<menuitem name="Financial Management/Charts/Analytic Accounts Charts/Unclosed accounts"
+		id="menu_action_open_analytic_accounts"
+		action="action_open_analytic_accounts"/> 
+
+	<record model="ir.actions.act_window" id="action_open_invoice_analytic_accounts">
+		<field name="name">Unclosed invoiced accounts</field>
+		<field name="res_model">account.analytic.account</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[('state','&lt;&gt;','close'),('type','&lt;&gt;','view'),('pricelist_id','&lt;&gt;',False)]</field>
+	</record>
+	<menuitem name="Financial Management/Charts/Analytic Accounts Charts/Unclosed accounts/Unclosed invoiced accounts"
+		id="menu_action_open_invoice_analytic_accounts"
+		action="action_open_invoice_analytic_accounts"/> 
+
+
+	<record model="ir.actions.act_window" id="action_draft_analytic_accounts">
+		<field name="name">Draft analytic accounts</field>
+		<field name="res_model">account.analytic.account</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[('state','=','draft'),('type','&lt;&gt;','view')]</field>
+	</record>
+	<menuitem name="Financial Management/Charts/Analytic Accounts Charts/Draft accounts"
+		id="menu_action_draft_analytic_accounts"
+		action="action_draft_analytic_accounts"/> 
+
+
+	<record model="ir.actions.act_window" id="action_pending_analytic_accounts">
+		<field name="name">Pending analytic accounts</field>
+		<field name="res_model">account.analytic.account</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[('state','=','pending'),('type','&lt;&gt;','view')]</field>
+	</record>
+	<menuitem name="Financial Management/Charts/Analytic Accounts Charts/Pending accounts"
+		id="menu_action_pending_analytic_accounts"
+		action="action_pending_analytic_accounts"/> 
+
+
+
+
 	<record model="ir.ui.view" id="view_hr_timesheet_invoice_factor_form">
 			<field name="name">hr_timesheet_invoice.factor.form</field>
 			<field name="model">hr_timesheet_invoice.factor</field>
