@@ -746,7 +746,7 @@ class orm(object):
 		else:
 			res = map(lambda x: {'id':x}, ids)
 
-		if context.get('lang', False) and context['lang'] != 'en_EN':
+		if context.get('lang', False) and context['lang'] != 'en_US':
 			for f in fields_pre:
 				if self._columns[f].translate:
 					ids = map(lambda x: x['id'], res)
@@ -888,7 +888,7 @@ class orm(object):
 		upd_todo=[]
 		updend=[]
 		direct = []
-		totranslate = context.get('lang', False) and (context['lang'] != 'en_EN')
+		totranslate = context.get('lang', False) and (context['lang'] != 'en_US')
 		for field in vals:
 			if field in self._columns:
 				if self._columns[field]._classic_write:
@@ -1085,7 +1085,7 @@ class orm(object):
 					res[f][arg] = getattr(self._columns[f], arg)
 
 			# translate the field label
-			if context.get('lang', False) and context['lang'] != 'en_EN':
+			if context.get('lang', False) and context['lang'] != 'en_US':
 				res_trans = self.pool.get('ir.translation')._get_source(cr, user, self._name+','+f, 'field', context['lang'])
 				if res_trans:
 					res[f]['string'] = res_trans
@@ -1095,7 +1095,7 @@ class orm(object):
 					sel = self._columns[f].selection
 					
 					# translate each selection option
-					if context.get('lang', False) and context['lang'] != 'en_EN':
+					if context.get('lang', False) and context['lang'] != 'en_US':
 						sel2 = []
 						for (key,val) in sel:
 							val2 = self.pool.get('ir.translation')._get_source(cr, user, self._name+','+f, 'selection', context['lang'], val)
@@ -1464,7 +1464,7 @@ class orm(object):
 				if field._fnct_search:
 					args.extend(field.search(cr, user, self, arg[0][0], arg))
 			else:
-				if field.translate and context.get('lang', False) and context['lang'] != 'en_EN':
+				if field.translate and context.get('lang', False) and context['lang'] != 'en_US':
 					if args[i][1] in ('like', 'ilike'):
 						args[i][2] = '%%%s%%' % args[i][2]
 					cr.execute('select res_id from ir_translation where name = %s and lang = %s and type = %s and value '+args[i][1]+' %s', (table._name+','+args[i][0], context['lang'], 'model', args[i][2]))
