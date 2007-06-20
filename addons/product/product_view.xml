@@ -264,7 +264,7 @@
 			<field name="res_model">product.product</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-			<field name="domain">[('categ_id','=',active_id)]</field>
+			<field name="domain">[('categ_id','child_of',[active_id])]</field>
 		</record>
 		<record model="ir.values" id="ir_product_category_open">
 			<field name="key2" eval="'tree_but_open'"/>
