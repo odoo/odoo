@@ -128,7 +128,6 @@ class report_account_analytic_planning_stat(osv.osv):
 					project_id in (select id from project_project where category_id=%d) and
 					date_close>=%s and
 					date_close<=%s''', (
-				line.user_id.id,
 				line.account_id.id,
 				line.planning_id.date_from,
 				line.planning_id.date_to)

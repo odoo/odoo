@@ -11,7 +11,7 @@
 		<field name="model">report.task.user.pipeline.open</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Tasks by Projects">
+			<form string="Tasks by projects">
 				<field name="user_id" select="1"/>
 				<field name="company_id" select="1"/>
 				<field name="task_nbr" select="2"/>
@@ -27,21 +27,19 @@
 		<field name="model">report.task.user.pipeline.open</field>
 		<field name="type">graph</field>
 		<field name="arch" type="xml">
-			<graph string="Tasks by Projects" type="bar">
+			<graph string="Tasks by projects" type="bar">
 				<field name="user_id" groups="task_state"/>
 				<field name="task_progress"/>
 			</graph>
 		</field>
 	</record>
 
-
-
 	<record model="ir.ui.view" id="view_task_project_tree">
 		<field name="name">report.project.task.tree</field>
 		<field name="model">report.task.user.pipeline.open</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Tasks by Projects">
+			<tree string="Tasks by projects">
 				<field name="user_id"/>
 				<field name="company_id"/>
 				<field name="task_nbr"/>
@@ -58,24 +56,30 @@
 		<field name="view_mode">tree,graph</field>
 		<field name="domain">[]</field>
 	</record>
-	<menuitem name="Project/Reporting/All Months/Tasks by Projects" action="action_project_task" id="menu_project_task_user_tree"/>
+	<menuitem name="Project/Reporting/All Months/Tasks by projects" action="action_project_task" id="menu_project_task_user_tree"/>
 
 	<record model="ir.actions.act_window" id="action_project_task_done">
-		<field name="name">Closed Task by Projects</field>
+		<field name="name">Closed task by company</field>
 		<field name="res_model">report.task.user.pipeline.open</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,graph</field>
 		<field name="domain">[('task_state','=','done')]</field>
 	</record>
-	<menuitem name="Project/Reporting/All Months/Closed Task by Projects" action="action_project_task_done" id="menu_project_task_user_tree2"/>
+	<menuitem 
+		name="Project/Reporting/All Months/Closed task by company"
+		action="action_project_task_done"
+		id="menu_project_task_user_tree2"/>
 
 	<record model="ir.actions.act_window" id="action_project_task_open">
-		<field name="name">Opened Task by Projects</field>
+		<field name="name">Opened task by projects</field>
 		<field name="res_model">report.task.user.pipeline.open</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,graph</field>
 		<field name="domain">[('task_state','=','open')]</field>
 	</record>
-	<menuitem name="Project/Reporting/All Months/Opened Task by Projects" action="action_project_task_open" id="menu_project_task_user_tree3"/>
+	<menuitem 
+		name="Project/Reporting/All Months/Opened task by company"
+		action="action_project_task_open" 
+		id="menu_project_task_user_tree3"/>
 </data>
 </terp>

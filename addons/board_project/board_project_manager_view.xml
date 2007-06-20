@@ -12,7 +12,6 @@
 		<act_window name="My projects"
 			domain="[('manager', '=', uid)]"
 			res_model="project.project"
-			src_model="res.users"
 			view_type="form"
 			view_mode="tree,form"
 			id="act_my_project"/>
@@ -20,7 +19,6 @@
 		<act_window name="My accounts to invoice"
 			domain="[('user_id','=',uid),('state','&lt;&gt;','close'),('partner_id','&lt;&gt;',False)]"
 			res_model="account.analytic.account"
-			src_model="res.users"
 			view_type="form"
 			view_mode="tree,form"
 			view_id="view_account_analytic_simplified"

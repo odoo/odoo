@@ -17,12 +17,12 @@
 				<field name="priority" eval="18"/>
 				<field name="arch" type="xml">
 					<notebook position="inside">
-						<page string="Analysys summary">  
+						<page string="Analysis summary">
 							<separator string="Work done stats" colspan="4" /> 
-							<field name="total_cost"/> 
+							<field name="total_cost"/>
 							<field name="remaining_ca"/>
 							<field name="ca_invoiced"/>
-							<field name="ca_theorical"/> 
+							<field name="ca_theorical"/>
 							<newline/>
 							<!-- <field name="old"/> -->
 							<field name="hours_quantity"/>
@@ -36,11 +36,11 @@
 							<field name="real_margin_rate"/>
 							<separator string="Key dates" colspan="4" /> 
 							<field name="last_invoice_date"/> 
-							<field name="last_worked_invoiced_date" select="1"/>
+							<field name="last_worked_invoiced_date" select="2"/>
 							<field name="last_worked_date"/>
 							<separator string="To be invoiced" colspan="4" />
 							<field name="hours_qtt_non_invoiced"/>
-							<field name="ca_to_invoice" select="1"/>
+							<field name="ca_to_invoice" select="2"/>
 							
 						</page>
 						<page string="Stats by month">  
