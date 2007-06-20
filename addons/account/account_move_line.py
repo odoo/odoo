@@ -373,7 +373,11 @@ class account_move_line(osv.osv):
 			for field in journal.view_id.columns_id:
 				fields.append(field.field)
 				attrs = []
-				if field.field=='account_id' and journal.id:
+				if field.field=='debit':
+					attrs.append('sum="Total debit"')
+				elif field.field=='credit':
+					attrs.append('sum="Total credit"')
+				elif field.field=='account_id' and journal.id:
 					attrs.append('domain="[(\'journal_id\', \'=\', '+str(journal.id)+'),(\'type\',\'&lt;&gt;\',\'view\'), (\'type\',\'&lt;&gt;\',\'closed\')]"')
 				if field.readonly:
 					attrs.append('readonly="1"')

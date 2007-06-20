@@ -121,8 +121,8 @@
 				<tree string="Analytic Entries" editable="top">
 					<field name="date"/>
 					<field name="name" />
-					<field name="unit_amount" />
-					<field name="amount" />
+					<field name="unit_amount" sum="Total quantity"/>
+					<field name="amount" sum="Total amount"/>
 					<field name="account_id" domain="[('type','=','normal')]"/>
 					<field name="general_account_id"/>
 					<field name="journal_id"/>
