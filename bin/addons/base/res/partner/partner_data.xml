@@ -3,6 +3,26 @@
 <data>
 
 
+	# --------------------------------------------------------------
+	# Default bank account description
+	# --------------------------------------------------------------
+	<record model="res.partner.bank.type" id="bank_normal">
+		<field name="name">Bank account</field>
+		<field name="code">bank</field>
+	</record>
+	<record model="res.partner.bank.type.field" id="bank_normal_field">
+		<field name="name">acc_number</field>
+		<field name="required" eval="True"/>
+		<field name="bank_type_id" ref="bank_normal"/>
+	</record>
+	<record model="res.partner.bank.type.field" id="bank_normal_field_contry">
+		<field name="name">country_id</field>
+		<field name="readonly" eval="True"/>
+		<field name="bank_type_id" ref="bank_normal"/>
+	</record>
+
+
+
 
 </data>
 </terp>
