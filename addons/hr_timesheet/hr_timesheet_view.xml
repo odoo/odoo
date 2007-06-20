@@ -11,10 +11,10 @@
 					<field name="date" />
 					<field name="account_id" on_change="on_change_account_id(account_id)" domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]"/>
                     <field name="name" />
-					<field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" />
+					<field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" sum="Total time"/>
 					<field name="product_id" required="1"/>
 					<field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" />
-					<field name="amount" />
+					<field name="amount"  sum="Total cost"/>
 					<field name="general_account_id"/>
 				</tree>
 			</field>

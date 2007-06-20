@@ -29,9 +29,9 @@
 						<field name="order_line" widget="one2many_list" colspan="4" nolabel="1"/>
 						<separator string="Document State" colspan="4" select="2"/>
 						<group colspan="4" col="7">
-							<field name="amount_untaxed"/>
+							<field name="amount_untaxed" sum="Untaxed amount"/>
 							<field name="amount_tax"/>
-							<field name="amount_total"/>
+							<field name="amount_total" sum="Total amount"/>
 							<button name="button_dummy" string="Compute" states="draft" type="object"/>
 						</group>
 						<group col="9" colspan="4">
