@@ -116,13 +116,6 @@ class hr_analytic_timesheet(osv.osv):
 		'user_id' : lambda obj, cr, uid, ctx : ctx.get('user_id', uid),
 	}
 
-	def on_change_account_id(self, cr, uid, ids, account_id):
-		return {}
-		if not account_id:
-			return {}
-		account = self.pool.get('account.analytic.account').read(cr, uid, [account_id], ['name'])[0]['name']
-		user = self.pool.get('res.users').read(cr, uid, [uid], ['name'])[0]['name']
-		return {'value' : {'name' : '%s (%s)' % (account, user)}}
 
 	def on_change_user_id(self, cr, uid, ids, user_id):
 		if not user_id:
