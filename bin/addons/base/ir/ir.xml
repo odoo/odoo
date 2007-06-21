@@ -345,13 +345,13 @@
 	==========================================================
 
 	<record model="ir.actions.act_window" id="action_res_company_tree">
-		<field name="name">Companies Structure</field>
+		<field name="name">Companies structure</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">res.company</field>
 		<field name="domain">[('parent_id','=',False)]</field>
 		<field name="view_type">tree</field>
 	</record>
-	<menuitem name="Administration/Users/" action="action_res_company_tree" id="menu_action_res_company_tree"/>
+	<menuitem name="Administration/Users/" action="action_res_company_tree" id="menu_action_res_company_tree" sequence="16"/>
 
 	<record model="ir.actions.act_window" id="action_res_company_form">
 		<field name="name">Companies</field>
@@ -359,7 +359,7 @@
 		<field name="res_model">res.company</field>
 		<field name="view_type">form</field>
 	</record>
-	<menuitem name="Administration/Users/Companies Structure/Define Companies" action="action_res_company_form" id="menu_action_res_company_form"/>
+	<menuitem name="Administration/Users/Companies structure/Companies" action="action_res_company_form" id="menu_action_res_company_form"/>
 
 	==========================================================
 	User Roles
