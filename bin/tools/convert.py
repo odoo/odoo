@@ -156,7 +156,7 @@ class xml_import(object):
 			keys = [('action',keyword),('res_model',res['model'])]
 			value = 'ir.actions.report.xml,'+str(id)
 			replace = rec.hasAttribute('replace') and rec.getAttribute("replace")
-			self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, res['name'], [res['model']], value, replace=replace, isobject=True)
+			self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, res['name'], [res['model']], value, replace=replace, isobject=True, xml_id=xml_id)
 		return False
 
 	def _tag_function(self, cr, rec, data_node=None):
@@ -179,7 +179,7 @@ class xml_import(object):
 			keys = [('action',keyword),('res_model',model)]
 			value = 'ir.actions.wizard,'+str(id)
 			replace = rec.hasAttribute('replace') and rec.getAttribute("replace")
-			self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, string, [model], value, replace=replace, isobject=True)
+			self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, string, [model], value, replace=replace, isobject=True, xml_id=xml_id)
 		return False
 
 	def _tag_act_window(self, cr, rec, data_node=None):
@@ -207,7 +207,7 @@ class xml_import(object):
 			keys = [('action', keyword), ('res_model', res_model)]
 			value = 'ir.actions.act_window,'+str(id)
 			replace = rec.hasAttribute('replace') and rec.getAttribute('replace')
-			self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, xml_id, [src_model], value, replace=replace, isobject=True)
+			self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, xml_id, [src_model], value, replace=replace, isobject=True, xml_id=xml_id)
 		return False
 
 	def _tag_ir_set(self, cr, rec, data_node=None):

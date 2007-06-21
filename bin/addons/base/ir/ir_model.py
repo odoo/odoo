@@ -208,7 +208,7 @@ class ir_model_data(osv.osv):
 			cr.execute('delete from ir_model_data where res_id=%d and model=\'%s\'', (id,model))
 		return True
 
-	def ir_set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=None):
+	def ir_set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=None, xml_id=False):
 		obj = self.pool.get('ir.values')
 		if type(models[0])==type([]) or type(models[0])==type(()):
 			model,res_id = models[0]
@@ -230,6 +230,8 @@ class ir_model_data(osv.osv):
 		res = cr.fetchone()
 		if not res:
 			res = ir.ir_set(cr, uid, key, key2, name, models, value, replace, isobject, meta)
+		elif xml_id:
+			cr.execute('UPDATE ir_values set value=%s WHERE model=%s and key=%s and name=%s'+where,(value, model, key, name))
 		return True
 
 	def _process_end(self, cr, uid, modules):
@@ -260,6 +262,7 @@ class ir_model_data(osv.osv):
 					self.pool.get(model).unlink(cr, uid, [id])
 					if self.unlink_mark[(model,id)]:
 						self.unlink(cr, uid, [self.unlink_mark[(model,id)]])
+						cr.execute('DELETE FROM ir_values WHERE value=%s', (model+','+str(id),))
 					cr.commit()
 				except:
 					logger.notifyChannel('init', netsvc.LOG_ERROR, 'Could not delete id: %d of model %s\tThere should be some relation that points to this resource\tYou should manually fix this and restart --update=module' % (id, model))
