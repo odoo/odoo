@@ -818,8 +818,8 @@ class stock_move(osv.osv):
 					ref = move.picking_id and move.picking_id.name or False
 					amount = move.product_qty * move.product_id.standard_price
 					lines = [
-							(0,0,{'name': move.name, 'quantity': move.product_qty, 'debit': amount, 'account_id': acc_src, 'ref': ref}),
-							(0,0,{'name': move.name, 'quantity': move.product_qty, 'credit': amount, 'account_id': acc_dest, 'ref': ref})
+							(0,0,{'name': move.name, 'quantity': move.product_qty, 'credit': amount, 'account_id': acc_src, 'ref': ref}),
+							(0,0,{'name': move.name, 'quantity': move.product_qty, 'debit': amount, 'account_id': acc_dest, 'ref': ref})
 					]
 					self.pool.get('account.move').create(cr, uid, {'name': move.name, 'journal_id': journal_id, 'line_id': lines, 'ref': ref})
 		self.write(cr, uid, ids, {'state':'done'})
