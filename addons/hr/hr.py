@@ -123,7 +123,6 @@ class hr_employee(osv.osv):
 		'holiday_max' : fields.integer("Number of holidays"),
 		'parent_id': fields.many2one('hr.employee', 'Boss', select=True),
 		'child_ids': fields.one2many('hr.employee', 'parent_id','Subordinates'),
-		'bank_account': fields.char("Bank Account", size=16),
 	}
 	_defaults = {
 		'active' : lambda *a: True,

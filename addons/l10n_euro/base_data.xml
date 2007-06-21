@@ -17,6 +17,20 @@
 		</field>
 	</record>
 
+	<record model="ir.ui.view" id="view_partner_form">
+		<field name="name">res.partner.bank.vat.inherit</field>
+		<field name="model">res.partner.bank.vat</field>
+		<field name="inherit_id" ref="base.view_partner_form"/>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<page string="Extra Info" position="inside">
+				<field name="vat"/>
+				<newline/>
+			</page>
+		</field>
+	</record>
+
+
 	# --------------------------------------------------------------
 	# Default bank account description
 	# --------------------------------------------------------------

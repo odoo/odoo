@@ -15,7 +15,11 @@
 	""",
 	"depends" : ["base"],
 	"init_xml" : [],
-	"demo_xml" : ["hr_demo.xml", "hr_bel_holidays_2005.xml"],
+	"demo_xml" : [
+		"hr_demo.xml", 
+		"hr_bel_holidays_2005.xml",
+		"hr_department_demo.xml"
+	],
 	"update_xml" : [
 		"hr_view.xml", 
 		"hr_report.xml", 
