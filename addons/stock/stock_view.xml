@@ -691,21 +691,22 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_move_form">
+		<field name="name">Delivery orders</field>
 		<field name="res_model">stock.move.lot</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_move_lot_form"/>
 	</record>
-	<menuitem name="Inventory Control/Move" id="menu_action_move_form" action="action_move_form"/>
+	<menuitem name="Inventory Control/Delivery order" id="menu_action_move_form" action="action_move_form"/>
 	<record model="ir.actions.act_window" id="action_move_tree">
-		<field name="name">Move Orders to process</field>
+		<field name="name">Delivery orders to process</field>
 		<field name="res_model">stock.move.lot</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','draft')]</field>
 	</record>
-	<menuitem name="Inventory Control/Move/Move Orders to process" action="action_move_tree" id="menu_move_draft"/>
+	<menuitem name="Inventory Control/Delivery order/Delivery orders to process" action="action_move_tree" id="menu_move_draft"/>
 
 	<record model="ir.ui.view" id="view_move_tree">
 		<field name="name">stock.move.tree</field>
@@ -826,6 +827,24 @@
 		<field name="view_mode">tree,form</field>
 	</record>
 	<menuitem name="Inventory Control/Configuration/Incoterms" id="menu_action_incoterms_tree" action="action_incoterms_tree"/>
+
+
+	<act_window
+		name=""
+		domain="[('type','&lt;&gt;','service')]"
+		context="{'location': active_id}"
+		res_model="product.product"
+		src_model="stock.location"
+		id="act_product_location_open"/>
+	<record model="ir.values" id="ir_act_product_location_open">
+		<field name="key2">tree_but_open</field>
+		<field name="model">stock.location</field>
+		<field name="name">Products</field>
+		<field name="value" eval="'ir.actions.act_window,%d'%act_product_location_open"/>
+		<field name="object" eval="True"/>
+	</record>
+
+
 
 </data>
 </terp>

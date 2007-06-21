@@ -939,6 +939,15 @@ class product_product(osv.osv):
 	#
 	# Utiliser browse pour limiter les queries !
 	#
+	def view_header_get(self, cr, user, view_id, view_type, context):
+		if (not context.get('location', False)):
+			return False
+		cr.execute('select name from stock_location where id=%d', (context['location'],))
+		j = cr.fetchone()[0]
+		if j:
+			return 'Products: '+j
+		return False
+
 	def _get_product_available_func(states, what):
 		def _product_available(self, cr, uid, ids, name, arg, context={}):
 			if context.get('shop', False):
