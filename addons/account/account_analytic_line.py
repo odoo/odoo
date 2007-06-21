@@ -118,9 +118,9 @@ class timesheet_invoice(osv.osv):
 		create or replace view report_hr_timesheet_invoice_journal as (
 			select
 				min(l.id) as id,
-				substring(l.create_date for 7)||'-01' as name,
+				substring(l.date for 7)||'-01' as name,
 				sum(
-					CASE WHEN -l.amount>0 THEN 0 ELSE -l.amount
+					CASE WHEN l.amount>0 THEN 0 ELSE l.amount
 					END
 				) as cost,
 				sum(
@@ -133,7 +133,7 @@ class timesheet_invoice(osv.osv):
 			from account_analytic_line l
 				left join product_uom u on (u.id=l.product_uom_id)
 			group by
-				substring(l.create_date for 7),
+				substring(l.date for 7),
 				journal_id,
 				account_id
 		)""")

@@ -63,7 +63,7 @@
 							<field name="description" colspan="4" nolabel="1" />
 						</page>
 						<page string="Statistics">
-							<field name="stats_ids" colspan="4" nolabel="1"/>
+							<field name="stats_ids" colspan="4" mode="graph,tree" nolabel="1"/>
 						</page>
 					</notebook>
 				</form>
@@ -263,6 +263,20 @@
 	<record model="ir.ui.view" id="report_hr_timesheet_invoice_journal_form">
 		<field name="name">report.hr.timesheet.invoice.journal.form</field>
 		<field name="model">report.hr.timesheet.invoice.journal</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Analytic Entries Stats">
+				<field name="name" select="1"/>
+				<field name="account_id" select="1"/>
+				<field name="journal_id" select="2"/>
+			</form>
+		</field>
+	</record>
+
+
+	<record model="ir.ui.view" id="report_hr_timesheet_invoice_journal_tree">
+		<field name="name">report.hr.timesheet.invoice.journal.tree</field>
+		<field name="model">report.hr.timesheet.invoice.journal</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
 			<tree string="Analytic Entries Stats">
@@ -276,13 +290,27 @@
 		</field>
 	</record>
 
+	<record model="ir.ui.view" id="report_hr_timesheet_invoice_journal_graph">
+		<field name="name">report.hr.timesheet.invoice.journal.graph</field>
+		<field name="model">report.hr.timesheet.invoice.journal</field>
+		<field name="type">graph</field>
+		<field name="arch" type="xml">
+			<graph type="bar">
+				<field name="name"/>
+				<field name="cost" operator="+"/>
+				<field name="revenue" operator="+"/>
+				<field group="True" name="journal_id"/>
+			</graph>
+		</field>
+	</record>
+
 	<record model="ir.actions.act_window" id="report_account_analytic_journal_tree">
 		<field name="name">Account Cost and Revenue by journal</field>
 		<field name="res_model">report.hr.timesheet.invoice.journal</field>
 		<field name="view_type">form</field>
-		<field name="view_mode">tree</field>
+		<field name="view_mode">tree,graph</field>
 	</record>
-	<menuitem name="Financial Management/Reporting/Analytic/All Months/Account Cost and Revenue by journal"
+	<menuitem name="Financial Management/Reporting/Analytic/All Months/Account cost and revenue by journal"
 		id="report_account_analytic_journal_print"
 		action="report_account_analytic_journal_tree"/> 
 
