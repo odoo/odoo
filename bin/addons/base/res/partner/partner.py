@@ -414,10 +414,6 @@ class res_partner_bank(osv.osv):
 				if f.name in res:
 					res[f.name].setdefault('states',{})
 					res[f.name]['states'][t.code] = [('readonly',f.readonly),('required',f.required)]
-					print 'Change', f.name
-				else:
-					print 'Noe Change', f.name
-		print res
 		return res
 
 res_partner_bank()
