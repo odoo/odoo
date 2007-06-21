@@ -69,7 +69,7 @@ class res_country_state(osv.osv):
 	_columns = {
 		'country_id': fields.many2one('res.country', 'Country'),
 		'name': fields.char('State Name', size=64),
-		'code': fields.char('State Code', size=2),
+		'code': fields.char('State Code', size=3),
 	}
 	_order = 'code'
 res_country_state()
