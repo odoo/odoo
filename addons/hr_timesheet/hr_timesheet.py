@@ -59,6 +59,7 @@ class hr_analytic_timesheet(osv.osv):
 		self.pool.get('account.analytic.line').unlink(cr, uid, toremove.keys(), context)
 		return super(hr_analytic_timesheet, self).unlink(cr, uid, ids, context)
 
+
 	def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount, unit, context={}):
 		res = {}
 		if prod_id and unit_amount:
@@ -122,4 +123,17 @@ class hr_analytic_timesheet(osv.osv):
 		account = self.pool.get('account.analytic.account').read(cr, uid, [account_id], ['name'])[0]['name']
 		user = self.pool.get('res.users').read(cr, uid, [uid], ['name'])[0]['name']
 		return {'value' : {'name' : '%s (%s)' % (account, user)}}
+
+	def on_change_user_id(self, cr, uid, ids, user_id):
+		if not user_id:
+			return {}
+		return {'value' : {
+			'product_id' : self._getEmployeeProduct(cr,user_id, context= {}),
+			'product_uom_id' : self._getEmployeeUnit(cr, user_id, context= {}),
+			'general_account_id' :self. _getGeneralAccount(cr, user_id, context= {}),
+			'journal_id' : self._getAnalyticJournal(cr, user_id, context= {}),
+						   }}
+
+
+
 hr_analytic_timesheet()

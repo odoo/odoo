@@ -7,7 +7,7 @@
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
 				<tree string="Timesheet Line" editable="bottom">
-					<field name="user_id" required="1"/>
+					<field name="user_id" required="1" on_change="on_change_user_id(user_id)"/>
 					<field name="date" />
 					<field name="account_id" on_change="on_change_account_id(account_id)" domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]"/>
                     <field name="name" />
@@ -26,7 +26,7 @@
 			<field name="arch" type="xml">
 				<form string="Timesheet Lines">
 					<field name="name" colspan="4"/>
-					<field name="user_id" select="1" required="1"/>
+					<field name="user_id" select="1" required="1" on_change="on_change_user_id(user_id)"/>
 					<field name="date" select="1"/>
 					<field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" />
 					<newline/>
