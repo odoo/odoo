@@ -687,6 +687,5 @@ class sale_order_line(osv.osv):
 			result['product_uom'] = res['uom_id'] and res['uom_id'][0]
 			result['product_uom_qty'] = qty_uos / res['uos_coeff']
 			result['weight'] = result['product_uom_qty'] * res['weight']
-		print result
 		return {'value':result, 'domain':domain}
 sale_order_line()
