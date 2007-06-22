@@ -544,6 +544,7 @@ class account_invoice(osv.osv):
 		return new_ids
 
 	def pay_and_reconcile(self, cr, uid, ids, pay_amount, pay_account_id, period_id, pay_journal_id, writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context={}):
+		#TODO check if we can use different period for payment and the writeoff line
 		assert len(ids)==1, "Can only pay one invoice at a time"
 		invoice = self.browse(cr, uid, ids[0])
 		src_account_id = invoice.account_id.id

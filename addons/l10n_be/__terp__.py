@@ -3,7 +3,7 @@
 	"version" : "1.0",
 	"author" : "Tiny",
 	"category" : "Localisation/Account charts",
-	"depends" : ["base", "account", "account_report", "l10n_euro"],
+	"depends" : ["base", "account", "account_report", "base_vat", "base_iban"],
 	"init_xml" : [],
 	"demo_xml" : ["account_demo.xml","account.report.report.csv"],
 	"update_xml" : ["account_pcmn_belgium.xml"],

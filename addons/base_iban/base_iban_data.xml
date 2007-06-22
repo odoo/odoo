@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<terp>
+	<data>
+
+		<record model="ir.ui.view" id="view_partner_bank_iban_form">
+			<field name="name">res.partner.bank.form.iban.inherit</field>
+			<field name="model">res.partner.bank</field>
+			<field name="inherit_id" ref="base.view_partner_bank_form"/>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<field name="acc_number" position="after">
+					<newline/>
+					<field name="swift"/>
+					<field name="iban"/>
+					<newline/>
+				</field>
+			</field>
+		</record>
+
+		<!--
+		Default bank account description
+		-->
+		<record model="res.partner.bank.type" id="bank_iban">
+			<field name="name">IBAN Account</field>
+			<field name="code">iban</field>
+		</record>
+		<record model="res.partner.bank.type.field" id="bank_iban_field">
+			<field name="name">iban</field>
+			<field name="bank_type_id" ref="bank_iban"/>
+			<field name="required" eval="True"/>
+			<field name="readonly" eval="False"/>
+		</record>
+		<record model="res.partner.bank.type.field" id="bank_swift_field">
+			<field name="name">swift</field>
+			<field name="bank_type_id" ref="bank_iban"/>
+			<field name="required" eval="True"/>
+			<field name="readonly" eval="False"/>
+		</record>
+		<record model="res.partner.bank.type.field" id="bank_country_field">
+			<field name="name">country_id</field>
+			<field name="bank_type_id" ref="bank_iban"/>
+			<field name="required" eval="True"/>
+			<field name="readonly" eval="False"/>
+		</record>
+		<record model="res.partner.bank.type.field" id="bank_zip_field">
+			<field name="name">zip</field>
+			<field name="bank_type_id" ref="bank_iban"/>
+			<field name="required" eval="True"/>
+			<field name="readonly" eval="False"/>
+		</record>
+		<record model="res.partner.bank.type.field" id="bank_acc_number_field">
+			<field name="name">acc_number</field>
+			<field name="bank_type_id" ref="bank_iban"/>
+			<field name="required" eval="False"/>
+			<field name="readonly" eval="True"/>
+		</record>
+	</data>
+</terp>

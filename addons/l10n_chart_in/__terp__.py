@@ -1,6 +1,3 @@
-#
-#
-#
 {
 	"name" : "India",
 	"version" : "1.0",

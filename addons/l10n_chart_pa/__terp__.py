@@ -1,6 +1,3 @@
-#
-#
-#
 {
 	"name" : "Panama",
 	"version" : "1.0",

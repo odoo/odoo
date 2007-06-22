@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2004 TINY SPRL. (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2007 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #                    Fabien Pinckaers <fp@tiny.Be>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -26,4 +26,4 @@
 #
 ##############################################################################
 
-import base_bank
+import base_iban
