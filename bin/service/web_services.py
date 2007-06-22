@@ -88,7 +88,7 @@ class db(netsvc.Service):
 						cr.close()
 						pool = pooler.get_pool(db_name, demo,serv.actions[id], update_module=True)
 						#tools.init_db(cr)
-						if lang and lang != 'en_EN':
+						if lang and lang != 'en_US':
 							filename = tools.config["root_path"] + "/i18n/" + lang + ".csv"
 							tools.trans_load(db_name, filename, lang) 
 

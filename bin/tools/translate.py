@@ -110,6 +110,7 @@ def in_modules(object_name, modules):
 	return module in modules
 
 def trans_generate(lang, modules, dbname=None):
+	logger = netsvc.Logger()
 	if not dbname:
 		dbname=tools.config['db_name']
 	pool = pooler.get_pool(dbname)
@@ -171,7 +172,7 @@ def trans_generate(lang, modules, dbname=None):
 				to_translate.append([report_type, name, parse_func(d.documentElement)])
 			except IOError:
 				if fname:
-					print "Warning: couldn't export translation for report %s" % name, report_type, fname
+					logger.notifyChannel("init", netsvc.LOG_WARNING, "couldn't export translation for report %s %s %s" % name, report_type, fname)
 
 	# views
 	obj = pool.get("ir.ui.view")
