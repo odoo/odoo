@@ -81,7 +81,7 @@
           <para style="P4">
             <font color="white"> </font>
           </para>
-          <para style="P4">[[ o.vat or '' ]]</para>
+          <para style="P4">VAT: [[ o.vat or removeParentNode('para') ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -224,7 +224,7 @@
     </para>
     <para style="P20">
       <font face="Times-Roman">Total amount due: </font>
-      <font face="Times-Roman">[[ '%.2f' % (reduce(lambda x,y: x+(y['debit']-y['credit']), getLines(o), 0)) ]] [[ company.currency_id.code ]].</font>
+      <font face="Times-Roman">[[ '%.2f' % (reduce(lambda x,y: x+(y['debit']-y['credit']), getLines(o), 0)) ]] EUR.</font>
     </para>
     <para style="P4">
       <font color="white"> </font>

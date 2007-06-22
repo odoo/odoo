@@ -108,9 +108,9 @@
           <para style="Standard">
             <font color="white"> </font>
           </para>
-          <para style="Standard">Tel. : [[ o.address_invoice_id.phone or '' ]]</para>
-          <para style="Standard">Fax : [[ o.address_invoice_id.fax or '' ]]</para>
-          <para style="Standard">[[ o.partner_id.vat or '' ]]</para>
+          <para style="Standard">Tel. : [[ o.address_invoice_id.phone or removeParentNode('para') ]]</para>
+          <para style="Standard">Fax : [[ o.address_invoice_id.fax or removeParentNode('para') ]]</para>
+          <para style="Standard">VAT : [[ o.partner_id.vat or removeParentNode('para') ]]</para>
         </td>
       </tr>
     </blockTable>

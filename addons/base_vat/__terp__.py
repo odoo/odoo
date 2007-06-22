@@ -4,7 +4,7 @@
 	"author" : "Tiny",
 	"category" : "Generic Modules/Base",
 	"depends" : ["base"],
-	"init_xml" : ["base_vat_data.xml"],
+	"update_xml" : ["base_vat_data.xml"],
 	"active": False,
 	"installable": True
 }
