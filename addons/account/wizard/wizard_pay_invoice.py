@@ -47,10 +47,11 @@ pay_fields = {
 def _pay_and_reconcile(self, cr, uid, data, context):
 	service = netsvc.LocalService("object_proxy")
 	form = data['form']
-	account_id = form.get('writeoff_acc_id', False)
 	period_id = form.get('period_id', False)
 	journal_id = form.get('journal_id', False)
-	service.execute(cr.dbname, uid, 'account.invoice', 'pay_and_reconcile', [data['id']], form['amount'], form['dest_account_id'], journal_id, account_id, period_id, journal_id, context)
+	writeoff_account_id = form.get('writeoff_acc_id', False)
+	writeoff_journal_id = form.get('writeoff_journal_id', False)
+	service.execute(cr.dbname, uid, 'account.invoice', 'pay_and_reconcile', [data['id']], form['amount'], form['dest_account_id'], period_id, journal_id, writeoff_account_id, period_id, writeoff_journal_id, context)
 	return {}
 
 def _trans_reconcile(self, cr, uid, data, context):
@@ -68,10 +69,12 @@ _transaction_add_form = '''<?xml version="1.0"?>
 <form string="Information addendum">
 	<separator string="Write-Off Move" colspan="4"/>
 	<field name="writeoff_acc_id"/>
+	<field name="writeoff_journal_id"/>
 </form>'''
 
 _transaction_add_fields = {
 	'writeoff_acc_id': {'string':'Write-Off account', 'type':'many2one', 'relation':'account.account', 'required':True},
+	'writeoff_journal_id': {'string': 'Write-Off journal', 'type': 'many2one', 'relation':'account.journal', 'required':True},
 }
 
 def _get_value_addendum(self, cr, uid, data, context={}):

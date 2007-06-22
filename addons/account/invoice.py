@@ -543,7 +543,7 @@ class account_invoice(osv.osv):
 			new_ids.append(self.create(cr, uid, invoice))
 		return new_ids
 
-	def pay_and_reconcile(self, cr, uid, ids, pay_amount, pay_account_id, pay_journal_id, writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context={}):
+	def pay_and_reconcile(self, cr, uid, ids, pay_amount, pay_account_id, period_id, pay_journal_id, writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context={}):
 		assert len(ids)==1, "Can only pay one invoice at a time"
 		invoice = self.browse(cr, uid, ids[0])
 		src_account_id = invoice.account_id.id
@@ -556,22 +556,22 @@ class account_invoice(osv.osv):
 		direction = types[invoice.type]
 		l1 = {
 			'name': name,
-			'debit': direction == 1 and pay_amount,
-			'credit': direction == -1 and pay_amount,
+			'debit': direction * pay_amount>0 and direction * pay_amount,
+			'credit': direction * pay_amount<0 and - direction * pay_amount,
 			'account_id': src_account_id,
 			'partner_id': invoice.partner_id.id,
 			'date': time.strftime('%Y-%m-%d'),
 		}
 		l2 = {
 			'name':name,
-			'debit': direction == -1 and pay_amount,
-			'credit': direction == 1 and pay_amount,
+			'debit': direction * pay_amount<0 and - direction * pay_amount,
+			'credit': direction * pay_amount>0 and direction * pay_amount,
 			'account_id': pay_account_id,
 			'partner_id': invoice.partner_id.id,
 			'date': time.strftime('%Y-%m-%d'),
 		}
 		lines = [(0, 0, l1), (0, 0, l2)]
-		move = {'name': name, 'line_id': lines, 'journal_id': pay_journal_id}
+		move = {'name': name, 'line_id': lines, 'journal_id': pay_journal_id, 'period_id': period_id}
 		move_id = self.pool.get('account.move').create(cr, uid, move)
 		
 		line_ids = []
