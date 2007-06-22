@@ -4,7 +4,7 @@
 	"author" : "Tiny",
 	"website" : "http://tinyerp.com",
 	"depends" : ["account","hr_timesheet_invoice"],
-	"category" : "Generic Modules/Account",
+	"category" : "Generic Modules/Accounting",
 	"description": "A module that adds new reports based on analytic accounts.",
 	"init_xml" : [],
 	"demo_xml" : [],

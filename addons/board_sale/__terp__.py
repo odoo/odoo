@@ -2,7 +2,7 @@
 	"name":"Dashboard for sales",
 	"version":"1.0",
 	"author":"Tiny",
-	"category":"Sales dashboard",
+	"category":"Board/Sales & Purchase",
 	"depends":["board","sale", "report_crm", "report_sale"],
 	"demo_xml":["board_sale_demo.xml"],
 	"update_xml":["board_sale_view.xml"],

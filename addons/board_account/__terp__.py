@@ -2,7 +2,7 @@
 	"name":"Board for accountant",
 	"version":"1.0",
 	"author":"Tiny",
-	"category":"Board",
+	"category":"Board/Accounting",
 	"depends":[
 		"account",
 		"hr_timesheet_invoice",

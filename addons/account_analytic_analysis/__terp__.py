@@ -5,7 +5,7 @@ important data for project manager for services companies.
 Add menu to show relevant information for each manager.""",
 	"version" : "1.0",
 	"author" : "Camptocamp",
-	"category" : "Generic Modules/Account",
+	"category" : "Generic Modules/Accounting",
 	"module": "",
 	"website": "http://www.camptocamp.com/",
 	"depends" : ["account","hr_timesheet","hr_timesheet_invoice"],

@@ -2,7 +2,7 @@
 	"name":"Board for project users",
 	"version":"1.0",
 	"author":"Tiny",
-	"category":"Board",
+	"category":"Board/Projects & Services",
 	"depends":[
 		"project",
 		"report_timesheet",

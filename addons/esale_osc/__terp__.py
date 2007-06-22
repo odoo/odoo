@@ -2,7 +2,7 @@
 	"name" : "OScommerce Interface / ZenCart",
 	"version" : "1.0",
 	"author" : "Tiny / modified by Lucien Moerkamp",
-	"category" : "Interface OScommerce",
+	"category" : "Interfaces/CMS & eCommerce",
 	"website" : "http://www.tinyerp.com",
 	"depends" : ["product", "stock", "sale"],
 	"description": """OSCommerce (Zencart) eCommerce interface synchronisation.
