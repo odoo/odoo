@@ -298,7 +298,8 @@ class account_invoice(osv.osv):
 		for inv in self.browse(cr, uid, ids):
 			if inv.move_id:
 				continue
-			if inv.type in ('in_invoice', 'in_refund') and not inv.check_total == inv.amount_total:
+			if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding/2.0):
+				print inv.check_total,  inv.amount_total
 				raise osv.except_osv('Bad total !', 'Please verify the price of the invoice !\nThe real total does not match the computed total.')
 			company_currency = inv.company_id.currency_id.id
 			# create the analytical lines
