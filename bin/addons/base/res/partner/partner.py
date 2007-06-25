@@ -361,7 +361,6 @@ class res_partner_bank_type(osv.osv):
 	_columns = {
 		'name': fields.char('Name', size=64, required=True),
 		'code': fields.char('Code', size=64, required=True),
-		'elec_pay': fields.char('Electronic Payment', size=64),
 		'field_ids': fields.one2many('res.partner.bank.type.field', 'bank_type_id', 'Type fields'),
 	}
 res_partner_bank_type()
@@ -382,6 +381,7 @@ res_partner_bank_type_fields()
 class res_partner_bank(osv.osv):
 	_description='Bank Details'
 	_name = "res.partner.bank"
+	_rec_name = "state"
 	def _bank_type_get(self, cr, uid, *args):
 		result = []
 		type_ids = self.pool.get('res.partner.bank.type').search(cr, uid, [])
@@ -391,7 +391,6 @@ class res_partner_bank(osv.osv):
 		return result
 
 	_columns = {
-		'name': fields.char('Account Name', size=64, required=True),
 		'acc_number': fields.char('Account Number', size=64, required=False),
 		'bank_id': fields.many2one('res.partner', 'Bank'),
 		'bank_address_id': fields.many2one('res.partner.address', 'Bank address'),
@@ -415,6 +414,11 @@ class res_partner_bank(osv.osv):
 					res[f.name].setdefault('states',{})
 					res[f.name]['states'][t.code] = [('readonly',f.readonly),('required',f.required)]
 		return res
+
+	def name_get(self, cr, uid, ids, context={}):
+		if not len(ids):
+			return []
+		return [(r['id'], r[self._rec_name] + (r['owner_name'] and (' ' + r['owner_name']))) for r in self.read(cr, uid, ids, [self._rec_name, 'owner_name'], context, load='_classic_write')]
 
 res_partner_bank()
 

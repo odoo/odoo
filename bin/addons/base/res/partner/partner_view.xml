@@ -362,8 +362,7 @@
 		<field name="arch" type="xml">
 			<form string="Bank Account Type">
 				<field name="name" select="1"/>
-				<field name="code" />
-				<field name="elec_pay" select="1"/>
+				<field name="code" select="1"/>
 			</form>
 		</field>
 	</record>
@@ -375,8 +374,7 @@
 		<field name="arch" type="xml">
 			<tree string="Bank Account Type">
 				<field name="name" select="1"/>
-				<field name="code" />
-				<field name="elec_pay" select="1"/>
+				<field name="code" select="1"/>
 			</tree>
 		</field>
 	</record>
@@ -388,7 +386,6 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Bank account">
-				<field name="name" select="1"/>
 				<field name="state" select="2"/>
 				<newline/>
 				<field name="acc_number" select="1"/>
@@ -410,8 +407,8 @@
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
 			<tree string="Bank Details">
-				<field name="name"/>
 				<field name="state"/>
+				<field name="owner_name"/>
 			</tree>
 		</field>
 	</record>
