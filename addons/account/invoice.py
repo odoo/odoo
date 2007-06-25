@@ -137,7 +137,7 @@ class account_invoice(osv.osv):
 		'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
 		'journal_id': fields.many2one('account.journal', 'Journal', required=True,readonly=True, states={'draft':[('readonly',False)]}),
 		'company_id': fields.many2one('res.company', 'Company', required=True),
-		'check_total': fields.float('Total', digits=(16,2)),
+		'check_total': fields.float('Total', digits=(16,2), states={'open':[('readonly',True)],'close':[('readonly',True)]}),
 	}
 	_defaults = {
 		'type': _get_type,
