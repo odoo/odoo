@@ -32,7 +32,7 @@ class res_partner_bank(osv.osv):
 	_inherit = "res.partner.bank"
 	_columns = {
 		'iban': fields.char('IBAN', size=34, readonly=True, help="International Bank Account Number"),
-		'swift': fields.char('BIC/Swift code', size=11, readonly=True, help="Bank Identifier Code"),
+		'bic': fields.char('BIC/Swift code', size=11, readonly=True, help="Bank Identifier Code"),
 	}
 res_partner_bank()
 
