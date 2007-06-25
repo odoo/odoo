@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<terp>
+	<data noupdate="True">
+		<!--
+
+		 Plan comptable général pour la France, conforme au 
+		 Règlement n° 99-03 du 29 avril 1999
+		 Version applicable au 1er janvier 2005.
+		 Règlement disponible sur http://comptabilite.erp-libre.info
+		 Mise en forme et paramétrage par http://sisalp.fr et http://nbconseil.net
+		 version du fichier : 01-01-2006
+		
+		 Définition des taux de TVA
+		
+		-->
+
+		<record model="account.tax" id="tva_normale">
+			<field name="name">19,6%</field>
+			<field name="amount" eval="0.196"/>
+			<field name="type">percent</field>
+			<field name="account_collected_id" ref="pcg_445710"/>
+			<field name="account_paid_id" ref="pcg_445510"/>
+		</record>
+
+		<record model="account.tax" id="tva_specifique">
+			<field name="name">8,5%</field>
+			<field name="amount" eval="0.085"/>
+			<field name="type">percent</field>
+			<field name="account_collected_id" ref="pcg_445710"/>
+			<field name="account_paid_id" ref="pcg_445510"/>
+		</record>
+
+		<record model="account.tax" id="tva_reduite">
+			<field name="name">5,5%</field>
+			<field name="amount" eval="0.055"/>
+			<field name="type">percent</field>
+			<field name="account_collected_id" ref="pcg_445710"/>
+			<field name="account_paid_id" ref="pcg_445510"/>
+		</record>
+
+		<record model="account.tax" id="tva_super_reduite">
+			<field name="name">2,1%</field>
+			<field name="amount" eval="0.021"/>
+			<field name="type">percent</field>
+			<field name="account_collected_id" ref="pcg_445710"/>
+			<field name="account_paid_id" ref="pcg_445510"/>
+		</record>
+
+		<record model="account.tax" id="tva_immo_normale">
+			<field name="name">Invest-19,6%</field>
+			<field name="amount" eval="0.196"/>
+			<field name="type">percent</field>
+		</record>
+
+		<record model="account.tax" id="tva_immo_specifique">
+			<field name="name">Invest-8,5%</field>
+			<field name="amount" eval="0.085"/>
+			<field name="type">percent</field>
+			<field name="account_collected_id" ref="pcg_445710"/>
+			<field name="account_paid_id" ref="pcg_445510"/>
+		</record>
+
+		<record model="account.tax" id="tva_immo_reduite">
+			<field name="name">Invest-5,5%</field>
+			<field name="amount" eval="0.055"/>
+			<field name="type">percent</field>
+			<field name="account_collected_id" ref="pcg_445710"/>
+			<field name="account_paid_id" ref="pcg_445510"/>
+		</record>
+
+		<record model="account.tax" id="tva_immo_super_reduite">
+			<field name="name">Invest-2,1%</field>
+			<field name="amount" eval="0.021"/>
+			<field name="type">percent</field>
+			<field name="account_collected_id" ref="pcg_445710"/>
+			<field name="account_paid_id" ref="pcg_445510"/>
+		</record>
+
+		<!-- la taxe nulle n'est pas acceptee
+		<record model="account.tax" id="tva_exonere">
+			<field name="name">Exonéré de TVA</field>
+			<field name="amount" eval="0"/>
+			<field name="type">Aucun</field>
+			</record>
+		-->
+
+	</data>
+</terp>
