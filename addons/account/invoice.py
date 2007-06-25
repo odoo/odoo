@@ -292,6 +292,33 @@ class account_invoice(osv.osv):
 						ait_obj.create(cr, uid, compute_taxes[key])
 		return True
 
+	def _get_analityc_lines(self, cr, uid, id):
+		inv = self.browse(cr, uid, [id])[0]
+		cur_obj = self.pool.get('res.currency')
+
+		company_currency = inv.company_id.currency_id.id
+		if inv.type in ('out_invoice', 'in_refund'):
+			sign = 1
+		else:
+			sign = -1
+
+		iml = self.pool.get('account.invoice.line').move_line_get(cr, uid, inv.id)
+		for il in iml:
+			if il['account_analytic_id']:
+				il['analytic_lines'] = [(0,0, {
+					'name': il['name'],
+					'date': inv['date_invoice'],
+					'account_id': il['account_analytic_id'],
+					'unit_amount': il['quantity'],
+					'amount': cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, il['price'], context={'date': inv.date_invoice}) * sign,
+					'product_id': il['product_id'],
+					'product_uom_id': il['uos_id'],
+					'general_account_id': il['account_id'],
+					'journal_id': self._get_journal_analytic(cr, uid, inv.type),
+					'ref': inv['number'],
+				})]
+		return iml
+
 	def action_move_create(self, cr, uid, ids, *args):
 		ait_obj = self.pool.get('account.invoice.tax')
 		cur_obj = self.pool.get('res.currency')
@@ -305,27 +332,8 @@ class account_invoice(osv.osv):
 			# create the analytical lines
 			line_ids = self.read(cr, uid, [inv.id], ['invoice_line'])[0]['invoice_line']
 			ils = self.pool.get('account.invoice.line').read(cr, uid, line_ids)
-			if inv.type in ('out_invoice', 'in_refund'):
-				sign = 1
-			else:
-				sign = -1
 			# one move line per invoice line
-			iml = self.pool.get('account.invoice.line').move_line_get(cr, uid, inv.id)
-			for il in iml:
-				if il['account_analytic_id']:
-					il['analytic_lines'] = [(0,0, {
-						'name': il['name'],
-						'date': inv['date_invoice'],
-						'account_id': il['account_analytic_id'],
-						'unit_amount': il['quantity'],
-						'amount': cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, il['price'], context={'date': inv.date_invoice}) * sign,
-						'product_id': il['product_id'],
-						'product_uom_id': il['uos_id'],
-						'general_account_id': il['account_id'],
-						'journal_id': self._get_journal_analytic(cr, uid, inv.type),
-						'ref': inv['number'],
-					})]
-
+			iml = self._get_analityc_lines(cr, uid, inv.id)
 			# check if taxes are all computed
 			compute_taxes = ait_obj.compute(cr, uid, inv.id)
 			if not inv.tax_line:

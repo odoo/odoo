@@ -1,9 +1,9 @@
 {
-	"name" : "Invoice on timesheet",
+	"name" : "Invoice on analytic lines",
 	"version" : "1.0",
 	"author" : "Tiny",
-	"category" : "Generic Modules/Human Resources",
-	"website" : "http://tinyerp.com/module_hr.html",
+	"category" : "Generic Modules/Accounting",
+	"website" : "http://tinyerp.com/",
 	"depends" : ["account",'hr_timesheet'],
 	"description": """
 Module to generate invoices based on costs (human ressources, expenses, ...).

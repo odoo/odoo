@@ -74,8 +74,7 @@ class account_analytic_line(osv.osv):
 	}
 account_analytic_line()
 
-class account_analytic_line(osv.osv):
-	_name = "hr.analytic.timesheet"
+class hr_analytic_timesheet(osv.osv):
 	_inherit = "hr.analytic.timesheet"
 	def on_change_account_id(self, cr, uid, ids, account_id):
 		res = super(account_analytic_line,self).on_change_account_id(cr, uid, ids, account_id)
@@ -85,5 +84,20 @@ class account_analytic_line(osv.osv):
 		st = self.pool.get('account.analytic.account').browse(cr, uid, account_id).to_invoice.id
 		res['value']['to_invoice'] = st or False
 		return res
-account_analytic_line()
+hr_analytic_timesheet()
 
+class account_invoice(osv.osv):
+	_inherit = "account.invoice"
+
+	def _get_analityc_lines(self, cr, uid, id):
+		iml = super(account_invoice, self)._get_analityc_lines(cr, uid, id)
+
+		inv = self.browse(cr, uid, [id])[0]
+		if inv.type == 'in_invoice':
+			for il in iml:
+				if il['account_analytic_id']:
+					to_invoice = self.pool.get('account.analytic.account').read(cr, uid, [il['account_analytic_id']], ['to_invoice'])[0]['to_invoice']
+					if to_invoice:
+						il['analytic_lines'][0][2]['to_invoice'] = to_invoice[0]
+		return iml
+account_invoice()
