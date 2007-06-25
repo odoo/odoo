@@ -75,7 +75,11 @@ class report_custom(osv.osv):
 		'type': fields.char('Report Type', size=32, required=True),
 		'model':fields.char('Model', size=64, required=True),
 		'report_id': fields.integer('Report Ref.', required=True),
-		'usage': fields.char('Action Usage', size=32)
+		'usage': fields.char('Action Usage', size=32),
+		'multi': fields.boolean('On multiple doc.', help="If set to true, the action will not be displayed on the right toolbar of a form views.")
+	}
+	_defaults = {
+		'multi': lambda *a: False,
 	}
 report_custom()
 
@@ -96,9 +100,11 @@ class report_xml(osv.osv):
 		'auto': fields.boolean('Automatic XSL:RML', required=True),
 		'usage': fields.char('Action Usage', size=32),
 		'header': fields.boolean('Add RML header', help="Add or not the coporate RML header"),
+		'multi': fields.boolean('On multiple doc.', help="If set to true, the action will not be displayed on the right toolbar of a form views.")
 	}
 	_defaults = {
 		'type': lambda *a: 'ir.actions.report.xml',
+		'multi': lambda *a: False,
 		'auto': lambda *a: True,
 		'header': lambda *a: True,
 		'report_sxw_content': lambda *a: False,
@@ -157,6 +163,10 @@ class act_window_view(osv.osv):
 		'view_id': fields.many2one('ir.ui.view', 'View'),
 		'view_mode': fields.selection((('tree', 'Tree'),('form', 'Form'),('graph', 'Graph')), string='Type of view', required=True),
 		'act_window_id': fields.many2one('ir.actions.act_window', 'Action'),
+		'multi': fields.boolean('On multiple doc.', help="If set to true, the action will not be displayed on the right toolbar of a form views.")
+	}
+	_defaults = {
+		'multi': lambda *a: False,
 	}
 	_order = 'sequence'
 act_window_view()

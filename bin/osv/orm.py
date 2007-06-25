@@ -1342,6 +1342,7 @@ class orm(object):
 			resprint = map(clean, resprint)
 			resaction = map(clean, resaction)
 			resaction = filter(lambda x: not x.get('multi',False), resaction)
+			resprint = filter(lambda x: not x.get('multi',False), resprint)
 			resrelate = map(lambda x:x[2], resrelate)
 			for x in resprint+resaction+resrelate:
 				x['string'] = x['name']

@@ -148,6 +148,7 @@ class xml_import(object):
 			res['report_sxw_content'] = sxw_content
 		if rec.hasAttribute('header'):
 			res['header'] = eval(rec.getAttribute('header'))
+		res['multi'] = rec.hasAttribute('multi') and  eval(rec.getAttribute('multi'))
 		xml_id = rec.getAttribute('id').encode('utf8')
 		id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.report.xml", self.module, res, xml_id, mode=self.mode)
 		self.idref[xml_id] = id
