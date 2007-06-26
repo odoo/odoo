@@ -265,7 +265,7 @@ class account_invoice(osv.osv):
 				ait_obj.create(cr, uid, taxe)
 		return True
 
-	def button_compute(self, cr, uid, ids, context={}):
+	def button_compute(self, cr, uid, ids, context={}, set_total=False):
 		ait_obj = self.pool.get('account.invoice.tax')
 		cur_obj = self.pool.get('res.currency')
 		for inv in self.browse(cr, uid, ids):
@@ -290,6 +290,8 @@ class account_invoice(osv.osv):
 				for key in compute_taxes:
 					if not key in tax_key:
 						ait_obj.create(cr, uid, compute_taxes[key])
+			if set_total:
+				self.pool.get('account.invoice').write(cr, uid, [inv.id], {'check_total': inv.amount_total})
 		return True
 
 	def _get_analityc_lines(self, cr, uid, id):

@@ -552,7 +552,7 @@ class stock_picking(osv.osv):
 					self.pool.get('sale.order.line').write(cr, uid, [line.sale_line_id.id], {
 						'invoice_lines': [(6, 0, [iline_id])]
 					})
-
+			self.pool.get('account.invoice').button_compute(cr, uid, [invoice_id], {'type':'in_invoice'}, set_total=(type in ('in_invoice','in_refund')))
 			self.pool.get('stock.picking').write(cr, uid, [p.id], {'invoice_state': 'invoiced'})
 			if p.sale_id:
 				sids = sales[p.sale_id.id]

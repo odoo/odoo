@@ -155,6 +155,7 @@ class hr_expense_expense(osv.osv):
 			if exp.journal_id:
 				inv['journal_id']=exp.journal_id.id
 			inv_id = self.pool.get('account.invoice').create(cr, uid, inv, {'type':'in_invoice'})
+			self.pool.get('account.invoice').button_compute(cr, uid, [inv_id], {'type':'in_invoice'}, set_total=True)
 			self.write(cr, uid, [exp.id], {'invoice_id': inv_id, 'state': 'invoiced'})
 			res = inv_id
 		return res
