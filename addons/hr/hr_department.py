@@ -29,25 +29,6 @@
 from osv import fields,osv
 import tools
 
-#class res_users(osv.osv):
-#	_inherit = "res.users"
-#	def _compute_manager_ids(self, cr, uid, ids, name, args, context):
-#		res = {}
-#		for id in ids:
-#			cr.execute("""SELECT
-#					distinct manager_id
-#				from 
-#					hr_department 
-#				where 
-#					id in (select department_id from hr_department_user_rel where user_id=%d)""", (id,))
-#			res[id] = map(lambda x: x[0], cr.fetchall() or []) + [id]
-#		return res
-#
-#	_columns = {
-#		'manager_ids': fields.function(_compute_manager_ids, method=True, string='Members', type="many2many", relation="res.users"),
-#	}
-#res_users()
-
 class hr_department(osv.osv):
 	_name = "hr.department"
 	_columns = {
