@@ -491,6 +491,17 @@ class account_invoice(osv.osv):
 				self.pool.get('res.partner.event').create(cr, uid, {'name':'Invoice: '+name, 'som':False, 'description':name+' '+str(inv['id']), 'document':name, 'partner_id':part, 'date':time.strftime('%Y-%m-%d %H:%M:%S'), 'canal_id':False, 'user_id':uid, 'partner_type':partnertype, 'probability':1.0, 'planned_revenue':pr, 'planned_cost':pc, 'type':eventtype})
 		return len(invs)
 
+	def name_get(self, cr, uid, ids, context={}):
+		if not len(ids):
+			return []
+		types = {
+				'out_invoice': 'CI: ',
+				'in_invoice': 'SI: ',
+				'out_refund': 'OR: ',
+				'in_refund': 'SR: ',
+				}
+		return [(r['id'], types[r['type']]+(r['number'] or '')+' '+(r['name'] or '')) for r in self.read(cr, uid, ids, ['type', 'number', 'name'], context, load='_classic_write')]
+
 	def name_search(self, cr, user, name, args=[], operator='ilike', context={}):
 		ids = []
 		if name:
