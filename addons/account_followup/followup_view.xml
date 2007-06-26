@@ -61,5 +61,61 @@
 			type="wizard"
 			id="account_followup_wizard_menu"/>
 
+
+	<record model="ir.ui.view" id="account_move_line_partner_tree">
+		<field name="name">account.move.line.partner.tree</field>
+		<field name="model">account.move.line</field>
+		<field name="type">tree</field>
+		<field name="priority" eval="32"/>
+		<field name="arch" type="xml">
+			<tree string="Partner entries">
+				<field name="date"/>
+				<field name="move_id"/>
+				<field name="ref"/>
+				<field name="name"/>
+				<field name="partner_id"/>
+				<field name="account_id"/>
+				<field name="followup_line_id"/>
+				<field name="followup_date"/>
+				<field name="debit" sum="Total debit"/>
+				<field name="credit" sum="Total credit"/>
+				<field name="state"/>
+			</tree>
+		</field>
+	</record>
+
+	
+	<act_window name="Unreconciled account entries"
+		domain="[('partner_id', '=', active_id),('account_id','=','partner:'+str(active_id)),('reconcile_id','=',False)]"
+		res_model="account.move.line"
+		src_model="res.partner"
+		view_id="account_move_line_partner_tree"
+		id="account.act_account_partner_account_move_unreconciled"/>
+
+	<act_window name="All account entries"
+		domain="[('reconcile_id', '=', False),('account_id','=','type:receivable')]"
+		res_model="account.move.line"
+		src_model="res.partner"
+		view_id="account_move_line_partner_tree"
+		id="act_account_partner_account_move_all"/>
+
+	<menuitem 
+		action="act_account_partner_account_move_all" 
+		name="Financial Management/Periodical Processing/Print Follow-Ups/Receivable Follow-Ups" 
+		id="menu_account_move_open_unreconcile"/>
+
+	<act_window name="All account entries"
+		domain="[('reconcile_id', '=', False),('account_id','=','type:payable')]"
+		res_model="account.move.line"
+		src_model="res.partner"
+		view_id="account_move_line_partner_tree"
+		id="act_account_partner_account_move_payable_all"/>
+
+	<menuitem 
+		action="act_account_partner_account_move_payable_all" 
+		name="Financial Management/Periodical Processing/Print Follow-Ups/Payable Follow-Ups" 
+		id="menu_account_move_open_unreconcile_payable"/>
+
+
 	</data>
 </terp>

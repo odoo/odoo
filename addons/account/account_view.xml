@@ -1067,6 +1067,7 @@
 		res_model="account.move.line"
 		src_model="account.account"
 		id="act_account_acount_move_line_open"/>
+
 	<act_window name="Unreconciled entries"
 		domain="[('account_id', '=', active_id),('reconcile_id','=',False)]"
 		res_model="account.move.line"
@@ -1549,6 +1550,13 @@
 		src_model="account.journal"
 		id="act_account_journal_2_account_move_line"/>
 
+	<act_window name="Statement entries"
+		domain="[('statement_id', '=', active_id)]"
+		res_model="account.move.line"
+		src_model="account.bank.statement"
+		id="act_account_bank_statement_account_move_unreconciled"/>
+
+
 	<act_window name="Unreconciled account entries"
 		domain="[('partner_id', '=', active_id),('account_id','=','partner:'+str(active_id)),('reconcile_id','=',False)]"
 		res_model="account.move.line"
@@ -1560,13 +1568,6 @@
 		res_model="account.move.line"
 		src_model="res.partner"
 		id="act_account_partner_account_move"/>
-
-	<act_window name="Statement entries"
-		domain="[('statement_id', '=', active_id)]"
-		res_model="account.move.line"
-		src_model="account.bank.statement"
-		id="act_account_bank_statement_account_move_unreconciled"/>
-
 
 
 </data>

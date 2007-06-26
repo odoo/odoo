@@ -266,6 +266,10 @@ class account_account(osv.osv):
 				part = self.pool.get('res.partner').browse(cr, user, part_id, context)
 				args += [('id','in', (part.property_account_payable[0],part.property_account_receivable[0]))]
 				name = False
+			if name and str(name).startswith('type:'):
+				type = name.split(':')[1]
+				args += [('type','=', type)]
+				name = False
 		except:
 			pass
 		if name:
@@ -275,7 +279,7 @@ class account_account(osv.osv):
 			if not ids:
 				ids = self.search(cr, user, [('name',operator,name)]+ args)
 		else:
-			ids = self.search(cr, user, args)
+			ids = self.search(cr, user, args, context=context)
 		return self.name_get(cr, user, ids, context=context)
 
 	def name_get(self, cr, uid, ids, context={}):
