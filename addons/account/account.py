@@ -850,6 +850,19 @@ class account_tax_code(osv.osv):
 	_defaults = {
 		'company_id': _default_company,
 	}
+	#def _check_recursion(self, cr, uid, ids):
+	#	level = 100
+	#	while len(ids):
+	#		cr.execute('select distinct parent_id from account_account_rel where child_id in ('+','.join(map(str,ids))+')')
+	#		ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+	#		if not level:
+	#			return False
+	#		level -= 1
+	#	return True
+
+	#_constraints = [
+	#	(_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id'])
+	#]
 	_order = 'name'
 account_tax_code()
 

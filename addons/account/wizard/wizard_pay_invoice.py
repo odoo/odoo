@@ -32,15 +32,13 @@ import pooler
 pay_form = '''<?xml version="1.0"?>
 <form string="Pay invoice">
 	<field name="amount"/>
-	<field name="dest_account_id"/>
 	<field name="journal_id"/>
 	<field name="period_id"/>
 </form>'''
 
 pay_fields = {
 	'amount': {'string': 'Amount paid', 'type':'float', 'required':True},
-	'dest_account_id': {'string':'Payment to Account', 'type':'many2one', 'required':True, 'relation':'account.account', 'domain':[('type','=','cash')]},
-	'journal_id': {'string': 'Journal', 'type': 'many2one', 'relation':'account.journal', 'required':True},
+	'journal_id': {'string': 'Journal', 'type': 'many2one', 'relation':'account.journal', 'required':True, 'domain':[('type','=','cash')]},
 	'period_id': {'string': 'Period', 'type': 'many2one', 'relation':'account.period', 'required':True},
 }
 
@@ -51,7 +49,11 @@ def _pay_and_reconcile(self, cr, uid, data, context):
 	journal_id = form.get('journal_id', False)
 	writeoff_account_id = form.get('writeoff_acc_id', False)
 	writeoff_journal_id = form.get('writeoff_journal_id', False)
-	service.execute(cr.dbname, uid, 'account.invoice', 'pay_and_reconcile', [data['id']], form['amount'], form['dest_account_id'], period_id, journal_id, writeoff_account_id, period_id, writeoff_journal_id, context)
+	pool = pooler.get_pool(cr.dbname)
+	acc_id = pool.get('account.journal').browse(cr, uid, journal_id, context).default_credit_account_id.id
+	if not acc_id:
+		raise wizard.except_wizard('Error !', 'Your journal must have a default credit and debit account.')
+	service.execute(cr.dbname, uid, 'account.invoice', 'pay_and_reconcile', [data['id']], form['amount'], acc_id, period_id, journal_id, writeoff_account_id, period_id, writeoff_journal_id, context)
 	return {}
 
 def _trans_reconcile(self, cr, uid, data, context):

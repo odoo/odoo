@@ -167,7 +167,7 @@ class account_move_line(osv.osv):
 		'credit': fields.float('Credit', digits=(16,2), states={'reconciled':[('readonly',True)]}),
 		'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade", states={'reconciled':[('readonly',True)]}, domain=[('type','<>','view'), ('type', '<>', 'closed')]),
 
-		'move_id': fields.many2one('account.move', 'Entry', required=True, ondelete="cascade", states={'reconciled':[('readonly',True)]}, help="The entry of this entry line.", select=2),
+		'move_id': fields.many2one('account.move', 'Entry', ondelete="cascade", states={'reconciled':[('readonly',True)]}, help="The entry of this entry line.", select=2),
 
 		'ref': fields.char('Ref.', size=32),
 		'statement_id': fields.many2one('account.bank.statement', 'Statement', help="The bank statement used for bank reconciliation", select=True),
@@ -480,15 +480,20 @@ class account_move_line(osv.osv):
 				else:
 					raise osv.except_osv('No piece number !', 'Can not create an automatic sequence for this piece !\n\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.')
 
+		ok = not (journal.type_control_ids or journal.account_control_ids)
 		if ('account_id' in vals) and journal.type_control_ids:
 			type = self.pool.get('account.account').browse(cr, uid, vals['account_id']).type
-			ok = False
 			for t in journal.type_control_ids:
 				if type==t.code:
 					ok = True
 					break
-			if not ok:
-				raise osv.except_osv('Bad account !', 'You can not use this general account in this journal !')
+		if ('account_id' in vals) and journal.account_control_ids and not ok:
+			for a in journal.account_control_ids:
+				if a.id==vals['account_id']:
+					ok = True
+					break
+		if not ok:
+			raise osv.except_osv('Bad account !', 'You can not use this general account in this journal !')
 
 		result = super(osv.osv, self).create(cr, uid, vals, context)
 		if check:

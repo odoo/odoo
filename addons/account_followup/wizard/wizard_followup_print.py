@@ -85,7 +85,14 @@ Thanks,
 
 class followup_all_print(wizard.interface):
 	def _get_partners(self, cr, uid, data, context):
-		cr.execute('select id from account_followup_stat')
+		cr.execute(
+			"SELECT distinct l.partner_id "\
+			"FROM account_move_line AS l LEFT JOIN account_account AS a "\
+				"ON (l.account_id=a.id) "\
+			"WHERE (l.reconcile_id IS NULL) "\
+				"AND (a.type='receivable') "\
+				"AND (l.state<>'draft') "\
+				"AND (l.reconcile_id is NULL) ")
 		ids = map(lambda x: x[0], cr.fetchall())
 		return {'partner_ids': ids}
 
@@ -97,8 +104,9 @@ class followup_all_print(wizard.interface):
 				"FROM account_move_line AS l LEFT JOIN account_account AS a "\
 					"ON (l.account_id=a.id) "\
 				"WHERE (l.reconcile_id IS NULL) "\
-					"AND (a.type='receivable') AND (l.debit > 0) "\
+					"AND (a.type='receivable') "\
 					"AND (l.state<>'draft') "\
+					"AND (l.reconcile_id is NULL) "\
 					"AND partner_id in ("+','.join(map(str,partner_ids))+") "\
 				"ORDER BY l.date")
 			move_lines = cr.fetchall()
