@@ -70,11 +70,6 @@ class followup_all_print(wizard.interface):
 				'You must define at least one follow up for your company !')
 		fup_id = fup_ids[0]
 
-		# fups = {
-		#     previous fup line id: (limit date for current fup line, 
-		#                            current fup line id),
-		#     ...
-		# }
 		current_date = datetime.date.today()
 		cr.execute(
 			"SELECT * "\
@@ -82,36 +77,20 @@ class followup_all_print(wizard.interface):
 			"WHERE followup_id=%d "\
 			"ORDER BY sequence", (fup_id,))
 		for result in cr.dictfetchall():
-			# compute date from when move lines entered earlier than it need 
-			# a follow up
 			delay = datetime.timedelta(days=result['delay'])
 			fups[old] = (current_date - delay, result['id'])
 			if result['start'] == 'end_of_month':
-				#CHECKME: I have a bad feeling about this...
-				# but it depends on the semantic of the field, which I don't
-				# know
 				fups[old][0].replace(day=1)
-			# old = id of previous fup line
 			old = result['id']
 
-		# we don't want any followup after the last one
 		fups[old] = (datetime.date(datetime.MAXYEAR, 12, 31), old)
 
 		partner_list = []
 		for partner_id, followup_line_id, date, id in move_lines: 
 			if (partner_id in partner_list) or (not partner_id):
 				continue
-				
-			# if the move line has already a followup line but it is invalid,
-			# we just skip the move line. 
-			# Note that having no follow-up line *is* valid because of the way 
-			# fups is constructed (fups[None] = ...)
 			if followup_line_id not in fups:
 				continue
-				
-			# if the move_line happened before the limit date for this level 
-			# of followup, we mark the partner as needing a follow up, and
-			# mark the line has having had this level of follow up
 			if date <= fups[followup_line_id][0].strftime('%Y-%m-%d'):
 				partner_list.append(partner_id)
 				cr.execute(
@@ -121,7 +100,6 @@ class followup_all_print(wizard.interface):
 					(fups[followup_line_id][1], 
 					current_date.strftime('%Y-%m-%d'), id,))
 		return {'partner_id': partner_list}
-
 	states = {
 		'init' : {
 			'actions': [_get_partners],
@@ -135,7 +113,6 @@ class followup_all_print(wizard.interface):
 			'actions': [_update_partners],
 			'result': {'type':'print', 'report':'account_followup.followup.print', 'state':'end'},
 		},
-
 	}
 followup_all_print('account_followup.followup.print.all')
 
