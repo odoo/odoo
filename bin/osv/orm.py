@@ -1503,6 +1503,7 @@ class orm(object):
 							qu1.append('(%s.%s %s %%s)' % (table._table, x[0], x[1]))
 							qu2.append(x[2])
 					else:
+						add_null = False
 						if x[1] in ('like', 'ilike'):
 							if isinstance(x[2], str):
 								str_utf8 = x[2]
@@ -1511,6 +1512,8 @@ class orm(object):
 							else:
 								str_utf8 = str(x[2])
 							qu2.append('%%%s%%' % str_utf8)
+							if not str_utf8:
+								add_null = True
 						else:
 							qu2.append(table._columns[x[0]]._symbol_set[1](x[2]))
 						if x[1]=='=like':
@@ -1518,6 +1521,8 @@ class orm(object):
 						else:
 							x1 = x[1]
 						qu1.append('(%s.%s %s %s)' % (table._table, x[0], x1, table._columns[x[0]]._symbol_set[0]))
+						if add_null:
+							qu1[-1] = '('+qu1[-1]+' or '+x[0]+' is null)'
 			elif x[1]=='in':
 				if len(x[2])>0:
 					todel = []
