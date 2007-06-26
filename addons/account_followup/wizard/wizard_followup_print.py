@@ -31,7 +31,24 @@ import pooler
 
 _followup_wizard_all_form = """<?xml version="1.0"?>
 <form string="Select partners" colspan="4">
-	<field name="partner_ids"/>
+	<notebook>
+	<page string="FollowUp selection">
+		<separator string="Select partners to remind" colspan="4"/>
+		<field name="partner_ids" colspan="4" nolabel="1"/>
+	</page><page string="Email confirmation">
+		<label string="Not yet implemented !" colspan="4"/>
+		<field name="email_conf" colspan="4"/>
+		<separator string="Email body" colspan="4"/>
+		<field name="email_body" colspan="4" nolabel="1"/>
+		<separator string="Legend" colspan="4"/>
+
+		<label string="%(partner_name)s: Partner name" colspan="2"/>
+		<label string="%(user_signature)s: Partner name" colspan="2"/>
+		<label string="%(followup_level)s: Followup level" colspan="2"/>
+		<label string="%(followup_amount)s: Followup level" colspan="2"/>
+		<label string="%(followup_details)s: Followup level" colspan="2"/>
+	</page>
+	</notebook>
 </form>"""
 
 _followup_wizard_all_fields = {
@@ -40,6 +57,29 @@ _followup_wizard_all_fields = {
 		'type': 'many2many', 
 		'relation': 'account_followup.stat',
 	},
+	'email_conf': {
+		'string': "Send email confirmation", 
+		'type': 'boolean', 
+	},
+	'email_body': {
+		'string': "Email body", 
+		'type': 'text', 
+		'default': '''
+Dear %(partner_name)s,
+
+Please find in attachment our reminder for a total amount due
+of %(followup_amount).2f EUR.
+
+The details is here:
+%(followup_details)s
+
+%(followup_level)s
+Thanks,
+
+-- 
+%(user_signature)s
+		'''
+	}
 }
 
 
@@ -51,16 +91,19 @@ class followup_all_print(wizard.interface):
 
 	def _update_partners(self, cr, uid, data, context):
 		partner_ids = data['form']['partner_ids'][0][2]
-		cr.execute(
-			"SELECT l.partner_id, l.followup_line_id, l.date, l.id "\
-			"FROM account_move_line AS l LEFT JOIN account_account AS a "\
-				"ON (l.account_id=a.id) "\
-			"WHERE (l.reconcile_id IS NULL) "\
-				"AND (a.type='receivable') AND (l.debit > 0) "\
-				"AND (l.state<>'draft') "\
-				"AND partner_id in ("+','.join(map(str,partner_ids))+") "\
-			"ORDER BY l.date")
-		move_lines = cr.fetchall()
+		if partner_ids:
+			cr.execute(
+				"SELECT l.partner_id, l.followup_line_id, l.date, l.id "\
+				"FROM account_move_line AS l LEFT JOIN account_account AS a "\
+					"ON (l.account_id=a.id) "\
+				"WHERE (l.reconcile_id IS NULL) "\
+					"AND (a.type='receivable') AND (l.debit > 0) "\
+					"AND (l.state<>'draft') "\
+					"AND partner_id in ("+','.join(map(str,partner_ids))+") "\
+				"ORDER BY l.date")
+			move_lines = cr.fetchall()
+		else:
+			move_lines = []
 
 		old = None
 		fups = {}
