@@ -29,7 +29,16 @@
 			name="mrp.workcenter.load" 
 			keyword="client_print_multi" 
 			id="wizard_workcenter_load"/>
-		
+
+		<wizard id="wizard_price" string="Product Cost Structure" model="product.product" name="product_price" menu="False"/>
+		 <record model="ir.values" id="ir_project_cost_structure">
+			 <field name="key2" eval="'client_print_multi'"/>
+			 <field name="model" eval="'product.product'"/>
+			 <field name="name">Product Cost Structure</field>
+			 <field name="value" eval="'ir.actions.wizard,%d'%wizard_price"/>
+			 <field name="object" eval="True"/>
+		 </record>
+
 	</data>
 </terp>
 

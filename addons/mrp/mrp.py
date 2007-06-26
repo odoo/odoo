@@ -55,7 +55,7 @@ class mrp_workcenter(osv.osv):
 		'timesheet_id': fields.many2one('hr.timesheet.group', 'Timesheet'),
 		'note': fields.text('Description'),
 
-		'capacity_per_cycle': fields.float('Capacity per Cycle'),
+		'capacity_per_cycle': fields.float('Number of workcenter', help="This is the number of available workcenter simultaneously"),
 
 		'time_cycle': fields.float('Time for 1 cycle (hour)'),
 		'time_start': fields.float('Time before prod.'),
