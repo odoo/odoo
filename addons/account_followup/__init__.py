@@ -27,5 +27,6 @@
 ##############################################################################
 
 import followup
+import followup_report
 import wizard
 import report

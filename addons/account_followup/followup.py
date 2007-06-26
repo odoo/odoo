@@ -29,7 +29,6 @@
 ##############################################################################
 
 from osv import fields, osv
-import ir
 
 class followup(osv.osv):
 	_name = 'account_followup.followup'

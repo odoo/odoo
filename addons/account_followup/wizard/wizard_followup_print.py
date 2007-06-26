@@ -29,28 +29,28 @@ import wizard
 import datetime
 import pooler
 
+_followup_wizard_all_form = """<?xml version="1.0"?>
+<form string="Select partners" colspan="4">
+	<field name="partner_ids"/>
+</form>"""
+
+_followup_wizard_all_fields = {
+	'partner_ids': {
+		'string': "Partners", 
+		'type': 'many2many', 
+		'relation': 'account_followup.stat',
+	},
+}
+
+
 class followup_all_print(wizard.interface):
-#	_followup_wizard_all_form = """<?xml version="1.0"?>
-#<form string="Parameters" colspan="4">
-#	<field name="type"/>
-#</form>"""
-#
-#	_followup_wizard_all_fields = {
-#		'type': {
-#			'string': "Follow up base on", 
-#			'type': 'selection', 
-#			'selection': [('maturity', 'Maturity date'),
-#				('date', 'Creation Date')]
-#		},
-#	}
+	def _get_partners(self, cr, uid, data, context):
+		cr.execute('select id from account_followup_stat')
+		ids = map(lambda x: x[0], cr.fetchall())
+		return {'partner_ids': ids}
 
-
-	# this method gets the list of all partners who need a follow up of any 
-	# level AND marks the movelines of thoses partners with the current date
-	# and the level of followup reached
-#CHECKME: shouldn't we also make sure that partners owe us money, and not the
-# opposite?
-	def _get_all_partners(self, cr, uid, data, context):
+	def _update_partners(self, cr, uid, data, context):
+		partner_ids = data['form']['partner_ids'][0][2]
 		cr.execute(
 			"SELECT l.partner_id, l.followup_line_id, l.date, l.id "\
 			"FROM account_move_line AS l LEFT JOIN account_account AS a "\
@@ -58,6 +58,7 @@ class followup_all_print(wizard.interface):
 			"WHERE (l.reconcile_id IS NULL) "\
 				"AND (a.type='receivable') AND (l.debit > 0) "\
 				"AND (l.state<>'draft') "\
+				"AND partner_id in ("+','.join(map(str,partner_ids))+") "\
 			"ORDER BY l.date")
 		move_lines = cr.fetchall()
 
@@ -67,8 +68,6 @@ class followup_all_print(wizard.interface):
 		if not fup_ids:
 			raise wizard.except_wizard('No Follow up Defined', 
 				'You must define at least one follow up for your company !')
-
-		#Ged> DUH!
 		fup_id = fup_ids[0]
 
 		# fups = {
@@ -124,13 +123,16 @@ class followup_all_print(wizard.interface):
 		return {'partner_id': partner_list}
 
 	states = {
-		#'init' : {
-		#	'actions': [],
-		#	'result': {'type': 'form', 'arch':_followup_wizard_all_form, 'fields':_followup_wizard_all_fields, 'state':[('end','Cancel'),('print','Print Follow Ups')]},
-		#},
-		#'print' : {
-		'init': {
-			'actions': [_get_all_partners],
+		'init' : {
+			'actions': [_get_partners],
+			'result': {'type': 'form',
+				'arch':_followup_wizard_all_form,
+				'fields':_followup_wizard_all_fields,
+				'state':[('end','Cancel'),('print','Print Follow Ups')]
+			},
+		},
+		'print': {
+			'actions': [_update_partners],
 			'result': {'type':'print', 'report':'account_followup.followup.print', 'state':'end'},
 		},
 

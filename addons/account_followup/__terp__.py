@@ -20,7 +20,10 @@
 	"category" : "Generic Modules/Accounting",
 	"init_xml" : [],
 	"demo_xml" : ["followup_demo.xml"],
-	"update_xml" : ["followup_view.xml"],
+	"update_xml" : [
+		"followup_view.xml",
+		"followup_report_view.xml"
+	],
 	"active": False,
 	"installable": True
 }
