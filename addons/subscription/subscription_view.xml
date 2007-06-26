@@ -27,7 +27,7 @@
 					<field name="date_init"/>
 					<field name="doc_source" colspan="4" widget="reference"/>
 					<field name="notes" colspan="4"/>
-					<separator string="State" colspan="4"/>
+					<separator colspan="4"/>
 					<field name="cron_id" colspan="4" readonly="1"/>
 					<field name="state" readonly="1"/>
 					<group col="3" colspan="2">
@@ -42,11 +42,27 @@
 			</form>
 		</field>
 	</record>
+
+	<record model="ir.ui.view" id="view_subscription_tree">
+		<field name="name">subscription.subscription.tree</field>
+		<field name="model">subscription.subscription</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Subscriptions">
+				<field name="name"/>
+				<field name="active"/>
+				<field name="user_id"/>
+				<field name="partner_id"/>
+				<field name="state"/>
+			</tree>
+		</field>
+	</record>
+
 	<record model="ir.actions.act_window" id="action_subscription_form">
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">subscription.subscription</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="view_subscription_form"/>
+		<field name="view_id" ref="view_subscription_tree"/>
 	</record>
 	<menuitem name="Tools/Subscriptions/All Subscriptions" id="menu_action_subscription_form" action="action_subscription_form"/>
 
@@ -57,7 +73,6 @@
 		<field name="arch" type="xml">
 			<tree string="Subscription History">
 				<field name="date"/>
-				<field name="name"/>
 			</tree>
 		</field>
 	</record>
@@ -68,10 +83,8 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Subscription History">
-				<field name="name"/>
 				<field name="date"/>
-				<newline/>
-				<field name="document_id" colspan="4" widget="reference"/>
+				<field name="document_id" colspan="4"/>
 			</form>
 		</field>
 	</record>
@@ -85,24 +98,45 @@
 				<field name="name" select="1"/>
 				<field name="active" select="1"/>
 				<field name="model" select="1"/>
-				<field name="workflow_action"/>
-				<newline/>
-				<field name="field_ids" colspan="4" widget="one2many_list"/>
+				<field name="field_ids" colspan="4" nolabel="1"/>
 			</form>
 		</field>
 	</record>
 
-	<record model="ir.ui.view" id="v2">
+	<record model="ir.ui.view" id="document_tree">
+		<field name="name">subscription.document.tree</field>
+		<field name="model">subscription.document</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Subscription Document">
+				<field name="name"/>
+				<field name="active"/>
+				<field name="model"/>
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="document_fields_form">
 		<field name="name">subscription.document.fields.form</field>
 		<field name="model">subscription.document.fields</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Subscription Document Fields">
-				<field name="name"/>
-				<newline/>
-				<field name="field"/>
+				<field name="field" select="1"/>
 				<field name="value"/>
 			</form>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="document_fields_tree">
+		<field name="name">subscription.document.fields.tree</field>
+		<field name="model">subscription.document.fields</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Subscription Document Fields">
+				<field name="field"/>
+				<field name="value"/>
+			</tree>
 		</field>
 	</record>
 
@@ -110,7 +144,7 @@
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">subscription.document</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="document_form"/>
+		<field name="view_id" ref="document_tree"/>
 	</record>
 	<menuitem name="Tools/Subscriptions/Configuration/Document Types" id="menu_action_document_form" action="action_document_form"/>
 </data>

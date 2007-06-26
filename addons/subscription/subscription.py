@@ -40,8 +40,7 @@ class subscription_document(osv.osv):
 	_columns = {
 		'name': fields.char('Name', size=60, required=True),
 		'active': fields.boolean('Active'),
-		'model': fields.char('Model', size=40, required=True),
-		'workflow_action': fields.char('Workflow Action', size=40),
+		'model': fields.many2one('ir.model', 'Model', required=True),
 		'field_ids': fields.one2many('subscription.document.fields', 'document_id', 'Fields')
 	}
 	_defaults = {
@@ -49,20 +48,20 @@ class subscription_document(osv.osv):
 	}
 subscription_document()
 
-class subscription_document_line(osv.osv):
+class subscription_document_fields(osv.osv):
 	_name = "subscription.document.fields"
 	_description = "Subscription document fields"
+	_rec_name = 'field'
 	_columns = {
-		'name': fields.char('Name', size=60, required=True),
-		'field': fields.char('Field name', size=60),
-		'value': fields.selection([('false','/'),('date','Current Date')], 'Default Value', size=40),
+		'field': fields.many2one('ir.model.fields', 'Field', domain="[('model_id', '=', parent.model)]", required=True),
+		'value': fields.selection([('false','False'),('date','Current Date')], 'Default Value', size=40),
 		'document_id': fields.many2one('subscription.document', 'Subscription Document', ondelete='cascade'),
 	}
 	_defaults = {}
-subscription_document_line()
+subscription_document_fields()
 
 def _get_document_types(self, cr, uid, context={}):
-	cr.execute('select model, name from subscription_document order by name')
+	cr.execute('select m.model, s.name from subscription_document s, ir_model m WHERE s.model = m.id order by s.name')
 	return cr.fetchall()
 
 class subscription_subscription(osv.osv):
@@ -79,7 +78,7 @@ class subscription_subscription(osv.osv):
 		'exec_init': fields.integer('Number of documents'),
 		'date_init': fields.datetime('First Date'),
 		'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'State'),
-		'doc_source': fields.char('Source Document', required=True, selection=_get_document_types, size=128),
+		'doc_source': fields.reference('Source Document', required=True, selection=_get_document_types, size=128),
 		'doc_lines': fields.one2many('subscription.subscription.history', 'subscription_id', 'Documents created'),
 		'cron_id': fields.many2one('ir.cron', 'Cron Job')
 	}
@@ -116,7 +115,7 @@ class subscription_subscription(osv.osv):
 
 			default = {'state':'draft'}
 			doc_obj = self.pool.get('subscription.document')
-			document_ids = doc_obj.search(cr, uid, [('model','=',model_name)])
+			document_ids = doc_obj.search(cr, uid, [('model.model','=',model_name)])
 			doc = doc_obj.browse(cr, uid, document_ids)[0]
 			for f in doc.field_ids:
 				if f.value=='date':
@@ -132,7 +131,7 @@ class subscription_subscription(osv.osv):
 			if remaining == 1:
 				state = 'done'
 			id = self.pool.get(model_name).copy(cr, uid, id, default, context)
-			self.pool.get('subscription.subscription.history').create(cr, uid, {'subscription_id': row['id'], 'name':row['name'], 'date':time.strftime('%Y-%m-%d %H:%M:%S'), 'document_id': model_name+','+str(id)})
+			self.pool.get('subscription.subscription.history').create(cr, uid, {'subscription_id': row['id'], 'date':time.strftime('%Y-%m-%d %H:%M:%S'), 'document_id': model_name+','+str(id)})
 			self.write(cr, uid, [row['id']], {'state':state})
 		return True
 
@@ -151,11 +150,11 @@ subscription_subscription()
 class subscription_subscription_history(osv.osv):
 	_name = "subscription.subscription.history"
 	_description = "Subscription history"
+	_rec_name = 'date'
 	_columns = {
-		'name': fields.char('Name', size=60, required=True),
-		'date': fields.date('Date'),
+		'date': fields.datetime('Date'),
 		'subscription_id': fields.many2one('subscription.subscription', 'Subscription', ondelete='cascade'),
-		'document_id': fields.char('Source Document', required=True, selection=[('account.invoice','Invoice'),('sale.order','Sale Order')], size=128),
+		'document_id': fields.reference('Source Document', required=True, selection=[('account.invoice','Invoice'),('sale.order','Sale Order')], size=128),
 	}
 subscription_subscription_history()
 
