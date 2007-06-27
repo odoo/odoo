@@ -128,7 +128,7 @@ class esale_user(osv.osv):
 		'picking_policy': fields.selection([
 			('direct','Direct Delivery'),
 			('one','All at once')
-		], 'Picking Policy', required=True ),
+		], 'Packing Policy', required=True ),
 		'order_policy': fields.selection([
 			('prepaid','Pay before delivery'),
 			('manual','Shipping & Manual Invoice'),

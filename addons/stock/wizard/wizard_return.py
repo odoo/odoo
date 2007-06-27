@@ -103,7 +103,7 @@ def _action_open_window(self, cr, uid, data, context):
 		return {}
 	return {
 		'domain': "[('id', 'in', ["+str(res)+"])]",
-		'name': 'Picking List',
+		'name': 'Packing List',
 		'view_type':'form',
 		'view_mode':'tree,form',
 		'res_model':'stock.picking',

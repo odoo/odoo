@@ -40,7 +40,7 @@ class res_partner(osv.osv):
 		method=True,
 		view_load=True,
 		group_name="Accounting Properties",
-		help="The type of journal used for sales and pickings."),
+		help="The type of journal used for sales and packings."),
 	}
 res_partner()
 

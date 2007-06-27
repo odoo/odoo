@@ -309,7 +309,7 @@ class product_product(osv.osv):
 		'variants': fields.char('Variants', size=64),
 		'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True),
 		'ean13': fields.char('EAN13', size=13),
-		'packaging' : fields.one2many('product.packaging', 'product_id', 'Palettization', help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
+		'packaging' : fields.one2many('product.packaging', 'product_id', 'Palettization', help="Gives the different ways to package the same product. This has no impact on the packing order and is mainly used if you use the EDI module."),
 		'price_extra': fields.float('Price Extra', digits=(16, int(config['price_accuracy']))),
 		'price_margin': fields.float('Price Margin', digits=(16, int(config['price_accuracy']))),
 	}

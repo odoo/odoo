@@ -310,9 +310,9 @@ stock_tracking()
 #----------------------------------------------------------
 class stock_picking(osv.osv):
 	_name = "stock.picking"
-	_description = "Picking list"
+	_description = "Packing list"
 	_columns = {
-		'name': fields.char('Picking Name', size=64, required=True, select=True),
+		'name': fields.char('Packing name', size=64, required=True, select=True),
 		'origin': fields.char('Origin', size=64),
 		'type': fields.selection([('out','Sending Goods'),('in','Getting Goods'),('internal','Internal')], 'Shipping Type', required=True, select=True),
 		'active': fields.boolean('Active'),
@@ -334,7 +334,7 @@ class stock_picking(osv.osv):
 
 		'move_lines': fields.one2many('stock.move', 'picking_id', 'Move Lines'),
 
-		'auto_picking': fields.boolean('Auto-Picking'),
+		'auto_picking': fields.boolean('Auto-Packing'),
 		'work': fields.boolean('Work todo'),
 		'loc_move_id': fields.many2one('stock.location', 'Move to Location'),
 		'address_id': fields.many2one('res.partner.address', 'Partner'),
@@ -660,7 +660,7 @@ class stock_move(osv.osv):
 		'move_dest_id': fields.many2one('stock.move', 'Dest. Move'),
 		'move_history_ids': fields.many2many('stock.move', 'stock_move_history_ids', 'parent_id', 'child_id', 'Move History'),
 		'move_history_ids2': fields.many2many('stock.move', 'stock_move_history_ids', 'child_id', 'parent_id', 'Move History'),
-		'picking_id': fields.many2one('stock.picking', 'Picking list', select=True),
+		'picking_id': fields.many2one('stock.picking', 'Packing list', select=True),
 
 		'note': fields.text('Notes'),
 

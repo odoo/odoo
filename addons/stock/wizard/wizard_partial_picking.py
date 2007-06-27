@@ -38,7 +38,7 @@ from osv import osv
 _moves_arch = UpdateableStr()
 _moves_fields = {}
 
-_moves_arch_end = '''<?xml version="1.0"?><form string="Picking Result"><label string="The picking has been successfully made !" colspan="4" /></form>'''
+_moves_arch_end = '''<?xml version="1.0"?><form string="Packing result"><label string="The packing has been successfully made !" colspan="4" /></form>'''
 _moves_fields_end = {}
 
 def make_default(val):
@@ -51,7 +51,7 @@ def _get_moves(self, cr, uid, data, context):
 	pick = pick_obj.browse(cr, uid, [data['id']])[0]
 	res = {}
 	_moves_fields.clear()
-	_moves_arch_lst = ['<?xml version="1.0"?>', '<form string="Make picking">']
+	_moves_arch_lst = ['<?xml version="1.0"?>', '<form string="Make packing">']
 	for m in pick.move_lines:
 		quantity = m.product_qty
 		if m.state<>'assigned':

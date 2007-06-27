@@ -48,7 +48,7 @@ parameter_fields = {
 	'po_cycle': {'string':'PO Cycle', 'type':'float', 'required':True, 'default': lambda *a: 1.0},
 	'po_lead': {'string':'PO Lead Time', 'type':'float', 'required':True, 'default': lambda *a: 1.0},
 	'security_lead': {'string':'Security Days', 'type':'float', 'required':True, 'default': lambda *a: 5.0},
-	'picking_lead': {'string':'Picking Lead Time', 'type':'float', 'required':True, 'default': lambda *a: 1.0},
+	'picking_lead': {'string':'Packing Lead Time', 'type':'float', 'required':True, 'default': lambda *a: 1.0},
 	'user_id': {'string':'Send Result To', 'type':'many2one', 'relation':'res.users', 'default': lambda uid,data,state: uid},
 }
 

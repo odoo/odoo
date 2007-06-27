@@ -2,7 +2,7 @@
 <data>
 
 	<record model="ir.ui.view" id="stock_picking_inherit_purchase">
-		<field name="name">stock.picking.form</field>
+		<field name="name">Packing list</field>
 		<field name="model">stock.picking</field>
 		<field name="type">form</field>
 		<field name="inherit_id" ref="stock.view_picking_form"/>
@@ -13,7 +13,7 @@
 		</field>
 	</record>
 
-	<act_window name="Pickings"
+	<act_window name="Packings"
 		domain="[('purchase_id', '=', active_id)]"
 		res_model="stock.picking"
 		src_model="purchase.order"

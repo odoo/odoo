@@ -2,7 +2,7 @@
 <data>
 
 	#
-	# Pickings by invoice type
+	# Packings by invoice type
 	#
 
 	<record model="ir.ui.view" id="view_picking_invoice_type_stats_form">
@@ -10,7 +10,7 @@
 		<field name="model">sale_journal.invoice.type.stats</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Pickings by invoice method">
+			<form string="Packings by invoice method">
 				<field name="name" select="1"/>
 				<field name="invoice_state" select="1"/>
 				<field name="state" select="1"/>
@@ -27,7 +27,7 @@
 		<field name="model">sale_journal.invoice.type.stats</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Pickings by invoice method">
+			<tree string="Packings by invoice method">
 				<field name="name"/>
 				<field name="invoice_state"/>
 				<field name="state"/>
@@ -40,7 +40,7 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_invoice_type_picking_stats_open">
-		<field name="name">Statistics on pickings to invoice</field>
+		<field name="name">Statistics on packings to invoice</field>
 		<field name="res_model">sale_journal.invoice.type.stats</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -50,13 +50,13 @@
 	<record model="ir.values" id="ir_open_invoice_type_stats">
 		<field name="key2">tree_but_open</field>
 		<field name="model">sale_journal.invoice.type</field>
-		<field name="name">Statistics on pickings to invoice</field>
+		<field name="name">Statistics on packings to invoice</field>
 		<field name="value" eval="'ir.actions.act_window,%d'%action_invoice_type_picking_stats_open"/>
 		<field name="object" eval="True"/>
 	</record>
 
 	<record model="ir.actions.act_window" id="action_invoice_type_picking_stats_open_menu_month">
-		<field name="name">sale_journal.invoice.type.stats.open</field>
+		<field name="name">Packings by invoice method</field>
 		<field name="res_model">sale_journal.invoice.type.stats</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -64,24 +64,24 @@
 		<field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
 	</record>
 	<menuitem
-		name="Inventory Control/Reporting/This month/Pickings by invoice method"
+		name="Inventory Control/Reporting/This month/Packings by invoice method"
 		action="action_invoice_type_picking_stats_open_menu_month"
 		id="menu_invoice_type_picking_stats_open_menu"/>
 
 	<record model="ir.actions.act_window" id="action_invoice_type_picking_stats_open_menu_all">
-		<field name="name">sale_journal.invoice.type.stats.open</field>
+		<field name="name">Packings by invoice method</field>
 		<field name="res_model">sale_journal.invoice.type.stats</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
 	<menuitem
-		name="Inventory Control/Reporting/All months/Pickings by invoice method"
+		name="Inventory Control/Reporting/All months/Packings by invoice method"
 		action="action_invoice_type_picking_stats_open_menu_all"
 		id="menu_invoice_type_picking_stats_open_all"/>
 
 	#
-	# Pickings by journal
+	# Packings by journal
 	#
 
 	<record model="ir.ui.view" id="view_picking_journal_stats_form">
@@ -89,7 +89,7 @@
 		<field name="model">sale_journal.picking.stats</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Pickings by journals">
+			<form string="Packings by journals">
 				<field name="name" select="1"/>
 				<field name="state" select="1"/>
 				<field name="journal_id" select="1"/>
@@ -105,7 +105,7 @@
 		<field name="model">sale_journal.picking.stats</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Pickings by journals">
+			<tree string="Packings by journals">
 				<field name="name"/>
 				<field name="state"/>
 				<field name="journal_id"/>
@@ -118,7 +118,7 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="action_picking_picking_stats_open_menu_month">
-		<field name="name">sale_journal.picking.stats.open</field>
+		<field name="name">Packings by journal</field>
 		<field name="res_model">sale_journal.picking.stats</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -126,19 +126,19 @@
 		<field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
 	</record>
 	<menuitem
-		name="Inventory Control/Reporting/This month/Pickings by journal"
+		name="Inventory Control/Reporting/This month/Packings by journal"
 		action="action_picking_picking_stats_open_menu_month"
 		id="menu_picking_picking_stats_open_menu"/>
 
 	<record model="ir.actions.act_window" id="action_picking_picking_stats_open_menu_all">
-		<field name="name">sale_journal.picking.stats.open</field>
+		<field name="name">Packings by journal</field>
 		<field name="res_model">sale_journal.picking.stats</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
 	<menuitem
-		name="Inventory Control/Reporting/All months/Pickings by journal"
+		name="Inventory Control/Reporting/All months/Packings by journal"
 		action="action_picking_picking_stats_open_menu_all"
 		id="menu_picking_picking_stats_open_all"/>
 

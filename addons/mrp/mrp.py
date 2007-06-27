@@ -324,7 +324,7 @@ class mrp_production(osv.osv):
 
 		'bom_id': fields.many2one('mrp.bom', 'Bill of Material', domain=[('bom_id','=',False)]),
 
-		'picking_id': fields.many2one('stock.picking', 'Picking list'),
+		'picking_id': fields.many2one('stock.picking', 'Packing list'),
 		'move_prod_id': fields.many2one('stock.move', 'Move Product'),
 		'move_lines': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Products Consummed'),
 
@@ -332,7 +332,7 @@ class mrp_production(osv.osv):
 		'product_lines': fields.one2many('mrp.production.product.line', 'production_id', 'Material Planned'),
 		'workcenter_lines': fields.one2many('mrp.production.workcenter.line', 'production_id', 'Workcenters Utilisation'),
 
-		'state': fields.selection([('draft','Draft'),('picking_except', 'Picking Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Canceled'),('done','Done')],'State', readonly=True)
+		'state': fields.selection([('draft','Draft'),('picking_except', 'Packing Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Canceled'),('done','Done')],'State', readonly=True)
 	}
 	_defaults = {
 		'priority': lambda *a: '1',

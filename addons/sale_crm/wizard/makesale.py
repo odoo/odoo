@@ -47,7 +47,7 @@ sale_fields = {
 	'name' : {'string' : 'Order name', 'type': 'char'},
 	'shop_id' : {'string' : 'Shop', 'type' : 'many2one', 'relation' : 'sale.shop'},
 	'partner_id' : {'string' : 'Partner', 'type' : 'many2one', 'relation' : 'res.partner', 'readonly':True},
-	'picking_policy': {'string': 'Picking policy', 'type': 'selection', 'selection' : [('direct','Direct Delivery'),('one','All at once')]},
+	'picking_policy': {'string': 'Packing policy', 'type': 'selection', 'selection' : [('direct','Direct Delivery'),('one','All at once')]},
 }
 
 ack_form = """<?xml version="1.0"?>

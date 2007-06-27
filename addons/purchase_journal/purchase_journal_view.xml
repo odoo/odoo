@@ -221,13 +221,13 @@
 		src_model="purchase_journal.purchase.journal"
 		id="act_purchase_journal_purchase_journal_2_purchase_order_approved"/>
 
-	<act_window name="Assigned pickings"
+	<act_window name="Assigned packings"
 		domain="[('purchase_journal_id', '=', active_id),('state', '=', 'assigned')]"
 		res_model="stock.picking"
 		src_model="purchase_journal.purchase.journal"
 		id="act_purchase_journal_purchase_journal_2_stock_picking_assigned"/>
 
-	<act_window name="Confirmed pickings"
+	<act_window name="Confirmed packings"
 		domain="[('purchase_journal_id', '=', active_id),('state', '=', 'confirmed')]"
 		res_model="stock.picking"
 		src_model="purchase_journal.purchase.journal"

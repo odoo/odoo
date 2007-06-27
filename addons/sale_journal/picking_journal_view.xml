@@ -6,7 +6,7 @@
 		<field name="model">sale_journal.picking.journal</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="picking Journal">
+			<form string="Packing Journal">
 				<notebook>
 				<page string="Journal">
 					<separator string="Journal Information" colspan="4"/>
@@ -24,8 +24,8 @@
 						<button name="button_draft" string="Set to Draft" states="close,open" type="object"/>
 					</group>
 				</page>
-				<page string="Pickings">
-					<button string="Cancel Pickings" name="button_picking_cancel" states="draft,open" type="object"/>
+				<page string="Packings">
+					<button string="Cancel Packings" name="button_picking_cancel" states="draft,open" type="object"/>
 					<newline/>
 					<field name="picking_stats_ids" colspan="4" nolabel="1"/>
 				</page><page string="Notes">
@@ -40,7 +40,7 @@
 		<field name="model">sale_journal.picking.journal</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Picking Journal">
+			<tree string="Packing Journal">
 				<field name="name" select="1"/>
 				<field name="code" select="1"/>
 				<field name="user_id" select="1"/>
@@ -50,67 +50,68 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_definition_picking_journal">
-		<field name="name">sale_journal.picking.journal.tree</field>
+		<field name="name">Packings journals</field>
 		<field name="res_model">sale_journal.picking.journal</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
 	<menuitem
-		name="Inventory Control/Configuration/Pickings Journals"
+		name="Inventory Control/Configuration/Packings Journals"
 		id="menu_definition_journal_pickings"
 		action="action_definition_picking_journal"/>
 
 
 	<record model="ir.actions.act_window" id="action_definition_picking_journal_tree">
-		<field name="name">sale_journal.picking.journal.tree</field>
+		<field name="name">Packings by journal</field>
 		<field name="res_model">sale_journal.picking.journal</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[]</field>
 	</record>
 	<menuitem
-		name="Inventory Control/Picking Lists/Pickings by Journal"
+		name="Inventory Control/Packing lists/Packings by Journal"
 		id="menu_definition_journal_picking_by_journal"
 		action="action_definition_picking_journal_tree"/>
 
 	<record model="ir.actions.act_window" id="action_definition_picking_journal_tree_my">
-		<field name="name">sale_journal.picking.journal.tree.my</field>
+		<field name="name">My open packing journals</field>
 		<field name="res_model">sale_journal.picking.journal</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('user_id','=',uid),('state','=','open')]</field>
 	</record>
 	<menuitem
-		name="Inventory Control/Picking Lists/Pickings by Journal/My open Journals"
+		name="Inventory Control/Packing lists/Packings by Journal/My open Journals"
 		id="menu_definition_journal_pickings_my_open"
 		action="action_definition_picking_journal_tree_my"/>
 
 	<record model="ir.actions.act_window" id="action_definition_picking_journal_tree_all">
-		<field name="name">sale_journal.picking.journal.tree.all</field>
+		<field name="name">Packings by journal</field>
 		<field name="res_model">sale_journal.picking.journal</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','open')]</field>
 	</record>
 	<menuitem
-		name="Inventory Control/Picking Lists/Pickings by Journal/All open Journals"
+		name="Inventory Control/Packing lists/Packings by Journal/All open Journals"
 		id="menu_definition_journal_pickings_all_open"
 		action="action_definition_picking_journal_tree_all"/>
 
 
 	<record model="ir.actions.act_window" id="action_invoice_type_tree">
+		<field name="name">Packings by invoice_method</field>
 		<field name="name">sale_journal.invoice.type.tree</field>
 		<field name="res_model">sale_journal.invoice.type</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">tree</field>
 	</record>
 	<menuitem
-		name="Inventory Control/Picking Lists/Sending Goods/Pickings to invoice/Pickings by invoice method"
+		name="Inventory Control/Packing lists/Sending Goods/Packings to invoice/Packings by invoice method"
 		id="menu_action_invoice_type_tree"
 		action="action_invoice_type_tree"/>
 
 	<record model="ir.actions.act_window" id="action_invoice_type_picking_open">
-		<field name="name">Pickings to invoice</field>
+		<field name="name">Packings to invoice</field>
 		<field name="res_model">stock.picking</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -120,7 +121,7 @@
 	<record model="ir.values" id="ir_open_invoice_type">
 		<field name="key2">tree_but_open</field>
 		<field name="model">sale_journal.invoice.type</field>
-		<field name="name">Pickings to invoice</field>
+		<field name="name">Packings to invoice</field>
 		<field name="value" eval="'ir.actions.act_window,%d'%action_invoice_type_picking_open"/>
 		<field name="object" eval="True"/>
 	</record>

@@ -26,7 +26,7 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_definition_journal_invoice_type">
-		<field name="res_model">sale_journal.invoice.type</field>
+		<field name="res_model">Invoice type</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
@@ -116,26 +116,26 @@
 		action="action_definition_journal_tree"/>
 
 	<record model="ir.actions.act_window" id="action_definition_journal_tree_my">
-		<field name="name">My open Journals</field>
+		<field name="name">My open journals</field>
 		<field name="res_model">sale_journal.sale.journal</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('user_id','=',uid),('state','=','open')]</field>
 	</record>
 	<menuitem
-		name="Sales Management/Sales by Journal/My opened Journals"
+		name="Sales Management/Sales by Journal/My open journals"
 		id="menu_definition_journal_sales_my_open"
 		action="action_definition_journal_tree_my"/>
 
 	<record model="ir.actions.act_window" id="action_definition_journal_tree_all">
-		<field name="name">Opened Journals</field>
+		<field name="name">Open journals</field>
 		<field name="res_model">sale_journal.sale.journal</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','open')]</field>
 	</record>
 	<menuitem
-		name="Sales Management/Sales by Journal/All opened Journals"
+		name="Sales Management/Sales by Journal/All open Journals"
 		id="menu_definition_journal_sales_all_open"
 		action="action_definition_journal_tree_all"/>
 
@@ -259,25 +259,25 @@
 		src_model="sale_journal.sale.journal"
 		id="act_sale_journal_sale_journal_2_sale_journal_sale_stats"/>
 
-	<act_window name="Assigned pickings"
+	<act_window name="Assigned packings"
 		domain="[('journal_id', '=', active_id),('state', '=', 'assigned')]"
 		res_model="stock.picking"
 		src_model="sale_journal.picking.journal"
 		id="act_sale_journal_picking_journal_2_stock_picking_assigned"/>
 
-	<act_window name="Confirmed pickings"
+	<act_window name="Confirmed packings"
 		domain="[('journal_id', '=', active_id),('state', '=', 'confirmed')]"
 		res_model="stock.picking"
 		src_model="sale_journal.picking.journal"
 		id="act_sale_journal_picking_journal_2_stock_picking_confirmed"/>
 
-	<act_window name="Assigned pickings"
+	<act_window name="Assigned packings"
 		domain="[('sale_journal_id', '=', active_id),('state', '=', 'assigned')]"
 		res_model="stock.picking"
 		src_model="sale_journal.sale.journal"
 		id="act_sale_journal_sale_journal_2_stock_picking_assigned"/>
 
-	<act_window name="Confirmed pickings"
+	<act_window name="Confirmed packings"
 		domain="[('sale_journal_id', '=', active_id),('state', '=', 'confirmed')]"
 		res_model="stock.picking"
 		src_model="sale_journal.sale.journal"

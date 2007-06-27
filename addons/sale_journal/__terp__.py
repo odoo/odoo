@@ -13,7 +13,7 @@
 	"update_xml" : ["sale_journal_view.xml","picking_journal_view.xml","picking_journal_view_report.xml"],
 	"description" : """
 	The sale journal modules allows you to categorize your
-	sales and deliveries (pickings) between different journals.
+	sales and deliveries (packing lists) between different journals.
 	This module is very helpfull for bigger companies that
 	works by departments.
 
@@ -25,7 +25,7 @@
 	* draft, open, cancel, done.
 
 	Batch operations can be processed on the different journals to
-	confirm all sales at once, to validate or invoice pickings, ...
+	confirm all sales at once, to validate or invoice packings, ...
 
 	It also supports batch invoicing methods that can be configured by
 	partners and sales orders, examples:

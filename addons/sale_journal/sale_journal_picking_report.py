@@ -31,7 +31,7 @@ from osv import fields,osv
 
 class report_sale_journal_invoice_type_stats(osv.osv):
 	_name = "sale_journal.invoice.type.stats"
-	_description = "Stats on pickings by invoice method"
+	_description = "Stats on packings by invoice method"
 	_auto = False
 	_columns = {
 		'name': fields.date('Month', readonly=True),
@@ -79,7 +79,7 @@ report_sale_journal_invoice_type_stats()
 
 class report_sale_journal_picking(osv.osv):
 	_name = "sale_journal.picking.stats"
-	_description = "pickings Orders by Journal"
+	_description = "Packing lists by Journal"
 	_auto = False
 	_columns = {
 		'name': fields.date('Month', readonly=True),

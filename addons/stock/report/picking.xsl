@@ -22,7 +22,7 @@
 	
 	<xsl:template name="first_page_graphics_report">
 		<setFont name="Helvetica" size="16"/>
-		<drawCentredString x="105mm" y="28cm" t="1">PICKINGLIST</drawCentredString>
+		<drawCentredString x="105mm" y="28cm" t="1">PACKINGLIST</drawCentredString>
 	</xsl:template>
 	
 	<!-- stylesheet -->
@@ -100,7 +100,7 @@
 		<tr>
 			<td t="1">Customer ref.</td>
 			<td t="1">Shipping ref.</td>
-			<td t="1">Picking Date</td>
+			<td t="1">Packing Date</td>
 			<td t="1">Shipping Date</td>
 		</tr><tr>
 			<td><para><xsl:value-of select="corporation/id"/></para></td>
