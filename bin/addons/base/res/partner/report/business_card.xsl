@@ -54,7 +54,7 @@
 
 <xsl:template match="address" mode="story">
 	
-		<drawCentredString x="105mm" y="28cm" t="1">PICKINGLIST</drawCentredString>
+		<drawCentredString x="105mm" y="28cm" t="1">PACKINGLIST</drawCentredString>
 		<image x="5mm" y="5m" file="addons/base/report/logo-tiny.png"/>
 <blockTable colWidths="3cm,3cm" style="infos">
 		<tr>
