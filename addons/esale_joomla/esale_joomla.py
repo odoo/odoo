@@ -235,7 +235,6 @@ class esale_joomla_order(osv.osv):
 				val_new = self.pool.get('sale.order.line').product_id_change(cr, uid, None, pricelist_id, line.product_id.id, line.product_qty, line.product_uom_id.id, name=line.name)['value']
 				del val_new['price_unit']
 				del val_new['weight']
-				val_new['product_uos'] = val_new['product_uos'][0]
 				val.update( val_new )
 				val['tax_id'] = [(6,0,val['tax_id'])]
 				order_lines.append( (0,0,val) )
