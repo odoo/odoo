@@ -133,6 +133,7 @@ class hr_expense_expense(osv.osv):
 					'price_unit': l.unit_amount,
 					'quantity': l.unit_quantity,
 					'uos_id': l.uom_id.id,
+					'product_id': l.product_id and l.product_id.id or False,
 					'invoice_line_tax_id': tax_id and [(6, 0, tax_id)] or False,
 					'account_analytic_id': l.analytic_account.id,
 				}))
