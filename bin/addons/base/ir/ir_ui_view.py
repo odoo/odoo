@@ -69,6 +69,10 @@ class view_sc(osv.osv):
 		'user_id': fields.many2one('res.users', 'User Ref.', required=True, ondelete='cascade'),
 		'resource': fields.char('Resource Name', size=64, required=True)
 	}
+	def get_sc(self, cr, uid, user_id, model='ir.ui.menu', context={}):
+		ids = self.search(cr, uid, [('user_id','=',user_id),('resource','=',model)], context)
+		return self.read(cr, uid, ids, ['res_id','name'], context=context)
+
 	_order = 'sequence'
 	_defaults = {
 		'resource': lambda *a: 'ir.ui.menu',
