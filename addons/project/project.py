@@ -141,9 +141,7 @@ class project(osv.osv):
 		self.write(cr, uid, [id], {'active': value}, context)
 		cr.execute('select id from project_task where project_id=%d', (proj.id,))
 		tasks_id = [x[0] for x in cr.fetchall()]
-		self.pool.get('project.task').write(cr, uid,
-			tasks_id,
-			{'active': value}, context)
+		self.pool.get('project.task').write(cr, uid, tasks_id, {'active': value}, context)
 		project_ids = [x[0] for x in cr.fetchall()]
 		for child in project_ids:
 			self.setActive(cr, uid, child, value, context)
