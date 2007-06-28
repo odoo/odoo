@@ -55,7 +55,7 @@ class mrp_workcenter(osv.osv):
 		'timesheet_id': fields.many2one('hr.timesheet.group', 'Timesheet'),
 		'note': fields.text('Description'),
 
-		'capacity_per_cycle': fields.float('Number of workcenter', help="This is the number of available workcenter simultaneously"),
+		'capacity_per_cycle': fields.float('Capacity per Cycle'),
 
 		'time_cycle': fields.float('Time for 1 cycle (hour)'),
 		'time_start': fields.float('Time before prod.'),
@@ -247,7 +247,8 @@ class mrp_bom(osv.osv):
 			if bom.routing_id:
 				for wc_use in bom.routing_id.workcenter_lines:
 					wc = wc_use.workcenter_id
-					cycle = factor * wc_use.cycle_nbr
+					d, m = divmod(factor, wc_use.workcenter_id.capacity_per_cycle)
+					cycle = (d + (m and 1.0 or 0.0)) * wc_use.cycle_nbr
 					result2.append({
 						'name': bom.routing_id.name,
 						'workcenter_id': wc.id,
