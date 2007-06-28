@@ -40,6 +40,12 @@ class hr_department(osv.osv):
 		'manager_id': fields.many2one('res.users', 'Manager', required=True),
 		'member_ids': fields.many2many('res.users', 'hr_department_user_rel', 'department_id', 'user_id', 'Members'),
 	}
+	def _get_members(self,cr, uid, context={}):
+		mids = self.search(cr, uid, [('manager_id','=',uid)])
+		result = {uid:1}
+		for m in self.browse(cr, uid, mids, context):
+			result[m.id] = 1
+		return result.keys()
 	def _check_recursion(self, cr, uid, ids):
 		level = 100
 		while len(ids):
@@ -54,4 +60,17 @@ class hr_department(osv.osv):
 	]
 
 hr_department()
+
+
+class ir_action_window(osv.osv):
+	_inherit = 'ir.actions.act_window'
+	def read(self, cr, uid, ids, *args, **kwargs):
+		res = super(ir_action_window, self).read(cr, uid, ids, *args, **kwargs)
+		for r in res:
+			mystring = 'department_users_get()'
+			if mystring in (r.get('domain', '[]') or ''):
+				r['domain'] = r['domain'].replace(mystring, str(self.pool.get('hr.department')._get_members(cr, uid)))
+		return res
+ir_action_window()
+
 

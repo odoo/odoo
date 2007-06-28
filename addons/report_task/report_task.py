@@ -39,14 +39,14 @@ class  report_task_user_pipeline_open (osv.osv):
 		'task_hrs': fields.float('Task Hours', readonly=True),
 		'task_progress': fields.float('Task Progress', readonly=True),
 		'company_id' : fields.many2one('res.company', 'Company'),
-		'task_state' : fields.char('Task State',size = '64' ,readonly=True),
+		'task_state': fields.selection([('draft', 'Draft'),('open', 'Open'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True),
 	}
 
 	def init(self, cr):
 		cr.execute("""
 			create or replace view report_task_user_pipeline_open as (
 				select
-					u.id as id,
+					min(t.id) as id,
 					u.id as user_id,
 					u.company_id as company_id,
 					count(*) as task_nbr,

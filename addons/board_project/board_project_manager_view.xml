@@ -24,13 +24,13 @@
 			view_id="view_account_analytic_simplified"
 			id="act_my_account"/>
 
-	<record model="ir.actions.act_window" id="action_project_pipeline_user">
-		<field name="name">Pipeline of tasks</field>
-		<field name="res_model">report.task.user.pipeline.open</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">graph,tree</field>
-		<field name="domain">[('task_state','&lt;&gt;','cancelled'),('task_state','&lt;&gt;','done')]</field>
-	</record>
+		<record model="ir.actions.act_window" id="action_project_pipeline_user">
+			<field name="name">Pipeline of tasks</field>
+			<field name="res_model">report.task.user.pipeline.open</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">graph,tree</field>
+			<field name="domain">[('task_state','&lt;&gt;','cancelled'),('task_state','&lt;&gt;','done'),('user_id','in',department_users_get())]</field>
+		</record>
 
 		<record model="ir.ui.view" id="hr_timesheet_sheet_tree">
 			<field name="name">hr.timesheet.sheet.tree.simplified.board</field>
@@ -50,7 +50,7 @@
 		<record model="ir.actions.act_window" id="act_hr_timesheet_sheet">
 			<field name="name">Timesheets</field>
 			<field name="res_model">hr_timesheet_sheet.sheet</field>
-			<field name="domain">[('state','&lt;&gt;','done')]</field>
+			<field name="domain">[('state','&lt;&gt;','done'),('user_id','in',department_users_get())]</field>
 			<field name="view_type">form</field>
 			<field name="view_id" ref="hr_timesheet_sheet_tree"/>
 		</record>
