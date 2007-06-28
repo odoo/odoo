@@ -8,6 +8,7 @@ import osv,ir,pooler
 import csv
 import os.path
 import misc
+import netsvc
 
 from config import config
 
@@ -58,7 +59,6 @@ def _eval_xml(self,node, pool, cr, uid, idref):
 				try:
 					import pytz
 				except:
-					import netsvc
 					logger = netsvc.Logger()
 					logger.notifyChannel("init", netsvc.LOG_INFO, 'could not find pytz library')
 					class pytzclass(object):
@@ -150,6 +150,8 @@ class xml_import(object):
 			res['header'] = eval(rec.getAttribute('header'))
 		res['multi'] = rec.hasAttribute('multi') and  eval(rec.getAttribute('multi'))
 		xml_id = rec.getAttribute('id').encode('utf8')
+		if len(xml_id) > 64:
+			self.logger.notifyChannel('init', netsvc.LOG_ERROR, 'id: %s is to long (max: 64)'%xml_id)
 		id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.report.xml", self.module, res, xml_id, mode=self.mode)
 		self.idref[xml_id] = id
 		if not rec.hasAttribute('menu') or eval(rec.getAttribute('menu')):
@@ -169,6 +171,8 @@ class xml_import(object):
 		model = rec.getAttribute("model").encode('utf8')
 		name = rec.getAttribute("name").encode('utf8')
 		xml_id = rec.getAttribute('id').encode('utf8')
+		if len(xml_id) > 64:
+			self.logger.notifyChannel('init', netsvc.LOG_ERROR, 'id: %s is to long (max: 64)'%xml_id)
 		multi = rec.hasAttribute('multi') and  eval(rec.getAttribute('multi'))
 		res = {'name': string, 'wiz_name': name, 'multi':multi}
 
@@ -186,6 +190,8 @@ class xml_import(object):
 	def _tag_act_window(self, cr, rec, data_node=None):
 		name = rec.hasAttribute('name') and rec.getAttribute('name').encode('utf-8')
 		xml_id = rec.getAttribute('id').encode('utf8')
+		if len(xml_id) > 64:
+			self.logger.notifyChannel('init', netsvc.LOG_ERROR, 'id: %s is to long (max: 64)'%xml_id)
 		type = rec.hasAttribute('type') and rec.getAttribute('type').encode('utf-8') or 'ir.actions.act_window'
 		view_id = False
 		if rec.hasAttribute('view'):
@@ -223,7 +229,6 @@ class xml_import(object):
 		return False
 
 	def _tag_workflow(self, cr, rec, data_node=None):
-		import netsvc
 		model = str(rec.getAttribute('model'))
 		wf_service = netsvc.LocalService("workflow")
 		wf_service.trg_validate(self.uid, model,
@@ -233,6 +238,8 @@ class xml_import(object):
 
 	def _tag_menuitem(self, cr, rec, data_node=None):
 		rec_id = rec.getAttribute("id").encode('ascii')
+		if len(rec_id) > 64:
+			self.logger.notifyChannel('init', netsvc.LOG_ERROR, 'id: %s is to long (max: 64)'%rec_id)
 		m_l = map(escape, escape_re.split(rec.getAttribute("name").encode('utf8')))
 		pid = False
 		for idx, menu_elem in enumerate(m_l):
@@ -283,6 +290,8 @@ class xml_import(object):
 						g_ids.extend(self.pool.get('res.groups').search(cr, self.uid, [('name', '=', group)]))
 					values['groups_id'] = [(6, 0, g_ids)]
 				xml_id = rec.getAttribute('id').encode('utf8')
+				if len(xml_id) > 64:
+					self.logger.notifyChannel('init', netsvc.LOG_ERROR, 'id: %s is to long (max: 64)'%xml_id)
 				pid = self.pool.get('ir.model.data')._update(cr, self.uid, 'ir.ui.menu', self.module, values, xml_id, idx==len(m_l)-1, mode=self.mode, res_id=res and res[0] or False)
 			elif res:
 				# the menuitem already exists
@@ -311,6 +320,8 @@ class xml_import(object):
 		model = self.pool.get(rec_model)
 		assert model, "The model %s does not exist !" % (rec_model,)
 		rec_id = rec.getAttribute("id").encode('ascii')
+		if len(rec_id) > 64:
+			self.logger.notifyChannel('init', netsvc.LOG_ERROR, 'id: %s is to long (max: 64)'%rec_id)
 
 #		if not rec_id and not data_node.getAttribute('noupdate'):
 #			print "Warning", rec_model
@@ -400,15 +411,14 @@ class xml_import(object):
 						try:
 							self._tags[rec.nodeName](self.cr, rec, n)
 						except:
-							import netsvc
-							logger = netsvc.Logger()
-							logger.notifyChannel("init", netsvc.LOG_INFO, '\n'+rec.toxml())
+							self.logger.notifyChannel("init", netsvc.LOG_INFO, '\n'+rec.toxml())
 							self.cr.rollback()
 							raise
 		self.cr.commit()
 		return True
 
 	def __init__(self, cr, module, idref, mode):
+		self.logger = netsvc.Logger()
 		self.mode = mode
 		self.module = module
 		self.cr = cr
