@@ -36,7 +36,7 @@ try:
 except ImportError:
 	import netsvc
 	logger = netsvc.Logger()
-	logger.notifyChannel("init", netsvc.LOG_ERROR, "could not import ldap!")
+	logger.notifyChannel("init", netsvc.LOG_WARNING, "could not import ldap!")
 
 class res_company(osv.osv):
 	_inherit = "res.company"
