@@ -655,7 +655,9 @@ class sale_order_line(osv.osv):
 
 		if update_tax:
 			taxes = self.pool.get('account.tax').browse(cr, uid, res['taxes_id'])
-			taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_tax
+			taxep = None
+			if partner_id:
+				taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_tax
 			if not taxep:
 				result['tax_id'] = res['taxes_id']
 			else:
