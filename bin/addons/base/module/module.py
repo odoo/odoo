@@ -277,11 +277,32 @@ module()
 class module_dependency(osv.osv):
 	_name = "ir.module.module.dependency"
 	_description = "Module dependency"
+
+	def _state(self, cr, uid, ids, name, args, context={}):
+		result = {}
+		mod_obj = self.pool.get('ir.module.module')
+		for md in self.browse(cr, uid, ids):
+			ids = mod_obj.search(cr, uid, [('name', '=', md.name)])
+			if ids:
+				result[md.id] = mod_obj.read(cr, uid, [ids[0]], ['state'])[0]['state']
+			else:
+				result[md.id] = 'unknown'
+		return result
+
 	_columns = {
 		'name': fields.char('Name',  size=128),
 		'module_id': fields.many2one('ir.module.module', 'Module', select=True),
 		#'module_dest_id': fields.many2one('ir.module.module', 'Module'),
 		'version_pattern': fields.char('Required Version', size=128),
+		'state': fields.function(_state, method=True, type='selection', selection=[
+			('uninstallable','Uninstallable'),
+			('uninstalled','Not Installed'),
+			('installed','Installed'),
+			('to upgrade','To be upgraded'),
+			('to remove','To be removed'),
+			('to install','To be installed'),
+			('unknown', 'Unknown'),
+			], string='State', readonly=True),
 	}
 	# returns the ids of module version records which match all dependencies
 	# [version_id, ...]
