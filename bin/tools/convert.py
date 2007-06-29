@@ -312,7 +312,7 @@ class xml_import(object):
 			a_type = rec.getAttribute('type').encode('utf8') or 'act_window'
 			a_id = self.id_get(cr, 'ir.actions.%s' % a_type, a_action)
 			action = "ir.actions.%s,%d" % (a_type, a_id)
-			self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', 'tree_but_open', 'Menuitem', [('ir.ui.menu', int(pid))], action, True, True)
+			self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', 'tree_but_open', 'Menuitem', [('ir.ui.menu', int(pid))], action, True, True, xml_id=rec_id)
 		return ('ir.ui.menu', pid)
 
 	def _tag_record(self, cr, rec, data_node=None):
