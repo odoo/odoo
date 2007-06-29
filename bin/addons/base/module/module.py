@@ -115,6 +115,10 @@ class module(osv.osv):
 	}
 	_order = 'name'
 
+	_sql_constraints = [
+		('name_uniq', 'unique (name)', 'The name of the module must be unique !')
+	]
+
 	def state_change(self, cr, uid, ids, newstate, context={}, level=50):
 		if level<1:
 			raise 'Recursion error in modules dependencies !'
