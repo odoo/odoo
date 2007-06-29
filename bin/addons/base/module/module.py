@@ -81,7 +81,10 @@ class module(osv.osv):
 	def _get_installed_version(self, cr, uid, ids, field_name=None, arg=None, context={}):
 		res = {}
 		for m in self.browse(cr, uid, ids):
-			res[m.id] = self.get_module_info(m.name).get('version', False)
+			if m.state in ('installed', 'to upgrade', 'to remove'):
+				res[m.id] = self.get_module_info(m.name).get('version', False)
+			else:
+				res[m.id] = ''
 		return res
 
 	_columns = {
@@ -189,11 +192,21 @@ class module(osv.osv):
 			if ids:
 				terp = self.get_module_info(mod_name)
 				if terp.get('installable', True) and self.read(cr, uid, ids, ['state'])[0]['state'] == 'uninstallable':
-					self.write(cr, uid, [ids], {'state': 'uninstalled'})
+					self.write(cr, uid, ids, {'state': 'uninstalled'})
+				self.write(cr, uid, ids, {
+					'description': terp.get('description', ''),
+					'shortdesc': terp.get('name', ''),
+					'author': terp.get('author', 'Unknown'),
+					'website': terp.get('website', ''),
+					'latest_version': terp.get('version', ''),
+					})
+				cr.execute('DELETE FROM ir_module_module_dependency where module_id = %d', (ids[0],))
+				self._update_dependencies(cr, uid, ids[0], terp.get('depends', []))
+				self._update_category(cr, uid, ids[0], terp.get('category', 'Uncategorized'))
 				continue
 			terp_file = os.path.join(adp, name, '__terp__.py')
 			mod_path = os.path.join(adp, name)
-			if os.path.isdir(mod_path) or zipfile.is_zipfile(mod_path):
+			if os.path.isdir(mod_path) or os.path.islink(mod_path) or zipfile.is_zipfile(mod_path):
 				terp = self.get_module_info(mod_name)
 				if not terp or not terp.get('installable', True):
 					continue
@@ -212,11 +225,13 @@ class module(osv.osv):
 					'state': 'uninstalled',
 					'description': terp.get('description', ''),
 					'shortdesc': terp.get('name', ''),
-					'author': terp.get('author', 'Unknown')
+					'author': terp.get('author', 'Unknown'),
+					'website': terp.get('website', ''),
+					'latest_version': terg.get('version', ''),
 				})
-				for d in terp.get('depends', []):
-					cr.execute('INSERT INTO ir_module_module_dependency (module_id, name) values (%s, %s)', (id, d))
-		
+				self._update_dependencies(cr, uid, id, terp.get('depends', []))
+				self._update_category(cr, uid, id, terp.get('category', 'Uncategorized'))
+
 		# make the list of all installable modules
 		for repository in robj.browse(cr, uid, robj.search(cr, uid, [])):
 			index_page = urllib.urlopen(repository.url).read()
@@ -238,9 +253,29 @@ class module(osv.osv):
 							self.write(cr, uid, [r['id']], {'latest_version': version, 'url':url})
 		return True
 
-	#
-	# TODO: update dependencies
-	#
+	def _update_dependencies(self, cr, uid, id, depends=[]):
+		for d in depends:
+			cr.execute('INSERT INTO ir_module_module_dependency (module_id, name) values (%d, %s)', (id, d))
+
+	def _update_category(self, cr, uid, id, category='Uncategorized'):
+		categs = category.split('/')
+		p_id = None
+		while categs:
+			if p_id is not None:
+				cr.execute('select id from ir_module_category where name=%s and parent_id=%d', (categs[0], p_id))
+			else:
+				cr.execute('select id from ir_module_category where name=%s and parent_id is NULL', (categs[0],))
+			c_id = cr.fetchone()
+			if not c_id:
+				cr.execute('select nextval(\'ir_module_category_id_seq\')')
+				c_id = cr.fetchone()[0]
+				cr.execute('insert into ir_module_category (id, name, parent_id) values (%d, %s, %d)', (c_id, categs[0], p_id))
+			else:
+				c_id = c_id[0]
+			p_id = c_id
+			categs = categs[1:]
+		self.write(cr, uid, [id], {'category_id': p_id})
+
 	def info_get(self, cr, uid, ids, context={}):
 		categ_obj = self.pool.get('ir.module.category')
 		
