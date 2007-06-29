@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -25,7 +26,7 @@
 #
 ##############################################################################
 
-__author__ = 'Gaetan de Menten, <ged@tiny.be>'
+__author__ = 'Cédric Krier, <ced@tinyerp.com>'
 __version__ = '0.1.0'
 
 import psycopg
@@ -72,41 +73,83 @@ password = hasattr(options, 'db_password') and "password=%s" % options.db_passwo
 db = psycopg.connect('%s %s %s %s %s' % (host, port, name, user, password), serialize=0)
 cr = db.cursor()
 
-# ----------------------------- #
-# convert date_planned to delay #
-# ----------------------------- #
+# fix country
 
-cr.execute("update sale_order_line set delay = pt.sale_delay from product_product as po, product_template as pt where product_id = po.id and po.product_tmpl_id = pt.id")
-cr.commit()
 
-# --------------------------------------------------------------------------- #
-# move account_invoice.project_id to account_invoice_line.account_analytic_id #
-# --------------------------------------------------------------------------- #
+cr.execute('SELECT code from res_country where code is not null group by code')
+res = cr.fetchall()
 
-cr.execute("update account_invoice_line set account_analytic_id = ai.project_id from account_invoice as ai where invoice_id = ai.id")
-cr.commit()
-
-# ------------------------------------------------------------------------- #
-# move purchase_order.project_id to purchase_order_line.account_analytic_id #
-# ------------------------------------------------------------------------- #
-
-cr.execute("update purchase_order_line set account_analytic_id = po.project_id from purchase_order as po where order_id = po.id")
+for c in res:
+	cr.execute('SELECT max(id) from res_country where code = %s group by code', (c[0],))
+	res2 = cr.fetchone()
+	cr.execute('SELECT id from res_country where code = %s', (c[0],))
+	ids = ','.join(map(lambda x: str(x[0]), cr.fetchall()))
+	cr.execute('UPDATE res_partner_address set country_id = %d where country_id in ('+ids+')', (res2[0],))
+	cr.execute('DELETE FROM res_country WHERE code = %s and id <> %d', (c[0], res2[0],))
 cr.commit()
 
 
-# --------------- #
-# remove old menu #
-# --------------- #
-
-cr.execute("delete from ir_ui_menu where (id not in (select parent_id from ir_ui_menu where parent_id is not null)) and (id not in (select res_id from ir_values where model='ir.ui.menu'))")
+cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_account_analytic_planning_stat\'')
+if cr.fetchall():
+	cr.execute('DROP VIEW report_account_analytic_planning_stat')
 cr.commit()
 
-# -------------------------------- #
-# remove active to account_account #
-# -------------------------------- #
 
-cr.execute("alter table account_account drop active")
+cr.execute('SELECT name from ( SELECT name, count(name) AS n FROM res_partner GROUP BY name ) AS foo WHERE n > 1')
+res = cr.fetchall()
+
+
+for p in res:
+	cr.execute('SELECT max(id) FROM res_partner WHERE name = %s GROUP BY name', (p[0],))
+	res2 = cr.fetchone()
+	cr.execute('UPDATE res_partner set active = False WHERE name = %s and id <> %d', (p[0], res2[0],))
+	cr.execute('SELECT id FROM res_partner WHERE name = %s AND id <> %d', (p[0], res2[0],))
+	res3 = cr.fetchall()
+	i = 0
+	for id in res3:
+		name = p[0]+' old'
+		if i:
+			name = name + ' ' + str(i)
+		cr.execute('UPDATE res_partner set name = %s WHERE id = %d', (name, id[0]))
+		i += 1
 cr.commit()
 
-cr.close()
+cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_account_analytic_line_to_invoice\'')
+if cr.fetchall():
+	cr.execute('DROP VIEW report_account_analytic_line_to_invoice')
+cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_timesheet_invoice\'')
+if cr.fetchall():
+	cr.execute('drop VIEW report_timesheet_invoice')
+cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_purchase_order_category\'')
+if cr.fetchall():
+	cr.execute('drop VIEW report_purchase_order_category')
+cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_purchase_order_product\'')
+if cr.fetchall():
+	cr.execute('drop VIEW report_purchase_order_product')
+cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_sale_order_category\'')
+if cr.fetchall():
+	cr.execute('drop VIEW report_sale_order_category')
+cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_sale_order_product\'')
+if cr.fetchall():
+	cr.execute('drop VIEW report_sale_order_product')
+cr.execute('ALTER TABLE product_template ALTER list_price TYPE numeric(16,2)')
+cr.execute('ALTER TABLE product_template ALTER standard_price TYPE numeric(16,2)')
+cr.execute('ALTER TABLE product_product ALTER price_extra TYPE numeric(16,2)')
+cr.execute('ALTER TABLE product_product ALTER price_margin TYPE numeric(16,2)')
+cr.execute('ALTER TABLE pricelist_partnerinfo ALTER price TYPE numeric(16,2)')
+cr.execute('ALTER TABLE account_invoice_line ALTER price_unit TYPE numeric(16,2)')
+cr.execute('ALTER TABLE purchase_order_line ALTER price_unit TYPE numeric(16,2)')
+cr.execute('ALTER TABLE sale_order_line ALTER price_unit TYPE numeric(16,2)')
+cr.commit()
 
+
+cr.execute('SELECT tablename FROM pg_tables WHERE tablename = \'subscription_document_fields\'')
+if cr.fetchall():
+	cr.execute('DROP TABLE subscription_document_fields')
+cr.execute('SELECT tablename FROM pg_tables WHERE tablename = \'subscription_document\'')
+if cr.fetchall():
+	cr.execute('DROP TABLE subscription_document')
+cr.execute('SELECT tablename FROM pg_tables WHERE tablename = \'subscription_subscription_history\'')
+if cr.fetchall():
+	cr.execute('DROP TABLE subscription_subscription_history')
+cr.commit()

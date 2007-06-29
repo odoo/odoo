@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -25,7 +26,7 @@
 #
 ##############################################################################
 
-__author__ = 'Gaetan de Menten, <ged@tiny.be>'
+__author__ = 'Cédric Krier, <ced@tinyerp.com>'
 __version__ = '0.1.0'
 
 import psycopg
@@ -78,7 +79,7 @@ cr = db.cursor()
 
 cr.execute("""SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size FROM pg_class c,pg_attribute a,pg_type t WHERE c.relname='res_currency' AND a.attname='rounding' AND c.oid=a.attrelid AND a.atttypid=t.oid""")
 res = cr.dictfetchall()
-if res[0]['typname'] != 'float':
+if res[0]['typname'] != 'numeric':
 	for line in (
 		"ALTER TABLE res_currency RENAME rounding TO rounding_bak",
 		"ALTER TABLE res_currency ADD rounding NUMERIC(12,6)",
@@ -92,22 +93,32 @@ cr.commit()
 # drop constraint on ir_ui_view #
 # ----------------------------- #
 
-cr.execute('ALTER TABLE ir_ui_view DROP CONSTRAINT ir_ui_view_type')
+cr.execute('SELECT conname FROM pg_constraint where conname = \'ir_ui_view_type\'')
+if cr.fetchall():
+	cr.execute('ALTER TABLE ir_ui_view DROP CONSTRAINT ir_ui_view_type')
 cr.commit()
 
 # ------------------------ #
 # update res.partner.bank  #
 # ------------------------ #
 
-cr.execute("ALTER TABLE res_partner_bank RENAME iban TO number")
+cr.execute('SELECT a.attname FROM pg_class c, pg_attribute a WHERE c.relname = \'res_partner_bank\' AND a.attname = \'iban\' AND c.oid = a.attrelid')
+if cr.fetchall():
+	cr.execute('ALTER TABLE res_partner_bank RENAME iban TO acc_number')
 cr.commit()
 
 # ------------------------------------------- #
 # Add perm_id to ir_model and ir_model_fields #
 # ------------------------------------------- #
 
-cr.execute("ALTER TABLE ir_model ADD perm_id int references perm on delete set null")
-cr.execute("ALTER TABLE ir_model_fields ADD perm_id int references perm on delete set null")
+cr.execute('SELECT a.attname FROM pg_class c, pg_attribute a WHERE c.relname = \'ir_model\' AND a.attname = \'perm_id\' AND c.oid = a.attrelid')
+if not cr.fetchall():
+	cr.execute("ALTER TABLE ir_model ADD perm_id int references perm on delete set null")
+cr.commit()
+
+cr.execute('SELECT a.attname FROM pg_class c, pg_attribute a WHERE c.relname = \'ir_model_fields\' AND a.attname = \'perm_id\' AND c.oid = a.attrelid')
+if not cr.fetchall():
+	cr.execute("ALTER TABLE ir_model_fields ADD perm_id int references perm on delete set null")
 cr.commit()
 
 
@@ -116,7 +127,7 @@ cr.commit()
 # --------------------------------- #
 
 cr.execute("UPDATE ir_act_window SET name = ''")
-
+cr.commit()
 
 # ------------------------------------------------------------------------ #
 # Create a "allow none" default access to keep the behaviour of the system #
@@ -125,6 +136,25 @@ cr.execute("UPDATE ir_act_window SET name = ''")
 cr.execute('SELECT model_id FROM ir_model_access')
 res= cr.fetchall()
 for r in res:
-	cr.execute("INSERT into ir_model_access (name,model_id,group_id) VALUES ('Auto-generated access by migration',%d,%s)",(r[0],None))
+	cr.execute('SELECT id FROM ir_model_access WHERE model_id = %d AND groupd_id IS NULL', (r[0],))
+	if not cr.fetchall():
+		cr.execute("INSERT into ir_model_access (name,model_id,group_id) VALUES ('Auto-generated access by migration',%d,NULL)",(r[0],))
 cr.commit()
+
+# ------------------------------------------------- #
+# Drop view report_account_analytic_line_to_invoice #
+# ------------------------------------------------- #
+
+cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_account_analytic_line_to_invoice\'')
+if cr.fetchall():
+	cr.execute('DROP VIEW report_account_analytic_line_to_invoice')
+cr.commit()
+
+# --------------------------- #
+# Drop state from hr_employee #
+# --------------------------- #
+
+cr.execute('ALTER TABLE hr_employee DROP state')
+cr.commit()
+
 cr.close
