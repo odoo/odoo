@@ -231,7 +231,7 @@ class module(osv.osv):
 					'shortdesc': terp.get('name', ''),
 					'author': terp.get('author', 'Unknown'),
 					'website': terp.get('website', ''),
-					'latest_version': terg.get('version', ''),
+					'latest_version': terp.get('version', ''),
 				})
 				self._update_dependencies(cr, uid, id, terp.get('depends', []))
 				self._update_category(cr, uid, id, terp.get('category', 'Uncategorized'))
