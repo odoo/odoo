@@ -67,7 +67,6 @@ def init_db(cr):
 		elif zipfile.is_zipfile(mod_path):
 			zfile = zipfile.ZipFile(mod_path)
 			i = os.path.splitext(i)[0]
-			print i
 			info = eval(zfile.read(opj(i, '__terp__.py')))
 		if info:
 			categs = info.get('category', 'Uncategorized').split('/')
