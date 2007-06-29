@@ -343,7 +343,7 @@ class account_journal(osv.osv):
 	_name = "account.journal"
 	_description = "Journal"
 	_columns = {
-		'name': fields.char('Journal Name', size=64, required=True),
+		'name': fields.char('Journal Name', size=64, required=True, translate=True),
 		'code': fields.char('Code', size=16),
 		'type': fields.selection([('sale','Sale'), ('purchase','Purchase'), ('cash','Cash'), ('general','General'), ('situation','Situation')], 'Type', size=32, required=True),
 
