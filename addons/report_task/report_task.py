@@ -43,23 +43,23 @@ class  report_task_user_pipeline_open (osv.osv):
 	}
 
 	def init(self, cr):
-		cr.execute("""
+		cr.execute('''
 			create or replace view report_task_user_pipeline_open as (
 				select
 					min(t.id) as id,
 					u.id as user_id,
 					u.company_id as company_id,
-					count(*) as task_nbr,
-					sum(planned_hours) as task_hrs,
-					sum(planned_hours*(100-progress)/100) as task_progress,
+					count(t.*) as task_nbr,
+					sum(t.planned_hours) as task_hrs,
+					sum(t.planned_hours * (100 - t.progress) / 100) as task_progress,
 					t.state as task_state
 				from
-				  res_users u
-				full outer join project_task t on (u.id=t.user_id)
+					project_task t
+				left join res_users u on (u.id = t.user_id)
 				group by
-					u.id,u.company_id,t.state
+					u.id, u.company_id, t.state
 			)
-		""")
+		''')
 report_task_user_pipeline_open()
 
 
