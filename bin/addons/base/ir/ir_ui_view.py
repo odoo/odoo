@@ -70,7 +70,7 @@ class view_sc(osv.osv):
 		'resource': fields.char('Resource Name', size=64, required=True)
 	}
 	def get_sc(self, cr, uid, user_id, model='ir.ui.menu', context={}):
-		ids = self.search(cr, uid, [('user_id','=',user_id),('resource','=',model)], context)
+		ids = self.search(cr, uid, [('user_id','=',user_id),('resource','=',model)], context=context)
 		return self.read(cr, uid, ids, ['res_id','name'], context=context)
 
 	_order = 'sequence'
