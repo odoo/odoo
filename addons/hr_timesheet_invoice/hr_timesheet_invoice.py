@@ -77,7 +77,7 @@ account_analytic_line()
 class hr_analytic_timesheet(osv.osv):
 	_inherit = "hr.analytic.timesheet"
 	def on_change_account_id(self, cr, uid, ids, account_id):
-		res = super(account_analytic_line,self).on_change_account_id(cr, uid, ids, account_id)
+		res = super(hr_analytic_timesheet,self).on_change_account_id(cr, uid, ids, account_id)
 		if not account_id:
 			return res
 		res.setdefault('value',{})
