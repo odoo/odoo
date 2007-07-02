@@ -158,7 +158,7 @@ class module(osv.osv):
 		self.write(cr, uid, ids, {'state': 'to remove'})
 		return True
 
-	def button_remove_cancel(self, cr, uid, ids, context={}):
+	def button_uninstall_cancel(self, cr, uid, ids, context={}):
 		self.write(cr, uid, ids, {'state': 'installed'})
 		return True
 	def button_upgrade(self, cr, uid, ids, context={}):
@@ -279,38 +279,6 @@ class module(osv.osv):
 			p_id = c_id
 			categs = categs[1:]
 		self.write(cr, uid, [id], {'category_id': p_id})
-
-	def info_get(self, cr, uid, ids, context={}):
-		categ_obj = self.pool.get('ir.module.category')
-		
-		for module in self.browse(cr, uid, ids, context):
-			url = module.url
-			adp = tools.config['addons_path']
-			info = False
-			if url:
-				tar = tarfile.open(mode="r|gz", fileobj=urllib.urlopen(url))
-				for tarinfo in tar:
-					if tarinfo.name.endswith('__terp__.py'):
-						info = eval(tar.extractfile(tarinfo).read())
-			elif os.path.isdir(os.path.join(adp, module.name)):
-				info = self.get_module_info(module.name)
-			if info:
-				categ = info.get('category', 'Unclassified')
-				parent = False
-				for c in categ.split('/'):
-					ids = categ_obj.search(cr, uid, [('name','=',c), ('parent_id','=',parent)])
-					if not ids:
-						parent = categ_obj.create(cr, uid, {'name':c, 'parent_id':parent})
-					else:
-						parent = ids[0]
-				self.write(cr, uid, [module.id], {
-					'author': info.get('author',False),
-					'website': info.get('website',False),
-					'shortdesc': info.get('name',False),
-					'description': info.get('description',False),
-					'category_id': parent
-				})
-		return True
 module()
 
 class module_dependency(osv.osv):

@@ -1,13 +1,6 @@
 <?xml version="1.0"?>
 <terp>
 	<data>
-		<!--
-		<wizard
-			id="wizard_info_get"
-			string="Request Info"
-			model="ir.module.module"
-			name="module.info_get"/>
-		-->
 		<wizard
 			string="Import module"
 			model="ir.module.module"
@@ -31,10 +24,10 @@
 			icon="STOCK_CONVERT"
 			id="menu_module_update"/>
 
-		<record model="ir.actions.wizard" id="wizard_upgrade">
-			<field name="name">Apply marked changes</field>
-			<field name="wiz_name">module.upgrade</field>
-		</record>
+		<wizard string="Apply Upgrades"
+			model="ir.module.module"
+			name="module.upgrade"
+			id="wizard_upgrade"/>
 		<menuitem
 			name="Administration/Modules Management/Apply Upgrades"
 			action="wizard_upgrade"
@@ -50,16 +43,6 @@
 			action="wizard_lang_install"
 			id="menu_wizard_lang_install"
 			type="wizard"/>
-
-		<!--record model="ir.actions.wizard" id="wizard_scan_addons">
-			<field name="name">Scan 'addons' path</field>
-			<field name="wiz_name">module.module.scan</field>
-		</record>
-		<menuitem
-			name="Administration/Modules Management/Update modules list"
-			action="wizard_scan_addons"
-			id="menu_wizard_module_scan"
-			type="wizard" /-->
 
 		<record model="ir.actions.wizard" id="wizard_lang_export">
 			<field name="name">Export a language</field>

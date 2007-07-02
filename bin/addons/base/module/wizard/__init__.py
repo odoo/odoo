@@ -28,7 +28,6 @@
 import wizard_install_module
 import wizard_update_module
 import wizard_module_upgrade
-import wizard_module_info_get
 import wizard_module_lang_install
 import add_new
 import wizard_export_lang
