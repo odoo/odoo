@@ -77,6 +77,8 @@ class account_analytic_line(osv.osv):
 			a = prod.product_tmpl_id.property_account_expense
 			if not a:
 				a = prod.categ_id.property_account_expense_categ
+			if not a:
+				raise osv.except_osv('Error !', 'There is no expense account define for this product: "%s" (id:%d)' % (prod.name, prod.id,))
 			return {'value' : {'amount' : -round(unit_amount * prod.standard_price * rate,2), 'general_account_id':a[0]}}
 		return {}
 
