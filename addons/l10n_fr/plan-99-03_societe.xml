@@ -3328,7 +3328,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_40])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_401700" model="account.account">
  <field name="name">Fournisseurs - Retenues de garantie</field>
@@ -3338,7 +3337,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_401000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_403000" model="account.account">
  <field name="name">Fournisseurs - Effets à payer</field>
@@ -3348,7 +3346,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_40])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_404000" model="account.account">
  <field name="name">Fournisseurs d'immobilisations</field>
@@ -3358,7 +3355,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_40])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_404100" model="account.account">
  <field name="name">Fournisseurs - Achats d'immobilisations</field>
@@ -3368,7 +3364,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_404000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_404700" model="account.account">
  <field name="name">Fournisseurs d'immobilisations - Retenues de garantie</field>
@@ -3378,7 +3373,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_404000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_405000" model="account.account">
  <field name="name">Fournisseurs d'immobilisations - Effets à payer</field>
@@ -3388,7 +3382,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_40])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_408000" model="account.account">
  <field name="name">Fournisseurs - Factures non parvenues</field>
@@ -3398,7 +3391,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_40])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_408100" model="account.account">
  <field name="name">Fournisseurs</field>
@@ -3408,7 +3400,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_408000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_408400" model="account.account">
  <field name="name">Fournisseurs d'immobilisations </field>
@@ -3418,7 +3409,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_408000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_408800" model="account.account">
  <field name="name">Fournisseurs - Intérêts courus</field>
@@ -3428,7 +3418,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_408000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_409000" model="account.account">
  <field name="name">Fournisseurs débiteurs</field>
@@ -3438,7 +3427,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_40])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_409100" model="account.account">
  <field name="name">Fournisseurs - Avances et acomptes versés sur commandes</field>
@@ -3448,7 +3436,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_409000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_409600" model="account.account">
  <field name="name">Fournisseurs - Créances pour emballages et matériel à rendre</field>
@@ -3458,7 +3445,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_409000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_409700" model="account.account">
  <field name="name">Fournisseurs - Autres avoirs</field>
@@ -3468,7 +3454,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_409000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_409710" model="account.account">
  <field name="name">Fournisseurs d'exploitation</field>
@@ -3478,7 +3463,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_409700])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_409740" model="account.account">
  <field name="name">Fournisseurs d'immobilisations</field>
@@ -3488,7 +3472,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_409700])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_409800" model="account.account">
  <field name="name">Rabais remises ristournes à obtenir et autres avoirs non encore reçus</field>
@@ -3498,7 +3481,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_409000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_Comptes_41" model="account.account">
  <field name="name">Clients et comptes rattachés</field>
@@ -3508,7 +3490,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Classe_4])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_410000" model="account.account">
  <field name="name">Clients et comptes rattachés </field>
@@ -3518,7 +3499,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_41])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_411000" model="account.account">
  <field name="name">Clients</field>
@@ -3529,7 +3509,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_41])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_411700" model="account.account">
  <field name="name">Clients - Retenues de garantie</field>
@@ -3539,7 +3518,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_411000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_413000" model="account.account">
  <field name="name">Clients - Effets à recevoir</field>
@@ -3549,7 +3527,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_41])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_416000" model="account.account">
  <field name="name">Clients douteux ou litigieux</field>
@@ -3559,7 +3536,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_41])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_418000" model="account.account">
  <field name="name">Clients - Produits non encore facturés</field>
@@ -3569,7 +3545,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_41])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_418100" model="account.account">
  <field name="name">Clients - Factures à établir </field>
@@ -3579,7 +3554,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_418000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_418800" model="account.account">
  <field name="name">Clients - Intérêts courus</field>
@@ -3589,7 +3563,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_418000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_419000" model="account.account">
  <field name="name">Clients créditeurs</field>
@@ -3599,7 +3572,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_41])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_419100" model="account.account">
  <field name="name">Clients - Avances et acomptes reçus sur commandes</field>
@@ -3609,7 +3581,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_419000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_419600" model="account.account">
  <field name="name">Clients - Dettes pour emballages et matériels consignés </field>
@@ -3619,7 +3590,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_419000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_419700" model="account.account">
  <field name="name">Clients - Autres avoirs </field>
@@ -3629,7 +3599,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_419000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_419800" model="account.account">
  <field name="name">Rabais remises ristournes à accorder et autres avoirs à établir</field>
@@ -3639,7 +3608,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_419000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_Comptes_42" model="account.account">
  <field name="name">Personnel et comptes rattachés</field>
@@ -5382,7 +5350,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_601000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_602000" model="account.account">
  <field name="name">Achats stockés - Autres approvisionnements</field>
@@ -5393,7 +5360,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_60])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_602100" model="account.account">
  <field name="name">Matières consommables</field>
@@ -5403,7 +5369,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_602000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_602110" model="account.account">
  <field name="name">Matières (ou groupe) C</field>
@@ -5413,7 +5378,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_602100])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_602120" model="account.account">
  <field name="name">Matières (ou groupe) D</field>
@@ -5423,7 +5387,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_602100])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_602200" model="account.account">
  <field name="name">Fournitures consommables</field>
@@ -5433,7 +5396,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_602000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_602210" model="account.account">
  <field name="name">Combustibles</field>
@@ -5443,7 +5405,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_602200])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_602220" model="account.account">
  <field name="name">Produits d'entretien</field>
@@ -5453,7 +5414,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_602200])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_602230" model="account.account">
  <field name="name">Fournitures d'atelier et d'usine</field>
@@ -5463,7 +5423,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_602200])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_602240" model="account.account">
  <field name="name">Fournitures de magasin</field>
@@ -5473,7 +5432,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_602200])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_602250" model="account.account">
  <field name="name">Fournitures de bureau</field>
@@ -5483,7 +5441,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_602200])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_602600" model="account.account">
  <field name="name">Emballages</field>
@@ -5493,7 +5450,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_602000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_602610" model="account.account">
  <field name="name">Emballages perdus</field>
@@ -5503,7 +5459,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_602600])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_602650" model="account.account">
  <field name="name">Emballages récupérables non identifiables</field>
@@ -5513,7 +5468,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_602600])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_602670" model="account.account">
  <field name="name">Emballages à usage mixte</field>
@@ -5523,7 +5477,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_602600])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_603000" model="account.account">
  <field name="name">Variation des stocks (approvisionnements et marchandises)</field>
@@ -5534,7 +5487,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_60])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_603100" model="account.account">
  <field name="name">Variation des stocks de matières premières (et fournitures)</field>
@@ -5544,7 +5496,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_603000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_603200" model="account.account">
  <field name="name">Variation des stocks des autres approvisionnements</field>
@@ -5554,7 +5505,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_603000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_603700" model="account.account">
  <field name="name">Variation des stocks de marchandises</field>
@@ -5564,7 +5514,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_603000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_604000" model="account.account">
  <field name="name">Achats d'études et prestations de services</field>
@@ -5574,7 +5523,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_60])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_605000" model="account.account">
  <field name="name">Achats de matériel équipements et travaux</field>
@@ -5584,7 +5532,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_60])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_606000" model="account.account">
  <field name="name">Achats non stockés de matières et fournitures</field>
@@ -5595,7 +5542,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_60])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_606100" model="account.account">
  <field name="name">Fournitures non stockables (eau énergie) </field>
@@ -5605,7 +5551,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_606000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_606300" model="account.account">
  <field name="name">Fournitures d'entretien et de petit équipement</field>
@@ -5615,7 +5560,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_606000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_606400" model="account.account">
  <field name="name">Fournitures administratives</field>
@@ -5625,7 +5569,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_606000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_606800" model="account.account">
  <field name="name">Autres matières et fournitures</field>
@@ -5635,7 +5578,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_606000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_607000" model="account.account">
  <field name="name">Achats de marchandises</field>
@@ -5646,7 +5588,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_60])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_607100" model="account.account">
  <field name="name">Achats de marchandises France</field>
@@ -5657,7 +5598,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_607000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_607200" model="account.account">
  <field name="name">Achats de marchandises CEE</field>
@@ -5668,7 +5608,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_607000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_607300" model="account.account">
  <field name="name">Achats de marchandises hors CEE</field>
@@ -5679,7 +5618,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_607000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_608000" model="account.account">
  <field name="name">Récapitulation des frais accessoires incorporés aux achats</field>
@@ -5689,7 +5627,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_60])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_609000" model="account.account">
  <field name="name">Rabais remises et ristournes obtenus sur achats</field>
@@ -5699,7 +5636,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_60])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_609100" model="account.account">
  <field name="name">Remises sur achats de matières premières (et fournitures)</field>
@@ -5709,7 +5645,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_609000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_609200" model="account.account">
  <field name="name">Remises sur achats d'autres approvisionnements stockés</field>
@@ -5719,7 +5654,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_609000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_609400" model="account.account">
  <field name="name">Remises sur achats d'études et prestations de services</field>
@@ -5729,7 +5663,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_609000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_609500" model="account.account">
  <field name="name">Remises sur achats de matériel équipements et travaux</field>
@@ -5739,7 +5672,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_609000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_609600" model="account.account">
  <field name="name">Remises sur achats d'approvisionnements non stockés</field>
@@ -5749,7 +5681,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_609000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_609700" model="account.account">
  <field name="name">Remises sur achats de marchandises</field>
@@ -5759,7 +5690,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_609000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_609800" model="account.account">
  <field name="name">Rabais remises et ristournes non affectés</field>
@@ -5769,7 +5699,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_609000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_Comptes_61" model="account.account">
  <field name="name">Services extérieurs</field>
@@ -5779,7 +5708,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Classe_6])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_611000" model="account.account">
  <field name="name">Sous-traitance générale</field>
@@ -5789,7 +5717,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_61])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_612000" model="account.account">
  <field name="name">Redevances de crédit-bail</field>
@@ -5799,7 +5726,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_61])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_612200" model="account.account">
  <field name="name">Crédit-bail mobilier</field>
@@ -5809,7 +5735,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_612000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_612500" model="account.account">
  <field name="name">Crédit-bail immobilier</field>
@@ -5819,7 +5744,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_612000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_613000" model="account.account">
  <field name="name">Locations</field>
@@ -5829,7 +5753,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_61])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_613200" model="account.account">
  <field name="name">Locations immobilières</field>
@@ -5839,7 +5762,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_613000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_613500" model="account.account">
  <field name="name">Locations mobilières</field>
@@ -5849,7 +5771,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_613000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_613600" model="account.account">
  <field name="name">Malis sur emballages</field>
@@ -5859,7 +5780,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_613000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_614000" model="account.account">
  <field name="name">Charges locatives et de copropriété</field>
@@ -5869,7 +5789,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_61])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_615000" model="account.account">
  <field name="name">Entretien et réparations</field>
@@ -5879,7 +5798,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_61])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_615200" model="account.account">
  <field name="name">Entretien et réparations sur biens immobiliers</field>
@@ -5889,7 +5807,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_615000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_615500" model="account.account">
  <field name="name">Entretien et réparations sur biens mobiliers</field>
@@ -5899,7 +5816,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_615000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_615600" model="account.account">
  <field name="name">Maintenance</field>
@@ -5909,7 +5825,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_615000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_616000" model="account.account">
  <field name="name">Primes d'assurance</field>
@@ -6126,7 +6041,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_622000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_622600" model="account.account">
  <field name="name">Honoraires</field>
@@ -6136,7 +6050,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_622000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_622700" model="account.account">
  <field name="name">Frais d'actes et de contentieux</field>
@@ -6146,7 +6059,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_622000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_622800" model="account.account">
  <field name="name">Divers</field>
@@ -6156,7 +6068,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_622000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_623000" model="account.account">
  <field name="name">Publicité publications relations publiques</field>
@@ -6167,7 +6078,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_62])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_623100" model="account.account">
  <field name="name">Annonces et insertions</field>
@@ -6177,7 +6087,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_623000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_623200" model="account.account">
  <field name="name">Échantillons</field>
@@ -6187,7 +6096,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_623000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_623300" model="account.account">
  <field name="name">Foires et expositions</field>
@@ -6197,7 +6105,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_623000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_623400" model="account.account">
  <field name="name">Cadeaux à la clientèle</field>
@@ -6208,7 +6115,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_623000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_623500" model="account.account">
  <field name="name">Primes</field>
@@ -6218,7 +6124,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_623000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_623600" model="account.account">
  <field name="name">Catalogues et imprimés</field>
@@ -6228,7 +6133,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_623000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_623700" model="account.account">
  <field name="name">Publications</field>
@@ -6238,7 +6142,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_623000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_623800" model="account.account">
  <field name="name">Divers (pourboires dons courants)</field>
@@ -6248,7 +6151,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_623000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_624000" model="account.account">
  <field name="name">Transports de biens et transports collectifs du personnel</field>
@@ -6258,7 +6160,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_62])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_624100" model="account.account">
  <field name="name">Transports sur achats</field>
@@ -6268,7 +6169,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_624000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_624200" model="account.account">
  <field name="name">Transports sur ventes</field>
@@ -6278,7 +6178,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_624000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_624300" model="account.account">
  <field name="name">Transports entre établissements ou chantiers</field>
@@ -6288,7 +6187,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_624000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_624400" model="account.account">
  <field name="name">Transports administratifs</field>
@@ -6298,7 +6196,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_624000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_624700" model="account.account">
  <field name="name">Transports collectifs du personnel</field>
@@ -6308,7 +6205,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_624000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_624800" model="account.account">
  <field name="name">Divers</field>
@@ -6318,7 +6214,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_624000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_625000" model="account.account">
  <field name="name">Déplacements missions et réceptions</field>
@@ -7775,7 +7670,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_701000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_reduite')])]"/>
  </record>
 <record id="pcg_701300" model="account.account">
  <field name="name">Ventes de produits finis CEE</field>
@@ -7803,7 +7697,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_70])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_703000" model="account.account">
  <field name="name">Ventes de produits résiduels</field>
@@ -7813,7 +7706,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_70])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_704000" model="account.account">
  <field name="name">Travaux</field>
@@ -7823,7 +7715,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_70])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_704100" model="account.account">
  <field name="name">Travaux de catégorie (ou activité) A</field>
@@ -7833,7 +7724,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_704000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_704200" model="account.account">
  <field name="name">Travaux de catégorie (ou activité) B</field>
@@ -7843,7 +7733,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_704000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_705000" model="account.account">
  <field name="name">Études</field>
@@ -7853,7 +7742,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_70])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_706000" model="account.account">
  <field name="name">Prestations de services</field>
@@ -7863,7 +7751,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_70])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_706100" model="account.account">
  <field name="name">Prestations 5,5%</field>
@@ -7873,7 +7760,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_706000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_reduite')])]"/>
  </record>
 <record id="pcg_706200" model="account.account">
  <field name="name">Prestations 19,6%</field>
@@ -7883,7 +7769,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_706000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_706300" model="account.account">
  <field name="name">Prestations CEE</field>
@@ -7912,7 +7797,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_Comptes_70])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_707100" model="account.account">
  <field name="name">Ventes de marchandises 5,5%</field>
@@ -7922,7 +7806,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_707000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_reduite')])]"/>
  </record>
 <record id="pcg_707200" model="account.account">
  <field name="name">Ventes de marchandises 19,6%</field>
@@ -7932,7 +7815,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_707000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 <record id="pcg_707300" model="account.account">
  <field name="name">Ventes de marchandises CEE</field>
@@ -9108,7 +8990,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_401000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 
 		<record model="ir.property" id="account.property_account_payable">
@@ -9123,7 +9004,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_411000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 
 		<record model="ir.property" id="account.property_account_receivable">
@@ -9148,7 +9028,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_601000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 
 		<record model="ir.property" id="account.property_account_expense_categ">
@@ -9163,7 +9042,6 @@
  <field name="sign">1</field>
  <field ref="base.EUR" name="currency_id"/>
  <field name="parent_id" eval="[(6,0,[pcg_701000])]"/>
-<field name="tax_ids" eval="[(6,0,[ref('tva_normale')])]"/>
  </record>
 
 		<record model="ir.property" id="account.property_account_income_categ">
