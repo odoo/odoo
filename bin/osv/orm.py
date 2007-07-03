@@ -1468,7 +1468,7 @@ class orm(object):
 			else:
 				if field.translate and context.get('lang', False) and context['lang'] != 'en_US':
 					if args[i][1] in ('like', 'ilike'):
-						args[i][2] = '%%%s%%' % args[i][2]
+						args[i] = (args[i][0], args[i][1], '%%%s%%' % args[i][2])
 					cr.execute('select res_id from ir_translation where name = %s and lang = %s and type = %s and value '+args[i][1]+' %s', (table._name+','+args[i][0], context['lang'], 'model', args[i][2]))
 					ids = map(lambda x: x[0], cr.fetchall())
 					cr.execute('select id from '+table._table+' where '+args[i][0]+' '+args[i][1]+' %s', (args[i][2],))
