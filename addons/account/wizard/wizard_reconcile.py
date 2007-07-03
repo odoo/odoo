@@ -79,7 +79,7 @@ _transaction_add_form = '''<?xml version="1.0"?>
 	<separator string="Write-Off Move" colspan="4"/>
 	<field name="journal_id"/>
 	<field name="period_id"/>
-	<field name="writeoff_acc_id"/>
+	<field name="writeoff_acc_id" domain="[('type', '&lt;&gt;', 'view')]"/>
 </form>'''
 
 _transaction_add_fields = {
