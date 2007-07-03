@@ -65,8 +65,9 @@ def _get_moves(self, cr, uid, data, context):
 			currency=0
 			if hasattr(pick, 'purchase_id') and pick.purchase_id:
 				currency=pick.purchase_id.pricelist_id.currency_id.id
-			_moves_arch_lst.append('<group><field name="price%s"/>' % (m.id,))
+			_moves_arch_lst.append('<group col="6"><field name="uom%s"/><field name="price%s"/>' % (m.id,m.id,))
 			_moves_fields['price%s' % m.id] = {'string': 'Unit Price', 'type': 'float', 'required': True, 'default': make_default(price)}
+			_moves_fields['uom%s' % m.id] = {'string': 'UOM', 'type': 'many2one', 'relation': 'product.uom', 'required': True, 'default': make_default(m.product_uom.id)}
 			_moves_arch_lst.append('<field name="currency%d"/></group>' % (m.id,))
 			_moves_fields['currency%s' % m.id] = {'string': 'Currency', 'type': 'many2one', 'relation': 'res.currency', 'required': True, 'default': make_default(currency)}
 		_moves_arch_lst.append('<newline/>')
@@ -98,13 +99,17 @@ def _do_split(self, cr, uid, data, context):
 			product_obj = pooler.get_pool(cr.dbname).get('product.product')
 			currency_obj = pooler.get_pool(cr.dbname).get('res.currency')
 			users_obj = pooler.get_pool(cr.dbname).get('res.users')
+			uom_obj = pooler.get_pool(cr.dbname).get('product.uom')
 
 			product = product_obj.browse(cr, uid, [move.product_id.id])[0]
 			user = users_obj.browse(cr, uid, [uid])[0]
 
 			qty = data['form']['move%s' % move.id]
+			uom = data['form']['uom%s' % move.id]
 			price = data['form']['price%s' % move.id]
 			currency = data['form']['currency%s' % move.id]
+
+			qty = uom_obj._compute_qty(cr, uid, uom, qty, product.uom_id.id)
 
 			if qty > 0:
 				new_price = currency_obj.compute(cr, uid, currency, user.company_id.currency_id.id, price)
