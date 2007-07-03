@@ -59,9 +59,9 @@ class account_payment_term(osv.osv):
 			if line.value=='fixed':
 				amt = round(line.value_amount, 2)
 			elif line.value=='procent':
-				amt = round(amount * line.value_amount,2)
+				amt = round(amount * line.value_amount, 2)
 			elif line.value=='balance':
-				amt = amount
+				amt = round(amount, 2)
 			if amt:
 				next_date = mx.DateTime.strptime(date_ref, '%Y-%m-%d') + RelativeDateTime(days=line.days)
 				if line.condition == 'end of month':
