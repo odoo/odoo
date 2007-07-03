@@ -840,9 +840,17 @@ class orm(object):
 		return res
 
 	def unlink(self, cr, uid, ids, context={}):
-		self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink')
 		if not len(ids):
 			return True
+		delta= context.get('read_delta',False)
+		if delta and self._log_access:
+			cr.execute("select  (now()  - min(write_date)) <= '%s'::interval  from %s where id in (%s)"% (delta,self._table,",".join(map(str, ids))) )
+			res= cr.fetchone()
+			if res and res[0]:
+				raise except_orm('ConcurrencyException', 'This record was modified in the meanwhile')
+
+		self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink')
+
 		wf_service = netsvc.LocalService("workflow")
 		for id in ids:
 			wf_service.trg_delete(uid, self._name, id, cr)
@@ -876,7 +884,9 @@ class orm(object):
 			cr.execute("select  (now()  - min(write_date)) <= '%s'::interval  from %s where id in (%s)"% (delta,self._table,",".join(map(str, ids))) )
 			res= cr.fetchone()
 			if res and res[0]:
-				raise except_orm('ConcurrencyException', 'This record was modified in the meanwhile')
+				for field in vals:
+					if field in self._columns and self._columns[field]._classic_write:
+						raise except_orm('ConcurrencyException', 'This record was modified in the meanwhile')
 
 		self.pool.get('ir.model.access').check(cr, user, self._name, 'write')
 
@@ -928,7 +938,7 @@ class orm(object):
 		upd_todo.sort(lambda x,y: self._columns[x].priority-self._columns[y].priority)
 		for field in upd_todo:
 			for id in ids:
-				self._columns[field].set(cr, self, id, field, vals[field], user)
+				self._columns[field].set(cr, self, id, field, vals[field], user, context=context)
 
 		for table in self._inherits:
 			col = self._inherits[table]
