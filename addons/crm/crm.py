@@ -286,8 +286,8 @@ class crm_case(osv.osv):
 							(action.trg_partner_categ_id.id in map(lambda x: x.id, case.partner_id.category_id or []))
 						)
 					)
-					ok = ok and (not action.trg_priority_from or action.trg_priority_from<=case.priority)
-					ok = ok and (not action.trg_priority_to or action.trg_priority_to>=case.priority)
+					ok = ok and (not action.trg_priority_from or action.trg_priority_from>=case.priority)
+					ok = ok and (not action.trg_priority_to or action.trg_priority_to<=case.priority)
 					if not ok:
 						continue
 
