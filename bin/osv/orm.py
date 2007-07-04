@@ -820,7 +820,9 @@ class orm(object):
 				value[field] = field_value 
 		return value
 
-	def perm_read(self, cr, user, ids, context={}):
+	def perm_read(self, cr, user, ids, context={}, details=True):
+		if not ids:
+			return []
 		fields = ', p.level, p.uid, p.gid'
 		if self._log_access:
 			fields +=', u.create_uid, u.create_date, u.write_uid, u.write_date'
@@ -834,7 +836,7 @@ class orm(object):
 		for r in res:
 			for key in r:
 				r[key] = r[key] or False
-				if key in ('write_uid','create_uid','uid'):
+				if key in ('write_uid','create_uid','uid') and details:
 					if r[key]:
 						r[key] = self.pool.get('res.users').name_get(cr, user, [r[key]])[0]
 		return res
@@ -1525,12 +1527,17 @@ class orm(object):
 							if not str_utf8:
 								add_null = True
 						else:
-							qu2.append(table._columns[x[0]]._symbol_set[1](x[2]))
+							if x[0] in table._columns:
+								qu2.append(table._columns[x[0]]._symbol_set[1](x[2]))
 						if x[1]=='=like':
 							x1 = 'like'
 						else:
 							x1 = x[1]
-						qu1.append('(%s.%s %s %s)' % (table._table, x[0], x1, table._columns[x[0]]._symbol_set[0]))
+						if x[0] in table._columns:
+							qu1.append('(%s.%s %s %s)' % (table._table, x[0], x1, table._columns[x[0]]._symbol_set[0]))
+						else:
+							qu1.append('(%s.%s %s \'%s\')' % (table._table, x[0], x1, x[2]))
+
 						if add_null:
 							qu1[-1] = '('+qu1[-1]+' or '+x[0]+' is null)'
 			elif x[1]=='in':
