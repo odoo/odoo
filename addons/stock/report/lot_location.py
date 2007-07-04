@@ -5,40 +5,33 @@ from report import report_sxw
 class lot_location(report_sxw.rml_parse):
 	def __init__(self, cr, uid, name, context):
 		super(lot_location, self).__init__(cr, uid, name, context)
-		self.ret_list=[]
 		self.localcontext.update({
 			'time': time,
 			'process':self.process,
-
 		})
 
 	def process(self,location_id):
-		ret_dict = {'location_name':''};
-		location_name = pooler.get_pool(self.cr.dbname).get('stock.location').read(self.cr, self.uid, [location_id],['name'])
-		if location_name:
-			ret_dict['location_name']= str(location_name[0]['name'])
-		prod_info = pooler.get_pool(self.cr.dbname).get('stock.location')._product_get(self.cr, self.uid, location_id)
+		res = {}
+		location_obj = pooler.get_pool(self.cr.dbname).get('stock.location')
+		product_obj = pooler.get_pool(self.cr.dbname).get('product.product')
 
-		pro_list = [];
-		for prod_id in prod_info.keys():
-			pro_dict={}
-			if prod_info[prod_id] != 0.0:
-				prod_name = pooler.get_pool(self.cr.dbname).get('product.product').read(self.cr, self.uid, [prod_id], ['name'])
-				if prod_name:
-					pro_dict['prod_name'] =  prod_name[0]['name']
-					pro_dict['prod_qty'] =  str(prod_info[prod_id])
-					pro_list.append(pro_dict)
-			else:
-				pro_dict = {'prod_name':'','prod_qty':''};
-		pro_list.append(pro_dict)
-		ret_dict['product'] = pro_list
-		if prod_info:
-			self.ret_list.append(ret_dict)
-			location_child = pooler.get_pool(self.cr.dbname).get('stock.location').read(self.cr, self.uid, [location_id], ['child_ids'])
-			for child_id in location_child[0]['child_ids']:
-				self.process(child_id)
+		res['location_name'] = pooler.get_pool(self.cr.dbname).get('stock.location').read(self.cr, self.uid, [location_id],['name'])[0]['name']
 
-		return self.ret_list
+		prod_info = location_obj._product_get(self.cr, self.uid, location_id)
+
+		res['product'] = []
+		for prod in product_obj.browse(self.cr, self.uid, prod_info.keys()):
+			if prod_info[prod.id]:
+				res['product'].append({'prod_name': prod.name, 'prod_qty': prod_info[prod.id]})
+		if not res['product']:
+			res['product'].append({'prod_name': '', 'prod_qty': ''})
+		location_child = location_obj.read(self.cr, self.uid, [location_id], ['child_ids'])
+		list=[]
+		list.append(res)
+		for child_id in location_child[0]['child_ids']:
+				list.extend(self.process(child_id))
+
+		return list
 
 report_sxw.report_sxw('report.lot.location', 'stock.location', 'addons/stock/report/lot_location.rml', parser=lot_location)
 
