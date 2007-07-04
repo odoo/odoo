@@ -163,7 +163,7 @@ class crm_case_rule(osv.osv):
 			('deadline','Deadline'),
 			], 'Trigger Date', size=16),
 		'trg_date_range': fields.integer('Delay after trigger date'),
-		'trg_date_range_type': fields.selection([('hour','Hours'),('day','Days'),('month','Months')], 'Delay type'),
+		'trg_date_range_type': fields.selection([('minutes', 'Minutes'),('hour','Hours'),('day','Days'),('month','Months')], 'Delay type'),
 
 		'trg_section_id': fields.many2one('crm.case.section', 'Section'),
 		'trg_categ_id':  fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',trg_section_id)]"),
@@ -303,6 +303,7 @@ class crm_case(osv.osv):
 						base = mx.DateTime.strptime(case.date_deadline, '%Y-%m-%d')
 					if base:
 						fnct = {
+							'minutes': lambda interval: mx.DateTime.RelativeDateTime(minutes=interval),
 							'day': lambda interval: mx.DateTime.RelativeDateTime(days=interval),
 							'hour': lambda interval: mx.DateTime.RelativeDateTime(hours=interval),
 							'month': lambda interval: mx.DateTime.RelativeDateTime(months=interval),
