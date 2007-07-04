@@ -193,10 +193,10 @@ class osv(orm.orm):
 	#__metaclass__ = inheritor
 
 	def __new__(cls):
+		module = str(cls)[6:]
+		module = module[:len(module)-1]
+		module = module.split('.')[0][2:]
 		if not hasattr(cls, '_module'):
-			module = str(cls)[6:]
-			module = module[:len(module)-1]
-			module = module.split('.')[0][2:]
 			cls._module = module
 		module_class_list.setdefault(cls._module, []).append(cls)
 		class_pool[cls._name] = cls
