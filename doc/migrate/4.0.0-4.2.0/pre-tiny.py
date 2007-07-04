@@ -132,6 +132,18 @@ if cr.fetchall():
 cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_sale_order_product\'')
 if cr.fetchall():
 	cr.execute('drop VIEW report_sale_order_product')
+cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_timesheet_user\'')
+if cr.fetchall():
+	cr.execute('drop VIEW report_timesheet_user')
+cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_task_user_pipeline_open\'')
+if cr.fetchall():
+	cr.execute('drop VIEW report_task_user_pipeline_open')
+cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'hr_timesheet_sheet_sheet_day\'')
+if cr.fetchall():
+	cr.execute('drop VIEW hr_timesheet_sheet_sheet_day')
+cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'hr_timesheet_sheet_sheet_account\'')
+if cr.fetchall():
+	cr.execute('drop VIEW hr_timesheet_sheet_sheet_account')
 cr.execute('ALTER TABLE product_template ALTER list_price TYPE numeric(16,2)')
 cr.execute('ALTER TABLE product_template ALTER standard_price TYPE numeric(16,2)')
 cr.execute('ALTER TABLE product_product ALTER price_extra TYPE numeric(16,2)')
