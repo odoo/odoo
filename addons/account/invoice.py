@@ -538,6 +538,8 @@ class account_invoice(osv.osv):
 						line['uos_id'] = line.get('uos_id', False) and line['uos_id'][0]
 					if 'invoice_line_tax_id' in line:
 						line['invoice_line_tax_id'] = [(6,0, line.get('invoice_line_tax_id', [])) ]
+					if 'account_analytic_id' in line:
+						line['account_analytic_id'] = line.get('account_analytic_id', False) and line['account_analytic_id'][0]
 				return map(lambda x: (0,0,x), lines)
 				
 			invoice_lines = self.pool.get('account.invoice.line').read(cr, uid, invoice['invoice_line'])
