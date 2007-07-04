@@ -28,6 +28,7 @@
 							<field name="planned_hours"/>
 							<field name="effective_hours"/>
 							<field name="timesheet_id"/>
+							<field name="state"/>
 							<separator string="Project's members" colspan="4" />
 							<field name="members" colspan="4" nolabel="1"/>
 						</page>
@@ -132,6 +133,7 @@
 					<field name="partner_id" />
 					<field name="planned_hours" />
 					<field name="effective_hours" />
+					<field name="state" />
 				</tree>
 			</field>
 		</record>
@@ -141,15 +143,60 @@
 			<field name="domain">[('parent_id','=',False)]</field>
 			<field name="view_id" ref="view_project" />
 		</record>
-		<menuitem name="Project/All Projects" action="open_view_all_project" id="menu_all_project"/>
+		<menuitem
+			name="Project/All Projects"
+			action="open_view_all_project"
+			id="menu_all_project"/>
+
+		<record model="ir.actions.act_window" id="open_view_all_project_unclosed">
+			<field name="name">Unclosed projects</field>
+			<field name="res_model">project.project</field>
+			<field name="view_type">tree</field>
+			<field name="domain">[('parent_id','=',False),('state','&lt;&gt;','cancelled'),('state','&lt;&gt;','done')]</field>
+			<field name="view_id" ref="view_project" />
+		</record>
+		<menuitem
+			name="Project/All Projects/Unclosed projects"
+			action="open_view_all_project_unclosed" 
+			id="menu_all_project_unclosed"/>
+
+
+		<record model="ir.actions.act_window" id="open_view_all_project_unclosed_open">
+			<field name="name">Open projects</field>
+			<field name="res_model">project.project</field>
+			<field name="view_type">tree</field>
+			<field name="domain">[('parent_id','=',False),('state','=','open')]</field>
+			<field name="view_id" ref="view_project" />
+		</record>
+		<menuitem
+			name="Project/All Projects/Unclosed projects/Open projects"
+			action="open_view_all_project_unclosed_open" 
+			id="menu_all_project_unclosed_open"/>
+
+
+		<record model="ir.actions.act_window" id="open_view_project_open">
+			<field name="name">Open projects</field>
+			<field name="res_model">project.project</field>
+			<field name="view_type">form</field>
+			<field name="domain">[('state','=','open')]</field>
+			<field name="view_id" ref="view_project" />
+		</record>
+		<menuitem 
+			name="Project/Configuration/Projects/Open projects" 
+			id="menu_open_view_project_open"
+			action="open_view_project_open"/>
+
 
 		<record model="ir.actions.act_window" id="open_view_project">
 			<field name="res_model">project.project</field>
 			<field name="view_type">form</field>
-			<field name="domain"></field>
+			<field name="domain">[]</field>
 			<field name="view_id" ref="view_project" />
 		</record>
-		<menuitem name="Project/All Projects/Edit project" id="menu_open_view_project" action="open_view_project"/>
+		<menuitem 
+			name="Project/Configuration/Projects"
+			id="menu_open_view_project" 
+			action="open_view_project"/>
 
 		<record model="ir.ui.view" id="view_task_work_form">
 			<field name="name">project.task.work.form</field>
@@ -190,17 +237,42 @@
 					<field name="partner_id" />
 					<field name="planned_hours" />
 					<field name="effective_hours" />
+					<field name="state" />
 				</tree>
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="open_view_my_project">
-			<field name="name">My Projects</field>
+			<field name="name">My projects</field>
 			<field name="res_model">project.project</field>
 			<field name="view_type">tree</field>
 			<field name="domain">[('manager', '=', uid)]</field>
 			<field name="view_id" ref="view_my_project" />
 		</record>
-		<menuitem name="Project/All Projects/" id="menu_open_view_my_project" action="open_view_my_project" />
+		<menuitem name="Project/My projects" id="menu_open_view_my_project" action="open_view_my_project" />
+
+
+		<record model="ir.actions.act_window" id="open_view_my_project_open_unclosed">
+			<field name="name">My unclosed projects</field>
+			<field name="res_model">project.project</field>
+			<field name="view_type">tree</field>
+			<field name="domain">[('manager', '=', uid),('state','&lt;&gt;','cancelled'),('state','&lt;&gt;','done')]</field>
+			<field name="view_id" ref="view_my_project" />
+		</record>
+		<menuitem name="Project/My projects/My unclosed projects"
+			id="menu_open_view_my_project_open_unclosed" 
+			action="open_view_my_project_open_unclosed" />
+
+
+		<record model="ir.actions.act_window" id="open_view_my_project_open">
+			<field name="name">My open projects</field>
+			<field name="res_model">project.project</field>
+			<field name="view_type">tree</field>
+			<field name="domain">[('manager', '=', uid),('state','=','open')]</field>
+			<field name="view_id" ref="view_my_project" />
+		</record>
+		<menuitem name="Project/My projects/My unclosed projects/My open projects"
+			id="menu_open_view_my_project_open" 
+			action="open_view_my_project_open" />
 
 		<!-- Task -->
 		<record model="ir.ui.view" id="view_task_form2">

@@ -136,7 +136,7 @@
 		<field name="arch" type="xml">
 			<tree string="Timesheets to invoice">
 				<field name="user_id"/>
-				<field name="project_id"/>
+				<field name="account_id"/>
 				<field name="manager_id"/>
 				<field name="quantity"/>
 				<field name="amount_invoice"/>
@@ -318,12 +318,6 @@
 		res_model="report_timesheet.account"
 		src_model="account.analytic.account"
 		id="act_account_analytic_account_2_report_timehsheet_account"/>
-
-	<act_window name="Costs to invoice"
-		domain="[('account_id', '=', active_id)]"
-		res_model="report_timesheet.invoice"
-		src_model="account.analytic.account"
-		id="act_account_analytic_account_2_report_timesheet_invoice"/>
 
 	<act_window name="Costs to invoice"
 		domain="[('manager_id', '=', active_id)]"

@@ -113,8 +113,8 @@ class project(osv.osv):
 		 'warn_header': fields.text('Mail header'),
 		 'warn_footer': fields.text('Mail footer'),
 		 'notes': fields.text('Notes'),
-		 'timesheet_id': fields.many2one('hr.timesheet.group', 'Timesheet'),
- 		 'state': fields.selection([('draft', 'Open'), ('pending', 'Pending'), ('done', 'Done')]),
+		 'timesheet_id': fields.many2one('hr.timesheet.group', 'Working hours'),
+		'state': fields.selection([('open', 'Open'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', required=True),
 	 }
 	
 	_defaults = {
@@ -122,6 +122,7 @@ class project(osv.osv):
 		'manager': lambda object,cr,uid,context: uid,
 		'priority': lambda *a: 1,
 		'date_start': lambda *a: time.strftime('%Y-%m-%d'),
+		'state': lambda *a: 'open'
 	}
 	
 	_order = "priority"
@@ -178,7 +179,7 @@ class task(osv.osv):
 		'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Priority'),
 		'sequence': fields.integer('Sequence'),
 		'type': fields.many2one('project.task.type', 'Type'),
-		'state': fields.selection([('draft', 'Draft'),('open', 'Open'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True),
+		'state': fields.selection([('draft', 'Draft'),('open', 'Open'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State'),
 		'date_start': fields.datetime('Date Start',readonly=True),
 		'date_deadline': fields.datetime('Deadline'),
 		'date_close': fields.datetime('Date Closed', readonly=True),

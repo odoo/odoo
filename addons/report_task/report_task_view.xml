@@ -28,8 +28,9 @@
 		<field name="type">graph</field>
 		<field name="arch" type="xml">
 			<graph string="Tasks by user" type="bar">
-				<field name="user_id" groups="task_state"/>
-				<field name="task_progress" colour="task_state"/>
+				<field name="user_id"/>
+				<field name="task_progress" operator="+"/>
+				<field name="task_state" group="True"/>
 			</graph>
 		</field>
 	</record>

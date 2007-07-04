@@ -44,7 +44,8 @@ class hr_department(osv.osv):
 		mids = self.search(cr, uid, [('manager_id','=',uid)])
 		result = {uid:1}
 		for m in self.browse(cr, uid, mids, context):
-			result[m.id] = 1
+			for user in m.member_ids:
+				result[user.id] = 1
 		return result.keys()
 	def _check_recursion(self, cr, uid, ids):
 		level = 100

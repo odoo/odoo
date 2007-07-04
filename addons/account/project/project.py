@@ -156,6 +156,7 @@ class account_analytic_account(osv.osv):
 		'type' : lambda *a : 'normal',
 		'company_id': _default_company,
 		'state' : lambda *a : 'draft',
+		'user_id' : lambda self,cr,uid,ctx : uid
 	}
 
 	_order = 'parent_id desc,code'

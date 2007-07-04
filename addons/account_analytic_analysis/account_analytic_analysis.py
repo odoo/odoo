@@ -48,8 +48,7 @@ class account_analytic_account(osv.osv):
 		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
 		# Amount uninvoiced hours to invoice at sale price
 		acc_set = ",".join(map(str, ids2))
-		cr.execute("""SELECT account_analytic_account.id,(sum (product_template.list_price *  account_analytic_line.unit_amount) 
-								- sum(product_template.list_price *  account_analytic_line.unit_amount * (hr_timesheet_invoice_factor.factor/100))) 
+		cr.execute("""SELECT account_analytic_account.id,sum (product_template.list_price * account_analytic_line.unit_amount * ((100-hr_timesheet_invoice_factor.factor)/100)) 
 						AS ca_to_invoice  
 						FROM product_template join product_product on product_template.id = product_product.product_tmpl_id 
 						JOIN account_analytic_line on account_analytic_line.product_id = product_product.id 
@@ -221,7 +220,7 @@ class account_analytic_account(osv.osv):
 			if account.ca_invoiced == 0:
 				res[account.id]=0.0
 			else:
-				res[account.id] = (account.real_margin / account.ca_invoiced) * 100
+				res[account.id] = (account.ca_invoiced / account.real_margin) * 100
 		for id in ids:
 			res[id] = round(res.get(id, 0.0),2)
 		return res
