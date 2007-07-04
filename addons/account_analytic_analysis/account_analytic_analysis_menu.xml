@@ -16,6 +16,18 @@
 		id="menu_analytic_account_managed" 
 		action="action_account_analytic_managed" />
 
+	<record model="ir.actions.act_window" id="action_hr_tree_invoiced_my">
+		<field name="name">Uninvoiced entries of my accounts</field>
+		<field name="res_model">account.analytic.line</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[('invoice_id','=',False),('to_invoice','!=',False),('account_id.user_id','=',uid)]</field>
+	</record>
+	<menuitem name="Project/Analytic accounts/Uninvoiced entries of my projects"
+		id="menu_action_hr_tree_invoiced_my"
+		action="action_hr_tree_invoiced_my"/> 
+
+
 
 	<record model="ir.actions.act_window" id="action_account_analytic_managed_open"> 
 		<field name="name">My open managed accounts</field> 

@@ -57,15 +57,21 @@
 		</record>
 		<menuitem name="Financial Management/Reporting/Analytic/All Months/Analytic lines to invoice" id="account_analytic_lines_to_invoice_report" action="action_account_analytic_line_to_invoice" />
 
-		<act_window name="Analytic lines to invoice"
+		<act_window name="Costs to invoice"
 			domain="[('product_id', '=', active_id)]"
 			res_model="report.account.analytic.line.to.invoice"
 			src_model="product.product"
 			id="act_product_product_2_report_acc_analytic_line_to_invoice"/>
 
-		<act_window name="Analytic lines to invoice"
-			domain="[('account_id', '=', active_id)]"
-			res_model="report.account.analytic.line.to.invoice"
+		<act_window name="Costs to invoice"
+			domain="[('user_id', '=', active_id),('invoice_id','=',False),('to_invoice','&lt;&gt;',False)]"
+			res_model="account.analytic.line"
+			src_model="res.users"
+			id="act_users_analytic_acc_2_report_acc_analytic_line_to_invoice"/>
+
+		<act_window name="Costs to invoice"
+			domain="[('account_id', '=', active_id),('invoice_id','=',False),('to_invoice','&lt;&gt;',False)]"
+			res_model="account.analytic.line"
 			src_model="account.analytic.account"
 			id="act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice"/>
 	</data>

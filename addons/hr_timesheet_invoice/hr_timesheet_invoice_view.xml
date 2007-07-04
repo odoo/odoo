@@ -123,6 +123,17 @@
 		action="action_hr_analytic_timesheet_tree_invoiced"/> 
 
 
+	<record model="ir.actions.act_window" id="action_hr_analytic_timesheet_tree_invoiced_my">
+		<field name="name">My uninvoiced Entries</field>
+		<field name="res_model">account.analytic.line</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[('invoice_id','=',False),('to_invoice','!=',False),('user_id','=',uid)]</field>
+	</record>
+	<menuitem name="Financial Management/Periodical Processing/Invoice on Entries/Uninvoiced Entries/My uninvoiced entries"
+		id="menu_hr_analytic_timesheet_tree_invoiced_my"
+		action="action_hr_analytic_timesheet_tree_invoiced_my"/> 
+
 	<record model="ir.actions.act_window" id="action_open_analytic_accounts">
 		<field name="name">Open analytic accounts</field>
 		<field name="res_model">account.analytic.account</field>

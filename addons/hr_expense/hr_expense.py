@@ -39,6 +39,11 @@ def _employee_get(obj,cr,uid,context={}):
 	return False
 
 class hr_expense_expense(osv.osv):
+	def copy(self, cr, uid, id, default=None, context={}):
+		if not default: default = {}
+		default.update( {'invoice_id':False,'date_confirm':False,'date_valid':False,'user_valid':False})
+		return super(hr_expense_expense, self).copy(cr, uid, id, default, context)
+
 	def _amount(self, cr, uid, ids, field_name, arg, context):
 		id_set = ",".join(map(str, ids))
 		cr.execute("SELECT s.id,COALESCE(SUM(l.unit_amount*l.unit_quantity),0) AS amount FROM hr_expense_expense s LEFT OUTER JOIN hr_expense_line l ON (s.id=l.expense_id) WHERE s.id IN ("+id_set+") GROUP BY s.id ")
