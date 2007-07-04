@@ -90,7 +90,7 @@ class users(osv.osv):
 		'active': fields.boolean('Active'),
 		'action_id': fields.many2one('ir.actions.actions', 'Home Action'),
 		'menu_id': fields.many2one('ir.actions.actions', 'Menu Action'),
-		'groups_id': fields.many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', 'groups'),
+		'groups_id': fields.many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', 'Groups'),
 		'roles_id': fields.many2many('res.roles', 'res_roles_users_rel', 'uid', 'rid', 'Roles'),
 		'company_id': fields.many2one('res.company', 'Company'),
 		'rule_groups': fields.many2many('ir.rule.group', 'user_rule_group_rel', 'user_id', 'rule_group_id', 'Rules', domain="[('global', '<>', True)]"),
