@@ -322,7 +322,6 @@
 			</tree>
 		</field>
 	</record>
-
 	<record model="ir.ui.view" id="view_order_line_form2">
 		<field name="name">sale.order.line.form2</field>
 		<field name="model">sale.order.line</field>
@@ -401,6 +400,12 @@
 		res_model="sale.order"
 		src_model="res.partner"
 		id="act_res_partner_2_sale_order"/>
+
+	<act_window name="Product sales"
+		id="action_order_line_product_tree"
+		res_model="sale.order.line"
+		src_model="product.product"
+		domain="[('product_id','=',active_id)]"/>
 
 </data>
 </terp>
