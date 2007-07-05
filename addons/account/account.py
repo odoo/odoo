@@ -130,6 +130,9 @@ class account_account(osv.osv):
 		pos = 0
 		while pos<len(args):
 			if args[pos][0]=='journal_id':
+				if not args[pos][2]:
+					del args[pos]
+					continue
 				jour = self.pool.get('account.journal').browse(cr, uid, args[pos][2])
 				if (not (jour.account_control_ids or jour.type_control_ids)) or not args[pos][2]:
 					del args[pos]
