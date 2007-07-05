@@ -445,33 +445,31 @@ class xml_import(object):
 #     delimiter: ,
 #     encoding: UTF8
 #
-def convert_csv_import(cr, module, fname, csvcontent, idref={}, mode='init'):
-	if mode != 'init':
-		return
+def convert_csv_import(cr, module, fname, csvcontent, idref={}, mode='init', noupdate=False):
 	model = ('.'.join(fname.split('.')[:-1]).split('-'))[0]
-	#model = fname.split('.')[0].replace('_', '.')
-
 	#remove folder path from model
 	head, model = os.path.split(model)
 
 	pool = pooler.get_pool(cr.dbname)
-#	pool = osv.osv.FakePool(module)
 
 	input=StringIO.StringIO(csvcontent)
 	reader = csv.reader(input, quotechar='"', delimiter=',')
 	fields = reader.next()
-
+	
+	if not (mode == 'init' or 'id' in fields):
+		return
+	
 	uid = 1
 	datas = []
 	for line in reader:
 		datas.append( map(lambda x:x.decode('utf8').encode('utf8'), line))
 		if len(datas) > COMMIT_STEP:
-			pool.get(model).import_data(cr, uid, fields, datas)
+			pool.get(model).import_data(cr, uid, fields, datas,mode, module,noupdate)
 			cr.commit()
 			datas=[]
 
 	if datas:
-		pool.get(model).import_data(cr, uid, fields, datas)
+		pool.get(model).import_data(cr, uid, fields, datas,mode, module,noupdate)
 		cr.commit()
 
 #

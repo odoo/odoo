@@ -213,7 +213,7 @@ def load_module_graph(cr, graph, status={}):
 					name, ext = os.path.splitext(xml)
 					logger.notifyChannel('init', netsvc.LOG_INFO, 'addon:%s:loading %s' % (m, xml))
 					if ext == '.csv':
-						tools.convert_csv_import(cr, m, os.path.basename(xml), tools.file_open(opj(m, xml)).read(), idref)
+						tools.convert_csv_import(cr, m, os.path.basename(xml), tools.file_open(opj(m, xml)).read(), idref, noupdate=True)
 					else:
 						tools.convert_xml_import(cr, m, tools.file_open(opj(m, xml)).read(), idref)
 				cr.execute('update ir_module_module set demo=%s where name=%s', (True, package.name))

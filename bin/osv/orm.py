@@ -571,15 +571,16 @@ class orm(object):
 			datas += self.__export_row(cr, uid, row, fields, [], context)
 		return datas
 
-	def import_data(self, cr, uid, fields, datas, context={}):
+	def import_data(self, cr, uid, fields, datas,  mode='init', current_module=None, noupdate=False, context={}):
 		fields = map(lambda x: x.split('/'), fields)
-
+		logger = netsvc.Logger()
 		def process_liness(self, datas, prefix, fields_def, position=0):
 			line = datas[position]
 			row = {}
 			translate = {}
 			todo = []
 			warning = ''
+			data_id= False
 			#
 			# Import normal fields
 			#
@@ -587,6 +588,9 @@ class orm(object):
 				if i>=len(line):
 					raise 'Please check that all your lines have %d cols.' % (len(fields),)
 				field = fields[i]
+				if field == ["id"]:
+					data_id= line[i]
+					continue
 				if (len(field)==len(prefix)+1) and field[len(prefix)].endswith(':id'):
 					res_id = False
 					if line[i]:
@@ -623,7 +627,6 @@ class orm(object):
 							if key==line[i]:             #val==line[i] if from the client !
 								res = key
 						if line[i] and not res:
-							logger = netsvc.Logger()
 							logger.notifyChannel("import", netsvc.LOG_WARNING, "key '%s' not found in selection field '%s'" %(line[i], field[len(prefix)]))
 					elif fields_def[field[len(prefix)]]['type']=='many2one':
 						res = False
@@ -634,7 +637,7 @@ class orm(object):
 							if not res and line[i]:
 								warning += ('Relation not found: '+line[i]+' on '+relation + ' !\n')
 							if not res:
-								print 'Relation not found: '+line[i]+' on '+relation + ' !\n'
+								logger.notifyChannel("import",netsvc.LOG_WARNING,'Relation not found: '+line[i]+' on '+relation + ' !\n')
 					elif fields_def[field[len(prefix)]]['type']=='many2many':
 						res = []
 						if line[i]:
@@ -652,8 +655,6 @@ class orm(object):
 				elif (prefix==field[0:len(prefix)]):
 					if field[0] not in todo:
 						todo.append(field[len(prefix)])
-
-
 			#
 			# Import one2many fields
 			#
@@ -686,21 +687,22 @@ class orm(object):
 				for i in range(max(nbrmax,1)):
 					#if datas:
 					datas.pop(0)
-			result = [row, nbrmax, warning, translate]
+			result = (row, nbrmax, warning, translate, data_id)
 			return result
 
 		fields_def = self.fields_get(cr, uid, context=context)
 		done = 0
+
 		while len(datas):
-			(res,other,warning,translate) = process_liness(self, datas, [], fields_def)
+			(res,other,warning,translate,data_id) = process_liness(self, datas, [], fields_def)
 			try:
-				id=self.create(cr, uid, res, context)
+				id= self.pool.get('ir.model.data')._update(cr,uid,self._name, current_module, res, xml_id=data_id, mode=mode, noupdate=noupdate)
 				for lang in translate:
 					context2=context.copy()
 					context2['lang']=lang
 					self.write(cr, uid, [id], translate[lang], context2)
 			except Exception, e:
-				print e
+				logger.notifyChannel("import",netsvc.LOG_ERROR, e)
 				cr.rollback()
 				return (-1, res, e[0], warning)
 			done += 1
