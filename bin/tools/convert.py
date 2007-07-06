@@ -317,6 +317,21 @@ class xml_import(object):
 			self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', 'tree_but_open', 'Menuitem', [('ir.ui.menu', int(pid))], action, True, True, xml_id=rec_id)
 		return ('ir.ui.menu', pid)
 
+	def _tag_assert(self, cr, rec, data_node=None):
+		rec_model = rec.getAttribute("model").encode('ascii')
+		model = self.pool.get(rec_model)
+		assert model, "The model %s does not exist !" % (rec_model,)
+		rec_id = rec.getAttribute("id").encode('ascii')
+		self._test_xml_id(rec_id)
+		id = self.id_get(cr, False, rec_id)
+		if data_node.getAttribute('noupdate') and not self.mode == 'init':
+			for test in [i for i in rec.childNodes if (i.nodeType == i.ELEMENT_NODE and i.nodeName=="test")]:
+				f_expr = test.getAttribute("expr").encode('utf-8')
+				class d(dict):
+					def __getitem__(self2, key):
+						return getattr(model.browse(cr, self.uid, id), key)
+				print "RESULT", eval(f_expr, d())
+
 	def _tag_record(self, cr, rec, data_node=None):
 		rec_model = rec.getAttribute("model").encode('ascii')
 		model = self.pool.get(rec_model)
@@ -430,6 +445,7 @@ class xml_import(object):
 		self._tags = {
 			'menuitem': self._tag_menuitem,
 			'record': self._tag_record,
+			'assert': self._tag_assert,
 			'report': self._tag_report,
 			'wizard': self._tag_wizard,
 			'delete': self._tag_delete,

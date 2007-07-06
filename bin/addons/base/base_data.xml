@@ -1292,6 +1292,11 @@
 		<field name="currency_id" ref="EUR"/>
 	</record>
 
+	<assert model="res.company" id="main_company">
+		<test expr="currency_id.code == 'eur'.upper()"/>
+		<test expr="name">Tiny sprl</test>
+	</assert>
+
 	<record model="res.users" id="user_admin">
 		<field name="login">admin</field>
 		<field name="password">admin</field>
