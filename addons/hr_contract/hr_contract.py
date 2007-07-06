@@ -65,6 +65,10 @@ class hr_contract_wage_type_period(osv.osv):
 	_description='Wage Period'
 	_columns = {
 		'name' : fields.char('Period Name', size=50, required=True, select=True),
+		'factor_days': fields.float('Hours in the period', digits=(12,4), required=True, help='This field is used by the timesheet system to compute the price of an hour of work wased on the contract of the employee')
+	}
+	_defaults = {
+		'factor_days': lambda *args: 168.0
 	}
 hr_contract_wage_type_period()
 
@@ -76,9 +80,11 @@ class hr_contract_wage_type(osv.osv):
 		'name' : fields.char('Wage Type Name', size=50, required=True, select=True),
 		'period_id' : fields.many2one('hr.contract.wage.type.period', 'Wage Period', required=True),
 		'type' : fields.selection([('gross','Gross'), ('net','Net')], 'Type', required=True),
+		'factor_type': fields.float('Factor for hour cost', digits=(12,4), required=True, help='This field is used by the timesheet system to compute the price of an hour of work wased on the contract of the employee')
 	}
 	_defaults = {
 		'type' : lambda *a : 'gross',
+		'factor_type': lambda *args: 1.8
 	}
 hr_contract_wage_type()
 

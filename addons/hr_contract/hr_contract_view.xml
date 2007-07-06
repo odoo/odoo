@@ -1,6 +1,19 @@
 <terp>
 	<data>
 
+		<record model="ir.ui.view" id="hr_contract_wage_type_period_view_form">
+			<field name="name">hr.contract.wage.type.period.view.form</field>
+			<field name="model">hr.contract.wage.type.period</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Wage period">
+					<field name="name" colspan="4"/>
+					<field name="factor_days"/>
+				</form>
+			</field>
+		</record>
+
+
 		<record model="ir.ui.view" id="hr_hr_employee_marital_status_form">
 			<field name="name">hr.hr.employee.marital.status</field>
 			<field name="model">hr.employee.marital.status</field>
@@ -18,10 +31,12 @@
 			<field name="model">hr.contract.wage.type</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Edit Wage Type">
+				<form string="Wage Type">
 					<field name="name" colspan="4"/>
 					<field name="period_id"/>
 					<field name="type"/>
+					<separator string="Hourly cost computation" colspan="4"/>
+					<field name="factor_type"/>
 				</form>
 			</field>
 		</record>
@@ -47,6 +62,16 @@
 				  id="hr_menu_contract_wage_type"
 				  action="action_hr_contract_wage_type"/>
 
+		<record model="ir.actions.act_window" id="action_hr_contract_wage_type_period">
+			<field name="name">Wage period</field>
+			<field name="res_model">hr.contract.wage.type.period</field>
+			<field name="view_type">form</field>
+		</record>
+		<menuitem name="Human Resources/Configuration/Contract/Contract wage period"
+				  id="hr_menu_contract_wage_type_period"
+				  action="action_hr_contract_wage_type_period"/>
+
+
 		<record model="ir.ui.view" id="hr_hr_employee_view_form2">
 			<field name="name">hr.hr.employee.view.form2</field>
 			<field name="model">hr.employee</field>
@@ -65,7 +90,7 @@
 								<field name="wage"/>
 							</tree>
 
-							<form string="Edit Contract">
+							<form string="Contract">
 								<separator string="Generalities" colspan="4"/>
 								<field name="name" colspan="4" select="1"/>
 								<newline/>
@@ -126,7 +151,7 @@
 			<field name="model">hr.contract</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Edit Contract">
+				<form string="Contract">
 					<separator string="Generalities" colspan="4"/>
 					<field name="name" select="1"/>
 					<field name="employee_id" select="1"/>
