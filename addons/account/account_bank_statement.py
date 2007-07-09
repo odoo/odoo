@@ -57,14 +57,13 @@ class account_bank_statement(osv.osv):
 		statements = self.browse(cr, uid, ids)
 		for statement in statements:
 			res[statement.id] = statement.balance_start
-			if statement.journal_id:
-				for line in statement.move_line_ids:
-					if line.debit>0:
-						if line.account_id.id == (statement.journal_id.default_debit_account_id.id):
-							res[statement.id]+=line.debit
-					else:
-						if line.account_id.id == (statement.journal_id.default_credit_account_id.id):
-							res[statement.id]+=line.credit
+			for line in statement.move_line_ids:
+				if line.debit>0:
+					if line.account_id.id == (statement.journal_id.default_debit_account_id.id):
+						res[statement.id]+=line.debit
+				else:
+					if line.account_id.id == (statement.journal_id.default_credit_account_id.id):
+						res[statement.id]+=line.credit
 			if statement.state=='draft':
 				for line in statement.line_ids:
 					res[statement.id] += line.amount
@@ -112,6 +111,9 @@ class account_bank_statement(osv.osv):
 				raise osv.except_osv('Error !', 'The statement balance is incorrect !\nCheck that the ending balance equals the computed one.')
 			if (not st.journal_id.default_credit_account_id) or (not st.journal_id.default_debit_account_id):
 				raise osv.except_osv('Configration Error !', 'Please verify that an account is defined in the journal.')
+			for line in st.move_line_ids:
+				if line.state <> 'valid':
+					raise osv.except_osv('Error !', 'The account entries lines are not valid.')
 			for move in st.line_ids:
 				move_id = self.pool.get('account.move').create(cr, uid, {
 					'journal_id': st.journal_id.id,
