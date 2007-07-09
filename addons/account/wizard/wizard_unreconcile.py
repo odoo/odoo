@@ -40,7 +40,6 @@ def _trans_unrec(self, cr, uid, data, context):
 	recs = filter(lambda x: x['reconcile_id'], recs)
 	rec_ids = [rec['reconcile_id'][0] for rec in recs]
 	if len(rec_ids):
-		cr.execute('update account_move_line set state=\'valid\' where reconcile_id in ('+','.join(map(str,rec_ids))+')')
 		pooler.get_pool(cr.dbname).get('account.move.reconcile').unlink(cr, uid, rec_ids)
 	return {}
 
@@ -61,7 +60,6 @@ wiz_unreconcile('account.move.line.unreconcile')
 def _trans_unrec_reconcile(self, cr, uid, data, context):
 	rec_ids = data['ids']
 	if len(rec_ids):
-		cr.execute('update account_move_line set state=\'valid\' where reconcile_id in ('+','.join(map(str,rec_ids))+')')
 		pooler.get_pool(cr.dbname).get('account.move.reconcile').unlink(cr, uid, rec_ids)
 	return {}
 
