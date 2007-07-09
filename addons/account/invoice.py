@@ -452,13 +452,15 @@ class account_invoice(osv.osv):
 		return True
 
 	def action_cancel(self, cr, uid, ids, *args):
+		account_move_obj = self.pool.get('account.move')
 		invoices = self.read(cr, uid, ids, ['move_id'])
 		for i in invoices:
 			if i['move_id']:
+				account_move_obj.button_cancel(cr, uid, [i['move_id'][0]])
 				# delete the move this invoice was pointing to
 				# Note that the corresponding move_lines and move_reconciles 
 				# will be automatically deleted too
-				self.pool.get('account.move').unlink(cr, uid, [i['move_id'][0]])
+				account_move_obj.unlink(cr, uid, [i['move_id'][0]])
 		self.write(cr, uid, ids, {'state':'cancel', 'move_id':False})
 		self._log_event(cr, uid, ids,-1.0, 'Cancel Invoice')
 		return True
