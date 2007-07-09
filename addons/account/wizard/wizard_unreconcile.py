@@ -28,6 +28,13 @@
 import wizard
 import pooler
 
+_info_form = '''<?xml version="1.0"?>
+<form string="Unreconciliation">
+	<separator string="Unreconciliation transactions" colspan="4"/>
+	<image name="gtk-info" size="64" colspan="2"/>
+	<label string="If you unreconciliate transactions, you must also verify all the actions that are linked to those transactions because they will not be disable" colspan="2"/>
+</form>'''
+
 def _trans_unrec(self, cr, uid, data, context):
 	recs = pooler.get_pool(cr.dbname).get('account.move.line').read(cr, uid, data['ids'], ['reconcile_id',])
 	recs = filter(lambda x: x['reconcile_id'], recs)
@@ -40,6 +47,10 @@ def _trans_unrec(self, cr, uid, data, context):
 class wiz_unreconcile(wizard.interface):
 	states = {
 		'init': {
+			'actions': [],
+			'result': {'type': 'form', 'arch': _info_form, 'fields': {}, 'state':[('end', 'Cancel'), ('unrec', 'Unreconcile')]}
+		},
+		'unrec': {
 			'actions': [_trans_unrec],
 			'result': {'type': 'state', 'state':'end'}
 		}
@@ -57,6 +68,10 @@ def _trans_unrec_reconcile(self, cr, uid, data, context):
 class wiz_unreconcile_reconcile(wizard.interface):
 	states = {
 		'init': {
+			'actions': [],
+			'result': {'type': 'form', 'arch': _info_form, 'fields': {}, 'state':[('end', 'Cancel'), ('unrec', 'Unreconcile')]}
+		},
+		'unrec': {
 			'actions': [_trans_unrec_reconcile],
 			'result': {'type': 'state', 'state':'end'}
 		}

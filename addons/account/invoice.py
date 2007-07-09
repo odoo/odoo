@@ -89,6 +89,12 @@ class account_invoice(osv.osv):
 		type = context.get('type', 'out_invoice')
 		return type
 
+	def _reconciled(self, cr, uid, ids, name, args, context):
+		res = {}
+		for id in ids:
+			res[id] = self.test_paid(cr, uid, [id])
+		return res
+
 	_name = "account.invoice"
 	_description = 'Invoice'
 	_order = "number"
@@ -138,6 +144,7 @@ class account_invoice(osv.osv):
 		'journal_id': fields.many2one('account.journal', 'Journal', required=True,readonly=True, states={'draft':[('readonly',False)]}),
 		'company_id': fields.many2one('res.company', 'Company', required=True),
 		'check_total': fields.float('Total', digits=(16,2), states={'open':[('readonly',True)],'close':[('readonly',True)]}),
+		'reconciled': fields.function(_reconciled, method=True, string='Reconciled', type='boolean'),
 	}
 	_defaults = {
 		'type': _get_type,

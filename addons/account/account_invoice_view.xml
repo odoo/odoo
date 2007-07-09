@@ -166,16 +166,16 @@
 							</tree>
 						</field>
 					</group>
-					<group col="3" colspan="2">
-						<label/>
+					<group col="4" colspan="2">
+						<label colspan="2"/>
 						<field name="amount_untaxed"/>
-						<button name="button_reset_taxes" string="Reset taxes" states="draft" type="object"/>
+						<button name="button_reset_taxes" string="Reset taxes" states="draft" type="object" colspan="2"/>
 						<field name="amount_tax"/>
-						<button name="button_compute" string="Compute" states="draft" type="object"/>
+						<button name="button_compute" string="Compute" states="draft" type="object" colspan="2"/>
 						<field name="amount_total"/>
-						<label/>
+						<field name="reconciled"/>
 						<field name="state" select="2"/>
-						<group col="3" colspan="3">
+						<group col="3" colspan="4">
 							<button name="invoice_open" states="draft,proforma" string="Create"/>
 							<button name="invoice_cancel" states="draft,proforma,sale,open" string="Cancel"/>
 							<button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
@@ -234,16 +234,16 @@
 							</tree>
 						</field>
 					</group>
-					<group col="3" colspan="2">
-						<label/>
+					<group col="4" colspan="2">
+						<label colspan="2"/>
 						<field name="amount_untaxed"/>
-						<button name="button_reset_taxes" string="Reset taxes" states="draft" type="object"/>
+						<button name="button_reset_taxes" string="Reset taxes" states="draft" type="object" colspan="2"/>
 						<field name="amount_tax"/>
-						<button name="button_compute" string="Compute" states="draft" type="object"/>
+						<button name="button_compute" string="Compute" states="draft" type="object" colspan="2"/>
 						<field name="amount_total"/>
-						<label/>
+						<field name="reconciled"/>
 						<field name="state" select="2"/>
-						<group col="4" colspan="3" expand="1">
+						<group col="4" colspan="4" expand="1">
 							<button name="invoice_proforma" states="draft" string="PRO-FORMA"/>
 							<button name="invoice_open" states="draft,proforma" string="Create"/>
 							<button name="invoice_cancel" states="draft,proforma,sale,open" string="Cancel"/>
