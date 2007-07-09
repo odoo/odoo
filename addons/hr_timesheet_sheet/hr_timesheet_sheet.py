@@ -260,6 +260,11 @@ class hr_timesheet_sheet(osv.osv):
 			wf_service.trg_create(uid, self._name, id, cr)
 		return True
 
+	def name_get(self, cr, uid, ids, context={}):
+		if not len(ids):
+			return []
+		return [(r['id'], r['date_from'] + ' - ' + r['date_to']) for r in self.read(cr, uid, ids, ['date_from', 'date_to'], context, load='_classic_write')]
+
 hr_timesheet_sheet()
 
 def _get_current_sheet(self, cr, uid, context={}):
