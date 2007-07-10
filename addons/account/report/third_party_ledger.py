@@ -38,20 +38,23 @@ class third_party_ledger(report_sxw.rml_parse):
 			'sum_debit_partner': self._sum_debit_partner,
 			'sum_credit_partner': self._sum_credit_partner,
 			'sum_debit': self._sum_debit,
-			'sum_credit': self._sum_credit
+			'sum_credit': self._sum_credit,
+			'get_company': self._get_company,
+			'get_currency': self._get_currency,
 		})
 
 	def preprocess(self, objects, data, ids):
 		self.cr.execute(
-			"SELECT DISTINCT partner_id " \
-			"FROM account_move_line " \
-			"WHERE partner_id IS NOT NULL AND date>=%s AND date<=%s AND state<>'draft' AND period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)", 
-			(data['form']['date1'], data['form']['date2'], data['form']['fiscalyear']))
+			"SELECT DISTINCT line.partner_id " \
+			"FROM account_move_line AS line, account_account AS account " \
+			"WHERE line.partner_id IS NOT NULL AND line.date>=%s AND line.date<=%s AND line.state<>'draft' AND line.period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)" \
+			"AND line.account_id = account.id AND account.company_id = %d",
+			(data['form']['date1'], data['form']['date2'], data['form']['fiscalyear'], data['form']['company_id']))
 		new_ids = [id for (id,) in self.cr.fetchall()]
 		self.cr.execute(
 			"SELECT a.id " \
 			"FROM account_account a LEFT JOIN account_account_type t ON (a.type=t.code) " \
-			"WHERE t.partner_account=TRUE")
+			"WHERE t.partner_account=TRUE AND a.company_id = %d", (data['form']['company_id'],))
 		self.account_ids = ','.join([str(a) for (a,) in self.cr.fetchall()])
 		self.partner_ids = ','.join(map(str, new_ids))
 		objects = self.pool.get('res.partner').browse(self.cr, self.uid, new_ids)
@@ -123,5 +126,12 @@ class third_party_ledger(report_sxw.rml_parse):
 			"AND period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)",
 			(self.datas['form']['date1'], self.datas['form']['date2'], self.datas['form']['fiscalyear']))
 		return self.cr.fetchone()[0] or 0.0
-report_sxw.report_sxw('report.account.third_party_ledger', 'res.partner', 'addons/account/report/third_party_ledger.rml',parser=third_party_ledger)
+
+	def _get_company(self, form):
+		return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).name
+
+	def _get_currency(self, form):
+		return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).currency_id.name
+
+report_sxw.report_sxw('report.account.third_party_ledger', 'res.partner', 'addons/account/report/third_party_ledger.rml',parser=third_party_ledger, header=False)
 

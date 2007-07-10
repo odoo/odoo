@@ -31,13 +31,15 @@ import pooler
 
 dates_form = '''<?xml version="1.0"?>
 <form string="Select period">
-	<field name="fiscalyear"/>
+	<field name="company_id" colspan="4"/>
+	<field name="fiscalyear" colspan="4"/>
 	<newline/>
 	<field name="date1"/>
 	<field name="date2"/>
 </form>'''
 
 dates_fields = {
+	'company_id': {'string': 'Company', 'type': 'many2one', 'relation': 'res.company', 'required': True},
 	'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear', 'required': True},
 	'date1': {'string':'Start of period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-01-01')},
 	'date2': {'string':'End of period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
@@ -47,6 +49,14 @@ class wizard_report(wizard.interface):
 	def _get_defaults(self, cr, uid, data, context):
 		fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
 		data['form']['fiscalyear'] = fiscalyear_obj.find(cr, uid)
+
+		user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid, context=context)
+		if user.company_id:
+			company_id = user.company_id.id
+		else:
+			company_id = pooler.get_pool(cr.dbname).get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
+		data['form']['company_id'] = company_id
+
 		return data['form']
 
 	states = {
