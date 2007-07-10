@@ -340,7 +340,7 @@ def trans_load_data(db_name, data, lang, strict=False, lang_name=None):
 					else:
 						trans_obj.create(cr, uid, dic)
 			except Exception, e:
-				print 'Import error', e, 'on line %d: %s!' % (line, row)
+				logger.notifyChannel('init', netsvc.LOG_ERROR, 'Import error: %s on line %d: %s!' % (str(e), line, row))
 		cr.commit()
 		cr.close()
 		logger.notifyChannel("init", netsvc.LOG_INFO, "translation file loaded succesfully")
