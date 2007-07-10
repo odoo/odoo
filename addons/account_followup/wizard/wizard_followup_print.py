@@ -92,7 +92,8 @@ class followup_all_print(wizard.interface):
 			"WHERE (l.reconcile_id IS NULL) "\
 				"AND (a.type='receivable') "\
 				"AND (l.state<>'draft') "\
-				"AND (l.reconcile_id is NULL) ")
+				"AND (l.reconcile_id is NULL) "\
+				"AND (l.partner_id is NOT NULL) ")
 		ids = map(lambda x: x[0], cr.fetchall())
 		return {'partner_ids': ids}
 
