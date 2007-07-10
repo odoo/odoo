@@ -128,13 +128,13 @@ class report_custom(report_int):
 			y_label = "Load (Cycles)"
 		else:
 			y_label = "Load (Hours)"
-		ar = area.T(legend		= legend.T(),
-					x_grid_style= line_style.gray70_dash1,
-					x_axis		= axis.X(label="Periods", format="/a90/hC%s"),
-					x_coord		= category_coord.T(x_index, 0),
-					y_axis		= axis.Y(label=y_label),
-					y_range		= (0, None),
-					size		= (640,480))
+		ar = area.T(legend = legend.T(),
+					x_grid_style = line_style.gray70_dash1,
+					x_axis = axis.X(label="Periods", format="/a90/hC%s"),
+					x_coord = category_coord.T(x_index, 0),
+					y_axis = axis.Y(label=y_label),
+					y_range = (0, None),
+					size = (640,480))
 		bar_plot.fill_styles.reset();
 
 		# select workcenters
@@ -154,9 +154,9 @@ class report_custom(report_int):
 							WHERE (mrp_production_workcenter_line.production_id=mrp_production.id) \
 								AND (mrp_production_workcenter_line.workcenter_id=mrp_workcenter.id) \
 								AND (mrp_workcenter.id=%d) \
-								AND (mrp_production.date_planned BETWEEN '%s' AND '%s') \
+								AND (mrp_production.date_planned BETWEEN %s AND %s) \
 							GROUP BY mrp_production_workcenter_line.workcenter_id, mrp_workcenter.name, mrp_workcenter.id \
-							ORDER BY mrp_workcenter.id" % (workcenter['id'], dates[date]['start'], dates[date]['stop']))
+							ORDER BY mrp_workcenter.id", (workcenter['id'], dates[date]['start'], dates[date]['stop']))
 				res = cr.dictfetchall()
 				if not res:
 					vals.append(0.0)
