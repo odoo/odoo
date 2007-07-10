@@ -40,15 +40,15 @@
     <paraStyle name="P2" fontName="Times-Roman" fontSize="10.0" leading="13" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P3" fontName="Times-Roman" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P4" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P5" fontName="Times-Roman" alignment="CENTER"/>
-    <paraStyle name="P6" fontName="Times-Roman" alignment="LEFT"/>
-    <paraStyle name="P7" fontName="Times-Roman" fontSize="6.0" leading="8"/>
-    <paraStyle name="P8" fontName="Times-Roman" fontSize="11.0" leading="14" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P9" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P10" fontName="Times-Roman" fontSize="7.0" leading="9" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P11" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P12" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P13" fontName="Times-Roman" fontSize="6.0" leading="8" alignment="LEFT"/>
+    <paraStyle name="P5" fontName="Times-Roman" fontSize="11.0" leading="14" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P6" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P7" fontName="Times-Roman" alignment="CENTER"/>
+    <paraStyle name="P8" fontName="Times-Roman" alignment="LEFT"/>
+    <paraStyle name="P9" fontName="Times-Roman" fontSize="6.0" leading="8"/>
+    <paraStyle name="P10" fontName="Times-Roman" fontSize="6.0" leading="8" alignment="LEFT"/>
+    <paraStyle name="P11" fontName="Times-Roman" fontSize="7.0" leading="9" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P12" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P13" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
@@ -70,12 +70,12 @@
           <para style="P1">Tax Report</para>
         </td>
         <td>
-          <para style="P2"><i>Period:</i> [[ get_period(data['form']['period_id']) ]]</para>
+          <para style="P2">Period: [[ get_period(data['form']['period_id']) ]]</para>
         </td>
       </tr>
       <tr>
         <td>
-          <para style="Table Contents">[[ company.name ]]</para>
+          <para style="Table Contents">[[ get_company(data['form']) ]]</para>
         </td>
         <td>
           <para style="P3">
@@ -83,15 +83,15 @@
           </para>
         </td>
         <td>
-          <para style="P4"><i>Currency:</i> [[ company.currency_id.name ]]</para>
+          <para style="P4">Currency: [[ get_currency(data['form']) ]]</para>
         </td>
       </tr>
     </blockTable>
     <para style="Standard">
       <font color="white"> </font>
     </para>
-    <para style="P5"><i>Printing date: </i>[[ time.strftime('%Y-%m-%d') ]] <i>at</i> [[ time.strftime('%H:%M:%S') ]]</para>
-    <para style="P6">
+    <para style="P7"><font face="Times-Roman">Printing date: </font>[[ time.strftime('%Y-%m-%d') ]] <font face="Times-Roman">at</font> [[ time.strftime('%H:%M:%S') ]]</para>
+    <para style="P8">
       <font color="white"> </font>
     </para>
     <blockTable colWidths="148.0,168.0,64.0,59.0,71.0" repeatRows="1" style="Tableau3">
@@ -113,51 +113,51 @@
         </td>
       </tr>
     </blockTable>
-    <para style="P7">
+    <para style="P9">
       <font color="white"> </font>
     </para>
     <section>
-      <para style="P7">[[ repeatIn(get_codes(data['form']['period_id']), 'o') ]]</para>
+      <para style="P9">[[ repeatIn(get_codes(data['form']['period_id']), 'o') ]]</para>
       <blockTable colWidths="316.0,64.0,59.0,71.0" repeatRows="1" style="Tableau1">
         <tr>
           <td>
-            <para style="P8">[[ o[0] ]] [[ o[1].code ]] - [[ o[1].name ]]</para>
+            <para style="P5">[[ o[0] ]] [[ o[1].code ]] - [[ o[1].name ]]</para>
           </td>
           <td>
-            <para style="P8">
+            <para style="P5">
               <font color="white"> </font>
             </para>
           </td>
           <td>
-            <para style="P8">
+            <para style="P5">
               <font color="white"> </font>
             </para>
           </td>
           <td>
-            <para style="P9">[[ o[1].sum_period and ('%.2f' % o[1].sum_period) or '' ]]</para>
+            <para style="P6">[[ o[1].sum_period and ('%.2f' % o[1].sum_period) or '' ]]</para>
           </td>
         </tr>
       </blockTable>
       <blockTable colWidths="44.0,273.0,62.0,60.0,72.0" repeatRows="1" style="Tableau2">
         <tr>
           <td>
-            <para style="P10">[[repeatIn(get_general(o[1], data['form']['period_id']), 'g') ]]</para>
+            <para style="P11">[[repeatIn(get_general(o[1], data['form']['period_id'], data['form']['company_id']), 'g') ]]</para>
           </td>
           <td>
-            <para style="P11">[[ g['account'].name ]]</para>
+            <para style="P12">[[ g['account'].name ]]</para>
           </td>
           <td>
-            <para style="P12">[[ g['debit'] and '%.2f' % g['debit'] or '' ]]</para>
+            <para style="P13">[[ g['debit'] and '%.2f' % g['debit'] or '' ]]</para>
           </td>
           <td>
-            <para style="P12">[[ g['credit'] and '%.2f' % g['credit'] or '' ]]</para>
+            <para style="P13">[[ g['credit'] and '%.2f' % g['credit'] or '' ]]</para>
           </td>
           <td>
-            <para style="P12">[[ g['tax_amount'] and '%.2f' % g['tax_amount'] or '' ]]</para>
+            <para style="P13">[[ g['tax_amount'] and '%.2f' % g['tax_amount'] or '' ]]</para>
           </td>
         </tr>
       </blockTable>
-      <para style="P13">
+      <para style="P10">
         <font color="white"> </font>
       </para>
     </section>

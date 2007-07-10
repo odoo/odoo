@@ -38,6 +38,8 @@ class tax_report(report_sxw.rml_parse):
 			'get_period': self._get_period,
 			'get_codes': self._get_codes,
 			'get_general': self._get_general,
+			'get_company': self._get_company,
+			'get_currency': self._get_currency,
 		})
 
 	def _add_header(self, node):
@@ -46,15 +48,17 @@ class tax_report(report_sxw.rml_parse):
 	def _get_period(self, period_id):
 		return self.pool.get('account.period').browse(self.cr, self.uid, period_id).name
 
-	def _get_general(self, tax_code_id, period_id):
-		self.cr.execute('select sum(tax_amount) as tax_amount, sum(debit) as debit, sum(credit) as credit, count(*) as count, account_id from account_move_line where state<>%s and period_id=%d and tax_code_id=%d group by account_id', ('draft',period_id, tax_code_id))
+	def _get_general(self, tax_code_id, period_id, company_id):
+		self.cr.execute('select sum(line.tax_amount) as tax_amount, sum(line.debit) as debit, sum(line.credit) as credit, count(*) as count, account.id as account_id \
+				from account_move_line AS line, account_account AS account \
+				where line.state<>%s and line.period_id=%d and line.tax_code_id=%d \
+				AND line.account_id = account.id AND account.company_id = %d \
+				group by account.id', ('draft',period_id, tax_code_id, company_id))
 		res = self.cr.dictfetchall()
 		i = 0
 		while i<len(res):
 			res[i]['account'] = self.pool.get('account.account').browse(self.cr, self.uid, res[i]['account_id'])
 			i+=1
-		#print '-'*50
-		#print 'GENERAL', res
 		return res
 
 	def _get_codes(self, period_id, parent=False, level=0):
@@ -66,9 +70,15 @@ class tax_report(report_sxw.rml_parse):
 			res += self._get_codes(period_id, code.id, level+1)
 		return res
 
+	def _get_company(self, form):
+		return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).name
+
+	def _get_currency(self, form):
+		return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).currency_id.name
+
 report_sxw.report_sxw(
 	'report.account.vat.declaration',
 	'account.tax.code',
 	'addons/account/report/tax_report.rml',
-	parser=tax_report)
+	parser=tax_report, header=False)
 
