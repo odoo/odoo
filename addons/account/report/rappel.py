@@ -54,7 +54,8 @@ class report_rappel(report_sxw.rml_parse):
 		part = pooler.get_pool(self.cr.dbname).get('res.partner')
 		acc = partner.property_account_receivable[0]
 		moveline_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
-		movelines = moveline_obj.search(self.cr, self.uid, [('partner_id','=',partner.id), ('account_id','=',acc), ('state','=','valid')])
+		movelines = moveline_obj.search(self.cr, self.uid, [('partner_id','=',partner.id), ('account_id','=',acc), ('state','=','valid'), ('date_maturity', '=', False)])
+		movelines += moveline_obj.search(self.cr, self.uid, [('partner_id','=',partner.id), ('account_id','=',acc), ('state','=','valid'), ('date_maturity', '<=', time.strftime('%Y-%m-%d'))])
 		movelines = moveline_obj.read(self.cr, self.uid, movelines)
 		return movelines
 
