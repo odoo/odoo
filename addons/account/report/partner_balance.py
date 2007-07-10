@@ -42,12 +42,18 @@ class partner_balance(report_sxw.rml_parse):
 			'sum_scredit': self._sum_scredit,
 			'solde_debit': self._solde_balance_debit,
 			'solde_credit': self._solde_balance_credit,
+			'get_company': self._get_company,
+			'get_currency': self._get_currency,
 		})
 
 	def preprocess(self, objects, data, ids):
-		self.cr.execute('select distinct partner_id from account_move_line where partner_id is not null and date>=%s and date<=%s and period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)', (data['form']['date1'], data['form']['date2'], data['form']['fiscalyear']))
+		self.cr.execute('select distinct line.partner_id \
+				from account_move_line AS line, account_account AS account \
+				where line.partner_id is not null and line.date>=%s and line.date<=%s \
+				and line.period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d) \
+				AND line.account_id = account.id AND account.company_id = %d', (data['form']['date1'], data['form']['date2'], data['form']['fiscalyear'], data['form']['company_id']))
 		new_ids = [id for (id,) in self.cr.fetchall()]
-		self.cr.execute("SELECT a.id FROM account_account a LEFT JOIN account_account_type t ON (a.type=t.code) WHERE t.partner_account=TRUE")
+		self.cr.execute("SELECT a.id FROM account_account a LEFT JOIN account_account_type t ON (a.type=t.code) WHERE t.partner_account=TRUE AND a.company_id = %d", (data['form']['company_id'],))
 		self.account_ids = ','.join([str(a) for (a,) in self.cr.fetchall()])
 		self.partner_ids = ','.join(map(str, new_ids))
 		objects = self.pool.get('res.partner').browse(self.cr, self.uid, new_ids)
@@ -168,6 +174,12 @@ class partner_balance(report_sxw.rml_parse):
 	def _solde_balance_credit(self):
 		debit, credit = self._sum_debit(), self._sum_credit()
 		return credit > debit and credit - debit
-	
-report_sxw.report_sxw('report.account.partner.balance', 'res.partner', 'addons/account/report/partner_balance.rml',parser=partner_balance)
+
+	def _get_company(self, form):
+		return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).name
+
+	def _get_currency(self, form):
+		return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).currency_id.name
+
+report_sxw.report_sxw('report.account.partner.balance', 'res.partner', 'addons/account/report/partner_balance.rml',parser=partner_balance, header=False)
 
