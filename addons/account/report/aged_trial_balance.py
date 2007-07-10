@@ -142,5 +142,5 @@ report_sxw.report_sxw(
 	'report.account.aged.trial.balance',
 	'res.partner',
 	'addons/account/report/aged_trial_balance.rml',
-	parser=aged_trial_report)
+	parser=aged_trial_report, header=False)
 
