@@ -59,10 +59,6 @@ class ir_sequence(osv.osv):
 		'number_next': lambda *a: 1,
 		'padding' : lambda *a : 0,
 	}
-	# Unactivated dur to multi-company environment
-	#_sql_constraints = [
-	#	('code_uniq', 'unique (code)', 'There is already a sequence of the same type in the system !')
-	#]
 
 	def _process(self, s):
 		return (s or '') % {'year':time.strftime('%Y'), 'month': time.strftime('%m'), 'day':time.strftime('%d')}
