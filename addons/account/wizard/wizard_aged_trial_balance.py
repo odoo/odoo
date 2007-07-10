@@ -35,13 +35,16 @@ from mx.DateTime import *
 
 _aged_trial_form = """<?xml version="1.0"?>
 <form string="Aged Trial Balance">
+	<field name="company_id"/>
+	<newline/>
 	<field name="fiscalyear"/>
 	<newline/>
 	<field name="period_length"/>
 </form>"""
 
 _aged_trial_fields = {
-		'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear', 'required': True},
+	'company_id': {'string': 'Company', 'type': 'many2one', 'relation': 'res.company', 'required': True},
+	'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear', 'required': True},
 	'period_length': {'string': 'Period length (days)', 'type': 'integer', 'required': True, 'default': lambda *a:30},
 }
 
@@ -65,7 +68,16 @@ class wizard_report(wizard.interface):
 	def _get_defaults(self, cr, uid, data, context):
 		fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
 		data['form']['fiscalyear'] = fiscalyear_obj.find(cr, uid)
+
+		user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid, context=context)
+		if user.company_id:
+			company_id = user.company_id.id
+		else:
+			company_id = pooler.get_pool(cr.dbname).get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
+		data['form']['company_id'] = company_id
+
 		return data['form']
+
 
 	states = {
 		'init': {
