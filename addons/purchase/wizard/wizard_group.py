@@ -59,7 +59,7 @@ def _mergeOrders(self, cr, uid, data, context):
 		list_key = []
 		for field in fields:
 			field_val = getattr(br, field)
-			if field in ('product_id','move_dest_id'):
+			if field in ('product_id','move_dest_id', 'account_analytic_id'):
 				if not field_val:
 					field_val = False
 			if isinstance(field_val, browse_record):
@@ -86,7 +86,6 @@ def _mergeOrders(self, cr, uid, data, context):
 				'dest_address_id': porder.dest_address_id.id,
 				'warehouse_id': porder.warehouse_id.id,
 				'location_id': porder.location_id.id,
-				'project_id': porder.project_id.id,
 				'pricelist_id': porder.pricelist_id.id,
 				'state': 'draft',
 				'order_line': {},
@@ -97,7 +96,7 @@ def _mergeOrders(self, cr, uid, data, context):
 			order_infos['notes'] += ('\n%s' % (porder.notes,))
 
 		for order_line in porder.order_line:
-			line_key = make_key(order_line, ('name', 'date_planned', 'taxes_id', 'price_unit', 'notes', 'product_id', 'move_dest_id'))	
+			line_key = make_key(order_line, ('name', 'date_planned', 'taxes_id', 'price_unit', 'notes', 'product_id', 'move_dest_id', 'account_analytic_id'))
 			o_line = order_infos['order_line'].setdefault(line_key, {})
 			if o_line:
 				# merge the line with an existing line
