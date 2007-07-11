@@ -199,7 +199,7 @@ class task(osv.osv):
 	_defaults = {
 		'user_id': lambda obj,cr,uid,context: uid,
 		'state': lambda *a: 'open',
-		'priority': lambda *a: '1',
+		'priority': lambda *a: '2',
 		'progress': lambda *a: 0,
 		'sequence': lambda *a: 10,
 		'active': lambda *a: True,
