@@ -37,7 +37,6 @@ class rpc_proxy(object):
 		self.dbname = dbname
 
 	def __call__(self, *request):
-		print self.dbname, self.user_id, self.passwd
 		return self.rpc.execute(self.dbname, self.user_id, self.passwd, *request)
 
 class email_parser(object):
@@ -190,12 +189,12 @@ class email_parser(object):
 		if not len(emails):
 			return False
 		del msg['To']
-		print '0'
 		msg['To'] = emails[0]
 		if len(emails)>1:
 			if 'Cc' in msg:
 				del msg['Cc']
 			msg['Cc'] = ','.join(emails[1:])
+		del msg['Reply-To']
 		msg['Reply-To'] = self.email
 		if priority:
 			msg['X-Priority'] = priorities.get(priority, '3 (Normal)')
@@ -203,7 +202,6 @@ class email_parser(object):
 		s.connect()
 		s.sendmail(self.email, emails, msg.as_string())
 		s.close()
-		print 'Email Sent To', emails
 		return True
 
 	def msg_partner(self, msg, id):
@@ -230,10 +228,8 @@ class email_parser(object):
 		(case_id, emails) = self.msg_test(msg, case_str and case_str.group(1))
 		if case_id:
 			if emails[0] and self.email_get(emails[0])==self.email_get(self._decode_header(msg['From'])):
-				print 'From User', case_id
 				self.msg_user(msg, case_id)
 			else:
-				print 'From Partner', case_id
 				self.msg_partner(msg, case_id)
 		else:
 			case_id = self.msg_new(msg)
@@ -256,7 +252,6 @@ class email_parser(object):
 		try:
 			pass
 		except:
-			print 'Sending mail to default address', self.email_default
 			if self.email_default:
 				a = self._decode_header(msg['Subject'])
 				del msg['Subject']
@@ -284,14 +279,7 @@ if __name__ == '__main__':
 
 	(options, args) = parser.parse_args()
 	parser = email_parser(options.userid, options.password, options.section, options.email, options.default, dbname=options.dbname)
-	print
-	print '-.- ICI'
 
-	#msg_txt = email.message_from_file(sys.stdin)
 	msg_txt = email.message_from_file(sys.stdin)
-
-#	fp = open('/home/admin/sample.eml');
-#	msg_txt = email.message_from_file(fp)
-#	fp.close()
 
 	parser.parse(msg_txt)
