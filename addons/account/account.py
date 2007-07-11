@@ -453,12 +453,15 @@ class account_fiscalyear(osv.osv):
 				ds = ds + RelativeDateTime(months=interval)
 		return True
 
-	def find(self, cr, uid, dt=None, context={}):
+	def find(self, cr, uid, dt=None, exception=True, context={}):
 		if not dt:
 			dt = time.strftime('%Y-%m-%d')
 		ids = self.search(cr, uid, [('date_start', '<=', dt), ('date_stop', '>=', dt)])
 		if not ids:
-			raise osv.except_osv('Error !', 'No fiscal year defined for this date !\nPlease create one.')
+			if exception:
+				raise osv.except_osv('Error !', 'No fiscal year defined for this date !\nPlease create one.')
+			else:
+				return False
 		return ids[0]
 account_fiscalyear()
 
