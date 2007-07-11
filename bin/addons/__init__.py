@@ -238,8 +238,11 @@ def register_classes():
 		except ImportError:
 			import zipimport
 			mod_path = opj(ad, m+'.zip')
-			zimp = zipimport.zipimporter(mod_path)
-			zimp.load_module(m)
+			try:
+				zimp = zipimport.zipimporter(mod_path)
+				zimp.load_module(m)
+			except zipimport.ZipImportError:
+				logger.notifyChannel('init', netsvc.LOG_ERROR, 'Couldn\'t find module %s' % m)
 
 def load_modules(db, force_demo=False, status={}, update_module=False):
 	cr = db.cursor()
