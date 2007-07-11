@@ -37,27 +37,17 @@ class res_partner(osv.osv):
 	_description = 'Partner'
 	def _credit_get(self, cr, uid, ids, name, arg, context):
 		res={}
-		for partner in self.browse(cr, uid, ids, context):
-			id = partner.id
-			if not partner.property_account_receivable:
-				res[id] = 0.0
-				continue
-			acc = partner.property_account_receivable[0]
+		for id in ids:
 			query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-			cr.execute(("select sum(debit-credit) from account_move_line l where account_id=%d and partner_id=%d and reconcile_id is null and "+query), (acc, id))
+			cr.execute("select sum(debit-credit) from account_move_line as l where account_id in (select id from account_account where type = %s) and partner_id=%d and reconcile_id is null and "+query, ('receivable', id))
 			res[id]=cr.fetchone()[0] or 0.0
 		return res
 
 	def _debit_get(self, cr, uid, ids, name, arg, context):
 		res={}
-		for partner in self.browse(cr, uid, ids, context):
-			id = partner.id
-			if not partner.property_account_payable:
-				res[id] = 0.0
-				continue
-			acc = partner.property_account_payable[0]
+		for id in ids:
 			query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-			cr.execute(("select sum(debit-credit) from account_move_line l where account_id=%d and partner_id=%d and reconcile_id is null and "+query), (acc, id))
+			cr.execute("select sum(debit-credit) from account_move_line as l where account_id in (select id from account_account where type = %s) and partner_id=%d and reconcile_id is null and "+query, ('payable', id))
 			res[id]=cr.fetchone()[0] or 0.0
 		return res
 
@@ -96,6 +86,7 @@ class res_partner(osv.osv):
 		  method=True,
 		  view_load=True,
 		  group_name="Accounting Properties",
+		  domain="[('type', '=', 'payable')]",
 		  help="This account will be used, instead of the default one, as the payable account for the current partner"),
 		'property_account_receivable': fields.property(
 		'account.account',
@@ -105,6 +96,7 @@ class res_partner(osv.osv):
 		  method=True,
 		  view_load=True,
 		  group_name="Accounting Properties",
+		  domain="[('type', '=', 'receivable')]",
 		  help="This account will be used, instead of the default one, as the receivable account for the current partner"),
 		'property_account_tax': fields.property(
 		  'account.tax',
