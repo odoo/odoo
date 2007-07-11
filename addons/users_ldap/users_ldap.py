@@ -36,7 +36,7 @@ try:
 except ImportError:
 	import netsvc
 	logger = netsvc.Logger()
-	logger.notifyChannel("init", netsvc.LOG_ERROR, "could not import ldap!")
+	logger.notifyChannel("init", netsvc.LOG_WARNING, "could not import ldap!")
 
 class res_company(osv.osv):
 	_inherit = "res.company"
@@ -62,7 +62,7 @@ def ldap_login(oldfnc):
 				for res_company in cr.dictfetchall():
 					try:
 						l = ldap.open(res_company['ldap_server'])
-						if l.simple_bind(res_company['ldap_binddn'], res_company['ldap_password']):
+						if l.simple_bind_s(res_company['ldap_binddn'], res_company['ldap_password']):
 							base = res_company['ldap_base']
 							scope = ldap.SCOPE_SUBTREE
 							filter = res_company['ldap_filter']%(login,)
@@ -74,8 +74,9 @@ def ldap_login(oldfnc):
 								continue
 							if result_type == ldap.RES_SEARCH_RESULT and len(result_data) == 1:
 								dn=result_data[0][0]
-								name=result_data[0][1]['cn']
+								name=result_data[0][1]['cn'][0]
 								if l.bind_s(dn, passwd):
+									l.unbind()
 									cr.execute("select id from res_users where login=%s",(login.encode('utf-8'),))
 									res = cr.fetchone()
 									if res:
@@ -88,6 +89,7 @@ def ldap_login(oldfnc):
 									cr.commit()
 									cr.close()
 									return res
+							l.unbind()
 					except Exception, e:
 						continue
 		cr.close()
@@ -108,11 +110,11 @@ def ldap_check(oldfnc):
 			if state in ('installed', 'to upgrade', 'to remove'):
 				users_obj = pooler.get_pool(cr.dbname).get('res.users')
 				user = users_obj.browse(cr, 1, uid)
-				if user:# and user.company_id.ldap_server and user.company_id.ldap_binddn:
+				if user and user.company_id.ldap_server and user.company_id.ldap_binddn:
 					company = user.company_id
 					try:
 						l = ldap.open(company.ldap_server)
-						if l.simple_bind(company.ldap_binddn, company.ldap_password):
+						if l.simple_bind_s(company.ldap_binddn, company.ldap_password):
 							base = company['ldap_base']
 							scope = ldap.SCOPE_SUBTREE
 							filter = company['ldap_filter']%(user.login,)
@@ -124,33 +126,13 @@ def ldap_check(oldfnc):
 								dn=result_data[0][0]
 								name=result_data[0][1]['cn']
 								if l.bind_s(dn, passwd):
+									l.unbind()
 									security._uid_cache[uid] = passwd
 									cr.close()
 									return True
+							l.unbind()
 					except Exception, e:
 						pass
-					cr.execute("select id, name, ldap_server, ldap_binddn, ldap_password, ldap_filter, ldap_base from res_company where ldap_server != '' and ldap_binddn != ''")
-					for res_company in cr.dictfetchall():
-						try:
-							l = ldap.open(res_company['ldap_server'])
-							if l.simple_bind(res_company['ldap_binddn'], res_company['ldap_password']):
-								base = res_company['ldap_base']
-								scope = ldap.SCOPE_SUBTREE
-								filter = res_company['ldap_filter']%(user.login,)
-								retrieve_attributes = None
-								result_id = l.search(base, scope, filter, retrieve_attributes)
-								timeout = 60
-								result_type, result_data = l.result(result_id, timeout)
-								if result_data and result_type == ldap.RES_SEARCH_RESULT and len(result_data) == 1:
-									dn=result_data[0][0]
-									name=result_data[0][1]['cn']
-									if l.bind_s(dn, passwd):
-										security._uid_cache[uid] = passwd
-										cr.close()
-										return True
-						except Exception, e:
-							pass
-
 		cr.close()
 		return oldfnc(db, uid, passwd)
 	return _ldap_check
