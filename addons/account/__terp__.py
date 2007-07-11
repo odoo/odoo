@@ -23,7 +23,6 @@
 		"account_wizard.xml",
 		"account_view.xml",
 		"account_end_fy.xml",
-		"account_view_transfer.xml",
 		"account_invoice_view.xml",
 		"account_report.xml",
 		"partner_view.xml",

@@ -32,7 +32,6 @@ import invoice
 import account_bank_statement
 import account_move_line
 import account_analytic_line
-import transfer
 import wizard
 import report
 
