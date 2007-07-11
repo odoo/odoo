@@ -79,7 +79,8 @@ class email_parser(object):
 			'email_from': self._decode_header(msg['From']),
 			'email_cc': self._decode_header(msg['Cc'] or ''),
 			'canal_id': self.canal_id,
-			'user_id': False
+			'user_id': False,
+			'history_line': [(0, 0, {'description': message['body'], 'email': msg['From'] })],
 		}
 		try:
 			data.update(self.partner_get(self._decode_header(msg['From'])))
@@ -147,8 +148,8 @@ class email_parser(object):
 	def msg_user(self, msg, id):
 		body = self.msg_body_get(msg)
 		data = {
-			'description': '> '+body['body'].replace('\n','\n> '),
-			'email_last': body['body']
+			'email_last': body['body'],
+			'history_line': [(0, 0, {'description': body['body'], 'email': msg['From']})],
 		}
 
 		# handle email body commands (ex: Set-State: Draft)
@@ -211,8 +212,8 @@ class email_parser(object):
 		self.rpc('crm.case', act, [id])
 		body2 = '\n'.join(map(lambda l: '> '+l, (body or '').split('\n')))
 		data = {
-			'description': body2,
 			'email_last': body,
+			'history_line': [(0, 0, {'description': body, 'email': msg['From']})],
 		}
 		self.rpc('crm.case', 'write', [id], data)
 		return id

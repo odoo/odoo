@@ -63,7 +63,7 @@
 	<record model="ir.actions.act_window" id="crm_case_section_act">
 		<field name="res_model">crm.case.section</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="crm_case_section_view_form"/>
+		<field name="view_id" ref="crm_case_section_view_tree"/>
 	</record>
 	<menuitem name="CRM &amp; SRM/Configuration/Cases/Sections" id="menu_crm_case_section_act" action="crm_case_section_act" groups="admin"/>
 
@@ -94,10 +94,23 @@
 			</form>
 		</field>
 	</record>
+	<record model="ir.ui.view" id="crm_case_categ_tree-view">
+		<field name="name">crm.case.categ.tree</field>
+		<field name="model">crm.case.categ</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Case Category">
+				<field name="name"/>
+				<field name="section_id"/>
+				<field name="probability"/>
+			</tree>
+		</field>
+	</record>
+
 	<record model="ir.actions.act_window" id="crm_case_categ-act">
 		<field name="res_model">crm.case.categ</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="crm_case_categ-view"/>
+		<field name="view_id" ref="crm_case_categ_tree-view"/>
 	</record>
 	<menuitem name="CRM &amp; SRM/Configuration/Cases/Categories" id="menu_crm_case_categ-act" action="crm_case_categ-act" groups="admin"/>
 
@@ -175,10 +188,21 @@
 			</form>
 		</field>
 	</record>
+	<record model="ir.ui.view" id="crm_case_rule_tree-view">
+		<field name="name">crm.case.rule.tree</field>
+		<field name="model">crm.case.rule</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Case Rule">
+				<field name="name"/>
+				<field name="active"/>
+			</tree>
+		</field>
+	</record>
 	<record model="ir.actions.act_window" id="crm_case_rule-act">
 		<field name="res_model">crm.case.rule</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="crm_case_rule-view"/>
+		<field name="view_id" ref="crm_case_rule_tree-view"/>
 	</record>
 	<menuitem name="CRM &amp; SRM/Configuration/Cases/Rules" id="menu_crm_case_rule-act" action="crm_case_rule-act" groups="admin"/>
 
@@ -326,7 +350,7 @@
 	<record model="ir.actions.act_window" id="crm_case_categ0-act">
 		<field name="res_model">crm.case</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="crm_case-view"/>
+		<field name="view_id" ref="crm_case_tree-view"/>
 	</record>
 	<menuitem name="CRM &amp; SRM/Cases/All Cases" id="menu_crm_case_categ0-act" action="crm_case_categ0-act"/>
 
@@ -385,8 +409,8 @@
 	<record model="ir.actions.act_window" id="crm_case_history-act">
 		<field name="res_model">crm.case.history</field>
 		<field name="view_type">form</field>
-		<field name="view_mode">form,tree</field>
-		<field name="view_id" ref="crm_case_history-view"/>
+		<field name="view_mode">tree,form</field>
+		<field name="view_id" ref="crm_case_history_tree-view"/>
 	</record>
 	<menuitem name="CRM &amp; SRM/Cases/Cases Actions" id="menu_crm_case_history-act_main" groups="admin"/>
 	<menuitem name="CRM &amp; SRM/Cases/Cases Actions/All Actions" id="menu_crm_case_history-act" action="crm_case_history-act" groups="admin"/>
@@ -489,7 +513,7 @@
 		<field name="view_mode">tree,form</field>
 	</record>
 	<menuitem name="CRM &amp; SRM/Configuration" groups="admin"/>
-	<menuitem name="CRM &amp; SRM/Configuration/Segmentations/Segmentations rules" id="menu_crm_segmentation-act" action="crm_segmentation-act"/>
+	<menuitem name="CRM &amp; SRM/Configuration/Segmentations/Segmentations rules" id="menu_crm_segmentation-act" action="crm_segmentation_tree-act"/>
 	<menuitem name="CRM &amp; SRM/Automatic Segmentations" id="menu_crm_segmentation_tree-act" action="crm_segmentation_tree-act"/>
 
 	<act_window name="Opened cases"
