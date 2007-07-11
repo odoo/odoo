@@ -211,6 +211,8 @@ def email_send(email_from, email_to, subject, body, email_cc=[], email_bcc=[], o
 	msg['Date'] = formatdate(localtime=True)
 	try:
 		s = smtplib.SMTP()
+		if config['smtp_user'] or config['smtp_password']:
+			s.login(config['smtp_user'], config['smtp_password'])
 		s.connect(config['smtp_server'])
 		s.sendmail(email_from, email_to + email_cc + email_bcc, msg.as_string())
 		s.quit()
@@ -255,6 +257,8 @@ def email_send_attach(email_from, email_to, subject, body, email_cc=[], email_bc
 		msg.attach(part)
 	try:
 		s = smtplib.SMTP()
+		if config['smtp_user'] or config['smtp_password']:
+			s.login(config['smtp_user'], config['smtp_password'])
 		s.connect(config['smtp_server'])
 		s.sendmail(email_from, email_to + email_cc + email_bcc, msg.as_string())
 		s.quit()
@@ -270,9 +274,7 @@ def email_send_attach(email_from, email_to, subject, body, email_cc=[], email_bc
 def sms_send(user, password, api_id, text, to):
 	import urllib
 	params = urllib.urlencode({'user': user, 'password': password, 'api_id': api_id, 'text': text, 'to':to})
-	#print "http://api.clickatell.com/http/sendmsg", params
 	#f = urllib.urlopen("http://api.clickatell.com/http/sendmsg", params)
-	print "http://196.7.150.220/http/sendmsg", params
 	f = urllib.urlopen("http://196.7.150.220/http/sendmsg", params)
 	print f.read()
 	return True
