@@ -72,6 +72,8 @@ class invoice_create(wizard.interface):
 			cr.execute("SELECT product_id,to_invoice,sum(unit_amount) FROM account_analytic_line as line WHERE account_id = %d and id IN (%s) GROUP BY product_id,to_invoice" % (account.id, ','.join(map(str,data['ids']))))
 			for product_id,factor_id,qty in cr.fetchall():
 				product = pool.get('product.product').browse(cr, uid, product_id, context2)
+				if not product:
+					raise wizard.except_wizard('Error', 'At least on line have no product !')
 				factor_name = ''
 				factor = pool.get('hr_timesheet_invoice.factor').browse(cr, uid, factor_id, context2)
 				if factor.customer_name:
