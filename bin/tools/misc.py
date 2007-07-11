@@ -200,6 +200,7 @@ def email_send(email_from, email_to, subject, body, email_cc=[], email_bcc=[], o
 	msg = MIMEText(body or '', _charset='utf-8')
 	msg['Subject'] = Header(subject.decode('utf8'), 'utf-8')
 	msg['From'] = email_from
+	del msg['Reply-To']
 	if reply_to:
 		msg['Reply-To'] = msg['From']+', '+reply_to
 	msg['To'] = COMMASPACE.join(email_to)
@@ -236,6 +237,7 @@ def email_send_attach(email_from, email_to, subject, body, email_cc=[], email_bc
 
 	msg['Subject'] = Header(subject.decode('utf8'), 'utf-8')
 	msg['From'] = email_from
+	del msg['Reply-To']
 	if reply_to:
 		msg['Reply-To'] = reply_to
 	msg['To'] = COMMASPACE.join(email_to)
