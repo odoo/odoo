@@ -35,7 +35,7 @@ view_form_end = """<?xml version="1.0"?>
 	<separator string="System upgrade done"/>
 	<label align="0.0" string="The modules have been upgraded / installed !" colspan="4"/>
 	<label align="0.0" string="You may have to reinstall some language pack." colspan="4"/>
-	<label align="0.0" string="We suggest you to close all tabs and open a new menu window (Ctrl T)." colspan="4"/>
+	<label align="0.0" string="We suggest you to reload the menu tab (Ctrl+t Ctrl+r)." colspan="4"/>
 </form>"""
 
 view_form = """<?xml version="1.0"?>
