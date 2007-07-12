@@ -136,7 +136,11 @@ def create_graph(module_list, force=[]):
 		terp_file = opj(ad, module, '__terp__.py')
 		mod_path = opj(ad, module)
 		if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path+'.zip'):
-			info = eval(tools.file_open(terp_file).read())
+			try:
+				info = eval(tools.file_open(terp_file).read())
+			except:
+				logger.notifyChannel('init', netsvc.LOG_ERROR, 'addon:%s:eval file %s' % (module, terp_file))
+				raise
 			if info.get('installable', True):
 				packages.append((module, info.get('depends', []), info))
 
