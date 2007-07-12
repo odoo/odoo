@@ -143,10 +143,11 @@ class db(netsvc.Service):
 			res = tools.exec_pg_command('dropdb', '--quiet', '--username='+tools.config['db_user'], db_name)
 		else:
 			res = tools.exec_pg_command('dropdb', '--quiet', db_name)
+		logger = netsvc.Logger()
 		if res:
+			logger.notifyChannel("web-service", netsvc.LOG_ERROR, 'DROP DB: %s failed' % (db_name,))
 			raise "Couldn't drop database"
 		else:
-			logger = netsvc.Logger()
 			logger.notifyChannel("web-services", netsvc.LOG_INFO, 'DROP DB: %s' % (db_name))
 			return True
 
@@ -160,9 +161,10 @@ class db(netsvc.Service):
 		stdin.close()
 		data = stdout.read()
 		res = stdout.close()
-		if res:
-			raise "Couldn't dump database"
 		logger = netsvc.Logger()
+		if res:
+			logger.notifyChannel("web-service", netsvc.LOG_ERROR, 'DUMP DB: %s failed\n%s' % (db_name, data))
+			raise "Couldn't dump database"
 		logger.notifyChannel("web-services", netsvc.LOG_INFO, 'DUMP DB: %s' % (db_name))
 		return base64.encodestring(data)
 
@@ -199,7 +201,7 @@ class db(netsvc.Service):
 			logger.notifyChannel("web-services", netsvc.LOG_INFO, 'RESTORE DB: %s' % (db_name))
 			return True
 		raise "Couldn't create database"
-		
+
 	def db_exist(self, db_name):
 		try:
 			db = sql_db.db_connect(db_name)
@@ -207,13 +209,7 @@ class db(netsvc.Service):
 			return True
 		except:
 			return False
-			
-#		cr.execute("select datname from pg_database where datname=%s", (db_name,))
-#		res = bool(cr.rowcount)
-#		cr.close()
-#		del cr
-#		return res
-		
+
 	def list(self):
 		db = sql_db.db_connect('template1')
 		try:
