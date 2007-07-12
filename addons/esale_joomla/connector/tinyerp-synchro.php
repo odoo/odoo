@@ -107,7 +107,7 @@
 			$prod['vendor_id']=$row[0];
 			$prod['vendor_currency']=$row[1];
 		}
-		$result=mysql_query("select shopper_group_id from ".$mosConfig_dbprefix."vm_shopper_group where vendor_id=".$vendor_id." and shopper_group_name='-default-';");
+		$result=mysql_query("select shopper_group_id from ".$mosConfig_dbprefix."vm_shopper_group where vendor_id=".$prod['vendor_id']." and shopper_group_name='-default-';");
 		if ($result && $row=mysql_fetch_row($result))
 			$prod['shopper_group']=$row[0];
 		if ( $tiny_product['esale_joomla_id']) {
@@ -120,7 +120,7 @@
 		if (! $tiny_product['esale_joomla_id']) {
 			mysql_query("insert into ".$mosConfig_dbprefix."vm_product () values ()");
 			$osc_id=mysql_insert_id();
-			mysql_query("insert into ".$mosConfig_dbprefix."vm_product_price (product_id, product_price, product_currency, product_price_vdate, product_price_edate, shopper_group_id) values (".$osc_id.", ".$tiny_product['price'].", '".$vendor_currency."', 0, 0, ".$shopper_group.");");
+			mysql_query("insert into ".$mosConfig_dbprefix."vm_product_price (product_id, product_price, product_currency, product_price_vdate, product_price_edate, shopper_group_id) values (".$osc_id.", ".$tiny_product['price'].", '".$prod['vendor_currency']."', 0, 0, ".$prod['shopper_group'].");");
 			mysql_query("insert into ".$mosConfig_dbprefix."vm_product_category_xref (product_id, category_id) values (".$osc_id.", ".$tiny_product['category_id'].");");
 		} else {
 			$osc_id=$tiny_product['esale_joomla_id'];
