@@ -63,7 +63,7 @@ def _trans_reconcile(self, cr, uid, data, context):
 def _wo_check(self, cr, uid, data, context):
 	pool = pooler.get_pool(cr.dbname)
 	invoice = pool.get('account.invoice').browse(cr, uid, data['id'], context)
-	if data['form']['amount'] == invoice.amount_total:
+	if round(data['form']['amount'], 2) == round(invoice.amount_total, 2):
 		return 'reconcile'
 	return 'addendum'
 
