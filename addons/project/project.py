@@ -41,11 +41,12 @@ class project(osv.osv):
 
 	def _calc_effective(self, cr, uid, ids, name, args, context):
 		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-		proj_set = ','.join(map(str, ids2))
-		cr.execute(("SELECT t.project_id, COALESCE(SUM(w.hours),0) FROM project_task t LEFT JOIN project_task_work w on (w.task_id = t.id) WHERE t.project_id in (%s) GROUP BY project_id") % (proj_set,))
 		res_sum = {}
-		for project_id, sum in cr.fetchall():
-			res_sum[project_id] = sum
+		if ids2:
+			proj_set = ','.join(map(str, ids2))
+			cr.execute(("SELECT t.project_id, COALESCE(SUM(w.hours),0) FROM project_task t LEFT JOIN project_task_work w on (w.task_id = t.id) WHERE t.project_id in (%s) GROUP BY project_id") % (proj_set,))
+			for project_id, sum in cr.fetchall():
+				res_sum[project_id] = sum
 		res={}
 		for id in ids:
 			ids3 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
@@ -56,11 +57,12 @@ class project(osv.osv):
 
 	def _calc_planned(self, cr, uid, ids, name, args, context):
 		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-		proj_set = ','.join(map(str, ids2))
-		cr.execute(("SELECT project_id, COALESCE(SUM(planned_hours),0) FROM project_task WHERE project_id IN (%s) GROUP BY project_id") % (proj_set,))
 		res_sum = {}
-		for project_id, sum in cr.fetchall():
-			res_sum[project_id] = sum
+		if ids2:
+			proj_set = ','.join(map(str, ids2))
+			cr.execute(("SELECT project_id, COALESCE(SUM(planned_hours),0) FROM project_task WHERE project_id IN (%s) GROUP BY project_id") % (proj_set,))
+			for project_id, sum in cr.fetchall():
+				res_sum[project_id] = sum
 		res = {}
 		for id in ids:
 			ids3 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
@@ -134,7 +136,7 @@ class project(osv.osv):
 	def toggleActive(self, cr, uid, ids, context={}):
 		for proj in self.browse(cr, uid, ids, context):
 			self.setActive(cr, uid, proj.id, not proj.active, context)
- 		return True
+		return True
 
 	# set active value for a project, its sub projects and its tasks
 	def setActive(self, cr, uid, id, value, context={}):
