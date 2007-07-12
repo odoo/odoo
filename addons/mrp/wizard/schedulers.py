@@ -68,7 +68,7 @@ def _procure_confirm(self, db_name, uid, data, context):
 			cr.execute('select name,state from mrp_procurement where id=%d', (proc.id,))
 			name,state = cr.fetchone()
 			if state=='exception':
-				report.append('PROC %d: MTO - %3d %-5s - %s' % (proc.id,proc.product_qty,proc.product_uom.name, proc.product_id.name))
+				report.append('PROC %d: on order - %3.2f %-5s - %s' % (proc.id,proc.product_qty,proc.product_uom.name, proc.product_id.name))
 				report_except += 1
 			report_total +=1
 			cr.commit()
@@ -83,7 +83,7 @@ def _procure_confirm(self, db_name, uid, data, context):
 				cr.execute('select name,state from mrp_procurement where id=%d', (proc.id,))
 				name,state = cr.fetchone()
 				if state=='exception':
-					report.append('PROC %d: MTS - %3d %-5s - %s' % (proc.id,proc.product_qty,proc.product_uom.name, proc.product_id.name,))
+					report.append('PROC %d: from stock - %3.2f %-5s - %s' % (proc.id,proc.product_qty,proc.product_uom.name, proc.product_id.name,))
 					report_except +=1
 			else:
 				report_later +=1

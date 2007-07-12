@@ -773,7 +773,7 @@ class mrp_procurement(osv.osv):
 		return True
 
 	def action_move_assigned(self, cr, uid, ids):
-		self.write(cr, uid, ids, {'state':'running','message':'MTS: products assigned.'})
+		self.write(cr, uid, ids, {'state':'running','message':'from stock: products assigned.'})
 		return True
 
 	def _check_make_to_stock_service(self, cr, uid, procurement, context={}):
@@ -787,7 +787,7 @@ class mrp_procurement(osv.osv):
 				ok = ok and self.pool.get('stock.move').action_assign(cr, uid, [id])
 				cr.execute('select count(id) from stock_warehouse_orderpoint where product_id=%d', (procurement.product_id.id,))
 				if not cr.fetchone()[0]:
-					cr.execute('update mrp_procurement set message=%s where id=%d', ('MTS and no minimum orderpoint rule defined', procurement.id))
+					cr.execute('update mrp_procurement set message=%s where id=%d', ('from stock and no minimum orderpoint rule defined', procurement.id))
 		return ok
 
 	def action_produce_assign_service(self, cr, uid, ids, context={}):
