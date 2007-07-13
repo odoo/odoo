@@ -716,11 +716,16 @@ class orm(object):
 		self.pool.get('ir.model.access').check(cr, user, self._name, 'read')
 		if not fields:
 			fields = self._columns.keys() + self._inherit_fields.keys()
-		result =  self._read_flat(cr, user, ids, fields, context, load)
+		select = ids
+		if isinstance(ids, (int, long)):
+			select = [ids]
+		result =  self._read_flat(cr, user, select, fields, context, load)
 		for r in result:
 			for key,v in r.items():
 				if v == None:
 					r[key]=False
+		if isinstance(ids, (int, long)):
+			return result[0]
 		return result
 
 	def _read_flat(self, cr, user, ids, fields, context={}, load='_classic_read'):
@@ -829,7 +834,10 @@ class orm(object):
 		fields = ', p.level, p.uid, p.gid'
 		if self._log_access:
 			fields +=', u.create_uid, u.create_date, u.write_uid, u.write_date'
-		ids_str = string.join(map(lambda x:str(x), ids),',')
+		if isinstance(ids, (int, long)):
+			ids_str = str(ids)
+		else:
+			ids_str = string.join(map(lambda x:str(x), ids),',')
 		cr.execute('select u.id'+fields+' from perm p right join '+self._table+' u on u.perm_id=p.id where u.id in ('+ids_str+')')
 		res = cr.dictfetchall()
 #		for record in res:
@@ -842,11 +850,15 @@ class orm(object):
 				if key in ('write_uid','create_uid','uid') and details:
 					if r[key]:
 						r[key] = self.pool.get('res.users').name_get(cr, user, [r[key]])[0]
+		if isinstance(ids, (int, long)):
+			return res[ids]
 		return res
 
 	def unlink(self, cr, uid, ids, context={}):
-		if not len(ids):
+		if not ids:
 			return True
+		if isinstance(ids, (int, long)):
+			ids = [ids]
 		delta= context.get('read_delta',False)
 		if delta and self._log_access:
 			cr.execute("select  (now()  - min(write_date)) <= '%s'::interval  from %s where id in (%s)"% (delta,self._table,",".join(map(str, ids))) )
@@ -884,6 +896,8 @@ class orm(object):
 	def write(self, cr, user, ids, vals, context={}):
 		if not ids:
 			return True
+		if isinstance(ids, (int, long)):
+			ids = [ids]
 		delta= context.get('read_delta',False)
 		if delta and self._log_access:
 			cr.execute("select  (now()  - min(write_date)) <= '%s'::interval  from %s where id in (%s)"% (delta,self._table,",".join(map(str, ids))) )
@@ -1062,6 +1076,10 @@ class orm(object):
 	# TODO: Validate
 	#
 	def perm_write(self, cr, user, ids, fields, context={}):
+		if not ids:
+			return True
+		if isinstance(ids, (int, long)):
+			ids = [ids]
 		query = []
 		vals = []
 		keys = fields.keys()
@@ -1619,6 +1637,8 @@ class orm(object):
 	def name_get(self, cr, user, ids, context={}):
 		if not len(ids):
 			return []
+		if isinstance(ids, (int, long)):
+			ids = [ids]
 		return [(r['id'], r[self._rec_name]) for r in self.read(cr, user, ids, [self._rec_name], context, load='_classic_write')]
 
 	def name_search(self, cr, user, name='', args=[], operator='ilike', context={}, limit=80):
