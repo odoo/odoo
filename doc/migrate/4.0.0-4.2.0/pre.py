@@ -154,7 +154,21 @@ cr.commit()
 # Drop state from hr_employee #
 # --------------------------- #
 
-cr.execute('ALTER TABLE hr_employee DROP state')
+cr.execute('SELECT * FROM pg_class c, pg_attribute a WHERE c.relname=\'hr_employee\' AND a.attname=\'state\' AND c.oid=a.attrelid')
+if cr.fetchall():
+	cr.execute('ALTER TABLE hr_employee DROP state')
+cr.commit()
+
+# ------------ #
+# Add timezone #
+# ------------ #
+
+cr.execute('SELECT id FROM ir_values where model=\'res.users\' AND key=\'meta\' AND name=\'tz\'')
+if not cr.fetchall():
+	import pytz, pickle
+	meta = pickle.dumps({'type':'selection', 'string':'Timezone', 'selection': [(x, x) for x in pytz.all_timezones]})
+	value = pickle.dumps(False)
+	cr.execute('INSERT INTO ir_values (name, key, model, meta, key2, object, value) VALUES (\'tz\', \'meta\', \'res.users\', %s, \'tz\', %s, %s)', (meta,False, value))
 cr.commit()
 
 cr.close
