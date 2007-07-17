@@ -169,7 +169,7 @@ CREATE TABLE res_users (
 );
 alter table res_users add constraint res_users_login_uniq unique (login);
 
-insert into res_users (id,login,password,name,action_id,perm_id,active) values (1,'root',NULL,'Administrator',NULL,1,False);
+insert into res_users (id,login,password,name,action_id,perm_id,active) values (1,'root',NULL,'Root',NULL,1,False);
 select setval('res_users_id_seq', 2);
 
 CREATE TABLE res_groups (
