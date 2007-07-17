@@ -89,6 +89,7 @@
 
 <record id="res_partner_asus" model="res.partner">
 	<field name="name">ASUStek</field>
+	<field name="user_id" ref="user_demo"/>
 </record>
 <record id="res_partner_agrolait" model="res.partner">
 	<field name="name">Agrolait</field>
@@ -108,21 +109,29 @@
 </record>
 <record id="res_partner_6" model="res.partner">
 	<field name="name">Elec Import</field>
+	<field name="user_id" ref="user_demo"/>
 </record>
 <record id="res_partner_maxtor" model="res.partner">
 	<field name="name">Maxtor</field>
+	<field name="credit_limit" eval="32000.00"/>
+	<field name="user_id" ref="user_demo"/>
 </record>
 <record id="res_partner_seagate" model="res.partner">
 	<field name="name">Seagate</field>
+	<field name="credit_limit" eval="5000.00"/>
+	<field name="user_id" ref="user_demo"/>
 </record>
 <record id="res_partner_8" model="res.partner">
 	<field name="website">http://mediapole.net</field>
 	<field name="name">Mediapole SPRL</field>
+	<field name="user_id" ref="user_demo"/>
 </record>
 <record id="res_partner_9" model="res.partner">
 	<field name="website">http://opensides.be</field>
 	<field name="name">Opensides sprl</field>
+	<field name="credit_limit" eval="12000.00"/>
 	<field name="ref">os</field>
+	<field name="user_id" ref="user_demo"/>
 </record>
 <record id="res_partner_10" model="res.partner">
 	<field name="name">Tecsas</field>
@@ -130,16 +139,21 @@
 </record>
 <record id="res_partner_11" model="res.partner">
 	<field name="name">Leclerc</field>
+	<field name="credit_limit" eval="1200.00"/>
+	<field name="user_id" ref="user_admin"/>
 </record>
 <record id="res_partner_14" model="res.partner">
 	<field name="name">Centrale d'achats BML</field>
 	<field name="ean13">3020178572427</field>
+	<field name="credit_limit" eval="15000.00"/>
 	<field name="parent_id" ref="res_partner_10"/>
 </record>
 <record id="res_partner_15" model="res.partner">
 	<field name="name">Magazin BML 1</field>
 	<field name="ean13">3020178570171</field>
 	<field name="parent_id" ref="res_partner_14"/>
+	<field name="credit_limit" eval="1500.00"/>
+	<field name="user_id" ref="user_admin"/>
 </record>
 
 	#
