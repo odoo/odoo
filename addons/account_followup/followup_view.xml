@@ -86,14 +86,14 @@
 
 	
 	<act_window name="Unreconciled account entries"
-		domain="[('partner_id', '=', active_id),('account_id','=','partner:'+str(active_id)),('reconcile_id','=',False)]"
+		domain="[('partner_id', '=', active_id),('reconcile_id','=',False),('account_id.reconcile', '=', True)]"
 		res_model="account.move.line"
 		src_model="res.partner"
 		view="account_move_line_partner_tree"
 		id="account.act_account_partner_account_move_unreconciled"/>
 
-	<act_window name="All account entries"
-		domain="[('reconcile_id', '=', False),('account_id','=','type:receivable')]"
+	<act_window name="All receivable entries"
+		domain="[('reconcile_id', '=', False),('account_id.type','=','receivable'),('partner_id', '=', active_id)]"
 		res_model="account.move.line"
 		src_model="res.partner"
 		view="account_move_line_partner_tree"
@@ -104,8 +104,8 @@
 		name="Financial Management/Periodical Processing/Send Follow-Ups/Receivable Follow-Ups" 
 		id="menu_account_move_open_unreconcile"/>
 
-	<act_window name="All account entries"
-		domain="[('reconcile_id', '=', False),('account_id','=','type:payable')]"
+	<act_window name="All payable entries"
+		domain="[('reconcile_id', '=', False),('account_id.type','=','payable'),('partner_id', '=', active_id)]"
 		res_model="account.move.line"
 		src_model="res.partner"
 		view="account_move_line_partner_tree"
