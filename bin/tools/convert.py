@@ -330,7 +330,6 @@ class xml_import(object):
 				class d(dict):
 					def __getitem__(self2, key):
 						return getattr(model.browse(cr, self.uid, id), key)
-				print "RESULT", eval(f_expr, d())
 
 	def _tag_record(self, cr, rec, data_node=None):
 		rec_model = rec.getAttribute("model").encode('ascii')

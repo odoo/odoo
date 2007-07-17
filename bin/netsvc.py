@@ -32,7 +32,6 @@ class ServiceEndPoint(object):
 	def __init__(self, name, id):
 		self._id = id
 		self._meth={}
-		print _service
 		s=_service[name]
 		for m in s._method:
 			self._meth[m]=s._method[m]

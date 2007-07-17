@@ -154,7 +154,9 @@ class rml_parse(object):
 			if res is False or res is None:
 				res = ''
 		except Exception,e:
-			netsvc.Logger().notifyChannel('report', netsvc.LOG_ERROR, 'report %s: %s' % (self.name, str(e)))
+			import traceback, sys
+			tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
+			netsvc.Logger().notifyChannel('report', netsvc.LOG_ERROR, 'report %s: %s\n%s' % (self.name, tb_s, str(e)))
 			res = 'Error'
 		return res
 
