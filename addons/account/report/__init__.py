@@ -31,7 +31,7 @@ import general_journal
 import account_journal
 import account_balance
 import partner_balance
-import grand_livre
+import general_ledger
 import third_party_ledger
 import invoice
 import rappel

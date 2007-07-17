@@ -13,15 +13,35 @@
     <blockTableStyle id="Tableau1">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
+      <blockBackground colorName="#e6e6e6" start="0,0" stop="0,0"/>
+      <blockBackground colorName="#e6e6e6" start="1,0" stop="1,0"/>
+      <blockBackground colorName="#e6e6e6" start="2,0" stop="2,0"/>
+      <blockBackground colorName="#e6e6e6" start="0,1" stop="0,1"/>
+      <blockBackground colorName="#e6e6e6" start="1,1" stop="1,1"/>
+      <blockBackground colorName="#e6e6e6" start="2,1" stop="2,1"/>
     </blockTableStyle>
     <blockTableStyle id="Tableau8">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
       <lineStyle kind="GRID" colorName="black"/>
     </blockTableStyle>
+    <blockTableStyle id="Table2">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <blockBackground colorName="#e6e6e6" start="0,0" stop="0,0"/>
+    </blockTableStyle>
     <blockTableStyle id="Tableau2">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table1">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <blockBackground colorName="#e6e6e6" start="0,0" stop="0,0"/>
+      <blockBackground colorName="#e6e6e6" start="1,0" stop="1,0"/>
+      <blockBackground colorName="#e6e6e6" start="2,0" stop="2,0"/>
+      <blockBackground colorName="#e6e6e6" start="3,0" stop="3,0"/>
+      <blockBackground colorName="#e6e6e6" start="4,0" stop="4,0"/>
     </blockTableStyle>
     <blockTableStyle id="Tableau10">
       <blockAlignment value="LEFT"/>
@@ -35,19 +55,20 @@
     <paraStyle name="P2" fontName="Times-Bold" fontSize="20.0" leading="25" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="P3" fontName="Times-Bold" fontSize="10.0" leading="13" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="P4" fontName="Times-Roman" fontSize="10.0" leading="13" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P5" fontName="Times-Roman"/>
-    <paraStyle name="P6" fontName="Times-Roman" fontSize="9.0" leading="11" alignment="CENTER"/>
-    <paraStyle name="P7" fontName="Times-Bold" fontSize="11.0" leading="14" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P8" fontName="Times-Roman" fontSize="6.0" leading="8"/>
-    <paraStyle name="P9" fontName="Times-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P10" fontName="Times-Roman" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P11" fontName="Times-Roman" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P12" fontName="Times-Italic" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P13" fontName="Times-Italic" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P14" fontName="Times-Italic" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P5" fontName="Times-Bold" fontSize="11.0" leading="14" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P6" fontName="Times-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P7" fontName="Times-Roman" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P8" fontName="Times-Roman" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P9" fontName="Times-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P10" fontName="Times-Roman"/>
+    <paraStyle name="P11" fontName="Times-Roman" fontSize="9.0" leading="11" alignment="CENTER"/>
+    <paraStyle name="P12" fontName="Times-Roman" fontSize="6.0" leading="8"/>
+    <paraStyle name="P13" fontName="Times-Roman" fontSize="10.0" leading="13" alignment="LEFT"/>
+    <paraStyle name="P14" fontName="Times-Roman" fontSize="10.0" leading="13" alignment="LEFT"/>
     <paraStyle name="P15" fontName="Times-Roman" fontSize="6.0" leading="8"/>
-    <paraStyle name="P16" fontName="Times-Roman" fontSize="10.0" leading="13" alignment="LEFT"/>
-    <paraStyle name="P17" fontName="Times-Roman" fontSize="10.0" leading="13" alignment="LEFT"/>
+    <paraStyle name="P16" fontName="Times-Bold" fontSize="11.0" leading="14" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P17" fontName="Times-Roman" fontSize="10.0" leading="13" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P18" fontName="Times-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="List" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -60,151 +81,145 @@
     <blockTable colWidths="161.0,161.0,161.0" repeatRows="1" style="Tableau1">
       <tr>
         <td>
-          <para style="P1">[[ company.name ]]</para>
+          <para style="P1">
+            <font color="white"> </font>
+          </para>
         </td>
         <td>
           <para style="P2">Analytic Balance</para>
         </td>
         <td>
-          <para style="P3">Period from [[ data['form']['date1'] ]]</para>
-          <para style="P3">to [[ data['form']['date2'] ]]</para>
+          <para style="P3">
+            <font color="white"> </font>
+          </para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P1">[[ company.name ]]</para>
+        </td>
+        <td>
+          <para style="P17">Period from [[ data['form']['date1'] ]] </para>
+          <para style="P17">to [[ data['form']['date2'] ]]</para>
+        </td>
+        <td>
           <para style="P4">Currency: [[ company.currency_id.name ]]</para>
         </td>
       </tr>
     </blockTable>
-    <para style="P5">
+    <para style="P10">
       <font color="white"> </font>
     </para>
-    <para style="P6">Printing date: [[ time.strftime('%Y-%m-%d') ]] at [[ time.strftime('%H:%M:%S') ]]</para>
-    <para style="P6">
+    <para style="P11">Printing date: [[ time.strftime('%Y-%m-%d') ]] at [[ time.strftime('%H:%M:%S') ]]</para>
+    <para style="P11">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="57.0,227.0,99.0,50.0,49.0" style="Tableau8">
+    <blockTable colWidths="57.0,227.0,50.0,50.0,50.0,49.0" style="Tableau8">
       <tr>
         <td>
-          <para style="P7">Code</para>
+          <para style="P5">Code</para>
         </td>
         <td>
-          <para style="P7">Account Name</para>
+          <para style="P5">Account Name</para>
         </td>
         <td>
-          <para style="P7">Moves</para>
-          <para style="P7">Débit Crédit</para>
+          <para style="P5">Debit </para>
         </td>
         <td>
-          <para style="P7">Balance</para>
+          <para style="P5">Credit</para>
         </td>
         <td>
-          <para style="P7">Quantity</para>
+          <para style="P5">Balance</para>
+        </td>
+        <td>
+          <para style="P5">Quantity</para>
         </td>
       </tr>
     </blockTable>
-    <para style="P8">
+    <para style="P15">
       <font color="white"> </font>
     </para>
     <section>
-      <para style="P8">[[ repeatIn(objects,'o') ]]</para>
-      <blockTable colWidths="57.0,227.0,50.0,50.0,49.0,50.0" style="Tableau2">
+      <para style="P15">[[ repeatIn(objects,'o') ]]</para>
+      <blockTable colWidths="482.0" style="Table2">
         <tr>
           <td>
-            <para style="P9">[[ o.code ]]</para>
-          </td>
-          <td>
-            <para style="P9">[[ o.complete_name ]]</para>
-          </td>
-          <td>
-            <para style="P9">
-              <font color="white"> </font>
-            </para>
-          </td>
-          <td>
-            <para style="P9">
-              <font color="white"> </font>
-            </para>
-          </td>
-          <td>
-            <para style="P9">
-              <font color="white"> </font>
-            </para>
-          </td>
-          <td>
-            <para style="P9">
-              <font color="white"> </font>
-            </para>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <para style="P10">[[ repeatIn(lines_g(o.id,data['form']['date1'],data['form']['date2']),'move_g') ]]</para>
-            <para style="P10">[[ move_g['code'] ]]</para>
-          </td>
-          <td>
-            <para style="P10">[[ move_g['name'] ]]</para>
-          </td>
-          <td>
-            <para style="P11">[[ move_g['debit'] ]]</para>
-          </td>
-          <td>
-            <para style="P11">[[ move_g['credit'] ]]</para>
-          </td>
-          <td>
-            <para style="P11">[[ '%.2f' % move_g['balance'] ]]</para>
-          </td>
-          <td>
-            <para style="P11">[[ '%.2f' % (move_g['quantity'] or 0.0) ]]</para>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <para style="P12">Total [[ o.code ]]</para>
-          </td>
-          <td>
-            <para style="P13">[[ o.complete_name ]]</para>
-          </td>
-          <td>
-            <para style="P14">[[ '%.2f' % (move_sum_debit(o.id,data['form']['date1'],data['form']['date2']) or 0) ]]</para>
-          </td>
-          <td>
-            <para style="P14">[[ '%.2f' % (move_sum_credit(o.id,data['form']['date1'],data['form']['date2']) or 0 )]]</para>
-          </td>
-          <td>
-            <para style="P14">[[ '%.2f' % move_sum_balance(o.id,data['form']['date1'],data['form']['date2']) ]]</para>
-          </td>
-          <td>
-            <para style="P14">[[ '%.2f' % move_sum_quantity(o.id,data['form']['date1'],data['form']['date2']) or 0.0]]</para>
+            <para style="P6">[[ o.code ]] <font face="Times-Bold" size="9.0">[[ o.complete_name ]]</font></para>
           </td>
         </tr>
       </blockTable>
-      <para style="P8">
+      <blockTable colWidths="57.0,227.0,50.0,50.0,49.0,50.0" style="Tableau2">
+        <tr>
+          <td>
+            <para style="P7">[[ repeatIn(lines_g(o.id,data['form']['date1'],data['form']['date2']),'move_g') ]]</para>
+            <para style="P7">[[ move_g['code'] ]]</para>
+          </td>
+          <td>
+            <para style="P7">[[ move_g['name'] ]]</para>
+          </td>
+          <td>
+            <para style="P8">[[ '%.2f' % move_g['debit'] ]]</para>
+          </td>
+          <td>
+            <para style="P8">[[ '%.2f' % move_g['credit'] ]]</para>
+          </td>
+          <td>
+            <para style="P8">[[ '%.2f' % move_g['balance'] ]]</para>
+          </td>
+          <td>
+            <para style="P8">[[ '%.2f' % (move_g['quantity'] or 0.0) ]]</para>
+          </td>
+        </tr>
+      </blockTable>
+      <blockTable colWidths="284.0,50.0,50.0,49.0,50.0" style="Table1">
+        <tr>
+          <td>
+            <para style="P9">Total ([[ o.code ]])</para>
+          </td>
+          <td>
+            <para style="P9">[[ '%.2f' % (move_sum_debit(o.id,data['form']['date1'],data['form']['date2']) or 0.0) ]]</para>
+          </td>
+          <td>
+            <para style="P9">[[ '%.2f' % (move_sum_credit(o.id,data['form']['date1'],data['form']['date2']) or 0.0 )]]</para>
+          </td>
+          <td>
+            <para style="P9">[[ '%.2f' % (move_sum_balance(o.id,data['form']['date1'],data['form']['date2']) or 0.0) ]]</para>
+          </td>
+          <td>
+            <para style="P9">[[ '%.2f' % move_sum_quantity(o.id,data['form']['date1'],data['form']['date2']) or 0.0]]</para>
+          </td>
+        </tr>
+      </blockTable>
+      <para style="P15">
         <font color="white"> </font>
       </para>
     </section>
-    <para style="P15">
+    <para style="P12">
       <font color="white"> </font>
     </para>
     <blockTable colWidths="284.0,50.0,50.0,50.0,49.0" style="Tableau10">
       <tr>
         <td>
-          <para style="P3">Sum</para>
+          <para style="P3">Total</para>
         </td>
         <td>
-          <para style="P3">[[ '%.2f' % (sum_debit(objects,data['form']['date1'],data['form']['date2']) or 0) ]]</para>
+          <para style="P3">[[ '%.2f' % (sum_debit(objects,data['form']['date1'],data['form']['date2']) or 0.0) ]]</para>
         </td>
         <td>
-          <para style="P3">[[ '%.2f' % (sum_credit(objects,data['form']['date1'],data['form']['date2']) or 0) ]]</para>
+          <para style="P3">[[ '%.2f' % (sum_credit(objects,data['form']['date1'],data['form']['date2']) or 0.0) ]]</para>
         </td>
         <td>
-          <para style="P3">[[ '%.2f' % sum_balance(objects,data['form']['date1'],data['form']['date2']) ]]</para>
+          <para style="P3">[[ '%.2f' % (sum_balance(objects,data['form']['date1'],data['form']['date2']) or 0.0)]]</para>
         </td>
         <td>
           <para style="P3">[[ '%.2f' % sum_quantity(objects,data['form']['date1'],data['form']['date2']) or 0.0 ]]</para>
         </td>
       </tr>
     </blockTable>
-    <para style="P16">
+    <para style="P13">
       <font color="white"> </font>
     </para>
-    <para style="P17">
+    <para style="P14">
       <font color="white"> </font>
     </para>
   </story>

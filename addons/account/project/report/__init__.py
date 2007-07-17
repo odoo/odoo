@@ -31,5 +31,5 @@ import analytic_balance
 import inverted_analytic_balance
 import cost_ledger
 import quantity_cost_ledger
-import year_to_date_check
+import analytic_check
 import account_analytic_budget_report

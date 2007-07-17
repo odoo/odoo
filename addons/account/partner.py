@@ -37,16 +37,16 @@ class res_partner(osv.osv):
 	_description = 'Partner'
 	def _credit_get(self, cr, uid, ids, name, arg, context):
 		res={}
+		query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
 		for id in ids:
-			query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
 			cr.execute("select sum(debit-credit) from account_move_line as l where account_id in (select id from account_account where type = %s) and partner_id=%d and reconcile_id is null and "+query, ('receivable', id))
 			res[id]=cr.fetchone()[0] or 0.0
 		return res
 
 	def _debit_get(self, cr, uid, ids, name, arg, context):
 		res={}
+		query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
 		for id in ids:
-			query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
 			cr.execute("select sum(debit-credit) from account_move_line as l where account_id in (select id from account_account where type = %s) and partner_id=%d and reconcile_id is null and "+query, ('payable', id))
 			res[id]=cr.fetchone()[0] or 0.0
 		return res

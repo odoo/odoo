@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -25,31 +25,35 @@
 #
 ##############################################################################
 
-import time
 import wizard
+import pooler
 
 dates_form = '''<?xml version="1.0"?>
 <form string="Select period">
-	<field name="date1"/>
-	<field name="date2"/>
+	<field name="fiscalyear" colspan="4"/>
+	<field name="periods" colspan="4"/>
 </form>'''
 
 dates_fields = {
-	'date1': {'string':'Start of period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-01-01')},
-	'date2': {'string':'End of period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
+	'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear', 'required': True},
+	'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty'}
 }
 
 class wizard_report(wizard.interface):
+	def _get_defaults(self, cr, uid, data, context):
+		fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
+		data['form']['fiscalyear'] = fiscalyear_obj.find(cr, uid)
+		return data['form']
+
 	states = {
 		'init': {
-			'actions': [], 
-			'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('report','Print'), ('end','Cancel')]}
+			'actions': [_get_defaults],
+			'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('end','Cancel'),('report','Print')]}
 		},
 		'report': {
 			'actions': [],
-			'result': {'type':'print', 'report':'account.analytic.account.year_to_date_check', 'state':'end'}
+			'result': {'type':'print', 'report':'account.general.ledger', 'state':'end'}
 		}
 	}
-wizard_report('account.analytic.account.year_to_date_check.report')
-
+wizard_report('account.general.ledger.report')
 

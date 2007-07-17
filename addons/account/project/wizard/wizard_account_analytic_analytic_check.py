@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -43,13 +43,13 @@ class wizard_report(wizard.interface):
 	states = {
 		'init': {
 			'actions': [], 
-			'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('end','Cancel'),('report','Print')]}
+			'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('end','Cancel'), ('report','Print')]}
 		},
 		'report': {
 			'actions': [],
-			'result': {'type':'print', 'report':'account.grand.livre', 'state':'end'}
+			'result': {'type':'print', 'report':'account.analytic.account.analytic.check', 'state':'end'}
 		}
 	}
-wizard_report('account.grand.livre.report')
+wizard_report('account.analytic.account.analytic.check.report')
 
 

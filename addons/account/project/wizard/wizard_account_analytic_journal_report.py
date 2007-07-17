@@ -43,7 +43,7 @@ class wizard_report(wizard.interface):
 	states = {
 		'init': {
 			'actions': [], 
-			'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('report','Print'), ('end','Cancel')]}
+			'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('end','Cancel'), ('report','Print')]}
 		},
 		'report': {
 			'actions': [],

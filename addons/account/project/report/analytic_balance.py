@@ -47,40 +47,47 @@ class account_analytic_balance(report_sxw.rml_parse):
 		})
 		
 	def _lines_g(self, account_id, date1, date2):
-		self.cr.execute("	SELECT aa.name AS name, aa.code AS code, sum(aal.amount) AS balance, sum(aal.unit_amount) AS quantity FROM account_analytic_line AS aal, account_account AS aa \
-							WHERE (aal.general_account_id=aa.id) AND (aal.account_id=%d) AND (date>=%s) AND (date<=%s) \
-							GROUP BY aal.general_account_id, aa.name, aa.code, aal.code ORDER BY aal.code", (account_id, date1, date2))
+		self.cr.execute("SELECT aa.name AS name, aa.code AS code, sum(aal.amount) AS balance, sum(aal.unit_amount) AS quantity \
+				FROM account_analytic_line AS aal, account_account AS aa \
+				WHERE (aal.general_account_id=aa.id) AND (aal.account_id=%d) AND (date>=%s) AND (date<=%s) \
+				GROUP BY aal.general_account_id, aa.name, aa.code, aal.code ORDER BY aal.code", (account_id, date1, date2))
 		res = self.cr.dictfetchall()
 		
 		for r in res:
 			if r['balance'] > 0:
-				r['debit'] = '%.2f' % r['balance']
-				r['credit'] = ''
+				r['debit'] = r['balance']
+				r['credit'] = 0.0
 			elif r['balance'] < 0:
-				r['debit'] = ''
-				r['credit'] = '%.2f' % -r['balance']
+				r['debit'] = 0.0
+				r['credit'] = -r['balance']
 			else:
 				r['balance'] == 0
-				r['debit'] = ''
-				r['credit'] = ''
+				r['debit'] = 0.0
+				r['credit'] = 0.0
 		return res
 	
 
 	def _move_sum_debit(self, account_id, date1, date2):
-		self.cr.execute("SELECT sum(amount) FROM account_analytic_line WHERE account_id=%d AND date>=%s AND date<=%s AND amount>0", (account_id, date1, date2))
+		self.cr.execute("SELECT sum(amount) \
+				FROM account_analytic_line \
+				WHERE account_id=%d AND date>=%s AND date<=%s AND amount>0", (account_id, date1, date2))
 		return self.cr.fetchone()[0] or 0.0
 
 	def _move_sum_credit(self, account_id, date1, date2):
-		self.cr.execute("SELECT -sum(amount) FROM account_analytic_line WHERE account_id=%d AND date>=%s AND date<=%s AND amount<0", (account_id, date1, date2))
+		self.cr.execute("SELECT -sum(amount) \
+				FROM account_analytic_line \
+				WHERE account_id=%d AND date>=%s AND date<=%s AND amount<0", (account_id, date1, date2))
 		return self.cr.fetchone()[0] or 0.0
 	
 	def _move_sum_balance(self, account_id, date1, date2):
 		debit = self._move_sum_debit(account_id, date1, date2) 
 		credit = self._move_sum_credit(account_id, date1, date2)
-		return (debit-credit) or 0.0
+		return (debit-credit)
 	
 	def _move_sum_quantity(self, account_id, date1, date2):
-		self.cr.execute("SELECT sum(unit_amount) FROM account_analytic_line WHERE account_id=%d AND date>=%s AND date<=%s", (account_id, date1, date2))
+		self.cr.execute("SELECT sum(unit_amount) \
+				FROM account_analytic_line \
+				WHERE account_id=%d AND date>=%s AND date<=%s", (account_id, date1, date2))
 		return self.cr.fetchone()[0] or 0.0
 
 	
@@ -88,7 +95,9 @@ class account_analytic_balance(report_sxw.rml_parse):
 		ids = map(lambda x: x.id, accounts)
 		if not len(ids):
 			return 0.0
-		self.cr.execute("SELECT sum(amount) FROM account_analytic_line WHERE account_id IN ("+','.join(map(str, ids))+") AND date>=%s AND date<=%s AND amount>0", (date1, date2))
+		self.cr.execute("SELECT sum(amount) \
+				FROM account_analytic_line \
+				WHERE account_id IN ("+','.join(map(str, ids))+") AND date>=%s AND date<=%s AND amount>0", (date1, date2))
 		return self.cr.fetchone()[0] or 0.0
 		
 	def _sum_credit(self, accounts, date1, date2):
@@ -96,7 +105,9 @@ class account_analytic_balance(report_sxw.rml_parse):
 		if not len(ids):
 			return 0.0
 		ids = map(lambda x: x.id, accounts)
-		self.cr.execute("SELECT -sum(amount) FROM account_analytic_line WHERE account_id IN ("+','.join(map(str, ids))+") AND date>=%s AND date<=%s AND amount<0", (date1, date2))
+		self.cr.execute("SELECT -sum(amount) \
+				FROM account_analytic_line \
+				WHERE account_id IN ("+','.join(map(str, ids))+") AND date>=%s AND date<=%s AND amount<0", (date1, date2))
 		return self.cr.fetchone()[0] or 0.0
 
 	def _sum_balance(self, accounts, date1, date2):
@@ -108,8 +119,10 @@ class account_analytic_balance(report_sxw.rml_parse):
 		ids = map(lambda x: x.id, accounts)
 		if not len(ids):
 			return 0.0
-		self.cr.execute("SELECT sum(unit_amount) FROM account_analytic_line WHERE account_id IN ("+','.join(map(str, ids))+") AND date>=%s AND date<=%s", (date1, date2))
+		self.cr.execute("SELECT sum(unit_amount) \
+				FROM account_analytic_line \
+				WHERE account_id IN ("+','.join(map(str, ids))+") AND date>=%s AND date<=%s", (date1, date2))
 		return self.cr.fetchone()[0] or 0.0
 
-report_sxw.report_sxw('report.account.analytic.account.balance', 'account.analytic.account', 'addons/account/project/report/analytic_balance.rml',parser=account_analytic_balance)
+report_sxw.report_sxw('report.account.analytic.account.balance', 'account.analytic.account', 'addons/account/project/report/analytic_balance.rml',parser=account_analytic_balance, header=False)
 
