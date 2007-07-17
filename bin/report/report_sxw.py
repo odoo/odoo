@@ -34,6 +34,8 @@ from interface import  report_rml
 import re
 import tools
 import pooler
+import netsvc
+import warnings
 
 import copy
 
@@ -61,7 +63,7 @@ class browse_record_list(list):
 		return "browse_record_list("+str(len(self))+")"
 
 	def repeatIn(self, name):
-		print 'Decrecated ! Use repeatIn(object_list, \'variable\')'
+		warnings.warn('Use repeatIn(object_list, \'variable\')', DeprecationWarning)
 		node = self.context['_node']
 		node.data = ''
 		while True:
@@ -152,6 +154,7 @@ class rml_parse(object):
 			if res is False or res is None:
 				res = ''
 		except Exception,e:
+			netsvc.Logger().notifyChannel('report', netsvc.LOG_ERROR, 'report %s: %s' % (self.name, str(e)))
 			res = 'Error'
 		return res
 
