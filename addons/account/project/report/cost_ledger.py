@@ -39,12 +39,12 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
 			'lines_a': self._lines_a,
 			'account_sum_debit': self._account_sum_debit,
 			'account_sum_credit': self._account_sum_credit,
+			'account_sum_balance': self._account_sum_balance,
 			'sum_debit': self._sum_debit,
 			'sum_credit': self._sum_credit,
 			'sum_balance': self._sum_balance,
-			'account_sum_balance': self._account_sum_balance,
 		})
-		
+
 	def _lines_g(self, account_id, date1, date2):
 		self.cr.execute("SELECT sum(aal.amount) AS balance, aa.code AS code, aa.name AS name, aa.id AS id \
 				FROM account_account AS aa, account_analytic_line AS aal \
@@ -82,7 +82,6 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
 				r['debit'] = 0.0
 				r['credit'] = 0.0
 		return res
-
 
 	def _account_sum_debit(self, account_id, date1, date2):
 		self.cr.execute("SELECT sum(amount) FROM account_analytic_line WHERE account_id=%d AND date>=%s AND date<=%s AND amount>0", (account_id, date1, date2))
