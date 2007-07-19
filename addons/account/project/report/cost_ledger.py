@@ -48,7 +48,7 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
 	def _lines_g(self, account_id, date1, date2):
 		self.cr.execute("SELECT sum(aal.amount) AS balance, aa.code AS code, aa.name AS name, aa.id AS id \
 				FROM account_account AS aa, account_analytic_line AS aal \
-				WHERE (aal.account_id=%d) AND (aal.date>=%s) AND (aal.date<=%s) AND (aal.general_account_id=aa.id) \
+				WHERE (aal.account_id=%d) AND (aal.date>=%s) AND (aal.date<=%s) AND (aal.general_account_id=aa.id) AND aa.active \
 				GROUP BY aa.code, aa.name, aa.id ORDER BY aa.code", (account_id, date1, date2))
 		res = self.cr.dictfetchall()
 

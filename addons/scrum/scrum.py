@@ -117,7 +117,7 @@ class scrum_sprint(osv.osv):
 			proj = self.pool.get('scrum.project').browse(cr, uid, [project_id])[0]
 			v['product_owner_id']= proj.product_owner_id.id
 			v['scrum_master_id']= proj.manager.id
-			v['date_stop'] = (DateTime.now() + DateTime.RelativeDateTime(days=int(proj.sprint_size or 15))).strftime('%Y-%m-%d')
+			v['date_stop'] = (DateTime.now() + DateTime.RelativeDateTime(days=int(proj.sprint_size or 14))).strftime('%Y-%m-%d')
 		return {'value':v}
 		
 scrum_sprint()

@@ -74,6 +74,7 @@ view_form_company = """<?xml version="1.0"?>
 		<field name="state_id" align="0.0"/>
 		<field name="email" align="0.0"/>
 		<field name="phone" align="0.0"/>
+		<field name="currency" align="0.0"/>
 		<separator string="Report header" colspan="4"/>
 		<newline/>
 		<field name="rml_header1" align="0.0" colspan="4"/>
@@ -131,6 +132,7 @@ class wizard_base_setup(wizard.interface):
 			return {}
 		company=company_obj.browse(cr, uid, ids)[0]
 		self.fields['name']['default']=company.name
+		self.fields['currency']['default']=company.currency_id.id
 		return {}
 		#self.fields['rml_header1']['default']=company.rml_header1
 		#self.fields['rml_footer1']['default']=company.rml_footer1
@@ -188,6 +190,7 @@ class wizard_base_setup(wizard.interface):
 				'rml_header1': form['rml_header1'],
 				'rml_footer1': form['rml_footer1'],
 				'rml_footer2': form['rml_footer2'],
+				'currency_id': form['currency'],
 			})
 		partner_obj.write(cr, uid, [company.partner_id.id], {
 				'name': form['name'],
@@ -200,7 +203,7 @@ class wizard_base_setup(wizard.interface):
 					'city': form['city'],
 					'email': form['email'],
 					'phone': form['phone'],
-					'country_id': form['country_id']
+					'country_id': form['country_id'],
 				}
 		if form['state_id'] > 0:
 			values['state_id']=form['state_id']
@@ -306,6 +309,12 @@ class wizard_base_setup(wizard.interface):
 			'string': 'Phone',
 			'type': 'char',
 			'size': 64,
+		},
+		'currency': {
+			'string': 'Currency',
+			'type': 'many2one',
+			'relation': 'res.currency',
+			'required': True,
 		},
 		'rml_header1':{
 			'string': 'Report Header',

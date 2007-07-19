@@ -4,19 +4,6 @@
 
 	<data noupdate="1">
 
-		<!-- Change default currency to GB Pounds -->
-
-		<record model="res.currency" id="GBP">
-			<field name="name">GBP</field>
-			<field name="code">GBP</field>
-			<field name="rounding">0.01</field>
-			<field name="accuracy">4</field>
-		</record>
-
-		<record model="res.company" id="base.main_company">
-			<field name="currency_id" ref="GBP"/>
-		</record>
-
 		<!-- Top level of main chart -->
 
 		<record id="chart0" model="account.account">

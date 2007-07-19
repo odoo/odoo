@@ -49,7 +49,7 @@ class account_analytic_balance(report_sxw.rml_parse):
 	def _lines_g(self, account_id, date1, date2):
 		self.cr.execute("SELECT aa.name AS name, aa.code AS code, sum(aal.amount) AS balance, sum(aal.unit_amount) AS quantity \
 				FROM account_analytic_line AS aal, account_account AS aa \
-				WHERE (aal.general_account_id=aa.id) AND (aal.account_id=%d) AND (date>=%s) AND (date<=%s) \
+				WHERE (aal.general_account_id=aa.id) AND (aal.account_id=%d) AND (date>=%s) AND (date<=%s) AND aa.active \
 				GROUP BY aal.general_account_id, aa.name, aa.code, aal.code ORDER BY aal.code", (account_id, date1, date2))
 		res = self.cr.dictfetchall()
 		

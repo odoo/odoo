@@ -31,52 +31,53 @@
 from osv import fields, osv
 
 def _code_get(self, cr, uid, context={}):
-    acc_type_obj = self.pool.get('account.account.type')
-    ids = acc_type_obj.search(cr, uid, [])
-    res = acc_type_obj.read(cr, uid, ids, ['code', 'name'], context)
-    return [(r['code'], r['name']) for r in res]
+	acc_type_obj = self.pool.get('account.account.type')
+	ids = acc_type_obj.search(cr, uid, [])
+	res = acc_type_obj.read(cr, uid, ids, ['code', 'name'], context)
+	return [(r['code'], r['name']) for r in res]
 
 
 class account_followup_stat(osv.osv):
-    _name = "account_followup.stat"
-    _description = "Followup statistics"
-    _auto = False
-    _columns = {
-        'name': fields.many2one('res.partner', 'Partner', readonly=True),
-        'account_type': fields.selection(_code_get, 'Account Type', required=True),
-        'date_move':fields.date('First move', readonly=True),
-        'date_move_last':fields.date('Last move', readonly=True),
-        'date_followup':fields.date('Latest followup', readonly=True),
-        'followup_id': fields.many2one('account_followup.followup.line', 'Follow Ups', required=True, ondelete="cascade"),
-        'balance':fields.float('Balance', readonly=True),
-        'debit':fields.float('Debit', readonly=True),
-        'credit':fields.float('Credit', readonly=True),
-    }
-    _order = 'date_move'
-    def init(self, cr):
-        cr.execute("""
-            create or replace view account_followup_stat as (
-                select
-                    l.partner_id as id,
-                    l.partner_id as name,
-                    min(l.date) as date_move,
-                    max(l.date) as date_move_last,
-                    max(l.followup_date) as date_followup,
-                    max(l.followup_line_id) as followup_id,
-                    sum(l.debit) as debit,
-                    sum(l.credit) as credit,
-                    sum(l.debit - l.credit) as balance,
-                    a.type as account_type
-                from
-                    account_move_line l
-                left join
-                    account_account a on (l.account_id=a.id)
-                where
-                    l.reconcile_id is NULL and
-                    a.type in ('receivable', 'payable')
-                group by
-                    l.partner_id, a.type
-            )""")
+	_name = "account_followup.stat"
+	_description = "Followup statistics"
+	_auto = False
+	_columns = {
+		'name': fields.many2one('res.partner', 'Partner', readonly=True),
+		'account_type': fields.selection(_code_get, 'Account Type', required=True),
+		'date_move':fields.date('First move', readonly=True),
+		'date_move_last':fields.date('Last move', readonly=True),
+		'date_followup':fields.date('Latest followup', readonly=True),
+		'followup_id': fields.many2one('account_followup.followup.line', 'Follow Ups', required=True, ondelete="cascade"),
+		'balance':fields.float('Balance', readonly=True),
+		'debit':fields.float('Debit', readonly=True),
+		'credit':fields.float('Credit', readonly=True),
+	}
+	_order = 'date_move'
+	def init(self, cr):
+		cr.execute("""
+			create or replace view account_followup_stat as (
+				select
+					l.partner_id as id,
+					l.partner_id as name,
+					min(l.date) as date_move,
+					max(l.date) as date_move_last,
+					max(l.followup_date) as date_followup,
+					max(l.followup_line_id) as followup_id,
+					sum(l.debit) as debit,
+					sum(l.credit) as credit,
+					sum(l.debit - l.credit) as balance,
+					a.type as account_type
+				from
+					account_move_line l
+				left join
+					account_account a on (l.account_id=a.id)
+				where
+					l.reconcile_id is NULL and
+					a.type in ('receivable', 'payable')
+					and a.active
+				group by
+					l.partner_id, a.type
+			)""")
 account_followup_stat()
 
 

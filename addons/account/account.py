@@ -228,6 +228,7 @@ class account_account(osv.osv):
 		'note': fields.text('Note'),
 		'company_currency_id': fields.function(_get_company_currency, method=True, type='many2one', relation='res.currency', string='Company Currency'),
 		'company_id': fields.many2one('res.company', 'Company', required=True),
+		'active': fields.boolean('Active', select=2),
 	}
 
 	def _default_company(self, cr, uid, context={}):
@@ -235,13 +236,16 @@ class account_account(osv.osv):
 		if user.company_id:
 			return user.company_id.id
 		return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
+
 	_defaults = {
 		'sign': lambda *a: 1,
 		'type': lambda *a: 'view',
 		'reconcile': lambda *a: False,
 		'close_method': lambda *a: 'balance',
 		'company_id': _default_company,
+		'active': lambda *a: True,
 	}
+
 	def _check_recursion(self, cr, uid, ids):
 		level = 100
 		while len(ids):

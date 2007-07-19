@@ -2,6 +2,7 @@
 <terp>
 	<data noupdate="True">
 	
+		<!--
 #***************************************************************************#
 #                              C R É A T I O N                              #
 #***************************************************************************#
@@ -49,17 +50,12 @@
 #  child_id    =  Comptes Enfants / Children
 #  balance     =  Solde / Balance
 #
-
-	<record model="res.currency" id="CAD">
-		<field name="name">CAD</field>
-		<field name="rate">1.0</field>
-		<field name="rounding">0.01</field>
-		<field name="accuracy">4</field>
-	</record>
-
+		-->
+<!--
 #
 #  ***  CHARTE DES COMPTES  (Plan comptable)  ***
 #
+-->
 	<record model="account.account" id="a_root">
 		<field name="type">view</field>
 		<field name="code">0</field>
@@ -67,9 +63,11 @@
 
 	</record>
 
+	<!--
 #
 #  ***  Comptes du BILAN  (10000 à 39999)  ***
 #
+-->
 	<record model="account.account" id="bilan_001">
 		<field name="type">view</field>
 		<field name="code">00001</field>
@@ -77,10 +75,12 @@
 
 		<field name="parent_id" eval="[(6,0,[a_root])]"/>
 	</record>		
-	
+
+	<!--
 #
 #  10000 à 19999 - ACTIF  /  ASSETS
-#
+#	
+-->
 	<record model="account.account" id="actif_10000">
 		<field name="type">view</field>
 		<field name="code">10000</field>
@@ -89,9 +89,11 @@
 		<field name="parent_id" eval="[(6,0,[bilan_001])]"/>
 	</record>
 
+	<!--
 #
 #  11000 à 12999 - Actif COURT TERME  /  Short Term ASSETS
 #
+-->
 	<record model="account.account" id="act_11000">
 		<field name="type">view</field>
 		<field name="code">11000</field>
@@ -303,9 +305,11 @@
 				<field name="parent_id" eval="[(6,0,[stock_inv_11500])]"/>
 			</record>
 
+			<!--
 #
 #  13000 à 14999 - Actif LONG TERME  -  Long Term ASSETS
 #
+-->
 	<record model="account.account" id="alt_13000">
 		<field name="type">view</field>
 		<field name="code">13000</field>
@@ -356,9 +360,11 @@
 				<field name="parent_id" eval="[(6,0,[alt_13300])]"/>
 			</record>
 
+			<!--
 #
 #  15000 à 16999 - Actif IMMOBILISÉ (Corporel ou Installation)  /  Lands and Buildings
 #
+-->
 	<record model="account.account" id="aim_15000">
 		<field name="type">view</field>
 		<field name="code">15000</field>
@@ -514,9 +520,11 @@
 				<field name="parent_id" eval="[(6,0,[aim_16800])]"/>
 			</record>
 
+			<!--
 #
 #  17000 à 19999 - Actif INCORPOREL  /  ???
 #
+-->
 	<record model="account.account" id="aic_17000">
 		<field name="type">view</field>
 		<field name="code">17000</field>
@@ -581,9 +589,11 @@
 			<field name="parent_id" eval="[(6,0,[aic_17000])]"/>
 		</record>
 
+		<!--
 #
 #  20000 à 29999 - PASSIF  /  PAYABLES
 #	
+-->
 	<record model="account.account" id="passif_20000">
 		<field name="type">view</field>
 		<field name="code">20000</field>
@@ -592,9 +602,11 @@
 		<field name="parent_id" eval="[(6,0,[bilan_001])]"/>
 	</record>
 	
+	<!--
 #
 #  21000 à 24999 - Passif à COURT TERME  /  Short Term PAYABLES
 #
+-->
 	<record model="account.account" id="pct_21200">
 		<field name="type">view</field>
 		<field name="code">21000</field>
@@ -862,9 +874,11 @@
 				<field name="parent_id" eval="[(6,0,[tx_imp_21700])]"/>
 			</record>
  
+			<!--
 #
 #  25000 à 29999 - Passif à LONG TERME  /  Long Term PAYABLES
 #
+-->
 	<record model="account.account" id="plt_25000">
 		<field name="type">view</field>
 		<field name="code">25000</field>
@@ -929,9 +943,11 @@
 				<field name="parent_id" eval="[(6,0,[plt_25400])]"/>
 			</record>
 
+			<!--
 #
 #  30000 à 39999 - CAPITAUX PROPRES  (Capital et Action)  /  EQUITY
 #	
+-->
 	<record model="account.account" id="capitaux_30000">
 		<field name="type">view</field>
 		<field name="code">30000</field>
@@ -940,9 +956,11 @@
 		<field name="parent_id" eval="[(6,0,[bilan_001])]"/>
 	</record>
 
+	<!--
 #
 #  31000 à 33999 - CAPITAL - ACTIONS
 #	
+-->
 	<record model="account.account" id="actions_31000">
 		<field name="type">view</field>
 		<field name="code">31000</field>
@@ -979,9 +997,11 @@
 				<field name="parent_id" eval="[(6,0,[privilegiees_33000])]"/>
 			</record>
 
+			<!--
 #
 #  34000 à 36999 - AVOIRS
 #	
+-->
 	<record model="account.account" id="avoirs_34000">
 		<field name="type">view</field>
 		<field name="code">34000</field>
@@ -1024,10 +1044,11 @@
 
 				<field name="parent_id" eval="[(6,0,[associes_36000])]"/>
 			</record>
-
+			<!--
 #
 #  37000 à 39999 - BÉNÉFICES - Résultat de l'exercice (bénéfice ou perte)
 #	
+-->
 	<record model="account.account" id="benefices_37000">
 		<field name="type">view</field>
 		<field name="code">37000</field>
@@ -1057,9 +1078,11 @@
 			<field name="parent_id" eval="[(6,0,[benefices_37000])]"/>
 		</record>
 
+		<!--
 #
 #  ***  Comptes de l'ÉTAT DES RÉSULTATS  (40000 à 69999)  ***
 #
+-->
 	<record model="account.account" id="resultats_002">
 		<field name="type">view</field>
 		<field name="code">00002</field>
@@ -1068,9 +1091,11 @@
 		<field name="parent_id" eval="[(6,0,[a_root])]"/>
 	</record>
 
+	<!--
 #
 #  40000 à 49999 - REVENUS (PRODUITS) D'EXPLOITATION  (Revenus ou Chiffre d'Affaires)  /  INCOME
 #
+-->
 	<record model="account.account" id="rvn_40000">
 		<field name="type">view</field>
 		<field name="code">40000</field>
@@ -1078,10 +1103,11 @@
 
 		<field name="parent_id" eval="[(6,0,[resultats_002])]"/>
 	</record>
-
+	<!--
 #
 #  41000 à 42999 - VENTES de Services  -  Service SALES
 #
+-->
 	<record model="account.account" id="vente_service_41000">
 		<field name="type">view</field>
 		<field name="code">41000</field>
@@ -1103,10 +1129,11 @@
 
 			<field name="parent_id" eval="[(6,0,[vente_service_41000])]"/>
 		</record>
-
+		<!--
 #
 #  43000 à 43999 - VENTES de produits  -  Products SALES
 #
+-->
 	<record model="account.account" id="vente_produits_43000">
 		<field name="type">view</field>
 		<field name="code">43000</field>
@@ -1128,10 +1155,11 @@
 
 			<field name="parent_id" eval="[(6,0,[vente_produits_43000])]"/>
 		</record>
-
+		<!--
 #
 #  44000 à 46999 - VENTES - Débits Divers
 #
+-->
 	<record model="account.account" id="ventes_dt_45000">
 			<field name="type">view</field>
 			<field name="code">44000</field>
@@ -1167,10 +1195,11 @@
 
 			<field name="parent_id" eval="[(6,0,[ventes_dt_45000])]"/>
 		</record>
-
+		<!--
 #
 #  47000 à 49999 - AUTRES Revenus
 #
+-->
 	<record model="account.account" id="autres_revenus_47000">
 		<field name="type">view</field>
 		<field name="code">47000</field>
@@ -1206,10 +1235,11 @@
 
 			<field name="parent_id" eval="[(6,0,[autres_revenus_47000])]"/>
 		</record>
-
+		<!--
 #
 #  50000 à 59999 - (C.M.V)  COÛT DES MARCHANDISES VENDUES  /  EXPENSE
 #
+-->
 	<record model="account.account" id="cmv_50000">
 		<field name="type">view</field>
 		<field name="code">50000</field>
@@ -1280,10 +1310,11 @@
 
 			<field name="parent_id" eval="[(6,0,[cmv_50000])]"/>
 		</record>
-	
+		<!--
 #
 #  60000 à 69999 - DÉPENSES (CHARGES) D'EXPLOITATION  /  EXPENSE
 #
+-->
 	<record model="account.account" id="depenses_60000">
 		<field name="type">view</field>
 		<field name="code">60000</field>
@@ -1291,10 +1322,11 @@
 
 		<field name="parent_id" eval="[(6,0,[resultats_002])]"/>
 	</record>
-
+	<!--
 #
 #  61000 à 64999 - FRAIS D'EXPLOITATION  (de vente)
 #
+-->
 	<record model="account.account" id="frais_expl_61000">
 		<field name="type">view</field>
 		<field name="code">61000</field>
@@ -1358,10 +1390,11 @@
 
 				<field name="parent_id" eval="[(6,0,[fr_exp_61100])]"/>
 			</record>
-
+			<!--
 #
 #  65000 à 69999 - FRAIS D'ADMINIISTRATION
 #
+-->
 	<record model="account.account" id="frais_adm_65000">
 		<field name="type">view</field>
 		<field name="code">65000</field>
@@ -1936,7 +1969,7 @@
 
 				<field name="parent_id" eval="[(6,0,[frais_adm_69000])]"/>
 			</record>
-
+			<!--
 #
 #  ***  Définition des TAXES  ***
 #
@@ -1969,6 +2002,7 @@
 #
 #  TVQ - Taxe de Vente du Québec
 #		
+-->
 		<record model="account.tax" id="TVQ">
 			<field name="type">percent</field>
 			<field name="name">TVQ 7.5 %</field>			
@@ -1977,9 +2011,11 @@
 			<field name="account_paid_id" ref="tvq_payee"/>
 			<field name="sequence">2</field>
 		</record>
+		<!--
 #
 #  TPS - Taxe sur les Produits et Services (Canada)
 #
+-->
 		<record model="account.tax" id="TPS">
 			<field name="type">percent</field>
 			<field name="name">TPS 6.0 %</field>		

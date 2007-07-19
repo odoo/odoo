@@ -64,7 +64,7 @@ def _data_save(self, cr, uid, data, context):
 	fy_id = data['form']['fy_id']
 	if data['form']['report_new']:
 		period = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy2_id']).period_ids[0]
-		cr.execute('select id from account_account')
+		cr.execute('select id from account_account WHERE active')
 		ids = map(lambda x: x[0], cr.fetchall())
 		for account in pool.get('account.account').browse(cr, uid, ids):
 			if account.close_method=='none' or account.type == 'view':

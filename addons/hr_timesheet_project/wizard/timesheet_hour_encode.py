@@ -55,9 +55,11 @@ def _action_line_create(self, cr, uid, data, context):
 			res2 = ts.on_change_unit_amount(cr, uid, False, product_id, work.hours or 0.0,unit_id, context)
 			if res2:
 				res.update(res2['value'])
+			if hasattr(ts, 'on_change_account_id'):
+				res2 = ts.on_change_account_id(cr, uid, False, work.task_id.project_id.category_id.id)
+				if res2:
+					res.update(res2['value'])
 			id = ts.create(cr, uid, res, context)
-		else:
-			print 'not found', work.task_id.project_id.name
 
 	value = {
 		'domain': "[('user_id','=',%d),('date','>=','%s'), ('date','<=','%s')]" % (uid, time.strftime('%Y-%m-%d 00:00:00'), time.strftime('%Y-%m-%d 23:59:59')),

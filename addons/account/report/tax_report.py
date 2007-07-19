@@ -52,7 +52,7 @@ class tax_report(report_sxw.rml_parse):
 		self.cr.execute('select sum(line.tax_amount) as tax_amount, sum(line.debit) as debit, sum(line.credit) as credit, count(*) as count, account.id as account_id \
 				from account_move_line AS line, account_account AS account \
 				where line.state<>%s and line.period_id=%d and line.tax_code_id=%d \
-				AND line.account_id = account.id AND account.company_id = %d \
+				AND line.account_id = account.id AND account.company_id = %d AND account.active \
 				group by account.id', ('draft',period_id, tax_code_id, company_id))
 		res = self.cr.dictfetchall()
 		i = 0

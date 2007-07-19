@@ -93,7 +93,8 @@ class followup_all_print(wizard.interface):
 				"AND (a.type='receivable') "\
 				"AND (l.state<>'draft') "\
 				"AND (l.reconcile_id is NULL) "\
-				"AND (l.partner_id is NOT NULL) ")
+				"AND (l.partner_id is NOT NULL) "\
+				"AND a.active ")
 		ids = map(lambda x: x[0], cr.fetchall())
 		return {'partner_ids': ids}
 
@@ -109,6 +110,7 @@ class followup_all_print(wizard.interface):
 					"AND (l.state<>'draft') "\
 					"AND (l.reconcile_id is NULL) "\
 					"AND partner_id in ("+','.join(map(str,partner_ids))+") "\
+					"AND a.active "\
 				"ORDER BY l.date")
 			move_lines = cr.fetchall()
 		else:

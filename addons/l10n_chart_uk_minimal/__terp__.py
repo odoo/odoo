@@ -41,7 +41,7 @@
 	"author" : "Seath Solutions Ltd",
 	"website": "http://www.seathsolutions.com",
 	"category" : "Localisation/Account charts",
-	"depends" : ["base", "account", "base_iban", "base_vat"],
+	"depends" : ["base", "account", "base_iban", "base_vat", "account_chart"],
 	"init_xml" : [],
 	"demo_xml" : [],
 	"update_xml" : ["account_chart.xml","account_tax.xml"],

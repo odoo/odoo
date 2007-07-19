@@ -47,7 +47,7 @@ class account_inverted_analytic_balance(report_sxw.rml_parse):
 		ids = map(lambda x: x.id, accounts)
 		self.cr.execute("SELECT aa.name AS name, aa.code AS code, sum(aal.amount) AS balance, sum(aal.unit_amount) AS quantity, aa.id AS id \
 				FROM account_analytic_line AS aal, account_account AS aa \
-				WHERE (aal.general_account_id=aa.id) AND (aal.account_id IN ("+','.join(map(str, ids))+")) AND (date>=%s) AND (date<=%s) \
+				WHERE (aal.general_account_id=aa.id) AND (aal.account_id IN ("+','.join(map(str, ids))+")) AND (date>=%s) AND (date<=%s) AND aa.active \
 				GROUP BY aal.general_account_id, aa.name, aa.code, aal.code, aa.id ORDER BY aal.code", (date1, date2))
 		res = self.cr.dictfetchall()
 

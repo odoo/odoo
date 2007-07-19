@@ -99,23 +99,6 @@ class timesheet_invoice(osv.osv):
 	}
 	_order = 'name desc, account_id'
 	def init(self, cr):
-		#cr.execute("""
-		#create or replace view report_hr_timesheet_invoice_journal as (
-		#	select
-		#		min(l.id) as id,
-		#		substring(l.create_date for 7)||'-01' as name,
-		#		sum(greatest(-l.amount,0)) as cost,
-		#		sum(greatest(l.amount,0)) as revenue,
-		#		sum(l.unit_amount*u.factor) as quantity,
-		#		journal_id,
-		#		account_id
-		#	from account_analytic_line l
-		#		left join product_uom u on (u.id=l.product_uom_id)
-		#	group by
-		#		substring(l.create_date for 7),
-		#		journal_id,
-		#		account_id
-		#)""")
 		cr.execute("""
 		create or replace view report_hr_timesheet_invoice_journal as (
 			select
@@ -138,5 +121,6 @@ class timesheet_invoice(osv.osv):
 				substring(l.date for 7),
 				journal_id,
 				account_id
+			limit 12
 		)""")
 timesheet_invoice()

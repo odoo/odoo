@@ -51,9 +51,9 @@ class partner_balance(report_sxw.rml_parse):
 				from account_move_line AS line, account_account AS account \
 				where line.partner_id is not null and line.date>=%s and line.date<=%s \
 				and line.period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d) \
-				AND line.account_id = account.id AND account.company_id = %d', (data['form']['date1'], data['form']['date2'], data['form']['fiscalyear'], data['form']['company_id']))
+				AND line.account_id = account.id AND account.company_id = %d AND account.active', (data['form']['date1'], data['form']['date2'], data['form']['fiscalyear'], data['form']['company_id']))
 		new_ids = [id for (id,) in self.cr.fetchall()]
-		self.cr.execute("SELECT a.id FROM account_account a LEFT JOIN account_account_type t ON (a.type=t.code) WHERE t.partner_account=TRUE AND a.company_id = %d", (data['form']['company_id'],))
+		self.cr.execute("SELECT a.id FROM account_account a LEFT JOIN account_account_type t ON (a.type=t.code) WHERE t.partner_account=TRUE AND a.company_id = %d AND a.active", (data['form']['company_id'],))
 		self.account_ids = ','.join([str(a) for (a,) in self.cr.fetchall()])
 		self.partner_ids = ','.join(map(str, new_ids))
 		objects = self.pool.get('res.partner').browse(self.cr, self.uid, new_ids)

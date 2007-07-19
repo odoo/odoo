@@ -52,7 +52,7 @@ class aged_trial_report(report_sxw.rml_parse):
 						WHERE (line.account_id=account_account.id) AND (line.reconcile_id IS NULL) \
 						AND (line.partner_id=res_partner.id) AND (line.state<>'draft') \
 						AND (line.period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d))\
-						AND (account_account.company_id = %d) \
+						AND (account_account.company_id = %d) AND account_account.active \
 						ORDER BY res_partner.name", (form['fiscalyear'], form['company_id']))
 		partners = self.cr.dictfetchall()
 		for partner in partners:
@@ -63,7 +63,7 @@ class aged_trial_report(report_sxw.rml_parse):
 					AND (date<%s) AND (partner_id=%d) \
 					AND (reconcile_id IS NULL) AND (line.state<>'draft') \
 					AND (line.period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)) \
-					AND (account_account.company_id = %d)", (form['0']['start'], partner['id'], form['fiscalyear'], form['company_id']))
+					AND (account_account.company_id = %d) AND account_account.active", (form['0']['start'], partner['id'], form['fiscalyear'], form['company_id']))
 			before = self.cr.fetchone()
 			values['before'] = before and before[0] or ""
 			for i in range(5):
@@ -73,7 +73,7 @@ class aged_trial_report(report_sxw.rml_parse):
 						AND (date >= %s) AND (date <= %s) \
 						AND (partner_id=%d) AND (reconcile_id IS NULL) \
 						AND line.state<>'draft' AND (line.period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)) \
-						AND (account_account.company_id = %d)", (form[str(i)]['start'], form[str(i)]['stop'], partner['id'], form['fiscalyear'], form['company_id']))
+						AND (account_account.company_id = %d) AND account_account.active", (form[str(i)]['start'], form[str(i)]['stop'], partner['id'], form['fiscalyear'], form['company_id']))
 				during = self.cr.fetchone()
 				values[str(i)] = during and during[0] or ""
 
@@ -82,7 +82,7 @@ class aged_trial_report(report_sxw.rml_parse):
 					WHERE (line.account_id=account_account.id) AND (account_account.type IN ('payable','receivable')) \
 					AND (partner_id = %d) AND (reconcile_id IS NULL) \
 					AND (line.state <> 'draft') AND (line.period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)) \
-					AND (account_account.company_id = %d)", (partner['id'], form['fiscalyear'], form['company_id']))
+					AND (account_account.company_id = %d) AND account_account.active", (partner['id'], form['fiscalyear'], form['company_id']))
 			total = self.cr.fetchone()
 			values['total'] = total and total[0] or 0.0
 			values['name'] = partner['name']
@@ -106,7 +106,7 @@ class aged_trial_report(report_sxw.rml_parse):
 				WHERE (line.account_id=account_account.id) AND (account_account.type IN ('payable','receivable')) \
 				AND reconcile_id IS NULL AND (line.state<>'draft') \
 				AND partner_id is not null AND (line.period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)) \
-				AND (account_account.company_id = %d)", (fiscalyear, company_id))
+				AND (account_account.company_id = %d) AND account_account.active", (fiscalyear, company_id))
 		total = self.cr.fetchone()
 		return total and total[0] or 0.0
 	
@@ -117,7 +117,7 @@ class aged_trial_report(report_sxw.rml_parse):
 				AND reconcile_id IS NULL AND (date < %s) \
 				AND (line.state <> 'draft') AND partner_id is not null \
 				AND (line.period_id in (SELECT id FROM account_period WHERE fiscalyear_id = %d)) \
-				AND (account_account.company_id = %d)", (date, fiscalyear, company_id))
+				AND (account_account.company_id = %d) AND account_account.active", (date, fiscalyear, company_id))
 		before = self.cr.fetchone()
 		return before and before[0] or 0.0
 
@@ -128,7 +128,7 @@ class aged_trial_report(report_sxw.rml_parse):
 				AND reconcile_id IS NULL AND (date >= %s) AND (date <= %s) \
 				AND (line.state<>'draft') AND partner_id is not null \
 				AND (line.period_id in (SELECT id FROM account_period WHERE fiscalyear_id = %d)) \
-				AND (account_account.company_id = %d)", (period['start'], period['stop'], fiscalyear, company_id))
+				AND (account_account.company_id = %d) AND account_account.active", (period['start'], period['stop'], fiscalyear, company_id))
 		period = self.cr.fetchone()
 		return period and period[0] or 0.0
 

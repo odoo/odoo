@@ -192,8 +192,8 @@ class account_move_line(osv.osv):
 		'balance': fields.function(_balance, method=True, string='Balance'),
 		'active': fields.boolean('Active'),
 		'state': fields.selection([('draft','Draft'), ('valid','Valid')], 'State', readonly=True),
-		'tax_code_id': fields.many2one('account.tax.code', 'Tax Account', states={'valid':[('readonly', True)]}),
-		'tax_amount': fields.float('Tax/Base Amount', digits=(16,2), select=True, states={'valid':[('readonly', True)]}),
+		'tax_code_id': fields.many2one('account.tax.code', 'Tax Account'),
+		'tax_amount': fields.float('Tax/Base Amount', digits=(16,2), select=True),
 	}
 	_defaults = {
 		'blocked': lambda *a: False,

@@ -140,7 +140,7 @@ class account_analytic_account(osv.osv):
 		'user_id' : fields.many2one('res.users', 'Account Manager'),
 		'date_start': fields.date('Date Start'),
 		'date': fields.date('Date End'),
-		'stats_ids': fields.one2many('report.hr.timesheet.invoice.journal', 'account_id', string='Statistics', readonly=True),
+		'stats_ids': fields.one2many('report.hr.timesheet.invoice.journal', 'account_id', 'Statistics', readonly=True),
 		'company_id': fields.many2one('res.company', 'Company', required=True),
 		'company_currency_id': fields.function(_get_company_currency, method=True, type='many2one', relation='res.currency', string='Currency'),
 		'state': fields.selection([('draft','Draft'), ('open','Open'), ('pending','Pending'), ('close','Close'),], 'State', required=True),
