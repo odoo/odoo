@@ -415,7 +415,6 @@ class crm_case(osv.osv):
 			if history:
 				obj = self.pool.get('crm.case.history')
 				data['description'] = case.description
-				print case, case.user_id, case.user_id.address_id
 				data['email'] = email or (case.user_id and case.user_id.address_id and case.user_id.address_id.email) or False
 			obj.create(cr, uid, data, context)
 		return True
