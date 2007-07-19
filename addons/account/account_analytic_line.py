@@ -69,11 +69,11 @@ class account_analytic_line(osv.osv):
 		if unit_amount and prod_id:
 			rate = 1
 			if unit:
-				uom_id = self.pool.get('product.uom')
-				hunit = uom_id.browse(cr, uid, unit)
+				uom_obj = self.pool.get('product.uom')
+				hunit = uom_obj.browse(cr, uid, unit)
 				rate = hunit.factor
-			uom_id = self.pool.get('product.product')
-			prod = uom_id.browse(cr, uid, prod_id)
+			product_obj = self.pool.get('product.product')
+			prod = product_obj.browse(cr, uid, prod_id)
 			a = prod.product_tmpl_id.property_account_expense
 			if not a:
 				a = prod.categ_id.property_account_expense_categ
