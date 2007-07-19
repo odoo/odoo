@@ -1635,7 +1635,7 @@ class orm(object):
 			return self._columns[field].search(cr, self, args, field, value, offset, limit, uid)
 
 	def name_get(self, cr, user, ids, context={}):
-		if not len(ids):
+		if not ids:
 			return []
 		if isinstance(ids, (int, long)):
 			ids = [ids]
