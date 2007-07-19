@@ -33,6 +33,7 @@ class groups(osv.osv):
 	_name = "res.groups"
 	_columns = {
 		'name': fields.char('Group Name', size=64, required=True),
+		'model_access': fields.one2many('ir.model.access', 'group_id', 'Access Controls'),
 		'rule_groups': fields.many2many('ir.rule.group', 'group_rule_group_rel', 'group_id', 'rule_group_id', 'Rules', domain="[('global', '<>', True)]"),
 	}
 	def write(self, cr, uid, *args, **argv):
@@ -129,7 +130,12 @@ class users(osv.osv):
 		login = self.read(cr, uid, [id], ['login'])[0]['login']
 		default.update({'login': login+' (copy)'})
 		return super(users, self).copy(cr, uid, id, default, context)
-
-
 users()
+
+class groups2(osv.osv):
+	_inherit = 'res.groups'
+	_columns = {
+		'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users'),
+	}
+groups2()
 

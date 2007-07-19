@@ -12,16 +12,5 @@
 		<field name="company_id" ref="main_company"/>
 	</record>
 
-	<record model="res.currency" id="USD">
-		<field name="name">USD</field>
-		<field name="rounding">0.01</field>
-		<field name="accuracy">4</field>
-	</record>
-	
-	<record model="res.currency.rate" id="rateUSD">
-		<field name="rate">0.8400</field>
-		<field name="currency_id" ref="USD"/>
-	</record>
-
 </data>
 </terp>

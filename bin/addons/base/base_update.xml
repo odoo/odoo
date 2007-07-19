@@ -58,9 +58,26 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Groups">
-				<field name="name" colspan="4" select="1"/>
-				<field name="rule_groups" />
-
+				<notebook>
+					<page string="Group">
+						<field name="name" colspan="4" select="1"/>
+						<field name="users" colspan="4"/>
+					</page>
+					<page string="Security">
+						<field name="model_access" colspan="4">
+							<form string="Access Controls">
+								<field name="name" select="1" colspan="4"/>
+								<field name="model_id" select="1"/>
+								<newline/>
+								<field name="perm_read"/>
+								<field name="perm_write"/>
+								<field name="perm_create"/>
+								<field name="perm_unlink"/>
+							</form>
+						</field>
+						<field name="rule_groups" colspan="4"/>
+					</page>
+				</notebook>
 			</form>
 		</field>
 	</record>

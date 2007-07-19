@@ -89,6 +89,15 @@ class res_currency(osv.osv):
 				return self.round(cr, uid, to_currency, from_amount * from_currency.rate/to_currency.rate)
 			else:
 				return (from_amount * from_currency.rate/to_currency.rate)
+	def name_search(self, cr, uid, name, args=[], operator='ilike', context={}, limit=80):
+		args2 = args[:]
+		if name:
+			args += [('name', operator, name)]
+			args2 += [('code', operator, name)]
+		ids = self.search(cr, uid, args, limit=limit)
+		ids += self.search(cr, uid, args2, limit=limit)
+		res = self.name_get(cr, uid, ids, context)
+		return res
 res_currency()
 
 class res_currency_rate(osv.osv):
