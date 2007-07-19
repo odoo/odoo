@@ -156,7 +156,7 @@ class rml_parse(object):
 		except Exception,e:
 			import traceback, sys
 			tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
-			netsvc.Logger().notifyChannel('report', netsvc.LOG_ERROR, 'report %s: %s\n%s' % (self.name, tb_s, str(e)))
+			netsvc.Logger().notifyChannel('report', netsvc.LOG_ERROR, 'report %s:\n%s\n%s\nexpr: %s' % (self.name, tb_s, str(e), expr))
 			res = 'Error'
 		return res
 
