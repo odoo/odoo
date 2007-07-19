@@ -30,69 +30,144 @@ import pooler
 import time
 from report import report_sxw
 
-SUMS  = ('credit','debit','balance','quantity','revenue')
-
 class account_analytic_cost_ledger(report_sxw.rml_parse):
 	def __init__(self, cr, uid, name, context):
 		super(account_analytic_cost_ledger, self).__init__(cr, uid, name, context)
+		self.sum_revenue={}
+		self.account_sum_revenue={}
 		self.localcontext.update( {
 			'time': time,
-			'lines': self._lines_all,
-			'totals': dict.fromkeys(SUMS, 0.0)
+			'lines_g': self._lines_g,
+			'lines_a': self._lines_a,
+			'account_sum_debit': self._account_sum_debit,
+			'account_sum_credit': self._account_sum_credit,
+			'account_sum_balance': self._account_sum_balance,
+			'account_sum_qty': self._account_sum_qty,
+			'account_sum_revenue': self._account_sum_revenue,
+			'account_g_sum_revenue': self._account_g_sum_revenue,
+			'sum_debit': self._sum_debit,
+			'sum_credit': self._sum_credit,
+			'sum_balance': self._sum_balance,
+			'sum_qty': self._sum_qty,
+			'sum_revenue': self._sum_revenue,
 		})
 
-	def _lines_all(self, accounts, date1, date2):
-		result = []
-		for account in accounts:
-			accs =  self._lines(account.id, date1, date2).values()
-			result.append( {
-				'code': account.code,
-				'name': account.complete_name,
-				'accounts': accs,
-				'qty_max': account.quantity_max or '/',
-				'debit_max': account.amount_max or '/'
-			})
-			for word in SUMS:
-				s=reduce(lambda x,y:x+y[word], accs, 0.0)
-				result[-1][word] = s
-				self.localcontext['totals'][word] += s
-		return result
+	def _lines_g(self, account_id, date1, date2):
+		self.cr.execute("SELECT sum(aal.amount) AS balance, aa.code AS code, aa.name AS name, aa.id AS id, sum(aal.unit_amount) AS quantity \
+				FROM account_account AS aa, account_analytic_line AS aal \
+				WHERE (aal.account_id=%d) AND (aal.date>=%s) AND (aal.date<=%s) AND (aal.general_account_id=aa.id) \
+				GROUP BY aa.code, aa.name, aa.id ORDER BY aa.code", (account_id, date1, date2))
+		res = self.cr.dictfetchall()
 
-	def _lines(self, account_id, date1, date2):
-		lineobj = self.pool.get('account.analytic.line')
-		line_ids = lineobj.search(self.cr, self.uid, [('account_id','=',account_id), ('date','>=',date1), ('date','<=',date2)])
-		result = {}
-		for line in lineobj.browse(self.cr, self.uid, line_ids):
-			if line.general_account_id.id not in result:
-				result[line.general_account_id.id] = {
-					'code': line.general_account_id.code,
-					'name': line.general_account_id.name,
-					'lines': []
-				}
-				result[line.general_account_id.id].update(dict.fromkeys(SUMS, 0.0))
+		for r in res:
+			if r['balance'] > 0:
+				r['debit'] = r['balance']
+				r['credit'] = 0.0
+			elif r['balance'] < 0:
+				r['debit'] = 0.0
+				r['credit'] = -r['balance']
+			else:
+				r['debit'] = 0.0
+				r['credit'] = 0.0
+		return res
 
+	def _lines_a(self, general_account_id, account_id, date1, date2):
+		self.cr.execute("SELECT aal.id AS id, aal.name AS name, aal.code AS code, aal.amount AS balance, aal.date AS date, aaj.code AS cj, aal.unit_amount AS quantity \
+				FROM account_analytic_line AS aal, account_analytic_journal AS aaj \
+				WHERE (aal.general_account_id=%d) AND (aal.account_id=%d) AND (aal.date>=%s) AND (aal.date<=%s) \
+				AND (aal.journal_id=aaj.id) \
+				ORDER BY aal.date, aaj.code, aal.code", (general_account_id, account_id, date1, date2))
+		res = self.cr.dictfetchall()
+
+		line_obj = self.pool.get('account.analytic.line')
+		price_obj = self.pool.get('product.pricelist')
+		lines = {}
+		for l in line_obj.browse(self.cr, self.uid, [ x['id'] for x in res]):
+			lines[l.id] = l
+		if not account_id in self.sum_revenue:
+			self.sum_revenue[account_id] = 0.0
+		if not general_account_id in self.account_sum_revenue:
+			self.account_sum_revenue[general_account_id] = 0.0
+		for r in res:
+			id = r['id']
 			revenue = 0.0
-			if line.amount<0 and line.product_id and line.product_uom_id and line.account_id.pricelist_id:
-				c = {
-					'uom': line.product_uom_id.id
-				}
-				id = line.account_id.pricelist_id.id
-				price = self.pool.get('product.pricelist').price_get(self.cr, self.uid, [id],
-					line.product_id.id, line.unit_amount, c)[id]
-				revenue = round(price * line.unit_amount, 2)
-			result[line.general_account_id.id]['lines'].append( {
-				'date':line.date,
-				'cj':line.journal_id.code,
-				'name': line.name,
-				'quantity': line.unit_amount,
-				'credit': line.amount <0 and -line.amount or 0,
-				'debit': line.amount >0 and line.amount or 0,
-				'balance': line.amount,
-				'revenue': revenue
-			} )
-			for word in SUMS:
-				result[line.general_account_id.id][word] += (result[line.general_account_id.id]['lines'][-1][word] or 0.0)
-		return result
+			if lines[id].amount < 0 and lines[id].product_id and lines[id].product_uom_id and lines[id].account_id.pricelist_id:
+				ctx = {'uom': lines[id].product_uom_id.id}
+				price = price_obj.price_get(self.cr, self.uid, [lines[id].pricelist_id.id], lines[id].product_id.id, lines[id].unit_amount, ctx)[lines[id].pricelist_id.id]
+				revenue = round(price * lines[id].unit_amount, 2)
+			r['revenue'] = revenue
+			self.sum_revenue[account_id] += revenue
+			self.account_sum_revenue[general_account_id] += revenue
+			if r['balance'] > 0:
+				r['debit'] = r['balance']
+				r['credit'] = 0.0
+			elif r['balance'] < 0:
+				r['debit'] = 0.0
+				r['credit'] = -r['balance']
+			else:
+				r['debit'] = 0.0
+				r['credit'] = 0.0
+		return res
 
-report_sxw.report_sxw('report.hr.timesheet.invoice.account.analytic.account.cost_ledger', 'account.analytic.account', 'addons/hr_timesheet_invoice/report/cost_ledger.rml',parser=account_analytic_cost_ledger)
+	def _account_sum_debit(self, account_id, date1, date2):
+		self.cr.execute("SELECT sum(amount) FROM account_analytic_line WHERE account_id=%d AND date>=%s AND date<=%s AND amount>0", (account_id, date1, date2))
+		return self.cr.fetchone()[0] or 0.0
+
+	def _account_sum_credit(self, account_id, date1, date2):
+		self.cr.execute("SELECT -sum(amount) FROM account_analytic_line WHERE account_id=%d AND date>=%s AND date<=%s AND amount<0", (account_id, date1, date2))
+		return self.cr.fetchone()[0] or 0.0
+
+	def _account_sum_balance(self, account_id, date1, date2):
+		debit = self._account_sum_debit(account_id, date1, date2) 
+		credit = self._account_sum_credit(account_id, date1, date2)
+		return (debit-credit)
+
+	def _account_sum_qty(self, account_id, date1, date2):
+		self.cr.execute("SELECT sum(unit_amount) FROM account_analytic_line WHERE account_id=%d AND date>=%s AND date<=%s", (account_id, date1, date2))
+		return self.cr.fetchone()[0] or 0.0
+
+	def _account_sum_revenue(self, account_id):
+		return self.sum_revenue.get(account_id, 0.0)
+
+	def _account_g_sum_revenue(self, general_account_id):
+		return self.account_sum_revenue.get(general_account_id, 0.0)
+
+	def _sum_debit(self, accounts, date1, date2):
+		ids = map(lambda x: x.id, accounts)
+		if not len(ids):
+			return 0.0
+		self.cr.execute("SELECT sum(amount) FROM account_analytic_line WHERE account_id IN ("+','.join(map(str, ids))+") AND date>=%s AND date<=%s AND amount>0", (date1, date2))
+		return self.cr.fetchone()[0] or 0.0
+
+	def _sum_credit(self, accounts, date1, date2):
+		ids = map(lambda x: x.id, accounts)
+		if not len(ids):
+			return 0.0
+		ids = map(lambda x: x.id, accounts)
+		self.cr.execute("SELECT -sum(amount) FROM account_analytic_line WHERE account_id IN ("+','.join(map(str, ids))+") AND date>=%s AND date<=%s AND amount<0", (date1, date2))
+		return self.cr.fetchone()[0] or 0.0
+
+	def _sum_balance(self, accounts, date1, date2):
+		debit = self._sum_debit(accounts, date1, date2) or 0.0
+		credit = self._sum_credit(accounts, date1, date2) or 0.0
+		return (debit-credit)
+
+	def _sum_qty(self, accounts, date1, date2):
+		ids = map(lambda x: x.id, accounts)
+		if not len(ids):
+			return 0.0
+		ids = map(lambda x: x.id, accounts)
+		self.cr.execute("SELECT sum(unit_amount) FROM account_analytic_line WHERE account_id IN ("+','.join(map(str, ids))+") AND date>=%s AND date<=%s", (date1, date2))
+		return self.cr.fetchone()[0] or 0.0
+
+	def _sum_revenue(self, accounts):
+		ids = map(lambda x: x.id, accounts)
+		if not len(ids):
+			return 0.0
+		res = 0.0
+		for id in ids:
+			res += self.sum_revenue.get(id, 0.0)
+		return res
+
+report_sxw.report_sxw('report.hr.timesheet.invoice.account.analytic.account.cost_ledger', 'account.analytic.account', 'addons/hr_timesheet_invoice/report/cost_ledger.rml',parser=account_analytic_cost_ledger, header=False)
 
