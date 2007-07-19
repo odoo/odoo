@@ -791,9 +791,10 @@ class account_move_reconcile(osv.osv):
 		'name': fields.char('Name', size=64, required=True),
 		'type': fields.char('Type', size=16, required=True),
 		'line_id': fields.one2many('account.move.line', 'reconcile_id', 'Entry lines'),
+		'create_date': fields.date('Creation date', readonly=True),
 	}
 	_defaults = {
-		'name': lambda self,cr,uid,ctx={}: self.pool.get('ir.sequence').get(cr, uid, 'account.reconcile') or '/'
+		'name': lambda self,cr,uid,ctx={}: self.pool.get('ir.sequence').get(cr, uid, 'account.reconcile') or '/',
 	}
 account_move_reconcile()
 
