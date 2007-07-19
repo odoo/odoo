@@ -38,7 +38,7 @@ class account_invoice(osv.osv):
 		res = {}
 		for invoice in self.browse(cr,uid,ids):
 			if invoice.price_type == 'tax_included':
-				res[invoice.id]= invoice.amount_total - invoice.amount_tax
+				res[invoice.id] = reduce( lambda x, y: x+y.price_subtotal, invoice.invoice_line,0)
 			else:
 				res[invoice.id] = super(account_invoice, self)._amount_untaxed(cr, uid, [invoice.id], name, args, context)[invoice.id]
 		return res
@@ -56,7 +56,7 @@ class account_invoice(osv.osv):
 		res = {}
 		for invoice in self.browse(cr,uid,ids):
 			if invoice.price_type == 'tax_included':
-				res[invoice.id]= reduce( lambda x, y: x+y.price_subtotal_incl, invoice.invoice_line,0)
+				res[invoice.id]= invoice.amount_untaxed + invoice.amount_tax
 			else:
 				res[invoice.id] = super(account_invoice, self)._amount_total(cr, uid, [invoice.id], name, args, context)[invoice.id]
 		return res
