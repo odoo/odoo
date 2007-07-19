@@ -85,28 +85,17 @@ class product_pricelist(osv.osv):
 		'active': lambda *a: 1,
 	}
 
-	#
-	# IN:
-	#   Context {
-	#      'uom': Unit of Measure (Int)
-	#      'partner': Partner ID (int)
-	#   }
-	#
+	#   context = { 'uom': Unit of Measure (Int), 'partner': Partner ID (int) }
 	def price_get(self, cr, uid, ids, prod_id, qty, partner=None, context={}):
 		if context and ('partner_id' in context):
 			partner = context['partner_id']
+		currency_obj = self.pool.get('res.currency')
 		result = {}
 		for id in ids:
+			# XXX add date test to select the pricelist version
 			cr.execute('select * from product_pricelist_version where pricelist_id=%d and active=True order by id limit 1', (id,))
-			#
-			# Ajouter le test de la date du jour
-			# 
-			plversion = False
+			plversion = cr.dictfetchone()
 
-			# Ahahahahaha
-			for plversion in cr.dictfetchall():
-				break
-			
 			if not plversion:
 				raise osv.except_osv('Warning !', 'No active version for the selected pricelist !\nPlease create or activate one.')
 
@@ -142,7 +131,7 @@ class product_pricelist(osv.osv):
 					else:
 						price_tmp = self.price_get(cr, uid, [res['base_pricelist_id']], prod_id, qty)[res['base_pricelist_id']]
 						ptype_src = self.pool.get('product.pricelist').browse(cr, uid, res['base_pricelist_id']).currency_id.id
-						price = self.pool.get('res.currency').compute(cr, uid, ptype_src, res['currency_id'], price_tmp)
+						price = currency_obj.compute(cr, uid, ptype_src, res['currency_id'], price_tmp)
 				elif res['base'] == -2:
 					where = []
 					if partner:
@@ -160,7 +149,7 @@ class product_pricelist(osv.osv):
 					continue
 				else:
 					price_type_o=self.pool.get('product.price.type').read(cr, uid, [ res['base'] ])[0]
-					price = self.pool.get('res.currency').compute(cr, uid, price_type_o['currency_id'][0], res['currency_id'], self.pool.get('product.product').price_get(cr, uid, [prod_id], price_type_o['field'])[prod_id])
+					price = currency_obj.compute(cr, uid, price_type_o['currency_id'][0], res['currency_id'], self.pool.get('product.product').price_get(cr, uid, [prod_id], price_type_o['field'])[prod_id])
 				
 				price_limit = price
 
@@ -224,7 +213,6 @@ class product_pricelist_item(osv.osv):
 		'min_quantity': fields.integer('Min. Quantity', required=True),
 		'sequence': fields.integer('Sequence', required=True),
 		'base': fields.selection(_price_field_get, 'Based on', required=True, size=-1),
-		#'base':	fields.many2one('product.price.type', 'Based on', required=True),
 		'base_pricelist_id': fields.many2one('product.pricelist', 'If Other Pricelist'),
 
 		'price_surcharge': fields.float('Price Surcharge'),
