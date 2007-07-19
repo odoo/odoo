@@ -167,14 +167,14 @@ class account_move_line(osv.osv):
 	_columns = {
 		'name': fields.char('Name', size=64, required=True),
 		'quantity': fields.float('Quantity', digits=(16,2), help="The optionnal quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very usefull for some reports."),
-		'debit': fields.float('Debit', digits=(16,2), states={'valid':[('readonly',True)]}),
-		'credit': fields.float('Credit', digits=(16,2), states={'valid':[('readonly',True)]}),
-		'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade", states={'valid':[('readonly',True)]}, domain=[('type','<>','view'), ('type', '<>', 'closed')]),
+		'debit': fields.float('Debit', digits=(16,2)),
+		'credit': fields.float('Credit', digits=(16,2)),
+		'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade", domain=[('type','<>','view'), ('type', '<>', 'closed')]),
 
-		'move_id': fields.many2one('account.move', 'Entry', ondelete="cascade", states={'valid':[('readonly',True)]}, help="The entry of this entry line.", select=2),
+		'move_id': fields.many2one('account.move', 'Move', ondelete="cascade", states={'valid':[('readonly',True)]}, help="The move of this entry line.", select=2),
 
 		'ref': fields.char('Ref.', size=32),
-		'statement_id': fields.many2one('account.bank.statement', 'Statement', help="The bank statement used for bank reconciliation", select=True),
+		'statement_id': fields.many2one('account.bank.statement', 'Statement', help="The bank statement used for bank reconciliation", select=1),
 		'reconcile_id': fields.many2one('account.move.reconcile', 'Reconcile', readonly=True, ondelete='set null', select=2),
 		'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optionnal other currency if it is a multi-currency entry."),
 		'currency_id': fields.many2one('res.currency', 'Currency', help="The optionnal other currency if it is a multi-currency entry."),
@@ -183,8 +183,8 @@ class account_move_line(osv.osv):
 		'journal_id': fields.many2one('account.journal', 'Journal', required=True),
 		'blocked': fields.boolean('Litigation', help="You can check this box to mark the entry line as a litigation with the associated partner"),
 
-		'partner_id': fields.many2one('res.partner', 'Partner Ref.', states={'valid':[('readonly',True)]}),
-		'date_maturity': fields.date('Maturity date', states={'valid':[('readonly',True)]}, help="This field is used for payable and receivable entries. You can put the limit date for the payment of this entry line."),
+		'partner_id': fields.many2one('res.partner', 'Partner Ref.'),
+		'date_maturity': fields.date('Maturity date', help="This field is used for payable and receivable entries. You can put the limit date for the payment of this entry line."),
 		'date': fields.date('Effective date', required=True),
 		'date_created': fields.date('Creation date'),
 		'analytic_lines': fields.one2many('account.analytic.line', 'move_id', 'Analytic lines'),
@@ -192,8 +192,8 @@ class account_move_line(osv.osv):
 		'balance': fields.function(_balance, method=True, string='Balance'),
 		'active': fields.boolean('Active'),
 		'state': fields.selection([('draft','Draft'), ('valid','Valid')], 'State', readonly=True),
-		'tax_code_id': fields.many2one('account.tax.code', 'Tax Account', states={'valid':[('readonly', True)]}),
-		'tax_amount': fields.float('Tax/Base Amount', digits=(16,2), select=True, states={'valid':[('readonly', True)]}),
+		'tax_code_id': fields.many2one('account.tax.code', 'Tax Account'),
+		'tax_amount': fields.float('Tax/Base Amount', digits=(16,2), select=True),
 	}
 	_defaults = {
 		'blocked': lambda *a: False,
