@@ -130,7 +130,7 @@
 		<record model="account.tax" id="vat_24">
 			<field name="name">TVA 2.4%</field>
 			<field name="amount" eval="0.024"/>
-			<field name="type">percent</field>
+			<field name="type">code</field>
 			<!--
 			<field name="account_collected_id" ref="vat_payable24"/>
 			<field name="account_paid_id" ref="vat_refund24"/>
@@ -140,58 +140,70 @@
 			<field name="tax_code_id" ref="vat_code_due_tva24"/>
 			<field name="ref_base_code_id" ref="vat_code_receivable_base"/>
 			<field name="ref_tax_code_id" ref="vat_code_payable24"/>
+			<field name="python_compute">result = round((price_unit * 0.024) / 0.05) * 0.05</field>
+			<field name="python_compute_inv">result = round((price_unit * ( 1 - (1 / 1.024))) / 0.05) * 0.05</field>
 		</record>
 		<record model="account.tax" id="vat_36">
 			<field name="name">TVA 3.6%</field>
 			<field name="amount" eval="0.036"/>
-			<field name="type">percent</field>
+			<field name="type">compute</field>
 
 			<field name="base_code_id" ref="vat_code_due_36"/>
 			<field name="tax_code_id" ref="vat_code_due_tva36"/>
 			<field name="ref_base_code_id" ref="vat_code_receivable_base"/>
 			<field name="ref_tax_code_id" ref="vat_code_payable36"/>
+			<field name="python_compute">result = round((price_unit * 0.036) / 0.05) * 0.05</field>
+			<field name="python_compute_inv">result = round((price_unit * ( 1 - (1 / 1.036))) / 0.05) * 0.05</field>
 		</record>
 		<record model="account.tax" id="vat_76">
 			<field name="name">TVA 7.6%</field>
 			<field name="amount" eval="0.076"/>
-			<field name="type">percent</field>
+			<field name="type">compute</field>
 
 			<field name="base_code_id" ref="vat_code_due_76"/>
 			<field name="tax_code_id" ref="vat_code_due_tva76"/>
 			<field name="ref_base_code_id" ref="vat_code_receivable_base"/>
 			<field name="ref_tax_code_id" ref="vat_code_payable76"/>
+			<field name="python_compute">result = round((price_unit * 0.076) / 0.05) * 0.05</field>
+			<field name="python_compute_inv">result = round((price_unit * ( 1 - (1 / 1.076))) / 0.05) * 0.05</field>
 		</record>
 
 
 		<record model="account.tax" id="vat_24_invest">
 			<field name="name">TVA 2.4% sur investissements</field>
 			<field name="amount" eval="0.024"/>
-			<field name="type">percent</field>
+			<field name="type">compute</field>
 
 			<field name="base_code_id" ref="vat_code_due_24"/>
 			<field name="tax_code_id" ref="vat_code_due_tva24"/>
 			<field name="ref_base_code_id" ref="vat_code_receivable_base_invest24"/>
 			<field name="ref_tax_code_id" ref="vat_code_payable_invest"/>
+			<field name="python_compute">result = round((price_unit * 0.024) / 0.05) * 0.05</field>
+			<field name="python_compute_inv">result = round((price_unit * ( 1 - (1 / 1.024))) / 0.05) * 0.05</field>
 		</record>
 		<record model="account.tax" id="vat_36_invest">
 			<field name="name">TVA 3.6% sur investissements</field>
 			<field name="amount" eval="0.036"/>
-			<field name="type">percent</field>
+			<field name="type">compute</field>
 
 			<field name="base_code_id" ref="vat_code_due_36"/>
 			<field name="tax_code_id" ref="vat_code_due_tva36"/>
 			<field name="ref_base_code_id" ref="vat_code_receivable_base_invest36"/>
 			<field name="ref_tax_code_id" ref="vat_code_payable_invest"/>
+			<field name="python_compute">result = round((price_unit * 0.036) / 0.05) * 0.05</field>
+			<field name="python_compute_inv">result = round((price_unit * ( 1 - (1 / 1.036))) / 0.05) * 0.05</field>
 		</record>
 		<record model="account.tax" id="vat_76_invest">
 			<field name="name">TVA 7.6% sur investissements</field>
 			<field name="amount" eval="0.076"/>
-			<field name="type">percent</field>
+			<field name="type">compute</field>
 
 			<field name="base_code_id" ref="vat_code_due_76"/>
 			<field name="tax_code_id" ref="vat_code_due_tva76"/>
 			<field name="ref_base_code_id" ref="vat_code_receivable_base_invest76"/>
 			<field name="ref_tax_code_id" ref="vat_code_payable_invest"/>
+			<field name="python_compute">result = round((price_unit * 0.076) / 0.05) * 0.05</field>
+			<field name="python_compute_inv">result = round((price_unit * ( 1 - (1 / 1.076))) / 0.05) * 0.05</field>
 		</record>
 
 		<record model="account.tax" id="vat_XO">
