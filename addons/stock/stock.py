@@ -323,12 +323,12 @@ class stock_picking(osv.osv):
 
 		'move_type': fields.selection([('direct','Direct Delivery'),('one','All at once')],'Delivery Method', required=True),
 		'state': fields.selection([
-			('draft','draft'),
-			('auto','waiting'),
-			('confirmed','confirmed'),
-			('assigned','assigned'),
-			('done','done'),
-			('cancel','cancel'),
+			('draft','Draft'),
+			('auto','Waiting'),
+			('confirmed','Confirmed'),
+			('assigned','Assigned'),
+			('done','Done'),
+			('cancel','Cancel'),
 			], 'State', readonly=True),
 		'date':fields.datetime('Date create'),
 
