@@ -37,7 +37,7 @@ sms_send_form = '''<?xml version="1.0"?>
 	<field name="user"/>
 	<field name="password"/>
 	<newline/>
-	<field name="text" colspan="3"/>
+	<field name="text" colspan="4"/>
 </form>''' % ('SMS - Gateway: clickatell','Bulk SMS send')
 
 sms_send_fields = {
