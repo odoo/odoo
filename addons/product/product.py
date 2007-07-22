@@ -193,7 +193,7 @@ class product_template(osv.osv):
 		'state': fields.selection([('draft', 'In Development'),('sellable','In production'),('end','End of lifecycle'),('obsolete','Obsolete')], 'State'),
 		'uos_id' : fields.many2one('product.uom', 'Unit of Sale'),
 		'uos_coeff': fields.float('UOM -> UOS Coeff', digits=(16,4)),
-		'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Mesure type', required=True),
+		'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure type', required=True),
 		'tracking': fields.boolean('Track lots'),
 		'seller_delay': fields.function(_calc_seller_delay, method=True, type='integer', string='Supplier lead time', help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
 		'seller_ids': fields.one2many('product.supplierinfo', 'product_id', 'Partners'),
