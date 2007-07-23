@@ -516,7 +516,9 @@ class orm(object):
 		self._inherit_fields=res
 		self._inherits_reload_src()
 
-	def browse(self, cr, uid, select, context={}, list_class=None):
+	def browse(self, cr, uid, select, context=None, list_class=None):
+		if not context:
+			context={}
 		self._list_class = list_class or browse_record_list
 		cache = {}
 		# need to accepts ints and longs because ids coming from a method 
@@ -529,7 +531,9 @@ class orm(object):
 			return []
 
 	# TODO: implement this
-	def __export_row(self, cr, uid, row, fields, prefix, context={}):
+	def __export_row(self, cr, uid, row, fields, prefix, context=None):
+		if not context:
+			context={}
 		lines = []
 		data = map(lambda x: '', range(len(fields)))
 		done = []
@@ -564,14 +568,18 @@ class orm(object):
 					data[fpos] = str(r or '')
 		return [data] + lines
 
-	def export_data(self, cr, uid, ids, fields, context={}):
+	def export_data(self, cr, uid, ids, fields, context=None):
+		if not context:
+			context={}
 		fields = map(lambda x: x.split('/'), fields)
 		datas = []
 		for row in self.browse(cr, uid, ids, context):
 			datas += self.__export_row(cr, uid, row, fields, [], context)
 		return datas
 
-	def import_data(self, cr, uid, fields, datas,  mode='init', current_module=None, noupdate=False, context={}):
+	def import_data(self, cr, uid, fields, datas,  mode='init', current_module=None, noupdate=False, context=None):
+		if not context:
+			context={}
 		fields = map(lambda x: x.split('/'), fields)
 		logger = netsvc.Logger()
 		def process_liness(self, datas, prefix, fields_def, position=0):
@@ -712,7 +720,9 @@ class orm(object):
 		#
 		return (done, 0, 0, 0)
 
-	def read(self, cr, user, ids, fields=None, context={}, load='_classic_read'):
+	def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
+		if not context:
+			context={}
 		self.pool.get('ir.model.access').check(cr, user, self._name, 'read')
 		if not fields:
 			fields = self._columns.keys() + self._inherit_fields.keys()
@@ -728,7 +738,9 @@ class orm(object):
 			return result[0]
 		return result
 
-	def _read_flat(self, cr, user, ids, fields, context={}, load='_classic_read'):
+	def _read_flat(self, cr, user, ids, fields, context=None, load='_classic_read'):
+		if not context:
+			context={}
 		if not ids:
 			return []
 
@@ -809,7 +821,9 @@ class orm(object):
 			cr.rollback()
 			raise except_orm('ValidateError', ('\n'.join(field_err_str), ','.join(field_error)))
 
-	def default_get(self, cr, uid, fields, context={}):
+	def default_get(self, cr, uid, fields, context=None):
+		if not context:
+			context={}
 		value = {}
 		# get the default values for the inherited fields
 		for t in self._inherits.keys():
@@ -828,7 +842,9 @@ class orm(object):
 				value[field] = field_value 
 		return value
 
-	def perm_read(self, cr, user, ids, context={}, details=True):
+	def perm_read(self, cr, user, ids, context=None, details=True):
+		if not context:
+			context={}
 		if not ids:
 			return []
 		fields = ', p.level, p.uid, p.gid'
@@ -854,7 +870,9 @@ class orm(object):
 			return res[ids]
 		return res
 
-	def unlink(self, cr, uid, ids, context={}):
+	def unlink(self, cr, uid, ids, context=None):
+		if not context:
+			context={}
 		if not ids:
 			return True
 		if isinstance(ids, (int, long)):
@@ -893,7 +911,9 @@ class orm(object):
 	#
 	# TODO: Validate
 	#
-	def write(self, cr, user, ids, vals, context={}):
+	def write(self, cr, user, ids, vals, context=None):
+		if not context:
+			context={}
 		if not ids:
 			return True
 		if isinstance(ids, (int, long)):
@@ -984,12 +1004,14 @@ class orm(object):
 	#
 	# TODO: Should set perm to user.xxx
 	#
-	def create(self, cr, user, vals, context={}):
+	def create(self, cr, user, vals, context=None):
 		""" create(cr, user, vals, context) -> int
 		cr = database cursor
 		user = user id
 		vals = dictionary of the form {'field_name':field_value, ...}
 		"""
+		if not context:
+			context={}
 		self.pool.get('ir.model.access').check(cr, user, self._name, 'create')
 
 		default = []
@@ -1056,7 +1078,9 @@ class orm(object):
 		self._update_function_stored(cr, user, [id_new], context=context)
 		return id_new
 
-	def _update_function_stored(self, cr, user, ids, context={}):
+	def _update_function_stored(self, cr, user, ids, context=None):
+		if not context:
+			context={}
 		f=filter(lambda a: isinstance(self._columns[a], fields.function) and self._columns[a].store, self._columns)
 		if f:
 			result=self.read(cr, user, ids, fields=f, context=context)
@@ -1075,7 +1099,9 @@ class orm(object):
 	#
 	# TODO: Validate
 	#
-	def perm_write(self, cr, user, ids, fields, context={}):
+	def perm_write(self, cr, user, ids, fields, context=None):
+		if not context:
+			context={}
 		if not ids:
 			return True
 		if isinstance(ids, (int, long)):
@@ -1100,7 +1126,9 @@ class orm(object):
 
 	# returns the definition of each field in the object
 	# the optional fields parameter can limit the result to some fields
-	def fields_get(self, cr, user, fields=None, context={}):
+	def fields_get(self, cr, user, fields=None, context=None):
+		if not context:
+			context={}
 		res = {}
 		for parent in self._inherits:
 			res.update(self.pool.get(parent).fields_get(cr, user, fields, context))
@@ -1153,10 +1181,12 @@ class orm(object):
 	#
 	# Overload this method if you need a window title which depends on the context
 	#
-	def view_header_get(self, cr, user, view_id=None, view_type='form', context={}):
+	def view_header_get(self, cr, user, view_id=None, view_type='form', context=None):
 		return False
 
-	def __view_look_dom(self, cr, user, node, context={}):
+	def __view_look_dom(self, cr, user, node, context=None):
+		if not context:
+			context={}
 		result = False
 		fields = {}
 		childs = True
@@ -1230,7 +1260,9 @@ class orm(object):
 				fields.update(self.__view_look_dom(cr, user, f,context))
 		return fields
 
-	def __view_look_dom_arch(self, cr, user, node, context={}):
+	def __view_look_dom_arch(self, cr, user, node, context=None):
+		if not context:
+			context={}
 		fields_def = self.__view_look_dom(cr, user, node, context=context)
 		arch = node.toxml()
 		fields = self.fields_get(cr, user, fields_def.keys(), context)
@@ -1242,7 +1274,9 @@ class orm(object):
 	#
 	# if view_id, view_type is not required
 	#
-	def fields_view_get(self, cr, user, view_id=None, view_type='form', context={}, toolbar=False):
+	def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False):
+		if not context:
+			context={}
 		def _inherit_apply(src, inherit):
 			def _find(node, node2):
 				if node.nodeType==node.ELEMENT_NODE and node.localName==node2.localName:
@@ -1387,8 +1421,10 @@ class orm(object):
 		return result
 
 	# TODO: ameliorer avec NULL
-	def _where_calc(self, cr, user, args2, context={}):
-		args = args2[:]
+	def _where_calc(self, cr, user, args, context=None):
+		if not context:
+			context={}
+		args = args[:]
 		# if the object has a field named 'active', filter out all inactive
 		# records unless they were explicitely asked for
 		if 'active' in self._columns:
@@ -1581,7 +1617,9 @@ class orm(object):
 					qu1.append(' (1=0)')
 		return (qu1,qu2,tables)
 
-	def search_count(self, cr, user, args, context={}):
+	def search_count(self, cr, user, args, context=None):
+		if not context:
+			context={}
 		# compute the count of records
 		(qu1,qu2,tables) = self._where_calc(cr, user, args, context)
 
@@ -1601,7 +1639,9 @@ class orm(object):
 		res = cr.fetchall()
 		return res[0][0]
 	
-	def search(self, cr, user, args, offset=0, limit=None, order=None, context={}):
+	def search(self, cr, user, args, offset=0, limit=None, order=None, context=None):
+		if not context:
+			context={}
 		# compute the where, order by, limit and offset clauses
 		(qu1,qu2,tables) = self._where_calc(cr, user, args, context)
 
@@ -1628,27 +1668,37 @@ class orm(object):
 	# returns the different values ever entered for one field
 	# this is used, for example, in the client when the user hits enter on 
 	# a char field
-	def distinct_field_get(self, cr, uid, field, value, args=[], offset=0, limit=None):
+	def distinct_field_get(self, cr, uid, field, value, args=None, offset=0, limit=None):
+		if not args:
+			args=[]
 		if field in self._inherit_fields:
 			return self.pool.get(self._inherit_fields[field][0]).distinct_field_get(cr, uid,field,value,args,offset,limit)
 		else:
 			return self._columns[field].search(cr, self, args, field, value, offset, limit, uid)
 
-	def name_get(self, cr, user, ids, context={}):
+	def name_get(self, cr, user, ids, context=None):
+		if not context:
+			context={}
 		if not ids:
 			return []
 		if isinstance(ids, (int, long)):
 			ids = [ids]
 		return [(r['id'], r[self._rec_name]) for r in self.read(cr, user, ids, [self._rec_name], context, load='_classic_write')]
 
-	def name_search(self, cr, user, name='', args=[], operator='ilike', context={}, limit=80):
+	def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):
+		if not args:
+			args=[]
+		if not context:
+			context={}
 		if name:
 			args += [(self._rec_name,operator,name)]
 		ids = self.search(cr, user, args, limit=limit)
 		res = self.name_get(cr, user, ids, context)
 		return res
 
-	def copy(self, cr, uid, id, default=None, context={}):
+	def copy(self, cr, uid, id, default=None, context=None):
+		if not context:
+			context={}
 		if not default:
 			default = {}
 		if 'state' not in default:
@@ -1687,7 +1737,9 @@ class orm(object):
 			del data[self._inherits[v]]
 		return self.create(cr, uid, data)
 
-	def read_string(self, cr, uid, id, langs, fields=None, context={}):
+	def read_string(self, cr, uid, id, langs, fields=None, context=None):
+		if not context:
+			context={}
 		res = {}
 		res2 = {}
 		self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'read')
@@ -1712,7 +1764,9 @@ class orm(object):
 				res[lang][f]=res2[lang][f]
 		return res
 
-	def write_string(self, cr, uid, id, langs, vals, context={}):
+	def write_string(self, cr, uid, id, langs, vals, context=None):
+		if not context:
+			context={}
 		self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'write')
 		for lang in langs:
 			for field in vals:

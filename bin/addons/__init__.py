@@ -126,7 +126,9 @@ class Node(Singleton):
 			s += '%s`-> %s' % ('   ' * depth, c._pprint(depth+1))
 		return s
 
-def create_graph(module_list, force=[]):
+def create_graph(module_list, force=None):
+	if not force:
+		force=[]
 	graph = Graph()
 	packages = []
 
@@ -177,7 +179,10 @@ def init_module_objects(cr, module_name, obj_list):
 		obj._auto_init(cr)
 		cr.commit()
 
-def load_module_graph(cr, graph, status={}):
+def load_module_graph(cr, graph, status=None):
+	if not status:
+		status={}
+	status = status.copy()
 	package_todo = []
 	statusi = 0
 	for package in graph:
@@ -248,7 +253,9 @@ def register_classes():
 			except zipimport.ZipImportError:
 				logger.notifyChannel('init', netsvc.LOG_ERROR, 'Couldn\'t find module %s' % m)
 
-def load_modules(db, force_demo=False, status={}, update_module=False):
+def load_modules(db, force_demo=False, status=None, update_module=False):
+	if not status:
+		status={}
 	cr = db.cursor()
 	force = []
 	if force_demo:

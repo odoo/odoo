@@ -158,7 +158,11 @@ class Agent(object):
 	_timers = []
 	_logger = Logger()
 
-	def setAlarm(self, fn, dt, args=[], kwargs={}):
+	def setAlarm(self, fn, dt, args=None, kwargs=None):
+		if not args:
+			args=[]
+		if not kwargs:
+			kwargs={}
 		wait = dt - time.time()
 		if wait > 0:
 			self._logger.notifyChannel('timers', LOG_DEBUG, "Job scheduled in %s seconds for %s.%s" % (wait, fn.im_class.__name__, fn.func_name))

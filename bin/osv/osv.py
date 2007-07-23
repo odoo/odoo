@@ -292,7 +292,11 @@ class cacheable_osv(osv, Cacheable):
 	def __init__(self):
 		super(cacheable_osv, self).__init__()
 	
-	def read(self, cr, user, ids, fields=[], context={}, load='_classic_read'):
+	def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
+		if not fields:
+			fields=[]
+		if not context:
+			context={}
 		fields = fields or self._columns.keys()
 		ctx = [context.get(x, False) for x in self._relevant]
 		result, tofetch = [], []
@@ -332,7 +336,9 @@ class cacheable_osv(osv, Cacheable):
 	def invalidate(self, key):
 		del self._cache[key[0]][key[1]]
 	
-	def write(self, cr, user, ids, values, context={}):
+	def write(self, cr, user, ids, values, context=None):
+		if not context:
+			context={}
 		for id in ids:
 			self.invalidate((self._name, id))
 		return super(cacheable_osv, self).write(cr, user, ids, values, context)

@@ -64,7 +64,7 @@ class report_int(netsvc.Service):
 		self.joinGroup('report')
 		self.exportMethod(self.create)
 
-	def create(self, cr, uid, ids, datas, context={}):
+	def create(self, cr, uid, ids, datas, context=None):
 		return False
 
 """
@@ -94,7 +94,9 @@ class report_rml(report_int):
 		pdf = create_doc(rml)
 		return (pdf, report_type)
 	
-	def create_xml(self, cr, uid, ids, datas, context={}):
+	def create_xml(self, cr, uid, ids, datas, context=None):
+		if not context:
+			context={}
 		doc = print_xml.document(cr, uid, datas, {})
 		self.bin_datas = doc.bin_datas
 		doc.parse(self.tmpl, ids, self.table, context)
@@ -102,7 +104,9 @@ class report_rml(report_int):
 		doc.close()
 		return self.post_process_xml_data(cr, uid, xml, context)
 
-	def post_process_xml_data(self, cr, uid, xml, context={}):
+	def post_process_xml_data(self, cr, uid, xml, context=None):
+		if not context:
+			context={}
 		# find the position of the 3rd tag 
 		# (skip the <?xml ...?> and the "root" tag)
 		iter = re.finditer('<[^>]*>', xml)
@@ -126,7 +130,9 @@ class report_rml(report_int):
 	#
 	# TODO: The translation doesn't work for "<tag t="1">textext<tag> tex</tag>text</tag>"
 	#
-	def create_rml(self, cr, xml, uid, context={}):
+	def create_rml(self, cr, xml, uid, context=None):
+		if not context:
+			context={}
 		service = netsvc.LocalService("object_proxy")
 
 		# In some case we might not use xsl ...

@@ -56,8 +56,10 @@ class interface(netsvc.Service):
 					node.setAttribute('string', trans.decode('utf8'))
 		for n in node.childNodes:
 			self.translate_view(cr, uid, n, state, lang)
-	
-	def execute_cr(self, cr, uid, data, state='init', context={}):
+
+	def execute_cr(self, cr, uid, data, state='init', context=None):
+		if not context:
+			context={}
 		res = {}
 		try:
 			state_def = self.states[state]
@@ -140,7 +142,9 @@ class interface(netsvc.Service):
 			
 		return res
 
-	def execute(self, db, uid, data, state='init', context={}):
+	def execute(self, db, uid, data, state='init', context=None):
+		if not context:
+			context={}
 		cr = pooler.get_db(db).cursor()
 		try:
 			try:

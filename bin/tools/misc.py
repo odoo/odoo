@@ -189,8 +189,12 @@ def file_open(name, mode="r", subdir='addons'):
 #----------------------------------------------------------
 # Emails
 #----------------------------------------------------------
-def email_send(email_from, email_to, subject, body, email_cc=[], email_bcc=[], on_error=False, reply_to=False):
+def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, on_error=False, reply_to=False):
 	"""Send an email."""
+	if not email_cc:
+		email_cc=[]
+	if not email_bcc:
+		email_bcc=[]
 	import smtplib
 	from email.MIMEText import MIMEText
 	from email.MIMEMultipart import MIMEMultipart
@@ -225,8 +229,14 @@ def email_send(email_from, email_to, subject, body, email_cc=[], email_bcc=[], o
 #----------------------------------------------------------
 # Emails
 #----------------------------------------------------------
-def email_send_attach(email_from, email_to, subject, body, email_cc=[], email_bcc=[], on_error=False, reply_to=False, attach=[]):
+def email_send_attach(email_from, email_to, subject, body, email_cc=None, email_bcc=None, on_error=False, reply_to=False, attach=None):
 	"""Send an email."""
+	if not email_cc:
+		email_cc=[]
+	if not email_bcc:
+		email_bcc=[]
+	if not attach:
+		attach=[]
 	import smtplib
 	from email.MIMEText import MIMEText
 	from email.MIMEBase import MIMEBase

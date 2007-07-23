@@ -80,7 +80,9 @@ class fake_cursor:
 		fake_cursor.nbr += 1
 		return self.obj.execute(*args)
 
-	def execute(self, sql, params=()):
+	def execute(self, sql, params=None):
+		if not params:
+			params=()
 		def base_string(s):
 			if isinstance(s, unicode):
 				return s.encode('utf-8')

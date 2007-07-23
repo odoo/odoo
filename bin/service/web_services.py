@@ -277,7 +277,11 @@ class common(netsvc.Service):
 		cr.close()
 		return res
 
-	def ir_get(self, db, uid, password, keys, args=[], meta=None, context={}):
+	def ir_get(self, db, uid, password, keys, args=None, meta=None, context=None):
+		if not args:
+			args=[]
+		if not context:
+			context={}
 		security.check(db, uid, password)
 		cr = pooler.get_db(db).cursor()
 		res = ir.ir_get(cr,uid, keys, args, meta, context)
@@ -361,7 +365,9 @@ class wizard(netsvc.Service):
 		wiz = netsvc.LocalService('wizard.'+self.wiz_name[wiz_id])
 		return wiz.execute(db, uid, self.wiz_datas[wiz_id], action, context)
 
-	def create(self, db, uid, passwd, wiz_name, datas={}):
+	def create(self, db, uid, passwd, wiz_name, datas=None):
+		if not datas:
+			datas={}
 		security.check(db, uid, passwd)
 #FIXME: this is not thread-safe
 		self.id += 1
@@ -370,7 +376,9 @@ class wizard(netsvc.Service):
 		self.wiz_uid[self.id] = uid
 		return self.id
 
-	def execute(self, db, uid, passwd, wiz_id, datas, action='init', context={}):
+	def execute(self, db, uid, passwd, wiz_id, datas, action='init', context=None):
+		if not context:
+			context={}
 		security.check(db, uid, passwd)
 
 		if wiz_id in self.wiz_uid:
@@ -398,7 +406,11 @@ class report_spool(netsvc.Service):
 		self.id = 0
 		self.id_protect = threading.Semaphore()
 
-	def report(self, db, uid, passwd, object, ids, datas={}, context={}):
+	def report(self, db, uid, passwd, object, ids, datas=None, context=None):
+		if not datas:
+			datas={}
+		if not context:
+			context={}
 		security.check(db, uid, passwd)
 		
 		self.id_protect.acquire()

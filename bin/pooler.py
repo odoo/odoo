@@ -34,7 +34,9 @@ import netsvc
 db_dic = {}
 pool_dic = {}
 
-def get_db_and_pool(db_name, force_demo=False, status={}, update_module=False):
+def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False):
+	if not status:
+		status={}
 	if db_name in db_dic:
 		db = db_dic[db_name]
 	else:
@@ -80,7 +82,7 @@ def get_db(db_name):
 #	print "get_db", db_name
 	return get_db_and_pool(db_name)[0]
 
-def get_pool(db_name, force_demo=False, status={}, update_module=False):
+def get_pool(db_name, force_demo=False, status=None, update_module=False):
 #	print "get_pool", db_name
 	pool = get_db_and_pool(db_name, force_demo, status, update_module)[1]
 #	addons.load_modules(db_name, False)

@@ -132,7 +132,9 @@ class report_custom(report_int):
 		return result 
 
 
-	def create(self, cr, uid, ids, datas, context={}):
+	def create(self, cr, uid, ids, datas, context=None):
+		if not context:
+			context={}
 		self.pool = pooler.get_pool(cr.dbname)
 		report = self.pool.get('ir.report.custom').browse(cr, uid, [datas['report_id']])[0]
 		datas['model'] = report.model_id.model

@@ -334,18 +334,24 @@ class document(object):
 	def xml_get(self):
 		return self.doc.toxml('utf-8')
 
-	def parse_tree(self, ids, model, context={}):
+	def parse_tree(self, ids, model, context=None):
+		if not context:
+			context={}
 		browser = self.pool.get(model).browse(self.cr, self.uid, ids, context)
 		self.parse_node(self.dom.documentElement, self.doc, browser)
 		
-	def parse_string(self, xml, ids, model, context={}):
+	def parse_string(self, xml, ids, model, context=None):
+		if not context:
+			context={}
 		# parses the xml template to memory
 		self.dom = minidom.parseString(xml)
 		
 		# create the xml data from the xml template
 		self.parse_tree(ids, model, context)
 
-	def parse(self, filename, ids, model, context={}):
+	def parse(self, filename, ids, model, context=None):
+		if not context:
+			context={}
 		# parses the xml template to memory
 		self.dom = minidom.parse(os.path.join(tools.config['root_path'],filename))
 

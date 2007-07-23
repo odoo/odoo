@@ -66,8 +66,8 @@ class _column(object):
 	_symbol_set = (_symbol_c, _symbol_f)
 	_symbol_get = None
 
-	def __init__(self, string='unknown', required=False, readonly=False, domain=[], context='', states={}, priority=0, change_default=False, size=None, ondelete="set null", translate=False, select=False, **args):
-		self.states = states
+	def __init__(self, string='unknown', required=False, readonly=False, domain=None, context='', states=None, priority=0, change_default=False, size=None, ondelete="set null", translate=False, select=False, **args):
+		self.states = states or {}
 		self.string = string
 		self.readonly = readonly
 		self.required = required
@@ -77,7 +77,7 @@ class _column(object):
 		self.change_default = change_default
 		self.ondelete = ondelete
 		self.translate = translate
-		self._domain = domain
+		self._domain = domain or []
 		self.relate =False
 		self._context = context
 		self.group_name = False
@@ -90,10 +90,10 @@ class _column(object):
 			warnings.warn("The relate attribute doesn't work anymore, use act_window tag instead", DeprecationWarning)
 
 
-	def set(self, cr, obj, id, name, value, user=None, context={}):
+	def set(self, cr, obj, id, name, value, user=None, context=None):
 		cr.execute('update '+obj._table+' set '+name+'='+self._symbol_set[0]+' where id=%d', (self._symbol_set[1](value),id) )
 
-	def get(self, cr, obj, ids, name, context={}, values={}):
+	def get(self, cr, obj, ids, name, context=None, values=None):
 		raise 'undefined get method !'
 
 	def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None):
@@ -212,7 +212,9 @@ class selection(_column):
 		_column.__init__(self, string=string, **args)
 		self.selection = selection
 
-	def set(self, cr, obj, id, name, value, user=None, context={}):
+	def set(self, cr, obj, id, name, value, user=None, context=None):
+		if not context:
+			context={}
 #CHECKME: a priori, ceci n'est jamais appelé puisque le test ci-dessous est mauvais
 # la raison est que selection n'est pas en classic_write = false
 # a noter qu'on pourrait fournir un _symbol_set specifique, et ca suffirait
@@ -244,7 +246,9 @@ class one2one(_column):
 		_column.__init__(self, string=string, **args)
 		self._obj = obj
 
-	def set(self, cr, obj_src, id, field, act, user=None, context={}):
+	def set(self, cr, obj_src, id, field, act, user=None, context=None):
+		if not context:
+			context={}
 		obj = obj_src.pool.get(self._obj)
 		self._table = obj_src.pool.get(self._obj)._table
 		if act[0]==0:
@@ -272,7 +276,11 @@ class many2one(_column):
 	# TODO: speed improvement
 	#
 	# name is the name of the relation field
-	def get(self, cr, obj, ids, name, user=None, context={}, values={}):
+	def get(self, cr, obj, ids, name, user=None, context=None, values=None):
+		if not context:
+			context={}
+		if not values:
+			values={}
 		res = {}
 		for r in values:
 			res[r['id']] = r[name]
@@ -300,7 +308,9 @@ class many2one(_column):
 				res[r] = False
 		return res
 
-	def set(self, cr, obj_src, id, field, values, user=None, context={}):
+	def set(self, cr, obj_src, id, field, values, user=None, context=None):
+		if not context:
+			context={}
 		obj = obj_src.pool.get(self._obj)
 		self._table = obj_src.pool.get(self._obj)._table
 		if type(values)==type([]):
@@ -338,7 +348,11 @@ class one2many(_column):
 		#one2many can't be used as condition for defaults
 		assert(self.change_default != True)
 	
-	def get(self, cr, obj, ids, name, user=None, offset=0, context={}, values={}):
+	def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
+		if not context:
+			context = {}
+		if not values:
+			values = {}
 		res = {}
 		for id in ids:
 			res[id] = []
@@ -347,7 +361,9 @@ class one2many(_column):
 			res[r[self._fields_id]].append( r['id'] )
 		return res
 
-	def set(self, cr, obj, id, field, values, user=None, context={}):
+	def set(self, cr, obj, id, field, values, user=None, context=None):
+		if not context:
+			context={}
 		if not values:
 			return
 		_table = obj.pool.get(self._obj)._table
@@ -397,7 +413,11 @@ class many2many(_column):
 		self._id2 = id2
 		self._limit = limit
 
-	def get(self, cr, obj, ids, name, user=None, offset=0, context={}, values={}):
+	def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
+		if not context:
+			context={}
+		if not values:
+			values={}
 		res = {}
 		if not ids:
 			return res
@@ -416,7 +436,9 @@ class many2many(_column):
 			res[r[1]].append(r[0])
 		return res
 
-	def set(self, cr, obj, id, name, values, user=None, context={}):
+	def set(self, cr, obj, id, name, values, user=None, context=None):
+		if not context:
+			context={}
 		if not values:
 			return
 		obj = obj.pool.get(self._obj)
@@ -486,7 +508,11 @@ class function(_column):
 			return []
 		return self._fnct_search(obj, cr, uid, obj, name, args)
 
-	def get(self, cr, obj, ids, name, user=None, context={}, values={}):
+	def get(self, cr, obj, ids, name, user=None, context=None, values=None):
+		if not context:
+			context={}
+		if not values:
+			values={}
 		res = {}
 		table = obj._table
 		if self._method:
@@ -495,7 +521,9 @@ class function(_column):
 		else:
 			return self._fnct(cr, table, ids, name, self._arg, context)
 
-	def set(self, cr, obj, id, name, value, user=None, context={}):
+	def set(self, cr, obj, id, name, value, user=None, context=None):
+		if not context:
+			context={}
 		if self._fnct_inv:
 			self._fnct_inv(obj, cr, user, id, name, value, self._fnct_inv_arg, context)
 
@@ -512,7 +540,9 @@ class serialized(_column):
 		super(serialized, self).__init__(string=string, **args)
 
 class property(function):
-	def _fnct_write(self2, self, cr, uid, id, prop, id_val, val, context={}):
+	def _fnct_write(self2, self, cr, uid, id, prop, id_val, val, context=None):
+		if not context:
+			context={}
 		(obj_dest,) = val
 		definition_id = self2._field_get(self, cr, uid, prop)
 
@@ -540,7 +570,9 @@ class property(function):
 			}, context=context)
 		return res
 
-	def _fnct_read(self2, self, cr, uid, ids, prop, val, context={}):
+	def _fnct_read(self2, self, cr, uid, ids, prop, val, context=None):
+		if not context:
+			context={}
 		property = self.pool.get('ir.property')
 		definition_id = self2._field_get(self, cr, uid, prop)
 
@@ -577,7 +609,4 @@ class property(function):
 
 	def __init__(self, obj_prop, **args):
 		self.field_id = {}
-		function.__init__(self,
-		  self._fnct_read, False,
-		  self._fnct_write, (obj_prop, ),
-		  **args)
+		function.__init__(self, self._fnct_read, False, self._fnct_write, (obj_prop, ), **args)

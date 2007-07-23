@@ -460,7 +460,9 @@ class xml_import(object):
 #     delimiter: ,
 #     encoding: UTF8
 #
-def convert_csv_import(cr, module, fname, csvcontent, idref={}, mode='init', noupdate=False):
+def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init', noupdate=False):
+	if not idref:
+		idref={}
 	model = ('.'.join(fname.split('.')[:-1]).split('-'))[0]
 	#remove folder path from model
 	head, model = os.path.split(model)
@@ -490,7 +492,9 @@ def convert_csv_import(cr, module, fname, csvcontent, idref={}, mode='init', nou
 #
 # xml import/export
 #
-def convert_xml_import(cr, module, xmlstr, idref={}, mode='init'):
+def convert_xml_import(cr, module, xmlstr, idref=None, mode='init'):
+	if not idref:
+		idref={}
 	obj = xml_import(cr, module, idref, mode)
 	obj.parse(xmlstr)
 	del obj

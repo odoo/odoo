@@ -60,7 +60,9 @@ class report_printscreen_list(report_int):
 		dom = minidom.parseString(view.encode('utf-8'))
 		return self._parse_node(dom)
 
-	def create(self, cr, uid, ids, datas, context={}):
+	def create(self, cr, uid, ids, datas, context=None):
+		if not context:
+			context={}
 		pool = pooler.get_pool(cr.dbname)
 		model = pool.get(datas['model'])
 		model_id = pool.get('ir.model').search(cr, uid, [('model','=',model._name)])

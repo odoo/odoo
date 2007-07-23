@@ -87,7 +87,9 @@ class browse_record_list(list):
 		return None
 
 class rml_parse(object):
-	def __init__(self, cr, uid, name, context={}):
+	def __init__(self, cr, uid, name, context=None):
+		if not context:
+			context={}
 		self.cr = cr
 		self.uid = uid
 		self.pool = pooler.get_pool(cr.dbname)
@@ -107,7 +109,9 @@ class rml_parse(object):
 		self._node = None
 #		self.already = {}
 	
-	def setTag(self, oldtag, newtag, attrs={}):
+	def setTag(self, oldtag, newtag, attrs=None):
+		if not attrs:
+			attrs={}
 		node = self._find_parent(self._node, [oldtag])
 		if node:
 			node.tagName = newtag
@@ -169,7 +173,9 @@ class rml_parse(object):
 				break
 		return node
 
-	def _parse_text(self, text, level=[]):
+	def _parse_text(self, text, level=None):
+		if not level:
+			level=[]
 		res = self._regex.findall(text)
 		todo = []
 		# translate the text
@@ -307,7 +313,9 @@ class report_sxw(report_rml):
 		table_obj = pooler.get_pool(cr.dbname).get(self.table)
 		return table_obj.browse(cr, uid, ids, list_class=browse_record_list, context=context)
 
-	def create(self, cr, uid, ids, data, context={}):
+	def create(self, cr, uid, ids, data, context=None):
+		if not context:
+			context={}
 		cr.execute('select report_rml_content from ir_act_report_xml where report_name=%s', (self.name[7:],))
 		result = cr.fetchone()
 		if result and result[0]:
