@@ -53,6 +53,7 @@ class aged_trial_report(report_sxw.rml_parse):
 						AND (line.partner_id=res_partner.id) AND (line.state<>'draft') \
 						AND (line.period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d))\
 						AND (account_account.company_id = %d) AND account_account.active \
+						AND (account_account.company_id = %d) \
 						ORDER BY res_partner.name", (form['fiscalyear'], form['company_id']))
 		partners = self.cr.dictfetchall()
 		for partner in partners:
