@@ -1421,13 +1421,13 @@ class orm(object):
 		return result
 
 	# TODO: ameliorer avec NULL
-	def _where_calc(self, cr, user, args, context=None):
+	def _where_calc(self, cr, user, args, active_test=True, context=None):
 		if not context:
 			context={}
 		args = args[:]
 		# if the object has a field named 'active', filter out all inactive
 		# records unless they were explicitely asked for
-		if 'active' in self._columns:
+		if 'active' in self._columns and active_test:
 			i = 0
 			active_found = False
 			while i<len(args):
@@ -1621,7 +1621,7 @@ class orm(object):
 		if not context:
 			context={}
 		# compute the count of records
-		(qu1,qu2,tables) = self._where_calc(cr, user, args, context)
+		(qu1,qu2,tables) = self._where_calc(cr, user, args, context=context)
 
 		if len(qu1):
 			qu1 = ' where '+string.join(qu1,' and ')

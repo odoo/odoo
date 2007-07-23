@@ -79,7 +79,7 @@ class ir_rule(osv.osv):
 			return res
 		res = [("False", "False"), ("True", "True"), ("user.id", "User")]+get('res.users', level=1,ending_excl=['one2many','many2one','many2many','reference'], recur=['many2one'],root_tech='user',root='User')
 		return res
-		
+
 	_columns = {
 		'field_id': fields.many2one('ir.model.fields', 'Field',domain= "[('model_id','=', parent.model_id)]", select=1, required=True),
 		'operator':fields.selection((('=', '='), ('<>', '<>'), ('<=', '<='), ('>=', '>='), ('in', 'in'), ('child_of', 'child_of')), 'Operator', required=True),
@@ -91,7 +91,7 @@ class ir_rule(osv.osv):
 		# root user above constraint
 		if uid == 1:
 			return '', []
-		
+
 		cr.execute("""SELECT r.id FROM
 			ir_rule r
 				JOIN (ir_rule_group g
@@ -118,7 +118,7 @@ class ir_rule(osv.osv):
 			else:
 				dom = eval("[('%s', '%s', %s)]"%(rule.field_id.name, rule.operator, rule.operand), {'user': self.pool.get('res.users').browse(cr, 1, uid), 'time':time})
 			clause.setdefault(rule.rule_group.id, [])
-			clause[rule.rule_group.id].append(obj._where_calc(cr, uid, dom))
+			clause[rule.rule_group.id].append(obj._where_calc(cr, uid, dom, active_test=False))
 		query = ''
 		val = []
 		for g in clause.values():
@@ -143,7 +143,7 @@ class ir_rule(osv.osv):
 				val += c[1]
 			query += ')'
 		return query, val
-	domain_get = tools.cache()(domain_get) 
+	domain_get = tools.cache()(domain_get)
 
 	def write(self, cr, uid, ids, vals, context=None):
 		if not context:
@@ -153,5 +153,4 @@ class ir_rule(osv.osv):
 		self.domain_get()
 		return res
 
-	
 ir_rule()
