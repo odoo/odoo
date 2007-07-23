@@ -46,6 +46,15 @@ class ir_rule_group(osv.osv):
 	_defaults={
 		'global': lambda *a: True,
 	}
+
+	def write(self, cr, uid, ids, vals, context=None):
+		if not context:
+			context={}
+		res = super(ir_rule_group, self).write(cr, uid, ids, vals, context)
+		# Restart the cache on the domain_get method of ir.rule
+		self.pool.get('ir.rule').domain_get()
+		return res
+
 ir_rule_group()
 
 
@@ -136,9 +145,11 @@ class ir_rule(osv.osv):
 		return query, val
 	domain_get = tools.cache()(domain_get) 
 
-	def write(self, cr, uid, *args, **argv):
-		res = super(ir_rule, self).write(cr, uid, *args, **argv)
-		# Restart the cache on the company_get method
+	def write(self, cr, uid, ids, vals, context=None):
+		if not context:
+			context={}
+		res = super(ir_rule, self).write(cr, uid, ids, vals, context)
+		# Restart the cache on the domain_get method
 		self.domain_get()
 		return res
 
