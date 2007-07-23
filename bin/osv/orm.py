@@ -1387,7 +1387,8 @@ class orm(object):
 		return result
 
 	# TODO: ameliorer avec NULL
-	def _where_calc(self, cr, user, args, context={}):
+	def _where_calc(self, cr, user, args2, context={}):
+		args = args2[:]
 		# if the object has a field named 'active', filter out all inactive
 		# records unless they were explicitely asked for
 		if 'active' in self._columns:
@@ -1601,7 +1602,6 @@ class orm(object):
 		return res[0][0]
 	
 	def search(self, cr, user, args, offset=0, limit=None, order=None, context={}):
-
 		# compute the where, order by, limit and offset clauses
 		(qu1,qu2,tables) = self._where_calc(cr, user, args, context)
 
