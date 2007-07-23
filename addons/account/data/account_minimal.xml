@@ -58,16 +58,19 @@
 		<field name="name">property_account_receivable</field>
 		<field name="fields_id" search="[('model','=','res.partner'),('name','=','property_account_receivable')]"/>
 		<field name="value" eval="'account.account,'+str(a_recv)"/>
+		<field name="company_id" ref="base.main_company"/>
 	</record>
 	<record model="ir.property" id="property_account_payable" forcecreate="True">
 		<field name="name">property_account_payable</field>
 		<field name="fields_id" search="[('model','=','res.partner'),('name','=','property_account_payable')]"/>
 		<field name="value" eval="'account.account,'+str(a_pay)"/>
+		<field name="company_id" ref="base.main_company"/>
 	</record>
 	<record model="ir.property" id="property_account_tax" forcecreate="True">
 		<field name="name">property_account_tax</field>
 		<field name="fields_id" search="[('model','=','res.partner'),('name','=','property_account_tax')]"/>
 		<field name="value" eval="False"/>
+		<field name="company_id" ref="base.main_company"/>
 	</record>
 
 </data>
