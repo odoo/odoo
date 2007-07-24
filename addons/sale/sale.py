@@ -534,7 +534,7 @@ class sale_order_line(osv.osv):
 		'delay': fields.float('Delivery Delay', required=True),
 		'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok','=',True)], change_default=True),
 		'invoice_lines': fields.many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id','invoice_id', 'Invoice Lines', readonly=True),
-		'invoiced': fields.boolean('Invoiced', readonly=True, select=True),
+		'invoiced': fields.boolean('Invoiced', readonly=True),
 		'procurement_id': fields.many2one('mrp.procurement', 'Procurement'),
 		'price_unit': fields.float('Unit Price', required=True, digits=(16, int(config['price_accuracy']))),
 		'price_net': fields.function(_amount_line_net, method=True, string='Net Price', digits=(16, int(config['price_accuracy']))),
