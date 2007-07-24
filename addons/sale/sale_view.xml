@@ -228,14 +228,14 @@
 
 
 	<record model="ir.actions.act_window" id="action_order_tree5">
-		<field name="name">Requests For Quotation</field>
+		<field name="name">All quotations</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">sale.order</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','draft')]</field>
 	</record>
-	<menuitem name="Sales Management/Sales Order/Requests For Quotation" id="menu_action_order_tree5" action="action_order_tree5"/>
+	<menuitem name="Sales Management/Sales Order/All quotations" id="menu_action_order_tree5" action="action_order_tree5"/>
 
 	<record model="ir.actions.act_window" id="action_order_tree6">
 		<field name="name">Sales Order in Invoice Exception</field>
@@ -281,14 +281,14 @@
 
 
 	<record model="ir.actions.act_window" id="action_order_tree10">
-		<field name="name">My Requests For Quotation</field>
+		<field name="name">My quotations</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">sale.order</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','draft'),('user_id','=',uid)]</field>
 	</record>
-	<menuitem name="Sales Management/Sales Order/My Sales Order/Requests For Quotation" id="menu_action_order_tree10" action="action_order_tree10"/>
+	<menuitem name="Sales Management/Sales Order/My Sales Order/Quotations" id="menu_action_order_tree10" action="action_order_tree10"/>
 
 
 	<record model="ir.ui.view" id="view_order_line_graph">
