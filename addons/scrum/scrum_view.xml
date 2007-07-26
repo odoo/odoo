@@ -2,9 +2,11 @@
 <terp>
 <data>
 
-#
-# Usual views
-#
+
+	<!--
+		Usual views
+		-->
+
 
 	<!-- Scrum Project -->
 
@@ -54,9 +56,9 @@
 	<menuitem name="Project/Scrum/Projects/Edit Projects" id="menu_action_scrum_project_form" action="action_scrum_project_form"/>
 
 
-	#
-	# Product Backlog
-	#
+	<!--
+	Product Backlog
+	-->
 
 	<record model="ir.ui.view" id="view_scrum_product_backlog_tree">
 		<field name="name">scrum.product.backlog.tree</field>
@@ -130,9 +132,10 @@
 
 
 
-#
-# Scrum Sprint
-#
+	<!--
+		Scrum Sprint
+	-->
+
 	<record model="ir.ui.view" id="view_scrum_sprint_tree">
 		<field name="name">scrum.sprint.tree</field>
 		<field name="model">scrum.sprint</field>
@@ -243,9 +246,11 @@
 	<menuitem name="Project/Scrum/Sprint/My Sprints (Scrum Master)/Opened" id="menu_action_sprint_open_tree7" action="action_sprint_open_tree7"/>
 
 
-#
-# Daily Meeting
-#
+
+	<!--
+		Daily Meeting
+	-->
+
 
 	<record model="ir.ui.view" id="view_scrum_meeting_tree">
 		<field name="name">scrum.meeting.tree</field>
@@ -293,9 +298,9 @@
 	</record>
 	<menuitem name="Project/Scrum/Daily Meeting" id="menu_action_meeting_form" action="action_meeting_form"/>
 
-	#
-	# Clicks on a sprint: what a hack !
-	#
+	<!--
+	Clicks on a sprint: what a hack
+	-->
 
 	<record model="ir.actions.act_window" id="action_sprint_task_open">
 		<field name="res_model">scrum.task</field>
@@ -327,9 +332,9 @@
 		<field name="object" eval="True" />
 	</record>
 
-	#
-	# Clicks on a project
-	#
+	<!--
+	Clicks on a project
+	-->
 
 	<record model="ir.actions.act_window" id="dblc_proj">
 		<field name="res_model">scrum.product.backlog</field>
@@ -362,9 +367,9 @@
 
 
 
-	#
-	# Tasks
-	#
+	<!--
+	 Tasks
+	 -->
 	<record model="ir.ui.view" id="view_task_tree">
 		<field name="name">scrum.task.tree</field>
 		<field name="model">scrum.task</field>
