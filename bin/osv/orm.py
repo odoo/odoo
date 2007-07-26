@@ -110,7 +110,9 @@ class browse_null(object):
 #
 class browse_record_list(list):
 
-	def __init__(self, lst, context={}):
+	def __init__(self, lst, context=None):
+		if not context:
+			context = {}
 		super(browse_record_list, self).__init__(lst)
 		self.context = context
 
@@ -120,7 +122,9 @@ class browse_record_list(list):
 #    default to : browse_record_list
 #
 class browse_record(object):
-	def __init__(self, cr, uid, id, table, cache, context={}, list_class = None):
+	def __init__(self, cr, uid, id, table, cache, context=None, list_class = None):
+		if not context:
+			context = {}
 		assert id, 'Wrong ID for the browse record, got '+str(id)+ ', expected an integer.'
 		self._list_class = list_class or browse_record_list
 		self._cr = cr
