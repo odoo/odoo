@@ -1645,7 +1645,7 @@ class orm(object):
 		cr.execute('select count(%s.id) from ' % self._table + ','.join(tables) +qu1, qu2)
 		res = cr.fetchall()
 		return res[0][0]
-	
+
 	def search(self, cr, user, args, offset=0, limit=None, order=None, context=None):
 		if not context:
 			context={}
