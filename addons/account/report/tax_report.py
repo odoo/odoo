@@ -76,9 +76,6 @@ class tax_report(report_sxw.rml_parse):
 	def _get_currency(self, form):
 		return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).currency_id.name
 
-report_sxw.report_sxw(
-	'report.account.vat.declaration',
-	'account.tax.code',
-	'addons/account/report/tax_report.rml',
-	parser=tax_report, header=False)
+report_sxw.report_sxw('report.account.vat.declaration', 'account.tax.code',
+	'addons/account/report/tax_report.rml', parser=tax_report, header=False)
 
