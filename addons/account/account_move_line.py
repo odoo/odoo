@@ -57,30 +57,34 @@ class account_move_line(osv.osv):
 		# Compute simple values
 		data = super(account_move_line, self).default_get(cr, uid, fields, context)
 
+		if not 'move_id' in fields: #we are not in manual entry
+			return data
+
 		# Compute the current move
 		move_id = False
 		partner_id = False
 		if context.get('journal_id',False) and context.get('period_id',False):
-			cr.execute('select move_id \
-				from \
-					account_move_line \
-				where \
-					journal_id=%d and period_id=%d and create_uid=%d and state=%s \
-				order by id desc limit 1', (context['journal_id'], context['period_id'], uid, 'draft'))
-			res = cr.fetchone()
-			move_id = (res and res[0]) or False
-			cr.execute('select date  \
-				from \
-					account_move_line \
-				where \
-					journal_id=%d and period_id=%d and create_uid=%d order by id desc', (context['journal_id'], context['period_id'], uid))
-			res = cr.fetchone()
-			data['date'] = res and res[0] or time.strftime('%Y-%m-%d')
-
-		if not move_id:
-			return data
-
-		data['move_id'] = move_id
+			if 'move_id' in fields:
+				cr.execute('select move_id \
+					from \
+						account_move_line \
+					where \
+						journal_id=%d and period_id=%d and create_uid=%d and state=%s \
+					order by id desc limit 1', (context['journal_id'], context['period_id'], uid, 'draft'))
+				res = cr.fetchone()
+				move_id = (res and res[0]) or False
+				if not move_id:
+					return data
+				else:
+					data['move_id'] = move_id
+			if 'date' in fields:
+				cr.execute('select date  \
+					from \
+						account_move_line \
+					where \
+						journal_id=%d and period_id=%d and create_uid=%d order by id desc', (context['journal_id'], context['period_id'], uid))
+				res = cr.fetchone()
+				data['date'] = res and res[0] or time.strftime('%Y-%m-%d')
 
 		total = 0
 		taxes = {}
@@ -92,9 +96,11 @@ class account_move_line(osv.osv):
 				acc = (l.debit >0) and tax.account_paid_id.id or tax.account_collected_id.id
 				taxes.setdefault((acc,tax.tax_code_id.id), False)
 			taxes[(l.account_id.id,l.tax_code_id.id)] = True
-			data.setdefault('name', l.name)
+			if 'name' in fields:
+				data.setdefault('name', l.name)
 
-		data['partner_id'] = partner_id
+		if 'partner_id' in fields:
+			data['partner_id'] = partner_id
 
 		if move.journal_id.type in ('purchase', 'sale'):
 			field_base=''
@@ -111,13 +117,14 @@ class account_move_line(osv.osv):
 									s += tax['amount']
 								else:
 									s -= tax['amount']
-					data['debit'] = s>0  and s or 0.0
-					data['credit'] = s<0  and -s or 0.0
-	
-					data['tax_code_id'] = t[1]
-	
-					data['account_id'] = t[0]
-	
+					if ('debit' in fields) or ('credit' in fields):
+						data['debit'] = s>0  and s or 0.0
+						data['credit'] = s<0  and -s or 0.0
+
+					if 'tax_code_id' in fields:
+						data['tax_code_id'] = t[1]
+					if 'account_id' in fields:
+						data['account_id'] = t[0]
 					#
 					# Compute line for tax T
 					#
@@ -126,13 +133,15 @@ class account_move_line(osv.osv):
 		#
 		# Compute latest line
 		#
-		data['credit'] = total>0 and total
-		data['debit'] = total<0 and -total
-		if total>=0:
-			data['account_id'] = move.journal_id.default_credit_account_id.id or False
-		else:
-			data['account_id'] = move.journal_id.default_debit_account_id.id or False
-		if data['account_id']:
+		if ('debit' in fields) or ('credit' in fields):
+			data['credit'] = total>0 and total
+			data['debit'] = total<0 and -total
+		if 'account_id' in fields:
+			if total>=0:
+				data['account_id'] = move.journal_id.default_credit_account_id.id or False
+			else:
+				data['account_id'] = move.journal_id.default_debit_account_id.id or False
+		if 'account_id' in fields and data['account_id']:
 			account = self.pool.get('account.account').browse(cr, uid, data['account_id'])
 			data['tax_code_id'] = self._default_get_tax(cr, uid, account )
 		return data
