@@ -181,5 +181,7 @@ class partner_balance(report_sxw.rml_parse):
 	def _get_currency(self, form):
 		return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).currency_id.name
 
-report_sxw.report_sxw('report.account.partner.balance', 'res.partner', 'addons/account/report/partner_balance.rml',parser=partner_balance, header=False)
+report_sxw.report_sxw('report.account.partner.balance', 'res.partner',
+	'addons/account/report/partner_balance.rml',parser=partner_balance,
+	header=False)
 
