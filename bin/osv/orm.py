@@ -1648,7 +1648,7 @@ class orm(object):
 		if not context:
 			context={}
 		# compute the where, order by, limit and offset clauses
-		(qu1,qu2,tables) = self._where_calc(cr, user, args, context)
+		(qu1,qu2,tables) = self._where_calc(cr, user, args, context=context)
 
 		if len(qu1):
 			qu1 = ' where '+string.join(qu1,' and ')
