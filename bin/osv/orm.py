@@ -1428,13 +1428,12 @@ class orm(object):
 		args = args[:]
 		# if the object has a field named 'active', filter out all inactive
 		# records unless they were explicitely asked for
-		if 'active' in self._columns and active_test:
+		if 'active' in self._columns and (active_test and context.get('active_test', True)):
 			i = 0
 			active_found = False
 			while i<len(args):
 				if args[i][0]=='active':
-					if not args[i][2]:
-						active_found = True
+					active_found = True
 				i += 1
 			if not active_found:
 				args.append(('active', '=', 1))
