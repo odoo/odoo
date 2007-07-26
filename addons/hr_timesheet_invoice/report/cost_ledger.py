@@ -30,6 +30,7 @@ import pooler
 import time
 from report import report_sxw
 
+
 class account_analytic_cost_ledger(report_sxw.rml_parse):
 	def __init__(self, cr, uid, name, context):
 		super(account_analytic_cost_ledger, self).__init__(cr, uid, name, context)
@@ -169,5 +170,9 @@ class account_analytic_cost_ledger(report_sxw.rml_parse):
 			res += self.sum_revenue.get(id, 0.0)
 		return res
 
-report_sxw.report_sxw('report.hr.timesheet.invoice.account.analytic.account.cost_ledger', 'account.analytic.account', 'addons/hr_timesheet_invoice/report/cost_ledger.rml',parser=account_analytic_cost_ledger, header=False)
+report_sxw.report_sxw(
+		'report.hr.timesheet.invoice.account.analytic.account.cost_ledger',
+		'account.analytic.account',
+		'addons/hr_timesheet_invoice/report/cost_ledger.rml',
+		parser=account_analytic_cost_ledger, header=False)
 
