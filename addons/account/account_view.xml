@@ -2,9 +2,9 @@
 <terp>
 <data>
 
-	#---------------------------------------------------------
-	# Fiscal Year
-	#---------------------------------------------------------
+	<!--
+	 Fiscal Year
+	-->
 
 	<menuitem name="Financial Management/Configuration" groups="admin" sequence="1"/>
 
@@ -56,9 +56,9 @@
 	</record>
 	<menuitem name="Financial Management/Configuration/Periods/" id="menu_action_account_fiscalyear_form" action="action_account_fiscalyear_form"/>
 
-	#---------------------------------------------------------
-	# Period
-	#---------------------------------------------------------
+	<!--
+	Period
+	-->
 
 	<record model="ir.ui.view" id="view_account_period_form">
 		<field name="name">account.period.form</field>
@@ -99,9 +99,9 @@
 	<menuitem name="Financial Management/Configuration/Periods/" id="menu_action_account_period_form" action="action_account_period_form"/>
 
 
-	#---------------------------------------------------------
-	# Accounts
-	#---------------------------------------------------------
+	<!--
+	Accounts
+	-->
 
 	<record model="ir.ui.view" id="view_account_form">
 		<field name="name">account.account.form</field>
@@ -187,11 +187,11 @@
 		<field name="domain">[('code','=','0')]</field>
 	</record>
 
-	#---------------------------------------------------------
-	# Journal
-	#---------------------------------------------------------
+	<!--
+	Journal
 
-	# Account Journal Columns
+	Account Journal Columns
+	-->
 
 	<record model="ir.ui.view" id="view_journal_column_form">
 		<field name="name">account.journal.column.form</field>
@@ -234,7 +234,9 @@
 		</field>
 	</record>
 
+	<!--
 	# Account Journal
+	-->
 
 	<record model="ir.ui.view" id="view_account_journal_tree">
 		<field name="name">account.journal.tree</field>
@@ -286,9 +288,9 @@
 	</record>
 	<menuitem name="Financial Management/Configuration/Journal/Journal Definition" id="menu_action_account_journal_form" action="action_account_journal_form"/>
 
-	#---------------------------------------------------------
-	# Banks
-	#---------------------------------------------------------
+	<!--
+	Banks
+	-->
 	<record model="ir.ui.view" id="view_bank_tree">
 		<field name="name">account.bank.tree</field>
 		<field name="model">account.bank</field>
@@ -489,9 +491,9 @@
 			</form>
 		</field>
 	</record>
-	#---------------------------------------------------------
-	# Account Types
-	#---------------------------------------------------------
+	<!--
+	Account Types
+	-->
 	<record model="ir.ui.view" id="view_account_type_tree">
 		<field name="name">account.account.type.tree</field>
 		<field name="model">account.account.type</field>
@@ -528,10 +530,9 @@
 		<field name="view_mode">tree,form</field>
 	</record>
 	<menuitem name="Financial Management/Configuration/General Accounts/" id="menu_action_account_type_form" action="action_account_type_form"/>
-
-	#---------------------------------------------------------
-	# Entries
-	#---------------------------------------------------------
+	<!--
+	Entries
+	-->
 	<record model="ir.ui.view" id="view_account_move_tree">
 		<field name="name">account.move.tree</field>
 		<field name="model">account.move</field>
@@ -547,9 +548,9 @@
 		</field>
 	</record>
 
-	#---------------------------------------------------------
-	# Reconcile
-	#---------------------------------------------------------
+	<!--
+	Reconcile
+	-->
 
 	<record model="ir.ui.view" id="view_move_reconcile_form">
 		<field name="name">account.move.reconcile.form</field>
@@ -567,9 +568,9 @@
 		</field>
 	</record>
 
-	#---------------------------------------------------------
-	# Tax Codes
-	#---------------------------------------------------------
+	<!--
+	Tax Codes
+	-->
 	<record model="ir.ui.view" id="view_tax_code_tree">
 		<field name="name">account.tax.code.tree</field>
 		<field name="model">account.tax.code</field>
@@ -620,9 +621,9 @@
 	<menuitem name="Financial Management/Periodical Processing/Taxes/" id="menu_action_tax_code_tree" action="action_tax_code_tree" sequence="12"/>
 
 
-	#---------------------------------------------------------
-	# Tax
-	#---------------------------------------------------------
+	<!--
+	Tax
+	-->
 	<record model="ir.ui.view" id="view_tax_tree">
 		<field name="name">account.tax.tree</field>
 		<field name="model">account.tax</field>
@@ -704,10 +705,9 @@
 
 	<menuitem name="Financial Management/Entries" sequence="2"/>
 
-
-	#---------------------------------------------------------
-	# Entries Journal lines
-	#---------------------------------------------------------
+	<!--
+	Entries Journal lines
+	-->
 
 	<wizard
 		string="Standard entry"
@@ -740,10 +740,9 @@
 	</record>
 	<menuitem name="Financial Management/Entries/Standard entry/" id="menu_action_move_journal_period_line_form" action="action_move_journal_period_line_form"/>
 
-
-	#---------------------------------------------------------
-	# Entries lines
-	#---------------------------------------------------------
+	<!--
+	Entries lines
+	-->
 
 	<record model="ir.ui.view" id="view_move_line_tree">
 		<field name="name">account.move.line.tree</field>
@@ -867,9 +866,9 @@
 		<field name="view_id" ref="view_move_line_tree"/>
 	</record>
 
-	# --------------------------------------------------------
-	# Account.Entry Edition
-	# --------------------------------------------------------
+	<!--
+	Account.Entry Edition
+	-->
 
 	<record model="ir.ui.view" id="view_move_tree">
 		<field name="name">account.move.tree</field>
@@ -985,7 +984,9 @@
 
 	<menuitem name="Financial Management/Periodical Processing" sequence="3"/>
 
+	<!--
 	# Wizard, Period
+	-->
 	<record model="ir.actions.act_window" id="action_account_bank_tree">
 		<field name="res_model">account.bank</field>
 		<field name="view_type">tree</field>
@@ -1495,7 +1496,9 @@
 	</record>
 
 
+	<!--
 	# Admin config
+	-->
 
 	<menuitem name="Administration/Configuration/Account" sequence="2"/>
 
