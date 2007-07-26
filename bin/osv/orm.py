@@ -164,13 +164,9 @@ class browse_record(object):
 			# otherwise we fetch only that field
 			else:
 				ffields = [(name,col)]
-				
-			if isinstance(col, fields.function):
-				ids = [self._id]
-			else:
-				# filter out all ids which were already fetched (and are already in _data)
-				ids = filter(lambda id: not self._data[id].has_key(name), self._data.keys())
-			
+
+			ids = filter(lambda id: not self._data[id].has_key(name), self._data.keys())
+
 			# read the data
 			datas = self._table.read(self._cr, self._uid, ids, map(lambda x: x[0], ffields), context=self._context, load="_classic_write")
 			
