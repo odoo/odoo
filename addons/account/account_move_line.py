@@ -211,6 +211,13 @@ class account_move_line(osv.osv):
 		('credit_debit2', 'CHECK (credit+debit>=0)', 'Wrong credit or debit value in accounting entry !'),
 	]
 
+	def _auto_init(self, cr):
+		super(account_move_line, self)._auto_init(cr)
+		cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'account_move_line_journal_id_period_id_index\'')
+		if not cr.fetchone():
+			cr.execute('CREATE INDEX account_move_line_journal_id_period_id_index ON account_move_line (journal_id, period_id)')
+			cr.commit()
+
 	def _check_no_view(self, cr, uid, ids):
 		lines = self.browse(cr, uid, ids)
 		for l in lines:
