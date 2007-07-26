@@ -109,6 +109,7 @@ class browse_null(object):
 # TODO: execute an object method on browse_record_list
 #
 class browse_record_list(list):
+
 	def __init__(self, lst, context={}):
 		super(browse_record_list, self).__init__(lst)
 		self.context = context
