@@ -63,20 +63,14 @@ class ir_cron(osv.osv, netsvc.Agent):
 		'interval_number': fields.integer('Interval Number'),
 		'interval_type': fields.selection( [('minutes', 'Minutes'),
 		    ('hours', 'Hours'), ('days', 'Days'),('weeks', 'Weeks'), ('months', 'Months')], 'Interval Unit'),
-		# number of time the function is called, a negative number
-		# indicates that the function will always be called.
-		'numbercall': fields.integer('Number of calls'),
+		'numbercall': fields.integer('Number of calls', help='Number of time the function is called,\na negative number indicates that the function will always be called'),
 		
-		# Repeat missed cronjobs ?
-		'doall' : fields.boolean('Repeat all missed'),
-
+		'doall' : fields.boolean('Repeat missed'),
 		'nextcall' : fields.datetime('Next call date', required=True),
 		'model': fields.char('Model', size=64),
 		'function': fields.char('Function', size=64),
 		'args': fields.text('Arguments'),
-
-		# 0 = Very Urgent, 10 = not urgent
-		'priority': fields.integer('Priority (0=Very Urgent)')
+		'priority': fields.integer('Priority', help='0=Very Urgent\n10=Not urgent')
 	}
 
 	_defaults = {
@@ -134,7 +128,4 @@ class ir_cron(osv.osv, netsvc.Agent):
 		# 
 		if not check:
 			self.setAlarm(self._poolJobs, int(time.time())+next_wait, [db_name])
-
-#	def __init__(self):
-#		super(ir_cron, self).__init__()
 ir_cron()
