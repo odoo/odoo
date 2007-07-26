@@ -1242,9 +1242,7 @@ class orm(object):
 			#
 			if node.localName=='properties':
 				parent = node.parentNode
-
 				doc = node.ownerDocument
-
 				models = map(lambda x: "'"+x+"'", [self._name] + self._inherits.keys())
 				cr.execute('select id,name,group_name from ir_model_fields where model in ('+','.join(models)+') and view_load order by group_name, id')
 				oldgroup = None
