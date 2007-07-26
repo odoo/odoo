@@ -28,6 +28,7 @@
 ##############################################################################
 
 from osv import fields, osv
+import netsvc
 
 class workflow(osv.osv):
 	_name = "workflow"
@@ -42,6 +43,20 @@ class workflow(osv.osv):
 	_defaults = {
 		'on_create': lambda *a: True
 	}
+
+	def write(self, cr, user, ids, vals, context=None):
+		if not context:
+			context={}
+		wf_service = netsvc.LocalService("workflow")
+		wf_service.clear_cache(cr, user)
+		return super(workflow, self).write(cr, user, ids, vals, context=context)
+
+	def create(self, cr, user, vals, context=None):
+		if not context:
+			context={}
+		wf_service = netsvc.LocalService("workflow")
+		wf_service.clear_cache(cr, user)
+		return super(workflow, self).create(cr, user, vals, context=context)
 workflow()
 
 class wkf_activity(osv.osv):
@@ -100,6 +115,12 @@ class wkf_instance(osv.osv):
 		'res_type': fields.char('Resource Model', size=64),
 		'state': fields.char('State', size=32),
 	}
+	def _auto_init(self, cr):
+		super(wkf_instance, self)._auto_init(cr)
+		cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'wkf_instance_res_id_res_type_state_index\'')
+		if not cr.fetchone():
+			cr.execute('CREATE INDEX wkf_instance_res_id_res_type_state_index ON wkf_instance (res_id, res_type, state)')
+			cr.commit()
 wkf_instance()
 
 class wkf_workitem(osv.osv):
@@ -110,7 +131,7 @@ class wkf_workitem(osv.osv):
 	_columns = {
 		'act_id': fields.many2one('workflow.activity', 'Activity', required=True, ondelete="cascade"),
 		'subflow_id': fields.many2one('workflow.instance', 'Subflow', ondelete="cascade"),
-		'inst_id': fields.many2one('workflow.instance', 'Instance', required=True, ondelete="cascade"),
+		'inst_id': fields.many2one('workflow.instance', 'Instance', required=True, ondelete="cascade", select=1),
 		'state': fields.char('State', size=64),
 	}
 wkf_workitem()

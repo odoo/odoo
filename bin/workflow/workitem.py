@@ -71,7 +71,9 @@ def process(cr, workitem, ident, signal=None, force_running=False):
 			if trans['trigger_model']:
 				ids = wkf_expr._eval_expr(cr,ident,workitem,trans['trigger_expr_id'])
 				for id in ids:
-					cr.execute('insert into wkf_triggers (model,res_id,instance_id,workitem_id) values (%s,%d,%d,%d)', (trans['trigger_model'],id,workitem['inst_id'], workitem['id']))
+					cr.execute('select nextval(\'wkf_workitem_id_seq\')')
+					id =cr.fetchone()[0]
+					cr.execute('insert into wkf_triggers (model,res_id,instance_id,workitem_id,id) values (%s,%d,%d,%d,%d)', (trans['trigger_model'],id,workitem['inst_id'], workitem['id'], id))
 
 	return True
 

@@ -42,6 +42,11 @@ class workflow_service(netsvc.Service):
 		self.exportMethod(self.trg_validate)
 		self.exportMethod(self.trg_redirect)
 		self.exportMethod(self.trg_trigger)
+		self.exportMethod(self.clear_cache)
+		self.wkf_on_create_cache={}
+
+	def clear_cache(self, cr, uid):
+		self.wkf_on_create_cache[cr.dbname]={}
 
 	def trg_write(self, uid, res_type, res_id, cr):
 		ident = (uid,res_type,res_id)
@@ -63,8 +68,14 @@ class workflow_service(netsvc.Service):
 
 	def trg_create(self, uid, res_type, res_id, cr):
 		ident = (uid,res_type,res_id)
-		cr.execute('select id from wkf where osv=%s and on_create=True', (res_type,))
-		for (wkf_id,) in cr.fetchall():
+		self.wkf_on_create_cache.setdefault(cr.dbname, {})
+		if res_type in self.wkf_on_create_cache[cr.dbname]:
+			wkf_ids = self.wkf_on_create_cache[cr.dbname][res_type]
+		else:
+			cr.execute('select id from wkf where osv=%s and on_create=True', (res_type,))
+			wkf_ids = cr.fetchall()
+			self.wkf_on_create_cache[cr.dbname][res_type] = wkf_ids
+		for (wkf_id,) in wkf_ids:
 			instance.create(cr, ident, wkf_id)
 
 	def trg_validate(self, uid, res_type, res_id, signal, cr):
