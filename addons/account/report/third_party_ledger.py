@@ -133,5 +133,7 @@ class third_party_ledger(report_sxw.rml_parse):
 	def _get_currency(self, form):
 		return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).currency_id.name
 
-report_sxw.report_sxw('report.account.third_party_ledger', 'res.partner', 'addons/account/report/third_party_ledger.rml',parser=third_party_ledger, header=False)
+report_sxw.report_sxw('report.account.third_party_ledger', 'res.partner',
+		'addons/account/report/third_party_ledger.rml',parser=third_party_ledger,
+		header=False)
 
