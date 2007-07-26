@@ -39,9 +39,18 @@ import sys,os
 
 import re
 
+from mx import DateTime as mdt
+re_from = re.compile('.* from ([a-zA-Z_0-9]+) .*$');
+re_into = re.compile('.* into ([a-zA-Z_0-9]+) .*$');
+
 class fake_cursor:
 	nbr = 0
 	_tables = {}
+	sql_from_log = {}
+	sql_into_log = {}
+	sql_log = False
+	count = 0
+
 	def __init__(self, db, con, dbname):
 		self.db = db
 		self.obj = db.cursor()
@@ -90,13 +99,41 @@ class fake_cursor:
 		p=map(base_string, params)
 		if isinstance(sql, unicode):
 			sql = sql.encode('utf-8')
+		if self.sql_log:
+			now = mdt.now()
 		if p:
-			return self.obj.execute(sql, p)
+			res = self.obj.execute(sql, p)
 		else:
-			return self.obj.execute(sql)
+			res = self.obj.execute(sql)
+		if self.sql_log:
+			self.count+=1
+			res_from = re_from.match(sql.lower())
+			if res_from:
+				self.sql_from_log.setdefault(res_from.group(1), 0)
+				self.sql_from_log[res_from.group(1)] += mdt.now() - now
+			res_into = re_into.match(sql.lower())
+			if res_into:
+				self.sql_into_log.setdefault(res_into.group(1), 0)
+				self.sql_into_log[res_into.group(1)] += mdt.now() - now
+		return res
+
+	def print_log(self, type='from'):
+		print "SQL LOG %s:" % (type,)
+		if type == 'from':
+			logs = self.sql_from_log.items()
+		else:
+			logs = self.sql_into_log.items()
+		logs.sort(lambda x, y: cmp(x[1], y[1]))
+		sum=0
+		for r in logs:
+			print "table:", r[0], ":", str(r[1])
+			sum+= r[1]
+		print "SUM:%s/%d"% (sum, self.count)
 
 	def close(self):
-#		print "close cursors fno:", [i.fileno() for i in self.db.cursors]
+		if self.sql_log:
+			self.print_log('from')
+			self.print_log('into')
 		self.obj.close()
 
 		# This force the cursor to be freed, and thus, available again. It is 
@@ -105,10 +142,8 @@ class fake_cursor:
 		# collected as fast as they should). The problem is probably due in 
 		# part because browse records keep a reference to the cursor.
 		del self.obj
-#		print "after close cursors fno:", [i.fileno() for i in self.db.cursors]
 
 	def __getattr__(self, name):
-#		print 'LOOK',name
 		return getattr(self.obj, name)
 
 class fakedb:
