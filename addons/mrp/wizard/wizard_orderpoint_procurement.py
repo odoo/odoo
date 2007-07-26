@@ -2,8 +2,6 @@
 #
 # Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
-# $Id$
-#
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -34,27 +32,27 @@
 
 import wizard
 import threading
-from schedulers import _procure_orderpoint_confirm
+import pooler
 
 parameter_form = '''<?xml version="1.0"?>
 <form string="Parameters" colspan="4">
-	<separator string="Time (days)" colspan="4"/>
-	<field name="po_lead"/>
-	<field name="security_lead"/>
 	<field name="automatic" />
-	<separator string="Control" colspan="4"/>
-	<field name="user_id"/>
 </form>'''
 
 parameter_fields = {
-	'po_lead': {'string':'PO Lead Time', 'type':'float', 'required':True, 'default': lambda *a: 1.0},
-	'security_lead': {'string':'Security Days', 'type':'float', 'required':True, 'default': lambda *a: 5.0},
 	'automatic': {'string': 'Automatic orderpoint', 'type': 'boolean', 'help': 'If the stock of a product is under 0, it will act like an orderpoint', 'default': lambda *a: False},
-	'user_id': {'string':'Send Result To', 'type':'many2one', 'relation':'res.users', 'default': lambda uid,data,state: uid},
 }
 
+def _procure_calculation_orderpoint(self, db_name, uid, data, context):
+	db, pool = pooler.get_db_and_pool(db_name)
+	cr = db.cursor()
+	proc_obj = pool.get('mrp.procurement')
+	automatic = data['form']['automatic']
+	proc_obj.run_orderpoint_confirm(cr, uid, automatic=automatic, context=context)
+	return {}
+
 def _procure_calculation(self, cr, uid, data, context):
-	threaded_calculation = threading.Thread(target=_procure_orderpoint_confirm, args=(self, cr.dbname, uid, data, context))
+	threaded_calculation = threading.Thread(target=_procure_calculation_orderpoint, args=(self, cr.dbname, uid, data, context))
 	threaded_calculation.start()
 	return {}
 

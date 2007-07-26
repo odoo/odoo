@@ -28,8 +28,8 @@
 ##############################################################################
 
 import wizard
-from schedulers import _procure_confirm
 import threading
+import pooler
 
 parameter_form = '''<?xml version="1.0"?>
 <form string="Parameters" colspan="4">
@@ -52,10 +52,23 @@ parameter_fields = {
 	'user_id': {'string':'Send Result To', 'type':'many2one', 'relation':'res.users', 'default': lambda uid,data,state: uid},
 }
 
+def _procure_calculation_procure(self, db_name, uid, data, context):
+	db, pool = pooler.get_db_and_pool(db_name)
+	cr = db.cursor()
+	proc_obj = pool.get('mrp.procurement')
+	schedule_cycle = data['form']['schedule_cycle']
+	po_cycle = data['form']['po_cycle']
+	po_lead = data['form']['po_lead']
+	security_lead = data['form']['security_lead']
+	picking_lead = data['form']['picking_lead']
+	user_id = data['form']['user_id']
+	proc_obj.run_procure_confirm(cr, uid, user_id=user_id, schedule_cycle=schedule_cycle,\
+			po_cycle=po_cycle, po_lead=po_lead, security_lead=security_lead,\
+			picking_lead=picking_lead, context=context)
+	return {}
+
 def _procure_calculation(self, cr, uid, data, context):
-	#CHECKME: I wonder if it would be a good idea to pass the cursor...
-	# in doubt, I didn't
-	threaded_calculation = threading.Thread(target=_procure_confirm, args=(self, cr.dbname, uid, data, context))
+	threaded_calculation = threading.Thread(target=_procure_calculation_procure, args=(self, cr.dbname, uid, data, context))
 	threaded_calculation.start()
 	return {}
 

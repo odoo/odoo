@@ -31,6 +31,18 @@
 		<field name="number_increment">1</field>
 	</record>
 
+	<record model="ir.cron" id="ir_cron_scheduler_action" forcecreate="True">
+		<field name="name">Run mrp scheduler</field>
+		<field name="active" eval="False"/>
+		<field name="user_id" ref="base.user_admin"/>
+		<field name="interval_number">1</field>
+		<field name="interval_type">days</field>
+		<field name="numbercall">-1</field>
+		<field name="doall" eval="False"/>
+		<field name="model" eval="'mrp.procurement'"/>
+		<field name="function" eval="'run_scheduler'"/>
+		<field name="args" eval="'(uid,)'"/>
+	</record>
 
 </data>
 </terp>

@@ -2,8 +2,6 @@
 #
 # Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
-# $Id$
-#
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -28,9 +26,8 @@
 ##############################################################################
 
 import wizard
-from schedulers import _procure_confirm
-from schedulers import _procure_orderpoint_confirm
 import threading
+import pooler
 
 parameter_form = '''<?xml version="1.0"?>
 <form string="Scheduler Parameters" colspan="4">
@@ -56,8 +53,19 @@ parameter_fields = {
 }
 
 def _procure_calculation_all(self, db_name, uid, data, context):
-	_procure_confirm(self, db_name, uid, data, context)
-	_procure_orderpoint_confirm(self, db_name, uid, data, context)
+	db, pool = pooler.get_db_and_pool(db_name)
+	cr = db.cursor()
+	proc_obj = pool.get('mrp.procurement')
+	schedule_cycle = data['form']['schedule_cycle']
+	po_cycle = data['form']['po_cycle']
+	po_lead = data['form']['po_lead']
+	security_lead = data['form']['security_lead']
+	picking_lead = data['form']['picking_lead']
+	user_id = data['form']['user_id']
+	automatic = data['form']['automatic']
+	proc_obj.run_scheduler(cr, uid, user_id=user_id, schedule_cycle=schedule_cycle,\
+			po_cycle=po_cycle, po_lead=po_lead, security_lead=security_lead,\
+			picking_lead=picking_lead, automatic=automatic, context=context)
 	return {}
 
 def _procure_calculation(self, cr, uid, data, context):

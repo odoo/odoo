@@ -2,8 +2,6 @@
 #
 # Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
-# $Id$
-#
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -33,9 +31,11 @@ from mx import DateTime
 import netsvc
 from osv import osv
 
-def _procure_confirm(self, db_name, uid, data, context):
-	cr = pooler.get_db(db_name).cursor()
+def _procure_confirm(self, db_name, uid, schedule_cycle=1.0, po_cycle=1.0, po_lead=1.0, security_lead=50.0, picking_lead=1.0, user_id=False, context=None):
+	if not context:
+		context={}
 
+	cr = pooler.get_db(db_name).cursor()
 	wf_service = netsvc.LocalService("workflow")
 
 	cr.execute('select id from mrp_procurement where state=%s order by date_planned', ('exception',))
@@ -44,8 +44,8 @@ def _procure_confirm(self, db_name, uid, data, context):
 		wf_service.trg_validate(uid, 'mrp.procurement', id, 'button_restart', cr)
 	cr.commit()
 
-	po_time = (data['form']['po_cycle'] or 0.0) + (data['form']['po_lead'] or 0.0)
-	maxdate = DateTime.now() + DateTime.RelativeDateTime(days=(data['form']['schedule_cycle'] or 0.0) + (data['form']['security_lead'] or 0.0))
+	po_time = po_cycle + po_lead
+	maxdate = DateTime.now() + DateTime.RelativeDateTime(days=schedule_cycle + security_lead)
 	start_date = time.strftime('%Y-%m-%d, %Hh %Mm %Ss')
 	offset = 0
 	report = []
@@ -78,7 +78,7 @@ def _procure_confirm(self, db_name, uid, data, context):
 	while len(ids):
 		ids = pooler.get_pool(cr.dbname).get('mrp.procurement').search(cr, uid, [('state','=','confirmed'),('procure_method','=','make_to_stock')], offset=offset)
 		for proc in pooler.get_pool(cr.dbname).get('mrp.procurement').browse(cr, uid, ids):
-			if (maxdate + DateTime.RelativeDateTime(days=data['form']['picking_lead'])).strftime('%Y-%m-%d') >= proc.date_planned:
+			if (maxdate + DateTime.RelativeDateTime(days=picking_lead)).strftime('%Y-%m-%d') >= proc.date_planned:
 				wf_service.trg_validate(uid, 'mrp.procurement', proc.id, 'button_check', cr)
 				cr.execute('select name,state from mrp_procurement where id=%d', (proc.id,))
 				name,state = cr.fetchone()
@@ -91,7 +91,7 @@ def _procure_confirm(self, db_name, uid, data, context):
 			cr.commit()
 		offset += len(ids)
 	end_date = time.strftime('%Y-%m-%d, %Hh %Mm %Ss')
-	if 'user_id' in data['form'] and data['form']['user_id']:
+	if user_id:
 		request = pooler.get_pool(cr.dbname).get('res.request')
 		summary = '''Here is the procurement scheduling report.
 
@@ -107,15 +107,17 @@ Exceptions;
 		summary += '\n'.join(report)
 		request.create(cr, uid, 
 			  {'name' : "Procurement calculation report.",
-			   'act_from' : data['form']['user_id'],
-			   'act_to' : data['form']['user_id'],
+			   'act_from' : user_id,
+			   'act_to' : user_id,
 			   'body': summary,
 			   })
 	cr.commit()
 	cr.close()
 	return {}
 
-def create_automatic_op(cr, uid, data, context):
+def create_automatic_op(cr, uid, context=None):
+	if not context:
+		context={}
 	product_obj = pooler.get_pool(cr.dbname).get('product.product')
 	proc_obj = pooler.get_pool(cr.dbname).get('mrp.procurement')
 	warehouse_obj = pooler.get_pool(cr.dbname).get('stock.warehouse')
@@ -155,13 +157,15 @@ def create_automatic_op(cr, uid, data, context):
 			wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_check', cr)
 
 
-def _procure_orderpoint_confirm(self, db_name, uid, data, context):
+def _procure_orderpoint_confirm(self, db_name, uid, automatic=False, context=None):
+	if not context:
+		context={}
 	cr = pooler.get_db(db_name).cursor()
 	wf_service = netsvc.LocalService("workflow")
 	offset = 0
 	ids = [1]
-	if data['form']['automatic']:
-		create_automatic_op(cr, uid, data, context)
+	if automatic:
+		create_automatic_op(cr, uid, context=context)
 	while ids:
 		cr.execute('select id from stock_warehouse_orderpoint where active offset %d limit 100', (offset,))
 		ids = map(lambda x: x[0], cr.fetchall())
