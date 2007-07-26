@@ -265,28 +265,30 @@ class account_account(osv.osv):
 			cr.execute("CREATE TABLE account_tax (id SERIAL NOT NULL, perm_id INTEGER, PRIMARY KEY(id))");
 			cr.commit()
 
-	def name_search(self, cr, user, name, args=[], operator='ilike', context={}):
+	def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+		if not args:
+			args=[]
+		if not context:
+			context = {}
+		args = args[:]
 		ids = []
-		try:
-			if name and str(name).startswith('partner:'):
-				part_id = int(name.split(':')[1])
-				part = self.pool.get('res.partner').browse(cr, user, part_id, context)
-				args += [('id','in', (part.property_account_payable[0],part.property_account_receivable[0]))]
-				name = False
-			if name and str(name).startswith('type:'):
-				type = name.split(':')[1]
-				args += [('type','=', type)]
-				name = False
-		except:
-			pass
+		if name and str(name).startswith('partner:'):
+			part_id = int(name.split(':')[1])
+			part = self.pool.get('res.partner').browse(cr, user, part_id, context)
+			args += [('id','in', (part.property_account_payable[0],part.property_account_receivable[0]))]
+			name = False
+		if name and str(name).startswith('type:'):
+			type = name.split(':')[1]
+			args += [('type','=', type)]
+			name = False
 		if name:
-			ids = self.search(cr, user, [('code','=like',name+"%")]+ args)
+			ids = self.search(cr, user, [('code','=like',name+"%")]+ args, limit=limit)
 			if not ids:
-				ids = self.search(cr, user, [('shortcut','=',name)]+ args)
+				ids = self.search(cr, user, [('shortcut','=',name)]+ args, limit=limit)
 			if not ids:
-				ids = self.search(cr, user, [('name',operator,name)]+ args)
+				ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
 		else:
-			ids = self.search(cr, user, args, context=context)
+			ids = self.search(cr, user, args, context=context, limit=limit)
 		return self.name_get(cr, user, ids, context=context)
 
 	def name_get(self, cr, uid, ids, context={}):
@@ -392,12 +394,16 @@ class account_journal(osv.osv):
 #				'period_id': period.id
 #			})
 		return journal_id
-	def name_search(self, cr, user, name, args=[], operator='ilike', context={}):
+	def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+		if not args:
+			args=[]
+		if not context:
+			context={}
 		ids = []
 		if name:
-			ids = self.search(cr, user, [('code','ilike',name)]+ args)
+			ids = self.search(cr, user, [('code','ilike',name)]+ args, limit=limit)
 		if not ids:
-			ids = self.search(cr, user, [('name',operator,name)]+ args)
+			ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
 		return self.name_get(cr, user, ids, context=context)
 account_journal()
 
