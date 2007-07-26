@@ -138,9 +138,7 @@ class aged_trial_report(report_sxw.rml_parse):
 	def _get_currency(self, form):
 		return pooler.get_pool(self.cr.dbname).get('res.company').browse(self.cr, self.uid, form['company_id']).currency_id.name
 
-report_sxw.report_sxw(
-	'report.account.aged.trial.balance',
-	'res.partner',
-	'addons/account/report/aged_trial_balance.rml',
-	parser=aged_trial_report, header=False)
+report_sxw.report_sxw('report.account.aged.trial.balance','res.partner',
+	'addons/account/report/aged_trial_balance.rml', parser=aged_trial_report,
+	header=False)
 
