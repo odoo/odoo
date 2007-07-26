@@ -168,5 +168,6 @@ class followup_all_print(wizard.interface):
 			'result': {'type':'print', 'report':'account_followup.followup.print', 'state':'end'},
 		},
 	}
+
 followup_all_print('account_followup.followup.print.all')
 
