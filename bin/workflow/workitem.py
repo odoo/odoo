@@ -84,8 +84,6 @@ def _state_set(cr, workitem, activity, state, ident):
 	cr.execute('update wkf_workitem set state=%s where id=%d', (state,workitem['id']))
 	workitem['state'] = state
 	wkf_logs.log(cr,ident,activity['id'],state)
-	if state == 'complete':
-		cr.commit()
 
 def _execute(cr, workitem, activity, ident):
 	#
