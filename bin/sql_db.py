@@ -109,12 +109,14 @@ class fake_cursor:
 			self.count+=1
 			res_from = re_from.match(sql.lower())
 			if res_from:
-				self.sql_from_log.setdefault(res_from.group(1), 0)
-				self.sql_from_log[res_from.group(1)] += mdt.now() - now
+				self.sql_from_log.setdefault(res_from.group(1), [0, 0])
+				self.sql_from_log[res_from.group(1)][0] += 1
+				self.sql_from_log[res_from.group(1)][1] += mdt.now() - now
 			res_into = re_into.match(sql.lower())
 			if res_into:
-				self.sql_into_log.setdefault(res_into.group(1), 0)
-				self.sql_into_log[res_into.group(1)] += mdt.now() - now
+				self.sql_into_log.setdefault(res_into.group(1), [0, 0])
+				self.sql_into_log[res_into.group(1)][0] += 1
+				self.sql_into_log[res_into.group(1)][1] += mdt.now() - now
 		return res
 
 	def print_log(self, type='from'):
@@ -123,11 +125,11 @@ class fake_cursor:
 			logs = self.sql_from_log.items()
 		else:
 			logs = self.sql_into_log.items()
-		logs.sort(lambda x, y: cmp(x[1], y[1]))
+		logs.sort(lambda x, y: cmp(x[1][1], y[1][1]))
 		sum=0
 		for r in logs:
-			print "table:", r[0], ":", str(r[1])
-			sum+= r[1]
+			print "table:", r[0], ":", str(r[1][1]), "/", r[1][0]
+			sum+= r[1][1]
 		print "SUM:%s/%d"% (sum, self.count)
 
 	def close(self):
