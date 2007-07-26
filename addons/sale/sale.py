@@ -315,14 +315,21 @@ class sale_order(osv.osv):
 		return True
 
 	def action_wait(self, cr, uid, ids, *args):
-		for r in self.read(cr,uid,ids,['order_policy','invoice_ids','name','amount_untaxed','partner_id','user_id','order_line']):
-			if self.pool.get('res.partner.event.type').check(cr, uid, 'sale_open'):
-				self.pool.get('res.partner.event').create(cr, uid, {'name':'Sale Order: '+r['name'], 'partner_id':r['partner_id'][0], 'date':time.strftime('%Y-%m-%d %H:%M:%S'), 'user_id':(r['user_id'] and r['user_id'][0]) or uid, 'partner_type':'customer', 'probability': 1.0, 'planned_revenue':r['amount_untaxed']})
-			if (r['order_policy']=='manual') and (not r['invoice_ids']):
-				self.write(cr,uid,[r['id']],{'state':'manual'})
+		event_p = self.pool.get('res.partner.event.type').check(cr, uid, 'sale_open')
+		event_obj = self.pool.get('res.partner.event')
+		for o in self.browse(cr, uid, ids):
+			if event_p:
+				event_obj.create(cr, uid, {'name': 'Sale Order: '+ o.name,\
+						'partner_id': o.partner_id.id,\
+						'date': time.strftime('%Y-%m-%d %H:%M:%S'),\
+						'user_id': (o.user_id and o.user_id.id) or uid,\
+						'partner_type': 'customer', 'probability': 1.0,\
+						'planned_revenue': o.amount_untaxed})
+			if (o.order_policy == 'manual') and (not o.invoice_ids):
+				self.write(cr, uid, [o.id], {'state': 'manual'})
 			else:
-				self.write(cr,uid,[r['id']],{'state':'progress'})
-			self.pool.get('sale.order.line').button_confirm(cr, uid, r['order_line'])
+				self.write(cr, uid, [o.id], {'state': 'progress'})
+			self.pool.get('sale.order.line').button_confirm(cr, uid, [x.id for x in o.order_line])
 
 	def procurement_lines_get(self, cr, uid, ids, *args):
 		res = []
