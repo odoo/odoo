@@ -59,7 +59,6 @@ class account_move_line(osv.osv):
 		# Compute the current move
 		move_id = False
 		partner_id = False
-		statement_acc_id = False
 		if context.get('journal_id',False) and context.get('period_id',False):
 			cr.execute('select move_id \
 				from \
@@ -76,14 +75,6 @@ class account_move_line(osv.osv):
 					journal_id=%d and period_id=%d and create_uid=%d order by id desc', (context['journal_id'], context['period_id'], uid))
 			res = cr.fetchone()
 			data['date'] = res and res[0] or time.strftime('%Y-%m-%d')
-			cr.execute('select statement_id, account_id  \
-				from \
-					account_move_line \
-				where \
-					journal_id=%d and period_id=%d and statement_id is not null and create_uid=%d order by id desc', (context['journal_id'], context['period_id'], uid))
-			res = cr.fetchone()
-			statement_id = res and res[0] or False
-			statement_acc_id = res and res[1]
 
 		if not move_id:
 			return data
