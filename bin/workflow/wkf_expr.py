@@ -31,22 +31,41 @@ import netsvc
 import osv as base
 import pooler
 
-def _inst_value_get(ident, field):
-	service = netsvc.LocalService("object_proxy")
-	res = service.execute(ident[0], ident[1], 'read', [ident[2]], [field])
-	return res[0][field]
 
-#
-# TODO: improve evaluation expression
-#       VERY SLOW !!! read all !!!
-#
-class _eval_call(object):
+class EnvCall(object):
+
 	def __init__(self,wf_service,d_arg):
 		self.wf_service=wf_service
 		self.d_arg=d_arg
+
 	def __call__(self,*args):
 		arg=self.d_arg+args
 		return self.wf_service.execute_cr(*arg)
+
+
+class Env(dict):
+
+	def __init__(self, wf_service, cr, uid, model, ids):
+		self.wf_service = wf_service
+		self.cr = cr
+		self.uid = uid
+		self.model = model
+		self.ids = ids
+		self.obj = pooler.get_pool(cr.dbname).get(model)
+		self.columns = self.obj._columns.keys() + self.obj._inherit_fields.keys()
+
+	def __getitem__(self, key):
+		if (key in self.columns) and (not super(Env, self).__contains__(key)):
+			res=self.wf_service.execute_cr(self.cr, self.uid, self.model, 'read',\
+					self.ids, [key])[0][key]
+			super(Env, self).__setitem__(key, res)
+			return res
+		elif key in dir(self.obj):
+			return EnvCall(self.wf_service, (self.cr, self.uid, self.model, key,\
+					self.ids))
+		else:
+			return super(Env, self).__getitem__(key)
+
 
 def _eval_expr(cr, ident, workitem, action):
 	ret=False
@@ -60,17 +79,9 @@ def _eval_expr(cr, ident, workitem, action):
 			ret=False
 		else:
 			wf_service = netsvc.LocalService("object_proxy")
-			res=wf_service.execute_cr(cr, uid, model, 'read', ids, None)
-			if res:
-				env=res[0]
-				if '(' in line:
-					pool=pooler.get_pool(cr.dbname)
-					obj=pool.get(model)
-					for i in dir(obj):
-						attr=getattr(obj,i)
-						if not i.startswith('_') and callable(attr):
-							env[i]=_eval_call(wf_service,(cr,uid,model,i,ids))
-				ret=eval(line,env)
+			obj = pooler.get_pool(cr.dbname).get(model)
+			env = Env(wf_service, cr, uid, model, ids)
+			ret = eval(line, env)
 	return ret
 
 def execute(cr, ident, workitem, activity):
