@@ -146,5 +146,11 @@ class wkf_triggers(osv.osv):
 		'instance_id': fields.many2one('workflow.instance', 'Destination Instance', ondelete="cascade"),
 		'workitem_id': fields.many2one('workflow.workitem', 'Workitem', required=True, ondelete="cascade"),
 	}
+	def _auto_init(self, cr):
+		super(wkf_triggers, self)._auto_init(cr)
+		cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'wkf_triggers_res_id_model_index\'')
+		if not cr.fetchone():
+			cr.execute('CREATE INDEX wkf_triggers_res_id_model_index ON wkf_triggers (res_id, model)')
+			cr.commit()
 wkf_triggers()
 
