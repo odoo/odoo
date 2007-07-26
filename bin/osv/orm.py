@@ -89,14 +89,19 @@ class except_orm(Exception):
 #
 # Readonly python database object browser
 class browse_null(object):
+
 	def __init__(self):
 		self.id=False
+
 	def __getitem__(self, name):
 		return False
+
 	def __int__(self):
 		return False
+
 	def __str__(self):
 		return ''
+
 	def __nonzero__(self):
 		return False
 
