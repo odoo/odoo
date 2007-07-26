@@ -351,13 +351,17 @@ class product_product(osv.osv):
 		result = map(_name_get, self.read(cr, user, ids, ['variants','name','default_code'], context))
 		return result
 
-	def name_search(self, cr, user, name, args=[], operator='ilike', context={}, limit=80):
-		ids = self.search(cr, user, [('default_code','=',name)]+ args, limit=limit)
+	def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):
+		if not args:
+			args=[]
+		if not context:
+			context={}
+		ids = self.search(cr, user, [('default_code','=',name)]+ args, limit=limit, context=context)
 		if not len(ids):
-			ids = self.search(cr, user, [('ean13','=',name)]+ args, limit=limit)
+			ids = self.search(cr, user, [('ean13','=',name)]+ args, limit=limit, context=context)
 		if not len(ids):
-			ids = self.search(cr, user, [('default_code',operator,name)]+ args, limit=limit)
-			ids += self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
+			ids = self.search(cr, user, [('default_code',operator,name)]+ args, limit=limit, context=context)
+			ids += self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
 		result = self.name_get(cr, user, ids, context)
 		return result
 

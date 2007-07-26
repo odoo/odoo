@@ -128,14 +128,18 @@ class account_report(osv.osv):
 		'active': lambda *args: True,
 		'type': lambda *args: 'indicator'
 	}
-	def name_search(self, cr, user, name, args=[], operator='ilike', context={}):
+	def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+		if not args:
+			args=[]
+		if not context:
+			context={}
 		ids = []
 		if name:
-			ids = self.search(cr, user, [('code','=',name)]+ args)
+			ids = self.search(cr, user, [('code','=',name)]+ args, limit=limit, context=context)
 			if not ids:
-				ids = self.search(cr, user, [('name',operator,name)]+ args)
+				ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
 		else:
-			ids = self.search(cr, user, args)
+			ids = self.search(cr, user, args, limit=limit, context=context)
 		return self.name_get(cr, user, ids, context=context)
 
 	#

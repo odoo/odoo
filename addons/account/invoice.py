@@ -513,13 +513,17 @@ class account_invoice(osv.osv):
 				}
 		return [(r['id'], types[r['type']]+(r['number'] or '')+' '+(r['name'] or '')) for r in self.read(cr, uid, ids, ['type', 'number', 'name'], context, load='_classic_write')]
 
-	def name_search(self, cr, user, name, args=[], operator='ilike', context={}):
+	def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+		if not args:
+			args=[]
+		if not context:
+			context={}
 		ids = []
 		if name:
-			ids = self.search(cr, user, [('number','=',name)]+ args)
+			ids = self.search(cr, user, [('number','=',name)]+ args, limit=limit, context=context)
 		if not ids:
-			ids = self.search(cr, user, [('name',operator,name)]+ args)
-		return self.name_get(cr, user, ids)
+			ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
+		return self.name_get(cr, user, ids, context)
 
 	def refund(self, cr, uid, ids):
 		invoices = self.read(cr, uid, ids, ['name', 'type', 'number', 'reference', 'comment', 'date_due', 'partner_id', 'address_contact_id', 'address_invoice_id', 'partner_contact', 'partner_insite', 'partner_ref', 'payment_term', 'account_id', 'currency_id', 'invoice_line', 'tax_line'])

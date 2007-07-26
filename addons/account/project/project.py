@@ -189,13 +189,17 @@ class account_analytic_account(osv.osv):
 			res['value']['partner_id'] = partner
 		return res
 
-	def name_search(self, cr, uid, name, args=[], operator='ilike', context={}):
-		account = self.search(cr, uid, [('code', '=', name)]+args)
+	def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=80):
+		if not args:
+			args=[]
+		if not context:
+			context={}
+		account = self.search(cr, uid, [('code', '=', name)]+args, limit=limit, context=context)
 		if not account:
-			account = self.search(cr, uid, [('name', 'ilike', '%%%s%%' % name)]+args)
+			account = self.search(cr, uid, [('name', 'ilike', '%%%s%%' % name)]+args, limit=limit, context=context)
 			newacc = account
 			while newacc:
-				newacc = self.search(cr, uid, [('parent_id', 'in', newacc)]+args)
+				newacc = self.search(cr, uid, [('parent_id', 'in', newacc)]+args, limit=limit, context=context)
 				account+=newacc
 		return self.name_get(cr, uid, account, context=context)
 

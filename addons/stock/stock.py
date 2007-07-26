@@ -290,10 +290,14 @@ class stock_tracking(osv.osv):
 		'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
 	}
 	#_sql = 'ALTER TABLE stock_tracking ADD CONSTRAINT stock_lot_tracking_unique UNIQUE (name,serial)'
-	def name_search(self, cr, user, name, args=[], operator='ilike', context={}):
-		ids = self.search(cr, user, [('serial','=',name)]+ args)
-		ids += self.search(cr, user, [('name',operator,name)]+ args)
-		return self.name_get(cr, user, ids)
+	def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+		if not args:
+			args=[]
+		if not context:
+			context={}
+		ids = self.search(cr, user, [('serial','=',name)]+ args, limit=limit, context=context)
+		ids += self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
+		return self.name_get(cr, user, ids, context)
 
 	def name_get(self, cr, uid, ids, context={}):
 		if not len(ids):

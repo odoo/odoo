@@ -126,12 +126,16 @@ class scrum_product_backlog(osv.osv):
 	_name = 'scrum.product.backlog'
 	_description = 'Product Backlog'
 
-	def name_search(self, cr, uid, name, args=[], operator='ilike', context={}):
+	def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=80):
+		if not args:
+			args=[]
+		if not context:
+			context={}
 		match = re.match('^S\(([0-9]+)\)$', name)
 		if match:
-			ids = self.search(cr, uid, [('sprint_id','=', int(match.group(1)))])
+			ids = self.search(cr, uid, [('sprint_id','=', int(match.group(1)))], limit=limit, context=context)
 			return self.name_get(cr, uid, ids, context=context)
-		return super(scrum_product_backlog, self).name_search(cr, uid, name, args,operator,context)
+		return super(scrum_product_backlog, self).name_search(cr, uid, name, args, operator,context, limit=limit)
 
 	def _calc_progress(self, cr, uid, ids, name, args, context):
 		res = {}
