@@ -312,6 +312,15 @@ class account_account(osv.osv):
 		else:
 			default['child_id'] = False
 		return super(account_account, self).copy(cr, uid, id, default, context=context)
+
+	def write(self, cr, uid, ids, vals, context=None):
+		if not context:
+			context={}
+		if 'active' in vals and not vals['active']:
+			line_obj = self.pool.get('account.move.line')
+			if line_obj.search(cr, uid, [('account_id', 'in', ids)]):
+				raise osv.except_osv('Error!', 'You can not deactivate a account with entry lines!')
+		super(account_account, self).write(cr, uid, ids, vals, context=context)
 account_account()
 
 class account_journal_view(osv.osv):

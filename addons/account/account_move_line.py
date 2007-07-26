@@ -401,7 +401,13 @@ class account_move_line(osv.osv):
 				self.pool.get('account.move').validate(cr, uid, [line.move_id.id], context=context)
 		return result
 
-	def write(self, cr, uid, ids, vals, context={}, check=True, update_check=True):
+	def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
+		if not context:
+			context={}
+		account_obj = self.pool.get('account.account')
+
+		if ('account_id' in vals) and not account_obj.read(cr, uid, vals['account_id'], ['active'])['active']:
+			raise osv.except_osv('Bad account!', 'You can not use an inactive account!')
 		if update_check:
 			self._update_check(cr, uid, ids, context)
 		result = super(osv.osv, self).write(cr, uid, ids, vals, context)
@@ -442,7 +448,13 @@ class account_move_line(osv.osv):
 				done[t] = True
 		return True
 
-	def create(self, cr, uid, vals, context={}, check=True):
+	def create(self, cr, uid, vals, context=None, check=True):
+		if not context:
+			context={}
+		account_obj = self.pool.get('account.account')
+
+		if ('account_id' in vals) and not account_obj.read(cr, uid, vals['account_id'], ['active'])['active']:
+			raise osv.except_osv('Bad account!', 'You can not use an inactive account!')
 		if 'journal_id' in vals and 'journal_id' not in context:
 			context['journal_id'] = vals['journal_id']
 		if 'period_id' in vals and 'period_id' not in context:
@@ -477,7 +489,7 @@ class account_move_line(osv.osv):
 
 		ok = not (journal.type_control_ids or journal.account_control_ids)
 		if ('account_id' in vals) and journal.type_control_ids:
-			type = self.pool.get('account.account').browse(cr, uid, vals['account_id']).type
+			type = account_obj.browse(cr, uid, vals['account_id']).type
 			for t in journal.type_control_ids:
 				if type==t.code:
 					ok = True
