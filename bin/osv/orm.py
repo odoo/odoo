@@ -1695,6 +1695,7 @@ class orm(object):
 			args=[]
 		if not context:
 			context={}
+		args=args[:]
 		if name:
 			args += [(self._rec_name,operator,name)]
 		ids = self.search(cr, user, args, limit=limit)
