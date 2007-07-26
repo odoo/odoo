@@ -1698,7 +1698,7 @@ class orm(object):
 		args=args[:]
 		if name:
 			args += [(self._rec_name,operator,name)]
-		ids = self.search(cr, user, args, limit=limit)
+		ids = self.search(cr, user, args, limit=limit, context=context)
 		res = self.name_get(cr, user, ids, context)
 		return res
 

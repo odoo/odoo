@@ -55,11 +55,15 @@ class res_country(osv.osv):
 		('name_uniq', 'unique (name)', 'The name of the country must be unique !'),
 		('code_uniq', 'unique (code)', 'The code of the country must be unique !')
 	]
-	def name_search(self, cr, user, name, args=[], operator='ilike', context={}):
-		ids = self.search(cr, user, [('code','=',name)]+ args)
+	def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):
+		if not args:
+			args=[]
+		if not context:
+			context={}
+		ids = self.search(cr, user, [('code','=',name)]+ args, limit=limit, context=context)
 		if not ids:
-			ids = self.search(cr, user, [('name',operator,name)]+ args)
-		return self.name_get(cr, user, ids)
+			ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
+		return self.name_get(cr, user, ids, context)
 	_order='code'
 res_country()
 
@@ -237,13 +241,17 @@ class res_partner(osv.osv):
 		res = [(r['id'], r[rec_name]) for r in self.read(cr, uid, ids, [rec_name], context)]
 		return res
 		
-	def name_search(self, cr, uid, name, args=[], operator='ilike', context={}, limit=80):
+	def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=80):
+		if not args:
+			args=[]
+		if not context:
+			context={}
 		if name:
-			ids = self.search(cr, uid, [('ref', '=', name)] + args, limit=limit)
+			ids = self.search(cr, uid, [('ref', '=', name)] + args, limit=limit, context=context)
 			if not ids:
-				ids = self.search(cr, uid, [('name', operator, name)] + args, limit=limit)
+				ids = self.search(cr, uid, [('name', operator, name)] + args, limit=limit, context=context)
 		else:
-			ids = self.search(cr, uid, args, limit=limit)
+			ids = self.search(cr, uid, args, limit=limit, context=context)
 		return self.name_get(cr, uid, ids, context)
 
 	def _email_send(self, cr, uid, ids, email_from, subject, body, on_error=None):
@@ -342,17 +350,21 @@ class res_partner_address(osv.osv):
 				res.append((r['id'], addr or '/'))
 		return res
 
-	def name_search(self, cr, user, name, args=[], operator='ilike', context={}, limit=80):
+	def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+		if not args:
+			args=[]
+		if not context:
+			context={}
 		if context.get('contact_display', 'contact')=='partner':
-			ids = self.search(cr, user, [('partner_id',operator,name)], limit=limit)
+			ids = self.search(cr, user, [('partner_id',operator,name)], limit=limit, context=context)
 		else:
-			ids = self.search(cr, user, [('zip','=',name)] + args, limit=limit)
+			ids = self.search(cr, user, [('zip','=',name)] + args, limit=limit, context=context)
 			if not ids: 
-				ids = self.search(cr, user, [('city',operator,name)] + args, limit=limit)
+				ids = self.search(cr, user, [('city',operator,name)] + args, limit=limit, context=context)
 			if name:
-				ids += self.search(cr, user, [('name',operator,name)] + args, limit=limit)
-				ids += self.search(cr, user, [('partner_id',operator,name)] + args, limit=limit)
-		return self.name_get(cr, user, ids)
+				ids += self.search(cr, user, [('name',operator,name)] + args, limit=limit, context=context)
+				ids += self.search(cr, user, [('partner_id',operator,name)] + args, limit=limit, context=context)
+		return self.name_get(cr, user, ids, context=context)
 res_partner_address()
 
 class res_partner_bank_type(osv.osv):

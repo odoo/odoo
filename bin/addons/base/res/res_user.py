@@ -120,10 +120,14 @@ class users(osv.osv):
 			raise osv.except_osv('Can not remove root user !', 'You can not remove the root user as it is used internally for resources created by Tiny ERP (updates, module installation, ...)')
 		return super(users, self).unlink(cr, uid, ids)
 		
-	def name_search(self, cr, user, name, args=[], operator='ilike', context={}):
-		ids = self.search(cr, user, [('login','=',name)]+ args)
+	def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):
+		if not args:
+			args=[]
+		if not context:
+			context={}
+		ids = self.search(cr, user, [('login','=',name)]+ args, limit=limit)
 		if not ids:
-			ids = self.search(cr, user, [('name',operator,name)]+ args)
+			ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
 		return self.name_get(cr, user, ids)
 		
 	def copy(self, cr, uid, id, default=None, context={}):
