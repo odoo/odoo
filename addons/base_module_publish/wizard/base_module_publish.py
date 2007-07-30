@@ -132,6 +132,7 @@ upload_info_form = '''<?xml version="1.0"?>
 	<label string="If you don't have an access, you can create one http://www.tinyerp.com/"
 	align="0.0" colspan="4"/>
 	<field name="login"/>
+	<newline/>
 	<field name="password"/>
 	<newline/>
 	<field name="email"/>
@@ -283,7 +284,8 @@ def module_check(self, cr, uid, data, context):
 		'website': module.website,
 		'url': module.url,
 		'description': module.description,
-		'version': module.latest_version
+		'version': module.latest_version,
+		'license': module.license,
 	}
 
 class base_module_publish(wizard.interface):
