@@ -1,11 +1,10 @@
 <?xml version="1.0"?>
 <terp>
 	<data>
-		<wizard
-			string="Import module"
-			model="ir.module.module"
-			name="base.module.import"
-			id="wizard_base_module_import"/>
+		<record model="ir.actions.wizard" id="wizard_base_module_import">
+			<field name="name">Import module</field>
+			<field name="wiz_name">base.module.import</field>
+		</record>
 		<menuitem
 			name="Administration/Modules Management/Import a new module"
 			action="wizard_base_module_import"

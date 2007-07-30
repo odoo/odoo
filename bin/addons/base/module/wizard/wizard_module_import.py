@@ -67,9 +67,6 @@ class move_module_wizard(wizard.interface):
 
 		ad = tools.config['addons_path']
 
-		if os.path.isdir(os.path.join(ad,module_name)) or os.path.isfile(os.path.join(ad,module_name+'.zip')):
-			raise wizard.except_wizard('Error !', 'This module already exist in your system !')
-
 		fname = os.path.join(ad,module_name+'.zip')
 		try:
 			fp = file(fname, 'wb')
@@ -78,7 +75,19 @@ class move_module_wizard(wizard.interface):
 		except IOError, e:
 			raise wizard.except_wizard('Error !', 'Can not create the module file:\n'+'  '+fname+'!')
 
-		return {}
+		pooler.get_pool(cr.dbname).get('ir.module.module').update_list(cr, uid)
+		return {'module_name': module_name}
+
+	def _action_module_open(self, cr, uid, data, context):
+		return {
+			'domain': str([('name', '=', data['form']['module_name'])]),
+			'name': 'Module List',
+			'view_type': 'form',
+			'view_mode': 'tree,form',
+			'res_model': 'ir.module.module',
+			'view_id': False,
+			'type': 'ir.actions.act_window'
+		}
 
 	states = {
 		'init': {
@@ -96,8 +105,12 @@ class move_module_wizard(wizard.interface):
 				'type':'form',
 				'arch':finish_form,
 				'fields':{},
-				'state':[('end','Close')]
+				'state':[('open_window','Close')]
 			}
-		}
+		},
+		'open_window': {
+			'actions': [],
+			'result': {'type': 'action', 'action': _action_module_open, 'state':'end'}
+		},
 	}
 move_module_wizard('base.module.import')

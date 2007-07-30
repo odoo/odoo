@@ -152,6 +152,9 @@ def create_graph(module_list, force=None):
 		
 		# if all dependencies of 'package' are already in the graph, add 'package' in the graph
 		if reduce(lambda x,y: x and y in graph, deps, True):
+			if not package in current:
+				packages.pop(0)
+				continue
 			later.clear()
 			current.remove(package)
 			graph.addNode(package, deps)
@@ -163,7 +166,7 @@ def create_graph(module_list, force=None):
 		else:
 			later.add(package)
 			packages.append((package, deps, datas))
-		packages = packages[1:]
+		packages.pop(0)
 	
 	for package in later:
 		logger.notifyChannel('init', netsvc.LOG_ERROR, 'addon:%s:Unmet dependency' % package)
@@ -241,10 +244,11 @@ def register_classes():
 		m = package.name
 		logger.notifyChannel('init', netsvc.LOG_INFO, 'addon:%s:registering classes' % m)
 		sys.stdout.flush()
-		try:
+
+		if not os.path.isfile(opj(ad, m+'.zip')):
 			# XXX must restrict to only addons paths
 			imp.load_module(m, *imp.find_module(m))
-		except ImportError:
+		else:
 			import zipimport
 			mod_path = opj(ad, m+'.zip')
 			try:

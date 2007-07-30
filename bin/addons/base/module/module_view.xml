@@ -89,7 +89,7 @@
 							<group col="6" colspan="2">
 								<button string="Install" name="button_install" type="object" states="uninstalled"/>
 								<button string="Cancel Install" name="button_install_cancel" type="object" states="to install"/>
-								<button string="Uninstall" name="button_uninstall" type="object" states="installed"/>
+								<button string="Uninstall (beta)" name="button_uninstall" type="object" states="installed"/>
 								<button string="Cancel Uninstall" name="button_uninstall_cancel" type="object" states="to remove"/>
 								<button string="Upgrade" name="button_upgrade" type="object" states="installed"/>
 								<button string="Cancel Upgrade" name="button_upgrade_cancel" type="object" states="to upgrade"/>
@@ -102,7 +102,6 @@
 							<field name="dependencies_id" colspan="4" nolabel="1">
 								<tree string="Dependencies">
 									<field name="name"/>
-									<field name="version_pattern"/>
 									<field name="state"/>
 								</tree>
 							</field>
@@ -140,7 +139,7 @@
 			<field name="res_model">ir.module.module</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-			<field name="domain">[('state','=','installed')]</field>
+			<field name="domain">[('state', 'in', ['installed', 'to upgrade', 'to remove'])]</field>
 		</record>
 		<menuitem name="Administration/Modules Management/Modules/Installed Modules" action="open_module_tree_install" id="menu_module_tree_install"/>
 		<record model="ir.actions.act_window" id="open_module_tree_uninstall">
@@ -148,7 +147,7 @@
 			<field name="res_model">ir.module.module</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-			<field name="domain">[('state','=','uninstalled')]</field>
+			<field name="domain">[('state', 'in', ['uninstalled', 'uninstallable'])]</field>
 		</record>
 		<menuitem name="Administration/Modules Management/Modules/Uninstalled Modules" action="open_module_tree_uninstall" id="menu_module_tree_uninstall"/>
 		<record model="ir.actions.act_window" id="open_module_tree_upgrade">
@@ -156,7 +155,7 @@
 			<field name="res_model">ir.module.module</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
-			<field name="domain">[('state','&lt;&gt;','uninstalled'),('state','&lt;&gt;','installed'),('state','&lt;&gt;','uninstallable'),]</field>
+			<field name="domain">[('state','in', ['to upgrade', 'to remove', 'to install'])]</field>
 		</record>
 		<menuitem name="Administration/Modules Management/Modules/Modules to be installed, upgraded or removed" action="open_module_tree_upgrade" id="menu_module_tree_upgrade"/>
 
@@ -166,8 +165,10 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Repository">
-					<field name="name" colspan="4" select="1"/>
-					<field name="url" colspan="4" select="1"/>
+					<field name="name" select="1"/>
+					<field name="sequence"/>
+					<field name="url" colspan="4" select="1" widget="url"/>
+					<field name="filter" colspan="4"/>
 				</form>
 			</field>
 		</record>
@@ -177,6 +178,7 @@
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
 				<tree string="Repository list">
+					<field name="sequence"/>
 					<field name="name"/>
 					<field name="url"/>
 				</tree>
@@ -187,13 +189,11 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 		</record>
-		<!--
 		<menuitem
 			name="Administration/Modules Management/Repositories"
 			action="open_repository_tree"
 			id="menu_module_repository_tree"
 			/>
-		-->
 
 	</data>
 </terp>

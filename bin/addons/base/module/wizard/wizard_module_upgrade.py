@@ -56,14 +56,18 @@ view_field = {
 class wizard_info_get(wizard.interface):
 	def _get_install(self, cr, uid, data, context):
 		pool=pooler.get_pool(cr.dbname)
-		ids = pool.get('ir.module.module').search(cr, uid, [
-			('state','<>','uninstalled'),
-			('state','<>','installed'),
-			('state','<>','uninstallable')])
+		mod_obj = pool.get('ir.module.module')
+		ids = mod_obj.search(cr, uid, [
+			('state', 'in', ['to upgrade', 'to remove', 'to install'])])
 		res = pool.get('ir.module.module').read(cr, uid, ids, ['name','state'], context)
 		return {'module_info':'\n'.join(map(lambda x: x['name']+' : '+x['state'], res))}
 
 	def _upgrade_module(self, cr, uid, data, context):
+		pool=pooler.get_pool(cr.dbname)
+		mod_obj = pool.get('ir.module.module')
+		ids = mod_obj.search(cr, uid, [
+			('state', 'in', ['to upgrade', 'to remove', 'to install'])])
+		mod_obj.download(cr, uid, ids, context=context)
 		(db, pool)=pooler.restart_pool(cr.dbname, update_module=True)
 		return {}
 

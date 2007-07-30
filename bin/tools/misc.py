@@ -41,6 +41,7 @@ from config import config
 #import tools
 
 import zipfile
+import release
 
 if sys.version_info[:2] < (2, 4):
 	from threadinglocal import local
@@ -100,7 +101,7 @@ def init_db(cr):
 			cr.execute('insert into ir_module_module (id, author, latest_version, website, name, shortdesc, description, category_id, state) values (%d, %s, %s, %s, %s, %s, %s, %d, %s)', (
 				id,
 				info.get('author', ''),
-				info.get('version', ''),
+				release.version.rsplit('.', 1)[0] + '.' + info.get('version', ''),
 				info.get('website', ''),
 				i,
 				info.get('name', False),
@@ -165,24 +166,25 @@ def file_open(name, mode="r", subdir='addons'):
 		name = os.path.join(config['root_path'], subdir, name)
 	else:
 		name = os.path.join(config['root_path'], name)
-	if os.path.isfile(name):
-		return file(name, mode)
 
 	# Check for a zipfile in the path
 	head = name
-	name = False
+	zipname = False
 	while True:
 		head, tail = os.path.split(head)
 		if not tail:
 			break
-		if name:
-			name = os.path.join(tail, name)
+		if zipname:
+			zipname = os.path.join(tail, zipname)
 		else:
-			name = tail
+			zipname = tail
 		if zipfile.is_zipfile(head+'.zip'):
 			import StringIO
 			zfile = zipfile.ZipFile(head+'.zip')
-			return StringIO.StringIO(zfile.read(os.path.join(os.path.basename(head), name)))
+			return StringIO.StringIO(zfile.read(os.path.join(os.path.basename(head), zipname)))
+	if os.path.isfile(name):
+		return file(name, mode)
+
 	raise IOError, 'File not found : '+str(name)
 
 

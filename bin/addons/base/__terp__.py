@@ -33,5 +33,6 @@
 		"res/partner/partner_data.xml",
 		"res/ir_property_view.xml",
 	],
-	"installable": True
+	"active": True,
+	"installable": True,
 }

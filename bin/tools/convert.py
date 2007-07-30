@@ -55,6 +55,8 @@ def _eval_xml(self,node, pool, cr, uid, idref):
 			if len(a_eval):
 				import time
 				idref['time'] = time
+				import release
+				idref['version'] = release.version.rsplit('.', 1)[0]
 				idref['ref'] = lambda x: self.id_get(cr, False, x)
 				try:
 					import pytz
