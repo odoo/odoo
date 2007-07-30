@@ -107,11 +107,15 @@ class module(osv.osv):
 			('to install','To be installed')
 		], string='State', readonly=True),
 		'demo': fields.boolean('Demo data'),
+		'license': fields.selection([('GPL-2', 'GPL-2'),
+			('Other proprietary', 'Other proprietary')], string='License',
+			readonly=True),
 	}
 	
 	_defaults = {
 		'state': lambda *a: 'uninstalled',
 		'demo': lambda *a: False,
+		'license': lambda *a: 'GPL-2',
 	}
 	_order = 'name'
 
@@ -203,6 +207,7 @@ class module(osv.osv):
 					'author': terp.get('author', 'Unknown'),
 					'website': terp.get('website', ''),
 					'latest_version': terp.get('version', ''),
+					'license': terp.get('license', 'GPL-2'),
 					})
 				cr.execute('DELETE FROM ir_module_module_dependency where module_id = %d', (ids[0],))
 				self._update_dependencies(cr, uid, ids[0], terp.get('depends', []))
@@ -232,6 +237,7 @@ class module(osv.osv):
 					'author': terp.get('author', 'Unknown'),
 					'website': terp.get('website', ''),
 					'latest_version': terp.get('version', ''),
+					'license': terp.get('license', 'GPL-2'),
 				})
 				self._update_dependencies(cr, uid, id, terp.get('depends', []))
 				self._update_category(cr, uid, id, terp.get('category', 'Uncategorized'))

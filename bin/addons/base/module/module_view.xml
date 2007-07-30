@@ -78,11 +78,15 @@
 							<field name="installed_version"/>
 							<field name="latest_version"/>
 							<field name="author" select="2"/>
-							<field name="website" select="2"/>
-							<field name="url"/>
+							<field name="website" select="2" widget="url"/>
+							<field name="url" widget="url"/>
+							<field name="license"/>
+							<newline/>
+							<label colspan="2"/>
 							<field name="demo" readonly="1"/>
+							<newline/>
 							<field name="state" readonly="1" select="1"/>
-							<group col="7" colspan="2">
+							<group col="6" colspan="2">
 								<button string="Install" name="button_install" type="object" states="uninstalled"/>
 								<button string="Cancel Install" name="button_install_cancel" type="object" states="to install"/>
 								<button string="Uninstall" name="button_uninstall" type="object" states="installed"/>

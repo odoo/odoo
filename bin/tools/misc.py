@@ -86,7 +86,7 @@ def init_db(cr):
 				p_id = c_id
 				categs = categs[1:]
 
-			active = info.get('active', True)
+			active = info.get('active', False)
 			installable = info.get('installable', True)
 			if installable:
 				if active:
