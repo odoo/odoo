@@ -140,6 +140,7 @@ send_form_fields = {
 class base_report_designer_modify(wizard.interface):
 	def _upload_report_clear(self, cr, uid, data, context):
 		return {'file_sxw': False}
+
 	def _upload_report(self, cr, uid, data, context):
 		import tiny_sxw2rml
 		import StringIO
@@ -151,10 +152,12 @@ class base_report_designer_modify(wizard.interface):
 			'report_rml_content': str(tiny_sxw2rml.sxw2rml(sxwval, xsl=fp.read()))
 		})
 		return {}
+
 	def _get_report(self, cr, uid, data, context):
 		pool = pooler.get_pool(cr.dbname)
 		report = pool.get('ir.actions.report.xml').browse(cr, uid, data['form']['report_id'], context)
 		return {'file_sxw': base64.encodestring(report.report_sxw_content)}
+
 	states = {
 		'init': {
 			'actions': [], 

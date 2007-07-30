@@ -380,6 +380,15 @@
 		</record>
 		<menuitem name="Project/" id="menu_action_view_task4" action="action_view_task4" />
 		
+		<record model="ir.actions.act_window" id="action_view_task5_pending">
+			<field name="name">My pending tasks</field>
+			<field name="res_model">project.task</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('user_id', '=', uid),('state','=','pending')]</field>
+		</record>
+		<menuitem name="Project/My tasks/" action="action_view_task5_pending" id="menu_tasks_yours_pending" />
+
 		<record model="ir.actions.act_window" id="action_view_task5">
 			<field name="name">My open tasks</field>
 			<field name="res_model">project.task</field>
