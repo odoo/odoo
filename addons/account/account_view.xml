@@ -639,7 +639,7 @@
 		name="account.move.journal"
 		menu="False"
 		id="action_move_journal_line_form" />
-	<menuitem name="Financial Management/Entries/Standard entry" id="menu_action_move_journal_line_form" action="action_move_journal_line_form" type="wizard"/>
+	<menuitem name="Financial Management/Entries/Entries in a journal" id="menu_action_move_journal_line_form" action="action_move_journal_line_form" type="wizard"/>
 
 	<record model="ir.actions.act_window" id="action_move_journal_period_line_form">
 		<field name="name">Open journals</field>
@@ -647,7 +647,7 @@
 		<field name="view_type">tree</field>
 		<field name="domain">[('state','&lt;&gt;','done')]</field>
 	</record>
-	<menuitem name="Financial Management/Entries/Standard entry/" id="menu_action_move_journal_period_line_form" action="action_move_journal_period_line_form"/>
+	<menuitem name="Financial Management/Entries/Entries in a journal/" id="menu_action_move_journal_period_line_form" action="action_move_journal_period_line_form"/>
 
 	<!--
 	Entries lines
@@ -892,15 +892,6 @@
 	<menuitem name="Financial Management/Charts/Accounts Charts/Fast Account Chart" id="menu_action_account_tree3" action="action_account_tree2"/>
 
 	<menuitem name="Financial Management/Periodical Processing" sequence="3"/>
-
-	<!--
-	# Wizard, Period
-	-->
-	<record model="ir.actions.act_window" id="action_account_bank_tree">
-		<field name="res_model">account.bank</field>
-		<field name="view_type">tree</field>
-		<field name="view_id" ref="view_bank_tree"/>
-	</record>
 
 
 	<record model="ir.ui.view" id="view_bank_statement_reconcile_form">

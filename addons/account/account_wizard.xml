@@ -111,28 +111,28 @@
 			type="wizard"
 			id="menu_generate_subscription"/>
 
-		<!-- Aged trial balance -->
+		<!-- Aged partner balance -->
 		<wizard 
-			string="Aged Trial Balance"
+			string="Aged partner balance"
 			model="res.partner"
 			name="account.aged.trial.balance"
 			menu="False"
 			id="wizard_aged_trial_balance"/>
 		<menuitem
-			name="Financial Management/Reporting/Aged Trial Balance"
+			name="Financial Management/Reporting/Partner accounts/Aged partner balance"
 			action="wizard_aged_trial_balance"
 			type="wizard"
 			id="menu_aged_trial_balance"/>
 	
 		<!-- report-related wizards -->
 		<wizard 
-			string="Partner Balance"
+			string="Partner balance"
 			model="res.partner"
 			name="account.partner.balance.report"
 			menu="False"
 			id="wizard_partner_balance_report"/>
 		<menuitem
-			name="Financial Management/Reporting/Partner balance"
+			name="Financial Management/Reporting/Partner accounts/Partner balance"
 			action="wizard_partner_balance_report"
 			type="wizard"
 			id="menu_partner_balance"/>
@@ -144,7 +144,7 @@
 			menu="False"
 			id="wizard_third_party_ledger"/>
 		<menuitem
-			name="Financial Management/Reporting/Partner ledger"
+			name="Financial Management/Reporting/Partner accounts/Partner ledger"
 			action="wizard_third_party_ledger"
 			type="wizard"
 			id="menu_third_party_ledger"/>

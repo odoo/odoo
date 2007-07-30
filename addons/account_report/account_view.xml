@@ -55,24 +55,25 @@
 		</field>
 	</record>
 
+	<record model="ir.actions.act_window" id="action_account_report_tree">
+		<field name="name">Custom reporting</field>
+		<field name="res_model">account.report.report</field>
+		<field name="view_type">tree</field>
+		<field name="domain">[('parent_id','=',False)]</field>
+	</record>
+	<menuitem
+		name="Financial Management/Configuration/Custom reporting"
+		id="menu_action_account_report_tree_define"
+		action="action_account_report_tree"/>
 	<record model="ir.actions.act_window" id="action_account_report_form">
 		<field name="res_model">account.report.report</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">form,tree</field>
 	</record>
 	<menuitem
-		name="Financial Management/Configuration/Reporting"
+		name="Financial Management/Configuration/Custom reporting/New reporting item formula"
 		id="menu_action_account_report_form"
 		action="action_account_report_form"/>
-	<record model="ir.actions.act_window" id="action_account_report_tree">
-		<field name="name">Structured reporting</field>
-		<field name="res_model">account.report.report</field>
-		<field name="view_type">tree</field>
-	</record>
-	<menuitem
-		name="Financial Management/Configuration/Reporting/Structured reporting"
-		id="menu_action_account_report_tree_define"
-		action="action_account_report_tree"/>
 
 	<record model="ir.ui.view" id="view_account_report_tree">
 		<field name="name">account.report.report.tree</field>
@@ -91,14 +92,14 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="action_account_report_tree_view">
-		<field name="name">Structured reporting</field>
+		<field name="name">Custom reporting</field>
 		<field name="res_model">account.fiscalyear</field>
 		<field name="view_type">tree</field>
 		<field name="view_id" ref="view_account_report_tree"/>
 		<field name="domain">[('parent_id','=',False)]</field>
 	</record>
 	<menuitem
-		name="Financial Management/Reporting/Account reportings"
+		name="Financial Management/Reporting/Custom reporting"
 		id="menu_action_account_report_tree_view"
 		action="action_account_report_tree_view"/>
 
@@ -111,7 +112,7 @@
 		<field name="domain">[('type','=','fiscal'),('parent_id','=',False)]</field>
 	</record>
 	<menuitem
-		name="Financial Management/Reporting/Account reportings/Fiscal Statements"
+		name="Financial Management/Reporting/Custom reporting/Fiscal Statements"
 		id="menu_action_account_report_tree_view_fiscal"
 		action="action_account_report_tree_view_fiscal"/>
 
@@ -123,7 +124,7 @@
 		<field name="domain">[('type','=','indicator'),('parent_id','=',False)]</field>
 	</record>
 	<menuitem
-		name="Financial Management/Reporting/Account reportings/Indicators"
+		name="Financial Management/Reporting/Custom reporting/Indicators"
 		id="menu_action_account_report_tree_view_indicator"
 		action="action_account_report_tree_view_indicator"/>
 
@@ -135,7 +136,7 @@
 		<field name="domain">[('type','=','other'),('parent_id','=',False)]</field>
 	</record>
 	<menuitem
-		name="Financial Management/Reporting/Account reportings/Others"
+		name="Financial Management/Reporting/Custom reporting/Others"
 		id="menu_action_account_report_tree_view_other"
 		action="action_account_report_tree_view_other"/>
 

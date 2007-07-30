@@ -60,26 +60,26 @@
 	<menuitem name="Project/Reporting/All Months/Tasks by user" action="action_project_task" id="menu_project_task_user_tree"/>
 
 	<record model="ir.actions.act_window" id="action_project_task_done">
-		<field name="name">Closed task by user</field>
+		<field name="name">Closed tasks by user</field>
 		<field name="res_model">report.task.user.pipeline.open</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,graph</field>
 		<field name="domain">[('task_state','=','done')]</field>
 	</record>
 	<menuitem 
-		name="Project/Reporting/All Months/Closed task by user"
+		name="Project/Reporting/All Months/Closed tasks by user"
 		action="action_project_task_done"
 		id="menu_project_task_user_tree2"/>
 
 	<record model="ir.actions.act_window" id="action_project_task_open">
-		<field name="name">Opened task by user</field>
+		<field name="name">Opened tasks by user</field>
 		<field name="res_model">report.task.user.pipeline.open</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,graph</field>
 		<field name="domain">[('task_state','=','open')]</field>
 	</record>
 	<menuitem 
-		name="Project/Reporting/All Months/Opened task by user"
+		name="Project/Reporting/All Months/Opened tasks by user"
 		action="action_project_task_open" 
 		id="menu_project_task_user_tree3"/>
 </data>
