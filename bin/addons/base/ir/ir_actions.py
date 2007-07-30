@@ -109,6 +109,20 @@ class report_xml(osv.osv):
 		'header': lambda *a: True,
 		'report_sxw_content': lambda *a: False,
 	}
+	#
+	# Untested function
+	#
+	def upload_report(self, cr, uid, report_id, file_sxw, context):
+		import tiny_sxw2rml
+		import StringIO
+		pool = pooler.get_pool(cr.dbname)
+		sxwval = StringIO.StringIO(base64.decodestring(file_sxw))
+		fp = tools.file_open('normalized_oo2rml.xsl',subdir='addons/base_report_designer/wizard/tiny_sxw2rml')
+		report = pool.get('ir.actions.report.xml').write(cr, uid, [report_id], {
+			'report_sxw_content': base64.decodestring(file_sxw),
+			'report_rml_content': str(tiny_sxw2rml.sxw2rml(sxwval, xsl=fp.read()))
+		})
+		return {}
 report_xml()
 
 class act_window(osv.osv):
