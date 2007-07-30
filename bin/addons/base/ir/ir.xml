@@ -439,7 +439,7 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_res_roles">
-		<field name="name">Roles Structure</field>
+		<field name="name">Roles structure</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">res.roles</field>
 		<field name="view_type">tree</field>
@@ -453,7 +453,7 @@
 		<field name="res_model">res.roles</field>
 		<field name="view_type">form</field>
 	</record>
-	<menuitem name="Administration/Users/Roles Structure/Define Roles" action="action_res_roles_form" id="menu_action_res_roles_form"/>
+	<menuitem name="Administration/Users/Roles structure/Define roles" action="action_res_roles_form" id="menu_action_res_roles_form"/>
 
 	==========================================================
 	View
@@ -827,7 +827,7 @@
 		<field name="view_type">form</field>
 		<field name="view_id" ref="edit_menu"/>
 	</record>
-	<menuitem name="Administration/Security/Grant Access to menu"
+	<menuitem name="Administration/Security/Grant access to menu"
 		action="grant_menu_access" id="menu_grant_menu_access"/>
 
 	<!--
@@ -889,7 +889,7 @@
 		<field name="model">ir.model.access</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Access Controls">
+			<tree string="Access controls">
 				<field name="name"/>
 				<field name="model_id"/>
 				<field name="group_id"/>
@@ -901,7 +901,7 @@
 		<field name="model">ir.model.access</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Access Controls">
+			<form string="Access controls">
 				<field name="name" select="1" colspan="4"/>
 				<field name="model_id" select="1"/>
 				<field name="group_id" select="1"/>
@@ -914,22 +914,22 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="ir_access_act">
-		<field name="name">Access Controls</field>
+		<field name="name">Access controls</field>
 		<field name="res_model">ir.model.access</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="ir_access_view_tree"/>
 	</record>
-	<menuitem name="Administration/Security/Access Controls" action="ir_access_act" id="menu_ir_access_act"/>
+	<menuitem name="Administration/Security/Access controls" action="ir_access_act" id="menu_ir_access_act"/>
 	==========================================================
 	Rules
 	==========================================================
 
 	<record model="ir.ui.view" id="view_rule_group_form">
-		<field name="name">Record Rules</field>
+		<field name="name">Security rules</field>
 		<field name="model">ir.rule.group</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Record Rules">
+			<form string="Security rules">
 				<field name="model_id"/>
 				<field name="global"/>
 				<field name="name" colspan="4"/>
@@ -943,11 +943,11 @@
 		</field>
 	</record>
 	<record model="ir.ui.view" id="view_rule_group_tree">
-		<field name="name">Record Rules</field>
+		<field name="name">Security rules</field>
 		<field name="model">ir.rule.group</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Record Rules">
+			<tree string="Security rules">
 				<field name="model_id"/>
 				<field name="name"/>
 				<field name="global"/>
@@ -987,7 +987,7 @@
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_rule_group_tree"/>
 	</record>
-	<menuitem name="Administration/Security/Record Rules" action="action_rule" id="menu_action_rule"/>
+	<menuitem name="Administration/Security/Security rules" action="action_rule" id="menu_action_rule"/>
 
 	<record model="ir.rule.group" id="property_rule_group">
 		<field name="name">Property multi-company</field>

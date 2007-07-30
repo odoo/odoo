@@ -114,7 +114,7 @@
 		<field name="model">res.partner.address</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Partner Contacts">
+			<tree string="Partner contacts">
 				<field name="partner_id" />
 				<field name="name" />
 				<field name="zip"/>
@@ -124,7 +124,7 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_partner_addess_tree">
-		<field name="name">Partner Contacts</field>
+		<field name="name">Partner contacts</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">res.partner.address</field>
 		<field name="view_type">tree</field>
@@ -137,7 +137,7 @@
 		<field name="type">form</field>
 		<field name="priority" eval="8"/>
 		<field name="arch" type="xml">
-			<form string="Partner Contacts">
+			<form string="Partner contacts">
 				<field name="partner_id" colspan="4" select="1"/>
 				<newline/>
 				<field name="name" select="1"/>
@@ -162,7 +162,7 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_partner_address_form">
-		<field name="name">Partner Contacts</field>
+		<field name="name">Partner contacts</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">res.partner.address</field>
 		<field name="view_type">form</field>
@@ -273,7 +273,7 @@
 					<field name="lang" select="2"/>
 					<newline/>
 					<field name="address" mode="form,tree" colspan="4" nolabel="1" select="1">
-						<form string="Partner Contacts">
+						<form string="Partner contacts">
 							<field name="name" select="2"/>
 							<field name="title" domain="[('domain', '=', 'contact')]"/>
 							<field name="function"/>
