@@ -238,11 +238,11 @@ class account_bank_statement_reconcile(osv.osv):
 		'name': fields.char('Date', size=64, required=True),
 		'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
 		'line_new_ids': fields.one2many('account.bank.statement.reconcile.line', 'line_id', 'Write-Off'),
-
 		'total_entry': fields.function(_total_entry, method=True, string='Total entries'),
 		'total_new': fields.function(_total_new, method=True, string='Total write-off'),
 		'total_amount': fields.function(_total_amount, method=True, string='Payment amount'),
 		'total_balance': fields.function(_total_balance, method=True, string='Balance'),
+		#line_ids define in account.py
 	}
 	_defaults = {
 		'name': lambda *a:time.strftime('%Y-%m-%d'),
