@@ -407,36 +407,6 @@ class account_journal(osv.osv):
 		return self.name_get(cr, user, ids, context=context)
 account_journal()
 
-class account_bank(osv.osv):
-	_name = "account.bank"
-	_description = "Banks"
-	_columns = {
-		'name': fields.char('Bank Name', size=64, required=True),
-		'code': fields.char('Code', size=6),
-		'partner_id': fields.many2one('res.partner', 'Bank Partner', help="The link to the partner that represent this bank. The partner contains all information about contacts, phones, applied taxes, eso."),
-		'bank_account_ids': fields.one2many('account.bank.account', 'bank_id', 'Bank Accounts'),
-		'note': fields.text('Notes'),
-	}
-	_order = "code"
-account_bank()
-
-class account_bank_account(osv.osv):
-	_name = "account.bank.account"
-	_description = "Bank Accounts"
-	_columns = {
-		'name': fields.char('Bank Account', size=64, required=True),
-		'code': fields.char('Code', size=6),
-		'iban': fields.char('IBAN', size=34),
-		'swift': fields.char('Swift Code', size=24),
-		'currency_id': fields.many2one('res.currency', 'Currency', required=True),
-		'journal_id': fields.many2one('account.journal', 'Journal', required=True),
-		'account_id': fields.many2one('account.account', 'General Account', required=True, select=True),
-		'bank_id': fields.many2one('account.bank', 'Bank'),
-	}
-	_order = "code"
-account_bank_account()
-
-
 class account_fiscalyear(osv.osv):
 	_name = "account.fiscalyear"
 	_description = "Fiscal Year"

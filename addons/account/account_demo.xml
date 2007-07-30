@@ -90,17 +90,5 @@
 		<field name="date_stop" eval="time.strftime('%Y')+'-12-31'"/>
 	</record>
 
-	<record model="account.bank" id="fs">
-		<field name="name">Fortis</field>
-		<field name="code">FSB</field>
-	</record>
-
-	<record model="account.bank.account" id="bank_account_fs">
-		<field name="name">001-123456789-73</field>
-		<field name="journal_id" ref="bank_journal"/>
-		<field name="bank_id" ref="fs"/>
-		<field name="currency_id" ref="base.EUR"/>
-		<field name="account_id" ref="account.cash"/>
-	</record>
 </data>
 </terp>
