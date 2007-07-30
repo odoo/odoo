@@ -1495,12 +1495,20 @@ class orm(object):
 						ids2 = [x[0] for x in self.pool.get(field._obj).name_search(cr, user, args[i][2], [], 'like')]
 					else:
 						ids2 = args[i][2]
-					def _rec_get(ids):
+					def _rec_get(ids, table, parent):
+						if not ids:
+							return []
+						if 'active' in table._columns:
+							ids2 = table.search(cr, user, [(parent,'in',ids),('active','in', [True, False])])
+						else:
+							ids2 = table.search(cr, user, [(parent, 'in', ids)])
+						return ids + _rec_get(ids2, table, parent)
+					def _rec_convert(ids):
 						if not len(ids): return []
 						cr.execute('select '+field._id1+' from '+field._rel+' where '+field._id2+' in ('+','.join(map(str,ids))+')')
 						ids = [x[0] for x in cr.fetchall()]
-						return ids + _rec_get(ids)
-					args[i] = ('id','in',ids2+_rec_get(ids2))
+						return ids
+					args[i] = ('id','in',_rec_convert(ids2+_rec_get(ids2, self.pool.get(field._obj), table._parent_name)))
 				else:
 					if isinstance(args[i][2], basestring):
 						res_ids = [x[0] for x in self.pool.get(field._obj).name_search(cr, user, args[i][2], [], args[i][1])]

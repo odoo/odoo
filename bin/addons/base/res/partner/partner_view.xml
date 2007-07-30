@@ -321,7 +321,7 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="action_partner_form">
-		<field name="name">Partner</field>
+		<field name="name">Partners</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">res.partner</field>
 		<field name="view_type">form</field>
@@ -491,7 +491,7 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_partner_category">
-		<field name="name">Partner Categories Architecture</field>
+		<field name="name">Partner categories</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">res.partner.category</field>
 		<field name="view_type">tree</field>
@@ -500,8 +500,28 @@
 	</record>
 	<menuitem name="Partners/Configuration/Categories" action="action_partner_category" id="menu_partner_category"/>
 
+	<record model="ir.actions.act_window" id="action_partner_by_category">
+		<field name="res_model">res.partner</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[('category_id','child_of', [active_id])]</field>
+	</record>
+	<record model="ir.values" id="ir_action_partner_by_category">
+		<field name="key2" eval="'tree_but_open'"/>
+		<field name="model" eval="'res.partner.category'"/>
+		<field name="name">Open partners</field>
+		<field name="value" eval="'ir.actions.act_window,%d'%action_partner_by_category"/>
+		<field name="object" eval="True"/>
+	</record>
+
+
+	<menuitem
+		name="Partners/Partners/Partners by categories" 
+		action="action_partner_category" 
+		id="menu_partner_category_main"/>
+
 	<record model="ir.actions.act_window" id="action_partner_category_form">
-		<field name="name">Partner Categories</field>
+		<field name="name">Partner categories</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">res.partner.category</field>
 		<field name="view_type">form</field>
