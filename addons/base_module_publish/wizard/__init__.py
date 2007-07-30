@@ -27,4 +27,5 @@
 ##############################################################################
 
 import base_module_publish
+import base_module_publish_all
 import wizard_module_export

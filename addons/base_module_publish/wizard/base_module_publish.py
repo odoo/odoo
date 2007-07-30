@@ -51,7 +51,7 @@ Make sure you read the publication manual and modules guidelines
 before continuing:
   http://www.tinyerp.com
 
-Thank you for contributing !
+Thank you for contributing!
 """},
 }
 
@@ -237,6 +237,13 @@ def _upload(self, cr, uid, datas, context):
 			], [
 				('module', res['module_filename'], res['module_file'])
 			])
+		if result[0] == "1":
+			raise wizard.except_wizard('Error', 'Login failed!')
+		elif result[0] == "2":
+			raise wizard.except_wizard('Error',
+					'This version of the module is already exist on the server')
+		elif result[0] != "0":
+			raise wizard.except_wizard('Error', 'Failed to upload the file')
 
 	updata = {
 		'link_name': mod.shortdesc or '',
@@ -250,7 +257,7 @@ def _upload(self, cr, uid, datas, context):
 		'cust_3': mod.url or '/',
 		'cust_4': datas['form']['docurl'] or '',
 		'cust_5': datas['form']['license'] or '',
-		'cust_6': mod.latest_version or '',
+		'cust_6': mod.installed_version or '0',
 		'cust_7': mod.name,
 		'option': 'com_mtree',
 		'task': 'savelisting',
@@ -277,6 +284,8 @@ def _upload(self, cr, uid, datas, context):
 def module_check(self, cr, uid, data, context):
 	pool = pooler.get_pool(cr.dbname)
 	module = pool.get('ir.module.module').browse(cr, uid, data['id'], context)
+	if module.state != 'installed':
+		raise wizard.except_wizard('Error', 'You could not publish a module that is not installed!')
 	return {
 		'name': module.name, 
 		'shortdesc': module.shortdesc,
@@ -284,7 +293,7 @@ def module_check(self, cr, uid, data, context):
 		'website': module.website,
 		'url': module.url,
 		'description': module.description,
-		'version': module.latest_version,
+		'version': module.installed_version,
 		'license': module.license,
 	}
 
@@ -324,7 +333,7 @@ class base_module_publish(wizard.interface):
 				'state':[
 					('end','Cancel'),
 					('step1', 'Previous'),
-					('publish','Publish Now !')
+					('publish','Publish')
 				]
 			}
 		},

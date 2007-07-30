@@ -1,11 +1,19 @@
 <?xml version="1.0"?>
 <terp>
 	<data>
-		<wizard 
+		<wizard
 			id="wizard_base_module_publish"
-			string="Publish your module"
+			string="Publish module"
 			model="ir.module.module"
 			name="base_module_publish.module_publish"/>
+
+		<wizard
+			id="wizard_base_module_publish_all"
+			string="Publish all modules"
+			model="ir.module.module"
+			name="base_module_publish.module_publish_all"
+			client_action_multi="True"
+			/>
 
 		<wizard
 			string="Export module"

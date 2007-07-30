@@ -19,6 +19,5 @@ to call this button when you want to release a new version of your module.
 	"init_xml" : [ ],
 	"demo_xml" : [ ],
 	"update_xml" : [ "base_module_publish_wizard.xml" ],
-	"active": True,
 	"installable": True
 }
