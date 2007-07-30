@@ -71,6 +71,9 @@ class res_currency(osv.osv):
 	def round(self, cr, uid, currency, amount):
 		return round(amount / currency.rounding) * currency.rounding
 
+	def is_zero(self, cr, uid, currency, amount):
+		return self.round(cr, uid, currency, amount) < currency.rounding
+
 	def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount, round=True, context={}):
 		if not from_currency_id:
 			from_currency_id = to_currency_id
