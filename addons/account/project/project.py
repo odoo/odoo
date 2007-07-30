@@ -89,14 +89,23 @@ class account_analytic_account(osv.osv):
 		return dict([(i, res[i]) for i in ids ])
 
 	def _quantity_calc(self, cr, uid, ids, name, arg, context={}):
+		#XXX must convert into one uom
+		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+		acc_set = ",".join(map(str, ids2))
+		cr.execute('SELECT a.id, COALESCE(SUM(l.unit_amount), 0) \
+				FROM account_analytic_account a \
+					LEFT JOIN account_analytic_line l ON (a.id = l.account_id) \
+				WHERE a.id IN ('+acc_set+') GROUP BY a.id')
 		res = {}
-		for account in self.browse(cr, uid, ids):
-			node_balance = reduce(operator.add, [line.unit_amount for line in account.line_ids], 0)
-			child_balance = reduce(operator.add, [child.quantity for child in account.child_ids], 0)
-			res[account.id] = node_balance + child_balance
+		for account_id, sum in cr.fetchall():
+			res[account_id] = sum
+
 		for id in ids:
-			res[id] = round(res.get(id, 0.0),2)
-		return res
+			for child in self.search(cr, uid, [('parent_id', 'child_of', [id])]):
+				if child <> id:
+					res.setdefault(id, 0.0)
+					res[id] += res.get(child, 0.0)
+		return dict([(i, res[i]) for i in ids])
 
 	def name_get(self, cr, uid, ids, context={}):
 		if not len(ids):
@@ -159,7 +168,13 @@ class account_analytic_account(osv.osv):
 		'user_id' : lambda self,cr,uid,ctx : uid
 	}
 
+	def check_recursion(self, cr, uid, ids, parent=None):
+		return super(account_analytic_account, self).check_recursion(cr, uid, ids, parent=parent)
+
 	_order = 'parent_id desc,code'
+	_constraints = [
+		(check_recursion, 'Error! You can not create recursive account.', ['parent_id'])
+	]
 
 	def create(self, cr, uid, vals, ctx={}):
 		parent_id = vals.get('parent_id', 0)
