@@ -8,20 +8,23 @@ from zipfile import PyZipFile, ZIP_DEFLATED
 import StringIO
 import base64
 
-def _zippy(archive, fromurl, path):
+def _zippy(archive, fromurl, path, src=True):
 	url = os.path.join(fromurl, path)
 	if os.path.isdir(url):
 		if path.split('/')[-1]=='.svn':
 			return False
 		for fname in os.listdir(url):
-			_zippy(archive, fromurl, path and os.path.join(path, fname) or fname)
+			_zippy(archive, fromurl, path and os.path.join(path, fname) or fname, src=src)
 	else:
-		if (path.split('.')[-1] not in ['py','pyo','pyc']) or (os.path.basename(path)=='__terp__.py'):
-			print 'Adding', os.path.join(fromurl, path), 'as', path
+		if src:
+			exclude = ['pyo', 'pyc']
+		else:
+			exclude = ['py','pyo','pyc']
+		if (path.split('.')[-1] not in exclude) or (os.path.basename(path)=='__terp__.py'):
 			archive.write(os.path.join(fromurl, path), path)
 	return True
 
-def createzip(cr, uid, moduleid, context, b64enc=True):
+def createzip(cr, uid, moduleid, context, b64enc=True, src=True):
 	module_obj=pooler.get_pool(cr.dbname).get('ir.module.module')
 	module_name = module_obj.browse(cr, uid, moduleid).name
 	module_version = module_obj.browse(cr, uid, moduleid).latest_version
@@ -31,7 +34,7 @@ def createzip(cr, uid, moduleid, context, b64enc=True):
 		archname = StringIO.StringIO('wb')
 		archive = PyZipFile(archname, "w", ZIP_DEFLATED)
 		archive.writepy(os.path.join(ad,module_name))
-		_zippy(archive, ad, module_name)
+		_zippy(archive, ad, module_name, src=src)
 		archive.close()
 		val =archname.getvalue()
 		archname.close()

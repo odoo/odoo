@@ -31,14 +31,24 @@ import pooler
 
 import module_zip
 
-finish_form ='''<?xml version="1.0"?>
+init_form = '''<?xml version="1.0"?>
+<form string="Export module">
+	<separator string="Export module" colspan="4"/>
+	<field name="include_src"/>
+</form>'''
+
+init_fields = {
+		'include_src': {'string': 'Include sources', 'type': 'boolean',
+			'default': lambda *a: True,},
+}
+
+finish_form = '''<?xml version="1.0"?>
 <form string="Finish">
 	<separator string="Module successfully exported !" colspan="4"/>
 	<field name="module_file"/>
 	<newline/>
 	<field name="module_filename"/>
-</form>
-'''
+</form>'''
 
 finish_fields = {
 	'module_file': {'string': 'Module .zip file', 'type':'binary', 'readonly':True},
@@ -47,17 +57,18 @@ finish_fields = {
 
 class move_module_wizard(wizard.interface):
 	def createzip(self, cr, uid, data, context):
-		return module_zip.createzip(cr, uid, data['id'], context)
+		return module_zip.createzip(cr, uid, data['id'], context, src=data['form']['include_src'])
 
 	states = {
 		'init': {
+			'actions': [],
+			'result': {'type': 'form', 'arch': init_form,
+				'fields': init_fields, 'state': [('end', 'Cancel'), ('zip', 'Ok')]},
+		},
+		'zip': {
 			'actions': [createzip],
-			'result': {
-				'type':'form',
-				'arch':finish_form,
-				'fields':finish_fields,
-				'state':[('end','Close')]
-			}
+			'result': {'type': 'form', 'arch': finish_form,
+				'fields': finish_fields, 'state': [('end', 'Close')]},
 		}
 	}
-move_module_wizard('base.module.export')
+move_module_wizard('base_module_publish.module_export')
