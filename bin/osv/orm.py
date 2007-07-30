@@ -1781,4 +1781,17 @@ class orm(object):
 				self.pool.get(table).write_string(cr, uid, id, langs, vals, context)
 		return True
 
+	def check_recursion(self, cr, uid, ids, parent=None):
+		if not parent:
+			parent = self._parent_name
+		ids_parent = ids[:]
+		while len(ids_parent):
+			cr.execute('SELECT distinct '+self._parent_name+
+				' FROM '+self._table+' WHERE id in ('+','.join(map(str, ids_parent))+')')
+			ids_parent = filter(None, map(lambda x: x[0], cr.fetchall()))
+			for i in ids_parent:
+				if i in ids:
+					return False
+		return True
+
 # vim:noexpandtab:ts=4
