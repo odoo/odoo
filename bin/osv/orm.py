@@ -1497,10 +1497,7 @@ class orm(object):
 					def _rec_get(ids, table, parent):
 						if not ids:
 							return []
-						if 'active' in table._columns:
-							ids2 = table.search(cr, user, [(parent,'in',ids),('active','in', [True, False])])
-						else:
-							ids2 = table.search(cr, user, [(parent, 'in', ids)])
+						ids2 = table.search(cr, user, [(parent, 'in', ids)], context=context)
 						return ids + _rec_get(ids2, table, parent)
 					def _rec_convert(ids):
 						if self.pool.get(field._obj)==self:
@@ -1530,10 +1527,7 @@ class orm(object):
 					def _rec_get(ids, table, parent):
 						if not ids:
 							return []
-						if 'active' in table._columns:
-							ids2 = table.search(cr, user, [(parent,'in',ids),('active','in', [True, False])])
-						else:
-							ids2 = table.search(cr, user, [(parent, 'in', ids)])
+						ids2 = table.search(cr, user, [(parent, 'in', ids)], context=context)
 						return ids + _rec_get(ids2, table, parent)
 					if field._obj <> table._name:
 						args[i] = (args[i][0],'in',ids2+_rec_get(ids2, self.pool.get(field._obj), table._parent_name), table)
