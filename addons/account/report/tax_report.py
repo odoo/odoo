@@ -31,7 +31,7 @@ from report import report_sxw
 
 class tax_report(report_sxw.rml_parse):
 
-	def __init__(self, cr, uid, name, context): #name, table, rml):
+	def __init__(self, cr, uid, name, context):
 		super(tax_report, self).__init__(cr, uid, name, context)
 		self.localcontext.update({
 			'time': time,
@@ -48,12 +48,45 @@ class tax_report(report_sxw.rml_parse):
 	def _get_period(self, period_id):
 		return self.pool.get('account.period').browse(self.cr, self.uid, period_id).name
 
-	def _get_general(self, tax_code_id, period_id, company_id):
-		self.cr.execute('select sum(line.tax_amount) as tax_amount, sum(line.debit) as debit, sum(line.credit) as credit, count(*) as count, account.id as account_id \
-				from account_move_line AS line, account_account AS account \
-				where line.state<>%s and line.period_id=%d and line.tax_code_id=%d \
-				AND line.account_id = account.id AND account.company_id = %d AND account.active \
-				group by account.id', ('draft',period_id, tax_code_id, company_id))
+	def _get_general(self, tax_code_id, period_id, company_id, based_on):
+		res=[]
+		if based_on == 'payments':
+			self.cr.execute('SELECT SUM(line.tax_amount) AS tax_amount, \
+						SUM(line.debit) AS debit, \
+						SUM(line.credit) AS credit, \
+						COUNT(*) AS count, \
+						account.id AS account_id \
+					FROM account_move_line AS line, \
+						account_account AS account, \
+						account_move AS move \
+						LEFT JOIN account_invoice invoice ON \
+							(invoice.move_id = move.id) \
+					WHERE line.state<>%s \
+						AND line.period_id = %d \
+						AND line.tax_code_id = %d  \
+						AND line.account_id = account.id \
+						AND account.company_id = %d \
+						AND move.id = line.move_id \
+						AND ((invoice.state = %s) \
+							OR (invoice.id IS NULL))  \
+					GROUP BY account.id', ('draft', period_id, tax_code_id,
+						company_id, 'paid'))
+		else :
+			self.cr.execute('SELECT SUM(line.tax_amount) AS tax_amount, \
+						SUM(line.debit) AS debit, \
+						SUM(line.credit) AS credit, \
+						COUNT(*) AS count, \
+						account.id AS account_id \
+					FROM account_move_line AS line, \
+						account_account AS account \
+					WHERE line.state <> %s \
+						AND line.period_id = %d \
+						AND line.tax_code_id = %d  \
+						AND line.account_id = account.id \
+						AND account.company_id = %d \
+						AND account.active \
+					GROUP BY account.id', ('draft', period_id, tax_code_id,
+						company_id))
 		res = self.cr.dictfetchall()
 		i = 0
 		while i<len(res):
@@ -61,13 +94,14 @@ class tax_report(report_sxw.rml_parse):
 			i+=1
 		return res
 
-	def _get_codes(self, period_id, parent=False, level=0):
+	def _get_codes(self, period_id, based_on, parent=False, level=0):
 		tc = self.pool.get('account.tax.code')
 		ids = tc.search(self.cr, self.uid, [('parent_id','=',parent)])
 		res = []
-		for code in tc.browse(self.cr, self.uid, ids, {'period_id':period_id}):
+		for code in tc.browse(self.cr, self.uid, ids, {'period_id': period_id,
+			'based_on': based_on}):
 			res.append((' - '*level*2, code))
-			res += self._get_codes(period_id, code.id, level+1)
+			res += self._get_codes(period_id, based_on, code.id, level+1)
 		return res
 
 	def _get_company(self, form):

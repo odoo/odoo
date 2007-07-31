@@ -800,10 +800,25 @@ class account_tax_code(osv.osv):
 
 	This code is used for some tax declarations.
 	"""
-	def _sum(self, cr, uid, ids, prop, unknow_none, unknow_dict, where =''):
+	def _sum(self, cr, uid, ids, name, args, context, where =''):
 		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
 		acc_set = ",".join(map(str, ids2))
-		cr.execute('SELECT tax_code_id,sum(tax_amount) FROM account_move_line WHERE tax_code_id in ('+acc_set+') '+where+' GROUP BY tax_code_id')
+		if context.get('based_on', 'invoices') == 'payments':
+			cr.execute('SELECT line.tax_code_id, sum(line.tax_amount) \
+					FROM account_move_line AS line, \
+						account_move AS move \
+						LEFT JOIN account_invoice invoice ON \
+							(invoice.move_id = move.id) \
+					WHERE line.tax_code_id in ('+acc_set+') '+where+' \
+						AND move.id = line.move_id \
+						AND ((invoice.state = \'paid\') \
+							OR (invoice.id IS NULL)) \
+					GROUP BY line.tax_code_id')
+		else:
+			cr.execute('SELECT line.tax_code_id, sum(line.tax_amount) \
+					FROM account_move_line AS line \
+					WHERE line.tax_code_id in ('+acc_set+') '+where+' \
+					GROUP BY line.tax_code_id')
 		res=dict(cr.fetchall())
 		for id in ids:
 			ids3 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
@@ -815,7 +830,7 @@ class account_tax_code(osv.osv):
 			res[id] = round(res.get(id,0.0), 2)
 		return res
 
-	def _sum_period(self, cr, uid, ids, prop, unknow_none, context={}):
+	def _sum_period(self, cr, uid, ids, name, args, context):
 		if not 'period_id' in context:
 			period_id = self.pool.get('account.period').find(cr, uid)
 			if not len(period_id):
@@ -823,7 +838,8 @@ class account_tax_code(osv.osv):
 			period_id = period_id[0]
 		else:
 			period_id = context['period_id']
-		return self._sum(cr, uid, ids, prop, unknow_none, context, where=' and period_id='+str(period_id))
+		return self._sum(cr, uid, ids, name, args, context,
+				where=' and line.period_id='+str(period_id))
 
 	_name = 'account.tax.code'
 	_description = 'Tax Code'
