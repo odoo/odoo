@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2004 TINY SPRL. (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2004-2007 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #                    Fabien Pinckaers <fp@tiny.Be>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -26,5 +26,25 @@
 #
 ##############################################################################
 
-import base_report_designer
-import wizard
+from osv import fields,osv
+from wizard.tiny_sxw2rml import sxw2rml
+from StringIO import StringIO
+
+class report_xml(osv.osv):
+	_inherit = 'or.actions.report.xml'
+
+	def upload_report(self, cr, uid, report_id, file_sxw, context):
+		'''
+		Untested function
+		'''
+		pool = pooler.get_pool(cr.dbname)
+		sxwval = StringIO(base64.decodestring(file_sxw))
+		fp = tools.file_open('normalized_oo2rml.xsl',
+				subdir='addons/base_report_designer/wizard/tiny_sxw2rml')
+		report = pool.get('ir.actions.report.xml').write(cr, uid, [report_id], {
+			'report_sxw_content': base64.decodestring(file_sxw),
+			'report_rml_content': str(sxw2rml(sxwval, xsl=fp.read()))
+		})
+		return {}
+
+report_xml()
