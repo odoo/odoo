@@ -12,7 +12,7 @@
 		<field name="type">graph</field>
 		<field name="arch" type="xml">
 			<graph string="Accounts by type" type="bar">
-				<field name="name" group="True"/>
+				<field name="name"/>
 				<field name="balance" operator="+"/>
 			</graph>
 		</field>
@@ -26,8 +26,8 @@
 				<field name="name"/>
 				<field name="type"/>
 				<field name="balance"/>
-				<field name="credit"/>
 				<field name="debit"/>
+				<field name="credit"/>
 			</tree>
 		</field>
 	</record>
@@ -47,7 +47,6 @@
 		<field name="res_model">report.account.receivable</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,graph</field>
-		<!-- <field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field> -->
 	</record>
 	<menuitem 
 		name="Financial Management/Reporting/Balance by type of account"
