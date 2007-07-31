@@ -31,7 +31,7 @@ from wizard.tiny_sxw2rml import sxw2rml
 from StringIO import StringIO
 
 class report_xml(osv.osv):
-	_inherit = 'or.actions.report.xml'
+	_inherit = 'ir.actions.report.xml'
 
 	def upload_report(self, cr, uid, report_id, file_sxw, context):
 		'''
