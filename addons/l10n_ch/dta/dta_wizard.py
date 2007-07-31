@@ -1,4 +1,4 @@
-# -*- encoding: latin-1 -*-
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -163,14 +163,14 @@ def _get_dta_lines(self,cr,uid,data,context):
 
 
 
-trans=[(u'é','e'),
-	   (u'è','e'),
-	   (u'à','a'),
-	   (u'ê','e'),
-	   (u'î','i'),
-	   (u'ï','i'),
-	   (u'â','a'),
-	   (u'ä','a')]
+trans=[(u'Ã©','e'),
+	   (u'Ã¨','e'),
+	   (u'Ã ','a'),
+	   (u'Ãª','e'),
+	   (u'Ã®','i'),
+	   (u'Ã¯','i'),
+	   (u'Ã¢','a'),
+	   (u'Ã¤','a')]
 def tr(s):
 	s= s.decode('utf-8')
 
@@ -377,7 +377,7 @@ def _create_dta(self,cr,uid,data,context):
 	bank= pool.get('res.partner.bank').browse(cr,uid,[data['form']['bank']])[0]
 
 	if not bank:
- 		return {'note':'No bank account for the company.'}
+		return {'note':'No bank account for the company.'}
 	
 
  	v['comp_bank_name']= bank.name or False
