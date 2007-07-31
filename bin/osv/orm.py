@@ -610,7 +610,10 @@ class orm(object):
 						if fields_def[field[len(prefix)][:-3]]['type']=='many2many':
 							res_id = []
 							for word in line[i].split(','):
-								module, xml_id = word.rsplit('.', 1)
+								if '.' in word:
+									module, xml_id = word.rsplit('.', 1)
+								else:
+									module, xml_id = current_module, word
 								ir_model_data_obj = self.pool.get('ir.model.data')
 								id=ir_model_data_obj._get_id(cr, uid, module, xml_id)
 								res_id2=ir_model_data_obj.read(cr, uid, [id], ['res_id'])[0]['res_id']
@@ -619,7 +622,10 @@ class orm(object):
 							if len(res_id):
 								res_id=[(6,0,res_id)]
 						else:
-							module, xml_id = line[i].rsplit('.', 1)
+							if '.' in line[i]:
+								module, xml_id = line[i].rsplit('.', 1)
+							else:
+								module, xml_id = current_module, line[i]
 							ir_model_data_obj = self.pool.get('ir.model.data')
 							id=ir_model_data_obj._get_id(cr, uid, module, xml_id)
 							res_id=ir_model_data_obj.read(cr, uid, [id], ['res_id'])[0]['res_id']
