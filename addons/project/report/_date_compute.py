@@ -27,8 +27,7 @@
 #
 ##############################################################################
 
-import mx.DateTime
-from mx.DateTime import *
+from mx import DateTime
 
 import time
 import pooler
@@ -60,8 +59,11 @@ def _compute_tasks(cr, uid, task_list, date_begin):
 					else:
 						break
 
-			if task.date_start and date_start<task.date_start:
-				date_start = task.date_start
+			if task.date_start:
+				task_date_start = DateTime.strptime(task.date_start, '%Y-%m-%d %H:%M:%S')
+				if DateTime.cmp(date_start, task_date_start) < 0:
+					date_start = task_date_start
+
 
 			# Compute the closing date of the task
 			tasks[task.id] = []
@@ -80,7 +82,7 @@ def _compute_tasks(cr, uid, task_list, date_begin):
 def _compute_project(cr, uid, project, date_begin):
 	tasks, last_date = _compute_tasks(cr, uid, project.tasks, date_begin)
 	for proj in project.child_id:
-		d0 = mx.DateTime.strptime(proj.date_start,'%Y-%m-%d')
+		d0 = DateTime.strptime(proj.date_start,'%Y-%m-%d')
 		if d0 > last_date:
 			last_date = d0
 		t2, l2 = _compute_project(cr, uid, proj, last_date)
@@ -91,9 +93,9 @@ def _compute_project(cr, uid, project, date_begin):
 def _project_compute(cr, uid, project_id):
 	project = pooler.get_pool(cr.dbname).get('project.project').browse(cr, uid, project_id)
 	if project.date_start:
-		date_begin = mx.DateTime.strptime(project.date_start, '%Y-%m-%d')
+		date_begin = DateTime.strptime(project.date_start, '%Y-%m-%d')
 	else:
-		date_begin = now()
+		date_begin = DateTime.now()
 	tasks, last_date = _compute_project(cr, uid, project, date_begin)
 	return tasks, last_date
 
