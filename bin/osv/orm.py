@@ -1489,7 +1489,6 @@ class orm(object):
 				i+=1
 
 			elif field._type=='many2many':
-				#FIXME
 				if args[i][1]=='child_of':
 					if isinstance(args[i][2], basestring):
 						ids2 = [x[0] for x in self.pool.get(field._obj).name_search(cr, user, args[i][2], [], 'like')]
@@ -1504,6 +1503,8 @@ class orm(object):
 							ids2 = table.search(cr, user, [(parent, 'in', ids)])
 						return ids + _rec_get(ids2, table, parent)
 					def _rec_convert(ids):
+						if self.pool.get(field._obj)==self:
+							return ids
 						if not len(ids): return []
 						cr.execute('select '+field._id1+' from '+field._rel+' where '+field._id2+' in ('+','.join(map(str,ids))+')')
 						ids = [x[0] for x in cr.fetchall()]
