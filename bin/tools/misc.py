@@ -221,7 +221,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
 		msg['Bcc'] = COMMASPACE.join(email_bcc)
 	msg['Date'] = formatdate(localtime=True)
 	if tinycrm:
-		msg['X-TinyCRM'] = tinycrm
+		msg['TinyCRM'] = tinycrm
 	try:
 		s = smtplib.SMTP()
 		if config['smtp_user'] or config['smtp_password']:
@@ -267,7 +267,7 @@ def email_send_attach(email_from, email_to, subject, body, email_cc=None, email_
 	if email_bcc:
 		msg['Bcc'] = COMMASPACE.join(email_bcc)
 	if tinycrm:
-		msg['X-TinyCRM'] = tinycrm
+		msg['TinyCRM'] = tinycrm
 	msg['Date'] = formatdate(localtime=True)
 	msg.attach( MIMEText(body or '', _charset='utf-8') )
 	for (fname,fcontent) in attach:
