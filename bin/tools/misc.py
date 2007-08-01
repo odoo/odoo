@@ -63,7 +63,7 @@ def init_db(cr):
 		terp_file = opj(ad, i, '__terp__.py')
 		mod_path = opj(ad, i)
 		info = False
-		if os.path.isfile(terp_file):
+		if os.path.isfile(terp_file) and not os.path.isfile(opj(ad, i+'.zip')):
 			info = eval(file(terp_file).read())
 		elif zipfile.is_zipfile(mod_path):
 			zfile = zipfile.ZipFile(mod_path)
@@ -74,14 +74,20 @@ def init_db(cr):
 			p_id = None
 			while categs:
 				if p_id is not None:
-					cr.execute('select id from ir_module_category where name=%s and parent_id=%d', (categs[0], p_id))
+					cr.execute('select id \
+							from ir_module_category \
+							where name=%s and parent_id=%d', (categs[0], p_id))
 				else:
-					cr.execute('select id from ir_module_category where name=%s and parent_id is NULL', (categs[0],))
+					cr.execute('select id \
+							from ir_module_category \
+							where name=%s and parent_id is NULL', (categs[0],))
 				c_id = cr.fetchone()
 				if not c_id:
 					cr.execute('select nextval(\'ir_module_category_id_seq\')')
 					c_id = cr.fetchone()[0]
-					cr.execute('insert into ir_module_category (id, name, parent_id) values (%d, %s, %d)', (c_id, categs[0], p_id))
+					cr.execute('insert into ir_module_category \
+							(id, name, parent_id) \
+							values (%d, %s, %d)', (c_id, categs[0], p_id))
 				else:
 					c_id = c_id[0]
 				p_id = c_id
@@ -98,19 +104,18 @@ def init_db(cr):
 				state = 'uninstallable'
 			cr.execute('select nextval(\'ir_module_module_id_seq\')')
 			id = cr.fetchone()[0]
-			cr.execute('insert into ir_module_module (id, author, latest_version, website, name, shortdesc, description, category_id, state) values (%d, %s, %s, %s, %s, %s, %s, %d, %s)', (
-				id,
-				info.get('author', ''),
+			cr.execute('insert into ir_module_module \
+					(id, author, latest_version, website, name, shortdesc, description, \
+						category_id, state) \
+					values (%d, %s, %s, %s, %s, %s, %s, %d, %s)', (
+				id, info.get('author', ''),
 				release.version.rsplit('.', 1)[0] + '.' + info.get('version', ''),
-				info.get('website', ''),
-				i,
-				info.get('name', False),
-				info.get('description', ''),
-				p_id,
-				state))
+				info.get('website', ''), i, info.get('name', False),
+				info.get('description', ''), p_id, state))
 			dependencies = info.get('depends', [])
 			for d in dependencies:
-				cr.execute('insert into ir_module_module_dependency (module_id,name) values (%s, %s)', (id, d))
+				cr.execute('insert into ir_module_module_dependency \
+						(module_id,name) values (%s, %s)', (id, d))
 			cr.commit()
 
 def find_in_path(name):
