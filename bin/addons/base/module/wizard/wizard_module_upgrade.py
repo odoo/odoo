@@ -46,11 +46,16 @@ view_form = """<?xml version="1.0"?>
 		<label align="0.0" string="Note that this operation my take a few minutes." colspan="4"/>
 		<separator string="Modules to update"/>
 		<field name="module_info" nolabel="1" colspan="4"/>
+		<separator string="Modules to download"/>
+		<field name="module_download" nolabel="1" colspan="4"/>
 	</group>
 </form>"""
 
 view_field = {
-	"module_info": {'type':'text', 'string':'Modules', 'readonly':True}
+	"module_info": {'type': 'text', 'string': 'Modules to update',
+		'readonly': True},
+	"module_download": {'type': 'text', 'string': 'Modules to download',
+		'readonly': True},
 }
 
 class wizard_info_get(wizard.interface):
@@ -59,8 +64,10 @@ class wizard_info_get(wizard.interface):
 		mod_obj = pool.get('ir.module.module')
 		ids = mod_obj.search(cr, uid, [
 			('state', 'in', ['to upgrade', 'to remove', 'to install'])])
-		res = pool.get('ir.module.module').read(cr, uid, ids, ['name','state'], context)
-		return {'module_info':'\n'.join(map(lambda x: x['name']+' : '+x['state'], res))}
+		res = mod_obj.read(cr, uid, ids, ['name','state'], context)
+		url = mod_obj.download(cr, uid, ids, download=False, context=context)
+		return {'module_info': '\n'.join(map(lambda x: x['name']+' : '+x['state'], res)),
+				'module_download': '\n'.join(url)}
 
 	def _upgrade_module(self, cr, uid, data, context):
 		pool=pooler.get_pool(cr.dbname)

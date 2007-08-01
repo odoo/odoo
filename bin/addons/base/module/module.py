@@ -441,7 +441,8 @@ class module(osv.osv):
 						res[0] += 1
 		return res
 
-	def download(self, cr, uid, ids, context=None):
+	def download(self, cr, uid, ids, download=True, context=None):
+		res = []
 		adp = tools.config['addons_path']
 		for mod in self.browse(cr, uid, ids, context=context):
 			if not mod.url:
@@ -452,6 +453,9 @@ class module(osv.osv):
 				version = match.group(1)
 			if vercmp(mod.installed_version or '0', version) >= 0:
 				continue
+			res.append(mod.url)
+			if not download:
+				continue
 			zipfile = urllib.urlopen(mod.url).read()
 			fname = os.path.join(adp, mod.name+'.zip')
 			try:
@@ -461,6 +465,7 @@ class module(osv.osv):
 			except IOError, e:
 				raise orm.except_orm('Error', 'Can not create the module file:\n %s'
 						% (fname,))
+		return res
 
 	def _update_dependencies(self, cr, uid, id, depends=[]):
 		for d in depends:
