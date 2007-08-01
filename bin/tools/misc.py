@@ -238,7 +238,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
 #----------------------------------------------------------
 # Emails
 #----------------------------------------------------------
-def email_send_attach(email_from, email_to, subject, body, email_cc=None, email_bcc=None, on_error=False, reply_to=False, attach=None):
+def email_send_attach(email_from, email_to, subject, body, email_cc=None, email_bcc=None, on_error=False, reply_to=False, attach=None, tinycrm=False):
 	"""Send an email."""
 	if not email_cc:
 		email_cc=[]
@@ -266,6 +266,8 @@ def email_send_attach(email_from, email_to, subject, body, email_cc=None, email_
 		msg['Cc'] = COMMASPACE.join(email_cc)
 	if email_bcc:
 		msg['Bcc'] = COMMASPACE.join(email_bcc)
+	if tinycrm:
+		msg['X-TinyCRM'] = tinycrm
 	msg['Date'] = formatdate(localtime=True)
 	msg.attach( MIMEText(body or '', _charset='utf-8') )
 	for (fname,fcontent) in attach:
