@@ -386,7 +386,7 @@ class crm_case(osv.osv):
 			emailfrom = case.user_id.address_id.email
 		else:
 			emailfrom = case.section_id.reply_to
-		tools.email_send(emailfrom, emails, '['+str(case.id)+'] '+case.name, body, reply_to=case.section_id.reply_to)
+		tools.email_send(emailfrom, emails, '['+str(case.id)+'] '+case.name, body, reply_to=case.section_id.reply_to, tinycrm=str(case.id))
 		return True
 	def __log(self, cr, uid, cases, keyword, context={}):
 		if not self.pool.get('res.partner.event.type').check(cr, uid, 'crm_case_'+keyword):
@@ -444,7 +444,8 @@ class crm_case(osv.osv):
 						src,
 						dest,
 						'Reminder: '+'['+str(case.id)+']'+' '+case.name,
-						case.email_last or case.description, reply_to=case.section_id.reply_to
+						case.email_last or case.description,
+						reply_to=case.section_id.reply_to, tinycrm=str(case.id)
 						)
 				else:
 					attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model','=','crm.case'),('res_id','=',case.id)])
@@ -454,8 +455,9 @@ class crm_case(osv.osv):
 						src,
 						dest,
 						'Reminder: '+'['+str(case.id)+']'+' '+case.name,
-						case.email_last or case.description, reply_to=case.section_id.reply_to,
-						attach=res
+						case.email_last or case.description,
+						reply_to=case.section_id.reply_to,
+						attach=res, tinycrm=str(case.id)
 						)
 		return True
 
@@ -474,7 +476,9 @@ class crm_case(osv.osv):
 			self.write(cr, uid, [case.id], {'description':False, 'som':False, 'canal_id': False, 'email_last':case.description})
 			emails = [case.email_from] + (case.email_cc or '').split(',')
 			emails = filter(None, emails)
-			tools.email_send(case.user_id.address_id.email, emails, '['+str(case.id)+'] '+case.name, case.description, reply_to=case.section_id.reply_to)
+			tools.email_send(case.user_id.address_id.email, emails,
+					'['+str(case.id)+'] '+case.name, case.description,
+					reply_to=case.section_id.reply_to, tinycrm=str(case.id))
 		return True
 
 	def onchange_partner_id(self, cr, uid, ids, part, email=False):

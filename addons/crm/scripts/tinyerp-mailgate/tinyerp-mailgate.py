@@ -18,7 +18,7 @@ email_re = re.compile(r"""
 	 [a-z]{2,3}                      # TLD
 	)
 	""", re.VERBOSE)
-project_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
+case_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
 command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
 
 priorities = {
@@ -225,8 +225,12 @@ class email_parser(object):
 		return (int(case_str), emails)
 
 	def parse(self, msg):
-		case_str = project_re.search(msg.get('Subject', ''))
-		(case_id, emails) = self.msg_test(msg, case_str and case_str.group(1))
+		case_str = msg.get('X-TinyCRM', '')
+		if not case_str:
+			case_str = case_re.search(msg.get('Subject', ''))
+			if case_str:
+				case_str = case_str.group(1)
+		(case_id, emails) = self.msg_test(msg, case_str)
 		if case_id:
 			if emails[0] and self.email_get(emails[0])==self.email_get(self._decode_header(msg['From'])):
 				self.msg_user(msg, case_id)
@@ -238,7 +242,7 @@ class email_parser(object):
 			if msg.get('Subject', ''):
 				del msg['Subject']
 			msg['Subject'] = '['+str(case_id)+'] '+subject
-			print 'Case', case_id, 'created...'
+			msg['X-TinyCRM'] = str(case_id)
 
 		emails = self.rpc('crm.case', 'emails_get', case_id)
 		priority = emails[3]
@@ -249,9 +253,8 @@ class email_parser(object):
 		msg_mails = map(self.email_get, filter(None, mm))
 
 		emails = filter(lambda m: m and m not in msg_mails, emails)
-		self.msg_send(msg, emails, priority)
 		try:
-			pass
+			self.msg_send(msg, emails, priority)
 		except:
 			if self.email_default:
 				a = self._decode_header(msg['Subject'])
