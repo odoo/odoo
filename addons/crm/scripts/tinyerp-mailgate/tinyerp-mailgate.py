@@ -147,17 +147,22 @@ class email_parser(object):
 
 	def msg_user(self, msg, id):
 		body = self.msg_body_get(msg)
-		data = {
-			'email_last': body['body'],
-			'history_line': [(0, 0, {'description': body['body'], 'email': msg['From']})],
-		}
 
 		# handle email body commands (ex: Set-State: Draft)
 		actions = {}
+		body_data=''
 		for line in body['body'].split('\n'):
 			res = command_re.match(line)
 			if res:
 				actions[res.group(1).lower()] = res.group(2).lower()
+			else:
+				body_data += line+'\n'
+		body['body'] = body_data
+
+		data = {
+			'email_last': body['body'],
+			'history_line': [(0, 0, {'description': body['body'], 'email': msg['From']})],
+		}
 
 		act = 'case_close'
 		if 'state' in actions:
