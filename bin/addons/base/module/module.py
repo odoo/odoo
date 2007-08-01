@@ -439,8 +439,6 @@ class module(osv.osv):
 						self.write(cr, uid, id,
 								{'latest_version': version, 'url': url})
 						res[0] += 1
-					elif c == 0:
-						self.write(cr, uid, id, {'url': url})
 		return res
 
 	def download(self, cr, uid, ids, context=None):
