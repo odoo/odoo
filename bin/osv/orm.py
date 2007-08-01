@@ -303,7 +303,7 @@ class orm(object):
 		if not hasattr(self, "_auto") or self._auto:
 			cr.execute("SELECT relname FROM pg_class WHERE relkind in ('r','v') AND relname='%s'" % self._table)
 			if not cr.rowcount:
-				cr.execute("CREATE TABLE %s(id SERIAL NOT NULL, perm_id INTEGER, PRIMARY KEY(id)) WITH OIDS" % self._table)
+				cr.execute("CREATE TABLE \"%s\" (id SERIAL NOT NULL, perm_id INTEGER, PRIMARY KEY(id)) WITH OIDS" % self._table)
 				create = True
 			cr.commit()
 			if self._log_access:
@@ -321,7 +321,7 @@ class orm(object):
 						WHERE c.relname='%s' AND a.attname='%s' AND c.oid=a.attrelid
 						""" % (self._table, k))
 					if not cr.rowcount:
-						cr.execute("ALTER TABLE %s ADD COLUMN %s %s" % 
+						cr.execute("ALTER TABLE \"%s\" ADD COLUMN \"%s\" %s" % 
 							(self._table, k, logs[k]))
 						cr.commit()
 
@@ -335,7 +335,7 @@ class orm(object):
 			for column in db_columns:
 				if column['attname'] not in ('id', 'oid', 'tableoid', 'ctid', 'xmin', 'xmax', 'cmin', 'cmax'):
 					if column['attnotnull'] and column['attname'] not in self._columns:
-						cr.execute("ALTER TABLE %s ALTER COLUMN %s DROP NOT NULL" % (self._table, column['attname']))
+						cr.execute("ALTER TABLE \"%s\" ALTER COLUMN \"%s\" DROP NOT NULL" % (self._table, column['attname']))
 
 			# iterate on the "object columns"
 			for k in self._columns:
@@ -345,42 +345,40 @@ class orm(object):
 				f = self._columns[k]
 
 				if isinstance(f, fields.one2many):
-					cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname='%s'"%f._obj)
+					cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname=%s", (f._obj,))
 					if cr.fetchone():
-						q = """SELECT count(*) as c FROM pg_class c,pg_attribute a WHERE c.relname='%s' AND a.attname='%s' AND c.oid=a.attrelid"""%(f._obj,f._fields_id)
-						cr.execute(q)
+						cr.execute("SELECT count(*) as c FROM pg_class c,pg_attribute a WHERE c.relname=%s AND a.attname=%s AND c.oid=a.attrelid", (f._obj,f._fields_id))
 						res = cr.fetchone()[0]
 						if not res:
-							cr.execute("ALTER TABLE %s ADD FOREIGN KEY (%s) REFERENCES %s ON DELETE SET NULL" % (self._obj, f._fields_id, f._table))
+							cr.execute("ALTER TABLE \"%s\" ADD FOREIGN KEY (%s) REFERENCES \"%s\" ON DELETE SET NULL" % (self._obj, f._fields_id, f._table))
 				elif isinstance(f, fields.many2many):
-					cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname='%s'"%f._rel)
+					cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname=%s", (f._rel,))
 					if not cr.dictfetchall():
 						#FIXME: Remove this try/except
 						try:
 							ref = self.pool.get(f._obj)._table
 						except AttributeError:
 							ref = f._obj.replace('.','_')
-						cr.execute("CREATE TABLE %s (%s INTEGER NOT NULL REFERENCES %s ON DELETE CASCADE, %s INTEGER NOT NULL REFERENCES %s ON DELETE CASCADE) WITH OIDS"%(f._rel,f._id1,self._table,f._id2,ref))
-						cr.execute("CREATE INDEX %s_%s_index ON %s (%s)" % (f._rel,f._id1,f._rel,f._id1))
-						cr.execute("CREATE INDEX %s_%s_index ON %s (%s)" % (f._rel,f._id2,f._rel,f._id2))
+						cr.execute("CREATE TABLE \"%s\" (\"%s\" INTEGER NOT NULL REFERENCES \"%s\" ON DELETE CASCADE, \"%s\" INTEGER NOT NULL REFERENCES \"%s\" ON DELETE CASCADE) WITH OIDS"%(f._rel,f._id1,self._table,f._id2,ref))
+						cr.execute("CREATE INDEX \"%s_%s_index\" ON \"%s\" (\"%s\")" % (f._rel,f._id1,f._rel,f._id1))
+						cr.execute("CREATE INDEX \"%s_%s_index\" ON \"%s\" (\"%s\")" % (f._rel,f._id2,f._rel,f._id2))
 						cr.commit()
 				else:
-					q = """SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size FROM pg_class c,pg_attribute a,pg_type t WHERE c.relname='%s' AND a.attname='%s' AND c.oid=a.attrelid AND a.atttypid=t.oid""" % (self._table, k.lower())
-					cr.execute(q)
+					cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size FROM pg_class c,pg_attribute a,pg_type t WHERE c.relname=%s AND a.attname=%s AND c.oid=a.attrelid AND a.atttypid=t.oid", (self._table, k.lower()))
 					res = cr.dictfetchall() 
 					if not res:
 						if not isinstance(f,fields.function) or f.store:
 
 							# add the missing field
-							cr.execute("ALTER TABLE %s ADD COLUMN %s %s" % (self._table, k, get_pg_type(f)[1]))
+							cr.execute("ALTER TABLE \"%s\" ADD COLUMN \"%s\" %s" % (self._table, k, get_pg_type(f)[1]))
 							
 							# initialize it
 							if not create and k in self._defaults:
 								default = self._defaults[k](self, cr, 1, {})
 								if not default:
-									cr.execute("UPDATE %s SET %s=NULL" % (self._table, k))
+									cr.execute("UPDATE \"%s\" SET \"%s\"=NULL" % (self._table, k))
 								else:
-									cr.execute("UPDATE %s SET %s='%s'" % (self._table, k, default))
+									cr.execute("UPDATE \"%s\" SET \"%s\"='%s'" % (self._table, k, default))
 
 							# and add constraints if needed
 							if isinstance(f, fields.many2one):
@@ -391,13 +389,13 @@ class orm(object):
 									ref = f._obj.replace('.','_')
 								# ir_actions is inherited so foreign key doesn't work on it
 								if ref <> 'ir_actions':
-									cr.execute("ALTER TABLE %s ADD FOREIGN KEY (%s) REFERENCES %s ON DELETE %s" % (self._table, k, ref, f.ondelete))
+									cr.execute("ALTER TABLE \"%s\" ADD FOREIGN KEY (\"%s\") REFERENCES \"%s\" ON DELETE %s" % (self._table, k, ref, f.ondelete))
 							if f.select:
-								cr.execute("CREATE INDEX %s_%s_index ON %s (%s)" % (self._table, k, self._table, k))
+								cr.execute("CREATE INDEX \"%s_%s_index\" ON \"%s\" (\"%s\")" % (self._table, k, self._table, k))
 							if f.required:
 								cr.commit()
 								try:
-									cr.execute("ALTER TABLE %s ALTER COLUMN %s SET NOT NULL" % (self._table, k))
+									cr.execute("ALTER TABLE \"%s\" ALTER COLUMN \"%s\" SET NOT NULL" % (self._table, k))
 								except:
 									logger.notifyChannel('init', netsvc.LOG_WARNING, 'WARNING: unable to set column %s of table %s not null !\nTry to re-run: tinyerp-server.py --update=module\nIf it doesn\'t work, update records and execute manually:\nALTER TABLE %s ALTER COLUMN %s SET NOT NULL' % (k, self._table, self._table, k))
 							cr.commit()
@@ -422,10 +420,10 @@ class orm(object):
 										logger.notifyChannel('init', netsvc.LOG_WARNING, "column '%s' in table '%s' has changed size (DB = %d, def = %d), strings will be truncated !" % (k, self._table, f_pg_size, f.size))
 #TODO: check si y a des donnees qui vont poser probleme (select char_length(...))
 #TODO: issue a log message even if f_pg_size < f.size
-									cr.execute("ALTER TABLE %s RENAME COLUMN %s TO temp_change_size" % (self._table,k))
-									cr.execute("ALTER TABLE %s ADD COLUMN %s VARCHAR(%d)" % (self._table,k,f.size))
-									cr.execute("UPDATE %s SET %s=temp_change_size::VARCHAR(%d)" % (self._table,k,f.size))
-									cr.execute("ALTER TABLE %s DROP COLUMN temp_change_size" % (self._table,))
+									cr.execute("ALTER TABLE \"%s\" RENAME COLUMN \"%s\" TO temp_change_size" % (self._table,k))
+									cr.execute("ALTER TABLE \"%s\" ADD COLUMN \"%s\" VARCHAR(%d)" % (self._table,k,f.size))
+									cr.execute("UPDATE \"%s\" SET \"%s\"=temp_change_size::VARCHAR(%d)" % (self._table,k,f.size))
+									cr.execute("ALTER TABLE \"%s\" DROP COLUMN temp_change_size" % (self._table,))
 									cr.commit()
 							# if the field is required and hasn't got a NOT NULL constraint
 							if f.required and f_pg_notnull == 0:
@@ -433,25 +431,25 @@ class orm(object):
 								if self._defaults.has_key(k):
 									default = self._defaults[k](self, cr, 1, {})
 									if not (default is False):
-										cr.execute("UPDATE %s SET %s='%s' WHERE %s is NULL" % (self._table, k, default, k))
+										cr.execute("UPDATE \"%s\" SET \"%s\"='%s' WHERE %s is NULL" % (self._table, k, default, k))
 										cr.commit()
 								# add the NOT NULL constraint
 								try:
-									cr.execute("ALTER TABLE %s ALTER COLUMN %s SET NOT NULL" % (self._table, k))
+									cr.execute("ALTER TABLE \"%s\" ALTER COLUMN \"%s\" SET NOT NULL" % (self._table, k))
 									cr.commit()
 								except:
 									logger.notifyChannel('init', netsvc.LOG_WARNING, 'unable to set a NOT NULL constraint on column %s of the %s table !\nIf you want to have it, you should update the records and execute manually:\nALTER TABLE %s ALTER COLUMN %s SET NOT NULL' % (k, self._table, self._table, k))
 								cr.commit()
 							elif not f.required and f_pg_notnull == 1:
-								cr.execute("ALTER TABLE %s ALTER COLUMN %s DROP NOT NULL" % (self._table,k))
+								cr.execute("ALTER TABLE \"%s\" ALTER COLUMN \"%s\" DROP NOT NULL" % (self._table,k))
 								cr.commit()
 							cr.execute("SELECT indexname FROM pg_indexes WHERE indexname = '%s_%s_index' and tablename = '%s'" % (self._table, k, self._table))
 							res = cr.dictfetchall()
 							if not res and f.select:
-								cr.execute("CREATE INDEX %s_%s_index ON %s (%s)" % (self._table, k, self._table, k))
+								cr.execute("CREATE INDEX \"%s_%s_index\" ON \"%s\" (\"%s\")" % (self._table, k, self._table, k))
 								cr.commit()
 							if res and not f.select:
-								cr.execute("DROP INDEX %s_%s_index" % (self._table, k))
+								cr.execute("DROP INDEX \"%s_%s_index\"" % (self._table, k))
 								cr.commit()
 					else:
 						print "ERROR"
@@ -463,7 +461,7 @@ class orm(object):
 			cr.execute("SELECT conname FROM pg_constraint where conname='%s_%s'" % (self._table, key))
 			if not cr.dictfetchall():
 				try:
-					cr.execute('alter table %s add constraint %s_%s %s' % (self._table,self._table,key, con,))
+					cr.execute('alter table \"%s\" add constraint \"%s_%s\" %s' % (self._table,self._table,key, con,))
 					cr.commit()
 				except:
 					logger.notifyChannel('init', netsvc.LOG_WARNING, 'unable to add \'%s\' constraint on table %s !\n If you want to have it, you should update the records and execute manually:\nALTER table %s ADD CONSTRAINT %s_%s %s' % (con, self._table, self._table,self._table,key, con,))
@@ -765,13 +763,13 @@ class orm(object):
 		fields_pre = filter(lambda x: x in self._columns and getattr(self._columns[x],'_classic_write'), fields) + self._inherits.values()
 
 		if len(fields_pre) :
-			fields_pre2 = map(lambda x: (x in ('create_date', 'write_date')) and ('date_trunc(\'second\', '+x+') as '+x) or x, fields_pre)
+			fields_pre2 = map(lambda x: (x in ('create_date', 'write_date')) and ('date_trunc(\'second\', '+x+') as '+x) or '"'+x+'"', fields_pre)
 			if d1:
-				cr.execute('select %s from %s where id in (%s) and %s order by %s' % (','.join(fields_pre2 + ['id']), self._table, ','.join([str(x) for x in ids]), d1, self._order),d2)
+				cr.execute('select %s from \"%s\" where id in (%s) and %s order by %s' % (','.join(fields_pre2 + ['id']), self._table, ','.join([str(x) for x in ids]), d1, self._order),d2)
 				if not cr.rowcount == len({}.fromkeys(ids)):
 					raise except_orm('AccessError', 'You try to bypass an access rule (Document type: %s).' % self._description)
 			else:
-				cr.execute('select %s from %s where id in (%s) order by %s' % (','.join(fields_pre2 + ['id']), self._table, ','.join([str(x) for x in ids]), self._order))
+				cr.execute('select %s from \"%s\" where id in (%s) order by %s' % (','.join(fields_pre2 + ['id']), self._table, ','.join([str(x) for x in ids]), self._order))
 
 			res = cr.dictfetchall()
 		else:
@@ -865,7 +863,7 @@ class orm(object):
 			ids_str = str(ids)
 		else:
 			ids_str = string.join(map(lambda x:str(x), ids),',')
-		cr.execute('select u.id'+fields+' from perm p right join '+self._table+' u on u.perm_id=p.id where u.id in ('+ids_str+')')
+		cr.execute('select u.id'+fields+' from perm p right join "'+self._table+'" u on u.perm_id=p.id where u.id in ('+ids_str+')')
 		res = cr.dictfetchall()
 #		for record in res:
 #			for f in ('ox','ux','gx','uid','gid'):
@@ -890,7 +888,7 @@ class orm(object):
 			ids = [ids]
 		delta= context.get('read_delta',False)
 		if delta and self._log_access:
-			cr.execute("select  (now()  - min(write_date)) <= '%s'::interval  from %s where id in (%s)"% (delta,self._table,",".join(map(str, ids))) )
+			cr.execute("select  (now()  - min(write_date)) <= '%s'::interval  from \"%s\" where id in (%s)"% (delta,self._table,",".join(map(str, ids))) )
 			res= cr.fetchone()
 			if res and res[0]:
 				raise except_orm('ConcurrencyException', 'This record was modified in the meanwhile')
@@ -911,12 +909,12 @@ class orm(object):
 		d1, d2 = self.pool.get('ir.rule').domain_get(cr, uid, self._name)
 		if d1:
 			d1 = ' AND '+d1
-			cr.execute('SELECT id FROM '+self._table+' WHERE id IN ('+str_d+')'+d1, ids+d2)
+			cr.execute('SELECT id FROM "'+self._table+'" WHERE id IN ('+str_d+')'+d1, ids+d2)
 			if not cr.rowcount == len({}.fromkeys(ids)):
 				raise except_orm('AccessError', 'You try to bypass an access rule (Document type: %s).'%self._description)
 
 		cr.execute('delete from inherit where (obj_type=%s and obj_id in ('+str_d+')) or (inst_type=%s and inst_id in ('+str_d+'))', (self._name,)+tuple(ids)+(self._name,)+tuple(ids))
-		cr.execute('delete from '+self._table+' where id in ('+str_d+')'+d1, ids+d2)
+		cr.execute('delete from "'+self._table+'" where id in ('+str_d+')'+d1, ids+d2)
 		return True
 
 	#
@@ -953,7 +951,7 @@ class orm(object):
 			if field in self._columns:
 				if self._columns[field]._classic_write:
 					if (not totranslate) or not self._columns[field].translate:
-						upd0.append(field+'='+self._columns[field]._symbol_set[0])
+						upd0.append('"'+field+'"='+self._columns[field]._symbol_set[0])
 						upd1.append(self._columns[field]._symbol_set[1](vals[field]))
 					direct.append(field)
 				else:
@@ -970,14 +968,14 @@ class orm(object):
 			d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
 			if d1:
 				d1 = ' and '+d1
-				cr.execute('SELECT id FROM '+self._table+' WHERE id IN ('+ids_str+')'+d1, d2)
+				cr.execute('SELECT id FROM "'+self._table+'" WHERE id IN ('+ids_str+')'+d1, d2)
 				if not cr.rowcount == len({}.fromkeys(ids)):
 					raise except_orm('AccessError', 'You try to bypass an access rule (Document type: %s).'%self._description)
 			else:
-				cr.execute('SELECT id FROM '+self._table+' WHERE id IN ('+ids_str+')')
+				cr.execute('SELECT id FROM "'+self._table+'" WHERE id IN ('+ids_str+')')
 				if not cr.rowcount == len({}.fromkeys(ids)):
 					raise except_orm('AccessError', 'You try to write on an record that doesn\'t exist (Document type: %s).'%self._description)
-			cr.execute('update '+self._table+' set '+string.join(upd0,',')+' where id in ('+ids_str+')'+d1, upd1+ d2)
+			cr.execute('update "'+self._table+'" set '+string.join(upd0,',')+' where id in ('+ids_str+')'+d1, upd1+ d2)
 
 			if totranslate:
 				for f in direct:
@@ -992,7 +990,7 @@ class orm(object):
 
 		for table in self._inherits:
 			col = self._inherits[table]
-			cr.execute('select distinct '+col+' from '+self._table+' where id in ('+ids_str+')', upd1)
+			cr.execute('select distinct "'+col+'" from "'+self._table+'" where id in ('+ids_str+')', upd1)
 			nids = [x[0] for x in cr.fetchall()]
 
 			v = {}
@@ -1068,7 +1066,7 @@ class orm(object):
 
 		for field in vals:
 			if self._columns[field]._classic_write:
-				upd0=upd0+','+field
+				upd0=upd0+',"'+field+'"'
 				upd1=upd1+','+self._columns[field]._symbol_set[0]
 				upd2.append(self._columns[field]._symbol_set[1](vals[field]))
 			else:
@@ -1077,7 +1075,7 @@ class orm(object):
 			upd0 += ',create_uid,create_date'
 			upd1 += ',%d,now()'
 			upd2.append(user)
-		cr.execute('insert into '+self._table+' (id,perm_id'+upd0+") values ("+str(id_new)+',NULL'+upd1+')', tuple(upd2))
+		cr.execute('insert into "'+self._table+'" (id,perm_id'+upd0+") values ("+str(id_new)+',NULL'+upd1+')', tuple(upd2))
 		upd_todo.sort(lambda x,y: self._columns[x].priority-self._columns[y].priority)
 		for field in upd_todo:
 			self._columns[field].set(cr, self, id_new, field, vals[field], user, context)
@@ -1101,10 +1099,10 @@ class orm(object):
 				for field in res:
 					if field not in f:
 						continue
-					upd0.append(field+'='+self._columns[field]._symbol_set[0])
+					upd0.append('"'+field+'"='+self._columns[field]._symbol_set[0])
 					upd1.append(self._columns[field]._symbol_set[1](res[field]))
 				upd1.append(res['id'])
-				cr.execute('update '+self._table+' set '+string.join(upd0,',')+ ' where id = %d', upd1)
+				cr.execute('update "'+self._table+'" set '+string.join(upd0,',')+ ' where id = %d', upd1)
 		return True
 
 	#
@@ -1119,10 +1117,11 @@ class orm(object):
 			ids = [ids]
 		query = []
 		vals = []
-		keys = fields.keys()
-		for x in keys:
-			query.append(x+'=%d')
+		keys = []
+		for x in fields.keys():
+			query.append('"'+x+'"=%d')
 			vals.append(fields[x])
+			keys.append('"'+x+'"')
 		cr.execute('select id from perm where ' + ' and '.join(query) + ' limit 1', vals)
 		res = cr.fetchone()
 		if res:
@@ -1447,14 +1446,14 @@ class orm(object):
 				args.append(('active', '=', 1))
 
 		i = 0
-		tables=[self._table]
+		tables=['"'+self._table+'"']
 		joins=[]
 		while i<len(args):
 			table=self
 			if args[i][0] in self._inherit_fields:
 				table=self.pool.get(self._inherit_fields[args[i][0]][0])
-				if (table._table not in tables):
-					tables.append(table._table)
+				if ('"'+table._table+'"' not in tables):
+					tables.append('"'+table._table+'"')
 					joins.append(('id', 'join', '%s.%s' % (self._table, self._inherits[table._name]), table))
 			fargs = args[i][0].split('.', 1)
 			field = table._columns.get(fargs[0],False)
@@ -1488,7 +1487,7 @@ class orm(object):
 				if not ids2:
 					args[i] = ('id','=','0')
 				else:
-					cr.execute('select '+field._fields_id+' from '+field_obj._table+' where id in ('+','.join(map(str,ids2))+')')
+					cr.execute('select "'+field._fields_id+'" from "'+field_obj._table+'" where id in ('+','.join(map(str,ids2))+')')
 					ids3 = [x[0] for x in cr.fetchall()]
 
 					args[i] = ('id', 'in', ids3)
@@ -1509,7 +1508,7 @@ class orm(object):
 						if self.pool.get(field._obj)==self:
 							return ids
 						if not len(ids): return []
-						cr.execute('select '+field._id1+' from '+field._rel+' where '+field._id2+' in ('+','.join(map(str,ids))+')')
+						cr.execute('select "'+field._id1+'" from "'+field._rel+'" where "'+field._id2+'" in ('+','.join(map(str,ids))+')')
 						ids = [x[0] for x in cr.fetchall()]
 						return ids
 					args[i] = ('id','in',_rec_convert(ids2+_rec_get(ids2, self.pool.get(field._obj), table._parent_name)))
@@ -1520,7 +1519,7 @@ class orm(object):
 						res_ids = args[i][2]
 					if not len(res_ids):
 						return []
-					cr.execute('select '+field._id1+' from '+field._rel+' where '+field._id2+' in ('+','.join(map(str, res_ids))+')')
+					cr.execute('select "'+field._id1+'" from "'+field._rel+'" where "'+field._id2+'" in ('+','.join(map(str, res_ids))+')')
 					args[i] = ('id', 'in', map(lambda x: x[0], cr.fetchall()))
 				i+=1
 
@@ -1552,7 +1551,7 @@ class orm(object):
 						args[i] = (args[i][0], args[i][1], '%%%s%%' % args[i][2])
 					cr.execute('select res_id from ir_translation where name = %s and lang = %s and type = %s and value '+args[i][1]+' %s', (table._name+','+args[i][0], context['lang'], 'model', args[i][2]))
 					ids = map(lambda x: x[0], cr.fetchall())
-					cr.execute('select id from '+table._table+' where '+args[i][0]+' '+args[i][1]+' %s', (args[i][2],))
+					cr.execute('select id from "'+table._table+'" where "'+args[i][0]+'" '+args[i][1]+' %s', (args[i][2],))
 					ids += map(lambda x: x[0], cr.fetchall())
 					args[i] = ('id', 'in', ids, table)
 				else:
@@ -1795,8 +1794,8 @@ class orm(object):
 			parent = self._parent_name
 		ids_parent = ids[:]
 		while len(ids_parent):
-			cr.execute('SELECT distinct '+self._parent_name+
-				' FROM '+self._table+' WHERE id in ('+','.join(map(str, ids_parent))+')')
+			cr.execute('SELECT distinct "'+self._parent_name+'"'+
+				' FROM "'+self._table+'" WHERE id in ('+','.join(map(str, ids_parent))+')')
 			ids_parent = filter(None, map(lambda x: x[0], cr.fetchall()))
 			for i in ids_parent:
 				if i in ids:
