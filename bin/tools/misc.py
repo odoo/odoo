@@ -196,7 +196,7 @@ def file_open(name, mode="r", subdir='addons'):
 #----------------------------------------------------------
 # Emails
 #----------------------------------------------------------
-def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, on_error=False, reply_to=False):
+def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, on_error=False, reply_to=False, tinycrm=False):
 	"""Send an email."""
 	if not email_cc:
 		email_cc=[]
@@ -220,6 +220,8 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
 	if email_bcc:
 		msg['Bcc'] = COMMASPACE.join(email_bcc)
 	msg['Date'] = formatdate(localtime=True)
+	if tinycrm:
+		msg['X-TinyCRM'] = tinycrm
 	try:
 		s = smtplib.SMTP()
 		if config['smtp_user'] or config['smtp_password']:
