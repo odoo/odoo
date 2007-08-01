@@ -42,9 +42,9 @@ class account_move_line(osv.osv):
 			context['fiscalyear'] = self.pool.get('account.fiscalyear').find(cr, uid, exception=False)
 		if context.get('periods', False):
 			ids = ','.join([str(x) for x in context['periods']])
-			return "l.active AND l.state<>'draft' AND l.period_id in (SELECT id from account_period WHERE fiscalyear_id=%d AND id in (%s))" % (context['fiscalyear'], ids)
+			return obj+".active AND "+obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id=%d AND id in (%s))" % (context['fiscalyear'], ids)
 		else:
-			return "l.active AND l.state<>'draft' AND l.period_id in (SELECT id from account_period WHERE fiscalyear_id=%d)" % (context['fiscalyear'],)
+			return obj+".active AND "+obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id=%d)" % (context['fiscalyear'],)
 
 	def default_get(self, cr, uid, fields, context={}):
 		data = self._default_get(cr, uid, fields, context)
