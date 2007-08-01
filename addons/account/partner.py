@@ -67,7 +67,7 @@ class res_partner(osv.osv):
 			return []
 		query = self.pool.get('account.move.line')._query_get(cr, uid, context={})
 		where = ' and '.join(map(lambda x: '(sum(debit-credit)'+x[1]+str(x[2])+')',args))
-		cr.execute(('select partner_id from account_move_line where account_id in (select id from account_account where type=%s and active) and reconcile_id is null and '+query+' partner_id is not null group by partner_id having '+where), ('payable',) )
+		cr.execute(('select partner_id from account_move_line l where account_id in (select id from account_account where type=%s and active) and reconcile_id is null and '+query+' and partner_id is not null group by partner_id having '+where), ('payable',) )
 		res = cr.fetchall()
 		if not len(res):
 			return [('id','=','0')]
