@@ -42,6 +42,7 @@ from config import config
 
 import zipfile
 import release
+import socket
 
 if sys.version_info[:2] < (2, 4):
 	from threadinglocal import local
@@ -221,7 +222,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
 		msg['Bcc'] = COMMASPACE.join(email_bcc)
 	msg['Date'] = formatdate(localtime=True)
 	if tinycrm:
-		msg['TinyCRM'] = tinycrm
+		msg['Message-Id'] = '<'+str(time.time())+'-tinycrm-'+str(tinycrm)+'@'+socket.gethostname()+'>'
 	try:
 		s = smtplib.SMTP()
 		if config['smtp_user'] or config['smtp_password']:
@@ -267,7 +268,7 @@ def email_send_attach(email_from, email_to, subject, body, email_cc=None, email_
 	if email_bcc:
 		msg['Bcc'] = COMMASPACE.join(email_bcc)
 	if tinycrm:
-		msg['TinyCRM'] = tinycrm
+		msg['Message-Id'] = '<'+str(time.time())+'-tinycrm-'+str(tinycrm)+'@'+socket.gethostname()+'>'
 	msg['Date'] = formatdate(localtime=True)
 	msg.attach( MIMEText(body or '', _charset='utf-8') )
 	for (fname,fcontent) in attach:
