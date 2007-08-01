@@ -29,6 +29,7 @@
 from osv import fields,osv
 from wizard.tiny_sxw2rml import sxw2rml
 from StringIO import StringIO
+import base64
 
 class report_xml(osv.osv):
 	_inherit = 'ir.actions.report.xml'
@@ -45,6 +46,11 @@ class report_xml(osv.osv):
 			'report_sxw_content': base64.decodestring(file_sxw),
 			'report_rml_content': str(sxw2rml(sxwval, xsl=fp.read()))
 		})
-		return {}
-
+		return True
+	def report_get(self, cr, uid, report_id, context={}):
+		report = self.browse(cr, uid, report_id, context)
+		return {
+			'report_sxw_content': report.report_sxw_content and base64.encodestring(report.report_sxw_content) or False,
+			'report_rml_content': report.report_rml_content and base64.encodestring(report.report_rml_content) or False
+		}
 report_xml()
