@@ -9,6 +9,7 @@ from email.MIMEText import MIMEText
 import xmlrpclib
 import os
 import binascii
+import time, socket
 
 email_re = re.compile(r"""
 	([a-zA-Z][\w\.-]*[a-zA-Z0-9]     # username part
@@ -20,6 +21,7 @@ email_re = re.compile(r"""
 	""", re.VERBOSE)
 case_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
 command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
+references_re = re.compile("<.*-tinycrm-(\\d+)@(.*)>", re.UNICODE)
 
 priorities = {
 	'1': '1 (Highest)',
@@ -230,8 +232,10 @@ class email_parser(object):
 		return (int(case_str), emails)
 
 	def parse(self, msg):
-		case_str = msg.get('TinyCRM', '')
-		if not case_str:
+		case_str = reference_re(msg.get('References', ''))
+		if case_str:
+			case_str = case_str.group(1)
+		else:
 			case_str = case_re.search(msg.get('Subject', ''))
 			if case_str:
 				case_str = case_str.group(1)
@@ -247,7 +251,7 @@ class email_parser(object):
 			if msg.get('Subject', ''):
 				del msg['Subject']
 			msg['Subject'] = '['+str(case_id)+'] '+subject
-			msg['TinyCRM'] = str(case_id)
+			msg['Message-Id'] = '<'+str(time.time())+'-tinycrm-'+str(case_id)+'@'+socket.gethostname()+'>'
 
 		emails = self.rpc('crm.case', 'emails_get', case_id)
 		priority = emails[3]
