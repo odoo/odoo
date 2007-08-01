@@ -230,7 +230,7 @@ class email_parser(object):
 		return (int(case_str), emails)
 
 	def parse(self, msg):
-		case_str = msg.get('X-TinyCRM', '')
+		case_str = msg.get('TinyCRM', '')
 		if not case_str:
 			case_str = case_re.search(msg.get('Subject', ''))
 			if case_str:
@@ -247,7 +247,7 @@ class email_parser(object):
 			if msg.get('Subject', ''):
 				del msg['Subject']
 			msg['Subject'] = '['+str(case_id)+'] '+subject
-			msg['X-TinyCRM'] = str(case_id)
+			msg['TinyCRM'] = str(case_id)
 
 		emails = self.rpc('crm.case', 'emails_get', case_id)
 		priority = emails[3]
