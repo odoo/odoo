@@ -127,14 +127,13 @@
 			<form string="Purchase Order Line">
 				<notebook>
 					<page string="Order Line">
-						<field name="account_analytic_id"/>
-						<newline/>
 						<field name="product_qty"/>
 						<field name="product_uom" on_change="product_uom_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id)"/>
 						<field name="product_id" colspan="4" on_change="product_id_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id)" context="partner_id=parent.partner_id,quantity=product_qty,pricelist=parent.pricelist_id,uom=product_uom,warehouse=parent.warehouse_id"/>
 						<field name="name" colspan="4"/>
 						<field name="date_planned"/>
 						<field name="price_unit"/>
+						<field name="account_analytic_id"/>
 						<field name="price_subtotal" readonly="1" />
 						<field name="taxes_id" colspan="4"/>
 					</page><page string="Notes">

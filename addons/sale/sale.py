@@ -139,7 +139,7 @@ class sale_order(osv.osv):
   - The 'Invoice after delivery' choice will generate the draft invoice after the packing list have been finished.
   - The 'Invoice from the packings' choice is used to create an invoice during the packing process."""),
 		'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-		'project_id':fields.many2one('account.analytic.account', 'Profit/Cost Center', readonly=True, states={'draft':[('readonly', False)]}),
+		'project_id':fields.many2one('account.analytic.account', 'Analytic account', readonly=True, states={'draft':[('readonly', False)]}),
 
 		'order_line': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft':[('readonly',False)]}),
 		'invoice_ids': fields.many2many('account.invoice', 'sale_order_invoice_rel', 'order_id', 'invoice_id', 'Invoice', help="This is the list of invoices that have been generated for this sale order. The same sale order may have been invoiced in several times (by line for example)."),
