@@ -144,7 +144,7 @@
 			<field name="view_id" ref="view_project" />
 		</record>
 		<menuitem
-			name="Project/All Projects"
+			name="Project/All projects"
 			action="open_view_all_project"
 			id="menu_all_project"/>
 
@@ -156,7 +156,7 @@
 			<field name="view_id" ref="view_project" />
 		</record>
 		<menuitem
-			name="Project/All Projects/Unclosed projects"
+			name="Project/All projects/Unclosed projects"
 			action="open_view_all_project_unclosed" 
 			id="menu_all_project_unclosed"/>
 
@@ -169,7 +169,7 @@
 			<field name="view_id" ref="view_project" />
 		</record>
 		<menuitem
-			name="Project/All Projects/Unclosed projects/Open projects"
+			name="Project/All projects/Unclosed projects/Open projects"
 			action="open_view_all_project_unclosed_open" 
 			id="menu_all_project_unclosed_open"/>
 
@@ -351,7 +351,7 @@
 			<field name="view_type">form</field>
 			<field name="view_id" ref="view_task_tree2" />
 		</record>
-		<menuitem name="Project/All Tasks" id="menu_action_view_task" action="action_view_task" />
+		<menuitem name="Project/All tasks" id="menu_action_view_task" action="action_view_task" />
 
 		<record model="ir.actions.act_window" id="action_view_task2">
 			<field name="name">Unbilled closed tasks</field>
@@ -360,7 +360,7 @@
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('state','=','done'), ('billable','=',True), ('invoice_id','=',False)]</field>
 		</record>
-		<menuitem name="Project/All Tasks/Billable Tasks/Unbilled closed tasks" id="menu_action_view_task2" action="action_view_task2" />
+		<menuitem name="Project/All tasks/Billable tasks/Unbilled closed tasks" id="menu_action_view_task2" action="action_view_task2" />
 
 		<record model="ir.actions.act_window" id="action_view_task3">
 			<field name="name">Unbilled open tasks</field>
@@ -369,7 +369,7 @@
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('state','=','open'), ('billable','=',True), ('invoice_id','=',False)]</field>
 		</record>
-		<menuitem name="Project/All Tasks/Billable Tasks/Unbilled open tasks" id="menu_action_view_task3" action="action_view_task3" />
+		<menuitem name="Project/All tasks/Billable tasks/Unbilled open tasks" id="menu_action_view_task3" action="action_view_task3" />
 
 		<record model="ir.actions.act_window" id="action_view_task4">
 			<field name="name">My tasks</field>
@@ -414,16 +414,16 @@
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('state', '=', 'open')]</field>
 		</record>
-		<menuitem name="Project/All Tasks/" id="menu_action_view_task6" action="action_view_task6" />
+		<menuitem name="Project/All tasks/" id="menu_action_view_task6" action="action_view_task6" />
 
 		<record model="ir.actions.act_window" id="action_view_task6_prog">
-			<field name="name">Tasks in Progress</field>
+			<field name="name">Tasks in progress</field>
 			<field name="res_model">project.task</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('state', '=', 'progress')]</field>
 		</record>
-		<menuitem name="Project/All Tasks/" id="menu_action_view_task6_prog" action="action_view_task6_prog" />
+		<menuitem name="Project/All tasks/" id="menu_action_view_task6_prog" action="action_view_task6_prog" />
 
 		<record model="ir.actions.act_window" id="action_view_task7">
 			<field name="name">Unassigned tasks</field>
@@ -432,7 +432,7 @@
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('user_id', '=', False)]</field>
 		</record>
-		<menuitem name="Project/All Tasks/" id="menu_action_view_task7" action="action_view_task7" />
+		<menuitem name="Project/All tasks/" id="menu_action_view_task7" action="action_view_task7" />
 
 		<!-- Opening task when double clicking on project -->
 		<record model="ir.actions.act_window" id="dblc_proj">

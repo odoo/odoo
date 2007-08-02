@@ -48,7 +48,7 @@
 		<field name="model">sale.order</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Sales Orders">
+			<tree string="Sales orders">
 				<field name="date_order"/>
 				<field name="name"/>
 				<field name="partner_id"/>
@@ -66,7 +66,7 @@
 		<field name="model">sale.order</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Sales Order">
+			<form string="Sales order">
 				<notebook>
 					<page string="Sale Order">
 						<field name="name" select="1"/>
@@ -124,7 +124,7 @@
 									</page>
 								</notebook>
 							</form>
-							<tree string="Sales Order Lines">
+							<tree string="Sales order lines">
 								<field name="name" colspan="4"/>
 								<field name="product_id"/>
 								<field name="product_uom_qty" string="Qty"/>
@@ -184,47 +184,62 @@
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_order_form"/>
 	</record>
-	<menuitem name="Sales Management/Sales Order" action="action_order_form" id="menu_sale_order"/>
+	<menuitem name="Sales Management/Sales order" action="action_order_form" id="menu_sale_order"/>
 
 	<record model="ir.actions.act_window" id="action_order_tree">
-		<field name="name">My Sales Order</field>
+		<field name="name">My sales order</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">sale.order</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('user_id','=',uid)]</field>
 	</record>
-	<menuitem name="Sales Management/Sales Order/" id="menu_action_order_tree" action="action_order_tree"/>
+	<menuitem name="Sales Management/Sales order/" id="menu_action_order_tree" action="action_order_tree"/>
+
+
+	<record model="ir.actions.act_window" id="action_order_tree_all">
+		<field name="name">All sales order</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">sale.order</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+	<menuitem name="Sales Management/Sales order/" id="menu_action_order_tree_all" action="action_order_tree_all"/>
+
 
 	<record model="ir.actions.act_window" id="action_order_tree2">
-		<field name="name">Sales Order in Shipping Exception</field>
+		<field name="name">Sales order in shipping exception</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">sale.order</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','shipping_except')]</field>
 	</record>
-	<menuitem name="Sales Management/Sales Order/Shipping Exception" id="menu_action_order_tree2" action="action_order_tree2"/>
+	<menuitem name="Sales Management/Sales order/All sales order/Shipping exception" id="menu_action_order_tree2" action="action_order_tree2"/>
 
 	<record model="ir.actions.act_window" id="action_order_tree3">
-		<field name="name">Sales Order waiting Invoice</field>
+		<field name="name">Sales order waiting Invoice</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">sale.order</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','manual')]</field>
 	</record>
-	<menuitem name="Sales Management/Sales Order/Waiting Invoice" id="menu_action_order_tree3" action="action_order_tree3"/>
+	<menuitem name="Sales Management/Sales order/All sales order/Waiting Invoice" id="menu_action_order_tree3" action="action_order_tree3"/>
 
 	<record model="ir.actions.act_window" id="action_order_tree4">
-		<field name="name">Sales Order in Progress</field>
+		<field name="name">Sales order in progress</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">sale.order</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','progress')]</field>
 	</record>
-	<menuitem name="Sales Management/Sales Order/in Progress" id="menu_action_order_tree4" action="action_order_tree4"/>
+	<menuitem 
+		name="Sales Management/Sales order/All sales order/Sales in progress" 
+		sequence="2"
+		id="menu_action_order_tree4" 
+		action="action_order_tree4"/>
 
 
 	<record model="ir.actions.act_window" id="action_order_tree5">
@@ -235,49 +250,57 @@
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','draft')]</field>
 	</record>
-	<menuitem name="Sales Management/Sales Order/All quotations" id="menu_action_order_tree5" action="action_order_tree5"/>
+	<menuitem 
+		name="Sales Management/Sales order/All sales order/All quotations" 
+		id="menu_action_order_tree5" 
+		sequence="1"
+		action="action_order_tree5"/>
 
 	<record model="ir.actions.act_window" id="action_order_tree6">
-		<field name="name">Sales Order in Invoice Exception</field>
+		<field name="name">Sales order in invoice exception</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">sale.order</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','invoice_except')]</field>
 	</record>
-	<menuitem name="Sales Management/Sales Order/Invoice Exception" id="menu_action_order_tree6" action="action_order_tree6"/>
+	<menuitem name="Sales Management/Sales order/All sales order/Invoice exception" id="menu_action_order_tree6" action="action_order_tree6"/>
 
 
 
 	<record model="ir.actions.act_window" id="action_order_tree7">
-		<field name="name">My Sales Order in Shipping Exception</field>
+		<field name="name">My sales order in shipping exception</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">sale.order</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','shipping_except'),('user_id','=',uid)]</field>
 	</record>
-	<menuitem name="Sales Management/Sales Order/My Sales Order/Shipping Exception" id="menu_action_order_tree7" action="action_order_tree7"/>
+	<menuitem name="Sales Management/Sales order/My sales order/Shipping exception" id="menu_action_order_tree7" action="action_order_tree7"/>
 
 	<record model="ir.actions.act_window" id="action_order_tree8">
-		<field name="name">My Sales Order waiting Invoice</field>
+		<field name="name">My sales order waiting Invoice</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">sale.order</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','manual'),('user_id','=',uid)]</field>
 	</record>
-	<menuitem name="Sales Management/Sales Order/My Sales Order/Waiting Invoice" id="menu_action_order_tree8" action="action_order_tree8"/>
+	<menuitem name="Sales Management/Sales order/My sales order/My sales waiting Invoice" id="menu_action_order_tree8" action="action_order_tree8"/>
 
 	<record model="ir.actions.act_window" id="action_order_tree9">
-		<field name="name">My Sales Order in Progress</field>
+		<field name="name">My sales order in progress</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">sale.order</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','progress'),('user_id','=',uid)]</field>
 	</record>
-	<menuitem name="Sales Management/Sales Order/My Sales Order/in Progress" id="menu_action_order_tree9" action="action_order_tree9"/>
+	<menuitem 
+		name="Sales Management/Sales order/My sales order/My sales in progress" 
+		sequence="2"
+		id="menu_action_order_tree9" 
+		action="action_order_tree9"/>
 
 
 	<record model="ir.actions.act_window" id="action_order_tree10">
@@ -288,7 +311,10 @@
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','draft'),('user_id','=',uid)]</field>
 	</record>
-	<menuitem name="Sales Management/Sales Order/My Sales Order/Quotations" id="menu_action_order_tree10" action="action_order_tree10"/>
+	<menuitem
+		name="Sales Management/Sales order/My sales order/Quotations"
+		sequence="1"
+		id="menu_action_order_tree10" action="action_order_tree10"/>
 
 
 	<record model="ir.ui.view" id="view_order_line_graph">
@@ -296,7 +322,7 @@
 		<field name="model">sale.order.line</field>
 		<field name="type">graph</field>
 		<field name="arch" type="xml">
-			<graph string="Sales Order Lines">
+			<graph string="Sales order lines">
 				<field name="product_id"/>
 				<field name="price_unit" operator="+"/>
 			</graph>
@@ -309,7 +335,7 @@
 		<field name="model">sale.order.line</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Sales Order Lines">
+			<tree string="Sales order lines">
 				<field name="order_id"/>
 				<field name="name" colspan="4"/>
 				<field name="product_id"/>
@@ -327,7 +353,7 @@
 		<field name="model">sale.order.line</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Sales Order Lines">
+			<form string="Sales order lines">
 				<notebook>
 					<page string="Order Lines">
 						<separator string="Automatic Declaration" colspan="4"/>
@@ -372,7 +398,7 @@
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_order_line_form2"/>
 	</record>
-	<menuitem name="Sales Management/Sales Order Lines" id="menu_action_order_line_tree1" action="action_order_line_tree1"/>
+	<menuitem name="Sales Management/Sales order lines" id="menu_action_order_line_tree1" action="action_order_line_tree1"/>
 
 	<record model="ir.actions.act_window" id="action_order_line_tree2">
 		<field name="name">Uninvoiced lines</field>
@@ -382,7 +408,7 @@
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('invoiced','&lt;&gt;', 1)]</field>
 	</record>
-	<menuitem name="Sales Management/Sales Order Lines/Uninvoiced lines" id="menu_action_order_line_tree2" action="action_order_line_tree2"/>
+	<menuitem name="Sales Management/Sales order lines/Uninvoiced lines" id="menu_action_order_line_tree2" action="action_order_line_tree2"/>
 
 	<record model="ir.actions.act_window" id="action_order_line_tree3">
 		<field name="name">Uninvoiced lines done</field>
@@ -392,7 +418,7 @@
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('invoiced','&lt;&gt;', 1),('state','=','done')]</field>
 	</record>
-	<menuitem name="Sales Management/Sales Order Lines/Uninvoiced lines/Uninvoiced lines done" id="menu_action_order_line_tree3" action="action_order_line_tree3"/>
+	<menuitem name="Sales Management/Sales order lines/Uninvoiced lines/Uninvoiced lines done" id="menu_action_order_line_tree3" action="action_order_line_tree3"/>
 
 	<act_window name="Sales"
 		domain="[('partner_id', '=', active_id)]"
