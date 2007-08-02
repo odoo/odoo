@@ -1471,7 +1471,7 @@
 		id="act_account_bank_statement_account_move_unreconciled"/>
 
 
-	<act_window name="Unreconciled account entries"
+	<act_window name="Receivables &amp; Payables"
 		domain="[('partner_id', '=', active_id), ('account_id.type', 'in', ['receivable', 'payable']), ('reconcile_id','=',False)]"
 		res_model="account.move.line"
 		src_model="res.partner"
