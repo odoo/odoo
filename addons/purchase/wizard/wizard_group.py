@@ -137,7 +137,7 @@ def _mergeOrders(self, cr, uid, data, context):
 
 	return {
 		'domain': "[('id','in', ["+','.join(map(str,allorders))+"])]",
-		'name': 'Purchase Orders',
+		'name': 'Purchase orders',
 		'view_type': 'form',
 		'view_mode': 'tree,form',
 		'res_model': 'purchase.order',
