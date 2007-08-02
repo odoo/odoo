@@ -155,13 +155,14 @@ class rml_parse(object):
 	def _eval(self, expr):
 		try:
 			res = eval(expr, self.localcontext)
-			if res is False or res is None:
+			if not res:
 				res = ''
+			print expr, res
 		except Exception,e:
 			import traceback, sys
 			tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
 			netsvc.Logger().notifyChannel('report', netsvc.LOG_ERROR, 'report %s:\n%s\n%s\nexpr: %s' % (self.name, tb_s, str(e), expr))
-			res = 'Error'
+			res = ''
 		return res
 
 	def _find_parent(self, node, parents):
