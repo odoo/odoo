@@ -7,6 +7,7 @@
 		"project",
 		"report_timesheet",
 		"board",
+		"report_analytic_planning",
 		"report_analytic_line",
 		"report_task",
 		"hr_timesheet_sheet"

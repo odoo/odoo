@@ -3,17 +3,14 @@
 	"version" : "1.0",
 	"author" : "Tiny",
 	"website" : "http://tinyerp.com",
-	"depends" : ["account", "hr_timesheet_invoice","project"],
+	"depends" : ["account", "hr_timesheet_invoice"],
 	"category" : "Generic Modules/Accounting",
 	"description": "A report on analytic lines, costs by products, months and accounts.",
 	"init_xml" : [],
 	"demo_xml" : [
-		"report_account_analytic.planning.csv"
 	],
 	"update_xml" : [
 		"report_analytic_line_view.xml",
-		"report_analytic_planning_view.xml",
-		"report_analytic_planning_report.xml"
 	],
 	"active": False,
 	"installable": True
