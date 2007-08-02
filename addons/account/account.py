@@ -272,15 +272,18 @@ class account_account(osv.osv):
 			context = {}
 		args = args[:]
 		ids = []
-		if name and str(name).startswith('partner:'):
-			part_id = int(name.split(':')[1])
-			part = self.pool.get('res.partner').browse(cr, user, part_id, context)
-			args += [('id','in', (part.property_account_payable[0],part.property_account_receivable[0]))]
-			name = False
-		if name and str(name).startswith('type:'):
-			type = name.split(':')[1]
-			args += [('type','=', type)]
-			name = False
+		try:
+			if name and str(name).startswith('partner:'):
+				part_id = int(name.split(':')[1])
+				part = self.pool.get('res.partner').browse(cr, user, part_id, context)
+				args += [('id','in', (part.property_account_payable[0],part.property_account_receivable[0]))]
+				name = False
+			if name and str(name).startswith('type:'):
+				type = name.split(':')[1]
+				args += [('type','=', type)]
+				name = False
+		except:
+			pass
 		if name:
 			ids = self.search(cr, user, [('code','=like',name+"%")]+ args, limit=limit)
 			if not ids:

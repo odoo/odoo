@@ -47,13 +47,13 @@
 		<field name="view_mode">tree</field>
 		<field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
 	</record>
-	<menuitem name="Purchase Management/Reporting/This Month/Purchases by Products" action="action_order_product_tree" id="menu_report_order_product"/>
+	<menuitem name="Purchase Management/Reporting/This month/Purchases by products" action="action_order_product_tree" id="menu_report_order_product"/>
 	<record model="ir.actions.act_window" id="action_order_product_tree_all">
 		<field name="res_model">report.purchase.order.product</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree</field>
 	</record>
-	<menuitem name="Purchase Management/Reporting/All Months/Purchases by Products" action="action_order_product_tree_all" id="menu_report_order_product_all"/>
+	<menuitem name="Purchase Management/Reporting/All months/Purchases by products" action="action_order_product_tree_all" id="menu_report_order_product_all"/>
 
 	#
 	# Purchases by category by month
@@ -100,13 +100,13 @@
 		<field name="view_mode">tree</field>
 		<field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
 	</record>
-	<menuitem name="Purchase Management/Reporting/This Month/Purchases by Category of Products" action="action_order_category_tree" id="menu_report_order_category"/>
+	<menuitem name="Purchase Management/Reporting/This month/Purchases by category of products" action="action_order_category_tree" id="menu_report_order_category"/>
 	<record model="ir.actions.act_window" id="action_order_category_tree_all">
 		<field name="res_model">report.purchase.order.category</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree</field>
 	</record>
-	<menuitem name="Purchase Management/Reporting/All Months/Purchases by Category of Products" action="action_order_category_tree_all" id="menu_report_order_category_all"/>
+	<menuitem name="Purchase Management/Reporting/All months/Purchases by category of products" action="action_order_category_tree_all" id="menu_report_order_category_all"/>
 
 	<act_window name="Monthly purchases"
 		domain="[('product_id', '=', active_id)]"

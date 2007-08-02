@@ -88,7 +88,7 @@
 		<field name="view_mode">tree,form</field>
 	</record>
 	<menuitem
-		name="Purchase Management/Configuration/purchases Journals"
+		name="Purchase Management/Configuration/Purchases journals"
 		id="menu_definition_journal"
 		action="action_definition_journal"/>
 
@@ -100,31 +100,31 @@
 		<field name="domain">[]</field>
 	</record>
 	<menuitem
-		name="Purchase Management/Purchases by Journal"
+		name="Purchase Management/Purchases by journal"
 		id="menu_definition_journal_purchases"
 		action="action_definition_journal_tree"/>
 
 	<record model="ir.actions.act_window" id="action_definition_journal_tree_my">
-		<field name="name">My Opened Journals</field>
+		<field name="name">My open journals</field>
 		<field name="res_model">purchase_journal.purchase.journal</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('user_id','=',uid),('state','=','open')]</field>
 	</record>
 	<menuitem
-		name="Purchase Management/Purchases by Journal/"
+		name="Purchase Management/Purchases by journal/"
 		id="menu_definition_journal_purchases_my_open"
 		action="action_definition_journal_tree_my"/>
 
 	<record model="ir.actions.act_window" id="action_definition_journal_tree_all">
-		<field name="name">Opened Journals</field>
+		<field name="name">Open journals</field>
 		<field name="res_model">purchase_journal.purchase.journal</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','open')]</field>
 	</record>
 	<menuitem
-		name="Purchase Management/Purchases by Journal/All Opened Journals"
+		name="Purchase Management/Purchases by journal/All open journals"
 		id="menu_definition_journal_purchases_all_open"
 		action="action_definition_journal_tree_all"/>
 
@@ -194,7 +194,7 @@
 		<field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
 	</record>
 	<menuitem
-		name="Purchase Management/Reporting/This Month/Purchases by journal"
+		name="Purchase Management/Reporting/This month/Purchases by journal"
 		action="action_purchase_purchase_stats_open_menu_month"
 		id="menu_purchase_purchase_stats_open_menu"/>
 
@@ -205,7 +205,7 @@
 		<field name="view_mode">tree,form</field>
 	</record>
 	<menuitem
-		name="Purchase Management/Reporting/All Months/Purchases by journal"
+		name="Purchase Management/Reporting/All months/Purchases by journal"
 		action="action_purchase_purchase_stats_open_menu_all"
 		id="menu_purchase_purchase_stats_open_all"/>
 

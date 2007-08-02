@@ -4,13 +4,13 @@
 		<menuitem name="Financial Management" icon="terp-account"/>
 
 		<wizard
-			string="Refund Invoice"
+			string="Refund invoice"
 			model="account.invoice"
 			name="account.invoice.refund"
 			id="wizard_invoice_refund"/>
 
 		<wizard
-			string="Pay Invoice"
+			string="Pay invoice"
 			model="account.invoice"
 			name="account.invoice.pay"
 			id="wizard_invoice_pay"/>
@@ -24,7 +24,7 @@
 			
 		<!-- close year, period, journal -->
 		<wizard
-			string="Close Fiscal Year"
+			string="Close a fiscal year"
 			model="account.fiscalyear"
 			name="account.fiscalyear.close"
 			menu="False"
@@ -43,12 +43,12 @@
 
 		<!-- automatic reconcile -->
 		<wizard
-			string="Automatic Reconciliation"
+			string="Automatic reconciliation"
 			model="account.account"
 			name="account.automatic.reconcile"
 			menu="False"
 			id="wizard_automatic_reconcile"/>
-		<menuitem name="Financial Management/Periodical Processing/Reconciliation/Automatic reconciliation"
+		<menuitem name="Financial Management/Periodical processing/Reconciliation/Automatic reconciliation"
 			action="wizard_automatic_reconcile"
 			type="wizard"
 			id="menu_automatic_reconcile"/>
@@ -68,13 +68,13 @@
 
 
 		<wizard
-			string="Reconcile Entries"
+			string="Reconcile entries"
 			model="account.move.line"
 			name="account.move.line.reconcile.select"
 			menu="False"
 			id="wizard_reconcile_select"/>
 		<menuitem
-			name="Financial Management/Periodical Processing/Reconciliation/Manual reconciliation"
+			name="Financial Management/Periodical processing/Reconciliation/Manual reconciliation"
 			action="wizard_reconcile_select"
 			type="wizard"
 			id="menu_reconcile_select"/>
@@ -87,26 +87,26 @@
 			id="wizard_unreconcile"/>
 
 		<wizard
-			string="Unreconcile Entries"
+			string="Unreconcile entries"
 			model="account.move.line"
 			name="account.move.line.unreconcile.select"
 			menu="False"
 			id="wizard_unreconcile_select"/>
 		<menuitem
-			name="Financial Management/Periodical Processing/Reconciliation/Manual unreconciliation"
+			name="Financial Management/Periodical processing/Reconciliation/Manual unreconciliation"
 			action="wizard_unreconcile_select"
 			type="wizard"
 			id="menu_unreconcile_select"/>
 
 		<!-- subscriptions -->
 		<wizard
-			string="Generate Subscription Entries"
+			string="Generate subscription entries"
 			model="account.subscription"
 			name="account.subscription.generate"
 			menu="False"
 			id="wizard_generate_subscription"/>
 		<menuitem
-			name="Financial Management/Periodical Processing/Subscription entries"
+			name="Financial Management/Periodical processing/Subscription entries"
 			action="wizard_generate_subscription"
 			type="wizard"
 			id="menu_generate_subscription"/>
@@ -156,13 +156,13 @@
 			keyword="client_print_multi"
 			id="wizard_budget_report"/>
 		<wizard
-			string="Account Balance"
+			string="Account balance"
 			model="account.account"
 			name="account.account.balance.report"
 			keyword="client_print_multi"
 			id="wizard_balance_report"/>
 		<wizard 
-			string="General Ledger"
+			string="General ledger"
 			model="account.account"
 			name="account.general.ledger.report"
 			keyword="client_print_multi"

@@ -49,7 +49,7 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_account_fiscalyear_form">
-		<field name="name">Fiscal Years</field>
+		<field name="name">Fiscal years</field>
 		<field name="res_model">account.fiscalyear</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
@@ -139,7 +139,7 @@
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	<menuitem name="Financial Management/Configuration/General Accounts/Accounts Definition" id="menu_action_account_form" action="action_account_form"/>
+	<menuitem name="Financial Management/Configuration/General accounts/Accounts definition" id="menu_action_account_form" action="action_account_form"/>
 
 	<record model="ir.ui.view" id="view_account_tree">
 		<field name="name">account.account.tree</field>
@@ -158,13 +158,13 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_account_tree">
-		<field name="name">Account Charts</field>
+		<field name="name">Account charts</field>
 		<field name="res_model">account.account</field>
 		<field name="view_type">tree</field>
 		<field name="view_id" ref="view_account_tree"/>
 		<field name="domain">[('code','=','0')]</field>
 	</record>
-	<menuitem name="Financial Management/Configuration/General Accounts/" id="menu_action_account_tree" action="action_account_tree"/>
+	<menuitem name="Financial Management/Configuration/General accounts/" id="menu_action_account_tree" action="action_account_tree"/>
 
 	<record model="ir.ui.view" id="view_account_list">
 		<field name="name">account.account.list</field>
@@ -281,12 +281,12 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_account_journal_form">
-		<field name="name">Account Journal</field>
+		<field name="name">Account journal</field>
 		<field name="res_model">account.journal</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	<menuitem name="Financial Management/Configuration/Journal/Journal Definition" id="menu_action_account_journal_form" action="action_account_journal_form"/>
+	<menuitem name="Financial Management/Configuration/Journal/Journal definition" id="menu_action_account_journal_form" action="action_account_journal_form"/>
 
 	<record model="ir.ui.view" id="view_bank_statement_tree">
 		<field name="name">account.bank.statement.tree</field>
@@ -436,12 +436,12 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_account_type_form">
-		<field name="name">Account Types</field>
+		<field name="name">Account types</field>
 		<field name="res_model">account.account.type</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	<menuitem name="Financial Management/Configuration/General Accounts/" id="menu_action_account_type_form" action="action_account_type_form"/>
+	<menuitem name="Financial Management/Configuration/General accounts/" id="menu_action_account_type_form" action="action_account_type_form"/>
 	<!--
 	Entries
 	-->
@@ -523,14 +523,14 @@
 		<field name="view_id" ref="view_tax_code_tree"/>
 	</record>
 	<record model="ir.actions.act_window" id="action_tax_code_tree">
-		<field name="name">Tax Codes Structure</field>
+		<field name="name">Tax codes structure</field>
 		<field name="res_model">account.tax.code</field>
 		<field name="domain">[('parent_id','=',False)]</field>
 		<field name="view_type">tree</field>
 		<field name="view_id" ref="view_tax_code_tree"/>
 	</record>
 	<menuitem name="Financial Management/Configuration/Taxes/" id="menu_action_tax_code_list" action="action_tax_code_list" sequence="12"/>
-	<menuitem name="Financial Management/Periodical Processing/Taxes/" id="menu_action_tax_code_tree" action="action_tax_code_tree" sequence="12"/>
+	<menuitem name="Financial Management/Periodical processing/Taxes/" id="menu_action_tax_code_tree" action="action_tax_code_tree" sequence="12"/>
 
 
 	<!--
@@ -598,7 +598,7 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_tax_tree">
-		<field name="name">Taxes Structure</field>
+		<field name="name">Taxes structure</field>
 		<field name="res_model">account.tax</field>
 		<field name="view_type">tree</field>
 		<field name="domain">[('parent_id','=',False)]</field>
@@ -891,10 +891,10 @@
 
 	<menuitem name="Financial Management/Charts" sequence="7"/>
 	<wizard string="Accounts Charts" menu="False" model="account.account" name="account.chart" id="wizard_account_chart"/>
-	<menuitem name="Financial Management/Charts/Accounts Charts" id="menu_action_account_tree2" action="wizard_account_chart" type="wizard"/>
-	<menuitem name="Financial Management/Charts/Accounts Charts/Fast Account Chart" id="menu_action_account_tree3" action="action_account_tree2"/>
+	<menuitem name="Financial Management/Charts/Accounts charts" id="menu_action_account_tree2" action="wizard_account_chart" type="wizard"/>
+	<menuitem name="Financial Management/Charts/Accounts charts/Fast account chart" id="menu_action_account_tree3" action="action_account_tree2"/>
 
-	<menuitem name="Financial Management/Periodical Processing" sequence="3"/>
+	<menuitem name="Financial Management/Periodical processing" sequence="3"/>
 
 
 	<record model="ir.ui.view" id="view_bank_statement_reconcile_form">
@@ -957,7 +957,7 @@
 		<field name="view_id" ref="view_bank_statement_reconcile_form"/>
 	</record>
 	<menuitem 
-		name="Financial Management/Periodical Processing/Bank reconciliation/Create statement importing entries"
+		name="Financial Management/Periodical processing/Bank reconciliation/Create statement importing entries"
 		id="menu_action_account_bank_reconcile_tree" 
 		action="action_bank_statement_reconciliation_form" 
 		/>
@@ -968,7 +968,7 @@
 		menu="False"
 		id="action_account_bank_reconcile_tree" />
 	<menuitem
-		name="Financial Management/Periodical Processing/Bank reconciliation/Check in bank journal"
+		name="Financial Management/Periodical processing/Bank reconciliation/Check in bank journal"
 		id="menu_action_account_bank_reconcile_check_tree"
 		action="action_account_bank_reconcile_tree"
 		type="wizard"
@@ -1170,7 +1170,7 @@
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	<menuitem name="Financial Management/Configuration/Models/Models Definition" id="menu_action_model_form" action="action_model_form"/>
+	<menuitem name="Financial Management/Configuration/Models/Models definition" id="menu_action_model_form" action="action_model_form"/>
 
 
 <!--
@@ -1231,7 +1231,7 @@
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	<menuitem name="Financial Management/Configuration/Payment Terms/Payment Terms" id="menu_action_payment_term_form" action="action_payment_term_form"/>
+	<menuitem name="Financial Management/Configuration/Payment terms/Payment terms" id="menu_action_payment_term_form" action="action_payment_term_form"/>
 
 <!--
 	# Account Subscriptions
@@ -1406,14 +1406,14 @@
 	<menuitem name="Administration/Configuration/Account" sequence="2"/>
 
 	<record model="ir.actions.act_window" id="open_module_tree_accounting">
-		<field name="name">Account Charts</field>
+		<field name="name">Account charts</field>
 		<field name="res_model">ir.module.module</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('category_id','=','Account charts')]</field>
 	</record>
 
-	<menuitem name="Administration/Configuration/Account/Choose Account charts" action="open_module_tree_accounting" sequence="1" id="menu_accounting_modules"/>
+	<menuitem name="Administration/Configuration/Account/Choose an account charts" action="open_module_tree_accounting" sequence="1" id="menu_accounting_modules"/>
 
 	<record model="ir.actions.act_window" id="open_module_tree_tva">
 		<field name="name">VAT mode</field>
@@ -1426,31 +1426,31 @@
 
 
 	<record model="ir.actions.wizard" id="account_wizard_upgrade">
-		<field name="name">Set Account charts</field>
+		<field name="name">Set account charts</field>
 		<field name="wiz_name">module.upgrade</field>
 	</record>
-	<menuitem name="Administration/Configuration/Account/Apply Account charts and VAT mode" action="account_wizard_upgrade" sequence="3" type="wizard" id="menu_install_module"/>
+	<menuitem name="Administration/Configuration/Account/Apply account charts and VAT mode" action="account_wizard_upgrade" sequence="3" type="wizard" id="menu_install_module"/>
 
 	<record model="ir.actions.act_window" id="open_module_plan_ctbl">
 		<field name="res_model">account.account</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	<menuitem name="Administration/Configuration/Account/Modify Account charts" action="open_module_plan_ctbl" sequence="4" id="menu_plan_ctbl"/>
+	<menuitem name="Administration/Configuration/Account/Modify the chart of accounts" action="open_module_plan_ctbl" sequence="4" id="menu_plan_ctbl"/>
 
 	<record model="ir.actions.act_window" id="open_module_fiscal">
 		<field name="res_model">account.fiscalyear</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	<menuitem name="Administration/Configuration/Account/Set Fiscal year" action="open_module_fiscal" sequence="5" id="menu_fiscal_def"/>
+	<menuitem name="Administration/Configuration/Account/Set fiscal year" action="open_module_fiscal" sequence="5" id="menu_fiscal_def"/>
 
 	<record model="ir.actions.act_window" id="open_module_journal">
 		<field name="res_model">account.journal</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	<menuitem name="Administration/Configuration/Account/Add Account journal" action="open_module_journal" sequence="6" id="menu_journal_def"/>
+	<menuitem name="Administration/Configuration/Account/Add account journal" action="open_module_journal" sequence="6" id="menu_journal_def"/>
 
 	<act_window name="Bank statements"
 		domain="[('journal_id', '=', active_id)]"

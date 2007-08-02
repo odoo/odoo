@@ -76,21 +76,21 @@
 			<field name="view_type">form</field>
 			<field name="view_id" ref="view_account_analytic_account_tree"/>
 		</record>
-		<menuitem name="Financial Management/Configuration/Analytic Accounts/Analytic Accounts" id="account_analytic_def_account"
+		<menuitem name="Financial Management/Configuration/Analytic accounts/Analytic accounts" id="account_analytic_def_account"
 		   	action="action_account_analytic_account_form"/>
 
 		<record model="ir.actions.act_window" id="action_account_analytic_account_tree2">
-			<field name="name">Analytic Accounts Charts</field>
+			<field name="name">Analytic accounts charts</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">account.analytic.account</field>
 			<field name="domain">[('parent_id','=',False)]</field>
 			<field name="view_type">tree</field>
 			<field name="view_id" ref="view_account_analytic_account_tree"/>
 		</record>
-		<menuitem name="Financial Management/Configuration/Analytic Accounts/" id="account_analytic_def_chart" action="action_account_analytic_account_tree2"/>
+		<menuitem name="Financial Management/Configuration/Analytic accounts/" id="account_analytic_def_chart" action="action_account_analytic_account_tree2"/>
 		<menuitem name="Financial Management/Charts/" id="account_analytic_chart" action="action_account_analytic_account_tree2"/>
 
-		<menuitem name="Financial Management/Reporting/Analytic/Analytic Balance" id="account_analytic_chart_balance" action="action_account_analytic_account_tree2"/>
+		<menuitem name="Financial Management/Reporting/Analytic/analytic balance" id="account_analytic_chart_balance" action="action_account_analytic_account_tree2"/>
 
 		<record model="ir.ui.view" id="view_account_analytic_line_form">
 			<field name="name">account.analytic.line.form</field>
@@ -136,7 +136,7 @@
 			<field name="view_type">form</field>
 			<field name="view_id" ref="view_account_analytic_line_tree"/>
 		</record>
-		<menuitem name="Financial Management/Entries/Analytic account/Analytic Entries" id="account_entries_analytic_entries" action="action_account_analytic_line_form" />
+		<menuitem name="Financial Management/Entries/Analytic account/Analytic antries" id="account_entries_analytic_entries" action="action_account_analytic_line_form" />
 
 
 		<record model="ir.actions.act_window" id="action_account_tree1">
@@ -213,7 +213,7 @@
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	<menuitem name="Financial Management/Configuration/Journal/Analytic Journal Definition" id="account_def_analytic_journal" 
+	<menuitem name="Financial Management/Configuration/Journal/Analytic journal definition" id="account_def_analytic_journal" 
 		action="action_account_analytic_journal_form"/>
 
 	#
@@ -305,7 +305,7 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="report_account_analytic_journal_tree">
-		<field name="name">Account Cost and Revenue by journal</field>
+		<field name="name">Account cost and revenue by journal</field>
 		<field name="res_model">report.hr.timesheet.invoice.journal</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,graph</field>
@@ -315,13 +315,13 @@
 		action="report_account_analytic_journal_tree"/> 
 
 	<record model="ir.actions.act_window" id="report_account_analytic_journal_tree_month">
-		<field name="name">Account Cost and Revenue by journal (This Month)</field>
+		<field name="name">Account cost and revenue by journal (This Month)</field>
 		<field name="res_model">report.hr.timesheet.invoice.journal</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree</field>
 		<field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
 	</record>
-	<menuitem name="Financial Management/Reporting/Analytic/This Month/Account Cost and Revenue by journal"
+	<menuitem name="Financial Management/Reporting/Analytic/This Month/Account cost and revenue by journal"
 		id="report_account_analytic_journal_print_month"
 		action="report_account_analytic_journal_tree_month"/> 
 
