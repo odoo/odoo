@@ -27,7 +27,7 @@
 		<field name="view_mode">tree,form</field>
 	</record>
 	<menuitem name="Production/Configuration" groups="admin"/>
-	<menuitem name="Production/Configuration/Properties/Property Groups" id="menu_mrp_property_group_action" action="mrp_property_group_action"/>
+	<menuitem name="Production/Configuration/Properties/Property groups" id="menu_mrp_property_group_action" action="mrp_property_group_action"/>
 
 	<record model="ir.ui.view" id="mrp_property_tree_view">
 		<field name="name">mrp.property.tree</field>
@@ -337,7 +337,7 @@
 		<field name="model">mrp.production</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Production Orders" colors="red:date_planned&lt;current_date and state not in ('done','cancel')">
+			<tree string="Production orders" colors="red:date_planned&lt;current_date and state not in ('done','cancel')">
 				<field name="name"/>
 				<field name="priority"/>
 
@@ -356,7 +356,7 @@
 		<field name="model">mrp.production</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Production Orders">
+			<form string="Production orders">
 				<notebook>
 				<page string="General">
 					<field name="name" select="1" colspan="4"/>
@@ -406,34 +406,34 @@
 		<field name="view_type">form</field>
 		<field name="view_id" ref="mrp_production_form_view"/>
 	</record>
-	<menuitem name="Production/Production Orders" id="menu_mrp_production_action" action="mrp_production_action"/>
+	<menuitem name="Production/Production orders" id="menu_mrp_production_action" action="mrp_production_action"/>
 	<record model="ir.actions.act_window" id="mrp_production_action2">
-		<field name="name">Production Orders to start</field>
+		<field name="name">Production orders to start</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">mrp.production</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','ready')]</field>
 	</record>
-	<menuitem name="Production/Production Orders/Production Orders to start" action="mrp_production_action2" id="menu_production_orders_start"/>
+	<menuitem name="Production/Production orders/Production orders to start" action="mrp_production_action2" id="menu_production_orders_start"/>
 	<record model="ir.actions.act_window" id="mrp_production_action3">
-		<field name="name">Production Orders in progress</field>
+		<field name="name">Production orders in progress</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">mrp.production</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','in_production')]</field>
 	</record>
-	<menuitem name="Production/Production Orders/Production Orders in progress" id="menu_mrp_production_action3" action="mrp_production_action3"/>
+	<menuitem name="Production/Production orders/Production orders in progress" id="menu_mrp_production_action3" action="mrp_production_action3"/>
 	<record model="ir.actions.act_window" id="mrp_production_action4">
-		<field name="name">Production Orders waiting Goods</field>
+		<field name="name">Production orders waiting goods</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">mrp.production</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','confirmed')]</field>
 	</record>
-	<menuitem name="Production/Production Orders/Production Orders waiting Goods" action="mrp_production_action4" id="menu_production_orders_waiting4"/>
+	<menuitem name="Production/Production orders/Production orders waiting goods" action="mrp_production_action4" id="menu_production_orders_waiting4"/>
 
 	<record model="ir.ui.view" id="mrp_production_workcenter_form_view">
 		<field name="name">mrp.production.workcenter.line.form</field>
@@ -572,7 +572,7 @@
 					<button string="Confirm" name="button_confirm" states="draft"/>
 					<button string="Retry" name="button_restart" states="exception"/>
 					<button string="Cancel" name="button_cancel" states="exception"/>
-					<button string="Run Procurement" name="button_check" states="confirmed"/>
+					<button string="Run procurement" name="button_check" states="confirmed"/>
 					<button string="Cancel" name="button_cancel" states="draft,running"/>
 				</group>
 			</form>
@@ -584,44 +584,44 @@
 		<field name="view_type">form</field>
 		<field name="view_id" ref="mrp_procurement_form_view"/>
 	</record>
-	<menuitem name="Production/Procurement Orders" id="menu_mrp_procurement_action" action="mrp_procurement_action"/>
+	<menuitem name="Production/Procurement orders" id="menu_mrp_procurement_action" action="mrp_procurement_action"/>
 
 	<record model="ir.actions.act_window" id="mrp_procurement_action2">
-		<field name="name">Draft Procurements</field>
+		<field name="name">Draft procurements</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">mrp.procurement</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','draft')]</field>
 	</record>
-	<menuitem name="Production/Procurement Orders/Draft Procurements" id="menu_mrp_procurement_action2" action="mrp_procurement_action2"/>
+	<menuitem name="Production/Procurement orders/Draft procurements" id="menu_mrp_procurement_action2" action="mrp_procurement_action2"/>
 	<record model="ir.actions.act_window" id="mrp_procurement_action3">
-		<field name="name">Unschedulled Procurements</field>
+		<field name="name">Unschedulled procurements</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">mrp.procurement</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','confirmed')]</field>
 	</record>
-	<menuitem name="Production/Procurement Orders/Unschedulled Procurements" id="menu_mrp_procurement_action3" action="mrp_procurement_action3"/>
+	<menuitem name="Production/Procurement orders/Unschedulled procurements" id="menu_mrp_procurement_action3" action="mrp_procurement_action3"/>
 	<record model="ir.actions.act_window" id="mrp_procurement_action4">
-		<field name="name">Exceptions Procurements to fix</field>
+		<field name="name">Exceptions procurements to fix</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">mrp.procurement</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','exception'), ('message', '&lt;&gt;', '')]</field>
 	</record>
-	<menuitem name="Production/Procurement Orders/All exceptions/Exceptions to fix" id="menu_mrp_procurement_action4" action="mrp_procurement_action4"/>
+	<menuitem name="Production/Procurement orders/All exceptions/Exceptions to fix" id="menu_mrp_procurement_action4" action="mrp_procurement_action4"/>
 	<record model="ir.actions.act_window" id="mrp_procurement_action5">
-		<field name="name">Exceptions Procurements</field>
+		<field name="name">Exceptions procurements</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">mrp.procurement</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','exception')]</field>
 	</record>
-	<menuitem name="Production/Procurement Orders/All exceptions" id="menu_mrp_procurement_action5" action="mrp_procurement_action5"/>
+	<menuitem name="Production/Procurement orders/All exceptions" id="menu_mrp_procurement_action5" action="mrp_procurement_action5"/>
 
 	=============================
 	Order Point
