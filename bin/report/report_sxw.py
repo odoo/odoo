@@ -157,7 +157,6 @@ class rml_parse(object):
 			res = eval(expr, self.localcontext)
 			if not res:
 				res = ''
-			print expr, res
 		except Exception,e:
 			import traceback, sys
 			tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
