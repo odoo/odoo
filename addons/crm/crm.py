@@ -203,12 +203,18 @@ class crm_case_rule(osv.osv):
 		'act_mail_to_watchers': lambda *a: 0,
 	}
 	_order = 'sequence'
-	#
-	# Function called by the sceduler to proccess cases for date actions
-	# Only works on not done and canceled cases
-	#
+
 	def _check(self, cr, uid, ids=False, context={}):
-		cr.execute('select * from crm_case where (date_action_last<%s or date_action_last is null) and (date_action_next<=%s or date_action_next is null) and state not in (\'cancel\',\'done\')', (time.strftime("%Y-%m-%d %H:%M:%S"), time.strftime('%Y-%m-%d %H:%M:%S')) )
+		'''
+		Function called by the sceduler to proccess cases for date actions
+		Only works on not done and canceled cases
+		'''
+		cr.execute('select * from crm_case \
+				where (date_action_last<%s or date_action_last is null) \
+				and (date_action_next<=%s or date_action_next is null) \
+				and state not in (\'cancel\',\'done\')',
+				(time.strftime("%Y-%m-%d %H:%M:%S"),
+					time.strftime('%Y-%m-%d %H:%M:%S')))
 		ids2 = map(lambda x: x[0], cr.fetchall() or [])
 		case_obj = self.pool.get('crm.case')
 		cases = case_obj.browse(cr, uid, ids2, context)
@@ -264,6 +270,7 @@ class crm_case(osv.osv):
 		'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
 	}
 	_order = 'priority, date_deadline desc, id desc'
+
 	def _action(self, cr, uid, cases, state_to, scrit=None, context={}):
 		if not scrit:
 			scrit = []
@@ -424,6 +431,7 @@ class crm_case(osv.osv):
 	def create(self, cr, uid, *args, **argv):
 		res = super(crm_case, self).create(cr, uid, *args, **argv)
 		cases = self.browse(cr, uid, [res])
+		cases[0].state # to fill the browse record cache
 		self.__log(cr,uid, cases, 'draft')
 		self._action(cr,uid, cases, 'draft')
 		return res
@@ -507,6 +515,7 @@ class crm_case(osv.osv):
 
 	def case_close(self, cr, uid, ids, *args):
 		cases = self.browse(cr, uid, ids)
+		cases[0].state # to fill the browse record cache
 		self.__log(cr,uid, cases, 'done')
 		self.__history(cr, uid, cases, 'Close')
 		self.write(cr, uid, ids, {'state':'done', 'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
@@ -548,6 +557,7 @@ class crm_case(osv.osv):
 
 	def case_cancel(self, cr, uid, ids, *args):
 		cases = self.browse(cr, uid, ids)
+		cases[0].state # to fill the browse record cache
 		self.__log(cr, uid, cases, 'cancel')
 		self.__history(cr, uid, cases, 'Cancel')
 		self.write(cr, uid, ids, {'state':'cancel', 'active':True})
@@ -556,6 +566,7 @@ class crm_case(osv.osv):
 
 	def case_pending(self, cr, uid, ids, *args):
 		cases = self.browse(cr, uid, ids)
+		cases[0].state # to fill the browse record cache
 		self.__log(cr, uid, cases, 'pending')
 		self.__history(cr, uid, cases, 'Pending')
 		self.write(cr, uid, ids, {'state':'pending', 'active':True})
@@ -564,6 +575,7 @@ class crm_case(osv.osv):
 
 	def case_reset(self, cr, uid, ids, *args):
 		cases = self.browse(cr, uid, ids)
+		cases[0].state # to fill the browse record cache
 		self.__log(cr, uid, cases, 'draft')
 		self.__history(cr, uid, cases, 'Draft')
 		self.write(cr, uid, ids, {'state':'draft', 'active':True})
