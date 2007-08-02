@@ -2,7 +2,7 @@
 <terp>
 <data>
 	<menuitem name="Partners" sequence="0" icon="terp-partner" id="menu_base_partner"/>
-	<menuitem name="Partners/Configuration" groups="admin"/>
+	<menuitem name="Partners/Configuration" groups="admin" sequence="1"/>
 
 	<!--
 	================================
@@ -460,7 +460,7 @@
 		<field name="model">res.partner.category</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Partner Categories">
+			<form string="Partner categories">
 				<field name="name" select="1"/>
 				<field name="active" select="1" />
 				<field name="type_id" select="1" />
@@ -474,7 +474,7 @@
 		<field name="type">tree</field>
 		<field name="priority" eval="6"/>
 		<field name="arch" type="xml">
-			<tree string="Partner Categories">
+			<tree string="Partner categories">
 				<field name="complete_name"/>
 			</tree>
 		</field>
@@ -516,7 +516,8 @@
 
 
 	<menuitem
-		name="Partners/Partners/Partners by categories" 
+		name="Partners/Categories of partners" 
+		sequence="1"
 		action="action_partner_category" 
 		id="menu_partner_category_main"/>
 
@@ -547,7 +548,7 @@
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	<menuitem name="Partners/Configuration/Categories/Type of Categories" groups="admin" action="action_partner_category_type_form" id="menu_partner_category_type_form"/>
+	<menuitem name="Partners/Configuration/Categories/Type of categories" groups="admin" action="action_partner_category_type_form" id="menu_partner_category_type_form"/>
 
 	# Admin config
 
@@ -560,7 +561,7 @@
 		<field name="view_mode">tree,form</field>
 	</record>
 
-	<menuitem name="Administration/Configuration/Partner/Define Partners categories" action="open_module_type_partenaire" sequence="1" id="menu_type_partenaire"/>
+	<menuitem name="Administration/Configuration/Partner/Define partners categories" action="open_module_type_partenaire" sequence="1" id="menu_type_partenaire"/>
 
 	<record model="ir.actions.act_window" id="open_module_def_partenaire">
 		<field name="name">Partner</field>
