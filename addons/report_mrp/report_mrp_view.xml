@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<terp>
+<data>
+
+	<record model="ir.ui.view" id="view_workcenter_load_tree">
+		<field name="name">report.workcenter.load.tree</field>
+		<field name="model">report.workcenter.load</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Workcenters load">
+				<field name="name" select="1"/>
+				<field name="workcenter_id" select="1"/>
+				<field name="cycle"/>
+				<field name="hour"/>
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="view_workcenter_load_graph">
+		<field name="name">report.workcenter.load.graph</field>
+		<field name="model">report.workcenter.load</field>
+		<field name="type">graph</field>
+		<field name="arch" type="xml">
+			<graph string="Workcenter load" type="bar">
+				<field name="name"/>
+				<field name="cycle" operator="+"/>
+				<field name="hour" operator="+"/>
+				<field name="workcenter_id" group="True"/>
+			</graph>
+		</field>
+	</record>
+
+
+	<record model="ir.ui.view" id="view_workcenter_load_form">
+		<field name="name">report.workcenter.load.form</field>
+		<field name="model">report.workcenter.load</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Workcenter load" type="bar">
+				<field name="name" select="1"/>
+				<field name="workcenter_id" select="1"/>
+				<field name="cycle"/>
+				<field name="hour"/>
+			</form>
+		</field>
+	</record>
+	<record model="ir.actions.act_window" id="action_report_workcenter_load_tree">
+		<field name="res_model">report.workcenter.load</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">graph,tree</field>
+	</record>
+	<menuitem name="Production/Reporting/Workcenter loads" action="action_report_workcenter_load_tree" id="menu_report_workcenter_load"/>
+
+=============================
+stock.move compared to internal location src/dest
+==============================
+
+	<record model="ir.ui.view" id="view_report_in_out_picking_tree">
+		<field name="name">report.mrp.inout.tree</field>
+		<field name="model">report.mrp.inout</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Stock value variation">
+				<field name="date"/>
+				<field name="value"/>
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="view_report_in_out_picking_form">
+		<field name="name">report.mrp.inout.form</field>
+		<field name="model">report.mrp.inout</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Stock value variation" type="bar">
+				<field name="date" select="1"/>
+				<field name="value" select="1"/>
+			</form>
+		</field>
+	</record>
+
+
+	<record model="ir.ui.view" id="view_report_in_out_picking_graph">
+		<field name="name">report.mrp.inout.graph</field>
+		<field name="model">report.mrp.inout</field>
+		<field name="type">graph</field>
+		<field name="arch" type="xml">
+			<graph string="Stock value variation" type="bar">
+				<field name="date" />
+				<field name="value" operator="+"/>
+			</graph>
+		</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="action_report_in_out_picking_tree">
+		<field name="res_model">report.mrp.inout</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">graph,tree</field>
+	</record>
+	<menuitem name="Production/Reporting/Weekly stock value variation" action="action_report_in_out_picking_tree" id="menu_report_in_out_picking"/>
+
+
+
+</data>
+</terp>
+
+
+
