@@ -431,7 +431,7 @@ class res_partner_bank(osv.osv):
 	def name_get(self, cr, uid, ids, context={}):
 		if not len(ids):
 			return []
-		return [(r['id'], r[self._rec_name] + (r['owner_name'] and (' ' + r['owner_name']))) for r in self.read(cr, uid, ids, [self._rec_name, 'owner_name'], context, load='_classic_write')]
+		return [(r['id'], r[self._rec_name] + (r['owner_name'] and (' ' + r['owner_name']) or '')) for r in self.read(cr, uid, ids, [self._rec_name, 'owner_name'], context, load='_classic_write')]
 
 res_partner_bank()
 
