@@ -51,13 +51,14 @@ class report_rappel(report_sxw.rml_parse):
 		return adr_id and res_partner_address.read(self.cr, self.uid, [adr_id])[0] or False
 
 	def _lines_get(self, partner):
-		part = pooler.get_pool(self.cr.dbname).get('res.partner')
-		acc = partner.property_account_receivable[0]
 		moveline_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
-		movelines = moveline_obj.search(self.cr, self.uid, [('partner_id','=',partner.id), ('account_id','=',acc), ('state','=','valid'), ('date_maturity', '=', False)])
-		movelines += moveline_obj.search(self.cr, self.uid, [('partner_id','=',partner.id), ('account_id','=',acc), ('state','=','valid'), ('date_maturity', '<=', time.strftime('%Y-%m-%d'))])
+		movelines = moveline_obj.search(self.cr, self.uid,
+				[('partner_id', '=', partner.id),
+					('account_id.type', 'in', ['receivable', 'payable']),
+					('state', '<>', 'draft'), ('reconcile_id', '=', False)])
 		movelines = moveline_obj.read(self.cr, self.uid, movelines)
 		return movelines
 
-report_sxw.report_sxw('report.account.rappel', 'res.partner', 'addons/account/report/rappel.rml',parser=report_rappel)
+report_sxw.report_sxw('report.account.rappel', 'res.partner',
+		'addons/account/report/rappel.rml', parser=report_rappel)
 

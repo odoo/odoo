@@ -43,11 +43,12 @@ class account_followup_stat(osv.osv):
 	_auto = False
 	_columns = {
 		'name': fields.many2one('res.partner', 'Partner', readonly=True),
-		'account_type': fields.selection(_code_get, 'Account Type', required=True),
+		'account_type': fields.selection(_code_get, 'Account Type', readonly=True),
 		'date_move':fields.date('First move', readonly=True),
 		'date_move_last':fields.date('Last move', readonly=True),
 		'date_followup':fields.date('Latest followup', readonly=True),
-		'followup_id': fields.many2one('account_followup.followup.line', 'Follow Ups', required=True, ondelete="cascade"),
+		'followup_id': fields.many2one('account_followup.followup.line',
+			'Follow Ups', readonly=True, ondelete="cascade"),
 		'balance':fields.float('Balance', readonly=True),
 		'debit':fields.float('Debit', readonly=True),
 		'credit':fields.float('Credit', readonly=True),

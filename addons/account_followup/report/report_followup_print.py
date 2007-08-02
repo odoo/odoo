@@ -44,8 +44,9 @@ class report_rappel(report_sxw.rml_parse):
 		})
 
 	def _ids_to_objects(self, partners_ids):
-		toto = pooler.get_pool(self.cr.dbname).get('res.partner').browse(self.cr, self.uid, partners_ids)
-		return toto
+		pool = pooler.get_pool(self.cr.dbname)
+		partners = pool.get('res.partner').browse(self.cr, self.uid, partners_ids)
+		return partners
 
 	def _adr_get(self, partner, type):
 		res_partner = pooler.get_pool(self.cr.dbname).get('res.partner')
@@ -55,7 +56,13 @@ class report_rappel(report_sxw.rml_parse):
 
 	def _lines_get(self, partner):
 		moveline_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
-		movelines = moveline_obj.search(self.cr, self.uid, [('partner_id','=',partner.id), ('account_id','=','type:receivable'), ('reconcile_id','=',False),('state','<>','draft')])
+		movelines = moveline_obj.search(self.cr, self.uid,
+				[('partner_id', '=', partner.id),
+					('account_id.type', '=', 'receivable'),
+					('reconcile_id', '=', False), ('state', '<>', 'draft')])
 		movelines = moveline_obj.read(self.cr, self.uid, movelines)
 		return movelines
-report_sxw.report_sxw('report.account_followup.followup.print', 'res.partner', 'addons/account_followup/report/rappel.rml',parser=report_rappel)
+
+report_sxw.report_sxw('report.account_followup.followup.print',
+		'res.partner', 'addons/account_followup/report/rappel.rml',
+		parser=report_rappel)

@@ -1472,7 +1472,7 @@
 
 
 	<act_window name="Unreconciled account entries"
-		domain="[('partner_id', '=', active_id),('account_id','=','partner:'+str(active_id)),('reconcile_id','=',False)]"
+		domain="[('partner_id', '=', active_id), ('account_id.type', 'in', ['receivable', 'payable']), ('reconcile_id','=',False)]"
 		res_model="account.move.line"
 		src_model="res.partner"
 		id="act_account_partner_account_move_unreconciled"/>

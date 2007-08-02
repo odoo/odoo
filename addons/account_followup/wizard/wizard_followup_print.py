@@ -28,26 +28,28 @@
 import wizard
 import datetime
 import pooler
+import time
 
 _followup_wizard_all_form = """<?xml version="1.0"?>
 <form string="Select partners" colspan="4">
 	<notebook>
-	<page string="FollowUp selection">
-		<separator string="Select partners to remind" colspan="4"/>
-		<field name="partner_ids" colspan="4" nolabel="1"/>
-	</page><page string="Email confirmation">
-		<label string="Not yet implemented !" colspan="4"/>
-		<field name="email_conf" colspan="4"/>
-		<separator string="Email body" colspan="4"/>
-		<field name="email_body" colspan="4" nolabel="1"/>
-		<separator string="Legend" colspan="4"/>
-
-		<label string="%(partner_name)s: Partner name" colspan="2"/>
-		<label string="%(user_signature)s: Partner name" colspan="2"/>
-		<label string="%(followup_level)s: Followup level" colspan="2"/>
-		<label string="%(followup_amount)s: Followup level" colspan="2"/>
-		<label string="%(followup_details)s: Followup level" colspan="2"/>
-	</page>
+		<page string="FollowUp selection">
+			<separator string="Select partners to remind" colspan="4"/>
+			<field name="partner_ids" colspan="4" nolabel="1"/>
+		</page>
+		<page string="Email confirmation">
+			<label string="Not yet implemented !" colspan="4"/>
+			<field name="email_conf" colspan="4"/>
+			<separator string="Email body" colspan="4"/>
+			<field name="email_body" colspan="4" nolabel="1"/>
+			<separator string="Legend" colspan="4"/>
+	
+			<label string="%(partner_name)s: Partner name" colspan="2"/>
+			<label string="%(user_signature)s: Partner name" colspan="2"/>
+			<label string="%(followup_level)s: Followup level" colspan="2"/>
+			<label string="%(followup_amount)s: Followup level" colspan="2"/>
+			<label string="%(followup_details)s: Followup level" colspan="2"/>
+		</page>
 	</notebook>
 </form>"""
 
@@ -84,41 +86,36 @@ Thanks,
 
 
 class followup_all_print(wizard.interface):
+	def _update_partners(self, cr, uid, data, context):
+		to_update = data['form']['to_update']
+		for id in to_update.keys():
+			cr.execute(
+				"UPDATE account_move_line "\
+				"SET followup_line_id=%d, followup_date=%s "\
+				"WHERE id=%d",
+				(to_update[id],
+				time.strftime('%Y-%m-%d'), int(id),))
+		return {}
+
 	def _get_partners(self, cr, uid, data, context):
+		pool = pooler.get_pool(cr.dbname)
 		cr.execute(
-			"SELECT distinct l.partner_id "\
-			"FROM account_move_line AS l LEFT JOIN account_account AS a "\
+			"SELECT l.partner_id, l.followup_line_id, l.date, l.id "\
+			"FROM account_move_line AS l "\
+				"LEFT JOIN account_account AS a "\
 				"ON (l.account_id=a.id) "\
 			"WHERE (l.reconcile_id IS NULL) "\
 				"AND (a.type='receivable') "\
 				"AND (l.state<>'draft') "\
 				"AND (l.reconcile_id is NULL) "\
-				"AND (l.partner_id is NOT NULL) "\
-				"AND a.active ")
-		ids = map(lambda x: x[0], cr.fetchall())
-		return {'partner_ids': ids}
-
-	def _update_partners(self, cr, uid, data, context):
-		partner_ids = data['form']['partner_ids'][0][2]
-		if partner_ids:
-			cr.execute(
-				"SELECT l.partner_id, l.followup_line_id, l.date, l.id "\
-				"FROM account_move_line AS l LEFT JOIN account_account AS a "\
-					"ON (l.account_id=a.id) "\
-				"WHERE (l.reconcile_id IS NULL) "\
-					"AND (a.type='receivable') "\
-					"AND (l.state<>'draft') "\
-					"AND (l.reconcile_id is NULL) "\
-					"AND partner_id in ("+','.join(map(str,partner_ids))+") "\
-					"AND a.active "\
-				"ORDER BY l.date")
-			move_lines = cr.fetchall()
-		else:
-			move_lines = []
+				"AND partner_id is NOT NULL "\
+				"AND a.active "\
+			"ORDER BY l.date")
+		move_lines = cr.fetchall()
 
 		old = None
 		fups = {}
-		fup_ids = pooler.get_pool(cr.dbname).get('account_followup.followup').search(cr, uid, [])
+		fup_ids = pool.get('account_followup.followup').search(cr, uid, [])
 		if not fup_ids:
 			raise wizard.except_wizard('No Follow up Defined', 
 				'You must define at least one follow up for your company !')
@@ -140,6 +137,7 @@ class followup_all_print(wizard.interface):
 		fups[old] = (datetime.date(datetime.MAXYEAR, 12, 31), old)
 
 		partner_list = []
+		to_update = {}
 		for partner_id, followup_line_id, date, id in move_lines: 
 			if (partner_id in partner_list) or (not partner_id):
 				continue
@@ -147,13 +145,9 @@ class followup_all_print(wizard.interface):
 				continue
 			if date <= fups[followup_line_id][0].strftime('%Y-%m-%d'):
 				partner_list.append(partner_id)
-				cr.execute(
-					"UPDATE account_move_line "\
-					"SET followup_line_id=%d, followup_date=%s "\
-					"WHERE id=%d", 
-					(fups[followup_line_id][1], 
-					current_date.strftime('%Y-%m-%d'), id,))
-		return {'partner_id': partner_list}
+				to_update[str(id)] = fups[followup_line_id][1]
+		return {'partner_ids': partner_list, 'to_update': to_update}
+
 	states = {
 		'init' : {
 			'actions': [_get_partners],
@@ -165,7 +159,9 @@ class followup_all_print(wizard.interface):
 		},
 		'print': {
 			'actions': [_update_partners],
-			'result': {'type':'print', 'report':'account_followup.followup.print', 'state':'end'},
+			'result': {'type': 'print',
+				'report':'account_followup.followup.print',
+				'state':'end'},
 		},
 	}
 
