@@ -221,6 +221,7 @@ class xml_import(object):
 			value = 'ir.actions.act_window,'+str(id)
 			replace = rec.hasAttribute('replace') and rec.getAttribute('replace')
 			self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, xml_id, [src_model], value, replace=replace, isobject=True, xml_id=xml_id)
+		# TODO add remove ir.model.data
 		return False
 
 	def _tag_ir_set(self, cr, rec, data_node=None):
