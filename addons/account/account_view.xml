@@ -338,6 +338,7 @@
 							<field name="account_id" domain="[('journal_id','=',parent.journal_id), ('type', '&lt;&gt;', 'view')]"/>
 							<field name="amount"/>
 							<field name="reconcile_id" context="{'partner_id':partner_id,'amount':amount,'account_id':account_id}"/> 
+							<field name="ref"/>							
 							<separator string="Notes" colspan="4"/>																				 
 							<field name="note" nolabel="1" colspan="4"/>
 						</form>

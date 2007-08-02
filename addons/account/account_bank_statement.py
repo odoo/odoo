@@ -290,6 +290,7 @@ class account_bank_statement_line(osv.osv):
 
 		'reconcile_id': fields.many2one('account.bank.statement.reconcile', 'Reconcile', states={'confirm':[('readonly',True)]}),
 		'move_ids': fields.many2many('account.move', 'account_bank_statement_line_move_rel', 'move_id','statement_id', 'Moves'),
+		'ref': fields.char('Ref.', size=32),
 		'note': fields.text('Notes')
 	}
 	_defaults = {
