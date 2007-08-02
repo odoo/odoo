@@ -72,7 +72,7 @@ Dear %(partner_name)s,
 Please find in attachment our reminder for a total amount due
 of %(followup_amount).2f EUR.
 
-The details is here:
+The details are here:
 %(followup_details)s
 
 %(followup_level)s

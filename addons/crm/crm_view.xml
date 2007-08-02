@@ -361,13 +361,13 @@
 	</record>
 	<menuitem name="CRM &amp; SRM/Cases/All Cases/My cases" id="menu_crm_case_categ0-act_my" action="crm_case_categ0-act_my"/>
 	<record model="ir.actions.act_window" id="crm_case_categ0-act_my_open">
-		<field name="name">My opened cases</field>
+		<field name="name">My open cases</field>
 		<field name="res_model">crm.case</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('user_id','=',uid),('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]</field>
 	</record>
-	<menuitem name="CRM &amp; SRM/Cases/All Cases/My cases/Opened" id="menu_crm_case_categ0-act_my_open" action="crm_case_categ0-act_my_open"/>
+	<menuitem name="CRM &amp; SRM/Cases/All Cases/My cases/" id="menu_crm_case_categ0-act_my_open" action="crm_case_categ0-act_my_open"/>
 
 
 
@@ -514,7 +514,7 @@
 	<menuitem name="CRM &amp; SRM/Configuration/Segmentations/Segmentations rules" id="menu_crm_segmentation-act" action="crm_segmentation_tree-act"/>
 	<menuitem name="CRM &amp; SRM/Automatic Segmentations" id="menu_crm_segmentation_tree-act" action="crm_segmentation_tree-act"/>
 
-	<act_window name="Opened cases"
+	<act_window name="Open cases"
 		domain="[('section_id', '=', active_id),('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]"
 		res_model="crm.case"
 		src_model="crm.case.section"
@@ -522,7 +522,7 @@
 		view_mode="tree,form"
 		id="act_crm_case_section_crm_case_opened"/>
 
-	<act_window name="Opened cases"
+	<act_window name="Open cases"
 		domain="[('categ_id', '=', active_id),('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]"
 		res_model="crm.case"
 		src_model="crm.case.categ"
@@ -530,7 +530,7 @@
 		view_mode="tree,form"
 		id="act_crm_case_categ_crm_case_opened"/>
 
-	<act_window name="Opened cases"
+	<act_window name="Open cases"
 		domain="[('partner_id', '=', active_id),('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]"
 		res_model="crm.case"
 		src_model="res.partner"
@@ -538,7 +538,7 @@
 		view_mode="tree,form"
 		id="act_res_partner_2_crm_case_opened"/>
 
-	<act_window name="Opened cases"
+	<act_window name="Open cases"
 		domain="[('canal_id', '=', active_id),('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]"
 		res_model="crm.case"
 		src_model="res.partner.canal"
@@ -546,7 +546,7 @@
 		view_mode="tree,form"
 		id="act_res_partner_canal_2_crm_case_opened"/>
 
-	<act_window name="Opened cases"
+	<act_window name="Open cases"
 		domain="[('user_id', '=', active_id),('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]"
 		res_model="crm.case"
 		src_model="res.users"
