@@ -89,11 +89,12 @@ def _mergeOrders(self, cr, uid, data, context):
 				'pricelist_id': porder.pricelist_id.id,
 				'state': 'draft',
 				'order_line': {},
-				'notes': '%s' % (porder.notes,),
+				'notes': '%s' % (porder.notes or '',),
 			})
 		else:
 			#order_infos['name'] += ', %s' % porder.name
-			order_infos['notes'] += ('\n%s' % (porder.notes,))
+			if porder.notes:
+				order_infos['notes'] += ('\n%s' % (porder.notes,))
 
 		for order_line in porder.order_line:
 			line_key = make_key(order_line, ('name', 'date_planned', 'taxes_id', 'price_unit', 'notes', 'product_id', 'move_dest_id', 'account_analytic_id'))
