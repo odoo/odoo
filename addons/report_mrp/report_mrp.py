@@ -46,15 +46,17 @@ class report_workcenter_load(osv.osv):
 			create or replace view report_workcenter_load as (
 				SELECT
 					min(wl.id) as id,
-					to_char(create_date,'YYYY:IW') as name,
+					to_char(p.date_planned,'YYYY:IW') as name,
 					SUM(wl.hour) AS hour,
 					SUM(wl.cycle) AS cycle,
 					wl.workcenter_id as workcenter_id
 				FROM
 					mrp_production_workcenter_line wl
+					LEFT JOIN mrp_production p
+						ON p.id = wl.production_id
 				GROUP BY
 					wl.workcenter_id,
-					to_char(create_date,'YYYY:IW')
+					to_char(p.date_planned,'YYYY:IW')
 			)""")
 
 report_workcenter_load()
@@ -67,7 +69,7 @@ class report_mrp_inout(osv.osv):
 	_rec_name = 'date'
 	_columns = {
 		'date': fields.char('Week', size=64, required=True),
-		'value': fields.float('Stock value', required=True),
+		'value': fields.float('Stock value', required=True, digits=(16,2)),
 	}
 
 	def init(self, cr):
