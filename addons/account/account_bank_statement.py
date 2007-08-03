@@ -286,7 +286,7 @@ class account_bank_statement_line(osv.osv):
 		'type': fields.selection([('supplier','Supplier'),('customer','Customer'),('general','General')], 'Type', required=True),
 		'partner_id': fields.many2one('res.partner', 'Partner'),
 		'account_id': fields.many2one('account.account','Account', required=True),
-		'statement_id': fields.many2one('account.bank.statement', 'Statement', select=True),
+		'statement_id': fields.many2one('account.bank.statement', 'Statement', select=True, required=True),
 
 		'reconcile_id': fields.many2one('account.bank.statement.reconcile', 'Reconcile', states={'confirm':[('readonly',True)]}),
 		'move_ids': fields.many2many('account.move', 'account_bank_statement_line_move_rel', 'move_id','statement_id', 'Moves'),
