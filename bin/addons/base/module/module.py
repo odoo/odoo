@@ -153,10 +153,12 @@ class module_repository(osv.osv):
 			'- The first parenthesis must match the name of the module.\n'
 			'- The second parenthesis must match all the version number.\n'
 			'- The last parenthesis must match the extension of the module.'),
+		'active': fields.boolean('Active'),
 	}
 	_defaults = {
 		'sequence': lambda *a: 5,
 		'filter': lambda *a: 'href="([a-zA-Z0-9_]+)-('+release.version.rsplit('.', 1)[0]+'.(\\d+)((\\.\\d+)*)([a-z]?)((_(pre|p|beta|alpha|rc)\\d*)*)(-r(\\d+))?)(\.zip)"',
+		'active': lambda *a: 1,
 	}
 	_order = "sequence"
 module_repository()

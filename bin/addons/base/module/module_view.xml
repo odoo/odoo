@@ -167,7 +167,8 @@
 				<form string="Repository">
 					<field name="name" select="1"/>
 					<field name="sequence"/>
-					<field name="url" colspan="4" select="1" widget="url"/>
+					<field name="url" select="1" widget="url"/>
+					<field name="active" select="1"/>
 					<field name="filter" colspan="4"/>
 				</form>
 			</field>
@@ -179,6 +180,7 @@
 			<field name="arch" type="xml">
 				<tree string="Repository list">
 					<field name="sequence"/>
+					<field name="active"/>
 					<field name="name"/>
 					<field name="url"/>
 				</tree>
@@ -188,6 +190,7 @@
 			<field name="res_model">ir.module.repository</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
+			<field name="context">{'active_test': False}</field>
 		</record>
 		<menuitem
 			name="Administration/Modules management/Repositories"
