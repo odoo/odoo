@@ -154,8 +154,6 @@ def _split_test(cr, workitem, split_mode, ident, signal=None):
 			cr.execute('select count(*) from wkf_witm_trans where trans_id=%d and inst_id=%d', (transition['id'], workitem['inst_id']))
 			if not cr.fetchone()[0]:
 				transitions.append((transition['id'], workitem['inst_id']))
-	if not test:
-		pass
 	if test and len(transitions):
 		cr.executemany('insert into wkf_witm_trans (trans_id,inst_id) values (%d,%d)', transitions)
 		cr.execute('delete from wkf_workitem where id=%d', (workitem['id'],))
