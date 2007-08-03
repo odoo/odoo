@@ -1,9 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2004-2007 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
-# $Id: account.py 1005 2005-07-25 08:41:42Z nicoe $
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -30,20 +29,24 @@
 
 from osv import fields, osv
 
+
 class res_partner(osv.osv):
 	_name = 'res.partner'
 	_inherit = 'res.partner'
 	_columns = {
 		'property_product_pricelist': fields.property(
-		  'product.pricelist',
-		  type='many2one', 
-		  relation='product.pricelist', 
-		  string="Sale Pricelist", 
-		  method=True,
-		  view_load=True,
-		  group_name="Pricelists Properties",
-		  help="This pricelist will be used, instead of the default one, for sales to the current partner"),
+			'product.pricelist',
+			type='many2one', 
+			relation='product.pricelist', 
+			string="Sale Pricelist", 
+			method=True,
+			view_load=True,
+			group_name="Pricelists Properties",
+			help="This pricelist will be used, instead of the default one, \
+					for sales to the current partner"),
+		'sales': fields.one2many('sale.order', 'partner_id', 'Sales'),
 	}
+
 res_partner()
 
 
