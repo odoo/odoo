@@ -54,6 +54,8 @@ view_form_charts = """<?xml version="1.0"?>
 		<newline/>
 		<field name="charts" align="0.0"/>
 		<newline/>
+		<label string="There is many other charts on http://www.tinyerp.com/" colspan="2" align="0.0"/>
+		<newline/>
 		<label string="(If you don't select a chart of accounts, you'll need to set up one manually)." colspan="2" align="0.0"/>
 	</group>
 </form>"""
@@ -227,21 +229,38 @@ class wizard_base_setup(wizard.interface):
 		return {}
 	def _menu(self, cr, uid, data, context):
 		users_obj=pooler.get_pool(cr.dbname).get('res.users')
-		actions_obj=pooler.get_pool(cr.dbname).get('ir.actions.act_window')
-		
-		ids=actions_obj.search(cr, uid, [('name', '=', 'Menu')])
-		menu=actions_obj.browse(cr, uid, ids)[0]
+		action_obj=pooler.get_pool(cr.dbname).get('ir.actions.act_window')
 
+		ids=action_obj.search(cr, uid, [('name', '=', 'Menu')])
+		menu=action_obj.browse(cr, uid, ids)[0]
 		ids=users_obj.search(cr, uid, [('action_id', '=', 'Setup')])
 		users_obj.write(cr, uid, ids, {'action_id': menu.id})
+
+		user = users_obj.browse(cr, uid, uid)
+		action = user.action_id
+		if action.type == 'ir.actions.act_window':
+			action = action_obj.browse(cr, uid, action.id)
+			return {
+				'name': action.name,
+				'type': action.type,
+				'view_id': (action.view_id and\
+						(action.view_id.id, action.view_id.name)) or False,
+				'domain': action.domain,
+				'res_model': action.res_model,
+				'src_model': action.src_model,
+				'view_type': action.view_type,
+				'view_mode': action.view_mode,
+				'views': action.views,
+			}
 		return {
 			'name': 'Menu',
-			'type':'ir.actions.act_window',
-			'res_model':'ir.ui.menu',
-			'view_type':'tree',
-			'domain': "[('parent_id','=',False)]",
+			'type': 'ir.actions.act_window',
+			'res_model': 'ir.ui.menu',
+			'view_type': 'tree',
+			'domain': str([('parent_id', '=', False)]),
 			'view_id': (menu.view_id.id, menu.view_id.name),
 		}
+
 	def _next(self, cr, uid, data, context):
 		if not data['form']['profile'] or data['form']['profile'] <= 0:
 			return 'company'
