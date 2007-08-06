@@ -32,7 +32,7 @@ import tools
 
 view_form_end = """<?xml version="1.0"?>
 <form string="Language file loaded.">
-	<image name="gtk-info" size="64" colspan="2"/>
+	<image name="gtk-dialog-info" colspan="2"/>
 	<group colspan="2" col="4">
 		<separator string="Installation done" colspan="4"/>
 		<label align="0.0" string="The selected language has been successfully installed.\nYou must change the preferences of the user and open a new menu to view changes." colspan="4"/>
@@ -41,7 +41,7 @@ view_form_end = """<?xml version="1.0"?>
 
 view_form = """<?xml version="1.0"?>
 <form string="System Upgrade">
-	<image name="gtk-info" size="64" colspan="2"/>
+	<image name="gtk-dialog-info" colspan="2"/>
 	<group colspan="2" col="4">
 	<separator string="System Upgrade" colspan="4"/>
 		<label align="0.0" string="Choose a language to install:" colspan="4"/>
@@ -72,11 +72,20 @@ class wizard_lang_install(wizard.interface):
 	states = {
 		'init': {
 			'actions': [], 
-			'result': {'type':'form', 'arch':view_form, 'fields': fields_form, 'state':[('end','Cancel','gtk-cancel'),('start','Start installation','gtk-ok')]}
+			'result': {'type': 'form', 'arch': view_form, 'fields': fields_form,
+				'state': [
+					('end', 'Cancel', 'gtk-cancel'),
+					('start', 'Start installation', 'gtk-ok', True)
+				]
+			}
 		},
 		'start': {
 			'actions': [_lang_install],
-			'result': {'type':'form', 'arch':view_form_end, 'fields': {}, 'state':[('end','Ok','gtk-ok')]}
+			'result': {'type': 'form', 'arch': view_form_end, 'fields': {},
+				'state': [
+					('end', 'Ok', 'gtk-ok', True)
+				]
+			}
 		},
 	}
 wizard_lang_install('module.lang.install')

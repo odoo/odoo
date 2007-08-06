@@ -36,7 +36,7 @@ import pooler
 
 view_form_init="""<?xml version="1.0"?>
 <form string="Export language">
-	<image name="gtk-info" size="64" colspan="2"/>
+	<image name="gtk-dialog-info" colspan="2"/>
 	<group colspan="2" col="4">
 		<separator string="Export translation file" colspan="4"/>
 		<label align="0.0" string="Choose a language to export:" colspan="4"/>
@@ -46,7 +46,7 @@ view_form_init="""<?xml version="1.0"?>
 
 view_form_finish="""<?xml version="1.0"?>
 <form string="Export language">
-	<image name="gtk-info" size="64" colspan="2"/>
+	<image name="gtk-dialog-info" colspan="2"/>
 	<group colspan="2" col="4">
 		<separator string="Export done" colspan="4"/>
 		<field name="data" readonly="1" colspan="3"/>
@@ -80,12 +80,22 @@ class wizard_export_lang(wizard.interface):
 	}
 	states={
 		'init':{
-			'actions':[],
-			'result':{'type':'form', 'arch':view_form_init, 'fields': fields_form, 'state':[('end', 'Cancel', 'gtk-cancel'),('finish', 'Ok', 'gtk-ok')]}
+			'actions': [],
+			'result': {'type': 'form', 'arch': view_form_init, 'fields': fields_form,
+				'state': [
+					('end', 'Cancel', 'gtk-cancel'),
+					('finish', 'Ok', 'gtk-ok', True)
+				]
+			}
 		},
 		'finish':{
-			'actions':[_get_file],
-			'result':{'type':'form', 'arch':view_form_finish, 'fields': fields_form_finish, 'state':[('end', 'Close', 'gtk-cancel')]}
+			'actions': [_get_file],
+			'result': {'type': 'form', 'arch': view_form_finish, 
+				'fields': fields_form_finish,
+				'state': [
+					('end', 'Close', 'gtk-cancel', True)
+				]
+			}
 		},
 	}
 wizard_export_lang('module.lang.export')

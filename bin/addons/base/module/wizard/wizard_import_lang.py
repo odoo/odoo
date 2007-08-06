@@ -34,7 +34,7 @@ import pooler
 
 view_form="""<?xml version="1.0"?>
 <form string="Import language">
-	<image name="gtk-info" size="64" colspan="2"/>
+	<image name="gtk-dialog-info" colspan="2"/>
 	<group colspan="2" col="4">
 		<separator string="Import new language" colspan="4"/>
 		<field name="name"/>
@@ -58,8 +58,13 @@ class wizard_import_lang(wizard.interface):
 	}
 	states={
 		'init':{
-			'actions':[],
-			'result':{'type':'form', 'arch':view_form, 'fields':fields_form, 'state':[('end', 'Cancel', 'gtk-cancel'), ('finish', 'Ok', 'gtk-ok')]}
+			'actions': [],
+			'result': {'type': 'form', 'arch': view_form, 'fields': fields_form,
+				'state':[
+					('end', 'Cancel', 'gtk-cancel'),
+					('finish', 'Ok', 'gtk-ok', True)
+				]
+			}
 		},
 		'finish':{
 			'actions':[],

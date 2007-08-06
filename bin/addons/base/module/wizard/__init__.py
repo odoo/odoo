@@ -25,7 +25,6 @@
 #
 ##############################################################################
 
-import wizard_install_module
 import wizard_update_module
 import wizard_module_upgrade
 import wizard_module_lang_install

@@ -40,7 +40,7 @@ view_form_end = """<?xml version="1.0"?>
 
 view_form = """<?xml version="1.0"?>
 <form string="System Upgrade">
-	<image name="gtk-info" size="64" colspan="2"/>
+	<image name="gtk-dialog-info" colspan="2"/>
 	<group colspan="2" col="4">
 		<label align="0.0" string="Your system will be upgraded." colspan="4"/>
 		<label align="0.0" string="Note that this operation my take a few minutes." colspan="4"/>
@@ -81,11 +81,20 @@ class wizard_info_get(wizard.interface):
 	states = {
 		'init': {
 			'actions': [_get_install], 
-			'result': {'type':'form', 'arch':view_form, 'fields': view_field, 'state':[('end','Cancel','gtk-cancel'),('start','Start Upgrade','gtk-ok')]}
+			'result': {'type':'form', 'arch':view_form, 'fields': view_field,
+				'state':[
+					('end', 'Cancel', 'gtk-cancel'),
+					('start', 'Start Upgrade', 'gtk-ok', True)
+				]
+			}
 		},
 		'start': {
 			'actions': [_upgrade_module], 
-			'result': {'type':'form', 'arch':view_form_end, 'fields': {}, 'state':[('end','Close','gtk-close')]}
+			'result': {'type':'form', 'arch':view_form_end, 'fields': {},
+				'state':[
+					('end', 'Close', 'gtk-close', True)
+				]
+			}
 		},
 	}
 wizard_info_get('module.upgrade')

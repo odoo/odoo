@@ -78,14 +78,20 @@ class wizard_update_module(wizard.interface):
 	states = {
 		'init': {
 			'actions': [_get_repositories],
-			'result': {'type': 'form', 'arch': arch, 'fields': fields, 'state':
-				[('end', 'Cancel', 'gtk-cancel'),
-					('update', 'Check new modules', 'gtk-ok')]}
+			'result': {'type': 'form', 'arch': arch, 'fields': fields,
+				'state': [
+					('end', 'Cancel', 'gtk-cancel'),
+					('update', 'Check new modules', 'gtk-ok', True)
+				]
+			}
 		},
 		'update': {
 			'actions': [_update_module],
 			'result': {'type': 'form', 'arch': arch_module, 'fields': fields_module,
-				'state': [('open_window', 'Ok', 'gtk-ok')]}
+				'state': [
+					('open_window', 'Ok', 'gtk-ok', True)
+				]
+			}
 		},
 		'open_window': {
 			'actions': [],

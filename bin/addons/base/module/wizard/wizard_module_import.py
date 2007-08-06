@@ -93,10 +93,13 @@ class move_module_wizard(wizard.interface):
 		'init': {
 			'actions': [],
 			'result': {
-				'type':'form',
-				'arch':ask_form,
-				'fields':ask_fields,
-				'state':[('end','Cancel'),('import','Import module')]
+				'type': 'form',
+				'arch': ask_form,
+				'fields': ask_fields,
+				'state': [
+					('end', 'Cancel', 'gtk-cancel'),
+					('import', 'Import module', 'gtk-ok', True)
+				]
 			}
 		},
 		'import': {
