@@ -6367,8 +6367,13 @@
 #
 # Tax Code Configuration
 #
+	<record model="account.tax.code" id="vat_code_op_base">
+		<field name="name">I. Valeur des operations</field>
+	</record>
+
 	<record model="account.tax.code" id="vat_code_out">
 		<field name="name">II. Operations a la sortie</field>
+		<field name="parent_id" ref="vat_code_op_base"/>
 	</record>
 
 	<record model="account.tax.code" id="vat_code_a00">
@@ -6415,11 +6420,13 @@
 	<record model="account.tax.code" id="vat_code_a48">
 		<field name="name">Notes de credit aux operations grille 46</field>
 		<field name="code">48</field>
+		<field name="sign">-1</field>
 		<field name="parent_id" ref="vat_code_a4X"/>
 	</record>
 	<record model="account.tax.code" id="vat_code_a49">
 		<field name="name">Notes de credit aux operations du point II</field>
 		<field name="code">49</field>
+		<field name="sign">-1</field>
 		<field name="parent_id" ref="vat_code_a4X"/>
 	</record>
 
@@ -6493,9 +6500,10 @@
 		<field name="parent_id" ref="vat_code_tax_in"/>
 	</record>
 
-
 	<record model="account.tax.code" id="vat_code_in">
 		<field name="name">III. Operations a l'entree</field>
+		<field name="sign">-1</field>
+		<field name="parent_id" ref="vat_code_op_base"/>
 	</record>
 	<record model="account.tax.code" id="vat_code_a81">
 		<field name="code">81</field>
@@ -6512,15 +6520,24 @@
 		<field name="name">Biens d'investissement</field>
 		<field name="parent_id" ref="vat_code_in"/>
 	</record>
+
+	<record model="account.tax.code" id="vat_code_in_nc">
+		<field name="code"></field>
+		<field name="name">Notes de credits</field>
+		<field name="parent_id" ref="vat_code_in"/>
+	</record>
+
 	<record model="account.tax.code" id="vat_code_a84">
 		<field name="code">84</field>
+		<field name="sign">-1</field>
 		<field name="name">Notes de credits sur operations case 86</field>
-		<field name="parent_id" ref="vat_code_in"/>
+		<field name="parent_id" ref="vat_code_in_nc"/>
 	</record>
 	<record model="account.tax.code" id="vat_code_a85">
 		<field name="code">85</field>
+		<field name="sign">-1</field>
 		<field name="name">Notes de credits autres operations</field>
-		<field name="parent_id" ref="vat_code_in"/>
+		<field name="parent_id" ref="vat_code_in_nc"/>
 	</record>
 	<record model="account.tax.code" id="vat_code_a86">
 		<field name="code">86</field>
@@ -6580,7 +6597,7 @@
 			<field name="ref_base_code_id" ref="vat_code_a85"/>
 			<field name="ref_tax_code_id" ref="vat_code_a63"/>
 		</record>
-			
+	
 		<record model="account.tax" id="vat_0">
 			<field name="name">VAT 0%</field>
 			<field name="amount" eval="0.00"/>

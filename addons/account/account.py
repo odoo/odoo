@@ -824,14 +824,13 @@ class account_tax_code(osv.osv):
 					WHERE line.tax_code_id in ('+acc_set+') '+where+' \
 					GROUP BY line.tax_code_id')
 		res=dict(cr.fetchall())
-		for id in ids:
-			ids3 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
-			for idx in ids3:
-				if idx <> id:
-					res.setdefault(id, 0.0)
-					res[id] += res.get(idx, 0.0)
-		for id in ids:
-			res[id] = round(res.get(id,0.0), 2)
+		for record in self.browse(cr, uid, ids, context):
+			def _rec_get(record):
+				amount = res.get(record.id, 0.0)
+				for rec in record.child_ids:
+					amount += _rec_get(rec) * rec.sign
+				return amount
+			res[record.id] = round(_rec_get(record), 2)
 		return res
 
 	def _sum_period(self, cr, uid, ids, name, args, context):
@@ -857,6 +856,7 @@ class account_tax_code(osv.osv):
 		'child_ids': fields.one2many('account.tax.code', 'parent_id', 'Childs Codes'),
 		'line_ids': fields.one2many('account.move.line', 'tax_code_id', 'Lines'),
 		'company_id': fields.many2one('res.company', 'Company', required=True),
+		'sign': fields.float('Sign for parent', required=True),
 	}
 	def name_get(self, cr, uid, ids, context={}):
 		if not len(ids):
@@ -871,6 +871,7 @@ class account_tax_code(osv.osv):
 		return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
 	_defaults = {
 		'company_id': _default_company,
+		'sign': lambda *args: 1.0,
 	}
 	def _check_recursion(self, cr, uid, ids):
 		level = 100
@@ -952,8 +953,8 @@ class account_tax(osv.osv):
 		'active': lambda *a: 1,
 		'sequence': lambda *a: 1,
 		'tax_group': lambda *a: 'vat',
-		'ref_tax_sign': lambda *a: -1,
-		'ref_base_sign': lambda *a: -1,
+		'ref_tax_sign': lambda *a: 1,
+		'ref_base_sign': lambda *a: 1,
 		'tax_sign': lambda *a: 1,
 		'base_sign': lambda *a: 1,
 		'include_base_amount': lambda *a: False,
