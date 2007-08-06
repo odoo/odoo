@@ -167,7 +167,7 @@ def create_automatic_op(cr, uid, context=None):
 			wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_check', cr)
 
 
-def _procure_orderpoint_confirm(self, db_name, uid, automatic=False,\
+def _procure_orderpoint_confirm(self, cr, uid, automatic=False,\
 		use_new_cursor=False, context=None):
 	'''
 	use_new_cursor: False or the dbname
