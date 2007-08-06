@@ -31,7 +31,7 @@ import pooler
 _info_form = '''<?xml version="1.0"?>
 <form string="Unreconciliation">
 	<separator string="Unreconciliation transactions" colspan="4"/>
-	<image name="gtk-info" size="64" colspan="2"/>
+	<image name="gtk-dialog-info" colspan="2"/>
 	<label string="If you unreconciliate transactions, you must also verify all the actions that are linked to those transactions because they will not be disable" colspan="2"/>
 </form>'''
 
