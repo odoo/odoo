@@ -1295,16 +1295,21 @@
 		<field name="accuracy">4</field>
 	</record>
 	<record model="res.currency.rate" id="rateUSD">
-		<field name="rate">0.8400</field>
+		<field name="rate">1.3785</field>
 		<field name="currency_id" ref="USD"/>
 	</record>
 
 	<record model="res.currency" id="VEB">
 		<field name="name">Bs</field>
 		<field name="code">VEB</field>
-		<field name="rounding">0.01</field>
+		<field name="rounding">2.95</field>
 		<field name="accuracy">4</field>
 	</record>
+	<record model="res.currency.rate" id="rateVEB">
+		<field name="rate">1.0</field>
+		<field name="currency_id" ref="VEB"/>
+	</record>
+
 
 	<record model="res.currency" id="CAD">
 		<field name="name">CAD</field>
@@ -1312,12 +1317,21 @@
 		<field name="rounding">0.01</field>
 		<field name="accuracy">4</field>
 	</record>
+	<record model="res.currency.rate" id="rateCAD">
+		<field name="rate">1.451</field>
+		<field name="currency_id" ref="CAD"/>
+	</record>
+
 
 	<record model="res.currency" id="CHF">
 		<field name="name">CHF</field>
 		<field name="code">CHF</field>
 		<field name="rounding">0.01</field>
 		<field name="accuracy">4</field>
+	</record>
+	<record model="res.currency.rate" id="rateCHF">
+		<field name="rate">1.644</field>
+		<field name="currency_id" ref="CHF"/>
 	</record>
 
 	<record model="res.currency" id="BRL">
@@ -1326,6 +1340,10 @@
 		<field name="rounding">0.01</field>
 		<field name="accuracy">4</field>
 	</record>
+	<record model="res.currency.rate" id="rateBRL">
+		<field name="rate">2.588</field>
+		<field name="currency_id" ref="BRL"/>
+	</record>
 
 	<record model="res.currency" id="CNY">
 		<field name="name">CNY</field>
@@ -1333,6 +1351,11 @@
 		<field name="rounding">0.01</field>
 		<field name="accuracy">4</field>
 	</record>
+	<record model="res.currency.rate" id="rateCNY">
+		<field name="rate">10.4311</field>
+		<field name="currency_id" ref="CNY"/>
+	</record>
+
 
 	<record model="res.currency" id="COP">
 		<field name="name">COP</field>
@@ -1354,6 +1377,11 @@
 		<field name="rounding">0.01</field>
 		<field name="accuracy">4</field>
 	</record>
+	<record model="res.currency.rate" id="rateDKK">
+		<field name="rate">7.4416</field>
+		<field name="currency_id" ref="DKK"/>
+	</record>
+
 
 	<record model="res.currency" id="HUF">
 		<field name="name">Ft</field>
@@ -1375,6 +1403,11 @@
 		<field name="rounding">0.01</field>
 		<field name="accuracy">4</field>
 	</record>
+	<record model="res.currency.rate" id="rateLVL">
+		<field name="rate">0.71</field>
+		<field name="currency_id" ref="LVL"/>
+	</record>
+
 
 	<record model="res.currency" id="NOK">
 		<field name="name">kr</field>
@@ -1382,6 +1415,11 @@
 		<field name="rounding">0.01</field>
 		<field name="accuracy">4</field>
 	</record>
+	<record model="res.currency.rate" id="rateNOK">
+		<field name="rate">7.93</field>
+		<field name="currency_id" ref="NOK"/>
+	</record>
+
 
 	<record model="res.currency" id="PAB">
 		<field name="name">PAB</field>
@@ -1389,6 +1427,11 @@
 		<field name="rounding">0.01</field>
 		<field name="accuracy">4</field>
 	</record>
+	<record model="res.currency.rate" id="ratePAB">
+		<field name="rate">1.3813</field>
+		<field name="currency_id" ref="PAB"/>
+	</record>
+
 
 	<record model="res.currency" id="PLN">
 		<field name="name">z&#322;</field>
@@ -1410,6 +1453,11 @@
 		<field name="rounding">0.01</field>
 		<field name="accuracy">4</field>
 	</record>
+	<record model="res.currency.rate" id="rateGBP">
+		<field name="rate">0.675</field>
+		<field name="currency_id" ref="GBP"/>
+	</record>
+
 
 	<record model="res.company" id="main_company">
 		<field name="name">Tiny sprl</field>
