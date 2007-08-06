@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<terp>
+<data>
+	<record model="workflow" id="wkf_payment_order">
+		<field name="name">Payment Order Workflow</field>
+		<field name="osv">payment.order</field>
+		<field name="on_create">True</field>
+	</record>
+	<!--Activity -->
+	<record model="workflow.activity" id="act_draft">
+		<field name="name">draft</field>
+		<field name="wkf_id" ref="wkf_payment_order"/>
+		<field name="flow_start">True</field>
+		<field name="action">write({'state':'draft'})</field>
+		<field name="kind">function</field>
+	</record>
+	<record model="workflow.activity" id="act_open">
+		<field name="name">open</field>
+		<field name="wkf_id" ref="wkf_payment_order"/>
+		<field name="action">action_open()&#10;write({'state':'open'})</field>
+		<field name="kind">function</field>
+	</record>
+	<record model="workflow.activity" id="act_done">
+		<field name="name">done</field>
+		<field name="wkf_id" ref="wkf_payment_order"/>
+		<field name="flow_stop">True</field>
+		<field name="action">action_done()&#10;write({'state':'done'})</field>
+		<field name="kind">function</field>
+	</record>
+	<record model="workflow.activity" id="act_cancel">
+		<field name="name">cancel</field>
+		<field name="wkf_id" ref="wkf_payment_order"/>
+		<field name="action">write({'state':'cancel'})</field>
+		<field name="kind">function</field>
+		<field name="flow_stop">True</field>
+	</record>
+
+	<!-- Transition -->
+	<record model="workflow.transition" id="trans_draft_open">
+		<field name="act_from" ref="act_draft"/>
+		<field name="act_to" ref="act_open"/>
+		<field name="signal">open</field>
+	</record>
+
+	<record model="workflow.transition" id="trans_open_done">
+		<field name="act_from" ref="act_open"/>
+		<field name="act_to" ref="act_done"/>
+		<field name="signal">done</field>
+	</record>
+	<record model="workflow.transition" id="trans_draft_cancel">
+		<field name="act_from" ref="act_draft"/>
+		<field name="act_to" ref="act_cancel"/>
+		<field name="signal">cancel</field>
+	</record>
+	<record model="workflow.transition" id="trans_open_cancel">
+		<field name="act_from" ref="act_open"/>
+		<field name="act_to" ref="act_cancel"/>
+		<field name="signal">cancel</field>
+	</record>
+
+</data>
+</terp>

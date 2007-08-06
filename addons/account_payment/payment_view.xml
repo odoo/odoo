@@ -1,0 +1,181 @@
+<?xml version="1.0" ?>
+<terp>
+	<data>
+		<menuitem name="Financial Management/Payment Management" id="menu_main" />
+		<menuitem name="Financial Management/Payment Management/Configuration" groups="admin" sequence="1"/>
+
+		<record model="ir.ui.view" id="view_payment_type_form">
+			<field name="name">payment.type.form</field>
+			<field name="model">payment.type</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Payment Type">
+					<field name="name" select="1"/>
+					<newline/>
+					<field name="suitable_bank_types" select="1"/>
+				</form>
+			</field>
+		</record>
+		<record model="ir.actions.act_window" id="action_payment_type_form">
+			<field name="name">Payment Type</field>
+			<field name="res_model">payment.type</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem name="Financial Management/Payment Management/Configuration/Payment Type" id="menu_action_payment_type_form" action="action_payment_type_form"/>
+
+
+		<record model="ir.ui.view" id="view_payment_mode_form">
+			<field name="name">payment.mode.form</field>
+			<field name="model">payment.mode</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Payment Mode">
+					<field name="name" select="1"/>
+					<field name="code" />
+					<field name="type" />
+					<field name="journal" />
+					<field name="bank" />
+				</form>
+			</field>
+		</record>
+		<record model="ir.actions.act_window" id="action_payment_mode_form">
+			<field name="name">Payment Mode</field>
+			<field name="res_model">payment.mode</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem name="Financial Management/Payment Management/Configuration/Payment Mode" id="menu_action_payment_mode_form" action="action_payment_mode_form"/>
+
+	    <record model="ir.ui.view" id="view_payment_order_form">
+			<field name="name">payment.order.form</field>
+			<field name="model">payment.order</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Payment Order">
+					<field name="reference" />
+					<field name="mode" />
+					<field name="date_prefered" />
+					<field name="date_planned" select="1"/>
+					<field name="user_id" select="2"/>
+					<button name="%(wizard_payment)d" string="Add payment lines" type="action" colspan="2"/>
+					<field name="lines" colspan="4"  nolabel="1"/>
+					<field name="total"/>
+					<field name="nb_line"/>
+					<field name="date_created" select="2"/>
+					<field name="date_done" select="2"/>
+					<field name="state" select="1" readonly="1"/>
+					<group colspan="2" col="4">
+					<button name="cancel" states="draft,open" string="Cancel"/>
+					<button name="open" states="draft" string="Open"/>
+					<button name="done" states="open" string="Make Payment"/>
+					<button name="set_to_draft" states="cancel" type="object" string="Set to draft"/>
+					</group>
+   				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_payment_order_tree">
+		<field name="name">payment.order.tree</field>
+		<field name="model">payment.order</field>
+		<field name="type">tree</field>
+		<field name="priority" eval="4"/>
+		<field name="arch" type="xml">
+			<tree string="Payment Order">
+				<field name="reference" />
+				<field name="mode"/>
+				<field name="nb_line" />				
+				<field name="date_planned"/>
+				<field name="date_created" select="2"/>
+				<field name="date_done" select="2"/>
+				<field name="total"/>
+				<field name="state" />
+			</tree>
+		</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="action_payment_order_draft">
+			<field name="name">Draft Payment Order</field>
+			<field name="res_model">payment.order</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('state','=','draft')]</field>
+		</record>
+	    <menuitem name="Financial Management/Payment Management/Draft Payment Orders" 
+				  id="menu_action_payment_order_draft" 
+				  action="action_payment_order_draft"
+				  sequence="1"/>
+
+		<record model="ir.actions.act_window" id="action_payment_order_open">
+			<field name="name">Payment Order to Validate</field>
+			<field name="res_model">payment.order</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('state','=','open')]</field>
+		</record>
+	    <menuitem name="Financial Management/Payment Management/Payment Orders to Validate" 
+				  id="menu_action_payment_order_open" 
+				  action="action_payment_order_open"
+				  sequence="2"/>
+
+		<record model="ir.actions.act_window" id="action_payment_order_tree">
+			<field name="name">Payment Order</field>
+			<field name="res_model">payment.order</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+	    <menuitem name="Financial Management/Payment Management/Payment Orders" 
+				  id="menu_action_payment_order_form" 
+				  action="action_payment_order_tree"
+				  sequence="3"/>
+
+
+
+
+		<record model="ir.ui.view" id="view_payment_line_form">
+			<field name="name">Payment Line</field>
+			<field name="model">payment.line</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Payment Line">
+					<field name="move_line" select="1" on_change="onchange_move_line(move_line,parent.mode)" domain="[('reconcile_id','=', False), ('credit', '>',0),('amount_to_pay','>',0)] "/>
+					<field name="amount" select="1" />
+					<field name="bank" domain="[('partner_id','=',partner)]"/>
+					<field name="to_pay"/>
+					<field name="partner"/>
+					<field name="partner_payable"/>
+					<field name="reference"/>
+					<field name="due_date"/>
+					<field name="date_created"/>
+				</form>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="view_payment_line_tree">
+		<field name="name">Payment Lines</field>
+		<field name="model">payment.line</field>
+		<field name="type">tree</field>
+		<field name="priority" eval="4"/>
+		<field name="arch" type="xml">
+			<tree string="Payment Line" editable="bottom" colors="red:to_pay&lt;amount" >
+				<field name="move_line" select="1" on_change="onchange_move_line(move_line,parent.mode)" domain="[('reconcile_id','=', False), ('credit', '>',0),('amount_to_pay','>',0)] "/>
+				<field name="bank" domain="[('partner_id','=',partner)]"/>
+				<field name="amount"/>
+				<field name="to_pay"/>
+				<field name="partner"/>
+				<field name="partner_payable"/>
+				<field name="reference"/>
+				<field name="due_date"/>
+				<field name="date_created"/>
+			</tree>
+		</field>
+		</record>
+		<record model="ir.actions.act_window" id="action_payment_line_form">
+			<field name="name">Payment Line</field>
+			<field name="res_model">payment.line</field>
+			<field name="view_type">tree</field>
+			<field name="view_mode">form,tree</field>
+		</record>
+
+
+	</data>
+</terp>
