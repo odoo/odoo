@@ -858,6 +858,12 @@ class account_tax_code(osv.osv):
 		'line_ids': fields.one2many('account.move.line', 'tax_code_id', 'Lines'),
 		'company_id': fields.many2one('res.company', 'Company', required=True),
 	}
+	def name_get(self, cr, uid, ids, context={}):
+		if not len(ids):
+			return []
+		reads = self.read(cr, uid, ids, ['name','code'], context)
+		return map(lambda x: (x['id'],x['code'] or x['name']), reads)
+
 	def _default_company(self, cr, uid, context={}):
 		user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
 		if user.company_id:
@@ -879,7 +885,7 @@ class account_tax_code(osv.osv):
 	_constraints = [
 		(_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id'])
 	]
-	_order = 'name'
+	_order = 'code,name'
 account_tax_code()
 
 class account_tax(osv.osv):
