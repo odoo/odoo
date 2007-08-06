@@ -311,6 +311,20 @@
 						<field name="owner_name"/>
 						<field name="acc_number"/>
 					  </tree>
+						<form string="Bank account">
+							<field name="state" select="2"/>
+							<newline/>
+							<field name="acc_number" select="1"/>
+							<newline/>
+							<field name="bank_id"/>
+							<field name="bank_address_id" domain="[('partner_id','=',bank_id)]"/>
+							<separator string="Bank account owner" colspan="4"/>
+							<field name="owner_name" colspan="4"/>
+							<field name="street" colspan="4"/>
+							<field name="city"/>
+							<field name="zip"/>
+							<field name="country_id"/>
+						</form>
 					</field>
 					<separator string="Notes" colspan="4"/>
 					<field name="comment" colspan="4" nolabel="1"/>
@@ -396,17 +410,18 @@
 		<field name="arch" type="xml">
 			<form string="Bank account">
 				<field name="state" select="2"/>
+				<field name="partner_id" select="1"/>
 				<newline/>
 				<field name="acc_number" select="1"/>
 				<newline/>
 				<field name="bank_id"/>
 				<field name="bank_address_id" domain="[('partner_id','=',bank_id)]"/>
 				<separator string="Bank account owner" colspan="4"/>
-				<field name="owner_name" colspan="4"/>
+				<field name="owner_name" colspan="4" select="2"/>
 				<field name="street" colspan="4"/>
 				<field name="city"/>
 				<field name="zip"/>
-				<field name="country_id"/>
+				<field name="country_id" select="2"/>
 			</form>
 		</field>
 	</record>
@@ -415,7 +430,7 @@
 		<field name="model">res.partner.bank</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Bank Details">
+			<tree string="Bank accounts">
 				<field name="state"/>
 				<field name="owner_name"/>
 				<field name="acc_number"/>
