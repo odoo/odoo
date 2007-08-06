@@ -16,12 +16,6 @@
 			<field name="wkf_id" ref="wkf"/>
 			<field name="name">confirm</field>
 		</record> -->
-		<record model="workflow.activity" id="act_sale">
-			<field name="wkf_id" ref="wkf"/>
-			<field name="name">sale</field>
-			<field name="action">action_move_create()&#10;write({'state':'sale'})</field>
-			<field name="kind">function</field>
-		</record>
 		<record model="workflow.activity" id="act_proforma">
 			<field name="wkf_id" ref="wkf"/>
 			<field name="name">proforma</field>
@@ -56,11 +50,6 @@
 		</record>
 		-->
 
-		<record model="workflow.transition" id="t2">
-			<field name="act_from" ref="act_draft"/>
-			<field name="act_to" ref="act_sale"/>
-			<field name="signal">invoice_sale</field>
-		</record>
 		<record model="workflow.transition" id="t3">
 			<field name="act_from" ref="act_draft"/>
 			<field name="act_to" ref="act_proforma"/>
@@ -75,13 +64,6 @@
 			<field name="act_from" ref="act_proforma"/>
 			<field name="act_to" ref="act_open"/>
 			<field name="signal">invoice_open</field>
-		</record>
-		<record model="workflow.transition" id="t6">
-			<field name="act_from" ref="act_sale"/>
-			<field name="act_to" ref="act_paid"/>
-			<field name="trigger_model">account.move.line</field>
-			<field name="trigger_expr_id">move_line_id_payment_get()</field>
-			<field name="condition">test_paid()</field>
 		</record>
 		<record model="workflow.transition" id="t7">
 			<field name="act_from" ref="act_proforma"/>
@@ -99,11 +81,6 @@
 		</record>
 		<record model="workflow.transition" id="t9">
 			<field name="act_from" ref="act_draft"/>
-			<field name="act_to" ref="act_cancel"/>
-			<field name="signal">invoice_cancel</field>
-		</record>
-		<record model="workflow.transition" id="t10">
-			<field name="act_from" ref="act_sale"/>
 			<field name="act_to" ref="act_cancel"/>
 			<field name="signal">invoice_cancel</field>
 		</record>
