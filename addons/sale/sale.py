@@ -407,7 +407,8 @@ class sale_order(osv.osv):
 						'product_qty': line.product_uom_qty,
 						'product_uom': line.product_uom.id,
 						'product_uos_qty': line.product_uos_qty,
-						'product_uos': line.product_uos.id,
+						'product_uos': (line.product_uos and line.product_uos.id)\
+								or line.product_uom.id,
 						'product_packaging' : line.product_packaging.id,
 						'address_id' : line.address_allotment_id.id or order.partner_shipping_id.id,
 						'location_id': location_id,
@@ -501,10 +502,7 @@ class sale_order_line(osv.osv):
 	def _amount_line_net(self, cr, uid, ids, field_name, arg, context):
 		res = {}
 		for line in self.browse(cr, uid, ids):
-			if line.product_uos.id:
-				res[line.id] = line.price_unit * (1 - (line.discount or 0.0) /100.0)
-			else:
-				res[line.id] = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+			res[line.id] = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
 		return res
 
 	def _amount_line(self, cr, uid, ids, field_name, arg, context):
@@ -593,7 +591,7 @@ class sale_order_line(osv.osv):
 				else:
 					a = self.pool.get('ir.property').get(cr, uid, 'property_account_income_categ', 'product.category', context=context)
 				uosqty = _get_line_qty(line)
-				uos_id = (line.product_uos and line.product_uos.id) or False
+				uos_id = (line.product_uos and line.product_uos.id) or line.product_uom.id
 				inv_id = self.pool.get('account.invoice.line').create(cr, uid, {
 					'name': line.name,
 					'account_id': a,
