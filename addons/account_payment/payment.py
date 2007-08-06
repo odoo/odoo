@@ -75,9 +75,9 @@ class payment_order(osv.osv):
 
 	def _total(self, cr, uid, ids, name, args, context={}):
 		if not ids: return {}
-		cr.execute("""select o.id, coalesce(sum(amount),0)
-				   from payment_order o left join payment_line l on (o.id = l.order)
-			   where o.id in (%s) group by o.id"""% ','.join(map(str,ids)))
+		cr.execute("""select l.order, coalesce(sum(amount),0)
+				   from payment_order_line l 
+			   where l.order in (%s) group by l.order"""% ','.join(map(str,ids)))
 		return dict(cr.fetchall())
 
 	def nb_line(self, cr, uid, ids, name, args, context={}):
