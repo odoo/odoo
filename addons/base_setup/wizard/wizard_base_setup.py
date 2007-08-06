@@ -34,7 +34,7 @@ import os
 
 view_form_profit = """<?xml version="1.0"?>
 <form string="Setup">
-	<image name="gtk-info"/>
+	<image name="gtk-dialog-info"/>
 	<group>
 		<separator string="Select a profile" colspan="2"/>
 		<newline/>
@@ -48,7 +48,7 @@ view_form_profit = """<?xml version="1.0"?>
 
 view_form_charts = """<?xml version="1.0"?>
 <form string="Setup">
-	<image name="gtk-info" size="64" colspan="2"/>
+	<image name="gtk-dialog-info" colspan="2"/>
 	<group>
 		<separator string="Select a chart of accounts" colspan="2"/>
 		<newline/>
@@ -62,7 +62,7 @@ view_form_charts = """<?xml version="1.0"?>
 
 view_form_company = """<?xml version="1.0"?>
 <form string="Setup">
-	<image name="gtk-info" size="64" colspan="2"/>
+	<image name="gtk-dialog-info" colspan="2"/>
 	<group>
 		<separator string="Define main company" colspan="4"/>
 		<newline/>
@@ -87,7 +87,7 @@ view_form_company = """<?xml version="1.0"?>
 
 view_form_update = """<?xml version="1.0"?>
 <form string="Setup">
-	<image name="gtk-info" size="64" colspan="2"/>
+	<image name="gtk-dialog-info" colspan="2"/>
 	<group>
 		<separator string="Summary" colspan="2"/>
 		<newline/>
@@ -102,7 +102,7 @@ view_form_update = """<?xml version="1.0"?>
 
 view_form_finish = """<?xml version="1.0"?>
 <form string="Setup">
-	<image name="gtk-info" size="64" colspan="2"/>
+	<image name="gtk-dialog-info" colspan="2"/>
 	<group colspan="2" col="4">
 		<separator colspan="4" string="Installation done"/>
 		<label align="0.0" colspan="4" string="Your new database is now fully installed."/>
@@ -353,36 +353,60 @@ class wizard_base_setup(wizard.interface):
 	}
 	states={
 		'init':{
-			'actions':[_get_company],
-			'result':{'type':'form', 'arch':view_form_profit, 'fields':fields, 'state':[('menu', 'Cancel', 'gtk-cancel'), ('next', 'Next', 'gtk-go-forward')]}
+			'actions': [_get_company],
+			'result': {'type': 'form', 'arch': view_form_profit, 'fields': fields,
+				'state': [
+					('menu', 'Cancel', 'gtk-cancel'),
+					('next', 'Next', 'gtk-go-forward', True)
+				]
+			}
 		},
 		'next': {
-			'actions':[],
-			'result':{'type':'choice', 'next_state': _next}
+			'actions': [],
+			'result': {'type': 'choice', 'next_state': _next}
 		},
 		'charts':{
-			'actions':[],
-			'result':{'type':'form', 'arch':view_form_charts, 'fields':fields, 'state':[('init', 'Previous', 'gtk-go-back'), ('company', 'Next', 'gtk-go-forward')]}
+			'actions': [],
+			'result': {'type': 'form', 'arch': view_form_charts, 'fields': fields,
+				'state':[
+					('init', 'Previous', 'gtk-go-back'),
+					('company', 'Next', 'gtk-go-forward', True)
+				]
+			}
 		},
 		'company':{
-			'actions':[],
-			'result':{'type':'form', 'arch':view_form_company, 'fields':fields, 'state':[('previous', 'Previous', 'gtk-go-back'), ('update', 'Next', 'gtk-go-forward')]}
+			'actions': [],
+			'result': {'type': 'form', 'arch': view_form_company, 'fields': fields,
+				'state': [
+					('previous', 'Previous', 'gtk-go-back'),
+					('update', 'Next', 'gtk-go-forward', True)
+				]
+			}
 		},
 		'previous':{
-			'actions':[],
-			'result':{'type':'choice', 'next_state': _previous}
+			'actions': [],
+			'result': {'type': 'choice', 'next_state': _previous}
 		},
 		'update':{
-			'actions':[],
-			'result':{'type':'form', 'arch':view_form_update, 'fields':fields, 'state':[('company', 'Previous', 'gtk-go-back'), ('finish', 'Install', 'gtk-ok')]}
+			'actions': [],
+			'result': {'type': 'form', 'arch': view_form_update, 'fields': fields,
+				'state': [
+					('company', 'Previous', 'gtk-go-back'),
+					('finish', 'Install', 'gtk-ok', True)
+				]
+			}
 		},
 		'finish':{
-			'actions':[_update],
-			'result':{'type':'form', 'arch':view_form_finish, 'fields':{}, 'state':[('menu', 'Ok', 'gtk-ok')]}
+			'actions': [_update],
+			'result': {'type': 'form', 'arch': view_form_finish, 'fields': {},
+				'state': [
+					('menu', 'Ok', 'gtk-ok', True)
+				]
+			}
 		},
 		'menu': {
-			'actions':[],
-			'result':{'type':'action', 'action':_menu, 'state':'end'}
+			'actions': [],
+			'result': {'type': 'action', 'action': _menu, 'state': 'end'}
 		}
 	}
 wizard_base_setup('base_setup.base_setup')
