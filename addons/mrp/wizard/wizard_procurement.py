@@ -64,7 +64,7 @@ def _procure_calculation_procure(self, db_name, uid, data, context):
 	user_id = data['form']['user_id']
 	proc_obj.run_procure_confirm(cr, uid, user_id=user_id, schedule_cycle=schedule_cycle,\
 			po_cycle=po_cycle, po_lead=po_lead, security_lead=security_lead,\
-			picking_lead=picking_lead, context=context)
+			picking_lead=picking_lead, use_new_cursor=cr.dbname, context=context)
 	return {}
 
 def _procure_calculation(self, cr, uid, data, context):

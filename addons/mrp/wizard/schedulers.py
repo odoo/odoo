@@ -31,18 +31,25 @@ from mx import DateTime
 import netsvc
 from osv import osv
 
-def _procure_confirm(self, db_name, uid, schedule_cycle=1.0, po_cycle=1.0, po_lead=1.0, security_lead=50.0, picking_lead=1.0, user_id=False, context=None):
+def _procure_confirm(self, cr, uid, schedule_cycle=1.0, po_cycle=1.0,\
+		po_lead=1.0, security_lead=50.0, picking_lead=1.0, user_id=False,\
+		use_new_cursor=False, context=None):
+	'''
+	use_new_cursor: False or the dbname
+	'''
 	if not context:
 		context={}
 
-	cr = pooler.get_db(db_name).cursor()
+	if use_new_cursor:
+		cr = pooler.get_db(use_new_cursor).cursor()
 	wf_service = netsvc.LocalService("workflow")
 
 	cr.execute('select id from mrp_procurement where state=%s order by date_planned', ('exception',))
 	ids = map(lambda x:x[0], cr.fetchall())
 	for id in ids:
 		wf_service.trg_validate(uid, 'mrp.procurement', id, 'button_restart', cr)
-	cr.commit()
+	if use_new_cursor:
+		cr.commit()
 
 	po_time = po_cycle + po_lead
 	maxdate = DateTime.now() + DateTime.RelativeDateTime(days=schedule_cycle + security_lead)
@@ -71,7 +78,8 @@ def _procure_confirm(self, db_name, uid, schedule_cycle=1.0, po_cycle=1.0, po_le
 				report.append('PROC %d: on order - %3.2f %-5s - %s' % (proc.id,proc.product_qty,proc.product_uom.name, proc.product_id.name))
 				report_except += 1
 			report_total +=1
-			cr.commit()
+			if use_new_cursor:
+				cr.commit()
 
 	offset = 0
 	ids = [1]
@@ -88,7 +96,8 @@ def _procure_confirm(self, db_name, uid, schedule_cycle=1.0, po_cycle=1.0, po_le
 			else:
 				report_later +=1
 			report_total +=1
-			cr.commit()
+			if use_new_cursor:
+				cr.commit()
 		offset += len(ids)
 	end_date = time.strftime('%Y-%m-%d, %Hh %Mm %Ss')
 	if user_id:
@@ -105,14 +114,15 @@ Not run now procurement: %d
 Exceptions;
 '''% (start_date,end_date,report_total, report_except,report_later)
 		summary += '\n'.join(report)
-		request.create(cr, uid, 
-			  {'name' : "Procurement calculation report.",
-			   'act_from' : user_id,
-			   'act_to' : user_id,
-			   'body': summary,
-			   })
-	cr.commit()
-	cr.close()
+		request.create(cr, uid,
+			{'name' : "Procurement calculation report.",
+				'act_from' : user_id,
+				'act_to' : user_id,
+				'body': summary,
+			})
+	if use_new_cursor:
+		cr.commit()
+		cr.close()
 	return {}
 
 def create_automatic_op(cr, uid, context=None):
@@ -157,10 +167,15 @@ def create_automatic_op(cr, uid, context=None):
 			wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_check', cr)
 
 
-def _procure_orderpoint_confirm(self, db_name, uid, automatic=False, context=None):
+def _procure_orderpoint_confirm(self, db_name, uid, automatic=False,\
+		use_new_cursor=False, context=None):
+	'''
+	use_new_cursor: False or the dbname
+	'''
 	if not context:
 		context={}
-	cr = pooler.get_db(db_name).cursor()
+	if use_new_cursor:
+		cr = pooler.get_db(use_new_cursor).cursor()
 	wf_service = netsvc.LocalService("workflow")
 	offset = 0
 	ids = [1]
@@ -208,8 +223,10 @@ def _procure_orderpoint_confirm(self, db_name, uid, automatic=False, context=Non
 				wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_check', cr)
 				pooler.get_pool(cr.dbname).get('stock.warehouse.orderpoint').write(cr, uid, [op.id], {'procurement_id':proc_id})
 		offset += len(ids)
-		cr.commit()
-	cr.close()
+		if use_new_cursor:
+			cr.commit()
+	if use_new_cursor:
+		cr.close()
 	return {}
 
 

@@ -895,30 +895,45 @@ class mrp_procurement(osv.osv):
 		for id in ids:
 			wf_service.trg_trigger(uid, 'mrp.procurement', id, cr)
 		return res
-	def run_scheduler(self, cr, uid, user_id=False, schedule_cycle=1.0, po_cycle=1.0, po_lead=1.0, security_lead=50.0, picking_lead=1.0, automatic=False, context=None):
+	def run_scheduler(self, cr, uid, user_id=False, schedule_cycle=1.0,\
+			po_cycle=1.0, po_lead=1.0, security_lead=50.0, picking_lead=1.0,\
+			automatic=False, use_new_cursor=False, context=None):
+		'''
+		use_new_cursor: False or the dbname
+		'''
 		if not context:
 			context={}
 		self.run_procure_confirm(cr, uid, schedule_cycle=schedule_cycle,\
 				po_cycle=po_cycle, po_lead=po_lead, security_lead=security_lead,\
-				picking_lead=picking_lead, user_id=user_id, context=context)
-		self.run_orderpoint_confirm(cr, uid, automatic=automatic, context=context)
+				picking_lead=picking_lead, user_id=user_id,\
+				use_new_cursor=use_new_cursor, context=context)
+		self.run_orderpoint_confirm(cr, uid, automatic=automatic,\
+				use_new_cursor=use_new_cursor, context=context)
 
 	def run_procure_confirm(self, cr, uid, user_id=False, schedule_cycle=1.0,\
 			po_cycle=1.0, po_lead=1.0, security_lead=50.0, picking_lead=1.0, \
-			context=None):
+			use_new_cursor=False, context=None):
+		'''
+		use_new_cursor: False or the dbname
+		'''
 		from wizard.schedulers import _procure_confirm
 		if not context:
 			context={}
-		_procure_confirm(self, cr.dbname, uid, schedule_cycle=schedule_cycle,\
+		_procure_confirm(self, cr, uid, schedule_cycle=schedule_cycle,\
 				po_cycle=po_cycle, po_lead=po_lead, security_lead=security_lead,\
-				picking_lead=picking_lead, user_id=user_id, context=context)
+				picking_lead=picking_lead, user_id=user_id, use_new_cursor=use_new_cursor,\
+				context=context)
 
-	def run_orderpoint_confirm(self, cr, uid, automatic=False, context=None):
+	def run_orderpoint_confirm(self, cr, uid, automatic=False, use_new_cursor=False,\
+			context=None):
+		'''
+		use_new_cursor: False or the dbname
+		'''
 		from wizard.schedulers import _procure_orderpoint_confirm
 		if not context:
 			context={}
-		_procure_orderpoint_confirm(self, cr.dbname, uid, automatic=automatic,\
-				context=context)
+		_procure_orderpoint_confirm(self, cr, uid, automatic=automatic,\
+				use_new_cursor=use_new_cursor, context=context)
 
 mrp_procurement()
 
