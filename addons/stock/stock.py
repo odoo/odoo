@@ -32,6 +32,7 @@ import time
 import netsvc
 from osv import fields,osv
 import ir
+from tools import config
 
 
 #----------------------------------------------------------
@@ -669,6 +670,8 @@ class stock_move(osv.osv):
 		'note': fields.text('Notes'),
 
 		'state': fields.selection([('draft','Draft'),('waiting','Waiting'),('confirmed','Confirmed'),('assigned','Assigned'),('done','Done'),('cancel','cancel')], 'State', readonly=True, select=True),
+		'price_unit': fields.float('Unit Price',
+			digits=(16, int(config['price_accuracy']))),
 	}
 	_defaults = {
 		'state': lambda *a: 'draft',
@@ -820,19 +823,43 @@ class stock_move(osv.osv):
 				journal_id = move.product_id.categ_id.property_stock_journal[0]
 				if acc_src != acc_dest:
 					ref = move.picking_id and move.picking_id.name or False
-					amount = move.product_qty * move.product_id.standard_price
+
+					if move.product_id.cost_method == 'average' and move.price_unit:
+						amount = move.product_qty * move.price_unit
+					else:
+						amount = move.product_qty * move.product_id.standard_price
+
+					date = time.strftime('%Y-%m-%d')
 					lines = [
-							(0,0,{'name': move.name, 'quantity': move.product_qty, 'credit': amount, 'account_id': acc_src, 'ref': ref}),
-							(0,0,{'name': move.name, 'quantity': move.product_qty, 'debit': amount, 'account_id': acc_dest, 'ref': ref})
+							(0, 0, {
+								'name': move.name,
+								'quantity': move.product_qty,
+								'credit': amount,
+								'account_id': acc_src,
+								'ref': ref,
+								'date': date}),
+							(0, 0, {
+								'name': move.name,
+								'quantity': move.product_qty,
+								'debit': amount,
+								'account_id': acc_dest,
+								'ref': ref,
+								'date': date})
 					]
-					self.pool.get('account.move').create(cr, uid, {'name': move.name, 'journal_id': journal_id, 'line_id': lines, 'ref': ref})
+					self.pool.get('account.move').create(cr, uid,
+							{
+								'name': move.name,
+								'journal_id': journal_id,
+								'line_id': lines,
+								'ref': ref,
+							})
 		self.write(cr, uid, ids, {'state':'done'})
 
 		wf_service = netsvc.LocalService("workflow")
 		for id in ids:
 			wf_service.trg_trigger(uid, 'stock.move', id, cr)
-
 		return True
+
 stock_move()
 
 class stock_inventory(osv.osv):
