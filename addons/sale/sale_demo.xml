@@ -194,5 +194,8 @@
 		<field name="delay">15</field>
 	</record>
 	<workflow model="sale.order" ref="order5" action="order_confirm" />
+
+	<!-- Run all schedulers -->
+	<function model="mrp.procurement" name="run_scheduler" />
 </data>
 </terp>
