@@ -227,38 +227,30 @@ class wizard_base_setup(wizard.interface):
 				filename=os.path.join(tools.config["root_path"], "i18n", lang.code + ".csv")
 				tools.trans_load(cr.dbname, filename, lang.code)
 		return {}
+
 	def _menu(self, cr, uid, data, context):
 		users_obj=pooler.get_pool(cr.dbname).get('res.users')
 		action_obj=pooler.get_pool(cr.dbname).get('ir.actions.act_window')
 
 		ids=action_obj.search(cr, uid, [('name', '=', 'Menu')])
 		menu=action_obj.browse(cr, uid, ids)[0]
+
 		ids=users_obj.search(cr, uid, [('action_id', '=', 'Setup')])
 		users_obj.write(cr, uid, ids, {'action_id': menu.id})
+		ids=users_obj.search(cr, uid, [('menu_id', '=', 'Setup')])
+		users_obj.write(cr, uid, ids, {'menu_id': menu.id})
 
-		user = users_obj.browse(cr, uid, uid)
-		action = user.action_id
-		if action.type == 'ir.actions.act_window':
-			action = action_obj.browse(cr, uid, action.id)
-			return {
-				'name': action.name,
-				'type': action.type,
-				'view_id': (action.view_id and\
-						(action.view_id.id, action.view_id.name)) or False,
-				'domain': action.domain,
-				'res_model': action.res_model,
-				'src_model': action.src_model,
-				'view_type': action.view_type,
-				'view_mode': action.view_mode,
-				'views': action.views,
-			}
 		return {
-			'name': 'Menu',
-			'type': 'ir.actions.act_window',
-			'res_model': 'ir.ui.menu',
-			'view_type': 'tree',
-			'domain': str([('parent_id', '=', False)]),
-			'view_id': (menu.view_id.id, menu.view_id.name),
+			'name': menu.name,
+			'type': menu.type,
+			'view_id': (menu.view_id and\
+					(menu.view_id.id, menu.view_id.name)) or False,
+			'domain': menu.domain,
+			'res_model': menu.res_model,
+			'src_model': menu.src_model,
+			'view_type': menu.view_type,
+			'view_mode': menu.view_mode,
+			'views': menu.views,
 		}
 
 	def _next(self, cr, uid, data, context):
@@ -407,6 +399,6 @@ class wizard_base_setup(wizard.interface):
 		'menu': {
 			'actions': [],
 			'result': {'type': 'action', 'action': _menu, 'state': 'end'}
-		}
+		},
 	}
 wizard_base_setup('base_setup.base_setup')
