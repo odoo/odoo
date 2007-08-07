@@ -1,136 +1,133 @@
+<?xml version="1.0"?>
 <terp>
-<data>
-	#---------------------------------------------------------------------------------------------------------
-	# Definition Action
-	#---------------------------------------------------------------------------------------------------------
+	<data>
 
+		<menuitem name="Project" id="menu_main" icon="terp-project"/>
 
-	<record model="ir.actions.act_window" id="action_account_analytic_managed"> 
-		<field name="name">My managed accounts</field> 
-		<field name="res_model">account.analytic.account</field> 
-		<field name="view_type">form</field> 
-		<field name="domain">[('user_id','=',uid)]</field> 
-	</record>
-	<menuitem 
-		name="Project/Analytic accounts/My managed accounts" 
-		id="menu_analytic_account_managed" 
-		action="action_account_analytic_managed" />
+		<record model="ir.actions.act_window" id="action_account_analytic_managed">
+			<field name="name">My managed accounts</field>
+			<field name="res_model">account.analytic.account</field>
+			<field name="view_type">form</field>
+			<field name="domain">[('user_id','=',uid)]</field>
+		</record>
 
-	<record model="ir.actions.act_window" id="action_hr_tree_invoiced_my">
-		<field name="name">Uninvoiced entries of my accounts</field>
-		<field name="res_model">account.analytic.line</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[('invoice_id','=',False),('to_invoice','!=',False),('account_id.user_id','=',uid)]</field>
-	</record>
-	<menuitem name="Project/Analytic accounts/Uninvoiced entries of my projects"
-		id="menu_action_hr_tree_invoiced_my"
-		action="action_hr_tree_invoiced_my"/> 
+		<menuitem
+			name="Project/Analytic accounts/My managed accounts"
+			id="menu_analytic_account_managed"
+			action="action_account_analytic_managed" />
 
+		<record model="ir.actions.act_window" id="action_hr_tree_invoiced_my">
+			<field name="name">Uninvoiced entries of my accounts</field>
+			<field name="res_model">account.analytic.line</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('invoice_id','=',False),('to_invoice','!=',False),('account_id.user_id','=',uid)]</field>
+		</record>
 
+		<menuitem name="Project/Analytic accounts/Uninvoiced entries of my projects"
+			id="menu_action_hr_tree_invoiced_my"
+			action="action_hr_tree_invoiced_my"/>
 
-	<record model="ir.actions.act_window" id="action_account_analytic_managed_open"> 
-		<field name="name">My open managed accounts</field> 
-		<field name="res_model">account.analytic.account</field> 
-		<field name="view_type">form</field> 
-		<field name="domain">[('user_id','=',uid),('state','=','open')]</field> 
-	</record>
-	<menuitem 
-		name="Project/Analytic accounts/My managed accounts/" 
-		id="menu_analytic_account_to_valid_open" 
-		action="action_account_analytic_managed_open" />
+		<record model="ir.actions.act_window" id="action_account_analytic_managed_open">
+			<field name="name">My open managed accounts</field>
+			<field name="res_model">account.analytic.account</field>
+			<field name="view_type">form</field>
+			<field name="domain">[('user_id','=',uid),('state','=','open')]</field>
+		</record>
 
-	<record model="ir.actions.act_window" id="action_account_analytic_managed_pending"> 
-		<field name="name">My pending managed accounts</field> 
-		<field name="res_model">account.analytic.account</field> 
-		<field name="view_type">form</field> 
-		<field name="domain">[('user_id','=',uid),('state','=','pending')]</field> 
-	</record>
-	<menuitem 
-		name="Project/Analytic accounts/My managed accounts/" 
-		id="menu_analytic_account_to_valid_pending" 
-		action="action_account_analytic_managed_pending" />
+		<menuitem
+			name="Project/Analytic accounts/My managed accounts/"
+			id="menu_analytic_account_to_valid_open"
+			action="action_account_analytic_managed_open" />
 
+		<record model="ir.actions.act_window" id="action_account_analytic_managed_pending">
+			<field name="name">My pending managed accounts</field>
+			<field name="res_model">account.analytic.account</field>
+			<field name="view_type">form</field>
+			<field name="domain">[('user_id','=',uid),('state','=','pending')]</field>
+		</record>
 
+		<menuitem
+			name="Project/Analytic accounts/My managed accounts/"
+			id="menu_analytic_account_to_valid_pending"
+			action="action_account_analytic_managed_pending" />
 
-	<record model="ir.actions.act_window" id="action_account_analytic_managed_overpassed"> 
-		<field name="name">Overpassed accounts</field> 
-		<field name="res_model">account.analytic.account</field> 
-		<field name="view_type">form</field> 
-		<field name="domain">[('date','&lt;=',time.strftime('%Y-%m-%d')),('state','=','open')]</field> 
-	</record>
-	<menuitem 
-		name="Project/Analytic accounts/Overpassed accounts" 
-		id="menu_action_account_analytic_managed_overpassed" 
-		action="action_account_analytic_managed_overpassed" />
+		<record model="ir.actions.act_window" id="action_account_analytic_managed_overpassed"> 
+			<field name="name">Overpassed accounts</field>
+			<field name="res_model">account.analytic.account</field>
+			<field name="view_type">form</field>
+			<field name="domain">[('date','&lt;=',time.strftime('%Y-%m-%d')),('state','=','open')]</field>
+		</record>
 
+		<menuitem
+			name="Project/Analytic accounts/Overpassed accounts"
+			id="menu_action_account_analytic_managed_overpassed"
+			action="action_account_analytic_managed_overpassed" />
 
+		<record model="ir.actions.act_window" id="action_account_analytic_all">
+			<field name="name">All analytic accounts</field>
+			<field name="res_model">account.analytic.account</field>
+			<field name="view_type">form</field>
+			<field name="view_id" ref="account.view_account_analytic_account_list"/>
+			<field name="domain">[]</field>
+		</record>
 
-	<record model="ir.actions.act_window" id="action_account_analytic_all"> 
-		<field name="name">All analytic accounts</field> 
-		<field name="res_model">account.analytic.account</field> 
-		<field name="view_type">form</field> 
-		<field name="view_id" ref="account.view_account_analytic_account_list"/>
-		<field name="domain">[]</field> 
+		<menuitem
+			name="Project/Analytic accounts/"
+			id="menu_action_account_analytic_all"
+			action="action_account_analytic_all" />
 
-	
-	</record>
-	<menuitem 
-		name="Project/Analytic accounts/" 
-		id="menu_action_account_analytic_all" 
-		action="action_account_analytic_all" />
+		<record model="ir.actions.act_window" id="action_account_analytic_all_draft">
+			<field name="name">Draft analytic accounts</field>
+			<field name="res_model">account.analytic.account</field>
+			<field name="view_type">form</field>
+			<field name="view_id" ref="account.view_account_analytic_account_list"/>
+			<field name="domain">[('state','=','draft')]</field>
+		</record>
 
+		<menuitem
+			name="Project/Analytic accounts/All analytic accounts/"
+			id="menu_action_account_analytic_all_draft"
+			action="action_account_analytic_all_draft" />
 
-	<record model="ir.actions.act_window" id="action_account_analytic_all_draft"> 
-		<field name="name">Draft analytic accounts</field> 
-		<field name="res_model">account.analytic.account</field> 
-		<field name="view_type">form</field> 
-		<field name="view_id" ref="account.view_account_analytic_account_list"/>
-		<field name="domain">[('state','=','draft')]</field> 
-	</record>
-	<menuitem 
-		name="Project/Analytic accounts/All analytic accounts/" 
-		id="menu_action_account_analytic_all_draft" 
-		action="action_account_analytic_all_draft" />
+		<record model="ir.actions.act_window" id="action_account_analytic_all_open">
+			<field name="name">Open analytic accounts</field>
+			<field name="res_model">account.analytic.account</field>
+			<field name="view_type">form</field>
+			<field name="view_id" ref="account.view_account_analytic_account_list"/>
+			<field name="domain">[('state','=','open')]</field>
+		</record>
 
+		<menuitem
+			name="Project/Analytic accounts/All analytic accounts/"
+			id="menu_action_account_analytic_all_open"
+			action="action_account_analytic_all_open" />
 
-	<record model="ir.actions.act_window" id="action_account_analytic_all_open"> 
-		<field name="name">Open analytic accounts</field> 
-		<field name="res_model">account.analytic.account</field> 
-		<field name="view_type">form</field> 
-		<field name="view_id" ref="account.view_account_analytic_account_list"/>
-		<field name="domain">[('state','=','open')]</field> 
-	</record>
-	<menuitem 
-		name="Project/Analytic accounts/All analytic accounts/" 
-		id="menu_action_account_analytic_all_open" 
-		action="action_account_analytic_all_open" />
+		<record model="ir.actions.act_window" id="action_account_analytic_all_pending">
+			<field name="name">Pending analytic accounts</field>
+			<field name="res_model">account.analytic.account</field>
+			<field name="view_type">form</field>
+			<field name="view_id" ref="account.view_account_analytic_account_list"/>
+			<field name="domain">[('state','=','pending')]</field>
+		</record>
 
-	<record model="ir.actions.act_window" id="action_account_analytic_all_pending"> 
-		<field name="name">Pending analytic accounts</field> 
-		<field name="res_model">account.analytic.account</field> 
-		<field name="view_type">form</field> 
-		<field name="view_id" ref="account.view_account_analytic_account_list"/>
-		<field name="domain">[('state','=','pending')]</field> 
-	</record>
-	<menuitem 
-		name="Project/Analytic accounts/All analytic accounts/" 
-		id="menu_action_account_analytic_all_pending" 
-		action="action_account_analytic_all_pending" />
+		<menuitem
+			name="Project/Analytic accounts/All analytic accounts/"
+			id="menu_action_account_analytic_all_pending"
+			action="action_account_analytic_all_pending" />
 
+		<record model="ir.actions.act_window" id="action_account_analytic_all_simplified">
+			<field name="name">Simplified view analytic accounts</field>
+			<field name="res_model">account.analytic.account</field>
+			<field name="view_type">form</field>
+			<field name="view_id" ref="view_account_analytic_simplified"/>
+			<field name="domain">[]</field>
+		</record>
 
-	<record model="ir.actions.act_window" id="action_account_analytic_all_simplified"> 
-		<field name="name">Simplified view analytic accounts</field> 
-		<field name="res_model">account.analytic.account</field> 
-		<field name="view_type">form</field> 
-		<field name="view_id" ref="view_account_analytic_simplified"/>
-		<field name="domain">[]</field> 
-	</record>
-	<menuitem 
-		name="Project/Analytic accounts/All analytic accounts/" 
-		id="menu_action_account_analytic_all_simplified" 
-		action="action_account_analytic_all_simplified" />
+		<menuitem
+			name="Project/Analytic accounts/All analytic accounts/"
+			id="menu_action_account_analytic_all_simplified"
+			action="action_account_analytic_all_simplified" />
 
-
-</data>
+	</data>
 </terp>

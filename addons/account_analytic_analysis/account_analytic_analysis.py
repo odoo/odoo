@@ -34,153 +34,217 @@ class account_analytic_account(osv.osv):
 	_inherit = "account.analytic.account"
 
 	def _ca_invoiced_calc(self, cr, uid, ids, name, arg, context={}):
-		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-		acc_set = ",".join(map(str, ids2))
-		cr.execute("select account_analytic_line.account_id, sum(amount) from account_analytic_line join account_analytic_journal on account_analytic_line.journal_id = account_analytic_journal.id  where account_analytic_line.account_id IN (%s) and account_analytic_journal.type = 'sale' group by account_analytic_line.account_id" % acc_set)
 		res = {}
-		for account_id, sum in cr.fetchall():
-			res[account_id] = round(sum,2)
- 		for id in ids:
+		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+		if ids2:
+			acc_set = ",".join(map(str, ids2))
+			cr.execute("select account_analytic_line.account_id, sum(amount) \
+					from account_analytic_line \
+					join account_analytic_journal \
+						on account_analytic_line.journal_id = account_analytic_journal.id  \
+					where account_analytic_line.account_id IN (%s) \
+						and account_analytic_journal.type = 'sale' \
+					group by account_analytic_line.account_id" % acc_set)
+			for account_id, sum in cr.fetchall():
+				res[account_id] = round(sum,2)
+		for id in ids:
 			res[id] = round(res.get(id, 0.0),2)
 		return res
 
 	def _ca_to_invoice_calc(self, cr, uid, ids, name, arg, context={}):
-		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-		# Amount uninvoiced hours to invoice at sale price
-		acc_set = ",".join(map(str, ids2))
-		cr.execute("""SELECT account_analytic_account.id,sum (product_template.list_price * account_analytic_line.unit_amount * ((100-hr_timesheet_invoice_factor.factor)/100)) 
-						AS ca_to_invoice  
-						FROM product_template join product_product on product_template.id = product_product.product_tmpl_id 
-						JOIN account_analytic_line on account_analytic_line.product_id = product_product.id 
-						JOIN account_analytic_journal on account_analytic_line.journal_id = account_analytic_journal.id 
-						JOIN account_analytic_account on account_analytic_account.id = account_analytic_line.account_id 
-						JOIN hr_timesheet_invoice_factor on hr_timesheet_invoice_factor.id = account_analytic_account.to_invoice 
-						WHERE account_analytic_account.id IN (%s) 
-							AND account_analytic_journal.type='general' 
-							AND account_analytic_line.invoice_id is null
-						GROUP BY account_analytic_account.id;"""%acc_set)
 		res = {}
-		for account_id, sum in cr.fetchall():
-			res[account_id] = round(sum,2)
-
-		# Expense amount and purchase invoice
-		acc_set = ",".join(map(str, ids2))
-		cr.execute ("select account_analytic_line.account_id,sum(amount) from account_analytic_line join account_analytic_journal on account_analytic_line.journal_id = account_analytic_journal.id  where account_analytic_line.account_id IN (%s) and account_analytic_journal.type = 'purchase' GROUP BY account_analytic_line.account_id;"%acc_set)
 		res2 = {}
-		for account_id, sum in cr.fetchall():
-			res2[account_id] = round(sum,2)
+		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+		if ids2:
+			# Amount uninvoiced hours to invoice at sale price
+			acc_set = ",".join(map(str, ids2))
+			cr.execute("""SELECT account_analytic_account.id, \
+						sum (product_template.list_price * \
+							account_analytic_line.unit_amount * \
+							((100-hr_timesheet_invoice_factor.factor)/100)) \
+							AS ca_to_invoice \
+					FROM product_template \
+					join product_product \
+						on product_template.id = product_product.product_tmpl_id \
+					JOIN account_analytic_line \
+						on account_analytic_line.product_id = product_product.id \
+					JOIN account_analytic_journal \
+						on account_analytic_line.journal_id = account_analytic_journal.id \
+					JOIN account_analytic_account \
+						on account_analytic_account.id = account_analytic_line.account_id \
+					JOIN hr_timesheet_invoice_factor \
+						on hr_timesheet_invoice_factor.id = account_analytic_account.to_invoice \
+					WHERE account_analytic_account.id IN (%s) \
+						AND account_analytic_journal.type='general' \
+						AND account_analytic_line.invoice_id is null \
+					GROUP BY account_analytic_account.id;"""%acc_set)
+			for account_id, sum in cr.fetchall():
+				res[account_id] = round(sum,2)
+
+			# Expense amount and purchase invoice
+			acc_set = ",".join(map(str, ids2))
+			cr.execute ("select account_analytic_line.account_id, sum(amount) \
+					from account_analytic_line \
+					join account_analytic_journal \
+						on account_analytic_line.journal_id = account_analytic_journal.id \
+					where account_analytic_line.account_id IN (%s) \
+						and account_analytic_journal.type = 'purchase' \
+					GROUP BY account_analytic_line.account_id;"%acc_set)
+			for account_id, sum in cr.fetchall():
+				res2[account_id] = round(sum,2)
 		# sum both result on account_id
 		for id in ids:
 			res[id] = round(res.get(id, 0.0),2) + round(res2.get(id, 0.0),2)
 		return res
 
 	def _hours_qtt_non_invoiced_calc (self, cr, uid, ids, name, arg, context={}):
-		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-		acc_set = ",".join(map(str, ids2))
-		cr.execute("select account_analytic_line.account_id,sum(unit_amount) from account_analytic_line join account_analytic_journal on account_analytic_line.journal_id = account_analytic_journal.id  where account_analytic_line.account_id IN (%s) and account_analytic_journal.type='general' and invoice_id is null GROUP BY account_analytic_line.account_id;"%acc_set)
 		res = {}
-		for account_id, sum in cr.fetchall():
-			res[account_id] = round(sum,2)
+		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+		if ids2:
+			acc_set = ",".join(map(str, ids2))
+			cr.execute("select account_analytic_line.account_id, sum(unit_amount) \
+					from account_analytic_line \
+					join account_analytic_journal \
+						on account_analytic_line.journal_id = account_analytic_journal.id \
+					where account_analytic_line.account_id IN (%s) \
+						and account_analytic_journal.type='general' \
+						and invoice_id is null \
+					GROUP BY account_analytic_line.account_id;"%acc_set)
+			for account_id, sum in cr.fetchall():
+				res[account_id] = round(sum,2)
 		for id in ids:
 			res[id] = round(res.get(id, 0.0),2)
 		return res			
 
 	def _hours_quantity_calc(self, cr, uid, ids, name, arg, context={}):
-		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-		acc_set = ",".join(map(str, ids2))
-		cr.execute("select account_analytic_line.account_id,sum(unit_amount) from account_analytic_line join account_analytic_journal on account_analytic_line.journal_id = account_analytic_journal.id where account_analytic_line.account_id IN (%s) and account_analytic_journal.type='general' GROUP BY account_analytic_line.account_id"%acc_set)
 		res = {}
-		for account_id, sum in cr.fetchall():
-			res[account_id] = round(sum,2)
+		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+		if ids2:
+			acc_set = ",".join(map(str, ids2))
+			cr.execute("select account_analytic_line.account_id,sum(unit_amount) \
+					from account_analytic_line \
+					join account_analytic_journal \
+						on account_analytic_line.journal_id = account_analytic_journal.id \
+					where account_analytic_line.account_id IN (%s) \
+						and account_analytic_journal.type='general' \
+					GROUP BY account_analytic_line.account_id"%acc_set)
+			for account_id, sum in cr.fetchall():
+				res[account_id] = round(sum,2)
 		for id in ids:
 			res[id] = round(res.get(id, 0.0),2)
 		return res
 
 	def _total_cost_calc(self, cr, uid, ids, name, arg, context={}):
-		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-		acc_set = ",".join(map(str, ids2))
-		cr.execute("""select
-		 account_analytic_line.account_id,sum(amount) 
-		from
-		 account_analytic_line join account_analytic_journal on account_analytic_line.journal_id = account_analytic_journal.id 
-		where
-		 account_analytic_line.account_id IN (%s) and amount<0
-		GROUP BY
-		 account_analytic_line.account_id"""%acc_set)
 		res = {}
-		for account_id, sum in cr.fetchall():
-			res[account_id] = round(sum,2)
+		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+		if ids2:
+			acc_set = ",".join(map(str, ids2))
+			cr.execute("""select account_analytic_line.account_id,sum(amount) \
+					from account_analytic_line \
+					join account_analytic_journal \
+						on account_analytic_line.journal_id = account_analytic_journal.id \
+					where account_analytic_line.account_id IN (%s) \
+						and amount<0 \
+					GROUP BY account_analytic_line.account_id"""%acc_set)
+			for account_id, sum in cr.fetchall():
+				res[account_id] = round(sum,2)
 		for id in ids:
 			res[id] = round(res.get(id, 0.0),2)
 		return res
 
 	def _ca_theorical_calc(self, cr, uid, ids, name, arg, context={}):
-		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-		acc_set = ",".join(map(str, ids2))
-		# First part with expense and purchase
-		cr.execute("""select 
-						account_analytic_line.account_id,sum(amount) 
-					from 
-						account_analytic_line join account_analytic_journal on account_analytic_line.journal_id = account_analytic_journal.id 
-					where 
-						account_analytic_line.account_id IN (%s) and account_analytic_journal.type = 'purchase'
-					GROUP BY
-						account_analytic_line.account_id"""%acc_set)
 		res = {}
-		for account_id, sum in cr.fetchall():
-			res[account_id] = round(sum,2)
-		# Second part with timesheet (with invoice factor)
-		acc_set = ",".join(map(str, ids2))
-		cr.execute("""
-				select 
-					account_analytic_line.account_id as account_id,sum((account_analytic_line.unit_amount * pt.list_price)-(account_analytic_line.unit_amount * pt.list_price*hr.factor)) as somme 
-				from 
-					account_analytic_line join account_analytic_journal on account_analytic_line.journal_id = account_analytic_journal.id 
-					join product_product pp on (account_analytic_line.product_id = pp.id) 
-					join product_template pt on (pp.product_tmpl_id = pt.id) 
-					join account_analytic_account a on (a.id=account_analytic_line.account_id) 
-					join hr_timesheet_invoice_factor hr on (hr.id=a.to_invoice)
-				where 
-					account_analytic_line.account_id IN (%s) and account_analytic_journal.type='general' and a.to_invoice IS NOT NULL
-				GROUP BY
-					account_analytic_line.account_id"""%acc_set)
 		res2 = {}
-		for account_id, sum in cr.fetchall():
-			res2[account_id] = round(sum,2)
+		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+		if ids2:
+			acc_set = ",".join(map(str, ids2))
+			# First part with expense and purchase
+			cr.execute("""select account_analytic_line.account_id,sum(amount) \
+					from account_analytic_line \
+					join account_analytic_journal \
+						on account_analytic_line.journal_id = account_analytic_journal.id \
+					where account_analytic_line.account_id IN (%s) \
+						and account_analytic_journal.type = 'purchase' \
+					GROUP BY account_analytic_line.account_id"""%acc_set)
+			for account_id, sum in cr.fetchall():
+				res[account_id] = round(sum,2)
+
+			# Second part with timesheet (with invoice factor)
+			acc_set = ",".join(map(str, ids2))
+			cr.execute("""select account_analytic_line.account_id as account_id, \
+						sum((account_analytic_line.unit_amount * pt.list_price) \
+							- (account_analytic_line.unit_amount * pt.list_price \
+								* hr.factor)) as somme
+					from account_analytic_line \
+					join account_analytic_journal \
+						on account_analytic_line.journal_id = account_analytic_journal.id \
+					join product_product pp \
+						on (account_analytic_line.product_id = pp.id) \
+					join product_template pt \
+						on (pp.product_tmpl_id = pt.id) \
+					join account_analytic_account a \
+						on (a.id=account_analytic_line.account_id) \
+					join hr_timesheet_invoice_factor hr \
+						on (hr.id=a.to_invoice) \
+				where account_analytic_line.account_id IN (%s) \
+					and account_analytic_journal.type = 'general' \
+					and a.to_invoice IS NOT NULL \
+				GROUP BY account_analytic_line.account_id"""%acc_set)
+			for account_id, sum in cr.fetchall():
+				res2[account_id] = round(sum,2)
+
 		# sum both result on account_id
 		for id in ids:
 			res[id] = round(res.get(id, 0.0),2) + round(res2.get(id, 0.0),2)
 		return res
 
 	def _last_worked_date_calc (self, cr, uid, ids, name, arg, context={}):
-		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-		acc_set = ",".join(map(str, ids2))
-		cr.execute("select account_analytic_line.account_id, max(date) from account_analytic_line where account_id IN (%s) and invoice_id is null GROUP BY account_analytic_line.account_id;"%acc_set)
 		res = {}
-		for account_id, sum in cr.fetchall():
-			res[account_id] = sum
+		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+		if ids2:
+			acc_set = ",".join(map(str, ids2))
+			cr.execute("select account_analytic_line.account_id, max(date) \
+					from account_analytic_line \
+					where account_id IN (%s) \
+						and invoice_id is null \
+					GROUP BY account_analytic_line.account_id" % acc_set)
+			for account_id, sum in cr.fetchall():
+				res[account_id] = sum
 		for id in ids:
 			res[id] = res.get(id, '')
 		return res
 
 	def _last_invoice_date_calc (self, cr, uid, ids, name, arg, context={}):
-		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-		acc_set = ",".join(map(str, ids2))
-		cr.execute ("select account_analytic_line.account_id,date(max(account_invoice.date_invoice)) from account_analytic_line join account_invoice on account_analytic_line.invoice_id = account_invoice.id where account_analytic_line.account_id IN (%s) and account_analytic_line.invoice_id is not null GROUP BY account_analytic_line.account_id"%acc_set)
 		res = {}
-		for account_id, sum in cr.fetchall():
-			res[account_id] = sum
+		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+		if ids2:
+			acc_set = ",".join(map(str, ids2))
+			cr.execute ("select account_analytic_line.account_id, \
+						date(max(account_invoice.date_invoice)) \
+					from account_analytic_line \
+					join account_invoice \
+						on account_analytic_line.invoice_id = account_invoice.id \
+					where account_analytic_line.account_id IN (%s) \
+						and account_analytic_line.invoice_id is not null \
+					GROUP BY account_analytic_line.account_id"%acc_set)
+			for account_id, sum in cr.fetchall():
+				res[account_id] = sum
 		for id in ids:
 			res[id] = res.get(id, '')
 		return res
 
 	def _last_worked_invoiced_date_calc (self, cr, uid, ids, name, arg, context={}):
-		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-		acc_set = ",".join(map(str, ids2))
-		cr.execute("select account_analytic_line.account_id, max(date) from account_analytic_line where account_id IN (%s) and invoice_id is not null GROUP BY account_analytic_line.account_id;"%acc_set)
 		res = {}
-		for account_id, sum in cr.fetchall():
-			res[account_id] = sum
+		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+		if ids2:
+			acc_set = ",".join(map(str, ids2))
+			cr.execute("select account_analytic_line.account_id, max(date) \
+					from account_analytic_line \
+					where account_id IN (%s) \
+						and invoice_id is not null \
+					GROUP BY account_analytic_line.account_id;"%acc_set)
+			for account_id, sum in cr.fetchall():
+				res[account_id] = sum
 		for id in ids:
 			res[id] = res.get(id, '')
 		return res
@@ -195,6 +259,7 @@ class account_analytic_account(osv.osv):
 		for id in ids:
 			res[id] = round(res.get(id, 0.0),2)
 		return res
+
 	def _hours_qtt_invoiced_calc(self, cr, uid, ids, name, arg, context={}):
 		res = {}
 		for account in self.browse(cr, uid, ids):
@@ -204,6 +269,7 @@ class account_analytic_account(osv.osv):
 		for id in ids:
 			res[id] = round(res.get(id, 0.0),2)
 		return res
+
 	def _revenue_per_hour_calc(self, cr, uid, ids, name, arg, context={}):
 		res = {}
 		for account in self.browse(cr, uid, ids):
@@ -214,6 +280,7 @@ class account_analytic_account(osv.osv):
 		for id in ids:
 			res[id] = round(res.get(id, 0.0),2)
 		return res
+
 	def _real_margin_rate_calc(self, cr, uid, ids, name, arg, context={}):
 		res = {}
 		for account in self.browse(cr, uid, ids):
@@ -224,6 +291,7 @@ class account_analytic_account(osv.osv):
 		for id in ids:
 			res[id] = round(res.get(id, 0.0),2)
 		return res
+
 	def _remaining_ca_calc(self, cr, uid, ids, name, arg, context={}):
 		res = {}
 		for account in self.browse(cr, uid, ids):
@@ -234,6 +302,7 @@ class account_analytic_account(osv.osv):
 		for id in ids:
 			res[id] = round(res.get(id, 0.0),2)
 		return res
+
 	def _real_margin_calc(self, cr, uid, ids, name, arg, context={}):
 		res = {}
 		for account in self.browse(cr, uid, ids):
@@ -241,6 +310,7 @@ class account_analytic_account(osv.osv):
 		for id in ids:
 			res[id] = round(res.get(id, 0.0),2)
 		return res
+
 	def _theorical_margin_calc(self, cr, uid, ids, name, arg, context={}):
 		res = {}
 		for account in self.browse(cr, uid, ids):
