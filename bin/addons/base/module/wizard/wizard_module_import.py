@@ -51,7 +51,7 @@ ask_form ='''<?xml version="1.0"?>
 '''
 
 ask_fields = {
-	'module_file': {'string': 'Module .ZIP file', 'type':'binary'},
+	'module_file': {'string': 'Module .ZIP file', 'type': 'binary', 'required': True},
 }
 
 class move_module_wizard(wizard.interface):
