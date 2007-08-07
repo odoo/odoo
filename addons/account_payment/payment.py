@@ -50,7 +50,7 @@ class payment_mode(osv.osv):
 	_columns= {
 		'name': fields.char('Name', size=64, required=True),
 		'code': fields.char('Code', size=64, required=True,unique=True,select=True),
-		'bank': fields.many2one('res.partner.bank',"Bank account",required=True),
+		'bank_id': fields.many2one('res.partner.bank',"Bank account",required=True),
 		'journal': fields.many2one('account.journal','Journal',required=True,domain=[('type','=','cash')]),
 		'type': fields.many2one('payment.type','Payment type',required=True),
 		}
@@ -75,17 +75,17 @@ class payment_order(osv.osv):
 
 	def _total(self, cr, uid, ids, name, args, context={}):
 		if not ids: return {}
-		cr.execute("""select l.order, coalesce(sum(amount),0)
-				   from payment_order_line l 
-			   where l.order in (%s) group by l.order"""% ','.join(map(str,ids)))
+		cr.execute("""select o.id, coalesce(sum(amount),0)
+			from payment_order o left join payment_line l on (o.id = l.order_id)
+			where o.id in (%s) group by o.id"""% ','.join(map(str,ids)))
 		return dict(cr.fetchall())
 
 	def nb_line(self, cr, uid, ids, name, args, context={}):
 		if not ids: return {}
 		res= {}.fromkeys(ids,0)
-		cr.execute("""select "order",count(*)
+		cr.execute("""select "order_id",count(*)
 		              from payment_line 
-			          where "order" in (%s) group by "order" """% ','.join(map(str,ids)))
+			          where "order_id" in (%s) group by "order_id" """% ','.join(map(str,ids)))
 		res.update(dict(cr.fetchall()))
 		return res
 
@@ -101,7 +101,7 @@ class payment_order(osv.osv):
 		'mode': fields.selection(mode_get, 'Payment mode',size=16,required=True, select=True),
 		'state': fields.selection([('draft', 'Draft'),('open','Open'),
 				   ('cancel','Cancelled'),('done','Done')], 'State', select=True),
-		'lines': fields.one2many('payment.line','order','Payment lines'),
+		'line_ids': fields.one2many('payment.line','order_id','Payment lines'),
 		'total': fields.function(_total, string="Total", method=True, type='float'),
 		'user_id': fields.many2one('res.users','User',required=True),
 		'nb_line': fields.function(nb_line,string='Number of payment',method=True, type='integer'),
@@ -141,12 +141,12 @@ payment_order()
 class payment_line(osv.osv):
 	_name = 'payment.line'
 	_description = 'Payment Line'
-	_rec_name = 'move_line'
+	_rec_name = 'move_line_id'
 
 	def partner_payable(self, cr, uid, ids, name, args, context={}):
 		if not ids: return {}
-		partners= self.read(cr, uid, ids, ['partner'], context)
-		partners= dict(map(lambda x: (x['id'],x['partner']),partners))
+		partners= self.read(cr, uid, ids, ['partner_id'], context)
+		partners= dict(map(lambda x: (x['id'],x['partner_id']),partners))
 		debit= self.pool.get('res.partner')._debit_get(cr, uid, partners.values(), name, args, context)
 		for i in partners:
 			partners[i]= debit[partners[i]]
@@ -155,40 +155,39 @@ class payment_line(osv.osv):
 	def translate(self,orig):
 		return {"to_pay":"credit",
 				"due_date":"date_maturity",
-				"partner":"partner_id",
 				"reference":"ref"}.get(orig,orig)
 
 	def select_by_name(self, cr, uid, ids, name, args, context={}):
 		if not ids: return {}
 		cr.execute("""SELECT pl.id, ml.%s 
 						from account_move_line ml 
-							inner join payment_line pl on (ml.id= pl.move_line)
+							inner join payment_line pl on (ml.id= pl.move_line_id)
 						where pl.id in (%s)"""% (self.translate(name),','.join(map(str,ids))) )
 		return dict(cr.fetchall())
 
 
 	_columns = {
-		'move_line': fields.many2one('account.move.line','Entry line',required=True),
+		'move_line_id': fields.many2one('account.move.line','Entry line',required=True),
 		'amount': fields.float('Payment Amount', digits=(16,2), required=True),
-		'bank': fields.many2one('res.partner.bank','Bank account'),
-		'order': fields.many2one('payment.order','Order', ondelete='cascade', select=True),
-		'partner': fields.function(select_by_name, string="Partner", method=True, type='many2one', obj='res.partner'),
+		'bank_id': fields.many2one('res.partner.bank','Bank account'),
+		'order_id': fields.many2one('payment.order','Order', ondelete='cascade', select=True),
+		'partner_id': fields.function(select_by_name, string="Partner", method=True, type='many2one', obj='res.partner'),
 		'to_pay': fields.function(select_by_name, string="To pay", method=True, type='float'),
 		'due_date': fields.function(select_by_name, string="Due date", method=True, type='date'),
 		'date_created': fields.function(select_by_name, string="Creation date", method=True, type='date'),
 		'reference': fields.function(select_by_name, string="Ref", method=True, type='char'),
 		'partner_payable': fields.function(partner_payable, string="Partner payable", method=True, type='float'),
 	 }
-	def onchange_move_line(self, cr, uid, id, move_line, type,context={}):
-		if not move_line:
+	def onchange_move_line(self, cr, uid, id, move_line_id, type,context={}):
+		if not move_line_id:
 			return {}
-		line=self.pool.get('account.move.line').browse(cr,uid,move_line)
+		line=self.pool.get('account.move.line').browse(cr,uid,move_line_id)
 		return {'value': {'amount': line.amount_to_pay,
 						  'to_pay': line.amount_to_pay,
-						  'partner': line.partner_id,
+						  'partner_id': line.partner_id,
 						  'reference': line.ref,
 						  'date_created': line.date_created,
-						  'bank': self.pool.get('account.move.line').line2bank(cr,uid,[move_line],type,context)[move_line]
+						  'bank_id': self.pool.get('account.move.line').line2bank(cr,uid,[move_line_id],type,context)[move_line_id]
 						  }}
 
 payment_line()

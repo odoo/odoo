@@ -35,7 +35,7 @@ class account_move_line(osv.osv):
 		""" Return the amount still to pay regarding all the payemnt orders (excepting cancelled orders)"""
 		if not ids:
 			return {}
-		cr.execute("SELECT ml.id,ml.credit - (select coalesce(sum(amount),0) from payment_line pl inner join payment_order po on (pl.order = po.id)where move_line = ml.id and po.state != 'cancel') as amount from account_move_line ml where credit > 0 and id in (%s)"% (",".join(map(str,ids))))
+		cr.execute("SELECT ml.id,ml.credit - (select coalesce(sum(amount),0) from payment_line pl inner join payment_order po on (pl.order_id = po.id)where move_line_id = ml.id and po.state != 'cancel') as amount from account_move_line ml where credit > 0 and id in (%s)"% (",".join(map(str,ids))))
 		r=dict(cr.fetchall())
 		return r
 
@@ -46,8 +46,8 @@ class account_move_line(osv.osv):
 		query = self.pool.get('account.move.line')._query_get(cr, uid, context={})
 		where = ' and '.join(map(lambda x: '''(select l.credit - coalesce(sum(amount),0)
 							from payment_line pl
-							  inner join payment_order po on (pl.order = po.id)
-							where move_line = l.id and po.state != 'cancel') '''+x[1]+str(x[2])+' ',args))
+							  inner join payment_order po on (pl.order_id = po.id)
+							where move_line_id = l.id and po.state != 'cancel') '''+x[1]+str(x[2])+' ',args))
 
 		cr.execute(('''select id
 					   from account_move_line l

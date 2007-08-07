@@ -71,10 +71,10 @@ def create_payment(self, cr, uid, data, context):
 	## Finally populate the current payment with new lines:
 	for line in pool.get('account.move.line').browse(cr,uid,mline_ids,context=context):
 		pool.get('payment.line').create(cr,uid,{
-			'move_line': line.id,
+			'move_line_id': line.id,
 			'amount':line.amount_to_pay, 
-			'bank':line2bank.get(line.id),
-			'order': payment['id'],
+			'bank_id':line2bank.get(line.id),
+			'order_id': payment['id'],
 			})
 
 	return {}
