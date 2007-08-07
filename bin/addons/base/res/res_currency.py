@@ -57,7 +57,8 @@ class res_currency(osv.osv):
 	_columns = {
 		'name': fields.char('Currency', size=32, required=True),
 		'code': fields.char('Code', size=3),
-		'rate': fields.function(_current_rate, method=True, string='Current rate',digits=(12,6)),
+		'rate': fields.function(_current_rate, method=True, string='Current rate', digits=(12,6),
+			help='The rate of the currency to the currency of rate 1'),
 		'rate_ids': fields.one2many('res.currency.rate', 'currency_id', 'Rates'),
 		'accuracy': fields.integer('Computational Accuracy'),
 		'rounding': fields.float('Rounding factor', digits=(12,6)),
@@ -89,9 +90,9 @@ class res_currency(osv.osv):
 				return from_amount
 		else:
 			if round:
-				return self.round(cr, uid, to_currency, from_amount * from_currency.rate/to_currency.rate)
+				return self.round(cr, uid, to_currency, from_amount * to_currency.rate/from_currency.rate)
 			else:
-				return (from_amount * from_currency.rate/to_currency.rate)
+				return (from_amount * to_currency.rate/from_currency.rate)
 	def name_search(self, cr, uid, name, args=[], operator='ilike', context={}, limit=80):
 		args2 = args[:]
 		if name:
@@ -108,7 +109,8 @@ class res_currency_rate(osv.osv):
 	_description = "Currency Rate"
 	_columns = {
 		'name': fields.date('Date', required=True, select=True),
-		'rate': fields.float('Rate', digits=(12,6), required=True),
+		'rate': fields.float('Rate', digits=(12,6), required=True,
+			help='The rate of the currency to the currency of rate 1'),
 		'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
 	}
 	_defaults = {

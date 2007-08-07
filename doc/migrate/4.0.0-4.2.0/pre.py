@@ -171,4 +171,15 @@ if not cr.fetchall():
 	cr.execute('INSERT INTO ir_values (name, key, model, meta, key2, object, value) VALUES (\'tz\', \'meta\', \'res.users\', %s, \'tz\', %s, %s)', (meta,False, value))
 cr.commit()
 
+# -------------------- #
+# Change currency rate #
+# -------------------- #
+
+cr.execute('SELECT a.attname FROM pg_class c, pg_attribute a WHERE c.relname = \'res_currency_rate\' AND a.attname = \'rate_old\' AND c.oid = a.attrelid')
+if not cr.fetchall():
+	cr.execute('ALTER TABLE res_currency_rate ADD rate_old NUMERIC(12,6)')
+	cr.execute('UPDATE res_currency_rate SET rate_old = rate')
+	cr.execute('UPDATE res_currency_rate SET rate = (1 / rate_old)')
+cr.commit()
+
 cr.close
