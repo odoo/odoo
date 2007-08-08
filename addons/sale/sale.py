@@ -591,7 +591,7 @@ class sale_order_line(osv.osv):
 				uos_id = (line.product_uos and line.product_uos.id) or line.product_uom.id
 				pu = line.price_unit
 				if line.product_uos_qty:
-					pu = round(pu* line.product_uom_qty /line.product_uos_qty, 2)
+					pu = round(pu * line.product_uom_qty / line.product_uos_qty, int(config['price_accuracy']))
 				inv_id = self.pool.get('account.invoice.line').create(cr, uid, {
 					'name': line.name,
 					'account_id': a,
