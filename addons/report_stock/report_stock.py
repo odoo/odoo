@@ -31,7 +31,7 @@ from osv import osv, fields
 
 class report_stock_prodlots(osv.osv):
 	_name = "report.stock.prodlots"
-	_description = "Report stock by production lots"
+	_description = "Stock report by production lots"
 	_auto = False
 	_columns = {
 			'name': fields.float('Quantity', readonly=True),

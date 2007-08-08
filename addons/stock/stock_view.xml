@@ -79,7 +79,7 @@
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_inventory_tree"/>
 	</record>
-	<menuitem name="Inventory Control/Lot Inventory" id="menu_action_inventory_form" action="action_inventory_form"/>
+	<menuitem name="Inventory Control/Physical inventory" id="menu_action_inventory_form" action="action_inventory_form"/>
 
 	<record model="ir.actions.act_window" id="action_inventory_line_form">
 		<field name="type">ir.actions.act_window</field>
@@ -381,7 +381,7 @@
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_location_tree2"/>
 	</record>
-	<menuitem name="Inventory Control/Configuration/Stock location" id="menu_action_location_form" action="action_location_form"/>
+	<menuitem name="Inventory Control/Configuration/Locations" id="menu_action_location_form" action="action_location_form"/>
 
 	<record model="ir.ui.view" id="view_location_tree">
 		<field name="name">stock.location.tree</field>
@@ -401,7 +401,7 @@
 		<field name="view_type">tree</field>
 		<field name="view_id" ref="view_location_tree"/>
 	</record>
-	<menuitem name="Inventory Control/Location Tree" id="menu_action_location_tree" action="action_location_tree"/>
+	<menuitem name="Inventory Control/Locations structure" id="menu_action_location_tree" action="action_location_tree"/>
 
 	=============================
 	Warehouse
@@ -441,7 +441,7 @@
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_warehouse_tree"/>
 	</record>
-	<menuitem name="Inventory Control/Configuration/Warehouse" id="menu_action_warehouse_form" action="action_warehouse_form"/>
+	<menuitem name="Inventory Control/Configuration/Warehouses" id="menu_action_warehouse_form" action="action_warehouse_form"/>
 
 	=============================
 	Packing
