@@ -38,7 +38,7 @@ class res_partner_function(osv.osv):
 	_name = 'res.partner.function'
 	_description = 'Function of the contact'
 	_columns = {
-		'name': fields.char('Name', size=64, required=True),
+		'name': fields.char('Function name', size=64, required=True),
 		'code': fields.char('Code', size=8),
 	}
 	_order = 'name'

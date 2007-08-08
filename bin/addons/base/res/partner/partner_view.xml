@@ -63,7 +63,6 @@
 		<field name="view_type">form</field>
 	</record>
 	<menuitem name="Partners/Configuration/Localisation/Countries" groups="admin" action="action_country" id="menu_country_partner"/>
-	<menuitem name="Administration/Custom/Localisation/Countries" groups="admin" action="action_country" id="menu_country"/>
 	
 	<!--
 	================================
@@ -95,14 +94,13 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_country_state">
-		<field name="name">State</field>
+		<field name="name">States</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">res.country.state</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_country_state_tree"/>
 	</record>
-	<menuitem name="Partners/Configuration/Localisation/Countries/States" groups="admin" action="action_country_state" id="menu_country_state_partner"/>
-	<menuitem name="Administration/Custom/Localisation/Countries/States" groups="admin" action="action_country_state" id="menu_country_state"/>
+	<menuitem name="Partners/Configuration/Localisation/States" groups="admin" action="action_country_state" id="menu_country_state_partner"/>
 	
 	<!--
 	=====================
@@ -521,7 +519,7 @@
 		<field name="view_id" ref="view_partner_category_tree"/>
 		<field name="domain">[('parent_id','=',False)]</field>
 	</record>
-	<menuitem name="Partners/Configuration/Categories" action="action_partner_category" id="menu_partner_category"/>
+	<menuitem name="Partners/Configuration/Categories/Categories structure" action="action_partner_category" id="menu_partner_category"/>
 
 	<record model="ir.actions.act_window" id="action_partner_by_category">
 		<field name="res_model">res.partner</field>
@@ -549,7 +547,6 @@
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">res.partner.category</field>
 		<field name="view_type">form</field>
-		<field name="view_id" ref="view_partner_category_form"/>
 	</record>
 	<menuitem name="Partners/Configuration/Categories/Edit Categories" action="action_partner_category_form" id="menu_partner_category_form"/>
 
