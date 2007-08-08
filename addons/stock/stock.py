@@ -337,14 +337,14 @@ class stock_picking(osv.osv):
 			], 'State', readonly=True),
 		'date':fields.datetime('Date create'),
 
-		'move_lines': fields.one2many('stock.move', 'picking_id', 'Move Lines'),
+		'move_lines': fields.one2many('stock.move', 'picking_id', 'Move lines'),
 
 		'auto_picking': fields.boolean('Auto-Packing'),
 		'work': fields.boolean('Work todo'),
-		'loc_move_id': fields.many2one('stock.location', 'Move to Location'),
+		'loc_move_id': fields.many2one('stock.location', 'Final location'),
 		'address_id': fields.many2one('res.partner.address', 'Partner'),
-		'lot_id': fields.many2one('stock.lot', 'Consumer Lot Created'),
-		'move_lot_id': fields.many2one('stock.move.lot', 'Moves Created'),
+		'lot_id': fields.many2one('stock.lot', 'Consumer lot created'),
+		'move_lot_id': fields.many2one('stock.move.lot', 'Moves created'),
 		'invoice_state':fields.selection([
 			("invoiced","Invoiced"),
 			("2binvoiced","To be invoiced"),

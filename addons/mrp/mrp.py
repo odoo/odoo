@@ -325,8 +325,8 @@ class mrp_production(osv.osv):
 
 		'bom_id': fields.many2one('mrp.bom', 'Bill of Material', domain=[('bom_id','=',False)]),
 
-		'picking_id': fields.many2one('stock.picking', 'Packing list'),
-		'move_prod_id': fields.many2one('stock.move', 'Move Product'),
+		'picking_id': fields.many2one('stock.picking', 'Packing list', readonly=True),
+		'move_prod_id': fields.many2one('stock.move', 'Move product', readonly=True),
 		'move_lines': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Products Consummed'),
 
 		'move_created_ids': fields.one2many('stock.move', 'production_id', 'Moves Created'),

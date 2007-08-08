@@ -169,9 +169,9 @@
 						<field name="note" colspan="4" nolabel="1"/>
 					</page>
 					<page string="History">
-						<separator string="Generated Invoices" colspan="4"/>
+						<separator string="Related invoices" colspan="4"/>
 						<field name="invoice_ids" colspan="4" nolabel="1"/>
-						<separator string="Generated packings" colspan="4"/>
+						<separator string="Related packings" colspan="4"/>
 						<field name="picking_ids" colspan="4" nolabel="1"/>
 					</page>
 				</notebook>
@@ -411,14 +411,14 @@
 	<menuitem name="Sales Management/Sales order lines/Uninvoiced lines" id="menu_action_order_line_tree2" action="action_order_line_tree2"/>
 
 	<record model="ir.actions.act_window" id="action_order_line_tree3">
-		<field name="name">Uninvoiced lines done</field>
+		<field name="name">Uninvoiced lines delivered</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">sale.order.line</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('invoiced','&lt;&gt;', 1),('state','=','done')]</field>
 	</record>
-	<menuitem name="Sales Management/Sales order lines/Uninvoiced lines/Uninvoiced lines done" id="menu_action_order_line_tree3" action="action_order_line_tree3"/>
+	<menuitem name="Sales Management/Sales order lines/Uninvoiced lines/Uninvoiced lines delivered" id="menu_action_order_line_tree3" action="action_order_line_tree3"/>
 
 	<act_window name="Sales"
 		domain="[('partner_id', '=', active_id)]"

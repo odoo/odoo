@@ -643,7 +643,7 @@
 		name="account.move.journal"
 		menu="False"
 		id="action_move_journal_line_form" />
-	<menuitem name="Financial Management/Entries/Entries in a journal" id="menu_action_move_journal_line_form" action="action_move_journal_line_form" type="wizard"/>
+	<menuitem name="Financial Management/Entries/Entries by journal" id="menu_action_move_journal_line_form" action="action_move_journal_line_form" type="wizard"/>
 
 	<record model="ir.actions.act_window" id="action_move_journal_period_line_form">
 		<field name="name">Open journals</field>
@@ -651,7 +651,7 @@
 		<field name="view_type">tree</field>
 		<field name="domain">[('state','&lt;&gt;','done')]</field>
 	</record>
-	<menuitem name="Financial Management/Entries/Entries in a journal/" id="menu_action_move_journal_period_line_form" action="action_move_journal_period_line_form"/>
+	<menuitem name="Financial Management/Entries/Entries by journal/" id="menu_action_move_journal_period_line_form" action="action_move_journal_period_line_form"/>
 
 	<!--
 	Entries lines
@@ -1150,7 +1150,7 @@
 				<field name="journal_id" select="1"/>
 				<field name="lines_id" colspan="4" widget="one2many_list"/>
 				<group col="1" colspan="4">
-					<button name="generate" string="Generate Entries" type="object"/>
+					<button name="generate" string="Create entries" type="object"/>
 				</group>
 			</form>
 		</field>
