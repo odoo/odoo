@@ -84,9 +84,9 @@ class stock_location(osv.osv):
 		'child_ids': fields.one2many('stock.location', 'location_id', 'Contains'),
 
 		'comment': fields.text('Additional Information'),
-		'posx': fields.integer('Position X', required=True),
-		'posy': fields.integer('Position Y', required=True),
-		'posz': fields.integer('Position Z', required=True)
+		'posx': fields.integer('Corridor (X)', required=True),
+		'posy': fields.integer('Shelves (Y)', required=True),
+		'posz': fields.integer('Height (Z)', required=True)
 	}
 	_defaults = {
 		'active': lambda *a: 1,
