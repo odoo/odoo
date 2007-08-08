@@ -90,7 +90,7 @@
 
 
 		<report id="account_vat_declaration"
-			string="VAT Declaration"
+			string="Taxes report"
 			model="account.tax.code"
 			name="account.vat.declaration"
 			rml="account/report/tax_report.rml"
@@ -98,14 +98,14 @@
 			menu="False"/>
 
 		<wizard 
-			string="Wizard VAT Declaration"
+			string="Wizard taxes report"
 			model="account.tax.code"
 			name="account.vat.declaration"
 			menu="False"
 			id="wizard_vat_declaration"/>
 
 		<menuitem
-			name="Financial Management/Reporting/VAT Declaration"
+			name="Financial Management/Reporting/Taxes report"
 			action="wizard_vat_declaration"
 			type="wizard"
 			id="menu_wizard_vat_declaration"/>

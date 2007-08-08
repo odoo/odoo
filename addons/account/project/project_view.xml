@@ -8,7 +8,7 @@
 			<field name="type">tree</field>
 			<field name="priority" eval="8"/>
 			<field name="arch" type="xml">
-				<tree string="Analytic Account" colors="red:date and (date&lt;=current_date); red:quantity_max and (quantity_max&gt;quantity)">
+				<tree string="Analytic account" colors="red:date and (date&lt;=current_date); red:quantity_max and (quantity_max&gt;quantity)">
 					<field name="code" />
 					<field name="complete_name"/>
 					<field name="quantity" />
@@ -24,7 +24,7 @@
 			<field name="type">tree</field>
 			<field name="field_parent">child_ids</field>
 			<field name="arch" type="xml">
-				<tree string="Analytic Account" colors="red:date and (date&lt;=current_date); red:quantity_max and (quantity_max&gt;quantity)">
+				<tree string="Analytic account" colors="red:date and (date&lt;=current_date); red:quantity_max and (quantity_max&gt;quantity)">
 					<field name="name"/>
 					<field name="code"/>
 					<field name="date" />
@@ -43,7 +43,7 @@
 			<field name="model">account.analytic.account</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Analytic Account">
+				<form string="Analytic account">
 					<notebook>
 						<page string="Account Data">
 							<field name="name" select="1"/>
@@ -136,7 +136,7 @@
 			<field name="view_type">form</field>
 			<field name="view_id" ref="view_account_analytic_line_tree"/>
 		</record>
-		<menuitem name="Financial Management/Entries/Analytic account/Analytic antries" id="account_entries_analytic_entries" action="action_account_analytic_line_form" />
+		<menuitem name="Financial Management/Entries/Analytic entries/Analytic entries" id="account_entries_analytic_entries" action="action_account_analytic_line_form" />
 
 
 		<record model="ir.actions.act_window" id="action_account_tree1">
@@ -252,7 +252,7 @@
 		<field name="view_type">tree</field>
 		<field name="view_id" ref="view_account_analytic_journal_tree"/>
 	</record>
-	<menuitem name="Financial Management/Entries/Analytic account/Journal Entries"
+	<menuitem name="Financial Management/Entries/Analytic entries/Entries by journal"
 		id="account_analytic_journal_entries"
 		action="action_account_analytic_journal_tree2"/>
 

@@ -524,7 +524,7 @@
 		<field name="view_id" ref="view_tax_code_tree"/>
 	</record>
 	<record model="ir.actions.act_window" id="action_tax_code_tree">
-		<field name="name">Tax codes structure</field>
+		<field name="name">Tax report</field>
 		<field name="res_model">account.tax.code</field>
 		<field name="domain">[('parent_id','=',False)]</field>
 		<field name="view_type">tree</field>
@@ -892,8 +892,8 @@
 
 	<menuitem name="Financial Management/Charts" sequence="7"/>
 	<wizard string="Accounts Charts" menu="False" model="account.account" name="account.chart" id="wizard_account_chart"/>
-	<menuitem name="Financial Management/Charts/Accounts charts" id="menu_action_account_tree2" action="wizard_account_chart" type="wizard"/>
-	<menuitem name="Financial Management/Charts/Accounts charts/Fast account chart" id="menu_action_account_tree3" action="action_account_tree2"/>
+	<menuitem name="Financial Management/Charts/Charts of accounts" id="menu_action_account_tree2" action="wizard_account_chart" type="wizard"/>
+	<menuitem name="Financial Management/Charts/Charts of accounts/Fast charts of accounts" id="menu_action_account_tree3" action="action_account_tree2"/>
 
 	<menuitem name="Financial Management/Periodical processing" sequence="3"/>
 
@@ -1430,7 +1430,9 @@
 		<field name="name">Set account charts</field>
 		<field name="wiz_name">module.upgrade</field>
 	</record>
-	<menuitem name="Administration/Configuration/Account/Apply account charts and VAT mode" action="account_wizard_upgrade" sequence="3" type="wizard" id="menu_install_module"/>
+	<menuitem
+		name="Administration/Configuration/Account/Set account charts and VAT mode" 
+		action="account_wizard_upgrade" sequence="3" type="wizard" id="menu_install_module"/>
 
 	<record model="ir.actions.act_window" id="open_module_plan_ctbl">
 		<field name="res_model">account.account</field>

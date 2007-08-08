@@ -30,6 +30,8 @@ from osv import fields,osv
 from wizard.tiny_sxw2rml import sxw2rml
 from StringIO import StringIO
 import base64
+import pooler
+import tools
 
 class report_xml(osv.osv):
 	_inherit = 'ir.actions.report.xml'
