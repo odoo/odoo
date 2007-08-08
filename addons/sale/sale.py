@@ -85,7 +85,7 @@ class sale_order(osv.osv):
 			val = 0.0
 			cur=order.pricelist_id.currency_id
 			for line in order.order_line:
-				for c in self.pool.get('account.tax').compute(cr, uid, line.tax_id, line.price_unit * (1-(line.discount or 0.0)/100.0), line.product_uos_qty, order.partner_invoice_id.id, line.product_id, order.partner_id):
+				for c in self.pool.get('account.tax').compute(cr, uid, line.tax_id, line.price_unit * (1-(line.discount or 0.0)/100.0), line.product_uom_qty, order.partner_invoice_id.id, line.product_id, order.partner_id):
 					val+= cur_obj.round(cr, uid, cur, c['amount'])
 			res[order.id]=cur_obj.round(cr, uid, cur, val)
 		return res
@@ -509,10 +509,7 @@ class sale_order_line(osv.osv):
 		res = {}
 		cur_obj=self.pool.get('res.currency')
 		for line in self.browse(cr, uid, ids):
-			if line.product_uos.id:
-				res[line.id] = line.price_unit * line.product_uos_qty * (1 - (line.discount or 0.0) /100.0)
-			else:
-				res[line.id] = line.price_unit * line.product_uom_qty * (1 - (line.discount or 0.0) / 100.0)
+			res[line.id] = line.price_unit * line.product_uom_qty * (1 - (line.discount or 0.0) / 100.0)
 			cur = line.order_id.pricelist_id.currency_id
 			res[line.id] = cur_obj.round(cr, uid, cur, res[line.id])
 		return res
@@ -592,10 +589,13 @@ class sale_order_line(osv.osv):
 					a = self.pool.get('ir.property').get(cr, uid, 'property_account_income_categ', 'product.category', context=context)
 				uosqty = _get_line_qty(line)
 				uos_id = (line.product_uos and line.product_uos.id) or line.product_uom.id
+				pu = line.price_unit
+				if line.product_uos_qty:
+					pu = round(pu* line.product_uom_qty /line.product_uos_qty, 2)
 				inv_id = self.pool.get('account.invoice.line').create(cr, uid, {
 					'name': line.name,
 					'account_id': a,
-					'price_unit': line.price_unit,
+					'price_unit': pu,
 					'quantity': uosqty,
 					'discount': line.discount,
 					'uos_id': uos_id,

@@ -10,7 +10,8 @@
 		"hr_timesheet_project", 
 		"crm", 
 		"project",
-		"board_project"
+		"board_project",
+		"account_analytic_analysis"
 	], 
 	#"board_project", 
 	#"board_account"],
