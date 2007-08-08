@@ -2,7 +2,7 @@
 <terp>
 	<data>
 
-		<menuitem name="Project" id="menu_main" icon="terp-project"/>
+		<menuitem name="Project Management" id="menu_main" icon="terp-project"/>
 
 		<record model="ir.actions.act_window" id="action_account_analytic_managed">
 			<field name="name">My managed accounts</field>
@@ -24,7 +24,7 @@
 			<field name="domain">[('invoice_id','=',False),('to_invoice','!=',False),('account_id.user_id','=',uid)]</field>
 		</record>
 
-		<menuitem name="Project/Analytic accounts/Uninvoiced entries of my projects"
+		<menuitem name="Project Management/Analytic accounts/Uninvoiced entries of my projects"
 			id="menu_action_hr_tree_invoiced_my"
 			action="action_hr_tree_invoiced_my"/>
 

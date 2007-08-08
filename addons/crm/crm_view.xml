@@ -352,6 +352,15 @@
 	</record>
 	<menuitem name="CRM &amp; SRM/Cases/All Cases" id="menu_crm_case_categ0-act" action="crm_case_categ0-act"/>
 
+	<record model="ir.actions.act_window" id="crm_case_categ0-act_open">
+		<field name="name">Open cases</field>
+		<field name="res_model">crm.case</field>
+		<field name="view_type">form</field>
+		<field name="domain">[('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]</field>
+	</record>
+	<menuitem name="CRM &amp; SRM/Cases/All Cases/" id="menu_crm_case_categ0-act_open" action="crm_case_categ0-act_open"/>
+
+
 	<record model="ir.actions.act_window" id="crm_case_categ0-act_my">
 		<field name="name">My cases</field>
 		<field name="res_model">crm.case</field>
@@ -359,7 +368,7 @@
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('user_id','=',uid)]</field>
 	</record>
-	<menuitem name="CRM &amp; SRM/Cases/All Cases/My cases" id="menu_crm_case_categ0-act_my" action="crm_case_categ0-act_my"/>
+	<menuitem name="CRM &amp; SRM/Cases/My cases" id="menu_crm_case_categ0-act_my" action="crm_case_categ0-act_my"/>
 	<record model="ir.actions.act_window" id="crm_case_categ0-act_my_open">
 		<field name="name">My open cases</field>
 		<field name="res_model">crm.case</field>
@@ -367,7 +376,7 @@
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('user_id','=',uid),('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]</field>
 	</record>
-	<menuitem name="CRM &amp; SRM/Cases/All Cases/My cases/" id="menu_crm_case_categ0-act_my_open" action="crm_case_categ0-act_my_open"/>
+	<menuitem name="CRM &amp; SRM/Cases/My cases/" id="menu_crm_case_categ0-act_my_open" action="crm_case_categ0-act_my_open"/>
 
 
 
@@ -410,16 +419,16 @@
 		<field name="view_mode">tree,form</field>
 		<field name="view_id" ref="crm_case_history_tree-view"/>
 	</record>
-	<menuitem name="CRM &amp; SRM/Cases/Cases Actions" id="menu_crm_case_history-act_main" groups="admin"/>
-	<menuitem name="CRM &amp; SRM/Cases/Cases Actions/All Actions" id="menu_crm_case_history-act" action="crm_case_history-act" groups="admin"/>
+	<menuitem name="CRM &amp; SRM/Cases/Cases histories" id="menu_crm_case_history-act_main" groups="admin"/>
+	<menuitem name="CRM &amp; SRM/Cases/Cases histories/All histories" id="menu_crm_case_history-act" action="crm_case_history-act" groups="admin"/>
 	<record model="ir.actions.act_window" id="crm_case_history_my-act">
-		<field name="name">My Actions</field>
+		<field name="name">My histories</field>
 		<field name="res_model">crm.case.history</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('user_id','=',uid)]</field>
 	</record>
-	<menuitem name="CRM &amp; SRM/Cases/Cases Actions/All Actions/" id="menu_crm_case_history_my-act" action="crm_case_history_my-act" groups="admin"/>
+	<menuitem name="CRM &amp; SRM/Cases/Cases histories/All histories/" id="menu_crm_case_history_my-act" action="crm_case_history_my-act" groups="admin"/>
 
 	<record model="ir.ui.view" id="crm_segmentation_line_tree-view">
 		<field name="name">crm.segmentation.line.tree</field>
