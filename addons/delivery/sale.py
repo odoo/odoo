@@ -9,7 +9,7 @@ class sale_order(osv.osv):
 	_description = "Sale Order"
 
 	_columns = {
- 		'carrier_id':fields.many2one("delivery.carrier","Carrier"),
+ 		'carrier_id':fields.many2one("delivery.carrier","Delivery method", help="Complete this field if you plan to invoice the shipping based on packings made."),
 	}
 
 	def onchange_partner_id(self, cr, uid, ids, part):
