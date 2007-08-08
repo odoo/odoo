@@ -866,7 +866,7 @@
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_move_tree"/>
 	</record>
-	<menuitem name="Financial Management/Entries/Entry lookup/" id="menu_action_move_line_form" action="action_move_line_form"/>
+	<menuitem name="Financial Management/Entries/Search entries/" id="menu_action_move_line_form" action="action_move_line_form"/>
 
 	<record model="ir.actions.act_window" id="action_move_line_search">
 		<field name="name">Entry line</field>
@@ -888,7 +888,7 @@
 		<field name="act_window_id" ref="action_move_line_search"/>
 	</record>
 
-	<menuitem name="Financial Management/Entries/Entry lookup/" id="menu_action_move_line_search" action="action_move_line_search"/>
+	<menuitem name="Financial Management/Entries/Search entries/" id="menu_action_move_line_search" action="action_move_line_search"/>
 
 	<menuitem name="Financial Management/Charts" sequence="7"/>
 	<wizard string="Accounts Charts" menu="False" model="account.account" name="account.chart" id="wizard_account_chart"/>

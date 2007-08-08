@@ -13,7 +13,7 @@
 		<field name="model">mrp.property.group</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Property Groups">
+			<form string="Properties categories">
 				<separator string="General Information" colspan="4"/>
 				<field name="name" select="1" colspan="4"/>
 				<field name="description" colspan="4"/>
@@ -27,7 +27,7 @@
 		<field name="view_mode">tree,form</field>
 	</record>
 	<menuitem name="Production Management/Configuration" groups="admin"/>
-	<menuitem name="Production Management/Configuration/Properties/Property groups" id="menu_mrp_property_group_action" action="mrp_property_group_action"/>
+	<menuitem name="Production Management/Configuration/Properties/Property categories" id="menu_mrp_property_group_action" action="mrp_property_group_action"/>
 
 	<record model="ir.ui.view" id="mrp_property_tree_view">
 		<field name="name">mrp.property.tree</field>
@@ -106,7 +106,7 @@
 						<field name="time_stop"/>
 					</group>
 				</page>
-				<page string="Cost Accounting">
+				<page string="Analytic Accounting">
 					<field name="costs_hour"/>
 					<field name="costs_hour_account_id"/>
 					<field name="costs_cycle"/>
@@ -383,7 +383,7 @@
 						<button name="button_cancel" string="Cancel" states="draft,ready,confirmed,in_production,picking_except"/>
 						<button name="button_recreate" string="Recreate Picking" states="picking_except"/>
 					</group>
-				</page><page string="Planned Materials">
+				</page><page string="Scheduled goods">
 					<field name="product_lines" colspan="4" nolabel="1" widget="one2many_list"/>
 				</page><page string="Workcenters">
 					<field name="workcenter_lines" colspan="4" nolabel="1" widget="one2many_list"/>
@@ -500,7 +500,7 @@
 		<field name="model">mrp.production.product.line</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Planned Products">
+			<form string="Scheduled goods">
 				<field name="name"/>
 				<field name="product_id"/>
 				<field name="product_uom"/>
@@ -513,7 +513,7 @@
 		<field name="model">mrp.production.product.line</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Planned Products">
+			<tree string="Scheduled goods">
 				<field name="product_id"/>
 				<field name="product_uom"/>
 				<field name="product_qty"/>
@@ -631,7 +631,7 @@
 		<field name="model">stock.warehouse.orderpoint</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Orderpoint rules">
+			<tree string="Stock minimum rules">
 				<field name="warehouse_id"/>
 				<field name="product_id"/>
 				<field name="product_uom"/>
@@ -648,7 +648,7 @@
 		<field name="model">stock.warehouse.orderpoint</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Orderpoint rule">
+			<form string="Stock minimum rules">
 				<field name="name" select="1"/>
 				<field name="active" select="1"/>
 				<field name="warehouse_id" select="1"/>
@@ -671,16 +671,16 @@
 		<field name="view_id" ref="view_warehouse_orderpoint_tree"/>
 	</record>
 	<menuitem name="Inventory Control/Reordering policy" sequence="4"/>
-	<menuitem name="Inventory Control/Reordering policy/Minimum quantity rules" id="menu_action_orderpoint_form" action="action_orderpoint_form"/>
+	<menuitem name="Inventory Control/Reordering policy/Stock minimum rules" id="menu_action_orderpoint_form" action="action_orderpoint_form"/>
 
-	<act_window name="Orderpoints"
+	<act_window name="Stock minimum rules"
 		domain="[('warehouse_id', '=', active_id)]"
 		res_model="stock.warehouse.orderpoint"
 		src_model="stock.warehouse"
 		id="act_stock_warehouse_2_stock_warehouse_orderpoint"/>
 
 	<!-- add product_uom to context to be the default value when adding new orderpoints -->
-	<act_window name="Orderpoints"
+	<act_window name="Stock minimum rules"
 		domain="[('product_id', '=', active_id)]"
 		context="{'product_uom': uom_id}"
 		res_model="stock.warehouse.orderpoint"

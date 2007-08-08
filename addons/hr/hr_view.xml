@@ -149,7 +149,7 @@
 			<field name="model">hr.timesheet.group</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Timesheet group">
+				<form string="Timesheet category">
 					<field name="name" select="1"/>
 					<field name="manager" select="1"/>
 					<newline />
@@ -164,7 +164,7 @@
 			<field name="view_type">form</field>
 			<field name="view_id" ref="create_group" />
 		</record>
-		<menuitem name="Human Resources/Configuration/Timesheet Groups" id="menu_edit_workgroup" action="edit_workgroup" groups="admin"/>
+		<menuitem name="Human Resources/Configuration/Timesheet categories" id="menu_edit_workgroup" action="edit_workgroup" groups="admin"/>
 
 		<record model="ir.ui.view" id="view_timesheet_tree">
 			<field name="name">hr.timesheet.tree</field>
@@ -263,13 +263,13 @@
 		<menuitem name="Human Resources/Configuration/Categories of Employee" id="menu_view_employee_category_form" action="open_view_categ_form" groups="admin"/>
 
 		<record model="ir.actions.act_window" id="open_view_categ_tree">
-			<field name="name">Categories Tree</field>
+			<field name="name">Categories structure</field>
 			<field name="res_model">hr.employee.category</field>
 			<field name="view_type">tree</field>
 			<field name="view_id" ref="view_employee_category_tree"/>
 			<field name="domain">[('parent_id','=',False)]</field>
 		</record>
-		<menuitem name="Human Resources/Configuration/Categories of Employee/Categories Tree" id="menu_view_employee_category_tree" action="open_view_categ_tree" groups="admin"/>
+		<menuitem name="Human Resources/Configuration/Categories of Employee/Categories structure" id="menu_view_employee_category_tree" action="open_view_categ_tree" groups="admin"/>
 
 		<record model="ir.ui.view" id="view_attendance_who">
 			<field name="name">hr.attendance.tree</field>

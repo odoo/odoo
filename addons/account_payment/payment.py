@@ -96,7 +96,7 @@ class payment_order(osv.osv):
 		return [(r['code'],r['name']) for r in res] + [('manual', 'Manual')]
 
 	_columns = {
-		'date_planned': fields.date('Date if fixed'),
+		'date_planned': fields.date('Scheduled date if fixed'),
 		'reference': fields.char('Reference',size=128),
 		'mode': fields.selection(mode_get, 'Payment mode',size=16,required=True, select=True),
 		'state': fields.selection([('draft', 'Draft'),('open','Open'),

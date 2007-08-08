@@ -300,7 +300,7 @@ class purchase_order_line(osv.osv):
 	_columns = {
 		'name': fields.char('Description', size=64, required=True),
 		'product_qty': fields.float('Quantity', required=True, digits=(16,2)),
-		'date_planned': fields.date('Date Promised', required=True),
+		'date_planned': fields.date('Scheduled date', required=True),
 		'taxes_id': fields.many2many('account.tax', 'purchase_order_taxe', 'ord_id', 'tax_id', 'Taxes'),
 		'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
 		'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok','=',True)], change_default=True),

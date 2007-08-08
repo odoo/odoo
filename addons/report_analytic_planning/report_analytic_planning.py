@@ -139,7 +139,7 @@ class report_account_analytic_planning_stat(osv.osv):
 		'user_id': fields.many2one('res.users', 'User'),
 		'manager_id': fields.many2one('res.users', 'Manager'),
 		'account_id': fields.many2one('account.analytic.account', 'Account', required=True),
-		'sum_amount': fields.float('Planned Work', required=True),
+		'sum_amount': fields.float('Planned hours', required=True),
 		'sum_amount_real': fields.function(_sum_amount_real, method=True, string='Timesheet'),
 		'sum_amount_tasks': fields.function(_sum_amount_tasks, method=True, string='Tasks'),
 	}

@@ -241,7 +241,7 @@ class esale_order_line(osv.osv):
 		'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok','=',True)], change_default=True),
 		'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True),
 		'price_unit': fields.float('Unit Price', required=True),
-		'date_planned': fields.date('Date Promised', required=True),
+		'date_planned': fields.date('Scheduled date', required=True),
 	}
 	_defaults = {
 		'date_planned': lambda *a: time.strftime('%Y-%m-%d'),

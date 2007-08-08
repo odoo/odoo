@@ -101,7 +101,7 @@ class project(osv.osv):
 		 'tasks': fields.one2many('project.task', 'project_id', "Project tasks"),
 		 'parent_id': fields.many2one('project.project', 'Parent project'),
 		 'child_id': fields.one2many('project.project', 'parent_id', 'Subproject'),
-		 'planned_hours': fields.function(_calc_planned, method=True, string='Hours planned'),
+		 'planned_hours': fields.function(_calc_planned, method=True, string='Planned hours'),
 		 'effective_hours': fields.function(_calc_effective, method=True, string='Hours spent'),
 		 'date_start': fields.date('Project started on'),
 		 'date_end': fields.date('Project should end on'),

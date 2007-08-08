@@ -231,8 +231,8 @@ class stock_move_lot(osv.osv):
 		'active': fields.boolean('Active'),
 		'state': fields.selection( (('draft','Draft'),('done','Moved')), 'State', readonly=True),
 		'serial': fields.char('Tracking Number', size=32),
-		'date_planned': fields.date('Planned Date'),
-		'date_moved': fields.date('Actual Date'),
+		'date_planned': fields.date('Scheduled date'),
+		'date_moved': fields.date('Actual date'),
 		'lot_id': fields.many2one('stock.lot','Lot', required=True),
 		'loc_dest_id': fields.many2one('stock.location', 'Destination Location', required=True),
 		'address_id': fields.many2one('res.partner.address', 'Destination Address'),
@@ -644,15 +644,15 @@ class stock_move(osv.osv):
 		'priority': fields.selection([('0','Not urgent'),('1','Urgent')], 'Priority'),
 
 		'date': fields.datetime('Date Created'),
-		'date_planned': fields.date('Planned date', required=True),
+		'date_planned': fields.date('Scheduled date', required=True),
 
 		'product_id': fields.many2one('product.product', 'Product', required=True),
 
-		'product_qty': fields.float('Quantity (UOM)', required=True),
+		'product_qty': fields.float('Quantity', required=True),
 		'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
 		'product_uos_qty': fields.float('Quantity (UOS)'),
 		'product_uos': fields.many2one('product.uom', 'Product UOS'),
-		'product_packaging' : fields.many2one('product.packaging', 'Product packaging'),
+		'product_packaging' : fields.many2one('product.packaging', 'Packaging'),
 
 		'location_id': fields.many2one('stock.location', 'Source Location', required=True),
 		'location_dest_id': fields.many2one('stock.location', 'Dest. Location', required=True),

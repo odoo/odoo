@@ -319,7 +319,7 @@ class mrp_production(osv.osv):
 		'location_src_id': fields.many2one('stock.location', 'Production Location', required=True),
 		'location_dest_id': fields.many2one('stock.location', 'Destination Location', required=True),
 
-		'date_planned': fields.date('Planned date', required=True),
+		'date_planned': fields.date('Scheduled date', required=True),
 		'date_start': fields.datetime('Start Date'),
 		'date_finnished': fields.datetime('End Date'),
 
@@ -330,7 +330,7 @@ class mrp_production(osv.osv):
 		'move_lines': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Products Consummed'),
 
 		'move_created_ids': fields.one2many('stock.move', 'production_id', 'Moves Created'),
-		'product_lines': fields.one2many('mrp.production.product.line', 'production_id', 'Material Planned'),
+		'product_lines': fields.one2many('mrp.production.product.line', 'production_id', 'Scheduled goods'),
 		'workcenter_lines': fields.one2many('mrp.production.workcenter.line', 'production_id', 'Workcenters Utilisation'),
 
 		'state': fields.selection([('draft','Draft'),('picking_except', 'Packing Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Canceled'),('done','Done')],'State', readonly=True)
@@ -604,7 +604,7 @@ mrp_production_workcenter_line()
 
 class mrp_production_product_line(osv.osv):
 	_name = 'mrp.production.product.line'
-	_description = 'Production planned products'
+	_description = 'Production scheduled products'
 	_columns = {
 		'name': fields.char('Name', size=64, required=True),
 		'product_id': fields.many2one('product.product', 'Product', required=True),
@@ -628,7 +628,7 @@ class mrp_procurement(osv.osv):
 		'name': fields.char('Name', size=64, required=True),
 		'origin': fields.char('Origin', size=64),
 		'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority', required=True),
-		'date_planned': fields.date('Date Promised', required=True),
+		'date_planned': fields.date('Scheduled date', required=True),
 		'date_close': fields.date('Date Closed'),
 		'product_id': fields.many2one('product.product', 'Product', required=True),
 		'product_qty': fields.float('Quantity', required=True),
