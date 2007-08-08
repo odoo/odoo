@@ -121,9 +121,11 @@
 				<tree string="Analytic Entries" editable="top">
 					<field name="date"/>
 					<field name="name" />
-					<field name="unit_amount" sum="Total quantity"/>
-					<field name="amount" sum="Total amount"/>
+					<field name="unit_amount" sum="Total quantity" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
+					<field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
 					<field name="account_id" domain="[('type','=','normal')]"/>
+					<field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" invisible="True"/>
+					<field name="amount" sum="Total amount"/>
 					<field name="general_account_id"/>
 					<field name="journal_id"/>
 					<field name="ref"/>
@@ -161,13 +163,13 @@
 				<form string="Project line">
 					<field name="name" />
 					<field name="account_id" />
-					<field name="account_id" />
 					<field name="date" />
 					<field name="journal_id" />
 					<field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" />
 					<field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" />
 					<field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" />
-					<field name="amount" colspan="4" />
+					<field name="general_account_id" invisible="True"/>
+					<field name="amount" />
 				</form>
 			</field>
 		</record>
