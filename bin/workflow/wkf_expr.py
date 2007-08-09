@@ -79,7 +79,6 @@ def _eval_expr(cr, ident, workitem, action):
 			ret=False
 		else:
 			wf_service = netsvc.LocalService("object_proxy")
-			obj = pooler.get_pool(cr.dbname).get(model)
 			env = Env(wf_service, cr, uid, model, ids)
 			ret = eval(line, env)
 	return ret
