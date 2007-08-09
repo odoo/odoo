@@ -144,7 +144,7 @@
 			<field name="view_id" ref="view_project" />
 		</record>
 		<menuitem
-			name="Project Management/All projects"
+			name="Project Management/All Projects"
 			action="open_view_all_project"
 			id="menu_all_project"/>
 
@@ -156,7 +156,7 @@
 			<field name="view_id" ref="view_project" />
 		</record>
 		<menuitem
-			name="Project Management/All projects/Unclosed projects"
+			name="Project Management/All Projects/Unclosed Projects"
 			action="open_view_all_project_unclosed" 
 			id="menu_all_project_unclosed"/>
 
@@ -169,7 +169,7 @@
 			<field name="view_id" ref="view_project" />
 		</record>
 		<menuitem
-			name="Project Management/All projects/Unclosed projects/Open projects"
+			name="Project Management/All Projects/Unclosed Projects/Open Projects"
 			action="open_view_all_project_unclosed_open" 
 			id="menu_all_project_unclosed_open"/>
 
@@ -182,7 +182,7 @@
 			<field name="view_id" ref="view_project" />
 		</record>
 		<menuitem 
-			name="Project Management/Configuration/Projects/Open projects" 
+			name="Project Management/Configuration/Projects/Open Projects" 
 			id="menu_open_view_project_open"
 			action="open_view_project_open"/>
 
@@ -248,7 +248,7 @@
 			<field name="domain">[('manager', '=', uid)]</field>
 			<field name="view_id" ref="view_my_project" />
 		</record>
-		<menuitem name="Project Management/My projects" id="menu_open_view_my_project" action="open_view_my_project" />
+		<menuitem name="Project Management/My Projects" id="menu_open_view_my_project" action="open_view_my_project" />
 
 
 		<record model="ir.actions.act_window" id="open_view_my_project_open_unclosed">
@@ -258,7 +258,7 @@
 			<field name="domain">[('manager', '=', uid),('state','&lt;&gt;','cancelled'),('state','&lt;&gt;','done')]</field>
 			<field name="view_id" ref="view_my_project" />
 		</record>
-		<menuitem name="Project Management/My projects/My unclosed projects"
+		<menuitem name="Project Management/My Projects/My Unclosed Projects"
 			id="menu_open_view_my_project_open_unclosed" 
 			action="open_view_my_project_open_unclosed" />
 
@@ -270,7 +270,7 @@
 			<field name="domain">[('manager', '=', uid),('state','=','open')]</field>
 			<field name="view_id" ref="view_my_project" />
 		</record>
-		<menuitem name="Project Management/My projects/My unclosed projects/My open projects"
+		<menuitem name="Project Management/My Projects/My Unclosed Projects/My Open Projects"
 			id="menu_open_view_my_project_open" 
 			action="open_view_my_project_open" />
 
@@ -366,7 +366,7 @@
 			<field name="view_mode">tree,form,calendar</field>
 			<field name="view_id" eval="False"/>
 		</record>
-		<menuitem name="Project Management/All tasks" id="menu_action_view_task" action="action_view_task" />
+		<menuitem name="Project Management/All Tasks" id="menu_action_view_task" action="action_view_task" />
 
 		<record model="ir.actions.act_window" id="action_view_task2">
 			<field name="name">Unbilled closed tasks</field>
@@ -375,7 +375,7 @@
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('state','=','done'), ('billable','=',True), ('invoice_id','=',False)]</field>
 		</record>
-		<menuitem name="Project Management/All tasks/Billable tasks/Unbilled closed tasks" id="menu_action_view_task2" action="action_view_task2" />
+		<menuitem name="Project Management/All Tasks/Billable Tasks/Unbilled Closed Tasks" id="menu_action_view_task2" action="action_view_task2" />
 
 		<record model="ir.actions.act_window" id="action_view_task3">
 			<field name="name">Unbilled open tasks</field>
@@ -384,10 +384,10 @@
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('state','=','open'), ('billable','=',True), ('invoice_id','=',False)]</field>
 		</record>
-		<menuitem name="Project Management/All tasks/Billable tasks/Unbilled open tasks" id="menu_action_view_task3" action="action_view_task3" />
+		<menuitem name="Project Management/All Tasks/Billable Tasks/Unbilled Open Tasks" id="menu_action_view_task3" action="action_view_task3" />
 
 		<record model="ir.actions.act_window" id="action_view_task4">
-			<field name="name">My tasks</field>
+			<field name="name">My Tasks</field>
 			<field name="res_model">project.task</field>
 			<field name="view_type">form</field>
 			<field name="domain">[('user_id', '=', uid)]</field>
@@ -396,58 +396,58 @@
 		<menuitem name="Project Management/" id="menu_action_view_task4" action="action_view_task4" />
 		
 		<record model="ir.actions.act_window" id="action_view_task5_pending">
-			<field name="name">My pending tasks</field>
+			<field name="name">My Pending Tasks</field>
 			<field name="res_model">project.task</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('user_id', '=', uid),('state','=','pending')]</field>
 		</record>
-		<menuitem name="Project Management/My tasks/" action="action_view_task5_pending" id="menu_tasks_yours_pending" />
+		<menuitem name="Project Management/My Tasks/" action="action_view_task5_pending" id="menu_tasks_yours_pending" />
 
 		<record model="ir.actions.act_window" id="action_view_task5">
-			<field name="name">My open tasks</field>
+			<field name="name">My Open Tasks</field>
 			<field name="res_model">project.task</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('user_id', '=', uid),('state','=','open')]</field>
 		</record>
-		<menuitem name="Project Management/My tasks/" action="action_view_task5" id="menu_tasks_yours" />
+		<menuitem name="Project Management/My Tasks/" action="action_view_task5" id="menu_tasks_yours" />
 
 		<record model="ir.actions.act_window" id="action_view_task5_prog">
-			<field name="name">My tasks in progress</field>
+			<field name="name">My Tasks in Progress</field>
 			<field name="res_model">project.task</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('user_id', '=', uid),('state','=','open')]</field>
 		</record>
-		<menuitem name="Project Management/My tasks/" action="action_view_task5_prog" id="menu_tasks_yours_prog" />
+		<menuitem name="Project Management/My Tasks/" action="action_view_task5_prog" id="menu_tasks_yours_prog" />
 		
 		<record model="ir.actions.act_window" id="action_view_task6">
-			<field name="name">Open tasks</field>
+			<field name="name">Open Tasks</field>
 			<field name="res_model">project.task</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('state', '=', 'open')]</field>
 		</record>
-		<menuitem name="Project Management/All tasks/" id="menu_action_view_task6" action="action_view_task6" />
+		<menuitem name="Project Management/All Tasks/" id="menu_action_view_task6" action="action_view_task6" />
 
 		<record model="ir.actions.act_window" id="action_view_task6_prog">
-			<field name="name">Tasks in progress</field>
+			<field name="name">Tasks in Progress</field>
 			<field name="res_model">project.task</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('state', '=', 'progress')]</field>
 		</record>
-		<menuitem name="Project Management/All tasks/" id="menu_action_view_task6_prog" action="action_view_task6_prog" />
+		<menuitem name="Project Management/All Tasks/" id="menu_action_view_task6_prog" action="action_view_task6_prog" />
 
 		<record model="ir.actions.act_window" id="action_view_task7">
-			<field name="name">Unassigned tasks</field>
+			<field name="name">Unassigned Tasks</field>
 			<field name="res_model">project.task</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('user_id', '=', False)]</field>
 		</record>
-		<menuitem name="Project Management/All tasks/" id="menu_action_view_task7" action="action_view_task7" />
+		<menuitem name="Project Management/All Tasks/" id="menu_action_view_task7" action="action_view_task7" />
 
 		<!-- Opening task when double clicking on project -->
 		<record model="ir.actions.act_window" id="dblc_proj">
@@ -492,7 +492,7 @@
 			<field name="view_type">form</field>
 			<field name="view_id" ref="task_type_tree"/>
 		</record>
-		<menuitem name="Project Management/Configuration/Task types" id="menu_task_types" action="open_task_type_form"/>
+		<menuitem name="Project Management/Configuration/Task Types" id="menu_task_types" action="open_task_type_form"/>
 
 		<act_window name="User's projects"
 			domain="[('manager', '=', active_id)]"

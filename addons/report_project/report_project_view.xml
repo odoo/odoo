@@ -49,14 +49,14 @@
 		<field name="view_mode">tree</field>
 		<field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
 	</record>
-	<menuitem name="Project Management/Reporting/This Month/Tasks finnished this month by project and user" action="action_project_task_user_tree_month" id="menu_project_task_user_tree_month"/>
+	<menuitem name="Project Management/Reporting/This Month/Tasks Finnished This Month by Project and User" action="action_project_task_user_tree_month" id="menu_project_task_user_tree_month"/>
 
 	<record model="ir.actions.act_window" id="action_project_task_user_tree">
 		<field name="res_model">report.project.task.user</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree</field>
 	</record>
-	<menuitem name="Project Management/Reporting/All Months/Tasks closed by project and user" action="action_project_task_user_tree" id="menu_project_task_user_tree"/>
+	<menuitem name="Project Management/Reporting/All Months/Tasks Closed by Project and User" action="action_project_task_user_tree" id="menu_project_task_user_tree"/>
 
 	#
 	# Tasks by projects
@@ -101,14 +101,14 @@
 		<field name="view_mode">tree</field>
 		<field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
 	</record>
-	<menuitem name="Project Management/Reporting/This Month/Tasks finnished this month by project" action="action_project_task_tree_month" id="menu_project_task_tree_month"/>
+	<menuitem name="Project Management/Reporting/This Month/Tasks Finnished This Month by Project" action="action_project_task_tree_month" id="menu_project_task_tree_month"/>
 
 	<record model="ir.actions.act_window" id="action_project_task_tree">
 		<field name="res_model">report.project.task</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree</field>
 	</record>
-	<menuitem name="Project Management/Reporting/All Months/Tasks closed by project" action="action_project_task_tree" id="menu_project_task_tree"/>
+	<menuitem name="Project Management/Reporting/All Months/Tasks Closed by Project" action="action_project_task_tree" id="menu_project_task_tree"/>
 
 </data>
 </terp>

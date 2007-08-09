@@ -71,7 +71,7 @@
 		<field name="res_model">purchase.order</field>
 		<field name="view_mode">form,tree</field>
 	</record>
-	<menuitem name="Purchase Management/Purchase order" id="menu_purchase_form_action" action="purchase_form_action"/>
+	<menuitem name="Purchase Management/Purchase Order" id="menu_purchase_form_action" action="purchase_form_action"/>
 	<record model="ir.actions.act_window" id="purchase_form_action2">
 		<field name="name">Request for quotation</field>
 		<field name="type">ir.actions.act_window</field>
@@ -80,7 +80,7 @@
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	<menuitem name="Purchase Management/Purchase order/Requests for quotation" action="purchase_form_action2" id="menu_purchase_order_draft"/>
+	<menuitem name="Purchase Management/Purchase Order/Requests For Quotation" action="purchase_form_action2" id="menu_purchase_order_draft"/>
 	<record model="ir.actions.act_window" id="purchase_form_action3">
 		<field name="name">Purchase order waiting Approval</field>
 		<field name="type">ir.actions.act_window</field>
@@ -89,7 +89,7 @@
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','confirmed')]</field>
 	</record>
-	<menuitem name="Purchase Management/Purchase order/Purchase order waiting approval" id="menu_purchase_form_action3" action="purchase_form_action3"/>
+	<menuitem name="Purchase Management/Purchase Order/Purchase Order Waiting Approval" id="menu_purchase_form_action3" action="purchase_form_action3"/>
 	<record model="ir.actions.act_window" id="purchase_form_action4">
 		<field name="name">Running purchase order</field>
 		<field name="type">ir.actions.act_window</field>
@@ -98,7 +98,7 @@
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','approved')]</field>
 	</record>
-	<menuitem name="Purchase Management/Purchase order/Running purchase order" id="menu_purchase_form_action4" action="purchase_form_action4"/>
+	<menuitem name="Purchase Management/Purchase Order/Running Purchase Order" id="menu_purchase_form_action4" action="purchase_form_action4"/>
 
 	<record model="ir.ui.view" id="purchase_order_tree">
 		<field name="name">purchase.order.tree</field>

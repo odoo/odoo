@@ -53,7 +53,7 @@
 		<field name="view_id" ref="view_scrum_project_form" />
 		<field name="domain">[('scrum','=',1)]</field>
 	</record>
-	<menuitem name="Project Management/Scrum/Projects/Edit projects" id="menu_action_scrum_project_form" action="action_scrum_project_form"/>
+	<menuitem name="Project Management/Scrum/Projects/Edit Projects" id="menu_action_scrum_project_form" action="action_scrum_project_form"/>
 
 
 	<!--
@@ -110,7 +110,7 @@
 		<field name="res_model">scrum.product.backlog</field>
 		<field name="view_type">form</field>
 	</record>
-	<menuitem name="Project Management/Scrum/Product backlog" id="menu_action_product_backlog_form" action="action_product_backlog_form"/>
+	<menuitem name="Project Management/Scrum/Product Backlog" id="menu_action_product_backlog_form" action="action_product_backlog_form"/>
 
 	<record model="ir.actions.act_window" id="action_product_backlog_form_draft">
 		<field name="name">Draft Backlogs</field>
@@ -119,7 +119,7 @@
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','draft')]</field>
 	</record>
-	<menuitem name="Project Management/Scrum/Product backlog/Draft backlogs" id="menu_action_product_backlog_form_draft" action="action_product_backlog_form_draft"/>
+	<menuitem name="Project Management/Scrum/Product Backlog/Draft Backlogs" id="menu_action_product_backlog_form_draft" action="action_product_backlog_form_draft"/>
 	
 	<record model="ir.actions.act_window" id="action_product_backlog_form_open">
 		<field name="name">Opened Backlogs</field>
@@ -128,7 +128,7 @@
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','open')]</field>
 	</record>
-	<menuitem name="Project Management/Scrum/Product backlog/Opened backlogs" id="menu_action_product_backlog_form_open" action="action_product_backlog_form_open"/>
+	<menuitem name="Project Management/Scrum/Product Backlog/Opened Backlogs" id="menu_action_product_backlog_form_open" action="action_product_backlog_form_open"/>
 
 
 
@@ -199,21 +199,21 @@
 		<field name="view_type">tree</field>
 		<field name="domain">[('state','=','open')]</field>
 	</record>
-	<menuitem name="Project Management/Scrum/Sprint/Opened sprints" id="menu_action_sprint_open_tree" action="action_sprint_open_tree"/>
+	<menuitem name="Project Management/Scrum/Sprint/Opened Sprints" id="menu_action_sprint_open_tree" action="action_sprint_open_tree"/>
 	<record model="ir.actions.act_window" id="action_sprint_open_tree2">
 		<field name="name">Draft Sprints</field>
 		<field name="res_model">scrum.sprint</field>
 		<field name="view_type">tree</field>
 		<field name="domain">[('state','=','draft')]</field>
 	</record>
-	<menuitem name="Project Management/Scrum/Sprint/Draft sprints" id="menu_action_sprint_open_tree2" action="action_sprint_open_tree2"/>
+	<menuitem name="Project Management/Scrum/Sprint/Draft Sprints" id="menu_action_sprint_open_tree2" action="action_sprint_open_tree2"/>
 	<record model="ir.actions.act_window" id="action_sprint_open_tree3">
 		<field name="name">Sprints Done</field>
 		<field name="res_model">scrum.sprint</field>
 		<field name="view_type">tree</field>
 		<field name="domain">[('state','=','done')]</field>
 	</record>
-	<menuitem name="Project Management/Scrum/Sprint/Sprints done" id="menu_action_sprint_open_tree3" action="action_sprint_open_tree3"/>
+	<menuitem name="Project Management/Scrum/Sprint/Sprints Done" id="menu_action_sprint_open_tree3" action="action_sprint_open_tree3"/>
 
 	<record model="ir.actions.act_window" id="action_sprint_open_tree4">
 		<field name="name">My Sprints (Product Owner)</field>
@@ -221,14 +221,14 @@
 		<field name="view_type">tree</field>
 		<field name="domain">[('product_owner_id','=',uid)]</field>
 	</record>
-	<menuitem name="Project Management/Scrum/Sprint/My sprints (Product Owner)" id="menu_action_sprint_open_tree4" action="action_sprint_open_tree4"/>
+	<menuitem name="Project Management/Scrum/Sprint/My Sprints (Product Owner)" id="menu_action_sprint_open_tree4" action="action_sprint_open_tree4"/>
 	<record model="ir.actions.act_window" id="action_sprint_open_tree5">
 		<field name="name">My Sprints (Scrum Master)</field>
 		<field name="res_model">scrum.sprint</field>
 		<field name="view_type">tree</field>
 		<field name="domain">[('scrum_master_id','=',uid)]</field>
 	</record>
-	<menuitem name="Project Management/Scrum/Sprint/My sprints (Scrum Master)" id="menu_action_sprint_open_tree5" action="action_sprint_open_tree5"/>
+	<menuitem name="Project Management/Scrum/Sprint/My Sprints (Scrum Master)" id="menu_action_sprint_open_tree5" action="action_sprint_open_tree5"/>
 
 	<record model="ir.actions.act_window" id="action_sprint_open_tree6">
 		<field name="name">My opened sprints (Product Owner)</field>
@@ -236,14 +236,14 @@
 		<field name="view_type">tree</field>
 		<field name="domain">[('product_owner_id','=',uid),('state','=','open')]</field>
 	</record>
-	<menuitem name="Project Management/Scrum/Sprint/My sprints (Product Owner)/Opened" id="menu_action_sprint_open_tree6" action="action_sprint_open_tree6"/>
+	<menuitem name="Project Management/Scrum/Sprint/My Sprints (Product Owner)/Opened" id="menu_action_sprint_open_tree6" action="action_sprint_open_tree6"/>
 	<record model="ir.actions.act_window" id="action_sprint_open_tree7">
 		<field name="name">My opened sprints (Scrum Master)</field>
 		<field name="res_model">scrum.sprint</field>
 		<field name="view_type">tree</field>
 		<field name="domain">[('scrum_master_id','=',uid),('state','=','open')]</field>
 	</record>
-	<menuitem name="Project Management/Scrum/Sprint/My sprints (Scrum Master)/Opened" id="menu_action_sprint_open_tree7" action="action_sprint_open_tree7"/>
+	<menuitem name="Project Management/Scrum/Sprint/My Sprints (Scrum Master)/Opened" id="menu_action_sprint_open_tree7" action="action_sprint_open_tree7"/>
 
 
 
@@ -296,7 +296,7 @@
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_scrum_meeting_form" />
 	</record>
-	<menuitem name="Project Management/Scrum/Daily meeting" id="menu_action_meeting_form" action="action_meeting_form"/>
+	<menuitem name="Project Management/Scrum/Daily Meeting" id="menu_action_meeting_form" action="action_meeting_form"/>
 
 	<!--
 	Clicks on a sprint: what a hack
@@ -407,7 +407,7 @@
 		<field name="view_type">form</field>
 		<field name="domain">[('scrum','=',1)]</field>
 	</record>
-	<menuitem name="Project Management/Scrum/All tasks" id="menu_action_view_task" action="action_view_task" />
+	<menuitem name="Project Management/Scrum/All Tasks" id="menu_action_view_task" action="action_view_task" />
 
 	<record model="ir.actions.act_window" id="action_view_task4">
 		<field name="name">My tasks</field>
@@ -416,7 +416,7 @@
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('user_id', '=', uid),('scrum','=',1)]</field>
 	</record>
-	<menuitem name="Project Management/Scrum/All tasks/My tasks" id="menu_action_view_task4" action="action_view_task4" />
+	<menuitem name="Project Management/Scrum/All Tasks/My Tasks" id="menu_action_view_task4" action="action_view_task4" />
 	
 	<record model="ir.actions.act_window" id="action_view_task5">
 		<field name="name">My opened tasks</field>
@@ -425,7 +425,7 @@
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('user_id','=',uid),('state','=','open'),('scrum','=',1)]</field>
 	</record>
-	<menuitem name="Project Management/Scrum/All tasks/My tasks/Opened" action="action_view_task5" id="menu_tasks_yours" />
+	<menuitem name="Project Management/Scrum/All Tasks/My Tasks/Opened" action="action_view_task5" id="menu_tasks_yours" />
 
 	<record model="ir.actions.act_window" id="action_view_task6">
 		<field name="name">Opened tasks</field>
@@ -434,6 +434,6 @@
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','open'),('scrum','=',1)]</field>
 	</record>
-	<menuitem name="Project Management/All tasks/Opened" id="menu_action_view_task6" action="action_view_task6" />
+	<menuitem name="Project Management/All Tasks/Opened" id="menu_action_view_task6" action="action_view_task6" />
 </data>
 </terp>

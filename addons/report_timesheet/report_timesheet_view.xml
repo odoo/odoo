@@ -55,7 +55,7 @@
 		<field name="domain">[('name','&gt;=',time.strftime('%Y-%m-01'))]</field>
 	</record>
 	<menuitem 
-		name="Human Resources/Reporting/This Month/Timesheet by user"
+		name="Human Resources/Reporting/This Month/Timesheet by User"
 		action="action_timesheet_user_stat"
 		id="menu_report_timesheet_user"/>
 
@@ -75,7 +75,7 @@
 
 
 	<record model="ir.actions.act_window" id="action_timesheet_user_stat_my">
-		<field name="name">My timesheet of the month</field>
+		<field name="name">My Timesheet of the Month</field>
 		<field name="res_model">report_timesheet.account.date</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">graph,tree</field>
@@ -94,7 +94,7 @@
 		<field name="view_mode">graph,tree</field>
 	</record>
 	<menuitem 
-		name="Human Resources/Reporting/All Months/Timesheet by user"
+		name="Human Resources/Reporting/All Months/Timesheet by User"
 		action="action_timesheet_user_stat_all"
 		id="menu_report_timesheet_user_all"/>
 
@@ -150,7 +150,7 @@
 		<field name="view_mode">graph,tree</field>
 	</record>
 	<menuitem 
-		name="Human Resources/Reporting/All Months/Timesheet by invoice"
+		name="Human Resources/Reporting/All Months/Timesheet by Invoice"
 		action="action_timesheet_invoice_stat_all"
 		id="menu_report_timesheet_invoice_all"/>
 
@@ -162,7 +162,7 @@
 		<field name="domain">[('manager_id','=',uid)]</field>
 	</record>
 	<menuitem 
-		name="Human Resources/Reporting/This Month/My timesheets to invoice"
+		name="Human Resources/Reporting/This Month/My Timesheets to Invoice"
 		action="action_timesheet_invoice_stat_my"
 		id="menu_report_timesheet_invoice_my"/>
 
@@ -217,7 +217,7 @@
 		<field name="view_mode">graph,tree</field>
 	</record>
 	<menuitem 
-		name="Human Resources/Reporting/All Months/Daily timesheet by account"
+		name="Human Resources/Reporting/All Months/Daily Timesheet by Account"
 		action="action_timesheet_account_date_stat_all"
 		id="menu_report_timesheet_account_date_all"/>
 
@@ -229,7 +229,7 @@
 		<field name="domain">[('user_id','=',uid)]</field>
 	</record>
 	<menuitem 
-		name="Human Resources/Reporting/This Month/My daily timesheets by account"
+		name="Human Resources/Reporting/This Month/My Daily Timesheets by Account"
 		action="action_timesheet_account_date_stat_my"
 		id="menu_report_timesheet_account_date_my"/>
 
@@ -285,7 +285,7 @@
 		<field name="view_mode">graph,tree</field>
 	</record>
 	<menuitem 
-		name="Human Resources/Reporting/All Months/Timesheet by account"
+		name="Human Resources/Reporting/All Months/Timesheet by Account"
 		action="action_timesheet_account_stat_all"
 		id="menu_report_timesheet_account_all"/>
 
@@ -297,7 +297,7 @@
 		<field name="domain">[('user_id','=',uid)]</field>
 	</record>
 	<menuitem 
-		name="Human Resources/Reporting/This Month/My timesheets by account"
+		name="Human Resources/Reporting/This Month/My Timesheets by Account"
 		action="action_timesheet_account_stat_my"
 		id="menu_report_timesheet_account_my"/>
 

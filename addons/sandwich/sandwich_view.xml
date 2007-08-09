@@ -30,7 +30,7 @@
 			<field name="view_mode">form,tree</field>
 			<field name="domain">[]</field>
 		</record>
-		<menuitem name="Tools/Sandwich/Configuration/Type of product" id="menu_action_sandwich_product_type" action="action_sandwich_product_type"/>
+		<menuitem name="Tools/Sandwich/Configuration/Type of Product" id="menu_action_sandwich_product_type" action="action_sandwich_product_type"/>
 	
 	
 		<record model="ir.ui.view" id="sandwich_product_view_tree">
@@ -103,7 +103,7 @@
 			<field name="domain">[]</field>
 			<field name="view_id" ref="sandwich_order_line_view_form"/>
 		</record>
-		<menuitem name="Tools/Sandwich/Order lines" id="menu_action_sandwich_order_line" action="action_sandwich_order_line"/>
+		<menuitem name="Tools/Sandwich/Order Lines" id="menu_action_sandwich_order_line" action="action_sandwich_order_line"/>
 		
 		
 		<record model="ir.actions.act_window" id="action_sandwich_my_order_line">
@@ -113,7 +113,7 @@
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('user_id','=',uid)]</field>
 		</record>
-		<menuitem name="Tools/Sandwich/Order lines/My order lines" id="menu_action_sandwich_my_order_line" action="action_sandwich_my_order_line"/>
+		<menuitem name="Tools/Sandwich/Order Lines/My Order Lines" id="menu_action_sandwich_my_order_line" action="action_sandwich_my_order_line"/>
 		
 		
 		<record model="ir.actions.act_window" id="action_sandwich_my_order_line_of_the_day">
@@ -123,7 +123,7 @@
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('user_id','=',uid),('date','=',time.strftime('%Y-%m-%d'))]</field>
 		</record>
-		<menuitem name="Tools/Sandwich/Order lines/My order lines/My order lines of the day" id="menu_action_sandwich_my_order_line_of_the_day" action="action_sandwich_my_order_line_of_the_day"/>
+		<menuitem name="Tools/Sandwich/Order Lines/My Order Lines/My Order Lines of the Day" id="menu_action_sandwich_my_order_line_of_the_day" action="action_sandwich_my_order_line_of_the_day"/>
 		
 		
 		<record model="ir.actions.act_window" id="action_sandwich_order_line_of_the_day">
@@ -133,7 +133,7 @@
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('date','=',time.strftime('%Y-%m-%d'))]</field>
 		</record>
-		<menuitem name="Tools/Sandwich/Order lines/Order lines of the day" id="menu_action_sandwich_order_line_of_the_day" action="action_sandwich_order_line_of_the_day"/>
+		<menuitem name="Tools/Sandwich/Order Lines/Order Lines of the Day" id="menu_action_sandwich_order_line_of_the_day" action="action_sandwich_order_line_of_the_day"/>
 
 
 		<record model="ir.ui.view" id="sandwich_order_view_tree">
@@ -179,7 +179,7 @@
 			<field name="view_id" eval="False"/>
 			<field name="domain">[('date','=',time.strftime('%Y-%m-%d'))]</field>
 		</record>
-		<menuitem name="Tools/Sandwich/Today's orders" id="menu_action_sandwich_order" action="action_sandwich_order"/>
+		<menuitem name="Tools/Sandwich/Today's Orders" id="menu_action_sandwich_order" action="action_sandwich_order"/>
 	</data>
 </terp>
 

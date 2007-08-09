@@ -106,7 +106,7 @@
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('to_invoice','&lt;&gt;',False)]</field>
 	</record>
-	<menuitem name="Financial Management/Periodical processing/Invoice on entries"
+	<menuitem name="Financial Management/Periodical Processing/Invoice on Entries"
 		id="menu_hr_analytic_timesheet_tree"
 		action="action_hr_analytic_timesheet_open_tree"/> 
 
@@ -118,7 +118,7 @@
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('invoice_id','=',False),('to_invoice','!=',False)]</field>
 	</record>
-	<menuitem name="Financial Management/Periodical processing/Invoice on entries/Uninvoiced entries"
+	<menuitem name="Financial Management/Periodical Processing/Invoice on Entries/Uninvoiced Entries"
 		id="menu_hr_analytic_timesheet_tree_invoiced"
 		action="action_hr_analytic_timesheet_tree_invoiced"/> 
 
@@ -130,7 +130,7 @@
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('invoice_id','=',False),('to_invoice','!=',False),('user_id','=',uid)]</field>
 	</record>
-	<menuitem name="Financial Management/Periodical processing/Invoice on entries/Uninvoiced entries/My uninvoiced entries"
+	<menuitem name="Financial Management/Periodical Processing/Invoice on Entries/Uninvoiced Entries/My Uninvoiced Entries"
 		id="menu_hr_analytic_timesheet_tree_invoiced_my"
 		action="action_hr_analytic_timesheet_tree_invoiced_my"/> 
 
@@ -141,7 +141,7 @@
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','&lt;&gt;','close'),('type','&lt;&gt;','view')]</field>
 	</record>
-	<menuitem name="Financial Management/Charts/Analytic accounts charts/Unclosed accounts"
+	<menuitem name="Financial Management/Charts/Analytic Charts of Accounts/Unclosed Accounts"
 		id="menu_action_open_analytic_accounts"
 		action="action_open_analytic_accounts"/> 
 
@@ -152,7 +152,7 @@
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','&lt;&gt;','close'),('type','&lt;&gt;','view'),('pricelist_id','&lt;&gt;',False)]</field>
 	</record>
-	<menuitem name="Financial Management/Charts/Analytic accounts charts/Unclosed accounts/Unclosed invoiced accounts"
+	<menuitem name="Financial Management/Charts/Analytic Charts of Accounts/Unclosed Accounts/Unclosed Invoiced Accounts"
 		id="menu_action_open_invoice_analytic_accounts"
 		action="action_open_invoice_analytic_accounts"/> 
 
@@ -164,7 +164,7 @@
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','draft'),('type','&lt;&gt;','view')]</field>
 	</record>
-	<menuitem name="Financial Management/Charts/Analytic accounts charts/Draft accounts"
+	<menuitem name="Financial Management/Charts/Analytic Charts of Accounts/Draft Accounts"
 		id="menu_action_draft_analytic_accounts"
 		action="action_draft_analytic_accounts"/> 
 
@@ -176,7 +176,7 @@
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','pending'),('type','&lt;&gt;','view')]</field>
 	</record>
-	<menuitem name="Financial Management/Charts/Analytic accounts charts/Pending accounts"
+	<menuitem name="Financial Management/Charts/Analytic Charts of Accounts/Pending Accounts"
 		id="menu_action_pending_analytic_accounts"
 		action="action_pending_analytic_accounts"/> 
 
@@ -214,7 +214,7 @@
 			<field name="view_id" ref="view_hr_timesheet_invoice_factor_tree"/>
 		</record>
 		<menuitem
-			name="Financial Management/Configuration/Analytic accounts/Types of invoicing"
+			name="Financial Management/Configuration/Analytic Accounts/Types of Invoicing"
 			id="hr_timesheet_invoice_factor_view"
 			action="action_hr_timesheet_invoice_factor_form" />
 

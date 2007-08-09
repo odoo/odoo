@@ -31,7 +31,7 @@
 		<field name="view_mode">tree,form</field>
 	</record>
 	<menuitem
-		name="Sales Management/Configuration/Invoicing methods"
+		name="Sales Management/Configuration/Invoicing Methods"
 		id="menu_definition_journal_invoice_type"
 		action="action_definition_journal_invoice_type"/>
 
@@ -123,7 +123,7 @@
 		<field name="domain">[('user_id','=',uid),('state','=','open')]</field>
 	</record>
 	<menuitem
-		name="Sales Management/Sales by Journal/My open journals"
+		name="Sales Management/Sales by Journal/My Open Journals"
 		id="menu_definition_journal_sales_my_open"
 		action="action_definition_journal_tree_my"/>
 
@@ -135,7 +135,7 @@
 		<field name="domain">[('state','=','open')]</field>
 	</record>
 	<menuitem
-		name="Sales Management/Sales by Journal/All open Journals"
+		name="Sales Management/Sales by Journal/All Open Journals"
 		id="menu_definition_journal_sales_all_open"
 		action="action_definition_journal_tree_all"/>
 
@@ -238,7 +238,7 @@
 		<field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
 	</record>
 	<menuitem
-		name="Sales Management/Reporting/This Month/Sales by journal"
+		name="Sales Management/Reporting/This Month/Sales by Journal"
 		action="action_sale_sale_stats_open_menu_month"
 		id="menu_sale_sale_stats_open_menu"/>
 
@@ -249,7 +249,7 @@
 		<field name="view_mode">tree,form</field>
 	</record>
 	<menuitem
-		name="Sales Management/Reporting/All Months/Sales by journal"
+		name="Sales Management/Reporting/All Months/Sales by Journal"
 		action="action_sale_sale_stats_open_menu_all"
 		id="menu_sale_sale_stats_open_all"/>
 

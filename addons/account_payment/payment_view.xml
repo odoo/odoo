@@ -1,8 +1,8 @@
 <?xml version="1.0" ?>
 <terp>
 	<data>
-		<menuitem name="Financial Management/Payment management" id="menu_main" />
-		<menuitem name="Financial Management/Payment management/Configuration" groups="admin" sequence="1"/>
+		<menuitem name="Financial Management/Payment Management" id="menu_main" />
+		<menuitem name="Financial Management/Payment Management/Configuration" groups="admin" sequence="1"/>
 
 		<record model="ir.ui.view" id="view_payment_type_form">
 			<field name="name">payment.type.form</field>
@@ -22,7 +22,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 		</record>
-		<menuitem name="Financial Management/Payment management/Configuration/Payment type" id="menu_action_payment_type_form" action="action_payment_type_form"/>
+		<menuitem name="Financial Management/Payment Management/Configuration/Payment Type" id="menu_action_payment_type_form" action="action_payment_type_form"/>
 
 		<record model="ir.ui.view" id="view_payment_mode_tree">
 			<field name="name">payment.mode.tree</field>
@@ -56,7 +56,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 		</record>
-		<menuitem name="Financial Management/Payment management/Configuration/Payment mode" id="menu_action_payment_mode_form" action="action_payment_mode_form"/>
+		<menuitem name="Financial Management/Payment Management/Configuration/Payment Mode" id="menu_action_payment_mode_form" action="action_payment_mode_form"/>
 
 	    <record model="ir.ui.view" id="view_payment_order_form">
 			<field name="name">payment.order.form</field>
@@ -111,7 +111,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 		</record>
-	    <menuitem name="Financial Management/Payment management/Payment orders" 
+	    <menuitem name="Financial Management/Payment Management/Payment Orders" 
 				  id="menu_action_payment_order_form" 
 				  action="action_payment_order_tree"
 				  sequence="3"/>
@@ -123,7 +123,7 @@
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('state','=','draft')]</field>
 		</record>
-	    <menuitem name="Financial Management/Payment management/Payment orders/Draft payment orders" 
+	    <menuitem name="Financial Management/Payment Management/Payment Orders/Draft Payment Orders" 
 				  id="menu_action_payment_order_draft" 
 				  action="action_payment_order_draft"
 				  sequence="1"/>
@@ -135,7 +135,7 @@
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('state','=','open')]</field>
 		</record>
-	    <menuitem name="Financial Management/Payment management/Payment orders/Payment orders to validate" 
+	    <menuitem name="Financial Management/Payment Management/Payment Orders/Payment Orders to Validate" 
 				  id="menu_action_payment_order_open" 
 				  action="action_payment_order_open"
 				  sequence="2"/>

@@ -67,7 +67,7 @@
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_esale_joomla_tree"/>
 	</record>
-	<menuitem name="Sales Management/eSale/Definition/Web Shop" id="menu_action_esale_joomla_web" action="action_esale_joomla_form" groups="admin"/>
+	<menuitem name="Sales Management/Esale/Definition/Web Shop" id="menu_action_esale_joomla_web" action="action_esale_joomla_form" groups="admin"/>
 
 	<record model="ir.ui.view" id="view_esale_joomla_product_form">
 		<field name="name">esale_joomla.product.form</field>
@@ -101,7 +101,7 @@
 		<field name="view_mode">tree,form</field>
 		<field name="view_id" ref="view_esale_joomla_product_tree"/>
 	</record>
-	<menuitem name="Sales Management/eSale/Definition/Web Product" id="menu_action_esale_joomla_product" action="action_esale_joomla_product_form" groups="admin"/>
+	<menuitem name="Sales Management/Esale/Definition/Web Product" id="menu_action_esale_joomla_product" action="action_esale_joomla_product_form" groups="admin"/>
 
 	<record model="ir.ui.view" id="view_order_tree">
 		<field name="name">esale_joomla.order.tree</field>
@@ -156,7 +156,7 @@
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_order_tree"/>
 	</record>
-	<menuitem name="Sales Management/eSale/eSale Orders" id="menu_action_order_form" action="action_order_form" groups="admin"/>
+	<menuitem name="Sales Management/Esale/Esale Orders" id="menu_action_order_form" action="action_order_form" groups="admin"/>
 
 	<record model="ir.actions.act_window" id="action_order_tree">
 		<field name="name">Draft eSale Order</field>
@@ -166,7 +166,7 @@
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','draft')]</field>
 	</record>
-	<menuitem name="Sales Management/eSale/eSale Orders/Draft eSale Orders" id="menu_action_order_tree" action="action_order_tree" groups="admin"/>
+	<menuitem name="Sales Management/Esale/Esale Orders/Draft Esale Orders" id="menu_action_order_tree" action="action_order_tree" groups="admin"/>
 
 
 	<record model="ir.ui.view" id="view_order_line_form">

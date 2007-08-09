@@ -47,7 +47,7 @@
 			<field name="view_type">form</field>
 			<field name="view_id" ref="hr_timesheet_line_tree" />
 		</record>
-        <menuitem name="Human Resources/Hours encoding" id="menu_act_hr_timesheet_line_today_form" action="act_hr_timesheet_line_today_form" />
+        <menuitem name="Human Resources/Hours Encoding" id="menu_act_hr_timesheet_line_today_form" action="act_hr_timesheet_line_today_form" />
 
 		<record model="ir.actions.act_window" id="act_hr_timesheet_line_me_today_form">
 			<field name="name">My works of the day</field>
@@ -57,7 +57,7 @@
 			<field name="view_mode">tree,form</field>
             <field name="domain">[('date', '=', time.strftime('%Y-%m-%d')),('user_id','=',uid)]</field>
 		</record>
-		<menuitem name="Human Resources/Hours encoding/For me/My works of the day" id="menu_act_hr_timesheet_line_me_today_form" action="act_hr_timesheet_line_me_today_form" />
+		<menuitem name="Human Resources/Hours Encoding/For me/My Works of the Day" id="menu_act_hr_timesheet_line_me_today_form" action="act_hr_timesheet_line_me_today_form" />
 
 		<record model="ir.actions.act_window" id="act_hr_timesheet_line_me_all_form">
 			<field name="name">All my works</field>
@@ -67,7 +67,7 @@
 			<field name="view_mode">tree,form</field>
             <field name="domain">[('user_id','=',uid)]</field>
 		</record>
-		<menuitem name="Human Resources/Hours encoding/For me/All my works" id="menu_act_hr_timesheet_line_me_all_form" action="act_hr_timesheet_line_me_all_form" />
+		<menuitem name="Human Resources/Hours Encoding/For me/All My Works" id="menu_act_hr_timesheet_line_me_all_form" action="act_hr_timesheet_line_me_all_form" />
 
 		<record model="ir.actions.act_window" id="act_hr_timesheet_line_evry1_today_form">
 			<field name="name">All works of the day</field>
@@ -77,7 +77,7 @@
 			<field name="view_mode">tree,form</field>
             <field name="domain">[('date', '=',	time.strftime('%Y-%m-%d'))]</field>
 		</record>
-		<menuitem name="Human Resources/Hours encoding/For everyone/All works of the day" id="menu_act_hr_timesheet_line_evry1_today_form" action="act_hr_timesheet_line_evry1_today_form" />
+		<menuitem name="Human Resources/Hours Encoding/For Everyone/All Works of the Day" id="menu_act_hr_timesheet_line_evry1_today_form" action="act_hr_timesheet_line_evry1_today_form" />
 		
 		<record model="ir.actions.act_window" id="act_hr_timesheet_line_evry1_all_form">
 			<field name="name">All works</field>
@@ -86,7 +86,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 		</record>
-		<menuitem name="Human Resources/Hours encoding/For everyone/All works" id="menu_act_hr_timesheet_line_evry1_all_form" action="act_hr_timesheet_line_evry1_all_form" />
+		<menuitem name="Human Resources/Hours Encoding/For Everyone/All Works" id="menu_act_hr_timesheet_line_evry1_all_form" action="act_hr_timesheet_line_evry1_all_form" />
 
 		<record model="ir.ui.view" id="hr_timesheet_employee_extd_form">
 			<field name="name">hr.timesheet.employee.extd_form</field>

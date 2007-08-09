@@ -105,7 +105,7 @@
 			<field name="domain">[('state','=','draft')]</field>
 		</record>
 		<menuitem
-			name="Human Resources/Expenses/All Expenses/Draft expenses"
+			name="Human Resources/Expenses/All Expenses/Draft Expenses"
 			id="menu_expense_all_draft"
 			action="expense_all_draft"/>
 		<record model="ir.actions.act_window" id="expense_all_confirm">
@@ -116,7 +116,7 @@
 			<field name="domain">[('state','=','confirm')]</field>
 		</record>
 		<menuitem
-			name="Human Resources/Expenses/All Expenses/Expenses waiting validation"
+			name="Human Resources/Expenses/All Expenses/Expenses Waiting Validation"
 			id="menu_expense_all_confirm"
 			action="expense_all_confirm"/>
 		<record model="ir.actions.act_window" id="expense_all_valid">
@@ -127,7 +127,7 @@
 			<field name="domain">[('state','=','accepted')]</field>
 		</record>
 		<menuitem
-			name="Human Resources/Expenses/All Expenses/Expenses waiting invoice"
+			name="Human Resources/Expenses/All Expenses/Expenses Waiting Invoice"
 			id="menu_expense_all_valid"
 			action="expense_all_valid"/>
 		<record model="ir.actions.act_window" id="expense_all_invoiced">
@@ -138,7 +138,7 @@
 			<field name="domain">[('state','=','invoiced')]</field>
 		</record>
 		<menuitem
-			name="Human Resources/Expenses/All Expenses/Expenses waiting payment"
+			name="Human Resources/Expenses/All Expenses/Expenses Waiting Payment"
 			id="menu_expense_all_invoiced"
 			action="expense_all_invoiced"/>
 
@@ -164,7 +164,7 @@
 			<field name="domain">[('user_id','=',uid),('state','=','draft')]</field>
 		</record>
 		<menuitem
-			name="Human Resources/Expenses/My Expenses/My draft expenses"
+			name="Human Resources/Expenses/My Expenses/My Draft Expenses"
 			id="menu_expense_my_draft"
 			action="expense_my_draft"/>
 		<record model="ir.actions.act_window" id="expense_my_confirm">
@@ -175,7 +175,7 @@
 			<field name="domain">[('user_id','=',uid),('state','=','confirm')]</field>
 		</record>
 		<menuitem
-			name="Human Resources/Expenses/My Expenses/My expenses waiting validation"
+			name="Human Resources/Expenses/My Expenses/My Expenses Waiting Validation"
 			id="menu_expense_my_confirm"
 			action="expense_my_confirm"/>
 
@@ -190,7 +190,7 @@
 			<field name="view_mode">tree,form</field>
 		</record>
 		<menuitem
-			name="Human Resources/Configuration/Expenses/Expenses types"
+			name="Human Resources/Configuration/Expenses/Expenses Types"
 			id="menu_open_expenses_type"
 			action="open_expenses_type"/>
 	</data>

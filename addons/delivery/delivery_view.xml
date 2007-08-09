@@ -36,7 +36,7 @@
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	<menuitem name="Inventory Control/Configuration/Delivery/Delivery method" id="menu_action_delivery_carrier_form" action="action_delivery_carrier_form"/>
+	<menuitem name="Inventory Control/Configuration/Delivery/Delivery Method" id="menu_action_delivery_carrier_form" action="action_delivery_carrier_form"/>
 
 	#
 	# Delivery Grids
@@ -85,7 +85,7 @@
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	<menuitem name="Inventory Control/Configuration/Delivery/Delivery grids for prices" id="menu_action_delivery_grid_form" action="action_delivery_grid_form"/>
+	<menuitem name="Inventory Control/Configuration/Delivery/Delivery Pricelist" id="menu_action_delivery_grid_form" action="action_delivery_grid_form"/>
 
 
 	<record model="ir.ui.view" id="view_delivery_grid_line_form">
@@ -162,7 +162,7 @@
 		<field name="domain">[('invoice_state','=','2binvoiced'),('state','=','done')]</field>
 	</record>
 	<menuitem
-		name="Inventory Control/Packing lists/Sending Goods/Packings to invoice"
+		name="Inventory Control/Packing Lists/Sending Goods/Packings to Invoice"
 		id="menu_action_picking_tree3"
 		action="action_picking_tree4"/>
 

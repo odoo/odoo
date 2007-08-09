@@ -44,7 +44,7 @@
 			<field name="view_type">form</field>
 			<field name="view_id" ref="view_audittrail_rule_form" />
 		</record>
-		<menuitem name="Administration/AuditTrails/Rules" id="menu_action_audittrail_rule_tree" action="action_audittrail_rule_tree"/>
+		<menuitem name="Administration/Audittrails/Rules" id="menu_action_audittrail_rule_tree" action="action_audittrail_rule_tree"/>
 
 		<record model="ir.actions.act_window" id="action_audittrail_rule_tree_sub">
 			<field name="res_model">audittrail.rule</field>
@@ -52,7 +52,7 @@
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('state','=','subscribed')]</field>
 		</record>
-		<menuitem name="Administration/AuditTrails/Rules/Subscribed Rules" id="menu_action_audittrail_rule_tree_sub" action="action_audittrail_rule_tree_sub"/>
+		<menuitem name="Administration/Audittrails/Rules/Subscribed Rules" id="menu_action_audittrail_rule_tree_sub" action="action_audittrail_rule_tree_sub"/>
 
 		<record model="ir.ui.view" id="view_audittrail_log_form">
 			<field name="name">audittrail.log.form</field>
@@ -87,6 +87,6 @@
 			<field name="res_model">audittrail.log</field>
 			<field name="view_type">form</field>
 		</record>
-		<menuitem name="Administration/AuditTrails/Logs" id="menu_action_audittrail_log_tree" action="action_audittrail_log_tree"/>
+		<menuitem name="Administration/Audittrails/Logs" id="menu_action_audittrail_log_tree" action="action_audittrail_log_tree"/>
 </data>
 </terp>

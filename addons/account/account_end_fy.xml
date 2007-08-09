@@ -2,7 +2,7 @@
 <terp>
 <data>
 
-	<menuitem name="Financial Management/End of year treatments" sequence="20"/>
+	<menuitem name="Financial Management/End of Year Treatments" sequence="20"/>
 
 	<record model="ir.actions.act_window" id="action_account_period_tree">
 		<field name="res_model">account.period</field>
@@ -10,7 +10,7 @@
 		<field name="domain">[('state','=','draft')]</field>
 		<field name="view_id" ref="view_account_period_tree"/>
 	</record>
-	<menuitem name="Financial Management/End of year treatments/Close a period"
+	<menuitem name="Financial Management/End of Year Treatments/Close Period"
 		id="menu_action_account_period_close_tree"
 		action="action_account_period_tree" />
 

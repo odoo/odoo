@@ -12,7 +12,7 @@
 				<field name="view_mode">tree,form</field-->
 			<!--	<field name="domain">[('name','like','Tiny')]</field>-->
 			<!--/record>
-			<menuitem name="Configuration/1. Configuration de la société" action="open_module_tree_company" sequence="1" id="menu_company_def"/>
+			<menuitem name="Configuration/1. Configuration de la Société" action="open_module_tree_company" sequence="1" id="menu_company_def"/>
 
 			<record model="ir.actions.act_window" id="open_module_tree_accounting">
 				<field name="name">ir.module.module</field>
@@ -22,7 +22,7 @@
 				<field name="domain">[('name','like','l10n_ch_pcpbl_')]</field>
 			</record>
 
-			<menuitem name="Configuration/2. Choix d'un plan comptable" action="open_module_tree_accounting" sequence="2" id="menu_accounting_modules"/>
+			<menuitem name="Configuration/2. Choix d'un Plan Comptable" action="open_module_tree_accounting" sequence="2" id="menu_accounting_modules"/>
 
 			<record model="ir.actions.act_window" id="open_module_tree_tva">
 				<field name="name">ir.module.module</field>
@@ -31,14 +31,14 @@
 				<field name="view_mode">tree,form</field>
 				<field name="domain">[('name','like','l10n_ch_vat_')]</field>
 			</record>
-			<menuitem name="Configuration/3. Choix de la méthode TVA" action="open_module_tree_tva" sequence="3" id="menu_tva_def"/>
+			<menuitem name="Configuration/3. Choix de la méThode Tva" action="open_module_tree_tva" sequence="3" id="menu_tva_def"/>
 
 			<record model="ir.actions.wizard" id="wizard_upgrade">
 				<field name="name">Apply marked changes</field>
 				<field name="wiz_name">module.upgrade</field>
 			</record>
 			<menuitem
-				name="Configuration/4. Installation des nouveaux modules" 
+				name="Configuration/4. Installation Des Nouveaux Modules" 
 				action="wizard_upgrade" 
 				sequence="4" 
 				type="wizard"

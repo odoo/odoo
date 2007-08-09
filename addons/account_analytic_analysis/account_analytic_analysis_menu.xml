@@ -12,7 +12,7 @@
 		</record>
 
 		<menuitem
-			name="Project Management/Analytic accounts/My managed accounts"
+			name="Project Management/Analytic Accounts/My Managed Accounts"
 			id="menu_analytic_account_managed"
 			action="action_account_analytic_managed" />
 
@@ -24,31 +24,31 @@
 			<field name="domain">[('invoice_id','=',False),('to_invoice','!=',False),('account_id.user_id','=',uid)]</field>
 		</record>
 
-		<menuitem name="Project Management/Analytic accounts/Uninvoiced entries of my projects"
+		<menuitem name="Project Management/Analytic Accounts/Uninvoiced Entries of My Projects"
 			id="menu_action_hr_tree_invoiced_my"
 			action="action_hr_tree_invoiced_my"/>
 
 		<record model="ir.actions.act_window" id="action_account_analytic_managed_open">
-			<field name="name">My open managed accounts</field>
+			<field name="name">My Open Managed Accounts</field>
 			<field name="res_model">account.analytic.account</field>
 			<field name="view_type">form</field>
 			<field name="domain">[('user_id','=',uid),('state','=','open')]</field>
 		</record>
 
 		<menuitem
-			name="Project Management/Analytic accounts/My managed accounts/"
+			name="Project Management/Analytic Accounts/My Managed Accounts/"
 			id="menu_analytic_account_to_valid_open"
 			action="action_account_analytic_managed_open" />
 
 		<record model="ir.actions.act_window" id="action_account_analytic_managed_pending">
-			<field name="name">My pending managed accounts</field>
+			<field name="name">My Pending Managed Accounts</field>
 			<field name="res_model">account.analytic.account</field>
 			<field name="view_type">form</field>
 			<field name="domain">[('user_id','=',uid),('state','=','pending')]</field>
 		</record>
 
 		<menuitem
-			name="Project Management/Analytic accounts/My managed accounts/"
+			name="Project Management/Analytic Accounts/My Managed Accounts/"
 			id="menu_analytic_account_to_valid_pending"
 			action="action_account_analytic_managed_pending" />
 
@@ -60,12 +60,12 @@
 		</record>
 
 		<menuitem
-			name="Project Management/Analytic accounts/Overpassed accounts"
+			name="Project Management/Analytic Accounts/Overpassed Accounts"
 			id="menu_action_account_analytic_managed_overpassed"
 			action="action_account_analytic_managed_overpassed" />
 
 		<record model="ir.actions.act_window" id="action_account_analytic_all">
-			<field name="name">All analytic accounts</field>
+			<field name="name">All Analytic Accounts</field>
 			<field name="res_model">account.analytic.account</field>
 			<field name="view_type">form</field>
 			<field name="view_id" ref="account.view_account_analytic_account_list"/>
@@ -73,12 +73,12 @@
 		</record>
 
 		<menuitem
-			name="Project Management/Analytic accounts/"
+			name="Project Management/Analytic Accounts/"
 			id="menu_action_account_analytic_all"
 			action="action_account_analytic_all" />
 
 		<record model="ir.actions.act_window" id="action_account_analytic_all_draft">
-			<field name="name">Draft analytic accounts</field>
+			<field name="name">Draft Analytic Accounts</field>
 			<field name="res_model">account.analytic.account</field>
 			<field name="view_type">form</field>
 			<field name="view_id" ref="account.view_account_analytic_account_list"/>
@@ -86,12 +86,12 @@
 		</record>
 
 		<menuitem
-			name="Project Management/Analytic accounts/All analytic accounts/"
+			name="Project Management/Analytic Accounts/All Analytic Accounts/"
 			id="menu_action_account_analytic_all_draft"
 			action="action_account_analytic_all_draft" />
 
 		<record model="ir.actions.act_window" id="action_account_analytic_all_open">
-			<field name="name">Open analytic accounts</field>
+			<field name="name">Open Analytic Accounts</field>
 			<field name="res_model">account.analytic.account</field>
 			<field name="view_type">form</field>
 			<field name="view_id" ref="account.view_account_analytic_account_list"/>
@@ -99,12 +99,12 @@
 		</record>
 
 		<menuitem
-			name="Project Management/Analytic accounts/All analytic accounts/"
+			name="Project Management/Analytic Accounts/All Analytic Accounts/"
 			id="menu_action_account_analytic_all_open"
 			action="action_account_analytic_all_open" />
 
 		<record model="ir.actions.act_window" id="action_account_analytic_all_pending">
-			<field name="name">Pending analytic accounts</field>
+			<field name="name">Pending Analytic Accounts</field>
 			<field name="res_model">account.analytic.account</field>
 			<field name="view_type">form</field>
 			<field name="view_id" ref="account.view_account_analytic_account_list"/>
@@ -112,12 +112,12 @@
 		</record>
 
 		<menuitem
-			name="Project Management/Analytic accounts/All analytic accounts/"
+			name="Project Management/Analytic Accounts/All Analytic Accounts/"
 			id="menu_action_account_analytic_all_pending"
 			action="action_account_analytic_all_pending" />
 
 		<record model="ir.actions.act_window" id="action_account_analytic_all_simplified">
-			<field name="name">Simplified view analytic accounts</field>
+			<field name="name">Simplified View Analytic Accounts</field>
 			<field name="res_model">account.analytic.account</field>
 			<field name="view_type">form</field>
 			<field name="view_id" ref="view_account_analytic_simplified"/>
@@ -125,7 +125,7 @@
 		</record>
 
 		<menuitem
-			name="Project Management/Analytic accounts/All analytic accounts/"
+			name="Project Management/Analytic Accounts/All Analytic Accounts/"
 			id="menu_action_account_analytic_all_simplified"
 			action="action_account_analytic_all_simplified" />
 
