@@ -269,9 +269,9 @@ class account_bank_statement_line(osv.osv):
 			return {}
 		part = self.pool.get('res.partner').browse(cr, uid, partner_id, context)
 		if type=='supplier':
-			account_id = part.property_account_payable[0]
+			account_id = part.property_account_payable.id
 		else:
-			account_id =  part.property_account_receivable[0]
+			account_id =  part.property_account_receivable.id
 		cr.execute('select sum(debit-credit) from account_move_line where (reconcile_id is null) and partner_id=%d and account_id=%d', (partner_id, account_id))
 		balance = cr.fetchone()[0] or 0.0
 		val = {'amount': balance, 'account_id':account_id}

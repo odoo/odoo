@@ -120,7 +120,7 @@ class purchase_order(osv.osv):
 		'invoice_method': lambda *a: 'order',
 		'invoiced': lambda *a: 0,
 		'partner_address_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['default'])['default'],
-		'pricelist_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').browse(cr, uid, context['partner_id']).property_product_pricelist_purchase[0],
+		'pricelist_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').browse(cr, uid, context['partner_id']).property_product_pricelist_purchase.id,
 	}
 	_name = "purchase.order"
 	_description = "Purchase order"
@@ -133,7 +133,7 @@ class purchase_order(osv.osv):
 		if not adr_id:
 			return {}
 		part_id = self.pool.get('res.partner.address').read(cr, uid, [adr_id], ['partner_id'])[0]['partner_id'][0]
-		loc_id = self.pool.get('res.partner').browse(cr, uid, part_id).property_stock_customer[0]
+		loc_id = self.pool.get('res.partner').browse(cr, uid, part_id).property_stock_customer.id
 		return {'value':{'location_id': loc_id, 'warehouse_id': False}}
 
 	def onchange_warehouse_id(self, cr, uid, ids, warehouse_id):
@@ -146,7 +146,7 @@ class purchase_order(osv.osv):
 		if not part:
 			return {'value':{'partner_address_id': False}}
 		addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['default'])
-		pricelist = self.pool.get('res.partner').browse(cr, uid, part).property_product_pricelist_purchase[0]
+		pricelist = self.pool.get('res.partner').browse(cr, uid, part).property_product_pricelist_purchase.id
 		return {'value':{'partner_address_id': addr['default'], 'pricelist_id': pricelist}}
 
 	def wkf_approve_order(self, cr, uid, ids):
@@ -188,12 +188,11 @@ class purchase_order(osv.osv):
 			for ol in o.order_line:
 
 				if ol.product_id:
-					a = ol.product_id.product_tmpl_id.property_account_expense
+					a = ol.product_id.product_tmpl_id.property_account_expense.id
 					if not a:
-						a = ol.product_id.categ_id.property_account_expense_categ
+						a = ol.product_id.categ_id.property_account_expense_categ.id
 					if not a:
 						raise osv.except_osv('Error !', 'There is no income account defined for this product: "%s" (id:%d)' % (line.product_id.name, line.product_id.id,))
-					a = a[0]
 				else:
 					a = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category')
 				il.append((0, False, {
@@ -207,7 +206,7 @@ class purchase_order(osv.osv):
 					'account_analytic_id': ol.account_analytic_id.id,
 				}))
 
-			a = o.partner_id.property_account_payable[0]
+			a = o.partner_id.property_account_payable.id
 			inv = {
 				'name': o.name,
 				'reference': "P%dPO%d" % (o.partner_id.id, o.id),
@@ -237,7 +236,7 @@ class purchase_order(osv.osv):
 	def action_picking_create(self,cr, uid, ids, *args):
 		picking_id = False
 		for order in self.browse(cr, uid, ids):
-			loc_id = order.partner_id.property_stock_supplier[0]
+			loc_id = order.partner_id.property_stock_supplier.id
 			istate = 'none'
 			if order.invoice_method=='picking':
 				istate = '2binvoiced'

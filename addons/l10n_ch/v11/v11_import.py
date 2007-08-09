@@ -176,7 +176,7 @@ def _v11_parsing(self, cr, uid, data, context):
 		i = invoice_obj.browse(cr, uid, invoice_id)
 
 		try:
-			acc1 = i.partner_id.property_account_receivable[0]
+			acc1 = i.partner_id.property_account_receivable.id
 		except:
 			err_log = err_log + '\n * invoice with number '+ rec['invoice_ref'].lstrip('0') +\
 					  ' has no partner !'+ '\n  line : '+rec['line_number']

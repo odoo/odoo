@@ -486,9 +486,9 @@ class stock_picking(osv.osv):
 		for p in self.browse(cr,uid,ids, context):
 			if p.invoice_state<>'2binvoiced':
 				continue
-			a = p.address_id.partner_id.property_account_receivable[0]
-			if p.address_id.partner_id and p.address_id.partner_id.property_payment_term:
-				pay_term = p.address_id.partner_id.property_payment_term[0]
+			a = p.address_id.partner_id.property_account_receivable.id
+			if p.address_id.partner_id and p.address_id.partner_id.property_payment_term.id:
+				pay_term = p.address_id.partner_id.property_payment_term.id
 			else:
 				pay_term = False
 
@@ -534,10 +534,9 @@ class stock_picking(osv.osv):
 					tax_ids = map(lambda x: x.id, line.sale_line_id.tax_id)
 				else:
 					tax_ids = map(lambda x: x.id, line.product_id.taxes_id)
-				a =  line.product_id.product_tmpl_id.property_account_income
-				if not a:
-					a = line.product_id.categ_id.property_account_income_categ
-				account_id =  a[0]
+				account_id =  line.product_id.product_tmpl_id.property_account_income.id
+				if not account_id:
+					account_id = line.product_id.categ_id.property_account_income_categ.id
 				punit = line.sale_line_id and line.sale_line_id.price_unit or line.product_id.list_price
 				if type in ('in_invoice','in_refund'):
 					punit = line.product_id.standard_price
@@ -806,22 +805,20 @@ class stock_move(osv.osv):
 				if move.product_id.categ_id:
 					test.append( ('product.category', move.product_id.categ_id.id) )
 				if not acc_src:
-					a = move.product_id.product_tmpl_id.property_account_expense
-					if not a:
-						a = move.product_id.categ_id.property_account_expense_categ
-					if not a:
+					acc_src = move.product_id.product_tmpl_id.property_account_expense.id
+					if not acc_src:
+						a = move.product_id.categ_id.property_account_expense_categ.id
+					if not acc_src:
 						raise osv.except_osv('Error !', 'There is no expense account defined for this product: "%s" (id:%d)' % (move.product_id.name, move.product_id.id,))
-					acc_src = a[0]
 				if not acc_dest:
-					b = move.product_id.product_tmpl_id.property_account_income
-					if not b:
-						b = move.product_id.categ_id.property_account_income_categ
-					if not b:
+					acc_dest = move.product_id.product_tmpl_id.property_account_income.id
+					if not acc_dest:
+						acc_dest = move.product_id.categ_id.property_account_income_categ.id
+					if not acc_dest:
 						raise osv.except_osv('Error !', 'There is no income account defined for this product: "%s" (id:%d)' % (move.product_id.name, move.product_id.id,))
-					acc_dest = b[0]
-				if not move.product_id.categ_id.property_stock_journal:
+				if not move.product_id.categ_id.property_stock_journal.id:
 					raise osv.except_osv('Error !', 'There is no journal define on the product category: "%s" (id:%d)' % (move.product_id.categ_id.name, move.product_id.categ_id.id,))
-				journal_id = move.product_id.categ_id.property_stock_journal[0]
+				journal_id = move.product_id.categ_id.property_stock_journal.id
 				if acc_src != acc_dest:
 					ref = move.picking_id and move.picking_id.name or False
 
@@ -891,7 +888,7 @@ class stock_inventory(osv.osv):
 				amount=self.pool.get('stock.location')._product_get(cr, uid, line.location_id.id, [pid], {'uom': line.product_uom.id})[pid]
 				change=line.product_qty-amount
 				if change:
-					location_id = line.product_id.product_tmpl_id.property_stock_inventory[0]
+					location_id = line.product_id.product_tmpl_id.property_stock_inventory.id
 					value = {
 						'name': 'INV:'+str(line.inventory_id.id)+':'+line.inventory_id.name,
 						'product_id': line.product_id.id,

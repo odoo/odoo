@@ -124,11 +124,9 @@ class hr_expense_expense(osv.osv):
 			for l in exp.line_ids:
 				tax_id = []
 				if l.product_id:
-					acc = l.product_id.product_tmpl_id.property_account_expense
+					acc = l.product_id.product_tmpl_id.property_account_expense.id
 					if not acc:
-						acc = l.product_id.categ_id.property_account_expense_categ[0]
-					else:
-						acc = acc[0]
+						acc = l.product_id.categ_id.property_account_expense_categ.id
 					tax_id = [x.id for x in l.product_id.supplier_taxes_id]
 				else:
 					acc = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category')
@@ -144,7 +142,7 @@ class hr_expense_expense(osv.osv):
 				}))
 			if not exp.employee_id.address_id:
 				raise osv.except_osv('Error !', 'The employee must have a contact address')
-			acc = exp.employee_id.address_id.partner_id.property_account_payable[0]
+			acc = exp.employee_id.address_id.partner_id.property_account_payable.id
 			inv = {
 				'name': exp.name,
 				'reference': self.pool.get('ir.sequence').get(cr, uid, 'hr.expense.invoice'),

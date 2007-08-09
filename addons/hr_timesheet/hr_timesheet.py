@@ -90,11 +90,11 @@ class hr_analytic_timesheet(osv.osv):
 		if emp_id:
 			emp = self.pool.get('hr.employee').browse(cr, uid, emp_id[0], context=context)
 			if bool(emp.product_id):
-				a =  emp.product_id.product_tmpl_id.property_account_income
+				a =  emp.product_id.product_tmpl_id.property_account_income.id
 				if not a:
-					a = emp.product_id.categ_id.property_account_income_categ
+					a = emp.product_id.categ_id.property_account_income_categ.id
 				if a:
-					return a[0]
+					return a
 		return False
 
 	def _getAnalyticJournal(self, cr, uid, context):

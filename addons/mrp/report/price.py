@@ -53,7 +53,7 @@ class report_custom(report_rml):
 			main_strd_price = ''
 			if prod.seller_ids and prod.seller_ids[0] :
 				main_sp_name = '<b>' + prod.seller_ids[0].name.name + '</b>\r\n'
-				pricelist = prod.seller_ids[0].name.property_product_pricelist_purchase
+				pricelist = prod.seller_ids[0].name.property_product_pricelist_purchase.id
 				if pricelist:
 					pricelist_id = pricelist[0]
 					pricelist_obj = pooler.get_pool(cr.dbname).get('product.pricelist')
@@ -71,7 +71,7 @@ class report_custom(report_rml):
 			sellers_price = ''
 			for seller_id in prod.seller_ids:
 				sellers +=  '- <i>'+ seller_id.name.name +'</i>\r\n'
-				pricelist = seller_id.name.property_product_pricelist_purchase
+				pricelist = seller_id.name.property_product_pricelist_purchase.id
 				if pricelist:
 					pricelist_id = pricelist[0]
 					pricelist_obj = pooler.get_pool(cr.dbname).get('product.pricelist')

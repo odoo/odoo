@@ -72,7 +72,7 @@ class sale(osv.osv):
 	def onchange_partner_id(self, cr, uid, ids, part):
 		result = super(sale, self).onchange_partner_id(cr, uid, ids, part)
 		if part:
-			itype = self.pool.get('res.partner').browse(cr, uid, part).property_invoice_type
-			result['value']['invoice_type_id'] = itype and itype[0]
+			itype = self.pool.get('res.partner').browse(cr, uid, part).property_invoice_type.id
+			result['value']['invoice_type_id'] = itype
 		return result
 sale()

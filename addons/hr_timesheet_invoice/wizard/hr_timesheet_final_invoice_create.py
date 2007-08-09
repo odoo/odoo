@@ -60,8 +60,8 @@ class final_invoice_create(wizard.interface):
 				'partner_id': account.partner_id.id,
 				'address_contact_id': pool.get('res.partner').address_get(cr, uid, [account.partner_id.id], adr_pref=['contact'])['contact'],
 				'address_invoice_id': pool.get('res.partner').address_get(cr, uid, [account.partner_id.id], adr_pref=['invoice'])['invoice'],
-				'payment_term': (partner.property_payment_term and partner.property_payment_term[0]) or False,
-				'account_id': partner.property_account_receivable[0],
+				'payment_term': partner.property_payment_term.id or False,
+				'account_id': partner.property_account_receivable.id,
 				'currency_id': account.pricelist_id.currency_id.id,
 				'project_id': account.id
 			}
@@ -87,16 +87,15 @@ class final_invoice_create(wizard.interface):
 
 				taxes = product.taxes_id
 				taxep = account.partner_id.property_account_tax
-				if not taxep:
+				if not taxep.id:
 					tax = [x.id for x in taxes or []]
 				else:
-					tax = [taxep[0]]
-					tp = pool.get('account.tax').browse(cr, uid, taxep[0])
+					tax = [taxep.id]
 					for t in taxes:
-						if not t.tax_group==tp.tax_group:
+						if not t.tax_group==taxep.tax_group:
 							tax.append(t.id)
 
-				account_id = product.product_tmpl_id.property_account_income or product.categ_id.property_account_income_categ
+				account_id = product.product_tmpl_id.property_account_income.id or product.categ_id.property_account_income_categ.id
 
 				curr_line = {
 					'price_unit': price,
@@ -107,7 +106,7 @@ class final_invoice_create(wizard.interface):
 					'name': factor_name,
 					'product_id': product_id,
 					'uos_id': product.uom_id.id,
-					'account_id': account_id[0],
+					'account_id': account_id,
 					'account_analytic_id': account.id,
 				}
 
@@ -145,13 +144,12 @@ class final_invoice_create(wizard.interface):
 				else:
 					taxes = []
 				taxep = account.partner_id.property_account_tax
-				if not taxep:
+				if not taxep.id:
 					tax = [x.id for x in taxes or []]
 				else:
-					tax = [taxep[0]]
-					tp = pool.get('account.tax').browse(cr, uid, taxep[0])
+					tax = [taxep.id]
 					for t in taxes:
-						if not t.tax_group==tp.tax_group:
+						if not t.tax_group==taxep.tax_group:
 							tax.append(t.id)
 
 				curr_line = {
@@ -175,16 +173,15 @@ class final_invoice_create(wizard.interface):
 
 					taxes = product.taxes_id
 					taxep = account.partner_id.property_account_tax
-					if not taxep:
+					if not taxep.id:
 						tax = [x.id for x in taxes or []]
 					else:
-						tax = [taxep[0]]
-						tp = pool.get('account.tax').browse(cr, uid, taxep[0])
+						tax = [taxep.id]
 						for t in taxes:
-							if not t.tax_group==tp.tax_group:
+							if not t.tax_group==taxep.tax_group:
 								tax.append(t.id)
 	
-					account_id = product.product_tmpl_id.property_account_income or product.categ_id.property_account_income_categ
+					account_id = product.product_tmpl_id.property_account_income.id or product.categ_id.property_account_income_categ.id
 
 					curr_line = {
 						'price_unit': account.amount_max - amount_total,

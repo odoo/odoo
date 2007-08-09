@@ -94,7 +94,7 @@ class sale_order_rebate(osv.osv):
 			return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False, 'partner_order_id': False}}
 		partner = self.pool.get('res.partner').browse(cr, uid, partner_id)
 		addr = self.pool.get('res.partner').address_get(cr, uid, [partner_id], ['delivery', 'invoice', 'contact'])
-		pricelist = partner.property_product_pricelist[0]
+		pricelist = partner.property_product_pricelist.id
 		return {
 			'value': {
 				'rebate_percent': partner.rebate or 0.0, 

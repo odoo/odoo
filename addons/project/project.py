@@ -85,9 +85,8 @@ class project(osv.osv):
 		if not part:
 			return {'value':{'contact_id': False, 'pricelist_id': False}}
 		addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
-		print part, self.pool.get('res.partner').browse(cr, uid, part).property_product_pricelist
 
-		pricelist = self.pool.get('res.partner').browse(cr, uid, part).property_product_pricelist[0]
+		pricelist = self.pool.get('res.partner').browse(cr, uid, part).property_product_pricelist.id
 		return {'value':{'contact_id': addr['contact'], 'pricelist_id': pricelist}}
 
 	_columns = {

@@ -68,7 +68,7 @@ class make_sale(wizard.interface):
 		sale = pooler.get_pool(cr.dbname).get('sale.order')
 		partner_obj = pooler.get_pool(cr.dbname).get('res.partner')
 		partner_addr = partner_obj.address_get(cr, uid, [data['form']['partner_id']], ['invoice', 'delivery', 'contact'])
-		pricelist = partner_obj.browse(cr, uid, data['form']['partner_id'], context).property_product_pricelist[0]
+		pricelist = partner_obj.browse(cr, uid, data['form']['partner_id'], context).property_product_pricelist.id
 		vals = {
 			'origin': 'BO:%s' % str(data['ids'][0]),
 			'picking_policy': data['form']['picking_policy'],

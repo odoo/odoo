@@ -74,12 +74,12 @@ class account_analytic_line(osv.osv):
 				rate = hunit.factor
 			product_obj = self.pool.get('product.product')
 			prod = product_obj.browse(cr, uid, prod_id)
-			a = prod.product_tmpl_id.property_account_expense
+			a = prod.product_tmpl_id.property_account_expense.id
 			if not a:
-				a = prod.categ_id.property_account_expense_categ
+				a = prod.categ_id.property_account_expense_categ.id
 			if not a:
 				raise osv.except_osv('Error !', 'There is no expense account define for this product: "%s" (id:%d)' % (prod.name, prod.id,))
-			return {'value' : {'amount' : -round(unit_amount * prod.standard_price * rate,2), 'general_account_id':a[0]}}
+			return {'value' : {'amount' : -round(unit_amount * prod.standard_price * rate,2), 'general_account_id':a}}
 		return {}
 
 account_analytic_line()

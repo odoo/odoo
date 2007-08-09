@@ -222,7 +222,7 @@ class esale_joomla_order(osv.osv):
 		for order in self.browse(cr, uid, ids, context):
 			if not (order.partner_id and order.partner_invoice_id and order.partner_shipping_id):
 				raise osv.except_osv('No addresses !', 'You must assign addresses before creating the order.')
-			pricelist_id=order.partner_id.property_product_pricelist[0]
+			pricelist_id=order.partner_id.property_product_pricelist.id
 			order_lines = []
 			for line in order.order_lines:
 				val = {

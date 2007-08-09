@@ -100,10 +100,9 @@ def _create_invoice(self, cr, uid, data, context):
 		price = pool.get('delivery.grid').get_price_from_picking(cr, uid, grid_id, 
 			invoice.amount_untaxed, picking.weight,
 			picking.volume, context) or 0.0
-		a =  picking.carrier_id.product_id.product_tmpl_id.property_account_income
-		if not a:
-			a = picking.carrier_id.product_id.categ_id.property_account_income_categ
-		account_id =  a[0]
+		account_id =  picking.carrier_id.product_id.product_tmpl_id.property_account_income.id
+		if not account_id:
+			account_id = picking.carrier_id.product_id.categ_id.property_account_income_categ.id
 		pool.get('account.invoice.line').create(cr, uid, {
 			'name':picking.carrier_id.name,
 			'invoice_id': inv_id,

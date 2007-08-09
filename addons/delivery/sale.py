@@ -15,8 +15,8 @@ class sale_order(osv.osv):
 	def onchange_partner_id(self, cr, uid, ids, part):
 		result = super(sale_order, self).onchange_partner_id(cr, uid, ids, part)
 		if part:
-			dtype = self.pool.get('res.partner').browse(cr, uid, part).property_delivery_carrier
-			result['value']['carrier_id'] = dtype and dtype[0]
+			dtype = self.pool.get('res.partner').browse(cr, uid, part).property_delivery_carrier.id
+			result['value']['carrier_id'] = dtype
 		return result
 
 	def action_ship_create(self, cr, uid, ids, *args):

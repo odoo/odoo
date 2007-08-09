@@ -48,7 +48,7 @@ def _delivery_default(self, cr, uid, data, context):
 	if not order.state in ('draft'):
 		raise wizard.except_wizard('Order not in draft state !', 'The order state have to be draft to add delivery lines.')
 
-	carrier_id = order.partner_id.property_delivery_carrier
+	carrier_id = order.partner_id.property_delivery_carrier.id
 	return {'carrier_id': carrier_id}
 
 def _delivery_set(self, cr, uid, data, context):

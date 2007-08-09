@@ -60,7 +60,7 @@ class esale_web(osv.osv):
 	# Compute the price for one product
 	#
 	def price_get(self, cr, uid, product_id, product_qty, partner_id):
-		pricelist = self.pool.get('res.partner').browse(cr, uid, partner_id).property_product_pricelist[0]
+		pricelist = self.pool.get('res.partner').browse(cr, uid, partner_id).property_product_pricelist.id
 		price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist], product_id, product_qty)[pricelist]
 		return price
 
@@ -92,7 +92,7 @@ class esale_web(osv.osv):
 	#  ]})
 	#
 	def compute(self, cr, uid, ids, order, context={}):
-		pricelist = self.pool.get('res.partner').browse(cr, uid, order['partner_id']).property_product_pricelist[0]
+		pricelist = self.pool.get('res.partner').browse(cr, uid, order['partner_id']).property_product_pricelist.id
 		subtotal = 0
 		taxes = 0
 		for product in order['products']:
@@ -168,7 +168,7 @@ class esale_order(osv.osv):
 	def order_create(self, cr, uid, ids, context={}):
 		for order in self.browse(cr, uid, ids, context):
 			addr = self.pool.get('res.partner').address_get(cr, uid, [order.partner_id.id], ['delivery','invoice','contact'])
-			pricelist_id=order.partner_id.property_product_pricelist[0]
+			pricelist_id=order.partner_id.property_product_pricelist.id
 			order_lines = []
 			for line in order.order_lines:
 				order_lines.append( (0,0,{

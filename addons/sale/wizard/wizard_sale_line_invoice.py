@@ -50,7 +50,7 @@ def _makeInvoices(self, cr, uid, data, context):
 
 	#TODO: merge with sale.py/make_invoice
 	def make_invoice(order, lines):
-		a = order.partner_id.property_account_receivable[0]
+		a = order.partner_id.property_account_receivable.id
 		inv = {
 			'name': order.name,
 			'origin': 'SO:'+str(order.id)+':'+order.name,

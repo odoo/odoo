@@ -186,10 +186,10 @@ class account_invoice(osv.osv):
 			invoice_addr_id = res['invoice']
 			p = self.pool.get('res.partner').browse(cr, uid, partner_id)
 			if type in ('out_invoice', 'out_refund'):
-				acc_id = p.property_account_receivable
+				acc_id = p.property_account_receivable.id
 			else:
-				acc_id = p.property_account_payable
-				
+				acc_id = p.property_account_payable.id
+
 			partner_bank_id = p.bank_ids and p.bank_ids[0] and p.bank_ids[0].id or False
 			payment_term = p.property_payment_term and p.property_payment_term or False
 
@@ -197,8 +197,8 @@ class account_invoice(osv.osv):
 							'account_id': acc_id,'partner_bank_id':partner_bank_id,
 							'payment_term':payment_term}}
 
-		if partner_id and p.property_payment_term:
-			result['value']['payment_term'] = p.property_payment_term
+		if partner_id and p.property_payment_term.id:
+			result['value']['payment_term'] = p.property_payment_term.id
 		return result
 
 	def onchange_currency_id(self, cr, uid, ids, curr_id):
@@ -692,22 +692,20 @@ class account_invoice_line(osv.osv):
 			taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_tax
 		tax_obj = self.pool.get('account.tax')
 		if type in ('out_invoice', 'out_refund'):
-			if not taxep or not taxep[0]:
+			if not taxep or not taxep.id:
 				tax_id = map(lambda x: x.id, res.taxes_id)
 			else:
-				tax_id = [taxep[0]]
-				tp = tax_obj.browse(cr, uid, taxep[0])
+				tax_id = [taxep.id]
 				for t in res.taxes_id:
-					if not t.tax_group==tp.tax_group:
+					if not t.tax_group==taxep.tax_group:
 						tax_id.append(t.id)
 		else:
-			if not taxep or not taxep[0]:
+			if not taxep or not taxep.id:
 				tax_id = map(lambda x: x.id, res.supplier_taxes_id)
 			else:
-				tax_id = [taxep[0]]
-				tp = tax_obj.browse(cr, uid, taxep[0])
+				tax_id = [taxep.id]
 				for t in res.supplier_taxes_id:
-					if not t.tax_group==tp.tax_group:
+					if not t.tax_group==taxep.tax_group:
 						tax_id.append(t.id)
 		if type in ('in_invoice', 'in_refund'):
 			result = self.product_id_change_unit_price_inv(cr, uid, tax_id, price_unit, qty, address_invoice_id, product, partner_id, context=context)
@@ -718,15 +716,15 @@ class account_invoice_line(osv.osv):
 			result['name'] = res.name
 
 		if type in ('out_invoice','out_refund'):
-			a =  res.product_tmpl_id.property_account_income
+			a =  res.product_tmpl_id.property_account_income.id
 			if not a:
-				a = res.categ_id.property_account_income_categ
+				a = res.categ_id.property_account_income_categ.id
 		else:
-			a =  res.product_tmpl_id.property_account_expense
+			a =  res.product_tmpl_id.property_account_expense.id
 			if not a:
-				a = res.categ_id.property_account_expense_categ
+				a = res.categ_id.property_account_expense_categ.id
 		if a:
-			result['account_id'] = a[0]
+			result['account_id'] = a
 
 		domain = {}
 		result['uos_id'] = uom or res.uom_id.id or False
@@ -776,12 +774,11 @@ class account_invoice_line(osv.osv):
 			return {}
 		taxes = self.pool.get('account.account').browse(cr, uid, account_id).tax_ids
 		taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_tax
-		if not taxep:
+		if not taxep.id:
 			return {'value': {'invoice_line_tax_id': map(lambda x: x.id, taxes or []) }}
-		res = [taxep[0]]
-		tp = self.pool.get('account.tax').browse(cr, uid, taxep[0])
+		res = [taxep.id]
 		for t in taxes:
-			if not t.tax_group==tp.tax_group:
+			if not t.tax_group==taxep.tax_group:
 				res.append(t.id)
 		r = {'value':{'invoice_line_tax_id': res}}
 		return r

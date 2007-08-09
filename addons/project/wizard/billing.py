@@ -92,9 +92,9 @@ def _do_orders(self, cr, uid, data, context):
 				raise wizard.except_wizard('Error !', 'No pricelist defined in the project definition.')
 			adr = pooler.get_pool(cr.dbname).get('res.partner').address_get(cr, uid, [partner.id], ['default','invoice','shipping'])
 
-			a = partner.property_account_receivable[0]
+			a = partner.property_account_receivable.id
 			if partner.property_payment_term:
-				pay_term = partner.property_payment_term[0]
+				pay_term = partner.property_payment_term.id
 			else:
 				pay_term = False
 

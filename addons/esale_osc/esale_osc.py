@@ -184,7 +184,7 @@ class esale_osc_saleorder(osv.osv):
 	def order_create(self, cr, uid, ids, context={}):
 		for order in self.browse(cr, uid, ids, context):
 			addr = self.pool.get('res.partner').address_get(cr, uid, [order.partner_id.id], ['delivery','invoice','contact'])
-			pricelist_id=order.partner_id.property_product_pricelist[0]
+			pricelist_id=order.partner_id.property_product_pricelist.id
 			order_lines = []
 			for line in order.order_lines:
 				order_lines.append( (0,0,{

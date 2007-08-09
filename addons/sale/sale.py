@@ -166,7 +166,7 @@ class sale_order(osv.osv):
 		'partner_invoice_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['invoice'])['invoice'],
 		'partner_order_id': lambda self, cr, uid, context: context.get('partner_id', False) and  self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['contact'])['contact'],
 		'partner_shipping_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['delivery'])['delivery'],
-		'pricelist_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').browse(cr, uid, context['partner_id']).property_product_pricelist[0],
+		'pricelist_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').browse(cr, uid, context['partner_id']).property_product_pricelist.id,
 	}
 	_order = 'name desc'
 
@@ -198,7 +198,7 @@ class sale_order(osv.osv):
 		if not part:
 			return {'value':{'partner_invoice_id': False, 'partner_shipping_id':False, 'partner_order_id':False}}
 		addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['delivery','invoice','contact'])
-		pricelist = self.pool.get('res.partner').browse(cr, uid, part).property_product_pricelist[0]
+		pricelist = self.pool.get('res.partner').browse(cr, uid, part).property_product_pricelist.id
 		return {'value':{'partner_invoice_id': addr['invoice'], 'partner_order_id':addr['contact'], 'partner_shipping_id':addr['delivery'], 'pricelist_id': pricelist}}
 
 	def button_dummy(self, cr, uid, ids, context={}):
@@ -217,9 +217,9 @@ class sale_order(osv.osv):
 		invoice_ids = []
 
 		def make_invoice(order, lines):
-			a = order.partner_id.property_account_receivable[0]
-			if order.partner_id and order.partner_id.property_payment_term:
-				pay_term = order.partner_id.property_payment_term[0]
+			a = order.partner_id.property_account_receivable.id
+			if order.partner_id and order.partner_id.property_payment_term.id:
+				pay_term = order.partner_id.property_payment_term.id
 			else:
 				pay_term = False
 			for preinv in order.invoice_ids:
@@ -385,7 +385,7 @@ class sale_order(osv.osv):
 				if line.product_id and line.product_id.product_tmpl_id.type in ('product', 'consu'):
 					location_id = order.shop_id.warehouse_id.lot_stock_id.id
 					if not picking_id:
-						loc_dest_id = order.partner_id.property_stock_customer[0]
+						loc_dest_id = order.partner_id.property_stock_customer.id
 						picking_id = self.pool.get('stock.picking').create(cr, uid, {
 							'origin': order.name,
 							'type': 'out',
@@ -579,12 +579,11 @@ class sale_order_line(osv.osv):
 		for line in self.browse(cr, uid, ids, context):
 			if not line.invoiced:
 				if line.product_id:
-					a =  line.product_id.product_tmpl_id.property_account_income
+					a =  line.product_id.product_tmpl_id.property_account_income.id
 					if not a:
-						a = line.product_id.categ_id.property_account_income_categ
+						a = line.product_id.categ_id.property_account_income_categ.id
 					if not a:
 						raise osv.except_osv('Error !', 'There is no income account defined for this product: "%s" (id:%d)' % (line.product_id.name, line.product_id.id,))
-					a = a[0]
 				else:
 					a = self.pool.get('ir.property').get(cr, uid, 'property_account_income_categ', 'product.category', context=context)
 				uosqty = _get_line_qty(line)
@@ -663,13 +662,12 @@ class sale_order_line(osv.osv):
 			taxep = None
 			if partner_id:
 				taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_tax
-			if not taxep:
+			if not taxep.id:
 				result['tax_id'] = res['taxes_id']
 			else:
-				res5 = [taxep[0]]
-				tp = self.pool.get('account.tax').browse(cr, uid, taxep[0])
+				res5 = [taxep.id]
 				for t in taxes:
-					if not t.tax_group==tp.tax_group:
+					if not t.tax_group==taxep.tax_group:
 						res5.append(t.id)
 				result['tax_id'] = res5
 

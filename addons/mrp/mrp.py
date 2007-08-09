@@ -417,7 +417,7 @@ class mrp_production(osv.osv):
 				self.pool.get('stock.move').write(cr, uid, new_moves, vals)
 			else:
 				# Why is it there ? Aren't we suppose to already have a created_move ?
-				source = production.product_id.product_tmpl_id.property_stock_production[0]
+				source = production.product_id.product_tmpl_id.property_stock_production.id
 				vals = {
 					'name':'PROD:'+production.name,
 					'date_planned': production.date_planned,
@@ -505,7 +505,7 @@ class mrp_production(osv.osv):
 			if production.move_prod_id:
 				self.pool.get('stock.move').write(cr, uid, [production.move_prod_id.id], {'location_id':production.location_dest_id.id})
 
-			source = production.product_id.product_tmpl_id.property_stock_production[0]
+			source = production.product_id.product_tmpl_id.property_stock_production.id
 			data = {
 				'name':'PROD:'+production.name,
 				'date_planned': production.date_planned,
@@ -753,7 +753,7 @@ class mrp_procurement(osv.osv):
 				if not procurement.move_id:
 					source = procurement.location_id.id
 					if procurement.procure_method=='make_to_order':
-						source = procurement.product_id.product_tmpl_id.property_stock_procurement[0]
+						source = procurement.product_id.product_tmpl_id.property_stock_procurement.id
 					id = self.pool.get('stock.move').create(cr, uid, {
 						'name': 'PROC:'+procurement.name,
 						'location_id': source,
@@ -825,7 +825,7 @@ class mrp_procurement(osv.osv):
 			partner = procurement.product_id.seller_ids[0].name
 			partner_id = partner.id
 			address_id = self.pool.get('res.partner').address_get(cr, uid, [partner_id], ['delivery'])['delivery']
-			pricelist_id = partner.property_product_pricelist_purchase[0]
+			pricelist_id = partner.property_product_pricelist_purchase.id
 
 			uom_id = procurement.product_id.uom_po_id.id
 

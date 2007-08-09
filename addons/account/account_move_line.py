@@ -241,8 +241,8 @@ class account_move_line(osv.osv):
 		if (not partner_id) or account_id:
 			return {}
 		part = self.pool.get('res.partner').browse(cr, uid, partner_id)
-		id1 = part.property_account_payable[0]
-		id2 =  part.property_account_receivable[0]
+		id1 = part.property_account_payable.id
+		id2 =  part.property_account_receivable.id
 		cr.execute('select sum(debit-credit) from account_move_line where (reconcile_id is null) and partner_id=%d and account_id=%d', (partner_id, id2))
 		balance = cr.fetchone()[0] or 0.0
 		val = {}
