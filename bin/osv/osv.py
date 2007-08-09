@@ -68,9 +68,14 @@ class osv_pool(netsvc.Service):
 		# TODO: check security level
 		#
 		try:
-			if (not method in getattr(self.obj_pool[obj],'_protected')) and len(args) and args[0] and len(self.obj_pool[obj]._inherits):
+			object = pooler.get_pool(cr.dbname).get(obj)
+			if (not method in getattr(object,'_protected')) and len(args) \
+					and args[0] and len(object._inherits):
 				types = {obj: args[0]}
-				cr.execute('select inst_type,inst_id,obj_id from inherit where obj_type=%s and  obj_id in ('+','.join(map(str,args[0]))+')', (obj,))
+				cr.execute('select inst_type,inst_id,obj_id \
+						from inherit \
+						where obj_type=%s \
+							and  obj_id in ('+','.join(map(str,args[0]))+')', (obj,))
 				for ty,id,id2 in cr.fetchall():
 					if not ty in types:
 						types[ty]=[]
@@ -78,21 +83,20 @@ class osv_pool(netsvc.Service):
 					types[obj].remove(id2)
 				for t,ids in types.items():
 					if len(ids):
-						t = self.obj_pool[t]
-						res = getattr(t,method)(cr, uid, ids, *args[1:], **kw)
+						object_t = pooler.get_pool(cr.dbname).get(t)
+						res = getattr(object_t,method)(cr, uid, ids, *args[1:], **kw)
 			else:
-				obj = self.obj_pool[obj]
-				res = getattr(obj,method)(cr, uid, *args, **kw)
+				res = getattr(object,method)(cr, uid, *args, **kw)
 			return res
 		except orm.except_orm, inst:
-			#self.abortResponse(1, inst.value[0], inst.name, inst.value[1])
 			self.abortResponse(1, inst.name, 'warning', inst.value)
 		except except_osv, inst:
 			self.abortResponse(1, inst.name, inst.exc_type, inst.value)
 		except psycopg.IntegrityError, inst:
 			for key in self._sql_error.keys():
 				if key in inst[0]:
-					self.abortResponse(1, 'Constraint Error', 'warning', self._sql_error[key])
+					self.abortResponse(1, 'Constraint Error', 'warning',
+							self._sql_error[key])
 			self.abortResponse(1, 'Integrity Error', 'warning', inst[0])
 
 
