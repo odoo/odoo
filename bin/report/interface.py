@@ -57,7 +57,7 @@ class report_int(netsvc.Service):
 		assert not netsvc.service_exist(name), 'The report "%s" already exist!'%name
 		super(report_int, self).__init__(name, audience)
 		if name[0:7]<>'report.':
-			raise 'ConceptionError, bad report name, should start with "report."'
+			raise Exception, 'ConceptionError, bad report name, should start with "report."'
 		self.name = name
 		self.id = 0
 		self.name2 = '.'.join(name.split('.')[1:])

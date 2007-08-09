@@ -262,7 +262,7 @@ class module(osv.osv):
 
 	def state_change(self, cr, uid, ids, newstate, context={}, level=50):
 		if level<1:
-			raise 'Recursion error in modules dependencies !'
+			raise Exception, 'Recursion error in modules dependencies !'
 		demo = True
 		for module in self.browse(cr, uid, ids):
 			mdemo = True
@@ -280,7 +280,7 @@ class module(osv.osv):
 	def state_upgrade(self, cr, uid, ids, newstate, context=None, level=50):
 		dep_obj = self.pool.get('ir.module.module.dependency')
 		if level<1:
-			raise 'Recursion error in modules dependencies !'
+			raise Exception, 'Recursion error in modules dependencies !'
 		for module in self.browse(cr, uid, ids):
 			dep_ids = dep_obj.search(cr, uid, [('name', '=', module.name)])
 			if dep_ids:

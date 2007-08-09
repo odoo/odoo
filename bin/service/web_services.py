@@ -117,8 +117,8 @@ class db(netsvc.Service):
 			create_thread.start()
 			self.actions[id]['thread'] = create_thread
 			return id
-		raise "Couldn't create database"
-	
+		raise Exception, "Couldn't create database"
+
 	def get_progress(self, password, id):
 		security.check_super(password)
 		if self.actions[id]['thread'].isAlive():
@@ -131,10 +131,9 @@ class db(netsvc.Service):
 				del self.actions[id]
 				return (1.0, users)
 			else:
-				print self.actions[id]['traceback']
 				e = self.actions[id]['exception']
 				del self.actions[id]
-				raise e
+				raise Exception, e
 
 	def drop(self, password, db_name):
 		security.check_super(password)
@@ -146,7 +145,7 @@ class db(netsvc.Service):
 		logger = netsvc.Logger()
 		if res:
 			logger.notifyChannel("web-service", netsvc.LOG_ERROR, 'DROP DB: %s failed' % (db_name,))
-			raise "Couldn't drop database"
+			raise Exception, "Couldn't drop database"
 		else:
 			logger.notifyChannel("web-services", netsvc.LOG_INFO, 'DROP DB: %s' % (db_name))
 			return True
@@ -164,7 +163,7 @@ class db(netsvc.Service):
 		logger = netsvc.Logger()
 		if res:
 			logger.notifyChannel("web-service", netsvc.LOG_ERROR, 'DUMP DB: %s failed\n%s' % (db_name, data))
-			raise "Couldn't dump database"
+			raise Exception, "Couldn't dump database"
 		logger.notifyChannel("web-services", netsvc.LOG_INFO, 'DUMP DB: %s' % (db_name))
 		return base64.encodestring(data)
 
@@ -172,7 +171,7 @@ class db(netsvc.Service):
 		security.check_super(password)
 		res = True
 		if self.db_exist(db_name):
-			raise "Database already exists"
+			raise Exception, "Database already exists"
 		else:
 			if tools.config['db_user']:
 				args = ('createdb', '--quiet', '--encoding=unicode', '--username='+tools.config['db_user'], db_name)
@@ -196,11 +195,11 @@ class db(netsvc.Service):
 			stdin.close()
 			res = stdout.close()
 			if res:
-				raise "Couldn't restore database"
+				raise Exception, "Couldn't restore database"
 			logger = netsvc.Logger()
 			logger.notifyChannel("web-services", netsvc.LOG_INFO, 'RESTORE DB: %s' % (db_name))
 			return True
-		raise "Couldn't create database"
+		raise Exception, "Couldn't create database"
 
 	def db_exist(self, db_name):
 		try:
@@ -385,9 +384,9 @@ class wizard(netsvc.Service):
 			if self.wiz_uid[wiz_id] == uid:
 				return self._execute(db, uid, wiz_id, datas, action, context)
 			else:
-				raise 'AccessDenied'
+				raise Exception, 'AccessDenied'
 		else:
-			raise 'WizardNotFound'
+			raise Exception, 'WizardNotFound'
 wizard()
 
 #
@@ -460,9 +459,9 @@ class report_spool(netsvc.Service):
 			if self._reports[report_id]['uid'] == uid:
 				return self._check_report(report_id)
 			else:
-				raise 'AccessDenied'
+				raise Exception, 'AccessDenied'
 		else:
-			raise 'ReportNotFound'
+			raise Exception, 'ReportNotFound'
 
 report_spool()
 

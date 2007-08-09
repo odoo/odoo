@@ -94,7 +94,7 @@ class _column(object):
 		cr.execute('update '+obj._table+' set '+name+'='+self._symbol_set[0]+' where id=%d', (self._symbol_set[1](value),id) )
 
 	def get(self, cr, obj, ids, name, context=None, values=None):
-		raise 'undefined get method !'
+		raise Exception, 'undefined get method !'
 
 	def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None):
 		ids = obj.search(cr, uid, args+self._domain+[(name,'ilike',value)], offset, limit)
@@ -219,7 +219,7 @@ class selection(_column):
 # la raison est que selection n'est pas en classic_write = false
 # a noter qu'on pourrait fournir un _symbol_set specifique, et ca suffirait
 		if value in self.selection:
-			raise 'BAD VALUE'
+			raise Exception, 'BAD VALUE'
 		_column.set(self, cr, obj, id, name, value, user=None, context=context)
 
 

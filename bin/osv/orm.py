@@ -603,7 +603,7 @@ class orm(object):
 			#
 			for i in range(len(fields)):
 				if i>=len(line):
-					raise 'Please check that all your lines have %d cols.' % (len(fields),)
+					raise Exception, 'Please check that all your lines have %d cols.' % (len(fields),)
 				field = fields[i]
 				if field == ["id"]:
 					data_id= line[i]

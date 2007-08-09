@@ -4,7 +4,7 @@ import os
 import sys
 
 if not len(sys.argv)>1:
-	raise 'Usage: gen_graph.sh module1 module2 module3'
+	raise Exception, 'Usage: gen_graph.sh module1 module2 module3'
 
 modules = sys.argv[1:]
 done = []
