@@ -62,7 +62,7 @@ icons = map(lambda x: (x,x), ['STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_
 'STOCK_UNDO', 'STOCK_UNINDENT', 'STOCK_YES', 'STOCK_ZOOM_100',
 'STOCK_ZOOM_FIT', 'STOCK_ZOOM_IN', 'STOCK_ZOOM_OUT',
 'terp-account', 'terp-crm', 'terp-mrp', 'terp-product', 'terp-purchase', 'terp-sale', 'terp-tools',
-'terp-administration', 'terp-hr', 'terp-partner', 'terp-project', 'terp-report', 'terp-stock'
+'terp-administration', 'terp-hr', 'terp-partner', 'terp-project', 'terp-report', 'terp-stock', 'terp-calendar',
 ])
 
 class many2many_unique(fields.many2many):

@@ -282,7 +282,9 @@ class xml_import(object):
 						elif action_mode and action_mode.startswith('tree'):
 							values['icon'] = 'STOCK_JUSTIFY_FILL'
 						elif action_mode and action_mode.startswith('graph'):
-							values['icon'] = 'terp-account'
+							values['icon'] = 'terp-graph'
+						elif action_mode and action_mode.startswith('calendar'):
+							values['icon'] = 'terp-calendar'
 						if not values['name']:
 							values['name'] = action_name
 				if rec.hasAttribute('sequence'):

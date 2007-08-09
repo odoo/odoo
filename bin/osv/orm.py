@@ -276,6 +276,7 @@ class orm(object):
 	_name = None
 	_rec_name = 'name'
 	_parent_name = 'parent_id'
+	_date_name = 'date'
 	_order = 'id'
 	_inherits = {}
 	_sequence = None
@@ -1398,6 +1399,8 @@ class orm(object):
 				xml += "</form>"
 			elif view_type == 'tree':
 				xml = '''<?xml version="1.0"?>\n<tree string="%s">\n\t<field name="%s"/>\n</tree>''' % (self._description,self._rec_name)
+			elif view_type == 'calendar':
+				xml = '''<?xml version="1.0"?>\n<calendar string="%s" date_start="%s">\n\t<field name="%s"/>\n</calendar>''' % (self._description,self._date_name,self._rec_name)
 			else:
 				xml = ''
 			result['arch'] = xml

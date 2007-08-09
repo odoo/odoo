@@ -162,9 +162,14 @@ class act_window_view(osv.osv):
 	_columns = {
 		'sequence': fields.integer('Sequence'),
 		'view_id': fields.many2one('ir.ui.view', 'View'),
-		'view_mode': fields.selection((('tree', 'Tree'),('form', 'Form'),('graph', 'Graph')), string='Type of view', required=True),
+		'view_mode': fields.selection((
+			('tree', 'Tree'),
+			('form', 'Form'),
+			('graph', 'Graph'),
+			('calendar', 'Calendar')), string='Type of view', required=True),
 		'act_window_id': fields.many2one('ir.actions.act_window', 'Action'),
-		'multi': fields.boolean('On multiple doc.', help="If set to true, the action will not be displayed on the right toolbar of a form views.")
+		'multi': fields.boolean('On multiple doc.',
+			help="If set to true, the action will not be displayed on the right toolbar of a form views.")
 	}
 	_defaults = {
 		'multi': lambda *a: False,
