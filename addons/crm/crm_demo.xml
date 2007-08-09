@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 <terp>
 <data noupdate="1">
-	#
-	# Case Sections
-	#
+
+	<!--
+	Case Sections
+	-->
 
 	<record model="crm.case.section" id="section_support">
 		<field name="name">Helpdesk and Support</field>
@@ -18,9 +19,9 @@
 		<field name="code">purchase</field>
 	</record>
 
-	#
-	# Case Categories
-	#
+	<!--
+	Case Categories
+	-->
 
 	<record model="crm.case.categ" id="categ1">
 		<field name="name">Computer Crashed</field>
@@ -47,9 +48,7 @@
 		<field name="section_id" ref="section_purchase"/>
 	</record>
 
-	# --------------------------------------------------------------
-	# Specific menus
-	# --------------------------------------------------------------
+	<!-- Specific menus -->
 
 	<!--
 	<record model="ir.actions.act_window" id="crm_case_categ2-act">
@@ -59,7 +58,7 @@
 		<field name="view_id" ref="crm_case-view"/>
 		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support)+')]'"/>
 	</record>
-	<menuitem name="Crm &Amp; Srm/Helpdesk/Helpdesk Cases" id="menu_crm_case_categ2-act" action="crm_case_categ2-act"/>
+	<menuitem name="Crm &amp; Srm/Helpdesk/Helpdesk Cases" id="menu_crm_case_categ2-act" action="crm_case_categ2-act"/>
 	-->
 
 	<function
@@ -67,9 +66,7 @@
 		name="menu_create"
 		eval="([section_support], 'Helpdesk', ref('menu_crm'))"/>
 
-	# --------------------------------------------------------------
-	# Demo Cases
-	# --------------------------------------------------------------
+	<!-- Demo Cases -->
 
 	<record model="crm.case">
 		<field name="name">Think about Tiny ERP</field>

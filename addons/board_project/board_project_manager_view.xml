@@ -6,9 +6,9 @@
 			<field name="name">Project managers</field>
 		</record>
 
-		#
-		# Board for project managers
-		#
+		<!--
+		 Board for project managers
+		 -->
 		<act_window name="My projects"
 			domain="[('manager', '=', uid)]"
 			res_model="project.project"
@@ -122,7 +122,8 @@
 			name="Dashboards/Project/Project Manager"
 			action="open_board_project_manager"
 			sequence="1"
-			id="menu_board_project_manager"/>
+			id="menu_board_project_manager"
+			icon="terp-graph"/>
 
 
 
