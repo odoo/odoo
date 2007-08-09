@@ -6,6 +6,7 @@ class Myexception(Exception):
 	def __init__(self, faultCode, faultString):
 		self.faultCode = faultCode
 		self.faultString = faultString
+		super(Myexception, self).__init__(faultCode, faultString)
 
 class mysocket:
 	def __init__(self, sock=None):
@@ -14,7 +15,7 @@ class mysocket:
 			socket.AF_INET, socket.SOCK_STREAM)
 		else:
 			self.sock = sock
-		self.sock.settimeout(60)
+		self.sock.settimeout(120)
 	def connect(self, host, port=False):
 		if not port:
 			protocol, buf = host.split('//')
@@ -56,8 +57,7 @@ class mysocket:
 		res = cPickle.loads(msg)
 		if isinstance(res[0],Exception):
 			if exception:
-				raise Myexception(exception, str(res[0]), str(res[1]))
+				raise Myexception(str(res[0]), str(res[1]))
 			raise res[0]
 		else:
 			return res[0]
-

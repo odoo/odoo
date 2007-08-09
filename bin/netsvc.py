@@ -289,38 +289,44 @@ class TinySocketClientThread(threading.Thread):
 		import traceback
 		import time
 		import select
+		self.running = True
 		try:
-			self.running = True
 			ts = tiny_socket.mysocket(self.sock)
-			while self.running:
-				msg = ts.myreceive()
-
-				try:
-					s=LocalService(msg[0])
-					m=getattr(s,msg[1])
-					s._service._response=None
-					r=m(*msg[2:])
-					res=s._service._response
-					if res!=None:
-						r=res
-					ts.mysend(r)
-				except Exception, e:
-					logger = Logger()
-					tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
-					logger.notifyChannel("web-services", LOG_ERROR, 'Exception in call: ' + tb_s)
-					s=str(e)
-					import tools
-					if tools.config['debug_mode']:
-						import pdb
-						tb = sys.exc_info()[2]
-						pdb.post_mortem(tb)
-					ts.mysend(e, exception=True, traceback=tb_s)
-				self.sock.close()
-				self.threads.remove(self)
-				return True
-		except Exception, e:
+		except:
 			self.sock.close()
 			return False
+		while self.running:
+			try:
+				msg = ts.myreceive()
+			except:
+				self.sock.close()
+				return False
+			try:
+				s=LocalService(msg[0])
+				m=getattr(s,msg[1])
+				s._service._response=None
+				r=m(*msg[2:])
+				res=s._service._response
+				if res!=None:
+					r=res
+				ts.mysend(r)
+			except Exception, e:
+				logger = Logger()
+				tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
+				logger.notifyChannel("web-services", LOG_ERROR, 'Exception in call: ' + tb_s)
+				s=str(e)
+				import tools
+				if tools.config['debug_mode']:
+					import pdb
+					tb = sys.exc_info()[2]
+					pdb.post_mortem(tb)
+				ts.mysend(e, exception=True, traceback=tb_s)
+			except:
+				pass
+			self.sock.close()
+			self.threads.remove(self)
+			return True
+
 	def stop(self):
 		self.running = False
 
