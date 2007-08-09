@@ -323,6 +323,7 @@
 					<field name="line_ids" colspan="4" nolabel="1">
 						<tree string="Statement lines" editable="bottom">
 							<field name="date"/>
+							<field name="ref"/>
 							<field name="name"/>
 							<field name="type"/>
 							<field name="partner_id" on_change="onchange_partner_id(partner_id,type)"/>
@@ -338,8 +339,8 @@
 							<field name="account_id" domain="[('journal_id','=',parent.journal_id), ('type', '&lt;&gt;', 'view')]"/>
 							<field name="amount"/>
 							<field name="reconcile_id" context="{'partner_id':partner_id,'amount':amount,'account_id':account_id}"/> 
-							<field name="ref"/>							
-							<separator string="Notes" colspan="4"/>																				 
+							<field name="ref"/>
+							<separator string="Notes" colspan="4"/>
 							<field name="note" nolabel="1" colspan="4"/>
 						</form>
 					</field>
@@ -1467,11 +1468,13 @@
 		src_model="account.journal"
 		id="act_account_journal_2_account_move_line"/>
 
+	<!-- 
 	<act_window name="Statement entries"
 		domain="[('statement_id', '=', active_id)]"
 		res_model="account.move.line"
 		src_model="account.bank.statement"
 		id="act_account_bank_statement_account_move_unreconciled"/>
+	-->
 
 
 	<act_window name="Receivables &amp; Payables"

@@ -132,6 +132,7 @@ class account_bank_statement(osv.osv):
 				torec.append(self.pool.get('account.move.line').create(cr, uid, {
 					'name': move.name,
 					'date': move.date,
+					'ref': move.ref,
 					'move_id': move_id,
 					'partner_id': ((move.partner_id) and move.partner_id.id) or False,
 					'account_id': (move.account_id) and move.account_id.id,
@@ -146,6 +147,7 @@ class account_bank_statement(osv.osv):
 						self.pool.get('account.move.line').create(cr, uid, {
 							'name': newline.name or move.name,
 							'date': move.date,
+							'ref': move.ref,
 							'move_id': move_id,
 							'partner_id': ((move.partner_id) and move.partner_id.id) or False,
 							'account_id': (newline.account_id) and newline.account_id.id,
@@ -166,6 +168,7 @@ class account_bank_statement(osv.osv):
 					'journal_id': st.journal_id.id,
 					'period_id': st.period_id.id,
 					'move_id': move_id,
+					'ref': move.ref,
 				})
 				self.pool.get('account.move.line').create(cr, uid, default, context=context)
 				if move.reconcile_id and move.reconcile_id.line_ids:
@@ -281,13 +284,12 @@ class account_bank_statement_line(osv.osv):
 	_description = "Bank Statement Line"
 	_columns = {
 		'name': fields.char('Name', size=64, required=True),
-		'date': fields.date('Date'),
+		'date': fields.date('Date', required=True),
 		'amount': fields.float('Amount'),
 		'type': fields.selection([('supplier','Supplier'),('customer','Customer'),('general','General')], 'Type', required=True),
 		'partner_id': fields.many2one('res.partner', 'Partner'),
 		'account_id': fields.many2one('account.account','Account', required=True),
 		'statement_id': fields.many2one('account.bank.statement', 'Statement', select=True, required=True),
-
 		'reconcile_id': fields.many2one('account.bank.statement.reconcile', 'Reconcile', states={'confirm':[('readonly',True)]}),
 		'move_ids': fields.many2many('account.move', 'account_bank_statement_line_move_rel', 'move_id','statement_id', 'Moves'),
 		'ref': fields.char('Ref.', size=32),
