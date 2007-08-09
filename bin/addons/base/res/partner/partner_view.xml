@@ -519,7 +519,7 @@
 		<field name="view_id" ref="view_partner_category_tree"/>
 		<field name="domain">[('parent_id','=',False)]</field>
 	</record>
-	<menuitem name="Partners/Configuration/Categories/Categories Structure" action="action_partner_category" id="menu_partner_category"/>
+	<menuitem name="Partners/Configuration/Categories/Category's Structure" action="action_partner_category" id="menu_partner_category"/>
 
 	<record model="ir.actions.act_window" id="action_partner_by_category">
 		<field name="res_model">res.partner</field>
@@ -537,7 +537,7 @@
 
 
 	<menuitem
-		name="Partners/Categories of Partners" 
+		name="Partners/Partners by Category" 
 		sequence="1"
 		action="action_partner_category" 
 		id="menu_partner_category_main"/>

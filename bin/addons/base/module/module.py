@@ -225,7 +225,7 @@ class module(osv.osv):
 		'dependencies_id': fields.one2many('ir.module.module.dependency',
 			'module_id', 'Dependencies', readonly=True),
 		'state': fields.selection([
-			('uninstallable','Uninstallable'),
+			('uninstallable','Not Installable'),
 			('uninstalled','Not Installed'),
 			('installed','Installed'),
 			('to upgrade','To be upgraded'),

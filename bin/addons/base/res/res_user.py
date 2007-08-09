@@ -143,7 +143,9 @@ class users(osv.osv):
 			args=[]
 		if not context:
 			context={}
-		ids = self.search(cr, user, [('login','=',name)]+ args, limit=limit)
+		ids = []
+		if name:
+			ids = self.search(cr, user, [('login','=',name)]+ args, limit=limit)
 		if not ids:
 			ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
 		return self.name_get(cr, user, ids)
