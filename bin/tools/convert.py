@@ -1,5 +1,5 @@
 #----------------------------------------------------------
-# Convert 
+# Convert
 #----------------------------------------------------------
 import re
 import StringIO,xml.dom.minidom
@@ -11,6 +11,11 @@ import misc
 import netsvc
 
 from config import config
+import logging
+
+# Number of imported lines between two commit (see convert_csv_import()):
+COMMIT_STEP = 500
+
 
 
 # Number of imported lines between two commit (see convert_csv_import()):
@@ -21,19 +26,28 @@ class ConvertError(Exception):
 	def __init__(self, doc, orig_excpt):
 		self.d = doc
 		self.orig = orig_excpt
-	
+
 	def __str__(self):
 		return 'Exception:\n\t%s\nUsing file:\n%s' % (self.orig, self.d)
 
-def _eval_xml(self,node, pool, cr, uid, idref):
+def _ref(self, cr):
+	return lambda x: self.id_get(cr, False, x)
+
+def _obj(pool, cr, uid, model_str, context=None):
+	model = pool.get(model_str)
+	return lambda x: model.browse(cr, uid, x, context=context)
+
+def _eval_xml(self,node, pool, cr, uid, idref, context=None):
+	if context is None:
+		context = {}
 	if node.nodeType == node.TEXT_NODE:
 		return node.data.encode("utf8")
 	elif node.nodeType == node.ELEMENT_NODE:
 		if node.nodeName in ('field','value'):
 			t = node.getAttribute('type') or 'char'
+			f_model = node.getAttribute("model").encode('ascii')
 			if len(node.getAttribute('search')):
 				f_search = node.getAttribute("search").encode('utf-8')
-				f_model = node.getAttribute("model").encode('ascii')
 				f_use = node.getAttribute("use").encode('ascii')
 				f_name = node.getAttribute("name").encode('utf-8')
 				if len(f_use)==0:
@@ -58,6 +72,8 @@ def _eval_xml(self,node, pool, cr, uid, idref):
 				import release
 				idref['version'] = release.version.rsplit('.', 1)[0]
 				idref['ref'] = lambda x: self.id_get(cr, False, x)
+				if len(f_model):
+					idref['obj'] = _obj(self.pool, cr, uid, f_model, context=context)
 				try:
 					import pytz
 				except:
@@ -115,17 +131,74 @@ def _eval_xml(self,node, pool, cr, uid, idref):
 				idref['ref'] = lambda x: self.id_get(cr, False, x)
 				args = eval(a_eval, idref)
 			for n in [i for i in node.childNodes if (i.nodeType == i.ELEMENT_NODE)]:
-				args.append(_eval_xml(self,n, pool, cr, uid, idref))
+				args.append(_eval_xml(self,n, pool, cr, uid, idref, context))
 			model = pool.get(node.getAttribute('model'))
 			method = node.getAttribute('name')
 			res = getattr(model, method)(cr, uid, *args)
 			return res
+		elif node.nodeName=="test":
+			d = ""
+			for n in [i for i in node.childNodes]:
+				d+=str(_eval_xml(self,n,pool,cr,uid,idref, context=context))
+			return d
+
 
 escape_re = re.compile(r'(?<!\\)/')
 def escape(x):
 	return x.replace('\\/', '/')
 
+class assertion_report(object):
+	def __init__(self):
+		self._report = {}
+
+	def record_assertion(self, success, severity):
+		"""
+			Records the result of an assertion for the failed/success count
+			retrurns success
+		"""
+		if severity in self._report:
+			self._report[severity][success] += 1
+		else:
+			self._report[severity] = {success:1, not success: 0}
+		return success
+
+	def get_report(self):
+		return self._report
+
+	def __str__(self):
+		res = 'Assertions report:\nLevel\tsuccess\tfailed\n'
+		success = failed = 0
+		for sev in self._report:
+			res += sev + '\t' + str(self._report[sev][True]) + '\t' + str(self._report[sev][False]) + '\n'
+			success += self._report[sev][True]
+			failed += self._report[sev][False]
+		res += 'total\t' + str(success) + '\t' + str(failed) + '\n'
+		res += 'end of report (' + str(success + failed) + ' assertion(s) checked)'
+		return res
+
 class xml_import(object):
+
+	def isnoupdate(self, data_node = None):
+		return self.noupdate or (data_node and data_node.getAttribute('noupdate'))
+
+	def get_context(self, data_node, node, eval_dict):
+		data_node_context = (data_node and data_node.getAttribute('context').encode('utf8'))
+		if data_node_context:
+			context = eval(data_node_context, eval_dict)
+		else:
+			context = {}
+
+		node_context = node.getAttribute("context").encode('utf8')
+		if len(node_context):
+			context.update(eval(node_context, eval_dict))
+
+		return context
+
+	def get_uid(self, cr, uid, data_node, node):
+		node_uid = node.getAttribute('uid') or (data_node and data_node.getAttribute('uid'))
+		if len(node_uid):
+			return self.id_get(cr, None, node_uid)
+		return uid
 
 	def _test_xml_id(self, xml_id):
 		id = xml_id
@@ -136,7 +209,12 @@ class xml_import(object):
 	def _tag_delete(self, cr, rec, data_node=None):
 		d_model = rec.getAttribute("model")
 		d_search = rec.getAttribute("search")
-		ids = self.pool.get(d_model).search(cr,self.uid,eval(d_search))
+		d_id = rec.getAttribute("id")
+		ids = []
+		if len(d_search):
+			ids = self.pool.get(d_model).search(cr,self.uid,eval(d_search))
+		if len(d_id):
+			ids.append(self.id_get(cr, d_model, d_id))
 		if len(ids):
 			self.pool.get(d_model).unlink(cr, self.uid, ids)
 			#self.pool.get('ir.model.data')._unlink(cr, self.uid, d_model, ids, direct=True)
@@ -171,7 +249,11 @@ class xml_import(object):
 		return False
 
 	def _tag_function(self, cr, rec, data_node=None):
-		_eval_xml(self,rec, self.pool, cr, self.uid, self.idref)
+		if self.isnoupdate(data_node) and self.mode != 'init':
+			return
+		context = self.get_context(data_node, rec, {'ref': _ref(self, cr)})
+		uid = self.get_uid(cr, self.uid, data_node, rec)
+		_eval_xml(self,rec, self.pool, cr, uid, self.idref, context=context)
 		return False
 
 	def _tag_wizard(self, cr, rec, data_node=None):
@@ -236,10 +318,22 @@ class xml_import(object):
 		return False
 
 	def _tag_workflow(self, cr, rec, data_node=None):
+		if self.isnoupdate(data_node) and self.mode != 'init':
+			return
 		model = str(rec.getAttribute('model'))
+		w_ref = rec.getAttribute('ref')
+		if len(w_ref):
+			id = self.id_get(cr, model, w_ref)
+		else:
+			assert rec.childNodes, 'You must define a child node if you dont give a ref'
+			element_childs = [i for i in rec.childNodes if i.nodeType == i.ELEMENT_NODE]
+			assert len(element_childs) == 1, 'Only one child node is accepted (%d given)' % len(rec.childNodes)
+			id = _eval_xml(self, element_childs[0], self.pool, cr, self.uid, self.idref)
+
+		uid = self.get_uid(cr, self.uid, data_node, rec)
 		wf_service = netsvc.LocalService("workflow")
-		wf_service.trg_validate(self.uid, model,
-			self.id_get(cr, model, rec.getAttribute('ref')),
+		wf_service.trg_validate(uid, model,
+			id,
 			str(rec.getAttribute('action')), cr)
 		return False
 
@@ -330,19 +424,72 @@ class xml_import(object):
 			self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', 'tree_but_open', 'Menuitem', [('ir.ui.menu', int(pid))], action, True, True, xml_id=rec_id)
 		return ('ir.ui.menu', pid)
 
+	def _assert_equals(self, f1, f2, prec = 4):
+		return not round(f1 - f2, prec)
+
 	def _tag_assert(self, cr, rec, data_node=None):
+		if self.isnoupdate(data_node) and self.mode != 'init':
+			return
+
 		rec_model = rec.getAttribute("model").encode('ascii')
 		model = self.pool.get(rec_model)
 		assert model, "The model %s does not exist !" % (rec_model,)
 		rec_id = rec.getAttribute("id").encode('ascii')
 		self._test_xml_id(rec_id)
-		id = self.id_get(cr, False, rec_id)
-		if data_node.getAttribute('noupdate') and not self.mode == 'init':
+		rec_src = rec.getAttribute("search").encode('utf8')
+		rec_src_count = rec.getAttribute("count")
+
+		severity = rec.getAttribute("severity").encode('ascii') or 'info'
+
+		rec_string = rec.getAttribute("string").encode('utf8') or '???' # TODO define a default string
+
+		ids = None
+		eval_dict = {'ref': _ref(self, cr)}
+		context = self.get_context(data_node, rec, eval_dict)
+		uid = self.get_uid(cr, self.uid, data_node, rec)
+		if len(rec_id):
+			ids = [self.id_get(cr, rec_model, rec_id)]
+		elif len(rec_src):
+			q = eval(rec_src, eval_dict)
+			ids = self.pool.get(rec_model).search(cr, uid, q, context=context)
+			if len(rec_src_count):
+				count = int(rec_src_count)
+				if len(ids) != count:
+					self.assert_report.record_assertion(False, severity)
+					self.logger.notifyChannel('init', severity, 'assertion "' + rec_string + '" failed ! (search count is incorrect: ' + str(len(ids)) + ')' )
+					sevval = getattr(logging, severity.upper())
+					if sevval > config['assert_exit_level']:
+						# TODO: define a dedicated exception
+						raise Exception('Severe assertion failure')
+					return
+
+		assert ids != None, 'You must give either an id or a search criteria'
+
+		ref = _ref(self, cr)
+		for id in ids:
+			brrec =  model.browse(cr, uid, id, context)
+			class d(dict):
+				def __getitem__(self2, key):
+					if key in brrec:
+						return brrec[key]
+					return dict.__getitem__(self2, key)
+			globals = d()
+			globals['floatEqual'] = self._assert_equals
+			globals['ref'] = ref
+			globals['_ref'] = ref
 			for test in [i for i in rec.childNodes if (i.nodeType == i.ELEMENT_NODE and i.nodeName=="test")]:
 				f_expr = test.getAttribute("expr").encode('utf-8')
-				class d(dict):
-					def __getitem__(self2, key):
-						return getattr(model.browse(cr, self.uid, id), key)
+				f_val = _eval_xml(self, test, self.pool, cr, uid, self.idref, context=context) or True
+				if eval(f_expr, globals) != f_val: # assertion failed
+					self.assert_report.record_assertion(False, severity)
+					self.logger.notifyChannel('init', severity, 'assertion "' + rec_string + '" failed ! (tag ' + test.toxml() + ')' )
+					sevval = getattr(logging, severity.upper())
+					if sevval > config['assert_exit_level']:
+						# TODO: define a dedicated exception
+						raise Exception('Severe assertion failure')
+					return
+		else: # all tests were successful for this assertion tag (no break)
+			self.assert_report.record_assertion(True, severity)
 
 	def _tag_record(self, cr, rec, data_node=None):
 		rec_model = rec.getAttribute("model").encode('ascii')
@@ -351,16 +498,16 @@ class xml_import(object):
 		rec_id = rec.getAttribute("id").encode('ascii')
 		self._test_xml_id(rec_id)
 
-#		if not rec_id and not data_node.getAttribute('noupdate'):
+#		if not rec_id and not self.isnoupdate(data_node):
 #			print "Warning", rec_model
 
-		if data_node.getAttribute('noupdate') and not self.mode == 'init':
+		if self.isnoupdate(data_node) and not self.mode == 'init':
 			# check if the xml record has an id string
 			if rec_id:
 				id = self.pool.get('ir.model.data')._update_dummy(cr, self.uid, rec_model, self.module, rec_id)
 				# check if the resource already existed at the last update
 				if id:
-					# if it existed, we don't update the data, but we need to 
+					# if it existed, we don't update the data, but we need to
 					# know the id of the existing record anyway
 					self.idref[rec_id] = id
 					return None
@@ -375,7 +522,7 @@ class xml_import(object):
 			else:
 				# otherwise it is skipped
 				return None
-				
+
 		res = {}
 		for field in [i for i in rec.childNodes if (i.nodeType == i.ELEMENT_NODE and i.nodeName=="field")]:
 #TODO: most of this code is duplicated above (in _eval_xml)...
@@ -415,7 +562,7 @@ class xml_import(object):
 					if isinstance(model._columns[f_name], osv.fields.integer):
 						f_val = int(f_val)
 			res[f_name] = f_val
-		id = self.pool.get('ir.model.data')._update(cr, self.uid, rec_model, self.module, res, rec_id or False, not data_node.getAttribute('noupdate'), noupdate=data_node.getAttribute('noupdate'), mode=self.mode )
+		id = self.pool.get('ir.model.data')._update(cr, self.uid, rec_model, self.module, res, rec_id or False, not self.isnoupdate(data_node), noupdate=self.isnoupdate(data_node), mode=self.mode )
 		if rec_id:
 			self.idref[rec_id] = id
 		return rec_model, id
@@ -445,7 +592,7 @@ class xml_import(object):
 		self.cr.commit()
 		return True
 
-	def __init__(self, cr, module, idref, mode):
+	def __init__(self, cr, module, idref, mode, report=assertion_report(), noupdate = False):
 		self.logger = netsvc.Logger()
 		self.mode = mode
 		self.module = module
@@ -454,6 +601,8 @@ class xml_import(object):
 		self.pool = pooler.get_pool(cr.dbname)
 #		self.pool = osv.osv.FakePool(module)
 		self.uid = 1
+		self.assert_report = report
+		self.noupdate = noupdate
 		self._tags = {
 			'menuitem': self._tag_menuitem,
 			'record': self._tag_record,
@@ -485,10 +634,10 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init', n
 	input=StringIO.StringIO(csvcontent)
 	reader = csv.reader(input, quotechar='"', delimiter=',')
 	fields = reader.next()
-	
+
 	if not (mode == 'init' or 'id' in fields):
 		return
-	
+
 	uid = 1
 	datas = []
 	for line in reader:
@@ -505,10 +654,12 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init', n
 #
 # xml import/export
 #
-def convert_xml_import(cr, module, xmlstr, idref=None, mode='init'):
+def convert_xml_import(cr, module, xmlstr, idref=None, mode='init', noupdate = False, report=None):
 	if not idref:
 		idref={}
-	obj = xml_import(cr, module, idref, mode)
+	if report is None:
+		report=assertion_report()
+	obj = xml_import(cr, module, idref, mode, report=report, noupdate = noupdate)
 	obj.parse(xmlstr)
 	del obj
 	return True

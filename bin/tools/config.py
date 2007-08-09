@@ -32,7 +32,7 @@ import ConfigParser,optparse,os,sys
 
 class configmanager(object):
 	def __init__(self, fname=None):
-		import netsvc
+		import netsvc, logging
 		logger = netsvc.Logger()
 		self.options = {
 			'verbose': False,
@@ -66,7 +66,11 @@ class configmanager(object):
 			'smtp_password': False,
 			'stop_after_init': False,   # this will stop the server after initialization
 			'price_accuracy': 2,
+			
+			'assert_exit_level': logging.WARNING, # level above which a failed assert will 
 		}
+		
+		assert_exit_levels = (netsvc.LOG_CRITICAL, netsvc.LOG_DEBUG, netsvc.LOG_ERROR, netsvc.LOG_INFO, netsvc.LOG_WARNING)
 
 		parser = optparse.OptionParser(version=tinyerp_version_string)
 		
@@ -89,6 +93,7 @@ class configmanager(object):
 		# stops the server from launching after initialization
 		parser.add_option("--stop-after-init", action="store_true", dest="stop_after_init", default=False, help="stop the server after it initializes")
 		parser.add_option('--debug', dest='debug_mode', action='store_true', default=False, help='enable debug mode')
+		parser.add_option("--assert-exit-level", dest='assert_exit_level', help="specify the level at which a failed assertion will stop the server " + str(assert_exit_levels))
 		parser.add_option("-S", "--secure", dest="secure", action="store_true", help="launch server over https instead of http", default=False)
 		parser.add_option('--smtp', dest='smtp_server', default='', help='specify the SMTP server for sending email')
 		parser.add_option('--smtp-user', dest='smtp_user', default='', help='specify the SMTP username for sending email')
@@ -153,6 +158,10 @@ class configmanager(object):
 			'upgrade', 'verbose', 'debug_mode', 
 			'stop_after_init', 'without_demo', 'netrpc', 'xmlrpc'):
 			self.options[arg] = getattr(opt, arg)
+		
+		if opt.assert_exit_level:
+			assert opt.assert_exit_level in assert_exit_levels
+			self.options['assert_exit_level'] = getattr(logging, opt.assert_exit_level.upper())
 			
 		if not self.options['root_path'] or self.options['root_path']=='None':
 			self.options['root_path'] = os.path.abspath(os.path.dirname(sys.argv[0]))

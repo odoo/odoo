@@ -59,7 +59,7 @@ class Graph(dict):
 			father.addChild(name)
 		else:
 			Node(name, self)
-	
+
 	def __iter__(self):
 		level = 0
 		done = Set(self.keys())
@@ -69,7 +69,7 @@ class Graph(dict):
 				done.remove(name)
 				yield module
 			level += 1
-	
+
 class Singleton(object):
 
 	def __new__(cls, name, graph):
@@ -89,7 +89,7 @@ class Node(Singleton):
 			self.childs = []
 		if not hasattr(self, 'depth'):
 			self.depth = 0
-	
+
 	def addChild(self, name):
 		node = Node(name, self.graph)
 		node.depth = self.depth + 1
@@ -99,7 +99,7 @@ class Node(Singleton):
 			if hasattr(self, attr):
 				setattr(node, attr, True)
 		self.childs.sort(lambda x,y: cmp(x.name, y.name))
-	
+
 	def hasChild(self, name):
 		return Node(name, self.graph) in self.childs or \
 				bool([c for c in self.childs if c.hasChild(name)])
@@ -149,7 +149,7 @@ def create_graph(module_list, force=None):
 	current,later = Set([p for p, dep, data in packages]), Set()
 	while packages and current > later:
 		package, deps, datas = packages[0]
-		
+
 		# if all dependencies of 'package' are already in the graph, add 'package' in the graph
 		if reduce(lambda x,y: x and y in graph, deps, True):
 			if not package in current:
@@ -170,7 +170,7 @@ def create_graph(module_list, force=None):
 	
 	for package in later:
 		logger.notifyChannel('init', netsvc.LOG_ERROR, 'addon:%s:Unmet dependency' % package)
-	
+
 	return graph
 
 def init_module_objects(cr, module_name, obj_list):
@@ -182,7 +182,8 @@ def init_module_objects(cr, module_name, obj_list):
 		obj._auto_init(cr)
 		cr.commit()
 
-def load_module_graph(cr, graph, status=None):
+def load_module_graph(cr, graph, status=None, **kwargs):
+	# **kwargs is passed directly to convert_xml_import
 	if not status:
 		status={}
 	status = status.copy()
@@ -218,7 +219,7 @@ def load_module_graph(cr, graph, status=None):
 								cr.execute(new_query)
 						cr.commit()
 					else:
-						tools.convert_xml_import(cr, m, tools.file_open(opj(m, filename)).read(), idref, mode=mode)
+						tools.convert_xml_import(cr, m, tools.file_open(opj(m, filename)).read(), idref, mode=mode, **kwargs)
 			if hasattr(package, 'demo') or (package_demo and package_state != 'installed'):
 				status['progress'] = (float(statusi)+0.75)/len(graph)
 				for xml in package.datas.get('demo_xml', []):
@@ -227,7 +228,7 @@ def load_module_graph(cr, graph, status=None):
 					if ext == '.csv':
 						tools.convert_csv_import(cr, m, os.path.basename(xml), tools.file_open(opj(m, xml)).read(), idref, mode=mode, noupdate=True)
 					else:
-						tools.convert_xml_import(cr, m, tools.file_open(opj(m, xml)).read(), idref)
+						tools.convert_xml_import(cr, m, tools.file_open(opj(m, xml)).read(), idref, mode=mode, noupdate=True, **kwargs)
 				cr.execute('update ir_module_module set demo=%s where name=%s', (True, package.name))
 			package_todo.append(package.name)
 			cr.execute("update ir_module_module set state='installed' where state in ('to upgrade', 'to install') and name=%s", (package.name,))
@@ -270,7 +271,10 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 		cr.execute("select name from ir_module_module where state in ('installed', 'to upgrade', 'to remove')")
 	module_list = [name for (name,) in cr.fetchall()]
 	graph = create_graph(module_list, force)
-	load_module_graph(cr, graph, status)
+	report = tools.assertion_report()
+	load_module_graph(cr, graph, status, report=report)
+	if report.get_report():
+		print report
 
 	for kind in ('init', 'demo', 'update'):
 		tools.config[kind]={}

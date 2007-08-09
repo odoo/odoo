@@ -205,6 +205,12 @@ class browse_record(object):
 #		raise an AttributeError exception.
 		return self[name]
 
+	def __contains__(self, name):
+		return (name in self._table._columns) or (name in self._table._inherit_fields) or hasattr(self._table, name)
+	
+	def __hasattr__(self, name):
+		return name in self
+
 	def __int__(self):
 		return self._id
 
@@ -1513,6 +1519,7 @@ class orm(object):
 				i+=1
 
 			elif field._type=='many2many':
+				#FIXME
 				if args[i][1]=='child_of':
 					if isinstance(args[i][2], basestring):
 						ids2 = [x[0] for x in self.pool.get(field._obj).name_search(cr, user, args[i][2], [], 'like')]
