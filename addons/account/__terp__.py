@@ -18,7 +18,6 @@
 		"account_demo.xml",
 		"project/project_demo.xml",
 		"project/analytic_account_demo.xml",
-		"account_unit_test.xml",
 	],
 	"update_xml" : [
 		"account_wizard.xml",
