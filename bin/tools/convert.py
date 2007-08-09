@@ -166,7 +166,7 @@ class assertion_report(object):
 		return self._report
 
 	def __str__(self):
-		res = 'Assertions report:\nLevel\tsuccess\tfailed\n'
+		res = '\nAssertions report:\nLevel\tsuccess\tfailed\n'
 		success = failed = 0
 		for sev in self._report:
 			res += sev + '\t' + str(self._report[sev][True]) + '\t' + str(self._report[sev][False]) + '\n'
@@ -441,7 +441,7 @@ class xml_import(object):
 
 		severity = rec.getAttribute("severity").encode('ascii') or 'info'
 
-		rec_string = rec.getAttribute("string").encode('utf8') or '???' # TODO define a default string
+		rec_string = rec.getAttribute("string").encode('utf8') or 'unknown'
 
 		ids = None
 		eval_dict = {'ref': _ref(self, cr)}

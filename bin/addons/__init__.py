@@ -274,7 +274,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 	report = tools.assertion_report()
 	load_module_graph(cr, graph, status, report=report)
 	if report.get_report():
-		print report
+		logger.notifyChannel('init', netsvc.LOG_INFO, 'assert:%s' % report)
 
 	for kind in ('init', 'demo', 'update'):
 		tools.config[kind]={}

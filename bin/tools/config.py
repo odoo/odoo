@@ -28,12 +28,11 @@
 ##############################################################################
 
 import ConfigParser,optparse,os,sys
+import netsvc,logging
 
 
 class configmanager(object):
 	def __init__(self, fname=None):
-		import netsvc, logging
-		logger = netsvc.Logger()
 		self.options = {
 			'verbose': False,
 			'interface': '',	# this will bind the server to all interfaces
@@ -70,7 +69,7 @@ class configmanager(object):
 			'assert_exit_level': logging.WARNING, # level above which a failed assert will 
 		}
 		
-		assert_exit_levels = (netsvc.LOG_CRITICAL, netsvc.LOG_DEBUG, netsvc.LOG_ERROR, netsvc.LOG_INFO, netsvc.LOG_WARNING)
+		assert_exit_levels = (netsvc.LOG_CRITICAL, netsvc.LOG_ERROR, netsvc.LOG_WARNING, netsvc.LOG_INFO, netsvc.LOG_DEBUG)
 
 		parser = optparse.OptionParser(version=tinyerp_version_string)
 		
@@ -125,9 +124,7 @@ class configmanager(object):
 
 		(opt, args) = parser.parse_args()
 
-		if (opt.translate_in or opt.translate_out) and (not opt.language or not opt.db_name):
-			logger.notifyChannel("init", netsvc.LOG_ERROR, "the i18n-import and i18n-export options cannot be used without the language (-l) and database (-d) options")
-			sys.exit(2)
+		assert not ((opt.translate_in or opt.translate_out) and (not opt.language or not opt.db_name)), "the i18n-import and i18n-export options cannot be used without the language (-l) and database (-d) options"
 
 		# place/search the config file on Win32 near the server installation
 		# (../etc from the server)
@@ -160,7 +157,7 @@ class configmanager(object):
 			self.options[arg] = getattr(opt, arg)
 		
 		if opt.assert_exit_level:
-			assert opt.assert_exit_level in assert_exit_levels
+			assert opt.assert_exit_level in assert_exit_levels, 'ERROR: The assert-exit-level must be one of those values: '+str(assert_exit_levels)
 			self.options['assert_exit_level'] = getattr(logging, opt.assert_exit_level.upper())
 			
 		if not self.options['root_path'] or self.options['root_path']=='None':
@@ -223,8 +220,6 @@ class configmanager(object):
 		except OSError:
 			# what to do if impossible?
 			sys.stderr.write("ERROR: couldn't create the config directory\n")
-
-				
 
 	def get(self, key, default=None):
 		return self.options.get(key, default)
