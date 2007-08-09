@@ -346,10 +346,25 @@
 				</tree>
 			</field>
 		</record>
+
+		<record model="ir.ui.view" id="view_task_calendar">
+			<field name="name">project.task.calendar</field>
+			<field name="model">project.task</field>
+			<field name="type">calendar</field>
+			<field name="priority" eval="2"/>
+			<field name="arch" type="xml">
+				<calendar string="Tasks" date_start="date" date_delay="planned_hours" color="user_id">
+					<field name="name"/>
+					<field name="project_id"/>
+				</calendar>
+			</field>
+		</record>
+
 		<record model="ir.actions.act_window" id="action_view_task">
 			<field name="res_model">project.task</field>
 			<field name="view_type">form</field>
-			<field name="view_id" ref="view_task_tree2" />
+			<field name="view_mode">tree,form,calendar</field>
+			<field name="view_id" eval="False"/>
 		</record>
 		<menuitem name="Project Management/All tasks" id="menu_action_view_task" action="action_view_task" />
 
