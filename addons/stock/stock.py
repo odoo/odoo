@@ -307,7 +307,7 @@ class stock_tracking(osv.osv):
 		return res
 
 	def unlink(self, cr ,uid, ids):
-		raise 'You can not remove a lot line !'
+		raise Exception, 'You can not remove a lot line !'
 stock_tracking()
 
 #----------------------------------------------------------

@@ -202,7 +202,7 @@ class record:
 		Must instanciate a fields list, field = (name,size)
 		and update a local_values dict.
 		"""
-		raise "not implemented"
+		raise Exception, "not implemented"
 
 	def generate(self):
 		res=''
