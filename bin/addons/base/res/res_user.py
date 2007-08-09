@@ -34,13 +34,31 @@ class groups(osv.osv):
 	_columns = {
 		'name': fields.char('Group Name', size=64, required=True),
 		'model_access': fields.one2many('ir.model.access', 'group_id', 'Access Controls'),
-		'rule_groups': fields.many2many('ir.rule.group', 'group_rule_group_rel', 'group_id', 'rule_group_id', 'Rules', domain="[('global', '<>', True)]"),
+		'rule_groups': fields.many2many('ir.rule.group', 'group_rule_group_rel',
+			'group_id', 'rule_group_id', 'Rules', domain="[('global', '<>', True)]"),
+		'menu_access': fields.many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', 'Access Menu'),
 	}
-	def write(self, cr, uid, *args, **argv):
-		res = super(groups, self).write(cr, uid, *args, **argv)
+	_sql_constraints = [
+		('name_uniq', 'unique (name)', 'The name of the group must be unique !')
+	]
+
+	def write(self, cr, uid, ids, vals, context=None):
+		if 'name' in vals:
+			if vals['name'].startswith('-'):
+				raise osv.except_osv('Error',
+						'The name of the group can not start with "-"')
+		res = super(groups, self).write(cr, uid, ids, vals, context=context)
 		# Restart the cache on the company_get method
 		self.pool.get('ir.rule').domain_get()
 		return res
+
+	def create(self, cr, uid, vals, context=None):
+		if 'name' in vals:
+			if vals['name'].startswith('-'):
+				raise osv.except_osv('Error',
+						'The name of the group can not start with "-"')
+		return super(groups, self).create(cr, uid, vals, context=context)
+
 groups()
 
 

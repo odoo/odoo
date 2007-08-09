@@ -65,6 +65,20 @@ icons = map(lambda x: (x,x), ['STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_
 'terp-administration', 'terp-hr', 'terp-partner', 'terp-project', 'terp-report', 'terp-stock'
 ])
 
+class many2many_unique(fields.many2many):
+	def set(self, cr, obj, id, name, values, user=None, context=None):
+		if not values:
+			return
+		val = values[:]
+		for act in values:
+			if act[0]==4:
+				cr.execute('SELECT * FROM '+self._rel+' \
+						WHERE '+self._id1+'=%d AND '+self._id2+'=%d', (id, act[1]))
+				if cr.fetchall():
+					val.remove(act)
+		return super(many2many_unique, self).set(cr, obj, id, name, val, user=user,
+				context=context)
+
 
 class ir_ui_menu(osv.osv):
 	_name = 'ir.ui.menu'
@@ -109,7 +123,7 @@ class ir_ui_menu(osv.osv):
 		'sequence': fields.integer('Sequence'),
 		'child_id' : fields.one2many('ir.ui.menu', 'parent_id','Child ids'),
 		'parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', select=True),
-		'groups_id': fields.many2many('res.groups', 'ir_ui_menu_group_rel', 'menu_id', 'gid', 'Groups'),
+		'groups_id': many2many_unique('res.groups', 'ir_ui_menu_group_rel', 'menu_id', 'gid', 'Groups'),
 		'complete_name': fields.function(_get_full_name, method=True, string='Complete Name', type='char', size=128),
 		'icon': fields.selection(lambda *a: icons, 'Icon', size=64)
 	}

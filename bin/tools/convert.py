@@ -291,10 +291,18 @@ class xml_import(object):
 					values['icon'] = str(rec.getAttribute('icon'))
 				if rec.hasAttribute('groups'):
 					g_names = rec.getAttribute('groups').split(',')
-					g_ids = []
+					groups_value = []
+					groups_obj = self.pool.get('res.groups')
 					for group in g_names:
-						g_ids.extend(self.pool.get('res.groups').search(cr, self.uid, [('name', '=', group)]))
-					values['groups_id'] = [(6, 0, g_ids)]
+						if group.startswith('-'):
+							id = groups_obj.search(cr, self.uid,
+									[('name', '=', group[1:])])[0]
+							groups_value.append((3, id))
+						else:
+							id = groups_obj.search(cr, self.uid,
+								[('name', '=', group)])[0]
+							groups_value.append((4, id))
+					values['groups_id'] = groups_value
 				xml_id = rec.getAttribute('id').encode('utf8')
 				self._test_xml_id(xml_id)
 				pid = self.pool.get('ir.model.data')._update(cr, self.uid, 'ir.ui.menu', self.module, values, xml_id, idx==len(m_l)-1, mode=self.mode, res_id=res and res[0] or False)
