@@ -95,10 +95,11 @@
 		<record model="account.analytic.account" id="analytic_integration_c2c">
 			<field name="name">CampToCamp</field>
 			<field name="code">7</field>
-			<field name="date_start">07/08/06</field>
-			<field name="date">31/12/07</field>
+			<field name="date_start" eval="str(time.localtime()[0] - 1) + '-08-07'" />
+			<field name="date" eval="time.strftime('%Y-12-31')" />
 			<field name="parent_id" ref="analytic_integration" />
 			<field name="partner_id" ref="base.res_partner_c2c" />
+			<field name="state">open</field>
 		</record>
 		<record model="account.analytic.account" id="analytic_agrolait">
 			<field name="name">Agrolait</field>
@@ -121,32 +122,34 @@
 		<record model="account.analytic.account" id="analytic_sednacom">
 			<field name="name">Sednacom</field>
 			<field name="code">2</field>
-			<field name="date_start">09/05/05</field>
-			<field name="date">08/05/06</field>
+			<field name="date_start" eval="str(time.localtime()[0] - 1) + '-05-09'" />
+			<field name="date" eval="time.strftime('%Y-05-08')" />
 			<field name="parent_id" ref="analytic_partners" />
 			<field name="partner_id" ref="base.res_partner_sednacom" />
+			<field name="state">open</field>
 		</record>
 		<record model="account.analytic.account" id="analytic_thymbra">
 			<field name="name">Thymbra</field>
 			<field name="code">3</field>
-			<field name="date_start">02/01/06</field>
-			<field name="date">02/07/06</field>
+			<field name="date_start" eval="time.strftime('%Y-02-01')" />
+			<field name="date" eval="time.strftime('%Y-07-01')" />
 			<field name="parent_id" ref="analytic_partners" />
 			<field name="partner_id" ref="base.res_partner_thymbra" />
+			<field name="state">open</field>
 		</record>
 		<record model="account.analytic.account" id="analytic_leclerc">
 			<field name="name">Leclerc</field>
 			<field name="code">10</field>
-			<field name="date_start">24/04/06</field>
-			<field name="date">24/04/07</field>
+			<field name="date_start" eval="time.strftime('%Y-04-24')" />
+			<field name="date" eval="str(time.localtime()[0] + 1) + '-04-24'" />
 			<field name="parent_id" ref="analytic_partners" />
 			<field name="partner_id" ref="base.res_partner_11" />
 		</record>
 		<record model="account.analytic.account" id="analytic_desertic_hispafuentes">
 			<field name="name">Desertic - Hispafuentes</field>
 			<field name="code">12</field>
-			<field name="date_start">01/02/06</field>
-			<field name="date">01/02/07</field>
+			<field name="date_start" eval="time.strftime('%Y-02-01')" />
+			<field name="date" eval="str(time.localtime()[0] + 1) + '-02-01'" />
 			<field name="parent_id" ref="analytic_partners" />
 			<field name="partner_id" ref="base.res_partner_desertic_hispafuentes" />
 		</record>
@@ -159,10 +162,11 @@
 		<record model="account.analytic.account" id="analytic_partners_camp_to_camp">
 			<field name="name">Camp to Camp</field>
 			<field name="code">21</field>
-			<field name="date_start">08/08/06</field>
-			<field name="date">08/08/07</field>
+			<field name="date_start" eval="time.strftime('%Y-%m-%d', time.localtime(time.time() - 365 * 86400))" />
+			<field name="date" eval="time.strftime('%Y-%m-%d')" />
 			<field name="parent_id" ref="analytic_partners" />
 			<field name="partner_id" ref="base.res_partner_c2c" />
+			<field name="state">open</field>
 		</record>
 		<record model="account.analytic.account" id="analytic_project_2_support">
 			<field name="name">Support</field>

@@ -20,5 +20,17 @@
 			<field name="factor">100.0</field>
 		</record>
 
+		<record model="account.analytic.account" id="account.analytic_sednacom">
+			<field name="to_invoice" ref="timesheet_invoice_factor1" />
+		</record>
+
+		<record model="account.analytic.account" id="account.analytic_thymbra">
+			<field name="to_invoice" ref="timesheet_invoice_factor1" />
+		</record>
+
+		<record model="account.analytic.account" id="account.analytic_partners_camp_to_camp">
+			<field name="to_invoice" ref="timesheet_invoice_factor1" />
+		</record>
+
 	</data>
 </terp>

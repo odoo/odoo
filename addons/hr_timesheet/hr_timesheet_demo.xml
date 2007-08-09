@@ -109,7 +109,7 @@
 			<field name="name">Phone support on reporting engine</field>
 			<field name="date" eval="time.strftime('%Y-%m-05')"/>
 			<field name="unit_amount">7.0</field>
-			<field name="account_id" search="[('name','=', 'Camp To Camp')]" model="account.analytic.account"/>
+			<field name="account_id" ref="base.res_partner_c2c" />
 			<field name="product_id" ref="hr_timesheet.product_consultant"/>
 			<field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
 			<field name="user_id" ref="base.user_admin"/>
