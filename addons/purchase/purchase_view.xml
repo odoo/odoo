@@ -89,16 +89,16 @@
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','confirmed')]</field>
 	</record>
-	<menuitem name="Purchase Management/Purchase Order/Purchase Order Waiting Approval" id="menu_purchase_form_action3" action="purchase_form_action3"/>
+	<menuitem name="Purchase Management/Purchase Order/Purchase Orders Waiting Approval" id="menu_purchase_form_action3" action="purchase_form_action3"/>
 	<record model="ir.actions.act_window" id="purchase_form_action4">
-		<field name="name">Running purchase order</field>
+		<field name="name">Purchase Orders in Progress</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">purchase.order</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','approved')]</field>
 	</record>
-	<menuitem name="Purchase Management/Purchase Order/Running Purchase Order" id="menu_purchase_form_action4" action="purchase_form_action4"/>
+	<menuitem name="Purchase Management/Purchase Order/Purchase Orders in Progress" id="menu_purchase_form_action4" action="purchase_form_action4"/>
 
 	<record model="ir.ui.view" id="purchase_order_tree">
 		<field name="name">purchase.order.tree</field>
@@ -161,7 +161,7 @@
 		</field>
 	</record>
 
-	<act_window name="Purchases"
+	<act_window name="Purchase orders"
 		domain="[('partner_id', '=', active_id)]"
 		context="{'partner_id': active_id}"
 		res_model="purchase.order"

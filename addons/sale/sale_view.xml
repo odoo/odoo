@@ -411,14 +411,14 @@
 	<menuitem name="Sales Management/Sales Order Lines/Uninvoiced Lines" id="menu_action_order_line_tree2" action="action_order_line_tree2"/>
 
 	<record model="ir.actions.act_window" id="action_order_line_tree3">
-		<field name="name">Uninvoiced lines delivered</field>
+		<field name="name">Uninvoiced and Delivered Lines</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">sale.order.line</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('invoiced','&lt;&gt;', 1),('state','=','done')]</field>
 	</record>
-	<menuitem name="Sales Management/Sales Order Lines/Uninvoiced Lines/Uninvoiced Lines Delivered" id="menu_action_order_line_tree3" action="action_order_line_tree3"/>
+	<menuitem name="Sales Management/Sales Order Lines/Uninvoiced Lines/Uninvoiced &amp; Delivered Lines" id="menu_action_order_line_tree3" action="action_order_line_tree3"/>
 
 	<act_window name="Sales"
 		domain="[('partner_id', '=', active_id)]"

@@ -154,7 +154,7 @@
 		</record>
 
 	<record model="ir.actions.act_window" id="action_picking_tree4">
-		<field name="name">Packings to invoice</field>
+		<field name="name">Packings to be invoiced</field>
 		<field name="res_model">stock.picking</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -162,7 +162,7 @@
 		<field name="domain">[('invoice_state','=','2binvoiced'),('state','=','done')]</field>
 	</record>
 	<menuitem
-		name="Inventory Control/Packing Lists/Sending Goods/Packings to Invoice"
+		name="Inventory Control/Packing Lists/Sending Goods/Packings to be Invoiced"
 		id="menu_action_picking_tree3"
 		action="action_picking_tree4"/>
 

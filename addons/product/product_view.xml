@@ -238,7 +238,7 @@
 			<field name="model">product.category</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Products Categories">
+				<form string="Product Categories">
 					<field name="name" select="1"/>
 					<field name="parent_id" />
 					<field name="sequence"/>
@@ -264,7 +264,7 @@
 			<field name="view_type">tree</field>
 			<field name="view_id" ref="product_category_tree_view"/>
 		</record>
-		<menuitem name="Products/Products Categories" id="menu_product_category_action" action="product_category_action"/>
+		<menuitem name="Products/Products by Category" id="menu_product_category_action" action="product_category_action"/>
 
 		<record model="ir.actions.act_window" id="product_category_action_form">
 			<field name="type">ir.actions.act_window</field>

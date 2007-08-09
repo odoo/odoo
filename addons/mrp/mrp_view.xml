@@ -631,7 +631,7 @@
 		<field name="model">stock.warehouse.orderpoint</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Stock minimum rules">
+			<tree string="Minimum Stock Rules">
 				<field name="warehouse_id"/>
 				<field name="product_id"/>
 				<field name="product_uom"/>
@@ -648,7 +648,7 @@
 		<field name="model">stock.warehouse.orderpoint</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Stock minimum rules">
+			<form string="Minimum Stock Rules">
 				<field name="name" select="1"/>
 				<field name="active" select="1"/>
 				<field name="warehouse_id" select="1"/>
@@ -671,16 +671,16 @@
 		<field name="view_id" ref="view_warehouse_orderpoint_tree"/>
 	</record>
 	<menuitem name="Inventory Control/Reordering Policy" sequence="4"/>
-	<menuitem name="Inventory Control/Reordering Policy/Stock Minimum Rules" id="menu_action_orderpoint_form" action="action_orderpoint_form"/>
+	<menuitem name="Inventory Control/Reordering Policy/Minimum Stock Rules" id="menu_action_orderpoint_form" action="action_orderpoint_form"/>
 
-	<act_window name="Stock minimum rules"
+	<act_window name="Minimum Stock Rules"
 		domain="[('warehouse_id', '=', active_id)]"
 		res_model="stock.warehouse.orderpoint"
 		src_model="stock.warehouse"
 		id="act_stock_warehouse_2_stock_warehouse_orderpoint"/>
 
 	<!-- add product_uom to context to be the default value when adding new orderpoints -->
-	<act_window name="Stock minimum rules"
+	<act_window name="Minimum Stock Rules"
 		domain="[('product_id', '=', active_id)]"
 		context="{'product_uom': uom_id}"
 		res_model="stock.warehouse.orderpoint"
