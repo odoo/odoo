@@ -1,6 +1,18 @@
 <?xml version="1.0"?>
 <terp>
 	<data noupdate="1">
+		<record model="hr_timesheet_sheet.sheet" id="sheet0">
+			<field name="name">Sheet 0</field>
+			<field name="user_id" ref="base.user_admin" />
+			<field name="date_from" eval="time.strftime('%Y-%m-01', time.localtime(time.mktime(time.localtime()[0:2] + (0,)*7)-1))"/>
+			<field name="date_current" eval="time.strftime('%Y-%m-15', time.localtime(time.mktime(time.localtime()[0:2] + (0,)*7)-1))"/>
+			<field name="date_to" eval="time.strftime('%Y-%m-%d', time.localtime(time.mktime(time.localtime()[0:2] + (0,)*7)-1))"/>
+		</record>
+		
+		<record model="hr.analytic.timesheet" id="hr_timesheet.analytic_timesheet10">
+			<field name="sheet_id" ref="sheet0"/>
+		</record>
+
 		<record model="hr_timesheet_sheet.sheet" id="sheet1">
 			<field name="name">Sheet 1</field>
 			<field name="user_id" search="[('login','=','admin')]" model="res.users"/>
