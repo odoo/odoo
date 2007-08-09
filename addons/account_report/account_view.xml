@@ -55,12 +55,27 @@
 		</field>
 	</record>
 
+	<record model="ir.ui.view" id="view_account_report_tree_simple">
+		<field name="name">account.report.report.tree.simple</field>
+		<field name="model">account.report.report</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Accounting reporting">
+				<field name="code"/>
+				<field name="name"/>
+			</tree>
+		</field>
+	</record>
+
 	<record model="ir.actions.act_window" id="action_account_report_tree">
 		<field name="name">Custom reporting</field>
 		<field name="res_model">account.report.report</field>
-		<field name="view_type">tree</field>
-		<field name="domain">[('parent_id','=',False)]</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain"></field>
+		<field name="view_id" ref="view_account_report_tree_simple"/>
 	</record>
+
 	<menuitem
 		name="Financial Management/Configuration/Custom reporting"
 		id="menu_action_account_report_tree_define"

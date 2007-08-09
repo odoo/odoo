@@ -40,6 +40,26 @@ from mx.DateTime import RelativeDateTime, now, DateTime, localtime
 class account_report(osv.osv):
 	_name = "account.report.report"
 	_description = "Account reporting"
+	_color = [
+			('', ''),
+			('green','Green'),
+			('red','Red'),
+			('pink','Pink'),
+			('blue','Blue'),
+			('yellow','Yellow'),
+			('cyan','Cyan'),
+			('lightblue','Light Blue'),
+			('orange','Orange'),
+			]
+	_style = [
+			('1','Header 1'),
+			('2','Header 2'),
+			('3','Header 3'),
+			('4','Header 4'),
+			('5','Normal'),
+			('6', 'Small'),
+			]
+
 	def _amount_get(self, cr, uid, ids, field_name, arg, context={}):
 		def _calc_credit(*code):
 			acc = self.pool.get('account.account')
@@ -87,20 +107,26 @@ class account_report(osv.osv):
 			else:
 				result[rep.id] =  val
 		return result
+
 	def onchange_parent_id(self, cr, uid, ids, parent_id):
 		v={}
 		if parent_id:
 			acc=self.pool.get('account.report.report').browse(cr,uid,parent_id)
 			v['type']=acc.type
-			if int(acc.style)<6:
-				v['style']=str(int(acc.style)+1)
-		return {'value':v}
+			if int(acc.style) < 6:
+				v['style'] = str(int(acc.style)+1)
+		return {'value': v}
+
 	_columns = {
 		'name': fields.char('Name', size=64, required=True),
 		'active': fields.boolean('Active'),
 		'sequence': fields.integer('Sequence'),
 		'code': fields.char('Code', size=64, required=True),
-		'type': fields.selection([('fiscal', 'Fiscal statement'),('indicator','Indicator'),('other','Others')], 'Type', required=True),
+		'type': fields.selection([
+			('fiscal', 'Fiscal statement'),
+			('indicator','Indicator'),
+			('other','Others')],
+			'Type', required=True),
 		'expression': fields.char('Expression', size=240, required=True),
 		'expression_status': fields.char('Status expression', size=240, required=True),
 		'parent_id': fields.many2one('account.report.report', 'Parent'),
@@ -117,17 +143,17 @@ class account_report(osv.osv):
 				('good', 'Good'),
 				('excellent', 'Excellent')
 			],
-			string='Status'
-		),
-		'style': fields.selection([('1','Header 1'), ('2','Header 2'), ('3','Header 3'), ('4','Header 4'), ('5','Normal'), ('6', 'Small')], 'Style', required=True),
-		'color_font' : fields.selection([('green','Green'),('red','Red'),('pink','Pink'),('blue','Blue'),('yellow','Yellow'),('cyan','Cyan'),('lightblue','Light Blue'),('orange','orange')], 'Font Color',help="Font Color for the report"),
-		'color_back' : fields.selection([('green','Green'),('red','Red'),('pink','Pink'),('blue','Blue'),('yellow','Yellow'),('cyan','Cyan'),('lightblue','Light Blue'),('orange','orange')], 'Back Color')
+			string='Status'),
+		'style': fields.selection(_style, 'Style', required=True),
+		'color_font' : fields.selection(_color, 'Font Color', help="Font Color for the report"),
+		'color_back' : fields.selection(_color, 'Back Color')
 	}
 	_defaults = {
 		'style': lambda *args: '5',
 		'active': lambda *args: True,
-		'type': lambda *args: 'indicator'
+		'type': lambda *args: 'indicator',
 	}
+
 	def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
 		if not args:
 			args=[]
@@ -142,13 +168,11 @@ class account_report(osv.osv):
 			ids = self.search(cr, user, args, limit=limit, context=context)
 		return self.name_get(cr, user, ids, context=context)
 
-	#
-	# Put an expression to valid expression and expression_status
-	#
 	_constraints = [
-
+	#TODO Put an expression to valid expression and expression_status
 	]
 	_sql_constraints = [
 		('code_uniq', 'unique (code)', 'The code of the report entry must be unique !')
 	]
+
 account_report()
