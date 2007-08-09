@@ -116,13 +116,13 @@ class browse_record_list(list):
 		super(browse_record_list, self).__init__(lst)
 		self.context = context
 
-#
-# table : the object (inherited from orm)
-# context : a dictionnary with an optionnal context
-#    default to : browse_record_list
-#
+
 class browse_record(object):
 	def __init__(self, cr, uid, id, table, cache, context=None, list_class = None):
+		'''
+		table : the object (inherited from orm)
+		context : a dictionnary with an optionnal context
+		'''
 		if not context:
 			context = {}
 		assert id, 'Wrong ID for the browse record, got '+str(id)+ ', expected an integer.'
@@ -154,7 +154,8 @@ class browse_record(object):
 			elif hasattr(self._table, name):
 				return getattr(self._table, name)
 			else:
-				print "Programming error: field '%s' does not exist in object '%s' !" % (name, self._table._name)
+				logger = netsvc.Logger()
+				logger.notifyChannel('orm', netsvc.LOG_ERROR, "Programming error: field '%s' does not exist in object '%s' !" % (name, self._table._name))
 				return False
 			
 			# if the field is a classic one or a many2one, we'll fetch all classic and many2one fields
@@ -175,7 +176,7 @@ class browse_record(object):
 			# create browse records for 'remote' objects
 			for data in datas:
 				for n,f in ffields:
-					if isinstance(f, fields.many2one) or isinstance(f, fields.one2one):
+					if f._type in ('many2one', 'one2one'):
 						if data[n]:
 							obj = self._table.pool.get(f._obj)
 							compids=False
@@ -191,7 +192,7 @@ class browse_record(object):
 							data[n] = browse_record(self._cr, self._uid, data[n], obj, self._cache, context=self._context, list_class=self._list_class)
 						else:
 							data[n] = browse_null()
-					elif isinstance(f, (fields.one2many, fields.many2many)) and len(data[n]):
+					elif f._type in ('one2many', 'many2many') and len(data[n]):
 						data[n] = self._list_class([browse_record(self._cr,self._uid,id,self._table.pool.get(f._obj),self._cache, context=self._context, list_class=self._list_class) for id in data[n]], self._context)
 				self._data[data['id']].update(data)
 		return self._data[self._id][name]
