@@ -101,7 +101,6 @@ class rml_parse(object):
 			'setLang': self.setLang,
 			'setTag': self.setTag,
 			'removeParentNode': self.removeParentNode,
-			'format': self.format,
 		}
 		self.localcontext.update(context)
 		self.name = name
@@ -109,7 +108,7 @@ class rml_parse(object):
 		self._transl_regex = re.compile('(\[\[.+?\]\])')
 		self._node = None
 #		self.already = {}
-
+	
 	def setTag(self, oldtag, newtag, attrs=None):
 		if not attrs:
 			attrs={}
@@ -119,28 +118,6 @@ class rml_parse(object):
 			for key, val in attrs.items():
 				node.setAttribute(key, val)
 		return None
-
-	def format(self, text, oldtag='para'):
-		self._node.data = ''
-		node = self._find_parent(self._node, [oldtag])
-
-		pp = node.parentNode
-		ns = node.nextSibling
-		pp.removeChild(node)
-		self._node = pp
-		lst = text.split('\n')
-		if not len(lst):
-			return None
-		nodes = []
-		for i in range(len(lst)):
-			newnode = node.cloneNode(1)
-			newnode.tagName='para'
-			newnode.__dict__['childNodes'][0].__dict__['data'] = ' %s '%lst[i]
-			if ns:
-				pp.insertBefore(newnode, ns)
-			else:
-				pp.appendChild(newnode)
-			nodes.append((i, newnode))
 
 	def removeParentNode(self, tag):
 		node = self._find_parent(self._node, [tag])
