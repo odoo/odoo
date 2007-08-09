@@ -43,19 +43,19 @@
 							<newline/>
 							<field name="weight" digits="(14, 3)"/>
 							<field name="weight_net" digits="(14, 3)"/>
-							<field name="procure_method" select="2"/>
-							<field name="state"/>
+							<field name="procure_method"/>
+							<field name="state" select="2"/>
 							<field name="uom_id"/>
 							<field name="uom_po_id"/>
-							<field name="product_manager"/>
+							<field name="product_manager" select="2"/>
 						</page>
 						<page string="Procurement">
-							<field name="supply_method" select="2"/>
+							<field name="supply_method"/>
 							<field name="active" select="2"/>
 							<newline/>
-							<field name="sale_delay" select="2"/>
+							<field name="sale_delay"/>
 							<field name="sale_ok" select="2"/>
-							<field name="produce_delay" select="2"/>
+							<field name="produce_delay"/>
 							<field name="purchase_ok" select="2"/>
 							<field name="warranty"/>
 							<field name="rental" select="2"/>
