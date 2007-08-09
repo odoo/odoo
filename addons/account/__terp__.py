@@ -18,6 +18,7 @@
 		"account_demo.xml",
 		"project/project_demo.xml",
 		"project/analytic_account_demo.xml",
+		"account_unit_test.xml",
 	],
 	"update_xml" : [
 		"account_wizard.xml",
@@ -36,6 +37,8 @@
 		"project/project_report.xml",
 		"product_data.xml",
 		"product_view.xml",
+		
+		"account_assert_test.xml",
 	],
 #	"translations" : {
 #		"fr": "i18n/french_fr.csv"

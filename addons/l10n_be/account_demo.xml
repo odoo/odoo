@@ -13,14 +13,14 @@
 		<field name="name">Sample invoice</field>
 		<field name="address_contact_id" ref="base.res_partner_address_tang"/>
 	</record>
-	<record model="account.invoice.line">
+	<record model="account.invoice.line" id="ceci_est_une_facture_line_1">
 		<field name="name">Basic computer with Dvorak keyboard and left-handed mouse</field>
 		<field name="invoice_id" ref="ceci_est_une_facture"/>
 		<field name="price_unit">250</field>
 		<field name="quantity">1</field>
 		<field name="account_id" ref="account.a_sale"/>
 	</record>
-	<record model="account.invoice.line">
+	<record model="account.invoice.line" id="ceci_est_une_facture_line_2">
 		<field name="name">Little server with raid 1 and 512ECC ram</field>
 		<field name="invoice_id" ref="ceci_est_une_facture"/>
 		<field name="price_unit">800</field>

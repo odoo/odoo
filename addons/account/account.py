@@ -175,7 +175,9 @@ class account_account(osv.osv):
 
 	def _balance(self, cr, uid, ids, field_name, arg, context={}):
 		if not 'fiscalyear' in context:
-			context['fiscalyear'] = self.pool.get('account.fiscalyear').find(cr, uid)
+			context['fiscalyear'] = self.pool.get('account.fiscalyear').find(cr, uid, exception=False)
+		if not context['fiscalyear']:
+			return dict(map(lambda x: (x, 0.0), ids))
 
 		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
 		acc_set = ",".join(map(str, ids2))
