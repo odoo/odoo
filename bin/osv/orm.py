@@ -228,10 +228,22 @@ class browse_record(object):
 	__repr__ = __str__
 
 
-# returns a tuple (type returned by postgres when the column was created, type expression to create the column)
 def get_pg_type(f):
-	type_dict = {fields.boolean:'bool', fields.integer:'int4', fields.text:'text', fields.date:'date', fields.time:'time', fields.datetime:'timestamp', fields.binary:'bytea', fields.many2one:'int4'}
+	'''
+	returns a tuple
+	(type returned by postgres when the column was created, type expression to create the column)
+	'''
 
+	type_dict = {
+			fields.boolean:'bool',
+			fields.integer:'int4',
+			fields.text:'text',
+			fields.date:'date',
+			fields.time:'time',
+			fields.datetime:'timestamp',
+			fields.binary:'bytea',
+			fields.many2one:'int4',
+			}
 	if type_dict.has_key(type(f)):
 		f_type = (type_dict[type(f)], type_dict[type(f)])
 	elif isinstance(f, fields.float):
@@ -253,19 +265,18 @@ def get_pg_type(f):
 			f_type = ('int4', 'INTEGER')
 		else:
 			f_type = ('varchar', 'VARCHAR(%d)' % f_size)
-	elif isinstance(f, fields.function) and type_dict.has_key(type(locals().get('fields.'+(f._type)))):
-		t=type(locals().get('fields.'+(f._type)))
+	elif isinstance(f, fields.function) and type_dict.has_key(eval('fields.'+(f._type))):
+		t=eval('fields.'+(f._type))
 		f_type = (type_dict[t], type_dict[t])
 	elif isinstance(f, fields.function) and f._type == 'float':
 		f_type = ('float8', 'DOUBLE PRECISION')
 	else:
 		logger = netsvc.Logger()
-		logger.notifyChannel("init", netsvc.LOG_WARNING, '%s type not supported!' % (f_type))
+		logger.notifyChannel("init", netsvc.LOG_WARNING, '%s type not supported!' % (type(f)))
 		f_type = None
 	return f_type
 
-		
-	
+
 class orm(object):
 	_columns = {}
 	_sql_constraints = []
