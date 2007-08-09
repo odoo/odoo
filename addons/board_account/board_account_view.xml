@@ -6,22 +6,6 @@
 			<field name="name">Accountants</field>
 		</record>
 
-		<record model="ir.ui.view" id="hr_timesheet_sheet_tree">
-			<field name="name">hr.timesheet.sheet.tree.simplified.board</field>
-			<field name="model">hr_timesheet_sheet.sheet</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Timesheets">
-					<field name="date_from" />
-					<field name="user_id"/>
-					<field name="name" />
-					<field name="total_attendance"/>
-					<field name="total_timesheet"/>
-					<field name="state"/>
-				</tree>
-			</field>
-		</record>
-
 		<record model="ir.actions.act_window" id="action_account_analytic_line_to_invoice">
 			<field name="res_model">report.account.analytic.line.to.invoice</field>
 			<field name="view_type">form</field>
@@ -52,16 +36,6 @@
 			view_mode="tree,form"
 			id="act_my_account"/>
 
-		<record model="ir.actions.act_window" id="act_hr_timesheet_sheet">
-			<field name="name">Timesheets</field>
-			<field name="res_model">hr_timesheet_sheet.sheet</field>
-			<field name="domain">[('state','&lt;&gt;','done'),('date_to','&lt;',time.strftime('%Y-%m-%d'))]</field>
-			<field name="view_type">form</field>
-			<field name="view_id" ref="hr_timesheet_sheet_tree"/>
-		</record>
-
-
-
 		<record model="ir.ui.view" id="board_account_form">
 			<field name="name">board.account.form</field>
 			<field name="model">board.board</field>
@@ -85,12 +59,6 @@
 								colspan="4"
 								height="160"
 								width="510"/>
-
-							<action
-								string="Unvalidated timesheets"
-								name="%(act_hr_timesheet_sheet)s"
-								colspan="4"
-								height="160"/>
 
 							<action
 								string="Draft invoices"
