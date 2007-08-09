@@ -6,7 +6,7 @@
 			<field name="wiz_name">base.module.import</field>
 		</record>
 		<menuitem
-			name="Administration/Modules management/Import a new module"
+			name="Administration/Modules Management/Import New Module"
 			action="wizard_base_module_import"
 			type="wizard"
 			id="menu_wizard_module_import"/>
@@ -16,7 +16,7 @@
 			<field name="wiz_name">module.module.update</field>
 		</record>
 		<menuitem
-			name="Administration/Modules management/Update modules list"
+			name="Administration/Modules Management/Update Modules List"
 			action="wizard_update"
 			type="wizard"
 			groups="admin"
@@ -28,7 +28,7 @@
 			name="module.upgrade"
 			id="wizard_upgrade"/>
 		<menuitem
-			name="Administration/Modules management/Apply upgrades"
+			name="Administration/Modules Management/Apply Upgrades"
 			action="wizard_upgrade"
 			id="menu_wizard_upgrade"
 			type="wizard"/>
@@ -38,27 +38,27 @@
 			<field name="wiz_name">module.lang.install</field>
 		</record>
 		<menuitem
-			name="Administration/Translations/Load a new language"
+			name="Administration/Translations/Load New Language"
 			action="wizard_lang_install"
 			id="menu_wizard_lang_install"
 			type="wizard"/>
 
 		<record model="ir.actions.wizard" id="wizard_lang_export">
-			<field name="name">Export a language</field>
+			<field name="name">Export language</field>
 			<field name="wiz_name">module.lang.export</field>
 		</record>
 		<menuitem
-			name="Administration/Translations/Export a language"
+			name="Administration/Translations/Export Language"
 			action="wizard_lang_export"
 			id="menu_wizard_lang_export"
 			type="wizard"/>
 
 		<record model="ir.actions.wizard" id="wizard_lang_import">
-			<field name="name">Import a language</field>
+			<field name="name">Import language</field>
 			<field name="wiz_name">module.lang.import</field>
 		</record>
 		<menuitem
-			name="Administration/Translations/Import a language"
+			name="Administration/Translations/Import Language"
 			action="wizard_lang_import"
 			id="menu_wizard_lang_import"
 			type="wizard"/>
