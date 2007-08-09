@@ -117,6 +117,23 @@
 				</form>
 			</field>
 		</record>
+
+		<record model="ir.ui.view" id="product_variant_tree_view">
+			<field name="name">product.variant.tree</field>
+			<field name="model">product.product</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Product Variant">
+					<field name="product_tmpl_id"/>
+					<field name="active"/>
+					<field name="variants"/>
+					<field name="default_code"/>
+					<field name="price_margin"/>
+					<field name="price_extra"/>
+				</tree>
+			</field>
+		</record>
+
 		<record model="ir.actions.act_window" id="product_variant_action">
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">product.product</field>
@@ -125,7 +142,7 @@
 		<record model="ir.actions.act_window.view" id="product_variant_action_view1">
 			<field name="sequence" eval="10"/>
 			<field name="view_mode">tree</field>
-			<field name="view_id" ref="product_product_tree_view"/>
+			<field name="view_id" ref="product_variant_tree_view"/>
 			<field name="act_window_id" ref="product_variant_action"/>
 		</record>
 		<record model="ir.actions.act_window.view" id="product_variant_action_view2">
