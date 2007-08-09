@@ -77,39 +77,46 @@
 			<field name="code">1</field>
 			<field name="parent_id" ref="analytic_integration" />
 			<field name="state">open</field>
+			<field name="partner_id" ref="base.res_partner_seagate" />
 		</record>
 		<record model="account.analytic.account" id="analytic_seagate_p2">
 			<field name="name">Seagate P2</field>
 			<field name="code">2</field>
 			<field name="parent_id" ref="analytic_integration" />
 			<field name="state">open</field>
+			<field name="partner_id" ref="base.res_partner_seagate" />
 		</record>
 		<record model="account.analytic.account" id="analytic_magasin_bml_1">
 			<field name="name">Magasin BML 1</field>
 			<field name="code">3</field>
 			<field name="parent_id" ref="analytic_integration" />
+			<field name="partner_id" ref="base.res_partner_15" />
 		</record>
-		<record model="account.analytic.account" id="analytic_integration_camp_to_camp">
-			<field name="name">Camp To Camp</field>
+		<record model="account.analytic.account" id="analytic_integration_c2c">
+			<field name="name">CampToCamp</field>
 			<field name="code">7</field>
 			<field name="date_start">07/08/06</field>
 			<field name="date">31/12/07</field>
 			<field name="parent_id" ref="analytic_integration" />
+			<field name="partner_id" ref="base.res_partner_c2c" />
 		</record>
 		<record model="account.analytic.account" id="analytic_agrolait">
 			<field name="name">Agrolait</field>
 			<field name="code">3</field>
 			<field name="parent_id" ref="analytic_customers" />
+			<field name="partner_id" ref="base.res_partner_agrolait" />
 		</record>
 		<record model="account.analytic.account" id="analytic_asustek">
 			<field name="name">Asustek</field>
 			<field name="code">4</field>
 			<field name="parent_id" ref="analytic_customers" />
+			<field name="partner_id" ref="base.res_partner_asus" />
 		</record>
 		<record model="account.analytic.account" id="analytic_distripc">
 			<field name="name">DistriPC</field>
 			<field name="code">7</field>
 			<field name="parent_id" ref="analytic_customers" />
+			<field name="partner_id" ref="base.res_partner_4" />
 		</record>
 		<record model="account.analytic.account" id="analytic_sednacom">
 			<field name="name">Sednacom</field>
@@ -117,6 +124,7 @@
 			<field name="date_start">09/05/05</field>
 			<field name="date">08/05/06</field>
 			<field name="parent_id" ref="analytic_partners" />
+			<field name="partner_id" ref="base.res_partner_sednacom" />
 		</record>
 		<record model="account.analytic.account" id="analytic_thymbra">
 			<field name="name">Thymbra</field>
@@ -124,6 +132,7 @@
 			<field name="date_start">02/01/06</field>
 			<field name="date">02/07/06</field>
 			<field name="parent_id" ref="analytic_partners" />
+			<field name="partner_id" ref="base.res_partner_thymbra" />
 		</record>
 		<record model="account.analytic.account" id="analytic_leclerc">
 			<field name="name">Leclerc</field>
@@ -131,6 +140,7 @@
 			<field name="date_start">24/04/06</field>
 			<field name="date">24/04/07</field>
 			<field name="parent_id" ref="analytic_partners" />
+			<field name="partner_id" ref="base.res_partner_11" />
 		</record>
 		<record model="account.analytic.account" id="analytic_desertic_hispafuentes">
 			<field name="name">Desertic - Hispafuentes</field>
@@ -138,11 +148,13 @@
 			<field name="date_start">01/02/06</field>
 			<field name="date">01/02/07</field>
 			<field name="parent_id" ref="analytic_partners" />
+			<field name="partner_id" ref="base.res_partner_desertic_hispafuentes" />
 		</record>
 		<record model="account.analytic.account" id="analytic_tiny_at_work">
 			<field name="name">Tiny AT Work</field>
 			<field name="code">15</field>
 			<field name="parent_id" ref="analytic_partners" />
+			<field name="partner_id" ref="base.res_partner_tinyatwork" />
 		</record>
 		<record model="account.analytic.account" id="analytic_partners_camp_to_camp">
 			<field name="name">Camp to Camp</field>
@@ -150,6 +162,7 @@
 			<field name="date_start">08/08/06</field>
 			<field name="date">08/08/07</field>
 			<field name="parent_id" ref="analytic_partners" />
+			<field name="partner_id" ref="base.res_partner_c2c" />
 		</record>
 		<record model="account.analytic.account" id="analytic_project_2_support">
 			<field name="name">Support</field>
