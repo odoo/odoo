@@ -21,7 +21,7 @@ email_re = re.compile(r"""
 	""", re.VERBOSE)
 case_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
 command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
-references_re = re.compile("<.*-tinycrm-(\\d+)@(.*)>", re.UNICODE)
+reference_re = re.compile("<.*-tinycrm-(\\d+)@(.*)>", re.UNICODE)
 
 priorities = {
 	'1': '1 (Highest)',
@@ -232,7 +232,7 @@ class email_parser(object):
 		return (int(case_str), emails)
 
 	def parse(self, msg):
-		case_str = reference_re(msg.get('References', ''))
+		case_str = reference_re.search(msg.get('References', ''))
 		if case_str:
 			case_str = case_str.group(1)
 		else:
