@@ -6,7 +6,7 @@ class Myexception(Exception):
 	def __init__(self, faultCode, faultString):
 		self.faultCode = faultCode
 		self.faultString = faultString
-		super(Myexception, self).__init__(faultCode, faultString)
+		self.args = (faultCode, faultString)
 
 class mysocket:
 	def __init__(self, sock=None):
