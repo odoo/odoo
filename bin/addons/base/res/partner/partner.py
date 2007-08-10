@@ -403,7 +403,8 @@ class res_partner_bank(osv.osv):
 		return result
 
 	_columns = {
-		'acc_number': fields.char('Account Number', size=64, required=False),
+		'name': fields.char('Description', size=128),
+		'acc_number': fields.char('Account number', size=64, required=False),
 		'bank_id': fields.many2one('res.partner', 'Bank'),
 		'bank_address_id': fields.many2one('res.partner.address', 'Bank address'),
 
@@ -414,7 +415,7 @@ class res_partner_bank(osv.osv):
 		'country_id': fields.many2one('res.country', 'Country'),
 		
 		'partner_id': fields.many2one('res.partner', 'Partner', required=True, ondelete='cascade', select=True),
-		'state': fields.selection(_bank_type_get, 'Bank type', required=True)
+		'state': fields.selection(_bank_type_get, 'Bank type', required=True),
 	}
 	def fields_get(self, cr, uid, *args):
 		res = super(res_partner_bank, self).fields_get(cr, uid, *args)

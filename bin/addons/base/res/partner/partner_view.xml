@@ -304,13 +304,9 @@
 					<field name="website" widget="url"/>
 					<field name="date" select="2"/>
 					<field name="bank_ids" colspan="4" nolabel="1">
-					  <tree string="Bank Details">
-						<field name="state"/>
-						<field name="owner_name"/>
-						<field name="acc_number"/>
-					  </tree>
 						<form string="Bank account">
 							<field name="state" select="2"/>
+							<field name="name" select="2"/>
 							<newline/>
 							<field name="acc_number" select="1"/>
 							<newline/>
@@ -323,6 +319,11 @@
 							<field name="zip"/>
 							<field name="country_id"/>
 						</form>
+					  <tree string="Bank Details">
+						<field name="state"/>
+						<field name="owner_name"/>
+						<field name="acc_number"/>
+					  </tree>
 					</field>
 					<separator string="Notes" colspan="4"/>
 					<field name="comment" colspan="4" nolabel="1"/>
