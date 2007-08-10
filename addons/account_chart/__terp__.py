@@ -1,6 +1,6 @@
 {
 	"name" : "Account Chart",
-	"version" : "0.1",
+	"version" : "1.0",
 	"depends" : ["account"],
 	"author" : "Tiny",
 	"description": """Remove minimal account chart""",
