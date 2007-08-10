@@ -2863,13 +2863,18 @@
 
             <field name="parent_id" eval="[(6,0,[a40])]"/>
 		</record>
-		<record model="account.account" id="account.a_recv">
+		<record model="account.account" id="a_recv">
 			<field name="name">Effets à recevoir</field>
 			<field name="code">4010</field>
 			<field name="type">receivable</field>
 
 			<field name="parent_id" eval="[(6,0,[a401])]"/>
 		</record>
+
+		<record model="ir.property" id="account.property_account_receivable">
+			<field name="value" eval="'account.account,'+str(a_recv)"/>
+		</record>
+
 		<record model="account.account" id="a4013">
 			<field name="name">Effets à l'encaissement</field>
 			<field name="code">4013</field>
@@ -3437,13 +3442,18 @@
 
             <field name="parent_id" eval="[(6,0,[a440])]"/>
 		</record>
-		<record model="account.account" id="account.a_pay">
+		<record model="account.account" id="a_pay">
 			<field name="name">Entreprises liées</field>
 			<field name="code">44000</field>
 			<field name="type">payable</field>
 
 			<field name="parent_id" eval="[(6,0,[a4400])]"/>
 		</record>
+
+		<record model="ir.property" id="account.property_account_payable">
+			<field name="value" eval="'account.account,'+str(a_pay)"/>
+		</record>
+
 		<record model="account.account" id="a44001">
 			<field name="name">Entreprises avec lesquelles il existe un lien de participation</field>
 			<field name="code">44001</field>
@@ -4375,13 +4385,18 @@
 
 			<field name="parent_id" eval="[(6,0,[a6])]"/>
 		</record>
-        <record model="account.account" id="account.a_expense">
+        <record model="account.account" id="a_expense">
 			<field name="name">Achats de matières premières</field>
 			<field name="code">600</field>
 			<field name="type">expense</field>
 
 			<field name="parent_id" eval="[(6,0,[a60])]"/>
 		</record>
+
+		<record model="ir.property" id="account.property_account_expense_categ">
+			<field name="value" eval="'account.account,'+str(a_expense)"/>
+		</record>
+
 		<record model="account.account" id="a601">
 			<field name="name">Achats de fournitures</field>
 			<field name="code">601</field>
@@ -5775,13 +5790,18 @@
 
 			<field name="parent_id" eval="[(6,0,[a70])]"/>
 		</record>
-		<record model="account.account" id="account.a_sale">
+		<record model="account.account" id="a_sale">
 			<field name="name">Ventes en Belgique</field>
 			<field name="code">7010</field>
 			<field name="type">income</field>
 
             <field name="parent_id" eval="[(6,0,[a701])]"/>
 		</record>
+
+		<record model="ir.property" id="account.property_account_income_categ">
+			<field name="value" eval="'account.account,'+str(a_sale)"/>
+		</record>
+
 		<record model="account.account" id="a7011">
 			<field name="name">Ventes dans les pays membres de la C.E.E.</field>
 			<field name="code">7011</field>
