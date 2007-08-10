@@ -69,6 +69,9 @@ class osv_pool(netsvc.Service):
 		#
 		try:
 			object = pooler.get_pool(cr.dbname).get(obj)
+			if not object:
+				self.abortResponse(1, 'Object Error', 'warning',
+				'Object %s doesn\'t exist' % str(obj))
 			if (not method in getattr(object,'_protected')) and len(args) \
 					and args[0] and len(object._inherits):
 				types = {obj: args[0]}
