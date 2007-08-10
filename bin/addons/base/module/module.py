@@ -194,8 +194,8 @@ class module(osv.osv):
 			f = tools.file_open(os.path.join(tools.config['addons_path'], name, '__terp__.py'))
 			data = f.read()
 			info = eval(data)
-			if name == 'version':
-				info = release.version.rsplit('.', 1)[0] + '.' + info
+			if 'version' in info:
+				info['version'] = release.version.rsplit('.', 1)[0] + '.' + info['version']
 			f.close()
 		except:
 			return {}
@@ -205,8 +205,7 @@ class module(osv.osv):
 		res = {}
 		for m in self.browse(cr, uid, ids):
 			if m.state in ('installed', 'to upgrade', 'to remove'):
-				res[m.id] = release.version.rsplit('.', 1)[0] + '.' + \
-					self.get_module_info(m.name).get('version', '')
+				res[m.id] = self.get_module_info(m.name).get('version', '')
 			else:
 				res[m.id] = ''
 		return res
@@ -359,7 +358,8 @@ class module(osv.osv):
 					self.write(cr, uid, id, {'state': 'uninstalled'})
 				if vercmp(terp.get('version', ''), mod.latest_version) > 0:
 					self.write(cr, uid, id, {
-						'latest_version': terp.get('version')})
+						'latest_version': terp.get('version'),
+						'url': ''})
 					res[0] += 1
 				self.write(cr, uid, id, {
 					'description': terp.get('description', ''),
