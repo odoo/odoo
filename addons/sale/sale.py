@@ -662,7 +662,7 @@ class sale_order_line(osv.osv):
 			taxep = None
 			if partner_id:
 				taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_tax
-			if not taxep.id:
+			if not taxep or not taxep.id:
 				result['tax_id'] = res['taxes_id']
 			else:
 				res5 = [taxep.id]
