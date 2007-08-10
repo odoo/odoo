@@ -87,10 +87,12 @@ class account_move_line(osv.osv):
 				data['date'] = res and res[0] or time.strftime('%Y-%m-%d')
 
 		total = 0
+		ref_id = False
 		taxes = {}
 		move = self.pool.get('account.move').browse(cr, uid, move_id, context)
 		for l in move.line_id:
 			partner_id = partner_id or l.partner_id.id
+			ref_id = ref_id or l.ref
 			total += (l.debit - l.credit)
 			for tax in l.account_id.tax_ids:
 				acc = (l.debit >0) and tax.account_paid_id.id or tax.account_collected_id.id
@@ -99,6 +101,8 @@ class account_move_line(osv.osv):
 			if 'name' in fields:
 				data.setdefault('name', l.name)
 
+		if 'ref' in fields:
+			data['ref'] = ref_id
 		if 'partner_id' in fields:
 			data['partner_id'] = partner_id
 
@@ -196,10 +200,20 @@ class account_move_line(osv.osv):
 		'tax_code_id': fields.many2one('account.tax.code', 'Tax Account'),
 		'tax_amount': fields.float('Tax/Base Amount', digits=(16,2), select=True),
 	}
+	def _get_date(self, cr, uid, context):
+		dt = time.strftime('%Y-%m-%d')
+		if ('journal_id' in context) and ('period_id' in context):
+			cr.execute('select date from account_move_line where journal_id=%d and period_id=%d order by id desc limit 1',\
+			  (context['journal_id'], context['period_id']))
+			res = cr.fetchone()
+			if res:
+				dt = res[0]
+		return dt
 	_defaults = {
 		'blocked': lambda *a: False,
 		'active': lambda *a: True,
 		'centralisation': lambda *a: 'normal',
+		'date': _get_date,
 		'date_created': lambda *a: time.strftime('%Y-%m-%d'),
 		'state': lambda *a: 'draft',
 		'journal_id': lambda self, cr, uid, c: c.get('journal_id', False),
