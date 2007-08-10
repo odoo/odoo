@@ -176,11 +176,11 @@ class account_analytic_account(osv.osv):
 		(check_recursion, 'Error! You can not create recursive account.', ['parent_id'])
 	]
 
-	def create(self, cr, uid, vals, ctx={}):
+	def create(self, cr, uid, vals, context=None):
 		parent_id = vals.get('parent_id', 0)
 		if ('code' not in vals or not vals['code']) and not parent_id:
 			vals['code'] = self.pool.get('ir.sequence').get(cr, uid, 'account.analytic.account')
-		return super(account_analytic_account, self).create(cr, uid, vals, ctx)
+		return super(account_analytic_account, self).create(cr, uid, vals, context=context)
 
 	def copy(self, cr, uid, id, default=None, context={}):
 		if not default:
