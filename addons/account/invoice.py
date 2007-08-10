@@ -301,6 +301,9 @@ class account_invoice(osv.osv):
 				self.pool.get('account.invoice').write(cr, uid, [inv.id], {'check_total': inv.amount_total})
 		return True
 
+	def _convert_ref(self, cr, uid, ref):
+		return (ref or '').replace('/','')
+
 	def _get_analityc_lines(self, cr, uid, id):
 		inv = self.browse(cr, uid, [id])[0]
 		cur_obj = self.pool.get('res.currency')
@@ -324,7 +327,7 @@ class account_invoice(osv.osv):
 					'product_uom_id': il['uos_id'],
 					'general_account_id': il['account_id'],
 					'journal_id': self._get_journal_analytic(cr, uid, inv.type),
-					'ref': inv['number'],
+					'ref': self._convert_ref(cr, uid, inv['number']),
 				})]
 		return iml
 
@@ -379,7 +382,7 @@ class account_invoice(osv.osv):
 				else:
 					i['amount_currency'] = False
 					i['currency_id'] = False
-				i['ref'] = inv.number
+				i['ref'] = self._convert_ref(cr, uid, inv.number)
 				if inv.type in ('out_invoice','in_refund'):
 					total += i['price']
 					total_currency += i['amount_currency'] or i['price']
@@ -454,8 +457,8 @@ class account_invoice(osv.osv):
 			if not number:
 				number = self.pool.get('ir.sequence').get(cr, uid, 'account.invoice.'+invtype)
 				cr.execute('UPDATE account_invoice SET number=%s WHERE id=%d', (number, id))
-				cr.execute('UPDATE account_move_line SET ref=%s WHERE move_id=%d and ref is null', (number, move_id))
-				cr.execute('UPDATE account_analytic_line SET ref=%s FROM account_move_line WHERE account_move_line.move_id=%d AND account_analytic_line.move_id=account_move_line.id', (number, move_id))
+				cr.execute('UPDATE account_move_line SET ref=%s WHERE move_id=%d and ref is null', (self._convert_ref(cr, uid, number), move_id))
+				cr.execute('UPDATE account_analytic_line SET ref=%s FROM account_move_line WHERE account_move_line.move_id=%d AND account_analytic_line.move_id=account_move_line.id', (self._convert_ref(cr, uid, number), move_id))
 		return True
 
 	def action_cancel(self, cr, uid, ids, *args):

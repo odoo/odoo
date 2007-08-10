@@ -68,6 +68,19 @@ class crm_case_section(osv.osv):
 	_sql_constraints = [
 		('code_uniq', 'unique (code)', 'The code of the section must be unique !')
 	]
+	def _check_recursion(self, cr, uid, ids):
+		level = 100
+		while len(ids):
+			cr.execute('select distinct parent_id from crm_case_section where id in ('+','.join(map(str,ids))+')')
+			ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+			if not level:
+				return False
+			level -= 1
+		return True
+	_constraints = [
+		(_check_recursion, 'Error ! You can not create recursive sections.', ['parent_id'])
+	]
+
 	def menu_create(self, cr, uid, ids, name, menu_parent_id=False, context={}):
 		menus = {}
 		menus[-1] = menu_parent_id
