@@ -64,9 +64,10 @@ def create_payment(self, cr, uid, data, context):
 	if not mline_ids: return {}
 
 	pool= pooler.get_pool(cr.dbname)	
-	payment = pool.get('payment.order').read(cr,uid,data['id'],['mode'])
+	payment = pool.get('payment.order').browse(cr,uid,data['id'],context)
+	t= payment.mode and payment.mode.type.code or 'manual'
 	line2bank= pool.get('account.move.line').line2bank(cr,uid,
-				mline_ids,payment['mode'],context)
+				mline_ids,t,context)
 
 	## Finally populate the current payment with new lines:
 	for line in pool.get('account.move.line').browse(cr,uid,mline_ids,context=context):
@@ -74,7 +75,7 @@ def create_payment(self, cr, uid, data, context):
 			'move_line_id': line.id,
 			'amount':line.amount_to_pay, 
 			'bank_id':line2bank.get(line.id),
-			'order_id': payment['id'],
+			'order_id': payment.id,
 			})
 
 	return {}
@@ -104,6 +105,6 @@ class wizard_payment_order(wizard.interface):
 				},				
 	
 		}
-wizard_payment_order('make_payment')
+wizard_payment_order('populate_payment')
 
 

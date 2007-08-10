@@ -34,6 +34,7 @@ class payment_type(osv.osv):
 	_description= 'Payment type'
 	_columns= {
 		'name': fields.char('Name', size=64, required=True),
+		'code': fields.char('Code', size=64, required=True),
 		'suitable_bank_types': fields.many2many('res.partner.bank.type',
 						'bank_type_payment_type_rel',
 						'pay_type_id','bank_type_id',
@@ -49,20 +50,19 @@ class payment_mode(osv.osv):
 	_description= 'Payment mode'
 	_columns= {
 		'name': fields.char('Name', size=64, required=True),
-		'code': fields.char('Code', size=64, required=True,unique=True,select=True),
 		'bank_id': fields.many2one('res.partner.bank',"Bank account",required=True),
 		'journal': fields.many2one('account.journal','Journal',required=True,domain=[('type','=','cash')]),
 		'type': fields.many2one('payment.type','Payment type',required=True),
+		'account': fields.many2one('account.account','Default payable account',domain=[('type','=','payable')],required=True),
 		}
 
-	def suitable_bank_types(self,cr,uid,payment_code,context):
-		""" Return the codes of the bank type that are suitable for the given payment mode"""
+	def suitable_bank_types(self,cr,uid,payment_code= 'manual',context={}):
+		""" Return the codes of the bank type that are suitable for the given payment type code"""
 		cr.execute(""" select t.code
 				   from res_partner_bank_type t
 					join bank_type_payment_type_rel r on (r.bank_type_id = t.id)
 					join payment_type pt on (r.pay_type_id = pt.id)
-					join payment_mode m on (pt.id=m.type) 
-				   where m.code = %s""", [payment_code])
+				   where pt.code = %s """, [payment_code])
 		return [x[0] for x in cr.fetchall()]
 
 payment_mode()
@@ -72,6 +72,11 @@ class payment_order(osv.osv):
 	_name = 'payment.order'
 	_description = 'Payment Order'
 	_rec_name = 'date'
+
+	def get_wizard(self,type):
+		logger = netsvc.Logger()
+		logger.notifyChannel("warning", netsvc.LOG_WARNING, "No wizard found for the payment type '%s'."%type)
+		return None
 
 	def _total(self, cr, uid, ids, name, args, context={}):
 		if not ids: return {}
@@ -89,16 +94,10 @@ class payment_order(osv.osv):
 		res.update(dict(cr.fetchall()))
 		return res
 
-	def mode_get(self, cr, uid, context={}):
-		pay_type_obj = self.pool.get('payment.mode')
-		ids = pay_type_obj.search(cr, uid, [])
-		res = pay_type_obj.read(cr, uid, ids, ['code','name'], context)
-		return [(r['code'],r['name']) for r in res] + [('manual', 'Manual')]
-
 	_columns = {
 		'date_planned': fields.date('Scheduled date if fixed'),
 		'reference': fields.char('Reference',size=128),
-		'mode': fields.selection(mode_get, 'Payment mode',size=16,required=True, select=True),
+		'mode': fields.many2one('payment.mode','Payment mode', select=True),
 		'state': fields.selection([('draft', 'Draft'),('open','Open'),
 				   ('cancel','Cancelled'),('done','Done')], 'State', select=True),
 		'line_ids': fields.one2many('payment.line','order_id','Payment lines'),
@@ -112,7 +111,6 @@ class payment_order(osv.osv):
 
 	_defaults = {
 		'user_id': lambda self,cr,uid,context: uid, 
-		'mode': lambda *a : 'manual',
 		'state': lambda *a: 'draft',
 		'date_prefered': lambda *a: 'due',
 		'date_created': lambda *a: time.strftime('%Y-%m-%d'),
@@ -132,10 +130,15 @@ class payment_order(osv.osv):
 				self.write(cr,uid,order['id'],{'reference':reference})
 		return True
 
-	def action_done(self, cr, uid, ids, *args):
-		self.write(cr,uid,ids,{'date_done':time.strftime('%Y-%m-%d')})
+	def set_done(self, cr, uid, id, *args):
+		self.write(cr,uid,id,{'date_done':time.strftime('%Y-%m-%d'),
+							   'state':'done',})
+		wf_service = netsvc.LocalService("workflow")
+		wf_service.trg_validate(uid, 'payment.order', id, 'done', cr)
+
 		return True
 
+	
 payment_order()
 
 class payment_line(osv.osv):
@@ -147,7 +150,9 @@ class payment_line(osv.osv):
 		if not ids: return {}
 		partners= self.read(cr, uid, ids, ['partner_id'], context)
 		partners= dict(map(lambda x: (x['id'],x['partner_id']),partners))
-		debit= self.pool.get('res.partner')._debit_get(cr, uid, partners.values(), name, args, context)
+		debit= self.pool.get('res.partner')._debit_get(cr, uid,
+													   partners.values(), name,
+													   args, context)
 		for i in partners:
 			partners[i]= debit[partners[i]]
 		return partners
@@ -178,16 +183,17 @@ class payment_line(osv.osv):
 		'reference': fields.function(select_by_name, string="Ref", method=True, type='char'),
 		'partner_payable': fields.function(partner_payable, string="Partner payable", method=True, type='float'),
 	 }
-	def onchange_move_line(self, cr, uid, id, move_line_id, type,context={}):
+	def onchange_move_line(self, cr, uid, id, move_line_id, payment_type,context={}):
 		if not move_line_id:
 			return {}
 		line=self.pool.get('account.move.line').browse(cr,uid,move_line_id)
 		return {'value': {'amount': line.amount_to_pay,
 						  'to_pay': line.amount_to_pay,
-						  'partner_id': line.partner_id,
+						  'partner_id': line.partner_id.id,
 						  'reference': line.ref,
 						  'date_created': line.date_created,
-						  'bank_id': self.pool.get('account.move.line').line2bank(cr,uid,[move_line_id],type,context)[move_line_id]
+						  'bank_id': self.pool.get('account.move.line').line2bank(cr,uid,[move_line_id],
+																				  payment_type or 'manual',context)[move_line_id]
 						  }}
 
 payment_line()

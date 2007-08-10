@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <terp>
-	<data>
+  <data>
 	<wizard
-				string="Payement Order"
-				model="payment.order"
-				name="make_payment"
-				menu="False"
-				id="wizard_payment"/>
-	</data>
+	   string="Populate payment"
+	   model="payment.order"
+	   name="populate_payment"
+	   menu="False"
+	   id="wizard_populate_payment"/>
+
+	<wizard
+	   string="Pay"
+	   model="payment.order"
+	   name="pay_payment"
+	   menu="False"
+	   id="wizard_pay_payment"/>
+
+  </data>
 </terp>

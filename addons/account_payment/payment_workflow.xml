@@ -24,8 +24,6 @@
 		<field name="name">done</field>
 		<field name="wkf_id" ref="wkf_payment_order"/>
 		<field name="flow_stop">True</field>
-		<field name="action">action_done()&#10;write({'state':'done'})</field>
-		<field name="kind">function</field>
 	</record>
 	<record model="workflow.activity" id="act_cancel">
 		<field name="name">cancel</field>

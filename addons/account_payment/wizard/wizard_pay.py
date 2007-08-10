@@ -2,8 +2,6 @@
 #
 # Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
-# $Id: __init__.py 843 2005-07-01 09:29:47Z nicoe $
-#
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -27,5 +25,47 @@
 #
 ##############################################################################
 
-import wizard_payment_order
-import wizard_pay
+import wizard
+from osv import osv
+import pooler
+from osv import fields
+import time
+
+
+def _launch_wizard(self, cr, uid, data, context):
+	"""
+	Search for a wizard to launch according to the type.
+	If type is manual. just confirm the order.
+	"""
+
+	order_ref= pooler.get_pool(cr.dbname).get('payment.order')
+	order= order_ref.browse(cr,uid,data['id'],context)
+	t= order.mode and order.mode.type.code or 'manual'
+	if t == 'manual' :
+		order_ref.set_done(cr,uid,data['id'],context)
+		return {}
+
+	gw= order_ref.get_wizard(t)
+	if not gw:
+		order_ref.set_done(cr,uid,data['id'],context)
+		return {}		
+
+	mod_obj = pooler.get_pool(cr.dbname).get('ir.model.data')
+	act_obj = pooler.get_pool(cr.dbname).get('ir.actions.wizard')
+	module, wizard= gw
+	result = mod_obj._get_id(cr, uid, module, wizard)
+	id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
+	result = act_obj.read(cr, uid, [id])[0]
+	#result['context'] = str({'fiscalyear': data['form']['fiscalyear']})
+	return result
+
+
+class wizard_pay(wizard.interface):
+
+	states= {'init' : {'actions': [],		
+					   'result':{'type':'action',
+								 'action':_launch_wizard,
+								 'state':'end'}
+					   }
+			 }
+wizard_pay('pay_payment')

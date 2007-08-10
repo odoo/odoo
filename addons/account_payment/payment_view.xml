@@ -11,6 +11,7 @@
 			<field name="arch" type="xml">
 				<form string="Payment type">
 					<field name="name" select="1"/>
+					<field name="code"/>
 					<newline/>
 					<field name="suitable_bank_types" select="1"/>
 				</form>
@@ -31,8 +32,8 @@
 			<field name="arch" type="xml">
 				<tree string="Payment mode">
 					<field name="name"/>
-					<field name="code"/>
 					<field name="journal" />
+					<field name="account" />
 				</tree>
 			</field>
 		</record>
@@ -43,10 +44,10 @@
 			<field name="arch" type="xml">
 				<form string="Payment mode">
 					<field name="name" select="1"/>
-					<field name="code"  select="1"/>
-					<field name="type" />
-					<field name="journal" />
-					<field name="bank_id" />
+					<field name="type"/>
+					<field name="journal"/>
+					<field name="bank_id"/>
+					<field name="account"/>
 				</form>
 			</field>
 		</record>
@@ -56,8 +57,10 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 		</record>
-		<menuitem name="Financial Management/Payment Management/Configuration/Payment Mode" id="menu_action_payment_mode_form" action="action_payment_mode_form"/>
 
+		<menuitem 
+		   name="Financial Management/Payment Management/Configuration/Payment Mode" 
+		   id="menu_action_payment_mode_form" action="action_payment_mode_form"/>
 	    <record model="ir.ui.view" id="view_payment_order_form">
 			<field name="name">payment.order.form</field>
 			<field name="model">payment.order</field>
@@ -69,7 +72,8 @@
 					<field name="date_prefered" />
 					<field name="date_planned" select="1"/>
 					<field name="user_id" select="2"/>
-					<button name="%(wizard_payment)d" string="Add payment lines" type="action" colspan="2"/>
+					<button name="%(wizard_populate_payment)d" 
+							string="Add payment lines" type="action" colspan="2"/>
 					<field name="line_ids" colspan="4"  nolabel="1"/>
 					<field name="total"/>
 					<field name="nb_line"/>
@@ -79,8 +83,10 @@
 					<group colspan="2" col="4">
 					<button name="cancel" states="draft,open" string="Cancel"/>
 					<button name="open" states="draft" string="Open"/>
-					<button name="done" states="open" string="Make Payment"/>
-					<button name="set_to_draft" states="cancel" type="object" string="Set to draft"/>
+					<button name="%(wizard_pay_payment)d" states="open,done"
+							string="Make Payment" type="action"/>
+					<button name="set_to_draft" states="cancel" 
+							type="object" string="Set to draft"/>
 					</group>
    				</form>
 			</field>
@@ -150,7 +156,8 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Payment Line">
-					<field name="move_line_id" select="1" on_change="onchange_move_line(move_line_id,parent.mode)" domain="[('reconcile_id','=', False), ('credit', '>',0),('amount_to_pay','>',0)] "/>
+					<field name="move_line_id" 
+						   select="1" on_change="onchange_move_line(move_line_id,parent.mode.type.code)" domain="[('reconcile_id','=', False), ('credit', '>',0),('amount_to_pay','>',0)] "/>
 					<field name="amount" select="1" />
 					<field name="bank_id" domain="[('partner_id','=',partner_id)]"/>
 					<field name="to_pay"/>

@@ -62,17 +62,16 @@ class account_move_line(osv.osv):
 		return [('id','in',map(lambda x:x[0], res))]
 
 
-	def line2bank(self,cr,uid,ids,payment_mode= 'manual',context=None):
+	def line2bank(self,cr,uid,ids,payment_type= 'manual',context=None):
 		"""
 		Try to return for each account move line a corresponding bank
-		account according to the payment mode.  This work using one of
+		account according to the payment type.  This work using one of
 		the bank of the partner defined on the invoice eventually
 		associated to the line.
 		Return the first suitable bank for the corresponding partner.  
-
 		"""
 		if not ids: return {}
-		bank_type= self.pool.get('payment.mode').suitable_bank_types(cr,uid,payment_mode,context=context)
+		bank_type= self.pool.get('payment.mode').suitable_bank_types(cr,uid,payment_type,context=context)
 		cr.execute('''select DISTINCT l.id,b.id,b.state
 				  from account_invoice i
 				    join account_move m on (i.move_id = m.id)
