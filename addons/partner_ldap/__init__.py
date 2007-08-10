@@ -1,2 +1,0 @@
-import partner
-import wizard
