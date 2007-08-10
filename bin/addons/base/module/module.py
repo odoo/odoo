@@ -206,7 +206,7 @@ class module(osv.osv):
 		for m in self.browse(cr, uid, ids):
 			if m.state in ('installed', 'to upgrade', 'to remove'):
 				res[m.id] = release.version.rsplit('.', 1)[0] + '.' + \
-					self.get_module_info(m.name).get('version', False)
+					self.get_module_info(m.name).get('version', '')
 			else:
 				res[m.id] = ''
 		return res
