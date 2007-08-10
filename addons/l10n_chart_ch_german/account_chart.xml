@@ -36,7 +36,7 @@
 	<field name="name">Flüssige Mittel</field>
 
 </record>
-<record id="account.a_cash" model="account.account">
+<record id="cash" model="account.account">
 	<field name="code">11101</field>
 	<field name="reconcile" eval="False"/>
 	<field name="close_method">balance</field>
@@ -540,7 +540,7 @@
 	<field name="name">Beratung</field>
 
 </record>
-<record id="account.a_income" model="account.account">
+<record id="a_income" model="account.account">
 	<field name="code">34002</field>
 	<field name="reconcile" eval="False"/>
 	<field name="close_method">none</field>
@@ -594,7 +594,7 @@
 	<field name="name">Versand</field>
 
 </record>
-<record id="account.a_recv" model="account.account">
+<record id="a_recv" model="account.account">
 	<field name="code">36005</field>
 	<field name="reconcile" eval="False"/>
 	<field name="close_method">none</field>
@@ -603,6 +603,10 @@
 	<field name="name">Kursgewinn</field>
 
 </record>
+
+		<record model="ir.property" id="account.property_account_receivable">
+			<field name="value" eval="'account.account,'+str(a_recv)"/>
+		</record>
 <record id="chart37000" model="account.account">
 	<field name="code">37000</field>
 	<field name="reconcile" eval="False"/>
@@ -693,7 +697,7 @@
 	<field name="name">Verluste aus Forderungen</field>
 
 </record>
-<record id="account.a_pay" model="account.account">
+<record id="a_pay" model="account.account">
 	<field name="code">39006</field>
 	<field name="reconcile" eval="False"/>
 	<field name="close_method">none</field>
@@ -702,6 +706,11 @@
 	<field name="name">Kursverlust</field>
 
 </record>
+
+		<record model="ir.property" id="account.property_account_payable">
+			<field name="value" eval="'account.account,'+str(a_pay)"/>
+		</record>
+
 <record id="chart40000" model="account.account">
 	<field name="code">40000</field>
 	<field name="reconcile" eval="False"/>
@@ -774,7 +783,7 @@
 	<field name="name">Software kommerz.</field>
 
 </record>
-<record id="account.a_expense" model="account.account">
+<record id="a_expense" model="account.account">
 	<field name="code">42005</field>
 	<field name="reconcile" eval="False"/>
 	<field name="close_method">none</field>
@@ -783,6 +792,10 @@
 	<field name="name">Übrige</field>
 
 </record>
+
+		<record model="ir.property" id="account.property_account_expense_categ">
+			<field name="value" eval="'account.account,'+str(a_expense)"/>
+		</record>
 <record id="chart44000" model="account.account">
 	<field name="code">44000</field>
 	<field name="reconcile" eval="False"/>
