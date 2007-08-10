@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 name = 'tinyerp-server'
-version = '4.2.0'
+version = '4.3.0'
 description = 'Tiny\'s ERP Server'
 long_desc = '''\
 Tiny ERP is a complete ERP and CRM. The main features are accounting (analytic
