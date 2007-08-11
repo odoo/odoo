@@ -87,6 +87,87 @@
 		<field name="sequence" eval="12"/>
 	</record>
 
+	<record model="account.journal.view" id="account_journal_bank_view_multi">
+		<field name="name">Multi-Currency Cash Journal View</field>
+	</record>
+	<record model="account.journal.column" id="bank_col1_multi">
+		<field name="view_id" ref="account_journal_bank_view_multi"/>
+		<field name="name">Date</field>
+		<field name="field">date</field>
+		<field name="required" eval="True"/>
+		<field name="sequence" eval="1"/>
+	</record>
+	<record model="account.journal.column" id="bank_col2_multi">
+		<field name="view_id" ref="account_journal_bank_view_multi"/>
+		<field name="name">N. Piece</field>
+		<field name="field">move_id</field>
+		<field name="required" eval="False"/>
+		<field name="sequence" eval="2"/>
+	</record>
+	<record model="account.journal.column" id="bank_col7_multi">
+		<field name="view_id" ref="account_journal_bank_view_multi"/>
+		<field name="name">Name</field>
+		<field name="field">name</field>
+		<field name="sequence" eval="3"/>
+		<field name="required" eval="True"/>
+	</record>
+	<record model="account.journal.column" id="bank_col4_multi">
+		<field name="view_id" ref="account_journal_bank_view_multi"/>
+		<field name="name">Statement</field>
+		<field name="field">statement_id</field>
+		<field name="sequence" eval="4"/>
+	</record>
+	<record model="account.journal.column" id="bank_col6_multi">
+		<field name="view_id" ref="account_journal_bank_view_multi"/>
+		<field name="name">Partner</field>
+		<field name="field">partner_id</field>
+		<field name="sequence" eval="5"/>
+	</record>
+	<record model="account.journal.column" id="bank_col5_multi">
+		<field name="view_id" ref="account_journal_bank_view_multi"/>
+		<field name="name">Account</field>
+		<field name="field">account_id</field>
+		<field name="required" eval="True"/>
+		<field name="sequence" eval="6"/>
+	</record>
+	<record model="account.journal.column" id="bank_col9_multi">
+		<field name="view_id" ref="account_journal_bank_view_multi"/>
+		<field name="name">Debit</field>
+		<field name="field">debit</field>
+		<field name="sequence" eval="10"/>
+	</record>
+	<record model="account.journal.column" id="bank_col10_multi">
+		<field name="view_id" ref="account_journal_bank_view_multi"/>
+		<field name="name">Credit</field>
+		<field name="field">credit</field>
+		<field name="sequence" eval="11"/>
+	</record>
+	<record model="account.journal.column" id="bank_col17_multi">
+		<field name="view_id" ref="account_journal_bank_view_multi"/>
+		<field name="name">Currency Amt.</field>
+		<field name="field">amount_currency</field>
+		<field name="sequence" eval="12"/>
+	</record>
+	<record model="account.journal.column" id="bank_col18_multi">
+		<field name="view_id" ref="account_journal_bank_view_multi"/>
+		<field name="name">Currency</field>
+		<field name="field">currency_id</field>
+		<field name="sequence" eval="13"/>
+	</record>
+	<record model="account.journal.column" id="bank_col3_multi">
+		<field name="view_id" ref="account_journal_bank_view_multi"/>
+		<field name="name">Ref</field>
+		<field name="field">ref</field>
+		<field name="sequence" eval="7"/>
+	</record>
+	<record model="account.journal.column" id="bank_col23_multi">
+		<field name="view_id" ref="account_journal_bank_view_multi"/>
+		<field name="name">State</field>
+		<field name="field">state</field>
+		<field name="sequence" eval="14"/>
+	</record>
+
+
 	<record model="account.journal.view" id="account_journal_view">
 		<field name="name">Journal View</field>
 	</record>

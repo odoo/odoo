@@ -54,9 +54,9 @@ view_form_charts = """<?xml version="1.0"?>
 		<newline/>
 		<field name="charts" align="0.0"/>
 		<newline/>
-		<label string="There is many other charts on http://www.tinyerp.com/" colspan="2" align="0.0"/>
+		<label string="There are many other chart of accounts available." colspan="2" align="0.0"/>
 		<newline/>
-		<label string="(If you don't select a chart of accounts, you'll need to set up one manually)." colspan="2" align="0.0"/>
+		<label string="If you don't select one now, you'll be able to install an other one through the Administration menu." colspan="2" align="0.0"/>
 	</group>
 </form>"""
 
