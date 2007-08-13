@@ -301,12 +301,14 @@ class TinySocketClientThread(threading.Thread):
 			ts = tiny_socket.mysocket(self.sock)
 		except:
 			self.sock.close()
+			self.threads.remove(self)
 			return False
 		while self.running:
 			try:
 				msg = ts.myreceive()
 			except:
 				self.sock.close()
+				self.threads.remove(self)
 				return False
 			try:
 				s=LocalService(msg[0])
@@ -355,8 +357,8 @@ class TinySocketServerThread(threading.Thread):
 			while self.running:
 				(clientsocket, address) = self.socket.accept()
 				ct = TinySocketClientThread(clientsocket, self.threads)
-				ct.start()
 				self.threads.append(ct)
+				ct.start()
 			self.socket.close()
 		except Exception, e:
 			self.socket.close()
