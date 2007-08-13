@@ -339,6 +339,7 @@ class report_sxw(report_rml):
 	def create(self, cr, uid, ids, data, context=None):
 		if not context:
 			context={}
+		print self.name[7:]
 		cr.execute('select report_rml_content from ir_act_report_xml where report_name=%s', (self.name[7:],))
 		result = cr.fetchone()
 		if result and result[0]:

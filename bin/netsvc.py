@@ -108,7 +108,7 @@ class ServiceUnavailable(Exception):
 	pass
 
 def service_exist(name):
-	return (name in _service)
+	return (name in _service) and bool(_service[name])
 
 LOG_DEBUG='debug'
 LOG_INFO='info'

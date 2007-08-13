@@ -197,8 +197,8 @@ def register_all(db):
 	for r in result:
 		if netsvc.service_exist('report.'+r['report_name']):
 			continue
-		if r['report_rml']:
-			report_sxw('report.'+r['report_name'], r['model'], opj('addons',r['report_rml']), header=r['header'])
+		if r['report_rml'] or r['report_rml_content']:
+			report_sxw('report.'+r['report_name'], r['model'], opj('addons',r['report_rml'] or '/'), header=r['header'])
 		if r['report_xsl']:
 			report_rml('report.'+r['report_name'], r['model'], opj('addons',r['report_xml']), r['report_xsl'] and opj('addons',r['report_xsl']))
 
