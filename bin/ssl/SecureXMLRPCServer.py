@@ -11,7 +11,7 @@ This code is in the public domain and is
 provided AS-IS WITH NO WARRANTY WHATSOEVER.
 """
 import SocketServer
-import os, socket
+import os, socket, sys
 import SimpleXMLRPCServer
 from OpenSSL import SSL
 
