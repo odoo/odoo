@@ -245,6 +245,7 @@ class HttpDaemon(threading.Thread):
 		threading.Thread.__init__(self)
 		self.__port=port
 		self.__interface=interface
+		self.secure = secure
 		if secure and HAS_SSL:
 			self.server = SecureThreadedXMLRPCServer((interface, port), SecureXMLRPCRequestHandler,0)
 		else:
@@ -257,9 +258,15 @@ class HttpDaemon(threading.Thread):
 		self.running = False
 		if os.name <> 'nt':
 			if hasattr(socket, 'SHUT_RDWR'):
-				self.server.socket.shutdown(socket.SHUT_RDWR)
+				if self.secure:
+					self.server.socket.sock_shutdown(socket.SHUT_RDWR)
+				else:
+					self.server.socket.shutdown(socket.SHUT_RDWR)
 			else:
-				self.server.socket.shutdown(2)
+				if self.secure:
+					self.server.socket.sock_shutdown(2)
+				else:
+					self.server.socket.shutdown(2)
 		self.server.socket.close()
 
 	def run(self):
