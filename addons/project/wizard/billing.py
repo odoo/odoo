@@ -110,8 +110,6 @@ def _do_orders(self, cr, uid, data, context):
 				'currency_id': task.project_id.pricelist_id.currency_id.id,
 				'payment_term': pay_term,
 				'journal_id': data['form']['journal_id'],
-				#'pricelist_id': task.project_id.pricelist_id.id,
-				'project_id': task.project_id.category_id.id
 			})
 			customers[task.project_id.id] = oid
 		else:
@@ -130,8 +128,8 @@ def _do_orders(self, cr, uid, data, context):
 			'account_id': data['form']['sale_account_id'],
 			'price_unit': task.project_id.tariff,
 			'quantity': qty,
-			'invoice_line_tax_id': [(6,0, [t.id for t in task.project_id.tax_ids])]
-
+			'invoice_line_tax_id': [(6,0, [t.id for t in task.project_id.tax_ids])],
+			'account_analytic_id': task.project_id.category_id.id,
 		})
 		#pooler.get_pool(cr.dbname).get('project.task').write(cr, uid, [task.id], {'invoice_id':oid})
 	return {
