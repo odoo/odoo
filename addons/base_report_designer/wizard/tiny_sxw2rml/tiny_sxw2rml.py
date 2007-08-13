@@ -211,12 +211,12 @@ class DomApi(DomApiGeneral):
 		the "normalized" style properties contain all information needed for
 		further processing."""
 		# TODO: What about table styles etc.?
-		page_master = self.page_master
 		outline_styles = self.styles_dom.getElementsByTagName("text:outline-style")
 		t = self.content_dom.createElement("transferredfromstylesxml")
 		self.document.insertBefore(t,self.body)
 		t_new = self.body.previousSibling
 		try:
+			page_master = self.page_master
 			t_new.appendChild(page_master.cloneNode(deep=1))
 			t_new.appendChild(outline_styles[0].cloneNode(deep=1))
 		except:

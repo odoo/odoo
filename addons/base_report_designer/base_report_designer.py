@@ -29,6 +29,7 @@
 from osv import fields,osv
 from wizard.tiny_sxw2rml import sxw2rml
 from StringIO import StringIO
+from report import interface
 import base64
 import pooler
 import tools
@@ -44,10 +45,16 @@ class report_xml(osv.osv):
 		sxwval = StringIO(base64.decodestring(file_sxw))
 		fp = tools.file_open('normalized_oo2rml.xsl',
 				subdir='addons/base_report_designer/wizard/tiny_sxw2rml')
+		file('/tmp/test.sxw','wb').write(base64.decodestring(file_sxw))
 		report = pool.get('ir.actions.report.xml').write(cr, uid, [report_id], {
 			'report_sxw_content': base64.decodestring(file_sxw),
 			'report_rml_content': str(sxw2rml(sxwval, xsl=fp.read()))
 		})
+		cr.commit()
+		db = pooler.get_db_only(cr.dbname)
+		print 'Register'
+		interface.register_all(db)
+		print 'Register End'
 		return True
 	def report_get(self, cr, uid, report_id, context={}):
 		report = self.browse(cr, uid, report_id, context)
