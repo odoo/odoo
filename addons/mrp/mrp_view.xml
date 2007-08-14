@@ -682,7 +682,7 @@
 	<!-- add product_uom to context to be the default value when adding new orderpoints -->
 	<act_window name="Minimum Stock Rules"
 		domain="[('product_id', '=', active_id)]"
-		context="{'product_uom': uom_id}"
+		context="{'product_uom': locals().has_key('uom_id') and uom_id}"
 		res_model="stock.warehouse.orderpoint"
 		src_model="product.product"
 		id="act_product_product_2_stock_warehouse_orderpoint"/>
