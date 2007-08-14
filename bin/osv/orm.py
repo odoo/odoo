@@ -809,6 +809,8 @@ class orm(object):
 		for table in self._inherits:
 			col = self._inherits[table]
 			cols = intersect(self._inherit_fields.keys(), fields)
+			if not cols:
+				continue
 			res2 = self.pool.get(table).read(cr, user, [x[col] for x in res], cols, context, load)
 
 			res3 = {}
