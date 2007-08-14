@@ -73,6 +73,7 @@
 			<field name="parent_id" eval="[(6, 0, [ref('cas')])]" />
 			<field name="type">receivable</field>
 			<field name="sign">1</field>
+			<field name="reconcile" eval="True"/>
 		</record>
 		<record model="ir.property" id="account.property_account_receivable">
 			<field name="value" eval="'account.account,'+str(a_recv)"/>
@@ -118,6 +119,7 @@
 			<field name="parent_id" eval="[(6, 0, [ref('cli')])]" />
 			<field name="type">payable</field>
 			<field name="sign">1</field>
+			<field name="reconcile" eval="True"/>
 		</record>
 		<record model="ir.property" id="account.property_account_payable">
 			<field name="value" eval="'account.account,'+str(a_pay)"/>
