@@ -431,7 +431,12 @@ class many2many(_column):
 		if d1:
 			d1 = ' and '+d1
 
-		cr.execute('SELECT '+self._rel+'.'+self._id2+','+self._rel+'.'+self._id1+' FROM '+self._rel+' , '+obj._table+' where '+self._rel+'.'+self._id1+' in ('+ids_s+') AND '+self._rel+'.'+self._id2+' = '+obj._table+'.id ' +d1+limit_str+' offset %d', d2+[offset])
+		cr.execute('SELECT '+self._rel+'.'+self._id2+','+self._rel+'.'+self._id1+' \
+				FROM '+self._rel+' , '+obj._table+' \
+				WHERE '+self._rel+'.'+self._id1+' in ('+ids_s+') \
+					AND '+self._rel+'.'+self._id2+' = '+obj._table+'.id '+d1
+				+limit_str+' order by '+obj._table+'.'+obj._order+' offset %d',
+				d2+[offset])
 		for r in cr.fetchall():
 			res[r[1]].append(r[0])
 		return res
