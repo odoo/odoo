@@ -1,6 +1,6 @@
 {
 	"name" : "Account Chart",
-	"version" : "1.0",
+	"version" : "1.1",
 	"depends" : ["account"],
 	"author" : "Tiny",
 	"description": """Remove minimal account chart""",
@@ -11,8 +11,8 @@
 	"demo_xml" : [
 	],
 	"update_xml" : [
-		"account_chart.xml",
+# Must be loaded by each modules
+#		"account_chart.xml",
 	],
-	"active": False,
 	"installable": True
 }

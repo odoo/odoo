@@ -7,14 +7,14 @@
 # 
 {
 	"name" : "France - Plan comptable Societe - 99-03",
-	"version" : "1.0",
+	"version" : "1.1",
 	"author" : "SISalp-NBconseil",
 	"category" : "Localisation/Account charts",
 	"website": "http://erp-libre.info",
 	"depends" : ["base", "account", "account_chart"],
 	"init_xml" : [],
-	"update_xml" : ["types.xml", "plan-99-03_societe.xml", "taxes.xml",],
+	"update_xml" : ["../account_chart/account_chart.xml", "types.xml",
+		"plan-99-03_societe.xml", "taxes.xml",],
 	"demo_xml" : [],
-	"active": False,
 	"installable": True
 }
