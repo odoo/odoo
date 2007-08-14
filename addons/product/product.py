@@ -378,6 +378,25 @@ class product_product(osv.osv):
 			if 'uom' in context:
 				result2[res['id']] = self.pool.get('product.uom')._compute_price(cr, uid, context['uom'], result2[res['id']])
 		return result2
+
+	def copy(self, cr, uid, id, default=None, context=None):
+		if not context:
+			context={}
+
+		if ('variant' in context) and context['variant']:
+			fields = ['product_tmpl_id', 'active', 'variants', 'default_code', 
+					'price_margin', 'price_extra']
+			data = self.read(cr, uid, id, fields=fields, context=context)
+			for f in fields:
+				if f in default:
+					data[f] = default[f]
+			data['product_tmpl_id'] = data.get('product_tmpl_id', False) \
+					and data['product_tmpl_id'][0]
+			del data['id']
+			return self.create(cr, uid, data)
+		else:
+			return super(product_product, self).copy(cr, uid, id, default=default,
+					context=context)
 product_product()
 
 class product_packaging(osv.osv):
