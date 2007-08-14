@@ -75,6 +75,16 @@ class res_country_state(osv.osv):
 		'name': fields.char('State Name', size=64),
 		'code': fields.char('State Code', size=3),
 	}
+
+	def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):
+		if not args:
+			args = []
+		if not context:
+			context = {}
+		ids = self.search(cr, user, [('code', '=', name)] + args, limit=limit, context=context)
+		if not ids:
+			ids = self.search(cr, user, [('name', operator, name)] + args, limit=limit, context=context)
+		return self.name_get(cr, user, ids, context)
 	_order = 'code'
 res_country_state()
 
