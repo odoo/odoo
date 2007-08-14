@@ -28,8 +28,7 @@
 import time
 import wizard
 import ir
-import pooler 
-from osv.osv import except_osv
+import pooler
 
 delivery_form = """<?xml version="1.0"?>
 <form string="Create deliveries">
@@ -58,8 +57,8 @@ def _delivery_set(self, cr, uid, data, context):
 
 	for order in order_objs:
 		grid_id = pooler.get_pool(cr.dbname).get('delivery.carrier').grid_get(cr, uid, [data['form']['carrier_id']],order.partner_shipping_id.id)
-		if not grid_id: 
-			raise except_osv('No grid avaible !', 'No grid matching for this carrier !')
+		if not grid_id:
+			raise wizard.except_wizard('No grid avaible !', 'No grid matching for this carrier !')
 		grid = pooler.get_pool(cr.dbname).get('delivery.grid').browse(cr, uid, [grid_id])[0]
 
 		line_obj.create(cr, uid, {
