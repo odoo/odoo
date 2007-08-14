@@ -46,11 +46,13 @@ profiles = [
 l10n_charts = [
 	'l10n_be',
 	'l10n_fr',
-	'l10n_chart_uk_minimal'
+	'l10n_chart_uk_minimal',
+	False
 ]
 dbname = 'test'
 admin_passwd = 'admin'
 lang = False          # List of langs of False for all
+
 
 sock = xmlrpclib.ServerProxy(url+'/object')
 sock2 = xmlrpclib.ServerProxy(url+'/db')
@@ -84,34 +86,37 @@ def wizard_run(wizname, fieldvalues={}, endstate='end'):
 	return True
 
 for demo in demos:
-		for l10n in l10n_charts:
-			print 'Testing localisation', l10n, '...'
-			for prof in profiles:
-				print '\tTesting profile', prof, '...'
-				id = sock2.create(admin_passwd, dbname, demo, lang)
-				wait(id)
-				uid = sock3.login(dbname, 'admin','admin')
+	for l10n in l10n_charts:
+		print 'Testing localisation', l10n, '...'
+		for prof in profiles:
+			print '\tTesting profile', prof, '...'
+			id = sock2.create(admin_passwd, dbname, demo, lang)
+			wait(id)
+			uid = sock3.login(dbname, 'admin','admin')
 
-				idprof = sock.execute(dbname, uid, 'admin', 'ir.module.module', 'search', [('name','=',prof)])
+			idprof = sock.execute(dbname, uid, 'admin', 'ir.module.module', 'search', [('name','=',prof)])
+			if l10n:
 				idl10n = sock.execute(dbname, uid, 'admin', 'ir.module.module', 'search', [('name','=',l10n)])
-				wizard_run('base_setup.base_setup', {
-					'profile': idprof[0],
-					'charts': idl10n[0],
-				}, 'menu')
-				for lang in langs:
-					print '\t\tTesting Language', lang, '...'
-					wizard_run('module.lang.install', {'lang': lang})
+			else:
+				idl10n = [-1]
+			wizard_run('base_setup.base_setup', {
+				'profile': idprof[0],
+				'charts': idl10n[0],
+			}, 'menu')
+			for lang in langs:
+				print '\t\tTesting Language', lang, '...'
+				wizard_run('module.lang.install', {'lang': lang})
 
-				ok = False
-				range = 4
-				while (not ok) and range:
-					try:
-						time.sleep(2)
-						id = sock2.drop(admin_passwd, dbname)
-						ok = True
-					except:
-						range -= 1
-				time.sleep(2)
+			ok = False
+			range = 4
+			while (not ok) and range:
+				try:
+					time.sleep(2)
+					id = sock2.drop(admin_passwd, dbname)
+					ok = True
+				except:
+					range -= 1
+			time.sleep(2)
 
 
 
