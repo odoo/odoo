@@ -111,6 +111,7 @@ for demo in demos:
 						ok = True
 					except:
 						range -= 1
+				time.sleep(2)
 
 
 
