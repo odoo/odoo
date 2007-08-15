@@ -89,6 +89,8 @@ class _column(object):
 		if self.relate:
 			warnings.warn("The relate attribute doesn't work anymore, use act_window tag instead", DeprecationWarning)
 
+	def restart(self):
+		pass
 
 	def set(self, cr, obj, id, name, value, user=None, context=None):
 		cr.execute('update '+obj._table+' set '+name+'='+self._symbol_set[0]+' where id=%d', (self._symbol_set[1](value),id) )
@@ -615,3 +617,6 @@ class property(function):
 	def __init__(self, obj_prop, **args):
 		self.field_id = {}
 		function.__init__(self, self._fnct_read, False, self._fnct_write, (obj_prop, ), **args)
+
+	def restart(self):
+		self.field_id = {}

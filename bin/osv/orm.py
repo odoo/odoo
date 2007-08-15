@@ -511,6 +511,8 @@ class orm(object):
 			self._sequence = self._table+'_id_seq'
 		for k in self._defaults:
 			assert (k in self._columns) or (k in self._inherit_fields), 'Default function defined in %s but field %s does not exist !' % (self._name, k,)
+		for f in self._columns:
+			self._columns[f].restart()
 		# FIXME: does not work at all
 #		if self._log_access:
 #			self._columns.update({

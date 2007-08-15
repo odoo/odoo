@@ -65,7 +65,9 @@ langs = lang or (map(lambda x: x[0], sock2.list_lang()) + ['en_US'])
 def wait(id):
 	progress=0.0
 	while not progress==1.0:
+		time.sleep(3)
 		progress,users = sock2.get_progress(admin_passwd, id)
+		time.sleep(3)
 	return True
 
 def wizard_run(wizname, fieldvalues={}, endstate='end'):
