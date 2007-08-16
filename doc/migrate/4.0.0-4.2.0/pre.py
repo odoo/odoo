@@ -73,6 +73,22 @@ password = hasattr(options, 'db_password') and "password=%s" % options.db_passwo
 db = psycopg.connect('%s %s %s %s %s' % (host, port, name, user, password), serialize=0)
 cr = db.cursor()
 
+# ------------------------ #
+# change currency rounding #
+# ------------------------ #
+
+cr.execute("""SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size FROM pg_class c,pg_attribute a,pg_type t WHERE c.relname='res_currency' AND a.attname='rounding' AND c.oid=a.attrelid AND a.atttypid=t.oid""")
+res = cr.dictfetchall()
+if res[0]['typname'] != 'numeric':
+	for line in (
+		"ALTER TABLE res_currency RENAME rounding TO rounding_bak",
+		"ALTER TABLE res_currency ADD rounding NUMERIC(12,6)",
+		"UPDATE res_currency SET rounding = power(10, - rounding_bak)",
+		"ALTER TABLE res_currency DROP rounding_bak",
+		):
+		cr.execute(line)
+cr.commit()
+
 # ----------------------------- #
 # drop constraint on ir_ui_view #
 # ----------------------------- #
@@ -153,17 +169,6 @@ if not cr.fetchall():
 	meta = pickle.dumps({'type':'selection', 'string':'Timezone', 'selection': [(x, x) for x in pytz.all_timezones]})
 	value = pickle.dumps(False)
 	cr.execute('INSERT INTO ir_values (name, key, model, meta, key2, object, value) VALUES (\'tz\', \'meta\', \'res.users\', %s, \'tz\', %s, %s)', (meta,False, value))
-cr.commit()
-
-# -------------------- #
-# Change currency rate #
-# -------------------- #
-
-cr.execute('SELECT a.attname FROM pg_class c, pg_attribute a WHERE c.relname = \'res_currency_rate\' AND a.attname = \'rate_old\' AND c.oid = a.attrelid')
-if not cr.fetchall():
-	cr.execute('ALTER TABLE res_currency_rate ADD rate_old NUMERIC(12,6)')
-	cr.execute('UPDATE res_currency_rate SET rate_old = rate')
-	cr.execute('UPDATE res_currency_rate SET rate = (1 / rate_old)')
 cr.commit()
 
 cr.close
