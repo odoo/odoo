@@ -356,7 +356,7 @@ class module(osv.osv):
 				terp = self.get_module_info(mod_name)
 				if terp.get('installable', True) and mod.state == 'uninstallable':
 					self.write(cr, uid, id, {'state': 'uninstalled'})
-				if vercmp(terp.get('version', ''), mod.latest_version) > 0:
+				if vercmp(terp.get('version', ''), mod.latest_version or '0') > 0:
 					self.write(cr, uid, id, {
 						'latest_version': terp.get('version'),
 						'url': ''})
