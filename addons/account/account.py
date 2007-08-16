@@ -1014,12 +1014,9 @@ class account_tax(osv.osv):
 			if len(tax.child_ids):
 				if tax.child_depend:
 					del res[-1]
-					amount = amount2
-				else:
-					amount = amount2
-			for t in tax.child_ids:
-				parent_tax = self._unit_compute(cr, uid, [t], amount, address_id)
-				res.extend(parent_tax)
+				amount = amount2
+				child_tax = self._unit_compute(cr, uid, tax.child_ids, amount, address_id, product, partner)
+				res.extend(child_tax)
 			if tax.include_base_amount:
 				cur_price_unit+=amount2
 		return res
