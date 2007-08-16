@@ -135,7 +135,7 @@ class rml_parse(object):
 		for i in range(len(lst)):
 			newnode = node.cloneNode(1)
 			newnode.tagName='para'
-			newnode.__dict__['childNodes'][0].__dict__['data'] = ' %s '%lst[i]
+			newnode.__dict__['childNodes'][0].__dict__['data'] = lst[i].decode('utf8')
 			if ns:
 				pp.insertBefore(newnode, ns)
 			else:
