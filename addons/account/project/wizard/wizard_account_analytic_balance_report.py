@@ -39,6 +39,7 @@ dates_fields = {
 	'date2': {'string':'End of period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
 }
 
+
 class wizard_report(wizard.interface):
 	states = {
 		'init': {
