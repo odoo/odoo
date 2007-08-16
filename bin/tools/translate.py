@@ -172,7 +172,7 @@ def trans_generate(lang, modules, dbname=None):
 				to_translate.append([report_type, name, parse_func(d.documentElement)])
 			except IOError:
 				if fname:
-					logger.notifyChannel("init", netsvc.LOG_WARNING, "couldn't export translation for report %s %s %s" % name, report_type, fname)
+					logger.notifyChannel("init", netsvc.LOG_WARNING, "couldn't export translation for report %s %s %s" % (name, report_type, fname))
 
 	# views
 	obj = pool.get("ir.ui.view")
