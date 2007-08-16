@@ -427,8 +427,8 @@ class res_partner_bank(osv.osv):
 		'partner_id': fields.many2one('res.partner', 'Partner', required=True, ondelete='cascade', select=True),
 		'state': fields.selection(_bank_type_get, 'Bank type', required=True, change_default=True),
 	}
-	def fields_get(self, cr, uid, *args):
-		res = super(res_partner_bank, self).fields_get(cr, uid, *args)
+	def fields_get(self, cr, uid, fields=None, context=None):
+		res = super(res_partner_bank, self).fields_get(cr, uid, fields, context)
 		type_ids = self.pool.get('res.partner.bank.type').search(cr, uid, [])
 		types = self.pool.get('res.partner.bank.type').browse(cr, uid, type_ids)
 		for t in types:
