@@ -632,7 +632,7 @@ class sale_order_line(osv.osv):
 		try:
 			value.update({
 				'product_uom_qty' : product_uos_qty / res['uos_coeff'],
-				'weight' : product_uos_qty / res['uos_coeff'] * res['weight']
+				'th_weight' : product_uos_qty / res['uos_coeff'] * res['weight']
 			})
 		except ZeroDivisionError:
 			pass
@@ -649,7 +649,7 @@ class sale_order_line(osv.osv):
 			lang=self.pool.get('res.partner').read(cr, uid, [partner_id])[0]['lang']
 		context = {'lang':lang}
 		if not product:
-			return {'value': {'price_unit': 0.0, 'notes':'', 'weight' : 0, 'product_uos_qty': qty}, 'domain':{'product_uom':[]}}
+			return {'value': {'price_unit': 0.0, 'notes':'', 'th_weight' : 0, 'product_uos_qty': qty}, 'domain':{'product_uom':[]}}
 		if not pricelist:
 			raise osv.except_osv('No Pricelist !', 'You have to select a pricelist in the sale form !\nPlease set one before choosing a product.')
 		price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist], product, qty or 1.0, partner_id, {'uom': uom})[pricelist]
@@ -681,7 +681,7 @@ class sale_order_line(osv.osv):
 			if result['product_uom']:
 				result['product_uos'] = res['uos_id']
 				result['product_uos_qty'] = qty * res['uos_coeff']
-				result['weight'] = qty * res['weight']
+				result['th_weight'] = qty * res['weight']
 				res2 = self.pool.get('product.uom').read(cr, uid, [result['product_uom']], ['category_id'])
 				if res2 and res2[0]['category_id']:
 					domain = {'product_uom':[('category_id','=',res2[0]['category_id'][0])]}
@@ -690,10 +690,10 @@ class sale_order_line(osv.osv):
 			q = self.pool.get('product.uom')._compute_qty(cr, uid, uom, qty, default_uom)
 			result['product_uos'] = res['uos_id']
 			result['product_uos_qty'] = q * res['uos_coeff']
-			result['weight'] = q * res['weight']
+			result['th_weight'] = q * res['weight']
 		elif uos: # only happens if uom is False
 			result['product_uom'] = res['uom_id'] and res['uom_id'][0]
 			result['product_uom_qty'] = qty_uos / res['uos_coeff']
-			result['weight'] = result['product_uom_qty'] * res['weight']
+			result['th_weight'] = result['product_uom_qty'] * res['weight']
 		return {'value':result, 'domain':domain}
 sale_order_line()
