@@ -292,6 +292,7 @@ class sale_order(osv.osv):
 
 	def action_cancel(self, cr, uid, ids, context={}):
 		ok = True
+		sale_order_line_obj = self.pool.get('sale.order.line')
 		for sale in self.browse(cr, uid, ids):
 			for pick in sale.picking_ids:
 				if pick.state not in ('draft','cancel'):
@@ -311,6 +312,8 @@ class sale_order(osv.osv):
 				for inv in r['invoice_ids']:
 					wf_service = netsvc.LocalService("workflow")
 					wf_service.trg_validate(uid, 'account.invoice', inv, 'invoice_cancel', cr)
+			sale_order_line_obj.write(cr, uid, [l.id for l in  sale.order_line],
+					{'state': 'cancel'})
 		self.write(cr,uid,ids,{'state':'cancel'})
 		return True
 
