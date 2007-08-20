@@ -176,7 +176,7 @@
 						<field name="reconciled"/>
 						<field name="state" select="2"/>
 						<group col="3" colspan="4">
-							<button name="invoice_open" states="draft,proforma" string="Create"/>
+							<button name="invoice_open" states="draft,proforma" string="Validate"/>
 							<button name="invoice_cancel" states="draft,proforma,sale,open" string="Cancel"/>
 							<button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
 						</group>
@@ -245,7 +245,7 @@
 						<field name="state" select="2"/>
 						<group col="4" colspan="4" expand="1">
 							<button name="invoice_proforma" states="draft" string="PRO-FORMA"/>
-							<button name="invoice_open" states="draft,proforma" string="Create"/>
+							<button name="invoice_open" states="draft,proforma" string="Validate"/>
 							<button name="invoice_cancel" states="draft,proforma,sale,open" string="Cancel"/>
 							<button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
 						</group>
