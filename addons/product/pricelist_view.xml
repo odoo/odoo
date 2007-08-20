@@ -39,7 +39,7 @@
 		<field name="view_type">form</field>
 		<field name="view_id" ref="product_pricelist_version_tree_view"/>
 	</record>
-	<menuitem name="Products/Pricelists/Pricelist Versions" id="menu_product_pricelist_action" action="product_pricelist_action"/>
+	<menuitem name="Products/Pricelists/Pricelist Versions" id="menu_product_pricelist_action" action="product_pricelist_action" sequence="2"/>
 
 	<record model="ir.ui.view" id="product_pricelist_item_tree_view">
 		<field name="name">product.pricelist.item.tree</field>
@@ -111,10 +111,25 @@
 		<field name="arch" type="xml">
 			<form string="Products Price List">
 				<separator string="Pricelist Name" colspan="4"/>
-				<field name="name" colspan="4" select="1"/>
+				<field name="name" select="1"/>
+				<field name="active" select="1"/>
 				<field name="type" select="1"/>
 				<field name="currency_id" select="1"/>
-				<field name="active" select="1"/>
+				<field name="version_id" colspan="4" nolabel="1">
+					<form string="Pricelist Version">
+						<field name="name" select="1"/>
+						<field name="active" select="2"/>
+						<field name="date_start" select="1"/>
+						<field name="date_end" select="1"/>
+						<field name="items_id" colspan="4" nolabel="1" widget="one2many_list"/>
+					</form>
+					<tree string="Pricelist Version">
+						<field name="name"/>
+						<field name="active"/>
+						<field name="date_start"/>
+						<field name="date_end"/>
+					</tree>
+				</field>
 			</form>
 		</field>
 	</record>
@@ -124,7 +139,8 @@
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	<menuitem name="Products/Pricelists/Pricelists" id="menu_product_pricelist_action2" action="product_pricelist_action2"/>
+	<menuitem name="Products/Pricelists/Pricelists" id="menu_product_pricelist_action2" action="product_pricelist_action2"
+		sequence="1"/>
 
 	<record model="ir.ui.view" id="product_price_type_view">
 		<field name="name">product.price.type.form</field>
@@ -165,12 +181,6 @@
 		<field name="view_mode">tree,form</field>
 	</record>
 	<menuitem name="Products/Configuration/Pricelists Types" id="menu_product_pricelist_type_action" action="product_pricelist_type_action"/>
-
-	<act_window name="Pricelist versions"
-		domain="[('pricelist_id', '=', active_id)]"
-		res_model="product.pricelist.version"
-		src_model="product.pricelist"
-		id="act_product_pricelist_2_product_pricelist_version"/>
 
 </data>
 </terp>
