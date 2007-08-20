@@ -35,9 +35,10 @@ class ir_attachment(osv.osv):
 		'datas': fields.binary('Data'),
 		'datas_fname': fields.char('Data Filename',size=64),
 		'description': fields.text('Description'),
-		'res_model': fields.char('Resource Model',size=64, required=True, readonly=True),
-		'res_id': fields.integer('Resource ID', required=True, readonly=True),
+		# Not required due to the document module !
+		'res_model': fields.char('Resource Model',size=64, readonly=True),
+		'res_id': fields.integer('Resource ID', readonly=True),
 		'link': fields.char('Link', size=256)
-}
+	}
 ir_attachment()
 
