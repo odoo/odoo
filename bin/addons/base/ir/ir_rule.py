@@ -111,37 +111,61 @@ class ir_rule(osv.osv):
 		sub = []
 		sub_str = []
 		clause={}
+		clause_global={}
 		# Use root user to prevent recursion
 		for rule in self.browse(cr, 1, ids):
 			if rule.operator in ('in', 'child_of'):
-				dom = eval("[('%s', '%s', [%s])]"%(rule.field_id.name, rule.operator, rule.operand), {'user': self.pool.get('res.users').browse(cr, 1, uid), 'time':time})
+				dom = eval("[('%s', '%s', [%s])]" % (rule.field_id.name, rule.operator,
+					rule.operand), {'user': self.pool.get('res.users').browse(cr, 1, uid),
+						'time':time})
 			else:
-				dom = eval("[('%s', '%s', %s)]"%(rule.field_id.name, rule.operator, rule.operand), {'user': self.pool.get('res.users').browse(cr, 1, uid), 'time':time})
-			clause.setdefault(rule.rule_group.id, [])
-			clause[rule.rule_group.id].append(obj._where_calc(cr, uid, dom, active_test=False))
-		query = ''
-		val = []
-		for g in clause.values():
-			if not g:
-				continue
-			if len(query):
-				query += ' AND '
-			query += '('
-			first = True
-			for c in g:
-				if not first:
-					query += ' OR '
-				first = False
+				dom = eval("[('%s', '%s', %s)]" % (rule.field_id.name, rule.operator,
+					rule.operand), {'user': self.pool.get('res.users').browse(cr, 1, uid),
+						'time':time})
+
+			if rule.rule_group['global']:
+				clause_global.setdefault(rule.rule_group.id, [])
+				clause_global[rule.rule_group.id].append(obj._where_calc(cr, uid, dom, active_test=False))
+			else:
+				clause.setdefault(rule.rule_group.id, [])
+				clause[rule.rule_group.id].append(obj._where_calc(cr, uid, dom, active_test=False))
+
+		def _query(clause, test):
+			query = ''
+			val = []
+			for g in clause.values():
+				if not g:
+					continue
+				if len(query):
+					query += ' '+test+' '
 				query += '('
-				first2 = True
-				for clause in c[0]:
-					if not first2:
-						query += ' AND '
-					first2 = False
-					query += clause
+				first = True
+				for c in g:
+					if not first:
+						query += ' OR '
+					first = False
+					query += '('
+					first2 = True
+					for clause in c[0]:
+						if not first2:
+							query += ' AND '
+						first2 = False
+						query += clause
+					query += ')'
+					val += c[1]
 				query += ')'
-				val += c[1]
-			query += ')'
+			return query, val
+
+		query, val = _query(clause, 'OR')
+		query_global, val_global = _query(clause_global, 'AND')
+		if query_global:
+			if query:
+				query = '('+query+') AND '+query_global
+				val.extend(val_global)
+			else:
+				query = query_global
+				val = val_global
+
 		return query, val
 	domain_get = tools.cache()(domain_get)
 
