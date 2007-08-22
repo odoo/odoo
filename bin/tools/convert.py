@@ -268,7 +268,7 @@ class xml_import(object):
 		id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.wizard", self.module, res, xml_id, mode=self.mode)
 		self.idref[xml_id] = id
 		# ir_set
-		if not rec.hasAttribute('menu') or eval(rec.getAttribute('menu')):
+		if (not rec.hasAttribute('menu') or eval(rec.getAttribute('menu'))) and id:
 			keyword = str(rec.getAttribute('keyword') or 'client_action_multi')
 			keys = [('action',keyword),('res_model',model)]
 			value = 'ir.actions.wizard,'+str(id)
