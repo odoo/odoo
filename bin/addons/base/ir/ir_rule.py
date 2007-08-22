@@ -29,6 +29,8 @@
 from osv import fields,osv
 import time
 import tools
+
+
 class ir_rule_group(osv.osv):
 	_name = 'ir.rule.group'
 
@@ -47,10 +49,22 @@ class ir_rule_group(osv.osv):
 		'global': lambda *a: True,
 	}
 
+	def unlink(self, cr, uid, ids, context=None):
+		res = super(ir_rule_group, self).unlink(cr, uid, ids, context=context)
+		# Restart the cache on the domain_get method of ir.rule
+		self.pool.get('ir.rule').domain_get()
+		return res
+
+	def create(self, cr, user, vals, context=None):
+		res = super(ir_rule_group, self).create(cr, user, vals, context=context)
+		# Restart the cache on the domain_get method of ir.rule
+		self.pool.get('ir.rule').domain_get()
+		return res
+
 	def write(self, cr, uid, ids, vals, context=None):
 		if not context:
 			context={}
-		res = super(ir_rule_group, self).write(cr, uid, ids, vals, context)
+		res = super(ir_rule_group, self).write(cr, uid, ids, vals, context=context)
 		# Restart the cache on the domain_get method of ir.rule
 		self.pool.get('ir.rule').domain_get()
 		return res
@@ -63,21 +77,37 @@ class ir_rule(osv.osv):
 	_rec_name = 'field_id'
 
 	def _operand(self,cr,uid,context):
-		def get(object, level=3, ending=[], ending_excl=[], recur=[], root_tech='', root=''):
-			res= []
+
+		def get(object, level=3, recur=None, root_tech='', root=''):
+			res = []
+			if not recur:
+				recur = []
 			fields = self.pool.get(object).fields_get(cr,uid)
 			key = fields.keys()
 			key.sort()
 			for k in key:
-				if (not ending or fields[k]['type'] in ending) and ((not ending_excl) or not (fields[k]['type'] in ending_excl)):
-					res.append((root_tech+'.'+k,root+'/'+fields[k]['string']))
 
-				if fields[k]['type'] in recur:
-					res.append((root_tech+'.'+k+'.id',root+'/'+fields[k]['string']))
+				if fields[k]['type'] in ('many2one'):
+					res.append((root_tech+'.'+k+'.id',
+						root+'/'+fields[k]['string']))
+
+				elif fields[k]['type'] in ('many2many', 'one2many'):
+					res.append(('\',\'.join(map(lambda x: str(x.id), '+root_tech+'.'+k+'))',
+						root+'/'+fields[k]['string']))
+
+				else:
+					res.append((root_tech+'.'+k,
+						root+'/'+fields[k]['string']))
+
 				if (fields[k]['type'] in recur) and (level>0):
-					res.extend(get(fields[k]['relation'], level-1, ending, ending_excl, recur, root_tech+'.'+k, root+'/'+fields[k]['string']))
+					res.extend(get(fields[k]['relation'], level-1,
+						recur, root_tech+'.'+k, root+'/'+fields[k]['string']))
+
 			return res
-		res = [("False", "False"), ("True", "True"), ("user.id", "User")]+get('res.users', level=1,ending_excl=['one2many','many2one','many2many','reference'], recur=['many2one'],root_tech='user',root='User')
+
+		res = [("False", "False"), ("True", "True"), ("user.id", "User")]
+		res += get('res.users', level=1,
+				recur=['many2one'], root_tech='user', root='User')
 		return res
 
 	_columns = {
@@ -156,7 +186,24 @@ class ir_rule(osv.osv):
 				query += ')'
 			return query, val
 
-		query, val = _query(clause, 'OR')
+		query = ''
+		val = []
+
+		# Test if there is no rule_group that have no rule
+		cr.execute("""SELECT g.id FROM
+			ir_rule_group g
+				JOIN ir_model m ON (g.model_id = m.id)
+			WHERE m.model = %s
+				AND (g.id NOT IN (SELECT rule_group FROM ir_rule))
+				AND (g.id IN (SELECT rule_group_id FROM user_rule_group_rel
+					WHERE user_id = %d
+					UNION SELECT rule_group_id FROM group_rule_group_rel g_rel
+						JOIN res_groups_users_rel u_rel
+							ON g_rel.group_id = u_rel.gid
+						WHERE u_rel.uid = %d))""", (model_name, uid, uid))
+		if not cr.fetchall():
+			query, val = _query(clause, 'OR')
+
 		query_global, val_global = _query(clause_global, 'AND')
 		if query_global:
 			if query:
@@ -169,10 +216,22 @@ class ir_rule(osv.osv):
 		return query, val
 	domain_get = tools.cache()(domain_get)
 
+	def unlink(self, cr, uid, ids, context=None):
+		res = super(ir_rule, self).unlink(cr, uid, ids, context=context)
+		# Restart the cache on the domain_get method of ir.rule
+		self.domain_get()
+		return res
+
+	def create(self, cr, user, vals, context=None):
+		res = super(ir_rule, self).create(cr, user, vals, context=context)
+		# Restart the cache on the domain_get method of ir.rule
+		self.domain_get()
+		return res
+
 	def write(self, cr, uid, ids, vals, context=None):
 		if not context:
 			context={}
-		res = super(ir_rule, self).write(cr, uid, ids, vals, context)
+		res = super(ir_rule, self).write(cr, uid, ids, vals, context=context)
 		# Restart the cache on the domain_get method
 		self.domain_get()
 		return res
