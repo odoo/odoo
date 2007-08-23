@@ -53,8 +53,6 @@ view_form = """<?xml version="1.0"?>
 
 class wizard_lang_install(wizard.interface):
 	def _lang_install(self, cr, uid, data, context):
-		print cr, uid, data, context
-
 		lang = data['form']['lang']
 		if lang and lang != 'en_EN':
 			filename = tools.config["root_path"] + "/i18n/" + lang + ".csv"
