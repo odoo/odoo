@@ -102,9 +102,9 @@
 			<value eval="ref('account.cash')" />
 			<value eval="ref('account.period_' + str(int(time.strftime('%m'))))" />
 			<value eval="ref('account.bank_journal')" />
-			<value eval="False" />
+			<value eval="ref('account.cash')" />
 			<value eval="ref('account.period_' + str(int(time.strftime('%m'))))" />
-			<value eval="False" />
+			<value eval="ref('account.bank_journal')" />
 		</function>
 		
 		<assert model="purchase.order" id="test_purchase_1" string="Test purchase's invoice is now paid" severity="error">
