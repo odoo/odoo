@@ -32,10 +32,20 @@ class account_move_line(osv.osv):
 	_inherit = "account.move.line"
 
 	def amount_to_pay(self, cr, uid, ids, name, arg={}, context={}):
-		""" Return the amount still to pay regarding all the payemnt orders (excepting cancelled orders)"""
+		""" Return the amount still to pay regarding all the payemnt orders
+		(excepting cancelled orders)"""
 		if not ids:
 			return {}
-		cr.execute("SELECT ml.id,ml.credit - (select coalesce(sum(amount),0) from payment_line pl inner join payment_order po on (pl.order_id = po.id)where move_line_id = ml.id and po.state != 'cancel') as amount from account_move_line ml where credit > 0 and id in (%s)"% (",".join(map(str,ids))))
+		cr.execute("""SELECT ml.id,
+					ml.credit -
+					(SELECT coalesce(sum(amount),0)
+						FROM payment_line pl
+							INNER JOIN payment_order po
+								ON (pl.order_id = po.id)
+						WHERE move_line_id = ml.id
+						AND po.state != 'cancel') as amount
+					FROM account_move_line ml
+					WHERE id in (%s)""" % (",".join(map(str, ids))))
 		r=dict(cr.fetchall())
 		return r
 

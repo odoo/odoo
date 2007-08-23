@@ -80,17 +80,21 @@ class payment_order(osv.osv):
 
 	def _total(self, cr, uid, ids, name, args, context={}):
 		if not ids: return {}
-		cr.execute("""select o.id, coalesce(sum(amount),0)
-			from payment_order o left join payment_line l on (o.id = l.order_id)
-			where o.id in (%s) group by o.id"""% ','.join(map(str,ids)))
+		cr.execute("""SELECT o.id, coalesce(sum(l.amount),0)
+			FROM payment_order o
+				LEFT JOIN payment_line l
+					ON (o.id = l.order_id)
+			WHERE o.id in (%s)
+			GROUP BY o.id""" % ','.join(map(str,ids)))
 		return dict(cr.fetchall())
 
 	def nb_line(self, cr, uid, ids, name, args, context={}):
 		if not ids: return {}
 		res= {}.fromkeys(ids,0)
-		cr.execute("""select "order_id",count(*)
-		              from payment_line 
-			          where "order_id" in (%s) group by "order_id" """% ','.join(map(str,ids)))
+		cr.execute("""SELECT "order_id", count(*)
+			FROM payment_line
+			WHERE "order_id" in (%s)
+			GROUP BY "order_id" """ % ','.join(map(str,ids)))
 		res.update(dict(cr.fetchall()))
 		return res
 
@@ -188,12 +192,13 @@ class payment_line(osv.osv):
 			return {}
 		line=self.pool.get('account.move.line').browse(cr,uid,move_line_id)
 		return {'value': {'amount': line.amount_to_pay,
-						  'to_pay': line.amount_to_pay,
-						  'partner_id': line.partner_id.id,
-						  'reference': line.ref,
-						  'date_created': line.date_created,
-						  'bank_id': self.pool.get('account.move.line').line2bank(cr,uid,[move_line_id],
-																				  payment_type or 'manual',context)[move_line_id]
-						  }}
+			'to_pay': line.amount_to_pay,
+			'partner_id': line.partner_id.id,
+			'reference': line.ref,
+			'date_created': line.date_created,
+			'bank_id': self.pool.get('account.move.line').line2bank(cr, uid,
+				[move_line_id],
+				payment_type or 'manual',context)[move_line_id]
+			}}
 
 payment_line()
