@@ -239,7 +239,7 @@ class xml_import(object):
 		xml_id = rec.getAttribute('id').encode('utf8')
 		self._test_xml_id(xml_id)
 		id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.report.xml", self.module, res, xml_id, mode=self.mode)
-		self.idref[xml_id] = id
+		self.idref[xml_id] = int(id)
 		if not rec.hasAttribute('menu') or eval(rec.getAttribute('menu')):
 			keyword = str(rec.getAttribute('keyword') or 'client_print_multi')
 			keys = [('action',keyword),('res_model',res['model'])]
@@ -266,7 +266,7 @@ class xml_import(object):
 		res = {'name': string, 'wiz_name': name, 'multi':multi}
 
 		id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.wizard", self.module, res, xml_id, mode=self.mode)
-		self.idref[xml_id] = id
+		self.idref[xml_id] = int(id)
 		# ir_set
 		if (not rec.hasAttribute('menu') or eval(rec.getAttribute('menu'))) and id:
 			keyword = str(rec.getAttribute('keyword') or 'client_action_multi')
@@ -295,7 +295,7 @@ class xml_import(object):
 		res = {'name': name, 'type': type, 'view_id': view_id, 'domain': domain, 'context': context, 'res_model': res_model, 'src_model': src_model, 'view_type': view_type, 'view_mode': view_mode, 'usage': usage }
 
 		id = self.pool.get('ir.model.data')._update(cr, self.uid, 'ir.actions.act_window', self.module, res, xml_id, mode=self.mode)
-		self.idref[xml_id] = id
+		self.idref[xml_id] = int(id)
 
 		if src_model:
 			keyword = 'client_action_relate'
@@ -414,7 +414,7 @@ class xml_import(object):
 				# the menuitem does't exist but we are in branch (not a leaf)
 				pid = self.pool.get('ir.ui.menu').create(cr, self.uid, {'parent_id' : pid, 'name' : menu_elem})
 		if rec_id and pid:
-			self.idref[rec_id] = pid
+			self.idref[rec_id] = int(pid)
 
 		if rec.hasAttribute('action') and pid:
 			a_action = rec.getAttribute('action').encode('utf8')
@@ -509,7 +509,7 @@ class xml_import(object):
 				if id:
 					# if it existed, we don't update the data, but we need to
 					# know the id of the existing record anyway
-					self.idref[rec_id] = id
+					self.idref[rec_id] = int(id)
 					return None
 				else:
 					# if the resource didn't exist
@@ -564,7 +564,7 @@ class xml_import(object):
 			res[f_name] = f_val
 		id = self.pool.get('ir.model.data')._update(cr, self.uid, rec_model, self.module, res, rec_id or False, not self.isnoupdate(data_node), noupdate=self.isnoupdate(data_node), mode=self.mode )
 		if rec_id:
-			self.idref[rec_id] = id
+			self.idref[rec_id] = int(id)
 		return rec_model, id
 
 	def id_get(self, cr, model, id_str):
@@ -574,7 +574,7 @@ class xml_import(object):
 		if '.' in id_str:
 			mod,id_str = id_str.split('.')
 		result = self.pool.get('ir.model.data')._get_id(cr, self.uid, mod, id_str)
-		return self.pool.get('ir.model.data').read(cr, self.uid, [result], ['res_id'])[0]['res_id']
+		return int(self.pool.get('ir.model.data').read(cr, self.uid, [result], ['res_id'])[0]['res_id'])
 
 	def parse(self, xmlstr):
 		d = xml.dom.minidom.parseString(xmlstr)
