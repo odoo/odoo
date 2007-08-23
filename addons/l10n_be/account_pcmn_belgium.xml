@@ -6659,6 +6659,21 @@
 			<field name="account_collected_id" ref="vat_payable0"/>
 			<field name="account_paid_id" ref="vat_refund0"/>
 		</record>
-		
+
+		<record model="account.journal" id="account.sales_journal">
+			<field name="default_credit_account_id" ref="a_recv"/>
+			<field name="default_debit_account_id" ref="a_recv"/>
+		</record>
+
+		<record model="account.journal" id="account.expenses_journal">
+			<field name="default_credit_account_id" ref="a_pay"/>
+			<field name="default_debit_account_id" ref="a_pay"/>
+		</record>
+
+		<record model="account.journal" id="account.bank_journal">
+			<field name="default_credit_account_id" ref="cash"/>
+			<field name="default_debit_account_id" ref="cash"/>
+		</record>
+
 	</data>
 </terp>
