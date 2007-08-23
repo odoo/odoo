@@ -704,7 +704,7 @@ class orm(object):
 			for field in todo:
 				newfd = self.pool.get(fields_def[field]['relation']).fields_get(cr, uid, context=context)
 				res = process_liness(self, datas, prefix+[field], newfd, position)
-				(newrow,max2,w2, translate2,data_id) = res
+				(newrow, max2, w2, translate2, data_id2) = res
 				nbrmax = max(nbrmax, max2)
 				warning = warning+w2
 				reduce(lambda x,y: x and y, newrow)
@@ -719,7 +719,8 @@ class orm(object):
 					if not ok:
 						break
 
-					(newrow,max2,w2, translate2,data_id) = process_liness(self, datas, prefix+[field], newfd, position+i)
+					(newrow, max2, w2, translate2, data_id2) = process_liness(
+							self, datas, prefix+[field], newfd, position+i)
 					warning = warning+w2
 					if reduce(lambda x,y: x or y, newrow.values()):
 						row[field].append((0,0,newrow))
