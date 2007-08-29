@@ -1549,9 +1549,10 @@ class orm(object):
 					else:
 						res_ids = args[i][2]
 					if not len(res_ids):
-						return []
-					cr.execute('select "'+field._id1+'" from "'+field._rel+'" where "'+field._id2+'" in ('+','.join(map(str, res_ids))+')')
-					args[i] = ('id', 'in', map(lambda x: x[0], cr.fetchall()))
+						args[i] = ('id', 'in', [0])
+					else:
+						cr.execute('select "'+field._id1+'" from "'+field._rel+'" where "'+field._id2+'" in ('+','.join(map(str, res_ids))+')')
+						args[i] = ('id', 'in', map(lambda x: x[0], cr.fetchall()))
 				i+=1
 
 			elif field._type=='many2one':
