@@ -107,6 +107,7 @@ def data_files():
                               add_path.replace('bin', 'tinyerp-server', 1), 'report'),
                           glob.glob(opj(add_path, 'report', '*xml')) +
                           glob.glob(opj(add_path, 'report', '*rml')) +
+                          glob.glob(opj(add_path, 'report', '*sxw')) +
                           glob.glob(opj(add_path, 'report', '*xsl')))]
             files.extend(pathfiles)
     return files
