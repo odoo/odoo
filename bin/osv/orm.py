@@ -1826,7 +1826,7 @@ class orm(object):
 			parent = self._parent_name
 		ids_parent = ids[:]
 		while len(ids_parent):
-			cr.execute('SELECT distinct "'+self._parent_name+'"'+
+			cr.execute('SELECT distinct "'+parent+'"'+
 				' FROM "'+self._table+'" WHERE id in ('+','.join(map(str, ids_parent))+')')
 			ids_parent = filter(None, map(lambda x: x[0], cr.fetchall()))
 			for i in ids_parent:
