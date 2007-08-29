@@ -1,5 +1,5 @@
 #!/usr/bin/python
-#coding: latin-1
+#coding: utf-8
 
 ##############################################################################
 #
@@ -357,7 +357,7 @@ if __name__ == "__main__":
 	fname = sys.argv[1]
 	f = StringIO.StringIO(file(fname).read())
 
-	xsl = file('normalized_oo2rml.xsl').read()
+	xsl = file(os.path.join(os.getcwd(), os.path.dirname(sys.argv[0]), 'normalized_oo2rml.xsl')).read()
 	result = sxw2rml(f, xsl, output=opt.output, save_pict=False)
 
 	print result
