@@ -289,7 +289,7 @@ class account_move_line(osv.osv):
 
 	def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context={}):
 		id_set = ','.join(map(str, ids))
-		lines = self.read(cr, uid, ids, context=context)
+		lines = self.browse(cr, uid, ids, context=context)
 		unrec_lines = filter(lambda x: not x['reconcile_id'], lines)
 		credit = debit = 0
 		account_id = False
@@ -297,8 +297,8 @@ class account_move_line(osv.osv):
 		for line in unrec_lines:
 			credit += line['credit']
 			debit += line['debit']
-			account_id = line['account_id'][0]
-			partner_id = (line['partner_id'] and line['partner_id'][0]) or False
+			account_id = line['account_id']['id']
+			partner_id = (line['partner_id'] and line['partner_id']['id']) or False
 		writeoff = debit - credit
 		date = time.strftime('%Y-%m-%d')
 
