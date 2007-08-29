@@ -860,11 +860,15 @@ class account_tax_code(osv.osv):
 		'company_id': fields.many2one('res.company', 'Company', required=True),
 		'sign': fields.float('Sign for parent', required=True),
 	}
-	def name_get(self, cr, uid, ids, context={}):
+
+	def name_get(self, cr, uid, ids, context=None):
 		if not len(ids):
 			return []
-		reads = self.read(cr, uid, ids, ['name','code'], context)
-		return map(lambda x: (x['id'],x['code'] or x['name']), reads)
+		if isinstance(ids, (int, long)):
+			ids = [ids]
+		reads = self.read(cr, uid, ids, ['name','code'], context, load='_classic_write')
+		return [(x['id'], (x['code'] and x['code'] + ' - ' or '') + x['name']) \
+				for x in reads]
 
 	def _default_company(self, cr, uid, context={}):
 		user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
