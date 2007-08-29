@@ -556,7 +556,7 @@ class orm(object):
 		elif isinstance(select,list):
 			return self._list_class([browse_record(cr,uid,id,self,cache, context=context, list_class=self._list_class) for id in select], context)
 		else:
-			return []
+			return browse_null()
 
 	# TODO: implement this
 	def __export_row(self, cr, uid, row, fields, prefix, context=None):
