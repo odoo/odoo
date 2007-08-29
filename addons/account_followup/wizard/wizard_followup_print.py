@@ -30,6 +30,15 @@ import datetime
 import pooler
 import time
 
+_followup_wizard_date_form = """<?xml version="1.0"?>
+<form string="Select a date">
+	<field name="date"/>
+</form>"""
+
+_followup_wizard_date_fields = {
+		'date': {'string': 'Date', 'type': 'date', 'required': True},
+}
+
 _followup_wizard_all_form = """<?xml version="1.0"?>
 <form string="Select partners" colspan="4">
 	<notebook>
@@ -94,7 +103,7 @@ class followup_all_print(wizard.interface):
 				"SET followup_line_id=%d, followup_date=%s "\
 				"WHERE id=%d",
 				(to_update[id],
-				time.strftime('%Y-%m-%d'), int(id),))
+				data['form']['date'], int(id),))
 		return {}
 
 	def _get_partners(self, cr, uid, data, context):
@@ -121,7 +130,8 @@ class followup_all_print(wizard.interface):
 				'You must define at least one follow up for your company !')
 		fup_id = fup_ids[0]
 
-		current_date = datetime.date.today()
+		current_date = datetime.date(*time.strptime(data['form']['date'],
+			'%Y-%m-%d')[:3])
 		cr.execute(
 			"SELECT * "\
 			"FROM account_followup_followup_line "\
@@ -148,13 +158,30 @@ class followup_all_print(wizard.interface):
 				to_update[str(id)] = fups[followup_line_id][1]
 		return {'partner_ids': partner_list, 'to_update': to_update}
 
+	def _get_date(self, cursor, user, data, context):
+		return {'date': time.strftime('%Y-%m-%d')}
+
 	states = {
-		'init' : {
+		'init': {
+			'actions': [_get_date],
+			'result': {'type': 'form',
+				'arch': _followup_wizard_date_form,
+				'fields': _followup_wizard_date_fields,
+				'state': [
+					('end', 'Cancel'),
+					('next', 'Continue'),
+				]
+			},
+		},
+		'next': {
 			'actions': [_get_partners],
 			'result': {'type': 'form',
-				'arch':_followup_wizard_all_form,
-				'fields':_followup_wizard_all_fields,
-				'state':[('end','Cancel'),('print','Print Follow Ups')]
+				'arch': _followup_wizard_all_form,
+				'fields': _followup_wizard_all_fields,
+				'state': [
+					('end','Cancel'),
+					('print','Print Follow Ups'),
+				]
 			},
 		},
 		'print': {
