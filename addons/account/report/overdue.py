@@ -34,9 +34,9 @@ from osv import osv
 from report import report_sxw
 import pooler
 
-class report_rappel(report_sxw.rml_parse):
+class Overdue(report_sxw.rml_parse):
 	def __init__(self, cr, uid, name, context):
-		super(report_rappel, self).__init__(cr, uid, name, context)
+		super(Overdue, self).__init__(cr, uid, name, context)
 		self.localcontext.update( {
 			'time' : time,
 			'adr_get' : self._adr_get,
@@ -59,6 +59,6 @@ class report_rappel(report_sxw.rml_parse):
 		movelines = moveline_obj.read(self.cr, self.uid, movelines)
 		return movelines
 
-report_sxw.report_sxw('report.account.rappel', 'res.partner',
-		'addons/account/report/rappel.rml', parser=report_rappel)
+report_sxw.report_sxw('report.account.overdue', 'res.partner',
+		'addons/account/report/overdue.rml', parser=Overdue)
 

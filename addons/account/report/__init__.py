@@ -34,6 +34,6 @@ import partner_balance
 import general_ledger
 import third_party_ledger
 import invoice
-import rappel
+import overdue
 import aged_trial_balance
 import tax_report
