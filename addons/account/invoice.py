@@ -528,6 +528,22 @@ class account_invoice(osv.osv):
 			ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
 		return self.name_get(cr, user, ids, context)
 
+	def _refund_cleanup_lines(self, lines):
+		for line in lines:
+			del line['id']
+			del line['invoice_id']
+			if 'account_id' in line:
+				line['account_id'] = line.get('account_id', False) and line['account_id'][0]
+			if 'product_id' in line:
+				line['product_id'] = line.get('product_id', False) and line['product_id'][0]
+			if 'uos_id' in line:
+				line['uos_id'] = line.get('uos_id', False) and line['uos_id'][0]
+			if 'invoice_line_tax_id' in line:
+				line['invoice_line_tax_id'] = [(6,0, line.get('invoice_line_tax_id', [])) ]
+			if 'account_analytic_id' in line:
+				line['account_analytic_id'] = line.get('account_analytic_id', False) and line['account_analytic_id'][0]
+		return map(lambda x: (0,0,x), lines)
+
 	def refund(self, cr, uid, ids):
 		invoices = self.read(cr, uid, ids, ['name', 'type', 'number', 'reference', 'comment', 'date_due', 'partner_id', 'address_contact_id', 'address_invoice_id', 'partner_contact', 'partner_insite', 'partner_ref', 'payment_term', 'account_id', 'currency_id', 'invoice_line', 'tax_line'])
 
@@ -542,28 +558,13 @@ class account_invoice(osv.osv):
 				'in_refund': 'in_invoice',   # Supplier Refund
 			}
 			
-			def cleanup_lines(lines):
-				for line in lines:
-					del line['id']
-					del line['invoice_id']
-					if 'account_id' in line:
-						line['account_id'] = line.get('account_id', False) and line['account_id'][0]
-					if 'product_id' in line:
-						line['product_id'] = line.get('product_id', False) and line['product_id'][0]
-					if 'uos_id' in line:
-						line['uos_id'] = line.get('uos_id', False) and line['uos_id'][0]
-					if 'invoice_line_tax_id' in line:
-						line['invoice_line_tax_id'] = [(6,0, line.get('invoice_line_tax_id', [])) ]
-					if 'account_analytic_id' in line:
-						line['account_analytic_id'] = line.get('account_analytic_id', False) and line['account_analytic_id'][0]
-				return map(lambda x: (0,0,x), lines)
 				
 			invoice_lines = self.pool.get('account.invoice.line').read(cr, uid, invoice['invoice_line'])
-			invoice_lines = cleanup_lines(invoice_lines)
+			invoice_lines = self._refund_cleanup_lines(invoice_lines)
 			
 			tax_lines = self.pool.get('account.invoice.tax').read(cr, uid, invoice['tax_line'])
 			tax_lines = filter(lambda l: l['manual'], tax_lines)
-			tax_lines = cleanup_lines(tax_lines)
+			tax_lines = self._refund_cleanup_lines(tax_lines)
 			
 			invoice.update({
 				'type': type_dict[invoice['type']],
