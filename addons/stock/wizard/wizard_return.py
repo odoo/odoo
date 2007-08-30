@@ -65,8 +65,11 @@ def _get_returns(self, cr, uid, data, context):
 	return res
 
 def _create_returns(self, cr, uid, data, context):
-	move_obj=pooler.get_pool(cr.dbname).get('stock.move')
-	pick_obj=pooler.get_pool(cr.dbname).get('stock.picking')
+	pool = pooler.get_pool(cr.dbname)
+	move_obj = pool.get('stock.move')
+	pick_obj = pool.get('stock.picking')
+	uom_obj = pool.get('product.uom')
+
 	pick=pick_obj.browse(cr, uid, [data['id']])[0]
 	new_picking=None
 	date_cur=time.strftime('%Y-%m-%d %H:%M:%S')
@@ -86,10 +89,14 @@ def _create_returns(self, cr, uid, data, context):
 			new_location=pick.loc_move_id.id
 		else:
 			new_location=move.location_dest_id.id
-		new_move=move_obj.copy(cr, uid, move.id, {'product_qty':data['form']['return%s' % move.id],
-				'picking_id':new_picking, 'state':'draft',
-				'location_id':new_location, 'location_dest_id':move.location_id.id,
-				'date':date_cur, 'date_planned':date_cur,})
+
+		new_move=move_obj.copy(cr, uid, move.id, {
+			'product_qty': data['form']['return%s' % move.id],
+			'product_uos_qty': uom_obj._compute_qty(cr, uid, move.product_uom.id,
+				data['form']['return%s' % move.id], move.product_uos.id),
+			'picking_id':new_picking, 'state':'draft',
+			'location_id':new_location, 'location_dest_id':move.location_id.id,
+			'date':date_cur, 'date_planned':date_cur,})
 	if new_picking:
 		wf_service = netsvc.LocalService("workflow")
 		if new_picking:
