@@ -217,7 +217,6 @@ def load_module_graph(cr, graph, status=None, **kwargs):
 							new_query = ' '.join(query.split())
 							if new_query:
 								cr.execute(new_query)
-						cr.commit()
 					else:
 						tools.convert_xml_import(cr, m, tools.file_open(opj(m, filename)).read(), idref, mode=mode, **kwargs)
 			if hasattr(package, 'demo') or (package_demo and package_state != 'installed'):
@@ -232,7 +231,7 @@ def load_module_graph(cr, graph, status=None, **kwargs):
 				cr.execute('update ir_module_module set demo=%s where name=%s', (True, package.name))
 			package_todo.append(package.name)
 			cr.execute("update ir_module_module set state='installed' where state in ('to upgrade', 'to install') and name=%s", (package.name,))
-			cr.commit()
+		cr.commit()
 		statusi+=1
 
 	pool = pooler.get_pool(cr.dbname)

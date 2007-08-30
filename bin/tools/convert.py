@@ -13,14 +13,6 @@ import netsvc
 from config import config
 import logging
 
-# Number of imported lines between two commit (see convert_csv_import()):
-COMMIT_STEP = 500
-
-
-
-# Number of imported lines between two commit (see convert_csv_import()):
-COMMIT_STEP = 500 
-
 
 class ConvertError(Exception):
 	def __init__(self, doc, orig_excpt):
@@ -589,7 +581,6 @@ class xml_import(object):
 							self.logger.notifyChannel("init", netsvc.LOG_INFO, '\n'+rec.toxml())
 							self.cr.rollback()
 							raise
-		self.cr.commit()
 		return True
 
 	def __init__(self, cr, module, idref, mode, report=assertion_report(), noupdate = False):
@@ -616,13 +607,13 @@ class xml_import(object):
 			'act_window': self._tag_act_window,
 		}
 
-#
-# Import a CSV file:
-#     quote: "
-#     delimiter: ,
-#     encoding: UTF8
-#
+CSV_STEP = 500
+
 def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init', noupdate=False):
+	'''Import csv file :
+		quote: "
+		delimiter: ,
+		encoding: utf-8'''
 	if not idref:
 		idref={}
 	model = ('.'.join(fname.split('.')[:-1]).split('-'))[0]
@@ -642,14 +633,11 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init', n
 	datas = []
 	for line in reader:
 		datas.append( map(lambda x:x.decode('utf8').encode('utf8'), line))
-		if len(datas) > COMMIT_STEP:
+		if len(datas) > CSV_STEP:
 			pool.get(model).import_data(cr, uid, fields, datas,mode, module,noupdate)
-			cr.commit()
 			datas=[]
-
 	if datas:
 		pool.get(model).import_data(cr, uid, fields, datas,mode, module,noupdate)
-		cr.commit()
 
 #
 # xml import/export
