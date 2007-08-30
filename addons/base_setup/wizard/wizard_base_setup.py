@@ -112,20 +112,25 @@ view_form_finish = """<?xml version="1.0"?>
 """
 
 class wizard_base_setup(wizard.interface):
+
 	def _get_profiles(self, cr, uid, context):
 		module_obj=pooler.get_pool(cr.dbname).get('ir.module.module')
-		ids=module_obj.search(cr, uid, [('category_id', '=', 'Profile'), ('state', '<>', 'installed')])
+		ids=module_obj.search(cr, uid, [('category_id', '=', 'Profile'),
+			('state', '<>', 'uninstallable')])
 		res=[(m.id, m.shortdesc) for m in module_obj.browse(cr, uid, ids)]
 		res.append((-1, 'Minimal Profile'))
 		res.sort()
 		return res
+
 	def _get_charts(self, cr, uid, context):
 		module_obj=pooler.get_pool(cr.dbname).get('ir.module.module')
-		ids=module_obj.search(cr, uid, [('category_id', '=', 'Account charts'), ('state', '<>', 'installed')])
+		ids=module_obj.search(cr, uid, [('category_id', '=', 'Account charts'),
+			('state', '<>', 'uninstallable')])
 		res=[(m.id, m.shortdesc) for m in module_obj.browse(cr, uid, ids)]
 		res.append((-1, 'None'))
 		res.sort(lambda x,y: cmp(x[1],y[1]))
 		return res
+
 	def _get_company(self, cr, uid, data, context):
 		pool=pooler.get_pool(cr.dbname)
 		company_obj=pool.get('res.company')
@@ -157,6 +162,7 @@ class wizard_base_setup(wizard.interface):
 		#else:
 		#	self.fields['country_id']['default']=-1
 		#return {}
+
 	def _get_states(self, cr, uid, context):
 		pool=pooler.get_pool(cr.dbname)
 		state_obj=pool.get('res.country.state')
@@ -165,6 +171,7 @@ class wizard_base_setup(wizard.interface):
 		res.append((-1, ''))
 		res.sort(lambda x,y: cmp(x[1],y[1]))
 		return res
+
 	def _get_countries(self, cr, uid, context):
 		pool=pooler.get_pool(cr.dbname)
 		country_obj=pool.get('res.country')
@@ -172,6 +179,7 @@ class wizard_base_setup(wizard.interface):
 		res=[(country.id, country.name) for country in country_obj.browse(cr, uid, ids)]
 		res.sort(lambda x,y: cmp(x[1],y[1]))
 		return res
+
 	def _update(self, cr, uid, data, context):
 		pool=pooler.get_pool(cr.dbname)
 		form=data['form']
@@ -257,10 +265,12 @@ class wizard_base_setup(wizard.interface):
 		if not data['form']['profile'] or data['form']['profile'] <= 0:
 			return 'company'
 		return 'charts'
+
 	def _previous(self, cr, uid, data, context):
 		if 'profile' not in data['form'] or data['form']['profile'] <= 0:
 			return 'init'
 		return 'charts'
+
 	fields={
 		'profile':{
 			'string':'Profile',
@@ -401,4 +411,5 @@ class wizard_base_setup(wizard.interface):
 			'result': {'type': 'action', 'action': _menu, 'state': 'end'}
 		},
 	}
+
 wizard_base_setup('base_setup.base_setup')
