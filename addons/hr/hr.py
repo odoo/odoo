@@ -98,12 +98,21 @@ class hr_employee(osv.osv):
 	def _state(self, cr, uid, ids, name, args, context={}):
 		result = {}
 		for id in ids:
-			cr.execute('select action from hr_attendance where employee_id=%d and action in (\'sign_in\', \'sign_out\') order by name desc limit 1', (id,))
-			res = cr.fetchone()
-			if res:
-				result[id] = res[0] == 'sign_in' and 'present' or 'absent'
-			else:
-				result[id] = 'absent'
+			result[id] = 'absent'
+		cr.execute('SELECT hr_attendance.action, hr_attendance.employee_id \
+				FROM ( \
+					SELECT MAX(name) AS name, employee_id \
+					FROM hr_attendance \
+					WHERE action in (\'sign_in\', \'sign_out\') \
+					GROUP BY employee_id \
+				) AS foo \
+				LEFT JOIN hr_attendance \
+					ON (hr_attendance.employee_id = foo.employee_id \
+						AND hr_attendance.name = foo.name) \
+				WHERE hr_attendance.employee_id \
+					in (' + ','.join([str(x) for x in ids]) + ')')
+		for res in cr.fetchall():
+			result[res[1]] = res[0] == 'sign_in' and 'present' or 'absent'
 		return result
 
 	_columns = {
