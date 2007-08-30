@@ -139,7 +139,7 @@ def init_logger():
 		handler = logging.StreamHandler(sys.stdout)
 
 	# create a format for log messages and dates
-	formatter = logging.Formatter('%(asctime)s %(levelname)s:%(name)s:%(message)s', '%a, %d %b %Y %H:%M:%S')
+	formatter = logging.Formatter('[%(asctime)s] %(levelname)s:%(name)s:%(message)s', '%a %b %d %H:%M:%S %Y')
 
 	# tell the handler to use this format
 	handler.setFormatter(formatter)
