@@ -40,8 +40,8 @@ import sys,os
 import re
 
 from mx import DateTime as mdt
-re_from = re.compile('.* from ([a-zA-Z_0-9]+) .*$');
-re_into = re.compile('.* into ([a-zA-Z_0-9]+) .*$');
+re_from = re.compile('.* from "?([a-zA-Z_0-9]+)"? .*$');
+re_into = re.compile('.* into "?([a-zA-Z_0-9]+)"? .*$');
 
 class fake_cursor:
 	nbr = 0
