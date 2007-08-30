@@ -546,59 +546,67 @@ class serialized(_column):
 		self._symbol_get = self._deserialize_func
 		super(serialized, self).__init__(string=string, **args)
 
+
 class property(function):
-	def _fnct_write(self2, self, cr, uid, id, prop, id_val, val, context=None):
+
+	def _fnct_write(self, obj, cr, uid, id, prop, id_val, val, context=None):
 		if not context:
 			context={}
 		(obj_dest,) = val
-		definition_id = self2._field_get(self, cr, uid, prop)
+		definition_id = self._field_get(cr, uid, obj._name, prop)
 
-		property = self.pool.get('ir.property')
-		nid = property.search(cr, uid, [('fields_id','=',definition_id),('res_id','=',self._name+','+str(id))])
+		property = obj.pool.get('ir.property')
+		nid = property.search(cr, uid, [('fields_id', '=', definition_id),
+			('res_id', '=', obj._name+','+str(id))])
 		while len(nid):
-			cr.execute('delete from ir_property where id=%d', (nid.pop(),))
+			cr.execute('DELETE FROM ir_property WHERE id=%d', (nid.pop(),))
 
-		nid = property.search(cr, uid, [('fields_id','=',definition_id),('res_id','=',False)])
+		nid = property.search(cr, uid, [('fields_id', '=', definition_id),
+			('res_id', '=', False)])
 		default_val = False
 		if nid:
 			default_val = property.browse(cr, uid, nid[0], context).value
 
-		company_id = self.pool.get('res.users').company_get(cr, uid, uid)
+		company_id = obj.pool.get('res.users').company_get(cr, uid, uid)
 		res = False
 		newval = (id_val and obj_dest+','+str(id_val)) or False
 		if (newval != default_val) and newval:
-			propdef = self.pool.get('ir.model.fields').browse(cr, uid, definition_id, context=context)
+			propdef = obj.pool.get('ir.model.fields').browse(cr, uid,
+					definition_id, context=context)
 			res = property.create(cr, uid, {
 				'name': propdef.name,
 				'value': newval,
-				'res_id': self._name+','+str(id),
+				'res_id': obj._name+','+str(id),
 				'company_id': company_id,
 				'fields_id': definition_id
 			}, context=context)
 		return res
 
-	def _fnct_read(self2, self, cr, uid, ids, prop, val, context=None):
+	def _fnct_read(self, obj, cr, uid, ids, prop, val, context=None):
 		if not context:
 			context={}
-		property = self.pool.get('ir.property')
-		definition_id = self2._field_get(self, cr, uid, prop)
+		property = obj.pool.get('ir.property')
+		definition_id = self._field_get(cr, uid, obj._name, prop)
 
-		nid = property.search(cr, uid, [('fields_id','=',definition_id),('res_id','=',False)])
+		nid = property.search(cr, uid, [('fields_id', '=', definition_id),
+			('res_id', '=', False)])
 		default_val = False
 		if nid:
 			d = property.browse(cr, uid, nid[0], context).value
 			default_val = (d and int(d.split(',')[1])) or False
 
-		vids = map(lambda id: self._name+','+str(id), ids)
-		nids = property.search(cr, uid, [('fields_id','=',definition_id),('res_id','in', vids)])
+		vids = [obj._name + ',' + str(id) for id in  ids]
+		nids = property.search(cr, uid, [('fields_id', '=', definition_id),
+			('res_id', 'in', vids)])
 
 		res = {}
 		for id in ids:
 			res[id]= default_val
 		for prop in property.browse(cr, uid, nids):
-			res[int(prop.res_id.split(',')[1])] = (prop.value and int(prop.value.split(',')[1])) or False
+			res[int(prop.res_id.split(',')[1])] = (prop.value and \
+					int(prop.value.split(',')[1])) or False
 
-		obj = self.pool.get(self2._obj)
+		obj = obj.pool.get(self._obj)
 		names = dict(obj.name_get(cr, uid, filter(None, res.values()), context))
 		for r in res.keys():
 			if res[r] and res[r] in names:
@@ -607,16 +615,19 @@ class property(function):
 				res[r] = False
 		return res
 
-	def _field_get(self, self2, cr, uid, prop):
+	def _field_get(self, cr, uid, model_name, prop):
 		if not self.field_id.get(cr.dbname):
-			cr.execute('select id from ir_model_fields where name=%s and model=%s', (prop, self2._name))
+			cr.execute('SELECT id \
+					FROM ir_model_fields \
+					WHERE name=%s AND model=%s', (prop, model_name))
 			res = cr.fetchone()
 			self.field_id[cr.dbname] = res and res[0]
 		return self.field_id[cr.dbname]
 
 	def __init__(self, obj_prop, **args):
 		self.field_id = {}
-		function.__init__(self, self._fnct_read, False, self._fnct_write, (obj_prop, ), **args)
+		function.__init__(self, self._fnct_read, False, self._fnct_write,
+				(obj_prop, ), **args)
 
 	def restart(self):
 		self.field_id = {}
