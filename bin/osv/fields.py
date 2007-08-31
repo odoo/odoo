@@ -385,10 +385,12 @@ class one2many(_column):
 			elif act[0]==5:
 				cr.execute('update '+_table+' set '+self._fields_id+'=null where '+self._fields_id+'=%d', (id,))
 			elif act[0]==6:
-				if not len(act[2]):
-					act[2] = [0]
-				cr.execute('update '+_table+' set '+self._fields_id+'=NULL where '+self._fields_id+'=%d and id not in ('+','.join(map(str, act[2]))+')', (id,))
-				if len(act[2]):
+				if not act[2]:
+					ids2 = [0]
+				else:
+					ids2 = act[2]
+				cr.execute('update '+_table+' set '+self._fields_id+'=NULL where '+self._fields_id+'=%d and id not in ('+','.join(map(str, ids2))+')', (id,))
+				if act[2]:
 					cr.execute('update '+_table+' set '+self._fields_id+'=%d where id in ('+','.join(map(str, act[2]))+')', (id,))
 	def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like'):
 		return obj.pool.get(self._obj).name_search(cr, uid, value, self._domain, offset, limit)
