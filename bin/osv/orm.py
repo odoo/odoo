@@ -1634,7 +1634,14 @@ class orm(object):
 						else:
 							x1 = x[1]
 						if x[0] in table._columns:
-							qu1.append('(%s.%s %s %s)' % (table._table, x[0], x1, table._columns[x[0]]._symbol_set[0]))
+							if x[1] in ('like', 'ilike'):
+
+								qu1.append('(%s.%s %s %s)' % (table._table,
+									x[0], x1, '%s'))
+							else:
+								qu1.append('(%s.%s %s %s)' % (table._table,
+									x[0], x1,
+									table._columns[x[0]]._symbol_set[0]))
 						else:
 							qu1.append('(%s.%s %s \'%s\')' % (table._table, x[0], x1, x[2]))
 
@@ -1725,7 +1732,8 @@ class orm(object):
 			return []
 		if isinstance(ids, (int, long)):
 			ids = [ids]
-		return [(r['id'], r[self._rec_name]) for r in self.read(cr, user, ids, [self._rec_name], context, load='_classic_write')]
+		return [(r['id'], str(r[self._rec_name])) for r in self.read(cr, user, ids,
+			[self._rec_name], context, load='_classic_write')]
 
 	def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):
 		if not args:
