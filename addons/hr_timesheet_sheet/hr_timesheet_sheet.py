@@ -93,22 +93,23 @@ class hr_timesheet_sheet(osv.osv):
 
 	def _total_day(self, cr, uid, ids, name, args, context):
 		result = {}
-		link_day = {}
 		day_ids = []
 		day_obj = self.pool.get('hr_timesheet_sheet.sheet.day')
 
-		for sheet in self.browse(cr, uid, ids, context=context):
-			result[sheet.id] = 0.0
-			day_ids2 = day_obj.search(cr, uid, [('sheet_id', '=', sheet.id),
-				('name', '=', sheet.date_current)])
-			if day_ids2:
-				link_day[day_ids2[0]] = sheet.id
-				day_ids.append(day_ids2[0])
+		for sheet_id in ids:
+			result[sheet_id] = 0.0
+
+		cr.execute('SELECT day.id \
+				FROM hr_timesheet_sheet_sheet_day AS day \
+				JOIN hr_timesheet_sheet_sheet AS sheet \
+					ON sheet.id = day.sheet_id \
+				WHERE day.name = sheet.date_current \
+					AND sheet.id in (' + ','.join([str(x) for x in ids]) + ')')
+		day_ids = [x[0] for x in cr.fetchall()]
+
 		field_name = name.strip('_day')
 		for day in day_obj.browse(cr, uid, day_ids, context=context):
-			if day.id in link_day:
-				sheet_id = link_day[day.id]
-				result[sheet_id] = day[field_name] or 0.0
+			result[day.sheet_id.id] = day[field_name] or 0.0
 		return result
 
 	def _total(self, cr, uid, ids, name, args, context):
@@ -158,6 +159,7 @@ class hr_timesheet_sheet(osv.osv):
 			else:
 				self.write(cr, uid, [sheet.id], {'date_current': time.strftime('%Y-%m-%d')})
 		return True
+
 	def date_previous(self, cr, uid, ids, context):
 		for sheet in self.browse(cr, uid, ids, context):
 			if DateTime.strptime(sheet.date_current, '%Y-%m-%d') <= DateTime.strptime(sheet.date_from, '%Y-%m-%d'):
@@ -167,6 +169,7 @@ class hr_timesheet_sheet(osv.osv):
 					'date_current': (DateTime.strptime(sheet.date_current, '%Y-%m-%d') + DateTime.RelativeDateTime(days=-1)).strftime('%Y-%m-%d'),
 				})
 		return True
+
 	def date_next(self, cr, uid, ids, context):
 		for sheet in self.browse(cr, uid, ids, context):
 			if DateTime.strptime(sheet.date_current, '%Y-%m-%d') >= DateTime.strptime(sheet.date_to, '%Y-%m-%d'):
@@ -176,6 +179,7 @@ class hr_timesheet_sheet(osv.osv):
 					'date_current': (DateTime.strptime(sheet.date_current, '%Y-%m-%d') + DateTime.RelativeDateTime(days=1)).strftime('%Y-%m-%d'),
 				})
 		return True
+
 	def button_dummy(self, cr, uid, ids, context):
 		for sheet in self.browse(cr, uid, ids, context):
 			if DateTime.strptime(sheet.date_current, '%Y-%m-%d') <= DateTime.strptime(sheet.date_from, '%Y-%m-%d'):
@@ -183,7 +187,7 @@ class hr_timesheet_sheet(osv.osv):
 			elif DateTime.strptime(sheet.date_current, '%Y-%m-%d') >= DateTime.strptime(sheet.date_to, '%Y-%m-%d'):
 				self.write(cr, uid, [sheet.id], {'date_current': sheet.date_to,})
 		return True
-	
+
 	def sign_in(self, cr, uid, ids, context):
 		if not self.browse(cr, uid, ids, context)[0].date_current == time.strftime('%Y-%m-%d'):
 			raise osv.except_osv('Error !', 'You can not sign in from an other date than today')
