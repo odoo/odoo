@@ -34,6 +34,9 @@ from xml import dom
 import ir
 import pooler
 
+from osv.osv import except_osv
+from osv.orm import except_orm
+
 class except_wizard(Exception):
 	def __init__(self, name, value):
 		self.name = name
@@ -137,9 +140,13 @@ class interface(netsvc.Service):
 				res['arch'] = arch
 				res['state'] = button_list
 
-		except except_wizard, e:
-			self.abortResponse(2, e.name, 'warning', e.value)
-			
+		except Exception, e:
+			if isinstance(e, except_wizard) \
+				or isinstance(e, except_osv) \
+				or isinstance(e, except_orm):
+				self.abortResponse(2, e.name, 'warning', e.value)
+			else:
+				raise
 		return res
 
 	def execute(self, db, uid, data, state='init', context=None):
