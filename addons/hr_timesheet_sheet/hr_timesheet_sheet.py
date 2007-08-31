@@ -92,25 +92,14 @@ class hr_timesheet_sheet(osv.osv):
 	_order = "id desc"
 
 	def _total_day(self, cr, uid, ids, name, args, context):
-		result = {}
-		day_ids = []
-		day_obj = self.pool.get('hr_timesheet_sheet.sheet.day')
-
-		for sheet_id in ids:
-			result[sheet_id] = 0.0
-
-		cr.execute('SELECT day.id \
-				FROM hr_timesheet_sheet_sheet_day AS day \
-				JOIN hr_timesheet_sheet_sheet AS sheet \
-					ON sheet.id = day.sheet_id \
-				WHERE day.name = sheet.date_current \
-					AND sheet.id in (' + ','.join([str(x) for x in ids]) + ')')
-		day_ids = [x[0] for x in cr.fetchall()]
-
 		field_name = name.strip('_day')
-		for day in day_obj.browse(cr, uid, day_ids, context=context):
-			result[day.sheet_id.id] = day[field_name] or 0.0
-		return result
+		cr.execute('SELECT sheet.id, day.' + field_name +' \
+				FROM hr_timesheet_sheet_sheet AS sheet \
+				LEFT JOIN hr_timesheet_sheet_sheet_day AS day \
+					ON (sheet.id = day.sheet_id \
+						AND day.name = sheet.date_current) \
+				WHERE sheet.id in (' + ','.join([str(x) for x in ids]) + ')')
+		return dict(cr.fetchall())
 
 	def _total(self, cr, uid, ids, name, args, context):
 		cr.execute('SELECT s.id, COALESCE(SUM(d.' + name + '),0) \
