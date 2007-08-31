@@ -813,7 +813,8 @@ class mrp_procurement(osv.osv):
 				'move_prod_id': res_id,
 			})
 			self.write(cr, uid, [procurement.id], {'state':'running'})
-			bom_result = self.pool.get('mrp.production').action_compute(cr, uid, [produce_id], properties=procurement.property_ids)
+			bom_result = self.pool.get('mrp.production').action_compute(cr, uid,
+					[produce_id], properties=[x.id for x in procurement.property_ids])
 			wf_service = netsvc.LocalService("workflow")
 			wf_service.trg_validate(uid, 'mrp.production', produce_id, 'button_confirm', cr)
 		return produce_id
