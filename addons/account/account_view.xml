@@ -266,6 +266,7 @@
 					<field name="sequence_id"/>
 					<field name="default_debit_account_id"/>
 					<field name="default_credit_account_id"/>
+					<field name="currency"/>
 					<field name="user_id"/>
 					<newline/>
 					<field name="centralisation"/>
@@ -315,7 +316,9 @@
 				<field name="name" select="1"/>
 				<field name="date" select="1"/>
 				<field name="journal_id" select="1" on_change="onchange_journal_id(journal_id)"/>
+				<field name="currency"/>
 				<field name="period_id" select="2"/>
+				<newline/>
 				<field name="balance_start"/>
 				<field name="balance_end_real"/>
 				<notebook colspan="4">
@@ -326,17 +329,20 @@
 							<field name="ref"/>
 							<field name="name"/>
 							<field name="type"/>
-							<field name="partner_id" on_change="onchange_partner_id(partner_id,type)"/>
-							<field name="account_id" domain="[('journal_id','=',parent.journal_id)]"/>
+							<field name="partner_id"
+								on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
+							<field name="account_id"
+								domain="[('journal_id','=',parent.journal_id)]"/>
 							<field name="amount"/>
-							<field name="reconcile_id" context="{'partner_id':partner_id,'amount':amount,'account_id':account_id}"/> 
+							<field name="reconcile_id"
+								context="{'partner_id': partner_id, 'amount': amount, 'account_id': account_id, 'currency_id': parent.currency}"/> 
 						</tree>
 						<form string="Statement lines">
 							<field name="date"/>
 							<field name="name"/>
 							<field name="type"/>
-							<field name="partner_id" on_change="onchange_partner_id(partner_id,type)"/>
-							<field name="account_id" domain="[('journal_id','=',parent.journal_id), ('type', '&lt;&gt;', 'view')]"/>
+							<field name="partner_id" on_change="onchange_partner_id(partner_id, type)"/>
+							<field name="account_id" domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]"/>
 							<field name="amount"/>
 							<field name="reconcile_id" context="{'partner_id':partner_id,'amount':amount,'account_id':account_id}"/> 
 							<field name="ref"/>
@@ -344,7 +350,8 @@
 							<field name="note" nolabel="1" colspan="4"/>
 						</form>
 					</field>
-				</page><page string="Real Entries">
+				</page>
+				<page string="Real Entries">
 					<field name="move_line_ids" colspan="4" nolabel="1"/>
 				</page>
 				</notebook>
@@ -384,10 +391,19 @@
 		<field name="arch" type="xml">
 			<form string="Reconcile">
 				<field name="name" select="1"/>
+				<newline/>
+				<field name="total_second_amount"/>
+				<field name="total_second_currency"/>
+				<newline/>
 				<field name="total_amount"/>
+				<field name="total_currency"/>
+				<newline/>
 				<separator colspan="4" string="Entries"/>
-				<field name="line_ids" view_mode="tree" colspan="4" nolabel="1" domain="[('partner_id','=',context.get('partner_id', False)),('state','=','valid'),('account_id','=',context.get('account_id', False)),('reconcile_id', '=', False)]">
-				</field>
+				<field name="line_ids"
+					view_mode="tree"
+					colspan="4"
+					nolabel="1"
+					domain="[('partner_id','=',context.get('partner_id', False)),('state','=','valid'),('account_id','=',context.get('account_id', False)),('reconcile_id', '=', False)]"/>
 				<field name="line_new_ids" colspan="4" nolabel="1">
 					<tree string="Write-Off" editable="bottom">
 						<field name="account_id"/>

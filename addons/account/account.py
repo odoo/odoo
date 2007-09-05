@@ -383,6 +383,7 @@ class account_journal(osv.osv):
 		'sequence_id': fields.many2one('ir.sequence', 'Entry Sequence', help="The sequence gives the display order for a list of journals", required=True),
 		'user_id': fields.many2one('res.users', 'User', help="The responsible user of this journal"),
 		'groups_id': fields.many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', 'Groups'),
+		'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
 	}
 	_defaults = {
 		'active': lambda *a: 1,
