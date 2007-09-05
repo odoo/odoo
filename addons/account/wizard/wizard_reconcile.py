@@ -49,24 +49,31 @@ _transaction_fields = {
 	'writeoff': {'string':'Write-Off amount', 'type':'float', 'readonly':True},
 }
 
-def _trans_rec_get(self, cr, uid, data, context={}):
-	service = netsvc.LocalService("object_proxy")
-	res = filter(lambda x: not x['reconcile_id'], service.execute(cr.dbname, uid, 'account.move.line', 'read', data['ids']))
+def _trans_rec_get(self, cr, uid, data, context=None):
+	pool = pooler.get_pool(cr.dbname)
+	account_move_line_obj = pool.get('account.move.line')
+
 	credit = debit = 0
 	account_id = False
-	for trans in res:
-		credit += trans['credit']
-		debit += trans['debit']
-		account_id = trans['account_id'][0]
-	return {'trans_nbr': len(res), 'account_id': account_id, 'credit': credit, 'debit': debit, 'writeoff': debit - credit}
+	count = 0
+	for line in account_move_line_obj.browse(cr, uid, data['ids'], context=context):
+		if not line.reconcile_id and not line.reconcile_id.id:
+			count += 1
+			credit += line.credit
+			debit += line.debit
+			account_id = line.account_id.id
+	return {'trans_nbr': count, 'account_id': account_id, 'credit': credit, 'debit': debit, 'writeoff': debit - credit}
 
-def _trans_rec_reconcile(self, cr, uid, data, context):
-	service = netsvc.LocalService("object_proxy")
+def _trans_rec_reconcile(self, cr, uid, data, context=None):
+	pool = pooler.get_pool(cr.dbname)
+	account_move_line_obj = pool.get('account.move.line')
+
 	form = data['form']
 	account_id = form.get('writeoff_acc_id', False)
 	period_id = form.get('period_id', False)
 	journal_id = form.get('journal_id', False)
-	service.execute(cr.dbname, uid, 'account.move.line', 'reconcile', data['ids'], 'manual', account_id, period_id, journal_id, context)
+	account_move_line_obj.reconcile(cr, uid, data['ids'], 'manual', account_id,
+			period_id, journal_id, context=context)
 	return {}
 
 def _wo_check(self, cr, uid, data, context):
