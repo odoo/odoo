@@ -295,6 +295,9 @@ class account_move_line(osv.osv):
 		account_id = False
 		partner_id = False
 		for line in unrec_lines:
+			if line.state <> 'valid':
+				raise osv.except_osv('Error',
+						'Entry "%s" is not valid !' % line.name)
 			credit += line['credit']
 			debit += line['debit']
 			account_id = line['account_id']['id']
@@ -302,7 +305,10 @@ class account_move_line(osv.osv):
 		writeoff = debit - credit
 		date = time.strftime('%Y-%m-%d')
 
-		cr.execute('SELECT account_id,reconcile_id FROM account_move_line WHERE id IN ('+id_set+') GROUP BY account_id,reconcile_id')
+		cr.execute('SELECT account_id, reconcile_id \
+				FROM account_move_line \
+				WHERE id IN ('+id_set+') \
+				GROUP BY account_id,reconcile_id')
 		r = cr.fetchall()
 #TODO: move this check to a constraint in the account_move_reconcile object
 		if len(r) != 1:
@@ -311,7 +317,8 @@ class account_move_line(osv.osv):
 		if not account.reconcile:
 			raise osv.except_osv('Error', 'The account is not defined to be reconcile !')
 		if r[0][1] != None:
-			raise Exception('Some entries are already reconciled !')
+			raise osv.except_osv('Error', 'Some entries are already reconciled !')
+
 		if not self.pool.get('res.currency').is_zero(cr, uid, account.company_id.currency_id, writeoff):
 			if not writeoff_acc_id:
 				raise osv.except_osv('Warning', 'You have to provide an account for the write off entry !')
