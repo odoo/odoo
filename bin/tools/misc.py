@@ -127,8 +127,9 @@ def find_in_path(name):
 	path = [dir for dir in os.environ['PATH'].split(sep)
 			if os.path.isdir(dir)]
 	for dir in path:
-		if name in os.listdir(dir):
-			return os.path.join(dir, name)
+		val = os.path.join(dir, name)
+		if os.path.isfile(val) or os.path.islink(val):
+			return val
 	return None
 
 def find_pg_tool(name):
