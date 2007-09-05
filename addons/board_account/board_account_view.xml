@@ -29,7 +29,7 @@
 
 
 		<act_window name="Accounts to invoice"
-			domain="[('state','&lt;&gt;','close'),('partner_id','&lt;&gt;',False)]"
+			domain="[('state','&lt;&gt;','close'),('partner_id','&lt;&gt;',False),('to_invoice', '&lt;&gt;', False)]"
 			res_model="account.analytic.account"
 			src_model="res.users"
 			view_type="form"

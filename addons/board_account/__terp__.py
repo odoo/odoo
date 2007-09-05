@@ -11,7 +11,6 @@
 		"report_analytic",
 		"report_analytic_line",
 		"account_report",
-		"hr_timesheet_sheet"
 	],
 	"demo_xml":["board_account_demo.xml"],
 	"update_xml":["board_account_view.xml"],
