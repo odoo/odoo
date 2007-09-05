@@ -411,9 +411,12 @@ class account_bank_statement_reconcile(osv.osv):
 
 		company_currency_id = res_users_obj.browse(cursor, user, user,
 				context=context).company_id.currency_id.id
-		currency_id = context.get('currency_id', company_currency_id)
 
 		for o in self.browse(cursor, user, ids, context=context):
+			if o.statement_line:
+				currency_id = o.statement_line[0].statement_id.currency.id
+			else:
+				currency_id = company_currency_id
 			res.append((o.id, '[%.2f/%.2f]' % (
 				res_currency_obj.compute(cursor, user, company_currency_id,
 					currency_id, o.total_entry, context=context),
@@ -443,6 +446,8 @@ class account_bank_statement_reconcile(osv.osv):
 		'total_balance': fields.function(_total_balance, method=True,
 			string='Balance'),
 		#line_ids define in account.py
+		'statement_line': fields.one2many('account.bank.statement.line',
+			 'reconcile_id', 'Bank Statement Line'),
 	}
 	_defaults = {
 		'name': lambda *a: time.strftime('%Y-%m-%d'),
