@@ -86,7 +86,7 @@ class Service(object):
 		self._response_process=None
 		self._response=s(self._response_process_id)
 
-	def abortResponse(self,error, description, origin, details):
+	def abortResponse(self, error, description, origin, details):
 		import tools
 		if not tools.config['debug_mode']:
 			raise Exception("%s -- %s\n\n%s"%(origin,description,details))
@@ -208,10 +208,9 @@ class GenericXMLRPCRequestHandler:
 			if res!=None:
 				r=res
 			return r
-		except Exception,e:
-			logger = Logger()
-			tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
-			logger.notifyChannel("web-services", LOG_ERROR, 'Exception in call: ' + tb_s)
+		except Exception, e:
+			tb_s = reduce(lambda x, y: x+y, traceback.format_exception(
+				sys.exc_type, sys.exc_value, sys.exc_traceback))
 			s=str(e)
 			import tools
 			if tools.config['debug_mode']:
@@ -320,9 +319,7 @@ class TinySocketClientThread(threading.Thread):
 					r=res
 				ts.mysend(r)
 			except Exception, e:
-				logger = Logger()
 				tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
-				logger.notifyChannel("web-services", LOG_ERROR, 'Exception in call: ' + tb_s)
 				s=str(e)
 				import tools
 				if tools.config['debug_mode']:

@@ -36,11 +36,14 @@ import pooler
 
 from osv.osv import except_osv
 from osv.orm import except_orm
+from netsvc import Logger, LOG_ERROR
+import sys
 
 class except_wizard(Exception):
 	def __init__(self, name, value):
 		self.name = name
 		self.value = value
+		self.args = (name, value)
 
 class interface(netsvc.Service):
 	states = {}
@@ -82,9 +85,6 @@ class interface(netsvc.Service):
 			lang = context.get('lang', False)
 			if result_def['type'] == 'action':
 				res['action'] = result_def['action'](self, cr, uid, data, context)
-			elif result_def['type'] == 'choice':
-				next_state = result_def['next_state'](self, cr, uid, data, context)
-				return self.execute_cr(cr, uid, data, next_state, context)
 			elif result_def['type'] == 'form':
 				fields = copy.copy(result_def['fields'])
 				arch = copy.copy(result_def['arch'])
@@ -146,7 +146,17 @@ class interface(netsvc.Service):
 				or isinstance(e, except_orm):
 				self.abortResponse(2, e.name, 'warning', e.value)
 			else:
+				import traceback
+				tb_s = reduce(lambda x, y: x+y, traceback.format_exception(
+					sys.exc_type, sys.exc_value, sys.exc_traceback))
+				logger = Logger()
+				logger.notifyChannel("web-services", LOG_ERROR,
+						'Exception in call: ' + tb_s)
 				raise
+
+		if result_def['type'] == 'choice':
+			next_state = result_def['next_state'](self, cr, uid, data, context)
+			return self.execute_cr(cr, uid, data, next_state, context)
 		return res
 
 	def execute(self, db, uid, data, state='init', context=None):

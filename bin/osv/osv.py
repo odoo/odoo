@@ -34,8 +34,10 @@ import orm
 import netsvc
 import pooler
 import copy
+import sys
 
 import psycopg
+from netsvc import Logger, LOG_ERROR
 
 module_list = []
 module_class_list = {}
@@ -101,7 +103,14 @@ class osv_pool(netsvc.Service):
 					self.abortResponse(1, 'Constraint Error', 'warning',
 							self._sql_error[key])
 			self.abortResponse(1, 'Integrity Error', 'warning', inst[0])
-
+		except Exception, e:
+			import traceback
+			tb_s = reduce(lambda x, y: x+y, traceback.format_exception(
+				sys.exc_type, sys.exc_value, sys.exc_traceback))
+			logger = Logger()
+			logger.notifyChannel("web-services", LOG_ERROR,
+					'Exception in call: ' + tb_s)
+			raise
 
 	def execute(self, db, uid, obj, method, *args, **kw):
 		db, pool = pooler.get_db_and_pool(db)
