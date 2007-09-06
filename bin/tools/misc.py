@@ -140,11 +140,15 @@ def find_pg_tool(name):
 
 def exec_pg_command(name, *args):
 	prog = find_pg_tool(name)
+	if not prog:
+		raise Exception('Couldn\'t find %s' % name)
 	args2 = (os.path.basename(prog),) + args
 	return os.spawnv(os.P_WAIT, prog, args2)
 
 def exec_pg_command_pipe(name, *args):
 	prog = find_pg_tool(name)
+	if not prog:
+		raise Exception('Couldn\'t find %s' % name)
 	if os.name == "nt":
 		cmd = '"' + prog + '" ' + ' '.join(args)
 	else:
@@ -154,7 +158,7 @@ def exec_pg_command_pipe(name, *args):
 def exec_command_pipe(name, *args):
 	prog = find_in_path(name)
 	if not prog:
-		raise
+		raise Exception('Couldn\'t find %s' % name)
 	if os.name == "nt":
 		cmd = '"'+prog+'" '+' '.join(args)
 	else:
