@@ -656,11 +656,11 @@ class sale_order_line(osv.osv):
 		if price is False:
 			raise osv.except_osv('No valid pricelist line found !', "Couldn't find a pricelist line matching this product and quantity.\nYou have to change either the product, the quantity or the pricelist.")
 		res = self.pool.get('product.product').read(cr, uid, [product], context=context)[0]
-#		dt = (DateTime.now() + DateTime.RelativeDateTime(days=res['sale_delay'] or 0.0)).strftime('%Y-%m-%d')
 
-		result = {'price_unit': price, 'type':res['procure_method'], 'delay':(res['sale_delay'] or 0.0), 'notes':res['description_sale']}
+		result = {'price_unit': price, 'type':res['procure_method'], 'notes':res['description_sale']}
 
-		if update_tax:
+		if update_tax: #The quantity only have changed
+			result['delay'] = (res['sale_delay'] or 0.0)
 			taxes = self.pool.get('account.tax').browse(cr, uid, res['taxes_id'])
 			taxep = None
 			if partner_id:
