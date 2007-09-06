@@ -321,7 +321,7 @@ class crm_case(osv.osv):
 							base = mx.DateTime.strptime(case.date_action_last, '%Y-%m-%d %H:%M:%S')
 						else:
 							base = mx.DateTime.strptime(case.create_date[:19], '%Y-%m-%d %H:%M:%S')
-					elif action.trg_date_type=='deadline':
+					elif action.trg_date_type=='deadline' and case.date_deadline:
 						base = mx.DateTime.strptime(case.date_deadline, '%Y-%m-%d')
 					if base:
 						fnct = {
