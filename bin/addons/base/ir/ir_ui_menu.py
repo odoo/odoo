@@ -126,7 +126,7 @@ class ir_ui_menu(osv.osv):
 		'parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', select=True),
 		'groups_id': many2many_unique('res.groups', 'ir_ui_menu_group_rel', 'menu_id', 'gid', 'Groups'),
 		'complete_name': fields.function(_get_full_name, method=True, string='Complete Name', type='char', size=128),
-		'icon': fields.selection(lambda *a: icons, 'Icon', size=64)
+		'icon': fields.selection(icons, 'Icon', size=64)
 	}
 	_defaults = {
 		'icon' : lambda *a: 'STOCK_OPEN',
