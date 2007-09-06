@@ -46,51 +46,70 @@ invoice_fields = {
 def _makeInvoices(self, cr, uid, data, context):
 	pool = pooler.get_pool(cr.dbname)
 	res = False
-	factures = {}
+	invoices = {}
 
 	#TODO: merge with sale.py/make_invoice
 	def make_invoice(order, lines):
 		a = order.partner_id.property_account_receivable.id
+		if order.partner_id and order.partner_id.property_payment_term.id:
+			pay_term = order.partner_id.property_payment_term.id
+		else:
+			pay_term = False
 		inv = {
 			'name': order.name,
-			'origin': 'SO:'+str(order.id)+':'+order.name,
+			'origin': order.name,
+			'type': 'out_invoice',
 			'reference': "P%dSO%d" % (order.partner_id.id, order.id),
 			'account_id': a,
 			'partner_id': order.partner_id.id,
 			'address_invoice_id': order.partner_invoice_id.id,
 			'address_contact_id': order.partner_invoice_id.id,
-			'project_id': order.project_id.id,
 			'invoice_line': [(6,0,lines)],
 			'currency_id' : order.pricelist_id.currency_id.id,
+			'comment': order.note,
+			'payment_term': pay_term,
 		}
-		inv_id = pool.get('account.invoice').create(cr, uid, inv, {'type' : 'out_invoice'})
+		inv_id = pool.get('account.invoice').create(cr, uid, inv)
 		return inv_id
 
 	for line in pool.get('sale.order.line').browse(cr,uid,data['ids']):
 		if not line.invoiced:
-			if not line.order_id.id in factures:
-				factures[line.order_id.id] = []
-			line_id = pool.get('sale.order.line').invoice_line_create(cr, uid, [line.id])
+			if not line.order_id.id in invoices:
+				invoices[line.order_id.id] = []
+			line_id = pool.get('sale.order.line').invoice_line_create(cr, uid,
+					[line.id])
 			for lid in line_id:
-				factures[line.order_id.id].append((line, lid))
-			pool.get('sale.order.line').write(cr, uid, [line.id], {'invoiced':True})
+				invoices[line.order_id.id].append((line, lid))
+			pool.get('sale.order.line').write(cr, uid, [line.id],
+					{'invoiced': True})
 
-	for result in factures.values():
+	for result in invoices.values():
 		order = result[0][0].order_id
 		il = map(lambda x: x[1], result)
 		res = make_invoice(order, il)
-		cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%d,%d)', (order.id, res))
+		cr.execute('INSERT INTO sale_order_invoice_rel \
+				(order_id,invoice_id) values (%d,%d)', (order.id, res))
 	return {}
+
 
 class line_make_invoice(wizard.interface):
 	states = {
 		'init' : {
-			'actions' : [],
-			'result' : {'type' : 'form', 'arch' : invoice_form, 'fields' : invoice_fields, 'state' : [('end', 'Cancel'),('invoice', 'Create invoices') ]}
+			'actions': [],
+			'result': {
+				'type': 'form',
+				'arch': invoice_form,
+				'fields': invoice_fields,
+				'state': [
+					('end', 'Cancel'),
+					('invoice', 'Create invoices')
+				]
+			}
 		},
 		'invoice' : {
 			'actions' : [_makeInvoices],
-			'result' : {'type':'state', 'state':'end'}
+			'result' : {'type': 'state', 'state': 'end'}
 		},
 	}
+
 line_make_invoice("sale.order.line.make_invoice")
