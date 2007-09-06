@@ -986,6 +986,23 @@ class orm(object):
 					upd_todo.append(field)
 			else:
 				updend.append(field)
+			if hasattr(self._columns[field], 'selection') and vals[field]:
+				if isinstance(self._columns[field], fields.reference):
+					val = vals[field].split(',')[0]
+				else:
+					val = vals[field]
+				if isinstance(self._columns[field].selection, (tuple, list)):
+					if val not in dict(self._columns[field].selection):
+						raise except_orm('ValidateError',
+						'The value "%s" for the field "%s" is not in the selection' \
+								% (vals[field], field))
+				else:
+					if val not in dict(self._columns[field].selection(
+						self, cr, user, context=context)):
+						raise except_orm('ValidateError',
+						'The value "%s" for the field "%s" is not in the selection' \
+								% (vals[field], field))
+
 		if self._log_access:
 			upd0.append('write_uid=%d')
 			upd0.append('write_date=now()')
@@ -1099,6 +1116,22 @@ class orm(object):
 				upd2.append(self._columns[field]._symbol_set[1](vals[field]))
 			else:
 				upd_todo.append(field)
+			if hasattr(self._columns[field], 'selection') and vals[field]:
+				if isinstance(self._columns[field], fields.reference):
+					val = vals[field].split(',')[0]
+				else:
+					val = vals[field]
+				if isinstance(self._columns[field].selection, (tuple, list)):
+					if val not in dict(self._columns[field].selection):
+						raise except_orm('ValidateError',
+						'The value "%s" for the field "%s" is not in the selection' \
+								% (vals[field], field))
+				else:
+					if val not in dict(self._columns[field].selection(
+						self, cr, user, context=context)):
+						raise except_orm('ValidateError',
+						'The value "%s" for the field "%s" is not in the selection' \
+								% (vals[field], field))
 		if self._log_access:
 			upd0 += ',create_uid,create_date'
 			upd1 += ',%d,now()'
