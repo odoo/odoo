@@ -63,7 +63,7 @@ def _makeInvoices(self, cr, uid, data, context):
 			'invoice_line': [(6,0,lines)],
 			'currency_id' : order.pricelist_id.currency_id.id,
 		}
-		inv_id = pool.get('account.invoice').create(cr, uid, inv, {'type' : 'customer_invoice'})
+		inv_id = pool.get('account.invoice').create(cr, uid, inv, {'type' : 'out_invoice'})
 		return inv_id
 
 	for line in pool.get('sale.order.line').browse(cr,uid,data['ids']):
