@@ -264,7 +264,8 @@ class xml_import(object):
 			keyword = str(rec.getAttribute('keyword') or 'client_action_multi')
 			keys = [('action',keyword),('res_model',model)]
 			value = 'ir.actions.wizard,'+str(id)
-			replace = rec.hasAttribute('replace') and rec.getAttribute("replace")
+			replace = rec.hasAttribute('replace') and \
+					rec.getAttribute("replace") or True
 			self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, string, [model], value, replace=replace, isobject=True, xml_id=xml_id)
 		return False
 
