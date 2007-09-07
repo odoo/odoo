@@ -10,6 +10,7 @@
 		<field name="planned_hours">584.0</field>
 		<field name="warn_manager">1</field>
 		<field name="name">Tiny ERP Integration</field>
+		<field name="manager" ref="base.user_admin"/>
 	</record>
 	<record id="project_project_21" model="project.project">
 		<field name="planned_hours">216.0</field>
@@ -18,6 +19,7 @@
 		<field name="parent_id" ref="project_project_9"/>
 		<field name="name">Study + Prototype</field>
 		<field name="category_id" search="[('name','=', 'Seagate P1')]" model="account.analytic.account"/>
+		<field name="manager" ref="base.user_admin"/>
 	</record>
 	<record id="project_project_22" model="project.project">
 		<field name="planned_hours">264.0</field>
@@ -25,6 +27,7 @@
 		<field name="parent_id" ref="project_project_9"/>
 		<field name="name">Specific Developements</field>
 		<field name="category_id" search="[('name','=', 'Seagate P1')]" model="account.analytic.account"/>
+		<field name="manager" ref="base.user_admin"/>
 	</record>
 	<record id="project_project_23" model="project.project">
 		<field name="planned_hours">104.0</field>
@@ -32,6 +35,7 @@
 		<field name="parent_id" ref="project_project_9"/>
 		<field name="name">Install, data import, configuration</field>
 		<field name="category_id" search="[('name','=', 'Seagate P1')]" model="account.analytic.account"/>
+		<field name="manager" ref="base.user_admin"/>
 	</record>
 
 	<record id="project_task_116" model="project.task">
