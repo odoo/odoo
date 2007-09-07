@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2005-2007 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -41,9 +41,9 @@ intro_form = '''<?xml version="1.0"?>
 
 intro_fields = {
 	'text': {
-		'string':'Introduction', 
-		'type':'text', 
-		'readonly':True, 
+		'string': 'Introduction',
+		'type': 'text',
+		'readonly': True,
 		'default': lambda *args: """This system must be used with the Tiny OpenOffice plugin. If you
 did not installed yet, you can find this package on:
 	http://tinyerp.com
@@ -53,12 +53,15 @@ in OpenOffice. After having modified it, you will be able to reupload
 it to the Tiny ERP server.
 """},
 	'operation': {
-		'string':'Operation', 
-		'type':'selection',
-		'selection':[('create','Create a new report'),('modify','Modify an existing report')],
-		'size':32,
-		'required':True, 
-		'default':lambda *args: 'create'
+		'string': 'Operation',
+		'type': 'selection',
+		'selection': [
+			('create','Create a new report'),
+			('modify','Modify an existing report')
+			],
+		'size': 32,
+		'required': True,
+		'default': lambda *args: 'create',
 	},
 }
 
@@ -70,11 +73,11 @@ get_form = '''<?xml version="1.0"?>
 
 get_fields = {
 	'report_id': {
-		'string':'Report', 
-		'type':'many2one', 
-		'relation':'ir.actions.report.xml', 
-		'required':True,
-		'domain': [('report_sxw_content','<>',False)]
+		'string': 'Report',
+		'type': 'many2one',
+		'relation': 'ir.actions.report.xml',
+		'required': True,
+		'domain': [('report_sxw_content','<>',False)],
 	},
 }
 
@@ -90,15 +93,15 @@ get_form_result = '''<?xml version="1.0"?>
 
 get_form_fields = {
 	'report_id': {
-		'string':'Report', 
-		'type':'many2one', 
-		'relation':'ir.actions.report.xml', 
-		'readonly':True,
+		'string': 'Report',
+		'type': 'many2one',
+		'relation': 'ir.actions.report.xml',
+		'readonly': True,
 	},
 	'file_sxw': {
-		'string':'Your .SXW file', 
-		'type':'binary', 
-		'readonly':True
+		'string': 'Your .SXW file',
+		'type': 'binary',
+		'readonly': True,
 	}
 }
 
@@ -123,18 +126,21 @@ send_form_arch = '''<?xml version="1.0"?>
 
 send_form_fields = {
 	'report_id': {
-		'string':'Report', 
-		'type':'many2one', 
-		'relation':'ir.actions.report.xml', 
-		'required':True,
+		'string': 'Report',
+		'type': 'many2one',
+		'relation': 'ir.actions.report.xml',
+		'required': True,
 		'domain': [('report_sxw_content','<>',False)]
 	},
 	'file_sxw': {
-		'string':'Your .SXW file', 
-		'type':'binary', 
-		'required':True
+		'string': 'Your .SXW file',
+		'type': 'binary',
+		'required': True
 	}
 }
+
+def _get_default(obj, cursor, user, data, context):
+	return {'report_id': data['id']}
 
 
 class base_report_designer_modify(wizard.interface):
@@ -160,24 +166,24 @@ class base_report_designer_modify(wizard.interface):
 
 	states = {
 		'init': {
-			'actions': [], 
+			'actions': [],
 			'result': {
-				'type':'form', 
-				'arch':intro_form,
-				'fields':intro_fields, 
-				'state':[
+				'type': 'form',
+				'arch': intro_form,
+				'fields': intro_fields,
+				'state': [
 					('end','Cancel'),
 					('get_form','Modify a report')
 				]
 			}
 		},
 		'get_form': {
-			'actions': [],
+			'actions': [_get_default],
 			'result': {
-				'type':'form', 
-				'arch':get_form,
-				'fields':get_fields, 
-				'state':[
+				'type': 'form',
+				'arch': get_form,
+				'fields': get_fields,
+				'state': [
 					('end','Cancel'),
 					('get_form_result', 'Continue'),
 				]
@@ -186,10 +192,10 @@ class base_report_designer_modify(wizard.interface):
 		'get_form_result': {
 			'actions': [_get_report],
 			'result': {
-				'type':'form', 
-				'arch':get_form_result,
-				'fields':get_form_fields, 
-				'state':[
+				'type': 'form',
+				'arch': get_form_result,
+				'fields': get_form_fields,
+				'state': [
 					('end','Close'),
 					('send_form', 'Upload the modified report'),
 				]
@@ -198,10 +204,10 @@ class base_report_designer_modify(wizard.interface):
 		'send_form': {
 			'actions': [_upload_report_clear],
 			'result': {
-				'type':'form', 
-				'arch':send_form_arch,
-				'fields':send_form_fields, 
-				'state':[
+				'type': 'form',
+				'arch': send_form_arch,
+				'fields': send_form_fields,
+				'state': [
 					('end','Close'),
 					('send_form_result', 'Update the report'),
 				]
@@ -210,14 +216,15 @@ class base_report_designer_modify(wizard.interface):
 		'send_form_result': {
 			'actions': [_upload_report],
 			'result': {
-				'type':'form', 
-				'arch':send_form_result_arch,
-				'fields':send_form_result_fields, 
-				'state':[
+				'type': 'form',
+				'arch': send_form_result_arch,
+				'fields': send_form_result_fields,
+				'state': [
 					('end','Close'),
 				]
 			}
 		},
 	}
+
 base_report_designer_modify('base_report_designer.modify')
 
