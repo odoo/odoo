@@ -79,15 +79,12 @@ class wizard_close(wizard.interface):
 		partner_id = task.partner_id or task.project_id.partner_id
 		if partner_id and partner_id.address[0].email:
 			email = partner_id.address[0].email
-		return {'description': task.cust_desc or task.description, 'email':email}
+		return {'description': task.description, 'email':email}
 		
 	def _data_send(self, cr, uid, data, context):
 		task_obj = pooler.get_pool(cr.dbname).get('project.task')
 		if data['form']['email']:
 			description = data['form'].get('description', False)
-			if description:
-				val = {'cust_desc': description}
-				task_obj.write(cr, uid, [data['ids'][0]], val)
 			email_send(cr, uid, data['ids'], data['form']['email'], data['form']['description'])
 		return {}
 

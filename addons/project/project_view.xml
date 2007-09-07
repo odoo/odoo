@@ -77,11 +77,12 @@
 
 											<group col="11" colspan="4">
 											 <field name="state" select="1"/>
-											 <button name="do_draft" string="Set to draft" states="open" type="object"/>
+											 <button name="do_draft" string="Set Draft" states="open" type="object"/>
 											 <button name="do_open" string="Open task" states="pending,draft" type="object"/>
 											 <button name="do_reopen" string="Re-open" states="done,cancelled" type="object"/>
 											 <button name="do_pending" states="open" string="Set pending" type="object"/>
 											 <button name="%(wizard_close_task)d" states="pending,open" string="Done" type="action"/>
+											 <button name="%(wizard_delegate_task)d" states="pending,open" string="Delegate" type="action"/>
 											 <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object"/>
 											</group>
 										</page>
@@ -93,12 +94,21 @@
 											<separator string="Notes" colspan="4"/>
 											<field name="invoice_id" readonly="True" colspan="4"/>
 											<field name="notes" colspan="4" nolabel="1"/>
-											<separator string="Customer Description" colspan="4"/>
-											<field name="cust_desc" colspan="4"  nolabel="1"/>
 											<newline/>
 											<field name="type" />
 											<field name="billable" select="1"/>
 											<field name="start_sequence"/>
+											<field name="child_ids" colspan="4" nolabel="1">
+												<tree string="Delegated tasks">
+													<field name="name"/>
+													<field name="user_id"/>
+													<field name="date_deadline"/>
+													<field name="planned_hours" widget="float_time"/>
+													<field name="effective_hours" widget="float_time"/>
+													<field name="state"/>
+												</tree>
+											</field>
+											<field name="parent_id" colspan="4"/>
 										</page>
 									</notebook>
 								</form>
@@ -298,10 +308,11 @@
 							<newline/>
 							<group col="11" colspan="4">
 								<field name="state" select="2"/>
-								<button name="do_draft" string="Set to draft" states="open" type="object"/>
-								<button name="do_open" string="Open task" states="pending,draft" type="object"/>
+								<button name="do_draft" string="Set Draft" states="open" type="object"/>
+								<button name="do_open" string="Open" states="pending,draft" type="object"/>
 								<button name="do_reopen" string="Re-open" states="done,cancelled" type="object"/>
-								<button name="do_pending" states="open" string="Set pending" type="object"/>
+								<button name="do_pending" states="open" string="Set Pending" type="object"/>
+								<button name="%(wizard_delegate_task)d" states="pending,open" string="Delegate" type="action"/>
 								<button name="%(wizard_close_task)d" states="pending,open" string="Done" type="action"/>
 								<button name="do_cancel" states="draft,open,pending" string="Cancel" type="object"/>
 
@@ -320,8 +331,17 @@
 							<field name="billable" select="2"/>
 							<separator colspan="4" string="Notes"/>
 							<field colspan="4" name="notes" nolabel="1"/>
-							<separator colspan="4" string="Customer Description"/>
-							<field colspan="4" name="cust_desc" nolabel="1"/>
+							<field name="child_ids" colspan="4" nolabel="1">
+								<tree string="Delegated tasks">
+									<field name="name"/>
+									<field name="user_id"/>
+									<field name="date_deadline"/>
+									<field name="planned_hours" widget="float_time"/>
+									<field name="effective_hours" widget="float_time"/>
+									<field name="state"/>
+								</tree>
+							</field>
+							<field name="parent_id" colspan="4"/>
 						</page>
 					</notebook>
 				</form>

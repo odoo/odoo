@@ -93,7 +93,7 @@ class project(osv.osv):
 		'name': fields.char("Project name", size=128, required=True),
 		'active': fields.boolean('Active'),
 		'category_id': fields.many2one('account.analytic.account','Analytic Account'),
-		'priority': fields.integer('Priority'),
+		'priority': fields.integer('Sequence'),
 		'manager': fields.many2one('res.users', 'Project manager'),
 		'warn_manager': fields.boolean('Warn manager'),
 		'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project members'),
@@ -167,6 +167,7 @@ project_task_type()
 class task(osv.osv):
 	_name = "project.task"
 	_description = "Task"
+	_date_name = "date_deadline"
 	def _hours_effect(self, cr, uid, ids, name, args, context):
 		task_set = ','.join(map(str, ids))
 		cr.execute(("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id in (%s) GROUP BY task_id") % (task_set,))
@@ -181,8 +182,7 @@ class task(osv.osv):
 		'name': fields.char('Task summary', size=128, required=True),
 		'active': fields.boolean('Active'),
 		'description': fields.text('Description'),
-		'cust_desc': fields.text("Description for the customer"),
-		'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Priority'),
+		'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Importance'),
 		'sequence': fields.integer('Sequence'),
 		'type': fields.many2one('project.task.type', 'Type'),
 		'state': fields.selection([('draft', 'Draft'),('open', 'Open'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State'),
@@ -190,6 +190,8 @@ class task(osv.osv):
 		'date_deadline': fields.datetime('Deadline'),
 		'date_close': fields.datetime('Date Closed', readonly=True),
 		'project_id': fields.many2one('project.project', 'Project', ondelete='cascade'),
+		'parent_id': fields.many2one('project.task', 'Parent Task'),
+		'child_ids': fields.one2many('project.task', 'parent_id', 'Delegated Tasks'),
 		'notes': fields.text('Notes'),
 		'start_sequence': fields.boolean('Wait for previous sequences'),
 		'planned_hours': fields.float('Planned hours'),
@@ -229,6 +231,9 @@ class task(osv.osv):
 						'ref_doc2': 'project.project,%d'% (project.id,),
 					})
 			self.write(cr, uid, [task.id], {'state': 'done', 'date_close':time.strftime('%Y-%m-%d %H:%M:%S'), 'progress': 100})
+			if task.parent_id and task.parent_id.state in ('pending','draft'):
+				self.do_reopen(cr, uid, [task.parent_id.id])
+
 			if task.procurement_id:
 				wf_service = netsvc.LocalService("workflow")
 				wf_service.trg_validate(uid, 'mrp.procurement', task.procurement_id.id, 'subflow.done', cr)

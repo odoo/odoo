@@ -29,4 +29,5 @@
 
 import billing
 import close_task
+import task_delegate
 
