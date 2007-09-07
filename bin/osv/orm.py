@@ -986,7 +986,9 @@ class orm(object):
 					upd_todo.append(field)
 			else:
 				updend.append(field)
-			if hasattr(self._columns[field], 'selection') and vals[field]:
+			if field in self._columns \
+					and hasattr(self._columns[field], 'selection') \
+					and vals[field]:
 				if isinstance(self._columns[field], fields.reference):
 					val = vals[field].split(',')[0]
 				else:
@@ -1116,7 +1118,9 @@ class orm(object):
 				upd2.append(self._columns[field]._symbol_set[1](vals[field]))
 			else:
 				upd_todo.append(field)
-			if hasattr(self._columns[field], 'selection') and vals[field]:
+			if field in self._columns \
+					and hasattr(self._columns[field], 'selection') \
+					and vals[field]:
 				if isinstance(self._columns[field], fields.reference):
 					val = vals[field].split(',')[0]
 				else:
