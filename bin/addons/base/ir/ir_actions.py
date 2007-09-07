@@ -27,6 +27,7 @@
 ##############################################################################
 
 from osv import fields,osv
+import tools
 
 class actions(osv.osv):
 	_name = 'ir.actions.actions'
@@ -84,6 +85,29 @@ class report_custom(osv.osv):
 report_custom()
 
 class report_xml(osv.osv):
+
+	def _report_content(self, cursor, user, ids, name, arg, context=None):
+		res = {}
+		for report in self.browse(cursor, user, ids, context=context):
+			data = report[name + '_data']
+			if not data and report[name[:-8]]:
+				fp = tools.file_open(report[name[:-8]], mode='rb')
+				data = fp.read()
+			res[report.id] = data
+		return res
+
+	def _report_content_inv(self, cursor, user, id, name, value, arg, context=None):
+		self.write(cursor, user, id, {name+'_data': value}, context=context)
+
+	def _report_sxw(self, cursor, user, ids, name, arg, context=None):
+		res = {}
+		for report in self.browse(cursor, user, ids, context=context):
+			if report.report_rml:
+				res[report.id] = report.report_rml.replace('.rml', '.sxw')
+			else:
+				res[report.id] = False
+		return res
+
 	_name = 'ir.actions.report.xml'
 	_table = 'ir_act_report_xml'
 	_sequence = 'ir_actions_id_seq'
@@ -94,13 +118,24 @@ class report_xml(osv.osv):
 		'report_name': fields.char('Internal Name', size=64, required=True),
 		'report_xsl': fields.char('XSL path', size=256),
 		'report_xml': fields.char('XML path', size=256),
-		'report_rml': fields.char('RML path', size=256, help="The .rml path of the file or NULL if the content is in report_rml_content"),
-		'report_sxw_content': fields.binary('SXW content'),
-		'report_rml_content': fields.binary('RML content'),
+		'report_rml': fields.char('RML path', size=256,
+			help="The .rml path of the file or NULL if the content is in report_rml_content"),
+		'report_sxw': fields.function(_report_sxw, method=True, type='char',
+			string='SXW path'),
+		'report_sxw_content_data': fields.binary('SXW content'),
+		'report_rml_content_data': fields.binary('RML content'),
+		'report_sxw_content': fields.function(_report_content,
+			fnct_inv=_report_content_inv, method=True,
+			type='binary', string='SXW content',),
+		'report_rml_content': fields.function(_report_content,
+			fnct_inv=_report_content_inv, method=True,
+			type='binary', string='SXW content'),
 		'auto': fields.boolean('Automatic XSL:RML', required=True),
 		'usage': fields.char('Action Usage', size=32),
-		'header': fields.boolean('Add RML header', help="Add or not the coporate RML header"),
-		'multi': fields.boolean('On multiple doc.', help="If set to true, the action will not be displayed on the right toolbar of a form views.")
+		'header': fields.boolean('Add RML header',
+			help="Add or not the coporate RML header"),
+		'multi': fields.boolean('On multiple doc.',
+			help="If set to true, the action will not be displayed on the right toolbar of a form views.")
 	}
 	_defaults = {
 		'type': lambda *a: 'ir.actions.report.xml',

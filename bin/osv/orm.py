@@ -1474,7 +1474,7 @@ class orm(object):
 		if toolbar:
 			def clean(x):
 				x = x[2]
-				for key in ('report_sxw_content','report_rml_content','report_sxw','report_rml'):
+				for key in ('report_sxw_content','report_rml_content','report_sxw','report_rml', 'report_sxw_content_data', 'report_rml_content_data'):
 					if key in x:
 						del x[key]
 				return x

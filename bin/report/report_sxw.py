@@ -339,12 +339,12 @@ class report_sxw(report_rml):
 	def create(self, cr, uid, ids, data, context=None):
 		if not context:
 			context={}
-		cr.execute('select report_rml_content from ir_act_report_xml where report_name=%s', (self.name[7:],))
-		result = cr.fetchone()
-		if result and result[0]:
-			rml = result[0]
-		else:
-			rml = tools.file_open(self.tmpl, subdir=None).read()
+		pool = pooler.get_pool(cr.dbname)
+		ir_actions_report_xml_obj = pool.get('ir.actions.report.xml')
+		report_xml_id = ir_actions_report_xml_obj.search(cr, uid,
+				[('report_name', '=', self.name[7:])], context=context)[0]
+		rml = ir_actions_report_xml_obj.browse(cr, uid, report_xml_id,
+				context=context).report_rml_content
 
 		rml_parser = self.parser(cr, uid, self.name2, context)
 		objs = self.getObjects(cr, uid, ids, context)
