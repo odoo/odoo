@@ -30,6 +30,7 @@
 
 from osv import fields, osv
 
+
 class hr_timesheet_invoice_factor(osv.osv):
 	_name = "hr_timesheet_invoice.factor"
 	_description = "Invoice rate"
@@ -41,7 +42,9 @@ class hr_timesheet_invoice_factor(osv.osv):
 	_defaults = {
 		'factor': lambda *a: 0.0,
 	}
+
 hr_timesheet_invoice_factor()
+
 
 class account_analytic_account(osv.osv):
 	def _invoiced_calc(self, cr, uid, ids, name, arg, context={}):
@@ -66,13 +69,33 @@ class account_analytic_account(osv.osv):
 	}
 account_analytic_account()
 
+
 class account_analytic_line(osv.osv):
 	_inherit = 'account.analytic.line'
 	_columns = {
 		'invoice_id': fields.many2one('account.invoice', 'Invoice'),
 		'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Invoicing'),
 	}
+
+	def unlink(self, cursor, user, ids, context=None):
+		self._check(cr, uid, ids)
+		return super(account_analytic_line,self).unlink(cr, uid, ids,
+				context=context)
+
+	def write(self, cr, uid, ids, vals, context=None):
+		self._check(cr, uid, ids)
+		return super(account_analytic_line,self).write(cr, uid, ids, vals,
+				context=context)
+
+	def _check(self, cr, uid, ids):
+		for line in self.browse(cr, uid, ids):
+			if line.invoice_id:
+				raise osv.except_osv('Error !',
+						'You can not modify an invoiced analytic line!')
+		return True
+
 account_analytic_line()
+
 
 class hr_analytic_timesheet(osv.osv):
 	_inherit = "hr.analytic.timesheet"
@@ -100,4 +123,5 @@ class account_invoice(osv.osv):
 					if to_invoice:
 						il['analytic_lines'][0][2]['to_invoice'] = to_invoice[0]
 		return iml
+
 account_invoice()
