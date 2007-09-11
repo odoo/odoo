@@ -496,6 +496,9 @@ class sale_order(osv.osv):
 		return False
 sale_order()
 
+# TODO add a field price_unit_uos
+# - update it on change product and unit price
+# - use it in report if there is a uos
 class sale_order_line(osv.osv):
 	def copy(self, cr, uid, id, default=None, context={}):
 		if not default: default = {}
@@ -623,16 +626,20 @@ class sale_order_line(osv.osv):
 		return res
 
 	def uos_change(self, cr, uid, ids, product_uos, product_uos_qty=0, product_id=None):
+		product_obj = self.pool.get('product.product')
 		if not product_id:
-			return {'value': {'product_uom': product_uos, 'product_uom_qty': product_uos_qty}, 'domain':{}}
-		res = self.pool.get('product.product').read(cr, uid, [product_id], ['uom_id', 'uos_id', 'uos_coeff', 'weight'])[0]
+			return {'value': {'product_uom': product_uos,
+				'product_uom_qty': product_uos_qty}, 'domain':{}}
+
+		product = product_obj.browse(cr, uid, product_id)
 		value = {
-			'product_uom' : res['uom_id'], 
+			'product_uom' : product.uom_id,
 		}
+		# FIXME must depend on uos/uom of the product and not only of the coeff.
 		try:
 			value.update({
-				'product_uom_qty' : product_uos_qty / res['uos_coeff'],
-				'th_weight' : product_uos_qty / res['uos_coeff'] * res['weight']
+				'product_uom_qty' : product_uos_qty / product.uos_coeff,
+				'th_weight' : product_uos_qty / product.uos_coeff * product.weight
 			})
 		except ZeroDivisionError:
 			pass
@@ -644,29 +651,61 @@ class sale_order_line(osv.osv):
 		default.update({'state':'draft', 'move_ids':[], 'invoiced':False, 'invoice_lines':[]})
 		return super(sale_order_line, self).copy(cr, uid, id, default, context)
 
-	def product_id_change(self, cr, uid, ids, pricelist, product, qty=0, uom=False, qty_uos=0, uos=False, name='', partner_id=False, lang=False, update_tax=True):
-		if partner_id:
-			lang=self.pool.get('res.partner').read(cr, uid, [partner_id])[0]['lang']
-		context = {'lang':lang}
-		if not product:
-			return {'value': {'price_unit': 0.0, 'notes':'', 'th_weight' : 0, 'product_uos_qty': qty}, 'domain':{'product_uom':[]}}
-		if not pricelist:
-			raise osv.except_osv('No Pricelist !', 'You have to select a pricelist in the sale form !\nPlease set one before choosing a product.')
-		price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist], product, qty or 1.0, partner_id, {'uom': uom})[pricelist]
-		if price is False:
-			raise osv.except_osv('No valid pricelist line found !', "Couldn't find a pricelist line matching this product and quantity.\nYou have to change either the product, the quantity or the pricelist.")
-		res = self.pool.get('product.product').read(cr, uid, [product], context=context)[0]
+	def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
+			uom=False, qty_uos=0, uos=False, name='', partner_id=False,
+			lang=False, update_tax=True):
+		product_uom_obj = self.pool.get('product.uom')
+		partner_obj = self.pool.get('res.partner')
+		product_obj = self.pool.get('product.product')
 
-		result = {'price_unit': price, 'type':res['procure_method'], 'notes':res['description_sale']}
+		if partner_id:
+			lang = partner_obj.browse(cr, uid, partner_id).lang
+		context = {'lang': lang}
+
+		if not product:
+			return {'value': {'price_unit': 0.0, 'notes':'', 'th_weight' : 0,
+				'product_uos_qty': qty}, 'domain': {'product_uom': []}}
+
+		if not pricelist:
+			raise osv.except_osv('No Pricelist !',
+					'You have to select a pricelist in the sale form !\n'
+					'Please set one before choosing a product.')
+
+		price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
+				product, qty or 1.0, partner_id, {'uom': uom})[pricelist]
+		if price is False:
+			raise osv.except_osv('No valid pricelist line found !',
+					"Couldn't find a pricelist line matching this product and quantity.\n"
+					"You have to change either the product, the quantity or the pricelist.")
+
+		product = product_obj.browse(cr, uid, product, context=context)
+
+		if uom:
+			uom2 = product_uom_obj.browse(cr, uid, uom)
+			if product.uom_id.category_id.id <> uom2.category_id.id:
+				uom = False
+
+		if uos:
+			if product.uos_id:
+				uos2 = product_uom_obj.browse(cr, uid, uos)
+				if product.uos_id.category_id.id <> uos2.category_id.id:
+					uos = False
+			else:
+				uos = False
+
+		result = {'price_unit': price, 'type': product.procure_method,
+				'notes': product.description_sale}
 
 		if update_tax: #The quantity only have changed
-			result['delay'] = (res['sale_delay'] or 0.0)
-			taxes = self.pool.get('account.tax').browse(cr, uid, res['taxes_id'])
+			result['delay'] = (product.sale_delay or 0.0)
+			taxes = self.pool.get('account.tax').browse(cr, uid,
+					[x.id for x in product.taxes_id])
 			taxep = None
 			if partner_id:
-				taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_tax
+				taxep = self.pool.get('res.partner').browse(cr, uid,
+						partner_id).property_account_tax
 			if not taxep or not taxep.id:
-				result['tax_id'] = res['taxes_id']
+				result['tax_id'] = [x.id for x in product.taxes_id]
 			else:
 				res5 = [taxep.id]
 				for t in taxes:
@@ -674,26 +713,34 @@ class sale_order_line(osv.osv):
 						res5.append(t.id)
 				result['tax_id'] = res5
 
-		result['name'] = res['partner_ref']
+		result['name'] = product.partner_ref
+
 		domain = {}
 		if not uom and not uos:
-			result['product_uom'] = res['uom_id'] and res['uom_id'][0]
-			if result['product_uom']:
-				result['product_uos'] = res['uos_id']
-				result['product_uos_qty'] = qty * res['uos_coeff']
-				result['th_weight'] = qty * res['weight']
-				res2 = self.pool.get('product.uom').read(cr, uid, [result['product_uom']], ['category_id'])
-				if res2 and res2[0]['category_id']:
-					domain = {'product_uom':[('category_id','=',res2[0]['category_id'][0])]}
+			result['product_uom'] = product.uom_id.id
+			if product.uos_id:
+				result['product_uos'] = product.uos_id.id
+				result['product_uos_qty'] = qty * product.uos_coeff
+			else:
+				result['product_uos'] = False
+				result['product_uos_qty'] = qty
+			result['th_weight'] = qty * product.weight
+			domain = {'product_uom':
+						[('category_id', '=', product.uom_id.category_id.id)]}
 		elif uom: # whether uos is set or not
-			default_uom = res['uom_id'] and res['uom_id'][0]
-			q = self.pool.get('product.uom')._compute_qty(cr, uid, uom, qty, default_uom)
-			result['product_uos'] = res['uos_id']
-			result['product_uos_qty'] = q * res['uos_coeff']
-			result['th_weight'] = q * res['weight']
+			default_uom = product.uom_id and product.uom_id.id
+			q = product_uom_obj._compute_qty(cr, uid, uom, qty, default_uom)
+			if product.uos_id:
+				result['product_uos'] = product.uos_id.id
+				result['product_uos_qty'] = q * product.uos_coeff
+			else:
+				result['product_uos'] = False
+				result['product_uos_qty'] = q
+			result['th_weight'] = q * product.weight
 		elif uos: # only happens if uom is False
-			result['product_uom'] = res['uom_id'] and res['uom_id'][0]
-			result['product_uom_qty'] = qty_uos / res['uos_coeff']
-			result['th_weight'] = result['product_uom_qty'] * res['weight']
-		return {'value':result, 'domain':domain}
+			result['product_uom'] = product.uom_id and product.uom_id.id
+			result['product_uom_qty'] = qty_uos / product.uos_coeff
+			result['th_weight'] = result['product_uom_qty'] * product.weight
+		return {'value': result, 'domain': domain}
+
 sale_order_line()

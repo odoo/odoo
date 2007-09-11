@@ -56,7 +56,7 @@ class product_uom(osv.osv):
 	_columns = {
 		'name': fields.char('Name', size=64, required=True),
 		'category_id': fields.many2one('product.uom.categ', 'UOM Category', required=True, ondelete='cascade'),
-		'factor': fields.float('Factor', required=True),
+		'factor': fields.float('Factor', digits=(12, 6), required=True),
 		'rounding': fields.float('Rounding Precision', digits=(16, 3), required=True),
 		'active': fields.boolean('Active'),
 	}
@@ -68,24 +68,34 @@ class product_uom(osv.osv):
 	}
 	
 	def _compute_qty(self, cr, uid, from_uom_id, qty, to_uom_id=False):
-		if not to_uom_id: to_uom_id = 0
-		if not from_uom_id or not qty:
+		if not from_uom_id or not qty or not to_uom_id:
 			return qty
-		f = self.read(cr, uid, [from_uom_id, to_uom_id], ['factor','rounding'])
-		if f[0]['id'] == from_uom_id:
-			from_unit, to_unit = f[0], f[-1]
+		uoms = self.browse(cr, uid, [from_uom_id, to_uom_id])
+		if uoms[0].id == from_uom_id:
+			from_unit, to_unit = uoms[0], uoms[-1]
 		else:
-			from_unit, to_unit = f[-1], f[0]
-		amount = qty * from_unit['factor']
+			from_unit, to_unit = uoms[-1], uoms[0]
+		if from_unit.category_id.id <> to_unit.category_id.id:
+			return qty
+		amount = qty / from_unit['factor']
 		if to_uom_id:
-			amount = rounding(amount / to_unit['factor'], to_unit['rounding'])
+			amount = rounding(amount * to_unit['factor'], to_unit['rounding'])
 		return amount
 
-	def _compute_price(self, cr, uid, uom_id, qty, to_uom_id=False):
-		if not uom_id or not qty:
-			return qty
-		f = self.read(cr, uid, [uom_id], ['factor','rounding'])[0]
-		return qty * f['factor']
+	def _compute_price(self, cr, uid, from_uom_id, price, to_uom_id=False):
+		if not from_uom_id or not price or not to_uom_id:
+			return price
+		uoms = self.browse(cr, uid, [from_uom_id, to_uom_id])
+		if uoms[0].id == from_uom_id:
+			from_unit, to_unit = uoms[0], uoms[-1]
+		else:
+			from_unit, to_unit = uoms[-1], uoms[0]
+		if from_unit.category_id.id <> to_unit.category_id.id:
+			return price
+		amount = price / from_unit.factor
+		if to_uom_id:
+			amount = amount * to_unit.factor
+		return amount
 
 product_uom()
 
@@ -254,15 +264,18 @@ class product_product(osv.osv):
 	_product_outgoing_qty = _get_product_available_func(('confirmed','waiting','assigned'), ('out',))
 	_product_incoming_qty = _get_product_available_func(('confirmed','waiting','assigned'), ('in',))
 	
-	def _product_lst_price(self, cr, uid, ids, name, arg, context={}):
+	def _product_lst_price(self, cr, uid, ids, name, arg, context=None):
 		res = {}
-		for p in self.browse(cr, uid, ids, context=context):
-			res[p.id] = p.list_price
+		product_uom_obj = self.pool.get('product.uom')
 		for id in ids:
 			res.setdefault(id, 0.0)
-		if 'uom' in context:
-			for id in ids:
-				res[id] = self.pool.get('product.uom')._compute_price(cr, uid, context['uom'], res[id])
+		for product in self.browse(cr, uid, ids, context=context):
+			if 'uom' in context:
+				uom = product.uos_id or product.uom_id
+				res[product.id] = product_uom_obj._compute_price(cr, uid,
+						uom.id, product.list_price, context['uom'])
+			else:
+				res[product.id] = product.list_price
 		return res
 
 	def _get_partner_code_name(self, cr, uid, ids, product_id, partner_id, context={}):
@@ -369,15 +382,28 @@ class product_product(osv.osv):
 	# Could be overrided for variants matrices prices
 	#
 	def price_get(self, cr, uid, ids, ptype='list_price', context={}):
-		result = self.read(cr, uid, ids, [ptype, 'price_extra','price_margin'])
-		result2 = {}
-		for res in result:
-			result2[res['id']] = res[ptype] or 0.0
-			if ptype=='list_price':
-				result2[res['id']] = result2[res['id']] * res['price_margin'] + res['price_extra']
+		res = {}
+		product_uom_obj = self.pool.get('product.uom')
+
+		for product in self.browse(cr, uid, ids, context=context):
+			res[product.id] = product[ptype] or 0.0
+			if ptype == 'list_price':
+				res[product.id] = (res[product.id] * product.price_margin) + \
+						product.price_extra
 			if 'uom' in context:
-				result2[res['id']] = self.pool.get('product.uom')._compute_price(cr, uid, context['uom'], result2[res['id']])
-		return result2
+				uom = product.uos_id or product.uom_id
+				res[product.id] = product_uom_obj._compute_price(cr, uid,
+						uom.id, res[product.id], context['uom'])
+		return res
+#		result = self.read(cr, uid, ids, [ptype, 'price_extra','price_margin'])
+#		result2 = {}
+#		for res in result:
+#			result2[res['id']] = res[ptype] or 0.0
+#			if ptype=='list_price':
+#				result2[res['id']] = result2[res['id']] * res['price_margin'] + res['price_extra']
+#			if 'uom' in context:
+#				result2[res['id']] = self.pool.get('product.uom')._compute_price(cr, uid, context['uom'], result2[res['id']])
+#		return result2
 
 	def copy(self, cr, uid, id, default=None, context=None):
 		if not context:

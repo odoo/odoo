@@ -90,6 +90,7 @@ class product_pricelist(osv.osv):
 		if context and ('partner_id' in context):
 			partner = context['partner_id']
 		currency_obj = self.pool.get('res.currency')
+		product_obj = self.pool.get('product.product')
 		result = {}
 		for id in ids:
 			# XXX add date test to select the pricelist version
@@ -166,7 +167,10 @@ class product_pricelist(osv.osv):
 				price = False
 			result[id] = price
 			if 'uom' in context:
-				result[id] = self.pool.get('product.uom')._compute_price(cr, uid, context['uom'], result[id])
+				product = product_obj.browse(cr, uid, prod_id)
+				uom = product.uos_id or product.uom_id
+				result[id] = self.pool.get('product.uom')._compute_price(cr,
+						uid, uom.id, result[id], context['uom'])
 		return result
 product_pricelist()
 
