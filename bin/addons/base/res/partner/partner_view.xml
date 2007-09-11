@@ -488,7 +488,6 @@
 			<form string="Partner categories">
 				<field name="name" select="1"/>
 				<field name="active" select="1" />
-				<field name="type_id" select="1" />
 				<field name="parent_id"/>
 			</form>
 		</field>
@@ -555,26 +554,9 @@
 	<menuitem name="Partners/Configuration/Categories/Edit Categories" action="action_partner_category_form" id="menu_partner_category_form"/>
 
 
-	<record model="ir.ui.view" id="view_partner_category_type_form">
-		<field name="name">res.partner.category.type.form</field>
-		<field name="model">res.partner.category.type</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Type of Partner Categories">
-				<field name="name" select="1"/>
-			</form>
-		</field>
-	</record>
-	<record model="ir.actions.act_window" id="action_partner_category_type_form">
-		<field name="name">Type of Partner Categories</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">res.partner.category.type</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-	</record>
-	<menuitem name="Partners/Configuration/Categories/Type of Categories" groups="admin" action="action_partner_category_type_form" id="menu_partner_category_type_form"/>
-
+	<!--
 	# Admin config
+	-->
 
 	<menuitem name="Administration/Configuration/Partner" sequence="3"/>
 

@@ -96,20 +96,6 @@ class res_payterm(osv.osv):
 	}
 res_payterm()
 
-class res_partner_category_type(osv.osv):
-	_description='Partner category types'
-	_name = 'res.partner.category.type'
-	_columns = {
-		'name': fields.char('Category Name', required=True, size=64),
-	}
-	_order = 'name'
-res_partner_category_type()
-
-def _cat_type_get(self, cr, uid, context={}):
-	obj = self.pool.get('res.partner.category.type')
-	ids = obj.search(cr, uid, [])
-	res = obj.read(cr, uid, ids, ['name'], context)
-	return [(r['name'], r['name']) for r in res]
 
 class res_partner_category(osv.osv):
 	def name_get(self, cr, uid, ids, context={}):
@@ -141,7 +127,6 @@ class res_partner_category(osv.osv):
 	_name = 'res.partner.category'
 	_columns = {
 		'name': fields.char('Category Name', required=True, size=64),
-		'type_id': fields.many2one('res.partner.category.type', 'Category Type'),
 		'parent_id': fields.many2one('res.partner.category', 'Parent Category', select=True),
 		'complete_name': fields.function(_name_get_fnc, method=True, type="char", string='Name'),
 		'child_ids': fields.one2many('res.partner.category', 'parent_id', 'Childs Category'),
