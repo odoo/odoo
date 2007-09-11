@@ -171,4 +171,16 @@ if not cr.fetchall():
 	cr.execute('INSERT INTO ir_values (name, key, model, meta, key2, object, value) VALUES (\'tz\', \'meta\', \'res.users\', %s, \'tz\', %s, %s)', (meta,False, value))
 cr.commit()
 
+# ------------------------- #
+# change product_uom factor #
+# ------------------------- #
+
+cr.execute('SELECT a.attname FROM pg_class c, pg_attribute a, pg_type t WHERE c.relname = \'product_uom\' AND a.attname = \'factor\' AND c.oid = a.attrelid AND a.atttypid = t.oid AND t.typname = \'float8\'')
+if cr.fetchall():
+	cr.execute('ALTER TABLE product_uom RENAME COLUMN factor to temp_column')
+	cr.execute('ALTER TABLE product_uom ADD COLUMN factor NUMERIC(12,6)')
+	cr.execute('UPDATE product_uom SET factor = temp_column')
+	cr.execute('ALTER TABLE product_uom SET factor NOT NULL')
+	cr.execute('ALTER TABLE product_uom DROP COLUMN temp_column')
+
 cr.close
