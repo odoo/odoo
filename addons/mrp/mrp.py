@@ -575,6 +575,7 @@ class mrp_production(osv.osv):
 
 mrp_production()
 
+
 class stock_move(osv.osv):
 	_name = 'stock.move'
 	_inherit = 'stock.move'
@@ -582,6 +583,7 @@ class stock_move(osv.osv):
 	_columns = {
 			'production_id': fields.many2one('mrp.production', 'Production', select=True),
 			}
+
 stock_move()
 
 class mrp_production_workcenter_line(osv.osv):
@@ -970,3 +972,28 @@ class stock_warehouse_orderpoint(osv.osv):
 stock_warehouse_orderpoint()
 
 
+class StockMove(osv.osv):
+	_inherit = 'stock.move'
+
+	_columns = {
+			'procurements': fields.one2many('mrp.procurement', 'move_id', 'Procurements'),
+			}
+
+StockMove()
+
+
+class StockPicking(osv.osv):
+	_inherit = 'stock.picking'
+
+	def test_finnished(self, cursor, user, ids):
+		wf_service = netsvc.LocalService("workflow")
+		res = super(StockPicking, self).test_finnished(cursor, user, ids)
+		for picking in self.browse(cursor, user, ids):
+			for move in picking.move_lines:
+				if move.state == 'done' and move.procurements:
+					for procurement in move.procurements:
+						wf_service.trg_validate(user, 'mrp.procurement',
+								procurement.id, 'button_check', cursor)
+		return res
+
+StockPicking()
