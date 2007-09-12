@@ -183,4 +183,14 @@ if cr.fetchall():
 	cr.execute('ALTER TABLE product_uom SET factor NOT NULL')
 	cr.execute('ALTER TABLE product_uom DROP COLUMN temp_column')
 
+
+# ------------------------------------------------- #
+# Drop name_uniq constraint on stock_production_lot #
+# ------------------------------------------------- #
+
+cr.execute('SELECT conname FROM pg_constraint where conname = \'stock_production_lot_name_uniq\'')
+if cr.fetchall():
+	cr.execute('ALTER TABLE stock_production_lot DROP CONSTRAINT \'stock_production_lot_name_uniq\'')
+cr.commit()
+
 cr.close
