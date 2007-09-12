@@ -182,6 +182,8 @@ class act_window(osv.osv):
 		'view_ids': fields.one2many('ir.actions.act_window.view', 'act_window_id', 'Views'),
 		'views': fields.function(_views_get_fnc, method=True, type='binary', string='Views'),
 		'limit': fields.integer('Limit', help='Default limit for the list view'),
+		'auto_refresh': fields.integer('Auto-Refresh',
+			help='Add an auto-refresh on the view'),
 	}
 	_defaults = {
 		'type': lambda *a: 'ir.actions.act_window',
@@ -189,6 +191,7 @@ class act_window(osv.osv):
 		'view_mode': lambda *a: 'tree,form',
 		'context': lambda *a: '{}',
 		'limit': lambda *a: 80,
+		'auto_refresh': lambda *a: 0,
 	}
 act_window()
 
