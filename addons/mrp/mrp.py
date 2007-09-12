@@ -392,31 +392,30 @@ class mrp_production(osv.osv):
 		self.write(cr, uid, ids, {'state':'cancel','move_lines':[(6,0,[])]})
 		return True
 
-	#
-	# BUGFIX: may be a bug here; lot_lines are unreserved for a few seconds;
-	#         between the end of the picking list and the call to this function
-	#
+	#XXX: may be a bug here; lot_lines are unreserved for a few seconds;
+	#     between the end of the picking list and the call to this function
 	def action_ready(self, cr, uid, ids):
 		self.write(cr, uid, ids, {'state':'ready'})
 		return True
 
-	#
-	# Review materials in function in_prod and prod_end.
-	#
+	#TODO Review materials in function in_prod and prod_end.
 	def action_production_end(self, cr, uid, ids):
 		move_ids = []
 		for production in self.browse(cr, uid, ids):
 			for res in production.move_lines:
 				for move in production.move_created_ids:
-					cr.execute('insert into stock_move_history_ids (parent_id,child_id) values (%d,%d)', (res.id, move.id))
+					#XXX must use the orm
+					cr.execute('INSERT INTO stock_move_history_ids \
+							(parent_id, child_id) VALUES (%d,%d)',
+							(res.id, move.id))
 				move_ids.append(res.id)
 			if production.move_created_ids:
-				# There we should handle the residus move creation
+				#TODO There we should handle the residus move creation
 				vals= {'state':'confirmed'}
 				new_moves = [x.id for x in production.move_created_ids]
 				self.pool.get('stock.move').write(cr, uid, new_moves, vals)
 			else:
-				# Why is it there ? Aren't we suppose to already have a created_move ?
+				#XXX Why is it there ? Aren't we suppose to already have a created_move ?
 				source = production.product_id.product_tmpl_id.property_stock_production.id
 				vals = {
 					'name':'PROD:'+production.name,
@@ -430,12 +429,16 @@ class mrp_production(osv.osv):
 					'state': 'confirmed'
 				}
 				new_moves = [self.pool.get('stock.move').create(cr, uid, vals)]
-				self.write(cr, uid, [production.id], {'move_created_ids': [(6, 'WTF', new_moves)]})
+				self.write(cr, uid, [production.id],
+						{'move_created_ids': [(6, 'WTF', new_moves)]})
+			if not production.date_finnished:
+				self.write(cr, uid, [production.id],
+						{'date_finnished': time.strftime('%Y-%m-%d %H:%M:%S')})
 			self.pool.get('stock.move').check_assign(cr, uid, new_moves)
 			self.pool.get('stock.move').action_done(cr, uid, new_moves)
 			self._costs_generate(cr, uid, production)
 		self.pool.get('stock.move').action_done(cr, uid, move_ids)
-		self.write(cr,  uid, ids, {'state':'done'})
+		self.write(cr,  uid, ids, {'state': 'done'})
 		return True
 
 	def _costs_generate(self, cr, uid, production):
@@ -471,12 +474,15 @@ class mrp_production(osv.osv):
 		return amount
 
 	def action_in_production(self, cr, uid, ids):
+		move_ids = []
 		for production in self.browse(cr, uid, ids):
-			ids2 = []
 			for res in production.move_lines:
-				ids2.append(res.id)
-			self.pool.get('stock.move').action_done(cr, uid, ids2)
-		self.write(cr, uid, ids, {'state':'in_production'})
+				move_ids.append(res.id)
+			if not production.date_start:
+				self.write(cr, uid, [production.id],
+						{'date_start': time.strftime('%Y-%m-%d %H:%M:%S')})
+		self.pool.get('stock.move').action_done(cr, uid, move_ids)
+		self.write(cr, uid, ids, {'state': 'in_production'})
 		return True
 
 	def test_if_product(self, cr, uid, ids):
