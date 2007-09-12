@@ -600,8 +600,9 @@ class stock_production_lot(osv.osv):
 		'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'stock.lot.serial'),
 	}
 	_sql_constraints = [
-		('name_uniq', 'unique (name)', 'The serial must be unique !'),
+		('name_ref_uniq', 'unique (name, ref)', 'The serial/ref must be unique !'),
 	]
+
 stock_production_lot()
 
 class stock_production_lot_revision(osv.osv):

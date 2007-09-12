@@ -57,14 +57,17 @@ fields = {
 def _track_lines(self, cr, uid, data, context):
 	move_id = data['id']
 
-	prodlot_obj = pooler.get_pool(cr.dbname).get('stock.production.lot')
-	move_obj = pooler.get_pool(cr.dbname).get('stock.move')
-	sequence = pooler.get_pool(cr.dbname).get('ir.sequence').get(cr, uid, 'stock.lot.serial')
-	production_obj = pooler.get_pool(cr.dbname).get('mrp.production')
+	pool = pooler.get_pool(cr.dbname)
+	prodlot_obj = pool.get('stock.production.lot')
+	move_obj = pool.get('stock.move')
+	production_obj = pool.get('mrp.production')
+	ir_sequence_obj = pool.get('ir.sequence')
+
+	sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
+	if not sequence:
+		raise wizard.except_wizard('Error!', 'No production sequence defined')
 	if data['form']['tracking_prefix']:
 		sequence=data['form']['tracking_prefix']+'/'+(sequence or '')
-	if not sequence:
-		raise wizard.except_wizard('Error !', 'No tracking prefix defined')
 
 	move = move_obj.browse(cr, uid, [move_id])[0]
 	quantity=data['form']['quantity']

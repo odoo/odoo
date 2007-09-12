@@ -41,6 +41,15 @@
 		<field name="name">Stock production lots</field>
 		<field name="code">stock.lot.serial</field>
 	</record>
+	<record model="ir.sequence" id="sequence_production_lots">
+		<field name="name">Stock production sequence</field>
+		<field name="code">stock.lot.serial</field>
+		<field name="prefix">1234567890</field>
+		<field name="padding">7</field>
+		<field name="number_next">1</field>
+		<field name="number_increment">1</field>
+	</record>
+
 	<record model="ir.sequence.type" id="sequence_type_tracking">
 		<field name="name">Stock Lot Tracking</field>
 		<field name="code">stock.lot.tracking</field>
