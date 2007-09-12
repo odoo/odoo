@@ -62,6 +62,8 @@ if hasattr(options, 'config'):
 				value = False
 			setattr(options, name, value)
 
+raise Exception('This script is provided as an example, you must custom it before')
+
 # -----
 
 host = hasattr(options, 'db_host') and "host=%s" % options.db_host or ''
@@ -144,6 +146,16 @@ if cr.fetchall():
 cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'hr_timesheet_sheet_sheet_account\'')
 if cr.fetchall():
 	cr.execute('drop VIEW hr_timesheet_sheet_sheet_account')
+cr.execute('SELECT viewname from pg_views where viewname = \'sale_journal_sale_stats\'')
+if cr.fetchall():
+	cr.execute('drop VIEW sale_journal_sale_stats')
+cr.execute('SELECT viewname from pg_views where viewname = \'sale_journal_picking_stats\'')
+if cr.fetchall():
+	cr.execute('drop VIEW sale_journal_picking_stats')
+cr.execute('SELECT viewname from pg_views where viewname = \'sale_journal_invoice_type_stats\'')
+if cr.fetchall():
+	cr.execute('drop VIEW sale_journal_invoice_type_stats')
+
 cr.execute('ALTER TABLE product_template ALTER list_price TYPE numeric(16,2)')
 cr.execute('ALTER TABLE product_template ALTER standard_price TYPE numeric(16,2)')
 cr.execute('ALTER TABLE product_product ALTER price_extra TYPE numeric(16,2)')
