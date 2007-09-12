@@ -664,7 +664,8 @@ class sale_order_line(osv.osv):
 
 		if not product:
 			return {'value': {'price_unit': 0.0, 'notes':'', 'th_weight' : 0,
-				'product_uos_qty': qty}, 'domain': {'product_uom': []}}
+				'product_uos_qty': qty}, 'domain': {'product_uom': [],
+					'product_uos': []}}
 
 		if not pricelist:
 			raise osv.except_osv('No Pricelist !',
@@ -721,12 +722,16 @@ class sale_order_line(osv.osv):
 			if product.uos_id:
 				result['product_uos'] = product.uos_id.id
 				result['product_uos_qty'] = qty * product.uos_coeff
+				uos_category_id = product.uos_id.category_id.id
 			else:
 				result['product_uos'] = False
 				result['product_uos_qty'] = qty
+				uos_category_id = False
 			result['th_weight'] = qty * product.weight
 			domain = {'product_uom':
-						[('category_id', '=', product.uom_id.category_id.id)]}
+						[('category_id', '=', product.uom_id.category_id.id)],
+						'product_uos':
+						[('category_id', '=', uos_category_id)]}
 		elif uom: # whether uos is set or not
 			default_uom = product.uom_id and product.uom_id.id
 			q = product_uom_obj._compute_qty(cr, uid, uom, qty, default_uom)

@@ -201,13 +201,17 @@ class product_template(osv.osv):
 		'uom_id': fields.many2one('product.uom', 'Default UOM', required=True),
 		'uom_po_id': fields.many2one('product.uom', 'Purchase UOM', required=True),
 		'state': fields.selection([('draft', 'In Development'),('sellable','In Production'),('end','End of Lifecycle'),('obsolete','Obsolete')], 'State'),
-		'uos_id' : fields.many2one('product.uom', 'Unit of Sale'),
-		'uos_coeff': fields.float('UOM -> UOS Coeff', digits=(16,4)),
+		'uos_id' : fields.many2one('product.uom', 'Unit of Sale',
+			help='Keep empty to use the default UOM'),
+		'uos_coeff': fields.float('UOM -> UOS Coeff', digits=(16,4),
+			help='Coefficient to convert UOM to UOS\n'
+			' uom = uos * coeff'),
 		'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure type', required=True),
 		'tracking': fields.boolean('Track lots'),
 		'seller_delay': fields.function(_calc_seller_delay, method=True, type='integer', string='Supplier lead time', help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
 		'seller_ids': fields.one2many('product.supplierinfo', 'product_id', 'Partners'),
 	}
+
 	def _get_uom_id(self, cr, uid, *args):
 		cr.execute('select id from product_uom order by id limit 1')
 		res = cr.fetchone()
@@ -231,6 +235,18 @@ class product_template(osv.osv):
 		'uos_coeff' : lambda *a: 1.0,
 		'mes_type' : lambda *a: 'fixed',
 	}
+
+	def _check_uos(self, cursor, user, ids):
+		for product in self.browse(cursor, user, ids):
+			if product.uos_id \
+					and product.uos_id.category_id.id \
+					== product.uom_id.category_id.id:
+				return False
+		return True
+
+	_constraints = [(_check_uos,
+		'Error: UOS must be in a different category than the UOM', ['uos_id'])]
+
 	def name_get(self, cr, user, ids, context={}):
 		if 'partner_id' in context:
 			pass
