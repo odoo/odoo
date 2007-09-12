@@ -274,13 +274,12 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Open a Window">
-				<field name="name" colspan="4" select="1"/>
+				<field name="name" select="1"/>
 				<field name="type" readonly="1"/>
 				<field name="res_model" select="1"/>
+				<field name="src_model" select="2"/>
 				<field name="usage"/>
 				<field name="view_type"/>
-				<field name="view_mode"/>
-				<field name="view_id"/>
 				<field name="view_ids" colspan="4">
 					<form string="Views">
 						<field name="sequence" colspan="4"/>
@@ -294,6 +293,10 @@
 					</tree>
 				</field>
 				<field name="domain" colspan="4"/>
+				<field name="limit"/>
+				<newline/>
+				<field name="view_mode"/>
+				<field name="view_id"/>
 			</form>
 		</field>
 	</record>

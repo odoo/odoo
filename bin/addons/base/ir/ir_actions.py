@@ -181,12 +181,14 @@ class act_window(osv.osv):
 		'usage': fields.char('Action Usage', size=32),
 		'view_ids': fields.one2many('ir.actions.act_window.view', 'act_window_id', 'Views'),
 		'views': fields.function(_views_get_fnc, method=True, type='binary', string='Views'),
+		'limit': fields.integer('Limit', help='Default limit for the list view'),
 	}
 	_defaults = {
 		'type': lambda *a: 'ir.actions.act_window',
 		'view_type': lambda *a: 'form',
 		'view_mode': lambda *a: 'tree,form',
-		'context': lambda *a: '{}'
+		'context': lambda *a: '{}',
+		'limit': lambda *a: 80,
 	}
 act_window()
 
@@ -204,7 +206,7 @@ class act_window_view(osv.osv):
 			('calendar', 'Calendar')), string='Type of view', required=True),
 		'act_window_id': fields.many2one('ir.actions.act_window', 'Action'),
 		'multi': fields.boolean('On multiple doc.',
-			help="If set to true, the action will not be displayed on the right toolbar of a form views.")
+			help="If set to true, the action will not be displayed on the right toolbar of a form views."),
 	}
 	_defaults = {
 		'multi': lambda *a: False,
