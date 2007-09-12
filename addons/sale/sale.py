@@ -430,7 +430,8 @@ class sale_order(osv.osv):
 						'product_uom': line.product_uom.id,
 						'location_id': order.shop_id.warehouse_id.lot_stock_id.id,
 						'procure_method': line.type,
-						'move_id': move_id, 
+						'move_id': move_id,
+						'property_ids': [(6, 0, [x.id for x in line.property_ids])],
 					})
 					wf_service = netsvc.LocalService("workflow")
 					wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
@@ -445,6 +446,7 @@ class sale_order(osv.osv):
 						'product_uom': line.product_uom.id,
 						'location_id': order.shop_id.warehouse_id.lot_stock_id.id,
 						'procure_method': line.type,
+						'property_ids': [(6, 0, [x.id for x in line.property_ids])],
 					})
 					wf_service = netsvc.LocalService("workflow")
 					wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
