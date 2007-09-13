@@ -429,7 +429,7 @@ class crm_case(osv.osv):
 			data = {
 				'name': keyword,
 				'som': case.som.id,
-				'canal_id': case.canal_id.i,
+				'canal_id': case.canal_id.id,
 				'user_id': uid,
 				'case_id': case.id
 			}
