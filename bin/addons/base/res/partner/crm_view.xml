@@ -32,10 +32,24 @@
 			</form>
 		</field>
 	</record>
+
+	<record model="ir.ui.view" id="res_partner_event_type_view_tree">
+		<field name="name">res.partner.event.type.tree</field>
+		<field name="model">res.partner.event.type</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Event Type">
+				<field name="name"/>
+				<field name="active"/>
+			</tree>
+		</field>
+	</record>
+
 	<record model="ir.actions.act_window" id="res_partner_event_type-act">
 		<field name="res_model">res.partner.event.type</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
+		<field name="context">{'active_test': False}</field>
 	</record>
 	<menuitem name="Partners/Configuration/Partner Events/Active Partner Events" groups="admin" action="res_partner_event_type-act" id="menu_res_partner_event_type-act"/>
 
