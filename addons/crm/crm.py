@@ -244,12 +244,12 @@ class crm_case(osv.osv):
 	_name = "crm.case"
 	_description = "Case"
 	_columns = {
-		'id': fields.integer('Case ID', readonly=True),
-		'name': fields.char('Case Description',size=64, required=True),
+		'id': fields.integer('ID', readonly=True),
+		'name': fields.char('Description',size=64, required=True),
 		'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
 		'active': fields.boolean('Active'),
 		'description': fields.text('Your action'),
-		'section_id': fields.many2one('crm.case.section', 'Case Section', required=True, select=True),
+		'section_id': fields.many2one('crm.case.section', 'Section', required=True, select=True),
 		'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id)]"),
 		'planned_revenue': fields.float('Planned Revenue'),
 		'planned_cost': fields.float('Planned Costs'),
@@ -261,9 +261,9 @@ class crm_case(osv.osv):
 		'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', domain="[('partner_id','=',partner_id)]"),
 		'som': fields.many2one('res.partner.som', 'State of Mind'),
 		'date': fields.datetime('Date'),
-		'create_date': fields.datetime('Date Created'),
-		'date_deadline': fields.date('Date Deadline'),
-		'date_closed': fields.datetime('Date Closed', readonly=True),
+		'create_date': fields.datetime('Created' ,readonly=True),
+		'date_deadline': fields.date('Deadline'),
+		'date_closed': fields.datetime('Closed', readonly=True),
 		'canal_id': fields.many2one('res.partner.canal', 'Channel'),
 		'user_id': fields.many2one('res.users', 'User Responsible'),
 		'history_line': fields.one2many('crm.case.history', 'case_id', 'Communication'),
@@ -272,8 +272,8 @@ class crm_case(osv.osv):
 		'ref' : fields.reference('Reference', selection=_links_get, size=128),
 		'ref2' : fields.reference('Reference 2', selection=_links_get, size=128),
 
-		'date_action_last': fields.datetime('Date Last Action', readonly=1),
-		'date_action_next': fields.datetime('Date Next Action', readonly=1),
+		'date_action_last': fields.datetime('Last Action', readonly=1),
+		'date_action_next': fields.datetime('Next Action', readonly=1),
 	}
 	_defaults = {
 		'active': lambda *a: 1,
@@ -281,6 +281,7 @@ class crm_case(osv.osv):
 		'state': lambda *a: 'draft',
 		'priority': lambda *a: AVAILABLE_PRIORITIES[2][0],
 		'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+		'create_date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
 	}
 	_order = 'priority, date_deadline desc, id desc'
 
@@ -434,7 +435,7 @@ class crm_case(osv.osv):
 				'case_id': case.id
 			}
 			obj = self.pool.get('crm.case.log')
-			if history:
+			if history and case.description:
 				obj = self.pool.get('crm.case.history')
 				data['description'] = case.description
 				data['email'] = email or \
@@ -612,7 +613,7 @@ class crm_case_log(osv.osv):
 	_description = "Case communication history"
 	_order = "id desc"
 	_columns = {
-		'name': fields.char('Name', size=64),
+		'name': fields.char('Action', size=64),
 		'som': fields.many2one('res.partner.som', 'State of Mind'),
 		'date': fields.datetime('Date'),
 		'canal_id': fields.many2one('res.partner.canal', 'Channel'),
