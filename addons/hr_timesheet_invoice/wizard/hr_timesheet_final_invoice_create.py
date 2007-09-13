@@ -47,13 +47,29 @@ class final_invoice_create(wizard.interface):
 
 	def _do_create(self, cr, uid, data, context):
 		pool = pooler.get_pool(cr.dbname)
+		analytic_account_obj = pool.get('account.analytic.account')
+		res_partner_obj = pool.get('res.partner')
+		account_payment_term_obj = pool.get('account.payment.term')
+
 		account_ids = data['ids']
 		invoices = []
-		for account in pool.get('account.analytic.account').browse(cr, uid, account_ids, context):
+		for account in analytic_account_obj.browse(cr, uid, account_ids, context):
 			partner = account.partner_id
 			amount_total=0.0
 			if (not partner) or not (account.pricelist_id):
-				raise wizard.except_wizard('Analytic account incomplete', 'Please fill in the partner and pricelist field in the analytic account:\n%s' % (account.name,))
+				raise wizard.except_wizard('Analytic account incomplete',
+						'Please fill in the partner and pricelist field '
+						'in the analytic account:\n%s' % (account.name,))
+
+			date_due = False
+			if partner.property_payment_term:
+				pterm_list= account_payment_term_obj.compute(cr, uid,
+						partner.property_payment_term.id, value=1,
+						date_ref=time.strftime('%Y-%m-%d'))
+				if pterm_list:
+					pterm_list = [line[0] for line in pterm_list]
+					pterm_list.sort()
+					date_due = pterm_list[-1]
 
 			curr_invoice = {
 				'name': time.strftime('%D')+' - '+account.name,
@@ -63,7 +79,7 @@ class final_invoice_create(wizard.interface):
 				'payment_term': partner.property_payment_term.id or False,
 				'account_id': partner.property_account_receivable.id,
 				'currency_id': account.pricelist_id.currency_id.id,
-				'project_id': account.id
+				'date_due': date_due,
 			}
 			last_invoice = pool.get('account.invoice').create(cr, uid, curr_invoice)
 			invoices.append(last_invoice)
