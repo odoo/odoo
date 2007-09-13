@@ -281,7 +281,6 @@ class crm_case(osv.osv):
 		'state': lambda *a: 'draft',
 		'priority': lambda *a: AVAILABLE_PRIORITIES[2][0],
 		'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-		'create_date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
 	}
 	_order = 'priority, date_deadline desc, id desc'
 
