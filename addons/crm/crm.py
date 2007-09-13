@@ -428,8 +428,8 @@ class crm_case(osv.osv):
 		for case in cases:
 			data = {
 				'name': keyword,
-				'som': False,
-				'canal_id': False,
+				'som': case.som.id,
+				'canal_id': case.canal_id.i,
 				'user_id': uid,
 				'case_id': case.id
 			}
@@ -437,7 +437,9 @@ class crm_case(osv.osv):
 			if history:
 				obj = self.pool.get('crm.case.history')
 				data['description'] = case.description
-				data['email'] = email or (case.user_id and case.user_id.address_id and case.user_id.address_id.email) or False
+				data['email'] = email or \
+						(case.user_id and case.user_id.address_id and \
+							case.user_id.address_id.email) or False
 			obj.create(cr, uid, data, context)
 		return True
 
@@ -450,11 +452,15 @@ class crm_case(osv.osv):
 		return res
 
 	def remind_partner(self, cr, uid, ids, context={}, attach=False):
-		return self.remind_user(cr, uid, ids, context, attach, destination=False)
+		return self.remind_user(cr, uid, ids, context, attach,
+				destination=False)
 
-	def remind_user(self, cr, uid, ids, context={}, attach=False, destination=True):
+	def remind_user(self, cr, uid, ids, context={}, attach=False,
+			destination=True):
 		for case in self.browse(cr, uid, ids):
-			if case.user_id and case.user_id.address_id and case.user_id.address_id.email and case.email_from:
+			if case.user_id and case.user_id.address_id \
+					and case.user_id.address_id.email \
+					and case.email_from:
 				src = case.email_from
 				dest = case.user_id.address_id.email
 				if not destination:
@@ -469,9 +475,13 @@ class crm_case(osv.osv):
 						reply_to=case.section_id.reply_to, tinycrm=str(case.id)
 						)
 				else:
-					attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model','=','crm.case'),('res_id','=',case.id)])
-					res = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname','datas'])
-					res = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), res)
+					attach_ids = self.pool.get('ir.attachment').search(cr, uid,
+							[('res_model', '=', 'crm.case'),
+								('res_id', '=', case.id)])
+					res = self.pool.get('ir.attachment').read(cr, uid,
+							attach_ids, ['datas_fname','datas'])
+					res = map(lambda x: (x['datas_fname'],
+						base64.decodestring(x['datas'])), res)
 					tools.email_send_attach(
 						src,
 						dest,
@@ -485,7 +495,8 @@ class crm_case(osv.osv):
 	def case_log(self, cr, uid, ids,context={}, email=False, *args):
 		cases = self.browse(cr, uid, ids)
 		self.__history(cr, uid, cases, 'Historize', history=True, email=email)
-		return self.write(cr, uid, ids, {'description':False, 'som':False, 'canal_id': False})
+		return self.write(cr, uid, ids, {'description': False, 'som': False,
+			'canal_id': False})
 
 	def case_log_reply(self, cr, uid, ids, context={}, email=False, *args):
 		cases = self.browse(cr, uid, ids)
