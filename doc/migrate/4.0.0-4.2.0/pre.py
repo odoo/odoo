@@ -193,4 +193,12 @@ if cr.fetchall():
 	cr.execute('ALTER TABLE stock_production_lot DROP CONSTRAINT \'stock_production_lot_name_uniq\'')
 cr.commit()
 
+# ------------------------------------ #
+# Put country/state code in upper case #
+# ------------------------------------ #
+
+cr.execute('UPDATE res_country SET code = UPPER(code)')
+cr.execute('UPDATE res_country_state SET code = UPPER(code)')
+cr.commit()
+
 cr.close

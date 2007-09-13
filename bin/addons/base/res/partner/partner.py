@@ -44,6 +44,7 @@ class res_partner_function(osv.osv):
 	_order = 'name'
 res_partner_function()
 
+
 class res_country(osv.osv):
 	_name = 'res.country'
 	_description = 'Country'
@@ -55,6 +56,7 @@ class res_country(osv.osv):
 		('name_uniq', 'unique (name)', 'The name of the country must be unique !'),
 		('code_uniq', 'unique (code)', 'The code of the country must be unique !')
 	]
+
 	def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):
 		if not args:
 			args=[]
@@ -65,6 +67,19 @@ class res_country(osv.osv):
 			ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
 		return self.name_get(cr, user, ids, context)
 	_order='code'
+
+	def create(self, cursor, user, vals, context=None):
+		if 'code' in vals:
+			vals['code'] = vals['code'].upper()
+		return super(res_country, self).create(cursor, user, vals,
+				context=context)
+
+	def write(self, cursor, user, ids, vals, context=None):
+		if 'code' in vals:
+			vals['code'] = vals['code'].upper()
+		return super(res_country, self).write(cursor, user, ids, vals,
+				context=context)
+
 res_country()
 
 class res_country_state(osv.osv):
@@ -86,6 +101,19 @@ class res_country_state(osv.osv):
 			ids = self.search(cr, user, [('name', operator, name)] + args, limit=limit, context=context)
 		return self.name_get(cr, user, ids, context)
 	_order = 'code'
+
+	def create(self, cursor, user, vals, context=None):
+		if 'code' in vals:
+			vals['code'] = vals['code'].upper()
+		return super(res_country_state, self).create(cursor, user, vals,
+				context=context)
+
+	def write(self, cursor, user, ids, vals, context=None):
+		if 'code' in vals:
+			vals['code'] = vals['code'].upper()
+		return super(res_country_state, self).write(cursor, user, ids, vals,
+				context=context)
+
 res_country_state()
 
 class res_payterm(osv.osv):
