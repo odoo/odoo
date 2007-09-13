@@ -680,6 +680,18 @@ class stock_move(osv.osv):
 		'date_planned': lambda *a: time.strftime('%Y-%m-%d'),
 		'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
 	}
+
+	def _auto_init(self, cursor):
+		super(stock_move, self)._auto_init(cursor)
+		cursor.execute('SELECT indexname \
+				FROM pg_indexes \
+				WHERE indexname = \'stock_move_location_id_location_dest_id_product_id_state\'')
+		if not cursor.fetchone():
+			cursor.execute('CREATE INDEX stock_move_location_id_location_dest_id_product_id_state \
+					ON stock_move (location_id, location_dest_id, product_id, state)')
+			cursor.commit()
+
+
 	def onchange_product_id(self, cr, uid, context, prod_id=False, loc_id=False, loc_dest_id=False):
 		if not prod_id:
 			return {}
