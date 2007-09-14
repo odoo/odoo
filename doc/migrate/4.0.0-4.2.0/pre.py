@@ -177,11 +177,37 @@ cr.commit()
 
 cr.execute('SELECT a.attname FROM pg_class c, pg_attribute a, pg_type t WHERE c.relname = \'product_uom\' AND a.attname = \'factor\' AND c.oid = a.attrelid AND a.atttypid = t.oid AND t.typname = \'float8\'')
 if cr.fetchall():
+	cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_account_analytic_planning_stat_account\'')
+	if cr.fetchall():
+		cr.execute('DROP VIEW report_account_analytic_planning_stat_account')
+	cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_account_analytic_planning_stat\'')
+	if cr.fetchall():
+		cr.execute('DROP VIEW report_account_analytic_planning_stat')
+	cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_account_analytic_planning_stat_user\'')
+	if cr.fetchall():
+		cr.execute('DROP VIEW report_account_analytic_planning_stat_user')
+	cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_purchase_order_product\'')
+	if cr.fetchall():
+		cr.execute('DROP VIEW report_purchase_order_product')
+	cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_purchase_order_category\'')
+	if cr.fetchall():
+		cr.execute('DROP VIEW report_purchase_order_category')
+	cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_sale_order_product\'')
+	if cr.fetchall():
+		cr.execute('DROP VIEW report_sale_order_product')
+	cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_sale_order_category\'')
+	if cr.fetchall():
+		cr.execute('DROP VIEW report_sale_order_category')
+	cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_hr_timesheet_invoice_journal\'')
+	if cr.fetchall():
+		cr.execute('DROP VIEW report_hr_timesheet_invoice_journal')
+
 	cr.execute('ALTER TABLE product_uom RENAME COLUMN factor to temp_column')
 	cr.execute('ALTER TABLE product_uom ADD COLUMN factor NUMERIC(12,6)')
 	cr.execute('UPDATE product_uom SET factor = temp_column')
-	cr.execute('ALTER TABLE product_uom SET factor NOT NULL')
+	cr.execute('ALTER TABLE product_uom ALTER factor SET NOT NULL')
 	cr.execute('ALTER TABLE product_uom DROP COLUMN temp_column')
+cr.commit()
 
 
 # ------------------------------------------------- #

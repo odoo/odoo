@@ -33,7 +33,7 @@ class Bank(osv.osv):
 	_description='Bank'
 	_name = 'res.bank'
 	_columns = {
-		'name': fields.char('Name', size=128, required=True),
+		'name': fields.char('Name', size=128),
 		'code': fields.char('Code', size=64),
 		'street': fields.char('Street', size=128),
 		'street2': fields.char('Street2', size=128),
