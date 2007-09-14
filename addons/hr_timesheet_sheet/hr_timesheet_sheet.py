@@ -328,7 +328,7 @@ class hr_timesheet_line(osv.osv):
 
 	def _check(self, cr, uid, ids):
 		for att in self.browse(cr, uid, ids):
-			if att.sheet_id and att.sheet_id.state<>'draft':
+			if att.sheet_id and att.sheet_id.state not in ('draft', 'new'):
 				raise osv.except_osv('Error !', 'You can not modify an entry in a confirmed timesheet !')
 		return True
 
@@ -365,7 +365,7 @@ class hr_attendance(osv.osv):
 			vals['sheet_id']=context['sheet_id']
 		if 'sheet_id' in vals:
 			ts = self.pool.get('hr_timesheet_sheet.sheet').browse(cr, uid, vals['sheet_id'])
-			if ts.state<>'draft':
+			if ts.state not in ('draft', 'new'):
 				raise osv.except_osv('Error !', 'You can not modify an entry in a confirmed timesheet !')
 		return super(hr_attendance,self).create(cr, uid, vals, context=context)
 
@@ -381,7 +381,7 @@ class hr_attendance(osv.osv):
 
 	def _check(self, cr, uid, ids):
 		for att in self.browse(cr, uid, ids):
-			if att.sheet_id and att.sheet_id.state<>'draft':
+			if att.sheet_id and att.sheet_id.state not in ('draft', 'new'):
 				raise osv.except_osv('Error !', 'You can not modify an entry in a confirmed timesheet !')
 		return True
 
