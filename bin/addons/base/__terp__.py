@@ -28,6 +28,8 @@
 		"res/partner/partner_report.xml",
 		"res/partner/partner_view.xml",
 		"res/partner/partner_wizard.xml",
+		"res/bank_view.xml",
+		"res/country_view.xml",
 		"res/res_currency_view.xml",
 		"res/partner/crm_view.xml",
 		"res/partner/partner_data.xml",

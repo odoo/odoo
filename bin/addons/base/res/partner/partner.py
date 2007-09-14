@@ -45,77 +45,6 @@ class res_partner_function(osv.osv):
 res_partner_function()
 
 
-class res_country(osv.osv):
-	_name = 'res.country'
-	_description = 'Country'
-	_columns = {
-		'name': fields.char('Country Name', size=64, help='The full name of the country.'),
-		'code': fields.char('Country Code', size=2, help='The ISO country code in two chars. You can use this field for quick search.'),
-	}
-	_sql_constraints = [
-		('name_uniq', 'unique (name)', 'The name of the country must be unique !'),
-		('code_uniq', 'unique (code)', 'The code of the country must be unique !')
-	]
-
-	def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):
-		if not args:
-			args=[]
-		if not context:
-			context={}
-		ids = self.search(cr, user, [('code','=',name)]+ args, limit=limit, context=context)
-		if not ids:
-			ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
-		return self.name_get(cr, user, ids, context)
-	_order='code'
-
-	def create(self, cursor, user, vals, context=None):
-		if 'code' in vals:
-			vals['code'] = vals['code'].upper()
-		return super(res_country, self).create(cursor, user, vals,
-				context=context)
-
-	def write(self, cursor, user, ids, vals, context=None):
-		if 'code' in vals:
-			vals['code'] = vals['code'].upper()
-		return super(res_country, self).write(cursor, user, ids, vals,
-				context=context)
-
-res_country()
-
-class res_country_state(osv.osv):
-	_description="Country state"
-	_name = 'res.country.state'
-	_columns = {
-		'country_id': fields.many2one('res.country', 'Country'),
-		'name': fields.char('State Name', size=64),
-		'code': fields.char('State Code', size=3),
-	}
-
-	def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):
-		if not args:
-			args = []
-		if not context:
-			context = {}
-		ids = self.search(cr, user, [('code', '=', name)] + args, limit=limit, context=context)
-		if not ids:
-			ids = self.search(cr, user, [('name', operator, name)] + args, limit=limit, context=context)
-		return self.name_get(cr, user, ids, context)
-	_order = 'code'
-
-	def create(self, cursor, user, vals, context=None):
-		if 'code' in vals:
-			vals['code'] = vals['code'].upper()
-		return super(res_country_state, self).create(cursor, user, vals,
-				context=context)
-
-	def write(self, cursor, user, ids, vals, context=None):
-		if 'code' in vals:
-			vals['code'] = vals['code'].upper()
-		return super(res_country_state, self).write(cursor, user, ids, vals,
-				context=context)
-
-res_country_state()
-
 class res_payterm(osv.osv):
 	_description = 'Payment term'
 	_name = 'res.payterm'
@@ -123,7 +52,6 @@ class res_payterm(osv.osv):
 		'name': fields.char('Payment term (short name)', size=64),
 	}
 res_payterm()
-
 
 class res_partner_category(osv.osv):
 	def name_get(self, cr, uid, ids, context={}):
@@ -428,9 +356,7 @@ class res_partner_bank(osv.osv):
 	_columns = {
 		'name': fields.char('Description', size=128),
 		'acc_number': fields.char('Account number', size=64, required=False),
-		'bank_id': fields.many2one('res.partner', 'Bank'),
-		'bank_address_id': fields.many2one('res.partner.address', 'Bank address'),
-
+		'bank': fields.many2one('res.bank', 'Bank'),
 		'owner_name': fields.char('Account owner', size=64),
 		'street': fields.char('Street', size=128),
 		'zip': fields.char('Zip', change_default=True, size=24),

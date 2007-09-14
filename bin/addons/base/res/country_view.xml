@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<terp>
+	<data>
+
+		<!--
+		Country
+		-->
+
+		<record model="ir.ui.view" id="view_country_tree">
+			<field name="name">res.country.tree</field>
+			<field name="model">res.country</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Country">
+					<field name="name" />
+					<field name="code"/>
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_country_form">
+			<field name="name">res.country.form</field>
+			<field name="model">res.country</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Country">
+					<field name="name" select="1"/>
+					<field name="code" select="1"/>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="action_country">
+			<field name="name">Country</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">res.country</field>
+			<field name="view_type">form</field>
+		</record>
+
+		<menuitem name="Partners/Configuration/Localisation/Countries"
+			groups="admin" action="action_country"
+			id="menu_country_partner"/>
+
+		<!--
+		State
+		-->
+
+		<record model="ir.ui.view" id="view_country_state_tree">
+			<field name="name">res.country.state.tree</field>
+			<field name="model">res.country.state</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="State">
+					<field name="country_id"/>
+					<field name="name"/>
+					<field name="code"/>
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_country_state_form">
+			<field name="name">res.country.state.form</field>
+			<field name="model">res.country.state</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="State">
+					<field name="country_id" select="1"/>
+					<field name="name" select="1"/>
+					<field name="code" select="1"/>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="action_country_state">
+			<field name="name">States</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">res.country.state</field>
+			<field name="view_type">form</field>
+			<field name="view_id" ref="view_country_state_tree"/>
+		</record>
+
+		<menuitem name="Partners/Configuration/Localisation/States"
+			groups="admin" action="action_country_state"
+			id="menu_country_state_partner"/>
+
+	</data>
+</terp>

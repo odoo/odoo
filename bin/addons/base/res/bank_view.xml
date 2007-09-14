@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<terp>
+	<data>
+		<menuitem name="Financial Management" icon="terp-account"/>
+		<menuitem name="Financial Management/Configuration"
+			groups="admin" sequence="1"/>
+
+		<record model="ir.ui.view" id="view_res_bank_form">
+			<field name="name">res.bank.form</field>
+			<field name="model">res.bank</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Bank">
+					<field name="name" colspan="4" select="1"/>
+					<field name="code" select="1"/>
+					<field name="active" select="2"/>
+					<field name="bic" select="1"/>
+					<newline/>
+					<field name="street" select="2"/>
+					<field name="street2" select="2"/>
+					<newline/>
+					<field name="zip"/>
+					<field name="city"/>
+					<newline/>
+					<field name="country" select="2"/>
+					<field name="state" select="2"/>
+					<newline/>
+					<field name="phone"/>
+					<field name="fax"/>
+					<newline/>
+					<field name="email"/>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_res_bank_tree">
+			<field name="name">res.bank.tree</field>
+			<field name="model">res.bank</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Banks">
+					<field name="name"/>
+					<field name="code"/>
+					<field name="country"/>
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="action_res_bank_form">
+			<field name="res_model">res.bank</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<menuitem name="Financial Management/Configuration/Banks"
+			action="action_res_bank_form" sequence="12"
+			id="menu_action_res_bank_form"/>
+
+	</data>
+</terp>
