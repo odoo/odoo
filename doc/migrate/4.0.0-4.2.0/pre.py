@@ -201,4 +201,5 @@ cr.execute('UPDATE res_country SET code = UPPER(code)')
 cr.execute('UPDATE res_country_state SET code = UPPER(code)')
 cr.commit()
 
+
 cr.close
