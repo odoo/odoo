@@ -341,7 +341,7 @@
 							<field name="date"/>
 							<field name="name"/>
 							<field name="type"/>
-							<field name="partner_id" on_change="onchange_partner_id(partner_id, type)"/>
+							<field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
 							<field name="account_id" domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]"/>
 							<field name="amount"/>
 							<field name="reconcile_id" context="{'partner_id':partner_id,'amount':amount,'account_id':account_id}"/> 

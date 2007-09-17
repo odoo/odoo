@@ -487,6 +487,9 @@ class account_bank_statement_line(osv.osv):
 		company_currency_id = res_users_obj.browse(cursor, user, user,
 				context=context).company_id.currency_id.id
 
+		if not currency_id:
+			currency_id = company_currency_id
+
 		part = self.pool.get('res.partner').browse(cursor, user, partner_id,
 				context=context)
 		if type == 'supplier':
