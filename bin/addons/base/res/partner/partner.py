@@ -134,11 +134,12 @@ class res_partner(osv.osv):
 		'name': fields.char('Name', size=128, required=True, select=True),
 		'date': fields.date('Date'),
 		'title': fields.selection(_partner_title_get, 'Title', size=32),
-		'parent_id': fields.many2one('res.partner','Main Company', select=True),
+		'parent_id': fields.many2one('res.partner','Main Company', select=2),
 		'child_ids': fields.one2many('res.partner', 'parent_id', 'Partner Ref.'),
 		'ref': fields.char('Code', size=64),
 		'lang': fields.selection(_lang_get, 'Language', size=5),
 		'user_id': fields.many2one('res.users', 'Salesman'),
+		'sales': fields.one2many('sale.order', 'partner_id', 'Sales'),
 		'responsible': fields.many2one('res.users', 'Users'),
 		'vat': fields.char('VAT',size=32 ,help="Value Added Tax number"),
 		'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
@@ -297,7 +298,7 @@ class res_partner_address(osv.osv):
 				addr = str(r['name'] or '')
 				if r['name'] and (r['zip'] or r['city']):
 					addr += ', '
-				addr += str(r['street']) + ' ' + str(r['zip'] or '') + ' ' + str(r['city'] or '')
+				addr += str(r['street'] or '') + ' ' + str(r['zip'] or '') + ' ' + str(r['city'] or '')
 				res.append((r['id'], addr.strip() or '/'))
 		return res
 
