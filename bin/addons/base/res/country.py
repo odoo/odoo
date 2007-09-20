@@ -34,10 +34,10 @@ class Country(osv.osv):
 	_description = 'Country'
 	_columns = {
 		'name': fields.char('Country Name', size=64,
-			help='The full name of the country.'),
+			help='The full name of the country.', required=True),
 		'code': fields.char('Country Code', size=2,
 			help='The ISO country code in two chars.\n'
-			'You can use this field for quick search.'),
+			'You can use this field for quick search.', required=True),
 	}
 	_sql_constraints = [
 		('name_uniq', 'unique (name)',
@@ -79,9 +79,10 @@ class CountryState(osv.osv):
 	_description="Country state"
 	_name = 'res.country.state'
 	_columns = {
-		'country_id': fields.many2one('res.country', 'Country'),
-		'name': fields.char('State Name', size=64),
-		'code': fields.char('State Code', size=3),
+		'country_id': fields.many2one('res.country', 'Country',
+			required=True),
+		'name': fields.char('State Name', size=64, required=True),
+		'code': fields.char('State Code', size=3, required=True),
 	}
 
 	def name_search(self, cr, user, name='', args=None, operator='ilike',
