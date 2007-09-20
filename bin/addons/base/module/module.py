@@ -405,7 +405,15 @@ class module(osv.osv):
 				self._update_category(cr, uid, id, terp.get('category', 'Uncategorized'))
 
 		for repository in robj.browse(cr, uid, robj.search(cr, uid, [])):
-			index_page = urllib.urlopen(repository.url).read()
+			try:
+				index_page = urllib.urlopen(repository.url).read()
+			except IOError, e:
+				if e.errno == 21:
+					raise orm.except_orm('Error',
+							'This url \'%s\' must provide an html file '
+							'with links to zip modules' % (repository.url))
+				else:
+					raise
 			modules = re.findall(repository.filter, index_page, re.I+re.M)
 			mod_sort = {}
 			for m in modules:
