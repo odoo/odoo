@@ -195,8 +195,6 @@ class ir_model_data(osv.osv):
 				if xml_id:
 					self.create(cr, uid, {'name':xml_id, 'model':model, 'module':module, 'res_id':res_id, 'noupdate':noupdate})
 		if xml_id:
-			if warning:
-				assert (module,xml_id) not in self.loads, "id '%s' is already defined in module '%s' !" % (xml_id, module)
 			if res_id:
 				self.loads[(module,xml_id)] = (model, res_id)
 		return res_id
