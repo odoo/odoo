@@ -41,22 +41,24 @@ class one2many_mod2(fields.one2many):
 		for id in ids:
 			res[id] = []
 
-		res5 = obj.read(cr, user, ids, ['date_current'], context)
+		res5 = obj.read(cr, user, ids, ['date_current', 'user_id'], context)
 		res6 = {}
 		for r in res5:
-			res6[r['id']] = r['date_current']
+			res6[r['id']] = (r['date_current'], r['user_id'][0])
 
 		ids2 = []
 		for id in ids:
 			dom = []
 			if id in res6:
-				dom = [('name', '>=', res6[id] + ' 00:00:00'),
-						('name', '<=', res6[id] + ' 23:59:59')]
+				dom = [('name', '>=', res6[id][0] + ' 00:00:00'),
+						('name', '<=', res6[id][0] + ' 23:59:59'),
+						('employee_id.user_id', '=', res6[id][1])]
 			ids2.extend(obj.pool.get(self._obj).search(cr, user,
-				[(self._fields_id, '=', id)] + dom, limit=self._limit))
+				dom, limit=self._limit))
 
-		for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
-			res[r[self._fields_id]].append( r['id'] )
+		for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2,
+				[self._fields_id], context=context, load='_classic_write'):
+			res[r[self._fields_id][0]].append( r['id'] )
 
 		return res
 
@@ -67,22 +69,22 @@ class one2many_mod(fields.one2many):
 		for id in ids:
 			res[id] = []
 
-		res5 = obj.read(cr, user, ids, ['date_current'], context)
+		res5 = obj.read(cr, user, ids, ['date_current', 'user_id'], context)
 		res6 = {}
 		for r in res5:
-			res6[r['id']] = r['date_current']
+			res6[r['id']] = (r['date_current'], r['user_id'][0])
 
 		ids2 = []
 		for id in ids:
 			dom = []
 			if id in res6:
-				dom = [('date', '=', res6[id])]
+				dom = [('date', '=', res6[id][0]), ('user_id', '=', res6[id][1])]
 			ids2.extend(obj.pool.get(self._obj).search(cr, user,
-				[(self._fields_id, '=', id)]+dom, limit=self._limit))
+				dom, limit=self._limit))
 
 		for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2,
 				[self._fields_id], context=context, load='_classic_write'):
-			res[r[self._fields_id]].append( r['id'] )
+			res[r[self._fields_id][0]].append( r['id'] )
 
 		return res
 
@@ -201,7 +203,12 @@ class hr_timesheet_sheet(osv.osv):
 		'date_from': fields.date('Date from', required=True, select=1, readonly=True, states={'new':[('readonly', False)]}),
 		'date_to': fields.date('Date to', required=True, select=1, readonly=True, states={'new':[('readonly', False)]}),
 		'date_current': fields.date('Current date', required=True),
-		'timesheet_ids' : one2many_mod('hr.analytic.timesheet', 'sheet_id', 'Timesheet lines', domain=[('date','=',time.strftime('%Y-%m-%d'))], readonly=True, states={'draft':[('readonly',False)],'new':[('readonly',False)]}),
+		'timesheet_ids' : one2many_mod('hr.analytic.timesheet', 'sheet_id',
+			'Timesheet lines', domain=[('date', '=', time.strftime('%Y-%m-%d'))],
+			readonly=True, states={
+				'draft': [('readonly', False)],
+				'new': [('readonly', False)]}
+			),
 		'attendances_ids' : one2many_mod2('hr.attendance', 'sheet_id', 'Attendances', readonly=True, states={'draft':[('readonly',False)],'new':[('readonly',False)]}),
 		'state' : fields.selection([('new', 'New'),('draft','Draft'),('confirm','Confirmed'),('done','Done')], 'state', select=True, required=True, readonly=True),
 		'state_attendance' : fields.function(_state_attendance, method=True, type='selection', selection=[('absent', 'Absent'), ('present', 'Present'),('none','No employee defined')], string='Current state'),
@@ -277,13 +284,6 @@ class hr_timesheet_sheet(osv.osv):
 
 hr_timesheet_sheet()
 
-def _get_current_sheet(self, cr, uid, context={}):
-	ts=self.pool.get('hr_timesheet_sheet.sheet')
-	ids = ts.search(cr, uid, [('user_id','=',uid),('state','=','draft'),('date_from','<=',time.strftime('%Y-%m-%d')), ('date_to','>=',time.strftime('%Y-%m-%d'))])
-	if ids:
-		return ids[0]
-	return False
-
 
 class hr_timesheet_line(osv.osv):
 	_inherit = "hr.analytic.timesheet"
@@ -293,23 +293,40 @@ class hr_timesheet_line(osv.osv):
 			return context['date']
 		return time.strftime('%Y-%m-%d')
 
-	def _sheet_date(self, cr, uid, ids):
-		timesheet_lines = self.browse(cr, uid, ids)
-		for l in timesheet_lines:
-			if l.date[:10] < l.sheet_id.date_from:
-				return False
-			if l.date[:10] > l.sheet_id.date_to:
-				return False
-		return True
+	def _sheet(self, cursor, user, ids, name, args, context):
+		sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
+
+		cursor.execute('SELECT l.id, COALESCE(MAX(s.id), 0) \
+				FROM hr_timesheet_sheet_sheet s \
+					LEFT JOIN (hr_analytic_timesheet l \
+						LEFT JOIN account_analytic_line al \
+							ON (l.line_id = al.id)) \
+						ON (s.date_to >= al.date \
+							AND s.date_from <= al.date \
+							AND s.user_id = al.user_id) \
+				WHERE l.id in (' + ','.join([str(x) for x in ids]) + ') \
+				GROUP BY l.id')
+		res = dict(cursor.fetchall())
+		sheet_names = {}
+		for sheet_id, name in sheet_obj.name_get(cursor, user, res.values(),
+				context=context):
+			sheet_names[sheet_id] = name
+
+		for line_id in ids:
+			sheet_id = res.get(line_id, False)
+			if sheet_id:
+				res[line_id] = (sheet_id, sheet_names[sheet_id])
+			else:
+				res[line_id] = False
+		return res
 
 	_columns = {
-		'sheet_id': fields.many2one('hr_timesheet_sheet.sheet', 'Sheet', ondelete='set null', required=True)
+		'sheet_id': fields.function(_sheet, method=True, string='Sheet',
+			type='many2one', relation='hr_timesheet_sheet.sheet'),
 	}
 	_defaults = {
-		'sheet_id': _get_current_sheet,
 		'date': _get_default_date,
 	}
-	_constraints = [(_sheet_date, 'Error: the timesheet line date must be in the sheet\'s dates', ['date'])]
 
 	def create(self, cr, uid, vals, *args, **kwargs):
 		if 'sheet_id' in vals:
@@ -342,23 +359,40 @@ class hr_attendance(osv.osv):
 			return context['name'] + time.strftime(' %H:%M:%S')
 		return time.strftime('%Y-%m-%d %H:%M:%S')
 
-	def _sheet_date(self, cr, uid, ids):
-		attendances = self.browse(cr, uid, ids)
-		for att in attendances:
-			if att.name[:10] < att.sheet_id.date_from:
-				return False
-			if att.name[:10] > att.sheet_id.date_to:
-				return False
-		return True
+	def _sheet(self, cursor, user, ids, name, args, context):
+		sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
+
+		cursor.execute('SELECT a.id, COALESCE(MAX(s.id), 0) \
+				FROM hr_timesheet_sheet_sheet s \
+					LEFT JOIN (hr_attendance a \
+						LEFT JOIN hr_employee e \
+							ON (a.employee_id = e.id)) \
+						ON (s.date_to >= a.name \
+							AND s.date_from <= a.name \
+							AND s.user_id = e.user_id) \
+				WHERE a.id in (' + ','.join([str(x) for x in ids]) + ') \
+				GROUP BY a.id')
+		res = dict(cursor.fetchall())
+		sheet_names = {}
+		for sheet_id, name in sheet_obj.name_get(cursor, user, res.values(),
+				context=context):
+			sheet_names[sheet_id] = name
+
+		for line_id in res.keys():
+			sheet_id = res[line_id]
+			if sheet_id:
+				res[line_id] = (sheet_id, sheet_names[sheet_id])
+			else:
+				res[line_id] = False
+		return res
 
 	_columns = {
-		'sheet_id': fields.many2one('hr_timesheet_sheet.sheet', 'Sheet', ondelete='set null', required=True)
+		'sheet_id': fields.function(_sheet, method=True, string='Sheet',
+			type='many2one', relation='hr_timesheet_sheet.sheet'),
 	}
 	_defaults = {
-		'sheet_id': _get_current_sheet,
 		'name': _get_default_date,
 	}
-	_constraints = [(_sheet_date, 'Error: the attendance date must be in the sheet\'s dates', ['name'])]
 
 	def create(self, cr, uid, vals, context={}):
 		if 'sheet_id' in context:
