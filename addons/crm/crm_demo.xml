@@ -73,37 +73,40 @@
 		<field name="priority">2</field>
 		<field name="description">Fabien think about a new EC website
 Send them a price.</field>
-		<field name="section_id" ref="section_support"/>
+		<field name="section_id" ref="section_sale"/>
 		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
+		<field name="partner_id" ref="base.res_partner_asus"/>
+		<field name="som" ref="base.som_normal"/>
 		<field name="planned_revenue" eval="30000"/>
 		<field name="probability" eval="0.85"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
+		<field name="priority" eval="2"/>
+		<field name="date" eval="time.strftime('%Y-%m-01')"/>
+		<field name="date_deadline" eval="time.strftime('%Y-%m-24')"/>
 		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">draft</field>
 	</record>
 
-	<record model="crm.case" id="case">
+	<record model="crm.case" id="case1">
 		<field name="name">Need a new eCommerce Website</field>
 		<field name="priority">2</field>
 		<field name="description">Fabien think about a new EC website
 Send them a price.</field>
-		<field name="section_id" ref="section_support"/>
+		<field name="section_id" ref="section_sale"/>
 		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
+		<field name="partner_id" ref="base.res_partner_agrolait"/>
+		<field name="som" ref="base.som_happy"/>
 		<field name="planned_revenue" eval="3000"/>
 		<field name="probability" eval="0.85"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
+		<field name="date" eval="time.strftime('%Y-%m-10')"/>
+		<field name="date_deadline" eval="time.strftime('%Y-%m-20')"/>
+		<field name="priority" eval="4"/>
 		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">open</field>
 		<field name="user_id" search="[('login','=','demo')]" model="res.users"/>
 	</record>
+	<function model="crm.case" name="case_open">
+		<value model="crm.case" eval="[ref('case1')]"/>
+	</function>
 
-	<record model="crm.case">
+	<record model="crm.case" id="case2">
 		<field name="name">Hdd Crashed unexpectedly</field>
 		<field name="priority">2</field>
 		<field name="description">HDD Crashed
@@ -111,562 +114,295 @@ Linux turned it readonly.
 The CPU Cooler is down.</field>
 		<field name="section_id" ref="section_support"/>
 		<field name="categ_id" eval="categ1"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
+		<field name="partner_id" ref="base.res_partner_sednacom"/>
+		<field name="som" ref="base.som_unhappy"/>
+		<field name="date" eval="time.strftime('%Y-%m-03')"/>
+		<field name="date_deadline" eval="time.strftime('%Y-%m-10')"/>
 		<field name="canal_id" search="[]" model="res.partner.canal"/>
 	</record>
 
-	<record model="crm.case">
+	<record model="crm.case" id="case3">
 		<field name="name">Need a new eCommerce Website</field>
 		<field name="priority">2</field>
 		<field name="description">Fabien think about a new EC website
 Send them a price.</field>
 		<field name="section_id" ref="section_sale"/>
 		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
+		<field name="partner_id" ref="base.res_partner_thymbra"/>
+		<field name="som" ref="base.som_very_happy"/>
 		<field name="planned_revenue" eval="2345"/>
 		<field name="probability" eval="0.60"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
+		<field name="date" eval="time.strftime('%Y-%m-18')"/>
 		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">open</field>
+		<field name="canal_id" search="[]" model="res.partner.canal"/>
 		<field name="user_id" search="[('login','=','demo')]" model="res.users"/>
 	</record>
+	<function model="crm.case" name="case_open">
+		<value model="crm.case" eval="[ref('case3')]"/>
+	</function>
 
-	<record model="crm.case">
+	<record model="crm.case" id="case4">
 		<field name="name">Need a new eCommerce Website</field>
 		<field name="priority">2</field>
 		<field name="description">Fabien think about a new EC website
 Send them a price.</field>
 		<field name="section_id" ref="section_sale"/>
 		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
+		<field name="partner_id" ref="base.res_partner_desertic_hispafuentes"/>
+		<field name="som" ref="base.som_happy"/>
 		<field name="planned_revenue" eval="1000"/>
 		<field name="planned_cost" eval="79"/>
 		<field name="probability" eval="0.30"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
+		<field name="date" eval="time.strftime('%Y-%m-05')"/>
 		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">open</field>
 		<field name="user_id" search="[('login','=','demo')]" model="res.users"/>
 	</record>
+	<function model="crm.case" name="case_open">
+		<value model="crm.case" eval="[ref('case4')]"/>
+	</function>
 
-	<record model="crm.case">
-		<field name="name">Need a new eCommerce Website</field>
+	<record model="crm.case" id="case5">
+		<field name="name">Bug in program</field>
 		<field name="priority">2</field>
-		<field name="description">Fabien think about a new EC website
-Send them a price.</field>
+		<field name="description">There is a bug in the program</field>
 		<field name="section_id" ref="section_support"/>
 		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
+		<field name="partner_id" ref="base.res_partner_asus"/>
+		<field name="som" ref="base.som_normal"/>
 		<field name="planned_revenue" eval="8000"/>
 		<field name="probability" eval="0.30"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
+		<field name="date" eval="time.strftime('%Y-%m-08')"/>
+		<field name="date_deadline" eval="time.strftime('%Y-%m-28')"/>
 		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">open</field>
 		<field name="user_id" search="[('login','=','admin')]" model="res.users"/>
 	</record>
+	<function model="crm.case" name="case_open">
+		<value model="crm.case" eval="[ref('case5')]"/>
+	</function>
 
-	<record model="crm.case">
-		<field name="name">Need a new eCommerce Website</field>
+	<record model="crm.case" id="case6">
+		<field name="name">Server is down</field>
 		<field name="priority">2</field>
-		<field name="description">Fabien think about a new EC website
-Send them a price.</field>
+		<field name="description">The web server is down</field>
 		<field name="section_id" ref="section_support"/>
 		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
+		<field name="partner_id" ref="base.res_partner_3"/>
+		<field name="som" ref="base.som_normal"/>
 		<field name="planned_revenue" eval="4200"/>
 		<field name="probability" eval="0.90"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
+		<field name="date" eval="time.strftime('%Y-%m-03')"/>
+		<field name="date_deadline" eval="time.strftime('%Y-%m-25')"/>
+		<field name="priority" eval="3"/>
 		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">pending</field>
 		<field name="user_id" search="[('login','=','demo')]" model="res.users"/>
 	</record>
+	<function model="crm.case" name="case_open">
+		<value model="crm.case" eval="[ref('case6')]"/>
+	</function>
+	<function model="crm.case" name="case_pending">
+		<value model="crm.case" eval="[ref('case6')]"/>
+	</function>
 
-	<record model="crm.case">
-		<field name="name">Need a new eCommerce Website</field>
+	<record model="crm.case" id="case7">
+		<field name="name">Disk failure</field>
 		<field name="priority">2</field>
-		<field name="description">Fabien think about a new EC website
-Send them a price.</field>
-		<field name="section_id" ref="section_support"/>
+		<field name="description">The new disk doesn't work</field>
+		<field name="section_id" ref="section_purchase"/>
 		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
+		<field name="partner_id" ref="base.res_partner_maxtor"/>
+		<field name="som" ref="base.som_normal"/>
 		<field name="planned_revenue" eval="2000"/>
 		<field name="probability" eval="0.30"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
+		<field name="date" eval="time.strftime('%Y-%m-06')"/>
+		<field name="date_deadline" eval="time.strftime('%Y-%m-18')"/>
+		<field name="priority" eval="2"/>
 		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">open</field>
 		<field name="user_id" search="[('login','=','admin')]" model="res.users"/>
 	</record>
+	<function model="crm.case" name="case_open">
+		<value model="crm.case" eval="[ref('case7')]"/>
+	</function>
 
-	<record model="crm.case">
-		<field name="name">Need a new eCommerce Website</field>
+	<record model="crm.case" id="case8">
+		<field name="name">Missing hardware</field>
 		<field name="priority">2</field>
-		<field name="description">Fabien think about a new EC website
-Send them a price.</field>
+		<field name="description">Missing some hardwares in the packing</field>
 		<field name="section_id" ref="section_support"/>
 		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
+		<field name="partner_id" ref="base.res_partner_seagate"/>
+		<field name="som" ref="base.som_normal"/>
 		<field name="planned_revenue" eval="2230"/>
 		<field name="probability" eval="0.80"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
+		<field name="date" eval="time.strftime('%Y-%m-02')"/>
+		<field name="date_deadline" eval="time.strftime('%Y-%m-14')"/>
 		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">open</field>
 		<field name="user_id" search="[('login','=','demo')]" model="res.users"/>
 	</record>
+	<function model="crm.case" name="case_open">
+		<value model="crm.case" eval="[ref('case8')]"/>
+	</function>
 
-	<record model="crm.case">
+	<record model="crm.case" id="case9">
 		<field name="name">Need a new eCommerce Website</field>
 		<field name="priority">2</field>
 		<field name="description">Fabien think about a new EC website
 Send them a price.</field>
-		<field name="section_id" ref="section_support"/>
+		<field name="section_id" ref="section_sale"/>
 		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
+		<field name="partner_id" ref="base.res_partner_9"/>
+		<field name="som" ref="base.som_happy"/>
 		<field name="planned_revenue" eval="1000"/>
 		<field name="probability" eval="0.40"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
+		<field name="date" eval="time.strftime('%Y-%m-06')"/>
+		<field name="date_deadline" eval="time.strftime('%Y-%m-24')"/>
+		<field name="priority" eval="4"/>
 		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">open</field>
 		<field name="user_id" search="[('login','=','admin')]" model="res.users"/>
 	</record>
+	<function model="crm.case" name="case_open">
+		<value model="crm.case" eval="[ref('case9')]"/>
+	</function>
 
-	<record model="crm.case">
-		<field name="name">Need a new eCommerce Website</field>
+	<record model="crm.case" id="case10">
+		<field name="name">Need a new module</field>
 		<field name="priority">2</field>
-		<field name="description">Fabien think about a new EC website
-Send them a price.</field>
-		<field name="section_id" ref="section_support"/>
+		<field name="description">Need a new module</field>
+		<field name="section_id" ref="section_sale"/>
 		<field name="categ_id" eval="categ5"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
+		<field name="partner_id" ref="base.res_partner_11"/>
+		<field name="som" ref="base.som_unhappy"/>
 		<field name="planned_revenue" eval="3100"/>
 		<field name="planned_cost" eval="790"/>
 		<field name="probability" eval="0.90"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
+		<field name="date" eval="time.strftime('%Y-%m-02')"/>
+		<field name="date_deadline" eval="time.strftime('%Y-%m-12')"/>
 		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">done</field>
 		<field name="user_id" search="[('login','=','demo')]" model="res.users"/>
 	</record>
+	<function model="crm.case" name="case_open">
+		<value model="crm.case" eval="[ref('case10')]"/>
+	</function>
+	<function model="crm.case" name="case_close">
+		<value model="crm.case" eval="[ref('case10')]"/>
+	</function>
 
-	<record model="crm.case">
-		<field name="name">Need a new eCommerce Website</field>
+	<record model="crm.case" id="case11">
+		<field name="name">Need support on module</field>
 		<field name="priority">2</field>
-		<field name="description">Fabien think about a new EC website
-Send them a price.</field>
+		<field name="description">Need some information on module ...</field>
 		<field name="section_id" ref="section_sale"/>
 		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
+		<field name="partner_id" ref="base.res_partner_10"/>
+		<field name="som" ref="base.som_happy"/>
 		<field name="planned_revenue" eval="8000"/>
 		<field name="planned_cost" eval="1234"/>
 		<field name="probability" eval="0.50"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
+		<field name="date" eval="time.strftime('%Y-%m-18')"/>
+		<field name="priority" eval="1"/>
 		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">open</field>
 		<field name="user_id" search="[('login','=','demo')]" model="res.users"/>
 	</record>
+	<function model="crm.case" name="case_open">
+		<value model="crm.case" eval="[ref('case11')]"/>
+	</function>
 
-	<record model="crm.case">
-		<field name="name">Need a new eCommerce Website</field>
+	<record model="crm.case" id="case12">
+		<field name="name">Bad packing</field>
 		<field name="priority">2</field>
-		<field name="description">Fabien think about a new EC website
-Send them a price.</field>
-		<field name="section_id" ref="section_support"/>
+		<field name="description">We receive bad package</field>
+		<field name="section_id" ref="section_purchase"/>
 		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
+		<field name="partner_id" ref="base.res_partner_14"/>
+		<field name="som" ref="base.som_happy"/>
 		<field name="planned_revenue" eval="800"/>
 		<field name="probability" eval="0.90"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
+		<field name="date" eval="time.strftime('%Y-%m-25')"/>
 		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">open</field>
 		<field name="user_id" search="[('login','=','demo')]" model="res.users"/>
 	</record>
+	<function model="crm.case" name="case_open">
+		<value model="crm.case" eval="[ref('case12')]"/>
+	</function>
 
-	<record model="crm.case">
-		<field name="name">Need a new eCommerce Website</field>
+	<record model="crm.case" id="case13">
+		<field name="name">Need quotation</field>
 		<field name="priority">2</field>
-		<field name="description">Fabien think about a new EC website
-Send them a price.</field>
+		<field name="description">Need quotation for new development</field>
 		<field name="section_id" ref="section_support"/>
 		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
+		<field name="partner_id" ref="base.res_partner_tinyatwork"/>
+		<field name="som" ref="base.som_happy"/>
 		<field name="planned_revenue" eval="300"/>
 		<field name="probability" eval="0.10"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
+		<field name="date" eval="time.strftime('%Y-%m-26')"/>
 		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">done</field>
 		<field name="user_id" search="[('login','=','admin')]" model="res.users"/>
 	</record>
+	<function model="crm.case" name="case_open">
+		<value model="crm.case" eval="[ref('case13')]"/>
+	</function>
+	<function model="crm.case" name="case_close">
+		<value model="crm.case" eval="[ref('case13')]"/>
+	</function>
 
-	<record model="crm.case">
-		<field name="name">Need a new eCommerce Website</field>
+	<record model="crm.case" id="case14">
+		<field name="name">New server</field>
 		<field name="priority">2</field>
-		<field name="description">Fabien think about a new EC website
-Send them a price.</field>
-		<field name="section_id" ref="section_support"/>
+		<field name="description">We need a new server</field>
+		<field name="section_id" ref="section_sale"/>
 		<field name="categ_id" eval="categ5"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
+		<field name="partner_id" ref="base.res_partner_4"/>
+		<field name="som" ref="base.som_normal"/>
 		<field name="planned_revenue" eval="8000"/>
 		<field name="probability" eval="0.90"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
+		<field name="date" eval="time.strftime('%Y-%m-16')"/>
+		<field name="priority" eval="1"/>
 		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">open</field>
 		<field name="user_id" search="[('login','=','demo')]" model="res.users"/>
 	</record>
+	<function model="crm.case" name="case_open">
+		<value model="crm.case" eval="[ref('case14')]"/>
+	</function>
 
-	<record model="crm.case">
-		<field name="name">Need a new eCommerce Website</field>
+	<record model="crm.case" id="case15">
+		<field name="name">Formation</field>
 		<field name="priority">2</field>
-		<field name="description">Fabien think about a new EC website
-Send them a price.</field>
-		<field name="section_id" ref="section_support"/>
+		<field name="description">Provide a formation</field>
+		<field name="section_id" ref="section_sale"/>
 		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
+		<field name="partner_id" ref="base.res_partner_5"/>
+		<field name="som" ref="base.som_normal"/>
 		<field name="planned_revenue" eval="1000"/>
 		<field name="probability" eval="0.30"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
+		<field name="date" eval="time.strftime('%Y-%m-17')"/>
+		<field name="priority" eval="4"/>
 		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">open</field>
 		<field name="user_id" search="[('login','=','admin')]" model="res.users"/>
 	</record>
+	<function model="crm.case" name="case_open">
+		<value model="crm.case" eval="[ref('case15')]"/>
+	</function>
 
-	<record model="crm.case">
-		<field name="name">Need a new eCommerce Website</field>
+	<record model="crm.case" id="case16">
+		<field name="name">Need new specific reports</field>
 		<field name="priority">2</field>
-		<field name="description">Fabien think about a new EC website
-Send them a price.</field>
+		<field name="description">Need some specific reports</field>
 		<field name="section_id" ref="section_support"/>
 		<field name="categ_id" eval="categ5"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
+		<field name="partner_id" ref="base.res_partner_thymbra"/>
+		<field name="som" ref="base.som_normal"/>
 		<field name="planned_revenue" eval="1300"/>
 		<field name="planned_cost" eval="79"/>
 		<field name="probability" eval="0.95"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
+		<field name="date" eval="time.strftime('%Y-%m-13')"/>
 		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">open</field>
 		<field name="user_id" search="[('login','=','demo')]" model="res.users"/>
 	</record>
+	<function model="crm.case" name="case_open">
+		<value model="crm.case" eval="[ref('case16')]"/>
+	</function>
 
-	<record model="crm.case" id="case2">
-		<field name="name">Need a new eCommerce Website</field>
-		<field name="priority">2</field>
-		<field name="description">Fabien think about a new EC website
-Send them a price.</field>
-		<field name="section_id" ref="section_support"/>
-		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
-		<field name="planned_revenue" eval="1000"/>
-		<field name="probability" eval="0.15"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
-		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">open</field>
-		<field name="user_id" search="[('login','=','admin')]" model="res.users"/>
-	</record>
-
-	<record model="crm.case">
-		<field name="name">Need a new eCommerce Website</field>
-		<field name="priority">2</field>
-		<field name="description">Fabien think about a new EC website
-Send them a price.</field>
-		<field name="section_id" ref="section_support"/>
-		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
-		<field name="planned_revenue" eval="5670"/>
-		<field name="probability" eval="0.5"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
-		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">open</field>
-		<field name="user_id" search="[('login','=','admin')]" model="res.users"/>
-	</record>
-
-	<record model="crm.case">
-		<field name="name">Need a new eCommerce Website</field>
-		<field name="priority">2</field>
-		<field name="description">Fabien think about a new EC website
-Send them a price.</field>
-		<field name="section_id" ref="section_support"/>
-		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
-		<field name="planned_revenue" eval="8700"/>
-		<field name="probability" eval="0.20"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
-		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">open</field>
-		<field name="user_id" search="[('login','=','demo')]" model="res.users"/>
-	</record>
-
-	<record model="crm.case">
-		<field name="name">Need a new eCommerce Website</field>
-		<field name="priority">2</field>
-		<field name="description">Fabien think about a new EC website
-Send them a price.</field>
-		<field name="section_id" ref="section_support"/>
-		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
-		<field name="planned_revenue" eval="1300"/>
-		<field name="probability" eval="0.5"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
-		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">done</field>
-		<field name="user_id" search="[('login','=','demo')]" model="res.users"/>
-	</record>
-
-	<record model="crm.case">
-		<field name="name">Need a new eCommerce Website</field>
-		<field name="priority">2</field>
-		<field name="description">Fabien think about a new EC website
-Send them a price.</field>
-		<field name="section_id" ref="section_support"/>
-		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
-		<field name="planned_revenue" eval="1000"/>
-		<field name="probability" eval="0.15"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
-		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">open</field>
-		<field name="user_id" search="[('login','=','demo')]" model="res.users"/>
-	</record>
-
-	<record model="crm.case">
-		<field name="name">Need a new eCommerce Website</field>
-		<field name="priority">2</field>
-		<field name="description">Fabien think about a new EC website
-Send them a price.</field>
-		<field name="section_id" ref="section_support"/>
-		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
-		<field name="planned_revenue" eval="2000"/>
-		<field name="planned_cost" eval="279"/>
-		<field name="probability" eval="0.70"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
-		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">open</field>
-		<field name="user_id" search="[('login','=','demo')]" model="res.users"/>
-	</record>
-
-	<record model="crm.case">
-		<field name="name">Need a new eCommerce Website</field>
-		<field name="priority">2</field>
-		<field name="description">Fabien think about a new EC website
-Send them a price.</field>
-		<field name="section_id" ref="section_support"/>
-		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
-		<field name="planned_revenue" eval="300"/>
-		<field name="planned_cost" eval="300"/>
-		<field name="probability" eval="0.5"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
-		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">open</field>
-		<field name="user_id" search="[('login','=','demo')]" model="res.users"/>
-	</record>
-
-	<record model="crm.case">
-		<field name="name">Need a new eCommerce Website</field>
-		<field name="priority">2</field>
-		<field name="description">Fabien think about a new EC website
-Send them a price.</field>
-		<field name="section_id" ref="section_support"/>
-		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
-		<field name="planned_revenue" eval="1875"/>
-		<field name="probability" eval="0.35"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
-		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">open</field>
-		<field name="user_id" search="[('login','=','admin')]" model="res.users"/>
-	</record>
-
-	<record model="crm.case">
-		<field name="name">Need a new eCommerce Website</field>
-		<field name="priority">2</field>
-		<field name="description">Fabien think about a new EC website
-Send them a price.</field>
-		<field name="section_id" ref="section_support"/>
-		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
-		<field name="planned_revenue" eval="1235"/>
-		<field name="probability" eval="0.35"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
-		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">cancel</field>
-		<field name="user_id" search="[('login','=','demo')]" model="res.users"/>
-	</record>
-
-	<record model="crm.case">
-		<field name="name">Need a new eCommerce Website</field>
-		<field name="priority">2</field>
-		<field name="description">Fabien think about a new EC website
-Send them a price.</field>
-		<field name="section_id" ref="section_support"/>
-		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
-		<field name="planned_revenue" eval="5000"/>
-		<field name="planned_cost" eval="679"/>
-		<field name="probability" eval="0.45"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
-		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">open</field>
-		<field name="user_id" search="[('login','=','demo')]" model="res.users"/>
-	</record>
-
-	<record model="crm.case">
-		<field name="name">Need a new eCommerce Website</field>
-		<field name="priority">2</field>
-		<field name="description">Fabien think about a new EC website
-Send them a price.</field>
-		<field name="section_id" ref="section_support"/>
-		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
-		<field name="planned_revenue" eval="6400"/>
-		<field name="probability" eval="0.75"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
-		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">open</field>
-		<field name="user_id" search="[('login','=','demo')]" model="res.users"/>
-	</record>
-
-	<record model="crm.case">
-		<field name="name">Need a new eCommerce Website</field>
-		<field name="priority">2</field>
-		<field name="description">Fabien think about a new EC website
-Send them a price.</field>
-		<field name="section_id" ref="section_support"/>
-		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
-		<field name="planned_revenue" eval="4000"/>
-		<field name="probability" eval="0.45"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
-		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">open</field>
-		<field name="user_id" search="[('login','=','demo')]" model="res.users"/>
-	</record>
-
-	<record model="crm.case">
-		<field name="name">Need a new eCommerce Website</field>
-		<field name="priority">2</field>
-		<field name="description">Fabien think about a new EC website
-Send them a price.</field>
-		<field name="section_id" ref="section_support"/>
-		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
-		<field name="planned_revenue" eval="1000"/>
-		<field name="probability" eval="0.40"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
-		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">done</field>
-		<field name="user_id" search="[('login','=','demo')]" model="res.users"/>
-	</record>
-
-	<record model="crm.case">
-		<field name="name">Need a new eCommerce Website</field>
-		<field name="priority">2</field>
-		<field name="description">Fabien think about a new EC website
-Send them a price.</field>
-		<field name="section_id" ref="section_support"/>
-		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
-		<field name="planned_revenue" eval="1000"/>
-		<field name="probability" eval="0.85"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
-		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">open</field>
-		<field name="user_id" search="[('login','=','demo')]" model="res.users"/>
-	</record>
-
-	<record model="crm.case">
-		<field name="name">Need a new eCommerce Website</field>
-		<field name="priority">2</field>
-		<field name="description">Fabien think about a new EC website
-Send them a price.</field>
-		<field name="section_id" ref="section_support"/>
-		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
-		<field name="planned_revenue" eval="135"/>
-		<field name="probability" eval="0.95"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
-		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">open</field>
-		<field name="user_id" search="[('login','=','admin')]" model="res.users"/>
-	</record>
-
-	<record model="crm.case">
-		<field name="name">Need a new eCommerce Website</field>
-		<field name="priority">2</field>
-		<field name="description">Fabien think about a new EC website
-Send them a price.</field>
-		<field name="section_id" ref="section_support"/>
-		<field name="categ_id" eval="categ4"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
-		<field name="planned_revenue" eval="6790"/>
-		<field name="planned_cost" eval="679"/>
-		<field name="probability" eval="0.90"/>
-		<field name="date">2005-04-05</field>
-		<field name="date_deadline">2005-05-07</field>
-		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">open</field>
-		<field name="user_id" search="[('login','=','demo')]" model="res.users"/>
-	</record>
-
-	<record model="crm.case">
+	<record model="crm.case" id="case17">
 		<field name="name">Server down</field>
 		<field name="priority">2</field>
 		<field name="description">Server is down, doesn't answser to pingz
@@ -677,17 +413,19 @@ Send them a price.</field>
 		(btw : this is only demo data. no stress dear sysadmin :))</field>
 		<field name="section_id" ref="section_support"/>
 		<field name="categ_id" eval="categ1"/>
-		<field name="partner_id" search="[]" model="res.partner"/>
-		<field name="som" search="[]" model="res.partner.som"/>
+		<field name="partner_id" ref="base.res_partner_9"/>
+		<field name="som" ref="base.som_normal"/>
 		<field name="planned_revenue" eval="0"/>
 		<field name="planned_cost" eval="0"/>
 		<field name="probability" eval="0"/>
-		<field name="date">2006-03-29</field>
-		<field name="date_deadline">2006-05-07</field>
+		<field name="date" eval="time.strftime('%Y-%m-19')"/>
+		<field name="priority" eval="2"/>
 		<field name="canal_id" search="[]" model="res.partner.canal"/>
-		<field name="state">open</field>
 		<field name="user_id" search="[('login','=','demo')]" model="res.users"/>
 	</record>
+	<function model="crm.case" name="case_open">
+		<value model="crm.case" eval="[ref('case17')]"/>
+	</function>
 
 </data>
 </terp>
