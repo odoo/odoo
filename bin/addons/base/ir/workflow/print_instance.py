@@ -117,24 +117,46 @@ class report_graph_instance(object):
 		try:
 			import pydot
 		except Exception,e:
-			logger.notifyChannel('workflow', netsvc.LOG_WARNING, 'Import Error for pydot, you will not be able to render workflows\nConsider Installing PyDot or dependencies: http://dkbza.org/pydot.html')
+			logger.notifyChannel('workflow', netsvc.LOG_WARNING,
+					'Import Error for pydot, you will not be able to render workflows\n'
+					'Consider Installing PyDot or dependencies: http://dkbza.org/pydot.html')
 			raise e
 		self.done = False
 
 		try:
-			cr.execute('select * from wkf where osv=%s limit 1', (data['model'],))
+			cr.execute('select * from wkf where osv=%s limit 1',
+					(data['model'],))
 			wkfinfo = cr.dictfetchone()
-			cr.execute('select id from wkf_instance where res_id=%d and wkf_id=%d order by state limit 1', (data['id'],wkfinfo['id']))
-			inst_id = cr.fetchone()[0]
-
-			graph = pydot.Dot(fontsize=16, label="\\n\\nWorkflow: %s\\n OSV: %s" % (wkfinfo['name'],wkfinfo['osv']))
-			graph.set('size', '10.7,7.3')
-			graph.set('center', '1')
-			graph.set('ratio', 'auto')
-			graph.set('rotate', '90')
-			graph.set('rankdir', 'LR')
-			graph_instance_get(cr, graph, inst_id, data.get('nested', False))
-			ps_string = graph.create_ps(prog='dot')
+			if not wkfinfo:
+				ps_string = '''%PS-Adobe-3.0
+/inch {72 mul} def
+/Times-Roman findfont 50 scalefont setfont
+1.5 inch 15 inch moveto
+(No workflow defined) show
+showpage'''
+			else:
+				cr.execute('SELECT id FROM wkf_instance \
+						WHERE res_id=%d AND wkf_id=%d \
+						ORDER BY state LIMIT 1',
+						(data['id'], wkfinfo['id']))
+				inst_id = cr.fetchone()
+				if not inst_id:
+					ps_string = '''%PS-Adobe-3.0
+/inch {72 mul} def
+/Times-Roman findfont 50 scalefont setfont
+1.5 inch 15 inch moveto
+(No workflow instance defined) show
+showpage'''
+				else:
+					inst_id = inst_id[0]
+					graph = pydot.Dot(fontsize=16, label="\\n\\nWorkflow: %s\\n OSV: %s" % (wkfinfo['name'],wkfinfo['osv']))
+					graph.set('size', '10.7,7.3')
+					graph.set('center', '1')
+					graph.set('ratio', 'auto')
+					graph.set('rotate', '90')
+					graph.set('rankdir', 'LR')
+					graph_instance_get(cr, graph, inst_id, data.get('nested', False))
+					ps_string = graph.create_ps(prog='dot')
 		except Exception, e:
 			import traceback, sys
 			tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
