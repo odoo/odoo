@@ -480,6 +480,7 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
 								SUM(((EXTRACT(hour FROM a.name) * 60) + EXTRACT(minute FROM a.name)) * (CASE WHEN a.action = 'sign_in' THEN -1 ELSE 1 END)) as total_attendance
 							from
 								hr_attendance a
+							WHERE action in ('sign_in', 'sign_out')
 							group by a.name::date, a.sheet_id
 						)) AS foo
 						GROUP BY name, sheet_id
