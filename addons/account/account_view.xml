@@ -927,12 +927,16 @@
 				<field name="name" select="1"/>
 				<field name="date" select="1"/>
 				<field name="journal_id" select="1" on_change="onchange_journal_id(journal_id)"/>
+				<field name="currency"/>
 				<newline/>
 				<field name="balance_start"/>
 				<field name="balance_end_real"/>
 				<notebook colspan="4">
 				<page string="Select entries">
-					<field name="move_line_ids" colspan="4" nolabel="1" domain="[('statement_id','=',False),('journal_id','=',journal_id)]" widget="many2many"/>
+					<field name="move_line_ids"
+						colspan="4" nolabel="1"
+						domain="[('statement_id', '=', False), ('journal_id', '=', journal_id)]"
+						widget="many2many"/>
 				</page>
 				<page string="Entry encoding">
 					<separator string="Entry Lines" colspan="4"/>
@@ -942,19 +946,25 @@
 							<field name="date"/>
 							<field name="name"/>
 							<field name="type"/>
-							<field name="partner_id" on_change="onchange_partner_id(partner_id,type)"/>
-							<field name="account_id" domain="[('journal_id','=',parent.journal_id)]"/>
+							<field name="partner_id"
+								on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
+							<field name="account_id"
+								domain="[('journal_id', '=', parent.journal_id)]"/>
 							<field name="amount"/>
-							<field name="reconcile_id" context="{'partner_id':partner_id,'amount':amount,'account_id':account_id}"/> 
+							<field name="reconcile_id"
+								context="{'partner_id': partner_id, 'amount': amount, 'account_id': account_id}"/>
 						</tree>
 						<form string="Statement lines">
 							<field name="date"/>
 							<field name="name"/>
 							<field name="type"/>
-							<field name="partner_id" on_change="onchange_partner_id(partner_id,type)"/>
-							<field name="account_id" domain="[('journal_id','=',parent.journal_id)]"/>
+							<field name="partner_id"
+								on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
+							<field name="account_id"
+								domain="[('journal_id', '=', parent.journal_id)]"/>
 							<field name="amount"/>
-							<field name="reconcile_id" context="{'partner_id':partner_id,'amount':amount,'account_id':account_id}"/> 
+							<field name="reconcile_id"
+								context="{'partner_id': partner_id, 'amount': amount, 'account_id': account_id}"/> 
 						</form>
 					</field>
 				</page>
@@ -977,9 +987,9 @@
 		<field name="view_id" ref="view_bank_statement_reconcile_form"/>
 	</record>
 	<menuitem 
-		name="Financial Management/Periodical Processing/Bank Reconciliation/Create Statement Importing Entries"
-		id="menu_action_account_bank_reconcile_tree" 
-		action="action_bank_statement_reconciliation_form" 
+		name="Financial Management/Periodical Processing/Bank Reconciliation/Statement by Importing Entries"
+		id="menu_action_account_bank_reconcile_tree"
+		action="action_bank_statement_reconciliation_form"
 		/>
 	<wizard
 		string="Bank reconciliation"
