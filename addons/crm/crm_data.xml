@@ -7,37 +7,52 @@
 			<field name="object">crm.case</field>
 		</record>
 
-	</data>
-
-	<data noupdate="1">
-
 		<record model="res.partner.event.type" id="event_type_case_create">
 			<field name="name">CRM: Create Case</field>
 			<field name="key">crm_case_draft</field>
-			<field name="active" eval="False"/>
 		</record>
 
 		<record model="res.partner.event.type" id="event_type_case_open">
 			<field name="name">CRM: Open Case</field>
 			<field name="key">crm_case_open</field>
-			<field name="active" eval="True"/>
 		</record>
 
 		<record model="res.partner.event.type" id="event_type_case_pending">
 			<field name="name">CRM: Pending Case</field>
 			<field name="key">crm_case_pending</field>
-			<field name="active" eval="False"/>
-		</record>
-
-		<record model="res.partner.event.type" id="event_type_case_close">
-			<field name="name">CRM: Close Case</field>
-			<field name="key">crm_case_close</field>
-			<field name="active" eval="True"/>
 		</record>
 
 		<record model="res.partner.event.type" id="event_type_case_cancel">
 			<field name="name">CRM: Cancel Case</field>
 			<field name="key">crm_case_cancel</field>
+		</record>
+
+		<record model="res.partner.event.type" id="event_type_case_close">
+			<field name="name">CRM: Close Case</field>
+			<field name="key">crm_case_done</field>
+		</record>
+
+	</data>
+
+	<data noupdate="1">
+
+		<record model="res.partner.event.type" id="event_type_case_create">
+			<field name="active" eval="False"/>
+		</record>
+
+		<record model="res.partner.event.type" id="event_type_case_open">
+			<field name="active" eval="True"/>
+		</record>
+
+		<record model="res.partner.event.type" id="event_type_case_pending">
+			<field name="active" eval="False"/>
+		</record>
+
+		<record model="res.partner.event.type" id="event_type_case_close">
+			<field name="active" eval="True"/>
+		</record>
+
+		<record model="res.partner.event.type" id="event_type_case_cancel">
 			<field name="active" eval="False"/>
 		</record>
 
