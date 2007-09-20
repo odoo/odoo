@@ -216,7 +216,7 @@ cr.commit()
 
 cr.execute('SELECT conname FROM pg_constraint where conname = \'stock_production_lot_name_uniq\'')
 if cr.fetchall():
-	cr.execute('ALTER TABLE stock_production_lot DROP CONSTRAINT \'stock_production_lot_name_uniq\'')
+	cr.execute('ALTER TABLE stock_production_lot DROP CONSTRAINT stock_production_lot_name_uniq')
 cr.commit()
 
 # ------------------------------------ #
