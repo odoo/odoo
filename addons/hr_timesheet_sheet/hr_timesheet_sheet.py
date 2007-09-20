@@ -58,7 +58,8 @@ class one2many_mod2(fields.one2many):
 
 		for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2,
 				[self._fields_id], context=context, load='_classic_write'):
-			res[r[self._fields_id][0]].append( r['id'] )
+			if r[self._fields_id]:
+				res[r[self._fields_id][0]].append(r['id'])
 
 		return res
 
@@ -84,7 +85,8 @@ class one2many_mod(fields.one2many):
 
 		for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2,
 				[self._fields_id], context=context, load='_classic_write'):
-			res[r[self._fields_id][0]].append( r['id'] )
+			if r[self._fields_id]:
+				res[r[self._fields_id][0]].append(r['id'])
 
 		return res
 
