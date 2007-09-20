@@ -43,8 +43,13 @@ class project(osv.osv):
 		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
 		res_sum = {}
 		if ids2:
-			proj_set = ','.join(map(str, ids2))
-			cr.execute(("SELECT t.project_id, COALESCE(SUM(w.hours),0) FROM project_task t LEFT JOIN project_task_work w on (w.task_id = t.id) WHERE t.project_id in (%s) GROUP BY project_id") % (proj_set,))
+			cr.execute('SELECT t.project_id, COALESCE(SUM(w.hours),0) \
+					FROM project_task t \
+						LEFT JOIN project_task_work w \
+							ON (w.task_id = t.id) \
+					WHERE t.project_id in (' + ','.join([str(x) for x in ids2]) + ') \
+						AND active \
+					GROUP BY project_id')
 			for project_id, sum in cr.fetchall():
 				res_sum[project_id] = sum
 		res={}
@@ -59,8 +64,11 @@ class project(osv.osv):
 		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
 		res_sum = {}
 		if ids2:
-			proj_set = ','.join(map(str, ids2))
-			cr.execute(("SELECT project_id, COALESCE(SUM(planned_hours),0) FROM project_task WHERE project_id IN (%s) GROUP BY project_id") % (proj_set,))
+			cr.execute('SELECT project_id, COALESCE(SUM(planned_hours),0) \
+					FROM project_task \
+					WHERE project_id IN (' + ','.join([str(x) for x in ids2]) + ') \
+						AND active \
+					GROUP BY project_id')
 			for project_id, sum in cr.fetchall():
 				res_sum[project_id] = sum
 		res = {}
@@ -71,15 +79,9 @@ class project(osv.osv):
 				res[id] += res_sum.get(idx, 0.0)
 		return res
 
-	def _check_recursion(self, cr, uid, ids):
-		level = 100
-		while len(ids):
-			cr.execute('select distinct parent_id from project_project where id in ('+','.join(map(str, ids))+')')
-			ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-			if not level:
-				return False
-			level -= 1
-		return True
+	def check_recursion(self, cursor, user, ids, parent=None):
+		return super(project, self).check_recursion(cursor, user, ids,
+				parent=parent)
 
 	def onchange_partner_id(self, cr, uid, ids, part):
 		if not part:
@@ -133,7 +135,7 @@ class project(osv.osv):
 	
 	_order = "priority"
 	_constraints = [
-		(_check_recursion, 'Error ! You can not create recursive projects.', ['parent_id'])
+		(check_recursion, 'Error ! You can not create recursive projects.', ['parent_id'])
 	]
 
 	# toggle activity of projects, their sub projects and their tasks
