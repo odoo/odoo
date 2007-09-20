@@ -284,8 +284,24 @@ class xml_import(object):
 		view_type = rec.hasAttribute('view_type') and rec.getAttribute('view_type').encode('utf-8') or 'form'
 		view_mode = rec.hasAttribute('view_mode') and rec.getAttribute('view_mode').encode('utf-8') or 'tree,form'
 		usage = rec.hasAttribute('usage') and rec.getAttribute('usage').encode('utf-8')
+		limit = rec.hasAttribute('limit') and rec.getAttribute('limit').encode('utf-8')
+		auto_refresh = rec.hasAttribute('auto_refresh') \
+				and rec.getAttribute('auto_refresh').encode('utf-8')
 
-		res = {'name': name, 'type': type, 'view_id': view_id, 'domain': domain, 'context': context, 'res_model': res_model, 'src_model': src_model, 'view_type': view_type, 'view_mode': view_mode, 'usage': usage }
+		res = {
+				'name': name,
+				'type': type,
+				'view_id': view_id,
+				'domain': domain,
+				'context': context,
+				'res_model': res_model,
+				'src_model': src_model,
+				'view_type': view_type,
+				'view_mode': view_mode,
+				'usage': usage,
+				'limit': limit,
+				'auto_refresh': auto_refresh,
+			}
 
 		id = self.pool.get('ir.model.data')._update(cr, self.uid, 'ir.actions.act_window', self.module, res, xml_id, mode=self.mode)
 		self.idref[xml_id] = int(id)
