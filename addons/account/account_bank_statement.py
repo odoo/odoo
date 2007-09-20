@@ -36,9 +36,7 @@ from tools.misc import currency
 import mx.DateTime
 from mx.DateTime import RelativeDateTime, now, DateTime, localtime
 
-#
-# use a sequence for names ?
-# 
+
 class account_bank_statement(osv.osv):
 	def _default_journal_id(self, cr, uid, context={}):
 		if context.get('journal_id', False):
