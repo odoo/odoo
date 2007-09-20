@@ -103,6 +103,9 @@ Send them a price.</field>
 	<function model="crm.case" name="case_open">
 		<value model="crm.case" eval="[ref('case1')]"/>
 	</function>
+	<function model="crm.case" name="case_log">
+		<value model="crm.case" eval="[ref('case1')]"/>
+	</function>
 
 	<record model="crm.case" id="case2">
 		<field name="name">Hdd Crashed unexpectedly</field>
@@ -138,6 +141,9 @@ Send them a price.</field>
 	<function model="crm.case" name="case_open">
 		<value model="crm.case" eval="[ref('case3')]"/>
 	</function>
+	<function model="crm.case" name="case_log">
+		<value model="crm.case" eval="[ref('case3')]"/>
+	</function>
 
 	<record model="crm.case" id="case4">
 		<field name="name">Need a new eCommerce Website</field>
@@ -156,6 +162,9 @@ Send them a price.</field>
 		<field name="user_id" search="[('login','=','demo')]" model="res.users"/>
 	</record>
 	<function model="crm.case" name="case_open">
+		<value model="crm.case" eval="[ref('case4')]"/>
+	</function>
+	<function model="crm.case" name="case_log">
 		<value model="crm.case" eval="[ref('case4')]"/>
 	</function>
 
@@ -196,6 +205,12 @@ Send them a price.</field>
 	<function model="crm.case" name="case_open">
 		<value model="crm.case" eval="[ref('case6')]"/>
 	</function>
+	<function model="crm.case" name="case_log">
+		<value model="crm.case" eval="[ref('case6')]"/>
+	</function>
+	<record model="crm.case" id="case6">
+		<field name="description">Have been rebooted</field>
+	</record>
 	<function model="crm.case" name="case_pending">
 		<value model="crm.case" eval="[ref('case6')]"/>
 	</function>
@@ -218,6 +233,9 @@ Send them a price.</field>
 	<function model="crm.case" name="case_open">
 		<value model="crm.case" eval="[ref('case7')]"/>
 	</function>
+	<function model="crm.case" name="case_log">
+		<value model="crm.case" eval="[ref('case7')]"/>
+	</function>
 
 	<record model="crm.case" id="case8">
 		<field name="name">Missing hardware</field>
@@ -235,6 +253,9 @@ Send them a price.</field>
 		<field name="user_id" search="[('login','=','demo')]" model="res.users"/>
 	</record>
 	<function model="crm.case" name="case_open">
+		<value model="crm.case" eval="[ref('case8')]"/>
+	</function>
+	<function model="crm.case" name="case_log">
 		<value model="crm.case" eval="[ref('case8')]"/>
 	</function>
 
@@ -257,6 +278,9 @@ Send them a price.</field>
 	<function model="crm.case" name="case_open">
 		<value model="crm.case" eval="[ref('case9')]"/>
 	</function>
+	<function model="crm.case" name="case_log">
+		<value model="crm.case" eval="[ref('case9')]"/>
+	</function>
 
 	<record model="crm.case" id="case10">
 		<field name="name">Need a new module</field>
@@ -277,6 +301,12 @@ Send them a price.</field>
 	<function model="crm.case" name="case_open">
 		<value model="crm.case" eval="[ref('case10')]"/>
 	</function>
+	<function model="crm.case" name="case_log">
+		<value model="crm.case" eval="[ref('case10')]"/>
+	</function>
+	<record model="crm.case" id="case10">
+		<field name="description">Module delivries</field>
+	</record>
 	<function model="crm.case" name="case_close">
 		<value model="crm.case" eval="[ref('case10')]"/>
 	</function>
@@ -299,6 +329,9 @@ Send them a price.</field>
 	<function model="crm.case" name="case_open">
 		<value model="crm.case" eval="[ref('case11')]"/>
 	</function>
+	<function model="crm.case" name="case_log">
+		<value model="crm.case" eval="[ref('case11')]"/>
+	</function>
 
 	<record model="crm.case" id="case12">
 		<field name="name">Bad packing</field>
@@ -315,6 +348,9 @@ Send them a price.</field>
 		<field name="user_id" search="[('login','=','demo')]" model="res.users"/>
 	</record>
 	<function model="crm.case" name="case_open">
+		<value model="crm.case" eval="[ref('case12')]"/>
+	</function>
+	<function model="crm.case" name="case_log">
 		<value model="crm.case" eval="[ref('case12')]"/>
 	</function>
 
@@ -335,6 +371,12 @@ Send them a price.</field>
 	<function model="crm.case" name="case_open">
 		<value model="crm.case" eval="[ref('case13')]"/>
 	</function>
+	<function model="crm.case" name="case_log">
+		<value model="crm.case" eval="[ref('case13')]"/>
+	</function>
+	<record model="crm.case" id="case13">
+		<field name="description">Not interested</field>
+	</record>
 	<function model="crm.case" name="case_close">
 		<value model="crm.case" eval="[ref('case13')]"/>
 	</function>
@@ -356,6 +398,9 @@ Send them a price.</field>
 	<function model="crm.case" name="case_open">
 		<value model="crm.case" eval="[ref('case14')]"/>
 	</function>
+	<function model="crm.case" name="case_log">
+		<value model="crm.case" eval="[ref('case14')]"/>
+	</function>
 
 	<record model="crm.case" id="case15">
 		<field name="name">Formation</field>
@@ -372,6 +417,15 @@ Send them a price.</field>
 		<field name="user_id" search="[('login','=','admin')]" model="res.users"/>
 	</record>
 	<function model="crm.case" name="case_open">
+		<value model="crm.case" eval="[ref('case15')]"/>
+	</function>
+	<function model="crm.case" name="case_log">
+		<value model="crm.case" eval="[ref('case15')]"/>
+	</function>
+	<record model="crm.case" id="case15">
+		<field name="description">Information sended</field>
+	</record>
+	<function model="crm.case" name="case_log">
 		<value model="crm.case" eval="[ref('case15')]"/>
 	</function>
 
@@ -391,6 +445,9 @@ Send them a price.</field>
 		<field name="user_id" search="[('login','=','demo')]" model="res.users"/>
 	</record>
 	<function model="crm.case" name="case_open">
+		<value model="crm.case" eval="[ref('case16')]"/>
+	</function>
+	<function model="crm.case" name="case_log">
 		<value model="crm.case" eval="[ref('case16')]"/>
 	</function>
 
@@ -415,6 +472,9 @@ Send them a price.</field>
 		<field name="user_id" search="[('login','=','demo')]" model="res.users"/>
 	</record>
 	<function model="crm.case" name="case_open">
+		<value model="crm.case" eval="[ref('case17')]"/>
+	</function>
+	<function model="crm.case" name="case_log">
 		<value model="crm.case" eval="[ref('case17')]"/>
 	</function>
 
