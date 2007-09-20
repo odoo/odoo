@@ -115,13 +115,12 @@ class ir_values(osv.osv):
 					where1.append('res_id=%d' % (res_id,))
 				else:
 					where1.append('(res_id is NULL)')
-			else:
-				if res_id:
-					if (models[-1][0]==m):
-						where1.append('(res_id=%d or (res_id is null))' % (res_id,))
-						where_opt.append('res_id=%d' % (res_id,))
-					else:
-						where1.append('res_id=%d' % (res_id,))
+			elif res_id:
+				if (models[-1][0]==m):
+					where1.append('(res_id=%d or (res_id is null))' % (res_id,))
+					where_opt.append('res_id=%d' % (res_id,))
+				else:
+					where1.append('res_id=%d' % (res_id,))
 
 #			if not without_user:
 			where_opt.append('user_id=%d' % (uid,))
@@ -130,7 +129,12 @@ class ir_values(osv.osv):
 			result = []
 			ok = True
 			while ok and len(result)==0:
-				cr.execute('select id from ir_values where '+' and '.join(where1+where_opt), where2)
+				if not where_opt:
+					cr.execute('select id from ir_values where ' +\
+							' and '.join(where1)+' and user_id is null', where2)
+				else:
+					cr.execute('select id from ir_values where ' +\
+							' and '.join(where1+where_opt), where2)
 				result = [x[0] for x in cr.fetchall()]
 				if len(where_opt):
 					where_opt.pop()
