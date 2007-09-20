@@ -608,9 +608,8 @@ class xml_import(object):
 			'act_window': self._tag_act_window,
 		}
 
-CSV_STEP = 500
-
-def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init', noupdate=False):
+def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
+		noupdate=False):
 	'''Import csv file :
 		quote: "
 		delimiter: ,
@@ -623,7 +622,7 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init', n
 
 	pool = pooler.get_pool(cr.dbname)
 
-	input=StringIO.StringIO(csvcontent)
+	input = StringIO.StringIO(csvcontent)
 	reader = csv.reader(input, quotechar='"', delimiter=',')
 	fields = reader.next()
 
@@ -634,11 +633,7 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init', n
 	datas = []
 	for line in reader:
 		datas.append( map(lambda x:x.decode('utf8').encode('utf8'), line))
-		if len(datas) > CSV_STEP:
-			pool.get(model).import_data(cr, uid, fields, datas,mode, module,noupdate)
-			datas=[]
-	if datas:
-		pool.get(model).import_data(cr, uid, fields, datas,mode, module,noupdate)
+	pool.get(model).import_data(cr, uid, fields, datas,mode, module,noupdate)
 
 #
 # xml import/export
