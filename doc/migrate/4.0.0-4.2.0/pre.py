@@ -136,7 +136,7 @@ cr.commit()
 cr.execute('SELECT model_id FROM ir_model_access')
 res= cr.fetchall()
 for r in res:
-	cr.execute('SELECT id FROM ir_model_access WHERE model_id = %d AND groupd_id IS NULL', (r[0],))
+	cr.execute('SELECT id FROM ir_model_access WHERE model_id = %d AND group_id IS NULL', (r[0],))
 	if not cr.fetchall():
 		cr.execute("INSERT into ir_model_access (name,model_id,group_id) VALUES ('Auto-generated access by migration',%d,NULL)",(r[0],))
 cr.commit()
