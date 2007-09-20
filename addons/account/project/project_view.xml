@@ -62,9 +62,6 @@
 							<separator string="Note" colspan="4" />
 							<field name="description" colspan="4" nolabel="1" />
 						</page>
-						<page string="Statistics">
-							<field name="stats_ids" colspan="4" mode="graph,tree" nolabel="1"/>
-						</page>
 					</notebook>
 				</form>
 			</field>
@@ -404,6 +401,9 @@
 		domain="[('account_id', '=', active_id)]"
 		res_model="report.hr.timesheet.invoice.journal"
 		src_model="account.analytic.account"
+		view_type="form"
+		view_mode="graph,tree,form"
+		limit="12"
 		id="act_acc_analytic_acc_2_report_hr_timesheet_invoice_journal"/>
 
 	</data>

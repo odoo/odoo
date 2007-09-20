@@ -103,7 +103,7 @@ class timesheet_invoice(osv.osv):
 		create or replace view report_hr_timesheet_invoice_journal as (
 			select
 				min(l.id) as id,
-				substring(l.date for 7)||'-01' as name,
+				date_trunc('month', l.date)::date as name,
 				sum(
 					CASE WHEN l.amount>0 THEN 0 ELSE l.amount
 					END
@@ -112,15 +112,14 @@ class timesheet_invoice(osv.osv):
 					CASE WHEN l.amount>0 THEN l.amount ELSE 0
 					END
 				) as revenue,
-				sum(l.unit_amount*u.factor) as quantity,
+				sum(l.unit_amount* COALESCE(u.factor, 1)) as quantity,
 				journal_id,
 				account_id
 			from account_analytic_line l
-				left join product_uom u on (u.id=l.product_uom_id)
+				LEFT OUTER join product_uom u on (u.id=l.product_uom_id)
 			group by
-				substring(l.date for 7),
+				date_trunc('month', l.date),
 				journal_id,
 				account_id
-			limit 12
 		)""")
 timesheet_invoice()
