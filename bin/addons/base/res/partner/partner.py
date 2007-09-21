@@ -139,7 +139,6 @@ class res_partner(osv.osv):
 		'ref': fields.char('Code', size=64),
 		'lang': fields.selection(_lang_get, 'Language', size=5),
 		'user_id': fields.many2one('res.users', 'Salesman'),
-		'sales': fields.one2many('sale.order', 'partner_id', 'Sales'),
 		'responsible': fields.many2one('res.users', 'Users'),
 		'vat': fields.char('VAT',size=32 ,help="Value Added Tax number"),
 		'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
