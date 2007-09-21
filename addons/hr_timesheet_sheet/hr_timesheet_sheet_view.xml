@@ -62,7 +62,7 @@
 							<tree string="Attendances">
 								<field name="name"/>
 								<field name="action"/>
-								<field name="employee_id" invisible="True"/>
+								<field name="employee_id" invisible="1"/>
 							</tree>
 						</field>
 						<group col="1" colspan="1">
@@ -75,18 +75,18 @@
 						<field name="total_attendance_day" widget="float_time"/>
 						<field name="timesheet_ids" colspan="4" nolabel="1" domain="[('name','=',date_current)]" context="date=date_current,user_id=user_id">
 							<tree string="Timesheet" editable="top">
-								<field name="date" readonly="True"/>
+								<field name="date" readonly="1"/>
 								<field name="account_id" on_change="on_change_account_id(account_id)" domain="[('type','=','normal'), ('state', '&lt;&gt;', 'close')]"/>
 								<field name="name" />
 								<field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" widget="float_time"/>
 								<field name="to_invoice"/>
-								<field name="journal_id" invisible="True"/>
-								<field name="product_id" invisible="True"/>
-								<field name="product_uom_id" invisible="True" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" />
-								<field name="amount" invisible="True"/>
-								<field name="general_account_id" invisible="True"/>
-								<field name="journal_id" invisible="True"/>
-								<field name="user_id" required="1" invisible="True"/>
+								<field name="journal_id" invisible="1"/>
+								<field name="product_id" invisible="1"/>
+								<field name="product_uom_id" invisible="1" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" />
+								<field name="amount" invisible="1"/>
+								<field name="general_account_id" invisible="1"/>
+								<field name="journal_id" invisible="1"/>
+								<field name="user_id" required="1" invisible="1"/>
 							</tree>
 						</field>
 						<field name="total_difference_day" widget="float_time"/>

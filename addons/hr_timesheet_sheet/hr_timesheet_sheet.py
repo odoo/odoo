@@ -59,7 +59,7 @@ class one2many_mod2(fields.one2many):
 		for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2,
 				[self._fields_id], context=context, load='_classic_write'):
 			if r[self._fields_id]:
-				res[r[self._fields_id][0]].append(r['id'])
+				res.setdefault(r[self._fields_id][0], []).append(r['id'])
 
 		return res
 
@@ -86,7 +86,7 @@ class one2many_mod(fields.one2many):
 		for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2,
 				[self._fields_id], context=context, load='_classic_write'):
 			if r[self._fields_id]:
-				res[r[self._fields_id][0]].append(r['id'])
+				res.setdefault(r[self._fields_id][0], []).append(r['id'])
 
 		return res
 
@@ -466,24 +466,35 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
 							select
 								min(hrt.id) as id,
 								l.date::date as name,
-								hrt.sheet_id as sheet_id,
+								s.id as sheet_id,
 								sum(l.unit_amount) as total_timesheet,
 								0.0 as total_attendance
 							from
 								hr_analytic_timesheet hrt
-								left join account_analytic_line l on (l.id = hrt.line_id)
-							group by l.date::date, hrt.sheet_id
+								left join (account_analytic_line l
+									LEFT JOIN hr_timesheet_sheet_sheet s
+									ON (s.date_to >= l.date
+										AND s.date_from <= l.date
+										AND s.user_id = l.user_id))
+									on (l.id = hrt.line_id)
+							group by l.date::date, s.id
 						) union (
 							select
 								-min(a.id) as id,
 								a.name::date as name,
-								a.sheet_id as sheet_id,
+								s.id as sheet_id,
 								0.0 as total_timesheet,
 								SUM(((EXTRACT(hour FROM a.name) * 60) + EXTRACT(minute FROM a.name)) * (CASE WHEN a.action = 'sign_in' THEN -1 ELSE 1 END)) as total_attendance
 							from
 								hr_attendance a
+								LEFT JOIN (hr_timesheet_sheet_sheet s
+									LEFT JOIN hr_employee e
+									ON (s.user_id = e.user_id))
+								ON (a.employee_id = e.id
+									AND s.date_to >= a.name
+									AND s.date_from <= a.name)
 							WHERE action in ('sign_in', 'sign_out')
-							group by a.name::date, a.sheet_id
+							group by a.name::date, s.id
 						)) AS foo
 						GROUP BY name, sheet_id
 				)) AS bar""")
@@ -508,13 +519,18 @@ class hr_timesheet_sheet_sheet_account(osv.osv):
 			select
 				min(hrt.id) as id,
 				l.account_id as name,
-				hrt.sheet_id as sheet_id,
+				s.id as sheet_id,
 				sum(l.unit_amount) as total,
 				l.to_invoice as invoice_rate
 			from
 				hr_analytic_timesheet hrt
-				left join account_analytic_line l on (l.id = hrt.line_id)
-			group by l.account_id, hrt.sheet_id, l.to_invoice
+				left join (account_analytic_line l
+					LEFT JOIN hr_timesheet_sheet_sheet s
+						ON (s.date_to >= l.date
+							AND s.date_from <= l.date
+							AND s.user_id = l.user_id))
+					on (l.id = hrt.line_id)
+			group by l.account_id, s.id, l.to_invoice
 		)""")
 
 hr_timesheet_sheet_sheet_account()
