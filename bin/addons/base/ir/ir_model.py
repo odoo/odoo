@@ -87,24 +87,44 @@ class ir_model_access(osv.osv):
 		'perm_create': fields.boolean('Create Access'),
 		'perm_unlink': fields.boolean('Delete Permission'),
 	}
+
 	def check(self, cr, uid, model_name, mode='read',raise_exception=True):
 		assert mode in ['read','write','create','unlink'], 'Invalid access mode for security'
-		if uid==1:
+		if uid == 1:
 			return True
-		cr.execute('select max(CASE WHEN perm_'+mode+' THEN 1 else 0 END) from ir_model_access a join ir_model m on (a.model_id=m.id) join res_groups_users_rel gu on (gu.gid = a.group_id) where m.model= %s and gu.uid= %s',(model_name,uid,))
-		r= cr.fetchall()
+		cr.execute('SELECT MAX(CASE WHEN perm_'+mode+' THEN 1 else 0 END) '
+			'FROM ir_model_access a '
+				'JOIN ir_model m '
+					'ON (a.model_id=m.id) '
+				'JOIN res_groups_users_rel gu '
+					'ON (gu.gid = a.group_id) '
+			'WHERE m.model = %s AND gu.uid = %s', (model_name, uid,))
+		r = cr.fetchall()
 		if r[0][0] == None:
-			cr.execute('select max(CASE WHEN perm_'+mode+' THEN 1 else 0 END) from ir_model_access a join ir_model m on (a.model_id=m.id) where a.group_id is null and m.model=%s',(model_name,))
+			cr.execute('SELECT MAX(CASE WHEN perm_'+mode+' THEN 1 else 0 END) '
+				'FROM ir_model_access a '
+					'JOIN ir_model m '
+						'ON (a.model_id = m.id) '
+				'WHERE a.group_id IS NULL AND m.model = %s', (model_name,))
 			r= cr.fetchall()
-			if r[0][0] == None : return True
+			if r[0][0] == None:
+				return True
 
 		if not r[0][0]:
 			if raise_exception:
-				raise except_orm('AccessError', 'You can not %s this resource !' % mode)
+				if mode == 'read':
+					raise except_orm('AccessError', 'You can not read this document!')
+				elif mode == 'write':
+					raise except_orm('AccessError', 'You can not write in this document!')
+				elif mode == 'create':
+					raise except_orm('AccessError', 'You can not create this kind of document!')
+				elif mode == 'unlink':
+					raise except_orm('AccessError', 'You can not delete this document!')
+				raise except_orm('AccessError', 'You do not have access to this document!')
 			else:
 				return False
 		return True
-		
+
 	check = tools.cache()(check)
 
 	#
