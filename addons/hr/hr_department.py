@@ -65,13 +65,23 @@ hr_department()
 
 class ir_action_window(osv.osv):
 	_inherit = 'ir.actions.act_window'
-	def read(self, cr, uid, ids, *args, **kwargs):
-		res = super(ir_action_window, self).read(cr, uid, ids, *args, **kwargs)
+
+	def read(self, cr, uid, ids, fields=None, context=None,
+			load='_classic_read'):
+		select = ids
+		if isinstance(ids, (int, long)):
+			select = [ids]
+		res = super(ir_action_window, self).read(cr, uid, select, fields=fields,
+				context=context, load=load)
 		for r in res:
 			mystring = 'department_users_get()'
 			if mystring in (r.get('domain', '[]') or ''):
-				r['domain'] = r['domain'].replace(mystring, str(self.pool.get('hr.department')._get_members(cr, uid)))
+				r['domain'] = r['domain'].replace(mystring, str(
+					self.pool.get('hr.department')._get_members(cr, uid)))
+		if isinstance(ids, (int, long)):
+			return res[0]
 		return res
+
 ir_action_window()
 
 
