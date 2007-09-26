@@ -569,7 +569,9 @@ class stock_picking(osv.osv):
 				self.pool.get('sale.order').write(cr, uid, [p.sale_id.id], {
 					'invoiced': True
 				})
+		self.write(cr, uid, res.keys(), {'invoice_state': 'invoiced'})
 		return res
+
 stock_picking()
 
 class stock_production_lot(osv.osv):

@@ -100,11 +100,7 @@ def _create_invoice(obj, cr, uid, data, context):
 			journal_id=data['form']['journal_id'],group=data['form']['group'],
 			type=type, context= context)
 
-	pick_ids = res.keys()
 	invoice_ids = res.values()
-
-	pool.get('stock.picking').write(cr, uid, pick_ids,
-			{'invoice_state': 'invoiced'})
 
 	if not invoice_ids:
 		return {}
