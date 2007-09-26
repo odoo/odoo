@@ -123,7 +123,7 @@ class report_printscreen_list(report_int):
 
 		for f in fields_order:
 			field = new_doc.createElement("field")
-			field_txt = new_doc.createTextNode('%s' % (fields[f]['string'],))
+			field_txt = new_doc.createTextNode(fields[f]['string'].encode('utf-8'))
 			field.appendChild(field_txt)
 			header.appendChild(field)
 		
