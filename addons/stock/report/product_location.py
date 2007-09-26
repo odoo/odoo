@@ -27,39 +27,46 @@
 
 from report.interface import report_rml
 from report.interface import toxml
-
 import pooler
-#FIXME: we should use toxml
+
 
 class report_custom(report_rml):
-	def create_xml(self, cr, uid, ids, datas, context={}):
-		products = pooler.get_pool(cr.dbname).get('product.product').read(cr, uid, ids, ['name','uom_id'])
-		cr.execute('select id from stock_location where usage=%s', ('internal',))
+
+	def create_xml(self, cr, uid, ids, datas, context=None):
+		pool = pooler.get_pool(cr.dbname)
+		product_obj = pool.get('product.product')
+		location_obj = pool.get('stock.location')
+
+		products = product_obj.read(cr, uid, ids, ['name','uom_id'])
+		cr.execute('SELECT id FROM stock_location WHERE usage = %s',
+				('internal',))
 		location_ids = [ x[0] for x in cr.fetchall() ]
 		location_ids.sort()
 		locs_info = {}
-		locs_name = dict( pooler.get_pool(cr.dbname).get('stock.location').name_get(cr, uid, location_ids) )
+		locs_name = dict(location_obj.name_get(cr, uid, location_ids))
 		for location_id in locs_name.keys():
-			locs_info[location_id] = pooler.get_pool(cr.dbname).get('stock.location')._product_get(cr, uid, location_id, ids)
+			locs_info[location_id] = location_obj._product_get(cr, uid,
+					location_id, ids)
 
 		xml = '<?xml version="1.0" ?><report>'
 		for p in products:
-			xml += '''<product>
-				<name>%s</name>
-				<unit>%s</unit>
-				<locations>
-			''' % (p['name'],p['uom_id'][1])
+			xml += '<product>' \
+				'<name>' + toxml(p['name']) + '</name>' \
+				'<unit>' + toxml(p['uom_id'][1]) + '</unit>' \
+				'<locations>'
 			for loc_id in locs_info.keys():
 				if locs_info[loc_id].get(p['id']):
 					xml += '<location>'
-					xml += '<loc_name>%s</loc_name>' % locs_name[loc_id]
-					xml += '<loc_qty>%s</loc_qty>' % str(locs_info[loc_id].get(p['id']))
+					xml += '<loc_name>' + toxml(locs_name[loc_id]) \
+							+ '</loc_name>'
+					xml += '<loc_qty>' + toxml(locs_info[loc_id].get(p['id'])) \
+							+ '</loc_qty>'
 					xml += '</location>'
-			xml += '''
-				</locations>
-			</product>'''
+			xml += '</locations>' \
+				'</product>'
 		xml += '</report>'
 		return self.post_process_xml_data(cr, uid, xml, context)
 
-report_custom('report.stock.product.location', 'stock.location', '', 'addons/stock/report/product_location.xsl')
+report_custom('report.stock.product.location', 'stock.location', '',
+		'addons/stock/report/product_location.xsl')
 
