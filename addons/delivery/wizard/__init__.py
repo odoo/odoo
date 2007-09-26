@@ -26,4 +26,3 @@
 ##############################################################################
 
 import delivery_sale_order
-import delivery_invoice_onshipping

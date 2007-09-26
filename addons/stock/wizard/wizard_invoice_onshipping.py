@@ -44,84 +44,110 @@ invoice_form = """<?xml version="1.0"?>
 """
 
 invoice_fields = {
-	'journal_id' : {
-		'string':'Destination Journal',
-		'type':'many2one',
-		'relation':'account.journal',
-		'required':True
+	'journal_id': {
+		'string': 'Destination Journal',
+		'type': 'many2one',
+		'relation': 'account.journal',
+		'required': True
 	},
-	'group' : {'string':'Group by partner', 'type':'boolean'}
+	'group': {
+		'string': 'Group by partner',
+		'type':'boolean'
+	},
+	'type': {
+		'string': 'Type',
+		'type': 'selection',
+		'selection': [
+			('out_invoice', 'Customer Invoice'),
+			('in_invoice', 'Supplier Invoice'),
+			('out_refund', 'Customer Refund'),
+			('in_refund', 'Supplier Refund'),
+			],
+		'required': True
+	},
 }
 
-def make_default(val):
-	def fct(obj, cr, uid):
-		return val
-	return fct
-
-def _get_type(self, cr, uid, data, context):
+def _get_type(obj, cr, uid, data, context):
 	picking_obj=pooler.get_pool(cr.dbname).get('stock.picking')
-	pick=picking_obj.browse(cr, uid, [data['id']])[0]
+
+	pick=picking_obj.browse(cr, uid, data['id'])
 	if pick.loc_move_id:
 		usage=pick.loc_move_id.usage
 	else:
 		usage=pick.move_lines[0].location_id.usage
-	if pick.type=='out' and usage=='supplier':
-		type='in_refund'
-	elif pick.type=='out' and usage=='customer':
-		type='out_invoice'
-	elif pick.type=='in' and usage=='supplier':
-		type='in_invoice'
-	elif pick.type=='in' and usage=='customer':
-		type='out_refund'
-	else:
-		type='out_invoice'
-	invoice_fields['type']={'string':'Type', 'type':'selection', 'default':make_default(type),
-		'selection':[
-			('out_invoice','Customer Invoice'),
-			('in_invoice','Supplier Invoice'),
-			('out_refund','Customer Refund'),
-			('in_refund','Supplier Refund'),
-			], 'required':True}
-	return {}
 
-def _create_invoice(self, cr, uid, data, context):
+	if pick.type == 'out' and usage == 'supplier':
+		type = 'in_refund'
+	elif pick.type == 'out' and usage == 'customer':
+		type = 'out_invoice'
+	elif pick.type == 'in' and usage == 'supplier':
+		type = 'in_invoice'
+	elif pick.type == 'in' and usage == 'customer':
+		type = 'out_refund'
+	else:
+		type = 'out_invoice'
+	return {'type': type}
+
+def _create_invoice(obj, cr, uid, data, context):
 	pool = pooler.get_pool(cr.dbname)
 	picking_obj = pooler.get_pool(cr.dbname).get('stock.picking')
-	res = picking_obj.action_invoice_create(cr, uid, data['ids'],journal_id=data['form']['journal_id'],group=data['form']['group'], type=data['form']['type'], context= context)
-	for pick_id, inv_id in res.items():
-		pool.get('stock.picking').write(cr, uid, [pick_id], {'invoice_state':'invoiced'})
-	return res
+	mod_obj = pool.get('ir.model.data')
+	act_obj = pool.get('ir.actions.act_window')
 
-def _action_open_window(self, cr, uid, data, context):
-	res = _create_invoice(self, cr, uid, data, context)
-	iids = res.values()
-	form = data['form']
-	return {
-		'domain': "[('id','in', ["+','.join(map(str,iids))+"])]",
-		'name': 'Invoices',
-		'view_type': 'form',
-		'view_mode': 'tree,form',
-		'res_model': 'account.invoice',
-		'view_id': False,
-		'context': "{'type':'out_invoice'}",
-		'type': 'ir.actions.act_window'
-	}
+	type = data['form']['type']
+
+	res = picking_obj.action_invoice_create(cr, uid, data['ids'],
+			journal_id=data['form']['journal_id'],group=data['form']['group'],
+			type=type, context= context)
+
+	pick_ids = res.keys()
+	invoice_ids = res.values()
+
+	pool.get('stock.picking').write(cr, uid, pick_ids,
+			{'invoice_state': 'invoiced'})
+
+	if not invoice_ids:
+		return {}
+
+	if type == 'out_invoice':
+		xml_id = 'action_invoice_tree5'
+	elif type == 'in_invoice':
+		xml_id = 'action_invoice_tree8'
+	elif type == 'out_refund':
+		xml_id = 'action_invoice_tree10'
+	else:
+		xml_id = 'action_invoice_tree12'
+
+	result = mod_obj._get_id(cr, uid, 'account', xml_id)
+	id = mod_obj.read(cr, uid, result, ['res_id'])['res_id']
+	result = act_obj.read(cr, uid, id)
+	result['res_id'] = invoice_ids
+	return result
+
 
 class make_invoice_onshipping(wizard.interface):
 	states = {
-		'init' : {
-			'actions' : [_get_type],
-			'result' : {'type' : 'form',
-				    'arch' : invoice_form,
-				    'fields' : invoice_fields,
-				    'state' : [('end', 'Cancel'),('create_invoice', 'Create invoice') ]}
+		'init': {
+			'actions': [_get_type],
+			'result': {
+				'type': 'form',
+				'arch': invoice_form,
+				'fields': invoice_fields,
+				'state': [
+					('end', 'Cancel'),
+					('create_invoice', 'Create invoice')
+				]
+			}
 		},
-		'create_invoice' : {
-			'actions' : [],
-			'result' : {'type' : 'action', 'action': _action_open_window, 'state' : 'end'}
+		'create_invoice': {
+			'actions': [],
+			'result': {
+				'type': 'action',
+				'action': _create_invoice,
+				'state': 'end'
+			}
 		},
 	}
+
 make_invoice_onshipping("stock.invoice_onshipping")
-
-
 
