@@ -293,7 +293,7 @@ class orm(object):
 	_name = None
 	_rec_name = 'name'
 	_parent_name = 'parent_id'
-	_date_name = 'date'
+	_date_name = 'date_start'
 	_order = 'id'
 	_inherits = {}
 	_sequence = None
@@ -375,7 +375,7 @@ class orm(object):
 						if not res:
 							cr.execute("ALTER TABLE \"%s\" ADD FOREIGN KEY (%s) REFERENCES \"%s\" ON DELETE SET NULL" % (self._obj, f._fields_id, f._table))
 				elif isinstance(f, fields.many2many):
-					cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname=%s", (f._rel,))
+					cr.execute("SELECT relname FROM pg_class WHERE relkind in ('r','v') AND relname=%s", (f._rel,))
 					if not cr.dictfetchall():
 						#FIXME: Remove this try/except
 						try:
