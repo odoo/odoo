@@ -75,10 +75,17 @@ class report_account_analytic_planning_stat_account(osv.osv):
 	_rec_name = 'account_id'
 	_auto = False
 	_log_access = False
+	def _sum_amount_real(self, cr, uid, ids, name, args, context):
+		result = {}
+		for line in self.browse(cr, uid, ids, context):
+			cr.execute('select sum(unit_amount) from account_analytic_line where account_id=%d and date>=%s and date<=%s', (line.account_id.id,line.planning_id.date_from,line.planning_id.date_to))
+			result[line.id] = cr.fetchone()[0]
+		return result
 	_columns = {
 		'planning_id': fields.many2one('report_account_analytic.planning', 'Planning'),
 		'account_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True),
-		'quantity': fields.float('Quantity', required=True)
+		'quantity': fields.float('Planned', required=True),
+		'sum_amount_real': fields.function(_sum_amount_real, method=True, string='Timesheet'),
 	}
 	def init(self, cr):
 		cr.execute("""
@@ -172,10 +179,19 @@ class report_account_analytic_planning_stat_user(osv.osv):
 	_rec_name = 'user_id'
 	_auto = False
 	_log_access = False
+	def _sum_amount_real(self, cr, uid, ids, name, args, context):
+		result = {}
+		for line in self.browse(cr, uid, ids, context):
+			result[line.id] = 0.0
+			if line.user_id:
+				cr.execute('select sum(unit_amount) from account_analytic_line where user_id=%d and date>=%s and date<=%s', (line.user_id.id,line.planning_id.date_from,line.planning_id.date_to))
+				result[line.id] = cr.fetchone()[0]
+		return result
 	_columns = {
 		'planning_id': fields.many2one('report_account_analytic.planning', 'Planning', required=True),
 		'user_id': fields.many2one('res.users', 'User'),
-		'quantity': fields.float('Quantity', required=True)
+		'quantity': fields.float('Planned', required=True),
+		'sum_amount_real': fields.function(_sum_amount_real, method=True, string='Timesheet'),
 	}
 	def init(self, cr):
 		cr.execute("""
