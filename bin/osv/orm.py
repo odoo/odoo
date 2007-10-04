@@ -293,7 +293,7 @@ class orm(object):
 	_name = None
 	_rec_name = 'name'
 	_parent_name = 'parent_id'
-	_date_name = 'date_start'
+	_date_name = 'date'
 	_order = 'id'
 	_inherits = {}
 	_sequence = None
