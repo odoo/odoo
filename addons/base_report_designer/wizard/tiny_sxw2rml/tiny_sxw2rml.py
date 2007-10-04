@@ -132,7 +132,7 @@ class DomApiGeneral:
 		if type(string) == unicode:
 			return string.encode("utf-8")
 		tempstring = unicode(string,"cp1252").encode("utf-8")
-		return tempstring 
+		return tempstring
 
 class DomApi(DomApiGeneral):
 	"""This class provides a DOM-API for XML-Files from an SXW-Archive."""
@@ -143,15 +143,15 @@ class DomApi(DomApiGeneral):
 		body = self.content_dom.getElementsByTagName("office:body")
 		self.body = body and body[0]
 
-		# TODO: 
+		# TODO:
 		self.style_dict = {}
 		self.style_properties_dict = {}
 
 		# ******** always use the following order:
 		self.buildStyleDict()
 		self.buildStylePropertiesDict()
-
-		self.page_master = self.styles_dom.getElementsByTagName("style:page-master")[0]
+		if self.styles_dom.getElementsByTagName("style:page-master").__len__()<>0:
+			self.page_master = self.styles_dom.getElementsByTagName("style:page-master")[0]
 		self.document = self.content_dom.getElementsByTagName("office:document-content")[0]
 
 	def buildStylePropertiesDict(self):
@@ -224,7 +224,7 @@ class DomApi(DomApiGeneral):
 
 	def normalizeLength(self):
 		"""Normalize all lengthes to floats (i.e: 1 inch = 72).
-		Always use this after "normalizeContent" and "transferStyles"!""" 
+		Always use this after "normalizeContent" and "transferStyles"!"""
 		# TODO: The complex attributes of table cell styles are not transferred yet.
 		#all_styles = self.content_dom.getElementsByTagName("style:properties")
 		#all_styles += self.content_dom.getElementsByTagName("draw:image")
@@ -335,9 +335,11 @@ def sxw2rml(sxw_file, xsl, output='.', save_pict=False):
 			node.setProp('name', img)
 			node.setContent( base64.encodestring(tool.images[img]))
 			images.addChild(node)
-		root.addNextSibling(images) 
-
-	xml = style.saveResultToString(result)
+		root.addNextSibling(images)
+	try:
+		xml = style.saveResultToString(result)
+	except:
+		pass
 	return result
 
 if __name__ == "__main__":
