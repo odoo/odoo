@@ -7,7 +7,7 @@
 	<xsl:variable name="rightMargin">1cm</xsl:variable>
 	<xsl:variable name="topMargin">1cm</xsl:variable>
 	<xsl:variable name="bottomMargin">1cm</xsl:variable>
-	<xsl:variable name="pageSize">21cm,29.7cm</xsl:variable>
+	<xsl:variable name="pageSize">29.7cm,21cm</xsl:variable>
 
 	<xsl:variable name="page_format">a4_letter</xsl:variable>
 

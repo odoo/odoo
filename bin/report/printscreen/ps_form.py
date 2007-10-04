@@ -81,7 +81,7 @@ class report_printscreen_list(report_int):
 
 
 	def _create_table(self, uid, ids, fields, fields_order, results, context, title=''):
-		pageSize=[210.0,297.0]
+		pageSize=[297.0,210.0]
 
 		impl = minidom.getDOMImplementation()
 		new_doc = impl.createDocument(None, "report", None)
