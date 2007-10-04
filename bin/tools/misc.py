@@ -423,4 +423,19 @@ def get_user_companies(cr, user):
 	compids.extend(_get_company_children(cr, compids))
 	return compids
 
+def mod10r(number):
+	"""
+	Input number : account or invoice number
+	Output return: the same number completed with the recursive mod10
+	key
+	"""
+	codec=[0,9,4,6,8,2,7,1,3,5]
+	report = 0
+	result=""
+	for digit in number:
+		result += digit
+		if digit.isdigit():
+			report = codec[ (int(digit) + report) % 10 ]
+	return result + str((10 - report) % 10)
+
 # vim:noexpandtab
