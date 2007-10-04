@@ -162,7 +162,9 @@ class ir_values(osv.osv):
 					#ir_del(cr, uid, x[0])
 					return False
 				def clean(x):
-					for key in ('report_sxw_content', 'report_rml_content', 'report_sxw', 'report_rml'):
+					for key in ('report_sxw_content', 'report_rml_content',
+							'report_sxw', 'report_rml', 'report_sxw_content_data',
+							'report_rml_content_data'):
 						if key in x:
 							del x[key]
 					return x
