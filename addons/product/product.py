@@ -444,21 +444,28 @@ product_product()
 class product_packaging(osv.osv):
 	_name = "product.packaging"
 	_description = "Conditionnement"
+	_rec_name = 'ean'
 	_columns = {
 		'name' : fields.char('Description', size=64),
-		'qty' : fields.float('Quantity by UL', help="The total number of products you can put on one transport unit (box or pallet)."),
+		'qty' : fields.float('Quantity by UL',
+			help="The total number of products you can put by UL."),
 		'ul' : fields.many2one('product.ul', 'Type of UL', required=True),
-		'ul_qty' : fields.integer('UL by row'),
-		'rows' : fields.integer('# of rows', required=True),
-		'product_id' : fields.many2one('product.product', 'Product', select=True),
-		'ean' : fields.char('EAN', size=14, help="The EAN code of the transport unit."),
-		'code' : fields.char('Code', size=14, help="The code of the transport unit."),
-		'weight': fields.float('Weight Palette'),
-		'weight_ul': fields.float('Weight UL'),
-		'active' : fields.boolean('Active'),
-		'height': fields.float('Height'),
-		'width': fields.float('Width'),
-		'length': fields.float('Length'),
+		'ul_qty' : fields.integer('UL by layer'),
+		'rows' : fields.integer('Number of layer', required=True,
+			help='The number of layer on palette'),
+		'product_id' : fields.many2one('product.product', 'Product',
+			select=1, required=True),
+		'ean' : fields.char('EAN', size=14,
+			help="The EAN code of the transport unit."),
+		'code' : fields.char('Code', size=14,
+			help="The code of the transport unit."),
+		'weight': fields.float('Palette Weight',
+			help='The weight of the empty palette'),
+		'weight_ul': fields.float('UL Weight',
+			help='The weight of the empty UL'),
+		'height': fields.float('Height', help='The height of the palette'),
+		'width': fields.float('Width', help='The width of the palette'),
+		'length': fields.float('Length', help='The length of the palette'),
 	}
 
 	def _get_1st_ul(self, cr, uid, context={}):
@@ -469,7 +476,6 @@ class product_packaging(osv.osv):
 	_defaults = {
 		'rows' : lambda *a : 3,
 		'ul' : _get_1st_ul,
-		'active' : lambda *a: 1,
 	}
 
 	def checksum(ean):
@@ -480,11 +486,6 @@ class product_packaging(osv.osv):
 		return (10 - (sum % 10)) % 10
 	checksum = staticmethod(checksum)
 
-	def on_change_qty(self, cr, uid, ids, weight, qty):
-		return {'value' : { 'weight_ul' : weight * qty } }
-
-	def on_change_rows(self, cr, uid, ids, weight, ul, row, qty):
-		return {'value' : { 'weight' : weight * ul * row * qty }}
 product_packaging()
 
 

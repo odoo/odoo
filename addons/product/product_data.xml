@@ -1,30 +1,8 @@
 <?xml version="1.0"?>
 <terp>
 <data noupdate="1">
-<!--
-FIXME: from here... 
--->
-	
-	<!-- 
-	Resource: product.ul
-	-->
-	<record id="product_ul" model="product.ul" >
-		<field name="name">PCE</field>
-		<field name="type">box</field>
-	</record>
-	
-	<!-- 
-	Resource: product.packaging
-	-->
-	<record id="product_packaging_0" model="product.packaging">
-		<field name="name">By Unit</field>
-		<field name="qty">1</field>
-		<field name="ul" ref="product_ul" />
-		<field name="ul_qty">1</field>
-		<field name="rows">1</field>
-	</record>
 
-	<!-- 
+	<!--
 	Resource: product.uom.categ
 	-->
 	<record id="product_uom_categ_unit" model="product.uom.categ">
@@ -34,7 +12,7 @@ FIXME: from here...
 		<field name="name">KGM</field>
 	</record>
 
-	<!-- 
+	<!--
 	Resource: product.uom
 	-->
 	<record id="product_uom_unit" model="product.uom">
@@ -50,7 +28,7 @@ FIXME: from here...
 		<field name="name">KGM</field>
 	</record>
 
-<!-- 
+<!--
 ... to here, it should be in product_demo but we cant just move it 
 there yet otherwise people who have installed the server (even with the without-demo
 parameter) will see those record just disappear.

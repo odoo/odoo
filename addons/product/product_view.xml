@@ -371,10 +371,9 @@
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
 				<tree string="Packaging">
-					<field name="name" />
 					<field name="ean" />
-					<field name="ul" />
 					<field name="qty" />
+					<field name="ul" />
 				</tree>
 			</field>
 		</record>
@@ -385,19 +384,21 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Packaging">
-					<field name="name" select="1"/>
-					<field name="ean" select="1" />
-					<field name="ul" />
-					<field name="qty" select="1" on_change="on_change_qty(parent.weight, qty)" />
-					<field name="weight_ul" />
-					<separator string="Palletization" colspan="4" />
-					<field name="ul_qty" />
-					<field name="rows" on_change="on_change_rows(parent.weight, ul_qty, rows, qty)" />
-					<field name="weight" />
-					<separator string="Dimension" colspan="4"/>
+					<field name="ean" select="1"/>
+					<newline/>
+					<field name="qty" select="1"/>
+					<field name="ul"/>
+					<field name="weight_ul"/>
+					<separator string="Paletization" colspan="4"/>
+					<field name="ul_qty"/>
+					<field name="rows"/>
+					<field name="weight"/>
+					<separator string="Palette Dimension" colspan="4"/>
 					<field name="height"/>
 					<field name="width"/>
 					<field name="length"/>
+					<separator string="Other Info" colspan="4"/>
+					<field name="name" select="1" colspan="4"/>
 				</form>
 			</field>
 		</record>
