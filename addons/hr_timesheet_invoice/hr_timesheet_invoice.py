@@ -78,7 +78,7 @@ class account_analytic_line(osv.osv):
 	}
 
 	def unlink(self, cursor, user, ids, context=None):
-		self._check(cursor, uid, ids)
+		self._check(cursor, user, ids)
 		return super(account_analytic_line,self).unlink(cursor, uid, ids,
 				context=context)
 
