@@ -11,7 +11,7 @@
 	"author" : "SISalp-NBconseil",
 	"category" : "Localisation/Account charts",
 	"website": "http://erp-libre.info",
-	"depends" : ["base", "account", "account_chart"],
+	"depends" : ["base", "account", "account_chart", 'base_vat'],
 	"init_xml" : [],
 	"update_xml" : ["../account_chart/account_chart.xml", "types.xml",
 		"plan-99-03_societe.xml", "taxes.xml",],
