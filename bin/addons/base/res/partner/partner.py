@@ -345,12 +345,15 @@ class res_partner_bank(osv.osv):
 	_description='Bank Details'
 	_name = "res.partner.bank"
 	_rec_name = "state"
+
 	def _bank_type_get(self, cr, uid, *args):
+		bank_type_obj = self.pool.get('res.partner.bank.type')
+
 		result = []
-		type_ids = self.pool.get('res.partner.bank.type').search(cr, uid, [])
-		res = self.pool.get('res.partner.bank.type').read(cr, uid, type_ids, ['code','name'])
-		for r in res:
-			result.append((r['code'], r['name']))
+		type_ids = bank_type_obj.search(cr, uid, [])
+		bank_types = bank_type_obj.browse(cr, uid, type_ids)
+		for bank_type in bank_types:
+			result.append((bank_type.code, bank_type.name))
 		return result
 
 	_columns = {
@@ -361,27 +364,43 @@ class res_partner_bank(osv.osv):
 		'street': fields.char('Street', size=128),
 		'zip': fields.char('Zip', change_default=True, size=24),
 		'city': fields.char('City', size=128),
-		'country_id': fields.many2one('res.country', 'Country', change_default=True),
-		'state_id': fields.many2one("res.country.state", 'State', change_default=True, domain="[('country_id','=',country_id)]"),
-		'partner_id': fields.many2one('res.partner', 'Partner', required=True, ondelete='cascade', select=True),
-		'state': fields.selection(_bank_type_get, 'Bank type', required=True, change_default=True),
+		'country_id': fields.many2one('res.country', 'Country',
+			change_default=True),
+		'state_id': fields.many2one("res.country.state", 'State',
+			change_default=True, domain="[('country_id','=',country_id)]"),
+		'partner_id': fields.many2one('res.partner', 'Partner', required=True,
+			ondelete='cascade', select=True),
+		'state': fields.selection(_bank_type_get, 'Bank type', required=True,
+			change_default=True),
 	}
+
 	def fields_get(self, cr, uid, fields=None, context=None):
 		res = super(res_partner_bank, self).fields_get(cr, uid, fields, context)
-		type_ids = self.pool.get('res.partner.bank.type').search(cr, uid, [])
-		types = self.pool.get('res.partner.bank.type').browse(cr, uid, type_ids)
-		for t in types:
-			for f in t.field_ids:
-				if f.name in res:
-					res[f.name].setdefault('states',{})
-					res[f.name]['states'][t.code] = [('readonly',f.readonly),('required',f.required)]
+		bank_type_obj = self.pool.get('res.partner.bank.type')
+		type_ids = bank_type_obj.search(cr, uid, [])
+		types = bank_type_obj.browse(cr, uid, type_ids)
+		for type in types:
+			for field in type.field_ids:
+				if field.name in res:
+					res[field.name].setdefault('states', {})
+					res[field.name]['states'][type.code] = [
+							('readonly', field.readonly),
+							('required', field.required)]
 		return res
 
-	def name_get(self, cr, uid, ids, context={}):
+	def name_get(self, cr, uid, ids, context=None):
 		if not len(ids):
 			return []
-		return [(r['id'], (r[self._rec_name] or '') + (r['owner_name'] and \
-				(' ' + r['owner_name']) or '')) for r in self.read(cr, uid, ids,
+		bank_type_obj = self.pool.get('res.partner.bank.type')
+
+		type_ids = bank_type_obj.search(cr, uid, [])
+		bank_type_names = {}
+		for bank_type in bank_type_obj.browse(cr, uid, type_ids,
+				context=context):
+			bank_type_names[bank_type.code] = bank_type.name
+
+		return [(r['id'], (bank_type_names[r['state']] or '') + (r['owner_name'] and \
+				(': ' + r['owner_name']) or '')) for r in self.read(cr, uid, ids,
 					[self._rec_name, 'owner_name'], context,
 					load='_classic_write')]
 
