@@ -339,9 +339,9 @@ def trans_load_data(db_name, data, lang, strict=False, lang_name=None):
 						trans_obj.write(cr, uid, ids, {'value': dic['value']})
 					else:
 						trans_obj.create(cr, uid, dic)
+				cr.commit()
 			except Exception, e:
 				logger.notifyChannel('init', netsvc.LOG_ERROR, 'Import error: %s on line %d: %s!' % (str(e), line, row))
-		cr.commit()
 		cr.close()
 		logger.notifyChannel("init", netsvc.LOG_INFO, "translation file loaded succesfully")
 	except IOError:

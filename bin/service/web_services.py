@@ -109,6 +109,7 @@ class db(netsvc.Service):
 						traceback_str = e_str.getvalue()
 						e_str.close()
 						serv.actions[id]['traceback'] = traceback_str
+						cr.close()
 			logger = netsvc.Logger()
 			logger.notifyChannel("web-services", netsvc.LOG_INFO, 'CREATE DB: %s' % (db_name))
 
