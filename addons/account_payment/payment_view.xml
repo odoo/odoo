@@ -1,8 +1,8 @@
 <?xml version="1.0" ?>
 <terp>
 	<data>
-		<menuitem name="Financial Management/Payment Management" id="menu_main" />
-		<menuitem name="Financial Management/Payment Management/Configuration" groups="admin" sequence="1"/>
+		<menuitem name="Financial Management/Payment" id="menu_main" />
+		<menuitem name="Financial Management/Configuration" groups="admin" sequence="1"/>
 
 		<record model="ir.ui.view" id="view_payment_type_form">
 			<field name="name">payment.type.form</field>
@@ -13,7 +13,7 @@
 					<field name="name" select="1"/>
 					<field name="code"/>
 					<newline/>
-					<field name="suitable_bank_types" select="1"/>
+					<field name="suitable_bank_types" select="1" colspan="4"/>
 				</form>
 			</field>
 		</record>
@@ -23,7 +23,8 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 		</record>
-		<menuitem name="Financial Management/Payment Management/Configuration/Payment Type" id="menu_action_payment_type_form" action="action_payment_type_form"/>
+		<menuitem name="Financial Management/Configuration/Payment/Payment Type"
+			id="menu_action_payment_type_form" action="action_payment_type_form"/>
 
 		<record model="ir.ui.view" id="view_payment_mode_tree">
 			<field name="name">payment.mode.tree</field>
@@ -58,10 +59,11 @@
 			<field name="view_mode">tree,form</field>
 		</record>
 
-		<menuitem 
-		   name="Financial Management/Payment Management/Configuration/Payment Mode" 
-		   id="menu_action_payment_mode_form" action="action_payment_mode_form"/>
-	    <record model="ir.ui.view" id="view_payment_order_form">
+		<menuitem
+			name="Financial Management/Configuration/Payment/Payment Mode"
+			id="menu_action_payment_mode_form" action="action_payment_mode_form"/>
+
+		<record model="ir.ui.view" id="view_payment_order_form">
 			<field name="name">payment.order.form</field>
 			<field name="model">payment.order</field>
 			<field name="type">form</field>
@@ -88,7 +90,7 @@
 					<button name="set_to_draft" states="cancel" 
 							type="object" string="Set to draft"/>
 					</group>
-   				</form>
+				</form>
 			</field>
 		</record>
 
@@ -115,12 +117,12 @@
 			<field name="name">Payment order</field>
 			<field name="res_model">payment.order</field>
 			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
+			<field name="view_mode">form,tree</field>
 		</record>
-	    <menuitem name="Financial Management/Payment Management/Payment Orders" 
-				  id="menu_action_payment_order_form" 
-				  action="action_payment_order_tree"
-				  sequence="3"/>
+		<menuitem name="Financial Management/Payment/Payment Orders"
+			id="menu_action_payment_order_form"
+			action="action_payment_order_tree"
+			sequence="3"/>
 
 		<record model="ir.actions.act_window" id="action_payment_order_draft">
 			<field name="name">Draft payment order</field>
@@ -129,10 +131,10 @@
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('state','=','draft')]</field>
 		</record>
-	    <menuitem name="Financial Management/Payment Management/Payment Orders/Draft Payment Orders" 
-				  id="menu_action_payment_order_draft" 
-				  action="action_payment_order_draft"
-				  sequence="1"/>
+		<menuitem name="Financial Management/Payment/Payment Orders/Draft Payment Orders"
+			id="menu_action_payment_order_draft"
+			action="action_payment_order_draft"
+			sequence="1"/>
 
 		<record model="ir.actions.act_window" id="action_payment_order_open">
 			<field name="name">Payment orders to validate</field>
@@ -141,14 +143,10 @@
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('state','=','open')]</field>
 		</record>
-	    <menuitem name="Financial Management/Payment Management/Payment Orders/Payment Orders to Validate" 
-				  id="menu_action_payment_order_open" 
-				  action="action_payment_order_open"
-				  sequence="2"/>
-
-
-
-
+		<menuitem name="Financial Management/Payment/Payment Orders/Payment Orders to Validate"
+			id="menu_action_payment_order_open"
+			action="action_payment_order_open"
+			sequence="2"/>
 
 		<record model="ir.ui.view" id="view_payment_line_form">
 			<field name="name">Payment Line</field>
@@ -156,15 +154,21 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Payment Line">
-					<field name="move_line_id" 
-						   select="1" on_change="onchange_move_line(move_line_id,parent.mode.type.code)" domain="[('reconcile_id','=', False), ('credit', '>',0),('amount_to_pay','>',0)] "/>
-					<field name="amount" select="1" />
+					<field name="move_line_id"
+						select="1"
+						on_change="onchange_move_line(move_line_id,parent.mode.type.code)"
+						domain="[('reconcile_id','=', False), ('credit', '>',0),('amount_to_pay','>',0)] "/>
+					<newline/>
+					<field name="amount_currency" select="1"/>
+					<field name="to_pay_currency"/>
+					<field name="currency"/>
 					<field name="bank_id" domain="[('partner_id','=',partner_id)]"/>
-					<field name="to_pay"/>
 					<field name="partner_id"/>
-					<field name="partner_payable"/>
 					<field name="reference"/>
 					<field name="due_date"/>
+					<field name="amount" select="2" />
+					<field name="to_pay"/>
+					<field name="partner_payable"/>
 					<field name="date_created"/>
 				</form>
 			</field>
@@ -175,16 +179,23 @@
 		<field name="type">tree</field>
 		<field name="priority" eval="4"/>
 		<field name="arch" type="xml">
-			<tree string="Payment Line" editable="bottom" colors="red:to_pay&lt;amount" >
-				<field name="move_line_id" select="1" on_change="onchange_move_line(move_line_id,parent.mode)" domain="[('reconcile_id','=', False), ('credit', '>',0),('amount_to_pay','>',0)] "/>
-				<field name="bank_id" domain="[('partner_id','=',partner_id)]"/>
-				<field name="amount"/>
-				<field name="to_pay"/>
+			<tree string="Payment Line" editable="bottom"
+				colors="red:to_pay_currency&lt;amount_currency">
+				<field name="move_line_id" select="1"
+					on_change="onchange_move_line(move_line_id,parent.mode)"
+					domain="[('reconcile_id', '=', False), ('credit', '>', 0), ('amount_to_pay', '>', 0)]"/>
+				<field name="bank_id" domain="[('partner_id', '=', partner_id)]"/>
+				<field name="amount_currency"/>
+				<field name="to_pay_currency"/>
+				<field name="currency"/>
 				<field name="partner_id"/>
-				<field name="partner_payable"/>
 				<field name="reference"/>
 				<field name="due_date"/>
+				<field name="amount"/>
+				<field name="to_pay"/>
+				<field name="partner_payable"/>
 				<field name="date_created"/>
+				<field name="name"/>
 			</tree>
 		</field>
 		</record>
@@ -195,6 +206,18 @@
 			<field name="view_mode">form,tree</field>
 		</record>
 
+	<record model="ir.ui.view" id="view_bank_statement_form">
+		<field name="name">account.bank.statement.form.inherit</field>
+		<field name="model">account.bank.statement</field>
+		<field name="type">form</field>
+		<field name="inherit_id" ref="account.view_bank_statement_form"/>
+		<field name="arch" type="xml">
+			<field name="period_id" position="after">
+				<button name="%(wizard_populate_statement)d"
+						string="Import payment lines" type="action" colspan="2"/>
+			</field>
+		</field>
+	</record>
 
 	</data>
 </terp>

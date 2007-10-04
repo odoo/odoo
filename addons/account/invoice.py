@@ -95,6 +95,9 @@ class account_invoice(osv.osv):
 			res[id] = self.test_paid(cr, uid, [id])
 		return res
 
+	def _get_reference_type(self, cursor, user, context=None):
+		return [('none', 'None')]
+
 	_name = "account.invoice"
 	_description = 'Invoice'
 	_order = "number"
@@ -110,6 +113,8 @@ class account_invoice(osv.osv):
 
 		'number': fields.char('Invoice Number', size=32, readonly=True),
 		'reference': fields.char('Invoice Reference', size=64),
+		'reference_type': fields.selection(_get_reference_type, 'Reference Type',
+			required=True),
 		'comment': fields.text('Additionnal Information'),
 
 		'state': fields.selection([
@@ -152,9 +157,12 @@ class account_invoice(osv.osv):
 		'state': lambda *a: 'draft',
 		'journal_id': _get_journal,
 		'currency_id': _get_currency,
-		'company_id': lambda self, cr, uid, context: self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id,
+		'company_id': lambda self, cr, uid, context: \
+				self.pool.get('res.users').browse(cr, uid, uid,
+					context=context).company_id.id,
+		'reference_type': lambda *a: 'none',
 	}
-	
+
 	def unlink(self, cr, uid, ids):
 		invoices = self.read(cr, uid, ids, ['state'])
 		unlink_ids = []
@@ -317,6 +325,10 @@ class account_invoice(osv.osv):
 		iml = self.pool.get('account.invoice.line').move_line_get(cr, uid, inv.id)
 		for il in iml:
 			if il['account_analytic_id']:
+				if inv.type in ('in_invoice', 'in_refund'):
+					ref = inv.reference
+				else:
+					ref = self._convert_ref(cr, uid, inv.number)
 				il['analytic_lines'] = [(0,0, {
 					'name': il['name'],
 					'date': inv['date_invoice'],
@@ -327,7 +339,7 @@ class account_invoice(osv.osv):
 					'product_uom_id': il['uos_id'],
 					'general_account_id': il['account_id'],
 					'journal_id': self._get_journal_analytic(cr, uid, inv.type),
-					'ref': self._convert_ref(cr, uid, inv['number']),
+					'ref': ref,
 				})]
 		return iml
 
@@ -370,7 +382,12 @@ class account_invoice(osv.osv):
 			# one move line per tax line
 			iml += ait_obj.move_line_get(cr, uid, inv.id)
 
-			
+			if inv.type in ('in_invoice', 'in_refund'):
+				ref = inv.reference
+			else:
+				ref = self._convert_ref(cr, uid, inv.number)
+
+			diff_currency_p = inv.currency_id.id <> company_currency
 			# create one move line for the total and possibly adjust the other lines amount
 			total = 0
 			total_currency = 0
@@ -378,11 +395,13 @@ class account_invoice(osv.osv):
 				if inv.currency_id.id != company_currency:
 					i['currency_id'] = inv.currency_id.id
 					i['amount_currency'] = i['price']
-					i['price'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, i['price'], context={'date': inv.date_invoice})
+					i['price'] = cur_obj.compute(cr, uid, inv.currency_id.id,
+							company_currency, i['price'],
+							context={'date': inv.date_invoice})
 				else:
 					i['amount_currency'] = False
 					i['currency_id'] = False
-				i['ref'] = self._convert_ref(cr, uid, inv.number)
+				i['ref'] = ref
 				if inv.type in ('out_invoice','in_refund'):
 					total += i['price']
 					total_currency += i['amount_currency'] or i['price']
@@ -409,9 +428,31 @@ class account_invoice(osv.osv):
 					if i == len(totlines):
 						amount_currency += res_amount_currency
 
-					iml.append({ 'type':'dest', 'name':name, 'price': t[1], 'account_id':acc_id, 'date_maturity': t[0], 'amount_currency': amount_currency, 'currency_id': inv.currency_id.id, 'ref': inv.number})
+					iml.append({
+						'type': 'dest',
+						'name': name,
+						'price': t[1],
+						'account_id': acc_id,
+						'date_maturity': t[0],
+						'amount_currency': diff_currency_p \
+								and  amount_currency or False,
+						'currency_id': diff_currency_p \
+								and inv.currency_id.id or False,
+						'ref': ref,
+					})
 			else:
-				iml.append({ 'type':'dest', 'name':name, 'price': total, 'account_id':acc_id, 'date_maturity' : inv.date_due or False, 'amount_currency': total_currency, 'currency_id': inv.currency_id.id, 'ref': inv.number})
+				iml.append({
+					'type': 'dest',
+					'name': name,
+					'price': total,
+					'account_id': acc_id,
+					'date_maturity' : inv.date_due or False,
+					'amount_currency': diff_currency_p \
+							and total_currency or False,
+					'currency_id': diff_currency_p \
+							and inv.currency_id.id or False,
+					'ref': ref
+			})
 
 			date = inv.date_invoice
 			part = inv.partner_id.id
@@ -452,13 +493,17 @@ class account_invoice(osv.osv):
 		}
 
 	def action_number(self, cr, uid, ids, *args):
-		cr.execute('SELECT id, type, number, move_id FROM account_invoice WHERE id IN ('+','.join(map(str,ids))+')')
-		for (id, invtype, number, move_id) in cr.fetchall():
+		cr.execute('SELECT id, type, number, move_id, reference FROM account_invoice WHERE id IN ('+','.join(map(str,ids))+')')
+		for (id, invtype, number, move_id, reference) in cr.fetchall():
 			if not number:
 				number = self.pool.get('ir.sequence').get(cr, uid, 'account.invoice.'+invtype)
+				if type in ('in_invoice', 'in_refund'):
+					ref = reference
+				else:
+					ref = self._convert_ref(cr, uid, number)
 				cr.execute('UPDATE account_invoice SET number=%s WHERE id=%d', (number, id))
-				cr.execute('UPDATE account_move_line SET ref=%s WHERE move_id=%d and ref is null', (self._convert_ref(cr, uid, number), move_id))
-				cr.execute('UPDATE account_analytic_line SET ref=%s FROM account_move_line WHERE account_move_line.move_id=%d AND account_analytic_line.move_id=account_move_line.id', (self._convert_ref(cr, uid, number), move_id))
+				cr.execute('UPDATE account_move_line SET ref=%s WHERE move_id=%d and ref is null', (ref, move_id))
+				cr.execute('UPDATE account_analytic_line SET ref=%s FROM account_move_line WHERE account_move_line.move_id=%d AND account_analytic_line.move_id=account_move_line.id', (ref, move_id))
 		return True
 
 	def action_cancel(self, cr, uid, ids, *args):

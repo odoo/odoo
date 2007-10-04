@@ -2,18 +2,25 @@
 <terp>
   <data>
 	<wizard
-	   string="Populate payment"
-	   model="payment.order"
-	   name="populate_payment"
-	   menu="False"
-	   id="wizard_populate_payment"/>
+		string="Populate payment"
+		model="payment.order"
+		name="populate_payment"
+		menu="False"
+		id="wizard_populate_payment"/>
 
 	<wizard
-	   string="Pay"
-	   model="payment.order"
-	   name="pay_payment"
-	   menu="False"
-	   id="wizard_pay_payment"/>
+		string="Pay"
+		model="payment.order"
+		name="pay_payment"
+		menu="False"
+		id="wizard_pay_payment"/>
+
+	<wizard
+		string="Populate Statement with Payment lines"
+		model="account.bank.statement"
+		name="populate_statement"
+		menu="False"
+		id="wizard_populate_statement"/>
 
   </data>
 </terp>

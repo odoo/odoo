@@ -25,88 +25,92 @@
 #
 ##############################################################################
 import wizard
-from osv import osv
 import pooler
-from osv import fields
-import time
+from tools.misc import UpdateableStr
 
 
 
-ask_form="""<?xml version="1.0"?>
-<form string="Populate Payment : ">
-<field name="entries"/>
-</form>
-"""
-ask_fields={
-		'entries': {'string':'Entries', 'type':'many2many',
-					'relation': 'account.move.line',},
-		}
+FORM = UpdateableStr()
+
+FIELDS = {
+	'entries': {'string':'Entries', 'type':'many2many',
+		'relation': 'account.move.line',},
+}
 
 
 def search_entries(self, cr, uid, data, context):
+	pool = pooler.get_pool(cr.dbname)
+	line_obj = pool.get('account.move.line')
 
-	pool= pooler.get_pool(cr.dbname)
 	# Search for move line to pay:
-	mline_ids = pool.get('account.move.line').search(cr, uid,
-					[('reconcile_id', '=', False),
-					('amount_to_pay', '>', 0)],
-					context=context)
+	line_ids = line_obj.search(cr, uid, [
+		('reconcile_id', '=', False),
+		('amount_to_pay', '>', 0)], context=context)
 
-	if not mline_ids:
-		ask_fields['entries']['domain']= [('id', 'in', [])]
-		return {}
-	
-	ask_fields['entries']['domain']= [('id', 'in', mline_ids)]
-	return {'entries': mline_ids}
+	FORM.string = '''<?xml version="1.0"?>
+<form string="Populate Payment:">
+	<field name="entries" colspan="4" height="300" width="800" nolabel="1"
+		domain="[('id', 'in', [%s])]"/>
+</form>''' % (','.join([str(x) for x in line_ids]))
+	return {'entries': line_ids}
 
 def create_payment(self, cr, uid, data, context):
-	mline_ids= data['form']['entries'][0][2]
-	if not mline_ids: return {}
+	line_ids= data['form']['entries'][0][2]
+	if not line_ids: return {}
 
 	pool= pooler.get_pool(cr.dbname)
-	payment = pool.get('payment.order').browse(cr, uid, data['id'],
+	order_obj = pool.get('payment.order')
+	line_obj = pool.get('account.move.line')
+
+	payment = order_obj.browse(cr, uid, data['id'],
 			context=context)
-	t= payment.mode and payment.mode.type.code or 'manual'
-	line2bank= pool.get('account.move.line').line2bank(cr,uid,
-				mline_ids,t,context)
+	t = payment.mode and payment.mode.type.code or 'manual'
+	line2bank= pool.get('account.move.line').line2bank(cr, uid,
+			line_ids, t, context)
 
 	## Finally populate the current payment with new lines:
-	for line in pool.get('account.move.line').browse(cr, uid, mline_ids,
-			context=context):
+	for line in line_obj.browse(cr, uid, line_ids, context=context):
 		pool.get('payment.line').create(cr,uid,{
 			'move_line_id': line.id,
-			'amount': line.amount_to_pay,
+			'amount_currency': line.amount_to_pay,
 			'bank_id': line2bank.get(line.id),
 			'order_id': payment.id,
-			})
-
+			}, context=context)
 	return {}
+
 
 class wizard_payment_order(wizard.interface):
 	"""
 	Create a payment object with lines corresponding to the account move line
 	to pay according to the date and the mode provided by the user.
 	Hypothesis:
-	- Small number of non-reconcilied move line , payment mode	and bank account type,
+	- Small number of non-reconcilied move line , payment mode and bank account type,
 	- Big number of partner and bank account.
 
 	If a type is given, unsuitable account move lines are ignored.
 	"""
-	states = {'init' : {'actions':[search_entries],		
-						'result': {'type':'form',
-							 'arch':ask_form,
-							 'fields':ask_fields,
-							 'state':[('end','_Cancel'),('create','_Add to payment order')]}
-
-							 },
-
-			  'create': {'actions': [], 
-						 'result': {'type':'action',
-									'action':create_payment,
-									'state':'end'}
-				},				
-	
+	states = {
+		'init': {
+			'actions': [search_entries],
+			'result': {
+				'type': 'form',
+				'arch': FORM,
+				'fields': FIELDS,
+				'state': [
+					('end','_Cancel'),
+					('create','_Add to payment order', '', True)
+				]
+			},
+		 },
+		'create': {
+			'actions': [],
+			'result': {
+				'type': 'action',
+				'action': create_payment,
+				'state': 'end'}
+			},
 		}
+
 wizard_payment_order('populate_payment')
 
 

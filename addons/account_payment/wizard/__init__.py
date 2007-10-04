@@ -29,3 +29,4 @@
 
 import wizard_payment_order
 import wizard_pay
+import wizard_populate_statement

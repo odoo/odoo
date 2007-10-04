@@ -507,6 +507,25 @@ class account_bank_statement_line(osv.osv):
 				currency_id, balance, context=context)
 		return {'value': {'amount': balance, 'account_id': account_id}}
 
+	def _reconcile_amount(self, cursor, user, ids, name, args, context=None):
+		if not ids:
+			return {}
+		res_currency_obj = self.pool.get('res.currency')
+		res_users_obj = self.pool.get('res.users')
+
+		res = {}
+		company_currency_id = res_users_obj.browse(cursor, user, user,
+				context=context).company_id.currency_id.id
+
+		for line in self.browse(cursor, user, ids, context=context):
+			if line.reconcile_id:
+				res[line.id] = res_currency_obj.compute(cursor, user,
+						company_currency_id, line.statement_id.currency.id,
+						line.reconcile_id.total_entry, context=context)
+			else:
+				res[line.id] = 0.0
+		return res
+
 	_order = "date,name desc"
 	_name = "account.bank.statement.line"
 	_description = "Bank Statement Line"
@@ -514,14 +533,25 @@ class account_bank_statement_line(osv.osv):
 		'name': fields.char('Name', size=64, required=True),
 		'date': fields.date('Date', required=True),
 		'amount': fields.float('Amount'),
-		'type': fields.selection([('supplier','Supplier'),('customer','Customer'),('general','General')], 'Type', required=True),
+		'type': fields.selection([
+			('supplier','Supplier'),
+			('customer','Customer'),
+			('general','General')
+			], 'Type', required=True),
 		'partner_id': fields.many2one('res.partner', 'Partner'),
-		'account_id': fields.many2one('account.account','Account', required=True),
-		'statement_id': fields.many2one('account.bank.statement', 'Statement', select=True, required=True),
-		'reconcile_id': fields.many2one('account.bank.statement.reconcile', 'Reconcile', states={'confirm':[('readonly',True)]}),
-		'move_ids': fields.many2many('account.move', 'account_bank_statement_line_move_rel', 'move_id','statement_id', 'Moves'),
+		'account_id': fields.many2one('account.account','Account',
+			required=True),
+		'statement_id': fields.many2one('account.bank.statement', 'Statement',
+			select=True, required=True),
+		'reconcile_id': fields.many2one('account.bank.statement.reconcile',
+			'Reconcile', states={'confirm':[('readonly',True)]}),
+		'move_ids': fields.many2many('account.move',
+			'account_bank_statement_line_move_rel', 'move_id','statement_id',
+			'Moves'),
 		'ref': fields.char('Ref.', size=32),
-		'note': fields.text('Notes')
+		'note': fields.text('Notes'),
+		'reconcile_amount': fields.function(_reconcile_amount,
+			string='Amount reconciled', method=True, type='float'),
 	}
 	_defaults = {
 		'name': lambda self,cr,uid,context={}: self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement.line'),
