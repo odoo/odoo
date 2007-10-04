@@ -49,32 +49,34 @@ def search_entries(self, cr, uid, data, context):
 	# Search for move line to pay:
 	mline_ids = pool.get('account.move.line').search(cr, uid,
 					[('reconcile_id', '=', False),
-					('amount_to_pay', '>',0)],
-					context)
+					('amount_to_pay', '>', 0)],
+					context=context)
 
 	if not mline_ids:
-		ask_fields['entries']['domain']= [('id','in',[])]
+		ask_fields['entries']['domain']= [('id', 'in', [])]
 		return {}
 	
-	ask_fields['entries']['domain']= [('id','in',mline_ids)]
+	ask_fields['entries']['domain']= [('id', 'in', mline_ids)]
 	return {'entries': mline_ids}
 
 def create_payment(self, cr, uid, data, context):
 	mline_ids= data['form']['entries'][0][2]
 	if not mline_ids: return {}
 
-	pool= pooler.get_pool(cr.dbname)	
-	payment = pool.get('payment.order').browse(cr,uid,data['id'],context)
+	pool= pooler.get_pool(cr.dbname)
+	payment = pool.get('payment.order').browse(cr, uid, data['id'],
+			context=context)
 	t= payment.mode and payment.mode.type.code or 'manual'
 	line2bank= pool.get('account.move.line').line2bank(cr,uid,
 				mline_ids,t,context)
 
 	## Finally populate the current payment with new lines:
-	for line in pool.get('account.move.line').browse(cr,uid,mline_ids,context=context):
+	for line in pool.get('account.move.line').browse(cr, uid, mline_ids,
+			context=context):
 		pool.get('payment.line').create(cr,uid,{
 			'move_line_id': line.id,
-			'amount':line.amount_to_pay, 
-			'bank_id':line2bank.get(line.id),
+			'amount': line.amount_to_pay,
+			'bank_id': line2bank.get(line.id),
 			'order_id': payment.id,
 			})
 
