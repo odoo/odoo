@@ -88,7 +88,10 @@ class account_analytic_line(osv.osv):
 				context=context)
 
 	def _check(self, cr, uid, ids):
-		for line in self.browse(cr, uid, ids):
+		select = ids
+		if isinstance(select, (int, long)):
+			select = [ids]
+		for line in self.browse(cr, uid, select):
 			if line.invoice_id:
 				raise osv.except_osv('Error !',
 						'You can not modify an invoiced analytic line!')
