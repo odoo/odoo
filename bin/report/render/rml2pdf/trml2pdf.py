@@ -546,14 +546,13 @@ class _rml_flowable(object):
 			return platypus.Paragraph(self._textual(node), style, **(utils.attr_get(node, [], {'bulletText':'str'})))
 		elif node.localName=='image':
 			if not node.hasAttribute('file'):
-				if self.doc.images.get(node.getAttribute('name'), ''):
-					name = '/tmp/image_%d.jpg' % (int(node.getAttribute('name')),)
-					file(name,'wb+').write( self.doc.images[node.getAttribute('name')].read() )
-					return platypus.Image(name, mask=(250,255,250,255,250,255), **(utils.attr_get(node, ['width','height'])))
+				if node.hasAttribute('name'):
+					image_data = self.doc.images[node.getAttribute('name')].read()
 				else:
-					name = '/tmp/image_%d.jpg' % (int(node.getAttribute('name')),)
-					file(name,'wb+').write( self._textual_image(node))
-					return platypus.Image(name, mask=(250,255,250,255,250,255), **(utils.attr_get(node, ['width','height'])))
+					import base64
+					image_data = base64.decodestring(node.firstChild.nodeValue)
+				image = StringIO.StringIO(image_data)
+				return platypus.Image(image, mask=(250,255,250,255,250,255), **(utils.attr_get(node, ['width','height'])))
 			else:
 				return platypus.Image(node.getAttribute('file'), mask=(250,255,250,255,250,255), **(utils.attr_get(node, ['width','height'])))
 
