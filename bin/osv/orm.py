@@ -1706,24 +1706,12 @@ class orm(object):
 	def search_count(self, cr, user, args, context=None):
 		if not context:
 			context={}
-		# compute the count of records
-		(qu1,qu2,tables) = self._where_calc(cr, user, args, context=context)
-
-		if len(qu1):
-			qu1 = ' where '+string.join(qu1,' and ')
-		else:
-			qu1 = ''
-
-		# construct a clause for the rules :
-		d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
-		if d1:
-			qu1 = qu1 and qu1+' and '+d1 or ' where '+d1
-			qu2 += d2
-		
-		# execute the "main" query to fetch the count of ids
-		cr.execute('select count(%s.id) from ' % self._table + ','.join(tables) +qu1, qu2)
-		res = cr.fetchall()
-		return res[0][0]
+		ctx = context.copy()
+		ctx['search_count'] = 1
+		res = self.search(cr, user, args, context=ctx)
+		if isinstance(res, list):
+			return len(res)
+		return res
 
 	def search(self, cr, user, args, offset=0, limit=None, order=None, context=None):
 		if not context:
@@ -1746,6 +1734,13 @@ class orm(object):
 		if d1:
 			qu1 = qu1 and qu1+' and '+d1 or ' where '+d1
 			qu2 += d2
+
+		if context and context.get('search_count', False):
+			cr.execute('select count(%s.id) from ' % self._table +
+					','.join(tables) +qu1+' order by ' + order_by + limit_str
+					+ offset_str, qu2)
+			res = cr.fetchall()
+			return res[0][0]
 		# execute the "main" query to fetch the ids we were searching for
 		cr.execute('select %s.id from ' % self._table + ','.join(tables) +qu1+' order by '+order_by+limit_str+offset_str, qu2)
 		res = cr.fetchall()
