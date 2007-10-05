@@ -12,7 +12,7 @@
 			<field name="close_method">none</field>
 			<field name="parent_id" eval="[]" />
 			<field name="type">view</field>
-			<field name="sign">1</field>
+			<field name="sign" eval="1"/>
 		</record>
 
 		<!-- Balance Sheet -->
@@ -22,7 +22,7 @@
 			<field name="close_method">none</field>
 			<field name="parent_id" eval="[(6, 0, [ref('chart0')])]" />
 			<field name="type">view</field>
-			<field name="sign">1</field>
+			<field name="sign" eval="1"/>
 		</record>
 
 		<record id="fas" model="account.account">
@@ -30,7 +30,7 @@
 			<field name="close_method">none</field>
 			<field name="parent_id" eval="[(6, 0, [ref('bal')])]" />
 			<field name="type">view</field>
-			<field name="sign">1</field>
+			<field name="sign" eval="1"/>
 		</record>
 
 		<record id="xfa" model="account.account">
@@ -38,7 +38,7 @@
 			<field name="close_method">balance</field>
 			<field name="parent_id" eval="[(6, 0, [ref('fas')])]" />
 			<field name="type">asset</field>
-			<field name="sign">1</field>
+			<field name="sign" eval="1"/>
 		</record>
 
 		<record id="nca" model="account.account">
@@ -46,7 +46,7 @@
 			<field name="close_method">none</field>
 			<field name="parent_id" eval="[(6, 0, [ref('bal')])]" />
 			<field name="type">view</field>
-			<field name="sign">1</field>
+			<field name="sign" eval="1"/>
 		</record>
 
 		<record id="cas" model="account.account">
@@ -54,7 +54,7 @@
 			<field name="close_method">none</field>
 			<field name="parent_id" eval="[(6, 0, [ref('nca')])]" />
 			<field name="type">view</field>
-			<field name="sign">1</field>
+			<field name="sign" eval="1"/>
 		</record>
 
 		<record id="stk" model="account.account">
@@ -63,7 +63,7 @@
 			<field name="close_method">unreconciled</field>
 			<field name="parent_id" eval="[(6, 0, [ref('cas')])]" />
 			<field name="type">asset</field>
-			<field name="sign">1</field>
+			<field name="sign" eval="1"/>
 		</record>
 
 		<record id="a_recv" model="account.account">
@@ -72,7 +72,7 @@
 			<field name="close_method">balance</field>
 			<field name="parent_id" eval="[(6, 0, [ref('cas')])]" />
 			<field name="type">receivable</field>
-			<field name="sign">1</field>
+			<field name="sign" eval="1"/>
 			<field name="reconcile" eval="True"/>
 		</record>
 		<record model="ir.property" id="account.property_account_receivable">
@@ -84,7 +84,7 @@
 			<field name="close_method">balance</field>
 			<field name="parent_id" eval="[(6, 0, [ref('cas')])]" />
 			<field name="type">tax</field>
-			<field name="sign">1</field>
+			<field name="sign" eval="1"/>
 		</record>
 
 		<record id="bnk" model="account.account">
@@ -92,7 +92,7 @@
 			<field name="close_method">balance</field>
 			<field name="parent_id" eval="[(6, 0, [ref('cas')])]" />
 			<field name="type">cash</field>
-			<field name="sign">1</field>
+			<field name="sign" eval="1"/>
 		</record>
 
 		<record id="cash" model="account.account">
@@ -101,7 +101,7 @@
 			<field name="close_method">balance</field>
 			<field name="parent_id" eval="[(6, 0, [ref('cas')])]" />
 			<field name="type">cash</field>
-			<field name="sign">1</field>
+			<field name="sign" eval="1"/>
 		</record>
 
 		<record id="cli" model="account.account">
@@ -109,7 +109,7 @@
 			<field name="close_method">none</field>
 			<field name="parent_id" eval="[(6, 0, [ref('nca')])]" />
 			<field name="type">view</field>
-			<field name="sign">1</field>
+			<field name="sign" eval="1"/>
 		</record>
 
 		<record id="a_pay" model="account.account">
@@ -118,7 +118,7 @@
 			<field name="close_method">balance</field>
 			<field name="parent_id" eval="[(6, 0, [ref('cli')])]" />
 			<field name="type">payable</field>
-			<field name="sign">1</field>
+			<field name="sign" eval="1"/>
 			<field name="reconcile" eval="True"/>
 		</record>
 		<record model="ir.property" id="account.property_account_payable">
@@ -130,7 +130,7 @@
 			<field name="close_method">balance</field>
 			<field name="parent_id" eval="[(6, 0, [ref('cli')])]" />
 			<field name="type">tax</field>
-			<field name="sign">1</field>
+			<field name="sign" eval="1"/>
 		</record>
 
 		<!-- Profit and Loss -->
@@ -140,7 +140,7 @@
 			<field name="close_method">none</field>
 			<field name="parent_id" eval="[(6, 0, [ref('chart0')])]" />
 			<field name="type">view</field>
-			<field name="sign">1</field>
+			<field name="sign" eval="1"/>
 		</record>
 
 		<record id="rev" model="account.account">
@@ -148,7 +148,7 @@
 			<field name="close_method">none</field>
 			<field name="parent_id" eval="[(6, 0, [ref('gpf')])]" />
 			<field name="type">view</field>
-			<field name="sign">1</field>
+			<field name="sign" eval="1"/>
 		</record>
 
 		<record id="a_sale" model="account.account">
@@ -157,7 +157,7 @@
 			<field name="close_method">unreconciled</field>
 			<field name="parent_id" eval="[(6, 0, [ref('rev')])]" />
 			<field name="type">income</field>
-			<field name="sign">1</field>
+			<field name="sign" eval="1"/>
 		</record>
 		<record model="ir.property" id="account.property_account_income_categ">
 			<field name="value" eval="'account.account,'+str(a_sale)"/>
@@ -168,7 +168,7 @@
 			<field name="close_method">none</field>
 			<field name="parent_id" eval="[(6, 0, [ref('gpf')])]" />
 			<field name="type">view</field>
-			<field name="sign">1</field>
+			<field name="sign" eval="1"/>
 		</record>
 
 		<record id="cog" model="account.account">
@@ -177,7 +177,7 @@
 			<field name="close_method">unreconciled</field>
 			<field name="parent_id" eval="[(6, 0, [ref('cos')])]" />
 			<field name="type">expense</field>
-			<field name="sign">1</field>
+			<field name="sign" eval="1"/>
 		</record>
 
 		<record id="ovr" model="account.account">
@@ -185,7 +185,7 @@
 			<field name="close_method">none</field>
 			<field name="parent_id" eval="[(6, 0, [ref('gpf')])]" />
 			<field name="type">view</field>
-			<field name="sign">1</field>
+			<field name="sign" eval="1"/>
 		</record>
 
 		<record id="a_expense" model="account.account">
@@ -194,7 +194,7 @@
 			<field name="close_method">unreconciled</field>
 			<field name="parent_id" eval="[(6, 0, [ref('ovr')])]" />
 			<field name="type">expense</field>
-			<field name="sign">1</field>
+			<field name="sign" eval="1"/>
 		</record>
 		<record model="ir.property" id="account.property_account_expense_categ">
 			<field name="value" eval="'account.account,'+str(a_expense)"/>

@@ -6440,13 +6440,13 @@
 	<record model="account.tax.code" id="vat_code_a48">
 		<field name="name">Notes de credit aux operations grille 46</field>
 		<field name="code">48</field>
-		<field name="sign">-1</field>
+		<field name="sign" eval="-1"/>
 		<field name="parent_id" ref="vat_code_a4X"/>
 	</record>
 	<record model="account.tax.code" id="vat_code_a49">
 		<field name="name">Notes de credit aux operations du point II</field>
 		<field name="code">49</field>
-		<field name="sign">-1</field>
+		<field name="sign" eval="-1"/>
 		<field name="parent_id" ref="vat_code_a4X"/>
 	</record>
 
@@ -6503,7 +6503,7 @@
 	<record model="account.tax.code" id="vat_code_tax_in">
 		<field name="name">V. Taxes deductibles</field>
 		<field name="code">yy</field>
-		<field name="sign">-1</field>
+		<field name="sign" eval="-1"/>
 		<field name="parent_id" ref="vat_code_tax_balance"/>
 	</record>
 	<record model="account.tax.code" id="vat_code_a59">
@@ -6524,7 +6524,7 @@
 
 	<record model="account.tax.code" id="vat_code_in">
 		<field name="name">III. Operations a l'entree</field>
-		<field name="sign">-1</field>
+		<field name="sign" eval="-1"/>
 		<field name="parent_id" ref="vat_code_op_base"/>
 	</record>
 	<record model="account.tax.code" id="vat_code_a81">
@@ -6551,13 +6551,13 @@
 
 	<record model="account.tax.code" id="vat_code_a84">
 		<field name="code">84</field>
-		<field name="sign">-1</field>
+		<field name="sign" eval="-1"/>
 		<field name="name">Notes de credits sur operations case 86</field>
 		<field name="parent_id" ref="vat_code_in_nc"/>
 	</record>
 	<record model="account.tax.code" id="vat_code_a85">
 		<field name="code">85</field>
-		<field name="sign">-1</field>
+		<field name="sign" eval="-1"/>
 		<field name="name">Notes de credits autres operations</field>
 		<field name="parent_id" ref="vat_code_in_nc"/>
 	</record>
