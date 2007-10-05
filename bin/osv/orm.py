@@ -1742,8 +1742,7 @@ class orm(object):
 
 		if context and context.get('search_count', False):
 			cr.execute('select count(%s.id) from ' % self._table +
-					','.join(tables) +qu1+' order by ' + order_by + limit_str
-					+ offset_str, qu2)
+					','.join(tables) +qu1 + limit_str + offset_str, qu2)
 			res = cr.fetchall()
 			return res[0][0]
 		# execute the "main" query to fetch the ids we were searching for
