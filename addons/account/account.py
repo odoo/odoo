@@ -180,6 +180,7 @@ class account_account(osv.osv):
 			return dict(map(lambda x: (x, 0.0), ids))
 
 		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+		ids2 = {}.fromkeys(ids + ids2).keys()
 		acc_set = ",".join(map(str, ids2))
 		query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
 		cr.execute(("SELECT a.id, COALESCE(SUM((l.debit-l.credit)),0) FROM account_account a LEFT JOIN account_move_line l ON (a.id=l.account_id) WHERE a.id IN (%s) and "+query+" GROUP BY a.id") % (acc_set, ))
@@ -190,6 +191,7 @@ class account_account(osv.osv):
 		resc = dict(cr.fetchall())
 		cr.execute("SELECT id, currency_id FROM res_company")
 		rescur = dict(cr.fetchall())
+
 		for id in ids:
 			ids3 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
 			to_currency_id = rescur[resc[id]]
@@ -325,7 +327,8 @@ class account_account(osv.osv):
 			context={}
 		if 'active' in vals and not vals['active']:
 			line_obj = self.pool.get('account.move.line')
-			if line_obj.search(cr, uid, [('account_id', 'in', ids)]):
+			account_ids = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+			if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
 				vals=vals.copy()
 				del vals['active']
 		return super(account_account, self).write(cr, uid, ids, vals, context=context)
