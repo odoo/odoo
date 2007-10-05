@@ -97,28 +97,49 @@ class stock_location(osv.osv):
 		'posz': lambda *a: 0,
 	}
 
-	def _product_get_all_report(self, cr, uid, ids, product_ids=False, context={}):
-		return self._product_get_report(cr, uid, ids, product_ids, context, recursive=True)
-		
-	def _product_get_report(self, cr, uid, ids, product_ids=False, context={}, recursive=False):
+	def _product_get_all_report(self, cr, uid, ids, product_ids=False,
+			context=None):
+		return self._product_get_report(cr, uid, ids, product_ids, context,
+				recursive=True)
+
+	def _product_get_report(self, cr, uid, ids, product_ids=False,
+			context=None, recursive=False):
+		if context is None:
+			context = {}
+		product_obj = self.pool.get('product.product')
 		if not product_ids:
-			product_ids = self.pool.get('product.product').search(cr, uid, [])
+			product_ids = product_obj.search(cr, uid, [])
+
+		products = product_obj.browse(cr, uid, product_ids, context=context)
+		products_by_uom = {}
+		products_by_id = {}
+		for product in products:
+			products_by_uom.setdefault(product.uom_id.id, [])
+			products_by_uom[product.uom_id.id].append(product)
+			products_by_id.setdefault(product.id, [])
+			products_by_id[product.id] = product
+
 		result = []
 		for id in ids:
-			for prod_id in product_ids:
-				product = self.pool.get('product.product').browse(cr, uid, [prod_id])[0]
+			for uom_id in products_by_uom.keys():
 				fnc = self._product_get
 				if recursive:
 					fnc = self._product_all_get
-				qty = fnc(cr, uid, id, [prod_id], {'uom': product.uom_id.id})
-				if qty[prod_id]:
+				ctx = context.copy()
+				ctx['uom'] = uom_id
+				qty = fnc(cr, uid, id, [x.id for x in products_by_uom[uom_id]],
+						context=ctx)
+				for product_id in qty.keys():
+					if not qty[product_id]:
+						continue
+					product = products_by_id[product_id]
 					result.append({
 						'price': product.list_price,
 						'name': product.name,
-						'code': product.default_code, # used by lot_overview_all report !
+						'code': product.default_code, # used by lot_overview_all report!
 						'variants': product.variants or '',
 						'uom': product.uom_id.name,
-						'amount':qty[prod_id]
+						'amount': qty[product_id],
 					})
 		return result
 
