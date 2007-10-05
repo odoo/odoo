@@ -132,7 +132,8 @@ class product_pricelist(osv.osv):
 					else:
 						price_tmp = self.price_get(cr, uid, [res['base_pricelist_id']], prod_id, qty)[res['base_pricelist_id']]
 						ptype_src = self.pool.get('product.pricelist').browse(cr, uid, res['base_pricelist_id']).currency_id.id
-						price = currency_obj.compute(cr, uid, ptype_src, res['currency_id'], price_tmp)
+						price = currency_obj.compute(cr, uid, ptype_src,
+								res['currency_id'], price_tmp, round=False)
 				elif res['base'] == -2:
 					where = []
 					if partner:
@@ -150,8 +151,11 @@ class product_pricelist(osv.osv):
 					continue
 				else:
 					price_type_o=self.pool.get('product.price.type').read(cr, uid, [ res['base'] ])[0]
-					price = currency_obj.compute(cr, uid, price_type_o['currency_id'][0], res['currency_id'], self.pool.get('product.product').price_get(cr, uid, [prod_id], price_type_o['field'])[prod_id])
-				
+					price = currency_obj.compute(cr, uid,
+							price_type_o['currency_id'][0], res['currency_id'],
+							product_obj.price_get(cr, uid, [prod_id],
+								price_type_o['field'])[prod_id], round=False)
+
 				price_limit = price
 
 				price = price * (1.0-(res['price_discount'] or 0.0))
