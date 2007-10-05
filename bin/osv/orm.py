@@ -1337,11 +1337,11 @@ class orm(object):
 		if not context:
 			context={}
 		fields_def = self.__view_look_dom(cr, user, node, context=context)
-		arch = node.toxml()
+		arch = node.toxml(encoding="utf-8").replace('\n', '').replace('\t', '')
 		fields = self.fields_get(cr, user, fields_def.keys(), context)
 		for field in fields_def:
 			fields[field].update(fields_def[field])
-		return arch,fields
+		return arch, fields
 
 
 	#
@@ -1407,7 +1407,7 @@ class orm(object):
 					])
 					tag = "<%s%s>" % (node2.localName, attrs)
 					raise AttributeError, "Couldn't find tag '%s' in parent view !" % tag
-			return doc_src.toxml()
+			return doc_src.toxml(encoding="utf-8").replace('\n', '').replace('\t', '')
 
 		result = {'type':view_type, 'model':self._name}
 
@@ -1449,17 +1449,23 @@ class orm(object):
 			# otherwise, build some kind of default view
 			if view_type == 'form':
 				res = self.fields_get(cr, user, context=context)
-				xml = '''<?xml version="1.0"?>\n<form string="%s">\n''' % (self._description,)
+				xml = '''<?xml version="1.0" encoding="utf-8"?>'''
+				'''<form string="%s">''' % (self._description,)
 				for x in res:
 					if res[x]['type'] not in ('one2many', 'many2many'):
-						xml += '\t<field name="%s"/>\n' % (x,)
+						xml += '<field name="%s"/>' % (x,)
 						if res[x]['type'] == 'text':
 							xml += "<newline/>"
 				xml += "</form>"
 			elif view_type == 'tree':
-				xml = '''<?xml version="1.0"?>\n<tree string="%s">\n\t<field name="%s"/>\n</tree>''' % (self._description,self._rec_name)
+				xml = '''<?xml version="1.0" encoding="utf-8"?>'''
+				'''<tree string="%s"><field name="%s"/></tree>''' \
+				% (self._description, self._rec_name)
 			elif view_type == 'calendar':
-				xml = '''<?xml version="1.0"?>\n<calendar string="%s" date_start="%s">\n\t<field name="%s"/>\n</calendar>''' % (self._description,self._date_name,self._rec_name)
+				xml = '''<?xml version="1.0 encoding="utf-8""?>'''
+				'''<calendar string="%s" date_start="%s">'''
+				'''<field name="%s"/></calendar>''' \
+				% (self._description, self._date_name, self._rec_name)
 			else:
 				xml = ''
 			result['arch'] = xml
@@ -1474,13 +1480,22 @@ class orm(object):
 		if toolbar:
 			def clean(x):
 				x = x[2]
-				for key in ('report_sxw_content','report_rml_content','report_sxw','report_rml', 'report_sxw_content_data', 'report_rml_content_data'):
+				for key in ('report_sxw_content', 'report_rml_content',
+						'report_sxw', 'report_rml', 
+						'report_sxw_content_data', 'report_rml_content_data'):
 					if key in x:
 						del x[key]
 				return x
-			resprint = self.pool.get('ir.values').get(cr, user, 'action', 'client_print_multi', [(self._name, False)], False, context)
-			resaction = self.pool.get('ir.values').get(cr, user, 'action', 'client_action_multi', [(self._name, False)], False, context)
-			resrelate = self.pool.get('ir.values').get(cr, user, 'action', 'client_action_relate', [(self._name, False)], False, context)
+			ir_values_obj = self.pool.get('ir.values')
+			resprint = ir_values_obj.get(cr, user, 'action',
+					'client_print_multi', [(self._name, False)], False,
+					context)
+			resaction = ir_values_obj.get(cr, user, 'action',
+					'client_action_multi', [(self._name, False)], False,
+					context)
+			resrelate = ir_values_obj.get(cr, user, 'action',
+					'client_action_relate', [(self._name, False)], False,
+					context)
 			resprint = map(clean, resprint)
 			resaction = map(clean, resaction)
 			resaction = filter(lambda x: not x.get('multi',False), resaction)
