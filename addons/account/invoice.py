@@ -412,13 +412,17 @@ class account_invoice(osv.osv):
 			acc_id = inv.account_id.id
 
 			name = inv['name'] or '/'
+			totlines = False
 			if inv.payment_term:
-				totlines = self.pool.get('account.payment.term').compute(cr, uid, inv.payment_term.id, total)
+				totlines = self.pool.get('account.payment.term').compute(cr,
+						uid, inv.payment_term.id, total)
+			if totlines:
 				res_amount_currency = total_currency
 				i = 0
 				for t in totlines:
 					if inv.currency_id.id != company_currency:
-						amount_currency = cur_obj.compute(cr, uid, company_currency, inv.currency_id.id, t[1])
+						amount_currency = cur_obj.compute(cr, uid,
+								company_currency, inv.currency_id.id, t[1])
 					else:
 						amount_currency = False
 
