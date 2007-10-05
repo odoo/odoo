@@ -36,7 +36,6 @@
 #    . Optimised processing by complex query (multiple actions at once)
 #    . Default fields value
 #    . Permissions optimisation
-#    . Multi-company features
 #    . Persistant object: DB postgresql
 #    . Datas conversions
 #    . Multi-level caching system
@@ -180,15 +179,6 @@ class browse_record(object):
 						if data[n]:
 							obj = self._table.pool.get(f._obj)
 							compids=False
-							#
-							# Removed for performance sake. (Bug may arise) [20070516]
-							#
-# 							if 'company_id' in obj._columns :
-# 								compids = tools.get_user_companies(self._cr, self._uid)
-# 								if compids:
-# 									self._cr.execute('SELECT id FROM '+obj._table+' where id = %d AND  (company_id in ('+','.join(map(str,compids))+') or company_id is null)', (data[n],))
-# 									if not self._cr.fetchall():
-# 										raise except_orm('BrowseError', 'Object %s (id:%d) is linked to the object %s (id:%d) which is not in your company' %(self._table._description, self._id, obj._description, data[n]))
 							if not f._classic_write:
 								ids2 = data[n][0]
 							else:
