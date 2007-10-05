@@ -156,6 +156,7 @@ class stock_location(osv.osv):
 		prod_ids_str = ','.join(map(str, product_ids))
 		location_ids_str = ','.join(map(str, ids))
 		results = []
+		results2 = []
 		if 'in' in what:
 			# all moves from a location out of the set to a location in the set
 			cr.execute(
@@ -167,7 +168,7 @@ class stock_location(osv.osv):
 				'and state in ('+states_str+') '\
 				'group by product_id,product_uom'
 			)
-			results += cr.fetchall()
+			results = cr.fetchall()
 		if 'out' in what:
 			# all moves from a location in the set to a location out of the set
 			cr.execute(
@@ -179,13 +180,18 @@ class stock_location(osv.osv):
 				'and state in ('+states_str+') '\
 				'group by product_id,product_uom'
 			)
-			results += cr.fetchall()
+			results2 = cr.fetchall()
 		uom_obj = self.pool.get('product.uom')
 		for amount, prod_id, prod_uom in results:
-			amount = uom_obj._compute_qty(cr, uid, prod_uom, amount, context.get('uom', False))
+			amount = uom_obj._compute_qty(cr, uid, prod_uom, amount,
+					context.get('uom', False))
 			res[prod_id] += amount
+		for amount, prod_id, prod_uom in results2:
+			amount = uom_obj._compute_qty(cr, uid, prod_uom, amount,
+					context.get('uom', False))
+			res[prod_id] -= amount
 		return res
-		
+
 	def _product_get(self, cr, uid, id, product_ids=False, context={}, states=['done']):
 		ids = id and [id] or []
 		return self._product_get_multi_location(cr, uid, ids, product_ids, context, states)
