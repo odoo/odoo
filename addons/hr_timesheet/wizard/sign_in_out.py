@@ -123,10 +123,7 @@ def _write(self, cr, uid, data, emp_id, context):
 def _sign_out_result_end(self, cr, uid, data, context):
 	emp_obj = pooler.get_pool(cr.dbname).get('hr.employee')
 	emp_id = data['form']['emp_id']
-	try:
-		emp_obj.sign_out(cr, uid, [emp_id], dt=data['form']['date'])
-	except except_osv, e:
-		raise wizard.except_wizard(e.name, e.value)
+	emp_obj.sign_out(cr, uid, [emp_id], dt=data['form']['date'])
 	_write(self, cr, uid, data, emp_id, context)
 	return {}
 
