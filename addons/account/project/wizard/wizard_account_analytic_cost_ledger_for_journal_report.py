@@ -43,17 +43,29 @@ _fields = {
 	'journal': {'string':'Journals','type':'many2many', 'relation':'account.analytic.journal'},
 }
 
+
 class wizard_report(wizard.interface):
 	states = {
 		'init': {
 			'actions': [],
-			'result': {'type':'form', 'arch':_form, 'fields':_fields, 'state':[('end','Cancel'), ('report','Print')]}
+			'result': {
+				'type': 'form',
+				'arch': _form,
+				'fields': _fields,
+				'state': [
+					('end','Cancel'),
+					('report','Print')
+				]
+			}
 		},
 		'report': {
 			'actions': [],
-			'result': {'type':'print', 'report':'account.analytic.account.cost_ledger_for_journal', 'state':'end'}
-		}
+			'result': {
+				'type': 'print',
+				'report': 'account.analytic.account.cost_ledger',
+				'state': 'end'
+			}
+		},
 	}
+
 wizard_report('account.analytic.account.quantity_cost_ledger.report')
-
-
