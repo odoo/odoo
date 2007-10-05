@@ -1403,6 +1403,7 @@ class orm(object):
 
 		ok = True
 		model = True
+		sql_res = False
 		while ok:
 			if view_id:
 				where = (model and (" and model='%s'" % (self._name,))) or ''
@@ -1439,7 +1440,7 @@ class orm(object):
 			# otherwise, build some kind of default view
 			if view_type == 'form':
 				res = self.fields_get(cr, user, context=context)
-				xml = '''<?xml version="1.0" encoding="utf-8"?>'''
+				xml = '''<?xml version="1.0" encoding="utf-8"?>''' \
 				'''<form string="%s">''' % (self._description,)
 				for x in res:
 					if res[x]['type'] not in ('one2many', 'many2many'):
@@ -1448,12 +1449,12 @@ class orm(object):
 							xml += "<newline/>"
 				xml += "</form>"
 			elif view_type == 'tree':
-				xml = '''<?xml version="1.0" encoding="utf-8"?>'''
+				xml = '''<?xml version="1.0" encoding="utf-8"?>''' \
 				'''<tree string="%s"><field name="%s"/></tree>''' \
 				% (self._description, self._rec_name)
 			elif view_type == 'calendar':
-				xml = '''<?xml version="1.0 encoding="utf-8""?>'''
-				'''<calendar string="%s" date_start="%s">'''
+				xml = '''<?xml version="1.0 encoding="utf-8""?>''' \
+				'''<calendar string="%s" date_start="%s">''' \
 				'''<field name="%s"/></calendar>''' \
 				% (self._description, self._date_name, self._rec_name)
 			else:
