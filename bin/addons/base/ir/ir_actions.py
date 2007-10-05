@@ -132,7 +132,7 @@ class report_xml(osv.osv):
 			type='binary', string='SXW content',),
 		'report_rml_content': fields.function(_report_content,
 			fnct_inv=_report_content_inv, method=True,
-			type='binary', string='SXW content'),
+			type='binary', string='RML content'),
 		'auto': fields.boolean('Automatic XSL:RML', required=True),
 		'usage': fields.char('Action Usage', size=32),
 		'header': fields.boolean('Add RML header',
