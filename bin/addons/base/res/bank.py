@@ -40,7 +40,7 @@ class Bank(osv.osv):
 		'zip': fields.char('Zip', change_default=True, size=24),
 		'city': fields.char('City', size=128),
 		'state': fields.many2one("res.country.state", 'State',
-			domain="[('country_id', '=', country_id)]"),
+			domain="[('country_id', '=', country)]"),
 		'country': fields.many2one('res.country', 'Country'),
 		'email': fields.char('E-Mail', size=64),
 		'phone': fields.char('Phone', size=64),
