@@ -1501,6 +1501,8 @@ class orm(object):
 			}
 		return result
 
+	_view_look_dom_arch=__view_look_dom_arch
+
 	# TODO: ameliorer avec NULL
 	def _where_calc(self, cr, user, args, active_test=True, context=None):
 		if not context:
