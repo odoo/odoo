@@ -56,17 +56,21 @@ class wizard_delegate(wizard.interface):
 	def _do_assign(self, cr, uid, data, context):
 		task_obj = pooler.get_pool(cr.dbname).get('project.task')
 		task = task_obj.browse(cr, uid, data['id'], context)
+		newname = task.name
+		if not task.name.startswith(data['form']['prefix'] or '++'):
+			newname = (data['form']['prefix'] or '')+task.name
 		task_obj.copy(cr, uid, data['id'], {
 			'name': data['form']['name'],
 			'user_id': data['form']['user_id'],
 			'planned_hours': data['form']['planned_hours'],
 			'parent_id': data['id'],
 			'state': 'open',
-			'description': data['form']['include_info'] and task.description or ''
+			'description': data['form']['include_info'] and task.description or '',
+			'child_ids': []
 		})
 		task_obj.write(cr, uid, data['id'], {
 			'planned_hours': data['form']['planned_hours_me'],
-			'name': (data['form']['prefix'] or '')+task.name
+			'name': newname
 		})
 		if data['form']['state']=='pending':
 			task_obj.do_pending(cr, uid, [data['id']])
@@ -82,7 +86,7 @@ class wizard_delegate(wizard.interface):
 			'user_id': False,
 			'planned_hours': task.planned_hours,
 			'planned_hours_me': task.planned_hours / 5.0,
-			'prefix': 'VALIDATION: ',
+			'prefix': 'CHECK: ',
 			'state': 'pending'
 		}
 
