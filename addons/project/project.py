@@ -170,22 +170,24 @@ class task(osv.osv):
 	_name = "project.task"
 	_description = "Task"
 	_date_name = "date_deadline"
-	def _str_get(self, task, context={}):
-		return '*** '+task.user_id.name.upper()+(' - %.1fh / %.1fh'%(task.effective_hours or 0.0,task.planned_hours))+' ***\n'+(task.description or '')+'\n\n'
+	def _str_get(self, task, level=0, border='***', context={}):
+		return border+' '+task.user_id.name.upper()+(level and (': L'+str(level)) or '')+(' - %.1fh / %.1fh'%(task.effective_hours or 0.0,task.planned_hours))+' '+border+'\n'+(task.description or '')+'\n\n'
 
 	def _history_get(self, cr, uid, ids, name, args, context={}):
 		result = {}
 		for task in self.browse(cr, uid, ids, context=context):
-			result[task.id] = self._str_get(task)
+			result[task.id] = self._str_get(task, border='===')
 			t2 = task.parent_id
+			level = 0
 			while t2:
-				result[task.id] = self._str_get(t2) + result[task.id]
+				level -= 1
+				result[task.id] = self._str_get(t2, level) + result[task.id]
 				t2 = t2.parent_id
-			t3 = task.child_ids
+			t3 = map(lambda x: (x,1), task.child_ids)
 			while t3:
 				t2 = t3.pop(0)
-				result[task.id] = result[task.id] + self._str_get(t2)
-				t3 += t2.child_ids
+				result[task.id] = result[task.id] + self._str_get(t2[0], t2[1])
+				t3 += map(lambda x: (x,t2[1]+1), t2[0].child_ids)
 		return result
 
 	def _hours_effect(self, cr, uid, ids, name, args, context):
