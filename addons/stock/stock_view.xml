@@ -674,17 +674,17 @@
 			<form string="Stock Move">
 				<separator string="General Information" colspan="4"/>
 				<field name="name" select="1"/>
-				<field name="active" select="1"/>
+				<field name="active" select="2"/>
 				<field name="date_planned" select="1"/>
-				<field name="date_moved" select="1" readonly="1"/>
+				<field name="date_moved" select="1" readonly="2"/>
 				<field name="lot_id" select="1"/>
-				<field name="loc_dest_id" select="1"/>
+				<field name="loc_dest_id" select="2"/>
 				<field name="serial" select="1"/>
 				<field name="origin"/>
 				<newline/>
 				<field name="address_id" select="1"/>
 				<separator string="State" colspan="4"/>
-				<field name="state"/>
+				<field name="state" select="2"/>
 				<group col="2" colspan="2">
 					<button name="action_move" type="object" string="Move Lot" states="draft"/>
 				</group>
