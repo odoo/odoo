@@ -3,7 +3,7 @@
 	<data>
 
 		<wizard
-			string="Hours from tasks"
+			string="Hours From Tasks"
 			model="hr.employee"
 			name="hr_timesheet_project.encode.hour"
 			id="encode_hour"/>
@@ -12,6 +12,12 @@
 			id="menu_act_hr_timesheet_line_me_today_project_form"
 			action="encode_hour"
 			type="wizard"/>
+
+		<wizard
+			string="Timesheet From Tasks"
+			model="hr_timesheet_sheet.sheet"
+			name="hr_timesheet_project.encode.hour.noopen"
+			id="encode_hour_tss"/>
 
 	</data>
 </terp>

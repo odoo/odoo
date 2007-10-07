@@ -40,7 +40,14 @@ def _action_line_create(self, cr, uid, data, context):
 	ts =  pooler.get_pool(cr.dbname).get('hr.analytic.timesheet')
 
 	for work in tw.browse(cr, uid, ids, context):
-		if work.task_id.project_id.category_id:
+		if not work.task_id.project_id:
+			continue
+		proj = work.task_id.project_id
+		aa = proj.category_id
+		while proj and not aa:
+			proj = proj.parent_id
+			aa = proj.category_id
+		if aa:
 			unit_id = ts._getEmployeeUnit(cr, uid, context)
 			product_id = ts._getEmployeeProduct(cr, uid, context)
 			res = {
@@ -50,13 +57,13 @@ def _action_line_create(self, cr, uid, data, context):
 				'product_uom_id': unit_id,
 				'product_id': product_id,
 				'amount': work.hours or 0.0,
-				'account_id': work.task_id.project_id.category_id.id
+				'account_id': aa.id
 			}
 			res2 = ts.on_change_unit_amount(cr, uid, False, product_id, work.hours or 0.0,unit_id, context)
 			if res2:
 				res.update(res2['value'])
 			if hasattr(ts, 'on_change_account_id'):
-				res2 = ts.on_change_account_id(cr, uid, False, work.task_id.project_id.category_id.id)
+				res2 = ts.on_change_account_id(cr, uid, False, aa.id)
 				if res2:
 					res.update(res2['value'])
 			id = ts.create(cr, uid, res, context)
@@ -80,4 +87,13 @@ class wiz_hr_timesheet_project(wizard.interface):
 		}
 	}
 wiz_hr_timesheet_project('hr_timesheet_project.encode.hour')
+
+class wiz_hr_timesheet_project_noopen(wizard.interface):
+	states = {
+		'init': {
+			'actions': [_action_line_create],
+			'result': {'type': 'state', 'state':'end'}
+		}
+	}
+wiz_hr_timesheet_project_noopen('hr_timesheet_project.encode.hour.noopen')
 
