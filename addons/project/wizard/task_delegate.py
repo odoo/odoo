@@ -35,6 +35,7 @@ ask_form = """<?xml version="1.0" ?>
 	<field name="user_id" colspan="4"/>
 	<field name="planned_hours" colspan="4"/>
 	<field name="name" colspan="4"/>
+	<field name="include_info"/>
 	<separator string="Validation Task" colspan="4"/>
 	<field name="planned_hours_me" colspan="4"/>
 	<field name="prefix" colspan="4"/>
@@ -45,6 +46,7 @@ ask_fields = {
 	'name': {'string': 'Title', 'type': 'char', 'required': 'True', 'size':64},
 	'prefix': {'string': 'Prefix of Task', 'type': 'char', 'required': 'True', 'size':64},
 	'user_id': {'string':'Assign To', 'type':'many2one', 'relation': 'res.users', 'required':'True'},
+	'include_info': {'string':'Copy Description', 'type':'boolean'},
 	'planned_hours': {'string':'Planned Hours', 'type':'float', 'widget':'float_time'},
 	'planned_hours_me': {'string':'Hours to Validate', 'type':'float', 'widget':'float_time'},
 	'state': {'string':'Validation State', 'type':'selection', 'selection': [('pending','Pending'),('done','Done')]},
@@ -59,7 +61,8 @@ class wizard_delegate(wizard.interface):
 			'user_id': data['form']['user_id'],
 			'planned_hours': data['form']['planned_hours'],
 			'parent_id': data['id'],
-			'state': 'open'
+			'state': 'open',
+			'description': data['form']['include_info'] and task.description or ''
 		})
 		task_obj.write(cr, uid, data['id'], {
 			'planned_hours': data['form']['planned_hours_me'],

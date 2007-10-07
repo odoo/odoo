@@ -170,6 +170,24 @@ class task(osv.osv):
 	_name = "project.task"
 	_description = "Task"
 	_date_name = "date_deadline"
+	def _str_get(self, task, context={}):
+		return '*** '+task.user_id.name.upper()+(' - %.1fh / %.1fh'%(task.effective_hours or 0.0,task.planned_hours))+' ***\n'+(task.description or '')+'\n\n'
+
+	def _history_get(self, cr, uid, ids, name, args, context={}):
+		result = {}
+		for task in self.browse(cr, uid, ids, context=context):
+			result[task.id] = self._str_get(task)
+			t2 = task.parent_id
+			while t2:
+				result[task.id] = self._str_get(t2) + result[task.id]
+				t2 = t2.parent_id
+			t3 = task.child_ids
+			while t3:
+				t2 = t3.pop(0)
+				result[task.id] = result[task.id] + self._str_get(t2)
+				t3 += t2.child_ids
+		return result
+
 	def _hours_effect(self, cr, uid, ids, name, args, context):
 		task_set = ','.join(map(str, ids))
 		cr.execute(("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id in (%s) GROUP BY task_id") % (task_set,))
@@ -188,12 +206,13 @@ class task(osv.osv):
 		'sequence': fields.integer('Sequence'),
 		'type': fields.many2one('project.task.type', 'Type'),
 		'state': fields.selection([('draft', 'Draft'),('open', 'Open'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State'),
-		'date_start': fields.datetime('Date Start'),
+		'date_start': fields.date('Date Start'),
 		'date_deadline': fields.datetime('Deadline'),
 		'date_close': fields.datetime('Date Closed', readonly=True),
 		'project_id': fields.many2one('project.project', 'Project', ondelete='cascade'),
 		'parent_id': fields.many2one('project.task', 'Parent Task'),
 		'child_ids': fields.one2many('project.task', 'parent_id', 'Delegated Tasks'),
+		'history': fields.function(_history_get, method=True, string="Task Details", type="text"),
 		'notes': fields.text('Notes'),
 		'start_sequence': fields.boolean('Wait for previous sequences'),
 		'planned_hours': fields.float('Planned hours'),

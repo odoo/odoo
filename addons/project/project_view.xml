@@ -293,7 +293,7 @@
 			<field name="arch" type="xml">
 				<form string="Task edition">
 					<notebook>
-						<page string="Task definition">
+						<page string="Information">
 							<field name="name" select="1"/>
 							<field name="project_id" required="1" select="1"/>
 							<field name="user_id" select="1"/>
@@ -318,7 +318,21 @@
 
 							</group>
 						</page>
-						<page string="Other Information">
+						<page string="Delegations">
+							<field name="history" colspan="4" nolabel="1"/>
+							<field name="child_ids" colspan="4" nolabel="1" height="150">
+								<tree string="Delegated tasks">
+									<field name="name"/>
+									<field name="user_id"/>
+									<field name="date_deadline"/>
+									<field name="planned_hours" widget="float_time"/>
+									<field name="effective_hours" widget="float_time"/>
+									<field name="state"/>
+								</tree>
+							</field>
+							<field name="parent_id" colspan="4"/>
+						</page>
+						<page string="Extra Info">
 							<field name="date_start" select="2"/>
 							<field name="date_close" select="2"/>
 							<field name="type"/>
@@ -331,17 +345,6 @@
 							<field name="billable" select="2"/>
 							<separator colspan="4" string="Notes"/>
 							<field colspan="4" name="notes" nolabel="1"/>
-							<field name="child_ids" colspan="4" nolabel="1">
-								<tree string="Delegated tasks">
-									<field name="name"/>
-									<field name="user_id"/>
-									<field name="date_deadline"/>
-									<field name="planned_hours" widget="float_time"/>
-									<field name="effective_hours" widget="float_time"/>
-									<field name="state"/>
-								</tree>
-							</field>
-							<field name="parent_id" colspan="4"/>
 						</page>
 					</notebook>
 				</form>
