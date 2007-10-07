@@ -171,6 +171,7 @@ class ir_model_data(osv.osv):
 		ids = self.search(cr, uid, [('module','=',module),('name','=', xml_id)])
 		assert len(ids)==1, '%d reference(s) to %s. You should have only one !' % (len(ids),xml_id)
 		return ids[0]
+	_get_id = tools.cache()(_get_id)
 
 	def _update_dummy(self,cr, uid, model, module, xml_id=False, store=True):
 		if not xml_id:
