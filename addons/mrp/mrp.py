@@ -724,8 +724,14 @@ class mrp_procurement(osv.osv):
 
 	def check_produce(self, cr, uid, ids, context={}):
 		res = True
+		user = self.pool.get('res.users').browse(cr, uid, uid)
 		for procurement in self.browse(cr, uid, ids):
 			if procurement.product_id.product_tmpl_id.supply_method=='buy':
+				if procurement.product_id.seller_ids:
+					partner = procurement.product_id.seller_ids[0].name
+					if user.company_id and user.company_id.partner_id:
+						if partner.id == user.company_id.partner_id.id:
+							return True
 				return False
 			if procurement.product_id.product_tmpl_id.type=='service':
 				res = res and self.check_produce_service(cr, uid, procurement, context)
@@ -736,6 +742,7 @@ class mrp_procurement(osv.osv):
 		return res
 
 	def check_buy(self, cr, uid, ids):
+		user = self.pool.get('res.users').browse(cr, uid, uid)
 		for procurement in self.browse(cr, uid, ids):
 			if procurement.product_id.product_tmpl_id.supply_method=='produce':
 				return False
@@ -743,6 +750,9 @@ class mrp_procurement(osv.osv):
 				cr.execute('update mrp_procurement set message=%s where id=%d', ('No supplier defined for this product !', procurement.id))
 				return False
 			partner = procurement.product_id.seller_ids[0].name
+			if user.company_id and user.company_id.partner_id:
+				if partner.id == user.company_id.partner_id.id:
+					return False
 			address_id = self.pool.get('res.partner').address_get(cr, uid, [partner.id], ['delivery'])['delivery']
 			if not address_id:
 				cr.execute('update mrp_procurement set message=%s where id=%d', ('No address defined for the supplier', procurement.id))
