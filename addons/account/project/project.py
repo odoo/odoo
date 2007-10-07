@@ -39,6 +39,7 @@ from osv import osv
 
 class account_analytic_account(osv.osv):
 	_name = 'account.analytic.account'
+	_description = 'Analytic Accounts'
 
 	def _credit_calc(self, cr, uid, ids, name, arg, context={}):
 		acc_set = ",".join(map(str, ids))
