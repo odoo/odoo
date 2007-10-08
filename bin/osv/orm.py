@@ -1327,7 +1327,7 @@ class orm(object):
 		if not context:
 			context={}
 		fields_def = self.__view_look_dom(cr, user, node, context=context)
-		arch = node.toxml(encoding="utf-8").replace('\n', '').replace('\t', '')
+		arch = node.toxml(encoding="utf-8").replace('\t', '')
 		fields = self.fields_get(cr, user, fields_def.keys(), context)
 		for field in fields_def:
 			fields[field].update(fields_def[field])
@@ -1397,7 +1397,7 @@ class orm(object):
 					])
 					tag = "<%s%s>" % (node2.localName, attrs)
 					raise AttributeError, "Couldn't find tag '%s' in parent view !" % tag
-			return doc_src.toxml(encoding="utf-8").replace('\n', '').replace('\t', '')
+			return doc_src.toxml(encoding="utf-8").replace('\t', '')
 
 		result = {'type':view_type, 'model':self._name}
 
@@ -1429,7 +1429,7 @@ class orm(object):
 				sql_inherit = cr.fetchall()
 				for (inherit,id) in sql_inherit:
 					result = _inherit_apply(result, inherit)
-					result = _inherit_apply_rec(result,id)
+					result = _inherit_apply_rec(result, id)
 				return result
 
 			result['arch'] = _inherit_apply_rec(result['arch'], sql_res[3])
