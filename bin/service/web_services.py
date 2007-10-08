@@ -72,10 +72,15 @@ class db(netsvc.Service):
 
 		self.actions[id] = {'clean': False}
 
+		cmd = ['createdb', '--quiet', '--encoding=unicode']
 		if tools.config['db_user']:
-			res = tools.exec_pg_command('createdb', '--quiet', '--encoding=unicode', '--username='+tools.config['db_user'], db_name)
-		else:
-			res = tools.exec_pg_command('createdb', '--quiet', '--encoding=unicode', db_name)
+			cmd.append('--username=' + tools.config['db_user'])
+		if tools.config['db_host']:
+			cmd.append('--host=' + tools.config['db_host'])
+		if tools.config['db_port']:
+			cmd.append('--port=' + tools.config['db_port'])
+		cmd.append(db_name)
+		res = tools.exec_pg_command(*tuple(cmd))
 		if not res:
 			class DBInitialize(object):
 				def __call__(self, serv, id, db_name, demo, lang):
@@ -139,33 +144,50 @@ class db(netsvc.Service):
 	def drop(self, password, db_name):
 		security.check_super(password)
 		pooler.close_db(db_name)
-		if tools.config['db_user']:
-			res = tools.exec_pg_command('dropdb', '--quiet', '--username='+tools.config['db_user'], db_name)
-		else:
-			res = tools.exec_pg_command('dropdb', '--quiet', db_name)
 		logger = netsvc.Logger()
+
+		cmd = ['dropdb', '--quiet']
+		if tools.config['db_user']:
+			cmd.append('--username=' + tools.config['db_user'])
+		if tools.config['db_host']:
+			cmd.append('--host=' + tools.config['db_host'])
+		if tools.config['db_port']:
+			cmd.append('--port=' + tools.config['db_port'])
+		cmd.append(db_name)
+		res = tools.exec_pg_command(*tuple(cmd))
+
 		if res:
-			logger.notifyChannel("web-service", netsvc.LOG_ERROR, 'DROP DB: %s failed' % (db_name,))
+			logger.notifyChannel("web-service", netsvc.LOG_ERROR,
+					'DROP DB: %s failed' % (db_name,))
 			raise Exception, "Couldn't drop database"
 		else:
-			logger.notifyChannel("web-services", netsvc.LOG_INFO, 'DROP DB: %s' % (db_name))
+			logger.notifyChannel("web-services", netsvc.LOG_INFO,
+					'DROP DB: %s' % (db_name))
 			return True
 
 	def dump(self, password, db_name):
 		security.check_super(password)
+
+		cmd = ['pg_dump', '--format=c']
 		if tools.config['db_user']:
-			args = ('pg_dump', '--format=c', '-U', tools.config['db_user'], db_name)
-		else:
-			args = ('pg_dump', '--format=c', db_name)
-		stdin, stdout = tools.exec_pg_command_pipe(*args)
+			cmd.append('--username=' + tools.config['db_user'])
+		if tools.config['db_host']:
+			cmd.append('--host=' + tools.config['db_host'])
+		if tools.config['db_port']:
+			cmd.append('--port=' + tools.config['db_port'])
+		cmd.append(db_name)
+
+		stdin, stdout = tools.exec_pg_command_pipe(*tuple(cmd))
 		stdin.close()
 		data = stdout.read()
 		res = stdout.close()
 		logger = netsvc.Logger()
 		if res:
-			logger.notifyChannel("web-service", netsvc.LOG_ERROR, 'DUMP DB: %s failed\n%s' % (db_name, data))
+			logger.notifyChannel("web-service", netsvc.LOG_ERROR,
+					'DUMP DB: %s failed\n%s' % (db_name, data))
 			raise Exception, "Couldn't dump database"
-		logger.notifyChannel("web-services", netsvc.LOG_INFO, 'DUMP DB: %s' % (db_name))
+		logger.notifyChannel("web-services", netsvc.LOG_INFO,
+				'DUMP DB: %s' % (db_name))
 		return base64.encodestring(data)
 
 	def restore(self, password, db_name, data):
@@ -173,16 +195,29 @@ class db(netsvc.Service):
 		res = True
 		if self.db_exist(db_name):
 			raise Exception, "Database already exists"
-		else:
-			if tools.config['db_user']:
-				args = ('createdb', '--quiet', '--encoding=unicode', '--username='+tools.config['db_user'], db_name)
-				args2 = ('pg_restore', '-U', tools.config['db_user'], '-d %s' % db_name)
-			else:
-				args = ('createdb', '--quiet', '--encoding=unicode', db_name)
-				args2 = ('pg_restore', '-d %s' % db_name)
-			res = tools.exec_pg_command(*args)
-		if not res:
 
+		cmd = ['createdb', '--quiet', '--encoding=unicode']
+		if tools.config['db_user']:
+			cmd.append('--username=' + tools.config['db_user'])
+		if tools.config['db_host']:
+			cmd.append('--host=' + tools.config['db_host'])
+		if tools.config['db_port']:
+			cmd.append('--port=' + tools.config['db_port'])
+		cmd.append(db_name)
+		args = tuple(cmd)
+
+		cmd = ['pg_restore']
+		if tools.config['db_user']:
+			cmd.append('--username=' + tools.config['db_user'])
+		if tools.config['db_host']:
+			cmd.append('--host=' + tools.config['db_host'])
+		if tools.config['db_port']:
+			cmd.append('--port=' + tools.config['db_port'])
+		cmd.append('--dbname=' + db_name)
+		args2 = tuple(cmd)
+
+		res = tools.exec_pg_command(*args)
+		if not res:
 			buf=base64.decodestring(data)
 			if os.name == "nt":
 				tmpfile = (os.environ['TMP'] or 'C:\\') + os.tmpnam()
@@ -198,7 +233,8 @@ class db(netsvc.Service):
 			if res:
 				raise Exception, "Couldn't restore database"
 			logger = netsvc.Logger()
-			logger.notifyChannel("web-services", netsvc.LOG_INFO, 'RESTORE DB: %s' % (db_name))
+			logger.notifyChannel("web-services", netsvc.LOG_INFO,
+					'RESTORE DB: %s' % (db_name))
 			return True
 		raise Exception, "Couldn't create database"
 
@@ -217,7 +253,7 @@ class db(netsvc.Service):
 			db_user = tools.config["db_user"]
 			if not db_user and os.name == 'posix':
 				import pwd
-				db_user = pwd.getpwuid(os.getuid())[0] 
+				db_user = pwd.getpwuid(os.getuid())[0]
 			if not db_user:
 				cr.execute("select usename from pg_user where usesysid=(select datdba from pg_database where datname=%s)", (tools.config["db_name"],))
 				res = cr.fetchone()
@@ -235,7 +271,7 @@ class db(netsvc.Service):
 
 	def change_admin_password(self, old_password, new_password):
 		security.check_super(old_password)
-		tools.config['admin_passwd'] = new_password 
+		tools.config['admin_passwd'] = new_password
 		tools.config.save()
 		return True
 	
