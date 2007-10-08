@@ -73,6 +73,7 @@ class ir_values(osv.osv):
 				ids = self.search(cr, uid, [
 					('key', '=', key),
 					('key2', '=', key2),
+					('value', '=', value),
 					('model', '=', model),
 					('res_id', '=', res_id),
 					('user_id', '=', preserve_user and uid)
