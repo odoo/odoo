@@ -341,10 +341,13 @@ class report_sxw(report_rml):
 			context={}
 		pool = pooler.get_pool(cr.dbname)
 		ir_actions_report_xml_obj = pool.get('ir.actions.report.xml')
-		report_xml_id = ir_actions_report_xml_obj.search(cr, uid,
-				[('report_name', '=', self.name[7:])], context=context)[0]
-		rml = ir_actions_report_xml_obj.browse(cr, uid, report_xml_id,
-				context=context).report_rml_content
+		report_xml_ids = ir_actions_report_xml_obj.search(cr, uid,
+				[('report_name', '=', self.name[7:])], context=context)
+		if report_xml_ids:
+			rml = ir_actions_report_xml_obj.browse(cr, uid, report_xml_ids[0],
+					context=context).report_rml_content
+		else:
+			rml = tools.file_open(self.tmpl, subdir=None).read()
 
 		rml_parser = self.parser(cr, uid, self.name2, context)
 		objs = self.getObjects(cr, uid, ids, context)
