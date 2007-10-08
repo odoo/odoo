@@ -211,41 +211,42 @@ class sale_order(osv.osv):
 	def _inv_get(self, cr, uid, order, context={}):
 		return {}
 
+	def _make_invoice(self, cr, uid, order, lines):
+		a = order.partner_id.property_account_receivable.id
+		if order.partner_id and order.partner_id.property_payment_term.id:
+			pay_term = order.partner_id.property_payment_term.id
+		else:
+			pay_term = False
+		for preinv in order.invoice_ids:
+			if preinv.state in ('open','paid','proforma'):
+				for preline in preinv.invoice_line:
+					inv_line_id = self.pool.get('account.invoice.line').copy(cr, uid, preline.id, {'invoice_id':False, 'price_unit':-preline.price_unit})
+					lines.append(inv_line_id)
+		inv = {
+			'name': order.name,
+			'origin': order.name,
+			'type': 'out_invoice',
+			'reference': "P%dSO%d"%(order.partner_id.id,order.id),
+			'account_id': a,
+			'partner_id': order.partner_id.id,
+			'address_invoice_id': order.partner_invoice_id.id,
+			'address_contact_id': order.partner_invoice_id.id,
+			'invoice_line': [(6,0,lines)],
+			'currency_id' : order.pricelist_id.currency_id.id,
+			'comment': order.note,
+			'payment_term': pay_term,
+		}
+		inv.update(self._inv_get(cr, uid, order))
+		inv_obj = self.pool.get('account.invoice')
+		inv_id = inv_obj.create(cr, uid, inv)
+		inv_obj.button_compute(cr, uid, [inv_id])
+		return inv_id
+
+
 	def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed','done']):
 		res = False
 		invoices = {}
 		invoice_ids = []
-
-		def make_invoice(order, lines):
-			a = order.partner_id.property_account_receivable.id
-			if order.partner_id and order.partner_id.property_payment_term.id:
-				pay_term = order.partner_id.property_payment_term.id
-			else:
-				pay_term = False
-			for preinv in order.invoice_ids:
-				if preinv.state in ('open','paid','proforma'):
-					for preline in preinv.invoice_line:
-						inv_line_id = self.pool.get('account.invoice.line').copy(cr, uid, preline.id, {'invoice_id':False, 'price_unit':-preline.price_unit})
-						lines.append(inv_line_id)
-			inv = {
-				'name': order.name,
-				'origin': order.name,
-				'type': 'out_invoice',
-				'reference': "P%dSO%d"%(order.partner_id.id,order.id),
-				'account_id': a,
-				'partner_id': order.partner_id.id,
-				'address_invoice_id': order.partner_invoice_id.id,
-				'address_contact_id': order.partner_invoice_id.id,
-				'invoice_line': [(6,0,lines)],
-				'currency_id' : order.pricelist_id.currency_id.id,
-				'comment': order.note,
-				'payment_term': pay_term,
-			}
-			inv.update(self._inv_get(cr, uid, order))
-			inv_obj = self.pool.get('account.invoice')
-			inv_id = inv_obj.create(cr, uid, inv)
-			inv_obj.button_compute(cr, uid, [inv_id])
-			return inv_id
 
 		for o in self.browse(cr,uid,ids):
 			lines = []
@@ -264,13 +265,13 @@ class sale_order(osv.osv):
 
 		for val in invoices.values():
 			if grouped:
-				res = make_invoice(val[0][0], reduce(lambda x,y: x + y, [l for o,l in val], []))
+				res = self._make_invoice(cr, uid, val[0][0], reduce(lambda x,y: x + y, [l for o,l in val], []))
 				for o,l in val:
 					self.write(cr, uid, [o.id], {'state' : 'progress'})
 					cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%d,%d)', (o.id, res))
 			else:
 				for order, il in val:
-					res = make_invoice(order, il)
+					res = self._make_invoice(cr, uid, order, il)
 					invoice_ids.append(res)
 					self.write(cr, uid, [order.id], {'state' : 'progress'})
 					cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%d,%d)', (order.id, res))
