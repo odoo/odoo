@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2005-2007 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #                    Fabien Pinckaers <fp@tiny.Be>
+#                    Cédric Krier <ced@tinyerp.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,44 +28,68 @@
 ##############################################################################
 
 import wizard
-from osv import osv
 import pooler
+import netsvc
 
-arch = '''<?xml version="1.0"?>
-<form string="Lots lines">
-	<field name="lot_lines" widget="one2many_list" nolabel="1" colspan="4"/>
+ARCH = '''<?xml version="1.0"?>
+<form string="Make packing">
+	<field name="pickings" nolabel="1" colspan="4"
+		width="600" height="300"/>
 </form>'''
 
-fields = {
-	'lot_lines': {'string':'Lot Lines', 'type':'one2many', 'relation':'stock.picking.lot.line'},
+FIELDS = {
+	'pickings': {
+		'string': 'Packings',
+		'type': 'one2many',
+		'relation': 'stock.picking',
+		'readonly': True,
+	},
 }
 
-def _get_value(self, cr, uid, data, context):
-	cr.execute("select l.id,l.name,l.product_uom,l.product_qty,l.serial,l.tracking,l.reservation_id,l.product_id,r.state from stock_lot_line l left join stock_reservation r on (l.reservation_id=r.id) where r.state='assigned' and r.picking_id=%d", (data['id'],))
-	records = cr.dictfetchall()
-	ids_products = [x['product_id'] for x in records]
-	prods = dict(pooler.get_pool(cr.dbname).get('product.product').name_get(cr, uid, ids_products))
-	ids_new = []
-	for record in records:
-		ids_new.append( pooler.get_pool(cr.dbname).get('stock.picking.lot.line').create(cr, uid, {'name': prods.get(record['product_id'],'Unknown'),'product_id':record['product_id'],  'product_uom':record['product_uom'], 'product_qty':record['product_qty'],'serial':record['serial'],'tracking':record['tracking'],'reservation_id':record['reservation_id'],'picking_id':data['id'],'lot_line_id':record['id'],'state':record['state']}) )
-	return {'lot_lines':ids_new}
+def _get_value(obj, cursor, user, data, context):
+	pool = pooler.get_pool(cursor.dbname)
+	picking_obj = pool.get('stock.picking')
 
-def _split_line(self, cr, uid, data, context):
-	service = netsvc.LocalService("object_proxy")
-	quantity = service.execute(cr.dbname, uid, 'stock.lot.line', '_split', data['id'], data['form']['quantity'], data['form']['serial'], data['form']['tracking'])
+	picking_ids = picking_obj.search(cursor, user, [
+		('id', 'in', data['ids']),
+		('state', '<>', 'done'),
+		('state', '<>', 'cancel')], context=context)
+	return {'pickings': picking_ids}
+
+def _make_packing(obj, cursor, user, data, context):
+	wkf_service = netsvc.LocalService('workflow')
+	pool = pooler.get_pool(cursor.dbname)
+	picking_obj = pool.get('stock.picking')
+	ids = [x[1] for x in data['form']['pickings']]
+
+	picking_obj.force_assign(cursor, user, ids)
+	picking_obj.action_move(cursor, user, ids)
+	for picking_id in ids:
+		wkf_service.trg_validate(user, 'stock.picking', picking_id,
+				'button_done', cursor)
 	return {}
 
 class stock_picking_make(wizard.interface):
 	states = {
 		'init': {
 			'actions': [_get_value],
-			'result': {'type':'form', 'arch':arch, 'fields':fields, 'state':[('end','Cancel'),('make','Make Parcel')]}
+			'result': {
+				'type': 'form',
+				'arch': ARCH,
+				'fields': FIELDS,
+				'state': [
+					('end', 'Cancel', 'gtk-cancel'),
+					('make', 'Ok', 'gtk-ok', True)
+				],
+			},
 		},
 		'make': {
-#SUPERCHECKME: this doesn't do anything... doesn't seem normal to me...		
-			'actions': [],
-			'result': {'type':'state', 'state':'end'}
-		}
+			'actions': [_make_packing],
+			'result': {
+				'type': 'state',
+				'state':'end',
+			},
+		},
 	}
 
 stock_picking_make('stock.picking.make')
