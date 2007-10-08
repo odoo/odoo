@@ -346,7 +346,7 @@ class res_partner_bank(osv.osv):
 	_name = "res.partner.bank"
 	_rec_name = "state"
 
-	def _bank_type_get(self, cr, uid, *args):
+	def _bank_type_get(self, cr, uid, context=None):
 		bank_type_obj = self.pool.get('res.partner.bank.type')
 
 		result = []
