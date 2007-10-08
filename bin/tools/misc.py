@@ -232,9 +232,9 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
 		msg['Message-Id'] = '<'+str(time.time())+'-tinycrm-'+str(tinycrm)+'@'+socket.gethostname()+'>'
 	try:
 		s = smtplib.SMTP()
+		s.connect(config['smtp_server'])
 		if config['smtp_user'] or config['smtp_password']:
 			s.login(config['smtp_user'], config['smtp_password'])
-		s.connect(config['smtp_server'])
 		s.sendmail(email_from, email_to + email_cc + email_bcc, msg.as_string())
 		s.quit()
 	except Exception, e:
@@ -286,9 +286,9 @@ def email_send_attach(email_from, email_to, subject, body, email_cc=None, email_
 		msg.attach(part)
 	try:
 		s = smtplib.SMTP()
+		s.connect(config['smtp_server'])
 		if config['smtp_user'] or config['smtp_password']:
 			s.login(config['smtp_user'], config['smtp_password'])
-		s.connect(config['smtp_server'])
 		s.sendmail(email_from, email_to + email_cc + email_bcc, msg.as_string())
 		s.quit()
 	except Exception, e:
