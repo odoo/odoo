@@ -40,14 +40,14 @@ import base64
 url = 'http://localhost:8069/xmlrpc'
 profiles = [
 	'profile_accounting',
-	'profile_manufacturing',
-	'profile_service'
+	'profile_service',
+	'profile_manufacturing'
 ]
 l10n_charts = [
-	'l10n_be',
-	'l10n_fr',
 	'l10n_chart_uk_minimal',
-	False
+	False,
+	'l10n_be',
+	'l10n_fr'
 ]
 dbname = 'test'
 admin_passwd = 'admin'
