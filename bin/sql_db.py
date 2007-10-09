@@ -57,7 +57,7 @@ class fake_cursor:
 		self.con = con
 		self.dbname = dbname
 
-	def execute_not_run(self,*args):
+	def execute(self,*args):
 		#if not fake_cursor.nbr % 1:
 		#	print 'sql: ',fake_cursor.nbr, args
 		res = re.match('^select.* from ([a-zA-Z_]+) .*$', args[0], re.I)
@@ -71,15 +71,15 @@ class fake_cursor:
 		#	else:
 		#		print 'sql: ',fake_cursor.nbr, args[0]
 
-		#if not fake_cursor.nbr % 5000:
-		#	ct = []
-		#	for t,c in fake_cursor._tables.items():
-		#		ct.append([c,t])
-		#	ct.sort()
-		#	ct.reverse()
-		#	print 'After %d queries' % (fake_cursor.nbr,)
-		#	for line in ct[:50]:
-		#		print '    %s: %d' % (line[1], line[0])
+		if not fake_cursor.nbr % 500:
+			ct = []
+			for t,c in fake_cursor._tables.items():
+				ct.append([c,t])
+			ct.sort()
+			ct.reverse()
+			print 'After %d queries' % (fake_cursor.nbr,)
+			for line in ct[:50]:
+				print '    %s: %d' % (line[1], line[0])
 
 		#if len(args)>1:
 		#	print 'sql: ',fake_cursor.nbr, args[0], args[1]
