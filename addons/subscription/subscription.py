@@ -122,7 +122,7 @@ class subscription_subscription(osv.osv):
 					value = time.strftime('%Y-%m-%d')
 				else:
 					value = False
-				default[f.field] = value
+				default[f.field.name] = value
 
 			state = 'running'
 
