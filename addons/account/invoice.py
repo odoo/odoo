@@ -129,7 +129,6 @@ class account_invoice(osv.osv):
 		'date_due': fields.date('Due Date', states={'open':[('readonly',True)],'close':[('readonly',True)]}),
 
 		'partner_id': fields.many2one('res.partner', 'Partner', change_default=True, readonly=True, required=True, states={'draft':[('readonly',False)]}),
-		'partner_bank_id': fields.many2one('res.partner.bank', 'Partner bank'),
 		'address_contact_id': fields.many2one('res.partner.address', 'Contact Address', readonly=True, states={'draft':[('readonly',False)]}),
 		'address_invoice_id': fields.many2one('res.partner.address', 'Invoice Address', readonly=True, required=True, states={'draft':[('readonly',False)]}),
 
@@ -181,7 +180,6 @@ class account_invoice(osv.osv):
 	def onchange_partner_id(self, cr, uid, ids, type, partner_id):
 		invoice_addr_id = False
 		contact_addr_id = False
-		partner_bank_id = False
 		payment_term = False
 		acc_id = False
 		
@@ -198,12 +196,14 @@ class account_invoice(osv.osv):
 			else:
 				acc_id = p.property_account_payable.id
 
-			partner_bank_id = p.bank_ids and p.bank_ids[0] and p.bank_ids[0].id or False
 			payment_term = p.property_payment_term and p.property_payment_term or False
 
-		result = {'value': {'address_contact_id': contact_addr_id, 'address_invoice_id': invoice_addr_id,
-							'account_id': acc_id,'partner_bank_id':partner_bank_id,
-							'payment_term':payment_term}}
+		result = {'value': {
+			'address_contact_id': contact_addr_id,
+			'address_invoice_id': invoice_addr_id,
+			'account_id': acc_id,
+			'payment_term':payment_term}
+		}
 
 		if partner_id and p.property_payment_term.id:
 			result['value']['payment_term'] = p.property_payment_term.id

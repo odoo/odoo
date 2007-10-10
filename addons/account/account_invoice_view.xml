@@ -192,8 +192,8 @@
 					<page string="Other Info">
 						<field name="company_id"/>
 						<newline/>
-						<field name="partner_bank_id" domain="[('partner_id','=',partner_id)]"/>
 						<field name="payment_term" on_change="onchange_payment_term_date_invoice(payment_term, date_invoice)" />
+						<newline/>
 						<field name="number" select="2"/>
 						<field name="origin"/>
 						<field name="address_contact_id" domain="[('partner_id','=',partner_id)]" colspan="4"/>
@@ -261,7 +261,6 @@
 					<page string="Other Info">
 						<field name="company_id"/>
 						<newline/>
-						<field name="partner_bank_id" domain="[('partner_id','=',partner_id)]"/>
 						<field name="date_due" select="1"/>
 						<newline/>
 						<field name="reference" select="2"/>
