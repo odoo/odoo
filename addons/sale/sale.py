@@ -656,7 +656,7 @@ class sale_order_line(osv.osv):
 
 	def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
 			uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-			lang=False, update_tax=True):
+			lang=False, update_tax=True, date_order=False):
 		product_uom_obj = self.pool.get('product.uom')
 		partner_obj = self.pool.get('res.partner')
 		product_obj = self.pool.get('product.product')
@@ -675,8 +675,13 @@ class sale_order_line(osv.osv):
 					'You have to select a pricelist in the sale form !\n'
 					'Please set one before choosing a product.')
 
+		if not date_order:
+			date_order = time.strftime('%Y-%m-%d')
 		price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
-				product, qty or 1.0, partner_id, {'uom': uom})[pricelist]
+				product, qty or 1.0, partner_id, {
+					'uom': uom,
+					'date': date_order,
+					})[pricelist]
 		if price is False:
 			raise osv.except_osv('No valid pricelist line found !',
 					"Couldn't find a pricelist line matching this product and quantity.\n"

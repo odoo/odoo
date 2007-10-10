@@ -110,7 +110,6 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Products Price List">
-				<separator string="Pricelist Name" colspan="4"/>
 				<field name="name" select="1"/>
 				<field name="active" select="1"/>
 				<field name="type" select="1"/>
@@ -121,7 +120,8 @@
 						<field name="active" select="2"/>
 						<field name="date_start" select="1"/>
 						<field name="date_end" select="1"/>
-						<field name="items_id" colspan="4" nolabel="1" widget="one2many_list"/>
+						<field name="items_id" colspan="4" nolabel="1"
+							widget="one2many_list"/>
 					</form>
 					<tree string="Pricelist Version">
 						<field name="name"/>

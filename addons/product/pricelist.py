@@ -30,6 +30,7 @@ from osv import fields, osv
 
 #from tools.misc import currency
 from _common import rounding
+import time
 
 class price_type(osv.osv):
 	"""
@@ -85,64 +86,102 @@ class product_pricelist(osv.osv):
 		'active': lambda *a: 1,
 	}
 
-	#   context = { 'uom': Unit of Measure (Int), 'partner': Partner ID (int) }
-	def price_get(self, cr, uid, ids, prod_id, qty, partner=None, context={}):
-		if context and ('partner_id' in context):
-			partner = context['partner_id']
+	def price_get(self, cr, uid, ids, prod_id, qty, partner=None, context=None):
+		'''
+		context = {
+			'uom': Unit of Measure (int),
+			'partner': Partner ID (int),
+			'date': Date of the pricelist (%Y-%m-%d),
+		}
+		'''
 		currency_obj = self.pool.get('res.currency')
 		product_obj = self.pool.get('product.product')
+		supplierinfo_obj = self.pool.get('product.supplierinfo')
+		price_type_obj = self.pool.get('product.price.type')
+
+		if context and ('partner_id' in context):
+			partner = context['partner_id']
+		date = time.strftime('%Y-%m-%d')
+		if context and ('date' in context):
+			date = context['date']
 		result = {}
 		for id in ids:
-			# XXX add date test to select the pricelist version
-			cr.execute('select * from product_pricelist_version where pricelist_id=%d and active=True order by id limit 1', (id,))
+			cr.execute('SELECT * ' \
+					'FROM product_pricelist_version ' \
+					'WHERE pricelist_id = %d AND active=True ' \
+						'AND (date_start IS NULL OR date_start <= %s) ' \
+						'AND (date_end IS NULL OR date_end >= %s) ' \
+					'ORDER BY id LIMIT 1', (id, date, date))
 			plversion = cr.dictfetchone()
 
 			if not plversion:
-				raise osv.except_osv('Warning !', 'No active version for the selected pricelist !\nPlease create or activate one.')
+				raise osv.except_osv('Warning !',
+						'No active version for the selected pricelist !\n' \
+								'Please create or activate one.')
 
-			cr.execute('select id,categ_id from product_template where id=(select product_tmpl_id from product_product where id=%d)', (prod_id,))
-			tmpl_id,categ = cr.fetchone()
+			cr.execute('SELECT id, categ_id ' \
+					'FROM product_template ' \
+					'WHERE id = (SELECT product_tmpl_id ' \
+						'FROM product_product ' \
+						'WHERE id = %d)', (prod_id,))
+			tmpl_id, categ = cr.fetchone()
 			categ_ids = []
 			while categ:
 				categ_ids.append(str(categ))
-				cr.execute('select parent_id from product_category where id=%d', (categ,))
+				cr.execute('SELECT parent_id ' \
+						'FROM product_category ' \
+						'WHERE id = %d', (categ,))
 				categ = cr.fetchone()[0]
 				if str(categ) in categ_ids:
-					raise osv.except_osv('Warning !', 'Could not resolve product category, you have defined cyclic categories of products !')
+					raise osv.except_osv('Warning !',
+							'Could not resolve product category, ' \
+									'you have defined cyclic categories ' \
+									'of products!')
 			if categ_ids:
-				categ_where = '(categ_id in ('+','.join(categ_ids)+'))'
+				categ_where = '(categ_id IN (' + ','.join(categ_ids) + '))'
 			else:
-				categ_where = '(categ_id is null)'
+				categ_where = '(categ_id IS NULL)'
 
 			cr.execute(
-				'select i.*, pl.currency_id '
-				'from product_pricelist_item as i, product_pricelist_version as v, product_pricelist as pl '
-				'where (product_tmpl_id is null or product_tmpl_id=%d) '
-				'and (product_id is null or product_id=%d) '
-				'and ('+categ_where+' or (categ_id is null)) '
-				'and price_version_id=%d '
-				'and (min_quantity is null or min_quantity<=%f) '
-				'and i.price_version_id=v.id and v.pricelist_id=pl.id '
-				'order by sequence limit 1', (tmpl_id, prod_id, plversion['id'], qty))
+				'SELECT i.*, pl.currency_id '
+				'FROM product_pricelist_item AS i, '
+					'product_pricelist_version AS v, product_pricelist AS pl '
+				'WHERE (product_tmpl_id IS NULL OR product_tmpl_id = %d) '
+					'AND (product_id IS NULL OR product_id = %d) '
+					'AND (' + categ_where + ' OR (categ_id IS NULL)) '
+					'AND price_version_id = %d '
+					'AND (min_quantity IS NULL OR min_quantity <= %f) '
+					'AND i.price_version_id = v.id AND v.pricelist_id = pl.id '
+				'ORDER BY sequence LIMIT 1',
+				(tmpl_id, prod_id, plversion['id'], qty))
 			res = cr.dictfetchone()
 			if res:
 				if res['base'] == -1:
 					if not res['base_pricelist_id']:
 						price = 0.0
 					else:
-						price_tmp = self.price_get(cr, uid, [res['base_pricelist_id']], prod_id, qty)[res['base_pricelist_id']]
-						ptype_src = self.pool.get('product.pricelist').browse(cr, uid, res['base_pricelist_id']).currency_id.id
+						price_tmp = self.price_get(cr, uid,
+								[res['base_pricelist_id']], prod_id,
+								qty)[res['base_pricelist_id']]
+						ptype_src = self.browse(cr, uid,
+								res['base_pricelist_id']).currency_id.id
 						price = currency_obj.compute(cr, uid, ptype_src,
 								res['currency_id'], price_tmp, round=False)
 				elif res['base'] == -2:
 					where = []
 					if partner:
 						where = [('name', '=', partner) ] 
-					sinfo = self.pool.get('product.supplierinfo').search(cr, uid, [('product_id', '=', prod_id)]+where)
+					sinfo = supplierinfo_obj.search(cr, uid,
+							[('product_id', '=', prod_id)] + where)
 					if not sinfo:
 						result[id] = 0
 						continue
-					cr.execute('select * from pricelist_partnerinfo where suppinfo_id in (' + ','.join(map(str, sinfo)) + ') and min_quantity<=%f order by min_quantity desc limit 1', (qty,))
+					cr.execute('SELECT * ' \
+							'FROM pricelist_partnerinfo ' \
+							'WHERE suppinfo_id IN (' + \
+								','.join(map(str, sinfo)) + ') ' \
+								'AND min_quantity <= %f ' \
+							'ORDER BY min_quantity DESC LIMIT 1', (qty,))
 					res = cr.dictfetchone()
 					if res:
 						result[id] = res['price']
@@ -150,11 +189,11 @@ class product_pricelist(osv.osv):
 						result[id] = 0
 					continue
 				else:
-					price_type_o=self.pool.get('product.price.type').read(cr, uid, [ res['base'] ])[0]
+					price_type = price_type_obj.browse(cr, uid, res['base'])
 					price = currency_obj.compute(cr, uid,
-							price_type_o['currency_id'][0], res['currency_id'],
+							price_type.currency_id.id, res['currency_id'],
 							product_obj.price_get(cr, uid, [prod_id],
-								price_type_o['field'])[prod_id], round=False)
+								price_type.field)[prod_id], round=False)
 
 				price_limit = price
 
@@ -166,32 +205,74 @@ class product_pricelist(osv.osv):
 				if res['price_max_margin']:
 					price = min(price, price_limit+res['price_max_margin'])
 			else:
-				# False means no valid line found ! But we may not raise an 
+				# False means no valid line found ! But we may not raise an
 				# exception here because it breaks the search
 				price = False
 			result[id] = price
-			if 'uom' in context:
+			if context and ('uom' in context):
 				product = product_obj.browse(cr, uid, prod_id)
 				uom = product.uos_id or product.uom_id
 				result[id] = self.pool.get('product.uom')._compute_price(cr,
 						uid, uom.id, result[id], context['uom'])
 		return result
+
 product_pricelist()
+
 
 class product_pricelist_version(osv.osv):
 	_name = "product.pricelist.version"
 	_description = "Pricelist Version"
 	_columns = {
-		'pricelist_id': fields.many2one('product.pricelist', 'Price List', required=True, select=True),
+		'pricelist_id': fields.many2one('product.pricelist', 'Price List',
+			required=True, select=True),
 		'name': fields.char('Name', size=64, required=True),
 		'active': fields.boolean('Active'),
-		'items_id': fields.one2many('product.pricelist.item', 'price_version_id', 'Price List Items', required=True),
+		'items_id': fields.one2many('product.pricelist.item',
+			'price_version_id', 'Price List Items', required=True),
 		'date_start': fields.date('Start Date'),
-		'date_end': fields.date('End Date')
+		'date_end': fields.date('End Date'),
 	}
 	_defaults = {
 		'active': lambda *a: 1,
 	}
+
+	def _check_date(self, cursor, user, ids):
+		for pricelist_version in self.browse(cursor, user, ids):
+			if not pricelist_version.active:
+				continue
+			cursor.execute('SELECT id ' \
+					'FROM product_pricelist_version ' \
+					'WHERE ((date_start <= %s AND %s <= date_end ' \
+							'AND date_end IS NOT NULL) ' \
+						'OR (date_end IS NULL AND date_start IS NOT NULL ' \
+							'AND date_start <= %s) ' \
+						'OR (date_start IS NULL AND date_end IS NOT NULL ' \
+							'AND %s <= date_end) ' \
+						'OR (date_start IS NULL AND date_end IS NULL) ' \
+						'OR (%s = \'0000-01-01\' AND date_start IS NULL) ' \
+						'OR (%s = \'0000-01-01\' AND date_end IS NULL) ' \
+						'OR (%s = \'0000-01-01\' AND %s = \'0000-01-01\')) ' \
+						'AND pricelist_id = %d ' \
+						'AND active ' \
+						'AND id <> %d', (pricelist_version.date_end or '0000-01-01',
+							pricelist_version.date_start or '0000-01-01',
+							pricelist_version.date_end or '0000-01-01',
+							pricelist_version.date_start or '0000-01-01',
+							pricelist_version.date_start or '0000-01-01',
+							pricelist_version.date_end or '0000-01-01',
+							pricelist_version.date_start or '0000-01-01',
+							pricelist_version.date_end or '0000-01-01',
+							pricelist_version.pricelist_id.id,
+							pricelist_version.id))
+			if cursor.fetchall():
+				return False
+		return True
+
+	_constraints = [
+		(_check_date, 'You can not have 2 pricelist version that overlaps!',
+			['date_start', 'date_end'])
+	]
+
 product_pricelist_version()
 
 class product_pricelist_item(osv.osv):

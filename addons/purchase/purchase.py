@@ -323,7 +323,8 @@ class purchase_order_line(osv.osv):
 		default.update({'state':'draft', 'move_id':False})
 		return super(purchase_order_line, self).copy(cr, uid, id, default, context)
 
-	def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom, partner_id):
+	def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,
+			partner_id, date_order=False):
 		if not pricelist:
 			raise osv.except_osv('No Pricelist !', 'You have to select a pricelist in the sale form !\n Please set one before choosing a product.')
 		if not product:
@@ -337,7 +338,13 @@ class purchase_order_line(osv.osv):
 		prod_uom_po = prod['uom_po_id'][0]
 		if not uom:
 			uom = prod_uom_po
-		price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist], product, qty or 1.0, partner_id, {'uom': uom})[pricelist]
+		if not date_order:
+			date_order = time.strftime('%Y-%m-%d')
+		price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist],
+				product, qty or 1.0, partner_id, {
+					'uom': uom,
+					'date': date_order,
+					})[pricelist]
 		dt = (DateTime.now() + DateTime.RelativeDateTime(days=prod['seller_delay'] or 0.0)).strftime('%Y-%m-%d')
 		prod_name = self.pool.get('product.product').name_get(cr, uid, [product], context=context)[0][1]
 
@@ -353,8 +360,10 @@ class purchase_order_line(osv.osv):
 		res['domain'] = domain
 		return res
 
-	def product_uom_change(self, cr, uid, ids, pricelist, product, qty, uom, partner_id):
-		res = self.product_id_change(cr, uid, ids, pricelist, product, qty, uom, partner_id)
+	def product_uom_change(self, cr, uid, ids, pricelist, product, qty, uom,
+			partner_id, date_order=False):
+		res = self.product_id_change(cr, uid, ids, pricelist, product, qty, uom,
+				partner_id, date_order=date_order)
 		if 'product_uom' in res['value']:
 			del res['value']['product_uom']
 		if not uom:
