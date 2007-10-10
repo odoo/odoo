@@ -75,7 +75,7 @@
 						<field name="total_attendance_day" widget="float_time"/>
 						<field name="timesheet_ids" colspan="4" nolabel="1" domain="[('name','=',date_current)]" context="date=date_current,user_id=user_id">
 							<tree string="Timesheet" editable="top">
-								<field name="date" readonly="1"/>
+								<field name="date" invisible="1"/>
 								<field name="account_id" on_change="on_change_account_id(account_id)" domain="[('type','=','normal'), ('state', '&lt;&gt;', 'close')]"/>
 								<field name="name" />
 								<field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" widget="float_time"/>
