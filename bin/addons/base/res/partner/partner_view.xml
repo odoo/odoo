@@ -229,15 +229,17 @@
 					<field name="parent_id"/>
 					<field name="website" widget="url"/>
 					<field name="date" select="2"/>
-					<field name="bank_ids" colspan="4" nolabel="1">
+					<field name="bank_ids" colspan="4" nolabel="1"
+						context="address=address">
 						<form string="Bank account">
 							<field name="state" select="2"/>
-							<field name="name" select="2"/>
 							<newline/>
 							<field name="acc_number" select="1"/>
 							<newline/>
 							<field name="bank"/>
 							<newline/>
+							<field name="sequence"/>
+							<field name="name" select="2" colspan="4"/>
 							<separator string="Bank account owner" colspan="4"/>
 							<field name="owner_name" colspan="4"/>
 							<field name="street" colspan="4"/>
@@ -344,12 +346,15 @@
 				<newline/>
 				<field name="bank"/>
 				<newline/>
+				<field name="sequence"/>
+				<field name="name" colspan="4"/>
 				<separator string="Bank account owner" colspan="4"/>
 				<field name="owner_name" colspan="4" select="2"/>
 				<field name="street" colspan="4"/>
 				<field name="city"/>
 				<field name="zip"/>
 				<field name="country_id" select="2" completion="1"/>
+				<field name="state_id" select="2"/>
 			</form>
 		</field>
 	</record>

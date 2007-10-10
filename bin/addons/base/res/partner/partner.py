@@ -346,6 +346,7 @@ class res_partner_bank(osv.osv):
 	_name = "res.partner.bank"
 	_rec_name = "state"
 	_description = __doc__
+	_order = 'sequence'
 
 	def _bank_type_get(self, cr, uid, context=None):
 		bank_type_obj = self.pool.get('res.partner.bank.type')
@@ -356,6 +357,17 @@ class res_partner_bank(osv.osv):
 		for bank_type in bank_types:
 			result.append((bank_type.code, bank_type.name))
 		return result
+
+	def _default_value(self, cursor, user, field, context=None):
+		if not context.get('address', False):
+			return
+		value = ''
+		for ham, spam, address in context['address']:
+			if address['type'] == 'default':
+				return address[field]
+			elif not address['type']:
+				value = address[field]
+		return value
 
 	_columns = {
 		'name': fields.char('Description', size=128),
@@ -373,6 +385,23 @@ class res_partner_bank(osv.osv):
 			ondelete='cascade', select=True),
 		'state': fields.selection(_bank_type_get, 'Bank type', required=True,
 			change_default=True),
+		'sequence': fields.integer('Sequence'),
+		'state_id': fields.many2one('res.country.state', 'State',
+			domain="[('country_id', '=', country_id)]"),
+	}
+	_defaults = {
+		'owner_name': lambda obj, cursor, user, context: obj._default_value(
+			cursor, user, 'name', context=context),
+		'street': lambda obj, cursor, user, context: obj._default_value(
+			cursor, user, 'street', context=context),
+		'city': lambda obj, cursor, user, context: obj._default_value(
+			cursor, user, 'city', context=context),
+		'zip': lambda obj, cursor, user, context: obj._default_value(
+			cursor, user, 'zip', context=context),
+		'country_id': lambda obj, cursor, user, context: obj._default_value(
+			cursor, user, 'country_id', context=context),
+		'state_id': lambda obj, cursor, user, context: obj._default_value(
+			cursor, user, 'state_id', context=context),
 	}
 
 	def fields_get(self, cr, uid, fields=None, context=None):
