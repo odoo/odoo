@@ -313,11 +313,10 @@ class stock_tracking(osv.osv):
 	}
 	_defaults = {
 		'active': lambda *a: 1,
-#		'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'stock.lot.tracking'),
 		'name' : make_sscc,
 		'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
 	}
-	#_sql = 'ALTER TABLE stock_tracking ADD CONSTRAINT stock_lot_tracking_unique UNIQUE (name,serial)'
+
 	def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
 		if not args:
 			args=[]
