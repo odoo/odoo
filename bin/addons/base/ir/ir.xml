@@ -46,6 +46,7 @@
 		<field name="res_model">ir.sequence</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="sequence_view_tree"/>
+		<field name="context">{'active_test': False}</field>
 	</record>
 	<menuitem name="Administration/Custom/Sequences/" action="ir_sequence_form" id="menu_ir_sequence_form"/>
 
