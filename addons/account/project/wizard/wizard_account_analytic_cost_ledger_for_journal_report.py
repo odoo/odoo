@@ -62,7 +62,7 @@ class wizard_report(wizard.interface):
 			'actions': [],
 			'result': {
 				'type': 'print',
-				'report': 'account.analytic.account.cost_ledger',
+				'report': 'account.analytic.account.quantity_cost_ledger',
 				'state': 'end'
 			}
 		},
