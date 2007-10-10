@@ -332,9 +332,12 @@ class crm_case(osv.osv):
 						}
 						d = base + fnct[action.trg_date_range_type](action.trg_date_range)
 						dt = d.strftime('%Y-%m-%d %H:%M:%S')
-						ok = (dt <= time.strftime('%Y-%m-%d %H:%M:%S')) and ((not case.date_action_next) or dt>case.date_action_next)
+						ok = (dt <= time.strftime('%Y-%m-%d %H:%M:%S')) and \
+								((not case.date_action_next) or \
+								(dt >= case.date_action_next and \
+								case.date_action_last < case.date_action_next))
 						if not ok:
-							if not case.date_action_next or dt<case.date_action_next:
+							if not case.date_action_next or dt < case.date_action_next:
 								case.date_action_next = dt
 								self.write(cr, uid, [case.id], {'date_action_next': dt}, context)
 
