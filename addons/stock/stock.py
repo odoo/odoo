@@ -172,7 +172,7 @@ class stock_location(osv.osv):
 		if 'out' in what:
 			# all moves from a location in the set to a location out of the set
 			cr.execute(
-				'select -sum(product_qty), product_id, product_uom '\
+				'select sum(product_qty), product_id, product_uom '\
 				'from stock_move '\
 				'where location_id in ('+location_ids_str+') '\
 				'and location_dest_id not in ('+location_ids_str+') '\
