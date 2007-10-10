@@ -342,9 +342,10 @@ res_partner_bank_type_fields()
 
 
 class res_partner_bank(osv.osv):
-	_description='Bank Details'
+	'''Bank Accounts'''
 	_name = "res.partner.bank"
 	_rec_name = "state"
+	_description = __doc__
 
 	def _bank_type_get(self, cr, uid, context=None):
 		bank_type_obj = self.pool.get('res.partner.bank.type')
