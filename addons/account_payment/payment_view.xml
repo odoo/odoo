@@ -185,7 +185,7 @@
 					on_change="onchange_move_line(move_line_id,parent.mode)"
 					domain="[('reconcile_id', '=', False), ('credit', '>', 0), ('amount_to_pay', '>', 0)]"/>
 				<field name="bank_id" domain="[('partner_id', '=', partner_id)]"/>
-				<field name="amount_currency"/>
+				<field name="amount_currency" sum="Amount Total"/>
 				<field name="to_pay_currency"/>
 				<field name="currency"/>
 				<field name="partner_id"/>
@@ -206,18 +206,24 @@
 			<field name="view_mode">form,tree</field>
 		</record>
 
-	<record model="ir.ui.view" id="view_bank_statement_form">
-		<field name="name">account.bank.statement.form.inherit</field>
-		<field name="model">account.bank.statement</field>
-		<field name="type">form</field>
-		<field name="inherit_id" ref="account.view_bank_statement_form"/>
-		<field name="arch" type="xml">
-			<field name="period_id" position="after">
-				<button name="%(wizard_populate_statement)d"
-						string="Import payment lines" type="action" colspan="2"/>
+		<record model="ir.ui.view" id="view_bank_statement_form">
+			<field name="name">account.bank.statement.form.inherit</field>
+			<field name="model">account.bank.statement</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="account.view_bank_statement_form"/>
+			<field name="arch" type="xml">
+				<field name="period_id" position="after">
+					<button name="%(wizard_populate_statement)d"
+							string="Import payment lines" type="action" colspan="2"/>
+				</field>
 			</field>
-		</field>
-	</record>
+		</record>
+
+		<act_window name="Payment Lines"
+			domain="[('move_line_id.move_id.id', '=', move_id)]"
+			res_model="payment.line"
+			src_model="account.invoice"
+			id="act_account_invoice_2_payment_line"/>
 
 	</data>
 </terp>
