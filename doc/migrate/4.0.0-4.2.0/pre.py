@@ -227,5 +227,25 @@ cr.execute('UPDATE res_country SET code = UPPER(code)')
 cr.execute('UPDATE res_country_state SET code = UPPER(code)')
 cr.commit()
 
+# --------------------------------------------- #
+# Add primary key on tables inherits ir_actions #
+# --------------------------------------------- #
+
+cr.execute('SELECT indexname FROm pg_indexes WHERE indexname = \'ir_act_report_xml_pkey\' and tablename = \'ir_act_report_xml\'')
+if not cr.fetchall():
+	cr.execute('ALTER TABLE ir_act_report_xml ADD PRIMARY KEY (id)')
+cr.execute('SELECT indexname FROm pg_indexes WHERE indexname = \'ir_act_report_custom_pkey\' and tablename = \'ir_act_report_custom\'')
+if not cr.fetchall():
+	cr.execute('ALTER TABLE ir_act_report_custom ADD PRIMARY KEY (id)')
+cr.execute('SELECT indexname FROm pg_indexes WHERE indexname = \'ir_act_group_pkey\' and tablename = \'ir_act_group\'')
+if not cr.fetchall():
+	cr.execute('ALTER TABLE ir_act_group ADD PRIMARY KEY (id)')
+cr.execute('SELECT indexname FROm pg_indexes WHERE indexname = \'ir_act_execute_pkey\' and tablename = \'ir_act_execute\'')
+if not cr.fetchall():
+	cr.execute('ALTER TABLE ir_act_execute ADD PRIMARY KEY (id)')
+cr.execute('SELECT indexname FROm pg_indexes WHERE indexname = \'ir_act_wizard_pkey\' and tablename = \'ir_act_wizard\'')
+if not cr.fetchall():
+	cr.execute('ALTER TABLE ir_act_wizard ADD PRIMARY KEY (id)')
+cr.commit()
 
 cr.close

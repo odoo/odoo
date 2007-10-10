@@ -92,18 +92,21 @@ CREATE TABLE ir_act_report_xml (
     report_name varchar(64) NOT NULL,
     report_xsl varchar(64),
     report_xml varchar(64),
-	auto boolean default true
+    auto boolean default true,
+    primary key(id)
 )
 INHERITS (ir_actions);
 
 create table ir_act_report_custom (
-    report_id int
+    report_id int,
 --  report_id int references ir_report_custom
+    primary key(id)
 )
 INHERITS (ir_actions);
 
 CREATE TABLE ir_act_group (
-    exec_type varchar(64) DEFAULT 'serial'::varchar NOT NULL
+    exec_type varchar(64) DEFAULT 'serial'::varchar NOT NULL,
+    primary key(id)
 )
 INHERITS (ir_actions);
 
@@ -114,12 +117,14 @@ CREATE TABLE ir_act_group_link (
 
 CREATE TABLE ir_act_execute (
     func_name varchar(64) NOT NULL,
-    func_arg varchar(64)
+    func_arg varchar(64),
+    primary key(id)
 )
 INHERITS (ir_actions);
 
 CREATE TABLE ir_act_wizard (
-    wiz_name varchar(64) NOT NULL
+    wiz_name varchar(64) NOT NULL,
+    primary key(id)
 )
 INHERITS (ir_actions);
 
