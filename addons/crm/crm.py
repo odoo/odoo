@@ -495,6 +495,15 @@ class crm_case(osv.osv):
 						)
 		return True
 
+	def add_reply(self, cursor, user, ids, context=None):
+		for case in self.browse(cursor, user, ids, context=context):
+			if case.history_line:
+				description = case.history_line[0].description
+				self.write(cursor, user, case.id, {
+					'description': '> ' + description.replace('\n','\n> '),
+					}, context=context)
+		return True
+
 	def case_log(self, cr, uid, ids,context={}, email=False, *args):
 		cases = self.browse(cr, uid, ids)
 		self.__history(cr, uid, cases, 'Historize', history=True, email=email)

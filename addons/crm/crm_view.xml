@@ -283,16 +283,6 @@
 					</group>
 
 					<separator colspan="4"/>
-					<group col="2" colspan="2" expand="1">
-						<group col="2" colspan="2">
-							<field name="canal_id"/>
-							<field name="som" select="2"/>
-						</group>
-						<field name="description" colspan="2" select="2" nolabel="1"/>
-						<button name="case_log_reply" string="Send Partner &amp; Historize" states="open" type="object"/>
-						<button name="case_log" string="Historize" states="open" type="object"/>
-					</group>
-
 					<field name="history_line" colspan="2" nolabel="1" mode="tree,form">
 						<form string="Communication history">
 							<group col="6" colspan="4">
@@ -309,6 +299,19 @@
 							<field name="date"/>
 						</tree>
 					</field>
+					<group col="2" colspan="2" expand="1">
+						<field name="canal_id"/>
+						<field name="som" select="2"/>
+						<button name="add_reply" string="Add Last Mail for Replying"
+							states="open" type="object" colspan="2"/>
+						<field name="description" colspan="2" select="2" nolabel="1"/>
+						<button name="case_log_reply"
+							string="Send Partner &amp; Historize" states="open"
+							type="object"/>
+						<button name="case_log" string="Historize" states="open"
+							type="object"/>
+					</group>
+
 					<separator colspan="4"/>
 					<group col="8" colspan="4">
 						<field name="state" select="1"/>

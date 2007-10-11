@@ -76,7 +76,6 @@ class email_parser(object):
 		message = self.msg_body_get(msg)
 		data = {
 			'name': self._decode_header(msg['Subject']),
-			'description': '> '+message['body'].replace('\n','\n> '),
 			'section_id': self.section_id,
 			'email_from': self._decode_header(msg['From']),
 			'email_cc': self._decode_header(msg['Cc'] or ''),
