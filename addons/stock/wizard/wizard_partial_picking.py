@@ -29,14 +29,14 @@
 
 import time
 import netsvc
-from tools.misc import UpdateableStr
+from tools.misc import UpdateableStr, UpdateableDict
 import pooler
 
 import wizard
 from osv import osv
 
 _moves_arch = UpdateableStr()
-_moves_fields = {}
+_moves_fields = UpdateableDict()
 
 _moves_arch_end = '''<?xml version="1.0"?>
 <form string="Packing result">
