@@ -27,7 +27,7 @@
 
 import netsvc
 import copy
-from tools.misc import UpdateableStr
+from tools.misc import UpdateableStr, UpdateableDict
 from tools.translate import translate
 from xml import dom
 
@@ -90,6 +90,11 @@ class interface(netsvc.Service):
 				arch = copy.copy(result_def['arch'])
 				button_list = copy.copy(result_def['state'])
 
+				if isinstance(fields, UpdateableDict):
+					fields = fields.dict
+				if isinstance(arch, UpdateableStr):
+					arch = arch.string
+
 				# fetch user-set defaut values for the field... shouldn't we pass it the uid?
 				defaults = ir.ir_get(cr, uid, 'default', False, [('wizard.'+self.wiz_name, False)])
 				default_values = dict([(x[1], x[2]) for x in defaults])
@@ -110,9 +115,6 @@ class interface(netsvc.Service):
 							fields[val] = copy.copy(fields[val])
 							fields[val]['selection'] = fields[val]['selection'](self, cr, uid, context)
 
-				if isinstance(arch, UpdateableStr):
-					arch = arch.string
-					
 				if lang:
 					# translate fields
 					for field in fields:
