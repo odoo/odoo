@@ -378,7 +378,7 @@ class account_analytic_account_summary_user(osv.osv):
 							user_id,account_id asc )as 
 					sous_account_analytic_analysis_summary_user
 					order by
-						name,account_id)""")
+						name desc,account_id)""")
 account_analytic_account_summary_user()
 
 class account_analytic_account_summary_month(osv.osv):
