@@ -526,7 +526,10 @@ class sale_order_line(osv.osv):
 	def _number_packages(self, cr, uid, ids, field_name, arg, context):
 		res = {}
 		for line in self.browse(cr, uid, ids):
-			res[line.id] = int(line.product_uom_qty / line.product_packaging.qty)
+			try:
+				res[line.id] = int(line.product_uom_qty / line.product_packaging.qty)
+			except:
+				res[line.id] = 1
 		return res
 	
 	def _get_1st_packaging(self, cr, uid, context={}):
