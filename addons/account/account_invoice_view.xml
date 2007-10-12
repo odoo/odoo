@@ -215,19 +215,6 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Invoice">
-<<<<<<< HEAD:server/bin/addons/account/account_invoice_view.xml
-				<notebook>
-					<page string="Invoice">
-						<field name="journal_id" select="2"/>
-						<field name="type" select="2" readonly="1"/>
-						<field name="partner_id" on_change="onchange_partner_id(type,partner_id)" select="1"/>
-						<field name="address_invoice_id" domain="[('partner_id','=',partner_id)]"/>
-						<field name="account_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" />
-						<field name="payment_term" on_change="onchange_payment_term_date_invoice(payment_term, date_invoice)" />
-						<field name="name" select="2"/>
-						<field name="number" select="1"/>
-						<field name="currency_id" on_change="onchange_currency_id(currency_id)" select="2"/>
-=======
 					<notebook>
 						<page string="Invoice">
 							<field name="journal_id" select="2"/>
@@ -239,42 +226,7 @@
 							<field name="name" select="2"/>
 							<field name="number" select="1"/>
 							<field name="currency_id" on_change="onchange_currency_id(currency_id)" select="2"/>
->>>>>>> 88bb23c... Re-add PRO-FORMA button on customer invoice and add invoice state on report:server/bin/addons/account/account_invoice_view.xml
-
-<<<<<<< HEAD:server/bin/addons/account/account_invoice_view.xml
-						<field name="invoice_line" nolabel="1" widget="one2many_list" colspan="4"/>
-=======
 							<field name="invoice_line" nolabel="1" widget="one2many_list" colspan="4"/>
->>>>>>> 88bb23c... Re-add PRO-FORMA button on customer invoice and add invoice state on report:server/bin/addons/account/account_invoice_view.xml
-
-<<<<<<< HEAD:server/bin/addons/account/account_invoice_view.xml
-						<group col="1" colspan="2">
-							<field name="tax_line" nolabel="1">
-								<tree string="Taxes" editable="bottom">
-									<field name="name"/>
-									<field name="base" on_change="base_change(base)" readonly="1"/>
-									<field name="amount" on_change="amount_change(amount)"/>
-
-									<field name="base_amount" invisible="True"/>
-									<field name="tax_amount" invisible="True"/>
-								</tree>
-							</field>
-						</group>
-						<group col="4" colspan="2">
-							<label colspan="2"/>
-							<field name="amount_untaxed"/>
-							<button name="button_reset_taxes" string="Reset taxes" states="draft" type="object" colspan="2"/>
-							<field name="amount_tax"/>
-							<button name="button_compute" string="Compute" states="draft" type="object" colspan="2"/>
-							<field name="amount_total"/>
-							<field name="reconciled"/>
-							<field name="state" select="2"/>
-							<group col="4" colspan="4" expand="1">
-								<button name="invoice_proforma" states="draft" string="PRO-FORMA"/>
-								<button name="invoice_open" states="draft,proforma" string="Validate"/>
-								<button name="invoice_cancel" states="draft,proforma,sale,open" string="Cancel"/>
-								<button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
-=======
 							<group col="1" colspan="2">
 								<field name="tax_line" nolabel="1">
 									<tree string="Taxes" editable="bottom">
@@ -301,7 +253,6 @@
 									<button name="invoice_cancel" states="draft,proforma,sale,open" string="Cancel"/>
 									<button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
 								</group>
->>>>>>> 88bb23c... Re-add PRO-FORMA button on customer invoice and add invoice state on report:server/bin/addons/account/account_invoice_view.xml
 							</group>
 						</group>
 					</page>
