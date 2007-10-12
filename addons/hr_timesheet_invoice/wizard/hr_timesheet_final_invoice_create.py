@@ -86,11 +86,12 @@ class final_invoice_create(wizard.interface):
 
 			context2=context.copy()
 			context2['lang'] = partner.lang
-			cr.execute("SELECT product_id, to_invoice, sum(unit_amount) \
-					FROM account_analytic_line as line \
-					WHERE account_id = %d AND to_invoice IS NOT NULL \
-					GROUP BY product_id, to_invoice", (account.id,))
-			for product_id, factor_id, qty in cr.fetchall():
+			cr.execute("SELECT product_id, to_invoice, sum(unit_amount) " \
+					"FROM account_analytic_line as line " \
+					"WHERE account_id = %d " \
+						"AND to_invoice IS NOT NULL " \
+					"GROUP BY product_id, to_invoice", (account.id,))
+			for product_id,factor_id,qty in cr.fetchall():
 				product = pool.get('product.product').browse(cr, uid, product_id, context2)
 				factor_name = ''
 				factor = pool.get('hr_timesheet_invoice.factor').browse(cr, uid, factor_id, context2)
