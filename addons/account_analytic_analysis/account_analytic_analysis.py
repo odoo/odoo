@@ -77,6 +77,7 @@ class account_analytic_account(osv.osv):
 					WHERE account_analytic_account.id IN (%s) \
 						AND account_analytic_journal.type='general' \
 						AND account_analytic_line.invoice_id is null \
+						AND account_analytic_line.to_invoice IS NOT NULL \
 					GROUP BY account_analytic_account.id;"""%acc_set)
 			for account_id, sum in cr.fetchall():
 				res[account_id] = round(sum,2)
@@ -109,6 +110,7 @@ class account_analytic_account(osv.osv):
 					where account_analytic_line.account_id IN (%s) \
 						and account_analytic_journal.type='general' \
 						and invoice_id is null \
+						AND to_invoice IS NOT NULL \
 					GROUP BY account_analytic_line.account_id;"%acc_set)
 			for account_id, sum in cr.fetchall():
 				res[account_id] = round(sum,2)
