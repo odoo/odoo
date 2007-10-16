@@ -30,6 +30,7 @@
 				<field name="product_id" select="1"  on_change="on_change_product_id(location_id,product_id,product_uom)" context="location=location_id,uom=product_uom"/>
 				<field name="product_uom"/>
 				<field name="product_qty"/>
+				<field name="prodlot_id"/>
 			</form>
 		</field>
 	</record>
@@ -474,9 +475,7 @@
 					<field name="date" select="1"/>
 					<newline/>
 					<field name="type" select="2"/>
-					<field name="move_type"/>
  					<field name="invoice_state" select="2"/>
-					<field name="loc_move_id" select="2"/>
 					<newline/>
 					<field name="location_id"/>
 					<field name="location_dest_id"/>
@@ -532,6 +531,8 @@
 					<field name="active" select="2"/>
 					<field name="auto_picking"/>
 					<newline/>
+					<field name="move_type"/>
+					<field name="loc_move_id" select="2"/>
 					<field name="lot_id" colspan="4"/>
 					<field name="move_lot_id" colspan="4"/>
 				</page>
@@ -577,7 +578,7 @@
 		<field name="domain">[('state','=','confirmed'),('type','=','out')]</field>
 		<field name="context">{'contact_display': 'partner'}</field>
 	</record>
-	<menuitem name="Inventory Control/Packing Lists/Sending Goods/Confirmed Packings" id="menu_action_picking_tree3" action="action_picking_tree3"/>
+	<menuitem name="Inventory Control/Packing Lists/Sending Goods/Confirmed Packings Waiting Products" id="menu_action_picking_tree3" action="action_picking_tree3"/>
 
 
 	<record model="ir.actions.act_window" id="action_picking_tree4">
@@ -630,7 +631,7 @@
 		<field name="domain">[('state','=','confirmed'),('type','=','internal')]</field>
 		<field name="context">{'contact_display': 'partner'}</field>
 	</record>
-	<menuitem name="Inventory Control/Packing Lists/Internal/Confirmed Packings" id="menu_action_picking_tree8" action="action_picking_tree8"/>
+	<menuitem name="Inventory Control/Packing Lists/Internal/Confirmed Packings Waiting Products" id="menu_action_picking_tree8" action="action_picking_tree8"/>
 	<record model="ir.actions.act_window" id="action_picking_tree9">
 		<field name="name">Draft packings (internal)</field>
 		<field name="res_model">stock.picking</field>
@@ -719,11 +720,9 @@
 				<field name="product_id" select="1"/>
 				<field name="product_qty" select="1"/>
 				<field name="product_uom" select="1" string="UOM"/>
-				<field name="product_packaging" />
+				<field name="prodlot_id" select="2"/>
 				<field name="location_id" select="1"/>
 				<field name="location_dest_id" select="1"/>
-				<field name="lot_id" select="1"/>
-				<field name="date" select="1"/>
 				<field name="date_planned" select="1"/>
 				<field name="state"/>
 			</tree>
