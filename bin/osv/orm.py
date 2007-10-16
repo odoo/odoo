@@ -655,11 +655,19 @@ class orm(object):
 						res =line[i] and float(line[i])
 					elif fields_def[field[len(prefix)]]['type']=='selection':
 						res = False
-						for key,val in fields_def[field[len(prefix)]]['selection']:
-							if key==line[i]:             #val==line[i] if from the client !
+						if isinstance(fields_def[field[len(prefix)]]['selection'],
+								(tuple, list)):
+							sel = fields_def[field[len(prefix)]]['selection']
+						else:
+							sel = fields_def[field[len(prefix)]]['selection'](self,
+									cr, uid, context)
+						for key, val in sel:
+							if key == line[i]:
 								res = key
 						if line[i] and not res:
-							logger.notifyChannel("import", netsvc.LOG_WARNING, "key '%s' not found in selection field '%s'" %(line[i], field[len(prefix)]))
+							logger.notifyChannel("import", netsvc.LOG_WARNING,
+									"key '%s' not found in selection field '%s'" % \
+											(line[i], field[len(prefix)]))
 					elif fields_def[field[len(prefix)]]['type']=='many2one':
 						res = False
 						if line[i]:
