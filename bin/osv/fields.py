@@ -295,14 +295,12 @@ class many2one(_column):
 			names = dict(obj.name_get(cr, user, filter(None, res.values()), context))
 		except except_orm:
 			names={}
-			for id in filter(None, res.values()):
-				try:
-					names[id] = dict(obj.name_get(cr, user, [id], context))[id]
-				except except_orm, e:
-					if e.name == 'AccessError':
-						names[id] = "== Access denied =="
-					else :
-						raise
+
+			iids = filter(None, res.values())
+			cr.execute('select id,'+obj._rec_name+' from '+obj._table+' where id in ('+','.join(map(str,iids))+')')
+			for res22 in cr.fetchall():
+				names[res22[0]] = res22[1]
+
 		for r in res.keys():
 			if res[r] and res[r] in names:
 				res[r] = (res[r], names[res[r]])
