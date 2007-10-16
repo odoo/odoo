@@ -192,9 +192,12 @@ def file_open(name, mode="r", subdir='addons'):
 		if zipfile.is_zipfile(head+'.zip'):
 			import StringIO
 			zfile = zipfile.ZipFile(head+'.zip')
-			return StringIO.StringIO(zfile.read(os.path.join(
-				os.path.basename(head), zipname).replace(
-					os.sep, '/')))
+			try:
+				return StringIO.StringIO(zfile.read(os.path.join(
+					os.path.basename(head), zipname).replace(
+						os.sep, '/')))
+			except:
+				pass
 	if os.path.isfile(name):
 		return file(name, mode)
 
