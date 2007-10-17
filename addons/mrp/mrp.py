@@ -341,7 +341,8 @@ class mrp_production(osv.osv):
 		'product_qty':  lambda *a: 1.0,
 		'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'mrp.production') or '/',
 	}
-	_order = 'date_planned desc, priority desc';
+	_order = 'date_planned asc, priority desc';
+
 	def product_id_change(self, cr, uid, ids, product):
 		if not product:
 			return {}
