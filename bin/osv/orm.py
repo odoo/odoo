@@ -871,10 +871,19 @@ class orm(object):
 
 		# get the default values set by the user and override the default
 		# values defined in the object
-		res = ir.ir_get(cr, uid, 'default', False, [self._name])
+		ir_values_obj = self.pool.get('ir.values')
+		res = ir_values_obj.get(cr, uid, 'default', False, [self._name])
 		for id, field, field_value in res:
 			if field in fields:
-				value[field] = field_value 
+				if self._columns[field]._type in ('many2one', 'one2one'):
+					obj = self.pool.get(self._columns[field]._obj)
+					if not obj.search(cr, uid, [('id', '=', field_value)]):
+						continue
+				if self._columns[field]._type in ('one2many', 'many2many'):
+					obj = self.pool.get(self._columns[field]._obj)
+					obj_ids = obj.search(cr, uid, [('id', 'in', field_value)])
+					field_value = obj_ids
+				value[field] = field_value
 		return value
 
 	def perm_read(self, cr, user, ids, context=None, details=True):
