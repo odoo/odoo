@@ -344,22 +344,27 @@ class product_product(osv.osv):
 	}
 
 	def _check_ean_key(self, cr, uid, ids):
-		for partner_o in pooler.get_pool(cr.dbname).get('product.product').read(cr, uid, ids, ['ean13',]):
-			thisean=partner_o['ean13']
-			if thisean and thisean!='':
-				if len(thisean)!=13:
-					return False
-				sum=0
-				for i in range(12):
-					if is_pair(i):
-						sum+=int(thisean[i])
-					else:
-						sum+=3*int(thisean[i])
-				if math.ceil(sum/10.0)*10-sum!=int(thisean[12]):
-					return False
+		for partner in self.browse(cr, uid, ids):
+			if not partner.ean13:
+				continue
+			if len(partner.ean13) < 12:
+				return False
+			sum=0
+			for i in range(12):
+				if is_pair(i):
+					sum += int(partner.ean13[i])
+				else:
+					sum += 3 * int(partner.ean13[i])
+			check = int(math.ceil(sum / 10.0) * 10 - sum)
+			if len(partner.ean13) == 12:
+				self.write(cr, uid, partner.id, {
+					'ean13': partner.ean13 + str(check)
+					})
+			elif check != int(partner.ean13[12]):
+				return False
 		return True
 
-	#_constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
+	_constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
 
 	def on_order(self, cr, uid, ids, orderline, quantity):
 		pass
