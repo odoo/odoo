@@ -168,7 +168,7 @@ def create_automatic_op(cr, uid, context=None):
 
 
 def _procure_orderpoint_confirm(self, cr, uid, automatic=False,\
-		use_new_cursor=False, context=None):
+		use_new_cursor=False, context=None, user_id=False):
 	'''
 	use_new_cursor: False or the dbname
 	'''
@@ -176,15 +176,23 @@ def _procure_orderpoint_confirm(self, cr, uid, automatic=False,\
 		context={}
 	if use_new_cursor:
 		cr = pooler.get_db(use_new_cursor).cursor()
+	pool = pooler.get_pool(cr.dbname)
+	orderpoint_obj = pool.get('stock.warehouse.orderpoint')
+	location_obj = pool.get('stock.location')
+	procurement_obj = pool.get('mrp.procurement')
+	request_obj = pool.get('res.request')
 	wf_service = netsvc.LocalService("workflow")
+	report = []
 	offset = 0
 	ids = [1]
 	if automatic:
 		create_automatic_op(cr, uid, context=context)
 	while ids:
-		cr.execute('select id from stock_warehouse_orderpoint where active offset %d limit 100', (offset,))
+		cr.execute('SELECT id ' \
+				'FROM stock_warehouse_orderpoint ' \
+				'WHERE active OFFSET %d LIMIT 100', (offset,))
 		ids = map(lambda x: x[0], cr.fetchall())
-		for op in pooler.get_pool(cr.dbname).get('stock.warehouse.orderpoint').browse(cr, uid, ids):
+		for op in orderpoint_obj.browse(cr, uid, ids):
 			#if op.procurement_id and op.procurement_id.purchase_id:
 			#	if (op.procurement_id.purchase_id.state=='confirmed'):
 			#		#
@@ -193,39 +201,56 @@ def _procure_orderpoint_confirm(self, cr, uid, automatic=False,\
 			#		continue
 			#	elif op.procurement_id.purchase_id.state=='draft':
 			#		wf_service = netsvc.LocalService("workflow")
-			#		wf_service.trg_validate(uid, 'purchase.order', op.procurement_id.purchase_id.id, 'purchase_cancel', cr)
-			prods = pooler.get_pool(cr.dbname).get('stock.location')._product_virtual_get(cr, uid, op.warehouse_id.lot_stock_id.id, [op.product_id.id], {'uom': op.product_uom.id})[op.product_id.id]
-			if prods < op.product_min_qty:
-				# order the quantity necessary to get to max(min_qty, max_qty)
-				qty = max(op.product_min_qty, op.product_max_qty)-prods
-				reste = qty % op.qty_multiple
-				if reste>0:
-					qty += op.qty_multiple-reste
-				newdate = DateTime.now() + DateTime.RelativeDateTime(days=op.product_id.seller_delay)
-				if op.product_id.supply_method == 'buy':
-					location_id = op.warehouse_id.lot_input_id
-				elif op.product_id.supply_method == 'produce':
-					location_id = op.warehouse_id.lot_stock_id
-				else:
-					continue
-				proc_id = pooler.get_pool(cr.dbname).get('mrp.procurement').create(cr, uid, {
-					'name': 'OP:'+str(op.id),
-					'date_planned': newdate.strftime('%Y-%m-%d'),
-					'product_id': op.product_id.id,
-					'product_qty': qty,
-					'product_uom': op.product_uom.id,
-					'location_id': op.warehouse_id.lot_input_id.id,
-					'procure_method': 'make_to_order',
-					'origin': op.name
-				})
-				wf_service = netsvc.LocalService("workflow")
-				wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
-				wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_check', cr)
-				pooler.get_pool(cr.dbname).get('stock.warehouse.orderpoint').write(cr, uid, [op.id], {'procurement_id':proc_id})
+			#		wf_service.trg_validate(uid, 'purchase.order',
+			#				op.procurement_id.purchase_id.id, 'purchase_cancel', cr)
+			try:
+				prods = location_obj._product_virtual_get(cr, uid,
+						op.warehouse_id.lot_stock_id.id, [op.product_id.id],
+						{'uom': op.product_uom.id})[op.product_id.id]
+				if prods < op.product_min_qty:
+					# order the quantity necessary to get to max(min_qty, max_qty)
+					qty = max(op.product_min_qty, op.product_max_qty)-prods
+					reste = qty % op.qty_multiple
+					if reste>0:
+						qty += op.qty_multiple-reste
+					newdate = DateTime.now() + DateTime.RelativeDateTime(
+							days=op.product_id.seller_delay)
+					if op.product_id.supply_method == 'buy':
+						location_id = op.warehouse_id.lot_input_id
+					elif op.product_id.supply_method == 'produce':
+						location_id = op.warehouse_id.lot_stock_id
+					else:
+						continue
+					proc_id = procurement_obj.create(cr, uid, {
+						'name': 'OP:'+str(op.id),
+						'date_planned': newdate.strftime('%Y-%m-%d'),
+						'product_id': op.product_id.id,
+						'product_qty': qty,
+						'product_uom': op.product_uom.id,
+						'location_id': op.warehouse_id.lot_input_id.id,
+						'procure_method': 'make_to_order',
+						'origin': op.name
+					})
+					wf_service.trg_validate(uid, 'mrp.procurement', proc_id,
+							'button_confirm', cr)
+					wf_service.trg_validate(uid, 'mrp.procurement', proc_id,
+							'button_check', cr)
+					orderpoint_obj.write(cr, uid, [op.id],
+							{'procurement_id': proc_id})
+			except Exception, e:
+				report.append('OP %d:\n%s\n' % (op.id, str(e)))
 		offset += len(ids)
 		if use_new_cursor:
 			cr.commit()
+	if user_id and report:
+		request_obj.create(cr, uid, {
+			'name': 'Orderpoint report.',
+			'act_from': user_id,
+			'act_to': user_id,
+			'body': '\n'.join(report)
+			})
 	if use_new_cursor:
+		cr.commit()
 		cr.close()
 	return {}
 

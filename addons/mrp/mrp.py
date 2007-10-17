@@ -928,7 +928,7 @@ class mrp_procurement(osv.osv):
 				picking_lead=picking_lead, user_id=user_id,\
 				use_new_cursor=use_new_cursor, context=context)
 		self.run_orderpoint_confirm(cr, uid, automatic=automatic,\
-				use_new_cursor=use_new_cursor, context=context)
+				use_new_cursor=use_new_cursor, context=context, user_id=user_id)
 
 	def run_procure_confirm(self, cr, uid, user_id=False, schedule_cycle=1.0,\
 			po_cycle=1.0, po_lead=1.0, security_lead=50.0, picking_lead=1.0, \
@@ -945,7 +945,7 @@ class mrp_procurement(osv.osv):
 				context=context)
 
 	def run_orderpoint_confirm(self, cr, uid, automatic=False, use_new_cursor=False,\
-			context=None):
+			context=None, user_id=False):
 		'''
 		use_new_cursor: False or the dbname
 		'''
@@ -953,7 +953,7 @@ class mrp_procurement(osv.osv):
 		if not context:
 			context={}
 		_procure_orderpoint_confirm(self, cr, uid, automatic=automatic,\
-				use_new_cursor=use_new_cursor, context=context)
+				use_new_cursor=use_new_cursor, context=context, user_id=user_id)
 
 mrp_procurement()
 

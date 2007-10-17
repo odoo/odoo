@@ -49,7 +49,7 @@ def _procure_calculation_orderpoint(self, db_name, uid, data, context):
 	proc_obj = pool.get('mrp.procurement')
 	automatic = data['form']['automatic']
 	proc_obj.run_orderpoint_confirm(cr, uid, automatic=automatic,\
-			use_new_cursor=cr.dbname, context=context)
+			use_new_cursor=cr.dbname, context=context, user_id=uid)
 	return {}
 
 def _procure_calculation(self, cr, uid, data, context):
