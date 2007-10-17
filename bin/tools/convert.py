@@ -648,6 +648,8 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
 	uid = 1
 	datas = []
 	for line in reader:
+		if not line.strip():
+			continue
 		datas.append( map(lambda x:x.decode('utf8').encode('utf8'), line))
 	pool.get(model).import_data(cr, uid, fields, datas,mode, module,noupdate)
 
