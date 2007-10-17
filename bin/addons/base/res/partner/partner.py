@@ -360,7 +360,7 @@ class res_partner_bank(osv.osv):
 
 	def _default_value(self, cursor, user, field, context=None):
 		if not context.get('address', False):
-			return
+			return ''
 		value = ''
 		for ham, spam, address in context['address']:
 			if address['type'] == 'default':
