@@ -349,6 +349,10 @@ class product_product(osv.osv):
 				continue
 			if len(partner.ean13) < 12:
 				return False
+			try:
+				int(partner.ean13)
+			except:
+				return False
 			sum=0
 			for i in range(12):
 				if is_pair(i):
