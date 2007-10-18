@@ -339,13 +339,11 @@
 		<field name="arch" type="xml">
 			<tree string="Production orders" colors="red:date_planned&lt;current_date and state not in ('done','cancel')">
 				<field name="name"/>
-				<field name="priority"/>
-
 				<field name="product_id"/>
 				<field name="product_qty"/>
 				<field name="date_planned"/>
-				<field name="date_start"/>
 				<field name="date_finnished"/>
+				<field name="origin"/>
 				<field name="state"/>
 			</tree>
 		</field>

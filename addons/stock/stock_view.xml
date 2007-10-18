@@ -455,10 +455,10 @@
 			<tree string="Packing list" color="red:state=='cancel'">
 				<field name="name" select="1" colspan="4"/>
 				<field name="date" select="1"/>
-				<field name="origin" select="1"/>
 				<field name="loc_move_id" select="1"/>
 				<field name="address_id" select="1"/>
 				<field name="invoice_state" readonly="1"/>
+				<field name="origin" select="1"/>
 				<field name="state" readonly="1"/>
 			</tree>
 		</field>
@@ -519,9 +519,9 @@
 						<field name="state" readonly="1"/>
 						<button name="button_confirm" string="Confirm" states="draft"/>
 						<button name="action_assign" string="Assign" states="confirmed" type="object"/>
-						<button name="force_assign" string="Force assignations" states="confirmed" type="object"/>
-						<button name="cancel_assign" string="Cancel assignations" states="assigned" type="object"/>
-						<button type="action" name="%(partial_picking)d" string="Make Packing" states="assigned"/>
+						<button name="force_assign" string="Force Assignation" states="confirmed" type="object"/>
+						<button name="cancel_assign" string="Cancel Assignation" states="assigned" type="object"/>
+						<button type="action" name="%(partial_picking)d" string="Validate" states="assigned"/>
 						<button name="button_cancel" string="Cancel" states="assigned,confirmed,draft"/>
 					</group>
 				</page><page string="Notes">
@@ -578,7 +578,7 @@
 		<field name="domain">[('state','=','confirmed'),('type','=','out')]</field>
 		<field name="context">{'contact_display': 'partner'}</field>
 	</record>
-	<menuitem name="Inventory Control/Packing Lists/Sending Goods/Confirmed Packings Waiting Products" id="menu_action_picking_tree3" action="action_picking_tree3"/>
+	<menuitem name="Inventory Control/Packing Lists/Sending Goods/Confirmed Packings Waiting Assignation" id="menu_action_picking_tree3" action="action_picking_tree3"/>
 
 
 	<record model="ir.actions.act_window" id="action_picking_tree4">
@@ -600,7 +600,7 @@
 		<field name="domain">[('state','=','assigned'),('type','=','in')]</field>
 		<field name="context">{'contact_display': 'partner'}</field>
 	</record>
-	<menuitem name="Inventory Control/Packing Lists/Getting Goods/Packings to Process" id="menu_action_picking_tree5" action="action_picking_tree5"/>
+	<menuitem name="Inventory Control/Packing Lists/Getting Goods/Packings to be Received" id="menu_action_picking_tree5" action="action_picking_tree5"/>
 
 	<record model="ir.actions.act_window" id="action_picking_tree6">
 		<field name="name">Internal packing lists</field>
@@ -631,7 +631,7 @@
 		<field name="domain">[('state','=','confirmed'),('type','=','internal')]</field>
 		<field name="context">{'contact_display': 'partner'}</field>
 	</record>
-	<menuitem name="Inventory Control/Packing Lists/Internal/Confirmed Packings Waiting Products" id="menu_action_picking_tree8" action="action_picking_tree8"/>
+	<menuitem name="Inventory Control/Packing Lists/Internal/Confirmed Packings Waiting Assignation" id="menu_action_picking_tree8" action="action_picking_tree8"/>
 	<record model="ir.actions.act_window" id="action_picking_tree9">
 		<field name="name">Draft packings (internal)</field>
 		<field name="res_model">stock.picking</field>

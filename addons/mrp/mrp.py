@@ -501,7 +501,7 @@ class mrp_production(osv.osv):
 				self.action_compute(cr, uid, [production.id])
 				production = self.browse(cr, uid, [production.id])[0]
 			picking_id = self.pool.get('stock.picking').create(cr, uid, {
-				'origin': (production.origin or '') +':'+production.name,
+				'origin': (production.origin or '').split(':')[0] +':'+production.name,
 				'type': 'internal',
 				'move_type': 'one',
 				'state': 'auto',
@@ -557,8 +557,8 @@ class mrp_production(osv.osv):
 						'state': 'waiting',
 					})
 				proc_id = self.pool.get('mrp.procurement').create(cr, uid, {
-					'name': production.name+':'+ (production.origin or ''),
-					'origin': production.name+':'+ (production.origin or ''),
+					'name': (production.origin or '').split(':')[0] + ':' + production.name,
+					'origin': (production.origin or '').split(':')[0] + ':' + production.name,
 					'date_planned': newdate,
 					'product_id': line.product_id.id,
 					'product_qty': line.product_qty,
@@ -821,7 +821,6 @@ class mrp_procurement(osv.osv):
 			loc_id = procurement.location_id.id
 			newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d') - DateTime.RelativeDateTime(days=procurement.product_id.product_tmpl_id.produce_delay or 0.0)
 			produce_id = self.pool.get('mrp.production').create(cr, uid, {
-				#'name': procurement.name,
 				'origin': procurement.origin,
 				'product_id': procurement.product_id.id,
 				'product_qty': procurement.product_qty,
