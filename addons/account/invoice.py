@@ -259,7 +259,7 @@ class account_invoice(osv.osv):
 
 	def copy(self, cr, uid, id, default=None, context={}):
 		if not default: default = {}
-		default.update({'state':'draft', 'number':False, 'move_id':False})
+		default.update({'state':'draft', 'number':False, 'move_id':False, 'date_invoice': time.strftime('%Y-%m-%d'), 'date_due':False})
 		return super(account_invoice, self).copy(cr, uid, id, default, context)
 
 	def test_paid(self, cr, uid, ids, *args):
