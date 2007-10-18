@@ -59,6 +59,7 @@
 		<field name="arch" type="xml">
 			<form string="Activity">
 				<field name="name" colspan="4" select="1"/>
+				<field name="wkf_id" select="1"/>
 				<field name="kind" select="1"/>
 				<field name="action" colspan="4" select="1"/>
 				<field name="subflow_id"/>
@@ -99,6 +100,7 @@
 		<field name="arch" type="xml">
 			<tree string="Activity">
 				<field name="name"/>
+				<field name="wkf_id"/>
 				<field name="kind"/>
 				<field name="action"/>
 				<field name="flow_start"/>
