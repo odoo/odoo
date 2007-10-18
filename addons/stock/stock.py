@@ -374,7 +374,7 @@ class stock_picking(osv.osv):
 		'invoice_state':fields.selection([
 			("invoiced","Invoiced"),
 			("2binvoiced","To be invoiced"),
-			("none","No invoice")], "Invoice state"),
+			("none","Not from Packing")], "Invoice state"),
 	}
 	_defaults = {
 		'name': lambda *a: '/',
