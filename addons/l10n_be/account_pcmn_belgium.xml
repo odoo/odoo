@@ -6574,7 +6574,7 @@
 		#  TVA - Taxe sur la Valeur Ajoutée
 		#
 		<record model="account.tax" id="vat_6">
-			<field name="name">VAT 6%</field>
+			<field name="name">VAT 6% - Ventes</field>
 			<field name="amount" eval="0.06"/>
 			<field name="type">percent</field>
 			<field name="account_collected_id" ref="vat_payable06"/>
@@ -6585,13 +6585,30 @@
 			<field name="ref_base_code_id" ref="vat_code_a54"/>
 			<field name="ref_tax_code_id" ref="vat_code_a63"/>
 		</record>
+
+		<record model="account.tax" id="vat_6_buy">
+			<field name="name">VAT 6% - Achats</field>
+			<field name="amount" eval="0.06"/>
+			<field name="type">percent</field>
+			<field name="account_collected_id" ref="vat_refund06"/>
+			<field name="account_paid_id" ref="vat_payable06"/>
+
+		</record>
 		
 		<record model="account.tax" id="vat_12">
-			<field name="name">VAT 12%</field>
+			<field name="name">VAT 12% - Ventes</field>
 			<field name="amount" eval="0.12"/>
 			<field name="type">percent</field>
 			<field name="account_collected_id" ref="vat_payable12"/>
 			<field name="account_paid_id" ref="vat_refund12"/>
+		</record>
+
+		<record model="account.tax" id="vat_12">
+			<field name="name">VAT 12% - Achats</field>
+			<field name="amount" eval="0.12"/>
+			<field name="type">percent</field>
+			<field name="account_collected_id" ref="vat_refund12"/>
+			<field name="account_paid_id" ref="vat_payable12"/>
 		</record>
 		
 		<record model="account.tax" id="vat_21">
