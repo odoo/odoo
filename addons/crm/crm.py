@@ -567,6 +567,8 @@ class crm_case(osv.osv):
 			data = {'active':True, 'user_id': False}
 			if case.section_id.parent_id:
 				data['section_id'] = case.section_id.parent_id.id
+				if case.section_id.parent_id.user_id:
+					data['user_id'] = case.section_id.parent_id.user_id.id
 			else:
 				raise osv.except_osv('Error !', 'You can not escalate this case.\nYou are already at the top level.')
 			self.write(cr, uid, ids, data)
