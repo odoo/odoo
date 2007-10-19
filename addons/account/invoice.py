@@ -196,7 +196,7 @@ class account_invoice(osv.osv):
 			else:
 				acc_id = p.property_account_payable.id
 
-			payment_term = p.property_payment_term and p.property_payment_term or False
+			payment_term = p.property_payment_term and p.property_payment_term.id or False
 
 		result = {'value': {
 			'address_contact_id': contact_addr_id,
