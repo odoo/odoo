@@ -504,101 +504,147 @@ class stock_picking(osv.osv):
 					self.write(cr, uid, [pick.id], {'move_lot_id':id})
 		return True
 
-	def action_invoice_create(self, cr, uid, ids, journal_id=False, group=False, type='out_invoice', context={}):
-		res={}
-		pgroup = {}
-		get_ids = lambda y: map(lambda x: x.id, y or [])
-		sales = {}
-		for p in self.browse(cr,uid,ids, context):
-			if p.invoice_state<>'2binvoiced':
+	def _get_address_invoice(self, cursor, user, picking):
+		'''Return {'contact': address, 'invoice': address} for invoice'''
+		partner_obj = self.pool.get('res.partner')
+		partner = picking.address_id.partner_id
+
+		return partner_obj.address_get(cursor, user, [partner.id],
+				['contact', 'invoice'])
+
+	def _get_comment_invoice(self, cursor, user, picking):
+		'''Return comment string for invoice'''
+		return picking.note or ''
+
+	def _get_price_unit_invoice(self, cursor, user, move_line, type):
+		'''Return the price unit for the move line'''
+		if type in ('in_invoice', 'in_refund'):
+			return move_line.product_id.standard_price
+		else:
+			return move_line.product_id.list_price
+	
+	def _get_discount_invoice(self, cursor, user, move_line):
+		'''Return the discount for the move line'''
+		return 0.0
+
+	def _get_taxes_invoice(self, cursor, user, move_line, type):
+		'''Return taxes ids for the move line'''
+		if type in ('in_invoice', 'in_refund'):
+			return [x.id for x in move_line.product_id.supplier_taxes_id]
+		else:
+			return [x.id for x in move_line.product_id.taxes_id]
+
+	def _get_account_analytic_invoice(self, cursor, user, picking, move_line):
+		return False
+
+	def _invoice_line_hook(self, cursor, user, move_line, invoice_line_id):
+		'''Call after the creation of the invoice line'''
+		return
+
+	def _invoice_hook(self, cursor, user, picking, invoice_id):
+		'''Call after the creation of the invoice'''
+		return
+
+	def action_invoice_create(self, cursor, user, ids, journal_id=False,
+			group=False, type='out_invoice', context=None):
+		'''Return ids of created invoices for the pickings'''
+		invoice_obj = self.pool.get('account.invoice')
+		invoice_line_obj = self.pool.get('account.invoice.line')
+		invoices_group = {}
+		res = {}
+
+		for picking in self.browse(cursor, user, ids, context=context):
+			if picking.invoice_state != '2binvoiced':
 				continue
-			a = p.address_id.partner_id.property_account_receivable.id
-			if p.address_id.partner_id and p.address_id.partner_id.property_payment_term.id:
-				pay_term = p.address_id.partner_id.property_payment_term.id
+
+			partner = picking.address_id.partner_id
+			if type in ('out_invoice', 'out_refund'):
+				account_id = partner.property_account_receivable.id
 			else:
-				pay_term = False
+				account_id = partner.property_account_payable.id
+			payment_term_id = False
+			if partner.property_payment_term:
+				payment_term_id = partner.property_payment_term.id
 
-			if p.sale_id:
-				pinv_id = p.sale_id.partner_invoice_id.id
-				pcon_id = p.sale_id.partner_order_id.id
-				if p.sale_id.id not in sales:
-					sales[p.sale_id.id] = [x.id for x in p.sale_id.invoice_ids]
+			address_contact_id, address_invoice_id = \
+					self._get_address_invoice(cursor, user, picking).values()
+
+			comment = self._get_comment_invoice(cursor, user, picking)
+
+			if group and partner.id in invoices_group:
+				invoice_id = invoices_group[partner.id]
 			else:
-				#
-				# ideal: get_address('invoice') on partner
-				#
-				pinv_id = p.address_id.id
-				pcon_id = p.address_id.id
-
-			val = {
-				'name': p.name,
-				'origin': p.name+':'+p.origin,
-				'type': type,
-				'account_id': a,
-				'partner_id': p.address_id.partner_id.id,
-				'address_invoice_id': pinv_id,
-				'address_contact_id': pcon_id,
-				'comment': (p.note or '') + '\n' + (p.sale_id and p.sale_id.note or ''),
-				'payment_term': pay_term,
-			}
-			if p.sale_id:
-				val['currency_id'] = (p.sale_id and p.sale_id.pricelist_id.currency_id.id) or False
-			if journal_id:
-				val['journal_id'] = journal_id
-
-			if group and p.address_id.partner_id.id in pgroup:
-				invoice_id= pgroup[p.address_id.partner_id.id]
-			else:
-				invoice_id = self.pool.get('account.invoice').create(cr, uid, val ,context= context)
-				pgroup[p.address_id.partner_id.id] = invoice_id
-
-
-			res[p.id]= invoice_id
-
-			for line in p.move_lines:
-				if line.sale_line_id:
-					tax_ids = map(lambda x: x.id, line.sale_line_id.tax_id)
-				else:
-					tax_ids = map(lambda x: x.id, line.product_id.taxes_id)
-				account_id =  line.product_id.product_tmpl_id.property_account_income.id
-				if not account_id:
-					account_id = line.product_id.categ_id.property_account_income_categ.id
-				punit = line.sale_line_id and line.sale_line_id.price_unit or line.product_id.list_price
-				if type in ('in_invoice','in_refund'):
-					punit = line.product_id.standard_price
-				iline_id = self.pool.get('account.invoice.line').create(cr, uid, {
-					'name': ((group and (p.name + ' - ')) or '') + line.name,
-					'invoice_id': invoice_id,
-					'uos_id': line.product_uos.id,
-					'product_id': line.product_id.id,
+				invoice_vals = {
+					'name': picking.name,
+					'origin': picking.name + ':' + picking.origin,
+					'type': type,
 					'account_id': account_id,
-					'price_unit': line.sale_line_id and line.sale_line_id.price_unit or line.product_id.list_price,
-					'discount': line.sale_line_id and line.sale_line_id.discount or 0.0,
-					'quantity': line.product_uos_qty,
-					'invoice_line_tax_id': [(6,0,tax_ids)],
-					'account_analytic_id': (p.sale_id and p.sale_id.project_id.id) or False,
-				})
-				if line.sale_line_id:
-					self.pool.get('sale.order.line').write(cr, uid, [line.sale_line_id.id], {
-						'invoice_lines': [(6, 0, [iline_id])]
-					})
-			self.pool.get('account.invoice').button_compute(cr, uid, [invoice_id], {'type':'in_invoice'}, set_total=(type in ('in_invoice','in_refund')))
-			self.pool.get('stock.picking').write(cr, uid, [p.id], {'invoice_state': 'invoiced'})
-			if p.sale_id:
-				sids = sales[p.sale_id.id]
-				if invoice_id not in sids:
-					sales[p.sale_id.id].append(invoice_id)
-					self.pool.get('sale.order').write(cr, uid, [p.sale_id.id], {
-						'invoice_ids': [(6, 0, sales[p.sale_id.id])]
-					})
+					'partner_id': partner.id,
+					'address_invoice_id': address_invoice_id,
+					'address_contact_id': address_contact_id,
+					'comment': comment,
+					'payment_term': payment_term_id,
+					}
+				if journal_id:
+					invoice_vals['journal_id'] = journal_id
+				invoice_id = invoice_obj.create(cursor, user, invoice_vals,
+						context=context)
+				invoices_group[partner.id] = invoice_id
+			res[picking.id] = invoice_id
 
-				self.pool.get('sale.order').write(cr, uid, [p.sale_id.id], {
-					'invoiced': True
-				})
-		self.write(cr, uid, res.keys(), {'invoice_state': 'invoiced'})
+			for move_line in picking.move_lines:
+				if group:
+					name = picking.name + '-' + move_line.name
+				else:
+					name = move_line.name
+
+				if type in ('out_invoice', 'out_refund'):
+					account_id = move_line.product_id.product_tmpl_id.\
+							property_account_income.id
+					if not account_id:
+						account_id = move_line.product_id.categ_id.\
+								property_account_income_categ.id
+				else:
+					account_id = move_line.product_id.product_tmpl_id.\
+							property_account_expense.id
+					if not account_id:
+						account_id = move_line.product_id.categ_id.\
+								property_account_expense_categ.id
+
+				price_unit = self._get_price_unit_invoice(cursor, user,
+						move_line, type)
+				discount = self._get_discount_invoice(cursor, user, move_line)
+				tax_ids = self._get_taxes_invoice(cursor, user, move_line, type)
+				account_analytic_id = self._get_account_analytic_invoice(cursor,
+						user, picking, move_line)
+
+				invoice_line_id = invoice_line_obj.create(cursor, user, {
+					'name': name,
+					'invoice_id': invoice_id,
+					'uos_id': move_line.product_uos.id,
+					'product_id': move_line.product_id.id,
+					'account_id': account_id,
+					'price_unit': price_unit,
+					'discount': discount,
+					'quantity': move_line.product_uos_qty,
+					'invoice_line_tax_id': [(6, 0, tax_ids)],
+					'account_analytic_id': account_analytic_id,
+					}, context=context)
+				self._invoice_line_hook(cursor, user, move_line, invoice_line_id)
+
+			invoice_obj.button_compute(cursor, user, [invoice_id], context=context,
+					set_total=(type in ('in_invoice', 'in_refund')))
+			self.write(cursor, user, [picking.id], {
+				'invoice_state': 'invoiced',
+				}, context=context)
+			self._invoice_hook(cursor, user, picking, invoice_id)
+		self.write(cursor, user, res.keys(), {
+			'invoice_state': 'invoiced',
+			}, context=context)
 		return res
 
 stock_picking()
+
 
 class stock_production_lot(osv.osv):
 
