@@ -846,19 +846,35 @@ class stock_move(osv.osv):
 				if move.product_id.categ_id:
 					test.append( ('product.category', move.product_id.categ_id.id) )
 				if not acc_src:
-					acc_src = move.product_id.product_tmpl_id.property_account_expense.id
+					acc_src = move.product_id.product_tmpl_id.\
+							property_stock_account_output.id
 					if not acc_src:
-						acc_src = move.product_id.categ_id.property_account_expense_categ.id
+						acc_src = move.product_id.categ_id.\
+								property_stock_account_output_categ.id
 					if not acc_src:
-						raise osv.except_osv('Error !', 'There is no expense account defined for this product: "%s" (id:%d)' % (move.product_id.name, move.product_id.id,))
+						raise osv.except_osv('Error!',
+								'There is no stock output account defined ' \
+										'for this product: "%s" (id: %d)' % \
+										(move.product_id.name,
+											move.product_id.id,))
 				if not acc_dest:
-					acc_dest = move.product_id.product_tmpl_id.property_account_income.id
+					acc_dest = move.product_id.product_tmpl_id.\
+							property_stock_account_input.id
 					if not acc_dest:
-						acc_dest = move.product_id.categ_id.property_account_income_categ.id
+						acc_dest = move.product_id.categ_id.\
+								property_stock_account_input_categ.id
 					if not acc_dest:
-						raise osv.except_osv('Error !', 'There is no income account defined for this product: "%s" (id:%d)' % (move.product_id.name, move.product_id.id,))
+						raise osv.except_osv('Error!',
+								'There is no stock input account defined ' \
+										'for this product: "%s" (id: %d)' % \
+										(move.product_id.name,
+											move.product_id.id,))
 				if not move.product_id.categ_id.property_stock_journal.id:
-					raise osv.except_osv('Error !', 'There is no journal define on the product category: "%s" (id:%d)' % (move.product_id.categ_id.name, move.product_id.categ_id.id,))
+					raise osv.except_osv('Error!',
+							'There is no journal defined '\
+							'on the product category: "%s" (id: %d)' % \
+							(move.product_id.categ_id.name,
+								move.product_id.categ_id.id,))
 				journal_id = move.product_id.categ_id.property_stock_journal.id
 				if acc_src != acc_dest:
 					ref = move.picking_id and move.picking_id.name or False

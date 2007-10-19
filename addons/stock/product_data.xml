@@ -1,11 +1,44 @@
 <?xml version="1.0"?>
 <terp>
-	<data>
+	<data noupdate="1">
 
 		<record model="ir.property" id="property_stock_journal">
 			<field name="name">property_stock_journal</field>
 			<field name="fields_id" search="[('model', '=', 'product.category'), ('name', '=', 'property_stock_journal')]"/>
 			<field name="value" eval="'account.journal,'+str(ref('account.stock_journal'))" model="account.journal"/>
+		</record>
+
+		<record model="ir.property" id="property_stock_account_output_prd"
+			forcecreate="True">
+			<field name="name">property_stock_account_output</field>
+			<field name="fields_id"
+				search="[('model','=','product.template'),('name','=','property_stock_account_output')]"/>
+			<field name="value" eval="False"/>
+			<field name="company_id" ref="base.main_company"/>
+		</record>
+		<record model="ir.property" id="property_stock_account_input_prd"
+			forcecreate="True">
+			<field name="name">property_stock_account_input</field>
+			<field name="fields_id"
+				search="[('model','=','product.template'),('name','=','property_stock_account_input')]"/>
+			<field name="value" eval="False"/>
+			<field name="company_id" ref="base.main_company"/>
+		</record>
+		<record model="ir.property" id="property_stock_account_output_categ"
+			forcecreate="True">
+			<field name="name">property_stock_account_output_categ</field>
+			<field name="fields_id"
+				search="[('model','=','product.category'),('name','=','property_stock_account_output_categ')]"/>
+			<field name="value" eval="False"/>
+			<field name="company_id" ref="base.main_company"/>
+		</record>
+		<record model="ir.property" id="property_stock_account_input_categ"
+			forcecreate="True">
+			<field name="name">property_stock_account_input_categ</field>
+			<field name="fields_id"
+				search="[('model','=','product.category'),('name','=','property_stock_account_input_categ')]"/>
+			<field name="value" eval="False"/>
+			<field name="company_id" ref="base.main_company"/>
 		</record>
 
 	</data>
