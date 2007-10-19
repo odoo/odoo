@@ -136,7 +136,7 @@
 						<field name="address_invoice_id" domain="[('partner_id','=',partner_id)]"/>
 						<field name="account_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" />
 						<field name="date_due" select="1"/>
-						<field name="reference_type" select="2" nolabel="1"/>
+						<field name="reference_type" select="2" nolabel="1" size="0"/>
 						<field name="reference" select="1" nolabel="1"/>
 						<field name="name" select="2"/>
 						<field name="check_total" required="2"/>
@@ -264,7 +264,7 @@
 							<newline/>
 							<field name="date_due" select="1"/>
 							<newline/>
-							<field name="reference_type" select="2" nolabel="1"/>
+							<field name="reference_type" select="2" nolabel="1" size="0"/>
 							<field name="reference" select="2" nolabel="1"/>
 							<field name="origin"/>
 							<field name="address_contact_id" domain="[('partner_id','=',partner_id)]" colspan="4"/>
