@@ -674,9 +674,8 @@ class orm(object):
 							relation = fields_def[field[len(prefix)]]['relation']
 							res2 = self.pool.get(relation).name_search(cr, uid, line[i], [],operator='=')
 							res = (res2 and res2[0][0]) or False
-							if not res and line[i]:
-								warning += ('Relation not found: '+line[i]+' on '+relation + ' !\n')
 							if not res:
+								warning += ('Relation not found: '+line[i]+' on '+relation + ' !\n')
 								logger.notifyChannel("import",netsvc.LOG_WARNING,'Relation not found: '+line[i]+' on '+relation + ' !\n')
 					elif fields_def[field[len(prefix)]]['type']=='many2many':
 						res = []
@@ -685,7 +684,10 @@ class orm(object):
 							for word in line[i].split(','):
 								res2 = self.pool.get(relation).name_search(cr, uid, word, [],operator='=')
 								res3 = (res2 and res2[0][0]) or False
-								if res3:
+								if not res3:
+									warning += ('Relation not found: '+line[i]+' on '+relation + ' !\n')
+									logger.notifyChannel("import",netsvc.LOG_WARNING,'Relation not found: '+line[i]+' on '+relation + ' !\n')
+								else:
 									res.append(res3)
 							if len(res):
 								res= [(6,0,res)]
