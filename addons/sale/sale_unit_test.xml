@@ -68,10 +68,10 @@
 		<function model="account.invoice" name="pay_and_reconcile">
 			<value model="sale.order" eval="[obj(ref('test_order_1')).invoice_ids[0].id]" />
 			<value model="sale.order" eval="obj(ref('test_order_1')).amount_total" />
-			<value eval="ref('account.cash')" />
+			<value search="[('type', '=', 'cash')]" model="account.account"/>
 			<value eval="ref('account.period_' + str(int(time.strftime('%m'))))" />
 			<value eval="ref('account.bank_journal')" />
-			<value eval="ref('account.cash')" />
+			<value search="[('type', '=', 'cash')]" model="account.account"/>
 			<value eval="ref('account.period_' + str(int(time.strftime('%m'))))" />
 			<value eval="ref('account.bank_journal')" />
 		</function>
