@@ -31,14 +31,41 @@ import pickle
 
 class ir_values(osv.osv):
 	_name = 'ir.values'
+
+	def _value_unpickle(self, cursor, user, ids, name, arg, context=None):
+		res = {}
+		for report in self.browse(cursor, user, ids, context=context):
+			value = report[name[:-9]]
+			if not report.object and value:
+				try:
+					value = str(pickle.loads(value))
+				except:
+					pass
+			res[report.id] = value
+		return res
+
+	def _value_pickle(self, cursor, user, id, name, value, arg, context=None):
+		if context is None:
+			context = {}
+		ctx = context.copy()
+		if 'read_delta' in ctx:
+			del ctx['read_delta']
+		if not self.browse(cursor, user, id, context=context).object:
+			value = pickle.dumps(eval(value))
+		self.write(cursor, user, id, {name[:-9]: value}, context=ctx)
+
 	_columns = {
 		'name': fields.char('Name', size=128),
-		'model': fields.char('Name', size=128),
+		'model': fields.char('Model', size=128),
 		'value': fields.text('Value'),
+		'value_unpickle': fields.function(_value_unpickle, fnct_inv=_value_pickle,
+			method=True, type='text', string='Value'),
 		'object': fields.boolean('Is Object'),
-		'key': fields.char('Name', size=128),
+		'key': fields.char('Type', size=128),
 		'key2': fields.char('Value', size=256),
 		'meta': fields.text('Meta Datas'),
+		'meta_unpickle': fields.function(_value_unpickle, fnct_inv=_value_pickle,
+			method=True, type='text', string='Meta Datas'),
 		'res_id': fields.integer('Resource ID'),
 		'user_id': fields.many2one('res.users', 'User', ondelete='cascade'),
 		'company_id': fields.many2one('res.company', 'Company')

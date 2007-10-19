@@ -1,6 +1,56 @@
 <?xml version="1.0"?>
 <terp>
 <data>
+
+	<!-- Values -->
+
+	<record model="ir.ui.view" id="values_view_form">
+		<field name="name">ir.values.form</field>
+		<field name="model">ir.values</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Values">
+				<field name="name" select="1"/>
+				<field name="model" select="1"/>
+				<field name="key" select="1"/>
+				<field name="key2" select="2"/>
+				<field name="object" select="2"/>
+				<field name="res_id"/>
+				<field name="user_id" select="2"/>
+				<field name="company_id" select="2"/>
+				<field name="value_unpickle"/>
+				<field name="meta_unpickle"/>
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="values_view_tree">
+		<field name="name">ir.values.tree</field>
+		<field name="model">ir.values</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Values">
+				<field name="name"/>
+				<field name="model"/>
+				<field name="key"/>
+				<field name="key2"/>
+				<field name="user_id"/>
+				<field name="company_id"/>
+			</tree>
+		</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="act_values_form">
+		<field name="name">Values</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">ir.values</field>
+		<field name="view_type">form</field>
+		<field name="view_id" ref="values_view_tree"/>
+	</record>
+
+	<menuitem name="Administration/Custom/Low Level/Base/Values"
+		action="act_values_form" id="menu_values_form"/>
+
 	==========================================================
 	Sequences
 	==========================================================
@@ -821,6 +871,7 @@
 				<field name="name" select="1"/>
 				<field name="sequence"/>
 				<field name="parent_id" colspan="4" select="1"/>
+				<field name="action"/>
 				<field name="groups_id" colspan="4"/>
 				<field name="icon"/>
 			</form>

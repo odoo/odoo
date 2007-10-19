@@ -119,14 +119,64 @@ class ir_ui_menu(osv.osv):
 			new_id = self.pool.get('ir.values').copy(cr, uid, iv.id, default={'res_id':res}, context=context)
 		return res
 
+	def _action(self, cursor, user, ids, name, arg, context=None):
+		res = {}
+		values_obj = self.pool.get('ir.values')
+		value_ids = values_obj.search(cursor, user, [
+			('model', '=', self._name), ('key', '=', 'action'),
+			('key2', '=', 'tree_but_open'), ('res_id', 'in', ids)],
+			context=context)
+		values_action = {}
+		for value in values_obj.browse(cursor, user, value_ids,
+				context=context):
+			values_action[value.res_id] = value.value
+		for menu_id in ids:
+			res[menu_id] = values_action.get(menu_id, False)
+		return res
+
+	def _action_inv(self, cursor, user, menu_id, name, value, arg, context=None):
+		if context is None:
+			context = {}
+		ctx = context.copy()
+		if 'read_delta' in ctx:
+			del ctx['read_delta']
+		values_obj = self.pool.get('ir.values')
+		values_ids = values_obj.search(cursor, user, [
+			('model', '=', self._name), ('key', '=', 'action'),
+			('key2', '=', 'tree_but_open'), ('res_id', '=', menu_id)],
+			context=context)
+		if values_ids:
+			values_obj.write(cursor, user, values_ids[0], {'value': value},
+					context=ctx)
+		else:
+			values_obj.create(cursor, user, {
+				'name': 'Menuitem',
+				'model': self._name,
+				'value': value,
+				'object': True,
+				'key': 'action',
+				'key2': 'tree_but_open',
+				'res_id': menu_id,
+				}, context=ctx)
+
 	_columns = {
 		'name': fields.char('Menu', size=64, required=True, translate=True),
 		'sequence': fields.integer('Sequence'),
 		'child_id' : fields.one2many('ir.ui.menu', 'parent_id','Child ids'),
 		'parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', select=True),
-		'groups_id': many2many_unique('res.groups', 'ir_ui_menu_group_rel', 'menu_id', 'gid', 'Groups'),
-		'complete_name': fields.function(_get_full_name, method=True, string='Complete Name', type='char', size=128),
-		'icon': fields.selection(icons, 'Icon', size=64)
+		'groups_id': many2many_unique('res.groups', 'ir_ui_menu_group_rel',
+			'menu_id', 'gid', 'Groups'),
+		'complete_name': fields.function(_get_full_name, method=True,
+			string='Complete Name', type='char', size=128),
+		'icon': fields.selection(icons, 'Icon', size=64),
+		'action': fields.function(_action, fnct_inv=_action_inv,
+			method=True, type='reference', string='Action',
+			selection=[
+				('ir.actions.report.custom', 'ir.actions.report.custom'),
+				('ir.actions.report.xml', 'ir.actions.report.xml'),
+				('ir.actions.act_window', 'ir.actions.act_window'),
+				('ir.actions.wizard', 'ir.actions.wizard'),
+				]),
 	}
 	_defaults = {
 		'icon' : lambda *a: 'STOCK_OPEN',
