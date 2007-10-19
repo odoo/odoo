@@ -96,7 +96,7 @@ class account_invoice(osv.osv):
 		return res
 
 	def _get_reference_type(self, cursor, user, context=None):
-		return [('none', 'None')]
+		return [('none', 'Free Reference')]
 
 	_name = "account.invoice"
 	_description = 'Invoice'
