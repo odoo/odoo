@@ -31,7 +31,9 @@ from osv import osv, fields
 class stock_move(osv.osv):
 	_inherit = 'stock.move'
 	_columns = {
-		'purchase_line_id': fields.many2one('purchase.order.line', 'Purchase Order Line', ondelete='set null', select=True),
+		'purchase_line_id': fields.many2one('purchase.order.line',
+			'Purchase Order Line', ondelete='set null', select=True,
+			readonly=True),
 	}
 	_defaults = {
 		'purchase_line_id': lambda *a:False
@@ -44,7 +46,8 @@ stock_move()
 class stock_picking(osv.osv):
 	_inherit = 'stock.picking'
 	_columns = {
-		'purchase_id': fields.many2one('purchase.order', 'Purchase Order', ondelete='set null', select=True),
+		'purchase_id': fields.many2one('purchase.order', 'Purchase Order',
+			ondelete='set null', select=True, readonly=True),
 	}
 	_defaults = {
 		'purchase_id': lambda *a: False,
