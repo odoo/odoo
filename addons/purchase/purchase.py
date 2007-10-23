@@ -106,7 +106,7 @@ class purchase_order(osv.osv):
 		'picking_ids': fields.one2many('stock.picking', 'purchase_id', 'Picking List', readonly=True, help="This is the list of picking list that have been generated for this purchase"),
 		'shipped':fields.boolean('Received', readonly=True, select=True),
 		'invoiced':fields.boolean('Invoiced & Paid', readonly=True, select=True),
-		'invoice_method': fields.selection([('manual','Manual'),('order','From order'),('picking','From picking')], 'Invoicing method', required=True),
+		'invoice_method': fields.selection([('manual','Manual'),('order','From order'),('picking','From picking')], 'Invoicing Control', required=True),
 
 		'amount_untaxed': fields.function(_amount_untaxed, method=True, string='Untaxed Amount'),
 		'amount_tax': fields.function(_amount_tax, method=True, string='Taxes'),
@@ -192,7 +192,7 @@ class purchase_order(osv.osv):
 					if not a:
 						a = ol.product_id.categ_id.property_account_expense_categ.id
 					if not a:
-						raise osv.except_osv('Error !', 'There is no income account defined for this product: "%s" (id:%d)' % (line.product_id.name, line.product_id.id,))
+						raise osv.except_osv('Error !', 'There is no expense account defined for this product: "%s" (id:%d)' % (line.product_id.name, line.product_id.id,))
 				else:
 					a = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category')
 				il.append((0, False, {
@@ -326,7 +326,7 @@ class purchase_order_line(osv.osv):
 	def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,
 			partner_id, date_order=False):
 		if not pricelist:
-			raise osv.except_osv('No Pricelist !', 'You have to select a pricelist in the sale form !\n Please set one before choosing a product.')
+			raise osv.except_osv('No Pricelist !', 'You have to select a pricelist in the purchase form !\n Please set one before choosing a product.')
 		if not product:
 			return {'value': {'price_unit': 0.0, 'name':'','notes':''}, 'domain':{'product_uom':[]}}
 		lang=False

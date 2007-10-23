@@ -42,6 +42,13 @@ class price_type(osv.osv):
 	def _price_field_get(self, cr, uid, context={}):
 		cr.execute('select name, field_description from ir_model_fields where model in (%s,%s) and ttype=%s', ('product.product', 'product.template', 'float'))
 		return cr.fetchall()
+	def _get_currency(self, cr, uid, ctx):
+		comp = self.pool.get('res.users').browse(cr,uid,uid).company_id
+		if not comp:
+			comp_id = self.pool.get('res.company').search(cr, uid, [])[0]
+			comp = self.pool.get('res.company').browse(cr, uid, comp_id)
+		return comp.currency_id.id
+
 	_name = "product.price.type"
 	_description = "Price type"
 	_columns = {
@@ -51,7 +58,8 @@ class price_type(osv.osv):
 		"currency_id" : fields.many2one('res.currency', "Currency", required=True),
 	}
 	_defaults = {
-		"active": lambda *args: True ,
+		"active": lambda *args: True,
+		"currency_id": _get_currency
 	}
 price_type()
 
@@ -82,8 +90,16 @@ class product_pricelist(osv.osv):
 		'version_id': fields.one2many('product.pricelist.version', 'pricelist_id', 'Pricelist Versions'),
 		'currency_id': fields.many2one('res.currency', 'Currency', required=True),
 	}
+	def _get_currency(self, cr, uid, ctx):
+		comp = self.pool.get('res.users').browse(cr,uid,uid).company_id
+		if not comp:
+			comp_id = self.pool.get('res.company').search(cr, uid, [])[0]
+			comp = self.pool.get('res.company').browse(cr, uid, comp_id)
+		return comp.currency_id.id
+
 	_defaults = {
 		'active': lambda *a: 1,
+		"currency_id": _get_currency
 	}
 
 	def price_get(self, cr, uid, ids, prod_id, qty, partner=None, context=None):
