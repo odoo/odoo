@@ -183,7 +183,7 @@ class account_account(osv.osv):
 		ids2 = {}.fromkeys(ids + ids2).keys()
 		acc_set = ",".join(map(str, ids2))
 		query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-		cr.execute(("SELECT a.id, COALESCE(SUM((l.debit-l.credit)),0) FROM account_account a LEFT JOIN account_move_line l ON (a.id=l.account_id) WHERE a.id IN (%s) and "+query+" GROUP BY a.id") % (acc_set, ))
+		cr.execute(("SELECT a.id, SUM((COALESCE(l.debit,0)-COALESCE(l.credit,0))) FROM account_account a LEFT JOIN account_move_line l ON (a.id=l.account_id) WHERE a.id IN (%s) and "+query+" GROUP BY a.id") % (acc_set, ))
 		res = {}
 		for account_id, sum in cr.fetchall():
 			res[account_id] = round(sum,2)
