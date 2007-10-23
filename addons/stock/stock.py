@@ -893,25 +893,25 @@ class stock_move(osv.osv):
 					test.append( ('product.category', move.product_id.categ_id.id) )
 				if not acc_src:
 					acc_src = move.product_id.product_tmpl_id.\
-							property_stock_account_output.id
+							property_stock_account_input.id
 					if not acc_src:
 						acc_src = move.product_id.categ_id.\
-								property_stock_account_output_categ.id
+								property_stock_account_input_categ.id
 					if not acc_src:
 						raise osv.except_osv('Error!',
-								'There is no stock output account defined ' \
+								'There is no stock input account defined ' \
 										'for this product: "%s" (id: %d)' % \
 										(move.product_id.name,
 											move.product_id.id,))
 				if not acc_dest:
 					acc_dest = move.product_id.product_tmpl_id.\
-							property_stock_account_input.id
+							property_stock_account_output.id
 					if not acc_dest:
 						acc_dest = move.product_id.categ_id.\
-								property_stock_account_input_categ.id
+								property_stock_account_output_categ.id
 					if not acc_dest:
 						raise osv.except_osv('Error!',
-								'There is no stock input account defined ' \
+								'There is no stock output account defined ' \
 										'for this product: "%s" (id: %d)' % \
 										(move.product_id.name,
 											move.product_id.id,))
