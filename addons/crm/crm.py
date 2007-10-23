@@ -275,9 +275,34 @@ class crm_case(osv.osv):
 		'date_action_last': fields.datetime('Last Action', readonly=1),
 		'date_action_next': fields.datetime('Next Action', readonly=1),
 	}
+	def _get_default_partner_address(self, cr, uid, context):
+		if not context.get('portal',False):
+			return False
+		return self.pool.get('res.users').browse(cr, uid, uid, context).address_id.id
+	def _get_default_partner(self, cr, uid, context):
+		if not context.get('portal',False):
+			return False
+		user = self.pool.get('res.users').browse(cr, uid, uid, context)
+		if not user.address_id:
+			return False
+		return user.address_id.partner_id.id
+	def _get_default_email(self, cr, uid, context):
+		if not context.get('portal',False):
+			return False
+		user = self.pool.get('res.users').browse(cr, uid, uid, context)
+		if not user.address_id:
+			return False
+		return user.address_id.email
+	def _get_default_user(self, cr, uid, context):
+		if context.get('portal', False):
+			return False
+		return uid
 	_defaults = {
 		'active': lambda *a: 1,
-		'user_id': lambda s,cr,uid,c={}: uid,
+		'user_id': _get_default_user,
+		'partner_id': _get_default_partner,
+		'partner_address_id': _get_default_partner_address,
+		'email_from': _get_default_email,
 		'state': lambda *a: 'draft',
 		'priority': lambda *a: AVAILABLE_PRIORITIES[2][0],
 		'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
