@@ -97,14 +97,24 @@ class ir_values(osv.osv):
 			else:
 				res_id=False
 			if replace:
-				ids = self.search(cr, uid, [
-					('key', '=', key),
-					('key2', '=', key2),
-					('value', '=', value),
-					('model', '=', model),
-					('res_id', '=', res_id),
-					('user_id', '=', preserve_user and uid)
-					])
+				if key == 'meta':
+					ids = self.search(cr, uid, [
+						('key', '=', key),
+						('key2', '=', key2),
+						('name', '=', name),
+						('model', '=', model),
+						('res_id', '=', res_id),
+						('user_id', '=', preserve_user and uid)
+						])
+				else:
+					ids = self.search(cr, uid, [
+						('key', '=', key),
+						('key2', '=', key2),
+						('value', '=', value),
+						('model', '=', model),
+						('res_id', '=', res_id),
+						('user_id', '=', preserve_user and uid)
+						])
 				self.unlink(cr, uid, ids)
 			vals = {
 				'name': name,
