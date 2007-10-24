@@ -77,8 +77,7 @@
 		<record model="workflow.activity" id="act_invoice_end">
 			<field name="wkf_id" ref="wkf_sale"/>
 			<field name="name">invoice_end</field>
-			<field name="kind">function</field>
-			<field name="action">write({'invoiced':1})</field>
+			<field name="kind">dummy</field>
 		</record>
 		<record model="workflow.activity" id="act_invoice_cancel">
 			<field name="wkf_id" ref="wkf_sale"/>

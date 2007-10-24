@@ -60,7 +60,6 @@ class sale_order(osv.osv):
 		default.update({
 			'state':'draft',
 			'shipped':False,
-			'invoiced':False,
 			'invoice_ids':[],
 			'picking_ids':[],
 			'name': self.pool.get('ir.sequence').get(cr, uid, 'sale.order'),
@@ -100,6 +99,47 @@ class sale_order(osv.osv):
 			cur=order.pricelist_id.currency_id
 			res[id] = cur_obj.round(cr, uid, cur, untax.get(id, 0.0) + tax.get(id, 0.0))
 		return res
+
+	def _invoiced(self, cursor, user, ids, name, arg, context=None):
+		res = {}
+		for sale in self.browse(cursor, user, ids, context=context):
+			res[sale.id] = True
+			for invoice in sale.invoice_ids:
+				if invoice.state <> 'paid':
+					res[sale.id] = False
+					break
+			if not sale.invoice_ids:
+				res[sale.id] = False
+		return res
+
+	def _invoiced_search(self, cursor, user, obj, name, args):
+		if not len(args):
+			return []
+
+		clause = ''
+		no_invoiced = False
+		for arg in args:
+			if arg[1] == '=':
+				if arg[2]:
+					clause += 'AND inv.state = \'paid\''
+				else:
+					clause += 'AND inv.state <> \'paid\''
+					no_invoiced = True
+
+		cursor.execute('SELECT rel.order_id ' \
+				'FROM sale_order_invoice_rel AS rel, account_invoice AS inv ' \
+				'WHERE rel.invoice_id = inv.id ' + clause)
+		res = cursor.fetchall()
+		if no_invoiced:
+			cursor.execute('SELECT sale.id ' \
+					'FROM sale_order AS sale ' \
+					'WHERE sale.id NOT IN ' \
+						'(SELECT rel.order_id ' \
+						'FROM sale_order_invoice_rel AS rel)')
+			res.extend(cursor.fetchall())
+		if not res:
+			return [('id', '=', 0)]
+		return [('id', 'in', [x[0] for x in res])]
 
 	_columns = {
 		'name': fields.char('Order Description', size=64, required=True, select=True),
@@ -144,12 +184,10 @@ class sale_order(osv.osv):
 		'order_line': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft':[('readonly',False)]}),
 		'invoice_ids': fields.many2many('account.invoice', 'sale_order_invoice_rel', 'order_id', 'invoice_id', 'Invoice', help="This is the list of invoices that have been generated for this sale order. The same sale order may have been invoiced in several times (by line for example)."),
 		'picking_ids': fields.one2many('stock.picking', 'sale_id', 'Packing List', readonly=True, help="This is the list of picking list that have been generated for this invoice"),
-
 		'shipped':fields.boolean('Picked', readonly=True),
-		'invoiced':fields.boolean('Paid', readonly=True),
-
+		'invoiced': fields.function(_invoiced, method=True, string='Paid',
+			fnct_search=_invoiced_search, type='boolean'),
 		'note': fields.text('Notes'),
-
 		'amount_untaxed': fields.function(_amount_untaxed, method=True, string='Untaxed Amount'),
 		'amount_tax': fields.function(_amount_tax, method=True, string='Taxes'),
 		'amount_total': fields.function(_amount_total, method=True, string='Total'),
@@ -187,7 +225,7 @@ class sale_order(osv.osv):
 			return False
 		cr.execute('select id from sale_order_line where order_id in ('+','.join(map(str, ids))+')', ('draft',))
 		line_ids = map(lambda x: x[0], cr.fetchall())
-		self.write(cr, uid, ids, {'state':'draft', 'invoice_ids':[], 'shipped':0, 'invoiced':0})
+		self.write(cr, uid, ids, {'state':'draft', 'invoice_ids':[], 'shipped':0})
 		self.pool.get('sale.order.line').write(cr, uid, line_ids, {'invoiced':False, 'state':'draft', 'invoice_lines':[(6,0,[])]})
 		wf_service = netsvc.LocalService("workflow")
 		for inv_id in ids:
