@@ -883,8 +883,18 @@ class orm(object):
 						continue
 				if self._columns[field]._type in ('one2many', 'many2many'):
 					obj = self.pool.get(self._columns[field]._obj)
-					obj_ids = obj.search(cr, uid, [('id', 'in', field_value)])
-					field_value = obj_ids
+					field_value2 = []
+					for i in range(len(field_value)):
+						field_value2.append({})
+						for field2 in field_value[i]:
+							if obj._columns[field2]._type in ('many2one', 'one2one'):
+								obj2 = self.pool.get(obj._columns[field2]._obj)
+								if not obj2.search(cr, uid,
+										[('id', '=', field_value[i][field2])]):
+									continue
+							# TODO add test for many2many and one2many
+							field_value2[i][field2] = field_value[i][field2]
+					field_value = field_value2
 				value[field] = field_value
 		return value
 
