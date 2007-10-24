@@ -31,6 +31,7 @@ from osv import fields, osv
 #from tools.misc import currency
 from _common import rounding
 import time
+from tools import config
 
 class price_type(osv.osv):
 	"""
@@ -320,11 +321,15 @@ class product_pricelist_item(osv.osv):
 		'base': fields.selection(_price_field_get, 'Based on', required=True, size=-1),
 		'base_pricelist_id': fields.many2one('product.pricelist', 'If Other Pricelist'),
 
-		'price_surcharge': fields.float('Price Surcharge'),
-		'price_discount': fields.float('Price Discount'),
-		'price_round': fields.float('Price Rounding'),
-		'price_min_margin': fields.float('Price Min. Margin'),
-		'price_max_margin': fields.float('Price Max. Margin'),
+		'price_surcharge': fields.float('Price Surcharge',
+			digits=(16, int(config['price_accuracy']))),
+		'price_discount': fields.float('Price Discount', digits=(16,4)),
+		'price_round': fields.float('Price Rounding',
+			digits=(16, int(config['price_accuracy']))),
+		'price_min_margin': fields.float('Price Min. Margin',
+			digits=(16, int(config['price_accuracy']))),
+		'price_max_margin': fields.float('Price Max. Margin',
+			digits=(16, int(config['price_accuracy']))),
 	}
 	def product_id_change(self, cr, uid, ids, product_id, context={}):
 		if not product_id:
