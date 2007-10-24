@@ -137,6 +137,17 @@ def trans_generate(lang, modules, dbname=None):
 					if len(res):
 						value = res[0]['value']
 				out.append(["field", name, "0", field_def.string.encode('utf8'), value])
+				if field_def.help:
+					value = ''
+					if lang:
+						cr.execute('SELECT * FROM ir_translation ' \
+								'WHERE type=\'help\' ' \
+									'AND name = %s ' \
+									'AND lang = %s', (name, lang))
+						res = cr.dictfetchall()
+						if res:
+							value = res[0]['value']
+					out.append(['help', name, '0', field_def.help.encode('utf8'), value])
 				if field_def.translate:
 					ids = osv.orm.orm.search(obj, cr, uid, [])
 					obj_values = obj.read(cr, uid, ids, [field_name])
@@ -274,7 +285,12 @@ def trans_load_data(db_name, data, lang, strict=False, lang_name=None):
 		langs = lang_obj.read(cr, uid, lang_ids)
 		ls = map(lambda x: (x['code'],x['name']), langs)
 
-		ir.ir_set(cr, uid, 'meta', 'lang', 'lang', [('res.users',False,)], 'en', True, False, meta = {'type':'selection', 'string':'Language', 'selection':ls})
+		ir.ir_set(cr, uid, 'meta', 'lang', 'lang', [('res.users',False,)],
+				False, True, False, meta={
+					'type': 'selection',
+					'string': 'Language',
+					'selection':ls,
+					})
 
 		ids = pool.get('res.users').search(cr, uid, [])
 		for id in ids:

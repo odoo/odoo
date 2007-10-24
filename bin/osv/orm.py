@@ -1211,29 +1211,40 @@ class orm(object):
 	# returns the definition of each field in the object
 	# the optional fields parameter can limit the result to some fields
 	def fields_get(self, cr, user, fields=None, context=None):
-		if not context:
-			context={}
+		if context is None:
+			context = {}
 		res = {}
+		translation_obj = self.pool.get('ir.translation')
+		model_access_obj = self.pool.get('ir.model.access')
 		for parent in self._inherits:
-			res.update(self.pool.get(parent).fields_get(cr, user, fields, context))
-		read_access= self.pool.get('ir.model.access').check(cr, user, self._name,'write',raise_exception=False)
+			res.update(self.pool.get(parent).fields_get(cr, user, fields,
+				context))
+		read_access= model_access_obj.check(cr, user, self._name, 'write',
+				raise_exception=False)
 		for f in self._columns.keys():
 			res[f] = {'type': self._columns[f]._type}
-			for arg in ('string','readonly','states','size','required','change_default','translate', 'help', 'select'):
+			for arg in ('string', 'readonly', 'states', 'size', 'required',
+					'change_default', 'translate', 'help', 'select'):
 				if getattr(self._columns[f], arg):
 					res[f][arg] = getattr(self._columns[f], arg)
 			if not read_access:
 				res[f]['readonly']= True
-				res[f]['states']={}
+				res[f]['states'] = {}
 			for arg in ('digits', 'invisible'):
-				if hasattr(self._columns[f], arg) and getattr(self._columns[f], arg):
+				if hasattr(self._columns[f], arg) \
+						and getattr(self._columns[f], arg):
 					res[f][arg] = getattr(self._columns[f], arg)
 
 			# translate the field label
 			if context.get('lang', False) and context['lang'] != 'en_US':
-				res_trans = self.pool.get('ir.translation')._get_source(cr, user, self._name+','+f, 'field', context['lang'])
+				res_trans = translation_obj._get_source(cr, user,
+						self._name + ',' + f, 'field', context['lang'])
 				if res_trans:
 					res[f]['string'] = res_trans
+				help_trans = translation_obj._get_source(cr, user,
+						self._name + ',' + f, 'help', context['lang'])
+				if help_trans:
+					res[f]['help'] = help_trans
 
 			if hasattr(self._columns[f], 'selection'):
 				if isinstance(self._columns[f].selection, (tuple, list)):
@@ -1243,14 +1254,18 @@ class orm(object):
 					if context.get('lang', False) and context['lang'] != 'en_US':
 						sel2 = []
 						for (key,val) in sel:
-							val2 = self.pool.get('ir.translation')._get_source(cr, user, self._name+','+f, 'selection', context['lang'], val)
+							val2 = translation_obj._get_source(cr, user,
+									self._name + ',' + f, 'selection',
+									context['lang'], val)
 							sel2.append((key, val2 or val))
 						sel = sel2
 					res[f]['selection'] = sel
 				else:
 					# call the 'dynamic selection' function
-					res[f]['selection'] = self._columns[f].selection(self, cr, user, context)
-			if res[f]['type'] in ('one2many', 'many2many', 'many2one', 'one2one'):
+					res[f]['selection'] = self._columns[f].selection(self, cr,
+							user, context)
+			if res[f]['type'] in ('one2many', 'many2many',
+					'many2one', 'one2one'):
 				res[f]['relation'] = self._columns[f]._obj
 				res[f]['domain'] = self._columns[f]._domain
 				res[f]['context'] = self._columns[f]._context

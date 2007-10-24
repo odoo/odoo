@@ -45,17 +45,20 @@ view_form="""<?xml version="1.0"?>
 	</group>
 </form>"""
 
+fields_form={
+	'name':{'string':'Language name', 'type':'char', 'size':64, 'required':True},
+	'code':{'string':'Code (eg:en__US)', 'type':'char', 'size':5, 'required':True},
+	'data':{'string':'File', 'type':'binary', 'required':True},
+}
+
 class wizard_import_lang(wizard.interface):
+
 	def _import_lang(self, cr, uid, data, context):
 		form=data['form']
 		buf=base64.decodestring(data['form']['data']).split('\n')
 		tools.trans_load_data(cr.dbname, buf, form['code'], lang_name=form['name'])
 		return {}
-	fields_form={
-		'name':{'string':'Language name', 'type':'char', 'size':64, 'required':True},
-		'code':{'string':'Code (eg:en_US)', 'type':'char', 'size':5, 'required':True},
-		'data':{'string':'File', 'type':'binary', 'required':True},
-	}
+
 	states={
 		'init':{
 			'actions': [],

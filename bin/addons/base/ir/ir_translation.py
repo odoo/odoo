@@ -28,15 +28,33 @@
 
 from osv import fields, osv
 from osv.osv  import Cacheable
+import tools
+
+TRANSLATION_TYPE = [
+	('field', 'Field'),
+	('model', 'Model'),
+	('rml', 'RML'),
+	('selection', 'Selection'),
+	('view', 'View'),
+	('wizard_button', 'Wizard Button'),
+	('wizard_field', 'Wizard Field'),
+	('wizard_view', 'Wizard View'),
+	('xsl', 'XSL'),
+	('help', 'Help'),
+]
 
 class ir_translation(osv.osv, Cacheable):
 	_name = "ir.translation"
 	_log_access = False
+
+	def _get_language(sel, cr, uid, context):
+		return tools.scan_languages()
+
 	_columns = {
 		'name': fields.char('Field Name', size=128, required=True),
 		'res_id': fields.integer('Resource ID'),
-		'lang': fields.char('Language', size=5),
-		'type': fields.char('Type', size=16),
+		'lang': fields.selection(_get_language, string='Language', size=5),
+		'type': fields.selection(TRANSLATION_TYPE, string='Type', size=16),
 		'src': fields.text('Source'),
 		'value': fields.text('Translation Value'),
 	}

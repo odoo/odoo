@@ -789,12 +789,12 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Translations">
-				<field name="name" select="1"/>
+				<field name="name" select="2"/>
+				<field name="res_id" select="2"/>
+				<field name="type" select="2"/>
 				<field name="lang" select="1"/>
-				<field name="src" colspan="4" select="1"/>
-				<field name="type" select="1"/>
-				<field name="res_id" select="1"/>
-				<field name="value" colspan="4" select="1"/>
+				<field name="src" select="1"/>
+				<field name="value" select="1"/>
 			</form>
 		</field>
 	</record>
@@ -803,10 +803,11 @@
 		<field name="model">ir.translation</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Translations">
+			<tree string="Translations" editable="bottom">
+				<field name="src"/>
+				<field name="value"/>
 				<field name="name"/>
 				<field name="lang"/>
-				<field name="src"/>
 				<field name="type"/>
 			</tree>
 		</field>
