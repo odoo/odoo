@@ -115,6 +115,7 @@ def trans_generate(lang, modules, dbname=None):
 		dbname=tools.config['db_name']
 	pool = pooler.get_pool(dbname)
 	trans_obj = pool.get('ir.translation')
+	model_data_obj = pool.get('ir.model.data')
 	cr = pooler.get_db(dbname).cursor()
 	uid = 1
 	l = pool.obj_pool.items()
@@ -154,11 +155,25 @@ def trans_generate(lang, modules, dbname=None):
 					for obj_value in obj_values:
 						trans = ""
 						if lang:
-							cr.execute("SELECT * FROM ir_translation WHERE type='model' AND name=%s AND res_id=%d AND lang=%s", (name, obj_value['id'], lang))
+							cr.execute("SELECT * " \
+									"FROM ir_translation " \
+									"WHERE type='model' " \
+										"AND name=%s AND res_id=%d AND lang=%s",
+										(name, obj_value['id'], lang))
 							res = cr.dictfetchall()
 							if len(res):
 								trans = res[0]['value']
-						out.append(["model", name, obj_value['id'], obj_value[field_name], trans])
+						model_data_ids = model_data_obj.search(cr, uid, [
+							('model', '=', obj_name),
+							('res_id', '=', obj_value['id']),
+							])
+						res_id = obj_value['id']
+						if model_data_ids:
+							model_data = model_data_obj.browse(cr, uid,
+									model_data_ids[0])
+							res_id = model_data.module + '.' + model_data.name
+						out.append(["model", name, res_id,
+							obj_value[field_name], trans])
 				if hasattr(field_def, 'selection') and isinstance(field_def.selection, (list, tuple)):
 					for key, val in field_def.selection:
 						to_translate.append(["selection", name, [val.encode('utf8')]])
@@ -263,10 +278,12 @@ def trans_load(db_name, filename, lang, strict=False):
 
 def trans_load_data(db_name, data, lang, strict=False, lang_name=None):
 	logger = netsvc.Logger()
-	logger.notifyChannel("init", netsvc.LOG_INFO, 'loading translation file for language %s' % (lang))
+	logger.notifyChannel("init", netsvc.LOG_INFO,
+			'loading translation file for language %s' % (lang))
 	pool = pooler.get_pool(db_name)
 	lang_obj = pool.get('res.lang')
 	trans_obj = pool.get('ir.translation')
+	model_data_obj = pool.get('ir.model.data')
 	try:
 		uid = 1
 		cr = pooler.get_db(db_name).cursor()
@@ -278,7 +295,11 @@ def trans_load_data(db_name, data, lang, strict=False, lang_name=None):
 				languages=tools.get_languages()
 				if lang in languages:
 					lang_name=languages[lang]
-			ids = lang_obj.create(cr, uid, {'code':lang, 'name':lang_name, 'translatable':1})
+			ids = lang_obj.create(cr, uid, {
+				'code': lang,
+				'name': lang_name,
+				'translatable': 1,
+				})
 		else:
 			lang_obj.write(cr, uid, ids, {'translatable':1})
 		lang_ids = lang_obj.search(cr, uid, [])
@@ -294,10 +315,10 @@ def trans_load_data(db_name, data, lang, strict=False, lang_name=None):
 
 		ids = pool.get('res.users').search(cr, uid, [])
 		for id in ids:
-			ir.ir_set(cr, uid, 'meta', 'lang', 'lang', [('res.users',id,)], lang, True, False)
+			ir.ir_set(cr, uid, 'meta', 'lang', 'lang', [('res.users',id,)],
+					lang, True, False)
 
 		reader = csv.reader(data)
-		
 		# read the first line of the file (it contains columns titles)
 		for row in reader:
 			f = row
@@ -311,15 +332,30 @@ def trans_load_data(db_name, data, lang, strict=False, lang_name=None):
 				# skip empty rows and rows where the translation field is empty
 				if (not row) or (not row[4]):
 					continue
-					
+
 				# dictionary which holds values for this line of the csv file
-				# {'lang': ..., 'type': ..., 'name': ..., 'res_id': ..., 'src': ..., 'value': ...}
+				# {'lang': ..., 'type': ..., 'name': ..., 'res_id': ...,
+				#  'src': ..., 'value': ...}
 				dic = {'lang': lang}
 				for i in range(len(f)):
-					if trans_obj._columns[f[i]]._type=='integer':
-						row[i] = row[i] and int(row[i]) or False
+#					if trans_obj._columns[f[i]]._type == 'integer':
+#						row[i] = row[i] and int(row[i]) or False
 					dic[f[i]] = row[i]
-					
+
+				try:
+					dic['res_id'] = int(dic['res_id'])
+				except:
+					model_data_ids = model_data_obj.search(cr, uid, [
+						('model', '=', dic['name'].split(',')[0]),
+						('module', '=', dic['res_id'].split('.', 1)[0]),
+						('name', '=', dic['res_id'].split('.', 1)[1]),
+						])
+					if model_data_ids:
+						dic['res_id'] = model_data_obj.browse(cr, uid,
+								model_data_ids[0]).res_id
+					else:
+						dic['res_id'] = False
+
 				if dic['type'] == 'model' and not strict:
 					(model, field) = dic['name'].split(',')
 
@@ -327,16 +363,17 @@ def trans_load_data(db_name, data, lang, strict=False, lang_name=None):
 					# the same source
 					obj = pool.get(model)
 					if obj:
-						ids = osv.orm.orm.search(obj, cr, uid, [(field, '=', dic['src'])])
+						ids = obj.search(cr, uid, [(field, '=', dic['src'])])
 
-						# if the resource id (res_id) is in that list, use it, otherwise use the whole list
+						# if the resource id (res_id) is in that list, use it,
+						# otherwise use the whole list
 						ids = (dic['res_id'] in ids) and [dic['res_id']] or ids
 						for id in ids:
 							dic['res_id'] = id
 							ids = trans_obj.search(cr, uid, [
-								('lang', '=', lang), 
-								('type', '=', dic['type']), 
-								('name', '=', dic['name']), 
+								('lang', '=', lang),
+								('type', '=', dic['type']),
+								('name', '=', dic['name']),
 								('src', '=', dic['src']),
 								('res_id', '=', dic['res_id'])
 							])
@@ -346,9 +383,9 @@ def trans_load_data(db_name, data, lang, strict=False, lang_name=None):
 								trans_obj.create(cr, uid, dic)
 				else:
 					ids = trans_obj.search(cr, uid, [
-						('lang', '=', lang), 
-						('type', '=', dic['type']), 
-						('name', '=', dic['name']), 
+						('lang', '=', lang),
+						('type', '=', dic['type']),
+						('name', '=', dic['name']),
 						('src', '=', dic['src'])
 					])
 					if ids:
@@ -357,9 +394,14 @@ def trans_load_data(db_name, data, lang, strict=False, lang_name=None):
 						trans_obj.create(cr, uid, dic)
 				cr.commit()
 			except Exception, e:
-				logger.notifyChannel('init', netsvc.LOG_ERROR, 'Import error: %s on line %d: %s!' % (str(e), line, row))
+				logger.notifyChannel('init', netsvc.LOG_ERROR,
+						'Import error: %s on line %d: %s!' % (str(e), line, row))
+				cr.rollback()
+				cr.close()
+				cr = pooler.get_db(db_name).cursor()
 		cr.close()
-		logger.notifyChannel("init", netsvc.LOG_INFO, "translation file loaded succesfully")
+		logger.notifyChannel("init", netsvc.LOG_INFO,
+				"translation file loaded succesfully")
 	except IOError:
 		logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't read file")
 
