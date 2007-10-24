@@ -140,10 +140,11 @@ class report_rml(report_int):
 			return xml
 
 		# load XSL (parse it to the XML level)
-		styledoc = libxml2.parseFile(os.path.join(tools.config['root_path'],self.xsl))
-		
-		#TODO: get all the translation in one query. That means we have to: 
-		# * build a list of items to translate, 
+		styledoc = libxml2.parseDoc(tools.file_open(
+			os.path.join(tools.config['root_path'], self.xsl)).read())
+
+		#TODO: get all the translation in one query. That means we have to:
+		# * build a list of items to translate,
 		# * issue the query to translate them,
 		# * (re)build/update the stylesheet with the translated items
 
