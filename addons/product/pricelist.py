@@ -268,7 +268,9 @@ class product_pricelist_version(osv.osv):
 						'OR (date_start IS NULL AND date_end IS NULL) ' \
 						'OR (%s = \'0000-01-01\' AND date_start IS NULL) ' \
 						'OR (%s = \'0000-01-01\' AND date_end IS NULL) ' \
-						'OR (%s = \'0000-01-01\' AND %s = \'0000-01-01\')) ' \
+						'OR (%s = \'0000-01-01\' AND %s = \'0000-01-01\') ' \
+						'OR (%s = \'0000-01-01\' AND date_start <= %s) ' \
+						'OR (%s = \'0000-01-01\' AND %s <= date_end)) ' \
 						'AND pricelist_id = %d ' \
 						'AND active ' \
 						'AND id <> %d', (pricelist_version.date_end or '0000-01-01',
@@ -279,6 +281,10 @@ class product_pricelist_version(osv.osv):
 							pricelist_version.date_end or '0000-01-01',
 							pricelist_version.date_start or '0000-01-01',
 							pricelist_version.date_end or '0000-01-01',
+							pricelist_version.date_start or '0000-01-01',
+							pricelist_version.date_end or '0000-01-01',
+							pricelist_version.date_end or '0000-01-01',
+							pricelist_version.date_start or '0000-01-01',
 							pricelist_version.pricelist_id.id,
 							pricelist_version.id))
 			if cursor.fetchall():
