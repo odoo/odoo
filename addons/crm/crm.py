@@ -243,6 +243,16 @@ def _links_get(self, cr, uid, context={}):
 class crm_case(osv.osv):
 	_name = "crm.case"
 	_description = "Case"
+
+	def _email_last(self, cursor, user, ids, name, arg, context=None):
+		res = {}
+		for case in self.browse(cursor, user, ids):
+			if case.history_line:
+				res[case.id] = case.history_line[0].description
+			else:
+				res[case.id] = False
+		return res
+
 	_columns = {
 		'id': fields.integer('ID', readonly=True),
 		'name': fields.char('Description',size=64, required=True),
@@ -256,7 +266,8 @@ class crm_case(osv.osv):
 		'probability': fields.float('Probability (0.50)'),
 		'email_from': fields.char('Partner Email', size=128),
 		'email_cc': fields.char('Watchers Emails', size=252),
-		'email_last': fields.text('Latest E-Mail'),
+		'email_last': fields.function(_email_last, method=True,
+			string='Latest E-Mail', type='text'),
 		'partner_id': fields.many2one('res.partner', 'Partner'),
 		'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', domain="[('partner_id','=',partner_id)]"),
 		'som': fields.many2one('res.partner.som', 'State of Mind'),
@@ -539,10 +550,15 @@ class crm_case(osv.osv):
 		cases = self.browse(cr, uid, ids)
 		for case in cases:
 			if not case.email_from:
-				raise osv.except_osv('Error !', 'You must put a Partner eMail to use this action !')
+				raise osv.except_osv('Error!',
+						'You must put a Partner eMail to use this action!')
 		self.__history(cr, uid, cases, 'Send', history=True, email=False)
 		for case in cases:
-			self.write(cr, uid, [case.id], {'description':False, 'som':False, 'canal_id': False, 'email_last':case.description})
+			self.write(cr, uid, [case.id], {
+				'description': False,
+				'som': False,
+				'canal_id': False,
+				})
 			emails = [case.email_from] + (case.email_cc or '').split(',')
 			emails = filter(None, emails)
 			tools.email_send(case.user_id.address_id.email, emails,

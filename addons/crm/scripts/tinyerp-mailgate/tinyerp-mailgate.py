@@ -161,7 +161,6 @@ class email_parser(object):
 		body['body'] = body_data
 
 		data = {
-			'email_last': body['body'],
 			'history_line': [(0, 0, {'description': body['body'], 'email': msg['From']})],
 		}
 
@@ -218,7 +217,6 @@ class email_parser(object):
 		self.rpc('crm.case', act, [id])
 		body2 = '\n'.join(map(lambda l: '> '+l, (body or '').split('\n')))
 		data = {
-			'email_last': body,
 			'history_line': [(0, 0, {'description': body, 'email': msg['From']})],
 		}
 		self.rpc('crm.case', 'write', [id], data)
