@@ -662,7 +662,7 @@ class orm(object):
 							sel = fields_def[field[len(prefix)]]['selection'](self,
 									cr, uid, context)
 						for key, val in sel:
-							if key == line[i]:
+							if str(key) == line[i]:
 								res = key
 						if line[i] and not res:
 							logger.notifyChannel("import", netsvc.LOG_WARNING,
