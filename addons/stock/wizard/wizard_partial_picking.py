@@ -49,6 +49,9 @@ def make_default(val):
 		return val
 	return fct
 
+def _to_xml(s):
+	return (s or '').replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
+
 def _get_moves(self, cr, uid, data, context):
 	pick_obj = pooler.get_pool(cr.dbname).get('stock.picking')
 	pick = pick_obj.browse(cr, uid, [data['id']])[0]
@@ -64,7 +67,7 @@ def _get_moves(self, cr, uid, data, context):
 
 		_moves_arch_lst.append('<field name="move%s" />' % (m.id,))
 		_moves_fields['move%s' % m.id] = {
-				'string': '%s - %s' % (m.product_id.code, m.product_id.name),
+				'string': '%s - %s' % (_to_xml(m.product_id.code or '/'), _to_xml(m.product_id.name)),
 				'type' : 'float', 'required' : True, 'default' : make_default(quantity)}
 
 		if (pick.type == 'in') and (m.product_id.cost_method == 'average'):
