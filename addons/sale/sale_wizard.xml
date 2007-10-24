@@ -1,13 +1,20 @@
 <?xml version="1.0" ?>
 <terp>
 	<data>
-		<wizard string="Make invoices" model="sale.order" name="sale.order.make_invoice" keyword="client_action_multi" />
 
-		<wizard 
+		<wizard
+			string="Make invoices"
+			model="sale.order"
+			name="sale.order.make_invoice"
+			keyword="client_action_multi"
+			id="wizard_sale_order_make_invoice"/>
+
+		<wizard
 			string="Make invoices"
 			model="sale.order.line"
 			name="sale.order.line.make_invoice"
 			keyword="client_action_multi"
 			id="wizard_sale_order_line_invoice"/>
+
 	</data>
 </terp>

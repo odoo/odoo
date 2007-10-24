@@ -1,12 +1,34 @@
 <?xml version="1.0" ?>
 <terp>
 	<data>
-		<wizard string="Sign in / Sign out" model="hr.employee" name="hr.si_so" id="si_so"/>
-		<menuitem name="Human Resources/Attendances/Sign in\/Out" action="si_so" type="wizard" id="menu_si_so"/>
 
- 		<wizard string="Print Timesheet by week" model="hr.employee" name="hr.print_week" keyword="client_print_multi" />
- 		<wizard string="Print Timesheet by month" model="hr.employee" name="hr.print_month" keyword="client_print_multi" />
+		<wizard string="Sign in / Sign out"
+			model="hr.employee"
+			name="hr.si_so"
+			id="si_so"/>
 
- 		<wizard string="Print Attendance Error Report" model="hr.employee" name="hr.timesheet.attendance.report" keyword="client_print_multi" id="wizard_attendance_error" />
+		<menuitem name="Human Resources/Attendances/Sign in\/Out"
+			action="si_so"
+			type="wizard"
+			id="menu_si_so"/>
+
+		<wizard string="Print Timesheet by week"
+			model="hr.employee"
+			name="hr.print_week"
+			keyword="client_print_multi"
+			id="print_week"/>
+
+		<wizard string="Print Timesheet by month"
+			model="hr.employee"
+			name="hr.print_month"
+			keyword="client_print_multi"
+			id="print_month"/>
+
+		<wizard string="Print Attendance Error Report"
+			model="hr.employee"
+			name="hr.timesheet.attendance.report"
+			keyword="client_print_multi"
+			id="wizard_attendance_error" />
+
 	</data>
 </terp>
