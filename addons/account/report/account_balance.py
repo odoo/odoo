@@ -41,11 +41,13 @@ class account_balance(report_sxw.rml_parse):
 		})
 		self.context = context
 
-	def lines(self, form, ids={}, done={}, level=1):
+	def lines(self, form, ids={}, done=None, level=1):
 		if not ids:
 			ids = self.ids
 		if not ids:
 			return []
+		if not done:
+			done={}
 		result = []
 		ctx = self.context.copy()
 		ctx['fiscalyear'] = form['fiscalyear']
