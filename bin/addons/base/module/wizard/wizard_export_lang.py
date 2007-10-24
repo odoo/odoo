@@ -64,7 +64,7 @@ class wizard_export_lang(wizard.interface):
 	def _get_file(self, cr, uid, data, context):
 		file=tools.trans_generate(data['form']['lang'], 'all', dbname=cr.dbname)
 		buf=StringIO.StringIO()
-		writer=csv.writer(buf)
+		writer=csv.writer(buf, 'TINY')
 		for row in file:
 			writer.writerow(row)
 		del file

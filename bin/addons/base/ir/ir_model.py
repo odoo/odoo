@@ -185,6 +185,7 @@ class ir_model_data(osv.osv):
 
 	def _update(self,cr, uid, model, module, values, xml_id=False, store=True, noupdate=False, mode='init', res_id=False):
 		warning = True
+		model_obj = self.pool.get(model)
 		if xml_id and ('.' in xml_id):
 			assert len(xml_id.split('.'))==2, '"%s" contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id' % (xml_id)
 			warning = False
@@ -204,20 +205,56 @@ class ir_model_data(osv.osv):
 					res_id,action_id = res_id2,action_id2
 
 		if action_id and res_id:
-			self.pool.get(model).write(cr, uid, [res_id], values)
-			self.write(cr, uid, [action_id], {'date_update': time.strftime('%Y-%m-%d %H:%M:%S')})
+			model_obj.write(cr, uid, [res_id], values)
+			self.write(cr, uid, [action_id], {
+				'date_update': time.strftime('%Y-%m-%d %H:%M:%S'),
+				})
 		elif res_id:
-			self.pool.get(model).write(cr, uid, [res_id], values)
+			model_obj.write(cr, uid, [res_id], values)
 			if xml_id:
-				self.create(cr, uid, {'name':xml_id, 'model':model, 'module':module, 'res_id':res_id, 'noupdate':noupdate})
+				self.create(cr, uid, {
+					'name': xml_id,
+					'model': model,
+					'module':module,
+					'res_id':res_id,
+					'noupdate': noupdate,
+					})
+				if model_obj._inherits:
+					for table in model_obj._inherits:
+						inherit_id = model_obj.browse(cr, uid,
+								res_id)[model_obj._inherits[table]]
+						self.create(cr, uid, {
+							'name': xml_id + '_' + table.replace('.', '_'),
+							'model': table,
+							'module': module,
+							'res_id': inherit_id,
+							'noupdate': noupdate,
+							})
 		else:
 			if mode=='init' or (mode=='update' and xml_id):
-				res_id = self.pool.get(model).create(cr, uid, values)
+				res_id = model_obj.create(cr, uid, values)
 				if xml_id:
-					self.create(cr, uid, {'name':xml_id, 'model':model, 'module':module, 'res_id':res_id, 'noupdate':noupdate})
+					self.create(cr, uid, {
+						'name': xml_id,
+						'model': model,
+						'module': module,
+						'res_id': res_id,
+						'noupdate': noupdate
+						})
+					if model_obj._inherits:
+						for table in model_obj._inherits:
+							inherit_id = model_obj.browse(cr, uid,
+									res_id)[model_obj._inherits[table]]
+							self.create(cr, uid, {
+								'name': xml_id + '_' + table.replace('.', '_'),
+								'model': table,
+								'module': module,
+								'res_id': inherit_id,
+								'noupdate': noupdate,
+								})
 		if xml_id:
 			if res_id:
-				self.loads[(module,xml_id)] = (model, res_id)
+				self.loads[(module, xml_id)] = (model, res_id)
 		return res_id
 
 	def _unlink(self, cr, uid, model, ids, direct=False):

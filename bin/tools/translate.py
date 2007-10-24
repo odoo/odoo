@@ -34,6 +34,12 @@ import ir
 import netsvc
 from tools.misc import UpdateableStr
 
+
+class TINY(csv.excel):
+	lineterminator = '\n'
+
+csv.register_dialect("TINY", TINY)
+
 #
 # TODO: a caching method
 #
@@ -163,15 +169,19 @@ def trans_generate(lang, modules, dbname=None):
 							res = cr.dictfetchall()
 							if len(res):
 								trans = res[0]['value']
+
+						res_id = obj_value['id']
+						if obj_name in ('ir.model', 'ir.ui.menu'):
+							res_id = 0
 						model_data_ids = model_data_obj.search(cr, uid, [
 							('model', '=', obj_name),
 							('res_id', '=', obj_value['id']),
 							])
-						res_id = obj_value['id']
 						if model_data_ids:
 							model_data = model_data_obj.browse(cr, uid,
 									model_data_ids[0])
 							res_id = model_data.module + '.' + model_data.name
+
 						out.append(["model", name, res_id,
 							obj_value[field_name], trans])
 				if hasattr(field_def, 'selection') and isinstance(field_def.selection, (list, tuple)):
