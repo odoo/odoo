@@ -31,6 +31,7 @@ import datetime
 import operator
 
 class account_analytic_budget_report(report_sxw.rml_parse):
+
 	def __init__(self, cr, uid, name, context):
 		super(account_analytic_budget_report, self).__init__(cr, uid, name, context)
 		self.localcontext.update( {
@@ -41,18 +42,31 @@ class account_analytic_budget_report(report_sxw.rml_parse):
 		})
 		
 	def post_total(self, post_obj, date1, date2):
+
 		def str2date(date_str):
-			return datetime.date.fromtimestamp(time.mktime(time.strptime(date_str, '%Y-%m-%d')))
+			return datetime.date.fromtimestamp(time.mktime(
+				time.strptime(date_str, '%Y-%m-%d')))
+
 		def interval(d1str, d2str):
-			return (str2date(d2str) - str2date(d1str) + datetime.timedelta(days=1)).days
-		prev = reduce(lambda x,d: x + d.amount, post_obj.dotation_ids, 0.0)
+			return (str2date(d2str) - str2date(d1str) + \
+					datetime.timedelta(days=1)).days
+
+		prev = reduce(lambda x, d: x + d.amount, post_obj.dotation_ids, 0.0)
 		period_days = interval(date1, date2)
+
 		for d in post_obj.dotation_ids:
 			i = interval(d.period_id.date_start, d.period_id.date_stop)
-		total_days = reduce(lambda x,d: x+interval(d.period_id.date_start, d.period_id.date_stop), post_obj.dotation_ids, 0)
-		achievements = reduce(lambda x,l: x+l['achievements'], self.lines(post_obj, date1, date2), 0.0)
-			
-		return [{'prev': prev, 'prev_period': prev * period_days / total_days, 'achievements': achievements}]
+
+		total_days = reduce(lambda x, d: x + interval(d.period_id.date_start,
+			d.period_id.date_stop), post_obj.dotation_ids, 0)
+		achievements = reduce(lambda x,l: x+l['achievements'],
+				self.lines(post_obj, date1, date2), 0.0)
+
+		return [{
+			'prev': prev,
+			'prev_period': total_days and (prev * period_days / total_days) or 0.0,
+			'achievements': achievements,
+		}]
 
 	def budget_total(self, post_objs, date1, date2):
 		res = {'prev': 0.0, 'prev_period': 0.0, 'achievements': 0.0}
@@ -63,19 +77,32 @@ class account_analytic_budget_report(report_sxw.rml_parse):
 		return [res]
 
 	def lines(self, post_obj, date1, date2):
-		def compute_achievements(a):
-			self.cr.execute("SELECT COALESCE(SUM(debit-credit), 0) FROM account_move_line WHERE account_id=%d AND date>=%s AND date<=%s and state<>'draft'", (a.id, date1, date2))
 
-			node_achievements = float(self.cr.fetchone()[0]) * (post_obj.sens=='produit' and -1 or 1)
-			childs_achievements = reduce(operator.add, [compute_achievements(c) for c in a.child_ids], 0)
+		def compute_achievements(a):
+			self.cr.execute("SELECT COALESCE(SUM(debit-credit), 0) " \
+					"FROM account_move_line "\
+					"WHERE account_id = %d " \
+						"AND date>=%s " \
+						"AND date<=%s " \
+						"AND state<>'draft'",
+						(a.id, date1, date2))
+			node_achievements = float(self.cr.fetchone()[0]) * \
+					(post_obj.sens == 'produit' and -1 or 1)
+			childs_achievements = reduce(operator.add,
+					[compute_achievements(c) for c in a.child_ids], 0)
 			return node_achievements + childs_achievements
 
 		res = []
-
 		for a in post_obj.account_ids:
-			res.append({'name': a.name, 'code': a.code, 'achievements': compute_achievements(a)})			
-		
+			res.append({
+				'name': a.name,
+				'code': a.code,
+				'achievements': compute_achievements(a),
+				})
 		return res
-	
-report_sxw.report_sxw('report.account.analytic.budget.print', 'account.analytic.budget.post', 'addons/account/project/report/account_analytic_budget_report.rml',parser=account_analytic_budget_report)
+
+report_sxw.report_sxw('report.account.analytic.budget.print',
+		'account.analytic.budget.post',
+		'addons/account/project/report/account_analytic_budget_report.rml',
+		parser=account_analytic_budget_report, header=False)
 
