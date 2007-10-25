@@ -548,16 +548,13 @@ class orm(object):
 		else:
 			return browse_null()
 
-	# TODO: implement this
-	def __export_row(self, cr, uid, row, fields, prefix, context=None):
-		if not context:
-			context={}
+	def __export_row(self, cr, uid, row, fields, context=None):
 		lines = []
 		data = map(lambda x: '', range(len(fields)))
 		done = []
 		for fpos in range(len(fields)):
 			f = fields[fpos]
-			if f and f[:len(prefix)] == prefix:
+			if f:
 				r = row
 				i = 0
 				while i<len(f):
@@ -566,12 +563,14 @@ class orm(object):
 						break
 					if isinstance(r, (browse_record_list, list)):
 						first = True
-						fields2 = map(lambda x: (x[:i+1]==f[:i+1] and x[i+1:]) or [], fields)
+						fields2 = map(lambda x: (x[:i+1]==f[:i+1] and x[i+1:]) \
+								or [], fields)
 						if fields2 in done:
 							break
 						done.append(fields2)
 						for row2 in r:
-							lines2 = self.__export_row(cr, uid, row2, fields2, f[i+2:], context)
+							lines2 = self.__export_row(cr, uid, row2, fields2,
+									context)
 							if first:
 								for fpos2 in range(len(fields)):
 									if lines2 and lines2[0][fpos2]:
@@ -592,7 +591,7 @@ class orm(object):
 		fields = map(lambda x: x.split('/'), fields)
 		datas = []
 		for row in self.browse(cr, uid, ids, context):
-			datas += self.__export_row(cr, uid, row, fields, [], context)
+			datas += self.__export_row(cr, uid, row, fields, context)
 		return datas
 
 	def import_data(self, cr, uid, fields, datas,  mode='init', current_module=None, noupdate=False, context=None):
