@@ -236,3 +236,22 @@ class act_wizard(osv.osv):
 	}
 act_wizard()
 
+class act_url(osv.osv):
+	_name = 'ir.actions.url'
+	_table = 'ir_act_url'
+	_sequence = 'ir_actions_id_seq'
+	_columns = {
+		'name': fields.char('Action Name', size=64, translate=True),
+		'type': fields.char('Action Type', size=32, required=True),
+		'url': fields.text('Action Url',required=True),
+		'target': fields.selection((
+									('new', 'New Window'),
+									('self', 'This Window')),
+									'Action Target', required=True)
+	}
+	_defaults = {
+		'type': lambda *a: 'ir.actions.act_url',
+		'target': lambda *a: 'new'
+	}
+act_url()
+

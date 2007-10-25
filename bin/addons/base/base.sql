@@ -128,6 +128,13 @@ CREATE TABLE ir_act_wizard (
 )
 INHERITS (ir_actions);
 
+CREATE TABLE ir_act_url (
+    url text NOT NULL,
+    target varchar(64) NOT NULL,
+    primary key(id)
+)
+INHERITS (ir_actions);
+
 CREATE TABLE ir_ui_view (
 	id serial NOT NULL,
 	perm_id int references perm on delete set null,
