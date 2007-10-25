@@ -97,7 +97,7 @@ class ir_values(osv.osv):
 			else:
 				res_id=False
 			if replace:
-				if key == 'meta':
+				if key in ('meta', 'default'):
 					ids = self.search(cr, uid, [
 						('key', '=', key),
 						('key2', '=', key2),
