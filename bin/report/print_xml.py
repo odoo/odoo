@@ -353,7 +353,9 @@ class document(object):
 		if not context:
 			context={}
 		# parses the xml template to memory
-		self.dom = minidom.parse(os.path.join(tools.config['root_path'],filename))
+		self.dom = minidom.parseString(tools.file_open(
+				os.path.join(tools.config['root_path'],
+					filename)).read())
 
 		# create the xml data from the xml template
 		self.parse_tree(ids, model, context)

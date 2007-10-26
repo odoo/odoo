@@ -142,6 +142,14 @@ class report_rml(report_int):
 		# load XSL (parse it to the XML level)
 		styledoc = libxml2.parseDoc(tools.file_open(
 			os.path.join(tools.config['root_path'], self.xsl)).read())
+		xsl_path, tail = os.path.split(os.path.join(tools.config['root_path'],
+			self.xsl))
+		for child in styledoc.children:
+			if child.name == 'import':
+				if child.hasProp('href'):
+					file = child.prop('href')
+					child.setProp('href', str(
+						os.path.normpath(os.path.join(xsl_path, file))))
 
 		#TODO: get all the translation in one query. That means we have to:
 		# * build a list of items to translate,
@@ -153,7 +161,8 @@ class report_rml(report_int):
 			while child is not None:
 				if (child.type == "element") and child.hasProp('t'):
 					#FIXME: use cursor
-					res = service.execute(cr.dbname, uid, 'ir.translation', '_get_source', self.name2, 'xsl', lang, child.content)
+					res = service.execute(cr.dbname, uid, 'ir.translation',
+							'_get_source', self.name2, 'xsl', lang, child.content)
 					if res:
 						child.setContent(res)
 				look_down(child.children, lang)
@@ -162,11 +171,14 @@ class report_rml(report_int):
 		if context.get('lang', False):
 			look_down(styledoc.children, context['lang'])
 
-		style = libxslt.parseStylesheetDoc(styledoc)			# parse XSL
-
-		doc = libxml2.parseMemory(xml,len(xml))					# load XML (data)
-		result = style.applyStylesheet(doc, None)				# create RML (apply XSL to XML data)
-		xml = style.saveResultToString(result)					# save result to string
+		# parse XSL
+		style = libxslt.parseStylesheetDoc(styledoc)
+		# load XML (data)
+		doc = libxml2.parseMemory(xml,len(xml))
+		# create RML (apply XSL to XML data)
+		result = style.applyStylesheet(doc, None)
+		# save result to string
+		xml = style.saveResultToString(result)
 		
 		style.freeStylesheet()
 		doc.freeDoc()

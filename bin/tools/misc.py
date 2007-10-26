@@ -181,6 +181,7 @@ def file_open(name, mode="r", subdir='addons'):
 	# Check for a zipfile in the path
 	head = name
 	zipname = False
+	name2 = False
 	while True:
 		head, tail = os.path.split(head)
 		if not tail:
@@ -197,9 +198,11 @@ def file_open(name, mode="r", subdir='addons'):
 					os.path.basename(head), zipname).replace(
 						os.sep, '/')))
 			except:
+				name2 = os.path.normpath(os.path.join(head + '.zip', zipname))
 				pass
-	if os.path.isfile(name):
-		return file(name, mode)
+	for i in (name2, name):
+		if i and os.path.isfile(i):
+			return file(i, mode)
 
 	raise IOError, 'File not found : '+str(name)
 
