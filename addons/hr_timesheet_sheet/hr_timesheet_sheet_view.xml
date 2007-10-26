@@ -256,17 +256,6 @@
 			hr.analytic.timesheet inheritancy
 		-->
 
-		<record model="ir.ui.view" id="hr_timesheet_line_tree">
-			<field name="name">hr.analytic.timesheet.tree</field>
-			<field name="model">hr.analytic.timesheet</field>
-			<field name="type">tree</field>
-			<field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
-			<field name="arch" type="xml">
-				<field name="date" position="after">
-					<field name="sheet_id"/>
-				</field>
-			</field>
-		</record>
 		<record model="ir.ui.view" id="hr_timesheet_line_form">
 			<field name="name">hr.analytic.timesheet.form</field>
 			<field name="model">hr.analytic.timesheet</field>
