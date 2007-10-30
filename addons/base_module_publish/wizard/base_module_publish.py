@@ -164,7 +164,7 @@ end_form = '''<?xml version="1.0"?>
 <form string="Module publication">
 	<notebook>
 		<page string="Information">
-			<field name="text_end" colspan="4" nolabel="1"/>
+			<field name="text_end" colspan="4" nolabel="1" width="300" height="200"/>
 		</page>
 		<page string="Result">
 			<field name="result" colspan="4" nolabel="1"/>
@@ -287,7 +287,7 @@ def module_check(self, cr, uid, data, context):
 	if module.state != 'installed':
 		raise wizard.except_wizard('Error', 'You could not publish a module that is not installed!')
 	return {
-		'name': module.name, 
+		'name': module.name,
 		'shortdesc': module.shortdesc,
 		'author': module.author,
 		'website': module.website,
@@ -306,8 +306,8 @@ class base_module_publish(wizard.interface):
 				'arch':intro_form,
 				'fields':intro_fields,
 				'state':[
-					('end','Cancel'),
-					('step1','Continue')
+					('end', 'Cancel', 'gtk-cancel'),
+					('step1', 'Continue', 'gtk-go-forward', True)
 				]
 			}
 		},
@@ -318,9 +318,9 @@ class base_module_publish(wizard.interface):
 				'arch':check_form,
 				'fields':check_fields,
 				'state':[
-					('end','Cancel'),
-					('init', 'Previous'),
-					('step2','Continue')
+					('end','Cancel', 'gtk-cancel'),
+					('init', 'Previous', 'gtk-go-back'),
+					('step2','Continue', 'gtk-go-forward', True)
 				]
 			}
 		},
@@ -331,9 +331,9 @@ class base_module_publish(wizard.interface):
 				'arch':upload_info_form,
 				'fields':upload_info_fields,
 				'state':[
-					('end','Cancel'),
-					('step1', 'Previous'),
-					('publish','Publish')
+					('end','Cancel', 'gtk-cancel'),
+					('step1', 'Previous', 'gtk-go-back'),
+					('publish','Publish', 'gtk-ok', True)
 				]
 			}
 		},
@@ -344,7 +344,7 @@ class base_module_publish(wizard.interface):
 				'arch':end_form,
 				'fields':end_fields,
 				'state':[
-					('end','Close')
+					('end','Close', 'gtk-ok', True)
 				]
 			}
 		}
