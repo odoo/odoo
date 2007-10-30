@@ -37,7 +37,7 @@ import module_zip
 intro_form = '''<?xml version="1.0"?>
 <form string="Module publication">
 	<separator string="Publication information" colspan="4"/>
-	<field name="text" colspan="4" nolabel="1"/>
+	<field name="text" colspan="4" nolabel="1" width="300" height="200"/>
 </form>'''
 
 intro_fields = {
