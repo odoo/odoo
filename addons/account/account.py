@@ -40,9 +40,9 @@ class account_payment_term(osv.osv):
 	_name = "account.payment.term"
 	_description = "Payment Term"
 	_columns = {
-		'name': fields.char('Payment Term', size=32),
+		'name': fields.char('Payment Term', size=32, translate=True),
 		'active': fields.boolean('Active'),
-		'note': fields.text('Description'),
+		'note': fields.text('Description', translate=True),
 		'line_ids': fields.one2many('account.payment.term.line', 'payment_id', 'Terms'),
 	}
 	_defaults = {
