@@ -220,6 +220,7 @@ class module(osv.osv):
 		'installed_version': fields.function(_get_installed_version, method=True,
 			string='Installed version', type='char'),
 		'latest_version': fields.char('Latest version', size=64, readonly=True),
+		'published_version': fields.char('Published Version', size=64, readonly=True),
 		'url': fields.char('URL', size=128),
 		'dependencies_id': fields.one2many('ir.module.module.dependency',
 			'module_id', 'Dependencies', readonly=True),
@@ -434,6 +435,7 @@ class module(osv.osv):
 					self.create(cr, uid, {
 						'name': name,
 						'latest_version': version,
+						'published_version': version,
 						'url': url,
 						'state': 'uninstalled',
 					})
@@ -449,6 +451,14 @@ class module(osv.osv):
 						self.write(cr, uid, id,
 								{'latest_version': version, 'url': url})
 						res[0] += 1
+					published_version = self.read(cr, uid, id, ['published_version'])\
+							['published_version']
+					if published_version == 'x' or not published_version:
+						published_version = '0'
+					c = vercmp(version, published_version)
+					if c > 0:
+						self.write(cr, uid, id,
+								{'published_version': version})
 		return res
 
 	def download(self, cr, uid, ids, download=True, context=None):
