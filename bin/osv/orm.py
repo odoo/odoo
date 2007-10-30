@@ -594,7 +594,8 @@ class orm(object):
 			datas += self.__export_row(cr, uid, row, fields, context)
 		return datas
 
-	def import_data(self, cr, uid, fields, datas,  mode='init', current_module=None, noupdate=False, context=None):
+	def import_data(self, cr, uid, fields, datas, mode='init',
+			current_module=None, noupdate=False, context=None):
 		if not context:
 			context={}
 		fields = map(lambda x: x.split('/'), fields)
@@ -627,8 +628,10 @@ class orm(object):
 								else:
 									module, xml_id = current_module, word
 								ir_model_data_obj = self.pool.get('ir.model.data')
-								id=ir_model_data_obj._get_id(cr, uid, module, xml_id)
-								res_id2=ir_model_data_obj.read(cr, uid, [id], ['res_id'])[0]['res_id']
+								id = ir_model_data_obj._get_id(cr, uid, module,
+										xml_id)
+								res_id2 = ir_model_data_obj.read(cr, uid, [id],
+										['res_id'])[0]['res_id']
 								if res_id2:
 									res_id.append(res_id2)
 							if len(res_id):
@@ -639,20 +642,23 @@ class orm(object):
 							else:
 								module, xml_id = current_module, line[i]
 							ir_model_data_obj = self.pool.get('ir.model.data')
-							id=ir_model_data_obj._get_id(cr, uid, module, xml_id)
-							res_id=ir_model_data_obj.read(cr, uid, [id], ['res_id'])[0]['res_id']
+							id = ir_model_data_obj._get_id(cr, uid, module, xml_id)
+							res_id = ir_model_data_obj.read(cr, uid, [id],
+									['res_id'])[0]['res_id']
 					row[field[0][:-3]] = res_id or False
 					continue
-				if (len(field)==len(prefix)+1) and len(field[len(prefix)].split(':lang=')) == 2:
+				if (len(field) == len(prefix)+1) and \
+						len(field[len(prefix)].split(':lang=')) == 2:
 					f, lang = field[len(prefix)].split(':lang=')
 					translate.setdefault(lang, {})[f]=line[i] or False
 					continue
-				if (len(field)==len(prefix)+1) and (prefix==field[0:len(prefix)]):
-					if fields_def[field[len(prefix)]]['type']=='integer':
+				if (len(field) == len(prefix)+1) and \
+						(prefix == field[0:len(prefix)]):
+					if fields_def[field[len(prefix)]]['type'] == 'integer':
 						res =line[i] and int(line[i])
-					elif fields_def[field[len(prefix)]]['type']=='float':
+					elif fields_def[field[len(prefix)]]['type'] == 'float':
 						res =line[i] and float(line[i])
-					elif fields_def[field[len(prefix)]]['type']=='selection':
+					elif fields_def[field[len(prefix)]]['type'] == 'selection':
 						res = False
 						if isinstance(fields_def[field[len(prefix)]]['selection'],
 								(tuple, list)):
@@ -671,21 +677,30 @@ class orm(object):
 						res = False
 						if line[i]:
 							relation = fields_def[field[len(prefix)]]['relation']
-							res2 = self.pool.get(relation).name_search(cr, uid, line[i], [],operator='=')
+							res2 = self.pool.get(relation).name_search(cr, uid,
+									line[i], [], operator='=')
 							res = (res2 and res2[0][0]) or False
 							if not res:
-								warning += ('Relation not found: '+line[i]+' on '+relation + ' !\n')
-								logger.notifyChannel("import",netsvc.LOG_WARNING,'Relation not found: '+line[i]+' on '+relation + ' !\n')
+								warning += ('Relation not found: ' + line[i] + \
+										' on ' + relation + ' !\n')
+								logger.notifyChannel("import", netsvc.LOG_WARNING,
+										'Relation not found: ' + line[i] + \
+												' on ' + relation + ' !\n')
 					elif fields_def[field[len(prefix)]]['type']=='many2many':
 						res = []
 						if line[i]:
 							relation = fields_def[field[len(prefix)]]['relation']
 							for word in line[i].split(','):
-								res2 = self.pool.get(relation).name_search(cr, uid, word, [],operator='=')
+								res2 = self.pool.get(relation).name_search(cr,
+										uid, word, [], operator='=')
 								res3 = (res2 and res2[0][0]) or False
 								if not res3:
-									warning += ('Relation not found: '+line[i]+' on '+relation + ' !\n')
-									logger.notifyChannel("import",netsvc.LOG_WARNING,'Relation not found: '+line[i]+' on '+relation + ' !\n')
+									warning += ('Relation not found: ' + \
+											line[i] + ' on '+relation + ' !\n')
+									logger.notifyChannel("import",
+											netsvc.LOG_WARNING,
+											'Relation not found: ' + line[i] + \
+													' on '+relation + ' !\n')
 								else:
 									res.append(res3)
 							if len(res):
@@ -701,19 +716,21 @@ class orm(object):
 			#
 			nbrmax = 1
 			for field in todo:
-				newfd = self.pool.get(fields_def[field]['relation']).fields_get(cr, uid, context=context)
-				res = process_liness(self, datas, prefix+[field], newfd, position)
+				newfd = self.pool.get(fields_def[field]['relation']).fields_get(
+						cr, uid, context=context)
+				res = process_liness(self, datas, prefix + [field], newfd, position)
 				(newrow, max2, w2, translate2, data_id2) = res
 				nbrmax = max(nbrmax, max2)
-				warning = warning+w2
+				warning = warning + w2
 				reduce(lambda x,y: x and y, newrow)
-				row[field] = (reduce(lambda x,y: x or y, newrow.values()) and [(0,0,newrow)]) or []
+				row[field] = (reduce(lambda x, y: x or y, newrow.values()) and \
+						[(0,0,newrow)]) or []
 				i = max2
 				while (position+i)<len(datas):
 					ok = True
 					for j in range(len(fields)):
 						field2 = fields[j]
-						if (len(field2)<=(len(prefix)+1)) and datas[position+i][j]:
+						if (len(field2) <= (len(prefix)+1)) and datas[position+i][j]:
 							ok = False
 					if not ok:
 						break
@@ -737,9 +754,15 @@ class orm(object):
 		done = 0
 
 		while len(datas):
-			(res,other,warning,translate,data_id) = process_liness(self, datas, [], fields_def)
 			try:
-				id= self.pool.get('ir.model.data')._update(cr,uid,self._name, current_module, res, xml_id=data_id, mode=mode, noupdate=noupdate)
+				(res, other, warning, translate, data_id) = \
+						process_liness(self, datas, [], fields_def)
+				if warning:
+					cr.rollback()
+					return (-1, res, warning, '')
+				id= self.pool.get('ir.model.data')._update(cr, uid, self._name,
+						current_module, res, xml_id=data_id, mode=mode,
+						noupdate=noupdate)
 				for lang in translate:
 					context2=context.copy()
 					context2['lang']=lang
