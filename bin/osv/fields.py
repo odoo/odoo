@@ -149,7 +149,7 @@ class char(_column):
 			u_symb = unicode(symb)
 			
 		if len(u_symb) > self.size:
-			return u_symb[:self.size-3].encode('utf8') + '...'
+			raise Exception, '%s size greater than %d' % (self.string, self.size)
 		else:
 			return u_symb.encode('utf8')
 
