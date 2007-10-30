@@ -368,7 +368,7 @@ class xml_import(object):
 						"act_window": 'STOCK_NEW',
 						"report.xml": 'STOCK_PASTE',
 						"wizard": 'STOCK_EXECUTE',
-						"url": 'STOCK_JUMP_TO',
+						"url": 'STOCK_JUMP_TO'
 					}
 					values['icon'] = icons.get(a_type,'STOCK_NEW')
 					if a_type=='act_window':
@@ -628,46 +628,46 @@ class xml_import(object):
 def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
 		noupdate=False):
 	'''Import csv file :
-	   quote: "
-	   delimiter: ,
-	   encoding: utf-8'''
-	   if not idref:
-	   idref={}
-	   model = ('.'.join(fname.split('.')[:-1]).split('-'))[0]
+		quote: "
+		delimiter: ,
+		encoding: utf-8'''
+	if not idref:
+		idref={}
+	model = ('.'.join(fname.split('.')[:-1]).split('-'))[0]
 	#remove folder path from model
-head, model = os.path.split(model)
+	head, model = os.path.split(model)
 
-pool = pooler.get_pool(cr.dbname)
+	pool = pooler.get_pool(cr.dbname)
 
-input = StringIO.StringIO(csvcontent)
+	input = StringIO.StringIO(csvcontent)
 	reader = csv.reader(input, quotechar='"', delimiter=',')
-fields = reader.next()
+	fields = reader.next()
 
 	if not (mode == 'init' or 'id' in fields):
 		return
 
-		uid = 1
-		datas = []
-		for line in reader:
+	uid = 1
+	datas = []
+	for line in reader:
 		if (not line) or not reduce(lambda x,y: x or y, line) :
 			continue
-	datas.append( map(lambda x:x.decode('utf8').encode('utf8'), line))
-	  pool.get(model).import_data(cr, uid, fields, datas,mode, module,noupdate)
+		datas.append( map(lambda x:x.decode('utf8').encode('utf8'), line))
+	pool.get(model).import_data(cr, uid, fields, datas,mode, module,noupdate)
 
 #
 # xml import/export
 #
-	  def convert_xml_import(cr, module, xmlstr, idref=None, mode='init', noupdate = False, report=None):
-		  if not idref:
-		  idref={}
-		  if report is None:
-	report=assertion_report()
+def convert_xml_import(cr, module, xmlstr, idref=None, mode='init', noupdate = False, report=None):
+	if not idref:
+		idref={}
+	if report is None:
+		report=assertion_report()
 	obj = xml_import(cr, module, idref, mode, report=report, noupdate = noupdate)
-obj.parse(xmlstr)
+	obj.parse(xmlstr)
 	del obj
 	return True
 
-	def convert_xml_export(res):
+def convert_xml_export(res):
 	uid=1
 	pool=pooler.get_pool(cr.dbname)
 	cr=pooler.db.cursor()
@@ -675,8 +675,8 @@ obj.parse(xmlstr)
 	d = xml.dom.minidom.getDOMImplementation().createDocument(None, "terp", None)
 	de = d.documentElement
 	data=d.createElement("data")
-de.appendChild(data)
+	de.appendChild(data)
 	de.appendChild(d.createTextNode('Some textual content.'))
 	cr.commit()
-cr.close()
+	cr.close()
 
