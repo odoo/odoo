@@ -70,12 +70,14 @@ class wizard_info_get(wizard.interface):
 				'module_download': '\n'.join(url)}
 
 	def _upgrade_module(self, cr, uid, data, context):
-		pool=pooler.get_pool(cr.dbname)
+		db, pool = pooler.get_db_and_pool(cr.dbname)
+		cr = db.cursor()
 		mod_obj = pool.get('ir.module.module')
 		ids = mod_obj.search(cr, uid, [
 			('state', 'in', ['to upgrade', 'to remove', 'to install'])])
 		mod_obj.download(cr, uid, ids, context=context)
-		(db, pool)=pooler.restart_pool(cr.dbname, update_module=True)
+		cr.commit()
+		db, pool = pooler.restart_pool(cr.dbname, update_module=True)
 		return {}
 
 	states = {

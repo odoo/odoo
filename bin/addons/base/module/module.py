@@ -475,6 +475,20 @@ class module(osv.osv):
 			except IOError, e:
 				raise orm.except_orm('Error', 'Can not create the module file:\n %s'
 						% (fname,))
+			terp = self.get_module_info(mod.name)
+			self.write(cr, uid, mod.id, {
+				'description': terp.get('description', ''),
+				'shortdesc': terp.get('name', ''),
+				'author': terp.get('author', 'Unknown'),
+				'website': terp.get('website', ''),
+				'license': terp.get('license', 'GPL-2'),
+				})
+			cr.execute('DELETE FROM ir_module_module_dependency ' \
+					'WHERE module_id = %d', (mod.id,))
+			self._update_dependencies(cr, uid, mod.id, terp.get('depends',
+				[]))
+			self._update_category(cr, uid, mod.id, terp.get('category',
+				'Uncategorized'))
 		return res
 
 	def _update_dependencies(self, cr, uid, id, depends=[]):
