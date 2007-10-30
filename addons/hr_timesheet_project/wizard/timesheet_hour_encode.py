@@ -51,7 +51,7 @@ def _action_line_create(self, cr, uid, data, context):
 			unit_id = ts._getEmployeeUnit(cr, uid, context)
 			product_id = ts._getEmployeeProduct(cr, uid, context)
 			res = {
-				'name': work.name,
+				'name': work.name or work.task_id.name,
 				'date': time.strftime('%Y-%m-%d'),
 				'unit_amount': work.hours,
 				'product_uom_id': unit_id,
