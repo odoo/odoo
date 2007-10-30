@@ -1496,7 +1496,7 @@ class orm(object):
 				'''<tree string="%s"><field name="%s"/></tree>''' \
 				% (self._description, self._rec_name)
 			elif view_type == 'calendar':
-				xml = '''<?xml version="1.0 encoding="utf-8""?>''' \
+				xml = '''<?xml version="1.0" encoding="utf-8"?>''' \
 				'''<calendar string="%s" date_start="%s">''' \
 				'''<field name="%s"/></calendar>''' \
 				% (self._description, self._date_name, self._rec_name)
