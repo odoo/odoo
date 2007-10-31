@@ -380,8 +380,8 @@ class hr_attendance(osv.osv):
 				context=context):
 			sheet_names[sheet_id] = name
 
-		for line_id in res.keys():
-			sheet_id = res[line_id]
+		for line_id in ids:
+			sheet_id = res.get(line_id, False)
 			if sheet_id:
 				res[line_id] = (sheet_id, sheet_names[sheet_id])
 			else:
