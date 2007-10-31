@@ -146,7 +146,8 @@ class account_account(osv.osv):
 
 	def _credit(self, cr, uid, ids, field_name, arg, context={}):
 		if not 'fiscalyear' in context:
-			context['fiscalyear'] = self.pool.get('account.fiscalyear').find(cr, uid)
+			context['fiscalyear'] = self.pool.get('account.fiscalyear').find(cr, uid,
+					exception=False)
 		acc_set = ",".join(map(str, ids))
 		query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
 		cr.execute(("SELECT a.id, COALESCE(SUM(l.credit*a.sign),0) FROM account_account a LEFT JOIN account_move_line l ON (a.id=l.account_id) WHERE a.type!='view' AND a.id IN (%s) AND "+query+" GROUP BY a.id") % (acc_set, ))
@@ -160,7 +161,8 @@ class account_account(osv.osv):
 
 	def _debit(self, cr, uid, ids, field_name, arg, context={}):
 		if not 'fiscalyear' in context:
-			context['fiscalyear'] = self.pool.get('account.fiscalyear').find(cr, uid)
+			context['fiscalyear'] = self.pool.get('account.fiscalyear').find(cr, uid,
+					exception=False)
 
 		acc_set = ",".join(map(str, ids))
 		query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
@@ -175,7 +177,8 @@ class account_account(osv.osv):
 
 	def _balance(self, cr, uid, ids, field_name, arg, context={}):
 		if not 'fiscalyear' in context:
-			context['fiscalyear'] = self.pool.get('account.fiscalyear').find(cr, uid, exception=False)
+			context['fiscalyear'] = self.pool.get('account.fiscalyear').find(cr, uid,
+					exception=False)
 		if not context['fiscalyear']:
 			return dict(map(lambda x: (x, 0.0), ids))
 
