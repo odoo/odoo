@@ -172,14 +172,14 @@ class ir_values(osv.osv):
 
 			result = []
 			ok = True
-			while ok and len(result)==0:
+			while ok:
 				if not where_opt:
 					cr.execute('select id from ir_values where ' +\
 							' and '.join(where1)+' and user_id is null', where2)
 				else:
 					cr.execute('select id from ir_values where ' +\
 							' and '.join(where1+where_opt), where2)
-				result = [x[0] for x in cr.fetchall()]
+				result.extend([x[0] for x in cr.fetchall()])
 				if len(where_opt):
 					where_opt.pop()
 				else:
@@ -191,10 +191,17 @@ class ir_values(osv.osv):
 		if not result:
 			return []
 		cid = self.pool.get('res.users').browse(cr, uid, uid, context={}).company_id.id
-		cr.execute('select id,name,value,object,meta from ir_values where id in ('+','.join(map(str,result))+') and (company_id is null or company_id='+str(cid)+')')
+		cr.execute('select id,name,value,object,meta, key ' \
+				'from ir_values ' \
+				'where id in ('+','.join(map(str,result))+') ' \
+					'and (company_id is null or company_id = %d) '\
+				'ORDER BY user_id', (cid,))
 		result = cr.fetchall()
 
-		def _result_get(x):
+		def _result_get(x, keys):
+			if x[1] in keys:
+				return False
+			keys.append(x[1])
 			if x[3]:
 				model,id = x[2].split(',')
 				try:
@@ -219,7 +226,8 @@ class ir_values(osv.osv):
 				meta2 = pickle.loads(x[4])
 				return (x[0],x[1],datas,meta2)
 			return (x[0],x[1],datas)
-		res = filter(bool, map(lambda x: _result_get(x), list(result)))
+		keys = []
+		res = filter(bool, map(lambda x: _result_get(x, keys), list(result)))
 		return res
 ir_values()
 
