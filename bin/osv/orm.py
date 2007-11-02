@@ -899,12 +899,13 @@ class orm(object):
 		res = ir_values_obj.get(cr, uid, 'default', False, [self._name])
 		for id, field, field_value in res:
 			if field in fields:
-				if self._columns[field]._type in ('many2one', 'one2one'):
-					obj = self.pool.get(self._columns[field]._obj)
+				fld_def = (field in self._columns) and self._columns[field] or self._inherit_fields[field][2]
+				if fld_def._type in ('many2one', 'one2one'):
+					obj = self.pool.get(fld_def._obj)
 					if not obj.search(cr, uid, [('id', '=', field_value)]):
 						continue
-				if self._columns[field]._type in ('many2many'):
-					obj = self.pool.get(self._columns[field]._obj)
+				if fld_def._type in ('many2many'):
+					obj = self.pool.get(fld_def._obj)
 					field_value2 = []
 					for i in range(len(field_value)):
 						if not obj.search(cr, uid, [('id', '=',
@@ -912,8 +913,8 @@ class orm(object):
 							continue
 						field_value2.append(field_value[i])
 					field_value = field_value2
-				if self._columns[field]._type in ('one2many'):
-					obj = self.pool.get(self._columns[field]._obj)
+				if fld_def._type in ('one2many'):
+					obj = self.pool.get(fld_def._obj)
 					field_value2 = []
 					for i in range(len(field_value)):
 						field_value2.append({})
