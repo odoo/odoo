@@ -135,6 +135,7 @@ def _upload(self, cr, uid, datas, context):
 		aa = a.read()
 		if aa[0]<>'0':
 			updata['link_id']=aa.split('\n')[0]
+			updata['cat_id']=aa.split('\n')[1]
 			updata['option'] = 'mtree'
 		result = post_multipart('www.tinyerp.com', '/index.php', updata.items(), [])
 	return {'update': '\n'.join(log[0]), 'already': '\n'.join(log[1]),
