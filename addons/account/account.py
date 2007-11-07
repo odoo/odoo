@@ -1079,7 +1079,6 @@ class account_tax_code(osv.osv):
             if not len(period_id):
                 return dict.fromkeys(ids, 0.0)
             period_id = period_id[0]
-
         return self._sum(cr, uid, ids, name, args, context,
                 where=' and line.period_id='+str(period_id))
 

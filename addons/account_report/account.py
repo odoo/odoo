@@ -57,16 +57,14 @@ class account_report(osv.osv):
         obj_period=self.pool.get('account.period')
 
         def _calc_context(key,obj):
-            print "for @@@@@@@@@@@@",obj
             if key==0:
-                print "ddddddddd",obj.find(cr,uid)
                 return obj.find(cr,uid)
             else:
                 obj_key=obj.browse(cr,uid,obj.find(cr,uid))
-                print "obj_key",obj_key
+                if isinstance(obj_key,list):
+                    obj_key=obj_key[0]
                 key_ids=obj.search(cr,uid,[('date_stop','<',obj_key.date_start)])
                 if len(key_ids)<abs(key):
-                    print len(key_ids),abs(key)
                     return False
                 return key_ids[key]
 
@@ -78,6 +76,7 @@ class account_report(osv.osv):
             acc = self.pool.get('account.account')
             acc_id = acc.search(cr, uid, [('code','in',code)])
             return reduce(lambda y,x=0: x.credit+y, acc.browse(cr, uid, acc_id, context),0)
+
         def _calc_debit(code,year=0):
             context['fiscalyear']=False
             context['fiscalyear']=_calc_context(year,obj_fy)
@@ -86,6 +85,7 @@ class account_report(osv.osv):
             acc = self.pool.get('account.account')
             acc_id = acc.search(cr, uid, [('code','in',code)])
             return reduce(lambda y,x=0: x.debit+y, acc.browse(cr, uid, acc_id, context),0)
+
         def _calc_balance(code,year=0):
             context['fiscalyear']=False
             context['fiscalyear']=_calc_context(year,obj_fy)
@@ -94,15 +94,18 @@ class account_report(osv.osv):
             acc = self.pool.get('account.account')
             acc_id = acc.search(cr, uid, [('code','in',code)])
             return reduce(lambda y,x=0: x.balance+y, acc.browse(cr, uid, acc_id, context),0)
+
         def _calc_report(*code):
             acc = self.pool.get('account.report.report')
             acc_id = acc.search(cr, uid, [('code','in',code)])
             return reduce(lambda y,x=0: x.amount+y, acc.browse(cr, uid, acc_id, context),0)
+
         def _calc_tax_code(code,period=0):
             context['period_id']=False
             context['period_id']=_calc_context(period,obj_period)
             if not context['period_id']:
                 return 0.00
+            context['period_id']=context['period_id'][0]
             acc = self.pool.get('account.tax.code')
             acc_id = acc.search(cr, uid, [('code','in',code)])
             return reduce(lambda y,x=0: x.sum_period+y, acc.browse(cr, uid, acc_id, context),0)
