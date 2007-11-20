@@ -460,6 +460,7 @@ class crm_case(osv.osv):
 					'date':case.date,
 					'canal_id':(case.canal_id or False) and case.canal_id.id,
 					'user_id':uid,
+					'document': 'crm.case,%i' % case.id,
 				})
 		return True
 
