@@ -397,6 +397,10 @@ class mrp_production(osv.osv):
 	#     between the end of the picking list and the call to this function
 	def action_ready(self, cr, uid, ids):
 		self.write(cr, uid, ids, {'state':'ready'})
+		for production in self.browse(cr, uid, ids):
+			if production.move_prod_id:
+				self.pool.get('stock.move').write(cr, uid, [production.move_prod_id.id],
+						{'location_id':production.location_dest_id.id})
 		return True
 
 	#TODO Review materials in function in_prod and prod_end.
@@ -508,9 +512,6 @@ class mrp_production(osv.osv):
 				'auto_picking': True,
 			})
 			toconfirm = True
-			
-			if production.move_prod_id:
-				self.pool.get('stock.move').write(cr, uid, [production.move_prod_id.id], {'location_id':production.location_dest_id.id})
 
 			source = production.product_id.product_tmpl_id.property_stock_production.id
 			data = {
