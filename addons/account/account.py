@@ -126,7 +126,10 @@ class account_account(osv.osv):
 	_name = "account.account"
 	_description = "Account"
 
-	def search(self, cr, uid, args, offset=0, limit=None, order=None, context={}):
+	def search(self, cr, uid, args, offset=0, limit=None, order=None,
+			context=None, count=False):
+		if context is None:
+			context = {}
 		pos = 0
 		while pos<len(args):
 			if args[pos][0]=='journal_id':
@@ -142,7 +145,8 @@ class account_account(osv.osv):
 				ids1 += map(lambda x: x.id, jour.account_control_ids)
 				args[pos] = ('id','in',ids1)
 			pos+=1
-		return super(account_account,self).search(cr, uid, args, offset, limit, order, context=context)
+		return super(account_account,self).search(cr, uid, args, offset, limit,
+				order, context=context, count=count)
 
 	def _credit(self, cr, uid, ids, field_name, arg, context={}):
 		if not 'fiscalyear' in context:
