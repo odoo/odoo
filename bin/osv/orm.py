@@ -1789,17 +1789,16 @@ class orm(object):
 
 	def search_count(self, cr, user, args, context=None):
 		if not context:
-			context={}
-		ctx = context.copy()
-		ctx['search_count'] = 1
-		res = self.search(cr, user, args, context=ctx)
+			context = {}
+		res = self.search(cr, user, args, context=context, count=True)
 		if isinstance(res, list):
 			return len(res)
 		return res
 
-	def search(self, cr, user, args, offset=0, limit=None, order=None, context=None):
+	def search(self, cr, user, args, offset=0, limit=None, order=None,
+			context=None, count=False):
 		if not context:
-			context={}
+			context = {}
 		# compute the where, order by, limit and offset clauses
 		(qu1,qu2,tables) = self._where_calc(cr, user, args, context=context)
 
@@ -1819,7 +1818,7 @@ class orm(object):
 			qu1 = qu1 and qu1+' and '+d1 or ' where '+d1
 			qu2 += d2
 
-		if context and context.get('search_count', False):
+		if count:
 			cr.execute('select count(%s.id) from ' % self._table +
 					','.join(tables) +qu1 + limit_str + offset_str, qu2)
 			res = cr.fetchall()

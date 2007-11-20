@@ -83,8 +83,12 @@ class many2many_unique(fields.many2many):
 
 class ir_ui_menu(osv.osv):
 	_name = 'ir.ui.menu'
-	def search(self, cr, uid, args, offset=0, limit=2000, order=None, context={}):
-		ids = osv.orm.orm.search(self, cr, uid, args, offset, limit, order, context=context)
+	def search(self, cr, uid, args, offset=0, limit=2000, order=None,
+			context=None, count=False):
+		if context is None:
+			context = {}
+		ids = osv.orm.orm.search(self, cr, uid, args, offset, limit, order,
+				context=context)
 		user_groups = self.pool.get('res.users').read(cr, uid, [uid])[0]['groups_id']
 		result = []
 		for menu in self.browse(cr, uid, ids):
