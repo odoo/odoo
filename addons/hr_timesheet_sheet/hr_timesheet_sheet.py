@@ -322,9 +322,62 @@ class hr_timesheet_line(osv.osv):
 				res[line_id] = False
 		return res
 
+	def _sheet_search(self, cursor, user, obj, name, args):
+		if not len(args):
+			return []
+		sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
+
+		i = 0
+		while i < len(args):
+			fargs = args[i][0].split('.', 1)
+			if len(fargs) > 1:
+				args[i] = (fargs[0], 'in', sheet_obj.search(cursor, user,
+					[(fargs[1], args[i][1], args[i][2])]))
+				i += 1
+				continue
+			if isinstance(args[i][2], basestring):
+				res_ids = sheet_obj.name_search(cursor, user, args[i][2], [],
+						args[i][1])
+				args[i] = (args[i][0], 'in', [x[0] for x in res_ids])
+			i += 1
+		qu1, qu2 = [], []
+		for x in args:
+			if x[1] != 'in':
+				if (x[2] is False) and (x[1] == '='):
+					qu1.append('(s.id IS NULL)')
+				elif (x[2] is False) and (x[1] == '<>' or x[1] == '!='):
+					qu1.append('(s.id IS NOT NULL)')
+				else:
+					qu1.append('(s.id %s %s)' % (x[1], '%d'))
+					qu2.append(x[2])
+			elif x[1] == 'in':
+				if len(x[2]) > 0:
+					qu1.append('(s.id in (%s))' % (','.join(['%d'] * len(x[2]))))
+					qu2 += x[2]
+				else:
+					qu1.append(' (False)')
+		if len(qu1):
+			qu1 = ' WHERE ' + 'AND'.join(qu1)
+		else:
+			qu1 = ''
+		cursor.execute('SELECT l.id \
+				FROM hr_timesheet_sheet_sheet s \
+					LEFT JOIN (hr_analytic_timesheet l \
+						LEFT JOIN account_analytic_line al \
+							ON (l.line_id = al.id)) \
+						ON (s.date_to >= al.date \
+							AND s.date_from <= al.date \
+							AND s.user_id = al.user_id)' + \
+				qu1, qu2)
+		res = cursor.fetchall()
+		if not len(res):
+			return [('id', '=', '0')]
+		return [('id', 'in', [x[0] for x in res])]
+
 	_columns = {
 		'sheet_id': fields.function(_sheet, method=True, string='Sheet',
-			type='many2one', relation='hr_timesheet_sheet.sheet'),
+			type='many2one', relation='hr_timesheet_sheet.sheet',
+			fnct_search=_sheet_search),
 	}
 	_defaults = {
 		'date': _get_default_date,
@@ -388,9 +441,62 @@ class hr_attendance(osv.osv):
 				res[line_id] = False
 		return res
 
+	def _sheet_search(self, cursor, user, obj, name, args):
+		if not len(args):
+			return []
+		sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
+
+		i = 0
+		while i < len(args):
+			fargs = args[i][0].split('.', 1)
+			if len(fargs) > 1:
+				args[i] = (fargs[0], 'in', sheet_obj.search(cursor, user,
+					[(fargs[1], args[i][1], args[i][2])]))
+				i += 1
+				continue
+			if isinstance(args[i][2], basestring):
+				res_ids = sheet_obj.name_search(cursor, user, args[i][2], [],
+						args[i][1])
+				args[i] = (args[i][0], 'in', [x[0] for x in res_ids])
+			i += 1
+		qu1, qu2 = [], []
+		for x in args:
+			if x[1] != 'in':
+				if (x[2] is False) and (x[1] == '='):
+					qu1.append('(s.id IS NULL)')
+				elif (x[2] is False) and (x[1] == '<>' or x[1] == '!='):
+					qu1.append('(s.id IS NOT NULL)')
+				else:
+					qu1.append('(s.id %s %s)' % (x[1], '%d'))
+					qu2.append(x[2])
+			elif x[1] == 'in':
+				if len(x[2]) > 0:
+					qu1.append('(s.id in (%s))' % (','.join(['%d'] * len(x[2]))))
+					qu2 += x[2]
+				else:
+					qu1.append(' (False)')
+		if len(qu1):
+			qu1 = ' WHERE ' + 'AND'.join(qu1)
+		else:
+			qu1 = ''
+		cursor.execute('SELECT a.id\
+				FROM hr_timesheet_sheet_sheet s \
+					LEFT JOIN (hr_attendance a \
+						LEFT JOIN hr_employee e \
+							ON (a.employee_id = e.id)) \
+						ON (s.date_to >= a.name \
+							AND s.date_from <= a.name \
+							AND s.user_id = e.user_id) ' + \
+				qu1, qu2)
+		res = cursor.fetchall()
+		if not len(res):
+			return [('id', '=', '0')]
+		return [('id', 'in', [x[0] for x in res])]
+
 	_columns = {
 		'sheet_id': fields.function(_sheet, method=True, string='Sheet',
-			type='many2one', relation='hr_timesheet_sheet.sheet'),
+			type='many2one', relation='hr_timesheet_sheet.sheet',
+			fnct_search=_sheet_search),
 	}
 	_defaults = {
 		'name': _get_default_date,
