@@ -754,6 +754,7 @@ class orm(object):
 		done = 0
 
 		while len(datas):
+			res = {}
 			try:
 				(res, other, warning, translate, data_id) = \
 						process_liness(self, datas, [], fields_def)
