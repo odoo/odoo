@@ -147,11 +147,7 @@ class char(_column):
 			u_symb = symb
 		else:
 			u_symb = unicode(symb)
-			
-		if len(u_symb) > self.size:
-			raise Exception, '%s size greater than %d' % (self.string, self.size)
-		else:
-			return u_symb.encode('utf8')
+		return u_symb.encode('utf8')
 
 class text(_column):
 	_type = 'text'
