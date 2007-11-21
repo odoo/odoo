@@ -508,17 +508,27 @@ class account_invoice(osv.osv):
 		}
 
 	def action_number(self, cr, uid, ids, *args):
-		cr.execute('SELECT id, type, number, move_id, reference FROM account_invoice WHERE id IN ('+','.join(map(str,ids))+')')
+		cr.execute('SELECT id, type, number, move_id, reference ' \
+				'FROM account_invoice ' \
+				'WHERE id IN ('+','.join(map(str,ids))+')')
 		for (id, invtype, number, move_id, reference) in cr.fetchall():
 			if not number:
-				number = self.pool.get('ir.sequence').get(cr, uid, 'account.invoice.'+invtype)
+				number = self.pool.get('ir.sequence').get(cr, uid,
+						'account.invoice.' + invtype)
 				if type in ('in_invoice', 'in_refund'):
 					ref = reference
 				else:
 					ref = self._convert_ref(cr, uid, number)
-				cr.execute('UPDATE account_invoice SET number=%s WHERE id=%d', (number, id))
-				cr.execute('UPDATE account_move_line SET ref=%s WHERE move_id=%d and ref is null', (ref, move_id))
-				cr.execute('UPDATE account_analytic_line SET ref=%s FROM account_move_line WHERE account_move_line.move_id=%d AND account_analytic_line.move_id=account_move_line.id', (ref, move_id))
+				cr.execute('UPDATE account_invoice SET number=%s ' \
+						'WHERE id=%d', (number, id))
+				cr.execute('UPDATE account_move_line SET ref=%s ' \
+						'WHERE move_id=%d AND (ref is null OR ref = \'\')',
+						(ref, move_id))
+				cr.execute('UPDATE account_analytic_line SET ref=%s ' \
+						'FROM account_move_line ' \
+						'WHERE account_move_line.move_id = %d ' \
+							'AND account_analytic_line.move_id = account_move_line.id',
+							(ref, move_id))
 		return True
 
 	def action_cancel(self, cr, uid, ids, *args):

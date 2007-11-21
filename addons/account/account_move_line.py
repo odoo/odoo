@@ -70,7 +70,8 @@ class account_move_line(osv.osv):
 						account_move_line \
 					where \
 						journal_id=%d and period_id=%d and create_uid=%d and state=%s \
-					order by id desc limit 1', (context['journal_id'], context['period_id'], uid, 'draft'))
+					order by id desc limit 1',
+					(context['journal_id'], context['period_id'], uid, 'draft'))
 				res = cr.fetchone()
 				move_id = (res and res[0]) or False
 				if not move_id:
@@ -82,7 +83,9 @@ class account_move_line(osv.osv):
 					from \
 						account_move_line \
 					where \
-						journal_id=%d and period_id=%d and create_uid=%d order by id desc', (context['journal_id'], context['period_id'], uid))
+						journal_id=%d and period_id=%d and create_uid=%d \
+					order by id desc',
+					(context['journal_id'], context['period_id'], uid))
 				res = cr.fetchone()
 				data['date'] = res and res[0] or time.strftime('%Y-%m-%d')
 
