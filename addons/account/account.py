@@ -505,6 +505,7 @@ account_period()
 class account_journal_period(osv.osv):
 	_name = "account.journal.period"
 	_description = "Journal - Period"
+
 	def _icon_get(self, cr, uid, ids, field_name, arg=None, context={}):
 		result = {}.fromkeys(ids, 'STOCK_NEW')
 		for r in self.read(cr, uid, ids, ['state']):
@@ -514,14 +515,16 @@ class account_journal_period(osv.osv):
 				'done': 'STOCK_DIALOG_AUTHENTICATION',
 			}.get(r['state'], 'STOCK_NEW')
 		return result
+
 	_columns = {
 		'name': fields.char('Journal-Period Name', size=64, required=True),
 		'journal_id': fields.many2one('account.journal', 'Journal', required=True, ondelete="cascade"),
 		'period_id': fields.many2one('account.period', 'Period', required=True, ondelete="cascade"),
-		'icon': fields.function(_icon_get, method=True, string='Icon'),
+		'icon': fields.function(_icon_get, method=True, string='Icon', type='string'),
 		'active': fields.boolean('Active', required=True),
 		'state': fields.selection([('draft','Draft'), ('printed','Printed'), ('done','Done')], 'State', required=True, readonly=True)
 	}
+
 	def _check(self, cr, uid, ids, context={}):
 		for obj in self.browse(cr, uid, ids, context):
 			cr.execute('select * from account_move_line where journal_id=%d and period_id=%d limit 1', (obj.journal_id.id, obj.period_id.id))
@@ -543,6 +546,7 @@ class account_journal_period(osv.osv):
 		'active': lambda *a: True,
 	}
 	_order = "period_id"
+
 account_journal_period()
 
 #----------------------------------------------------------
