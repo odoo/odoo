@@ -10,7 +10,20 @@
 			<field name="arch" type="xml">
 				<field name="acc_number" position="after">
 					<newline/>
-					<field name="bic"/>
+					<field name="iban"/>
+					<newline/>
+				</field>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_partner_iban_form">
+			<field name="name">res.partner.form.iban.inherit</field>
+			<field name="model">res.partner</field>
+			<field name="inherit_id" ref="base.view_partner_form"/>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<field name="acc_number" position="after">
+					<newline/>
 					<field name="iban"/>
 					<newline/>
 				</field>
