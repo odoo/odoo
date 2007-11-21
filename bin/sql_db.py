@@ -130,14 +130,15 @@ def decimalize(symb):
 		return decimal.Decimal('%f' % symb)
 	return decimal.Decimal(symb)
 
-def db_connect(db_name):
+def db_connect(db_name, serialize=0):
 	host = tools.config['db_host'] and "host=%s" % tools.config['db_host'] or ''
 	port = tools.config['db_port'] and "port=%s" % tools.config['db_port'] or ''
 	name = "dbname=%s" % db_name
 	user = tools.config['db_user'] and "user=%s" % tools.config['db_user'] or ''
 	password = tools.config['db_password'] and "password=%s" % tools.config['db_password'] or ''
 	maxconn = int(tools.config['db_maxconn']) or 64
-	tdb = psycopg.connect('%s %s %s %s %s' % (host, port, name, user, password), serialize=0, maxconn=maxconn)
+	tdb = psycopg.connect('%s %s %s %s %s' % (host, port, name, user, password),
+			serialize=serialize, maxconn=maxconn)
 	fdb = fakedb(tdb, db_name)
 	return fdb
 

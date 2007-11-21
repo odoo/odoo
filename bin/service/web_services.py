@@ -72,58 +72,52 @@ class db(netsvc.Service):
 
 		self.actions[id] = {'clean': False}
 
-		cmd = ['createdb', '--quiet', '--encoding=unicode']
-		if tools.config['db_user']:
-			cmd.append('--username=' + tools.config['db_user'])
-		if tools.config['db_host']:
-			cmd.append('--host=' + tools.config['db_host'])
-		if tools.config['db_port']:
-			cmd.append('--port=' + tools.config['db_port'])
-		cmd.append(db_name)
-		res = tools.exec_pg_command(*tuple(cmd))
-		if not res:
-			class DBInitialize(object):
-				def __call__(self, serv, id, db_name, demo, lang):
-					try:
-						serv.actions[id]['progress'] = 0
-						clean = False
-						cr = sql_db.db_connect(db_name).cursor()
-						tools.init_db(cr)
-						cr.commit()
-						cr.close()
-						pool = pooler.get_pool(db_name, demo,serv.actions[id], update_module=True)
-						#tools.init_db(cr)
-						if lang and lang != 'en_US':
-							filename = tools.config["root_path"] + "/i18n/" + lang + ".csv"
-							tools.trans_load(db_name, filename, lang) 
-
-						serv.actions[id]['clean'] = True 
-
-
-						cr = sql_db.db_connect(db_name).cursor()
-						cr.execute('select login,password,name from res_users where login<>\'root\' order by login')
-						serv.actions[id]['users'] = cr.dictfetchall()
-						cr.close()
-					except Exception, e:
-						serv.actions[id]['clean'] = False
-						serv.actions[id]['exception'] = e
-						from StringIO import StringIO
-						import traceback
-						e_str = StringIO()
-						traceback.print_exc(file=e_str)
-						traceback_str = e_str.getvalue()
-						e_str.close()
-						serv.actions[id]['traceback'] = traceback_str
-						cr.close()
-			logger = netsvc.Logger()
-			logger.notifyChannel("web-services", netsvc.LOG_INFO, 'CREATE DB: %s' % (db_name))
-
-			dbi = DBInitialize()
-			create_thread = threading.Thread(target=dbi, args=(self, id, db_name, demo, lang))
-			create_thread.start()
-			self.actions[id]['thread'] = create_thread
-			return id
-		raise Exception, "Couldn't create database"
+		db = sql_db.db_connect('template1', serialize=1)
+		db.truedb.autocommit()
+		cr = db.cursor()
+		cr.execute('CREATE DATABASE ' + db_name + ' ENCODING \'unicode\'')
+		cr.close()
+		class DBInitialize(object):
+			def __call__(self, serv, id, db_name, demo, lang):
+				try:
+					serv.actions[id]['progress'] = 0
+					clean = False
+					cr = sql_db.db_connect(db_name).cursor()
+					tools.init_db(cr)
+					cr.commit()
+					cr.close()
+					pool = pooler.get_pool(db_name, demo,serv.actions[id],
+							update_module=True)
+					if lang and lang != 'en_US':
+						filename = tools.config["root_path"] + "/i18n/" + lang + ".csv"
+						tools.trans_load(db_name, filename, lang)
+					serv.actions[id]['clean'] = True
+					cr = sql_db.db_connect(db_name).cursor()
+					cr.execute('select login, password, name ' \
+							'from res_users ' \
+							'where login <> \'root\' order by login')
+					serv.actions[id]['users'] = cr.dictfetchall()
+					cr.close()
+				except Exception, e:
+					serv.actions[id]['clean'] = False
+					serv.actions[id]['exception'] = e
+					from StringIO import StringIO
+					import traceback
+					e_str = StringIO()
+					traceback.print_exc(file=e_str)
+					traceback_str = e_str.getvalue()
+					e_str.close()
+					serv.actions[id]['traceback'] = traceback_str
+					cr.close()
+		logger = netsvc.Logger()
+		logger.notifyChannel("web-services", netsvc.LOG_INFO,
+				'CREATE DB: %s' % (db_name))
+		dbi = DBInitialize()
+		create_thread = threading.Thread(target=dbi,
+				args=(self, id, db_name, demo, lang))
+		create_thread.start()
+		self.actions[id]['thread'] = create_thread
+		return id
 
 	def get_progress(self, password, id):
 		security.check_super(password)
@@ -146,27 +140,31 @@ class db(netsvc.Service):
 		pooler.close_db(db_name)
 		logger = netsvc.Logger()
 
-		cmd = ['dropdb', '--quiet']
-		if tools.config['db_user']:
-			cmd.append('--username=' + tools.config['db_user'])
-		if tools.config['db_host']:
-			cmd.append('--host=' + tools.config['db_host'])
-		if tools.config['db_port']:
-			cmd.append('--port=' + tools.config['db_port'])
-		cmd.append(db_name)
-		res = tools.exec_pg_command(*tuple(cmd))
-
-		if res:
-			logger.notifyChannel("web-service", netsvc.LOG_ERROR,
+		db = sql_db.db_connect('template1', serialize=1)
+		db.truedb.autocommit()
+		cr = db.cursor()
+		try:
+			try:
+				cr.execute('DROP DATABASE ' + db_name)
+			except:
+				logger.notifyChannel("web-service", netsvc.LOG_ERROR,
 					'DROP DB: %s failed' % (db_name,))
-			raise Exception, "Couldn't drop database"
-		else:
-			logger.notifyChannel("web-services", netsvc.LOG_INFO,
+				raise
+			else:
+				logger.notifyChannel("web-services", netsvc.LOG_INFO,
 					'DROP DB: %s' % (db_name))
-			return True
+		finally:
+			cr.close()
+		return True
 
 	def dump(self, password, db_name):
 		security.check_super(password)
+		logger = netsvc.Logger()
+
+		if tools.config['db_password']:
+			logger.notifyChannel("web-service", netsvc.LOG_ERROR,
+					'DUMP DB: %s doesn\'t work with password' % (db_name,))
+			raise Exception, "Couldn't dump database with password"
 
 		cmd = ['pg_dump', '--format=c']
 		if tools.config['db_user']:
@@ -181,7 +179,6 @@ class db(netsvc.Service):
 		stdin.close()
 		data = stdout.read()
 		res = stdout.close()
-		logger = netsvc.Logger()
 		if res:
 			logger.notifyChannel("web-service", netsvc.LOG_ERROR,
 					'DUMP DB: %s failed\n%s' % (db_name, data))
@@ -192,19 +189,23 @@ class db(netsvc.Service):
 
 	def restore(self, password, db_name, data):
 		security.check_super(password)
-		res = True
+		logger = netsvc.Logger()
+
 		if self.db_exist(db_name):
+			logger.notifyChannel("web-service", netsvc.LOG_WARNING,
+					'RESTORE DB: %s already exists' % (db_name,))
 			raise Exception, "Database already exists"
 
-		cmd = ['createdb', '--quiet', '--encoding=unicode']
-		if tools.config['db_user']:
-			cmd.append('--username=' + tools.config['db_user'])
-		if tools.config['db_host']:
-			cmd.append('--host=' + tools.config['db_host'])
-		if tools.config['db_port']:
-			cmd.append('--port=' + tools.config['db_port'])
-		cmd.append(db_name)
-		args = tuple(cmd)
+		if tools.config['db_password']:
+			logger.notifyChannel("web-service", netsvc.LOG_ERROR,
+					'RESTORE DB: %s doesn\'t work with password' % (db_name,))
+			raise Exception, "Couldn't restore database with password"
+
+		db = sql_db.db_connect('template1', serialize=1)
+		db.truedb.autocommit()
+		cr = db.cursor()
+		cr.execute('CREATE DATABASE ' + db_name + ' ENCODING \'unicode\'')
+		cr.close()
 
 		cmd = ['pg_restore']
 		if tools.config['db_user']:
@@ -216,27 +217,23 @@ class db(netsvc.Service):
 		cmd.append('--dbname=' + db_name)
 		args2 = tuple(cmd)
 
-		res = tools.exec_pg_command(*args)
-		if not res:
-			buf=base64.decodestring(data)
-			if os.name == "nt":
-				tmpfile = (os.environ['TMP'] or 'C:\\') + os.tmpnam()
-				file(tmpfile, 'wb').write(buf)
-				args2=list(args2)
-				args2.append(' ' + tmpfile)
-				args2=tuple(args2)
-			stdin, stdout = tools.exec_pg_command_pipe(*args2)
-			if not os.name == "nt":
-				stdin.write(base64.decodestring(data))
-			stdin.close()
-			res = stdout.close()
-			if res:
-				raise Exception, "Couldn't restore database"
-			logger = netsvc.Logger()
-			logger.notifyChannel("web-services", netsvc.LOG_INFO,
-					'RESTORE DB: %s' % (db_name))
-			return True
-		raise Exception, "Couldn't create database"
+		buf=base64.decodestring(data)
+		if os.name == "nt":
+			tmpfile = (os.environ['TMP'] or 'C:\\') + os.tmpnam()
+			file(tmpfile, 'wb').write(buf)
+			args2=list(args2)
+			args2.append(' ' + tmpfile)
+			args2=tuple(args2)
+		stdin, stdout = tools.exec_pg_command_pipe(*args2)
+		if not os.name == "nt":
+			stdin.write(base64.decodestring(data))
+		stdin.close()
+		res = stdout.close()
+		if res:
+			raise Exception, "Couldn't restore database"
+		logger.notifyChannel("web-services", netsvc.LOG_INFO,
+				'RESTORE DB: %s' % (db_name))
+		return True
 
 	def db_exist(self, db_name):
 		try:
