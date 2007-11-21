@@ -68,7 +68,7 @@ class account_invoice(osv.osv):
 			return res[0]
 		else:
 			return False
-	
+
 	def _get_currency(self, cr, uid, context):
 		user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, [uid])[0]
 		if user.company_id:
@@ -177,15 +177,15 @@ class account_invoice(osv.osv):
 #		res = self.pool.get('res.partner').address_get(cr, uid, [part], ['invoice'])
 #		return [{}]
 
-	def onchange_partner_id(self, cr, uid, ids, type, partner_id):
+	def onchange_partner_id(self, cr, uid, ids, type, partner_id, date_invoice=False, payment_term=False):
 		invoice_addr_id = False
 		contact_addr_id = False
-		payment_term = False
+		partner_payment_term = False
 		acc_id = False
-		
+
 		opt = [('uid', str(uid))]
 		if partner_id:
-			
+
 			opt.insert(0, ('id', partner_id))
 			res = self.pool.get('res.partner').address_get(cr, uid, [partner_id], ['contact', 'invoice'])
 			contact_addr_id = res['contact']
@@ -196,22 +196,27 @@ class account_invoice(osv.osv):
 			else:
 				acc_id = p.property_account_payable.id
 
-			payment_term = p.property_payment_term and p.property_payment_term.id or False
+			partner_payment_term = p.property_payment_term and p.property_payment_term.id or False
 
 		result = {'value': {
 			'address_contact_id': contact_addr_id,
 			'address_invoice_id': invoice_addr_id,
 			'account_id': acc_id,
-			'payment_term':payment_term}
+			'payment_term': partner_payment_term}
 		}
 
-		if partner_id and p.property_payment_term.id:
-			result['value']['payment_term'] = p.property_payment_term.id
+		if payment_term != partner_payment_term:
+			if partner_payment_term:
+				to_update = self.onchange_payment_term_date_invoice(
+					cr,uid,ids,partner_payment_term,date_invoice)
+				result['value'].update(to_update['value'])
+			else:
+				result['value']['date_due'] = False
 		return result
 
 	def onchange_currency_id(self, cr, uid, ids, curr_id):
 		return {}
-	
+
 	def onchange_payment_term_date_invoice(self, cr, uid, ids, payment_term_id, date_invoice):
 		if not payment_term_id:
 			return {}
@@ -219,7 +224,7 @@ class account_invoice(osv.osv):
 		pt_obj= self.pool.get('account.payment.term')
 
 		if not date_invoice :
-			date_invoice= time.strftime('%Y-%m-%d')
+			date_invoice = self._defaults["date_invoice"](cr,uid,{})
 
 		pterm_list= pt_obj.compute(cr, uid, payment_term_id, value=1, date_ref=date_invoice)
 
@@ -523,7 +528,7 @@ class account_invoice(osv.osv):
 			if i['move_id']:
 				account_move_obj.button_cancel(cr, uid, [i['move_id'][0]])
 				# delete the move this invoice was pointing to
-				# Note that the corresponding move_lines and move_reconciles 
+				# Note that the corresponding move_lines and move_reconciles
 				# will be automatically deleted too
 				account_move_obj.unlink(cr, uid, [i['move_id'][0]])
 		self.write(cr, uid, ids, {'state':'cancel', 'move_id':False})
@@ -605,22 +610,22 @@ class account_invoice(osv.osv):
 		new_ids = []
 		for invoice in invoices:
 			del invoice['id']
-			
+
 			type_dict = {
 				'out_invoice': 'out_refund', # Customer Invoice
 				'in_invoice': 'in_refund',   # Supplier Invoice
 				'out_refund': 'out_invoice', # Customer Refund
 				'in_refund': 'in_invoice',   # Supplier Refund
 			}
-			
-				
+
+
 			invoice_lines = self.pool.get('account.invoice.line').read(cr, uid, invoice['invoice_line'])
 			invoice_lines = self._refund_cleanup_lines(invoice_lines)
-			
+
 			tax_lines = self.pool.get('account.invoice.tax').read(cr, uid, invoice['tax_line'])
 			tax_lines = filter(lambda l: l['manual'], tax_lines)
 			tax_lines = self._refund_cleanup_lines(tax_lines)
-			
+
 			invoice.update({
 				'type': type_dict[invoice['type']],
 				'date_invoice': time.strftime('%Y-%m-%d'),
@@ -629,9 +634,9 @@ class account_invoice(osv.osv):
 				'invoice_line': invoice_lines,
 				'tax_line': tax_lines
 			})
-		
+
 			# take the id part of the tuple returned for many2one fields
-			for field in ('address_contact_id', 'address_invoice_id', 'partner_id', 
+			for field in ('address_contact_id', 'address_invoice_id', 'partner_id',
 					'account_id', 'currency_id', 'payment_term'):
 				invoice[field] = invoice[field] and invoice[field][0]
 
@@ -670,7 +675,7 @@ class account_invoice(osv.osv):
 		lines = [(0, 0, l1), (0, 0, l2)]
 		move = {'name': name, 'line_id': lines, 'journal_id': pay_journal_id, 'period_id': period_id}
 		move_id = self.pool.get('account.move').create(cr, uid, move)
-		
+
 		line_ids = []
 		line = self.pool.get('account.move.line')
 		cr.execute('select id from account_move_line where move_id in ('+str(move_id)+','+str(invoice.move_id.id)+')')
@@ -827,7 +832,7 @@ class account_invoice_line(osv.osv):
 			}
 	#
 	# Set the tax field according to the account and the partner
-	# 
+	#
 	def onchange_account_id(self, cr, uid, ids, partner_id,account_id):
 		if not (partner_id and account_id):
 			return {}
@@ -927,4 +932,3 @@ class account_invoice_tax(osv.osv):
 			})
 		return res
 account_invoice_tax()
-
