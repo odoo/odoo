@@ -1206,8 +1206,9 @@ class orm(object):
 
 	def _update_function_stored(self, cr, user, ids, context=None):
 		if not context:
-			context={}
-		f=filter(lambda a: isinstance(self._columns[a], fields.function) and self._columns[a].store, self._columns)
+			context = {}
+		f = filter(lambda a: isinstance(self._columns[a], fields.function) \
+				and self._columns[a].store, self._columns)
 		if f:
 			result=self.read(cr, user, ids, fields=f, context=context)
 			for res in result:
@@ -1216,10 +1217,14 @@ class orm(object):
 				for field in res:
 					if field not in f:
 						continue
+					value = res[field]
+					if self._columns[field]._type in ('many2one', 'one2one'):
+						value = res[field][0]
 					upd0.append('"'+field+'"='+self._columns[field]._symbol_set[0])
-					upd1.append(self._columns[field]._symbol_set[1](res[field]))
+					upd1.append(self._columns[field]._symbol_set[1](value))
 				upd1.append(res['id'])
-				cr.execute('update "'+self._table+'" set '+string.join(upd0,',')+ ' where id = %d', upd1)
+				cr.execute('update "' + self._table + '" set ' + \
+						string.join(upd0, ',') + ' where id = %d', upd1)
 		return True
 
 	#
