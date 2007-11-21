@@ -452,8 +452,11 @@ class crm_case(osv.osv):
 			return False
 		for case in cases:
 			if case.partner_id:
+				name = 'Case ' + keyword + ': ' + case.name
+				if len(name) > 64:
+					name = name[:61] + '...'
 				self.pool.get('res.partner.event').create(cr, uid, {
-					'name':'Case '+keyword+': '+case.name,
+					'name': name,
 					'som':(case.som or False) and case.som.id,
 					'description':case.description,
 					'partner_id':case.partner_id.id,
