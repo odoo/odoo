@@ -7,7 +7,7 @@
 			<field name="model">report.account.analytic.line.to.invoice</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<tree string="Costs to invoice">
+				<tree string="Analytic Lines to Invoice">
 					<field name="name" select="1"/>
 					<field name="account_id" select="1"/>
 					<newline/>
@@ -25,7 +25,7 @@
 			<field name="model">report.account.analytic.line.to.invoice</field>
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
-				<tree string="Costs to invoice">
+				<tree string="Analytic Lines to Invoice">
 					<field name="name"/>
 					<field name="product_id"/>
 					<field name="account_id"/>
@@ -42,7 +42,7 @@
 			<field name="model">report.account.analytic.line.to.invoice</field>
 			<field name="type">graph</field>
 			<field name="arch" type="xml">
-				<graph type="bar" string="Costs to invoice">
+				<graph type="bar" string="Analytic Lines to Invoice">
 					<field name="name"/>
 					<field name="sale_price" operator="+"/>
 				</graph>
@@ -55,24 +55,22 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,graph</field>
 		</record>
-		<menuitem name="Financial Management/Reporting/Analytic/All Months/Analytic Lines to Invoice" id="account_analytic_lines_to_invoice_report" action="action_account_analytic_line_to_invoice" />
+		<menuitem
+			name="Financial Management/Reporting/Analytic/All Months/Analytic Lines to Invoice"
+			id="account_analytic_lines_to_invoice_report"
+			action="action_account_analytic_line_to_invoice"/>
 
-		<act_window name="Costs to invoice"
+		<act_window name="Analytic Lines to Invoice"
 			domain="[('product_id', '=', active_id)]"
 			res_model="report.account.analytic.line.to.invoice"
 			src_model="product.product"
 			id="act_product_product_2_report_acc_analytic_line_to_invoice"/>
 
-		<act_window name="Costs to invoice"
-			domain="[('user_id', '=', active_id),('invoice_id','=',False),('to_invoice','&lt;&gt;',False)]"
-			res_model="account.analytic.line"
-			src_model="res.users"
-			id="act_users_analytic_acc_2_report_acc_analytic_line_to_invoice"/>
-
-		<act_window name="Costs to invoice"
+		<act_window name="Lines to Invoice"
 			domain="[('account_id', '=', active_id),('invoice_id','=',False),('to_invoice','&lt;&gt;',False)]"
 			res_model="account.analytic.line"
 			src_model="account.analytic.account"
 			id="act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice"/>
+
 	</data>
 </terp>
