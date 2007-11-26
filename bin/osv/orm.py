@@ -824,13 +824,12 @@ class orm(object):
 		else:
 			res = map(lambda x: {'id':x}, ids)
 
-		if context.get('lang', False) and context['lang'] != 'en_US':
-			for f in fields_pre:
-				if self._columns[f].translate:
-					ids = map(lambda x: x['id'], res)
-					res_trans = self.pool.get('ir.translation')._get_ids(cr, user, self._name+','+f, 'model', context['lang'], ids)
-					for r in res:
-						r[f] = res_trans.get(r['id'], r[f])
+		for f in fields_pre:
+			if self._columns[f].translate:
+				ids = map(lambda x: x['id'], res)
+				res_trans = self.pool.get('ir.translation')._get_ids(cr, user, self._name+','+f, 'model', context.get('lang', False) or 'en_US', ids)
+				for r in res:
+					r[f] = res_trans.get(r['id'], False) or r[f]
 
 		for table in self._inherits:
 			col = self._inherits[table]
@@ -1284,29 +1283,26 @@ class orm(object):
 					res[f][arg] = getattr(self._columns[f], arg)
 
 			# translate the field label
-			if context.get('lang', False) and context['lang'] != 'en_US':
-				res_trans = translation_obj._get_source(cr, user,
-						self._name + ',' + f, 'field', context['lang'])
-				if res_trans:
-					res[f]['string'] = res_trans
-				help_trans = translation_obj._get_source(cr, user,
-						self._name + ',' + f, 'help', context['lang'])
-				if help_trans:
-					res[f]['help'] = help_trans
+			res_trans = translation_obj._get_source(cr, user,
+					self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
+			if res_trans:
+				res[f]['string'] = res_trans
+			help_trans = translation_obj._get_source(cr, user,
+					self._name + ',' + f, 'help', context.get('lang', False) or 'en_US')
+			if help_trans:
+				res[f]['help'] = help_trans
 
 			if hasattr(self._columns[f], 'selection'):
 				if isinstance(self._columns[f].selection, (tuple, list)):
 					sel = self._columns[f].selection
-					
 					# translate each selection option
-					if context.get('lang', False) and context['lang'] != 'en_US':
-						sel2 = []
-						for (key,val) in sel:
-							val2 = translation_obj._get_source(cr, user,
-									self._name + ',' + f, 'selection',
-									context['lang'], val)
-							sel2.append((key, val2 or val))
-						sel = sel2
+					sel2 = []
+					for (key,val) in sel:
+						val2 = translation_obj._get_source(cr, user,
+								self._name + ',' + f, 'selection',
+								context.get('lang', False) or 'en_US', val)
+						sel2.append((key, val2 or val))
+					sel = sel2
 					res[f]['selection'] = sel
 				else:
 					# call the 'dynamic selection' function
@@ -1705,12 +1701,20 @@ class orm(object):
 						args[i] += (table,)
 				i+=1
 			else:
-				if field.translate and context.get('lang', False) and context['lang'] != 'en_US':
+				if field.translate:
 					if args[i][1] in ('like', 'ilike'):
 						args[i] = (args[i][0], args[i][1], '%%%s%%' % args[i][2])
-					cr.execute('select res_id from ir_translation where name = %s and lang = %s and type = %s and value '+args[i][1]+' %s', (table._name+','+args[i][0], context['lang'], 'model', args[i][2]))
+					cr.execute('select res_id from ir_translation ' \
+							'where name = %s and lang = %s ' \
+								'and type = %s ' \
+								'and value ' + args[i][1] + ' %s',
+							(table._name+','+args[i][0],
+								context.get('lang', False) or 'en_US', 'model',
+								args[i][2]))
 					ids = map(lambda x: x[0], cr.fetchall())
-					cr.execute('select id from "'+table._table+'" where "'+args[i][0]+'" '+args[i][1]+' %s', (args[i][2],))
+					cr.execute('select id from "' + table._table + '" ' \
+							'where "' + args[i][0]+'" '+args[i][1]+' %s',
+							(args[i][2],))
 					ids += map(lambda x: x[0], cr.fetchall())
 					args[i] = ('id', 'in', ids, table)
 				else:

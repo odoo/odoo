@@ -25,6 +25,7 @@
 		"module/module_report.xml",
 #		"module/move_module_wizard.xml",
 		"res/res_request_view.xml",
+		"res/res_lang_view.xml",
 		"res/partner/partner_report.xml",
 		"res/partner/partner_view.xml",
 		"res/partner/partner_wizard.xml",

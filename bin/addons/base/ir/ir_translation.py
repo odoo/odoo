@@ -47,8 +47,16 @@ class ir_translation(osv.osv, Cacheable):
 	_name = "ir.translation"
 	_log_access = False
 
-	def _get_language(sel, cr, uid, context):
-		return tools.scan_languages()
+	def _get_language(self, cr, uid, context):
+		lang_obj = self.pool.get('res.lang')
+		lang_ids = lang_obj.search(cr, uid, [('translatable', '=', True)],
+				context=context)
+		langs = lang_obj.browse(cr, uid, lang_ids, context=context)
+		res = [(lang.code, lang.name) for lang in langs]
+		for lang_dict in tools.scan_languages():
+			if lang_dict not in res:
+				res.append(lang_dict)
+		return res
 
 	_columns = {
 		'name': fields.char('Field Name', size=128, required=True),
@@ -67,35 +75,67 @@ class ir_translation(osv.osv, Cacheable):
 		translations, to_fetch = {}, []
 		for id in ids:
 			trans = self.get((lang, name, id))
-			if trans:
+			if trans is not None:
 				translations[id] = trans
 			else:
 				to_fetch.append(id)
 		if to_fetch:
-			cr.execute('select res_id,value from ir_translation where lang=%s and type=%s and name=%s and res_id in ('+','.join(map(str, to_fetch))+')', (lang,tt,name))
+			cr.execute('select res_id,value ' \
+					'from ir_translation ' \
+					'where lang=%s ' \
+						'and type=%s ' \
+						'and name=%s ' \
+						'and res_id in ('+','.join(map(str, to_fetch))+')',
+					(lang,tt,name))
 			for res_id, value in cr.fetchall():
 				self.add((lang, tt, name, res_id), value)
 				translations[res_id] = value
+		for res_id in ids:
+			if res_id not in translations:
+				self.add((lang, tt, name, res_id), False)
+				translations[res_id] = False
 		return translations
 
 	def _set_ids(self, cr, uid, name, tt, lang, ids, value):
-		cr.execute('delete from ir_translation where lang=%s and type=%s and name=%s and res_id in ('+','.join(map(str,ids))+')', (lang,tt,name))
+		cr.execute('delete from ir_translation ' \
+				'where lang=%s ' \
+					'and type=%s ' \
+					'and name=%s ' \
+					'and res_id in ('+','.join(map(str,ids))+')',
+				(lang,tt,name))
 		for id in ids:
-			self.create(cr, uid, {'lang':lang, 'type':tt, 'name':name, 'res_id':id, 'value':value})
+			self.create(cr, uid, {
+				'lang':lang,
+				'type':tt,
+				'name':name,
+				'res_id':id,
+				'value':value,
+				})
 		return len(ids)
 
 	def _get_source(self, cr, uid, name, tt, lang, source=None):
 		trans = self.get((lang, tt, name, source))
-		if trans:
+		if trans is not None:
 			return trans
-		
+
 		if source:
 			source = source.strip().replace('\n',' ')
 			if isinstance(source, unicode):
-				source = source.encode('utf8')	
-			cr.execute('select value from ir_translation where lang=%s and type=%s and name=%s and src=%s', (lang, tt, str(name), source))
+				source = source.encode('utf8')
+			cr.execute('select value ' \
+					'from ir_translation ' \
+					'where lang=%s ' \
+						'and type=%s ' \
+						'and name=%s ' \
+						'and src=%s',
+					(lang, tt, str(name), source))
 		else:
-			cr.execute('select value from ir_translation where lang=%s and type=%s and name=%s', (lang, tt, str(name)))
+			cr.execute('select value ' \
+					'from ir_translation ' \
+					'where lang=%s ' \
+						'and type=%s ' \
+						'and name=%s',
+					(lang, tt, str(name)))
 		res = cr.fetchone()
 		if res:
 			self.add((lang, tt, name, source), res[0])
@@ -103,4 +143,20 @@ class ir_translation(osv.osv, Cacheable):
 		else:
 			self.add((lang, tt, name, source), False)
 			return False
+
+		def unlink(self, cursor, user, ids, context=None):
+			self.clear()
+			return super(ir_translation, self).unlink(cusor, user, ids,
+					context=context)
+
+		def create(self, cursor, user, vals, context=None):
+			self.clear()
+			return super(ir_translation, self).create(cursor, user, ids,
+					context=context)
+
+		def write(self, cursor, user, ids, vals, context=None):
+			self.clear()
+			return super(ir_translation, self).write(cursor, user, ids,
+					context=context)
+
 ir_translation()

@@ -38,6 +38,7 @@ import sys
 
 import psycopg
 from netsvc import Logger, LOG_ERROR
+from tools.misc import UpdateableDict
 
 module_list = []
 module_class_list = {}
@@ -262,34 +263,21 @@ class osv(orm.orm):
 
 class Cacheable(object):
 
-	_cache = {}
-	count = 0
-
-	def __delete_key(self, key):
-		odico = self._cache
-		for key_item in key[:-1]:
-			odico = odico[key_item]
-		del odico[key[-1]]
-	
-	def __add_key(self, key, value):
-		odico = self._cache
-		for key_item in key[:-1]:
-			odico = odico.setdefault(key_item, {})
-		odico[key[-1]] = value
+	_cache = UpdateableDict()
 
 	def add(self, key, value):
-		self.__add_key(key, value)
-	
+		self._cache[key] = value
+
 	def invalidate(self, key):
-		self.__delete_key(key)
-	
+		del self._cache[key]
+
 	def get(self, key):
 		try:
 			w = self._cache[key]
 			return w
 		except KeyError:
 			return None
-	
+
 	def clear(self):
 		self._cache.clear()
 		self._items = []

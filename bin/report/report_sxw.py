@@ -209,7 +209,7 @@ class rml_parse(object):
 		# translate the RML file
 		if 'lang' in self.localcontext:
 			lang = self.localcontext['lang']
-			if lang not in (False, 'en_US') and text and not text.isspace():
+			if lang and text and not text.isspace():
 				transl_obj = self.pool.get('ir.translation')
 				piece_list = self._transl_regex.split(text)
 				for pn in range(len(piece_list)):

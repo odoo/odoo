@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2004 TINY SPRL. (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2007 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #                    Fabien Pinckaers <fp@tiny.Be>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -26,16 +26,22 @@
 #
 ##############################################################################
 
-import tools
+from osv import fields, osv
 
-import country
-import bank
-import partner
-import res_currency
-import res_company
-import res_user
-import res_lang
-import res_request
+class lang(osv.osv):
+	_name = "res.lang"
+	_columns = {
+		'name': fields.char('Name', size=64, required=True),
+		'code': fields.char('Code', size=5, required=True),
+		'translatable': fields.boolean('Translatable'),
+		'active': fields.boolean('Active'),
+		'direction': fields.selection([('ltr', 'Left-to-right'), ('rtl', 'Right-to-left')], 'Direction',resuired=True),
+	}
+	_defaults = {
+		'active': lambda *a: 1,
+		'translatable': lambda *a: 0,
+		'direction': lambda *a: 'ltr',
+	}
 
+lang()
 
-import ir_property
