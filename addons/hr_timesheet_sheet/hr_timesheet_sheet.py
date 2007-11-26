@@ -355,9 +355,9 @@ class hr_timesheet_line(osv.osv):
 					qu1.append('(s.id in (%s))' % (','.join(['%d'] * len(x[2]))))
 					qu2 += x[2]
 				else:
-					qu1.append(' (False)')
+					qu1.append('(False)')
 		if len(qu1):
-			qu1 = ' WHERE ' + 'AND'.join(qu1)
+			qu1 = ' WHERE ' + ' AND '.join(qu1)
 		else:
 			qu1 = ''
 		cursor.execute('SELECT l.id \
@@ -474,9 +474,9 @@ class hr_attendance(osv.osv):
 					qu1.append('(s.id in (%s))' % (','.join(['%d'] * len(x[2]))))
 					qu2 += x[2]
 				else:
-					qu1.append(' (False)')
+					qu1.append('(False)')
 		if len(qu1):
-			qu1 = ' WHERE ' + 'AND'.join(qu1)
+			qu1 = ' WHERE ' + ' AND '.join(qu1)
 		else:
 			qu1 = ''
 		cursor.execute('SELECT a.id\
