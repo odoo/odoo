@@ -52,7 +52,7 @@ def search_entries(self, cr, uid, data, context):
 	<field name="entries" colspan="4" height="300" width="800" nolabel="1"
 		domain="[('id', 'in', [%s])]"/>
 </form>''' % (','.join([str(x) for x in line_ids]))
-	return {'entries': line_ids}
+	return {}
 
 def create_payment(self, cr, uid, data, context):
 	line_ids= data['form']['entries'][0][2]

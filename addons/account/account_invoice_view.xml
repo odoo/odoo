@@ -138,7 +138,9 @@
 						<field name="date_due" select="1"/>
 						<field name="reference_type" select="2" nolabel="1" size="0"/>
 						<field name="reference" select="1" nolabel="1"/>
-						<field name="name" select="2"/>
+						<field name="partner_bank" select="2"
+							domain="[('partner_id', '=', partner_id)]"
+							on_change="onchange_partner_bank(partner_bank)"/>
 						<field name="check_total" required="2"/>
 						<field name="currency_id" on_change="onchange_currency_id(currency_id)" select="2"/>
 						<field name="invoice_line" nolabel="1" colspan="4"
@@ -190,6 +192,7 @@
 						<field name="company_id"/>
 						<newline/>
 						<field name="payment_term" on_change="onchange_payment_term_date_invoice(payment_term, date_invoice)" />
+						<field name="name" select="2"/>
 						<newline/>
 						<field name="number" select="2"/>
 						<field name="origin"/>

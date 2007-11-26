@@ -149,6 +149,8 @@ class account_invoice(osv.osv):
 		'company_id': fields.many2one('res.company', 'Company', required=True),
 		'check_total': fields.float('Total', digits=(16,2), states={'open':[('readonly',True)],'close':[('readonly',True)]}),
 		'reconciled': fields.function(_reconciled, method=True, string='Reconciled', type='boolean'),
+		'partner_bank': fields.many2one('res.partner.bank', 'Bank Account',
+			help='The partner bank account to pay\nKeep empty to use the default'),
 	}
 	_defaults = {
 		'type': _get_type,
@@ -237,6 +239,9 @@ class account_invoice(osv.osv):
 
 	def onchange_invoice_line(self, cr, uid, ids, lines):
 		return {}
+
+	def onchange_partner_bank(self, cursor, user, ids, partner_bank_id):
+		return {'value': {}}
 
 	# go from canceled state to draft state
 	def action_cancel_draft(self, cr, uid, ids, *args):

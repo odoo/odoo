@@ -81,7 +81,7 @@ class account_move_line(osv.osv):
 			return [('id','=','0')]
 		return [('id','in',map(lambda x:x[0], res))]
 
-	def line2bank(self,cr,uid,ids,payment_type= 'manual',context=None):
+	def line2bank(self, cr, uid, ids, payment_type='manual', context=None):
 		"""
 		Try to return for each account move line a corresponding bank
 		account according to the payment type.  This work using one of
@@ -89,28 +89,22 @@ class account_move_line(osv.osv):
 		associated to the line.
 		Return the first suitable bank for the corresponding partner.
 		"""
-		if not ids: return {}
-		bank_type= self.pool.get('payment.mode').suitable_bank_types(cr,uid,payment_type,context=context)
-		cr.execute('''select DISTINCT l.id,b.id,b.state
-				  from account_invoice i
-				    join account_move m on (i.move_id = m.id)
-				    join account_move_line l on (m.id = l.move_id)
-				    join res_partner p on (p.id = i.partner_id)
-				    join res_partner_bank b on (p.id = b.partner_id)
-				  where l.id in (%s)
-				  ''' % ",".join(map(str,ids)) )
-
-		r= cr.fetchall()
-		type_ok=[]
-		line2bank={}.fromkeys(ids)
-		for line,bank,t in r:
-			if not line2bank[line]:
-				line2bank[line]= bank
-				if t in bank_type:
-					type_ok.append(line)
-			elif (line not in  type_ok) and (t in bank_type) :
-				line2bank[line]= bank
-				type_ok.append(line)
+		payment_mode_obj = self.pool.get('payment.mode')
+		line2bank = {}
+		if not ids:
+			return {}
+		bank_type = payment_mode_obj.suitable_bank_types(cr, uid, payment_type,
+				context=context)
+		for line in self.browse(cr, uid, ids, context=context):
+			if line.invoice and line.invoice.partner_bank:
+				line2bank[line.id] = line.invoice.partner_bank.id
+			elif line.partner:
+				for bank in line.partner.bank_ids:
+					if bank.state in bank_type:
+						line2bank[line.id] = bank.id
+						break
+				if line.id not in line2bank and line.partner.bank_ids:
+					line2bank[line.id] = line.partner.bank_ids[0].id
 		return line2bank
 
 	_columns = {
