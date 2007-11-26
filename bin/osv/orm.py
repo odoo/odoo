@@ -1040,7 +1040,7 @@ class orm(object):
 			if field in self._columns \
 					and hasattr(self._columns[field], 'selection') \
 					and vals[field]:
-				if isinstance(self._columns[field], fields.reference):
+				if self._columns[field]._type == 'reference':
 					val = vals[field].split(',')[0]
 				else:
 					val = vals[field]
@@ -1172,7 +1172,7 @@ class orm(object):
 			if field in self._columns \
 					and hasattr(self._columns[field], 'selection') \
 					and vals[field]:
-				if isinstance(self._columns[field], fields.reference):
+				if self._columns[field]._type == 'reference':
 					val = vals[field].split(',')[0]
 				else:
 					val = vals[field]
