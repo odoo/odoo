@@ -60,6 +60,8 @@ class account_move_line(osv.osv):
 		if not 'move_id' in fields: #we are not in manual entry
 			return data
 
+		period_obj = self.pool.get('account.period')
+
 		# Compute the current move
 		move_id = False
 		partner_id = False
@@ -87,7 +89,12 @@ class account_move_line(osv.osv):
 					order by id desc',
 					(context['journal_id'], context['period_id'], uid))
 				res = cr.fetchone()
-				data['date'] = res and res[0] or time.strftime('%Y-%m-%d')
+				if res:
+					data['date'] = res[0]
+				else:
+					period = period_obj.browse(cr, uid, context['period_id'],
+							context=context)
+					data['date'] = period.date_start
 
 		total = 0
 		ref_id = False
@@ -204,13 +211,20 @@ class account_move_line(osv.osv):
 		'tax_amount': fields.float('Tax/Base Amount', digits=(16,2), select=True),
 	}
 	def _get_date(self, cr, uid, context):
+		period_obj = self.pool.get('account.period')
 		dt = time.strftime('%Y-%m-%d')
 		if ('journal_id' in context) and ('period_id' in context):
-			cr.execute('select date from account_move_line where journal_id=%d and period_id=%d order by id desc limit 1',\
-			  (context['journal_id'], context['period_id']))
+			cr.execute('select date from account_move_line ' \
+					'where journal_id=%d and period_id=%d ' \
+					'order by id desc limit 1',
+					(context['journal_id'], context['period_id']))
 			res = cr.fetchone()
 			if res:
 				dt = res[0]
+			else:
+				period = period_obj.browse(cr, uid, context['period_id'],
+						context=context)
+				dt = period.date_start
 		return dt
 	_defaults = {
 		'blocked': lambda *a: False,
