@@ -1000,11 +1000,42 @@ class account_tax(osv.osv):
 		cur_price_unit=price_unit
 		for tax in taxes:
 			# we compute the amount for the current tax object and append it to the result
+
 			if tax.type=='percent':
 				amount = cur_price_unit * tax.amount
-				res.append({'id':tax.id, 'name':tax.name, 'amount':amount, 'account_collected_id':tax.account_collected_id.id, 'account_paid_id':tax.account_paid_id.id, 'base_code_id': tax.base_code_id.id, 'ref_base_code_id': tax.ref_base_code_id.id, 'sequence': tax.sequence, 'base_sign': tax.base_sign, 'tax_sign': tax.tax_sign, 'ref_base_sign': tax.ref_base_sign, 'ref_tax_sign': tax.ref_tax_sign, 'price_unit': cur_price_unit, 'tax_code_id': tax.tax_code_id.id, 'ref_tax_code_id': tax.ref_tax_code_id.id,})
+				res.append({'id':tax.id,
+							'name':tax.name,
+							'amount':amount,
+							'account_collected_id':tax.account_collected_id.id,
+							'account_paid_id':tax.account_paid_id.id,
+							'base_code_id': tax.base_code_id.id,
+							'ref_base_code_id': tax.ref_base_code_id.id,
+							'sequence': tax.sequence,
+							'base_sign': tax.base_sign,
+							'tax_sign': tax.tax_sign,
+							'ref_base_sign': tax.ref_base_sign,
+							'ref_tax_sign': tax.ref_tax_sign,
+							'price_unit': cur_price_unit,
+							'tax_code_id': tax.tax_code_id.id,
+							'ref_tax_code_id': tax.ref_tax_code_id.id,
+							})
+
 			elif tax.type=='fixed':
-				res.append({'id':tax.id, 'name':tax.name, 'amount':tax.amount, 'account_collected_id':tax.account_collected_id.id, 'account_paid_id':tax.account_paid_id.id, 'base_code_id': tax.base_code_id.id, 'ref_base_code_id': tax.ref_base_code_id.id, 'sequence': tax.sequence, 'base_sign': tax.base_sign, 'tax_sign': tax.tax_sign, 'ref_base_sign': tax.ref_base_sign, 'ref_tax_sign': tax.ref_tax_sign, 'price_unit': 1, 'tax_code_id': tax.tax_code_id.id, 'ref_tax_code_id': tax.ref_tax_code_id.id,})
+				res.append({'id':tax.id,
+							'name':tax.name,
+							'amount':tax.amount,
+							'account_collected_id':tax.account_collected_id.id,
+							'account_paid_id':tax.account_paid_id.id,
+							'base_code_id': tax.base_code_id.id,
+							'ref_base_code_id': tax.ref_base_code_id.id,
+							'sequence': tax.sequence,
+							'base_sign': tax.base_sign,
+							'tax_sign': tax.tax_sign,
+							'ref_base_sign': tax.ref_base_sign,
+							'ref_tax_sign': tax.ref_tax_sign,
+							'price_unit': 1,
+							'tax_code_id': tax.tax_code_id.id,
+							'ref_tax_code_id': tax.ref_tax_code_id.id,})
 			elif tax.type=='code':
 				address = address_id and self.pool.get('res.partner.address').browse(cr, uid, address_id) or None
 				localdict = {'price_unit':cur_price_unit, 'address':address, 'product':product, 'partner':partner}
@@ -1061,11 +1092,42 @@ class account_tax(osv.osv):
 		cur_price_unit=price_unit
 		for tax in taxes:
 			# we compute the amount for the current tax object and append it to the result
+
 			if tax.type=='percent':
 				amount = cur_price_unit - (cur_price_unit / (1 + tax.amount))
-				res.append({'id':tax.id, 'name':tax.name, 'amount':amount, 'account_collected_id':tax.account_collected_id.id, 'account_paid_id':tax.account_paid_id.id, 'base_code_id': tax.base_code_id.id, 'ref_base_code_id': tax.ref_base_code_id.id, 'sequence': tax.sequence, 'base_sign': tax.base_sign, 'tax_sign': tax.tax_sign, 'ref_base_sign': tax.ref_base_sign, 'ref_tax_sign': tax.ref_tax_sign, 'price_unit': cur_price_unit - amount, 'tax_code_id': tax.tax_code_id.id, 'ref_tax_code_id': tax.ref_tax_code_id.id,})
+				res.append({'id':tax.id,
+							'name':tax.name,
+							'amount':amount,
+							'account_collected_id':tax.account_collected_id.id,
+							'account_paid_id':tax.account_paid_id.id,
+							'base_code_id': tax.base_code_id.id,
+							'ref_base_code_id': tax.ref_base_code_id.id,
+							'sequence': tax.sequence,
+							'base_sign': tax.base_sign,
+							'tax_sign': tax.tax_sign,
+							'ref_base_sign': tax.ref_base_sign,
+							'ref_tax_sign': tax.ref_tax_sign,
+							'price_unit': cur_price_unit - amount,
+							'tax_code_id': tax.tax_code_id.id,
+							'ref_tax_code_id': tax.ref_tax_code_id.id,})
+
 			elif tax.type=='fixed':
-				res.append({'id':tax.id, 'name':tax.name, 'amount':tax.amount, 'account_collected_id':tax.account_collected_id.id, 'account_paid_id':tax.account_paid_id.id, 'base_code_id': tax.base_code_id.id, 'ref_base_code_id': tax.ref_base_code_id.id, 'sequence': tax.sequence, 'base_sign': tax.base_sign, 'tax_sign': tax.tax_sign, 'ref_base_sign': tax.ref_base_sign, 'ref_tax_sign': tax.ref_tax_sign, 'price_unit': 1, 'tax_code_id': tax.tax_code_id.id, 'ref_tax_code_id': tax.ref_tax_code_id.id,})
+				res.append({'id':tax.id,
+							'name':tax.name,
+							'amount':tax.amount,
+							'account_collected_id':tax.account_collected_id.id,
+							'account_paid_id':tax.account_paid_id.id,
+							'base_code_id': tax.base_code_id.id,
+							'ref_base_code_id': tax.ref_base_code_id.id,
+							'sequence': tax.sequence,
+							'base_sign': tax.base_sign,
+							'tax_sign': tax.tax_sign,
+							'ref_base_sign': tax.ref_base_sign,
+							'ref_tax_sign': tax.ref_tax_sign,
+							'price_unit': 1,
+							'tax_code_id': tax.tax_code_id.id,
+							'ref_tax_code_id': tax.ref_tax_code_id.id,})
+
 			elif tax.type=='code':
 				address = address_id and self.pool.get('res.partner.address').browse(cr, uid, address_id) or None
 				localdict = {'price_unit':cur_price_unit, 'address':address, 'product':product, 'partner':partner}
@@ -1088,6 +1150,7 @@ class account_tax(osv.osv):
 					'tax_code_id': tax.tax_code_id.id,
 					'ref_tax_code_id': tax.ref_tax_code_id.id,
 				})
+
 			amount2 = res[-1]['amount']
 			if len(tax.child_ids):
 				if tax.child_depend:
@@ -1096,7 +1159,7 @@ class account_tax(osv.osv):
 				else:
 					amount = amount2
 			for t in tax.child_ids:
-				parent_tax = self._unit_compute_inv(cr, uid, [t], amount, address_id)
+				parent_tax = self._unit_compute_inv(cr, uid, [t], amount, address_id, product, partner)
 				res.extend(parent_tax)
 			if tax.include_base_amount:
 				cur_price_unit-=amount
