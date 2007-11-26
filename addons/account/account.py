@@ -180,19 +180,30 @@ class account_account(osv.osv):
 		return res
 
 	def _balance(self, cr, uid, ids, field_name, arg, context={}):
+		fiscalyear_obj = self.pool.get('account.fiscalyear')
 		if not 'fiscalyear' in context:
-			context['fiscalyear'] = self.pool.get('account.fiscalyear').find(cr, uid,
+			context['fiscalyear'] = fiscalyear_obj.find(cr, uid,
 					exception=False)
 
 		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
 		ids2 = {}.fromkeys(ids + ids2).keys()
 		acc_set = ",".join(map(str, ids2))
-		query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-		cr.execute(("SELECT a.id, SUM((COALESCE(l.debit,0)-COALESCE(l.credit,0))) FROM account_account a LEFT JOIN account_move_line l ON (a.id=l.account_id) WHERE a.id IN (%s) and "+query+" GROUP BY a.id") % (acc_set, ))
+		query = self.pool.get('account.move.line')._query_get(cr, uid,
+				context=context)
+		cr.execute(("SELECT a.id, " \
+					"SUM((COALESCE(l.debit,0) -COALESCE(l.credit,0))) " \
+				"FROM account_account a " \
+					"LEFT JOIN account_move_line l " \
+					"ON (a.id=l.account_id) " \
+				"WHERE a.id IN (%s) AND " + query + " " \
+					"AND a.active " \
+				"GROUP BY a.id") % (acc_set, ))
 		res = {}
 		for account_id, sum in cr.fetchall():
 			res[account_id] = round(sum,2)
-		cr.execute("SELECT a.id, a.company_id FROM account_account a where id in (%s)" % acc_set)
+		cr.execute("SELECT a.id, a.company_id " \
+				"FROM account_account a " \
+				"WHERE id IN (%s)" % acc_set)
 		resc = dict(cr.fetchall())
 		cr.execute("SELECT id, currency_id FROM res_company")
 		rescur = dict(cr.fetchall())
@@ -205,7 +216,9 @@ class account_account(osv.osv):
 					res.setdefault(id, 0.0)
 					if resc[idx]<>resc[id] and resc[idx] and resc[id]:
 						from_currency_id = rescur[resc[idx]]
-						res[id] += self.pool.get('res.currency').compute(cr, uid, from_currency_id, to_currency_id, res.get(idx, 0.0), context=context)
+						res[id] += self.pool.get('res.currency').compute(cr,
+								uid, from_currency_id, to_currency_id,
+								res.get(idx, 0.0), context=context)
 					else:
 						res[id] += res.get(idx, 0.0)
 		for id in ids:
