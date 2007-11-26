@@ -179,6 +179,74 @@ class account_move_line(osv.osv):
 			res[id] = cr.fetchone()[0]
 		return res
 
+	def _invoice(self, cursor, user, ids, name, arg, context=None):
+		invoice_obj = self.pool.get('account.invoice')
+		res = {}
+		for line_id in ids:
+			res[line_id] = False
+		cursor.execute('SELECT l.id, i.id ' \
+				'FROM account_move_line l, account_invoice i ' \
+				'WHERE l.move_id = i.move_id ' \
+					'AND l.id in (' + ','.join([str(x) for x in ids]) + ')')
+		invoice_ids = []
+		for line_id, invoice_id in cursor.fetchall():
+			res[line_id] = invoice_id
+			invoice_ids.append(invoice_id)
+		invoice_names = {False: ''}
+		for invoice_id, name in invoice_obj.name_get(cursor, user,
+				invoice_ids, context=context):
+			invoice_names[invoice_id] = name
+		for line_id in res.keys():
+			invoice_id = res[line_id]
+			res[line_id] = (invoice_id, invoice_names[invoice_id])
+		return res
+
+	def _invoice_search(self, cursor, user, obj, name, args):
+		if not len(args):
+			return []
+		invoice_obj = self.pool.get('account.invoice')
+
+		i = 0
+		while i < len(args):
+			fargs = args[i][0].split('.', 1)
+			if len(fargs) > 1:
+				args[i] = (frags[0], 'in', invoice_obj.search(cursor, user,
+					[(fargs[1], args[i][1], args[i][2])]))
+				i += 1
+				continue
+			if isinstance(args[i][2], basestring):
+				res_ids = invoice_obj.name_search(cursor, user, args[i][2], [],
+						args[i][1])
+				args[i] = (args[i][0], 'in', [x[0] for x in res_ids])
+			i += 1
+		qu1, qu2 = [], []
+		for x in args:
+			if x[1] != 'in':
+				if (x[2] is False) and (x[1] == '='):
+					qu1.append('(i.id IS NULL)')
+				elif (x[2] is False) and (x[1] == '<>' or x[1] == '!='):
+					qu1.append('(i.id IS NOT NULL)')
+				else:
+					qu1.append('(i.id %s %s)' % (x[1], '%d'))
+					qu2.append(x[2])
+			elif x[1] == 'in':
+				if len(x[2]) > 0:
+					qu1.append('(i.id in (%s))' % (','.join(['%d'] * len(x[2]))))
+					qu2 += x[2]
+				else:
+					qu1.append(' (False)')
+		if len(qu1):
+			qu1 = ' AND' + ' AND'.join(qu1)
+		else:
+			qu1 = ''
+		cursor.execute('SELECT l.id ' \
+				'FROM account_move_line l, account_invoice i ' \
+				'WHERE l.move_id = i.move_id ' + qu1, qu2)
+		res = cursor.fetchall()
+		if not len(res):
+			return [('id', '=', '0')]
+		return [('id', 'in', [x[0] for x in res])]
+
 	_columns = {
 		'name': fields.char('Name', size=64, required=True),
 		'quantity': fields.float('Quantity', digits=(16,2), help="The optionnal quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very usefull for some reports."),
@@ -209,7 +277,10 @@ class account_move_line(osv.osv):
 		'state': fields.selection([('draft','Draft'), ('valid','Valid')], 'State', readonly=True),
 		'tax_code_id': fields.many2one('account.tax.code', 'Tax Account'),
 		'tax_amount': fields.float('Tax/Base Amount', digits=(16,2), select=True),
+		'invoice': fields.function(_invoice, method=True, string='Invoice',
+			type='many2one', relation='account.invoice', fnct_search=_invoice_search),
 	}
+
 	def _get_date(self, cr, uid, context):
 		period_obj = self.pool.get('account.period')
 		dt = time.strftime('%Y-%m-%d')
