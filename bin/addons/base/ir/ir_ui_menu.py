@@ -116,11 +116,16 @@ class ir_ui_menu(osv.osv):
 			parent_path = ''
 		return parent_path + menu.name
 
-	def copy(self, cr, uid, id, default=None, context={}):
+	def copy(self, cr, uid, id, default=None, context=None):
+		ir_values_obj = self.pool.get('ir.values')
 		res = super(ir_ui_menu, self).copy(cr, uid, id, context=context)
-		ids = self.pool.get('ir.values').search(cr, uid, [('model','=','ir.ui.menu'),('res_id','=',id)])
-		for iv in self.pool.get('ir.values').browse(cr, uid, ids):
-			new_id = self.pool.get('ir.values').copy(cr, uid, iv.id, default={'res_id':res}, context=context)
+		ids = ir_values_obj.search(cr, uid, [
+			('model', '=', 'ir.ui.menu'),
+			('res_id', '=', id),
+			])
+		for iv in ir_values_obj.browse(cr, uid, ids):
+			new_id = ir_values_obj.copy(cr, uid, iv.id,
+					default={'res_id': res}, context=context)
 		return res
 
 	def _action(self, cursor, user, ids, name, arg, context=None):
