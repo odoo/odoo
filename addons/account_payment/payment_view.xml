@@ -17,14 +17,6 @@
 				</form>
 			</field>
 		</record>
-		<record model="ir.actions.act_window" id="action_payment_type_form">
-			<field name="name">Payment type</field>
-			<field name="res_model">payment.type</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-		</record>
-		<menuitem name="Financial Management/Configuration/Payment/Payment Type"
-			id="menu_action_payment_type_form" action="action_payment_type_form"/>
 
 		<record model="ir.ui.view" id="view_payment_mode_tree">
 			<field name="name">payment.mode.tree</field>
@@ -34,7 +26,6 @@
 				<tree string="Payment mode">
 					<field name="name"/>
 					<field name="journal" />
-					<field name="account" />
 				</tree>
 			</field>
 		</record>
@@ -48,7 +39,6 @@
 					<field name="type"/>
 					<field name="journal"/>
 					<field name="bank_id"/>
-					<field name="account"/>
 				</form>
 			</field>
 		</record>

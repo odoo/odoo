@@ -56,8 +56,6 @@ class payment_mode(osv.osv):
 		'journal': fields.many2one('account.journal', 'Journal', required=True,
 			domain=[('type', '=', 'cash')]),
 		'type': fields.many2one('payment.type','Payment type',required=True),
-		'account': fields.many2one('account.account', 'Default payable account',
-			domain=[('type', '=', 'payable')], required=True),
 	}
 
 	def suitable_bank_types(self,cr,uid,payment_code= 'manual',context={}):
