@@ -12,7 +12,8 @@
 	""",
 	"demo_xml": [],
 	"update_xml": ["payment_wizard.xml", "payment_view.xml",
-		"payment_workflow.xml", "payment_sequence.xml"],
+		"payment_workflow.xml", "payment_sequence.xml",
+		"account_invoice_view.xml",],
 	"active": False,
 	"installable": True
 }
