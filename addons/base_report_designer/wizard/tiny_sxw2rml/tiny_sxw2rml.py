@@ -338,9 +338,9 @@ def sxw2rml(sxw_file, xsl, output='.', save_pict=False):
 		root.addNextSibling(images)
 	try:
 		xml = style.saveResultToString(result)
+		return xml
 	except:
-		pass
-	return result
+		return result
 
 if __name__ == "__main__":
 	import optparse
