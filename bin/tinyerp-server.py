@@ -215,18 +215,17 @@ if tools.config['xmlrpc']:
 	if tools.config["xmlrpc"]:
 		xml_gw = netsvc.xmlrpc.RpcGateway('web-services')
 		httpd.attach("/xmlrpc", xml_gw )
-		logger.notifyChannel("web-services", netsvc.LOG_INFO, "starting XML-RPC services, port "+str(port))
-	
+		logger.notifyChannel("web-services", netsvc.LOG_INFO,
+				"starting XML-RPC" + \
+						(tools.config['secure'] and ' Secure' or '') + \
+						" services, port " + str(port))
+
 	#
 	#if tools.config["soap"]:
 	#	soap_gw = netsvc.xmlrpc.RpcGateway('web-services')
 	#	httpd.attach("/soap", soap_gw )
 	#	logger.notifyChannel("web-services", netsvc.LOG_INFO, 'starting SOAP services, port '+str(port))
 	#
-	if not (netsvc.HAS_SSL and tools.config['secure']):
-		logger.notifyChannel("web-services", netsvc.LOG_INFO, "You are not using the SSL layer")
-	else:
-		logger.notifyChannel("web-services", netsvc.LOG_INFO, "You are using the SSL Layer")
 
 if tools.config['netrpc']:
 	try:

@@ -9,12 +9,6 @@ import socket
 import logging
 import os
 
-try:
-	from ssl import *
-	HAS_SSL = True
-except ImportError:
-	HAS_SSL = False
-
 _service={}
 _group={}
 _res_id=1
@@ -219,36 +213,55 @@ class GenericXMLRPCRequestHandler:
 				pdb.post_mortem(tb)
 			raise xmlrpclib.Fault(s, tb_s)
 
-class SimpleXMLRPCRequestHandler(GenericXMLRPCRequestHandler, SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
-	SimpleXMLRPCServer.SimpleXMLRPCRequestHandler.rpc_paths = ('/xmlrpc/db', '/xmlrpc/common', '/xmlrpc/object', '/xmlrpc/report', '/xmlrpc/wizard')
+class SimpleXMLRPCRequestHandler(GenericXMLRPCRequestHandler,
+		SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
+	SimpleXMLRPCServer.SimpleXMLRPCRequestHandler.rpc_paths = (
+			'/xmlrpc/db',
+			'/xmlrpc/common',
+			'/xmlrpc/object',
+			'/xmlrpc/report',
+			'/xmlrpc/wizard',
+			)
 
-if HAS_SSL:
-	class SecureXMLRPCRequestHandler(GenericXMLRPCRequestHandler, SecureXMLRPCServer.SecureXMLRPCRequestHandler):
-		SecureXMLRPCServer.SecureXMLRPCRequestHandler.rpc_paths = ('/xmlrpc/db', '/xmlrpc/common', '/xmlrpc/object', '/xmlrpc/report', '/xmlrpc/wizard')
+class SimpleThreadedXMLRPCServer(SocketServer.ThreadingMixIn,
+		SimpleXMLRPCServer.SimpleXMLRPCServer):
 
-class SimpleThreadedXMLRPCServer(SocketServer.ThreadingMixIn, SimpleXMLRPCServer.SimpleXMLRPCServer):
 	def server_bind(self):
-		self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+		self.socket.setsockopt(socket.SOL_SOCKET,
+				socket.SO_REUSEADDR, 1)
 		SimpleXMLRPCServer.SimpleXMLRPCServer.server_bind(self)
 
-if HAS_SSL:
-	class SecureThreadedXMLRPCServer(SocketServer.ThreadingMixIn, SecureXMLRPCServer.SecureXMLRPCServer):
-		def server_bind(self):
-			self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-			SecureXMLRPCServer.SecureXMLRPCServer.server_bind(self)
-else:
-	pass
-
 class HttpDaemon(threading.Thread):
+
 	def __init__(self, interface,port, secure=False):
 		threading.Thread.__init__(self)
 		self.__port=port
 		self.__interface=interface
 		self.secure = secure
-		if secure and HAS_SSL:
-			self.server = SecureThreadedXMLRPCServer((interface, port), SecureXMLRPCRequestHandler,0)
+		if secure:
+			from ssl import SecureXMLRPCServer
+			class SecureXMLRPCRequestHandler(GenericXMLRPCRequestHandler,
+					SecureXMLRPCServer.SecureXMLRPCRequestHandler):
+				SecureXMLRPCServer.SecureXMLRPCRequestHandler.rpc_paths = (
+						'/xmlrpc/db',
+						'/xmlrpc/common',
+						'/xmlrpc/object',
+						'/xmlrpc/report',
+						'/xmlrpc/wizard',
+						)
+			class SecureThreadedXMLRPCServer(SocketServer.ThreadingMixIn,
+					SecureXMLRPCServer.SecureXMLRPCServer):
+
+				def server_bind(self):
+					self.socket.setsockopt(socket.SOL_SOCKET,
+							socket.SO_REUSEADDR, 1)
+					SecureXMLRPCServer.SecureXMLRPCServer.server_bind(self)
+
+			self.server = SecureThreadedXMLRPCServer((interface, port),
+					SecureXMLRPCRequestHandler,0)
 		else:
-			self.server = SimpleThreadedXMLRPCServer((interface, port), SimpleXMLRPCRequestHandler,0)
+			self.server = SimpleThreadedXMLRPCServer((interface, port),
+					SimpleXMLRPCRequestHandler,0)
 
 	def attach(self,path,gw):
 		pass
