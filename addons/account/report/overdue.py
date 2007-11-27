@@ -56,7 +56,7 @@ class Overdue(report_sxw.rml_parse):
 				[('partner_id', '=', partner.id),
 					('account_id.type', 'in', ['receivable', 'payable']),
 					('state', '<>', 'draft'), ('reconcile_id', '=', False)])
-		movelines = moveline_obj.read(self.cr, self.uid, movelines)
+		movelines = moveline_obj.browse(self.cr, self.uid, movelines)
 		return movelines
 
 report_sxw.report_sxw('report.account.overdue', 'res.partner',
