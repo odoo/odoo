@@ -49,6 +49,7 @@ class crm_segmentation(osv.osv):
 		'som_interval_max': fields.integer('Max Interval', help="The computation is made on all events that occured during this interval, the past X periods."),
 		'som_interval_decrease': fields.float('Decrease (0>1)', help="If the partner has not purchased (or buied) during a period, decrease the state of mind by this factor. It\'s a multiplication"),
 		'som_interval_default': fields.float('Default (0=None)', help="Default state of mind for period preceeding the 'Max Interval' computation. This is the starting state of mind by default if the partner has no event."),
+		'sales_purchase_active': fields.boolean('Optionnal tab active', help='Check if you want to use this tab as part of the segmentation rule. If not checked, the criteria beneath will be ignored')
 	}
 	_defaults = {
 		'partner_id': lambda *a: 0,
@@ -59,31 +60,62 @@ class crm_segmentation(osv.osv):
 	}
 
 	def process_continue(self, cr, uid, ids, start=False):
-		categs = self.read(cr,uid,ids,['categ_id','exclusif','partner_id'])
+		categs = self.read(cr,uid,ids,['categ_id','exclusif','partner_id', 'sales_purchase_active', 'profiling_active'])
 		for categ in categs:
 			if start:
 				if categ['exclusif']:
 					cr.execute('delete from res_partner_category_rel where category_id=%d', (categ['categ_id'][0],))
-			id = categ['id']
-			cr.execute('select id from crm_segmentation_line where segmentation_id=%d', (id,))
-			line_ids = [x[0] for x in cr.fetchall()]
-			cr.execute('select id from res_partner order by id limit 100 offset %d', (categ['partner_id'],))
-			partners = cr.fetchall()
-			ok = []
-			for (pid,) in partners:
-				if self.pool.get('crm.segmentation.line').test(cr, uid, line_ids, pid):
-					ok.append(pid)
 
-			for partner_id in ok:
+			id = categ['id']			
+
+			cr.execute('select id from res_partner order by id ')
+			partners = [x[0] for x in cr.fetchall()]
+
+			if categ['sales_purchase_active']:
+				to_remove_list=[]
+				cr.execute('select id from crm_segmentation_line where segmentation_id=%d', (id,))
+				line_ids = [x[0] for x in cr.fetchall()]
+
+				for pid in partners:
+					if (not self.pool.get('crm.segmentation.line').test(cr, uid, line_ids, pid)):
+						to_remove_list.append(pid)
+				for pid in to_remove_list:
+					partners.remove(pid)
+
+			for partner_id in partners:
 				cr.execute('insert into res_partner_category_rel (category_id,partner_id) values (%d,%d)', (categ['categ_id'][0],partner_id))
 			cr.commit()
 
-			if len(partners)==100:
-				self.write(cr, uid, [id], {'partner_id':categ['partner_id']+100})
-				self.process_continue(cr, uid, [id])
 			self.write(cr, uid, [id], {'state':'not running', 'partner_id':0})
 			cr.commit()
 		return True
+
+#	def process_continue(self, cr, uid, ids, start=False):
+#		categs = self.read(cr,uid,ids,['categ_id','exclusif','partner_id'])
+#		for categ in categs:
+#			if start:
+#				if categ['exclusif']:
+#					cr.execute('delete from res_partner_category_rel where category_id=%d', (categ['categ_id'][0],))
+#			id = categ['id']
+#			cr.execute('select id from crm_segmentation_line where segmentation_id=%d', (id,))
+#			line_ids = [x[0] for x in cr.fetchall()]
+#			cr.execute('select id from res_partner order by id limit 100 offset %d', (categ['partner_id'],))
+#			partners = cr.fetchall()
+#			ok = []
+#			for (pid,) in partners:
+#				if self.pool.get('crm.segmentation.line').test(cr, uid, line_ids, pid):
+#					ok.append(pid)
+#
+#			for partner_id in ok:
+#				cr.execute('insert into res_partner_category_rel (category_id,partner_id) values (%d,%d)', (categ['categ_id'][0],partner_id))
+#			cr.commit()
+#
+#			if len(partners)==100:
+#				self.write(cr, uid, [id], {'partner_id':categ['partner_id']+100})
+#				self.process_continue(cr, uid, [id])
+#			self.write(cr, uid, [id], {'state':'not running', 'partner_id':0})
+#			cr.commit()
+#		return True
 
 	def process_stop(self, cr, uid, ids, *args):
 		return self.write(cr, uid, ids, {'state':'not running', 'partner_id':0})
