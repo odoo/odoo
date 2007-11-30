@@ -93,16 +93,6 @@ class payment_order(osv.osv):
 				res[order.id] = 0.0
 		return res
 
-	def nb_line(self, cr, uid, ids, name, args, context={}):
-		if not ids: return {}
-		res= {}.fromkeys(ids,0)
-		cr.execute("""SELECT "order_id", count(*)
-			FROM payment_line
-			WHERE "order_id" in (%s)
-			GROUP BY "order_id" """ % ','.join(map(str,ids)))
-		res.update(dict(cr.fetchall()))
-		return res
-
 	_columns = {
 		'date_planned': fields.date('Scheduled date if fixed'),
 		'reference': fields.char('Reference',size=128),
@@ -116,8 +106,6 @@ class payment_order(osv.osv):
 		'total': fields.function(_total, string="Total", method=True,
 			type='float'),
 		'user_id': fields.many2one('res.users','User',required=True),
-		'nb_line': fields.function(nb_line,string='Number of payment',
-			method=True, type='integer'),
 		'date_prefered': fields.selection([
 			('now', 'Directly'),
 			('due', 'Due date'),

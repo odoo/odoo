@@ -67,8 +67,6 @@
 					<button name="%(wizard_populate_payment)d" 
 							string="Add payment lines" type="action" colspan="2"/>
 					<field name="line_ids" colspan="4"  nolabel="1"/>
-					<field name="total"/>
-					<field name="nb_line"/>
 					<field name="date_created" select="2"/>
 					<field name="date_done" select="2"/>
 					<field name="state" select="1" readonly="1"/>
@@ -93,7 +91,7 @@
 			<tree string="Payment order">
 				<field name="reference" />
 				<field name="mode"/>
-				<field name="nb_line" />
+				<field name="line_ids"/>
 				<field name="date_planned"/>
 				<field name="date_created" select="2"/>
 				<field name="date_done" select="2"/>
@@ -175,13 +173,13 @@
 					on_change="onchange_move_line(move_line_id,parent.mode)"
 					domain="[('reconcile_id', '=', False), ('credit', '>', 0), ('amount_to_pay', '>', 0)]"/>
 				<field name="bank_id" domain="[('partner_id', '=', partner_id)]"/>
-				<field name="amount_currency" sum="Amount Total"/>
+				<field name="amount_currency"/>
 				<field name="to_pay_currency"/>
 				<field name="currency"/>
 				<field name="partner_id"/>
 				<field name="reference"/>
 				<field name="due_date"/>
-				<field name="amount"/>
+				<field name="amount" sum="Amount Total"/>
 				<field name="to_pay"/>
 				<field name="partner_payable"/>
 				<field name="date_created"/>
