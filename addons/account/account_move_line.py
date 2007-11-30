@@ -96,6 +96,9 @@ class account_move_line(osv.osv):
 							context=context)
 					data['date'] = period.date_start
 
+		if not move_id:
+			return data
+
 		total = 0
 		ref_id = False
 		taxes = {}
@@ -151,7 +154,7 @@ class account_move_line(osv.osv):
 			data['credit'] = total>0 and total
 			data['debit'] = total<0 and -total
 		if 'account_id' in fields:
-			if total>=0:
+			if total >= 0:
 				data['account_id'] = move.journal_id.default_credit_account_id.id or False
 			else:
 				data['account_id'] = move.journal_id.default_debit_account_id.id or False
