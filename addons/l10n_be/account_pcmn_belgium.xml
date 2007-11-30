@@ -6624,6 +6624,13 @@
 		</record>
 		<record model="account.tax" id="vat_21_buy">
 			<field name="name">VAT 21% - Achats</field>
+			<field name="amount" eval="1.0"/>
+			<field name="type">percent</field>
+			<field name="child_depend" eval="1"/>
+		</record>
+		<record model="account.tax" id="vat_21_buy_1">
+			<field name="parent_id" ref="vat_21_buy"/>
+			<field name="name">VAT 21% - Achats</field>
 			<field name="amount" eval="0.21"/>
 			<field name="type">percent</field>
 			<field name="account_collected_id" ref="vat_refund21"/>
@@ -6633,7 +6640,15 @@
 			<field name="ref_base_code_id" ref="vat_code_a85"/>
 			<field name="ref_tax_code_id" ref="vat_code_a63"/>
 		</record>
-	
+		<record model="account.tax" id="vat_21_buy_2">
+			<field name="parent_id" ref="vat_21_buy"/>
+			<field name="name">VAT 21% - Achats</field>
+			<field name="amount" eval="0.0"/>
+			<field name="type">percent</field>
+			<field name="ref_base_code_id" ref="vat_code_a82"/>
+			<field name="ref_base_sign" eval="-1"/>
+		</record>
+
 		<record model="account.tax" id="vat_0">
 			<field name="name">VAT 0%</field>
 			<field name="amount" eval="0.00"/>

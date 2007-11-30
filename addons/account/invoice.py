@@ -833,14 +833,34 @@ class account_invoice_line(osv.osv):
 		cur = inv.currency_id
 
 		for line in inv.invoice_line:
-			res.append( self.move_line_get_item(cr, uid, line, context))
-			for tax in tax_obj.compute(cr, uid, line.invoice_line_tax_id, (line.price_unit *(1.0-(line['discount'] or 0.0)/100.0)), line.quantity, inv.address_invoice_id.id, line.product_id, inv.partner_id):
+			res.append(self.move_line_get_item(cr, uid, line, context))
+			tax_code_found= False
+			for tax in tax_obj.compute(cr, uid, line.invoice_line_tax_id,
+					(line.price_unit * (1.0 - (line['discount'] or 0.0) / 100.0)),
+					line.quantity, inv.address_invoice_id.id, line.product_id,
+					inv.partner_id):
+
 				if inv.type in ('out_invoice', 'in_invoice'):
-					res[-1]['tax_code_id'] = tax['base_code_id']
-					res[-1]['tax_amount'] = tax['price_unit'] * line['quantity'] * tax['base_sign']
+					tax_code_id = tax['base_code_id']
+					tax_amount = tax['price_unit'] * \
+							line['quantity'] * tax['base_sign']
 				else:
-					res[-1]['tax_code_id'] = tax['ref_base_code_id']
-					res[-1]['tax_amount'] = tax['price_unit'] * line['quantity'] * tax['ref_base_sign']
+					tax_code_id = tax['ref_base_code_id']
+					tax_amount = tax['price_unit'] * \
+							line['quantity'] * tax['ref_base_sign']
+
+				if tax_code_found:
+					if not tax_code_id:
+						continue
+					res.append(self.move_line_get_item(cr, uid, line, context))
+					res[-1]['price'] = 0.0
+					res[-1]['account_analytic_id'] = False
+				elif not tax_code_id:
+					continue
+				tax_code_found = True
+
+				res[-1]['tax_code_id'] = tax_code_id
+				res[-1]['tax_amount'] = tax_amount
 		return res
 
 	def move_line_get_item(self, cr, uid, line, context={}):
@@ -945,6 +965,10 @@ class account_invoice_tax(osv.osv):
 		res = []
 		cr.execute('SELECT * FROM account_invoice_tax WHERE invoice_id=%d', (invoice_id,))
 		for t in cr.dictfetchall():
+			if not t['amount'] \
+					and not t['tax_code_id'] \
+					and not t['tax_amount']:
+				continue
 			res.append({
 				'type':'tax',
 				'name':t['name'],
