@@ -179,11 +179,13 @@ class account_invoice(osv.osv):
 #		res = self.pool.get('res.partner').address_get(cr, uid, [part], ['invoice'])
 #		return [{}]
 
-	def onchange_partner_id(self, cr, uid, ids, type, partner_id, date_invoice=False, payment_term=False):
+	def onchange_partner_id(self, cr, uid, ids, type, partner_id,
+			date_invoice=False, payment_term=False, partner_bank_id=False):
 		invoice_addr_id = False
 		contact_addr_id = False
 		partner_payment_term = False
 		acc_id = False
+		bank_id = False
 
 		opt = [('uid', str(uid))]
 		if partner_id:
@@ -199,12 +201,16 @@ class account_invoice(osv.osv):
 				acc_id = p.property_account_payable.id
 
 			partner_payment_term = p.property_payment_term and p.property_payment_term.id or False
+			if p.bank_ids:
+				bank_id = p.bank_ids[0].id
 
 		result = {'value': {
 			'address_contact_id': contact_addr_id,
 			'address_invoice_id': invoice_addr_id,
 			'account_id': acc_id,
-			'payment_term': partner_payment_term}
+			'payment_term': partner_payment_term,
+			'partner_bank': bank_id,
+			}
 		}
 
 		if payment_term != partner_payment_term:
@@ -214,6 +220,10 @@ class account_invoice(osv.osv):
 				result['value'].update(to_update['value'])
 			else:
 				result['value']['date_due'] = False
+
+		if partner_bank_id != bank_id:
+			to_update = self.onchange_partner_bank(cr, uid, ids, bank_id)
+			result['value'].update(to_update['value'])
 		return result
 
 	def onchange_currency_id(self, cr, uid, ids, curr_id):

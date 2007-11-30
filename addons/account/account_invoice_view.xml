@@ -132,7 +132,9 @@
 					<page string="Invoice">
 						<field name="journal_id" domain="[('type', '=', 'purchase')]" select="2"/>
 						<field name="type" select="2" readonly="1"/>
-						<field name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term)" select="1"/>
+						<field name="partner_id"
+							on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank)"
+							select="1"/>
 						<field name="address_invoice_id" domain="[('partner_id','=',partner_id)]"/>
 						<field name="account_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" />
 						<field name="date_due" select="1"/>
