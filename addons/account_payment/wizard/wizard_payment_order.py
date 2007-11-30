@@ -40,7 +40,14 @@ FIELDS = {
 
 def search_entries(self, cr, uid, data, context):
 	pool = pooler.get_pool(cr.dbname)
+	order_obj = pool.get('payment.order')
 	line_obj = pool.get('account.move.line')
+
+	payment = order_obj.browse(cr, uid, data['id'],
+			context=context)
+	ctx = ''
+	if payment.mode:
+		ctx = '''context="{'journal_id': %d}"''' % payment.mode.journal.id
 
 	# Search for move line to pay:
 	line_ids = line_obj.search(cr, uid, [
@@ -50,8 +57,8 @@ def search_entries(self, cr, uid, data, context):
 	FORM.string = '''<?xml version="1.0"?>
 <form string="Populate Payment:">
 	<field name="entries" colspan="4" height="300" width="800" nolabel="1"
-		domain="[('id', 'in', [%s])]"/>
-</form>''' % (','.join([str(x) for x in line_ids]))
+		domain="[('id', 'in', [%s])]" %s/>
+</form>''' % (','.join([str(x) for x in line_ids]), ctx)
 	return {}
 
 def create_payment(self, cr, uid, data, context):
