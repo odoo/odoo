@@ -704,7 +704,7 @@ class sale_order_line(osv.osv):
 
 		if partner_id:
 			lang = partner_obj.browse(cr, uid, partner_id).lang
-		context = {'lang': lang}
+		context = {'lang': lang, 'partner_id': partner_id}
 
 		if not product:
 			return {'value': {'price_unit': 0.0, 'notes':'', 'th_weight' : 0,
