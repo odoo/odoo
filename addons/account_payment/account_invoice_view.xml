@@ -7,9 +7,10 @@
 			<field name="type">form</field>
 			<field name="inherit_id" ref="account.invoice_supplier_form"/>
 			<field name="arch" type="xml">
-				<label colspan="2" position="replace">
+				<field name="period_id" position="before">
 					<field name="amount_to_pay"/>
-				</label>
+					<newline/>
+				</field>
 			</field>
 		</record>
 	</data>
