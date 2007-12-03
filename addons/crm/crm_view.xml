@@ -484,12 +484,6 @@
 			<form string="Partner Segmentation">
 				<notebook>
 				<page string="Segmentation">
-					<field name="state"/>
-					<group col="3" colspan="2">
-						<button name="process_start" states="not running" string="Compute Segmentation" type="object"/>
-						<button name="process_stop" states="running" string="Stop Process" type="object"/>
-						<button name="process_continue" states="running" string="Continue Process" type="object"/>
-					</group>
 					<separator string="Segmentation Description" colspan="4"/>
 					<field name="name" select="1"/>
 					<field name="exclusif"/>
@@ -497,6 +491,12 @@
 					<field name="categ_id" select="2" colspan="2"/>
 					<newline/>
 					<field name="description" select="2" colspan="4"/>
+					<field name="state"/>
+					<group col="3" colspan="2">
+						<button name="process_start" states="not running" string="Compute Segmentation" type="object"/>
+						<button name="process_stop" states="running" string="Stop Process" type="object"/>
+						<button name="process_continue" states="running" string="Continue Process" type="object"/>
+					</group>
 				</page>
 				<page string="Sales Purchase">
 					<field name="sales_purchase_active"/>

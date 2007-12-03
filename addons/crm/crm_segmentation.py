@@ -49,7 +49,7 @@ class crm_segmentation(osv.osv):
 		'som_interval_max': fields.integer('Max Interval', help="The computation is made on all events that occured during this interval, the past X periods."),
 		'som_interval_decrease': fields.float('Decrease (0>1)', help="If the partner has not purchased (or buied) during a period, decrease the state of mind by this factor. It\'s a multiplication"),
 		'som_interval_default': fields.float('Default (0=None)', help="Default state of mind for period preceeding the 'Max Interval' computation. This is the starting state of mind by default if the partner has no event."),
-		'sales_purchase_active': fields.boolean('Optionnal tab active', help='Check if you want to use this tab as part of the segmentation rule. If not checked, the criteria beneath will be ignored')
+		'sales_purchase_active': fields.boolean('Use The Sales Purchase Rules', help='Check if you want to use this tab as part of the segmentation rule. If not checked, the criteria beneath will be ignored')
 	}
 	_defaults = {
 		'partner_id': lambda *a: 0,
