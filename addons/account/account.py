@@ -152,9 +152,19 @@ class account_account(osv.osv):
 		if not 'fiscalyear' in context:
 			context['fiscalyear'] = self.pool.get('account.fiscalyear').find(cr, uid,
 					exception=False)
+
 		acc_set = ",".join(map(str, ids))
 		query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-		cr.execute(("SELECT a.id, COALESCE(SUM(l.credit*a.sign),0) FROM account_account a LEFT JOIN account_move_line l ON (a.id=l.account_id) WHERE a.type!='view' AND a.id IN (%s) AND "+query+" GROUP BY a.id") % (acc_set, ))
+		cr.execute(("SELECT a.id, " \
+					"SUM(COALESCE(l.credit * a.sign, 0)) " \
+				"FROM account_account a " \
+					"LEFT JOIN account_move_line l " \
+					"ON (a.id = l.account_id) " \
+				"WHERE a.type != 'view' " \
+					"AND a.id IN (%s) " \
+					"AND " + query + " " \
+					"AND a.active " \
+				"GROUP BY a.id") % (acc_set, ))
 		res2 = cr.fetchall()
 		res = {}
 		for id in ids:
@@ -170,7 +180,16 @@ class account_account(osv.osv):
 
 		acc_set = ",".join(map(str, ids))
 		query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-		cr.execute(("SELECT a.id, COALESCE(SUM(l.debit*a.sign),0) FROM account_account a LEFT JOIN account_move_line l ON (a.id=l.account_id) WHERE a.type!='view' AND a.id IN (%s) and "+query+" GROUP BY a.id") % (acc_set, ))
+		cr.execute(("SELECT a.id, " \
+					"SUM(COALESCE(l.debit * a.sign, 0)) " \
+				"FROM account_account a " \
+					"LEFT JOIN account_move_line l " \
+					"ON (a.id = l.account_id) " \
+				"WHERE a.type != 'view' " \
+					"AND a.id IN (%s) " \
+					"AND " + query + " " \
+					"AND a.active " \
+				"GROUP BY a.id") % (acc_set, ))
 		res2 = cr.fetchall()
 		res = {}
 		for id in ids:
@@ -191,11 +210,13 @@ class account_account(osv.osv):
 		query = self.pool.get('account.move.line')._query_get(cr, uid,
 				context=context)
 		cr.execute(("SELECT a.id, " \
-					"SUM((COALESCE(l.debit,0) -COALESCE(l.credit,0))) " \
+					"SUM((COALESCE(l.debit, 0) - COALESCE(l.credit, 0))) " \
 				"FROM account_account a " \
 					"LEFT JOIN account_move_line l " \
 					"ON (a.id=l.account_id) " \
-				"WHERE a.id IN (%s) AND " + query + " " \
+				"WHERE a.type != 'view' " \
+					"AND a.id IN (%s) " \
+					"AND " + query + " " \
 					"AND a.active " \
 				"GROUP BY a.id") % (acc_set, ))
 		res = {}
