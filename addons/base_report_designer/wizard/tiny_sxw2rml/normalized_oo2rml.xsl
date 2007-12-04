@@ -132,22 +132,70 @@
 	    </xsl:if>
         <blockAlignment value="LEFT" />
         <blockValign value="TOP" />
-        <xsl:call-template name="make_tablegrid" />
+        <xsl:call-template name="make_linestyle" />
         <xsl:call-template name="make_tablebackground" />
       </blockTableStyle>
     </xsl:if>
   </xsl:for-each>
 </xsl:template>
 
-<xsl:template name="make_tablegrid">
-  <xsl:variable name="test_grid">
-    <xsl:call-template name="test_grid" />
-  </xsl:variable>
-  <xsl:if test="contains($test_grid,'has_grid')">
-    <lineStyle kind="GRID" colorName="black" />
-  </xsl:if>
+<xsl:template name="make_linestyle">
+	<xsl:for-each select=".//table:table-row">
+		<xsl:variable name="row" select="position() - 1"/>
+		<xsl:for-each select=".//table:table-cell">
+			<xsl:variable name="col" select="position() - 1"/>
+			<xsl:variable name="linebefore">
+				<xsl:value-of select="key('table_cell_style',@table:style-name)/style:properties/@fo:border-left"/>
+			</xsl:variable>
+			<xsl:if test="not($linebefore='') and not($linebefore='none')">
+				<xsl:variable name="colorname">
+					<xsl:value-of select="substring-after($linebefore,'#')"/>
+				</xsl:variable>
+				<lineStyle kind="LINEBEFORE" colorName="#{$colorname}" start="{$col},{$row}" stop="{$col},-1"/>
+			</xsl:if>
+			<xsl:variable name="lineafter">
+				<xsl:value-of select="key('table_cell_style',@table:style-name)/style:properties/@fo:border-right"/>
+			</xsl:variable>
+			<xsl:if test="not($lineafter='') and not($lineafter='none')">
+				<xsl:variable name="colorname">
+					<xsl:value-of select="substring-after($lineafter,'#')"/>
+				</xsl:variable>
+				<lineStyle kind="LINEAFTER" colorName="#{$colorname}" start="{$col},{$row}" stop="{$col},-1"/>
+			</xsl:if>
+			<xsl:variable name="lineabove">
+				<xsl:value-of select="key('table_cell_style',@table:style-name)/style:properties/@fo:border-top"/>
+			</xsl:variable>
+			<xsl:if test="not($lineabove='') and not($lineabove='none')">
+				<xsl:variable name="colorname">
+					<xsl:value-of select="substring-after($lineabove,'#')"/>
+				</xsl:variable>
+				<lineStyle kind="LINEABOVE" colorName="#{$colorname}" start="{$col},{$row}" stop="{$col},{$row}"/>
+			</xsl:if>
+			<xsl:variable name="linebelow">
+				<xsl:value-of select="key('table_cell_style',@table:style-name)/style:properties/@fo:border-bottom"/>
+			</xsl:variable>
+			<xsl:if test="not($linebelow='') and not($linebelow='none')">
+				<xsl:variable name="colorname">
+					<xsl:value-of select="substring-after($linebelow,'#')"/>
+				</xsl:variable>
+				<lineStyle kind="LINEBELOW" colorName="#{$colorname}" start="{$col},{-1}" stop="{$col},{-1}"/>
+			</xsl:if>
+			<xsl:variable name="grid">
+				<xsl:value-of select="key('table_cell_style',@table:style-name)/style:properties/@fo:border"/>
+			</xsl:variable>
+			<xsl:if test="not($grid='') and not($grid='none')">
+				<xsl:variable name="colorname">
+					<xsl:value-of select="substring-after($grid,'#')"/>
+				</xsl:variable>
+				<!-- Don't use grid because we don't need a line between each rows -->
+				<lineStyle kind="LINEBEFORE" colorName="#{$colorname}" start="{$col},{$row}" stop="{$col},-1"/>
+				<lineStyle kind="LINEAFTER" colorName="#{$colorname}" start="{$col},{$row}" stop="{$col},-1"/>
+				<lineStyle kind="LINEABOVE" colorName="#{$colorname}" start="{$col},{$row}" stop="{$col},{$row}"/>
+				<lineStyle kind="LINEBELOW" colorName="#{$colorname}" start="{$col},{-1}" stop="{$col},{-1}"/>
+			</xsl:if>
+		</xsl:for-each>
+	</xsl:for-each>
 </xsl:template>
-
 
 <!-- Was needed to simulate bulleted lists:
 <xsl:template match="text:ordered-list|text:unordered-list">
@@ -219,26 +267,10 @@
       </xsl:variable>
       <xsl:if test="not($background='') and boolean(key('table_cell_style',@table:style-name)/style:properties/@fo:background-color) and starts-with($background,'#')">
         <!--only RGB hexcolors are accepted -->
-        <blockBackground colorName="{$background}" start="{$col},{$row}" stop="{$col},{$row}" />
+		<blockBackground colorName="{$background}" start="{$col},{$row}" stop="{$col},-1" />
       </xsl:if>
      </xsl:for-each>
    </xsl:for-each>
-</xsl:template>
-
-<xsl:template name="test_grid">
-  <!--very primitive: if at last one cell has a border,
-       the whole table style is set to GRID.-->
-  <xsl:for-each select=".//table:table-cell">
-    <xsl:for-each select="key('table_cell_style',@table:style-name)/style:properties" >
-      <!--Test all table cell styles if there is at least one border line -->
-      <xsl:variable name="border">
-        <xsl:value-of select="@fo:border" />
-      </xsl:variable>
-      <xsl:if test="not($border='none') and not($border='') and boolean(@fo:border)">
-        <xsl:text>has_grid</xsl:text>
-      </xsl:if>
-    </xsl:for-each>
-  </xsl:for-each>
 </xsl:template>
 
 <xsl:template name="make_columns">
