@@ -96,10 +96,10 @@ class account_invoice_line(osv.osv):
 						product_taxes = line.product_id.supplier_taxes_id
 				if product_taxes:
 					for tax in tax_obj.compute_inv(cr, uid, product_taxes, res[line.id]/line.quantity, line.quantity):
-						res[line.id] = res[line.id] - tax['amount']
+						res[line.id] = res[line.id] - round(tax['amount'], 2)
 				else:
 					for tax in tax_obj.compute_inv(cr, uid,line.invoice_line_tax_id, res[line.id]/line.quantity, line.quantity):
-						res[line.id] = res[line.id] - tax['amount']
+						res[line.id] = res[line.id] - round(tax['amount'], 2)
 			if name == 'price_subtotal_incl' and line.invoice_id.price_type == 'tax_included':
 				prod_taxe_ids = None
 				line_taxe_ids = None
