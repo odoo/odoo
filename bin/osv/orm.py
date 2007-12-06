@@ -1635,8 +1635,11 @@ class orm(object):
 			elif field._type=='one2many':
 				field_obj = self.pool.get(field._obj)
 
-				# get the ids of the records of the "distant" resource
-				ids2 = [x[0] for x in field_obj.name_search(cr, user, args[i][2], [], args[i][1])]
+				if isinstance(args[i][2], basestring):
+					# get the ids of the records of the "distant" resource
+					ids2 = [x[0] for x in field_obj.name_search(cr, user, args[i][2], [], args[i][1])]
+				else:
+					ids2 = args[i][2]
 				if not ids2:
 					args[i] = ('id','=','0')
 				else:
