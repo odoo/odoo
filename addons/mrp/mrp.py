@@ -693,6 +693,12 @@ class mrp_procurement(osv.osv):
 			return proc.move_id.product_uos_qty
 		return False
 
+	def _uom_compute_get(self, cr, uid, proc, context={}):
+		if proc.product_id.type=='product':
+			if proc.move_id.product_uos:
+				return proc.move_id.product_uos.id
+		return False
+
 	#
 	# Return the quantity of product shipped/produced/served, wich may be
 	# different from the planned quantity
@@ -702,6 +708,13 @@ class mrp_procurement(osv.osv):
 		result = self._quantity_compute_get(cr, uid, proc, context)
 		if not result:
 			result = proc.product_qty
+		return result
+
+	def uom_get(self, cr, uid, id, context=None):
+		proc = self.browse(cr, uid, id, context)
+		result = self._uom_compute_get(cr, uid, proc, context)
+		if not result:
+			result = proc.product_uom.id
 		return result
 
 	def check_produce_service(self, cr, uid, procurement, context=[]):

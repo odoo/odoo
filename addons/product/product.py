@@ -92,9 +92,9 @@ class product_uom(osv.osv):
 			from_unit, to_unit = uoms[-1], uoms[0]
 		if from_unit.category_id.id <> to_unit.category_id.id:
 			return price
-		amount = price / from_unit.factor
+		amount = price * from_unit.factor
 		if to_uom_id:
-			amount = amount * to_unit.factor
+			amount = amount / to_unit.factor
 		return amount
 
 product_uom()

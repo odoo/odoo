@@ -622,9 +622,22 @@ class sale_order_line(osv.osv):
 	def invoice_line_create(self, cr, uid, ids, context={}):
 		def _get_line_qty(line):
 			if (line.order_id.invoice_quantity=='order') or not line.procurement_id:
-				return line.product_uos_qty or line.product_uom_qty
+				if line.product_uos:
+					return line.product_uos_qty or 0.0
+				return line.product_uom_qty
 			else:
-				return self.pool.get('mrp.procurement').quantity_get(cr, uid, line.procurement_id.id, context)
+				return self.pool.get('mrp.procurement').quantity_get(cr, uid,
+						line.procurement_id.id, context)
+
+		def _get_line_uom(line):
+			if (line.order_id.invoice_quantity=='order') or not line.procurement_id:
+				if line.product_uos:
+					return line.product_uos.id
+				return line.product_uom.id
+			else:
+				return self.pool.get('mrp.procurement').uom_get(cr, uid,
+						line.procurement_id.id, context)
+
 		create_ids = []
 		for line in self.browse(cr, uid, ids, context):
 			if not line.invoiced:
@@ -633,14 +646,20 @@ class sale_order_line(osv.osv):
 					if not a:
 						a = line.product_id.categ_id.property_account_income_categ.id
 					if not a:
-						raise osv.except_osv('Error !', 'There is no income account defined for this product: "%s" (id:%d)' % (line.product_id.name, line.product_id.id,))
+						raise osv.except_osv('Error !',
+								'There is no income account defined ' \
+										'for this product: "%s" (id:%d)' % \
+										(line.product_id.name, line.product_id.id,))
 				else:
-					a = self.pool.get('ir.property').get(cr, uid, 'property_account_income_categ', 'product.category', context=context)
+					a = self.pool.get('ir.property').get(cr, uid,
+							'property_account_income_categ', 'product.category',
+							context=context)
 				uosqty = _get_line_qty(line)
-				uos_id = (line.product_uos and line.product_uos.id) or line.product_uom.id
-				pu = line.price_unit
-				if line.product_uos_qty:
-					pu = round(pu * line.product_uom_qty / line.product_uos_qty, int(config['price_accuracy']))
+				uos_id = _get_line_uom(line)
+				pu = 0.0
+				if uosqty:
+					pu = round(line.price_unit * line.product_uom_qty / uosqty,
+							int(config['price_accuracy']))
 				inv_id = self.pool.get('account.invoice.line').create(cr, uid, {
 					'name': line.name,
 					'account_id': a,
