@@ -592,12 +592,13 @@ class _rml_flowable(object):
 			return platypus.NextPageTemplate(str(node.getAttribute('name')))
 		elif node.localName=='nextFrame':
 			return platypus.CondPageBreak(1000)           # TODO: change the 1000 !
+		elif node.localName == 'setNextFrame':
+			from reportlab.platypus.doctemplate import NextFrameFlowable
+			return NextFrameFlowable(str(node.getAttribute('name')))
 		elif node.localName == 'currentFrame':
-			#return platypus.CondPageBreak(1000)           # TODO: change the 1000 !
 			from reportlab.platypus.doctemplate import CurrentFrameFlowable
 			return CurrentFrameFlowable(str(node.getAttribute('name')))
 		elif node.localName == 'frameEnd':
-			return False
 			return EndFrameFlowable()
 		else:
 			sys.stderr.write('Warning: flowable not yet implemented: %s !\n' % (node.localName,))
@@ -661,6 +662,8 @@ class _rml_template(object):
 			frames = []
 			for frame_el in pt.getElementsByTagName('frame'):
 				frame = platypus.Frame( **(utils.attr_get(frame_el, ['x1','y1', 'width','height', 'leftPadding', 'rightPadding', 'bottomPadding', 'topPadding'], {'id':'str', 'showBoundary':'bool'})) )
+				if utils.attr_get(frame_el, ['last']):
+					frame.lastFrame = True
 				frames.append( frame )
 			gr = pt.getElementsByTagName('pageGraphics')
 			if len(gr):
