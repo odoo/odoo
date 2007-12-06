@@ -150,7 +150,7 @@ class account_invoice(osv.osv):
 		'check_total': fields.float('Total', digits=(16,2), states={'open':[('readonly',True)],'close':[('readonly',True)]}),
 		'reconciled': fields.function(_reconciled, method=True, string='Reconciled', type='boolean'),
 		'partner_bank': fields.many2one('res.partner.bank', 'Bank Account',
-			help='The partner bank account to pay\nKeep empty to use the default'),
+			help='The bank account to pay or to be paid'),
 	}
 	_defaults = {
 		'type': _get_type,
@@ -209,9 +209,11 @@ class account_invoice(osv.osv):
 			'address_invoice_id': invoice_addr_id,
 			'account_id': acc_id,
 			'payment_term': partner_payment_term,
-			'partner_bank': bank_id,
 			}
 		}
+
+		if type in ('in_invoice', 'in_refund'):
+			result['value']['partner_bank'] = bank_id
 
 		if payment_term != partner_payment_term:
 			if partner_payment_term:

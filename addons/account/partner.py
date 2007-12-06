@@ -116,6 +116,8 @@ class res_partner(osv.osv):
 		  view_load=True,
 		  group_name="Accounting Properties",
 		  help="This payment term will be used, instead of the default one, for the current partner"),
+		'ref_companies': fields.one2many('res.company', 'partner_id',
+			'Companies that refers to partner'),
 	}
 res_partner()
 

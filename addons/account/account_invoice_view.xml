@@ -269,8 +269,8 @@
 							<newline/>
 							<field name="date_due" select="1"/>
 							<newline/>
-							<field name="reference_type" select="2" nolabel="1" size="0"/>
-							<field name="reference" select="2" nolabel="1"/>
+							<field name="partner_bank" select="2"
+								domain="[('partner_id.ref_companies', 'in', [company_id])]"/>
 							<field name="origin"/>
 							<field name="address_contact_id" domain="[('partner_id','=',partner_id)]" colspan="4"/>
 							<field name="move_id"/>

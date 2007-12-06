@@ -34,5 +34,10 @@ class account_invoice(report_sxw.rml_parse):
 		self.localcontext.update({
 			'time': time,
 		})
-report_sxw.report_sxw('report.account.invoice', 'account.invoice', 'addons/account/report/invoice.rml', parser=account_invoice)
+report_sxw.report_sxw(
+		'report.account.invoice',
+		'account.invoice',
+		'addons/account/report/invoice.rml',
+		parser=account_invoice,
+		)
 
