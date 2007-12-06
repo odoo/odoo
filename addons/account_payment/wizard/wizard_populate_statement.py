@@ -54,7 +54,7 @@ def _search_entries(obj, cursor, user, data, context):
 	<field name="lines" colspan="4" height="300" width="800" nolabel="1"
 		domain="[('id', 'in', [%s])]"/>
 </form>''' % (','.join([str(x) for x in line_ids]))
-	return {'lines': line_ids}
+	return {}
 
 def _populate_statement(obj, cursor, user, data, context):
 	line_ids = data['form']['lines'][0][2]
