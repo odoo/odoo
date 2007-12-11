@@ -970,7 +970,7 @@ class mrp_procurement(osv.osv):
 
 mrp_procurement()
 
-#CHECKME: why the **** is this object defined here and not in stock???
+
 class stock_warehouse_orderpoint(osv.osv):
 	_name = "stock.warehouse.orderpoint"
 	_description = "Orderpoint minimum rule"
