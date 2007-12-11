@@ -696,7 +696,7 @@ class sale_order_line(osv.osv):
 
 		product = product_obj.browse(cr, uid, product_id)
 		value = {
-			'product_uom' : product.uom_id,
+			'product_uom' : product.uom_id.id,
 		}
 		# FIXME must depend on uos/uom of the product and not only of the coeff.
 		try:
