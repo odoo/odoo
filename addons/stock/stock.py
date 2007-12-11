@@ -848,7 +848,7 @@ class stock_move(osv.osv):
 				if move.picking_id:
 					pickings[move.picking_id.id] = True
 		self.write(cr, uid, ids, {'state':'cancel'})
-		ids_lst = ','.join(map(str,ids))
+
 		for pick_id in pickings:
 			wf_service = netsvc.LocalService("workflow")
 			wf_service.trg_validate(uid, 'stock.picking', pick_id, 'button_cancel', cr)
