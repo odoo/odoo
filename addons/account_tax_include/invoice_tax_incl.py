@@ -87,6 +87,9 @@ class account_invoice_line(osv.osv):
 		res = super(account_invoice_line, self)._amount_line(cr, uid, ids, name, args, context)
 		res2 = res.copy()
 		for line in self.browse(cr, uid, ids):
+			if not line.quantity:
+				res[line.id] = 0.0
+				continue
 			if line.invoice_id.price_type == 'tax_included':
 				product_taxes = None
 				if line.product_id:
