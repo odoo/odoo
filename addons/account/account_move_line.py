@@ -108,9 +108,22 @@ class account_move_line(osv.osv):
 			ref_id = ref_id or l.ref
 			total += (l.debit - l.credit)
 			for tax in l.account_id.tax_ids:
-				acc = (l.debit >0) and tax.account_paid_id.id or tax.account_collected_id.id
-				taxes.setdefault((acc,tax.tax_code_id.id), False)
-			taxes[(l.account_id.id,l.tax_code_id.id)] = True
+				if move.journal_id.type == 'sale':
+					if l.debit:
+						code = tax.ref_tax_code_id.id
+						acc = tax.account_paid_id.id
+					else:
+						code = tax.tax_code_id.id
+						acc = tax.account_collected_id.id
+				else:
+					if l.debit:
+						code = tax.tax_code_id.id
+						acc = tax.account_collected_id.id
+					else:
+						code = tax.ref_tax_code_id.id
+						acc = tax.account_paid_id.id
+				taxes.setdefault((acc, code), False)
+			taxes[(l.account_id.id, l.tax_code_id.id)] = True
 			if 'name' in fields:
 				data.setdefault('name', l.name)
 
@@ -120,20 +133,35 @@ class account_move_line(osv.osv):
 			data['partner_id'] = partner_id
 
 		if move.journal_id.type in ('purchase', 'sale'):
-			field_base=''
-			if move.journal_id.type=='purchase':
-				field_base='ref_'
 			for t in taxes:
 				if not taxes[t] and t[0]:
-					s=0
+					s = 0
+					tax_amount = 0
 					for l in move.line_id:
-						key = (l.debit and 'account_paid_id') or 'account_collected_id'
-						for tax in self.pool.get('account.tax').compute(cr, uid, l.account_id.tax_ids, l.debit or l.credit, 1, False):
-							if (tax[key] == t[0]) and (tax[field_base+'tax_code_id']==t[1]):
+						if move.journal_id.type == 'sale':
+							if l.debit:
+								field_base = 'ref_'
+								key = 'account_paid_id'
+							else:
+								field_base = ''
+								key = 'account_collected_id'
+						else:
+							if l.debit:
+								field_base = ''
+								key = 'account_collected_id'
+							else:
+								field_base = 'ref_'
+								key = 'account_paid_id'
+						for tax in self.pool.get('account.tax').compute(cr, uid,
+								l.account_id.tax_ids, l.debit or l.credit, 1, False):
+							if (tax[key] == t[0]) \
+									and (tax[field_base + 'tax_code_id'] == t[1]):
 								if l.debit:
 									s += tax['amount']
 								else:
 									s -= tax['amount']
+								tax_amount += tax['amount'] * \
+										tax[field_base + 'tax_sign']
 					if ('debit' in fields) or ('credit' in fields):
 						data['debit'] = s>0  and s or 0.0
 						data['credit'] = s<0  and -s or 0.0
@@ -142,6 +170,8 @@ class account_move_line(osv.osv):
 						data['tax_code_id'] = t[1]
 					if 'account_id' in fields:
 						data['account_id'] = t[0]
+					if 'tax_amount' in fields:
+						data['tax_amount'] = tax_amount
 					#
 					# Compute line for tax T
 					#

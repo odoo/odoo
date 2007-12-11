@@ -229,23 +229,22 @@
 			<field name="field">credit</field>
 			<field name="sequence" eval="9"/>
 		</record>
-		<record model="account.journal.column" id="journal_col24">
-			<field name="view_id" ref="account_journal_view"/>
-			<field name="name">State</field>
-			<field name="field">state</field>
-			<field name="sequence" eval="10"/>
-		</record>
 		<record model="account.journal.column" id="journal_col25">
 			<field name="view_id" ref="account_journal_view"/>
 			<field name="name">Tax Acc.</field>
 			<field name="field">tax_code_id</field>
-			<field name="sequence" eval="11"/>
+			<field name="sequence" eval="10"/>
 		</record>
-
 		<record model="account.journal.column" id="journal_col26">
 			<field name="view_id" ref="account_journal_view"/>
 			<field name="name">Tax</field>
 			<field name="field">tax_amount</field>
+			<field name="sequence" eval="11"/>
+		</record>
+		<record model="account.journal.column" id="journal_col24">
+			<field name="view_id" ref="account_journal_view"/>
+			<field name="name">State</field>
+			<field name="field">state</field>
 			<field name="sequence" eval="12"/>
 		</record>
 

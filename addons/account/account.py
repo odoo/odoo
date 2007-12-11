@@ -266,8 +266,8 @@ class account_account(osv.osv):
 		'reconcile': fields.boolean('Reconcile', help="Check this account if the user can make a reconciliation of the entries in this account."),
 		'shortcut': fields.char('Shortcut', size=12),
 		'close_method': fields.selection([('none','None'), ('balance','Balance'), ('detail','Detail'),('unreconciled','Unreconciled')], 'Deferral Method', required=True, help="Tell Tiny ERP how to process the entries of this account when you close a fiscal year. None removes all entries to start with an empty account for the new fiscal year. Balance creates only one entry to keep the balance for the new fiscal year. Detail keeps the detail of all entries of the preceeding years. Unreconciled keeps the detail of unreconciled entries only."),
-		'tax_ids': fields.many2many('account.tax', 'account_account_tax_default_rel', 'account_id','tax_id', 'Default Taxes'),
-
+		'tax_ids': fields.many2many('account.tax', 'account_account_tax_default_rel',
+			'account_id','tax_id', 'Default Taxes'),
 		'note': fields.text('Note'),
 		'company_currency_id': fields.function(_get_company_currency, method=True, type='many2one', relation='res.currency', string='Company Currency'),
 		'company_id': fields.many2one('res.company', 'Company', required=True),
@@ -765,33 +765,51 @@ class account_move(osv.osv):
 				todo = []
 				account = {}
 				account2 = {}
-				field_base = ''
 				if journal.type not in ('purchase','sale'):
 					continue
-				if journal.type=='purchase':
-					field_base='ref_'
 
 				for line in move.line_id:
+					if move.journal_id.type == 'sale':
+						if line.debit:
+							field_base = 'ref_'
+							key = 'account_paid_id'
+						else:
+							field_base = ''
+							key = 'account_collected_id'
+					else:
+						if line.debit:
+							field_base = ''
+							key = 'account_collected_id'
+						else:
+							field_base = 'ref_'
+							key = 'account_paid_id'
 					if line.account_id.tax_ids:
 						code = amount = False
 						for tax in line.account_id.tax_ids:
 							if tax.tax_code_id:
-								acc = (line.debit >0) and tax.account_paid_id.id or tax.account_collected_id.id
-								account[acc] = (getattr(tax,field_base+'tax_code_id').id, getattr(tax,field_base+'tax_sign'))
-								account2[(acc,getattr(tax,field_base+'tax_code_id').id)] = (getattr(tax,field_base+'tax_code_id').id, getattr(tax,field_base+'tax_sign'))
-								code = getattr(tax,field_base+'base_code_id').id
-								amount = getattr(tax, field_base+'base_sign') * (line.debit + line.credit)
+								acc = getattr(tax, key).id
+								account[acc] = (getattr(tax,
+									field_base + 'tax_code_id').id,
+									getattr(tax, field_base + 'tax_sign'))
+								account2[(acc,getattr(tax,
+									field_base + 'tax_code_id').id)] = (getattr(tax,
+										field_base + 'tax_code_id').id,
+										getattr(tax, field_base + 'tax_sign'))
+								code = getattr(tax, field_base + 'base_code_id').id
+								amount = getattr(tax, field_base+'base_sign') * \
+										(line.debit + line.credit)
 								break
-						if code and not (line.tax_code_id or line.tax_amount): 
-							self.pool.get('account.move.line').write(cr, uid, [line.id], {
+						if code and not (line.tax_code_id or line.tax_amount):
+							self.pool.get('account.move.line').write(cr, uid,
+									[line.id], {
 								'tax_code_id': code,
 								'tax_amount': amount
-							}, context, check=False)
+							}, context=context, check=False)
 					else:
 						todo.append(line)
 				for line in todo:
 					code = amount = 0
-					key = (line.account_id.id,line.tax_code_id.id)
+					key = (line.account_id.id, line.tax_code_id.id)
 					if key in account2:
 						code = account2[key][0]
 						amount = account2[key][1] * (line.debit + line.credit)
