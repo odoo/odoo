@@ -568,7 +568,6 @@
 		<field name="domain">[('state','=','assigned'),('type','=','out')]</field>
 		<field name="context">{'contact_display': 'partner'}</field>
 	</record>
-	<menuitem name="Inventory Control/Packing Lists/Sending Goods/Assigned Packings" action="action_picking_tree2" id="menu_picking_waiting"/>
 	<record model="ir.actions.act_window" id="action_picking_tree3">
 		<field name="name">Confirmed packings to send</field>
 		<field name="res_model">stock.picking</field>
@@ -579,6 +578,7 @@
 		<field name="context">{'contact_display': 'partner'}</field>
 	</record>
 	<menuitem name="Inventory Control/Packing Lists/Sending Goods/Confirmed Packings Waiting Assignation" id="menu_action_picking_tree3" action="action_picking_tree3"/>
+	<menuitem name="Inventory Control/Packing Lists/Sending Goods/Assigned Packings" action="action_picking_tree2" id="menu_picking_waiting"/>
 
 
 	<record model="ir.actions.act_window" id="action_picking_tree4">
