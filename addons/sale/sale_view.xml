@@ -40,7 +40,8 @@
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_shop_tree"/>
 	</record>
-	<menuitem name="Sales Management/Configuration" groups="admin" sequence="1"/>
+	<menuitem name="Sales Management/Configuration" groups="base.group_admin"
+		sequence="1"/>
 	<menuitem name="Sales Management/Configuration/Shop" id="menu_action_shop_form" action="action_shop_form"/>
 
 	<record model="ir.ui.view" id="view_order_tree">

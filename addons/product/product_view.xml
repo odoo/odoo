@@ -3,7 +3,8 @@
 	<data>
 
 		<menuitem name="Products" icon="terp-product" id="menu_main_product"/>
-		<menuitem name="Products/Configuration" groups="admin" sequence="1" id="menu_config_product"/>
+		<menuitem name="Products/Configuration" groups="base.group_admin"
+			sequence="1" id="menu_config_product"/>
 
 		<record model="ir.ui.view" id="product_product_tree_view">
 			<field name="name">product.product.tree</field>
@@ -234,7 +235,7 @@
 			<field name="view_id" ref="product_template_form_view"/>
 			<field name="act_window_id" ref="product_template_action"/>
 		</record>
-		<menuitem name="Products/Products/Templates" id="menu_product_template_action" action="product_template_action" groups="admin"/>
+		<menuitem name="Products/Products/Templates" id="menu_product_template_action" action="product_template_action" groups="base.group_admin"/>
 
 		<record model="ir.ui.view" id="product_category_form_view">
 			<field name="name">product.category.form</field>
