@@ -10,6 +10,7 @@
 			<field name="name">product.product.tree</field>
 			<field name="model">product.product</field>
 			<field name="type">tree</field>
+			<field name="priority" eval="7"/>
 			<field name="arch" type="xml">
 				<tree string="Products" colors="red:virtual_available&lt;0;blue:state in ['draft', 'end', 'obsolete']">
 					<field name="default_code"/>
