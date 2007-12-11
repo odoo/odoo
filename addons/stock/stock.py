@@ -391,8 +391,9 @@ class stock_picking(osv.osv):
 		self.write(cr, uid, ids, {'state': 'confirmed'})
 		todo = []
 		for picking in self.browse(cr, uid, ids):
-			number = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.%s' % picking.type)
-			self.write(cr, uid, [picking.id], {'name': number})
+			if picking.name == self._defaults['name']():
+				number = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.%s' % picking.type)
+				self.write(cr, uid, [picking.id], {'name': number})
 			for r in picking.move_lines:
 				if r.state=='draft':
 					todo.append(r.id)
