@@ -159,7 +159,7 @@
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
-		<field name="domain">[('invoice_state','=','2binvoiced'),('state','=','done')]</field>
+		<field name="domain">[('invoice_state','=','2binvoiced'),('state','=','done'),('type','=','out')]</field>
 	</record>
 	<menuitem
 		name="Inventory Control/Packing Lists/Sending Goods/Packings to be Invoiced"
