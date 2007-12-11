@@ -97,6 +97,14 @@ class account_analytic_line(osv.osv):
 						'You can not modify an invoiced analytic line!')
 		return True
 
+	def copy(self, cursor, user, obj_id, default=None, context=None):
+		if default is None:
+			default = {}
+		default = default.copy()
+		default.update({'invoice_id': False})
+		return super(account_analytic_line, self).copy(cursor, user, obj_id,
+				default, context)
+
 account_analytic_line()
 
 
@@ -107,9 +115,19 @@ class hr_analytic_timesheet(osv.osv):
 		if not account_id:
 			return res
 		res.setdefault('value',{})
-		st = self.pool.get('account.analytic.account').browse(cr, uid, account_id).to_invoice.id
+		st = self.pool.get('account.analytic.account').browse(cr, uid,
+				account_id).to_invoice.id
 		res['value']['to_invoice'] = st or False
 		return res
+
+	def copy(self, cursor, user, obj_id, default=None, context=None):
+		if default is None:
+			default = {}
+		default = default.copy()
+		default.update({'invoice_id': False})
+		return super(hr_analytic_timesheet, self).copy(cursor, user, obj_id,
+				default, context)
+
 hr_analytic_timesheet()
 
 class account_invoice(osv.osv):
