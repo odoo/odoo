@@ -18,7 +18,9 @@
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	<menuitem name="Partners/Configuration/Partner Events/Channels" groups="admin" action="res_partner_canal-act" id="menu_res_partner_canal-act"/>
+	<menuitem name="Partners/Configuration/Partner Events/Channels"
+		groups="group_admin" action="res_partner_canal-act"
+		id="menu_res_partner_canal-act"/>
 
 	<record model="ir.ui.view" id="res_partner_event_type-view">
 		<field name="name">res.partner.event.type.form</field>
@@ -51,7 +53,9 @@
 		<field name="view_mode">tree,form</field>
 		<field name="context">{'active_test': False}</field>
 	</record>
-	<menuitem name="Partners/Configuration/Partner Events/Active Partner Events" groups="admin" action="res_partner_event_type-act" id="menu_res_partner_event_type-act"/>
+	<menuitem name="Partners/Configuration/Partner Events/Active Partner Events"
+		groups="group_admin" action="res_partner_event_type-act"
+		id="menu_res_partner_event_type-act"/>
 
 	<record model="ir.ui.view" id="res_partner_som_tree-view">
 		<field name="name">res.partner.som.tree</field>
@@ -82,7 +86,9 @@
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	<menuitem name="Partners/Configuration/Partner Events/States of Mind" groups="admin" action="res_partner_som-act" id="menu_res_partner_som-act"/>
+	<menuitem name="Partners/Configuration/Partner Events/States of Mind"
+		groups="group_admin" action="res_partner_som-act"
+		id="menu_res_partner_som-act"/>
 
 	<record model="ir.ui.view" id="res_partner_event-wopartner-view_form">
 		<field name="name">res.partner.event.form</field>
