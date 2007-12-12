@@ -88,13 +88,13 @@
     <paraStyle name="P14" fontName="Times-Roman" fontSize="14.0" leading="17" alignment="LEFT"/>
     <paraStyle name="P15" fontName="Times-Roman" fontSize="14.0" leading="17" alignment="CENTER"/>
     <paraStyle name="P16" fontName="Times-Roman" fontSize="20.0" leading="25" alignment="LEFT"/>
-    <paraStyle name="P17" fontName="Times-Roman" fontSize="11.0" leading="14"/>
+    <paraStyle name="P17" fontName="Times-Roman" fontSize="20.0" leading="25" alignment="LEFT"/>
     <paraStyle name="P18" fontName="Times-Roman" fontSize="11.0" leading="14"/>
-    <paraStyle name="P19" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="LEFT"/>
-    <paraStyle name="P20" fontName="Times-Roman" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P21" fontName="Times-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P22" fontName="Times-Roman" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P23" fontName="Times-Roman" fontSize="20.0" leading="25" alignment="LEFT"/>
+    <paraStyle name="P19" fontName="Times-Roman" fontSize="11.0" leading="14"/>
+    <paraStyle name="P20" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="LEFT"/>
+    <paraStyle name="P21" fontName="Times-Roman" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P22" fontName="Times-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P23" fontName="Times-Roman" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="List" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -134,12 +134,12 @@
     <para style="P14">
       <font color="white"> </font>
     </para>
-    <para style="P23">Invoice [[ ((o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')) or removeParentNode('para')) and '' ]] [[ o.number ]]</para>
-    <para style="P23">PRO-FORMA [[ ((o.type == 'out_invoice' and o.state == 'proforma') or removeParentNode('para')) and '' ]]</para>
-    <para style="P23">Draft Invoice [[ ((o.type == 'out_invoice' and o.state == 'draft') or removeParentNode('para')) and '' ]]</para>
-    <para style="P23">Canceled Invoice [[ ((o.type == 'out_invoice' and o.state == 'cancel') or removeParentNode('para')) and '' ]]</para>
-    <para style="P23">Refund [[ (o.type=='out_refund' or removeParentNode('para')) and '' ]] [[ o.number ]]</para>
-    <para style="P23">Supplier Refund [[ (o.type=='in_refund' or removeParentNode('para')) and '' ]] [[ o.number ]]</para>
+    <para style="P17">Invoice [[ ((o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')) or removeParentNode('para')) and '' ]] [[ o.number ]]</para>
+    <para style="P17">PRO-FORMA [[ ((o.type == 'out_invoice' and o.state == 'proforma') or removeParentNode('para')) and '' ]]</para>
+    <para style="P17">Draft Invoice [[ ((o.type == 'out_invoice' and o.state == 'draft') or removeParentNode('para')) and '' ]]</para>
+    <para style="P17">Canceled Invoice [[ ((o.type == 'out_invoice' and o.state == 'cancel') or removeParentNode('para')) and '' ]]</para>
+    <para style="P17">Refund [[ (o.type=='out_refund' or removeParentNode('para')) and '' ]] [[ o.number ]]</para>
+    <para style="P17">Supplier Refund [[ (o.type=='in_refund' or removeParentNode('para')) and '' ]] [[ o.number ]]</para>
     <para style="P16">
       <font face="Times-Roman">Supplier Invoice [[ (o.type=='in_invoice' or removeParentNode('para')) and '' ]]</font>
       <font face="Times-Roman">[[ o.number ]]</font>
@@ -147,16 +147,16 @@
     <para style="P15">
       <font color="white"> </font>
     </para>
-    <para style="P17">
+    <para style="P18">
       <font face="Times-Roman">Document</font>
       <font face="Times-Roman">:</font>
       <font face="Times-Roman">[[o.name]]</font>
     </para>
-    <para style="P17">
+    <para style="P18">
       <font face="Times-Roman">Invoice Date: </font>
       <font face="Times-Roman">[[o.date_invoice]]</font>
     </para>
-    <para style="P18"><font face="Times-Roman">Customer Ref:</font> [[ o.address_invoice_id.partner_id.ref or '/' ]]</para>
+    <para style="P19"><font face="Times-Roman">Customer Ref:</font> [[ o.address_invoice_id.partner_id.ref or '/' ]]</para>
     <para style="Standard">
       <font color="white"> </font>
     </para>
@@ -183,7 +183,7 @@
       </tr>
     </blockTable>
     <section>
-      <para style="P20">[[repeatIn(o.invoice_line,'l') ]]</para>
+      <para style="P21">[[repeatIn(o.invoice_line,'l') ]]</para>
       <blockTable colWidths="216.0,62.0,62.0,62.0,51.0,74.0" style="Tableau7">
         <tr>
           <td>
@@ -193,23 +193,23 @@
             <para style="P6">[[ ', '.join([lt.name for lt in l.invoice_line_tax_id]) ]]</para>
           </td>
           <td>
-            <para style="P8">[[ '%.2f' % l.quantity ]] [[l.uos_id and l.uos_id.name or '' ]]</para>
+            <para style="P8">[[ formatLang(l.quantity) ]] [[l.uos_id and l.uos_id.name or '' ]]</para>
           </td>
           <td>
-            <para style="P8">[[ '%.2f' % l.price_unit ]]</para>
+            <para style="P8">[[ formatLang(l.price_unit) ]]</para>
           </td>
           <td>
-            <para style="P8">[[ l.discount and '%.2f' % (l.discount) or '' ]] </para>
+            <para style="P8">[[ l.discount and formatLang (l.discount) or '' ]] </para>
           </td>
           <td>
-            <para style="P8">[[ '%.2f' %l.price_subtotal ]] [[o.currency_id.code ]]</para>
+            <para style="P8">[[ formatLang(l.price_subtotal) ]] [[o.currency_id.code ]]</para>
           </td>
         </tr>
       </blockTable>
       <blockTable colWidths="28.0,499.0" style="Tableau8">
         <tr>
           <td>
-            <para style="P21">[[ repeatIn((l.note and l.note.splitlines()) or [], 'note') ]]</para>
+            <para style="P22">[[ repeatIn((l.note and l.note.splitlines()) or [], 'note') ]]</para>
           </td>
           <td>
             <para style="P9">[[ note or removeParentNode('table') ]]</para>
@@ -240,10 +240,10 @@
                 <para style="P5"><font face="Times-Roman">[[ repeatIn(o.tax_line,'t') ]]</font> [[ t.name ]]</para>
               </td>
               <td>
-                <para style="P11">[[ '%.2f' % t.base ]]</para>
+                <para style="P11">[[ formatLang(t.base) ]]</para>
               </td>
               <td>
-                <para style="P11">[[ '%.2f' % t.amount]]</para>
+                <para style="P11">[[ formatLang(t.amount)]]</para>
               </td>
             </tr>
           </blockTable>
@@ -255,7 +255,7 @@
                 <para style="P7">Total (excl. taxes):</para>
               </td>
               <td>
-                <para style="P12">[[ '%.2f' % o.amount_untaxed ]] [[o.currency_id.code ]]</para>
+                <para style="P12">[[ formatLang(o.amount_untaxed) ]] [[o.currency_id.code ]]</para>
               </td>
             </tr>
             <tr>
@@ -263,7 +263,7 @@
                 <para style="P7">Taxes:</para>
               </td>
               <td>
-                <para style="P12">[[ '%.2f' % o.amount_tax ]] [[o.currency_id.code ]]</para>
+                <para style="P12">[[ formatLang(o.amount_tax) ]] [[o.currency_id.code ]]</para>
               </td>
             </tr>
             <tr>
@@ -271,7 +271,7 @@
                 <para style="P13">Total <font face="Times-Roman">(incl. taxes):</font></para>
               </td>
               <td>
-                <para style="P22">[[ '%.2f' % o.amount_total ]] [[o.currency_id.code ]]</para>
+                <para style="P23">[[ formatLang(o.amount_total) ]] [[o.currency_id.code ]]</para>
               </td>
             </tr>
           </blockTable>
@@ -281,11 +281,11 @@
         </td>
       </tr>
     </blockTable>
-    <para style="P19">[[ format(o.comment or '') ]]</para>
-    <para style="P19">
+    <para style="P20">[[ format(o.comment or '') ]]</para>
+    <para style="P20">
       <font color="white"> </font>
     </para>
-    <para style="P19">[[ format((o.payment_term and o.payment_term.note) or '') ]]</para>
+    <para style="P20">[[ format((o.payment_term and o.payment_term.note) or '') ]]</para>
   </story>
 </document>
 
