@@ -880,25 +880,39 @@ class orm(object):
 			cr.rollback()
 			raise except_orm('ValidateError', ('\n'.join(field_err_str), ','.join(field_error)))
 
-	def default_get(self, cr, uid, fields, context=None):
+	def default_get(self, cr, uid, fields_list, context=None):
 		if not context:
 			context={}
 		value = {}
 		# get the default values for the inherited fields
 		for t in self._inherits.keys():
-			value.update(self.pool.get(t).default_get(cr, uid, fields, context))
+			value.update(self.pool.get(t).default_get(cr, uid, fields_list,
+				context))
 
 		# get the default values defined in the object
-		for f in fields:
+		for f in fields_list:
 			if f in self._defaults:
 				value[f] = self._defaults[f](self, cr, uid, context)
+			fld_def = ((f in self._columns) and self._columns[f]) \
+					or ((f in self._inherit_fields ) and self._inherit_fields[f][2]) \
+					or False
+			if isinstance(fld_def, fields.property):
+				property_obj = self.pool.get('ir.property')
+				definition_id = fld_def._field_get(cr, uid, self._name, f)
+				nid = property_obj.search(cr, uid, [('fields_id', '=',
+					definition_id), ('res_id', '=', False)])
+				if nid:
+					prop_value = property_obj.browse(cr, uid, nid[0],
+							context=context).value
+					value[f] = (prop_value and int(prop_value.split(',')[1])) \
+							or False
 
 		# get the default values set by the user and override the default
 		# values defined in the object
 		ir_values_obj = self.pool.get('ir.values')
 		res = ir_values_obj.get(cr, uid, 'default', False, [self._name])
 		for id, field, field_value in res:
-			if field in fields:
+			if field in fields_list:
 				fld_def = (field in self._columns) and self._columns[field] or self._inherit_fields[field][2]
 				if fld_def._type in ('many2one', 'one2one'):
 					obj = self.pool.get(fld_def._obj)
