@@ -465,7 +465,7 @@ class stock_picking(osv.osv):
 	#
 	# TODO: change and create a move if not parents
 	#
-	def action_done(self, cr, uid, ids, *args):
+	def action_done(self, cr, uid, ids, context=None):
 		for pick in self.browse(cr, uid, ids):
 			if pick.move_type=='one' and pick.loc_move_id:
 				if pick.lot_id:
@@ -488,7 +488,8 @@ class stock_picking(osv.osv):
 					todo.append(move.id)
 
 			if len(todo):
-				self.pool.get('stock.move').action_done(cr, uid, todo)
+				self.pool.get('stock.move').action_done(cr, uid, todo,
+						context=context)
 
 				lot_id = self.pool.get('stock.lot').create(cr, uid, {'name':pick.name})
 				self.pool.get('stock.move').write(cr,uid, todo, {'lot_id':lot_id})
@@ -864,7 +865,7 @@ class stock_move(osv.osv):
 		self.action_cancel(cr,uid, ids2, context)
 		return True
 
-	def action_done(self, cr, uid, ids, *args):
+	def action_done(self, cr, uid, ids, context=None):
 		for move in self.browse(cr, uid, ids):
 			if move.move_dest_id.id and (move.state != 'done'):
 				mid = move.move_dest_id.id
@@ -982,7 +983,7 @@ class stock_inventory(osv.osv):
 	#
 	# Update to support tracking
 	#
-	def action_done(self, cr, uid, ids, *args):
+	def action_done(self, cr, uid, ids, context=None):
 		for inv in self.browse(cr,uid,ids):
 			move_ids = []
 			move_line=[]
@@ -1015,7 +1016,8 @@ class stock_inventory(osv.osv):
 						})
 					move_ids.append(self.pool.get('stock.move').create(cr, uid, value))
 			if len(move_ids):
-				self.pool.get('stock.move').action_done(cr, uid, move_ids)
+				self.pool.get('stock.move').action_done(cr, uid, move_ids,
+						context=context)
 			self.write(cr, uid, [inv.id], {'state':'done', 'date_done': time.strftime('%Y-%m-%d %H:%M:%S'), 'move_ids': [(6,0,move_ids)]})
 		return True
 
