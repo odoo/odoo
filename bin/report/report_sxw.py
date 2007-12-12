@@ -36,7 +36,7 @@ import tools
 import pooler
 import netsvc
 import warnings
-
+import locale
 import copy
 
 parents = {
@@ -102,6 +102,7 @@ class rml_parse(object):
 			'setTag': self.setTag,
 			'removeParentNode': self.removeParentNode,
 			'format': self.format,
+			'formatLang': self.formatLang,
 		}
 		self.localcontext.update(context)
 		self.name = name
@@ -151,6 +152,20 @@ class rml_parse(object):
 
 	def setLang(self, lang):
 		self.localcontext['lang'] = lang
+
+	def formatLang(self, value, digit=2):
+		lc, encoding = locale.getdefaultlocale()
+		if encoding == 'utf':
+			encoding = 'UTF-8'
+		try:
+			locale.setlocale(locale.LC_ALL,
+					(self.localcontext.get('lang', 'en_US') or 'en_US') + \
+							'.' + encoding)
+		except Exception:
+			netsvc.Logger().notifyChannel('report', netsvc.LOG_WARNING,
+					'report %s: unable to set locale "%s"' % (self.name,
+						self.localcontext.get('lang', 'en_US') or 'en_US'))
+		return locale.format('%.' + str(digit) + 'f', value, True)
 
 	def repeatIn(self, lst, name, nodes_parent=False):
 		self._node.data = ''
