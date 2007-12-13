@@ -60,6 +60,7 @@ import ir
 import tools
 
 prof = 0
+ID_MAX = 1000
 
 def intersect(la, lb):
 	return filter(lambda x: x in lb, la)
@@ -811,18 +812,27 @@ class orm(object):
 		# all inherited fields + all non inherited fields for which the attribute whose name is in load is True
 		fields_pre = filter(lambda x: x in self._columns and getattr(self._columns[x],'_classic_write'), fields) + self._inherits.values()
 
+		res = []
 		if len(fields_pre) :
 			fields_pre2 = map(lambda x: (x in ('create_date', 'write_date')) and ('date_trunc(\'second\', '+x+') as '+x) or '"'+x+'"', fields_pre)
-			if d1:
-				cr.execute('select %s from \"%s\" where id in (%s) and %s order by %s' % (','.join(fields_pre2 + ['id']), self._table, ','.join([str(x) for x in ids]), d1, self._order),d2)
-				if not cr.rowcount == len({}.fromkeys(ids)):
-					raise except_orm('AccessError', 'You try to bypass an access rule (Document type: %s).' % self._description)
-			else:
-				cr.execute('select %s from \"%s\" where id in (%s) order by %s' % (','.join(fields_pre2 + ['id']), self._table, ','.join([str(x) for x in ids]), self._order))
-
-			res = cr.dictfetchall()
+			for i in range((len(ids) / ID_MAX) + ((len(ids) % ID_MAX) and 1 or 0)):
+				sub_ids = ids[ID_MAX * i:ID_MAX * (i + 1)]
+				if d1:
+					cr.execute('select %s from \"%s\" where id in (%s) and %s order by %s' % \
+							(','.join(fields_pre2 + ['id']), self._table,
+								','.join([str(x) for x in sub_ids]), d1,
+								self._order),d2)
+					if not cr.rowcount == len({}.fromkeys(sub_ids)):
+						raise except_orm('AccessError',
+								'You try to bypass an access rule (Document type: %s).' % self._description)
+				else:
+					cr.execute('select %s from \"%s\" where id in (%s) order by %s' % \
+							(','.join(fields_pre2 + ['id']), self._table,
+								','.join([str(x) for x in sub_ids]),
+								self._order))
+				res.extend(cr.dictfetchall())
 		else:
-			res = map(lambda x: {'id':x}, ids)
+			res = map(lambda x: {'id': x}, ids)
 
 		for f in fields_pre:
 			if self._columns[f].translate:
@@ -981,17 +991,21 @@ class orm(object):
 			ids = [ids]
 		delta= context.get('read_delta',False)
 		if delta and self._log_access:
-			cr.execute("select  (now()  - min(write_date)) <= '%s'::interval  from \"%s\" where id in (%s)"% (delta,self._table,",".join(map(str, ids))) )
+			for i in range((len(ids) / ID_MAX) + ((len(ids) % ID_MAX) and 1 or 0)):
+				sub_ids = ids[ID_MAX * i:ID_MAX * (i + 1)]
+				cr.execute("select  (now()  - min(write_date)) <= '%s'::interval " \
+						"from \"%s\" where id in (%s)" %
+						(delta, self._table, ",".join(map(str, sub_ids))) )
 			res= cr.fetchone()
 			if res and res[0]:
-				raise except_orm('ConcurrencyException', 'This record was modified in the meanwhile')
+				raise except_orm('ConcurrencyException',
+						'This record was modified in the meanwhile')
 
 		self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink')
 
 		wf_service = netsvc.LocalService("workflow")
 		for id in ids:
 			wf_service.trg_delete(uid, self._name, id, cr)
-		str_d = string.join(('%d',)*len(ids),',')
 
 		#cr.execute('select * from '+self._table+' where id in ('+str_d+')', ids)
 		#res = cr.dictfetchall()
@@ -1002,12 +1016,28 @@ class orm(object):
 		d1, d2 = self.pool.get('ir.rule').domain_get(cr, uid, self._name)
 		if d1:
 			d1 = ' AND '+d1
-			cr.execute('SELECT id FROM "'+self._table+'" WHERE id IN ('+str_d+')'+d1, ids+d2)
-			if not cr.rowcount == len({}.fromkeys(ids)):
-				raise except_orm('AccessError', 'You try to bypass an access rule (Document type: %s).'%self._description)
 
-		cr.execute('delete from inherit where (obj_type=%s and obj_id in ('+str_d+')) or (inst_type=%s and inst_id in ('+str_d+'))', (self._name,)+tuple(ids)+(self._name,)+tuple(ids))
-		cr.execute('delete from "'+self._table+'" where id in ('+str_d+')'+d1, ids+d2)
+		for i in range((len(ids) / ID_MAX) + ((len(ids) % ID_MAX) and 1 or 0)):
+			sub_ids = ids[ID_MAX * i:ID_MAX * (i + 1)]
+			str_d = string.join(('%d',)*len(sub_ids),',')
+			if d1:
+				cr.execute('SELECT id FROM "'+self._table+'" ' \
+						'WHERE id IN ('+str_d+')'+d1, sub_ids+d2)
+				if not cr.rowcount == len({}.fromkeys(ids)):
+					raise except_orm('AccessError',
+							'You try to bypass an access rule (Document type: %s).' % \
+									self._description)
+
+			cr.execute('delete from inherit ' \
+					'where (obj_type=%s and obj_id in ('+str_d+')) ' \
+						'or (inst_type=%s and inst_id in ('+str_d+'))',
+						(self._name,)+tuple(sub_ids)+(self._name,)+tuple(sub_ids))
+			if d1:
+				cr.execute('delete from "'+self._table+'" ' \
+						'where id in ('+str_d+')'+d1, sub_ids+d2)
+			else:
+				cr.execute('delete from "'+self._table+'" ' \
+						'where id in ('+str_d+')', sub_ids)
 		return True
 
 	#
@@ -1022,18 +1052,22 @@ class orm(object):
 			ids = [ids]
 		delta= context.get('read_delta',False)
 		if delta and self._log_access:
-			cr.execute("select  (now()  - min(write_date)) <= '%s'::interval  from %s where id in (%s)"% (delta,self._table,",".join(map(str, ids))) )
-			res= cr.fetchone()
-			if res and res[0]:
-				for field in vals:
-					if field in self._columns and self._columns[field]._classic_write:
-						raise except_orm('ConcurrencyException', 'This record was modified in the meanwhile')
+			for i in range((len(ids) / ID_MAX) + ((len(ids) % ID_MAX) and 1 or 0)):
+				sub_ids = ids[ID_MAX * i:ID_MAX * (i + 1)]
+				cr.execute("select  (now()  - min(write_date)) <= '%s'::interval " \
+						"from %s where id in (%s)" %
+						(delta,self._table, ",".join(map(str, sub_ids))))
+				res= cr.fetchone()
+				if res and res[0]:
+					for field in vals:
+						if field in self._columns and self._columns[field]._classic_write:
+							raise except_orm('ConcurrencyException',
+									'This record was modified in the meanwhile')
 
 		self.pool.get('ir.model.access').check(cr, user, self._name, 'write')
 
 		#for v in self._inherits.values():
 		#	assert v not in vals, (v, vals)
-		ids_str = string.join(map(str, ids),',')
 		upd0=[]
 		upd1=[]
 		upd_todo=[]
@@ -1080,14 +1114,29 @@ class orm(object):
 			d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
 			if d1:
 				d1 = ' and '+d1
-				cr.execute('SELECT id FROM "'+self._table+'" WHERE id IN ('+ids_str+')'+d1, d2)
-				if not cr.rowcount == len({}.fromkeys(ids)):
-					raise except_orm('AccessError', 'You try to bypass an access rule (Document type: %s).'%self._description)
-			else:
-				cr.execute('SELECT id FROM "'+self._table+'" WHERE id IN ('+ids_str+')')
-				if not cr.rowcount == len({}.fromkeys(ids)):
-					raise except_orm('AccessError', 'You try to write on an record that doesn\'t exist (Document type: %s).'%self._description)
-			cr.execute('update "'+self._table+'" set '+string.join(upd0,',')+' where id in ('+ids_str+')'+d1, upd1+ d2)
+
+			for i in range((len(ids) / ID_MAX) + ((len(ids) % ID_MAX) and 1 or 0)):
+				sub_ids = ids[ID_MAX * i:ID_MAX * (i + 1)]
+				ids_str = string.join(map(str, sub_ids),',')
+				if d1:
+					cr.execute('SELECT id FROM "'+self._table+'" ' \
+							'WHERE id IN ('+ids_str+')'+d1, d2)
+					if not cr.rowcount == len({}.fromkeys(sub_ids)):
+						raise except_orm('AccessError',
+								'You try to bypass an access rule (Document type: %s).'% \
+										self._description)
+				else:
+					cr.execute('SELECT id FROM "'+self._table+'" WHERE id IN ('+ids_str+')')
+					if not cr.rowcount == len({}.fromkeys(sub_ids)):
+						raise except_orm('AccessError',
+								'You try to write on an record that doesn\'t exist ' \
+										'(Document type: %s).' % self._description)
+				if d1:
+					cr.execute('update "'+self._table+'" set '+string.join(upd0,',')+' ' \
+							'where id in ('+ids_str+')'+d1, upd1+ d2)
+				else:
+					cr.execute('update "'+self._table+'" set '+string.join(upd0,',')+' ' \
+							'where id in ('+ids_str+')', upd1)
 
 			if totranslate:
 				for f in direct:
@@ -1102,8 +1151,13 @@ class orm(object):
 
 		for table in self._inherits:
 			col = self._inherits[table]
-			cr.execute('select distinct "'+col+'" from "'+self._table+'" where id in ('+ids_str+')', upd1)
-			nids = [x[0] for x in cr.fetchall()]
+			nids = []
+			for i in range((len(ids) / ID_MAX) + ((len(ids) % ID_MAX) and 1 or 0)):
+				sub_ids = ids[ID_MAX * i:ID_MAX * (i + 1)]
+				ids_str = string.join(map(str, sub_ids),',')
+				cr.execute('select distinct "'+col+'" from "'+self._table+'" ' \
+						'where id in ('+ids_str+')', upd1)
+				nids.extend([x[0] for x in cr.fetchall()])
 
 			v = {}
 			for val in updend:
@@ -1657,8 +1711,13 @@ class orm(object):
 				if not ids2:
 					args[i] = ('id','=','0')
 				else:
-					cr.execute('select "'+field._fields_id+'" from "'+field_obj._table+'" where id in ('+','.join(map(str,ids2))+')')
-					ids3 = [x[0] for x in cr.fetchall()]
+					ids3 = []
+					for i in range((len(ids2) / ID_MAX) + (len(ids2) % ID_MAX)):
+						sub_ids2 = ids2[ID_MAX * i:ID_MAX * (i + 1)]
+						cr.execute('select "'+field._fields_id+'" ' \
+								'from "'+field_obj._table+'" ' \
+								'where id in ('+','.join(map(str,sub_ids2))+')')
+						ids3.extend([x[0] for x in cr.fetchall()])
 
 					args[i] = ('id', 'in', ids3)
 				i+=1
@@ -1803,6 +1862,7 @@ class orm(object):
 							todel.append(xitem)
 					for xitem in todel[::-1]:
 						del x[2][xitem]
+					#TODO fix max_stack_depth
 					if x[0]=='id':
 						qu1.append('(%s.id in (%s))' % (table._table, ','.join(['%d'] * len(x[2])),))
 					else:
@@ -1975,9 +2035,14 @@ class orm(object):
 			parent = self._parent_name
 		ids_parent = ids[:]
 		while len(ids_parent):
-			cr.execute('SELECT distinct "'+parent+'"'+
-				' FROM "'+self._table+'" WHERE id in ('+','.join(map(str, ids_parent))+')')
-			ids_parent = filter(None, map(lambda x: x[0], cr.fetchall()))
+			ids_parent2 = []
+			for i in range((len(ids) / ID_MAX) + ((len(ids) % ID_MAX) and 1 or 0)):
+				sub_ids_parent = ids_parent[ID_MAX * i:ID_MAX * (i + 1)]
+				cr.execute('SELECT distinct "'+parent+'"'+
+					' FROM "'+self._table+'" ' \
+					'WHERE id in ('+','.join(map(str, sub_ids_parent))+')')
+				ids_parent2.extend(filter(None, map(lambda x: x[0], cr.fetchall())))
+			ids_parent = ids_parent2
 			for i in ids_parent:
 				if i in ids:
 					return False
