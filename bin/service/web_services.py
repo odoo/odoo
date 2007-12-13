@@ -86,6 +86,7 @@ class db(netsvc.Service):
 					tools.init_db(cr)
 					cr.commit()
 					cr.close()
+					cr = None
 					pool = pooler.get_pool(db_name, demo,serv.actions[id],
 							update_module=True)
 					if lang and lang != 'en_US':
@@ -108,7 +109,8 @@ class db(netsvc.Service):
 					traceback_str = e_str.getvalue()
 					e_str.close()
 					serv.actions[id]['traceback'] = traceback_str
-					cr.close()
+					if cr:
+						cr.close()
 		logger = netsvc.Logger()
 		logger.notifyChannel("web-services", netsvc.LOG_INFO,
 				'CREATE DB: %s' % (db_name))
