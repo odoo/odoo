@@ -503,7 +503,7 @@ class account_invoice(osv.osv):
 			move_id = self.pool.get('account.move').create(cr, uid, move)
 			# make the invoice point to that move
 			self.write(cr, uid, [inv.id], {'move_id': move_id})
-			self.pool.get('account.move').write(cr, uid, [move_id], {'state':'posted'})
+			self.pool.get('account.move').post(cr, uid, [move_id])
 		self._log_event(cr, uid, ids)
 		return True
 

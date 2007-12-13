@@ -606,14 +606,15 @@ class account_move(osv.osv):
 		'state': lambda *a: 'draft',
 		'period_id': _get_period,
 	}
-	def button_validate(self, cr, uid, ids, context={}):
+	def post(self, cr, uid, ids, context=None):
 		if self.validate(cr, uid, ids, context) and len(ids):
 			cr.execute('update account_move set state=%s where id in ('+','.join(map(str,ids))+')', ('posted',))
 		else:
-			cr.execute('update account_move set state=%s where id in ('+','.join(map(str,ids))+')', ('draft',))
-			cr.commit()
 			raise osv.except_osv('Integrity Error !', 'You can not validate a non balanced entry !')
 		return True
+
+	def button_validate(self, cursor, user, ids, context=None):
+		return self.post(cursor, user, ids, context=context)
 
 	def button_cancel(self, cr, uid, ids, context={}):
 		for line in self.browse(cr, uid, ids, context):
