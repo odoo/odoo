@@ -65,21 +65,26 @@ class account_analytic_line(osv.osv):
 		(_check_company, 'You can not create analytic line that is not in the same company than the account line', ['account_id'])
 	]
 	
-	def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount, unit=False, context={}):
+	def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount,
+			unit=False, context=None):
+		uom_obj = self.pool.get('product.uom')
+		product_obj = self.pool.get('product.product')
 		if unit_amount and prod_id:
-			rate = 1
-			if unit:
-				uom_obj = self.pool.get('product.uom')
-				hunit = uom_obj.browse(cr, uid, unit)
-				rate = hunit.factor
-			product_obj = self.pool.get('product.product')
 			prod = product_obj.browse(cr, uid, prod_id)
 			a = prod.product_tmpl_id.property_account_expense.id
 			if not a:
 				a = prod.categ_id.property_account_expense_categ.id
 			if not a:
-				raise osv.except_osv('Error !', 'There is no expense account define for this product: "%s" (id:%d)' % (prod.name, prod.id,))
-			return {'value' : {'amount' : -round(unit_amount * prod.standard_price * rate,2), 'general_account_id':a}}
+				raise osv.except_osv('Error !',
+						'There is no expense account define ' \
+								'for this product: "%s" (id:%d)' % \
+								(prod.name, prod.id,))
+			amount = unit_amount * uom_obj._compute_price(cr, uid,
+					prod.uom_id.id, prod.standard_price, unit)
+			return {'value': {
+				'amount': - round(amount, 2),
+				'general_account_id': a,
+				}}
 		return {}
 
 account_analytic_line()
