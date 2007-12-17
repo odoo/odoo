@@ -43,7 +43,6 @@ pay_fields = {
 }
 
 def _pay_and_reconcile(self, cr, uid, data, context):
-	service = netsvc.LocalService("object_proxy")
 	form = data['form']
 	period_id = form.get('period_id', False)
 	journal_id = form.get('journal_id', False)
@@ -53,11 +52,9 @@ def _pay_and_reconcile(self, cr, uid, data, context):
 	acc_id = pool.get('account.journal').browse(cr, uid, journal_id, context).default_credit_account_id.id
 	if not acc_id:
 		raise wizard.except_wizard('Error !', 'Your journal must have a default credit and debit account.')
-	service.execute(cr.dbname, uid, 'account.invoice', 'pay_and_reconcile', [data['id']], form['amount'], acc_id, period_id, journal_id, writeoff_account_id, period_id, writeoff_journal_id, context)
-	return {}
-
-def _trans_reconcile(self, cr, uid, data, context):
-	service = netsvc.LocalService("object_proxy")
+	pool.get('account.invoice').pay_and_reconcile(cr, uid, [data['id']],
+			form['amount'], acc_id, period_id, journal_id, writeoff_account_id,
+			period_id, writeoff_journal_id, context=context)
 	return {}
 
 def _wo_check(self, cr, uid, data, context):
