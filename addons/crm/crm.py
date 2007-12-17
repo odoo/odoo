@@ -49,6 +49,12 @@ AVAILABLE_PRIORITIES = [
 	('1','Highest')
 ]
 
+icon_lst = {
+	'form':'STOCK_NEW',
+	'tree':'STOCK_JUSTIFY_FILL',
+	'calendar':'STOCK_SELECT_COLOR'
+}
+
 class crm_case_section(osv.osv):
 	_name = "crm.case.section"
 	_description = "Case Section"
@@ -81,6 +87,53 @@ class crm_case_section(osv.osv):
 		(_check_recursion, 'Error ! You can not create recursive sections.', ['parent_id'])
 	]
 
+	# Mainly used by the wizard
+	def menu_create_data(self, cr, uid, data, menu_lst, context):
+		menus = {}
+		menus[0] = data['menu_parent_id']
+		section = self.browse(cr, uid, data['section_id'], context)
+		for (index, mname, mdomain, latest, view_mode) in menu_lst:
+			if view_mode=='no':
+				menus[index] = data['menu_parent_id']
+				continue
+			view_mode = data['menu'+str(index)+'_option']
+			icon = icon_lst.get(view_mode.split(',')[0], 'STOCK_JUSTIFY_FILL')
+			menu_id=self.pool.get('ir.ui.menu').create(cr, uid, {
+				'name': data['menu'+str(index)],
+				'parent_id': menus[latest],
+				'icon': icon
+			})
+			menus[index] = menu_id
+			action_id = self.pool.get('ir.actions.act_window').create(cr,uid, {
+				'name': data['menu'+str(index)],
+				'res_model': 'crm.case',
+				'domain': mdomain.replace('SECTION_ID', str(data['section_id'])),
+				'view_type': 'form',
+				'view_mode': view_mode,
+			})
+			seq = 0
+			for mode in view_mode.split(','):
+				self.pool.get('ir.actions.act_window.view').create(cr, uid, {
+					'sequence': seq,
+					'view_id': data['view_'+mode],
+					'view_mode': mode,
+					'act_window_id': action_id,
+					'multi': True
+				})
+				seq+=1
+			self.pool.get('ir.values').create(cr, uid, {
+				'name': data['menu'+str(index)],
+				'key2': 'tree_but_open',
+				'model': 'ir.ui.menu',
+				'res_id': menu_id,
+				'value': 'ir.actions.act_window,%d'%action_id,
+				'object': True
+			})
+		return True
+
+	#
+	# Used when called from .XML file
+	#
 	def menu_create(self, cr, uid, ids, name, menu_parent_id=False, context={}):
 		menus = {}
 		menus[-1] = menu_parent_id
@@ -273,7 +326,7 @@ class crm_case(osv.osv):
 		'som': fields.many2one('res.partner.som', 'State of Mind'),
 		'date': fields.datetime('Date'),
 		'create_date': fields.datetime('Created' ,readonly=True),
-		'date_deadline': fields.date('Deadline'),
+		'date_deadline': fields.datetime('Deadline'),
 		'date_closed': fields.datetime('Closed', readonly=True),
 		'canal_id': fields.many2one('res.partner.canal', 'Channel'),
 		'user_id': fields.many2one('res.users', 'User Responsible'),
@@ -688,8 +741,15 @@ class crm_case_history(osv.osv):
 	_description = "Case history"
 	_order = "id desc"
 	_inherits = {'crm.case.log':"log_id"}
+	def _note_get(self, cursor, user, ids, name, arg, context=None):
+		res = {}
+		for hist in self.browse(cursor, user, ids, context or {}):
+			res[hist.id] = (hist.email or '/') + ' (' + str(hist.date) + ')\n'
+			res[hist.id] += (hist.description or '')
+		return res
 	_columns = {
 		'description': fields.text('Description'),
+		'note': fields.function(_note_get, method=True, string="Description", type="text"),
 		'email': fields.char('Email', size=84),
 		'log_id': fields.many2one('crm.case.log','Log'),
 	}

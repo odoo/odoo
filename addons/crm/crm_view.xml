@@ -247,6 +247,20 @@
 		</field>
 	</record>
 
+	<record model="ir.ui.view" id="crm_case_calendar-view">
+		<field name="name">crm.case.calendar</field>
+		<field name="model">crm.case</field>
+		<field name="type">calendar</field>
+		<field name="arch" type="xml">
+			<calendar string="Cases" color="user_id" date_start="date" date_stop="date_deadline" day_length="12">
+				<field name="name"/>
+				<field name="partner_id"/>
+				<field name="state"/>
+			</calendar>
+		</field>
+	</record>
+
+
 	<record model="ir.ui.view" id="crm_case_tree-view">
 		<field name="name">crm.case.tree</field>
 		<field name="model">crm.case</field>
@@ -302,14 +316,11 @@
 							<field name="description" colspan="4" nolabel="1" select="2"/>
 						</form>
 						<tree string="Communication history">
-							<field name="description"/>
-							<field name="email"/>
-							<field name="date"/>
+							<field name="note"/>
 						</tree>
 					</field>
 					<group col="2" colspan="2" expand="1">
 						<field name="canal_id"/>
-						<field name="som" select="2"/>
 						<button name="add_reply" string="Add Last Mail for Replying"
 							states="open" type="object" colspan="2"/>
 						<field name="description" colspan="2" select="2" nolabel="1"/>
@@ -336,6 +347,7 @@
 					<field name="active" select="2"/>
 					<field name="email_cc" colspan="4"/>
 					<field name="categ_id" select="2" on_change="onchange_categ_id(categ_id)"/>
+					<field name="som" select="2"/>
 					<separator colspan="4" string="Dates"/>
 					<field name="create_date"/>
 					<field name="date_closed"/>
