@@ -66,7 +66,7 @@ class crm_segmentation(osv.osv):
 				if categ['exclusif']:
 					cr.execute('delete from res_partner_category_rel where category_id=%d', (categ['categ_id'][0],))
 
-			id = categ['id']			
+			id = categ['id']
 
 			cr.execute('select id from res_partner order by id ')
 			partners = [x[0] for x in cr.fetchall()]
@@ -147,14 +147,39 @@ class crm_segmentation_line(osv.osv):
 		lst = self.read(cr, uid, ids)
 		for l in lst:
 			if l['expr_name']=='som':
-				datas = self.pool.get('crm.segmentation').read(cr, uid, [l['segmentation_id'][0]], ['som','som_interval','som_interval_max','som_interval_default', 'som_interval_decrease'])
+				datas = self.pool.get('crm.segmentation').read(cr, uid, [l['segmentation_id'][0]],
+						['som','som_interval','som_interval_max','som_interval_default', 'som_interval_decrease'])
 				value = crm_operators.som(cr, uid, partner_id, datas[0])
 			elif l['expr_name']=='sale':
-				cr.execute('select sum(l.price_unit*l.quantity) from account_invoice_line l left join account_invoice i on (l.invoice_id=i.id) where i.partner_id=%d', (partner_id,))
+				cr.execute('SELECT SUM(l.price_unit * l.quantity) ' \
+						'FROM account_invoice_line l, account_invoice i ' \
+						'WHERE (l.invoice_id = i.id) ' \
+							'AND i.partner_id = %d '\
+							'AND i.type = \'out_invoice\'',
+						(partner_id,))
 				value = cr.fetchone()[0] or 0.0
+				cr.execute('SELECT SUM(l.price_unit * l.quantity) ' \
+						'FROM account_invoice_line l, account_invoice i ' \
+						'WHERE (l.invoice_id = i.id) ' \
+							'AND i.partner_id = %d '\
+							'AND i.type = \'out_refund\'',
+						(partner_id,))
+				value -= cr.fetchone()[0] or 0.0
 			elif l['expr_name']=='purchase':
-				cr.execute('select sum(l.price_unit*l.quantity) from account_invoice_line l left join account_invoice i on (l.invoice_id=i.id) where i.partner_id=%d', (partner_id,))
+				cr.execute('SELECT SUM(l.price_unit * l.quantity) ' \
+						'FROM account_invoice_line l, account_invoice i ' \
+						'WHERE (l.invoice_id = i.id) ' \
+							'AND i.partner_id = %d '\
+							'AND i.type = \'in_invoice\'',
+						(partner_id,))
 				value = cr.fetchone()[0] or 0.0
+				cr.execute('SELECT SUM(l.price_unit * l.quantity) ' \
+						'FROM account_invoice_line l, account_invoice i ' \
+						'WHERE (l.invoice_id = i.id) ' \
+							'AND i.partner_id = %d '\
+							'AND i.type = \'in_refund\'',
+						(partner_id,))
+				value -= cr.fetchone()[0] or 0.0
 			res = expression[l['expr_operator']](value, l['expr_value'])
 			if (not res) and (l['operator']=='and'):
 				return False
