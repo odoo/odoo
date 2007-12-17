@@ -93,10 +93,10 @@ class crm_case_section(osv.osv):
 		menus[0] = data['menu_parent_id']
 		section = self.browse(cr, uid, data['section_id'], context)
 		for (index, mname, mdomain, latest, view_mode) in menu_lst:
+			view_mode = data['menu'+str(index)+'_option']
 			if view_mode=='no':
 				menus[index] = data['menu_parent_id']
 				continue
-			view_mode = data['menu'+str(index)+'_option']
 			icon = icon_lst.get(view_mode.split(',')[0], 'STOCK_JUSTIFY_FILL')
 			menu_id=self.pool.get('ir.ui.menu').create(cr, uid, {
 				'name': data['menu'+str(index)],
