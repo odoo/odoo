@@ -80,7 +80,12 @@ class report_rml(report_int):
 		self.tmpl = tmpl
 		self.xsl = xsl
 		self.bin_datas = {}
-		self.generators = {'pdf': self.create_pdf, 'html': self.create_html, 'raw': self.create_raw}
+		self.generators = {
+				'pdf': self.create_pdf,
+				'html': self.create_html,
+				'raw': self.create_raw,
+				'sxw': self.create_sxw,
+				}
 
 	def create(self, cr, uid, ids, datas, context):
 		xml = self.create_xml(cr, uid, ids, datas, context)
@@ -197,6 +202,9 @@ class report_rml(report_int):
 
 	def create_raw(self, xml):
 		return xml
+
+	def create_sxw(self, path):
+		return path
 
 from report_sxw import report_sxw
 

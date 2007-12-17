@@ -138,7 +138,13 @@ class report_xml(osv.osv):
 		'header': fields.boolean('Add RML header',
 			help="Add or not the coporate RML header"),
 		'multi': fields.boolean('On multiple doc.',
-			help="If set to true, the action will not be displayed on the right toolbar of a form views.")
+			help="If set to true, the action will not be displayed on the right toolbar of a form views."),
+		'report_type': fields.selection([
+			('pdf', 'pdf'),
+			('html', 'html'),
+			('raw', 'raw'),
+			('sxw', 'sxw'),
+			], string='Type', required=True),
 	}
 	_defaults = {
 		'type': lambda *a: 'ir.actions.report.xml',
@@ -146,6 +152,7 @@ class report_xml(osv.osv):
 		'auto': lambda *a: True,
 		'header': lambda *a: True,
 		'report_sxw_content': lambda *a: False,
+		'report_type': lambda *a: 'pdf',
 	}
 
 report_xml()

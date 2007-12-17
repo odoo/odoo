@@ -38,12 +38,29 @@ import netsvc
 import warnings
 import locale
 import copy
+import StringIO
+import zipfile
 
-parents = {
+rml_parents = {
 	'tr':1,
 	'li':1,
 	'story': 0,
 	'section': 0
+}
+
+rml_tag="para"
+
+sxw_parents = {
+	'table-row': 1,
+	'list-item': 1,
+	'body': 0,
+	'section': 0,
+}
+
+sxw_tag = "p"
+
+rml2sxw = {
+	'para': 'p',
 }
 
 #
@@ -52,7 +69,6 @@ parents = {
 class browse_record_list(list):
 	def __init__(self, lst, context):
 		super(browse_record_list, self).__init__(lst)
-		self.parents = copy.copy(parents)
 		self.context = context
 
 	def __getattr__(self, name):
@@ -65,6 +81,7 @@ class browse_record_list(list):
 	def repeatIn(self, name):
 		warnings.warn('Use repeatIn(object_list, \'variable\')', DeprecationWarning)
 		node = self.context['_node']
+		parents = self.context.get('parents', rml_parents)
 		node.data = ''
 		while True:
 			if not node.parentNode:
@@ -87,7 +104,7 @@ class browse_record_list(list):
 		return None
 
 class rml_parse(object):
-	def __init__(self, cr, uid, name, context=None):
+	def __init__(self, cr, uid, name, parents=rml_parents, tag=rml_tag, context=None):
 		if not context:
 			context={}
 		self.cr = cr
@@ -109,6 +126,8 @@ class rml_parse(object):
 		self._regex = re.compile('\[\[(.+?)\]\]')
 		self._transl_regex = re.compile('(\[\[.+?\]\])')
 		self._node = None
+		self.parents = parents
+		self.tag = tag
 #		self.already = {}
 
 	def setTag(self, oldtag, newtag, attrs=None):
@@ -121,7 +140,9 @@ class rml_parse(object):
 				node.setAttribute(key, val)
 		return None
 
-	def format(self, text, oldtag='para'):
+	def format(self, text, oldtag=None):
+		if not oldtag:
+			oldtag = self.tag
 		self._node.data = ''
 		node = self._find_parent(self._node, [oldtag])
 
@@ -135,7 +156,7 @@ class rml_parse(object):
 		nodes = []
 		for i in range(len(lst)):
 			newnode = node.cloneNode(1)
-			newnode.tagName='para'
+			newnode.tagName=rml_tag
 			newnode.__dict__['childNodes'][0].__dict__['data'] = lst[i].decode('utf8')
 			if ns:
 				pp.insertBefore(newnode, ns)
@@ -143,7 +164,11 @@ class rml_parse(object):
 				pp.appendChild(newnode)
 			nodes.append((i, newnode))
 
-	def removeParentNode(self, tag):
+	def removeParentNode(self, tag=None):
+		if not tag:
+			tag = self.tag
+		if self.tag == sxw_tag and rml2sxw.get(tag, False):
+			tag = rml2sxw[tag]
 		node = self._find_parent(self._node, [tag])
 		if node:
 			parentNode = node.parentNode
@@ -169,7 +194,7 @@ class rml_parse(object):
 
 	def repeatIn(self, lst, name, nodes_parent=False):
 		self._node.data = ''
-		node = self._find_parent(self._node, nodes_parent or parents)
+		node = self._find_parent(self._node, nodes_parent or self.parents)
 
 		pp = node.parentNode
 		ns = node.nextSibling
@@ -356,28 +381,78 @@ class report_sxw(report_rml):
 	def create(self, cr, uid, ids, data, context=None):
 		if not context:
 			context={}
+		context = context.copy()
 		pool = pooler.get_pool(cr.dbname)
 		ir_actions_report_xml_obj = pool.get('ir.actions.report.xml')
 		report_xml_ids = ir_actions_report_xml_obj.search(cr, uid,
 				[('report_name', '=', self.name[7:])], context=context)
+		report_type = 'pdf'
+		report_xml = None
 		if report_xml_ids:
-			rml = ir_actions_report_xml_obj.browse(cr, uid, report_xml_ids[0],
-					context=context).report_rml_content
+			report_xml = ir_actions_report_xml_obj.browse(cr, uid, report_xml_ids[0],
+					context=context)
+			rml = report_xml.report_rml_content
+			report_type = report_xml.report_type
 		else:
 			rml = tools.file_open(self.tmpl, subdir=None).read()
+		report_type= data.get('report_type', report_type)
 
-		rml_parser = self.parser(cr, uid, self.name2, context)
-		objs = self.getObjects(cr, uid, ids, context)
-		rml_parser.preprocess(objs, data, ids)
-		
-		rml_dom = xml.dom.minidom.parseString(rml)
-		
-		rml2 = rml_parser._parse(rml_dom, objs, data, header=self.header)
-		#if os.name != "nt":
-		#	f = file("/tmp/debug.rml", "w")
-		#	f.write(rml2)
-		#	f.close()
-		report_type= data.get('report_type','pdf')
+		if report_type == 'sxw' and report_xml:
+			context['parents'] = sxw_parents
+			sxw_io = StringIO.StringIO(report_xml.report_sxw_content)
+			sxw_z = zipfile.ZipFile(sxw_io, mode='r')
+			rml = sxw_z.read('content.xml')
+			meta = sxw_z.read('meta.xml')
+			sxw_z.close()
+			rml_parser = self.parser(cr, uid, self.name2, context)
+			rml_parser.parents = sxw_parents
+			rml_parser.tag = sxw_tag
+			objs = self.getObjects(cr, uid, ids, context)
+			rml_parser.preprocess(objs, data, ids)
+			rml_dom = xml.dom.minidom.parseString(rml)
+
+			node = rml_dom.documentElement
+			elements = node.getElementsByTagName("text:p")
+			for pe in elements:
+				e = pe.getElementsByTagName("text:drop-down")
+				for de in e:
+					for cnd in de.childNodes:
+						if cnd.nodeType in (cnd.CDATA_SECTION_NODE, cnd.TEXT_NODE):
+							pe.appendChild(cnd)
+							pe.removeChild(de)
+
+			rml2 = rml_parser._parse(rml_dom, objs, data, header=self.header)
+			sxw_z = zipfile.ZipFile(sxw_io, mode='a')
+			sxw_z.writestr('content.xml', "<?xml version='1.0' encoding='UTF-8'?>" + \
+					rml2)
+			if self.header:
+				#Add corporate header/footer
+				rml = tools.file_open('custom/corporate_sxw_header.xml').read()
+				rml_parser = self.parser(cr, uid, self.name2, context)
+				rml_parser.parents = sxw_parents
+				rml_parser.tag = sxw_tag
+				objs = self.getObjects(cr, uid, ids, context)
+				rml_parser.preprocess(objs, data, ids)
+				rml_dom = xml.dom.minidom.parseString(rml)
+				rml2 = rml_parser._parse(rml_dom, objs, data, header=self.header)
+				sxw_z.writestr('styles.xml',"<?xml version='1.0' encoding='UTF-8'?>" + \
+						rml2)
+			sxw_z.close()
+			rml2 = sxw_io.getvalue()
+			sxw_io.close()
+		else:
+			context['parents'] = rml_parents
+			rml_parser = self.parser(cr, uid, self.name2, context)
+			rml_parser.parents = rml_parents
+			rml_parser.tag = rml_tag
+			objs = self.getObjects(cr, uid, ids, context)
+			rml_parser.preprocess(objs, data, ids)
+			rml_dom = xml.dom.minidom.parseString(rml)
+			rml2 = rml_parser._parse(rml_dom, objs, data, header=self.header)
+			#if os.name != "nt":
+			#	f = file("/tmp/debug.rml", "w")
+			#	f.write(rml2)
+			#	f.close()
 		create_doc = self.generators[report_type]
 		pdf = create_doc(rml2)
 		return (pdf, report_type)
