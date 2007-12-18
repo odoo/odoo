@@ -189,7 +189,7 @@ class product_pricelist(osv.osv):
 					if partner:
 						where = [('name', '=', partner) ] 
 					sinfo = supplierinfo_obj.search(cr, uid,
-							[('product_id', '=', prod_id)] + where)
+							[('product_id', '=', tmpl_id)] + where)
 					if not sinfo:
 						result[id] = 0
 						continue
