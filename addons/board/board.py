@@ -70,7 +70,7 @@ class board_board(osv.osv):
 		res = super(board_board, self).fields_view_get(cr, user, view_id, view_type, context, toolbar)
 		return res
 	_columns = {
-		'name': fields.char('Board', size=64, required=True),
+		'name': fields.char('Dashboard', size=64, required=True),
 		'line_ids': fields.one2many('board.board.line', 'board_id', 'Action Views')
 	}
 board_board()
