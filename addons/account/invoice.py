@@ -141,9 +141,9 @@ class account_invoice(osv.osv):
 		'tax_line': fields.one2many('account.invoice.tax', 'invoice_id', 'Tax Lines', readonly=True, states={'draft':[('readonly',False)]}),
 
 		'move_id': fields.many2one('account.move', 'Invoice Movement', readonly=True),
-		'amount_untaxed': fields.function(_amount_untaxed, method=True, digits=(16,2),string='Untaxed'),
-		'amount_tax': fields.function(_amount_tax, method=True, string='Tax', store=True),
-		'amount_total': fields.function(_amount_total, method=True, string='Total', store=True),
+		'amount_untaxed': fields.function(_amount_untaxed, method=True, digits=(16,2),string='Untaxed', store=True),
+		'amount_tax': fields.function(_amount_tax, method=True, digits=(16,2), string='Tax', store=True),
+		'amount_total': fields.function(_amount_total, method=True, digits=(16,2), string='Total', store=True),
 		'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
 		'journal_id': fields.many2one('account.journal', 'Journal', required=True,readonly=True, states={'draft':[('readonly',False)]}),
 		'company_id': fields.many2one('res.company', 'Company', required=True),
