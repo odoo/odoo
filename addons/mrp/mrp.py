@@ -145,28 +145,21 @@ class mrp_bom(osv.osv):
 		'code': fields.char('Code', size=16),
 		'active': fields.boolean('Active'),
 		'type': fields.selection([('normal','Normal BoM'),('phantom','Phantom')], 'BoM Type', required=True, help="Use a phantom bill of material in lines that have a sub-bom and that have to be automatically computed in one line, without habing two production orders."),
-
 		'date_start': fields.date('Valid from'),
 		'date_stop': fields.date('Valid until'),
-
 		'sequence': fields.integer('Sequence'),
-
 		'position': fields.char('Internal Ref.', size=64),
 		'product_id': fields.many2one('product.product', 'Product', required=True),
+		'product_uos_qty': fields.float('Product UOS Qty'),
+		'product_uos': fields.many2one('product.uom', 'Product UOS'),
 		'product_qty': fields.float('Product Qty', required=True),
 		'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
-
 		'product_rounding': fields.float('Product Rounding'),
-
 		'product_efficiency': fields.float('Product Efficiency', required=True),
-
 		'bom_lines': fields.one2many('mrp.bom', 'bom_id', 'BoM Lines'),
 		'bom_id': fields.many2one('mrp.bom', 'Parent BoM', ondelete='cascade', select=True),
-
 		'routing_id': fields.many2one('mrp.routing', 'Routing', help="The list of operations (list of workcenters) to produce the finnished product. The routing is mainly used to compute workcenter costs during operations and to plan futur loads on workcenters based on production plannification."),
-
 		'property_ids': fields.many2many('mrp.property', 'mrp_bom_property_rel', 'bom_id','property_id', 'Properties'),
-
 		'revision_ids': fields.one2many('mrp.bom.revision', 'bom_id', 'BoM Revisions'),
 		'revision_type': fields.selection([('numeric','numeric indices'),('alpha','alphabetical indices')], 'indice type')
 	}
@@ -307,6 +300,7 @@ def rounding(f, r):
 class mrp_production(osv.osv):
 	_name = 'mrp.production'
 	_description = 'Production'
+	_date_name  = 'date_planned'
 	_columns = {
 		'name': fields.char('Name', size=64, required=True),
 		'origin': fields.char('Origin', size=64),
@@ -428,6 +422,8 @@ class mrp_production(osv.osv):
 					'product_id': production.product_id.id,
 					'product_qty': production.product_qty,
 					'product_uom': production.product_uom.id,
+					'product_uos_qty': production.product_uos and production.product_uos_qty or False,
+					'product_uos': production.product_uos and production.product_uos.id or False,
 					'location_id': source,
 					'location_dest_id': production.location_dest_id.id,
 					'move_dest_id': production.move_prod_id.id,
@@ -504,12 +500,17 @@ class mrp_production(osv.osv):
 			if not production.product_lines:
 				self.action_compute(cr, uid, [production.id])
 				production = self.browse(cr, uid, [production.id])[0]
+			autopick = True
+			try:
+				autopick = production.product_id.auto_picking
+			except:
+				pass
 			picking_id = self.pool.get('stock.picking').create(cr, uid, {
 				'origin': (production.origin or '').split(':')[0] +':'+production.name,
 				'type': 'internal',
 				'move_type': 'one',
 				'state': 'auto',
-				'auto_picking': True,
+				'auto_picking': autopick,
 			})
 			toconfirm = True
 
@@ -520,6 +521,8 @@ class mrp_production(osv.osv):
 				'product_id': production.product_id.id,
 				'product_qty': production.product_qty,
 				'product_uom': production.product_uom.id,
+				'product_uos_qty': production.product_uos and production.product_uos_qty or False,
+				'product_uos': production.product_uos and production.product_uos.id or False,
 				'location_id': source,
 				'location_dest_id': production.location_dest_id.id,
 				'move_dest_id': production.move_prod_id.id,
@@ -539,6 +542,8 @@ class mrp_production(osv.osv):
 						'product_id': line.product_id.id,
 						'product_qty': line.product_qty,
 						'product_uom': line.product_uom.id,
+						'product_uos_qty': line.product_uos and line.product_uos_qty or False,
+						'product_uos': line.product_uos and line.product_uos.id or False,
 						'location_id': production.location_src_id.id,
 						'location_dest_id': source,
 						'move_dest_id': res_final_id,
@@ -551,6 +556,8 @@ class mrp_production(osv.osv):
 						'product_id': line.product_id.id,
 						'product_qty': line.product_qty,
 						'product_uom': line.product_uom.id,
+						'product_uos_qty': line.product_uos and line.product_uos_qty or False,
+						'product_uos': line.product_uos and line.product_uos.id or False,
 						'date_planned': newdate,
 						'move_dest_id': res_dest_id,
 						'location_id': production.location_src_id.id,
