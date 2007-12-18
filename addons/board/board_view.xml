@@ -39,5 +39,62 @@
 			action="action_view_board_note_form"
 			sequence="100"
 			id="menu_view_board_note_form"/>
+
+
+		<record model="ir.ui.view" id="view_board_tree">
+			<field name="name">board.board.tree</field>
+			<field name="model">board.board</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Dashboard">
+					<field name="name"/>
+				</tree>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="view_board_form">
+			<field name="name">board.board.form</field>
+			<field name="model">board.board</field>
+			<field name="type">form</field>
+			<field name="priority" eval="1"/>
+			<field name="arch" type="xml">
+				<form string="Dashboard">
+					<field name="name" select="1"/>
+					<field name="line_ids" colspan="4">
+						<tree string="Dashboard View">
+							<field name="name"/>
+							<field name="sequence"/>
+							<field name="action_id"/>
+							<field name="position"/>
+						</tree>
+						<form string="Dashboard View">
+							<field name="name"/>
+							<field name="sequence"/>
+							<field name="width"/>
+							<field name="height"/>
+							<field name="action_id"/>
+							<field name="position"/>
+						</form>
+					</field>
+				</form>
+			</field>
+		</record>
+		<record model="ir.actions.act_window" id="action_view_board_list_form">
+			<field name="name">Dashboard Definition</field>
+			<field name="res_model">board.board</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem
+			name="Dashboards/Configuration/Dashboard Definition"
+			action="action_view_board_list_form"
+			id="menu_view_board_form"/>
+
+
+	<act_window name="Open Dashboard"
+		context="{'view': active_id}"
+		res_model="board.board"
+		src_model="board.board"
+		id="dashboard_open"/>
+
 	</data>
 </terp>

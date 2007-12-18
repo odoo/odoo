@@ -29,17 +29,68 @@
 import time
 from osv import fields,osv
 
-class board(osv.osv):
+class board_board(osv.osv):
 	_name = 'board.board'
-	def create(self, cr, user, vals, context={}):
-		return False
-	def copy(self, cr, uid, id, default=None, context={}):
-		return False
+	def create(self, cr, user, vals, context=None):
+		if not 'name' in vals:
+			return False
+		return super(board_board, self).create(cr, user, vals, context)
+	def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False):
+		if context and ('view' in context):
+			board = self.pool.get('board.board').browse(cr, user, int(context['view']), context)
+			left = []
+			right = []
+			for line in board.line_ids:
+				linestr = '<action string="%s" name="%d" colspan="4"' % (line.name, line.action_id.id)
+				if line.height:
+					linestr+=(' height="%d"' % (line.height,))
+				if line.width:
+					linestr+=(' width="%d"' % (line.width,))
+				linestr += '/>'
+				if line.position=='left':
+					left.append(linestr)
+				else:
+					right.append(linestr)
+			arch = """<form string="My Board">
+<hpaned>
+	<child1>
+		%s
+	</child1>
+	<child2>
+		%s
+	</child2>
+</hpaned>
+</form>""" % ('\n'.join(left), '\n'.join(right))
+			result = {
+				'toolbar': {'print':[],'action':[],'relate':[]},
+				'fields': {},
+				'arch': arch
+			}
+			return result
+		res = super(board_board, self).fields_view_get(cr, user, view_id, view_type, context, toolbar)
+		return res
 	_columns = {
-		'name': fields.char('Board', size=64),
+		'name': fields.char('Board', size=64, required=True),
+		'line_ids': fields.one2many('board.board.line', 'board_id', 'Action Views')
 	}
-board()
+board_board()
 
+class board_line(osv.osv):
+	_name = 'board.board.line'
+	_order = 'position,sequence'
+	_columns = {
+		'name': fields.char('Board', size=64, required=True),
+		'sequence': fields.integer('Sequence'),
+		'height': fields.integer('Height'),
+		'width': fields.integer('Width'),
+		'board_id': fields.many2one('board.board', 'Dashboard', required=True, ondelete='cascade'),
+		'action_id': fields.many2one('ir.actions.act_window', 'Action', required=True),
+		'position': fields.selection([('left','Left'),('right','Right')], 'Position', required=True)
+	}
+	_defaults = {
+		'position': lambda *args: 'left'
+	}
+board_line()
 
 class board_note_type(osv.osv):
 	_name = 'board.note.type'
