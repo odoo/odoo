@@ -134,31 +134,6 @@
 	</record>
 	<menuitem name="Sales Management/Reporting/This Month/Sales of the Month" action="action_order_sale_list" id="menu_report_order_sale_list"/>
 
-	<record model="ir.actions.act_window" id="action_order_sale_quotation">
-		<field name="name">Open Quotations</field>
-		<field name="res_model">sale.order</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[('date_order','>=',time.strftime('%Y-%m-01')),('state','=','draft')]</field>
-	</record>
-	<menuitem name="Sales Management/Reporting/All Months/Open Quotations" action="action_order_sale_quotation" id="menu_report_order_sale_quotation"/>
-
-	<record model="ir.actions.act_window" id="action_order_sale_uninvoiced">
-		<field name="name">Uninvoiced Sales</field>
-		<field name="res_model">sale.order</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[('invoiced','=',False),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]</field>
-	</record>
-	<menuitem name="Sales Management/Reporting/All Months/Uninvoiced Sales" action="action_order_sale_uninvoiced" id="menu_report_order_sale_uninvoiced"/>
-	<record model="ir.actions.act_window" id="action_order_sale_uninvoiced_shipped">
-		<field name="name">Uninvoiced but shipped Sales</field>
-		<field name="res_model">sale.order</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[('invoiced','=',False),('shipped','=',True),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]</field>
-	</record>
-	<menuitem name="Sales Management/Reporting/All Months/Uninvoiced But Shipped Sales" action="action_order_sale_uninvoiced_shipped" id="menu_report_order_sale_uninvoiced_shipped"/>
 
 
 
