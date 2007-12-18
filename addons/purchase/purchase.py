@@ -86,7 +86,7 @@ class purchase_order(osv.osv):
 		'name': fields.char('Order Description', size=64, required=True, select=True),
 		'origin': fields.char('Origin', size=64),
 		'ref': fields.char('Order Reference', size=64),
-		'partner_ref': fields.char('Partner Reference', size=64),
+		'partner_ref': fields.char('Partner Ref.', size=64),
 		'date_order':fields.date('Date Ordered', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}),
 		'date_approve':fields.date('Date Approved'),
 		'partner_id':fields.many2one('res.partner', 'Partner', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, change_default=True),
@@ -208,7 +208,7 @@ class purchase_order(osv.osv):
 
 			a = o.partner_id.property_account_payable.id
 			inv = {
-				'name': o.name,
+				'name': o.partner_ref or o.name,
 				'reference': "P%dPO%d" % (o.partner_id.id, o.id),
 				'account_id': a,
 				'type': 'in_invoice',
