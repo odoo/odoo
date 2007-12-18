@@ -215,8 +215,12 @@
 						<field name="name" select="1"/>
 						<field name="code" select="1"/>
 						<field name="product_id" select="1" on_change="onchange_product_id(product_id, name)"/>
+						<newline/>
 						<field name="product_uom"/>
 						<field name="product_qty"/>
+						<newline/>
+						<field name="product_uos"/>
+						<field name="product_uos_qty"/>
 						<field name="routing_id" select="2"/>
 						<field name="type"/>
 
@@ -350,6 +354,22 @@
 		</field>
 	</record>
 
+
+		<record model="ir.ui.view" id="view_production_calendar">
+			<field name="name">mrp.production.calendar</field>
+			<field name="model">mrp.production</field>
+			<field name="type">calendar</field>
+			<field name="priority" eval="2"/>
+			<field name="arch" type="xml">
+				<calendar string="Production Orders" date_start="date_planned"
+					color="product_id">
+					<field name="origin"/>
+					<field name="name"/>
+				</calendar>
+			</field>
+		</record>
+
+
 	<record model="ir.ui.view" id="mrp_production_form_view">
 		<field name="name">mrp.production.form</field>
 		<field name="model">mrp.production</field>
@@ -403,6 +423,7 @@
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">mrp.production</field>
 		<field name="view_type">form</field>
+		<field name="view_mode">tree,form,calendar</field>
 		<field name="view_id" ref="mrp_production_form_view"/>
 	</record>
 	<menuitem name="Production Management/Production Orders" id="menu_mrp_production_action" action="mrp_production_action"/>
