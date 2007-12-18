@@ -29,7 +29,7 @@
 			<field name="res_model">report.task.user.pipeline.open</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">graph,tree</field>
-			<field name="domain">[('task_state','&lt;&gt;','cancelled'),('task_state','&lt;&gt;','done'),('user_id','in',department_users_get())]</field>
+			<field name="domain">[('user_id','in',department_users_get())]</field>
 		</record>
 
 		<record model="ir.ui.view" id="hr_timesheet_sheet_tree">
