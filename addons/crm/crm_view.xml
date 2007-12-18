@@ -398,7 +398,7 @@
 		<field name="name">My cases</field>
 		<field name="res_model">crm.case</field>
 		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
+		<field name="view_mode">tree,form,calendar</field>
 		<field name="domain">[('user_id','=',uid)]</field>
 	</record>
 	<menuitem name="CRM &amp; SRM/Cases/My Cases" id="menu_crm_case_categ0-act_my" action="crm_case_categ0-act_my"/>
@@ -406,7 +406,7 @@
 		<field name="name">My Open Cases</field>
 		<field name="res_model">crm.case</field>
 		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
+		<field name="view_mode">tree,form,calendar</field>
 		<field name="domain">[('user_id','=',uid),('state','&lt;&gt;','done'),('state','&lt;&gt;','cancel'),('state','&lt;&gt;','pending')]</field>
 	</record>
 	<menuitem name="CRM &amp; SRM/Cases/My Cases/" id="menu_crm_case_categ0-act_my_open" action="crm_case_categ0-act_my_open"/>
@@ -418,7 +418,7 @@
 		<field name="res_model">crm.case</field>
 		<field name="domain">[('section_id','child_of',[active_id])]</field>
 		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
+		<field name="view_mode">tree,form,calendar</field>
 	</record>
 	<record model="ir.values" id="ir_open_section_case">
 		<field name="key2" eval="'tree_but_open'"/>
@@ -570,7 +570,7 @@
 		res_model="crm.case"
 		src_model="crm.case.section"
 		view_type="form"
-		view_mode="tree,form"
+		view_mode="tree,form,calendar"
 		id="act_crm_case_section_crm_case_opened"/>
 
 	<act_window name="Open cases"
@@ -578,7 +578,7 @@
 		res_model="crm.case"
 		src_model="crm.case.categ"
 		view_type="form"
-		view_mode="tree,form"
+		view_mode="tree,form,calendar"
 		id="act_crm_case_categ_crm_case_opened"/>
 
 	<act_window name="Open cases"
@@ -586,7 +586,7 @@
 		res_model="crm.case"
 		src_model="res.partner"
 		view_type="form"
-		view_mode="tree,form"
+		view_mode="tree,form,calendar"
 		id="act_res_partner_2_crm_case_opened"/>
 
 	<act_window name="Open cases"
@@ -594,7 +594,7 @@
 		res_model="crm.case"
 		src_model="res.partner.canal"
 		view_type="form"
-		view_mode="tree,form"
+		view_mode="tree,form,calendar"
 		id="act_res_partner_canal_2_crm_case_opened"/>
 
 	<act_window name="Open cases"
@@ -602,7 +602,7 @@
 		res_model="crm.case"
 		src_model="res.users"
 		view_type="form"
-		view_mode="tree,form"
+		view_mode="tree,form,calendar"
 		id="act_res_users_2_crm_case_opened"/>
 
 
