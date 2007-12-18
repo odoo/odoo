@@ -156,7 +156,7 @@
       <font face="Times-Roman">Invoice Date: </font>
       <font face="Times-Roman">[[o.date_invoice]]</font>
     </para>
-    <para style="P19"><font face="Times-Roman">Customer Ref:</font> [[ o.address_invoice_id.partner_id.ref or '/' ]]</para>
+    <para style="P19"><font face="Times-Roman">Partner Code:</font> [[ o.address_invoice_id.partner_id.ref or removeParentNode('para') ]]</para>
     <para style="Standard">
       <font color="white"> </font>
     </para>
