@@ -82,4 +82,26 @@ cr.execute('ALTER TABLE ir_attachment \
 		ALTER COLUMN res_id DROP NOT NULL')
 cr.commit()
 
+# ---------------------------------- #
+# change case date_deadline rounding #
+# ---------------------------------- #
+
+cr.execute("""SELECT
+c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE
+WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size FROM pg_class
+c,pg_attribute a,pg_type t WHERE c.relname='crm_case' AND
+a.attname='date_deadline' AND c.oid=a.attrelid AND a.atttypid=t.oid""")
+
+res = cr.dictfetchall()
+if res[0]['typname'] != 'timestamp':
+	for line in (
+		"ALTER TABLE crm_case RENAME date_deadline TO date_deadline_bak",
+		"ALTER TABLE crm_case ADD date_deadline timestamp",
+		"UPDATE crm_case SET date_deadline = date_deadline_bak",
+		"ALTER TABLE crm_case DROP date_deadline_bak",
+		):
+		cr.execute(line)
+cr.commit()
+
+
 cr.close
