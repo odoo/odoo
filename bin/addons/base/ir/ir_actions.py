@@ -217,7 +217,7 @@ class act_window_view(osv.osv):
 			('form', 'Form'),
 			('graph', 'Graph'),
 			('calendar', 'Calendar')), string='Type of view', required=True),
-		'act_window_id': fields.many2one('ir.actions.act_window', 'Action'),
+		'act_window_id': fields.many2one('ir.actions.act_window', 'Action', ondelete='cascade'),
 		'multi': fields.boolean('On multiple doc.',
 			help="If set to true, the action will not be displayed on the right toolbar of a form views."),
 	}
