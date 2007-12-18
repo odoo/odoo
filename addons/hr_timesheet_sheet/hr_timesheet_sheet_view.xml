@@ -20,21 +20,65 @@
 		</record>
 
 
+		<record model="ir.ui.view" id="hr_timesheet_account_form">
+			<field name="name">hr.timesheet.account.form</field>
+			<field name="model">hr_timesheet_sheet.sheet.account</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Timesheet by accounts">
+					<field name="sheet_id" select="1"/>
+					<field name="name" select="1"/>
+					<field name="total" sum="Total"/>
+					<field name="invoice_rate" select="2"/>
+				</form>
+			</field>
+		</record>
+
 		<record model="ir.ui.view" id="hr_timesheet_account_tree">
 			<field name="name">hr.timesheet.account.tree</field>
 			<field name="model">hr_timesheet_sheet.sheet.account</field>
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
-				<tree string="Timesheet by accounts">
+				<tree string="Timesheet by Accounts">
 					<field name="sheet_id"/>
 					<field name="name"/>
-					<field name="total"/>
+					<field name="total" sum="Total"/>
 					<field name="invoice_rate"/>
 				</tree>
 			</field>
 		</record>
 
 
+		<record model="ir.ui.view" id="hr_timesheet_day_form">
+			<field name="name">hr.timesheet.day.form</field>
+			<field name="model">hr_timesheet_sheet.sheet.day</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Timesheet by Days">
+					<field name="sheet_id" select="1"/>
+					<field name="name" select="1"/>
+					<field name="total_timesheet"/>
+					<field name="total_attendance"/>
+					<field name="total_difference"/>
+				</form>
+			</field>
+		</record>
+
+
+		<record model="ir.ui.view" id="hr_timesheet_day_tree">
+			<field name="name">hr.timesheet.day.tree</field>
+			<field name="model">hr_timesheet_sheet.sheet.day</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Timesheet by Days" colors="red:total_difference&lt;=0.1;blue:total_difference&gt;=0.1">
+					<field name="sheet_id"/>
+					<field name="name"/>
+					<field name="total_timesheet" sum="Total Timesheet"/>
+					<field name="total_attendance" sum="Total Attendance"/>
+					<field name="total_difference" sum="Total Difference"/>
+				</tree>
+			</field>
+		</record>
 
 		<record model="ir.ui.view" id="hr_timesheet_sheet_form">
 			<field name="name">hr.timesheet.sheet.form</field>
@@ -48,7 +92,7 @@
 					<field name="date_to" />
 
 					<notebook colspan="4">
-					<page string="Daily view">
+					<page string="Daily View">
 						<group col="6" colspan="4">
 							<button name="button_dummy" string="Go to:" type="object"/>
 							<field name="date_current" nolabel="1"/>
@@ -97,7 +141,8 @@
 						<field name="total_difference_day" widget="float_time"/>
 						<field name="total_timesheet_day" widget="float_time"/>
 					</page>
-					<page string="By day">
+					<!--
+					<page string="By Day">
 						<field name="period_ids" colspan="4" nolabel="1">
 							<tree string="Period" colors="red:total_difference&lt;=0.1;blue:total_difference&gt;=0.1">
 								<field name="name"/>
@@ -119,6 +164,7 @@
 							</tree>
 						</field>
 					</page>
+					-->
 					</notebook>
 						<field name="state"/>
 						<group col="4" colspan="2">
@@ -199,7 +245,7 @@
 
 
 
-		<wizard string="My current timesheet"
+		<wizard string="My Current Timesheet"
 			model="hr.employee"
 			name="hr_timesheet_sheet.current.open"
 			id="act_hr_timesheet_sheet_form_my_current"/>
@@ -210,7 +256,7 @@
 			type="wizard"/>
 
 		<record model="ir.actions.act_window" id="act_hr_timesheet_sheet_form_all_confirm">
-			<field name="name">Timesheets to confirm</field>
+			<field name="name">Timesheets To Confirm</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">hr_timesheet_sheet.sheet</field>
 			<field name="domain">[('state','=','draft'),('date_to','&lt;=',time.strftime('%Y-%m-%d'))]</field>
@@ -222,7 +268,7 @@
 			action="act_hr_timesheet_sheet_form_all_confirm" />
 
 		<record model="ir.actions.act_window" id="act_hr_timesheet_sheet_form_all_valid">
-			<field name="name">Timesheets to validate</field>
+			<field name="name">Timesheets To Validate</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">hr_timesheet_sheet.sheet</field>
 			<field name="domain">[('state','=','confirm')]</field>
@@ -295,7 +341,19 @@
 			</field>
 		</record>
 
-		<act_window name="Timesheet lines"
+		<act_window name="Timesheet by Account"
+			domain="[('sheet_id', '=', active_id)]"
+			res_model="hr_timesheet_sheet.sheet.account"
+			src_model="hr_timesheet_sheet.sheet"
+			id="act_hr_timesheet_sheet_sheet_by_day"/>
+		<act_window name="Timesheet by Day"
+			domain="[('sheet_id', '=', active_id)]"
+			res_model="hr_timesheet_sheet.sheet.day"
+			src_model="hr_timesheet_sheet.sheet"
+			id="act_hr_timesheet_sheet_sheet_by_account"/>
+
+
+		<act_window name="Timesheet Lines"
 			domain="[('sheet_id', '=', active_id)]"
 			res_model="hr.analytic.timesheet"
 			src_model="hr_timesheet_sheet.sheet"
