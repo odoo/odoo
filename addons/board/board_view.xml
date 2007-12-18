@@ -40,6 +40,12 @@
 			sequence="100"
 			id="menu_view_board_note_form"/>
 
+		<wizard
+			string="Create Board Menu"
+			model="board.board"
+			name="board.board.menu.create"
+			id="wizard_board_create_menu"/>
+
 
 		<record model="ir.ui.view" id="view_board_tree">
 			<field name="name">board.board.tree</field>
@@ -59,6 +65,7 @@
 			<field name="arch" type="xml">
 				<form string="Dashboard">
 					<field name="name" select="1"/>
+					<button string="Create Menu" name="%(wizard_board_create_menu)d" type="action" colspan="2"/>
 					<field name="line_ids" colspan="4">
 						<tree string="Dashboard View">
 							<field name="name"/>
