@@ -11,7 +11,7 @@
 		<field name="model">report.task.user.pipeline.open</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Tasks by user">
+			<form string="Tasks by User">
 				<field name="user_id" select="1"/>
 				<field name="company_id" select="1"/>
 				<field name="task_nbr" select="2"/>
@@ -27,7 +27,7 @@
 		<field name="model">report.task.user.pipeline.open</field>
 		<field name="type">graph</field>
 		<field name="arch" type="xml">
-			<graph string="Tasks by user" type="bar">
+			<graph string="Tasks by User" type="bar">
 				<field name="user_id"/>
 				<field name="task_progress" operator="+"/>
 				<field name="task_state" group="True"/>
@@ -40,7 +40,7 @@
 		<field name="model">report.task.user.pipeline.open</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Tasks by user">
+			<tree string="Tasks by User">
 				<field name="user_id"/>
 				<field name="company_id"/>
 				<field name="task_nbr"/>
@@ -67,7 +67,7 @@
 		<field name="domain">[('task_state','=','done')]</field>
 	</record>
 	<menuitem 
-		name="Project Management/Reporting/All Months/Closed Tasks by User"
+		name="Project Management/Reporting/All Months/Tasks by User/Closed Tasks by User"
 		action="action_project_task_done"
 		id="menu_project_task_user_tree2"/>
 
@@ -79,7 +79,7 @@
 		<field name="domain">[('task_state','=','open')]</field>
 	</record>
 	<menuitem 
-		name="Project Management/Reporting/All Months/Opened Tasks by User"
+		name="Project Management/Reporting/All Months/Tasks by User/Opened Tasks by User"
 		action="action_project_task_open" 
 		id="menu_project_task_user_tree3"/>
 </data>
