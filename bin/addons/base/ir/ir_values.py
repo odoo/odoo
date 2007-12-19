@@ -206,9 +206,9 @@ class ir_values(osv.osv):
 				model,id = x[2].split(',')
 				try:
 					id = int(id)
+					datas = self.pool.get(model).read(cr, uid, [id], False, context)
 				except:
 					return False
-				datas = self.pool.get(model).read(cr, uid, [id], False, context)
 				if not len(datas):
 					#ir_del(cr, uid, x[0])
 					return False
