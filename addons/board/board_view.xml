@@ -44,6 +44,7 @@
 			string="Create Board Menu"
 			model="board.board"
 			name="board.board.menu.create"
+			multi="True"
 			id="wizard_board_create_menu"/>
 
 
@@ -99,6 +100,7 @@
 
 	<act_window name="Open Dashboard"
 		context="{'view': active_id}"
+		multi="True"
 		res_model="board.board"
 		src_model="board.board"
 		id="dashboard_open"/>
