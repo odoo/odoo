@@ -28,6 +28,8 @@
 ##############################################################################
 import operator
 from osv import osv, fields
+from osv.orm import ID_MAX
+
 
 class account_analytic_account(osv.osv):
 	_name = "account.analytic.account"
@@ -382,6 +384,28 @@ class account_analytic_account(osv.osv):
 			res[id] = round(res.get(id, 0.0),2)
 		return res
 
+	def _month(self, cr, uid, ids, name, arg, context=None):
+		res = {}
+		for id in ids:
+			ids2 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
+			cr.execute('SELECT month_id FROM account_analytic_analysis_summary_month ' \
+					'WHERE account_id in (' + ','.join([str(x) for x in ids2]) + ') ' \
+						'AND unit_amount <> 0.0')
+			res[id] = [int(str(x[0]) + str(id)) for x in cr.fetchall()]
+		return res
+
+	def _user(self, cr, uid, ids, name, arg, context=None):
+		res = {}
+		cr.execute('SELECT MAX(id) FROM res_users')
+		max_user = cr.fetchone()[0]
+		for id in ids:
+			ids2 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
+			cr.execute('SELECT "user" FROM account_analytic_analysis_summary_user ' \
+					'WHERE account_id in (' + ','.join([str(x) for x in ids2]) + ') ' \
+						'AND unit_amount <> 0.0')
+			res[id] = [int((id * max_user) + x[0]) for x in cr.fetchall()]
+		return res
+
 	_columns ={
 		'ca_invoiced': fields.function(_ca_invoiced_calc, method=True, type='float', string='Invoiced amount'),
 		'total_cost': fields.function(_total_cost_calc, method=True, type='float', string='Total cost'),
@@ -399,76 +423,354 @@ class account_analytic_account(osv.osv):
 		'real_margin': fields.function(_real_margin_calc, method=True, type='float', string='Real margin'),
 		'theorical_margin': fields.function(_theorical_margin_calc, method=True, type='float', string='Theorical margin'),
 		'real_margin_rate': fields.function(_real_margin_rate_calc, method=True, type='float', string='Real margin rate (%)'),
-		'month_ids': fields.one2many('account_analytic_analysis.summary.month', 'account_id', 'Month', readonly=True),
-		'user_ids': fields.one2many('account_analytic_analysis.summary.user', 'account_id', 'User', readonly=True),
+		'month_ids': fields.function(_month, method=True, type='many2many', relation='account_analytic_analysis.summary.month', string='Month'),
+		'user_ids': fields.function(_user, method=True, type="many2many", relation='account_analytic_analysis.summary.user', string='User'),
 	}
 account_analytic_account()
 
 class account_analytic_account_summary_user(osv.osv):
 	_name = "account_analytic_analysis.summary.user"
 	_description = "Hours summary by user"
-	_order='name'
+	_order='user'
 	_auto = False
+	_rec_name = 'user'
+
+	def _unit_amount(self, cr, uid, ids, name, arg, context=None):
+		res = {}
+		account_obj = self.pool.get('account.analytic.account')
+		cr.execute('SELECT MAX(id) FROM res_users')
+		max_user = cr.fetchone()[0]
+		account_ids = [int(str(x/max_user - (x%max_user == 0 and 1 or 0))) for x in ids]
+		user_ids = [int(str(x-((x/max_user - (x%max_user == 0 and 1 or 0)) *max_user))) for x in ids]
+		account_ids2 = account_obj.search(cr, uid, [('parent_id', 'child_of', account_ids)])
+		user_set = ','.join([str(x) for x in user_ids])
+		if account_ids2:
+			acc_set = ','.join([str(x) for x in account_ids2])
+			cr.execute('SELECT id, unit_amount ' \
+					'FROM account_analytic_analysis_summary_user ' \
+					'WHERE account_id in (%s) ' \
+						'AND "user" in (%s) ' % \
+						(acc_set, user_set))
+			for sum_id, unit_amount in cr.fetchall():
+				res[sum_id] = unit_amount
+		for obj_id in ids:
+			res.setdefault(obj_id, 0.0)
+			for child_id in account_obj.search(cr, uid,
+					[('parent_id', 'child_of', [int(str(obj_id/max_user - (obj_id%max_user == 0 and 1 or 0)))])]):
+				if child_id != int(str(obj_id/max_user - (obj_id%max_user == 0 and 1 or 0))):
+					res[obj_id] += res.get((child_id * max_user) + obj_id -((obj_id/max_user - (obj_id%max_user == 0 and 1 or 0)) * max_user), 0.0)
+		for id in ids:
+			res[id] = round(res.get(id, 0.0), 2)
+		return res
+
 	_columns = {
 		'account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
-		'unit_amount': fields.float('Total Time', digits=(16,2), readonly=True),
-		'name' : fields.many2one('res.users','User'),
+		'unit_amount': fields.function(_unit_amount, method=True, type='float',
+			string='Total Time'),
+		'user' : fields.many2one('res.users', 'User'),
 	}
 	def init(self, cr):
-		cr.execute("""
-			create or replace view account_analytic_analysis_summary_user as (
-				select
-					id,
-					unit_amount,
-					account_id,
-					name from (
-						select
-							min(account_analytic_line.id) as id, 
-							user_id as name,
-							account_id, 
-							sum(unit_amount) as unit_amount 
-						from 
-							account_analytic_line 
-						join 
-							account_analytic_journal on account_analytic_line.journal_id = account_analytic_journal.id 
-						where 
-							account_analytic_journal.type = 'general'
-						group by
-							account_id, user_id 
-						order by
-							user_id,account_id asc )as 
-					sous_account_analytic_analysis_summary_user
-					order by
-						name desc,account_id)""")
+		cr.execute('CREATE OR REPLACE VIEW account_analytic_analysis_summary_user AS (' \
+				'SELECT ' \
+					'(u.account_id * u.max_user) + u.user AS id, ' \
+					'u.account_id AS account_id, ' \
+					'u.user AS user, ' \
+					'COALESCE(SUM(l.unit_amount), 0.0) AS unit_amount ' \
+				'FROM ' \
+					'(SELECT ' \
+						'a.id AS account_id, ' \
+						'u1.id AS user, ' \
+						'MAX(u2.id) AS max_user ' \
+					'FROM ' \
+						'res_users AS u1, ' \
+						'res_users AS u2, ' \
+						'account_analytic_account AS a ' \
+					'GROUP BY u1.id, a.id ' \
+					') AS u ' \
+				'LEFT JOIN ' \
+					'(SELECT ' \
+						'l.account_id AS account_id, ' \
+						'l.user_id AS user, ' \
+						'SUM(l.unit_amount) AS unit_amount ' \
+					'FROM account_analytic_line AS l, ' \
+						'account_analytic_journal AS j ' \
+					'WHERE j.type = \'general\' ' \
+					'GROUP BY l.account_id, l.user_id ' \
+					') AS l '
+					'ON (' \
+						'u.account_id = l.account_id ' \
+						'AND u.user = l.user' \
+					') ' \
+				'GROUP BY u.user, u.account_id, u.max_user' \
+				')')
+
+	def _read_flat(self, cr, user, ids, fields, context=None, load='_classic_read'):
+		if not context:
+			context={}
+		if not ids:
+			return []
+
+		if fields==None:
+			fields = self._columns.keys()
+
+		# construct a clause for the rules :
+		d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
+
+		# all inherited fields + all non inherited fields for which the attribute whose name is in load is True
+		fields_pre = filter(lambda x: x in self._columns and getattr(self._columns[x],'_classic_write'), fields) + self._inherits.values()
+
+		res = []
+		cr.execute('SELECT MAX(id) FROM res_users')
+		max_user = cr.fetchone()[0]
+		if len(fields_pre) :
+			fields_pre2 = map(lambda x: (x in ('create_date', 'write_date')) and ('date_trunc(\'second\', '+x+') as '+x) or '"'+x+'"', fields_pre)
+			for i in range((len(ids) / ID_MAX) + ((len(ids) % ID_MAX) and 1 or 0)):
+				sub_ids = ids[ID_MAX * i:ID_MAX * (i + 1)]
+				if d1:
+					cr.execute('select %s from \"%s\" where id in (%s) ' \
+							'and account_id in (%s) ' \
+							'and "user" in (%s) and %s order by %s' % \
+							(','.join(fields_pre2 + ['id']), self._table,
+								','.join([str(x) for x in sub_ids]),
+								','.join([str(x/max_user - (x%max_user == 0 and 1 or 0)) for x in sub_ids]),
+								','.join([str(x-((x/max_user - (x%max_user == 0 and 1 or 0)) *max_user)) for x in sub_ids]), d1,
+								self._order),d2)
+					if not cr.rowcount == len({}.fromkeys(sub_ids)):
+						raise except_orm('AccessError',
+								'You try to bypass an access rule (Document type: %s).' % self._description)
+				else:
+					cr.execute('select %s from \"%s\" where id in (%s) ' \
+							'and account_id in (%s) ' \
+							'and "user" in (%s) order by %s' % \
+							(','.join(fields_pre2 + ['id']), self._table,
+								','.join([str(x) for x in sub_ids]),
+								','.join([str(x/max_user - (x%max_user == 0 and 1 or 0)) for x in sub_ids]),
+								','.join([str(x-((x/max_user - (x%max_user == 0 and 1 or 0)) *max_user)) for x in sub_ids]),
+								self._order))
+				res.extend(cr.dictfetchall())
+		else:
+			res = map(lambda x: {'id': x}, ids)
+
+		for f in fields_pre:
+			if self._columns[f].translate:
+				ids = map(lambda x: x['id'], res)
+				res_trans = self.pool.get('ir.translation')._get_ids(cr, user, self._name+','+f, 'model', context.get('lang', False) or 'en_US', ids)
+				for r in res:
+					r[f] = res_trans.get(r['id'], False) or r[f]
+
+		for table in self._inherits:
+			col = self._inherits[table]
+			cols = intersect(self._inherit_fields.keys(), fields)
+			if not cols:
+				continue
+			res2 = self.pool.get(table).read(cr, user, [x[col] for x in res], cols, context, load)
+
+			res3 = {}
+			for r in res2:
+				res3[r['id']] = r
+				del r['id']
+
+			for record in res:
+				record.update(res3[record[col]])
+				if col not in fields:
+					del record[col]
+
+		# all fields which need to be post-processed by a simple function (symbol_get)
+		fields_post = filter(lambda x: x in self._columns and self._columns[x]._symbol_get, fields)
+		if fields_post:
+			# maybe it would be faster to iterate on the fields then on res, so that we wouldn't need
+			# to get the _symbol_get in each occurence
+			for r in res:
+				for f in fields_post:
+					r[f] = self.columns[f]._symbol_get(r[f])
+		ids = map(lambda x: x['id'], res)
+
+		# all non inherited fields for which the attribute whose name is in load is False
+		fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields)
+		for f in fields_post:
+			# get the value of that field for all records/ids
+			res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=res)
+			for record in res:
+				record[f] = res2[record['id']]
+
+		return res
+
 account_analytic_account_summary_user()
 
 class account_analytic_account_summary_month(osv.osv):
 	_name = "account_analytic_analysis.summary.month"
 	_description = "Hours summary by month"
 	_auto = False
+	_rec_name = 'month'
+	_order = 'month'
+
+	def _unit_amount(self, cr, uid, ids, name, arg, context=None):
+		res = {}
+		account_obj = self.pool.get('account.analytic.account')
+		account_ids = [int(str(x)[6:]) for x in ids]
+		month_ids = [int(str(x)[:6]) for x in ids]
+		account_ids2 = account_obj.search(cr, uid, [('parent_id', 'child_of', account_ids)])
+		month_set = ','.join([str(x) for x in month_ids])
+		if account_ids2:
+			acc_set = ','.join([str(x) for x in account_ids2])
+			cr.execute('SELECT id, unit_amount ' \
+					'FROM account_analytic_analysis_summary_month ' \
+					'WHERE account_id in (%s) ' \
+						'AND month_id in (%s) ' % \
+						(acc_set, month_set))
+			for sum_id, unit_amount in cr.fetchall():
+				res[sum_id] = unit_amount
+		for obj_id in ids:
+			res.setdefault(obj_id, 0.0)
+			for child_id in account_obj.search(cr, uid,
+					[('parent_id', 'child_of', [int(str(obj_id)[6:])])]):
+				if child_id != int(str(obj_id)[6:]):
+					res[obj_id] += res.get(str(obj_id)[:6] + str(child_id), 0.0)
+		for id in ids:
+			res[id] = round(res.get(id, 0.0), 2)
+		return res
+
 	_columns = {
-		'account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
-		'unit_amount': fields.float('Total Time', digits=(16,2), readonly=True),
-		'name': fields.char('Month', size=25, readonly=True),
+		'account_id': fields.many2one('account.analytic.account', 'Analytic Account',
+			readonly=True),
+		'unit_amount': fields.function(_unit_amount, method=True, type='float',
+			string='Total Time'),
+		'month': fields.char('Month', size=25, readonly=True),
 	}
 	def init(self, cr):
-		cr.execute("""create or replace view account_analytic_analysis_summary_month as ( 
-			select id, unit_amount,account_id, sort_month,month as name from ( 
-			select 
-				min(account_analytic_line.id) as id, 
-				date_trunc('month', date) as sort_month, 
-				account_id, 
-				to_char(date,'Mon YYYY') as month, 
-				sum(unit_amount) as unit_amount 
-			from 
-				account_analytic_line join account_analytic_journal on account_analytic_line.journal_id = account_analytic_journal.id 
-			where 
-				account_analytic_journal.type = 'general' 
-			group by 
-				sort_month, month, account_id 
-			order by 
-				sort_month,account_id asc 
-		)as sous_account_analytic_analysis_summary_month order by sort_month,account_id)""")
-			
+		cr.execute('CREATE OR REPLACE VIEW account_analytic_analysis_summary_month AS (' \
+				'SELECT ' \
+					'TO_CHAR(d.month, \'YYYYMM\') || d.account_id AS id, ' \
+					'd.account_id AS account_id, ' \
+					'TO_CHAR(d.month, \'Mon YYYY\') AS month, ' \
+					'TO_CHAR(d.month, \'YYYYMM\') AS month_id, ' \
+					'COALESCE(SUM(l.unit_amount), 0.0) AS unit_amount ' \
+				'FROM ' \
+					'(SELECT ' \
+						'd2.account_id, ' \
+						'd2.month ' \
+					'FROM ' \
+						'(SELECT ' \
+							'a.id AS account_id, ' \
+							'l.month AS month ' \
+						'FROM ' \
+							'(SELECT ' \
+								'DATE_TRUNC(\'month\', l.date) AS month ' \
+							'FROM account_analytic_line AS l, ' \
+								'account_analytic_journal AS j ' \
+							'WHERE j.type = \'general\' ' \
+							'GROUP BY DATE_TRUNC(\'month\', l.date) ' \
+							') AS l, ' \
+							'account_analytic_account AS a ' \
+						'GROUP BY l.month, a.id ' \
+						') AS d2 ' \
+					'GROUP BY d2.account_id, d2.month ' \
+					') AS d ' \
+				'LEFT JOIN ' \
+					'(SELECT ' \
+						'l.account_id AS account_id, ' \
+						'DATE_TRUNC(\'month\', l.date) AS month, ' \
+						'SUM(l.unit_amount) AS unit_amount ' \
+					'FROM account_analytic_line AS l, ' \
+						'account_analytic_journal AS j ' \
+					'WHERE j.type = \'general\' ' \
+					'GROUP BY l.account_id, DATE_TRUNC(\'month\', l.date) ' \
+					') AS l '
+					'ON (' \
+						'd.account_id = l.account_id ' \
+						'AND d.month = l.month' \
+					') ' \
+				'GROUP BY d.month, d.account_id ' \
+				')')
+
+	def _read_flat(self, cr, user, ids, fields, context=None, load='_classic_read'):
+		if not context:
+			context={}
+		if not ids:
+			return []
+
+		if fields==None:
+			fields = self._columns.keys()
+
+		# construct a clause for the rules :
+		d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
+
+		# all inherited fields + all non inherited fields for which the attribute whose name is in load is True
+		fields_pre = filter(lambda x: x in self._columns and getattr(self._columns[x],'_classic_write'), fields) + self._inherits.values()
+
+		res = []
+		if len(fields_pre) :
+			fields_pre2 = map(lambda x: (x in ('create_date', 'write_date')) and ('date_trunc(\'second\', '+x+') as '+x) or '"'+x+'"', fields_pre)
+			for i in range((len(ids) / ID_MAX) + ((len(ids) % ID_MAX) and 1 or 0)):
+				sub_ids = ids[ID_MAX * i:ID_MAX * (i + 1)]
+				if d1:
+					cr.execute('select %s from \"%s\" where id in (%s) ' \
+							'and account_id in (%s) ' \
+							'and month_id in (%s) and %s order by %s' % \
+							(','.join(fields_pre2 + ['id']), self._table,
+								','.join([str(x) for x in sub_ids]),
+								','.join([str(x)[6:] for x in sub_ids]),
+								','.join([str(x)[:6] for x in sub_ids]), d1,
+								self._order),d2)
+					if not cr.rowcount == len({}.fromkeys(sub_ids)):
+						raise except_orm('AccessError',
+								'You try to bypass an access rule (Document type: %s).' % self._description)
+				else:
+					cr.execute('select %s from \"%s\" where id in (%s) ' \
+							'and account_id in (%s) ' \
+							'and month_id in (%s) order by %s' % \
+							(','.join(fields_pre2 + ['id']), self._table,
+								','.join([str(x) for x in sub_ids]),
+								','.join([str(x)[6:] for x in sub_ids]),
+								','.join([str(x)[:6] for x in sub_ids]),
+								self._order))
+				res.extend(cr.dictfetchall())
+		else:
+			res = map(lambda x: {'id': x}, ids)
+
+		for f in fields_pre:
+			if self._columns[f].translate:
+				ids = map(lambda x: x['id'], res)
+				res_trans = self.pool.get('ir.translation')._get_ids(cr, user, self._name+','+f, 'model', context.get('lang', False) or 'en_US', ids)
+				for r in res:
+					r[f] = res_trans.get(r['id'], False) or r[f]
+
+		for table in self._inherits:
+			col = self._inherits[table]
+			cols = intersect(self._inherit_fields.keys(), fields)
+			if not cols:
+				continue
+			res2 = self.pool.get(table).read(cr, user, [x[col] for x in res], cols, context, load)
+
+			res3 = {}
+			for r in res2:
+				res3[r['id']] = r
+				del r['id']
+
+			for record in res:
+				record.update(res3[record[col]])
+				if col not in fields:
+					del record[col]
+
+		# all fields which need to be post-processed by a simple function (symbol_get)
+		fields_post = filter(lambda x: x in self._columns and self._columns[x]._symbol_get, fields)
+		if fields_post:
+			# maybe it would be faster to iterate on the fields then on res, so that we wouldn't need
+			# to get the _symbol_get in each occurence
+			for r in res:
+				for f in fields_post:
+					r[f] = self.columns[f]._symbol_get(r[f])
+		ids = map(lambda x: x['id'], res)
+
+		# all non inherited fields for which the attribute whose name is in load is False
+		fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields)
+		for f in fields_post:
+			# get the value of that field for all records/ids
+			res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=res)
+			for record in res:
+				record[f] = res2[record['id']]
+
+		return res
+
 account_analytic_account_summary_month()
 
