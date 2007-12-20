@@ -47,6 +47,12 @@ class account_analytic_account(osv.osv):
 					group by account_analytic_line.account_id" % acc_set)
 			for account_id, sum in cr.fetchall():
 				res[account_id] = round(sum,2)
+		for obj_id in ids:
+			res.setdefault(obj_id, 0.0)
+			for child_id in self.search(cr, uid,
+					[('parent_id', 'child_of', [obj_id])]):
+				if child_id != obj_id:
+					res[obj_id] += res.get(child_id, 0.0)
 		for id in ids:
 			res[id] = round(res.get(id, 0.0),2)
 		return res
@@ -93,6 +99,14 @@ class account_analytic_account(osv.osv):
 					GROUP BY account_analytic_line.account_id;"%acc_set)
 			for account_id, sum in cr.fetchall():
 				res2[account_id] = round(sum,2)
+		for obj_id in ids:
+			res.setdefault(obj_id, 0.0)
+			res2.setdefault(obj_id, 0.0)
+			for child_id in self.search(cr, uid,
+					[('parent_id', 'child_of', [obj_id])]):
+				if child_id != obj_id:
+					res[obj_id] += res.get(child_id, 0.0)
+					res2[obj_id] += res2.get(child_id, 0.0)
 		# sum both result on account_id
 		for id in ids:
 			res[id] = round(res.get(id, 0.0),2) + round(res2.get(id, 0.0),2)
@@ -114,9 +128,15 @@ class account_analytic_account(osv.osv):
 					GROUP BY account_analytic_line.account_id;"%acc_set)
 			for account_id, sum in cr.fetchall():
 				res[account_id] = round(sum,2)
+		for obj_id in ids:
+			res.setdefault(obj_id, 0.0)
+			for child_id in self.search(cr, uid,
+					[('parent_id', 'child_of', [obj_id])]):
+				if child_id != obj_id:
+					res[obj_id] += res.get(child_id, 0.0)
 		for id in ids:
 			res[id] = round(res.get(id, 0.0),2)
-		return res			
+		return res
 
 	def _hours_quantity_calc(self, cr, uid, ids, name, arg, context={}):
 		res = {}
@@ -132,6 +152,12 @@ class account_analytic_account(osv.osv):
 					GROUP BY account_analytic_line.account_id"%acc_set)
 			for account_id, sum in cr.fetchall():
 				res[account_id] = round(sum,2)
+		for obj_id in ids:
+			res.setdefault(obj_id, 0.0)
+			for child_id in self.search(cr, uid,
+					[('parent_id', 'child_of', [obj_id])]):
+				if child_id != obj_id:
+					res[obj_id] += res.get(child_id, 0.0)
 		for id in ids:
 			res[id] = round(res.get(id, 0.0),2)
 		return res
@@ -150,6 +176,12 @@ class account_analytic_account(osv.osv):
 					GROUP BY account_analytic_line.account_id"""%acc_set)
 			for account_id, sum in cr.fetchall():
 				res[account_id] = round(sum,2)
+		for obj_id in ids:
+			res.setdefault(obj_id, 0.0)
+			for child_id in self.search(cr, uid,
+					[('parent_id', 'child_of', [obj_id])]):
+				if child_id != obj_id:
+					res[obj_id] += res.get(child_id, 0.0)
 		for id in ids:
 			res[id] = round(res.get(id, 0.0),2)
 		return res
@@ -195,6 +227,15 @@ class account_analytic_account(osv.osv):
 			for account_id, sum in cr.fetchall():
 				res2[account_id] = round(sum,2)
 
+		for obj_id in ids:
+			res.setdefault(obj_id, 0.0)
+			res2.setdefault(obj_id, 0.0)
+			for child_id in self.search(cr, uid,
+					[('parent_id', 'child_of', [obj_id])]):
+				if child_id != obj_id:
+					res[obj_id] += res.get(child_id, 0.0)
+					res[obj_id] += res2.get(child_id, 0.0)
+
 		# sum both result on account_id
 		for id in ids:
 			res[id] = round(res.get(id, 0.0),2) + round(res2.get(id, 0.0),2)
@@ -212,6 +253,12 @@ class account_analytic_account(osv.osv):
 					GROUP BY account_analytic_line.account_id" % acc_set)
 			for account_id, sum in cr.fetchall():
 				res[account_id] = sum
+		for obj_id in ids:
+			res.setdefault(obj_id, '')
+			for child_id in self.search(cr, uid,
+					[('parent_id', 'child_of', [obj_id])]):
+				if res[obj_id] < res.get(child_id, ''):
+					res[obj_id] = res.get(child_id, '')
 		for id in ids:
 			res[id] = res.get(id, '')
 		return res
@@ -231,6 +278,12 @@ class account_analytic_account(osv.osv):
 					GROUP BY account_analytic_line.account_id"%acc_set)
 			for account_id, sum in cr.fetchall():
 				res[account_id] = sum
+		for obj_id in ids:
+			res.setdefault(obj_id, '')
+			for child_id in self.search(cr, uid,
+					[('parent_id', 'child_of', [obj_id])]):
+				if res[obj_id] < res.get(child_id, ''):
+					res[obj_id] = res.get(child_id, '')
 		for id in ids:
 			res[id] = res.get(id, '')
 		return res
@@ -247,6 +300,12 @@ class account_analytic_account(osv.osv):
 					GROUP BY account_analytic_line.account_id;"%acc_set)
 			for account_id, sum in cr.fetchall():
 				res[account_id] = sum
+		for obj_id in ids:
+			res.setdefault(obj_id, '')
+			for child_id in self.search(cr, uid,
+					[('parent_id', 'child_of', [obj_id])]):
+				if res[obj_id] < res.get(child_id, ''):
+					res[obj_id] = res.get(child_id, '')
 		for id in ids:
 			res[id] = res.get(id, '')
 		return res
