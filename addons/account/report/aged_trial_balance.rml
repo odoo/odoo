@@ -47,6 +47,9 @@
     <paraStyle name="P8" fontName="Times-Roman" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P9" fontName="Times-Roman" alignment="CENTER"/>
     <paraStyle name="P10" fontName="Times-Roman" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P11" fontName="Times-Roman" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P12" fontName="Times-Roman" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P13" fontName="Times-Roman" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
@@ -65,7 +68,7 @@
           </para>
         </td>
         <td>
-          <para style="P1">Aged partner balance</para>
+          <para style="P1">Aged Trial balance</para>
         </td>
         <td>
           <para style="P2">From the beginning</para>
@@ -93,10 +96,13 @@
     <para style="P9">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="218.0,71.0,71.0,71.0,71.0,71.0,71.0,85.0" style="Tableau1">
+    <blockTable colWidths="109.0,109.0,71.0,71.0,71.0,71.0,71.0,71.0,85.0" style="Tableau1">
       <tr>
         <td>
           <para style="P5">Partners</para>
+        </td>
+        <td>
+          <para style="P5">Code</para>
         </td>
         <td>
           <para style="P6">[[ data['form']['4']['name'] ]]</para>
@@ -121,11 +127,14 @@
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="218.0,71.0,71.0,71.0,71.0,71.0,71.0,85.0" style="Tableau2">
+    <blockTable colWidths="109.0,109.0,71.0,71.0,71.0,71.0,71.0,71.0,85.0" style="Tableau2">
       <tr>
         <td>
-          <para style="P3">[[ repeatIn(get_lines(data['form']), 'partner') ]]</para>
-          <para style="P3">[[ partner['name'] ]]</para>
+          <para style="P11">[[ repeatIn(get_lines(data['form']), 'partner') ]]</para>
+          <para style="P11">[[ partner['name'] ]]</para>
+        </td>
+        <td>
+          <para style="P3">[[ partner['ref'] or ' ' ]]</para>
         </td>
         <td>
           <para style="P8">[[ '%.2f' % (partner['4'] or 0.0) ]]</para>

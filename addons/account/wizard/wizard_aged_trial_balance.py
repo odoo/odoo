@@ -40,12 +40,18 @@ _aged_trial_form = """<?xml version="1.0"?>
 	<field name="fiscalyear"/>
 	<newline/>
 	<field name="period_length"/>
+	<newline/>
+	<field name="sorting_on"/>
+	<newline/>
+	<field name="computation"/>
 </form>"""
 
 _aged_trial_fields = {
 	'company_id': {'string': 'Company', 'type': 'many2one', 'relation': 'res.company', 'required': True},
 	'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear', 'required': True},
 	'period_length': {'string': 'Period length (days)', 'type': 'integer', 'required': True, 'default': lambda *a:30},
+	'sorting_on':{'string': 'Sorting On', 'type': 'selection', 'selection': [('partner','By Partner Name (asc)'), ('amount','By Amount (desc)')],'required': True, 'default': lambda *a:'partner'},
+	'computation':{'string': 'Computational Method', 'type': 'selection', 'selection': [("\'receivable\'",'On Receivables Only'), ("\'payable\'",'On Payables Only'), ("\'receivable\',\'payable\'",'On Receivables & Payables')], 'required': True, 'default': lambda *a:"\'receivable\'"}
 }
 
 def _calc_dates(self, cr, uid, data, context):
@@ -82,7 +88,7 @@ class wizard_report(wizard.interface):
 	states = {
 		'init': {
 			'actions': [_get_defaults],
-			'result': {'type':'form', 'arch':_aged_trial_form, 'fields':_aged_trial_fields, 'state':[('end','Cancel'),('print','Print Aged Trial Balance')]},
+			'result': {'type':'form', 'arch':_aged_trial_form, 'fields':_aged_trial_fields, 'state':[('end','Cancel'),('print','Print Aged Partner Balance')]},
 		},
 		'print': {
 			'actions': [_calc_dates],
