@@ -85,7 +85,25 @@
 						<page string="Packaging">
 							<field name="mes_type" />
 							<field name="tracking" />
-							<field name="packaging" colspan="4" nolabel="1" widget="one2many_list" />
+							<field name="packaging" colspan="4" nolabel="1">
+								<form string="Packaging">
+									<field name="ean" select="1"/>
+									<newline/>
+									<field name="qty" select="1"/>
+									<field name="ul"/>
+									<field name="weight_ul"/>
+									<separator string="Paletization" colspan="4"/>
+									<field name="ul_qty"/>
+									<field name="rows"/>
+									<field name="weight"/>
+									<separator string="Palette Dimension" colspan="4"/>
+									<field name="height"/>
+									<field name="width"/>
+									<field name="length"/>
+									<separator string="Other Info" colspan="4"/>
+									<field name="name" select="1" colspan="4"/>
+								</form>
+							</field>
 						</page>
 						<page string="Properties">
 							<properties/>
@@ -368,7 +386,7 @@
 		</record>
 
 		<record model="ir.ui.view" id="product_packaging_tree_view">
-			<field name="name">product.packaging.form.view</field>
+			<field name="name">product.packaging.tree.view</field>
 			<field name="model">product.packaging</field>
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
@@ -386,6 +404,7 @@
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Packaging">
+					<field name="product_id" select="1"/>
 					<field name="ean" select="1"/>
 					<newline/>
 					<field name="qty" select="1"/>
