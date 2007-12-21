@@ -388,10 +388,10 @@ class account_analytic_account(osv.osv):
 		res = {}
 		for id in ids:
 			ids2 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
-			cr.execute('SELECT month_id FROM account_analytic_analysis_summary_month ' \
+			cr.execute('SELECT DISTINCT(month_id) FROM account_analytic_analysis_summary_month ' \
 					'WHERE account_id in (' + ','.join([str(x) for x in ids2]) + ') ' \
 						'AND unit_amount <> 0.0')
-			res[id] = [int(str(x[0]) + str(id)) for x in cr.fetchall()]
+			res[id] = [int(id * 1000000 + int(x[0])) for x in cr.fetchall()]
 		return res
 
 	def _user(self, cr, uid, ids, name, arg, context=None):
@@ -400,7 +400,7 @@ class account_analytic_account(osv.osv):
 		max_user = cr.fetchone()[0]
 		for id in ids:
 			ids2 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
-			cr.execute('SELECT "user" FROM account_analytic_analysis_summary_user ' \
+			cr.execute('SELECT DISTINCT("user") FROM account_analytic_analysis_summary_user ' \
 					'WHERE account_id in (' + ','.join([str(x) for x in ids2]) + ') ' \
 						'AND unit_amount <> 0.0')
 			res[id] = [int((id * max_user) + x[0]) for x in cr.fetchall()]
@@ -607,8 +607,8 @@ class account_analytic_account_summary_month(osv.osv):
 	def _unit_amount(self, cr, uid, ids, name, arg, context=None):
 		res = {}
 		account_obj = self.pool.get('account.analytic.account')
-		account_ids = [int(str(x)[6:]) for x in ids]
-		month_ids = [int(str(x)[:6]) for x in ids]
+		account_ids = [int(str(int(x))[:-6]) for x in ids]
+		month_ids = [int(str(int(x))[-6:]) for x in ids]
 		account_ids2 = account_obj.search(cr, uid, [('parent_id', 'child_of', account_ids)])
 		month_set = ','.join([str(x) for x in month_ids])
 		if account_ids2:
@@ -623,9 +623,9 @@ class account_analytic_account_summary_month(osv.osv):
 		for obj_id in ids:
 			res.setdefault(obj_id, 0.0)
 			for child_id in account_obj.search(cr, uid,
-					[('parent_id', 'child_of', [int(str(obj_id)[6:])])]):
-				if child_id != int(str(obj_id)[6:]):
-					res[obj_id] += res.get(str(obj_id)[:6] + str(child_id), 0.0)
+					[('parent_id', 'child_of', [int(str(int(obj_id))[:-6])])]):
+				if child_id != int(str(int(obj_id))[:-6]):
+					res[obj_id] += res.get(int(child_id * 1000000 + int(obj_id)), 0.0)
 		for id in ids:
 			res[id] = round(res.get(id, 0.0), 2)
 		return res
@@ -640,7 +640,7 @@ class account_analytic_account_summary_month(osv.osv):
 	def init(self, cr):
 		cr.execute('CREATE OR REPLACE VIEW account_analytic_analysis_summary_month AS (' \
 				'SELECT ' \
-					'TO_CHAR(d.month, \'YYYYMM\') || d.account_id AS id, ' \
+					'(TO_NUMBER(TO_CHAR(d.month, \'YYYYMM\'), \'999999\') + (d.account_id  * 1000000))::integer AS id, ' \
 					'd.account_id AS account_id, ' \
 					'TO_CHAR(d.month, \'Mon YYYY\') AS month, ' \
 					'TO_CHAR(d.month, \'YYYYMM\') AS month_id, ' \
@@ -709,8 +709,8 @@ class account_analytic_account_summary_month(osv.osv):
 							'and month_id in (%s) and %s order by %s' % \
 							(','.join(fields_pre2 + ['id']), self._table,
 								','.join([str(x) for x in sub_ids]),
-								','.join([str(x)[6:] for x in sub_ids]),
-								','.join([str(x)[:6] for x in sub_ids]), d1,
+								','.join([str(x)[:-6] for x in sub_ids]),
+								','.join([str(x)[-6:] for x in sub_ids]), d1,
 								self._order),d2)
 					if not cr.rowcount == len({}.fromkeys(sub_ids)):
 						raise except_orm('AccessError',
@@ -721,8 +721,8 @@ class account_analytic_account_summary_month(osv.osv):
 							'and month_id in (%s) order by %s' % \
 							(','.join(fields_pre2 + ['id']), self._table,
 								','.join([str(x) for x in sub_ids]),
-								','.join([str(x)[6:] for x in sub_ids]),
-								','.join([str(x)[:6] for x in sub_ids]),
+								','.join([str(x)[:-6] for x in sub_ids]),
+								','.join([str(x)[-6:] for x in sub_ids]),
 								self._order))
 				res.extend(cr.dictfetchall())
 		else:
