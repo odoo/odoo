@@ -69,15 +69,13 @@ class aged_trial_report(report_sxw.rml_parse):
 			before = self.cr.fetchone()
 			values['before'] = before and before[0] or ""
 			for i in range(5):
-
 				a2 = "SELECT SUM(debit-credit) \
 						FROM account_move_line AS line, account_account \
 						WHERE (line.account_id=account_account.id) AND (account_account.type IN (%s)) \
-						AND (date >= %s) AND (date <= %s) \
+						AND (date >= '%s') AND (date <= '%s') \
 						AND (partner_id=%d) AND (reconcile_id IS NULL) \
 						AND line.state<>'draft' AND (line.period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)) \
 						AND (account_account.company_id = %d) AND account_account.active" %(form['computation'], form[str(i)]['start'], form[str(i)]['stop'], partner['id'], form['fiscalyear'], form['company_id'])
-
 				self.cr.execute(a2)
 				during = self.cr.fetchone()
 				values[str(i)] = during and during[0] or ""
