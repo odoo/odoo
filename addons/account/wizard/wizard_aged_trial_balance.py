@@ -63,7 +63,7 @@ def _calc_dates(self, cr, uid, data, context):
 	for i in range(5)[::-1]:
 		stop = start-RelativeDateTime(days=period_length)
 		res[str(i)] = {
-			'name' : 'over '+str((5-i)*period_length)+' days',
+			'name' : str((5-i)*period_length)+' days',
 			'stop': start.strftime('%Y-%m-%d'),
 			'start' : stop.strftime('%Y-%m-%d'),
 		}
