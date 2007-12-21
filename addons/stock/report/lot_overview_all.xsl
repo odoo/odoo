@@ -47,8 +47,6 @@
 			<xsl:apply-templates select="product"/>
 		</blockTable>
 		
-		<setNextTemplate name="other_pages"/>
-		<pageBreak/>
 <!--
 		<setNextTemplate name="first_page"/>
 		<nextFrame/>
