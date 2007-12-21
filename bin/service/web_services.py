@@ -453,16 +453,20 @@ class report_spool(netsvc.Service):
 		id = self.id
 		self.id_protect.release()
 
-		self._reports[id] = {'uid': uid, 'result': False, 'state': False}
+		self._reports[id] = {'uid': uid, 'result': False, 'state': False, 'exception': None}
 
 		def go(id, uid, ids, datas, context):
-			cr = pooler.get_db(db).cursor()
-			obj = netsvc.LocalService('report.'+object)
-			(result, format) = obj.create(cr, uid, ids, datas, context)
-			cr.close()
-			self._reports[id]['result'] = result
-			self._reports[id]['format'] = format
-			self._reports[id]['state'] = True
+			try:
+				cr = pooler.get_db(db).cursor()
+				obj = netsvc.LocalService('report.'+object)
+				(result, format) = obj.create(cr, uid, ids, datas, context)
+				cr.close()
+				self._reports[id]['result'] = result
+				self._reports[id]['format'] = format
+				self._reports[id]['state'] = True
+			except Exception, exception:
+				self._reports[id]['exception'] = exception
+				self._reports[id]['state'] = True
 			return True
 
 		thread.start_new_thread(go, (id, uid, ids, datas, context))
@@ -470,6 +474,8 @@ class report_spool(netsvc.Service):
 
 	def _check_report(self, report_id):
 		result = self._reports[report_id]
+		if result['exception']:
+			raise result['exception']
 		res = {'state': result['state']}
 		if res['state']:
 			if tools.config['reportgz']:
