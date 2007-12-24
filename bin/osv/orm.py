@@ -378,7 +378,7 @@ class orm(object):
 						cr.execute("CREATE INDEX \"%s_%s_index\" ON \"%s\" (\"%s\")" % (f._rel,f._id2,f._rel,f._id2))
 						cr.commit()
 				else:
-					cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size FROM pg_class c,pg_attribute a,pg_type t WHERE c.relname=%s AND a.attname=%s AND c.oid=a.attrelid AND a.atttypid=t.oid", (self._table, k.lower()))
+					cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size FROM pg_class c,pg_attribute a,pg_type t WHERE c.relname=%s AND a.attname=%s AND c.oid=a.attrelid AND a.atttypid=t.oid", (self._table, k))
 					res = cr.dictfetchall() 
 					if not res:
 						if not isinstance(f,fields.function) or f.store:
