@@ -1,3 +1,57 @@
+4.2.1
+	Bugfixes
+	Fix context for source_count function
+	Create stock move on production for products without BOM lines
+	Add IBAN fields in bank view
+	Fix uninitialize variable in import data
+	Update due date on invoice when payment term change
+	Fix store on field function that have type many2one or one2one
+	Request summary must be truncate
+	Partner event name must be truncate
+	Remove parent field on partner contact view
+	Fix icon type on journal period
+	Remove exception on the size of char field
+	Fix reference on move line that comes from invoice (Customer != Supplier)
+	Add function search on sheet_id of timesheet_sheet
+	Don't return 0 for balance account if there is no fiscal year
+	Fix set to draft for expense, now really set to draft
+	Add product and partner in the recursive call of tax compute
+	Don't compute balance account for inactive account
+	Fix bad encoding in log message on report_sxw
+	Fix overdue report for refund lines
+	Don't start server in non secure mode if secure mode have been set
+	Fix default value of move line if move_id is not find
+	Fix _product_partner_ref for cannot concatenate 'str' and 'bool' objects
+	Add partner_id in the context of SO for browsing the product
+	Fix multi-tax code on invoice
+	Fix tax definition for Belgium chart
+	Remove compute debit/credit on inactive account
+	Fix the way the tax are rounded for invoice with tax included prices
+	Fix SO to use the right uom and price to create invoice
+	Fix on_chnage uos on SO to return the id not the browse record
+	Add condition on the button "Sending goods>Packing to be invoiced" to show
+		only customer packings
+	Fix zero division error when the quantity is zero on an invoice line
+	Fix duplicate timesheet line that have been invoiced
+	Fix invoice report for bad removeParentNode tag
+	Fix priority for product view
+	Fix tax line computation when encoding account lines manually
+	Fix refund supplier invoice to have the same journal
+	New chinese translation
+	Pass context to action_done on stock move
+	Add product_uom change on sale order line
+	Fix demo data for working time UOM
+	Fix _sheet function in timesheet_sheet when called with a list of non
+		unique id
+	Remove commit inside function validate on account move
+	Use one function to post account move
+	Fix computation of sale/purchase amount in segmentation module
+	Use standar uom converion in analytic lines
+	Add journal_id in context for account move line search in payment module
+	Fix wrong id used by pricelist based on partner form
+	Use partner reference from SO/PO for invoice name if there is one
+	Make analysis analytic module include child accounts
+
 4.2.0
 	Summary:
 		Add new view graph
