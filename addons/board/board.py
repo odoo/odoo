@@ -68,6 +68,7 @@ class board_board(osv.osv):
 			}
 			return result
 		res = super(board_board, self).fields_view_get(cr, user, view_id, view_type, context, toolbar)
+		res['toolbar'] = {'print':[],'action':[],'relate':[]}
 		return res
 	_columns = {
 		'name': fields.char('Dashboard', size=64, required=True),
