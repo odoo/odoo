@@ -1679,6 +1679,14 @@ class orm(object):
 			fargs = args[i][0].split('.', 1)
 			field = table._columns.get(fargs[0],False)
 			if not field:
+				if args[i][0] == 'id' and args[i][1] == 'child_of':
+					ids2 = args[i][2]
+					def _rec_get(ids, table, parent):
+						if not ids:
+							return []
+						ids2 = table.search(cr, user, [(parent, 'in', ids)], context=context)
+						return ids + _rec_get(ids2, table, parent)
+					args[i] = (args[i][0], 'in', ids2 + _rec_get(ids2, table, table._parent_name), table)
 				i+=1
 				continue
 			if len(fargs) > 1:
