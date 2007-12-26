@@ -453,7 +453,7 @@ class _rml_flowable(object):
 			colwidths = [utils.unit_get(f.strip()) for f in node.getAttribute('colWidths').split(',')]
 		if node.hasAttribute('rowHeights'):
 			rowheights = [utils.unit_get(f.strip()) for f in node.getAttribute('rowHeights').split(',')]
-		table = platypus.Table(data = data, colWidths=colwidths, rowHeights=rowheights, **(utils.attr_get(node, ['splitByRow'] ,{'repeatRows':'int','repeatCols':'int'})))
+		table = platypus.LongTable(data = data, colWidths=colwidths, rowHeights=rowheights, **(utils.attr_get(node, ['splitByRow'] ,{'repeatRows':'int','repeatCols':'int'})))
 		if node.hasAttribute('style'):
 			table.setStyle(self.styles.table_styles[node.getAttribute('style')])
 		return table
