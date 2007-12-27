@@ -1488,6 +1488,7 @@ class orm(object):
 			context={}
 		def _inherit_apply(src, inherit):
 			def _find(node, node2):
+				# Check if xpath query or normal inherit (with field matching)
 				if node2.nodeType==node2.ELEMENT_NODE and node2.localName=='xpath':
 					res = xpath.Evaluate(node2.getAttribute('expr'), node)
 					return res and res[0]
