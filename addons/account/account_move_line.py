@@ -628,9 +628,13 @@ class account_move_line(osv.osv):
 		if not move_id:
 			if journal.centralisation:
 				# use the first move ever created for this journal and period
-				cr.execute('select id from account_move where journal_id=%d and period_id=%d order by id limit 1', (context['journal_id'],context['period_id']))
+				cr.execute('select id, state, name from account_move where journal_id=%d and period_id=%d order by id limit 1', (context['journal_id'],context['period_id']))
 				res = cr.fetchone()
 				if res:
+					if res[1] != 'draft':
+						raise osv.except_osv('UserError',
+								'The account move (%s) for centralisation ' \
+										'has been confirmed!' % res[2])
 					vals['move_id'] = res[0]
 
 			if not vals.get('move_id', False):

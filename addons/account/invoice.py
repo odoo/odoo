@@ -494,6 +494,9 @@ class account_invoice(osv.osv):
 			journal = self.pool.get('account.journal').browse(cr, uid, journal_id)
 			if journal.sequence_id:
 				name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
+			if journal.centralisation:
+				raise osv.except_osv('UserError',
+						'Can not create invoice move on centralized journal')
 
 			move = {'name': name, 'line_id': line, 'journal_id': journal_id}
 			if inv.period_id:

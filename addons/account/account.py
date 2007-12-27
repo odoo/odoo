@@ -606,6 +606,23 @@ class account_move(osv.osv):
 		'state': lambda *a: 'draft',
 		'period_id': _get_period,
 	}
+
+	def _check_centralisation(self, cursor, user, ids):
+		for move in self.browse(cursor, user, ids):
+			if move.journal_id.centralisation:
+				move_ids = self.search(cursor, user, [
+					('period_id', '=', move.period_id.id),
+					('journal_id', '=', move.journal_id.id),
+					])
+				if len(move_ids) > 1:
+					return False
+		return True
+
+	_constraints = [
+		(_check_centralisation,
+			'You can not create more than one move per period on centralized journal',
+			['journal_id']),
+	]
 	def post(self, cr, uid, ids, context=None):
 		if self.validate(cr, uid, ids, context) and len(ids):
 			cr.execute('update account_move set state=%s where id in ('+','.join(map(str,ids))+')', ('posted',))
@@ -694,9 +711,17 @@ class account_move(osv.osv):
 		if mode=='credit':
 			account_id = move.journal_id.default_debit_account_id.id
 			mode2 = 'debit'
+			if not account_id:
+				raise osv.except_osv('UserError',
+						'There is no default default debit account defined \n' \
+								'on journal "%s"' % move.journal_id.name)
 		else:
 			account_id = move.journal_id.default_credit_account_id.id
 			mode2 = 'credit'
+			if not account_id:
+				raise osv.except_osv('UserError',
+						'There is no default default credit account defined \n' \
+								'on journal "%s"' % move.journal_id.name)
 
 		# find the first line of this move with the current mode 
 		# or create it if it doesn't exist
