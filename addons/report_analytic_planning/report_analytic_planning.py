@@ -38,8 +38,8 @@ class report_account_analytic_planning(osv.osv):
 	_columns = {
 		'name': fields.char('Planning Name', size=32, required=True),
 		'user_id': fields.many2one('res.users', 'Responsible', required=True),
-		'date_from':fields.date('Start date', required=True),
-		'date_to':fields.date('End date', required=True),
+		'date_from':fields.date('Start Date', required=True),
+		'date_to':fields.date('End Date', required=True),
 		'line_ids': fields.one2many('report_account_analytic.planning.line', 'planning_id', 'Planning lines'),
 		'stat_ids': fields.one2many('report_account_analytic.planning.stat', 'planning_id', 'Planning analysis', readonly=True),
 		'stat_user_ids': fields.one2many('report_account_analytic.planning.stat.user', 'planning_id', 'Planning by user', readonly=True),

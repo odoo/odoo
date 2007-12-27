@@ -6,7 +6,7 @@
 			<field name="model">report_account_analytic.planning</field>
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
-				<tree string="Planning by account">
+				<tree string="Planning by Account">
 					<field name="name"/>
 					<field name="user_id"/>
 					<field name="date_from"/>
@@ -20,7 +20,7 @@
 			<field name="model">report_account_analytic.planning</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Planning by account">
+				<form string="Planning by Account">
 					<notebook>
 					<page string="Planning">
 						<field name="name" select="1"/>
@@ -28,7 +28,7 @@
 						<field name="date_from"/>
 						<field name="date_to"/>
 						<field name="line_ids" colspan="4" nolabel="1">
-							<tree string="Planning line" editable="bottom">
+							<tree string="Planning Line" editable="bottom">
 								<field name="user_id"/>
 								<field name="account_id"/>
 								<field name="amount"/>
@@ -38,24 +38,24 @@
 						</field>
 					</page><page string="Analysis">
 						<field name="stat_ids" colspan="4" nolabel="1" readonly="1">
-							<tree string="Planning line" editable="bottom">
+							<tree string="Planning Line" editable="bottom">
 								<field name="user_id"/>
 								<field name="account_id"/>
 								<field name="sum_amount"/>
 								<field name="sum_amount_real"/>
 							</tree>
 						</field>
-					</page><page string="Time by user">
+					</page><page string="Time by User">
 						<field name="stat_user_ids" colspan="4" nolabel="1">
-							<tree string="Quantities by user">
+							<tree string="Quantities by User">
 								<field name="user_id"/>
 								<field name="quantity" sum="Total Planned"/>
 								<field name="sum_amount_real" sum="Total Timesheet"/>
 							</tree>
 						</field>
-					</page><page string="Time by account">
+					</page><page string="Time by Account">
 						<field name="stat_account_ids" colspan="4" nolabel="1">
-							<tree string="Quantities by account">
+							<tree string="Quantities by Account">
 								<field name="account_id"/>
 								<field name="quantity" sum="Total Planned"/>
 								<field name="sum_amount_real" sum="Total Timesheet"/>
