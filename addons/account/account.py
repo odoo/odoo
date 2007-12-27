@@ -618,10 +618,22 @@ class account_move(osv.osv):
 					return False
 		return True
 
+	def _check_period_journal(self, cursor, user, ids):
+		for move in self.browse(cursor, user, ids):
+			for line in move.line_id:
+				if line.period_id.id != move.period_id.id:
+					return False
+				if line.journal_id.id != move.journal_id.id:
+					return False
+		return True
+
 	_constraints = [
 		(_check_centralisation,
 			'You can not create more than one move per period on centralized journal',
 			['journal_id']),
+		(_check_period_journal,
+			'You can not create entries on different period/journal in the same move',
+			['line_id']),
 	]
 	def post(self, cr, uid, ids, context=None):
 		if self.validate(cr, uid, ids, context) and len(ids):
