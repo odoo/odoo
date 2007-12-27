@@ -465,6 +465,13 @@ class report_spool(netsvc.Service):
 				self._reports[id]['format'] = format
 				self._reports[id]['state'] = True
 			except Exception, exception:
+				import traceback
+				import sys
+				tb_s = reduce(lambda x, y: x+y, traceback.format_exception(
+					sys.exc_type, sys.exc_value, sys.exc_traceback))
+				logger = netsvc.Logger()
+				logger.notifyChannel('web-service', netsvc.LOG_ERROR,
+						'Exception: %s\n%s' % (str(exception), tb_s))
 				self._reports[id]['exception'] = exception
 				self._reports[id]['state'] = True
 			return True
