@@ -868,7 +868,7 @@ class account_invoice_line(osv.osv):
 	def move_line_get_item(self, cr, uid, line, context={}):
 		return {
 				'type':'src',
-				'name':line.name,
+				'name': line.name[:64],
 				'price_unit':line.price_unit,
 				'quantity':line.quantity,
 				'price':line.price_subtotal,
