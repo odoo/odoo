@@ -424,8 +424,8 @@ class _rml_flowable(object):
 
 	def _table(self, node):
 		length = 0
-		colwidths = 0
-		rowheights = 0
+		colwidths = None
+		rowheights = None
 		data = []
 		childs = _child_get(node,'tr')
 		if not childs:
