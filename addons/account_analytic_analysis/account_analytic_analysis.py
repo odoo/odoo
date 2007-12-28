@@ -472,14 +472,14 @@ class account_analytic_account_summary_user(osv.osv):
 	def init(self, cr):
 		cr.execute('CREATE OR REPLACE VIEW account_analytic_analysis_summary_user AS (' \
 				'SELECT ' \
-					'(u.account_id * u.max_user) + u.user AS id, ' \
+					'(u.account_id * u.max_user) + u."user" AS id, ' \
 					'u.account_id AS account_id, ' \
-					'u.user AS user, ' \
+					'u."user" AS "user", ' \
 					'COALESCE(SUM(l.unit_amount), 0.0) AS unit_amount ' \
 				'FROM ' \
 					'(SELECT ' \
 						'a.id AS account_id, ' \
-						'u1.id AS user, ' \
+						'u1.id AS "user", ' \
 						'MAX(u2.id) AS max_user ' \
 					'FROM ' \
 						'res_users AS u1, ' \
@@ -490,7 +490,7 @@ class account_analytic_account_summary_user(osv.osv):
 				'LEFT JOIN ' \
 					'(SELECT ' \
 						'l.account_id AS account_id, ' \
-						'l.user_id AS user, ' \
+						'l.user_id AS "user", ' \
 						'SUM(l.unit_amount) AS unit_amount ' \
 					'FROM account_analytic_line AS l, ' \
 						'account_analytic_journal AS j ' \
@@ -499,9 +499,9 @@ class account_analytic_account_summary_user(osv.osv):
 					') AS l '
 					'ON (' \
 						'u.account_id = l.account_id ' \
-						'AND u.user = l.user' \
+						'AND u."user" = l."user"' \
 					') ' \
-				'GROUP BY u.user, u.account_id, u.max_user' \
+				'GROUP BY u."user", u.account_id, u.max_user' \
 				')')
 
 	def _read_flat(self, cr, user, ids, fields, context=None, load='_classic_read'):
