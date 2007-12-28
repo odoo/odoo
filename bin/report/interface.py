@@ -191,7 +191,7 @@ class report_rml(report_int):
 		return xml
 	
 	def create_pdf(self, xml):
-		obj = render.rml(xml, self.bin_datas, os.path.dirname(self.tmpl))
+		obj = render.rml(xml, self.bin_datas, tools.config['root_path'])
 		obj.render()
 		return obj.get()
 

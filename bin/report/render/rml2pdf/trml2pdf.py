@@ -667,7 +667,7 @@ class _rml_template(object):
 				frames.append( frame )
 			gr = pt.getElementsByTagName('pageGraphics')
 			if len(gr):
-				drw = _rml_draw(gr[0], self.doc, images=images)
+				drw = _rml_draw(gr[0], self.doc, images=images, path=self.path)
 				self.page_templates.append( platypus.PageTemplate(frames=frames, onPage=drw.render, **utils.attr_get(pt, [], {'id':'str'}) ))
 			else:
 				self.page_templates.append( platypus.PageTemplate(frames=frames, **utils.attr_get(pt, [], {'id':'str'}) ))
