@@ -41,6 +41,16 @@ import copy
 import StringIO
 import zipfile
 
+DT_FORMAT = '%Y-%m-%d'
+DHM_FORMAT = '%Y-%m-%d %H:%M:%S'
+HM_FORMAT = '%H:%M:%S'
+
+if not hasattr(locale, 'nl_langinfo'):
+	locale.nl_langinfo = lambda *a: '%x'
+
+if not hasattr(locale, 'D_FMT'):
+	locale.D_FMT = None
+
 rml_parents = {
 	'tr':1,
 	'li':1,
@@ -178,7 +188,7 @@ class rml_parse(object):
 	def setLang(self, lang):
 		self.localcontext['lang'] = lang
 
-	def formatLang(self, value, digit=2):
+	def formatLang(self, value, digit=2, date=False):
 		lc, encoding = locale.getdefaultlocale()
 		if encoding == 'utf':
 			encoding = 'UTF-8'
@@ -190,6 +200,10 @@ class rml_parse(object):
 			netsvc.Logger().notifyChannel('report', netsvc.LOG_WARNING,
 					'report %s: unable to set locale "%s"' % (self.name,
 						self.localcontext.get('lang', 'en_US') or 'en_US'))
+		if date:
+			date = time.strptime(value, DT_FORMAT)
+			return time.strftime(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'),
+					date)
 		return locale.format('%.' + str(digit) + 'f', value, True)
 
 	def repeatIn(self, lst, name, nodes_parent=False):
