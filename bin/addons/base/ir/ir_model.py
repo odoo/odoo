@@ -255,6 +255,13 @@ class ir_model_data(osv.osv):
 		if xml_id:
 			if res_id:
 				self.loads[(module, xml_id)] = (model, res_id)
+				if model_obj._inherits:
+					for table in model_obj._inherits:
+						inherit_field = model_obj._inherits[table]
+						inherit_id = model_obj.read(cr, uid, res_id,
+								[inherit_field])[inherit_field]
+						self.loads[(module, xml_id + '_' + \
+								table.replace('.', '_'))] = (table, inherit_id)
 		return res_id
 
 	def _unlink(self, cr, uid, model, ids, direct=False):
