@@ -65,7 +65,7 @@ class wkf_activity(osv.osv):
 	_log_access = False
 	_columns = {
 		'name': fields.char('Name', size=64, required=True),
-		'wkf_id': fields.many2one('workflow', 'Workflow', required=True, select=True),
+		'wkf_id': fields.many2one('workflow', 'Workflow', required=True, select=True, ondelete='cascade'),
 		'split_mode': fields.selection([('XOR', 'Xor'), ('OR','Or'), ('AND','And')], 'Split Mode', size=3, required=True),
 		'join_mode': fields.selection([('XOR', 'Xor'), ('AND', 'And')], 'Join Mode', size=3, required=True),
 		'kind': fields.selection([('dummy', 'Dummy'), ('function', 'Function'), ('subflow', 'Subflow'), ('stopall', 'Stop All')], 'Kind', size=64, required=True),
@@ -95,8 +95,8 @@ class wkf_transition(osv.osv):
 		'signal': fields.char('Signal (button Name)', size=64),
 		'role_id': fields.many2one('res.roles', 'Role Required'),
 		'condition': fields.char('Condition', required=True, size=128),
-		'act_from': fields.many2one('workflow.activity', 'Source Activity', required=True, select=True),
-		'act_to': fields.many2one('workflow.activity', 'Destination Activity', required=True, select=True),
+		'act_from': fields.many2one('workflow.activity', 'Source Activity', required=True, select=True, ondelete='cascade'),
+		'act_to': fields.many2one('workflow.activity', 'Destination Activity', required=True, select=True, ondelete='cascade'),
 	}
 	_defaults = {
 		'condition': lambda *a: 'True',
@@ -109,7 +109,7 @@ class wkf_instance(osv.osv):
 	_rec_name = 'res_type'
 	_log_access = False
 	_columns = {
-		'wkf_id': fields.many2one('workflow', 'Workflow', ondelete="cascade"),
+		'wkf_id': fields.many2one('workflow', 'Workflow', ondelete='restrict'),
 		'uid': fields.integer('User ID'),
 		'res_id': fields.integer('Resource ID'),
 		'res_type': fields.char('Resource Model', size=64),

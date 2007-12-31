@@ -465,6 +465,37 @@ class orm(object):
 							if res and not f.select:
 								cr.execute("DROP INDEX \"%s_%s_index\"" % (self._table, k))
 								cr.commit()
+							if isinstance(f, fields.many2one):
+								ref = self.pool.get(f._obj)._table
+								if ref != 'ir_actions':
+									cr.execute('SELECT confdeltype, conname FROM pg_constraint as con, pg_class as cl1, pg_class as cl2, ' \
+												'pg_attribute as att1, pg_attribute as att2 ' \
+											'WHERE con.conrelid = cl1.oid ' \
+												'AND cl1.relname = %s ' \
+												'AND con.confrelid = cl2.oid ' \
+												'AND cl2.relname = %s ' \
+												'AND array_lower(con.conkey, 1) = 1 ' \
+												'AND con.conkey[1] = att1.attnum ' \
+												'AND att1.attrelid = cl1.oid ' \
+												'AND att1.attname = %s ' \
+												'AND array_lower(con.confkey, 1) = 1 ' \
+												'AND con.confkey[1] = att2.attnum ' \
+												'AND att2.attrelid = cl2.oid ' \
+												'AND att2.attname = %s ' \
+												'AND con.contype = \'f\'', (self._table, ref, k, 'id'))
+									res = cr.dictfetchall()
+									if res:
+										confdeltype = {
+											'RESTRICT': 'r',
+											'NO ACTION': 'a',
+											'CASCADE': 'c',
+											'SET NULL': 'n',
+											'SET DEFAULT': 'd',
+										}
+										if res[0]['confdeltype'] != confdeltype.get(f.ondelete.upper(), 'a'):
+											cr.execute('ALTER TABLE "' + self._table + '" DROP CONSTRAINT "' + res[0]['conname'] + '"')
+											cr.execute('ALTER TABLE "' + self._table + '" ADD FOREIGN KEY ("' + k + '") REFERENCES "' + ref + '" ON DELETE ' + f.ondelete)
+											cr.commit()
 					else:
 						print "ERROR"
 		else:

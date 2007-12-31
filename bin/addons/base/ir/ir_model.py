@@ -57,7 +57,7 @@ class ir_model_fields(osv.osv):
 # faire une jointure a chaque fois qu'on recherche vu que le client ne connait que le nom
 # de l'objet et pas son id
 		'relation': fields.char('Model Relation', size=64),
-		'model_id': fields.many2one('ir.model', 'Model id', required=True, select=True),
+		'model_id': fields.many2one('ir.model', 'Model id', required=True, select=True, ondelete='cascade'),
 # in fact, this is the field label
 		'field_description': fields.char('Field Description', size=256),
 		'ttype': fields.char('Field Type', size=64),
