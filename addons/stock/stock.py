@@ -963,6 +963,15 @@ class stock_move(osv.osv):
 			wf_service.trg_trigger(uid, 'stock.move', id, cr)
 		return True
 
+
+	def unlink(self, cr, uid, ids, context=None):
+		for move in self.browse(cr, uid, ids, context=context):
+			if move.state != 'draft':
+				raise osv.except_osv('UserError',
+						'You can only delete draft moves.')
+		return super(stock_move, self).unlink(
+			cr, uid, ids, context=context)
+
 stock_move()
 
 class stock_inventory(osv.osv):
