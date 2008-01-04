@@ -8,7 +8,7 @@
 	"depends" : [],
 	"init_xml" : [
 		"base_data.xml",
-		"base_menu.xml"
+		"base_menu.xml",
 	],
 	"demo_xml" : [
 		"base_demo.xml",
@@ -35,6 +35,7 @@
 		"res/partner/crm_view.xml",
 		"res/partner/partner_data.xml",
 		"res/ir_property_view.xml",
+		"base_security.xml",
 	],
 	"active": True,
 	"installable": True,
