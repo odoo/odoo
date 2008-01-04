@@ -144,15 +144,20 @@ class stock_location(osv.osv):
 		return result
 
 	def _product_get_multi_location(self, cr, uid, ids, product_ids=False, context={}, states=['done'], what=('in', 'out')):
+		product_obj = self.pool.get('product.product')
 		states_str = ','.join(map(lambda s: "'%s'" % s, states))
 		if not product_ids:
-			product_ids = self.pool.get('product.product').search(cr, uid, [])
+			product_ids = product_obj.search(cr, uid, [])
 		res = {}
 		for id in product_ids:
 			res[id] = 0.0
 		if not ids:
 			return res
-			
+
+		product2uom = {}
+		for product in product_obj.browse(cr, uid, product_ids, context=context):
+			product2uom[product.id] = product.uom_id.id
+
 		prod_ids_str = ','.join(map(str, product_ids))
 		location_ids_str = ','.join(map(str, ids))
 		results = []
@@ -184,11 +189,11 @@ class stock_location(osv.osv):
 		uom_obj = self.pool.get('product.uom')
 		for amount, prod_id, prod_uom in results:
 			amount = uom_obj._compute_qty(cr, uid, prod_uom, amount,
-					context.get('uom', False))
+					context.get('uom', product2uom[prod_id]))
 			res[prod_id] += amount
 		for amount, prod_id, prod_uom in results2:
 			amount = uom_obj._compute_qty(cr, uid, prod_uom, amount,
-					context.get('uom', False))
+					context.get('uom', product2uom[prod_id]))
 			res[prod_id] -= amount
 		return res
 
