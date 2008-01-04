@@ -53,16 +53,43 @@ product_uom_categ()
 class product_uom(osv.osv):
 	_name = 'product.uom'
 	_description = 'Product Unit of Measure'
+
+	def _factor(self, cursor, user, ids, name, arg, context):
+		res = {}
+		for uom in self.browse(cursor, user, ids, context=context):
+			if uom.factor:
+				res[uom.id] = round(1 / uom.factor, 4)
+			else:
+				res[uom.id] = 0.0
+		return res
+
+	def _factor_inv(self, cursor, user, id, name, value, arg, context):
+		ctx = context.copy()
+		if 'read_delta' in ctx:
+			del ctx['read_delta']
+		if value:
+			self.write(cursor, user, id, {'factor': round(1/value, 6)},
+					context=ctx)
+		else:
+			self.write(cursor, user, id, {'factor': 0.0}, context=ctx)
+
 	_columns = {
 		'name': fields.char('Name', size=64, required=True),
 		'category_id': fields.many2one('product.uom.categ', 'UOM Category', required=True, ondelete='cascade'),
-		'factor': fields.float('Factor', digits=(12, 6), required=True),
+		'factor': fields.float('Rate', digits=(12, 6), required=True,
+			help='The coefficient for the formula:\n' \
+					'1 (base unit) = coef (this unit)'),
+		'factor_inv': fields.function(_factor, fnct_inv=_factor_inv, digits=(12, 4),
+			method=True, string='Factor',
+			help='The coefficient for the formula:\n' \
+					'coef (base unit) = 1 (this unit)'),
 		'rounding': fields.float('Rounding Precision', digits=(16, 3), required=True),
 		'active': fields.boolean('Active'),
 	}
 	
 	_defaults = {
 		'factor': lambda *a: 1.0,
+		'factor_inv': lambda *a: 1.0,
 		'active': lambda *a: 1,
 		'rounding': lambda *a: 0.01,
 	}
@@ -96,6 +123,12 @@ class product_uom(osv.osv):
 		if to_uom_id:
 			amount = amount / to_unit.factor
 		return amount
+
+	def onchange_factor_inv(self, cursor, user, ids, value):
+		return {'value': {'factor': round(1/value, 6)}}
+
+	def onchange_factor(self, cursor, user, ids, value):
+		return {'value': {'factor_inv': round(1/value, 4)}}
 
 product_uom()
 

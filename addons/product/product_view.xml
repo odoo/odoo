@@ -326,7 +326,8 @@
 				<tree string="Unit of Measure">
 					<field name="name"/>
 					<field name="category_id"/>
-					<field name="factor"/>
+					<field name="factor_inv" on_change="onchange_factor_inv(factor_inv)"/>
+					<field name="factor" on_change="onchange_factor(factor)"/>
 					<field name="rounding"/>
 				</tree>
 			</field>
@@ -339,8 +340,8 @@
 			<field name="arch" type="xml">
 				<form string="Unit of Measure">
 					<field name="name" select="1"/>
-					<newline/>
 					<field name="category_id" select="1"/>
+					<field name="factor_inv" select="1"/>
 					<field name="factor" select="1"/>
 					<field name="rounding" />
 					<field name="active"/>
