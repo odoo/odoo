@@ -607,7 +607,7 @@ class sale_order_line(osv.osv):
 		'th_weight' : fields.float('Weight'),
 		'state': fields.selection([('draft','Draft'),('confirmed','Confirmed'),('done','Done'),('cancel','Canceled')], 'State', required=True, readonly=True),
 	}
-	_order = 'sequence'
+	_order = 'sequence, id'
 	_defaults = {
 		'discount': lambda *a: 0.0,
 		'delay': lambda *a: 0.0,
