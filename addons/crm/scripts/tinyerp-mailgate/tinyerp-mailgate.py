@@ -75,13 +75,13 @@ class email_parser(object):
 	def msg_new(self, msg):
 		message = self.msg_body_get(msg)
 		data = {
-			'name': self._decode_header(msg['Subject']),
+				'name': self._decode_header(msg['Subject'][:64]),
 			'section_id': self.section_id,
-			'email_from': self._decode_header(msg['From']),
-			'email_cc': self._decode_header(msg['Cc'] or ''),
+			'email_from': self._decode_header(msg['From'])[:128],
+			'email_cc': self._decode_header(msg['Cc'] or '')[:252],
 			'canal_id': self.canal_id,
 			'user_id': False,
-			'history_line': [(0, 0, {'description': message['body'], 'email': msg['From'] })],
+			'history_line': [(0, 0, {'description': message['body'], 'email': msg['From'][:84] })],
 		}
 		try:
 			data.update(self.partner_get(self._decode_header(msg['From'])))
@@ -94,9 +94,9 @@ class email_parser(object):
 
 		for attach in attachments or []:
 			data_attach = {
-				'name': str(attach),
+				'name': str(attach)[:64],
 				'datas':binascii.b2a_base64(str(attachments[attach])),
-				'datas_fname': attach,
+				'datas_fname': str(attach)[:64],
 				'description': 'Mail attachment',
 				'res_model': 'crm.case',
 				'res_id': id
@@ -161,7 +161,7 @@ class email_parser(object):
 		body['body'] = body_data
 
 		data = {
-			'history_line': [(0, 0, {'description': body['body'], 'email': msg['From']})],
+				'history_line': [(0, 0, {'description': body['body'], 'email': msg['From'][:84]})],
 		}
 
 		act = 'case_close'
@@ -180,7 +180,7 @@ class email_parser(object):
 				data['priority'] = actions['priority']
 
 		if 'partner' in actions:
-			data['email_from'] = actions['partner']
+			data['email_from'] = actions['partner'][:128]
 
 		if 'user' in actions:
 			uids = self.rpc('res.users', 'name_search', actions['user'])
@@ -217,7 +217,7 @@ class email_parser(object):
 		self.rpc('crm.case', act, [id])
 		body2 = '\n'.join(map(lambda l: '> '+l, (body or '').split('\n')))
 		data = {
-			'history_line': [(0, 0, {'description': body, 'email': msg['From']})],
+				'history_line': [(0, 0, {'description': body, 'email': msg['From'][:84]})],
 		}
 		self.rpc('crm.case', 'write', [id], data)
 		return id
