@@ -190,21 +190,17 @@ class product_pricelist(osv.osv):
 						where = [('name', '=', partner) ] 
 					sinfo = supplierinfo_obj.search(cr, uid,
 							[('product_id', '=', tmpl_id)] + where)
-					if not sinfo:
-						result[id] = 0
-						continue
-					cr.execute('SELECT * ' \
-							'FROM pricelist_partnerinfo ' \
-							'WHERE suppinfo_id IN (' + \
-								','.join(map(str, sinfo)) + ') ' \
-								'AND min_quantity <= %f ' \
-							'ORDER BY min_quantity DESC LIMIT 1', (qty,))
-					res = cr.dictfetchone()
-					if res:
-						result[id] = res['price']
-					else:
-						result[id] = 0
-					continue
+					price = 0.0
+					if sinfo:
+						cr.execute('SELECT * ' \
+								'FROM pricelist_partnerinfo ' \
+								'WHERE suppinfo_id IN (' + \
+									','.join(map(str, sinfo)) + ') ' \
+									'AND min_quantity <= %f ' \
+								'ORDER BY min_quantity DESC LIMIT 1', (qty,))
+						res2 = cr.dictfetchone()
+						if res2:
+							price = res2['price']
 				else:
 					price_type = price_type_obj.browse(cr, uid, res['base'])
 					price = currency_obj.compute(cr, uid,
