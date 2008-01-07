@@ -751,7 +751,7 @@ class crm_case_history(osv.osv):
 		'description': fields.text('Description'),
 		'note': fields.function(_note_get, method=True, string="Description", type="text"),
 		'email': fields.char('Email', size=84),
-		'log_id': fields.many2one('crm.case.log','Log'),
+		'log_id': fields.many2one('crm.case.log','Log',ondelete='cascade'),
 	}
 crm_case_history()
 
