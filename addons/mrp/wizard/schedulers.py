@@ -60,10 +60,11 @@ def _procure_confirm(self, cr, uid, schedule_cycle=1.0, po_cycle=1.0,\
 	report_except = 0
 	report_later = 0
 	ids = [1]
+	procurement_obj = pooler.get_pool(cr.dbname).get('mrp.procurement')
 	while len(ids):
 		cr.execute('select id from mrp_procurement where state=%s and procure_method=%s order by date_planned limit 500 offset %d', ('confirmed','make_to_order',offset))
 		ids = map(lambda x:x[0], cr.fetchall())
-		for proc in pooler.get_pool(cr.dbname).get('mrp.procurement').browse(cr, uid, ids):
+		for proc in procurement_obj.browse(cr, uid, ids):
 			if proc.product_id.supply_method=='produce':
 				wf_service.trg_validate(uid, 'mrp.procurement', proc.id, 'button_check', cr)
 			else:
@@ -72,32 +73,36 @@ def _procure_confirm(self, cr, uid, schedule_cycle=1.0, po_cycle=1.0,\
 				else:
 					offset+=1
 					report_later += 1
-			cr.execute('select name,state from mrp_procurement where id=%d', (proc.id,))
-			name,state = cr.fetchone()
-			if state=='exception':
-				report.append('PROC %d: on order - %3.2f %-5s - %s' % (proc.id,proc.product_qty,proc.product_uom.name, proc.product_id.name))
+		for proc in procurement_obj.browse(cr, uid, ids):
+			if proc.state == 'exception':
+				report.append('PROC %d: on order - %3.2f %-5s - %s' % \
+						(proc.id, proc.product_qty, proc.product_uom.name,
+							proc.product_id.name))
 				report_except += 1
-			report_total +=1
-			if use_new_cursor:
-				cr.commit()
+			report_total += 1
+		if use_new_cursor:
+			cr.commit()
 
 	offset = 0
 	ids = [1]
 	while len(ids):
+		report_ids = []
 		ids = pooler.get_pool(cr.dbname).get('mrp.procurement').search(cr, uid, [('state','=','confirmed'),('procure_method','=','make_to_stock')], offset=offset)
-		for proc in pooler.get_pool(cr.dbname).get('mrp.procurement').browse(cr, uid, ids):
+		for proc in procurement_obj.browse(cr, uid, ids):
 			if (maxdate + DateTime.RelativeDateTime(days=picking_lead)).strftime('%Y-%m-%d') >= proc.date_planned:
 				wf_service.trg_validate(uid, 'mrp.procurement', proc.id, 'button_check', cr)
-				cr.execute('select name,state from mrp_procurement where id=%d', (proc.id,))
-				name,state = cr.fetchone()
-				if state=='exception':
-					report.append('PROC %d: from stock - %3.2f %-5s - %s' % (proc.id,proc.product_qty,proc.product_uom.name, proc.product_id.name,))
-					report_except +=1
+				report_ids.append(proc.id)
 			else:
 				report_later +=1
 			report_total +=1
-			if use_new_cursor:
-				cr.commit()
+		for proc in procurement_obj.browse(cr, uid, report_ids):
+			if proc.state == 'exception':
+				report.append('PROC %d: from stock - %3.2f %-5s - %s' % \
+						(proc.id, proc.product_qty, proc.product_uom.name,
+							proc.product_id.name,))
+				report_except +=1
+		if use_new_cursor:
+			cr.commit()
 		offset += len(ids)
 	end_date = time.strftime('%Y-%m-%d, %Hh %Mm %Ss')
 	if user_id:
