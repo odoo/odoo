@@ -1459,7 +1459,7 @@ class orm(object):
 		elif node.nodeType==node.ELEMENT_NODE and node.localName in ('form','tree'):
 			result = self.view_header_get(cr, user, False, node.localName, context)
 			if result:
-				node.setAttribute('string', result)
+				node.setAttribute('string', result.decode('utf-8'))
 
 		if node.nodeType == node.ELEMENT_NODE:
 			# translate view
@@ -1485,13 +1485,13 @@ class orm(object):
 				for id, fname, gname in res:
 					if oldgroup != gname:
 						child = doc.createElement('separator')
-						child.setAttribute('string', gname)
+						child.setAttribute('string', gname.decode('utf-8'))
 						child.setAttribute('colspan', "4")
 						oldgroup = gname
 						parent.insertBefore(child, node)
 
 					child = doc.createElement('field')
-					child.setAttribute('name', fname)
+					child.setAttribute('name', fname.decode('utf-8'))
 					parent.insertBefore(child, node)
 				parent.removeChild(node)
 
