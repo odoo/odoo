@@ -236,6 +236,8 @@ class mrp_bom(osv.osv):
 					'product_id': bom.product_id.id,
 					'product_qty': bom.product_qty * factor,
 					'product_uom': bom.product_uom.id,
+					'product_uos_qty': bom.product_uos and bom.product_uos_qty * factor or False,
+					'product_uos': bom.product_uos and bom.product_uos.id or False,
 				})
 			if bom.routing_id:
 				for wc_use in bom.routing_id.workcenter_lines:
@@ -308,7 +310,9 @@ class mrp_production(osv.osv):
 
 		'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type','<>','service')]),
 		'product_qty': fields.float('Product Qty', required=True),
-		'product_uom': fields.many2one('product.uom', 'Product UOM'),
+		'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
+		'product_uos_qty': fields.float('Product Qty'),
+		'product_uos': fields.many2one('product.uom', 'Product UOM'),
 
 		'location_src_id': fields.many2one('stock.location', 'Production Location', required=True),
 		'location_dest_id': fields.many2one('stock.location', 'Destination Location', required=True),
@@ -494,23 +498,21 @@ class mrp_production(osv.osv):
 					res = False
 		return res
 
+	def _get_auto_picking(self, cr, uid, production):
+		return True
+
 	def action_confirm(self, cr, uid, ids):
 		picking_id=False
 		for production in self.browse(cr, uid, ids):
 			if not production.product_lines:
 				self.action_compute(cr, uid, [production.id])
 				production = self.browse(cr, uid, [production.id])[0]
-			autopick = True
-			try:
-				autopick = production.product_id.auto_picking
-			except:
-				pass
 			picking_id = self.pool.get('stock.picking').create(cr, uid, {
 				'origin': (production.origin or '').split(':')[0] +':'+production.name,
 				'type': 'internal',
 				'move_type': 'one',
 				'state': 'auto',
-				'auto_picking': autopick,
+				'auto_picking': self._get_auto_picking(cr, uid, production),
 			})
 			toconfirm = True
 
@@ -571,9 +573,11 @@ class mrp_production(osv.osv):
 					'product_id': line.product_id.id,
 					'product_qty': line.product_qty,
 					'product_uom': line.product_uom.id,
+					'product_uos_qty': line.product_uos and line.product_qty or False,
+					'product_uos': line.product_uos and line.product_uos.id or False,
 					'location_id': production.location_src_id.id,
 					'procure_method': line.product_id.procure_method,
-					'move_id': move_id, 
+					'move_id': move_id,
 				})
 				wf_service = netsvc.LocalService("workflow")
 				wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
@@ -627,6 +631,8 @@ class mrp_production_product_line(osv.osv):
 		'product_id': fields.many2one('product.product', 'Product', required=True),
 		'product_qty': fields.float('Product Qty', required=True),
 		'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
+		'product_uos_qty': fields.float('Product UOS Qty'),
+		'product_uos': fields.many2one('product.uom', 'Product UOS'),
 		'production_id': fields.many2one('mrp.production', 'Production Order', select=True),
 	}
 mrp_production_product_line()
@@ -650,6 +656,8 @@ class mrp_procurement(osv.osv):
 		'product_id': fields.many2one('product.product', 'Product', required=True),
 		'product_qty': fields.float('Quantity', required=True),
 		'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
+		'product_uos_qty': fields.float('Quantity'),
+		'product_uos': fields.many2one('product.uom', 'Product UOM'),
 		'move_id': fields.many2one('stock.move', 'Reservation', ondelete='set null'),
 		'close_move': fields.boolean('Close Move at end', required=True),
 		'location_id': fields.many2one('stock.location', 'Location', required=True),
@@ -846,6 +854,8 @@ class mrp_procurement(osv.osv):
 				'product_id': procurement.product_id.id,
 				'product_qty': procurement.product_qty,
 				'product_uom': procurement.product_uom.id,
+				'product_uos_qty': procurement.product_uos and procurement.product_uos_qty or False,
+				'product_uos': procurement.product_uos and procurement.product_uos.id or False,
 				'location_src_id': procurement.location_id.id,
 				'location_dest_id': procurement.location_id.id,
 				'date_planned': newdate,
