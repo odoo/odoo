@@ -189,11 +189,11 @@ class stock_location(osv.osv):
 		uom_obj = self.pool.get('product.uom')
 		for amount, prod_id, prod_uom in results:
 			amount = uom_obj._compute_qty(cr, uid, prod_uom, amount,
-					context.get('uom', product2uom[prod_id]))
+					context.get('uom', False) or product2uom[prod_id])
 			res[prod_id] += amount
 		for amount, prod_id, prod_uom in results2:
 			amount = uom_obj._compute_qty(cr, uid, prod_uom, amount,
-					context.get('uom', product2uom[prod_id]))
+					context.get('uom', False) or product2uom[prod_id])
 			res[prod_id] -= amount
 		return res
 
