@@ -838,7 +838,10 @@ class account_invoice_line(osv.osv):
 		cur = inv.currency_id
 
 		for line in inv.invoice_line:
-			res.append(self.move_line_get_item(cr, uid, line, context))
+			mres = self.move_line_get_item(cr, uid, line, context)
+			if not mres:
+				continue
+			res.append(mres)
 			tax_code_found= False
 			for tax in tax_obj.compute(cr, uid, line.invoice_line_tax_id,
 					(line.price_unit * (1.0 - (line['discount'] or 0.0) / 100.0)),
@@ -870,16 +873,16 @@ class account_invoice_line(osv.osv):
 
 	def move_line_get_item(self, cr, uid, line, context={}):
 		return {
-				'type':'src',
-				'name': line.name[:64],
-				'price_unit':line.price_unit,
-				'quantity':line.quantity,
-				'price':line.price_subtotal,
-				'account_id':line.account_id.id,
-				'product_id':line.product_id.id,
-				'uos_id':line.uos_id.id,
-				'account_analytic_id':line.account_analytic_id.id,
-			}
+			'type':'src',
+			'name': line.name[:64],
+			'price_unit':line.price_unit,
+			'quantity':line.quantity,
+			'price':line.price_subtotal,
+			'account_id':line.account_id.id,
+			'product_id':line.product_id.id,
+			'uos_id':line.uos_id.id,
+			'account_analytic_id':line.account_analytic_id.id,
+		}
 	#
 	# Set the tax field according to the account and the partner
 	#
