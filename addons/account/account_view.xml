@@ -740,6 +740,7 @@
 						<field name="journal_id" select="2"/>
 						<field name="period_id"/>
 						<field name="reconcile_id"/>
+						<field name="reconcile_partial_id"/>
 						<field name="active" select="2"/>
 						<field name="state" select="2"/>
 					</page>
@@ -784,8 +785,10 @@
 						<field name="blocked" select="3"/>
 
 						<separator string="State" colspan="4"/>
-						<field name="state" select="2"/>
+						<newline/>
 						<field name="reconcile_id"/>
+						<field name="reconcile_partial_id"/>
+						<field name="state" select="2"/>
 					</page>
 					<page string="Analytic Lines">
 						<field name="analytic_lines" colspan="4" nolabel="1"/>
@@ -857,6 +860,7 @@
 
 						<separator string="State" colspan="4"/>
 						<field name="reconcile_id"/>
+						<field name="reconcile_partial_id"/>
 						<field name="statement_id"/>
 						<field name="state"/>
 					</form>

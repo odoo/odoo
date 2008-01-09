@@ -891,11 +891,31 @@ class account_move_reconcile(osv.osv):
 		'name': fields.char('Name', size=64, required=True),
 		'type': fields.char('Type', size=16, required=True),
 		'line_id': fields.one2many('account.move.line', 'reconcile_id', 'Entry lines'),
+		'line_partial_ids': fields.one2many('account.move.line', 'reconcile_partial_id', 'Partial Entry lines'),
 		'create_date': fields.date('Creation date', readonly=True),
 	}
 	_defaults = {
 		'name': lambda self,cr,uid,ctx={}: self.pool.get('ir.sequence').get(cr, uid, 'account.reconcile') or '/',
 	}
+	def reconcile_partial_check(self, cr, uid, ids, type='auto', context={}):
+		for rec in self.pool.get('account.move.reconcile').browse(cr, uid, ids):
+			total = 0.0
+			for line in rec.line_partial_ids:
+				total += (line.debit or 0.0) - (line.credit or 0.0)
+			if not total:
+				self.write(cr,uid, map(lambda x: x.id, rec.line_partial_ids), {'reconcile_id': rec.id })
+				for line in rec.line_partial_ids:
+					total += (line.debit or 0.0) - (line.credit or 0.0)
+		return True
+	def name_get(self, cr, uid, ids, context=None):
+		result = {}
+		for r in self.browse(cr, uid, ids, context):
+			total = reduce(lambda y,t: (t.debit or 0.0) - (t.credit or 0.0) + y, r.line_partial_ids, 0.0)
+			if total:
+				result[r.id] = '%s (%.2f)' % (r.name, total)
+			else:
+				result[r.id] = r.name
+		return result
 account_move_reconcile()
 
 #----------------------------------------------------------

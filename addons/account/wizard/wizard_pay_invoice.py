@@ -95,7 +95,7 @@ class wizard_pay_invoice(wizard.interface):
 	states = {
 		'init': {
 			'actions': [_get_period],
-			'result': {'type':'form', 'arch':pay_form, 'fields':pay_fields, 'state':[('end','Cancel'),('writeoff_check','Pay Invoice')]}
+			'result': {'type':'form', 'arch':pay_form, 'fields':pay_fields, 'state':[('end','Cancel'),('reconcile','Partial Payment'),('writeoff_check','Full Payment')]}
 		},
 		'writeoff_check': {
 			'actions': [],

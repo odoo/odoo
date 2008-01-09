@@ -292,6 +292,7 @@ class account_move_line(osv.osv):
 		'ref': fields.char('Ref.', size=32),
 		'statement_id': fields.many2one('account.bank.statement', 'Statement', help="The bank statement used for bank reconciliation", select=1),
 		'reconcile_id': fields.many2one('account.move.reconcile', 'Reconcile', readonly=True, ondelete='set null', select=2),
+		'reconcile_partial_id': fields.many2one('account.move.reconcile', 'Partial Reconcile', readonly=True, ondelete='set null', select=2),
 		'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optionnal other currency if it is a multi-currency entry."),
 		'currency_id': fields.many2one('res.currency', 'Currency', help="The optionnal other currency if it is a multi-currency entry."),
 
@@ -408,6 +409,32 @@ class account_move_line(osv.osv):
 	# writeoff; entry generated for the difference between the lines
 	#
 
+	def reconcile_partial(self, cr, uid, ids, type='auto', context={}):
+		merges = []
+		unmerge = []
+		total = 0.0
+		merges_rec = []
+		for line in self.browse(cr, uid, ids, context):
+			if line.reconcile_id:
+				raise 'Already Reconciled'
+			if line.reconcile_partial_id:
+				for line2 in line.reconcile_partial_id.line_partial_ids:
+					if not line2.reconcile_id:
+						merges.append(line2.id)
+						total += (line2.debit or 0.0) - (line2.credit or 0.0)
+				merges_rec.append(line.reconcile_partial_id.id)
+			else:
+				unmerge.append(line.id)
+				total += (line.debit or 0.0) - (line.credit or 0.0)
+		if not total:
+			return self.reconcile(cr, uid, merges+unmerge, context=context)
+		r_id = self.pool.get('account.move.reconcile').create(cr, uid, {
+			'type': type, 
+			'line_partial_ids': map(lambda x: (4,x,False), merges+unmerge)
+		})
+		self.pool.get('account.move.reconcile').reconcile_partial_check(cr, uid, [r_id] + merges_rec, context=context)
+		return True
+
 	def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context={}):
 		id_set = ','.join(map(str, ids))
 		lines = self.browse(cr, uid, ids, context=context)
@@ -480,7 +507,8 @@ class account_move_line(osv.osv):
 		r_id = self.pool.get('account.move.reconcile').create(cr, uid, {
 			#'name': date, 
 			'type': type, 
-			'line_id': map(lambda x: (4,x,False), ids)
+			'line_id': map(lambda x: (4,x,False), ids),
+			'line_partial_ids': map(lambda x: (3,x,False), ids)
 		})
 		# the id of the move.reconcile is written in the move.line (self) by the create method above 
 		# because of the way the line_id are defined: (4, x, False)

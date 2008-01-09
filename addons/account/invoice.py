@@ -707,14 +707,21 @@ class account_invoice(osv.osv):
 		move_id = self.pool.get('account.move').create(cr, uid, move)
 
 		line_ids = []
+		total = 0.0
 		line = self.pool.get('account.move.line')
 		cr.execute('select id from account_move_line where move_id in ('+str(move_id)+','+str(invoice.move_id.id)+')')
 		lines = line.browse(cr, uid, map(lambda x: x[0], cr.fetchall()) )
 		for l in lines:
 			if l.account_id.id==src_account_id:
 				line_ids.append(l.id)
-
-		self.pool.get('account.move.line').reconcile(cr, uid, line_ids, 'manual', writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context)
+				total += (l.debit or 0.0) - (l.credit or 0.0)
+		print total, writeoff_period_id, writeoff_acc_id
+		if (not total) or writeoff_acc_id:
+			print 'Total'
+			self.pool.get('account.move.line').reconcile(cr, uid, line_ids, 'manual', writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context)
+		else:
+			print 'Partial'
+			self.pool.get('account.move.line').reconcile_partial(cr, uid, line_ids, 'manual', context)
 		return True
 account_invoice()
 

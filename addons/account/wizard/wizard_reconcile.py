@@ -64,6 +64,12 @@ def _trans_rec_get(self, cr, uid, data, context=None):
 			account_id = line.account_id.id
 	return {'trans_nbr': count, 'account_id': account_id, 'credit': credit, 'debit': debit, 'writeoff': debit - credit}
 
+def _trans_rec_reconcile_partial(self, cr, uid, data, context=None):
+	pool = pooler.get_pool(cr.dbname)
+	account_move_line_obj = pool.get('account.move.line')
+	account_move_line_obj.reconcile_partial(cr, uid, data['ids'], 'manual', context=context)
+	return {}
+
 def _trans_rec_reconcile(self, cr, uid, data, context=None):
 	pool = pooler.get_pool(cr.dbname)
 	account_move_line_obj = pool.get('account.move.line')
@@ -76,10 +82,10 @@ def _trans_rec_reconcile(self, cr, uid, data, context=None):
 			period_id, journal_id, context=context)
 	return {}
 
-def _wo_check(self, cr, uid, data, context):
-	if data['form']['writeoff'] == 0:
-		return 'reconcile'
-	return 'addendum'
+def _partial_check(self, cr, uid, data, context):
+	if _trans_rec_get(self,cr,uid, data, context)['writeoff'] == 0:
+		return 'init_full'
+	return 'init_partial'
 
 _transaction_add_form = '''<?xml version="1.0"?>
 <form string="Information addendum">
@@ -107,12 +113,16 @@ def _trans_rec_addendum(self, cr, uid, data, context={}):
 class wiz_reconcile(wizard.interface):
 	states = {
 		'init': {
-			'actions': [_trans_rec_get],
-			'result': {'type': 'form', 'arch':_transaction_form, 'fields':_transaction_fields, 'state':[('end','Cancel'),('writeoff_check','Reconcile')]}
-		},
-		'writeoff_check': {
 			'actions': [],
-			'result' : {'type' : 'choice', 'next_state': _wo_check }
+			'result': {'type': 'choice', 'next_state': _partial_check}
+		},
+		'init_full': {
+			'actions': [_trans_rec_get],
+			'result': {'type': 'form', 'arch':_transaction_form, 'fields':_transaction_fields, 'state':[('end','Cancel'),('reconcile','Reconcile')]}
+		},
+		'init_partial': {
+			'actions': [_trans_rec_get],
+			'result': {'type': 'form', 'arch':_transaction_form, 'fields':_transaction_fields, 'state':[('end','Cancel'),('addendum','Reconcile With Write-Off'),('partial','Partial Reconcile')]}
 		},
 		'addendum': {
 			'actions': [_trans_rec_addendum],
@@ -120,6 +130,10 @@ class wiz_reconcile(wizard.interface):
 		},
 		'reconcile': {
 			'actions': [_trans_rec_reconcile],
+			'result': {'type': 'state', 'state':'end'}
+		},
+		'partial': {
+			'actions': [_trans_rec_reconcile_partial],
 			'result': {'type': 'state', 'state':'end'}
 		}
 	}
