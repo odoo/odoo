@@ -136,7 +136,7 @@ class account_invoice(osv.osv):
 
 		'period_id': fields.many2one('account.period', 'Force Period', help="Keep empty to use the period of the validation date."),
 
-		'account_id': fields.many2one('account.account', 'Dest Account', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+		'account_id': fields.many2one('account.account', 'Account', required=True, readonly=True, states={'draft':[('readonly',False)]}),
 		'invoice_line': fields.one2many('account.invoice.line', 'invoice_id', 'Invoice Lines', readonly=True, states={'draft':[('readonly',False)]}),
 		'tax_line': fields.one2many('account.invoice.tax', 'invoice_id', 'Tax Lines', readonly=True, states={'draft':[('readonly',False)]}),
 
@@ -748,7 +748,7 @@ class account_invoice_line(osv.osv):
 		'invoice_id': fields.many2one('account.invoice', 'Invoice Ref', ondelete='cascade', select=True),
 		'uos_id': fields.many2one('product.uom', 'Unit', ondelete='set null'),
 		'product_id': fields.many2one('product.product', 'Product', ondelete='set null'),
-		'account_id': fields.many2one('account.account', 'Source Account', required=True, domain=[('type','<>','view'), ('type', '<>', 'closed')]),
+		'account_id': fields.many2one('account.account', 'Account', required=True, domain=[('type','<>','view'), ('type', '<>', 'closed')]),
 		'price_unit': fields.float('Unit Price', required=True, digits=(16, int(config['price_accuracy']))),
 		'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal'),
 		'quantity': fields.float('Quantity', required=True),
