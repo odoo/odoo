@@ -30,7 +30,7 @@
 					<blockFont name="Helvetica" size="6" start="0,2" stop="-2,-2"/>
 					<blockFont name="Helvetica-BoldOblique" size="8" start="0,-1" stop="-1,-1"/>
 					<blockBackground colorName="#AAAAAA" start="1,0" stop="-2,1"/>
-					<xsl:for-each select="/report/days/day[@name='Sat']">
+					<xsl:for-each select="/report/days/day[@name='Sat' or @name='Sun']">
 						<xsl:variable name="col" select="attribute::number" />
 						<blockBackground>
 							<xsl:attribute name="colorName">lightgrey</xsl:attribute>
@@ -39,7 +39,7 @@
 								<xsl:text>,0</xsl:text>
 							</xsl:attribute>
 							<xsl:attribute name="stop">
-								<xsl:value-of select="$col+1" />
+								<xsl:value-of select="$col" />
 								<xsl:text>,-1</xsl:text>
 							</xsl:attribute>
 						</blockBackground>
