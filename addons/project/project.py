@@ -210,7 +210,7 @@ class task(osv.osv):
 		'sequence': fields.integer('Sequence'),
 		'type': fields.many2one('project.task.type', 'Type'),
 		'state': fields.selection([('draft', 'Draft'),('open', 'Open'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State'),
-		'date_start': fields.date('Date'),
+		'date_start': fields.datetime('Date'),
 		'date_deadline': fields.datetime('Deadline'),
 		'date_close': fields.datetime('Date Closed', readonly=True),
 		'project_id': fields.many2one('project.project', 'Project', ondelete='cascade'),
