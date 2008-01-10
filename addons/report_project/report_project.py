@@ -49,7 +49,7 @@ class report_project_task_user(osv.osv):
             create or replace view report_project_task_user as (
                 select
                     min(t.id) as id,
-                    substring(date_close for 7)||'-01' as name,
+                    to_char(date_close, 'YYYY-MM-01') as name,
                     count(distinct t.id) as task_closed,
                     t.user_id,
                     t.project_id,
@@ -62,7 +62,7 @@ class report_project_task_user(osv.osv):
                 where
                     t.state='done'
                 group by
-                    substring(date_close for 7),t.user_id,project_id
+                    to_char(date_close, 'YYYY-MM-01'),t.user_id,project_id
             )
         """)
 report_project_task_user()
@@ -87,7 +87,7 @@ class report_project_task(osv.osv):
             create or replace view report_project_task as (
                 select
                     min(t.id) as id,
-                    substring(date_close for 7)||'-01' as name,
+                    to_char(date_close, 'YYYY-MM-01') as name,
                     count(distinct t.id) as task_closed,
                     t.project_id,
                     sum(planned_hours) as hours_planned,
@@ -99,7 +99,7 @@ class report_project_task(osv.osv):
                 where
                     t.state='done'
                 group by
-                    substring(date_close for 7),project_id
+                    to_char(date_close, 'YYYY-MM-01'),project_id
             )
         """)
 report_project_task()

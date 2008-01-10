@@ -61,7 +61,7 @@ class report_purchase_order_product(osv.osv):
 			create or replace view report_purchase_order_product as (
 				select
 					min(l.id) as id,
-					substring(s.date_order for 7)||'-'||'01' as name,
+					to_char(s.date_order, 'YYYY-MM-01') as name,
 					s.state,
 					l.product_id,
 					sum(l.product_qty*u.factor) as quantity,
@@ -71,7 +71,7 @@ class report_purchase_order_product(osv.osv):
 				from purchase_order s
 					left join purchase_order_line l on (s.id=l.order_id)
 					left join product_uom u on (u.id=l.product_uom)
-				group by l.product_id, substring(s.date_order for 7),s.state
+				group by l.product_id, to_char(s.date_order, 'YYYY-MM-01'),s.state
 			)
 		""")
 report_purchase_order_product()
@@ -104,7 +104,7 @@ class report_purchase_order_category(osv.osv):
 			create or replace view report_purchase_order_category as (
 				select
 					min(l.id) as id,
-					substring(s.date_order for 7)||'-'||'01' as name,
+					to_char(s.date_order, 'YYYY-MM-01') as name,
 					s.state,
 					t.categ_id as category_id,
 					sum(l.product_qty*u.factor) as quantity,
@@ -116,7 +116,7 @@ class report_purchase_order_category(osv.osv):
 					left join product_product p on (p.id=l.product_id)
 					left join product_template t on (t.id=p.product_tmpl_id)
 					left join product_uom u on (u.id=l.product_uom)
-				group by t.categ_id, substring(s.date_order for 7),s.state
+				group by t.categ_id, to_char(s.date_order, 'YYYY-MM-01'),s.state
 			 )
 		""")
 report_purchase_order_category()

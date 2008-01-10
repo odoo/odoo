@@ -59,7 +59,7 @@ class report_crm_case_user(osv.osv):
 			create or replace view report_crm_case_user as (
 				select
 					min(c.id) as id,
-					substring(c.create_date for 7)||'-01' as name,
+					to_char(c.create_date, 'YYYY-MM-01') as name,
 					c.state,
 					c.user_id,
 					c.section_id,
@@ -71,7 +71,7 @@ class report_crm_case_user(osv.osv):
 					to_char(avg(date_closed-c.create_date), 'DD"d" HH24:MI:SS') as delay_close
 				from
 					crm_case c
-				group by substring(c.create_date for 7), c.state, c.user_id, c.section_id
+				group by to_char(c.create_date, 'YYYY-MM-01'), c.state, c.user_id, c.section_id
 			)""")
 report_crm_case_user()
 
@@ -97,7 +97,7 @@ class report_crm_case_categ(osv.osv):
 			create or replace view report_crm_case_categ as (
 				select
 					min(c.id) as id,
-					substring(c.create_date for 7)||'-01' as name,
+					to_char(c.create_date, 'YYYY-MM-01') as name,
 					c.state,
 					c.categ_id,
 					c.section_id,
@@ -109,6 +109,6 @@ class report_crm_case_categ(osv.osv):
 					to_char(avg(date_closed-c.create_date), 'DD"d" HH24:MI:SS') as delay_close
 				from
 					crm_case c
-				group by substring(c.create_date for 7), c.state, c.categ_id, c.section_id
+				group by to_char(c.create_date, 'YYYY-MM-01'), c.state, c.categ_id, c.section_id
 			)""")
 report_crm_case_categ()

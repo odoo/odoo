@@ -74,7 +74,7 @@ class report_intrastat(osv.osv):
 		cr.execute("""
 			create or replace view report_intrastat as (
 				select
-					substring(m.create_date for 7)||'-01' as name,
+					to_char(m.create_date, 'YYYY-MM-01') as name,
 					min(m.id) as id,
 					pt.intrastat_id as intrastat_id,
 					case when l.usage in ('supplier', 'customer') then upper(pc.code) else upper(c.code) end as code,
@@ -122,7 +122,7 @@ class report_intrastat(osv.osv):
 					and ((l.usage in ('supplier', 'customer') and dl.usage not in ('supplier', 'customer'))
 						or (dl.usage in ('supplier', 'customer') and l.usage not in ('supplier', 'customer')))
 					and (c.intrastat is not null or pc.intrastat is not null)
-				group by substring(m.create_date for 7), pt.intrastat_id, c.code, pc.code, l.usage, dl.usage, ppl.currency_id, spl.currency_id
+				group by to_char(m.create_date, 'YYYY-MM-01'), pt.intrastat_id, c.code, pc.code, l.usage, dl.usage, ppl.currency_id, spl.currency_id
 			)""")
 report_intrastat()
 
