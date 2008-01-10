@@ -81,12 +81,12 @@ class aged_trial_report(report_sxw.rml_parse):
 				values[str(i)] = during and during[0] or ""
 
 
-				a3 = "SELECT SUM(debit-credit) \
-					FROM account_move_line AS line, account_account \
-					WHERE (line.account_id=account_account.id) AND (account_account.type IN (%s)) \
-					AND (partner_id = %d) AND (reconcile_id IS NULL) \
-					AND (line.state <> 'draft') AND (line.period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)) \
-					AND (account_account.company_id = %d) AND account_account.active" %(form['computation'], partner['id'], form['fiscalyear'], form['company_id'])
+			a3 = "SELECT SUM(debit-credit) \
+				FROM account_move_line AS line, account_account \
+				WHERE (line.account_id=account_account.id) AND (account_account.type IN (%s)) \
+				AND (partner_id = %d) AND (reconcile_id IS NULL) \
+				AND (line.state <> 'draft') AND (line.period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)) \
+				AND (account_account.company_id = %d) AND account_account.active" %(form['computation'], partner['id'], form['fiscalyear'], form['company_id'])
 
 			self.cr.execute(a3)
 			total = self.cr.fetchone()
@@ -136,7 +136,7 @@ class aged_trial_report(report_sxw.rml_parse):
 		per = "SELECT SUM(debit-credit) \
 				FROM account_move_line AS line, account_account \
 				WHERE (line.account_id=account_account.id) AND (account_account.type IN (%s)) \
-				AND reconcile_id IS NULL AND (date >= %s) AND (date <= %s) \
+				AND reconcile_id IS NULL AND (date >= '%s') AND (date <= '%s') \
 				AND (line.state<>'draft') AND partner_id is not null \
 				AND (line.period_id in (SELECT id FROM account_period WHERE fiscalyear_id = %d)) \
 				AND (account_account.company_id = %d) AND account_account.active" %(self.form['computation'], period['start'], period['stop'], fiscalyear, company_id)
