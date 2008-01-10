@@ -40,6 +40,7 @@ import locale
 import copy
 import StringIO
 import zipfile
+import os
 
 DT_FORMAT = '%Y-%m-%d'
 DHM_FORMAT = '%Y-%m-%d %H:%M:%S'
@@ -71,6 +72,73 @@ sxw_tag = "p"
 
 rml2sxw = {
 	'para': 'p',
+}
+
+_LOCALE2WIN32 = {
+	'af_ZA': 'Afrikaans_South Africa',
+	'sq_AL': 'Albanian_Albania',
+	'ar_SA': 'Arabic_Saudi Arabia',
+	'eu_ES': 'Basque_Spain',
+	'be_BY': 'Belarusian_Belarus',
+	'bs_BA': 'Serbian (Latin)',
+	'bg_BG': 'Bulgarian_Bulgaria',
+	'ca_ES': 'Catalan_Spain',
+	'hr_HR': 'Croatian_Croatia',
+	'zh_CN': 'Chinese_China',
+	'zh_TW': 'Chinese_Taiwan',
+	'cs_CZ': 'Czech_Czech Republic',
+	'da_DK': 'Danish_Denmark',
+	'nl_NL': 'Dutch_Netherlands',
+	'et_EE': 'Estonian_Estonia',
+	'fa_IR': 'Farsi_Iran',
+	'ph_PH': 'Filipino_Philippines',
+	'fi_FI': 'Finnish_Finland',
+	'fr_FR': 'French_France',
+	'fr_BE': 'French_France',
+	'fr_CH': 'French_France',
+	'fr_CA': 'French_France',
+	'ga': 'Scottish Gaelic',
+	'gl_ES': 'Galician_Spain',
+	'ka_GE': 'Georgian_Georgia',
+	'de_DE': 'German_Germany',
+	'el_GR': 'Greek_Greece',
+	'gu': 'Gujarati_India',
+	'he_IL': 'Hebrew_Israel',
+	'hi_IN': 'Hindi',
+	'hu': 'Hungarian_Hungary',
+	'is_IS': 'Icelandic_Iceland',
+	'id_ID': 'Indonesian_indonesia',
+	'it_IT': 'Italian_Italy',
+	'ja_JP': 'Japanese_Japan',
+	'kn_IN': 'Kannada',
+	'km_KH': 'Khmer',
+	'ko_KR': 'Korean_Korea',
+	'lo_LA': 'Lao_Laos',
+	'lt_LT': 'Lithuanian_Lithuania',
+	'lat': 'Latvian_Latvia',
+	'ml_IN': 'Malayalam_India',
+	'id_ID': 'Indonesian_indonesia',
+	'mi_NZ': 'Maori',
+	'mn': 'Cyrillic_Mongolian',
+	'no_NO': 'Norwegian_Norway',
+	'nn_NO': 'Norwegian-Nynorsk_Norway',
+	'pl': 'Polish_Poland',
+	'pt_PT': 'Portuguese_Portugal',
+	'pt_BR': 'Portuguese_Brazil',
+	'ro_RO': 'Romanian_Romania',
+	'ru_RU': 'Russian_Russia',
+	'mi_NZ': 'Maori',
+	'sr_CS': 'Serbian (Cyrillic)_Serbia and Montenegro',
+	'sk_SK': 'Slovak_Slovakia',
+	'sl_SI': 'Slovenian_Slovenia',
+	'es_ES': 'Spanish_Spain',
+	'sv_SE': 'Swedish_Sweden',
+	'ta_IN': 'English_Australia',
+	'th_TH': 'Thai_Thailand',
+	'mi_NZ': 'Maori',
+	'tr_TR': 'Turkish_Turkey',
+	'uk_UA': 'Ukrainian_Ukraine',
+	'vi_VN': 'Vietnamese_Viet Nam',
 }
 
 #
@@ -192,10 +260,14 @@ class rml_parse(object):
 		lc, encoding = locale.getdefaultlocale()
 		if encoding == 'utf':
 			encoding = 'UTF-8'
+		if encoding == 'cp1252':
+			encoding= '1252'
+		lang = self.localcontext.get('lang', 'en_US') or 'en_US'
 		try:
-			locale.setlocale(locale.LC_ALL,
-					(self.localcontext.get('lang', 'en_US') or 'en_US') + \
-							'.' + encoding)
+			if os.name == 'nt':
+				locale.setlocale(locale.LC_ALL, _LOCALE2WIN32.get(lang, lang) + '.' + encoding)
+			else:
+				locale.setlocale(locale.LC_ALL, lang + '.' + encoding)
 		except Exception:
 			netsvc.Logger().notifyChannel('report', netsvc.LOG_WARNING,
 					'report %s: unable to set locale "%s"' % (self.name,
