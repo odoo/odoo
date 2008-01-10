@@ -173,10 +173,7 @@ showpage'''
 		else:
 			prog = 'ps2pdf'
 		args = (prog, '-', '-')
-		try:
-			input, output = tools.exec_command_pipe(*args)
-		except:
-			return
+		input, output = tools.exec_command_pipe(*args)
 		input.write(ps_string)
 		input.close()
 		self.result = output.read()
