@@ -13,17 +13,38 @@
     <blockTableStyle id="Table1">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <blockBackground colorName="#e6e6e6" start="0,0" stop="0,0"/>
-      <blockBackground colorName="#e6e6e6" start="1,0" stop="1,0"/>
-      <blockBackground colorName="#e6e6e6" start="2,0" stop="2,0"/>
-      <blockBackground colorName="#e6e6e6" start="0,1" stop="0,1"/>
-      <blockBackground colorName="#e6e6e6" start="1,1" stop="1,1"/>
-      <blockBackground colorName="#e6e6e6" start="2,1" stop="2,1"/>
+      <blockBackground colorName="#e6e6e6" start="0,0" stop="0,-1"/>
+      <blockBackground colorName="#e6e6e6" start="1,0" stop="1,-1"/>
+      <blockBackground colorName="#e6e6e6" start="2,0" stop="2,-1"/>
+      <blockBackground colorName="#e6e6e6" start="0,1" stop="0,-1"/>
+      <blockBackground colorName="#e6e6e6" start="1,1" stop="1,-1"/>
+      <blockBackground colorName="#e6e6e6" start="2,1" stop="2,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table2">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <lineStyle kind="GRID" colorName="black"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="0,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,0" stop="2,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="4,0" stop="4,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="5,0" stop="5,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="5,0" stop="5,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="5,-1" stop="5,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="6,0" stop="6,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="6,0" stop="6,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="6,0" stop="6,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="6,-1" stop="6,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table3">
       <blockAlignment value="LEFT"/>
@@ -36,7 +57,19 @@
     <blockTableStyle id="Table4">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <lineStyle kind="GRID" colorName="black"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="0,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,0" stop="2,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
     </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
@@ -64,6 +97,7 @@
     <paraStyle name="Caption" fontName="Times-Roman" fontSize="10.0" leading="13" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="Index" fontName="Times-Roman"/>
   </stylesheet>
+  <images/>
   <story>
     <blockTable colWidths="145.0,187.0,149.0" repeatRows="1" style="Table1">
       <tr>
@@ -76,8 +110,8 @@
           <para style="P1">Third party ledger</para>
         </td>
         <td>
-          <para style="P2"><font face="Times-Roman">From</font> [[ data['form']['date1'] ]]</para>
-          <para style="P2"><font face="Times-Roman">to</font> [[ data['form']['date2'] ]]</para>
+          <para style="P2"><font face="Times-Roman">From</font> [[ formatLang(data['form']['date1'], date=True) ]]</para>
+          <para style="P2"><font face="Times-Roman">to</font> [[ formatLang(data['form']['date2'], date=True) ]]</para>
         </td>
       </tr>
       <tr>
@@ -95,7 +129,7 @@
     <para style="Standard">
       <font color="white"> </font>
     </para>
-    <para style="P10"><font face="Times-Roman">Printing date:</font> [[ time.strftime('%Y-%m-%d') ]] <font face="Times-Roman">at</font> [[ time.strftime('%H:%M:%S') ]]</para>
+    <para style="P10"><font face="Times-Roman">Printing date:</font> [[ formatLang(time.strftime('%Y-%m-%d'), date=True) ]] <font face="Times-Roman">at</font> [[ time.strftime('%H:%M:%S') ]]</para>
     <para style="P11">
       <font color="white"> </font>
     </para>
@@ -133,7 +167,7 @@
       <blockTable colWidths="45.0,37.0,50.0,145.0,69.0,72.0,63.0" style="Table3">
         <tr>
           <td>
-            <para style="P15"><font face="Times-Roman">[[ repeatIn(lines(p), 'line') ]]</font>[[ line['date'] ]]</para>
+            <para style="P15"><font face="Times-Roman">[[ repeatIn(lines(p), 'line') ]]</font>[[ formatLang(line['date'], date=True) ]]</para>
           </td>
           <td>
             <para style="P3">[[ line['code'] ]]</para>
@@ -145,13 +179,13 @@
             <para style="P4">[[ line['name'] ]]</para>
           </td>
           <td>
-            <para style="P5">[[ line['debit'] and '%.2f' % line['debit'] or '' ]]</para>
+            <para style="P5">[[ formatLang(line['debit']) ]]</para>
           </td>
           <td>
-            <para style="P5">[[ line['credit'] and '%.2f' % line['credit'] or '' ]]</para>
+            <para style="P5">[[ formatLang(line['credit']) ]]</para>
           </td>
           <td>
-            <para style="P5">[[ line['progress'] and '%.2f' % line['progress'] or '' ]]</para>
+            <para style="P5">[[ formatLang(line['progress']) ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -164,13 +198,13 @@
             </para>
           </td>
           <td>
-            <para style="P9">[[ '%.2f' % sum_debit_partner(p) ]]</para>
+            <para style="P9">[[ formatLang(sum_debit_partner(p)) ]]</para>
           </td>
           <td>
-            <para style="P9">[[ '%.2f' % sum_credit_partner(p) ]]</para>
+            <para style="P9">[[ formatLang(sum_credit_partner(p)) ]]</para>
           </td>
           <td>
-            <para style="P9">[[ '%.2f' %(sum_debit_partner(p) - sum_credit_partner(p)) ]]</para>
+            <para style="P9">[[ formatLang((sum_debit_partner(p) - sum_credit_partner(p))) ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -187,13 +221,13 @@
           <para style="P8">Balance brought forward</para>
         </td>
         <td>
-          <para style="P9">[[ '%.2f' % sum_debit() ]]</para>
+          <para style="P9">[[ formatLang(sum_debit()) ]]</para>
         </td>
         <td>
-          <para style="P9">[[ '%.2f' % sum_credit() ]]</para>
+          <para style="P9">[[ formatLang(sum_credit()) ]]</para>
         </td>
         <td>
-          <para style="P9">[[ '%.2f' %(sum_debit() - sum_credit()) ]]</para>
+          <para style="P9">[[ formatLang((sum_debit() - sum_credit())) ]]</para>
         </td>
       </tr>
     </blockTable>
