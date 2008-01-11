@@ -729,7 +729,7 @@ class sale_order_line(osv.osv):
 		context = {'lang': lang, 'partner_id': partner_id}
 
 		if not product:
-			return {'value': {'price_unit': 0.0, 'notes':'', 'th_weight' : 0,
+			return {'value': {'th_weight' : 0,
 				'product_uos_qty': qty}, 'domain': {'product_uom': [],
 					'product_uos': []}}
 
@@ -765,8 +765,9 @@ class sale_order_line(osv.osv):
 			else:
 				uos = False
 
-		result = {'price_unit': price, 'type': product.procure_method,
-				'notes': product.description_sale}
+		result = {'price_unit': price, 'type': product.procure_method}
+		if product.description_sale:
+			result['notes'] = product.description_sale
 
 		if update_tax: #The quantity only have changed
 			result['delay'] = (product.sale_delay or 0.0)
