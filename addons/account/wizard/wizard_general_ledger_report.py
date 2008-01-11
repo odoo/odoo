@@ -35,7 +35,8 @@ dates_form = '''<?xml version="1.0"?>
 </form>'''
 
 dates_fields = {
-	'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear', 'required': True},
+	'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear',
+		'help': 'Keep empty for all open fiscal year'},
 	'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty'}
 }
 

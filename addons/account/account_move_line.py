@@ -38,13 +38,17 @@ class account_move_line(osv.osv):
 	_description = "Entry lines"
 
 	def _query_get(self, cr, uid, obj='l', context={}):
-		if not 'fiscalyear' in context:
-			context['fiscalyear'] = self.pool.get('account.fiscalyear').find(cr, uid, exception=False)
+		fiscalyear_obj = self.pool.get('account.fiscalyear')
+		if not context.get('fiscalyear', False):
+			fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('state', '=', 'draft')])
+			fiscalyear_clause = ','.join([str(x) for x in fiscalyear_ids])
+		else:
+			fiscalyear_clause = '%s' % context['fiscalyear']
 		if context.get('periods', False):
 			ids = ','.join([str(x) for x in context['periods']])
-			return obj+".active AND "+obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id=%d AND id in (%s))" % (context['fiscalyear'], ids)
+			return obj+".active AND "+obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) AND id in (%s))" % (fiscalyear_clause, ids)
 		else:
-			return obj+".active AND "+obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id=%d)" % (context['fiscalyear'],)
+			return obj+".active AND "+obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s))" % (fiscalyear_clause,)
 
 	def default_get(self, cr, uid, fields, context={}):
 		data = self._default_get(cr, uid, fields, context)

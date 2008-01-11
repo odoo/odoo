@@ -36,7 +36,12 @@ class wizard_account_chart(wizard.interface):
 	</form>'''
 	
 	_account_chart_fields = {
-			'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear', 'required': True },
+			'fiscalyear': {
+				'string': 'Fiscal year',
+				'type': 'many2one',
+				'relation': 'account.fiscalyear',
+				'help': 'Keep empty for all open fiscal year',
+		},
 	}
 
 	def _get_defaults(self, cr, uid, data, context):

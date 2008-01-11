@@ -40,7 +40,8 @@ dates_form = '''<?xml version="1.0"?>
 
 dates_fields = {
 	'company_id': {'string': 'Company', 'type': 'many2one', 'relation': 'res.company', 'required': True},
-	'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear', 'required': True},
+	'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear',
+		'help': 'Keep empty for all open fiscal year'},
 	'date1': {'string':'Start of period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-01-01')},
 	'date2': {'string':'End of period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
 }

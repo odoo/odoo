@@ -48,47 +48,60 @@ class aged_trial_report(report_sxw.rml_parse):
 	def _get_lines(self, form):
 		self.form=form
 		res = []
-		self.cr.execute("SELECT DISTINCT res_partner.id AS id, res_partner.name AS name, res_partner.ref AS code \
-						FROM res_partner, account_move_line AS line, account_account \
-						WHERE (line.account_id=account_account.id) AND (line.reconcile_id IS NULL) \
-						AND (line.partner_id=res_partner.id) AND (line.state<>'draft') \
-						AND (line.period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d))\
-						AND (account_account.company_id = %d) AND account_account.active \
-						ORDER BY res_partner.name", (form['fiscalyear'], form['company_id']))
+		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
+		line_query = account_move_line_obj._query_get(self.cr, self.uid, obj='line',
+				context={'fiscalyear': form['fiscalyear']})
+		self.cr.execute("SELECT DISTINCT res_partner.id AS id, " \
+					"res_partner.name AS name, res_partner.ref AS code " \
+				"FROM res_partner, account_move_line AS line, account_account " \
+				"WHERE (line.account_id=account_account.id) " \
+					"AND (line.reconcile_id IS NULL) " \
+					"AND (line.partner_id=res_partner.id) " \
+					"AND " + line_query + " " \
+					"AND (account_account.company_id = %d) " \
+					"AND account_account.active " \
+				"ORDER BY res_partner.name", (form['company_id'],))
 		partners = self.cr.dictfetchall()
 		for partner in partners:
 			values = {}
-			a1  = "SELECT SUM(debit-credit) \
-					FROM account_move_line AS line, account_account \
-					WHERE (line.account_id=account_account.id) AND (account_account.type IN (%s)) \
-					AND (date<'%s') AND (partner_id=%d) \
-					AND (reconcile_id IS NULL) AND (line.state<>'draft') \
-					AND (line.period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)) \
-					AND (account_account.company_id = %d) AND account_account.active" %(form['computation'], form['0']['start'], partner['id'], form['fiscalyear'], form['company_id'])
-			self.cr.execute(a1)
+			self.cr.execute("SELECT SUM(debit-credit) " \
+					"FROM account_move_line AS line, account_account " \
+					"WHERE (line.account_id=account_account.id) " \
+						"AND (account_account.type IN (" + form['computation'] +")) " \
+						"AND (date < %s) AND (partner_id=%d) " \
+						"AND (reconcile_id IS NULL) " \
+						"AND " + line_query + " " \
+						"AND (account_account.company_id = %d) " \
+						"AND account_account.active",
+						(form['0']['start'], partner['id'], form['company_id']))
 			before = self.cr.fetchone()
 			values['before'] = before and before[0] or ""
 			for i in range(5):
-				a2 = "SELECT SUM(debit-credit) \
-						FROM account_move_line AS line, account_account \
-						WHERE (line.account_id=account_account.id) AND (account_account.type IN (%s)) \
-						AND (date >= '%s') AND (date <= '%s') \
-						AND (partner_id=%d) AND (reconcile_id IS NULL) \
-						AND line.state<>'draft' AND (line.period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)) \
-						AND (account_account.company_id = %d) AND account_account.active" %(form['computation'], form[str(i)]['start'], form[str(i)]['stop'], partner['id'], form['fiscalyear'], form['company_id'])
-				self.cr.execute(a2)
+				self.cr.execute("SELECT SUM(debit-credit) " \
+						"FROM account_move_line AS line, account_account " \
+						"WHERE (line.account_id=account_account.id) " \
+							"AND (account_account.type IN (" + form['computation'] + ")) " \
+							"AND (date >= %s) AND (date <= %s) " \
+							"AND (partner_id = %d) " \
+							"AND (reconcile_id IS NULL) " \
+							"AND " + line_query + " " \
+							"AND (account_account.company_id = %d) " \
+							"AND account_account.active",
+							(form[str(i)]['start'], form[str(i)]['stop'],
+								partner['id'], form['company_id']))
 				during = self.cr.fetchone()
 				values[str(i)] = during and during[0] or ""
 
-
-			a3 = "SELECT SUM(debit-credit) \
-				FROM account_move_line AS line, account_account \
-				WHERE (line.account_id=account_account.id) AND (account_account.type IN (%s)) \
-				AND (partner_id = %d) AND (reconcile_id IS NULL) \
-				AND (line.state <> 'draft') AND (line.period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)) \
-				AND (account_account.company_id = %d) AND account_account.active" %(form['computation'], partner['id'], form['fiscalyear'], form['company_id'])
-
-			self.cr.execute(a3)
+			self.cr.execute("SELECT SUM(debit-credit) " \
+					"FROM account_move_line AS line, account_account " \
+					"WHERE (line.account_id = account_account.id) " \
+						"AND (account_account.type IN (" + form['computation'] + ")) " \
+						"AND (partner_id = %d) " \
+						"AND (reconcile_id IS NULL) " \
+						"AND " + line_query + " " \
+						"AND (account_account.company_id = %d) " \
+						"AND account_account.active",
+						(partner['id'], form['company_id']))
 			total = self.cr.fetchone()
 			values['total'] = total and total[0] or 0.0
 			values['name'] = partner['name']
@@ -110,37 +123,56 @@ class aged_trial_report(report_sxw.rml_parse):
 		return res
 
 	def _get_total(self, fiscalyear, company_id):
-		tot = "SELECT SUM(debit-credit) \
-				FROM account_move_line AS line, account_account \
-				WHERE (line.account_id=account_account.id) AND (account_account.type IN (%s)) \
-				AND reconcile_id IS NULL AND (line.state<>'draft') \
-				AND partner_id is not null AND (line.period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)) \
-				AND (account_account.company_id = %d) AND account_account.active" %(self.form['computation'], fiscalyear, company_id)
-		self.cr.execute(tot)
+		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
+		line_query = account_move_line_obj._query_get(self.cr, self.uid, obj='line',
+				context={'fiscalyear': fiscalyear})
+		self.cr.execute("SELECT SUM(debit - credit) " \
+				"FROM account_move_line AS line, account_account " \
+				"WHERE (line.account_id = account_account.id) " \
+					"AND (account_account.type IN (" + self.form['computation'] + ")) "\
+					"AND reconcile_id IS NULL " \
+					"AND partner_id is NOT NULL " \
+					"AND " + line_query + " " \
+					"AND (account_account.company_id = %d) " \
+					"AND account_account.active",
+					(company_id,))
 		total = self.cr.fetchone()
 		return total and total[0] or 0.0
 
 	def _get_before(self, date, fiscalyear, company_id):
-		bef = "SELECT SUM(debit-credit) \
-				FROM account_move_line AS line, account_account \
-				WHERE (line.account_id=account_account.id) AND (account_account.type IN (%s)) \
-				AND reconcile_id IS NULL AND (date < '%s') \
-				AND (line.state <> 'draft') AND partner_id is not null \
-				AND (line.period_id in (SELECT id FROM account_period WHERE fiscalyear_id = %d)) \
-				AND (account_account.company_id = %d) AND account_account.active" %(self.form['computation'], date, fiscalyear, company_id)
-		self.cr.execute(bef)
+		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
+		line_query = account_move_line_obj._query_get(self.cr, self.uid, obj='line',
+				context={'fiscalyear': fiscalyear})
+		self.cr.execute("SELECT SUM(debit - credit) " \
+				"FROM account_move_line AS line, account_account " \
+				"WHERE (line.account_id = account_account.id) " \
+					"AND (account_account.type IN (" + self.form['computation'] + ")) " \
+					"AND reconcile_id IS NULL " \
+					"AND (date < %s) " \
+					"AND partner_id IS NOT NULL " \
+					"AND " + line_query + " " \
+					"AND (account_account.company_id = %d) " \
+					"AND account_account.active",
+					(date, company_id))
 		before = self.cr.fetchone()
 		return before and before[0] or 0.0
 
 	def _get_for_period(self, period, fiscalyear, company_id):
-		per = "SELECT SUM(debit-credit) \
-				FROM account_move_line AS line, account_account \
-				WHERE (line.account_id=account_account.id) AND (account_account.type IN (%s)) \
-				AND reconcile_id IS NULL AND (date >= '%s') AND (date <= '%s') \
-				AND (line.state<>'draft') AND partner_id is not null \
-				AND (line.period_id in (SELECT id FROM account_period WHERE fiscalyear_id = %d)) \
-				AND (account_account.company_id = %d) AND account_account.active" %(self.form['computation'], period['start'], period['stop'], fiscalyear, company_id)
-		self.cr.execute(per)
+		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
+		line_query = account_move_line_obj._query_get(self.cr, self.uid, obj='line',
+				context={'fiscalyear': fiscalyear})
+		self.cr.execute("SELECT SUM(debit - credit) " \
+				"FROM account_move_line AS line, account_account " \
+				"WHERE (line.account_id = account_account.id) " \
+					"AND (account_account.type IN (" + self.form['computation'] + ")) " \
+					"AND reconcile_id IS NULL " \
+					"AND (date >= %s) " \
+					"AND (date <= %s) " \
+					"AND partner_id IS NOT NULL " \
+					"AND " + line_query + " " \
+					"AND (account_account.company_id = %d) " \
+					"AND account_account.active",
+					(period['start'], period['stop'], company_id))
 		period = self.cr.fetchone()
 		return period and period[0] or 0.0
 

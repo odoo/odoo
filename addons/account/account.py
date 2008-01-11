@@ -149,10 +149,6 @@ class account_account(osv.osv):
 				order, context=context, count=count)
 
 	def _credit(self, cr, uid, ids, field_name, arg, context={}):
-		if not 'fiscalyear' in context:
-			context['fiscalyear'] = self.pool.get('account.fiscalyear').find(cr, uid,
-					exception=False)
-
 		acc_set = ",".join(map(str, ids))
 		query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
 		cr.execute(("SELECT a.id, " \
@@ -174,10 +170,6 @@ class account_account(osv.osv):
 		return res
 
 	def _debit(self, cr, uid, ids, field_name, arg, context={}):
-		if not 'fiscalyear' in context:
-			context['fiscalyear'] = self.pool.get('account.fiscalyear').find(cr, uid,
-					exception=False)
-
 		acc_set = ",".join(map(str, ids))
 		query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
 		cr.execute(("SELECT a.id, " \
@@ -199,11 +191,6 @@ class account_account(osv.osv):
 		return res
 
 	def _balance(self, cr, uid, ids, field_name, arg, context={}):
-		fiscalyear_obj = self.pool.get('account.fiscalyear')
-		if not 'fiscalyear' in context:
-			context['fiscalyear'] = fiscalyear_obj.find(cr, uid,
-					exception=False)
-
 		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
 		ids2 = {}.fromkeys(ids + ids2).keys()
 		acc_set = ",".join(map(str, ids2))

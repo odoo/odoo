@@ -47,13 +47,28 @@ class partner_balance(report_sxw.rml_parse):
 		})
 
 	def preprocess(self, objects, data, ids):
-		self.cr.execute('select distinct line.partner_id \
-				from account_move_line AS line, account_account AS account \
-				where line.partner_id is not null and line.date>=%s and line.date<=%s \
-				and line.period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d) \
-				AND line.account_id = account.id AND account.company_id = %d AND account.active', (data['form']['date1'], data['form']['date2'], data['form']['fiscalyear'], data['form']['company_id']))
+		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
+		line_query = account_move_line_obj._query_get(self.cr, self.uid, obj='line',
+				context={'fiscalyear': data['form']['fiscalyear']})
+		self.cr.execute('SELECT DISTINCT line.partner_id ' \
+				'FROM account_move_line AS line, account_account AS account ' \
+				'WHERE line.partner_id IS NOT NULL ' \
+					'AND line.date >= %s ' \
+					'AND line.date <= %s ' \
+					'AND ' + line_query + ' ' \
+					'AND line.account_id = account.id ' \
+					'AND account.company_id = %d ' \
+					'AND account.active',
+					(data['form']['date1'], data['form']['date2'],
+						data['form']['company_id']))
 		new_ids = [id for (id,) in self.cr.fetchall()]
-		self.cr.execute("SELECT a.id FROM account_account a LEFT JOIN account_account_type t ON (a.type=t.code) WHERE t.partner_account=TRUE AND a.company_id = %d AND a.active", (data['form']['company_id'],))
+		self.cr.execute('SELECT a.id ' \
+				'FROM account_account a ' \
+				'LEFT JOIN account_account_type t ' \
+					'ON (a.type = t.code) ' \
+				'WHERE t.partner_account = TRUE ' \
+					'AND a.company_id = %d ' \
+					'AND a.active', (data['form']['company_id'],))
 		self.account_ids = ','.join([str(a) for (a,) in self.cr.fetchall()])
 		self.partner_ids = ','.join(map(str, new_ids))
 		objects = self.pool.get('res.partner').browse(self.cr, self.uid, new_ids)
@@ -62,109 +77,137 @@ class partner_balance(report_sxw.rml_parse):
 	def lines(self):
 		if not self.partner_ids:
 			return []
-
-#TODO: use an SQL CASE to compute sdebit and scredit
+		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
+		line_query = account_move_line_obj._query_get(self.cr, self.uid, obj='l',
+				context={'fiscalyear': self.datas['form']['fiscalyear']})
 		self.cr.execute(
 			"SELECT p.ref, p.name, sum(debit) as debit, sum(credit) as credit, " \
-			"(SELECT sum(debit-credit) FROM account_move_line WHERE partner_id=p.id AND date>=%s AND date<=%s AND blocked=TRUE AND state <>'draft' AND period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)) as enlitige " \
+					"CASE WHEN sum(debit) > sum(credit) " \
+						"THEN sum(debit) - sum(credit) " \
+						"ELSE 0 " \
+					"END AS sdebit, " \
+					"CASE WHEN sum(debit) < sum(credit) " \
+						"THEN sum(credit) - sum(debit) " \
+						"ELSE 0 " \
+					"END AS scredit, " \
+					"(SELECT sum(debit-credit) " \
+						"FROM account_move_line l " \
+						"WHERE partner_id = p.id " \
+							"AND date >= %s " \
+							"AND date <= %s " \
+							"AND blocked = TRUE " \
+							"AND " + line_query + " " \
+					") AS enlitige " \
 			"FROM account_move_line l LEFT JOIN res_partner p ON (l.partner_id=p.id) " \
 			"WHERE partner_id IN (" + self.partner_ids + ") " \
-			"AND account_id IN (" + self.account_ids + ") " \
-			"AND l.date>=%s AND l.date<=%s " \
-			"AND l.state<>'draft' " \
-			"AND l.period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d) " \
+				"AND account_id IN (" + self.account_ids + ") " \
+				"AND l.date >= %s " \
+				"AND l.date <= %s " \
+				"AND " + line_query + " " \
 			"GROUP BY p.id, p.ref, p.name " \
 			"ORDER BY p.ref, p.name",
-			(self.datas['form']['date1'], self.datas['form']['date2'], self.datas['form']['fiscalyear'], self.datas['form']['date1'], self.datas['form']['date2'], self.datas['form']['fiscalyear']))
+			(self.datas['form']['date1'], self.datas['form']['date2'],
+				self.datas['form']['date1'], self.datas['form']['date2']))
 		res = self.cr.dictfetchall()
-		for r in res:
-			r['sdebit'] = r['debit'] > r['credit'] and r['debit'] - r['credit']
-			r['scredit'] = r['credit'] > r['debit'] and r['credit'] - r['debit']
 		return res
-		
+
 	def _sum_debit(self):
 		if not self.ids:
 			return 0.0
-
+		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
+		line_query = account_move_line_obj._query_get(self.cr, self.uid,
+				obj='account_move_line',
+				context={'fiscalyear': self.datas['form']['fiscalyear']})
 		self.cr.execute(
-			'SELECT sum(debit) ' \
-			'FROM account_move_line ' \
-			'WHERE partner_id IN (' + self.partner_ids + ') ' \
-			'AND account_id IN (' + self.account_ids + ') ' \
-			"AND state<>'draft' " \
-			'AND date>=%s AND date<=%s ' \
-			"AND period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)",
-			(self.datas['form']['date1'], self.datas['form']['date2'], self.datas['form']['fiscalyear']))
+				'SELECT sum(debit) ' \
+				'FROM account_move_line ' \
+				'WHERE partner_id IN (' + self.partner_ids + ') ' \
+					'AND account_id IN (' + self.account_ids + ') ' \
+					'AND date >=%s ' \
+					'AND date <= %s ' \
+					'AND ' + line_query,
+			(self.datas['form']['date1'], self.datas['form']['date2']))
 		return self.cr.fetchone()[0] or 0.0
-		
+
 	def _sum_credit(self):
 		if not self.ids:
 			return 0.0
-
+		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
+		line_query = account_move_line_obj._query_get(self.cr, self.uid,
+				obj='account_move_line',
+				context={'fiscalyear': self.datas['form']['fiscalyear']})
 		self.cr.execute(
-			'SELECT sum(credit) ' \
-			'FROM account_move_line ' \
-			'WHERE partner_id IN (' + self.partner_ids + ') ' \
-			'AND account_id IN (' + self.account_ids + ') ' \
-			"AND state<>'draft' " \
-			'AND date>=%s AND date<=%s ' \
-			'AND period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)',
-			(self.datas['form']['date1'], self.datas['form']['date2'], self.datas['form']['fiscalyear']))
+				'SELECT sum(credit) ' \
+				'FROM account_move_line ' \
+				'WHERE partner_id IN (' + self.partner_ids + ') ' \
+					'AND account_id IN (' + self.account_ids + ') ' \
+					'AND date >= %s ' \
+					'AND date <= %s ' \
+					'AND ' + line_query,
+				(self.datas['form']['date1'], self.datas['form']['date2']))
 		return self.cr.fetchone()[0] or 0.0
 
 	def _sum_litige(self):
 		if not self.ids:
 			return 0.0
-
+		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
+		line_query = account_move_line_obj._query_get(self.cr, self.uid,
+				obj='account_move_line',
+				context={'fiscalyear': self.datas['form']['fiscalyear']})
 		self.cr.execute(
-			'SELECT sum(debit-credit) ' \
-			'FROM account_move_line ' \
-			'WHERE partner_id IN (' + self.partner_ids + ') ' \
-			'AND account_id IN (' + self.account_ids + ') ' \
-			"AND state<>'draft' " \
-			'AND date>=%s AND date<=%s AND blocked=TRUE ' \
-			'AND period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d)',
-			(self.datas['form']['date1'], self.datas['form']['date2'], self.datas['form']['fiscalyear']))
+				'SELECT sum(debit-credit) ' \
+				'FROM account_move_line ' \
+				'WHERE partner_id IN (' + self.partner_ids + ') ' \
+					'AND account_id IN (' + self.account_ids + ') ' \
+					'AND date >= %s ' \
+					'AND date <= %s ' \
+					'AND blocked=TRUE ' \
+					'AND ' + line_query,
+				(self.datas['form']['date1'], self.datas['form']['date2']))
 		return self.cr.fetchone()[0] or 0.0
-	
+
 	def _sum_sdebit(self):
 		if not self.ids:
 			return 0.0
-
+		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
+		line_query = account_move_line_obj._query_get(self.cr, self.uid,
+				obj='account_move_line',
+				context={'fiscalyear': self.datas['form']['fiscalyear']})
 		self.cr.execute(
-			'SELECT sum(debit-credit) ' \
-			'FROM (' \
-				'SELECT sum(debit), sum(credit) ' \
-				'FROM account_move_line ' \
-				'WHERE partner_id IN (' + self.partner_ids + ') ' \
+			'SELECT CASE WHEN sum(debit) > sum(credit) ' \
+					'THEN sum(debit - credit) ' \
+					'ELSE 0 ' \
+				'END ' \
+			'FROM account_move_line ' \
+			'WHERE partner_id IN (' + self.partner_ids + ') ' \
 				'AND account_id IN (' + self.account_ids + ') ' \
-				'AND date>=%s AND date<=%s ' \
-				"AND state<>'draft' " \
-				"AND period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d) " \
-				'GROUP BY partner_id' \
-			') AS dc (debit,credit) ' \
-			'WHERE debit>credit', 
-			(self.datas['form']['date1'], self.datas['form']['date2'], self.datas['form']['fiscalyear']))
+				'AND date >= %s ' \
+				'AND date <= %s ' \
+				'AND ' + line_query + ' ' \
+			'GROUP BY partner_id',
+			(self.datas['form']['date1'], self.datas['form']['date2']))
 		return self.cr.fetchone()[0] or 0.0
-		
+
 	def _sum_scredit(self):
 		if not self.ids:
 			return 0.0
-
+		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
+		line_query = account_move_line_obj._query_get(self.cr, self.uid,
+				obj='account_move_line',
+				context={'fiscalyear': self.datas['form']['fiscalyear']})
 		self.cr.execute(
-			'SELECT sum(credit-debit) ' \
-			'FROM (' \
-				'SELECT sum(debit), sum(credit) ' \
-				'FROM account_move_line ' \
-				'WHERE partner_id IN (' + self.partner_ids + ') ' \
+			'SELECT CASE WHEN sum(debit) < sum(credit) ' \
+					'THEN sum(credit - debit) ' \
+					'ELSE 0 ' \
+				'END ' \
+			'FROM account_move_line ' \
+			'WHERE partner_id IN (' + self.partner_ids + ') ' \
 				'AND account_id IN (' + self.account_ids + ') ' \
-				'AND date>=%s AND date<=%s ' \
-				"AND state<>'draft' " \
-				"AND period_id in (SELECT id FROM account_period WHERE fiscalyear_id=%d) " \
-				'GROUP BY partner_id' \
-			') AS dc (debit,credit) ' \
-			'WHERE credit>debit', 
-			(self.datas['form']['date1'], self.datas['form']['date2'], self.datas['form']['fiscalyear']))
+				'AND date >= %s ' \
+				'AND date <= %s ' \
+				'AND ' + line_query + ' ' \
+			'GROUP BY partner_id',
+			(self.datas['form']['date1'], self.datas['form']['date2']))
 		return self.cr.fetchone()[0] or 0.0
 
 	def _solde_balance_debit(self):

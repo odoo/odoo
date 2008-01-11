@@ -35,16 +35,22 @@ class wizard_move_line_select(wizard.interface):
 		act_obj = pooler.get_pool(cr.dbname).get('ir.actions.act_window')
 		fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
 
-		if not 'fiscalyear' in context:
-			context['fiscalyear'] = fiscalyear_obj.find(cr, uid)
+		if not context.get('fiscalyear', False):
+			fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('state', '=', 'draft')])
+		else:
+			fiscalyear_ids = [context['fiscalyear']]
 
-		fy = fiscalyear_obj.browse(cr, uid, [context['fiscalyear']])[0]
-		domain = str(('period_id', 'in', [x.id for x in fy.period_ids]))
+		fiscalyears = fiscalyear_obj.browse(cr, uid, fiscalyear_ids)
+		period_ids = []
+		for fiscalyear in fiscalyears:
+			for period in fiscalyear.period_ids:
+				period_ids.append(period.id)
+		domain = str(('period_id', 'in', period_ids))
 
 		result = mod_obj._get_id(cr, uid, 'account', 'action_move_line_tree1')
 		id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
 		result = act_obj.read(cr, uid, [id])[0]
-		result['context'] = str({'fiscalyear': context['fiscalyear']})
+		result['context'] = str({'fiscalyear': context.get('fiscalyear', False)})
 		result['domain']=result['domain'][0:-1]+','+domain+result['domain'][-1]
 		return result
 
