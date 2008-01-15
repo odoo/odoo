@@ -33,6 +33,7 @@ import tools
 from osv import fields, osv, orm
 import zipfile
 import release
+import zipimport
 
 ver_regexp = re.compile("^(\\d+)((\\.\\d+)*)([a-z]?)((_(pre|p|beta|alpha|rc)\\d*)*)(-r(\\d+))?$")
 suffix_regexp = re.compile("^(alpha|beta|rc|pre|p)(\\d*)$")
@@ -501,6 +502,9 @@ class module(osv.osv):
 				[]))
 			self._update_category(cr, uid, mod.id, terp.get('category',
 				'Uncategorized'))
+			# Import module
+			zimp = zipimport.zipimporter(fname)
+			zimp.load_module(mod.name)
 		return res
 
 	def _update_dependencies(self, cr, uid, id, depends=[]):
