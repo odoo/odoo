@@ -64,9 +64,19 @@ def _data_save(self, cr, uid, data, context):
 	fy_id = data['form']['fy_id']
 	if data['form']['report_new']:
 		period = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy2_id']).period_ids[0]
+		journal = pool.get('account.journal').browse(cr, uid, data['form']['report_journal'])
+		if not journal.default_credit_account_id or not journal.default_debit_account_id:
+			raise wizard.except_wizard('UserError',
+					'The journal must have default credit and debit account')
+		if not journal.centralisation:
+			raise wizard.except_wizard('UserError',
+					'The journal must have centralised counterpart')
+		query_line = pool.get('account.move.line')._query_get(cr, uid,
+				obj='account_move_line', context={'fiscalyear': fy_id})
 		cr.execute('select id from account_account WHERE active')
 		ids = map(lambda x: x[0], cr.fetchall())
-		for account in pool.get('account.account').browse(cr, uid, ids):
+		for account in pool.get('account.account').browse(cr, uid, ids,
+			context={'fiscalyear': fy_id}):
 			if account.close_method=='none' or account.type == 'view':
 				continue
 			if account.close_method=='balance':
@@ -84,7 +94,15 @@ def _data_save(self, cr, uid, data, context):
 				offset = 0
 				limit = 100
 				while True:
-					cr.execute('select name,quantity,debit,credit,account_id,ref,amount_currency,currency_id,blocked,partner_id,date_maturity,date_created from account_move_line where account_id=%d and period_id in (select id from account_period where fiscalyear_id=%d) and reconcile_id is NULL order by id limit %d offset %d', (account.id,fy_id, limit, offset))
+					cr.execute('SELECT name, quantity, debit, credit, account_id, ref, ' \
+								'amount_currency, currency_id, blocked, partner_id, ' \
+								'date_maturity, date_created ' \
+							'FROM account_move_line ' \
+							'WHERE account_id = %d ' \
+								'AND ' + query_line + ' ' \
+								'AND reconcile_id is NULL ' \
+							'ORDER BY id ' \
+							'LIMIT %d OFFSET %d', (account.id, limit, offset))
 					result = cr.dictfetchall()
 					if not result:
 						break
@@ -94,13 +112,23 @@ def _data_save(self, cr, uid, data, context):
 							'journal_id': data['form']['report_journal'],
 							'period_id': period.id,
 						})
-						pool.get('account.move.line').create(cr, uid, move, {'journal_id': data['form']['report_journal'], 'period_id':period.id})
+						pool.get('account.move.line').create(cr, uid, move, {
+							'journal_id': data['form']['report_journal'],
+							'period_id': period.id,
+							})
 					offset += limit
 			if account.close_method=='detail':
 				offset = 0
 				limit = 100
 				while True:
-					cr.execute('select name,quantity,debit,credit,account_id,ref,amount_currency,currency_id,blocked,partner_id,date_maturity,date_created from account_move_line where account_id=%d and period_id in (select id from account_period where fiscalyear_id=%d) order by id limit %d offset %d', (account.id,fy_id, limit, offset))
+					cr.execute('SELECT name, quantity, debit, credit, account_id, ref, ' \
+								'amount_currency, currency_id, blocked, partner_id, ' \
+								'date_maturity, date_created ' \
+							'FROM account_move_line ' \
+							'WHERE account_id = %d ' \
+								'AND ' + query_line + ' ' \
+							'ORDER BY id ' \
+							'LIMIT %d OFFSET %d', (account.id,fy_id, limit, offset))
 					result = cr.dictfetchall()
 					if not result:
 						break
@@ -113,9 +141,15 @@ def _data_save(self, cr, uid, data, context):
 						pool.get('account.move.line').create(cr, uid, move)
 					offset += limit
 
-	cr.execute('update account_journal_period set state=%s where period_id in (select id from account_period where fiscalyear_id=%d)', ('done',fy_id))
-	cr.execute('update account_period set state=%s where fiscalyear_id=%d', ('done',fy_id))
-	cr.execute('update account_fiscalyear set state=%s where id=%d', ('done',fy_id))
+	cr.execute('UPDATE account_journal_period ' \
+			'SET state = %s ' \
+			'WHERE period_id IN (SELECT id FROM account_period WHERE fiscalyear_id = %d)',
+			('done',fy_id))
+	cr.execute('UPDATE account_period SET state = %s ' \
+			'WHERE fiscalyear_id = %d', ('done',fy_id))
+	cr.execute('UPDATE account_fiscalyear ' \
+			'SET state = %s ' \
+			'WHERE id = %d', ('done',fy_id))
 	return {}
 
 class wiz_journal_close(wizard.interface):
