@@ -893,7 +893,7 @@ class mrp_procurement(osv.osv):
 				'product_uom': uom_id,
 				'price_unit': price,
 				'date_planned': newdate.strftime('%Y-%m-%d'),
-				'taxes_id': [(6, 0, [x.id for x in procurement.product_id.product_tmpl_id.taxes_id])],
+				'taxes_id': [(6, 0, [x.id for x in procurement.product_id.product_tmpl_id.supplier_taxes_id])],
 				'move_dest_id': res_id,
 			}
 
