@@ -39,6 +39,7 @@ import pooler
 import tools
 import print_xml
 import render
+import urllib
 
 #
 # encode a value to a string in utf8 and converts XML entities
@@ -153,8 +154,8 @@ class report_rml(report_int):
 			if child.name == 'import':
 				if child.hasProp('href'):
 					file = child.prop('href')
-					child.setProp('href', str(
-						os.path.normpath(os.path.join(xsl_path, file))))
+					child.setProp('href', urllib.quote(str(
+						os.path.normpath(os.path.join(xsl_path, file)))))
 
 		#TODO: get all the translation in one query. That means we have to:
 		# * build a list of items to translate,
