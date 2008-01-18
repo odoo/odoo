@@ -63,6 +63,14 @@ class one2many_mod2(fields.one2many):
 
 		return res
 
+	def set(self, cr, obj, id, field, values, user=None, context=None):
+		if context is None:
+			context = {}
+		context = context.copy()
+		context['sheet_id'] = id
+		return super(one2many_mod2, self).set(cr, obj, id, field, values, user=user,
+				context=context)
+
 
 class one2many_mod(fields.one2many):
 	def get(self, cr, obj, ids, name, user=None, offset=0, context={}, values={}):
@@ -504,22 +512,29 @@ class hr_attendance(osv.osv):
 
 	def create(self, cr, uid, vals, context={}):
 		if 'sheet_id' in context:
-			vals['sheet_id']=context['sheet_id']
-		if 'sheet_id' in vals:
-			ts = self.pool.get('hr_timesheet_sheet.sheet').browse(cr, uid, vals['sheet_id'])
+			ts = self.pool.get('hr_timesheet_sheet.sheet').browse(cr, uid, context['sheet_id'])
 			if ts.state not in ('draft', 'new'):
 				raise osv.except_osv('Error !', 'You can not modify an entry in a confirmed timesheet !')
-		return super(hr_attendance,self).create(cr, uid, vals, context=context)
+		res = super(hr_attendance,self).create(cr, uid, vals, context=context)
+		if 'sheet_id' in context:
+			if context['sheet_id'] != self.browse(cr, uid, res, context=context).sheet_id.id:
+				raise osv.except_osv('UserError', 'You can not enter an attendance ' \
+						'date outside the current timesheet dates!')
+		return res
 
 	def unlink(self, cr, uid, ids, *args, **kwargs):
 		self._check(cr, uid, ids)
 		return super(hr_attendance,self).unlink(cr, uid, ids,*args, **kwargs)
 
 	def write(self, cr, uid, ids, vals, context={}):
-		if 'sheet_id' in context:
-			vals['sheet_id']=context['sheet_id']
 		self._check(cr, uid, ids)
-		return super(hr_attendance,self).write(cr, uid, ids, vals, context=context)
+		res = super(hr_attendance,self).write(cr, uid, ids, vals, context=context)
+		if 'sheet_id' in context:
+			for attendance in self.browse(cr, uid, ids, context=context):
+				if context['sheet_id'] != attendance.sheet_id.id:
+					raise osv.except_osv('UserError', 'You can not enter an attendance ' \
+							'date outside the current timesheet dates!')
+		return res
 
 	def _check(self, cr, uid, ids):
 		for att in self.browse(cr, uid, ids):
