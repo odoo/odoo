@@ -119,6 +119,7 @@ class hr_expense_expense(osv.osv):
 
 	def action_invoice_create(self, cr, uid, ids):
 		res = False
+		invoice_obj = self.pool.get('account.invoice')
 		for exp in self.browse(cr, uid, ids):
 			lines = []
 			for l in exp.line_ids:
@@ -143,6 +144,7 @@ class hr_expense_expense(osv.osv):
 			if not exp.employee_id.address_id:
 				raise osv.except_osv('Error !', 'The employee must have a contact address')
 			acc = exp.employee_id.address_id.partner_id.property_account_payable.id
+			payment_term_id = exp.employee_id.address_id.partner_id.property_payment_term.id
 			inv = {
 				'name': exp.name,
 				'reference': self.pool.get('ir.sequence').get(cr, uid, 'hr.expense.invoice'),
@@ -155,11 +157,18 @@ class hr_expense_expense(osv.osv):
 				'invoice_line': lines,
 				'price_type': 'tax_included',
 				'currency_id': exp.currency_id.id,
+				'payment_term': payment_term_id,
 			}
+			if payment_term_id:
+				to_update = invoice_obj.onchange_payment_term_date_invoice(cr, uid, [],
+						payment_term_id, None)
+				if to_update:
+					inv.update(to_update['value'])
 			if exp.journal_id:
 				inv['journal_id']=exp.journal_id.id
-			inv_id = self.pool.get('account.invoice').create(cr, uid, inv, {'type':'in_invoice'})
-			self.pool.get('account.invoice').button_compute(cr, uid, [inv_id], {'type':'in_invoice'}, set_total=True)
+			inv_id = invoice_obj.create(cr, uid, inv, {'type':'in_invoice'})
+			invoice_obj.button_compute(cr, uid, [inv_id], {'type':'in_invoice'},
+					set_total=True)
 			self.write(cr, uid, [exp.id], {'invoice_id': inv_id, 'state': 'invoiced'})
 			res = inv_id
 		return res
