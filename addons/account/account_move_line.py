@@ -41,7 +41,7 @@ class account_move_line(osv.osv):
 		fiscalyear_obj = self.pool.get('account.fiscalyear')
 		if not context.get('fiscalyear', False):
 			fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('state', '=', 'draft')])
-			fiscalyear_clause = ','.join([str(x) for x in fiscalyear_ids])
+			fiscalyear_clause = (','.join([str(x) for x in fiscalyear_ids])) or '0'
 		else:
 			fiscalyear_clause = '%s' % context['fiscalyear']
 		if context.get('periods', False):
