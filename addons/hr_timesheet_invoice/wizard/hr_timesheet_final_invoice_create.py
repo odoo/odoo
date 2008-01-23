@@ -212,7 +212,7 @@ class final_invoice_create(wizard.interface):
 						'name': product.name,
 						'product_id': product_id,
 						'uos_id': product.uom_id.id,
-						'account_id': account_id[0],
+						'account_id': account_id,
 					}
 					pool.get('account.invoice.line').create(cr, uid, curr_line)
 					if account.amount_max < amount_total:
