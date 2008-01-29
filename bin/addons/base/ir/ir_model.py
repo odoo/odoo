@@ -113,14 +113,19 @@ class ir_model_access(osv.osv):
 		if not r[0][0]:
 			if raise_exception:
 				if mode == 'read':
-					raise except_orm('AccessError', 'You can not read this document!')
+					raise except_orm('AccessError',
+							'You can not read this document! (%s)' % model_name)
 				elif mode == 'write':
-					raise except_orm('AccessError', 'You can not write in this document!')
+					raise except_orm('AccessError',
+							'You can not write in this document! (%s)' % model_name)
 				elif mode == 'create':
-					raise except_orm('AccessError', 'You can not create this kind of document!')
+					raise except_orm('AccessError',
+							'You can not create this kind of document! (%s)' % model_name)
 				elif mode == 'unlink':
-					raise except_orm('AccessError', 'You can not delete this document!')
-				raise except_orm('AccessError', 'You do not have access to this document!')
+					raise except_orm('AccessError',
+							'You can not delete this document! (%s)' % model_name)
+				raise except_orm('AccessError',
+						'You do not have access to this document! (%s)' % model_name)
 			else:
 				return False
 		return True
