@@ -366,10 +366,10 @@ class res_partner_bank(osv.osv):
 		if not context.get('address', False):
 			return value
 		for ham, spam, address in context['address']:
-			if address['type'] == 'default':
-				return address[field]
-			elif not address['type']:
-				value = address[field]
+			if address.get('type', False) == 'default':
+				return address.get(field, value)
+			elif not address.get('type', False):
+				value = address.get(field, value)
 		return value
 
 	_columns = {
