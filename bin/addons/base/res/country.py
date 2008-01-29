@@ -53,8 +53,8 @@ class Country(osv.osv):
 		if not context:
 			context={}
 		ids = False
-		if len(name) <= 2:
-			ids = self.search(cr, user, [('code', '=', name)] + args,
+		if len(name) == 2:
+			ids = self.search(cr, user, [('code', '=', name.upper())] + args,
 					limit=limit, context=context)
 		if not ids:
 			ids = self.search(cr, user, [('name', operator, name)] + args,
