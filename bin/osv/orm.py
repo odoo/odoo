@@ -1707,6 +1707,9 @@ class orm(object):
 		joins=[]
 		while i<len(args):
 			table=self
+			if args[i][1] == 'inselect':
+				raise except_orm('ValidateError',
+						'The clause \'inselect\' can not be used outside the orm!')
 			if args[i][0] in self._inherit_fields:
 				table=self.pool.get(self._inherit_fields[args[i][0]][0])
 				if ('"'+table._table+'"' not in tables):
@@ -1824,19 +1827,19 @@ class orm(object):
 				if field.translate:
 					if args[i][1] in ('like', 'ilike'):
 						args[i] = (args[i][0], args[i][1], '%%%s%%' % args[i][2])
-					cr.execute('select res_id from ir_translation ' \
-							'where name = %s and lang = %s ' \
-								'and type = %s ' \
-								'and value ' + args[i][1] + ' %s',
-							(table._name+','+args[i][0],
-								context.get('lang', False) or 'en_US', 'model',
-								args[i][2]))
-					ids = map(lambda x: x[0], cr.fetchall())
-					cr.execute('select id from "' + table._table + '" ' \
-							'where "' + args[i][0]+'" '+args[i][1]+' %s',
-							(args[i][2],))
-					ids += map(lambda x: x[0], cr.fetchall())
-					args[i] = ('id', 'in', ids, table)
+					query1 = '(SELECT res_id FROM ir_translation ' \
+							'WHERE name = %s AND lang = %s ' \
+								'AND type = %s ' \
+								'AND VALUE ' + args[i][1] + ' %s)'
+					query2 = [table._name + ',' + args[i][0],
+							context.get('lang', False) or 'en_US',
+							'model',
+							args[i][2]]
+					query1 += ' UNION '
+					query1 += '(SELECT id FROM "' + table._table + '" ' \
+							'WHERE "' + args[i][0] + '" ' + args[i][1] + ' %s)'
+					query2 += [args[i][2]]
+					args[i] = ('id', 'inselect', (query1, query2), table)
 				else:
 					args[i] += (table,)
 				i+=1
@@ -1847,7 +1850,10 @@ class orm(object):
 			table=self
 			if len(x) > 3:
 				table=x[3]
-			if x[1] != 'in':
+			if x[1] == 'inselect':
+				qu1.append('(%s.%s in (%s))' % (table._table, x[0], x[2][0]))
+				qu2 += x[2][1]
+			elif x[1] != 'in':
 #FIXME: this replace all (..., '=', False) values with 'is null' and this is 
 # not what we want for real boolean fields. The problem is, we can't change it
 # easily because we use False everywhere instead of None
