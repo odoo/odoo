@@ -206,6 +206,7 @@ class rml_parse(object):
 		self._node = None
 		self.parents = parents
 		self.tag = tag
+		self._lang_cache = {}
 #		self.already = {}
 
 	def setTag(self, oldtag, newtag, attrs=None):
@@ -255,6 +256,18 @@ class rml_parse(object):
 
 	def setLang(self, lang):
 		self.localcontext['lang'] = lang
+		for obj in self.objects:
+			for table in obj._cache:
+				for id in obj._cache[table]:
+					self._lang_cache.setdefault(obj._context['lang'], {}).setdefault(table,
+							{}).update(obj._cache[table][id])
+					if lang in self._lang_cache \
+							and table in self._lang_cache[lang] \
+							and id in self._lang_cache[lang][table]:
+						obj._cache[table][id] = self._lang_cache[lang][table][id]
+					else:
+						obj._cache[table][id] = {'id': id}
+			obj._context['lang'] = lang
 
 	def formatLang(self, value, digit=2, date=False):
 		lc, encoding = locale.getdefaultlocale()
