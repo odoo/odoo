@@ -1,0 +1,179 @@
+<?xml version="1.0"?>
+<terp>
+	<data noupdate="1">
+
+		<record model="ir.model.access" id="access_analytic_account">
+			<field name="name">Analytic Accounts</field>
+			<field name="model_id" model="ir.model"
+				search="[('model', '=', 'account.analytic.account')]"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="False"/>
+			<field name="perm_create" eval="False"/>
+			<field name="perm_unlink" eval="False"/>
+		</record>
+
+		<record model="ir.model.access" id="access_analytic_account_account_user">
+			<field name="name">Analytic Accounts</field>
+			<field name="model_id" model="ir.model"
+				search="[('model', '=', 'account.analytic.account')]"/>
+			<field name="group_id" ref="group_account_user"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="True"/>
+			<field name="perm_create" eval="True"/>
+			<field name="perm_unlink" eval="True"/>
+		</record>
+
+		<record model="ir.model.access" id="access_analytic_account_account_admin">
+			<field name="name">Analytic Accounts</field>
+			<field name="model_id" model="ir.model"
+				search="[('model', '=', 'account.analytic.account')]"/>
+			<field name="group_id" ref="group_account_admin"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="True"/>
+			<field name="perm_create" eval="True"/>
+			<field name="perm_unlink" eval="True"/>
+		</record>
+
+		<record model="ir.model.access" id="access_analytic_account_admin">
+			<field name="name">Analytic Accounts</field>
+			<field name="model_id" model="ir.model"
+				search="[('model', '=', 'account.analytic.account')]"/>
+			<field name="group_id" ref="base.group_admin"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="True"/>
+			<field name="perm_create" eval="True"/>
+			<field name="perm_unlink" eval="True"/>
+		</record>
+
+		<record model="ir.model.access" id="access_analytic_journal">
+			<field name="name">Analytic Journal</field>
+			<field name="model_id" model="ir.model"
+				search="[('model', '=', 'account.analytic.journal')]"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="False"/>
+			<field name="perm_create" eval="False"/>
+			<field name="perm_unlink" eval="False"/>
+		</record>
+
+		<record model="ir.model.access" id="access_analytic_journal_account_user">
+			<field name="name">Analytic Journal</field>
+			<field name="model_id" model="ir.model"
+				search="[('model', '=', 'account.analytic.journal')]"/>
+			<field name="group_id" ref="group_account_user"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="True"/>
+			<field name="perm_create" eval="True"/>
+			<field name="perm_unlink" eval="True"/>
+		</record>
+
+		<record model="ir.model.access" id="access_analytic_journal_account_admin">
+			<field name="name">Analytic Journal</field>
+			<field name="model_id" model="ir.model"
+				search="[('model', '=', 'account.analytic.journal')]"/>
+			<field name="group_id" ref="group_account_admin"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="True"/>
+			<field name="perm_create" eval="True"/>
+			<field name="perm_unlink" eval="True"/>
+		</record>
+
+		<record model="ir.model.access" id="access_analytic_journal_admin">
+			<field name="name">Analytic Journal</field>
+			<field name="model_id" model="ir.model"
+				search="[('model', '=', 'account.analytic.journal')]"/>
+			<field name="group_id" ref="base.group_admin"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="True"/>
+			<field name="perm_create" eval="True"/>
+			<field name="perm_unlink" eval="True"/>
+		</record>
+
+		<record model="ir.model.access" id="access_analytic_budget_post">
+			<field name="name">Budget Item</field>
+			<field name="model_id" model="ir.model"
+				search="[('model', '=', 'account.analytic.budget.post')]"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="False"/>
+			<field name="perm_create" eval="False"/>
+			<field name="perm_unlink" eval="False"/>
+		</record>
+
+		<record model="ir.model.access" id="access_analytic_budget_post_account_user">
+			<field name="name">Budget Item</field>
+			<field name="model_id" model="ir.model"
+				search="[('model', '=', 'account.analytic.budget.post')]"/>
+			<field name="group_id" ref="group_account_user"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="True"/>
+			<field name="perm_create" eval="True"/>
+			<field name="perm_unlink" eval="True"/>
+		</record>
+
+		<record model="ir.model.access" id="access_analytic_budget_post_account_admin">
+			<field name="name">Budget Item</field>
+			<field name="model_id" model="ir.model"
+				search="[('model', '=', 'account.analytic.budget.post')]"/>
+			<field name="group_id" ref="group_account_admin"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="True"/>
+			<field name="perm_create" eval="True"/>
+			<field name="perm_unlink" eval="True"/>
+		</record>
+
+		<record model="ir.model.access" id="access_analytic_budget_post_journal_admin">
+			<field name="name">Budget Item</field>
+			<field name="model_id" model="ir.model"
+				search="[('model', '=', 'account.analytic.budget.post')]"/>
+			<field name="group_id" ref="base.group_admin"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="True"/>
+			<field name="perm_create" eval="True"/>
+			<field name="perm_unlink" eval="True"/>
+		</record>
+
+		<record model="ir.model.access" id="access_analytic_budget_post_dotation">
+			<field name="name">Budget Item Endowment</field>
+			<field name="model_id" model="ir.model"
+				search="[('model', '=', 'account.analytic.budget.post.dotation')]"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="False"/>
+			<field name="perm_create" eval="False"/>
+			<field name="perm_unlink" eval="False"/>
+		</record>
+
+		<record model="ir.model.access" id="access_analytic_budget_post_dotation_account_user">
+			<field name="name">Budget Item Endowment</field>
+			<field name="model_id" model="ir.model"
+				search="[('model', '=', 'account.analytic.budget.post.dotation')]"/>
+			<field name="group_id" ref="group_account_user"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="True"/>
+			<field name="perm_create" eval="True"/>
+			<field name="perm_unlink" eval="True"/>
+		</record>
+
+		<record model="ir.model.access" id="access_analytic_budget_post_dotation_account_admin">
+			<field name="name">Budget Item Endowment</field>
+			<field name="model_id" model="ir.model"
+				search="[('model', '=', 'account.analytic.budget.post.dotation')]"/>
+			<field name="group_id" ref="group_account_admin"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="True"/>
+			<field name="perm_create" eval="True"/>
+			<field name="perm_unlink" eval="True"/>
+		</record>
+
+		<record model="ir.model.access" id="access_analytic_budget_post_dotation_journal_admin">
+			<field name="name">Budget Item Endowment</field>
+			<field name="model_id" model="ir.model"
+				search="[('model', '=', 'account.analytic.budget.post.dotation')]"/>
+			<field name="group_id" ref="base.group_admin"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="True"/>
+			<field name="perm_create" eval="True"/>
+			<field name="perm_unlink" eval="True"/>
+		</record>
+
+
+	</data>
+</terp>
