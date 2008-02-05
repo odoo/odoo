@@ -145,7 +145,7 @@
             </td>
             <td>
               <para style="Standard">
-                <font face="Times-Roman">[[ field[1].get('string', 'Unknown') ]], [[ field[1]['type'] ]] [[field[1].get('required',False) and ', required']] [[field[1].get('readonly',False) and ', readonly']] </font>
+                <font face="Times-Roman">[[ field[1].get('string', 'Unknown') ]], [[ field[1]['type'] ]] [[field[1].get('required',False) and ', required']] [[field[1].get('readonly',False) and ', readonly']], [[str(field[1].get('selection',''))]] </font>
               </para>
               <para style="Standard">[[ field[1].get('help', '') ]]</para>
             </td>
