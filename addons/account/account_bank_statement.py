@@ -268,7 +268,7 @@ class account_bank_statement(osv.osv):
 				if move.reconcile_id and move.reconcile_id.line_ids:
 					torec += map(lambda x: x.id, move.reconcile_id.line_ids)
 					try:
-						if abs(move.reconcile_amount-move.amount<0.0001):
+						if abs(move.reconcile_amount-move.amount)<0.0001:
 							account_move_line_obj.reconcile(cr, uid, torec, 'statement', context)
 						else:
 							account_move_line_obj.reconcile_partial(cr, uid, torec, 'statement', context)
