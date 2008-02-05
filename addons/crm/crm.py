@@ -305,6 +305,10 @@ class crm_case(osv.osv):
 			else:
 				res[case.id] = False
 		return res
+	def copy(self, cr, uid, id, default=None, context={}):
+		if not default: default = {}
+		default.update( {'state':'draft', 'id':False, 'history_line':[],'log_ids':[]})
+		return super(crm_case, self).copy(cr, uid, id, default, context)
 
 	_columns = {
 		'id': fields.integer('ID', readonly=True),

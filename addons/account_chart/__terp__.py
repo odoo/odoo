@@ -1,5 +1,5 @@
 {
-	"name" : "Account Chart",
+	"name" : "Charts of Accounts",
 	"version" : "1.1",
 	"depends" : ["account"],
 	"author" : "Tiny",

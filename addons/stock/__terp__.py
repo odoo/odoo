@@ -1,5 +1,5 @@
 {
-	"name" : "Double-entry Inventory Management",
+	"name" : "Stock Management",
 	"version" : "1.0",
 	"author" : "Tiny",
 	"website" : "http://tinyerp.com/module_stock.html",

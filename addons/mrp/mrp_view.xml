@@ -385,8 +385,10 @@
 					<field name="product_id" on_change="product_id_change(product_id)" select="1"/>
 					<field name="product_qty"/>
 					<field name="product_uom"/>
+					<!--
 					<field name="product_uos_qty"/>
 					<field name="product_uos"/>
+					-->
 					<field name="bom_id" select="2"/>
 
 					<newline/>
@@ -664,6 +666,7 @@
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
 			<tree string="Minimum Stock Rules">
+				<field name="name"/>
 				<field name="warehouse_id"/>
 				<field name="product_id"/>
 				<field name="product_uom"/>

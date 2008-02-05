@@ -44,12 +44,14 @@ class report_account_analytic_planning(osv.osv):
 		'stat_ids': fields.one2many('report_account_analytic.planning.stat', 'planning_id', 'Planning analysis', readonly=True),
 		'stat_user_ids': fields.one2many('report_account_analytic.planning.stat.user', 'planning_id', 'Planning by user', readonly=True),
 		'stat_account_ids': fields.one2many('report_account_analytic.planning.stat.account', 'planning_id', 'Planning by account', readonly=True),
+		'state': fields.selection([('open','Open'),('done','Done')], 'State', required=True)
 	}
 	_defaults = {
 		'name': lambda *a: time.strftime('%Y-%m-%d'),
 		'date_from': lambda *a: time.strftime('%Y-%m-01'),
 		'date_to': lambda *a: (mx.DateTime.now()+mx.DateTime.RelativeDateTime(months=1,day=1,days=-1)).strftime('%Y-%m-%d'),
-		'user_id': lambda self,cr,uid,c: uid
+		'user_id': lambda self,cr,uid,c: uid,
+		'state': lambda *args: 'open'
 	}
 	_order = 'date_from desc'
 report_account_analytic_planning()
@@ -164,7 +166,7 @@ class report_account_analytic_planning_stat(osv.osv):
 				from
 					report_account_analytic_planning_line l
 				left join
-					account_analytic_account a on (a.id = l.account_id)
+					report_account_analytic_planning a on (a.id = l.planning_id)
 				left join
 					product_uom u on (l.amount_unit = u.id)
 				group by

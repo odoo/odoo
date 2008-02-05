@@ -34,8 +34,8 @@ form='''<?xml version="1.0"?>
 <form string="Choose">
 	<field name="date_from"/>
 	<field name="date_to"/>
-	<field name="journal_ids" colspan="3"/>
-	<field name="employee_ids" colspan="3"/>
+	<field name="journal_ids" colspan="4"/>
+	<field name="employee_ids" colspan="4"/>
 </form>'''
 
 class wizard_report(wizard.interface):

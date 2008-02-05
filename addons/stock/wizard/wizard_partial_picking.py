@@ -79,7 +79,7 @@ def _get_moves(self, cr, uid, data, context):
 			if hasattr(pick, 'purchase_id') and pick.purchase_id:
 				currency=pick.purchase_id.pricelist_id.currency_id.id
 
-			_moves_arch_lst.append('<group col="6"><field name="uom%s"/>\
+			_moves_arch_lst.append('<group col="6"><field name="uom%s" nolabel="1"/>\
 					<field name="price%s"/>' % (m.id,m.id,))
 
 			_moves_fields['price%s' % m.id] = {'string': 'Unit Price',
@@ -89,7 +89,7 @@ def _get_moves(self, cr, uid, data, context):
 					'relation': 'product.uom', 'required': True,
 					'default': make_default(m.product_uom.id)}
 
-			_moves_arch_lst.append('<field name="currency%d"/></group>' % (m.id,))
+			_moves_arch_lst.append('<field name="currency%d" nolabel="1"/></group>' % (m.id,))
 			_moves_fields['currency%s' % m.id] = {'string': 'Currency',
 					'type': 'many2one', 'relation': 'res.currency',
 					'required': True, 'default': make_default(currency)}

@@ -70,32 +70,52 @@ class account_analytic_profit(report_sxw.rml_parse):
 				])
 		res={}
 		for line in line_obj.browse(self.cr, self.uid, ids):
-			if line.to_invoice:
-				id=line.to_invoice.id
-				name=line.to_invoice.name
-				discount=line.to_invoice.factor
-			else:
-				if line.account_id.pricelist_id:
-					name="Fixed Price"
+			if line.account_id.pricelist_id:
+				if line.account_id.to_invoice:
+					if line.to_invoice:
+						id=line.to_invoice.id
+						name=line.to_invoice.name
+						discount=line.to_invoice.factor
+					else:
+						name="/"
+						discount=1.0
+						id = -1
+				else:
+					name="Fixed"
 					discount=0.0
 					id=0
-				else:
-					name="/"
-					discount=1.0
-					id = -1
-			if line.account_id.pricelist_id:
 				pl=line.account_id.pricelist_id.id
 				price=price_obj.price_get(self.cr, self.uid, [pl], line.product_id.id, line.unit_amount or 1.0, line.account_id.partner_id.id)[pl]
 			else:
+				name="/"
+				discount=1.0
+				id = -1
 				price=0.0
 			if id not in res:
-				res[id]={'name': name, 'amount': 0, 'cost':0, 'unit_amount':0,}
-			res[id]['amount']+=round(price * line.unit_amount * (1-(discount or 0.0)/100.0), 2)
+				res[id]={'name': name, 'amount': 0, 'cost':0, 'unit_amount':0,'amount_th':0}
+			xxx = round(price * line.unit_amount * (1-(discount or 0.0)), 2)
+			res[id]['amount_th']+=xxx
+			if line.invoice_id:
+				self.cr.execute('select id from account_analytic_line where invoice_id=%d', (line.invoice_id.id,))
+				tot = 0
+				for lid in self.cr.fetchall():
+					lid2 = line_obj.browse(self.cr, self.uid, lid[0])
+					pl=lid2.account_id.pricelist_id.id
+					price=price_obj.price_get(self.cr, self.uid, [pl], lid2.product_id.id, lid2.unit_amount or 1.0, lid2.account_id.partner_id.id)[pl]
+					tot += price * lid2.unit_amount * (1-(discount or 0.0))
+				if tot:
+					procent = line.invoice_id.amount_untaxed / tot
+					res[id]['amount'] +=  xxx * procent
+				else:
+					res[id]['amount'] += xxx
+			else:
+				res[id]['amount'] += xxx
+
 			res[id]['cost']+=line.amount
 			res[id]['unit_amount']+=line.unit_amount
 		for id in res:
 			res[id]['profit']=res[id]['amount']+res[id]['cost']
-			res[id]['eff']=abs(round(res[id]['amount'] / res[id]['cost'] * 100, 2))
+			res[id]['eff']='%d' % (-res[id]['amount'] / res[id]['cost'] * 100,)
 		return res.values()
 
 	def _lines(self, form):

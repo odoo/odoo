@@ -134,7 +134,7 @@ class stock_location(osv.osv):
 						continue
 					product = products_by_id[product_id]
 					result.append({
-						'price': product.list_price,
+						'price': product.standard_price,
 						'name': product.name,
 						'code': product.default_code, # used by lot_overview_all report!
 						'variants': product.variants or '',

@@ -41,7 +41,7 @@ class price_type(osv.osv):
 		sale and purchase prices based on some fields of the product.
 	"""
 	def _price_field_get(self, cr, uid, context={}):
-		cr.execute('select name, field_description from ir_model_fields where model in (%s,%s) and ttype=%s', ('product.product', 'product.template', 'float'))
+		cr.execute('select name, field_description from ir_model_fields where model in (%s,%s) and ttype=%s order by name', ('product.product', 'product.template', 'float'))
 		return cr.fetchall()
 	def _get_currency(self, cr, uid, ctx):
 		comp = self.pool.get('res.users').browse(cr,uid,uid).company_id
