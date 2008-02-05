@@ -443,7 +443,7 @@ class account_invoice(osv.osv):
 			totlines = False
 			if inv.payment_term:
 				totlines = self.pool.get('account.payment.term').compute(cr,
-						uid, inv.payment_term.id, total)
+						uid, inv.payment_term.id, total, inv.date_invoice or False)
 			if totlines:
 				res_amount_currency = total_currency
 				i = 0
