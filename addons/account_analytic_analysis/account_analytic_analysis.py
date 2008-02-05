@@ -83,7 +83,6 @@ class account_analytic_account(osv.osv):
 					JOIN hr_timesheet_invoice_factor \
 						on hr_timesheet_invoice_factor.id = account_analytic_account.to_invoice \
 					WHERE account_analytic_account.id IN (%s) \
-						AND account_analytic_journal.type='general' \
 						AND account_analytic_line.invoice_id is null \
 						AND account_analytic_line.to_invoice IS NOT NULL \
 					GROUP BY account_analytic_account.id;"""%acc_set)
@@ -223,7 +222,6 @@ class account_analytic_account(osv.osv):
 					join hr_timesheet_invoice_factor hr \
 						on (hr.id=a.to_invoice) \
 				where account_analytic_line.account_id IN (%s) \
-					and account_analytic_journal.type = 'general' \
 					and a.to_invoice IS NOT NULL \
 				GROUP BY account_analytic_line.account_id"""%acc_set)
 			for account_id, sum in cr.fetchall():

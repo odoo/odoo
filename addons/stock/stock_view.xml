@@ -391,8 +391,9 @@
 		<field name="type">tree</field>
 		<field name="field_parent">child_ids</field>
 		<field name="arch" type="xml">
-			<tree string="Stock location tree">
+			<tree string="Stock location tree" color="grey:usage in ('procurement','inventory','production')">
 				<field name="name"/>
+				<field name="usage" visible="0"/>
 			</tree>
 		</field>
 	</record>
@@ -664,6 +665,7 @@
 				<field name="lot_id"/>
 				<field name="serial"/>
 				<field name="address_id"/>
+				<field name="origin"/>
 				<field name="state"/>
 			</tree>
 		</field>
@@ -699,6 +701,7 @@
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_move_lot_form"/>
+		<field name="context">{'contact_display': 'partner'}</field>
 	</record>
 	<menuitem name="Inventory Control/Delivery Order" id="menu_action_move_form" action="action_move_form"/>
 	<record model="ir.actions.act_window" id="action_move_tree">
@@ -708,6 +711,7 @@
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','draft')]</field>
+		<field name="context">{'contact_display': 'partner'}</field>
 	</record>
 	<menuitem name="Inventory Control/Delivery Order/Delivery Orders to Process" action="action_move_tree" id="menu_move_draft"/>
 

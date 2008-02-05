@@ -475,8 +475,8 @@ class stock_picking(osv.osv):
 			if pick.move_type=='one' and pick.loc_move_id:
 				if pick.lot_id:
 					id = self.pool.get('stock.move.lot').create(cr, uid, {
-						'name': 'MOVE:'+pick.name,
-						'origin': 'PICK:'+str(pick.id),
+						'name': pick.name,
+						'origin': str(pick.origin or ''),
 						'lot_id': pick.lot_id.id,
 						'loc_dest_id': pick.loc_move_id.id,
 						'address_id': pick.address_id.id
@@ -502,8 +502,8 @@ class stock_picking(osv.osv):
 
 				if pick.move_type=='direct' and pick.loc_move_id:
 					id = self.pool.get('stock.move.lot').create(cr, uid, {
-						'name': 'MOVE:'+pick.name,
-						'origin': 'PICK:'+str(pick.id),
+						'name': pick.name,
+						'origin': str(pick.origin or ''),
 						'lot_id': lot_id,
 						'loc_dest_id': pick.loc_move_id.id,
 						'address_id': pick.address_id.id

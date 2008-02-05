@@ -638,15 +638,7 @@
 		<field name="domain">[('state','=','confirmed')]</field>
 	</record>
 	<menuitem name="Production Management/Procurement Orders/Unscheduled Procurements" id="menu_mrp_procurement_action3" action="mrp_procurement_action3"/>
-	<record model="ir.actions.act_window" id="mrp_procurement_action4">
-		<field name="name">Exceptions procurements to fix</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">mrp.procurement</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[('state','=','exception'), ('message', '&lt;&gt;', '')]</field>
-	</record>
-	<menuitem name="Production Management/Procurement Orders/All Exceptions/Exceptions to Fix" id="menu_mrp_procurement_action4" action="mrp_procurement_action4"/>
+
 	<record model="ir.actions.act_window" id="mrp_procurement_action5">
 		<field name="name">Exceptions procurements</field>
 		<field name="type">ir.actions.act_window</field>
@@ -656,6 +648,32 @@
 		<field name="domain">[('state','=','exception')]</field>
 	</record>
 	<menuitem name="Production Management/Procurement Orders/All Exceptions" id="menu_mrp_procurement_action5" action="mrp_procurement_action5"/>
+
+	<record model="ir.actions.act_window" id="mrp_procurement_action4">
+		<field name="name">Exceptions procurements to fix</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">mrp.procurement</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[('state','=','exception'), ('message', '&lt;&gt;', '')]</field>
+	</record>
+	<menuitem 
+		name="Production Management/Procurement Orders/All Exceptions/Exceptions to Fix" 
+		id="menu_mrp_procurement_action4" 
+		action="mrp_procurement_action4"/>
+
+	<record model="ir.actions.act_window" id="mrp_procurement_action11">
+		<field name="name">Temporary Procurement Exceptions</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">mrp.procurement</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+		<field name="domain">[('state','=','exception'), ('message', '=', '')]</field>
+	</record>
+	<menuitem 
+		name="Production Management/Procurement Orders/All Exceptions/Temporary Procurement Exceptions" 
+		id="menu_mrp_procurement_action11" 
+		action="mrp_procurement_action11"/>
 
 	=============================
 	Order Point

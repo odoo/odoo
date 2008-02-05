@@ -168,7 +168,7 @@ class sale_order(osv.osv):
 		'incoterm': fields.selection(_incoterm_get, 'Incoterm',size=3),
 		'picking_policy': fields.selection([('direct','Direct Delivery'),('one','All at once')], 'Packing Policy', required=True ),
 		'order_policy': fields.selection([
-			('prepaid','Invoice before delivery'),
+			('prepaid','Payment before delivery'),
 			('manual','Shipping & Manual Invoice'),
 			('postpaid','Automatic Invoice after delivery'),
 			('picking','Invoice from the packings'),
