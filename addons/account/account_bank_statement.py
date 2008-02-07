@@ -414,11 +414,14 @@ class account_bank_statement_reconcile(osv.osv):
 				context=context).company_id.currency_id.id
 
 		for o in self.browse(cursor, user, ids, context=context):
+			td = ''
 			if o.statement_line:
 				currency_id = o.statement_line[0].statement_id.currency.id
+				if abs(o.statement_line[0].amount - (o.total_entry - o.total_new))>0.01:
+					td = 'P '
 			else:
 				currency_id = company_currency_id
-			res.append((o.id, '[%.2f/%.2f]' % (
+			res.append((o.id, '%s[%.2f/%.2f]' % (td,
 				res_currency_obj.compute(cursor, user, company_currency_id,
 					currency_id, o.total_entry, context=context),
 				res_currency_obj.compute(cursor, user, company_currency_id,
