@@ -211,6 +211,9 @@ class ir_rule(osv.osv):
 				query = query_global
 				val = val_global
 
+
+		if query:
+			query = '('+query+')'
 		return query, val
 	domain_get = tools.cache()(domain_get)
 
