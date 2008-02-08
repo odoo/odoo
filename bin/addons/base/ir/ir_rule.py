@@ -114,7 +114,8 @@ class ir_rule(osv.osv):
 		res = {}
 		for rule in self.browse(cr, uid, ids, context):
 			if rule.domain_force:
-				res[rule.id] = rule.domain_force
+				res[rule.id] = eval(rule.domain_force, {'user': self.pool.get('res.users').browse(cr, 1, uid),
+							'time':time})
 			else:
 				if rule.operator in ('in', 'child_of'):
 					dom = eval("[('%s', '%s', [%s])]" % (rule.field_id.name, rule.operator,
