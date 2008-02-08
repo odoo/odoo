@@ -110,12 +110,35 @@ class ir_rule(osv.osv):
 				recur=['many2one'], root_tech='user', root='User')
 		return res
 
+	def _domain_force_get(self, cr, uid, ids, field_name, arg, context={}):
+		res = {}
+		for rule in self.browse(cr, uid, ids, context):
+			if rule.domain_force:
+				res[rule.id] = rule.domain_force
+			else:
+				if rule.operator in ('in', 'child_of'):
+					dom = eval("[('%s', '%s', [%s])]" % (rule.field_id.name, rule.operator,
+						rule.operand), {'user': self.pool.get('res.users').browse(cr, 1, uid),
+							'time':time})
+				else:
+					dom = eval("[('%s', '%s', %s)]" % (rule.field_id.name, rule.operator,
+						rule.operand), {'user': self.pool.get('res.users').browse(cr, 1, uid),
+							'time':time})
+				res[rule.id] = dom
+		return res
+
 	_columns = {
 		'field_id': fields.many2one('ir.model.fields', 'Field',domain= "[('model_id','=', parent.model_id)]", select=1, required=True),
 		'operator':fields.selection((('=', '='), ('<>', '<>'), ('<=', '<='), ('>=', '>='), ('in', 'in'), ('child_of', 'child_of')), 'Operator', required=True),
 		'operand':fields.selection(_operand,'Operand', size=64, required=True),
-		'rule_group': fields.many2one('ir.rule.group', 'Group', select=2, required=True, ondelete="cascade")
+		'rule_group': fields.many2one('ir.rule.group', 'Group', select=2, required=True, ondelete="cascade"),
+		'domain_force': fields.char('Force Domain', size=250),
+		'domain': fields.function(_domain_force_get, method=True, string='Domain', type='char', size=250)
 	}
+
+	def onchange_all(self, cr, uid, ids, field_id, operator, operand):
+		if not (field_id or operator or operand):
+			return {}
 
 	def domain_get(self, cr, uid, model_name):
 		# root user above constraint
@@ -142,17 +165,8 @@ class ir_rule(osv.osv):
 		sub_str = []
 		clause={}
 		clause_global={}
-		# Use root user to prevent recursion
-		for rule in self.browse(cr, 1, ids):
-			if rule.operator in ('in', 'child_of'):
-				dom = eval("[('%s', '%s', [%s])]" % (rule.field_id.name, rule.operator,
-					rule.operand), {'user': self.pool.get('res.users').browse(cr, 1, uid),
-						'time':time})
-			else:
-				dom = eval("[('%s', '%s', %s)]" % (rule.field_id.name, rule.operator,
-					rule.operand), {'user': self.pool.get('res.users').browse(cr, 1, uid),
-						'time':time})
-
+		for rule in self.browse(cr, uid, ids):
+			dom = rule.domain
 			if rule.rule_group['global']:
 				clause_global.setdefault(rule.rule_group.id, [])
 				clause_global[rule.rule_group.id].append(obj._where_calc(cr, uid, dom, active_test=False))
@@ -172,7 +186,7 @@ class ir_rule(osv.osv):
 				first = True
 				for c in g:
 					if not first:
-						query += ' OR '
+						query += ' AND '
 					first = False
 					query += '('
 					first2 = True
@@ -186,25 +200,8 @@ class ir_rule(osv.osv):
 				query += ')'
 			return query, val
 
-		query = ''
-		val = []
-
-		# Test if there is no rule_group that have no rule
-		cr.execute("""SELECT g.id FROM
-			ir_rule_group g
-				JOIN ir_model m ON (g.model_id = m.id)
-			WHERE m.model = %s
-				AND (g.id NOT IN (SELECT rule_group FROM ir_rule))
-				AND (g.id IN (SELECT rule_group_id FROM user_rule_group_rel
-					WHERE user_id = %d
-					UNION SELECT rule_group_id FROM group_rule_group_rel g_rel
-						JOIN res_groups_users_rel u_rel
-							ON g_rel.group_id = u_rel.gid
-						WHERE u_rel.uid = %d))""", (model_name, uid, uid))
-		if not cr.fetchall():
-			query, val = _query(clause, 'OR')
-
-		query_global, val_global = _query(clause_global, 'AND')
+		query, val = _query(clause, 'OR')
+		query_global, val_global = _query(clause_global, 'OR')
 		if query_global:
 			if query:
 				query = '('+query+') AND '+query_global
