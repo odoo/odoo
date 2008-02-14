@@ -65,7 +65,7 @@
 							<newline/>
 							<field name="standard_price"/>
 							<field name="cost_method"/>
-							<!-- 
+							<!--
 							<field name="price_margin"/>
 							<field name="price_extra"/>
 							-->
@@ -385,6 +385,24 @@
 				</form>
 			</field>
 		</record>
+		<record model="ir.ui.view" id="product_ul_tree">
+			<field name="name">product.ul.tree</field>
+			<field name="model">product.ul</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Logisitcal Unit">
+					<field name="name" select="1"/>
+					<field name="type" select="1"/>
+				</tree>
+			</field>
+		</record>
+		<record model="ir.actions.act_window" id="product_ul_form_action">
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">product.ul</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem name="Products/Configuration/Logisitcal Unit" id="menu_product_ul_form_action" action="product_ul_form_action"/>
 
 		<record model="ir.ui.view" id="product_packaging_tree_view">
 			<field name="name">product.packaging.tree.view</field>

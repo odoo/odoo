@@ -98,14 +98,14 @@ class product_uom(osv.osv):
 		'rounding': fields.float('Rounding Precision', digits=(16, 3), required=True),
 		'active': fields.boolean('Active'),
 	}
-	
+
 	_defaults = {
 		'factor': lambda *a: 1.0,
 		'factor_inv': lambda *a: 1.0,
 		'active': lambda *a: 1,
 		'rounding': lambda *a: 0.01,
 	}
-	
+
 	def _compute_qty(self, cr, uid, from_uom_id, qty, to_uom_id=False):
 		if not from_uom_id or not qty or not to_uom_id:
 			return qty
@@ -165,7 +165,7 @@ class product_ul(osv.osv):
 	_name = "product.ul"
 	_description = "Shipping Unit"
 	_columns = {
-		'name' : fields.char('Name', size=64),
+		'name' : fields.char('Name', size=64,select=True),
 		'type' : fields.selection([('unit','Unit'),('pack','Pack'),('box', 'Box'), ('palet', 'Palet')], 'Type', required=True),
 	}
 product_ul()
@@ -340,7 +340,7 @@ class product_product(osv.osv):
 	_product_virtual_available = _get_product_available_func(('confirmed','waiting','assigned','done'), ('in', 'out'))
 	_product_outgoing_qty = _get_product_available_func(('confirmed','waiting','assigned'), ('out',))
 	_product_incoming_qty = _get_product_available_func(('confirmed','waiting','assigned'), ('in',))
-	
+
 	def _product_lst_price(self, cr, uid, ids, name, arg, context=None):
 		res = {}
 		product_uom_obj = self.pool.get('product.uom')
@@ -497,7 +497,7 @@ class product_product(osv.osv):
 			context={}
 
 		if ('variant' in context) and context['variant']:
-			fields = ['product_tmpl_id', 'active', 'variants', 'default_code', 
+			fields = ['product_tmpl_id', 'active', 'variants', 'default_code',
 					'price_margin', 'price_extra']
 			data = self.read(cr, uid, id, fields=fields, context=context)
 			for f in fields:
