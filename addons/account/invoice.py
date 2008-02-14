@@ -378,7 +378,6 @@ class account_invoice(osv.osv):
 			if inv.move_id:
 				continue
 			if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding/2.0):
-				print inv.check_total,  inv.amount_total
 				raise osv.except_osv('Bad total !', 'Please verify the price of the invoice !\nThe real total does not match the computed total.')
 			company_currency = inv.company_id.currency_id.id
 			# create the analytical lines
@@ -400,7 +399,7 @@ class account_invoice(osv.osv):
 					tax_key.append(key)
 					if not key in compute_taxes:
 						raise osv.except_osv('Warning !', 'Global taxes defined, but not in invoice lines !')
-					base = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, compute_taxes[key]['base'], context={'date': inv.date_invoice})
+					base = compute_taxes[key]['base']
 					if abs(base - tax.base) > inv.company_id.currency_id.rounding:
 						raise osv.except_osv('Warning !', 'Tax base different !\nClick on compute to update tax base')
 				for key in compute_taxes:
@@ -715,12 +714,9 @@ class account_invoice(osv.osv):
 			if l.account_id.id==src_account_id:
 				line_ids.append(l.id)
 				total += (l.debit or 0.0) - (l.credit or 0.0)
-		print total, writeoff_period_id, writeoff_acc_id
 		if (not total) or writeoff_acc_id:
-			print 'Total'
 			self.pool.get('account.move.line').reconcile(cr, uid, line_ids, 'manual', writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context)
 		else:
-			print 'Partial'
 			self.pool.get('account.move.line').reconcile_partial(cr, uid, line_ids, 'manual', context)
 		return True
 account_invoice()
@@ -842,6 +838,7 @@ class account_invoice_line(osv.osv):
 		cur_obj = self.pool.get('res.currency')
 		ait_obj = self.pool.get('account.invoice.tax')
 		inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id)
+		company_currency = inv.company_id.currency_id.id
 		cur = inv.currency_id
 
 		for line in inv.invoice_line:
@@ -875,7 +872,7 @@ class account_invoice_line(osv.osv):
 				tax_code_found = True
 
 				res[-1]['tax_code_id'] = tax_code_id
-				res[-1]['tax_amount'] = tax_amount
+				res[-1]['tax_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, tax_amount, context={'date': inv.date_invoice})
 		return res
 
 	def move_line_get_item(self, cr, uid, line, context={}):
@@ -941,6 +938,7 @@ class account_invoice_tax(osv.osv):
 		cur_obj = self.pool.get('res.currency')
 		inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id)
 		cur = inv.currency_id
+		company_currency = inv.company_id.currency_id.id
 
 		for line in inv.invoice_line:
 			for tax in tax_obj.compute(cr, uid, line.invoice_line_tax_id, (line.price_unit* (1-(line.discount or 0.0)/100.0)), line.quantity, inv.address_invoice_id.id, line.product_id, inv.partner_id):
@@ -955,14 +953,14 @@ class account_invoice_tax(osv.osv):
 				if inv.type in ('out_invoice','in_invoice'):
 					val['base_code_id'] = tax['base_code_id']
 					val['tax_code_id'] = tax['tax_code_id']
-					val['base_amount'] = val['base'] * tax['base_sign']
-					val['tax_amount'] = val['amount'] * tax['tax_sign']
+					val['base_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['base'] * tax['base_sign'], context={'date': inv.date_invoice})
+					val['tax_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['amount'] * tax['tax_sign'], context={'date': inv.date_invoice})
 					val['account_id'] = tax['account_collected_id'] or line.account_id.id
 				else:
 					val['base_code_id'] = tax['ref_base_code_id']
 					val['tax_code_id'] = tax['ref_tax_code_id']
-					val['base_amount'] = val['base'] * tax['ref_base_sign']
-					val['tax_amount'] = val['amount'] * tax['ref_tax_sign']
+					val['base_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['base'] * tax['ref_base_sign'], context={'date': inv.date_invoice})
+					val['tax_amount'] = cur_obj.compute(cr, uid, inv.currency_id.id, company_currency, val['amount'] * tax['ref_tax_sign'], context={'date': inv.date_invoice})
 					val['account_id'] = tax['account_paid_id'] or line.account_id.id
 
 				key = (val['tax_code_id'], val['base_code_id'], val['account_id'])
