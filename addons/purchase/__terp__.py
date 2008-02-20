@@ -14,7 +14,8 @@
 		"purchase_view.xml", 
 		"purchase_report.xml", 
 		"purchase_wizard.xml",
-		"stock_view.xml"
+		"stock_view.xml",
+		"purchase_security.xml"
 	],
 	"active": False,
 	"installable": True
