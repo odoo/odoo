@@ -30,7 +30,8 @@
 		"sale_view.xml",
 		"sale_report.xml",
 		"sale_wizard.xml",
-		"stock_view.xml"
+		"stock_view.xml",
+		"sale_security.xml"
 	],
 	"active": False,
 	"installable": True
