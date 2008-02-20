@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<terp>
+	<data>
+	
+		<record model="res.groups" id="group_sale_manager">
+			<field name="name">Sale Manager</field>
+		</record>
+		<record model="res.groups" id="group_sale_salesman">
+			<field name="name">Salesman</field>
+		</record>
+		
+		<!-- Sales order security -->
+		<record model="ir.model.access" id="access_sale_order">
+			<field name="name">Sale Order</field>
+			<field name="model_id" model="ir.model" search="[('model', '=', 'sale.order')]"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="False"/>
+			<field name="perm_create" eval="False"/>
+			<field name="perm_unlink" eval="False"/>
+		</record>
+		
+		<record model="ir.model.access" id="access_sale_order_sale_manager">
+			<field name="name">Sale Order</field>
+			<field name="model_id" model="ir.model" search="[('model', '=', 'sale.order')]"/>
+			<field name="group_id" ref="group_sale_manager"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="True"/>
+			<field name="perm_create" eval="True"/>
+			<field name="perm_unlink" eval="True"/>
+		</record>
+		
+		<record model="ir.model.access" id="access_sale_order_salesman">
+			<field name="name">Sale Order</field>
+			<field name="model_id" model="ir.model" search="[('model', '=', 'sale.order')]"/>
+			<field name="group_id" ref="group_sale_salesman"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="True"/>
+			<field name="perm_create" eval="True"/>
+			<field name="perm_unlink" eval="True"/>
+		</record>
+		
+		<record model="ir.model.access" id="access_sale_order_admin">
+			<field name="name">Sale Order</field>
+			<field name="model_id" model="ir.model" search="[('model', '=', 'sale.order')]"/>
+			<field name="group_id" ref="base.group_admin"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="True"/>
+			<field name="perm_create" eval="True"/>
+			<field name="perm_unlink" eval="True"/>
+		</record>
+		
+		<!-- Sales order line security -->
+		<record model="ir.model.access" id="access_sale_order_line">
+			<field name="name">Sale Order Line</field>
+			<field name="model_id" model="ir.model" search="[('model', '=', 'sale.order.line')]"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="False"/>
+			<field name="perm_create" eval="False"/>
+			<field name="perm_unlink" eval="False"/>
+		</record>
+		
+		<record model="ir.model.access" id="access_sale_order_line_manager">
+			<field name="name">Sale Order Line</field>
+			<field name="model_id" model="ir.model" search="[('model', '=', 'sale.order.line')]"/>
+			<field name="group_id" ref="group_sale_manager"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="True"/>
+			<field name="perm_create" eval="True"/>
+			<field name="perm_unlink" eval="True"/>
+		</record>
+		
+		<record model="ir.model.access" id="access_sale_order_line_salesman">
+			<field name="name">Sale Order Line</field>
+			<field name="model_id" model="ir.model" search="[('model', '=', 'sale.order.line')]"/>
+			<field name="group_id" ref="group_sale_salesman"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="True"/>
+			<field name="perm_create" eval="True"/>
+			<field name="perm_unlink" eval="True"/>
+		</record>
+		
+		<record model="ir.model.access" id="access_sale_order_line_admin">
+			<field name="name">Sale Order Line</field>
+			<field name="model_id" model="ir.model" search="[('model', '=', 'sale.order.line')]"/>
+			<field name="group_id" ref="base.group_admin"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="True"/>
+			<field name="perm_create" eval="True"/>
+			<field name="perm_unlink" eval="True"/>
+		</record>
+	</data>
+</terp>
