@@ -25,7 +25,7 @@
 	Print product labels with barcodes.
 	""",
 	"update_xml" : ["product_data.xml","product_report.xml",
-		"product_view.xml", "pricelist_view.xml"],
+		"product_view.xml", "pricelist_view.xml","product_security.xml"],
 	"active": False,
 	"installable": True
 }
