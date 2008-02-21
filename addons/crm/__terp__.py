@@ -24,7 +24,7 @@ between mails and Tiny ERP.""",
 	"depends" : ["base", "account"],
 	"init_xml" : ["crm_data.xml"],
 	"demo_xml" : ["crm_demo.xml"],
-	"update_xml" : ["crm_view.xml", "crm_report.xml", "crm_wizard.xml"],
+	"update_xml" : ["crm_view.xml", "crm_report.xml", "crm_wizard.xml","crm_security.xml"],
 	"active": False,
 	"installable": True
 }
