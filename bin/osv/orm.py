@@ -393,6 +393,15 @@ class orm(object):
 									cr.execute("UPDATE \"%s\" SET \"%s\"=NULL" % (self._table, k))
 								else:
 									cr.execute("UPDATE \"%s\" SET \"%s\"='%s'" % (self._table, k, default))
+							if isinstance(f,fields.function):
+								cr.execute('select id from '+self._table)
+								ids_lst = map(lambda x: x[0], cr.fetchall())
+								while ids_lst:
+									iids = ids_lst[:40]
+									ids_lst = ids_lst[40:]
+									res = f.get(cr, self, iids, k, 1, {})
+									for r in res.items():
+										cr.execute("UPDATE \"%s\" SET \"%s\"='%s' where id=%d"% (self._table, k, r[1],r[0]))
 
 							# and add constraints if needed
 							if isinstance(f, fields.many2one):
