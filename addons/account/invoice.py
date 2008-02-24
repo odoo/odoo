@@ -41,7 +41,7 @@ from tools import config
 class account_invoice(osv.osv):
 	def _amount_untaxed(self, cr, uid, ids, name, args, context={}):
 		id_set=",".join(map(str,ids))
-		cr.execute("SELECT s.id,COALESCE(SUM(l.price_unit*l.quantity*(100-l.discount))/100.0,0)::decimal(16,2) AS amount FROM account_invoice s LEFT OUTER JOIN account_invoice_line l ON (s.id=l.invoice_id) WHERE s.id IN ("+id_set+") GROUP BY s.id ")
+		cr.execute("SELECT s.id,COALESCE(SUM(l.price_subtotal),0)::decimal(16,2) AS amount FROM account_invoice s LEFT OUTER JOIN account_invoice_line l ON (s.id=l.invoice_id) WHERE s.id IN ("+id_set+") GROUP BY s.id ")
 		res=dict(cr.fetchall())
 		return res
 
@@ -753,7 +753,7 @@ class account_invoice_line(osv.osv):
 		'product_id': fields.many2one('product.product', 'Product', ondelete='set null'),
 		'account_id': fields.many2one('account.account', 'Account', required=True, domain=[('type','<>','view'), ('type', '<>', 'closed')]),
 		'price_unit': fields.float('Unit Price', required=True, digits=(16, int(config['price_accuracy']))),
-		'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal'),
+		'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal',store=True),
 		'quantity': fields.float('Quantity', required=True),
 		'discount': fields.float('Discount (%)', digits=(16,2)),
 		'invoice_line_tax_id': fields.many2many('account.tax', 'account_invoice_line_tax', 'invoice_line_id', 'tax_id', 'Taxes', domain=[('parent_id','=',False)]),
