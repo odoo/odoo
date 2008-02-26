@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<terp>
+	<data>
+	
+		<!-- Department security -->
+		<record model="ir.model.access" id="access_hr_contract_period">
+			<field name="name">HR Contract Period</field>
+			<field name="model_id" model="ir.model" search="[('model', '=', 'hr.contract.wage.type.period')]"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="False"/>
+			<field name="perm_create" eval="False"/>
+			<field name="perm_unlink" eval="False"/>
+		</record>
+
+		<record model="ir.model.access" id="access_hr_contract_period_manager">
+			<field name="name">HR Contract Period</field>
+			<field name="model_id" model="ir.model" search="[('model', '=', 'hr.contract.wage.type.period')]"/>
+			<field name="group_id" ref="hr.group_hr_manager"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="True"/>
+			<field name="perm_create" eval="True"/>
+			<field name="perm_unlink" eval="True"/>
+		</record>
+		
+		<record model="ir.model.access" id="access_hr_contract_period_admin">
+			<field name="name">HR Contract Period</field>
+			<field name="model_id" model="ir.model" search="[('model', '=', 'hr.contract.wage.type.period')]"/>
+			<field name="group_id" ref="base.group_admin"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="True"/>
+			<field name="perm_create" eval="True"/>
+			<field name="perm_unlink" eval="True"/>
+		</record>
+		
+		<!-- Wages Type security -->
+		<record model="ir.model.access" id="access_hr_wagestype">
+			<field name="name">HR Wages Type</field>
+			<field name="model_id" model="ir.model" search="[('model', '=', 'hr.contract.wage.type')]"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="False"/>
+			<field name="perm_create" eval="False"/>
+			<field name="perm_unlink" eval="False"/>
+		</record>
+
+		<record model="ir.model.access" id="access_hr_wagestype_manager">
+			<field name="name">HR Wages Type</field>
+			<field name="model_id" model="ir.model" search="[('model', '=', 'hr.contract.wage.type')]"/>
+			<field name="group_id" ref="hr.group_hr_manager"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="True"/>
+			<field name="perm_create" eval="True"/>
+			<field name="perm_unlink" eval="True"/>
+		</record>
+		
+		<record model="ir.model.access" id="access_hr_wagestype_admin">
+			<field name="name">HR Wages Type</field>
+			<field name="model_id" model="ir.model" search="[('model', '=', 'hr.contract.wage.type')]"/>
+			<field name="group_id" ref="base.group_admin"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="True"/>
+			<field name="perm_create" eval="True"/>
+			<field name="perm_unlink" eval="True"/>
+		</record>
+		
+		<!-- HR Contract security -->
+		<record model="ir.model.access" id="access_hr_contract">
+			<field name="name">HR Contract</field>
+			<field name="model_id" model="ir.model" search="[('model', '=', 'hr.contract')]"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="False"/>
+			<field name="perm_create" eval="False"/>
+			<field name="perm_unlink" eval="False"/>
+		</record>
+
+		<record model="ir.model.access" id="access_hr_contract_manager">
+			<field name="name">HR Contract</field>
+			<field name="model_id" model="ir.model" search="[('model', '=', 'hr.contract')]"/>
+			<field name="group_id" ref="hr.group_hr_manager"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="True"/>
+			<field name="perm_create" eval="True"/>
+			<field name="perm_unlink" eval="True"/>
+		</record>
+		
+		<record model="ir.model.access" id="access_hr_contract_admin">
+			<field name="name">HR Contract</field>
+			<field name="model_id" model="ir.model" search="[('model', '=', 'hr.contract')]"/>
+			<field name="group_id" ref="base.group_admin"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="True"/>
+			<field name="perm_create" eval="True"/>
+			<field name="perm_unlink" eval="True"/>
+		</record>
+		
+		<!-- Marital Status security -->
+		<record model="ir.model.access" id="access_hr_marital_status">
+			<field name="name">HR Contract</field>
+			<field name="model_id" model="ir.model" search="[('model', '=', 'hr.employee.marital.status')]"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="False"/>
+			<field name="perm_create" eval="False"/>
+			<field name="perm_unlink" eval="False"/>
+		</record>
+
+		<record model="ir.model.access" id="access_hr_marital_status_manager">
+			<field name="name">HR Contract</field>
+			<field name="model_id" model="ir.model" search="[('model', '=', 'hr.employee.marital.status')]"/>
+			<field name="group_id" ref="hr.group_hr_manager"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="True"/>
+			<field name="perm_create" eval="True"/>
+			<field name="perm_unlink" eval="True"/>
+		</record>
+		
+		<record model="ir.model.access" id="access_hr_marital_status_admin">
+			<field name="name">HR Contract</field>
+			<field name="model_id" model="ir.model" search="[('model', '=', 'hr.employee.marital.status')]"/>
+			<field name="group_id" ref="base.group_admin"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="True"/>
+			<field name="perm_create" eval="True"/>
+			<field name="perm_unlink" eval="True"/>
+		</record>
+	</data>
+</terp>
