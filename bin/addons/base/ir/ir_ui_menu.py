@@ -103,7 +103,7 @@ class ir_ui_menu(osv.osv):
 
 	def _get_full_name(self, cr, uid, ids, name, args, context):
  		res = {}
-		for m in self.browse(cr, uid, ids):
+		for m in self.browse(cr, uid, ids, context=context):
 			res[m.id] = self._get_one_full_name(m)
 		return res
 
