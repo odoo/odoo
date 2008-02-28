@@ -58,7 +58,7 @@ class account_followup_stat(osv.osv):
 		cr.execute("""
 			create or replace view account_followup_stat as (
 				select
-					l.partner_id as id,
+					min(l.id) as id,
 					l.partner_id as name,
 					min(l.date) as date_move,
 					max(l.date) as date_move_last,
@@ -75,7 +75,8 @@ class account_followup_stat(osv.osv):
 				where
 					l.reconcile_id is NULL and
 					a.type in ('receivable', 'payable')
-					and a.active
+					and a.active and
+					l.partner_id is not null
 				group by
 					l.partner_id, a.type
 			)""")
