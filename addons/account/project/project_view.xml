@@ -397,7 +397,16 @@
 
 	<menuitem name="Financial Management/Configuration/Budgets/Analytic Budgets" id="menu_account_analytic_budget_post_form" action="open_account_analytic_budget_post_form"/>
 
-	<act_window name="Costs &amp; revenues"
+	<act_window name="All Analytic Entries"
+		domain="[('account_id', '=', active_id)]"
+		res_model="account.analytic.line"
+		src_model="account.analytic.account"
+		view_type="form"
+		view_mode="tree,form"
+		id="act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal"/>
+
+
+	<act_window name="Costs &amp; Revenues"
 		domain="[('account_id', '=', active_id)]"
 		res_model="report.hr.timesheet.invoice.journal"
 		src_model="account.analytic.account"
