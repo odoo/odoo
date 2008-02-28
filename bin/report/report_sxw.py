@@ -494,7 +494,7 @@ class report_sxw(report_rml):
 			report_type = report_xml.report_type
 		else:
 			rml = tools.file_open(self.tmpl, subdir=None).read()
-		report_type= data.get('report_type', report_type)
+			report_type= data.get('report_type', report_type)
 
 		if report_type == 'sxw' and report_xml:
 			context['parents'] = sxw_parents
@@ -511,21 +511,42 @@ class report_sxw(report_rml):
 			rml_dom = xml.dom.minidom.parseString(rml)
 
 			node = rml_dom.documentElement
+
 			elements = node.getElementsByTagName("text:p")
+
 			for pe in elements:
 				e = pe.getElementsByTagName("text:drop-down")
 				for de in e:
+					pp=de.parentNode
 					for cnd in de.childNodes:
 						if cnd.nodeType in (cnd.CDATA_SECTION_NODE, cnd.TEXT_NODE):
 							pe.appendChild(cnd)
-							pe.removeChild(de)
+							pp.removeChild(de)
+
+
+
+			# Add Information : Resource ID and Model
+			rml_dom_meta = xml.dom.minidom.parseString(meta)
+			node = rml_dom_meta.documentElement
+			elements = node.getElementsByTagName("meta:user-defined")
+			for pe in elements:
+				if pe.hasAttribute("meta:name"):
+					if pe.getAttribute("meta:name") == "Info 3":
+						pe.childNodes[0].data=data['id']
+					if pe.getAttribute("meta:name") == "Info 4":
+						pe.childNodes[0].data=data['model']
+			meta = rml_dom_meta.documentElement.toxml('utf-8')
 
 			rml2 = rml_parser._parse(rml_dom, objs, data, header=self.header)
 			sxw_z = zipfile.ZipFile(sxw_io, mode='a')
 			sxw_z.writestr('content.xml', "<?xml version='1.0' encoding='UTF-8'?>" + \
 					rml2)
+			sxw_z.writestr('meta.xml', "<?xml version='1.0' encoding='UTF-8'?>" + \
+					meta)
+
 			if self.header:
 				#Add corporate header/footer
+				rml_head = tools.file_open('custom/corporate_rml_header.rml').read()
 				rml = tools.file_open('custom/corporate_sxw_header.xml').read()
 				rml_parser = self.parser(cr, uid, self.name2, context)
 				rml_parser.parents = sxw_parents
