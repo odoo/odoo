@@ -176,6 +176,11 @@ class act_window(osv.osv):
 						find = True
 						continue
 					res[act.id].append((False, t))
+
+				if 'calendar' not in modes:
+					mobj = self.pool.get(act.res_model)
+					if mobj._date_name in mobj._columns:
+						res[act.id].append((False, 'calendar'))
 		return res
 
 	_columns = {
