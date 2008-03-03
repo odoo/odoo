@@ -490,6 +490,9 @@ class cache(object):
 			return result
 		return cached_result
 
+def to_xml(s):
+	return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
+
 def get_languages():
 	languages={
 		'zh_CN': 'Chinese (CN)',
