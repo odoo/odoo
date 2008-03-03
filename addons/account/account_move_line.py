@@ -584,6 +584,7 @@ class account_move_line(osv.osv):
 
 	def unlink(self, cr, uid, ids, context={}, check=True):
 		self._update_check(cr, uid, ids, context)
+		result = False
 		for line in self.browse(cr, uid, ids, context):
 			context['journal_id']=line.journal_id.id
 			context['period_id']=line.period_id.id
@@ -600,7 +601,8 @@ class account_move_line(osv.osv):
 		if ('account_id' in vals) and not account_obj.read(cr, uid, vals['account_id'], ['active'])['active']:
 			raise osv.except_osv('Bad account!', 'You can not use an inactive account!')
 		if update_check:
-			self._update_check(cr, uid, ids, context)
+			if ('account_id' in vals) or ('journal_id' in vals) or ('period_id' in vals) or ('move_id' in vals) or ('debit' in vals) or ('credit' in vals) or ('date' in vals):
+				self._update_check(cr, uid, ids, context)
 		result = super(osv.osv, self).write(cr, uid, ids, vals, context)
 		if check:
 			done = []
@@ -630,9 +632,9 @@ class account_move_line(osv.osv):
 		done = {}
 		for line in self.browse(cr, uid, ids, context):
 			if line.move_id.state<>'draft':
-				raise osv.except_osv('Error !', 'You can not modify or delete a confirmed entry !')
+				raise osv.except_osv('Error !', 'You can not do this modification on a confirmed entry ! Please note that you can just change some non important fields !')
 			if line.reconcile_id:
-				raise osv.except_osv('Error !', 'You can not modify or delete a reconciled entry !')
+				raise osv.except_osv('Error !', 'You can not do this modification on a reconciled entry ! Please note that you can just change some non important fields !')
 			t = (line.journal_id.id, line.period_id.id)
 			if t not in done:
 				self._update_journal_check(cr, uid, line.journal_id.id, line.period_id.id, context)
