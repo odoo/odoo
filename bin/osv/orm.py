@@ -1520,6 +1520,37 @@ class orm(object):
 		return arch, fields
 
 
+	def __get_default_calendar_view(self):
+		"""Generate a default calendar view (For internal use only).
+		"""
+
+		arch = ('<?xml version="1.0" encoding="utf-8"?>\n'
+			    '<calendar string="%s" date_start="%s"') % (self._description, self._date_name)
+
+		if 'user_id' in self._columns:
+			arch += ' color="user_id"'
+
+		elif 'partner_id' in self._columns:
+			arch += ' color="partner_id"'
+
+		if 'date_stop' in self._columns:
+			arch += ' date_stop="date_stop"'
+
+		elif 'date_end' in self._columns:
+			arch += ' date_stop="date_end"'
+
+		elif 'date_delay' in self._columns:
+			arch += ' date_delay="date_delay"'
+
+		elif 'planned_hours' in self._columns:
+			arch += ' date_delay="planned_hours"'
+		
+		arch += ('>\n'
+			   	 '  <field name="%s"/>\n'
+			   	 '</calendar>') % (self._rec_name)
+
+		return arch
+
 	#
 	# if view_id, view_type is not required
 	#
@@ -1644,10 +1675,7 @@ class orm(object):
 				'''<tree string="%s"><field name="%s"/></tree>''' \
 				% (self._description, self._rec_name)
 			elif view_type == 'calendar':
-				xml = '''<?xml version="1.0" encoding="utf-8"?>''' \
-				'''<calendar string="%s" date_start="%s">''' \
-				'''<field name="%s"/></calendar>''' \
-				% (self._description, self._date_name, self._rec_name)
+				xml = self.__get_default_calendar_view()
 			else:
 				xml = ''
 			result['arch'] = xml
