@@ -25,17 +25,7 @@
 			<field name="perm_create" eval="True"/>
 			<field name="perm_unlink" eval="True"/>
 		</record>
-		
-		<record model="ir.model.access" id="access_product_admin">
-			<field name="name">Product</field>
-			<field name="model_id" model="ir.model" search="[('model', '=', 'product.product')]"/>
-			<field name="group_id" ref="base.group_admin"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="True"/>
-			<field name="perm_create" eval="True"/>
-			<field name="perm_unlink" eval="True"/>
-		</record>
-	
+			
 		<!-- Product Template security -->
 		<record model="ir.model.access" id="access_product_template">
 			<field name="name">Product Template</field>
@@ -55,17 +45,7 @@
 			<field name="perm_create" eval="True"/>
 			<field name="perm_unlink" eval="True"/>
 		</record>
-		
-		<record model="ir.model.access" id="access_product_template_admin">
-			<field name="name">Product Template</field>
-			<field name="model_id" model="ir.model" search="[('model', '=', 'product.template')]"/>
-			<field name="group_id" ref="base.group_admin"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="True"/>
-			<field name="perm_create" eval="True"/>
-			<field name="perm_unlink" eval="True"/>
-		</record>
-		
+				
 		<!-- Pricelist security -->
 		<record model="ir.model.access" id="access_product_pricelist">
 			<field name="name">Product Pricelist</field>
@@ -85,17 +65,7 @@
 			<field name="perm_create" eval="True"/>
 			<field name="perm_unlink" eval="True"/>
 		</record>
-		
-		<record model="ir.model.access" id="access_product_pricelist_admin">
-			<field name="name">Product Pricelist</field>
-			<field name="model_id" model="ir.model" search="[('model', '=', 'product.pricelist')]"/>
-			<field name="group_id" ref="base.group_admin"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="True"/>
-			<field name="perm_create" eval="True"/>
-			<field name="perm_unlink" eval="True"/>
-		</record>
-		
+				
 		<!-- Pricelist Version security -->
 		<record model="ir.model.access" id="access_product_pricelist_version">
 			<field name="name">Product Pricelist Version</field>
@@ -115,17 +85,7 @@
 			<field name="perm_create" eval="True"/>
 			<field name="perm_unlink" eval="True"/>
 		</record>
-		
-		<record model="ir.model.access" id="access_product_pricelist_version_admin">
-			<field name="name">Product Pricelist Version</field>
-			<field name="model_id" model="ir.model" search="[('model', '=', 'product.pricelist.version')]"/>
-			<field name="group_id" ref="base.group_admin"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="True"/>
-			<field name="perm_create" eval="True"/>
-			<field name="perm_unlink" eval="True"/>
-		</record>
-		
+				
 		<!-- Pricelist Item security -->
 		<record model="ir.model.access" id="access_product_pricelist_item_version">
 			<field name="name">Product Pricelist Item</field>
@@ -146,15 +106,6 @@
 			<field name="perm_unlink" eval="True"/>
 		</record>
 		
-		<record model="ir.model.access" id="access_product_pricelist_item_admin">
-			<field name="name">Product Pricelist Item</field>
-			<field name="model_id" model="ir.model" search="[('model', '=', 'product.pricelist.item')]"/>
-			<field name="group_id" ref="base.group_admin"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="True"/>
-			<field name="perm_create" eval="True"/>
-			<field name="perm_unlink" eval="True"/>
-		</record>
 	</data>
 </terp>
 		
