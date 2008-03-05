@@ -180,6 +180,17 @@ class purchase_order(osv.osv):
 					   'ref_partner_id': po.partner_id.id,
 					   'ref_doc1': 'purchase.order,%d' % (po.id,),
 					   })
+	def inv_line_create(self,a,ol):
+		return (0, False, {
+					'name': ol.name,
+					'account_id': a,
+					'price_unit': ol.price_unit or 0.0,
+					'quantity': ol.product_qty,
+					'product_id': ol.product_id.id or False,
+					'uos_id': ol.product_uom.id or False,
+					'invoice_line_tax_id': [(6, 0, [x.id for x in ol.taxes_id])],
+					'account_analytic_id': ol.account_analytic_id.id,
+				})
 
 	def action_invoice_create(self, cr, uid, ids, *args):
 		res = False
@@ -195,16 +206,17 @@ class purchase_order(osv.osv):
 						raise osv.except_osv('Error !', 'There is no expense account defined for this product: "%s" (id:%d)' % (line.product_id.name, line.product_id.id,))
 				else:
 					a = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category')
-				il.append((0, False, {
-					'name': ol.name,
-					'account_id': a,
-					'price_unit': ol.price_unit or 0.0,
-					'quantity': ol.product_qty,
-					'product_id': ol.product_id.id or False,
-					'uos_id': ol.product_uom.id or False,
-					'invoice_line_tax_id': [(6, 0, [x.id for x in ol.taxes_id])],
-					'account_analytic_id': ol.account_analytic_id.id,
-				}))
+				il.append(self.inv_line_create(a,ol))
+#				il.append((0, False, {
+#					'name': ol.name,
+#					'account_id': a,
+#					'price_unit': ol.price_unit or 0.0,
+#					'quantity': ol.product_qty,
+#					'product_id': ol.product_id.id or False,
+#					'uos_id': ol.product_uom.id or False,
+#					'invoice_line_tax_id': [(6, 0, [x.id for x in ol.taxes_id])],
+#					'account_analytic_id': ol.account_analytic_id.id,
+#				}))
 
 			a = o.partner_id.property_account_payable.id
 			inv = {
