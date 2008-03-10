@@ -517,7 +517,7 @@ class crm_case(osv.osv):
 					'som':(case.som or False) and case.som.id,
 					'description':case.description,
 					'partner_id':case.partner_id.id,
-					'date':case.date,
+					'date':time.strftime('%Y-%m-%d %H:%M:%S'),
 					'canal_id':(case.canal_id or False) and case.canal_id.id,
 					'user_id':uid,
 					'document': 'crm.case,%i' % case.id,
