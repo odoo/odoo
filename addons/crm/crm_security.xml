@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <terp>
-	<data noupdate="1">
+	<data>
 	
 		<record model="res.groups" id="group_crm_manager">
 			<field name="name">Customer Executive - Manager</field>
@@ -8,6 +8,10 @@
 		
 		<record model="res.groups" id="group_crm_member">
 			<field name="name">Customer Executive</field>
+		</record>
+		
+		<record model="res.users" id="base.user_admin">
+			<field name="groups_id" eval="[(6, 0, [ref('base.group_admin'), ref('group_crm_manager'),ref('group_crm_member')])]"/>
 		</record>
 		
 		<!-- CRM Case security -->
