@@ -1,12 +1,16 @@
 <?xml version="1.0"?>
 <terp>
-	<data noupdate="1">
+	<data>
 	
 		<record model="res.groups" id="group_sale_manager">
 			<field name="name">Sale Manager</field>
 		</record>
 		<record model="res.groups" id="group_sale_salesman">
 			<field name="name">Salesman</field>
+		</record>
+		
+		<record model="res.users" id="base.user_admin">
+			<field name="groups_id" eval="[(6, 0, [ref('base.group_admin'),ref('group_sale_manager'),ref('group_sale_salesman')])]"/>
 		</record>
 		
 		<!-- Sales order security -->
