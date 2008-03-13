@@ -37,10 +37,9 @@
 		"project/project_report.xml",
 		"product_data.xml",
 		"product_view.xml",
-		
-		"account_assert_test.xml",
 		"account_security.xml",
-		"project/project_security.xml",
+		"project/project_security.xml",	
+		"account_assert_test.xml",
 	],
 #	"translations" : {
 #		"fr": "i18n/french_fr.csv"
