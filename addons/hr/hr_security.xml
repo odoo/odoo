@@ -10,6 +10,10 @@
 			<field name="name">Employee</field>
 		</record>
 		
+		<record model="res.groups" id="base.group_admin">
+			<field name="groups_id" eval="[(6, 0, [ref('base.group_admin'), ref('group_hr_employee'),ref('group_hr_manager')])]"/>
+		</record>
+		
 		<!-- Department security -->
 		<record model="ir.model.access" id="access_hr_department">
 			<field name="name">HR Department</field>
