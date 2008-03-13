@@ -1,9 +1,13 @@
 <?xml version="1.0"?>
 <terp>
-	<data noupdate="1">
+	<data>
 	
 		<record model="res.groups" id="group_purchase_manager">
 			<field name="name">Purchase Manager</field>
+		</record>
+		
+		<record model="res.users" id="base.user_admin">
+			<field name="groups_id" eval="[(6, 0, [ref('base.group_admin'),ref('group_purchase_manager')])]"/>
 		</record>
 		
 		<!-- Purchase order security -->
@@ -35,7 +39,7 @@
 			<field name="perm_create" eval="False"/>
 			<field name="perm_unlink" eval="False"/>
 		</record>
-				
+
 		<record model="ir.model.access" id="access_purchase_order_line_purchase_manager">
 			<field name="name">Purchase Order Line</field>
 			<field name="model_id" model="ir.model" search="[('model', '=', 'purchase.order.line')]"/>
