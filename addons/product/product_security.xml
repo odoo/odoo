@@ -6,6 +6,10 @@
 			<field name="name">Product Manager</field>
 		</record>
 		
+		<record model="res.users" id="base.user_admin">
+			<field name="groups_id" eval="[(6, 0, [ref('base.group_admin'), ref('group_product_manager')])]"/>
+		</record>
+		
 		<!-- Product security -->
 		<record model="ir.model.access" id="access_product">
 			<field name="name">Product</field>
