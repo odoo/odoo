@@ -24,6 +24,7 @@
 		- delivery costs
 	""",
 	"update_xml" : [
+		"sale_security.xml",
 		"sale_workflow.xml",
 		"sale_sequence.xml",
 		"sale_data.xml",
@@ -31,7 +32,6 @@
 		"sale_report.xml",
 		"sale_wizard.xml",
 		"stock_view.xml",
-		"sale_security.xml"
 	],
 	"active": False,
 	"installable": True
