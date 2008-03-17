@@ -49,13 +49,13 @@ sms_send_fields = {
 
 def _sms_send(self, cr, uid, data, context):
 	service = netsvc.LocalService("object_proxy")
-	res = service.execute(cr.dbname, uid, 'res.partner', 'read', data['ids'], ['gsm'])
+	res = service.execute(cr.dbname, uid, 'res.partner', 'read', data['ids'], ['mobile'])
 
 	nbr = 0
 	for r in res:
-		to = r['gsm']
+		to = r['mobile']
 		if to:
-			tools.smssend(data['form']['user'], data['form']['password'], data['form']['app_id'], unicode(data['form']['text'], 'utf-8').encode('latin1'), to)
+			tools.sms_send(data['form']['user'], data['form']['password'], data['form']['app_id'], unicode(data['form']['text'], 'utf-8').encode('latin1'), to)
 			nbr += 1
 	return {'sms_sent': nbr}
 
