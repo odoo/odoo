@@ -28,6 +28,7 @@
 
 import wizard
 import netsvc
+import tools
 
 sms_send_form = '''<?xml version="1.0"?>
 <form string="%s">
@@ -49,7 +50,9 @@ sms_send_fields = {
 
 def _sms_send(self, cr, uid, data, context):
 	service = netsvc.LocalService("object_proxy")
-	res = service.execute(cr.dbname, uid, 'res.partner', 'read', data['ids'], ['mobile'])
+
+	res_ids = service.execute(cr.dbname, uid, 'res.partner.address', 'search', [('partner_id','in',data['ids']),('type','=','default')])
+	res = service.execute(cr.dbname, uid, 'res.partner.address', 'read', res_ids, ['mobile'])
 
 	nbr = 0
 	for r in res:
