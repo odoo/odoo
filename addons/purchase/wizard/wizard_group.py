@@ -95,6 +95,7 @@ def _mergeOrders(self, cr, uid, data, context):
 			#order_infos['name'] += ', %s' % porder.name
 			if porder.notes:
 				order_infos['notes'] += ('\n%s' % (porder.notes,))
+			if porder.origin:
 				order_infos['origin'] = order_infos['origin'] +' '+ porder.origin
 
 		for order_line in porder.order_line:
