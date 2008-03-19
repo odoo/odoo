@@ -510,6 +510,8 @@ class crm_case(osv.osv):
 		for case in cases:
 			if case.partner_id:
 				name = 'Case ' + keyword + ': ' + case.name
+				if isinstance(name, str):
+					name = unicode(name, 'utf-8')
 				if len(name) > 64:
 					name = name[:61] + '...'
 				self.pool.get('res.partner.event').create(cr, uid, {
