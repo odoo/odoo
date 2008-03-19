@@ -812,7 +812,10 @@ class orm(object):
 			except Exception, e:
 				logger.notifyChannel("import",netsvc.LOG_ERROR, e)
 				cr.rollback()
-				return (-1, res, e[0], warning)
+				try:
+					return (-1, res, e[0], warning)
+				except:
+					return (-1, res, e[0], '')
 			done += 1
 		#
 		# TODO: Send a request with the result and multi-thread !
