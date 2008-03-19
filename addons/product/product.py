@@ -568,7 +568,7 @@ class product_supplierinfo(osv.osv):
 		'product_name': fields.char('Partner product name', size=128),
 		'product_code': fields.char('Partner product reference', size=64),
 		'sequence' : fields.integer('Sequence'),
-		'qty' : fields.integer('Minimal quantity', required=True),
+		'qty' : fields.float('Minimal quantity', required=True),
 		'product_id' : fields.many2one('product.template', 'Product', required=True, ondelete='cascade', select=True),
 		'delay' : fields.integer('Delivery delay', required=True),
 		'pricelist_ids': fields.one2many('pricelist.partnerinfo', 'suppinfo_id', 'Pricelist'),
