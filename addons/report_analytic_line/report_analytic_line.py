@@ -48,7 +48,7 @@ class report_account_analytic_line_to_invoice(osv.osv):
         cr.execute("""
             CREATE OR REPLACE VIEW report_account_analytic_line_to_invoice AS (
                 SELECT
-                    DISTINCT(SUBSTRING(l.date for 7))||'-'||'01' AS name,
+                    DISTINCT(to_char(l.date,'YYYY-MM-DD')) AS name,
                     MIN(l.id) AS id,
                     l.product_id,
                     l.account_id,
@@ -65,7 +65,7 @@ class report_account_analytic_line_to_invoice(osv.osv):
                 WHERE
                     (invoice_id IS NULL) and (to_invoice IS NOT NULL)
                 GROUP BY
-                    SUBSTRING(date for 7), product_id, product_uom_id, account_id
+                    to_char(date,'YYYY-MM-DD'), product_id, product_uom_id, account_id
             )
         """)
 report_account_analytic_line_to_invoice()
