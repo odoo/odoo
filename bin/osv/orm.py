@@ -1538,14 +1538,25 @@ class orm(object):
 		if not context:
 			context={}
 		fields_def = self.__view_look_dom(cr, user, node, context=context)
-		doc = node.ownerDocument
 		
 		buttons = xpath.Evaluate('//button', node)
 		if buttons:
 			for button in buttons:
 				if button.getAttribute('type') == 'object':
 					continue
-				button.setAttribute('readonly', '1')
+				
+				#check for the signal, related role and associeated groups and set attribute according to that 
+				cr.execute("select role_id from wkf_transition where signal='%s'" % button.getAttribute('name'))
+				roles = cr.fetchall()
+				for role in roles:
+					if role[0]:
+						cr.execute("select count(*) from res_roles_users_rel where uid='%s' and rid in (%s)" % (user,','.join([str(x) for x in role])))
+						res = cr.fetchall()
+						if res[0][0] == 0:
+							button.setAttribute('readonly', '1')
+						else:
+							button.setAttribute('readonly', '0')
+				
 
 		arch = node.toxml(encoding="utf-8").replace('\t', '')
 		
