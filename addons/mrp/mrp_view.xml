@@ -26,7 +26,7 @@
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	<menuitem name="Production Management/Configuration"
+	<menuitem name="Production Management/Configuration" id="menu_mrp_configuration"
 		groups="base.group_admin"/>
 	<menuitem name="Production Management/Configuration/Properties/Property Categories" id="menu_mrp_property_group_action" action="mrp_property_group_action"/>
 
@@ -127,9 +127,9 @@
 	</record>
 	<menuitem name="Production Management/Configuration/Workcenters" id="menu_mrp_workcenter_action" action="mrp_workcenter_action"/>
 
-	<!-- 
+	<!--
 	Routings
-	--> 
+	-->
 
 	<record model="ir.ui.view" id="mrp_routing_workcenter_tree.view">
 		<field name="name">mrp.routing.workcenter.tree</field>
@@ -200,9 +200,9 @@
 	</record>
 	<menuitem name="Production Management/Configuration/Routings" id="menu_mrp_routing_action" action="mrp_routing_action"/>
 
-	<!-- 
+	<!--
 	Bill of Materials
-	--> 
+	-->
 
 	<record model="ir.ui.view" id="mrp_bom_form_view">
 		<field name="name">mrp.bom.form</field>
@@ -333,9 +333,9 @@
 		</field>
 	</record>
 
-	<!-- 
+	<!--
 	Production Management
-	--> 
+	-->
 
 	<record model="ir.ui.view" id="mrp_production_tree_view">
 		<field name="name">mrp.production.tree</field>
@@ -657,9 +657,9 @@
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','exception'), ('message', '&lt;&gt;', '')]</field>
 	</record>
-	<menuitem 
-		name="Production Management/Procurement Orders/All Exceptions/Exceptions to Fix" 
-		id="menu_mrp_procurement_action4" 
+	<menuitem
+		name="Production Management/Procurement Orders/All Exceptions/Exceptions to Fix"
+		id="menu_mrp_procurement_action4"
 		action="mrp_procurement_action4"/>
 
 	<record model="ir.actions.act_window" id="mrp_procurement_action11">
@@ -670,9 +670,9 @@
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','=','exception'), ('message', '=', '')]</field>
 	</record>
-	<menuitem 
-		name="Production Management/Procurement Orders/All Exceptions/Temporary Procurement Exceptions" 
-		id="menu_mrp_procurement_action11" 
+	<menuitem
+		name="Production Management/Procurement Orders/All Exceptions/Temporary Procurement Exceptions"
+		id="menu_mrp_procurement_action11"
 		action="mrp_procurement_action11"/>
 
 	=============================

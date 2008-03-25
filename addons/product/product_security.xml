@@ -1,15 +1,19 @@
 <?xml version="1.0"?>
 <terp>
 	<data noupdate="1">
-	
+
 		<record model="res.groups" id="group_product_manager">
 			<field name="name">Product Manager</field>
 		</record>
-		
+
 		<record model="res.users" id="base.user_admin">
 			<field name="groups_id" eval="[(6, 0, [ref('base.group_admin'), ref('group_product_manager')])]"/>
 		</record>
-		
+
+		<record id="product.group_product_manager" model="res.groups">
+			<field eval="[(6,0,[ref('product.menu_main_product'),ref('product.menu_products'),ref('product.menu_product_category_action'),ref('product.menu_product_category_action_form'),ref('stock.menu_action_production_lot_form'),ref('mrp.menu_mrp_root'),ref('mrp.menu_mrp_production_action'),ref('mrp.menu_production_orders_start'),ref('mrp.menu_mrp_production_action3'),ref('mrp.menu_production_orders_waiting4'),ref('product.menu_product_template_action'),ref('product.menu_product_variant_action')])]" name="menu_access"/>
+		</record>
+
 		<!-- Product security -->
 		<record model="ir.model.access" id="access_product">
 			<field name="name">Product</field>
@@ -19,7 +23,7 @@
 			<field name="perm_create" eval="False"/>
 			<field name="perm_unlink" eval="False"/>
 		</record>
-		
+
 		<record model="ir.model.access" id="access_product_manager">
 			<field name="name">Product</field>
 			<field name="model_id" model="ir.model" search="[('model', '=', 'product.product')]"/>
@@ -29,7 +33,7 @@
 			<field name="perm_create" eval="True"/>
 			<field name="perm_unlink" eval="True"/>
 		</record>
-			
+
 		<!-- Product Template security -->
 		<record model="ir.model.access" id="access_product_template">
 			<field name="name">Product Template</field>
@@ -39,7 +43,7 @@
 			<field name="perm_create" eval="False"/>
 			<field name="perm_unlink" eval="False"/>
 		</record>
-		
+
 		<record model="ir.model.access" id="access_product_template_manager">
 			<field name="name">Product Template</field>
 			<field name="model_id" model="ir.model" search="[('model', '=', 'product.template')]"/>
@@ -49,7 +53,7 @@
 			<field name="perm_create" eval="True"/>
 			<field name="perm_unlink" eval="True"/>
 		</record>
-				
+
 		<!-- Pricelist security -->
 		<record model="ir.model.access" id="access_product_pricelist">
 			<field name="name">Product Pricelist</field>
@@ -59,7 +63,7 @@
 			<field name="perm_create" eval="False"/>
 			<field name="perm_unlink" eval="False"/>
 		</record>
-		
+
 		<record model="ir.model.access" id="access_product_pricelist_manager">
 			<field name="name">Product Pricelist</field>
 			<field name="model_id" model="ir.model" search="[('model', '=', 'product.pricelist')]"/>
@@ -69,7 +73,7 @@
 			<field name="perm_create" eval="True"/>
 			<field name="perm_unlink" eval="True"/>
 		</record>
-				
+
 		<!-- Pricelist Version security -->
 		<record model="ir.model.access" id="access_product_pricelist_version">
 			<field name="name">Product Pricelist Version</field>
@@ -79,7 +83,7 @@
 			<field name="perm_create" eval="False"/>
 			<field name="perm_unlink" eval="False"/>
 		</record>
-		
+
 		<record model="ir.model.access" id="access_product_pricelist_version_manager">
 			<field name="name">Product Pricelist Version</field>
 			<field name="model_id" model="ir.model" search="[('model', '=', 'product.pricelist.version')]"/>
@@ -89,7 +93,7 @@
 			<field name="perm_create" eval="True"/>
 			<field name="perm_unlink" eval="True"/>
 		</record>
-				
+
 		<!-- Pricelist Item security -->
 		<record model="ir.model.access" id="access_product_pricelist_item_version">
 			<field name="name">Product Pricelist Item</field>
@@ -99,7 +103,7 @@
 			<field name="perm_create" eval="False"/>
 			<field name="perm_unlink" eval="False"/>
 		</record>
-		
+
 		<record model="ir.model.access" id="access_product_pricelist_item_manager">
 			<field name="name">Product Pricelist Item</field>
 			<field name="model_id" model="ir.model" search="[('model', '=', 'product.pricelist.item')]"/>
@@ -109,7 +113,7 @@
 			<field name="perm_create" eval="True"/>
 			<field name="perm_unlink" eval="True"/>
 		</record>
-		
+
 	</data>
 </terp>
-		
+
