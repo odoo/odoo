@@ -1545,18 +1545,20 @@ class orm(object):
 				if button.getAttribute('type') == 'object':
 					continue
 				
-				#check for the signal, related role and associeated groups and set attribute according to that 
+				ok = True
+				
+				serv = netsvc.LocalService('object_proxy')
+				user_roles = serv.execute_cr(cr, user, 'res.users', 'read', [user], ['roles_id'])[0]['roles_id']
 				cr.execute("select role_id from wkf_transition where signal='%s'" % button.getAttribute('name'))
 				roles = cr.fetchall()
 				for role in roles:
 					if role[0]:
-						cr.execute("select count(*) from res_roles_users_rel where uid='%s' and rid in (%s)" % (user,','.join([str(x) for x in role])))
-						res = cr.fetchall()
-						if res[0][0] == 0:
-							button.setAttribute('readonly', '1')
-						else:
-							button.setAttribute('readonly', '0')
-				
+						ok = ok and serv.execute_cr(cr, user, 'res.roles', 'check', user_roles, role[0])
+
+				if not ok:
+					button.setAttribute('readonly', '1')
+				else:
+					button.setAttribute('readonly', '0')
 
 		arch = node.toxml(encoding="utf-8").replace('\t', '')
 		
