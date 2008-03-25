@@ -1444,6 +1444,7 @@ class orm(object):
 		result = False
 		fields = {}
 		childs = True
+		
 		if node.nodeType==node.ELEMENT_NODE and node.localName=='field':
 			if node.hasAttribute('name'):
 				attrs = {}
@@ -1467,6 +1468,27 @@ class orm(object):
 							}
 					attrs = {'views': views}
 				fields[node.getAttribute('name')] = attrs
+				
+			if node.hasAttribute('groups'):
+				groups = None
+				group_str = node.getAttribute('groups')
+				if ',' in group_str:
+					groups = group_str.split(',');
+					readonly = False
+					access_pool = self.pool.get('ir.model.access')
+					for group in groups:
+						readonly = readonly and access_pool.check_groups(cr, user, group)
+						
+					if readonly:
+						fields[node.getAttribute('name')] = {'readonly':True}
+					else:
+						fields[node.getAttribute('name')] = {'readonly':False}
+
+				else:
+					if not self.pool.get('ir.model.access').check_groups(cr, user, group_str):
+						fields[node.getAttribute('name')] = {'readonly':True}
+					else:
+						fields[node.getAttribute('name')] = {'readonly':False}
 
 		elif node.nodeType==node.ELEMENT_NODE and node.localName in ('form','tree'):
 			result = self.view_header_get(cr, user, False, node.localName, context)
@@ -1516,7 +1538,17 @@ class orm(object):
 		if not context:
 			context={}
 		fields_def = self.__view_look_dom(cr, user, node, context=context)
+		doc = node.ownerDocument
+		
+		buttons = xpath.Evaluate('//button', node)
+		if buttons:
+			for button in buttons:
+				if button.getAttribute('type') == 'object':
+					continue
+				button.setAttribute('readonly', '1')
+
 		arch = node.toxml(encoding="utf-8").replace('\t', '')
+		
 		fields = self.fields_get(cr, user, fields_def.keys(), context)
 		for field in fields_def:
 			fields[field].update(fields_def[field])
@@ -1686,7 +1718,7 @@ class orm(object):
 			result['field_parent'] = False
 			result['view_id'] = 0
 
-		doc = dom.minidom.parseString(result['arch'])
+		doc = dom.minidom.parseString(result['arch'].encode('utf-8'))
 		xarch, xfields = self.__view_look_dom_arch(cr, user, doc, context=context)
 		result['arch'] = xarch
 		result['fields'] = xfields
