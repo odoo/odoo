@@ -16,7 +16,7 @@
 		<record model="res.users" id="base.user_admin">
 			<field name="groups_id" eval="[(6, 0, [ref('base.group_admin'), ref('group_account_invoice'), ref('group_account_user'), ref('group_account_admin')])]"/>
 		</record>
-		
+
 		<record model="ir.model.access" id="access_payment_term">
 			<field name="name">Payment Term</field>
 			<field name="model_id" model="ir.model"
@@ -352,8 +352,8 @@
 			<field name="model_id" model="ir.model"
 				search="[('model', '=', 'account.move')]"/>
 			<field name="group_id" ref="group_account_invoice"/>
-			<field name="perm_read" eval="False"/>
-			<field name="perm_write" eval="False"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="True"/>
 			<field name="perm_create" eval="True"/>
 			<field name="perm_unlink" eval="False"/>
 		</record>
@@ -969,6 +969,17 @@
 			<field name="perm_write" eval="True"/>
 			<field name="perm_create" eval="True"/>
 			<field name="perm_unlink" eval="True"/>
+		</record>
+
+		<record model="ir.model.access" id="access_move_line_account_admin">
+			<field name="name">Entry Lines</field>
+			<field name="model_id" model="ir.model"
+				search="[('model', '=', 'account.move.line')]"/>
+			<field name="group_id" ref="group_account_invoice"/>
+			<field name="perm_read" eval="True"/>
+			<field name="perm_write" eval="True"/>
+			<field name="perm_create" eval="True"/>
+			<field name="perm_unlink" eval="False"/>
 		</record>
 
 		<record model="ir.model.access" id="access_move_line_admin">
