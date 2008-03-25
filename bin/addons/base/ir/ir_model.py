@@ -87,7 +87,23 @@ class ir_model_access(osv.osv):
 		'perm_create': fields.boolean('Create Access'),
 		'perm_unlink': fields.boolean('Delete Permission'),
 	}
-
+	
+	def check_groups(self, cr, uid, group):
+		res = False
+		grouparr  = group.split('.')
+		if grouparr:
+			cr.execute("select * from res_groups_users_rel where uid=" + str(uid) + " and gid in(select res_id from ir_model_data where module='%s' and name='%s')" % (grouparr[0], grouparr[1]))
+			r = cr.fetchall()	
+			if not r:
+				res = False
+			else:
+				res = True
+		else:
+			res = False
+		#end if
+		return res
+	#end def
+	
 	def check(self, cr, uid, model_name, mode='read',raise_exception=True):
 		assert mode in ['read','write','create','unlink'], 'Invalid access mode for security'
 		if uid == 1:
