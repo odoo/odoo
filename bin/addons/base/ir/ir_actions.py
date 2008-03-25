@@ -145,6 +145,8 @@ class report_xml(osv.osv):
 			('raw', 'raw'),
 			('sxw', 'sxw'),
 			], string='Type', required=True),
+		'groups_id': fields.many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', 'Groups')
+		
 	}
 	_defaults = {
 		'type': lambda *a: 'ir.actions.report.xml',
@@ -240,7 +242,8 @@ class act_wizard(osv.osv):
 		'name': fields.char('Wizard info', size=64, required=True, translate=True),
 		'type': fields.char('Action type', size=32, required=True),
 		'wiz_name': fields.char('Wizard name', size=64, required=True),
-		'multi': fields.boolean('Action on multiple doc.', help="If set to true, the wizard will not be displayed on the right toolbar of a form views.")
+		'multi': fields.boolean('Action on multiple doc.', help="If set to true, the wizard will not be displayed on the right toolbar of a form views."),
+		'groups_id': fields.many2many('res.groups', 'res_groups_wizard_rel', 'uid', 'gid', 'Groups')
 	}
 	_defaults = {
 		'type': lambda *a: 'ir.actions.wizard',
