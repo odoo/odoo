@@ -197,7 +197,7 @@ class ir_values(osv.osv):
 					'and (company_id is null or company_id = %d) '\
 				'ORDER BY user_id', (cid,))
 		result = cr.fetchall()
-
+						
 		def _result_get(x, keys):
 			if x[1] in keys:
 				return False
@@ -228,7 +228,22 @@ class ir_values(osv.osv):
 			return (x[0],x[1],datas)
 		keys = []
 		res = filter(bool, map(lambda x: _result_get(x, keys), list(result)))
-		return res
+		res2 = res[:]
+		for r in res:
+			if r[2].has_key('groups_id'):
+				groups = r[2]['groups_id']
+				if len(groups) > 0:
+					group_ids = ','.join([ str(x) for x in r[2]['groups_id']])
+					cr.execute("select count(*) from res_groups_users_rel where gid in (%s) and uid='%s'" % (group_ids, uid))
+					gr_ids = cr.fetchall()
+					print gr_ids
+					if not gr_ids[0][0] > 0:
+						res2.remove(r)
+#				else:
+#					#raise osv.except_osv('Error !','You have not permission to perform operation !!!')
+#					res2.remove(r)
+		
+		return res2
 ir_values()
 
 
