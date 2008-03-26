@@ -168,7 +168,7 @@ class osv_pool(netsvc.Service):
 		return obj
 
 	#TODO: pass a list of modules to load
-	def instanciate(self, module):
+	def instanciate(self, module, cr):
 #		print "module list:", module_list
 #		for module in module_list:
 		res = []
@@ -176,7 +176,7 @@ class osv_pool(netsvc.Service):
 #			if module not in self.module_object_list:
 #		print "%s class_list:" % module, class_list
 		for klass in class_list:
-			res.append(klass.createInstance(self, module))
+			res.append(klass.createInstance(self, module, cr))
 		return res
 #			else:
 #				print "skipping module", module
@@ -225,7 +225,7 @@ class osv(orm.orm):
 	# Goal: try to apply inheritancy at the instanciation level and
 	#       put objects in the pool var
 	#
-	def createInstance(cls, pool, module):
+	def createInstance(cls, pool, module, cr):
 #		obj = cls()
 		parent_name = hasattr(cls, '_inherit') and cls._inherit
 		if parent_name:
@@ -245,18 +245,17 @@ class osv(orm.orm):
 			name = hasattr(cls,'_name') and cls._name or cls._inherit
 			#name = str(cls)
 			cls = type(name, (cls, parent_class), nattr)
-
 		obj = object.__new__(cls)
-		obj.__init__(pool)
+		obj.__init__(pool, cr)
 		return obj
 #		return object.__new__(cls, pool)
 	createInstance = classmethod(createInstance)
 
-	def __init__(self, pool):
+	def __init__(self, pool, cr):
 #		print "__init__", self._name, pool
 		pool.add(self._name, self)
 		self.pool = pool
-		orm.orm.__init__(self)
+		orm.orm.__init__(self, cr)
 		
 #		pooler.get_pool(cr.dbname).add(self._name, self)
 #		print self._name, module

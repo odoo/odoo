@@ -303,7 +303,7 @@ class orm(object):
 			if not cr.rowcount:
 				cr.execute("select id from ir_model where model='%s'" % self._name)
 				model_id = cr.fetchone()[0]
-				cr.execute("INSERT INTO ir_model_fields (model_id, model, name, field_description, ttype, relate,relation,group_name,view_load) VALUES (%d,%s,%s,%s,%s,%s,%s,%s,%s)", (model_id, self._name, k, f.string.replace("'", " "), f._type, (f.relate and 'True') or 'False', f._obj or 'NULL', f.group_name or '', (f.view_load and 'True') or 'False'))
+				cr.execute("INSERT INTO ir_model_fields (model_id, model, name, field_description, ttype, relate,relation,group_name,view_load,state) VALUES (%d,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (model_id, self._name, k, f.string.replace("'", " "), f._type, (f.relate and 'True') or 'False', f._obj or 'NULL', f.group_name or '', (f.view_load and 'True') or 'False', 'base'))
 			else:
 				id, relate = cr.fetchone()
 				if relate != f.relate:
@@ -528,15 +528,37 @@ class orm(object):
 						cr.execute(line2)
 						cr.commit()
 
-	def __init__(self):
+	def __init__(self, cr):
 		if not self._table:
 			self._table=self._name.replace('.','_')
 		if not self._description:
 			self._description = self._name
 		for (key,_,msg) in self._sql_constraints:
 			self.pool._sql_error[self._table+'_'+key] = msg
-		
-#		if self.__class__.__name__ != 'fake_class':
+
+		# Load manual fields
+
+		cr.execute("select id from ir_model_fields where name=%s and model=%s", ('state','ir.model.fields'))
+		if cr.fetchone():
+			cr.execute('select * from ir_model_fields where model=%s and state=%s', (self._name,'manual'))
+			for field in cr.dictfetchall():
+				if field['name'] in self._columns:
+					continue
+				attrs = {
+					'string': field['field_description'],
+					'required': bool(field['required']),
+					'readonly': bool(field['readonly']),
+					'domain': field['domain'] or None,
+					'size': field['size'],
+					'ondelete': field['on_delete'],
+					'translate': (field['translate']),
+					'select': int(field['select'])
+				}
+				if field['relation']:
+					attrs['relation'] = field['relation']
+				self._columns[field['name']] = getattr(fields, field['ttype'])(**attrs)
+
+		# if self.__class__.__name__ != 'fake_class':
 		self._inherits_reload()
 		if not self._sequence:
 			self._sequence = self._table+'_id_seq'
@@ -544,18 +566,7 @@ class orm(object):
 			assert (k in self._columns) or (k in self._inherit_fields), 'Default function defined in %s but field %s does not exist !' % (self._name, k,)
 		for f in self._columns:
 			self._columns[f].restart()
-		# FIXME: does not work at all
-#		if self._log_access:
-#			self._columns.update({
-#				'create_uid': fields.many2one('res.users','Creation user',required=True, readonly=True),
-#				'create_date': fields.datetime('Creation date',required=True, readonly=True),
-#				'write_uid': fields.many2one('res.users','Last modification by', readonly=True),
-#				'write_date': fields.datetime('Last modification date', readonly=True),
-#				})
-# 			self._defaults.update({
-# 				'create_uid': lambda self,cr,uid,context : uid,
-# 				'create_date': lambda *a : time.strftime("%Y-%m-%d %H:%M:%S")
-# 				})
+
 	#
 	# Update objects that uses this one to update their _inherits fields
 	#

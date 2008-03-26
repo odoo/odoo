@@ -709,12 +709,23 @@
 				<separator string="Information" colspan="4"/>
 				<field name="info" select="1" colspan="4" nolabel="1"/>
 				<separator string="Fields" colspan="4"/>
-				<field name="field_id" colspan="4" nolabel="1" readonly="1">
+				<field name="field_id" colspan="4" nolabel="1" context="{'manual':True}">
 					<form string="Fields Description">
-					<field name="name" select="1"/>
-					<field name="field_description" select="1" colspan="4"/>
-					<field name="ttype" select="1"/>
-					<field name="relation" select="1"/>
+						<field name="name" select="1"/>
+						<field name="field_description" select="1" colspan="4"/>
+						<field name="ttype" select="1"/>
+						<field name="relation" select="1"/>
+
+						<field name="required" select="2"/>
+						<field name="readonly" select="2"/>
+
+						<field name="size" select="1"/>
+						<field name="on_delete" select="1"/>
+						<field name="select" select="2"/>
+						<field name="translate"/>
+						<field name="selection"/>
+						<field name="domain"/>
+						<field name="state" readonly="1"/>
 					</form>
 				</field>
 			</form>
@@ -749,6 +760,17 @@
 				<field name="field_description" select="2" colspan="4"/>
 				<field name="ttype" select="2"/>
 				<field name="relation" select="2"/>
+
+					<field name="required" select="2"/>
+					<field name="readonly" select="2"/>
+
+					<field name="size" select="1"/>
+					<field name="on_delete" select="1"/>
+					<field name="select" select="2"/>
+					<field name="translate"/>
+					<field name="selection"/>
+					<field name="domain"/>
+					<field name="state" readonly="1"/>
 			</form>
 		</field>
 	</record>
@@ -770,6 +792,7 @@
 		<field name="name">Objects</field>
 		<field name="res_model">ir.model</field>
 		<field name="view_type">form</field>
+		<field name="context">{'manual':True}</field>
 		<field name="view_id" ref="view_model_tree"/>
 	</record>
 	<menuitem name="Administration/Custom/Low Level/Base/Database Structure/Objects" action="action_model_model" id="ir_model_model_menu"/>
@@ -778,6 +801,7 @@
 		<field name="name">Fields</field>
 		<field name="res_model">ir.model.fields</field>
 		<field name="view_type">form</field>
+		<field name="context">{'manual':True}</field>
 		<field name="view_id" ref="view_model_fields_tree"/>
 	</record>
 	<menuitem name="Administration/Custom/Low Level/Base/Database Structure/Fields" action="action_model_fields" id="ir_model_model_fields"/>

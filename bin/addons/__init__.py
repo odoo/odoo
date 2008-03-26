@@ -195,7 +195,7 @@ def load_module_graph(cr, graph, status=None, **kwargs):
 		logger.notifyChannel('init', netsvc.LOG_INFO, 'addon:%s' % m)
 		sys.stdout.flush()
 		pool = pooler.get_pool(cr.dbname)
-		modules = pool.instanciate(m)
+		modules = pool.instanciate(m, cr)
 		cr.execute('select state, demo from ir_module_module where name=%s', (m,))
 		(package_state, package_demo) = (cr.rowcount and cr.fetchone()) or ('uninstalled', False)
 		idref = {}

@@ -34,6 +34,10 @@ import time
 import tools
 import pooler
 
+def _get_fields_type(self, cr, uid, context=None):
+	cr.execute('select distinct ttype,ttype from ir_model_fields')
+	return cr.fetchall()
+
 class ir_model(osv.osv):
 	_name = 'ir.model'
 	_rec_name = 'model'
@@ -51,17 +55,23 @@ ir_model()
 class ir_model_fields(osv.osv):
 	_name = 'ir.model.fields'
 	_columns = {
-		'name': fields.char('Name', size=64),
+		'name': fields.char('Name', required=True, size=64, select=1),
 		'model': fields.char('Model Name', size=64, required=True),
-# on pourrait egalement changer ca en many2one, mais le prob c'est qu'alors faut
-# faire une jointure a chaque fois qu'on recherche vu que le client ne connait que le nom
-# de l'objet et pas son id
 		'relation': fields.char('Model Relation', size=64),
 		'model_id': fields.many2one('ir.model', 'Model id', required=True, select=True, ondelete='cascade'),
-# in fact, this is the field label
-		'field_description': fields.char('Field Description', size=256),
-		'ttype': fields.char('Field Type', size=64),
+		'field_description': fields.char('Field Label', required=True, size=256),
 		'relate': fields.boolean('Click and Relate'),
+
+		'ttype': fields.selection(_get_fields_type, 'Field Type',size=64, required=True),
+		'selection': fields.char('Field Selection',size=128),
+		'required': fields.boolean('Required'),
+		'readonly': fields.boolean('Readonly'),
+		'select': fields.selection([('0','Not Searchable'),('1','Always Searchable'),('2','Advanced Search')],'Searchable', required=True),
+		'translate': fields.boolean('Translate'),
+		'size': fields.integer('Size'),
+		'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Manualy Created'),
+		'on_delete': fields.selection([('no','Nothing'),('cascade','Cascade'),('set null','Set NULL')], 'On delete', help='On delete property for many2one fields'),
+		'domain': fields.char('Domain', size=256),
 
 		'groups': fields.many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id', 'Groups'),
 		'group_name': fields.char('Group Name', size=128),
@@ -70,10 +80,38 @@ class ir_model_fields(osv.osv):
 	_defaults = {
 		'relate': lambda *a: 0,
 		'view_load': lambda *a: 0,
-		'name': lambda *a: 'No Name',
-		'field_description': lambda *a: 'No description available',
+		'selection': lambda *a: "[]",
+		'domain': lambda *a: "[]",
+		'name': lambda *a: 'x_',
+		'state': lambda self,cr,uid,ctx={}: ctx.get('manual',False) and 'manual' or 'base',
+		'on_delete': lambda *a: 'no',
+		'select': lambda *a: '0',
+		'size': lambda *a: 64,
+		'field_description': lambda *a: '',
 	}
 	_order = "id"
+	def unlink(self, cr, user, ids, context=None):
+		for field in self.browse(cr, uid, ids, context):
+			if field.state <> 'manual':
+				raise except_orm('Error', "You can not remove the field '%s' !" %(field.name,))
+		#
+		# MAY BE ADD A ALTER TABLE DROP ?
+		#
+		return super(ir_model_fields, self).unlink(cr, user, ids, context)
+
+	def create(self, cr, user, vals, context=None):
+		if 'model_id' in vals:
+			model_data=self.pool.get('ir.model').read(cr,user,vals['model_id'])
+			vals['model']=model_data['model']
+		if context and context.get('manual',False):
+			vals['state']='manual'
+		res = super(ir_model_fields,self).create(cr, user, vals, context)
+		if vals.get('state','base')=='manual':
+			if not vals['name'].startswith('x_'):
+				raise except_orm('Error', "Custom fields must have a name that starts with 'x_' !")
+			self.pool.get(vals['model']).__init__(self.pool, cr)
+			self.pool.get(vals['model'])._auto_init(cr)
+		return res
 ir_model_fields()
 
 class ir_model_access(osv.osv):
@@ -182,8 +220,8 @@ class ir_model_data(osv.osv):
 		'noupdate': lambda *a: False
 	}
 
-	def __init__(self, pool):
-		osv.osv.__init__(self, pool)
+	def __init__(self, pool, cr):
+		osv.osv.__init__(self, pool, cr)
 		self.loads = {}
 		self.doinit = True
 		self.unlink_mark = {}
