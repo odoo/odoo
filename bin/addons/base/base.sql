@@ -56,6 +56,7 @@ CREATE TABLE ir_model_fields (
   model_id int references ir_model on delete cascade,
   name varchar(64) DEFAULT ''::varchar NOT NULL,
   relation varchar(64),
+  select_level varchar(4),
   field_description varchar(256),
   ttype varchar(64),
   group_name varchar(64),

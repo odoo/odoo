@@ -296,14 +296,13 @@ class orm(object):
 			# reference model in order to have a description of its fonctionnality in custom_report
 			cr.execute("INSERT INTO ir_model (model, name, info) VALUES (%s, %s, %s)", (self._name, self._description, self.__doc__)) 
 		cr.commit()
-
 		for k in self._columns:
 			f = self._columns[k]
 			cr.execute("select id, relate from ir_model_fields where model=%s and name=%s", (self._name,k))
 			if not cr.rowcount:
 				cr.execute("select id from ir_model where model='%s'" % self._name)
 				model_id = cr.fetchone()[0]
-				cr.execute("INSERT INTO ir_model_fields (model_id, model, name, field_description, ttype, relate,relation,group_name,view_load,state) VALUES (%d,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (model_id, self._name, k, f.string.replace("'", " "), f._type, (f.relate and 'True') or 'False', f._obj or 'NULL', f.group_name or '', (f.view_load and 'True') or 'False', 'base'))
+				cr.execute("INSERT INTO ir_model_fields (model_id, model, name, field_description, ttype, relate,relation,group_name,view_load,state,select_level) VALUES (%d,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (model_id, self._name, k, f.string.replace("'", " "), f._type, (f.relate and 'True') or 'False', f._obj or 'NULL', f.group_name or '', (f.view_load and 'True') or 'False', 'base', str(f.select or 0)))
 			else:
 				id, relate = cr.fetchone()
 				if relate != f.relate:
@@ -552,13 +551,12 @@ class orm(object):
 					'size': field['size'],
 					'ondelete': field['on_delete'],
 					'translate': (field['translate']),
-					'select': int(field['select'])
+					'select': int(field['select_level'])
 				}
 				if field['relation']:
 					attrs['relation'] = field['relation']
 				self._columns[field['name']] = getattr(fields, field['ttype'])(**attrs)
 
-		# if self.__class__.__name__ != 'fake_class':
 		self._inherits_reload()
 		if not self._sequence:
 			self._sequence = self._table+'_id_seq'

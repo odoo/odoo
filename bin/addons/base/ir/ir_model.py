@@ -52,6 +52,8 @@ class ir_model(osv.osv):
 	}
 ir_model()
 
+print 'MODEL'
+
 class ir_model_fields(osv.osv):
 	_name = 'ir.model.fields'
 	_columns = {
@@ -66,7 +68,7 @@ class ir_model_fields(osv.osv):
 		'selection': fields.char('Field Selection',size=128),
 		'required': fields.boolean('Required'),
 		'readonly': fields.boolean('Readonly'),
-		'select': fields.selection([('0','Not Searchable'),('1','Always Searchable'),('2','Advanced Search')],'Searchable', required=True),
+		'select_level': fields.selection([('0','Not Searchable'),('1','Always Searchable'),('2','Advanced Search')],'Searchable', required=True),
 		'translate': fields.boolean('Translate'),
 		'size': fields.integer('Size'),
 		'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Manualy Created'),
@@ -83,15 +85,15 @@ class ir_model_fields(osv.osv):
 		'selection': lambda *a: "[]",
 		'domain': lambda *a: "[]",
 		'name': lambda *a: 'x_',
-		'state': lambda self,cr,uid,ctx={}: ctx.get('manual',False) and 'manual' or 'base',
+		'state': lambda self,cr,uid,ctx={}: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
 		'on_delete': lambda *a: 'no',
-		'select': lambda *a: '0',
+		'select_level': lambda *a: '0',
 		'size': lambda *a: 64,
-		'field_description': lambda *a: '',
+		'field_description': lambda *a: 'No',
 	}
 	_order = "id"
 	def unlink(self, cr, user, ids, context=None):
-		for field in self.browse(cr, uid, ids, context):
+		for field in self.browse(cr, user, ids, context):
 			if field.state <> 'manual':
 				raise except_orm('Error', "You can not remove the field '%s' !" %(field.name,))
 		#
@@ -203,6 +205,7 @@ class ir_model_access(osv.osv):
 		return res
 ir_model_access()
 
+print 'MODEL ACCESS'
 class ir_model_data(osv.osv):
 	_name = 'ir.model.data'
 	_columns = {
