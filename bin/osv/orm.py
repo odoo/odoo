@@ -1491,7 +1491,6 @@ class orm(object):
 
 			else:
 				if not self.pool.get('ir.model.access').check_groups(cr, user, group_str):
-					#fields[node.getAttribute('name')] = {'readonly':True}
 					parent = node.parentNode
 					parent.removeChild(node)
 						
