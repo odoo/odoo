@@ -1469,32 +1469,38 @@ class orm(object):
 					attrs = {'views': views}
 				fields[node.getAttribute('name')] = attrs
 				
-			if node.hasAttribute('groups'):
-				groups = None
-				group_str = node.getAttribute('groups')
-				if ',' in group_str:
-					groups = group_str.split(',');
-					readonly = False
-					access_pool = self.pool.get('ir.model.access')
-					for group in groups:
-						readonly = readonly and access_pool.check_groups(cr, user, group)
-						
-					if readonly:
-						fields[node.getAttribute('name')] = {'readonly':True}
-					else:
-						fields[node.getAttribute('name')] = {'readonly':False}
-
-				else:
-					if not self.pool.get('ir.model.access').check_groups(cr, user, group_str):
-						fields[node.getAttribute('name')] = {'readonly':True}
-					else:
-						fields[node.getAttribute('name')] = {'readonly':False}
+			
 
 		elif node.nodeType==node.ELEMENT_NODE and node.localName in ('form','tree'):
 			result = self.view_header_get(cr, user, False, node.localName, context)
 			if result:
 				node.setAttribute('string', result.decode('utf-8'))
+		if node.nodeType==node.ELEMENT_NODE and node.hasAttribute('groups'):
+			groups = None
+			group_str = node.getAttribute('groups')
+			if ',' in group_str:
+				groups = group_str.split(',');
+				readonly = False
+				access_pool = self.pool.get('ir.model.access')
+				for group in groups:
+					readonly = readonly and access_pool.check_groups(cr, user, group)
+					
+				if readonly:
+					parent = node.parentNode
+					parent.removeChild(node)
+					#fields[node.getAttribute('name')] = {'readonly':True}
+					#node.re
+				else:
+					fields[node.getAttribute('name')] = {'readonly':False}
 
+			else:
+				if not self.pool.get('ir.model.access').check_groups(cr, user, group_str):
+					#fields[node.getAttribute('name')] = {'readonly':True}
+					parent = node.parentNode
+					parent.removeChild(node)
+				else:
+					fields[node.getAttribute('name')] = {'readonly':False}
+						
 		if node.nodeType == node.ELEMENT_NODE:
 			# translate view
 			if ('lang' in context) and not result:
@@ -1563,6 +1569,7 @@ class orm(object):
 		arch = node.toxml(encoding="utf-8").replace('\t', '')
 		
 		fields = self.fields_get(cr, user, fields_def.keys(), context)
+
 		for field in fields_def:
 			fields[field].update(fields_def[field])
 		return arch, fields
@@ -1751,6 +1758,7 @@ class orm(object):
 			resaction = ir_values_obj.get(cr, user, 'action',
 					'client_action_multi', [(self._name, False)], False,
 					context)
+			
 			resrelate = ir_values_obj.get(cr, user, 'action',
 					'client_action_relate', [(self._name, False)], False,
 					context)
@@ -1759,8 +1767,10 @@ class orm(object):
 			resaction = filter(lambda x: not x.get('multi',False), resaction)
 			resprint = filter(lambda x: not x.get('multi',False), resprint)
 			resrelate = map(lambda x:x[2], resrelate)
+			
 			for x in resprint+resaction+resrelate:
 				x['string'] = x['name']
+			
 			result['toolbar'] = {
 				'print': resprint,
 				'action': resaction,
