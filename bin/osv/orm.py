@@ -1488,18 +1488,12 @@ class orm(object):
 				if readonly:
 					parent = node.parentNode
 					parent.removeChild(node)
-					#fields[node.getAttribute('name')] = {'readonly':True}
-					#node.re
-				else:
-					fields[node.getAttribute('name')] = {'readonly':False}
 
 			else:
 				if not self.pool.get('ir.model.access').check_groups(cr, user, group_str):
 					#fields[node.getAttribute('name')] = {'readonly':True}
 					parent = node.parentNode
 					parent.removeChild(node)
-				else:
-					fields[node.getAttribute('name')] = {'readonly':False}
 						
 		if node.nodeType == node.ELEMENT_NODE:
 			# translate view
