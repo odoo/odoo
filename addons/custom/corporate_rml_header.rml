@@ -3,23 +3,25 @@
 		<frame id="first" x1="1cm" y1="2.5cm" width="19.0cm" height="23.0cm"/>
 		<pageGraphics>
 			<!--logo-->
+			<image x="0.8cm" y="27.2cm" width="103" height="50" file="addons/custom/tiny.png"/>
 			<setFont name="Helvetica" size="30"/>
 			<fill color="black"/>
-			<stroke color="#888888"/>
+			<stroke color="black"/>
+			<!--drawString x="1cm" y="27.8cm">[[ company.partner_id.name ]]</drawString-->
 			<lines>1cm 27.7cm 20cm 27.7cm</lines>
-			<drawString x="1cm" y="27.8cm">[[ company.partner_id.name ]]</drawString>
 
 			<setFont name="Helvetica" size="10"/>
 			<drawRightString x="20cm" y="27.8cm">[[ company.rml_header1 ]]</drawRightString>
 
 
-			<drawString x="1cm" y="27.1cm">[[ company.partner_id.address and company.partner_id.address[0].street ]]</drawString>
-			<drawString x="1cm" y="26.7cm">[[ company.partner_id.address and company.partner_id.address[0].zip ]] [[ company.partner_id.address and company.partner_id.address[0].city ]] - [[ company.partner_id.address and company.partner_id.address[0].country_id and company.partner_id.address[0].country_id.name ]]</drawString>
-			<drawString x="1cm" y="26.2cm">Phone:</drawString>
-			<drawRightString x="7cm" y="26.2cm">[[ company.partner_id.address and company.partner_id.address[0].phone ]]</drawRightString>
-			<drawString x="1cm" y="25.8cm">Mail:</drawString>
-			<drawRightString x="7cm" y="25.8cm">[[ company.partner_id.address and company.partner_id.address[0].email ]]</drawRightString>
-			<lines>1cm 25.7cm 7cm 25.7cm</lines>
+			<drawString x="1cm" y="27.2cm">[[ company.partner_id.name ]]</drawString>
+			<drawString x="1cm" y="26.8cm">[[ company.partner_id.address and company.partner_id.address[0].street ]]</drawString>
+			<drawString x="1cm" y="26.4cm">[[ company.partner_id.address and company.partner_id.address[0].zip ]] [[ company.partner_id.address and company.partner_id.address[0].city ]] - [[ company.partner_id.address and company.partner_id.address[0].country_id and company.partner_id.address[0].country_id.name ]]</drawString>
+			<drawString x="1cm" y="26.0cm">Phone:</drawString>
+			<drawRightString x="7cm" y="26.0cm">[[ company.partner_id.address and company.partner_id.address[0].phone ]]</drawRightString>
+			<drawString x="1cm" y="25.6cm">Mail:</drawString>
+			<drawRightString x="7cm" y="25.6cm">[[ company.partner_id.address and company.partner_id.address[0].email ]]</drawRightString>
+			<lines>1cm 25.5cm 7cm 25.5cm</lines>
 
 			<!--page bottom-->
 
