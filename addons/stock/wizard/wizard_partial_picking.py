@@ -198,7 +198,7 @@ def _do_split(self, cr, uid, data, context):
 	else:
 		pick_obj.action_move(cr, uid, [pick.id])
 		wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_done', cr)
-	return {}
+	return {'new_picking':new_picking or False}
 
 
 class partial_picking(wizard.interface):
