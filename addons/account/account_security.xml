@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <terp>
-	<data>
+	<data noupdate="1">
 		<record model="res.groups" id="group_account_invoice">
 			<field name="name">Financial Invoice</field>
 		</record>
@@ -14,7 +14,7 @@
 		</record>
 
 		<record model="res.users" id="base.user_admin">
-			<field name="groups_id" eval="[(6, 0, [ref('base.group_admin'), ref('group_account_invoice'), ref('group_account_user'), ref('group_account_admin')])]"/>
+			<field name="groups_id" eval="[(4, ref('base.group_admin')), (4, ref('group_account_invoice')), (4, ref('group_account_user')), (4, ref('group_account_admin'))]"/>
 		</record>
 
 		<record model="ir.model.access" id="access_payment_term">

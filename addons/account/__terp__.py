@@ -13,6 +13,7 @@
 	"website" : "http://tinyerp.com/module_account.html",
 	"category" : "Generic Modules/Accounting",
 	"init_xml" : [
+		"account_security.xml",
 	],
 	"demo_xml" : [
 		"account_demo.xml",
@@ -37,7 +38,6 @@
 		"project/project_report.xml",
 		"product_data.xml",
 		"product_view.xml",
-		"account_security.xml",
 		"project/project_security.xml",	
 		"account_assert_test.xml",
 	],
