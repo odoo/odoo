@@ -230,15 +230,15 @@ class ir_values(osv.osv):
 		res = filter(bool, map(lambda x: _result_get(x, keys), list(result)))
 		res2 = res[:]
 		for r in res:
-			if type(r) == type([]) and r[2].has_key('groups_id'):
-				groups = r[2]['groups_id']
-				if len(groups) > 0:
-					group_ids = ','.join([ str(x) for x in r[2]['groups_id']])
-					cr.execute("select count(*) from res_groups_users_rel where gid in (%s) and uid='%s'" % (group_ids, uid))
-					gr_ids = cr.fetchall()
-					print gr_ids
-					if not gr_ids[0][0] > 0:
-						res2.remove(r)
+			if r[2]['type'] == 'ir.actions.report.xml' or r[2]['type'] == 'ir.actions.report.xml':
+				if r[2].has_key('groups_id'):
+					groups = r[2]['groups_id']
+					if len(groups) > 0:
+						group_ids = ','.join([ str(x) for x in r[2]['groups_id']])
+						cr.execute("select count(*) from res_groups_users_rel where gid in (%s) and uid='%s'" % (group_ids, uid))
+						gr_ids = cr.fetchall()
+						if not gr_ids[0][0] > 0:
+							res2.remove(r)
 #				else:
 #					#raise osv.except_osv('Error !','You have not permission to perform operation !!!')
 #					res2.remove(r)
