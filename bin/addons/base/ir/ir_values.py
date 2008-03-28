@@ -230,7 +230,7 @@ class ir_values(osv.osv):
 		res = filter(bool, map(lambda x: _result_get(x, keys), list(result)))
 		res2 = res[:]
 		for r in res:
-			if r[2].has_key('groups_id'):
+			if type(r) == type([]) and r[2].has_key('groups_id'):
 				groups = r[2]['groups_id']
 				if len(groups) > 0:
 					group_ids = ','.join([ str(x) for x in r[2]['groups_id']])
