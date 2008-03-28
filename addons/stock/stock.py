@@ -983,10 +983,10 @@ class stock_inventory(osv.osv):
 	_name = "stock.inventory"
 	_description = "Inventory"
 	_columns = {
-		'name': fields.char('Inventory', size=64, required=True),
-		'date': fields.datetime('Date create', required=True),
+		'name': fields.char('Inventory', size=64, required=True, readonly=True, states={'draft':[('readonly',False)]}),
+		'date': fields.datetime('Date create', required=True, readonly=True, states={'draft':[('readonly',False)]}),
 		'date_done': fields.datetime('Date done'),
-		'inventory_line_id': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories'),
+		'inventory_line_id': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', readonly=True, states={'draft':[('readonly',False)]}),
 		'move_ids': fields.many2many('stock.move', 'stock_inventory_move_rel', 'inventory_id', 'move_id', 'Created Moves'),
 		'state': fields.selection( (('draft','Draft'),('done','Done')), 'State', readonly=True),
 	}
