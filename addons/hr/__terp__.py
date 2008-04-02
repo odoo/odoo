@@ -14,18 +14,18 @@
 	Different reports are also provided, mainly for attendance statistics.
 	""",
 	"depends" : ["base"],
-	"init_xml" : ["hr_security.xml"],
+	"init_xml" : [],
 	"demo_xml" : [
 		"hr_demo.xml", 
 		"hr_bel_holidays_2005.xml",
-		"hr_department_demo.xml"
+		"hr_department_demo.xml",
 	],
 	"update_xml" : [
 		"hr_view.xml", 
+		"hr_security.xml",
 		"hr_report.xml", 
 		"hr_wizard.xml",
 		"hr_department_view.xml",
-		
 	],
 	"active": False,
 	"installable": True
