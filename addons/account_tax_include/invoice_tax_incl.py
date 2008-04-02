@@ -90,7 +90,7 @@ class account_invoice_line(osv.osv):
 			if not line.quantity:
 				res[line.id] = 0.0
 				continue
-			if line.invoice_id.price_type == 'tax_included':
+			if line.invoice_id and line.invoice_id.price_type == 'tax_included':
 				product_taxes = None
 				if line.product_id:
 					if line.invoice_id.type in ('out_invoice', 'out_refund'):
@@ -103,7 +103,7 @@ class account_invoice_line(osv.osv):
 				else:
 					for tax in tax_obj.compute_inv(cr, uid,line.invoice_line_tax_id, res[line.id]/line.quantity, line.quantity):
 						res[line.id] = res[line.id] - round(tax['amount'], 2)
-			if name == 'price_subtotal_incl' and line.invoice_id.price_type == 'tax_included':
+			if name == 'price_subtotal_incl' and line.invoice_id and line.invoice_id.price_type == 'tax_included':
 				prod_taxe_ids = None
 				line_taxe_ids = None
 				if product_taxes:
