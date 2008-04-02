@@ -157,7 +157,7 @@ class browse_record(object):
 				logger = netsvc.Logger()
 				logger.notifyChannel('orm', netsvc.LOG_ERROR, "Programming error: field '%s' does not exist in object '%s' !" % (name, self._table._name))
 				return False
-			
+
 			# if the field is a classic one or a many2one, we'll fetch all classic and many2one fields
 			if col._classic_write:
 				# gen the list of "local" (ie not inherited) fields which are classic or many2one
@@ -172,7 +172,7 @@ class browse_record(object):
 			ids = filter(lambda id: not self._data[id].has_key(name), self._data.keys())
 			# read the data
 			datas = self._table.read(self._cr, self._uid, ids, map(lambda x: x[0], ffields), context=self._context, load="_classic_write")
-			
+
 			# create browse records for 'remote' objects
 			for data in datas:
 				for n,f in ffields:
@@ -198,7 +198,7 @@ class browse_record(object):
 
 	def __contains__(self, name):
 		return (name in self._table._columns) or (name in self._table._inherit_fields) or hasattr(self._table, name)
-	
+
 	def __hasattr__(self, name):
 		return name in self
 
@@ -214,7 +214,7 @@ class browse_record(object):
 	def __ne__(self, other):
 		return (self._table_name, self._id) != (other._table_name, other._id)
 
-	# we need to define __unicode__ even though we've already defined __str__ 
+	# we need to define __unicode__ even though we've already defined __str__
 	# because we have overridden __getattr__
 	def __unicode__(self):
 		return unicode(str(self))
@@ -257,7 +257,7 @@ def get_pg_type(f):
 			f_size = -1
 		else:
 			f_size = (hasattr(f,'size') and f.size) or 16
-			
+
 		if f_size == -1:
 			f_type = ('int4', 'INTEGER')
 		else:
@@ -294,7 +294,7 @@ class orm(object):
 		cr.execute("SELECT id FROM ir_model WHERE model='%s'" % self._name)
 		if not cr.rowcount:
 			# reference model in order to have a description of its fonctionnality in custom_report
-			cr.execute("INSERT INTO ir_model (model, name, info) VALUES (%s, %s, %s)", (self._name, self._description, self.__doc__)) 
+			cr.execute("INSERT INTO ir_model (model, name, info) VALUES (%s, %s, %s)", (self._name, self._description, self.__doc__))
 		cr.commit()
 		for k in self._columns:
 			f = self._columns[k]
@@ -329,12 +329,12 @@ class orm(object):
 				for k in logs:
 					cr.execute(
 						"""
-						SELECT c.relname 
+						SELECT c.relname
 						FROM pg_class c, pg_attribute a
 						WHERE c.relname='%s' AND a.attname='%s' AND c.oid=a.attrelid
 						""" % (self._table, k))
 					if not cr.rowcount:
-						cr.execute("ALTER TABLE \"%s\" ADD COLUMN \"%s\" %s" % 
+						cr.execute("ALTER TABLE \"%s\" ADD COLUMN \"%s\" %s" %
 							(self._table, k, logs[k]))
 						cr.commit()
 
@@ -378,13 +378,13 @@ class orm(object):
 						cr.commit()
 				else:
 					cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size FROM pg_class c,pg_attribute a,pg_type t WHERE c.relname=%s AND a.attname=%s AND c.oid=a.attrelid AND a.atttypid=t.oid", (self._table, k))
-					res = cr.dictfetchall() 
+					res = cr.dictfetchall()
 					if not res:
 						if not isinstance(f,fields.function) or f.store:
 
 							# add the missing field
 							cr.execute("ALTER TABLE \"%s\" ADD COLUMN \"%s\" %s" % (self._table, k, get_pg_type(f)[1]))
-							
+
 							# initialize it
 							if not create and k in self._defaults:
 								default = self._defaults[k](self, cr, 1, {})
@@ -431,7 +431,7 @@ class orm(object):
 							f_obj_type = None
 						else:
 							f_obj_type = get_pg_type(f) and get_pg_type(f)[0]
-						
+
 						if f_obj_type:
 							if f_pg_type != f_obj_type:
 								logger.notifyChannel('init', netsvc.LOG_WARNING, "column '%s' in table '%s' has changed type (DB = %s, def = %s) !" % (k, self._table, f_pg_type, f._type))
@@ -589,7 +589,7 @@ class orm(object):
 			context={}
 		self._list_class = list_class or browse_record_list
 		cache = {}
-		# need to accepts ints and longs because ids coming from a method 
+		# need to accepts ints and longs because ids coming from a method
 		# launched by button in the interface have a type long...
 		if isinstance(select, (int, long)):
 			return browse_record(cr,uid,select,self,cache, context=context, list_class=self._list_class)
@@ -1221,7 +1221,7 @@ class orm(object):
 
 		if context.has_key('read_delta'):
 			del context['read_delta']
-		
+
 		wf_service = netsvc.LocalService("workflow")
 		for id in ids:
 			wf_service.trg_write(user, self._name, id, cr)
@@ -1453,7 +1453,7 @@ class orm(object):
 		result = False
 		fields = {}
 		childs = True
-		
+
 		if node.nodeType==node.ELEMENT_NODE and node.localName=='field':
 			if node.hasAttribute('name'):
 				attrs = {}
@@ -1477,8 +1477,8 @@ class orm(object):
 							}
 					attrs = {'views': views}
 				fields[node.getAttribute('name')] = attrs
-				
-			
+
+
 
 		elif node.nodeType==node.ELEMENT_NODE and node.localName in ('form','tree'):
 			result = self.view_header_get(cr, user, False, node.localName, context)
@@ -1493,7 +1493,7 @@ class orm(object):
 				access_pool = self.pool.get('ir.model.access')
 				for group in groups:
 					readonly = readonly and access_pool.check_groups(cr, user, group)
-					
+
 				if readonly:
 					parent = node.parentNode
 					parent.removeChild(node)
@@ -1502,7 +1502,7 @@ class orm(object):
 				if not self.pool.get('ir.model.access').check_groups(cr, user, group_str):
 					parent = node.parentNode
 					parent.removeChild(node)
-						
+
 		if node.nodeType == node.ELEMENT_NODE:
 			# translate view
 			if ('lang' in context) and not result:
@@ -1546,15 +1546,15 @@ class orm(object):
 		if not context:
 			context={}
 		fields_def = self.__view_look_dom(cr, user, node, context=context)
-		
+
 		buttons = xpath.Evaluate('//button', node)
 		if buttons:
 			for button in buttons:
 				if button.getAttribute('type') == 'object':
 					continue
-				
+
 				ok = True
-				
+
 				serv = netsvc.LocalService('object_proxy')
 				user_roles = serv.execute_cr(cr, user, 'res.users', 'read', [user], ['roles_id'])[0]['roles_id']
 				cr.execute("select role_id from wkf_transition where signal='%s'" % button.getAttribute('name'))
@@ -1569,7 +1569,7 @@ class orm(object):
 					button.setAttribute('readonly', '0')
 
 		arch = node.toxml(encoding="utf-8").replace('\t', '')
-		
+
 		fields = self.fields_get(cr, user, fields_def.keys(), context)
 
 		for field in fields_def:
@@ -1601,7 +1601,7 @@ class orm(object):
 
 		elif 'planned_hours' in self._columns:
 			arch += ' date_delay="planned_hours"'
-		
+
 		arch += ('>\n'
 			   	 '  <field name="%s"/>\n'
 			   	 '</calendar>') % (self._rec_name)
@@ -1670,8 +1670,8 @@ class orm(object):
 									raise AttributeError, 'Unknown position in inherited view %s !' % pos
 				else:
 					attrs = ''.join([
-						' %s="%s"' % (attr, node2.getAttribute(attr)) 
-						for attr in node2.attributes.keys() 
+						' %s="%s"' % (attr, node2.getAttribute(attr))
+						for attr in node2.attributes.keys()
 						if attr != 'position'
 					])
 					tag = "<%s%s>" % (node2.localName, attrs)
@@ -1748,7 +1748,7 @@ class orm(object):
 			def clean(x):
 				x = x[2]
 				for key in ('report_sxw_content', 'report_rml_content',
-						'report_sxw', 'report_rml', 
+						'report_sxw', 'report_rml',
 						'report_sxw_content_data', 'report_rml_content_data'):
 					if key in x:
 						del x[key]
@@ -1760,7 +1760,7 @@ class orm(object):
 			resaction = ir_values_obj.get(cr, user, 'action',
 					'client_action_multi', [(self._name, False)], False,
 					context)
-			
+
 			resrelate = ir_values_obj.get(cr, user, 'action',
 					'client_action_relate', [(self._name, False)], False,
 					context)
@@ -1769,10 +1769,10 @@ class orm(object):
 			resaction = filter(lambda x: not x.get('multi',False), resaction)
 			resprint = filter(lambda x: not x.get('multi',False), resprint)
 			resrelate = map(lambda x:x[2], resrelate)
-			
+
 			for x in resprint+resaction+resrelate:
 				x['string'] = x['name']
-			
+
 			result['toolbar'] = {
 				'print': resprint,
 				'action': resaction,
@@ -1843,6 +1843,9 @@ class orm(object):
 						j+=1
 				if field._fnct_search:
 					args.extend(field.search(cr, user, self, arg[0][0], arg))
+				else:
+					args.extend(arg)
+				i+=1
 
 			elif field._type=='one2many':
 				field_obj = self.pool.get(field._obj)
@@ -1951,7 +1954,7 @@ class orm(object):
 				qu1.append('(%s.%s in (%s))' % (table._table, x[0], x[2][0]))
 				qu2 += x[2][1]
 			elif x[1] != 'in':
-#FIXME: this replace all (..., '=', False) values with 'is null' and this is 
+#FIXME: this replace all (..., '=', False) values with 'is null' and this is
 # not what we want for real boolean fields. The problem is, we can't change it
 # easily because we use False everywhere instead of None
 # NOTE FAB: we can't use None because it is not accepted by XML-RPC, that's why
@@ -2063,7 +2066,7 @@ class orm(object):
 		return [x[0] for x in res]
 
 	# returns the different values ever entered for one field
-	# this is used, for example, in the client when the user hits enter on 
+	# this is used, for example, in the client when the user hits enter on
 	# a char field
 	def distinct_field_get(self, cr, uid, field, value, args=None, offset=0, limit=None):
 		if not args:
@@ -2124,7 +2127,7 @@ class orm(object):
 				res = []
 				rel = self.pool.get(fields[f]['relation'])
 				for rel_id in data[f]:
-					# the lines are first duplicated using the wrong (old) 
+					# the lines are first duplicated using the wrong (old)
 					# parent but then are reassigned to the correct one thanks
 					# to the (4, ...)
 					res.append((4, rel.copy(cr, uid, rel_id, context=context)))
