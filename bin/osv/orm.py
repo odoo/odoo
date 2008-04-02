@@ -1843,10 +1843,9 @@ class orm(object):
 						j+=1
 				if field._fnct_search:
 					args.extend(field.search(cr, user, self, arg[0][0], arg))
-				else:
+				if field.store:
 					args.extend(arg)
 				i+=1
-
 			elif field._type=='one2many':
 				field_obj = self.pool.get(field._obj)
 
