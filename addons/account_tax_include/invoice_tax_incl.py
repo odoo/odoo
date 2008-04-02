@@ -134,7 +134,7 @@ class account_invoice_line(osv.osv):
 		return 0
 
 	_columns = {
-		'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal w/o tax'),
+		'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal w/o tax', store=True),
 		'price_subtotal_incl': fields.function(_amount_line, method=True, string='Subtotal'),
 	}
 
