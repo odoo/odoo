@@ -257,6 +257,7 @@ class rml_parse(object):
 	def setLang(self, lang):
 		self.localcontext['lang'] = lang
 		for obj in self.objects:
+			obj._context['lang'] = lang
 			for table in obj._cache:
 				for id in obj._cache[table]:
 					self._lang_cache.setdefault(obj._context['lang'], {}).setdefault(table,
@@ -267,7 +268,7 @@ class rml_parse(object):
 						obj._cache[table][id] = self._lang_cache[lang][table][id]
 					else:
 						obj._cache[table][id] = {'id': id}
-			obj._context['lang'] = lang
+
 
 	def formatLang(self, value, digit=2, date=False):
 		lc, encoding = locale.getdefaultlocale()
