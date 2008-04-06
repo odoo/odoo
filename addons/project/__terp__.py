@@ -4,7 +4,7 @@
 	"author" : "Tiny",
 	"website" : "http://tinyerp.com/module_project.html",
 	"category" : "Generic Modules/Projects & Services",
-	"depends" : ["product", "account", 'mrp', 'sale', 'base'],
+	"depends" : ["product", "account"],
 	"description": "Project management module that track multi-level projects, tasks, works done on tasks, eso. It is able to render planning, order tasks, eso.",
 	"init_xml" : [],
 	"demo_xml" : ["project_demo.xml", "project_security.xml"],
