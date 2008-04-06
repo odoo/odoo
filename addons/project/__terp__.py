@@ -13,7 +13,6 @@
 		"project_wizard.xml", 
 		"project_view.xml", 
 		"project_report.xml", 
-		"project_workflow.xml",
 	],
 	"active": False,
 	"installable": True

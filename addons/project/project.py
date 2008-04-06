@@ -227,7 +227,6 @@ class task(osv.osv):
 		'user_id': fields.many2one('res.users', 'Assigned to'),
 		'partner_id': fields.many2one('res.partner', 'Customer'),
 		'work_ids': fields.one2many('project.task.work', 'task_id', 'Work done'),
-		'procurement_id': fields.many2one('mrp.procurement', 'Procurement', ondelete='set null')
 	}
 	_defaults = {
 		'user_id': lambda obj,cr,uid,context: uid,
@@ -258,10 +257,6 @@ class task(osv.osv):
 			self.write(cr, uid, [task.id], {'state': 'done', 'date_close':time.strftime('%Y-%m-%d %H:%M:%S'), 'progress': 100})
 			if task.parent_id and task.parent_id.state in ('pending','draft'):
 				self.do_reopen(cr, uid, [task.parent_id.id])
-
-			if task.procurement_id:
-				wf_service = netsvc.LocalService("workflow")
-				wf_service.trg_validate(uid, 'mrp.procurement', task.procurement_id.id, 'subflow.done', cr)
 		return True
 
 	def do_reopen(self, cr, uid, ids, *args):
@@ -299,9 +294,6 @@ class task(osv.osv):
 					'ref_doc2': 'project.project,%d' % project.id,
 				})
 			self.write(cr, uid, [task.id], {'state': 'cancelled'})
-			if task.procurement_id:
-				wf_service = netsvc.LocalService("workflow")
-				wf_service.trg_validate(uid, 'mrp.procurement', task.procurement_id.id, 'subflow.cancel', cr)
 		return True
 
 	def do_open(self, cr, uid, ids, *args):
