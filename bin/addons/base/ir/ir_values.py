@@ -243,7 +243,6 @@ class ir_values(osv.osv):
 #				else:
 #					#raise osv.except_osv('Error !','You have not permission to perform operation !!!')
 #					res2.remove(r)
-		
 		return res2
 ir_values()
 
