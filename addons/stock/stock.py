@@ -816,7 +816,7 @@ class stock_move(osv.osv):
 		pickings = {}
 		for move in self.browse(cr, uid, ids):
 			if move.product_id.type == 'consu':
-				if mode.state in ('confirmed', 'waiting'):
+				if move.state in ('confirmed', 'waiting'):
 					done.append(move.id)
 				pickings[move.picking_id.id] = 1
 				continue
