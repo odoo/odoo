@@ -5,7 +5,7 @@
 	"website" : "http://tinyerp.com/module_purchase.html",
 	"depends" : ["base", "account", "stock"],
 	"category" : "Generic Modules/Sales & Purchases",
-	"init_xml" : ["purchase_security.xml"],
+	"init_xml" : [],
 	"demo_xml" : ["purchase_demo.xml", 
 				  #"purchase_unit_test.xml"
 				  ],
@@ -17,6 +17,7 @@
 		"purchase_report.xml", 
 		"purchase_wizard.xml",
 		"stock_view.xml",
+		"purchase_security.xml"
 	],
 	"active": False,
 	"installable": True
