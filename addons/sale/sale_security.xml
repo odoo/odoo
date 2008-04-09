@@ -10,7 +10,7 @@
 		</record>
 
 		<record model="res.users" id="base.user_admin">
-			<field name="groups_id" eval="[(6, 0, [ref('base.group_admin'),ref('group_sale_manager'),ref('group_sale_salesman')])]"/>
+			<field name="groups_id" eval="[(4, ref('group_sale_manager')),(4, ref('group_sale_salesman'))]"/>
 		</record>
 
 		<record id="ir_model_access_stockmove0" model="ir.model.access">
