@@ -13,13 +13,14 @@
 	"website" : "http://tinyerp.com/module_account.html",
 	"category" : "Generic Modules/Accounting",
 	"init_xml" : [
-		"account_security.xml",
+		
 	],
 	"demo_xml" : [
 		"account_demo.xml",
 		"project/project_demo.xml",
 		"project/analytic_account_demo.xml",
 		"account_unit_test.xml",
+		"account_security.xml",
 	],
 	"update_xml" : [
 		"account_wizard.xml",
