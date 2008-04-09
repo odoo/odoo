@@ -332,9 +332,9 @@ class common(netsvc.Service):
 		return res or False
 
 	def about(self):
-		return tools.version_string + _('''
+		return _('''
 
-Tiny ERP is an ERP+CRM program for small and medium businesses.
+OpenERP is an ERP+CRM program for small and medium businesses.
 
 The whole source code is distributed under the terms of the
 GNU Public Licence.
