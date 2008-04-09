@@ -1952,6 +1952,23 @@ class orm(object):
 			if x[1] == 'inselect':
 				qu1.append('(%s.%s in (%s))' % (table._table, x[0], x[2][0]))
 				qu2 += x[2][1]
+			if x[1]=='not in':
+					if len(x[2])>0:
+						todel = []
+						for xitem in range(len(x[2])):
+							if x[2][xitem]==False and isinstance(x[2][xitem],bool):
+								todel.append(xitem)
+						for xitem in todel[::-1]:
+							del x[2][xitem]
+						if x[0]=='id':
+							qu1.append('(%s.id not in (%s))' % (table._table, ','.join(['%d'] * len(x[2])),))
+						else:
+							qu1.append('(%s.%s not in (%s))' % (table._table, x[0], ','.join([table._columns[x[0]]._symbol_set[0]]*len(x[2]))))
+						if todel:
+							qu1[-1] = '('+qu1[-1]+' or '+x[0]+' is null)'
+						qu2+=x[2]
+					else:
+						qu1.append(' (1=0)')
 			elif x[1] != 'in':
 #FIXME: this replace all (..., '=', False) values with 'is null' and this is
 # not what we want for real boolean fields. The problem is, we can't change it
