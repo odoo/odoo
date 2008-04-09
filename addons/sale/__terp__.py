@@ -6,7 +6,7 @@
 	"depends" : ["product", "stock", "mrp"],
 	"category" : "Generic Modules/Sales & Purchases",
 	"init_xml" : [],
-	"demo_xml" : ["sale_security.xml", "sale_demo.xml", "sale_unit_test.xml"],
+	"demo_xml" : ["sale_demo.xml", "sale_unit_test.xml"],
 	"description": """
 	The base module to manage quotations and sales orders.
 
@@ -32,6 +32,7 @@
 		"sale_report.xml",
 		"sale_wizard.xml",
 		"stock_view.xml",
+		"sale_security.xml"
 	],
 	"active": False,
 	"installable": True
