@@ -11,7 +11,7 @@
 		</record>
 
 		<record model="res.groups" id="base.group_admin">
-			<field name="groups_id" eval="[(6, 0, [ref('base.group_admin'), ref('group_hr_employee'),ref('group_hr_manager')])]"/>
+			<field name="groups_id" eval="[(4, ref('base.group_admin')), (4, ref('group_hr_employee')),(4, ref('group_hr_manager'))]"/>
 		</record>
 
 		<record id="hr.group_hr_employee" model="res.groups">
