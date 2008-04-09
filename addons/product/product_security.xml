@@ -7,7 +7,7 @@
 		</record>
 
 		<record model="res.users" id="base.user_admin">
-			<field name="groups_id" eval="[(6, 0, [ref('base.group_admin'), ref('group_product_manager')])]"/>
+			<field name="groups_id" eval="[ (4, ref('group_product_manager'))]"/>
 		</record>
 
 		<record id="product.group_product_manager" model="res.groups">
