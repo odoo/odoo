@@ -18,7 +18,7 @@
 		</record>
 		
 		<record model="res.users" id="base.user_admin">
-			<field name="groups_id" eval="[(6, 0, [ref('base.group_admin'), ref('group_project_consultant'),ref('group_project_manager'),ref('group_project_member'),ref('group_project_member_begin')])]"/>
+			<field name="groups_id" eval="[(4, ref('base.group_admin')), (4, ref('group_project_consultant')), (4, ref('group_project_manager')), (4, ref('group_project_member')) ,(4, ref('group_project_member_begin')) ]"/>
 		</record>
 		
 		<!-- Project security -->
