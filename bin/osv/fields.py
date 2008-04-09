@@ -147,7 +147,7 @@ class char(_column):
 			u_symb = symb
 		else:
 			u_symb = unicode(symb)
-		return u_symb.encode('utf8')
+		return u_symb.encode('utf8')[:self.size]
 
 class text(_column):
 	_type = 'text'
