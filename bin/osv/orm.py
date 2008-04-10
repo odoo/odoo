@@ -1952,7 +1952,7 @@ class orm(object):
 			if x[1] == 'inselect':
 				qu1.append('(%s.%s in (%s))' % (table._table, x[0], x[2][0]))
 				qu2 += x[2][1]
-			if x[1]=='not in':
+			elif x[1]=='not in':
 					if len(x[2])>0:
 						todel = []
 						for xitem in range(len(x[2])):
