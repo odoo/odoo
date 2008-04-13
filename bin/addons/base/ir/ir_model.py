@@ -46,13 +46,37 @@ class ir_model(osv.osv):
 		'model': fields.char('Object name', size=64, required=True),
 		'info': fields.text('Information'),
 		'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True),
+		'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Manualy Created'),
 	}
 	_defaults = {
 		'name': lambda *a: 'No Name',
+		'model': lambda *a: 'x_',
+		'state': lambda self,cr,uid,ctx={}: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
 	}
-ir_model()
+	def unlink(self, cr, user, ids, context=None):
+		for model in self.browse(cr, user, ids, context):
+			if model.state <> 'manual':
+				raise except_orm('Error', "You can not remove the model '%s' !" %(field.name,))
+		return super(ir_model, self).unlink(cr, user, ids, context)
 
-print 'MODEL'
+	def create(self, cr, user, vals, context=None):
+		if context and context.get('manual',False):
+			vals['state']='manual'
+		res = super(ir_model,self).create(cr, user, vals, context)
+		if vals.get('state','base')=='manual':
+			if not vals['name'].startswith('x_'):
+				raise except_orm('Error', "Custom models must have an object name that starts with 'x_' !")
+#			self.pool.get(vals['model']).__init__(self.pool, cr)
+#			self.pool.get(vals['model'])._auto_init(cr)
+		return res
+
+#	def instanciate(self, cr, user, models):
+#		class inst_obj(osv.osv):
+#			def __init__():
+#				pass
+#		for model in models:
+#			self.pool.add(model, inst_moed)
+ir_model()
 
 class ir_model_fields(osv.osv):
 	_name = 'ir.model.fields'
