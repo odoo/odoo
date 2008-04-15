@@ -240,7 +240,7 @@ class account_account(osv.osv):
 		return result
 
 	_columns = {
-		'name': fields.char('Name', size=128, required=True, translate=True, select=True),
+		'name': fields.char('Name', size=128, required=True, select=True),
 		'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign', required=True, help='Allows to change the displayed amount of the balance to see positive results instead of negative ones in expenses accounts'),
 		'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Force all moves for this account to have this secondary currency."),
 		'code': fields.char('Code', size=64),

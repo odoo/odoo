@@ -144,7 +144,7 @@
             <para style="P11">[[repeatIn(get_general(o[1], data['form']['period_id'], data['form']['company_id'], data['form']['based_on']), 'g') ]]</para>
           </td>
           <td>
-            <para style="P12">[[ g['account'].name ]]</para>
+            <para style="P12">[[ g['account'].code ]] - [[ g['account'].name ]]</para>
           </td>
           <td>
             <para style="P13">[[ g['debit'] and '%.2f' % g['debit'] or '' ]]</para>

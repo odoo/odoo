@@ -117,7 +117,7 @@
 				<form string="Supplier invoice">
 				<notebook>
 					<page string="Invoice">
-						<field name="journal_id" domain="[('type', '=', 'purchase'),('centralisation', '=', False)]" select="2"/>
+						<field name="journal_id" domain="[('type', '=', 'purchase')]" select="2"/>
 						<field name="type" select="2" readonly="1"/>
 						<field name="partner_id"
 							on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank)"
@@ -208,7 +208,7 @@
 				<form string="Invoice">
 					<notebook>
 						<page string="Invoice">
-							<field name="journal_id" domain="[('centralisation', '=', False)]" select="2"/>
+							<field name="journal_id" select="2"/>
 							<field name="type" select="2" readonly="1"/>
 							<field name="partner_id"
 								on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term)"
