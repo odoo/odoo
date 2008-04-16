@@ -551,11 +551,16 @@ class orm(object):
 					'size': field['size'],
 					'ondelete': field['on_delete'],
 					'translate': (field['translate']),
-					'select': int(field['select_level'])
+					#'select': int(field['select_level'])
 				}
-				if field['relation']:
-					attrs['relation'] = field['relation']
-				self._columns[field['name']] = getattr(fields, field['ttype'])(**attrs)
+				#if field['relation']:
+				#	attrs['relation'] = field['relation']
+				if field['ttype'] == 'selection':
+					self._columns[field['name']] = getattr(fields, field['ttype'])(eval(field['selection']), **attrs)
+				elif field['ttype'] == 'many2one':
+					self._columns[field['name']] = getattr(fields, field['ttype'])(field['relation'], **attrs)
+				else:
+					self._columns[field['name']] = getattr(fields, field['ttype'])(**attrs)
 
 		self._inherits_reload()
 		if not self._sequence:

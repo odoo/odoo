@@ -186,6 +186,7 @@ def load_module_graph(cr, graph, status=None, **kwargs):
 	# **kwargs is passed directly to convert_xml_import
 	if not status:
 		status={}
+
 	status = status.copy()
 	package_todo = []
 	statusi = 0
@@ -235,6 +236,11 @@ def load_module_graph(cr, graph, status=None, **kwargs):
 		statusi+=1
 
 	pool = pooler.get_pool(cr.dbname)
+	cr.execute('select * from ir_model where state=%s', ('manual',))
+	for model in cr.dictfetchall():
+		print 'INSTANCIATE', model['model']
+		pool.get('ir.model').instanciate(cr, 1, model['model'], {})
+
 	pool.get('ir.model.data')._process_end(cr, 1, package_todo)
 	cr.commit()
 

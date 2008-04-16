@@ -43,10 +43,10 @@ class ir_model(osv.osv):
 	_rec_name = 'model'
 	_columns = {
 		'name': fields.char('Model name', size=64, translate=True),
-		'model': fields.char('Object name', size=64, required=True),
+		'model': fields.char('Object name', size=64, required=True, search=1),
 		'info': fields.text('Information'),
 		'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True),
-		'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Manualy Created'),
+		'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Manualy Created',readonly=1),
 	}
 	_defaults = {
 		'name': lambda *a: 'No Name',
@@ -64,18 +64,18 @@ class ir_model(osv.osv):
 			vals['state']='manual'
 		res = super(ir_model,self).create(cr, user, vals, context)
 		if vals.get('state','base')=='manual':
-			if not vals['name'].startswith('x_'):
+			if not vals['model'].startswith('x_'):
 				raise except_orm('Error', "Custom models must have an object name that starts with 'x_' !")
-#			self.pool.get(vals['model']).__init__(self.pool, cr)
-#			self.pool.get(vals['model'])._auto_init(cr)
+			pooler.restart_pool(cr.dbname)
 		return res
 
-#	def instanciate(self, cr, user, models):
-#		class inst_obj(osv.osv):
-#			def __init__():
-#				pass
-#		for model in models:
-#			self.pool.add(model, inst_moed)
+	def instanciate(self, cr, user, model, context={}):
+		class x_custom_model(osv.osv):
+			pass
+		x_custom_model._name = model
+		x_custom_model._module = False
+		x_custom_model._rec_name = 'id'
+		x_custom_model.createInstance(self.pool, '', cr)
 ir_model()
 
 class ir_model_fields(osv.osv):
@@ -96,7 +96,7 @@ class ir_model_fields(osv.osv):
 		'translate': fields.boolean('Translate'),
 		'size': fields.integer('Size'),
 		'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Manualy Created'),
-		'on_delete': fields.selection([('no','Nothing'),('cascade','Cascade'),('set null','Set NULL')], 'On delete', help='On delete property for many2one fields'),
+		'on_delete': fields.selection([('cascade','Cascade'),('set null','Set NULL')], 'On delete', help='On delete property for many2one fields'),
 		'domain': fields.char('Domain', size=256),
 
 		'groups': fields.many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id', 'Groups'),
@@ -110,10 +110,10 @@ class ir_model_fields(osv.osv):
 		'domain': lambda *a: "[]",
 		'name': lambda *a: 'x_',
 		'state': lambda self,cr,uid,ctx={}: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
-		'on_delete': lambda *a: 'no',
+		'on_delete': lambda *a: 'set null',
 		'select_level': lambda *a: '0',
 		'size': lambda *a: 64,
-		'field_description': lambda *a: 'No',
+		'field_description': lambda *a: '',
 	}
 	_order = "id"
 	def unlink(self, cr, user, ids, context=None):
@@ -135,6 +135,7 @@ class ir_model_fields(osv.osv):
 		if vals.get('state','base')=='manual':
 			if not vals['name'].startswith('x_'):
 				raise except_orm('Error', "Custom fields must have a name that starts with 'x_' !")
+			print vals['model']
 			self.pool.get(vals['model']).__init__(self.pool, cr)
 			self.pool.get(vals['model'])._auto_init(cr)
 		return res

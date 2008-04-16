@@ -208,7 +208,6 @@ class osv_pool(netsvc.Service):
 
 class osv(orm.orm):
 	#__metaclass__ = inheritor
-
 	def __new__(cls):
 		module = str(cls)[6:]
 		module = module[:len(module)-1]
