@@ -81,6 +81,7 @@ class _column(object):
 		self.relate =False
 		self._context = context
 		self.group_name = False
+		self.groups = False
 		self.view_load = 0
 		self.select=select
 		for a in args:
