@@ -1096,6 +1096,29 @@ class orm(object):
 	# TODO: Validate
 	#
 	def write(self, cr, user, ids, vals, context=None):
+		readonly = None
+		tmpvals = vals.copy()
+		
+		for field in tmpvals:
+			groups = self._columns[field].groups
+			if groups:
+				edit = False
+				for group in groups:
+					module = group.split(".")[0]
+					grp = group.split(".")[1]
+					cr.execute("select count(*) from res_groups_users_rel where gid in (select res_id from ir_model_data where name='%s' and module='%s' and model='%s') and uid=%s" % \
+							   (grp, module, 'res.groups', user))
+					readonly = cr.fetchall()
+					if readonly[0][0] >= 1:
+						edit = True
+					elif readonly[0][0] == 0:
+						edit = False
+					else:
+						edit = False
+						
+				if not edit:
+					vals.pop(field)
+
 		if not context:
 			context={}
 		if not ids:
@@ -1281,7 +1304,7 @@ class orm(object):
 			upd1 += ',%d'
 			upd2.append(id)
 			cr.execute('insert into inherit (obj_type,obj_id,inst_type,inst_id) values (%s,%d,%s,%d)', (table,id,self._name,id_new))
-
+		
 		for field in vals:
 			if self._columns[field]._classic_write:
 				upd0=upd0+',"'+field+'"'
@@ -1464,6 +1487,28 @@ class orm(object):
 						relation = self._inherit_fields[node.getAttribute('name')][2]._obj
 				except:
 					relation = False
+				
+#				groups = self._columns[node.getAttribute('name')].groups
+#				
+#				if groups:
+#					readonly = False
+#					access_pool = self.pool.get('ir.model.access')
+#					print 'Field : ',node.getAttribute('name'), ' Groups : ', groups
+#					for group in groups:
+#						module = group.split(".")[0]
+#						grp = group.split(".")[1]
+#						cr.execute("select * from res_groups_users_rel where gid in (select res_id from ir_model_data where name='%s' and module='%s' and model='%s') and uid=%s" % \
+#								   (grp, module, 'res_groups', user))
+#
+#						readonly = cr.fetchall()
+#						print '*********',readonly
+#					
+#					readonly = True
+#					if readonly:
+#						node.setAttribute('readonly', '1')
+#						#parent = node.parentNode
+#						#parent.removeChild(node)
+
 				if relation:
 					childs = False
 					views = {}
@@ -1477,8 +1522,6 @@ class orm(object):
 							}
 					attrs = {'views': views}
 				fields[node.getAttribute('name')] = attrs
-
-
 
 		elif node.nodeType==node.ELEMENT_NODE and node.localName in ('form','tree'):
 			result = self.view_header_get(cr, user, False, node.localName, context)
@@ -1571,7 +1614,6 @@ class orm(object):
 		arch = node.toxml(encoding="utf-8").replace('\t', '')
 
 		fields = self.fields_get(cr, user, fields_def.keys(), context)
-
 		for field in fields_def:
 			fields[field].update(fields_def[field])
 		return arch, fields
