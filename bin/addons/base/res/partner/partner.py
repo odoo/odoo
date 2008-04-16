@@ -131,7 +131,7 @@ class res_partner(osv.osv):
 	_name = "res.partner"
 	_order = "name"
 	_columns = {
-		'name': fields.char('Name', size=128, required=True, select=True),
+		'name': fields.char('Name', size=128, required=True, select=True, groups=['base.group_admin','base.group_user']),
 		'date': fields.date('Date', select=1),
 		'title': fields.selection(_partner_title_get, 'Title', size=32),
 		'parent_id': fields.many2one('res.partner','Main Company', select=2),
