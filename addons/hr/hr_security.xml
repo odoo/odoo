@@ -4,23 +4,26 @@
 
 		<record model="res.groups" id="group_hr_manager">
 			<field name="name">HR Manager</field>
+			<field eval="[(6,0,[ref('hr.menu_open_view_employee_tree'),ref('hr.menu_open_view_employee_list'),ref('hr.menu_open_view_employee_new'),ref('hr.menu_view_employee_category_form')])]" name="menu_access"/>
 		</record>
 
 		<record model="res.groups" id="group_hr_employee">
 			<field name="name">Employee</field>
+			<field eval="[(6,0,[ref('hr.menu_open_view_employee_tree'),ref('hr.menu_open_view_employee_list'),ref('hr.menu_open_view_employee_new'),ref('hr.menu_view_employee_category_form')])]" name="menu_access"/>
 		</record>
 
-		<record model="res.groups" id="base.group_admin">
+		<record model="res.users" id="base.group_admin">
 			<field name="groups_id" eval="[(4, ref('base.group_admin')), (4, ref('group_hr_employee')),(4, ref('group_hr_manager'))]"/>
 		</record>
 
-		<record id="hr.group_hr_employee" model="res.groups">
-			<field eval="[(6,0,[ref('hr.menu_open_view_employee_tree'),ref('hr.menu_open_view_employee_list'),ref('hr.menu_open_view_employee_new'),ref('hr.menu_view_employee_category_form')])]" name="menu_access"/>
+		<!--
+		<record id="hr.group_hr_employee" model="res.users">
 		</record>
 
-		<record id="hr.group_hr_manager" model="res.groups">
-			<field eval="[(6,0,[ref('hr.menu_open_view_employee_tree'),ref('hr.menu_open_view_employee_list'),ref('hr.menu_open_view_employee_new'),ref('hr.menu_view_employee_category_form')])]" name="menu_access"/>
+		<record id="hr.group_hr_manager" model="res.users">
 		</record>
+		-->
+
 		<!-- Department security -->
 		<record model="ir.model.access" id="access_hr_department">
 			<field name="name">HR Department</field>
