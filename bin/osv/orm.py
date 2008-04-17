@@ -1102,10 +1102,15 @@ class orm(object):
 	#
 	def write(self, cr, user, ids, vals, context=None):
 		readonly = None
-		tmpvals = vals.copy()
-		
-		for field in tmpvals:
-			groups = self._columns[field].groups
+		for field in vals:
+			fobj = None
+			if field in self._columns:
+				fobj = self._columns[field]
+			else:
+				fobj = _inherit_fields[field]
+			if not fobj:
+				continue
+			groups = fobj.groups
 			if groups:
 				edit = False
 				for group in groups:
