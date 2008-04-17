@@ -1102,7 +1102,7 @@ class orm(object):
 	#
 	def write(self, cr, user, ids, vals, context=None):
 		readonly = None
-		for field in vals:
+		for field in vals.copy():
 			fobj = None
 			if field in self._columns:
 				fobj = self._columns[field]
