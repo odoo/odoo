@@ -325,7 +325,7 @@ class sale_order(osv.osv):
 					else:
 						invoiced=True
 				self.pool.get('sale.order.line').write(cr, uid, [line.id], {'invoiced': invoiced})
-		self.write(cr, uid, ids, {'state':'invoice_except', 'invoice_id':False})
+		self.write(cr, uid, ids, {'state':'invoice_except', 'invoice_ids':False})
 		return True
 
 
