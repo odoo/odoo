@@ -1497,27 +1497,6 @@ class orm(object):
 						relation = self._inherit_fields[node.getAttribute('name')][2]._obj
 				except:
 					relation = False
-				
-#				groups = self._columns[node.getAttribute('name')].groups
-#				
-#				if groups:
-#					readonly = False
-#					access_pool = self.pool.get('ir.model.access')
-#					print 'Field : ',node.getAttribute('name'), ' Groups : ', groups
-#					for group in groups:
-#						module = group.split(".")[0]
-#						grp = group.split(".")[1]
-#						cr.execute("select * from res_groups_users_rel where gid in (select res_id from ir_model_data where name='%s' and module='%s' and model='%s') and uid=%s" % \
-#								   (grp, module, 'res_groups', user))
-#
-#						readonly = cr.fetchall()
-#						print '*********',readonly
-#					
-#					readonly = True
-#					if readonly:
-#						node.setAttribute('readonly', '1')
-#						#parent = node.parentNode
-#						#parent.removeChild(node)
 
 				if relation:
 					childs = False
