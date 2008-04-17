@@ -1107,7 +1107,7 @@ class orm(object):
 			if field in self._columns:
 				fobj = self._columns[field]
 			else:
-				fobj = _inherit_fields[field]
+				fobj = self._inherit_fields[field]
 			if not fobj:
 				continue
 			groups = fobj.groups
