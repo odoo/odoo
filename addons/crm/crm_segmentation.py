@@ -90,33 +90,6 @@ class crm_segmentation(osv.osv):
 			cr.commit()
 		return True
 
-#	def process_continue(self, cr, uid, ids, start=False):
-#		categs = self.read(cr,uid,ids,['categ_id','exclusif','partner_id'])
-#		for categ in categs:
-#			if start:
-#				if categ['exclusif']:
-#					cr.execute('delete from res_partner_category_rel where category_id=%d', (categ['categ_id'][0],))
-#			id = categ['id']
-#			cr.execute('select id from crm_segmentation_line where segmentation_id=%d', (id,))
-#			line_ids = [x[0] for x in cr.fetchall()]
-#			cr.execute('select id from res_partner order by id limit 100 offset %d', (categ['partner_id'],))
-#			partners = cr.fetchall()
-#			ok = []
-#			for (pid,) in partners:
-#				if self.pool.get('crm.segmentation.line').test(cr, uid, line_ids, pid):
-#					ok.append(pid)
-#
-#			for partner_id in ok:
-#				cr.execute('insert into res_partner_category_rel (category_id,partner_id) values (%d,%d)', (categ['categ_id'][0],partner_id))
-#			cr.commit()
-#
-#			if len(partners)==100:
-#				self.write(cr, uid, [id], {'partner_id':categ['partner_id']+100})
-#				self.process_continue(cr, uid, [id])
-#			self.write(cr, uid, [id], {'state':'not running', 'partner_id':0})
-#			cr.commit()
-#		return True
-
 	def process_stop(self, cr, uid, ids, *args):
 		return self.write(cr, uid, ids, {'state':'not running', 'partner_id':0})
 
@@ -146,45 +119,47 @@ class crm_segmentation_line(osv.osv):
 		ok = False
 		lst = self.read(cr, uid, ids)
 		for l in lst:
-			if l['expr_name']=='som':
-				datas = self.pool.get('crm.segmentation').read(cr, uid, [l['segmentation_id'][0]],
-						['som','som_interval','som_interval_max','som_interval_default', 'som_interval_decrease'])
-				value = crm_operators.som(cr, uid, partner_id, datas[0])
-			elif l['expr_name']=='sale':
-				cr.execute('SELECT SUM(l.price_unit * l.quantity) ' \
-						'FROM account_invoice_line l, account_invoice i ' \
-						'WHERE (l.invoice_id = i.id) ' \
-							'AND i.partner_id = %d '\
-							'AND i.type = \'out_invoice\'',
-						(partner_id,))
-				value = cr.fetchone()[0] or 0.0
-				cr.execute('SELECT SUM(l.price_unit * l.quantity) ' \
-						'FROM account_invoice_line l, account_invoice i ' \
-						'WHERE (l.invoice_id = i.id) ' \
-							'AND i.partner_id = %d '\
-							'AND i.type = \'out_refund\'',
-						(partner_id,))
-				value -= cr.fetchone()[0] or 0.0
-			elif l['expr_name']=='purchase':
-				cr.execute('SELECT SUM(l.price_unit * l.quantity) ' \
-						'FROM account_invoice_line l, account_invoice i ' \
-						'WHERE (l.invoice_id = i.id) ' \
-							'AND i.partner_id = %d '\
-							'AND i.type = \'in_invoice\'',
-						(partner_id,))
-				value = cr.fetchone()[0] or 0.0
-				cr.execute('SELECT SUM(l.price_unit * l.quantity) ' \
-						'FROM account_invoice_line l, account_invoice i ' \
-						'WHERE (l.invoice_id = i.id) ' \
-							'AND i.partner_id = %d '\
-							'AND i.type = \'in_refund\'',
-						(partner_id,))
-				value -= cr.fetchone()[0] or 0.0
-			res = expression[l['expr_operator']](value, l['expr_value'])
-			if (not res) and (l['operator']=='and'):
-				return False
-			if res:
-				return True
+			cr.execute('select * from ir_module_module where name=%s and state=%s', ('account','installed'))
+			if cr.fetchone():
+				if l['expr_name']=='som':
+					datas = self.pool.get('crm.segmentation').read(cr, uid, [l['segmentation_id'][0]],
+							['som','som_interval','som_interval_max','som_interval_default', 'som_interval_decrease'])
+					value = crm_operators.som(cr, uid, partner_id, datas[0])
+				elif l['expr_name']=='sale':
+					cr.execute('SELECT SUM(l.price_unit * l.quantity) ' \
+							'FROM account_invoice_line l, account_invoice i ' \
+							'WHERE (l.invoice_id = i.id) ' \
+								'AND i.partner_id = %d '\
+								'AND i.type = \'out_invoice\'',
+							(partner_id,))
+					value = cr.fetchone()[0] or 0.0
+					cr.execute('SELECT SUM(l.price_unit * l.quantity) ' \
+							'FROM account_invoice_line l, account_invoice i ' \
+							'WHERE (l.invoice_id = i.id) ' \
+								'AND i.partner_id = %d '\
+								'AND i.type = \'out_refund\'',
+							(partner_id,))
+					value -= cr.fetchone()[0] or 0.0
+				elif l['expr_name']=='purchase':
+					cr.execute('SELECT SUM(l.price_unit * l.quantity) ' \
+							'FROM account_invoice_line l, account_invoice i ' \
+							'WHERE (l.invoice_id = i.id) ' \
+								'AND i.partner_id = %d '\
+								'AND i.type = \'in_invoice\'',
+							(partner_id,))
+					value = cr.fetchone()[0] or 0.0
+					cr.execute('SELECT SUM(l.price_unit * l.quantity) ' \
+							'FROM account_invoice_line l, account_invoice i ' \
+							'WHERE (l.invoice_id = i.id) ' \
+								'AND i.partner_id = %d '\
+								'AND i.type = \'in_refund\'',
+							(partner_id,))
+					value -= cr.fetchone()[0] or 0.0
+				res = expression[l['expr_operator']](value, l['expr_value'])
+				if (not res) and (l['operator']=='and'):
+					return False
+				if res:
+					return True
 		return True
 crm_segmentation_line()
 

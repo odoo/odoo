@@ -21,7 +21,7 @@ place.
 
 The CRM module has a email gateway for the synchronisation interface
 between mails and Tiny ERP.""",
-	"depends" : ["base", "account"],
+	"depends" : ["base"],
 	"init_xml" : ["crm_data.xml"],
 	"demo_xml" : ["crm_demo.xml"],
 	"update_xml" : ["crm_view.xml", "crm_report.xml", "crm_wizard.xml", "crm_security.xml"],
