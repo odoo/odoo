@@ -58,7 +58,7 @@ class graph(object):
 	def process(self, starting_node):
 		pos = (len(starting_node) - 1.0)/2.0
 		for s in starting_node:
-			g.process_ranking(s)
+			self.process_ranking(s)
 			self.result[s]['x'] = pos
 			pos += 1.0
 

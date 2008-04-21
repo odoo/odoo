@@ -28,6 +28,7 @@
 ##############################################################################
 
 from osv import fields, osv
+from tools import graph
 import netsvc
 
 class workflow(osv.osv):
@@ -50,6 +51,32 @@ class workflow(osv.osv):
 		wf_service = netsvc.LocalService("workflow")
 		wf_service.clear_cache(cr, user)
 		return super(workflow, self).write(cr, user, ids, vals, context=context)
+
+	#
+	# scale = [stepx, stepy, posx, posy ]
+	# 
+	def graph_get(self, cr, uid, id, scale, context={}):
+		nodes= []
+		transitions = []
+		start = []
+		tres = []
+		workflow = self.browse(cr, uid, id, context)
+		for a in workflow.activities:
+			nodes.append((a.id,a.name))
+			if a.flow_start:
+				start.append((a.id,a.name))
+			for t in a.out_transitions:
+				transitions.append( ((a.id,a.name), (t.act_to.id,t.act_to.name)) )
+				tres.append((a.id,t.act_to.id))
+		g  = graph(nodes, transitions)
+		g.process(start)
+		g.scale(*scale)
+		result = g.result_get()
+		results = {}
+		for r in result.items():
+			r[1]['name'] = r[0][1]
+			results[str(r[0][0])] = r[1]
+		return {'node': results, 'transition': tres}
 
 	def create(self, cr, user, vals, context=None):
 		if not context:
