@@ -104,7 +104,7 @@ class report_rml(report_int):
 		if not context:
 			context={}
 		doc = print_xml.document(cr, uid, datas, {})
-		self.bin_datas = doc.bin_datas
+		self.bin_datas.update( doc.bin_datas  or {})
 		doc.parse(self.tmpl, ids, self.table, context)
 		xml = doc.xml_get()
 		doc.close()
@@ -191,20 +191,25 @@ class report_rml(report_int):
 		result.freeDoc()
 		return xml
 	
-	def create_pdf(self, xml):
+	def create_pdf(self, xml, logo=None):
+		if logo:
+			self.bin_datas['logo'] = logo
+		else:
+			if 'logo' in self.bin_datas:
+				del self.bin_datas['logo']
 		obj = render.rml(xml, self.bin_datas, tools.config['root_path'])
 		obj.render()
 		return obj.get()
 
-	def create_html(self, xml):
+	def create_html(self, xml, logo=None):
 		obj = render.rml2html(xml, self.bin_datas)
 		obj.render()
 		return obj.get()
 
-	def create_raw(self, xml):
+	def create_raw(self, xml, logo=None):
 		return xml
 
-	def create_sxw(self, path):
+	def create_sxw(self, path, logo=None):
 		return path
 
 from report_sxw import report_sxw

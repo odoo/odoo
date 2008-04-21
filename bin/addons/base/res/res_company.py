@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2004-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
-#                    Fabien Pinckaers <fp@tiny.Be>
+#					Fabien Pinckaers <fp@tiny.Be>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -40,6 +40,8 @@ class res_company(osv.osv):
 		'rml_header1': fields.char('Report Header', size=200),
 		'rml_footer1': fields.char('Report Footer 1', size=200),
 		'rml_footer2': fields.char('Report Footer 2', size=200),
+		'rml_header' : fields.text('Rml Header'),
+		'logo' : fields.binary('Logo'),
 		'currency_id': fields.many2one('res.currency', 'Currency', required=True),
 	}
 	
@@ -106,8 +108,44 @@ class res_company(osv.osv):
 			level -= 1
 		return True
 	
+	def _get_header(self,cr,uid,ids):
+		try :
+			return tools.file_open('custom/corporate_rml_header.rml').read()
+		except:
+			return """<header>
+	<pageTemplate>
+		<frame id="first" x1="1cm" y1="2.5cm" width="19.0cm" height="23.0cm"/>
+		<pageGraphics>
+			<!--logo-->
+			<setFont name="Helvetica" size="30"/>
+			<fill color="black"/>
+			<stroke color="black"/>
+			<image x="13cm" y="25.4cm" height="2.4cm" name="logo"/>
+			<drawString x="1cm" y="27.8cm">[[ company.partner_id.name ]]</drawString>
+			<lines>1cm 27.7cm 20cm 27.7cm</lines>
+			<setFont name="Helvetica" size="10"/>
+			<drawRightString x="20cm" y="27.8cm">[[ company.rml_header1 ]]</drawRightString>
+			<drawString x="1cm" y="27.2cm">[[ company.partner_id.address and company.partner_id.address[0].street ]]</drawString>
+			<drawString x="1cm" y="26.8cm">[[ company.partner_id.address and company.partner_id.address[0].zip ]] [[ company.partner_id.address and company.partner_id.address[0].city ]] - [[ company.partner_id.address and company.partner_id.address[0].country_id and company.partner_id.address[0].country_id.name ]]</drawString>
+			<drawString x="1cm" y="26.4cm">Phone:</drawString>
+			<drawRightString x="7cm" y="26.4cm">[[ company.partner_id.address and company.partner_id.address[0].phone ]]</drawRightString>
+			<drawString x="1cm" y="26.0cm">Mail:</drawString>
+			<drawRightString x="7cm" y="26.0cm">[[ company.partner_id.address and company.partner_id.address[0].email ]]</drawRightString>
+			<lines>1cm 25.9cm 7cm 25.9cm</lines>
+
+			<!--page bottom-->
+
+			<lines>1.5cm 2.15cm 19.9cm 2.15cm</lines>
+
+			<drawCentredString x="10.5cm" y="1.7cm">[[ company.rml_footer1 ]]</drawCentredString>
+			<drawCentredString x="10.5cm" y="1.25cm">[[ company.rml_footer2 ]]</drawCentredString>
+			<drawCentredString x="10.5cm" y="0.8cm">Contact : [[ user.name ]]</drawCentredString>
+		</pageGraphics>
+	</pageTemplate>
+</header>"""
 	_defaults = {
 		'currency_id': _get_euro,
+		'rml_header':_get_header 
 	}
 
 	_constraints = [

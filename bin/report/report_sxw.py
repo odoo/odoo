@@ -46,6 +46,8 @@ DT_FORMAT = '%Y-%m-%d'
 DHM_FORMAT = '%Y-%m-%d %H:%M:%S'
 HM_FORMAT = '%H:%M:%S'
 
+import base64
+
 if not hasattr(locale, 'nl_langinfo'):
 	locale.nl_langinfo = lambda *a: '%x'
 
@@ -200,6 +202,8 @@ class rml_parse(object):
 			'formatLang': self.formatLang,
 		}
 		self.localcontext.update(context)
+		self.rml_header = user.company_id.rml_header
+		self.logo = user.company_id.logo
 		self.name = name
 		self._regex = re.compile('\[\[(.+?)\]\]')
 		self._transl_regex = re.compile('(\[\[.+?\]\])')
@@ -432,7 +436,7 @@ class rml_parse(object):
 		return False
 
 	def _add_header(self, node):
-		rml_head = tools.file_open('custom/corporate_rml_header.rml').read()
+		rml_head =  self.rml_header
 		head_dom = xml.dom.minidom.parseString(rml_head)
 		#for frame in head_dom.getElementsByTagName('frame'):
 		#	frame.parentNode.removeChild(frame)
@@ -479,6 +483,7 @@ class report_sxw(report_rml):
 		return table_obj.browse(cr, uid, ids, list_class=browse_record_list, context=context)
 
 	def create(self, cr, uid, ids, data, context=None):
+		logo = None
 		if not context:
 			context={}
 		context = context.copy()
@@ -547,7 +552,6 @@ class report_sxw(report_rml):
 
 			if self.header:
 				#Add corporate header/footer
-				rml_head = tools.file_open('custom/corporate_rml_header.rml').read()
 				rml = tools.file_open('custom/corporate_sxw_header.xml').read()
 				rml_parser = self.parser(cr, uid, self.name2, context)
 				rml_parser.parents = sxw_parents
@@ -574,8 +578,11 @@ class report_sxw(report_rml):
 			#	f = file("/tmp/debug.rml", "w")
 			#	f.write(rml2)
 			#	f.close()
+			if rml_parser.logo:
+				logo = base64.decodestring(rml_parser.logo)
+
 		create_doc = self.generators[report_type]
-		pdf = create_doc(rml2)
+		pdf = create_doc(rml2, logo)
 		return (pdf, report_type)
 
 

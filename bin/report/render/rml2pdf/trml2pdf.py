@@ -301,7 +301,11 @@ class _rml_canvas(object):
 		from reportlab.lib.utils import ImageReader
 
 		if not node.hasAttribute('file'):
-			s = self.images[node.getAttribute('name')]
+			if node.getAttribute('name') in self.images:
+				scontent = self.images[node.getAttribute('name')]
+				s = StringIO.StringIO(scontent)
+			else:
+				return True
 		else:
 			if node.getAttribute('file') in self.images:
 				s = StringIO.StringIO(self.images[node.getAttribute('file')])
