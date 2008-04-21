@@ -3632,25 +3632,25 @@
 		<record model="account.account" id="vat_payable0">
 			<field name="name">T.V.A. due 0%</field>
 			<field name="code">451000</field>
-			<field name="type">payable</field>
+			<field name="type">tax</field>
 			<field name="parent_id" eval="[(6,0,[a4510])]"/>
 		</record>
 		<record model="account.account" id="vat_payable06">
 			<field name="name">T.V.A. due 6%</field>
 			<field name="code">4510001</field>
-			<field name="type">payable</field>
+			<field name="type">tax</field>
 			<field name="parent_id" eval="[(6,0,[a4510])]"/>
 		</record>
 		<record model="account.account" id="vat_payable12">
 			<field name="name">T.V.A. due 12%</field>
 			<field name="code">4510002</field>
-			<field name="type">payable</field>
+			<field name="type">tax</field>
 			<field name="parent_id" eval="[(6,0,[a4510])]"/>
 		</record>
 		<record model="account.account" id="vat_payable21">
 			<field name="name">T.V.A. due 21%</field>
 			<field name="code">4510003</field>
-			<field name="type">payable</field>
+			<field name="type">tax</field>
 
 			<field name="parent_id" eval="[(6,0,[a4510])]"/>
 		</record>
@@ -6452,6 +6452,16 @@
 
 
 
+
+	<record model="account.tax.code" id="vat_code_autres">
+		<field name="name">Autres</field>
+	</record>
+	<record model="account.tax.code" id="vat_code_autres_period">
+		<field name="name">TVA due pour la période du 1er au 20 décembre</field>
+		<field name="code">91</field>
+		<field name="parent_id" ref="vat_code_autres"/>
+	</record>
+
 	<record model="account.tax.code" id="vat_code_tax_balance">
 		<field name="name">V. Solde des taxes dues a l'Etat</field>
 		<field name="code">71-72</field>
@@ -6594,7 +6604,7 @@
 			<field name="account_paid_id" ref="vat_payable06"/>
 
 		</record>
-		
+
 		<record model="account.tax" id="vat_12">
 			<field name="name">VAT 12% - Ventes</field>
 			<field name="amount" eval="0.12"/>
@@ -6610,7 +6620,7 @@
 			<field name="account_collected_id" ref="vat_refund12"/>
 			<field name="account_paid_id" ref="vat_payable12"/>
 		</record>
-		
+
 		<record model="account.tax" id="vat_21">
 			<field name="name">VAT 21% - Ventes</field>
 			<field name="amount" eval="0.21"/>
@@ -6656,7 +6666,7 @@
 			<field name="account_collected_id" ref="vat_payable0"/>
 			<field name="account_paid_id" ref="vat_refund0"/>
 		</record>
-		
+
 		<record model="account.tax" id="vat_CO">
 			<field name="name">VAT 0% Cocontractants</field>
 			<field name="amount" eval="0.21"/>
@@ -6695,7 +6705,7 @@
 			<field name="account_collected_id" ref="vat_payable0"/>
 			<field name="account_paid_id" ref="vat_refund0"/>
 		</record>
-		
+
 		<record model="account.tax" id="vat_I0">
 			<field name="name">VAT 0% Intracommunautaire</field>
 			<field name="amount" eval="0.21"/>
