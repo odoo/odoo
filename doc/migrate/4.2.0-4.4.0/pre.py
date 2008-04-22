@@ -103,5 +103,13 @@ if res[0]['typname'] != 'timestamp':
 		cr.execute(line)
 cr.commit()
 
+cr.execute('drop view report_task_user_pipeline_open');
+cr.commit()
 
-cr.close
+cr.execute('alter table ir_model_fields add state varchar(26)')
+cr.execute('alter table ir_model_fields add select_level varchar(3)')
+cr.execute('alter table ir_act_wizard add primary key(id)')
+cr.commit()
+
+
+cr.close()
