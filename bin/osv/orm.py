@@ -1121,6 +1121,7 @@ class orm(object):
 					readonly = cr.fetchall()
 					if readonly[0][0] >= 1:
 						edit = True
+						break
 					elif readonly[0][0] == 0:
 						edit = False
 					else:
