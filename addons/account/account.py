@@ -1291,12 +1291,10 @@ class account_budget_post(osv.osv):
 	_columns = {
 		'code': fields.char('Code', size=64, required=True),
 		'name': fields.char('Name', size=256, required=True),
-		'sens': fields.selection( [('charge','Charge'), ('produit','Product')], 'Direction', required=True),
 		'dotation_ids': fields.one2many('account.budget.post.dotation', 'post_id', 'Expenses'),
 		'account_ids': fields.many2many('account.account', 'account_budget_rel', 'budget_id', 'account_id', 'Accounts'),
 	}
 	_defaults = {
-		'sens': lambda *a: 'produit',
 	}
 
 	def spread(self, cr, uid, ids, fiscalyear_id=False, quantity=0.0, amount=0.0):
