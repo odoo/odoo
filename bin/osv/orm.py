@@ -1890,12 +1890,13 @@ class orm(object):
 					args[i] = ('id','=','0')
 				else:
 					ids3 = []
-					for i in range((len(ids2) / ID_MAX) + (len(ids2) % ID_MAX)):
-						sub_ids2 = ids2[ID_MAX * i:ID_MAX * (i + 1)]
-						cr.execute('select "'+field._fields_id+'" ' \
-								'from "'+field_obj._table+'" ' \
-								'where id in ('+','.join(map(str,sub_ids2))+')')
-						ids3.extend([x[0] for x in cr.fetchall()])
+					for j in range((len(ids2) / ID_MAX) + (len(ids2) % ID_MAX)):
+						sub_ids2 = ids2[ID_MAX * j:ID_MAX * (j + 1)]
+						if sub_ids2:
+							cr.execute('select "'+field._fields_id+'" ' \
+									'from "'+field_obj._table+'" ' \
+									'where id in ('+','.join(map(str,sub_ids2))+')')
+							ids3.extend([x[0] for x in cr.fetchall()])
 
 					args[i] = ('id', 'in', ids3)
 				i+=1
