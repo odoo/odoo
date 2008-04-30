@@ -202,7 +202,7 @@ class product_pricelist(osv.osv):
 						if res2:
 							price = res2['price']
 				else:
-					price_type = price_type_obj.browse(cr, uid, res['base'])
+					price_type = price_type_obj.browse(cr, uid, int(res['base']))
 					price = currency_obj.compute(cr, uid,
 							price_type.currency_id.id, res['currency_id'],
 							product_obj.price_get(cr, uid, [prod_id],
