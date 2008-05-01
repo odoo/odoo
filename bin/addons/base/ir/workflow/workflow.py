@@ -56,6 +56,7 @@ class workflow(osv.osv):
 	# scale = [stepx, stepy, posx, posy ]
 	# 
 	def graph_get(self, cr, uid, id, scale, context={}):
+		
 		nodes= []
 		transitions = []
 		start = []
