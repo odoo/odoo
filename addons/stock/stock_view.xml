@@ -35,7 +35,7 @@
 			</form>
 		</field>
 	</record>
-	
+
 	=============================
 	Inventory
 	=============================
@@ -179,7 +179,7 @@
 		<field name="view_id" ref="view_lot_tree"/>
 	</record>
 	<menuitem name="Inventory Control/Traceability/Consumer Lots" id="menu_action_lot_form" action="action_lot_form"/>
-	
+
 	<record model="ir.ui.view" id="view_production_lot_revision_form">
 		<field name="name">stock.production.lot.revision.form</field>
 		<field name="model">stock.production.lot.revision</field>
@@ -247,7 +247,7 @@
 
 	#
 	# Lot composition (history)
-	# 
+	#
 	<record model="ir.ui.view" id="stock_move_tree">
 		<field name="name">stock.move.tree2</field>
 		<field name="model">stock.move</field>
@@ -497,7 +497,7 @@
 							<field name="lot_id" select="1"/>
 							<field name="location_id" select="1"/>
 							<field name="location_dest_id" select="1"/>
-							<field name="address_id" select="1" /> 
+							<field name="address_id" select="1" />
 							<field name="product_packaging"/>
 							<field name="prodlot_id" select="1" context="product_id=product_id" />
 							<field name="tracking_id" select="1" />
@@ -839,6 +839,7 @@
 		context="{'location': active_id}"
 		res_model="product.product"
 		src_model="stock.location"
+		name="Products"
 		id="act_product_location_open"/>
 	<record model="ir.values" id="ir_act_product_location_open">
 		<field name="key2">tree_but_open</field>
