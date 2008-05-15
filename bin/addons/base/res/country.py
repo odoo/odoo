@@ -60,7 +60,7 @@ class Country(osv.osv):
 			ids = self.search(cr, user, [('name', operator, name)] + args,
 					limit=limit, context=context)
 		return self.name_get(cr, user, ids, context)
-	_order='code'
+	_order='name'
 
 	def create(self, cursor, user, vals, context=None):
 		if 'code' in vals:
