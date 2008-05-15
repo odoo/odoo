@@ -267,6 +267,8 @@ def get_pg_type(f):
 		f_type = (type_dict[t], type_dict[t])
 	elif isinstance(f, fields.function) and f._type == 'float':
 		f_type = ('float8', 'DOUBLE PRECISION')
+	elif isinstance(f, fields.function) and f._type == 'selection':
+		f_type = ('text', 'text')
 	else:
 		logger = netsvc.Logger()
 		logger.notifyChannel("init", netsvc.LOG_WARNING, '%s type not supported!' % (type(f)))
@@ -528,6 +530,30 @@ class orm(object):
 						cr.commit()
 
 	def __init__(self, cr):
+		f=filter(lambda a: isinstance(self._columns[a], fields.function) and self._columns[a].store, self._columns)
+		if f:
+			list_store = []
+			tuple_store = ()
+			tuple_fn = ()
+			for store_field in f:
+				if not self._columns[store_field].store == True:
+					dict_store = self._columns[store_field].store
+					key = dict_store.keys()
+					list_data=[]
+					for i in key:
+						tuple_store=self._name,store_field,self._columns[store_field]._fnct.__name__,tuple(dict_store[i][0]),dict_store[i][1],i
+						list_data.append(tuple_store)
+					#tuple_store=self._name,store_field,self._columns[store_field]._fnct.__name__,tuple(dict_store[key[0]][0]),dict_store[key[0]][1]
+					for l in list_data:
+						list_store=[]
+						if l[5] in self.pool._store_function.keys():
+							self.pool._store_function[l[5]].append(l)
+							temp_list = list(set(self.pool._store_function[l[5]]))
+							self.pool._store_function[l[5]]=temp_list
+						else:
+							list_store.append(l)
+							self.pool._store_function[l[5]]=list_store
+
 		if not self._table:
 			self._table=self._name.replace('.','_')
 		if not self._description:
@@ -1046,6 +1072,18 @@ class orm(object):
 			return True
 		if isinstance(ids, (int, long)):
 			ids = [ids]
+
+		fn_list = []
+		if self._name in self.pool._store_function.keys():
+			list_store = self.pool._store_function[self._name]
+			fn_data = ()
+			id_change = []
+			for tuple_fn in list_store:
+				for id in ids:
+					id_change.append(self._store_get_ids(cr, uid, id,tuple_fn, context)[0])
+				fn_data = id_change,tuple_fn
+				fn_list.append(fn_data)
+
 		delta= context.get('read_delta',False)
 		if delta and self._log_access:
 			for i in range((len(ids) / ID_MAX) + ((len(ids) % ID_MAX) and 1 or 0)):
@@ -1095,6 +1133,10 @@ class orm(object):
 			else:
 				cr.execute('delete from "'+self._table+'" ' \
 						'where id in ('+str_d+')', sub_ids)
+		if fn_list:
+			for ids,tuple_fn in fn_list:
+				self._store_set_values(cr, uid, ids,tuple_fn,id_change, context)
+
 		return True
 
 	#
@@ -1126,7 +1168,7 @@ class orm(object):
 						edit = False
 					else:
 						edit = False
-						
+
 				if not edit:
 					vals.pop(field)
 
@@ -1260,6 +1302,21 @@ class orm(object):
 		for id in ids:
 			wf_service.trg_write(user, self._name, id, cr)
 		self._update_function_stored(cr, user, ids, context=context)
+
+		if self._name in self.pool._store_function.keys():
+			list_store = self.pool._store_function[self._name]
+			for tuple_fn in list_store:
+				flag = False
+				if not tuple_fn[3]:
+					flag = True
+				for field in tuple_fn[3]:
+					if field in vals.keys():
+						flag = True
+						break
+				if flag:
+					id_change = self._store_get_ids(cr, user, ids[0],tuple_fn, context)
+					self._store_set_values(cr, user, ids[0],tuple_fn,id_change, context)
+
 		return True
 
 	#
@@ -1315,7 +1372,7 @@ class orm(object):
 			upd1 += ',%d'
 			upd2.append(id)
 			cr.execute('insert into inherit (obj_type,obj_id,inst_type,inst_id) values (%s,%d,%s,%d)', (table,id,self._name,id_new))
-		
+
 		for field in vals:
 			if self._columns[field]._classic_write:
 				upd0=upd0+',"'+field+'"'
@@ -1355,7 +1412,28 @@ class orm(object):
 		wf_service = netsvc.LocalService("workflow")
 		wf_service.trg_create(user, self._name, id_new, cr)
 		self._update_function_stored(cr, user, [id_new], context=context)
+		if self._name in self.pool._store_function.keys():
+			list_store = self.pool._store_function[self._name]
+			for tuple_fn in list_store:
+				id_change = self._store_get_ids(cr, user, id_new,tuple_fn, context)
+				self._store_set_values(cr, user, id_new,tuple_fn,id_change, context)
+
 		return id_new
+
+	def _store_get_ids(self,cr, uid, ids,tuple_fn, context):
+		parent_id=getattr(self.pool.get(tuple_fn[0]),tuple_fn[4].func_name)(cr,uid,[ids])
+		return parent_id
+
+	def _store_set_values(self,cr,uid,ids,tuple_fn,parent_id,context):
+		name = tuple_fn[1]
+		table = tuple_fn[0]
+		args={}
+		vals_tot=getattr(self.pool.get(table),tuple_fn[2])(cr, uid, parent_id ,name, args, context)
+		write_dict = {}
+		for id in vals_tot.keys():
+			write_dict[name]=vals_tot[id]
+			self.pool.get(table).write(cr,uid,[id],write_dict)
+		return True
 
 	def _update_function_stored(self, cr, user, ids, context=None):
 		if not context:

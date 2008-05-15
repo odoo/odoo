@@ -58,6 +58,7 @@ class osv_pool(netsvc.Service):
 		self.module_object_list = {}
 		self.created = []
 		self._sql_error = {}
+		self._store_function = {}
 		netsvc.Service.__init__(self, 'object_proxy', audience='')
 		self.joinGroup('web-services')
 		self.exportMethod(self.exportedMethods)
@@ -148,7 +149,7 @@ class osv_pool(netsvc.Service):
 	def obj_list(self):
 		return self.obj_pool.keys()
 
-	# adds a new object instance to the object pool. 
+	# adds a new object instance to the object pool.
 	# if it already existed, the instance is replaced
 	def add(self, name, obj_inst):
 		if self.obj_pool.has_key(name):
@@ -219,7 +220,7 @@ class osv(orm.orm):
 		if module not in module_list:
 			module_list.append(cls._module)
 		return None
-		
+
 	#
 	# Goal: try to apply inheritancy at the instanciation level and
 	#       put objects in the pool var
@@ -255,7 +256,7 @@ class osv(orm.orm):
 		pool.add(self._name, self)
 		self.pool = pool
 		orm.orm.__init__(self, cr)
-		
+
 #		pooler.get_pool(cr.dbname).add(self._name, self)
 #		print self._name, module
 
@@ -293,7 +294,7 @@ class cacheable_osv(osv, Cacheable):
 
 	def __init__(self):
 		super(cacheable_osv, self).__init__()
-	
+
 	def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
 		if not fields:
 			fields=[]
@@ -337,14 +338,14 @@ class cacheable_osv(osv, Cacheable):
 
 	def invalidate(self, key):
 		del self._cache[key[0]][key[1]]
-	
+
 	def write(self, cr, user, ids, values, context=None):
 		if not context:
 			context={}
 		for id in ids:
 			self.invalidate((self._name, id))
 		return super(cacheable_osv, self).write(cr, user, ids, values, context)
-	
+
 	def unlink(self, cr, user, ids):
 		self.clear()
 		return super(cacheable_osv, self).unlink(cr, user, ids)
@@ -356,7 +357,7 @@ class cacheable_osv(osv, Cacheable):
 #class FakePool(object):
 #	def __init__(self, module):
 #		self.preferred_module = module
-	
+
 #	def get(self, name):
 #		localpool = module_objects_dict.get(self.preferred_module, {'dict': {}})['dict']
 #		if name in localpool:
@@ -370,6 +371,6 @@ class cacheable_osv(osv, Cacheable):
 #			def __init__(self):
 #				super(fake_class, self).__init__()
 #				self.pool = fake_pool
-				
+
 #		return fake_class()
 
