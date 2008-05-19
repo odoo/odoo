@@ -169,8 +169,10 @@ class graph(object):
 					pos += step
 					
 	def exchange(self,e,f):
-		print e
-		print f
+		self.tree_edges.__delitem__(self.tree_edges.index(e))
+		self.tree_edges.append(f)
+		self.init_cutvalues()
+		
 					
 	def enter_edge(self,edge):
 		self.head_nodes = []
@@ -187,8 +189,7 @@ class graph(object):
 							slack = self.temp[edge]-1
 							new_edge = (source_node,dest_node)
 		return new_edge	
-						
-			
+		
 
 	def leave_edge(self):
 		for edge in self.cut_edges:
@@ -207,6 +208,7 @@ class graph(object):
 		#normalize
 		least_rank=100
 		
+		#normalization
 		for node in self.result:
 			if least_rank>self.result[node]['y']:
 				least_rank = self.result[node]['y']
@@ -216,14 +218,12 @@ class graph(object):
 			for node in self.result:
 				self.result[node]['y']-=least_rank
 					
-#		e = self.leave_edge()
-#		print '============e==============',e
-##		while e:
-#		f = self.enter_edge(e)
-#		print '=========f===============',f
-#		self.exchange(e,f) 
-#		e = self.leave_edge()	
-		
+		e = self.leave_edge()
+		#while e:
+		f = self.enter_edge(e)
+		self.exchange(e,f) 
+		e = self.leave_edge()	
+	
 			
 		
 		self.preprocess_order()
@@ -246,6 +246,7 @@ class graph(object):
 		plusy = - min(map(lambda x: x['y'],self.result.values()))
 
 		maxcurrent = 1.0
+		diff = 1.0
 		for l in self.levels:
 			for n in range(1, len(self.levels[l])):
 				n1 = self.levels[l][n]

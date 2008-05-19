@@ -55,12 +55,13 @@ class workflow(osv.osv):
 	#
 	# scale = [stepx, stepy, posx, posy ]
 	# 
+	
 	def graph_get(self, cr, uid, id, scale, context={}):
 		
 		nodes= []
 		transitions = []
 		start = []
-		tres = []
+		tres = {}
 		workflow = self.browse(cr, uid, id, context)
 		for a in workflow.activities:
 			nodes.append((a.id,a.name))
@@ -68,12 +69,14 @@ class workflow(osv.osv):
 				start.append((a.id,a.name))
 			for t in a.out_transitions:
 				transitions.append( ((a.id,a.name), (t.act_to.id,t.act_to.name)) )
-				tres.append((a.id,t.act_to.id))
+				tres[t.id] = (a.id,t.act_to.id)
 		g  = graph(nodes, transitions)
 		g.process(start)
 		g.scale(*scale)
 		result = g.result_get()
 		results = {}
+		
+		
 		for r in result.items():
 			r[1]['name'] = r[0][1]
 			results[str(r[0][0])] = r[1]
