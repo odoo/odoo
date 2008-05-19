@@ -27,6 +27,7 @@
 
 import time
 from report import report_sxw
+import pooler
 
 class general_ledger(report_sxw.rml_parse):
 	def __init__(self, cr, uid, name, context):
@@ -38,10 +39,68 @@ class general_ledger(report_sxw.rml_parse):
 			'sum_credit_account': self._sum_credit_account,
 			'sum_debit': self._sum_debit,
 			'sum_credit': self._sum_credit,
+
 		})
 		self.context = context
+		self.tmp_list2=[]
+		self.final_list=[]
+
+
+	def recur(self,list1):
+		tmp_list3 =list1
+		self.tmp_list2 =list1
+#		print "self list",self.tmp_list2
+		for i in range(0,len(list1)):
+			if list1[i] in self.final_list:
+				continue
+			self.final_list.append(list1[i])
+#			print "finallly",self.final_list
+			if list1[i].child_id:
+
+				tmp_list4=(hasattr(list1[i],'child_id') and list(list1[i].child_id) or [])
+
+				self.tmp_list2 +=tmp_list4
+
+				self.tmp_list2+=self.recur(tmp_list4)
+
+		return self.final_list
+
+	def repeatIn(self, lst, name,nodes_parent=False):
+
+		if name=='o':
+			list_final=[]
+			if not lst:
+				return 	super(general_ledger,self).repeatIn(lst, name,nodes_parent)
+			try:
+				tmp_list = list(lst)
+				if tmp_list:
+					tmp_list = self.recur(tmp_list)
+				else:
+					return 	super(general_ledger,self).repeatIn(lst, name,nodes_parent)
+
+				lst = list(set([x for x in tmp_list]))
+
+				final={}
+#				for x in lst:
+#					final[x]=x.id
+#				final1=sorted(final.items(), lambda x, y: cmp(x[1], y[1]))
+#
+#				for a in final1:
+#					list_final.append(a[0])
+				list_final=tmp_list
+
+			except:
+				pass
+		else:
+
+			list_final=lst
+		ret_data = super(general_ledger,self).repeatIn(list_final, name,nodes_parent)
+
+		return ret_data
+
 
 	def lines(self, account, form):
+
 		ctx = self.context.copy()
 		ctx['fiscalyear'] = form['fiscalyear']
 		ctx['periods'] = form['periods'][0][2]
@@ -53,9 +112,11 @@ class general_ledger(report_sxw.rml_parse):
 			"ORDER by l.id", (account.id,))
 		res = self.cr.dictfetchall()
 		sum = 0.0
+
 		for l in res:
 			sum += l['debit'] - l ['credit']
 			l['progress'] = sum
+		self.ids +=[account.id]
 		return res
 
 	def _sum_debit_account(self, account, form):
@@ -88,6 +149,7 @@ class general_ledger(report_sxw.rml_parse):
 		self.cr.execute("SELECT sum(debit) "\
 				"FROM account_move_line l "\
 				"WHERE l.account_id in ("+','.join(map(str, self.ids))+") AND "+query)
+
 		return self.cr.fetchone()[0] or 0.0
 
 	def _sum_credit(self, form):
