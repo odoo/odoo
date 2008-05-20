@@ -1581,7 +1581,7 @@ class orm(object):
 					childs = False
 					views = {}
 					for f in node.childNodes:
-						if f.nodeType==f.ELEMENT_NODE and f.localName in ('form','tree'):
+						if f.nodeType==f.ELEMENT_NODE and f.localName in ('form','tree','graph'):
 							node.removeChild(f)
 							xarch,xfields = self.pool.get(relation).__view_look_dom_arch(cr, user, f, context)
 							views[str(f.localName)] = {
