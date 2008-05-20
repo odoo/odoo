@@ -366,7 +366,7 @@
 			<field name="perm_read" eval="True"/>
 			<field name="perm_write" eval="True"/>
 			<field name="perm_create" eval="True"/>
-			<field name="perm_unlink" eval="False"/>
+			<field name="perm_unlink" eval="True"/>
 		</record>
 
 		<!--<record model="ir.model.access" id="access_move_account_admin">
@@ -420,7 +420,7 @@
 			<field name="perm_read" eval="True"/>
 			<field name="perm_write" eval="True"/>
 			<field name="perm_create" eval="True"/>
-			<field name="perm_unlink" eval="False"/>
+			<field name="perm_unlink" eval="True"/>
 		</record>
 
 		<!--<record model="ir.model.access" id="access_move_reconcile_account_admin">
@@ -530,28 +530,6 @@
 			<field name="perm_unlink" eval="True"/>
 		</record>
 
-		<!--<record model="ir.model.access" id="access_budget_post_account_admin">
-			<field name="name">Budget Item</field>
-			<field name="model_id" model="ir.model"
-				search="[('model', '=', 'account.budget.post')]"/>
-			<field name="group_id" ref="group_account_admin"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="True"/>
-			<field name="perm_create" eval="True"/>
-			<field name="perm_unlink" eval="True"/>
-		</record>
-
-		<record model="ir.model.access" id="access_budget_post_admin">
-			<field name="name">Budget Item</field>
-			<field name="model_id" model="ir.model"
-				search="[('model', '=', 'account.budget.post')]"/>
-			<field name="group_id" ref="base.group_admin"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="True"/>
-			<field name="perm_create" eval="True"/>
-			<field name="perm_unlink" eval="True"/>
-		</record>-->
-
 		<record model="ir.model.access" id="access_budget_post_dotation">
 			<field name="name">Budget Item Endowment</field>
 			<field name="model_id" model="ir.model"
@@ -572,28 +550,6 @@
 			<field name="perm_create" eval="True"/>
 			<field name="perm_unlink" eval="True"/>
 		</record>
-
-		<!--<record model="ir.model.access" id="access_budget_post_dotation_account_admin">
-			<field name="name">Budget Item Endowment</field>
-			<field name="model_id" model="ir.model"
-				search="[('model', '=', 'account.budget.post.dotation')]"/>
-			<field name="group_id" ref="group_account_admin"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="True"/>
-			<field name="perm_create" eval="True"/>
-			<field name="perm_unlink" eval="True"/>
-		</record>
-
-		<record model="ir.model.access" id="access_budget_post_admin">
-			<field name="name">Budget Item Endowment</field>
-			<field name="model_id" model="ir.model"
-				search="[('model', '=', 'account.budget.post.dotation')]"/>
-			<field name="group_id" ref="base.group_admin"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="True"/>
-			<field name="perm_create" eval="True"/>
-			<field name="perm_unlink" eval="True"/>
-		</record>-->
 
 		<record model="ir.model.access" id="access_model">
 			<field name="name">Model</field>
@@ -616,28 +572,6 @@
 			<field name="perm_unlink" eval="True"/>
 		</record>
 
-		<!--<record model="ir.model.access" id="access_model_account_admin">
-			<field name="name">Model</field>
-			<field name="model_id" model="ir.model"
-				search="[('model', '=', 'account.model')]"/>
-			<field name="group_id" ref="group_account_admin"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="True"/>
-			<field name="perm_create" eval="True"/>
-			<field name="perm_unlink" eval="True"/>
-		</record>
-
-		<record model="ir.model.access" id="access_model_admin">
-			<field name="name">Model</field>
-			<field name="model_id" model="ir.model"
-				search="[('model', '=', 'account.model')]"/>
-			<field name="group_id" ref="base.group_admin"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="True"/>
-			<field name="perm_create" eval="True"/>
-			<field name="perm_unlink" eval="True"/>
-		</record>-->
-
 		<record model="ir.model.access" id="access_model_line">
 			<field name="name">Model Line</field>
 			<field name="model_id" model="ir.model"
@@ -658,28 +592,6 @@
 			<field name="perm_create" eval="True"/>
 			<field name="perm_unlink" eval="True"/>
 		</record>
-
-		<!--<record model="ir.model.access" id="access_model_line_account_admin">
-			<field name="name">Model Line</field>
-			<field name="model_id" model="ir.model"
-				search="[('model', '=', 'account.model.line')]"/>
-			<field name="group_id" ref="group_account_admin"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="True"/>
-			<field name="perm_create" eval="True"/>
-			<field name="perm_unlink" eval="True"/>
-		</record>
-
-		<record model="ir.model.access" id="access_model_line_admin">
-			<field name="name">Model Line</field>
-			<field name="model_id" model="ir.model"
-				search="[('model', '=', 'account.model.line')]"/>
-			<field name="group_id" ref="base.group_admin"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="True"/>
-			<field name="perm_create" eval="True"/>
-			<field name="perm_unlink" eval="True"/>
-		</record>-->
 
 		<record model="ir.model.access" id="access_subscription">
 			<field name="name">Subscription</field>
@@ -702,28 +614,6 @@
 			<field name="perm_unlink" eval="True"/>
 		</record>
 
-		<!--<record model="ir.model.access" id="access_subscription_account_admin">
-			<field name="name">Subscription</field>
-			<field name="model_id" model="ir.model"
-				search="[('model', '=', 'account.subscription')]"/>
-			<field name="group_id" ref="group_account_admin"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="True"/>
-			<field name="perm_create" eval="True"/>
-			<field name="perm_unlink" eval="True"/>
-		</record>
-
-		<record model="ir.model.access" id="access_subscription_admin">
-			<field name="name">Subscription</field>
-			<field name="model_id" model="ir.model"
-				search="[('model', '=', 'account.subscription')]"/>
-			<field name="group_id" ref="base.group_admin"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="True"/>
-			<field name="perm_create" eval="True"/>
-			<field name="perm_unlink" eval="True"/>
-		</record>-->
-
 		<record model="ir.model.access" id="access_subscription_line">
 			<field name="name">Subscription Line</field>
 			<field name="model_id" model="ir.model"
@@ -744,28 +634,6 @@
 			<field name="perm_create" eval="True"/>
 			<field name="perm_unlink" eval="True"/>
 		</record>
-
-		<!--<record model="ir.model.access" id="access_subscription_line_account_admin">
-			<field name="name">Subscription Line</field>
-			<field name="model_id" model="ir.model"
-				search="[('model', '=', 'account.subscription.line')]"/>
-			<field name="group_id" ref="group_account_admin"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="True"/>
-			<field name="perm_create" eval="True"/>
-			<field name="perm_unlink" eval="True"/>
-		</record>
-
-		<record model="ir.model.access" id="access_subscription_line_admin">
-			<field name="name">Subscription Line</field>
-			<field name="model_id" model="ir.model"
-				search="[('model', '=', 'account.subscription.line')]"/>
-			<field name="group_id" ref="base.group_admin"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="True"/>
-			<field name="perm_create" eval="True"/>
-			<field name="perm_unlink" eval="True"/>
-		</record>-->
 
 		<record model="ir.model.access" id="access_bank_statement">
 			<field name="name">Bank Statement</field>
@@ -788,28 +656,6 @@
 			<field name="perm_unlink" eval="True"/>
 		</record>
 
-		<!--<record model="ir.model.access" id="access_bank_statement_account_admin">
-			<field name="name">Bank Statement</field>
-			<field name="model_id" model="ir.model"
-				search="[('model', '=', 'account.bank.statement')]"/>
-			<field name="group_id" ref="group_account_admin"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="True"/>
-			<field name="perm_create" eval="True"/>
-			<field name="perm_unlink" eval="True"/>
-		</record>
-
-		<record model="ir.model.access" id="access_bank_statement_admin">
-			<field name="name">Bank Statement</field>
-			<field name="model_id" model="ir.model"
-				search="[('model', '=', 'account.bank.statement')]"/>
-			<field name="group_id" ref="base.group_admin"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="True"/>
-			<field name="perm_create" eval="True"/>
-			<field name="perm_unlink" eval="True"/>
-		</record>-->
-
 		<record model="ir.model.access" id="access_bank_statement_reconcile">
 			<field name="name">Statement Reconcile</field>
 			<field name="model_id" model="ir.model"
@@ -830,28 +676,6 @@
 			<field name="perm_create" eval="True"/>
 			<field name="perm_unlink" eval="True"/>
 		</record>
-
-		<!--<record model="ir.model.access" id="access_bank_statement_reconcile_account_admin">
-			<field name="name">Statement Reconcile</field>
-			<field name="model_id" model="ir.model"
-				search="[('model', '=', 'account.bank.statement.reconcile')]"/>
-			<field name="group_id" ref="group_account_admin"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="True"/>
-			<field name="perm_create" eval="True"/>
-			<field name="perm_unlink" eval="True"/>
-		</record>
-
-		<record model="ir.model.access" id="access_bank_statement_reconcile_admin">
-			<field name="name">Statement Reconcile</field>
-			<field name="model_id" model="ir.model"
-				search="[('model', '=', 'account.bank.statement.reconcile')]"/>
-			<field name="group_id" ref="base.group_admin"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="True"/>
-			<field name="perm_create" eval="True"/>
-			<field name="perm_unlink" eval="True"/>
-		</record>-->
 
 		<record model="ir.model.access" id="access_bank_statement_reconcile_line">
 			<field name="name">Statement Reconcile Line</field>
