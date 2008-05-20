@@ -1073,7 +1073,7 @@
 		<field name="model">account.budget.post</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Budget item">
+			<form string="Master Budget">
 				<notebook>
 					<page string="Definition">
 						<field name="code" select="1"/>
@@ -1093,7 +1093,7 @@
 		<field name="model">account.budget.post</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Budget item">
+			<tree string="Master Budget">
 				<field name="code"/>
 				<field name="name"/>
 			</tree>
@@ -1104,7 +1104,7 @@
 		<field name="model">account.budget.post.dotation</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Budget items expenses">
+			<form string="Master Budget Expenses">
 				<field name="period_id"/>
 				<newline/>
 				<field name="quantity"/>
@@ -1117,7 +1117,7 @@
 		<field name="model">account.budget.post.dotation</field>
 		<field name="type">tree</field>
 		<field name="arch" type="xml">
-			<tree string="Budget items expenses">
+			<tree string="Master Budget Expenses">
 				<field name="period_id"/>
 				<field name="quantity"/>
 				<field name="amount"/>
@@ -1130,7 +1130,7 @@
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_budget_post_tree"/>
 	</record>
-	<menuitem name="Financial Management/Configuration/Budgets/General Budgets" id="menu_budget_post_form" action="open_budget_post_form"/>
+	<menuitem name="Financial Management/Configuration/Budgets/Master Budgets" id="menu_budget_post_form" action="open_budget_post_form"/>
 
 
 <!--
