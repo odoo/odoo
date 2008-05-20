@@ -142,37 +142,11 @@ class account_invoice_line(osv.osv):
 		'price_unit': _price_unit_default,
 	}
 
-	#
-	# Compute a tax amount for each kind of tax :
-	#
-	def move_line_get(self, cr, uid, invoice_id, context={}):
-		inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id)
-		if inv.price_type=='tax_excluded':
-			return super(account_invoice_line,self).move_line_get(cr, uid, invoice_id)
-
-		res = []
-		tax_grouped = {}
-		tax_obj = self.pool.get('account.tax')
-		cur_obj = self.pool.get('res.currency')
-		ait_obj = self.pool.get('account.invoice.tax')
-		cur = inv.currency_id
-
-		for line in inv.invoice_line:
-			res.append( self.move_line_get_item(cr, uid, line, context))
-			for tax in tax_obj.compute(cr, uid, line.invoice_line_tax_id, (line.price_unit *(1.0-(line['discount'] or 0.0)/100.0)), line.quantity, inv.address_invoice_id.id, line.product_id, inv.partner_id):
-				if inv.type in ('out_invoice', 'in_invoice'):
-					res[-1]['tax_code_id'] = tax['base_code_id']
-					res[-1]['tax_amount'] = tax['price_unit'] * line['quantity'] * tax['base_sign']
-				else:
-					res[-1]['ta_code_id'] = tax['ref_base_code_id']
-					res[-1]['tax_amount'] = tax['price_unit'] * line['quantity'] * tax['ref_base_sign']
-		return res
-
 	def move_line_get_item(self, cr, uid, line, context={}):
 		return {
 				'type':'src',
 				'name':line.name,
-				'price_unit':line.price_unit,
+				'price_unit':line.price_subtotal / line.quantity,
 				'quantity':line.quantity,
 				'price':line.price_subtotal,
 				'account_id':line.account_id.id,
