@@ -534,7 +534,7 @@ class account_invoice(osv.osv):
 			if not number:
 				number = self.pool.get('ir.sequence').get(cr, uid,
 						'account.invoice.' + invtype)
-				if type in ('in_invoice', 'in_refund'):
+				if invtype in ('in_invoice', 'in_refund'):
 					ref = reference
 				else:
 					ref = self._convert_ref(cr, uid, number)
