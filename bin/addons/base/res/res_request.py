@@ -42,7 +42,7 @@ class res_request(osv.osv):
 			cr.execute('update res_request set state=%s,date_sent=%s where id=%d', ('waiting', time.strftime('%Y-%m-%d %H:%M:%S'), id))
 			cr.execute('select act_from,act_to,body,date_sent from res_request where id=%d', (id,))
 			values = cr.dictfetchone()
-			if len(values['body']) > 128:
+			if values['body'] and (len(values['body']) > 128):
 				values['name'] = values['body'][:125] + '...'
 			else:
 				values['name'] = values['body'] or '/'
