@@ -841,6 +841,15 @@
 		src_model="stock.location"
 		name="Products"
 		id="act_product_location_open"/>
+
+	<act_window
+		domain="[('product_id','=',active_id)]"
+		context="{'location': active_id}"
+		res_model="stock.move"
+		src_model="product.product"
+		name="Stock Moves"
+		id="act_product_stock_move_open"/>
+
 	<record model="ir.values" id="ir_act_product_location_open">
 		<field name="key2">tree_but_open</field>
 		<field name="model">stock.location</field>
