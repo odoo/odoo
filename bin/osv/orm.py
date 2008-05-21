@@ -958,7 +958,7 @@ class orm(object):
 			res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=res)
 			for record in res:
 				record[f] = res2[record['id']]
-		
+				
 		readonly = None
 		for vals in res:
 			for field in vals.copy():
@@ -994,7 +994,6 @@ class orm(object):
 							vals[field] = '=No Permission='
 						else:
 							vals[field] = False
-
 		return res
 
 	def _validate(self, cr, uid, ids):
@@ -1189,8 +1188,6 @@ class orm(object):
 			if not fobj:
 				continue
 			groups = fobj.write
-			if not groups:
-				groups = fobj.read
 				
 			if groups:
 				edit = False
