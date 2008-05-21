@@ -958,6 +958,42 @@ class orm(object):
 			res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=res)
 			for record in res:
 				record[f] = res2[record['id']]
+		
+		readonly = None
+		for vals in res:
+			for field in vals.copy():
+				fobj = None
+				if field in self._columns:
+					fobj = self._columns[field]
+
+				if not fobj:
+					continue
+				groups = fobj.read
+				if groups:
+					edit = False
+					for group in groups:
+						module = group.split(".")[0]
+						grp = group.split(".")[1]
+						cr.execute("select count(*) from res_groups_users_rel where gid in (select res_id from ir_model_data where name='%s' and module='%s' and model='%s') and uid=%s" % \
+								   (grp, module, 'res.groups', user))
+						readonly = cr.fetchall()
+						if readonly[0][0] >= 1:
+							edit = True
+							break
+						elif readonly[0][0] == 0:
+							edit = False
+						else:
+							edit = False
+
+					if not edit:
+						if type(vals[field]) == type([]):
+							vals[field] = []
+						elif type(vals[field]) == type(0.0):
+							vals[field] = 0
+						elif type(vals[field]) == type(''):
+							vals[field] = '=No Permission='
+						else:
+							vals[field] = False
 
 		return res
 
@@ -1152,7 +1188,10 @@ class orm(object):
 				fobj = self._inherit_fields[field][2]
 			if not fobj:
 				continue
-			groups = fobj.groups
+			groups = fobj.write
+			if not groups:
+				groups = fobj.read
+				
 			if groups:
 				edit = False
 				for group in groups:
