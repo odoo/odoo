@@ -362,8 +362,9 @@ class mrp_production(osv.osv):
 			bom_id = production.bom_id.id
 			if not bom_point:
 				bom_id = self.pool.get('mrp.bom')._bom_find(cr, uid, production.product_id.id, production.product_uom.id, properties)
-				self.write(cr, uid, [production.id], {'bom_id': bom_id})
-				bom_point = self.pool.get('mrp.bom').browse(cr, uid, [bom_id])[0]
+				if bom_id:
+					self.write(cr, uid, [production.id], {'bom_id': bom_id})
+					bom_point = self.pool.get('mrp.bom').browse(cr, uid, [bom_id])[0]
 
 			if not bom_id:
 				raise osv.except_osv('Error', "Couldn't find bill of material for product")
