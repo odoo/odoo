@@ -67,9 +67,12 @@ def _action_open_window(self, cr, uid, data, context):
 		if state == 'done':
 			raise wizard.except_wizard('UserError', 'This period is already closed !')
 		jp.create(cr, uid, {'name':name, 'period_id': form['period_id'], 'journal_id':form['journal_id']})
+	ids = jp.search(cr, uid, [('journal_id','=',form['journal_id']), ('period_id','=',form['period_id'])])
+	jp = jp.browse(cr, uid, ids, context=context)[0]
+	name = (jp.journal_id.code or '') + ':' + (jp.period_id.code or '')
 	return {
 		'domain': "[('journal_id','=',%d), ('period_id','=',%d)]" % (form['journal_id'],form['period_id']),
-		'name': 'Standard entries',
+		'name': name,
 		'view_type': 'form',
 		'view_mode': 'tree,form',
 		'res_model': 'account.move.line',
