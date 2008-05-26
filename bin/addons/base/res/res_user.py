@@ -98,6 +98,15 @@ class users(osv.osv):
 		'company_id': fields.many2one('res.company', 'Company'),
 		'rule_groups': fields.many2many('ir.rule.group', 'user_rule_group_rel', 'user_id', 'rule_group_id', 'Rules', domain="[('global', '<>', True)]"),
 	}
+	def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
+		result = super(users, self).read(cr, uid, ids, fields, context, load)
+		canwrite = self.pool.get('ir.model.access').check(cr, uid, 'res.users', 'write', raise_exception=False)
+		if not canwrite:
+			for r in result:
+				if 'password' in r:
+					r['password'] = '********'
+		return result
+
 	_sql_constraints = [
 		('login_key', 'UNIQUE (login)', 'You can not have two users with the same login !')
 	]
