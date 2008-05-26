@@ -722,7 +722,7 @@ class account_move(osv.osv):
 						'There is no default default credit account defined \n' \
 								'on journal "%s"' % move.journal_id.name)
 
-		# find the first line of this move with the current mode 
+		# find the first line of this move with the current mode
 		# or create it if it doesn't exist
 		cr.execute('select id from account_move_line where move_id=%d and centralisation=%s limit 1', (move.id, mode))
 		res = cr.fetchone()
@@ -909,7 +909,7 @@ account_move_reconcile()
 # Tax
 #----------------------------------------------------------
 """
-a documenter 
+a documenter
 child_depend: la taxe depend des taxes filles
 """
 class account_tax_code(osv.osv):
@@ -1079,7 +1079,7 @@ class account_tax(osv.osv):
 		'company_id': _default_company,
 	}
 	_order = 'sequence'
-	
+
 	def _applicable(self, cr, uid, taxes, price_unit, address_id=None, product=None, partner=None):
 		res = []
 		for tax in taxes:
@@ -1297,7 +1297,7 @@ class account_budget_post(osv.osv):
 	_defaults = {
 	}
 
-	def spread(self, cr, uid, ids, fiscalyear_id=False, quantity=0.0, amount=0.0):
+	def spread(self, cr, uid, ids, fiscalyear_id=False, amount=0.0):
 		dobj = self.pool.get('account.budget.post.dotation')
 		for o in self.browse(cr, uid, ids):
 			# delete dotations for this post
@@ -1307,7 +1307,7 @@ class account_budget_post(osv.osv):
 			fy = self.pool.get('account.fiscalyear').browse(cr, uid, [fiscalyear_id])[0]
 			num = len(fy.period_ids)
 			for p in fy.period_ids:
-				dobj.create(cr, uid, {'post_id': o.id, 'period_id': p.id, 'quantity': quantity/num, 'amount': amount/num})
+				dobj.create(cr, uid, {'post_id': o.id, 'period_id': p.id, 'amount': amount/num})
 		return True
 account_budget_post()
 
@@ -1318,7 +1318,7 @@ class account_budget_post_dotation(osv.osv):
 		'name': fields.char('Name', size=64),
 		'post_id': fields.many2one('account.budget.post', 'Item', select=True),
 		'period_id': fields.many2one('account.period', 'Period'),
-		'quantity': fields.float('Quantity', digits=(16,2)),
+#		'quantity': fields.float('Quantity', digits=(16,2)),
 		'amount': fields.float('Amount', digits=(16,2)),
 	}
 account_budget_post_dotation()

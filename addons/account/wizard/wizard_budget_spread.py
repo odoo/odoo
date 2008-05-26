@@ -31,14 +31,11 @@ import netsvc
 _spread_form = '''<?xml version="1.0"?>
 <form string="Spread">
 	<field name="fiscalyear"/>
-	<newline/>
-	<field name="quantity"/>
 	<field name="amount"/>
 </form>'''
 
 _spread_fields = {
 	'fiscalyear': {'string':'Fiscal Year', 'type':'many2one', 'relation':'account.fiscalyear', 'required':True},
-	'quantity': {'string':'Quantity', 'type':'float', 'digits':(16,2)},
 	'amount': {'string':'Amount', 'type':'float', 'digits':(16,2)},
 }
 
@@ -46,9 +43,9 @@ class wizard_budget_spread(wizard.interface):
 	def _spread(self, cr, uid, data, context):
 		service = netsvc.LocalService("object_proxy")
 		form = data['form']
-		res = service.execute(cr.dbname, uid, 'account.budget.post', 'spread', data['ids'], form['fiscalyear'], form['quantity'], form['amount'])
+		res = service.execute(cr.dbname, uid, 'account.budget.post', 'spread', data['ids'], form['fiscalyear'], form['amount'])
 		return {}
-		
+
 	states = {
 		'init': {
 			'actions': [],

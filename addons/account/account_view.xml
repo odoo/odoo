@@ -347,7 +347,7 @@
 							<field name="partner_id" on_change="onchange_partner_id(partner_id, type, parent.currency)"/>
 							<field name="account_id" domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]"/>
 							<field name="amount"/>
-							<field name="reconcile_id" context="{'partner_id':partner_id,'amount':amount,'account_id':account_id}"/> 
+							<field name="reconcile_id" context="{'partner_id':partner_id,'amount':amount,'account_id':account_id}"/>
 							<field name="ref"/>
 							<separator string="Notes" colspan="4"/>
 							<field name="note" nolabel="1" colspan="4"/>
@@ -973,7 +973,7 @@
 								domain="[('journal_id', '=', parent.journal_id)]"/>
 							<field name="amount"/>
 							<field name="reconcile_id"
-								context="{'partner_id': partner_id, 'amount': amount, 'account_id': account_id}"/> 
+								context="{'partner_id': partner_id, 'amount': amount, 'account_id': account_id}"/>
 						</form>
 					</field>
 				</page>
@@ -995,7 +995,7 @@
 		<field name="view_mode">form,tree</field>
 		<field name="view_id" ref="view_bank_statement_reconcile_form"/>
 	</record>
-	<menuitem 
+	<menuitem
 		name="Financial Management/Periodical Processing/Bank Reconciliation/Statement by Importing Entries"
 		id="menu_action_account_bank_reconcile_tree"
 		action="action_bank_statement_reconciliation_form"
@@ -1056,14 +1056,14 @@
 		<field name="res_model">account.journal.period</field>
 		<field name="view_type">tree</field>
 	</record>
-	<menuitem name="Financial Management/Reporting/Print Journals" id="menu_action_account_journal_period_tree" action="action_account_journal_period_tree"/> 
+	<menuitem name="Financial Management/Reporting/Print Journals" id="menu_action_account_journal_period_tree" action="action_account_journal_period_tree"/>
 
 	<record model="ir.actions.act_window" id="action_account_budget_post_tree">
 		<field name="name">Budgets</field>
 		<field name="res_model">account.budget.post</field>
 		<field name="view_type">tree</field>
 	</record>
-	<menuitem name="Financial Management/Reporting/Print Budgets" id="menu_action_account_budget_post_tree" action="action_account_budget_post_tree"/> 
+	<menuitem name="Financial Management/Reporting/Print Budgets" id="menu_action_account_budget_post_tree" action="action_account_budget_post_tree"/>
 
 	<!--
 	Budgets
@@ -1078,10 +1078,12 @@
 					<page string="Definition">
 						<field name="code" select="1"/>
 						<field name="name" select="1"/>
-					</page><page string="Dotations">
+					</page>
+					<page string="Dotations">
 						<button string="Spread" name="%(wizard_budget_spread)d" type="action"/>
 						<field name="dotation_ids" colspan="4" nolabel="1"/>
-					</page><page string="Accounts">
+					</page>
+					<page string="Accounts">
 						<field name="account_ids" colspan="4" nolabel="1"/>
 					</page>
 				</notebook>
@@ -1106,8 +1108,6 @@
 		<field name="arch" type="xml">
 			<form string="Master Budget Expenses">
 				<field name="period_id"/>
-				<newline/>
-				<field name="quantity"/>
 				<field name="amount"/>
 			</form>
 		</field>
@@ -1119,12 +1119,11 @@
 		<field name="arch" type="xml">
 			<tree string="Master Budget Expenses">
 				<field name="period_id"/>
-				<field name="quantity"/>
 				<field name="amount"/>
 			</tree>
 		</field>
 	</record>
-	
+
 	<record model="ir.actions.act_window" id="open_budget_post_form">
 		<field name="res_model">account.budget.post</field>
 		<field name="view_type">form</field>
