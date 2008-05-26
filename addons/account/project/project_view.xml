@@ -212,7 +212,7 @@
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	<menuitem name="Financial Management/Configuration/Journal/Analytic Journal Definition" id="account_def_analytic_journal" 
+	<menuitem name="Financial Management/Configuration/Journal/Analytic Journal Definition" id="account_def_analytic_journal"
 		action="action_account_analytic_journal_form"/>
 
 	#
@@ -243,7 +243,7 @@
 	</record>
 	<menuitem name="Financial Management/Reporting/Analytic/Print Analytic Journals"
 		id="account_analytic_journal_print"
-		action="action_account_analytic_journal_tree"/> 
+		action="action_account_analytic_journal_tree"/>
 
 
 	<record model="ir.actions.act_window" id="action_account_analytic_journal_tree2">
@@ -257,7 +257,7 @@
 
 	#
 	# Statistics
-	# 
+	#
 
 	<record model="ir.ui.view" id="report_hr_timesheet_invoice_journal_form">
 		<field name="name">report.hr.timesheet.invoice.journal.form</field>
@@ -311,7 +311,7 @@
 	</record>
 	<menuitem name="Financial Management/Reporting/Analytic/All Months/Account Cost and Revenue by Journal"
 		id="report_account_analytic_journal_print"
-		action="report_account_analytic_journal_tree"/> 
+		action="report_account_analytic_journal_tree"/>
 
 	<record model="ir.actions.act_window" id="report_account_analytic_journal_tree_month">
 		<field name="name">Account cost and revenue by journal (This Month)</field>
@@ -322,12 +322,12 @@
 	</record>
 	<menuitem name="Financial Management/Reporting/Analytic/This Month/Account Cost and Revenue by Journal"
 		id="report_account_analytic_journal_print_month"
-		action="report_account_analytic_journal_tree_month"/> 
+		action="report_account_analytic_journal_tree_month"/>
 
 	# ---------------------------------------------------------
 	# Budgets
 	# ---------------------------------------------------------
-	<record model="ir.ui.view" id="view_account_analytic_budget_post_form">
+	<!--<record model="ir.ui.view" id="view_account_analytic_budget_post_form">
 		<field name="name">account.analytic.budget.post.form</field>
 		<field name="model">account.analytic.budget.post</field>
 		<field name="type">form</field>
@@ -348,7 +348,7 @@
 			</form>
 		</field>
 	</record>
-	
+
 	<record model="ir.ui.view" id="view_account_analytic_budget_post_tree">
 		<field name="name">account.analytic.budget.post.tree</field>
 		<field name="model">account.analytic.budget.post</field>
@@ -395,7 +395,7 @@
 		<field name="view_id" ref="view_account_analytic_budget_post_tree"/>
 	</record>
 
-	<menuitem name="Financial Management/Configuration/Budgets/Analytic Budgets" id="menu_account_analytic_budget_post_form" action="open_account_analytic_budget_post_form"/>
+	<menuitem name="Financial Management/Configuration/Budgets/Analytic Budgets" id="menu_account_analytic_budget_post_form" action="open_account_analytic_budget_post_form"/>-->
 
 	<act_window name="All Analytic Entries"
 		domain="[('account_id', '=', active_id)]"
