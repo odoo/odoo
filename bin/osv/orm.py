@@ -62,6 +62,8 @@ import tools
 prof = 0
 ID_MAX = 1000
 
+regex_order = re.compile('^([a-zA-Z0-9_]+( desc)?,?)+$')
+
 def intersect(la, lb):
 	return filter(lambda x: x in lb, la)
 
@@ -1950,6 +1952,7 @@ class orm(object):
 		joins=[]
 		while i<len(args):
 			table=self
+			assert args[i][1] in ('like','ilike','not in','inselect','child_of','in','=','<>','<','>','>=','<='), 'Error ! Bad clause operand "%s".' % (args[i][1],)
 			if args[i][1] == 'inselect':
 				raise except_orm('ValidateError',
 						'The clause \'inselect\' can not be used outside the orm!')
@@ -2187,6 +2190,11 @@ class orm(object):
 					qu1.append(' (1=0)')
 		return (qu1,qu2,tables)
 
+	def _check_qorder(self, word):
+		if not regex_order.match(word):
+			raise except_orm('AccessError', 'Bad query.')
+		return True
+
 	def search_count(self, cr, user, args, context=None):
 		if not context:
 			context = {}
@@ -2206,6 +2214,9 @@ class orm(object):
 			qu1 = ' where '+string.join(qu1,' and ')
 		else:
 			qu1 = ''
+
+		if order:
+			self._check_qorder(order)
 		order_by = order or self._order
 
 		limit_str = limit and ' limit %d' % limit or ''
