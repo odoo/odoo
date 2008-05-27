@@ -59,6 +59,8 @@ import fields
 import ir
 import tools
 
+from tools.config import config
+
 prof = 0
 ID_MAX = 1000
 
@@ -851,6 +853,8 @@ class orm(object):
 					context2=context.copy()
 					context2['lang']=lang
 					self.write(cr, uid, [id], translate[lang], context2)
+				if config.get('commit_mode', False):
+					cr.commit()
 			except Exception, e:
 				logger.notifyChannel("import",netsvc.LOG_ERROR, e)
 				cr.rollback()

@@ -573,6 +573,8 @@ class xml_import(object):
 		id = self.pool.get('ir.model.data')._update(cr, self.uid, rec_model, self.module, res, rec_id or False, not self.isnoupdate(data_node), noupdate=self.isnoupdate(data_node), mode=self.mode )
 		if rec_id:
 			self.idref[rec_id] = int(id)
+		if config.get('commit_mode', False):
+			cr.commit()
 		return rec_model, id
 
 	def id_get(self, cr, model, id_str):

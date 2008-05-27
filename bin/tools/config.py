@@ -57,6 +57,7 @@ class configmanager(object):
 			'addons_path': None,
 			'root_path': None,
 			'debug_mode': False,
+			'commit_mode': False,
 			'pidfile': None,
 			'logfile': None,
 			'secure': False,
@@ -110,6 +111,7 @@ class configmanager(object):
 		group.add_option("--db_host", dest="db_host", help="specify the database host") 
 		group.add_option("--db_port", dest="db_port", help="specify the database port") 
 		group.add_option("--db_maxconn", dest="db_maxconn", default='64', help="specify the the maximum number of physical connections to posgresql")
+		group.add_option("-C", "--commit-mode", dest="commit_mode", action="store_true", help="Several commit during one file importation. Use this for big data importation.", default=False)
 		parser.add_option_group(group)
 
 		group = optparse.OptionGroup(parser, "Internationalisation options",
