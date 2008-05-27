@@ -1956,7 +1956,7 @@ class orm(object):
 		joins=[]
 		while i<len(args):
 			table=self
-			assert args[i][1] in ('like','ilike','not in','inselect','child_of','in','=','<>','<','>','>=','<='), 'Error ! Bad clause operand "%s".' % (args[i][1],)
+			assert args[i][1] in ('like','ilike','=like','not in','inselect','child_of','in','=','<>','<','>','>=','<='), 'Error ! Bad clause operand "%s".' % (args[i][1],)
 			if args[i][1] == 'inselect':
 				raise except_orm('ValidateError',
 						'The clause \'inselect\' can not be used outside the orm!')
