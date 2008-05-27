@@ -196,7 +196,7 @@ class account_bank_statement(osv.osv):
 					for newline in move.reconcile_id.line_new_ids:
 						amount += newline.amount
 
-				torec.append(account_move_line_obj.create(cr, uid, {
+				val = {
 					'name': move.name,
 					'date': move.date,
 					'ref': move.ref,
@@ -208,7 +208,22 @@ class account_bank_statement(osv.osv):
 					'statement_id': st.id,
 					'journal_id': st.journal_id.id,
 					'period_id': st.period_id.id,
-				}, context=context))
+					'currency_id': st.currency.id,
+				}
+
+				amount = res_currency_obj.compute(cr, uid, st.currency.id,
+						company_currency_id, move.amount, context=context)
+
+				if move.account_id and move.account_id.currency_id:
+					val['currency_id'] = move.account_id.currency_id.id
+					if company_currency_id==move.account_id.currency_id.id:
+						amount_cur = move.amount
+					else:
+						amount_cur = res_currency_obj.compute(cr, uid, company_currency_id,
+								move.account_id.currency_id.id, amount, context=context)
+					val['amount_currency'] = amount_cur
+
+				torec.append(account_move_line_obj.create(cr, uid, val , context=context))
 
 				if move.reconcile_id and move.reconcile_id.line_new_ids:
 					for newline in move.reconcile_id.line_new_ids:
@@ -226,8 +241,6 @@ class account_bank_statement(osv.osv):
 							'period_id': st.period_id.id,
 						}, context=context)
 
-				amount = res_currency_obj.compute(cr, uid, st.currency.id,
-						company_currency_id, move.amount, context=context)
 				if amount >= 0:
 					account_id = st.journal_id.default_credit_account_id.id
 				else:
