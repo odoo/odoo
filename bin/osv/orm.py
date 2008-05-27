@@ -64,7 +64,7 @@ from tools.config import config
 prof = 0
 ID_MAX = 1000
 
-regex_order = re.compile('^([a-zA-Z0-9_]+( desc)?,?)+$')
+regex_order = re.compile('^([a-zA-Z0-9_]+( desc)?( asc)?,?)+$', re.I)
 
 def intersect(la, lb):
 	return filter(lambda x: x in lb, la)
