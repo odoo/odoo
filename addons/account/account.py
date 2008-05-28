@@ -1185,6 +1185,7 @@ class account_tax(osv.osv):
 
 	def _unit_compute_inv(self, cr, uid, taxes, price_unit, address_id=None, product=None, partner=None):
 		taxes = self._applicable(cr, uid, taxes, price_unit, address_id, product, partner)
+		print 'Compute Inv Unit', price_unit, taxes
 
 		res = []
 		taxes.reverse()
@@ -1254,7 +1255,7 @@ class account_tax(osv.osv):
 			if len(tax.child_ids):
 				if tax.child_depend:
 					del res[-1]
-					amount = amount2
+					amount = price_unit
 				else:
 					amount = amount2
 			for t in tax.child_ids:
@@ -1275,6 +1276,7 @@ class account_tax(osv.osv):
 			tax = {'name':'', 'amount':0.0, 'account_collected_id':1, 'account_paid_id':2}
 			one tax for each tax id in IDS and their childs
 		"""
+		print 'Compute Inv', price_unit, taxes
 		res = self._unit_compute_inv(cr, uid, taxes, price_unit, address_id, product, partner=None)
 		for r in res:
 			r['amount'] *= quantity
