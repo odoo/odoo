@@ -2,11 +2,16 @@
 
 import os
 import sys
+import glob
 
-if not len(sys.argv)>1:
-	raise Exception, 'Usage: gen_graph.sh module1 module2 module3'
+if len(sys.argv) == 2 and (sys.argv[1] in ['-h', '--help']):
+    print >>sys.stderr, 'Usage: module_graph.py [module1 module2 module3]\n\tWhen no module is specified, all modules in current directory are used'
+    sys.exit(1)
 
 modules = sys.argv[1:]
+if not len(modules):
+    modules = map(os.path.dirname, glob.glob(os.path.join('*', '__terp__.py')))
+
 done = []
 
 print 'digraph G {'
