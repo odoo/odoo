@@ -27,7 +27,7 @@
 import wizard
 import pooler
 from tools.misc import UpdateableStr
-
+import time
 
 
 FORM = UpdateableStr()
@@ -36,9 +36,18 @@ FIELDS = {
 	'entries': {'string':'Entries', 'type':'many2many',
 		'relation': 'account.move.line',},
 }
+field_duedate={
+	'duedate': {'string':'Due Date', 'type':'date','required':True, 'default': lambda *a: time.strftime('%Y-%m-%d'),},
+	}
+arch_duedate='''<?xml version="1.0"?>
+<form string="Search Payment lines">
+    <field name="duedate" />
+</form>'''
 
 
 def search_entries(self, cr, uid, data, context):
+	search_due_date=data['form']['duedate']
+	
 	pool = pooler.get_pool(cr.dbname)
 	order_obj = pool.get('payment.order')
 	line_obj = pool.get('account.move.line')
@@ -52,14 +61,15 @@ def search_entries(self, cr, uid, data, context):
 	# Search for move line to pay:
 	line_ids = line_obj.search(cr, uid, [
 		('reconcile_id', '=', False),
-		('amount_to_pay', '>', 0)], context=context)
-
+		('amount_to_pay', '>', 0),('date_maturity','<=',search_due_date)], context=context)
+		
+	
 	FORM.string = '''<?xml version="1.0"?>
 <form string="Populate Payment:">
 	<field name="entries" colspan="4" height="300" width="800" nolabel="1"
 		domain="[('id', 'in', [%s])]" %s/>
 </form>''' % (','.join([str(x) for x in line_ids]), ctx)
-	return {}
+	return {'entries': line_ids}
 
 def create_payment(self, cr, uid, data, context):
 	line_ids= data['form']['entries'][0][2]
@@ -97,7 +107,21 @@ class wizard_payment_order(wizard.interface):
 	If a type is given, unsuitable account move lines are ignored.
 	"""
 	states = {
+		
 		'init': {
+			'actions': [],
+			'result': {
+				'type': 'form',
+				'arch': arch_duedate,
+				'fields':field_duedate,
+				'state': [
+					('end','_Cancel'),
+					('search','_Search', '', True)
+				]
+			},
+		 },
+		  
+		'search': {
 			'actions': [search_entries],
 			'result': {
 				'type': 'form',
