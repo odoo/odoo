@@ -1,7 +1,7 @@
 {
 	"name" : "Base",
 	"version" : "1.0",
-	"author" : "Tiny",
+	"author" : "FS3 , Review Tiny",
 	"website" : "http://tinyerp.com",
 	"category" : "Generic Modules/Base",
 	"description": "Module for password encryption.",
