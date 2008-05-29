@@ -53,5 +53,45 @@ parameter) will see those record just disappear.
 		<field name="name">Cost Price</field>
 		<field name="field">standard_price</field>
 	</record>
+
+
+
+
+
+	<!--
+	Price list type
+	-->
+	<record model="product.pricelist.type" id="pricelist_type_sale">
+		<field name="name">Sale Pricelist</field>
+		<field name="key">sale</field>
+	</record>
+
+	<!--
+	Price list
+	-->
+	<record model="product.pricelist" id="list0">
+		<field name="name">Default Sale Pricelist</field>
+		<field name="type">sale</field>
+	</record>
+	<record model="product.pricelist.version" id="ver0">
+		<field name="pricelist_id" ref="list0"/>
+		<field name="name">Default Sale Pricelist Version</field>
+	</record>
+	<record model="product.pricelist.item" id="item0">
+		<field name="price_version_id" ref="ver0"/>
+		<field name="base" ref="product.list_price" />
+		<field name="name">Default Sale Pricelist Line</field>
+	</record>
+
+	<!--
+	Property
+	-->
+	<record model="ir.property" id="property_product_pricelist" forcecreate="True">
+		<field name="name">property_product_pricelist</field>
+		<field name="fields_id" search="[('model','=','res.partner'),('name','=','property_product_pricelist')]"/>
+		<field name="value" eval="'product.pricelist,'+str(list0)"/>
+	</record>
+
+
 </data>
 </terp>
