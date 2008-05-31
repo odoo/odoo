@@ -395,7 +395,7 @@ class crm_case(osv.osv):
 					ok = ok and (not action.trg_user_id.id or action.trg_user_id.id==case.user_id.id)
 					ok = ok and (not action.trg_partner_id.id or action.trg_partner_id.id==case.partner_id.id)
 					ok = ok and (
-						not action.trg_partner_categ_id.id or 
+						not action.trg_partner_categ_id.id or
 						(
 							case.partner_id.id and
 							(action.trg_partner_categ_id.id in map(lambda x: x.id, case.partner_id.category_id or []))
@@ -566,15 +566,18 @@ class crm_case(osv.osv):
 					and case.email_from:
 				src = case.email_from
 				dest = case.user_id.address_id.email
+				body = case.email_last or case.description
 				if not destination:
 					src,dest = dest,src
+					if case.user_id.signature:
+						body += '\n\n%s' % (case.user_id.signature)
 				dest = [dest]
 				if not attach:
 					tools.email_send(
 						src,
 						dest,
 						'Reminder: '+'['+str(case.id)+']'+' '+case.name,
-						case.email_last or case.description,
+						body,
 						reply_to=case.section_id.reply_to, tinycrm=str(case.id)
 						)
 				else:
@@ -589,7 +592,7 @@ class crm_case(osv.osv):
 						src,
 						dest,
 						'Reminder: '+'['+str(case.id)+']'+' '+case.name,
-						case.email_last or case.description,
+						body,
 						reply_to=case.section_id.reply_to,
 						attach=res, tinycrm=str(case.id)
 						)
@@ -625,8 +628,11 @@ class crm_case(osv.osv):
 				})
 			emails = [case.email_from] + (case.email_cc or '').split(',')
 			emails = filter(None, emails)
+			body = case.description
+			if case.user_id.signature:
+				body += '\n\n%s' % (case.user_id.signature)
 			tools.email_send(case.user_id.address_id.email, emails,
-					'['+str(case.id)+'] '+case.name, case.description,
+					'['+str(case.id)+'] '+case.name, body,
 					reply_to=case.section_id.reply_to, tinycrm=str(case.id))
 		return True
 
