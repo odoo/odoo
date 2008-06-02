@@ -138,12 +138,17 @@
 			<field name="signal">cancel</field>
 		</record>
 
+		<record model="workflow.transition" id="trans_wait_invoice_all_lines_invoiced">
+			<field name="act_from" ref="act_wait_invoice"/>
+			<field name="act_to" ref="act_invoice_end"/>
+			<field name="signal">all_lines</field>
+		</record>
+
 		<record model="workflow.transition" id="trans_router_wait_invoice_shipping">
 			<field name="act_from" ref="act_wait_invoice"/>
 			<field name="act_to" ref="act_invoice_end"/>
 			<field name="condition">(order_policy=='picking')</field>
 		</record>
-
 
 		<record model="workflow.transition" id="trans_router_wait_invoice">
 			<field name="act_from" ref="act_router"/>

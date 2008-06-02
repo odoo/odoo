@@ -82,6 +82,16 @@ def _makeInvoices(self, cr, uid, data, context):
 				invoices[line.order_id.id].append((line, lid))
 			pool.get('sale.order.line').write(cr, uid, [line.id],
 					{'invoiced': True})
+		flag = True
+		data_sale = pool.get('sale.order').browse(cr,uid,line.order_id.id)
+		for line in data_sale.order_line:
+			if not line.invoiced:
+				flag = False
+				break
+		if flag:
+			wf_service = netsvc.LocalService('workflow')
+			wf_service.trg_validate(uid, 'sale.order', line.order_id.id, 'all_lines', cr)
+			pool.get('sale.order').write(cr,uid,[line.order_id.id],{'state' : 'progress'})
 
 	for result in invoices.values():
 		order = result[0][0].order_id
