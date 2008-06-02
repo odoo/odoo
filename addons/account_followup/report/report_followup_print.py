@@ -45,14 +45,18 @@ class report_rappel(report_sxw.rml_parse):
 
 	def _ids_to_objects(self, partners_ids):
 		pool = pooler.get_pool(self.cr.dbname)
-		partners = pool.get('res.partner').browse(self.cr, self.uid, partners_ids)
-		return partners
+		all_partners = []
+		for partner in partners_ids:
+			partners = pool.get('account_followup.stat').browse(self.cr, self.uid, partner[2])
+			for par in partners:
+				all_partners.append(par.name)
+		return all_partners
 
 	def _adr_get(self, partner, type):
 		res_partner = pooler.get_pool(self.cr.dbname).get('res.partner')
 		res_partner_address = pooler.get_pool(self.cr.dbname).get('res.partner.address')
 		adr = res_partner.address_get(self.cr, self.uid, [partner.id], [type])[type]
-		return res_partner_address.read(self.cr, self.uid, [adr])[0]
+		return res_partner_address.read(self.cr, self.uid, [adr])
 
 	def _lines_get(self, partner):
 		moveline_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')

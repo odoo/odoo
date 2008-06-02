@@ -37,8 +37,8 @@
 			<field name="res_model">account_followup.followup</field>
 			<field name="view_type">form</field>
 		</record>
-		<menuitem 
-			name="Financial Management/Configuration/Payment Terms/Follow-Ups" 
+		<menuitem
+			name="Financial Management/Configuration/Payment Terms/Follow-Ups"
 			action="action_account_followup_definition_form"
 			id="account_followup_menu"/>
 
@@ -54,9 +54,9 @@
 			<field name="name">Send followups</field>
 			<field name="wiz_name">account_followup.followup.print.all</field>
 		</record>
-		<menuitem 
-			name="Financial Management/Periodical Processing/Send Follow-Ups" 
-			action="action_account_followup_all_wizard" 
+		<menuitem
+			name="Financial Management/Periodical Processing/Send Follow-Ups"
+			action="action_account_followup_all_wizard"
 			type="wizard"
 			id="account_followup_wizard_menu"/>
 
@@ -79,6 +79,7 @@
 				<field name="debit" sum="Total debit"/>
 				<field name="credit" sum="Total credit"/>
 				<field name="state"/>
+				<field name="date_maturity"/>
 			</tree>
 		</field>
 	</record>
@@ -107,7 +108,7 @@
 		</field>
 	</record>
 
-	
+
 	<act_window name="Receivables &amp; Payables"
 		domain="[('partner_id', '=', active_id),('reconcile_id','=',False),('account_id.reconcile', '=', True)]"
 		res_model="account.move.line"
@@ -121,9 +122,9 @@
 		view="account_move_line_partner_tree"
 		id="act_account_partner_account_move_all"/>
 
-	<menuitem 
-		action="act_account_partner_account_move_all" 
-		name="Financial Management/Periodical Processing/Send Follow-Ups/Receivable Entries" 
+	<menuitem
+		action="act_account_partner_account_move_all"
+		name="Financial Management/Periodical Processing/Send Follow-Ups/Receivable Entries"
 		id="menu_account_move_open_unreconcile"/>
 
 	<act_window name="All payable entries"
@@ -133,9 +134,9 @@
 		view="account_move_line_partner_tree"
 		id="act_account_partner_account_move_payable_all"/>
 
-	<menuitem 
-		action="act_account_partner_account_move_payable_all" 
-		name="Financial Management/Periodical Processing/Send Follow-Ups/Payable Entries" 
+	<menuitem
+		action="act_account_partner_account_move_payable_all"
+		name="Financial Management/Periodical Processing/Send Follow-Ups/Payable Entries"
 		id="menu_account_move_open_unreconcile_payable"/>
 
 
