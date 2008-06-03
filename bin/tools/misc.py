@@ -208,6 +208,42 @@ def file_open(name, mode="r", subdir='addons'):
 
 
 #----------------------------------------------------------
+# iterables
+#----------------------------------------------------------
+def flatten(list):
+    """Flatten a list of elements into a uniqu list
+    Author: Christophe Simonis (christophe@tinyerp.com)
+    
+    Examples:
+    >>> flatten(['a'])
+    ['a']
+    >>> flatten('b')
+    ['b']
+    >>> flatten( [] )
+    []
+    >>> flatten( [[], [[]]] )
+    []
+    >>> flatten( [[['a','b'], 'c'], 'd', ['e', [], 'f']] )
+    ['a', 'b', 'c', 'd', 'e', 'f']
+    >>> t = (1,2,(3,), [4, 5, [6, [7], (8, 9), ([10, 11, (12, 13)]), [14, [], (15,)], []]])
+    >>> flatten(t)
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+    """
+    
+    def isiterable(x):
+        return hasattr(x, "__iter__")
+
+    r = []
+    for e in list:
+        if isiterable(e):
+            map(r.append, flatten(e))
+        else:
+            r.append(e)
+    return r
+
+
+
+#----------------------------------------------------------
 # Emails
 #----------------------------------------------------------
 def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, on_error=False, reply_to=False, tinycrm=False):
@@ -241,11 +277,11 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
 		s.connect(config['smtp_server'])
 		if config['smtp_user'] or config['smtp_password']:
 			s.login(config['smtp_user'], config['smtp_password'])
-		s.sendmail(email_from, email_to + email_cc + email_bcc, msg.as_string())
+		s.sendmail(email_from, flatten([email_to, email_cc, email_bcc]), msg.as_string())
 		s.quit()
 	except Exception, e:
 		import logging
-		logging.getLogger().info(str(e))
+		logging.getLogger().error(str(e))
 	return True
 
 
@@ -295,11 +331,11 @@ def email_send_attach(email_from, email_to, subject, body, email_cc=None, email_
 		s.connect(config['smtp_server'])
 		if config['smtp_user'] or config['smtp_password']:
 			s.login(config['smtp_user'], config['smtp_password'])
-		s.sendmail(email_from, email_to + email_cc + email_bcc, msg.as_string())
+		s.sendmail(email_from, flatten([email_to, email_cc, email_bcc]), msg.as_string())
 		s.quit()
 	except Exception, e:
 		import logging
-		logging.getLogger().info(str(e))
+		logging.getLogger().error(str(e))
 	return True
 
 #----------------------------------------------------------
@@ -549,5 +585,13 @@ def mod10r(number):
 		if digit.isdigit():
 			report = codec[ (int(digit) + report) % 10 ]
 	return result + str((10 - report) % 10)
+
+
+
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
+
 
 # vim:noexpandtab
