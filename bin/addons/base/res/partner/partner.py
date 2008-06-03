@@ -275,7 +275,7 @@ class res_partner_address(osv.osv):
 		'city': fields.char('City', size=128),
 		'state_id': fields.many2one("res.country.state", 'State', change_default=True, domain="[('country_id','=',country_id)]"),
 		'country_id': fields.many2one('res.country', 'Country', change_default=True),
-		'email': fields.char('E-Mail', size=64),
+		'email': fields.char('E-Mail', size=240),
 		'phone': fields.char('Phone', size=64),
 		'fax': fields.char('Fax', size=64),
 		'mobile': fields.char('Mobile', size=64),
