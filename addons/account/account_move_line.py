@@ -238,6 +238,17 @@ class account_move_line(osv.osv):
 			res[line_id] = (invoice_id, invoice_names[invoice_id])
 		return res
 
+	def name_get(self, cr, uid, ids, context={}):
+		if not len(ids):
+			return []
+		result = []
+		for line in self.browse(cr, uid, ids, context):
+			if line.ref:
+				result.append((line.id, (line.name or '')+' ('+line.ref+')'))
+			else:
+				result.append((line.id, line.name))
+		return result
+
 	def _invoice_search(self, cursor, user, obj, name, args):
 		if not len(args):
 			return []
