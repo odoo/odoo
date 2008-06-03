@@ -46,7 +46,7 @@ module (new version).
 
 Make sure you read the publication manual and modules guidlines
 before continuing:
-  http://www.tinyerp.com/
+  http://www.openerp.com/
 
 Thanks you for contributing!
 """},
@@ -57,7 +57,7 @@ login_form = '''<?xml version="1.0"?>
 	<separator string="User information" colspan="4"/>
 	<label string="Please provide here your login on the Tiny ERP website."
 	align="0.0" colspan="4"/>
-	<label string="If you don't have an access, you can create one http://www.tinyerp.com/"
+	<label string="If you don't have an access, you can create one http://www.openerp.com/"
 	align="0.0" colspan="4"/>
 	<field name="login"/>
 	<newline/>
@@ -98,8 +98,8 @@ def _upload(self, cr, uid, datas, context):
 			continue
 		res = module_zip.createzip(cr, uid, mod.id, context, b64enc=False,
 				src=(mod.license in ('GPL-2')))
-		download = 'http://www.tinyerp.com/download/modules/'+res['module_filename']
-		result = post_multipart('www.tinyerp.com', '/mtree_upload.php',
+		download = 'http://www.openerp.com/download/modules/'+res['module_filename']
+		result = post_multipart('www.openerp.com', '/mtree_upload.php',
 				[('login', datas['form']['login']),
 					('password', datas['form']['password']),
 					('module_name', mod.name)
@@ -131,13 +131,13 @@ def _upload(self, cr, uid, datas, context):
 			'auto_login': datas['form']['login'],
 			'auto_password': datas['form']['password']
 		}
-		a = urlopen('http://www.tinyerp.com/mtree_interface.php?module=%s' % (mod.name,))
+		a = urlopen('http://www.openerp.com/mtree_interface.php?module=%s' % (mod.name,))
 		aa = a.read()
 		if aa[0]<>'0':
 			updata['link_id']=aa.split('\n')[0]
 			updata['cat_id']=aa.split('\n')[1]
 			updata['option'] = 'mtree'
-		result = post_multipart('www.tinyerp.com', '/index.php', updata.items(), [])
+		result = post_multipart('www.openerp.com', '/index.php', updata.items(), [])
 	return {'update': '\n'.join(log[0]), 'already': '\n'.join(log[1]),
 		'error': '\n'.join(log[2])}
 

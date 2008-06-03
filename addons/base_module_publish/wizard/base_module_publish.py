@@ -49,14 +49,14 @@ module or update an existing one (new version).
 
 Make sure you read the publication manual and modules guidelines
 before continuing:
-  http://www.tinyerp.com
+  http://www.openerp.com
 
 Thank you for contributing!
 """},
 }
 
 def _get_selection(self, cr, uid, datas, *args):
-	a = urllib.urlopen('http://www.tinyerp.com/mtree_interface.php')
+	a = urllib.urlopen('http://www.openerp.com/mtree_interface.php')
 	contents = a.read()
 	content = filter(None, contents.split('\n'))
 	result = map(lambda x:x.split('='), content)
@@ -129,7 +129,7 @@ upload_info_form = '''<?xml version="1.0"?>
 	<separator string="User information" colspan="4"/>
 	<label string="Please provide here your login on the Tiny ERP website."
 	align="0.0" colspan="4"/>
-	<label string="If you don't have an access, you can create one http://www.tinyerp.com/"
+	<label string="If you don't have an access, you can create one http://www.openerp.com/"
 	align="0.0" colspan="4"/>
 	<field name="login"/>
 	<newline/>
@@ -141,7 +141,7 @@ upload_info_form = '''<?xml version="1.0"?>
 def _get_edit(self, cr, uid, datas, *args):
 	pool = pooler.get_pool(cr.dbname)
 	name = pool.get('ir.module.module').read(cr, uid, [datas['id']], ['name'])[0]['name']
-	a = urllib.urlopen('http://www.tinyerp.com/mtree_interface.php?module=%s' % (name,))
+	a = urllib.urlopen('http://www.openerp.com/mtree_interface.php?module=%s' % (name,))
 	content = a.read()
 	try:
 		email = self.pool.get('res.users').browse(cr, uid, uid).address.email or ''
@@ -228,8 +228,8 @@ def _upload(self, cr, uid, datas, context):
 	if not download:
 		res = module_zip.createzip(cr, uid, datas['id'], context,
 				b64enc=False, src=datas['form']['include_src'])
-		download = 'http://www.tinyerp.com/download/modules/'+res['module_filename']
-		result = post_multipart('www.tinyerp.com', '/mtree_upload.php',
+		download = 'http://www.openerp.com/download/modules/'+res['module_filename']
+		result = post_multipart('www.openerp.com', '/mtree_upload.php',
 			[
 				('login',datas['form']['login']),
 				('password',datas['form']['password']),
@@ -268,7 +268,7 @@ def _upload(self, cr, uid, datas, context):
 		'auto_password': datas['form']['password']
 	}
 	name = mod.name
-	a = urllib.urlopen('http://www.tinyerp.com/mtree_interface.php?module=%s' % (name,))
+	a = urllib.urlopen('http://www.openerp.com/mtree_interface.php?module=%s' % (name,))
 	aa = a.read()
 	if aa[0]<>'0':
 		updata['link_id']=aa.split('\n')[0]
@@ -278,7 +278,7 @@ def _upload(self, cr, uid, datas, context):
 	if datas['form']['image']:
 		files.append(('link_image', 'link_image.png',
 			base64.decodestring(datas['form']['image'])))
-	result = post_multipart('www.tinyerp.com', '/index.php', updata.items(), files)
+	result = post_multipart('www.openerp.com', '/index.php', updata.items(), files)
 	return {'result': result}
 
 def module_check(self, cr, uid, data, context):
