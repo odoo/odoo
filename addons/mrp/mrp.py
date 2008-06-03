@@ -369,8 +369,8 @@ class mrp_production(osv.osv):
 			if not bom_id:
 				raise osv.except_osv('Error', "Couldn't find bill of material for product")
 
-			if bom_point.routing_id and bom_point.routing_id.location_id:
-				self.write(cr, uid, [production.id], {'location_src_id': bom_point.routing_id.location_id.id})
+			#if bom_point.routing_id and bom_point.routing_id.location_id:
+			#	self.write(cr, uid, [production.id], {'location_src_id': bom_point.routing_id.location_id.id})
 
 			factor = production.product_qty * production.product_uom.factor / bom_point.product_uom.factor
 			res = self.pool.get('mrp.bom')._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, properties)
@@ -508,9 +508,17 @@ class mrp_production(osv.osv):
 			if not production.product_lines:
 				self.action_compute(cr, uid, [production.id])
 				production = self.browse(cr, uid, [production.id])[0]
+			routing_loc = None
+			pick_type = 'internal'
+			if production.bom_id.routing_id and production.bom_id.routing_id.location_id:
+				routing_loc = production.bom_id.routing_id.location_id
+				if routing_loc.usage<>'internal':
+					pick_type = 'out'
+
+				routing_loc = routing_loc.id
 			picking_id = self.pool.get('stock.picking').create(cr, uid, {
 				'origin': (production.origin or '').split(':')[0] +':'+production.name,
-				'type': 'internal',
+				'type': pick_type,
 				'move_type': 'one',
 				'state': 'auto',
 				'auto_picking': self._get_auto_picking(cr, uid, production),
@@ -547,7 +555,7 @@ class mrp_production(osv.osv):
 						'product_uom': line.product_uom.id,
 						'product_uos_qty': line.product_uos and line.product_uos_qty or False,
 						'product_uos': line.product_uos and line.product_uos.id or False,
-						'location_id': production.location_src_id.id,
+						'location_id': routing_loc or production.location_src_id.id,
 						'location_dest_id': source,
 						'move_dest_id': res_final_id,
 						'state': 'waiting',
@@ -564,7 +572,7 @@ class mrp_production(osv.osv):
 						'date_planned': newdate,
 						'move_dest_id': res_dest_id,
 						'location_id': production.location_src_id.id,
-						'location_dest_id': production.location_src_id.id,
+						'location_dest_id': routing_loc or production.location_src_id.id,
 						'state': 'waiting',
 					})
 				proc_id = self.pool.get('mrp.procurement').create(cr, uid, {
@@ -985,7 +993,6 @@ class mrp_procurement(osv.osv):
 			context={}
 		_procure_orderpoint_confirm(self, cr, uid, automatic=automatic,\
 				use_new_cursor=use_new_cursor, context=context, user_id=user_id)
-
 mrp_procurement()
 
 
@@ -1022,11 +1029,9 @@ stock_warehouse_orderpoint()
 
 class StockMove(osv.osv):
 	_inherit = 'stock.move'
-
 	_columns = {
-			'procurements': fields.one2many('mrp.procurement', 'move_id', 'Procurements'),
-			}
-
+		'procurements': fields.one2many('mrp.procurement', 'move_id', 'Procurements'),
+	}
 StockMove()
 
 
