@@ -510,17 +510,19 @@ class mrp_production(osv.osv):
 				production = self.browse(cr, uid, [production.id])[0]
 			routing_loc = None
 			pick_type = 'internal'
+			address_id = False
 			if production.bom_id.routing_id and production.bom_id.routing_id.location_id:
 				routing_loc = production.bom_id.routing_id.location_id
 				if routing_loc.usage<>'internal':
 					pick_type = 'out'
-
+				address_id = routing_loc.address_id and routing_loc.address_id.id or False
 				routing_loc = routing_loc.id
 			picking_id = self.pool.get('stock.picking').create(cr, uid, {
 				'origin': (production.origin or '').split(':')[0] +':'+production.name,
 				'type': pick_type,
 				'move_type': 'one',
 				'state': 'auto',
+				'address_id': address_id,
 				'auto_picking': self._get_auto_picking(cr, uid, production),
 			})
 			toconfirm = True
