@@ -83,6 +83,8 @@ class stock_location(osv.osv):
 		'location_id': fields.many2one('stock.location', 'Parent Location', select=True),
 		'child_ids': fields.one2many('stock.location', 'location_id', 'Contains'),
 
+		'address_id': fields.many2one('res.partner.address', 'Location Address'),
+
 		'comment': fields.text('Additional Information'),
 		'posx': fields.integer('Corridor (X)', required=True),
 		'posy': fields.integer('Shelves (Y)', required=True),
