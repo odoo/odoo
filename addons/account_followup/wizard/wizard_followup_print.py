@@ -47,7 +47,7 @@ form = """<?xml version="1.0"?>
 	<field name="mail_sent" colspan="4"/>
 	<newline/>
 	<newline/>
-	<label string="Mail not sent to following Partners , Email not available !" colspan="4"/>
+	<separator string="Mail not sent to following Partners , Email not available !" colspan="4"/>
 	<field name="mail_notsent" colspan="4" nolabel="1"/>
 </form>"""
 
@@ -64,7 +64,6 @@ _followup_wizard_all_form = """<?xml version="1.0"?>
 			<field name="partner_ids" colspan="4" nolabel="1"/>
 		</page>
 		<page string="Email confirmation">
-			<label string="Not yet implemented !" colspan="4"/>
 			<field name="email_conf" colspan="4"/>
 			<field name="email_subject" colspan="4"/>
 			<separator string="Email body" colspan="4"/>
@@ -97,7 +96,7 @@ _followup_wizard_all_fields = {
 		'string' : "Email Subject",
 		'type' : "char",
 		'size': 64,
-		'default': 'Account Statement'
+		'default': 'Account Follow-up'
 		},
 	'email_body': {
 		'string': "Email body",
@@ -154,7 +153,6 @@ class followup_all_print(wizard.interface):
 			for line in move_lines:
 				partners.append(line.name)
 				dict_lines[line.name.id] =line
-			print partners
 			for partner in partners:
 				ids_lines = pool.get('account.move.line').search(cr,uid,[('partner_id','=',partner.id),('reconcile_id','=',False),('account_id.type','in',['receivable','payable'])])
 				data_lines = pool.get('account.move.line').browse(cr,uid,ids_lines)
@@ -168,8 +166,7 @@ class followup_all_print(wizard.interface):
 						if (not dest) and adr.type=='default':
 							if adr.email:
 								dest = [adr.email]
-				print "dest: ", dest
-				src = tools.config.options['smtp_user'] #'priteshmodi.eiffel@yahoo.co.in'
+				src = tools.config.options['smtp_user']
 				body=data['form']['email_body']
 				total_amt = followup_data.debit - followup_data.credit
 				move_line = ''
@@ -251,8 +248,6 @@ class followup_all_print(wizard.interface):
 		partner_list = []
 		to_update = {}
 		for partner_id, followup_line_id, date, id in move_lines:
-#			if (partner_id in partner_list) or (not partner_id):
-#				continue
 			if not partner_id:
 				continue
 			if partner_id in partner_list:
