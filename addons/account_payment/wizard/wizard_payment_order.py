@@ -92,6 +92,8 @@ def create_payment(self, cr, uid, data, context):
 			'amount_currency': line.amount_to_pay,
 			'bank_id': line2bank.get(line.id),
 			'order_id': payment.id,
+			'partner_id': line.partner_id and line.partner_id.id or False,
+			'communication': line.ref or '/'
 			}, context=context)
 	return {}
 

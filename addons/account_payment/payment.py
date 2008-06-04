@@ -95,11 +95,11 @@ class payment_order(osv.osv):
 
 	_columns = {
 		'date_planned': fields.date('Scheduled date if fixed'),
-		'reference': fields.char('Reference',size=128),
-		'mode': fields.many2one('payment.mode','Payment mode', select=True),
+		'reference': fields.char('Reference',size=128,required=1),
+		'mode': fields.many2one('payment.mode','Payment mode', select=True, required=1),
 		'state': fields.selection([
 			('draft', 'Draft'),
-			('open','Open'),
+			('open','Confirmed'),
 			('cancel','Cancelled'),
 			('done','Done')], 'State', select=True),
 		'line_ids': fields.one2many('payment.line','order_id','Payment lines'),
@@ -120,8 +120,7 @@ class payment_order(osv.osv):
 		'state': lambda *a: 'draft',
 		'date_prefered': lambda *a: 'due',
 		'date_created': lambda *a: time.strftime('%Y-%m-%d'),
-		'reference': lambda self,cr,uid,context: self.pool.get('ir.sequence'
-			).get(cr, uid, 'payment.order'),
+		'reference': lambda self,cr,uid,context: self.pool.get('ir.sequence').get(cr, uid, 'payment.order'),
 	}
 
 	def set_to_draft(self, cr, uid, ids, *args):
@@ -167,6 +166,18 @@ class payment_line(osv.osv):
 				"due_date": "date_maturity",
 				"reference": "ref"}.get(orig, orig)
 
+	def info_owner(self, cr, uid, ids, name, args, context=None):
+		if not ids: return {}
+		result = {}
+		for id in ids:
+			result[id] = """Tiny SPRL
+126-12021213-07 (Fortis)
+Chaussee de Namlur 40
+1367 Grand Rosiere
+Belgique"""
+		return result
+
+	info_partner = info_owner
 	def select_by_name(self, cr, uid, ids, name, args, context=None):
 		if not ids: return {}
 
@@ -279,7 +290,9 @@ class payment_line(osv.osv):
 		return res
 
 	_columns = {
-		'name': fields.char('Name', size=64, required=True, readonly=True),
+		'name': fields.char('Your Reference', size=64, required=True),
+		'communication': fields.char('Communication', size=64),
+		'communication2': fields.char('Communication 2', size=64),
 		'move_line_id': fields.many2one('account.move.line','Entry line',
 			required=True),
 		'amount_currency': fields.float('Amount', digits=(16,2),
@@ -292,8 +305,7 @@ class payment_line(osv.osv):
 		'bank_id': fields.many2one('res.partner.bank', 'Bank account'),
 		'order_id': fields.many2one('payment.order', 'Order', required=True,
 			ondelete='cascade', select=True),
-		'partner_id': fields.function(select_by_name, string="Partner",
-			method=True, type='many2one', obj='res.partner'),
+		'partner_id': fields.many2one('res.partner', string="Partner"),
 		'amount': fields.function(_amount, string='Amount',
 			method=True, type='float',
 			help='Payment amount in the company currency'),
@@ -305,14 +317,19 @@ class payment_line(osv.osv):
 			method=True, type='date'),
 		'reference': fields.function(select_by_name, string="Ref", method=True,
 			type='char'),
+		'info_owner': fields.function(info_owner, string="Owner Account", method=True, type="text"),
+		'info_partner': fields.function(info_partner, string="Owner Account", method=True, type="text"),
 		'partner_payable': fields.function(partner_payable,
 			string="Partner payable", method=True, type='float'),
 		'value_date': fields.function(_value_date, string='Value Date',
 			method=True, type='date'),
+		'date': fields.date('Memo Date'),
+		'state': fields.selection([('normal','Normal'), ('structured','Structured')], 'State', required=True)
 	 }
 	_defaults = {
 		'name': lambda obj, cursor, user, context: obj.pool.get('ir.sequence'
 			).get(cursor, user, 'payment.line'),
+		'state': lambda *args: 'normal'
 	}
 	_sql_constraints = [
 		('name_uniq', 'UNIQUE(name)', 'The payment line name must be unique!'),
