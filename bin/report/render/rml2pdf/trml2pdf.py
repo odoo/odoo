@@ -98,6 +98,8 @@ class _rml_styles(object):
 					styles.append(('LEADING', start, stop, utils.unit_get(node.getAttribute('length'))))
 				elif node.localName=='blockAlignment':
 					styles.append(('ALIGNMENT', start, stop, str(node.getAttribute('value'))))
+				elif node.localName=='blockSpan':
+					styles.append(('SPAN', start, stop))
 				elif node.localName=='blockLeftPadding':
 					styles.append(('LEFTPADDING', start, stop, utils.unit_get(node.getAttribute('length'))))
 				elif node.localName=='blockRightPadding':
@@ -457,8 +459,8 @@ class _rml_flowable(object):
 			colwidths = [utils.unit_get(f.strip()) for f in node.getAttribute('colWidths').split(',')]
 		if node.hasAttribute('rowHeights'):
 			rowheights = [utils.unit_get(f.strip()) for f in node.getAttribute('rowHeights').split(',')]
-                        if len(rowheights) == 1:
-                            rowheights = rowheights[0]
+			if len(rowheights) == 1:
+				rowheights = rowheights[0]
 		table = platypus.Table(data = data, colWidths=colwidths, rowHeights=rowheights, **(utils.attr_get(node, ['splitByRow'] ,{'repeatRows':'int','repeatCols':'int'})))
 		if node.hasAttribute('style'):
 			table.setStyle(self.styles.table_styles[node.getAttribute('style')])
