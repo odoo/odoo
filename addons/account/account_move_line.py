@@ -444,7 +444,7 @@ class account_move_line(osv.osv):
 		if not total:
 			return self.reconcile(cr, uid, merges+unmerge, context=context)
 		r_id = self.pool.get('account.move.reconcile').create(cr, uid, {
-			'type': type, 
+			'type': type,
 			'line_partial_ids': map(lambda x: (4,x,False), merges+unmerge)
 		})
 		self.pool.get('account.move.reconcile').reconcile_partial_check(cr, uid, [r_id] + merges_rec, context=context)
@@ -518,14 +518,14 @@ class account_move_line(osv.osv):
 
 			writeoff_line_ids = self.search(cr, uid, [('move_id', '=', writeoff_move_id), ('account_id', '=', account_id)])
 			ids += writeoff_line_ids
-			
+
 		r_id = self.pool.get('account.move.reconcile').create(cr, uid, {
-			#'name': date, 
-			'type': type, 
+			#'name': date,
+			'type': type,
 			'line_id': map(lambda x: (4,x,False), ids),
 			'line_partial_ids': map(lambda x: (3,x,False), ids)
 		})
-		# the id of the move.reconcile is written in the move.line (self) by the create method above 
+		# the id of the move.reconcile is written in the move.line (self) by the create method above
 		# because of the way the line_id are defined: (4, x, False)
 		wf_service = netsvc.LocalService("workflow")
 		for id in ids:

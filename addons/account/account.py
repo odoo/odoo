@@ -575,6 +575,20 @@ class account_move(osv.osv):
 	_name = "account.move"
 	_description = "Account Entry"
 
+	def name_get(self, cursor, user, ids, context=None):
+		if not len(ids):
+			return []
+		res=[]
+		data_move = self.pool.get('account.move').browse(cursor,user,ids)
+		for move in data_move:
+			if move.state=='draft':
+				name = '*' + move.name
+			else:
+				name = move.name
+			res.append((move.id, name))
+		return res
+
+
 	def _get_period(self, cr, uid, context):
 		periods = self.pool.get('account.period').find(cr, uid)
 		if periods:

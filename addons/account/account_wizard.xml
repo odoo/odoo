@@ -21,7 +21,7 @@
 			name="account.budget.spread"
 			menu="False"
 			id="wizard_budget_spread"/>
-			
+
 		<!-- close year, period, journal -->
 		<wizard
 			string="Close a fiscal year"
@@ -52,7 +52,7 @@
 			action="wizard_automatic_reconcile"
 			type="wizard"
 			id="menu_automatic_reconcile"/>
-			
+
 		<!-- manual reconcile -->
 		<wizard
 			string="Reconcile Entries"
@@ -112,7 +112,7 @@
 			id="menu_generate_subscription"/>
 
 		<!-- Aged partner balance -->
-		<wizard 
+		<wizard
 			string="Aged partner balance"
 			model="res.partner"
 			name="account.aged.trial.balance"
@@ -123,9 +123,9 @@
 			action="wizard_aged_trial_balance"
 			type="wizard"
 			id="menu_aged_trial_balance"/>
-	
+
 		<!-- report-related wizards -->
-		<wizard 
+		<wizard
 			string="Partner balance"
 			model="res.partner"
 			name="account.partner.balance.report"
@@ -136,8 +136,8 @@
 			action="wizard_partner_balance_report"
 			type="wizard"
 			id="menu_partner_balance"/>
-			
-		<wizard 
+
+		<wizard
 			string="Partner ledger"
 			model="res.partner"
 			name="account.third_party_ledger.report"
@@ -148,8 +148,8 @@
 			action="wizard_third_party_ledger"
 			type="wizard"
 			id="menu_third_party_ledger"/>
-			
-		<wizard 
+
+		<wizard
 			string="Budget"
 			model="account.budget.post"
 			name="account.budget.report"
@@ -161,21 +161,21 @@
 			name="account.account.balance.report"
 			keyword="client_print_multi"
 			id="wizard_balance_report"/>
-		<wizard 
+		<wizard
 			string="General ledger"
 			model="account.account"
 			name="account.general.ledger.report"
 			keyword="client_print_multi"
 			id="wizard_general_ledger_report"/>
 
-		<wizard 
+		<wizard
 			string="Confirm draft invoices"
 			model="account.invoice"
 			name="account.invoice.state.confirm"
 			keyword="client_action_multi"
 			multi="True"
 			id="wizard_invoice_state_confirm"/>
-		<wizard 
+		<wizard
 			string="Cancel selected invoices"
 			model="account.invoice"
 			name="account.invoice.state.cancel"
@@ -190,6 +190,26 @@
 			name="account.wizard.account.duplicate"
 			id="wizard_account_duplicate"
 			keyword="tree_but_action"/>
+
+		<!-- account.move validate -->
+		<wizard
+			string="Validate Account Moves"
+			model="account.move"
+			name="account.move.validate"
+			menu="False"
+			id="wizard_validate_account_moves"/>
+		<menuitem
+			name="Financial Management/Periodical Processing/Validate Account Moves"
+			action="wizard_validate_account_moves"
+			type="wizard"
+			id="menu_validate_account_moves"/>
+
+		<wizard
+			string="Validate Account Moves"
+			model="account.move.line"
+			name="account.move_line.validate"
+			menu="True"
+			id="wizard_validate_account_moves_line"/>
 
 		</data>
 </terp>
