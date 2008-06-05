@@ -12,8 +12,8 @@
 			<field eval="[(4, ref('hr.menu_open_view_employee_tree')), (4, ref('hr.menu_open_view_employee_list')),(4, ref('hr.menu_open_view_employee_new')), (4, ref('hr.menu_view_employee_category_form'))]" name="menu_access"/>
 		</record>
 
-		<record model="res.users" id="base.group_admin">
-			<field name="groups_id" eval="[(4, ref('base.group_admin')), (4, ref('group_hr_employee')),(4, ref('group_hr_manager'))]"/>
+		<record model="res.users" id="base.user_admin">
+			<field name="groups_id" eval="[(4, ref('group_hr_employee')),(4, ref('group_hr_manager'))]"/>
 		</record>
 
 		<!-- Department security -->
