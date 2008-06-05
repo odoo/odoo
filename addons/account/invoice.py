@@ -503,8 +503,6 @@ class account_invoice(osv.osv):
 				for i in line:
 					i[2]['period_id'] = inv.period_id.id
 
-			print 'move: ', move
-
 			move_id = self.pool.get('account.move').create(cr, uid, move)
 			# make the invoice point to that move
 			self.write(cr, uid, [inv.id], {'move_id': move_id})
