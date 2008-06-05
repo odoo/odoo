@@ -104,6 +104,9 @@ class ServiceUnavailable(Exception):
 def service_exist(name):
 	return (name in _service) and bool(_service[name])
 
+def get_rpc_paths():
+	return map(lambda s: '/xmlrpc/%s' % s, _service)
+
 LOG_DEBUG='debug'
 LOG_INFO='info'
 LOG_WARNING='warn'
@@ -215,13 +218,7 @@ class GenericXMLRPCRequestHandler:
 
 class SimpleXMLRPCRequestHandler(GenericXMLRPCRequestHandler,
 		SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
-	SimpleXMLRPCServer.SimpleXMLRPCRequestHandler.rpc_paths = (
-			'/xmlrpc/db',
-			'/xmlrpc/common',
-			'/xmlrpc/object',
-			'/xmlrpc/report',
-			'/xmlrpc/wizard',
-			)
+	SimpleXMLRPCServer.SimpleXMLRPCRequestHandler.rpc_paths = get_rpc_paths()
 
 class SimpleThreadedXMLRPCServer(SocketServer.ThreadingMixIn,
 		SimpleXMLRPCServer.SimpleXMLRPCServer):
@@ -242,13 +239,7 @@ class HttpDaemon(threading.Thread):
 			from ssl import SecureXMLRPCServer
 			class SecureXMLRPCRequestHandler(GenericXMLRPCRequestHandler,
 					SecureXMLRPCServer.SecureXMLRPCRequestHandler):
-				SecureXMLRPCServer.SecureXMLRPCRequestHandler.rpc_paths = (
-						'/xmlrpc/db',
-						'/xmlrpc/common',
-						'/xmlrpc/object',
-						'/xmlrpc/report',
-						'/xmlrpc/wizard',
-						)
+				SecureXMLRPCServer.SecureXMLRPCRequestHandler.rpc_paths = get_rpc_paths()
 			class SecureThreadedXMLRPCServer(SocketServer.ThreadingMixIn,
 					SecureXMLRPCServer.SecureXMLRPCServer):
 
