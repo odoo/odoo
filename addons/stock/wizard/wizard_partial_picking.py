@@ -161,7 +161,7 @@ def _do_split(self, cr, uid, data, context):
 					'picking_id' : new_picking,
 					'state': 'assigned',
 					'move_dest_id': False,
-					'price_unit': False,
+					'price_unit': move.price_unit,
 				})
 		move_obj.write(cr, uid, [move.id],
 				{
