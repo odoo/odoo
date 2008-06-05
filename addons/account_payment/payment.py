@@ -116,7 +116,7 @@ class payment_order(osv.osv):
 	}
 
 	_defaults = {
-		'user_id': lambda self,cr,uid,context: uid, 
+		'user_id': lambda self,cr,uid,context: uid,
 		'state': lambda *a: 'draft',
 		'date_prefered': lambda *a: 'due',
 		'date_created': lambda *a: time.strftime('%Y-%m-%d'),
@@ -197,7 +197,7 @@ Belgique"""
 				partner_name[p_id] = p_name
 
 			for id in ids:
-				if id in res:
+				if id in res and partner_name:
 					res[id] = (res[id],partner_name[res[id]])
 				else:
 					res[id] = (False,False)
@@ -335,19 +335,26 @@ Belgique"""
 		('name_uniq', 'UNIQUE(name)', 'The payment line name must be unique!'),
 	]
 
-	def onchange_move_line(self, cr, uid, id, move_line_id, payment_type,context=None):
-		if not move_line_id:
-			return {}
-		line=self.pool.get('account.move.line').browse(cr,uid,move_line_id)
-		return {'value': {
-			'amount_currency': line.amount_to_pay,
-			'to_pay_currency': line.amount_to_pay,
-			'partner_id': line.partner_id.id,
-			'reference': line.ref,
-			'date_created': line.date_created,
-			'bank_id': self.pool.get('account.move.line').line2bank(cr, uid,
+	def onchange_move_line(self,cr,uid,ids,move_line_id,payment_type,context=None):
+		data={}
+		data['amount_currency']=data['to_pay_currency']=data['partner_id']=data['reference']=data['date_created']=data['bank_id']=False
+		if move_line_id:
+			line=self.pool.get('account.move.line').browse(cr,uid,move_line_id)
+			data['amount_currency']=data['to_pay_currency']=line.amount_to_pay
+			data['partner_id']=line.partner_id.id
+			data['reference']=line.ref
+			data['date_created']=line.date_created
+
+			if payment_type:
+				payment_mode = self.pool.get('payment.mode').browse(cr,uid,payment_type).type.code
+			else:
+				payment_mode=False
+
+			data['bank_id']=self.pool.get('account.move.line').line2bank(cr, uid,
 				[move_line_id],
-				payment_type or 'manual', context)[move_line_id]
-			}}
+				payment_mode or 'manual', context)[move_line_id]
+
+		return {'value': data}
+
 
 payment_line()
