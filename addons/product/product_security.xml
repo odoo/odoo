@@ -4,15 +4,11 @@
 
 		<record model="res.groups" id="group_product_manager">
 			<field name="name">Product Manager</field>
-		</record><!--
+		</record>
 
 		<record model="res.users" id="base.user_admin">
 			<field name="groups_id" eval="[ (4, ref('group_product_manager'))]"/>
 		</record>
-
-		<record id="product.group_product_manager" model="res.groups">
-			<field eval="[(6,0,[ref('product.menu_main_product'),ref('product.menu_products'),ref('product.menu_product_category_action'),ref('product.menu_product_category_action_form'),ref('product.menu_product_template_action'),ref('product.menu_product_variant_action')])]" name="menu_access"/>
-		</record>-->
 		
 		<!-- Product security -->
 		<record model="ir.model.access" id="access_product">
