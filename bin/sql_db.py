@@ -74,6 +74,8 @@ class fake_cursor:
 		else:
 			res = self.obj.execute(sql)
 		if self.sql_log:
+			print "SQL LOG query:", sql
+			print "SQL LOG params:", repr(p)
 			self.count+=1
 			res_from = re_from.match(sql.lower())
 			if res_from:
