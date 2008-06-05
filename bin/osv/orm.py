@@ -188,7 +188,10 @@ class browse_record(object):
 								ids2 = data[n][0]
 							else:
 								ids2 = data[n]
-							data[n] = browse_record(self._cr, self._uid, ids2, obj, self._cache, context=self._context, list_class=self._list_class)
+							if ids2:
+								data[n] = browse_record(self._cr, self._uid, ids2, obj, self._cache, context=self._context, list_class=self._list_class)
+							else:
+								data[n] = browse_null()
 						else:
 							data[n] = browse_null()
 					elif f._type in ('one2many', 'many2many') and len(data[n]):
@@ -964,7 +967,7 @@ class orm(object):
 			res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=res)
 			for record in res:
 				record[f] = res2[record['id']]
-				
+
 		readonly = None
 		for vals in res:
 			for field in vals.copy():
@@ -1194,7 +1197,7 @@ class orm(object):
 			if not fobj:
 				continue
 			groups = fobj.write
-				
+
 			if groups:
 				edit = False
 				for group in groups:
