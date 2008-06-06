@@ -177,6 +177,7 @@ class _rml_doc(object):
 		return result
 
 	def render(self, out):
+		self.canvas = canvas.Canvas(out)
 		el = self.dom.documentElement.getElementsByTagName('docinit')
 		if el:
 			self.docinit(el)
@@ -192,8 +193,8 @@ class _rml_doc(object):
 		if len(el):
 			pt_obj = _rml_template(out, el[0], self, images=self.images, path=self.path)
 			pt_obj.render(self.dom.documentElement.getElementsByTagName('story'))
+			del self.canvas
 		else:
-			self.canvas = canvas.Canvas(out)
 			pd = self.dom.documentElement.getElementsByTagName('pageDrawing')[0]
 			pd_obj = _rml_canvas(self.canvas, None, self, self.images, path=self.path)
 			pd_obj.render(pd)
@@ -418,8 +419,12 @@ class _rml_flowable(object):
 					newNode = self.doc.dom.createTextNode(self.styles.names.get(n.getAttribute('id'),'Unknown name'))
 					node.insertBefore(newNode, n)
 					node.removeChild(n)
+					n = newNode
 				elif n.localName == 'pageNumber':
-					rc += '<pageNumber/>'            # TODO: change this !
+					newNode = self.doc.dom.createTextNode(str(self.doc.canvas.getPageNumber()))
+					node.insertBefore(newNode, n)
+					node.removeChild(n)
+					n = newNode
 				else:
 					#CHECKME: I wonder if this is useful since we don't stock the result. Maybe for the getName tag?
 					self._textual(n)
@@ -710,7 +715,7 @@ if __name__=="__main__":
 	if len(sys.argv)>1:
 		if sys.argv[1]=='--help':
 			trml2pdf_help()
-		print parseString(file(sys.argv[1], 'r').read()),
+		print parseString(file(sys.argv[1], 'r').read())
 	else:
 		print 'Usage: trml2pdf input.rml >output.pdf'
 		print 'Try \'trml2pdf --help\' for more information.'
