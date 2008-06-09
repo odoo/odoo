@@ -418,6 +418,7 @@ class _rml_flowable(object):
 					newNode = self.doc.dom.createTextNode(self.styles.names.get(n.getAttribute('id'),'Unknown name'))
 					node.insertBefore(newNode, n)
 					node.removeChild(n)
+					n = newNode
 				elif n.localName == 'pageNumber':
 					rc += '<pageNumber/>'            # TODO: change this !
 				else:
