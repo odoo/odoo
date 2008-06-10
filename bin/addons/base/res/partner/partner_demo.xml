@@ -5,6 +5,17 @@
 		<!--
 		Resource: res.partner.title
 		-->
+		<record id="res_partner_title_pvt_ltd" model="res.partner.title">
+			<field name="domain">partner</field>
+			<field name="name">Pvt. Ltd</field>
+			<field name="shortcut">pvt ltd</field>
+		</record>
+
+		<record id="res_partner_title_ltd" model="res.partner.title">
+			<field name="domain">partner</field>
+			<field name="name">Ltd</field>
+			<field name="shortcut">ltd</field>
+		</record>
 
 		<record id="res_partner_title_madam" model="res.partner.title">
 			<field name="domain">contact</field>
@@ -21,6 +32,19 @@
 			<field name="name">Sir</field>
 			<field name="shortcut">M.</field>
 		</record>
+
+	<record model="res.partner.function" id="function_director">
+		<field name="name">Director</field>
+		<field name="code">CEO</field>
+	</record>
+	<record model="res.partner.function" id="function_it">
+		<field name="name">Chief Technical Officer</field>
+		<field name="code">CTO</field>
+	</record>
+	<record model="res.partner.function" id="function_sale">
+		<field name="name">Salesman</field>
+	</record>
+
 
 
 		<!--

@@ -26,11 +26,7 @@
 #
 ##############################################################################
 
-print '1'
 import ir
-print '2'
 import module
-print '3'
 import res
-print '4'
 

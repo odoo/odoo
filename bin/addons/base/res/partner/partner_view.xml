@@ -178,10 +178,10 @@
 		<field name="arch" type="xml">
 			<tree string="Partners">
 				<field name="name"/>
+				<field name="title" string="Type"/>
 				<field name="ref"/>
-				<field name="address"/>
+				<field name="address" string="# of Contacts"/>
 				<field name="lang"/>
-				<field name="category_id"/>
 			</tree>
 		</field>
 	</record>
@@ -201,7 +201,7 @@
 					<field name="address" mode="form,tree" colspan="4" nolabel="1" select="1">
 						<form string="Partner contacts">
 							<field name="name" select="2"/>
-							<field name="title" domain="[('domain', '=', 'contact')]"/>
+							<field name="title" domain="[('domain', '=', 'contact')]" string="Type"/>
 							<field name="function"/>
 							<field name="type" select="2"/>
 							<field name="street" select="2"/>

@@ -86,7 +86,7 @@ class res_partner_category(osv.osv):
 		'parent_id': fields.many2one('res.partner.category', 'Parent Category', select=True),
 		'complete_name': fields.function(_name_get_fnc, method=True, type="char", string='Name'),
 		'child_ids': fields.one2many('res.partner.category', 'parent_id', 'Childs Category'),
-		'active' : fields.boolean('Active'),
+		'active' : fields.boolean('Active', help="The active field allows you to hide the category, without removing it."),
 	}
 	_constraints = [
 		(_check_recursion, 'Error ! You can not create recursive categories.', ['parent_id'])
@@ -131,22 +131,22 @@ class res_partner(osv.osv):
 	_name = "res.partner"
 	_order = "name"
 	_columns = {
-		'name': fields.char('Name', size=128, required=True, select=True, write=['base.group_admin'], read=['base.group_admin']),
+		'name': fields.char('Name', size=128, required=True, select=True),
 		'date': fields.date('Date', select=1),
 		'title': fields.selection(_partner_title_get, 'Title', size=32),
 		'parent_id': fields.many2one('res.partner','Main Company', select=2),
 		'child_ids': fields.one2many('res.partner', 'parent_id', 'Partner Ref.'),
 		'ref': fields.char('Code', size=64),
 		'lang': fields.selection(_lang_get, 'Language', size=5),
-		'user_id': fields.many2one('res.users', 'Salesman', read=['base.group_admin']),
+		'user_id': fields.many2one('res.users', 'Dedicated Salesman'),
 		'responsible': fields.many2one('res.users', 'Users'),
 		'vat': fields.char('VAT',size=32 ,help="Value Added Tax number"),
 		'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
 		'website': fields.char('Website',size=64),
 		'comment': fields.text('Notes'),
-		'address': fields.one2many('res.partner.address', 'partner_id', 'Contacts', read=['base.group_admin']),
-		'category_id': fields.many2many('res.partner.category', 'res_partner_category_rel', 'partner_id', 'category_id', 'Categories',  read=['base.group_user']),
-		'events': fields.one2many('res.partner.event', 'partner_id', 'events', read=['base.group_user']),
+		'address': fields.one2many('res.partner.address', 'partner_id', 'Contacts'),
+		'category_id': fields.many2many('res.partner.category', 'res_partner_category_rel', 'partner_id', 'category_id', 'Categories'),
+		'events': fields.one2many('res.partner.event', 'partner_id', 'Events'),
 		'credit_limit': fields.float(string='Credit Limit'),
 		'ean13': fields.char('EAN13', size=13),
 		'active': fields.boolean('Active'),

@@ -135,7 +135,6 @@ class ir_model_fields(osv.osv):
 		if vals.get('state','base')=='manual':
 			if not vals['name'].startswith('x_'):
 				raise except_orm('Error', "Custom fields must have a name that starts with 'x_' !")
-			print vals['model']
 			self.pool.get(vals['model']).__init__(self.pool, cr)
 			self.pool.get(vals['model'])._auto_init(cr)
 		return res
@@ -230,7 +229,6 @@ class ir_model_access(osv.osv):
 		return res
 ir_model_access()
 
-print 'MODEL ACCESS'
 class ir_model_data(osv.osv):
 	_name = 'ir.model.data'
 	_columns = {

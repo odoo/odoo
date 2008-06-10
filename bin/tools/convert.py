@@ -195,9 +195,13 @@ class xml_import(object):
 	def _test_xml_id(self, xml_id):
 		id = xml_id
 		if '.' in xml_id:
+			assert len(id.split('.'))==2, """The ID reference '"%s" must contains
+maximum one dot. They are used to refer to other modules ID, in the
+form: module.record_id""" % (xml_id,)
 			base, id = xml_id.split('.')
 		if len(id) > 64:
 			self.logger.notifyChannel('init', netsvc.LOG_ERROR, 'id: %s is to long (max: 64)'%xml_id)
+
 	def _tag_delete(self, cr, rec, data_node=None):
 		d_model = rec.getAttribute("model")
 		d_search = rec.getAttribute("search")
@@ -267,6 +271,27 @@ class xml_import(object):
 			replace = rec.hasAttribute('replace') and \
 					rec.getAttribute("replace") or True
 			self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, string, [model], value, replace=replace, isobject=True, xml_id=xml_id)
+		return False
+
+	def _tag_url(self, cr, rec, data_node=None):
+		url = rec.getAttribute("string").encode('utf8')
+		target = rec.getAttribute("target").encode('utf8')
+		name = rec.getAttribute("name").encode('utf8')
+		xml_id = rec.getAttribute('id').encode('utf8')
+		self._test_xml_id(xml_id)
+
+		res = {'name': name, 'url': url, 'target':target}
+
+		id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.url", self.module, res, xml_id, mode=self.mode)
+		self.idref[xml_id] = int(id)
+		# ir_set
+		if (not rec.hasAttribute('menu') or eval(rec.getAttribute('menu'))) and id:
+			keyword = str(rec.getAttribute('keyword') or 'client_action_multi')
+			keys = [('action',keyword)]
+			value = 'ir.actions.url,'+str(id)
+			replace = rec.hasAttribute('replace') and \
+					rec.getAttribute("replace") or True
+			self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, url, ["ir.actions.url"], value, replace=replace, isobject=True, xml_id=xml_id)
 		return False
 
 	def _tag_act_window(self, cr, rec, data_node=None):
@@ -346,81 +371,101 @@ class xml_import(object):
 			str(rec.getAttribute('action')), cr)
 		return False
 
+	#
+	# Support two types of notation:
+	#   name="Inventory Control/Sending Goods"
+	# or
+	#   action="action_id"
+	#   parent="parent_id"
+	#
 	def _tag_menuitem(self, cr, rec, data_node=None):
 		rec_id = rec.getAttribute("id").encode('ascii')
 		self._test_xml_id(rec_id)
 		m_l = map(escape, escape_re.split(rec.getAttribute("name").encode('utf8')))
-		pid = False
-		for idx, menu_elem in enumerate(m_l):
-			if pid:
-				cr.execute('select id from ir_ui_menu where parent_id=%d and name=%s', (pid, menu_elem))
-			else:
-				cr.execute('select id from ir_ui_menu where parent_id is null and name=%s', (menu_elem,))
-			res = cr.fetchone()
-			if idx==len(m_l)-1:
-				# we are at the last menu element/level (it's a leaf)
-				values = {'parent_id': pid,'name':menu_elem}
 
-				if rec.hasAttribute('action'):
-					a_action = rec.getAttribute('action').encode('utf8')
-					a_type = rec.getAttribute('type').encode('utf8') or 'act_window'
-					icons = {
-						"act_window": 'STOCK_NEW',
-						"report.xml": 'STOCK_PASTE',
-						"wizard": 'STOCK_EXECUTE',
-						"url": 'STOCK_JUMP_TO'
-					}
-					values['icon'] = icons.get(a_type,'STOCK_NEW')
-					if a_type=='act_window':
-						a_id = self.id_get(cr, 'ir.actions.%s'% a_type, a_action)
-						cr.execute('select view_type,view_mode,name,view_id from ir_act_window where id=%d', (int(a_id),))
-						action_type,action_mode,action_name,view_id = cr.fetchone()
-						if view_id:
-							cr.execute('SELECT type FROM ir_ui_view WHERE id=%d', (int(view_id),))
-							action_mode, = cr.fetchone()
-						cr.execute('SELECT view_mode FROM ir_act_window_view WHERE act_window_id=%d ORDER BY sequence LIMIT 1', (int(a_id),))
-						if cr.rowcount:
-							action_mode, = cr.fetchone()
-						if action_type=='tree':
-							values['icon'] = 'STOCK_INDENT'
-						elif action_mode and action_mode.startswith('tree'):
-							values['icon'] = 'STOCK_JUSTIFY_FILL'
-						elif action_mode and action_mode.startswith('graph'):
-							values['icon'] = 'terp-graph'
-						elif action_mode and action_mode.startswith('calendar'):
-							values['icon'] = 'terp-calendar'
-						if not values['name']:
-							values['name'] = action_name
-				if rec.hasAttribute('sequence'):
-					values['sequence'] = int(rec.getAttribute('sequence'))
-				if rec.hasAttribute('icon'):
-					values['icon'] = str(rec.getAttribute('icon'))
-				if rec.hasAttribute('groups'):
-					g_names = rec.getAttribute('groups').split(',')
-					groups_value = []
-					groups_obj = self.pool.get('res.groups')
-					for group in g_names:
-						if group.startswith('-'):
-							group_id = self.id_get(cr, 'res.groups', group[1:])
-							groups_value.append((3, group_id))
-						else:
-							group_id = self.id_get(cr, 'res.groups', group)
-							groups_value.append((4, group_id))
-					values['groups_id'] = groups_value
-				xml_id = rec.getAttribute('id').encode('utf8')
-				self._test_xml_id(xml_id)
-				pid = self.pool.get('ir.model.data')._update(cr, self.uid, 'ir.ui.menu', self.module, values, xml_id, idx==len(m_l)-1, mode=self.mode, res_id=res and res[0] or False)
-			elif res:
-				# the menuitem already exists
-				pid = res[0]
-				xml_id = idx==len(m_l)-1 and rec.getAttribute('id').encode('utf8')
-				try:
-					npid = self.pool.get('ir.model.data')._update_dummy(cr, self.uid, 'ir.ui.menu', self.module, xml_id, idx==len(m_l)-1)
-				except:
-					print 'Menu Error', self.module, xml_id, idx==len(m_l)-1
-			else:
-				# the menuitem does't exist but we are in branch (not a leaf)
-				pid = self.pool.get('ir.ui.menu').create(cr, self.uid, {'parent_id' : pid, 'name' : menu_elem})
+		values = {'parent_id': False}
+		if not rec.hasAttribute('parent'):
+			pid = False
+			for idx, menu_elem in enumerate(m_l):
+				if pid:
+					cr.execute('select id from ir_ui_menu where parent_id=%d and name=%s', (pid, menu_elem))
+				else:
+					cr.execute('select id from ir_ui_menu where parent_id is null and name=%s', (menu_elem,))
+				res = cr.fetchone()
+				if idx==len(m_l)-1:
+					values = {'parent_id': pid,'name':menu_elem}
+				elif res:
+					pid = res[0]
+					xml_id = idx==len(m_l)-1 and rec.getAttribute('id').encode('utf8')
+					try:
+						npid = self.pool.get('ir.model.data')._update_dummy(cr, self.uid, 'ir.ui.menu', self.module, xml_id, idx==len(m_l)-1)
+					except:
+						print 'Menu Error', self.module, xml_id, idx==len(m_l)-1
+				else:
+					# the menuitem does't exist but we are in branch (not a leaf)
+					self.logger.notifyChannel("init", netsvc.LOG_INFO, 'Warning no ID for submenu %s of menu %s !' % (menu_elem, str(m_l)))
+					pid = self.pool.get('ir.ui.menu').create(cr, self.uid, {'parent_id' : pid, 'name' : menu_elem})
+		else:
+			menu_parent_id = self.id_get(cr, 'ir.ui.menu', rec.getAttribute('parent'))
+			values = {'parent_id': menu_parent_id}
+			if rec.hasAttribute('name'):
+				values['name'] = rec.getAttribute('name')
+			try:
+				res = [ self.id_get(cr, 'ir.ui.menu', rec.getAttribute('id')) ]
+			except:
+				res = None
+
+		if rec.hasAttribute('action'):
+			a_action = rec.getAttribute('action').encode('utf8')
+			a_type = rec.getAttribute('type').encode('utf8') or 'act_window'
+			icons = {
+				"act_window": 'STOCK_NEW',
+				"report.xml": 'STOCK_PASTE',
+				"wizard": 'STOCK_EXECUTE',
+				"url": 'STOCK_JUMP_TO'
+			}
+			values['icon'] = icons.get(a_type,'STOCK_NEW')
+			if a_type=='act_window':
+				a_id = self.id_get(cr, 'ir.actions.%s'% a_type, a_action)
+				cr.execute('select view_type,view_mode,name,view_id from ir_act_window where id=%d', (int(a_id),))
+				action_type,action_mode,action_name,view_id = cr.fetchone()
+				if view_id:
+					cr.execute('SELECT type FROM ir_ui_view WHERE id=%d', (int(view_id),))
+					action_mode, = cr.fetchone()
+				cr.execute('SELECT view_mode FROM ir_act_window_view WHERE act_window_id=%d ORDER BY sequence LIMIT 1', (int(a_id),))
+				if cr.rowcount:
+					action_mode, = cr.fetchone()
+				if action_type=='tree':
+					values['icon'] = 'STOCK_INDENT'
+				elif action_mode and action_mode.startswith('tree'):
+					values['icon'] = 'STOCK_JUSTIFY_FILL'
+				elif action_mode and action_mode.startswith('graph'):
+					values['icon'] = 'terp-graph'
+				elif action_mode and action_mode.startswith('calendar'):
+					values['icon'] = 'terp-calendar'
+				if not values.get('name', False):
+					values['name'] = action_name
+		if rec.hasAttribute('sequence'):
+			values['sequence'] = int(rec.getAttribute('sequence'))
+		if rec.hasAttribute('icon'):
+			values['icon'] = str(rec.getAttribute('icon'))
+		if rec.hasAttribute('groups'):
+			g_names = rec.getAttribute('groups').split(',')
+			groups_value = []
+			groups_obj = self.pool.get('res.groups')
+			for group in g_names:
+				if group.startswith('-'):
+					group_id = self.id_get(cr, 'res.groups', group[1:])
+					groups_value.append((3, group_id))
+				else:
+					group_id = self.id_get(cr, 'res.groups', group)
+					groups_value.append((4, group_id))
+			values['groups_id'] = groups_value
+
+		xml_id = rec.getAttribute('id').encode('utf8')
+		self._test_xml_id(xml_id)
+		pid = self.pool.get('ir.model.data')._update(cr, self.uid, 'ir.ui.menu', self.module, values, xml_id, True, mode=self.mode, res_id=res and res[0] or False)
+
 		if rec_id and pid:
 			self.idref[rec_id] = int(pid)
 
@@ -623,6 +668,7 @@ class xml_import(object):
 			'function': self._tag_function,
 			'workflow': self._tag_workflow,
 			'act_window': self._tag_act_window,
+			'url': self._tag_url
 		}
 
 def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
