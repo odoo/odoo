@@ -247,10 +247,10 @@ class product_template(osv.osv):
 		'supply_method': fields.selection([('produce','Produce'),('buy','Buy')], 'Supply method', required=True),
 		'sale_delay': fields.float('Customer lead time', help="This is the average time between the confirmation of the customer order and the delivery of the finnished products. It's the time you promise to your customers."),
 		'produce_delay': fields.float('Manufacturing lead time', help="Average time to produce this product. This is only for the production order and, if it is a multi-level bill of material, it's only for the level of this product. Different delays will be summed for all levels and purchase orders."),
-		'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procure Method', required=True),
+		'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procure Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until refurnishing. 'Make to Order': When needed, purchase or produce for the procurement request."),
 		'rental': fields.boolean('Rentable product'),
 		'categ_id': fields.many2one('product.category','Category', required=True, change_default=True),
-		'list_price': fields.float('List Price', digits=(16, int(config['price_accuracy']))),
+		'list_price': fields.float('Public Price', digits=(16, int(config['price_accuracy']))),
 		'standard_price': fields.float('Cost Price', required=True, digits=(16, int(config['price_accuracy']))),
 		'volume': fields.float('Volume'),
 		'weight': fields.float('Gross weight'),
@@ -261,7 +261,7 @@ class product_template(osv.osv):
 		'purchase_ok': fields.boolean('Can be Purchased', help="Determine if the product is visible in the list of products within a selection from a purchase order line."),
 		'uom_id': fields.many2one('product.uom', 'Default UOM', required=True),
 		'uom_po_id': fields.many2one('product.uom', 'Purchase UOM', required=True),
-		'state': fields.selection([('draft', 'In Development'),('sellable','In Production'),('end','End of Lifecycle'),('obsolete','Obsolete')], 'State'),
+		'state': fields.selection([('draft', 'In Development'),('sellable','In Production'),('end','End of Lifecycle'),('obsolete','Obsolete')], 'Status', help="Tells the user if he can use the product or not."),
 		'uos_id' : fields.many2one('product.uom', 'Unit of Sale',
 			help='Keep empty to use the default UOM'),
 		'uos_coeff': fields.float('UOM -> UOS Coeff', digits=(16,4),
@@ -297,6 +297,12 @@ class product_template(osv.osv):
 		'mes_type' : lambda *a: 'fixed',
 	}
 
+	def _check_uom(self, cursor, user, ids):
+		for product in self.browse(cursor, user, ids):
+			if product.uom_id.id <> product.uom_po_id.id:
+				return False
+		return True
+
 	def _check_uos(self, cursor, user, ids):
 		for product in self.browse(cursor, user, ids):
 			if product.uos_id \
@@ -305,8 +311,10 @@ class product_template(osv.osv):
 				return False
 		return True
 
-	_constraints = [(_check_uos,
-		'Error: UOS must be in a different category than the UOM', ['uos_id'])]
+	_constraints = [
+		(_check_uos, 'Error: UOS must be in a different category than the UOM', ['uos_id']),
+		(_check_uom, 'Error: The default UOM and the purchase UOM must be in the same category.', ['uom_id']),
+	]
 
 	def name_get(self, cr, user, ids, context={}):
 		if 'partner_id' in context:
@@ -566,7 +574,7 @@ class product_supplierinfo(osv.osv):
 		'name' : fields.many2one('res.partner', 'Partner', required=True, ondelete='cascade'),
 		'product_name': fields.char('Partner product name', size=128),
 		'product_code': fields.char('Partner product reference', size=64),
-		'sequence' : fields.integer('Sequence'),
+		'sequence' : fields.integer('Priority'),
 		'qty' : fields.float('Minimal quantity', required=True),
 		'product_id' : fields.many2one('product.template', 'Product', required=True, ondelete='cascade', select=True),
 		'delay' : fields.integer('Delivery delay', required=True),
@@ -586,7 +594,7 @@ class pricelist_partnerinfo(osv.osv):
 		'name': fields.char('Description', size=64),
 		'suppinfo_id': fields.many2one('product.supplierinfo', 'Partner Information', required=True, ondelete='cascade'),
 		'min_quantity': fields.float('Quantity', required=True),
-		'price': fields.float('Price', required=True, digits=(16, int(config['price_accuracy']))),
+		'price': fields.float('Unit Price', required=True, digits=(16, int(config['price_accuracy']))),
 	}
 	_order = 'min_quantity asc'
 pricelist_partnerinfo()

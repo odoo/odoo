@@ -162,13 +162,13 @@
 		<field name="domain">[('invoice_state','=','2binvoiced'),('state','=','done'),('type','=','out')]</field>
 	</record>
 	<menuitem
-		name="Inventory Control/Packing Lists/Sending Goods/Packings to be Invoiced"
+		parent="stock.menu_action_picking_tree"
 		id="menu_action_picking_tree3"
 		action="action_picking_tree4"/>
 
 
 	<record model="ir.actions.act_window" id="action_picking_tree5">
-		<field name="name">Generate draft invoices on receptions</field>
+		<field name="name">Generate Draft Invoices On Receptions</field>
 		<field name="res_model">stock.picking</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
@@ -176,7 +176,7 @@
 		<field name="domain">[('invoice_state','=','2binvoiced'),('state','=','done'),('type','=','in')]</field>
 	</record>
 	<menuitem
-		name="Inventory Control/Packing Lists/Getting Goods/Generate draft invoices on receptions"
+		parent="stock.action_picking_tree4"
 		id="menu_action_picking_tree5"
 		action="action_picking_tree5"/>
 

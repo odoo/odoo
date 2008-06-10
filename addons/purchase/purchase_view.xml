@@ -23,7 +23,6 @@
 						<field name="partner_id" select="1" on_change="onchange_partner_id(partner_id)"/>
 						<field name="partner_address_id"/>
 						<field name="pricelist_id" domain="[('type','=','purchase')]"/>
-						<field name="ref" select="1"/>
 						<field name="partner_ref" select="2"/>
 						<newline/>
 						<field name="order_line" widget="one2many_list" colspan="4" nolabel="1"/>
@@ -47,18 +46,16 @@
 							<button name="invoice_ok" states="except_invoice" string="Invoice Done"/>
 						</group>
 					</page>
-					<page string="Purchase Shippings">
+					<page string="Extra Infos">
 						<field name="dest_address_id" on_change="onchange_dest_address_id(dest_address_id)"/>
 						<field name="location_id"/>
 						<field name="invoice_method"/>
+						<field name="origin" select="2"/>
 						<newline/>
-						<field name="invoice_id" colspan="4"/>
-						<field name="picking_ids" colspan="4"/>
-					</page>
-					<page string="Notes">
 						<field name="validator" />
 						<field name="date_approve" />
-						<field name="origin" select="2"/>
+					</page>
+					<page string="Notes">
 						<field name="notes" colspan="4" nolabel="1"/>
 					</page>
 				</notebook>

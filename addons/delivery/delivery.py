@@ -98,7 +98,6 @@ class delivery_grid(osv.osv):
 
 		return self.get_price_from_picking(cr, uid, id, total,weight, volume, context)
 
-			
 	def get_price_from_picking(self, cr, uid, id, total, weight, volume, context={}):
 		grid = self.browse(cr, uid, id, context)
 
@@ -134,8 +133,8 @@ class delivery_grid_line(osv.osv):
 		'max_value': fields.float('Maximum Value', required=True),
 		'price_type': fields.selection([('fixed','Fixed'),('variable','Variable')], 'Price Type', required=True),
 		'variable_factor': fields.selection([('weight','Weight'),('volume','Volume'),('wv','Weight * Volume'), ('price','Price')], 'Variable Factor', required=True),
-		'list_price': fields.float('List Price', required=True),
-		'standard_price': fields.float('Standard Price', required=True),
+		'list_price': fields.float('Sale Price', required=True),
+		'standard_price': fields.float('Cost Price', required=True),
 	}
 	_defaults = {
 		'type': lambda *args: 'weight',

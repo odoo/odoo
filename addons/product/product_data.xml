@@ -2,14 +2,18 @@
 <terp>
 <data noupdate="1">
 
+	<record model="res.groups" id="group_uos">
+		<field name="name">Product UOS View</field>
+	</record>
+
 	<!--
 	Resource: product.uom.categ
 	-->
 	<record id="product_uom_categ_unit" model="product.uom.categ">
-		<field name="name">PCE</field>
+		<field name="name">Unit</field>
 	</record>
 	<record id="product_uom_categ_kgm" model="product.uom.categ">
-		<field name="name">KGM</field>
+		<field name="name">Weight</field>
 	</record>
 
 	<!--
@@ -17,15 +21,11 @@
 	-->
 	<record id="product_uom_unit" model="product.uom">
 		<field name="category_id" ref="product_uom_categ_unit"/>
-		<field name="name">Unit</field>
-	</record>
-	<record id="product_uom_pce" model="product.uom">
-		<field name="category_id" ref="product_uom_categ_unit"/>
 		<field name="name">PCE</field>
 	</record>
 	<record id="product_uom_kgm" model="product.uom">
 		<field name="category_id" ref="product_uom_categ_kgm"/>
-		<field name="name">Weight</field>
+		<field name="name">KGM</field>
 	</record>
 
 <!--
@@ -46,7 +46,7 @@ parameter) will see those record just disappear.
 	Resource: product.price.type
 	-->
 	<record model="product.price.type" id="list_price">
-		<field name="name">List Price</field>
+		<field name="name">Public Price</field>
 		<field name="field">list_price</field>
 	</record>
 	<record model="product.price.type" id="standard_price">
@@ -70,17 +70,17 @@ parameter) will see those record just disappear.
 	Price list
 	-->
 	<record model="product.pricelist" id="list0">
-		<field name="name">Default Sale Pricelist</field>
+		<field name="name">Public Pricelist</field>
 		<field name="type">sale</field>
 	</record>
 	<record model="product.pricelist.version" id="ver0">
 		<field name="pricelist_id" ref="list0"/>
-		<field name="name">Default Sale Pricelist Version</field>
+		<field name="name">Default Public Pricelist Version</field>
 	</record>
 	<record model="product.pricelist.item" id="item0">
 		<field name="price_version_id" ref="ver0"/>
 		<field name="base" ref="list_price" />
-		<field name="name">Default Sale Pricelist Line</field>
+		<field name="name">Default Public Pricelist Line</field>
 	</record>
 
 	<!--

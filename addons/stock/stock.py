@@ -51,19 +51,19 @@ class stock_incoterms(osv.osv):
 	}
 stock_incoterms()
 
-class stock_lot(osv.osv):
-	_name = "stock.lot"
-	_description = "Lot"
-	_columns = {
-		'name': fields.char('Lot Name', size=64, required=True),
-		'active': fields.boolean('Active'),
-		'tracking': fields.char('Tracking', size=64),
-		'move_ids': fields.one2many('stock.move', 'lot_id', 'Move lines'),
-	}
-	_defaults = {
-		'active': lambda *a: True,
-	}
-stock_lot()
+#class stock_lot(osv.osv):
+#	_name = "stock.lot"
+#	_description = "Lot"
+#	_columns = {
+#		'name': fields.char('Lot Name', size=64, required=True),
+#		'active': fields.boolean('Active'),
+#		'tracking': fields.char('Tracking', size=64),
+#		'move_ids': fields.one2many('stock.move', 'lot_id', 'Move lines'),
+#	}
+#	_defaults = {
+#		'active': lambda *a: True,
+#	}
+#stock_lot()
 
 
 #----------------------------------------------------------
@@ -76,12 +76,15 @@ class stock_location(osv.osv):
 	_columns = {
 		'name': fields.char('Location Name', size=64, required=True),
 		'active': fields.boolean('Active'),
-		'usage': fields.selection([('supplier','Supplier Location'),('internal','Internal Location'),('customer','Customer Location'),('inventory','Inventory'),('procurement','Procurement'),('production','Production')], 'Location type'),
+		'usage': fields.selection([('supplier','Supplier Location'),('view','View'),('internal','Internal Location'),('customer','Customer Location'),('inventory','Inventory'),('procurement','Procurement'),('production','Production')], 'Location type'),
 		'allocation_method': fields.selection([('fifo','FIFO'),('lifo','LIFO'),('nearest','Nearest')], 'Allocation Method', required=True),
 
 		'account_id': fields.many2one('account.account', string='Inventory Account', domain=[('type','!=','view')]),
 		'location_id': fields.many2one('stock.location', 'Parent Location', select=True),
 		'child_ids': fields.one2many('stock.location', 'location_id', 'Contains'),
+
+		'chained_location_id': fields.many2one('stock.location', 'Chained Location If Fixed'),
+		'chained_location_type': fields.selection([('','None'),('customer', 'Customer'),('fixed','Fixed Location')], 'Chained Location Type'),
 
 		'address_id': fields.many2one('res.partner.address', 'Location Address'),
 
@@ -94,10 +97,28 @@ class stock_location(osv.osv):
 		'active': lambda *a: 1,
 		'usage': lambda *a: 'internal',
 		'allocation_method': lambda *a: 'fifo',
+		'chained_location_type': lambda *a: '',
 		'posx': lambda *a: 0,
 		'posy': lambda *a: 0,
 		'posz': lambda *a: 0,
 	}
+
+	def chained_location_get(self, cr, uid, location, partner=None, product=None, context={}):
+		result = None
+		if location.chained_location_type=='customer':
+			result = partner.property_stock_customer
+		elif location.chained_location_type=='fixed':
+			result = location.chained_location_id
+		return result
+
+
+	def picking_type_get(self, cr, uid, from_location, to_location, context={}):
+		result = 'internal'
+		if (to_location and to_location.usage=='customer'):
+			result = 'delivery'
+		elif from_location.usage=='supplier':
+			result = 'in'
+		return result
 
 	def _product_get_all_report(self, cr, uid, ids, product_ids=False,
 			context=None):
@@ -257,43 +278,43 @@ stock_location()
 # Stock Move
 #----------------------------------------------------------
 
-class stock_move_lot(osv.osv):
-	_name = "stock.move.lot"
-	_description = "Move Lot"
-	_columns = {
-		'name': fields.char('Move Description', size=64, required=True),
-		'active': fields.boolean('Active'),
-		'state': fields.selection( (('draft','Draft'),('done','Moved')), 'State', readonly=True),
-		'serial': fields.char('Tracking Number', size=32),
-		'date_planned': fields.date('Scheduled date'),
-		'date_moved': fields.date('Actual date'),
-		'lot_id': fields.many2one('stock.lot','Lot', required=True),
-		'loc_dest_id': fields.many2one('stock.location', 'Destination Location', required=True),
-		'address_id': fields.many2one('res.partner.address', 'Destination Address'),
-		'origin': fields.char('Origin', size=64),
-	}
-	_defaults = {
-		'active': lambda *a: 1,
-		'state': lambda *a: 'draft',
-		'date_planned': lambda *a: time.strftime('%Y-%m-%d'),
-	}
-	#
-	# TODO: test if valid
-	# ERROR: does this function should call action_done instead of doing him self on
-	# stock.move
-	#
-	def action_move(self, cr, uid, ids, context={}):
-		for move in self.browse(cr, uid, ids, context):
-			lot_remove = []
-			for m in move.lot_id.move_ids:
-				new_id = self.pool.get('stock.move').copy(cr, uid, m.id, {'location_id': m.location_dest_id.id, 'location_dest_id': move.loc_dest_id.id, 'date_moved': time.strftime('%Y-%m-%d'), 'picking_id': False, 'state':'draft','prodlot_id':False, 'tracking_id':False, 'lot_id': False, 'move_history_ids':[], 'move_history_ids2':[]})
-				self.pool.get('stock.move').action_done(cr, uid, [new_id], context)
-				cr.execute('insert into stock_move_history_ids (parent_id,child_id) values (%d,%d)', (m.id, new_id))
-				lot_remove.append(m.id)
-			self.pool.get('stock.move').write(cr, uid, lot_remove, {'lot_id':False})
-		self.write(cr,uid, ids, {'state':'done','date_moved':time.strftime('%Y-%m-%d')})
-		return True
-stock_move_lot()
+#class stock_move_lot(osv.osv):
+#	_name = "stock.move.lot"
+#	_description = "Move Lot"
+#	_columns = {
+#		'name': fields.char('Move Description', size=64, required=True),
+#		'active': fields.boolean('Active'),
+#		'state': fields.selection( (('draft','Draft'),('done','Moved')), 'State', readonly=True),
+#		'serial': fields.char('Tracking Number', size=32),
+#		'date_planned': fields.date('Scheduled date'),
+#		'date_moved': fields.date('Actual date'),
+#		'lot_id': fields.many2one('stock.lot','Lot', required=True),
+#		'loc_dest_id': fields.many2one('stock.location', 'Destination Location', required=True),
+#		'address_id': fields.many2one('res.partner.address', 'Destination Address'),
+#		'origin': fields.char('Origin', size=64),
+#	}
+#	_defaults = {
+#		'active': lambda *a: 1,
+#		'state': lambda *a: 'draft',
+#		'date_planned': lambda *a: time.strftime('%Y-%m-%d'),
+#	}
+#	#
+#	# TODO: test if valid
+#	# ERROR: does this function should call action_done instead of doing him self on
+#	# stock.move
+#	#
+#	def action_move(self, cr, uid, ids, context={}):
+#		for move in self.browse(cr, uid, ids, context):
+#			lot_remove = []
+#			for m in move.lot_id.move_ids:
+#				new_id = self.pool.get('stock.move').copy(cr, uid, m.id, {'location_id': m.location_dest_id.id, 'location_dest_id': move.loc_dest_id.id, 'date_moved': time.strftime('%Y-%m-%d'), 'picking_id': False, 'state':'draft','prodlot_id':False, 'tracking_id':False, 'lot_id': False, 'move_history_ids':[], 'move_history_ids2':[]})
+#				self.pool.get('stock.move').action_done(cr, uid, [new_id], context)
+#				cr.execute('insert into stock_move_history_ids (parent_id,child_id) values (%d,%d)', (m.id, new_id))
+#				lot_remove.append(m.id)
+#			self.pool.get('stock.move').write(cr, uid, lot_remove, {'lot_id':False})
+#		self.write(cr,uid, ids, {'state':'done','date_moved':time.strftime('%Y-%m-%d')})
+#		return True
+#stock_move_lot()
 
 class stock_tracking(osv.osv):
 	_name = "stock.tracking"
@@ -352,7 +373,7 @@ class stock_picking(osv.osv):
 	_columns = {
 		'name': fields.char('Packing name', size=64, required=True, select=True),
 		'origin': fields.char('Origin', size=64),
-		'type': fields.selection([('out','Sending Goods'),('in','Getting Goods'),('internal','Internal')], 'Shipping Type', required=True, select=True),
+		'type': fields.selection([('out','Sending Goods'),('in','Getting Goods'),('internal','Internal'),('delivery','Delivery')], 'Shipping Type', required=True, select=True),
 		'active': fields.boolean('Active'),
 		'note': fields.text('Notes'),
 
@@ -373,11 +394,7 @@ class stock_picking(osv.osv):
 		'move_lines': fields.one2many('stock.move', 'picking_id', 'Move lines'),
 
 		'auto_picking': fields.boolean('Auto-Packing'),
-		'work': fields.boolean('Work todo'),
-		'loc_move_id': fields.many2one('stock.location', 'Final location'),
 		'address_id': fields.many2one('res.partner.address', 'Partner'),
-		'lot_id': fields.many2one('stock.lot', 'Consumer lot created'),
-		'move_lot_id': fields.many2one('stock.move.lot', 'Moves created'),
 		'invoice_state':fields.selection([
 			("invoiced","Invoiced"),
 			("2binvoiced","To be invoiced"),
@@ -385,7 +402,6 @@ class stock_picking(osv.osv):
 	}
 	_defaults = {
 		'name': lambda *a: '/',
-		'work': lambda *a: 0,
 		'active': lambda *a: 1,
 		'state': lambda *a: 'draft',
 		'move_type': lambda *a: 'direct',
@@ -393,6 +409,14 @@ class stock_picking(osv.osv):
 		'invoice_state': lambda *a: 'none',
 		'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
 	}
+	def onchange_partner_in(self, cr, uid, context, partner_id=None):
+		sid = self.pool.get('res.partner.address').browse(cr, uid, partner_id, context).partner_id.property_stock_supplier.id
+		return {
+			'value': {'location_id':sid}
+		}
+
+	def action_explode(self, cr, uid, ids, *args):
+		return True
 
 	def action_confirm(self, cr, uid, ids, *args):
 		self.write(cr, uid, ids, {'state': 'confirmed'})
@@ -406,6 +430,42 @@ class stock_picking(osv.osv):
 					todo.append(r.id)
 		if len(todo):
 			self.pool.get('stock.move').action_confirm(cr,uid, todo)
+		self.action_explode(cr, uid, ids)
+		for picking in self.browse(cr, uid, ids):
+			todo = []
+			for r in picking.move_lines:
+				if r.location_dest_id.chained_location_type:
+					todo.append(r)
+			if todo:
+				loc = self.pool.get('stock.location').chained_location_get(cr, uid, todo[0].location_dest_id, todo[0].picking_id and todo[0].picking_id.address_id and todo[0].picking_id.address_id.partner_id, todo[0].product_id)
+				ptype = self.pool.get('stock.location').picking_type_get(cr, uid, todo[0].location_dest_id, loc)
+				pickid = self.pool.get('stock.picking').create(cr, uid, {
+					'name': picking.name,
+					'origin': str(picking.origin or ''),
+					'type': ptype,
+					'note': picking.note,
+					'move_type': picking.move_type,
+					'address_id': picking.address_id.id
+				})
+				for move in todo:
+					loc = self.pool.get('stock.location').chained_location_get(cr, uid, move.location_dest_id, picking.address_id.partner_id, move.product_id).id
+					new_id = self.pool.get('stock.move').copy(cr, uid, move.id, {
+						'location_id': move.location_dest_id.id,
+						'location_dest_id': loc,
+						'date_moved': time.strftime('%Y-%m-%d'),
+						'picking_id': pickid,
+						'state':'waiting',
+						'prodlot_id':False,
+						'tracking_id':False,
+						'move_history_ids':[],
+						'move_history_ids2':[]}
+					)
+					self.pool.get('stock.move').write(cr, uid, [move.id], {
+						'move_dest_id': new_id,
+						'move_history_ids': [(4, new_id)]
+					})
+				wf_service = netsvc.LocalService("workflow")
+				wf_service.trg_validate(uid, 'stock.picking', pickid, 'button_confirm', cr)
 		return True
 
 	def test_auto_picking(self, cr, uid, ids):
@@ -473,17 +533,6 @@ class stock_picking(osv.osv):
 	# TODO: change and create a move if not parents
 	#
 	def action_done(self, cr, uid, ids, context=None):
-		for pick in self.browse(cr, uid, ids):
-			if pick.move_type=='one' and pick.loc_move_id:
-				if pick.lot_id:
-					id = self.pool.get('stock.move.lot').create(cr, uid, {
-						'name': pick.name,
-						'origin': str(pick.origin or ''),
-						'lot_id': pick.lot_id.id,
-						'loc_dest_id': pick.loc_move_id.id,
-						'address_id': pick.address_id.id
-					})
-					self.write(cr, uid, [pick.id], {'move_lot_id':id})
 		self.write(cr,uid, ids, {'state':'done'})
 		return True
 
@@ -497,20 +546,6 @@ class stock_picking(osv.osv):
 			if len(todo):
 				self.pool.get('stock.move').action_done(cr, uid, todo,
 						context=context)
-
-				lot_id = self.pool.get('stock.lot').create(cr, uid, {'name':pick.name})
-				self.pool.get('stock.move').write(cr,uid, todo, {'lot_id':lot_id})
-				self.write(cr, uid, [pick.id], {'lot_id':lot_id})
-
-				if pick.move_type=='direct' and pick.loc_move_id:
-					id = self.pool.get('stock.move.lot').create(cr, uid, {
-						'name': pick.name,
-						'origin': str(pick.origin or ''),
-						'lot_id': lot_id,
-						'loc_dest_id': pick.loc_move_id.id,
-						'address_id': pick.address_id.id
-					})
-					self.write(cr, uid, [pick.id], {'move_lot_id':id})
 		return True
 
 	def _get_address_invoice(self, cursor, user, picking):
@@ -743,7 +778,9 @@ class stock_move(osv.osv):
 
 		'prodlot_id' : fields.many2one('stock.production.lot', 'Production lot', help="Production lot is used to put a serial number on the production"),
 		'tracking_id': fields.many2one('stock.tracking', 'Tracking lot', select=True, help="Tracking lot is the code that will be put on the logistic unit/pallet"),
-		'lot_id': fields.many2one('stock.lot', 'Consumer lot', select=True, readonly=True),
+#		'lot_id': fields.many2one('stock.lot', 'Consumer lot', select=True, readonly=True),
+
+		'auto_validate': fields.boolean('Auto Validate'),
 
 		'move_dest_id': fields.many2one('stock.move', 'Dest. Move'),
 		'move_history_ids': fields.many2many('stock.move', 'stock_move_history_ids', 'parent_id', 'child_id', 'Move History'),
@@ -886,6 +923,8 @@ class stock_move(osv.osv):
 					else:
 						pass
 						# self.action_done(cr, uid, [move.move_dest_id.id])
+					if move.move_dest_id.auto_validate:
+						self.action_done(cr, uid, [move.move_dest_id.id], context=context)
 
 			#
 			# Accounting Entries

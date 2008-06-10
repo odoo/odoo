@@ -144,7 +144,7 @@ class mrp_bom(osv.osv):
 		'name': fields.char('Name', size=64, required=True),
 		'code': fields.char('Code', size=16),
 		'active': fields.boolean('Active'),
-		'type': fields.selection([('normal','Normal BoM'),('phantom','Phantom')], 'BoM Type', required=True, help="Use a phantom bill of material in lines that have a sub-bom and that have to be automatically computed in one line, without habing two production orders."),
+		'type': fields.selection([('normal','Normal BoM'),('phantom','Sets / Phantom')], 'BoM Type', required=True, help="Use a phantom bill of material in lines that have a sub-bom and that have to be automatically computed in one line, without habing two production orders."),
 		'date_start': fields.date('Valid from'),
 		'date_stop': fields.date('Valid until'),
 		'sequence': fields.integer('Sequence'),
@@ -743,6 +743,12 @@ class mrp_procurement(osv.osv):
 			result = proc.product_uom.id
 		return result
 
+	def check_waiting(self, cr, uid, ids, context=[]):
+		for procurement in self.browse(cr, uid, ids, context=context):
+			if procurement.move_id and procurement.move_id.state=='auto':
+				return True
+		return False
+
 	def check_produce_service(self, cr, uid, procurement, context=[]):
 		return True
 
@@ -1034,6 +1040,63 @@ class StockMove(osv.osv):
 	_columns = {
 		'procurements': fields.one2many('mrp.procurement', 'move_id', 'Procurements'),
 	}
+	def _action_explode(self, cr, uid, move, context={}):
+		if move.product_id.supply_method=='produce' and move.product_id.procure_method=='make_to_order':
+			bis = self.pool.get('mrp.bom').search(cr, uid, [
+				('product_id','=',move.product_id.id),
+				('bom_id','=',False),
+				('type','=','phantom')])
+			if bis:
+				factor = move.product_qty
+				bom_point = self.pool.get('mrp.bom').browse(cr, uid, bis[0])
+				res = self.pool.get('mrp.bom')._bom_explode(cr, uid, bom_point, factor, [])
+				dest = move.product_id.product_tmpl_id.property_stock_production.id
+				state = 'confirmed'
+				if move.state=='assigned':
+					state='assigned'
+				for line in res[0]:
+					valdef = {
+						'picking_id': move.picking_id.id,
+						'product_id': line['product_id'],
+						'product_uom': line['product_uom'],
+						'product_qty': line['product_qty'],
+						'product_uos': line['product_uos'],
+						'product_uos_qty': line['product_uos_qty'],
+						'move_dest_id': move.id,
+						'state': state,
+						'location_dest_id': dest,
+						'move_history_ids2': [(6,0,[move.id])],
+						'move_history_ids': [],
+						'procurements': []
+					}
+					mid = self.pool.get('stock.move').copy(cr, uid, move.id, default=valdef)
+					prodobj = self.pool.get('product.product').browse(cr, uid, line['product_id'], context=context)
+					proc_id = self.pool.get('mrp.procurement').create(cr, uid, {
+						'name': (move.picking_id.origin or ''),
+						'origin': (move.picking_id.origin or ''),
+						'date_planned': move.date_planned,
+						'product_id': line['product_id'],
+						'product_qty': line['product_qty'],
+						'product_uom': line['product_uom'],
+						'product_uos_qty': line['product_uos'] and line['product_uos_qty'] or False,
+						'product_uos':  line['product_uos'],
+						'location_id': move.location_id.id,
+						'procure_method': prodobj.procure_method,
+						'move_id': mid,
+					})
+					wf_service = netsvc.LocalService("workflow")
+					wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
+				self.pool.get('stock.move').write(cr, uid, [move.id], {
+					'location_id': move.location_dest_id.id,
+					'auto_validate': True,
+					'picking_id': False,
+					'location_id': dest,
+					'state': 'waiting'
+				})
+				for m in self.pool.get('mrp.procurement').search(cr, uid, [('move_id','=',move.id)], context):
+					wf_service = netsvc.LocalService("workflow")
+					wf_service.trg_validate(uid, 'mrp.procurement', m, 'button_wait_done', cr)
+		return True
 StockMove()
 
 
@@ -1050,5 +1113,14 @@ class StockPicking(osv.osv):
 						wf_service.trg_validate(user, 'mrp.procurement',
 								procurement.id, 'button_check', cursor)
 		return res
+
+	#
+	# Explode picking by replacing phantom BoMs
+	#
+	def action_explode(self, cr, uid, ids, *args):
+		for pick in self.browse(cr, uid, ids):
+			for move in pick.move_lines:
+				self.pool.get('stock.move')._action_explode(cr, uid, move)
+		return True
 
 StockPicking()

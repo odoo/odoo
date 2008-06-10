@@ -113,12 +113,14 @@
 										<field name="tax_id" colspan="4"/>
 										<separator string="States" colspan="4"/>
 										<field name="state" select="2"/>
-										<button name="%(wizard_sale_order_line_invoice)d" string="Make Invoice" states="confirmed" type="action" colspan="2"/>
-										<field name="invoiced" select="2"/>
+										<group col="3" colspan="2">
+											<field name="invoiced" select="2"/>
+											<button name="%(wizard_sale_order_line_invoice)d" string="Make Invoice" states="confirmed" type="action" colspan="1"/>
+										</group>
 									</page>
-									<page string="Extra Info">
-										<field name="product_uos_qty" on_change="uos_change(product_uos, product_uos_qty, product_id)"/>
-										<field name="product_uos"  />
+									<page string="Extra Info" groups="base.group_extended">
+										<field name="product_uos_qty" on_change="uos_change(product_uos, product_uos_qty, product_id)" groups="product.group_uos"/>
+										<field name="product_uos" groups="product.group_uos"/>
 										<field name="product_packaging" />
 										<field name="address_allotment_id" select="2"/>
 										<separator string="Properties" colspan="4"/>
@@ -130,7 +132,7 @@
 									<page string="History">
 										<separator string="Invoice Lines" colspan="4"/>
 										<field name="invoice_lines" colspan="4" nolabel="1"/>
-										<separator string="Inventory Moves" colspan="4"/>
+										<separator string="Stock Moves" colspan="4"/>
 										<field name="move_ids" colspan="4" nolabel="1"/>
 									</page>
 								</notebook>
@@ -169,12 +171,12 @@
 						</group>
 					</page>
 					<page string="Other data">
-						<field name="incoterm"/>
-						<field name="picking_policy" required="True"/>
+						<field name="incoterm" groups="base.group_extended"/>
+						<field name="picking_policy" required="True" groups="base.group_extended"/>
 						<field name="user_id"/>
 						<field name="order_policy" />
-						<field name="origin"/>
-						<field name="invoice_quantity"/>
+						<field name="origin" groups="base.group_extended"/>
+						<field name="invoice_quantity" groups="base.group_extended"/>
 						<field name="client_order_ref" />
 						<separator string="Notes" colspan="4"/>
 						<field name="note" colspan="4" nolabel="1"/>

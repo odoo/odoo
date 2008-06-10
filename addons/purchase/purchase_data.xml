@@ -36,5 +36,11 @@
 		<field name="value" eval="'product.pricelist,'+str(list0)"/>
 	</record>
 
+	<function 
+		model="ir.values" 
+		id="purchase_default_set"
+		name="set"
+		eval="('default',False,'warehouse_id', [('purchase.order', False)], ref('stock.warehouse0'), True, False, False, False, True)"/>
+
 </data>
 </terp>

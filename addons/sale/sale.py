@@ -142,10 +142,10 @@ class sale_order(osv.osv):
 		return [('id', 'in', [x[0] for x in res])]
 
 	_columns = {
-		'name': fields.char('Order Description', size=64, required=True, select=True),
+		'name': fields.char('Order Reference', size=64, required=True, select=True),
 		'shop_id':fields.many2one('sale.shop', 'Shop', required=True, readonly=True, states={'draft':[('readonly',False)]}),
 		'origin': fields.char('Origin', size=64),
-		'client_order_ref': fields.char('Partner Ref.',size=64),
+		'client_order_ref': fields.char('Customer Ref.',size=64),
 
 		'state': fields.selection([
 			('draft','Quotation'),
@@ -160,7 +160,7 @@ class sale_order(osv.osv):
 		'date_order':fields.date('Date Ordered', required=True, readonly=True, states={'draft':[('readonly',False)]}),
 
 		'user_id':fields.many2one('res.users', 'Salesman', states={'draft':[('readonly',False)]}, select=True),
-		'partner_id':fields.many2one('res.partner', 'Partner', readonly=True, states={'draft':[('readonly',False)]}, change_default=True, select=True),
+		'partner_id':fields.many2one('res.partner', 'Customer', readonly=True, states={'draft':[('readonly',False)]}, change_default=True, select=True),
 		'partner_invoice_id':fields.many2one('res.partner.address', 'Invoice Address', readonly=True, required=True, states={'draft':[('readonly',False)]}),
 		'partner_order_id':fields.many2one('res.partner.address', 'Ordering Contact', readonly=True, required=True, states={'draft':[('readonly',False)]}, help="The name and address of the contact that requested the order or quotation."),
 		'partner_shipping_id':fields.many2one('res.partner.address', 'Shipping Address', readonly=True, required=True, states={'draft':[('readonly',False)]}),
@@ -433,7 +433,6 @@ class sale_order(osv.osv):
 							'type': 'out',
 							'state': 'auto',
 							'move_type': order.picking_policy,
-							'loc_move_id': loc_dest_id,
 							'sale_id': order.id,
 							'address_id': order.partner_shipping_id.id,
 							'note': order.note,
@@ -503,13 +502,13 @@ class sale_order(osv.osv):
 			if picking_id:
 				wf_service = netsvc.LocalService("workflow")
 				wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
-				#val = {'picking_ids':[(6,0,[picking_id])]}
 
 			if order.state=='shipping_except':
 				val['state'] = 'progress'
 				if (order.order_policy == 'manual') and order.invoice_ids:
 					val['state'] = 'manual'
 			self.write(cr, uid, [order.id], val)
+
 		return True
 
 	def action_ship_end(self, cr, uid, ids, context={}):

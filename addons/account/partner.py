@@ -74,10 +74,10 @@ class res_partner(osv.osv):
 		return [('id','in',map(lambda x:x[0], res))]
 
 	_columns = {
-		'credit': fields.function(_credit_get, fnct_search=_credit_search, method=True, string='Receivable'),
-		'debit': fields.function(_debit_get, fnct_search=_debit_search, method=True, string='Payable'),
-		'debit_limit': fields.float('Debit Limit'),
-		'credit_limit': fields.float('Credit Limit'),
+		'credit': fields.function(_credit_get, fnct_search=_credit_search, method=True, string='Total Receivable'),
+		'debit': fields.function(_debit_get, fnct_search=_debit_search, method=True, string='Total Payable'),
+		'debit_limit': fields.float('Payable Limit'),
+		'credit_limit': fields.float('Receivable Limit'),
 		'property_account_payable': fields.property(
 			'account.account',
 			type='many2one',

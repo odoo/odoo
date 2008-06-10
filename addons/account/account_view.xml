@@ -565,8 +565,6 @@
 		<field name="arch" type="xml">
 			<tree string="Account Tax">
 				<field name="name"/>
-				<field name="amount" select="1"/>
-				<field name="type"/>
 			</tree>
 		</field>
 	</record>
@@ -582,7 +580,7 @@
 				<field name="company_id"/>
 				<field name="tax_group" select="1"/>
 				<field name="active" select="2" />
-				<field name="type" select="1"/>
+				<field name="type"/>
 				<field name="applicable_type"/>
 				<field name="amount" select="2"/>
 				<field name="include_base_amount"/>

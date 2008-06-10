@@ -54,7 +54,7 @@ view_form_charts = """<?xml version="1.0"?>
 		<newline/>
 		<field name="charts" align="0.0"/>
 		<newline/>
-		<label string="There are many other chart of accounts available." colspan="2" align="0.0"/>
+		<label string="There are many other chart of accounts available on the OpenERP website." colspan="2" align="0.0"/>
 		<newline/>
 		<label string="If you don't select one now, you'll be able to install an other one through the Administration menu." colspan="2" align="0.0"/>
 	</group>
@@ -340,15 +340,24 @@ class wizard_base_setup(wizard.interface):
 		'rml_header1':{
 			'string': 'Report Header',
 			'type': 'char',
+			'help': """This sentence will appear at the top right corner of your reports.
+We suggest you to put a slogan here:
+"Open Source Business Solutions".""",
 			'size': 200,
 		},
 		'rml_footer1':{
 			'string': 'Report Footer 1',
 			'type': 'char',
+			'help': """This sentence will appear at the bottom of your reports.
+We suggest you to write legal sentences here:
+Web: http://openerp.com - Fax: +32.81.73.35.01 - Fortis Bank: 126-2013269-07""",
 			'size': 200,
 		},
 		'rml_footer2':{
 			'string': 'Report Footer 2',
+			'help': """This sentence will appear at the bottom of your reports.
+We suggest you to put bank information here:
+IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701""",
 			'type': 'char',
 			'size': 200,
 		},
