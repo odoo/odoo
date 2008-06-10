@@ -10,9 +10,9 @@
 			<field name="name">Project Member - Expert</field>
 		</record>
 		
-		<!--<record model="res.users" id="base.user_admin">
-			<field name="groups_id" eval="[(4, ref('base.group_admin')), (4, ref('group_project_consultant')), (4, ref('group_project_manager')), (4, ref('group_project_member')) ,(4, ref('group_project_member_begin')) ]"/>
-		</record>-->
+		<record model="res.users" id="base.user_admin">
+			<field name="groups_id" eval="[(4, ref('group_project_manager')), (4, ref('group_project_member'))]"/>
+		</record>
 		
 		<!-- Project security -->
 		<record model="ir.model.access" id="access_project">
