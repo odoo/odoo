@@ -73,6 +73,13 @@ class view_sc(osv.osv):
 		'user_id': fields.many2one('res.users', 'User Ref.', required=True, ondelete='cascade'),
 		'resource': fields.char('Resource Name', size=64, required=True)
 	}
+	def create(self, cr, uid, vals, context=None):
+		id=self.pool.get('ir.values').search(cr,uid,[('res_id','=',vals['res_id'])])
+		if len(id):
+			return super(view_sc, self).create(cr, uid, vals, context=context)
+		else:
+			raise osv.except_osv('Note !','You can not add root node as shortcut !')
+
 	def get_sc(self, cr, uid, user_id, model='ir.ui.menu', context={}):
 		ids = self.search(cr, uid, [('user_id','=',user_id),('resource','=',model)], context=context)
 		return self.read(cr, uid, ids, ['res_id','name'], context=context)
