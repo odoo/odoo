@@ -54,10 +54,10 @@ class workflow(osv.osv):
 
 	#
 	# scale = [stepx, stepy, posx, posy ]
-	# 
-	
+	#
+
 	def graph_get(self, cr, uid, id, scale, context={}):
-		
+
 		nodes= []
 		transitions = []
 		start = []
@@ -75,8 +75,8 @@ class workflow(osv.osv):
 		g.scale(*scale)
 		result = g.result_get()
 		results = {}
-		
-		
+
+
 		for r in result.items():
 			r[1]['name'] = r[0][1]
 			results[str(r[0][0])] = r[1]
@@ -100,7 +100,7 @@ class wkf_activity(osv.osv):
 		'split_mode': fields.selection([('XOR', 'Xor'), ('OR','Or'), ('AND','And')], 'Split Mode', size=3, required=True),
 		'join_mode': fields.selection([('XOR', 'Xor'), ('AND', 'And')], 'Join Mode', size=3, required=True),
 		'kind': fields.selection([('dummy', 'Dummy'), ('function', 'Function'), ('subflow', 'Subflow'), ('stopall', 'Stop All')], 'Kind', size=64, required=True),
-		'action': fields.char('Action', size=64),
+		'action': fields.char('Action', size=256),
 		'flow_start': fields.boolean('Flow Start'),
 		'flow_stop': fields.boolean('Flow Stop'),
 		'subflow_id': fields.many2one('workflow', 'Subflow'),
