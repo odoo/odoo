@@ -23,6 +23,10 @@ def _remove_entries(self, cr, uid, data, context):
 		raise wizard.except_wizard('UserError', 'The journal must have centralised counterpart')
 	ids_move = pool.get('account.move').search(cr,uid,[('journal_id','=',period_journal.journal_id.id),('period_id','=',period_journal.period_id.id)])
 	pool.get('account.move').unlink(cr,uid,ids_move)
+	cr.execute('UPDATE account_journal_period ' \
+			'SET state = %s ' \
+			'WHERE period_id IN (SELECT id FROM account_period WHERE fiscalyear_id = %d)',
+			('draft',data_fyear))
 	cr.execute('UPDATE account_period SET state = %s ' \
 			'WHERE fiscalyear_id = %d', ('draft',data_fyear))
 	cr.execute('UPDATE account_fiscalyear ' \
