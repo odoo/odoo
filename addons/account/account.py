@@ -556,6 +556,13 @@ class account_journal_period(osv.osv):
 		self._check(cr, uid, ids, context)
 		return super(account_journal_period, self).write(cr, uid, ids, vals, context)
 
+	def create(self, cr, uid, vals, context={}):
+		period_id=vals.get('period_id',False)
+		if period_id:
+			period = self.pool.get('account.period').browse(cr, uid,period_id)
+			vals['state']=period.state
+		return super(account_journal_period, self).create(cr, uid, vals, context)
+
 	def unlink(self, cr, uid, ids, context={}):
 		self._check(cr, uid, ids, context)
 		return super(account_journal_period, self).unlink(cr, uid, ids, context)
