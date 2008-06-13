@@ -568,6 +568,15 @@ class account_journal_period(osv.osv):
 
 account_journal_period()
 
+class account_fiscalyear(osv.osv):
+	_inherit = "account.fiscalyear"
+	_description = "Fiscal Year"
+	_columns = {
+		'start_journal_period_id':fields.many2one('account.journal.period','New Entries Journal'),
+		'end_journal_period_id':fields.many2one('account.journal.period','End of Year Entries Journal', readonly=True),
+	}
+
+account_fiscalyear()
 #----------------------------------------------------------
 # Entries
 #----------------------------------------------------------

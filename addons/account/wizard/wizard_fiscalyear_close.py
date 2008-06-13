@@ -36,7 +36,6 @@ _transaction_form = '''<?xml version="1.0"?>
 	<field name="fy2_id"/>
 	<field name="report_new"/>
 	<field name="report_name" colspan="3"/>
-	<field name="report_journal" colspan="3"/>
 
 	<separator string="Are you sure ?" colspan="4"/>
 	<field name="sure"/>
@@ -47,7 +46,6 @@ _transaction_fields = {
 	'fy2_id': {'string':'New Fiscal Year', 'type':'many2one', 'relation': 'account.fiscalyear', 'domain':[('state','=','draft')], 'required':True},
 	'report_new': {'string':'Create new entries', 'type':'boolean', 'required':True, 'default': lambda *a:True},
 	'report_name': {'string':'Name of new entries', 'type':'char', 'size': 64, 'required':True},
-	'report_journal': {'string':'New Entries Journal', 'type':'many2one', 'relation': 'account.journal', 'required':True},
 	'sure': {'string':'Check this box', 'type':'boolean'},
 }
 
@@ -64,13 +62,21 @@ def _data_save(self, cr, uid, data, context):
 	fy_id = data['form']['fy_id']
 	if data['form']['report_new']:
 		period = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy2_id']).period_ids[0]
-		journal = pool.get('account.journal').browse(cr, uid, data['form']['report_journal'])
-		if not journal.default_credit_account_id or not journal.default_debit_account_id:
+		new_fyear = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy2_id'])
+		start_jp = new_fyear.start_journal_period_id
+		if not start_jp:
+			raise wizard.except_wizard('UserError',
+						'The new fiscal year should have a journal for new entries define on it')
+
+		new_journal = start_jp.journal_id
+
+		if not new_journal.default_credit_account_id or not new_journal.default_debit_account_id:
 			raise wizard.except_wizard('UserError',
 					'The journal must have default credit and debit account')
-		if not journal.centralisation:
+		if not new_journal.centralisation:
 			raise wizard.except_wizard('UserError',
 					'The journal must have centralised counterpart')
+
 		query_line = pool.get('account.move.line')._query_get(cr, uid,
 				obj='account_move_line', context={'fiscalyear': fy_id})
 		cr.execute('select id from account_account WHERE active')
@@ -86,10 +92,10 @@ def _data_save(self, cr, uid, data, context):
 						'credit': account.balance<0 and -account.balance,
 						'name': data['form']['report_name'],
 						'date': period.date_start,
-						'journal_id': data['form']['report_journal'],
+						'journal_id': new_journal.id,
 						'period_id': period.id,
 						'account_id': account.id
-					}, {'journal_id': data['form']['report_journal'], 'period_id':period.id})
+					}, {'journal_id': new_journal.id, 'period_id':period.id})
 			if account.close_method=='unreconciled':
 				offset = 0
 				limit = 100
@@ -109,11 +115,11 @@ def _data_save(self, cr, uid, data, context):
 					for move in result:
 						move.update({
 							'date': period.date_start,
-							'journal_id': data['form']['report_journal'],
+							'journal_id': new_journal.id,
 							'period_id': period.id,
 						})
 						pool.get('account.move.line').create(cr, uid, move, {
-							'journal_id': data['form']['report_journal'],
+							'journal_id': new_journal.id,
 							'period_id': period.id,
 							})
 					offset += limit
@@ -135,7 +141,7 @@ def _data_save(self, cr, uid, data, context):
 					for move in result:
 						move.update({
 							'date': period.date_start,
-							'journal_id': data['form']['report_journal'],
+							'journal_id': new_journal.id,
 							'period_id': period.id,
 						})
 						pool.get('account.move.line').create(cr, uid, move)
@@ -148,8 +154,8 @@ def _data_save(self, cr, uid, data, context):
 	cr.execute('UPDATE account_period SET state = %s ' \
 			'WHERE fiscalyear_id = %d', ('done',fy_id))
 	cr.execute('UPDATE account_fiscalyear ' \
-			'SET state = %s ' \
-			'WHERE id = %d', ('done',fy_id))
+			'SET state = %s, end_journal_period_id = %d' \
+			'WHERE id = %d', ('done',start_jp,fy_id))
 	return {}
 
 class wiz_journal_close(wizard.interface):

@@ -49,6 +49,7 @@ import wizard_partner_balance_report
 
 import wizard_period_close
 import wizard_fiscalyear_close
+import wizard_open_closed_fiscalyear
 
 import wizard_vat
 

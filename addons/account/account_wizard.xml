@@ -24,16 +24,30 @@
 
 		<!-- close year, period, journal -->
 		<wizard
-			string="Close a fiscal year"
+			string="Close a Fiscal Year"
 			model="account.fiscalyear"
 			name="account.fiscalyear.close"
 			menu="False"
 			id="wizard_fiscalyear_close"/>
 		<menuitem
 			name="Financial Management/End of Year Treatments/Close a Fiscal Year"
+			sequence="11"
 			action="wizard_fiscalyear_close"
 			type="wizard"
 			id="menu_wizard_fy_close"/>
+
+		<wizard
+			string="Open a Closed Fiscal Year"
+			model="account.fiscalyear"
+			name="account.open_closed_fiscalyear"
+			menu="False"
+			id="wizard_open_closed_fiscalyear"/>
+		<menuitem
+			name="Financial Management/End of Year Treatments/Open a Closed Fiscal Year"
+			sequence="12"
+			action="wizard_open_closed_fiscalyear"
+			type="wizard"
+			id="menu_wizard_open_closed_fy"/>
 
 		<wizard
 			string="Close Period"
