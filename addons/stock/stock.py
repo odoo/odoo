@@ -85,13 +85,14 @@ class stock_location(osv.osv):
 
 		'chained_location_id': fields.many2one('stock.location', 'Chained Location If Fixed'),
 		'chained_location_type': fields.selection([('','None'),('customer', 'Customer'),('fixed','Fixed Location')], 'Chained Location Type'),
+		'chained_auto_packing': fields.boolean('Chained Auto-Packing'),
 
 		'address_id': fields.many2one('res.partner.address', 'Location Address'),
 
 		'comment': fields.text('Additional Information'),
 		'posx': fields.integer('Corridor (X)', required=True),
 		'posy': fields.integer('Shelves (Y)', required=True),
-		'posz': fields.integer('Height (Z)', required=True)
+		'posz': fields.integer('Height (Z)', required=True),
 	}
 	_defaults = {
 		'active': lambda *a: 1,
@@ -114,9 +115,9 @@ class stock_location(osv.osv):
 
 	def picking_type_get(self, cr, uid, from_location, to_location, context={}):
 		result = 'internal'
-		if (to_location and to_location.usage=='customer'):
+		if (from_location.usage=='internal') and (to_location and to_location.usage in ('customer','supplier')):
 			result = 'delivery'
-		elif from_location.usage=='supplier':
+		elif (from_location.usage in ('supplier','customer')) and (to_location.usage=='internal'):
 			result = 'in'
 		return result
 
@@ -445,7 +446,9 @@ class stock_picking(osv.osv):
 					'type': ptype,
 					'note': picking.note,
 					'move_type': picking.move_type,
-					'address_id': picking.address_id.id
+					'auto_picking': todo[0].location_dest_id.chained_auto_packing,
+					'address_id': picking.address_id.id,
+					'invoice_state': 'none'
 				})
 				for move in todo:
 					loc = self.pool.get('stock.location').chained_location_get(cr, uid, move.location_dest_id, picking.address_id.partner_id, move.product_id).id

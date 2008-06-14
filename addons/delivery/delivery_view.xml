@@ -137,18 +137,43 @@
 			</field>
 		</record>
 
-
-
 		<record model="ir.ui.view" id="view_picking_withcarrier_form">
 			<field name="name">delivery.stock.picking_withcarrier.form.view</field>
 			<field name="type">form</field>
 			<field name="model">stock.picking</field>
-			<field name="inherit_id" ref="stock.view_picking_form" />
+			<field name="inherit_id" ref="stock.view_picking_delivery_form" />
 			<field name="arch" type="xml">
 				<field name="address_id" position="after">
-						<field name="volume" /> 
-						<field name="weight" /> 
- 						<field name="carrier_id" /> 
+					<field name="volume"/>
+					<field name="weight"/>
+					<field name="carrier_id"/>
+				</field>
+			</field>
+		</record>
+		<record model="ir.ui.view" id="view_picking_withcarrier_out_form">
+			<field name="name">delivery.stock.picking_withcarrier.out.form.view</field>
+			<field name="type">form</field>
+			<field name="model">stock.picking</field>
+			<field name="inherit_id" ref="stock.view_picking_out_form" />
+			<field name="arch" type="xml">
+				<field name="address_id" position="after">
+					<field name="volume"/>
+					<field name="weight"/>
+					<field name="carrier_id"/>
+				</field>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_picking_withcarrier_delivery_form">
+			<field name="name">delivery.stock.picking_withcarrier.delivery.form.view</field>
+			<field name="type">form</field>
+			<field name="model">stock.picking</field>
+			<field name="inherit_id" ref="stock.view_picking_delivery_form" />
+			<field name="arch" type="xml">
+				<field name="address_id" position="after">
+					<field name="volume"/>
+					<field name="weight"/>
+					<field name="carrier_id"/>
 				</field>
 			</field>
 		</record>
