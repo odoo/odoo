@@ -86,7 +86,6 @@ class CountryState(osv.osv):
 		'name': fields.char('State Name', size=64, required=True),
 		'code': fields.char('State Code', size=3, required=True),
 	}
-
 	def name_search(self, cr, user, name='', args=None, operator='ilike',
 			context=None, limit=80):
 		if not args:
@@ -99,20 +98,8 @@ class CountryState(osv.osv):
 			ids = self.search(cr, user, [('name', operator, name)] + args,
 					limit=limit, context=context)
 		return self.name_get(cr, user, ids, context)
+
 	_order = 'code'
-
-	def create(self, cursor, user, vals, context=None):
-		if 'code' in vals:
-			vals['code'] = vals['code'].upper()
-		return super(CountryState, self).create(cursor, user, vals,
-				context=context)
-
-	def write(self, cursor, user, ids, vals, context=None):
-		if 'code' in vals:
-			vals['code'] = vals['code'].upper()
-		return super(CountryState, self).write(cursor, user, ids, vals,
-				context=context)
-
 CountryState()
 
 

@@ -2,15 +2,6 @@
 -- Pure SQL
 -------------------------------------------------------------------------
 
-CREATE TABLE perm (
-    id serial NOT NULL,
-    level smallint DEFAULT 4 NOT NULL,
-    uid int default null,
-    gid int default null,
-    primary key(id)
-);
-insert into perm (id,uid,gid) values (1,1,1);
-
 CREATE TABLE inherit (
     obj_type varchar(128) not null,
     obj_id int not null,
@@ -25,7 +16,6 @@ CREATE TABLE inherit (
 create table ir_values
 (
     id serial,
-    perm_id int references perm on delete set null,
     name varchar(128) not null,
     key varchar(128) not null,
     key2 varchar(128) not null,
@@ -42,7 +32,6 @@ create table ir_values
 
 CREATE TABLE ir_model (
   id serial,
-  perm_id int references perm on delete set null,
   model varchar(64) DEFAULT ''::varchar NOT NULL,
   name varchar(64),
   info text,
@@ -51,7 +40,6 @@ CREATE TABLE ir_model (
 
 CREATE TABLE ir_model_fields (
   id serial,
-  perm_id int references perm on delete set null,
   model varchar(64) DEFAULT ''::varchar NOT NULL,
   model_id int references ir_model on delete cascade,
   name varchar(64) DEFAULT ''::varchar NOT NULL,
@@ -73,7 +61,6 @@ CREATE TABLE ir_model_fields (
 
 CREATE TABLE ir_actions (
     id serial NOT NULL,
-    perm_id int references perm on delete set null,
     name varchar(64) DEFAULT ''::varchar NOT NULL,
     "type" varchar(64) DEFAULT 'window'::varchar NOT NULL,
     usage varchar(32) DEFAULT null,
@@ -139,7 +126,6 @@ INHERITS (ir_actions);
 
 CREATE TABLE ir_ui_view (
 	id serial NOT NULL,
-	perm_id int references perm on delete set null,
 	name varchar(64) DEFAULT ''::varchar NOT NULL,
 	model varchar(64) DEFAULT ''::varchar NOT NULL,
 	"type" varchar(64) DEFAULT 'form'::varchar NOT NULL,
@@ -151,7 +137,6 @@ CREATE TABLE ir_ui_view (
 
 CREATE TABLE ir_ui_menu (
 	id serial NOT NULL,
-	perm_id int references perm on delete set null,
 	parent_id int references ir_ui_menu on delete set null,
 	name varchar(64) DEFAULT ''::varchar NOT NULL,
 	icon varchar(64) DEFAULT ''::varchar,
@@ -171,31 +156,27 @@ select setval('ir_ui_menu_id_seq', 2);
 
 CREATE TABLE res_users (
     id serial NOT NULL,
-    perm_id int references perm on delete set null,
     name varchar(64) not null,
     active boolean default True,
     login varchar(64) NOT NULL UNIQUE,
     password varchar(32) default null,
-    perm_default int references perm on delete set null,
 --  action_id int references ir_act_window on delete set null,
     action_id int,
     primary key(id)
 );
 alter table res_users add constraint res_users_login_uniq unique (login);
 
-insert into res_users (id,login,password,name,action_id,perm_id,active) values (1,'root',NULL,'Root',NULL,1,False);
+insert into res_users (id,login,password,name,action_id,active) values (1,'root',NULL,'Root',NULL,False);
 select setval('res_users_id_seq', 2);
 
 CREATE TABLE res_groups (
     id serial NOT NULL,
-    perm_id int references perm on delete set null,
     name varchar(32) NOT NULL,
     primary key(id)
 );
 
 create table res_roles (
     id serial NOT NULL,
-    perm_id int references perm on delete set null,
     parent_id int references res_roles on delete set null,
     name varchar(32) NOT NULL,
     primary key(id)
@@ -218,7 +199,6 @@ CREATE TABLE res_groups_users_rel (
 create table wkf
 (
     id serial,
-    perm_id int references perm on delete set null,
     name varchar(64),
     osv varchar(64),
     on_create bool default False,
@@ -228,7 +208,6 @@ create table wkf
 create table wkf_activity
 (
     id serial,
-    perm_id int references perm on delete set null,
     wkf_id int references wkf on delete cascade,
     subflow_id int references wkf on delete set null,
     split_mode varchar(3) default 'XOR',
@@ -245,7 +224,6 @@ create table wkf_activity
 create table wkf_transition
 (
     id serial,
-    perm_id int references perm on delete set null,
     act_from int references wkf_activity on delete cascade,
     act_to int references wkf_activity on delete cascade,
     condition varchar(128) default NULL,
@@ -304,7 +282,6 @@ create table wkf_logs
 
 CREATE TABLE ir_module_category (
     id serial NOT NULL,
-    perm_id integer,
     create_uid integer references res_users on delete set null,
     create_date timestamp without time zone,
     write_date timestamp without time zone,
@@ -317,7 +294,6 @@ CREATE TABLE ir_module_category (
 
 CREATE TABLE ir_module_module (
     id serial NOT NULL,
-    perm_id integer,
     create_uid integer references res_users on delete set null,
     create_date timestamp without time zone,
     write_date timestamp without time zone,
@@ -338,7 +314,6 @@ ALTER TABLE ir_module_module add constraint name_uniq unique (name);
 
 CREATE TABLE ir_module_module_dependency (
     id serial NOT NULL,
-    perm_id integer,
     create_uid integer references res_users on delete set null,
     create_date timestamp without time zone,
     write_date timestamp without time zone,
@@ -351,7 +326,6 @@ CREATE TABLE ir_module_module_dependency (
 
 CREATE TABLE res_company (
     id serial NOT NULL,
-    perm_id integer,
     name character varying(64) not null,
     parent_id integer references res_company on delete set null,
     primary key(id)

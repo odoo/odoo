@@ -205,6 +205,49 @@ class osv_pool(netsvc.Service):
 #		#
 #		return res
 
+class osv_memory(orm.orm_memory):
+	#__metaclass__ = inheritor
+	def __new__(cls):
+		module = str(cls)[6:]
+		module = module[:len(module)-1]
+		module = module.split('.')[0][2:]
+		if not hasattr(cls, '_module'):
+			cls._module = module
+		module_class_list.setdefault(cls._module, []).append(cls)
+		class_pool[cls._name] = cls
+		if module not in module_list:
+			module_list.append(cls._module)
+		return None
+
+	#
+	# Goal: try to apply inheritancy at the instanciation level and
+	#       put objects in the pool var
+	#
+	def createInstance(cls, pool, module, cr):
+		parent_name = hasattr(cls, '_inherit') and cls._inherit
+		if parent_name:
+			parent_class = pool.get(parent_name).__class__
+			assert parent_class, "parent class %s does not exist !" % parent_name
+			nattr = {}
+			for s in ('_columns', '_defaults', '_inherits', '_constraints', '_sql_constraints'):
+				new = copy.copy(getattr(pool.get(parent_name), s))
+				if hasattr(new, 'update'):
+					new.update(cls.__dict__.get(s, {}))
+				else:
+					new.extend(cls.__dict__.get(s, []))
+				nattr[s] = new
+			name = hasattr(cls,'_name') and cls._name or cls._inherit
+			cls = type(name, (cls, parent_class), nattr)
+		obj = object.__new__(cls)
+		obj.__init__(pool, cr)
+		return obj
+	createInstance = classmethod(createInstance)
+
+	def __init__(self, pool, cr):
+		pool.add(self._name, self)
+		self.pool = pool
+		orm.orm_memory.__init__(self, cr)
+
 
 
 class osv(orm.orm):
@@ -226,7 +269,6 @@ class osv(orm.orm):
 	#       put objects in the pool var
 	#
 	def createInstance(cls, pool, module, cr):
-#		obj = cls()
 		parent_name = hasattr(cls, '_inherit') and cls._inherit
 		if parent_name:
 			parent_class = pool.get(parent_name).__class__
@@ -239,26 +281,17 @@ class osv(orm.orm):
 				else:
 					new.extend(cls.__dict__.get(s, []))
 				nattr[s] = new
-			#bases = (parent_class,)
-			#obj.__class__ += (parent_class,)
-			#res = type.__new__(cls, name, bases, d)
 			name = hasattr(cls,'_name') and cls._name or cls._inherit
-			#name = str(cls)
 			cls = type(name, (cls, parent_class), nattr)
 		obj = object.__new__(cls)
 		obj.__init__(pool, cr)
 		return obj
-#		return object.__new__(cls, pool)
 	createInstance = classmethod(createInstance)
 
 	def __init__(self, pool, cr):
-#		print "__init__", self._name, pool
 		pool.add(self._name, self)
 		self.pool = pool
 		orm.orm.__init__(self, cr)
-
-#		pooler.get_pool(cr.dbname).add(self._name, self)
-#		print self._name, module
 
 class Cacheable(object):
 
