@@ -121,6 +121,11 @@ def _code_get(self, cr, uid, context={}):
 #----------------------------------------------------------
 # Accounts
 #----------------------------------------------------------
+
+class account_tax(osv.osv):
+	_name = 'account.tax'
+account_tax()
+
 class account_account(osv.osv):
 	_order = "code"
 	_name = "account.account"
@@ -289,12 +294,6 @@ class account_account(osv.osv):
 	_constraints = [
 		(_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id'])
 	]
-	def init(self, cr):
-		cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname='account_tax'")
-		if len(cr.dictfetchall())==0:
-			cr.execute("CREATE TABLE account_tax (id SERIAL NOT NULL, perm_id INTEGER, PRIMARY KEY(id))");
-			cr.commit()
-
 	def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
 		if not args:
 			args=[]
