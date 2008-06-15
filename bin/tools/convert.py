@@ -314,20 +314,21 @@ form: module.record_id""" % (xml_id,)
 				and rec.getAttribute('auto_refresh').encode('utf-8')
 
 		res = {
-				'name': name,
-				'type': type,
-				'view_id': view_id,
-				'domain': domain,
-				'context': context,
-				'res_model': res_model,
-				'src_model': src_model,
-				'view_type': view_type,
-				'view_mode': view_mode,
-				'usage': usage,
-				'limit': limit,
-				'auto_refresh': auto_refresh,
-			}
-
+			'name': name,
+			'type': type,
+			'view_id': view_id,
+			'domain': domain,
+			'context': context,
+			'res_model': res_model,
+			'src_model': src_model,
+			'view_type': view_type,
+			'view_mode': view_mode,
+			'usage': usage,
+			'limit': limit,
+			'auto_refresh': auto_refresh,
+		}
+		if rec.hasAttribute('target'):
+			res['target'] = rex.getAttribute('target')
 		id = self.pool.get('ir.model.data')._update(cr, self.uid, 'ir.actions.act_window', self.module, res, xml_id, mode=self.mode)
 		self.idref[xml_id] = int(id)
 

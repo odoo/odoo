@@ -171,6 +171,7 @@ class act_window(osv.osv):
 		'context': fields.char('Context Value', size=250),
 		'res_model': fields.char('Model', size=64),
 		'src_model': fields.char('Source model', size=64),
+		'target': fields.selection([('current','Current Window'),('new','New Window')], 'Target Window'),
 		'view_type': fields.selection((('tree','Tree'),('form','Form')),string='Type of view'),
 		'view_mode': fields.char('Mode of view', size=250),
 		'usage': fields.char('Action Usage', size=32),
@@ -186,6 +187,7 @@ class act_window(osv.osv):
 		'view_mode': lambda *a: 'tree,form',
 		'context': lambda *a: '{}',
 		'limit': lambda *a: 80,
+		'target': lambda *a: 'current',
 		'auto_refresh': lambda *a: 0,
 	}
 act_window()
@@ -320,4 +322,17 @@ class actions_server(osv.osv):
 					return localdict['action']
 		return False
 actions_server()
+
+class act_window_close(osv.osv):
+	_name = 'ir.actions.act_window_close'
+	_table = 'ir_actions'
+	_sequence = 'ir_actions_id_seq'
+	_columns = {
+		'name': fields.char('Action Name', size=64, translate=True),
+		'type': fields.char('Action Type', size=32, required=True),
+	}
+	_defaults = {
+		'type': lambda *a: 'ir.actions.act_window_close',
+	}
+act_window_close()
 

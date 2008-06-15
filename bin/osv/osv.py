@@ -202,20 +202,10 @@ class osv_memory(orm.orm_memory):
 	#       put objects in the pool var
 	#
 	def createInstance(cls, pool, module, cr):
+		name = hasattr(cls,'_name') and cls._name or cls._inherit
 		parent_name = hasattr(cls, '_inherit') and cls._inherit
 		if parent_name:
-			parent_class = pool.get(parent_name).__class__
-			assert parent_class, "parent class %s does not exist !" % parent_name
-			nattr = {}
-			for s in ('_columns', '_defaults', '_inherits', '_constraints', '_sql_constraints'):
-				new = copy.copy(getattr(pool.get(parent_name), s))
-				if hasattr(new, 'update'):
-					new.update(cls.__dict__.get(s, {}))
-				else:
-					new.extend(cls.__dict__.get(s, []))
-				nattr[s] = new
-			name = hasattr(cls,'_name') and cls._name or cls._inherit
-			cls = type(name, (cls, parent_class), nattr)
+			print 'Inherit not supported in osv_memory object !'
 		obj = object.__new__(cls)
 		obj.__init__(pool, cr)
 		return obj

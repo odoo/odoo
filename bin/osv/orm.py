@@ -47,6 +47,7 @@
 #
 #
 
+import time
 from xml import dom, xpath
 from xml.parsers import expat
 import string
@@ -862,8 +863,13 @@ class orm_template(object):
 
 			doc_src = dom.minidom.parseString(src)
 			doc_dest = dom.minidom.parseString(inherit)
-			for node2 in doc_dest.childNodes:
+			toparse = doc_dest.childNodes
+			while len(toparse):
+				node2 = toparse.pop(0)
 				if not node2.nodeType==node2.ELEMENT_NODE:
+					continue
+				if node2.localName=='data':
+					toparse += node2.childNodes
 					continue
 				node = _find(doc_src, node2)
 				if node:
@@ -1029,12 +1035,35 @@ class orm_template(object):
 class orm_memory(orm_template):
 	_protected = ['read','write','create','default_get','perm_read','unlink','fields_get','fields_view_get','search','name_get','distinct_field_get','name_search','copy','import_data','search_count']
 	_inherit_fields = {}
+	_max_count = 200
+	_max_hours = 1
+	_check_time = 20
 	def __init__(self, cr):
 		super(orm_memory, self).__init__(cr)
 		self.datas = {}
 		self.next_id = 0
+		self.check_id = 0
+		cr.execute('delete from wkf_instance where res_type=%s', (self._name,))
+
+	def clear(self):
+		self.check_id+=1
+		if self.check_id % self._check_time:
+			return True
+		tounlink = []
+		max = time.time() - self._max_hours * 60 * 60
+		for id in self.datas:
+			if self.datas[id]['internal.date_access'] < max:
+				tounlink.append(id)
+		self.unlink(tounlink)
+		if len(self.datas)>self._max_count:
+			sorted = map(lambda x: (x[1]['internal.date_access'], x[0]), self.datas.items())
+			sorted.sort()
+			ids = map(lambda x: x[1], sorted[:len(self.datas)-self._max_count])
+			self.unlink(ids)
+		return True
 
 	def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
+		print 'Read Memory'
 		self.pool.get('ir.model.access').check(cr, user, self._name, 'read')
 		if not fields:
 			fields = self._columns.keys()
@@ -1044,9 +1073,10 @@ class orm_memory(orm_template):
 			for f in fields:
 				r[f] = self.datas[id].get(f, False)
 			result.append(r)
+			self.datas[id]['internal.date_access'] = time.time()
 		fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields)
 		for f in fields_post:
-			res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=False)
+			res2 = self._columns[f].get_memory(cr, self, ids, f, user, context=context, values=False)
 			for record in result:
 				record[f] = res2[record['id']]
 		return result
@@ -1062,13 +1092,14 @@ class orm_memory(orm_template):
 				upd_todo.append(field)
 		for id_new in ids:
 			self.datas[id_new].update(vals2)
+			self.datas[id_new]['internal.date_access'] = time.time()
 			for field in upd_todo:
-				self._columns[field].set(cr, self, id_new, field, vals[field], user, context)
+				self._columns[field].set_memory(cr, self, id_new, field, vals[field], user, context)
 		self._validate(cr, user, [id_new])
 		wf_service = netsvc.LocalService("workflow")
 		wf_service.trg_write(user, self._name, id_new, cr)
+		self.clear()
 		return id_new
-
 
 	def create(self, cr, user, vals, context=None):
 		self.pool.get('ir.model.access').check(cr, user, self._name, 'create')
@@ -1088,11 +1119,13 @@ class orm_memory(orm_template):
 			else:
 				upd_todo.append(field)
 		self.datas[id_new] = vals2
+		self.datas[id_new]['internal.date_access'] = time.time()
 		for field in upd_todo:
-			self._columns[field].set(cr, self, id_new, field, vals[field], user, context)
+			self._columns[field].set_memory(cr, self, id_new, field, vals[field], user, context)
 		self._validate(cr, user, [id_new])
 		wf_service = netsvc.LocalService("workflow")
 		wf_service.trg_create(user, self._name, id_new, cr)
+		self.clear()
 		return id_new
 
 	def default_get(self, cr, uid, fields_list, context=None):
@@ -1149,18 +1182,19 @@ class orm_memory(orm_template):
 		return self.datas.keys()
 
 	def unlink(self, cr, uid, ids, context=None):
-		self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink')
 		for id in ids:
 			if id in self.datas:
 				del self.datas[id]
+		if len(ids):
+			cr.execute('delete from wkf_instance where res_type=%s and res_id in ('+','.join(map(str,ids))+')', (self._name, ))
 		return True
 
 	def perm_read(self, cr, user, ids, context=None, details=True):
 		result = []
 		for id in ids:
 			result.append({
-				'create_uid': (1, 'Root'),
-				'create_date': '2008-06-12 10:42:09.880151',
+				'create_uid': (user, 'Root'),
+				'create_date': time.strftime('%Y-%m-%d %H:%M:%S'),
 				'write_uid': False,
 				'write_date': False,
 				'id': id
@@ -1698,7 +1732,6 @@ class orm(orm_template):
 						r[key] = self.pool.get('res.users').name_get(cr, user, [r[key]])[0]
 		if isinstance(ids, (int, long)):
 			return res[ids]
-		print res
 		return res
 
 	def unlink(self, cr, uid, ids, context=None):

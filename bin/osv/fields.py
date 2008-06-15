@@ -96,7 +96,11 @@ class _column(object):
 
 	def set(self, cr, obj, id, name, value, user=None, context=None):
 		cr.execute('update '+obj._table+' set '+name+'='+self._symbol_set[0]+' where id=%d', (self._symbol_set[1](value),id) )
+	def set_memory(self, cr, obj, id, name, value, user=None, context=None):
+		raise Exception, 'Not implemented set_memory method !'
 
+	def get_memory(self, cr, obj, ids, name, context=None, values=None):
+		raise Exception, 'Not implemented get_memory method !'
 	def get(self, cr, obj, ids, name, context=None, values=None):
 		raise Exception, 'undefined get method !'
 
@@ -104,6 +108,8 @@ class _column(object):
 		ids = obj.search(cr, uid, args+self._domain+[(name,'ilike',value)], offset, limit)
 		res = obj.read(cr, uid, ids, [name])
 		return [x[name] for x in res]
+	def search_memory(self, cr, obj, args, name, value, offset=0, limit=None, uid=None):
+		raise Exception, 'Not implemented search_memory method !'
 
 # ---------------------------------------------------------
 # Simple fields
@@ -165,31 +171,6 @@ class float(_column):
 		_column.__init__(self, string=string, **args)
 		self.digits = digits
 
-# We'll need to use decimal one day or another
-#try:
-#	import decimal
-#except ImportError:
-#	from tools import decimal
-#
-#class float(_column):
-#	_type = 'float'
-#	_symbol_c = '%f'
-#	def __init__(self, string='unknown', digits=None, **args):
-#		_column.__init__(self, string=string, **args)
-#		self._symbol_set = (self._symbol_c, self._symbol_set_decimal)
-#		self.digits = digits
-#		if not digits:
-#			scale = 4
-#		else:
-#			scale = digits[1]
-#		self._scale = decimal.Decimal(str(10**-scale))
-#		self._context = decimal.Context(prec=scale, rounding=decimal.ROUND_HALF_UP)
-#
-#	def _symbol_set_decimal(self, symb):
-#		if isinstance(symb, __builtin__.float):
-#			return decimal.Decimal('%f' % symb)
-#		return decimal.Decimal(symb)
-
 class date(_column):
 	_type = 'date'
 
@@ -211,17 +192,6 @@ class selection(_column):
 	def __init__(self, selection, string='unknown', **args):
 		_column.__init__(self, string=string, **args)
 		self.selection = selection
-
-	def set(self, cr, obj, id, name, value, user=None, context=None):
-		if not context:
-			context={}
-#CHECKME: a priori, ceci n'est jamais appelé puisque le test ci-dessous est mauvais
-# la raison est que selection n'est pas en classic_write = false
-# a noter qu'on pourrait fournir un _symbol_set specifique, et ca suffirait
-		if value in self.selection:
-			raise Exception, 'BAD VALUE'
-		_column.set(self, cr, obj, id, name, value, user=None, context=context)
-
 
 # ---------------------------------------------------------
 # Relationals fields
@@ -262,16 +232,6 @@ class one2one(_column):
 	def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None):
 		return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name','like',value)], offset, limit)
 
-class many2one_memory(_column):
-	_classic_read = True
-	_classic_write = True
-	_type = 'many2one'
-	def __init__(self, obj, string='unknown', **args):
-		_column.__init__(self, string=string, **args)
-		self._obj = obj
-
-
-
 class many2one(_column):
 	_classic_read = False
 	_classic_write = True
@@ -285,6 +245,12 @@ class many2one(_column):
 	# TODO: speed improvement
 	#
 	# name is the name of the relation field
+	def get_memory(self, cr, obj, ids, name, user=None, context=None, values=None):
+		result = {}
+		for id in ids:
+			result[id] = obj.datas[id][name]
+		return result
+
 	def get(self, cr, obj, ids, name, user=None, context=None, values=None):
 		if not context:
 			context={}
@@ -342,19 +308,20 @@ class many2one(_column):
 	def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None):
 		return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name','like',value)], offset, limit)
 
-class one2many_memory(_column):
+class one2many(_column):
 	_classic_read = False
 	_classic_write = False
 	_type = 'one2many'
+	
 	def __init__(self, obj, fields_id, string='unknown', limit=None, **args):
 		_column.__init__(self, string=string, **args)
 		self._obj = obj
 		self._fields_id = fields_id
 		self._limit = limit
+		#one2many can't be used as condition for defaults
 		assert(self.change_default != True)
 
-	def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-		print 'Get O2M'
+	def get_memory(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
 		if not context:
 			context = {}
 		if not values:
@@ -369,7 +336,7 @@ class one2many_memory(_column):
 		print 'Ok', res
 		return res
 
-	def set(self, cr, obj, id, field, values, user=None, context=None):
+	def set_memory(self, cr, obj, id, field, values, user=None, context=None):
 		if not context:
 			context={}
 		if not values:
@@ -395,63 +362,9 @@ class one2many_memory(_column):
 				for id2 in (act[2] or []):
 					obj.datas[id2][self._fields_id] = id
 
-	def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like'):
+	def search_memory(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like'):
 		raise 'Not Implemented'
 
-class many2many_memory(_column):
-	_classic_read = False
-	_classic_write = False
-	_type = 'many2many'
-	
-	def __init__(self, obj, string='unknown', limit=None, **args):
-		_column.__init__(self, string=string, **args)
-		self._obj = obj
-		self._limit = limit
-
-	def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-		result = {}
-		for id in ids:
-			result[id] = obj.datas[id][name]
-		return result
-
-	def set(self, cr, obj, id, name, values, user=None, context=None):
-		if not values:
-			return
-		for act in values:
-			if act[0]==0:
-				raise 'Not Implemented'
-			elif act[0]==1:
-				raise 'Not Implemented'
-			elif act[0]==2:
-				raise 'Not Implemented'
-			elif act[0]==3:
-				raise 'Not Implemented'
-			elif act[0]==4:
-				raise 'Not Implemented'
-			elif act[0]==5:
-				raise 'Not Implemented'
-			elif act[0]==6:
-				obj.datas[id][name] = act[2]
-
-	#
-	# TODO: use a name_search
-	#
-	def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like'):
-		raise 'Not Implemented'
-
-
-class one2many(_column):
-	_classic_read = False
-	_classic_write = False
-	_type = 'one2many'
-	
-	def __init__(self, obj, fields_id, string='unknown', limit=None, **args):
-		_column.__init__(self, string=string, **args)
-		self._obj = obj
-		self._fields_id = fields_id
-		self._limit = limit
-		#one2many can't be used as condition for defaults
-		assert(self.change_default != True)
 	
 	def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
 		if not context:
@@ -583,6 +496,32 @@ class many2many(_column):
 	#
 	def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like'):
 		return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name',operator,value)], offset, limit)
+
+	def get_memory(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
+		result = {}
+		for id in ids:
+			result[id] = obj.datas[id].get(name, [])
+		return result
+
+	def set_memory(self, cr, obj, id, name, values, user=None, context=None):
+		if not values:
+			return
+		for act in values:
+			if act[0]==0:
+				raise 'Not Implemented'
+			elif act[0]==1:
+				raise 'Not Implemented'
+			elif act[0]==2:
+				raise 'Not Implemented'
+			elif act[0]==3:
+				raise 'Not Implemented'
+			elif act[0]==4:
+				raise 'Not Implemented'
+			elif act[0]==5:
+				raise 'Not Implemented'
+			elif act[0]==6:
+				obj.datas[id][name] = act[2]
+
 
 # ---------------------------------------------------------
 # Function fields

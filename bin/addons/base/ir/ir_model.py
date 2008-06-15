@@ -40,7 +40,8 @@ def _get_fields_type(self, cr, uid, context=None):
 
 class ir_model(osv.osv):
 	_name = 'ir.model'
-	_rec_name = 'model'
+	_description = "Objects"
+	_rec_name = 'name'
 	_columns = {
 		'name': fields.char('Model name', size=64, translate=True),
 		'model': fields.char('Object name', size=64, required=True, search=1),
@@ -80,9 +81,10 @@ ir_model()
 
 class ir_model_fields(osv.osv):
 	_name = 'ir.model.fields'
+	_description = "Fields"
 	_columns = {
 		'name': fields.char('Name', required=True, size=64, select=1),
-		'model': fields.char('Model Name', size=64, required=True),
+		'model': fields.char('Object Name', size=64, required=True),
 		'relation': fields.char('Model Relation', size=64),
 		'model_id': fields.many2one('ir.model', 'Model id', required=True, select=True, ondelete='cascade'),
 		'field_description': fields.char('Field Label', required=True, size=256),
