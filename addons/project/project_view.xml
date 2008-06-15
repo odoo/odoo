@@ -357,7 +357,7 @@
 			<field name="type">tree</field>
 			<field name="priority" eval="2"/>
 			<field name="arch" type="xml">
-				<tree string="Tasks" colors="red:date_deadline&lt;current_date and state=='draft';blue:date_deadline==current_date and state=='draft';grey:state=='cancel'">
+				<tree string="Tasks" colors="grey:state in ('cancel','done');blue:state=='pending'">
 					<field name="sequence"/>
 					<field name="name"/>
 					<field name="project_id"/>
