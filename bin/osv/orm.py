@@ -1063,7 +1063,6 @@ class orm_memory(orm_template):
 		return True
 
 	def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
-		print 'Read Memory'
 		self.pool.get('ir.model.access').check(cr, user, self._name, 'read')
 		if not fields:
 			fields = self._columns.keys()
