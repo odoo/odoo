@@ -55,17 +55,18 @@ class Env(dict):
 		self.columns = self.obj._columns.keys() + self.obj._inherit_fields.keys()
 
 	def __getitem__(self, key):
-		if (key in self.columns) and (not super(Env, self).__contains__(key)):
-			res=self.wf_service.execute_cr(self.cr, self.uid, self.model, 'read',\
-					self.ids, [key])[0][key]
-			super(Env, self).__setitem__(key, res)
-			return res
-		elif key in dir(self.obj):
-			return EnvCall(self.wf_service, (self.cr, self.uid, self.model, key,\
-					self.ids))
+		if (key in self.columns) or (key in dir(self.obj)):
+			res = self.obj.browse(self.cr, self.uid, self.ids[0])
+			return res[key]
+			#res=self.wf_service.execute_cr(self.cr, self.uid, self.model, 'read',\
+			#		self.ids, [key])[0][key]
+			#super(Env, self).__setitem__(key, res)
+			#return res
+		#elif key in dir(self.obj):
+		#	return EnvCall(self.wf_service, (self.cr, self.uid, self.model, key,\
+		#			self.ids))
 		else:
 			return super(Env, self).__getitem__(key)
-
 
 def _eval_expr(cr, ident, workitem, action):
 	ret=False
@@ -82,6 +83,15 @@ def _eval_expr(cr, ident, workitem, action):
 			env = Env(wf_service, cr, uid, model, ids)
 			ret = eval(line, env)
 	return ret
+
+def execute_action(cr, ident, workitem, activity):
+	print 'Execute Action'
+	wf_service = netsvc.LocalService("object_proxy")
+	obj = pooler.get_pool(cr.dbname).get('ir.actions.server')
+	ctx = {'active_id':ident[2], 'active_ids':[ident[2]]}
+	result = obj.run(cr, ident[0], [activity['action_id']], ctx)
+	print 'Result', result
+	return result
 
 def execute(cr, ident, workitem, activity):
 	return _eval_expr(cr, ident, workitem, activity['action'])

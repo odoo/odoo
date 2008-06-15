@@ -162,74 +162,6 @@
 	</record>
 	<menuitem name="Administration/Custom/Low Level/Base/Actions/" action="ir_sequence_actions" id="menu_ir_sequence_actions"/>
 
-	<record model="ir.ui.view" id="act_execute_view">
-		<field name="name">ir.actions.execute</field>
-		<field name="model">ir.actions.execute</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Execute">
-				<field name="name" select="1"/>
-				<field name="type" select="1"/>
-				<field name="func_name"/>
-				<field name="func_arg"/>
-				<field name="usage"/>
-			</form>
-		</field>
-	</record>
-	<record model="ir.ui.view" id="act_execute_view_tree">
-		<field name="name">ir.actions.execute.tree</field>
-		<field name="model">ir.actions.execute</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Execute">
-				<field name="name"/>
-				<field name="type"/>
-			</tree>
-		</field>
-	</record>
-
-
-	<record model="ir.actions.act_window" id="ir_action_execute">
-		<field name="name">Execute</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">ir.actions.execute</field>
-		<field name="view_type">form</field>
-		<field name="view_id" ref="act_execute_view_tree"/>
-	</record>
-	<menuitem name="Administration/Custom/Low Level/Base/Actions/" action="ir_action_execute" id="menu_ir_action_execute"/>
-
-	<record model="ir.ui.view" id="act_group_view_form">
-		<field name="name">ir.actions.group.form</field>
-		<field name="model">ir.actions.group</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Group">
-				<field name="name" select="1"/>
-				<field name="type" select="1"/>
-			</form>
-		</field>
-	</record>
-	<record model="ir.ui.view" id="act_group_view_tree">
-		<field name="name">ir.actions.group.tree</field>
-		<field name="model">ir.actions.group</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Group">
-				<field name="name"/>
-				<field name="type"/>
-			</tree>
-		</field>
-	</record>
-
-	<record model="ir.actions.act_window" id="ir_action_group">
-		<field name="name">Group</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">ir.actions.group</field>
-		<field name="view_type">form</field>
-		<field name="view_id" ref="act_group_view_tree"/>
-	</record>
-	<menuitem name="Administration/Custom/Low Level/Base/Actions/" action="ir_action_group" id="menu_ir_action_group"/>
-
 	<record model="ir.ui.view" id="act_report_custom_view">
 		<field name="name">ir.actions.report.custom</field>
 		<field name="model">ir.actions.report.custom</field>
@@ -979,6 +911,10 @@
 				<field name="name"/>
 				<field name="model_id"/>
 				<field name="group_id"/>
+				<field name="perm_read"/>
+				<field name="perm_write"/>
+				<field name="perm_create"/>
+				<field name="perm_unlink"/>
 			</tree>
 		</field>
 	</record>

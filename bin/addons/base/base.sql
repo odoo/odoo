@@ -93,24 +93,6 @@ create table ir_act_report_custom (
 )
 INHERITS (ir_actions);
 
-CREATE TABLE ir_act_group (
-    exec_type varchar(64) DEFAULT 'serial'::varchar NOT NULL,
-    primary key(id)
-)
-INHERITS (ir_actions);
-
-CREATE TABLE ir_act_group_link (
-    aid integer NOT NULL,
-    gid integer NOT NULL
-);
-
-CREATE TABLE ir_act_execute (
-    func_name varchar(64) NOT NULL,
-    func_arg varchar(64),
-    primary key(id)
-)
-INHERITS (ir_actions);
-
 CREATE TABLE ir_act_wizard (
     wiz_name varchar(64) NOT NULL,
     primary key(id)
@@ -123,6 +105,12 @@ CREATE TABLE ir_act_url (
     primary key(id)
 )
 INHERITS (ir_actions);
+
+CREATE TABLE ir_act_server (
+    primary key(id)
+)
+INHERITS (ir_actions);
+
 
 CREATE TABLE ir_ui_view (
 	id serial NOT NULL,

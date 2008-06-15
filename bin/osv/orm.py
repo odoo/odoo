@@ -156,7 +156,7 @@ class browse_record(object):
 			elif name in self._table._inherit_fields:
 				col = self._table._inherit_fields[name][2]
 			elif hasattr(self._table, name):
-				return getattr(self._table, name)
+				return lambda *args, **argv: getattr(self._table, name)(self._cr, self._uid, [self._id], *args, **argv)
 			else:
 				logger = netsvc.Logger()
 				logger.notifyChannel('orm', netsvc.LOG_ERROR, "Programming error: field '%s' does not exist in object '%s' !" % (name, self._table._name))
@@ -1028,13 +1028,14 @@ class orm_template(object):
 
 class orm_memory(orm_template):
 	_protected = ['read','write','create','default_get','perm_read','unlink','fields_get','fields_view_get','search','name_get','distinct_field_get','name_search','copy','import_data','search_count']
+	_inherit_fields = {}
 	def __init__(self, cr):
 		super(orm_memory, self).__init__(cr)
 		self.datas = {}
 		self.next_id = 0
 
 	def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
-		print 'Read', ids
+		self.pool.get('ir.model.access').check(cr, user, self._name, 'read')
 		if not fields:
 			fields = self._columns.keys()
 		result = []
@@ -1043,24 +1044,56 @@ class orm_memory(orm_template):
 			for f in fields:
 				r[f] = self.datas[id].get(f, False)
 			result.append(r)
+		fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields)
+		for f in fields_post:
+			res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=False)
+			for record in result:
+				record[f] = res2[record['id']]
 		return result
 
+	def write(self, cr, user, ids, vals, context=None):
+		self.pool.get('ir.model.access').check(cr, user, self._name, 'write')
+		vals2 = {}
+		upd_todo = []
+		for field in vals:
+			if self._columns[field]._classic_write:
+				vals2[field] = vals[field]
+			else:
+				upd_todo.append(field)
+		for id_new in ids:
+			self.datas[id_new].update(vals2)
+			for field in upd_todo:
+				self._columns[field].set(cr, self, id_new, field, vals[field], user, context)
+		self._validate(cr, user, [id_new])
+		wf_service = netsvc.LocalService("workflow")
+		wf_service.trg_write(user, self._name, id_new, cr)
+		return id_new
+
+
 	def create(self, cr, user, vals, context=None):
+		self.pool.get('ir.model.access').check(cr, user, self._name, 'create')
 		self.next_id += 1
-		nid = self.next_id
+		id_new = self.next_id
 		default = []
-		for f in self._columns.keys(): # + self._inherit_fields.keys():
+		for f in self._columns.keys():
 			if not f in vals:
 				default.append(f)
 		if len(default):
 			vals.update(self.default_get(cr, user, default, context))
-		self.datas[nid] = vals
-		return nid
-
-	def write(self, cr, user, ids, vals, context=None):
-		for id in ids:
-			self.datas[id].update(vals)
-		return True
+		vals2 = {}
+		upd_todo = []
+		for field in vals:
+			if self._columns[field]._classic_write:
+				vals2[field] = vals[field]
+			else:
+				upd_todo.append(field)
+		self.datas[id_new] = vals2
+		for field in upd_todo:
+			self._columns[field].set(cr, self, id_new, field, vals[field], user, context)
+		self._validate(cr, user, [id_new])
+		wf_service = netsvc.LocalService("workflow")
+		wf_service.trg_create(user, self._name, id_new, cr)
+		return id_new
 
 	def default_get(self, cr, uid, fields_list, context=None):
 		if not context:
@@ -1116,8 +1149,10 @@ class orm_memory(orm_template):
 		return self.datas.keys()
 
 	def unlink(self, cr, uid, ids, context=None):
+		self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink')
 		for id in ids:
-			del self.datas[id]
+			if id in self.datas:
+				del self.datas[id]
 		return True
 
 	def perm_read(self, cr, user, ids, context=None, details=True):
@@ -1640,6 +1675,7 @@ class orm(orm_template):
 						else:
 							vals[field] = False
 		return res
+
 	def perm_read(self, cr, user, ids, context=None, details=True):
 		if not context:
 			context={}

@@ -39,7 +39,8 @@ def create(cr, ident, wkf_id):
 	cr.execute('insert into wkf_instance (id,res_type,res_id,uid,wkf_id) values (%d,%s,%s,%s,%s)', (id_new,res_type,res_id,uid,wkf_id))
 	cr.execute('select * from wkf_activity where flow_start=True and wkf_id=%d', (wkf_id,))
 	res = cr.dictfetchall()
-	workitem.create(cr, res, id_new, ident)
+	stack = []
+	workitem.create(cr, res, id_new, ident, stack=stack)
 	update(cr, id_new, ident)
 	return id_new
 
@@ -50,13 +51,20 @@ def delete(cr, ident):
 def validate(cr, inst_id, ident, signal, force_running=False):
 	cr.execute("select * from wkf_workitem where inst_id=%d", (inst_id,))
 	for witem in cr.dictfetchall():
-		workitem.process(cr, witem, ident, signal, force_running)
-	return _update_end(cr, inst_id, ident)
+		print '-----'
+		stack = []
+		workitem.process(cr, witem, ident, signal, force_running, stack=stack)
+		# An action is returned
+		print '----- Got', stack
+	_update_end(cr, inst_id, ident)
+	return stack and stack[0] or False
 
 def update(cr, inst_id, ident):
 	cr.execute("select * from wkf_workitem where inst_id=%d", (inst_id,))
 	for witem in cr.dictfetchall():
-		workitem.process(cr, witem, ident)
+		stack = []
+		workitem.process(cr, witem, ident, stack=stack)
+		print 'End Update'
 	return _update_end(cr, inst_id, ident)
 
 def _update_end(cr, inst_id, ident):

@@ -130,8 +130,7 @@ class osv_pool(netsvc.Service):
 
 	def exec_workflow_cr(self, cr, uid, obj, method, *args):
 		wf_service = netsvc.LocalService("workflow")
-		wf_service.trg_validate(uid, obj, args[0], method, cr)
-		return True
+		return wf_service.trg_validate(uid, obj, args[0], method, cr)
 
 	def exec_workflow(self, db, uid, obj, method, *args):
 		cr = pooler.get_db(db).cursor()
@@ -183,27 +182,6 @@ class osv_pool(netsvc.Service):
 #				print "skipping module", module
 
 #pooler.get_pool(cr.dbname) = osv_pool()
-
-#
-# See if we can use the pool var instead of the class_pool one
-#
-# XXX no more used
-#class inheritor(type):
-#	def __new__(cls, name, bases, d):
-#		parent_name = d.get('_inherit', None)
-#		if parent_name:
-#			parent_class = class_pool.get(parent_name)
-#			assert parent_class, "parent class %s does not exist !" % parent_name
-#			for s in ('_columns', '_defaults', '_inherits'):
-#				new_dict = copy.copy(getattr(parent_class, s))
-#				new_dict.update(d.get(s, {}))
-#				d[s] = new_dict
-#			bases = (parent_class,)
-#		res = type.__new__(cls, name, bases, d)
-#		#
-#		# update _inherits of others objects
-#		#
-#		return res
 
 class osv_memory(orm.orm_memory):
 	#__metaclass__ = inheritor

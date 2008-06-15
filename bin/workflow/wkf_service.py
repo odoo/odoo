@@ -79,11 +79,15 @@ class workflow_service(netsvc.Service):
 			instance.create(cr, ident, wkf_id)
 
 	def trg_validate(self, uid, res_type, res_id, signal, cr):
+		result = False
 		ident = (uid,res_type,res_id)
 		# ids of all active workflow instances for a corresponding resource (id, model_nam)
 		cr.execute('select id from wkf_instance where res_id=%d and res_type=%s and state=%s', (res_id, res_type, 'active'))
 		for (id,) in cr.fetchall():
-			instance.validate(cr, id, ident, signal)
+			res2 = instance.validate(cr, id, ident, signal)
+			print 'Inst val,', res2
+			result = result or res2
+		return result
 
 	# make all workitems which are waiting for a (subflow) workflow instance
 	# for the old resource point to the (first active) workflow instance for

@@ -28,6 +28,7 @@
 
 from osv import fields,osv
 import tools
+import time
 
 class actions(osv.osv):
 	_name = 'ir.actions.actions'
@@ -35,37 +36,13 @@ class actions(osv.osv):
 	_columns = {
 		'name': fields.char('Action Name', required=True, size=64),
 		'type': fields.char('Action Type', required=True, size=32),
-		'usage': fields.char('Action Usage', size=32)
+		'usage': fields.char('Action Usage', size=32),
+		'parent_id': fields.many2one('ir.actions.server', 'Parent Action'),
 	}
 	_defaults = {
 		'usage': lambda *a: False,
 	}
 actions()
-
-class act_execute(osv.osv):
-	_name = 'ir.actions.execute'
-	_table = 'ir_act_execute'
-	_sequence = 'ir_actions_id_seq'
-	_columns = {
-		'name': fields.char('name', size=64, required=True, translate=True),
-		'type': fields.char('type', size=32, required=True),
-		'func_name': fields.char('Function Name', size=64, required=True),
-		'func_arg': fields.char('Function Argument', size=64),
-		'usage': fields.char('Action Usage', size=32)
-	}
-act_execute()
-
-class group(osv.osv):
-	_name = 'ir.actions.group'
-	_table = 'ir_act_group'
-	_sequence = 'ir_actions_id_seq'
-	_columns = {
-		'name': fields.char('Group Name', size=64, required=True),
-		'type': fields.char('Action Type', size=32, required=True),
-		'exec_type': fields.char('Execution sequence', size=64, required=True),
-		'usage': fields.char('Action Usage', size=32)
-	}
-group()
 
 class report_custom(osv.osv):
 	_name = 'ir.actions.report.custom'
@@ -81,6 +58,7 @@ class report_custom(osv.osv):
 	}
 	_defaults = {
 		'multi': lambda *a: False,
+		'type': lambda *a: 'ir.actions.report.custom',
 	}
 report_custom()
 
@@ -260,13 +238,86 @@ class act_url(osv.osv):
 		'type': fields.char('Action Type', size=32, required=True),
 		'url': fields.text('Action Url',required=True),
 		'target': fields.selection((
-									('new', 'New Window'),
-									('self', 'This Window')),
-									'Action Target', required=True)
+			('new', 'New Window'),
+			('self', 'This Window')),
+			'Action Target', required=True
+		)
 	}
 	_defaults = {
 		'type': lambda *a: 'ir.actions.act_url',
 		'target': lambda *a: 'new'
 	}
 act_url()
+
+#
+# Actions that are run on the server side
+#
+class actions_server(osv.osv):
+	_name = 'ir.actions.server'
+	_table = 'ir_act_server'
+	_sequence = 'ir_actions_id_seq'
+	_columns = {
+		'name': fields.char('Action Name', required=True, size=64),
+		'state': fields.selection([
+			('python','Python Code'),
+			('dummy','Dummy'),
+			('trigger','Trigger'),
+			('email','Email'),
+			('sms','SMS'),
+			('object_create','Create Object'),
+			('object_write','Write Object'),
+			('client_action','Client Action'),
+			('other','Others Actions'),
+		], 'Action State', required=True, size=32),
+		'code': fields.text('Python Code'),
+		'sequence': fields.integer('Sequence'),
+		'model_id': fields.many2one('ir.model', 'Model', required=True),
+		'trigger_name': fields.char('Trigger Name', size=128),
+		'trigger_object': fields.char('Trigger Object', size=128),
+		'trigger_object_id': fields.char('Trigger Object ID', size=128),
+		'message': fields.text('Message', translate=True),
+		'address': fields.char('Address', size=128),
+		'child_ids': fields.one2many('ir.actions.actions', 'parent_id', 'Others Actions'),
+		'usage': fields.char('Action Usage', size=32),
+		'type': fields.char('Report Type', size=32, required=True),
+	}
+	_defaults = {
+		'state': lambda *a: 'dummy',
+		'type': lambda *a: 'ir.actions.server',
+		'sequence': lambda *a: 0,
+		'code': lambda *a: """# You can use the following variables
+#    - object
+#    - object2
+#    - time
+#    - cr
+#    - uid
+#    - ids
+# If you plan to return an action, assign: action = {...}
+"""
+	}
+	#
+	# Context should contains:
+	#   ids : original ids
+	#   id  : current id of the object
+	# OUT:
+	#   False : Finnished correctly
+	#   ACTION_ID : Action to launch
+	def run(self, cr, uid, ids, context={}):
+		for action in self.browse(cr, uid, ids, context):
+			if action.state=='python':
+				localdict = {
+					'self': self.pool.get(action.model_id.model),
+					'context': context,
+					'time': time,
+					'ids': ids,
+					'cr': cr,
+					'uid': uid
+				}
+				print action.code
+				exec action.code in localdict
+				print localdict.keys()
+				if 'action' in localdict:
+					return localdict['action']
+		return False
+actions_server()
 

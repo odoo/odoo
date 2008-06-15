@@ -262,6 +262,15 @@ class one2one(_column):
 	def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None):
 		return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name','like',value)], offset, limit)
 
+class many2one_memory(_column):
+	_classic_read = True
+	_classic_write = True
+	_type = 'many2one'
+	def __init__(self, obj, string='unknown', **args):
+		_column.__init__(self, string=string, **args)
+		self._obj = obj
+
+
 
 class many2one(_column):
 	_classic_read = False
@@ -332,6 +341,104 @@ class many2one(_column):
 
 	def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None):
 		return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name','like',value)], offset, limit)
+
+class one2many_memory(_column):
+	_classic_read = False
+	_classic_write = False
+	_type = 'one2many'
+	def __init__(self, obj, fields_id, string='unknown', limit=None, **args):
+		_column.__init__(self, string=string, **args)
+		self._obj = obj
+		self._fields_id = fields_id
+		self._limit = limit
+		assert(self.change_default != True)
+
+	def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
+		print 'Get O2M'
+		if not context:
+			context = {}
+		if not values:
+			values = {}
+		res = {}
+		for id in ids:
+			res[id] = []
+		ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id,'in',ids)], limit=self._limit)
+		for r in obj.pool.get(self._obj).read(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
+			if r[self._fields_id] in res:
+				res[r[self._fields_id]].append( r['id'] )
+		print 'Ok', res
+		return res
+
+	def set(self, cr, obj, id, field, values, user=None, context=None):
+		if not context:
+			context={}
+		if not values:
+			return
+		obj = obj.pool.get(self._obj)
+		for act in values:
+			if act[0]==0:
+				act[2][self._fields_id] = id
+				obj.create(cr, user, act[2], context=context)
+			elif act[0]==1:
+				obj.write(cr, user, [act[1]] , act[2], context=context)
+			elif act[0]==2:
+				obj.unlink(cr, user, [act[1]], context=context)
+			elif act[0]==3:
+				obj.datas[act[1]][self._fields_id] = False
+			elif act[0]==4:
+				obj.datas[act[1]] = id
+			elif act[0]==5:
+				for o in obj.datas.values():
+					if o[self._fields_id]==id:
+						o[self._fields_id] = False
+			elif act[0]==6:
+				for id2 in (act[2] or []):
+					obj.datas[id2][self._fields_id] = id
+
+	def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like'):
+		raise 'Not Implemented'
+
+class many2many_memory(_column):
+	_classic_read = False
+	_classic_write = False
+	_type = 'many2many'
+	
+	def __init__(self, obj, string='unknown', limit=None, **args):
+		_column.__init__(self, string=string, **args)
+		self._obj = obj
+		self._limit = limit
+
+	def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
+		result = {}
+		for id in ids:
+			result[id] = obj.datas[id][name]
+		return result
+
+	def set(self, cr, obj, id, name, values, user=None, context=None):
+		if not values:
+			return
+		for act in values:
+			if act[0]==0:
+				raise 'Not Implemented'
+			elif act[0]==1:
+				raise 'Not Implemented'
+			elif act[0]==2:
+				raise 'Not Implemented'
+			elif act[0]==3:
+				raise 'Not Implemented'
+			elif act[0]==4:
+				raise 'Not Implemented'
+			elif act[0]==5:
+				raise 'Not Implemented'
+			elif act[0]==6:
+				obj.datas[id][name] = act[2]
+
+	#
+	# TODO: use a name_search
+	#
+	def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like'):
+		raise 'Not Implemented'
+
 
 class one2many(_column):
 	_classic_read = False

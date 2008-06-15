@@ -56,42 +56,6 @@
 			<field name="perm_unlink" eval="True"/>
 		</record>
 
-		<record model="ir.model.access" id="access_actions_execute">
-			<field name="name">Actions Execute</field>
-			<field name="model_id" model="ir.model" search="[('model', '=', 'ir.actions.execute')]"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="False"/>
-			<field name="perm_create" eval="False"/>
-			<field name="perm_unlink" eval="False"/>
-		</record>
-		<record model="ir.model.access" id="access_actions_execute_admin">
-			<field name="name">Actions Execute</field>
-			<field name="model_id" model="ir.model" search="[('model', '=', 'ir.actions.execute')]"/>
-			<field name="group_id" ref="group_admin"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="True"/>
-			<field name="perm_create" eval="True"/>
-			<field name="perm_unlink" eval="True"/>
-		</record>
-
-		<record model="ir.model.access" id="access_actions_group">
-			<field name="name">Actions Group</field>
-			<field name="model_id" model="ir.model" search="[('model', '=', 'ir.actions.group')]"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="False"/>
-			<field name="perm_create" eval="False"/>
-			<field name="perm_unlink" eval="False"/>
-		</record>
-		<record model="ir.model.access" id="access_actions_group_admin">
-			<field name="name">Actions Group</field>
-			<field name="model_id" model="ir.model" search="[('model', '=', 'ir.actions.group')]"/>
-			<field name="group_id" ref="group_admin"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="True"/>
-			<field name="perm_create" eval="True"/>
-			<field name="perm_unlink" eval="True"/>
-		</record>
-
 		<record model="ir.model.access" id="access_actions_report_custom">
 			<field name="name">Actions Report Custom</field>
 			<field name="model_id" model="ir.model" search="[('model', '=', 'ir.actions.report.custom')]"/>

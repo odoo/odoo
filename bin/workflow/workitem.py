@@ -37,7 +37,7 @@ import instance
 import wkf_expr
 import wkf_logs
 
-def create(cr, act_datas, inst_id, ident):
+def create(cr, act_datas, inst_id, ident, stack):
 	for act in act_datas:
 		cr.execute("select nextval('wkf_workitem_id_seq')")
 		id_new = cr.fetchone()[0]
@@ -45,23 +45,27 @@ def create(cr, act_datas, inst_id, ident):
 		cr.execute('select * from wkf_workitem where id=%d',(id_new,))
 		res = cr.dictfetchone()
 		wkf_logs.log(cr,ident,act['id'],'active')
-		process(cr, res, ident)
+		process(cr, res, ident, stack=stack)
 
-def process(cr, workitem, ident, signal=None, force_running=False):
+def process(cr, workitem, ident, signal=None, force_running=False, stack=None):
+	if stack is None:
+		raise 'Error !!!'
+	result = True
 	cr.execute('select * from wkf_activity where id=%d', (workitem['act_id'],))
 	activity = cr.dictfetchone()
 
 	triggers = False
 	if workitem['state']=='active':
 		triggers = True
-		if not _execute(cr, workitem, activity, ident):
+		result = _execute(cr, workitem, activity, ident, stack)
+		if not result:
 			return False
 
 	if workitem['state']=='running':
 		pass
 
 	if workitem['state']=='complete' or force_running:
-		ok = _split_test(cr, workitem, activity['split_mode'], ident, signal)
+		ok = _split_test(cr, workitem, activity['split_mode'], ident, signal, stack)
 		triggers = triggers and not ok
 
 	if triggers:
@@ -75,7 +79,7 @@ def process(cr, workitem, ident, signal=None, force_running=False):
 					id =cr.fetchone()[0]
 					cr.execute('insert into wkf_triggers (model,res_id,instance_id,workitem_id,id) values (%s,%d,%d,%d,%d)', (trans['trigger_model'],res_id,workitem['inst_id'], workitem['id'], id))
 
-	return True
+	return result
 
 
 # ---------------------- PRIVATE FUNCS --------------------------------
@@ -85,7 +89,8 @@ def _state_set(cr, workitem, activity, state, ident):
 	workitem['state'] = state
 	wkf_logs.log(cr,ident,activity['id'],state)
 
-def _execute(cr, workitem, activity, ident):
+def _execute(cr, workitem, activity, ident, stack):
+	result = True
 	#
 	# send a signal to parent workflow (signal: subflow.signal_name)
 	#
@@ -94,8 +99,6 @@ def _execute(cr, workitem, activity, ident):
 		for i in cr.fetchall():
 			instance.validate(cr, i[0], (ident[0],i[1],i[2]), activity['signal_send'], force_running=True)
 
-
-
 	if activity['kind']=='dummy':
 		if workitem['state']=='active':
 			_state_set(cr, workitem, activity, 'complete', ident)
@@ -103,6 +106,12 @@ def _execute(cr, workitem, activity, ident):
 		if workitem['state']=='active':
 			_state_set(cr, workitem, activity, 'running', ident)
 			wkf_expr.execute(cr, ident, workitem, activity)
+			if activity['action_id']:
+				res2 = wkf_expr.execute_action(cr, ident, workitem, activity)
+				# A client action has been returned
+				if res2:
+					stack.append(res2)
+					result=res2
 			_state_set(cr, workitem, activity, 'complete', ident)
 	elif activity['kind']=='stopall':
 		if workitem['state']=='active':
@@ -131,9 +140,11 @@ def _execute(cr, workitem, activity, ident):
 			state= cr.fetchone()[0]
 			if state=='complete':
 				_state_set(cr, workitem, activity, 'complete', ident)
-	return True
+	return result
 
-def _split_test(cr, workitem, split_mode, ident, signal=None):
+def _split_test(cr, workitem, split_mode, ident, signal=None, stack=None):
+	if stack is None:
+		raise 'Error !!!'
 	cr.execute('select * from wkf_transition where act_from=%d', (workitem['act_id'],))
 	test = False
 	transitions = []
@@ -158,15 +169,15 @@ def _split_test(cr, workitem, split_mode, ident, signal=None):
 		cr.executemany('insert into wkf_witm_trans (trans_id,inst_id) values (%d,%d)', transitions)
 		cr.execute('delete from wkf_workitem where id=%d', (workitem['id'],))
 		for t in transitions:
-			_join_test(cr, t[0], t[1], ident)
+			_join_test(cr, t[0], t[1], ident, stack)
 		return True
 	return False
 
-def _join_test(cr, trans_id, inst_id, ident):
+def _join_test(cr, trans_id, inst_id, ident, stack):
 	cr.execute('select * from wkf_activity where id=(select act_to from wkf_transition where id=%d)', (trans_id,))
 	activity = cr.dictfetchone()
 	if activity['join_mode']=='XOR':
-		create(cr,[activity], inst_id, ident)
+		create(cr,[activity], inst_id, ident, stack)
 		cr.execute('delete from wkf_witm_trans where inst_id=%d and trans_id=%d', (inst_id,trans_id))
 	else:
 		cr.execute('select id from wkf_transition where act_to=%d', (activity['id'],))
@@ -181,4 +192,4 @@ def _join_test(cr, trans_id, inst_id, ident):
 		if ok:
 			for (id,) in trans_ids:
 				cr.execute('delete from wkf_witm_trans where trans_id=%d and inst_id=%d', (id,inst_id))
-			create(cr, [activity], inst_id, ident)
+			create(cr, [activity], inst_id, ident, stack)
