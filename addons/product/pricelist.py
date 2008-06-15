@@ -249,6 +249,9 @@ class product_pricelist_version(osv.osv):
 		'active': lambda *a: 1,
 	}
 
+	#
+	# TODO: improve this function ?
+	#
 	def _check_date(self, cursor, user, ids):
 		for pricelist_version in self.browse(cursor, user, ids):
 			if not pricelist_version.active:

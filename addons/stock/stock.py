@@ -86,6 +86,7 @@ class stock_location(osv.osv):
 		'chained_location_id': fields.many2one('stock.location', 'Chained Location If Fixed'),
 		'chained_location_type': fields.selection([('','None'),('customer', 'Customer'),('fixed','Fixed Location')], 'Chained Location Type'),
 		'chained_auto_packing': fields.boolean('Chained Auto-Packing'),
+		'chained_delay': fields.integer('Chained Delay (days)'),
 
 		'address_id': fields.many2one('res.partner.address', 'Location Address'),
 
@@ -461,6 +462,7 @@ class stock_picking(osv.osv):
 						'prodlot_id':False,
 						'tracking_id':False,
 						'move_history_ids':[],
+						'date_planned': DateTime.strptime(move.date_planned, '%Y-%m-%d') + DateTime.RelativeDateTime(days=move.location_dest_id.chained_delay or 0),
 						'move_history_ids2':[]}
 					)
 					self.pool.get('stock.move').write(cr, uid, [move.id], {

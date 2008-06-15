@@ -312,11 +312,11 @@
 				<form string="Supplier Information">
 					<field name="name"/>
 					<field name="sequence"/>
-					<field name="product_name" />
-					<field name="product_code" />
+					<field name="product_name"/>
+					<field name="product_code"/>
 					<field name="delay"/>
 					<field name="qty"/>
-					<field name="pricelist_ids" widget="one2many_list" colspan="4" nolabel="1">
+					<field name="pricelist_ids" widget="one2many_list" colspan="4" nolabel="1" groups="base.group_extended">
 						<tree string="Pricelist" editable="bottom">
 							<field name="min_quantity" />
 							<field name="price" />
