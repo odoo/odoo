@@ -696,20 +696,28 @@ class account_move_line(osv.osv):
 					raise osv.except_osv('No piece number !', 'Can not create an automatic sequence for this piece !\n\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.')
 
 		ok = not (journal.type_control_ids or journal.account_control_ids)
-		if ('account_id' in vals) and journal.type_control_ids:
-			type = account_obj.browse(cr, uid, vals['account_id']).type
-			for t in journal.type_control_ids:
-				if type==t.code:
-					ok = True
-					break
-		if ('account_id' in vals) and journal.account_control_ids and not ok:
-			for a in journal.account_control_ids:
-				if a.id==vals['account_id']:
-					ok = True
-					break
+		if ('account_id' in vals):
+			account = account_obj.browse(cr, uid, vals['account_id'])
+			if journal.type_control_ids:
+				type = account.type
+				for t in journal.type_control_ids:
+					if type==t.code:
+						ok = True
+						break
+			if journal.account_control_ids and not ok:
+				for a in journal.account_control_ids:
+					if a.id==vals['account_id']:
+						ok = True
+						break
+			if (account.currency_id) and 'amount_currency' not in vals:
+				vals['currency_id'] = account.currency_id.id
+				cur_obj = self.pool.get('res.currency')
+				ctx = {}
+				if 'date' in vals:
+					ctx['date'] = vals['date']
+				vals['amount_currency'] = cur_obj.compute(cr, uid, account.company_id.currency_id.id, account.currency_id.id, vals.get('debit', 0.0)+vals.get('credit', 0.0), context=ctx)
 		if not ok:
 			raise osv.except_osv('Bad account !', 'You can not use this general account in this journal !')
-
 		result = super(osv.osv, self).create(cr, uid, vals, context)
 		if check:
 			self.pool.get('account.move').validate(cr, uid, [vals['move_id']], context)

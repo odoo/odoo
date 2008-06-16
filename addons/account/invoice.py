@@ -674,16 +674,17 @@ class account_invoice(osv.osv):
 			new_ids.append(self.create(cr, uid, invoice))
 		return new_ids
 
-	def pay_and_reconcile(self, cr, uid, ids, pay_amount, pay_account_id, period_id, pay_journal_id, writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context={}):
+	def pay_and_reconcile(self, cr, uid, ids, pay_amount, pay_account_id, period_id, pay_journal_id, writeoff_acc_id, writeoff_period_id, writeoff_journal_id, context={}, name=''):
 		#TODO check if we can use different period for payment and the writeoff line
 		assert len(ids)==1, "Can only pay one invoice at a time"
 		invoice = self.browse(cr, uid, ids[0])
 		src_account_id = invoice.account_id.id
 		journal = self.pool.get('account.journal').browse(cr, uid, pay_journal_id)
-		if journal.sequence_id:
-			name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
-		else:
-			raise osv.except_osv('No piece number !', 'Can not create an automatic sequence for this piece !\n\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.')
+		if not name:
+			if journal.sequence_id:
+				name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
+			else:
+				raise osv.except_osv('No piece number !', 'Can not create an automatic sequence for this piece !\n\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.')
 		types = {'out_invoice': -1, 'in_invoice': 1, 'out_refund': 1, 'in_refund': -1}
 		direction = types[invoice.type]
 		l1 = {

@@ -30,16 +30,22 @@
 import wizard
 import netsvc
 import pooler
+import time
 
 pay_form = '''<?xml version="1.0"?>
 <form string="Pay invoice">
 	<field name="amount"/>
+	<newline/>
+	<field name="name"/>
+	<field name="date"/>
 	<field name="journal_id"/>
 	<field name="period_id"/>
 </form>'''
 
 pay_fields = {
 	'amount': {'string': 'Amount paid', 'type':'float', 'required':True},
+	'name': {'string': 'Entry Name', 'type':'char', 'size': 64, 'required':True},
+	'date': {'string': 'Payment date', 'type':'date', 'required':True, 'default':lambda *args: time.strftime('%Y-%m-%d')},
 	'journal_id': {'string': 'Journal', 'type': 'many2one', 'relation':'account.journal', 'required':True, 'domain':[('type','=','cash')]},
 	'period_id': {'string': 'Period', 'type': 'many2one', 'relation':'account.period', 'required':True},
 }
@@ -51,17 +57,29 @@ def _pay_and_reconcile(self, cr, uid, data, context):
 	writeoff_account_id = form.get('writeoff_acc_id', False)
 	writeoff_journal_id = form.get('writeoff_journal_id', False)
 	pool = pooler.get_pool(cr.dbname)
-	acc_id = pool.get('account.journal').browse(cr, uid, journal_id, context).default_credit_account_id.id
+	cur_obj = pool.get('res.currency')
+	amount = form['amount']
+
+	invoice = pool.get('account.invoice').browse(cr, uid, data['id'], context)
+	journal = pool.get('account.journal').browse(cr, uid, data['form']['journal_id'], context)
+	if journal.currency and invoice.company_id.currency_id.id<>journal.currency.id:
+		ctx = {'date':data['form']['date']}
+		amount = cur_obj.compute(cr, uid, journal.currency.id, invoice.company_id.currency_id.id, amount, context=ctx)
+
+	acc_id = journal.default_credit_account_id and journal.default_credit_account_id.id
 	if not acc_id:
 		raise wizard.except_wizard('Error !', 'Your journal must have a default credit and debit account.')
 	pool.get('account.invoice').pay_and_reconcile(cr, uid, [data['id']],
-			form['amount'], acc_id, period_id, journal_id, writeoff_account_id,
-			period_id, writeoff_journal_id, context=context)
+			amount, acc_id, period_id, journal_id, writeoff_account_id,
+			period_id, writeoff_journal_id, context, data['form']['name'])
 	return {}
 
 def _wo_check(self, cr, uid, data, context):
 	pool = pooler.get_pool(cr.dbname)
 	invoice = pool.get('account.invoice').browse(cr, uid, data['id'], context)
+	journal = pool.get('account.journal').browse(cr, uid, data['form']['journal_id'], context)
+	if invoice.company_id.currency_id.id<>journal.currency.id:
+		return 'addendum'
 	if pool.get('res.currency').is_zero(cr, uid, invoice.currency_id,
 			(data['form']['amount'] - invoice.amount_total)):
 		return 'reconcile'
@@ -91,7 +109,11 @@ def _get_period(self, cr, uid, data, context={}):
 	invoice = pool.get('account.invoice').browse(cr, uid, data['id'], context)
 	if invoice.state == 'draft':
 		raise wizard.except_wizard('Error !', 'Can not pay draft invoice.')
-	return {'period_id': period_id, 'amount': invoice.amount_total}
+	return {
+		'period_id': period_id,
+		'amount': invoice.amount_total,
+		'date': time.strftime('%Y-%m-%d')
+	}
 
 class wizard_pay_invoice(wizard.interface):
 	states = {
