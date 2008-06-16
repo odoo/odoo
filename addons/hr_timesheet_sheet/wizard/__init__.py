@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
-# $Id: hr_timesheet.py 5490 2007-01-29 16:05:51Z pinky $
+# $Id$
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential

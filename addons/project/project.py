@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2005-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
-# $Id: project.py 1011 2005-07-26 08:11:45Z nicoe $
+# $Id$
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential

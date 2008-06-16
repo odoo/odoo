@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
-# $Id: rappel.py 2514 2006-03-23 07:33:22Z pinky $
+# $Id$
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
