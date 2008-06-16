@@ -1,7 +1,6 @@
 ##############################################################################
 #
-# copyright (c) 2004 TINY SPRL. (http://tiny.be)
-# copyright (c) 2004 Fabien Pinckaers <fp@tiny.be>
+# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be)
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential

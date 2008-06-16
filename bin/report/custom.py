@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2004-2005 TINY SPRL. (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
 # $Id$
 #
