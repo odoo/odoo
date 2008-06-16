@@ -1,10 +1,6 @@
 <?xml version="1.0"?>
 <terp>
 	<data>
-		<menuitem name="Financial Management" icon="terp-account" id="menu_finance_main"/>
-		<menuitem name="Financial Management/Configuration"
-			groups="group_admin" sequence="1"/>
-
 		<record model="ir.ui.view" id="view_res_bank_form">
 			<field name="name">res.bank.form</field>
 			<field name="model">res.bank</field>
@@ -47,12 +43,13 @@
 		</record>
 
 		<record model="ir.actions.act_window" id="action_res_bank_form">
+			<field name="name">Banks</field>
 			<field name="res_model">res.bank</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 		</record>
 
-		<menuitem name="Financial Management/Configuration/Banks"
+		<menuitem parent="menu_base_config"
 			action="action_res_bank_form" sequence="12"
 			id="menu_action_res_bank_form"/>
 

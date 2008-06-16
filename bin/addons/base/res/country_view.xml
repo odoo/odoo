@@ -31,13 +31,18 @@
 		</record>
 
 		<record model="ir.actions.act_window" id="action_country">
-			<field name="name">Country</field>
+			<field name="name">Countries</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">res.country</field>
 			<field name="view_type">form</field>
 		</record>
 
-		<menuitem name="Partners/Configuration/Localisation/Countries"
+		<menuitem
+			parent="menu_base_config"
+			name="Localisation"
+			id="menu_localisation"/>
+		<menuitem
+			parent="menu_localisation"
 			groups="group_admin" action="action_country"
 			id="menu_country_partner"/>
 
@@ -79,7 +84,7 @@
 			<field name="view_id" ref="view_country_state_tree"/>
 		</record>
 
-		<menuitem name="Partners/Configuration/Localisation/States"
+		<menuitem parent="menu_localisation"
 			groups="group_admin" action="action_country_state"
 			id="menu_country_state_partner"/>
 

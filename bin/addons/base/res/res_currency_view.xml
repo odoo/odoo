@@ -2,10 +2,6 @@
 <terp>
 <data>
 
-	<menuitem name="Financial Management" icon="terp-account"/>
-	<menuitem name="Financial Management/Configuration"
-		groups="group_admin" sequence="1"/>
-
 	<record model="ir.ui.view" id="view_currency_tree">
 		<field name="name">res.currency.tree</field>
 		<field name="model">res.currency</field>
@@ -47,14 +43,17 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_currency_form">
+		<field name="name">Currencies</field>
 		<field name="res_model">res.currency</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
 
-	<menuitem name="Financial Management/Configuration/Currencies" action="action_currency_form" sequence="11" id="menu_action_currency_form"/>
-
-	<menuitem name="Administration/Configuration/Base/Define Currencies" action="action_currency_form" sequence="1" id="menu_currency_def"/>
+	<menuitem 
+		parent="menu_localisation" 
+		action="action_currency_form" 
+		sequence="11" 
+		id="menu_action_currency_form"/>
 
 </data>
 </terp>
