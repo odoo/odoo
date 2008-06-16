@@ -6,8 +6,16 @@
 	 Fiscal Year
 	-->
 
-	<menuitem name="Financial Management/Configuration"
+	<menuitem name="Financial Management" icon="terp-account"
+		id="menu_finance"/>
+	<menuitem name="Configuration"
+		parent="menu_finance"
+		id="menu_finance_configuration"
 		groups="base.group_admin" sequence="1"/>
+	<menuitem
+		id="base.menu_action_currency_form"
+		parent="menu_finance_configuration"
+		sequence="20"/>
 
 	<record model="ir.ui.view" id="view_account_fiscalyear_form">
 		<field name="name">account.fiscalyear.form</field>
