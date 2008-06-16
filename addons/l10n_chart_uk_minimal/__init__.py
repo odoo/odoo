@@ -1,7 +1,9 @@
 ##############################################################################
 #
-# Copyright (c) 2007 Seath Solutions Ltd. All Rights Reserved.
+# Copyright (c) 2004-2008 Seath Solutions Ltd. All Rights Reserved.
 # Geoff Gardiner, Seath Solutions Ltd (http://www.seathsolutions.com/)
+# $Id$
+#
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
