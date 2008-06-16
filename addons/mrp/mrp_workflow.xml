@@ -294,7 +294,7 @@
 			<field name="act_to" ref="act_make_done"/>
 			<field name="condition">check_move_done()</field>
 			<field name="trigger_model">stock.move</field>
-			<field name="trigger_expr_id">[move_id[0]]</field>
+			<field name="trigger_expr_id">[move_id.id]</field>
 		</record>
 		<record model="workflow.transition" id="trans_make_to_stock_cancel">
 			<field name="act_from" ref="act_make_to_stock"/>

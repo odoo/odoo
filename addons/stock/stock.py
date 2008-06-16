@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-import datetime
+from mx import DateTime
 import time
 import netsvc
 from osv import fields,osv
