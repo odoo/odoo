@@ -54,7 +54,6 @@ _transaction_fields = {
 def _trans_rec_get(self, cr, uid, data, context=None):
 	pool = pooler.get_pool(cr.dbname)
 	account_move_line_obj = pool.get('account.move.line')
-
 	credit = debit = 0
 	account_id = False
 	count = 0

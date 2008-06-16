@@ -4,7 +4,11 @@
 	#
 	# Delivery Carriers
 	# 
-	<menuitem name="Inventory Control/Configuration/Delivery" sequence="4"/>
+	<menuitem
+		parent="stock.menu_stock_configuration"
+		name="Delivery"
+		id="menu_delivery"
+		sequence="4"/>
 
 	<record model="ir.ui.view" id="view_delivery_carrier_tree">
 		<field name="name">delivery.carrier.tree</field>
@@ -31,12 +35,16 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_delivery_carrier_form">
+		<field name="name">Delivery Method</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">delivery.carrier</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	<menuitem name="Inventory Control/Configuration/Delivery/Delivery Method" id="menu_action_delivery_carrier_form" action="action_delivery_carrier_form"/>
+	<menuitem 
+		parent="menu_delivery"
+		id="menu_action_delivery_carrier_form" 
+		action="action_delivery_carrier_form"/>
 
 	#
 	# Delivery Grids
@@ -80,13 +88,16 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_delivery_grid_form">
+		<field name="name">Delivery Pricelist</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">delivery.grid</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	<menuitem name="Inventory Control/Configuration/Delivery/Delivery Pricelist" id="menu_action_delivery_grid_form" action="action_delivery_grid_form"/>
-
+	<menuitem
+		parent="menu_delivery"
+		id="menu_action_delivery_grid_form"
+		action="action_delivery_grid_form"/>
 
 	<record model="ir.ui.view" id="view_delivery_grid_line_form">
 		<field name="name">delivery.grid.line.form</field>

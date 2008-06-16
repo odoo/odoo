@@ -1235,13 +1235,16 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_incoterms_tree">
+		<field name="name">Incoterms</field>
 		<field name="res_model">stock.incoterms</field>
 		<field name="type">ir.actions.act_window</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	<menuitem name="Inventory Control/Configuration/Incoterms" id="menu_action_incoterms_tree" action="action_incoterms_tree"/>
-
+	<menuitem
+		parent="menu_stock_configuration"
+		id="menu_action_incoterms_tree"
+		action="action_incoterms_tree"/>
 
 	<act_window
 		domain="[('type','&lt;&gt;','service')]"
