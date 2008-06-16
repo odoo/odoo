@@ -282,9 +282,9 @@
 			<field name="model_id" model="ir.model" search="[('model', '=', 'stock.warehouse.orderpoint')]"/>
 			<field name="group_id" ref="group_production_worker"/>
 			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="False"/>
-			<field name="perm_create" eval="False"/>
-			<field name="perm_unlink" eval="False"/>
+			<field name="perm_write" eval="True"/>
+			<field name="perm_create" eval="True"/>
+			<field name="perm_unlink" eval="True"/>
 		</record>
 	</data>
 </terp>

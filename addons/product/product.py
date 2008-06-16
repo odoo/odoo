@@ -490,15 +490,6 @@ class product_product(osv.osv):
 				res[product.id] = product_uom_obj._compute_price(cr, uid,
 						uom.id, res[product.id], context['uom'])
 		return res
-#		result = self.read(cr, uid, ids, [ptype, 'price_extra','price_margin'])
-#		result2 = {}
-#		for res in result:
-#			result2[res['id']] = res[ptype] or 0.0
-#			if ptype=='list_price':
-#				result2[res['id']] = result2[res['id']] * res['price_margin'] + res['price_extra']
-#			if 'uom' in context:
-#				result2[res['id']] = self.pool.get('product.uom')._compute_price(cr, uid, context['uom'], result2[res['id']])
-#		return result2
 
 	def copy(self, cr, uid, id, default=None, context=None):
 		if not context:

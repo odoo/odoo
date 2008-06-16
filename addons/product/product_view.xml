@@ -36,20 +36,20 @@
 						<page string="Information">
 							<field name="name" select="1"/>
 							<field name="default_code" select="1"/>
-							<field name="variants" select="2"/>
-							<field name="ean13" select="2"/>
+							<field name="variants" select="2" groups="base.group_extended"/>
+							<field name="ean13" select="2" groups="base.group_extended"/>
 							<newline/>
 							<field name="categ_id" select="1"/>
 							<field name="type" select="2"/>
-							<field name="volume" digits="(14, 3)"/>
+							<field name="volume" digits="(14, 3)" groups="base.group_extended"/>
 							<newline/>
-							<field name="weight" digits="(14, 3)"/>
-							<field name="weight_net" digits="(14, 3)"/>
+							<field name="weight" digits="(14, 3)" groups="base.group_extended"/>
+							<field name="weight_net" digits="(14, 3)" groups="base.group_extended"/>
 							<field name="procure_method"/>
 							<field name="state" select="2"/>
 							<field name="uom_id"/>
 							<field name="uom_po_id"/>
-							<field name="product_manager" select="2"/>
+							<field name="product_manager" select="2" groups="base.group_extended"/>
 						</page>
 						<page string="Procurement">
 							<field name="supply_method"/>
@@ -61,10 +61,11 @@
 							<field name="purchase_ok" select="2"/>
 							<field name="warranty"/>
 							<field name="rental" select="2" groups="base.group_extended"/>
-							<field name="list_price"/>
 							<newline/>
+							<field name="list_price"/>
 							<field name="standard_price"/>
 							<field name="cost_method" groups="base.group_extended"/>
+							<newline/>
 							<field name="uos_id"  groups="base.group_uos"/>
 							<field name="uos_coeff"  groups="base.group_uos"/>
 							<newline />
@@ -126,7 +127,9 @@
 					<field name="name" select="1"/>
 					<field name="parent_id" />
 					<field name="sequence"/>
+					<group colspan="4" groups="base.group_extended">
 					<properties/>
+					</group>
 				</form>
 			</field>
 		</record>
@@ -240,7 +243,7 @@
 			<field name="model">product.ul</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Logisitcal Unit">
+				<form string="Logistical Unit">
 					<field name="name" />
 					<field name="type" />
 				</form>
@@ -251,7 +254,7 @@
 			<field name="model">product.ul</field>
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
-				<tree string="Logisitcal Unit">
+				<tree string="Logistical Unit">
 					<field name="name" select="1"/>
 					<field name="type" select="1"/>
 				</tree>
@@ -263,7 +266,8 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 		</record>
-		<menuitem name="Products/Configuration/Logisitcal Unit" id="menu_product_ul_form_action" action="product_ul_form_action"/>
+		<menuitem name="Products/Configuration/Logisitcal Unit" id="menu_product_ul_form_action" action="product_ul_form_action"
+			groups="base.group_extended"/>
 
 		<record model="ir.ui.view" id="product_packaging_tree_view">
 			<field name="name">product.packaging.tree.view</field>

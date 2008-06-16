@@ -33,7 +33,7 @@
 							<separator string="Project's members" colspan="4" />
 							<field name="members" colspan="4" nolabel="1"/>
 						</page>
-						<page string="Partner Info">
+						<page string="Partner Info" groups="base.group_extended">
 							<field name="partner_id" select="1" colspan="4" on_change="onchange_partner_id(partner_id)"/>
 							<field name="contact_id" select="2" domain="[('partner_id','=',partner_id)]"/>
 							<field name="category_id" select="2"/>
@@ -83,7 +83,7 @@
 											 <button name="do_reopen" string="Re-open" states="done,cancelled" type="object"/>
 											 <button name="do_pending" states="open" string="Set pending" type="object"/>
 											 <button name="%(wizard_close_task)d" states="pending,open" string="Done" type="action"/>
-											 <button name="%(wizard_delegate_task)d" states="pending,open" string="Delegate" type="action"/>
+											 <button name="%(wizard_delegate_task)d" states="pending,open" string="Delegate" type="action" groups="base.group_extended"/>
 											 <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object"/>
 											</group>
 										</page>
@@ -313,13 +313,13 @@
 								<button name="do_open" string="Open" states="pending,draft" type="object"/>
 								<button name="do_reopen" string="Re-open" states="done,cancelled" type="object"/>
 								<button name="do_pending" states="open" string="Set Pending" type="object"/>
-								<button name="%(wizard_delegate_task)d" states="pending,open" string="Delegate" type="action"/>
+								<button name="%(wizard_delegate_task)d" states="pending,open" string="Delegate" type="action" groups="base.group_extended"/>
 								<button name="%(wizard_close_task)d" states="pending,open" string="Done" type="action"/>
 								<button name="do_cancel" states="draft,open,pending" string="Cancel" type="object"/>
 
 							</group>
 						</page>
-						<page string="Delegations">
+						<page string="Delegations" groups="base.group_extended">
 							<field name="history" colspan="4" nolabel="1"/>
 							<field name="child_ids" colspan="4" nolabel="1" height="150">
 								<tree string="Delegated tasks">
@@ -333,7 +333,7 @@
 							</field>
 							<field name="parent_id" colspan="4"/>
 						</page>
-						<page string="Extra Info">
+						<page string="Extra Info" groups="base.group_extended">
 							<field name="date_start" select="2"/>
 							<field name="date_close" select="2"/>
 							<field name="type"/>
@@ -400,6 +400,11 @@
 			<field name="view_mode">tree,form</field>
 			<field name="domain">[('state','=','done'), ('billable','=',True), ('invoice_id','=',False)]</field>
 		</record>
+		<menuitem
+			name="Project Management/All Tasks/Billable Tasks" 
+			groups="base.group_extended" 
+			id="menu_action_billable"/>
+
 		<menuitem name="Project Management/All Tasks/Billable Tasks/Unbilled Closed Tasks" id="menu_action_view_task2" action="action_view_task2" />
 
 		<record model="ir.actions.act_window" id="action_view_task3">

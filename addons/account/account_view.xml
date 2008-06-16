@@ -471,7 +471,11 @@
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	<menuitem name="Financial Management/Configuration/General Accounts/" id="menu_action_account_type_form" action="action_account_type_form"/>
+	<menuitem 
+		name="Financial Management/Configuration/General Accounts/" 
+		id="menu_action_account_type_form" 
+		groups="base.group_extended"
+		action="action_account_type_form"/>
 	<!--
 	Entries
 	-->
@@ -593,17 +597,17 @@
 				<field name="type"/>
 				<field name="applicable_type"/>
 				<field name="amount" select="2"/>
-				<field name="include_base_amount"/>
-				<field name="domain"/>
+				<field name="include_base_amount" groups="base.group_extended"/>
+				<field name="domain" groups="base.group_extended"/>
 				<newline/>
 				<field name="account_collected_id"/>
 					<label string="Keep empty to use the income account" nolabel="1" colspan="2"/>
 				<field name="account_paid_id"/>
 					<label string="Keep empty to use the expense account" nolabel="1" colspan="2"/>
-				<field name="child_depend"/>
-				<field name="sequence" />
+				<field name="child_depend" groups="base.group_extended"/>
+				<field name="sequence"  groups="base.group_extended"/>
 				<newline/>
-				<field name="child_ids" colspan="4"/>
+				<field name="child_ids" colspan="4" groups="base.group_extended"/>
 				</page><page string="Tax Declaration">
 					<separator colspan="4" string="Invoices"/>
 					<field name="base_code_id"/>
@@ -616,7 +620,7 @@
 					<field name="ref_base_sign"/>
 					<field name="ref_tax_code_id"/>
 					<field name="ref_tax_sign"/>
-				</page><page string="Special Computation">
+				</page><page string="Special Computation" groups="base.group_extended">
 					<separator string="Compute Code (if type=code)" colspan="4"/>
 					<field name="python_compute" colspan="4" nolabel="1"/>
 					<separator string="Applicable Code (if type=code)" colspan="4"/>
