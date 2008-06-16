@@ -454,7 +454,8 @@ class account_move_line(osv.osv):
 		id_set = ','.join(map(str, ids))
 		lines = self.browse(cr, uid, ids, context=context)
 		unrec_lines = filter(lambda x: not x['reconcile_id'], lines)
-		credit = debit = 0
+		credit = debit = 0.0
+		currency = 0.0
 		account_id = False
 		partner_id = False
 		for line in unrec_lines:
@@ -463,6 +464,7 @@ class account_move_line(osv.osv):
 						'Entry "%s" is not valid !' % line.name)
 			credit += line['credit']
 			debit += line['debit']
+			currency += line['amount_currency'] or 0.0
 			account_id = line['account_id']['id']
 			partner_id = (line['partner_id'] and line['partner_id']['id']) or False
 		writeoff = debit - credit
@@ -482,7 +484,8 @@ class account_move_line(osv.osv):
 		if r[0][1] != None:
 			raise osv.except_osv('Error', 'Some entries are already reconciled !')
 
-		if not self.pool.get('res.currency').is_zero(cr, uid, account.company_id.currency_id, writeoff):
+		if (not self.pool.get('res.currency').is_zero(cr, uid, account.company_id.currency_id, writeoff)) or \
+		   (account.currency_id and (not self.pool.get('res.currency').is_zero(cr, uid, account.currency_id, currency))):
 			if not writeoff_acc_id:
 				raise osv.except_osv('Warning', 'You have to provide an account for the write off entry !')
 			if writeoff > 0:
@@ -497,8 +500,24 @@ class account_move_line(osv.osv):
 				self_debit = -writeoff
 
 			writeoff_lines = [
-				(0, 0, {'name':'Write-Off', 'debit':self_debit, 'credit':self_credit, 'account_id':account_id, 'date':date, 'partner_id':partner_id}),
-				(0, 0, {'name':'Write-Off', 'debit':debit, 'credit':credit, 'account_id':writeoff_acc_id, 'date':date, 'partner_id':partner_id})
+				(0, 0, {
+					'name':'Write-Off',
+					'debit':self_debit,
+					'credit':self_credit,
+					'account_id':account_id,
+					'date':date,
+					'partner_id':partner_id,
+					'currency_id': account.currency_id.id or False,
+					'amount_currency': account.currency_id.id and -currency or 0.0
+				}),
+				(0, 0, {
+					'name':'Write-Off',
+					'debit':debit,
+					'credit':credit,
+					'account_id':writeoff_acc_id,
+					'date':date,
+					'partner_id':partner_id
+				})
 			]
 
 			name = 'Write-Off'
@@ -715,7 +734,7 @@ class account_move_line(osv.osv):
 				ctx = {}
 				if 'date' in vals:
 					ctx['date'] = vals['date']
-				vals['amount_currency'] = cur_obj.compute(cr, uid, account.company_id.currency_id.id, account.currency_id.id, vals.get('debit', 0.0)+vals.get('credit', 0.0), context=ctx)
+				vals['amount_currency'] = cur_obj.compute(cr, uid, account.company_id.currency_id.id, account.currency_id.id, vals.get('debit', 0.0)-vals.get('credit', 0.0), context=ctx)
 		if not ok:
 			raise osv.except_osv('Bad account !', 'You can not use this general account in this journal !')
 		result = super(osv.osv, self).create(cr, uid, vals, context)

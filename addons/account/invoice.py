@@ -520,7 +520,7 @@ class account_invoice(osv.osv):
 			'credit':x['price']<0 and -x['price'],
 			'account_id':x['account_id'],
 			'analytic_lines':x.get('analytic_lines', []),
-			'amount_currency':x.get('amount_currency', False),
+			'amount_currency':x['price']>0 and abs(x.get('amount_currency', False)) or -abs(x.get('amount_currency', False)),
 			'currency_id':x.get('currency_id', False),
 			'tax_code_id': x.get('tax_code_id', False),
 			'tax_amount': x.get('tax_amount', False),
@@ -703,6 +703,7 @@ class account_invoice(osv.osv):
 			'partner_id': invoice.partner_id.id,
 			'date': time.strftime('%Y-%m-%d'),
 		}
+
 		lines = [(0, 0, l1), (0, 0, l2)]
 		move = {'name': name, 'line_id': lines, 'journal_id': pay_journal_id, 'period_id': period_id}
 		move_id = self.pool.get('account.move').create(cr, uid, move)
