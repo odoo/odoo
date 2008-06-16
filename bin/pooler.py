@@ -1,6 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
+#
+# $Id$
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -22,8 +24,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-#
-##############################################################################
+###############################################################################
 
 import sql_db
 import osv.osv
