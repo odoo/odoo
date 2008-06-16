@@ -70,6 +70,8 @@ class Env(dict):
 
 def _eval_expr(cr, ident, workitem, action):
 	ret=False
+	print '***'
+	print action
 	for line in action.split('\n'):
 		uid=ident[0]
 		model=ident[1]
@@ -81,6 +83,7 @@ def _eval_expr(cr, ident, workitem, action):
 		else:
 			wf_service = netsvc.LocalService("object_proxy")
 			env = Env(wf_service, cr, uid, model, ids)
+			print line
 			ret = eval(line, env)
 	return ret
 

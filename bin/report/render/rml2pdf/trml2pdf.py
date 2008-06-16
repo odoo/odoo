@@ -332,7 +332,8 @@ class _rml_canvas(object):
 		if not node.hasAttribute('file'):
 
 			if node.hasAttribute('name'):
-				s = self.images[node.getAttribute('name')]
+				image_data = self.images[node.getAttribute('name')]
+				s = StringIO.StringIO(image_data)
 			else:
 				import base64
 				image_data = base64.decodestring(node.firstChild.nodeValue)
