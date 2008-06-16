@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2004 TINY SPRL. (http://tiny.be)
 #
-# $Id: __init__.py 1308 2005-09-08 18:02:01Z pinky $
+# $Id$
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential

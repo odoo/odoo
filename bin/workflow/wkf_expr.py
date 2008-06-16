@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2004 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
-# $Id: wkf_expr.py 1304 2005-09-08 14:35:42Z nicoe $
+# $Id$
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential

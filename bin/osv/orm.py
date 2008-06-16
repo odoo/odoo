@@ -3,7 +3,7 @@
 #
 # Copyright (c) 2004-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
-# $Id: orm.py 1008 2005-07-25 14:03:55Z pinky $
+# $Id$
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential

@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2004-2005 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
-# $Id: custom.py 1305 2005-09-08 14:39:51Z kayhman $
+# $Id$
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
