@@ -108,6 +108,7 @@ class db(netsvc.Service):
 					traceback.print_exc(file=e_str)
 					traceback_str = e_str.getvalue()
 					e_str.close()
+					print traceback_str
 					serv.actions[id]['traceback'] = traceback_str
 					if cr:
 						cr.close()
