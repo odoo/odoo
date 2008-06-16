@@ -29,6 +29,7 @@
 
 from osv import fields,osv
 import tools
+import pytz
 
 class groups(osv.osv):
 	_name = "res.groups"
@@ -82,6 +83,13 @@ class roles(osv.osv):
 		return False
 roles()
 
+def _lang_get(self, cr, uid, context={}):
+	obj = self.pool.get('res.lang')
+	ids = obj.search(cr, uid, [])
+	res = obj.read(cr, uid, ids, ['code', 'name'], context)
+	res = [(r['code'], r['name']) for r in res]
+	return res
+
 class users(osv.osv):
 	_name = "res.users"
 	_log_access = False
@@ -98,6 +106,8 @@ class users(osv.osv):
 		'roles_id': fields.many2many('res.roles', 'res_roles_users_rel', 'uid', 'rid', 'Roles'),
 		'company_id': fields.many2one('res.company', 'Company'),
 		'rule_groups': fields.many2many('ir.rule.group', 'user_rule_group_rel', 'user_id', 'rule_group_id', 'Rules', domain="[('global', '<>', True)]"),
+		'context_lang': fields.selection(_lang_get, 'Language', required=True),
+		'context_tz': fields.selection([(x, x) for x in pytz.all_timezones], 'Timezone')
 	}
 	def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
 		result = super(users, self).read(cr, uid, ids, fields, context, load)
@@ -113,6 +123,7 @@ class users(osv.osv):
 	]
 	_defaults = {
 		'password' : lambda obj,cr,uid,context={} : '',
+		'context_lang': lambda *args: 'en_US',
 		'active' : lambda obj,cr,uid,context={} : True,
 	}
 	def company_get(self, cr, uid, uid2):
@@ -120,8 +131,15 @@ class users(osv.osv):
 		return company_id
 	company_get = tools.cache()(company_get)
 
-	def write(self, cr, uid, *args, **argv):
-		res = super(users, self).write(cr, uid, *args, **argv)
+	def write(self, cr, uid, ids, values, *args, **argv):
+		if (ids == [uid]):
+			ok = True
+			for k in values.keys():
+				if k not in ('password','signature','action_id', 'context_lang', 'context_tz'):
+					ok=False
+			if ok:
+				uid = 1
+		res = super(users, self).write(cr, uid, ids, values, *args, **argv)
 		self.company_get()
 		# Restart the cache on the company_get method
 		self.pool.get('ir.rule').domain_get()
@@ -148,6 +166,19 @@ class users(osv.osv):
 		login = self.read(cr, uid, [id], ['login'])[0]['login']
 		default.update({'login': login+' (copy)'})
 		return super(users, self).copy(cr, uid, id, default, context)
+
+	def context_get(self, cr, uid, context={}):
+		user = self.browse(cr, uid, uid, context)
+		result = {}
+		for k in self._columns.keys():
+			if k.startswith('context_'):
+				result[k[8:]] = getattr(user,k)
+		return result
+
+	def action_get(self, cr, uid, context={}):
+		dataobj = self.pool.get('ir.model.data')
+		data_id = dataobj._get_id(cr, 1, 'base', 'action_res_users_my')
+		return dataobj.browse(cr, uid, data_id, context).res_id
 users()
 
 class groups2(osv.osv):

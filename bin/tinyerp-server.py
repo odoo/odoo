@@ -139,7 +139,7 @@ except psycopg.OperationalError:
 	logger.notifyChannel("init", netsvc.LOG_INFO, "could not connect to database '%s'!" % db_name,)
 	cr = None
 if cr:
-	cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname='perm'")
+	cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname='ir_ui_menu'")
 	if len(cr.fetchall())==0:
 #if False:
 		logger.notifyChannel("init", netsvc.LOG_INFO, "init db")

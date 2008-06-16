@@ -317,18 +317,6 @@ def trans_load_data(db_name, data, lang, strict=False, lang_name=None):
 		langs = lang_obj.read(cr, uid, lang_ids)
 		ls = map(lambda x: (x['code'],x['name']), langs)
 
-		ir.ir_set(cr, uid, 'meta', 'lang', 'lang', [('res.users',False,)],
-				False, True, False, meta={
-					'type': 'selection',
-					'string': 'Language',
-					'selection':ls,
-					})
-
-		ids = pool.get('res.users').search(cr, uid, [])
-		for id in ids:
-			ir.ir_set(cr, uid, 'meta', 'lang', 'lang', [('res.users',id,)],
-					lang, True, False)
-
 		reader = csv.reader(data)
 		# read the first line of the file (it contains columns titles)
 		for row in reader:

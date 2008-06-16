@@ -26,26 +26,6 @@
 		<field name="view_type">form</field>
 	</record>
 	<menuitem name="Administration/Custom/Interface/Languages" action="action_lang" id="menu_action_lang"/>
-	
-	<ir_set>
-		<field name="key" eval="'meta'"/>
-		<field name="key2" eval="'lang'"/>
-		<field name="models" eval="['res.users']"/>
-		<field name="name">lang</field>
-		<field name="value" eval="False"/>
-		<field name="meta" eval="{'type':'selection', 'string':'Language', 'selection':[('en_US', 'English')]}"/>
-		<field name="replace" eval="True"/>
-	</ir_set>
-
-	<ir_set>
-		<field name="key" eval="'meta'"/>
-		<field name="key2" eval="'tz'"/>
-		<field name="models" eval="['res.users']"/>
-		<field name="name">tz</field>
-		<field name="value" eval="False"/>
-		<field name="meta" eval="{'type':'selection', 'string':'Timezone', 'selection': [(x, x) for x in pytz.all_timezones] }"/>
-		<field name="replace" eval="True"/>
-	</ir_set>
 
 	<!--
 	======================
@@ -84,7 +64,7 @@
 			</form>
 		</field>
 	</record>
-	
+
 	<!--
 	======================
 	Users
@@ -97,30 +77,16 @@
 		<field name="priority" eval="10"/>
 		<field name="arch" type="xml">
 			<form string="Users">
-				<field name="name" colspan="4" select="1"/>
-				<field name="login" readonly="1" select="1"/>
 				<field name="password"/>
 				<label string="Please note that you will have to logout and relog if you change your password." colspan="4"/>
+				<field name="context_lang"/>
+				<field name="context_tz"/>
 				<newline/>
 				<field name="signature" colspan="4"/>
 			</form>
 		</field>
 	</record>
-	<record model="ir.ui.view" id="view_users_form_simple">
-		<field name="name">res.users.form</field>
-		<field name="model">res.users</field>
-		<field name="type">form</field>
-		<field name="priority" eval="8"/>
-		<field name="arch" type="xml">
-			<form string="Users">
-				<field name="name" readonly="1" colspan="4" select="1"/>
-				<field name="login" readonly="1" select="1"/>
-				<field name="active" readonly="1" select="1"/>
-				<newline/>
-				<field name="signature" readonly="1" colspan="4"/>
-			</form>
-		</field>
-	</record>
+
 	<record model="ir.ui.view" id="view_users_form">
 		<field name="name">res.users.form</field>
 		<field name="model">res.users</field>
