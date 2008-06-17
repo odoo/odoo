@@ -202,6 +202,7 @@ class rml_parse(object):
 			'removeParentNode': self.removeParentNode,
 			'format': self.format,
 			'formatLang': self.formatLang,
+			'logo' : user.company_id.logo,
 		}
 		self.localcontext.update(context)
 		self.rml_header = user.company_id.rml_header
@@ -439,6 +440,14 @@ class rml_parse(object):
 
 	def _add_header(self, node):
 		rml_head =  self.rml_header
+
+		# Refactor this patch, to use the minidom interface
+		if self.logo and (rml_head.find('company.logo')<0 or rml_head.find('<image')<0) and rml_head.find('<!--image')<0:
+			rml_head =  rml_head.replace('<pageGraphics>','''<pageGraphics> <image x="10" y="26cm" height="70" width="90" >[[company.logo]] </image> ''')
+		if not self.logo and rml_head.find('company.logo')>=0:
+			rml_head = rml_head.replace('<image','<!--image')
+			rml_head = rml_head.replace('</image>','</image-->')
+
 		head_dom = xml.dom.minidom.parseString(rml_head)
 		#for frame in head_dom.getElementsByTagName('frame'):
 		#	frame.parentNode.removeChild(frame)
