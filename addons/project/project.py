@@ -124,7 +124,7 @@ class project(osv.osv):
 		'timesheet_id': fields.many2one('hr.timesheet.group', 'Working hours'),
 		'state': fields.selection([('open', 'Open'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', required=True),
 	 }
-	
+
 	_defaults = {
 		'active': lambda *a: True,
 		'manager': lambda object,cr,uid,context: uid,
@@ -132,7 +132,7 @@ class project(osv.osv):
 		'date_start': lambda *a: time.strftime('%Y-%m-%d'),
 		'state': lambda *a: 'open'
 	}
-	
+
 	_order = "priority"
 	_constraints = [
 		(check_recursion, 'Error ! You can not create recursive projects.', ['parent_id'])
@@ -235,6 +235,7 @@ class task(osv.osv):
 		'progress': lambda *a: 0,
 		'sequence': lambda *a: 10,
 		'active': lambda *a: True,
+		'date_start': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
 	}
 	_order = "state, sequence, priority, date_deadline, id"
 
@@ -243,7 +244,7 @@ class task(osv.osv):
 		tasks = self.browse(cr, uid, ids)
 		for task in tasks:
 			project = task.project_id
-			if project: 
+			if project:
 				if project.warn_manager and project.manager and (project.manager.id != uid):
 					request.create(cr, uid, {
 						'name': "Task '%s' closed" % task.name,
@@ -299,7 +300,7 @@ class task(osv.osv):
 	def do_open(self, cr, uid, ids, *args):
 		tasks= self.browse(cr,uid,ids)
 		for t in tasks:
-			self.write(cr, uid, [t.id], {'state': 'open','date_start':t.date_start or time.strftime('%Y-%m-%d %H:%M:%S')})
+			self.write(cr, uid, [t.id], {'state': 'open'})
 		return True
 
 	def do_draft(self, cr, uid, ids, *args):
@@ -311,7 +312,7 @@ class task(osv.osv):
 		self.write(cr, uid, ids, {'state': 'pending'})
 		return True
 
-		
+
 task()
 
 class project_work(osv.osv):
