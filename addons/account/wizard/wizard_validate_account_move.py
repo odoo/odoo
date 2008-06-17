@@ -33,54 +33,58 @@ import pooler
 
 _journal_form = '''<?xml version="1.0"?>
 <form string="Standard entries">
-    <field name="journal_id"/>
+	<field name="journal_id"/>
+	<newline/>
+	<field name="period_id"/>
 </form>'''
+
 _journal_fields = {
-    'journal_id': {'string':'Journal', 'type':'many2one', 'relation':'account.journal', 'required':True},
+	'journal_id': {'string':'Journal', 'type':'many2one', 'relation':'account.journal', 'required':True},
+	'period_id': {'string':'Period', 'type':'many2one', 'relation':'account.period', 'required':True, 'domain':"[('state','<>','done')]"},
 }
 
 def _validate_move(self, cr, uid, data, context={}):
-    pool = pooler.get_pool(cr.dbname)
-    move_obj = pool.get('account.move')
-    ids_move = move_obj.search(cr,uid,[('state','=','draft'),('journal_id','=',data['form']['journal_id'])])
-    if not ids_move:
-        raise wizard.except_wizard('Warning', 'Specified Journal does not have any account move enties in draft state')
-    res = move_obj.button_validate(cr, uid, ids_move, context)
-    return {}
+	pool = pooler.get_pool(cr.dbname)
+	move_obj = pool.get('account.move')
+	ids_move = move_obj.search(cr,uid,[('state','=','draft'),('journal_id','=',data['form']['journal_id']),('period_id','=',data['form']['period_id'])])
+	if not ids_move:
+		raise wizard.except_wizard('Warning', 'Specified Journal does not have any account move entries in draft state for this period')
+	res = move_obj.button_validate(cr, uid, ids_move, context)
+	return {}
 
 class validate_account_move(wizard.interface):
-    states = {
-        'init': {
-            'actions': [],
-            'result': {'type': 'form', 'arch':_journal_form, 'fields':_journal_fields, 'state':[('end','Cancel'),('validate','Validate')]}
-        },
-        'validate': {
-            'actions': [_validate_move],
-            'result': {'type': 'state', 'state':'end'}
-        },
-    }
+	states = {
+		'init': {
+			'actions': [],
+			'result': {'type': 'form', 'arch':_journal_form, 'fields':_journal_fields, 'state':[('end','Cancel'),('validate','Validate')]}
+		},
+		'validate': {
+			'actions': [_validate_move],
+			'result': {'type': 'state', 'state':'end'}
+		},
+	}
 validate_account_move('account.move.validate')
 
 def _validate_move_lines(self, cr, uid, data, context={}):
-    move_ids = []
-    pool = pooler.get_pool(cr.dbname)
-    move_line_obj = pool.get('account.move.line')
-    move_obj = pool.get('account.move')
-    data_line = move_line_obj.browse(cr,uid,data['ids'],context)
-    for line in data_line:
-        if line.move_id.state=='draft':
-            move_ids.append(line.move_id.id)
-    move_ids = list(set(move_ids))
-    if not move_ids:
-        raise wizard.except_wizard('Warning', 'Selected Move lines does not have any account move enties in draft state')
-    res = move_obj.button_validate(cr, uid, move_ids, context)
-    return {}
+	move_ids = []
+	pool = pooler.get_pool(cr.dbname)
+	move_line_obj = pool.get('account.move.line')
+	move_obj = pool.get('account.move')
+	data_line = move_line_obj.browse(cr,uid,data['ids'],context)
+	for line in data_line:
+		if line.move_id.state=='draft':
+			move_ids.append(line.move_id.id)
+	move_ids = list(set(move_ids))
+	if not move_ids:
+		raise wizard.except_wizard('Warning', 'Selected Move lines does not have any account move enties in draft state')
+	res = move_obj.button_validate(cr, uid, move_ids, context)
+	return {}
 
 class validate_account_move_lines(wizard.interface):
-    states = {
-        'init': {
-            'actions': [_validate_move_lines],
-            'result': {'type': 'state', 'state':'end'}
-        },
-    }
+	states = {
+		'init': {
+			'actions': [_validate_move_lines],
+			'result': {'type': 'state', 'state':'end'}
+		},
+	}
 validate_account_move_lines('account.move_line.validate')
