@@ -77,7 +77,6 @@ class res_partner(osv.osv):
 		'credit': fields.function(_credit_get, fnct_search=_credit_search, method=True, string='Total Receivable'),
 		'debit': fields.function(_debit_get, fnct_search=_debit_search, method=True, string='Total Payable'),
 		'debit_limit': fields.float('Payable Limit'),
-		'credit_limit': fields.float('Receivable Limit'),
 		'property_account_payable': fields.property(
 			'account.account',
 			type='many2one',

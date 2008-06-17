@@ -806,8 +806,8 @@ class stock_move(osv.osv):
 		'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
 	}
 
-	def _auto_init(self, cursor):
-		super(stock_move, self)._auto_init(cursor)
+	def _auto_init(self, cursor, context):
+		super(stock_move, self)._auto_init(cursor, context)
 		cursor.execute('SELECT indexname \
 				FROM pg_indexes \
 				WHERE indexname = \'stock_move_location_id_location_dest_id_product_id_state\'')
