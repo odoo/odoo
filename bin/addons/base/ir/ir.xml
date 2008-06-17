@@ -382,16 +382,16 @@
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">res.users</field>
 		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
+		<field name="view_mode">form,tree</field>
 		<field name="domain">[('id','=',uid)]</field>
 	</record>
 	<record model="ir.actions.act_window.view" id="action_res_users_my_view1">
-		<field name="sequence" eval="10"/>
+		<field name="sequence" eval="20"/>
 		<field name="view_mode">tree</field>
 		<field name="act_window_id" ref="action_res_users_my"/>
 	</record>
 	<record model="ir.actions.act_window.view" id="action_res_users_my_view2">
-		<field name="sequence" eval="20"/>
+		<field name="sequence" eval="10"/>
 		<field name="view_mode">form</field>
 		<field name="view_id" ref="view_users_form_simple_modif"/>
 		<field name="act_window_id" ref="action_res_users_my"/>
