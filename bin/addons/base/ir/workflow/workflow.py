@@ -147,8 +147,8 @@ class wkf_instance(osv.osv):
 		'res_type': fields.char('Resource Model', size=64),
 		'state': fields.char('State', size=32),
 	}
-	def _auto_init(self, cr):
-		super(wkf_instance, self)._auto_init(cr)
+	def _auto_init(self, cr, context={}):
+		super(wkf_instance, self)._auto_init(cr, context)
 		cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'wkf_instance_res_id_res_type_state_index\'')
 		if not cr.fetchone():
 			cr.execute('CREATE INDEX wkf_instance_res_id_res_type_state_index ON wkf_instance (res_id, res_type, state)')
@@ -178,8 +178,8 @@ class wkf_triggers(osv.osv):
 		'instance_id': fields.many2one('workflow.instance', 'Destination Instance', ondelete="cascade"),
 		'workitem_id': fields.many2one('workflow.workitem', 'Workitem', required=True, ondelete="cascade"),
 	}
-	def _auto_init(self, cr):
-		super(wkf_triggers, self)._auto_init(cr)
+	def _auto_init(self, cr, context={}):
+		super(wkf_triggers, self)._auto_init(cr, context)
 		cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'wkf_triggers_res_id_model_index\'')
 		if not cr.fetchone():
 			cr.execute('CREATE INDEX wkf_triggers_res_id_model_index ON wkf_triggers (res_id, model)')

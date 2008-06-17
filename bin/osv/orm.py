@@ -76,21 +76,6 @@ class except_orm(Exception):
 		self.value = value
 		self.args = (name, value)
 
-#class find_fields(object):
-#	def _start_el(self,name, attrs):
-#		if name == 'field' and attrs.get('name', False):
-#			self.datas[str(attrs['name'])] = attrs.get('preload','')
-#	def __init__(self):
-#		self.datas = {}
-#	def parse(self, datas):
-#		p = expat.ParserCreate()
-#		p.StartElementHandler = self._start_el
-#		p.Parse(datas, 1)
-#		return self.datas
-
-#
-# TODO: trigger pour chaque action
-#
 # Readonly python database object browser
 class browse_null(object):
 
@@ -295,27 +280,79 @@ class orm_template(object):
 	_description = None
 	_inherits = {}
 
-	def _field_create(self, cr):
+	def _field_create(self, cr, context={}):
 		cr.execute("SELECT id FROM ir_model WHERE model='%s'" % self._name)
 		if not cr.rowcount:
 			# reference model in order to have a description of its fonctionnality in custom_report
-			cr.execute("INSERT INTO ir_model (model, name, info) VALUES (%s, %s, %s)", (self._name, self._description, self.__doc__))
-		cr.commit()
-		for k in self._columns:
-			f = self._columns[k]
-			cr.execute("select id, relate from ir_model_fields where model=%s and name=%s", (self._name,k))
-			if not cr.rowcount:
-				cr.execute("select id from ir_model where model='%s'" % self._name)
-				model_id = cr.fetchone()[0]
-				cr.execute("INSERT INTO ir_model_fields (model_id, model, name, field_description, ttype, relate,relation,group_name,view_load,state,select_level) VALUES (%d,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (model_id, self._name, k, f.string.replace("'", " "), f._type, (f.relate and 'True') or 'False', f._obj or 'NULL', f.group_name or '', (f.view_load and 'True') or 'False', 'base', str(f.select or 0)))
-			else:
-				id, relate = cr.fetchone()
-				if relate != f.relate:
-					cr.execute("UPDATE ir_model_fields SET relate=%s WHERE id=%d", ((f.relate and 'True') or 'False', id))
+			cr.execute('select nextval(%s)', ('ir_model_id_seq',))
+			id = cr.fetchone()[0]
+			cr.execute("INSERT INTO ir_model (id,model, name, info) VALUES (%s, %s, %s, %s)", (id,self._name, self._description, self.__doc__))
+			if 'module' in context:
+				cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, now(), now(), %s, %s, %s)", \
+					( 'model_'+self._table, context['module'], 'ir.model', id)
+				)
 		cr.commit()
 
-	def _auto_init(self, cr):
-		self._field_create(cr)
+		cr.execute("select * from ir_model_fields where model=%s", (self._name,))
+		cols = {}
+		for rec in cr.dictfetchall():
+			cols[rec['name']] = rec
+
+		cr.execute("select id from ir_model where model='%s'" % self._name)
+		model_id = cr.fetchone()[0]
+
+		for (k,f) in self._columns.items():
+			vals = {
+				'model_id':model_id,
+				'model':self._name,
+				'name':k,
+				'field_description':f.string.replace("'", " "),
+				'ttype':f._type,
+				'relate':(f.relate and 1) or 0,
+				'relation':f._obj or 'NULL',
+				'group_name':f.group_name or '',
+				'view_load':(f.view_load and 1) or 0,
+				'state':'base',
+				'select_level':str(f.select or 0)
+			}
+			if k not in cols:
+				cr.execute('select nextval(%s)', ('ir_model_fields_id_seq',))
+				id = cr.fetchone()[0]
+				vals['id'] = id
+				cr.execute("""INSERT INTO ir_model_fields (
+					id, model_id, model, name, field_description, ttype, 
+					relate,relation,group_name,view_load,state,select_level
+				) VALUES (
+					%d,%s,%s,%s,%s,%s, %s,%s,%s,%s,%s, %s
+				)""", (
+					id, vals['model_id'], vals['model'], vals['name'], vals['field_description'], vals['ttype'],
+					bool(vals['relate']), vals['relation'], vals['group_name'], bool(vals['view_load']), vals['state'],
+					vals['select_level']
+				))
+				if 'module' in context:
+					cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, now(), now(), %s, %s, %s)", \
+						( ('field_'+self._table+'_'+k)[:64], context['module'], 'ir.model.fields', id)
+					)
+			else:
+				for key,val in vals.items():
+					if cols[k][key]<>vals[key]:
+						print 'Different', cols[k][key], vals[key], k, key, self._name
+						cr.execute('update ir_model_fields set field_description=%s where model=%s and name=%s', (vals['field_description'],vals['model'],vals['name']))
+						cr.commit()
+						cr.execute("""UPDATE ir_model_fields SET
+							model_id=%s, field_description=%s, ttype=%s, relate=%s, relation=%s,
+							group_name=%s, view_load=%s, state=%s, select_level=%s
+						WHERE
+							model=%s AND name=%s""", (
+								vals['model_id'],vals['field_description'],vals['ttype'],bool(vals['relate']),
+								vals['relation'], vals['group_name'], bool(vals['view_load']), vals['state'],
+								vals['select_level'], vals['model'], vals['name']
+							))
+						continue
+		cr.commit()
+
+	def _auto_init(self, cr, context={}):
+		self._field_create(cr, context)
 
 	def __init__(self, cr):
 		if not self._description:
@@ -1206,10 +1243,10 @@ class orm(orm_template):
 	_log_access = True
 	_table = None
 	_protected = ['read','write','create','default_get','perm_read','unlink','fields_get','fields_view_get','search','name_get','distinct_field_get','name_search','copy','import_data','search_count']
-	def _auto_init(self, cr):
+	def _auto_init(self, cr, context={}):
 		logger = netsvc.Logger()
 		create = False
-		self._field_create(cr)
+		self._field_create(cr, context=context)
 		if not hasattr(self, "_auto") or self._auto:
 			cr.execute("SELECT relname FROM pg_class WHERE relkind in ('r','v') AND relname='%s'" % self._table)
 			if not cr.rowcount:

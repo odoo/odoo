@@ -89,6 +89,8 @@ class ir_ui_menu(osv.osv):
 			context = {}
 		ids = osv.orm.orm.search(self, cr, uid, args, offset, limit, order,
 				context=context)
+		if uid==1:
+			return ids
 		user_groups = self.pool.get('res.users').read(cr, uid, [uid])[0]['groups_id']
 		result = []
 		for menu in self.browse(cr, uid, ids):

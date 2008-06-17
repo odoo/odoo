@@ -503,28 +503,6 @@
 	<menuitem name="Partners/Configuration/Categories/Edit Categories" action="action_partner_category_form" id="menu_partner_category_form"/>
 
 
-	<!--
-	# Admin config
-	-->
-
-	<menuitem name="Administration/Configuration/Partner" sequence="3"/>
-
-	<record model="ir.actions.act_window" id="open_module_type_partenaire">
-		<field name="name">Partner Categories</field>
-		<field name="res_model">res.partner.category</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-	</record>
-
-	<menuitem name="Administration/Configuration/Partner/Define Partners Categories" action="open_module_type_partenaire" sequence="1" id="menu_type_partenaire"/>
-
-	<record model="ir.actions.act_window" id="open_module_def_partenaire">
-		<field name="name">Partner</field>
-		<field name="res_model">res.partner</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-	</record>
-	<menuitem name="Administration/Configuration/Partner/Define Partners" action="open_module_def_partenaire" sequence="2" id="menu_partenaire_def"/>
 
 </data>
 </terp>

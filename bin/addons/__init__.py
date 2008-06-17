@@ -179,7 +179,7 @@ def init_module_objects(cr, module_name, obj_list):
 	for obj in obj_list:
 		if hasattr(obj, 'init'):
 			obj.init(cr)
-		obj._auto_init(cr)
+		obj._auto_init(cr, {'module': module_name})
 		cr.commit()
 
 def load_module_graph(cr, graph, status=None, **kwargs):

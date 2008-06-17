@@ -51,11 +51,9 @@ def delete(cr, ident):
 def validate(cr, inst_id, ident, signal, force_running=False):
 	cr.execute("select * from wkf_workitem where inst_id=%d", (inst_id,))
 	for witem in cr.dictfetchall():
-		print '-----'
 		stack = []
 		workitem.process(cr, witem, ident, signal, force_running, stack=stack)
 		# An action is returned
-		print '----- Got', stack
 	_update_end(cr, inst_id, ident)
 	return stack and stack[0] or False
 
@@ -64,7 +62,6 @@ def update(cr, inst_id, ident):
 	for witem in cr.dictfetchall():
 		stack = []
 		workitem.process(cr, witem, ident, stack=stack)
-		print 'End Update'
 	return _update_end(cr, inst_id, ident)
 
 def _update_end(cr, inst_id, ident):

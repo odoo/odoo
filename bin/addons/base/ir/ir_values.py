@@ -77,8 +77,8 @@ class ir_values(osv.osv):
 		'company_id': lambda *a: False
 	}
 
-	def _auto_init(self, cr):
-		super(ir_values, self)._auto_init(cr)
+	def _auto_init(self, cr, context={}):
+		super(ir_values, self)._auto_init(cr, context)
 		cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_values_key_model_key2_index\'')
 		if not cr.fetchone():
 			cr.execute('CREATE INDEX ir_values_key_model_key2_index ON ir_values (key, model, key2)')

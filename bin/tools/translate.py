@@ -54,14 +54,13 @@ def translate(cr, uid, name, source_type, lang, source=None):
 	res_trans = cr.fetchone()
 	res = res_trans and res_trans[0] or False
 	return res
-	
+
 def translate_code(cr, uid, source, context):
 	lang = context.get('lang', False)
 	if lang:
 		return translate(cr, uid, None, 'code', lang, source)
 	else:
 		return source
-		
 _ = lambda source: translate_code(cr, uid, source, context)
 
 # Methods to export the translation file
@@ -129,104 +128,28 @@ def trans_generate(lang, modules, dbname=None):
 	l.sort()
 	out = [["type","name","res_id","src","value"]]
 
-#TODO: do everything through to_translate, for that, we'll probably need to change its
-#format and have records = list of tuples (id, name, source) instead of just source
 	to_translate = []
 	
-	# object fields
-	for obj_name, obj in l:
-		if in_modules(obj_name, modules):
-			for field_name, field_def in obj._columns.iteritems():
-				name = obj_name + "," + field_name
-				value = ""
-				if lang:
-					cr.execute("SELECT * FROM ir_translation WHERE type='field' AND name=%s AND lang=%s", (name,lang))
-					res = cr.dictfetchall()
-					if len(res):
-						value = res[0]['value']
-				out.append(["field", name, "0", field_def.string.encode('utf8'), value])
-				if field_def.help:
-					value = ''
-					if lang:
-						cr.execute('SELECT * FROM ir_translation ' \
-								'WHERE type=\'help\' ' \
-									'AND name = %s ' \
-									'AND lang = %s', (name, lang))
-						res = cr.dictfetchall()
-						if res:
-							value = res[0]['value']
-					out.append(['help', name, '0', field_def.help.encode('utf8'), value])
-				if field_def.translate:
-					ids = osv.orm.orm.search(obj, cr, uid, [])
-					obj_values = obj.read(cr, uid, ids, [field_name])
-					for obj_value in obj_values:
-						trans = ""
-						if lang:
-							cr.execute("SELECT * " \
-									"FROM ir_translation " \
-									"WHERE type='model' " \
-										"AND name=%s AND res_id=%d AND lang=%s",
-										(name, obj_value['id'], lang))
-							res = cr.dictfetchall()
-							if len(res):
-								trans = res[0]['value']
+	if 'all' in modules:
+		cr.execute('select name,model,res_id,module from ir_model_data')
+	else:
+		cr.execute('select name,model,res_id,module from ir_model_data where module in ('+','.join(['%s']*len(modules))+')', modules)
 
-						res_id = obj_value['id']
-						if obj_name in ('ir.model', 'ir.ui.menu'):
-							res_id = 0
-						model_data_ids = model_data_obj.search(cr, uid, [
-							('model', '=', obj_name),
-							('res_id', '=', obj_value['id']),
-							])
-						if model_data_ids:
-							model_data = model_data_obj.browse(cr, uid,
-									model_data_ids[0])
-							res_id = model_data.module + '.' + model_data.name
-
-						out.append(["model", name, res_id,
-							obj_value[field_name], trans])
-				if hasattr(field_def, 'selection') and isinstance(field_def.selection, (list, tuple)):
-					for key, val in field_def.selection:
-						to_translate.append(["selection", name, [val.encode('utf8')]])
-
-	# reports (xsl and rml)
-	obj = pool.get("ir.actions.report.xml")
-	for i in obj.read(cr, uid, osv.orm.orm.search(obj, cr, uid, [])):
-		if in_modules(i["model"], modules):
-			name = i["report_name"]
-			fname = ""
-			if i["report_rml"]:
-				fname = i["report_rml"]
-				parse_func = trans_parse_rml
-				report_type = "rml"
-			elif i["report_xsl"]:
-				fname = i["report_xsl"]
-				parse_func = trans_parse_xsl
-				report_type = "xsl"
-			try:
-				xmlstr = tools.file_open(fname).read()
-				d = xml.dom.minidom.parseString(xmlstr)
-				to_translate.append([report_type, name, parse_func(d.documentElement)])
-			except IOError:
-				if fname:
-					logger.notifyChannel("init", netsvc.LOG_WARNING, "couldn't export translation for report %s %s %s" % (name, report_type, fname))
-
-	# views
-	obj = pool.get("ir.ui.view")
-	for i in obj.read(cr, uid, osv.orm.orm.search(obj, cr, uid, [])):
-		if in_modules(i["model"], modules):
-			d = xml.dom.minidom.parseString(i['arch'])
-			to_translate.append(["view", i['model'], trans_parse_view(d.documentElement)])
-	
-	# wizards
-	for service_name, obj in netsvc._service.iteritems():
-		if service_name.startswith('wizard.'):
-			for state_name, state_def in obj.states.iteritems():
+	for (xml_name,model,res_id,module) in cr.fetchall():
+		xml_name = module+'.'+xml_name
+		obj = pool.get(model).browse(cr, uid, res_id)
+		if model=='ir.ui.view':
+			d = xml.dom.minidom.parseString(obj.arch)
+			for t in trans_parse_view(d.documentElement):
+				to_translate.append(["view", obj.model, 0, t])
+		elif model=='ir.actions.wizard':
+			service_name = 'wizard.'+obj.wiz_name
+			obj2 = netsvc._service[service_name]
+			for state_name, state_def in obj2.states.iteritems():
 				if 'result' in state_def:
 					result = state_def['result']
 					if result['type'] != 'form':
 						continue
-
 					name = obj.wiz_name + ',' + state_name
 
 					# export fields
@@ -234,47 +157,95 @@ def trans_generate(lang, modules, dbname=None):
 						if 'string' in field_def:
 							source = field_def['string']
 							res_name = name + ',' + field_name
-							to_translate.append(["wizard_field", res_name, [source]])
+							to_translate.append(["wizard_field", res_name,0,source])
 
 					# export arch
 					arch = result['arch']
 					if not isinstance(arch, UpdateableStr):
 						d = xml.dom.minidom.parseString(arch)
-						to_translate.append(["wizard_view", name, trans_parse_view(d.documentElement)])
+						for t in trans_parse_view(d.documentElement):
+							to_translate.append(["wizard_view", name, 0, t])
 
 					# export button labels
 					for but_args in result['state']:
 						button_name = but_args[0]
 						button_label = but_args[1]
 						res_name = name + ',' + button_name
-						to_translate.append(["wizard_button", res_name, [button_label]])
-	
+						to_translate.append(["wizard_button", res_name, 0, button_label])
+
+		elif model=='ir.model.fields':
+			field_name = obj.name
+			field_def = pool.get(obj.model)._columns[field_name]
+
+			name = obj.model + "," + field_name
+			to_translate.append(["field", name, 0, field_def.string.encode('utf8')])
+
+			if field_def.help:
+				to_translate.append(["help", name, 0, field_def.help.encode('utf8')])
+
+			if field_def.translate:
+				ids = pool.get(obj.model).search(cr, uid, [])
+				obj_values = pool.get(obj.model).read(cr, uid, ids, [field_name])
+				for obj_value in obj_values:
+					res_id = obj_value['id']
+					if obj.name in ('ir.model', 'ir.ui.menu'):
+						res_id = 0
+					model_data_ids = model_data_obj.search(cr, uid, [
+						('model', '=', model),
+						('res_id', '=', res_id),
+						])
+					if not model_data_ids:
+						to_translate.append(['model', name, 0, obj_value[field_name]])
+
+			if hasattr(field_def, 'selection') and isinstance(field_def.selection, (list, tuple)):
+				for key, val in field_def.selection:
+					to_translate.append(["selection", name, 0, val.encode('utf8')])
+
+		elif model=='ir.actions.report.xml':
+			name = obj.report_name
+			fname = ""
+			if obj.report_rml:
+				fname = obj.report_rml
+				parse_func = trans_parse_rml
+				report_type = "rml"
+			elif obj.report_xsl:
+				fname = obj.report_xsl
+				parse_func = trans_parse_xsl
+				report_type = "xsl"
+			try:
+				xmlstr = tools.file_open(fname).read()
+				d = xml.dom.minidom.parseString(xmlstr)
+				for t in parse_func(d.documentElement):
+					to_translate.append([report_type, name, 0, t])
+			except IOError:
+				if fname:
+					logger.notifyChannel("init", netsvc.LOG_WARNING, "couldn't export translation for report %s %s %s" % (name, report_type, fname))
+
+		
+		for field_name,field_def in pool.get(model)._columns.items():
+			if field_def.translate:
+				name = model + "," + field_name
+				to_translate.append(['model', name, xml_name, getattr(obj,field_name)])
+
+	# TODO: By module
 	# code
 	for root, dirs, files in os.walk(tools.config['root_path']):
 		for fname in fnmatch.filter(files, '*.py'):
 			frelativepath = join(root, fname)
 			code_string = tools.file_open(frelativepath, subdir='').read()
-			
-# TODO: add support for """ and '''... These should use the DOTALL flag
-# DOTALL
-#     Make the "." special character match any character at all, including a
-#     newline; without this flag, "." will match anything except a newline.
-			# *? is the non-greedy version of the * qualifier
 			iter = re.finditer(
 				'[^a-zA-Z0-9_]_\([\s]*["\'](.*?)["\'][\s]*\)',
 				code_string)
+			sources = []
 			for i in iter:
-				source = i.group(1).encode('utf8')
-# TODO: check whether the same string has already been exported
-				res = trans_obj._get_source(cr, uid, frelativepath, 'code', lang, source) or ''
-				out.append(["code", frelativepath, "0", source, res])
+				to_translate.append(['code', frelativepath, 0, i.group(1).encode('utf8')])
 
 	# translate strings marked as to be translated
-	for type, name, sources in to_translate:
-		for source in sources:
-			trans = trans_obj._get_source(cr, uid, name, type, lang, source)
-			out.append([type, name, "0", source, trans or ''])
-			
+	for a  in to_translate:
+		(type, name, id, source) = a
+		trans = trans_obj._get_source(cr, uid, name, type, lang, source)
+		out.append([type, name, id, source, trans or ''])
+
 	cr.close()
 	return out
 

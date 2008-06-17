@@ -113,22 +113,22 @@ INHERITS (ir_actions);
 
 
 CREATE TABLE ir_ui_view (
-	id serial NOT NULL,
-	name varchar(64) DEFAULT ''::varchar NOT NULL,
-	model varchar(64) DEFAULT ''::varchar NOT NULL,
-	"type" varchar(64) DEFAULT 'form'::varchar NOT NULL,
-	arch text NOT NULL,
-	field_parent varchar(64),
-	priority integer DEFAULT 5 NOT NULL,
-	primary key(id)
+    id serial NOT NULL,
+    name varchar(64) DEFAULT ''::varchar NOT NULL,
+    model varchar(64) DEFAULT ''::varchar NOT NULL,
+    "type" varchar(64) DEFAULT 'form'::varchar NOT NULL,
+    arch text NOT NULL,
+    field_parent varchar(64),
+    priority integer DEFAULT 5 NOT NULL,
+    primary key(id)
 );
 
 CREATE TABLE ir_ui_menu (
-	id serial NOT NULL,
-	parent_id int references ir_ui_menu on delete set null,
-	name varchar(64) DEFAULT ''::varchar NOT NULL,
-	icon varchar(64) DEFAULT ''::varchar,
-	primary key (id)
+    id serial NOT NULL,
+    parent_id int references ir_ui_menu on delete set null,
+    name varchar(64) DEFAULT ''::varchar NOT NULL,
+    icon varchar(64) DEFAULT ''::varchar,
+    primary key (id)
 );
 
 select setval('ir_ui_menu_id_seq', 2);
@@ -171,13 +171,13 @@ create table res_roles (
 );
 
 CREATE TABLE res_roles_users_rel (
-	uid integer NOT NULL references res_users on delete cascade,
-	rid integer NOT NULL references res_roles on delete cascade
+    uid integer NOT NULL references res_users on delete cascade,
+    rid integer NOT NULL references res_roles on delete cascade
 );
 
 CREATE TABLE res_groups_users_rel (
-	uid integer NOT NULL references res_users on delete cascade,
-	gid integer NOT NULL references res_groups on delete cascade
+    uid integer NOT NULL references res_users on delete cascade,
+    gid integer NOT NULL references res_groups on delete cascade
 );
 
 ---------------------------------
@@ -318,3 +318,19 @@ CREATE TABLE res_company (
     parent_id integer references res_company on delete set null,
     primary key(id)
 );
+
+CREATE TABLE ir_model_data (
+    id serial NOT NULL,
+    create_uid integer,
+    create_date timestamp without time zone,
+    write_date timestamp without time zone,
+    write_uid integer,
+    noupdate boolean,
+    name character varying(64) NOT NULL,
+    date_init timestamp without time zone,
+    date_update timestamp without time zone,
+    module character varying(64) NOT NULL,
+    model character varying(64) NOT NULL,
+    res_id integer, primary key(id)
+);
+

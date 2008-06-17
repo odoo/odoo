@@ -85,7 +85,6 @@ class workflow_service(netsvc.Service):
 		cr.execute('select id from wkf_instance where res_id=%d and res_type=%s and state=%s', (res_id, res_type, 'active'))
 		for (id,) in cr.fetchall():
 			res2 = instance.validate(cr, id, ident, signal)
-			print 'Inst val,', res2
 			result = result or res2
 		return result
 

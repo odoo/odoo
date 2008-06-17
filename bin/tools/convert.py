@@ -355,7 +355,7 @@ form: module.record_id""" % (xml_id,)
 			'auto_refresh': auto_refresh,
 		}
 		if rec.hasAttribute('target'):
-			res['target'] = rex.getAttribute('target')
+			res['target'] = rec.getAttribute('target')
 		id = self.pool.get('ir.model.data')._update(cr, self.uid, 'ir.actions.act_window', self.module, res, xml_id, mode=self.mode)
 		self.idref[xml_id] = int(id)
 

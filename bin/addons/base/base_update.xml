@@ -169,30 +169,5 @@
 		</field>
 	</record>
 
-	# Admin config
-
-	<menuitem name="Administration/Configuration/User" sequence="4" id="menu_adm_conf_user"/>
-
-	<record model="ir.actions.act_window" id="open_module_users_list">
-		<field name="name">Users</field>
-		<field name="res_model">res.users</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-	</record>
-	<record model="ir.actions.act_window.view" id="open_module_users_list_view1">
-		<field name="sequence" eval="10"/>
-		<field name="view_mode">tree</field>
-		<field name="view_id" ref="view_users_tree"/>
-		<field name="act_window_id" ref="open_module_users_list"/>
-	</record>
-	<record model="ir.actions.act_window.view" id="open_module_users_list_view2">
-		<field name="sequence" eval="20"/>
-		<field name="view_mode">form</field>
-		<field name="view_id" ref="view_users_form"/>
-		<field name="act_window_id" ref="open_module_users_list"/>
-	</record>
-
-	<menuitem name="Administration/Configuration/User/Define Users" action="open_module_users_list" sequence="1" id="menu_users_list"/>
-
 </data>
 </terp>
