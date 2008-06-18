@@ -285,7 +285,7 @@ class orm_template(object):
 		cr.execute("SELECT id FROM ir_model WHERE model='%s'" % self._name)
 		if not cr.rowcount:
 			# reference model in order to have a description of its fonctionnality in custom_report
-			cr.execute('select nextval(%s)', ('ir_model_id_seq',))
+			cr.execute('SELECT nextval(%s)', ('ir_model_id_seq',))
 			id = cr.fetchone()[0]
 			cr.execute("INSERT INTO ir_model (id,model, name, info) VALUES (%s, %s, %s, %s)", (id,self._name, self._description, self.__doc__))
 			if 'module' in context:
@@ -294,12 +294,12 @@ class orm_template(object):
 				)
 		cr.commit()
 
-		cr.execute("select * from ir_model_fields where model=%s", (self._name,))
+		cr.execute("SELECT * FROM ir_model_fields WHERE model=%s", (self._name,))
 		cols = {}
 		for rec in cr.dictfetchall():
 			cols[rec['name']] = rec
 
-		cr.execute("select id from ir_model where model='%s'" % self._name)
+		cr.execute("SELECT id FROM ir_model WHERE model='%s'" % self._name)
 		model_id = cr.fetchone()[0]
 
 		for (k,f) in self._columns.items():
@@ -954,9 +954,9 @@ class orm_template(object):
 		while ok:
 			if view_id:
 				where = (model and (" and model='%s'" % (self._name,))) or ''
-				cr.execute('select arch,name,field_parent,id,type,inherit_id from ir_ui_view where id=%d'+where, (view_id,))
+				cr.execute('SELECT arch,name,field_parent,id,type,inherit_id FROM ir_ui_view WHERE id=%d'+where, (view_id,))
 			else:
-				cr.execute('select arch,name,field_parent,id,type,inherit_id from ir_ui_view where model=%s and type=%s order by priority', (self._name,view_type))
+				cr.execute('SELECT arch,name,field_parent,id,type,inherit_id FROM ir_ui_view WHERE model=%s AND type=%s ORDER BY priority', (self._name,view_type))
 			sql_res = cr.fetchone()
 			if not sql_res:
 				break
@@ -1497,9 +1497,9 @@ class orm(orm_template):
 
 		# Load manual fields
 
-		cr.execute("select id from ir_model_fields where name=%s and model=%s", ('state','ir.model.fields'))
+		cr.execute("SELECT id FROM ir_model_fields WHERE name=%s AND model=%s", ('state','ir.model.fields'))
 		if cr.fetchone():
-			cr.execute('select * from ir_model_fields where model=%s and state=%s', (self._name,'manual'))
+			cr.execute('SELECT * FROM ir_model_fields WHERE model=%s AND state=%s', (self._name,'manual'))
 			for field in cr.dictfetchall():
 				if field['name'] in self._columns:
 					continue
@@ -1653,7 +1653,7 @@ class orm(orm_template):
 			for i in range((len(ids) / ID_MAX) + ((len(ids) % ID_MAX) and 1 or 0)):
 				sub_ids = ids[ID_MAX * i:ID_MAX * (i + 1)]
 				if d1:
-					cr.execute('select %s from \"%s\" where id in (%s) and %s order by %s' % \
+					cr.execute('SELECT %s FROM \"%s\" WHERE id IN (%s) AND %s ORDER BY %s' % \
 							(','.join(fields_pre2 + ['id']), self._table,
 								','.join([str(x) for x in sub_ids]), d1,
 								self._order),d2)
@@ -1661,7 +1661,7 @@ class orm(orm_template):
 						raise except_orm('AccessError',
 								'You try to bypass an access rule (Document type: %s).' % self._description)
 				else:
-					cr.execute('select %s from \"%s\" where id in (%s) order by %s' % \
+					cr.execute('SELECT %s FROM \"%s\" WHERE id IN (%s) ORDER BY %s' % \
 							(','.join(fields_pre2 + ['id']), self._table,
 								','.join([str(x) for x in sub_ids]),
 								self._order))
@@ -2070,7 +2070,7 @@ class orm(orm_template):
 				tocreate[table][v] = vals[v]
 				del vals[v]
 
-		cr.execute("select nextval('"+self._sequence+"')")
+		cr.execute("SELECT nextval('"+self._sequence+"')")
 		id_new = cr.fetchone()[0]
 		for table in tocreate:
 			id = self.pool.get(table).create(cr, user, tocreate[table])
@@ -2250,9 +2250,9 @@ class orm(orm_template):
 					for j in range((len(ids2) / ID_MAX) + (len(ids2) % ID_MAX)):
 						sub_ids2 = ids2[ID_MAX * j:ID_MAX * (j + 1)]
 						if sub_ids2:
-							cr.execute('select "'+field._fields_id+'" ' \
-									'from "'+field_obj._table+'" ' \
-									'where id in ('+','.join(map(str,sub_ids2))+')')
+							cr.execute('SELECT "'+field._fields_id+'" ' \
+									'FROM "'+field_obj._table+'" ' \
+									'WHERE id in ('+','.join(map(str,sub_ids2))+')')
 							ids3.extend([x[0] for x in cr.fetchall()])
 
 					args[i] = ('id', 'in', ids3)
