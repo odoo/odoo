@@ -89,6 +89,8 @@ def _lang_get(self, cr, uid, context={}):
 	res = obj.read(cr, uid, ids, ['code', 'name'], context)
 	res = [(r['code'], r['name']) for r in res]
 	return res
+def _tz_get(self,cr,uid, context={}):
+	return [(x, x) for x in pytz.all_timezones]
 
 class users(osv.osv):
 	_name = "res.users"
@@ -107,7 +109,7 @@ class users(osv.osv):
 		'company_id': fields.many2one('res.company', 'Company'),
 		'rule_groups': fields.many2many('ir.rule.group', 'user_rule_group_rel', 'user_id', 'rule_group_id', 'Rules', domain="[('global', '<>', True)]"),
 		'context_lang': fields.selection(_lang_get, 'Language', required=True),
-		'context_tz': fields.selection([(x, x) for x in pytz.all_timezones], 'Timezone')
+		'context_tz': fields.selection(_tz_get,  'Timezone')
 	}
 	def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
 		result = super(users, self).read(cr, uid, ids, fields, context, load)

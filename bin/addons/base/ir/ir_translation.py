@@ -42,6 +42,7 @@ TRANSLATION_TYPE = [
 	('wizard_view', 'Wizard View'),
 	('xsl', 'XSL'),
 	('help', 'Help'),
+	('code', 'Code'),
 ]
 
 class ir_translation(osv.osv, Cacheable):

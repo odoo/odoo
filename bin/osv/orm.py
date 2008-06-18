@@ -279,6 +279,7 @@ class orm_template(object):
 	_sequence = None
 	_description = None
 	_inherits = {}
+	_table = None
 
 	def _field_create(self, cr, context={}):
 		cr.execute("SELECT id FROM ir_model WHERE model='%s'" % self._name)
@@ -357,6 +358,8 @@ class orm_template(object):
 	def __init__(self, cr):
 		if not self._description:
 			self._description = self._name
+		if not self._table:
+			self._table=self._name.replace('.','_')
 
 	def browse(self, cr, uid, select, context=None, list_class=None):
 		if not context:
@@ -1079,6 +1082,8 @@ class orm_memory(orm_template):
 		self.datas = {}
 		self.next_id = 0
 		self.check_id = 0
+		print '=--=-=-=-=-='
+		print self._table
 		cr.execute('delete from wkf_instance where res_type=%s', (self._name,))
 
 	def clear(self):
@@ -1487,8 +1492,6 @@ class orm(orm_template):
 							list_store.append(l)
 							self.pool._store_function[l[5]]=list_store
 
-		if not self._table:
-			self._table=self._name.replace('.','_')
 		for (key,_,msg) in self._sql_constraints:
 			self.pool._sql_error[self._table+'_'+key] = msg
 
