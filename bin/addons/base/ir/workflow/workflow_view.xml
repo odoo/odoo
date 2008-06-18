@@ -37,6 +37,7 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="action_workflow_form">
+                <field name="name">Workflows</field>
 		<field name="res_model">workflow</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_workflow_tree"/>
@@ -112,6 +113,7 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="action_workflow_activity_form">
+                <field name="name">Activites</field>
 		<field name="res_model">workflow.activity</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_workflow_activity_tree"/>
@@ -163,6 +165,7 @@
 
 
 	<record model="ir.actions.act_window" id="action_workflow_transition_form">
+                <field name="name">Transitions</field>
 		<field name="res_model">workflow.transition</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_workflow_transition_tree"/>
@@ -208,6 +211,7 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="action_workflow_instance_form">
+                <field name="name">Instances</field>
 		<field name="res_model">workflow.instance</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_workflow_instance_tree"/>
@@ -251,6 +255,7 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="action_workflow_workitem_form">
+                <field name="name">Workitems</field>
 		<field name="res_model">workflow.workitem</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_workflow_workitem_tree"/>
