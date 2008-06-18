@@ -40,6 +40,7 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_scrum_project_tree">
+                <field name="name">Projects</field>
 		<field name="res_model">scrum.project</field>
 		<field name="view_type">tree</field>
 		<field name="view_id" ref="view_scrum_project_tree" />
@@ -48,6 +49,7 @@
 	<menuitem name="Project Management/Scrum/Projects" id="menu_action_scrum_project_tree" action="action_scrum_project_tree"/>
 
 	<record model="ir.actions.act_window" id="action_scrum_project_form">
+                <field name="name">Edit Projects</field>
 		<field name="res_model">scrum.project</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_scrum_project_form" />
@@ -187,6 +189,7 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_sprint_form">
+                <field name="name">Sprint</field>
 		<field name="res_model">scrum.sprint</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_scrum_sprint_form" />
@@ -403,6 +406,7 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_view_task">
+                <field name="name">All Tasks</field>
 		<field name="res_model">scrum.task</field>
 		<field name="view_type">form</field>
 		<field name="domain">[('scrum','=',1)]</field>

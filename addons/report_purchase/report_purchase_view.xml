@@ -49,6 +49,7 @@
 	</record>
 	<menuitem name="Purchase Management/Reporting/This Month/Purchases by Products" action="action_order_product_tree" id="menu_report_order_product"/>
 	<record model="ir.actions.act_window" id="action_order_product_tree_all">
+                <field name="name">Purchases by Products</field>
 		<field name="res_model">report.purchase.order.product</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree</field>
@@ -102,6 +103,7 @@
 	</record>
 	<menuitem name="Purchase Management/Reporting/This Month/Purchases by Category of Products" action="action_order_category_tree" id="menu_report_order_category"/>
 	<record model="ir.actions.act_window" id="action_order_category_tree_all">
+                <field name="name">Purchases by Category of Products</field>
 		<field name="res_model">report.purchase.order.category</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree</field>

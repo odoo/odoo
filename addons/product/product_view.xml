@@ -110,6 +110,7 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="product_normal_action">
+                        <field name="name">Products</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">product.product</field>
 			<field name="view_type">form</field>
@@ -145,6 +146,7 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="product_category_action">
+                        <field name="name">Products by Category</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">product.category</field>
 			<field name="domain">[('parent_id','=',False)]</field>
@@ -154,6 +156,7 @@
 		<menuitem name="Products/Products by Category" id="menu_product_category_action" action="product_category_action"/>
 
 		<record model="ir.actions.act_window" id="product_category_action_form">
+                        <field name="name">Products Categories</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">product.category</field>
 			<field name="view_type">form</field>
@@ -163,6 +166,7 @@
 
 
 		<record model="ir.actions.act_window" id="product_normal_action_tree">
+                        <field name="name">product.normal.action.tree</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">product.product</field>
 			<field name="view_type">form</field>
@@ -213,6 +217,7 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="product_uom_form_action">
+                        <field name="name">Unit of Measure</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">product.uom</field>
 			<field name="view_type">form</field>
@@ -231,6 +236,7 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="product_uom_categ_form_action">
+                        <field name="name">Unit of Measure Categories</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">product.uom.categ</field>
 			<field name="view_type">form</field>
@@ -261,12 +267,13 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="product_ul_form_action">
+                        <field name="name">Logistical Unit</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">product.ul</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 		</record>
-		<menuitem name="Products/Configuration/Logisitcal Unit" id="menu_product_ul_form_action" action="product_ul_form_action"
+		<menuitem name="Products/Configuration/Logistical Unit" id="menu_product_ul_form_action" action="product_ul_form_action"
 			groups="base.group_extended"/>
 
 		<record model="ir.ui.view" id="product_packaging_tree_view">

@@ -70,6 +70,7 @@
 		</record>
 
 		<record model="ir.actions.act_window" id="action_account_analytic_planning_form">
+                        <field name="name">Planning</field>
 			<field name="res_model">report_account_analytic.planning</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">form,tree</field>
@@ -80,6 +81,7 @@
 			action="action_account_analytic_planning_form" />
 
 		<record model="ir.actions.act_window" id="action_account_analytic_planning_form_my">
+                        <field name="name">My Planning</field>
 			<field name="res_model">report_account_analytic.planning</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
@@ -91,6 +93,7 @@
 			action="action_account_analytic_planning_form_my" />
 
 		<record model="ir.actions.act_window" id="action_account_analytic_planning_form_current_my">
+                        <field name="name">My Current Planning</field>
 			<field name="res_model">report_account_analytic.planning</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
@@ -103,6 +106,7 @@
 
 
 		<record model="ir.actions.act_window" id="action_account_analytic_planning_form_current">
+                        <field name="name">Current Planning</field>
 			<field name="res_model">report_account_analytic.planning</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
@@ -166,6 +170,7 @@
 
 
 		<record model="ir.actions.act_window" id="action_account_analytic_planning_stat_form">
+                        <field name="name">Planning Statistics</field>
 			<field name="res_model">report_account_analytic.planning.stat</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">graph,tree</field>
@@ -176,6 +181,7 @@
 			action="action_account_analytic_planning_stat_form" />
 
 		<record model="ir.actions.act_window" id="action_account_analytic_planning_stat_my_form">
+                        <field name="name">My Planning Statistics</field>
 			<field name="res_model">report_account_analytic.planning.stat</field>
 			<field name="view_type">form</field>
 			<field name="domain">[('user_id','=',uid),('planning_id.state','=','open')]</field>
@@ -187,6 +193,7 @@
 			action="action_account_analytic_planning_stat_my_form" />
 
 		<record model="ir.actions.act_window" id="action_account_analytic_planning_stat_my_manager_form">
+                        <field name="name">Planning Statistics of My Projects</field>
 			<field name="res_model">report_account_analytic.planning.stat</field>
 			<field name="view_type">form</field>
 			<field name="domain">[('manager_id','=',uid),('planning_id.state','=','open')]</field>

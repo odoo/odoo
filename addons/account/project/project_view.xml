@@ -68,6 +68,7 @@
 		</record>
 
 		<record model="ir.actions.act_window" id="action_account_analytic_account_form">
+                        <field name="name">Analytic Accounts</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">account.analytic.account</field>
 			<field name="view_type">form</field>
@@ -130,6 +131,7 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="action_account_analytic_line_form">
+                    <field name="name">Analytic Entries</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">account.analytic.line</field>
 			<field name="view_type">form</field>
@@ -139,6 +141,7 @@
 
 
 		<record model="ir.actions.act_window" id="action_account_tree1">
+                        <field name="name">action.account.tree1</field>
 			<field name="res_model">account.analytic.line</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
@@ -171,6 +174,7 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="action_account_analytic_account_line_extended_form">
+                        <field name="name">account.analytic.line.extended</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">account.analytic.line</field>
 			<field name="view_type">form</field>
@@ -208,6 +212,7 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="action_account_analytic_journal_form">
+                <field name="name">Analytic Journal Definition</field>
 		<field name="res_model">account.analytic.journal</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
@@ -220,6 +225,7 @@
 	#
 
 	<record model="ir.actions.act_window" id="action_account_analytic_journal_open_form">
+                <field name="name">account.analytic.journal.open.form</field>
 		<field name="res_model">account.analytic.line</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
@@ -238,6 +244,7 @@
 	#
 
 	<record model="ir.actions.act_window" id="action_account_analytic_journal_tree">
+                <field name="name">Print Analytic Journals</field>
 		<field name="res_model">account.analytic.journal</field>
 		<field name="view_type">tree</field>
 	</record>
@@ -247,6 +254,7 @@
 
 
 	<record model="ir.actions.act_window" id="action_account_analytic_journal_tree2">
+                <field name="name">Entries by Journal</field>
 		<field name="res_model">account.analytic.journal</field>
 		<field name="view_type">tree</field>
 		<field name="view_id" ref="view_account_analytic_journal_tree"/>

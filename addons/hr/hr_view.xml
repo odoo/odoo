@@ -88,6 +88,7 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="open_view_employee_list">
+                        <field name="name">Employees</field>
 			<field name="res_model">hr.employee</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
@@ -98,6 +99,7 @@
 			groups="base.group_admin"/>
 
 		<record model="ir.actions.act_window" id="open_view_employee_new">
+                        <field name="name">New Employee</field>
 			<field name="res_model">hr.employee</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">form,tree</field>
@@ -166,6 +168,7 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="edit_workgroup">
+                        <field name="name">Timesheet Categories</field>
 			<field name="res_model">hr.timesheet.group</field>
 			<field name="view_type">form</field>
 			<field name="view_id" ref="create_group" />
@@ -264,6 +267,7 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="open_view_categ_form">
+                        <field name="name">Categories of Employee</field>
 			<field name="res_model">hr.employee.category</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">form,tree</field>
@@ -298,6 +302,7 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="open_view_attendance">
+                        <field name="name">Attendances</field>
 			<field name="res_model">hr.attendance</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
@@ -353,6 +358,7 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="open_ask_holidays">
+                        <field name="name">Vacation Request</field>
 			<field name="res_model">hr.holidays</field>
 			<field name="view_type">form</field>
 			<field name="view_id" ref="view_holiday" />
@@ -384,6 +390,7 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="open_view_holiday_status">
+                        <field name="name">Holiday Status</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">hr.holidays.status</field>
 			<field name="view_type">form</field>
@@ -417,6 +424,7 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="open_view_attendance_reason">
+                        <field name="name">Attendance Reasons</field>
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">hr.action.reason</field>
 			<field name="view_type">form</field>

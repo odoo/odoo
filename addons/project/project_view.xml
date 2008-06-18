@@ -149,6 +149,7 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="open_view_all_project">
+                        <field name="name">All Projects</field>
 			<field name="res_model">project.project</field>
 			<field name="view_type">tree</field>
 			<field name="domain">[('parent_id','=',False)]</field>
@@ -199,6 +200,7 @@
 
 
 		<record model="ir.actions.act_window" id="open_view_project">
+                        <field name="name">Projects</field>
 			<field name="res_model">project.project</field>
 			<field name="view_type">form</field>
 			<field name="domain">[]</field>
@@ -386,6 +388,7 @@
 		</record>
 
 		<record model="ir.actions.act_window" id="action_view_task">
+                        <field name="name">All Tasks</field>
 			<field name="res_model">project.task</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form,calendar</field>
@@ -518,6 +521,7 @@
 			</field>
 		</record>
 		<record model="ir.actions.act_window" id="open_task_type_form">
+                        <field name="name">Task Types</field>
 			<field name="res_model">project.task.type</field>
 			<field name="view_type">form</field>
 			<field name="view_id" ref="task_type_tree"/>

@@ -59,6 +59,7 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="crm_case_section_act">
+                <field name="name">Sections</field>
 		<field name="res_model">crm.case.section</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="crm_case_section_view_tree"/>
@@ -110,6 +111,7 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="crm_case_categ-act">
+                <field name="name">Categories</field>
 		<field name="res_model">crm.case.categ</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="crm_case_categ_tree-view"/>
@@ -204,6 +206,7 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="crm_case_rule-act">
+                <field name="name">Rules</field>
 		<field name="res_model">crm.case.rule</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="crm_case_rule_tree-view"/>
@@ -379,6 +382,7 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="crm_case_categ0-act">
+                <field name="name">All Cases</field>
 		<field name="res_model">crm.case</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="crm_case_tree-view"/>
@@ -415,6 +419,7 @@
 
 
 	<record model="ir.actions.act_window" id="crm_case_section_open_act">
+                <field name="name">crm.case.section.open</field>
 		<field name="res_model">crm.case</field>
 		<field name="domain">[('section_id','child_of',[active_id])]</field>
 		<field name="view_type">form</field>
@@ -447,6 +452,7 @@
 		</field>
 	</record>
 	<record model="ir.actions.act_window" id="crm_case_history-act">
+                <field name="name">All Histories</field>
 		<field name="res_model">crm.case.history</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
@@ -551,12 +557,14 @@
 	</record>
 
 	<record model="ir.actions.act_window" id="crm_segmentation-act">
+                <field name="name">Segmentations</field>
 		<field name="res_model">crm.segmentation</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="crm_segmentation-view"/>
 	</record>
 
 	<record model="ir.actions.act_window" id="crm_segmentation_tree-act">
+                <field name="name">Segmentations</field>
 		<field name="res_model">crm.segmentation</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
