@@ -320,9 +320,9 @@ class product_pricelist_item(osv.osv):
 	_columns = {
 		'name': fields.char('Name', size=64),
 		'price_version_id': fields.many2one('product.pricelist.version', 'Price List Version', required=True, select=True),
-		'product_tmpl_id': fields.many2one('product.template', 'Product Template'),
-		'product_id': fields.many2one('product.product', 'Product'),
-		'categ_id': fields.many2one('product.category', 'Product Category'),
+		'product_tmpl_id': fields.many2one('product.template', 'Product Template', ondelete='cascade'),
+		'product_id': fields.many2one('product.product', 'Product', ondelete='cascade'),
+		'categ_id': fields.many2one('product.category', 'Product Category', ondelete='cascade'),
 
 		'min_quantity': fields.integer('Min. Quantity', required=True),
 		'sequence': fields.integer('Sequence', required=True),
