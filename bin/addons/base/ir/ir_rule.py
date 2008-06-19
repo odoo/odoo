@@ -153,8 +153,7 @@ class ir_rule(osv.osv):
 					JOIN ir_model m ON (g.model_id = m.id))
 					ON (g.id = r.rule_group)
 				WHERE m.model = %s
-				AND (g.id IN ( SELECT rule_group_id FROM user_rule_group_rel WHERE user_id = %d
-						UNION SELECT rule_group_id FROM group_rule_group_rel g_rel
+				AND (g.id IN (SELECT rule_group_id FROM group_rule_group_rel g_rel
 							JOIN res_groups_users_rel u_rel ON (g_rel.group_id = u_rel.gid)
 							WHERE u_rel.uid = %d) OR g.global)""", (model_name, uid, uid))
 		ids = map(lambda x:x[0], cr.fetchall())

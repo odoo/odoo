@@ -107,7 +107,6 @@ class users(osv.osv):
 		'groups_id': fields.many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', 'Groups'),
 		'roles_id': fields.many2many('res.roles', 'res_roles_users_rel', 'uid', 'rid', 'Roles'),
 		'company_id': fields.many2one('res.company', 'Company'),
-		'rule_groups': fields.many2many('ir.rule.group', 'user_rule_group_rel', 'user_id', 'rule_group_id', 'Rules', domain="[('global', '<>', True)]"),
 		'context_lang': fields.selection(_lang_get, 'Language', required=True),
 		'context_tz': fields.selection(_tz_get,  'Timezone')
 	}
