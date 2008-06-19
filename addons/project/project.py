@@ -109,9 +109,9 @@ class project(osv.osv):
 		'tariff': fields.float('Sales price'),
 		'mode': fields.selection([
 			('', ''),
-			('project', 'By project'),
-			('hour', 'By hour'),
-			('effective', 'By effective hour')
+			('project', 'By Task'),
+			('hour', 'By Hour'),
+			('effective', 'By Effective Hour')
 			], 'Price setting mode'),
 		'partner_id': fields.many2one('res.partner', 'Customer'),
 		'contact_id': fields.many2one('res.partner.address', 'Contact'),
