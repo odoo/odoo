@@ -300,17 +300,17 @@
 							<field name="name" select="1"/>
 							<field name="project_id" required="1" select="1"/>
 							<field name="user_id" select="1"/>
-							<field name="priority" select="2"/>
+							<field name="priority"/>
 							<field name="date_deadline" select="2"/>
 							<field name="planned_hours"  widget="float_time"/>
 							<separator colspan="4" string="Description"/>
-							<field colspan="4" name="description" nolabel="1"/>
+							<field colspan="4" name="description" nolabel="1" select="2"/>
 							<field name="effective_hours"  widget="float_time"/>
 							<field name="progress"/>
 							<field colspan="4" name="work_ids" nolabel="1"/>
 							<newline/>
 							<group col="11" colspan="4">
-								<field name="state" select="2"/>
+								<field name="state" select="1"/>
 								<button name="do_draft" string="Set Draft" states="open" type="object"/>
 								<button name="do_open" string="Open" states="pending,draft" type="object"/>
 								<button name="do_reopen" string="Re-open" states="done,cancelled" type="object"/>
