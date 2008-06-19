@@ -238,7 +238,6 @@ def load_module_graph(cr, graph, status=None, **kwargs):
 	pool = pooler.get_pool(cr.dbname)
 	cr.execute('select * from ir_model where state=%s', ('manual',))
 	for model in cr.dictfetchall():
-		print 'INSTANCIATE', model['model']
 		pool.get('ir.model').instanciate(cr, 1, model['model'], {})
 
 	pool.get('ir.model.data')._process_end(cr, 1, package_todo)

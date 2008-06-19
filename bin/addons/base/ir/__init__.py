@@ -41,3 +41,4 @@ import ir_translation
 import ir_exports
 import workflow
 import ir_rule
+import wizard

@@ -659,32 +659,48 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Model Description">
-				<field name="name" select="1"/>
-				<field name="model" select="1"/>
-				<separator string="Information" colspan="4"/>
-				<field name="info" select="1" colspan="4" nolabel="1"/>
-				<separator string="Fields" colspan="4"/>
-				<field name="field_id" colspan="4" nolabel="1" context="{'manual':True}">
-					<form string="Fields Description">
-						<field name="name" select="1"/>
-						<field name="field_description" select="1" colspan="4"/>
-						<field name="ttype" select="1"/>
-						<field name="relation" select="1"/>
+				<notebook>
+				<page string="Object">
+					<field name="name" select="1"/>
+					<field name="model" select="1"/>
+					<separator string="Fields" colspan="4"/>
+					<field name="field_id" colspan="4" nolabel="1" context="{'manual':True}">
+						<tree string="Fields Description">
+							<field name="name"/>
+							<field name="field_description"/>
+							<field name="ttype"/>
+							<field name="required"/>
+							<field name="readonly"/>
+							<field name="select_level"/>
+							<field name="state"/>
+						</tree>
+						<form string="Fields Description">
+							<field name="name" select="1"/>
+							<field name="field_description" select="1" colspan="4"/>
+							<field name="ttype" select="1"/>
+							<field name="relation" select="1"/>
 
-						<field name="required" select="2"/>
-						<field name="readonly" select="2"/>
+							<field name="required" select="2"/>
+							<field name="readonly" select="2"/>
 
-						<field name="size" select="1"/>
-						<field name="on_delete" select="1"/>
-						<field name="select_level" select="2"/>
-						<field name="translate"/>
-						<field name="selection"/>
-						<field name="domain"/>
-						<field name="state" readonly="1"/>
-					</form>
-				</field>
-				<separator string="Status" colspan="4"/>
-				<field name="state"/>
+							<field name="size" select="1"/>
+							<field name="on_delete" select="1"/>
+							<field name="select_level" select="2"/>
+							<field name="translate"/>
+							<field name="selection"/>
+							<field name="domain"/>
+							<field name="state" readonly="1"/>
+						</form>
+					</field>
+					<separator string="Status" colspan="4"/>
+					<field name="state"/>
+					<group col="2" colspan="2">
+						<button name="%(act_menu_create)d" string="Create a Menu" colspan="2" type="action"/>
+					</group>
+				</page><page string="Information">
+					<field name="info" select="1" colspan="4" nolabel="1"/>
+				</page>
+				</notebook>
 			</form>
 		</field>
 	</record>

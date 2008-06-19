@@ -44,6 +44,7 @@
 	],
 	"update_xml" : [
 		"base_update.xml",
+		"ir/wizard/wizard_menu_view.xml",
 		"ir/ir.xml",
 		"ir/workflow/workflow_view.xml",
 		"module/module_data.xml",

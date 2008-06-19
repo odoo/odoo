@@ -28,7 +28,7 @@
 ##############################################################################
 
 from osv import fields,osv
-import ir
+import ir, re
 import netsvc
 from osv.orm import except_orm
 
@@ -45,30 +45,42 @@ class ir_model(osv.osv):
 	_description = "Objects"
 	_rec_name = 'name'
 	_columns = {
-		'name': fields.char('Model name', size=64, translate=True),
-		'model': fields.char('Object name', size=64, required=True, search=1),
+		'name': fields.char('Model Name', size=64, translate=True, required=True),
+		'model': fields.char('Object Name', size=64, required=True, search=1),
 		'info': fields.text('Information'),
 		'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True),
-		'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Manualy Created',readonly=1),
+		'state': fields.selection([('manual','Custom Object'),('base','Base Field')],'Manualy Created',readonly=1),
 	}
 	_defaults = {
-		'name': lambda *a: 'No Name',
 		'model': lambda *a: 'x_',
 		'state': lambda self,cr,uid,ctx={}: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
 	}
+	
+	def _check_model_name(self, cr, uid, ids):
+		for model in self.browse(cr, uid, ids):
+			if model.state=='manual':
+				if not model.model.startswith('x_'):
+					return False
+			if not re.match('^[a-z_A-Z0-9]+$',model.model):
+				return False
+		return True
+
+	_constraints = [
+		(_check_model_name, 'The model name must start with x_ and not contain any special character !', ['model']),
+	]
 	def unlink(self, cr, user, ids, context=None):
 		for model in self.browse(cr, user, ids, context):
 			if model.state <> 'manual':
 				raise except_orm('Error', "You can not remove the model '%s' !" %(field.name,))
-		return super(ir_model, self).unlink(cr, user, ids, context)
+		res = super(ir_model, self).unlink(cr, user, ids, context)
+		pooler.restart_pool(cr.dbname)
+		return res
 
 	def create(self, cr, user, vals, context=None):
 		if context and context.get('manual',False):
 			vals['state']='manual'
 		res = super(ir_model,self).create(cr, user, vals, context)
 		if vals.get('state','base')=='manual':
-			if not vals['model'].startswith('x_'):
-				raise except_orm('Error', "Custom models must have an object name that starts with 'x_' !")
 			pooler.restart_pool(cr.dbname)
 		return res
 
@@ -77,8 +89,11 @@ class ir_model(osv.osv):
 			pass
 		x_custom_model._name = model
 		x_custom_model._module = False
-		x_custom_model._rec_name = 'id'
 		x_custom_model.createInstance(self.pool, '', cr)
+		if 'x_name' in x_custom_model._columns:
+			x_custom_model._rec_name = 'x_name'
+		else:
+			x_custom_model._rec_name = x_custom_model._columns.keys()[0]
 ir_model()
 
 class ir_model_fields(osv.osv):
@@ -139,8 +154,9 @@ class ir_model_fields(osv.osv):
 		if vals.get('state','base')=='manual':
 			if not vals['name'].startswith('x_'):
 				raise except_orm('Error', "Custom fields must have a name that starts with 'x_' !")
-			self.pool.get(vals['model']).__init__(self.pool, cr)
-			self.pool.get(vals['model'])._auto_init(cr,{})
+			if self.pool.get(vals['model']):
+				self.pool.get(vals['model']).__init__(self.pool, cr)
+				self.pool.get(vals['model'])._auto_init(cr,{})
 		return res
 ir_model_fields()
 
