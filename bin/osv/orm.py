@@ -313,7 +313,6 @@ class orm_template(object):
 				'relation':f._obj or 'NULL',
 				'group_name':f.group_name or '',
 				'view_load':(f.view_load and 1) or 0,
-				'state':'base',
 				'select_level':str(f.select or 0)
 			}
 			if k not in cols:
@@ -327,7 +326,7 @@ class orm_template(object):
 					%d,%s,%s,%s,%s,%s, %s,%s,%s,%s,%s, %s
 				)""", (
 					id, vals['model_id'], vals['model'], vals['name'], vals['field_description'], vals['ttype'],
-					bool(vals['relate']), vals['relation'], vals['group_name'], bool(vals['view_load']), vals['state'],
+					bool(vals['relate']), vals['relation'], vals['group_name'], bool(vals['view_load']), 'base',
 					vals['select_level']
 				))
 				if 'module' in context:
@@ -342,11 +341,11 @@ class orm_template(object):
 						cr.commit()
 						cr.execute("""UPDATE ir_model_fields SET
 							model_id=%s, field_description=%s, ttype=%s, relate=%s, relation=%s,
-							group_name=%s, view_load=%s, state=%s, select_level=%s
+							group_name=%s, view_load=%s, select_level=%s
 						WHERE
 							model=%s AND name=%s""", (
 								vals['model_id'],vals['field_description'],vals['ttype'],bool(vals['relate']),
-								vals['relation'], vals['group_name'], bool(vals['view_load']), vals['state'],
+								vals['relation'], vals['group_name'], bool(vals['view_load']), 
 								vals['select_level'], vals['model'], vals['name']
 							))
 						continue
