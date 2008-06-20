@@ -36,6 +36,7 @@ from tools.misc import currency
 import mx.DateTime
 from mx.DateTime import RelativeDateTime, now, DateTime, localtime
 
+
 class account_payment_term(osv.osv):
 	_name = "account.payment.term"
 	_description = "Payment Term"
@@ -1540,4 +1541,71 @@ class account_subscription_line(osv.osv):
 	_rec_name = 'date'
 account_subscription_line()
 
+
+class account_config_fiscalyear(osv.osv_memory):
+    _name = 'account.config.fiscalyear'
+    _columns = {
+		'name':fields.char('Name', required=True,size=64),
+		'code':fields.char('Code', required=True,size=64),
+        'date1': fields.date('Start of period', required=True),
+        'date2': fields.date('End of period', required=True),
+    }
+    _defaults = {
+        'date1': lambda *a: time.strftime('%Y-01-01'),
+        'date2': lambda *a: time.strftime('%Y-%m-%d'),
+    }
+    def action_create(self, cr, uid,ids, context=None):
+    	res=self.read(cr,uid,ids)[0]
+    	if 'date1' in res and 'date2' in res:
+	        res_obj = self.pool.get('account.fiscalyear')
+	        start_date=res['date1']
+	        end_date=res['date2']
+	        name=res['name']#DateTime.strptime(start_date, '%Y-%m-%d').strftime('%m.%Y') + '-' + DateTime.strptime(end_date, '%Y-%m-%d').strftime('%m.%Y')
+	        vals={
+	          'name':name,
+	          'code':name,
+	          'date_start':start_date,
+	          'date_stop':end_date,
+	          }
+	        new_id=res_obj.create(cr, uid, vals, context=context)
+        return {
+                'view_type': 'form',
+				'res_model': 'ir.module.module.configuration.wizard',
+				'type': 'ir.actions.act_window',
+				'target':'new',
+
+         }
+
+account_config_fiscalyear()
+
+
+class account_config_journal_bank_accounts(osv.osv_memory):
+	_name='account.config.journal.bank.account'
+	_columns = {
+		'name':fields.char('Journal Name', size=64,required=True),
+		'bank_account_id':fields.many2one('account.account', 'Bank Account', required=True, domain=[('type','=','cash')]),
+		'view_id':fields.many2one('account.journal.view', 'Journal view', required=True),
+		'sequence_id':fields.many2one('ir.sequence', 'Sequence', required=True),
+    }
+	def action_create(self, cr, uid, ids, context=None):
+		res=self.read(cr,uid,ids)[0]
+		res_obj = self.pool.get('account.journal')
+		if 'name' in res and 'bank_account_id' in res and 'view_id'  in res and 'sequence_id' in res:
+			vals={
+				  'name':res['name'],
+				  'type':'cash',
+				  'view_id':res['view_id'],
+				  'default_credit_account_id':res['bank_account_id'],
+				  'default_debit_account_id':res['bank_account_id'],
+				  'sequence_id':res['sequence_id']
+				  }
+			res_obj.create(cr, uid, vals, context=context)
+		return {
+				'view_type': 'form',
+			    'res_model': 'ir.module.module.configuration.wizard',
+			    'type': 'ir.actions.act_window',
+			    'target':'new',
+			}
+
+account_config_journal_bank_accounts()
 

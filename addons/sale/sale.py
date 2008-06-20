@@ -91,7 +91,7 @@ class sale_order(osv.osv):
 
 	def _amount_total(self, cr, uid, ids, field_name, arg, context):
 		res = {}
-		untax = self._amount_untaxed(cr, uid, ids, field_name, arg, context) 
+		untax = self._amount_untaxed(cr, uid, ids, field_name, arg, context)
 		tax = self._amount_tax(cr, uid, ids, field_name, arg, context)
 		cur_obj=self.pool.get('res.currency')
 		for id in ids:
@@ -242,8 +242,8 @@ class sale_order(osv.osv):
 	def button_dummy(self, cr, uid, ids, context={}):
 		return True
 
-#FIXME: the method should return the list of invoices created (invoice_ids) 
-# and not the id of the last invoice created (res). The problem is that we 
+#FIXME: the method should return the list of invoices created (invoice_ids)
+# and not the id of the last invoice created (res). The problem is that we
 # cannot change it directly since the method is called by the sale order
 # workflow and I suppose it expects a single id...
 	def _inv_get(self, cr, uid, order, context={}):
@@ -571,7 +571,7 @@ class sale_order_line(osv.osv):
 			except:
 				res[line.id] = 1
 		return res
-	
+
 	def _get_1st_packaging(self, cr, uid, context={}):
 		cr.execute('select id from product_packaging order by id asc limit 1')
 		res = cr.fetchone()
@@ -833,3 +833,34 @@ class sale_order_line(osv.osv):
 		return res
 
 sale_order_line()
+
+
+
+_policy_form = '''<?xml version="1.0"?>
+<form string="Select Bank Account">
+    <field name="picking_policy" colspan="4"/>
+</form>'''
+
+_policy_fields = {
+    'picking_policy': {'string': 'Packing Policy', 'type': 'selection','selection': [('direct','Direct Delivery'),('one','All at once')],'required': True,}
+}
+class sale_config_picking_policy(osv.osv_memory):
+	_name='sale.config.picking_policy'
+	_columns = {
+		'name':fields.char('Name', size=64),
+		'picking_policy': fields.selection([('direct','Direct Delivery'),('one','All at once')], 'Packing Policy', required=True ),
+    }
+	_defaults={
+		'picking_policy': lambda *a: 'direct',
+	}
+	def set_default(self, cr, uid, ids, context=None):
+		if 'name' in context:
+			ir_values_obj = self.pool.get('ir.values')
+			ir_values_obj.set(cr,uid,'default',False,'picking_policy',['sale.order'],context['picking_policy'])
+		return {
+			    'view_type': 'form',
+				'res_model': 'ir.module.module.configuration.wizard',
+				'type': 'ir.actions.act_window',
+				'target':'new',
+         }
+sale_config_picking_policy()

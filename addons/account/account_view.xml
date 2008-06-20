@@ -471,9 +471,9 @@
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	<menuitem 
-		name="Financial Management/Configuration/General Accounts/" 
-		id="menu_action_account_type_form" 
+	<menuitem
+		name="Financial Management/Configuration/General Accounts/"
+		id="menu_action_account_type_form"
 		groups="base.group_extended"
 		action="action_account_type_form"/>
 	<!--
@@ -1482,6 +1482,83 @@
 		src_model="res.partner"
 		id="act_account_partner_account_move"/>
 
+
+
+    <!-- configuration wizard view -->
+
+    <record model="ir.ui.view" id="view_config_fiscalyear_form">
+		<field name="name">Configure Fiscal Year</field>
+		<field name="model">account.config.fiscalyear</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Configure Fiscal Year">
+            <separator string="Configure Fiscal Year"/>
+            <newline/>
+            <field name="name"/>
+            <field name="code"/>
+            <field name="date1"/>
+			<field name="date2"/>
+			<group colspan="4" col="4">
+				<button special="cancel" string="Cancel" />
+				<button name="action_create" type='object' string="Create" />
+			</group>
+			</form>
+		</field>
+        </record>
+
+		<record model="ir.actions.act_window" id="action_config_fiscalyear_form">
+		<field name="name">Configure Fiscal Year</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">account.config.fiscalyear</field>
+		<field name="view_type">form</field>
+		<field name="target">new</field>
+		</record>
+
+
+
+		<record model="ir.ui.view" id="view_config_journal_bank_account">
+		<field name="name">Configure Journal of Bank account</field>
+		<field name="model">account.config.journal.bank.account</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Configure Journal of Bank account">
+			<separator string="Configure Journal of Bank account"/>
+			<newline/>
+            <field name="name"/>
+			<field name="bank_account_id"/>
+			<field name="view_id"/>
+			<field name="sequence_id"/>
+			<group colspan="4" col="4">
+				<button special="cancel" string="Cancel" />
+				<button name="action_create" type='object' string="Create"/>
+			</group>
+			</form>
+		</field>
+        </record>
+
+		<record model="ir.actions.act_window" id="action_config_journal_bank_account">
+		<field name="name">Configure Journal of Bank account</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">account.config.journal.bank.account</field>
+		<field name="view_type">form</field>
+		<field name="target">new</field>
+		</record>
+
+	<!-- register configuration wizard -->
+
+	<record model="ir.module.module.configuration.step"
+            id="config_fiscalyear">
+            <field name="name">account.config.fiscalyear</field>
+            <field name="action_id" ref="action_config_fiscalyear_form"/>
+            <field name="state">open</field>
+        </record>
+
+    <record model="ir.module.module.configuration.step"
+            id="config_journal_bank_account">
+            <field name="name">account.config.journal.bank.account</field>
+            <field name="action_id" ref="action_config_journal_bank_account"/>
+            <field name="state">open</field>
+    </record>
 
 </data>
 </terp>

@@ -447,5 +447,43 @@
 		domain="[('product_id','=',active_id)]"/>
 
 
+
+
+    <!-- configartion view -->
+
+    <record model="ir.ui.view" id="view_config_picking_policy">
+		<field name="name">Configure Picking Policy for Sale Order </field>
+		<field name="model">sale.config.picking_policy</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Configure Picking Policy for Sale Order">
+			<separator string="Configure Picking Policy for Sale Order"/>
+			<newline/>
+            <field name="picking_policy"/>
+			<group colspan="4" col="4">
+				<button special="cancel" string="Cancel" />
+				<button name="set_default" type='object' string="Set Default"/>
+			</group>
+			</form>
+		</field>
+        </record>
+
+		<record model="ir.actions.act_window" id="action_config_picking_policy">
+		<field name="name">Configure Picking Policy for Sale Order</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">sale.config.picking_policy</field>
+		<field name="view_type">form</field>
+		<field name="target">new</field>
+		</record>
+
+		<!-- register configuration wizard -->
+	<record model="ir.module.module.configuration.step"
+            id="config_wizard_step_sale_picking_policy">
+            <field name="name">sale.config.picking_policy</field>
+            <field name="action_id" ref="action_config_picking_policy"/>
+            <field name="state">open</field>
+    </record>
+
+
 </data>
 </terp>
