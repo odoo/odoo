@@ -60,10 +60,7 @@ view_field = {
 		'readonly': True},
 }
 
-class module_install_upgrade_start(wizard_osv):
-    _name = 'ir.module.module.install_upgrade.start'
 
-module_install_upgrade_start()
 
 class wizard_info_get(wizard.interface):
 	def _get_install(self, cr, uid, data, context):
