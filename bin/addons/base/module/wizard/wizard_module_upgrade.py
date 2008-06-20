@@ -30,7 +30,7 @@
 
 import wizard
 import pooler
-from wizard import wizard_osv
+
 
 view_form_end = """<?xml version="1.0"?>
 <form string="System upgrade done">
