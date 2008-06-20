@@ -121,6 +121,7 @@ class product_pricelist(osv.osv):
 
 		if context and ('partner_id' in context):
 			partner = context['partner_id']
+		context['partner_id'] = partner
 		date = time.strftime('%Y-%m-%d')
 		if context and ('date' in context):
 			date = context['date']
