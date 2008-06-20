@@ -150,7 +150,7 @@ class users(osv.osv):
 		if 1 in ids:
 			raise osv.except_osv('Can not remove root user !', 'You can not remove the root user as it is used internally for resources created by Tiny ERP (updates, module installation, ...)')
 		return super(users, self).unlink(cr, uid, ids)
-		
+
 	def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):
 		if not args:
 			args=[]
@@ -162,7 +162,7 @@ class users(osv.osv):
 		if not ids:
 			ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
 		return self.name_get(cr, user, ids)
-		
+
 	def copy(self, cr, uid, id, default=None, context={}):
 		login = self.read(cr, uid, [id], ['login'])[0]['login']
 		default.update({'login': login+' (copy)'})
@@ -180,6 +180,14 @@ class users(osv.osv):
 		dataobj = self.pool.get('ir.model.data')
 		data_id = dataobj._get_id(cr, 1, 'base', 'action_res_users_my')
 		return dataobj.browse(cr, uid, data_id, context).res_id
+
+	def action_create(self,cr,uid,ids,context={}):
+		return {
+			    'view_type': 'form',
+			    'res_model': 'ir.module.module.configuration.wizard',
+			    'type': 'ir.actions.act_window',
+			    'target':'new',
+			   }
 users()
 
 class groups2(osv.osv):

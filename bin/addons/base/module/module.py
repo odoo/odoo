@@ -37,6 +37,11 @@ import zipfile
 import release
 import zipimport
 
+import wizard
+
+
+
+
 ver_regexp = re.compile("^(\\d+)((\\.\\d+)*)([a-z]?)((_(pre|p|beta|alpha|rc)\\d*)*)(-r(\\d+))?$")
 suffix_regexp = re.compile("^(alpha|beta|rc|pre|p)(\\d*)$")
 
@@ -169,7 +174,7 @@ module_repository()
 class module_category(osv.osv):
 	_name = "ir.module.category"
 	_description = "Module Category"
-	
+
 	def _module_nbr(self,cr,uid, ids, prop, unknow_none,context):
 		cr.execute('select category_id,count(*) from ir_module_module where category_id in ('+','.join(map(str,ids))+') or category_id in (select id from ir_module_category where parent_id in ('+','.join(map(str,ids))+')) group by category_id')
 		result = dict(cr.fetchall())
@@ -178,7 +183,7 @@ class module_category(osv.osv):
 			childs = [c for c, in cr.fetchall()]
 			result[id] = reduce(lambda x,y:x+y, [result.get(c, 0) for c in childs], result.get(id, 0))
 		return result
-		
+
 	_columns = {
 		'name': fields.char("Name", size=128, required=True),
 		'parent_id': fields.many2one('ir.module.category', 'Parent Category', select=True),
@@ -240,7 +245,7 @@ class module(osv.osv):
 			('Other proprietary', 'Other proprietary')], string='License',
 			readonly=True),
 	}
-	
+
 	_defaults = {
 		'state': lambda *a: 'uninstalled',
 		'demo': lambda *a: False,
@@ -307,8 +312,8 @@ class module(osv.osv):
 		for module in self.browse(cr, uid, ids):
 			cr.execute('''select m.state,m.name
 				from
-					ir_module_module_dependency d 
-				join 
+					ir_module_module_dependency d
+				join
 					ir_module_module m on (d.module_id=m.id)
 				where
 					d.name=%s and
@@ -331,7 +336,7 @@ class module(osv.osv):
 		cr.execute('select code from res_lang where translatable=TRUE')
 		langs = [l[0] for l in cr.fetchall()]
 		modules = self.read(cr, uid, ids, ['name'])
-		for module in modules: 
+		for module in modules:
 			files = self.get_module_info(module['name']).get('translations', {})
 			for lang in langs:
 				if files.has_key(lang):
@@ -562,4 +567,79 @@ class module_dependency(osv.osv):
 			], string='State', readonly=True),
 	}
 module_dependency()
+
+
+
+class module_config_wizard_step(osv.osv):
+    _name = 'ir.module.module.configuration.step'
+
+    _columns={
+		'name':fields.char('Name', size=64, required=True, select=True),
+		'action_id':fields.many2one('ir.actions.act_window', 'Action', select=True,required=True, ondelete='cascade'),
+		'sequence':fields.integer('Sequence'),
+		'state':fields.selection([('open', 'Open'),('done', 'Done'),('skip','Skip')], string='State', required=True)
+	}
+    _defaults={
+		'state': lambda *a: 'open',
+		'sequence': lambda *a: 10,
+	}
+    _order="sequence"
+module_config_wizard_step()
+
+
+class module_configuration(osv.osv_memory):
+    _name='ir.module.module.configuration.wizard'
+    def _get_wizard(self, cr, uid, context={}):
+		item_obj = self.pool.get('ir.module.module.configuration.step')
+		item_ids = item_obj.search(cr, uid, [
+            ('state', '=', 'open'),
+            ], limit=1, context=context)
+		if item_ids:
+			item = item_obj.browse(cr, uid, item_ids[0], context=context)
+			return item.id
+		return False
+
+    _columns = {
+		'name': fields.char('Next Wizard', size=64,readonly=True),
+		'item_id':fields.many2one('ir.module.module.configuration.step', 'Next Configuration Wizard', readonly=True,required=True),
+	}
+    _defaults={
+		'item_id':_get_wizard
+	}
+
+    def button_skip(self,cr,uid,ids,context=None):
+    	item_obj = self.pool.get('ir.module.module.configuration.step')
+    	item_id=self.read(cr,uid,ids)[0]['item_id']
+        if item_id:
+            item = item_obj.browse(cr, uid, item_id, context=context)
+            item_obj.write(cr, uid, item.id, {
+                'state': 'skip',
+                }, context=context)
+            return{
+				'view_type': 'form',
+				'res_model': 'ir.module.module.configuration.wizard',
+				'type': 'ir.actions.act_window',
+				'target':'new',
+			}
+        return {}
+
+    def button_continue(self, cr, uid, ids, context=None):
+    	item_obj = self.pool.get('ir.module.module.configuration.step')
+    	item_id=self.read(cr,uid,ids)[0]['item_id']
+        if item_id:
+            item = item_obj.browse(cr, uid, item_id, context=context)
+            item_obj.write(cr, uid, item.id, {
+                'state': 'done',
+                }, context=context)
+            return{
+				  'view_type': item.action_id.view_type,
+				  'view_id':item.action_id.view_id and [item.action_id.view_id.id] or False,
+				  'res_model': item.action_id.res_model,
+				  'type': item.action_id.type,
+				  'target':item.action_id.target,
+			}
+        return {}
+module_configuration()
+
+
 

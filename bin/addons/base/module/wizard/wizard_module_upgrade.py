@@ -30,6 +30,7 @@
 
 import wizard
 import pooler
+from wizard import wizard_osv
 
 view_form_end = """<?xml version="1.0"?>
 <form string="System upgrade done">
@@ -59,6 +60,11 @@ view_field = {
 		'readonly': True},
 }
 
+class module_install_upgrade_start(wizard_osv):
+    _name = 'ir.module.module.install_upgrade.start'
+
+module_install_upgrade_start()
+
 class wizard_info_get(wizard.interface):
 	def _get_install(self, cr, uid, data, context):
 		pool=pooler.get_pool(cr.dbname)
@@ -81,9 +87,16 @@ class wizard_info_get(wizard.interface):
 		db, pool = pooler.restart_pool(cr.dbname, update_module=True)
 		return {}
 
+	def _config(self, cr, uid, data, context=None):
+		return {
+                'view_type': 'form',
+				'res_model': 'ir.module.module.configuration.wizard',
+				'type': 'ir.actions.act_window',
+         }
+
 	states = {
 		'init': {
-			'actions': [_get_install], 
+			'actions': [_get_install],
 			'result': {'type':'form', 'arch':view_form, 'fields': view_field,
 				'state':[
 					('end', 'Cancel', 'gtk-cancel'),
@@ -92,13 +105,47 @@ class wizard_info_get(wizard.interface):
 			}
 		},
 		'start': {
-			'actions': [_upgrade_module], 
-			'result': {'type':'form', 'arch':view_form_end, 'fields': {},
-				'state':[
-					('end', 'Close', 'gtk-close', True)
-				]
-			}
-		},
-	}
+			'actions': [_upgrade_module],
+			'result': {
+                'type': 'form',
+                'object': 'ir.module.module.install_upgrade.start',
+                'state': [
+                    ('config', 'Ok', 'tryton-ok', True),
+                ],
+            },
+        },
+        'config': {
+            'result': {
+                'type': 'action',
+                'action': _config,
+                'state': 'end',
+            },
+        },
+    }
+
 wizard_info_get('module.upgrade')
 
+class module_config(wizard.interface):
+	def _action_open(self, cr, uid, datas, context=None):
+		pool=pooler.get_pool(cr.dbname)
+	 	model_data_obj = pool.get('ir.model.data')
+	 	act_window_obj = pool.get('ir.actions.act_window')
+	 	model_data_ids = model_data_obj.search(cr, uid, [
+            ('name', '=', 'open_module_tree'),
+            ('module', '=', 'base'),
+            ], limit=1, context=context)
+	 	model_data = model_data_obj.browse(cr, uid, model_data_ids[0],
+                context=context)
+	 	res = act_window_obj.read(cr, uid, model_data.res_id, context=context)
+	 	return res
+	states = {
+        'init': {
+            'result': {
+                'type': 'action',
+                'action': _action_open,
+                'state': 'end',
+            },
+        },
+    }
+
+module_config('ir.module.module.config')

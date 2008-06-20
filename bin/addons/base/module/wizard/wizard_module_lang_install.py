@@ -55,7 +55,7 @@ view_form = """<?xml version="1.0"?>
 class wizard_lang_install(wizard.interface):
 	def _lang_install(self, cr, uid, data, context):
 		lang = data['form']['lang']
-		if lang and lang != 'en_EN':
+		if lang and lang != 'en_US':
 			filename = tools.config["root_path"] + "/i18n/" + lang + ".csv"
 			tools.trans_load(cr.dbname, filename, lang)
 		return {}
@@ -70,7 +70,7 @@ class wizard_lang_install(wizard.interface):
 
 	states = {
 		'init': {
-			'actions': [], 
+			'actions': [],
 			'result': {'type': 'form', 'arch': view_form, 'fields': fields_form,
 				'state': [
 					('end', 'Cancel', 'gtk-cancel'),

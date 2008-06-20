@@ -200,5 +200,83 @@
 			id="menu_module_repository_tree"
 			/>
 
+
+
+
+
+
+
+
+
+
+
+
+		<record model="ir.ui.view" id="config_wizard_step_view_tree">
+            <field name="model">ir.module.module.configuration.step</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Config Wizard Steps" editable="bottom">
+                    <field name="name" select="1"/>
+                    <field name="action_id" select="1"/>
+                    <field name="sequence"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="act_config_wizard_step_form">
+            <field name="name">Config Wizard Steps</field>
+            <field name="res_model">ir.module.module.configuration.step</field>
+            <field name="view_id" ref="config_wizard_step_view_tree"/>
+            <field name="view_type">form</field>
+        </record>
+
+
+        <menuitem name="Administration/Modules Management/Config wizard Step"
+            action="act_config_wizard_step_form"
+            id="menu_config_wizard_step_form"/>
+
+
+
+
+		<record model="ir.ui.view" id="view_config_wizard_form">
+		<field name="name">Main Configuration wizard</field>
+		<field name="model">ir.module.module.configuration.wizard</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Main Configuration wizard">
+            <separator string="Main Configuration wizard"/>
+            <newline/>
+            <field name="item_id" select="1"/>
+			<group colspan="4" col="4">
+				<button special="cancel" string="Cancel" />
+				<button name="button_skip" type='object' string="Skip" />
+				<button name="button_continue" type='object' string="Continue"/>
+			</group>
+			</form>
+		</field>
+        </record>
+
+		<record model="ir.actions.act_window" id="action_config_wizard_form">
+		<field name="name">Main Configuration Window</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">ir.module.module.configuration.wizard</field>
+		<field name="view_type">form</field>
+		<field name="target">new</field>
+		</record>
+
+		<menuitem
+		name="Administration/Modules Management/Module Configuration"
+		action="action_config_wizard_form"  id="menu_config_module"/>
+
+		<!--<record model="ir.module.module.configuration.step"
+            id="config_wizard_item_module">
+            <field name="name">ir.module.module.config</field>
+            <field name="action_id" ref=""/>
+            <field name="sequence" eval="10000"/>
+            <field name="state">open</field>
+        </record>-->
+
+
+
 	</data>
 </terp>
