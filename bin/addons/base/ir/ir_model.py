@@ -156,7 +156,7 @@ class ir_model_fields(osv.osv):
 				raise except_orm('Error', "Custom fields must have a name that starts with 'x_' !")
 			if self.pool.get(vals['model']):
 				self.pool.get(vals['model']).__init__(self.pool, cr)
-				self.pool.get(vals['model'])._auto_init(cr,{})
+				#self.pool.get(vals['model'])._auto_init(cr,{})
 		return res
 ir_model_fields()
 
