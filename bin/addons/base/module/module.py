@@ -601,7 +601,7 @@ class module_configuration(osv.osv_memory):
 
     _columns = {
 		'name': fields.char('Next Wizard', size=64,readonly=True),
-		'item_id':fields.many2one('ir.module.module.configuration.step', 'Next Configuration Wizard', readonly=True,required=True),
+		'item_id':fields.many2one('ir.module.module.configuration.step', 'Next Configuration Wizard', readonly=True),
 	}
     _defaults={
 		'item_id':_get_wizard
@@ -617,6 +617,7 @@ class module_configuration(osv.osv_memory):
                 }, context=context)
             return{
 				'view_type': 'form',
+				"view_mode": 'form',
 				'res_model': 'ir.module.module.configuration.wizard',
 				'type': 'ir.actions.act_window',
 				'target':'new',

@@ -172,12 +172,12 @@
 
 
         <record model="ir.ui.view" id="view_users_configuration_form">
-		<field name="name">res.users.form</field>
+		<field name="name">res.users.confirm.form</field>
 		<field name="model">res.users</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Configure User">
-				<separator string="Configure User"/>
+				<separator string="Configure User" colspan="4" col="4"/>
 				<newline/>
 				<notebook>
 					<page string="User">
@@ -210,16 +210,56 @@
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">res.users</field>
 		<field name="view_type">form</field>
+		<field name="view_mode">form</field>
+		<field name="view_id" ref="view_users_configuration_form"/>
+		<field name="target">new</field>
+	</record>
+
+
+	<record model="ir.ui.view" id="view_confirm_simple_view_form">
+		<field name="name">res.users.confirm.simple_view</field>
+		<field name="model">res.config.view</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Configure simple view">
+				<separator string="If you are testing or using OpenERP for the first time, we suggest
+you to use the simplified view, which has less features but is easier
+to understand." colspan="4" col="4"/>
+				<newline/>
+				<field name="view"/>
+				<group colspan="4" col="4">
+								<button special="cancel" string="Cancel" />
+								<button name="action_set" type='object' string="Set" />
+				</group>
+
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.actions.act_window" id="action_config_simple_view_form">
+		<field name="name">Configure Simple View</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">res.config.view</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">form</field>
 		<field name="target">new</field>
 	</record>
 
 
 
 	<!-- register on configuratuion -->
+
 	<record model="ir.module.module.configuration.step"
             id="config_wizard_step_user">
-            <field name="name">Configure User</field>
+            <field name="name">Create User</field>
             <field name="action_id" ref="action_config_user_form"></field>
+            <field name="state">open</field>
+        </record>
+
+        <record model="ir.module.module.configuration.step"
+            id="config_wizard_simple_view">
+            <field name="name">Select between the simplified views or the extended views.</field>
+            <field name="action_id" ref="action_config_simple_view_form"></field>
             <field name="state">open</field>
         </record>
 

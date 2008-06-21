@@ -184,6 +184,7 @@ class users(osv.osv):
 	def action_create(self,cr,uid,ids,context={}):
 		return {
 			    'view_type': 'form',
+			    "view_mode": 'form',
 			    'res_model': 'ir.module.module.configuration.wizard',
 			    'type': 'ir.actions.act_window',
 			    'target':'new',
@@ -196,4 +197,36 @@ class groups2(osv.osv):
 		'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users'),
 	}
 groups2()
+
+
+class res_config_view(osv.osv_memory):
+	_name='res.config.view'
+	_columns = {
+		'name':fields.char('Name', size=64),
+		'view': fields.selection([('simple','Simple'),('extended','Extended')], 'Select between the simplified views or the extended views.', required=True ),
+
+    }
+	_defaults={
+		'view':lambda *args: 'simple',
+		}
+	def action_set(self, cr, uid, ids, context=None):
+		res=self.read(cr,uid,ids)[0]
+		users_obj = self.pool.get('res.users')
+		group_obj=self.pool.get('res.groups')
+		if 'view' in res:
+			group_ids=group_obj.search(cr,uid,[('name','=','Extended View')])
+			if group_ids and len(group_ids):
+				users_obj.write(cr, uid, [3],{
+								'groups_id':[(4,group_ids[0])]
+							}, context=context)
+		return {
+				'view_type': 'form',
+				"view_mode": 'form',
+			    'res_model': 'ir.module.module.configuration.wizard',
+			    'type': 'ir.actions.act_window',
+			    'target':'new',
+			}
+
+res_config_view()
+
 

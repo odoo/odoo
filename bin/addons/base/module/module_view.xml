@@ -244,7 +244,7 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Main Configuration wizard">
-            <separator string="Main Configuration wizard"/>
+            <separator string="Main Configuration wizard" colspan="4" col="4"/>
             <newline/>
             <field name="item_id" select="1"/>
 			<group colspan="4" col="4">
@@ -261,6 +261,7 @@
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">ir.module.module.configuration.wizard</field>
 		<field name="view_type">form</field>
+		<field name="view_mode">form</field>
 		<field name="target">new</field>
 		</record>
 
@@ -268,13 +269,6 @@
 		name="Administration/Modules Management/Module Configuration"
 		action="action_config_wizard_form"  id="menu_config_module"/>
 
-		<!--<record model="ir.module.module.configuration.step"
-            id="config_wizard_item_module">
-            <field name="name">ir.module.module.config</field>
-            <field name="action_id" ref=""/>
-            <field name="sequence" eval="10000"/>
-            <field name="state">open</field>
-        </record>-->
 
 
 

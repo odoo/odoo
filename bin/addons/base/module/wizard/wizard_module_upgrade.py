@@ -81,9 +81,18 @@ class wizard_info_get(wizard.interface):
 		db, pool = pooler.restart_pool(cr.dbname, update_module=True)
 		return {}
 
+	def _config(self, cr, uid, data, context=None):
+		return {
+                'view_type': 'form',
+                "view_mode": 'form',
+				'res_model': 'ir.module.module.configuration.wizard',
+				'type': 'ir.actions.act_window',
+				'target':'new',
+         }
+
 	states = {
 		'init': {
-			'actions': [_get_install], 
+			'actions': [_get_install],
 			'result': {'type':'form', 'arch':view_form, 'fields': view_field,
 				'state':[
 					('end', 'Cancel', 'gtk-cancel'),
@@ -92,13 +101,21 @@ class wizard_info_get(wizard.interface):
 			}
 		},
 		'start': {
-			'actions': [_upgrade_module], 
+			'actions': [_upgrade_module],
 			'result': {'type':'form', 'arch':view_form_end, 'fields': {},
 				'state':[
-					('end', 'Close', 'gtk-close', True)
+					('end', 'Close', 'gtk-close', True),
+					('config', 'Start configuration', 'gtk-ok', True)
 				]
 			}
 		},
+		'config':{
+            'result': {
+                'type': 'action',
+                'action': _config,
+                'state': 'end',
+            },
+		}
 	}
 wizard_info_get('module.upgrade')
 
