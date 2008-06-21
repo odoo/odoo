@@ -74,7 +74,7 @@
 		<field name="name">res.users.form.modif</field>
 		<field name="model">res.users</field>
 		<field name="type">form</field>
-		<field name="priority" eval="10"/>
+		<field name="priority" eval="18"/>
 		<field name="arch" type="xml">
 			<form string="Users">
 				<field name="password"/>
@@ -103,6 +103,8 @@
 						<field name="company_id" required="1"/>
 						<field name="action_id" required="True"/>
 						<field name="menu_id" domain="[('usage','=','menu')]" required="True"/>
+						<field name="context_lang"/>
+						<field name="context_tz"/>
 						<field name="signature" colspan="4"/>
 					</page>
 					<page string="Security">
