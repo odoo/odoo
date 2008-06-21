@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<terp>
+<data>
+<record model="ir.ui.view" id="view_confirm_install_module_form">
+		<field name="name">Install extra modules</field>
+		<field name="model">config.install_extra_modules</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Install Extra Module">
+            <separator string="Install Extra Module" colspan="4" col="4"/>
+            <newline/>
+            <field name="timesheets_module"/>
+            <field name="holidays_module"/>
+            <!--<field name="module_ids" widget="one2many_list" colspan="4" nolabel="1" mode="tree,graph">
+            	<form string="Module Lines">
+            	<field name="install"/>
+            	<field name="module_id"/>
+            	</form>
+            	<tree string="Module Lines">
+            	<field name="install"/>
+            	<field name="module_id"/>
+            	</tree>
+            </field>-->
+			<group colspan="4" col="4">
+				<button special="cancel" string="Cancel" />
+				<button name="action_install" type='object' string="Install" />
+			</group>
+			</form>
+		</field>
+        </record>
+
+		<record model="ir.actions.act_window" id="action_config_install_module">
+		<field name="name">Install extra modules</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="res_model">config.install_extra_modules</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">form</field>
+		<field name="target">new</field>
+		</record>
+
+		<!--<record model="ir.module.module.configuration.step"
+            id="config_install_module">
+            <field name="name">Install Extra modules</field>
+            <field name="action_id" ref="action_config_install_module"/>
+            <field name="state">open</field>
+        </record>-->
+
+
+</data>
+</terp>

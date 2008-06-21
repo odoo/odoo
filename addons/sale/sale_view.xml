@@ -457,7 +457,7 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Configure Picking Policy for Sale Order">
-			<separator string="Configure Picking Policy for Sale Order"/>
+			<separator string="Configure Picking Policy for Sale Order" colspan="4" col="4"/>
 			<newline/>
             <field name="picking_policy"/>
 			<group colspan="4" col="4">
@@ -473,13 +473,14 @@
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">sale.config.picking_policy</field>
 		<field name="view_type">form</field>
+		<field name="view_mode">form</field>
 		<field name="target">new</field>
 		</record>
 
 		<!-- register configuration wizard -->
 	<record model="ir.module.module.configuration.step"
             id="config_wizard_step_sale_picking_policy">
-            <field name="name">sale.config.picking_policy</field>
+            <field name="name">Select the default picking policy for Sale Order</field>
             <field name="action_id" ref="action_config_picking_policy"/>
             <field name="state">open</field>
     </record>

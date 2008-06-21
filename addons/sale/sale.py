@@ -859,6 +859,7 @@ class sale_config_picking_policy(osv.osv_memory):
 			ir_values_obj.set(cr,uid,'default',False,'picking_policy',['sale.order'],context['picking_policy'])
 		return {
 			    'view_type': 'form',
+			    "view_mode": 'form',
 				'res_model': 'ir.module.module.configuration.wizard',
 				'type': 'ir.actions.act_window',
 				'target':'new',

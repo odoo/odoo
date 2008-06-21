@@ -272,6 +272,25 @@ class wizard_base_setup(wizard.interface):
 			return 'init'
 		return 'charts'
 
+	def _config(self, cr, uid, data, context=None):
+		users_obj=pooler.get_pool(cr.dbname).get('res.users')
+		action_obj=pooler.get_pool(cr.dbname).get('ir.actions.act_window')
+
+		ids=action_obj.search(cr, uid, [('name', '=', 'Menu')])
+		menu=action_obj.browse(cr, uid, ids)[0]
+
+		ids=users_obj.search(cr, uid, [('action_id', '=', 'Setup')])
+		users_obj.write(cr, uid, ids, {'action_id': menu.id})
+		ids=users_obj.search(cr, uid, [('menu_id', '=', 'Setup')])
+		users_obj.write(cr, uid, ids, {'menu_id': menu.id})
+		return {
+                'view_type': 'form',
+                "view_mode": 'form',
+				'res_model': 'ir.module.module.configuration.wizard',
+				'type': 'ir.actions.act_window',
+				'target':'new',
+         }
+
 	fields={
 		'profile':{
 			'string':'Profile',
@@ -412,10 +431,18 @@ IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701""",
 			'actions': [_update],
 			'result': {'type': 'form', 'arch': view_form_finish, 'fields': {},
 				'state': [
-					('menu', 'Ok', 'gtk-ok', True)
+					('menu', 'Ok', 'gtk-ok', True),
+					('config', 'Start configuration', 'gtk-ok', True)
 				]
 			}
 		},
+		'config': {
+            'result': {
+                'type': 'action',
+                'action': _config,
+                'state': 'end',
+            },
+        },
 		'menu': {
 			'actions': [],
 			'result': {'type': 'action', 'action': _menu, 'state': 'end'}

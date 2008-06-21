@@ -1570,6 +1570,7 @@ class account_config_fiscalyear(osv.osv_memory):
 	        new_id=res_obj.create(cr, uid, vals, context=context)
         return {
                 'view_type': 'form',
+                "view_mode": 'form',
 				'res_model': 'ir.module.module.configuration.wizard',
 				'type': 'ir.actions.act_window',
 				'target':'new',
@@ -1602,6 +1603,7 @@ class account_config_journal_bank_accounts(osv.osv_memory):
 			res_obj.create(cr, uid, vals, context=context)
 		return {
 				'view_type': 'form',
+				"view_mode": 'form',
 			    'res_model': 'ir.module.module.configuration.wizard',
 			    'type': 'ir.actions.act_window',
 			    'target':'new',
