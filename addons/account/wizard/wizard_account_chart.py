@@ -34,6 +34,7 @@ class wizard_account_chart(wizard.interface):
 	_account_chart_arch = '''<?xml version="1.0"?>
 	<form string="Account charts">
 		<field name="fiscalyear"/>
+		<field name="target_move"/>
 	</form>'''
 	
 	_account_chart_fields = {
@@ -42,6 +43,13 @@ class wizard_account_chart(wizard.interface):
 				'type': 'many2one',
 				'relation': 'account.fiscalyear',
 				'help': 'Keep empty for all open fiscal year',
+		},
+			'target_move': {
+				'string': 'Target Moves', 
+				'type': 'selection', 
+				'selection': [('all','All Entries'),('posted_only','All Posted Entries')], 
+				'required': True, 
+				'default': lambda *a:"all",
 		},
 	}
 
@@ -58,7 +66,7 @@ class wizard_account_chart(wizard.interface):
 		result = mod_obj._get_id(cr, uid, 'account', 'action_account_tree')
 		id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
 		result = act_obj.read(cr, uid, [id])[0]
-		result['context'] = str({'fiscalyear': data['form']['fiscalyear']})
+		result['context'] = str({'fiscalyear': data['form']['fiscalyear'],'target_move':data['form']['target_move']})
 		return result
 
 	states = {

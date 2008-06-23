@@ -46,6 +46,9 @@ class wizard_report(wizard.interface):
 	def _get_defaults(self, cr, uid, data, context):
 		fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
 		data['form']['fiscalyear'] = fiscalyear_obj.find(cr, uid)
+		data['form']['target_move'] = False
+		if context.has_key('target_move'):
+			data['form']['target_move'] = context['target_move']
 		return data['form']
 
 	states = {

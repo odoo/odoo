@@ -54,6 +54,7 @@ class account_balance(report_sxw.rml_parse):
 		ctx = self.context.copy()
 		ctx['fiscalyear'] = form['fiscalyear']
 		ctx['periods'] = form['periods'][0][2]
+		ctx['target_move'] = form['target_move']
 		accounts = self.pool.get('account.account').browse(self.cr, self.uid, ids, ctx)
 		def cmp_code(x, y):
 			return cmp(x.code, y.code)
