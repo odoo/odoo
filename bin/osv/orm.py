@@ -2191,7 +2191,7 @@ class orm(orm_template):
 		joins=[]
 		while i<len(args):
 			table=self
-			assert args[i][1] in ('like','!=','ilike','=like','not in','inselect','child_of','in','=','<>','<','>','>=','<='), 'Error ! Bad clause operand "%s".' % (args[i][1],)
+			assert args[i][1] in ('like','!=','ilike','=like', 'not like', 'not ilike', 'not in','inselect','child_of','in','=','<>','<','>','>=','<='), 'Error ! Bad clause operand "%s".' % (args[i][1],)
 			if args[i][1] == 'inselect':
 				raise except_orm('ValidateError',
 						'The clause \'inselect\' can not be used outside the orm!')
@@ -2313,7 +2313,7 @@ class orm(orm_template):
 				i+=1
 			else:
 				if field.translate:
-					if args[i][1] in ('like', 'ilike'):
+					if args[i][1] in ('like', 'ilike', 'not like', 'not ilike'):
 						args[i] = (args[i][0], args[i][1], '%%%s%%' % args[i][2])
 					query1 = '(SELECT res_id FROM ir_translation ' \
 							'WHERE name = %s AND lang = %s ' \
@@ -2378,7 +2378,7 @@ class orm(orm_template):
 							qu2.append(x[2])
 					else:
 						add_null = False
-						if x[1] in ('like', 'ilike'):
+						if x[1] in ('like', 'ilike', 'not like', 'not ilike'):
 							if isinstance(x[2], str):
 								str_utf8 = x[2]
 							elif isinstance(x[2], unicode):
@@ -2396,7 +2396,7 @@ class orm(orm_template):
 						else:
 							x1 = x[1]
 						if x[0] in table._columns:
-							if x[1] in ('like', 'ilike'):
+							if x[1] in ('like', 'ilike', 'not like', 'not ilike'):
 
 								qu1.append('(%s.%s %s %s)' % (table._table,
 									x[0], x1, '%s'))
