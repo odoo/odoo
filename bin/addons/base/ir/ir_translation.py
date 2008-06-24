@@ -146,19 +146,19 @@ class ir_translation(osv.osv, Cacheable):
 			self.add((lang, tt, name, source), False)
 			return False
 
-		def unlink(self, cursor, user, ids, context=None):
-			self.clear()
-			return super(ir_translation, self).unlink(cusor, user, ids,
-					context=context)
+	def unlink(self, cursor, user, ids, context=None):
+		self.clear()
+		return super(ir_translation, self).unlink(cusor, user, ids,
+				context=context)
 
-		def create(self, cursor, user, vals, context=None):
-			self.clear()
-			return super(ir_translation, self).create(cursor, user, ids,
-					context=context)
+	def create(self, cursor, user, vals, context=None):
+		self.clear()
+		return super(ir_translation, self).create(cursor, user, ids,
+				context=context)
 
-		def write(self, cursor, user, ids, vals, context=None):
-			self.clear()
-			return super(ir_translation, self).write(cursor, user, ids,
-					context=context)
+	def write(self, cursor, user, ids, vals, context=None):
+		self.clear()
+		return super(ir_translation, self).write(cursor, user, ids,
+				context=context)
 
 ir_translation()
