@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
-# $Id$
+# $Id: __init__.py 8595 2008-06-16 13:00:21Z stw $
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,4 +27,4 @@
 #
 ##############################################################################
 
-import wizard
+import wizard_chart_report
