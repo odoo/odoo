@@ -135,14 +135,15 @@ class osv_pool(netsvc.Service):
 	def exec_workflow(self, db, uid, obj, method, *args):
 		cr = pooler.get_db(db).cursor()
 		try:
-			res = self.exec_workflow_cr(cr, uid, obj, method, *args)
-			cr.commit()
-		except orm.except_orm, inst:
-			cr.rollback()
-			self.abortResponse(1, inst.name, 'warning', inst.value)
-		except except_osv, inst:
-			cr.rollback()
-			self.abortResponse(1, inst.name, inst[0], inst.value)
+			try:
+				res = self.exec_workflow_cr(cr, uid, obj, method, *args)
+				cr.commit()
+			except orm.except_orm, inst:
+				cr.rollback()
+				self.abortResponse(1, inst.name, 'warning', inst.value)
+			except except_osv, inst:
+				cr.rollback()
+				self.abortResponse(1, inst.name, inst[0], inst.value)
 		finally:
 			cr.close()
 		return res
