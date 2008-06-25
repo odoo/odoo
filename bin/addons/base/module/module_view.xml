@@ -212,6 +212,19 @@
                 </tree>
             </field>
         </record>
+        <record model="ir.ui.view" id="config_wizard_step_view_form">
+            <field name="model">ir.module.module.configuration.step</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Config Wizard Steps" editable="bottom">
+                    <field name="name" select="1"/>
+                    <field name="action_id" select="1"/>
+                    <field name="sequence"/>
+                    <field name="state"/>
+                    <field name="note" colspan="4"/>
+                </form>
+            </field>
+        </record>
         <record model="ir.actions.act_window" id="act_config_wizard_step_form">
             <field name="name">Config Wizard Steps</field>
             <field name="res_model">ir.module.module.configuration.step</field>
@@ -223,18 +236,24 @@
             id="menu_config_wizard_step_form"/>
 
 		<record model="ir.ui.view" id="view_config_wizard_form">
-		<field name="name">Main Configuration wizard</field>
+		<field name="name">Main Configuration Wizard</field>
 		<field name="model">ir.module.module.configuration.wizard</field>
 		<field name="type">form</field>
 		<field name="arch" type="xml">
-			<form string="Main Configuration wizard">
-            <separator string="Main Configuration wizard" colspan="4" col="4"/>
-            <newline/>
-            <field name="item_id" select="1"/>
-			<group colspan="4" col="4">
-				<button special="cancel" string="Cancel" />
-				<button name="button_skip" type='object' string="Skip" />
-				<button name="button_continue" type='object' string="Continue"/>
+			<form string="Next Configuration Step">
+            <group colspan="4">
+	            <separator string="Next Configuration Step"/>
+	            <newline/>
+	            <field name="name" nolabel="1"/>
+	        </group>
+	        <separator string="" colspan="4"/>
+	        <newline/>
+			<group colspan="2">
+			</group>
+			<group colspan="2">
+				<button special="cancel" colspan="1" string="Cancel" icon="gtk-cancel" />
+				<!--<button name="button_skip" type='object' string="Skip" icon="gtk-ok"/>-->
+				<button name="button_continue" size="1" type='object' string="Continue" icon="gtk-go-forward"/>
 			</group>
 			</form>
 		</field>

@@ -193,8 +193,9 @@
 						<field name="menu_id" domain="[('usage','=','menu')]" required="True"/>
 						<field name="signature" colspan="4"/>
 						<group colspan="4" col="4">
-								<button special="cancel" string="Cancel" />
-								<button name="action_create" type='object' string="Create" />
+								<button special="cancel" string="Cancel" icon="gtk-cancel"/>
+								<button name="action_create" type='object' string="Save" icon="gtk-ok"/>
+								<button name="action_create_new" type='object' string="Save + New" icon="gtk-ok" />
 						</group>
 
 					</page>
@@ -224,14 +225,25 @@
 		<field name="type">form</field>
 		<field name="arch" type="xml">
 			<form string="Configure simple view">
-				<separator string="If you are testing or using OpenERP for the first time, we suggest
-you to use the simplified view, which has less features but is easier
-to understand." colspan="4" col="4"/>
+				<separator string="Select between the simplified views or the extended views."/>
 				<newline/>
-				<field name="view"/>
-				<group colspan="4" col="4">
-								<button special="cancel" string="Cancel" />
-								<button name="action_set" type='object' string="Set" />
+				<!--<label string="If you are testing or using OpenERP for the first time," colspan="2"/>
+
+				<newline/>
+				<label string="We suggest you to use the simplified view, which has less features but is easier
+to understand." colspan="2"/>
+
+				<newline/>-->
+				<group colspan="4">
+						<field name="view" colspan="2"/>
+				</group>
+				<newline/>
+				<separator string=""/>
+				<newline/>
+
+				<group>
+								<button special="cancel" string="Cancel" icon="gtk-cancel" />
+								<button name="action_set" type='object' string="Set" icon="gtk-ok"/>
 				</group>
 
 			</form>
@@ -254,15 +266,21 @@ to understand." colspan="4" col="4"/>
 	<record model="ir.module.module.configuration.step"
             id="config_wizard_step_user">
             <field name="name">Create User</field>
+            <field name="note">Create some users</field>
             <field name="action_id" ref="action_config_user_form"></field>
             <field name="state">open</field>
+            <field name="sequence">10</field>
         </record>
 
         <record model="ir.module.module.configuration.step"
             id="config_wizard_simple_view">
             <field name="name">Select between the simplified views or the extended views.</field>
+            <field name="note">Select between the simplified views or the extended views.
+(If you are testing or using OpenERP for the first time,
+we suggest you to use the simplified view, which has less features but is easier to understand.)</field>
             <field name="action_id" ref="action_config_simple_view_form"></field>
             <field name="state">open</field>
+            <field name="sequence">5</field>
         </record>
 
 </data>
