@@ -1499,8 +1499,8 @@
             <field name="date1"/>
 			<field name="date2"/>
 			<group colspan="4" col="4">
-				<button special="cancel" string="Cancel" />
-				<button name="action_create" type='object' string="Create" />
+				<button special="cancel" string="Cancel" icon="gtk-cancel" />
+				<button name="action_create" type='object' string="Create" icon="gtk-ok"/>
 			</group>
 			</form>
 		</field>
@@ -1525,13 +1525,23 @@
 			<form string="Configure Journal of Bank account">
 			<separator string="Configure Journal of Bank account" colspan="4" col="4"/>
 			<newline/>
-            <field name="name"/>
-			<field name="bank_account_id"/>
-			<field name="view_id"/>
-			<field name="sequence_id"/>
+			<field name="lines_id" widget="one2many_list" colspan="4" nolabel="1" mode="tree">
+				<form string="Journal Lines">
+					<field name="name"/>
+					<field name="bank_account_id"/>
+					<field name="view_id"/>
+					<field name="sequence_id"/>
+				</form>
+				<tree string="Account Journals" editable="bottom">
+		            <field name="name"/>
+					<field name="bank_account_id"/>
+					<field name="view_id"/>
+					<field name="sequence_id"/>
+				</tree>
+			</field>
 			<group colspan="4" col="4">
-				<button special="cancel" string="Cancel" />
-				<button name="action_create" type='object' string="Create"/>
+				<button special="cancel" string="Cancel" icon="gtk-cancel"/>
+				<button name="action_create" type='object' string="Create" icon="gtk-ok"/>
 			</group>
 			</form>
 		</field>
@@ -1551,6 +1561,7 @@
 	<record model="ir.module.module.configuration.step"
             id="config_fiscalyear">
             <field name="name">Define fiscal years</field>
+            <field name="note">Define fiscal years</field>
             <field name="action_id" ref="action_config_fiscalyear_form"/>
             <field name="state">open</field>
         </record>
@@ -1558,6 +1569,7 @@
     <record model="ir.module.module.configuration.step"
             id="config_journal_bank_account">
             <field name="name">Define journal for bank accounts</field>
+            <field name="note">Define journal for bank accounts</field>
             <field name="action_id" ref="action_config_journal_bank_account"/>
             <field name="state">open</field>
     </record>

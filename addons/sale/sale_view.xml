@@ -461,8 +461,8 @@
 			<newline/>
             <field name="picking_policy"/>
 			<group colspan="4" col="4">
-				<button special="cancel" string="Cancel" />
-				<button name="set_default" type='object' string="Set Default"/>
+				<button special="cancel" string="Cancel" icon="gtk-cancel"/>
+				<button name="set_default" type='object' string="Set Default" icon="gtk-ok"/>
 			</group>
 			</form>
 		</field>
@@ -481,6 +481,7 @@
 	<record model="ir.module.module.configuration.step"
             id="config_wizard_step_sale_picking_policy">
             <field name="name">Select the default picking policy for Sale Order</field>
+            <field name="note">This Configuration step use to set default picking policy when make sale order</field>
             <field name="action_id" ref="action_config_picking_policy"/>
             <field name="state">open</field>
     </record>
