@@ -200,17 +200,6 @@
 			id="menu_module_repository_tree"
 			/>
 
-
-
-
-
-
-
-
-
-
-
-
 		<record model="ir.ui.view" id="config_wizard_step_view_tree">
             <field name="model">ir.module.module.configuration.step</field>
             <field name="type">tree</field>
@@ -229,14 +218,9 @@
             <field name="view_id" ref="config_wizard_step_view_tree"/>
             <field name="view_type">form</field>
         </record>
-
-
-        <menuitem name="Administration/Modules Management/Config wizard Step"
+        <menuitem name="Administration/Custom/Configuration Wizards/List of Configuration Wizards"
             action="act_config_wizard_step_form"
             id="menu_config_wizard_step_form"/>
-
-
-
 
 		<record model="ir.ui.view" id="view_config_wizard_form">
 		<field name="name">Main Configuration wizard</field>
@@ -266,8 +250,9 @@
 		</record>
 
 		<menuitem
-		name="Administration/Modules Management/Module Configuration"
-		action="action_config_wizard_form"  id="menu_config_module"/>
+			name="Administration/Custom/Configuration Wizards/Launch Configurator"
+			action="action_config_wizard_form"
+			id="menu_config_module"/>
 
 
 

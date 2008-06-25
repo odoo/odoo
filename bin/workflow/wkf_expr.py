@@ -70,6 +70,7 @@ class Env(dict):
 
 def _eval_expr(cr, ident, workitem, action):
 	ret=False
+	assert action, 'You used a NULL action in a workflow, use dummy node instead.'
 	for line in action.split('\n'):
 		uid=ident[0]
 		model=ident[1]
