@@ -1101,8 +1101,6 @@ class orm_memory(orm_template):
 		self.datas = {}
 		self.next_id = 0
 		self.check_id = 0
-		print '=--=-=-=-=-='
-		print self._table
 		cr.execute('delete from wkf_instance where res_type=%s', (self._name,))
 
 	def clear(self):
