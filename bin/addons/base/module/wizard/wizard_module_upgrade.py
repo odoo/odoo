@@ -70,6 +70,17 @@ class wizard_info_get(wizard.interface):
 		return {'module_info': '\n'.join(map(lambda x: x['name']+' : '+x['state'], res)),
 				'module_download': '\n'.join(url)}
 
+	def _check_upgrade_module(self,cr,uid,data,context):
+		db, pool = pooler.get_db_and_pool(cr.dbname)
+		cr = db.cursor()
+		mod_obj = pool.get('ir.module.module')
+		ids = mod_obj.search(cr, uid, [
+			('state', 'in', ['to upgrade', 'to remove', 'to install'])])
+		if ids and len(ids):
+			return 'next'
+		else:
+			return 'end'
+
 	def _upgrade_module(self, cr, uid, data, context):
 		db, pool = pooler.get_db_and_pool(cr.dbname)
 		cr = db.cursor()
@@ -92,6 +103,10 @@ class wizard_info_get(wizard.interface):
 
 	states = {
 		'init': {
+			'actions': [],
+			'result' : {'type': 'choice', 'next_state': _check_upgrade_module }
+		},
+		'next': {
 			'actions': [_get_install],
 			'result': {'type':'form', 'arch':view_form, 'fields': view_field,
 				'state':[
@@ -102,6 +117,15 @@ class wizard_info_get(wizard.interface):
 		},
 		'start': {
 			'actions': [_upgrade_module],
+			'result': {'type':'form', 'arch':view_form_end, 'fields': {},
+				'state':[
+					('end', 'Close', 'gtk-close', True),
+					('config', 'Start configuration', 'gtk-ok', True)
+				]
+			}
+		},
+		'end': {
+			'actions': [],
 			'result': {'type':'form', 'arch':view_form_end, 'fields': {},
 				'state':[
 					('end', 'Close', 'gtk-close', True),
