@@ -109,7 +109,7 @@ class users(osv.osv):
 		'roles_id': fields.many2many('res.roles', 'res_roles_users_rel', 'uid', 'rid', 'Roles'),
 		'company_id': fields.many2one('res.company', 'Company'),
 		'context_lang': fields.selection(_lang_get, 'Language', required=True),
-		'context_tz': fields.selection(_tz_get,  'Timezone')
+		'context_tz': fields.selection(_tz_get,  'Timezone', size=64)
 	}
 	def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
 		result = super(users, self).read(cr, uid, ids, fields, context, load)
