@@ -184,14 +184,13 @@ class ir_model_access(osv.osv):
 				res = True
 		else:
 			res = False
-		#end if
 		return res
-	#end def
 	
 	def check(self, cr, uid, model_name, mode='read',raise_exception=True):
 		assert mode in ['read','write','create','unlink'], 'Invalid access mode for security'
 		if uid == 1:
-			return True
+			return True # TODO: check security: don't allow xml-rpc request with uid == 1
+
 		cr.execute('SELECT MAX(CASE WHEN perm_'+mode+' THEN 1 else 0 END) '
 			'FROM ir_model_access a '
 				'JOIN ir_model m '
@@ -208,27 +207,19 @@ class ir_model_access(osv.osv):
 				'WHERE a.group_id IS NULL AND m.model = %s', (model_name,))
 			r= cr.fetchall()
 			if r[0][0] == None:
-				return True
+				return False # by default, the user had no access
 
 		if not r[0][0]:
 			if raise_exception:
-				if mode == 'read':
-					raise except_orm('AccessError',
-							'You can not read this document! (%s)' % model_name)
-				elif mode == 'write':
-					raise except_orm('AccessError',
-							'You can not write in this document! (%s)' % model_name)
-				elif mode == 'create':
-					raise except_orm('AccessError',
-							'You can not create this kind of document! (%s)' % model_name)
-				elif mode == 'unlink':
-					raise except_orm('AccessError',
-							'You can not delete this document! (%s)' % model_name)
-				raise except_orm('AccessError',
-						'You do not have access to this document! (%s)' % model_name)
-			else:
-				return False
-		return True
+				msgs = {
+						'read':   _('You can not read this document! (%s)'),
+						'write':  _('You can not write in this document! (%s)'),
+						'create': _('You can not create this kind of document! (%s)'),
+						'unlink': _('You can not delete this document! (%s)'),
+						}
+				# due to the assert at the begin of the function, we will never have a KeyError
+				raise except_orm(_('AccessError'), msgs[mode] % model_name )
+		return r[0][0]
 
 	check = tools.cache()(check)
 
