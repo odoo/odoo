@@ -39,6 +39,7 @@ class groups(osv.osv):
 		'rule_groups': fields.many2many('ir.rule.group', 'group_rule_group_rel',
 			'group_id', 'rule_group_id', 'Rules', domain="[('global', '<>', True)]"),
 		'menu_access': fields.many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', 'Access Menu'),
+		'comment' : fields.text('Comment',size=250),
 	}
 	_sql_constraints = [
 		('name_uniq', 'unique (name)', 'The name of the group must be unique !')
