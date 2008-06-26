@@ -47,7 +47,7 @@ from osv import fields,osv
 next_wait = 60
 
 _intervalTypes = {
-	'work_days': lambda interal: DateTime.RelativeDateTime(days=interval),
+	'work_days': lambda interval: DateTime.RelativeDateTime(days=interval),
 	'days': lambda interval: DateTime.RelativeDateTime(days=interval),
 	'hours': lambda interval: DateTime.RelativeDateTime(hours=interval),
 	'weeks': lambda interval: DateTime.RelativeDateTime(days=7*interval),
@@ -63,9 +63,8 @@ class ir_cron(osv.osv, netsvc.Agent):
 		'active': fields.boolean('Active'),
 		'interval_number': fields.integer('Interval Number'),
 		'interval_type': fields.selection( [('minutes', 'Minutes'),
-		    ('hours', 'Hours'), ('days', 'Days'),('weeks', 'Weeks'), ('months', 'Months')], 'Interval Unit'),
-		'numbercall': fields.integer('Number of calls', help='Number of time the function is called,\na negative number indicates that the function will always be called'),
-		
+		    ('hours', 'Hours'), ('work_days','Work Days'), ('days', 'Days'),('weeks', 'Weeks'), ('months', 'Months')], 'Interval Unit'),
+		'numbercall': fields.integer('Number of calls', help='Number of time the function is called,\na negative number indicates that the function will always be called'),		
 		'doall' : fields.boolean('Repeat missed'),
 		'nextcall' : fields.datetime('Next call date', required=True),
 		'model': fields.char('Model', size=64),
