@@ -17,7 +17,7 @@
 			<test expr="False" />
 		</assert>
 		
-		<assert model="account.invoice" search="[('state', 'in', ['paid', 'open'])]" string="The total amount of all paid or open invoices si correctly computed">
+		<assert model="account.invoice" search="[('state', 'in', ['paid', 'open'])]" string="The total amount of all paid or open invoices is correctly computed">
 			<test expr="sum([l.price_subtotal for l in invoice_line]) - amount_untaxed &lt;= 0.00001" />
 		</assert>
 		
