@@ -1,109 +1,92 @@
-<?xml version="1.0"?>
+<?xml version='1.0'?>
 <terp>
-	<data>
-		<menuitem name="Dashboards" icon="terp-graph" id="dashboard_menu"/>
-
-		<record model="ir.ui.view" id="view_board_note_tree">
-			<field name="name">board.note.tree</field>
-			<field name="model">board.note</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Notes">
-					<field name="name"/>
-				</tree>
-			</field>
-		</record>
-		<record model="ir.ui.view" id="view_board_note_form">
-			<field name="name">board.note.form</field>
-			<field name="model">board.note</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Note">
-					<field name="name" select="1"/>
-					<field name="type" select="1"/>
-					<field name="user_id" select="1"/>
-					<field name="date" select="1"/>
-					<field name="note" colspan="4"/>
-				</form>
-			</field>
-		</record>
-		<record model="ir.actions.act_window" id="action_view_board_note_form">
-			<field name="name">Publish a note</field>
-			<field name="res_model">board.note</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">form,tree</field>
-		</record>
-
-		<menuitem
-			name="Dashboards/Notes"
-			action="action_view_board_note_form"
-			sequence="100"
-			id="menu_view_board_note_form"/>
-
-		<wizard
-			string="Create Board Menu"
-			model="board.board"
-			name="board.board.menu.create"
-			multi="True"
-			id="wizard_board_create_menu"/>
-
-
-		<record model="ir.ui.view" id="view_board_tree">
-			<field name="name">board.board.tree</field>
-			<field name="model">board.board</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Dashboard">
-					<field name="name"/>
-				</tree>
-			</field>
-		</record>
-		<record model="ir.ui.view" id="view_board_form">
-			<field name="name">board.board.form</field>
-			<field name="model">board.board</field>
-			<field name="type">form</field>
-			<field name="priority" eval="1"/>
-			<field name="arch" type="xml">
-				<form string="Dashboard">
-					<field name="name" select="1"/>
-					<button string="Create Menu" name="%(wizard_board_create_menu)d" type="action" colspan="2"/>
-					<field name="line_ids" colspan="4">
-						<tree string="Dashboard View">
-							<field name="name"/>
-							<field name="sequence"/>
-							<field name="action_id"/>
-							<field name="position"/>
-						</tree>
-						<form string="Dashboard View">
-							<field name="name"/>
-							<field name="sequence"/>
-							<field name="width"/>
-							<field name="height"/>
-							<field name="action_id"/>
-							<field name="position"/>
-						</form>
-					</field>
-				</form>
-			</field>
-		</record>
-		<record model="ir.actions.act_window" id="action_view_board_list_form">
-			<field name="name">Dashboard Definition</field>
-			<field name="res_model">board.board</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-		</record>
-		<menuitem
-			name="Dashboards/Configuration/Dashboard Definition"
-			action="action_view_board_list_form"
-			id="menu_view_board_form"/>
-
-
-	<act_window name="Open Dashboard"
-		context="{'view': active_id}"
-		multi="True"
-		res_model="board.board"
-		src_model="board.board"
-		id="dashboard_open"/>
-
-	</data>
+    <data>
+        <menuitem name='Dashboards' icon='terp-graph' id='dashboard_menu'/>
+        
+        <record id='view_board_note_tree' model='ir.ui.view'>
+            <field name='name'>board.note.tree</field>
+            <field name='model'>board.note</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Notes'>
+                    <field name='name'/>
+                </tree>
+            </field>
+        </record>
+        <record id='view_board_note_form' model='ir.ui.view'>
+            <field name='name'>board.note.form</field>
+            <field name='model'>board.note</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Note'>
+                    <field name='name' select='1'/>
+                    <field name='type' select='1'/>
+                    <field name='user_id' select='1'/>
+                    <field name='date' select='1'/>
+                    <field name='note' colspan='4'/>
+                </form>
+            </field>
+        </record>
+        <record id='action_view_board_note_form' model='ir.actions.act_window'>
+            <field name='name'>Publish a note</field>
+            <field name='res_model'>board.note</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>form,tree</field>
+        </record>
+        
+        <menuitem name='Dashboards/Notes' sequence='100' action='action_view_board_note_form' id='menu_view_board_note_form'/>
+        
+        <wizard name='board.board.menu.create' multi='True' id='wizard_board_create_menu' model='board.board' string='Create Board Menu'/>
+        
+        
+        <record id='view_board_tree' model='ir.ui.view'>
+            <field name='name'>board.board.tree</field>
+            <field name='model'>board.board</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Dashboard'>
+                    <field name='name'/>
+                </tree>
+            </field>
+        </record>
+        <record id='view_board_form' model='ir.ui.view'>
+            <field name='name'>board.board.form</field>
+            <field name='model'>board.board</field>
+            <field name='type'>form</field>
+            <field name='priority' eval='1'/>
+            <field name='arch' type='xml'>
+                <form string='Dashboard'>
+                    <field name='name' select='1'/>
+                    <button name='%(wizard_board_create_menu)d' type='action' string='Create Menu' colspan='2'/>
+                    <field name='line_ids' colspan='4'>
+                        <tree string='Dashboard View'>
+                            <field name='name'/>
+                            <field name='sequence'/>
+                            <field name='action_id'/>
+                            <field name='position'/>
+                        </tree>
+                        <form string='Dashboard View'>
+                            <field name='name'/>
+                            <field name='sequence'/>
+                            <field name='width'/>
+                            <field name='height'/>
+                            <field name='action_id'/>
+                            <field name='position'/>
+                        </form>
+                    </field>
+                </form>
+            </field>
+        </record>
+        <record id='action_view_board_list_form' model='ir.actions.act_window'>
+            <field name='name'>Dashboard Definition</field>
+            <field name='res_model'>board.board</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+        </record>
+        <menuitem name='Dashboards/Configuration/Dashboard Definition' action='action_view_board_list_form' id='menu_view_board_form'/>
+        
+        
+        <act_window name='Open Dashboard' multi='True' id='dashboard_open' src_model='board.board' context='{&apos;view&apos;: active_id}' res_model='board.board'/>
+        
+    </data>
 </terp>

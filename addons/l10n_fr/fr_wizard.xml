@@ -1,20 +1,11 @@
-<?xml version="1.0"?>
+<?xml version='1.0'?>
 <terp>
-	<data>
-
-<wizard
-	string="Account Report"
-	model="account.account"
-	name="account.chart.report"
-	menu="False"
-	id="wizard_chart_report"/>
-
-<menuitem
-	name="Financial Management/Reporting/Balance Sheet  &amp; Profit and Loss"
-	action="wizard_chart_report"
-	type="wizard"
-	id="menu_fr_chart_report"/>
-
-
-	</data>
+    <data>
+        
+        <wizard name='account.chart.report' id='wizard_chart_report' model='account.account' menu='False' string='Account Report'/>
+        
+        <menuitem name='Financial Management/Reporting/Balance Sheet  &amp; Profit and Loss' action='wizard_chart_report' type='wizard' id='menu_fr_chart_report'/>
+        
+        
+    </data>
 </terp>

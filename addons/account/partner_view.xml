@@ -1,22 +1,22 @@
 <?xml version="1.0"?>
 <terp>
-<data>
-	<!--
+    <data>
+        <!--
 		Partners Extension
 	-->
-
-	<record model="ir.ui.view" id="view_partner_form">
-		<field name="name">res.partner.form.inherit</field>
-		<field name="model">res.partner</field>
-		<field name="type">form</field>
-		<field name="inherit_id" ref="base.view_partner_form"/>
-		<field name="arch" type="xml">
-			<field name="credit_limit" position="after">
-				<field name="credit" select="2"/>
-				<field name="debit" select="2"/>
-				<newline/>
-			</field>
-		</field>
-	</record>
-</data>
+        
+        <record model="ir.ui.view" id="view_partner_form">
+            <field name="name">res.partner.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <field name="credit_limit" position="after">
+                    <field name="credit" select="2"/>
+                    <field name="debit" select="2"/>
+                    <newline/>
+                </field>
+            </field>
+        </record>
+    </data>
 </terp>

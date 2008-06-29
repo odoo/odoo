@@ -1,43 +1,16 @@
-<?xml version="1.0"?>
+<?xml version='1.0'?>
 <terp>
-	<data>
-
-		<report
-			id="account_analytic_account_cost_ledger"
-			string="Cost Ledger"
-			model="account.analytic.account"
-			name="hr.timesheet.invoice.account.analytic.account.cost_ledger"
-			rml="account/project/report/cost_ledger.rml"
-			auto="False"
-			menu="False"/>
-
-		<wizard
-			id="account_analytic_account_cost_ledger_report"
-			string="Cost Ledger"
-			model="account.analytic.account"
-			name="hr.timesheet.invoice.account.analytic.account.cost_ledger.report"
-			keyword="client_print_multi"/>
-
-		<report
-			id="report_analytical_profit"
-			string="Timesheet profit"
-			model="account.analytic.line"
-			name="account.analytic.profit"
-			rml="hr_timesheet_invoice/report/account_analytic_profit.rml"
-			auto="False"
-			menu="False"/>
-
-		<wizard id="account_analytic_profit"
-			string="Timesheet profit"
-			model="account.analytic.line"
-			name="account.analytic.profit"
-			menu="False"/>
-		<menuitem
-			id="print_account_analytic_profit"
-			name="Human Resources/Reporting/Invoice Rate by User"
-			action="account_analytic_profit"
-			type="wizard"/>
-
-	</data>
+    <data>
+        
+        <report name='hr.timesheet.invoice.account.analytic.account.cost_ledger' id='account_analytic_account_cost_ledger' rml='account/project/report/cost_ledger.rml' auto='False' model='account.analytic.account' menu='False' string='Cost Ledger'/>
+        
+        <wizard name='hr.timesheet.invoice.account.analytic.account.cost_ledger.report' id='account_analytic_account_cost_ledger_report' model='account.analytic.account' keyword='client_print_multi' string='Cost Ledger'/>
+        
+        <report name='account.analytic.profit' id='report_analytical_profit' rml='hr_timesheet_invoice/report/account_analytic_profit.rml' auto='False' model='account.analytic.line' menu='False' string='Timesheet profit'/>
+        
+        <wizard name='account.analytic.profit' id='account_analytic_profit' model='account.analytic.line' menu='False' string='Timesheet profit'/>
+        <menuitem name='Human Resources/Reporting/Invoice Rate by User' action='account_analytic_profit' type='wizard' id='print_account_analytic_profit'/>
+        
+    </data>
 </terp>
 

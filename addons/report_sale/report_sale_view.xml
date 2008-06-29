@@ -1,143 +1,143 @@
-<?xml version="1.0"?>
+<?xml version='1.0'?>
 <terp>
-<data>
-
-	#
-	# Sales by products by month
-	#
-
-
-
-	<record model="ir.ui.view" id="view_order_product_form">
-		<field name="name">report.sale.order.product.form</field>
-		<field name="model">report.sale.order.product</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Sales by Product">
-				<field name="name" select="1"/>
-				<field name="product_id" select="1"/>
-				<field name="count"/>
-				<field name="quantity" select="2"/>
-				<field name="price_total" select="2"/>
-				<field name="price_average" select="2"/>
-				<field name="state" select="1"/>
-			</form>
-		</field>
-	</record>
-
-
-	<record model="ir.ui.view" id="view_order_product_tree">
-		<field name="name">report.sale.order.product.tree</field>
-		<field name="model">report.sale.order.product</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Sales by Product">
-				<field name="name"/>
-				<field name="product_id"/>
-				<field name="count"/>
-				<field name="quantity"/>
-				<field name="price_total"/>
-				<field name="price_average"/>
-				<field name="state"/>
-			</tree>
-		</field>
-	</record>
-
-	<record model="ir.actions.act_window" id="action_order_product_tree">
-		<field name="name">Sales by Product (this month)</field>
-		<field name="res_model">report.sale.order.product</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree</field>
-		<field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
-	</record>
-	<menuitem name="Sales Management/Reporting/This Month/Sales by Product" action="action_order_product_tree" id="menu_report_order_product"/>
-	<record model="ir.actions.act_window" id="action_order_product_tree_all">
-                <field name="name">Sales by Product</field>
-		<field name="res_model">report.sale.order.product</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree</field>
-	</record>
-	<menuitem name="Sales Management/Reporting/All Months/Sales by Product" action="action_order_product_tree_all" id="menu_report_order_product_all"/>
-
-	#
-	# Sales by category by month
-	#
-
-	<record model="ir.ui.view" id="view_order_category_form">
-		<field name="name">report.sale.order.category.form</field>
-		<field name="model">report.sale.order.category</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Sales Orders by category">
-				<field name="name" select="1"/>
-				<field name="category_id" select="1"/>
-				<field name="count"/>
-				<field name="quantity" select="2"/>
-				<field name="price_total" select="2"/>
-				<field name="price_average" select="2"/>
-				<field name="state" select="1"/>
-			</form>
-		</field>
-	</record>
-
-	<record model="ir.ui.view" id="view_order_category_tree">
-		<field name="name">report.sale.order.category.tree</field>
-		<field name="model">report.sale.order.category</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Sales by Category of Products">
-				<field name="name"/>
-				<field name="category_id"/>
-				<field name="count"/>
-				<field name="quantity"/>
-				<field name="price_total"/>
-				<field name="price_average"/>
-				<field name="state"/>
-			</tree>
-		</field>
-	</record>
-
-	<record model="ir.ui.view" id="view_order_category_graph">
-		<field name="name">report.sale.order.category.graph</field>
-		<field name="model">report.sale.order.category</field>
-		<field name="type">graph</field>
-		<field name="arch" type="xml">
-			<graph string="Sales by Category of Products" type="pie">
-				<field name="category_id"/>
-				<field name="price_average"/>
-			</graph>
-		</field>
-	</record>
-	<record model="ir.actions.act_window" id="action_order_category_tree">
-		<field name="name">Sales by Category of Product (this month)</field>
-		<field name="res_model">report.sale.order.category</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree</field>
-		<field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
-	</record>
-	<menuitem name="Sales Management/Reporting/This Month/Sales by Category of Products" action="action_order_category_tree" id="menu_report_order_category"/>
-	<record model="ir.actions.act_window" id="action_order_category_tree_all">
-                <field name="name">Sales by Category of Products</field>
-		<field name="res_model">report.sale.order.category</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,graph</field>
-	</record>
-	<menuitem name="Sales Management/Reporting/All Months/Sales by Category of Products" action="action_order_category_tree_all" id="menu_report_order_category_all"/>
-
-	#
-	# Sales of the month
-	#
-	<record model="ir.actions.act_window" id="action_order_sale_list">
-		<field name="name">Sales of the Month</field>
-		<field name="res_model">sale.order</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[('date_order','>=',time.strftime('%Y-%m-01')),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]</field>
-	</record>
-	<menuitem name="Sales Management/Reporting/This Month/Sales of the Month" action="action_order_sale_list" id="menu_report_order_sale_list"/>
-
-
-
-
-</data>
+    <data>
+        
+        #
+        # Sales by products by month
+        #
+        
+        
+        
+        <record id='view_order_product_form' model='ir.ui.view'>
+            <field name='name'>report.sale.order.product.form</field>
+            <field name='model'>report.sale.order.product</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Sales by Product'>
+                    <field name='name' select='1'/>
+                    <field name='product_id' select='1'/>
+                    <field name='count'/>
+                    <field name='quantity' select='2'/>
+                    <field name='price_total' select='2'/>
+                    <field name='price_average' select='2'/>
+                    <field name='state' select='1'/>
+                </form>
+            </field>
+        </record>
+        
+        
+        <record id='view_order_product_tree' model='ir.ui.view'>
+            <field name='name'>report.sale.order.product.tree</field>
+            <field name='model'>report.sale.order.product</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Sales by Product'>
+                    <field name='name'/>
+                    <field name='product_id'/>
+                    <field name='count'/>
+                    <field name='quantity'/>
+                    <field name='price_total'/>
+                    <field name='price_average'/>
+                    <field name='state'/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id='action_order_product_tree' model='ir.actions.act_window'>
+            <field name='name'>Sales by Product (this month)</field>
+            <field name='res_model'>report.sale.order.product</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree</field>
+            <field name='domain'>[('name','=',time.strftime('%Y-%m-01'))]</field>
+        </record>
+        <menuitem name='Sales Management/Reporting/This Month/Sales by Product' action='action_order_product_tree' id='menu_report_order_product'/>
+        <record id='action_order_product_tree_all' model='ir.actions.act_window'>
+            <field name='name'>Sales by Product</field>
+            <field name='res_model'>report.sale.order.product</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree</field>
+        </record>
+        <menuitem name='Sales Management/Reporting/All Months/Sales by Product' action='action_order_product_tree_all' id='menu_report_order_product_all'/>
+        
+        #
+        # Sales by category by month
+        #
+        
+        <record id='view_order_category_form' model='ir.ui.view'>
+            <field name='name'>report.sale.order.category.form</field>
+            <field name='model'>report.sale.order.category</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Sales Orders by category'>
+                    <field name='name' select='1'/>
+                    <field name='category_id' select='1'/>
+                    <field name='count'/>
+                    <field name='quantity' select='2'/>
+                    <field name='price_total' select='2'/>
+                    <field name='price_average' select='2'/>
+                    <field name='state' select='1'/>
+                </form>
+            </field>
+        </record>
+        
+        <record id='view_order_category_tree' model='ir.ui.view'>
+            <field name='name'>report.sale.order.category.tree</field>
+            <field name='model'>report.sale.order.category</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Sales by Category of Products'>
+                    <field name='name'/>
+                    <field name='category_id'/>
+                    <field name='count'/>
+                    <field name='quantity'/>
+                    <field name='price_total'/>
+                    <field name='price_average'/>
+                    <field name='state'/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id='view_order_category_graph' model='ir.ui.view'>
+            <field name='name'>report.sale.order.category.graph</field>
+            <field name='model'>report.sale.order.category</field>
+            <field name='type'>graph</field>
+            <field name='arch' type='xml'>
+                <graph type='pie' string='Sales by Category of Products'>
+                    <field name='category_id'/>
+                    <field name='price_average'/>
+                </graph>
+            </field>
+        </record>
+        <record id='action_order_category_tree' model='ir.actions.act_window'>
+            <field name='name'>Sales by Category of Product (this month)</field>
+            <field name='res_model'>report.sale.order.category</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree</field>
+            <field name='domain'>[('name','=',time.strftime('%Y-%m-01'))]</field>
+        </record>
+        <menuitem name='Sales Management/Reporting/This Month/Sales by Category of Products' action='action_order_category_tree' id='menu_report_order_category'/>
+        <record id='action_order_category_tree_all' model='ir.actions.act_window'>
+            <field name='name'>Sales by Category of Products</field>
+            <field name='res_model'>report.sale.order.category</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,graph</field>
+        </record>
+        <menuitem name='Sales Management/Reporting/All Months/Sales by Category of Products' action='action_order_category_tree_all' id='menu_report_order_category_all'/>
+        
+        #
+        # Sales of the month
+        #
+        <record id='action_order_sale_list' model='ir.actions.act_window'>
+            <field name='name'>Sales of the Month</field>
+            <field name='res_model'>sale.order</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+            <field name='domain'>[('date_order','>=',time.strftime('%Y-%m-01')),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]</field>
+        </record>
+        <menuitem name='Sales Management/Reporting/This Month/Sales of the Month' action='action_order_sale_list' id='menu_report_order_sale_list'/>
+        
+        
+        
+        
+    </data>
 </terp>

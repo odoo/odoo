@@ -1,71 +1,71 @@
 <?xml version="1.0"?>
 <terp>
-	<data>
-
-		<record model="res.request.link" id="req_link_case">
-			<field name="name">Case</field>
-			<field name="object">crm.case</field>
-		</record>
-
-		<record model="res.partner.event.type" id="event_type_case_create">
-			<field name="name">CRM: Create Case</field>
-			<field name="key">crm_case_draft</field>
-		</record>
-
-		<record model="res.partner.event.type" id="event_type_case_open">
-			<field name="name">CRM: Open Case</field>
-			<field name="key">crm_case_open</field>
-		</record>
-
-		<record model="res.partner.event.type" id="event_type_case_pending">
-			<field name="name">CRM: Pending Case</field>
-			<field name="key">crm_case_pending</field>
-		</record>
-
-		<record model="res.partner.event.type" id="event_type_case_cancel">
-			<field name="name">CRM: Cancel Case</field>
-			<field name="key">crm_case_cancel</field>
-		</record>
-
-		<record model="res.partner.event.type" id="event_type_case_close">
-			<field name="name">CRM: Close Case</field>
-			<field name="key">crm_case_done</field>
-		</record>
-
-	</data>
-
-	<data noupdate="1">
-
-		<record model="res.partner.event.type" id="event_type_case_create">
-			<field name="active" eval="False"/>
-		</record>
-
-		<record model="res.partner.event.type" id="event_type_case_open">
-			<field name="active" eval="True"/>
-		</record>
-
-		<record model="res.partner.event.type" id="event_type_case_pending">
-			<field name="active" eval="False"/>
-		</record>
-
-		<record model="res.partner.event.type" id="event_type_case_close">
-			<field name="active" eval="True"/>
-		</record>
-
-		<record model="res.partner.event.type" id="event_type_case_cancel">
-			<field name="active" eval="False"/>
-		</record>
-
-		<record model="ir.cron" id="ir_cron_crm_action">
-			<field name="name">Check cases rules</field>
-			<field name="interval_number">1</field>
-			<field name="interval_type">hours</field>
-			<field name="numbercall">-1</field>
-			<field name="doall" eval="False"/>
-			<field name="model" eval="'crm.case.rule'"/>
-			<field name="function" eval="'_check'"/>
-			<field name="args" eval="'()'"/>
-		</record>
-
-	</data>
+    <data>
+        
+        <record model="res.request.link" id="req_link_case">
+            <field name="name">Case</field>
+            <field name="object">crm.case</field>
+        </record>
+        
+        <record model="res.partner.event.type" id="event_type_case_create">
+            <field name="name">CRM: Create Case</field>
+            <field name="key">crm_case_draft</field>
+        </record>
+        
+        <record model="res.partner.event.type" id="event_type_case_open">
+            <field name="name">CRM: Open Case</field>
+            <field name="key">crm_case_open</field>
+        </record>
+        
+        <record model="res.partner.event.type" id="event_type_case_pending">
+            <field name="name">CRM: Pending Case</field>
+            <field name="key">crm_case_pending</field>
+        </record>
+        
+        <record model="res.partner.event.type" id="event_type_case_cancel">
+            <field name="name">CRM: Cancel Case</field>
+            <field name="key">crm_case_cancel</field>
+        </record>
+        
+        <record model="res.partner.event.type" id="event_type_case_close">
+            <field name="name">CRM: Close Case</field>
+            <field name="key">crm_case_done</field>
+        </record>
+        
+    </data>
+    
+    <data noupdate="1">
+        
+        <record model="res.partner.event.type" id="event_type_case_create">
+            <field name="active" eval="False"/>
+        </record>
+        
+        <record model="res.partner.event.type" id="event_type_case_open">
+            <field name="active" eval="True"/>
+        </record>
+        
+        <record model="res.partner.event.type" id="event_type_case_pending">
+            <field name="active" eval="False"/>
+        </record>
+        
+        <record model="res.partner.event.type" id="event_type_case_close">
+            <field name="active" eval="True"/>
+        </record>
+        
+        <record model="res.partner.event.type" id="event_type_case_cancel">
+            <field name="active" eval="False"/>
+        </record>
+        
+        <record model="ir.cron" id="ir_cron_crm_action">
+            <field name="name">Check cases rules</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'crm.case.rule'"/>
+            <field name="function" eval="'_check'"/>
+            <field name="args" eval="'()'"/>
+        </record>
+        
+    </data>
 </terp>

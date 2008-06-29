@@ -1,73 +1,73 @@
 <?xml version="1.0"?>
 <terp>
-<data noupdate="1">
-
-	#
-	# Create a transporter
-	# 
-
-	<record model="res.partner" id="delivery_partner">
-		<field name="name">Default Transporter</field>
-		<field name="website">http://tinyerp.com</field>
-	</record>
-	<record id="delivery_partner_address" model="res.partner.address">
-		<field name="name">Fabien Pinckaers</field>
-		<field name="type">default</field>
-		<field name="partner_id" ref="delivery_partner"/>
-	</record>
-
-	#
-	# Create a partner
-	# 
-
-	<record model="product.product" id="delivery_product">
-		<field name="name">Default Delivery</field>
-		<field name="type">service</field>
-		<field name="categ_id" search="[]" model="product.category"/>
-	</record>
-
-	#
-	# Carrier
-	#
-
-	<record id="delivery_carrier" model="delivery.carrier">
-		<field name="name">Default Delivery</field>
-		<field name="partner_id" ref="delivery_partner"/>
-		<field name="product_id" ref="delivery_product"/>
-	</record>
-
-	#
-	# Carrier Grids
-	#
-
-	<record model="delivery.grid" id="delivery_grid">
-		<field name="name">Default Delivery Grid</field>
-		<field name="carrier_id" ref="delivery_carrier"/>
-	</record>
-	<record model="delivery.grid.line" id="delivery_grid_line3">
-		<field name="name">Franco, price &gt;= 300</field>
-		<field name="grid_id" ref="delivery_grid"/>
-		<field name="max_value" eval="300"/>
-		<field name="operator">&gt;=</field>
-		<field name="type">price</field>
-		<field name="list_price" eval="0"/>
-		<field name="standard_price" eval="20"/>
-	</record>
-	<record model="delivery.grid.line" id="delivery_grid_line1">
-		<field name="name">Weight &lt;= 250</field>
-		<field name="grid_id" ref="delivery_grid"/>
-		<field name="max_value" eval="250"/>
-		<field name="list_price" eval="100"/>
-		<field name="standard_price" eval="80"/>
-	</record>
-	<record model="delivery.grid.line" id="delivery_grid_line2">
-		<field name="name">Weight &gt; 250</field>
-		<field name="grid_id" ref="delivery_grid"/>
-		<field name="operator">&gt;=</field>
-		<field name="max_value" eval="250"/>
-		<field name="list_price" eval="120"/>
-		<field name="standard_price" eval="100"/>
-	</record>
-
-</data>
+    <data noupdate="1">
+        
+        #
+        # Create a transporter
+        # 
+        
+        <record model="res.partner" id="delivery_partner">
+            <field name="name">Default Transporter</field>
+            <field name="website">http://tinyerp.com</field>
+        </record>
+        <record id="delivery_partner_address" model="res.partner.address">
+            <field name="name">Fabien Pinckaers</field>
+            <field name="type">default</field>
+            <field name="partner_id" ref="delivery_partner"/>
+        </record>
+        
+        #
+        # Create a partner
+        # 
+        
+        <record model="product.product" id="delivery_product">
+            <field name="name">Default Delivery</field>
+            <field name="type">service</field>
+            <field name="categ_id" search="[]" model="product.category"/>
+        </record>
+        
+        #
+        # Carrier
+        #
+        
+        <record id="delivery_carrier" model="delivery.carrier">
+            <field name="name">Default Delivery</field>
+            <field name="partner_id" ref="delivery_partner"/>
+            <field name="product_id" ref="delivery_product"/>
+        </record>
+        
+        #
+        # Carrier Grids
+        #
+        
+        <record model="delivery.grid" id="delivery_grid">
+            <field name="name">Default Delivery Grid</field>
+            <field name="carrier_id" ref="delivery_carrier"/>
+        </record>
+        <record model="delivery.grid.line" id="delivery_grid_line3">
+            <field name="name">Franco, price &gt;= 300</field>
+            <field name="grid_id" ref="delivery_grid"/>
+            <field name="max_value" eval="300"/>
+            <field name="operator">&gt;=</field>
+            <field name="type">price</field>
+            <field name="list_price" eval="0"/>
+            <field name="standard_price" eval="20"/>
+        </record>
+        <record model="delivery.grid.line" id="delivery_grid_line1">
+            <field name="name">Weight &lt;= 250</field>
+            <field name="grid_id" ref="delivery_grid"/>
+            <field name="max_value" eval="250"/>
+            <field name="list_price" eval="100"/>
+            <field name="standard_price" eval="80"/>
+        </record>
+        <record model="delivery.grid.line" id="delivery_grid_line2">
+            <field name="name">Weight &gt; 250</field>
+            <field name="grid_id" ref="delivery_grid"/>
+            <field name="operator">&gt;=</field>
+            <field name="max_value" eval="250"/>
+            <field name="list_price" eval="120"/>
+            <field name="standard_price" eval="100"/>
+        </record>
+        
+    </data>
 </terp>

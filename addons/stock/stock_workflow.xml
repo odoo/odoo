@@ -1,99 +1,99 @@
 <?xml version="1.0"?>
 <terp>
-<data>
-	<record model="workflow" id="wkf_picking">
-		<field name="name">stock.picking.basic</field>
-		<field name="osv">stock.picking</field>
-		<field name="on_create">True</field>
-	</record>
-		<record model="workflow.activity" id="act_draft">
-			<field name="wkf_id" ref="wkf_picking"/>
-			<field name="flow_start">True</field>
-			<field name="name">draft</field>
-		</record>
-		<record model="workflow.activity" id="act_confirmed">
-			<field name="wkf_id" ref="wkf_picking"/>
-			<field name="name">confirmed</field>
-			<field name="kind">function</field>
-			<field name="action">action_confirm()</field>
-		</record>
-		<record model="workflow.activity" id="act_assigned">
-			<field name="wkf_id" ref="wkf_picking"/>
-			<field name="name">assigned</field>
-			<field name="kind">function</field>
-			<field name="action">action_assign_wkf()</field>
-		</record>
-		<record model="workflow.activity" id="act_move">
-			<field name="wkf_id" ref="wkf_picking"/>
-			<field name="name">move</field>
-			<field name="kind">function</field>
-			<field name="action">action_move()</field>
-		</record>
-		<record model="workflow.activity" id="act_done">
-			<field name="wkf_id" ref="wkf_picking"/>
-			<field name="name">done</field>
-			<field name="kind">function</field>
-			<field name="action">action_done()</field>
-			<field name="flow_stop">True</field>
-		</record>
-		<record model="workflow.activity" id="act_cancel">
-			<field name="wkf_id" ref="wkf_picking"/>
-			<field name="name">cancel</field>
-			<field name="flow_stop">True</field>
-			<field name="kind">function</field>
-			<field name="action">action_cancel()</field>
-		</record>
-
-		<record model="workflow.transition" id="trans_draft_confirmed">
-			<field name="act_from" ref="act_draft"/>
-			<field name="act_to" ref="act_confirmed"/>
-			<field name="signal">button_confirm</field>
-		</record>
-		<record model="workflow.transition" id="trans_confirmed_assigned_back">
-			<field name="act_from" ref="act_assigned"/>
-			<field name="act_to" ref="act_confirmed"/>
-			<field name="condition">not test_assigned()</field>
-		</record>
-		<record model="workflow.transition" id="trans_confirmed_assigned">
-			<field name="act_from" ref="act_confirmed"/>
-			<field name="act_to" ref="act_assigned"/>
-			<field name="condition">test_assigned()</field>
-		</record>
-		<record model="workflow.transition" id="trans_assigned_move">
-			<field name="act_from" ref="act_assigned"/>
-			<field name="act_to" ref="act_move"/>
-			<field name="condition">auto_picking and test_auto_picking()</field>
-		</record>
-		<record model="workflow.transition" id="trans_assigned_move2">
-			<field name="act_from" ref="act_assigned"/>
-			<field name="act_to" ref="act_move"/>
-			<field name="signal">button_done</field>
-		</record>
-		<record model="workflow.transition" id="trans_move_done">
-			<field name="act_from" ref="act_move"/>
-			<field name="act_to" ref="act_done"/>
-			<field name="condition">test_finnished()</field>
-		</record>
-		<record model="workflow.transition" id="trans_move_confirmed">
-			<field name="act_from" ref="act_move"/>
-			<field name="act_to" ref="act_confirmed"/>
-			<field name="condition">not test_finnished()</field>
-		</record>
-		<record model="workflow.transition" id="trans_assigned_cancel">
-			<field name="act_from" ref="act_assigned"/>
-			<field name="act_to" ref="act_cancel"/>
-			<field name="signal">button_cancel</field>
-		</record>
-		<record model="workflow.transition" id="trans_confirmed_cancel">
-			<field name="act_from" ref="act_confirmed"/>
-			<field name="act_to" ref="act_cancel"/>
-			<field name="signal">button_cancel</field>
-		</record>
-		<record model="workflow.transition" id="trans_draft_cancel">
-			<field name="act_from" ref="act_draft"/>
-			<field name="act_to" ref="act_cancel"/>
-			<field name="signal">button_cancel</field>
-		</record>
-
-</data>
+    <data>
+        <record model="workflow" id="wkf_picking">
+            <field name="name">stock.picking.basic</field>
+            <field name="osv">stock.picking</field>
+            <field name="on_create">True</field>
+        </record>
+        <record model="workflow.activity" id="act_draft">
+            <field name="wkf_id" ref="wkf_picking"/>
+            <field name="flow_start">True</field>
+            <field name="name">draft</field>
+        </record>
+        <record model="workflow.activity" id="act_confirmed">
+            <field name="wkf_id" ref="wkf_picking"/>
+            <field name="name">confirmed</field>
+            <field name="kind">function</field>
+            <field name="action">action_confirm()</field>
+        </record>
+        <record model="workflow.activity" id="act_assigned">
+            <field name="wkf_id" ref="wkf_picking"/>
+            <field name="name">assigned</field>
+            <field name="kind">function</field>
+            <field name="action">action_assign_wkf()</field>
+        </record>
+        <record model="workflow.activity" id="act_move">
+            <field name="wkf_id" ref="wkf_picking"/>
+            <field name="name">move</field>
+            <field name="kind">function</field>
+            <field name="action">action_move()</field>
+        </record>
+        <record model="workflow.activity" id="act_done">
+            <field name="wkf_id" ref="wkf_picking"/>
+            <field name="name">done</field>
+            <field name="kind">function</field>
+            <field name="action">action_done()</field>
+            <field name="flow_stop">True</field>
+        </record>
+        <record model="workflow.activity" id="act_cancel">
+            <field name="wkf_id" ref="wkf_picking"/>
+            <field name="name">cancel</field>
+            <field name="flow_stop">True</field>
+            <field name="kind">function</field>
+            <field name="action">action_cancel()</field>
+        </record>
+        
+        <record model="workflow.transition" id="trans_draft_confirmed">
+            <field name="act_from" ref="act_draft"/>
+            <field name="act_to" ref="act_confirmed"/>
+            <field name="signal">button_confirm</field>
+        </record>
+        <record model="workflow.transition" id="trans_confirmed_assigned_back">
+            <field name="act_from" ref="act_assigned"/>
+            <field name="act_to" ref="act_confirmed"/>
+            <field name="condition">not test_assigned()</field>
+        </record>
+        <record model="workflow.transition" id="trans_confirmed_assigned">
+            <field name="act_from" ref="act_confirmed"/>
+            <field name="act_to" ref="act_assigned"/>
+            <field name="condition">test_assigned()</field>
+        </record>
+        <record model="workflow.transition" id="trans_assigned_move">
+            <field name="act_from" ref="act_assigned"/>
+            <field name="act_to" ref="act_move"/>
+            <field name="condition">auto_picking and test_auto_picking()</field>
+        </record>
+        <record model="workflow.transition" id="trans_assigned_move2">
+            <field name="act_from" ref="act_assigned"/>
+            <field name="act_to" ref="act_move"/>
+            <field name="signal">button_done</field>
+        </record>
+        <record model="workflow.transition" id="trans_move_done">
+            <field name="act_from" ref="act_move"/>
+            <field name="act_to" ref="act_done"/>
+            <field name="condition">test_finnished()</field>
+        </record>
+        <record model="workflow.transition" id="trans_move_confirmed">
+            <field name="act_from" ref="act_move"/>
+            <field name="act_to" ref="act_confirmed"/>
+            <field name="condition">not test_finnished()</field>
+        </record>
+        <record model="workflow.transition" id="trans_assigned_cancel">
+            <field name="act_from" ref="act_assigned"/>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="signal">button_cancel</field>
+        </record>
+        <record model="workflow.transition" id="trans_confirmed_cancel">
+            <field name="act_from" ref="act_confirmed"/>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="signal">button_cancel</field>
+        </record>
+        <record model="workflow.transition" id="trans_draft_cancel">
+            <field name="act_from" ref="act_draft"/>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="signal">button_cancel</field>
+        </record>
+        
+    </data>
 </terp>

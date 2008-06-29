@@ -1,48 +1,36 @@
-<?xml version="1.0"?>
+<?xml version='1.0'?>
 <terp>
-	<data>
-
-		<record model="ir.ui.view" id="report_stock_prodlots_tree">
-			<field name="name">report.stock.prodlots.view</field>
-			<field name="model">report.stock.prodlots</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Stock by production lots">
-					<field name="location_id" select="1"/>
-					<field name="product_id" select="1"/>
-					<field name="prodlot_id" select="1"/>
-					<field name="name"/>
-				</tree>
-			</field>
-		</record>
-
-		<record model="ir.actions.act_window" id="action_report_stock_prodlots_form">
-			<field name="name">Stock by production lots</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">report.stock.prodlots</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">form,tree</field>
-		</record>
-
-		<menuitem name="Stock Management/Reporting/Traceability/Stock by Production Lots" action="action_report_stock_prodlots_form" id="menu_report_stock_prodlots"/>
-
-		<act_window name="Stock by production lots"
-			domain="[('location_id', '=', active_id)]"
-			res_model="report.stock.prodlots"
-			src_model="stock.location"
-			id="act_stock_location_2_report_stock_prodlots"/>
-
-		<act_window name="Stock by production lots"
-			domain="[('product_id', '=', active_id)]"
-			res_model="report.stock.prodlots"
-			src_model="product.product"
-			id="act_product_product_2_report_stock_prodlots"/>
-
-		<act_window name="Stock"
-			domain="[('prodlot_id', '=', active_id)]"
-			res_model="report.stock.prodlots"
-			src_model="stock.production.lot"
-			id="act_stock_production_lot_2_report_stock_prodlots"/>
-
-	</data>
+    <data>
+        
+        <record id='report_stock_prodlots_tree' model='ir.ui.view'>
+            <field name='name'>report.stock.prodlots.view</field>
+            <field name='model'>report.stock.prodlots</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Stock by production lots'>
+                    <field name='location_id' select='1'/>
+                    <field name='product_id' select='1'/>
+                    <field name='prodlot_id' select='1'/>
+                    <field name='name'/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id='action_report_stock_prodlots_form' model='ir.actions.act_window'>
+            <field name='name'>Stock by production lots</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='res_model'>report.stock.prodlots</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>form,tree</field>
+        </record>
+        
+        <menuitem name='Stock Management/Reporting/Traceability/Stock by Production Lots' action='action_report_stock_prodlots_form' id='menu_report_stock_prodlots'/>
+        
+        <act_window name='Stock by production lots' domain='[(&apos;location_id&apos;, &apos;=&apos;, active_id)]' id='act_stock_location_2_report_stock_prodlots' src_model='stock.location' res_model='report.stock.prodlots'/>
+        
+        <act_window name='Stock by production lots' domain='[(&apos;product_id&apos;, &apos;=&apos;, active_id)]' id='act_product_product_2_report_stock_prodlots' src_model='product.product' res_model='report.stock.prodlots'/>
+        
+        <act_window name='Stock' domain='[(&apos;prodlot_id&apos;, &apos;=&apos;, active_id)]' id='act_stock_production_lot_2_report_stock_prodlots' src_model='stock.production.lot' res_model='report.stock.prodlots'/>
+        
+    </data>
 </terp>

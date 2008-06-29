@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <terp>
-<data noupdate="True">
-<!--
+    <data noupdate="True">
+        <!--
 #
 # Plan comptable général pour la France, conforme au 
 # Règlement n° 99-03 du 29 avril 1999
@@ -10,51 +10,51 @@
 # Mise en forme et paramétrage par http://sisalp.fr et http://nbconseil.net
 # version du fichier : 01-01-2007
 -->
-
-
-<!-- Nouveaux types de comptes -->
-<record model="account.account.type" id="account_type_dettes">
-	<field name="name">dettes long terme</field>
-	<field name="code">dettes</field>
-	</record>
-
-<record model="account.account.type" id="account_type_immobilisations">
-	<field name="name">immobilisations</field>
-	<field name="code">immobilisations</field>
-	</record>
-
-<record model="account.account.type" id="account_type_stocks">
-	<field name="name">stocks</field>
-	<field name="code">stocks</field>
-	</record>
-
-<record model="account.account.type" id="account_type_cloture">
-	<field name="name">Cloture</field>
-	<field name="code">cloture</field>
-	</record>
-
-
-
-
-	
-<!-- Journaux de saisie -->
-<record model="account.journal" id="operations_journal">
-	<field name="name">Journal des opérations diverses</field>
-	<field name="code">Op-Div</field>
-	<field name="type">purchase</field>
-	<field name="view_id" ref="account.account_journal_view"/>
-	<field name="sequence_id" ref="account.sequence_journal"/>
-	<field name="default_debit_account_id" model="account.account" search="[('type','=','payable')]"/>
-	<field name="default_credit_account_id" model="account.account" search="[('type','=','receivable')]"/>
-	</record>
-<record model="account.journal" id="bilan_journal">
-	<field name="name">Journal d'ouverture</field>
-	<field name="code">Ouverture</field>
-	<field name="type">situation</field>
-	<field name="centralisation">True</field>
-	<field name="view_id" ref="account.account_journal_view"/>
-	<field name="sequence_id" ref="account.sequence_journal"/>
-	</record>
-
-</data>
+        
+        
+        <!-- Nouveaux types de comptes -->
+        <record model="account.account.type" id="account_type_dettes">
+            <field name="name">dettes long terme</field>
+            <field name="code">dettes</field>
+        </record>
+        
+        <record model="account.account.type" id="account_type_immobilisations">
+            <field name="name">immobilisations</field>
+            <field name="code">immobilisations</field>
+        </record>
+        
+        <record model="account.account.type" id="account_type_stocks">
+            <field name="name">stocks</field>
+            <field name="code">stocks</field>
+        </record>
+        
+        <record model="account.account.type" id="account_type_cloture">
+            <field name="name">Cloture</field>
+            <field name="code">cloture</field>
+        </record>
+        
+        
+        
+        
+        
+        <!-- Journaux de saisie -->
+        <record model="account.journal" id="operations_journal">
+            <field name="name">Journal des opérations diverses</field>
+            <field name="code">Op-Div</field>
+            <field name="type">purchase</field>
+            <field name="view_id" ref="account.account_journal_view"/>
+            <field name="sequence_id" ref="account.sequence_journal"/>
+            <field name="default_debit_account_id" model="account.account" search="[('type','=','payable')]"/>
+            <field name="default_credit_account_id" model="account.account" search="[('type','=','receivable')]"/>
+        </record>
+        <record model="account.journal" id="bilan_journal">
+            <field name="name">Journal d'ouverture</field>
+            <field name="code">Ouverture</field>
+            <field name="type">situation</field>
+            <field name="centralisation">True</field>
+            <field name="view_id" ref="account.account_journal_view"/>
+            <field name="sequence_id" ref="account.sequence_journal"/>
+        </record>
+        
+    </data>
 </terp>

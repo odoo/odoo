@@ -1,161 +1,161 @@
 <?xml version="1.0"?>
 <terp>
-	<data noupdate="1">
-
-		<record model="product.uom.categ" id="uom_categ_wtime">
-			<field name="name">Working Time</field>
-		</record>
-		<record model="product.uom" id="uom_hour">
-			<field name="name">Hour</field>
-			<field name="category_id" eval="uom_categ_wtime"/>
-			<field name="factor">8.0</field>
-		</record>
-		<record model="product.uom" id="uom_day">
-			<field name="name">Day</field>
-			<field name="category_id" eval="uom_categ_wtime"/>
-			<field name="factor">1.0</field>
-		</record>
-
-		<record id="product_consultant" model="product.product">
-			<field name="default_code">DEV</field>
-			<field name="list_price">75.0</field>
-			<field name="standard_price">30.0</field>
-			<field name="uom_id" ref="uom_hour"/>
-			<field name="uom_po_id" ref="uom_hour"/>
-			<field name="name">Consultancy - Senior Developper</field>
-			<field name="categ_id" ref="product.product_category_10"/>
-			<field name="type">service</field>
-			<field name="supply_method">produce</field>
-			<field name="procure_method">make_to_order</field>
-			<field name="purchase_ok" eval="False"/>
-		</record>
-
-		<!-- complete our example employee -->
-		<record model="hr.employee" id="hr.employee1">
-			<field name="product_id" ref="product_consultant"/>
-			<field name="journal_id" ref="analytic_journal"/>
-		</record>
-
-		<record model="hr.analytic.timesheet" id="analytic_timesheet1">
-			<field name="amount">-240.0</field>
-			<field name="date" eval="time.strftime('%Y-%m-%d')"/>
-			<field name="name">Letters</field>
-			<field name="unit_amount">8.0</field>
-			<field name="account_id" search="[('name','=', 'Administratif')]" model="account.analytic.account"/>
-			<field name="product_id" ref="hr_timesheet.product_consultant"/>
-			<field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
-			<field name="user_id" ref="base.user_admin"/>
-			<field name="journal_id" ref="analytic_journal"/>
-			<field name="general_account_id" ref="account.a_recv"/>
-		</record>
-		<record model="hr.analytic.timesheet" id="analytic_timesheet2">
-			<field name="amount">-120.0</field>
-			<field name="date" eval="time.strftime('%Y-%m-01')"/>
-			<field name="name">Support by phone</field>
-			<field name="unit_amount">4.0</field>
-			<field name="account_id" search="[('name','=', 'Seagate P1')]" model="account.analytic.account"/>
-			<field name="product_id" ref="hr_timesheet.product_consultant"/>
-			<field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
-			<field name="user_id" ref="base.user_admin"/>
-			<field name="journal_id" ref="analytic_journal"/>
-			<field name="general_account_id" ref="account.a_recv"/>
-		</record>
-		<record model="hr.analytic.timesheet" id="analytic_timesheet3">
-			<field name="amount">-120.0</field>
-			<field name="date" eval="time.strftime('%Y-%m-01')"/>
-			<field name="name">Support</field>
-			<field name="unit_amount">4.0</field>
-			<field name="account_id" search="[('name','=', 'Seagate P2')]" model="account.analytic.account"/>
-			<field name="product_id" ref="hr_timesheet.product_consultant"/>
-			<field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
-			<field name="user_id" ref="base.user_admin"/>
-			<field name="journal_id" ref="analytic_journal"/>
-			<field name="general_account_id" ref="account.a_recv"/>
-		</record>
-		<record model="hr.analytic.timesheet" id="analytic_timesheet4">
-			<field name="amount">-240.0</field>
-			<field name="date" eval="time.strftime('%Y-%m-02')"/>
-			<field name="name">Repport on this</field>
-			<field name="unit_amount">8.0</field>
-			<field name="account_id" search="[('name','=', 'Seagate P1')]" model="account.analytic.account"/>
-			<field name="product_id" ref="hr_timesheet.product_consultant"/>
-			<field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
-			<field name="user_id" ref="base.user_admin"/>
-			<field name="journal_id" ref="analytic_journal"/>
-			<field name="general_account_id" ref="account.a_recv"/>
-		</record>
-		<record model="hr.analytic.timesheet" id="analytic_timesheet5">
-			<field name="amount">-240.0</field>
-			<field name="date" eval="time.strftime('%Y-%m-03')"/>
-			<field name="name">Repport on that</field>
-			<field name="unit_amount">8.0</field>
-			<field name="account_id" search="[('name','=', 'Seagate P1')]" model="account.analytic.account"/>
-			<field name="product_id" ref="hr_timesheet.product_consultant"/>
-			<field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
-			<field name="user_id" ref="base.user_admin"/>
-			<field name="journal_id" ref="analytic_journal"/>
-			<field name="general_account_id" ref="account.a_recv"/>
-		</record>
-		<record model="hr.analytic.timesheet" id="analytic_timesheet6">
-			<field name="amount">-240.0</field>
-			<field name="date" eval="time.strftime('%Y-%m-04')"/>
-			<field name="name">Phone support</field>
-			<field name="unit_amount">8.0</field>
-			<field name="account_id" search="[('name','=', 'Sednacom')]" model="account.analytic.account"/>
-			<field name="product_id" ref="hr_timesheet.product_consultant"/>
-			<field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
-			<field name="user_id" ref="base.user_admin"/>
-			<field name="journal_id" ref="analytic_journal"/>
-			<field name="general_account_id" ref="account.a_recv"/>
-		</record>
-		<record model="hr.analytic.timesheet" id="analytic_timesheet7">
-			<field name="amount">-210.0</field>
-			<field name="name">Phone support on reporting engine</field>
-			<field name="date" eval="time.strftime('%Y-%m-05')"/>
-			<field name="unit_amount">7.0</field>
-			<field name="account_id" ref="base.res_partner_c2c" />
-			<field name="product_id" ref="hr_timesheet.product_consultant"/>
-			<field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
-			<field name="user_id" ref="base.user_admin"/>
-			<field name="journal_id" ref="analytic_journal"/>
-			<field name="general_account_id" ref="account.a_recv"/>
-		</record>
-		<record model="hr.analytic.timesheet" id="analytic_timesheet8">
-			<field name="amount">-210.0</field>
-			<field name="date" eval="time.strftime('%Y-%m-06')"/>
-			<field name="name">Quotation 234 done</field>
-			<field name="unit_amount">8.0</field>
-			<field name="account_id" search="[('name','=', 'Agrolait')]" model="account.analytic.account"/>
-			<field name="product_id" ref="hr_timesheet.product_consultant"/>
-			<field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
-			<field name="user_id" ref="base.user_admin"/>
-			<field name="journal_id" ref="analytic_journal"/>
-			<field name="general_account_id" ref="account.a_recv"/>
-		</record>
-		<record model="hr.analytic.timesheet" id="analytic_timesheet9">
-			<field name="amount">-210.0</field>
-			<field name="date" eval="time.strftime('%Y-%m-07')"/>
-			<field name="name">Quotation 356</field>
-			<field name="unit_amount">8.0</field>
-			<field name="account_id" search="[('name','=', 'Agrolait')]" model="account.analytic.account"/>
-			<field name="product_id" ref="hr_timesheet.product_consultant"/>
-			<field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
-			<field name="user_id" ref="base.user_admin"/>
-			<field name="journal_id" ref="analytic_journal"/>
-			<field name="general_account_id" ref="account.a_recv"/>
-		</record>
-
-		<record model="hr.analytic.timesheet" id="analytic_timesheet10">
-			<field name="amount">-210.0</field>
-			<field name="date" eval="time.strftime('%Y-%m-08', time.localtime(time.mktime(time.localtime()[0:2] + (0,)*7)-1))"/>
-			<field name="name">Quotation 42</field>
-			<field name="unit_amount">5.0</field>
-			<field name="account_id" ref="account.analytic_agrolait"/>
-			<field name="product_id" ref="hr_timesheet.product_consultant"/>
-			<field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
-			<field name="user_id" ref="base.user_admin"/>
-			<field name="journal_id" ref="analytic_journal"/>
-			<field name="general_account_id" ref="account.a_recv"/>
-		</record>
-	</data>
+    <data noupdate="1">
+        
+        <record model="product.uom.categ" id="uom_categ_wtime">
+            <field name="name">Working Time</field>
+        </record>
+        <record model="product.uom" id="uom_hour">
+            <field name="name">Hour</field>
+            <field name="category_id" eval="uom_categ_wtime"/>
+            <field name="factor">8.0</field>
+        </record>
+        <record model="product.uom" id="uom_day">
+            <field name="name">Day</field>
+            <field name="category_id" eval="uom_categ_wtime"/>
+            <field name="factor">1.0</field>
+        </record>
+        
+        <record id="product_consultant" model="product.product">
+            <field name="default_code">DEV</field>
+            <field name="list_price">75.0</field>
+            <field name="standard_price">30.0</field>
+            <field name="uom_id" ref="uom_hour"/>
+            <field name="uom_po_id" ref="uom_hour"/>
+            <field name="name">Consultancy - Senior Developper</field>
+            <field name="categ_id" ref="product.product_category_10"/>
+            <field name="type">service</field>
+            <field name="supply_method">produce</field>
+            <field name="procure_method">make_to_order</field>
+            <field name="purchase_ok" eval="False"/>
+        </record>
+        
+        <!-- complete our example employee -->
+        <record model="hr.employee" id="hr.employee1">
+            <field name="product_id" ref="product_consultant"/>
+            <field name="journal_id" ref="analytic_journal"/>
+        </record>
+        
+        <record model="hr.analytic.timesheet" id="analytic_timesheet1">
+            <field name="amount">-240.0</field>
+            <field name="date" eval="time.strftime('%Y-%m-%d')"/>
+            <field name="name">Letters</field>
+            <field name="unit_amount">8.0</field>
+            <field name="account_id" search="[('name','=', 'Administratif')]" model="account.analytic.account"/>
+            <field name="product_id" ref="hr_timesheet.product_consultant"/>
+            <field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="journal_id" ref="analytic_journal"/>
+            <field name="general_account_id" ref="account.a_recv"/>
+        </record>
+        <record model="hr.analytic.timesheet" id="analytic_timesheet2">
+            <field name="amount">-120.0</field>
+            <field name="date" eval="time.strftime('%Y-%m-01')"/>
+            <field name="name">Support by phone</field>
+            <field name="unit_amount">4.0</field>
+            <field name="account_id" search="[('name','=', 'Seagate P1')]" model="account.analytic.account"/>
+            <field name="product_id" ref="hr_timesheet.product_consultant"/>
+            <field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="journal_id" ref="analytic_journal"/>
+            <field name="general_account_id" ref="account.a_recv"/>
+        </record>
+        <record model="hr.analytic.timesheet" id="analytic_timesheet3">
+            <field name="amount">-120.0</field>
+            <field name="date" eval="time.strftime('%Y-%m-01')"/>
+            <field name="name">Support</field>
+            <field name="unit_amount">4.0</field>
+            <field name="account_id" search="[('name','=', 'Seagate P2')]" model="account.analytic.account"/>
+            <field name="product_id" ref="hr_timesheet.product_consultant"/>
+            <field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="journal_id" ref="analytic_journal"/>
+            <field name="general_account_id" ref="account.a_recv"/>
+        </record>
+        <record model="hr.analytic.timesheet" id="analytic_timesheet4">
+            <field name="amount">-240.0</field>
+            <field name="date" eval="time.strftime('%Y-%m-02')"/>
+            <field name="name">Repport on this</field>
+            <field name="unit_amount">8.0</field>
+            <field name="account_id" search="[('name','=', 'Seagate P1')]" model="account.analytic.account"/>
+            <field name="product_id" ref="hr_timesheet.product_consultant"/>
+            <field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="journal_id" ref="analytic_journal"/>
+            <field name="general_account_id" ref="account.a_recv"/>
+        </record>
+        <record model="hr.analytic.timesheet" id="analytic_timesheet5">
+            <field name="amount">-240.0</field>
+            <field name="date" eval="time.strftime('%Y-%m-03')"/>
+            <field name="name">Repport on that</field>
+            <field name="unit_amount">8.0</field>
+            <field name="account_id" search="[('name','=', 'Seagate P1')]" model="account.analytic.account"/>
+            <field name="product_id" ref="hr_timesheet.product_consultant"/>
+            <field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="journal_id" ref="analytic_journal"/>
+            <field name="general_account_id" ref="account.a_recv"/>
+        </record>
+        <record model="hr.analytic.timesheet" id="analytic_timesheet6">
+            <field name="amount">-240.0</field>
+            <field name="date" eval="time.strftime('%Y-%m-04')"/>
+            <field name="name">Phone support</field>
+            <field name="unit_amount">8.0</field>
+            <field name="account_id" search="[('name','=', 'Sednacom')]" model="account.analytic.account"/>
+            <field name="product_id" ref="hr_timesheet.product_consultant"/>
+            <field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="journal_id" ref="analytic_journal"/>
+            <field name="general_account_id" ref="account.a_recv"/>
+        </record>
+        <record model="hr.analytic.timesheet" id="analytic_timesheet7">
+            <field name="amount">-210.0</field>
+            <field name="name">Phone support on reporting engine</field>
+            <field name="date" eval="time.strftime('%Y-%m-05')"/>
+            <field name="unit_amount">7.0</field>
+            <field name="account_id" ref="base.res_partner_c2c" />
+            <field name="product_id" ref="hr_timesheet.product_consultant"/>
+            <field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="journal_id" ref="analytic_journal"/>
+            <field name="general_account_id" ref="account.a_recv"/>
+        </record>
+        <record model="hr.analytic.timesheet" id="analytic_timesheet8">
+            <field name="amount">-210.0</field>
+            <field name="date" eval="time.strftime('%Y-%m-06')"/>
+            <field name="name">Quotation 234 done</field>
+            <field name="unit_amount">8.0</field>
+            <field name="account_id" search="[('name','=', 'Agrolait')]" model="account.analytic.account"/>
+            <field name="product_id" ref="hr_timesheet.product_consultant"/>
+            <field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="journal_id" ref="analytic_journal"/>
+            <field name="general_account_id" ref="account.a_recv"/>
+        </record>
+        <record model="hr.analytic.timesheet" id="analytic_timesheet9">
+            <field name="amount">-210.0</field>
+            <field name="date" eval="time.strftime('%Y-%m-07')"/>
+            <field name="name">Quotation 356</field>
+            <field name="unit_amount">8.0</field>
+            <field name="account_id" search="[('name','=', 'Agrolait')]" model="account.analytic.account"/>
+            <field name="product_id" ref="hr_timesheet.product_consultant"/>
+            <field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="journal_id" ref="analytic_journal"/>
+            <field name="general_account_id" ref="account.a_recv"/>
+        </record>
+        
+        <record model="hr.analytic.timesheet" id="analytic_timesheet10">
+            <field name="amount">-210.0</field>
+            <field name="date" eval="time.strftime('%Y-%m-08', time.localtime(time.mktime(time.localtime()[0:2] + (0,)*7)-1))"/>
+            <field name="name">Quotation 42</field>
+            <field name="unit_amount">5.0</field>
+            <field name="account_id" ref="account.analytic_agrolait"/>
+            <field name="product_id" ref="hr_timesheet.product_consultant"/>
+            <field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="journal_id" ref="analytic_journal"/>
+            <field name="general_account_id" ref="account.a_recv"/>
+        </record>
+    </data>
 </terp>

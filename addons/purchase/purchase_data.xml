@@ -1,46 +1,46 @@
 <?xml version="1.0"?>
 <terp>
-<data noupdate="1">
-	<record model="res.request.link" id="req_link_purchase_order">
-		<field name="name">Purchase Order</field>
-		<field name="object">purchase.order</field>
-	</record>
-
-	<record model="res.partner.event.type" id="event_type_purchase_open">
-		<field name="name">Purchase: Purchase Confirmation</field>
-		<field name="key">purchase_open</field>
-	</record>
-
-	<record model="product.pricelist.type" id="pricelist_type_purchase">
-		<field name="name">Purchase Pricelist</field>
-		<field name="key">purchase</field>
-	</record>
-
-	<record model="product.pricelist" id="list0">
-		<field name="name">Default Purchase Pricelist</field>
-		<field name="type">purchase</field>
-	</record>
-	<record model="product.pricelist.version" id="ver0">
-		<field name="pricelist_id" ref="list0"/>
-		<field name="name">Default Purchase Pricelist Version</field>
-	</record>
-	<record model="product.pricelist.item" id="item0">
-		<field name="price_version_id" ref="ver0"/>
-		<field name="base" ref="product.standard_price"/>
-		<field name="name">Default Purchase Pricelist Line</field>
-	</record>
-
-	<record model="ir.property" id="property_product_pricelist_purchase" forcecreate="True">
-		<field name="name">property_product_pricelist_purchase</field>
-		<field name="fields_id" search="[('model','=','res.partner'),('name','=','property_product_pricelist_purchase')]"/>
-		<field name="value" eval="'product.pricelist,'+str(list0)"/>
-	</record>
-
-	<function 
+    <data noupdate="1">
+        <record model="res.request.link" id="req_link_purchase_order">
+            <field name="name">Purchase Order</field>
+            <field name="object">purchase.order</field>
+        </record>
+        
+        <record model="res.partner.event.type" id="event_type_purchase_open">
+            <field name="name">Purchase: Purchase Confirmation</field>
+            <field name="key">purchase_open</field>
+        </record>
+        
+        <record model="product.pricelist.type" id="pricelist_type_purchase">
+            <field name="name">Purchase Pricelist</field>
+            <field name="key">purchase</field>
+        </record>
+        
+        <record model="product.pricelist" id="list0">
+            <field name="name">Default Purchase Pricelist</field>
+            <field name="type">purchase</field>
+        </record>
+        <record model="product.pricelist.version" id="ver0">
+            <field name="pricelist_id" ref="list0"/>
+            <field name="name">Default Purchase Pricelist Version</field>
+        </record>
+        <record model="product.pricelist.item" id="item0">
+            <field name="price_version_id" ref="ver0"/>
+            <field name="base" ref="product.standard_price"/>
+            <field name="name">Default Purchase Pricelist Line</field>
+        </record>
+        
+        <record model="ir.property" id="property_product_pricelist_purchase" forcecreate="True">
+            <field name="name">property_product_pricelist_purchase</field>
+            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_product_pricelist_purchase')]"/>
+            <field name="value" eval="'product.pricelist,'+str(list0)"/>
+        </record>
+        
+        <function 
 		model="ir.values" 
 		id="purchase_default_set"
 		name="set"
 		eval="('default',False,'warehouse_id', [('purchase.order', False)], ref('stock.warehouse0'), True, False, False, False, True)"/>
-
-</data>
+        
+    </data>
 </terp>

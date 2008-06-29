@@ -1,93 +1,93 @@
 <?xml version="1.0"?>
 <terp>
-	<data noupdate="1">
-
-		<record model="res.groups" id="group_purchase_manager">
-			<field name="name">Purchase Manager</field>
-		</record>
-
-		<record model="res.users" id="base.user_admin">
-			<field name="groups_id" eval="[(4 ,ref('group_purchase_manager'))]"/>
-		</record>
-
-		<record id="ir_model_access_stockmove0" model="ir.model.access">
-			<field model="ir.model" name="model_id" search="[('name','=','Stock Move')]"/>
-			<field eval="1" name="perm_read"/>
-			<field eval="&quot;Stock Move&quot;" name="name"/>
-			<field eval="0" name="perm_unlink"/>
-			<field eval="1" name="perm_write"/>
-			<field eval="1" name="perm_create"/>
-			<field name="group_id" ref="purchase.group_purchase_manager"/>
-		</record>
-
-		<record id="ir_model_access_accountinvoice0" model="ir.model.access">
-			<field model="ir.model" name="model_id" search="[('name','=','Invoice')]"/>
-			<field eval="1" name="perm_read"/>
-			<field eval="&quot;Account Invoice&quot;" name="name"/>
-			<field eval="0" name="perm_unlink"/>
-			<field eval="1" name="perm_write"/>
-			<field eval="1" name="perm_create"/>
-			<field name="group_id" ref="purchase.group_purchase_manager"/>
-		</record>
-
-		<record id="ir_model_access_accountinvoiceline0" model="ir.model.access">
-			<field model="ir.model" name="model_id" search="[('name','=','Invoice line')]"/>
-			<field eval="1" name="perm_read"/>
-			<field eval="&quot;Account Invoice Line&quot;" name="name"/>
-			<field eval="0" name="perm_unlink"/>
-			<field eval="0" name="perm_write"/>
-			<field eval="1" name="perm_create"/>
-			<field name="group_id" ref="purchase.group_purchase_manager"/>
-		</record>
-
-		<record id="ir_model_access_accountinvoicetax0" model="ir.model.access">
-			<field model="ir.model" name="model_id" search="[('name','=','Invoice Tax')]"/>
-			<field eval="1" name="perm_read"/>
-			<field eval="&quot;Account Invoice tax&quot;" name="name"/>
-			<field eval="0" name="perm_unlink"/>
-			<field eval="0" name="perm_write"/>
-			<field eval="1" name="perm_create"/>
-			<field name="group_id" ref="purchase.group_purchase_manager"/>
-		</record>
-
-		<!-- Purchase order security -->
-		<record model="ir.model.access" id="access_purchase_order">
-			<field name="name">Purchase Order</field>
-			<field name="model_id" model="ir.model" search="[('model', '=', 'purchase.order')]"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="False"/>
-			<field name="perm_create" eval="False"/>
-			<field name="perm_unlink" eval="False"/>
-		</record>
-
-		<record model="ir.model.access" id="access_purchase_order_purchase_manager">
-			<field name="name">Purchase Order</field>
-			<field name="model_id" model="ir.model" search="[('model', '=', 'purchase.order')]"/>
-			<field name="group_id" ref="group_purchase_manager"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="True"/>
-			<field name="perm_create" eval="True"/>
-			<field name="perm_unlink" eval="True"/>
-		</record>
-
-		<!-- Purchase order line security -->
-		<record model="ir.model.access" id="access_purchase_order_line">
-			<field name="name">Purchase Order Line</field>
-			<field name="model_id" model="ir.model" search="[('model', '=', 'purchase.order.line')]"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="False"/>
-			<field name="perm_create" eval="False"/>
-			<field name="perm_unlink" eval="False"/>
-		</record>
-
-		<record model="ir.model.access" id="access_purchase_order_line_purchase_manager">
-			<field name="name">Purchase Order Line</field>
-			<field name="model_id" model="ir.model" search="[('model', '=', 'purchase.order.line')]"/>
-			<field name="group_id" ref="group_purchase_manager"/>
-			<field name="perm_read" eval="True"/>
-			<field name="perm_write" eval="True"/>
-			<field name="perm_create" eval="True"/>
-			<field name="perm_unlink" eval="True"/>
-		</record>
-	</data>
+    <data noupdate="1">
+        
+        <record model="res.groups" id="group_purchase_manager">
+            <field name="name">Purchase Manager</field>
+        </record>
+        
+        <record model="res.users" id="base.user_admin">
+            <field name="groups_id" eval="[(4 ,ref('group_purchase_manager'))]"/>
+        </record>
+        
+        <record id="ir_model_access_stockmove0" model="ir.model.access">
+            <field model="ir.model" name="model_id" search="[('name','=','Stock Move')]"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="&quot;Stock Move&quot;" name="name"/>
+            <field eval="0" name="perm_unlink"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_create"/>
+            <field name="group_id" ref="purchase.group_purchase_manager"/>
+        </record>
+        
+        <record id="ir_model_access_accountinvoice0" model="ir.model.access">
+            <field model="ir.model" name="model_id" search="[('name','=','Invoice')]"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="&quot;Account Invoice&quot;" name="name"/>
+            <field eval="0" name="perm_unlink"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_create"/>
+            <field name="group_id" ref="purchase.group_purchase_manager"/>
+        </record>
+        
+        <record id="ir_model_access_accountinvoiceline0" model="ir.model.access">
+            <field model="ir.model" name="model_id" search="[('name','=','Invoice line')]"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="&quot;Account Invoice Line&quot;" name="name"/>
+            <field eval="0" name="perm_unlink"/>
+            <field eval="0" name="perm_write"/>
+            <field eval="1" name="perm_create"/>
+            <field name="group_id" ref="purchase.group_purchase_manager"/>
+        </record>
+        
+        <record id="ir_model_access_accountinvoicetax0" model="ir.model.access">
+            <field model="ir.model" name="model_id" search="[('name','=','Invoice Tax')]"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="&quot;Account Invoice tax&quot;" name="name"/>
+            <field eval="0" name="perm_unlink"/>
+            <field eval="0" name="perm_write"/>
+            <field eval="1" name="perm_create"/>
+            <field name="group_id" ref="purchase.group_purchase_manager"/>
+        </record>
+        
+        <!-- Purchase order security -->
+        <record model="ir.model.access" id="access_purchase_order">
+            <field name="name">Purchase Order</field>
+            <field name="model_id" model="ir.model" search="[('model', '=', 'purchase.order')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        
+        <record model="ir.model.access" id="access_purchase_order_purchase_manager">
+            <field name="name">Purchase Order</field>
+            <field name="model_id" model="ir.model" search="[('model', '=', 'purchase.order')]"/>
+            <field name="group_id" ref="group_purchase_manager"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+        
+        <!-- Purchase order line security -->
+        <record model="ir.model.access" id="access_purchase_order_line">
+            <field name="name">Purchase Order Line</field>
+            <field name="model_id" model="ir.model" search="[('model', '=', 'purchase.order.line')]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        
+        <record model="ir.model.access" id="access_purchase_order_line_purchase_manager">
+            <field name="name">Purchase Order Line</field>
+            <field name="model_id" model="ir.model" search="[('model', '=', 'purchase.order.line')]"/>
+            <field name="group_id" ref="group_purchase_manager"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+    </data>
 </terp>

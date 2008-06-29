@@ -1,80 +1,80 @@
 <?xml version="1.0"?>
 <terp>
-<data>
-
-	<record model="ir.ui.view" id="account_tax_view_price">
-		<field name="name">account.tax.exlcuded.view.form</field>
-		<field name="type">form</field>
-		<field name="model">account.tax</field>
-		<field name="inherit_id" ref="account.view_tax_form" />
-		<field name="arch" type="xml">
-			<field name="python_compute" position="after">
-				<field name="python_compute_inv" colspan="4" nolabel="1"/>
-				<separator string="Compute Code for Taxes included prices" colspan="4"/>
-			</field>
-		</field>
-	</record>
-
-	<record model="ir.ui.view" id="account_invoice_view_price">
-		<field name="name">account.invoice.vat.exlcuded.view.form</field>
-		<field name="type">form</field>
-		<field name="model">account.invoice</field>
-		<field name="inherit_id" ref="account.invoice_form" />
-		<field name="arch" type="xml">
-			<field name="invoice_line" position="before">
-				<field name="price_type"/>
-			</field>
-		</field>
-	</record>
-
-	<record model="ir.ui.view" id="invoice_supplier_form_tax_include">
-		<field name="name">account.invoice.supplier.tax_include</field>
-		<field name="type">form</field>
-		<field name="model">account.invoice</field>
-		<field name="inherit_id" ref="account.invoice_supplier_form" />
-		<field name="arch" type="xml">
-			<field name="invoice_line" position="before">
-				<field name="price_type"/>
-			</field>
-		</field>
-	</record>
-
-	<record model="ir.ui.view" id="invoice_supplier_form_tax_include2">
-		<field name="name">account.invoice.supplier.tax_include2</field>
-		<field name="type">form</field>
-		<field name="model">account.invoice</field>
-		<field name="inherit_id" ref="account.invoice_supplier_form" />
-		<field name="arch" type="xml">
-			<field name="price_subtotal" position="after">
-				<field name="price_subtotal_incl"/>
-			</field>
-		</field>
-	</record>
-
-	<record model="ir.ui.view" id="invoice_supplier_form_tax_include3">
-		<field name="name">account.invoice.supplier.tax_include3</field>
-		<field name="type">form</field>
-		<field name="model">account.invoice</field>
-		<field name="inherit_id" ref="account.invoice_supplier_form" />
-		<field name="arch" type="xml">
-			<field name="product_id" position="replace">
-				<field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, price_unit, parent.address_invoice_id, parent.price_type)"/>
-			</field>
-		</field>
-	</record>
-
-	<record model="ir.ui.view" id="view_invoice_line_tree">
-		<field name="name">account.invoice.line.tree</field>
-		<field name="model">account.invoice.line</field>
-		<field name="type">tree</field>
-		<field name="inherit_id" ref="account.view_invoice_line_tree" />
-		<field name="arch" type="xml">
-			<field name="price_subtotal" position="after">
-				<field name="price_subtotal_incl"/>
-			</field>
-		</field>
-	</record>
-
-</data>
+    <data>
+        
+        <record model="ir.ui.view" id="account_tax_view_price">
+            <field name="name">account.tax.exlcuded.view.form</field>
+            <field name="type">form</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form" />
+            <field name="arch" type="xml">
+                <field name="python_compute" position="after">
+                    <field name="python_compute_inv" colspan="4" nolabel="1"/>
+                    <separator string="Compute Code for Taxes included prices" colspan="4"/>
+                </field>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="account_invoice_view_price">
+            <field name="name">account.invoice.vat.exlcuded.view.form</field>
+            <field name="type">form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form" />
+            <field name="arch" type="xml">
+                <field name="invoice_line" position="before">
+                    <field name="price_type"/>
+                </field>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="invoice_supplier_form_tax_include">
+            <field name="name">account.invoice.supplier.tax_include</field>
+            <field name="type">form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form" />
+            <field name="arch" type="xml">
+                <field name="invoice_line" position="before">
+                    <field name="price_type"/>
+                </field>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="invoice_supplier_form_tax_include2">
+            <field name="name">account.invoice.supplier.tax_include2</field>
+            <field name="type">form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form" />
+            <field name="arch" type="xml">
+                <field name="price_subtotal" position="after">
+                    <field name="price_subtotal_incl"/>
+                </field>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="invoice_supplier_form_tax_include3">
+            <field name="name">account.invoice.supplier.tax_include3</field>
+            <field name="type">form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form" />
+            <field name="arch" type="xml">
+                <field name="product_id" position="replace">
+                    <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, price_unit, parent.address_invoice_id, parent.price_type)"/>
+                </field>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="view_invoice_line_tree">
+            <field name="name">account.invoice.line.tree</field>
+            <field name="model">account.invoice.line</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="account.view_invoice_line_tree" />
+            <field name="arch" type="xml">
+                <field name="price_subtotal" position="after">
+                    <field name="price_subtotal_incl"/>
+                </field>
+            </field>
+        </record>
+        
+    </data>
 </terp>
 

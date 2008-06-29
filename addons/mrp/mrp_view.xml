@@ -1,766 +1,741 @@
-<?xml version="1.0"?>
+<?xml version='1.0'?>
 <terp>
-<data>
-
-	<menuitem name="Production Management" icon="terp-mrp" id="menu_mrp_root"/>
-
-	<!--
+    <data>
+        
+        <menuitem name='Production Management' icon='terp-mrp' id='menu_mrp_root'/>
+        
+        <!--
 	Property / Property Group
 	-->
-
-	<record model="ir.ui.view" id="mrp_property_group_form_view">
-		<field name="name">mrp.property.group.form</field>
-		<field name="model">mrp.property.group</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Properties categories">
-				<separator string="General Information" colspan="4"/>
-				<field name="name" select="1" colspan="4"/>
-				<field name="description" colspan="4"/>
-			</form>
-		</field>
-	</record>
-	<record model="ir.actions.act_window" id="mrp_property_group_action">
-                <field name="name">Property Categories</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">mrp.property.group</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-	</record>
-	<menuitem name="Production Management/Configuration" id="menu_mrp_configuration"
-		groups="base.group_admin"/>
-	<menuitem name="Production Management/Configuration/Properties/Property Categories" id="menu_mrp_property_group_action" action="mrp_property_group_action"/>
-
-	<record model="ir.ui.view" id="mrp_property_tree_view">
-		<field name="name">mrp.property.tree</field>
-		<field name="model">mrp.property</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Properties">
-				<field name="name"/>
-				<field name="composition"/>
-				<field name="group_id"/>
-			</tree>
-		</field>
-	</record>
-	<record model="ir.ui.view" id="mrp_property_form_view">
-		<field name="name">mrp.property.form</field>
-		<field name="model">mrp.property</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Properties">
-				<separator string="General Information" colspan="4"/>
-				<field name="name" select="1" colspan="4"/>
-				<field name="group_id" select="1"/>
-				<field name="composition" select="1"/>
-				<separator string="Description" colspan="4"/>
-				<field name="description" colspan="4"/>
-			</form>
-		</field>
-	</record>
-	<record model="ir.actions.act_window" id="mrp_property_action">
-                <field name="name">Properties</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">mrp.property</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-	</record>
-	<menuitem name="Production Management/Configuration/Properties/Properties" id="menu_mrp_property_action" action="mrp_property_action"/>
-
-	<!--
+        
+        <record id='mrp_property_group_form_view' model='ir.ui.view'>
+            <field name='name'>mrp.property.group.form</field>
+            <field name='model'>mrp.property.group</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Properties categories'>
+                    <separator string='General Information' colspan='4'/>
+                    <field name='name' select='1' colspan='4'/>
+                    <field name='description' colspan='4'/>
+                </form>
+            </field>
+        </record>
+        <record id='mrp_property_group_action' model='ir.actions.act_window'>
+            <field name='name'>Property Categories</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='res_model'>mrp.property.group</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+        </record>
+        <menuitem name='Production Management/Configuration' groups='base.group_admin' id='menu_mrp_configuration'/>
+        <menuitem name='Production Management/Configuration/Properties/Property Categories' action='mrp_property_group_action' id='menu_mrp_property_group_action'/>
+        
+        <record id='mrp_property_tree_view' model='ir.ui.view'>
+            <field name='name'>mrp.property.tree</field>
+            <field name='model'>mrp.property</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Properties'>
+                    <field name='name'/>
+                    <field name='composition'/>
+                    <field name='group_id'/>
+                </tree>
+            </field>
+        </record>
+        <record id='mrp_property_form_view' model='ir.ui.view'>
+            <field name='name'>mrp.property.form</field>
+            <field name='model'>mrp.property</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Properties'>
+                    <separator string='General Information' colspan='4'/>
+                    <field name='name' select='1' colspan='4'/>
+                    <field name='group_id' select='1'/>
+                    <field name='composition' select='1'/>
+                    <separator string='Description' colspan='4'/>
+                    <field name='description' colspan='4'/>
+                </form>
+            </field>
+        </record>
+        <record id='mrp_property_action' model='ir.actions.act_window'>
+            <field name='name'>Properties</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='res_model'>mrp.property</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+        </record>
+        <menuitem name='Production Management/Configuration/Properties/Properties' action='mrp_property_action' id='menu_mrp_property_action'/>
+        
+        <!--
 	Workcenters
 	-->
-
-	<record model="ir.ui.view" id="mrp_workcenter_tree_view">
-		<field name="name">mrp.workcenter.tree</field>
-		<field name="model">mrp.workcenter</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Workcenter">
-				<field name="code"/>
-				<field name="name"/>
-			</tree>
-		</field>
-	</record>
-	<record model="ir.ui.view" id="mrp_workcenter_view">
-		<field name="name">mrp.workcenter.form</field>
-		<field name="model">mrp.workcenter</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Workcenter">
-				<notebook>
-				<page string="Workcenter">
-					<separator string="General Information" colspan="4"/>
-					<field name="name" select="1"/>
-					<field name="active" select="2"/>
-					<field name="code" select="1"/>
-					<newline/>
-					<field name="type"/>
-					<field name="timesheet_id"/>
-					<separator string="Description" colspan="4"/>
-					<field name="note" colspan="4" nolabel="1"/>
-					<separator string="Capacity Information" colspan="4"/>
-					<group colspan="4" col="4">
-						<field name="capacity_per_cycle"/>
-						<newline/>
-						<field name="time_cycle"/>
-						<field name="time_efficiency"/>
-						<field name="time_start"/>
-						<field name="time_stop"/>
-					</group>
-				</page>
-				<page string="Analytic Accounting">
-					<field name="costs_hour"/>
-					<field name="costs_hour_account_id"/>
-					<field name="costs_cycle"/>
-					<field name="costs_cycle_account_id"/>
-					<field name="costs_journal_id"/>
-					<field name="costs_general_account_id"/>
-				</page>
-				</notebook>
-			</form>
-		</field>
-	</record>
-	<record model="ir.actions.act_window" id="mrp_workcenter_action">
-                <field name="name">Workcenters</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">mrp.workcenter</field>
-		<field name="view_type">form</field>
-		<field name="view_id" ref="mrp_workcenter_tree_view"/>
-	</record>
-	<menuitem name="Production Management/Configuration/Workcenters" id="menu_mrp_workcenter_action" action="mrp_workcenter_action"/>
-
-	<!--
+        
+        <record id='mrp_workcenter_tree_view' model='ir.ui.view'>
+            <field name='name'>mrp.workcenter.tree</field>
+            <field name='model'>mrp.workcenter</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Workcenter'>
+                    <field name='code'/>
+                    <field name='name'/>
+                </tree>
+            </field>
+        </record>
+        <record id='mrp_workcenter_view' model='ir.ui.view'>
+            <field name='name'>mrp.workcenter.form</field>
+            <field name='model'>mrp.workcenter</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Workcenter'>
+                    <notebook>
+                        <page string='Workcenter'>
+                            <separator string='General Information' colspan='4'/>
+                            <field name='name' select='1'/>
+                            <field name='active' select='2'/>
+                            <field name='code' select='1'/>
+                            <newline/>
+                            <field name='type'/>
+                            <field name='timesheet_id'/>
+                            <separator string='Description' colspan='4'/>
+                            <field name='note' nolabel='1' colspan='4'/>
+                            <separator string='Capacity Information' colspan='4'/>
+                            <group col='4' colspan='4'>
+                                <field name='capacity_per_cycle'/>
+                                <newline/>
+                                <field name='time_cycle'/>
+                                <field name='time_efficiency'/>
+                                <field name='time_start'/>
+                                <field name='time_stop'/>
+                            </group>
+                        </page>
+                        <page string='Analytic Accounting'>
+                            <field name='costs_hour'/>
+                            <field name='costs_hour_account_id'/>
+                            <field name='costs_cycle'/>
+                            <field name='costs_cycle_account_id'/>
+                            <field name='costs_journal_id'/>
+                            <field name='costs_general_account_id'/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+        <record id='mrp_workcenter_action' model='ir.actions.act_window'>
+            <field name='name'>Workcenters</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='res_model'>mrp.workcenter</field>
+            <field name='view_type'>form</field>
+            <field name='view_id' ref='mrp_workcenter_tree_view'/>
+        </record>
+        <menuitem name='Production Management/Configuration/Workcenters' action='mrp_workcenter_action' id='menu_mrp_workcenter_action'/>
+        
+        <!--
 	Routings
 	-->
-
-	<record model="ir.ui.view" id="mrp_routing_workcenter_tree.view">
-		<field name="name">mrp.routing.workcenter.tree</field>
-		<field name="model">mrp.routing.workcenter</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Routing Workcenters">
-				<field name="sequence"/>
-				<field name="workcenter_id" select="1"/>
-				<field name="cycle_nbr"/>
-				<field name="hour_nbr"/>
-			</tree>
-		</field>
-	</record>
-
-	<record model="ir.ui.view" id="mrp_routing_workcenter_form.view">
-		<field name="name">mrp.routing.workcenter.form</field>
-		<field name="model">mrp.routing.workcenter</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Routing Workcenters">
-				<separator string="General Information" colspan="4"/>
-				<field name="name" select="1" colspan="4"/>
-				<field name="sequence" select="1"/>
-				<field name="workcenter_id" select="1"/>
-				<field name="cycle_nbr"/>
-				<field name="hour_nbr"/>
-				<field name="note" colspan="4"/>
-			</form>
-		</field>
-	</record>
-
-	<record model="ir.ui.view" id="mrp_routing_form_view">
-		<field name="name">mrp.routing.form</field>
-		<field name="model">mrp.routing</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Routing">
-				<separator string="General Information" colspan="4"/>
-				<field name="name" select="1"/>
-				<field name="active" select="1"/>
-				<field name="code" select="1"/>
-				<field name="location_id"/>
-				<separator string="Description" colspan="4"/>
-				<field name="note" colspan="4" nolabel="1"/>
-				<separator string="Workcenter Operations" colspan="4"/>
-				<field name="workcenter_lines" widget="one2many_list" colspan="4" nolabel="1"/>
-			</form>
-		</field>
-	</record>
-	<record model="ir.ui.view" id="mrp_routing_tree_view">
-		<field name="name">mrp.routing.tree</field>
-		<field name="model">mrp.routing</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Routing">
-				<field name="code"/>
-				<field name="name"/>
-				<field name="location_id"/>
-			</tree>
-		</field>
-	</record>
-	<record model="ir.actions.act_window" id="mrp_routing_action">
-                <field name="name">Routings</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">mrp.routing</field>
-		<field name="view_type">form</field>
-		<field name="view_id" ref="mrp_routing_tree_view"/>
-	</record>
-	<menuitem name="Production Management/Configuration/Routings" id="menu_mrp_routing_action" action="mrp_routing_action"/>
-
-	<!--
+        
+        <record id='mrp_routing_workcenter_tree.view' model='ir.ui.view'>
+            <field name='name'>mrp.routing.workcenter.tree</field>
+            <field name='model'>mrp.routing.workcenter</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Routing Workcenters'>
+                    <field name='sequence'/>
+                    <field name='workcenter_id' select='1'/>
+                    <field name='cycle_nbr'/>
+                    <field name='hour_nbr'/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id='mrp_routing_workcenter_form.view' model='ir.ui.view'>
+            <field name='name'>mrp.routing.workcenter.form</field>
+            <field name='model'>mrp.routing.workcenter</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Routing Workcenters'>
+                    <separator string='General Information' colspan='4'/>
+                    <field name='name' select='1' colspan='4'/>
+                    <field name='sequence' select='1'/>
+                    <field name='workcenter_id' select='1'/>
+                    <field name='cycle_nbr'/>
+                    <field name='hour_nbr'/>
+                    <field name='note' colspan='4'/>
+                </form>
+            </field>
+        </record>
+        
+        <record id='mrp_routing_form_view' model='ir.ui.view'>
+            <field name='name'>mrp.routing.form</field>
+            <field name='model'>mrp.routing</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Routing'>
+                    <separator string='General Information' colspan='4'/>
+                    <field name='name' select='1'/>
+                    <field name='active' select='1'/>
+                    <field name='code' select='1'/>
+                    <field name='location_id'/>
+                    <separator string='Description' colspan='4'/>
+                    <field name='note' nolabel='1' colspan='4'/>
+                    <separator string='Workcenter Operations' colspan='4'/>
+                    <field name='workcenter_lines' widget='one2many_list' nolabel='1' colspan='4'/>
+                </form>
+            </field>
+        </record>
+        <record id='mrp_routing_tree_view' model='ir.ui.view'>
+            <field name='name'>mrp.routing.tree</field>
+            <field name='model'>mrp.routing</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Routing'>
+                    <field name='code'/>
+                    <field name='name'/>
+                    <field name='location_id'/>
+                </tree>
+            </field>
+        </record>
+        <record id='mrp_routing_action' model='ir.actions.act_window'>
+            <field name='name'>Routings</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='res_model'>mrp.routing</field>
+            <field name='view_type'>form</field>
+            <field name='view_id' ref='mrp_routing_tree_view'/>
+        </record>
+        <menuitem name='Production Management/Configuration/Routings' action='mrp_routing_action' id='menu_mrp_routing_action'/>
+        
+        <!--
 	Bill of Materials
 	-->
-
-	<record model="ir.ui.view" id="mrp_bom_form_view">
-		<field name="name">mrp.bom.form</field>
-		<field name="model">mrp.bom</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Bill of Material">
-				<notebook>
-					<page string="General Information">
-						<field name="name" select="1"/>
-						<field name="code" select="1"/>
-						<field name="product_id" select="1" on_change="onchange_product_id(product_id, name)"/>
-						<newline/>
-						<field name="product_uom"/>
-						<field name="product_qty"/>
-						<newline/>
-						<field name="product_uos"/>
-						<field name="product_uos_qty"/>
-						<field name="routing_id" select="2"/>
-						<field name="type"/>
-
-						<field name="bom_lines" colspan="4" nolabel="1" widget="one2many_list"/>
-					</page>
-					<page string="Revisions">
-						<field name="revision_ids" colspan="4" nolabel="1" widget="one2many_list"/>
-					</page>
-					<page string="Properties">
-						<field name="position" select="2" />
-						<field name="active" select="2"/>
-						<field name="sequence"/>
-						<field name="bom_id"/>
-
-						<field name="date_start" select="2"/>
-						<field name="date_stop" select="2"/>
-						<field name="product_rounding"/>
-						<field name="product_efficiency"/>
-						<field name="property_ids" colspan="4" nolabel="2"/>
-					</page>
-				</notebook>
-			</form>
-		</field>
-	</record>
-	<record model="ir.ui.view" id="mrp_bom_tree_view">
-		<field name="name">mrp.bom.tree</field>
-		<field name="model">mrp.bom</field>
-		<field name="type">tree</field>
-		<field name="field_parent">bom_lines</field>
-		<field name="arch" type="xml">
-			<tree string="BoM Structure">
-				<field name="name"/>
-				<field name="code"/>
-				<field name="product_id"/>
-				<field name="product_qty"/>
-				<field name="product_uom"/>
-				<field name="date_start"/>
-				<field name="date_stop"/>
-			</tree>
-		</field>
-	</record>
-	<record model="ir.actions.act_window" id="mrp_bom_form_action">
-                <field name="name">Bill of Materials</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">mrp.bom</field>
-		<field name="view_type">form</field>
-		<field name="domain">[('bom_id','=',False)]</field>
-		<field name="view_id" ref="mrp_bom_tree_view"/>
-	</record>
-	<menuitem name="Production Management/Configuration/Bill of Materials" id="menu_mrp_bom_form_action" action="mrp_bom_form_action"/>
-
-	<record model="ir.actions.act_window" id="mrp_bom_tree_action">
-                <field name="name">BOM Structure</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">mrp.bom</field>
-		<field name="view_type">tree</field>
-		<field name="domain">[('bom_id','=',False)]</field>
-		<field name="view_id" ref="mrp_bom_tree_view"/>
-	</record>
-	<menuitem name="Production Management/Configuration/Bill of Materials/BOM Structure" action="mrp_bom_tree_action" id="menu_bom_tree"/>
-
-	<record model="ir.actions.act_window" id="mrp_bom_form_action2">
-                <field name="name">BOM Lines</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">mrp.bom</field>
-		<field name="view_type">form</field>
-		<field name="view_id" ref="mrp_bom_tree_view"/>
-	</record>
-	<menuitem name="Production Management/Configuration/Bill of Materials/BOM Lines" id="menu_mrp_bom_form_action2" action="mrp_bom_form_action2"/>
-
-
-	<record model="ir.actions.act_window" id="action2">
-		<field name="name">Bill of Materials Architecture</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">mrp.bom</field>
-		<field name="domain">[('id','in',active_ids)]</field>
-		<field name="view_type">tree</field>
-		<field name="view_id" ref="mrp_bom_tree_view"/>
-	</record>
-	<record model="ir.values" id="ir_bom_architecture_open">
-		<field name="key2" eval="'client_action_multi'"/>
-		<field name="model" eval="'mrp.bom'"/>
-		<field name="name">Bill of Material Architecture</field>
-		<field name="value" eval="'ir.actions.act_window,'+str(action2)"/>
-		<field name="object" eval="True"/>
-	</record>
-
-	<record model="ir.ui.view" id="mrp_bom_revision_tree" >
-		<field name="name">mrp.bom.revision</field>
-		<field name="model">mrp.bom.revision</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="BoM Revisions">
-				<field name="indice" />
-				<field name="author_id" />
-				<field name="date" />
-				<field name="name" colspan="4" />
-			</tree>
-		</field>
-	</record>
-	<record model="ir.ui.view" id="mrp_bom_revision_form" >
-		<field name="name">mrp.bom.revision</field>
-		<field name="model">mrp.bom.revision</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="BoM Revisions">
-				<field name="name" colspan="4" />
-				<field name="indice" colspan="1" />
-				<field name="date" colspan="1" />
-				<field name="author_id" readonly="1" />
-				<field name="description" colspan="4"/>
-			</form>
-		</field>
-	</record>
-
-	<!--
+        
+        <record id='mrp_bom_form_view' model='ir.ui.view'>
+            <field name='name'>mrp.bom.form</field>
+            <field name='model'>mrp.bom</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Bill of Material'>
+                    <notebook>
+                        <page string='General Information'>
+                            <field name='name' select='1'/>
+                            <field name='code' select='1'/>
+                            <field name='product_id' on_change='onchange_product_id(product_id, name)' select='1'/>
+                            <newline/>
+                            <field name='product_uom'/>
+                            <field name='product_qty'/>
+                            <newline/>
+                            <field name='product_uos'/>
+                            <field name='product_uos_qty'/>
+                            <field name='routing_id' select='2'/>
+                            <field name='type'/>
+                            
+                            <field name='bom_lines' nolabel='1' widget='one2many_list' colspan='4'/>
+                        </page>
+                        <page string='Revisions'>
+                            <field name='revision_ids' nolabel='1' widget='one2many_list' colspan='4'/>
+                        </page>
+                        <page string='Properties'>
+                            <field name='position' select='2'/>
+                            <field name='active' select='2'/>
+                            <field name='sequence'/>
+                            <field name='bom_id'/>
+                            
+                            <field name='date_start' select='2'/>
+                            <field name='date_stop' select='2'/>
+                            <field name='product_rounding'/>
+                            <field name='product_efficiency'/>
+                            <field name='property_ids' nolabel='2' colspan='4'/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+        <record id='mrp_bom_tree_view' model='ir.ui.view'>
+            <field name='name'>mrp.bom.tree</field>
+            <field name='model'>mrp.bom</field>
+            <field name='type'>tree</field>
+            <field name='field_parent'>bom_lines</field>
+            <field name='arch' type='xml'>
+                <tree string='BoM Structure'>
+                    <field name='name'/>
+                    <field name='code'/>
+                    <field name='product_id'/>
+                    <field name='product_qty'/>
+                    <field name='product_uom'/>
+                    <field name='date_start'/>
+                    <field name='date_stop'/>
+                </tree>
+            </field>
+        </record>
+        <record id='mrp_bom_form_action' model='ir.actions.act_window'>
+            <field name='name'>Bill of Materials</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='res_model'>mrp.bom</field>
+            <field name='view_type'>form</field>
+            <field name='domain'>[('bom_id','=',False)]</field>
+            <field name='view_id' ref='mrp_bom_tree_view'/>
+        </record>
+        <menuitem name='Production Management/Configuration/Bill of Materials' action='mrp_bom_form_action' id='menu_mrp_bom_form_action'/>
+        
+        <record id='mrp_bom_tree_action' model='ir.actions.act_window'>
+            <field name='name'>BOM Structure</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='res_model'>mrp.bom</field>
+            <field name='view_type'>tree</field>
+            <field name='domain'>[('bom_id','=',False)]</field>
+            <field name='view_id' ref='mrp_bom_tree_view'/>
+        </record>
+        <menuitem name='Production Management/Configuration/Bill of Materials/BOM Structure' action='mrp_bom_tree_action' id='menu_bom_tree'/>
+        
+        <record id='mrp_bom_form_action2' model='ir.actions.act_window'>
+            <field name='name'>BOM Lines</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='res_model'>mrp.bom</field>
+            <field name='view_type'>form</field>
+            <field name='view_id' ref='mrp_bom_tree_view'/>
+        </record>
+        <menuitem name='Production Management/Configuration/Bill of Materials/BOM Lines' action='mrp_bom_form_action2' id='menu_mrp_bom_form_action2'/>
+        
+        
+        <record id='action2' model='ir.actions.act_window'>
+            <field name='name'>Bill of Materials Architecture</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='res_model'>mrp.bom</field>
+            <field name='domain'>[('id','in',active_ids)]</field>
+            <field name='view_type'>tree</field>
+            <field name='view_id' ref='mrp_bom_tree_view'/>
+        </record>
+        <record id='ir_bom_architecture_open' model='ir.values'>
+            <field name='key2' eval='&apos;client_action_multi&apos;'/>
+            <field name='model' eval='&apos;mrp.bom&apos;'/>
+            <field name='name'>Bill of Material Architecture</field>
+            <field name='value' eval='&apos;ir.actions.act_window,&apos;+str(action2)'/>
+            <field name='object' eval='True'/>
+        </record>
+        
+        <record id='mrp_bom_revision_tree' model='ir.ui.view'>
+            <field name='name'>mrp.bom.revision</field>
+            <field name='model'>mrp.bom.revision</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='BoM Revisions'>
+                    <field name='indice'/>
+                    <field name='author_id'/>
+                    <field name='date'/>
+                    <field name='name' colspan='4'/>
+                </tree>
+            </field>
+        </record>
+        <record id='mrp_bom_revision_form' model='ir.ui.view'>
+            <field name='name'>mrp.bom.revision</field>
+            <field name='model'>mrp.bom.revision</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='BoM Revisions'>
+                    <field name='name' colspan='4'/>
+                    <field name='indice' colspan='1'/>
+                    <field name='date' colspan='1'/>
+                    <field name='author_id' readonly='1'/>
+                    <field name='description' colspan='4'/>
+                </form>
+            </field>
+        </record>
+        
+        <!--
 	Production Management
 	-->
-
-	<record model="ir.ui.view" id="mrp_production_tree_view">
-		<field name="name">mrp.production.tree</field>
-		<field name="model">mrp.production</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Production orders" colors="red:date_planned&lt;current_date and state not in ('done','cancel')">
-				<field name="name"/>
-				<field name="product_id"/>
-				<field name="product_qty"/>
-				<field name="date_planned"/>
-				<field name="date_finnished"/>
-				<field name="origin"/>
-				<field name="state"/>
-			</tree>
-		</field>
-	</record>
-
-
-		<record model="ir.ui.view" id="view_production_calendar">
-			<field name="name">mrp.production.calendar</field>
-			<field name="model">mrp.production</field>
-			<field name="type">calendar</field>
-			<field name="priority" eval="2"/>
-			<field name="arch" type="xml">
-				<calendar string="Production Orders" date_start="date_planned"
-					color="product_id">
-					<field name="origin"/>
-					<field name="name"/>
-				</calendar>
-			</field>
-		</record>
-
-
-	<record model="ir.ui.view" id="mrp_production_form_view">
-		<field name="name">mrp.production.form</field>
-		<field name="model">mrp.production</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Production orders">
-				<notebook>
-				<page string="General">
-					<field name="name" select="1" colspan="4"/>
-					<field name="date_planned" select="1"/>
-					<field name="priority"/>
-
-					<field name="product_id" on_change="product_id_change(product_id)" select="1"/>
-					<field name="product_qty"/>
-					<field name="product_uom"/>
-					<!--
+        
+        <record id='mrp_production_tree_view' model='ir.ui.view'>
+            <field name='name'>mrp.production.tree</field>
+            <field name='model'>mrp.production</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree colors='red:date_planned&lt;current_date and state not in (&apos;done&apos;,&apos;cancel&apos;)' string='Production orders'>
+                    <field name='name'/>
+                    <field name='product_id'/>
+                    <field name='product_qty'/>
+                    <field name='date_planned'/>
+                    <field name='date_finnished'/>
+                    <field name='origin'/>
+                    <field name='state'/>
+                </tree>
+            </field>
+        </record>
+        
+        
+        <record id='view_production_calendar' model='ir.ui.view'>
+            <field name='name'>mrp.production.calendar</field>
+            <field name='model'>mrp.production</field>
+            <field name='type'>calendar</field>
+            <field name='priority' eval='2'/>
+            <field name='arch' type='xml'>
+                <calendar color='product_id' string='Production Orders' date_start='date_planned'>
+                    <field name='origin'/>
+                    <field name='name'/>
+                </calendar>
+            </field>
+        </record>
+        
+        
+        <record id='mrp_production_form_view' model='ir.ui.view'>
+            <field name='name'>mrp.production.form</field>
+            <field name='model'>mrp.production</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Production orders'>
+                    <notebook>
+                        <page string='General'>
+                            <field name='name' select='1' colspan='4'/>
+                            <field name='date_planned' select='1'/>
+                            <field name='priority'/>
+                            
+                            <field name='product_id' on_change='product_id_change(product_id)' select='1'/>
+                            <field name='product_qty'/>
+                            <field name='product_uom'/>
+                            <!--
 					<field name="product_uos_qty"/>
 					<field name="product_uos"/>
 					-->
-					<field name="bom_id" select="2"/>
-
-					<newline/>
-					<field name="location_src_id" select="2"/>
-					<field name="location_dest_id"/>
-
-					<field name="move_lines" colspan="4" nolabel="1" widget="one2many_list"/>
-					<group colspan="4" col="9">
-						<field name="state" select="2"/>
-						<button name="action_compute" string="Compute Data" states="draft" type="object"/>
-						<button name="button_confirm" string="Confirm Production" states="draft"/>
-						<button name="button_produce" string="Start Production" states="ready"/>
-						<button name="button_produce_done" string="Production done" states="in_production"/>
-						<button name="force_production" string="Force Reservation" states="confirmed,picking_except" type="object" />
-						<button name="button_cancel" string="Cancel" states="draft,ready,confirmed,in_production,picking_except"/>
-						<button name="button_recreate" string="Recreate Picking" states="picking_except"/>
-					</group>
-				</page><page string="Scheduled goods">
-					<field name="product_lines" colspan="4" nolabel="1" widget="one2many_list"/>
-				</page><page string="Workcenters">
-					<field name="workcenter_lines" colspan="4" nolabel="1" widget="one2many_list"/>
-				</page><page string="Other Info">
-					<field name="date_start" select="2"/>
-					<field name="date_finnished"/>
-					<field name="picking_id"/>
-					<field name="origin"/>
-					<field name="move_prod_id"/>
-					<newline />
-					<field name="move_created_ids" nolabel="1" colspan="4"/>
-				</page>
-				</notebook>
-			</form>
-		</field>
-	</record>
-	<record model="ir.actions.act_window" id="mrp_production_action">
-                <field name="name">Production Orders</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">mrp.production</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form,calendar</field>
-		<field name="view_id" ref="mrp_production_form_view"/>
-	</record>
-	<menuitem name="Production Management/Production Orders" id="menu_mrp_production_action" action="mrp_production_action"/>
-	<record model="ir.actions.act_window" id="mrp_production_action2">
-		<field name="name">Production orders to start</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">mrp.production</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[('state','=','ready')]</field>
-	</record>
-	<menuitem name="Production Management/Production Orders/Production Orders to Start" action="mrp_production_action2" id="menu_production_orders_start"/>
-	<record model="ir.actions.act_window" id="mrp_production_action3">
-		<field name="name">Production orders in progress</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">mrp.production</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[('state','=','in_production')]</field>
-	</record>
-	<menuitem name="Production Management/Production Orders/Production Orders in Progress" id="menu_mrp_production_action3" action="mrp_production_action3"/>
-	<record model="ir.actions.act_window" id="mrp_production_action4">
-		<field name="name">Production orders waiting goods</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">mrp.production</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[('state','=','confirmed')]</field>
-	</record>
-	<menuitem name="Production Management/Production Orders/Production Orders Waiting Goods" action="mrp_production_action4" id="menu_production_orders_waiting4"/>
-
-	<record model="ir.ui.view" id="mrp_production_workcenter_form_view">
-		<field name="name">mrp.production.workcenter.line.form</field>
-		<field name="model">mrp.production.workcenter.line</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Production Workcenters">
-				<field name="name" colspan="4" select="1"/>
-				<field name="workcenter_id" select="1" colspan="4"/>
-				<field name="sequence"/>
-				<field name="cycle"/>
-				<field name="hour"/>
-			</form>
-		</field>
-	</record>
-	<record model="ir.ui.view" id="mrp_production_workcenter_tree_view">
-		<field name="name">mrp.production.workcenter.line.tree</field>
-		<field name="model">mrp.production.workcenter.line</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Production Workcenters">
-				<field name="sequence"/>
-				<field name="name"/>
-				<field name="workcenter_id"/>
-				<field name="cycle"/>
-				<field name="hour"/>
-			</tree>
-		</field>
-	</record>
-
-	<record model="ir.ui.view" id="mrp_production_lot_form_view">
-		<field name="name">mrp.production.lot.line.form</field>
-		<field name="model">mrp.production.lot.line</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Production Products">
-				<field name="move_id" colspan="4" on_change="onchange_lot_line_id(lot_id)"/>
-				<field name="name"/>
-				<field name="product_id"/>
-				<field name="product_qty"/>
-				<field name="product_uom"/>
-				<field name="product_uos_qty"/>
-				<field name="product_uos"/>
-				<field name="tracking_id"/>
-			</form>
-		</field>
-	</record>
-	<record model="ir.ui.view" id="mrp_production_lot_tree_view">
-		<field name="name">mrp.production.lot.line.tree</field>
-		<field name="model">mrp.production.lot.line</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Production Products Consommation">
-				<field name="product_id"/>
-				<field name="product_qty"/>
-				<field name="product_uom"/>
-				<field name="product_uos_qty"/>
-				<field name="product_uos"/>
-				<field name="tracking_id"/>
-			</tree>
-		</field>
-	</record>
-
-
-
-	<record model="ir.ui.view" id="mrp_production_product_form_view">
-		<field name="name">mrp.production.product.line.form</field>
-		<field name="model">mrp.production.product.line</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Scheduled goods">
-				<field name="name"/>
-				<field name="product_id"/>
-				<field name="product_qty"/>
-				<field name="product_uom"/>
-				<field name="product_uos_qty"/>
-				<field name="product_uos"/>
-			</form>
-		</field>
-	</record>
-	<record model="ir.ui.view" id="mrp_production_product_tree_view">
-		<field name="name">mrp.production.product.line.tree</field>
-		<field name="model">mrp.production.product.line</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Scheduled goods">
-				<field name="product_id"/>
-				<field name="product_qty"/>
-				<field name="product_uom"/>
-				<field name="product_uos_qty"/>
-				<field name="product_uos"/>
-			</tree>
-		</field>
-	</record>
-
-	<!--
+                            <field name='bom_id' select='2'/>
+                            
+                            <newline/>
+                            <field name='location_src_id' select='2'/>
+                            <field name='location_dest_id'/>
+                            
+                            <field name='move_lines' nolabel='1' widget='one2many_list' colspan='4'/>
+                            <group col='9' colspan='4'>
+                                <field name='state' select='2'/>
+                                <button name='action_compute' type='object' states='draft' string='Compute Data'/>
+                                <button name='button_confirm' states='draft' string='Confirm Production'/>
+                                <button name='button_produce' states='ready' string='Start Production'/>
+                                <button name='button_produce_done' states='in_production' string='Production done'/>
+                                <button name='force_production' type='object' states='confirmed,picking_except' string='Force Reservation'/>
+                                <button name='button_cancel' states='draft,ready,confirmed,in_production,picking_except' string='Cancel'/>
+                                <button name='button_recreate' states='picking_except' string='Recreate Picking'/>
+                            </group>
+                        </page>
+                        <page string='Scheduled goods'>
+                            <field name='product_lines' nolabel='1' widget='one2many_list' colspan='4'/>
+                        </page>
+                        <page string='Workcenters'>
+                            <field name='workcenter_lines' nolabel='1' widget='one2many_list' colspan='4'/>
+                        </page>
+                        <page string='Other Info'>
+                            <field name='date_start' select='2'/>
+                            <field name='date_finnished'/>
+                            <field name='picking_id'/>
+                            <field name='origin'/>
+                            <field name='move_prod_id'/>
+                            <newline/>
+                            <field name='move_created_ids' nolabel='1' colspan='4'/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+        <record id='mrp_production_action' model='ir.actions.act_window'>
+            <field name='name'>Production Orders</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='res_model'>mrp.production</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form,calendar</field>
+            <field name='view_id' ref='mrp_production_form_view'/>
+        </record>
+        <menuitem name='Production Management/Production Orders' action='mrp_production_action' id='menu_mrp_production_action'/>
+        <record id='mrp_production_action2' model='ir.actions.act_window'>
+            <field name='name'>Production orders to start</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='res_model'>mrp.production</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+            <field name='domain'>[('state','=','ready')]</field>
+        </record>
+        <menuitem name='Production Management/Production Orders/Production Orders to Start' action='mrp_production_action2' id='menu_production_orders_start'/>
+        <record id='mrp_production_action3' model='ir.actions.act_window'>
+            <field name='name'>Production orders in progress</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='res_model'>mrp.production</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+            <field name='domain'>[('state','=','in_production')]</field>
+        </record>
+        <menuitem name='Production Management/Production Orders/Production Orders in Progress' action='mrp_production_action3' id='menu_mrp_production_action3'/>
+        <record id='mrp_production_action4' model='ir.actions.act_window'>
+            <field name='name'>Production orders waiting goods</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='res_model'>mrp.production</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+            <field name='domain'>[('state','=','confirmed')]</field>
+        </record>
+        <menuitem name='Production Management/Production Orders/Production Orders Waiting Goods' action='mrp_production_action4' id='menu_production_orders_waiting4'/>
+        
+        <record id='mrp_production_workcenter_form_view' model='ir.ui.view'>
+            <field name='name'>mrp.production.workcenter.line.form</field>
+            <field name='model'>mrp.production.workcenter.line</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Production Workcenters'>
+                    <field name='name' colspan='4' select='1'/>
+                    <field name='workcenter_id' select='1' colspan='4'/>
+                    <field name='sequence'/>
+                    <field name='cycle'/>
+                    <field name='hour'/>
+                </form>
+            </field>
+        </record>
+        <record id='mrp_production_workcenter_tree_view' model='ir.ui.view'>
+            <field name='name'>mrp.production.workcenter.line.tree</field>
+            <field name='model'>mrp.production.workcenter.line</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Production Workcenters'>
+                    <field name='sequence'/>
+                    <field name='name'/>
+                    <field name='workcenter_id'/>
+                    <field name='cycle'/>
+                    <field name='hour'/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id='mrp_production_lot_form_view' model='ir.ui.view'>
+            <field name='name'>mrp.production.lot.line.form</field>
+            <field name='model'>mrp.production.lot.line</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Production Products'>
+                    <field name='move_id' on_change='onchange_lot_line_id(lot_id)' colspan='4'/>
+                    <field name='name'/>
+                    <field name='product_id'/>
+                    <field name='product_qty'/>
+                    <field name='product_uom'/>
+                    <field name='product_uos_qty'/>
+                    <field name='product_uos'/>
+                    <field name='tracking_id'/>
+                </form>
+            </field>
+        </record>
+        <record id='mrp_production_lot_tree_view' model='ir.ui.view'>
+            <field name='name'>mrp.production.lot.line.tree</field>
+            <field name='model'>mrp.production.lot.line</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Production Products Consommation'>
+                    <field name='product_id'/>
+                    <field name='product_qty'/>
+                    <field name='product_uom'/>
+                    <field name='product_uos_qty'/>
+                    <field name='product_uos'/>
+                    <field name='tracking_id'/>
+                </tree>
+            </field>
+        </record>
+        
+        
+        
+        <record id='mrp_production_product_form_view' model='ir.ui.view'>
+            <field name='name'>mrp.production.product.line.form</field>
+            <field name='model'>mrp.production.product.line</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Scheduled goods'>
+                    <field name='name'/>
+                    <field name='product_id'/>
+                    <field name='product_qty'/>
+                    <field name='product_uom'/>
+                    <field name='product_uos_qty'/>
+                    <field name='product_uos'/>
+                </form>
+            </field>
+        </record>
+        <record id='mrp_production_product_tree_view' model='ir.ui.view'>
+            <field name='name'>mrp.production.product.line.tree</field>
+            <field name='model'>mrp.production.product.line</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Scheduled goods'>
+                    <field name='product_id'/>
+                    <field name='product_qty'/>
+                    <field name='product_uom'/>
+                    <field name='product_uos_qty'/>
+                    <field name='product_uos'/>
+                </tree>
+            </field>
+        </record>
+        
+        <!--
 	Procurement
 	-->
-
-	<record model="ir.ui.view" id="mrp_procurement_tree_view">
-		<field name="name">mrp.procurement.tree</field>
-		<field name="model">mrp.procurement</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Procurement Lines">
-				<field name="name"/>
-				<field name="product_id"/>
-				<field name="product_qty"/>
-				<field name="product_uom" string="UOM"/>
-				<field name="date_planned"/>
-				<field name="procure_method"/>
-				<field name="origin"/>
-				<field name="state"/>
-				<field name="message"/>
-			</tree>
-		</field>
-	</record>
-	<record model="ir.ui.view" id="mrp_procurement_form_view">
-		<field name="name">mrp.procurement.form</field>
-		<field name="model">mrp.procurement</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Procurement">
-				<separator string="General Information" colspan="4"/>
-				<field name="name" colspan="4" select="1"/>
-				<field name="priority"/>
-				<field name="date_planned" select="1"/>
-				<field name="procure_method" select="2"/>
-				<field name="date_close" select="2"/>
-				<newline/>
-				<field name="product_qty"/>
-				<field name="product_uom"/>
-				<field name="product_uos_qty"/>
-				<field name="product_uos"/>
-				<field name="product_id" select="1"/>
-				<field name="location_id" select="2"/>
-				<newline/>
-				<field name="origin" select="2"/>
-				<field name="move_id"/>
-				<newline/>
-				<field name="message" colspan="4"/>
-				<separator string="Properties" colspan="4"/>
-				<field name="property_ids" colspan="4" nolabel="1"/>
-				<group col="7" colspan="4">
-					<field name="state" readonly="1" select="2"/>
-					<button string="Confirm" name="button_confirm" states="draft"/>
-					<button string="Retry" name="button_restart" states="exception"/>
-					<button string="Cancel" name="button_cancel" states="exception"/>
-					<button string="Run procurement" name="button_check" states="confirmed"/>
-					<button string="Cancel" name="button_cancel" states="draft,running"/>
-				</group>
-			</form>
-		</field>
-	</record>
-	<record model="ir.actions.act_window" id="mrp_procurement_action">
-                <field name="name">Procurement Orders</field>
-                <field name="type">ir.actions.act_window</field>
-                <field name="res_model">mrp.procurement</field>
-                <field name="view_type">form</field>
-		<field name="view_id" ref="mrp_procurement_form_view"/>
-	</record>
-	<menuitem name="Production Management/Procurement Orders" id="menu_mrp_procurement_action" action="mrp_procurement_action"/>
-
-	<record model="ir.actions.act_window" id="mrp_procurement_action2">
-		<field name="name">Draft procurements</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">mrp.procurement</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[('state','=','draft')]</field>
-	</record>
-	<menuitem name="Production Management/Procurement Orders/Draft Procurements" id="menu_mrp_procurement_action2" action="mrp_procurement_action2"/>
-	<record model="ir.actions.act_window" id="mrp_procurement_action3">
-		<field name="name">Unscheduled procurements</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">mrp.procurement</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[('state','=','confirmed')]</field>
-	</record>
-	<menuitem name="Production Management/Procurement Orders/Unscheduled Procurements" id="menu_mrp_procurement_action3" action="mrp_procurement_action3"/>
-
-	<record model="ir.actions.act_window" id="mrp_procurement_action5">
-		<field name="name">Exceptions procurements</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">mrp.procurement</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[('state','=','exception')]</field>
-	</record>
-	<menuitem name="Production Management/Procurement Orders/All Exceptions" id="menu_mrp_procurement_action5" action="mrp_procurement_action5"/>
-
-	<record model="ir.actions.act_window" id="mrp_procurement_action4">
-		<field name="name">Exceptions procurements to fix</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">mrp.procurement</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[('state','=','exception'), ('message', '&lt;&gt;', '')]</field>
-	</record>
-	<menuitem
-		name="Production Management/Procurement Orders/All Exceptions/Exceptions to Fix"
-		id="menu_mrp_procurement_action4"
-		action="mrp_procurement_action4"/>
-
-	<record model="ir.actions.act_window" id="mrp_procurement_action11">
-		<field name="name">Temporary Procurement Exceptions</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">mrp.procurement</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[('state','=','exception'), ('message', '=', '')]</field>
-	</record>
-	<menuitem
-		name="Production Management/Procurement Orders/All Exceptions/Temporary Procurement Exceptions"
-		id="menu_mrp_procurement_action11"
-		action="mrp_procurement_action11"/>
-
-	=============================
-	Order Point
-	=============================
-	<record model="ir.ui.view" id="view_warehouse_orderpoint_tree">
-		<field name="name">stock.warehouse.orderpoint.tree</field>
-		<field name="model">stock.warehouse.orderpoint</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Minimum Stock Rules">
-				<field name="name"/>
-				<field name="warehouse_id"/>
-				<field name="product_id"/>
-				<field name="product_uom"/>
-				<field name="product_min_qty"/>
-				<field name="product_max_qty"/>
-<!--
+        
+        <record id='mrp_procurement_tree_view' model='ir.ui.view'>
+            <field name='name'>mrp.procurement.tree</field>
+            <field name='model'>mrp.procurement</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Procurement Lines'>
+                    <field name='name'/>
+                    <field name='product_id'/>
+                    <field name='product_qty'/>
+                    <field name='product_uom' string='UOM'/>
+                    <field name='date_planned'/>
+                    <field name='procure_method'/>
+                    <field name='origin'/>
+                    <field name='state'/>
+                    <field name='message'/>
+                </tree>
+            </field>
+        </record>
+        <record id='mrp_procurement_form_view' model='ir.ui.view'>
+            <field name='name'>mrp.procurement.form</field>
+            <field name='model'>mrp.procurement</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Procurement'>
+                    <separator string='General Information' colspan='4'/>
+                    <field name='name' colspan='4' select='1'/>
+                    <field name='priority'/>
+                    <field name='date_planned' select='1'/>
+                    <field name='procure_method' select='2'/>
+                    <field name='date_close' select='2'/>
+                    <newline/>
+                    <field name='product_qty'/>
+                    <field name='product_uom'/>
+                    <field name='product_uos_qty'/>
+                    <field name='product_uos'/>
+                    <field name='product_id' select='1'/>
+                    <field name='location_id' select='2'/>
+                    <newline/>
+                    <field name='origin' select='2'/>
+                    <field name='move_id'/>
+                    <newline/>
+                    <field name='message' colspan='4'/>
+                    <separator string='Properties' colspan='4'/>
+                    <field name='property_ids' nolabel='1' colspan='4'/>
+                    <group col='7' colspan='4'>
+                        <field name='state' readonly='1' select='2'/>
+                        <button name='button_confirm' states='draft' string='Confirm'/>
+                        <button name='button_restart' states='exception' string='Retry'/>
+                        <button name='button_cancel' states='exception' string='Cancel'/>
+                        <button name='button_check' states='confirmed' string='Run procurement'/>
+                        <button name='button_cancel' states='draft,running' string='Cancel'/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id='mrp_procurement_action' model='ir.actions.act_window'>
+            <field name='name'>Procurement Orders</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='res_model'>mrp.procurement</field>
+            <field name='view_type'>form</field>
+            <field name='view_id' ref='mrp_procurement_form_view'/>
+        </record>
+        <menuitem name='Production Management/Procurement Orders' action='mrp_procurement_action' id='menu_mrp_procurement_action'/>
+        
+        <record id='mrp_procurement_action2' model='ir.actions.act_window'>
+            <field name='name'>Draft procurements</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='res_model'>mrp.procurement</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+            <field name='domain'>[('state','=','draft')]</field>
+        </record>
+        <menuitem name='Production Management/Procurement Orders/Draft Procurements' action='mrp_procurement_action2' id='menu_mrp_procurement_action2'/>
+        <record id='mrp_procurement_action3' model='ir.actions.act_window'>
+            <field name='name'>Unscheduled procurements</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='res_model'>mrp.procurement</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+            <field name='domain'>[('state','=','confirmed')]</field>
+        </record>
+        <menuitem name='Production Management/Procurement Orders/Unscheduled Procurements' action='mrp_procurement_action3' id='menu_mrp_procurement_action3'/>
+        
+        <record id='mrp_procurement_action5' model='ir.actions.act_window'>
+            <field name='name'>Exceptions procurements</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='res_model'>mrp.procurement</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+            <field name='domain'>[('state','=','exception')]</field>
+        </record>
+        <menuitem name='Production Management/Procurement Orders/All Exceptions' action='mrp_procurement_action5' id='menu_mrp_procurement_action5'/>
+        
+        <record id='mrp_procurement_action4' model='ir.actions.act_window'>
+            <field name='name'>Exceptions procurements to fix</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='res_model'>mrp.procurement</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+            <field name='domain'>[('state','=','exception'), ('message', '&lt;&gt;', '')]</field>
+        </record>
+        <menuitem name='Production Management/Procurement Orders/All Exceptions/Exceptions to Fix' action='mrp_procurement_action4' id='menu_mrp_procurement_action4'/>
+        
+        <record id='mrp_procurement_action11' model='ir.actions.act_window'>
+            <field name='name'>Temporary Procurement Exceptions</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='res_model'>mrp.procurement</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+            <field name='domain'>[('state','=','exception'), ('message', '=', '')]</field>
+        </record>
+        <menuitem name='Production Management/Procurement Orders/All Exceptions/Temporary Procurement Exceptions' action='mrp_procurement_action11' id='menu_mrp_procurement_action11'/>
+        
+        =============================
+        Order Point
+        =============================
+        <record id='view_warehouse_orderpoint_tree' model='ir.ui.view'>
+            <field name='name'>stock.warehouse.orderpoint.tree</field>
+            <field name='model'>stock.warehouse.orderpoint</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Minimum Stock Rules'>
+                    <field name='name'/>
+                    <field name='warehouse_id'/>
+                    <field name='product_id'/>
+                    <field name='product_uom'/>
+                    <field name='product_min_qty'/>
+                    <field name='product_max_qty'/>
+                    <!--
 				<field name="logic"/>
 -->
-			</tree>
-		</field>
-	</record>
-	<record model="ir.ui.view" id="view_warehouse_orderpoint_form">
-		<field name="name">stock.warehouse.orderpoint.form</field>
-		<field name="model">stock.warehouse.orderpoint</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Minimum Stock Rules">
-				<field name="name" select="1"/>
-				<field name="active" select="1"/>
-				<field name="warehouse_id" select="1"/>
-<!--
+                </tree>
+            </field>
+        </record>
+        <record id='view_warehouse_orderpoint_form' model='ir.ui.view'>
+            <field name='name'>stock.warehouse.orderpoint.form</field>
+            <field name='model'>stock.warehouse.orderpoint</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Minimum Stock Rules'>
+                    <field name='name' select='1'/>
+                    <field name='active' select='1'/>
+                    <field name='warehouse_id' select='1'/>
+                    <!--
 				<field name="logic"/>
 -->
-				<field name="product_id" on_change="onchange_product_id(product_id)" select="1"/>
-				<field name="product_uom"/>
-				<field name="product_min_qty"/>
-				<field name="product_max_qty"/>
-				<field name="qty_multiple"/>
-				<field name="procurement_id" readonly="1"/>
-			</form>
-		</field>
-	</record>
-	<record model="ir.actions.act_window" id="action_orderpoint_form">
-		<field name="name">Minimum Stock Rules</field>
-		<field name="res_model">stock.warehouse.orderpoint</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="view_type">form</field>
-		<field name="view_id" ref="view_warehouse_orderpoint_tree"/>
-	</record>
-	<menuitem
-		name="Reordering Policy"
-		parent="stock.menu_stock_root"
-		id="menu_mrp_reordering"
-		sequence="4"/>
-	<menuitem 
-		parent="menu_mrp_reordering" 
-		id="menu_action_orderpoint_form" 
-		action="action_orderpoint_form"/>
-
-	<act_window name="Minimum Stock Rules"
-		domain="[('warehouse_id', '=', active_id)]"
-		res_model="stock.warehouse.orderpoint"
-		src_model="stock.warehouse"
-		id="act_stock_warehouse_2_stock_warehouse_orderpoint"/>
-
-	<!-- add product_uom to context to be the default value when adding new orderpoints -->
-	<act_window name="Minimum Stock Rules"
-		domain="[('product_id', '=', active_id)]"
-		context="{'product_uom': locals().has_key('uom_id') and uom_id}"
-		res_model="stock.warehouse.orderpoint"
-		src_model="product.product"
-		id="act_product_product_2_stock_warehouse_orderpoint"/>
-
-	<act_window name="Bill of Material"
-		domain="[('product_id', '=', active_id)]"
-		res_model="mrp.bom"
-		src_model="product.product"
-		id="act_product_product_2_mrp_bom"/>
-</data>
+                    <field name='product_id' on_change='onchange_product_id(product_id)' select='1'/>
+                    <field name='product_uom'/>
+                    <field name='product_min_qty'/>
+                    <field name='product_max_qty'/>
+                    <field name='qty_multiple'/>
+                    <field name='procurement_id' readonly='1'/>
+                </form>
+            </field>
+        </record>
+        <record id='action_orderpoint_form' model='ir.actions.act_window'>
+            <field name='name'>Minimum Stock Rules</field>
+            <field name='res_model'>stock.warehouse.orderpoint</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='view_type'>form</field>
+            <field name='view_id' ref='view_warehouse_orderpoint_tree'/>
+        </record>
+        <menuitem name='Reordering Policy' sequence='4' id='menu_mrp_reordering' parent='stock.menu_stock_root'/>
+        <menuitem action='action_orderpoint_form' id='menu_action_orderpoint_form' parent='menu_mrp_reordering'/>
+        
+        <act_window name='Minimum Stock Rules' domain='[(&apos;warehouse_id&apos;, &apos;=&apos;, active_id)]' id='act_stock_warehouse_2_stock_warehouse_orderpoint' src_model='stock.warehouse' res_model='stock.warehouse.orderpoint'/>
+        
+        <!-- add product_uom to context to be the default value when adding new orderpoints -->
+        <act_window name='Minimum Stock Rules' domain='[(&apos;product_id&apos;, &apos;=&apos;, active_id)]' id='act_product_product_2_stock_warehouse_orderpoint' src_model='product.product' context='{&apos;product_uom&apos;: locals().has_key(&apos;uom_id&apos;) and uom_id}' res_model='stock.warehouse.orderpoint'/>
+        
+        <act_window name='Bill of Material' domain='[(&apos;product_id&apos;, &apos;=&apos;, active_id)]' id='act_product_product_2_mrp_bom' src_model='product.product' res_model='mrp.bom'/>
+    </data>
 </terp>

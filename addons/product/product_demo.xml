@@ -1,471 +1,471 @@
 <?xml version="1.0"?>
 <terp>
-<data noupdate="1">
-	<!-- 
+    <data noupdate="1">
+        <!-- 
 	Resource: product.category 
 	-->
-
-	<record model="product.category" id="cat0">
-		<field name="parent_id" ref="null"/>
-		<field name="name">All products</field>
-	</record>
-	<record model="product.category" id="cat1">
-		<field name="parent_id" ref="cat0"/>
-		<field name="name">Sellable</field>
-	</record>
-	<record model="product.category" id="cat2">
-		<field name="parent_id" ref="cat0"/>
-		<field name="name">Private</field>
-	</record>
-	<record id="product_category_3" model="product.category">
-		<field name="parent_id" ref="cat1"/>
-		<field name="name">Computer Stuff</field>
-	</record>
-	<record id="product_category_4" model="product.category">
-		<field name="parent_id" ref="product_category_3"/>
-		<field name="name">Dello Computer</field>
-	</record>
-	<record id="product_category_accessories" model="product.category">
-		<field name="parent_id" ref="product_category_3"/>
-		<field name="name">Accessories</field>
-	</record>
-	<record id="product_category_services" model="product.category">
-		<field name="parent_id" ref="cat1"/>
-		<field name="name">Services</field>
-	</record>
-	<record id="product_category_7" model="product.category">
-		<field name="parent_id" ref="product_category_services"/>
-		<field name="name">Onsite Intervention</field>
-	</record>
-	<record id="product_category_8" model="product.category">
-		<field name="parent_id" ref="product_category_services"/>
-		<field name="name">Phone Help</field>
-	</record>
-	<record id="product_category_pc" model="product.category">
-		<field name="parent_id" ref="product_category_3"/>
-		<field name="name">PC</field>
-	</record>
-	<record id="product_category_10" model="product.category">
-		<field name="parent_id" ref="product_category_3"/>
-		<field name="name">IT components</field>
-	</record>
-	<record id="product_category_11" model="product.category">
-		<field name="parent_id" ref="product_category_3"/>
-		<field name="name">IT components kits</field>
-	</record>
-	
-	<record id="product_ul_box" model="product.ul" >
-		<field name="name">Box 20x20x40</field>
-		<field name="type">box</field>
-	</record>
-	<record id="product_ul_big_box" model="product.ul" >
-		<field name="name">Box 30x40x60</field>
-		<field name="type">box</field>
-	</record>
-
-	<!--
+        
+        <record model="product.category" id="cat0">
+            <field name="parent_id" ref="null"/>
+            <field name="name">All products</field>
+        </record>
+        <record model="product.category" id="cat1">
+            <field name="parent_id" ref="cat0"/>
+            <field name="name">Sellable</field>
+        </record>
+        <record model="product.category" id="cat2">
+            <field name="parent_id" ref="cat0"/>
+            <field name="name">Private</field>
+        </record>
+        <record id="product_category_3" model="product.category">
+            <field name="parent_id" ref="cat1"/>
+            <field name="name">Computer Stuff</field>
+        </record>
+        <record id="product_category_4" model="product.category">
+            <field name="parent_id" ref="product_category_3"/>
+            <field name="name">Dello Computer</field>
+        </record>
+        <record id="product_category_accessories" model="product.category">
+            <field name="parent_id" ref="product_category_3"/>
+            <field name="name">Accessories</field>
+        </record>
+        <record id="product_category_services" model="product.category">
+            <field name="parent_id" ref="cat1"/>
+            <field name="name">Services</field>
+        </record>
+        <record id="product_category_7" model="product.category">
+            <field name="parent_id" ref="product_category_services"/>
+            <field name="name">Onsite Intervention</field>
+        </record>
+        <record id="product_category_8" model="product.category">
+            <field name="parent_id" ref="product_category_services"/>
+            <field name="name">Phone Help</field>
+        </record>
+        <record id="product_category_pc" model="product.category">
+            <field name="parent_id" ref="product_category_3"/>
+            <field name="name">PC</field>
+        </record>
+        <record id="product_category_10" model="product.category">
+            <field name="parent_id" ref="product_category_3"/>
+            <field name="name">IT components</field>
+        </record>
+        <record id="product_category_11" model="product.category">
+            <field name="parent_id" ref="product_category_3"/>
+            <field name="name">IT components kits</field>
+        </record>
+        
+        <record id="product_ul_box" model="product.ul" >
+            <field name="name">Box 20x20x40</field>
+            <field name="type">box</field>
+        </record>
+        <record id="product_ul_big_box" model="product.ul" >
+            <field name="name">Box 30x40x60</field>
+            <field name="type">box</field>
+        </record>
+        
+        <!--
 	Resource: product.product
 	-->
-
-	<record id="product_product_0" model="product.product">
-		<field name="list_price">38.25</field>
-		<field name="standard_price">25.5</field>
-		<field name="uom_id" ref="product_uom_unit"/>
-		<field name="uom_po_id" ref="product_uom_unit"/>
-		<field name="type">service</field>
-		<field name="name">Onsite Senior Intervention</field>
-		<field name="categ_id" ref="product_category_7"/>
-	</record>
-	<record id="product_product_1" model="product.product">
-		<field name="list_price">30.75</field>
-		<field name="standard_price">20.5</field>
-		<field name="uom_id" ref="product_uom_unit"/>
-		<field name="uom_po_id" ref="product_uom_unit"/>
-		<field name="type">service</field>
-		<field name="name">Onsite Intervention</field>
-		<field name="categ_id" ref="product_category_7"/>
-	</record>
-	<record id="product_product_pc1" model="product.product">
-		<field name="default_code">PC1</field>
-		<field name="supply_method">produce</field>
-		<field name="list_price">450.0</field>
-		<field name="standard_price">300.0</field>
-		<field name="uom_id" ref="product_uom_unit"/>
-		<field name="uom_po_id" ref="product_uom_unit"/>
-		<field name="sale_delay">2.0</field>
-		<field name="name">Basic PC</field>
-		<field name="categ_id" ref="product_category_pc"/>
-	</record>
-	<record id="product_product_pc2" model="product.product">
-		<field name="default_code">PC2</field>
-		<field name="supply_method">produce</field>
-		<field name="list_price">750.0</field>
-		<field name="standard_price">500.0</field>
-		<field name="uom_id" ref="product_uom_unit"/>
-		<field name="uom_po_id" ref="product_uom_unit"/>
-		<field name="procure_method">make_to_order</field>
-		<field name="sale_delay">3.0</field>
-		<field name="name">Basic+ PC (assembly on order)</field>
-		<field name="categ_id" ref="product_category_pc"/>
-	</record>
-	<record id="product_product_pc3" model="product.product">
-		<field name="default_code">PC3</field>
-		<field name="supply_method">produce</field>
-		<field name="list_price">900.0</field>
-		<field name="standard_price">600.0</field>
-		<field name="uom_id" ref="product_uom_unit"/>
-		<field name="uom_po_id" ref="product_uom_unit"/>
-		<field name="sale_delay">3.0</field>
-		<field name="name">Medium PC</field>
-		<field name="categ_id" ref="product_category_pc"/>
-	</record>
-	<record id="product_product_pc4" model="product.product">
-		<field name="default_code">PC4</field>
-		<field name="supply_method">produce</field>
-		<field name="list_price">1200.0</field>
-		<field name="standard_price">800.0</field>
-		<field name="uom_id" ref="product_uom_unit"/>
-		<field name="uom_po_id" ref="product_uom_unit"/>
-		<field name="procure_method">make_to_order</field>
-		<field name="name">Customizable PC</field>
-		<field name="categ_id" ref="product_category_pc"/>
-		<field name="state">end</field>
-	</record>
-	<record id="product_product_mb1" model="product.product">
-		<field name="default_code">MB1</field>
-		<field name="list_price">88.0</field>
-		<field name="standard_price">54.0</field>
-		<field name="uom_id" ref="product_uom_unit"/>
-		<field name="uom_po_id" ref="product_uom_unit"/>
-		<field name="sale_delay">1.0</field>
-		<field name="name">Mainboard ASUStek A7N8X</field>
-		<field name="categ_id" ref="product_category_10"/>
-	</record>
-	<record id="product_product_mb2" model="product.product">
-		<field name="default_code">MB2</field>
-		<field name="list_price">270.0</field>
-		<field name="standard_price">180.0</field>
-		<field name="uom_id" ref="product_uom_unit"/>
-		<field name="uom_po_id" ref="product_uom_unit"/>
-		<field name="sale_delay">1.0</field>
-		<field name="name">Mainboard ASUStek A7V8X-X</field>
-		<field name="categ_id" ref="product_category_10"/>
-		<field name="state">draft</field>
-	</record>
-	<record id="product_product_cpu1" model="product.product">
-		<field name="default_code">CPU1</field>
-		<field name="list_price">75.0</field>
-		<field name="standard_price">50.0</field>
-		<field name="uom_id" ref="product_uom_unit"/>
-		<field name="uom_po_id" ref="product_uom_unit"/>
-		<field name="sale_delay">1.0</field>
-		<field name="name">Processor AMD Athlon XP 1800+</field>
-		<field name="categ_id" ref="product_category_10"/>
-	</record>
-	<record id="product_product_cpu3" model="product.product">
-		<field name="default_code">CPU2</field>
-		<field name="list_price">150.0</field>
-		<field name="standard_price">100.0</field>
-		<field name="uom_id" ref="product_uom_unit"/>
-		<field name="uom_po_id" ref="product_uom_unit"/>
-		<field name="sale_delay">1.0</field>
-		<field name="name">Processor AMD Athlon XP 2200+</field>
-		<field name="categ_id" ref="product_category_10"/>
-	</record>
-	<record id="product_product_hdd1" model="product.product">
-		<field name="default_code">HDD1</field>
-		<field name="list_price">50.0</field>
-		<field name="standard_price">40.0</field>
-		<field name="uom_id" ref="product_uom_unit"/>
-		<field name="uom_po_id" ref="product_uom_unit"/>
-		<field name="sale_delay">1.0</field>
-		<field name="name">HDD Seagate 7200.8 80GB</field>
-		<field name="categ_id" ref="product_category_10"/>
-	</record>
-	<record id="product_product_hdd2" model="product.product">
-		<field name="default_code">HDD2</field>
-		<field name="list_price">75.0</field>
-		<field name="standard_price">60.0</field>
-		<field name="uom_id" ref="product_uom_unit"/>
-		<field name="uom_po_id" ref="product_uom_unit"/>
-		<field name="sale_delay">1.0</field>
-		<field name="name">HDD Seagate 7200.8 120GB</field>
-		<field name="categ_id" ref="product_category_10"/>
-	</record>
-	<record id="product_product_hdd3" model="product.product">
-		<field name="default_code">HDD3</field>
-		<field name="list_price">95.0</field>
-		<field name="standard_price">80.0</field>
-		<field name="uom_id" ref="product_uom_unit"/>
-		<field name="uom_po_id" ref="product_uom_unit"/>
-		<field name="procure_method">make_to_order</field>
-		<field name="sale_delay">1.0</field>
-		<field name="name">HDD Seagate 7200.8 160GB</field>
-		<field name="categ_id" ref="product_category_10"/>
-	</record>
-	<record id="product_product_fan" model="product.product">
-		<field name="default_code">FAN</field>
-		<field name="list_price">8.0</field>
-		<field name="standard_price">5.0</field>
-		<field name="uom_id" ref="product_uom_unit"/>
-		<field name="uom_po_id" ref="product_uom_unit"/>
-		<field name="sale_delay">1.0</field>
-		<field name="name">Regular case fan 80mm</field>
-		<field name="categ_id" ref="product_category_10"/>
-	</record>
-	<record id="product_product_fan2" model="product.product">
-		<field name="default_code">FAN2</field>
-		<field name="list_price">18.5</field>
-		<field name="standard_price">10.0</field>
-		<field name="uom_id" ref="product_uom_unit"/>
-		<field name="uom_po_id" ref="product_uom_unit"/>
-		<field name="sale_delay">1.0</field>
-		<field name="name">Silent fan</field>
-		<field name="categ_id" ref="cat1"/>
-	</record>
-	<record id="product_product_cpu_gen" model="product.product">
-		<field name="default_code">CPU_GEN</field>
-		<field name="supply_method">produce</field>
-		<field name="list_price">300.0</field>
-		<field name="standard_price">200.0</field>
-		<field name="uom_id" ref="product_uom_unit"/>
-		<field name="uom_po_id" ref="product_uom_unit"/>
-		<field name="sale_delay">1.0</field>
-		<field name="name">Regular processor config</field>
-		<field name="procure_method">make_to_order</field>
-		<field name="categ_id" ref="product_category_10"/>
-	</record>
-	<record id="product_product_ram" model="product.product">
-		<field name="default_code">RAM</field>
-		<field name="list_price">60.0</field>
-		<field name="standard_price">40.0</field>
-		<field name="uom_id" ref="product_uom_unit"/>
-		<field name="uom_po_id" ref="product_uom_unit"/>
-		<field name="sale_delay">1.0</field>
-		<field name="name">DDR 256MB PC400</field>
-		<field name="categ_id" ref="product_category_pc"/>
-	</record>
-	<record id="product_product_ram512" model="product.product">
-		<field name="default_code">RAM512</field>
-		<field name="list_price">90.0</field>
-		<field name="standard_price">60.0</field>
-		<field name="uom_id" ref="product_uom_unit"/>
-		<field name="uom_po_id" ref="product_uom_unit"/>
-		<field name="sale_delay">1.0</field>
-		<field name="name">DDR 512MB PC400</field>
-		<field name="categ_id" ref="product_category_10"/>
-	</record>
-	<record id="product_product_cpu2" model="product.product">
-		<field name="default_code">CPU2</field>
-		<field name="supply_method">produce</field>
-		<field name="list_price">450.0</field>
-		<field name="standard_price">300.0</field>
-		<field name="uom_id" ref="product_uom_unit"/>
-		<field name="uom_po_id" ref="product_uom_unit"/>
-		<field name="procure_method">make_to_order</field>
-		<field name="sale_delay">1.0</field>
-		<field name="name">High speed processor config</field>
-		<field name="categ_id" ref="product_category_10"/>
-	</record>
-	<record id="product_product_tow1" model="product.product">
-		<field name="default_code">TOW1</field>
-		<field name="list_price">37.5</field>
-		<field name="standard_price">25.0</field>
-		<field name="uom_id" ref="product_uom_unit"/>
-		<field name="uom_po_id" ref="product_uom_unit"/>
-		<field name="sale_delay">1.0</field>
-		<field name="name">ATX Mid-size Tower</field>
-		<field name="categ_id" ref="product_category_10"/>
-	</record>
-	<record id="product_product_20" model="product.product">
-		<field name="default_code">HDD_GEN</field>
-		<field name="supply_method">produce</field>
-		<field name="list_price">135.0</field>
-		<field name="standard_price">90.0</field>
-		<field name="uom_id" ref="product_uom_unit"/>
-		<field name="uom_po_id" ref="product_uom_unit"/>
-		<field name="procure_method">make_to_order</field>
-		<field name="sale_delay">1.0</field>
-		<field name="name">HDD on demand</field>
-		<field name="sale_ok" eval="False"/>
-		<field name="categ_id" ref="product_category_10"/>
-	</record>
-	<record id="product_product_21" model="product.product">
-		<field name="default_code">RAM_GEN</field>
-		<field name="supply_method">produce</field>
-		<field name="list_price">150.0</field>
-		<field name="standard_price">100.0</field>
-		<field name="uom_id" ref="product_uom_unit"/>
-		<field name="uom_po_id" ref="product_uom_unit"/>
-		<field name="name">RAM on demand</field>
-		<field name="sale_ok" eval="False"/>
-		<field name="categ_id" ref="product_category_10"/>
-	</record>
-	<record id="product_product_22" model="product.product">
-		<field name="default_code">CPU_GEN</field>
-		<field name="supply_method">produce</field>
-		<field name="list_price">150.0</field>
-		<field name="standard_price">100.0</field>
-		<field name="uom_id" ref="product_uom_unit"/>
-		<field name="uom_po_id" ref="product_uom_unit"/>
-		<field name="name">Processor on demand</field>
-		<field name="sale_ok" eval="False"/>
-		<field name="categ_id" ref="product_category_10"/>
-	</record>
-	<record id="product_product_23" model="product.product">
-		<field name="default_code">PC0</field>
-		<field name="supply_method">produce</field>
-		<field name="list_price">750.0</field>
-		<field name="standard_price">500.0</field>
-		<field name="uom_id" ref="product_uom_unit"/>
-		<field name="uom_po_id" ref="product_uom_unit"/>
-		<field name="name">Complete PC With Peripherals</field>
-		<field name="categ_id" ref="product_category_10"/>
-	</record>
-	<record id="product_product_24" model="product.product">
-		<field name="default_code">KEYA</field>
-		<field name="list_price">7.0</field>
-		<field name="standard_price">5.0</field>
-		<field name="uom_id" ref="product_uom_unit"/>
-		<field name="uom_po_id" ref="product_uom_unit"/>
-		<field name="name">Keyboard</field>
-		<field name="variants">AZERTY</field>
-		<field name="categ_id" ref="product_category_10"/>
-	</record>
-	<record id="product_product_25" model="product.product">
-		<field name="default_code">MOU</field>
-		<field name="list_price">7.0</field>
-		<field name="standard_price">5.0</field>
-		<field name="uom_id" ref="product_uom_unit"/>
-		<field name="uom_po_id" ref="product_uom_unit"/>
-		<field name="name">Mouse</field>
-		<field name="categ_id" ref="product_category_10"/>
-	</record>
-	<record id="product_product_26" model="product.product">
-		<field name="default_code">KIT0</field>
-		<field name="supply_method">produce</field>
-		<field name="list_price">7.0</field>
-		<field name="standard_price">5.0</field>
-		<field name="uom_id" ref="product_uom_unit"/>
-		<field name="uom_po_id" ref="product_uom_unit"/>
-		<field name="name">Kit Keyboard + Mouse</field>
-		<field name="categ_id" ref="product_category_11"/>
-	</record>
-
-	<record model="product.supplierinfo" id="supplierinfo1">
-		<field name="name" ref="base.res_partner_asus"/>
-		<field name="qty">10</field>
-		<field name="product_id" ref="product_product_mb1"/>
-		<field name="delay">5</field>
-	</record>
-	<record model="product.supplierinfo" id="supplierinfo2">
-		<field name="name" ref="base.res_partner_asus"/>
-		<field name="qty">10</field>
-		<field name="product_id" ref="product_product_mb2"/>
-		<field name="delay">5</field>
-	</record>
-	<record model="product.supplierinfo" id="supplierinfo3">
-		<field name="name" ref="base.res_partner_4"/>
-		<field name="qty">1</field>
-		<field name="product_id" ref="product_product_mb1"/>
-		<field name="delay">1</field>
-	</record>
-	<record model="product.supplierinfo" id="supplierinfo4">
-		<field name="name" ref="base.res_partner_4"/>
-		<field name="qty">1</field>
-		<field name="product_id" ref="product_product_mb2"/>
-		<field name="delay">1</field>
-	</record>
-	<record model="product.supplierinfo" id="supplierinfo5">
-		<field name="name" ref="base.res_partner_4"/>
-		<field name="qty">1</field>
-		<field name="product_id" ref="product_product_pc1"/>
-		<field name="delay">2</field>
-	</record>
-	<record model="product.supplierinfo" id="supplierinfo6">
-		<field name="name" ref="base.res_partner_4"/>
-		<field name="qty">1</field>
-		<field name="product_id" ref="product_product_pc2"/>
-		<field name="delay">2</field>
-	</record>
-	<record model="product.supplierinfo" id="supplierinfo7">
-		<field name="name" ref="base.res_partner_4"/>
-		<field name="qty">1</field>
-		<field name="product_id" ref="product_product_pc3"/>
-		<field name="delay">2</field>
-	</record>
-	<record model="product.supplierinfo" id="supplierinfo8">
-		<field name="name" ref="base.res_partner_4"/>
-		<field name="qty">1</field>
-		<field name="product_id" ref="product_product_pc4"/>
-		<field name="delay">1</field>
-	</record>
-	<record model="product.supplierinfo" id="supplierinfo9">
-		<field name="name" ref="base.res_partner_4"/>
-		<field name="qty">1</field>
-		<field name="product_id" ref="product_product_cpu1"/>
-		<field name="delay">1</field>
-	</record>
-	<record model="product.supplierinfo" id="supplierinfo10">
-		<field name="name" ref="base.res_partner_4"/>
-		<field name="qty">1</field>
-		<field name="product_id" ref="product_product_cpu3"/>
-		<field name="delay">1</field>
-	</record>
-	<record model="product.supplierinfo" id="supplierinfo11">
-		<field name="name" ref="base.res_partner_4"/>
-		<field name="qty">1</field>
-		<field name="product_id" ref="product_product_hdd1"/>
-		<field name="delay">1</field>
-	</record>
-	<record model="product.supplierinfo" id="supplierinfo12">
-		<field name="name" ref="base.res_partner_4"/>
-		<field name="qty">1</field>
-		<field name="product_id" ref="product_product_hdd2"/>
-		<field name="delay">1</field>
-	</record>
-	<record model="product.supplierinfo" id="supplierinfo13">
-		<field name="name" ref="base.res_partner_4"/>
-		<field name="qty">1</field>
-		<field name="product_id" ref="product_product_hdd3"/>
-		<field name="delay">1</field>
-	</record>
-	<record model="product.supplierinfo" id="supplierinfo14">
-		<field name="name" ref="base.res_partner_4"/>
-		<field name="qty">1</field>
-		<field name="product_id" ref="product_product_20"/>
-		<field name="delay">10</field>
-	</record>
-	<record model="product.supplierinfo" id="supplierinfo15">
-		<field name="name" ref="base.res_partner_4"/>
-		<field name="qty">1</field>
-		<field name="product_id" ref="product_product_21"/>
-		<field name="delay">10</field>
-	</record>
-	<record model="product.supplierinfo" id="supplierinfo16">
-		<field name="name" ref="base.res_partner_4"/>
-		<field name="qty">1</field>
-		<field name="product_id" ref="product_product_22"/>
-		<field name="delay">10</field>
-	</record>
-	<record model="product.supplierinfo" id="supplierinfo17">
-		<field name="name" ref="base.res_partner_seagate"/>
-		<field name="qty">10</field>
-		<field name="product_id" ref="product_product_hdd1"/>
-		<field name="delay">10</field>
-	</record>
-	<record model="product.supplierinfo" id="supplierinfo18">
-		<field name="name" ref="base.res_partner_seagate"/>
-		<field name="qty">10</field>
-		<field name="product_id" ref="product_product_hdd2"/>
-		<field name="delay">10</field>
-	</record>
-	<record model="product.supplierinfo" id="supplierinfo19">
-		<field name="name" ref="base.res_partner_4"/>
-		<field name="qty">10</field>
-		<field name="product_id" ref="product_product_hdd3"/>
-		<field name="delay">10</field>
-	</record>
-
-</data>
+        
+        <record id="product_product_0" model="product.product">
+            <field name="list_price">38.25</field>
+            <field name="standard_price">25.5</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="type">service</field>
+            <field name="name">Onsite Senior Intervention</field>
+            <field name="categ_id" ref="product_category_7"/>
+        </record>
+        <record id="product_product_1" model="product.product">
+            <field name="list_price">30.75</field>
+            <field name="standard_price">20.5</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="type">service</field>
+            <field name="name">Onsite Intervention</field>
+            <field name="categ_id" ref="product_category_7"/>
+        </record>
+        <record id="product_product_pc1" model="product.product">
+            <field name="default_code">PC1</field>
+            <field name="supply_method">produce</field>
+            <field name="list_price">450.0</field>
+            <field name="standard_price">300.0</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="sale_delay">2.0</field>
+            <field name="name">Basic PC</field>
+            <field name="categ_id" ref="product_category_pc"/>
+        </record>
+        <record id="product_product_pc2" model="product.product">
+            <field name="default_code">PC2</field>
+            <field name="supply_method">produce</field>
+            <field name="list_price">750.0</field>
+            <field name="standard_price">500.0</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="procure_method">make_to_order</field>
+            <field name="sale_delay">3.0</field>
+            <field name="name">Basic+ PC (assembly on order)</field>
+            <field name="categ_id" ref="product_category_pc"/>
+        </record>
+        <record id="product_product_pc3" model="product.product">
+            <field name="default_code">PC3</field>
+            <field name="supply_method">produce</field>
+            <field name="list_price">900.0</field>
+            <field name="standard_price">600.0</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="sale_delay">3.0</field>
+            <field name="name">Medium PC</field>
+            <field name="categ_id" ref="product_category_pc"/>
+        </record>
+        <record id="product_product_pc4" model="product.product">
+            <field name="default_code">PC4</field>
+            <field name="supply_method">produce</field>
+            <field name="list_price">1200.0</field>
+            <field name="standard_price">800.0</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="procure_method">make_to_order</field>
+            <field name="name">Customizable PC</field>
+            <field name="categ_id" ref="product_category_pc"/>
+            <field name="state">end</field>
+        </record>
+        <record id="product_product_mb1" model="product.product">
+            <field name="default_code">MB1</field>
+            <field name="list_price">88.0</field>
+            <field name="standard_price">54.0</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="sale_delay">1.0</field>
+            <field name="name">Mainboard ASUStek A7N8X</field>
+            <field name="categ_id" ref="product_category_10"/>
+        </record>
+        <record id="product_product_mb2" model="product.product">
+            <field name="default_code">MB2</field>
+            <field name="list_price">270.0</field>
+            <field name="standard_price">180.0</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="sale_delay">1.0</field>
+            <field name="name">Mainboard ASUStek A7V8X-X</field>
+            <field name="categ_id" ref="product_category_10"/>
+            <field name="state">draft</field>
+        </record>
+        <record id="product_product_cpu1" model="product.product">
+            <field name="default_code">CPU1</field>
+            <field name="list_price">75.0</field>
+            <field name="standard_price">50.0</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="sale_delay">1.0</field>
+            <field name="name">Processor AMD Athlon XP 1800+</field>
+            <field name="categ_id" ref="product_category_10"/>
+        </record>
+        <record id="product_product_cpu3" model="product.product">
+            <field name="default_code">CPU2</field>
+            <field name="list_price">150.0</field>
+            <field name="standard_price">100.0</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="sale_delay">1.0</field>
+            <field name="name">Processor AMD Athlon XP 2200+</field>
+            <field name="categ_id" ref="product_category_10"/>
+        </record>
+        <record id="product_product_hdd1" model="product.product">
+            <field name="default_code">HDD1</field>
+            <field name="list_price">50.0</field>
+            <field name="standard_price">40.0</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="sale_delay">1.0</field>
+            <field name="name">HDD Seagate 7200.8 80GB</field>
+            <field name="categ_id" ref="product_category_10"/>
+        </record>
+        <record id="product_product_hdd2" model="product.product">
+            <field name="default_code">HDD2</field>
+            <field name="list_price">75.0</field>
+            <field name="standard_price">60.0</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="sale_delay">1.0</field>
+            <field name="name">HDD Seagate 7200.8 120GB</field>
+            <field name="categ_id" ref="product_category_10"/>
+        </record>
+        <record id="product_product_hdd3" model="product.product">
+            <field name="default_code">HDD3</field>
+            <field name="list_price">95.0</field>
+            <field name="standard_price">80.0</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="procure_method">make_to_order</field>
+            <field name="sale_delay">1.0</field>
+            <field name="name">HDD Seagate 7200.8 160GB</field>
+            <field name="categ_id" ref="product_category_10"/>
+        </record>
+        <record id="product_product_fan" model="product.product">
+            <field name="default_code">FAN</field>
+            <field name="list_price">8.0</field>
+            <field name="standard_price">5.0</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="sale_delay">1.0</field>
+            <field name="name">Regular case fan 80mm</field>
+            <field name="categ_id" ref="product_category_10"/>
+        </record>
+        <record id="product_product_fan2" model="product.product">
+            <field name="default_code">FAN2</field>
+            <field name="list_price">18.5</field>
+            <field name="standard_price">10.0</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="sale_delay">1.0</field>
+            <field name="name">Silent fan</field>
+            <field name="categ_id" ref="cat1"/>
+        </record>
+        <record id="product_product_cpu_gen" model="product.product">
+            <field name="default_code">CPU_GEN</field>
+            <field name="supply_method">produce</field>
+            <field name="list_price">300.0</field>
+            <field name="standard_price">200.0</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="sale_delay">1.0</field>
+            <field name="name">Regular processor config</field>
+            <field name="procure_method">make_to_order</field>
+            <field name="categ_id" ref="product_category_10"/>
+        </record>
+        <record id="product_product_ram" model="product.product">
+            <field name="default_code">RAM</field>
+            <field name="list_price">60.0</field>
+            <field name="standard_price">40.0</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="sale_delay">1.0</field>
+            <field name="name">DDR 256MB PC400</field>
+            <field name="categ_id" ref="product_category_pc"/>
+        </record>
+        <record id="product_product_ram512" model="product.product">
+            <field name="default_code">RAM512</field>
+            <field name="list_price">90.0</field>
+            <field name="standard_price">60.0</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="sale_delay">1.0</field>
+            <field name="name">DDR 512MB PC400</field>
+            <field name="categ_id" ref="product_category_10"/>
+        </record>
+        <record id="product_product_cpu2" model="product.product">
+            <field name="default_code">CPU2</field>
+            <field name="supply_method">produce</field>
+            <field name="list_price">450.0</field>
+            <field name="standard_price">300.0</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="procure_method">make_to_order</field>
+            <field name="sale_delay">1.0</field>
+            <field name="name">High speed processor config</field>
+            <field name="categ_id" ref="product_category_10"/>
+        </record>
+        <record id="product_product_tow1" model="product.product">
+            <field name="default_code">TOW1</field>
+            <field name="list_price">37.5</field>
+            <field name="standard_price">25.0</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="sale_delay">1.0</field>
+            <field name="name">ATX Mid-size Tower</field>
+            <field name="categ_id" ref="product_category_10"/>
+        </record>
+        <record id="product_product_20" model="product.product">
+            <field name="default_code">HDD_GEN</field>
+            <field name="supply_method">produce</field>
+            <field name="list_price">135.0</field>
+            <field name="standard_price">90.0</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="procure_method">make_to_order</field>
+            <field name="sale_delay">1.0</field>
+            <field name="name">HDD on demand</field>
+            <field name="sale_ok" eval="False"/>
+            <field name="categ_id" ref="product_category_10"/>
+        </record>
+        <record id="product_product_21" model="product.product">
+            <field name="default_code">RAM_GEN</field>
+            <field name="supply_method">produce</field>
+            <field name="list_price">150.0</field>
+            <field name="standard_price">100.0</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="name">RAM on demand</field>
+            <field name="sale_ok" eval="False"/>
+            <field name="categ_id" ref="product_category_10"/>
+        </record>
+        <record id="product_product_22" model="product.product">
+            <field name="default_code">CPU_GEN</field>
+            <field name="supply_method">produce</field>
+            <field name="list_price">150.0</field>
+            <field name="standard_price">100.0</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="name">Processor on demand</field>
+            <field name="sale_ok" eval="False"/>
+            <field name="categ_id" ref="product_category_10"/>
+        </record>
+        <record id="product_product_23" model="product.product">
+            <field name="default_code">PC0</field>
+            <field name="supply_method">produce</field>
+            <field name="list_price">750.0</field>
+            <field name="standard_price">500.0</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="name">Complete PC With Peripherals</field>
+            <field name="categ_id" ref="product_category_10"/>
+        </record>
+        <record id="product_product_24" model="product.product">
+            <field name="default_code">KEYA</field>
+            <field name="list_price">7.0</field>
+            <field name="standard_price">5.0</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="name">Keyboard</field>
+            <field name="variants">AZERTY</field>
+            <field name="categ_id" ref="product_category_10"/>
+        </record>
+        <record id="product_product_25" model="product.product">
+            <field name="default_code">MOU</field>
+            <field name="list_price">7.0</field>
+            <field name="standard_price">5.0</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="name">Mouse</field>
+            <field name="categ_id" ref="product_category_10"/>
+        </record>
+        <record id="product_product_26" model="product.product">
+            <field name="default_code">KIT0</field>
+            <field name="supply_method">produce</field>
+            <field name="list_price">7.0</field>
+            <field name="standard_price">5.0</field>
+            <field name="uom_id" ref="product_uom_unit"/>
+            <field name="uom_po_id" ref="product_uom_unit"/>
+            <field name="name">Kit Keyboard + Mouse</field>
+            <field name="categ_id" ref="product_category_11"/>
+        </record>
+        
+        <record model="product.supplierinfo" id="supplierinfo1">
+            <field name="name" ref="base.res_partner_asus"/>
+            <field name="qty">10</field>
+            <field name="product_id" ref="product_product_mb1"/>
+            <field name="delay">5</field>
+        </record>
+        <record model="product.supplierinfo" id="supplierinfo2">
+            <field name="name" ref="base.res_partner_asus"/>
+            <field name="qty">10</field>
+            <field name="product_id" ref="product_product_mb2"/>
+            <field name="delay">5</field>
+        </record>
+        <record model="product.supplierinfo" id="supplierinfo3">
+            <field name="name" ref="base.res_partner_4"/>
+            <field name="qty">1</field>
+            <field name="product_id" ref="product_product_mb1"/>
+            <field name="delay">1</field>
+        </record>
+        <record model="product.supplierinfo" id="supplierinfo4">
+            <field name="name" ref="base.res_partner_4"/>
+            <field name="qty">1</field>
+            <field name="product_id" ref="product_product_mb2"/>
+            <field name="delay">1</field>
+        </record>
+        <record model="product.supplierinfo" id="supplierinfo5">
+            <field name="name" ref="base.res_partner_4"/>
+            <field name="qty">1</field>
+            <field name="product_id" ref="product_product_pc1"/>
+            <field name="delay">2</field>
+        </record>
+        <record model="product.supplierinfo" id="supplierinfo6">
+            <field name="name" ref="base.res_partner_4"/>
+            <field name="qty">1</field>
+            <field name="product_id" ref="product_product_pc2"/>
+            <field name="delay">2</field>
+        </record>
+        <record model="product.supplierinfo" id="supplierinfo7">
+            <field name="name" ref="base.res_partner_4"/>
+            <field name="qty">1</field>
+            <field name="product_id" ref="product_product_pc3"/>
+            <field name="delay">2</field>
+        </record>
+        <record model="product.supplierinfo" id="supplierinfo8">
+            <field name="name" ref="base.res_partner_4"/>
+            <field name="qty">1</field>
+            <field name="product_id" ref="product_product_pc4"/>
+            <field name="delay">1</field>
+        </record>
+        <record model="product.supplierinfo" id="supplierinfo9">
+            <field name="name" ref="base.res_partner_4"/>
+            <field name="qty">1</field>
+            <field name="product_id" ref="product_product_cpu1"/>
+            <field name="delay">1</field>
+        </record>
+        <record model="product.supplierinfo" id="supplierinfo10">
+            <field name="name" ref="base.res_partner_4"/>
+            <field name="qty">1</field>
+            <field name="product_id" ref="product_product_cpu3"/>
+            <field name="delay">1</field>
+        </record>
+        <record model="product.supplierinfo" id="supplierinfo11">
+            <field name="name" ref="base.res_partner_4"/>
+            <field name="qty">1</field>
+            <field name="product_id" ref="product_product_hdd1"/>
+            <field name="delay">1</field>
+        </record>
+        <record model="product.supplierinfo" id="supplierinfo12">
+            <field name="name" ref="base.res_partner_4"/>
+            <field name="qty">1</field>
+            <field name="product_id" ref="product_product_hdd2"/>
+            <field name="delay">1</field>
+        </record>
+        <record model="product.supplierinfo" id="supplierinfo13">
+            <field name="name" ref="base.res_partner_4"/>
+            <field name="qty">1</field>
+            <field name="product_id" ref="product_product_hdd3"/>
+            <field name="delay">1</field>
+        </record>
+        <record model="product.supplierinfo" id="supplierinfo14">
+            <field name="name" ref="base.res_partner_4"/>
+            <field name="qty">1</field>
+            <field name="product_id" ref="product_product_20"/>
+            <field name="delay">10</field>
+        </record>
+        <record model="product.supplierinfo" id="supplierinfo15">
+            <field name="name" ref="base.res_partner_4"/>
+            <field name="qty">1</field>
+            <field name="product_id" ref="product_product_21"/>
+            <field name="delay">10</field>
+        </record>
+        <record model="product.supplierinfo" id="supplierinfo16">
+            <field name="name" ref="base.res_partner_4"/>
+            <field name="qty">1</field>
+            <field name="product_id" ref="product_product_22"/>
+            <field name="delay">10</field>
+        </record>
+        <record model="product.supplierinfo" id="supplierinfo17">
+            <field name="name" ref="base.res_partner_seagate"/>
+            <field name="qty">10</field>
+            <field name="product_id" ref="product_product_hdd1"/>
+            <field name="delay">10</field>
+        </record>
+        <record model="product.supplierinfo" id="supplierinfo18">
+            <field name="name" ref="base.res_partner_seagate"/>
+            <field name="qty">10</field>
+            <field name="product_id" ref="product_product_hdd2"/>
+            <field name="delay">10</field>
+        </record>
+        <record model="product.supplierinfo" id="supplierinfo19">
+            <field name="name" ref="base.res_partner_4"/>
+            <field name="qty">10</field>
+            <field name="product_id" ref="product_product_hdd3"/>
+            <field name="delay">10</field>
+        </record>
+        
+    </data>
 </terp>

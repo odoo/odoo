@@ -1,48 +1,48 @@
 <?xml version="1.0"?>
 <terp>
-<data noupdate="1">
-
-	<record model="ir.sequence.type" id="sequence_mrp_prod_type">
-		<field name="name">Production order</field>
-		<field name="code">mrp.production</field>
-	</record>
-
-	<record model="ir.sequence" id="sequence_mrp_prod">
-		<field name="name">Production order</field>
-		<field name="code">mrp.production</field>
-		<field name="prefix">MO/</field>
-		<field name="padding">5</field>
-		<field name="number_next">1</field>
-		<field name="number_increment">1</field>
-	</record>
-
-
-	<record model="ir.sequence.type" id="sequence_mrp_op_type">
-		<field name="name">Stock orderpoint</field>
-		<field name="code">mrp.warehouse.orderpoint</field>
-	</record>
-
-	<record model="ir.sequence" id="sequence_mrp_op">
-		<field name="name">Stock orderpoint</field>
-		<field name="code">mrp.warehouse.orderpoint</field>
-		<field name="prefix">OP/</field>
-		<field name="padding">5</field>
-		<field name="number_next">1</field>
-		<field name="number_increment">1</field>
-	</record>
-
-	<record model="ir.cron" id="ir_cron_scheduler_action" forcecreate="True">
-		<field name="name">Run mrp scheduler</field>
-		<field name="active" eval="False"/>
-		<field name="user_id" ref="base.user_admin"/>
-		<field name="interval_number">1</field>
-		<field name="interval_type">days</field>
-		<field name="numbercall">-1</field>
-		<field name="doall" eval="False"/>
-		<field name="model" eval="'mrp.procurement'"/>
-		<field name="function" eval="'run_scheduler'"/>
-		<field name="args" eval="'(uid,)'"/>
-	</record>
-
-</data>
+    <data noupdate="1">
+        
+        <record model="ir.sequence.type" id="sequence_mrp_prod_type">
+            <field name="name">Production order</field>
+            <field name="code">mrp.production</field>
+        </record>
+        
+        <record model="ir.sequence" id="sequence_mrp_prod">
+            <field name="name">Production order</field>
+            <field name="code">mrp.production</field>
+            <field name="prefix">MO/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+        
+        
+        <record model="ir.sequence.type" id="sequence_mrp_op_type">
+            <field name="name">Stock orderpoint</field>
+            <field name="code">mrp.warehouse.orderpoint</field>
+        </record>
+        
+        <record model="ir.sequence" id="sequence_mrp_op">
+            <field name="name">Stock orderpoint</field>
+            <field name="code">mrp.warehouse.orderpoint</field>
+            <field name="prefix">OP/</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+        
+        <record model="ir.cron" id="ir_cron_scheduler_action" forcecreate="True">
+            <field name="name">Run mrp scheduler</field>
+            <field name="active" eval="False"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'mrp.procurement'"/>
+            <field name="function" eval="'run_scheduler'"/>
+            <field name="args" eval="'(uid,)'"/>
+        </record>
+        
+    </data>
 </terp>

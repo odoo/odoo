@@ -1,94 +1,94 @@
 <?xml version="1.0"?>
 <terp>
-<data noupdate="1">
-
-	<!--
+    <data noupdate="1">
+        
+        <!--
 	Fiscal year
 	-->	
-
-	<record model="account.fiscalyear" id="data_fiscalyear">
-		<field name="name" eval="'Fiscal Year '+time.strftime('%Y')"/>
-		<field name="code" eval="'FY'+time.strftime('%Y')"/>
-		<field name="date_start" eval="time.strftime('%Y')+'-01-01'"/>
-		<field name="date_stop" eval="time.strftime('%Y')+'-12-31'"/>
-	</record>
-
-	<!--
+        
+        <record model="account.fiscalyear" id="data_fiscalyear">
+            <field name="name" eval="'Fiscal Year '+time.strftime('%Y')"/>
+            <field name="code" eval="'FY'+time.strftime('%Y')"/>
+            <field name="date_start" eval="time.strftime('%Y')+'-01-01'"/>
+            <field name="date_stop" eval="time.strftime('%Y')+'-12-31'"/>
+        </record>
+        
+        <!--
 	Fiscal Periods
 	-->	
-
-	<record model="account.period" id="period_1">
-		<field name="name" eval="'Jan.'+time.strftime('%Y')"/>
-		<field name="fiscalyear_id" ref="data_fiscalyear"/>
-		<field name="date_start" eval="time.strftime('%Y')+'-01-01'"/>
-		<field name="date_stop" eval="time.strftime('%Y')+'-01-31'"/>
-	</record>
-	<record model="account.period" id="period_2">
-		<field name="name" eval="'Feb.'+time.strftime('%Y')"/>
-		<field name="fiscalyear_id" ref="data_fiscalyear"/>
-		<field name="date_start" eval="time.strftime('%Y')+'-02-01'"/>
-		<field name="date_stop" eval="time.strftime('%Y')+'-02-28'"/>
-	</record>
-	<record model="account.period" id="period_3">
-		<field name="name" eval="'Mar.'+time.strftime('%Y')"/>
-		<field name="fiscalyear_id" ref="data_fiscalyear"/>
-		<field name="date_start" eval="time.strftime('%Y')+'-03-01'"/>
-		<field name="date_stop" eval="time.strftime('%Y')+'-03-31'"/>
-	</record>
-	<record model="account.period" id="period_4">
-		<field name="name" eval="'Apr.'+time.strftime('%Y')"/>
-		<field name="fiscalyear_id" ref="data_fiscalyear"/>
-		<field name="date_start" eval="time.strftime('%Y')+'-04-01'"/>
-		<field name="date_stop" eval="time.strftime('%Y')+'-04-30'"/>
-	</record>
-	<record model="account.period" id="period_5">
-		<field name="name" eval="'May.'+time.strftime('%Y')"/>
-		<field name="fiscalyear_id" ref="data_fiscalyear"/>
-		<field name="date_start" eval="time.strftime('%Y')+'-05-01'"/>
-		<field name="date_stop" eval="time.strftime('%Y')+'-05-31'"/>
-	</record>
-	<record model="account.period" id="period_6">
-		<field name="name" eval="'Jun.'+time.strftime('%Y')"/>
-		<field name="fiscalyear_id" ref="data_fiscalyear"/>
-		<field name="date_start" eval="time.strftime('%Y')+'-06-01'"/>
-		<field name="date_stop" eval="time.strftime('%Y')+'-06-30'"/>
-	</record>
-	<record model="account.period" id="period_7">
-		<field name="name" eval="'Jul.'+time.strftime('%Y')"/>
-		<field name="fiscalyear_id" ref="data_fiscalyear"/>
-		<field name="date_start" eval="time.strftime('%Y')+'-07-01'"/>
-		<field name="date_stop" eval="time.strftime('%Y')+'-07-31'"/>
-	</record>
-	<record model="account.period" id="period_8">
-		<field name="name" eval="'Aug.'+time.strftime('%Y')"/>
-		<field name="fiscalyear_id" ref="data_fiscalyear"/>
-		<field name="date_start" eval="time.strftime('%Y')+'-08-01'"/>
-		<field name="date_stop" eval="time.strftime('%Y')+'-08-31'"/>
-	</record>
-	<record model="account.period" id="period_9">
-		<field name="name" eval="'Sep.'+time.strftime('%Y')"/>
-		<field name="fiscalyear_id" ref="data_fiscalyear"/>
-		<field name="date_start" eval="time.strftime('%Y')+'-09-01'"/>
-		<field name="date_stop" eval="time.strftime('%Y')+'-09-30'"/>
-	</record>
-	<record model="account.period" id="period_10">
-		<field name="name" eval="'Oct.'+time.strftime('%Y')"/>
-		<field name="fiscalyear_id" ref="data_fiscalyear"/>
-		<field name="date_start" eval="time.strftime('%Y')+'-10-01'"/>
-		<field name="date_stop" eval="time.strftime('%Y')+'-10-31'"/>
-	</record>
-	<record model="account.period" id="period_11">
-		<field name="name" eval="'Nov.'+time.strftime('%Y')"/>
-		<field name="fiscalyear_id" ref="data_fiscalyear"/>
-		<field name="date_start" eval="time.strftime('%Y')+'-11-01'"/>
-		<field name="date_stop" eval="time.strftime('%Y')+'-11-30'"/>
-	</record>
-	<record model="account.period" id="period_12">
-		<field name="name" eval="'Dec.'+time.strftime('%Y')"/>
-		<field name="fiscalyear_id" ref="data_fiscalyear"/>
-		<field name="date_start" eval="time.strftime('%Y')+'-12-01'"/>
-		<field name="date_stop" eval="time.strftime('%Y')+'-12-31'"/>
-	</record>
-
-</data>
+        
+        <record model="account.period" id="period_1">
+            <field name="name" eval="'Jan.'+time.strftime('%Y')"/>
+            <field name="fiscalyear_id" ref="data_fiscalyear"/>
+            <field name="date_start" eval="time.strftime('%Y')+'-01-01'"/>
+            <field name="date_stop" eval="time.strftime('%Y')+'-01-31'"/>
+        </record>
+        <record model="account.period" id="period_2">
+            <field name="name" eval="'Feb.'+time.strftime('%Y')"/>
+            <field name="fiscalyear_id" ref="data_fiscalyear"/>
+            <field name="date_start" eval="time.strftime('%Y')+'-02-01'"/>
+            <field name="date_stop" eval="time.strftime('%Y')+'-02-28'"/>
+        </record>
+        <record model="account.period" id="period_3">
+            <field name="name" eval="'Mar.'+time.strftime('%Y')"/>
+            <field name="fiscalyear_id" ref="data_fiscalyear"/>
+            <field name="date_start" eval="time.strftime('%Y')+'-03-01'"/>
+            <field name="date_stop" eval="time.strftime('%Y')+'-03-31'"/>
+        </record>
+        <record model="account.period" id="period_4">
+            <field name="name" eval="'Apr.'+time.strftime('%Y')"/>
+            <field name="fiscalyear_id" ref="data_fiscalyear"/>
+            <field name="date_start" eval="time.strftime('%Y')+'-04-01'"/>
+            <field name="date_stop" eval="time.strftime('%Y')+'-04-30'"/>
+        </record>
+        <record model="account.period" id="period_5">
+            <field name="name" eval="'May.'+time.strftime('%Y')"/>
+            <field name="fiscalyear_id" ref="data_fiscalyear"/>
+            <field name="date_start" eval="time.strftime('%Y')+'-05-01'"/>
+            <field name="date_stop" eval="time.strftime('%Y')+'-05-31'"/>
+        </record>
+        <record model="account.period" id="period_6">
+            <field name="name" eval="'Jun.'+time.strftime('%Y')"/>
+            <field name="fiscalyear_id" ref="data_fiscalyear"/>
+            <field name="date_start" eval="time.strftime('%Y')+'-06-01'"/>
+            <field name="date_stop" eval="time.strftime('%Y')+'-06-30'"/>
+        </record>
+        <record model="account.period" id="period_7">
+            <field name="name" eval="'Jul.'+time.strftime('%Y')"/>
+            <field name="fiscalyear_id" ref="data_fiscalyear"/>
+            <field name="date_start" eval="time.strftime('%Y')+'-07-01'"/>
+            <field name="date_stop" eval="time.strftime('%Y')+'-07-31'"/>
+        </record>
+        <record model="account.period" id="period_8">
+            <field name="name" eval="'Aug.'+time.strftime('%Y')"/>
+            <field name="fiscalyear_id" ref="data_fiscalyear"/>
+            <field name="date_start" eval="time.strftime('%Y')+'-08-01'"/>
+            <field name="date_stop" eval="time.strftime('%Y')+'-08-31'"/>
+        </record>
+        <record model="account.period" id="period_9">
+            <field name="name" eval="'Sep.'+time.strftime('%Y')"/>
+            <field name="fiscalyear_id" ref="data_fiscalyear"/>
+            <field name="date_start" eval="time.strftime('%Y')+'-09-01'"/>
+            <field name="date_stop" eval="time.strftime('%Y')+'-09-30'"/>
+        </record>
+        <record model="account.period" id="period_10">
+            <field name="name" eval="'Oct.'+time.strftime('%Y')"/>
+            <field name="fiscalyear_id" ref="data_fiscalyear"/>
+            <field name="date_start" eval="time.strftime('%Y')+'-10-01'"/>
+            <field name="date_stop" eval="time.strftime('%Y')+'-10-31'"/>
+        </record>
+        <record model="account.period" id="period_11">
+            <field name="name" eval="'Nov.'+time.strftime('%Y')"/>
+            <field name="fiscalyear_id" ref="data_fiscalyear"/>
+            <field name="date_start" eval="time.strftime('%Y')+'-11-01'"/>
+            <field name="date_stop" eval="time.strftime('%Y')+'-11-30'"/>
+        </record>
+        <record model="account.period" id="period_12">
+            <field name="name" eval="'Dec.'+time.strftime('%Y')"/>
+            <field name="fiscalyear_id" ref="data_fiscalyear"/>
+            <field name="date_start" eval="time.strftime('%Y')+'-12-01'"/>
+            <field name="date_stop" eval="time.strftime('%Y')+'-12-31'"/>
+        </record>
+        
+    </data>
 </terp>

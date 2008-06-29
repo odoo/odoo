@@ -1,19 +1,17 @@
-<?xml version="1.0"?>
+<?xml version='1.0'?>
 <terp>
-<data>
-
-	<menuitem name="Financial Management/End of Year Treatments" sequence="20" id="menu_account_end_year_treatments"/>
-
-	<record model="ir.actions.act_window" id="action_account_period_tree">
-                <field name="name">Close Period</field>
-		<field name="res_model">account.period</field>
-		<field name="view_type">form</field>
-		<field name="domain">[('state','=','draft')]</field>
-		<field name="view_id" ref="view_account_period_tree"/>
-	</record>
-	<menuitem name="Financial Management/End of Year Treatments/Close Period"
-		id="menu_action_account_period_close_tree"
-		action="action_account_period_tree" />
-
-</data>
+    <data>
+        
+        <menuitem name='Financial Management/End of Year Treatments' sequence='20' id='menu_account_end_year_treatments'/>
+        
+        <record id='action_account_period_tree' model='ir.actions.act_window'>
+            <field name='name'>Close Period</field>
+            <field name='res_model'>account.period</field>
+            <field name='view_type'>form</field>
+            <field name='domain'>[('state','=','draft')]</field>
+            <field name='view_id' ref='view_account_period_tree'/>
+        </record>
+        <menuitem name='Financial Management/End of Year Treatments/Close Period' action='action_account_period_tree' id='menu_action_account_period_close_tree'/>
+        
+    </data>
 </terp>

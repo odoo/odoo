@@ -1,58 +1,55 @@
-<?xml version="1.0"?>
+<?xml version='1.0'?>
 <terp>
-<data>
-
-	#
-	# Balance by account type
-	#
-
-	<record model="ir.ui.view" id="view_crm_case_user_graph">
-		<field name="name">report.account.receivable.graph</field>
-		<field name="model">report.account.receivable</field>
-		<field name="type">graph</field>
-		<field name="arch" type="xml">
-			<graph string="Accounts by type" type="bar">
-				<field name="name"/>
-				<field name="balance" operator="+"/>
-			</graph>
-		</field>
-	</record>
-	<record model="ir.ui.view" id="view_crm_case_user_tree">
-		<field name="name">report.account.receivable.tree</field>
-		<field name="model">report.account.receivable</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Accounts by type">
-				<field name="name"/>
-				<field name="type"/>
-				<field name="balance"/>
-				<field name="debit"/>
-				<field name="credit"/>
-			</tree>
-		</field>
-	</record>
-	<record model="ir.ui.view" id="view_crm_case_user_form">
-		<field name="name">report.account.receivable.form</field>
-		<field name="model">report.account.receivable</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Accounts by type">
-				<field name="name" select="1"/>
-				<field name="type" select="1"/>
-			</form>
-		</field>
-	</record>
-
-	<record model="ir.actions.act_window" id="action_account_receivable_graph">
-                <field name="name">Balance by Type of Account</field>
-		<field name="res_model">report.account.receivable</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,graph</field>
-	</record>
-	<menuitem 
-		name="Financial Management/Reporting/Balance by Type of Account"
-		action="action_account_receivable_graph"
-		id="menu_account_receivable_graph"/>
-
-	</data>
+    <data>
+        
+        #
+        # Balance by account type
+        #
+        
+        <record id='view_crm_case_user_graph' model='ir.ui.view'>
+            <field name='name'>report.account.receivable.graph</field>
+            <field name='model'>report.account.receivable</field>
+            <field name='type'>graph</field>
+            <field name='arch' type='xml'>
+                <graph type='bar' string='Accounts by type'>
+                    <field name='name'/>
+                    <field name='balance' operator='+'/>
+                </graph>
+            </field>
+        </record>
+        <record id='view_crm_case_user_tree' model='ir.ui.view'>
+            <field name='name'>report.account.receivable.tree</field>
+            <field name='model'>report.account.receivable</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Accounts by type'>
+                    <field name='name'/>
+                    <field name='type'/>
+                    <field name='balance'/>
+                    <field name='debit'/>
+                    <field name='credit'/>
+                </tree>
+            </field>
+        </record>
+        <record id='view_crm_case_user_form' model='ir.ui.view'>
+            <field name='name'>report.account.receivable.form</field>
+            <field name='model'>report.account.receivable</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Accounts by type'>
+                    <field name='name' select='1'/>
+                    <field name='type' select='1'/>
+                </form>
+            </field>
+        </record>
+        
+        <record id='action_account_receivable_graph' model='ir.actions.act_window'>
+            <field name='name'>Balance by Type of Account</field>
+            <field name='res_model'>report.account.receivable</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,graph</field>
+        </record>
+        <menuitem name='Financial Management/Reporting/Balance by Type of Account' action='action_account_receivable_graph' id='menu_account_receivable_graph'/>
+        
+    </data>
 </terp>

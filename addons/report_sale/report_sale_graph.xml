@@ -1,95 +1,95 @@
 <terp>
-<data>
-
-	<menuitem name="Sales Management/Reporting/All Months/Graphs/Monthly Sales Turnover Over One Year" id="ir_ui_menu1" icon="STOCK_PRINT"/>
-	<menuitem name="Sales Management/Reporting/All Months/Graphs/Daily Sales Turnover Over One Year" id="ir_ui_menu2" icon="STOCK_PRINT"/>
-	<menuitem name="Sales Management/Reporting/All Months/Graphs/Monthly Cumulated Sales Turnover Over One Year" id="ir_ui_menu3" icon="STOCK_PRINT"/>
-
-	<!-- reports -->
-	<record id="ir_report_custom_4" model="ir.report.custom">
-		<field name="model_id" model="ir.model" search="[('model','=','sale.order')]"/>
-		<field name="title">Monthly sales turnover over one year</field>
-		<field name="name">Monthly sales turnover over one year</field>
-		<field name="frequency">M</field>
-		<field name="type">bar</field>
-		<field name="menu_id" ref="ir_ui_menu1"/>
-	</record>
-
-	<record id="ir_report_custom_5" model="ir.report.custom">
-		<field name="model_id" model="ir.model" search="[('model','=','sale.order')]"/>
-		<field name="title">Daily sales turnover over one year</field>
-		<field name="name">Daily sales turnover over one year</field>
-		<field name="frequency">D</field>
-		<field name="type">bar</field>
-		<field name="menu_id" ref="ir_ui_menu2"/>
-	</record>
-
-	<record id="ir_report_custom_6" model="ir.report.custom">
-		<field name="model_id" model="ir.model" search="[('model','=','sale.order')]"/>
-		<field name="title">Monthly cumulated sales turnover over one year</field>
-		<field name="name">Monthly cumulated sales turnover over one year</field>
-		<field name="frequency">M</field>
-		<field name="type">bar</field>
-		<field name="menu_id" ref="ir_ui_menu3"/>
-	</record>
-
-	<!-- fields -->
-	<record id="ir_report_custom_fields_0" model="ir.report.custom.fields">
-		<field name="field_child0" model="ir.model.fields" search="[('name','=','date_order'), ('model','=','sale.order')]"/>
-		<field name="sequence">1</field>
-		<field name="operation" eval="None"/>
-		<field name="report_id" ref="ir_report_custom_4"/>
-		<field name="name">order date</field>
-		<field name="groupby">1</field>
-	</record>
-	<record id="ir_report_custom_fields_sales" model="ir.report.custom.fields">
-		<field name="operation">calc_sum</field>
-		<field name="sequence">2</field>
-		<field name="field_child1" model="ir.model.fields" search="[('name','=','price_subtotal'), ('model','=','sale.order.line')]"/>
-		<field name="field_child0" model="ir.model.fields" search="[('name','=','order_line'), ('model','=','sale.order')]"/>
-		<field name="report_id" ref="ir_report_custom_4"/>
-		<field name="name">sales</field>
-	</record>
-	
-	<record id="ir_report_custom_fields_2" model="ir.report.custom.fields">
-		<field name="field_child0" model="ir.model.fields" search="[('name','=','date_order'), ('model','=','sale.order')]"/>
-		<field name="sequence">1</field>
-		<field name="operation" eval="None"/>
-		<field name="report_id" ref="ir_report_custom_5"/>
-		<field name="name">order date</field>
-		<field name="groupby">1</field>
-	</record>
-	<record id="ir_report_custom_fields_sale" model="ir.report.custom.fields">
-		<field name="operation">calc_sum</field>
-		<field name="sequence">2</field>
-		<field name="field_child1" model="ir.model.fields" search="[('name','=','price_subtotal'), ('model','=','sale.order.line')]"/>
-		<field name="field_child0" model="ir.model.fields" search="[('name','=','order_line'),('model','=','sale.order')]"/>
-		<field name="cumulate">1</field>
-		<field name="report_id" ref="ir_report_custom_5"/>
-		<field name="name">sale</field>
-	</record>
-	
-	<record id="ir_report_custom_fields_1" model="ir.report.custom.fields">
-		<field name="field_child0" model="ir.model.fields" search="[('name','=','date_order'), ('model','=','sale.order')]"/>
-		<field name="sequence">1</field>
-		<field name="operation">calc_sum</field>
-		<field name="report_id" ref="ir_report_custom_6"/>
-		<field name="name">order date</field>
-		<field name="groupby">1</field>
-	</record>
-	<record id="ir_report_custom_fields_sales2" model="ir.report.custom.fields">
-		<field name="sequence">2</field>
-		<field name="field_child1" model="ir.model.fields" search="[('name','=','price_subtotal'), ('model','=','sale.order.line')]"/>
-		<field name="field_child0" model="ir.model.fields" search="[('name','=','order_line'), ('model','=','sale.order')]"/>
-		<field name="operation">calc_sum</field>
-		<field name="cumulate">1</field>
-		<field name="report_id" ref="ir_report_custom_6"/>
-		<field name="name">sales</field>
-	</record>
-	
-	<function model="ir.report.custom" name="subscribe" eval="[[ir_report_custom_4]]"/>
-	<function model="ir.report.custom" name="subscribe" eval="[[ir_report_custom_5]]"/>
-	<function model="ir.report.custom" name="subscribe" eval="[[ir_report_custom_6]]"/>
-
-</data>
+    <data>
+        
+        <menuitem name='Sales Management/Reporting/All Months/Graphs/Monthly Sales Turnover Over One Year' icon='STOCK_PRINT' id='ir_ui_menu1'/>
+        <menuitem name='Sales Management/Reporting/All Months/Graphs/Daily Sales Turnover Over One Year' icon='STOCK_PRINT' id='ir_ui_menu2'/>
+        <menuitem name='Sales Management/Reporting/All Months/Graphs/Monthly Cumulated Sales Turnover Over One Year' icon='STOCK_PRINT' id='ir_ui_menu3'/>
+        
+        <!-- reports -->
+        <record id='ir_report_custom_4' model='ir.report.custom'>
+            <field name='model_id' search='[(&apos;model&apos;,&apos;=&apos;,&apos;sale.order&apos;)]' model='ir.model'/>
+            <field name='title'>Monthly sales turnover over one year</field>
+            <field name='name'>Monthly sales turnover over one year</field>
+            <field name='frequency'>M</field>
+            <field name='type'>bar</field>
+            <field name='menu_id' ref='ir_ui_menu1'/>
+        </record>
+        
+        <record id='ir_report_custom_5' model='ir.report.custom'>
+            <field name='model_id' search='[(&apos;model&apos;,&apos;=&apos;,&apos;sale.order&apos;)]' model='ir.model'/>
+            <field name='title'>Daily sales turnover over one year</field>
+            <field name='name'>Daily sales turnover over one year</field>
+            <field name='frequency'>D</field>
+            <field name='type'>bar</field>
+            <field name='menu_id' ref='ir_ui_menu2'/>
+        </record>
+        
+        <record id='ir_report_custom_6' model='ir.report.custom'>
+            <field name='model_id' search='[(&apos;model&apos;,&apos;=&apos;,&apos;sale.order&apos;)]' model='ir.model'/>
+            <field name='title'>Monthly cumulated sales turnover over one year</field>
+            <field name='name'>Monthly cumulated sales turnover over one year</field>
+            <field name='frequency'>M</field>
+            <field name='type'>bar</field>
+            <field name='menu_id' ref='ir_ui_menu3'/>
+        </record>
+        
+        <!-- fields -->
+        <record id='ir_report_custom_fields_0' model='ir.report.custom.fields'>
+            <field name='field_child0' search='[(&apos;name&apos;,&apos;=&apos;,&apos;date_order&apos;), (&apos;model&apos;,&apos;=&apos;,&apos;sale.order&apos;)]' model='ir.model.fields'/>
+            <field name='sequence'>1</field>
+            <field name='operation' eval='None'/>
+            <field name='report_id' ref='ir_report_custom_4'/>
+            <field name='name'>order date</field>
+            <field name='groupby'>1</field>
+        </record>
+        <record id='ir_report_custom_fields_sales' model='ir.report.custom.fields'>
+            <field name='operation'>calc_sum</field>
+            <field name='sequence'>2</field>
+            <field name='field_child1' search='[(&apos;name&apos;,&apos;=&apos;,&apos;price_subtotal&apos;), (&apos;model&apos;,&apos;=&apos;,&apos;sale.order.line&apos;)]' model='ir.model.fields'/>
+            <field name='field_child0' search='[(&apos;name&apos;,&apos;=&apos;,&apos;order_line&apos;), (&apos;model&apos;,&apos;=&apos;,&apos;sale.order&apos;)]' model='ir.model.fields'/>
+            <field name='report_id' ref='ir_report_custom_4'/>
+            <field name='name'>sales</field>
+        </record>
+        
+        <record id='ir_report_custom_fields_2' model='ir.report.custom.fields'>
+            <field name='field_child0' search='[(&apos;name&apos;,&apos;=&apos;,&apos;date_order&apos;), (&apos;model&apos;,&apos;=&apos;,&apos;sale.order&apos;)]' model='ir.model.fields'/>
+            <field name='sequence'>1</field>
+            <field name='operation' eval='None'/>
+            <field name='report_id' ref='ir_report_custom_5'/>
+            <field name='name'>order date</field>
+            <field name='groupby'>1</field>
+        </record>
+        <record id='ir_report_custom_fields_sale' model='ir.report.custom.fields'>
+            <field name='operation'>calc_sum</field>
+            <field name='sequence'>2</field>
+            <field name='field_child1' search='[(&apos;name&apos;,&apos;=&apos;,&apos;price_subtotal&apos;), (&apos;model&apos;,&apos;=&apos;,&apos;sale.order.line&apos;)]' model='ir.model.fields'/>
+            <field name='field_child0' search='[(&apos;name&apos;,&apos;=&apos;,&apos;order_line&apos;),(&apos;model&apos;,&apos;=&apos;,&apos;sale.order&apos;)]' model='ir.model.fields'/>
+            <field name='cumulate'>1</field>
+            <field name='report_id' ref='ir_report_custom_5'/>
+            <field name='name'>sale</field>
+        </record>
+        
+        <record id='ir_report_custom_fields_1' model='ir.report.custom.fields'>
+            <field name='field_child0' search='[(&apos;name&apos;,&apos;=&apos;,&apos;date_order&apos;), (&apos;model&apos;,&apos;=&apos;,&apos;sale.order&apos;)]' model='ir.model.fields'/>
+            <field name='sequence'>1</field>
+            <field name='operation'>calc_sum</field>
+            <field name='report_id' ref='ir_report_custom_6'/>
+            <field name='name'>order date</field>
+            <field name='groupby'>1</field>
+        </record>
+        <record id='ir_report_custom_fields_sales2' model='ir.report.custom.fields'>
+            <field name='sequence'>2</field>
+            <field name='field_child1' search='[(&apos;name&apos;,&apos;=&apos;,&apos;price_subtotal&apos;), (&apos;model&apos;,&apos;=&apos;,&apos;sale.order.line&apos;)]' model='ir.model.fields'/>
+            <field name='field_child0' search='[(&apos;name&apos;,&apos;=&apos;,&apos;order_line&apos;), (&apos;model&apos;,&apos;=&apos;,&apos;sale.order&apos;)]' model='ir.model.fields'/>
+            <field name='operation'>calc_sum</field>
+            <field name='cumulate'>1</field>
+            <field name='report_id' ref='ir_report_custom_6'/>
+            <field name='name'>sales</field>
+        </record>
+        
+        <function name='subscribe' model='ir.report.custom' eval='[[ir_report_custom_4]]'/>
+        <function name='subscribe' model='ir.report.custom' eval='[[ir_report_custom_5]]'/>
+        <function name='subscribe' model='ir.report.custom' eval='[[ir_report_custom_6]]'/>
+        
+    </data>
 </terp>

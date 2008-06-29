@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <terp>
-	<data noupdate="1">
-
-		<record model="ir.actions.wizard" id="action_wizard_setup">
-			<field name="name">Setup</field>
-			<field name="type">ir.actions.wizard</field>
-			<field name="wiz_name">base_setup.base_setup</field>
-		</record>
-
-		<record model="res.users" id="base.user_admin">
-			<field name="action_id" ref="action_wizard_setup"/>
-			<field name="menu_id" ref="action_wizard_setup"/>
-		</record>
-
-
-
-	</data>
+    <data noupdate="1">
+        
+        <record model="ir.actions.wizard" id="action_wizard_setup">
+            <field name="name">Setup</field>
+            <field name="type">ir.actions.wizard</field>
+            <field name="wiz_name">base_setup.base_setup</field>
+        </record>
+        
+        <record model="res.users" id="base.user_admin">
+            <field name="action_id" ref="action_wizard_setup"/>
+            <field name="menu_id" ref="action_wizard_setup"/>
+        </record>
+        
+        
+        
+    </data>
 </terp>

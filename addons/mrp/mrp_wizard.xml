@@ -1,43 +1,35 @@
-<?xml version="1.0"?>
+<?xml version='1.0'?>
 <terp>
-	<data>
-		<record model="ir.actions.wizard" id="wiz_mrp_proc0">
-			<field name="name">Compute all schedulers</field>
-			<field name="wiz_name">mrp.procurement.compute.all</field>
-		</record>
-		<menuitem
-			name="Production Management/Start All Schedulers" 
-			action="wiz_mrp_proc0" 
-			type="wizard"
-			id="mrp_Sched_all"/>
-
-		<record model="ir.actions.wizard" id="wiz_mrp_proc1">
-			<field name="name">Compute procurement</field>
-			<field name="wiz_name">mrp.procurement.compute</field>
-		</record>
-		<menuitem name="Production Management/Start All Schedulers/Start Procurement Scheduling" action="wiz_mrp_proc1" type="wizard" id="menu_wiz_mrp_proc1"/>
-
-		<record model="ir.actions.wizard" id="wiz_mrp_proc2">
-			<field name="name">Compute stock minimum rules</field>
-			<field name="wiz_name">mrp.procurement.orderpoint.compute</field>
-		</record>
-		<menuitem name="Production Management/Start All Schedulers/Start Order Point Scheduling" action="wiz_mrp_proc2" type="wizard" id="menu_wiz_mrp_proc2"/>
-
-		<wizard 
-			string="Workcenter load" 
-			model="mrp.workcenter" 
-			name="mrp.workcenter.load" 
-			id="wizard_workcenter_load"/>
-
-		<wizard id="wizard_price" string="Product Cost Structure" model="product.product" name="product_price" menu="False"/>
-		 <record model="ir.values" id="ir_project_cost_structure">
-			 <field name="key2" eval="'client_print_multi'"/>
-			 <field name="model" eval="'product.product'"/>
-			 <field name="name">Product Cost Structure</field>
-			 <field name="value" eval="'ir.actions.wizard,%d'%wizard_price"/>
-			 <field name="object" eval="True"/>
-		 </record>
-
-	</data>
+    <data>
+        <record id='wiz_mrp_proc0' model='ir.actions.wizard'>
+            <field name='name'>Compute all schedulers</field>
+            <field name='wiz_name'>mrp.procurement.compute.all</field>
+        </record>
+        <menuitem name='Production Management/Start All Schedulers' action='wiz_mrp_proc0' type='wizard' id='mrp_Sched_all'/>
+        
+        <record id='wiz_mrp_proc1' model='ir.actions.wizard'>
+            <field name='name'>Compute procurement</field>
+            <field name='wiz_name'>mrp.procurement.compute</field>
+        </record>
+        <menuitem name='Production Management/Start All Schedulers/Start Procurement Scheduling' action='wiz_mrp_proc1' type='wizard' id='menu_wiz_mrp_proc1'/>
+        
+        <record id='wiz_mrp_proc2' model='ir.actions.wizard'>
+            <field name='name'>Compute stock minimum rules</field>
+            <field name='wiz_name'>mrp.procurement.orderpoint.compute</field>
+        </record>
+        <menuitem name='Production Management/Start All Schedulers/Start Order Point Scheduling' action='wiz_mrp_proc2' type='wizard' id='menu_wiz_mrp_proc2'/>
+        
+        <wizard name='mrp.workcenter.load' id='wizard_workcenter_load' model='mrp.workcenter' string='Workcenter load'/>
+        
+        <wizard name='product_price' id='wizard_price' model='product.product' menu='False' string='Product Cost Structure'/>
+        <record id='ir_project_cost_structure' model='ir.values'>
+            <field name='key2' eval='&apos;client_print_multi&apos;'/>
+            <field name='model' eval='&apos;product.product&apos;'/>
+            <field name='name'>Product Cost Structure</field>
+            <field name='value' eval='&apos;ir.actions.wizard,%d&apos;%wizard_price'/>
+            <field name='object' eval='True'/>
+        </record>
+        
+    </data>
 </terp>
 

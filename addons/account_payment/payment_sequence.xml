@@ -1,29 +1,29 @@
 <?xml version="1.0"?>
 <terp>
-	<data noupdate="1">
-		<record model="ir.sequence.type" id="seq_type_payment_order" forcecreate="1">
-			<field name="name">Payment order</field>
-			<field name="code">payment.order</field>
-		</record>
-
-		<record model="ir.sequence" id="seq_payment_order" forcecreate="1">
-			<field name="name">Payment order</field>
-			<field name="code">payment.order</field>
-			<field name="padding" eval="3"/>
-			<field name="prefix">%(year)s/</field>
-		</record>
-
-		<record model="ir.sequence.type" id="seq_type_payment_line" forcecreate="1">
-			<field name="name">Payment Line</field>
-			<field name="code">payment.line</field>
-		</record>
-
-		<record model="ir.sequence" id="seq_payment_line" forcecreate="1">
-			<field name="name">Payment Line</field>
-			<field name="code">payment.line</field>
-			<field name="prefix"></field>
-			<field name="padding">3</field>
-		</record>
-
-	</data>
+    <data noupdate="1">
+        <record model="ir.sequence.type" id="seq_type_payment_order" forcecreate="1">
+            <field name="name">Payment order</field>
+            <field name="code">payment.order</field>
+        </record>
+        
+        <record model="ir.sequence" id="seq_payment_order" forcecreate="1">
+            <field name="name">Payment order</field>
+            <field name="code">payment.order</field>
+            <field name="padding" eval="3"/>
+            <field name="prefix">%(year)s/</field>
+        </record>
+        
+        <record model="ir.sequence.type" id="seq_type_payment_line" forcecreate="1">
+            <field name="name">Payment Line</field>
+            <field name="code">payment.line</field>
+        </record>
+        
+        <record model="ir.sequence" id="seq_payment_line" forcecreate="1">
+            <field name="name">Payment Line</field>
+            <field name="code">payment.line</field>
+            <field name="prefix"></field>
+            <field name="padding">3</field>
+        </record>
+        
+    </data>
 </terp>

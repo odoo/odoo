@@ -1,353 +1,331 @@
-<?xml version="1.0"?>
+<?xml version='1.0'?>
 <terp>
-	<data>
-
-		<record model="ir.ui.view" id="view_account_analytic_account_list">
-			<field name="name">account.analytic.account.list</field>
-			<field name="model">account.analytic.account</field>
-			<field name="type">tree</field>
-			<field name="priority" eval="8"/>
-			<field name="arch" type="xml">
-				<tree string="Analytic account" colors="red:date and (date&lt;=current_date)">
-					<field name="code" />
-					<field name="complete_name"/>
-					<field name="quantity" />
-					<field name="quantity_max" />
-					<field name="date" />
-				</tree>
-			</field>
-		</record>
-
-		<record model="ir.ui.view" id="view_account_analytic_account_tree">
-			<field name="name">account.analytic.account.tree</field>
-			<field name="model">account.analytic.account</field>
-			<field name="type">tree</field>
-			<field name="field_parent">child_ids</field>
-			<field name="arch" type="xml">
-				<tree string="Analytic account" colors="red:date and (date&lt;=current_date)">
-					<field name="name"/>
-					<field name="code"/>
-					<field name="date" />
-					<field name="company_currency_id"/>
-					<field name="debit" />
-					<field name="credit" />
-					<field name="balance" />
-					<field name="quantity" />
-					<field name="quantity_max" />
-				</tree>
-			</field>
-		</record>
-
-		<record model="ir.ui.view" id="view_account_analytic_account_form">
-			<field name="name">account.analytic.account.form</field>
-			<field name="model">account.analytic.account</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Analytic account">
-					<notebook>
-						<page string="Account Data">
-							<field name="name" select="1"/>
-							<field name="code" select="1"/>
-							<field name="parent_id" on_change="on_change_parent(parent_id)" />
-							<field name="company_id" select="2"/>
-							<field name="type" select="2" />
-							<field name="partner_id" select="1"/>
-							<newline/>
-							<field name="date_start" />
-							<field name="date" select="2"/>
-							<field name="active" select="2"/>
-							<newline/>
-							<field name="quantity_max" />
-							<field name="user_id" />
-							<separator string="Note" colspan="4" />
-							<field name="description" colspan="4" nolabel="1" />
-						</page>
-					</notebook>
-				</form>
-			</field>
-		</record>
-
-		<record model="ir.actions.act_window" id="action_account_analytic_account_form">
-                        <field name="name">Analytic Accounts</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">account.analytic.account</field>
-			<field name="view_type">form</field>
-			<field name="view_id" ref="view_account_analytic_account_tree"/>
-		</record>
-		<menuitem name="Financial Management/Configuration/Analytic Accounts/Analytic Accounts" id="account_analytic_def_account"
-		   	action="action_account_analytic_account_form"/>
-
-		<record model="ir.actions.act_window" id="action_account_analytic_account_tree2">
-			<field name="name">Analytic Charts of Accounts</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">account.analytic.account</field>
-			<field name="domain">[('parent_id','=',False)]</field>
-			<field name="view_type">tree</field>
-			<field name="view_id" ref="view_account_analytic_account_tree"/>
-		</record>
-		<menuitem name="Financial Management/Configuration/Analytic Accounts/" id="account_analytic_def_chart" action="action_account_analytic_account_tree2"/>
-		<menuitem name="Financial Management/Charts/" id="account_analytic_chart" action="action_account_analytic_account_tree2"/>
-
-		<menuitem name="Financial Management/Reporting/Analytic/Analytic Balance" id="account_analytic_chart_balance" action="action_account_analytic_account_tree2"/>
-
-		<record model="ir.ui.view" id="view_account_analytic_line_form">
-			<field name="name">account.analytic.line.form</field>
-			<field name="model">account.analytic.line</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Analytic Entry">
-					<field name="name" select="1" colspan="4"/>
-					<field name="amount"  select="2"/>
-					<field name="date" select="1"/>
-					<field name="account_id" select="1"/>
-					<field name="journal_id" select="2"/>
-					<field name="general_account_id" select="2"/>
-					<field name="move_id" select="2"/>
-					<field name="unit_amount" select="2"/>
-					<field name="ref" select="2"/>
-					<newline/>
-					<field name="product_id" select="2"/>
-					<field name="product_uom_id" select="2"/>
-				</form>
-			</field>
-		</record>
-		<record model="ir.ui.view" id="view_account_analytic_line_tree">
-			<field name="name">account.analytic.line.tree</field>
-			<field name="model">account.analytic.line</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Analytic Entries" editable="top">
-					<field name="date"/>
-					<field name="name" />
-					<field name="unit_amount" sum="Total quantity" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
-					<field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
-					<field name="account_id" domain="[('type','=','normal')]"/>
-					<field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" invisible="True"/>
-					<field name="amount" sum="Total amount"/>
-					<field name="general_account_id"/>
-					<field name="journal_id"/>
-					<field name="ref"/>
-				</tree>
-			</field>
-		</record>
-		<record model="ir.actions.act_window" id="action_account_analytic_line_form">
-                    <field name="name">Analytic Entries</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">account.analytic.line</field>
-			<field name="view_type">form</field>
-			<field name="view_id" ref="view_account_analytic_line_tree"/>
-		</record>
-		<menuitem name="Financial Management/Entries/Analytic Entries/Analytic Entries" id="account_entries_analytic_entries" action="action_account_analytic_line_form" />
-
-
-		<record model="ir.actions.act_window" id="action_account_tree1">
-                        <field name="name">action.account.tree1</field>
-			<field name="res_model">account.analytic.line</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-			<field name="domain">[('account_id','=', active_id)]</field>
-		</record>
-		<record model="ir.values" id="ir_open_account_analytic_account">
-			<field name="key2" eval="'tree_but_open'"/>
-			<field name="model" eval="'account.analytic.account'"/>
-			<field name="name">Open Account Tree</field>
-			<field name="value" eval="'ir.actions.act_window,%d'%action_account_tree1"/>
-			<field name="object" eval="True"/>
-		</record>
-
-		<record model="ir.ui.view" id="account_analytic_line_extended_form">
-			<field name="name">account.analytic.line.extended_form</field>
-			<field name="model">account.analytic.line</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Project line">
-					<field name="name" />
-					<field name="account_id" />
-					<field name="date" />
-					<field name="journal_id" />
-					<field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" />
-					<field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" />
-					<field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" />
-					<field name="general_account_id" invisible="True"/>
-					<field name="amount" />
-				</form>
-			</field>
-		</record>
-		<record model="ir.actions.act_window" id="action_account_analytic_account_line_extended_form">
-                        <field name="name">account.analytic.line.extended</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">account.analytic.line</field>
-			<field name="view_type">form</field>
-			<field name="view_id" ref="account_analytic_line_extended_form" />
-		</record>
-
-	#
-	# Analytic Journal
-	#
-
-	<record model="ir.ui.view" id="view_account_analytic_journal_tree">
-		<field name="name">account.analytic.journal.tree</field>
-		<field name="model">account.analytic.journal</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Analytic Journal">
-				<field name="code"/>
-				<field name="name"/>
-				<field name="type"/>
-			</tree>
-		</field>
-	</record>
-
-	<record model="ir.ui.view" id="view_account_analytic_journal_form">
-		<field name="name">account.analytic.journal.form</field>
-		<field name="model">account.analytic.journal</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Analytic Journal">
-				<field name="name" select="1"/>
-				<field name="code" select="1"/>
-				<field name="type" select="2" />
-				<field name="active" select="2" />
-			</form>
-		</field>
-	</record>
-	<record model="ir.actions.act_window" id="action_account_analytic_journal_form">
-                <field name="name">Analytic Journal Definition</field>
-		<field name="res_model">account.analytic.journal</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-	</record>
-	<menuitem name="Financial Management/Configuration/Journal/Analytic Journal Definition" id="account_def_analytic_journal"
-		action="action_account_analytic_journal_form"/>
-
-	#
-	# Open journal entries
-	#
-
-	<record model="ir.actions.act_window" id="action_account_analytic_journal_open_form">
-                <field name="name">account.analytic.journal.open.form</field>
-		<field name="res_model">account.analytic.line</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[('journal_id','=',active_id)]</field>
-	</record>
-	<record model="ir.values" id="ir_open_account_journal_analytic">
-		<field name="key2" eval="'tree_but_open'"/>
-		<field name="model" eval="'account.analytic.journal'"/>
-		<field name="name">Open Analytic Journal</field>
-		<field name="value" eval="'ir.actions.act_window,%d'%action_account_analytic_journal_open_form"/>
-		<field name="object" eval="True"/>
-	</record>
-
-	#
-	# Reporting
-	#
-
-	<record model="ir.actions.act_window" id="action_account_analytic_journal_tree">
-                <field name="name">Print Analytic Journals</field>
-		<field name="res_model">account.analytic.journal</field>
-		<field name="view_type">tree</field>
-	</record>
-	<menuitem name="Financial Management/Reporting/Analytic/Print Analytic Journals"
-		id="account_analytic_journal_print"
-		action="action_account_analytic_journal_tree"/>
-
-
-	<record model="ir.actions.act_window" id="action_account_analytic_journal_tree2">
-                <field name="name">Entries by Journal</field>
-		<field name="res_model">account.analytic.journal</field>
-		<field name="view_type">tree</field>
-		<field name="view_id" ref="view_account_analytic_journal_tree"/>
-	</record>
-	<menuitem name="Financial Management/Entries/Analytic Entries/Entries by Journal"
-		id="account_analytic_journal_entries"
-		action="action_account_analytic_journal_tree2"/>
-
-	#
-	# Statistics
-	#
-
-	<record model="ir.ui.view" id="report_hr_timesheet_invoice_journal_form">
-		<field name="name">report.hr.timesheet.invoice.journal.form</field>
-		<field name="model">report.hr.timesheet.invoice.journal</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Analytic Entries Stats">
-				<field name="name" select="1"/>
-				<field name="account_id" select="1"/>
-				<field name="journal_id" select="2"/>
-			</form>
-		</field>
-	</record>
-
-
-	<record model="ir.ui.view" id="report_hr_timesheet_invoice_journal_tree">
-		<field name="name">report.hr.timesheet.invoice.journal.tree</field>
-		<field name="model">report.hr.timesheet.invoice.journal</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Analytic Entries Stats">
-				<field name="name"/>
-				<field name="account_id"/>
-				<field name="journal_id"/>
-				<field name="quantity"/>
-				<field name="revenue"/>
-				<field name="cost"/>
-			</tree>
-		</field>
-	</record>
-
-	<record model="ir.ui.view" id="report_hr_timesheet_invoice_journal_graph">
-		<field name="name">report.hr.timesheet.invoice.journal.graph</field>
-		<field name="model">report.hr.timesheet.invoice.journal</field>
-		<field name="type">graph</field>
-		<field name="arch" type="xml">
-			<graph type="bar" string="Analytic Entries Stats">
-				<field name="name"/>
-				<field name="cost" operator="+"/>
-				<field name="revenue" operator="+"/>
-				<field group="True" name="journal_id"/>
-			</graph>
-		</field>
-	</record>
-
-	<record model="ir.actions.act_window" id="report_account_analytic_journal_tree">
-		<field name="name">Account cost and revenue by journal</field>
-		<field name="res_model">report.hr.timesheet.invoice.journal</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,graph</field>
-	</record>
-	<menuitem name="Financial Management/Reporting/Analytic/All Months/Account Cost and Revenue by Journal"
-		id="report_account_analytic_journal_print"
-		action="report_account_analytic_journal_tree"/>
-
-	<record model="ir.actions.act_window" id="report_account_analytic_journal_tree_month">
-		<field name="name">Account cost and revenue by journal (This Month)</field>
-		<field name="res_model">report.hr.timesheet.invoice.journal</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree</field>
-		<field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
-	</record>
-	<menuitem name="Financial Management/Reporting/Analytic/This Month/Account Cost and Revenue by Journal"
-		id="report_account_analytic_journal_print_month"
-		action="report_account_analytic_journal_tree_month"/>
-
-	<act_window name="All Analytic Entries"
-		domain="[('account_id', '=', active_id)]"
-		res_model="account.analytic.line"
-		src_model="account.analytic.account"
-		view_type="form"
-		view_mode="tree,form"
-		id="act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal"/>
-
-
-	<act_window name="Costs &amp; Revenues"
-		domain="[('account_id', '=', active_id)]"
-		res_model="report.hr.timesheet.invoice.journal"
-		src_model="account.analytic.account"
-		view_type="form"
-		view_mode="graph,tree,form"
-		id="act_acc_analytic_acc_2_report_hr_timesheet_invoice_journal"/>
-
-	</data>
+    <data>
+        
+        <record id='view_account_analytic_account_list' model='ir.ui.view'>
+            <field name='name'>account.analytic.account.list</field>
+            <field name='model'>account.analytic.account</field>
+            <field name='type'>tree</field>
+            <field name='priority' eval='8'/>
+            <field name='arch' type='xml'>
+                <tree colors='red:date and (date&lt;=current_date)' string='Analytic account'>
+                    <field name='code'/>
+                    <field name='complete_name'/>
+                    <field name='quantity'/>
+                    <field name='quantity_max'/>
+                    <field name='date'/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id='view_account_analytic_account_tree' model='ir.ui.view'>
+            <field name='name'>account.analytic.account.tree</field>
+            <field name='model'>account.analytic.account</field>
+            <field name='type'>tree</field>
+            <field name='field_parent'>child_ids</field>
+            <field name='arch' type='xml'>
+                <tree colors='red:date and (date&lt;=current_date)' string='Analytic account'>
+                    <field name='name'/>
+                    <field name='code'/>
+                    <field name='date'/>
+                    <field name='company_currency_id'/>
+                    <field name='debit'/>
+                    <field name='credit'/>
+                    <field name='balance'/>
+                    <field name='quantity'/>
+                    <field name='quantity_max'/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id='view_account_analytic_account_form' model='ir.ui.view'>
+            <field name='name'>account.analytic.account.form</field>
+            <field name='model'>account.analytic.account</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Analytic account'>
+                    <notebook>
+                        <page string='Account Data'>
+                            <field name='name' select='1'/>
+                            <field name='code' select='1'/>
+                            <field name='parent_id' on_change='on_change_parent(parent_id)'/>
+                            <field name='company_id' select='2'/>
+                            <field name='type' select='2'/>
+                            <field name='partner_id' select='1'/>
+                            <newline/>
+                            <field name='date_start'/>
+                            <field name='date' select='2'/>
+                            <field name='active' select='2'/>
+                            <newline/>
+                            <field name='quantity_max'/>
+                            <field name='user_id'/>
+                            <separator string='Note' colspan='4'/>
+                            <field name='description' nolabel='1' colspan='4'/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+        
+        <record id='action_account_analytic_account_form' model='ir.actions.act_window'>
+            <field name='name'>Analytic Accounts</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='res_model'>account.analytic.account</field>
+            <field name='view_type'>form</field>
+            <field name='view_id' ref='view_account_analytic_account_tree'/>
+        </record>
+        <menuitem name='Financial Management/Configuration/Analytic Accounts/Analytic Accounts' action='action_account_analytic_account_form' id='account_analytic_def_account'/>
+        
+        <record id='action_account_analytic_account_tree2' model='ir.actions.act_window'>
+            <field name='name'>Analytic Charts of Accounts</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='res_model'>account.analytic.account</field>
+            <field name='domain'>[('parent_id','=',False)]</field>
+            <field name='view_type'>tree</field>
+            <field name='view_id' ref='view_account_analytic_account_tree'/>
+        </record>
+        <menuitem name='Financial Management/Configuration/Analytic Accounts/' action='action_account_analytic_account_tree2' id='account_analytic_def_chart'/>
+        <menuitem name='Financial Management/Charts/' action='action_account_analytic_account_tree2' id='account_analytic_chart'/>
+        
+        <menuitem name='Financial Management/Reporting/Analytic/Analytic Balance' action='action_account_analytic_account_tree2' id='account_analytic_chart_balance'/>
+        
+        <record id='view_account_analytic_line_form' model='ir.ui.view'>
+            <field name='name'>account.analytic.line.form</field>
+            <field name='model'>account.analytic.line</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Analytic Entry'>
+                    <field name='name' select='1' colspan='4'/>
+                    <field name='amount' select='2'/>
+                    <field name='date' select='1'/>
+                    <field name='account_id' select='1'/>
+                    <field name='journal_id' select='2'/>
+                    <field name='general_account_id' select='2'/>
+                    <field name='move_id' select='2'/>
+                    <field name='unit_amount' select='2'/>
+                    <field name='ref' select='2'/>
+                    <newline/>
+                    <field name='product_id' select='2'/>
+                    <field name='product_uom_id' select='2'/>
+                </form>
+            </field>
+        </record>
+        <record id='view_account_analytic_line_tree' model='ir.ui.view'>
+            <field name='name'>account.analytic.line.tree</field>
+            <field name='model'>account.analytic.line</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree editable='top' string='Analytic Entries'>
+                    <field name='date'/>
+                    <field name='name'/>
+                    <field name='unit_amount' sum='Total quantity' on_change='on_change_unit_amount(product_id, unit_amount, product_uom_id)'/>
+                    <field name='product_id' on_change='on_change_unit_amount(product_id, unit_amount, product_uom_id)'/>
+                    <field name='account_id' domain='[(&apos;type&apos;,&apos;=&apos;,&apos;normal&apos;)]'/>
+                    <field name='product_uom_id' invisible='True' on_change='on_change_unit_amount(product_id, unit_amount, product_uom_id)'/>
+                    <field name='amount' sum='Total amount'/>
+                    <field name='general_account_id'/>
+                    <field name='journal_id'/>
+                    <field name='ref'/>
+                </tree>
+            </field>
+        </record>
+        <record id='action_account_analytic_line_form' model='ir.actions.act_window'>
+            <field name='name'>Analytic Entries</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='res_model'>account.analytic.line</field>
+            <field name='view_type'>form</field>
+            <field name='view_id' ref='view_account_analytic_line_tree'/>
+        </record>
+        <menuitem name='Financial Management/Entries/Analytic Entries/Analytic Entries' action='action_account_analytic_line_form' id='account_entries_analytic_entries'/>
+        
+        
+        <record id='action_account_tree1' model='ir.actions.act_window'>
+            <field name='name'>action.account.tree1</field>
+            <field name='res_model'>account.analytic.line</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+            <field name='domain'>[('account_id','=', active_id)]</field>
+        </record>
+        <record id='ir_open_account_analytic_account' model='ir.values'>
+            <field name='key2' eval='&apos;tree_but_open&apos;'/>
+            <field name='model' eval='&apos;account.analytic.account&apos;'/>
+            <field name='name'>Open Account Tree</field>
+            <field name='value' eval='&apos;ir.actions.act_window,%d&apos;%action_account_tree1'/>
+            <field name='object' eval='True'/>
+        </record>
+        
+        <record id='account_analytic_line_extended_form' model='ir.ui.view'>
+            <field name='name'>account.analytic.line.extended_form</field>
+            <field name='model'>account.analytic.line</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Project line'>
+                    <field name='name'/>
+                    <field name='account_id'/>
+                    <field name='date'/>
+                    <field name='journal_id'/>
+                    <field name='unit_amount' on_change='on_change_unit_amount(product_id, unit_amount, product_uom_id)'/>
+                    <field name='product_id' on_change='on_change_unit_amount(product_id, unit_amount, product_uom_id)'/>
+                    <field name='product_uom_id' on_change='on_change_unit_amount(product_id, unit_amount, product_uom_id)'/>
+                    <field name='general_account_id' invisible='True'/>
+                    <field name='amount'/>
+                </form>
+            </field>
+        </record>
+        <record id='action_account_analytic_account_line_extended_form' model='ir.actions.act_window'>
+            <field name='name'>account.analytic.line.extended</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='res_model'>account.analytic.line</field>
+            <field name='view_type'>form</field>
+            <field name='view_id' ref='account_analytic_line_extended_form'/>
+        </record>
+        
+        #
+        # Analytic Journal
+        #
+        
+        <record id='view_account_analytic_journal_tree' model='ir.ui.view'>
+            <field name='name'>account.analytic.journal.tree</field>
+            <field name='model'>account.analytic.journal</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Analytic Journal'>
+                    <field name='code'/>
+                    <field name='name'/>
+                    <field name='type'/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id='view_account_analytic_journal_form' model='ir.ui.view'>
+            <field name='name'>account.analytic.journal.form</field>
+            <field name='model'>account.analytic.journal</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Analytic Journal'>
+                    <field name='name' select='1'/>
+                    <field name='code' select='1'/>
+                    <field name='type' select='2'/>
+                    <field name='active' select='2'/>
+                </form>
+            </field>
+        </record>
+        <record id='action_account_analytic_journal_form' model='ir.actions.act_window'>
+            <field name='name'>Analytic Journal Definition</field>
+            <field name='res_model'>account.analytic.journal</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+        </record>
+        <menuitem name='Financial Management/Configuration/Journal/Analytic Journal Definition' action='action_account_analytic_journal_form' id='account_def_analytic_journal'/>
+        
+        #
+        # Open journal entries
+        #
+        
+        <record id='action_account_analytic_journal_open_form' model='ir.actions.act_window'>
+            <field name='name'>account.analytic.journal.open.form</field>
+            <field name='res_model'>account.analytic.line</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+            <field name='domain'>[('journal_id','=',active_id)]</field>
+        </record>
+        <record id='ir_open_account_journal_analytic' model='ir.values'>
+            <field name='key2' eval='&apos;tree_but_open&apos;'/>
+            <field name='model' eval='&apos;account.analytic.journal&apos;'/>
+            <field name='name'>Open Analytic Journal</field>
+            <field name='value' eval='&apos;ir.actions.act_window,%d&apos;%action_account_analytic_journal_open_form'/>
+            <field name='object' eval='True'/>
+        </record>
+        
+        #
+        # Reporting
+        #
+        
+        <record id='action_account_analytic_journal_tree' model='ir.actions.act_window'>
+            <field name='name'>Print Analytic Journals</field>
+            <field name='res_model'>account.analytic.journal</field>
+            <field name='view_type'>tree</field>
+        </record>
+        <menuitem name='Financial Management/Reporting/Analytic/Print Analytic Journals' action='action_account_analytic_journal_tree' id='account_analytic_journal_print'/>
+        
+        
+        <record id='action_account_analytic_journal_tree2' model='ir.actions.act_window'>
+            <field name='name'>Entries by Journal</field>
+            <field name='res_model'>account.analytic.journal</field>
+            <field name='view_type'>tree</field>
+            <field name='view_id' ref='view_account_analytic_journal_tree'/>
+        </record>
+        <menuitem name='Financial Management/Entries/Analytic Entries/Entries by Journal' action='action_account_analytic_journal_tree2' id='account_analytic_journal_entries'/>
+        
+        #
+        # Statistics
+        #
+        
+        <record id='report_hr_timesheet_invoice_journal_form' model='ir.ui.view'>
+            <field name='name'>report.hr.timesheet.invoice.journal.form</field>
+            <field name='model'>report.hr.timesheet.invoice.journal</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Analytic Entries Stats'>
+                    <field name='name' select='1'/>
+                    <field name='account_id' select='1'/>
+                    <field name='journal_id' select='2'/>
+                </form>
+            </field>
+        </record>
+        
+        
+        <record id='report_hr_timesheet_invoice_journal_tree' model='ir.ui.view'>
+            <field name='name'>report.hr.timesheet.invoice.journal.tree</field>
+            <field name='model'>report.hr.timesheet.invoice.journal</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Analytic Entries Stats'>
+                    <field name='name'/>
+                    <field name='account_id'/>
+                    <field name='journal_id'/>
+                    <field name='quantity'/>
+                    <field name='revenue'/>
+                    <field name='cost'/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id='report_hr_timesheet_invoice_journal_graph' model='ir.ui.view'>
+            <field name='name'>report.hr.timesheet.invoice.journal.graph</field>
+            <field name='model'>report.hr.timesheet.invoice.journal</field>
+            <field name='type'>graph</field>
+            <field name='arch' type='xml'>
+                <graph type='bar' string='Analytic Entries Stats'>
+                    <field name='name'/>
+                    <field name='cost' operator='+'/>
+                    <field name='revenue' operator='+'/>
+                    <field name='journal_id' group='True'/>
+                </graph>
+            </field>
+        </record>
+        
+        <record id='report_account_analytic_journal_tree' model='ir.actions.act_window'>
+            <field name='name'>Account cost and revenue by journal</field>
+            <field name='res_model'>report.hr.timesheet.invoice.journal</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,graph</field>
+        </record>
+        <menuitem name='Financial Management/Reporting/Analytic/All Months/Account Cost and Revenue by Journal' action='report_account_analytic_journal_tree' id='report_account_analytic_journal_print'/>
+        
+        <record id='report_account_analytic_journal_tree_month' model='ir.actions.act_window'>
+            <field name='name'>Account cost and revenue by journal (This Month)</field>
+            <field name='res_model'>report.hr.timesheet.invoice.journal</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree</field>
+            <field name='domain'>[('name','=',time.strftime('%Y-%m-01'))]</field>
+        </record>
+        <menuitem name='Financial Management/Reporting/Analytic/This Month/Account Cost and Revenue by Journal' action='report_account_analytic_journal_tree_month' id='report_account_analytic_journal_print_month'/>
+        
+        <act_window name='All Analytic Entries' view_type='form' domain='[(&apos;account_id&apos;, &apos;=&apos;, active_id)]' id='act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal' src_model='account.analytic.account' view_mode='tree,form' res_model='account.analytic.line'/>
+        
+        
+        <act_window name='Costs &amp; Revenues' view_type='form' domain='[(&apos;account_id&apos;, &apos;=&apos;, active_id)]' id='act_acc_analytic_acc_2_report_hr_timesheet_invoice_journal' src_model='account.analytic.account' view_mode='graph,tree,form' res_model='report.hr.timesheet.invoice.journal'/>
+        
+    </data>
 </terp>

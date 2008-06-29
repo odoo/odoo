@@ -1,62 +1,62 @@
 <?xml version="1.0"?>
 <terp>
-	<data>
-
-		<report
+    <data>
+        
+        <report
 			id="report_product_history"
 			string="Future stock forecast"
 			model="product.product"
 			name="stock.product.history"
 			auto="False"/>
-
-
-		<report
+        
+        
+        <report
 			id="report_picking_list"
 			string="Packing list"
 			model="stock.picking"
 			name="stock.picking.list"
 			xml="stock/report/picking.xml"
 			xsl="stock/report/picking.xsl"/>
-
-		<report
+        
+        <report
 			id="report_move_labels"
 			string="Print Item Labels"
 			model="stock.move"
 			name="stock.move.label"
 			xml="stock/report/lot_move_label.xml"
 			xsl="stock/report/lot_move_label.xsl"/>
-
-		<report
+        
+        <report
 			id="report_location_overview"
 			string="Location Overview"
 			model="stock.location"
 			name="stock.location.overview"
 			xml="stock/report/lot_overview.xml"
 			xsl="stock/report/lot_overview.xsl"/>
-
-		<report
+        
+        <report
 			id="report_lot_location"
 			string="Lots by location"
 			model="stock.location"
 			name="lot.location"
 			rml="stock/report/lot_location.rml"
 			auto="False"/>
-
-		<report
+        
+        <report
 			id="report_product_location"
 			string="Products Localisations"
 			model="product.product"
 			name="stock.product.location"
 			auto="False"/>
-
-		<report
+        
+        <report
 			id="report_location_overview_all"
 			string="Location Content (With childs)"
 			model="stock.location"
 			name="stock.location.overview.all"
 			xml="stock/report/lot_overview_all.xml"
 			xsl="stock/report/lot_overview_all.xsl"/>
-<!--
+        <!--
 		<report
 			id="report_lot_ups"
 			string="UPS xml file"
@@ -65,5 +65,5 @@
 			menu="False"
 			auto="False" />
 -->
-	</data>
+    </data>
 </terp>

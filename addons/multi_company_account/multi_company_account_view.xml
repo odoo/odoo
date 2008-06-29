@@ -1,65 +1,65 @@
 <terp>
-	<data>
-
-		<record model="ir.ui.view" id="view_account_journal_form_multi_company">
-			<field name="name">account.journal.form</field>
-			<field name="model">account.journal</field>
-			<field name="type">form</field>
-			<field name="inherit_id" ref="account.view_account_journal_form"/>
-			<field name="arch" type="xml">
-				<field name="user_id" position="after">
-					<field name="company_id"/>
-				</field>
-			</field>
-		</record>
-
-		<record model="ir.ui.view" id="view_account_analytic_journal_form_multi_company">
-			<field name="name">account.analytic.journal.form</field>
-			<field name="model">account.analytic.journal</field>
-			<field name="type">form</field>
-			<field name="inherit_id" ref="account.view_account_analytic_journal_form"/>
-			<field name="arch" type="xml">
-				<field name="active" position="after">
-					<field name="company_id"/>
-				</field>
-			</field>
-		</record>
-
-		<record model="ir.ui.view" id="view_budget_post_form_multi_company">
-			<field name="name">account.budget.post.form</field>
-			<field name="model">account.budget.post</field>
-			<field name="type">form</field>
-			<field name="inherit_id" ref="account.view_budget_post_form"/>
-			<field name="arch" type="xml">
-				<field name="sens" position="after">
-					<field name="company_id"/>
-				</field>
-			</field>
-		</record>
-
-		<record model="ir.ui.view" id="view_account_fiscalyear_form_multi_company">
-			<field name="name">account.fiscalyear.form</field>
-			<field name="model">account.fiscalyear</field>
-			<field name="type">form</field>
-			<field name="inherit_id" ref="account.view_account_fiscalyear_form"/>
-			<field name="arch" type="xml">
-				<field name="date_stop" position="after">
-					<field name="company_id"/>
-				</field>
-			</field>
-		</record>
-
-		<record model="ir.ui.view" id="view_account_period_form_multi_company">
-			<field name="name">account.period.form</field>
-			<field name="model">account.period</field>
-			<field name="type">form</field>
-			<field name="inherit_id" ref="account.view_account_period_form"/>
-			<field name="arch" type="xml">
-				<field name="date_stop" position="after">
-					<field name="company_id"/>
-				</field>
-			</field>
-		</record>
-
-	</data>
+    <data>
+        
+        <record model="ir.ui.view" id="view_account_journal_form_multi_company">
+            <field name="name">account.journal.form</field>
+            <field name="model">account.journal</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                    <field name="company_id"/>
+                </field>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="view_account_analytic_journal_form_multi_company">
+            <field name="name">account.analytic.journal.form</field>
+            <field name="model">account.analytic.journal</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_account_analytic_journal_form"/>
+            <field name="arch" type="xml">
+                <field name="active" position="after">
+                    <field name="company_id"/>
+                </field>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="view_budget_post_form_multi_company">
+            <field name="name">account.budget.post.form</field>
+            <field name="model">account.budget.post</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_budget_post_form"/>
+            <field name="arch" type="xml">
+                <field name="sens" position="after">
+                    <field name="company_id"/>
+                </field>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="view_account_fiscalyear_form_multi_company">
+            <field name="name">account.fiscalyear.form</field>
+            <field name="model">account.fiscalyear</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_account_fiscalyear_form"/>
+            <field name="arch" type="xml">
+                <field name="date_stop" position="after">
+                    <field name="company_id"/>
+                </field>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="view_account_period_form_multi_company">
+            <field name="name">account.period.form</field>
+            <field name="model">account.period</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_account_period_form"/>
+            <field name="arch" type="xml">
+                <field name="date_stop" position="after">
+                    <field name="company_id"/>
+                </field>
+            </field>
+        </record>
+        
+    </data>
 </terp>

@@ -1,10 +1,8 @@
-<?xml version="1.0" ?>
+<?xml version='1.0'?>
 <terp>
-	<data>
-		<wizard string="Sign in / Sign out by project" model="hr.employee" name="hr_timesheet.si_so" id="si_so"/>
-		<menuitem name="Human Resources/Attendances/Sign in\/Out by Project"
-			action="si_so" type="wizard" groups="base.group_admin"
-			id="menu_si_so"/>
-
-	</data>
+    <data>
+        <wizard name='hr_timesheet.si_so' id='si_so' model='hr.employee' string='Sign in / Sign out by project'/>
+        <menuitem name='Human Resources/Attendances/Sign in\/Out by Project' groups='base.group_admin' action='si_so' type='wizard' id='menu_si_so'/>
+        
+    </data>
 </terp>

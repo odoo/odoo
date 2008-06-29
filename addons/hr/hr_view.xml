@@ -1,439 +1,417 @@
-<?xml version="1.0" ?>
+<?xml version='1.0'?>
 <terp>
-	<data>
-		<menuitem name="Human Resources" id="menu_hr_root" icon="terp-hr"/>
-		<menuitem name="Human Resources/Reporting" id="menu_hr_reporting" sequence="40"/>
-		<menuitem name="Human Resources/Configuration" groups="base.group_admin" id="menu_hr_configuration" />
-
-		<!--
+    <data>
+        <menuitem name='Human Resources' icon='terp-hr' id='menu_hr_root'/>
+        <menuitem name='Human Resources/Reporting' sequence='40' id='menu_hr_reporting'/>
+        <menuitem name='Human Resources/Configuration' groups='base.group_admin' id='menu_hr_configuration'/>
+        
+        <!--
 		==========
 		Employee 
 		==========
 		-->
-		<record model="ir.ui.view" id="view_employee_form">
-			<field name="name">hr.employee.form</field>
-			<field name="model">hr.employee</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Employee">
-					<notebook>
-						<page string="Information">
-							<separator string="General Information" colspan="4" />
-							<field name="name" select="1"/>
-							<field name="company_id"/>
-							<field name="user_id"/>
-							<field name="address_id"/>
-							<field name="notes" colspan="4"/>
-							<separator string="Working Data" colspan="4" />
-							<field name="regime" />
-							<field name="active" select="1" />
-							<field name="holiday_max" />
-							<field name="started" select="1" />
-							<field name="parent_id" select="1"/>
-							<field name="category_id"/>
-							<field name="workgroups" colspan="4" />
-							<field name="state"/>
-							<group colspan="2" col="2">
-								<button string="Sign in !" name="sign_in" states="absent" type="object" />
-								<button string="Sign out !" name="sign_out" states="present" type="object" />
-							</group>
-						</page>
-						<page string="Holidays">
-							<field name="holidays" colspan="4"
-								widget="one2many_list"
-								nolabel="1" />
-						</page>
-					</notebook>
-				</form>
-			</field>
-		</record>
-		<record model="ir.ui.view" id="view_employee_tree">
-			<field name="name">hr.employee.tree</field>
-			<field name="model">hr.employee</field>
-			<field name="type">tree</field>
-			<field name="field_parent">child_ids</field>
-			<field name="arch" type="xml">
-				<tree string="Employees">
-					<field name="name"/>
-					<field name="user_id"/>
-					<field name="address_id"/>
-					<field name="state"/>
-				</tree>
-			</field>
-		</record>
-		<record model="ir.actions.act_window" id="open_view_employee_tree">
-			<field name="name">Employees Structure</field>
-			<field name="res_model">hr.employee</field>
-			<field name="view_type">tree</field>
-			<field name="view_mode">tree,form</field>
-			<field name="view_id" ref="view_employee_tree"/>
-			<field name="domain">[('parent_id','=',False)]</field>
-		</record>
-		<menuitem name="Human Resources/Employees"
-			id="menu_open_view_employee_tree" action="open_view_employee_tree"
-			groups="base.group_admin"/>
-
-		<record model="ir.ui.view" id="view_employee_list">
-			<field name="name">hr.employee.tree</field>
-			<field name="model">hr.employee</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Employees">
-					<field name="name"/>
-					<field name="user_id"/>
-					<field name="address_id"/>
-					<field name="state"/>
-					<field name="parent_id"/>
-				</tree>
-			</field>
-		</record>
-		<record model="ir.actions.act_window" id="open_view_employee_list">
-                        <field name="name">Employees</field>
-			<field name="res_model">hr.employee</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-			<field name="view_id" ref="view_employee_list"/>
-		</record>
-		<menuitem name="Human Resources/Employees/Employees"
-			id="menu_open_view_employee_list" action="open_view_employee_list"
-			groups="base.group_admin"/>
-
-		<record model="ir.actions.act_window" id="open_view_employee_new">
-                        <field name="name">New Employee</field>
-			<field name="res_model">hr.employee</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">form,tree</field>
-		</record>
-		<menuitem name="Human Resources/Employees/New Employee"
-			id="menu_open_view_employee_new" action="open_view_employee_new"
-			groups="base.group_admin"/>
-
-
-		<!--
+        <record id='view_employee_form' model='ir.ui.view'>
+            <field name='name'>hr.employee.form</field>
+            <field name='model'>hr.employee</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Employee'>
+                    <notebook>
+                        <page string='Information'>
+                            <separator string='General Information' colspan='4'/>
+                            <field name='name' select='1'/>
+                            <field name='company_id'/>
+                            <field name='user_id'/>
+                            <field name='address_id'/>
+                            <field name='notes' colspan='4'/>
+                            <separator string='Working Data' colspan='4'/>
+                            <field name='regime'/>
+                            <field name='active' select='1'/>
+                            <field name='holiday_max'/>
+                            <field name='started' select='1'/>
+                            <field name='parent_id' select='1'/>
+                            <field name='category_id'/>
+                            <field name='workgroups' colspan='4'/>
+                            <field name='state'/>
+                            <group col='2' colspan='2'>
+                                <button name='sign_in' type='object' states='absent' string='Sign in !'/>
+                                <button name='sign_out' type='object' states='present' string='Sign out !'/>
+                            </group>
+                        </page>
+                        <page string='Holidays'>
+                            <field name='holidays' widget='one2many_list' nolabel='1' colspan='4'/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+        <record id='view_employee_tree' model='ir.ui.view'>
+            <field name='name'>hr.employee.tree</field>
+            <field name='model'>hr.employee</field>
+            <field name='type'>tree</field>
+            <field name='field_parent'>child_ids</field>
+            <field name='arch' type='xml'>
+                <tree string='Employees'>
+                    <field name='name'/>
+                    <field name='user_id'/>
+                    <field name='address_id'/>
+                    <field name='state'/>
+                </tree>
+            </field>
+        </record>
+        <record id='open_view_employee_tree' model='ir.actions.act_window'>
+            <field name='name'>Employees Structure</field>
+            <field name='res_model'>hr.employee</field>
+            <field name='view_type'>tree</field>
+            <field name='view_mode'>tree,form</field>
+            <field name='view_id' ref='view_employee_tree'/>
+            <field name='domain'>[('parent_id','=',False)]</field>
+        </record>
+        <menuitem name='Human Resources/Employees' groups='base.group_admin' action='open_view_employee_tree' id='menu_open_view_employee_tree'/>
+        
+        <record id='view_employee_list' model='ir.ui.view'>
+            <field name='name'>hr.employee.tree</field>
+            <field name='model'>hr.employee</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Employees'>
+                    <field name='name'/>
+                    <field name='user_id'/>
+                    <field name='address_id'/>
+                    <field name='state'/>
+                    <field name='parent_id'/>
+                </tree>
+            </field>
+        </record>
+        <record id='open_view_employee_list' model='ir.actions.act_window'>
+            <field name='name'>Employees</field>
+            <field name='res_model'>hr.employee</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+            <field name='view_id' ref='view_employee_list'/>
+        </record>
+        <menuitem name='Human Resources/Employees/Employees' groups='base.group_admin' action='open_view_employee_list' id='menu_open_view_employee_list'/>
+        
+        <record id='open_view_employee_new' model='ir.actions.act_window'>
+            <field name='name'>New Employee</field>
+            <field name='res_model'>hr.employee</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>form,tree</field>
+        </record>
+        <menuitem name='Human Resources/Employees/New Employee' groups='base.group_admin' action='open_view_employee_new' id='menu_open_view_employee_new'/>
+        
+        
+        <!--
 		=======================
 		Employee architecture
 		=======================
 		-->
-		<record model="ir.ui.view" id="view_partner_tree2">
-			<field name="name">hr.employee.tree</field>
-			<field name="model">hr.employee</field>
-			<field name="type">tree</field>
-			<field name="field_parent">child_ids</field>
-			<field name="arch" type="xml">
-				<tree string="Employees">
-					<field name="name"/>
-					<field name="user_id"/>
-					<field name="address_id"/>
-					<field name="state"/>
-				</tree>
-			</field>
-		</record>
-		<record model="ir.actions.act_window" id="action2">
-			<field name="name">Hierarchical view of this employee</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">hr.employee</field>
-			<field name="domain">[('id','in',active_ids)]</field>
-			<field name="view_type">tree</field>
-			<field name="view_id" ref="view_partner_tree2"/>
-		</record>
-		<ir_set>
-			<field name="key" eval="'action'"/>
-			<field name="key2" eval="'client_action_multi'"/>
-			<field name="models" eval="['hr.employee']"/>
-			<field name="name">Employees Hierarchy</field>
-			<field name="value" eval="'ir.actions.act_window,'+str(action2)"/>
-			<field name="isobject" eval="True"/>
-			<field name="replace" eval="True"/>
-		</ir_set>
-
-
-		<!-- 
+        <record id='view_partner_tree2' model='ir.ui.view'>
+            <field name='name'>hr.employee.tree</field>
+            <field name='model'>hr.employee</field>
+            <field name='type'>tree</field>
+            <field name='field_parent'>child_ids</field>
+            <field name='arch' type='xml'>
+                <tree string='Employees'>
+                    <field name='name'/>
+                    <field name='user_id'/>
+                    <field name='address_id'/>
+                    <field name='state'/>
+                </tree>
+            </field>
+        </record>
+        <record id='action2' model='ir.actions.act_window'>
+            <field name='name'>Hierarchical view of this employee</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='res_model'>hr.employee</field>
+            <field name='domain'>[('id','in',active_ids)]</field>
+            <field name='view_type'>tree</field>
+            <field name='view_id' ref='view_partner_tree2'/>
+        </record>
+        <ir_set>
+            <field name='key' eval='&apos;action&apos;'/>
+            <field name='key2' eval='&apos;client_action_multi&apos;'/>
+            <field name='models' eval='[&apos;hr.employee&apos;]'/>
+            <field name='name'>Employees Hierarchy</field>
+            <field name='value' eval='&apos;ir.actions.act_window,&apos;+str(action2)'/>
+            <field name='isobject' eval='True'/>
+            <field name='replace' eval='True'/>
+        </ir_set>
+        
+        
+        <!-- 
 		============
 		Timesheets 
 		============
 		-->
-		<record model="ir.ui.view" id="create_group">
-			<field name="name">hr.timesheet.group.form</field>
-			<field name="model">hr.timesheet.group</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Timesheet category">
-					<field name="name" select="1"/>
-					<field name="manager" select="1"/>
-					<newline />
-					<separator string="Timesheets" colspan="4"/>
-					<newline />
-					<field name="timesheet_id" widget="one2many_list" nolabel="1" colspan="4"/>
-				</form>
-			</field>
-		</record>
-		<record model="ir.actions.act_window" id="edit_workgroup">
-                        <field name="name">Timesheet Categories</field>
-			<field name="res_model">hr.timesheet.group</field>
-			<field name="view_type">form</field>
-			<field name="view_id" ref="create_group" />
-		</record>
-		<menuitem name="Human Resources/Configuration/Timesheet Categories"
-			id="menu_edit_workgroup" action="edit_workgroup"
-			groups="base.group_admin"/>
-
-		<record model="ir.ui.view" id="view_timesheet_tree">
-			<field name="name">hr.timesheet.tree</field>
-			<field name="model">hr.timesheet</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Timesheet">
-					<field name="name"/>
-					<field name="dayofweek"/>
-					<field name="hour_from"/>
-					<field name="hour_to"/>
-				</tree>
-			</field>
-		</record>
-		<record model="ir.ui.view" id="view_timesheet_form">
-			<field name="name">hr.timesheet.form</field>
-			<field name="model">hr.timesheet</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Timesheet">
-					<field name="name" colspan="4" select="1"/>
-					<field name="date_from" />
-					<field name="dayofweek" select="1" />
-					<field name="hour_from"/>
-					<field name="hour_to"/>
-				</form>
-			</field>
-		</record>
-
-		<!-- Attendance -->
-		<record model="ir.ui.view" id="view_attendance_form">
-			<field name="name">hr.attendance.form</field>
-			<field name="model">hr.attendance</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Employee attendance">
-					<field name="employee_id" select="1"/>
-					<field name="name" colspan="4" select="1"/>
-					<field name="action" select="1"/>
-					<field name="action_desc"  select="1"/>
-				</form>
-			</field>
-		</record>
-		<record model="ir.ui.view" id="view_attendance_tree">
-			<field name="name">hr.attendance.tree</field>
-			<field name="model">hr.attendance</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Employee attendances">
-					<field name="name" />
-					<field name="action" />
-					<field name="action_desc" />
-				</tree>
-			</field>
-		</record>
-
-		<record model="ir.ui.view" id="view_employee_category_form">
-			<field name="name">hr.employee.category.form</field>
-			<field name="model">hr.employee.category</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Employee Category">
-					<field name="name" select="1"/>
-					<field name="parent_id"  select="1"/>
-				</form>
-			</field>
-		</record>
-		<record model="ir.ui.view" id="view_employee_category_list">
-			<field name="name">hr.employee.category.list</field>
-			<field name="model">hr.employee.category</field>
-			<field name="type">tree</field>
-			<field name="priority" eval="8"/>
-			<field name="arch" type="xml">
-				<tree string="Employees Categories">
-					<field name="name" />
-					<field name="parent_id" />
-				</tree>
-			</field>
-		</record>
-		<record model="ir.ui.view" id="view_employee_category_tree">
-			<field name="name">hr.employee.category.tree</field>
-			<field name="model">hr.employee.category</field>
-			<field name="type">tree</field>
-			<field name="field_parent">child_ids</field>
-			<field name="arch" type="xml">
-				<tree string="Employees Categories">
-					<field name="name" />
-				</tree>
-			</field>
-		</record>
-		<record model="ir.actions.act_window" id="open_view_categ_form">
-                        <field name="name">Categories of Employee</field>
-			<field name="res_model">hr.employee.category</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">form,tree</field>
-		</record>
-		<menuitem name="Human Resources/Configuration/Categories of Employee"
-			id="menu_view_employee_category_form" action="open_view_categ_form"
-			groups="base.group_admin"/>
-
-		<record model="ir.actions.act_window" id="open_view_categ_tree">
-			<field name="name">Categories structure</field>
-			<field name="res_model">hr.employee.category</field>
-			<field name="view_type">tree</field>
-			<field name="view_id" ref="view_employee_category_tree"/>
-			<field name="domain">[('parent_id','=',False)]</field>
-		</record>
-		<menuitem name="Human Resources/Configuration/Categories of Employee/Categories Structure"
-			id="menu_view_employee_category_tree" action="open_view_categ_tree"
-			groups="base.group_admin"/>
-
-		<record model="ir.ui.view" id="view_attendance_who">
-			<field name="name">hr.attendance.tree</field>
-			<field name="model">hr.attendance</field>
-			<field name="type">tree</field>
-			<field name="priority" eval="3"/>
-			<field name="arch" type="xml">
-				<tree string="Employee attendance">
-					<field name="employee_id" />
-					<field name="name" />
-					<field name="action" />
-					<field name="action_desc" />
-				</tree>
-			</field>
-		</record>
-		<record model="ir.actions.act_window" id="open_view_attendance">
-                        <field name="name">Attendances</field>
-			<field name="res_model">hr.attendance</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-		</record>
-		<menuitem name="Human Resources/Attendances" id="menu_hr_attendance"/>
-		<menuitem name="Human Resources/Attendances/Attendances"
-			id="menu_open_view_attendance" action="open_view_attendance"
-			groups="base.group_admin"/>
-
-
-		<!-- Holidays -->
-		<record model="ir.ui.view" id="edit_holiday">
-			<field name="name">hr.holidays.form</field>
-			<field name="model">hr.holidays</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Employee holidays">
-					<field name="name" colspan="4" select="1"/>
-					<field name="date_from"  select="1"/>
-					<field name="date_to"  select="1"/>
-					<newline />
-					<field name="holiday_status"  select="1"/>
-				</form>
-			</field>
-		</record>
-		<record model="ir.ui.view" id="view_holiday">
-			<field name="name">hr.holidays.tree</field>
-			<field name="model">hr.holidays</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Employee holidays">
-					<field name="name" />
-					<field name="date_from" />
-					<field name="date_to" />
-					<field name="holiday_status" />
-				</tree>
-			</field>
-		</record>
-
-		<record model="ir.ui.view" id="ask_holiday">
-			<field name="name">hr.holidays.ask_form</field>
-			<field name="model">hr.holidays</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Vacations requests">
-					<field name="name" select="1"/>
-					<field name="holiday_status"/>
-					<field name="employee_id" colspan="4" select="1"/>
-					<newline />
-					<field name="date_from"  select="1"/>
-					<field name="date_to"  select="1"/>
-				</form>
-			</field>
-		</record>
-		<record model="ir.actions.act_window" id="open_ask_holidays">
-                        <field name="name">Vacation Request</field>
-			<field name="res_model">hr.holidays</field>
-			<field name="view_type">form</field>
-			<field name="view_id" ref="view_holiday" />
-		</record>
-		<menuitem name="Human Resources/Attendances/Vacation Request"
-			id="menu_open_ask_holidays" action="open_ask_holidays"
-			groups="base.group_admin"/>
-
-		<!-- Some Configuration (holiday type, attendance reasons) -->
-
-		<record model="ir.ui.view" id="edit_holiday_status">
-			<field name="name">hr.holidays.status.form</field>
-			<field name="model">hr.holidays.status</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Define holiday status">
-					<field name="name" colspan="4"  select="1"/>
-				</form>
-			</field>
-		</record>
-		<record model="ir.ui.view" id="view_holiday_status">
-			<field name="name">hr.holidays.status.tree</field>
-			<field name="model">hr.holidays.status</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Holiday status">
-					<field name="name"/>
-				</tree>
-			</field>
-		</record>
-		<record model="ir.actions.act_window" id="open_view_holiday_status">
-                        <field name="name">Holiday Status</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">hr.holidays.status</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-			<field name="view_id" ref="view_holiday_status" />
-		</record>
-		<menuitem name="Human Resources/Configuration/Holiday Status"
-			id="menu_open_view_holiday_status" action="open_view_holiday_status"
-			groups="base.group_admin"/>
-
-		<record model="ir.ui.view" id="edit_attendance_reason">
-			<field name="name">hr.action.reason.form</field>
-			<field name="model">hr.action.reason</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Define attendance reason">
-					<field name="name" colspan="4"  select="1"/>
-					<field name="action_type"  select="1"/>
-				</form>
-			</field>
-		</record>
-		<record model="ir.ui.view" id="view_attendance_reason">
-			<field name="name">hr.action.reason.tree</field>
-			<field name="model">hr.action.reason</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Attendance reasons">
-					<field name="name"/>
-					<field name="action_type" />
-				</tree>
-			</field>
-		</record>
-		<record model="ir.actions.act_window" id="open_view_attendance_reason">
-                        <field name="name">Attendance Reasons</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">hr.action.reason</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-			<field name="view_id" ref="view_attendance_reason" />
-		</record>
-		<menuitem name="Human Resources/Configuration/Attendance Reasons"
-			id="menu_open_view_attendance_reason" action="open_view_attendance_reason"
-			groups="base.group_admin"/>
-
-	</data>
+        <record id='create_group' model='ir.ui.view'>
+            <field name='name'>hr.timesheet.group.form</field>
+            <field name='model'>hr.timesheet.group</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Timesheet category'>
+                    <field name='name' select='1'/>
+                    <field name='manager' select='1'/>
+                    <newline/>
+                    <separator string='Timesheets' colspan='4'/>
+                    <newline/>
+                    <field name='timesheet_id' widget='one2many_list' nolabel='1' colspan='4'/>
+                </form>
+            </field>
+        </record>
+        <record id='edit_workgroup' model='ir.actions.act_window'>
+            <field name='name'>Timesheet Categories</field>
+            <field name='res_model'>hr.timesheet.group</field>
+            <field name='view_type'>form</field>
+            <field name='view_id' ref='create_group'/>
+        </record>
+        <menuitem name='Human Resources/Configuration/Timesheet Categories' groups='base.group_admin' action='edit_workgroup' id='menu_edit_workgroup'/>
+        
+        <record id='view_timesheet_tree' model='ir.ui.view'>
+            <field name='name'>hr.timesheet.tree</field>
+            <field name='model'>hr.timesheet</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Timesheet'>
+                    <field name='name'/>
+                    <field name='dayofweek'/>
+                    <field name='hour_from'/>
+                    <field name='hour_to'/>
+                </tree>
+            </field>
+        </record>
+        <record id='view_timesheet_form' model='ir.ui.view'>
+            <field name='name'>hr.timesheet.form</field>
+            <field name='model'>hr.timesheet</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Timesheet'>
+                    <field name='name' colspan='4' select='1'/>
+                    <field name='date_from'/>
+                    <field name='dayofweek' select='1'/>
+                    <field name='hour_from'/>
+                    <field name='hour_to'/>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Attendance -->
+        <record id='view_attendance_form' model='ir.ui.view'>
+            <field name='name'>hr.attendance.form</field>
+            <field name='model'>hr.attendance</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Employee attendance'>
+                    <field name='employee_id' select='1'/>
+                    <field name='name' colspan='4' select='1'/>
+                    <field name='action' select='1'/>
+                    <field name='action_desc' select='1'/>
+                </form>
+            </field>
+        </record>
+        <record id='view_attendance_tree' model='ir.ui.view'>
+            <field name='name'>hr.attendance.tree</field>
+            <field name='model'>hr.attendance</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Employee attendances'>
+                    <field name='name'/>
+                    <field name='action'/>
+                    <field name='action_desc'/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id='view_employee_category_form' model='ir.ui.view'>
+            <field name='name'>hr.employee.category.form</field>
+            <field name='model'>hr.employee.category</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Employee Category'>
+                    <field name='name' select='1'/>
+                    <field name='parent_id' select='1'/>
+                </form>
+            </field>
+        </record>
+        <record id='view_employee_category_list' model='ir.ui.view'>
+            <field name='name'>hr.employee.category.list</field>
+            <field name='model'>hr.employee.category</field>
+            <field name='type'>tree</field>
+            <field name='priority' eval='8'/>
+            <field name='arch' type='xml'>
+                <tree string='Employees Categories'>
+                    <field name='name'/>
+                    <field name='parent_id'/>
+                </tree>
+            </field>
+        </record>
+        <record id='view_employee_category_tree' model='ir.ui.view'>
+            <field name='name'>hr.employee.category.tree</field>
+            <field name='model'>hr.employee.category</field>
+            <field name='type'>tree</field>
+            <field name='field_parent'>child_ids</field>
+            <field name='arch' type='xml'>
+                <tree string='Employees Categories'>
+                    <field name='name'/>
+                </tree>
+            </field>
+        </record>
+        <record id='open_view_categ_form' model='ir.actions.act_window'>
+            <field name='name'>Categories of Employee</field>
+            <field name='res_model'>hr.employee.category</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>form,tree</field>
+        </record>
+        <menuitem name='Human Resources/Configuration/Categories of Employee' groups='base.group_admin' action='open_view_categ_form' id='menu_view_employee_category_form'/>
+        
+        <record id='open_view_categ_tree' model='ir.actions.act_window'>
+            <field name='name'>Categories structure</field>
+            <field name='res_model'>hr.employee.category</field>
+            <field name='view_type'>tree</field>
+            <field name='view_id' ref='view_employee_category_tree'/>
+            <field name='domain'>[('parent_id','=',False)]</field>
+        </record>
+        <menuitem name='Human Resources/Configuration/Categories of Employee/Categories Structure' groups='base.group_admin' action='open_view_categ_tree' id='menu_view_employee_category_tree'/>
+        
+        <record id='view_attendance_who' model='ir.ui.view'>
+            <field name='name'>hr.attendance.tree</field>
+            <field name='model'>hr.attendance</field>
+            <field name='type'>tree</field>
+            <field name='priority' eval='3'/>
+            <field name='arch' type='xml'>
+                <tree string='Employee attendance'>
+                    <field name='employee_id'/>
+                    <field name='name'/>
+                    <field name='action'/>
+                    <field name='action_desc'/>
+                </tree>
+            </field>
+        </record>
+        <record id='open_view_attendance' model='ir.actions.act_window'>
+            <field name='name'>Attendances</field>
+            <field name='res_model'>hr.attendance</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+        </record>
+        <menuitem name='Human Resources/Attendances' id='menu_hr_attendance'/>
+        <menuitem name='Human Resources/Attendances/Attendances' groups='base.group_admin' action='open_view_attendance' id='menu_open_view_attendance'/>
+        
+        
+        <!-- Holidays -->
+        <record id='edit_holiday' model='ir.ui.view'>
+            <field name='name'>hr.holidays.form</field>
+            <field name='model'>hr.holidays</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Employee holidays'>
+                    <field name='name' colspan='4' select='1'/>
+                    <field name='date_from' select='1'/>
+                    <field name='date_to' select='1'/>
+                    <newline/>
+                    <field name='holiday_status' select='1'/>
+                </form>
+            </field>
+        </record>
+        <record id='view_holiday' model='ir.ui.view'>
+            <field name='name'>hr.holidays.tree</field>
+            <field name='model'>hr.holidays</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Employee holidays'>
+                    <field name='name'/>
+                    <field name='date_from'/>
+                    <field name='date_to'/>
+                    <field name='holiday_status'/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id='ask_holiday' model='ir.ui.view'>
+            <field name='name'>hr.holidays.ask_form</field>
+            <field name='model'>hr.holidays</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Vacations requests'>
+                    <field name='name' select='1'/>
+                    <field name='holiday_status'/>
+                    <field name='employee_id' colspan='4' select='1'/>
+                    <newline/>
+                    <field name='date_from' select='1'/>
+                    <field name='date_to' select='1'/>
+                </form>
+            </field>
+        </record>
+        <record id='open_ask_holidays' model='ir.actions.act_window'>
+            <field name='name'>Vacation Request</field>
+            <field name='res_model'>hr.holidays</field>
+            <field name='view_type'>form</field>
+            <field name='view_id' ref='view_holiday'/>
+        </record>
+        <menuitem name='Human Resources/Attendances/Vacation Request' groups='base.group_admin' action='open_ask_holidays' id='menu_open_ask_holidays'/>
+        
+        <!-- Some Configuration (holiday type, attendance reasons) -->
+        
+        <record id='edit_holiday_status' model='ir.ui.view'>
+            <field name='name'>hr.holidays.status.form</field>
+            <field name='model'>hr.holidays.status</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Define holiday status'>
+                    <field name='name' colspan='4' select='1'/>
+                </form>
+            </field>
+        </record>
+        <record id='view_holiday_status' model='ir.ui.view'>
+            <field name='name'>hr.holidays.status.tree</field>
+            <field name='model'>hr.holidays.status</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Holiday status'>
+                    <field name='name'/>
+                </tree>
+            </field>
+        </record>
+        <record id='open_view_holiday_status' model='ir.actions.act_window'>
+            <field name='name'>Holiday Status</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='res_model'>hr.holidays.status</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+            <field name='view_id' ref='view_holiday_status'/>
+        </record>
+        <menuitem name='Human Resources/Configuration/Holiday Status' groups='base.group_admin' action='open_view_holiday_status' id='menu_open_view_holiday_status'/>
+        
+        <record id='edit_attendance_reason' model='ir.ui.view'>
+            <field name='name'>hr.action.reason.form</field>
+            <field name='model'>hr.action.reason</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Define attendance reason'>
+                    <field name='name' colspan='4' select='1'/>
+                    <field name='action_type' select='1'/>
+                </form>
+            </field>
+        </record>
+        <record id='view_attendance_reason' model='ir.ui.view'>
+            <field name='name'>hr.action.reason.tree</field>
+            <field name='model'>hr.action.reason</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Attendance reasons'>
+                    <field name='name'/>
+                    <field name='action_type'/>
+                </tree>
+            </field>
+        </record>
+        <record id='open_view_attendance_reason' model='ir.actions.act_window'>
+            <field name='name'>Attendance Reasons</field>
+            <field name='type'>ir.actions.act_window</field>
+            <field name='res_model'>hr.action.reason</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+            <field name='view_id' ref='view_attendance_reason'/>
+        </record>
+        <menuitem name='Human Resources/Configuration/Attendance Reasons' groups='base.group_admin' action='open_view_attendance_reason' id='menu_open_view_attendance_reason'/>
+        
+    </data>
 </terp>

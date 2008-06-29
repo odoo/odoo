@@ -1,126 +1,118 @@
-<?xml version="1.0"?>
+<?xml version='1.0'?>
 <terp>
-<data>
-
-	#
-	# Purchases by products by month
-	#
-
-	<record model="ir.ui.view" id="view_order_product_form">
-		<field name="name">report.purchase.order.product.form</field>
-		<field name="model">report.purchase.order.product</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Purchases by products">
-				<field name="name" select="1"/>
-				<field name="product_id" select="1"/>
-				<field name="count"/>
-				<field name="quantity" select="1"/>
-				<field name="price_total" select="1"/>
-				<field name="price_average" select="1"/>
-				<field name="state" select="1"/>
-			</form>
-		</field>
-	</record>
-
-	<record model="ir.ui.view" id="view_order_product_tree">
-		<field name="name">report.purchase.order.product.tree</field>
-		<field name="model">report.purchase.order.product</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Purchases by products">
-				<field name="name"/>
-				<field name="product_id"/>
-				<field name="count"/>
-				<field name="quantity"/>
-				<field name="price_total"/>
-				<field name="price_average"/>
-				<field name="state"/>
-			</tree>
-		</field>
-	</record>
-
-	<record model="ir.actions.act_window" id="action_order_product_tree">
-		<field name="name">Purchases by Products (this month)</field>
-		<field name="res_model">report.purchase.order.product</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree</field>
-		<field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
-	</record>
-	<menuitem name="Purchase Management/Reporting/This Month/Purchases by Products" action="action_order_product_tree" id="menu_report_order_product"/>
-	<record model="ir.actions.act_window" id="action_order_product_tree_all">
-                <field name="name">Purchases by Products</field>
-		<field name="res_model">report.purchase.order.product</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree</field>
-	</record>
-	<menuitem name="Purchase Management/Reporting/All Months/Purchases by Products" action="action_order_product_tree_all" id="menu_report_order_product_all"/>
-
-	#
-	# Purchases by category by month
-	#
-
-	<record model="ir.ui.view" id="view_order_category_form">
-		<field name="name">report.purchase.order.category.form</field>
-		<field name="model">report.purchase.order.category</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Purchases by Category of Products">
-				<field name="name" select="1"/>
-				<field name="category_id" select="1"/>
-				<field name="count"/>
-				<field name="quantity" select="1"/>
-				<field name="price_total" select="1"/>
-				<field name="price_average" select="1"/>
-				<field name="state" select="1"/>
-			</form>
-		</field>
-	</record>
-
-	<record model="ir.ui.view" id="view_order_category_tree">
-		<field name="name">report.purchase.order.category.tree</field>
-		<field name="model">report.purchase.order.category</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Purchases by Category of Products">
-				<field name="name"/>
-				<field name="category_id"/>
-				<field name="count"/>
-				<field name="quantity"/>
-				<field name="price_total"/>
-				<field name="price_average"/>
-				<field name="state"/>
-			</tree>
-		</field>
-	</record>
-
-	<record model="ir.actions.act_window" id="action_order_category_tree">
-		<field name="name">Purchases by Category of Product (this month)</field>
-		<field name="res_model">report.purchase.order.category</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree</field>
-		<field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
-	</record>
-	<menuitem name="Purchase Management/Reporting/This Month/Purchases by Category of Products" action="action_order_category_tree" id="menu_report_order_category"/>
-	<record model="ir.actions.act_window" id="action_order_category_tree_all">
-                <field name="name">Purchases by Category of Products</field>
-		<field name="res_model">report.purchase.order.category</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree</field>
-	</record>
-	<menuitem name="Purchase Management/Reporting/All Months/Purchases by Category of Products" action="action_order_category_tree_all" id="menu_report_order_category_all"/>
-
-	<act_window name="Monthly purchases"
-		domain="[('product_id', '=', active_id)]"
-		res_model="report.purchase.order.product"
-		src_model="product.product"
-		id="act_product_product_2_report_purchases_order_product"/>
-
-	<act_window name="Monthly purchases"
-		domain="[('category_id', '=', active_id)]"
-		res_model="report.purchase.order.category"
-		src_model="product.category"
-		id="act_product_category_2_report_purchase_order_category"/>
-
-</data>
+    <data>
+        
+        #
+        # Purchases by products by month
+        #
+        
+        <record id='view_order_product_form' model='ir.ui.view'>
+            <field name='name'>report.purchase.order.product.form</field>
+            <field name='model'>report.purchase.order.product</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Purchases by products'>
+                    <field name='name' select='1'/>
+                    <field name='product_id' select='1'/>
+                    <field name='count'/>
+                    <field name='quantity' select='1'/>
+                    <field name='price_total' select='1'/>
+                    <field name='price_average' select='1'/>
+                    <field name='state' select='1'/>
+                </form>
+            </field>
+        </record>
+        
+        <record id='view_order_product_tree' model='ir.ui.view'>
+            <field name='name'>report.purchase.order.product.tree</field>
+            <field name='model'>report.purchase.order.product</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Purchases by products'>
+                    <field name='name'/>
+                    <field name='product_id'/>
+                    <field name='count'/>
+                    <field name='quantity'/>
+                    <field name='price_total'/>
+                    <field name='price_average'/>
+                    <field name='state'/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id='action_order_product_tree' model='ir.actions.act_window'>
+            <field name='name'>Purchases by Products (this month)</field>
+            <field name='res_model'>report.purchase.order.product</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree</field>
+            <field name='domain'>[('name','=',time.strftime('%Y-%m-01'))]</field>
+        </record>
+        <menuitem name='Purchase Management/Reporting/This Month/Purchases by Products' action='action_order_product_tree' id='menu_report_order_product'/>
+        <record id='action_order_product_tree_all' model='ir.actions.act_window'>
+            <field name='name'>Purchases by Products</field>
+            <field name='res_model'>report.purchase.order.product</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree</field>
+        </record>
+        <menuitem name='Purchase Management/Reporting/All Months/Purchases by Products' action='action_order_product_tree_all' id='menu_report_order_product_all'/>
+        
+        #
+        # Purchases by category by month
+        #
+        
+        <record id='view_order_category_form' model='ir.ui.view'>
+            <field name='name'>report.purchase.order.category.form</field>
+            <field name='model'>report.purchase.order.category</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Purchases by Category of Products'>
+                    <field name='name' select='1'/>
+                    <field name='category_id' select='1'/>
+                    <field name='count'/>
+                    <field name='quantity' select='1'/>
+                    <field name='price_total' select='1'/>
+                    <field name='price_average' select='1'/>
+                    <field name='state' select='1'/>
+                </form>
+            </field>
+        </record>
+        
+        <record id='view_order_category_tree' model='ir.ui.view'>
+            <field name='name'>report.purchase.order.category.tree</field>
+            <field name='model'>report.purchase.order.category</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Purchases by Category of Products'>
+                    <field name='name'/>
+                    <field name='category_id'/>
+                    <field name='count'/>
+                    <field name='quantity'/>
+                    <field name='price_total'/>
+                    <field name='price_average'/>
+                    <field name='state'/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id='action_order_category_tree' model='ir.actions.act_window'>
+            <field name='name'>Purchases by Category of Product (this month)</field>
+            <field name='res_model'>report.purchase.order.category</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree</field>
+            <field name='domain'>[('name','=',time.strftime('%Y-%m-01'))]</field>
+        </record>
+        <menuitem name='Purchase Management/Reporting/This Month/Purchases by Category of Products' action='action_order_category_tree' id='menu_report_order_category'/>
+        <record id='action_order_category_tree_all' model='ir.actions.act_window'>
+            <field name='name'>Purchases by Category of Products</field>
+            <field name='res_model'>report.purchase.order.category</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree</field>
+        </record>
+        <menuitem name='Purchase Management/Reporting/All Months/Purchases by Category of Products' action='action_order_category_tree_all' id='menu_report_order_category_all'/>
+        
+        <act_window name='Monthly purchases' domain='[(&apos;product_id&apos;, &apos;=&apos;, active_id)]' id='act_product_product_2_report_purchases_order_product' src_model='product.product' res_model='report.purchase.order.product'/>
+        
+        <act_window name='Monthly purchases' domain='[(&apos;category_id&apos;, &apos;=&apos;, active_id)]' id='act_product_category_2_report_purchase_order_category' src_model='product.category' res_model='report.purchase.order.category'/>
+        
+    </data>
 </terp>

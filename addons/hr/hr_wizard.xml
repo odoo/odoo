@@ -1,34 +1,16 @@
-<?xml version="1.0" ?>
+<?xml version='1.0'?>
 <terp>
-	<data>
-
-		<wizard string="Sign in / Sign out"
-			model="hr.employee"
-			name="hr.si_so"
-			id="si_so"/>
-
-		<menuitem name="Human Resources/Attendances/Sign in\/Out"
-			action="si_so"
-			type="wizard"
-			id="menu_si_so"/>
-
-		<wizard string="Print Timesheet by week"
-			model="hr.employee"
-			name="hr.print_week"
-			keyword="client_print_multi"
-			id="print_week"/>
-
-		<wizard string="Print Timesheet by month"
-			model="hr.employee"
-			name="hr.print_month"
-			keyword="client_print_multi"
-			id="print_month"/>
-
-		<wizard string="Print Attendance Error Report"
-			model="hr.employee"
-			name="hr.timesheet.attendance.report"
-			keyword="client_print_multi"
-			id="wizard_attendance_error" />
-
-	</data>
+    <data>
+        
+        <wizard name='hr.si_so' id='si_so' model='hr.employee' string='Sign in / Sign out'/>
+        
+        <menuitem name='Human Resources/Attendances/Sign in\/Out' action='si_so' type='wizard' id='menu_si_so'/>
+        
+        <wizard name='hr.print_week' id='print_week' model='hr.employee' keyword='client_print_multi' string='Print Timesheet by week'/>
+        
+        <wizard name='hr.print_month' id='print_month' model='hr.employee' keyword='client_print_multi' string='Print Timesheet by month'/>
+        
+        <wizard name='hr.timesheet.attendance.report' id='wizard_attendance_error' model='hr.employee' keyword='client_print_multi' string='Print Attendance Error Report'/>
+        
+    </data>
 </terp>

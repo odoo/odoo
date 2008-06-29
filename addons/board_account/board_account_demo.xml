@@ -1,22 +1,22 @@
 <?xml version="1.0"?>
 <terp>
-	<data noupdate="1">
-
-		<!--
+    <data noupdate="1">
+        
+        <!--
 			Administrator shortcut
 			Demo user startup menu
 		-->
-		<record model="ir.ui.view_sc" id="sc_account_dash">
-			<field name="name">Accounting dashboard</field>
-			<field name="user_id" ref="base.user_admin"/>
-			<field name="resource">ir.ui.menu</field>
-			<field name="sequence">0</field>
-			<field name="res_id" ref="menu_board_account"/>
-		</record>
-		<record model="res.users" id="base.user_admin">
-			<field name="action_id" ref="open_board_account"/>
-		</record>
-
-	</data>
+        <record model="ir.ui.view_sc" id="sc_account_dash">
+            <field name="name">Accounting dashboard</field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="resource">ir.ui.menu</field>
+            <field name="sequence">0</field>
+            <field name="res_id" ref="menu_board_account"/>
+        </record>
+        <record model="res.users" id="base.user_admin">
+            <field name="action_id" ref="open_board_account"/>
+        </record>
+        
+    </data>
 </terp>
 

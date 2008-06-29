@@ -1,251 +1,251 @@
 <?xml version="1.0"?>
 <terp>
-	<data>
-<!--		<record model="res.groups" id="hr_id">-->
-<!--			<field name="name">HR</field>-->
-<!--		</record>-->
-
-		<record model="hr.action.reason">
-			<field name="name">Start of shift</field>
-			<field name="action_type">sign_in</field>
-		</record>
-		<record model="hr.action.reason">
-			<field name="name">End of shift</field>
-			<field name="action_type">sign_out</field>
-		</record>
-		<record model="hr.action.reason">
-			<field name="name">Meal Break</field>
-			<field name="action_type">sign_in</field>
-		</record>
-		<record model="hr.action.reason">
-			<field name="name">Meal Break</field>
-			<field name="action_type">sign_out</field>
-		</record>
-		<record model="hr.action.reason">
-			<field name="name">Early exit (sick)</field>
-			<field name="action_type">sign_out</field>
-		</record>
-		<record model="hr.action.reason">
-			<field name="name">Early exit (work injury)</field>
-			<field name="action_type">sign_out</field>
-		</record>
-
-		<record model="hr.holidays.status" id="status_unpaid">
-			<field name="name">Unpaid holidays</field>
-		</record>
-		<record model="hr.holidays.status" id="ca">
-			<field name="name">Annual holidays</field>
-		</record>
-		<record model="hr.holidays.status" id="status_sick">
-			<field name="name">Sickness holidays</field>
-		</record>
-		<record model="hr.holidays.status" id="ma">
-			<field name="name">Maternity holidays</field>
-		</record>
-		<record model="hr.holidays.status" id="status_unauth">
-			<field name="name">Unauthorised holidays</field>
-		</record>
-
-
-		<!-- Example employee -->
-		
-		<record model="hr.timesheet.group" id="timesheet_group1">
-			<field name="name">Default timesheet</field>
-		</record>
-
-		<record model="hr.employee" id="employee1">
-			<field name="name">Fabien Pinckaers</field>
-			<field name="regime">45</field>
-			<field name="user_id" search="[('login','=','admin')]" model="res.users"/>
-			<field name="holiday_max">25</field>
-			<fields name="workgroups" ref="timesheet_group1" />
-		</record>
-
-		<record model="hr.timesheet">
-			<field name="name">Monday morning</field>
-			<field name="dayofweek">0</field>
-			<field name="hour_from">08:00</field>
-			<field name="hour_to">12:00</field>
-			<field name="tgroup_id" ref="timesheet_group1" />
-		</record>
-		<record model="hr.timesheet">
-			<field name="name">Monday evening</field>
-			<field name="dayofweek">0</field>
-			<field name="hour_from">13:00</field>
-			<field name="hour_to">18:00</field>
-			<field name="tgroup_id" ref="timesheet_group1" />
-		</record>
-		<record model="hr.timesheet">
-			<field name="name">Tuesday morning</field>
-			<field name="dayofweek">1</field>
-			<field name="hour_from">08:00</field>
-			<field name="hour_to">12:00</field>
-			<field name="tgroup_id" ref="timesheet_group1" />
-		</record>
-		<record model="hr.timesheet">
-			<field name="name">Tuesday evening</field>
-			<field name="dayofweek">1</field>
-			<field name="hour_from">13:00</field>
-			<field name="hour_to">18:00</field>
-			<field name="tgroup_id" ref="timesheet_group1" />
-		</record>
-		<record model="hr.timesheet">
-			<field name="name">Wednesday morning</field>
-			<field name="dayofweek">2</field>
-			<field name="hour_from">08:00</field>
-			<field name="hour_to">12:00</field>
-			<field name="tgroup_id" ref="timesheet_group1" />
-		</record>
-		<record model="hr.timesheet">
-			<field name="name">Wednesday evening</field>
-			<field name="dayofweek">2</field>
-			<field name="hour_from">13:00</field>
-			<field name="hour_to">18:00</field>
-			<field name="tgroup_id" ref="timesheet_group1" />
-		</record>
-		<record model="hr.timesheet">
-			<field name="name">Thursday morning</field>
-			<field name="dayofweek">3</field>
-			<field name="hour_from">08:00</field>
-			<field name="hour_to">12:00</field>
-			<field name="tgroup_id" ref="timesheet_group1" />
-		</record>
-		<record model="hr.timesheet">
-			<field name="name">Thursday evening</field>
-			<field name="hour_from">13:00</field>
-			<field name="hour_to">18:00</field>
-			<field name="dayofweek">3</field>
-			<field name="tgroup_id" ref="timesheet_group1" />
-		</record>
-		<record model="hr.timesheet">
-			<field name="name">Friday morning</field>
-			<field name="dayofweek">4</field>
-			<field name="hour_from">08:00</field>
-			<field name="hour_to">12:00</field>
-			<field name="tgroup_id" ref="timesheet_group1" />
-		</record>
-		<record model="hr.timesheet">
-			<field name="name">Friday evening</field>
-			<field name="dayofweek">4</field>
-			<field name="hour_from">13:00</field>
-			<field name="hour_to">18:00</field>
-			<field name="tgroup_id" ref="timesheet_group1" />
-		</record>
-
-		<record model="hr.holidays">
-			<field name="name">Bali Trip</field>
-			<field name="date_from">2005-05-11 08:00</field>
-			<field name="date_to">2005-05-25 18:00</field>
-			<field name="holiday_status" ref="ca" />
-			<field name="employee_id" ref="employee1" />
-		</record>
-		<record model="hr.holidays">
-			<field name="name">Paternity holiday</field>
-			<field name="date_from">2005-06-02 08:00</field>
-			<field name="date_to">2005-06-13 18:00</field>
-			<field name="holiday_status" ref="ma" />
-			<field name="employee_id" ref="employee1" />
-		</record>
-
-		<record model="hr.attendance" id="attendance1">
-			<field name="name" eval="time.strftime('%Y-%m-01 08:21')"/>
-			<field name="action">sign_in</field>
-			<field name="employee_id" ref="employee1" />
-		</record>
-		<record model="hr.attendance" id="attendance2">
-			<field name="name" eval="time.strftime('%Y-%m-01 11:51')"/>
-			<field name="action">sign_out</field>
-			<field name="employee_id" ref="employee1" />
-		</record>
-		<record model="hr.attendance" id="attendance3">
-			<field name="name" eval="time.strftime('%Y-%m-02 12:47')"/>
-			<field name="action">sign_in</field>
-			<field name="employee_id" ref="employee1" />
-		</record>
-		<record model="hr.attendance" id="attendance4">
-			<field name="name" eval="time.strftime('%Y-%m-02 19:53')"/>
-			<field name="action">sign_out</field>
-			<field name="employee_id" ref="employee1" />
-		</record>
-		<record model="hr.attendance" id="attendance5">
-			<field name="name" eval="time.strftime('%Y-%m-03 07:32')"/>
-			<field name="action">sign_in</field>
-			<field name="employee_id" ref="employee1" />
-		</record>
-		<record model="hr.attendance" id="attendance6">
-			<field name="name" eval="time.strftime('%Y-%m-03 12:32')"/>
-			<field name="action">sign_out</field>
-			<field name="employee_id" ref="employee1" />
-		</record>
-		<record model="hr.attendance" id="attendance7">
-			<field name="name" eval="time.strftime('%Y-%m-04 14:01')"/>
-			<field name="action">sign_in</field>
-			<field name="employee_id" ref="employee1" />
-		</record>
-		<record model="hr.attendance" id="attendance8">
-			<field name="name" eval="time.strftime('%Y-%m-04 17:21')"/>
-			<field name="action">sign_out</field>
-			<field name="employee_id" ref="employee1" />
-		</record>
-		<record model="hr.attendance" id="attendance9">
-			<field name="name" eval="time.strftime('%Y-%m-05 09:10')"/>
-			<field name="action">sign_in</field>
-			<field name="employee_id" ref="employee1" />
-		</record>
-		<record model="hr.attendance" id="attendance10">
-			<field name="name" eval="time.strftime('%Y-%m-05 12:42')"/>
-			<field name="action">sign_out</field>
-			<field name="employee_id" ref="employee1" />
-		</record>
-		<record model="hr.attendance" id="attendance11">
-			<field name="name" eval="time.strftime('%Y-%m-06 13:10')"/>
-			<field name="action">sign_in</field>
-			<field name="employee_id" ref="employee1" />
-		</record>
-		<record model="hr.attendance" id="attendance12">
-			<field name="name" eval="time.strftime('%Y-%m-06 18:34')"/>
-			<field name="action">sign_out</field>
-			<field name="employee_id" ref="employee1" />
-		</record>
-		<record model="hr.attendance" id="attendance13">
-			<field name="name" eval="time.strftime('%Y-%m-07 08:21')"/>
-			<field name="action">sign_in</field>
-			<field name="employee_id" ref="employee1" />
-		</record>
-		<record model="hr.attendance" id="attendance14">
-			<field name="name" eval="time.strftime('%Y-%m-07 18:21')"/>
-			<field name="action">sign_out</field>
-			<field name="employee_id" ref="employee1" />
-		</record>
-		<record model="hr.attendance" id="attendance15">
-			<field name="name" eval="time.strftime('%Y-%m-08 08:21')"/>
-			<field name="action">sign_in</field>
-			<field name="employee_id" ref="employee1" />
-		</record>
-		<record model="hr.attendance" id="attendance16">
-			<field name="name" eval="time.strftime('%Y-%m-08 12:54')"/>
-			<field name="action">sign_out</field>
-			<field name="employee_id" ref="employee1" />
-		</record>
-		<record model="hr.attendance" id="attendance17">
-			<field name="name" eval="time.strftime('%Y-%m-09 13:32')"/>
-			<field name="action">sign_in</field>
-			<field name="employee_id" ref="employee1" />
-		</record>
-		<record model="hr.attendance" id="attendance18">
-			<field name="name" eval="time.strftime('%Y-%m-09 19:31')"/>
-			<field name="action">sign_out</field>
-			<field name="employee_id" ref="employee1" />
-		</record>
-		<record model="hr.attendance" id="attendance19">
-			<field name="name" eval="time.strftime('%Y-%m-10 07:10')"/>
-			<field name="action">sign_in</field>
-			<field name="employee_id" ref="employee1" />
-		</record>
-		<record model="hr.attendance" id="attendance20">
-			<field name="name" eval="time.strftime('%Y-%m-10 12:34')"/>
-			<field name="action">sign_out</field>
-			<field name="employee_id" ref="employee1" />
-		</record>
-	</data>
+    <data>
+        <!--		<record model="res.groups" id="hr_id">-->
+        <!--			<field name="name">HR</field>-->
+        <!--		</record>-->
+        
+        <record model="hr.action.reason">
+            <field name="name">Start of shift</field>
+            <field name="action_type">sign_in</field>
+        </record>
+        <record model="hr.action.reason">
+            <field name="name">End of shift</field>
+            <field name="action_type">sign_out</field>
+        </record>
+        <record model="hr.action.reason">
+            <field name="name">Meal Break</field>
+            <field name="action_type">sign_in</field>
+        </record>
+        <record model="hr.action.reason">
+            <field name="name">Meal Break</field>
+            <field name="action_type">sign_out</field>
+        </record>
+        <record model="hr.action.reason">
+            <field name="name">Early exit (sick)</field>
+            <field name="action_type">sign_out</field>
+        </record>
+        <record model="hr.action.reason">
+            <field name="name">Early exit (work injury)</field>
+            <field name="action_type">sign_out</field>
+        </record>
+        
+        <record model="hr.holidays.status" id="status_unpaid">
+            <field name="name">Unpaid holidays</field>
+        </record>
+        <record model="hr.holidays.status" id="ca">
+            <field name="name">Annual holidays</field>
+        </record>
+        <record model="hr.holidays.status" id="status_sick">
+            <field name="name">Sickness holidays</field>
+        </record>
+        <record model="hr.holidays.status" id="ma">
+            <field name="name">Maternity holidays</field>
+        </record>
+        <record model="hr.holidays.status" id="status_unauth">
+            <field name="name">Unauthorised holidays</field>
+        </record>
+        
+        
+        <!-- Example employee -->
+        
+        <record model="hr.timesheet.group" id="timesheet_group1">
+            <field name="name">Default timesheet</field>
+        </record>
+        
+        <record model="hr.employee" id="employee1">
+            <field name="name">Fabien Pinckaers</field>
+            <field name="regime">45</field>
+            <field name="user_id" search="[('login','=','admin')]" model="res.users"/>
+            <field name="holiday_max">25</field>
+            <fields name="workgroups" ref="timesheet_group1" />
+        </record>
+        
+        <record model="hr.timesheet">
+            <field name="name">Monday morning</field>
+            <field name="dayofweek">0</field>
+            <field name="hour_from">08:00</field>
+            <field name="hour_to">12:00</field>
+            <field name="tgroup_id" ref="timesheet_group1" />
+        </record>
+        <record model="hr.timesheet">
+            <field name="name">Monday evening</field>
+            <field name="dayofweek">0</field>
+            <field name="hour_from">13:00</field>
+            <field name="hour_to">18:00</field>
+            <field name="tgroup_id" ref="timesheet_group1" />
+        </record>
+        <record model="hr.timesheet">
+            <field name="name">Tuesday morning</field>
+            <field name="dayofweek">1</field>
+            <field name="hour_from">08:00</field>
+            <field name="hour_to">12:00</field>
+            <field name="tgroup_id" ref="timesheet_group1" />
+        </record>
+        <record model="hr.timesheet">
+            <field name="name">Tuesday evening</field>
+            <field name="dayofweek">1</field>
+            <field name="hour_from">13:00</field>
+            <field name="hour_to">18:00</field>
+            <field name="tgroup_id" ref="timesheet_group1" />
+        </record>
+        <record model="hr.timesheet">
+            <field name="name">Wednesday morning</field>
+            <field name="dayofweek">2</field>
+            <field name="hour_from">08:00</field>
+            <field name="hour_to">12:00</field>
+            <field name="tgroup_id" ref="timesheet_group1" />
+        </record>
+        <record model="hr.timesheet">
+            <field name="name">Wednesday evening</field>
+            <field name="dayofweek">2</field>
+            <field name="hour_from">13:00</field>
+            <field name="hour_to">18:00</field>
+            <field name="tgroup_id" ref="timesheet_group1" />
+        </record>
+        <record model="hr.timesheet">
+            <field name="name">Thursday morning</field>
+            <field name="dayofweek">3</field>
+            <field name="hour_from">08:00</field>
+            <field name="hour_to">12:00</field>
+            <field name="tgroup_id" ref="timesheet_group1" />
+        </record>
+        <record model="hr.timesheet">
+            <field name="name">Thursday evening</field>
+            <field name="hour_from">13:00</field>
+            <field name="hour_to">18:00</field>
+            <field name="dayofweek">3</field>
+            <field name="tgroup_id" ref="timesheet_group1" />
+        </record>
+        <record model="hr.timesheet">
+            <field name="name">Friday morning</field>
+            <field name="dayofweek">4</field>
+            <field name="hour_from">08:00</field>
+            <field name="hour_to">12:00</field>
+            <field name="tgroup_id" ref="timesheet_group1" />
+        </record>
+        <record model="hr.timesheet">
+            <field name="name">Friday evening</field>
+            <field name="dayofweek">4</field>
+            <field name="hour_from">13:00</field>
+            <field name="hour_to">18:00</field>
+            <field name="tgroup_id" ref="timesheet_group1" />
+        </record>
+        
+        <record model="hr.holidays">
+            <field name="name">Bali Trip</field>
+            <field name="date_from">2005-05-11 08:00</field>
+            <field name="date_to">2005-05-25 18:00</field>
+            <field name="holiday_status" ref="ca" />
+            <field name="employee_id" ref="employee1" />
+        </record>
+        <record model="hr.holidays">
+            <field name="name">Paternity holiday</field>
+            <field name="date_from">2005-06-02 08:00</field>
+            <field name="date_to">2005-06-13 18:00</field>
+            <field name="holiday_status" ref="ma" />
+            <field name="employee_id" ref="employee1" />
+        </record>
+        
+        <record model="hr.attendance" id="attendance1">
+            <field name="name" eval="time.strftime('%Y-%m-01 08:21')"/>
+            <field name="action">sign_in</field>
+            <field name="employee_id" ref="employee1" />
+        </record>
+        <record model="hr.attendance" id="attendance2">
+            <field name="name" eval="time.strftime('%Y-%m-01 11:51')"/>
+            <field name="action">sign_out</field>
+            <field name="employee_id" ref="employee1" />
+        </record>
+        <record model="hr.attendance" id="attendance3">
+            <field name="name" eval="time.strftime('%Y-%m-02 12:47')"/>
+            <field name="action">sign_in</field>
+            <field name="employee_id" ref="employee1" />
+        </record>
+        <record model="hr.attendance" id="attendance4">
+            <field name="name" eval="time.strftime('%Y-%m-02 19:53')"/>
+            <field name="action">sign_out</field>
+            <field name="employee_id" ref="employee1" />
+        </record>
+        <record model="hr.attendance" id="attendance5">
+            <field name="name" eval="time.strftime('%Y-%m-03 07:32')"/>
+            <field name="action">sign_in</field>
+            <field name="employee_id" ref="employee1" />
+        </record>
+        <record model="hr.attendance" id="attendance6">
+            <field name="name" eval="time.strftime('%Y-%m-03 12:32')"/>
+            <field name="action">sign_out</field>
+            <field name="employee_id" ref="employee1" />
+        </record>
+        <record model="hr.attendance" id="attendance7">
+            <field name="name" eval="time.strftime('%Y-%m-04 14:01')"/>
+            <field name="action">sign_in</field>
+            <field name="employee_id" ref="employee1" />
+        </record>
+        <record model="hr.attendance" id="attendance8">
+            <field name="name" eval="time.strftime('%Y-%m-04 17:21')"/>
+            <field name="action">sign_out</field>
+            <field name="employee_id" ref="employee1" />
+        </record>
+        <record model="hr.attendance" id="attendance9">
+            <field name="name" eval="time.strftime('%Y-%m-05 09:10')"/>
+            <field name="action">sign_in</field>
+            <field name="employee_id" ref="employee1" />
+        </record>
+        <record model="hr.attendance" id="attendance10">
+            <field name="name" eval="time.strftime('%Y-%m-05 12:42')"/>
+            <field name="action">sign_out</field>
+            <field name="employee_id" ref="employee1" />
+        </record>
+        <record model="hr.attendance" id="attendance11">
+            <field name="name" eval="time.strftime('%Y-%m-06 13:10')"/>
+            <field name="action">sign_in</field>
+            <field name="employee_id" ref="employee1" />
+        </record>
+        <record model="hr.attendance" id="attendance12">
+            <field name="name" eval="time.strftime('%Y-%m-06 18:34')"/>
+            <field name="action">sign_out</field>
+            <field name="employee_id" ref="employee1" />
+        </record>
+        <record model="hr.attendance" id="attendance13">
+            <field name="name" eval="time.strftime('%Y-%m-07 08:21')"/>
+            <field name="action">sign_in</field>
+            <field name="employee_id" ref="employee1" />
+        </record>
+        <record model="hr.attendance" id="attendance14">
+            <field name="name" eval="time.strftime('%Y-%m-07 18:21')"/>
+            <field name="action">sign_out</field>
+            <field name="employee_id" ref="employee1" />
+        </record>
+        <record model="hr.attendance" id="attendance15">
+            <field name="name" eval="time.strftime('%Y-%m-08 08:21')"/>
+            <field name="action">sign_in</field>
+            <field name="employee_id" ref="employee1" />
+        </record>
+        <record model="hr.attendance" id="attendance16">
+            <field name="name" eval="time.strftime('%Y-%m-08 12:54')"/>
+            <field name="action">sign_out</field>
+            <field name="employee_id" ref="employee1" />
+        </record>
+        <record model="hr.attendance" id="attendance17">
+            <field name="name" eval="time.strftime('%Y-%m-09 13:32')"/>
+            <field name="action">sign_in</field>
+            <field name="employee_id" ref="employee1" />
+        </record>
+        <record model="hr.attendance" id="attendance18">
+            <field name="name" eval="time.strftime('%Y-%m-09 19:31')"/>
+            <field name="action">sign_out</field>
+            <field name="employee_id" ref="employee1" />
+        </record>
+        <record model="hr.attendance" id="attendance19">
+            <field name="name" eval="time.strftime('%Y-%m-10 07:10')"/>
+            <field name="action">sign_in</field>
+            <field name="employee_id" ref="employee1" />
+        </record>
+        <record model="hr.attendance" id="attendance20">
+            <field name="name" eval="time.strftime('%Y-%m-10 12:34')"/>
+            <field name="action">sign_out</field>
+            <field name="employee_id" ref="employee1" />
+        </record>
+    </data>
 </terp>

@@ -1,98 +1,98 @@
 <?xml version="1.0"?>
 <terp>
-<data>
-	<record model="workflow" id="wkf">
-		<field name="name">account.invoice.basic</field>
-		<field name="osv">account.invoice</field>
-		<field name="on_create">True</field>
-	</record>
-
-		<record model="workflow.activity" id="act_draft">
-			<field name="wkf_id" ref="wkf"/>
-			<field name="flow_start">True</field>
-			<field name="name">draft</field>
-		</record>
-<!--		<record model="workflow.activity" id="act_confirm">
+    <data>
+        <record model="workflow" id="wkf">
+            <field name="name">account.invoice.basic</field>
+            <field name="osv">account.invoice</field>
+            <field name="on_create">True</field>
+        </record>
+        
+        <record model="workflow.activity" id="act_draft">
+            <field name="wkf_id" ref="wkf"/>
+            <field name="flow_start">True</field>
+            <field name="name">draft</field>
+        </record>
+        <!--		<record model="workflow.activity" id="act_confirm">
 			<field name="wkf_id" ref="wkf"/>
 			<field name="name">confirm</field>
 		</record> -->
-		<record model="workflow.activity" id="act_proforma">
-			<field name="wkf_id" ref="wkf"/>
-			<field name="name">proforma</field>
-			<field name="action">action_move_create()&#10;write({'state':'proforma'})</field>
-			<field name="kind">function</field>
-		</record>
-		<record model="workflow.activity" id="act_open">
-			<field name="wkf_id" ref="wkf"/>
-			<field name="name">open</field>
-			<field name="action">action_move_create()&#10;action_number()&#10;write({'state':'open'})</field>
-			<field name="kind">function</field>
-		</record>
-		<record model="workflow.activity" id="act_paid">
-			<field name="wkf_id" ref="wkf"/>
-			<field name="name">paid</field>
-			<field name="flow_stop">True</field>
-			<field name="action">write({'state':'paid'})</field>
-			<field name="kind">function</field>
-		</record>
-		<record model="workflow.activity" id="act_cancel">
-			<field name="wkf_id" ref="wkf"/>
-			<field name="name">cancel</field>
-			<field name="flow_stop">True</field>
-			<field name="action">action_cancel()&#10;write({'state':'cancel'})</field>
-			<field name="kind">function</field>
-		</record>
-
-		<!--
+        <record model="workflow.activity" id="act_proforma">
+            <field name="wkf_id" ref="wkf"/>
+            <field name="name">proforma</field>
+            <field name="action">action_move_create()&#10;write({'state':'proforma'})</field>
+            <field name="kind">function</field>
+        </record>
+        <record model="workflow.activity" id="act_open">
+            <field name="wkf_id" ref="wkf"/>
+            <field name="name">open</field>
+            <field name="action">action_move_create()&#10;action_number()&#10;write({'state':'open'})</field>
+            <field name="kind">function</field>
+        </record>
+        <record model="workflow.activity" id="act_paid">
+            <field name="wkf_id" ref="wkf"/>
+            <field name="name">paid</field>
+            <field name="flow_stop">True</field>
+            <field name="action">write({'state':'paid'})</field>
+            <field name="kind">function</field>
+        </record>
+        <record model="workflow.activity" id="act_cancel">
+            <field name="wkf_id" ref="wkf"/>
+            <field name="name">cancel</field>
+            <field name="flow_stop">True</field>
+            <field name="action">action_cancel()&#10;write({'state':'cancel'})</field>
+            <field name="kind">function</field>
+        </record>
+        
+        <!--
 		<record model="workflow.transition" id="t1">
 			<field name="act_from" ref="act_draft"/>
 			<field name="act_to" ref="act_confirm"/>
 		</record>
 		-->
-
-		<record model="workflow.transition" id="t3">
-			<field name="act_from" ref="act_draft"/>
-			<field name="act_to" ref="act_proforma"/>
-			<field name="signal">invoice_proforma</field>
-		</record>
-		<record model="workflow.transition" id="t4">
-			<field name="act_from" ref="act_draft"/>
-			<field name="act_to" ref="act_open"/>
-			<field name="signal">invoice_open</field>
-		</record>
-		<record model="workflow.transition" id="t5">
-			<field name="act_from" ref="act_proforma"/>
-			<field name="act_to" ref="act_open"/>
-			<field name="signal">invoice_open</field>
-		</record>
-		<record model="workflow.transition" id="t7">
-			<field name="act_from" ref="act_proforma"/>
-			<field name="act_to" ref="act_paid"/>
-			<field name="trigger_model">account.move.line</field>
-			<field name="trigger_expr_id">move_line_id_payment_get()</field>
-			<field name="condition">test_paid()</field>
-		</record>
-		<record model="workflow.transition" id="t8">
-			<field name="act_from" ref="act_open"/>
-			<field name="act_to" ref="act_paid"/>
-			<field name="trigger_model">account.move.line</field>
-			<field name="trigger_expr_id">move_line_id_payment_get()</field>
-			<field name="condition">test_paid()</field>
-		</record>
-		<record model="workflow.transition" id="t9">
-			<field name="act_from" ref="act_draft"/>
-			<field name="act_to" ref="act_cancel"/>
-			<field name="signal">invoice_cancel</field>
-		</record>
-		<record model="workflow.transition" id="t11">
-			<field name="act_from" ref="act_proforma"/>
-			<field name="act_to" ref="act_cancel"/>
-			<field name="signal">invoice_cancel</field>
-		</record>
-		<record model="workflow.transition" id="t12">
-			<field name="act_from" ref="act_open"/>
-			<field name="act_to" ref="act_cancel"/>
-			<field name="signal">invoice_cancel</field>
-		</record>
-</data>
+        
+        <record model="workflow.transition" id="t3">
+            <field name="act_from" ref="act_draft"/>
+            <field name="act_to" ref="act_proforma"/>
+            <field name="signal">invoice_proforma</field>
+        </record>
+        <record model="workflow.transition" id="t4">
+            <field name="act_from" ref="act_draft"/>
+            <field name="act_to" ref="act_open"/>
+            <field name="signal">invoice_open</field>
+        </record>
+        <record model="workflow.transition" id="t5">
+            <field name="act_from" ref="act_proforma"/>
+            <field name="act_to" ref="act_open"/>
+            <field name="signal">invoice_open</field>
+        </record>
+        <record model="workflow.transition" id="t7">
+            <field name="act_from" ref="act_proforma"/>
+            <field name="act_to" ref="act_paid"/>
+            <field name="trigger_model">account.move.line</field>
+            <field name="trigger_expr_id">move_line_id_payment_get()</field>
+            <field name="condition">test_paid()</field>
+        </record>
+        <record model="workflow.transition" id="t8">
+            <field name="act_from" ref="act_open"/>
+            <field name="act_to" ref="act_paid"/>
+            <field name="trigger_model">account.move.line</field>
+            <field name="trigger_expr_id">move_line_id_payment_get()</field>
+            <field name="condition">test_paid()</field>
+        </record>
+        <record model="workflow.transition" id="t9">
+            <field name="act_from" ref="act_draft"/>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="signal">invoice_cancel</field>
+        </record>
+        <record model="workflow.transition" id="t11">
+            <field name="act_from" ref="act_proforma"/>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="signal">invoice_cancel</field>
+        </record>
+        <record model="workflow.transition" id="t12">
+            <field name="act_from" ref="act_open"/>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="signal">invoice_cancel</field>
+        </record>
+    </data>
 </terp>

@@ -1,64 +1,43 @@
-<?xml version="1.0"?>
+<?xml version='1.0'?>
 <terp>
-	<data>
-		<record model="board.note.type" id="note_sale_type">
-			<field name="name">Production</field>
-		</record>
-
-		<record model="ir.ui.view" id="board_mrp_manager_form">
-			<field name="name">board.mrp.manager.form</field>
-			<field name="model">board.board</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Manufacturing board">
-					<hpaned position="100">
-						<child1>
-							<action
-								string="Next production orders"
-								name="%(mrp.mrp_production_action2)d"
-								colspan="4"
-								height="200"
-								width="510"/>
-							<action string="Deliveries (Out packing)"
-								name="%(stock.action_picking_tree2)d"
-								colspan="4"/>
-							<action
-								string="Procurement in Exception"
-								name="%(mrp.mrp_procurement_action4)d"
-								colspan="4"/>
-						</child1>
-
-
-						<child2>
-							<action
-								string="Workcenter futur load"
-								name="%(report_mrp.action_report_workcenter_load_tree)d"
-								colspan="4"/>
-
-							<action
-								string="Stock value variation"
-								name="%(report_mrp.action_report_in_out_picking_tree)d"
-								colspan="4"/>
-						</child2>
-					</hpaned>
-				</form>
-			</field>
-		</record>
-
-		<record model="ir.actions.act_window" id="open_board_manufacturing">
-                        <field name="name">Production Dashboard</field>
-			<field name="res_model">board.board</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">form</field>
-			<field name="view_id" ref="board_mrp_manager_form"/>
-		</record>
-
-		<menuitem
-			name="Dashboards/Production/Production Dashboard"
-			action="open_board_manufacturing"
-			sequence="1"
-			id="menu_board_manufacturing"
-			icon="terp-graph"/>
-
-	</data>
+    <data>
+        <record id='note_sale_type' model='board.note.type'>
+            <field name='name'>Production</field>
+        </record>
+        
+        <record id='board_mrp_manager_form' model='ir.ui.view'>
+            <field name='name'>board.mrp.manager.form</field>
+            <field name='model'>board.board</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Manufacturing board'>
+                    <hpaned position='100'>
+                        <child1>
+                            <action name='%(mrp.mrp_production_action2)d' height='200' string='Next production orders' colspan='4' width='510'/>
+                            <action name='%(stock.action_picking_tree2)d' string='Deliveries (Out packing)' colspan='4'/>
+                            <action name='%(mrp.mrp_procurement_action4)d' string='Procurement in Exception' colspan='4'/>
+                        </child1>
+                        
+                        
+                        <child2>
+                            <action name='%(report_mrp.action_report_workcenter_load_tree)d' string='Workcenter futur load' colspan='4'/>
+                            
+                            <action name='%(report_mrp.action_report_in_out_picking_tree)d' string='Stock value variation' colspan='4'/>
+                        </child2>
+                    </hpaned>
+                </form>
+            </field>
+        </record>
+        
+        <record id='open_board_manufacturing' model='ir.actions.act_window'>
+            <field name='name'>Production Dashboard</field>
+            <field name='res_model'>board.board</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>form</field>
+            <field name='view_id' ref='board_mrp_manager_form'/>
+        </record>
+        
+        <menuitem name='Dashboards/Production/Production Dashboard' sequence='1' icon='terp-graph' action='open_board_manufacturing' id='menu_board_manufacturing'/>
+        
+    </data>
 </terp>

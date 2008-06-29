@@ -1,23 +1,23 @@
 <terp>
-<data>
-
-	<record model="ir.ui.view" id="stock_picking_inherit_purchase">
-		<field name="name">Packing list</field>
-		<field name="model">stock.picking</field>
-		<field name="type">form</field>
-		<field name="inherit_id" ref="stock.view_picking_form"/>
-		<field name="arch" type="xml">
-			<field name="active" position="after">
-				<field name="purchase_id"/>
-			</field>
-		</field>
-	</record>
-
-	<act_window name="Packings"
+    <data>
+        
+        <record model="ir.ui.view" id="stock_picking_inherit_purchase">
+            <field name="name">Packing list</field>
+            <field name="model">stock.picking</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <field name="active" position="after">
+                    <field name="purchase_id"/>
+                </field>
+            </field>
+        </record>
+        
+        <act_window name="Packings"
 		domain="[('purchase_id', '=', active_id)]"
 		res_model="stock.picking"
 		src_model="purchase.order"
 		id="act_purchase_order_2_stock_picking"/>
-
-</data>
+        
+    </data>
 </terp>

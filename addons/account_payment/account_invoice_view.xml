@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <terp>
-	<data>
-		<record model="ir.ui.view" id="invoice_supplier_form">
-			<field name="name">account.invoice.supplier.form.inherit</field>
-			<field name="model">account.invoice</field>
-			<field name="type">form</field>
-			<field name="inherit_id" ref="account.invoice_supplier_form"/>
-			<field name="arch" type="xml">
-				<field name="period_id" position="before">
-					<field name="amount_to_pay"/>
-					<newline/>
-				</field>
-			</field>
-		</record>
-	</data>
+    <data>
+        <record model="ir.ui.view" id="invoice_supplier_form">
+            <field name="name">account.invoice.supplier.form.inherit</field>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <field name="period_id" position="before">
+                    <field name="amount_to_pay"/>
+                    <newline/>
+                </field>
+            </field>
+        </record>
+    </data>
 </terp>
