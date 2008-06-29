@@ -1,1511 +1,1511 @@
 <?xml version="1.0"?>
 <terp>
-<data noupdate="1">
-
-	<record model="ir.ui.view" id="view_menu">
-		<field name="name">ir.ui.menu.tree</field>
-		<field name="model">ir.ui.menu</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Menu" toolbar="1">
-				<field name="name" icon="icon"/>
-			</tree>
-		</field>
-		<field name="field_parent">child_id</field>
-	</record>
-
-	<record model="ir.actions.act_window" id="action_menu_admin">
-		<field name="name">Menu</field>
-		<field name="usage">menu</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="view_id" ref="view_menu"/>
-		<field name="res_model">ir.ui.menu</field>
-		<field name="view_type">tree</field>
-		<field name="domain" eval="'[(\'parent_id\',\'=\',False)]'"/>
-	</record>
-
-	<record model="res.groups" id="group_admin">
-		<field name="name">Administration/Administrator</field>
-	</record>
-
-	<record model="res.groups" id="group_extended">
-		<field name="name">Extended View</field>
-	</record>
-	<record model="res.groups" id="group_no_one">
-		<field name="name">No One</field>
-	</record>
-
-	<record model="res.lang" id="lang_en">
-	<field name="code">en_US</field>
-	<field name="name">English</field>
-	</record>
-
-	<record model="res.country" id="ad">
-	<field name="name">Andorra, Principality of</field>
-	<field name="code">ad</field>
-	</record>
-	<record model="res.country" id="ae">
-	<field name="name">United Arab Emirates</field>
-	<field name="code">ae</field>
-	</record>
-	<record model="res.country" id="af">
-		<field name="name">Afghanistan, Islamic State of</field>
-		<field name="code">af</field>
-	</record>
-	<record model="res.country" id="ag">
-		<field name="name">Antigua and Barbuda</field>
-		<field name="code">ag</field>
-	</record>
-	<record model="res.country" id="ai">
-		<field name="name">Anguilla</field>
-		<field name="code">ai</field>
-	</record>
-	<record model="res.country" id="al">
-		<field name="name">Albania</field>
-		<field name="code">al</field>
-	</record>
-	<record model="res.country" id="am">
-		<field name="name">Armenia</field>
-		<field name="code">am</field>
-	</record>
-	<record model="res.country" id="an">
-		<field name="name">Netherlands Antilles</field>
-		<field name="code">an</field>
-	</record>
-	<record model="res.country" id="ao">
-		<field name="name">Angola</field>
-		<field name="code">ao</field>
-	</record>
-	<record model="res.country" id="aq">
-		<field name="name">Antarctica</field>
-		<field name="code">aq</field>
-	</record>
-	<record model="res.country" id="ar">
-		<field name="name">Argentina</field>
-		<field name="code">ar</field>
-	</record>
-	<record model="res.country" id="as">
-		<field name="name">American Samoa</field>
-		<field name="code">as</field>
-	</record>
-	<record model="res.country" id="at">
-		<field name="name">Austria</field>
-		<field name="code">at</field>
-	</record>
-	<record model="res.country" id="au">
-		<field name="name">Australia</field>
-		<field name="code">au</field>
-	</record>
-	<record model="res.country" id="aw">
-		<field name="name">Aruba</field>
-		<field name="code">aw</field>
-	</record>
-	<record model="res.country" id="az">
-		<field name="name">Azerbaidjan</field>
-		<field name="code">az</field>
-	</record>
-	<record model="res.country" id="ba">
-		<field name="name">Bosnia-Herzegovina</field>
-		<field name="code">ba</field>
-	</record>
-	<record model="res.country" id="bb">
-		<field name="name">Barbados</field>
-		<field name="code">bb</field>
-	</record>
-	<record model="res.country" id="bd">
-		<field name="name">Bangladesh</field>
-		<field name="code">bd</field>
-	</record>
-	<record model="res.country" id="be">
-		<field name="name">Belgium</field>
-		<field name="code">be</field>
-	</record>
-	<record model="res.country" id="bf">
-		<field name="name">Burkina Faso</field>
-		<field name="code">bf</field>
-	</record>
-	<record model="res.country" id="bg">
-		<field name="name">Bulgaria</field>
-		<field name="code">bg</field>
-	</record>
-	<record model="res.country" id="bh">
-		<field name="name">Bahrain</field>
-		<field name="code">bh</field>
-	</record>
-	<record model="res.country" id="bi">
-		<field name="name">Burundi</field>
-		<field name="code">bi</field>
-	</record>
-	<record model="res.country" id="bj">
-		<field name="name">Benin</field>
-		<field name="code">bj</field>
-	</record>
-	<record model="res.country" id="bm">
-		<field name="name">Bermuda</field>
-		<field name="code">bm</field>
-	</record>
-	<record model="res.country" id="bn">
-		<field name="name">Brunei Darussalam</field>
-		<field name="code">bn</field>
-	</record>
-	<record model="res.country" id="bo">
-		<field name="name">Bolivia</field>
-		<field name="code">bo</field>
-	</record>
-	<record model="res.country" id="br">
-		<field name="name">Brazil</field>
-		<field name="code">br</field>
-	</record>
-	<record model="res.country" id="bs">
-		<field name="name">Bahamas</field>
-		<field name="code">bs</field>
-	</record>
-	<record model="res.country" id="bt">
-		<field name="name">Bhutan</field>
-		<field name="code">bt</field>
-	</record>
-	<record model="res.country" id="bv">
-		<field name="name">Bouvet Island</field>
-		<field name="code">bv</field>
-	</record>
-	<record model="res.country" id="bw">
-		<field name="name">Botswana</field>
-		<field name="code">bw</field>
-	</record>
-	<record model="res.country" id="by">
-		<field name="name">Belarus</field>
-		<field name="code">by</field>
-	</record>
-	<record model="res.country" id="bz">
-		<field name="name">Belize</field>
-		<field name="code">bz</field>
-	</record>
-	<record model="res.country" id="ca">
-		<field name="name">Canada</field>
-		<field name="code">ca</field>
-	</record>
-	<record model="res.country" id="cc">
-		<field name="name">Cocos (Keeling) Islands</field>
-		<field name="code">cc</field>
-	</record>
-	<record model="res.country" id="cf">
-		<field name="name">Central African Republic</field>
-		<field name="code">cf</field>
-	</record>
-	<record model="res.country" id="cd">
-		<field name="name">Congo, The Democratic Republic of the</field>
-		<field name="code">cd</field>
-	</record>
-	<record model="res.country" id="cg">
-		<field name="name">Congo</field>
-		<field name="code">cg</field>
-	</record>
-	<record model="res.country" id="ch">
-		<field name="name">Suisse</field>
-		<field name="code">ch</field>
-	</record>
-	<record model="res.country" id="ci">
-		<field name="name">Ivory Coast (Cote D'Ivoire)</field>
-		<field name="code">ci</field>
-	</record>
-	<record model="res.country" id="ck">
-		<field name="name">Cook Islands</field>
-		<field name="code">ck</field>
-	</record>
-	<record model="res.country" id="cl">
-		<field name="name">Chile</field>
-		<field name="code">cl</field>
-	</record>
-	<record model="res.country" id="cm">
-		<field name="name">Cameroon</field>
-		<field name="code">cm</field>
-	</record>
-	<record model="res.country" id="cn">
-		<field name="name">China</field>
-		<field name="code">cn</field>
-	</record>
-	<record model="res.country" id="co">
-		<field name="name">Colombia</field>
-		<field name="code">co</field>
-	</record>
-	<record model="res.country" id="cr">
-		<field name="name">Costa Rica</field>
-		<field name="code">cr</field>
-	</record>
-	<record model="res.country" id="cs">
-		<field name="name">Serbia and Montenegro</field>
-		<field name="code">cs</field>
-	</record>
-	<record model="res.country" id="cu">
-		<field name="name">Cuba</field>
-		<field name="code">cu</field>
-	</record>
-	<record model="res.country" id="cv">
-		<field name="name">Cape Verde</field>
-		<field name="code">cv</field>
-	</record>
-	<record model="res.country" id="cx">
-		<field name="name">Christmas Island</field>
-		<field name="code">cx</field>
-	</record>
-	<record model="res.country" id="cy">
-		<field name="name">Cyprus</field>
-		<field name="code">cy</field>
-	</record>
-	<record model="res.country" id="cz">
-		<field name="name">Czech Republic</field>
-		<field name="code">cz</field>
-	</record>
-	<record model="res.country" id="de">
-		<field name="name">Germany</field>
-		<field name="code">de</field>
-	</record>
-	<record model="res.country" id="dj">
-		<field name="name">Djibouti</field>
-		<field name="code">dj</field>
-	</record>
-	<record model="res.country" id="dk">
-		<field name="name">Denmark</field>
-		<field name="code">dk</field>
-	</record>
-	<record model="res.country" id="dm">
-		<field name="name">Dominica</field>
-		<field name="code">dm</field>
-	</record>
-	<record model="res.country" id="do">
-		<field name="name">Dominican Republic</field>
-		<field name="code">do</field>
-	</record>
-	<record model="res.country" id="dz">
-		<field name="name">Algeria</field>
-		<field name="code">dz</field>
-	</record>
-	<record model="res.country" id="ec">
-		<field name="name">Ecuador</field>
-		<field name="code">ec</field>
-	</record>
-	<record model="res.country" id="ee">
-		<field name="name">Estonia</field>
-		<field name="code">ee</field>
-	</record>
-	<record model="res.country" id="eg">
-		<field name="name">Egypt</field>
-		<field name="code">eg</field>
-	</record>
-	<record model="res.country" id="eh">
-		<field name="name">Western Sahara</field>
-		<field name="code">eh</field>
-	</record>
-	<record model="res.country" id="er">
-		<field name="name">Eritrea</field>
-		<field name="code">er</field>
-	</record>
-	<record model="res.country" id="es">
-		<field name="name">Spain</field>
-		<field name="code">es</field>
-	</record>
-	<record model="res.country" id="et">
-		<field name="name">Ethiopia</field>
-		<field name="code">et</field>
-	</record>
-	<record model="res.country" id="fi">
-		<field name="name">Finland</field>
-		<field name="code">fi</field>
-	</record>
-	<record model="res.country" id="fj">
-		<field name="name">Fiji</field>
-		<field name="code">fj</field>
-	</record>
-	<record model="res.country" id="fk">
-		<field name="name">Falkland Islands</field>
-		<field name="code">fk</field>
-	</record>
-	<record model="res.country" id="fm">
-		<field name="name">Micronesia</field>
-		<field name="code">fm</field>
-	</record>
-	<record model="res.country" id="fo">
-		<field name="name">Faroe Islands</field>
-		<field name="code">fo</field>
-	</record>
-	<record model="res.country" id="fr">
-		<field name="name">France</field>
-		<field name="code">fr</field>
-	</record>
-	<record model="res.country" id="ga">
-		<field name="name">Gabon</field>
-		<field name="code">ga</field>
-	</record>
-	<record model="res.country" id="gd">
-		<field name="name">Grenada</field>
-		<field name="code">gd</field>
-	</record>
-	<record model="res.country" id="ge">
-		<field name="name">Georgia</field>
-		<field name="code">ge</field>
-	</record>
-	<record model="res.country" id="gf">
-		<field name="name">French Guyana</field>
-		<field name="code">gf</field>
-	</record>
-	<record model="res.country" id="gh">
-		<field name="name">Ghana</field>
-		<field name="code">gh</field>
-	</record>
-	<record model="res.country" id="gi">
-		<field name="name">Gibraltar</field>
-		<field name="code">gi</field>
-	</record>
-	<record model="res.country" id="gl">
-		<field name="name">Greenland</field>
-		<field name="code">gl</field>
-	</record>
-	<record model="res.country" id="gm">
-		<field name="name">Gambia</field>
-		<field name="code">gm</field>
-	</record>
-	<record model="res.country" id="gn">
-		<field name="name">Guinea</field>
-		<field name="code">gn</field>
-	</record>
-	<record model="res.country" id="gp">
-		<field name="name">Guadeloupe (French)</field>
-		<field name="code">gp</field>
-	</record>
-	<record model="res.country" id="gq">
-		<field name="name">Equatorial Guinea</field>
-		<field name="code">gq</field>
-	</record>
-	<record model="res.country" id="gr">
-		<field name="name">Greece</field>
-		<field name="code">gr</field>
-	</record>
-	<record model="res.country" id="gs">
-		<field name="name">S. Georgia &amp; S. Sandwich Isls.</field>
-		<field name="code">gs</field>
-	</record>
-	<record model="res.country" id="gt">
-		<field name="name">Guatemala</field>
-		<field name="code">gt</field>
-	</record>
-	<record model="res.country" id="gu">
-		<field name="name">Guam (USA)</field>
-		<field name="code">gu</field>
-	</record>
-	<record model="res.country" id="gw">
-		<field name="name">Guinea Bissau</field>
-		<field name="code">gw</field>
-	</record>
-	<record model="res.country" id="gy">
-		<field name="name">Guyana</field>
-		<field name="code">gy</field>
-	</record>
-	<record model="res.country" id="hk">
-		<field name="name">Hong Kong</field>
-		<field name="code">hk</field>
-	</record>
-	<record model="res.country" id="hm">
-		<field name="name">Heard and McDonald Islands</field>
-		<field name="code">hm</field>
-	</record>
-	<record model="res.country" id="hn">
-		<field name="name">Honduras</field>
-		<field name="code">hn</field>
-	</record>
-	<record model="res.country" id="hr">
-		<field name="name">Croatia</field>
-		<field name="code">hr</field>
-	</record>
-	<record model="res.country" id="ht">
-		<field name="name">Haiti</field>
-		<field name="code">ht</field>
-	</record>
-	<record model="res.country" id="hu">
-		<field name="name">Hungary</field>
-		<field name="code">hu</field>
-	</record>
-	<record model="res.country" id="id">
-		<field name="name">Indonesia</field>
-		<field name="code">id</field>
-	</record>
-	<record model="res.country" id="ie">
-		<field name="name">Ireland</field>
-		<field name="code">ie</field>
-	</record>
-	<record model="res.country" id="il">
-		<field name="name">Israel</field>
-		<field name="code">il</field>
-	</record>
-	<record model="res.country" id="in">
-		<field name="name">India</field>
-		<field name="code">in</field>
-	</record>
-	<record model="res.country" id="io">
-		<field name="name">British Indian Ocean Territory</field>
-		<field name="code">io</field>
-	</record>
-	<record model="res.country" id="iq">
-		<field name="name">Iraq</field>
-		<field name="code">iq</field>
-	</record>
-	<record model="res.country" id="ir">
-		<field name="name">Iran</field>
-		<field name="code">ir</field>
-	</record>
-	<record model="res.country" id="is">
-		<field name="name">Iceland</field>
-		<field name="code">is</field>
-	</record>
-	<record model="res.country" id="it">
-		<field name="name">Italy</field>
-		<field name="code">it</field>
-	</record>
-	<record model="res.country" id="jm">
-		<field name="name">Jamaica</field>
-		<field name="code">jm</field>
-	</record>
-	<record model="res.country" id="jo">
-		<field name="name">Jordan</field>
-		<field name="code">jo</field>
-	</record>
-	<record model="res.country" id="jp">
-		<field name="name">Japan</field>
-		<field name="code">jp</field>
-	</record>
-	<record model="res.country" id="ke">
-		<field name="name">Kenya</field>
-		<field name="code">ke</field>
-	</record>
-	<record model="res.country" id="kg">
-		<field name="name">Kyrgyz Republic (Kyrgyzstan)</field>
-		<field name="code">kg</field>
-	</record>
-	<record model="res.country" id="kh">
-		<field name="name">Cambodia, Kingdom of</field>
-		<field name="code">kh</field>
-	</record>
-	<record model="res.country" id="ki">
-		<field name="name">Kiribati</field>
-		<field name="code">ki</field>
-	</record>
-	<record model="res.country" id="km">
-		<field name="name">Comoros</field>
-		<field name="code">km</field>
-	</record>
-	<record model="res.country" id="kn">
-		<field name="name">Saint Kitts &amp; Nevis Anguilla</field>
-		<field name="code">kn</field>
-	</record>
-	<record model="res.country" id="kp">
-		<field name="name">North Korea</field>
-		<field name="code">kp</field>
-	</record>
-	<record model="res.country" id="kr">
-		<field name="name">South Korea</field>
-		<field name="code">kr</field>
-	</record>
-	<record model="res.country" id="kw">
-		<field name="name">Kuwait</field>
-		<field name="code">kw</field>
-	</record>
-	<record model="res.country" id="ky">
-		<field name="name">Cayman Islands</field>
-		<field name="code">ky</field>
-	</record>
-	<record model="res.country" id="kz">
-		<field name="name">Kazakhstan</field>
-		<field name="code">kz</field>
-	</record>
-	<record model="res.country" id="la">
-		<field name="name">Laos</field>
-		<field name="code">la</field>
-	</record>
-	<record model="res.country" id="lb">
-		<field name="name">Lebanon</field>
-		<field name="code">lb</field>
-	</record>
-	<record model="res.country" id="lc">
-		<field name="name">Saint Lucia</field>
-		<field name="code">lc</field>
-	</record>
-	<record model="res.country" id="li">
-		<field name="name">Liechtenstein</field>
-		<field name="code">li</field>
-	</record>
-	<record model="res.country" id="lk">
-		<field name="name">Sri Lanka</field>
-		<field name="code">lk</field>
-	</record>
-	<record model="res.country" id="lr">
-		<field name="name">Liberia</field>
-		<field name="code">lr</field>
-	</record>
-	<record model="res.country" id="ls">
-		<field name="name">Lesotho</field>
-		<field name="code">ls</field>
-	</record>
-	<record model="res.country" id="lt">
-		<field name="name">Lithuania</field>
-		<field name="code">lt</field>
-	</record>
-	<record model="res.country" id="lu">
-		<field name="name">Luxembourg</field>
-		<field name="code">lu</field>
-	</record>
-	<record model="res.country" id="lv">
-		<field name="name">Latvia</field>
-		<field name="code">lv</field>
-	</record>
-	<record model="res.country" id="ly">
-		<field name="name">Libya</field>
-		<field name="code">ly</field>
-	</record>
-	<record model="res.country" id="ma">
-		<field name="name">Morocco</field>
-		<field name="code">ma</field>
-	</record>
-	<record model="res.country" id="mc">
-		<field name="name">Monaco</field>
-		<field name="code">mc</field>
-	</record>
-	<record model="res.country" id="md">
-		<field name="name">Moldavia</field>
-		<field name="code">md</field>
-	</record>
-	<record model="res.country" id="mg">
-		<field name="name">Madagascar</field>
-		<field name="code">mg</field>
-	</record>
-	<record model="res.country" id="mh">
-		<field name="name">Marshall Islands</field>
-		<field name="code">mh</field>
-	</record>
-	<record model="res.country" id="mk">
-		<field name="name">Macedonia</field>
-		<field name="code">mk</field>
-	</record>
-	<record model="res.country" id="ml">
-		<field name="name">Mali</field>
-		<field name="code">ml</field>
-	</record>
-	<record model="res.country" id="mm">
-		<field name="name">Myanmar</field>
-		<field name="code">mm</field>
-	</record>
-	<record model="res.country" id="mn">
-		<field name="name">Mongolia</field>
-		<field name="code">mn</field>
-	</record>
-	<record model="res.country" id="mo">
-		<field name="name">Macau</field>
-		<field name="code">mo</field>
-	</record>
-	<record model="res.country" id="mp">
-		<field name="name">Northern Mariana Islands</field>
-		<field name="code">mp</field>
-	</record>
-	<record model="res.country" id="mq">
-		<field name="name">Martinique (French)</field>
-		<field name="code">mq</field>
-	</record>
-	<record model="res.country" id="mr">
-		<field name="name">Mauritania</field>
-		<field name="code">mr</field>
-	</record>
-	<record model="res.country" id="ms">
-		<field name="name">Montserrat</field>
-		<field name="code">ms</field>
-	</record>
-	<record model="res.country" id="mt">
-		<field name="name">Malta</field>
-		<field name="code">mt</field>
-	</record>
-	<record model="res.country" id="mu">
-		<field name="name">Mauritius</field>
-		<field name="code">mu</field>
-	</record>
-	<record model="res.country" id="mv">
-		<field name="name">Maldives</field>
-		<field name="code">mv</field>
-	</record>
-	<record model="res.country" id="mw">
-		<field name="name">Malawi</field>
-		<field name="code">mw</field>
-	</record>
-	<record model="res.country" id="mx">
-		<field name="name">Mexico</field>
-		<field name="code">mx</field>
-	</record>
-	<record model="res.country" id="my">
-		<field name="name">Malaysia</field>
-		<field name="code">my</field>
-	</record>
-	<record model="res.country" id="mz">
-		<field name="name">Mozambique</field>
-		<field name="code">mz</field>
-	</record>
-	<record model="res.country" id="na">
-		<field name="name">Namibia</field>
-		<field name="code">na</field>
-	</record>
-	<record model="res.country" id="nc">
-		<field name="name">New Caledonia (French)</field>
-		<field name="code">nc</field>
-	</record>
-	<record model="res.country" id="ne">
-		<field name="name">Niger</field>
-		<field name="code">ne</field>
-	</record>
-	<record model="res.country" id="nf">
-		<field name="name">Norfolk Island</field>
-		<field name="code">nf</field>
-	</record>
-	<record model="res.country" id="ng">
-		<field name="name">Nigeria</field>
-		<field name="code">ng</field>
-	</record>
-	<record model="res.country" id="ni">
-		<field name="name">Nicaragua</field>
-		<field name="code">ni</field>
-	</record>
-	<record model="res.country" id="nl">
-		<field name="name">Netherlands</field>
-		<field name="code">nl</field>
-	</record>
-	<record model="res.country" id="no">
-		<field name="name">Norway</field>
-		<field name="code">no</field>
-	</record>
-	<record model="res.country" id="np">
-		<field name="name">Nepal</field>
-		<field name="code">np</field>
-	</record>
-	<record model="res.country" id="nr">
-		<field name="name">Nauru</field>
-		<field name="code">nr</field>
-	</record>
-	<record model="res.country" id="nt">
-		<field name="name">Neutral Zone</field>
-		<field name="code">nt</field>
-	</record>
-	<record model="res.country" id="nu">
-		<field name="name">Niue</field>
-		<field name="code">nu</field>
-	</record>
-	<record model="res.country" id="nz">
-		<field name="name">New Zealand</field>
-		<field name="code">nz</field>
-	</record>
-	<record model="res.country" id="om">
-		<field name="name">Oman</field>
-		<field name="code">om</field>
-	</record>
-	<record model="res.country" id="pa">
-		<field name="name">Panama</field>
-		<field name="code">pa</field>
-	</record>
-	<record model="res.country" id="pe">
-		<field name="name">Peru</field>
-		<field name="code">pe</field>
-	</record>
-	<record model="res.country" id="pf">
-		<field name="name">Polynesia (French)</field>
-		<field name="code">pf</field>
-	</record>
-	<record model="res.country" id="pg">
-		<field name="name">Papua New Guinea</field>
-		<field name="code">pg</field>
-	</record>
-	<record model="res.country" id="ph">
-		<field name="name">Philippines</field>
-		<field name="code">ph</field>
-	</record>
-	<record model="res.country" id="pk">
-		<field name="name">Pakistan</field>
-		<field name="code">pk</field>
-	</record>
-	<record model="res.country" id="pl">
-		<field name="name">Poland</field>
-		<field name="code">pl</field>
-	</record>
-	<record model="res.country" id="pm">
-		<field name="name">Saint Pierre and Miquelon</field>
-		<field name="code">pm</field>
-	</record>
-	<record model="res.country" id="pn">
-		<field name="name">Pitcairn Island</field>
-		<field name="code">pn</field>
-	</record>
-	<record model="res.country" id="pr">
-		<field name="name">Puerto Rico</field>
-		<field name="code">pr</field>
-	</record>
-	<record model="res.country" id="pt">
-		<field name="name">Portugal</field>
-		<field name="code">pt</field>
-	</record>
-	<record model="res.country" id="pw">
-		<field name="name">Palau</field>
-		<field name="code">pw</field>
-	</record>
-	<record model="res.country" id="py">
-		<field name="name">Paraguay</field>
-		<field name="code">py</field>
-	</record>
-	<record model="res.country" id="qa">
-		<field name="name">Qatar</field>
-		<field name="code">qa</field>
-	</record>
-	<record model="res.country" id="re">
-		<field name="name">Reunion (French)</field>
-		<field name="code">re</field>
-	</record>
-	<record model="res.country" id="ro">
-		<field name="name">Romania</field>
-		<field name="code">ro</field>
-	</record>
-	<record model="res.country" id="ru">
-		<field name="name">Russian Federation</field>
-		<field name="code">ru</field>
-	</record>
-	<record model="res.country" id="rw">
-		<field name="name">Rwanda</field>
-		<field name="code">rw</field>
-	</record>
-	<record model="res.country" id="sa">
-		<field name="name">Saudi Arabia</field>
-		<field name="code">sa</field>
-	</record>
-	<record model="res.country" id="sb">
-		<field name="name">Solomon Islands</field>
-		<field name="code">sb</field>
-	</record>
-	<record model="res.country" id="sc">
-		<field name="name">Seychelles</field>
-		<field name="code">sc</field>
-	</record>
-	<record model="res.country" id="sd">
-		<field name="name">Sudan</field>
-		<field name="code">sd</field>
-	</record>
-	<record model="res.country" id="se">
-		<field name="name">Sweden</field>
-		<field name="code">se</field>
-	</record>
-	<record model="res.country" id="sg">
-		<field name="name">Singapore</field>
-		<field name="code">sg</field>
-	</record>
-	<record model="res.country" id="sh">
-		<field name="name">Saint Helena</field>
-		<field name="code">sh</field>
-	</record>
-	<record model="res.country" id="si">
-		<field name="name">Slovenia</field>
-		<field name="code">si</field>
-	</record>
-	<record model="res.country" id="sj">
-		<field name="name">Svalbard and Jan Mayen Islands</field>
-		<field name="code">sj</field>
-	</record>
-	<record model="res.country" id="sk">
-		<field name="name">Slovak Republic</field>
-		<field name="code">sk</field>
-	</record>
-	<record model="res.country" id="sl">
-		<field name="name">Sierra Leone</field>
-		<field name="code">sl</field>
-	</record>
-	<record model="res.country" id="sm">
-		<field name="name">San Marino</field>
-		<field name="code">sm</field>
-	</record>
-	<record model="res.country" id="sn">
-		<field name="name">Senegal</field>
-		<field name="code">sn</field>
-	</record>
-	<record model="res.country" id="so">
-		<field name="name">Somalia</field>
-		<field name="code">so</field>
-	</record>
-	<record model="res.country" id="sr">
-		<field name="name">Suriname</field>
-		<field name="code">sr</field>
-	</record>
-	<record model="res.country" id="st">
-		<field name="name">Saint Tome (Sao Tome) and Principe</field>
-		<field name="code">st</field>
-	</record>
-	<record model="res.country" id="sv">
-		<field name="name">El Salvador</field>
-		<field name="code">sv</field>
-	</record>
-	<record model="res.country" id="sy">
-		<field name="name">Syria</field>
-		<field name="code">sy</field>
-	</record>
-	<record model="res.country" id="sz">
-		<field name="name">Swaziland</field>
-		<field name="code">sz</field>
-	</record>
-	<record model="res.country" id="tc">
-		<field name="name">Turks and Caicos Islands</field>
-		<field name="code">tc</field>
-	</record>
-	<record model="res.country" id="td">
-		<field name="name">Chad</field>
-		<field name="code">td</field>
-	</record>
-	<record model="res.country" id="tf">
-		<field name="name">French Southern Territories</field>
-		<field name="code">tf</field>
-	</record>
-	<record model="res.country" id="tg">
-		<field name="name">Togo</field>
-		<field name="code">tg</field>
-	</record>
-	<record model="res.country" id="th">
-		<field name="name">Thailand</field>
-		<field name="code">th</field>
-	</record>
-	<record model="res.country" id="tj">
-		<field name="name">Tadjikistan</field>
-		<field name="code">tj</field>
-	</record>
-	<record model="res.country" id="tk">
-		<field name="name">Tokelau</field>
-		<field name="code">tk</field>
-	</record>
-	<record model="res.country" id="tm">
-		<field name="name">Turkmenistan</field>
-		<field name="code">tm</field>
-	</record>
-	<record model="res.country" id="tn">
-		<field name="name">Tunisia</field>
-		<field name="code">tn</field>
-	</record>
-	<record model="res.country" id="to">
-		<field name="name">Tonga</field>
-		<field name="code">to</field>
-	</record>
-	<record model="res.country" id="tp">
-		<field name="name">East Timor</field>
-		<field name="code">tp</field>
-	</record>
-	<record model="res.country" id="tr">
-		<field name="name">Turkey</field>
-		<field name="code">tr</field>
-	</record>
-	<record model="res.country" id="tt">
-		<field name="name">Trinidad and Tobago</field>
-		<field name="code">tt</field>
-	</record>
-	<record model="res.country" id="tv">
-		<field name="name">Tuvalu</field>
-		<field name="code">tv</field>
-	</record>
-	<record model="res.country" id="tw">
-		<field name="name">Taiwan</field>
-		<field name="code">tw</field>
-	</record>
-	<record model="res.country" id="tz">
-		<field name="name">Tanzania</field>
-		<field name="code">tz</field>
-	</record>
-	<record model="res.country" id="ua">
-		<field name="name">Ukraine</field>
-		<field name="code">ua</field>
-	</record>
-	<record model="res.country" id="ug">
-		<field name="name">Uganda</field>
-		<field name="code">ug</field>
-	</record>
-	<record model="res.country" id="uk">
-		<field name="name">United Kingdom</field>
-		<field name="code">uk</field>
-	</record>
-	<record model="res.country" id="um">
-		<field name="name">USA Minor Outlying Islands</field>
-		<field name="code">um</field>
-	</record>
-	<record model="res.country" id="us">
-		<field name="name">United States</field>
-		<field name="code">us</field>
-	</record>
-	<record model="res.country" id="uy">
-		<field name="name">Uruguay</field>
-		<field name="code">uy</field>
-	</record>
-	<record model="res.country" id="uz">
-		<field name="name">Uzbekistan</field>
-		<field name="code">uz</field>
-	</record>
-	<record model="res.country" id="va">
-		<field name="name">Holy See (Vatican City State)</field>
-		<field name="code">va</field>
-	</record>
-	<record model="res.country" id="vc">
-		<field name="name">Saint Vincent &amp; Grenadines</field>
-		<field name="code">vc</field>
-	</record>
-	<record model="res.country" id="ve">
-		<field name="name">Venezuela</field>
-		<field name="code">ve</field>
-	</record>
-	<record model="res.country" id="vg">
-		<field name="name">Virgin Islands (British)</field>
-		<field name="code">vg</field>
-	</record>
-	<record model="res.country" id="vi">
-		<field name="name">Virgin Islands (USA)</field>
-		<field name="code">vi</field>
-	</record>
-	<record model="res.country" id="vn">
-		<field name="name">Vietnam</field>
-		<field name="code">vn</field>
-	</record>
-	<record model="res.country" id="vu">
-		<field name="name">Vanuatu</field>
-		<field name="code">vu</field>
-	</record>
-	<record model="res.country" id="wf">
-		<field name="name">Wallis and Futuna Islands</field>
-		<field name="code">wf</field>
-	</record>
-	<record model="res.country" id="ws">
-		<field name="name">Samoa</field>
-		<field name="code">ws</field>
-	</record>
-	<record model="res.country" id="ye">
-		<field name="name">Yemen</field>
-		<field name="code">ye</field>
-	</record>
-	<record model="res.country" id="yt">
-		<field name="name">Mayotte</field>
-		<field name="code">yt</field>
-	</record>
-	<record model="res.country" id="yu">
-		<field name="name">Yugoslavia</field>
-		<field name="code">yu</field>
-	</record>
-	<record model="res.country" id="za">
-		<field name="name">South Africa</field>
-		<field name="code">za</field>
-	</record>
-	<record model="res.country" id="zm">
-		<field name="name">Zambia</field>
-		<field name="code">zm</field>
-	</record>
-	<!-- DEPRECATED, News name of Zaire is Democratic Republic of the Congo ! -->
-	<record model="res.country" id="zr">
-		<field name="name">Zaire</field>
-		<field name="code">zr</field>
-	</record>
-	<record model="res.country" id="zw">
-		<field name="name">Zimbabwe</field>
-		<field name="code">zw</field>
-	</record>
-
-	<!-- USA States -->
-	<record model="res.country.state" id="us-al">
-		<field name="name">Alabama</field>
-		<field name="code">al</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-ak">
-		<field name="name">Alaska</field>
-		<field name="code">ak</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-az">
-		<field name="name">Arizona</field>
-		<field name="code">az</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-ar">
-		<field name="name">Arkansas</field>
-		<field name="code">ar</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-ca">
-		<field name="name">California</field>
-		<field name="code">ca</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-co">
-		<field name="name">Colorado</field>
-		<field name="code">co</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-ct">
-		<field name="name">Connecticut</field>
-		<field name="code">ct</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-dc">
-		<field name="name">District of Columbia</field>
-		<field name="code">dc</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-de">
-		<field name="name">Delaware</field>
-		<field name="code">de</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-fl">
-		<field name="name">Florida</field>
-		<field name="code">fl</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-ga">
-		<field name="name">Georgia</field>
-		<field name="code">ga</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-hi">
-		<field name="name">Hawaii</field>
-		<field name="code">hi</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-id">
-		<field name="name">Idaho</field>
-		<field name="code">id</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-il">
-		<field name="name">Illinois</field>
-		<field name="code">il</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-in">
-		<field name="name">Indiana</field>
-		<field name="code">in</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-ia">
-		<field name="name">Iowa</field>
-		<field name="code">ia</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-ks">
-		<field name="name">Kansas</field>
-		<field name="code">ks</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-ky">
-		<field name="name">Kentucky</field>
-		<field name="code">ky</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-la">
-		<field name="name">Louisiana</field>
-		<field name="code">la</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-me">
-		<field name="name">Maine</field>
-		<field name="code">me</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-md">
-		<field name="name">Maryland</field>
-		<field name="code">md</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-ma">
-		<field name="name">Massachusetts</field>
-		<field name="code">ma</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-mi">
-		<field name="name">Michigan</field>
-		<field name="code">mi</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-mn">
-		<field name="name">Minnesota</field>
-		<field name="code">mn</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-ms">
-		<field name="name">Mississippi</field>
-		<field name="code">ms</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-mo">
-		<field name="name">Missouri</field>
-		<field name="code">mo</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-mt">
-		<field name="name">Montana</field>
-		<field name="code">mt</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-ne">
-		<field name="name">Nebraska</field>
-		<field name="code">ne</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-nv">
-		<field name="name">Nevada</field>
-		<field name="code">nv</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-nh">
-		<field name="name">New Hampshire</field>
-		<field name="code">nh</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-nj">
-		<field name="name">New Jersey</field>
-		<field name="code">nj</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-nm">
-		<field name="name">New Mexico</field>
-		<field name="code">nm</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-ny">
-		<field name="name">New York</field>
-		<field name="code">ny</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-nc">
-		<field name="name">North Carolina</field>
-		<field name="code">nc</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-nd">
-		<field name="name">North Dakota</field>
-		<field name="code">nd</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-oh">
-		<field name="name">Ohio</field>
-		<field name="code">oh</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-ok">
-		<field name="name">Oklahoma</field>
-		<field name="code">ok</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-or">
-		<field name="name">Oregon</field>
-		<field name="code">or</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-pa">
-		<field name="name">Pennsylvania</field>
-		<field name="code">pa</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-ri">
-		<field name="name">Rhode Island</field>
-		<field name="code">ri</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-sc">
-		<field name="name">South Carolina</field>
-		<field name="code">sc</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-sd">
-		<field name="name">South Dakota</field>
-		<field name="code">sd</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-tn">
-		<field name="name">Tennessee</field>
-		<field name="code">tn</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-tx">
-		<field name="name">Texas</field>
-		<field name="code">tx</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-ut">
-		<field name="name">Utah</field>
-		<field name="code">ut</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-vt">
-		<field name="name">Vermont</field>
-		<field name="code">vt</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-va">
-		<field name="name">Virginia</field>
-		<field name="code">va</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-wa">
-		<field name="name">Washington</field>
-		<field name="code">wa</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-wv">
-		<field name="name">West Virginia</field>
-		<field name="code">wv</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-wi">
-		<field name="name">Wisconsin</field>
-		<field name="code">wi</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-	<record model="res.country.state" id="us-wy">
-		<field name="name">Wyoming</field>
-		<field name="code">wy</field>
-		<field name="country_id" model="res.country" ref="us"/>
-	</record>
-
-	<record model="res.partner" id="main_partner">
-		<field name="name">Tiny sprl</field>
-	</record>
-	<record model="res.partner.address" id="main_address">
-		<field name="partner_id" ref="main_partner"/>
-		<field name="name">Fabien Pinckaers</field>
-		<field name="street">Chaussee de Namur 40</field>
-		<field name="zip">1367</field>
-		<field name="city">Gerompont</field>
-		<field name="phone">(+32).81.81.37.00</field>
-		<field name="type">default</field>
-		<field name="country_id" model="res.country" ref="be"/>
-	</record>
-
-#
-# Currencies
-#
-
-	<record model="res.currency" id="EUR">
-		<field name="name">EUR</field>
-		<field name="code">EUR</field>
-		<field name="rounding">0.01</field>
-		<field name="accuracy">4</field>
-	</record>
-	<record model="res.currency.rate" id="rateEUR">
-		<field name="rate">1.0</field>
-		<field name="currency_id" ref="EUR"/>
-		<field name="name" eval="time.strftime('%Y-01-01')"/>
-	</record>
-
-	<record model="res.currency" id="USD">
-		<field name="name">USD</field>
-		<field name="code">USD</field>
-		<field name="rounding">0.01</field>
-		<field name="accuracy">4</field>
-	</record>
-	<record model="res.currency.rate" id="rateUSD">
-		<field name="rate">1.3785</field>
-		<field name="currency_id" ref="USD"/>
-		<field name="name" eval="time.strftime('%Y-01-01')"/>
-	</record>
-
-	<record model="res.currency" id="VEB">
-		<field name="name">Bs</field>
-		<field name="code">VEB</field>
-		<field name="rounding">2.95</field>
-		<field name="accuracy">4</field>
-	</record>
-	<record model="res.currency.rate" id="rateVEB">
-		<field name="rate">1.0</field>
-		<field name="currency_id" ref="VEB"/>
-		<field name="name" eval="time.strftime('%Y-01-01')"/>
-	</record>
-
-
-	<record model="res.currency" id="CAD">
-		<field name="name">CAD</field>
-		<field name="code">CAD</field>
-		<field name="rounding">0.01</field>
-		<field name="accuracy">4</field>
-	</record>
-	<record model="res.currency.rate" id="rateCAD">
-		<field name="rate">1.451</field>
-		<field name="currency_id" ref="CAD"/>
-		<field name="name" eval="time.strftime('%Y-01-01')"/>
-	</record>
-
-
-	<record model="res.currency" id="CHF">
-		<field name="name">CHF</field>
-		<field name="code">CHF</field>
-		<field name="rounding">0.01</field>
-		<field name="accuracy">4</field>
-	</record>
-	<record model="res.currency.rate" id="rateCHF">
-		<field name="rate">1.644</field>
-		<field name="currency_id" ref="CHF"/>
-		<field name="name" eval="time.strftime('%Y-01-01')"/>
-	</record>
-
-	<record model="res.currency" id="BRL">
-		<field name="name">BRL</field>
-		<field name="code">BRL</field>
-		<field name="rounding">0.01</field>
-		<field name="accuracy">4</field>
-	</record>
-	<record model="res.currency.rate" id="rateBRL">
-		<field name="rate">2.588</field>
-		<field name="currency_id" ref="BRL"/>
-		<field name="name" eval="time.strftime('%Y-01-01')"/>
-	</record>
-
-	<record model="res.currency" id="CNY">
-		<field name="name">CNY</field>
-		<field name="code">CNY</field>
-		<field name="rounding">0.01</field>
-		<field name="accuracy">4</field>
-	</record>
-	<record model="res.currency.rate" id="rateCNY">
-		<field name="rate">10.4311</field>
-		<field name="currency_id" ref="CNY"/>
-		<field name="name" eval="time.strftime('%Y-01-01')"/>
-	</record>
-
-
-	<record model="res.currency" id="COP">
-		<field name="name">COP</field>
-		<field name="code">COP</field>
-		<field name="rounding">0.01</field>
-		<field name="accuracy">4</field>
-	</record>
-
-	<record model="res.currency" id="CZK">
-		<field name="name">K&#269;</field>
-		<field name="code">CZK</field>
-		<field name="rounding">0.01</field>
-		<field name="accuracy">4</field>
-	</record>
-
-	<record model="res.currency" id="DKK">
-		<field name="name">kr</field>
-		<field name="code">DKK</field>
-		<field name="rounding">0.01</field>
-		<field name="accuracy">4</field>
-	</record>
-	<record model="res.currency.rate" id="rateDKK">
-		<field name="rate">7.4416</field>
-		<field name="currency_id" ref="DKK"/>
-		<field name="name" eval="time.strftime('%Y-01-01')"/>
-	</record>
-
-
-	<record model="res.currency" id="HUF">
-		<field name="name">Ft</field>
-		<field name="code">HUF</field>
-		<field name="rounding">0.01</field>
-		<field name="accuracy">4</field>
-	</record>
-
-	<record model="res.currency" id="IDR">
-		<field name="name">Rs</field>
-		<field name="code">IDR</field>
-		<field name="rounding">0.01</field>
-		<field name="accuracy">4</field>
-	</record>
-
-	<record model="res.currency" id="LVL">
-		<field name="name">Ls</field>
-		<field name="code">LVL</field>
-		<field name="rounding">0.01</field>
-		<field name="accuracy">4</field>
-	</record>
-	<record model="res.currency.rate" id="rateLVL">
-		<field name="rate">0.71</field>
-		<field name="currency_id" ref="LVL"/>
-		<field name="name" eval="time.strftime('%Y-01-01')"/>
-	</record>
-
-
-	<record model="res.currency" id="NOK">
-		<field name="name">kr</field>
-		<field name="code">NOK</field>
-		<field name="rounding">0.01</field>
-		<field name="accuracy">4</field>
-	</record>
-	<record model="res.currency.rate" id="rateNOK">
-		<field name="rate">7.93</field>
-		<field name="currency_id" ref="NOK"/>
-		<field name="name" eval="time.strftime('%Y-01-01')"/>
-	</record>
-
-
-	<record model="res.currency" id="PAB">
-		<field name="name">PAB</field>
-		<field name="code">PAB</field>
-		<field name="rounding">0.01</field>
-		<field name="accuracy">4</field>
-	</record>
-	<record model="res.currency.rate" id="ratePAB">
-		<field name="rate">1.3813</field>
-		<field name="currency_id" ref="PAB"/>
-		<field name="name" eval="time.strftime('%Y-01-01')"/>
-	</record>
-
-
-	<record model="res.currency" id="PLN">
-		<field name="name">z&#322;</field>
-		<field name="code">PLN</field>
-		<field name="rounding">0.01</field>
-		<field name="accuracy">4</field>
-	</record>
-
-	<record model="res.currency" id="SEK">
-		<field name="name">kr</field>
-		<field name="code">SEK</field>
-		<field name="rounding">0.01</field>
-		<field name="accuracy">4</field>
-	</record>
-
-	<record model="res.currency" id="GBP">
-		<field name="name">GBP</field>
-		<field name="code">GBP</field>
-		<field name="rounding">0.01</field>
-		<field name="accuracy">4</field>
-	</record>
-	<record model="res.currency.rate" id="rateGBP">
-		<field name="rate">0.675</field>
-		<field name="currency_id" ref="GBP"/>
-		<field name="name" eval="time.strftime('%Y-01-01')"/>
-	</record>
-
-	<record model="res.currency" id="ARS">
-		<field name="name">ARS</field>
-		<field name="code">ARS</field>
-		<field name="rounding">0.01</field>
-		<field name="accuracy">4</field>
-	</record>
-
-
-	<record model="res.company" id="main_company">
-		<field name="name">Tiny sprl</field>
-		<field name="partner_id" ref="main_partner"/>
-		<field name="rml_header1">Free Business Solutions</field>
-		<field name="rml_footer1">Web: http://tiny.be - Tel: (+32).81.81.37.00 - Bank: CPH 126-2013269-07</field>
-		<field name="rml_footer2">IBAN: BE74 1262 0132 6907 - SWIFT: GKCCBEBB - VAT: BE0477.472.701</field>
-		<field name="currency_id" ref="EUR"/>
-	</record>
-
-	<assert model="res.company" id="main_company">
-		<test expr="currency_id.code == 'eur'.upper()"/>
-		<test expr="name">Tiny sprl</test>
-	</assert>
-
-	<record model="res.users" id="user_admin">
-		<field name="login">admin</field>
-		<field name="password">admin</field>
-		<field name="name">Administrator</field>
-		<field name="signature">Administrator</field>
-		<field name="action_id" ref="action_menu_admin"/>
-		<field name="menu_id" ref="action_menu_admin"/>
-		<field name="address_id" ref="main_address"/>
-		<field name="groups_id" eval="[(6,0,[group_admin])]"/>
-		<field name="company_id" ref="main_company"/>
-	</record>
-</data>
+    <data noupdate="1">
+        
+        <record model="ir.ui.view" id="view_menu">
+            <field name="name">ir.ui.menu.tree</field>
+            <field name="model">ir.ui.menu</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Menu" toolbar="1">
+                    <field name="name" icon="icon"/>
+                </tree>
+            </field>
+            <field name="field_parent">child_id</field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="action_menu_admin">
+            <field name="name">Menu</field>
+            <field name="usage">menu</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_id" ref="view_menu"/>
+            <field name="res_model">ir.ui.menu</field>
+            <field name="view_type">tree</field>
+            <field name="domain" eval="'[(\'parent_id\',\'=\',False)]'"/>
+        </record>
+        
+        <record model="res.groups" id="group_admin">
+            <field name="name">Administration/Administrator</field>
+        </record>
+        
+        <record model="res.groups" id="group_extended">
+            <field name="name">Extended View</field>
+        </record>
+        <record model="res.groups" id="group_no_one">
+            <field name="name">No One</field>
+        </record>
+        
+        <record model="res.lang" id="lang_en">
+            <field name="code">en_US</field>
+            <field name="name">English</field>
+        </record>
+        
+        <record model="res.country" id="ad">
+            <field name="name">Andorra, Principality of</field>
+            <field name="code">ad</field>
+        </record>
+        <record model="res.country" id="ae">
+            <field name="name">United Arab Emirates</field>
+            <field name="code">ae</field>
+        </record>
+        <record model="res.country" id="af">
+            <field name="name">Afghanistan, Islamic State of</field>
+            <field name="code">af</field>
+        </record>
+        <record model="res.country" id="ag">
+            <field name="name">Antigua and Barbuda</field>
+            <field name="code">ag</field>
+        </record>
+        <record model="res.country" id="ai">
+            <field name="name">Anguilla</field>
+            <field name="code">ai</field>
+        </record>
+        <record model="res.country" id="al">
+            <field name="name">Albania</field>
+            <field name="code">al</field>
+        </record>
+        <record model="res.country" id="am">
+            <field name="name">Armenia</field>
+            <field name="code">am</field>
+        </record>
+        <record model="res.country" id="an">
+            <field name="name">Netherlands Antilles</field>
+            <field name="code">an</field>
+        </record>
+        <record model="res.country" id="ao">
+            <field name="name">Angola</field>
+            <field name="code">ao</field>
+        </record>
+        <record model="res.country" id="aq">
+            <field name="name">Antarctica</field>
+            <field name="code">aq</field>
+        </record>
+        <record model="res.country" id="ar">
+            <field name="name">Argentina</field>
+            <field name="code">ar</field>
+        </record>
+        <record model="res.country" id="as">
+            <field name="name">American Samoa</field>
+            <field name="code">as</field>
+        </record>
+        <record model="res.country" id="at">
+            <field name="name">Austria</field>
+            <field name="code">at</field>
+        </record>
+        <record model="res.country" id="au">
+            <field name="name">Australia</field>
+            <field name="code">au</field>
+        </record>
+        <record model="res.country" id="aw">
+            <field name="name">Aruba</field>
+            <field name="code">aw</field>
+        </record>
+        <record model="res.country" id="az">
+            <field name="name">Azerbaidjan</field>
+            <field name="code">az</field>
+        </record>
+        <record model="res.country" id="ba">
+            <field name="name">Bosnia-Herzegovina</field>
+            <field name="code">ba</field>
+        </record>
+        <record model="res.country" id="bb">
+            <field name="name">Barbados</field>
+            <field name="code">bb</field>
+        </record>
+        <record model="res.country" id="bd">
+            <field name="name">Bangladesh</field>
+            <field name="code">bd</field>
+        </record>
+        <record model="res.country" id="be">
+            <field name="name">Belgium</field>
+            <field name="code">be</field>
+        </record>
+        <record model="res.country" id="bf">
+            <field name="name">Burkina Faso</field>
+            <field name="code">bf</field>
+        </record>
+        <record model="res.country" id="bg">
+            <field name="name">Bulgaria</field>
+            <field name="code">bg</field>
+        </record>
+        <record model="res.country" id="bh">
+            <field name="name">Bahrain</field>
+            <field name="code">bh</field>
+        </record>
+        <record model="res.country" id="bi">
+            <field name="name">Burundi</field>
+            <field name="code">bi</field>
+        </record>
+        <record model="res.country" id="bj">
+            <field name="name">Benin</field>
+            <field name="code">bj</field>
+        </record>
+        <record model="res.country" id="bm">
+            <field name="name">Bermuda</field>
+            <field name="code">bm</field>
+        </record>
+        <record model="res.country" id="bn">
+            <field name="name">Brunei Darussalam</field>
+            <field name="code">bn</field>
+        </record>
+        <record model="res.country" id="bo">
+            <field name="name">Bolivia</field>
+            <field name="code">bo</field>
+        </record>
+        <record model="res.country" id="br">
+            <field name="name">Brazil</field>
+            <field name="code">br</field>
+        </record>
+        <record model="res.country" id="bs">
+            <field name="name">Bahamas</field>
+            <field name="code">bs</field>
+        </record>
+        <record model="res.country" id="bt">
+            <field name="name">Bhutan</field>
+            <field name="code">bt</field>
+        </record>
+        <record model="res.country" id="bv">
+            <field name="name">Bouvet Island</field>
+            <field name="code">bv</field>
+        </record>
+        <record model="res.country" id="bw">
+            <field name="name">Botswana</field>
+            <field name="code">bw</field>
+        </record>
+        <record model="res.country" id="by">
+            <field name="name">Belarus</field>
+            <field name="code">by</field>
+        </record>
+        <record model="res.country" id="bz">
+            <field name="name">Belize</field>
+            <field name="code">bz</field>
+        </record>
+        <record model="res.country" id="ca">
+            <field name="name">Canada</field>
+            <field name="code">ca</field>
+        </record>
+        <record model="res.country" id="cc">
+            <field name="name">Cocos (Keeling) Islands</field>
+            <field name="code">cc</field>
+        </record>
+        <record model="res.country" id="cf">
+            <field name="name">Central African Republic</field>
+            <field name="code">cf</field>
+        </record>
+        <record model="res.country" id="cd">
+            <field name="name">Congo, The Democratic Republic of the</field>
+            <field name="code">cd</field>
+        </record>
+        <record model="res.country" id="cg">
+            <field name="name">Congo</field>
+            <field name="code">cg</field>
+        </record>
+        <record model="res.country" id="ch">
+            <field name="name">Suisse</field>
+            <field name="code">ch</field>
+        </record>
+        <record model="res.country" id="ci">
+            <field name="name">Ivory Coast (Cote D'Ivoire)</field>
+            <field name="code">ci</field>
+        </record>
+        <record model="res.country" id="ck">
+            <field name="name">Cook Islands</field>
+            <field name="code">ck</field>
+        </record>
+        <record model="res.country" id="cl">
+            <field name="name">Chile</field>
+            <field name="code">cl</field>
+        </record>
+        <record model="res.country" id="cm">
+            <field name="name">Cameroon</field>
+            <field name="code">cm</field>
+        </record>
+        <record model="res.country" id="cn">
+            <field name="name">China</field>
+            <field name="code">cn</field>
+        </record>
+        <record model="res.country" id="co">
+            <field name="name">Colombia</field>
+            <field name="code">co</field>
+        </record>
+        <record model="res.country" id="cr">
+            <field name="name">Costa Rica</field>
+            <field name="code">cr</field>
+        </record>
+        <record model="res.country" id="cs">
+            <field name="name">Serbia and Montenegro</field>
+            <field name="code">cs</field>
+        </record>
+        <record model="res.country" id="cu">
+            <field name="name">Cuba</field>
+            <field name="code">cu</field>
+        </record>
+        <record model="res.country" id="cv">
+            <field name="name">Cape Verde</field>
+            <field name="code">cv</field>
+        </record>
+        <record model="res.country" id="cx">
+            <field name="name">Christmas Island</field>
+            <field name="code">cx</field>
+        </record>
+        <record model="res.country" id="cy">
+            <field name="name">Cyprus</field>
+            <field name="code">cy</field>
+        </record>
+        <record model="res.country" id="cz">
+            <field name="name">Czech Republic</field>
+            <field name="code">cz</field>
+        </record>
+        <record model="res.country" id="de">
+            <field name="name">Germany</field>
+            <field name="code">de</field>
+        </record>
+        <record model="res.country" id="dj">
+            <field name="name">Djibouti</field>
+            <field name="code">dj</field>
+        </record>
+        <record model="res.country" id="dk">
+            <field name="name">Denmark</field>
+            <field name="code">dk</field>
+        </record>
+        <record model="res.country" id="dm">
+            <field name="name">Dominica</field>
+            <field name="code">dm</field>
+        </record>
+        <record model="res.country" id="do">
+            <field name="name">Dominican Republic</field>
+            <field name="code">do</field>
+        </record>
+        <record model="res.country" id="dz">
+            <field name="name">Algeria</field>
+            <field name="code">dz</field>
+        </record>
+        <record model="res.country" id="ec">
+            <field name="name">Ecuador</field>
+            <field name="code">ec</field>
+        </record>
+        <record model="res.country" id="ee">
+            <field name="name">Estonia</field>
+            <field name="code">ee</field>
+        </record>
+        <record model="res.country" id="eg">
+            <field name="name">Egypt</field>
+            <field name="code">eg</field>
+        </record>
+        <record model="res.country" id="eh">
+            <field name="name">Western Sahara</field>
+            <field name="code">eh</field>
+        </record>
+        <record model="res.country" id="er">
+            <field name="name">Eritrea</field>
+            <field name="code">er</field>
+        </record>
+        <record model="res.country" id="es">
+            <field name="name">Spain</field>
+            <field name="code">es</field>
+        </record>
+        <record model="res.country" id="et">
+            <field name="name">Ethiopia</field>
+            <field name="code">et</field>
+        </record>
+        <record model="res.country" id="fi">
+            <field name="name">Finland</field>
+            <field name="code">fi</field>
+        </record>
+        <record model="res.country" id="fj">
+            <field name="name">Fiji</field>
+            <field name="code">fj</field>
+        </record>
+        <record model="res.country" id="fk">
+            <field name="name">Falkland Islands</field>
+            <field name="code">fk</field>
+        </record>
+        <record model="res.country" id="fm">
+            <field name="name">Micronesia</field>
+            <field name="code">fm</field>
+        </record>
+        <record model="res.country" id="fo">
+            <field name="name">Faroe Islands</field>
+            <field name="code">fo</field>
+        </record>
+        <record model="res.country" id="fr">
+            <field name="name">France</field>
+            <field name="code">fr</field>
+        </record>
+        <record model="res.country" id="ga">
+            <field name="name">Gabon</field>
+            <field name="code">ga</field>
+        </record>
+        <record model="res.country" id="gd">
+            <field name="name">Grenada</field>
+            <field name="code">gd</field>
+        </record>
+        <record model="res.country" id="ge">
+            <field name="name">Georgia</field>
+            <field name="code">ge</field>
+        </record>
+        <record model="res.country" id="gf">
+            <field name="name">French Guyana</field>
+            <field name="code">gf</field>
+        </record>
+        <record model="res.country" id="gh">
+            <field name="name">Ghana</field>
+            <field name="code">gh</field>
+        </record>
+        <record model="res.country" id="gi">
+            <field name="name">Gibraltar</field>
+            <field name="code">gi</field>
+        </record>
+        <record model="res.country" id="gl">
+            <field name="name">Greenland</field>
+            <field name="code">gl</field>
+        </record>
+        <record model="res.country" id="gm">
+            <field name="name">Gambia</field>
+            <field name="code">gm</field>
+        </record>
+        <record model="res.country" id="gn">
+            <field name="name">Guinea</field>
+            <field name="code">gn</field>
+        </record>
+        <record model="res.country" id="gp">
+            <field name="name">Guadeloupe (French)</field>
+            <field name="code">gp</field>
+        </record>
+        <record model="res.country" id="gq">
+            <field name="name">Equatorial Guinea</field>
+            <field name="code">gq</field>
+        </record>
+        <record model="res.country" id="gr">
+            <field name="name">Greece</field>
+            <field name="code">gr</field>
+        </record>
+        <record model="res.country" id="gs">
+            <field name="name">S. Georgia &amp; S. Sandwich Isls.</field>
+            <field name="code">gs</field>
+        </record>
+        <record model="res.country" id="gt">
+            <field name="name">Guatemala</field>
+            <field name="code">gt</field>
+        </record>
+        <record model="res.country" id="gu">
+            <field name="name">Guam (USA)</field>
+            <field name="code">gu</field>
+        </record>
+        <record model="res.country" id="gw">
+            <field name="name">Guinea Bissau</field>
+            <field name="code">gw</field>
+        </record>
+        <record model="res.country" id="gy">
+            <field name="name">Guyana</field>
+            <field name="code">gy</field>
+        </record>
+        <record model="res.country" id="hk">
+            <field name="name">Hong Kong</field>
+            <field name="code">hk</field>
+        </record>
+        <record model="res.country" id="hm">
+            <field name="name">Heard and McDonald Islands</field>
+            <field name="code">hm</field>
+        </record>
+        <record model="res.country" id="hn">
+            <field name="name">Honduras</field>
+            <field name="code">hn</field>
+        </record>
+        <record model="res.country" id="hr">
+            <field name="name">Croatia</field>
+            <field name="code">hr</field>
+        </record>
+        <record model="res.country" id="ht">
+            <field name="name">Haiti</field>
+            <field name="code">ht</field>
+        </record>
+        <record model="res.country" id="hu">
+            <field name="name">Hungary</field>
+            <field name="code">hu</field>
+        </record>
+        <record model="res.country" id="id">
+            <field name="name">Indonesia</field>
+            <field name="code">id</field>
+        </record>
+        <record model="res.country" id="ie">
+            <field name="name">Ireland</field>
+            <field name="code">ie</field>
+        </record>
+        <record model="res.country" id="il">
+            <field name="name">Israel</field>
+            <field name="code">il</field>
+        </record>
+        <record model="res.country" id="in">
+            <field name="name">India</field>
+            <field name="code">in</field>
+        </record>
+        <record model="res.country" id="io">
+            <field name="name">British Indian Ocean Territory</field>
+            <field name="code">io</field>
+        </record>
+        <record model="res.country" id="iq">
+            <field name="name">Iraq</field>
+            <field name="code">iq</field>
+        </record>
+        <record model="res.country" id="ir">
+            <field name="name">Iran</field>
+            <field name="code">ir</field>
+        </record>
+        <record model="res.country" id="is">
+            <field name="name">Iceland</field>
+            <field name="code">is</field>
+        </record>
+        <record model="res.country" id="it">
+            <field name="name">Italy</field>
+            <field name="code">it</field>
+        </record>
+        <record model="res.country" id="jm">
+            <field name="name">Jamaica</field>
+            <field name="code">jm</field>
+        </record>
+        <record model="res.country" id="jo">
+            <field name="name">Jordan</field>
+            <field name="code">jo</field>
+        </record>
+        <record model="res.country" id="jp">
+            <field name="name">Japan</field>
+            <field name="code">jp</field>
+        </record>
+        <record model="res.country" id="ke">
+            <field name="name">Kenya</field>
+            <field name="code">ke</field>
+        </record>
+        <record model="res.country" id="kg">
+            <field name="name">Kyrgyz Republic (Kyrgyzstan)</field>
+            <field name="code">kg</field>
+        </record>
+        <record model="res.country" id="kh">
+            <field name="name">Cambodia, Kingdom of</field>
+            <field name="code">kh</field>
+        </record>
+        <record model="res.country" id="ki">
+            <field name="name">Kiribati</field>
+            <field name="code">ki</field>
+        </record>
+        <record model="res.country" id="km">
+            <field name="name">Comoros</field>
+            <field name="code">km</field>
+        </record>
+        <record model="res.country" id="kn">
+            <field name="name">Saint Kitts &amp; Nevis Anguilla</field>
+            <field name="code">kn</field>
+        </record>
+        <record model="res.country" id="kp">
+            <field name="name">North Korea</field>
+            <field name="code">kp</field>
+        </record>
+        <record model="res.country" id="kr">
+            <field name="name">South Korea</field>
+            <field name="code">kr</field>
+        </record>
+        <record model="res.country" id="kw">
+            <field name="name">Kuwait</field>
+            <field name="code">kw</field>
+        </record>
+        <record model="res.country" id="ky">
+            <field name="name">Cayman Islands</field>
+            <field name="code">ky</field>
+        </record>
+        <record model="res.country" id="kz">
+            <field name="name">Kazakhstan</field>
+            <field name="code">kz</field>
+        </record>
+        <record model="res.country" id="la">
+            <field name="name">Laos</field>
+            <field name="code">la</field>
+        </record>
+        <record model="res.country" id="lb">
+            <field name="name">Lebanon</field>
+            <field name="code">lb</field>
+        </record>
+        <record model="res.country" id="lc">
+            <field name="name">Saint Lucia</field>
+            <field name="code">lc</field>
+        </record>
+        <record model="res.country" id="li">
+            <field name="name">Liechtenstein</field>
+            <field name="code">li</field>
+        </record>
+        <record model="res.country" id="lk">
+            <field name="name">Sri Lanka</field>
+            <field name="code">lk</field>
+        </record>
+        <record model="res.country" id="lr">
+            <field name="name">Liberia</field>
+            <field name="code">lr</field>
+        </record>
+        <record model="res.country" id="ls">
+            <field name="name">Lesotho</field>
+            <field name="code">ls</field>
+        </record>
+        <record model="res.country" id="lt">
+            <field name="name">Lithuania</field>
+            <field name="code">lt</field>
+        </record>
+        <record model="res.country" id="lu">
+            <field name="name">Luxembourg</field>
+            <field name="code">lu</field>
+        </record>
+        <record model="res.country" id="lv">
+            <field name="name">Latvia</field>
+            <field name="code">lv</field>
+        </record>
+        <record model="res.country" id="ly">
+            <field name="name">Libya</field>
+            <field name="code">ly</field>
+        </record>
+        <record model="res.country" id="ma">
+            <field name="name">Morocco</field>
+            <field name="code">ma</field>
+        </record>
+        <record model="res.country" id="mc">
+            <field name="name">Monaco</field>
+            <field name="code">mc</field>
+        </record>
+        <record model="res.country" id="md">
+            <field name="name">Moldavia</field>
+            <field name="code">md</field>
+        </record>
+        <record model="res.country" id="mg">
+            <field name="name">Madagascar</field>
+            <field name="code">mg</field>
+        </record>
+        <record model="res.country" id="mh">
+            <field name="name">Marshall Islands</field>
+            <field name="code">mh</field>
+        </record>
+        <record model="res.country" id="mk">
+            <field name="name">Macedonia</field>
+            <field name="code">mk</field>
+        </record>
+        <record model="res.country" id="ml">
+            <field name="name">Mali</field>
+            <field name="code">ml</field>
+        </record>
+        <record model="res.country" id="mm">
+            <field name="name">Myanmar</field>
+            <field name="code">mm</field>
+        </record>
+        <record model="res.country" id="mn">
+            <field name="name">Mongolia</field>
+            <field name="code">mn</field>
+        </record>
+        <record model="res.country" id="mo">
+            <field name="name">Macau</field>
+            <field name="code">mo</field>
+        </record>
+        <record model="res.country" id="mp">
+            <field name="name">Northern Mariana Islands</field>
+            <field name="code">mp</field>
+        </record>
+        <record model="res.country" id="mq">
+            <field name="name">Martinique (French)</field>
+            <field name="code">mq</field>
+        </record>
+        <record model="res.country" id="mr">
+            <field name="name">Mauritania</field>
+            <field name="code">mr</field>
+        </record>
+        <record model="res.country" id="ms">
+            <field name="name">Montserrat</field>
+            <field name="code">ms</field>
+        </record>
+        <record model="res.country" id="mt">
+            <field name="name">Malta</field>
+            <field name="code">mt</field>
+        </record>
+        <record model="res.country" id="mu">
+            <field name="name">Mauritius</field>
+            <field name="code">mu</field>
+        </record>
+        <record model="res.country" id="mv">
+            <field name="name">Maldives</field>
+            <field name="code">mv</field>
+        </record>
+        <record model="res.country" id="mw">
+            <field name="name">Malawi</field>
+            <field name="code">mw</field>
+        </record>
+        <record model="res.country" id="mx">
+            <field name="name">Mexico</field>
+            <field name="code">mx</field>
+        </record>
+        <record model="res.country" id="my">
+            <field name="name">Malaysia</field>
+            <field name="code">my</field>
+        </record>
+        <record model="res.country" id="mz">
+            <field name="name">Mozambique</field>
+            <field name="code">mz</field>
+        </record>
+        <record model="res.country" id="na">
+            <field name="name">Namibia</field>
+            <field name="code">na</field>
+        </record>
+        <record model="res.country" id="nc">
+            <field name="name">New Caledonia (French)</field>
+            <field name="code">nc</field>
+        </record>
+        <record model="res.country" id="ne">
+            <field name="name">Niger</field>
+            <field name="code">ne</field>
+        </record>
+        <record model="res.country" id="nf">
+            <field name="name">Norfolk Island</field>
+            <field name="code">nf</field>
+        </record>
+        <record model="res.country" id="ng">
+            <field name="name">Nigeria</field>
+            <field name="code">ng</field>
+        </record>
+        <record model="res.country" id="ni">
+            <field name="name">Nicaragua</field>
+            <field name="code">ni</field>
+        </record>
+        <record model="res.country" id="nl">
+            <field name="name">Netherlands</field>
+            <field name="code">nl</field>
+        </record>
+        <record model="res.country" id="no">
+            <field name="name">Norway</field>
+            <field name="code">no</field>
+        </record>
+        <record model="res.country" id="np">
+            <field name="name">Nepal</field>
+            <field name="code">np</field>
+        </record>
+        <record model="res.country" id="nr">
+            <field name="name">Nauru</field>
+            <field name="code">nr</field>
+        </record>
+        <record model="res.country" id="nt">
+            <field name="name">Neutral Zone</field>
+            <field name="code">nt</field>
+        </record>
+        <record model="res.country" id="nu">
+            <field name="name">Niue</field>
+            <field name="code">nu</field>
+        </record>
+        <record model="res.country" id="nz">
+            <field name="name">New Zealand</field>
+            <field name="code">nz</field>
+        </record>
+        <record model="res.country" id="om">
+            <field name="name">Oman</field>
+            <field name="code">om</field>
+        </record>
+        <record model="res.country" id="pa">
+            <field name="name">Panama</field>
+            <field name="code">pa</field>
+        </record>
+        <record model="res.country" id="pe">
+            <field name="name">Peru</field>
+            <field name="code">pe</field>
+        </record>
+        <record model="res.country" id="pf">
+            <field name="name">Polynesia (French)</field>
+            <field name="code">pf</field>
+        </record>
+        <record model="res.country" id="pg">
+            <field name="name">Papua New Guinea</field>
+            <field name="code">pg</field>
+        </record>
+        <record model="res.country" id="ph">
+            <field name="name">Philippines</field>
+            <field name="code">ph</field>
+        </record>
+        <record model="res.country" id="pk">
+            <field name="name">Pakistan</field>
+            <field name="code">pk</field>
+        </record>
+        <record model="res.country" id="pl">
+            <field name="name">Poland</field>
+            <field name="code">pl</field>
+        </record>
+        <record model="res.country" id="pm">
+            <field name="name">Saint Pierre and Miquelon</field>
+            <field name="code">pm</field>
+        </record>
+        <record model="res.country" id="pn">
+            <field name="name">Pitcairn Island</field>
+            <field name="code">pn</field>
+        </record>
+        <record model="res.country" id="pr">
+            <field name="name">Puerto Rico</field>
+            <field name="code">pr</field>
+        </record>
+        <record model="res.country" id="pt">
+            <field name="name">Portugal</field>
+            <field name="code">pt</field>
+        </record>
+        <record model="res.country" id="pw">
+            <field name="name">Palau</field>
+            <field name="code">pw</field>
+        </record>
+        <record model="res.country" id="py">
+            <field name="name">Paraguay</field>
+            <field name="code">py</field>
+        </record>
+        <record model="res.country" id="qa">
+            <field name="name">Qatar</field>
+            <field name="code">qa</field>
+        </record>
+        <record model="res.country" id="re">
+            <field name="name">Reunion (French)</field>
+            <field name="code">re</field>
+        </record>
+        <record model="res.country" id="ro">
+            <field name="name">Romania</field>
+            <field name="code">ro</field>
+        </record>
+        <record model="res.country" id="ru">
+            <field name="name">Russian Federation</field>
+            <field name="code">ru</field>
+        </record>
+        <record model="res.country" id="rw">
+            <field name="name">Rwanda</field>
+            <field name="code">rw</field>
+        </record>
+        <record model="res.country" id="sa">
+            <field name="name">Saudi Arabia</field>
+            <field name="code">sa</field>
+        </record>
+        <record model="res.country" id="sb">
+            <field name="name">Solomon Islands</field>
+            <field name="code">sb</field>
+        </record>
+        <record model="res.country" id="sc">
+            <field name="name">Seychelles</field>
+            <field name="code">sc</field>
+        </record>
+        <record model="res.country" id="sd">
+            <field name="name">Sudan</field>
+            <field name="code">sd</field>
+        </record>
+        <record model="res.country" id="se">
+            <field name="name">Sweden</field>
+            <field name="code">se</field>
+        </record>
+        <record model="res.country" id="sg">
+            <field name="name">Singapore</field>
+            <field name="code">sg</field>
+        </record>
+        <record model="res.country" id="sh">
+            <field name="name">Saint Helena</field>
+            <field name="code">sh</field>
+        </record>
+        <record model="res.country" id="si">
+            <field name="name">Slovenia</field>
+            <field name="code">si</field>
+        </record>
+        <record model="res.country" id="sj">
+            <field name="name">Svalbard and Jan Mayen Islands</field>
+            <field name="code">sj</field>
+        </record>
+        <record model="res.country" id="sk">
+            <field name="name">Slovak Republic</field>
+            <field name="code">sk</field>
+        </record>
+        <record model="res.country" id="sl">
+            <field name="name">Sierra Leone</field>
+            <field name="code">sl</field>
+        </record>
+        <record model="res.country" id="sm">
+            <field name="name">San Marino</field>
+            <field name="code">sm</field>
+        </record>
+        <record model="res.country" id="sn">
+            <field name="name">Senegal</field>
+            <field name="code">sn</field>
+        </record>
+        <record model="res.country" id="so">
+            <field name="name">Somalia</field>
+            <field name="code">so</field>
+        </record>
+        <record model="res.country" id="sr">
+            <field name="name">Suriname</field>
+            <field name="code">sr</field>
+        </record>
+        <record model="res.country" id="st">
+            <field name="name">Saint Tome (Sao Tome) and Principe</field>
+            <field name="code">st</field>
+        </record>
+        <record model="res.country" id="sv">
+            <field name="name">El Salvador</field>
+            <field name="code">sv</field>
+        </record>
+        <record model="res.country" id="sy">
+            <field name="name">Syria</field>
+            <field name="code">sy</field>
+        </record>
+        <record model="res.country" id="sz">
+            <field name="name">Swaziland</field>
+            <field name="code">sz</field>
+        </record>
+        <record model="res.country" id="tc">
+            <field name="name">Turks and Caicos Islands</field>
+            <field name="code">tc</field>
+        </record>
+        <record model="res.country" id="td">
+            <field name="name">Chad</field>
+            <field name="code">td</field>
+        </record>
+        <record model="res.country" id="tf">
+            <field name="name">French Southern Territories</field>
+            <field name="code">tf</field>
+        </record>
+        <record model="res.country" id="tg">
+            <field name="name">Togo</field>
+            <field name="code">tg</field>
+        </record>
+        <record model="res.country" id="th">
+            <field name="name">Thailand</field>
+            <field name="code">th</field>
+        </record>
+        <record model="res.country" id="tj">
+            <field name="name">Tadjikistan</field>
+            <field name="code">tj</field>
+        </record>
+        <record model="res.country" id="tk">
+            <field name="name">Tokelau</field>
+            <field name="code">tk</field>
+        </record>
+        <record model="res.country" id="tm">
+            <field name="name">Turkmenistan</field>
+            <field name="code">tm</field>
+        </record>
+        <record model="res.country" id="tn">
+            <field name="name">Tunisia</field>
+            <field name="code">tn</field>
+        </record>
+        <record model="res.country" id="to">
+            <field name="name">Tonga</field>
+            <field name="code">to</field>
+        </record>
+        <record model="res.country" id="tp">
+            <field name="name">East Timor</field>
+            <field name="code">tp</field>
+        </record>
+        <record model="res.country" id="tr">
+            <field name="name">Turkey</field>
+            <field name="code">tr</field>
+        </record>
+        <record model="res.country" id="tt">
+            <field name="name">Trinidad and Tobago</field>
+            <field name="code">tt</field>
+        </record>
+        <record model="res.country" id="tv">
+            <field name="name">Tuvalu</field>
+            <field name="code">tv</field>
+        </record>
+        <record model="res.country" id="tw">
+            <field name="name">Taiwan</field>
+            <field name="code">tw</field>
+        </record>
+        <record model="res.country" id="tz">
+            <field name="name">Tanzania</field>
+            <field name="code">tz</field>
+        </record>
+        <record model="res.country" id="ua">
+            <field name="name">Ukraine</field>
+            <field name="code">ua</field>
+        </record>
+        <record model="res.country" id="ug">
+            <field name="name">Uganda</field>
+            <field name="code">ug</field>
+        </record>
+        <record model="res.country" id="uk">
+            <field name="name">United Kingdom</field>
+            <field name="code">uk</field>
+        </record>
+        <record model="res.country" id="um">
+            <field name="name">USA Minor Outlying Islands</field>
+            <field name="code">um</field>
+        </record>
+        <record model="res.country" id="us">
+            <field name="name">United States</field>
+            <field name="code">us</field>
+        </record>
+        <record model="res.country" id="uy">
+            <field name="name">Uruguay</field>
+            <field name="code">uy</field>
+        </record>
+        <record model="res.country" id="uz">
+            <field name="name">Uzbekistan</field>
+            <field name="code">uz</field>
+        </record>
+        <record model="res.country" id="va">
+            <field name="name">Holy See (Vatican City State)</field>
+            <field name="code">va</field>
+        </record>
+        <record model="res.country" id="vc">
+            <field name="name">Saint Vincent &amp; Grenadines</field>
+            <field name="code">vc</field>
+        </record>
+        <record model="res.country" id="ve">
+            <field name="name">Venezuela</field>
+            <field name="code">ve</field>
+        </record>
+        <record model="res.country" id="vg">
+            <field name="name">Virgin Islands (British)</field>
+            <field name="code">vg</field>
+        </record>
+        <record model="res.country" id="vi">
+            <field name="name">Virgin Islands (USA)</field>
+            <field name="code">vi</field>
+        </record>
+        <record model="res.country" id="vn">
+            <field name="name">Vietnam</field>
+            <field name="code">vn</field>
+        </record>
+        <record model="res.country" id="vu">
+            <field name="name">Vanuatu</field>
+            <field name="code">vu</field>
+        </record>
+        <record model="res.country" id="wf">
+            <field name="name">Wallis and Futuna Islands</field>
+            <field name="code">wf</field>
+        </record>
+        <record model="res.country" id="ws">
+            <field name="name">Samoa</field>
+            <field name="code">ws</field>
+        </record>
+        <record model="res.country" id="ye">
+            <field name="name">Yemen</field>
+            <field name="code">ye</field>
+        </record>
+        <record model="res.country" id="yt">
+            <field name="name">Mayotte</field>
+            <field name="code">yt</field>
+        </record>
+        <record model="res.country" id="yu">
+            <field name="name">Yugoslavia</field>
+            <field name="code">yu</field>
+        </record>
+        <record model="res.country" id="za">
+            <field name="name">South Africa</field>
+            <field name="code">za</field>
+        </record>
+        <record model="res.country" id="zm">
+            <field name="name">Zambia</field>
+            <field name="code">zm</field>
+        </record>
+        <!-- DEPRECATED, News name of Zaire is Democratic Republic of the Congo ! -->
+        <record model="res.country" id="zr">
+            <field name="name">Zaire</field>
+            <field name="code">zr</field>
+        </record>
+        <record model="res.country" id="zw">
+            <field name="name">Zimbabwe</field>
+            <field name="code">zw</field>
+        </record>
+        
+        <!-- USA States -->
+        <record model="res.country.state" id="us-al">
+            <field name="name">Alabama</field>
+            <field name="code">al</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-ak">
+            <field name="name">Alaska</field>
+            <field name="code">ak</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-az">
+            <field name="name">Arizona</field>
+            <field name="code">az</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-ar">
+            <field name="name">Arkansas</field>
+            <field name="code">ar</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-ca">
+            <field name="name">California</field>
+            <field name="code">ca</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-co">
+            <field name="name">Colorado</field>
+            <field name="code">co</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-ct">
+            <field name="name">Connecticut</field>
+            <field name="code">ct</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-dc">
+            <field name="name">District of Columbia</field>
+            <field name="code">dc</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-de">
+            <field name="name">Delaware</field>
+            <field name="code">de</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-fl">
+            <field name="name">Florida</field>
+            <field name="code">fl</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-ga">
+            <field name="name">Georgia</field>
+            <field name="code">ga</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-hi">
+            <field name="name">Hawaii</field>
+            <field name="code">hi</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-id">
+            <field name="name">Idaho</field>
+            <field name="code">id</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-il">
+            <field name="name">Illinois</field>
+            <field name="code">il</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-in">
+            <field name="name">Indiana</field>
+            <field name="code">in</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-ia">
+            <field name="name">Iowa</field>
+            <field name="code">ia</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-ks">
+            <field name="name">Kansas</field>
+            <field name="code">ks</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-ky">
+            <field name="name">Kentucky</field>
+            <field name="code">ky</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-la">
+            <field name="name">Louisiana</field>
+            <field name="code">la</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-me">
+            <field name="name">Maine</field>
+            <field name="code">me</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-md">
+            <field name="name">Maryland</field>
+            <field name="code">md</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-ma">
+            <field name="name">Massachusetts</field>
+            <field name="code">ma</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-mi">
+            <field name="name">Michigan</field>
+            <field name="code">mi</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-mn">
+            <field name="name">Minnesota</field>
+            <field name="code">mn</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-ms">
+            <field name="name">Mississippi</field>
+            <field name="code">ms</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-mo">
+            <field name="name">Missouri</field>
+            <field name="code">mo</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-mt">
+            <field name="name">Montana</field>
+            <field name="code">mt</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-ne">
+            <field name="name">Nebraska</field>
+            <field name="code">ne</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-nv">
+            <field name="name">Nevada</field>
+            <field name="code">nv</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-nh">
+            <field name="name">New Hampshire</field>
+            <field name="code">nh</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-nj">
+            <field name="name">New Jersey</field>
+            <field name="code">nj</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-nm">
+            <field name="name">New Mexico</field>
+            <field name="code">nm</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-ny">
+            <field name="name">New York</field>
+            <field name="code">ny</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-nc">
+            <field name="name">North Carolina</field>
+            <field name="code">nc</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-nd">
+            <field name="name">North Dakota</field>
+            <field name="code">nd</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-oh">
+            <field name="name">Ohio</field>
+            <field name="code">oh</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-ok">
+            <field name="name">Oklahoma</field>
+            <field name="code">ok</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-or">
+            <field name="name">Oregon</field>
+            <field name="code">or</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-pa">
+            <field name="name">Pennsylvania</field>
+            <field name="code">pa</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-ri">
+            <field name="name">Rhode Island</field>
+            <field name="code">ri</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-sc">
+            <field name="name">South Carolina</field>
+            <field name="code">sc</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-sd">
+            <field name="name">South Dakota</field>
+            <field name="code">sd</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-tn">
+            <field name="name">Tennessee</field>
+            <field name="code">tn</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-tx">
+            <field name="name">Texas</field>
+            <field name="code">tx</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-ut">
+            <field name="name">Utah</field>
+            <field name="code">ut</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-vt">
+            <field name="name">Vermont</field>
+            <field name="code">vt</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-va">
+            <field name="name">Virginia</field>
+            <field name="code">va</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-wa">
+            <field name="name">Washington</field>
+            <field name="code">wa</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-wv">
+            <field name="name">West Virginia</field>
+            <field name="code">wv</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-wi">
+            <field name="name">Wisconsin</field>
+            <field name="code">wi</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        <record model="res.country.state" id="us-wy">
+            <field name="name">Wyoming</field>
+            <field name="code">wy</field>
+            <field name="country_id" model="res.country" ref="us"/>
+        </record>
+        
+        <record model="res.partner" id="main_partner">
+            <field name="name">Tiny sprl</field>
+        </record>
+        <record model="res.partner.address" id="main_address">
+            <field name="partner_id" ref="main_partner"/>
+            <field name="name">Fabien Pinckaers</field>
+            <field name="street">Chaussee de Namur 40</field>
+            <field name="zip">1367</field>
+            <field name="city">Gerompont</field>
+            <field name="phone">(+32).81.81.37.00</field>
+            <field name="type">default</field>
+            <field name="country_id" model="res.country" ref="be"/>
+        </record>
+        
+        #
+        # Currencies
+        #
+        
+        <record model="res.currency" id="EUR">
+            <field name="name">EUR</field>
+            <field name="code">EUR</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+        </record>
+        <record model="res.currency.rate" id="rateEUR">
+            <field name="rate">1.0</field>
+            <field name="currency_id" ref="EUR"/>
+            <field name="name" eval="time.strftime('%Y-01-01')"/>
+        </record>
+        
+        <record model="res.currency" id="USD">
+            <field name="name">USD</field>
+            <field name="code">USD</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+        </record>
+        <record model="res.currency.rate" id="rateUSD">
+            <field name="rate">1.3785</field>
+            <field name="currency_id" ref="USD"/>
+            <field name="name" eval="time.strftime('%Y-01-01')"/>
+        </record>
+        
+        <record model="res.currency" id="VEB">
+            <field name="name">Bs</field>
+            <field name="code">VEB</field>
+            <field name="rounding">2.95</field>
+            <field name="accuracy">4</field>
+        </record>
+        <record model="res.currency.rate" id="rateVEB">
+            <field name="rate">1.0</field>
+            <field name="currency_id" ref="VEB"/>
+            <field name="name" eval="time.strftime('%Y-01-01')"/>
+        </record>
+        
+        
+        <record model="res.currency" id="CAD">
+            <field name="name">CAD</field>
+            <field name="code">CAD</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+        </record>
+        <record model="res.currency.rate" id="rateCAD">
+            <field name="rate">1.451</field>
+            <field name="currency_id" ref="CAD"/>
+            <field name="name" eval="time.strftime('%Y-01-01')"/>
+        </record>
+        
+        
+        <record model="res.currency" id="CHF">
+            <field name="name">CHF</field>
+            <field name="code">CHF</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+        </record>
+        <record model="res.currency.rate" id="rateCHF">
+            <field name="rate">1.644</field>
+            <field name="currency_id" ref="CHF"/>
+            <field name="name" eval="time.strftime('%Y-01-01')"/>
+        </record>
+        
+        <record model="res.currency" id="BRL">
+            <field name="name">BRL</field>
+            <field name="code">BRL</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+        </record>
+        <record model="res.currency.rate" id="rateBRL">
+            <field name="rate">2.588</field>
+            <field name="currency_id" ref="BRL"/>
+            <field name="name" eval="time.strftime('%Y-01-01')"/>
+        </record>
+        
+        <record model="res.currency" id="CNY">
+            <field name="name">CNY</field>
+            <field name="code">CNY</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+        </record>
+        <record model="res.currency.rate" id="rateCNY">
+            <field name="rate">10.4311</field>
+            <field name="currency_id" ref="CNY"/>
+            <field name="name" eval="time.strftime('%Y-01-01')"/>
+        </record>
+        
+        
+        <record model="res.currency" id="COP">
+            <field name="name">COP</field>
+            <field name="code">COP</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+        </record>
+        
+        <record model="res.currency" id="CZK">
+            <field name="name">K&#269;</field>
+            <field name="code">CZK</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+        </record>
+        
+        <record model="res.currency" id="DKK">
+            <field name="name">kr</field>
+            <field name="code">DKK</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+        </record>
+        <record model="res.currency.rate" id="rateDKK">
+            <field name="rate">7.4416</field>
+            <field name="currency_id" ref="DKK"/>
+            <field name="name" eval="time.strftime('%Y-01-01')"/>
+        </record>
+        
+        
+        <record model="res.currency" id="HUF">
+            <field name="name">Ft</field>
+            <field name="code">HUF</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+        </record>
+        
+        <record model="res.currency" id="IDR">
+            <field name="name">Rs</field>
+            <field name="code">IDR</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+        </record>
+        
+        <record model="res.currency" id="LVL">
+            <field name="name">Ls</field>
+            <field name="code">LVL</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+        </record>
+        <record model="res.currency.rate" id="rateLVL">
+            <field name="rate">0.71</field>
+            <field name="currency_id" ref="LVL"/>
+            <field name="name" eval="time.strftime('%Y-01-01')"/>
+        </record>
+        
+        
+        <record model="res.currency" id="NOK">
+            <field name="name">kr</field>
+            <field name="code">NOK</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+        </record>
+        <record model="res.currency.rate" id="rateNOK">
+            <field name="rate">7.93</field>
+            <field name="currency_id" ref="NOK"/>
+            <field name="name" eval="time.strftime('%Y-01-01')"/>
+        </record>
+        
+        
+        <record model="res.currency" id="PAB">
+            <field name="name">PAB</field>
+            <field name="code">PAB</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+        </record>
+        <record model="res.currency.rate" id="ratePAB">
+            <field name="rate">1.3813</field>
+            <field name="currency_id" ref="PAB"/>
+            <field name="name" eval="time.strftime('%Y-01-01')"/>
+        </record>
+        
+        
+        <record model="res.currency" id="PLN">
+            <field name="name">z&#322;</field>
+            <field name="code">PLN</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+        </record>
+        
+        <record model="res.currency" id="SEK">
+            <field name="name">kr</field>
+            <field name="code">SEK</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+        </record>
+        
+        <record model="res.currency" id="GBP">
+            <field name="name">GBP</field>
+            <field name="code">GBP</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+        </record>
+        <record model="res.currency.rate" id="rateGBP">
+            <field name="rate">0.675</field>
+            <field name="currency_id" ref="GBP"/>
+            <field name="name" eval="time.strftime('%Y-01-01')"/>
+        </record>
+        
+        <record model="res.currency" id="ARS">
+            <field name="name">ARS</field>
+            <field name="code">ARS</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+        </record>
+        
+        
+        <record model="res.company" id="main_company">
+            <field name="name">Tiny sprl</field>
+            <field name="partner_id" ref="main_partner"/>
+            <field name="rml_header1">Free Business Solutions</field>
+            <field name="rml_footer1">Web: http://tiny.be - Tel: (+32).81.81.37.00 - Bank: CPH 126-2013269-07</field>
+            <field name="rml_footer2">IBAN: BE74 1262 0132 6907 - SWIFT: GKCCBEBB - VAT: BE0477.472.701</field>
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        
+        <assert model="res.company" id="main_company">
+            <test expr="currency_id.code == 'eur'.upper()"/>
+            <test expr="name">Tiny sprl</test>
+        </assert>
+        
+        <record model="res.users" id="user_admin">
+            <field name="login">admin</field>
+            <field name="password">admin</field>
+            <field name="name">Administrator</field>
+            <field name="signature">Administrator</field>
+            <field name="action_id" ref="action_menu_admin"/>
+            <field name="menu_id" ref="action_menu_admin"/>
+            <field name="address_id" ref="main_address"/>
+            <field name="groups_id" eval="[(6,0,[group_admin])]"/>
+            <field name="company_id" ref="main_company"/>
+        </record>
+    </data>
 </terp>

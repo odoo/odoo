@@ -1,60 +1,56 @@
-<?xml version="1.0"?>
+<?xml version='1.0'?>
 <terp>
-<data>
-
-	<record model="ir.ui.view" id="view_currency_tree">
-		<field name="name">res.currency.tree</field>
-		<field name="model">res.currency</field>
-		<field name="type">tree</field>
-		<field name="arch" type="xml">
-			<tree string="Currencies">
-				<field name="name"/>
-				<field name="code"/>
-				<field name="rate"/>
-				<field name="rounding"/>
-				<field name="accuracy"/>
-				<field name="active" />
-			</tree>
-		</field>
-	</record>
-	<record model="ir.ui.view" id="view_currency_form">
-		<field name="name">res.currency.form</field>
-		<field name="model">res.currency</field>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-			<form string="Currency">
-				<field name="name" select="1" colspan="4"/>
-				<field name="code" select="1"/>
-				<field name="rate"/>
-				<field name="rounding"/>
-				<field name="accuracy"/>
-				<field name="active"  select="1"/>
-				<field name="rate_ids" colspan="4" nolabel="1" mode="tree,form">
-					<form string="Rates">
-						<field name="name"/>
-						<field name="rate"/>
-					</form>
-					<tree string="Rates">
-						<field name="name"/>
-						<field name="rate"/>
-					</tree>
-				</field>
-			</form>
-		</field>
-	</record>
-	<record model="ir.actions.act_window" id="action_currency_form">
-		<field name="name">Currencies</field>
-		<field name="res_model">res.currency</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-	</record>
-
-	<menuitem 
-		parent="menu_localisation" 
-		action="action_currency_form" 
-		sequence="11" 
-		id="menu_action_currency_form"/>
-
-</data>
+    <data>
+        
+        <record id='view_currency_tree' model='ir.ui.view'>
+            <field name='name'>res.currency.tree</field>
+            <field name='model'>res.currency</field>
+            <field name='type'>tree</field>
+            <field name='arch' type='xml'>
+                <tree string='Currencies'>
+                    <field name='name'/>
+                    <field name='code'/>
+                    <field name='rate'/>
+                    <field name='rounding'/>
+                    <field name='accuracy'/>
+                    <field name='active'/>
+                </tree>
+            </field>
+        </record>
+        <record id='view_currency_form' model='ir.ui.view'>
+            <field name='name'>res.currency.form</field>
+            <field name='model'>res.currency</field>
+            <field name='type'>form</field>
+            <field name='arch' type='xml'>
+                <form string='Currency'>
+                    <field name='name' select='1' colspan='4'/>
+                    <field name='code' select='1'/>
+                    <field name='rate'/>
+                    <field name='rounding'/>
+                    <field name='accuracy'/>
+                    <field name='active' select='1'/>
+                    <field name='rate_ids' mode='tree,form' nolabel='1' colspan='4'>
+                        <form string='Rates'>
+                            <field name='name'/>
+                            <field name='rate'/>
+                        </form>
+                        <tree string='Rates'>
+                            <field name='name'/>
+                            <field name='rate'/>
+                        </tree>
+                    </field>
+                </form>
+            </field>
+        </record>
+        <record id='action_currency_form' model='ir.actions.act_window'>
+            <field name='name'>Currencies</field>
+            <field name='res_model'>res.currency</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+        </record>
+        
+        <menuitem sequence='11' action='action_currency_form' id='menu_action_currency_form' parent='menu_localisation'/>
+        
+    </data>
 </terp>
 
