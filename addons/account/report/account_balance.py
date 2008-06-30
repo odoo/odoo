@@ -69,12 +69,24 @@ class account_balance(report_sxw.rml_parse):
 				'level': level,
 				'debit': account.debit,
 				'credit': account.credit,
-				'balance': account.balance
+				'balance': account.balance,
+				'leef': not bool(account.child_id)
 			}
 			self.sum_debit += account.debit
 			self.sum_credit += account.credit
 			if not (res['credit'] or res['debit']) and not account.child_id:
 				continue
+			if account.child_id:
+				def _check_rec(account):
+					if not account.child_id:
+						return bool(account.credit or account.debit)
+					for c in account.child_id:
+						if _check_rec(c):
+							return True
+					return False
+				if not _check_rec(account):
+					continue
+
 			result.append(res)
 			if account.child_id:
 				ids2 = [(x.code,x.id) for x in account.child_id]
