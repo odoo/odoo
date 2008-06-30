@@ -146,9 +146,10 @@ _LOCALE2WIN32 = {
 }
 
 class _format(object):
-	def __init__(self, name, object):
+	def __init__(self, name, object, field):
 		#super(_date_format, self).__init__(self)
 		self.object = object
+		self._field = field
 		self.name=name
 		lc, encoding = locale.getdefaultlocale()
 		if not encoding:
@@ -174,7 +175,10 @@ class _float_format(_format):
 	def __str__(self):
 		if not self.object._context:
 			return self.name
-		return locale.format('%.' + str(2) + 'f', self.name, True)
+		digit = 2
+		if hasattr(self._field, 'digits') and self._field.digits:
+			digit = self._field.digits[1]
+		return locale.format('%.' + str(digit) + 'f', self.name, True)
 
 class _int_format(_format):
 	def __str__(self):
