@@ -207,7 +207,7 @@ class ir_model_access(osv.osv):
 				'WHERE a.group_id IS NULL AND m.model = %s', (model_name,))
 			r= cr.fetchall()
 			if r[0][0] == None:
-				return False # by default, the user had no access
+				return True
 
 		if not r[0][0]:
 			if raise_exception:
