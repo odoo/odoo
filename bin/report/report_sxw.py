@@ -145,6 +145,57 @@ _LOCALE2WIN32 = {
 	'vi_VN': 'Vietnamese_Viet Nam',
 }
 
+class _format(object):
+	def __init__(self, name, object):
+		#super(_date_format, self).__init__(self)
+		self.object = object
+		self.name=name
+		lc, encoding = locale.getdefaultlocale()
+		if encoding == 'utf':
+			encoding = 'UTF-8'
+		if encoding == 'cp1252':
+			encoding= '1252'
+		lang = self.object._context.get('lang', 'en_US') or 'en_US'
+		try:
+			if os.name == 'nt':
+				locale.setlocale(locale.LC_ALL, _LOCALE2WIN32.get(lang, lang) + '.' + encoding)
+			else:
+				locale.setlocale(locale.LC_ALL, lang + '.' + encoding)
+		except Exception:
+			netsvc.Logger().notifyChannel('report', netsvc.LOG_WARNING,
+					'report %s: unable to set locale "%s"' % (self.name,
+						self.object._context.get('lang', 'en_US') or 'en_US'))
+	def __str__(self):
+		return self.name
+
+class _float_format(_format):
+	def __str__(self):
+		if not self.object._context:
+			return self.name
+		return locale.format('%.' + str(2) + 'f', self.name, True)
+
+class _int_format(_format):
+	def __str__(self):
+		if not self.object._context:
+			return self.name
+		return locale.format('%d', self.name, True)
+
+class _date_format(_format):
+	def __str__(self):
+		if not self.object._context:
+			return self.name
+		if self.name:
+			datedata = time.strptime(self.name, DT_FORMAT)
+			return time.strftime(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'),
+					datedata)
+		return ''
+
+_fields_process = {
+	'float': _float_format,
+	'date': _date_format,
+	'integer': _int_format
+}
+
 #
 # Context: {'node': node.dom}
 #
@@ -276,7 +327,6 @@ class rml_parse(object):
 					else:
 						obj._cache[table][id] = {'id': id}
 
-
 	def formatLang(self, value, digit=2, date=False):
 		lc, encoding = locale.getdefaultlocale()
 		if encoding == 'utf':
@@ -377,8 +427,8 @@ class rml_parse(object):
 			if isinstance(newtext, list):
 				todo.append((key, newtext))
 			else:
-				if not isinstance(newtext, basestring):
-					newtext = str(newtext)
+				#if not isinstance(newtext, basestring):
+				newtext = str(newtext)
 				# if there are two [[]] blocks the same, it will replace both
 				# but it's ok because it should evaluate to the same thing 
 				# anyway
@@ -491,7 +541,7 @@ class report_sxw(report_rml):
 
 	def getObjects(self, cr, uid, ids, context):
 		table_obj = pooler.get_pool(cr.dbname).get(self.table)
-		return table_obj.browse(cr, uid, ids, list_class=browse_record_list, context=context)
+		return table_obj.browse(cr, uid, ids, list_class=browse_record_list, context=context, fields_process=_fields_process)
 
 	def create(self, cr, uid, ids, data, context=None):
 		logo = None

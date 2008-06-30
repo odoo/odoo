@@ -123,10 +123,24 @@ class users(osv.osv):
 	_sql_constraints = [
 		('login_key', 'UNIQUE (login)', 'You can not have two users with the same login !')
 	]
+	def _get_action(self,cr, uid, context={}):
+		ids = self.pool.get('ir.ui.menu').search(cr, uid, [('usage','=','menu')])
+		return ids and ids[0] or False
+
+	def _get_company(self,cr, uid, context={}):
+		return self.pool.get('res.users').browse(cr, uid, uid, context).company_id.id
+
+	def _get_menu(self,cr, uid, context={}):
+		ids = self.pool.get('ir.actions.act_window').search(cr, uid, [('usage','=','menu')])
+		return ids and ids[0] or False
+
 	_defaults = {
 		'password' : lambda obj,cr,uid,context={} : '',
 		'context_lang': lambda *args: 'en_US',
 		'active' : lambda obj,cr,uid,context={} : True,
+		'menu_id': _get_menu,
+		'action_id': _get_menu,
+		'company_id': _get_company,
 	}
 	def company_get(self, cr, uid, uid2):
 		company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id

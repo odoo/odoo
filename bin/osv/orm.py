@@ -107,7 +107,7 @@ class browse_record_list(list):
 
 
 class browse_record(object):
-	def __init__(self, cr, uid, id, table, cache, context=None, list_class = None):
+	def __init__(self, cr, uid, id, table, cache, context=None, list_class = None, fields_process={}):
 		'''
 		table : the object (inherited from orm)
 		context : a dictionnary with an optionnal context
@@ -122,6 +122,7 @@ class browse_record(object):
 		self._table = table
 		self._table_name = self._table._name
 		self._context = context
+		self._fields_process = fields_process
 
 		cache.setdefault(table._name, {})
 		self._data = cache[table._name]
@@ -160,7 +161,13 @@ class browse_record(object):
 				ffields = [(name,col)]
 			ids = filter(lambda id: not self._data[id].has_key(name), self._data.keys())
 			# read the data
-			datas = self._table.read(self._cr, self._uid, ids, map(lambda x: x[0], ffields), context=self._context, load="_classic_write")
+			fffields = map(lambda x: x[0], ffields)
+			datas = self._table.read(self._cr, self._uid, ids, fffields, context=self._context, load="_classic_write")
+			if self._fields_process:
+				for n,f in ffields:
+					if f._type in self._fields_process:
+						for d in datas:
+							d[n] = self._fields_process[f._type](d[n], self)
 
 			# create browse records for 'remote' objects
 			for data in datas:
@@ -174,13 +181,13 @@ class browse_record(object):
 							else:
 								ids2 = data[n]
 							if ids2:
-								data[n] = browse_record(self._cr, self._uid, ids2, obj, self._cache, context=self._context, list_class=self._list_class)
+								data[n] = browse_record(self._cr, self._uid, ids2, obj, self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process)
 							else:
 								data[n] = browse_null()
 						else:
 							data[n] = browse_null()
 					elif f._type in ('one2many', 'many2many') and len(data[n]):
-						data[n] = self._list_class([browse_record(self._cr,self._uid,id,self._table.pool.get(f._obj),self._cache, context=self._context, list_class=self._list_class) for id in data[n]], self._context)
+						data[n] = self._list_class([browse_record(self._cr,self._uid,id,self._table.pool.get(f._obj),self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process) for id in data[n]], self._context)
 				self._data[data['id']].update(data)
 		return self._data[self._id][name]
 
@@ -360,7 +367,7 @@ class orm_template(object):
 		if not self._table:
 			self._table=self._name.replace('.','_')
 
-	def browse(self, cr, uid, select, context=None, list_class=None):
+	def browse(self, cr, uid, select, context=None, list_class=None, fields_process={}):
 		if not context:
 			context={}
 		self._list_class = list_class or browse_record_list
@@ -368,9 +375,9 @@ class orm_template(object):
 		# need to accepts ints and longs because ids coming from a method
 		# launched by button in the interface have a type long...
 		if isinstance(select, (int, long)):
-			return browse_record(cr,uid,select,self,cache, context=context, list_class=self._list_class)
+			return browse_record(cr,uid,select,self,cache, context=context, list_class=self._list_class, fields_process=fields_process)
 		elif isinstance(select,list):
-			return self._list_class([browse_record(cr,uid,id,self,cache, context=context, list_class=self._list_class) for id in select], context)
+			return self._list_class([browse_record(cr,uid,id,self,cache, context=context, list_class=self._list_class, fields_process=fields_process) for id in select], context)
 		else:
 			return browse_null()
 
