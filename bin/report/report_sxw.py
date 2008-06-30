@@ -146,7 +146,7 @@ _LOCALE2WIN32 = {
 }
 
 class _format(object):
-	def __init__(self, name, object, field):
+	def set_value(self, name, object, field):
 		#super(_date_format, self).__init__(self)
 		self.object = object
 		self._field = field
@@ -168,10 +168,8 @@ class _format(object):
 			netsvc.Logger().notifyChannel('report', netsvc.LOG_WARNING,
 					'report %s: unable to set locale "%s"' % (self.name,
 						self.object._context.get('lang', 'en_US') or 'en_US'))
-	def __str__(self):
-		return self.name
 
-class _float_format(_format):
+class _float_format(float, _format):
 	def __str__(self):
 		if not self.object._context:
 			return self.name
@@ -180,13 +178,13 @@ class _float_format(_format):
 			digit = self._field.digits[1]
 		return locale.format('%.' + str(digit) + 'f', self.name, True)
 
-class _int_format(_format):
+class _int_format(int, _format):
 	def __str__(self):
 		if not self.object._context:
 			return self.name
 		return locale.format('%d', self.name, True)
 
-class _date_format(_format):
+class _date_format(str, _format):
 	def __str__(self):
 		if not self.object._context:
 			return self.name
@@ -334,6 +332,8 @@ class rml_parse(object):
 						obj._cache[table][id] = {'id': id}
 
 	def formatLang(self, value, digit=2, date=False):
+		if not value:
+			return ''
 		lc, encoding = locale.getdefaultlocale()
 		if not encoding:
 			encoding = 'UTF-8'

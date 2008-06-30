@@ -53,6 +53,7 @@ import xml.dom.minidom
 import copy
 
 import reportlab
+import re
 from reportlab.pdfgen import canvas
 from reportlab import platypus
 
@@ -85,29 +86,32 @@ class _rml_styles(object):
 			for style in node.getElementsByTagName('blockTableStyle'):
 				self.table_styles[style.getAttribute('id')] = self._table_style_get(style)
 			for style in node.getElementsByTagName('paraStyle'):
-				self.styles[style.getAttribute('name')] = self._para_style_get(style)
+				self.styles[style.getAttribute('name')] = self._para_style_update(style)
 			for variable in node.getElementsByTagName('initialize'):
 				for name in variable.getElementsByTagName('name'):
 					self.names[ name.getAttribute('id')] = name.getAttribute('value')
 
-	def _para_style_update(self, style, node):
-		for attr in ['textColor', 'backColor', 'bulletColor']:
+	def _para_style_update(self, node):
+		data = {}
+		for attr in ['textColor', 'backColor', 'bulletColor', 'borderColor']:
 			if node.hasAttribute(attr):
-				style.__dict__[attr] = color.get(node.getAttribute(attr))
+				data[attr] = color.get(node.getAttribute(attr))
 		for attr in ['fontName', 'bulletFontName', 'bulletText']:
 			if node.hasAttribute(attr):
-				style.__dict__[attr] = node.getAttribute(attr)
-		for attr in ['fontSize', 'leftIndent', 'rightIndent', 'spaceBefore', 'spaceAfter', 'firstLineIndent', 'bulletIndent', 'bulletFontSize', 'leading']:
+				data[attr] = node.getAttribute(attr)
+		for attr in ['fontSize', 'leftIndent', 'rightIndent', 'spaceBefore', 'spaceAfter', 
+			'firstLineIndent', 'bulletIndent', 'bulletFontSize', 'leading',
+			'borderWidth','borderPadding','borderRadius']:
 			if node.hasAttribute(attr):
-				style.__dict__[attr] = utils.unit_get(node.getAttribute(attr))
+				data[attr] = utils.unit_get(node.getAttribute(attr))
 		if node.hasAttribute('alignment'):
 			align = {
 				'right':reportlab.lib.enums.TA_RIGHT,
 				'center':reportlab.lib.enums.TA_CENTER,
 				'justify':reportlab.lib.enums.TA_JUSTIFY
 			}
-			style.alignment = align.get(node.getAttribute('alignment').lower(), reportlab.lib.enums.TA_LEFT)
-		return style
+			data['alignment'] = align.get(node.getAttribute('alignment').lower(), reportlab.lib.enums.TA_LEFT)
+		return data
 
 	def _table_style_get(self, style_node):
 		styles = []
@@ -149,23 +153,20 @@ class _rml_styles(object):
 					styles.append((kind, start, stop, thick, color.get(node.getAttribute('colorName'))))
 		return platypus.tables.TableStyle(styles)
 
-	def _para_style_get(self, node):
-		styles = reportlab.lib.styles.getSampleStyleSheet()
-		style = copy.deepcopy(styles["Normal"])
-		self._para_style_update(style, node)
-		return style
-
 	def para_style_get(self, node):
 		style = False
 		if node.hasAttribute('style'):
 			if node.getAttribute('style') in self.styles:
-				style = copy.deepcopy(self.styles[node.getAttribute('style')])
+				styles = reportlab.lib.styles.getSampleStyleSheet()
+				sname = node.getAttribute('style')
+				style = reportlab.lib.styles.ParagraphStyle(sname, styles["Normal"], **self.styles[sname])
 			else:
 				sys.stderr.write('Warning: style not found, %s - setting default!\n' % (node.getAttribute('style'),) )
 		if not style:
 			styles = reportlab.lib.styles.getSampleStyleSheet()
 			style = copy.deepcopy(styles['Normal'])
-		return self._para_style_update(style, node)
+		style.__dict__.update(self._para_style_update(node))
+		return style
 
 class _rml_doc(object):
 	def __init__(self, data, images={}, path='.'):
@@ -468,13 +469,40 @@ class _rml_flowable(object):
 		childs = _child_get(node,'tr')
 		if not childs:
 			return None
+		posy = 0
+		styles = []
 		for tr in childs:
+			paraStyle = None
+			if tr.hasAttribute('style'):
+				st = copy.deepcopy(self.styles.table_styles[tr.getAttribute('style')])
+				for s in st._cmds:
+					s[1][1] = posy
+					s[2][1] = posy
+				styles.append(st)
+			if tr.hasAttribute('paraStyle'):
+				paraStyle = self.styles.styles[tr.getAttribute('paraStyle')]
+
 			data2 = []
+			posx = 0
 			for td in _child_get(tr, 'td'):
+				if td.hasAttribute('style'):
+					st = copy.deepcopy(self.styles.table_styles[td.getAttribute('style')])
+					for s in st._cmds:
+						s[1][1] = posy
+						s[2][1] = posy
+						s[1][0] = posx
+						s[2][0] = posx
+					styles.append(st)
+				if td.hasAttribute('paraStyle'):
+					# TODO: merge styles
+					paraStyle = self.styles.styles[td.getAttribute('paraStyle')]
+				posx += 1
+
 				flow = []
 				for n in td.childNodes:
 					if n.nodeType==node.ELEMENT_NODE:
-						flow.append( self._flowable(n) )
+						fl = self._flowable(n, extra_style=paraStyle)
+						flow.append( fl )
 				if not len(flow):
 					flow = self._textual(td)
 				data2.append( flow )
@@ -486,6 +514,7 @@ class _rml_flowable(object):
 			while len(data2)<length:
 				data2.append('')
 			data.append( data2 )
+			posy += 1
 		if node.hasAttribute('colWidths'):
 			assert length == len(node.getAttribute('colWidths').split(','))
 			colwidths = [utils.unit_get(f.strip()) for f in node.getAttribute('colWidths').split(',')]
@@ -496,6 +525,8 @@ class _rml_flowable(object):
 		table = platypus.Table(data = data, colWidths=colwidths, rowHeights=rowheights, **(utils.attr_get(node, ['splitByRow'] ,{'repeatRows':'int','repeatCols':'int'})))
 		if node.hasAttribute('style'):
 			table.setStyle(self.styles.table_styles[node.getAttribute('style')])
+		for s in styles:
+			table.setStyle(s)
 		return table
 
 	def _illustration(self, node):
@@ -522,9 +553,11 @@ class _rml_flowable(object):
 				rc += n.data
 		return base64.decodestring(rc)
 
-	def _flowable(self, node):
+	def _flowable(self, node, extra_style=None):
 		if node.localName=='para':
 			style = self.styles.para_style_get(node)
+			if extra_style:
+				style.__dict__.update(extra_style)
 			return platypus.Paragraph(self._textual(node), style, **(utils.attr_get(node, [], {'bulletText':'str'})))
 		elif node.localName=='barCode':
 			try:
@@ -572,17 +605,9 @@ class _rml_flowable(object):
 			styles = reportlab.lib.styles.getSampleStyleSheet()
 			style = styles['Title']
 			return platypus.Paragraph(self._textual(node), style, **(utils.attr_get(node, [], {'bulletText':'str'})))
-		elif node.localName=='h1':
+		elif re.match('^h([1-9]+[0-9]*)$', node.localName):
 			styles = reportlab.lib.styles.getSampleStyleSheet()
-			style = styles['Heading1']
-			return platypus.Paragraph(self._textual(node), style, **(utils.attr_get(node, [], {'bulletText':'str'})))
-		elif node.localName=='h2':
-			styles = reportlab.lib.styles.getSampleStyleSheet()
-			style = styles['Heading2']
-			return platypus.Paragraph(self._textual(node), style, **(utils.attr_get(node, [], {'bulletText':'str'})))
-		elif node.localName=='h3':
-			styles = reportlab.lib.styles.getSampleStyleSheet()
-			style = styles['Heading3']
+			style = styles['Heading'+str(node.localName[1:])]
 			return platypus.Paragraph(self._textual(node), style, **(utils.attr_get(node, [], {'bulletText':'str'})))
 		elif node.localName=='image':
 			if not node.hasAttribute('file'):

@@ -167,7 +167,9 @@ class browse_record(object):
 				for n,f in ffields:
 					if f._type in self._fields_process:
 						for d in datas:
-							d[n] = self._fields_process[f._type](d[n], self, f)
+							d[n] = self._fields_process[f._type](d[n])
+							d[n].set_value(d[n], self, f)
+
 
 			# create browse records for 'remote' objects
 			for data in datas:
