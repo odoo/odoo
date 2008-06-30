@@ -1,3 +1,268 @@
 <?xml version="1.0"?>
-<document filename="test.pdf"><template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20"><pageTemplate id="first"><frame id="first" x1="34.0" y1="42.0" width="527" height="758"/></pageTemplate></template><stylesheet><blockTableStyle id="Standard_Outline"><blockAlignment value="LEFT"/><blockValign value="TOP"/></blockTableStyle><blockTableStyle id="Tableau1"><blockAlignment value="LEFT"/><blockValign value="TOP"/></blockTableStyle><blockTableStyle id="Tableau2"><blockAlignment value="LEFT"/><blockValign value="TOP"/><lineStyle kind="GRID" colorName="black"/><blockBackground colorName="#e6e6e6" start="0,0" stop="0,0"/><blockBackground colorName="#e6e6e6" start="1,0" stop="1,0"/><blockBackground colorName="#e6e6e6" start="2,0" stop="2,0"/><blockBackground colorName="#e6e6e6" start="3,0" stop="3,0"/><blockBackground colorName="#e6e6e6" start="4,0" stop="4,0"/><blockBackground colorName="#e6e6e6" start="5,0" stop="5,0"/></blockTableStyle><blockTableStyle id="Tableau3"><blockAlignment value="LEFT"/><blockValign value="TOP"/></blockTableStyle><blockTableStyle id="Tableau5"><blockAlignment value="LEFT"/><blockValign value="TOP"/></blockTableStyle><blockTableStyle id="Tableau6"><blockAlignment value="LEFT"/><blockValign value="TOP"/></blockTableStyle><blockTableStyle id="Tableau4"><blockAlignment value="LEFT"/><blockValign value="TOP"/></blockTableStyle><initialize><paraStyle name="all" alignment="justify"/></initialize><paraStyle name="P1" fontName="Times-Roman" fontSize="9.0" leading="11"/><paraStyle name="P2" fontName="Times-Roman"/><paraStyle name="P3" fontName="Times-Roman" alignment="LEFT"/><paraStyle name="P4" fontName="Times-Roman" alignment="LEFT"/><paraStyle name="P5" fontName="Times-Bold" fontSize="9.0" leading="11"/><paraStyle name="P6" fontName="Times-Bold" fontSize="9.0" leading="11"/><paraStyle name="P7" fontName="Times-Roman" fontSize="9.0" leading="11" alignment="LEFT"/><paraStyle name="P8" fontName="Times-Roman" fontSize="9.0" leading="11" alignment="CENTER"/><paraStyle name="P9" fontName="Times-Roman" fontSize="9.0" leading="11" alignment="RIGHT"/><paraStyle name="P10" fontName="Times-BoldItalic" fontSize="9.0" leading="11" alignment="LEFT"/><paraStyle name="P11" fontName="Times-Italic" fontSize="9.0" leading="11" alignment="LEFT"/><paraStyle name="P12" fontName="Times-Bold" fontSize="9.0" leading="11" alignment="RIGHT"/><paraStyle name="P13" fontName="Times-Bold" fontSize="9.0" leading="11"/><paraStyle name="P14" fontName="Times-Roman" fontSize="10.0" leading="13"/><paraStyle name="P15" fontName="Times-Roman" fontSize="10.0" leading="13"/><paraStyle name="P16" fontName="Times-Roman" fontSize="4.0" leading="5"/><paraStyle name="P17" fontName="Times-Roman" fontSize="4.0" leading="5"/><paraStyle name="P18" fontName="Times-Roman" fontSize="11.0" leading="14"/><paraStyle name="P19" fontName="Times-Roman" fontSize="11.0" leading="14"/><paraStyle name="P20" fontName="Times-Roman" fontSize="16.0" leading="20"/><paraStyle name="P21" fontName="Times-BoldItalic" fontSize="6.0" leading="8" alignment="LEFT"/><paraStyle name="P22" fontName="Times-Roman" fontSize="7.0" leading="9"/><paraStyle name="P23" fontName="Times-Roman" fontSize="11.0" leading="14"/><paraStyle name="P24" fontName="Times-Roman" fontSize="7.0" leading="9"/><paraStyle name="P25" fontName="Times-Bold" fontSize="9.0" leading="11" alignment="RIGHT"/><paraStyle name="P26" fontName="Times-Roman" fontSize="9.0" leading="11" alignment="RIGHT"/><paraStyle name="P27" fontName="Times-BoldItalic" fontSize="11.0" leading="14"/><paraStyle name="P28" fontName="Times-BoldItalic" fontSize="11.0" leading="14" alignment="CENTER"/><paraStyle name="Standard" fontName="Times-Roman"/><paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/><paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/><paraStyle name="List" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/><paraStyle name="Table Contents" fontName="Times-Roman"/><paraStyle name="Table Heading" fontName="Times-Roman" alignment="CENTER"/><paraStyle name="Caption" fontName="Times-Roman" fontSize="12.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/><paraStyle name="Index" fontName="Times-Roman"/></stylesheet><images/><story><para style="P1">[[ repeatIn(objects,'o') ]] <font face="Times-Roman">[[ setLang(o.partner_id.lang) ]]</font></para><blockTable colWidths="257.0,50.0,220.0" style="Tableau1"><tr><td><para style="P5">Shipping address :</para><para style="P14">[[ o.partner_id.title or '' ]] [[ o.partner_id.name ]]</para><para style="P14">[[ o.partner_shipping_id.title or '' ]] [[ o.partner_shipping_id.name ]]</para><para style="P14">[[ o.partner_shipping_id.street ]]</para><para style="P14">[[ o.partner_shipping_id.street2 or '' ]]</para><para style="P15"><font face="Times-Roman">[[ o.partner_shipping_id.zip or '' ]]</font> [[ o.partner_shipping_id.city or '' ]]</para><para style="P15">[[ o.partner_shipping_id.state_id and o.partner_shipping_id.state_id.name or '' ]]</para><para style="P15">[[ o.partner_shipping_id.country_id and o.partner_shipping_id.country_id.name or '' ]]</para><para style="P16"><font color="white"> </font></para><para style="P6">Invoice address :</para><para style="P15">[[ o.partner_invoice_id.street ]][[ o.partner_invoice_id.street2 and (', %s' % o.partner_invoice_id.street2 or '') ]]</para><para style="P15">[[ o.partner_invoice_id.zip or '' ]] [[ o.partner_invoice_id.city or '' ]] [[ o.partner_invoice_id.country_id and (', %s' % (o.partner_invoice_id.country_id and o.partner_invoice_id.country_id.name or '')) ]]</para></td><td><para style="P18"><font color="white"> </font></para></td><td><para style="P19">[[ o.partner_id.title or '' ]] [[ o.partner_id.name ]]</para><para style="P19">[[ o.partner_order_id.title or '' ]] [[ o.partner_order_id.name ]]</para><para style="P19">[[ o.partner_order_id.street ]]</para><para style="P19">[[ o.partner_order_id.street2 or '' ]]</para><para style="P19">[[ o.partner_order_id.zip or '' ]] [[ o.partner_order_id.city or '' ]]</para><para style="P19">[[ o.partner_order_id.state_id and o.partner_order_id.state_id.name or '' ]]</para><para style="P19">[[ o.partner_order_id.country_id and o.partner_order_id.country_id.name or '' ]]</para><para style="P17"><font color="white"> </font></para><para style="P14">Tel.&#xA0;: [[ o.partner_order_id.phone or removeParentNode('para') ]]</para><para style="P14">Fax&#xA0;: [[ o.partner_order_id.fax or removeParentNode('para') ]]</para><para style="P14">VAT&#xA0;: [[ o.partner_id.vat or removeParentNode('para') ]]</para></td></tr></blockTable><para style="P2"><font color="white"> </font></para><para style="P20">[[ o.state&lt;&gt;'draft' and removeParentNode('para') ]] Quotation N&#xB0; : [[ o.name ]]</para><para style="P20">[[ o.state=='draft' and removeParentNode('para') ]] Order N&#xB0; : [[ o.name ]]</para><para style="P20"><font color="white"> </font></para><para style="P23">Your order reference : [[ o.client_order_ref or '' ]]</para><para style="P23">Date ordered : [[ time.strftime('%d/%m/%Y', time.strptime(o.date_order, '%Y-%m-%d')) ]]</para><para style="P23">Our salesman : [[ o.user_id.name ]]</para><para style="P2"><font color="white"> </font></para><blockTable colWidths="256.0,46.0,56.0,59.0,56.0,54.0" repeatRows="1" style="Tableau2"><tr><td><para style="P27">Description</para></td><td><para style="P28">Taxes</para></td><td><para style="P28">Quantity</para></td><td><para style="P28">Unit Price</para></td><td><para style="P28"><font face="Times-Roman">Disc. (%)</font></para></td><td><para style="P28">Price</para></td></tr></blockTable><section><para style="P21">[[ repeatIn(o.order_line,'line') ]]</para><blockTable colWidths="256.0,46.0,56.0,59.0,56.0,54.0" style="Tableau3"><tr><td><para style="P7">[[ line.name ]]</para></td><td><para style="P8">[[ ', '.join(map(lambda x: x.name, line.tax_id))]]</para></td><td><para style="P9">[[ line.product_uos and '%.2f' % line.product_uos_qty or '%.2f' % line.product_uom_qty ]] [[ line.product_uos and line.product_uos.name or line.product_uom.name ]]</para></td><td><para style="P9">[[ '%.2f' % line.price_unit ]]</para></td><td><para style="P9">[[ (line.discount and str(line.discount)+'%')or '' ]]</para></td><td><para style="P9">[[ '%.2f' % line.price_subtotal ]]</para></td></tr></blockTable><blockTable colWidths="52.0,366.0,110.0" style="Tableau5"><tr><td><para style="P10">[[ repeatIn((line.notes and line.notes.splitlines()) or [], 'l') ]]</para></td><td><para style="P11">[[ l or removeParentNode('table') ]]</para></td><td><para style="P10"><font color="white"> </font></para></td></tr></blockTable></section><blockTable colWidths="348.0,69.0,110.0" style="Tableau6"><tr><td><para style="P24"><font color="white"> </font></para></td><td><para style="P25">Net Total&#xA0;:</para></td><td><para style="P25">[[ '%.2f' % o.amount_untaxed ]] [[ o.pricelist_id.currency_id.name ]]</para></td></tr><tr><td><para style="P24"><font color="white"> </font></para></td><td><para style="P25">Taxes&#xA0;:</para></td><td><para style="P25">[[ '%.2f' % o.amount_tax ]] [[ o.pricelist_id.currency_id.name ]]</para></td></tr><tr><td><para style="P22"><font color="white"> </font></para></td><td><para style="P12">TOTAL&#xA0;:</para></td><td><para style="P12">[[ '%.2f' % o.amount_total ]] [[ o.pricelist_id.currency_id.name ]]</para></td></tr></blockTable><para style="P13"><font color="white"> </font></para><blockTable colWidths="527.0" style="Tableau4"><tr><td><para style="P3">[[ format(o.note or '') ]]</para></td></tr><tr><td><para style="P3">[[ format((o.partner_id.property_payment_term and o.partner_id.property_payment_term.note) or '') ]]</para></td></tr></blockTable><para style="P4"><font color="white"> </font></para></story></document>
+<document filename="test.pdf">
+<template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+<pageTemplate id="first">
+<frame id="first" x1="34.0" y1="42.0" width="527" height="758"/>
+</pageTemplate>
+</template>
+<stylesheet>
+<blockTableStyle id="Standard_Outline">
+<blockAlignment value="LEFT"/>
+<blockValign value="TOP"/>
+</blockTableStyle>
+<blockTableStyle id="Tableau1">
+<blockAlignment value="LEFT"/>
+<blockValign value="TOP"/>
+</blockTableStyle>
+<blockTableStyle id="Tableau2">
+<blockAlignment value="LEFT"/>
+<blockValign value="TOP"/>
+<lineStyle kind="GRID" colorName="black"/>
+<blockBackground colorName="#e6e6e6" start="0,0" stop="0,0"/>
+<blockBackground colorName="#e6e6e6" start="1,0" stop="1,0"/>
+<blockBackground colorName="#e6e6e6" start="2,0" stop="2,0"/>
+<blockBackground colorName="#e6e6e6" start="3,0" stop="3,0"/>
+<blockBackground colorName="#e6e6e6" start="4,0" stop="4,0"/>
+<blockBackground colorName="#e6e6e6" start="5,0" stop="5,0"/>
+</blockTableStyle>
+<blockTableStyle id="Tableau3">
+<blockAlignment value="LEFT"/>
+<blockValign value="TOP"/>
+</blockTableStyle>
+<blockTableStyle id="Tableau5">
+<blockAlignment value="LEFT"/>
+<blockValign value="TOP"/>
+</blockTableStyle>
+<blockTableStyle id="Tableau6">
+<blockAlignment value="LEFT"/>
+<blockValign value="TOP"/>
+</blockTableStyle>
+<blockTableStyle id="Tableau4">
+<blockAlignment value="LEFT"/>
+<blockValign value="TOP"/>
+</blockTableStyle>
+<initialize>
+<paraStyle name="all" alignment="justify"/>
+</initialize>
+<paraStyle name="P1" fontName="Times-Roman" fontSize="9.0" leading="11"/>
+<paraStyle name="P2" fontName="Times-Roman"/>
+<paraStyle name="P3" fontName="Times-Roman" alignment="LEFT"/>
+<paraStyle name="P4" fontName="Times-Roman" alignment="LEFT"/>
+<paraStyle name="P5" fontName="Times-Bold" fontSize="9.0" leading="11"/>
+<paraStyle name="P6" fontName="Times-Bold" fontSize="9.0" leading="11"/>
+<paraStyle name="P7" fontName="Times-Roman" fontSize="9.0" leading="11" alignment="LEFT"/>
+<paraStyle name="P8" fontName="Times-Roman" fontSize="9.0" leading="11" alignment="CENTER"/>
+<paraStyle name="P9" fontName="Times-Roman" fontSize="9.0" leading="11" alignment="RIGHT"/>
+<paraStyle name="P10" fontName="Times-BoldItalic" fontSize="9.0" leading="11" alignment="LEFT"/>
+<paraStyle name="P11" fontName="Times-Italic" fontSize="9.0" leading="11" alignment="LEFT"/>
+<paraStyle name="P12" fontName="Times-Bold" fontSize="9.0" leading="11" alignment="RIGHT"/>
+<paraStyle name="P13" fontName="Times-Bold" fontSize="9.0" leading="11"/>
+<paraStyle name="P14" fontName="Times-Roman" fontSize="10.0" leading="13"/>
+<paraStyle name="P15" fontName="Times-Roman" fontSize="10.0" leading="13"/>
+<paraStyle name="P16" fontName="Times-Roman" fontSize="4.0" leading="5"/>
+<paraStyle name="P17" fontName="Times-Roman" fontSize="4.0" leading="5"/>
+<paraStyle name="P18" fontName="Times-Roman" fontSize="11.0" leading="14"/>
+<paraStyle name="P19" fontName="Times-Roman" fontSize="11.0" leading="14"/>
+<paraStyle name="P20" fontName="Times-Roman" fontSize="16.0" leading="20"/>
+<paraStyle name="P21" fontName="Times-BoldItalic" fontSize="6.0" leading="8" alignment="LEFT"/>
+<paraStyle name="P22" fontName="Times-Roman" fontSize="7.0" leading="9"/>
+<paraStyle name="P23" fontName="Times-Roman" fontSize="11.0" leading="14"/>
+<paraStyle name="P24" fontName="Times-Roman" fontSize="7.0" leading="9"/>
+<paraStyle name="P25" fontName="Times-Bold" fontSize="9.0" leading="11" alignment="RIGHT"/>
+<paraStyle name="P26" fontName="Times-Roman" fontSize="9.0" leading="11" alignment="RIGHT"/>
+<paraStyle name="P27" fontName="Times-BoldItalic" fontSize="11.0" leading="14"/>
+<paraStyle name="P28" fontName="Times-BoldItalic" fontSize="11.0" leading="14" alignment="CENTER"/>
+<paraStyle name="Standard" fontName="Times-Roman"/>
+<paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+<paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
+<paraStyle name="List" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+<paraStyle name="Table Contents" fontName="Times-Roman"/>
+<paraStyle name="Table Heading" fontName="Times-Roman" alignment="CENTER"/>
+<paraStyle name="Caption" fontName="Times-Roman" fontSize="12.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/>
+<paraStyle name="Index" fontName="Times-Roman"/>
+</stylesheet>
+<images/>
+<story>
+<para style="P1">[[ repeatIn(objects,'o') ]] <font face="Times-Roman">[[ setLang(o.partner_id.lang) ]]</font>
+</para>
+<blockTable colWidths="257.0,50.0,220.0" style="Tableau1">
+<tr>
+<td>
+<para style="P5">Shipping address :</para>
+<para style="P14">[[ o.partner_id.title or '' ]] [[ o.partner_id.name ]]</para>
+<para style="P14">[[ o.partner_shipping_id.title or '' ]] [[ o.partner_shipping_id.name ]]</para>
+<para style="P14">[[ o.partner_shipping_id.street ]]</para>
+<para style="P14">[[ o.partner_shipping_id.street2 or '' ]]</para>
+<para style="P15">
+<font face="Times-Roman">[[ o.partner_shipping_id.zip or '' ]]</font> [[ o.partner_shipping_id.city or '' ]]</para>
+<para style="P15">[[ o.partner_shipping_id.state_id and o.partner_shipping_id.state_id.name or '' ]]</para>
+<para style="P15">[[ o.partner_shipping_id.country_id and o.partner_shipping_id.country_id.name or '' ]]</para>
+<para style="P16">
+<font color="white"> </font>
+</para>
+<para style="P6">Invoice address :</para>
+<para style="P15">[[ o.partner_invoice_id.street ]][[ o.partner_invoice_id.street2 and (', %s' % o.partner_invoice_id.street2 or '') ]]</para>
+<para style="P15">[[ o.partner_invoice_id.zip or '' ]] [[ o.partner_invoice_id.city or '' ]] [[ o.partner_invoice_id.country_id and (', %s' % (o.partner_invoice_id.country_id and o.partner_invoice_id.country_id.name or '')) ]]</para>
+</td>
+<td>
+<para style="P18">
+<font color="white"> </font>
+</para>
+</td>
+<td>
+<para style="P19">[[ o.partner_id.title or '' ]] [[ o.partner_id.name ]]</para>
+<para style="P19">[[ o.partner_order_id.title or '' ]] [[ o.partner_order_id.name ]]</para>
+<para style="P19">[[ o.partner_order_id.street ]]</para>
+<para style="P19">[[ o.partner_order_id.street2 or '' ]]</para>
+<para style="P19">[[ o.partner_order_id.zip or '' ]] [[ o.partner_order_id.city or '' ]]</para>
+<para style="P19">[[ o.partner_order_id.state_id and o.partner_order_id.state_id.name or '' ]]</para>
+<para style="P19">[[ o.partner_order_id.country_id and o.partner_order_id.country_id.name or '' ]]</para>
+<para style="P17">
+<font color="white"> </font>
+</para>
+<para style="P14">Tel.&#xA0;: [[ o.partner_order_id.phone or removeParentNode('para') ]]</para>
+<para style="P14">Fax&#xA0;: [[ o.partner_order_id.fax or removeParentNode('para') ]]</para>
+<para style="P14">VAT&#xA0;: [[ o.partner_id.vat or removeParentNode('para') ]]</para>
+</td>
+</tr>
+</blockTable>
+<para style="P2">
+<font color="white"> </font>
+</para>
+<para style="P20">[[ o.state&lt;&gt;'draft' and removeParentNode('para') ]] Quotation N&#xB0; : [[ o.name ]]</para>
+<para style="P20">[[ o.state=='draft' and removeParentNode('para') ]] Order N&#xB0; : [[ o.name ]]</para>
+<para style="P20">
+<font color="white"> </font>
+</para>
+<para style="P23">Your Order Reference : [[ o.client_order_ref or '' ]]</para>
+<para style="P23">Date Ordered : [[ o.date_order ]]</para>
+<para style="P23">Our salesman : [[ o.user_id.name ]]</para>
+<para style="P2">
+<font color="white"> </font>
+</para>
+<blockTable colWidths="256.0,46.0,56.0,59.0,56.0,54.0" repeatRows="1" style="Tableau2">
+<tr>
+<td>
+<para style="P27">Description</para>
+</td>
+<td>
+<para style="P28">Taxes</para>
+</td>
+<td>
+<para style="P28">Quantity</para>
+</td>
+<td>
+<para style="P28">Unit Price</para>
+</td>
+<td>
+<para style="P28">
+<font face="Times-Roman">Disc. (%)</font>
+</para>
+</td>
+<td>
+<para style="P28">Price</para>
+</td>
+</tr>
+</blockTable>
+<section>
+<para style="P21">[[ repeatIn(o.order_line,'line') ]]</para>
+<blockTable colWidths="256.0,46.0,56.0,59.0,56.0,54.0" style="Tableau3">
+<tr>
+<td>
+<para style="P7">[[ line.name ]]</para>
+</td>
+<td>
+<para style="P8">[[ ', '.join(map(lambda x: x.name, line.tax_id))]]</para>
+</td>
+<td>
+<para style="P9">[[ line.product_uos and line.product_uos_qty or line.product_uom_qty ]] [[ line.product_uos and line.product_uos.name or line.product_uom.name ]]</para>
+</td>
+<td>
+<para style="P9">[[ line.price_unit ]]</para>
+</td>
+<td>
+<para style="P9">[[ (line.discount and str(line.discount)+'%')or '' ]]</para>
+</td>
+<td>
+<para style="P9">[[ line.price_subtotal ]]</para>
+</td>
+</tr>
+</blockTable>
+<blockTable colWidths="52.0,366.0,110.0" style="Tableau5">
+<tr>
+<td>
+<para style="P10">[[ repeatIn((line.notes and line.notes.splitlines()) or [], 'l') ]]</para>
+</td>
+<td>
+<para style="P11">[[ l or removeParentNode('table') ]]</para>
+</td>
+<td>
+<para style="P10">
+<font color="white"> </font>
+</para>
+</td>
+</tr>
+</blockTable>
+</section>
+<blockTable colWidths="348.0,69.0,110.0" style="Tableau6">
+<tr>
+<td>
+<para style="P24">
+<font color="white"> </font>
+</para>
+</td>
+<td>
+<para style="P25">Net Total&#xA0;:</para>
+</td>
+<td>
+<para style="P25">[[ o.amount_untaxed ]] [[ o.pricelist_id.currency_id.name ]]</para>
+</td>
+</tr>
+<tr>
+<td>
+<para style="P24">
+<font color="white"> </font>
+</para>
+</td>
+<td>
+<para style="P25">Taxes&#xA0;:</para>
+</td>
+<td>
+<para style="P25">[[ o.amount_tax ]] [[ o.pricelist_id.currency_id.name ]]</para>
+</td>
+</tr>
+<tr>
+<td>
+<para style="P22">
+<font color="white"> </font>
+</para>
+</td>
+<td>
+<para style="P12">TOTAL&#xA0;:</para>
+</td>
+<td>
+<para style="P12">[[ o.amount_total ]] [[ o.pricelist_id.currency_id.name ]]</para>
+</td>
+</tr>
+</blockTable>
+<para style="P13">
+<font color="white"> </font>
+</para>
+<blockTable colWidths="527.0" style="Tableau4">
+<tr>
+<td>
+<para style="P3">[[ format(o.note or '') ]]</para>
+</td>
+</tr>
+<tr>
+<td>
+<para style="P3">[[ format((o.partner_id.property_payment_term and o.partner_id.property_payment_term.note) or '') ]]</para>
+</td>
+</tr>
+</blockTable>
+<para style="P4">
+<font color="white"> </font>
+</para>
+</story>
+</document>
 

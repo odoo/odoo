@@ -30,15 +30,14 @@
                 <form string='Invoice Line'>
                     <notebook>
                         <page string='Line'>
-                            <field name='name' select='1' colspan='4'/>
-                            <field name='account_id' domain='[(&apos;company_id&apos;, &apos;=&apos;, parent.company_id), (&apos;journal_id&apos;, &apos;=&apos;, parent.journal_id), (&apos;type&apos;, &apos;&lt;&gt;&apos;, &apos;view&apos;)]' on_change='onchange_account_id(parent.partner_id,account_id)'/>
-                            <field name='account_analytic_id' domain='[(&apos;type&apos;,&apos;&lt;&gt;&apos;,&apos;view&apos;), (&apos;company_id&apos;, &apos;=&apos;, parent.company_id)]'/>
-                            <newline/>
                             <field name='product_id' on_change='product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id)' select='1'/>
                             <field name='uos_id'/>
                             <field name='quantity' select='1'/>
                             <field name='price_unit' select='1'/>
                             <field name='discount'/>
+                            <field name='name' select='1' colspan='4'/>
+                            <field name='account_id' domain='[(&apos;company_id&apos;, &apos;=&apos;, parent.company_id), (&apos;journal_id&apos;, &apos;=&apos;, parent.journal_id), (&apos;type&apos;, &apos;&lt;&gt;&apos;, &apos;view&apos;)]' on_change='onchange_account_id(parent.partner_id,account_id)'/>
+                            <field name='account_analytic_id' domain='[(&apos;type&apos;,&apos;&lt;&gt;&apos;,&apos;view&apos;), (&apos;company_id&apos;, &apos;=&apos;, parent.company_id)]'/>
                             <newline/>
                             <field name='price_subtotal'/>
                             <field name='invoice_line_tax_id' colspan='4'/>

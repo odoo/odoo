@@ -192,12 +192,11 @@
         </record>
         <record model="workflow.activity" id="act_wait_done">
             <field name="wkf_id" ref="wkf"/>
-            <field name="flow_stop">True</field>
             <field name="name">wait_done</field>
             <field name="kind">function</field>
-            <field name="action">write({'state':'done'})</field>
+            <field name="action">write({'state':'waiting'})</field>
         </record>
-        
+
         <record model="workflow.activity" id="act_done">
             <field name="wkf_id" ref="wkf"/>
             <field name="flow_stop">True</field>
@@ -217,6 +216,14 @@
             <field name="signal">button_wait_done</field>
             <field name="condition">True</field>
         </record>
+        <record model="workflow.transition" id="trans_confirm_wait_done">
+            <field name="act_from" ref="act_wait_done"/>
+            <field name="act_to" ref="act_done"/>
+            <field name="condition">check_move_done()</field>
+            <field name="trigger_model">stock.move</field>
+            <field name="trigger_expr_id">[move_id.id]</field>
+        </record>
+
         <record model="workflow.transition" id="trans_confirm_cancel">
             <field name="act_from" ref="act_confirm"/>
             <field name="act_to" ref="act_cancel"/>
@@ -241,6 +248,11 @@
         </record>
         <record model="workflow.transition" id="trans_confirm_mts_cancel">
             <field name="act_from" ref="act_confirm_mts"/>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="signal">button_cancel</field>
+        </record>
+        <record model="workflow.transition" id="trans_confirm_waiting_cancel">
+            <field name="act_from" ref="act_wait_done"/>
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">button_cancel</field>
         </record>

@@ -55,7 +55,8 @@ import time
 _reconcile_form = '''<?xml version="1.0"?>
 <form string="Reconciliation">
 	<separator string="Options" colspan="4"/>
-	<field name="account_ids" colspan="4" domain="[('reconcile','=',1)]"/>
+	<field name="account_ids" colspan="4" domain="[('reconcile','=',1)]" views="account.view_account_list">
+	</field>
 	<field name="date1"/>
 	<field name="date2"/>
 	<field name="power"/>

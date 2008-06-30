@@ -90,9 +90,9 @@
                                     <notebook>
                                         <page string='Order Line'>
                                             <separator string='Automatic Declaration' colspan='4'/>
+                                            <field name='product_id' on_change='product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, &apos;lang&apos; in context and context[&apos;lang&apos;], True, parent.date_order)' context='partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom' colspan='4' select='1'/>
                                             <field name='product_uom_qty' on_change='product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, &apos;lang&apos; in context and context[&apos;lang&apos;], False, parent.date_order)' context='partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom' select='1'/>
                                             <field name='product_uom' on_change='product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, &apos;lang&apos; in context and context[&apos;lang&apos;], False, parent.date_order)'/>
-                                            <field name='product_id' on_change='product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, &apos;lang&apos; in context and context[&apos;lang&apos;], True, parent.date_order)' context='partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom' colspan='4' select='1'/>
                                             <separator string='Manual Description' colspan='4'/>
                                             <field name='name' colspan='4' select='2'/>
                                             <field name='price_unit' select='2'/>
@@ -129,7 +129,6 @@
                                 </form>
                                 <tree string='Sales order lines'>
                                     <field name='name' colspan='4'/>
-                                    <field name='product_id'/>
                                     <field name='product_uom_qty' string='Qty'/>
                                     <field name='product_uom' string='UoM'/>
                                     <field name='discount'/>

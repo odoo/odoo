@@ -680,7 +680,7 @@ class mrp_procurement(osv.osv):
 		'property_ids': fields.many2many('mrp.property', 'mrp_procurement_property_rel', 'procurement_id','property_id', 'Properties'),
 
 		'message': fields.char('Latest error', size=64),
-		'state': fields.selection([('draft','Draft'),('confirmed','Confirmed'),('exception','Exception'),('running','Running'),('cancel','Cancel'),('done','Done')], 'State')
+		'state': fields.selection([('draft','Draft'),('confirmed','Confirmed'),('exception','Exception'),('running','Running'),('cancel','Cancel'),('done','Done'),('waiting','Waiting')], 'State')
 	}
 	_defaults = {
 		'state': lambda *a: 'draft',
@@ -1065,8 +1065,8 @@ class StockMove(osv.osv):
 						'move_dest_id': move.id,
 						'state': state,
 						'location_dest_id': dest,
-						'move_history_ids2': [(6,0,[move.id])],
-						'move_history_ids': [],
+						'move_history_ids': [(6,0,[move.id])],
+						'move_history_ids2': [(6,0,[])],
 						'procurements': []
 					}
 					mid = self.pool.get('stock.move').copy(cr, uid, move.id, default=valdef)
