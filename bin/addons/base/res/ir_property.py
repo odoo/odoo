@@ -74,7 +74,8 @@ class ir_property(osv.osv):
 		cr.execute('select id from ir_model_fields where name=%s and model=%s', (name, model))
 		res = cr.fetchone()
 		if res:
-			nid = self.search(cr, uid, [('fields_id','=',res[0]),('res_id','=',res_id)])
+			ucid = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
+			nid = self.search(cr, uid, [('fields_id','=',res[0]),('res_id','=',res_id),('company_id','=',ucid)])
 			if nid:
 				d = self.browse(cr, uid, nid[0], context).value
 				return (d and int(d.split(',')[1])) or False
