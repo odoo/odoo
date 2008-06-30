@@ -151,6 +151,8 @@ class _format(object):
 		self.object = object
 		self.name=name
 		lc, encoding = locale.getdefaultlocale()
+		if not encoding:
+			encoding = 'UTF-8'
 		if encoding == 'utf':
 			encoding = 'UTF-8'
 		if encoding == 'cp1252':
@@ -329,6 +331,8 @@ class rml_parse(object):
 
 	def formatLang(self, value, digit=2, date=False):
 		lc, encoding = locale.getdefaultlocale()
+		if not encoding:
+			encoding = 'UTF-8'
 		if encoding == 'utf':
 			encoding = 'UTF-8'
 		if encoding == 'cp1252':

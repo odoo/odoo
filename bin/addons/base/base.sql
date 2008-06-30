@@ -148,6 +148,8 @@ CREATE TABLE res_users (
     active boolean default True,
     login varchar(64) NOT NULL UNIQUE,
     password varchar(32) default null,
+    context_tz varchar(64) default null,
+    signature text,
 --  action_id int references ir_act_window on delete set null,
     action_id int,
     primary key(id)

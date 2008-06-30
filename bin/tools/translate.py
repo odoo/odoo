@@ -298,77 +298,77 @@ def trans_load_data(db_name, data, lang, strict=False, lang_name=None):
 		line = 1
 		for row in reader:
 			line += 1
-			try:
-				# skip empty rows and rows where the translation field is empty
-				if (not row) or (not row[4]):
-					continue
+			#try:
+			# skip empty rows and rows where the translation field is empty
+			if (not row) or (not row[4]):
+				continue
 
-				# dictionary which holds values for this line of the csv file
-				# {'lang': ..., 'type': ..., 'name': ..., 'res_id': ...,
-				#  'src': ..., 'value': ...}
-				dic = {'lang': lang}
-				for i in range(len(f)):
+			# dictionary which holds values for this line of the csv file
+			# {'lang': ..., 'type': ..., 'name': ..., 'res_id': ...,
+			#  'src': ..., 'value': ...}
+			dic = {'lang': lang}
+			for i in range(len(f)):
 #					if trans_obj._columns[f[i]]._type == 'integer':
 #						row[i] = row[i] and int(row[i]) or False
-					dic[f[i]] = row[i]
+				dic[f[i]] = row[i]
 
-				try:
-					dic['res_id'] = int(dic['res_id'])
-				except:
-					model_data_ids = model_data_obj.search(cr, uid, [
-						('model', '=', dic['name'].split(',')[0]),
-						('module', '=', dic['res_id'].split('.', 1)[0]),
-						('name', '=', dic['res_id'].split('.', 1)[1]),
-						])
-					if model_data_ids:
-						dic['res_id'] = model_data_obj.browse(cr, uid,
-								model_data_ids[0]).res_id
-					else:
-						dic['res_id'] = False
-
-				if dic['type'] == 'model' and not strict:
-					(model, field) = dic['name'].split(',')
-
-					# get the ids of the resources of this model which share
-					# the same source
-					obj = pool.get(model)
-					if obj:
-						ids = obj.search(cr, uid, [(field, '=', dic['src'])])
-
-						# if the resource id (res_id) is in that list, use it,
-						# otherwise use the whole list
-						ids = (dic['res_id'] in ids) and [dic['res_id']] or ids
-						for id in ids:
-							dic['res_id'] = id
-							ids = trans_obj.search(cr, uid, [
-								('lang', '=', lang),
-								('type', '=', dic['type']),
-								('name', '=', dic['name']),
-								('src', '=', dic['src']),
-								('res_id', '=', dic['res_id'])
-							])
-							if ids:
-								trans_obj.write(cr, uid, ids, {'value': dic['value']})
-							else:
-								trans_obj.create(cr, uid, dic)
-				else:
-					ids = trans_obj.search(cr, uid, [
-						('lang', '=', lang),
-						('type', '=', dic['type']),
-						('name', '=', dic['name']),
-						('src', '=', dic['src'])
+			try:
+				dic['res_id'] = int(dic['res_id'])
+			except:
+				model_data_ids = model_data_obj.search(cr, uid, [
+					('model', '=', dic['name'].split(',')[0]),
+					('module', '=', dic['res_id'].split('.', 1)[0]),
+					('name', '=', dic['res_id'].split('.', 1)[1]),
 					])
-					if ids:
-						trans_obj.write(cr, uid, ids, {'value': dic['value']})
-					else:
-						trans_obj.create(cr, uid, dic)
-				cr.commit()
-			except Exception, e:
-				logger.notifyChannel('init', netsvc.LOG_ERROR,
-						'Import error: %s on line %d: %s!' % (str(e), line, row))
-				cr.rollback()
-				cr.close()
-				cr = pooler.get_db(db_name).cursor()
+				if model_data_ids:
+					dic['res_id'] = model_data_obj.browse(cr, uid,
+							model_data_ids[0]).res_id
+				else:
+					dic['res_id'] = False
+
+			if dic['type'] == 'model' and not strict:
+				(model, field) = dic['name'].split(',')
+
+				# get the ids of the resources of this model which share
+				# the same source
+				obj = pool.get(model)
+				if obj:
+					ids = obj.search(cr, uid, [(field, '=', dic['src'])])
+
+					# if the resource id (res_id) is in that list, use it,
+					# otherwise use the whole list
+					ids = (dic['res_id'] in ids) and [dic['res_id']] or ids
+					for id in ids:
+						dic['res_id'] = id
+						ids = trans_obj.search(cr, uid, [
+							('lang', '=', lang),
+							('type', '=', dic['type']),
+							('name', '=', dic['name']),
+							('src', '=', dic['src']),
+							('res_id', '=', dic['res_id'])
+						])
+						if ids:
+							trans_obj.write(cr, uid, ids, {'value': dic['value']})
+						else:
+							trans_obj.create(cr, uid, dic)
+			else:
+				ids = trans_obj.search(cr, uid, [
+					('lang', '=', lang),
+					('type', '=', dic['type']),
+					('name', '=', dic['name']),
+					('src', '=', dic['src'])
+				])
+				if ids:
+					trans_obj.write(cr, uid, ids, {'value': dic['value']})
+				else:
+					trans_obj.create(cr, uid, dic)
+			cr.commit()
+			#except Exception, e:
+			#	logger.notifyChannel('init', netsvc.LOG_ERROR,
+			#			'Import error: %s on line %d: %s!' % (str(e), line, row))
+			#	cr.rollback()
+			#	cr.close()
+			#	cr = pooler.get_db(db_name).cursor()
 		cr.close()
 		logger.notifyChannel("init", netsvc.LOG_INFO,
 				"translation file loaded succesfully")
