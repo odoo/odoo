@@ -77,6 +77,16 @@ def _child_get(node, childs):
 			clds.append(n)
 	return clds
 
+class PageCount(platypus.Flowable):
+	def draw(self):
+		self.canv.beginForm("pageCount")
+		self.canv.drawString(0, 0, str(self.canv.getPageNumber()))
+		self.canv.endForm()
+
+class PageReset(platypus.Flowable):
+	def draw(self):
+		self.canv._pageNumber = 0
+
 class _rml_styles(object):
 	def __init__(self, nodes):
 		self.styles = {}
@@ -225,6 +235,7 @@ class _rml_doc(object):
 			pd = self.dom.documentElement.getElementsByTagName('pageDrawing')[0]
 			pd_obj = _rml_canvas(self.canvas, None, self, self.images, path=self.path)
 			pd_obj.render(pd)
+
 			self.canvas.showPage()
 			self.canvas.save()
 
@@ -237,10 +248,20 @@ class _rml_canvas(object):
 		self.images = images
 		self.path = path
 
-	def _textual(self, node):
+	def _textual(self, node, x=0, y=0):
 		rc = ''
 		for n in node.childNodes:
 			if n.nodeType == n.ELEMENT_NODE:
+				if n.localName == 'seq':
+					from reportlab.lib.sequencer import getSequencer
+					seq = getSequencer()
+					rc += str(seq.next(n.getAttribute('id')))
+				if n.localName == 'pageCount':
+					if x or y:
+						self.canvas.translate(x,y)
+					self.canvas.doForm('pageCount')
+					if x or y:
+						self.canvas.translate(-x,-y)
 				if n.localName == 'pageNumber':
 					rc += str(self.canvas.getPageNumber())
 			elif n.nodeType in (node.CDATA_SECTION_NODE, node.TEXT_NODE):
@@ -249,11 +270,14 @@ class _rml_canvas(object):
 		return rc.encode(encoding, 'replace')
 
 	def _drawString(self, node):
-		self.canvas.drawString(text=self._textual(node), **utils.attr_get(node, ['x','y']))
+		v = utils.attr_get(node, ['x','y'])
+		self.canvas.drawString(text=self._textual(node, **v), **v)
 	def _drawCenteredString(self, node):
-		self.canvas.drawCentredString(text=self._textual(node), **utils.attr_get(node, ['x','y']))
+		v = utils.attr_get(node, ['x','y'])
+		self.canvas.drawCentredString(text=self._textual(node, **v), **v)
 	def _drawRightString(self, node):
-		self.canvas.drawRightString(text=self._textual(node), **utils.attr_get(node, ['x','y']))
+		v = utils.attr_get(node, ['x','y'])
+		self.canvas.drawRightString(text=self._textual(node, **v), **v)
 	def _rect(self, node):
 		if node.hasAttribute('round'):
 			self.canvas.roundRect(radius=utils.unit_get(node.getAttribute('round')), **utils.attr_get(node, ['x','y','width','height'], {'fill':'bool','stroke':'bool'}))
@@ -649,6 +673,8 @@ class _rml_flowable(object):
 			return platypus.Spacer(width=width, height=length)
 		elif node.localName=='section':
 			return self.render(node)
+		elif node.localName == 'pageNumberReset':
+			return PageReset()
 		elif node.localName in ('pageBreak', 'nextPage'):
 			return platypus.PageBreak()
 		elif node.localName=='condPageBreak':
@@ -690,7 +716,6 @@ class EndFrameFlowable(ActionFlowable):
 		ActionFlowable.__init__(self,('frameEnd',resume))
 
 class TinyDocTemplate(platypus.BaseDocTemplate):
-
 	def ___handle_pageBegin(self):
 		self.page = self.page + 1
 		self.pageTemplate.beforeDrawPage(self.canv,self)
@@ -707,6 +732,9 @@ class TinyDocTemplate(platypus.BaseDocTemplate):
 				self.frame = f
 				break
 		self.handle_frameBegin()
+	def afterFlowable(self, flowable):
+		if isinstance(flowable, PageReset):
+			self.canv._pageNumber = 0
 
 class _rml_template(object):
 	def __init__(self, out, node, doc, images={}, path='.'):
@@ -743,6 +771,7 @@ class _rml_template(object):
 		r = _rml_flowable(self.doc,images=self.images, path=self.path)
 		for node_story in node_stories:
 			fis += r.render(node_story)
+			fis.append(PageCount())
 			fis.append(platypus.PageBreak())
 		self.doc_tmpl.build(fis)
 
