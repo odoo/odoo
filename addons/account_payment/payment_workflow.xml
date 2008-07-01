@@ -1,31 +1,32 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
-        <record model="workflow" id="wkf_payment_order">
+        <record id="wkf_payment_order" model="workflow">
             <field name="name">Payment Order Workflow</field>
             <field name="osv">payment.order</field>
             <field name="on_create">True</field>
         </record>
         <!--Activity -->
-        <record model="workflow.activity" id="act_draft">
+        <record id="act_draft" model="workflow.activity">
             <field name="name">draft</field>
             <field name="wkf_id" ref="wkf_payment_order"/>
             <field name="flow_start">True</field>
             <field name="action">write({'state':'draft'})</field>
             <field name="kind">function</field>
         </record>
-        <record model="workflow.activity" id="act_open">
+        <record id="act_open" model="workflow.activity">
             <field name="name">open</field>
             <field name="wkf_id" ref="wkf_payment_order"/>
-            <field name="action">action_open()&#10;write({'state':'open'})</field>
+            <field name="action">action_open()
+write({'state':'open'})</field>
             <field name="kind">function</field>
         </record>
-        <record model="workflow.activity" id="act_done">
+        <record id="act_done" model="workflow.activity">
             <field name="name">done</field>
             <field name="wkf_id" ref="wkf_payment_order"/>
             <field name="flow_stop">True</field>
         </record>
-        <record model="workflow.activity" id="act_cancel">
+        <record id="act_cancel" model="workflow.activity">
             <field name="name">cancel</field>
             <field name="wkf_id" ref="wkf_payment_order"/>
             <field name="action">write({'state':'cancel'})</field>
@@ -34,23 +35,23 @@
         </record>
         
         <!-- Transition -->
-        <record model="workflow.transition" id="trans_draft_open">
+        <record id="trans_draft_open" model="workflow.transition">
             <field name="act_from" ref="act_draft"/>
             <field name="act_to" ref="act_open"/>
             <field name="signal">open</field>
         </record>
         
-        <record model="workflow.transition" id="trans_open_done">
+        <record id="trans_open_done" model="workflow.transition">
             <field name="act_from" ref="act_open"/>
             <field name="act_to" ref="act_done"/>
             <field name="signal">done</field>
         </record>
-        <record model="workflow.transition" id="trans_draft_cancel">
+        <record id="trans_draft_cancel" model="workflow.transition">
             <field name="act_from" ref="act_draft"/>
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">cancel</field>
         </record>
-        <record model="workflow.transition" id="trans_open_cancel">
+        <record id="trans_open_cancel" model="workflow.transition">
             <field name="act_from" ref="act_open"/>
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">cancel</field>

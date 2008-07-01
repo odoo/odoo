@@ -1,214 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
         
-        <record id='hr_contract_wage_type_period_view_form' model='ir.ui.view'>
-            <field name='name'>hr.contract.wage.type.period.view.form</field>
-            <field name='model'>hr.contract.wage.type.period</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Wage period'>
-                    <field name='name' colspan='4'/>
-                    <field name='factor_days'/>
+        <record id="hr_contract_wage_type_period_view_form" model="ir.ui.view">
+            <field name="name">hr.contract.wage.type.period.view.form</field>
+            <field name="model">hr.contract.wage.type.period</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Wage period">
+                    <field colspan="4" name="name"/>
+                    <field name="factor_days"/>
                 </form>
             </field>
         </record>
         
         
-        <record id='hr_hr_employee_marital_status_form' model='ir.ui.view'>
-            <field name='name'>hr.hr.employee.marital.status</field>
-            <field name='model'>hr.employee.marital.status</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Marital Status'>
-                    <field name='name' nolabel='1' select='1' colspan='4'/>
-                    <field name='description' nolabel='1' colspan='4'/>
+        <record id="hr_hr_employee_marital_status_form" model="ir.ui.view">
+            <field name="name">hr.hr.employee.marital.status</field>
+            <field name="model">hr.employee.marital.status</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Marital Status">
+                    <field colspan="4" name="name" nolabel="1" select="1"/>
+                    <field colspan="4" name="description" nolabel="1"/>
                 </form>
             </field>
         </record>
         
-        <record id='hr_contract_wage_type_view_form' model='ir.ui.view'>
-            <field name='name'>hr.contract.wage.type.view.form</field>
-            <field name='model'>hr.contract.wage.type</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Wage Type'>
-                    <field name='name' colspan='4'/>
-                    <field name='period_id'/>
-                    <field name='type'/>
-                    <separator string='Hourly cost computation' colspan='4'/>
-                    <field name='factor_type'/>
+        <record id="hr_contract_wage_type_view_form" model="ir.ui.view">
+            <field name="name">hr.contract.wage.type.view.form</field>
+            <field name="model">hr.contract.wage.type</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Wage Type">
+                    <field colspan="4" name="name"/>
+                    <field name="period_id"/>
+                    <field name="type"/>
+                    <separator colspan="4" string="Hourly cost computation"/>
+                    <field name="factor_type"/>
                 </form>
             </field>
         </record>
         
-        <record id='hr_contract_wage_type_view_tree' model='ir.ui.view'>
-            <field name='name'>hr.contract.wage.type.view.tree</field>
-            <field name='model'>hr.contract.wage.type</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree string='Wage Types'>
-                    <field name='name'/>
-                    <field name='type'/>
+        <record id="hr_contract_wage_type_view_tree" model="ir.ui.view">
+            <field name="name">hr.contract.wage.type.view.tree</field>
+            <field name="model">hr.contract.wage.type</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Wage Types">
+                    <field name="name"/>
+                    <field name="type"/>
                 </tree>
             </field>
         </record>
-        <record id='action_hr_contract_wage_type' model='ir.actions.act_window'>
-            <field name='name'>Contract Wage Type</field>
-            <field name='res_model'>hr.contract.wage.type</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[]</field>
+        <record id="action_hr_contract_wage_type" model="ir.actions.act_window">
+            <field name="name">Contract Wage Type</field>
+            <field name="res_model">hr.contract.wage.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
         </record>
-        <menuitem name='Human Resources/Configuration/Contract/Contract Wage Type' action='action_hr_contract_wage_type' id='hr_menu_contract_wage_type'/>
+        <menuitem id="next_id_56" name="Contract" parent="hr.menu_hr_configuration"/><menuitem action="action_hr_contract_wage_type" id="hr_menu_contract_wage_type" parent="next_id_56"/>
         
-        <record id='action_hr_contract_wage_type_period' model='ir.actions.act_window'>
-            <field name='name'>Wage period</field>
-            <field name='res_model'>hr.contract.wage.type.period</field>
-            <field name='view_type'>form</field>
+        <record id="action_hr_contract_wage_type_period" model="ir.actions.act_window">
+            <field name="name">Wage period</field>
+            <field name="res_model">hr.contract.wage.type.period</field>
+            <field name="view_type">form</field>
         </record>
-        <menuitem name='Human Resources/Configuration/Contract/Contract Wage Period' action='action_hr_contract_wage_type_period' id='hr_menu_contract_wage_type_period'/>
+        <menuitem action="action_hr_contract_wage_type_period" id="hr_menu_contract_wage_type_period" parent="hr_contract.next_id_56"/>
         
         
-        <record id='hr_hr_employee_view_form2' model='ir.ui.view'>
-            <field name='name'>hr.hr.employee.view.form2</field>
-            <field name='model'>hr.employee</field>
-            <field name='inherit_id' ref='hr.view_employee_form'/>
-            <field name='arch' type='xml'>
-                <notebook position='inside'>
-                    <page string='Contracts'>
-                        <field name='contract_ids' nolabel='1' colspan='4'>
-                            <tree string='Contracts'>
-                                <field name='name'/>
-                                <field name='function'/>
-                                <field name='date_start'/>
-                                <field name='date_end'/>
-                                <field name='working_hours_per_day'/>
-                                <field name='wage_type_id'/>
-                                <field name='wage'/>
+        <record id="hr_hr_employee_view_form2" model="ir.ui.view">
+            <field name="name">hr.hr.employee.view.form2</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Contracts">
+                        <field colspan="4" name="contract_ids" nolabel="1">
+                            <tree string="Contracts">
+                                <field name="name"/>
+                                <field name="function"/>
+                                <field name="date_start"/>
+                                <field name="date_end"/>
+                                <field name="working_hours_per_day"/>
+                                <field name="wage_type_id"/>
+                                <field name="wage"/>
                             </tree>
                             
-                            <form string='Contract'>
-                                <separator string='Generalities' colspan='4'/>
-                                <field name='name' colspan='4' select='1'/>
+                            <form string="Contract">
+                                <separator colspan="4" string="Generalities"/>
+                                <field colspan="4" name="name" select="1"/>
                                 <newline/>
-                                <separator string='Contract Duration' colspan='4'/>
-                                <field name='function'/>
-                                <field name='working_hours_per_day'/>
-                                <field name='date_start' select='1'/>
-                                <field name='date_end' select='1'/>
+                                <separator colspan="4" string="Contract Duration"/>
+                                <field name="function"/>
+                                <field name="working_hours_per_day"/>
+                                <field name="date_start" select="1"/>
+                                <field name="date_end" select="1"/>
                                 
-                                <separator string='Salary' colspan='4'/>
-                                <field name='wage_type_id'/>
-                                <field name='wage'/>
+                                <separator colspan="4" string="Salary"/>
+                                <field name="wage_type_id"/>
+                                <field name="wage"/>
                                 
-                                <separator string='Notes' colspan='4'/>
-                                <field name='notes' nolabel='1' colspan='4'/>
+                                <separator colspan="4" string="Notes"/>
+                                <field colspan="4" name="notes" nolabel="1"/>
                             </form>
                         </field>
                     </page>
-                    <page string='Miscelleanous'>
-                        <field name='manager' select='1'/>
-                        <field name='soc_security' select='1'/>
-                        <field name='medic_exam' select='1'/>
-                        <field name='audiens_num'/>
-                        <field name='nationality'/>
-                        <field name='birth_date'/>
-                        <field name='place_of_birth'/>
-                        <field name='marital_status'/>
-                        <field name='children'/>
+                    <page string="Miscelleanous">
+                        <field name="manager" select="1"/>
+                        <field name="soc_security" select="1"/>
+                        <field name="medic_exam" select="1"/>
+                        <field name="audiens_num"/>
+                        <field name="nationality"/>
+                        <field name="birth_date"/>
+                        <field name="place_of_birth"/>
+                        <field name="marital_status"/>
+                        <field name="children"/>
                     </page>
                 </notebook>
             </field>
         </record>
         
-        <record id='hr_contract_type_view_form' model='ir.ui.view'>
-            <field name='name'>hr.contract.type.view.form</field>
-            <field name='model'>hr.contract.type</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Contract Type'>
-                    <field name='name' colspan='4'/>
-                    <field name='description' colspan='4'/>
+        <record id="hr_contract_type_view_form" model="ir.ui.view">
+            <field name="name">hr.contract.type.view.form</field>
+            <field name="model">hr.contract.type</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Contract Type">
+                    <field colspan="4" name="name"/>
+                    <field colspan="4" name="description"/>
                 </form>
             </field>
         </record>
         
-        <record id='action_hr_marital_status' model='ir.actions.act_window'>
-            <field name='name'>Marital Status</field>
-            <field name='res_model'>hr.employee.marital.status</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
+        <record id="action_hr_marital_status" model="ir.actions.act_window">
+            <field name="name">Marital Status</field>
+            <field name="res_model">hr.employee.marital.status</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
         </record>
         
-        <menuitem name='Human Resources/Configuration/Marital Status' action='action_hr_marital_status' id='hr_menu_marital_status'/>
+        <menuitem action="action_hr_marital_status" id="hr_menu_marital_status" parent="hr.menu_hr_configuration"/>
         
-        <record id='hr_contract_view_form' model='ir.ui.view'>
-            <field name='name'>hr.contract.view.form</field>
-            <field name='model'>hr.contract</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Contract'>
-                    <separator string='Generalities' colspan='4'/>
-                    <field name='name' select='1'/>
-                    <field name='employee_id' select='1'/>
-                    <field name='function'/>
+        <record id="hr_contract_view_form" model="ir.ui.view">
+            <field name="name">hr.contract.view.form</field>
+            <field name="model">hr.contract</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Contract">
+                    <separator colspan="4" string="Generalities"/>
+                    <field name="name" select="1"/>
+                    <field name="employee_id" select="1"/>
+                    <field name="function"/>
                     <newline/>
                     
-                    <separator string='Contract Duration' colspan='4'/>
-                    <field name='date_start' select='1'/>
-                    <field name='date_end' select='1'/>
-                    <field name='working_hours_per_day'/>
+                    <separator colspan="4" string="Contract Duration"/>
+                    <field name="date_start" select="1"/>
+                    <field name="date_end" select="1"/>
+                    <field name="working_hours_per_day"/>
                     <newline/>
                     
-                    <separator string='Remuneration' colspan='4'/>
-                    <field name='wage_type_id'/>
-                    <field name='wage'/>
-                    <separator string='Notes' colspan='4'/>
-                    <field name='notes' nolabel='1' colspan='4'/>
+                    <separator colspan="4" string="Remuneration"/>
+                    <field name="wage_type_id"/>
+                    <field name="wage"/>
+                    <separator colspan="4" string="Notes"/>
+                    <field colspan="4" name="notes" nolabel="1"/>
                 </form>
             </field>
         </record>
         
-        <record id='hr_contract_type_view_tree' model='ir.ui.view'>
-            <field name='name'>hr.contract.type.view.tree</field>
-            <field name='model'>hr.contract.type</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree string='Contract Type'>
-                    <field name='name' colspan='4'/>
+        <record id="hr_contract_type_view_tree" model="ir.ui.view">
+            <field name="name">hr.contract.type.view.tree</field>
+            <field name="model">hr.contract.type</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Contract Type">
+                    <field colspan="4" name="name"/>
                 </tree>
             </field>
         </record>
         
-        <record id='hr_contract_view_tree' model='ir.ui.view'>
-            <field name='name'>hr.contract.view.tree</field>
-            <field name='model'>hr.contract</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree string='Contracts'>
-                    <field name='name'/>
-                    <field name='employee_id'/>
-                    <field name='function'/>
-                    <field name='date_start'/>
-                    <field name='date_end'/>
-                    <field name='working_hours_per_day'/>
-                    <field name='wage_type_id'/>
-                    <field name='wage'/>
+        <record id="hr_contract_view_tree" model="ir.ui.view">
+            <field name="name">hr.contract.view.tree</field>
+            <field name="model">hr.contract</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Contracts">
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="function"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <field name="working_hours_per_day"/>
+                    <field name="wage_type_id"/>
+                    <field name="wage"/>
                 </tree>
             </field>
         </record>
         
-        <record id='action_hr_contract' model='ir.actions.act_window'>
-            <field name='name'>Contract</field>
-            <field name='res_model'>hr.contract</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>form,tree</field>
-            <field name='domain'>[]</field>
+        <record id="action_hr_contract" model="ir.actions.act_window">
+            <field name="name">Contract</field>
+            <field name="res_model">hr.contract</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="domain">[]</field>
         </record>
         
-        <menuitem name='Human Resources/Contract' action='action_hr_contract' id='hr_menu_contract'/>
+        <menuitem action="action_hr_contract" id="hr_menu_contract" parent="hr.menu_hr_root"/>
         
     </data>
 </terp>
-
-

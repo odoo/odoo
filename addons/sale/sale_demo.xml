@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data noupdate="1">
         
@@ -6,30 +6,30 @@
 	Resource: sale.order
 	-->
         
-        <record model="sale.order" id="order">
+        <record id="order" model="sale.order">
             <field name="shop_id" ref="shop"/>
-            <field name="pricelist_id" search="[]" model="product.pricelist"/>
+            <field model="product.pricelist" name="pricelist_id" search="[]"/>
             <field name="user_id" ref="base.user_admin"/>
-            <field name="partner_id" search="[]" model="res.partner"/>
-            <field name="partner_invoice_id" search="[]" model="res.partner.address"/>
-            <field name="partner_shipping_id" search="[]" model="res.partner.address"/>
-            <field name="partner_order_id" search="[]" model="res.partner.address"/>
+            <field model="res.partner" name="partner_id" search="[]"/>
+            <field model="res.partner.address" name="partner_invoice_id" search="[]"/>
+            <field model="res.partner.address" name="partner_shipping_id" search="[]"/>
+            <field model="res.partner.address" name="partner_order_id" search="[]"/>
         </record>
         
         <!--
 	Resource: sale.order.line
 	-->
         
-        <record model="sale.order.line" id="line">
+        <record id="line" model="sale.order.line">
             <field name="order_id" ref="order"/>
             <field name="name">New server config + material</field>
-            <field name="product_id" search="[]" model="product.product"/>
-            <field name="product_uom" search="[]" model="product.uom"/>
+            <field model="product.product" name="product_id" search="[]"/>
+            <field model="product.uom" name="product_uom" search="[]"/>
             <field name="price_unit">123</field>
             <field name="type">make_to_stock</field>
         </record>
         
-        <record model="sale.order.line" id="line1">
+        <record id="line1" model="sale.order.line">
             <field name="order_id" ref="order"/>
             <field name="name">[PC1] Basic PC</field>
             <field name="product_id" ref="product.product_product_pc1"/>
@@ -39,7 +39,7 @@
             <field name="product_uos_qty">3</field>
             <field name="type">make_to_stock</field>
         </record>
-        <record model="sale.order.line" id="line13">
+        <record id="line13" model="sale.order.line">
             <field name="order_id" ref="order"/>
             <field name="name">[PC1] Basic PC</field>
             <field name="product_id" ref="product.product_product_pc1"/>
@@ -49,7 +49,7 @@
             <field name="product_uos_qty">3</field>
             <field name="type">make_to_stock</field>
         </record>
-        <record model="sale.order.line" id="line12">
+        <record id="line12" model="sale.order.line">
             <field name="order_id" ref="order"/>
             <field name="name">[MB1] Mainboard ASUStek A7N8X</field>
             <field name="product_id" ref="product.product_product_mb1"/>
@@ -67,9 +67,9 @@
 	Resource: sale.order
 	-->
         
-        <record model="sale.order" id="order2">
+        <record id="order2" model="sale.order">
             <field name="shop_id" ref="shop"/>
-            <field name="pricelist_id" search="[]" model="product.pricelist"/>
+            <field model="product.pricelist" name="pricelist_id" search="[]"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="partner_id" ref="base.res_partner_2"/>
             <field name="partner_invoice_id" ref="base.res_partner_address_9"/>
@@ -81,7 +81,7 @@
 	Resource: sale.order.line
 	-->
         
-        <record model="sale.order.line" id="line3">
+        <record id="line3" model="sale.order.line">
             <field name="order_id" ref="order2"/>
             <field name="name">[PC2] Computer assembled on demand</field>
             <field name="product_id" ref="product.product_product_pc2"/>
@@ -89,7 +89,7 @@
             <field name="price_unit">540</field>
             <field name="type">make_to_order</field>
         </record>
-        <record model="sale.order.line" id="line4">
+        <record id="line4" model="sale.order.line">
             <field name="order_id" ref="order2"/>
             <field name="name">[MB1] Mainboard ASUStek (purchased on order)</field>
             <field name="product_id" ref="product.product_product_mb1"/>
@@ -106,16 +106,16 @@
         <!--
 	Resource: sale.order
 	-->
-        <record model="sale.order" id="order3">
+        <record id="order3" model="sale.order">
             <field name="shop_id" ref="shop"/>
-            <field name="pricelist_id" search="[]" model="product.pricelist"/>
+            <field model="product.pricelist" name="pricelist_id" search="[]"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="partner_id" ref="base.res_partner_agrolait"/>
             <field name="partner_invoice_id" ref="base.res_partner_address_8"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_8"/>
             <field name="partner_order_id" ref="base.res_partner_address_8"/>
         </record>
-        <record model="sale.order.line" id="line5">
+        <record id="line5" model="sale.order.line">
             <field name="order_id" ref="order3"/>
             <field name="name">[PC1] Basic PC</field>
             <field name="product_id" ref="product.product_product_pc1"/>
@@ -125,7 +125,7 @@
             <field name="type">make_to_order</field>
             <field name="delay">2</field>
         </record>
-        <record model="sale.order.line" id="line6">
+        <record id="line6" model="sale.order.line">
             <field name="order_id" ref="order3"/>
             <field name="name">[PC2] Basic+ PC (assembly on order)</field>
             <field name="product_id" ref="product.product_product_pc2"/>
@@ -135,21 +135,21 @@
             <field name="type">make_to_order</field>
             <field name="delay">7</field>
         </record>
-        <workflow model="sale.order" ref="order3" action="order_confirm" />
+        <workflow action="order_confirm" model="sale.order" ref="order3"/>
         
         <!--
 	Resource: sale.order
 	-->
-        <record model="sale.order" id="order4">
+        <record id="order4" model="sale.order">
             <field name="shop_id" ref="shop"/>
-            <field name="pricelist_id" search="[]" model="product.pricelist"/>
+            <field model="product.pricelist" name="pricelist_id" search="[]"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="partner_id" ref="base.res_partner_5"/>
             <field name="partner_invoice_id" ref="base.res_partner_address_10"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_10"/>
             <field name="partner_order_id" ref="base.res_partner_address_10"/>
         </record>
-        <record model="sale.order.line" id="line7">
+        <record id="line7" model="sale.order.line">
             <field name="order_id" ref="order4"/>
             <field name="name">[PC1] Basic PC</field>
             <field name="product_id" ref="product.product_product_pc1"/>
@@ -159,7 +159,7 @@
             <field name="type">make_to_order</field>
             <field name="delay">8</field>
         </record>
-        <record model="sale.order.line" id="line8">
+        <record id="line8" model="sale.order.line">
             <field name="order_id" ref="order4"/>
             <field name="name">[PC3] Medium PC</field>
             <field name="product_id" ref="product.product_product_pc3"/>
@@ -169,21 +169,21 @@
             <field name="type">make_to_order</field>
             <field name="delay">1</field>
         </record>
-        <workflow model="sale.order" ref="order4" action="order_confirm" />
+        <workflow action="order_confirm" model="sale.order" ref="order4"/>
         
         <!--
 	Resource: sale.order
 	-->
-        <record model="sale.order" id="order5">
+        <record id="order5" model="sale.order">
             <field name="shop_id" ref="shop"/>
-            <field name="pricelist_id" search="[]" model="product.pricelist"/>
+            <field model="product.pricelist" name="pricelist_id" search="[]"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="partner_id" ref="base.res_partner_3"/>
             <field name="partner_invoice_id" ref="base.res_partner_address_zen"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_zen"/>
             <field name="partner_order_id" ref="base.res_partner_address_zen"/>
         </record>
-        <record model="sale.order.line" id="line9">
+        <record id="line9" model="sale.order.line">
             <field name="order_id" ref="order5"/>
             <field name="name">[PC2] Basic+ PC (assembly on order)</field>
             <field name="product_id" ref="product.product_product_pc2"/>
@@ -193,9 +193,9 @@
             <field name="type">make_to_order</field>
             <field name="delay">15</field>
         </record>
-        <workflow model="sale.order" ref="order5" action="order_confirm" />
+        <workflow action="order_confirm" model="sale.order" ref="order5"/>
         
         <!-- Run all schedulers -->
-        <function model="mrp.procurement" name="run_scheduler" />
+        <function model="mrp.procurement" name="run_scheduler"/>
     </data>
 </terp>

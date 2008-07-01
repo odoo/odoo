@@ -1,10 +1,10 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data noupdate="1">
         <!--
 	Request link
 	-->
-        <record model="res.request.link" id="req_link_tracking">
+        <record id="req_link_tracking" model="res.request.link">
             <field name="name">Production Lot</field>
             <field name="object">stock.production.lot</field>
         </record>
@@ -25,12 +25,12 @@
             <field name="usage">view</field>
         </record>
         
-        <record model="stock.location" id="location_inventory">
+        <record id="location_inventory" model="stock.location">
             <field name="name">Inventory loss</field>
             <field name="location_id" ref="stock_location_locations_virtual"/>
             <field name="usage">inventory</field>
         </record>
-        <record model="stock.location" id="location_procurement">
+        <record id="location_procurement" model="stock.location">
             <field name="name">Procurements</field>
             <field name="location_id" ref="stock_location_locations_virtual"/>
             <field name="usage">procurement</field>
@@ -51,7 +51,7 @@
             <field name="usage">customer</field>
         </record>
         <record id="stock_location_company" model="stock.location">
-            <field name="name" model="res.company" use="name" search="[]"/>
+            <field model="res.company" name="name" search="[]" use="name"/>
             <field name="usage">view</field>
             <field name="location_id" ref="stock_location_locations"/>
         </record>
@@ -69,38 +69,38 @@
         <!--
 	Properties
 	-->
-        <record model="ir.property" id="property_stock_supplier" forcecreate="True">
+        <record forcecreate="True" id="property_stock_supplier" model="ir.property">
             <field name="name">property_stock_supplier</field>
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_stock_supplier')]"/>
-            <field name="value" eval="'stock.location,'+str(stock_location_suppliers)"/>
+            <field eval="'stock.location,'+str(stock_location_suppliers)" name="value"/>
         </record>
-        <record model="ir.property" id="property_stock_customer" forcecreate="True">
+        <record forcecreate="True" id="property_stock_customer" model="ir.property">
             <field name="name">property_stock_customer</field>
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_stock_customer')]"/>
-            <field name="value" eval="'stock.location,'+str(stock_location_customers)"/>
+            <field eval="'stock.location,'+str(stock_location_customers)" name="value"/>
         </record>
         
-        <record model="ir.property" id="property_stock_procurement" forcecreate="True">
+        <record forcecreate="True" id="property_stock_procurement" model="ir.property">
             <field name="name">property_stock_procurement</field>
             <field name="fields_id" search="[('model','=','product.template'),('name','=','property_stock_procurement')]"/>
-            <field name="value" eval="'stock.location,'+str(location_procurement)"/>
+            <field eval="'stock.location,'+str(location_procurement)" name="value"/>
         </record>
-        <record model="ir.property" id="property_stock_inventory" forcecreate="True">
+        <record forcecreate="True" id="property_stock_inventory" model="ir.property">
             <field name="name">property_stock_inventory</field>
             <field name="fields_id" search="[('model','=','product.template'),('name','=','property_stock_inventory')]"/>
-            <field name="value" eval="'stock.location,'+str(location_inventory)"/>
+            <field eval="'stock.location,'+str(location_inventory)" name="value"/>
         </record>
-        <record model="ir.property" id="property_stock_production" forcecreate="True">
+        <record forcecreate="True" id="property_stock_production" model="ir.property">
             <field name="name">property_stock_production</field>
             <field name="fields_id" search="[('model','=','product.template'),('name','=','property_stock_production')]"/>
-            <field name="value" eval="'stock.location,'+str(location_production)"/>
+            <field eval="'stock.location,'+str(location_production)" name="value"/>
         </record>
         
         <!--
 	Resource: stock.warehouse
 	-->
-        <record model="stock.warehouse" id="warehouse0">
-            <field name="name" search="[]" model="res.company" use="name"/>
+        <record id="warehouse0" model="stock.warehouse">
+            <field model="res.company" name="name" search="[]" use="name"/>
             <field name="lot_input_id" ref="stock_location_stock"/>
             <field name="lot_stock_id" ref="stock_location_stock"/>
             <field name="lot_output_id" ref="stock_location_output"/>

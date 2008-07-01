@@ -1,8 +1,8 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
         
-        <record model="ir.ui.view" id="view_partner_bank_iban_form">
+        <record id="view_partner_bank_iban_form" model="ir.ui.view">
             <field name="name">res.partner.bank.form.iban.inherit</field>
             <field name="model">res.partner.bank</field>
             <field name="inherit_id" ref="base.view_partner_bank_form"/>
@@ -16,7 +16,7 @@
             </field>
         </record>
         
-        <record model="ir.ui.view" id="view_partner_iban_form">
+        <record id="view_partner_iban_form" model="ir.ui.view">
             <field name="name">res.partner.form.iban.inherit</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
@@ -33,39 +33,39 @@
         <!--
 		Default bank account description
 		-->
-        <record model="res.partner.bank.type" id="bank_iban">
+        <record id="bank_iban" model="res.partner.bank.type">
             <field name="name">IBAN Account</field>
             <field name="code">iban</field>
         </record>
-        <record model="res.partner.bank.type.field" id="bank_iban_field">
+        <record id="bank_iban_field" model="res.partner.bank.type.field">
             <field name="name">iban</field>
             <field name="bank_type_id" ref="bank_iban"/>
-            <field name="required" eval="True"/>
-            <field name="readonly" eval="False"/>
+            <field eval="True" name="required"/>
+            <field eval="False" name="readonly"/>
         </record>
-        <record model="res.partner.bank.type.field" id="bank_swift_field">
+        <record id="bank_swift_field" model="res.partner.bank.type.field">
             <field name="name">bic</field>
             <field name="bank_type_id" ref="bank_iban"/>
-            <field name="required" eval="True"/>
-            <field name="readonly" eval="False"/>
+            <field eval="True" name="required"/>
+            <field eval="False" name="readonly"/>
         </record>
-        <record model="res.partner.bank.type.field" id="bank_country_field">
+        <record id="bank_country_field" model="res.partner.bank.type.field">
             <field name="name">country_id</field>
             <field name="bank_type_id" ref="bank_iban"/>
-            <field name="required" eval="False"/>
-            <field name="readonly" eval="False"/>
+            <field eval="False" name="required"/>
+            <field eval="False" name="readonly"/>
         </record>
-        <record model="res.partner.bank.type.field" id="bank_zip_field">
+        <record id="bank_zip_field" model="res.partner.bank.type.field">
             <field name="name">zip</field>
             <field name="bank_type_id" ref="bank_iban"/>
-            <field name="required" eval="False"/>
-            <field name="readonly" eval="False"/>
+            <field eval="False" name="required"/>
+            <field eval="False" name="readonly"/>
         </record>
-        <record model="res.partner.bank.type.field" id="bank_acc_number_field">
+        <record id="bank_acc_number_field" model="res.partner.bank.type.field">
             <field name="name">acc_number</field>
             <field name="bank_type_id" ref="bank_iban"/>
-            <field name="required" eval="False"/>
-            <field name="readonly" eval="True"/>
+            <field eval="False" name="required"/>
+            <field eval="True" name="readonly"/>
         </record>
     </data>
 </terp>

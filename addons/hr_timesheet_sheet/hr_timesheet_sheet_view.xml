@@ -1,153 +1,153 @@
-<?xml version='1.0'?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
-        <record id='hr_timesheet_sheet_tree' model='ir.ui.view'>
-            <field name='name'>hr.timesheet.sheet.tree</field>
-            <field name='model'>hr_timesheet_sheet.sheet</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree string='Timesheets'>
-                    <field name='user_id'/>
-                    <field name='date_from'/>
-                    <field name='date_to'/>
-                    <field name='name'/>
-                    <field name='total_attendance'/>
-                    <field name='total_timesheet'/>
-                    <field name='total_difference'/>
-                    <field name='state'/>
+        <record id="hr_timesheet_sheet_tree" model="ir.ui.view">
+            <field name="name">hr.timesheet.sheet.tree</field>
+            <field name="model">hr_timesheet_sheet.sheet</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Timesheets">
+                    <field name="user_id"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="name"/>
+                    <field name="total_attendance"/>
+                    <field name="total_timesheet"/>
+                    <field name="total_difference"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
         
         
-        <record id='hr_timesheet_account_form' model='ir.ui.view'>
-            <field name='name'>hr.timesheet.account.form</field>
-            <field name='model'>hr_timesheet_sheet.sheet.account</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Timesheet by accounts'>
-                    <field name='sheet_id' select='1'/>
-                    <field name='name' select='1'/>
-                    <field name='total' sum='Total'/>
-                    <field name='invoice_rate' select='2'/>
+        <record id="hr_timesheet_account_form" model="ir.ui.view">
+            <field name="name">hr.timesheet.account.form</field>
+            <field name="model">hr_timesheet_sheet.sheet.account</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Timesheet by accounts">
+                    <field name="sheet_id" select="1"/>
+                    <field name="name" select="1"/>
+                    <field name="total" sum="Total"/>
+                    <field name="invoice_rate" select="2"/>
                 </form>
             </field>
         </record>
         
-        <record id='hr_timesheet_account_tree' model='ir.ui.view'>
-            <field name='name'>hr.timesheet.account.tree</field>
-            <field name='model'>hr_timesheet_sheet.sheet.account</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree string='Timesheet by Accounts'>
-                    <field name='sheet_id'/>
-                    <field name='name'/>
-                    <field name='total' sum='Total'/>
-                    <field name='invoice_rate'/>
+        <record id="hr_timesheet_account_tree" model="ir.ui.view">
+            <field name="name">hr.timesheet.account.tree</field>
+            <field name="model">hr_timesheet_sheet.sheet.account</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Timesheet by Accounts">
+                    <field name="sheet_id"/>
+                    <field name="name"/>
+                    <field name="total" sum="Total"/>
+                    <field name="invoice_rate"/>
                 </tree>
             </field>
         </record>
         
         
-        <record id='hr_timesheet_day_form' model='ir.ui.view'>
-            <field name='name'>hr.timesheet.day.form</field>
-            <field name='model'>hr_timesheet_sheet.sheet.day</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Timesheet by Days'>
-                    <field name='sheet_id' select='1'/>
-                    <field name='name' select='1'/>
-                    <field name='total_timesheet'/>
-                    <field name='total_attendance'/>
-                    <field name='total_difference'/>
+        <record id="hr_timesheet_day_form" model="ir.ui.view">
+            <field name="name">hr.timesheet.day.form</field>
+            <field name="model">hr_timesheet_sheet.sheet.day</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Timesheet by Days">
+                    <field name="sheet_id" select="1"/>
+                    <field name="name" select="1"/>
+                    <field name="total_timesheet"/>
+                    <field name="total_attendance"/>
+                    <field name="total_difference"/>
                 </form>
             </field>
         </record>
         
         
-        <record id='hr_timesheet_day_tree' model='ir.ui.view'>
-            <field name='name'>hr.timesheet.day.tree</field>
-            <field name='model'>hr_timesheet_sheet.sheet.day</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree colors='red:total_difference&lt;=0.1;blue:total_difference&gt;=0.1' string='Timesheet by Days'>
-                    <field name='sheet_id'/>
-                    <field name='name'/>
-                    <field name='total_timesheet' sum='Total Timesheet'/>
-                    <field name='total_attendance' sum='Total Attendance'/>
-                    <field name='total_difference' sum='Total Difference'/>
+        <record id="hr_timesheet_day_tree" model="ir.ui.view">
+            <field name="name">hr.timesheet.day.tree</field>
+            <field name="model">hr_timesheet_sheet.sheet.day</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree colors="red:total_difference&lt;=0.1;blue:total_difference&gt;=0.1" string="Timesheet by Days">
+                    <field name="sheet_id"/>
+                    <field name="name"/>
+                    <field name="total_timesheet" sum="Total Timesheet"/>
+                    <field name="total_attendance" sum="Total Attendance"/>
+                    <field name="total_difference" sum="Total Difference"/>
                 </tree>
             </field>
         </record>
         
-        <record id='hr_timesheet_sheet_form' model='ir.ui.view'>
-            <field name='name'>hr.timesheet.sheet.form</field>
-            <field name='model'>hr_timesheet_sheet.sheet</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Timesheet'>
-                    <field name='name'/>
-                    <field name='user_id'/>
-                    <field name='date_from'/>
-                    <field name='date_to'/>
+        <record id="hr_timesheet_sheet_form" model="ir.ui.view">
+            <field name="name">hr.timesheet.sheet.form</field>
+            <field name="model">hr_timesheet_sheet.sheet</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Timesheet">
+                    <field name="name"/>
+                    <field name="user_id"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
                     
-                    <notebook colspan='4'>
-                        <page string='Daily View'>
-                            <group col='6' colspan='4'>
-                                <button name='button_dummy' type='object' string='Go to:'/>
-                                <field name='date_current' nolabel='1'/>
-                                <label string=''/>
-                                <button name='date_previous' icon='gtk-media-previous' type='object' string=''/>
-                                <button name='date_today' type='object' string='Today'/>
-                                <button name='date_next' icon='gtk-media-next' type='object' string=''/>
+                    <notebook colspan="4">
+                        <page string="Daily View">
+                            <group col="6" colspan="4">
+                                <button name="button_dummy" string="Go to:" type="object"/>
+                                <field name="date_current" nolabel="1"/>
+                                <label string=""/>
+                                <button icon="gtk-media-previous" name="date_previous" string="" type="object"/>
+                                <button name="date_today" string="Today" type="object"/>
+                                <button icon="gtk-media-next" name="date_next" string="" type="object"/>
                             </group>
                             
-                            <field name='attendances_ids' height='100' nolabel='1' context='name=date_current,user_id=user_id' colspan='3'>
-                                <tree string='Attendances'>
-                                    <field name='name'/>
-                                    <field name='action'/>
-                                    <field name='employee_id' invisible='1'/>
+                            <field colspan="3" context="name=date_current,user_id=user_id" height="100" name="attendances_ids" nolabel="1">
+                                <tree string="Attendances">
+                                    <field name="name"/>
+                                    <field name="action"/>
+                                    <field invisible="1" name="employee_id"/>
                                 </tree>
                             </field>
-                            <group col='1' colspan='1'>
-                                <button name='sign_in' type='object' string='Sign In'/>
-                                <button name='sign_out' type='object' string='Sign Out'/>
+                            <group col="1" colspan="1">
+                                <button name="sign_in" string="Sign In" type="object"/>
+                                <button name="sign_out" string="Sign Out" type="object"/>
                             </group>
                             
                             
-                            <field name='state_attendance'/>
-                            <field name='total_attendance_day' widget='float_time'/>
-                            <field name='timesheet_ids' domain='[(&apos;name&apos;,&apos;=&apos;,date_current)]' nolabel='1' context='date=date_current,user_id=user_id' colspan='4'>
-                                <tree editable='top' string='Timesheet'>
-                                    <field name='date' invisible='1'/>
-                                    <field name='account_id' domain='[(&apos;type&apos;,&apos;=&apos;,&apos;normal&apos;), (&apos;state&apos;, &apos;&lt;&gt;&apos;, &apos;close&apos;)]' on_change='on_change_account_id(account_id)'/>
-                                    <field name='name'/>
-                                    <field name='unit_amount' on_change='on_change_unit_amount(product_id, unit_amount, product_uom_id)' widget='float_time'/>
-                                    <field name='to_invoice'/>
-                                    <field name='journal_id' invisible='1'/>
-                                    <field name='product_id' invisible='1'/>
-                                    <field name='product_uom_id' invisible='1' on_change='on_change_unit_amount(product_id, unit_amount, product_uom_id)'/>
-                                    <field name='amount'/>
-                                    <field name='general_account_id'/>
-                                    <field name='journal_id'/>
-                                    <field name='user_id' invisible='1' required='1'/>
+                            <field name="state_attendance"/>
+                            <field name="total_attendance_day" widget="float_time"/>
+                            <field colspan="4" context="date=date_current,user_id=user_id" domain="[('name','=',date_current)]" name="timesheet_ids" nolabel="1">
+                                <tree editable="top" string="Timesheet">
+                                    <field invisible="1" name="date"/>
+                                    <field domain="[('type','=','normal'), ('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id)"/>
+                                    <field name="name"/>
+                                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)" widget="float_time"/>
+                                    <field name="to_invoice"/>
+                                    <field invisible="1" name="journal_id"/>
+                                    <field invisible="1" name="product_id"/>
+                                    <field invisible="1" name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, product_uom_id)"/>
+                                    <field name="amount"/>
+                                    <field name="general_account_id"/>
+                                    <field name="journal_id"/>
+                                    <field invisible="1" name="user_id" required="1"/>
                                 </tree>
                             </field>
-                            <field name='total_difference_day' widget='float_time'/>
-                            <field name='total_timesheet_day' widget='float_time'/>
+                            <field name="total_difference_day" widget="float_time"/>
+                            <field name="total_timesheet_day" widget="float_time"/>
                         </page>
-                        <page string='By Day'>
-                            <field name='period_ids' nolabel='1' colspan='4'>
-                                <tree colors='red:total_difference&lt;=0.1;blue:total_difference&gt;=0.1' string='Period'>
-                                    <field name='name'/>
-                                    <field name='total_attendance' widget='float_time'/>
-                                    <field name='total_timesheet' widget='float_time'/>
-                                    <field name='total_difference' widget='float_time'/>
+                        <page string="By Day">
+                            <field colspan="4" name="period_ids" nolabel="1">
+                                <tree colors="red:total_difference&lt;=0.1;blue:total_difference&gt;=0.1" string="Period">
+                                    <field name="name"/>
+                                    <field name="total_attendance" widget="float_time"/>
+                                    <field name="total_timesheet" widget="float_time"/>
+                                    <field name="total_difference" widget="float_time"/>
                                 </tree>
                             </field>
-                            <field name='total_attendance' widget='float_time'/>
-                            <field name='total_timesheet' widget='float_time'/>
-                            <field name='total_difference' widget='float_time'/>
+                            <field name="total_attendance" widget="float_time"/>
+                            <field name="total_timesheet" widget="float_time"/>
+                            <field name="total_difference" widget="float_time"/>
                         </page>
                         <!--
 					<page string="By account">
@@ -161,96 +161,96 @@
 					</page>
 					-->
                     </notebook>
-                    <field name='state'/>
-                    <group col='4' colspan='2'>
-                        <button name='button_confirm' type='object' states='draft' string='Confirm'/>
-                        <button name='action_set_to_draft' type='object' states='done' string='Set to Draft'/>
-                        <button name='cancel' states='confirm' string='Refuse'/>
-                        <button name='done' states='confirm' string='Accept'/>
+                    <field name="state"/>
+                    <group col="4" colspan="2">
+                        <button name="button_confirm" states="draft" string="Confirm" type="object"/>
+                        <button name="action_set_to_draft" states="done" string="Set to Draft" type="object"/>
+                        <button name="cancel" states="confirm" string="Refuse"/>
+                        <button name="done" states="confirm" string="Accept"/>
                     </group>
                 </form>
             </field>
         </record>
         
-        <record id='act_hr_timesheet_sheet_form' model='ir.actions.act_window'>
-            <field name='name'>All Timesheets</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>hr_timesheet_sheet.sheet</field>
-            <field name='view_type'>form</field>
-            <field name='view_id' ref='hr_timesheet_sheet_form'/>
+        <record id="act_hr_timesheet_sheet_form" model="ir.actions.act_window">
+            <field name="name">All Timesheets</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr_timesheet_sheet.sheet</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="hr_timesheet_sheet_form"/>
         </record>
-        <menuitem name='Human Resources/Timesheets/All Timesheets' action='act_hr_timesheet_sheet_form' id='menu_act_hr_timesheet_sheet_form'/>
+        <menuitem id="next_id_60" name="Timesheets" parent="hr.menu_hr_root"/><menuitem action="act_hr_timesheet_sheet_form" id="menu_act_hr_timesheet_sheet_form" parent="next_id_60"/>
         
-        <record id='act_hr_timesheet_sheet_form_my' model='ir.actions.act_window'>
-            <field name='name'>My timesheets</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>hr_timesheet_sheet.sheet</field>
-            <field name='domain'>[('user_id','=',uid)]</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
+        <record id="act_hr_timesheet_sheet_form_my" model="ir.actions.act_window">
+            <field name="name">My timesheets</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr_timesheet_sheet.sheet</field>
+            <field name="domain">[('user_id','=',uid)]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
         </record>
-        <menuitem name='Human Resources/Timesheets/My Timesheets' action='act_hr_timesheet_sheet_form_my' id='menu_act_hr_timesheet_sheet_form_my'/>
+        <menuitem action="act_hr_timesheet_sheet_form_my" id="menu_act_hr_timesheet_sheet_form_my" parent="hr_timesheet_sheet.next_id_60"/>
         
-        <record id='act_hr_timesheet_sheet_form_my_confirm' model='ir.actions.act_window'>
-            <field name='name'>My timesheets to confirm</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>hr_timesheet_sheet.sheet</field>
-            <field name='domain'>[('user_id','=',uid),('state','=','draft'),('date_to','&lt;=',time.strftime('%Y-%m-%d'))]</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
+        <record id="act_hr_timesheet_sheet_form_my_confirm" model="ir.actions.act_window">
+            <field name="name">My timesheets to confirm</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr_timesheet_sheet.sheet</field>
+            <field name="domain">[('user_id','=',uid),('state','=','draft'),('date_to','&lt;=',time.strftime('%Y-%m-%d'))]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
         </record>
-        <menuitem name='Human Resources/Timesheets/My Timesheets/My Timesheets to Confirm' action='act_hr_timesheet_sheet_form_my_confirm' id='menu_act_hr_timesheet_sheet_form_my_confirm'/>
+        <menuitem action="act_hr_timesheet_sheet_form_my_confirm" id="menu_act_hr_timesheet_sheet_form_my_confirm" parent="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my"/>
         
-        <wizard name='hr_timesheet_sheet.department.open' id='act_hr_timesheet_sheet_form_department_current' model='hr.employee' string='My department&apos;s timesheet'/>
-        <menuitem name='Human Resources/Timesheets/My Department&apos;s Timesheets' icon='STOCK_JUSTIFY_FILL' action='act_hr_timesheet_sheet_form_department_current' type='wizard' id='menu_act_hr_timesheet_sheet_form_department_current'/>
+        <wizard id="act_hr_timesheet_sheet_form_department_current" model="hr.employee" name="hr_timesheet_sheet.department.open" string="My department's timesheet"/>
+        <menuitem action="act_hr_timesheet_sheet_form_department_current" icon="STOCK_JUSTIFY_FILL" id="menu_act_hr_timesheet_sheet_form_department_current" parent="hr_timesheet_sheet.next_id_60" type="wizard"/>
         
-        <wizard name='hr_timesheet_sheet.department.validate.open' id='act_hr_timesheet_sheet_form_department_validate' model='hr.employee' string='My department&apos;s timesheet'/>
-        <menuitem name='Human Resources/Timesheets/My Department&apos;s Timesheets/Timesheets to Validate' icon='STOCK_JUSTIFY_FILL' action='act_hr_timesheet_sheet_form_department_validate' type='wizard' id='menu_act_hr_timesheet_sheet_form_department_validate'/>
-        
-        
-        <wizard name='hr_timesheet_sheet.department.confirm.open' id='act_hr_timesheet_sheet_form_department_confirm' model='hr.employee' string='My department&apos;s timesheet'/>
-        <menuitem name='Human Resources/Timesheets/My Department&apos;s Timesheets/Timesheets to Confirm' icon='STOCK_JUSTIFY_FILL' action='act_hr_timesheet_sheet_form_department_confirm' type='wizard' id='menu_act_hr_timesheet_sheet_form_department_confirm'/>
+        <wizard id="act_hr_timesheet_sheet_form_department_validate" model="hr.employee" name="hr_timesheet_sheet.department.validate.open" string="My department's timesheet"/>
+        <menuitem action="act_hr_timesheet_sheet_form_department_validate" icon="STOCK_JUSTIFY_FILL" id="menu_act_hr_timesheet_sheet_form_department_validate" parent="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_department_current" type="wizard"/>
         
         
+        <wizard id="act_hr_timesheet_sheet_form_department_confirm" model="hr.employee" name="hr_timesheet_sheet.department.confirm.open" string="My department's timesheet"/>
+        <menuitem action="act_hr_timesheet_sheet_form_department_confirm" icon="STOCK_JUSTIFY_FILL" id="menu_act_hr_timesheet_sheet_form_department_confirm" parent="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_department_current" type="wizard"/>
         
         
-        <wizard name='hr_timesheet_sheet.current.open' id='act_hr_timesheet_sheet_form_my_current' model='hr.employee' string='My Current Timesheet'/>
-        <menuitem name='Human Resources/Timesheets/My Timesheets/My Current Timesheet' icon='STOCK_NEW' action='act_hr_timesheet_sheet_form_my_current' type='wizard' id='menu_act_hr_timesheet_sheet_form_my_current'/>
         
-        <record id='act_hr_timesheet_sheet_form_all_confirm' model='ir.actions.act_window'>
-            <field name='name'>Timesheets To Confirm</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>hr_timesheet_sheet.sheet</field>
-            <field name='domain'>[('state','=','draft'),('date_to','&lt;=',time.strftime('%Y-%m-%d'))]</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
+        
+        <wizard id="act_hr_timesheet_sheet_form_my_current" model="hr.employee" name="hr_timesheet_sheet.current.open" string="My Current Timesheet"/>
+        <menuitem action="act_hr_timesheet_sheet_form_my_current" icon="STOCK_NEW" id="menu_act_hr_timesheet_sheet_form_my_current" parent="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my" type="wizard"/>
+        
+        <record id="act_hr_timesheet_sheet_form_all_confirm" model="ir.actions.act_window">
+            <field name="name">Timesheets To Confirm</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr_timesheet_sheet.sheet</field>
+            <field name="domain">[('state','=','draft'),('date_to','&lt;=',time.strftime('%Y-%m-%d'))]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
         </record>
-        <menuitem name='Human Resources/Timesheets/All Timesheets/Timesheets to Confirm' action='act_hr_timesheet_sheet_form_all_confirm' id='menu_act_hr_timesheet_sheet_form_all_confirm'/>
+        <menuitem action="act_hr_timesheet_sheet_form_all_confirm" id="menu_act_hr_timesheet_sheet_form_all_confirm" parent="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form"/>
         
-        <record id='act_hr_timesheet_sheet_form_all_valid' model='ir.actions.act_window'>
-            <field name='name'>Timesheets To Validate</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>hr_timesheet_sheet.sheet</field>
-            <field name='domain'>[('state','=','confirm')]</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
+        <record id="act_hr_timesheet_sheet_form_all_valid" model="ir.actions.act_window">
+            <field name="name">Timesheets To Validate</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr_timesheet_sheet.sheet</field>
+            <field name="domain">[('state','=','confirm')]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
         </record>
-        <menuitem name='Human Resources/Timesheets/All Timesheets/Timesheets to Validate' action='act_hr_timesheet_sheet_form_all_valid' id='menu_act_hr_timesheet_sheet_form_all_valid'/>
+        <menuitem action="act_hr_timesheet_sheet_form_all_valid" id="menu_act_hr_timesheet_sheet_form_all_valid" parent="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form"/>
         
         <!--
 			Company inheritancy
 		-->
         
-        <record id='hr_timesheet_sheet_company' model='ir.ui.view'>
-            <field name='name'>res.company.sheet</field>
-            <field name='model'>res.company</field>
-            <field name='type'>form</field>
-            <field name='inherit_id' ref='base.view_company_form'/>
-            <field name='arch' type='xml'>
-                <field name='rml_footer2' position='after'>
+        <record id="hr_timesheet_sheet_company" model="ir.ui.view">
+            <field name="name">res.company.sheet</field>
+            <field name="model">res.company</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <field name="rml_footer2" position="after">
                     <newline/>
-                    <field name='timesheet_range'/>
-                    <field name='timesheet_max_difference'/>
+                    <field name="timesheet_range"/>
+                    <field name="timesheet_max_difference"/>
                     <newline/>
                 </field>
             </field>
@@ -260,14 +260,14 @@
 			hr.analytic.timesheet inheritancy
 		-->
         
-        <record id='hr_timesheet_line_form' model='ir.ui.view'>
-            <field name='name'>hr.analytic.timesheet.form</field>
-            <field name='model'>hr.analytic.timesheet</field>
-            <field name='type'>form</field>
-            <field name='inherit_id' ref='hr_timesheet.hr_timesheet_line_form'/>
-            <field name='arch' type='xml'>
-                <field name='date' position='after'>
-                    <field name='sheet_id' select='2'/>
+        <record id="hr_timesheet_line_form" model="ir.ui.view">
+            <field name="name">hr.analytic.timesheet.form</field>
+            <field name="model">hr.analytic.timesheet</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
+            <field name="arch" type="xml">
+                <field name="date" position="after">
+                    <field name="sheet_id" select="2"/>
                 </field>
             </field>
         </record>
@@ -276,62 +276,62 @@
 			hr.attendance inheritancy
 		-->
         
-        <record id='view_attendance_form' model='ir.ui.view'>
-            <field name='name'>hr.attendance.form</field>
-            <field name='model'>hr.attendance</field>
-            <field name='type'>form</field>
-            <field name='inherit_id' ref='hr.view_attendance_form'/>
-            <field name='arch' type='xml'>
-                <field name='action_desc' position='after'>
-                    <field name='sheet_id' select='2'/>
+        <record id="view_attendance_form" model="ir.ui.view">
+            <field name="name">hr.attendance.form</field>
+            <field name="model">hr.attendance</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr.view_attendance_form"/>
+            <field name="arch" type="xml">
+                <field name="action_desc" position="after">
+                    <field name="sheet_id" select="2"/>
                 </field>
             </field>
         </record>
-        <record id='view_attendance_tree' model='ir.ui.view'>
-            <field name='name'>hr.attendance.tree</field>
-            <field name='model'>hr.attendance</field>
-            <field name='type'>tree</field>
-            <field name='inherit_id' ref='hr.view_attendance_tree'/>
-            <field name='arch' type='xml'>
-                <field name='action_desc' position='after'>
-                    <field name='sheet_id'/>
+        <record id="view_attendance_tree" model="ir.ui.view">
+            <field name="name">hr.attendance.tree</field>
+            <field name="model">hr.attendance</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="hr.view_attendance_tree"/>
+            <field name="arch" type="xml">
+                <field name="action_desc" position="after">
+                    <field name="sheet_id"/>
                 </field>
             </field>
         </record>
         
-        <act_window name='Timesheet by Account' domain='[(&apos;sheet_id&apos;, &apos;=&apos;, active_id)]' id='act_hr_timesheet_sheet_sheet_by_day' src_model='hr_timesheet_sheet.sheet' res_model='hr_timesheet_sheet.sheet.account'/>
-        <act_window name='Timesheet by Day' domain='[(&apos;sheet_id&apos;, &apos;=&apos;, active_id)]' id='act_hr_timesheet_sheet_sheet_by_account' src_model='hr_timesheet_sheet.sheet' res_model='hr_timesheet_sheet.sheet.day'/>
+        <act_window domain="[('sheet_id', '=', active_id)]" id="act_hr_timesheet_sheet_sheet_by_day" name="Timesheet by Account" res_model="hr_timesheet_sheet.sheet.account" src_model="hr_timesheet_sheet.sheet"/>
+        <act_window domain="[('sheet_id', '=', active_id)]" id="act_hr_timesheet_sheet_sheet_by_account" name="Timesheet by Day" res_model="hr_timesheet_sheet.sheet.day" src_model="hr_timesheet_sheet.sheet"/>
         
         
-        <act_window name='Timesheet Lines' domain='[(&apos;sheet_id&apos;, &apos;=&apos;, active_id)]' id='act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet' src_model='hr_timesheet_sheet.sheet' res_model='hr.analytic.timesheet'/>
+        <act_window domain="[('sheet_id', '=', active_id)]" id="act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet" name="Timesheet Lines" res_model="hr.analytic.timesheet" src_model="hr_timesheet_sheet.sheet"/>
         
-        <act_window name='Attendances' domain='[(&apos;sheet_id&apos;, &apos;=&apos;, active_id)]' id='act_hr_timesheet_sheet_sheet_2_hr_attendance' src_model='hr_timesheet_sheet.sheet' res_model='hr.attendance'/>
+        <act_window domain="[('sheet_id', '=', active_id)]" id="act_hr_timesheet_sheet_sheet_2_hr_attendance" name="Attendances" res_model="hr.attendance" src_model="hr_timesheet_sheet.sheet"/>
         
-        <record id='hr_timesheet_sheet_tree_simplified' model='ir.ui.view'>
-            <field name='name'>hr.timesheet.sheet.tree.simplified</field>
-            <field name='model'>hr_timesheet_sheet.sheet</field>
-            <field name='type'>tree</field>
-            <field name='priority' eval='20'/>
-            <field name='arch' type='xml'>
-                <tree string='Timesheets'>
-                    <field name='date_from'/>
-                    <field name='user_id'/>
-                    <field name='name'/>
-                    <field name='total_attendance'/>
-                    <field name='total_timesheet'/>
-                    <field name='state'/>
+        <record id="hr_timesheet_sheet_tree_simplified" model="ir.ui.view">
+            <field name="name">hr.timesheet.sheet.tree.simplified</field>
+            <field name="model">hr_timesheet_sheet.sheet</field>
+            <field name="type">tree</field>
+            <field eval="20" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Timesheets">
+                    <field name="date_from"/>
+                    <field name="user_id"/>
+                    <field name="name"/>
+                    <field name="total_attendance"/>
+                    <field name="total_timesheet"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
         
-        <record id='act_hr_timesheet_sheet_unvalidate' model='ir.actions.act_window'>
-            <field name='name'>Unvalidated Timesheets</field>
-            <field name='res_model'>hr_timesheet_sheet.sheet</field>
-            <field name='domain'>[('state','&lt;&gt;','done'),('date_to','&lt;',time.strftime('%Y-%m-%d'))]</field>
-            <field name='view_type'>form</field>
-            <field name='view_id' ref='hr_timesheet_sheet_tree_simplified'/>
+        <record id="act_hr_timesheet_sheet_unvalidate" model="ir.actions.act_window">
+            <field name="name">Unvalidated Timesheets</field>
+            <field name="res_model">hr_timesheet_sheet.sheet</field>
+            <field name="domain">[('state','&lt;&gt;','done'),('date_to','&lt;',time.strftime('%Y-%m-%d'))]</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="hr_timesheet_sheet_tree_simplified"/>
         </record>
         
-        <menuitem name='Human Resources/Timesheets/All Timesheets/Timesheets Unvalidate' action='act_hr_timesheet_sheet_unvalidate' id='menu_hr_timesheet_sheet_unvalidate'/>
+        <menuitem action="act_hr_timesheet_sheet_unvalidate" id="menu_hr_timesheet_sheet_unvalidate" parent="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form"/>
     </data>
 </terp>

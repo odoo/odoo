@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data noupdate="1">
         
@@ -7,18 +7,18 @@
 		 Administrator shortcut
 		 Demo user startup menu
 		 -->
-        <record model="ir.ui.view_sc" id="sc_account_dash">
+        <record id="sc_account_dash" model="ir.ui.view_sc">
             <field name="name">project dashboard</field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="resource">ir.ui.menu</field>
             <field name="sequence">3</field>
             <field name="res_id" ref="menu_board_project"/>
         </record>
-        <record model="res.users" id="base.user_admin">
+        <record id="base.user_admin" model="res.users">
             <field name="action_id" ref="open_board_project"/>
         </record>
         
-        <record model="board.note" id="note_project">
+        <record id="note_project" model="board.note">
             <field name="name">Don't forget the new development policies.</field>
             <field name="user_id" ref="base.user_admin"/>
             <field name="type">Project</field>

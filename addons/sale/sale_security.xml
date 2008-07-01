@@ -1,16 +1,16 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data noupdate="1">
         
-        <record model="res.groups" id="group_sale_manager">
+        <record id="group_sale_manager" model="res.groups">
             <field name="name">Sale Manager</field>
         </record>
-        <record model="res.groups" id="group_sale_salesman">
+        <record id="group_sale_salesman" model="res.groups">
             <field name="name">Salesman</field>
         </record>
         
-        <record model="res.users" id="base.user_admin">
-            <field name="groups_id" eval="[(4, ref('group_sale_manager')),(4, ref('group_sale_salesman'))]"/>
+        <record id="base.user_admin" model="res.users">
+            <field eval="[(4, ref('group_sale_manager')),(4, ref('group_sale_salesman'))]" name="groups_id"/>
         </record>
         
         <record id="ir_model_access_stockmove0" model="ir.model.access">
@@ -53,14 +53,14 @@
             <field name="group_id" ref="group_sale_manager"/>
         </record>
         
-        <record model="ir.model.access" id="access_mrp_procurement">
+        <record id="access_mrp_procurement" model="ir.model.access">
             <field name="name">Mrp procurement</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'mrp.procurement')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'mrp.procurement')]"/>
             <field name="group_id" ref="group_sale_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="False"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
         <record id="ir_model_access_stockmove0" model="ir.model.access">
@@ -103,74 +103,74 @@
             <field name="group_id" ref="group_sale_salesman"/>
         </record>
         
-        <record model="ir.model.access" id="access_mrp_procurement">
+        <record id="access_mrp_procurement" model="ir.model.access">
             <field name="name">Mrp procurement</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'mrp.procurement')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'mrp.procurement')]"/>
             <field name="group_id" ref="group_sale_salesman"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="False"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
         <!-- Sales order security -->
-        <record model="ir.model.access" id="access_sale_order">
+        <record id="access_sale_order" model="ir.model.access">
             <field name="name">Sale Order</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'sale.order')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'sale.order')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_sale_order_sale_manager">
+        <record id="access_sale_order_sale_manager" model="ir.model.access">
             <field name="name">Sale Order</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'sale.order')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'sale.order')]"/>
             <field name="group_id" ref="group_sale_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_sale_order_salesman">
+        <record id="access_sale_order_salesman" model="ir.model.access">
             <field name="name">Sale Order</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'sale.order')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'sale.order')]"/>
             <field name="group_id" ref="group_sale_salesman"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
         <!-- Sales order line security -->
-        <record model="ir.model.access" id="access_sale_order_line">
+        <record id="access_sale_order_line" model="ir.model.access">
             <field name="name">Sale Order Line</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'sale.order.line')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'sale.order.line')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_sale_order_line_manager">
+        <record id="access_sale_order_line_manager" model="ir.model.access">
             <field name="name">Sale Order Line</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'sale.order.line')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'sale.order.line')]"/>
             <field name="group_id" ref="group_sale_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_sale_order_line_salesman">
+        <record id="access_sale_order_line_salesman" model="ir.model.access">
             <field name="name">Sale Order Line</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'sale.order.line')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'sale.order.line')]"/>
             <field name="group_id" ref="group_sale_salesman"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
     </data>

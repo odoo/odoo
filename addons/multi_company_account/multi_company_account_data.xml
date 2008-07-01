@@ -1,133 +1,133 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
         
-        <record model="account.journal" id="account.sales_journal">
+        <record id="account.sales_journal" model="account.journal">
             <field name="company_id" ref="base.main_company"/>
         </record>
-        <record model="account.journal" id="account.expenses_journal">
+        <record id="account.expenses_journal" model="account.journal">
             <field name="company_id" ref="base.main_company"/>
         </record>
-        <record model="account.journal" id="account.bank_journal">
+        <record id="account.bank_journal" model="account.journal">
             <field name="company_id" ref="base.main_company"/>
         </record>
         
-        <record model="ir.rule.group" id="journal_comp_rule_group">
+        <record id="journal_comp_rule_group" model="ir.rule.group">
             <field name="name">Journal multi-company</field>
-            <field name="model_id" search="[('model','=','account.journal')]" model="ir.model"/>
-            <field name="global" eval="True"/>
+            <field model="ir.model" name="model_id" search="[('model','=','account.journal')]"/>
+            <field eval="True" name="global"/>
         </record>
-        <record model="ir.rule" id="journal_comp_rule">
-            <field name="field_id" search="[('model','=','account.journal'),('name','=','company_id')]" model="ir.model.fields"/>
+        <record id="journal_comp_rule" model="ir.rule">
+            <field model="ir.model.fields" name="field_id" search="[('model','=','account.journal'),('name','=','company_id')]"/>
             <field name="operator">child_of</field>
             <field name="operand">user.company_id.id</field>
             <field name="rule_group" ref="journal_comp_rule_group"/>
         </record>
         
-        <record model="ir.rule.group" id="analytic_journal_comp_rule_group">
+        <record id="analytic_journal_comp_rule_group" model="ir.rule.group">
             <field name="name">Analytic journal multi-company</field>
-            <field name="model_id" search="[('model','=','account.analytic.journal')]" model="ir.model"/>
-            <field name="global" eval="True"/>
+            <field model="ir.model" name="model_id" search="[('model','=','account.analytic.journal')]"/>
+            <field eval="True" name="global"/>
         </record>
-        <record model="ir.rule" id="analytic_journal_comp_rule">
-            <field name="field_id" search="[('model','=','account.analytic.journal'),('name','=','company_id')]" model="ir.model.fields"/>
+        <record id="analytic_journal_comp_rule" model="ir.rule">
+            <field model="ir.model.fields" name="field_id" search="[('model','=','account.analytic.journal'),('name','=','company_id')]"/>
             <field name="operator">child_of</field>
             <field name="operand">user.company_id.id</field>
             <field name="rule_group" ref="analytic_journal_comp_rule_group"/>
         </record>
-        <record model="ir.rule" id="analytic_journal_comp_rule_false">
-            <field name="field_id" search="[('model','=','account.analytic.journal'),('name','=','company_id')]" model="ir.model.fields"/>
+        <record id="analytic_journal_comp_rule_false" model="ir.rule">
+            <field model="ir.model.fields" name="field_id" search="[('model','=','account.analytic.journal'),('name','=','company_id')]"/>
             <field name="operator">=</field>
             <field name="operand">False</field>
             <field name="rule_group" ref="analytic_journal_comp_rule_group"/>
         </record>
         
-        <record model="ir.rule.group" id="budget_post_comp_rule_group">
+        <record id="budget_post_comp_rule_group" model="ir.rule.group">
             <field name="name">Budget post multi-company</field>
-            <field name="model_id" search="[('model','=','account.budget.post')]" model="ir.model"/>
-            <field name="global" eval="True"/>
+            <field model="ir.model" name="model_id" search="[('model','=','account.budget.post')]"/>
+            <field eval="True" name="global"/>
         </record>
-        <record model="ir.rule" id="budget_post_comp_rule">
-            <field name="field_id" search="[('model','=','account.budget.post'),('name','=','company_id')]" model="ir.model.fields"/>
+        <record id="budget_post_comp_rule" model="ir.rule">
+            <field model="ir.model.fields" name="field_id" search="[('model','=','account.budget.post'),('name','=','company_id')]"/>
             <field name="operator">child_of</field>
             <field name="operand">user.company_id.id</field>
             <field name="rule_group" ref="budget_post_comp_rule_group"/>
         </record>
-        <record model="ir.rule" id="budget_post_comp_rule_false">
-            <field name="field_id" search="[('model','=','account.budget.post'),('name','=','company_id')]" model="ir.model.fields"/>
+        <record id="budget_post_comp_rule_false" model="ir.rule">
+            <field model="ir.model.fields" name="field_id" search="[('model','=','account.budget.post'),('name','=','company_id')]"/>
             <field name="operator">=</field>
             <field name="operand">False</field>
             <field name="rule_group" ref="budget_post_comp_rule_group"/>
         </record>
         
-        <record model="ir.rule.group" id="period_comp_rule_group">
+        <record id="period_comp_rule_group" model="ir.rule.group">
             <field name="name">Period multi-company</field>
-            <field name="model_id" search="[('model','=','account.period')]" model="ir.model"/>
-            <field name="global" eval="True"/>
+            <field model="ir.model" name="model_id" search="[('model','=','account.period')]"/>
+            <field eval="True" name="global"/>
         </record>
-        <record model="ir.rule" id="period_comp_rule">
-            <field name="field_id" search="[('model','=','account.period'),('name','=','company_id')]" model="ir.model.fields"/>
+        <record id="period_comp_rule" model="ir.rule">
+            <field model="ir.model.fields" name="field_id" search="[('model','=','account.period'),('name','=','company_id')]"/>
             <field name="operator">child_of</field>
             <field name="operand">user.company_id.id</field>
             <field name="rule_group" ref="period_comp_rule_group"/>
         </record>
         
         
-        <record model="ir.rule.group" id="fiscal_year_comp_rule_group">
+        <record id="fiscal_year_comp_rule_group" model="ir.rule.group">
             <field name="name">Fiscal year multi-company</field>
-            <field name="model_id" search="[('model','=','account.fiscalyear')]" model="ir.model"/>
-            <field name="global" eval="True"/>
+            <field model="ir.model" name="model_id" search="[('model','=','account.fiscalyear')]"/>
+            <field eval="True" name="global"/>
         </record>
-        <record model="ir.rule" id="fiscal_year_comp_rule">
-            <field name="field_id" search="[('model','=','account.fiscalyear'),('name','=','company_id')]" model="ir.model.fields"/>
+        <record id="fiscal_year_comp_rule" model="ir.rule">
+            <field model="ir.model.fields" name="field_id" search="[('model','=','account.fiscalyear'),('name','=','company_id')]"/>
             <field name="operator">child_of</field>
             <field name="operand">user.company_id.id</field>
             <field name="rule_group" ref="fiscal_year_comp_rule_group"/>
         </record>
         
-        <record model="ir.rule.group" id="account_comp_rule_group">
+        <record id="account_comp_rule_group" model="ir.rule.group">
             <field name="name">Account multi-company</field>
-            <field name="model_id" search="[('model','=','account.account')]" model="ir.model"/>
-            <field name="global" eval="True"/>
+            <field model="ir.model" name="model_id" search="[('model','=','account.account')]"/>
+            <field eval="True" name="global"/>
         </record>
-        <record model="ir.rule" id="account_comp_rule">
-            <field name="field_id" search="[('model','=','account.account'),('name','=','company_id')]" model="ir.model.fields"/>
+        <record id="account_comp_rule" model="ir.rule">
+            <field model="ir.model.fields" name="field_id" search="[('model','=','account.account'),('name','=','company_id')]"/>
             <field name="operator">child_of</field>
             <field name="operand">user.company_id.id</field>
             <field name="rule_group" ref="account_comp_rule_group"/>
         </record>
         
-        <record model="ir.rule.group" id="tax_comp_rule_group">
+        <record id="tax_comp_rule_group" model="ir.rule.group">
             <field name="name">Tax multi-company</field>
-            <field name="model_id" search="[('model','=','account.tax')]" model="ir.model"/>
-            <field name="global" eval="True"/>
+            <field model="ir.model" name="model_id" search="[('model','=','account.tax')]"/>
+            <field eval="True" name="global"/>
         </record>
-        <record model="ir.rule" id="tax_comp_rule">
-            <field name="field_id" search="[('model','=','account.tax'),('name','=','company_id')]" model="ir.model.fields"/>
+        <record id="tax_comp_rule" model="ir.rule">
+            <field model="ir.model.fields" name="field_id" search="[('model','=','account.tax'),('name','=','company_id')]"/>
             <field name="operator">child_of</field>
             <field name="operand">user.company_id.id</field>
             <field name="rule_group" ref="tax_comp_rule_group"/>
         </record>
         
-        <record model="ir.rule.group" id="tax_code_comp_rule_group">
+        <record id="tax_code_comp_rule_group" model="ir.rule.group">
             <field name="name">Tax code multi-company</field>
-            <field name="model_id" search="[('model','=','account.tax.code')]" model="ir.model"/>
-            <field name="global" eval="True"/>
+            <field model="ir.model" name="model_id" search="[('model','=','account.tax.code')]"/>
+            <field eval="True" name="global"/>
         </record>
-        <record model="ir.rule" id="tax_code_comp_rule">
-            <field name="field_id" search="[('model','=','account.tax.code'),('name','=','company_id')]" model="ir.model.fields"/>
+        <record id="tax_code_comp_rule" model="ir.rule">
+            <field model="ir.model.fields" name="field_id" search="[('model','=','account.tax.code'),('name','=','company_id')]"/>
             <field name="operator">child_of</field>
             <field name="operand">user.company_id.id</field>
             <field name="rule_group" ref="tax_code_comp_rule_group"/>
         </record>
         
-        <record model="ir.rule.group" id="invoice_comp_rule_group">
+        <record id="invoice_comp_rule_group" model="ir.rule.group">
             <field name="name">Invoice multi-company</field>
-            <field name="model_id" search="[('model','=','account.invoice')]" model="ir.model"/>
-            <field name="global" eval="True"/>
+            <field model="ir.model" name="model_id" search="[('model','=','account.invoice')]"/>
+            <field eval="True" name="global"/>
         </record>
-        <record model="ir.rule" id="invoice_comp_rule">
-            <field name="field_id" search="[('model','=','account.invoice'),('name','=','company_id')]" model="ir.model.fields"/>
+        <record id="invoice_comp_rule" model="ir.rule">
+            <field model="ir.model.fields" name="field_id" search="[('model','=','account.invoice'),('name','=','company_id')]"/>
             <field name="operator">child_of</field>
             <field name="operand">user.company_id.id</field>
             <field name="rule_group" ref="invoice_comp_rule_group"/>

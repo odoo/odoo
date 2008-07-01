@@ -1,199 +1,199 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data noupdate="1">
         
-        <record model="res.groups" id="group_hr_manager">
+        <record id="group_hr_manager" model="res.groups">
             <field name="name">HR Manager</field>
             <field eval="[(4, ref('hr.menu_open_view_employee_tree')), (4, ref('hr.menu_open_view_employee_list')), (4, ref('hr.menu_open_view_employee_new')), (4, ref('hr.menu_view_employee_category_form'))]" name="menu_access"/>
         </record>
         
-        <record model="res.groups" id="group_hr_employee">
+        <record id="group_hr_employee" model="res.groups">
             <field name="name">Employee</field>
             <field eval="[(4, ref('hr.menu_open_view_employee_tree')), (4, ref('hr.menu_open_view_employee_list')),(4, ref('hr.menu_open_view_employee_new')), (4, ref('hr.menu_view_employee_category_form'))]" name="menu_access"/>
         </record>
         
-        <record model="res.users" id="base.user_admin">
-            <field name="groups_id" eval="[(4, ref('group_hr_employee')),(4, ref('group_hr_manager'))]"/>
+        <record id="base.user_admin" model="res.users">
+            <field eval="[(4, ref('group_hr_employee')),(4, ref('group_hr_manager'))]" name="groups_id"/>
         </record>
         
         <!-- Department security -->
-        <record model="ir.model.access" id="access_hr_department">
+        <record id="access_hr_department" model="ir.model.access">
             <field name="name">HR Department</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'hr.department')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'hr.department')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_hr_department_manager">
+        <record id="access_hr_department_manager" model="ir.model.access">
             <field name="name">HR Department</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'hr.department')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'hr.department')]"/>
             <field name="group_id" ref="group_hr_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
         <!-- Timesheet Group security -->
-        <record model="ir.model.access" id="access_hr_timesheet">
+        <record id="access_hr_timesheet" model="ir.model.access">
             <field name="name">HR Timesheet Group</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'hr.timesheet.group')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'hr.timesheet.group')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_hr_timesheet_manager">
+        <record id="access_hr_timesheet_manager" model="ir.model.access">
             <field name="name">HR Timesheet Group</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'hr.timesheet.group')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'hr.timesheet.group')]"/>
             <field name="group_id" ref="group_hr_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
         <!-- Employee Category security -->
-        <record model="ir.model.access" id="access_hr_employee_category">
+        <record id="access_hr_employee_category" model="ir.model.access">
             <field name="name">HR Employee Category</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'hr.employee.category')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'hr.employee.category')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_hr_employee_category_manager">
+        <record id="access_hr_employee_category_manager" model="ir.model.access">
             <field name="name">HR Employee Category</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'hr.employee.category')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'hr.employee.category')]"/>
             <field name="group_id" ref="group_hr_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
         <!-- Employee security -->
-        <record model="ir.model.access" id="access_hr_employee">
+        <record id="access_hr_employee" model="ir.model.access">
             <field name="name">HR Employee</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'hr.employee')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'hr.employee')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_hr_employee_employee">
+        <record id="access_hr_employee_employee" model="ir.model.access">
             <field name="name">HR Employee</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'hr.employee')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'hr.employee')]"/>
             <field name="group_id" ref="group_hr_employee"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
         <!-- Employee security -->
-        <record model="ir.model.access" id="access_hr_timesheet">
+        <record id="access_hr_timesheet" model="ir.model.access">
             <field name="name">HR Employee Timesheet</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'hr.timesheet')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'hr.timesheet')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_hr_timesheet_employee">
+        <record id="access_hr_timesheet_employee" model="ir.model.access">
             <field name="name">HR Employee Timesheet</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'hr.timesheet')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'hr.timesheet')]"/>
             <field name="group_id" ref="group_hr_employee"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
         <!-- Action Reason security -->
-        <record model="ir.model.access" id="access_hr_action_reason">
+        <record id="access_hr_action_reason" model="ir.model.access">
             <field name="name">HR Timesheet Action Reason</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'hr.action.reason')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'hr.action.reason')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_hr_action_reason_manager">
+        <record id="access_hr_action_reason_manager" model="ir.model.access">
             <field name="name">HR Timesheet Action Reason</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'hr.action.reason')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'hr.action.reason')]"/>
             <field name="group_id" ref="group_hr_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
         <!-- Timesheet Attendance security -->
-        <record model="ir.model.access" id="access_hr_attendance">
+        <record id="access_hr_attendance" model="ir.model.access">
             <field name="name">HR Attendance</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'hr.attendance')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'hr.attendance')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_hr_attendance_employee">
+        <record id="access_hr_attendance_employee" model="ir.model.access">
             <field name="name">HR Attendance</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'hr.attendance')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'hr.attendance')]"/>
             <field name="group_id" ref="group_hr_employee"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
         <!-- Holiday Status security -->
-        <record model="ir.model.access" id="access_hr_holiday_status">
+        <record id="access_hr_holiday_status" model="ir.model.access">
             <field name="name">HR Holiday Status</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'hr.holidays.status')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'hr.holidays.status')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_hr_holiday_status_manager">
+        <record id="access_hr_holiday_status_manager" model="ir.model.access">
             <field name="name">HR Holiday Status</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'hr.holidays.status')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'hr.holidays.status')]"/>
             <field name="group_id" ref="group_hr_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
         <!-- Holidays security -->
-        <record model="ir.model.access" id="access_hr_holiday">
+        <record id="access_hr_holiday" model="ir.model.access">
             <field name="name">HR Holidays</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'hr.holidays')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'hr.holidays')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_hr_holiday_employee">
+        <record id="access_hr_holiday_employee" model="ir.model.access">
             <field name="name">HR Holidays</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'hr.holidays')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'hr.holidays')]"/>
             <field name="group_id" ref="group_hr_employee"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
     </data>
 </terp>

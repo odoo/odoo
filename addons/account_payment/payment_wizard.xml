@@ -1,26 +1,11 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
-        <wizard
-		string="Populate payment"
-		model="payment.order"
-		name="populate_payment"
-		menu="False"
-		id="wizard_populate_payment"/>
+        <wizard id="wizard_populate_payment" menu="False" model="payment.order" name="populate_payment" string="Populate payment"/>
         
-        <wizard
-		string="Pay"
-		model="payment.order"
-		name="pay_payment"
-		menu="False"
-		id="wizard_pay_payment"/>
+        <wizard id="wizard_pay_payment" menu="False" model="payment.order" name="pay_payment" string="Pay"/>
         
-        <wizard
-		string="Populate Statement with Payment lines"
-		model="account.bank.statement"
-		name="populate_statement"
-		menu="False"
-		id="wizard_populate_statement"/>
+        <wizard id="wizard_populate_statement" menu="False" model="account.bank.statement" name="populate_statement" string="Populate Statement with Payment lines"/>
         
     </data>
 </terp>

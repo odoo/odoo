@@ -1,161 +1,161 @@
-<?xml version='1.0'?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
         <!-- Expenses -->
-        <record id='view_expenses_line_tree' model='ir.ui.view'>
-            <field name='name'>hr.expense.line.tree</field>
-            <field name='type'>tree</field>
-            <field name='model'>hr.expense.line</field>
-            <field name='arch' type='xml'>
-                <tree string='Expense Lines'>
-                    <field name='date_value'/>
-                    <field name='name'/>
-                    <field name='ref'/>
-                    <field name='analytic_account' domain='[(&apos;type&apos;,&apos;=&apos;,&apos;normal&apos;)]'/>
-                    <field name='unit_amount'/>
-                    <field name='unit_quantity'/>
-                    <field name='total_amount'/>
+        <record id="view_expenses_line_tree" model="ir.ui.view">
+            <field name="name">hr.expense.line.tree</field>
+            <field name="type">tree</field>
+            <field name="model">hr.expense.line</field>
+            <field name="arch" type="xml">
+                <tree string="Expense Lines">
+                    <field name="date_value"/>
+                    <field name="name"/>
+                    <field name="ref"/>
+                    <field domain="[('type','=','normal')]" name="analytic_account"/>
+                    <field name="unit_amount"/>
+                    <field name="unit_quantity"/>
+                    <field name="total_amount"/>
                 </tree>
             </field>
         </record>
         
-        <record id='view_expenses_tree' model='ir.ui.view'>
-            <field name='name'>hr.expense.expense.tree</field>
-            <field name='model'>hr.expense.expense</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree string='Expenses'>
-                    <field name='date'/>
-                    <field name='employee_id'/>
-                    <field name='name'/>
-                    <field name='ref'/>
-                    <field name='amount'/>
-                    <field name='state'/>
+        <record id="view_expenses_tree" model="ir.ui.view">
+            <field name="name">hr.expense.expense.tree</field>
+            <field name="model">hr.expense.expense</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Expenses">
+                    <field name="date"/>
+                    <field name="employee_id"/>
+                    <field name="name"/>
+                    <field name="ref"/>
+                    <field name="amount"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
-        <record id='view_expenses_form' model='ir.ui.view'>
-            <field name='name'>hr.expense.form</field>
-            <field name='type'>form</field>
-            <field name='model'>hr.expense.expense</field>
-            <field name='arch' type='xml'>
-                <form string='Expenses Sheet'>
+        <record id="view_expenses_form" model="ir.ui.view">
+            <field name="name">hr.expense.form</field>
+            <field name="type">form</field>
+            <field name="model">hr.expense.expense</field>
+            <field name="arch" type="xml">
+                <form string="Expenses Sheet">
                     <notebook>
-                        <page string='Expense Sheet'>
-                            <field name='name' select='1'/>
-                            <field name='id' select='2'/>
-                            <field name='employee_id' select='1'/>
-                            <field name='date' select='1'/>
-                            <field name='ref' select='2'/>
+                        <page string="Expense Sheet">
+                            <field name="name" select="1"/>
+                            <field name="id" select="2"/>
+                            <field name="employee_id" select="1"/>
+                            <field name="date" select="1"/>
+                            <field name="ref" select="2"/>
                             <newline/>
-                            <field name='amount'/>
-                            <field name='currency_id'/>
-                            <field name='line_ids' nolabel='1' colspan='4'>
-                                <form string='Expense Lines'>
-                                    <field name='name' select='1'/>
-                                    <field name='date_value' select='1'/>
-                                    <field name='product_id' on_change='onchange_product_id(product_id, uom_id)' select='2'/>
-                                    <field name='uom_id' on_change='onchange_product_id(product_id, uom_id)' select='2'/>
-                                    <field name='unit_quantity' select='2'/>
-                                    <field name='unit_amount' select='2'/>
-                                    <field name='ref' select='2'/>
-                                    <field name='sequence'/>
-                                    <field name='analytic_account' domain='[(&apos;type&apos;,&apos;=&apos;,&apos;normal&apos;)]'/>
+                            <field name="amount"/>
+                            <field name="currency_id"/>
+                            <field colspan="4" name="line_ids" nolabel="1">
+                                <form string="Expense Lines">
+                                    <field name="name" select="1"/>
+                                    <field name="date_value" select="1"/>
+                                    <field name="product_id" on_change="onchange_product_id(product_id, uom_id)" select="2"/>
+                                    <field name="uom_id" on_change="onchange_product_id(product_id, uom_id)" select="2"/>
+                                    <field name="unit_quantity" select="2"/>
+                                    <field name="unit_amount" select="2"/>
+                                    <field name="ref" select="2"/>
+                                    <field name="sequence"/>
+                                    <field domain="[('type','=','normal')]" name="analytic_account"/>
                                     <newline/>
-                                    <field name='total_amount'/>
+                                    <field name="total_amount"/>
                                 </form>
                             </field>
-                            <field name='state' select='2'/>
-                            <group col='6' colspan='2'>
-                                <button name='confirm' type='workflow' states='draft' string='Confirm'/>
-                                <button name='cancel' type='workflow' states='cancel' string='Cancel'/>
-                                <button name='validate' type='workflow' states='confirm' string='Accept'/>
-                                <button name='invoice' type='workflow' states='accepted' string='Invoice'/>
-                                <button name='draft' type='workflow' states='confirm' string='Set to Draft'/>
-                                <button name='refuse' type='workflow' states='confirm,draft,accepted' string='Refuse'/>
+                            <field name="state" select="2"/>
+                            <group col="6" colspan="2">
+                                <button name="confirm" states="draft" string="Confirm" type="workflow"/>
+                                <button name="cancel" states="cancel" string="Cancel" type="workflow"/>
+                                <button name="validate" states="confirm" string="Accept" type="workflow"/>
+                                <button name="invoice" states="accepted" string="Invoice" type="workflow"/>
+                                <button name="draft" states="confirm" string="Set to Draft" type="workflow"/>
+                                <button name="refuse" states="confirm,draft,accepted" string="Refuse" type="workflow"/>
                             </group>
                         </page>
-                        <page string='Other Info'>
-                            <separator string='Accounting data' colspan='4'/>
-                            <field name='journal_id'/>
-                            <separator string='Validation' colspan='4'/>
-                            <field name='date_confirm' select='2'/>
-                            <field name='date_valid' select='2'/>
-                            <field name='user_valid' select='2'/>
-                            <field name='invoice_id' select='2'/>
-                            <separator string='Notes' colspan='4'/>
-                            <field name='note' nolabel='1' colspan='4'/>
+                        <page string="Other Info">
+                            <separator colspan="4" string="Accounting data"/>
+                            <field name="journal_id"/>
+                            <separator colspan="4" string="Validation"/>
+                            <field name="date_confirm" select="2"/>
+                            <field name="date_valid" select="2"/>
+                            <field name="user_valid" select="2"/>
+                            <field name="invoice_id" select="2"/>
+                            <separator colspan="4" string="Notes"/>
+                            <field colspan="4" name="note" nolabel="1"/>
                         </page>
                     </notebook>
                 </form>
             </field>
         </record>
-        <record id='expense_all' model='ir.actions.act_window'>
-            <field name='name'>All expenses</field>
-            <field name='res_model'>hr.expense.expense</field>
-            <field name='view_type'>form</field>
+        <record id="expense_all" model="ir.actions.act_window">
+            <field name="name">All expenses</field>
+            <field name="res_model">hr.expense.expense</field>
+            <field name="view_type">form</field>
         </record>
-        <menuitem name='Human Resources/Expenses/All Expenses' action='expense_all' id='menu_expense_all'/>
-        <record id='expense_all_draft' model='ir.actions.act_window'>
-            <field name='name'>Draft expenses</field>
-            <field name='res_model'>hr.expense.expense</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('state','=','draft')]</field>
+        <menuitem id="next_id_49" name="Expenses" parent="hr.menu_hr_root"/><menuitem action="expense_all" id="menu_expense_all" parent="next_id_49"/>
+        <record id="expense_all_draft" model="ir.actions.act_window">
+            <field name="name">Draft expenses</field>
+            <field name="res_model">hr.expense.expense</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','draft')]</field>
         </record>
-        <menuitem name='Human Resources/Expenses/All Expenses/Draft Expenses' action='expense_all_draft' id='menu_expense_all_draft'/>
-        <record id='expense_all_confirm' model='ir.actions.act_window'>
-            <field name='name'>Expenses waiting validation</field>
-            <field name='res_model'>hr.expense.expense</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('state','=','confirm')]</field>
+        <menuitem action="expense_all_draft" id="menu_expense_all_draft" parent="hr_expense.menu_expense_all"/>
+        <record id="expense_all_confirm" model="ir.actions.act_window">
+            <field name="name">Expenses waiting validation</field>
+            <field name="res_model">hr.expense.expense</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','confirm')]</field>
         </record>
-        <menuitem name='Human Resources/Expenses/All Expenses/Expenses Waiting Validation' action='expense_all_confirm' id='menu_expense_all_confirm'/>
-        <record id='expense_all_valid' model='ir.actions.act_window'>
-            <field name='name'>Expenses waiting invoice</field>
-            <field name='res_model'>hr.expense.expense</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('state','=','accepted')]</field>
+        <menuitem action="expense_all_confirm" id="menu_expense_all_confirm" parent="hr_expense.menu_expense_all"/>
+        <record id="expense_all_valid" model="ir.actions.act_window">
+            <field name="name">Expenses waiting invoice</field>
+            <field name="res_model">hr.expense.expense</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','accepted')]</field>
         </record>
-        <menuitem name='Human Resources/Expenses/All Expenses/Expenses Waiting Invoice' action='expense_all_valid' id='menu_expense_all_valid'/>
-        <record id='expense_all_invoiced' model='ir.actions.act_window'>
-            <field name='name'>Expenses waiting payment</field>
-            <field name='res_model'>hr.expense.expense</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('state','=','invoiced')]</field>
+        <menuitem action="expense_all_valid" id="menu_expense_all_valid" parent="hr_expense.menu_expense_all"/>
+        <record id="expense_all_invoiced" model="ir.actions.act_window">
+            <field name="name">Expenses waiting payment</field>
+            <field name="res_model">hr.expense.expense</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','invoiced')]</field>
         </record>
-        <menuitem name='Human Resources/Expenses/All Expenses/Expenses Waiting Payment' action='expense_all_invoiced' id='menu_expense_all_invoiced'/>
+        <menuitem action="expense_all_invoiced" id="menu_expense_all_invoiced" parent="hr_expense.menu_expense_all"/>
         
         <!--
 		My expenses menu
 		-->
-        <record id='expense_my' model='ir.actions.act_window'>
-            <field name='name'>My Expenses</field>
-            <field name='res_model'>hr.expense.expense</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>form,tree</field>
-            <field name='domain'>[('user_id','=',uid)]</field>
+        <record id="expense_my" model="ir.actions.act_window">
+            <field name="name">My Expenses</field>
+            <field name="res_model">hr.expense.expense</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="domain">[('user_id','=',uid)]</field>
         </record>
-        <menuitem name='Human Resources/Expenses/My Expenses' action='expense_my' id='menu_expense_my'/>
-        <record id='expense_my_draft' model='ir.actions.act_window'>
-            <field name='name'>My Draft expenses</field>
-            <field name='res_model'>hr.expense.expense</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('user_id','=',uid),('state','=','draft')]</field>
+        <menuitem action="expense_my" id="menu_expense_my" parent="hr_expense.next_id_49"/>
+        <record id="expense_my_draft" model="ir.actions.act_window">
+            <field name="name">My Draft expenses</field>
+            <field name="res_model">hr.expense.expense</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('user_id','=',uid),('state','=','draft')]</field>
         </record>
-        <menuitem name='Human Resources/Expenses/My Expenses/My Draft Expenses' action='expense_my_draft' id='menu_expense_my_draft'/>
-        <record id='expense_my_confirm' model='ir.actions.act_window'>
-            <field name='name'>My expenses waiting validation</field>
-            <field name='res_model'>hr.expense.expense</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('user_id','=',uid),('state','=','confirm')]</field>
+        <menuitem action="expense_my_draft" id="menu_expense_my_draft" parent="hr_expense.menu_expense_my"/>
+        <record id="expense_my_confirm" model="ir.actions.act_window">
+            <field name="name">My expenses waiting validation</field>
+            <field name="res_model">hr.expense.expense</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('user_id','=',uid),('state','=','confirm')]</field>
         </record>
-        <menuitem name='Human Resources/Expenses/My Expenses/My Expenses Waiting Validation' action='expense_my_confirm' id='menu_expense_my_confirm'/>
+        <menuitem action="expense_my_confirm" id="menu_expense_my_confirm" parent="hr_expense.menu_expense_my"/>
         
     </data>
 </terp>

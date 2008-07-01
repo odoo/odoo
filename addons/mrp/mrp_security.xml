@@ -1,12 +1,12 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
         
-        <record model="res.groups" id="group_production_manager">
+        <record id="group_production_manager" model="res.groups">
             <field name="name">Production Manager</field>
         </record>
         
-        <record model="res.groups" id="group_production_worker">
+        <record id="group_production_worker" model="res.groups">
             <field name="name">Workers</field>
         </record>
         
@@ -27,264 +27,264 @@
         </record>
         
         <!-- Workcenter security -->
-        <record model="ir.model.access" id="mrp_workcenter">
+        <record id="mrp_workcenter" model="ir.model.access">
             <field name="name">Workcenter</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'mrp.workcenter')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'mrp.workcenter')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="mrp_workcenter_manager">
+        <record id="mrp_workcenter_manager" model="ir.model.access">
             <field name="name">Workcenter</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'mrp.workcenter')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'mrp.workcenter')]"/>
             <field name="group_id" ref="group_production_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
         <!-- Property security -->
-        <record model="ir.model.access" id="mrp_property">
+        <record id="mrp_property" model="ir.model.access">
             <field name="name">Property</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'mrp.property')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'mrp.property')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="mrp_property_manager">
+        <record id="mrp_property_manager" model="ir.model.access">
             <field name="name">Property</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'mrp.property')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'mrp.property')]"/>
             <field name="group_id" ref="group_production_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
         <!-- Property Group security -->
-        <record model="ir.model.access" id="mrp_property_group">
+        <record id="mrp_property_group" model="ir.model.access">
             <field name="name">Property Group</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'mrp.property.group')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'mrp.property.group')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="mrp_property_group_manager">
+        <record id="mrp_property_group_manager" model="ir.model.access">
             <field name="name">Property Group</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'mrp.property.group')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'mrp.property.group')]"/>
             <field name="group_id" ref="group_production_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
         <!-- Routing security -->
-        <record model="ir.model.access" id="mrp_routing">
+        <record id="mrp_routing" model="ir.model.access">
             <field name="name">Routing</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'mrp.routing')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'mrp.routing')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="mrp_routing_manager">
+        <record id="mrp_routing_manager" model="ir.model.access">
             <field name="name">Routing</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'mrp.routing')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'mrp.routing')]"/>
             <field name="group_id" ref="group_production_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
         <!-- Workcenter Routing security -->
-        <record model="ir.model.access" id="mrp_routing_workcenter">
+        <record id="mrp_routing_workcenter" model="ir.model.access">
             <field name="name">Workcenter Routing</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'mrp.routing.workcenter')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'mrp.routing.workcenter')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="mrp_routing_workcenter_manager">
+        <record id="mrp_routing_workcenter_manager" model="ir.model.access">
             <field name="name">Workcenter Routing</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'mrp.routing.workcenter')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'mrp.routing.workcenter')]"/>
             <field name="group_id" ref="group_production_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
         <!-- BOM security -->
-        <record model="ir.model.access" id="mrp_bom">
+        <record id="mrp_bom" model="ir.model.access">
             <field name="name">Bill of Material</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'mrp.bom')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'mrp.bom')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="mrp_bom_manager">
+        <record id="mrp_bom_manager" model="ir.model.access">
             <field name="name">Bill of Material</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'mrp.bom')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'mrp.bom')]"/>
             <field name="group_id" ref="group_production_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
         <!-- BOM Revision security -->
-        <record model="ir.model.access" id="mrp_bom_revision">
+        <record id="mrp_bom_revision" model="ir.model.access">
             <field name="name">Bom Revision</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'mrp.bom.revision')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'mrp.bom.revision')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="mrp_bom_revision_manager">
+        <record id="mrp_bom_revision_manager" model="ir.model.access">
             <field name="name">Bom Revision</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'mrp.bom.revision')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'mrp.bom.revision')]"/>
             <field name="group_id" ref="group_production_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
         <!-- Production security -->
-        <record model="ir.model.access" id="mrp_production">
+        <record id="mrp_production" model="ir.model.access">
             <field name="name">Production</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'mrp.production')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'mrp.production')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="mrp_production_worker">
+        <record id="mrp_production_worker" model="ir.model.access">
             <field name="name">Production</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'mrp.production')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'mrp.production')]"/>
             <field name="group_id" ref="group_production_worker"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
         <!-- Procurement security -->
-        <record model="ir.model.access" id="mrp_procurement">
+        <record id="mrp_procurement" model="ir.model.access">
             <field name="name">Procurement</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'mrp.procurement')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'mrp.procurement')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="mrp_procurement_worker">
+        <record id="mrp_procurement_worker" model="ir.model.access">
             <field name="name">Procurement</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'mrp.procurement')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'mrp.procurement')]"/>
             <field name="group_id" ref="group_production_worker"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="False"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
         <!-- Production Product Line security -->
-        <record model="ir.model.access" id="mrp_production_product_line">
+        <record id="mrp_production_product_line" model="ir.model.access">
             <field name="name">Production Product Line</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'mrp.production.product.line')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'mrp.production.product.line')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="mrp_production_product_line_worker">
+        <record id="mrp_production_product_line_worker" model="ir.model.access">
             <field name="name">Production Product Line</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'mrp.production.product.line')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'mrp.production.product.line')]"/>
             <field name="group_id" ref="group_production_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
         <!-- Production Workcenter Line security -->
-        <record model="ir.model.access" id="mrp_production_workcenter_line">
+        <record id="mrp_production_workcenter_line" model="ir.model.access">
             <field name="name">Production Product Line</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'mrp.production.workcenter.line')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'mrp.production.workcenter.line')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="mrp_production_workcenter_line_worker">
+        <record id="mrp_production_workcenter_line_worker" model="ir.model.access">
             <field name="name">Production Product Line</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'mrp.production.workcenter.line')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'mrp.production.workcenter.line')]"/>
             <field name="group_id" ref="group_production_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
         <!-- Stock Movement Security -->
-        <record model="ir.model.access" id="mrp_stock_move">
+        <record id="mrp_stock_move" model="ir.model.access">
             <field name="name">Stock Move</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'stock.move')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'stock.move')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="mrp_stock_move_worker">
+        <record id="mrp_stock_move_worker" model="ir.model.access">
             <field name="name">Stock Move</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'stock.move')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'stock.move')]"/>
             <field name="group_id" ref="group_production_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
         
         <!-- Order Point Security -->
-        <record model="ir.model.access" id="mrp_order_point">
+        <record id="mrp_order_point" model="ir.model.access">
             <field name="name">Stock Move</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'stock.warehouse.orderpoint')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'stock.warehouse.orderpoint')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="mrp_order_point_worker">
+        <record id="mrp_order_point_worker" model="ir.model.access">
             <field name="name">Stock Move</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'stock.warehouse.orderpoint')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'stock.warehouse.orderpoint')]"/>
             <field name="group_id" ref="group_production_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
     </data>
 </terp>

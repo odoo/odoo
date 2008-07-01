@@ -1,366 +1,366 @@
-<?xml version='1.0'?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
-        <menuitem name='Sales Management' icon='terp-sale' id='menu_sale_root'/>
+        <menuitem icon="terp-sale" id="menu_sale_root" name="Sales Management"/>
         
-        <record id='view_shop_form' model='ir.ui.view'>
-            <field name='name'>sale.shop</field>
-            <field name='model'>sale.shop</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Sale Shop'>
-                    <field name='name' select='1'/>
-                    <field name='warehouse_id' required='1' select='1'/>
-                    <separator string='Accounting' colspan='4'/>
-                    <field name='payment_default_id'/>
-                    <field name='pricelist_id' domain='[(&apos;type&apos;,&apos;=&apos;,&apos;sale&apos;)]' select='1'/>
-                    <field name='project_id' select='1'/>
-                    <separator string='Payment accounts' colspan='4'/>
-                    <field name='payment_account_id' nolabel='1' colspan='4'/>
+        <record id="view_shop_form" model="ir.ui.view">
+            <field name="name">sale.shop</field>
+            <field name="model">sale.shop</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Sale Shop">
+                    <field name="name" select="1"/>
+                    <field name="warehouse_id" required="1" select="1"/>
+                    <separator colspan="4" string="Accounting"/>
+                    <field name="payment_default_id"/>
+                    <field domain="[('type','=','sale')]" name="pricelist_id" select="1"/>
+                    <field name="project_id" select="1"/>
+                    <separator colspan="4" string="Payment accounts"/>
+                    <field colspan="4" name="payment_account_id" nolabel="1"/>
                 </form>
             </field>
         </record>
-        <record id='view_shop_tree' model='ir.ui.view'>
-            <field name='name'>sale.shop</field>
-            <field name='model'>sale.shop</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree string='Sale Shop'>
-                    <field name='name'/>
-                    <field name='pricelist_id'/>
-                    <field name='project_id'/>
-                    <field name='warehouse_id'/>
+        <record id="view_shop_tree" model="ir.ui.view">
+            <field name="name">sale.shop</field>
+            <field name="model">sale.shop</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Sale Shop">
+                    <field name="name"/>
+                    <field name="pricelist_id"/>
+                    <field name="project_id"/>
+                    <field name="warehouse_id"/>
                 </tree>
             </field>
         </record>
         
-        <record id='action_shop_form' model='ir.actions.act_window'>
-            <field name='name'>Shop</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>sale.shop</field>
-            <field name='view_type'>form</field>
-            <field name='view_id' ref='view_shop_tree'/>
+        <record id="action_shop_form" model="ir.actions.act_window">
+            <field name="name">Shop</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.shop</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_shop_tree"/>
         </record>
-        <menuitem name='Sales Management/Configuration' sequence='1' groups='base.group_admin' id='menu_shop_configuration'/>
-        <menuitem name='Sales Management/Configuration/Shop' action='action_shop_form' id='menu_action_shop_form'/>
+        <menuitem groups="base.group_admin" id="menu_shop_configuration" name="Configuration" parent="sale.menu_sale_root" sequence="1"/>
+        <menuitem action="action_shop_form" id="menu_action_shop_form" parent="sale.menu_shop_configuration"/>
         
-        <record id='view_order_tree' model='ir.ui.view'>
-            <field name='name'>sale.order.tree</field>
-            <field name='model'>sale.order</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree string='Sales orders'>
-                    <field name='date_order'/>
-                    <field name='name'/>
-                    <field name='partner_id'/>
-                    <field name='partner_shipping_id'/>
-                    <field name='shipped'/>
-                    <field name='invoiced'/>
-                    <field name='amount_untaxed'/>
-                    <field name='state'/>
+        <record id="view_order_tree" model="ir.ui.view">
+            <field name="name">sale.order.tree</field>
+            <field name="model">sale.order</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Sales orders">
+                    <field name="date_order"/>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="partner_shipping_id"/>
+                    <field name="shipped"/>
+                    <field name="invoiced"/>
+                    <field name="amount_untaxed"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
         
-        <record id='view_order_form' model='ir.ui.view'>
-            <field name='name'>sale.order.form</field>
-            <field name='model'>sale.order</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Sales order'>
+        <record id="view_order_form" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Sales order">
                     <notebook>
-                        <page string='Sale Order'>
-                            <field name='name' select='1'/>
-                            <group col='4' colspan='2'>
-                                <field name='shipped' select='2'/>
-                                <field name='invoiced' select='2'/>
+                        <page string="Sale Order">
+                            <field name="name" select="1"/>
+                            <group col="4" colspan="2">
+                                <field name="shipped" select="2"/>
+                                <field name="invoiced" select="2"/>
                             </group>
                             <newline/>
-                            <field name='date_order' select='1'/>
-                            <field name='shop_id' on_change='onchange_shop_id(shop_id)' select='2'/>
-                            <field name='partner_id' on_change='onchange_partner_id(partner_id)' required='1' select='1'/>
-                            <field name='partner_order_id' domain='[(&apos;partner_id&apos;,&apos;=&apos;,partner_id)]'/>
-                            <field name='partner_invoice_id' domain='[(&apos;partner_id&apos;,&apos;=&apos;,partner_id)]'/>
-                            <field name='partner_shipping_id' domain='[(&apos;partner_id&apos;,&apos;=&apos;,partner_id)]'/>
-                            <field name='pricelist_id' domain='[(&apos;type&apos;,&apos;=&apos;,&apos;sale&apos;)]'/>
-                            <field name='project_id' select='2'/>
+                            <field name="date_order" select="1"/>
+                            <field name="shop_id" on_change="onchange_shop_id(shop_id)" select="2"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" required="1" select="1"/>
+                            <field domain="[('partner_id','=',partner_id)]" name="partner_order_id"/>
+                            <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id"/>
+                            <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id"/>
+                            <field domain="[('type','=','sale')]" name="pricelist_id"/>
+                            <field name="project_id" select="2"/>
                             <newline/>
-                            <field name='order_line' mode='tree,graph' widget='one2many_list' nolabel='1' colspan='4'>
-                                <form string='Sale Order Lines'>
+                            <field colspan="4" mode="tree,graph" name="order_line" nolabel="1" widget="one2many_list">
+                                <form string="Sale Order Lines">
                                     <notebook>
-                                        <page string='Order Line'>
-                                            <separator string='Automatic Declaration' colspan='4'/>
-                                            <field name='product_id' on_change='product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, &apos;lang&apos; in context and context[&apos;lang&apos;], True, parent.date_order)' context='partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom' colspan='4' select='1'/>
-                                            <field name='product_uom_qty' on_change='product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, &apos;lang&apos; in context and context[&apos;lang&apos;], False, parent.date_order)' context='partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom' select='1'/>
-                                            <field name='product_uom' on_change='product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, &apos;lang&apos; in context and context[&apos;lang&apos;], False, parent.date_order)'/>
-                                            <separator string='Manual Description' colspan='4'/>
-                                            <field name='name' colspan='4' select='2'/>
-                                            <field name='price_unit' select='2'/>
-                                            <field name='discount'/>
-                                            <field name='type'/>
-                                            <field name='delay' select='2'/>
+                                        <page string="Order Line">
+                                            <separator colspan="4" string="Automatic Declaration"/>
+                                            <field colspan="4" context="partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom" name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], True, parent.date_order)" select="1"/>
+                                            <field context="partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom" name="product_uom_qty" on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order)" select="1"/>
+                                            <field name="product_uom" on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order)"/>
+                                            <separator colspan="4" string="Manual Description"/>
+                                            <field colspan="4" name="name" select="2"/>
+                                            <field name="price_unit" select="2"/>
+                                            <field name="discount"/>
+                                            <field name="type"/>
+                                            <field name="delay" select="2"/>
                                             <newline/>
-                                            <field name='tax_id' colspan='4'/>
-                                            <separator string='States' colspan='4'/>
-                                            <field name='state' select='2'/>
-                                            <group col='3' colspan='2'>
-                                                <field name='invoiced' select='2'/>
-                                                <button name='%(wizard_sale_order_line_invoice)d' type='action' states='confirmed' string='Make Invoice' colspan='1'/>
+                                            <field colspan="4" name="tax_id"/>
+                                            <separator colspan="4" string="States"/>
+                                            <field name="state" select="2"/>
+                                            <group col="3" colspan="2">
+                                                <field name="invoiced" select="2"/>
+                                                <button colspan="1" name="%(wizard_sale_order_line_invoice)d" states="confirmed" string="Make Invoice" type="action"/>
                                             </group>
                                         </page>
-                                        <page groups='base.group_extended' string='Extra Info'>
-                                            <field name='product_uos_qty' groups='product.group_uos' on_change='uos_change(product_uos, product_uos_qty, product_id)'/>
-                                            <field name='product_uos' groups='product.group_uos'/>
-                                            <field name='product_packaging'/>
-                                            <field name='address_allotment_id' select='2'/>
-                                            <separator string='Properties' colspan='4'/>
-                                            <field name='property_ids' nolabel='1' colspan='4'/>
+                                        <page groups="base.group_extended" string="Extra Info">
+                                            <field groups="product.group_uos" name="product_uos_qty" on_change="uos_change(product_uos, product_uos_qty, product_id)"/>
+                                            <field groups="product.group_uos" name="product_uos"/>
+                                            <field name="product_packaging"/>
+                                            <field name="address_allotment_id" select="2"/>
+                                            <separator colspan="4" string="Properties"/>
+                                            <field colspan="4" name="property_ids" nolabel="1"/>
                                         </page>
-                                        <page string='Notes'>
-                                            <field name='notes' nolabel='1' colspan='4'/>
+                                        <page string="Notes">
+                                            <field colspan="4" name="notes" nolabel="1"/>
                                         </page>
-                                        <page string='History'>
-                                            <separator string='Invoice Lines' colspan='4'/>
-                                            <field name='invoice_lines' nolabel='1' colspan='4'/>
-                                            <separator string='Stock Moves' colspan='4'/>
-                                            <field name='move_ids' nolabel='1' colspan='4'/>
+                                        <page string="History">
+                                            <separator colspan="4" string="Invoice Lines"/>
+                                            <field colspan="4" name="invoice_lines" nolabel="1"/>
+                                            <separator colspan="4" string="Stock Moves"/>
+                                            <field colspan="4" name="move_ids" nolabel="1"/>
                                         </page>
                                     </notebook>
                                 </form>
-                                <tree string='Sales order lines'>
-                                    <field name='name' colspan='4'/>
-                                    <field name='product_uom_qty' string='Qty'/>
-                                    <field name='product_uom' string='UoM'/>
-                                    <field name='discount'/>
-                                    <field name='price_unit'/>
-                                    <field name='price_net'/>
-                                    <field name='price_subtotal'/>
+                                <tree string="Sales order lines">
+                                    <field colspan="4" name="name"/>
+                                    <field name="product_uom_qty" string="Qty"/>
+                                    <field name="product_uom" string="UoM"/>
+                                    <field name="discount"/>
+                                    <field name="price_unit"/>
+                                    <field name="price_net"/>
+                                    <field name="price_subtotal"/>
                                 </tree>
                             </field>
                             <newline/>
-                            <group col='7' colspan='4'>
-                                <field name='amount_untaxed' sum='Untaxed amount'/>
-                                <field name='amount_tax'/>
-                                <field name='amount_total' sum='Total amount'/>
-                                <button name='button_dummy' type='object' states='draft' string='Compute'/>
+                            <group col="7" colspan="4">
+                                <field name="amount_untaxed" sum="Untaxed amount"/>
+                                <field name="amount_tax"/>
+                                <field name="amount_total" sum="Total amount"/>
+                                <button name="button_dummy" states="draft" string="Compute" type="object"/>
                             </group>
-                            <group col='13' colspan='4'>
-                                <field name='state' select='2'/>
-                                <button name='order_confirm' states='draft' string='Confirm Order'/>
-                                <button name='invoice_recreate' states='invoice_except' string='Recreate Invoice'/>
-                                <button name='invoice_corrected' states='invoice_except' string='Invoice Corrected'/>
-                                <button name='ship_recreate' states='shipping_except' string='Recreate Procurement'/>
-                                <button name='ship_corrected' states='shipping_except' string='Procurement Corrected'/>
-                                <button name='manual_invoice' states='manual' string='Create Invoice'/>
-                                <button name='ship_cancel' states='shipping_except' string='Cancel Order'/>
-                                <button name='action_cancel_draft' type='object' states='cancel' string='Set to Draft'/>
-                                <button name='action_cancel' type='object' states='manual,progress' string='Cancel Order'/>
-                                <button name='cancel' states='draft' string='Cancel Order'/>
-                                <button name='invoice_cancel' states='invoice_except' string='Cancel Order'/>
+                            <group col="13" colspan="4">
+                                <field name="state" select="2"/>
+                                <button name="order_confirm" states="draft" string="Confirm Order"/>
+                                <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice"/>
+                                <button name="invoice_corrected" states="invoice_except" string="Invoice Corrected"/>
+                                <button name="ship_recreate" states="shipping_except" string="Recreate Procurement"/>
+                                <button name="ship_corrected" states="shipping_except" string="Procurement Corrected"/>
+                                <button name="manual_invoice" states="manual" string="Create Invoice"/>
+                                <button name="ship_cancel" states="shipping_except" string="Cancel Order"/>
+                                <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
+                                <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object"/>
+                                <button name="cancel" states="draft" string="Cancel Order"/>
+                                <button name="invoice_cancel" states="invoice_except" string="Cancel Order"/>
                             </group>
                         </page>
-                        <page string='Other data'>
-                            <field name='incoterm' groups='base.group_extended'/>
-                            <field name='picking_policy' groups='base.group_extended' required='True'/>
-                            <field name='user_id'/>
-                            <field name='order_policy'/>
-                            <field name='origin' groups='base.group_extended'/>
-                            <field name='invoice_quantity' groups='base.group_extended'/>
-                            <field name='client_order_ref'/>
-                            <separator string='Notes' colspan='4'/>
-                            <field name='note' nolabel='1' colspan='4'/>
+                        <page string="Other data">
+                            <field groups="base.group_extended" name="incoterm"/>
+                            <field groups="base.group_extended" name="picking_policy" required="True"/>
+                            <field name="user_id"/>
+                            <field name="order_policy"/>
+                            <field groups="base.group_extended" name="origin"/>
+                            <field groups="base.group_extended" name="invoice_quantity"/>
+                            <field name="client_order_ref"/>
+                            <separator colspan="4" string="Notes"/>
+                            <field colspan="4" name="note" nolabel="1"/>
                         </page>
-                        <page groups='base.group_extended' string='History'>
-                            <separator string='Related invoices' colspan='4'/>
-                            <field name='invoice_ids' nolabel='1' colspan='4'/>
-                            <separator string='Related packings' colspan='4'/>
-                            <field name='picking_ids' nolabel='1' colspan='4'/>
+                        <page groups="base.group_extended" string="History">
+                            <separator colspan="4" string="Related invoices"/>
+                            <field colspan="4" name="invoice_ids" nolabel="1"/>
+                            <separator colspan="4" string="Related packings"/>
+                            <field colspan="4" name="picking_ids" nolabel="1"/>
                         </page>
                     </notebook>
                 </form>
             </field>
         </record>
-        <record id='action_order_form' model='ir.actions.act_window'>
-            <field name='name'>Sales Order</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>sale.order</field>
-            <field name='view_type'>form</field>
-            <field name='view_id' ref='view_order_form'/>
+        <record id="action_order_form" model="ir.actions.act_window">
+            <field name="name">Sales Order</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_order_form"/>
         </record>
-        <menuitem name='Sales Management/Sales Order' action='action_order_form' id='menu_sale_order'/>
+        <menuitem action="action_order_form" id="menu_sale_order" parent="sale.menu_sale_root"/>
         
-        <record id='action_order_tree' model='ir.actions.act_window'>
-            <field name='name'>My Sales Order</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>sale.order</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('user_id','=',uid)]</field>
+        <record id="action_order_tree" model="ir.actions.act_window">
+            <field name="name">My Sales Order</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('user_id','=',uid)]</field>
         </record>
-        <menuitem name='Sales Management/Sales Order/' action='action_order_tree' id='menu_action_order_tree'/>
+        <menuitem action="action_order_tree" id="menu_action_order_tree" parent="sale.menu_sale_order"/>
         
         
-        <record id='action_order_tree_all' model='ir.actions.act_window'>
-            <field name='name'>All Sales Order</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>sale.order</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
+        <record id="action_order_tree_all" model="ir.actions.act_window">
+            <field name="name">All Sales Order</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
         </record>
-        <menuitem name='Sales Management/Sales Order/' action='action_order_tree_all' id='menu_action_order_tree_all'/>
+        <menuitem action="action_order_tree_all" id="menu_action_order_tree_all" parent="sale.menu_sale_order"/>
         
         
-        <record id='action_order_tree2' model='ir.actions.act_window'>
-            <field name='name'>Sales in Exception</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>sale.order</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('state','in',('shipping_except','invoice_except')]</field>
+        <record id="action_order_tree2" model="ir.actions.act_window">
+            <field name="name">Sales in Exception</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','in',('shipping_except','invoice_except')]</field>
         </record>
-        <menuitem name='Sales Management/Sales Order/All Sales Order/' action='action_order_tree2' id='menu_action_order_tree2'/>
+        <menuitem id="next_id_78" name="All Sales Order" parent="sale.menu_sale_order"/><menuitem action="action_order_tree2" id="menu_action_order_tree2" parent="next_id_78"/>
         
-        <record id='action_order_tree3' model='ir.actions.act_window'>
-            <field name='name'>Sales Order To Be Invoiced</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>sale.order</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('state','=','manual')]</field>
+        <record id="action_order_tree3" model="ir.actions.act_window">
+            <field name="name">Sales Order To Be Invoiced</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','manual')]</field>
         </record>
-        <menuitem name='Sales Management/Sales Order/All Sales Order/' action='action_order_tree3' id='menu_action_order_tree3'/>
+        <menuitem action="action_order_tree3" id="menu_action_order_tree3" parent="sale.next_id_78"/>
         
-        <record id='action_order_tree4' model='ir.actions.act_window'>
-            <field name='name'>Sales Order in Progress</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>sale.order</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('state','in',('progress','waiting_date','manual'))]</field>
+        <record id="action_order_tree4" model="ir.actions.act_window">
+            <field name="name">Sales Order in Progress</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','in',('progress','waiting_date','manual'))]</field>
         </record>
-        <menuitem name='Sales Management/Sales Order/All Sales Order/Sales in Progress' sequence='2' action='action_order_tree4' id='menu_action_order_tree4'/>
+        <menuitem action="action_order_tree4" id="menu_action_order_tree4" parent="sale.next_id_78" sequence="2"/>
         
         
-        <record id='action_order_tree5' model='ir.actions.act_window'>
-            <field name='name'>All Quotations</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>sale.order</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('state','=','draft')]</field>
+        <record id="action_order_tree5" model="ir.actions.act_window">
+            <field name="name">All Quotations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','draft')]</field>
         </record>
-        <menuitem name='Sales Management/Sales Order/All Sales Order/All Quotations' sequence='1' action='action_order_tree5' id='menu_action_order_tree5'/>
+        <menuitem action="action_order_tree5" id="menu_action_order_tree5" parent="sale.next_id_78" sequence="1"/>
         
-        <record id='action_order_tree7' model='ir.actions.act_window'>
-            <field name='name'>My sales in shipping exception</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>sale.order</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('state','in',('shipping_except','invoice_except')),('user_id','=',uid)]</field>
+        <record id="action_order_tree7" model="ir.actions.act_window">
+            <field name="name">My sales in shipping exception</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','in',('shipping_except','invoice_except')),('user_id','=',uid)]</field>
         </record>
-        <menuitem name='Sales Management/Sales Order/My Sales Order/My Sales in Exception' action='action_order_tree7' id='menu_action_order_tree7'/>
+        <menuitem id="next_id_79" name="My Sales Order" parent="sale.menu_sale_order"/><menuitem action="action_order_tree7" id="menu_action_order_tree7" parent="next_id_79"/>
         
-        <record id='action_order_tree8' model='ir.actions.act_window'>
-            <field name='name'>My sales order waiting Invoice</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>sale.order</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('state','=','manual'),('user_id','=',uid)]</field>
+        <record id="action_order_tree8" model="ir.actions.act_window">
+            <field name="name">My sales order waiting Invoice</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','manual'),('user_id','=',uid)]</field>
         </record>
-        <menuitem name='Sales Management/Sales Order/My Sales Order/My Sales to be Invoiced' action='action_order_tree8' id='menu_action_order_tree8'/>
+        <menuitem action="action_order_tree8" id="menu_action_order_tree8" parent="sale.next_id_79"/>
         
-        <record id='action_order_tree9' model='ir.actions.act_window'>
-            <field name='name'>My sales order in progress</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>sale.order</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('state','in',('progress','waiting_date','manual')),('user_id','=',uid)]</field>
+        <record id="action_order_tree9" model="ir.actions.act_window">
+            <field name="name">My sales order in progress</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','in',('progress','waiting_date','manual')),('user_id','=',uid)]</field>
         </record>
-        <menuitem name='Sales Management/Sales Order/My Sales Order/My Sales in Progress' sequence='2' action='action_order_tree9' id='menu_action_order_tree9'/>
+        <menuitem action="action_order_tree9" id="menu_action_order_tree9" parent="sale.next_id_79" sequence="2"/>
         
         
-        <record id='action_order_tree10' model='ir.actions.act_window'>
-            <field name='name'>My Quotations</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>sale.order</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('state','=','draft'),('user_id','=',uid)]</field>
+        <record id="action_order_tree10" model="ir.actions.act_window">
+            <field name="name">My Quotations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','draft'),('user_id','=',uid)]</field>
         </record>
-        <menuitem name='Sales Management/Sales Order/My Sales Order/' sequence='1' action='action_order_tree10' id='menu_action_order_tree10'/>
+        <menuitem action="action_order_tree10" id="menu_action_order_tree10" parent="sale.next_id_79" sequence="1"/>
         
         
-        <record id='view_order_line_graph' model='ir.ui.view'>
-            <field name='name'>sale.order.line.graph</field>
-            <field name='model'>sale.order.line</field>
-            <field name='type'>graph</field>
-            <field name='arch' type='xml'>
-                <graph string='Sales order lines'>
-                    <field name='product_id'/>
-                    <field name='price_unit' operator='+'/>
+        <record id="view_order_line_graph" model="ir.ui.view">
+            <field name="name">sale.order.line.graph</field>
+            <field name="model">sale.order.line</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Sales order lines">
+                    <field name="product_id"/>
+                    <field name="price_unit" operator="+"/>
                 </graph>
             </field>
         </record>
         
         
-        <record id='view_order_line_tree' model='ir.ui.view'>
-            <field name='name'>sale.order.line.tree</field>
-            <field name='model'>sale.order.line</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree string='Sales order lines'>
-                    <field name='order_id'/>
-                    <field name='name' colspan='4'/>
-                    <field name='product_id'/>
-                    <field name='product_uom_qty' string='Qty'/>
-                    <field name='product_uom' string='UoM'/>
-                    <field name='discount'/>
-                    <field name='price_unit'/>
-                    <field name='price_net'/>
-                    <field name='price_subtotal'/>
+        <record id="view_order_line_tree" model="ir.ui.view">
+            <field name="name">sale.order.line.tree</field>
+            <field name="model">sale.order.line</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Sales order lines">
+                    <field name="order_id"/>
+                    <field colspan="4" name="name"/>
+                    <field name="product_id"/>
+                    <field name="product_uom_qty" string="Qty"/>
+                    <field name="product_uom" string="UoM"/>
+                    <field name="discount"/>
+                    <field name="price_unit"/>
+                    <field name="price_net"/>
+                    <field name="price_subtotal"/>
                 </tree>
             </field>
         </record>
-        <record id='view_order_line_form2' model='ir.ui.view'>
-            <field name='name'>sale.order.line.form2</field>
-            <field name='model'>sale.order.line</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Sales Order Lines'>
+        <record id="view_order_line_form2" model="ir.ui.view">
+            <field name="name">sale.order.line.form2</field>
+            <field name="model">sale.order.line</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Sales Order Lines">
                     <notebook>
-                        <page string='Order Lines'>
-                            <separator string='Automatic Declaration' colspan='4'/>
-                            <field name='order_id' select='1'/>
-                            <field name='invoiced' select='2'/>
-                            <field name='product_uom_qty' readonly='1' select='2'/>
-                            <field name='product_uom' readonly='2'/>
-                            <field name='product_id' readonly='1' select='1'/>
+                        <page string="Order Lines">
+                            <separator colspan="4" string="Automatic Declaration"/>
+                            <field name="order_id" select="1"/>
+                            <field name="invoiced" select="2"/>
+                            <field name="product_uom_qty" readonly="1" select="2"/>
+                            <field name="product_uom" readonly="2"/>
+                            <field name="product_id" readonly="1" select="1"/>
                             
-                            <separator string='Manual Designation' colspan='4'/>
-                            <field name='name' colspan='4' select='2'/>
-                            <field name='price_unit' select='2'/>
-                            <field name='discount'/>
-                            <field name='type'/>
-                            <field name='delay' select='2'/>
-                            <field name='price_subtotal'/>
-                            <field name='tax_id' colspan='4'/>
-                            <separator string='States' colspan='4'/>
-                            <field name='state' select='2'/>
-                            <group col='2' colspan='2'>
-                                <button name='button_done' type='object' states='confirmed' string='Done'/>
+                            <separator colspan="4" string="Manual Designation"/>
+                            <field colspan="4" name="name" select="2"/>
+                            <field name="price_unit" select="2"/>
+                            <field name="discount"/>
+                            <field name="type"/>
+                            <field name="delay" select="2"/>
+                            <field name="price_subtotal"/>
+                            <field colspan="4" name="tax_id"/>
+                            <separator colspan="4" string="States"/>
+                            <field name="state" select="2"/>
+                            <group col="2" colspan="2">
+                                <button name="button_done" states="confirmed" string="Done" type="object"/>
                             </group>
                         </page>
-                        <page string='Properties'>
-                            <field name='property_ids' nolabel='1'/>
+                        <page string="Properties">
+                            <field name="property_ids" nolabel="1"/>
                         </page>
-                        <page string='Notes'>
-                            <field name='notes' nolabel='1' colspan='4'/>
+                        <page string="Notes">
+                            <field colspan="4" name="notes" nolabel="1"/>
                         </page>
-                        <page string='Invoice Lines'>
-                            <field name='invoice_lines' nolabel='1' colspan='4'/>
+                        <page string="Invoice Lines">
+                            <field colspan="4" name="invoice_lines" nolabel="1"/>
                         </page>
                     </notebook>
                 </form>
@@ -368,85 +368,85 @@
         </record>
         
         
-        <record id='action_order_line_tree1' model='ir.actions.act_window'>
-            <field name='name'>Sales Order Lines</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>sale.order.line</field>
-            <field name='view_type'>form</field>
-            <field name='view_id' ref='view_order_line_form2'/>
+        <record id="action_order_line_tree1" model="ir.actions.act_window">
+            <field name="name">Sales Order Lines</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order.line</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_order_line_form2"/>
         </record>
-        <menuitem name='Sales Management/Sales Order Lines' action='action_order_line_tree1' id='menu_action_order_line_tree1'/>
+        <menuitem action="action_order_line_tree1" id="menu_action_order_line_tree1" parent="sale.menu_sale_root"/>
         
-        <record id='action_order_line_tree2' model='ir.actions.act_window'>
-            <field name='name'>Uninvoiced lines</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>sale.order.line</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('invoiced','&lt;&gt;', 1),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]</field>
+        <record id="action_order_line_tree2" model="ir.actions.act_window">
+            <field name="name">Uninvoiced lines</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('invoiced','&lt;&gt;', 1),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]</field>
         </record>
-        <menuitem name='Sales Management/Sales Order Lines/Uninvoiced Lines' action='action_order_line_tree2' id='menu_action_order_line_tree2'/>
+        <menuitem action="action_order_line_tree2" id="menu_action_order_line_tree2" parent="sale.menu_action_order_line_tree1"/>
         
-        <record id='action_order_line_tree3' model='ir.actions.act_window'>
-            <field name='name'>Uninvoiced and Delivered Lines</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>sale.order.line</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('invoiced','&lt;&gt;', 1),('state','=','done')]</field>
+        <record id="action_order_line_tree3" model="ir.actions.act_window">
+            <field name="name">Uninvoiced and Delivered Lines</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('invoiced','&lt;&gt;', 1),('state','=','done')]</field>
         </record>
-        <menuitem name='Sales Management/Sales Order Lines/Uninvoiced Lines/Uninvoiced &amp; Delivered Lines' action='action_order_line_tree3' id='menu_action_order_line_tree3'/>
+        <menuitem action="action_order_line_tree3" id="menu_action_order_line_tree3" parent="sale.menu_action_order_line_tree2"/>
         
-        <record id='action_order_line_tree4' model='ir.actions.act_window'>
-            <field name='name'>All Sale Order Lines</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>sale.order.line</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
+        <record id="action_order_line_tree4" model="ir.actions.act_window">
+            <field name="name">All Sale Order Lines</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
         </record>
-        <menuitem name='Sales Management/Sales Order Lines/All Sale Order Lines' action='action_order_line_tree4' id='menu_action_order_line_tree4'/>
+        <menuitem action="action_order_line_tree4" id="menu_action_order_line_tree4" parent="sale.menu_action_order_line_tree1"/>
         
-        <act_window name='Sales' domain='[(&apos;partner_id&apos;, &apos;=&apos;, active_id)]' id='act_res_partner_2_sale_order' src_model='res.partner' context='{&apos;partner_id&apos;: active_id}' res_model='sale.order'/>
+        <act_window context="{'partner_id': active_id}" domain="[('partner_id', '=', active_id)]" id="act_res_partner_2_sale_order" name="Sales" res_model="sale.order" src_model="res.partner"/>
         
-        <act_window name='Product sales' domain='[(&apos;product_id&apos;,&apos;=&apos;,active_id)]' id='action_order_line_product_tree' src_model='product.product' res_model='sale.order.line'/>
+        <act_window domain="[('product_id','=',active_id)]" id="action_order_line_product_tree" name="Product sales" res_model="sale.order.line" src_model="product.product"/>
         
         
         
         
         <!-- configartion view -->
         
-        <record id='view_config_picking_policy' model='ir.ui.view'>
-            <field name='name'>Configure Picking Policy for Sale Order </field>
-            <field name='model'>sale.config.picking_policy</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Configure Picking Policy for Sale Order'>
-                    <separator col='4' string='Configure Picking Policy for Sale Order' colspan='4'/>
+        <record id="view_config_picking_policy" model="ir.ui.view">
+            <field name="name">Configure Picking Policy for Sale Order </field>
+            <field name="model">sale.config.picking_policy</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Configure Picking Policy for Sale Order">
+                    <separator col="4" colspan="4" string="Configure Picking Policy for Sale Order"/>
                     <newline/>
-                    <field name='picking_policy'/>
-                    <group col='4' colspan='4'>
-                        <button icon='gtk-cancel' special='cancel' string='Cancel'/>
-                        <button name='set_default' icon='gtk-ok' type='object' string='Set Default'/>
+                    <field name="picking_policy"/>
+                    <group col="4" colspan="4">
+                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                        <button icon="gtk-ok" name="set_default" string="Set Default" type="object"/>
                     </group>
                 </form>
             </field>
         </record>
         
-        <record id='action_config_picking_policy' model='ir.actions.act_window'>
-            <field name='name'>Configure Picking Policy for Sale Order</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>sale.config.picking_policy</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>form</field>
-            <field name='target'>new</field>
+        <record id="action_config_picking_policy" model="ir.actions.act_window">
+            <field name="name">Configure Picking Policy for Sale Order</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.config.picking_policy</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
         </record>
         
         <!-- register configuration wizard -->
-        <record id='config_wizard_step_sale_picking_policy' model='ir.module.module.configuration.step'>
-            <field name='name'>Select the default picking policy for Sale Order</field>
-            <field name='note'>This Configuration step use to set default picking policy when make sale order</field>
-            <field name='action_id' ref='action_config_picking_policy'/>
-            <field name='state'>open</field>
+        <record id="config_wizard_step_sale_picking_policy" model="ir.module.module.configuration.step">
+            <field name="name">Select the default picking policy for Sale Order</field>
+            <field name="note">This Configuration step use to set default picking policy when make sale order</field>
+            <field name="action_id" ref="action_config_picking_policy"/>
+            <field name="state">open</field>
         </record>
         
         

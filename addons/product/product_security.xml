@@ -1,115 +1,114 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data noupdate="1">
         
-        <record model="res.groups" id="group_product_manager">
+        <record id="group_product_manager" model="res.groups">
             <field name="name">Product Manager</field>
         </record>
         
-        <record model="res.users" id="base.user_admin">
-            <field name="groups_id" eval="[ (4, ref('group_product_manager'))]"/>
+        <record id="base.user_admin" model="res.users">
+            <field eval="[ (4, ref('group_product_manager'))]" name="groups_id"/>
         </record>
         
         <!-- Product security -->
-        <record model="ir.model.access" id="access_product">
+        <record id="access_product" model="ir.model.access">
             <field name="name">Product</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'product.product')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'product.product')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_product_manager">
+        <record id="access_product_manager" model="ir.model.access">
             <field name="name">Product</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'product.product')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'product.product')]"/>
             <field name="group_id" ref="group_product_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
         <!-- Product Template security -->
-        <record model="ir.model.access" id="access_product_template">
+        <record id="access_product_template" model="ir.model.access">
             <field name="name">Product Template</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'product.template')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'product.template')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_product_template_manager">
+        <record id="access_product_template_manager" model="ir.model.access">
             <field name="name">Product Template</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'product.template')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'product.template')]"/>
             <field name="group_id" ref="group_product_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
         <!-- Pricelist security -->
-        <record model="ir.model.access" id="access_product_pricelist">
+        <record id="access_product_pricelist" model="ir.model.access">
             <field name="name">Product Pricelist</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'product.pricelist')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'product.pricelist')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_product_pricelist_manager">
+        <record id="access_product_pricelist_manager" model="ir.model.access">
             <field name="name">Product Pricelist</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'product.pricelist')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'product.pricelist')]"/>
             <field name="group_id" ref="group_product_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
         <!-- Pricelist Version security -->
-        <record model="ir.model.access" id="access_product_pricelist_version">
+        <record id="access_product_pricelist_version" model="ir.model.access">
             <field name="name">Product Pricelist Version</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'product.pricelist.version')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'product.pricelist.version')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_product_pricelist_version_manager">
+        <record id="access_product_pricelist_version_manager" model="ir.model.access">
             <field name="name">Product Pricelist Version</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'product.pricelist.version')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'product.pricelist.version')]"/>
             <field name="group_id" ref="group_product_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
         <!-- Pricelist Item security -->
-        <record model="ir.model.access" id="access_product_pricelist_item_version">
+        <record id="access_product_pricelist_item_version" model="ir.model.access">
             <field name="name">Product Pricelist Item</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'product.pricelist.item')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'product.pricelist.item')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_product_pricelist_item_manager">
+        <record id="access_product_pricelist_item_manager" model="ir.model.access">
             <field name="name">Product Pricelist Item</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'product.pricelist.item')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'product.pricelist.item')]"/>
             <field name="group_id" ref="group_product_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
     </data>
 </terp>
-

@@ -1,117 +1,117 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data noupdate="1">
         
-        <record model="res.groups" id="group_crm_manager">
+        <record id="group_crm_manager" model="res.groups">
             <field name="name">Customer Executive - Manager</field>
         </record>
         
-        <record model="res.groups" id="group_crm_member">
+        <record id="group_crm_member" model="res.groups">
             <field name="name">Customer Executive</field>
         </record>
         
-        <record model="res.users" id="base.user_admin">
-            <field name="groups_id" eval="[ (4 ,ref('base.group_admin')), (4, ref('group_crm_manager')), (4, ref('group_crm_member')) ]"/>
+        <record id="base.user_admin" model="res.users">
+            <field eval="[ (4 ,ref('base.group_admin')), (4, ref('group_crm_manager')), (4, ref('group_crm_member')) ]" name="groups_id"/>
         </record>
         
         <!-- CRM Case security -->
-        <record model="ir.model.access" id="access_crm_case">
+        <record id="access_crm_case" model="ir.model.access">
             <field name="name">CRM Case</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'crm.case')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'crm.case')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_crm_case_member">
+        <record id="access_crm_case_member" model="ir.model.access">
             <field name="name">CRM Case</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'crm.case')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'crm.case')]"/>
             <field name="group_id" ref="group_crm_member"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
         <!-- CRM Case Section security -->
-        <record model="ir.model.access" id="access_crm_case_section">
+        <record id="access_crm_case_section" model="ir.model.access">
             <field name="name">Case Section</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'crm.case.section')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'crm.case.section')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_crm_case_section_manager">
+        <record id="access_crm_case_section_manager" model="ir.model.access">
             <field name="name">Case Section</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'crm.case.section')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'crm.case.section')]"/>
             <field name="group_id" ref="group_crm_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
         <!-- CRM Segmentation security -->
-        <record model="ir.model.access" id="access_crm_segmentation">
+        <record id="access_crm_segmentation" model="ir.model.access">
             <field name="name">Case Segmentation</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'crm.segmentation')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'crm.segmentation')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_crm_segmentatio_manager">
+        <record id="access_crm_segmentatio_manager" model="ir.model.access">
             <field name="name">Case Segmentation</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'crm.segmentation')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'crm.segmentation')]"/>
             <field name="group_id" ref="group_crm_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
         <!-- CRM Segmentation Rules security -->
-        <record model="ir.model.access" id="access_crm_segmentation_rule">
+        <record id="access_crm_segmentation_rule" model="ir.model.access">
             <field name="name">Case Segmentation Rules</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'crm.case.rule')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'crm.case.rule')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_crm_segmentatio_rule_manager">
+        <record id="access_crm_segmentatio_rule_manager" model="ir.model.access">
             <field name="name">Case Segmentation Rules</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'crm.case.rule')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'crm.case.rule')]"/>
             <field name="group_id" ref="group_crm_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
         <!-- Case History security -->
-        <record model="ir.model.access" id="access_crm_segmentation_rule">
+        <record id="access_crm_segmentation_rule" model="ir.model.access">
             <field name="name">Case History</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'crm.case.log')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'crm.case.log')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_crm_segmentatio_rule_member">
+        <record id="access_crm_segmentatio_rule_member" model="ir.model.access">
             <field name="name">Case History</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'crm.case.log')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'crm.case.log')]"/>
             <field name="group_id" ref="group_crm_member"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="False"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
     </data>
 </terp>

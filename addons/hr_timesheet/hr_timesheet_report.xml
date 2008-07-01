@@ -1,19 +1,18 @@
-<?xml version='1.0'?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
-        <report name='hr.analytical.timesheet' id='report_user_timesheet' xsl='hr_timesheet/report/user_timesheet.xsl' auto='False' model='hr.employee' menu='False' string='Employee timesheet'/>
+        <report auto="False" id="report_user_timesheet" menu="False" model="hr.employee" name="hr.analytical.timesheet" string="Employee timesheet" xsl="hr_timesheet/report/user_timesheet.xsl"/>
         
-        <wizard name='hr.analytical.timesheet' id='wizard_hr_timesheet' model='hr.employee' menu='False' string='Employee timesheet'/>
-        <menuitem name='Human Resources/Reporting/Timesheet/Print a User Timesheet' action='wizard_hr_timesheet' type='wizard' id='menu_wizard_hr_timesheet'/>
+        <wizard id="wizard_hr_timesheet" menu="False" model="hr.employee" name="hr.analytical.timesheet" string="Employee timesheet"/>
+        <menuitem id="next_id_48" name="Timesheet" parent="hr.menu_hr_reporting"/><menuitem action="wizard_hr_timesheet" id="menu_wizard_hr_timesheet" parent="next_id_48" type="wizard"/>
         
-        <wizard name='hr.analytical.timesheet.my' id='wizard_hr_timesheet_my' model='hr.employee' menu='False' string='Print my timesheet'/>
-        <menuitem name='Human Resources/Reporting/Timesheet/Print My Timesheet' action='wizard_hr_timesheet_my' type='wizard' id='menu_wizard_hr_timesheet_my'/>
+        <wizard id="wizard_hr_timesheet_my" menu="False" model="hr.employee" name="hr.analytical.timesheet.my" string="Print my timesheet"/>
+        <menuitem action="wizard_hr_timesheet_my" id="menu_wizard_hr_timesheet_my" parent="hr_timesheet.next_id_48" type="wizard"/>
         
-        <report name='hr.analytical.timesheet_users' id='report_users_timesheet' xsl='hr_timesheet/report/users_timesheet.xsl' auto='False' model='hr.employee' menu='False' string='Employees timesheet'/>
+        <report auto="False" id="report_users_timesheet" menu="False" model="hr.employee" name="hr.analytical.timesheet_users" string="Employees timesheet" xsl="hr_timesheet/report/users_timesheet.xsl"/>
         
-        <wizard name='hr.analytical.timesheet_users' id='wizard_hr_timesheet_users' model='hr.employee' menu='False' string='Employees timesheet'/>
-        <menuitem name='Human Resources/Reporting/Timesheet/Print Summary Timesheet' action='wizard_hr_timesheet_users' type='wizard' id='menu_wizard_hr_timesheet_users'/>
+        <wizard id="wizard_hr_timesheet_users" menu="False" model="hr.employee" name="hr.analytical.timesheet_users" string="Employees timesheet"/>
+        <menuitem action="wizard_hr_timesheet_users" id="menu_wizard_hr_timesheet_users" parent="hr_timesheet.next_id_48" type="wizard"/>
         
     </data>
 </terp>
-

@@ -1,8 +1,8 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
         <!-- This file must be loaded  _after_  account_demo.xml ! --> 
-        <record model="account.invoice" id="test_invoice_1">
+        <record id="test_invoice_1" model="account.invoice">
             <field name="currency_id" ref="base.EUR"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="address_invoice_id" ref="base.res_partner_address_tang"/>
@@ -14,14 +14,14 @@
             <field name="name">Test invoice 1</field>
             <field name="address_contact_id" ref="base.res_partner_address_tang"/>
         </record>
-        <record model="account.invoice.line" id="test_invoice_1_line_1">
+        <record id="test_invoice_1_line_1" model="account.invoice.line">
             <field name="name">Basic computer with Dvorak keyboard and left-handed mouse</field>
             <field name="invoice_id" ref="test_invoice_1"/>
             <field name="price_unit">250</field>
             <field name="quantity">1</field>
             <field name="account_id" ref="account.a_sale"/>
         </record>
-        <record model="account.invoice.line" id="test_invoice_1_line_2">
+        <record id="test_invoice_1_line_2" model="account.invoice.line">
             <field name="name">Little server with raid 1 and 512ECC ram</field>
             <field name="invoice_id" ref="test_invoice_1"/>
             <field name="price_unit">800</field>
@@ -29,18 +29,18 @@
             <field name="account_id" ref="account.a_sale"/>
         </record>
         
-        <assert model="account.invoice" id="test_invoice_1" string="The currency unit of Test invoice 1 is EUR">
+        <assert id="test_invoice_1" model="account.invoice" string="The currency unit of Test invoice 1 is EUR">
             <test expr="currency_id.code">EUR</test>
         </assert>
         
-        <assert model="account.invoice" id="test_invoice_1" string="The amount of Test invoice 1 is correct" severity="error">
-            <test expr="sum([l.price_subtotal for l in invoice_line]) == 1850" />
-            <test expr="sum([l.price_subtotal for l in invoice_line]) == amount_untaxed" />
+        <assert id="test_invoice_1" model="account.invoice" severity="error" string="The amount of Test invoice 1 is correct">
+            <test expr="sum([l.price_subtotal for l in invoice_line]) == 1850"/>
+            <test expr="sum([l.price_subtotal for l in invoice_line]) == amount_untaxed"/>
         </assert>
         
-        <workflow model="account.invoice" ref="test_invoice_1" action="invoice_open" />
+        <workflow action="invoice_open" model="account.invoice" ref="test_invoice_1"/>
         
-        <assert model="account.invoice" id="test_invoice_1" string="Test invoice 1 is now open">
+        <assert id="test_invoice_1" model="account.invoice" string="Test invoice 1 is now open">
             <test expr="state">open</test>
         </assert>
         
@@ -61,19 +61,18 @@
 			context={}):
 		-->
         <function model="account.invoice" name="pay_and_reconcile">
-            <value eval="[ref('test_invoice_1')]" />
-            <value eval="1850" />
-            <value eval="ref('cash')" />
-            <value eval="ref('account.period_' + str(int(time.strftime('%m'))))" />
-            <value eval="ref('bank_journal')" />
-            <value eval="ref('cash')" />
-            <value eval="ref('account.period_' + str(int(time.strftime('%m'))))" />
-            <value eval="ref('bank_journal')" />
+            <value eval="[ref('test_invoice_1')]"/>
+            <value eval="1850"/>
+            <value eval="ref('cash')"/>
+            <value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
+            <value eval="ref('bank_journal')"/>
+            <value eval="ref('cash')"/>
+            <value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
+            <value eval="ref('bank_journal')"/>
         </function>
         
-        <assert model="account.invoice" id="test_invoice_1" string="Test invoice 1 is now paid">
+        <assert id="test_invoice_1" model="account.invoice" string="Test invoice 1 is now paid">
             <test expr="state">paid</test>
         </assert>
     </data>
 </terp>
- 

@@ -1,41 +1,41 @@
-<?xml version='1.0'?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
-        <record id='note_sale_type' model='board.note.type'>
-            <field name='name'>Sales</field>
+        <record id="note_sale_type" model="board.note.type">
+            <field name="name">Sales</field>
         </record>
         
-        <record id='board_sales_manager_form' model='ir.ui.view'>
-            <field name='name'>board.sales.manager.form</field>
-            <field name='model'>board.board</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Sales manager board'>
-                    <hpaned position='100'>
+        <record id="board_sales_manager_form" model="ir.ui.view">
+            <field name="name">board.sales.manager.form</field>
+            <field name="model">board.board</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Sales manager board">
+                    <hpaned position="100">
                         <child1>
-                            <action name='%(sale.action_order_tree10)d' height='200' string='My open quotations' colspan='4' width='510'/>
-                            <action name='%(report_sale.action_order_sale_list)d' string='Top ten sales of the month' colspan='4'/>
-                            <action name='%(report_crm.action_report_crm_case_user_tree_month_my)d' string='Cases statistics' colspan='4'/>
+                            <action colspan="4" height="200" name="%(sale.action_order_tree10)d" string="My open quotations" width="510"/>
+                            <action colspan="4" name="%(report_sale.action_order_sale_list)d" string="Top ten sales of the month"/>
+                            <action colspan="4" name="%(report_crm.action_report_crm_case_user_tree_month_my)d" string="Cases statistics"/>
                         </child1>
                         
                         <child2>
-                            <action name='%(report_sale.action_order_category_tree_all)d' view_mode='graph,tree' string='Sales of the month' colspan='4'/>
-                            <action name='%(report_crm.action_report_crm_case_user_tree_month)d' view_mode='graph,tree' string='Cases of the month' colspan='4'/>
+                            <action colspan="4" name="%(report_sale.action_order_category_tree_all)d" string="Sales of the month" view_mode="graph,tree"/>
+                            <action colspan="4" name="%(report_crm.action_report_crm_case_user_tree_month)d" string="Cases of the month" view_mode="graph,tree"/>
                         </child2>
                     </hpaned>
                 </form>
             </field>
         </record>
         
-        <record id='open_board_sales_manager' model='ir.actions.act_window'>
-            <field name='name'>Sale Dashboard</field>
-            <field name='res_model'>board.board</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>form</field>
-            <field name='view_id' ref='board_sales_manager_form'/>
+        <record id="open_board_sales_manager" model="ir.actions.act_window">
+            <field name="name">Sale Dashboard</field>
+            <field name="res_model">board.board</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="board_sales_manager_form"/>
         </record>
         
-        <menuitem name='Dashboards/Sales/Sales Manager' sequence='1' icon='terp-graph' action='open_board_sales_manager' id='menu_board_sales_manager'/>
+        <menuitem id="next_id_88" name="Sales" parent="board.dashboard_menu"/><menuitem action="open_board_sales_manager" icon="terp-graph" id="menu_board_sales_manager" parent="next_id_88" sequence="1"/>
         
     </data>
 </terp>

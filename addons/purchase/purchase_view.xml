@@ -1,165 +1,165 @@
-<?xml version='1.0'?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
         
-        <menuitem name='Purchase Management' icon='terp-purchase' id='menu_purchase_root'/>
+        <menuitem icon="terp-purchase" id="menu_purchase_root" name="Purchase Management"/>
         
-        <record id='purchase_order_form' model='ir.ui.view'>
-            <field name='name'>purchase.order.form</field>
-            <field name='model'>purchase.order</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Purchase Order'>
+        <record id="purchase_order_form" model="ir.ui.view">
+            <field name="name">purchase.order.form</field>
+            <field name="model">purchase.order</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Purchase Order">
                     <notebook>
-                        <page string='Purchase Order'>
-                            <field name='name' select='1'/>
-                            <group col='4' colspan='2'>
-                                <field name='shipped' select='2'/>
-                                <field name='invoiced' select='2'/>
+                        <page string="Purchase Order">
+                            <field name="name" select="1"/>
+                            <group col="4" colspan="2">
+                                <field name="shipped" select="2"/>
+                                <field name="invoiced" select="2"/>
                             </group>
                             <newline/>
-                            <field name='warehouse_id' on_change='onchange_warehouse_id(warehouse_id)'/>
-                            <field name='date_order' select='2'/>
-                            <field name='partner_id' on_change='onchange_partner_id(partner_id)' select='1'/>
-                            <field name='partner_address_id'/>
-                            <field name='pricelist_id' domain='[(&apos;type&apos;,&apos;=&apos;,&apos;purchase&apos;)]'/>
-                            <field name='partner_ref' select='2'/>
+                            <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)"/>
+                            <field name="date_order" select="2"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" select="1"/>
+                            <field name="partner_address_id"/>
+                            <field domain="[('type','=','purchase')]" name="pricelist_id"/>
+                            <field name="partner_ref" select="2"/>
                             <newline/>
-                            <field name='order_line' widget='one2many_list' nolabel='1' colspan='4'/>
-                            <separator string='Document State' colspan='4' select='2'/>
-                            <group col='7' colspan='4'>
-                                <field name='amount_untaxed' sum='Untaxed amount'/>
-                                <field name='amount_tax'/>
-                                <field name='amount_total' sum='Total amount'/>
-                                <button name='button_dummy' type='object' states='draft' string='Compute'/>
+                            <field colspan="4" name="order_line" nolabel="1" widget="one2many_list"/>
+                            <separator colspan="4" select="2" string="Document State"/>
+                            <group col="7" colspan="4">
+                                <field name="amount_untaxed" sum="Untaxed amount"/>
+                                <field name="amount_tax"/>
+                                <field name="amount_total" sum="Total amount"/>
+                                <button name="button_dummy" states="draft" string="Compute" type="object"/>
                             </group>
-                            <group col='9' colspan='4'>
-                                <field name='state' readonly='1'/>
-                                <button name='purchase_confirm' states='draft' string='Confirm Purchase Order'/>
-                                <button name='purchase_appbuyer' states='wait_auth' string='Approve Purchase'/>
-                                <button name='purchase_approve' states='confirmed' string='Approved by Supplier'/>
-                                <button name='purchase_cancel' states='draft,confirmed,wait_auth' string='Cancel Purchase Order'/>
+                            <group col="9" colspan="4">
+                                <field name="state" readonly="1"/>
+                                <button name="purchase_confirm" states="draft" string="Confirm Purchase Order"/>
+                                <button name="purchase_appbuyer" states="wait_auth" string="Approve Purchase"/>
+                                <button name="purchase_approve" states="confirmed" string="Approved by Supplier"/>
+                                <button name="purchase_cancel" states="draft,confirmed,wait_auth" string="Cancel Purchase Order"/>
                                 
-                                <button name='purchase_cancel' states='approved' string='Cancel Purchase Order'/>
+                                <button name="purchase_cancel" states="approved" string="Cancel Purchase Order"/>
                                 
-                                <button name='shipping_ok' states='except_shipping' string='Shipping Done'/>
-                                <button name='invoice_ok' states='except_invoice' string='Invoice Done'/>
+                                <button name="shipping_ok" states="except_shipping" string="Shipping Done"/>
+                                <button name="invoice_ok" states="except_invoice" string="Invoice Done"/>
                             </group>
                         </page>
-                        <page string='Extra Infos'>
-                            <field name='dest_address_id' on_change='onchange_dest_address_id(dest_address_id)'/>
-                            <field name='location_id'/>
-                            <field name='invoice_method'/>
-                            <field name='origin' select='2'/>
+                        <page string="Extra Infos">
+                            <field name="dest_address_id" on_change="onchange_dest_address_id(dest_address_id)"/>
+                            <field name="location_id"/>
+                            <field name="invoice_method"/>
+                            <field name="origin" select="2"/>
                             <newline/>
-                            <field name='validator'/>
-                            <field name='date_approve'/>
+                            <field name="validator"/>
+                            <field name="date_approve"/>
                         </page>
-                        <page string='Notes'>
-                            <field name='notes' nolabel='1' colspan='4'/>
+                        <page string="Notes">
+                            <field colspan="4" name="notes" nolabel="1"/>
                         </page>
                     </notebook>
                 </form>
             </field>
         </record>
         
-        <record id='purchase_form_action' model='ir.actions.act_window'>
-            <field name='name'>Purchase Order</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>purchase.order</field>
-            <field name='view_mode'>form,tree</field>
+        <record id="purchase_form_action" model="ir.actions.act_window">
+            <field name="name">Purchase Order</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_mode">form,tree</field>
         </record>
-        <menuitem name='Purchase Management/Purchase Order' action='purchase_form_action' id='menu_purchase_form_action'/>
-        <record id='purchase_form_action2' model='ir.actions.act_window'>
-            <field name='name'>Request for quotation</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>purchase.order</field>
-            <field name='domain'>[('state','=','draft')]</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
+        <menuitem action="purchase_form_action" id="menu_purchase_form_action" parent="purchase.menu_purchase_root"/>
+        <record id="purchase_form_action2" model="ir.actions.act_window">
+            <field name="name">Request for quotation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="domain">[('state','=','draft')]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
         </record>
-        <menuitem name='Purchase Management/Purchase Order/Requests For Quotation' action='purchase_form_action2' id='menu_purchase_order_draft'/>
-        <record id='purchase_form_action3' model='ir.actions.act_window'>
-            <field name='name'>Purchase order waiting Approval</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>purchase.order</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('state','=','confirmed')]</field>
+        <menuitem action="purchase_form_action2" id="menu_purchase_order_draft" parent="purchase.menu_purchase_form_action"/>
+        <record id="purchase_form_action3" model="ir.actions.act_window">
+            <field name="name">Purchase order waiting Approval</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','confirmed')]</field>
         </record>
-        <menuitem name='Purchase Management/Purchase Order/Purchase Orders Waiting Approval' action='purchase_form_action3' id='menu_purchase_form_action3'/>
-        <record id='purchase_form_action4' model='ir.actions.act_window'>
-            <field name='name'>Purchase Orders in Progress</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>purchase.order</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('state','=','approved')]</field>
+        <menuitem action="purchase_form_action3" id="menu_purchase_form_action3" parent="purchase.menu_purchase_form_action"/>
+        <record id="purchase_form_action4" model="ir.actions.act_window">
+            <field name="name">Purchase Orders in Progress</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','approved')]</field>
         </record>
-        <menuitem name='Purchase Management/Purchase Order/Purchase Orders in Progress' action='purchase_form_action4' id='menu_purchase_form_action4'/>
+        <menuitem action="purchase_form_action4" id="menu_purchase_form_action4" parent="purchase.menu_purchase_form_action"/>
         
-        <record id='purchase_order_tree' model='ir.ui.view'>
-            <field name='name'>purchase.order.tree</field>
-            <field name='model'>purchase.order</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree string='Purchase Order'>
-                    <field name='name'/>
-                    <field name='date_order'/>
-                    <field name='partner_id'/>
-                    <field name='location_id'/>
-                    <field name='invoiced' string='Paid'/>
-                    <field name='shipped'/>
-                    <field name='amount_untaxed'/>
-                    <field name='origin'/>
-                    <field name='state'/>
+        <record id="purchase_order_tree" model="ir.ui.view">
+            <field name="name">purchase.order.tree</field>
+            <field name="model">purchase.order</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Purchase Order">
+                    <field name="name"/>
+                    <field name="date_order"/>
+                    <field name="partner_id"/>
+                    <field name="location_id"/>
+                    <field name="invoiced" string="Paid"/>
+                    <field name="shipped"/>
+                    <field name="amount_untaxed"/>
+                    <field name="origin"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
         
-        <record id='purchase_order_line_form' model='ir.ui.view'>
-            <field name='name'>purchase.order.line.form</field>
-            <field name='model'>purchase.order.line</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Purchase Order Line'>
+        <record id="purchase_order_line_form" model="ir.ui.view">
+            <field name="name">purchase.order.line.form</field>
+            <field name="model">purchase.order.line</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Purchase Order Line">
                     <notebook>
-                        <page string='Order Line'>
-                            <field name='product_qty'/>
-                            <field name='product_uom' on_change='product_uom_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order)'/>
-                            <field name='product_id' on_change='product_id_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order)' context='partner_id=parent.partner_id,quantity=product_qty,pricelist=parent.pricelist_id,uom=product_uom,warehouse=parent.warehouse_id' colspan='4'/>
-                            <field name='name' colspan='4'/>
-                            <field name='date_planned'/>
-                            <field name='price_unit'/>
-                            <field name='account_analytic_id'/>
-                            <field name='price_subtotal' readonly='1'/>
-                            <field name='taxes_id' colspan='4'/>
+                        <page string="Order Line">
+                            <field name="product_qty"/>
+                            <field name="product_uom" on_change="product_uom_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order)"/>
+                            <field colspan="4" context="partner_id=parent.partner_id,quantity=product_qty,pricelist=parent.pricelist_id,uom=product_uom,warehouse=parent.warehouse_id" name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order)"/>
+                            <field colspan="4" name="name"/>
+                            <field name="date_planned"/>
+                            <field name="price_unit"/>
+                            <field name="account_analytic_id"/>
+                            <field name="price_subtotal" readonly="1"/>
+                            <field colspan="4" name="taxes_id"/>
                         </page>
-                        <page string='Notes'>
-                            <field name='notes' nolabel='1' colspan='4'/>
+                        <page string="Notes">
+                            <field colspan="4" name="notes" nolabel="1"/>
                         </page>
                     </notebook>
                 </form>
             </field>
         </record>
         
-        <record id='purchase_order_line_tree' model='ir.ui.view'>
-            <field name='name'>purchase.order.line.tree</field>
-            <field name='model'>purchase.order.line</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree colors='red:date_planned&lt;=current_date' string='Purchase Order Line'>
-                    <field name='date_planned'/>
-                    <field name='name'/>
-                    <field name='product_id'/>
-                    <field name='product_qty'/>
-                    <field name='product_uom'/>
-                    <field name='price_unit'/>
-                    <field name='price_subtotal'/>
+        <record id="purchase_order_line_tree" model="ir.ui.view">
+            <field name="name">purchase.order.line.tree</field>
+            <field name="model">purchase.order.line</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree colors="red:date_planned&lt;=current_date" string="Purchase Order Line">
+                    <field name="date_planned"/>
+                    <field name="name"/>
+                    <field name="product_id"/>
+                    <field name="product_qty"/>
+                    <field name="product_uom"/>
+                    <field name="price_unit"/>
+                    <field name="price_subtotal"/>
                 </tree>
             </field>
         </record>
         
-        <act_window name='Purchase orders' domain='[(&apos;partner_id&apos;, &apos;=&apos;, active_id)]' id='act_res_partner_2_purchase_order' src_model='res.partner' context='{&apos;partner_id&apos;: active_id}' res_model='purchase.order'/>
+        <act_window context="{'partner_id': active_id}" domain="[('partner_id', '=', active_id)]" id="act_res_partner_2_purchase_order" name="Purchase orders" res_model="purchase.order" src_model="res.partner"/>
     </data>
 </terp>

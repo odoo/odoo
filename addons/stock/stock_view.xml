@@ -1,35 +1,35 @@
-<?xml version='1.0'?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
-        <menuitem name='Stock Management' icon='terp-stock' id='menu_stock_root'/>
-        <menuitem name='Configuration' sequence='1' groups='base.group_admin' id='menu_stock_configuration' parent='menu_stock_root'/>
+        <menuitem icon="terp-stock" id="menu_stock_root" name="Stock Management"/>
+        <menuitem groups="base.group_admin" id="menu_stock_configuration" name="Configuration" parent="menu_stock_root" sequence="1"/>
         
         =============================
         Inventory Line
         =============================
-        <record id='stock_inventory_line_tree' model='ir.ui.view'>
-            <field name='name'>stock.inventory.line.tree</field>
-            <field name='model'>stock.inventory.line</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree string='Stock Inventory Lines'>
-                    <field name='location_id'/>
-                    <field name='product_id'/>
-                    <field name='product_qty'/>
-                    <field name='product_uom'/>
+        <record id="stock_inventory_line_tree" model="ir.ui.view">
+            <field name="name">stock.inventory.line.tree</field>
+            <field name="model">stock.inventory.line</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Stock Inventory Lines">
+                    <field name="location_id"/>
+                    <field name="product_id"/>
+                    <field name="product_qty"/>
+                    <field name="product_uom"/>
                 </tree>
             </field>
         </record>
-        <record id='view_inventory_line_form' model='ir.ui.view'>
-            <field name='name'>stock.inventory.line.form</field>
-            <field name='model'>stock.inventory.line</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Stock Inventory Lines'>
-                    <field name='location_id' domain='[(&apos;usage&apos;,&apos;=&apos;,&apos;internal&apos;)]' colspan='4' select='1'/>
-                    <field name='product_id' on_change='on_change_product_id(location_id,product_id,product_uom)' context='location=location_id,uom=product_uom' select='1'/>
-                    <field name='product_uom'/>
-                    <field name='product_qty'/>
+        <record id="view_inventory_line_form" model="ir.ui.view">
+            <field name="name">stock.inventory.line.form</field>
+            <field name="model">stock.inventory.line</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Stock Inventory Lines">
+                    <field colspan="4" domain="[('usage','=','internal')]" name="location_id" select="1"/>
+                    <field context="location=location_id,uom=product_uom" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom)" select="1"/>
+                    <field name="product_uom"/>
+                    <field name="product_qty"/>
                 </form>
             </field>
         </record>
@@ -37,245 +37,245 @@
         =============================
         Inventory
         =============================
-        <record id='view_inventory_tree' model='ir.ui.view'>
-            <field name='name'>stock.inventory.tree</field>
-            <field name='model'>stock.inventory</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree string='Lot Inventory'>
-                    <field name='name'/>
-                    <field name='date'/>
-                    <field name='state'/>
+        <record id="view_inventory_tree" model="ir.ui.view">
+            <field name="name">stock.inventory.tree</field>
+            <field name="model">stock.inventory</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Lot Inventory">
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
-        <record id='view_inventory_form' model='ir.ui.view'>
-            <field name='name'>stock.inventory.form</field>
-            <field name='model'>stock.inventory</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Lot Inventory'>
+        <record id="view_inventory_form" model="ir.ui.view">
+            <field name="name">stock.inventory.form</field>
+            <field name="model">stock.inventory</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Lot Inventory">
                     <notebook>
-                        <page string='General Informations'>
-                            <field name='name' select='1'/>
-                            <field name='date' select='1'/>
-                            <field name='inventory_line_id' nolabel='1' widget='one2many_list' colspan='4'/>
-                            <field name='state' select='1'/>
-                            <group col='2' colspan='2'>
-                                <button name='action_done' type='object' states='draft' string='Confirm Inventory'/>
-                                <button name='action_cancel' type='object' states='done' string='Cancel Inventory'/>
+                        <page string="General Informations">
+                            <field name="name" select="1"/>
+                            <field name="date" select="1"/>
+                            <field colspan="4" name="inventory_line_id" nolabel="1" widget="one2many_list"/>
+                            <field name="state" select="1"/>
+                            <group col="2" colspan="2">
+                                <button name="action_done" states="draft" string="Confirm Inventory" type="object"/>
+                                <button name="action_cancel" states="done" string="Cancel Inventory" type="object"/>
                             </group>
                         </page>
-                        <page string='Posted Inventory'>
-                            <field name='move_ids' nolabel='1' colspan='4'/>
+                        <page string="Posted Inventory">
+                            <field colspan="4" name="move_ids" nolabel="1"/>
                         </page>
                     </notebook>
                 </form>
             </field>
         </record>
-        <record id='action_inventory_form' model='ir.actions.act_window'>
-            <field name='name'>Physical Inventory</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>stock.inventory</field>
-            <field name='view_type'>form</field>
-            <field name='view_id' ref='view_inventory_tree'/>
+        <record id="action_inventory_form" model="ir.actions.act_window">
+            <field name="name">Physical Inventory</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.inventory</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_inventory_tree"/>
         </record>
-        <menuitem action='action_inventory_form' id='menu_action_inventory_form' parent='menu_stock_root'/>
+        <menuitem action="action_inventory_form" id="menu_action_inventory_form" parent="menu_stock_root"/>
         
-        <record id='action_inventory_line_form' model='ir.actions.act_window'>
-            <field name='name'>Inventory Lines</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>stock.inventory.line</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='view_id' ref='stock_inventory_line_tree'/>
+        <record id="action_inventory_line_form" model="ir.actions.act_window">
+            <field name="name">Inventory Lines</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.inventory.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="stock_inventory_line_tree"/>
         </record>
-        <menuitem groups='base.group_extended' action='action_inventory_line_form' id='menu_action_inventory_line_form' parent='menu_action_inventory_form'/>
+        <menuitem action="action_inventory_line_form" groups="base.group_extended" id="menu_action_inventory_line_form" parent="menu_action_inventory_form"/>
         
         
         =============================
         Lot
         =============================
         
-        <record id='view_tracking_form' model='ir.ui.view'>
-            <field name='name'>stock.tracking.form</field>
-            <field name='model'>stock.tracking</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Tracking/Serial'>
-                    <field name='name' select='1'/>
-                    <field name='serial' select='1'/>
-                    <field name='date' select='1'/>
-                    <field name='active' select='1'/>
+        <record id="view_tracking_form" model="ir.ui.view">
+            <field name="name">stock.tracking.form</field>
+            <field name="model">stock.tracking</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Tracking/Serial">
+                    <field name="name" select="1"/>
+                    <field name="serial" select="1"/>
+                    <field name="date" select="1"/>
+                    <field name="active" select="1"/>
                 </form>
             </field>
         </record>
-        <record id='view_tracking_tree' model='ir.ui.view'>
-            <field name='name'>stock.tracking.tree</field>
-            <field name='model'>stock.tracking</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree string='Tracking/Serial'>
-                    <field name='name'/>
-                    <field name='serial'/>
-                    <field name='date'/>
-                    <field name='active'/>
+        <record id="view_tracking_tree" model="ir.ui.view">
+            <field name="name">stock.tracking.tree</field>
+            <field name="model">stock.tracking</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Tracking/Serial">
+                    <field name="name"/>
+                    <field name="serial"/>
+                    <field name="date"/>
+                    <field name="active"/>
                 </tree>
             </field>
         </record>
-        <record id='action_tracking_form' model='ir.actions.act_window'>
-            <field name='name'>Tracking Lots</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>stock.tracking</field>
-            <field name='view_type'>form</field>
-            <field name='view_id' ref='view_tracking_tree'/>
+        <record id="action_tracking_form" model="ir.actions.act_window">
+            <field name="name">Tracking Lots</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.tracking</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_tracking_tree"/>
         </record>
-        <menuitem name='Traceability' sequence='2' id='menu_traceability' parent='menu_stock_root'/>
-        <menuitem action='action_tracking_form' id='menu_action_tracking_form' parent='menu_traceability'/>
+        <menuitem id="menu_traceability" name="Traceability" parent="menu_stock_root" sequence="2"/>
+        <menuitem action="action_tracking_form" id="menu_action_tracking_form" parent="menu_traceability"/>
         
-        <record id='lot_line_tree' model='ir.ui.view'>
-            <field name='name'>stock.tracking.tree</field>
-            <field name='model'>stock.tracking</field>
-            <field name='type'>tree</field>
-            <field name='field_parent'>child_ids</field>
-            <field name='arch' type='xml'>
-                <tree color='grey:not active' string='Tracking Number'>
-                    <field name='name' select='1'/>
-                    <field name='serial' select='1'/>
-                    <field name='date' select='1'/>
+        <record id="lot_line_tree" model="ir.ui.view">
+            <field name="name">stock.tracking.tree</field>
+            <field name="model">stock.tracking</field>
+            <field name="type">tree</field>
+            <field name="field_parent">child_ids</field>
+            <field name="arch" type="xml">
+                <tree color="grey:not active" string="Tracking Number">
+                    <field name="name" select="1"/>
+                    <field name="serial" select="1"/>
+                    <field name="date" select="1"/>
                 </tree>
             </field>
         </record>
         
-        <record id='view_production_lot_revision_form' model='ir.ui.view'>
-            <field name='name'>stock.production.lot.revision.form</field>
-            <field name='model'>stock.production.lot.revision</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Production Lot Revisions'>
-                    <field name='name' colspan='4'/>
-                    <field name='indice' colspan='2'/>
-                    <field name='date' colspan='2'/>
+        <record id="view_production_lot_revision_form" model="ir.ui.view">
+            <field name="name">stock.production.lot.revision.form</field>
+            <field name="model">stock.production.lot.revision</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Production Lot Revisions">
+                    <field colspan="4" name="name"/>
+                    <field colspan="2" name="indice"/>
+                    <field colspan="2" name="date"/>
                     <newline/>
-                    <field name='author_id' readonly='1'/>
+                    <field name="author_id" readonly="1"/>
                     <newline/>
-                    <field name='description'/>
+                    <field name="description"/>
                 </form>
             </field>
         </record>
-        <record id='view_production_lot_revision_tree' model='ir.ui.view'>
-            <field name='name'>stock.production.lot.revision.tree</field>
-            <field name='model'>stock.production.lot.revision</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree string='Production Lot Revisions'>
-                    <field name='indice'/>
-                    <field name='author_id'/>
-                    <field name='date'/>
-                    <field name='name'/>
+        <record id="view_production_lot_revision_tree" model="ir.ui.view">
+            <field name="name">stock.production.lot.revision.tree</field>
+            <field name="model">stock.production.lot.revision</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Production Lot Revisions">
+                    <field name="indice"/>
+                    <field name="author_id"/>
+                    <field name="date"/>
+                    <field name="name"/>
                 </tree>
             </field>
         </record>
-        <record id='view_production_lot_form' model='ir.ui.view'>
-            <field name='name'>stock.production.lot.form</field>
-            <field name='model'>stock.production.lot</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Production Lot'>
-                    <field name='name' select='1'/>
-                    <field name='ref' select='1'/>
-                    <field name='date' select='1'/>
-                    <separator string='Revisions' colspan='4'/>
-                    <field name='revisions' widget='one2many_list' nolabel='1' colspan='4'/>
+        <record id="view_production_lot_form" model="ir.ui.view">
+            <field name="name">stock.production.lot.form</field>
+            <field name="model">stock.production.lot</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Production Lot">
+                    <field name="name" select="1"/>
+                    <field name="ref" select="1"/>
+                    <field name="date" select="1"/>
+                    <separator colspan="4" string="Revisions"/>
+                    <field colspan="4" name="revisions" nolabel="1" widget="one2many_list"/>
                 </form>
             </field>
         </record>
-        <record id='view_production_lot_tree' model='ir.ui.view'>
-            <field name='name'>stock.production.lot.tree</field>
-            <field name='model'>stock.production.lot</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree string='Production Lot'>
-                    <field name='name'/>
-                    <field name='ref'/>
-                    <field name='date'/>
-                    <field name='revisions'/>
+        <record id="view_production_lot_tree" model="ir.ui.view">
+            <field name="name">stock.production.lot.tree</field>
+            <field name="model">stock.production.lot</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Production Lot">
+                    <field name="name"/>
+                    <field name="ref"/>
+                    <field name="date"/>
+                    <field name="revisions"/>
                 </tree>
             </field>
         </record>
-        <record id='action_production_lot_form' model='ir.actions.act_window'>
-            <field name='name'>Production Lots</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>stock.production.lot</field>
-            <field name='view_type'>form</field>
-            <field name='view_id' ref='view_production_lot_tree'/>
+        <record id="action_production_lot_form" model="ir.actions.act_window">
+            <field name="name">Production Lots</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.production.lot</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_production_lot_tree"/>
         </record>
-        <menuitem action='action_production_lot_form' id='menu_action_production_lot_form' parent='menu_traceability'/>
+        <menuitem action="action_production_lot_form" id="menu_action_production_lot_form" parent="menu_traceability"/>
         
         
         #
         # Lot composition (history)
         #
-        <record id='stock_move_tree' model='ir.ui.view'>
-            <field name='name'>stock.move.tree2</field>
-            <field name='model'>stock.move</field>
-            <field name='type'>tree</field>
-            <field name='field_parent'>move_history_ids</field>
-            <field name='arch' type='xml'>
-                <tree color='grey:state==&apos;cancel&apos;' string='Moves'>
-                    <field name='product_id' select='1'/>
-                    <field name='product_qty' select='1'/>
-                    <field name='product_uom' select='1' string='UOM'/>
-                    <field name='product_packaging'/>
-                    <field name='location_id' select='1'/>
-                    <field name='location_dest_id' select='1'/>
-                    <field name='date' select='1'/>
-                    <field name='date_planned' select='1'/>
-                    <field name='state'/>
+        <record id="stock_move_tree" model="ir.ui.view">
+            <field name="name">stock.move.tree2</field>
+            <field name="model">stock.move</field>
+            <field name="type">tree</field>
+            <field name="field_parent">move_history_ids</field>
+            <field name="arch" type="xml">
+                <tree color="grey:state=='cancel'" string="Moves">
+                    <field name="product_id" select="1"/>
+                    <field name="product_qty" select="1"/>
+                    <field name="product_uom" select="1" string="UOM"/>
+                    <field name="product_packaging"/>
+                    <field name="location_id" select="1"/>
+                    <field name="location_dest_id" select="1"/>
+                    <field name="date" select="1"/>
+                    <field name="date_planned" select="1"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
         
-        <record id='stock_move_tree2' model='ir.ui.view'>
-            <field name='name'>stock.move.tree2</field>
-            <field name='model'>stock.move</field>
-            <field name='type'>tree</field>
-            <field name='field_parent'>move_history_ids2</field>
-            <field name='arch' type='xml'>
-                <tree color='grey:state==&apos;cancel&apos;' string='Moves'>
-                    <field name='product_id' select='1'/>
-                    <field name='product_qty' select='1'/>
-                    <field name='product_uom' select='1' string='UOM'/>
-                    <field name='product_packaging'/>
-                    <field name='location_id' select='1'/>
-                    <field name='location_dest_id' select='1'/>
-                    <field name='date' select='1'/>
-                    <field name='date_planned' select='1'/>
-                    <field name='state'/>
+        <record id="stock_move_tree2" model="ir.ui.view">
+            <field name="name">stock.move.tree2</field>
+            <field name="model">stock.move</field>
+            <field name="type">tree</field>
+            <field name="field_parent">move_history_ids2</field>
+            <field name="arch" type="xml">
+                <tree color="grey:state=='cancel'" string="Moves">
+                    <field name="product_id" select="1"/>
+                    <field name="product_qty" select="1"/>
+                    <field name="product_uom" select="1" string="UOM"/>
+                    <field name="product_packaging"/>
+                    <field name="location_id" select="1"/>
+                    <field name="location_dest_id" select="1"/>
+                    <field name="date" select="1"/>
+                    <field name="date_planned" select="1"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
         
-        <wizard name='stock.traceability.lot.amont' id='action_lot2' model='stock.production.lot' string='Downstream traceability'/>
-        <wizard name='stock.traceability.lot.aval' id='action_lot4' model='stock.production.lot' string='Upstream traceability'/>
+        <wizard id="action_lot2" model="stock.production.lot" name="stock.traceability.lot.amont" string="Downstream traceability"/>
+        <wizard id="action_lot4" model="stock.production.lot" name="stock.traceability.lot.aval" string="Upstream traceability"/>
         
-        <wizard name='stock.traceability.amont' id='action2' model='stock.tracking' string='Upstream traceability'/>
-        <wizard name='stock.traceability.aval' id='action4' model='stock.tracking' string='Downstream traceability'/>
+        <wizard id="action2" model="stock.tracking" name="stock.traceability.amont" string="Upstream traceability"/>
+        <wizard id="action4" model="stock.tracking" name="stock.traceability.aval" string="Downstream traceability"/>
         
-        <record id='action3' model='ir.actions.act_window'>
-            <field name='name'>Downstream traceability</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>stock.move</field>
-            <field name='domain'>[('id','in',active_ids)]</field>
-            <field name='view_type'>tree</field>
-            <field name='view_id' eval='stock_move_tree'/>
+        <record id="action3" model="ir.actions.act_window">
+            <field name="name">Downstream traceability</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.move</field>
+            <field name="domain">[('id','in',active_ids)]</field>
+            <field name="view_type">tree</field>
+            <field eval="stock_move_tree" name="view_id"/>
         </record>
-        <record id='ir_move_traceability_upstream' model='ir.values'>
-            <field name='key2' eval='&apos;tree_but_action&apos;'/>
-            <field name='model' eval='&apos;stock.move&apos;'/>
-            <field name='name'>Downstream traceability</field>
-            <field name='value' eval='&apos;ir.actions.act_window,&apos;+str(action3)'/>
-            <field name='object' eval='True'/>
+        <record id="ir_move_traceability_upstream" model="ir.values">
+            <field eval="'tree_but_action'" name="key2"/>
+            <field eval="'stock.move'" name="model"/>
+            <field name="name">Downstream traceability</field>
+            <field eval="'ir.actions.act_window,'+str(action3)" name="value"/>
+            <field eval="True" name="object"/>
         </record>
         
         
@@ -283,20 +283,20 @@
         # Composed lots
         #
         
-        <record id='action5' model='ir.actions.act_window'>
-            <field name='name'>Upstream traceability</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>stock.move</field>
-            <field name='domain'>[('id','in',active_ids)]</field>
-            <field name='view_type'>tree</field>
-            <field name='view_id' eval='stock_move_tree2'/>
+        <record id="action5" model="ir.actions.act_window">
+            <field name="name">Upstream traceability</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.move</field>
+            <field name="domain">[('id','in',active_ids)]</field>
+            <field name="view_type">tree</field>
+            <field eval="stock_move_tree2" name="view_id"/>
         </record>
-        <record id='ir_move_traceability_downstream' model='ir.values'>
-            <field name='key2' eval='&apos;tree_but_action&apos;'/>
-            <field name='model' eval='&apos;stock.move&apos;'/>
-            <field name='name'>Upstream traceability</field>
-            <field name='value' eval='&apos;ir.actions.act_window,&apos;+str(action5)'/>
-            <field name='object' eval='True'/>
+        <record id="ir_move_traceability_downstream" model="ir.values">
+            <field eval="'tree_but_action'" name="key2"/>
+            <field eval="'stock.move'" name="model"/>
+            <field name="name">Upstream traceability</field>
+            <field eval="'ir.actions.act_window,'+str(action5)" name="value"/>
+            <field eval="True" name="object"/>
         </record>
         
         
@@ -304,210 +304,210 @@
         =============================
         Location
         =============================
-        <record id='view_location_form' model='ir.ui.view'>
-            <field name='name'>stock.location.form</field>
-            <field name='model'>stock.location</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Stock location'>
+        <record id="view_location_form" model="ir.ui.view">
+            <field name="name">stock.location.form</field>
+            <field name="model">stock.location</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Stock location">
                     <notebook>
-                        <page string='General Informations'>
-                            <field name='name' select='1'/>
-                            <field name='active' select='2'/>
-                            <field name='usage' select='1'/>
-                            <field name='account_id' select='1'/>
-                            <field name='location_id'/>
-                            <field name='address_id'/>
-                            <field name='chained_location_type'/>
-                            <field name='chained_location_id'/>
-                            <field name='chained_auto_packing'/>
-                            <field name='chained_delay'/>
+                        <page string="General Informations">
+                            <field name="name" select="1"/>
+                            <field name="active" select="2"/>
+                            <field name="usage" select="1"/>
+                            <field name="account_id" select="1"/>
+                            <field name="location_id"/>
+                            <field name="address_id"/>
+                            <field name="chained_location_type"/>
+                            <field name="chained_location_id"/>
+                            <field name="chained_auto_packing"/>
+                            <field name="chained_delay"/>
                             <newline/>
-                            <field name='comment' colspan='4'/>
+                            <field colspan="4" name="comment"/>
                         </page>
-                        <page string='Localisation'>
-                            <field name='posx'/>
-                            <field name='posy'/>
-                            <field name='posz'/>
+                        <page string="Localisation">
+                            <field name="posx"/>
+                            <field name="posy"/>
+                            <field name="posz"/>
                         </page>
                     </notebook>
                 </form>
             </field>
         </record>
-        <record id='view_location_tree2' model='ir.ui.view'>
-            <field name='name'>stock.location.tree</field>
-            <field name='model'>stock.location</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree string='Stock location'>
-                    <field name='name'/>
-                    <field name='usage'/>
-                    <field name='account_id'/>
-                    <field name='active'/>
+        <record id="view_location_tree2" model="ir.ui.view">
+            <field name="name">stock.location.tree</field>
+            <field name="model">stock.location</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Stock location">
+                    <field name="name"/>
+                    <field name="usage"/>
+                    <field name="account_id"/>
+                    <field name="active"/>
                 </tree>
             </field>
         </record>
         
-        <record id='action_location_form' model='ir.actions.act_window'>
-            <field name='name'>Locations</field>
-            <field name='res_model'>stock.location</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='view_type'>form</field>
-            <field name='view_id' ref='view_location_tree2'/>
+        <record id="action_location_form" model="ir.actions.act_window">
+            <field name="name">Locations</field>
+            <field name="res_model">stock.location</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_location_tree2"/>
         </record>
-        <menuitem action='action_location_form' id='menu_action_location_form' parent='menu_stock_configuration'/>
+        <menuitem action="action_location_form" id="menu_action_location_form" parent="menu_stock_configuration"/>
         
-        <record id='view_location_tree' model='ir.ui.view'>
-            <field name='name'>stock.location.tree</field>
-            <field name='model'>stock.location</field>
-            <field name='type'>tree</field>
-            <field name='field_parent'>child_ids</field>
-            <field name='arch' type='xml'>
-                <tree color='grey:usage in (&apos;procurement&apos;,&apos;inventory&apos;,&apos;production&apos;)' string='Stock location tree'>
-                    <field name='name'/>
-                    <field name='usage' visible='0'/>
+        <record id="view_location_tree" model="ir.ui.view">
+            <field name="name">stock.location.tree</field>
+            <field name="model">stock.location</field>
+            <field name="type">tree</field>
+            <field name="field_parent">child_ids</field>
+            <field name="arch" type="xml">
+                <tree color="grey:usage in ('procurement','inventory','production')" string="Stock location tree">
+                    <field name="name"/>
+                    <field name="usage" visible="0"/>
                 </tree>
             </field>
         </record>
-        <record id='action_location_tree' model='ir.actions.act_window'>
-            <field name='name'>Locations Structure</field>
-            <field name='res_model'>stock.location</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='domain'>[('location_id','=',False)]</field>
-            <field name='view_type'>tree</field>
-            <field name='view_id' ref='view_location_tree'/>
+        <record id="action_location_tree" model="ir.actions.act_window">
+            <field name="name">Locations Structure</field>
+            <field name="res_model">stock.location</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="domain">[('location_id','=',False)]</field>
+            <field name="view_type">tree</field>
+            <field name="view_id" ref="view_location_tree"/>
         </record>
-        <menuitem action='action_location_tree' id='menu_action_location_tree' parent='menu_stock_root'/>
+        <menuitem action="action_location_tree" id="menu_action_location_tree" parent="menu_stock_root"/>
         
         =============================
         Warehouse
         =============================
-        <record id='view_warehouse' model='ir.ui.view'>
-            <field name='name'>stock.warehouse</field>
-            <field name='model'>stock.warehouse</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Warehouse'>
-                    <field name='name' select='1' colspan='4'/>
-                    <field name='lot_input_id'/>
-                    <field name='lot_stock_id'/>
-                    <field name='lot_output_id'/>
+        <record id="view_warehouse" model="ir.ui.view">
+            <field name="name">stock.warehouse</field>
+            <field name="model">stock.warehouse</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Warehouse">
+                    <field colspan="4" name="name" select="1"/>
+                    <field name="lot_input_id"/>
+                    <field name="lot_stock_id"/>
+                    <field name="lot_output_id"/>
                     <newline/>
-                    <field name='partner_address_id'/>
+                    <field name="partner_address_id"/>
                 </form>
             </field>
         </record>
-        <record id='view_warehouse_tree' model='ir.ui.view'>
-            <field name='name'>stock.warehouse.tree</field>
-            <field name='model'>stock.warehouse</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree string='Warehouse'>
-                    <field name='name'/>
-                    <field name='lot_input_id'/>
-                    <field name='lot_stock_id'/>
-                    <field name='lot_output_id'/>
-                    <field name='partner_address_id'/>
+        <record id="view_warehouse_tree" model="ir.ui.view">
+            <field name="name">stock.warehouse.tree</field>
+            <field name="model">stock.warehouse</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Warehouse">
+                    <field name="name"/>
+                    <field name="lot_input_id"/>
+                    <field name="lot_stock_id"/>
+                    <field name="lot_output_id"/>
+                    <field name="partner_address_id"/>
                 </tree>
             </field>
         </record>
-        <record id='action_warehouse_form' model='ir.actions.act_window'>
-            <field name='name'>Warehouses</field>
-            <field name='res_model'>stock.warehouse</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='view_type'>form</field>
-            <field name='view_id' ref='view_warehouse_tree'/>
+        <record id="action_warehouse_form" model="ir.actions.act_window">
+            <field name="name">Warehouses</field>
+            <field name="res_model">stock.warehouse</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_warehouse_tree"/>
         </record>
-        <menuitem action='action_warehouse_form' id='menu_action_warehouse_form' parent='menu_stock_configuration'/>
+        <menuitem action="action_warehouse_form" id="menu_action_warehouse_form" parent="menu_stock_configuration"/>
         
         =============================
         Packing
         =============================
-        <record id='vpicktree' model='ir.ui.view'>
-            <field name='name'>stock.picking.tree</field>
-            <field name='model'>stock.picking</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree color='red:state==&apos;cancel&apos;' string='Packing list'>
-                    <field name='name' select='1' colspan='4'/>
-                    <field name='date' select='1'/>
-                    <field name='address_id' select='1'/>
-                    <field name='invoice_state' readonly='1'/>
-                    <field name='origin' select='1'/>
-                    <field name='state' readonly='1'/>
+        <record id="vpicktree" model="ir.ui.view">
+            <field name="name">stock.picking.tree</field>
+            <field name="model">stock.picking</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree color="red:state=='cancel'" string="Packing list">
+                    <field colspan="4" name="name" select="1"/>
+                    <field name="date" select="1"/>
+                    <field name="address_id" select="1"/>
+                    <field name="invoice_state" readonly="1"/>
+                    <field name="origin" select="1"/>
+                    <field name="state" readonly="1"/>
                 </tree>
             </field>
         </record>
-        <record id='view_picking_form' model='ir.ui.view'>
-            <field name='name'>stock.picking.form</field>
-            <field name='model'>stock.picking</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Packing list'>
+        <record id="view_picking_form" model="ir.ui.view">
+            <field name="name">stock.picking.form</field>
+            <field name="model">stock.picking</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Packing list">
                     <notebook>
-                        <page string='General Information'>
-                            <field name='name' select='1'/>
-                            <field name='date' select='1'/>
+                        <page string="General Information">
+                            <field name="name" select="1"/>
+                            <field name="date" select="1"/>
                             <newline/>
-                            <field name='type' select='2'/>
-                            <field name='invoice_state' select='2'/>
+                            <field name="type" select="2"/>
+                            <field name="invoice_state" select="2"/>
                             <newline/>
-                            <field name='location_id'/>
-                            <field name='location_dest_id'/>
-                            <field name='address_id' select='2'/>
-                            <field name='move_lines' widget='one2many_list' nolabel='1' colspan='4'>
-                                <form string='Stock Moves'>
-                                    <separator string='Move Information' colspan='4'/>
-                                    <field name='product_id' on_change='onchange_product_id(product_id, parent.location_id, parent.location_dest_id)' context='location=parent.location_id' colspan='4' select='1'/>
-                                    <field name='product_uom' select='1'/>
-                                    <field name='product_qty' select='1'/>
-                                    <field name='product_uos' groups='product.group_uos'/>
-                                    <field name='product_uos_qty' groups='product.group_uos'/>
-                                    <field name='name' select='1' colspan='4'/>
-                                    <field name='date'/>
-                                    <field name='date_planned'/>
-                                    <field name='priority'/>
-                                    <field name='location_id' select='1'/>
-                                    <field name='location_dest_id' select='1'/>
-                                    <field name='address_id' select='1'/>
-                                    <field name='product_packaging'/>
-                                    <field name='prodlot_id' context='product_id=product_id' select='1'/>
-                                    <field name='tracking_id' select='1'/>
+                            <field name="location_id"/>
+                            <field name="location_dest_id"/>
+                            <field name="address_id" select="2"/>
+                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list">
+                                <form string="Stock Moves">
+                                    <separator colspan="4" string="Move Information"/>
+                                    <field colspan="4" context="location=parent.location_id" name="product_id" on_change="onchange_product_id(product_id, parent.location_id, parent.location_dest_id)" select="1"/>
+                                    <field name="product_uom" select="1"/>
+                                    <field name="product_qty" select="1"/>
+                                    <field groups="product.group_uos" name="product_uos"/>
+                                    <field groups="product.group_uos" name="product_uos_qty"/>
+                                    <field colspan="4" name="name" select="1"/>
+                                    <field name="date"/>
+                                    <field name="date_planned"/>
+                                    <field name="priority"/>
+                                    <field name="location_id" select="1"/>
+                                    <field name="location_dest_id" select="1"/>
+                                    <field name="address_id" select="1"/>
+                                    <field name="product_packaging"/>
+                                    <field context="product_id=product_id" name="prodlot_id" select="1"/>
+                                    <field name="tracking_id" select="1"/>
                                     <newline/>
                                     <label/>
-                                    <button name='%(track_line)d' type='action' string='Split in production lots'/>
+                                    <button name="%(track_line)d" string="Split in production lots" type="action"/>
                                     
-                                    <separator string='Move State' colspan='4'/>
-                                    <field name='state' select='1'/>
+                                    <separator colspan="4" string="Move State"/>
+                                    <field name="state" select="1"/>
                                     <group>
-                                        <button name='force_assign' type='object' states='confirmed' string='Force assignation'/>
-                                        <button name='cancel_assign' type='object' states='assigned' string='Cancel assignation'/>
+                                        <button name="force_assign" states="confirmed" string="Force assignation" type="object"/>
+                                        <button name="cancel_assign" states="assigned" string="Cancel assignation" type="object"/>
                                     </group>
                                 </form>
                             </field>
-                            <group col='7' colspan='4'>
-                                <label colspan='6'/>
-                                <button name='%(move_split)d' type='action' string='Split move lines in two'/>
+                            <group col="7" colspan="4">
+                                <label colspan="6"/>
+                                <button name="%(move_split)d" string="Split move lines in two" type="action"/>
                             </group>
-                            <group col='8' colspan='4'>
-                                <field name='state' readonly='1'/>
-                                <button name='button_confirm' states='draft' string='Confirm'/>
-                                <button name='action_assign' type='object' states='confirmed' string='Assign'/>
-                                <button name='force_assign' type='object' states='confirmed' string='Force Assignation'/>
-                                <button name='cancel_assign' type='object' states='assigned' string='Cancel Assignation'/>
-                                <button name='%(partial_picking)d' type='action' states='assigned' string='Validate'/>
-                                <button name='button_cancel' states='assigned,confirmed,draft' string='Cancel'/>
+                            <group col="8" colspan="4">
+                                <field name="state" readonly="1"/>
+                                <button name="button_confirm" states="draft" string="Confirm"/>
+                                <button name="action_assign" states="confirmed" string="Assign" type="object"/>
+                                <button name="force_assign" states="confirmed" string="Force Assignation" type="object"/>
+                                <button name="cancel_assign" states="assigned" string="Cancel Assignation" type="object"/>
+                                <button name="%(partial_picking)d" states="assigned" string="Validate" type="action"/>
+                                <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel"/>
                             </group>
                         </page>
-                        <page string='Notes'>
-                            <field name='note' nolabel='1' colspan='4'/>
+                        <page string="Notes">
+                            <field colspan="4" name="note" nolabel="1"/>
                         </page>
-                        <page string='Others info'>
-                            <field name='origin' select='2'/>
-                            <field name='active' select='2'/>
-                            <field name='auto_picking'/>
+                        <page string="Others info">
+                            <field name="origin" select="2"/>
+                            <field name="active" select="2"/>
+                            <field name="auto_picking"/>
                             <newline/>
-                            <field name='move_type'/>
+                            <field name="move_type"/>
                         </page>
                     </notebook>
                 </form>
@@ -518,79 +518,79 @@
         # Delivery Orders
         # 
         
-        <record id='view_picking_delivery_tree' model='ir.ui.view'>
-            <field name='name'>stock.picking.delivery.tree</field>
-            <field name='model'>stock.picking</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree color='red:state==&apos;cancel&apos;' string='Packing list'>
-                    <field name='name' select='1' colspan='4'/>
-                    <field name='date' select='1'/>
-                    <field name='address_id' select='1'/>
-                    <field name='origin' select='1'/>
-                    <field name='state' readonly='1'/>
+        <record id="view_picking_delivery_tree" model="ir.ui.view">
+            <field name="name">stock.picking.delivery.tree</field>
+            <field name="model">stock.picking</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree color="red:state=='cancel'" string="Packing list">
+                    <field colspan="4" name="name" select="1"/>
+                    <field name="date" select="1"/>
+                    <field name="address_id" select="1"/>
+                    <field name="origin" select="1"/>
+                    <field name="state" readonly="1"/>
                 </tree>
             </field>
         </record>
-        <record id='view_picking_delivery_form' model='ir.ui.view'>
-            <field name='name'>stock.picking.delivery.form</field>
-            <field name='model'>stock.picking</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Packing list'>
+        <record id="view_picking_delivery_form" model="ir.ui.view">
+            <field name="name">stock.picking.delivery.form</field>
+            <field name="model">stock.picking</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Packing list">
                     <notebook>
-                        <page string='General Information'>
-                            <field name='name' select='1'/>
-                            <field name='date' select='1'/>
+                        <page string="General Information">
+                            <field name="name" select="1"/>
+                            <field name="date" select="1"/>
                             <newline/>
-                            <field name='address_id' select='2'/>
-                            <field name='move_lines' widget='one2many_list' nolabel='1' colspan='4'>
-                                <form string='Stock Moves'>
-                                    <separator string='Move Information' colspan='4'/>
-                                    <field name='product_id' on_change='onchange_product_id(product_id, parent.location_id, parent.location_dest_id)' context='location=parent.location_id' colspan='4' select='1'/>
-                                    <field name='product_uom' select='1'/>
-                                    <field name='product_qty' select='1'/>
-                                    <field name='product_uos' groups='product.group_uos'/>
-                                    <field name='product_uos_qty' groups='product.group_uos'/>
-                                    <field name='name' invisible='1' select='1' colspan='4'/>
-                                    <field name='date' invisible='1'/>
-                                    <field name='date_planned'/>
-                                    <field name='location_id' select='1'/>
-                                    <field name='location_dest_id' select='1'/>
-                                    <field name='product_packaging' groups='base.group_extended'/>
-                                    <field name='prodlot_id' context='product_id=product_id' select='1'/>
-                                    <field name='tracking_id' groups='base.group_extended' select='1'/>
-                                    <separator string='Move State' colspan='4'/>
-                                    <field name='state' select='1'/>
+                            <field name="address_id" select="2"/>
+                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list">
+                                <form string="Stock Moves">
+                                    <separator colspan="4" string="Move Information"/>
+                                    <field colspan="4" context="location=parent.location_id" name="product_id" on_change="onchange_product_id(product_id, parent.location_id, parent.location_dest_id)" select="1"/>
+                                    <field name="product_uom" select="1"/>
+                                    <field name="product_qty" select="1"/>
+                                    <field groups="product.group_uos" name="product_uos"/>
+                                    <field groups="product.group_uos" name="product_uos_qty"/>
+                                    <field colspan="4" invisible="1" name="name" select="1"/>
+                                    <field invisible="1" name="date"/>
+                                    <field name="date_planned"/>
+                                    <field name="location_id" select="1"/>
+                                    <field name="location_dest_id" select="1"/>
+                                    <field groups="base.group_extended" name="product_packaging"/>
+                                    <field context="product_id=product_id" name="prodlot_id" select="1"/>
+                                    <field groups="base.group_extended" name="tracking_id" select="1"/>
+                                    <separator colspan="4" string="Move State"/>
+                                    <field name="state" select="1"/>
                                     <group>
-                                        <button name='force_assign' type='object' states='confirmed' string='Force assignation'/>
-                                        <button name='cancel_assign' type='object' states='assigned' string='Cancel assignation'/>
+                                        <button name="force_assign" states="confirmed" string="Force assignation" type="object"/>
+                                        <button name="cancel_assign" states="assigned" string="Cancel assignation" type="object"/>
                                     </group>
                                 </form>
                             </field>
-                            <group col='7' colspan='4'>
-                                <label colspan='6'/>
-                                <button name='%(move_split)d' type='action' string='Split in Two'/>
+                            <group col="7" colspan="4">
+                                <label colspan="6"/>
+                                <button name="%(move_split)d" string="Split in Two" type="action"/>
                             </group>
-                            <group col='8' colspan='4'>
-                                <field name='state' readonly='1'/>
-                                <button name='button_confirm' states='draft' string='Confirm'/>
-                                <button name='action_assign' type='object' states='confirmed' string='Assign'/>
-                                <button name='force_assign' type='object' states='confirmed' string='Force Assignation'/>
-                                <button name='cancel_assign' type='object' states='assigned' string='Cancel Assignation'/>
-                                <button name='%(partial_picking)d' type='action' states='assigned' string='Validate'/>
-                                <button name='button_cancel' states='assigned,confirmed,draft' string='Cancel'/>
+                            <group col="8" colspan="4">
+                                <field name="state" readonly="1"/>
+                                <button name="button_confirm" states="draft" string="Confirm"/>
+                                <button name="action_assign" states="confirmed" string="Assign" type="object"/>
+                                <button name="force_assign" states="confirmed" string="Force Assignation" type="object"/>
+                                <button name="cancel_assign" states="assigned" string="Cancel Assignation" type="object"/>
+                                <button name="%(partial_picking)d" states="assigned" string="Validate" type="action"/>
+                                <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel"/>
                             </group>
                         </page>
-                        <page string='Notes'>
-                            <field name='note' nolabel='1' colspan='4'/>
+                        <page string="Notes">
+                            <field colspan="4" name="note" nolabel="1"/>
                         </page>
-                        <page string='Others info'>
-                            <field name='origin' select='2'/>
-                            <field name='active' select='2'/>
-                            <field name='auto_picking'/>
+                        <page string="Others info">
+                            <field name="origin" select="2"/>
+                            <field name="active" select="2"/>
+                            <field name="auto_picking"/>
                             <newline/>
-                            <field name='move_type'/>
+                            <field name="move_type"/>
                         </page>
                     </notebook>
                 </form>
@@ -598,318 +598,318 @@
         </record>
         
         
-        <record id='action_picking_tree_delivery' model='ir.actions.act_window'>
-            <field name='name'>Delivery Orders</field>
-            <field name='res_model'>stock.picking</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('type','=','delivery')]</field>
-            <field name='context'>{'contact_display': 'partner'}</field>
+        <record id="action_picking_tree_delivery" model="ir.actions.act_window">
+            <field name="name">Delivery Orders</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','delivery')]</field>
+            <field name="context">{'contact_display': 'partner'}</field>
         </record>
-        <record id='action_picking_tree_delivery_view1' model='ir.actions.act_window.view'>
-            <field name='sequence' eval='1'/>
-            <field name='view_mode'>tree</field>
-            <field name='view_id' ref='view_picking_delivery_tree'/>
-            <field name='act_window_id' ref='action_picking_tree_delivery'/>
+        <record id="action_picking_tree_delivery_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_picking_delivery_tree"/>
+            <field name="act_window_id" ref="action_picking_tree_delivery"/>
         </record>
-        <record id='action_picking_tree_delivery_view2' model='ir.actions.act_window.view'>
-            <field name='sequence' eval='2'/>
-            <field name='view_mode'>form</field>
-            <field name='view_id' ref='view_picking_delivery_form'/>
-            <field name='act_window_id' ref='action_picking_tree_delivery'/>
+        <record id="action_picking_tree_delivery_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_picking_delivery_form"/>
+            <field name="act_window_id" ref="action_picking_tree_delivery"/>
         </record>
         
-        <menuitem sequence='20' groups='base.group_extended' action='action_picking_tree_delivery' id='menu_action_picking_tree_delivery' parent='menu_stock_root'/>
+        <menuitem action="action_picking_tree_delivery" groups="base.group_extended" id="menu_action_picking_tree_delivery" parent="menu_stock_root" sequence="20"/>
         
-        <record id='action_picking_tree2_delivery' model='ir.actions.act_window'>
-            <field name='name'>Delivery Orders to Process</field>
-            <field name='res_model'>stock.picking</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('state','=','assigned'),('type','=','delivery')]</field>
-            <field name='context'>{'contact_display': 'partner'}</field>
+        <record id="action_picking_tree2_delivery" model="ir.actions.act_window">
+            <field name="name">Delivery Orders to Process</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','assigned'),('type','=','delivery')]</field>
+            <field name="context">{'contact_display': 'partner'}</field>
         </record>
-        <record id='action_picking_tree_delivery_view1_toproc' model='ir.actions.act_window.view'>
-            <field name='sequence' eval='1'/>
-            <field name='view_mode'>tree</field>
-            <field name='view_id' ref='view_picking_delivery_tree'/>
-            <field name='act_window_id' ref='action_picking_tree2_delivery'/>
+        <record id="action_picking_tree_delivery_view1_toproc" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_picking_delivery_tree"/>
+            <field name="act_window_id" ref="action_picking_tree2_delivery"/>
         </record>
-        <record id='action_picking_tree_delivery_view2_toproc' model='ir.actions.act_window.view'>
-            <field name='sequence' eval='2'/>
-            <field name='view_mode'>form</field>
-            <field name='view_id' ref='view_picking_delivery_form'/>
-            <field name='act_window_id' ref='action_picking_tree2_delivery'/>
+        <record id="action_picking_tree_delivery_view2_toproc" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_picking_delivery_form"/>
+            <field name="act_window_id" ref="action_picking_tree2_delivery"/>
         </record>
-        <menuitem action='action_picking_tree2_delivery' id='menu_picking_waiting_delivery' parent='menu_action_picking_tree_delivery'/>
+        <menuitem action="action_picking_tree2_delivery" id="menu_picking_waiting_delivery" parent="menu_action_picking_tree_delivery"/>
         
-        <record id='action_picking_tree3_delivery' model='ir.actions.act_window'>
-            <field name='name'>Waiting Delivery Orders</field>
-            <field name='res_model'>stock.picking</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('state','=','confirmed'),('type','=','delivery')]</field>
-            <field name='context'>{'contact_display': 'partner'}</field>
+        <record id="action_picking_tree3_delivery" model="ir.actions.act_window">
+            <field name="name">Waiting Delivery Orders</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','confirmed'),('type','=','delivery')]</field>
+            <field name="context">{'contact_display': 'partner'}</field>
         </record>
-        <record id='action_picking_tree_delivery_view1_waiting' model='ir.actions.act_window.view'>
-            <field name='sequence' eval='1'/>
-            <field name='view_mode'>tree</field>
-            <field name='view_id' ref='view_picking_delivery_tree'/>
-            <field name='act_window_id' ref='action_picking_tree3_delivery'/>
+        <record id="action_picking_tree_delivery_view1_waiting" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_picking_delivery_tree"/>
+            <field name="act_window_id" ref="action_picking_tree3_delivery"/>
         </record>
-        <record id='action_picking_tree_delivery_view2_waiting' model='ir.actions.act_window.view'>
-            <field name='sequence' eval='2'/>
-            <field name='view_mode'>form</field>
-            <field name='view_id' ref='view_picking_delivery_form'/>
-            <field name='act_window_id' ref='action_picking_tree3_delivery'/>
+        <record id="action_picking_tree_delivery_view2_waiting" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_picking_delivery_form"/>
+            <field name="act_window_id" ref="action_picking_tree3_delivery"/>
         </record>
-        <menuitem action='action_picking_tree3_delivery' id='menu_action_picking_tree3_delivery' parent='menu_action_picking_tree_delivery'/>
+        <menuitem action="action_picking_tree3_delivery" id="menu_action_picking_tree3_delivery" parent="menu_action_picking_tree_delivery"/>
         
         #
         # Sending Products
         #
         
-        <record id='view_picking_out_tree' model='ir.ui.view'>
-            <field name='name'>stock.picking.out.tree</field>
-            <field name='model'>stock.picking</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree color='red:state==&apos;cancel&apos;' string='Packing list'>
-                    <field name='name' select='1' colspan='4'/>
-                    <field name='date' select='1'/>
-                    <field name='address_id' select='1'/>
-                    <field name='invoice_state' readonly='1'/>
-                    <field name='origin' select='1'/>
-                    <field name='state' readonly='1'/>
+        <record id="view_picking_out_tree" model="ir.ui.view">
+            <field name="name">stock.picking.out.tree</field>
+            <field name="model">stock.picking</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree color="red:state=='cancel'" string="Packing list">
+                    <field colspan="4" name="name" select="1"/>
+                    <field name="date" select="1"/>
+                    <field name="address_id" select="1"/>
+                    <field name="invoice_state" readonly="1"/>
+                    <field name="origin" select="1"/>
+                    <field name="state" readonly="1"/>
                 </tree>
             </field>
         </record>
-        <record id='view_picking_out_form' model='ir.ui.view'>
-            <field name='name'>stock.picking.out.form</field>
-            <field name='model'>stock.picking</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Packing list'>
+        <record id="view_picking_out_form" model="ir.ui.view">
+            <field name="name">stock.picking.out.form</field>
+            <field name="model">stock.picking</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Packing list">
                     <notebook>
-                        <page string='General Information'>
-                            <field name='name' select='1'/>
-                            <field name='date' select='1'/>
+                        <page string="General Information">
+                            <field name="name" select="1"/>
+                            <field name="date" select="1"/>
                             <newline/>
-                            <field name='address_id' select='2'/>
-                            <field name='move_lines' widget='one2many_list' nolabel='1' colspan='4'>
-                                <form string='Stock Moves'>
-                                    <separator string='Move Information' colspan='4'/>
-                                    <field name='product_id' on_change='onchange_product_id(product_id, parent.location_id, parent.location_dest_id)' context='location=parent.location_id' colspan='4' select='1'/>
-                                    <field name='product_uom' select='1'/>
-                                    <field name='product_qty' select='1'/>
-                                    <field name='product_uos' groups='product.group_uos'/>
-                                    <field name='product_uos_qty' groups='product.group_uos'/>
-                                    <field name='name' invisible='1' select='1' colspan='4'/>
-                                    <field name='date' invisible='1'/>
-                                    <field name='date_planned'/>
-                                    <field name='location_id' select='1'/>
-                                    <field name='location_dest_id' select='1'/>
-                                    <field name='product_packaging' groups='base.group_extended'/>
-                                    <field name='prodlot_id' context='product_id=product_id' select='1'/>
-                                    <field name='tracking_id' groups='base.group_extended' select='1'/>
-                                    <separator string='Move State' colspan='4'/>
-                                    <field name='state' select='1'/>
+                            <field name="address_id" select="2"/>
+                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list">
+                                <form string="Stock Moves">
+                                    <separator colspan="4" string="Move Information"/>
+                                    <field colspan="4" context="location=parent.location_id" name="product_id" on_change="onchange_product_id(product_id, parent.location_id, parent.location_dest_id)" select="1"/>
+                                    <field name="product_uom" select="1"/>
+                                    <field name="product_qty" select="1"/>
+                                    <field groups="product.group_uos" name="product_uos"/>
+                                    <field groups="product.group_uos" name="product_uos_qty"/>
+                                    <field colspan="4" invisible="1" name="name" select="1"/>
+                                    <field invisible="1" name="date"/>
+                                    <field name="date_planned"/>
+                                    <field name="location_id" select="1"/>
+                                    <field name="location_dest_id" select="1"/>
+                                    <field groups="base.group_extended" name="product_packaging"/>
+                                    <field context="product_id=product_id" name="prodlot_id" select="1"/>
+                                    <field groups="base.group_extended" name="tracking_id" select="1"/>
+                                    <separator colspan="4" string="Move State"/>
+                                    <field name="state" select="1"/>
                                     <group>
-                                        <button name='force_assign' type='object' states='confirmed' string='Force assignation'/>
-                                        <button name='cancel_assign' type='object' states='assigned' string='Cancel assignation'/>
+                                        <button name="force_assign" states="confirmed" string="Force assignation" type="object"/>
+                                        <button name="cancel_assign" states="assigned" string="Cancel assignation" type="object"/>
                                     </group>
                                 </form>
                             </field>
-                            <group col='7' colspan='4'>
-                                <label colspan='6'/>
-                                <button name='%(move_split)d' type='action' string='Split in Two'/>
+                            <group col="7" colspan="4">
+                                <label colspan="6"/>
+                                <button name="%(move_split)d" string="Split in Two" type="action"/>
                             </group>
-                            <group col='8' colspan='4'>
-                                <field name='state' readonly='1'/>
-                                <button name='button_confirm' states='draft' string='Confirm'/>
-                                <button name='action_assign' type='object' states='confirmed' string='Assign'/>
-                                <button name='force_assign' type='object' states='confirmed' string='Force Assignation'/>
-                                <button name='cancel_assign' type='object' states='assigned' string='Cancel Assignation'/>
-                                <button name='%(partial_picking)d' type='action' states='assigned' string='Validate'/>
-                                <button name='button_cancel' states='assigned,confirmed,draft' string='Cancel'/>
+                            <group col="8" colspan="4">
+                                <field name="state" readonly="1"/>
+                                <button name="button_confirm" states="draft" string="Confirm"/>
+                                <button name="action_assign" states="confirmed" string="Assign" type="object"/>
+                                <button name="force_assign" states="confirmed" string="Force Assignation" type="object"/>
+                                <button name="cancel_assign" states="assigned" string="Cancel Assignation" type="object"/>
+                                <button name="%(partial_picking)d" states="assigned" string="Validate" type="action"/>
+                                <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel"/>
                             </group>
                         </page>
-                        <page string='Notes'>
-                            <field name='note' nolabel='1' colspan='4'/>
+                        <page string="Notes">
+                            <field colspan="4" name="note" nolabel="1"/>
                         </page>
-                        <page string='Others info'>
-                            <field name='origin' select='2'/>
-                            <field name='active' select='2'/>
-                            <field name='auto_picking'/>
+                        <page string="Others info">
+                            <field name="origin" select="2"/>
+                            <field name="active" select="2"/>
+                            <field name="auto_picking"/>
                             <newline/>
-                            <field name='move_type'/>
+                            <field name="move_type"/>
                         </page>
                     </notebook>
                 </form>
             </field>
         </record>
         
-        <record id='action_picking_tree' model='ir.actions.act_window'>
-            <field name='name'>Sending Goods</field>
-            <field name='res_model'>stock.picking</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('type','=','out')]</field>
-            <field name='context'>{'contact_display': 'partner'}</field>
+        <record id="action_picking_tree" model="ir.actions.act_window">
+            <field name="name">Sending Goods</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','out')]</field>
+            <field name="context">{'contact_display': 'partner'}</field>
         </record>
-        <record id='action_picking_tree_out_view1_waiting' model='ir.actions.act_window.view'>
-            <field name='sequence' eval='1'/>
-            <field name='view_mode'>tree</field>
-            <field name='view_id' ref='view_picking_out_tree'/>
-            <field name='act_window_id' ref='action_picking_tree'/>
+        <record id="action_picking_tree_out_view1_waiting" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_picking_out_tree"/>
+            <field name="act_window_id" ref="action_picking_tree"/>
         </record>
-        <record id='action_picking_tree_out_view2_waiting' model='ir.actions.act_window.view'>
-            <field name='sequence' eval='2'/>
-            <field name='view_mode'>form</field>
-            <field name='view_id' ref='view_picking_out_form'/>
-            <field name='act_window_id' ref='action_picking_tree'/>
+        <record id="action_picking_tree_out_view2_waiting" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_picking_out_form"/>
+            <field name="act_window_id" ref="action_picking_tree"/>
         </record>
-        <menuitem sequence='19' action='action_picking_tree' id='menu_action_picking_tree' parent='menu_stock_root'/>
+        <menuitem action="action_picking_tree" id="menu_action_picking_tree" parent="menu_stock_root" sequence="19"/>
         
-        <record id='action_picking_tree2' model='ir.actions.act_window'>
-            <field name='name'>Assigned Packings</field>
-            <field name='res_model'>stock.picking</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('state','=','assigned'),('type','=','out')]</field>
-            <field name='context'>{'contact_display': 'partner'}</field>
+        <record id="action_picking_tree2" model="ir.actions.act_window">
+            <field name="name">Assigned Packings</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','assigned'),('type','=','out')]</field>
+            <field name="context">{'contact_display': 'partner'}</field>
         </record>
-        <record id='action_picking_tree2_out_view1' model='ir.actions.act_window.view'>
-            <field name='sequence' eval='1'/>
-            <field name='view_mode'>tree</field>
-            <field name='view_id' ref='view_picking_out_tree'/>
-            <field name='act_window_id' ref='action_picking_tree2'/>
+        <record id="action_picking_tree2_out_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_picking_out_tree"/>
+            <field name="act_window_id" ref="action_picking_tree2"/>
         </record>
-        <record id='action_picking_tree2_out_view2' model='ir.actions.act_window.view'>
-            <field name='sequence' eval='2'/>
-            <field name='view_mode'>form</field>
-            <field name='view_id' ref='view_picking_out_form'/>
-            <field name='act_window_id' ref='action_picking_tree2'/>
+        <record id="action_picking_tree2_out_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_picking_out_form"/>
+            <field name="act_window_id" ref="action_picking_tree2"/>
         </record>
-        <menuitem action='action_picking_tree2' id='menu_picking_waiting' parent='menu_action_picking_tree'/>
+        <menuitem action="action_picking_tree2" id="menu_picking_waiting" parent="menu_action_picking_tree"/>
         
-        <record id='action_picking_tree3' model='ir.actions.act_window'>
-            <field name='name'>Confirmed Packings Waiting Assignation</field>
-            <field name='res_model'>stock.picking</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('state','=','confirmed'),('type','=','out')]</field>
-            <field name='context'>{'contact_display': 'partner'}</field>
+        <record id="action_picking_tree3" model="ir.actions.act_window">
+            <field name="name">Confirmed Packings Waiting Assignation</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','confirmed'),('type','=','out')]</field>
+            <field name="context">{'contact_display': 'partner'}</field>
         </record>
-        <record id='action_picking_tree3_out_view1' model='ir.actions.act_window.view'>
-            <field name='sequence' eval='1'/>
-            <field name='view_mode'>tree</field>
-            <field name='view_id' ref='view_picking_out_tree'/>
-            <field name='act_window_id' ref='action_picking_tree3'/>
+        <record id="action_picking_tree3_out_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_picking_out_tree"/>
+            <field name="act_window_id" ref="action_picking_tree3"/>
         </record>
-        <record id='action_picking_tree3_out_view2' model='ir.actions.act_window.view'>
-            <field name='sequence' eval='2'/>
-            <field name='view_mode'>form</field>
-            <field name='view_id' ref='view_picking_out_form'/>
-            <field name='act_window_id' ref='action_picking_tree3'/>
+        <record id="action_picking_tree3_out_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_picking_out_form"/>
+            <field name="act_window_id" ref="action_picking_tree3"/>
         </record>
-        <menuitem action='action_picking_tree3' id='menu_action_picking_tree3' parent='menu_action_picking_tree'/>
+        <menuitem action="action_picking_tree3" id="menu_action_picking_tree3" parent="menu_action_picking_tree"/>
         
         #
         # Reception of Goods
         #
-        <record id='view_picking_in_tree' model='ir.ui.view'>
-            <field name='name'>stock.picking.in.tree</field>
-            <field name='model'>stock.picking</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree color='red:state==&apos;cancel&apos;' string='Packing list'>
-                    <field name='name' select='1' colspan='4'/>
-                    <field name='date' select='1'/>
-                    <field name='address_id' select='1'/>
-                    <field name='invoice_state' readonly='1'/>
-                    <field name='origin' select='1'/>
-                    <field name='state' readonly='1'/>
+        <record id="view_picking_in_tree" model="ir.ui.view">
+            <field name="name">stock.picking.in.tree</field>
+            <field name="model">stock.picking</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree color="red:state=='cancel'" string="Packing list">
+                    <field colspan="4" name="name" select="1"/>
+                    <field name="date" select="1"/>
+                    <field name="address_id" select="1"/>
+                    <field name="invoice_state" readonly="1"/>
+                    <field name="origin" select="1"/>
+                    <field name="state" readonly="1"/>
                 </tree>
             </field>
         </record>
-        <record id='view_picking_in_form' model='ir.ui.view'>
-            <field name='name'>stock.picking.in.form</field>
-            <field name='model'>stock.picking</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Input Packing List'>
+        <record id="view_picking_in_form" model="ir.ui.view">
+            <field name="name">stock.picking.in.form</field>
+            <field name="model">stock.picking</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Input Packing List">
                     <notebook>
-                        <page string='General Information'>
-                            <field name='address_id' on_change='onchange_partner_in(address_id)' select='2'/>
-                            <field name='name' readonly='1' select='1'/>
-                            <field name='location_id'/>
-                            <field name='location_dest_id' domain='[(&apos;usage&apos;,&apos;=&apos;,&apos;internal&apos;)]'/>
-                            <field name='invoice_state' string='Supplier Invoice Control' select='2'/>
-                            <field name='origin' select='2'/>
+                        <page string="General Information">
+                            <field name="address_id" on_change="onchange_partner_in(address_id)" select="2"/>
+                            <field name="name" readonly="1" select="1"/>
+                            <field name="location_id"/>
+                            <field domain="[('usage','=','internal')]" name="location_dest_id"/>
+                            <field name="invoice_state" select="2" string="Supplier Invoice Control"/>
+                            <field name="origin" select="2"/>
                             
-                            <field name='move_lines' widget='one2many_list' nolabel='1' colspan='4'>
-                                <tree string='Stock Moves'>
-                                    <field name='product_id'/>
-                                    <field name='product_qty'/>
-                                    <field name='product_uom'/>
-                                    <field name='location_dest_id' select='1'/>
-                                    <field name='prodlot_id' context='product_id=product_id' select='1'/>
-                                    <field name='state' select='1'/>
+                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list">
+                                <tree string="Stock Moves">
+                                    <field name="product_id"/>
+                                    <field name="product_qty"/>
+                                    <field name="product_uom"/>
+                                    <field name="location_dest_id" select="1"/>
+                                    <field context="product_id=product_id" name="prodlot_id" select="1"/>
+                                    <field name="state" select="1"/>
                                 </tree>
-                                <form string='Stock Moves'>
-                                    <separator string='Move Information' colspan='4'/>
-                                    <field name='product_id' on_change='onchange_product_id(product_id, parent.location_id, parent.location_dest_id)' context='location=parent.location_id' colspan='4' select='1'/>
-                                    <field name='product_uom' select='1'/>
-                                    <field name='product_qty' select='1'/>
-                                    <field name='product_uos' groups='product.group_uos'/>
-                                    <field name='product_uos_qty' groups='product.group_uos'/>
-                                    <field name='name' invisible='1' select='1' colspan='4'/>
-                                    <field name='date' groups='base.group_extended'/>
-                                    <field name='date_planned' groups='base.group_extended'/>
+                                <form string="Stock Moves">
+                                    <separator colspan="4" string="Move Information"/>
+                                    <field colspan="4" context="location=parent.location_id" name="product_id" on_change="onchange_product_id(product_id, parent.location_id, parent.location_dest_id)" select="1"/>
+                                    <field name="product_uom" select="1"/>
+                                    <field name="product_qty" select="1"/>
+                                    <field groups="product.group_uos" name="product_uos"/>
+                                    <field groups="product.group_uos" name="product_uos_qty"/>
+                                    <field colspan="4" invisible="1" name="name" select="1"/>
+                                    <field groups="base.group_extended" name="date"/>
+                                    <field groups="base.group_extended" name="date_planned"/>
                                     <newline/>
-                                    <field name='location_id' select='1'/>
-                                    <field name='location_dest_id' domain='[(&apos;usage&apos;,&apos;=&apos;,&apos;internal&apos;)]' select='1'/>
+                                    <field name="location_id" select="1"/>
+                                    <field domain="[('usage','=','internal')]" name="location_dest_id" select="1"/>
                                     <newline/>
-                                    <field name='product_packaging' groups='base.group_extended'/>
+                                    <field groups="base.group_extended" name="product_packaging"/>
                                     <newline/>
-                                    <field name='prodlot_id' context='product_id=product_id' select='1'/>
-                                    <field name='tracking_id' groups='base.group_extended' select='1'/>
+                                    <field context="product_id=product_id" name="prodlot_id" select="1"/>
+                                    <field groups="base.group_extended" name="tracking_id" select="1"/>
                                     <newline/>
                                     <label/>
-                                    <button name='%(track_line)d' groups='base.group_extended' type='action' string='Split in production lots'/>
+                                    <button groups="base.group_extended" name="%(track_line)d" string="Split in production lots" type="action"/>
                                     
-                                    <separator string='Move State' colspan='4'/>
-                                    <field name='state' select='1'/>
+                                    <separator colspan="4" string="Move State"/>
+                                    <field name="state" select="1"/>
                                     <group>
-                                        <button name='force_assign' type='object' states='confirmed' string='Force assignation'/>
-                                        <button name='cancel_assign' type='object' states='assigned' string='Cancel assignation'/>
+                                        <button name="force_assign" states="confirmed" string="Force assignation" type="object"/>
+                                        <button name="cancel_assign" states="assigned" string="Cancel assignation" type="object"/>
                                     </group>
                                 </form>
                             </field>
-                            <group col='7' colspan='4'>
-                                <label colspan='5'/>
-                                <button name='llk' type='action' string='Fill From Unreceived Products'/>
-                                <button name='%(move_split)d' groups='base.group_extended' type='action' string='Split move lines in two'/>
+                            <group col="7" colspan="4">
+                                <label colspan="5"/>
+                                <button name="llk" string="Fill From Unreceived Products" type="action"/>
+                                <button groups="base.group_extended" name="%(move_split)d" string="Split move lines in two" type="action"/>
                             </group>
-                            <group col='8' colspan='4'>
-                                <field name='state' readonly='1'/>
-                                <button name='button_confirm' states='draft' string='Confirm'/>
-                                <button name='action_assign' type='object' states='confirmed' string='Assign'/>
-                                <button name='force_assign' type='object' states='confirmed' string='Force Assignation'/>
-                                <button name='cancel_assign' type='object' states='assigned' string='Cancel Assignation'/>
-                                <button name='%(partial_picking)d' type='action' states='assigned' string='Validate'/>
-                                <button name='button_cancel' states='assigned,confirmed,draft' string='Cancel'/>
+                            <group col="8" colspan="4">
+                                <field name="state" readonly="1"/>
+                                <button name="button_confirm" states="draft" string="Confirm"/>
+                                <button name="action_assign" states="confirmed" string="Assign" type="object"/>
+                                <button name="force_assign" states="confirmed" string="Force Assignation" type="object"/>
+                                <button name="cancel_assign" states="assigned" string="Cancel Assignation" type="object"/>
+                                <button name="%(partial_picking)d" states="assigned" string="Validate" type="action"/>
+                                <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel"/>
                             </group>
                         </page>
-                        <page string='Notes'>
-                            <field name='note' nolabel='1' colspan='4'/>
+                        <page string="Notes">
+                            <field colspan="4" name="note" nolabel="1"/>
                         </page>
                     </notebook>
                 </form>
@@ -918,121 +918,121 @@
         
         
         
-        <record id='action_picking_tree4' model='ir.actions.act_window'>
-            <field name='name'>Getting Goods</field>
-            <field name='res_model'>stock.picking</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('type','=','in')]</field>
-            <field name='context'>{'contact_display': 'partner'}</field>
+        <record id="action_picking_tree4" model="ir.actions.act_window">
+            <field name="name">Getting Goods</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','in')]</field>
+            <field name="context">{'contact_display': 'partner'}</field>
         </record>
-        <record id='action_invoice_tree5_view1' model='ir.actions.act_window.view'>
-            <field name='sequence' eval='1'/>
-            <field name='view_mode'>tree</field>
-            <field name='view_id' ref='view_picking_in_tree'/>
-            <field name='act_window_id' ref='action_picking_tree4'/>
+        <record id="action_invoice_tree5_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_picking_in_tree"/>
+            <field name="act_window_id" ref="action_picking_tree4"/>
         </record>
-        <record id='action_invoice_tree5_view2' model='ir.actions.act_window.view'>
-            <field name='sequence' eval='2'/>
-            <field name='view_mode'>form</field>
-            <field name='view_id' ref='view_picking_in_form'/>
-            <field name='act_window_id' ref='action_picking_tree4'/>
+        <record id="action_invoice_tree5_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_picking_in_form"/>
+            <field name="act_window_id" ref="action_picking_tree4"/>
         </record>
         
-        <menuitem sequence='17' action='action_picking_tree4' id='menu_action_picking_tree4' parent='menu_stock_root'/>
+        <menuitem action="action_picking_tree4" id="menu_action_picking_tree4" parent="menu_stock_root" sequence="17"/>
         
-        <record id='action_picking_tree5' model='ir.actions.act_window'>
-            <field name='name'>Packings to Process</field>
-            <field name='res_model'>stock.picking</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('state','=','assigned'),('type','=','in')]</field>
-            <field name='context'>{'contact_display': 'partner'}</field>
+        <record id="action_picking_tree5" model="ir.actions.act_window">
+            <field name="name">Packings to Process</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','assigned'),('type','=','in')]</field>
+            <field name="context">{'contact_display': 'partner'}</field>
         </record>
-        <record id='action_invoice_tree6_view1' model='ir.actions.act_window.view'>
-            <field name='sequence' eval='1'/>
-            <field name='view_mode'>tree</field>
-            <field name='view_id' ref='view_picking_in_tree'/>
-            <field name='act_window_id' ref='action_picking_tree5'/>
+        <record id="action_invoice_tree6_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_picking_in_tree"/>
+            <field name="act_window_id" ref="action_picking_tree5"/>
         </record>
-        <record id='action_invoice_tree6_view2' model='ir.actions.act_window.view'>
-            <field name='sequence' eval='2'/>
-            <field name='view_mode'>form</field>
-            <field name='view_id' ref='view_picking_in_form'/>
-            <field name='act_window_id' ref='action_picking_tree5'/>
+        <record id="action_invoice_tree6_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_picking_in_form"/>
+            <field name="act_window_id" ref="action_picking_tree5"/>
         </record>
-        <menuitem action='action_picking_tree5' id='menu_action_picking_tree5' parent='menu_action_picking_tree4'/>
+        <menuitem action="action_picking_tree5" id="menu_action_picking_tree5" parent="menu_action_picking_tree4"/>
         
-        <record id='action_picking_form' model='ir.actions.act_window'>
-            <field name='name'>New Reception Packing</field>
-            <field name='res_model'>stock.picking</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='view_type'>form</field>
-            <field name='view_id' ref='view_picking_in_form'/>
-            <field name='context'>{'contact_display': 'partner'}</field>
-            <field name='domain'>[('type','=','in')]</field>
+        <record id="action_picking_form" model="ir.actions.act_window">
+            <field name="name">New Reception Packing</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_picking_in_form"/>
+            <field name="context">{'contact_display': 'partner'}</field>
+            <field name="domain">[('type','=','in')]</field>
         </record>
-        <record id='action_picking_form_view1' model='ir.actions.act_window.view'>
-            <field name='sequence' eval='1'/>
-            <field name='view_mode'>tree</field>
-            <field name='view_id' ref='view_picking_in_tree'/>
-            <field name='act_window_id' ref='action_picking_form'/>
+        <record id="action_picking_form_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_picking_in_tree"/>
+            <field name="act_window_id" ref="action_picking_form"/>
         </record>
-        <record id='action_picking_form_view2' model='ir.actions.act_window.view'>
-            <field name='sequence' eval='2'/>
-            <field name='view_mode'>form</field>
-            <field name='view_id' ref='view_picking_in_form'/>
-            <field name='act_window_id' ref='action_picking_form'/>
+        <record id="action_picking_form_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_picking_in_form"/>
+            <field name="act_window_id" ref="action_picking_form"/>
         </record>
-        <menuitem action='action_picking_form' id='menu_action_picking_form' parent='menu_action_picking_tree4'/>
-        
-        
-        <record id='action_picking_tree6' model='ir.actions.act_window'>
-            <field name='name'>Internal Packings</field>
-            <field name='res_model'>stock.picking</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('type','=','internal')]</field>
-            <field name='context'>{'contact_display': 'partner'}</field>
-        </record>
-        <menuitem sequence='18' action='action_picking_tree6' id='menu_action_picking_tree6' parent='menu_stock_root'/>
+        <menuitem action="action_picking_form" id="menu_action_picking_form" parent="menu_action_picking_tree4"/>
         
         
-        <record id='action_picking_tree7' model='ir.actions.act_window'>
-            <field name='name'>Assigned Packings</field>
-            <field name='res_model'>stock.picking</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('state','=','assigned'),('type','=','internal')]</field>
-            <field name='context'>{'contact_display': 'partner'}</field>
+        <record id="action_picking_tree6" model="ir.actions.act_window">
+            <field name="name">Internal Packings</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','=','internal')]</field>
+            <field name="context">{'contact_display': 'partner'}</field>
         </record>
-        <menuitem action='action_picking_tree7' id='menu_action_picking_tree7' parent='menu_action_picking_tree6'/>
+        <menuitem action="action_picking_tree6" id="menu_action_picking_tree6" parent="menu_stock_root" sequence="18"/>
         
-        <record id='action_picking_tree8' model='ir.actions.act_window'>
-            <field name='name'>Confirmed Packings Waiting Assignation</field>
-            <field name='res_model'>stock.picking</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('state','=','confirmed'),('type','=','internal')]</field>
-            <field name='context'>{'contact_display': 'partner'}</field>
-        </record>
-        <menuitem action='action_picking_tree8' id='menu_action_picking_tree8' parent='menu_action_picking_tree6'/>
         
-        <record id='action_picking_tree9' model='ir.actions.act_window'>
-            <field name='name'>Draft Internal Packings</field>
-            <field name='res_model'>stock.picking</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'>[('state','=','draft'),('type','=','internal')]</field>
-            <field name='context'>{'contact_display': 'partner'}</field>
+        <record id="action_picking_tree7" model="ir.actions.act_window">
+            <field name="name">Assigned Packings</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','assigned'),('type','=','internal')]</field>
+            <field name="context">{'contact_display': 'partner'}</field>
         </record>
-        <menuitem action='action_picking_tree9' id='menu_action_picking_tree9' parent='menu_action_picking_tree6'/>
+        <menuitem action="action_picking_tree7" id="menu_action_picking_tree7" parent="menu_action_picking_tree6"/>
+        
+        <record id="action_picking_tree8" model="ir.actions.act_window">
+            <field name="name">Confirmed Packings Waiting Assignation</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','confirmed'),('type','=','internal')]</field>
+            <field name="context">{'contact_display': 'partner'}</field>
+        </record>
+        <menuitem action="action_picking_tree8" id="menu_action_picking_tree8" parent="menu_action_picking_tree6"/>
+        
+        <record id="action_picking_tree9" model="ir.actions.act_window">
+            <field name="name">Draft Internal Packings</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','draft'),('type','=','internal')]</field>
+            <field name="context">{'contact_display': 'partner'}</field>
+        </record>
+        <menuitem action="action_picking_tree9" id="menu_action_picking_tree9" parent="menu_action_picking_tree6"/>
         
         =============================
         Move Tracking
@@ -1043,147 +1043,147 @@
         Move
         =============================
         
-        <record id='view_move_tree' model='ir.ui.view'>
-            <field name='name'>stock.move.tree</field>
-            <field name='model'>stock.move</field>
-            <field name='type'>tree</field>
-            <field name='priority' eval='6'/>
-            <field name='arch' type='xml'>
-                <tree color='grey:state==&apos;cancel&apos;' string='Moves'>
-                    <field name='product_id' select='1'/>
-                    <field name='product_qty' select='1'/>
-                    <field name='product_uom' select='1' string='UOM'/>
-                    <field name='prodlot_id' select='2'/>
-                    <field name='location_id' select='1'/>
-                    <field name='location_dest_id' select='1'/>
-                    <field name='date_planned' select='1'/>
-                    <field name='state'/>
+        <record id="view_move_tree" model="ir.ui.view">
+            <field name="name">stock.move.tree</field>
+            <field name="model">stock.move</field>
+            <field name="type">tree</field>
+            <field eval="6" name="priority"/>
+            <field name="arch" type="xml">
+                <tree color="grey:state=='cancel'" string="Moves">
+                    <field name="product_id" select="1"/>
+                    <field name="product_qty" select="1"/>
+                    <field name="product_uom" select="1" string="UOM"/>
+                    <field name="prodlot_id" select="2"/>
+                    <field name="location_id" select="1"/>
+                    <field name="location_dest_id" select="1"/>
+                    <field name="date_planned" select="1"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
         
-        <menuitem name='Low Level' id='menu_traceability_low' parent='menu_traceability'/>
+        <menuitem id="menu_traceability_low" name="Low Level" parent="menu_traceability"/>
         
-        <record id='view_move_form' model='ir.ui.view'>
-            <field name='name'>stock.move.form</field>
-            <field name='model'>stock.move</field>
-            <field name='type'>form</field>
-            <field name='priority' eval='4'/>
-            <field name='arch' type='xml'>
-                <form string='Stock Moves'>
-                    <separator string='Move Information' colspan='4'/>
-                    <field name='name' select='1' colspan='4'/>
-                    <field name='date'/>
-                    <field name='date_planned'/>
-                    <field name='product_id' colspan='4' select='1'/>
-                    <field name='product_uom' select='1'/>
-                    <field name='product_qty' select='1'/>
-                    <field name='location_id' select='1'/>
-                    <field name='location_dest_id' select='1'/>
-                    <field name='priority'/>
-                    <field name='address_id' select='1'/>
+        <record id="view_move_form" model="ir.ui.view">
+            <field name="name">stock.move.form</field>
+            <field name="model">stock.move</field>
+            <field name="type">form</field>
+            <field eval="4" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Stock Moves">
+                    <separator colspan="4" string="Move Information"/>
+                    <field colspan="4" name="name" select="1"/>
+                    <field name="date"/>
+                    <field name="date_planned"/>
+                    <field colspan="4" name="product_id" select="1"/>
+                    <field name="product_uom" select="1"/>
+                    <field name="product_qty" select="1"/>
+                    <field name="location_id" select="1"/>
+                    <field name="location_dest_id" select="1"/>
+                    <field name="priority"/>
+                    <field name="address_id" select="1"/>
                     <newline/>
-                    <field name='prodlot_id' context='product_id=product_id' select='1'/>
-                    <field name='tracking_id' select='1'/>
+                    <field context="product_id=product_id" name="prodlot_id" select="1"/>
+                    <field name="tracking_id" select="1"/>
                     <newline/>
                     <label/>
-                    <button name='%(track_line)d' type='action' string='Split in production lots'/>
-                    <separator string='Move State' colspan='4'/>
-                    <field name='state' select='1'/>
-                    <group col='4' colspan='2'>
-                        <button name='action_confirm' type='object' states='draft' string='Confirm'/>
-                        <button name='action_assign' type='object' states='confirmed' string='Assign'/>
-                        <button name='action_cancel' type='object' states='assigned' string='Cancel'/>
-                        <button name='action_done' type='object' states='assigned' string='Make Parcel'/>
+                    <button name="%(track_line)d" string="Split in production lots" type="action"/>
+                    <separator colspan="4" string="Move State"/>
+                    <field name="state" select="1"/>
+                    <group col="4" colspan="2">
+                        <button name="action_confirm" states="draft" string="Confirm" type="object"/>
+                        <button name="action_assign" states="confirmed" string="Assign" type="object"/>
+                        <button name="action_cancel" states="assigned" string="Cancel" type="object"/>
+                        <button name="action_done" states="assigned" string="Make Parcel" type="object"/>
                     </group>
                 </form>
             </field>
         </record>
-        <record id='action_move_form2' model='ir.actions.act_window'>
-            <field name='name'>Stock Moves</field>
-            <field name='res_model'>stock.move</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='view_type'>form</field>
-            <field name='view_id' ref='view_move_tree'/>
+        <record id="action_move_form2" model="ir.actions.act_window">
+            <field name="name">Stock Moves</field>
+            <field name="res_model">stock.move</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_move_tree"/>
         </record>
-        <menuitem action='action_move_form2' id='menu_action_move_form2' parent='menu_traceability_low'/>
+        <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability_low"/>
         
-        <record id='action_move_form3' model='ir.actions.act_window'>
-            <field name='name'>Draft Moves</field>
-            <field name='res_model'>stock.move</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='view_type'>form</field>
-            <field name='domain'>[('state','=','draft')]</field>
-            <field name='view_id' ref='view_move_tree'/>
+        <record id="action_move_form3" model="ir.actions.act_window">
+            <field name="name">Draft Moves</field>
+            <field name="res_model">stock.move</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('state','=','draft')]</field>
+            <field name="view_id" ref="view_move_tree"/>
         </record>
-        <menuitem action='action_move_form3' id='menu_action_move_form3' parent='menu_action_move_form2'/>
+        <menuitem action="action_move_form3" id="menu_action_move_form3" parent="menu_action_move_form2"/>
         
-        <record id='action_move_form4' model='ir.actions.act_window'>
-            <field name='name'>Assigned Moves</field>
-            <field name='res_model'>stock.move</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='view_type'>form</field>
-            <field name='domain'>[('state','=','assigned')]</field>
-            <field name='view_id' ref='view_move_tree'/>
+        <record id="action_move_form4" model="ir.actions.act_window">
+            <field name="name">Assigned Moves</field>
+            <field name="res_model">stock.move</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('state','=','assigned')]</field>
+            <field name="view_id" ref="view_move_tree"/>
         </record>
-        <menuitem action='action_move_form4' id='menu_action_move_form4' parent='menu_action_move_form2'/>
+        <menuitem action="action_move_form4" id="menu_action_move_form4" parent="menu_action_move_form2"/>
         
-        <record id='action_picking_all' model='ir.actions.act_window'>
-            <field name='name'>All Packings</field>
-            <field name='res_model'>stock.picking</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='context'>{'contact_display': 'partner'}</field>
+        <record id="action_picking_all" model="ir.actions.act_window">
+            <field name="name">All Packings</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'contact_display': 'partner'}</field>
         </record>
-        <menuitem action='action_picking_all' id='menu_action_picking_all' parent='menu_traceability_low'/>
+        <menuitem action="action_picking_all" id="menu_action_picking_all" parent="menu_traceability_low"/>
         
         
         # -------------------------------------------------------------
         # Stock incoterms
         # -------------------------------------------------------------
-        <record id='view_incoterms_tree' model='ir.ui.view'>
-            <field name='name'>stock.incoterms.tree</field>
-            <field name='model'>stock.incoterms</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree string='Incoterms'>
-                    <field name='code'/>
-                    <field name='name' select='1' colspan='4'/>
+        <record id="view_incoterms_tree" model="ir.ui.view">
+            <field name="name">stock.incoterms.tree</field>
+            <field name="model">stock.incoterms</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Incoterms">
+                    <field name="code"/>
+                    <field colspan="4" name="name" select="1"/>
                 </tree>
             </field>
         </record>
-        <record id='stock_incoterms_form' model='ir.ui.view'>
-            <field name='name'>stock.incoterms.form</field>
-            <field name='model'>stock.incoterms</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Incoterms'>
-                    <field name='name' select='1' colspan='4'/>
-                    <field name='code' select='1'/>
-                    <field name='active' select='1'/>
+        <record id="stock_incoterms_form" model="ir.ui.view">
+            <field name="name">stock.incoterms.form</field>
+            <field name="model">stock.incoterms</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Incoterms">
+                    <field colspan="4" name="name" select="1"/>
+                    <field name="code" select="1"/>
+                    <field name="active" select="1"/>
                 </form>
             </field>
         </record>
-        <record id='action_incoterms_tree' model='ir.actions.act_window'>
-            <field name='name'>Incoterms</field>
-            <field name='res_model'>stock.incoterms</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
+        <record id="action_incoterms_tree" model="ir.actions.act_window">
+            <field name="name">Incoterms</field>
+            <field name="res_model">stock.incoterms</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action='action_incoterms_tree' id='menu_action_incoterms_tree' parent='menu_stock_configuration'/>
+        <menuitem action="action_incoterms_tree" id="menu_action_incoterms_tree" parent="menu_stock_configuration"/>
         
-        <act_window name='Products' domain='[(&apos;type&apos;,&apos;&lt;&gt;&apos;,&apos;service&apos;)]' id='act_product_location_open' src_model='stock.location' context='{&apos;location&apos;: active_id}' res_model='product.product'/>
+        <act_window context="{'location': active_id}" domain="[('type','&lt;&gt;','service')]" id="act_product_location_open" name="Products" res_model="product.product" src_model="stock.location"/>
         
-        <act_window name='Stock Moves' domain='[(&apos;product_id&apos;,&apos;=&apos;,active_id)]' id='act_product_stock_move_open' src_model='product.product' context='{&apos;location&apos;: active_id}' res_model='stock.move'/>
+        <act_window context="{'location': active_id}" domain="[('product_id','=',active_id)]" id="act_product_stock_move_open" name="Stock Moves" res_model="stock.move" src_model="product.product"/>
         
-        <record id='ir_act_product_location_open' model='ir.values'>
-            <field name='key2'>tree_but_open</field>
-            <field name='model'>stock.location</field>
-            <field name='name'>Products</field>
-            <field name='value' eval='&apos;ir.actions.act_window,%d&apos;%act_product_location_open'/>
-            <field name='object' eval='True'/>
+        <record id="ir_act_product_location_open" model="ir.values">
+            <field name="key2">tree_but_open</field>
+            <field name="model">stock.location</field>
+            <field name="name">Products</field>
+            <field eval="'ir.actions.act_window,%d'%act_product_location_open" name="value"/>
+            <field eval="True" name="object"/>
         </record>
         
         

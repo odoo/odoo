@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data noupdate="1">
         
@@ -37,7 +37,7 @@
         <record id="stock_location_14" model="stock.location">
             <field name="name">Finished products</field>
             <field name="location_id" ref="stock_location_13"/>
-            <field name="account_id" model="account.account" search="[('name','=','Merchandise Type B')]"/>
+            <field model="account.account" name="account_id" search="[('name','=','Merchandise Type B')]"/>
         </record>
         <record id="stock_location_15" model="stock.location">
             <field name="name">Sub Products</field>
@@ -181,9 +181,8 @@
         </record>
         
         <function model="stock.inventory" name="action_done">
-            <function model="stock.inventory" name="search" eval="[[]]"/>
+            <function eval="[[]]" model="stock.inventory" name="search"/>
         </function>
         
     </data>
 </terp>
-

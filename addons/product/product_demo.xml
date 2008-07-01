@@ -1,19 +1,19 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data noupdate="1">
         <!-- 
 	Resource: product.category 
 	-->
         
-        <record model="product.category" id="cat0">
+        <record id="cat0" model="product.category">
             <field name="parent_id" ref="null"/>
             <field name="name">All products</field>
         </record>
-        <record model="product.category" id="cat1">
+        <record id="cat1" model="product.category">
             <field name="parent_id" ref="cat0"/>
             <field name="name">Sellable</field>
         </record>
-        <record model="product.category" id="cat2">
+        <record id="cat2" model="product.category">
             <field name="parent_id" ref="cat0"/>
             <field name="name">Private</field>
         </record>
@@ -54,11 +54,11 @@
             <field name="name">IT components kits</field>
         </record>
         
-        <record id="product_ul_box" model="product.ul" >
+        <record id="product_ul_box" model="product.ul">
             <field name="name">Box 20x20x40</field>
             <field name="type">box</field>
         </record>
-        <record id="product_ul_big_box" model="product.ul" >
+        <record id="product_ul_big_box" model="product.ul">
             <field name="name">Box 30x40x60</field>
             <field name="type">box</field>
         </record>
@@ -287,7 +287,7 @@
             <field name="procure_method">make_to_order</field>
             <field name="sale_delay">1.0</field>
             <field name="name">HDD on demand</field>
-            <field name="sale_ok" eval="False"/>
+            <field eval="False" name="sale_ok"/>
             <field name="categ_id" ref="product_category_10"/>
         </record>
         <record id="product_product_21" model="product.product">
@@ -298,7 +298,7 @@
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
             <field name="name">RAM on demand</field>
-            <field name="sale_ok" eval="False"/>
+            <field eval="False" name="sale_ok"/>
             <field name="categ_id" ref="product_category_10"/>
         </record>
         <record id="product_product_22" model="product.product">
@@ -309,7 +309,7 @@
             <field name="uom_id" ref="product_uom_unit"/>
             <field name="uom_po_id" ref="product_uom_unit"/>
             <field name="name">Processor on demand</field>
-            <field name="sale_ok" eval="False"/>
+            <field eval="False" name="sale_ok"/>
             <field name="categ_id" ref="product_category_10"/>
         </record>
         <record id="product_product_23" model="product.product">
@@ -352,115 +352,115 @@
             <field name="categ_id" ref="product_category_11"/>
         </record>
         
-        <record model="product.supplierinfo" id="supplierinfo1">
+        <record id="supplierinfo1" model="product.supplierinfo">
             <field name="name" ref="base.res_partner_asus"/>
             <field name="qty">10</field>
             <field name="product_id" ref="product_product_mb1"/>
             <field name="delay">5</field>
         </record>
-        <record model="product.supplierinfo" id="supplierinfo2">
+        <record id="supplierinfo2" model="product.supplierinfo">
             <field name="name" ref="base.res_partner_asus"/>
             <field name="qty">10</field>
             <field name="product_id" ref="product_product_mb2"/>
             <field name="delay">5</field>
         </record>
-        <record model="product.supplierinfo" id="supplierinfo3">
+        <record id="supplierinfo3" model="product.supplierinfo">
             <field name="name" ref="base.res_partner_4"/>
             <field name="qty">1</field>
             <field name="product_id" ref="product_product_mb1"/>
             <field name="delay">1</field>
         </record>
-        <record model="product.supplierinfo" id="supplierinfo4">
+        <record id="supplierinfo4" model="product.supplierinfo">
             <field name="name" ref="base.res_partner_4"/>
             <field name="qty">1</field>
             <field name="product_id" ref="product_product_mb2"/>
             <field name="delay">1</field>
         </record>
-        <record model="product.supplierinfo" id="supplierinfo5">
+        <record id="supplierinfo5" model="product.supplierinfo">
             <field name="name" ref="base.res_partner_4"/>
             <field name="qty">1</field>
             <field name="product_id" ref="product_product_pc1"/>
             <field name="delay">2</field>
         </record>
-        <record model="product.supplierinfo" id="supplierinfo6">
+        <record id="supplierinfo6" model="product.supplierinfo">
             <field name="name" ref="base.res_partner_4"/>
             <field name="qty">1</field>
             <field name="product_id" ref="product_product_pc2"/>
             <field name="delay">2</field>
         </record>
-        <record model="product.supplierinfo" id="supplierinfo7">
+        <record id="supplierinfo7" model="product.supplierinfo">
             <field name="name" ref="base.res_partner_4"/>
             <field name="qty">1</field>
             <field name="product_id" ref="product_product_pc3"/>
             <field name="delay">2</field>
         </record>
-        <record model="product.supplierinfo" id="supplierinfo8">
+        <record id="supplierinfo8" model="product.supplierinfo">
             <field name="name" ref="base.res_partner_4"/>
             <field name="qty">1</field>
             <field name="product_id" ref="product_product_pc4"/>
             <field name="delay">1</field>
         </record>
-        <record model="product.supplierinfo" id="supplierinfo9">
+        <record id="supplierinfo9" model="product.supplierinfo">
             <field name="name" ref="base.res_partner_4"/>
             <field name="qty">1</field>
             <field name="product_id" ref="product_product_cpu1"/>
             <field name="delay">1</field>
         </record>
-        <record model="product.supplierinfo" id="supplierinfo10">
+        <record id="supplierinfo10" model="product.supplierinfo">
             <field name="name" ref="base.res_partner_4"/>
             <field name="qty">1</field>
             <field name="product_id" ref="product_product_cpu3"/>
             <field name="delay">1</field>
         </record>
-        <record model="product.supplierinfo" id="supplierinfo11">
+        <record id="supplierinfo11" model="product.supplierinfo">
             <field name="name" ref="base.res_partner_4"/>
             <field name="qty">1</field>
             <field name="product_id" ref="product_product_hdd1"/>
             <field name="delay">1</field>
         </record>
-        <record model="product.supplierinfo" id="supplierinfo12">
+        <record id="supplierinfo12" model="product.supplierinfo">
             <field name="name" ref="base.res_partner_4"/>
             <field name="qty">1</field>
             <field name="product_id" ref="product_product_hdd2"/>
             <field name="delay">1</field>
         </record>
-        <record model="product.supplierinfo" id="supplierinfo13">
+        <record id="supplierinfo13" model="product.supplierinfo">
             <field name="name" ref="base.res_partner_4"/>
             <field name="qty">1</field>
             <field name="product_id" ref="product_product_hdd3"/>
             <field name="delay">1</field>
         </record>
-        <record model="product.supplierinfo" id="supplierinfo14">
+        <record id="supplierinfo14" model="product.supplierinfo">
             <field name="name" ref="base.res_partner_4"/>
             <field name="qty">1</field>
             <field name="product_id" ref="product_product_20"/>
             <field name="delay">10</field>
         </record>
-        <record model="product.supplierinfo" id="supplierinfo15">
+        <record id="supplierinfo15" model="product.supplierinfo">
             <field name="name" ref="base.res_partner_4"/>
             <field name="qty">1</field>
             <field name="product_id" ref="product_product_21"/>
             <field name="delay">10</field>
         </record>
-        <record model="product.supplierinfo" id="supplierinfo16">
+        <record id="supplierinfo16" model="product.supplierinfo">
             <field name="name" ref="base.res_partner_4"/>
             <field name="qty">1</field>
             <field name="product_id" ref="product_product_22"/>
             <field name="delay">10</field>
         </record>
-        <record model="product.supplierinfo" id="supplierinfo17">
+        <record id="supplierinfo17" model="product.supplierinfo">
             <field name="name" ref="base.res_partner_seagate"/>
             <field name="qty">10</field>
             <field name="product_id" ref="product_product_hdd1"/>
             <field name="delay">10</field>
         </record>
-        <record model="product.supplierinfo" id="supplierinfo18">
+        <record id="supplierinfo18" model="product.supplierinfo">
             <field name="name" ref="base.res_partner_seagate"/>
             <field name="qty">10</field>
             <field name="product_id" ref="product_product_hdd2"/>
             <field name="delay">10</field>
         </record>
-        <record model="product.supplierinfo" id="supplierinfo19">
+        <record id="supplierinfo19" model="product.supplierinfo">
             <field name="name" ref="base.res_partner_4"/>
             <field name="qty">10</field>
             <field name="product_id" ref="product_product_hdd3"/>

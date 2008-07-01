@@ -1,111 +1,111 @@
-<?xml version='1.0'?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
         <!-- Country -->
-        <record id='view_country_tree' model='ir.ui.view'>
-            <field name='name'>res.country.tree</field>
-            <field name='model'>res.country</field>
-            <field name='inherit_id' ref='base.view_country_tree'/>
-            <field name='arch' type='xml'>
-                <field name='code' position='after'>
-                    <field name='intrastat'/>
+        <record id="view_country_tree" model="ir.ui.view">
+            <field name="name">res.country.tree</field>
+            <field name="model">res.country</field>
+            <field name="inherit_id" ref="base.view_country_tree"/>
+            <field name="arch" type="xml">
+                <field name="code" position="after">
+                    <field name="intrastat"/>
                 </field>
             </field>
         </record>
         
-        <record id='view_country_form' model='ir.ui.view'>
-            <field name='name'>res.country.form</field>
-            <field name='model'>res.country</field>
-            <field name='inherit_id' ref='base.view_country_form'/>
-            <field name='arch' type='xml'>
-                <field name='code' position='after'>
-                    <field name='intrastat' select='1'/>
+        <record id="view_country_form" model="ir.ui.view">
+            <field name="name">res.country.form</field>
+            <field name="model">res.country</field>
+            <field name="inherit_id" ref="base.view_country_form"/>
+            <field name="arch" type="xml">
+                <field name="code" position="after">
+                    <field name="intrastat" select="1"/>
                 </field>
             </field>
         </record>
         
         <!-- Product -->
-        <record id='product_normal_form_view' model='ir.ui.view'>
-            <field name='name'>product.normal.form</field>
-            <field name='model'>product.product</field>
-            <field name='inherit_id' ref='product.product_normal_form_view'/>
-            <field name='arch' type='xml'>
-                <field name='product_manager' position='after'>
-                    <field name='intrastat_id'/>
+        <record id="product_normal_form_view" model="ir.ui.view">
+            <field name="name">product.normal.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <field name="product_manager" position="after">
+                    <field name="intrastat_id"/>
                 </field>
             </field>
         </record>
         
         <!-- Intrastat code -->
-        <record id='view_report_intrastat_code_tree' model='ir.ui.view'>
-            <field name='name'>report.intrastat.code.tree</field>
-            <field name='model'>report.intrastat.code</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree string='Intrastat code'>
-                    <field name='name'/>
-                    <field name='description'/>
+        <record id="view_report_intrastat_code_tree" model="ir.ui.view">
+            <field name="name">report.intrastat.code.tree</field>
+            <field name="model">report.intrastat.code</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Intrastat code">
+                    <field name="name"/>
+                    <field name="description"/>
                 </tree>
             </field>
         </record>
-        <record id='view_report_intrastat_code_form' model='ir.ui.view'>
-            <field name='name'>report.intrastat.code.form</field>
-            <field name='model'>report.intrastat.code</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Intrastat code'>
-                    <field name='name' select='1'/>
-                    <field name='description' select='1'/>
+        <record id="view_report_intrastat_code_form" model="ir.ui.view">
+            <field name="name">report.intrastat.code.form</field>
+            <field name="model">report.intrastat.code</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Intrastat code">
+                    <field name="name" select="1"/>
+                    <field name="description" select="1"/>
                 </form>
             </field>
         </record>
-        <record id='action_report_intrastat_code_tree' model='ir.actions.act_window'>
-            <field name='name'>Intrastat Code</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>report.intrastat.code</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
+        <record id="action_report_intrastat_code_tree" model="ir.actions.act_window">
+            <field name="name">Intrastat Code</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">report.intrastat.code</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
         </record>
         
-        <menuitem name='Products/Configuration/Intrastat Code' action='action_report_intrastat_code_tree' id='menu_report_intrastat_code'/>
+        <menuitem action="action_report_intrastat_code_tree" id="menu_report_intrastat_code" parent="product.menu_config_product"/>
         
         
-        <record id='view_report_intrastat_tree' model='ir.ui.view'>
-            <field name='name'>report.intrastat.view</field>
-            <field name='model'>report.intrastat</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree string='Intrastat Data'>
-                    <field name='name'/>
-                    <field name='code'/>
-                    <field name='intrastat_id'/>
-                    <field name='weight'/>
-                    <field name='value'/>
-                    <field name='currency_id'/>
-                    <field name='type'/>
+        <record id="view_report_intrastat_tree" model="ir.ui.view">
+            <field name="name">report.intrastat.view</field>
+            <field name="model">report.intrastat</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Intrastat Data">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="intrastat_id"/>
+                    <field name="weight"/>
+                    <field name="value"/>
+                    <field name="currency_id"/>
+                    <field name="type"/>
                 </tree>
             </field>
         </record>
         
-        <record id='action_report_intrastat_tree' model='ir.actions.act_window'>
-            <field name='name'>Intrastat (this month)</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>report.intrastat</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree</field>
-            <field name='domain'>[('name','=',time.strftime('%Y-%m-01'))]</field>
+        <record id="action_report_intrastat_tree" model="ir.actions.act_window">
+            <field name="name">Intrastat (this month)</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">report.intrastat</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
         </record>
         
-        <menuitem name='Stock Management/Reporting/This Month/Intrastat' action='action_report_intrastat_tree' id='menu_report_intrastat'/>
+        <menuitem id="next_id_89" name="This Month" parent="report_stock.next_id_61"/><menuitem action="action_report_intrastat_tree" id="menu_report_intrastat" parent="next_id_89"/>
         
-        <record id='action_report_intrastat_tree_all' model='ir.actions.act_window'>
-            <field name='name'>Intrastat</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>report.intrastat</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree</field>
+        <record id="action_report_intrastat_tree_all" model="ir.actions.act_window">
+            <field name="name">Intrastat</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">report.intrastat</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
         </record>
         
-        <menuitem name='Stock Management/Reporting/All Months/Intrastat' action='action_report_intrastat_tree_all' id='menu_report_intrastat_all'/>
+        <menuitem id="next_id_90" name="All Months" parent="report_stock.next_id_61"/><menuitem action="action_report_intrastat_tree_all" id="menu_report_intrastat_all" parent="next_id_90"/>
     </data>
 </terp>

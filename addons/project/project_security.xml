@@ -1,97 +1,97 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data noupdate="1">
         
-        <record model="res.groups" id="group_project_manager">
+        <record id="group_project_manager" model="res.groups">
             <field name="name">Project Manager</field>
         </record>
         
-        <record model="res.groups" id="group_project_member">
+        <record id="group_project_member" model="res.groups">
             <field name="name">Project Member</field>
         </record>
         
-        <record model="res.users" id="base.user_admin">
-            <field name="groups_id" eval="[(4, ref('group_project_manager')), (4, ref('group_project_member'))]"/>
+        <record id="base.user_admin" model="res.users">
+            <field eval="[(4, ref('group_project_manager')), (4, ref('group_project_member'))]" name="groups_id"/>
         </record>
         
         <!-- Project security -->
-        <record model="ir.model.access" id="access_project">
+        <record id="access_project" model="ir.model.access">
             <field name="name">Project</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'project.project')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'project.project')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_project_manager">
+        <record id="access_project_manager" model="ir.model.access">
             <field name="name">Project</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'project.project')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'project.project')]"/>
             <field name="group_id" ref="group_project_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
         <!-- Project Task security -->
-        <record model="ir.model.access" id="access_project_task">
+        <record id="access_project_task" model="ir.model.access">
             <field name="name">Project Task</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'project.task')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'project.task')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_project_task_manager">
+        <record id="access_project_task_manager" model="ir.model.access">
             <field name="name">Project Task</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'project.task')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'project.task')]"/>
             <field name="group_id" ref="group_project_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_project_task_member">
+        <record id="access_project_task_member" model="ir.model.access">
             <field name="name">Project Task</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'project.task')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'project.task')]"/>
             <field name="group_id" ref="group_project_member"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
         <!-- Project Work security -->
-        <record model="ir.model.access" id="access_project_task_work">
+        <record id="access_project_task_work" model="ir.model.access">
             <field name="name">Project Task Work</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'project.task.work')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'project.task.work')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_project_task_work_manager">
+        <record id="access_project_task_work_manager" model="ir.model.access">
             <field name="name">Project Task Work</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'project.task.work')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'project.task.work')]"/>
             <field name="group_id" ref="group_project_manager"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_project_task_work_member">
+        <record id="access_project_task_work_member" model="ir.model.access">
             <field name="name">Project Task Work</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'project.task.work')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'project.task.work')]"/>
             <field name="group_id" ref="group_project_member"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
     </data>

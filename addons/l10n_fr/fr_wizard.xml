@@ -1,14 +1,10 @@
-<?xml version='1.0'?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
 
-        <wizard name='account.chart.report' id='wizard_chart_report' model='account.account' menu='False' string='Account Report'/>
+        <wizard id="wizard_chart_report" menu="False" model="account.account" name="account.chart.report" string="Account Report"/>
 
-        <menuitem
-            name='Financial Management/Reporting/CERFA Declaration' 
-            action='wizard_chart_report' 
-            type='wizard' 
-            id='menu_fr_chart_report'/>
+        <menuitem action="wizard_chart_report" id="menu_fr_chart_report" parent="account.menu_finance_reporting" type="wizard"/>
 
 
     </data>

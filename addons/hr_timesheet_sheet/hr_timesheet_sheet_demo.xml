@@ -1,114 +1,114 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data noupdate="1">
-        <record model="hr_timesheet_sheet.sheet" id="sheet0">
+        <record id="sheet0" model="hr_timesheet_sheet.sheet">
             <field name="name">Sheet 0</field>
-            <field name="user_id" ref="base.user_admin" />
-            <field name="date_from" eval="time.strftime('%Y-%m-01', time.localtime(time.mktime(time.localtime()[0:2] + (0,)*7)-1))"/>
-            <field name="date_current" eval="time.strftime('%Y-%m-15', time.localtime(time.mktime(time.localtime()[0:2] + (0,)*7)-1))"/>
-            <field name="date_to" eval="time.strftime('%Y-%m-%d', time.localtime(time.mktime(time.localtime()[0:2] + (0,)*7)-1))"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field eval="time.strftime('%Y-%m-01', time.localtime(time.mktime(time.localtime()[0:2] + (0,)*7)-1))" name="date_from"/>
+            <field eval="time.strftime('%Y-%m-15', time.localtime(time.mktime(time.localtime()[0:2] + (0,)*7)-1))" name="date_current"/>
+            <field eval="time.strftime('%Y-%m-%d', time.localtime(time.mktime(time.localtime()[0:2] + (0,)*7)-1))" name="date_to"/>
         </record>
         
-        <record model="hr.analytic.timesheet" id="hr_timesheet.analytic_timesheet10">
+        <record id="hr_timesheet.analytic_timesheet10" model="hr.analytic.timesheet">
             <field name="sheet_id" ref="sheet0"/>
         </record>
         
-        <record model="hr_timesheet_sheet.sheet" id="sheet1">
+        <record id="sheet1" model="hr_timesheet_sheet.sheet">
             <field name="name">Sheet 1</field>
-            <field name="user_id" search="[('login','=','admin')]" model="res.users"/>
+            <field model="res.users" name="user_id" search="[('login','=','admin')]"/>
             <!--
 			<field name="date_from">2005-05-01</field>
 			<field name="date_to">2005-05-31</field>
 			-->
-            <field name="date_current" eval="time.strftime('%Y-%m-%d')"/>
+            <field eval="time.strftime('%Y-%m-%d')" name="date_current"/>
         </record>
         
-        <record model="hr.attendance" id="hr.attendance1">
+        <record id="hr.attendance1" model="hr.attendance">
             <field name="sheet_id" ref="sheet1"/>
         </record>
-        <record model="hr.attendance" id="hr.attendance2">
+        <record id="hr.attendance2" model="hr.attendance">
             <field name="sheet_id" ref="sheet1"/>
         </record>
-        <record model="hr.attendance" id="hr.attendance3">
+        <record id="hr.attendance3" model="hr.attendance">
             <field name="sheet_id" ref="sheet1"/>
         </record>
-        <record model="hr.attendance" id="hr.attendance4">
+        <record id="hr.attendance4" model="hr.attendance">
             <field name="sheet_id" ref="sheet1"/>
         </record>
-        <record model="hr.attendance" id="hr.attendance5">
+        <record id="hr.attendance5" model="hr.attendance">
             <field name="sheet_id" ref="sheet1"/>
         </record>
-        <record model="hr.attendance" id="hr.attendance6">
+        <record id="hr.attendance6" model="hr.attendance">
             <field name="sheet_id" ref="sheet1"/>
         </record>
-        <record model="hr.attendance" id="hr.attendance7">
+        <record id="hr.attendance7" model="hr.attendance">
             <field name="sheet_id" ref="sheet1"/>
         </record>
-        <record model="hr.attendance" id="hr.attendance8">
+        <record id="hr.attendance8" model="hr.attendance">
             <field name="sheet_id" ref="sheet1"/>
         </record>
-        <record model="hr.attendance" id="hr.attendance9">
+        <record id="hr.attendance9" model="hr.attendance">
             <field name="sheet_id" ref="sheet1"/>
         </record>
-        <record model="hr.attendance" id="hr.attendance10">
+        <record id="hr.attendance10" model="hr.attendance">
             <field name="sheet_id" ref="sheet1"/>
         </record>
-        <record model="hr.attendance" id="hr.attendance11">
+        <record id="hr.attendance11" model="hr.attendance">
             <field name="sheet_id" ref="sheet1"/>
         </record>
-        <record model="hr.attendance" id="hr.attendance12">
+        <record id="hr.attendance12" model="hr.attendance">
             <field name="sheet_id" ref="sheet1"/>
         </record>
-        <record model="hr.attendance" id="hr.attendance13">
+        <record id="hr.attendance13" model="hr.attendance">
             <field name="sheet_id" ref="sheet1"/>
         </record>
-        <record model="hr.attendance" id="hr.attendance14">
+        <record id="hr.attendance14" model="hr.attendance">
             <field name="sheet_id" ref="sheet1"/>
         </record>
-        <record model="hr.attendance" id="hr.attendance15">
+        <record id="hr.attendance15" model="hr.attendance">
             <field name="sheet_id" ref="sheet1"/>
         </record>
-        <record model="hr.attendance" id="hr.attendance16">
+        <record id="hr.attendance16" model="hr.attendance">
             <field name="sheet_id" ref="sheet1"/>
         </record>
-        <record model="hr.attendance" id="hr.attendance17">
+        <record id="hr.attendance17" model="hr.attendance">
             <field name="sheet_id" ref="sheet1"/>
         </record>
-        <record model="hr.attendance" id="hr.attendance18">
+        <record id="hr.attendance18" model="hr.attendance">
             <field name="sheet_id" ref="sheet1"/>
         </record>
-        <record model="hr.attendance" id="hr.attendance19">
+        <record id="hr.attendance19" model="hr.attendance">
             <field name="sheet_id" ref="sheet1"/>
         </record>
-        <record model="hr.attendance" id="hr.attendance20">
+        <record id="hr.attendance20" model="hr.attendance">
             <field name="sheet_id" ref="sheet1"/>
         </record>
         
-        <record model="hr.analytic.timesheet" id="hr_timesheet.analytic_timesheet1">
+        <record id="hr_timesheet.analytic_timesheet1" model="hr.analytic.timesheet">
             <field name="sheet_id" ref="sheet1"/>
         </record>
-        <record model="hr.analytic.timesheet" id="hr_timesheet.analytic_timesheet2">
+        <record id="hr_timesheet.analytic_timesheet2" model="hr.analytic.timesheet">
             <field name="sheet_id" ref="sheet1"/>
         </record>
-        <record model="hr.analytic.timesheet" id="hr_timesheet.analytic_timesheet3">
+        <record id="hr_timesheet.analytic_timesheet3" model="hr.analytic.timesheet">
             <field name="sheet_id" ref="sheet1"/>
         </record>
-        <record model="hr.analytic.timesheet" id="hr_timesheet.analytic_timesheet4">
+        <record id="hr_timesheet.analytic_timesheet4" model="hr.analytic.timesheet">
             <field name="sheet_id" ref="sheet1"/>
         </record>
-        <record model="hr.analytic.timesheet" id="hr_timesheet.analytic_timesheet5">
+        <record id="hr_timesheet.analytic_timesheet5" model="hr.analytic.timesheet">
             <field name="sheet_id" ref="sheet1"/>
         </record>
-        <record model="hr.analytic.timesheet" id="hr_timesheet.analytic_timesheet6">
+        <record id="hr_timesheet.analytic_timesheet6" model="hr.analytic.timesheet">
             <field name="sheet_id" ref="sheet1"/>
         </record>
-        <record model="hr.analytic.timesheet" id="hr_timesheet.analytic_timesheet7">
+        <record id="hr_timesheet.analytic_timesheet7" model="hr.analytic.timesheet">
             <field name="sheet_id" ref="sheet1"/>
         </record>
-        <record model="hr.analytic.timesheet" id="hr_timesheet.analytic_timesheet8">
+        <record id="hr_timesheet.analytic_timesheet8" model="hr.analytic.timesheet">
             <field name="sheet_id" ref="sheet1"/>
         </record>
-        <record model="hr.analytic.timesheet" id="hr_timesheet.analytic_timesheet9">
+        <record id="hr_timesheet.analytic_timesheet9" model="hr.analytic.timesheet">
             <field name="sheet_id" ref="sheet1"/>
         </record>
     </data>

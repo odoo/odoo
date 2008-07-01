@@ -1,34 +1,34 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data noupdate="1">
         <!--
 	Sequences for packings
 	-->
         
-        <record model="ir.sequence.type" id="seq_type_picking_out">
+        <record id="seq_type_picking_out" model="ir.sequence.type">
             <field name="name">Packing Out</field>
             <field name="code">stock.picking.out</field>
         </record>
-        <record model="ir.sequence.type" id="seq_type_picking_in">
+        <record id="seq_type_picking_in" model="ir.sequence.type">
             <field name="name">Packing In</field>
             <field name="code">stock.picking.in</field>
         </record>
-        <record model="ir.sequence.type" id="seq_type_picking_internal">
+        <record id="seq_type_picking_internal" model="ir.sequence.type">
             <field name="name">Packing Internal</field>
             <field name="code">stock.picking.internal</field>
         </record>
         
-        <record model="ir.sequence" id="seq_picking_out">
+        <record id="seq_picking_out" model="ir.sequence">
             <field name="name">Packing Out</field>
             <field name="code">stock.picking.out</field>
             <field name="prefix">OUT:</field>
         </record>
-        <record model="ir.sequence" id="seq_picking_in">
+        <record id="seq_picking_in" model="ir.sequence">
             <field name="name">Packing In</field>
             <field name="code">stock.picking.in</field>
             <field name="prefix">IN:</field>
         </record>
-        <record model="ir.sequence" id="seq_picking_internal">
+        <record id="seq_picking_internal" model="ir.sequence">
             <field name="name">Packing Internal</field>
             <field name="code">stock.picking.internal</field>
             <field name="prefix">INTERNAL:</field>
@@ -37,26 +37,26 @@
         <!--
 	Sequences from tracking numbers
 	-->
-        <record model="ir.sequence.type" id="sequence_type_serial">
+        <record id="sequence_type_serial" model="ir.sequence.type">
             <field name="name">Stock Production Lots</field>
             <field name="code">stock.lot.serial</field>
         </record>
-        <record model="ir.sequence" id="sequence_production_lots">
+        <record id="sequence_production_lots" model="ir.sequence">
             <field name="name">Stock Production Lots</field>
             <field name="code">stock.lot.serial</field>
             <field name="prefix">1234567890</field>
             <field name="padding">7</field>
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
-            <field name="active" eval="False"/>
+            <field eval="False" name="active"/>
         </record>
         
-        <record model="ir.sequence.type" id="sequence_type_tracking">
+        <record id="sequence_type_tracking" model="ir.sequence.type">
             <field name="name">Stock Tracking Lots</field>
             <field name="code">stock.lot.tracking</field>
         </record>
         
-        <record model="ir.sequence" id="sequence_tracking">
+        <record id="sequence_tracking" model="ir.sequence">
             <field name="name">Stock Tracking Lots</field>
             <field name="code">stock.lot.tracking</field>
             <field name="prefix">1234567890</field>
@@ -66,4 +66,3 @@
         </record>
     </data>
 </terp>
-

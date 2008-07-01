@@ -1,10 +1,10 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data noupdate="1">
         <!--
 	Requests Links
 	-->
-        <record model="res.request.link" id="req_link_sale_order">
+        <record id="req_link_sale_order" model="res.request.link">
             <field name="name">Sale Order</field>
             <field name="object">sale.order</field>
         </record>
@@ -12,7 +12,7 @@
         <!--
 	Partner event type 
 	-->
-        <record model="res.partner.event.type" id="event_type_sale_open">
+        <record id="event_type_sale_open" model="res.partner.event.type">
             <field name="name">SALE: Sale Confirmation</field>
             <field name="key">sale_open</field>
         </record>
@@ -22,17 +22,13 @@
         <!--
 	Resource: sale.shop
 	-->
-        <record model="sale.shop" id="shop">
-            <field name="name" search="[]" model="res.company" use="name"/>
-            <field name="warehouse_id" search="[]" model="stock.warehouse"/>
-            <field name="payment_default_id" search="[]" model="account.payment.term"/>
+        <record id="shop" model="sale.shop">
+            <field model="res.company" name="name" search="[]" use="name"/>
+            <field model="stock.warehouse" name="warehouse_id" search="[]"/>
+            <field model="account.payment.term" name="payment_default_id" search="[]"/>
         </record>
         
-        <function 
-		model="ir.values" 
-		id="sale_default_set"
-		name="set"
-		eval="('default',False,'shop_id', [('sale.order', False)], shop, True, False, False, False, True)"/>
+        <function eval="('default',False,'shop_id', [('sale.order', False)], shop, True, False, False, False, True)" id="sale_default_set" model="ir.values" name="set"/>
         
     </data>
 </terp>

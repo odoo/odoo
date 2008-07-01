@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data noupdate="True">
         <!--
@@ -13,22 +13,22 @@
         
         
         <!-- Nouveaux types de comptes -->
-        <record model="account.account.type" id="account_type_dettes">
+        <record id="account_type_dettes" model="account.account.type">
             <field name="name">dettes long terme</field>
             <field name="code">dettes</field>
         </record>
         
-        <record model="account.account.type" id="account_type_immobilisations">
+        <record id="account_type_immobilisations" model="account.account.type">
             <field name="name">immobilisations</field>
             <field name="code">immobilisations</field>
         </record>
         
-        <record model="account.account.type" id="account_type_stocks">
+        <record id="account_type_stocks" model="account.account.type">
             <field name="name">stocks</field>
             <field name="code">stocks</field>
         </record>
         
-        <record model="account.account.type" id="account_type_cloture">
+        <record id="account_type_cloture" model="account.account.type">
             <field name="name">Cloture</field>
             <field name="code">cloture</field>
         </record>
@@ -38,16 +38,16 @@
         
         
         <!-- Journaux de saisie -->
-        <record model="account.journal" id="operations_journal">
+        <record id="operations_journal" model="account.journal">
             <field name="name">Journal des opérations diverses</field>
             <field name="code">Op-Div</field>
             <field name="type">purchase</field>
             <field name="view_id" ref="account.account_journal_view"/>
             <field name="sequence_id" ref="account.sequence_journal"/>
-            <field name="default_debit_account_id" model="account.account" search="[('type','=','payable')]"/>
-            <field name="default_credit_account_id" model="account.account" search="[('type','=','receivable')]"/>
+            <field model="account.account" name="default_debit_account_id" search="[('type','=','payable')]"/>
+            <field model="account.account" name="default_credit_account_id" search="[('type','=','receivable')]"/>
         </record>
-        <record model="account.journal" id="bilan_journal">
+        <record id="bilan_journal" model="account.journal">
             <field name="name">Journal d'ouverture</field>
             <field name="code">Ouverture</field>
             <field name="type">situation</field>

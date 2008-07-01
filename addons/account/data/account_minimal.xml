@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data noupdate="True">
         
@@ -10,66 +10,66 @@
             <field name="code">0</field>
             <field name="name">Minimal account chart</field>
             <field name="close_method">none</field>
-            <field name="parent_id" eval="[]"/>
+            <field eval="[]" name="parent_id"/>
             <field name="type">view</field>
         </record>
         
-        <record model="account.account" id="a_recv">
+        <record id="a_recv" model="account.account">
             <field name="name">Main Receivable</field>
             <field name="code">40</field>
             <field name="type">receivable</field>
-            <field name="parent_id" eval="[(6,0,[ref('minimal_0')])]"/>
+            <field eval="[(6,0,[ref('minimal_0')])]" name="parent_id"/>
             <field name="company_id" ref="base.main_company"/>
-            <field name="reconcile" eval="True"/>
+            <field eval="True" name="reconcile"/>
         </record>
-        <record model="account.account" id="a_pay">
+        <record id="a_pay" model="account.account">
             <field name="name">Main Payable</field>
             <field name="code">440</field>
             <field name="type">payable</field>
-            <field name="parent_id" eval="[(6,0,[ref('minimal_0')])]"/>
+            <field eval="[(6,0,[ref('minimal_0')])]" name="parent_id"/>
             <field name="company_id" ref="base.main_company"/>
-            <field name="reconcile" eval="True"/>
+            <field eval="True" name="reconcile"/>
         </record>
         
-        <record model="account.account" id="cash">
+        <record id="cash" model="account.account">
             <field name="name">Petty Cash</field>
             <field name="code">57</field>
             <field name="type">cash</field>
-            <field name="parent_id" eval="[(6,0,[ref('minimal_0')])]"/>
+            <field eval="[(6,0,[ref('minimal_0')])]" name="parent_id"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
         
-        <record model="account.account" id="a_expense">
+        <record id="a_expense" model="account.account">
             <field name="name">Products Purchase</field>
             <field name="code">600</field>
             <field name="type">expense</field>
-            <field name="parent_id" eval="[(6,0,[ref('minimal_0')])]"/>
+            <field eval="[(6,0,[ref('minimal_0')])]" name="parent_id"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
-        <record model="account.account" id="a_sale">
+        <record id="a_sale" model="account.account">
             <field name="name">Products Sales</field>
             <field name="code">701</field>
             <field name="type">income</field>
-            <field name="parent_id" eval="[(6,0,[ref('minimal_0')])]"/>
+            <field eval="[(6,0,[ref('minimal_0')])]" name="parent_id"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
         
-        <record model="ir.property" id="property_account_receivable" forcecreate="True">
+        <record forcecreate="True" id="property_account_receivable" model="ir.property">
             <field name="name">property_account_receivable</field>
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_account_receivable')]"/>
-            <field name="value" eval="'account.account,'+str(a_recv)"/>
+            <field eval="'account.account,'+str(a_recv)" name="value"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
-        <record model="ir.property" id="property_account_payable" forcecreate="True">
+        <record forcecreate="True" id="property_account_payable" model="ir.property">
             <field name="name">property_account_payable</field>
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_account_payable')]"/>
-            <field name="value" eval="'account.account,'+str(a_pay)"/>
+            <field eval="'account.account,'+str(a_pay)" name="value"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
-        <record model="ir.property" id="property_account_tax" forcecreate="True">
+        <record forcecreate="True" id="property_account_tax" model="ir.property">
             <field name="name">property_account_tax</field>
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_account_tax')]"/>
-            <field name="value" eval="False"/>
+            <field eval="False" name="value"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
         

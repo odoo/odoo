@@ -1,143 +1,143 @@
-<?xml version='1.0'?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
         
-        <record id='view_account_report_form' model='ir.ui.view'>
-            <field name='name'>account.report.report.form</field>
-            <field name='model'>account.report.report</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Accounting reporting'>
+        <record id="view_account_report_form" model="ir.ui.view">
+            <field name="name">account.report.report.form</field>
+            <field name="model">account.report.report</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Accounting reporting">
                     <notebook>
-                        <page string='General'>
-                            <field name='name' select='1' colspan='3'/>
-                            <field name='code' select='1'/>
-                            <field name='active' select='1'/>
-                            <field name='parent_id' on_change='onchange_parent_id(parent_id)'/>
-                            <field name='sequence'/>
-                            <field name='type' select='1'/>
-                            <field name='style'/>
-                            <field name='color_font'/>
-                            <field name='color_back'/>
+                        <page string="General">
+                            <field colspan="3" name="name" select="1"/>
+                            <field name="code" select="1"/>
+                            <field name="active" select="1"/>
+                            <field name="parent_id" on_change="onchange_parent_id(parent_id)"/>
+                            <field name="sequence"/>
+                            <field name="type" select="1"/>
+                            <field name="style"/>
+                            <field name="color_font"/>
+                            <field name="color_back"/>
                             <newline/>
-                            <field name='expression' colspan='4'/>
-                            <field name='expression_status' colspan='4'/>
-                            <separator string='Legend of operators' colspan='4'/>
-                            <label align='1.0' string='Account debit:'/>
-                            <label align='0.0' string='debit(&apos;ACCOUNT_CODE&apos;)'/>
-                            <label align='1.0' string='Account credit:'/>
-                            <label align='0.0' string='credit(&apos;ACCOUNT_CODE&apos;)'/>
-                            <label align='1.0' string='Account balance:'/>
-                            <label align='0.0' string='balance(&apos;ACCOUNT_CODE&apos;)'/>
-                            <label align='1.0' string='Report amount:'/>
-                            <label align='0.0' string='report(&apos;REPORT_CODE&apos;)'/>
-                            <label align='1.0' string='Operators:'/>
-                            <label align='0.0' string='+ - * / ( )'/>
-                            <label string='Exemple: (balance(&apos;6&apos;,&apos;45&apos;) - credit(&apos;7&apos;)) / report(&apos;RPT1&apos;)' colspan='4'/>
-                            <separator string='Return value for status' colspan='4'/>
-                            <group col='2' colspan='1'>
-                                <label align='1.0' string='&lt; -1:'/>
-                                <label align='0.0' string='Very bad'/>
-                                <label align='1.0' string='-1:'/>
-                                <label align='0.0' string='Bad'/>
-                                <label align='1.0' string='0:'/>
-                                <label align='0.0' string='Normal'/>
-                                <label align='1.0' string='1:'/>
-                                <label align='0.0' string='Good'/>
-                                <label align='1.0' string='&gt; 1:'/>
-                                <label align='0.0' string='Very Good'/>
+                            <field colspan="4" name="expression"/>
+                            <field colspan="4" name="expression_status"/>
+                            <separator colspan="4" string="Legend of operators"/>
+                            <label align="1.0" string="Account debit:"/>
+                            <label align="0.0" string="debit('ACCOUNT_CODE')"/>
+                            <label align="1.0" string="Account credit:"/>
+                            <label align="0.0" string="credit('ACCOUNT_CODE')"/>
+                            <label align="1.0" string="Account balance:"/>
+                            <label align="0.0" string="balance('ACCOUNT_CODE')"/>
+                            <label align="1.0" string="Report amount:"/>
+                            <label align="0.0" string="report('REPORT_CODE')"/>
+                            <label align="1.0" string="Operators:"/>
+                            <label align="0.0" string="+ - * / ( )"/>
+                            <label colspan="4" string="Exemple: (balance('6','45') - credit('7')) / report('RPT1')"/>
+                            <separator colspan="4" string="Return value for status"/>
+                            <group col="2" colspan="1">
+                                <label align="1.0" string="&lt; -1:"/>
+                                <label align="0.0" string="Very bad"/>
+                                <label align="1.0" string="-1:"/>
+                                <label align="0.0" string="Bad"/>
+                                <label align="1.0" string="0:"/>
+                                <label align="0.0" string="Normal"/>
+                                <label align="1.0" string="1:"/>
+                                <label align="0.0" string="Good"/>
+                                <label align="1.0" string="&gt; 1:"/>
+                                <label align="0.0" string="Very Good"/>
                             </group>
                         </page>
-                        <page string='Notes'>
-                            <field name='note' nolabel='1' colspan='4'/>
+                        <page string="Notes">
+                            <field colspan="4" name="note" nolabel="1"/>
                         </page>
                     </notebook>
                 </form>
             </field>
         </record>
         
-        <record id='view_account_report_tree_simple' model='ir.ui.view'>
-            <field name='name'>account.report.report.tree.simple</field>
-            <field name='model'>account.report.report</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree string='Accounting reporting'>
-                    <field name='code'/>
-                    <field name='name'/>
+        <record id="view_account_report_tree_simple" model="ir.ui.view">
+            <field name="name">account.report.report.tree.simple</field>
+            <field name="model">account.report.report</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Accounting reporting">
+                    <field name="code"/>
+                    <field name="name"/>
                 </tree>
             </field>
         </record>
         
-        <record id='action_account_report_tree' model='ir.actions.act_window'>
-            <field name='name'>Custom reporting</field>
-            <field name='res_model'>account.report.report</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
-            <field name='domain'/>
-            <field name='view_id' ref='view_account_report_tree_simple'/>
+        <record id="action_account_report_tree" model="ir.actions.act_window">
+            <field name="name">Custom reporting</field>
+            <field name="res_model">account.report.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain"/>
+            <field name="view_id" ref="view_account_report_tree_simple"/>
         </record>
         
-        <menuitem name='Financial Management/Configuration/Custom Reporting' action='action_account_report_tree' id='menu_action_account_report_tree_define'/>
-        <record id='action_account_report_form' model='ir.actions.act_window'>
-            <field name='name'>New Reporting Item Formula</field>
-            <field name='res_model'>account.report.report</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>form,tree</field>
+        <menuitem action="action_account_report_tree" id="menu_action_account_report_tree_define" parent="account_payment.menu_main_configuration"/>
+        <record id="action_account_report_form" model="ir.actions.act_window">
+            <field name="name">New Reporting Item Formula</field>
+            <field name="res_model">account.report.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
         </record>
-        <menuitem name='Financial Management/Configuration/Custom Reporting/New Reporting Item Formula' action='action_account_report_form' id='menu_action_account_report_form'/>
+        <menuitem action="action_account_report_form" id="menu_action_account_report_form" parent="account_report.menu_action_account_report_tree_define"/>
         
-        <record id='view_account_report_tree' model='ir.ui.view'>
-            <field name='name'>account.report.report.tree</field>
-            <field name='model'>account.report.report</field>
-            <field name='type'>tree</field>
-            <field name='priority' eval='8'/>
-            <field name='field_parent'>child_ids</field>
-            <field name='arch' type='xml'>
-                <tree string='Accounting reporting'>
-                    <field name='code'/>
-                    <field name='name'/>
-                    <field name='status'/>
-                    <field name='amount'/>
+        <record id="view_account_report_tree" model="ir.ui.view">
+            <field name="name">account.report.report.tree</field>
+            <field name="model">account.report.report</field>
+            <field name="type">tree</field>
+            <field eval="8" name="priority"/>
+            <field name="field_parent">child_ids</field>
+            <field name="arch" type="xml">
+                <tree string="Accounting reporting">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="status"/>
+                    <field name="amount"/>
                 </tree>
             </field>
         </record>
         
-        <record id='action_account_report_tree_view' model='ir.actions.act_window'>
-            <field name='name'>Custom reporting</field>
-            <field name='res_model'>account.fiscalyear</field>
-            <field name='view_type'>tree</field>
-            <field name='view_id' ref='view_account_report_tree'/>
-            <field name='domain'>[('parent_id','=',False)]</field>
+        <record id="action_account_report_tree_view" model="ir.actions.act_window">
+            <field name="name">Custom reporting</field>
+            <field name="res_model">account.fiscalyear</field>
+            <field name="view_type">tree</field>
+            <field name="view_id" ref="view_account_report_tree"/>
+            <field name="domain">[('parent_id','=',False)]</field>
         </record>
-        <menuitem name='Financial Management/Reporting/Custom Reporting' action='action_account_report_tree_view' id='menu_action_account_report_tree_view'/>
+        <menuitem action="action_account_report_tree_view" id="menu_action_account_report_tree_view" parent="account.menu_finance_reporting"/>
         
         
-        <record id='action_account_report_tree_view_fiscal' model='ir.actions.act_window'>
-            <field name='name'>Fiscal Statements reporting</field>
-            <field name='res_model'>account.fiscalyear</field>
-            <field name='view_type'>tree</field>
-            <field name='view_id' ref='view_account_report_tree'/>
-            <field name='domain'>[('type','=','fiscal'),('parent_id','=',False)]</field>
+        <record id="action_account_report_tree_view_fiscal" model="ir.actions.act_window">
+            <field name="name">Fiscal Statements reporting</field>
+            <field name="res_model">account.fiscalyear</field>
+            <field name="view_type">tree</field>
+            <field name="view_id" ref="view_account_report_tree"/>
+            <field name="domain">[('type','=','fiscal'),('parent_id','=',False)]</field>
         </record>
-        <menuitem name='Financial Management/Reporting/Custom Reporting/Fiscal Statements' action='action_account_report_tree_view_fiscal' id='menu_action_account_report_tree_view_fiscal'/>
+        <menuitem action="action_account_report_tree_view_fiscal" id="menu_action_account_report_tree_view_fiscal" parent="account_report.menu_action_account_report_tree_view"/>
         
-        <record id='action_account_report_tree_view_indicator' model='ir.actions.act_window'>
-            <field name='name'>Indicators reporting</field>
-            <field name='res_model'>account.fiscalyear</field>
-            <field name='view_type'>tree</field>
-            <field name='view_id' ref='view_account_report_tree'/>
-            <field name='domain'>[('type','=','indicator'),('parent_id','=',False)]</field>
+        <record id="action_account_report_tree_view_indicator" model="ir.actions.act_window">
+            <field name="name">Indicators reporting</field>
+            <field name="res_model">account.fiscalyear</field>
+            <field name="view_type">tree</field>
+            <field name="view_id" ref="view_account_report_tree"/>
+            <field name="domain">[('type','=','indicator'),('parent_id','=',False)]</field>
         </record>
-        <menuitem name='Financial Management/Reporting/Custom Reporting/Indicators' action='action_account_report_tree_view_indicator' id='menu_action_account_report_tree_view_indicator'/>
+        <menuitem action="action_account_report_tree_view_indicator" id="menu_action_account_report_tree_view_indicator" parent="account_report.menu_action_account_report_tree_view"/>
         
-        <record id='action_account_report_tree_view_other' model='ir.actions.act_window'>
-            <field name='name'>Others reportings</field>
-            <field name='res_model'>account.fiscalyear</field>
-            <field name='view_type'>tree</field>
-            <field name='view_id' ref='view_account_report_tree'/>
-            <field name='domain'>[('type','=','other'),('parent_id','=',False)]</field>
+        <record id="action_account_report_tree_view_other" model="ir.actions.act_window">
+            <field name="name">Others reportings</field>
+            <field name="res_model">account.fiscalyear</field>
+            <field name="view_type">tree</field>
+            <field name="view_id" ref="view_account_report_tree"/>
+            <field name="domain">[('type','=','other'),('parent_id','=',False)]</field>
         </record>
-        <menuitem name='Financial Management/Reporting/Custom Reporting/Others' action='action_account_report_tree_view_other' id='menu_action_account_report_tree_view_other'/>
+        <menuitem action="action_account_report_tree_view_other" id="menu_action_account_report_tree_view_other" parent="account_report.menu_action_account_report_tree_view"/>
         
         
     </data>

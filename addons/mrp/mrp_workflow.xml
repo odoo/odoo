@@ -1,52 +1,52 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
         <!-- Production -->
         
-        <record model="workflow" id="wkf_prod">
+        <record id="wkf_prod" model="workflow">
             <field name="name">mrp.production.basic</field>
             <field name="osv">mrp.production</field>
             <field name="on_create">True</field>
         </record>
         
-        <record model="workflow.activity" id="prod_act_draft">
+        <record id="prod_act_draft" model="workflow.activity">
             <field name="wkf_id" ref="wkf_prod"/>
             <field name="flow_start">True</field>
             <field name="name">draft</field>
         </record>
-        <record model="workflow.activity" id="prod_act_picking">
+        <record id="prod_act_picking" model="workflow.activity">
             <field name="wkf_id" ref="wkf_prod"/>
             <field name="name">picking</field>
             <field name="kind">subflow</field>
             <field name="subflow_id" search="[('osv','=','stock.picking')]"/>
             <field name="action">action_confirm()</field>
         </record>
-        <record model="workflow.activity" id="prod_act_ready">
+        <record id="prod_act_ready" model="workflow.activity">
             <field name="wkf_id" ref="wkf_prod"/>
             <field name="name">ready</field>
             <field name="kind">function</field>
             <field name="action">action_ready()</field>
         </record>
-        <record model="workflow.activity" id="prod_act_picking_exception">
+        <record id="prod_act_picking_exception" model="workflow.activity">
             <field name="wkf_id" ref="wkf_prod"/>
             <field name="name">picking_exception</field>
             <field name="kind">function</field>
             <field name="action">action_picking_except()</field>
         </record>
-        <record model="workflow.activity" id="prod_act_in_production">
+        <record id="prod_act_in_production" model="workflow.activity">
             <field name="wkf_id" ref="wkf_prod"/>
             <field name="name">in_production</field>
             <field name="kind">function</field>
             <field name="action">action_in_production()</field>
         </record>
-        <record model="workflow.activity" id="prod_act_done">
+        <record id="prod_act_done" model="workflow.activity">
             <field name="wkf_id" ref="wkf_prod"/>
             <field name="flow_stop">True</field>
             <field name="kind">function</field>
             <field name="action">action_production_end()</field>
             <field name="name">done</field>
         </record>
-        <record model="workflow.activity" id="prod_act_cancel">
+        <record id="prod_act_cancel" model="workflow.activity">
             <field name="wkf_id" ref="wkf_prod"/>
             <field name="flow_stop">True</field>
             <field name="name">cancel</field>
@@ -54,59 +54,59 @@
             <field name="action">action_cancel()</field>
         </record>
         
-        <record model="workflow.transition" id="prod_trans_draft_ready">
+        <record id="prod_trans_draft_ready" model="workflow.transition">
             <field name="act_from" ref="prod_act_draft"/>
             <field name="act_to" ref="prod_act_ready"/>
             <field name="signal">button_confirm</field>
             <field name="condition">not test_if_product()</field>
         </record>
-        <record model="workflow.transition" id="prod_trans_draft_picking">
+        <record id="prod_trans_draft_picking" model="workflow.transition">
             <field name="act_from" ref="prod_act_draft"/>
             <field name="act_to" ref="prod_act_picking"/>
             <field name="signal">button_confirm</field>
             <field name="condition">test_if_product()</field>
         </record>
-        <record model="workflow.transition" id="prod_trans_picking_ready">
+        <record id="prod_trans_picking_ready" model="workflow.transition">
             <field name="act_from" ref="prod_act_picking"/>
             <field name="act_to" ref="prod_act_ready"/>
             <field name="signal">subflow.done</field>
         </record>
-        <record model="workflow.transition" id="prod_trans_ready_in_production">
+        <record id="prod_trans_ready_in_production" model="workflow.transition">
             <field name="act_from" ref="prod_act_ready"/>
             <field name="act_to" ref="prod_act_in_production"/>
             <field name="signal">button_produce</field>
         </record>
-        <record model="workflow.transition" id="prod_trans_in_production_done">
+        <record id="prod_trans_in_production_done" model="workflow.transition">
             <field name="act_from" ref="prod_act_in_production"/>
             <field name="act_to" ref="prod_act_done"/>
             <field name="signal">button_produce_done</field>
         </record>
-        <record model="workflow.transition" id="prod_trans_picking_picking_exception">
+        <record id="prod_trans_picking_picking_exception" model="workflow.transition">
             <field name="act_from" ref="prod_act_picking"/>
             <field name="act_to" ref="prod_act_picking_exception"/>
             <field name="signal">subflow.cancel</field>
         </record>
-        <record model="workflow.transition" id="prod_trans_picking_exception_cancel">
+        <record id="prod_trans_picking_exception_cancel" model="workflow.transition">
             <field name="act_from" ref="prod_act_picking_exception"/>
             <field name="act_to" ref="prod_act_cancel"/>
             <field name="signal">button_cancel</field>
         </record>
-        <record model="workflow.transition" id="prod_trans_picking_exception_picking">
+        <record id="prod_trans_picking_exception_picking" model="workflow.transition">
             <field name="act_from" ref="prod_act_picking_exception"/>
             <field name="act_to" ref="prod_act_picking"/>
             <field name="signal">button_recreate</field>
         </record>
-        <record model="workflow.transition" id="prod_trans_ready_cancel">
+        <record id="prod_trans_ready_cancel" model="workflow.transition">
             <field name="act_from" ref="prod_act_ready"/>
             <field name="act_to" ref="prod_act_cancel"/>
             <field name="signal">button_cancel</field>
         </record>
-        <record model="workflow.transition" id="prod_trans_in_production_cancel">
+        <record id="prod_trans_in_production_cancel" model="workflow.transition">
             <field name="act_from" ref="prod_act_in_production"/>
             <field name="act_to" ref="prod_act_cancel"/>
             <field name="signal">button_cancel</field>
         </record>
-        <record model="workflow.transition" id="prod_trans_draft_cancel">
+        <record id="prod_trans_draft_cancel" model="workflow.transition">
             <field name="act_from" ref="prod_act_draft"/>
             <field name="act_to" ref="prod_act_cancel"/>
             <field name="signal">button_cancel</field>
@@ -114,86 +114,86 @@
         
         <!-- Procurement -->
         
-        <record model="workflow" id="wkf">
+        <record id="wkf" model="workflow">
             <field name="name">mrp.procurement.basic</field>
             <field name="osv">mrp.procurement</field>
             <field name="on_create">True</field>
         </record>
         
-        <record model="workflow.activity" id="act_draft">
+        <record id="act_draft" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
             <field name="flow_start">True</field>
             <field name="name">draft</field>
         </record>
-        <record model="workflow.activity" id="act_cancel">
+        <record id="act_cancel" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
             <field name="name">cancel</field>
             <field name="kind">function</field>
             <field name="action">action_cancel()</field>
             <field name="flow_stop">True</field>
         </record>
-        <record model="workflow.activity" id="act_confirm">
+        <record id="act_confirm" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
             <field name="name">confirm</field>
             <field name="kind">function</field>
             <field name="action">action_confirm()</field>
         </record>
-        <record model="workflow.activity" id="act_confirm_wait">
+        <record id="act_confirm_wait" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
             <field name="name">confirm_wait</field>
             <field name="kind">function</field>
             <field name="action">write({'state':'exception'})</field>
         </record>
-        <record model="workflow.activity" id="act_confirm_mts">
+        <record id="act_confirm_mts" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
             <field name="name">confirm_mts</field>
         </record>
-        <record model="workflow.activity" id="act_confirm_mto">
+        <record id="act_confirm_mto" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
             <field name="name">confirm_mto</field>
         </record>
-        <record model="workflow.activity" id="act_make_to_stock">
+        <record id="act_make_to_stock" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
             <field name="name">make_to_stock</field>
             <field name="kind">function</field>
             <field name="action">action_move_assigned()</field>
         </record>
-        <record model="workflow.activity" id="act_produce">
+        <record id="act_produce" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
             <field name="name">produce</field>
             <field name="kind">subflow</field>
             <field name="subflow_id" search="[('osv','=','mrp.production')]"/>
             <field name="action">action_produce_assign_product()</field>
         </record>
-        <record model="workflow.activity" id="act_produce_check">
+        <record id="act_produce_check" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
             <field name="name">produce_check</field>
         </record>
-        <record model="workflow.activity" id="act_produce_service">
+        <record id="act_produce_service" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
             <field name="name">produce_service</field>
             <field name="kind">function</field>
             <field name="action">action_produce_assign_service()</field>
         </record>
-        <record model="workflow.activity" id="act_buy">
+        <record id="act_buy" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
             <field name="name">buy</field>
             <field name="kind">subflow</field>
             <field name="subflow_id" search="[('osv','=','purchase.order')]"/>
             <field name="action">action_po_assign()</field>
         </record>
-        <record model="workflow.activity" id="act_make_done">
+        <record id="act_make_done" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
             <field name="name">done</field>
         </record>
-        <record model="workflow.activity" id="act_wait_done">
+        <record id="act_wait_done" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
             <field name="name">wait_done</field>
             <field name="kind">function</field>
             <field name="action">write({'state':'waiting'})</field>
         </record>
 
-        <record model="workflow.activity" id="act_done">
+        <record id="act_done" model="workflow.activity">
             <field name="wkf_id" ref="wkf"/>
             <field name="flow_stop">True</field>
             <field name="name">done</field>
@@ -201,18 +201,18 @@
             <field name="action">action_done()</field>
         </record>
         
-        <record model="workflow.transition" id="trans_draft_confirm">
+        <record id="trans_draft_confirm" model="workflow.transition">
             <field name="act_from" ref="act_draft"/>
             <field name="act_to" ref="act_confirm"/>
             <field name="signal">button_confirm</field>
         </record>
-        <record model="workflow.transition" id="trans_confirm_cancel2">
+        <record id="trans_confirm_cancel2" model="workflow.transition">
             <field name="act_from" ref="act_confirm"/>
             <field name="act_to" ref="act_wait_done"/>
             <field name="signal">button_wait_done</field>
             <field name="condition">True</field>
         </record>
-        <record model="workflow.transition" id="trans_confirm_wait_done">
+        <record id="trans_confirm_wait_done" model="workflow.transition">
             <field name="act_from" ref="act_wait_done"/>
             <field name="act_to" ref="act_done"/>
             <field name="condition">check_move_done()</field>
@@ -220,132 +220,132 @@
             <field name="trigger_expr_id">[move_id.id]</field>
         </record>
 
-        <record model="workflow.transition" id="trans_confirm_cancel">
+        <record id="trans_confirm_cancel" model="workflow.transition">
             <field name="act_from" ref="act_confirm"/>
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">button_check</field>
             <field name="condition">test_cancel()</field>
         </record>
-        <record model="workflow.transition" id="trans_confirm_confirm_wait">
+        <record id="trans_confirm_confirm_wait" model="workflow.transition">
             <field name="act_from" ref="act_confirm"/>
             <field name="act_to" ref="act_confirm_wait"/>
             <field name="signal">button_check</field>
             <field name="condition">not test_cancel()</field>
         </record>
-        <record model="workflow.transition" id="trans_confirm_wait_confirm_mto">
+        <record id="trans_confirm_wait_confirm_mto" model="workflow.transition">
             <field name="act_from" ref="act_confirm_wait"/>
             <field name="act_to" ref="act_confirm_mto"/>
             <field name="condition">procure_method=='make_to_order'</field>
         </record>
-        <record model="workflow.transition" id="trans_confirm_wait_confirm_mts">
+        <record id="trans_confirm_wait_confirm_mts" model="workflow.transition">
             <field name="act_from" ref="act_confirm_wait"/>
             <field name="act_to" ref="act_confirm_mts"/>
             <field name="condition">procure_method=='make_to_stock'</field>
         </record>
-        <record model="workflow.transition" id="trans_confirm_mts_cancel">
+        <record id="trans_confirm_mts_cancel" model="workflow.transition">
             <field name="act_from" ref="act_confirm_mts"/>
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">button_cancel</field>
         </record>
-        <record model="workflow.transition" id="trans_confirm_waiting_cancel">
+        <record id="trans_confirm_waiting_cancel" model="workflow.transition">
             <field name="act_from" ref="act_wait_done"/>
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">button_cancel</field>
         </record>
-        <record model="workflow.transition" id="trans_confirm_mts_confirm">
+        <record id="trans_confirm_mts_confirm" model="workflow.transition">
             <field name="act_from" ref="act_confirm_mts"/>
             <field name="act_to" ref="act_confirm"/>
             <field name="signal">button_restart</field>
         </record>
-        <record model="workflow.transition" id="trans_confirm_mto_cancel">
+        <record id="trans_confirm_mto_cancel" model="workflow.transition">
             <field name="act_from" ref="act_confirm_mto"/>
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">button_cancel</field>
         </record>
-        <record model="workflow.transition" id="trans_confirm_mto_confirm">
+        <record id="trans_confirm_mto_confirm" model="workflow.transition">
             <field name="act_from" ref="act_confirm_mto"/>
             <field name="act_to" ref="act_confirm"/>
             <field name="signal">button_restart</field>
         </record>
-        <record model="workflow.transition" id="trans_draft_cancel">
+        <record id="trans_draft_cancel" model="workflow.transition">
             <field name="act_from" ref="act_draft"/>
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">button_cancel</field>
         </record>
-        <record model="workflow.transition" id="trans_confirm_mts_make_to_stock">
+        <record id="trans_confirm_mts_make_to_stock" model="workflow.transition">
             <field name="act_from" ref="act_confirm_mts"/>
             <field name="act_to" ref="act_make_to_stock"/>
             <field name="condition">check_make_to_stock()</field>
         </record>
-        <record model="workflow.transition" id="trans_confirm_mto_produce_check">
+        <record id="trans_confirm_mto_produce_check" model="workflow.transition">
             <field name="act_from" ref="act_confirm_mto"/>
             <field name="act_to" ref="act_produce_check"/>
             <field name="condition">check_produce()</field>
         </record>
-        <record model="workflow.transition" id="trans_product_check_produce">
+        <record id="trans_product_check_produce" model="workflow.transition">
             <field name="act_from" ref="act_produce_check"/>
             <field name="act_to" ref="act_produce"/>
             <field name="condition">check_product()</field>
         </record>
-        <record model="workflow.transition" id="trans_product_check_produce_service">
+        <record id="trans_product_check_produce_service" model="workflow.transition">
             <field name="act_from" ref="act_produce_check"/>
             <field name="act_to" ref="act_produce_service"/>
             <field name="condition">not check_product()</field>
         </record>
-        <record model="workflow.transition" id="trans_confirm_mto_buy">
+        <record id="trans_confirm_mto_buy" model="workflow.transition">
             <field name="act_from" ref="act_confirm_mto"/>
             <field name="act_to" ref="act_buy"/>
             <field name="condition">check_buy()</field>
         </record>
-        <record model="workflow.transition" id="trans_make_to_stock_make_done">
+        <record id="trans_make_to_stock_make_done" model="workflow.transition">
             <field name="act_from" ref="act_make_to_stock"/>
             <field name="act_to" ref="act_make_done"/>
             <field name="condition">check_move_done()</field>
             <field name="trigger_model">stock.move</field>
             <field name="trigger_expr_id">[move_id.id]</field>
         </record>
-        <record model="workflow.transition" id="trans_make_to_stock_cancel">
+        <record id="trans_make_to_stock_cancel" model="workflow.transition">
             <field name="act_from" ref="act_make_to_stock"/>
             <field name="act_to" ref="act_cancel"/>
             <field name="condition">check_move_cancel()</field>
         </record>
-        <record model="workflow.transition" id="trans_produce_cancel">
+        <record id="trans_produce_cancel" model="workflow.transition">
             <field name="act_from" ref="act_produce"/>
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">subflow.cancel</field>
         </record>
-        <record model="workflow.transition" id="trans_produce_service_cancel">
+        <record id="trans_produce_service_cancel" model="workflow.transition">
             <field name="act_from" ref="act_produce_service"/>
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">subflow.cancel</field>
         </record>
-        <record model="workflow.transition" id="trans_buy_cancel">
+        <record id="trans_buy_cancel" model="workflow.transition">
             <field name="act_from" ref="act_buy"/>
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">subflow.cancel</field>
         </record>
         
-        <record model="workflow.transition" id="trans_produce_make_done">
+        <record id="trans_produce_make_done" model="workflow.transition">
             <field name="act_from" ref="act_produce"/>
             <field name="act_to" ref="act_make_done"/>
             <field name="signal">subflow.done</field>
         </record>
         
-        <record model="workflow.transition" id="trans_produce_service_make_done">
+        <record id="trans_produce_service_make_done" model="workflow.transition">
             <field name="act_from" ref="act_produce_service"/>
             <field name="act_to" ref="act_make_done"/>
         </record>
-        <record model="workflow.transition" id="trans_buy_make_done">
+        <record id="trans_buy_make_done" model="workflow.transition">
             <field name="act_from" ref="act_buy"/>
             <field name="act_to" ref="act_make_done"/>
             <field name="signal">subflow.delivery_done</field>
         </record>
-        <record model="workflow.transition" id="trans_make_done_done">
+        <record id="trans_make_done_done" model="workflow.transition">
             <field name="act_from" ref="act_make_done"/>
             <field name="act_to" ref="act_done"/>
             <field name="condition">action_check_finnished()</field>
         </record>
-        <record model="workflow.transition" id="trans_make_done_confirm">
+        <record id="trans_make_done_confirm" model="workflow.transition">
             <field name="act_from" ref="act_make_done"/>
             <field name="act_to" ref="act_confirm"/>
             <field name="condition">not action_check_finnished()</field>

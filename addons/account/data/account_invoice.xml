@@ -1,7 +1,7 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data noupdate="1">
-        <record model="res.request.link" id="req_link_invoice">
+        <record id="req_link_invoice" model="res.request.link">
             <field name="name">Invoice</field>
             <field name="object">account.invoice</field>
         </record>
@@ -9,19 +9,19 @@
         <!--
 	Sequences types for invoices
 	-->
-        <record model="ir.sequence.type" id="seq_type_out_invoice">
+        <record id="seq_type_out_invoice" model="ir.sequence.type">
             <field name="name">Account Invoice Out</field>
             <field name="code">account.invoice.out_invoice</field>
         </record>
-        <record model="ir.sequence.type" id="seq_type_in_invoice">
+        <record id="seq_type_in_invoice" model="ir.sequence.type">
             <field name="name">Account Invoice In</field>
             <field name="code">account.invoice.in_invoice</field>
         </record>
-        <record model="ir.sequence.type" id="seq_type_out_refund">
+        <record id="seq_type_out_refund" model="ir.sequence.type">
             <field name="name">Account Refund Out</field>
             <field name="code">account.invoice.out_refund</field>
         </record>
-        <record model="ir.sequence.type" id="seq_type_in_refund">
+        <record id="seq_type_in_refund" model="ir.sequence.type">
             <field name="name">Account Refund In</field>
             <field name="code">account.invoice.in_refund</field>
         </record>
@@ -29,35 +29,35 @@
         <!--
 	Sequences for invoices
 	-->
-        <record model="ir.sequence" id="seq_out_invoice">
+        <record id="seq_out_invoice" model="ir.sequence">
             <field name="name">Account Invoice Out</field>
             <field name="code">account.invoice.out_invoice</field>
-            <field name="padding" eval="3"/>
+            <field eval="3" name="padding"/>
             <field name="prefix">%(year)s/</field>
         </record>
-        <record model="ir.sequence" id="seq_in_invoice">
+        <record id="seq_in_invoice" model="ir.sequence">
             <field name="name">Account Invoice In</field>
             <field name="code">account.invoice.in_invoice</field>
-            <field name="padding" eval="3"/>
+            <field eval="3" name="padding"/>
             <field name="prefix">%(year)s/</field>
         </record>
-        <record model="ir.sequence" id="seq_out_refund">
+        <record id="seq_out_refund" model="ir.sequence">
             <field name="name">Account Refund Out</field>
             <field name="code">account.invoice.out_refund</field>
-            <field name="padding" eval="3"/>
+            <field eval="3" name="padding"/>
             <field name="prefix">%(year)s/</field>
         </record>
-        <record model="ir.sequence" id="seq_in_refund">
+        <record id="seq_in_refund" model="ir.sequence">
             <field name="name">Account Refund In</field>
             <field name="code">account.invoice.in_refund</field>
-            <field name="padding" eval="3"/>
+            <field eval="3" name="padding"/>
             <field name="prefix">%(year)s/</field>
         </record>
         
         <!--
 	Sequences types for analytic account 
 	-->
-        <record model="ir.sequence.type" id="seq_type_analytic_account">
+        <record id="seq_type_analytic_account" model="ir.sequence.type">
             <field name="name">Analytic account</field>
             <field name="code">account.analytic.account</field>
         </record>
@@ -65,12 +65,11 @@
         <!-- 
 	Sequence for analytic account 
 	-->
-        <record model="ir.sequence" id="seq_analytic_account">
+        <record id="seq_analytic_account" model="ir.sequence">
             <field name="name">Analytic account sequence</field>
             <field name="code">account.analytic.account</field>
-            <field name="padding" eval="3" />
-            <field name="number_next" eval="2708" />
+            <field eval="3" name="padding"/>
+            <field eval="2708" name="number_next"/>
         </record>
     </data>
 </terp>
-

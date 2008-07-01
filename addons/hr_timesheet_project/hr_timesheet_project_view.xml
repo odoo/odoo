@@ -1,11 +1,11 @@
-<?xml version='1.0'?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
         
-        <wizard name='hr_timesheet_project.encode.hour' id='encode_hour' model='hr.employee' string='Hours From Tasks'/>
-        <menuitem name='Human Resources/Hours Encoding/For me/Today&apos;s Work (Import From Projects)' action='encode_hour' type='wizard' id='menu_act_hr_timesheet_line_me_today_project_form'/>
+        <wizard id="encode_hour" model="hr.employee" name="hr_timesheet_project.encode.hour" string="Hours From Tasks"/>
+        <menuitem action="encode_hour" id="menu_act_hr_timesheet_line_me_today_project_form" parent="hr_timesheet.next_id_46" type="wizard"/>
         
-        <wizard name='hr_timesheet_project.encode.hour.noopen' id='encode_hour_tss' model='hr_timesheet_sheet.sheet' string='Timesheet From Tasks'/>
+        <wizard id="encode_hour_tss" model="hr_timesheet_sheet.sheet" name="hr_timesheet_project.encode.hour.noopen" string="Timesheet From Tasks"/>
         
     </data>
 </terp>

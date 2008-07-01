@@ -1,16 +1,15 @@
-<?xml version='1.0'?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
         
-        <report name='hr.timesheet.invoice.account.analytic.account.cost_ledger' id='account_analytic_account_cost_ledger' rml='account/project/report/cost_ledger.rml' auto='False' model='account.analytic.account' menu='False' string='Cost Ledger'/>
+        <report auto="False" id="account_analytic_account_cost_ledger" menu="False" model="account.analytic.account" name="hr.timesheet.invoice.account.analytic.account.cost_ledger" rml="account/project/report/cost_ledger.rml" string="Cost Ledger"/>
         
-        <wizard name='hr.timesheet.invoice.account.analytic.account.cost_ledger.report' id='account_analytic_account_cost_ledger_report' model='account.analytic.account' keyword='client_print_multi' string='Cost Ledger'/>
+        <wizard id="account_analytic_account_cost_ledger_report" keyword="client_print_multi" model="account.analytic.account" name="hr.timesheet.invoice.account.analytic.account.cost_ledger.report" string="Cost Ledger"/>
         
-        <report name='account.analytic.profit' id='report_analytical_profit' rml='hr_timesheet_invoice/report/account_analytic_profit.rml' auto='False' model='account.analytic.line' menu='False' string='Timesheet profit'/>
+        <report auto="False" id="report_analytical_profit" menu="False" model="account.analytic.line" name="account.analytic.profit" rml="hr_timesheet_invoice/report/account_analytic_profit.rml" string="Timesheet profit"/>
         
-        <wizard name='account.analytic.profit' id='account_analytic_profit' model='account.analytic.line' menu='False' string='Timesheet profit'/>
-        <menuitem name='Human Resources/Reporting/Invoice Rate by User' action='account_analytic_profit' type='wizard' id='print_account_analytic_profit'/>
+        <wizard id="account_analytic_profit" menu="False" model="account.analytic.line" name="account.analytic.profit" string="Timesheet profit"/>
+        <menuitem action="account_analytic_profit" id="print_account_analytic_profit" parent="hr.menu_hr_reporting" type="wizard"/>
         
     </data>
 </terp>
-

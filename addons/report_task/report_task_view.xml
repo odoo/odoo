@@ -1,59 +1,59 @@
-<?xml version='1.0'?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
         
         <!-- Tasks by projects and users -->
         
-        <record id='view_task_project_form' model='ir.ui.view'>
-            <field name='name'>report.project.task.form</field>
-            <field name='model'>report.task.user.pipeline.open</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Tasks by User'>
-                    <field name='user_id' select='1'/>
-                    <field name='company_id' select='1'/>
-                    <field name='task_nbr' select='2'/>
-                    <field name='task_hrs' select='2'/>
-                    <field name='task_progress' select='2'/>
+        <record id="view_task_project_form" model="ir.ui.view">
+            <field name="name">report.project.task.form</field>
+            <field name="model">report.task.user.pipeline.open</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Tasks by User">
+                    <field name="user_id" select="1"/>
+                    <field name="company_id" select="1"/>
+                    <field name="task_nbr" select="2"/>
+                    <field name="task_hrs" select="2"/>
+                    <field name="task_progress" select="2"/>
                 </form>
             </field>
         </record>
         
-        <record id='view_task_project_graph' model='ir.ui.view'>
-            <field name='name'>report.project.task.graph</field>
-            <field name='model'>report.task.user.pipeline.open</field>
-            <field name='type'>graph</field>
-            <field name='arch' type='xml'>
-                <graph type='bar' string='Tasks by User'>
-                    <field name='user_id'/>
-                    <field name='task_progress' operator='+'/>
+        <record id="view_task_project_graph" model="ir.ui.view">
+            <field name="name">report.project.task.graph</field>
+            <field name="model">report.task.user.pipeline.open</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Tasks by User" type="bar">
+                    <field name="user_id"/>
+                    <field name="task_progress" operator="+"/>
                 </graph>
             </field>
         </record>
         
-        <record id='view_task_project_tree' model='ir.ui.view'>
-            <field name='name'>report.project.task.tree</field>
-            <field name='model'>report.task.user.pipeline.open</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree string='Tasks by User'>
-                    <field name='user_id'/>
-                    <field name='company_id'/>
-                    <field name='task_nbr'/>
-                    <field name='task_hrs'/>
-                    <field name='task_progress'/>
+        <record id="view_task_project_tree" model="ir.ui.view">
+            <field name="name">report.project.task.tree</field>
+            <field name="model">report.task.user.pipeline.open</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Tasks by User">
+                    <field name="user_id"/>
+                    <field name="company_id"/>
+                    <field name="task_nbr"/>
+                    <field name="task_hrs"/>
+                    <field name="task_progress"/>
                 </tree>
             </field>
         </record>
         
-        <record id='action_project_task' model='ir.actions.act_window'>
-            <field name='name'>Tasks by User</field>
-            <field name='res_model'>report.task.user.pipeline.open</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,graph</field>
-            <field name='domain'>[]</field>
+        <record id="action_project_task" model="ir.actions.act_window">
+            <field name="name">Tasks by User</field>
+            <field name="res_model">report.task.user.pipeline.open</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,graph</field>
+            <field name="domain">[]</field>
         </record>
-        <menuitem name='Project Management/Reporting/All Months/Tasks by User' action='action_project_task' id='menu_project_task_user_tree'/>
+        <menuitem id="next_id_57" name="Reporting" parent="project.menu_main"/><menuitem id="next_id_58" name="All Months" parent="next_id_57"/><menuitem action="action_project_task" id="menu_project_task_user_tree" parent="next_id_58"/>
         
     </data>
 </terp>

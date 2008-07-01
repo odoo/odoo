@@ -1,25 +1,11 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
-        <wizard
-			id="wizard_base_module_publish"
-			string="Publish module"
-			model="ir.module.module"
-			name="base_module_publish.module_publish"/>
+        <wizard id="wizard_base_module_publish" model="ir.module.module" name="base_module_publish.module_publish" string="Publish module"/>
         
-        <wizard
-			id="wizard_base_module_publish_all"
-			string="Publish all modules"
-			model="ir.module.module"
-			name="base_module_publish.module_publish_all"
-			client_action_multi="True"
-			/>
+        <wizard client_action_multi="True" id="wizard_base_module_publish_all" model="ir.module.module" name="base_module_publish.module_publish_all" string="Publish all modules"/>
         
-        <wizard
-			string="Export module"
-			model="ir.module.module"
-			name="base_module_publish.module_export"
-			id="wizard_base_module_export"/>
+        <wizard id="wizard_base_module_export" model="ir.module.module" name="base_module_publish.module_export" string="Export module"/>
         
     </data>
 </terp>

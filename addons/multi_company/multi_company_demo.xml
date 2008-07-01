@@ -1,11 +1,11 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data noupdate="1">
-        <record model="res.partner" id="second_partner">
+        <record id="second_partner" model="res.partner">
             <field name="name">Tiny Editor</field>
         </record>
         
-        <record model="res.company" id="second_company">
+        <record id="second_company" model="res.company">
             <field name="name">Tiny Editor</field>
             <field name="partner_id" ref="base.main_partner"/>
             <field name="parent_id" ref="base.main_company"/>
@@ -15,11 +15,11 @@
             <field name="currency_id" ref="base.EUR"/>
         </record>
         
-        <record model="res.partner" id="ter_partner">
+        <record id="ter_partner" model="res.partner">
             <field name="name">Tiny Integrator</field>
         </record>
         
-        <record model="res.company" id="ter_company">
+        <record id="ter_company" model="res.company">
             <field name="name">Tiny Integrator</field>
             <field name="partner_id" ref="base.main_partner"/>
             <field name="parent_id" ref="base.main_company"/>

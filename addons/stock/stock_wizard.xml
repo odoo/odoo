@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
         
@@ -7,22 +7,16 @@
 		-->
         
         
-        <wizard string="Split move line" multi="True" model="stock.picking" name="stock.move.split" id="move_split" />
-        <wizard string="Partial packing" multi="True" model="stock.picking" name="stock.partial_picking" id="partial_picking" />
-        <wizard string="Track line" multi="True" model="stock.move" name="stock.move.track" id="track_line" />
-        <wizard string="Make packing" multi="True" model="stock.picking" name="stock.picking.make" id="make_picking"/>
+        <wizard id="move_split" model="stock.picking" multi="True" name="stock.move.split" string="Split move line"/>
+        <wizard id="partial_picking" model="stock.picking" multi="True" name="stock.partial_picking" string="Partial packing"/>
+        <wizard id="track_line" model="stock.move" multi="True" name="stock.move.track" string="Track line"/>
+        <wizard id="make_picking" model="stock.picking" multi="True" name="stock.picking.make" string="Make packing"/>
         <!--
 		<wizard string="Replace element" model="stock.tracking" name="stock.move.replace" id="move_replace" />
 		-->
-        <wizard string="Return packing" model="stock.picking" name="stock.return.picking" id="return_picking"/>
+        <wizard id="return_picking" model="stock.picking" name="stock.return.picking" string="Return packing"/>
         
-        <wizard
-		string="Create invoice"
-		model="stock.picking"
-		name="stock.invoice_onshipping"
-		keyword="client_action_multi"
-		id="wizard_invoice_onshipping"
-		/>
+        <wizard id="wizard_invoice_onshipping" keyword="client_action_multi" model="stock.picking" name="stock.invoice_onshipping" string="Create invoice"/>
         
         
     </data>

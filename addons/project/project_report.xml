@@ -1,23 +1,9 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
         
-        <report string="Gantt Representation"
-			model="project.task"
-			name="project.tasks.gantt"
-			auto="False"
-			id="report_project_task_gantt"/>
-        <report string="Gantt Representation"
-			model="project.project"
-			name="project.project.gantt"
-			auto="False"
-			id="report_project_project_gantt"/>
-        <report string="Project Description"
-			model="project.project"
-			name="project.report"
-			auto="True"
-			xml="project/report/project_report.xml"
-			xsl="project/report/project_report.xsl"
-			id="report_project_desc"/>
+        <report auto="False" id="report_project_task_gantt" model="project.task" name="project.tasks.gantt" string="Gantt Representation"/>
+        <report auto="False" id="report_project_project_gantt" model="project.project" name="project.project.gantt" string="Gantt Representation"/>
+        <report auto="True" id="report_project_desc" model="project.project" name="project.report" string="Project Description" xml="project/report/project_report.xml" xsl="project/report/project_report.xsl"/>
     </data>
 </terp>

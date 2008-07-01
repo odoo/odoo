@@ -1,61 +1,61 @@
-<?xml version='1.0'?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
         
-        <record id='note_account_type' model='board.note.type'>
-            <field name='name'>Accountants</field>
+        <record id="note_account_type" model="board.note.type">
+            <field name="name">Accountants</field>
         </record>
         
-        <record id='action_account_analytic_line_to_invoice' model='ir.actions.act_window'>
-            <field name='name'>Costs to invoice</field>
-            <field name='res_model'>report.account.analytic.line.to.invoice</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>graph,tree</field>
+        <record id="action_account_analytic_line_to_invoice" model="ir.actions.act_window">
+            <field name="name">Costs to invoice</field>
+            <field name="res_model">report.account.analytic.line.to.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
         </record>
         
-        <record id='action_aged_receivable' model='ir.actions.act_window'>
-            <field name='name'>Receivable Accounts</field>
-            <field name='res_model'>report.account.receivable</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>graph,tree</field>
-            <field name='domain'>[('type','=','receivable')]</field>
+        <record id="action_aged_receivable" model="ir.actions.act_window">
+            <field name="name">Receivable Accounts</field>
+            <field name="res_model">report.account.receivable</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
+            <field name="domain">[('type','=','receivable')]</field>
         </record>
-        <record id='action_aged_income' model='ir.actions.act_window'>
-            <field name='name'>Income Accounts</field>
-            <field name='res_model'>report.account.receivable</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>graph,tree</field>
-            <field name='domain'>[('type','=','income')]</field>
+        <record id="action_aged_income" model="ir.actions.act_window">
+            <field name="name">Income Accounts</field>
+            <field name="res_model">report.account.receivable</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
+            <field name="domain">[('type','=','income')]</field>
         </record>
         
         
-        <act_window name='Accounts to invoice' view_type='form' domain='[(&apos;state&apos;,&apos;&lt;&gt;&apos;,&apos;close&apos;),(&apos;partner_id&apos;,&apos;&lt;&gt;&apos;,False),(&apos;to_invoice&apos;, &apos;&lt;&gt;&apos;, False)]' id='act_my_account' src_model='res.users' view_mode='tree,form' res_model='account.analytic.account'/>
+        <act_window domain="[('state','&lt;&gt;','close'),('partner_id','&lt;&gt;',False),('to_invoice', '&lt;&gt;', False)]" id="act_my_account" name="Accounts to invoice" res_model="account.analytic.account" src_model="res.users" view_mode="tree,form" view_type="form"/>
         
-        <record id='board_account_form' model='ir.ui.view'>
-            <field name='name'>board.account.form</field>
-            <field name='model'>board.board</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Account Board'>
+        <record id="board_account_form" model="ir.ui.view">
+            <field name="name">board.account.form</field>
+            <field name="model">board.board</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Account Board">
                     <hpaned>
                         
                         <child1>
                             
-                            <action name='%(report_analytic.action_analytic_account_tree)d' height='160' string='Analytic accounts to close' colspan='4' width='510'/>
+                            <action colspan="4" height="160" name="%(report_analytic.action_analytic_account_tree)d" string="Analytic accounts to close" width="510"/>
                             
-                            <action name='%(act_my_account)d' height='160' string='Accounts to invoice' colspan='4' width='510'/>
+                            <action colspan="4" height="160" name="%(act_my_account)d" string="Accounts to invoice" width="510"/>
                             
-                            <action name='%(account.action_invoice_tree5)d' height='160' string='Draft invoices' colspan='4'/>
+                            <action colspan="4" height="160" name="%(account.action_invoice_tree5)d" string="Draft invoices"/>
                         </child1>
                         
                         <child2>
-                            <button name='%(account_report.action_account_report_tree_view_indicator)d' icon='terp-purchase' type='action' string='My indicators' colspan='4'/>
+                            <button colspan="4" icon="terp-purchase" name="%(account_report.action_account_report_tree_view_indicator)d" string="My indicators" type="action"/>
                             
-                            <action name='%(action_account_analytic_line_to_invoice)d' height='220' string='Costs to invoice' colspan='4'/>
+                            <action colspan="4" height="220" name="%(action_account_analytic_line_to_invoice)d" string="Costs to invoice"/>
                             
-                            <action name='%(action_aged_receivable)d' height='220' string='Aged receivables' colspan='4'/>
+                            <action colspan="4" height="220" name="%(action_aged_receivable)d" string="Aged receivables"/>
                             
-                            <action name='%(action_aged_income)d' height='220' string='Aged income' colspan='4'/>
+                            <action colspan="4" height="220" name="%(action_aged_income)d" string="Aged income"/>
                             
                         </child2>
                     </hpaned>
@@ -63,15 +63,15 @@
             </field>
         </record>
         
-        <record id='open_board_account' model='ir.actions.act_window'>
-            <field name='name'>Accounting Dashboard</field>
-            <field name='res_model'>board.board</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>form</field>
-            <field name='usage'>menu</field>
-            <field name='view_id' ref='board_account_form'/>
+        <record id="open_board_account" model="ir.actions.act_window">
+            <field name="name">Accounting Dashboard</field>
+            <field name="res_model">board.board</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="usage">menu</field>
+            <field name="view_id" ref="board_account_form"/>
         </record>
         
-        <menuitem name='Dashboards/Accounting/' sequence='1' icon='terp-graph' action='open_board_account' id='menu_board_account'/>
+        <menuitem id="next_id_68" name="Accounting" parent="board.dashboard_menu"/><menuitem action="open_board_account" icon="terp-graph" id="menu_board_account" parent="next_id_68" sequence="1"/>
     </data>
 </terp>

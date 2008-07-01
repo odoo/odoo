@@ -1,17 +1,7 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
-        <report id="report_purchase_quotation"
-			name="purchase.quotation"
-			string="Request for Quotation"
-			model="purchase.order"
-			rml="purchase/report/request_quotation.rml"
-			auto="False"/>
-        <report id="report_purchase_order"
-			name="purchase.order"
-			string="Print Order"
-			model="purchase.order"
-			rml="purchase/report/order.rml"
-			auto="False"/>
+        <report auto="False" id="report_purchase_quotation" model="purchase.order" name="purchase.quotation" rml="purchase/report/request_quotation.rml" string="Request for Quotation"/>
+        <report auto="False" id="report_purchase_order" model="purchase.order" name="purchase.order" rml="purchase/report/order.rml" string="Print Order"/>
     </data>
 </terp>

@@ -1,40 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data noupdate="1">
         
         <!-- Contract Period Names -->
-        <record model="hr.contract.wage.type.period" id="hr_contract_wage_type_period_daily">
+        <record id="hr_contract_wage_type_period_daily" model="hr.contract.wage.type.period">
             <field name="name">daily</field>
         </record>
-        <record model="hr.contract.wage.type.period" id="hr_contract_wage_type_period_weekly">
+        <record id="hr_contract_wage_type_period_weekly" model="hr.contract.wage.type.period">
             <field name="name">weekly</field>
         </record>
-        <record model="hr.contract.wage.type.period" id="hr_contract_wage_type_period_monthly">
+        <record id="hr_contract_wage_type_period_monthly" model="hr.contract.wage.type.period">
             <field name="name">monthly</field>
         </record>
         
         <!-- Contract Wage Types -->
-        <record model="hr.contract.wage.type" id="hr_contract_monthly_gross">
+        <record id="hr_contract_monthly_gross" model="hr.contract.wage.type">
             <field name="name">Monthly Gross Wage</field>
             <field name="type">gross</field>
             <field name="period_id" ref="hr_contract_wage_type_period_monthly"/>
         </record>
-        <record model="hr.contract.wage.type" id="hr_contract_monthly_net">
+        <record id="hr_contract_monthly_net" model="hr.contract.wage.type">
             <field name="name">Monthly Net Wage</field>
             <field name="type">net</field>
             <field name="period_id" ref="hr_contract_wage_type_period_monthly"/>
         </record>
         
         <!-- Employee Marital Statusses -->
-        <record model="hr.employee.marital.status" id="hr_employee_marital_status_single">
+        <record id="hr_employee_marital_status_single" model="hr.employee.marital.status">
             <field name="name">Single</field>
         </record>
-        <record model="hr.employee.marital.status" id="hr_employee_marital_status_married">
+        <record id="hr_employee_marital_status_married" model="hr.employee.marital.status">
             <field name="name">Married</field>
         </record>
-        <record model="hr.employee.marital.status" id="hr_employee_marital_status_divorced">
+        <record id="hr_employee_marital_status_divorced" model="hr.employee.marital.status">
             <field name="name">Divorced</field>
         </record>
-        <record model="hr.employee.marital.status" id="hr_employee_marital_status_widower">
+        <record id="hr_employee_marital_status_widower" model="hr.employee.marital.status">
             <field name="name">Widower</field>
         </record>
     </data>

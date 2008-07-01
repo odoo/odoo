@@ -1,7 +1,4 @@
-<?xml version="1.0"?>
-
-
-
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     
     
@@ -22,7 +19,7 @@
         
         
         
-        <record model="account.tax.code" id="vat_code_balance_net">
+        <record id="vat_code_balance_net" model="account.tax.code">
             
             <field name="name">VAT balance to pay</field>
             
@@ -30,31 +27,31 @@
         
         
         
-        <record model="account.tax.code" id="vat_code_input">
+        <record id="vat_code_input" model="account.tax.code">
             
             <field name="name">Input VAT</field>
             
-            <field name="parent_id" ref="vat_code_balance_net" />
+            <field name="parent_id" ref="vat_code_balance_net"/>
             
         </record>
         
         
         
-        <record model="account.tax.code" id="vat_code_input_S">
+        <record id="vat_code_input_S" model="account.tax.code">
             
             <field name="name">Input VAT rate S (17.5%)</field>
             
-            <field name="parent_id" ref="vat_code_input" />
+            <field name="parent_id" ref="vat_code_input"/>
             
         </record>
         
         
         
-        <record model="account.tax.code" id="vat_code_input_R">
+        <record id="vat_code_input_R" model="account.tax.code">
             
             <field name="name">Input VAT rate R (5%)</field>
             
-            <field name="parent_id" ref="vat_code_input" />
+            <field name="parent_id" ref="vat_code_input"/>
             
         </record>
         
@@ -64,31 +61,31 @@
         
         
         
-        <record model="account.tax.code" id="vat_code_output">
+        <record id="vat_code_output" model="account.tax.code">
             
             <field name="name">Output VAT</field>
             
-            <field name="parent_id" ref="vat_code_balance_net" />
+            <field name="parent_id" ref="vat_code_balance_net"/>
             
         </record>
         
         
         
-        <record model="account.tax.code" id="vat_code_output_S">
+        <record id="vat_code_output_S" model="account.tax.code">
             
             <field name="name">Output VAT rate S (17.5%)</field>
             
-            <field name="parent_id" ref="vat_code_output" />
+            <field name="parent_id" ref="vat_code_output"/>
             
         </record>
         
         
         
-        <record model="account.tax.code" id="vat_code_output_R">
+        <record id="vat_code_output_R" model="account.tax.code">
             
             <field name="name">Output VAT rate R (5%)</field>
             
-            <field name="parent_id" ref="vat_code_output" />
+            <field name="parent_id" ref="vat_code_output"/>
             
         </record>
         
@@ -102,7 +99,7 @@
         
         
         
-        <record model="account.tax.code" id="vat_code_base_net">
+        <record id="vat_code_base_net" model="account.tax.code">
             
             <field name="name">Tax bases</field>
             
@@ -110,61 +107,61 @@
         
         
         
-        <record model="account.tax.code" id="vat_code_base_purchases">
+        <record id="vat_code_base_purchases" model="account.tax.code">
             
             <field name="name">Taxable purchases base</field>
             
-            <field name="parent_id" ref="vat_code_base_net" />
+            <field name="parent_id" ref="vat_code_base_net"/>
             
         </record>
         
         
         
-        <record model="account.tax.code" id="vat_code_purch_S">
+        <record id="vat_code_purch_S" model="account.tax.code">
             
             <field name="name">Taxable purchases rated S (17.5%)</field>
             
-            <field name="parent_id" ref="vat_code_base_purchases" />
+            <field name="parent_id" ref="vat_code_base_purchases"/>
             
         </record>
         
         
         
-        <record model="account.tax.code" id="vat_code_purch_R">
+        <record id="vat_code_purch_R" model="account.tax.code">
             
             <field name="name">Taxable purchases rated R (5%)</field>
             
-            <field name="parent_id" ref="vat_code_base_purchases" />
+            <field name="parent_id" ref="vat_code_base_purchases"/>
             
         </record>
         
         
         
-        <record model="account.tax.code" id="vat_code_purch_Z">
+        <record id="vat_code_purch_Z" model="account.tax.code">
             
             <field name="name">Taxable purchases rated Z (0%)</field>
             
-            <field name="parent_id" ref="vat_code_base_purchases" />
+            <field name="parent_id" ref="vat_code_base_purchases"/>
             
         </record>
         
         
         
-        <record model="account.tax.code" id="vat_code_purch_X">
+        <record id="vat_code_purch_X" model="account.tax.code">
             
             <field name="name">Taxable purchases type X (Exempt)</field>
             
-            <field name="parent_id" ref="vat_code_base_purchases" />
+            <field name="parent_id" ref="vat_code_base_purchases"/>
             
         </record>
         
         
         
-        <record model="account.tax.code" id="vat_code_purch_O">
+        <record id="vat_code_purch_O" model="account.tax.code">
             
             <field name="name">Taxable purchases type O (Out of scope)</field>
             
-            <field name="parent_id" ref="vat_code_base_purchases" />
+            <field name="parent_id" ref="vat_code_base_purchases"/>
             
         </record>
         
@@ -174,61 +171,61 @@
         
         
         
-        <record model="account.tax.code" id="vat_code_base_sales">
+        <record id="vat_code_base_sales" model="account.tax.code">
             
             <field name="name">Base of taxable sales</field>
             
-            <field name="parent_id" ref="vat_code_base_net" />
+            <field name="parent_id" ref="vat_code_base_net"/>
             
         </record>
         
         
         
-        <record model="account.tax.code" id="vat_code_sales_S">
+        <record id="vat_code_sales_S" model="account.tax.code">
             
             <field name="name">Taxable sales rated S (17.5%)</field>
             
-            <field name="parent_id" ref="vat_code_base_sales" />
+            <field name="parent_id" ref="vat_code_base_sales"/>
             
         </record>
         
         
         
-        <record model="account.tax.code" id="vat_code_sales_R">
+        <record id="vat_code_sales_R" model="account.tax.code">
             
             <field name="name">Taxable sales rated R (5%)</field>
             
-            <field name="parent_id" ref="vat_code_base_sales" />
+            <field name="parent_id" ref="vat_code_base_sales"/>
             
         </record>
         
         
         
-        <record model="account.tax.code" id="vat_code_sales_Z">
+        <record id="vat_code_sales_Z" model="account.tax.code">
             
             <field name="name">Taxable sales rated Z (0%)</field>
             
-            <field name="parent_id" ref="vat_code_base_sales" />
+            <field name="parent_id" ref="vat_code_base_sales"/>
             
         </record>
         
         
         
-        <record model="account.tax.code" id="vat_code_sales_X">
+        <record id="vat_code_sales_X" model="account.tax.code">
             
             <field name="name">Taxable sales type X (Exempt)</field>
             
-            <field name="parent_id" ref="vat_code_base_sales" />
+            <field name="parent_id" ref="vat_code_base_sales"/>
             
         </record>
         
         
         
-        <record model="account.tax.code" id="vat_code_sales_O">
+        <record id="vat_code_sales_O" model="account.tax.code">
             
             <field name="name">Taxable sales type O (Out of scope)</field>
             
-            <field name="parent_id" ref="vat_code_base_sales" />
+            <field name="parent_id" ref="vat_code_base_sales"/>
             
         </record>
         
@@ -244,11 +241,11 @@
         
         
         
-        <record model="account.tax" id="ivats">
+        <record id="ivats" model="account.tax">
             
             <field name="name">IVAT S</field>
             
-            <field name="amount" eval="0.175"/>
+            <field eval="0.175" name="amount"/>
             
             <field name="type">percent</field>
             
@@ -268,11 +265,11 @@
         
         
         
-        <record model="account.tax" id="ivatr">
+        <record id="ivatr" model="account.tax">
             
             <field name="name">IVAT R</field>
             
-            <field name="amount" eval="0.005"/>
+            <field eval="0.005" name="amount"/>
             
             <field name="type">percent</field>
             
@@ -292,11 +289,11 @@
         
         
         
-        <record model="account.tax" id="ivatz">
+        <record id="ivatz" model="account.tax">
             
             <field name="name">IVAT Z</field>
             
-            <field name="amount" eval="0.0"/>
+            <field eval="0.0" name="amount"/>
             
             <field name="type">percent</field>
             
@@ -308,11 +305,11 @@
         
         
         
-        <record model="account.tax" id="ivatx">
+        <record id="ivatx" model="account.tax">
             
             <field name="name">IVAT X</field>
             
-            <field name="amount" eval="0.0"/>
+            <field eval="0.0" name="amount"/>
             
             <field name="type">percent</field>
             
@@ -324,11 +321,11 @@
         
         
         
-        <record model="account.tax" id="ivato">
+        <record id="ivato" model="account.tax">
             
             <field name="name">IVAT O</field>
             
-            <field name="amount" eval="0.0"/>
+            <field eval="0.0" name="amount"/>
             
             <field name="type">percent</field>
             
@@ -344,11 +341,11 @@
         
         
         
-        <record model="account.tax" id="ovats">
+        <record id="ovats" model="account.tax">
             
             <field name="name">OVAT S</field>
             
-            <field name="amount" eval="0.175"/>
+            <field eval="0.175" name="amount"/>
             
             <field name="type">percent</field>
             
@@ -368,11 +365,11 @@
         
         
         
-        <record model="account.tax" id="ovatr">
+        <record id="ovatr" model="account.tax">
             
             <field name="name">OVAT R</field>
             
-            <field name="amount" eval="0.005"/>
+            <field eval="0.005" name="amount"/>
             
             <field name="type">percent</field>
             
@@ -392,11 +389,11 @@
         
         
         
-        <record model="account.tax" id="ovatz">
+        <record id="ovatz" model="account.tax">
             
             <field name="name">OVAT Z</field>
             
-            <field name="amount" eval="0.0"/>
+            <field eval="0.0" name="amount"/>
             
             <field name="type">percent</field>
             
@@ -408,11 +405,11 @@
         
         
         
-        <record model="account.tax" id="ovatx">
+        <record id="ovatx" model="account.tax">
             
             <field name="name">OVAT X</field>
             
-            <field name="amount" eval="0.0"/>
+            <field eval="0.0" name="amount"/>
             
             <field name="type">percent</field>
             
@@ -424,11 +421,11 @@
         
         
         
-        <record model="account.tax" id="ovato">
+        <record id="ovato" model="account.tax">
             
             <field name="name">OVAT O</field>
             
-            <field name="amount" eval="0.0"/>
+            <field eval="0.0" name="amount"/>
             
             <field name="type">percent</field>
             
@@ -445,4 +442,3 @@
     
     
 </terp>
-
