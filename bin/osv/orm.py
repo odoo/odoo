@@ -963,6 +963,7 @@ class orm_template(object):
 		ok = True
 		model = True
 		sql_res = False
+		base = False
 		while ok:
 			sql_res_usr = None
 			if view_id:
@@ -974,11 +975,15 @@ class orm_template(object):
 				if not sql_res_usr:
 					where = (model and (" and model='%s'" % (self._name,))) or ''
 					cr.execute('select arch,name,field_parent,id,type,inherit_id from ir_ui_view where id=%d'+where, (view_id,))
+				else:
+					base = True
 			else:
 				cr.execute('select arch,name,field_parent,ref_id,type,inherit_id from ir_ui_view_user where model=%s and type=%s and user_id=%d order by priority', (self._name, view_type, user))
 				sql_res_usr = cr.fetchone()
 				if not sql_res_usr:
 					cr.execute('select arch,name,field_parent,id,type,inherit_id from ir_ui_view where model=%s and type=%s order by priority', (self._name,view_type))
+				else:
+					base = True
 			
 			if sql_res_usr is None:
 				sql_res = cr.fetchone()
@@ -1010,8 +1015,9 @@ class orm_template(object):
 					result = _inherit_apply(result, inherit)
 					result = _inherit_apply_rec(result, id)
 				return result
-
-			result['arch'] = _inherit_apply_rec(result['arch'], sql_res[3])
+			
+			if not base:
+				result['arch'] = _inherit_apply_rec(result['arch'], sql_res[3])
 
 			result['name'] = sql_res[1]
 			result['field_parent'] = sql_res[2] or False
