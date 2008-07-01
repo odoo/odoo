@@ -28,16 +28,23 @@
 ##############################################################################
 
 from osv import fields,osv
-from xml import dom
+from lxml import etree
+import tools
+import netsvc
+import os
 
-def _check_xml(self, cr, uid, ids):
-	try:
-		cr.execute('select arch from ir_ui_view where id in ('+','.join(map(str,ids))+')')
-		for row in cr.fetchall():
-			doc = dom.minidom.parseString(row[0])
-		return True
-	except Exception, e:
-		return False
+def _check_xml(self, cr, uid, ids, context={}):
+	for view in self.browse(cr, uid, ids, context):
+		eview = etree.fromstring(view.arch)
+		frng = tools.file_open(os.path.join('base','rng',view.type+'.rng'))
+		relaxng = etree.RelaxNG(file=frng)
+		if not relaxng.validate(eview):
+			logger = netsvc.Logger()
+			logger.notifyChannel('init', netsvc.LOG_ERROR, 'The view do not fit the required schema !')
+			logger.notifyChannel('init', netsvc.LOG_ERROR, relaxng.error_log.last_error)
+			print view.arch
+			return False
+	return True
 
 class view(osv.osv):
 	_name = 'ir.ui.view'
