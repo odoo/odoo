@@ -60,7 +60,7 @@
 <paraStyle name="P3" fontName="Helvetica" alignment="LEFT"/>
 <paraStyle name="P4" fontName="Helvetica" alignment="LEFT"/>
 <paraStyle name="P5" fontName="Times-Bold" fontSize="9.0" leading="11"/>
-<paraStyle name="P6" fontName="Times-Bold" fontSize="9.0" leading="11"/>
+<paraStyle name="P6" fontName="Times-Bold" fontSize="10.0" leading="11"/>
 <paraStyle name="P7" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT"/>
 <paraStyle name="P8" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER"/>
 <paraStyle name="P9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT"/>
@@ -74,22 +74,24 @@
 <paraStyle name="P17" fontName="Helvetica" fontSize="4.0" leading="5"/>
 <paraStyle name="P18" fontName="Helvetica" fontSize="11.0" leading="14"/>
 <paraStyle name="P19" fontName="Helvetica" fontSize="11.0" leading="14"/>
-<paraStyle name="P20" fontName="Helvetica" fontSize="16.0" leading="20"/>
+<paraStyle name="P20" fontName="Helvetica" fontSize="16.0" leading="20" alignment="LEFT"/>
 <paraStyle name="P21" fontName="Times-BoldItalic" fontSize="6.0" leading="8" alignment="LEFT"/>
 <paraStyle name="P22" fontName="Helvetica" fontSize="7.0" leading="9"/>
 <paraStyle name="P23" fontName="Helvetica" fontSize="11.0" leading="14"/>
 <paraStyle name="P24" fontName="Helvetica" fontSize="7.0" leading="9"/>
 <paraStyle name="P25" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT"/>
-<paraStyle name="P25b" fontName="Times-Bold" fontSize="9.0" leading="11" alignment="RIGHT"/>
+<paraStyle name="P25b" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT"/>
 <paraStyle name="P26" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT"/>
 <paraStyle name="P27" fontName="Times-Bold" fontSize="11.0" leading="14"/>
-<paraStyle name="P27b" fontName="Helvetica" fontSize="11.0" leading="14"/>
+<paraStyle name="P27b" fontName="Helvetica-Bold" fontSize="9.0" leading="14" alignment="CENTER"/>
 <paraStyle name="P28" fontName="Times-BoldItalic" fontSize="11.0" leading="14" alignment="CENTER"/>
 <paraStyle name="P29" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT"/>
 <paraStyle name="P30" fontName="Helvetica" fontSize="9.0" leading="14"/>
 <paraStyle name="P31" fontName="Helvetica" fontSize="9.0" leading="14"/>
 <paraStyle name="P32" fontName= "Helvetica" fontSize="9.0" leading="13" alignment="RIGHT"/>
-<paraStyle name="P32a" fontName= "Helvetica" fontSize="9.0" leading="13"/>
+<paraStyle name="P32d" fontName= "Helvetica" fontSize="9.0" leading="13" alignment="CENTER"/>
+<paraStyle name="P32a" fontName= "Helvetica" fontSize="9.0" leading="13" alignment="LEFT"/>
+<paraStyle name="P32c" fontName= "Helvetica" fontSize="9.0" leading="13" alignment="CENTER"/>
 
 <paraStyle name="Standard" fontName="Helvetica"/>
 <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -104,7 +106,7 @@
 <story>
 <para style="P1">[[ repeatIn(objects,'o') ]] <font face="Helvetica">[[ setLang(o.partner_id.lang) ]]</font>
 </para>
-<blockTable colWidths="257.0,50.0,220.0" style="Tableau1">
+<blockTable colWidths="275.0,50.0,220.0" style="Tableau1">
 <tr>
 <td>
 <para style="P5">Shipping address :</para>
@@ -112,10 +114,8 @@
 <para style="P14">[[ o.partner_shipping_id.title or '' ]] [[ o.partner_shipping_id.name ]]</para>
 <para style="P14">[[ o.partner_shipping_id.street ]]</para>
 <para style="P14">[[ o.partner_shipping_id.street2 or '' ]]</para>
-<para style="P15">
-<font face="Helvetica">[[ o.partner_shipping_id.zip or '' ]]</font> [[ o.partner_shipping_id.city or '' ]]</para>
-<para style="P15">[[ o.partner_shipping_id.state_id and o.partner_shipping_id.state_id.name or '' ]]</para>
-<para style="P15">[[ o.partner_shipping_id.country_id and o.partner_shipping_id.country_id.name or '' ]]</para>
+<para style="P15">[[ o.partner_shipping_id.zip or '' ]] [[ o.partner_shipping_id.city or '' ]] [[ o.partner_shipping_id.country_id and (', %s' % (o.partner_shipping_id.country_id and o.partner_shipping_id.country_id.name or '')) ]]</para>
+
 <para style="P16">
 <font color="white"> </font>
 </para>
@@ -153,7 +153,7 @@
 <para style="P20">
 <font color="white"> </font>
 </para>
-<blockTable colWidths="132.0,132.0,132.0,132.0" style="Tableau7">
+<blockTable colWidths="135.0,135.0,135.0,133.0" style="Tableau7">
 <tr>
 <td>
 <para style="P27b">Your Reference </para>
@@ -170,16 +170,16 @@
 </tr>
 <tr>
 <td>
-<para style="P32a">[[ o.client_order_ref ]]</para>
+<para style="P32c">[[ o.client_order_ref ]]</para>
 </td>
 <td>
-<para style="P32a">[[ o.date_order ]]</para>
+<para style="P32c">[[ o.date_order ]]</para>
 </td>
 <td>
-<para style="P32a">[[ o.user_id.name ]]</para>
+<para style="P32c">[[ o.user_id.name ]]</para>
 </td>
 <td>
-<para style="P32a">[[ o.partner_id.property_payment_term and o.partner_id.property_payment_term.note or False ]] </para>
+<para style="P32c">[[ o.partner_id.property_payment_term and o.partner_id.property_payment_term.note or False ]] </para>
 </td>
 </tr>
 </blockTable>
@@ -187,7 +187,7 @@
 <font color="white"> </font>
 </para>
 
-<blockTable colWidths="246.0,46.0,56.0,69.0,56.0,54.0" repeatRows="1" style="Tableau2">
+<blockTable colWidths="238.0,54.0,53.0,69.0,65.0,60.0" repeatRows="1" style="Tableau2">
 <tr>
 <td>
 <para style="P27">Description</para>
@@ -224,7 +224,7 @@
 	<para style="P32">[[ line.price_unit ]]</para>
 	</td>
 	<td>
-	<para style="P32">[[ (line.discount and str(line.discount)+'%')or '' ]]</para>
+	<para style="P32d">[[ (line.discount and str(line.discount)+'%')or '' ]]</para>
 	</td>
 	<td>
 	<para style="P32">[[ line.price_subtotal ]]</para>
@@ -235,7 +235,7 @@
 
 <condPageBreak height="2.5cm"/>
 
-<blockTable colWidths="362.0,69.0,95.0" style="Tableau6">
+<blockTable colWidths="362.0,69.0,125.0" style="Tableau6">
 <tr>
 <td>
 <para style="P24">
