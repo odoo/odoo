@@ -1,11 +1,7 @@
 <?xml version="1.0"?>
 <terp>
     <data>
-        
-        
-        # --------------------------------------------------------------
-        # Default bank account description
-        # --------------------------------------------------------------
+        <!-- Default bank account description -->
         <record model="res.partner.bank.type" id="bank_normal">
             <field name="name">Bank account</field>
             <field name="code">bank</field>
@@ -20,9 +16,5 @@
             <field name="readonly" eval="True"/>
             <field name="bank_type_id" ref="bank_normal"/>
         </record>
-        
-        
-        
-        
     </data>
 </terp>

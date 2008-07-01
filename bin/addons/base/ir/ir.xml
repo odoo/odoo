@@ -50,9 +50,7 @@
         
         <menuitem name='Administration/Custom/Low Level/Base/Values' action='act_values_form' id='menu_values_form'/>
         
-        ==========================================================
-        Sequences
-        ==========================================================
+        <!-- Sequences -->
         
         <record id='sequence_view' model='ir.ui.view'>
             <field name='name'>ir.sequence.form</field>
@@ -99,9 +97,7 @@
         </record>
         <menuitem name='Administration/Custom/Sequences/' action='ir_sequence_form' id='menu_ir_sequence_form'/>
         
-        ==========================================================
-        Sequences Types
-        ==========================================================
+        <!-- Sequences Types -->
         
         <record id='sequence_type_form_view' model='ir.ui.view'>
             <field name='name'>ir.sequence.type.form</field>
@@ -125,9 +121,7 @@
         </record>
         <menuitem name='Administration/Custom/Sequences/' action='ir_sequence_type' id='menu_ir_sequence_type'/>
         
-        ==========================================================
-        Actions
-        ==========================================================
+        <!-- Actions -->
         
         <record id='action_view' model='ir.ui.view'>
             <field name='name'>ir.actions.actions</field>
@@ -330,10 +324,7 @@
         
         <menuitem name='Administration/Custom/Low Level/Base/Actions/' action='ir_action_wizard' id='menu_ir_action_wizard'/>
         
-        ==========================================================
-        Companies
-        ==========================================================
-        
+        <!-- Companies -->
         <record id='action_res_company_tree' model='ir.actions.act_window'>
             <field name='name'>Company's Structure</field>
             <field name='type'>ir.actions.act_window</field>
@@ -351,10 +342,7 @@
         </record>
         <menuitem name='Administration/Users/Company&apos;s Structure/Companies' action='action_res_company_form' id='menu_action_res_company_form'/>
         
-        ==========================================================
-        User Roles
-        ==========================================================
-        
+        <!-- User Roles -->
         <record id='action_res_users' model='ir.actions.act_window'>
             <field name='name'>Users</field>
             <field name='type'>ir.actions.act_window</field>
@@ -468,9 +456,7 @@
         </record>
         <menuitem name='Administration/Users/Roles Structure/Define Roles' action='action_res_roles_form' id='menu_action_res_roles_form'/>
         
-        ==========================================================
-        View
-        ==========================================================
+        <!-- View -->
         <record id='view_view_form' model='ir.ui.view'>
             <field name='name'>ir.ui.view</field>
             <field name='model'>ir.ui.view</field>
@@ -507,9 +493,7 @@
         </record>
         <menuitem name='Administration/Custom/Interface/View' action='action_ui_view' id='menu_action_ui_view'/>
         
-        ==========================================================
-        Attachment
-        ==========================================================
+        <!-- Attachment -->
         <record id='view_attachment_form' model='ir.ui.view'>
             <field name='name'>ir.attachment.view</field>
             <field name='model'>ir.attachment</field>
@@ -549,9 +533,7 @@
         </record>
         <menuitem name='Administration/Custom/Low Level/Base/Attachments' action='action_attachment' id='menu_action_attachment'/>
         
-        ==========================================================
-        Report
-        ==========================================================
+        <!-- Report -->       
         <record id='view_report_custom_fields_tree' model='ir.ui.view'>
             <field name='name'>ir.report.custom.fields.tree</field>
             <field name='model'>ir.report.custom.fields</field>
@@ -650,9 +632,7 @@
 	<menuitem name="Administration/Report/Report Custom" action="action_report_custom"/>
 	-->
         
-        ==========================================================
-        model
-        ==========================================================
+        <!-- model -->
         <record id='view_model_form' model='ir.ui.view'>
             <field name='name'>ir.model.form</field>
             <field name='model'>ir.model</field>
@@ -720,9 +700,7 @@
         </record>
         
         
-        ==========================================================
-        fields_description
-        ==========================================================
+        <!-- fields_description -->
         <record id='view_model_fields_form' model='ir.ui.view'>
             <field name='name'>ir.model.fields.form</field>
             <field name='model'>ir.model.fields</field>
@@ -780,9 +758,7 @@
         </record>
         <menuitem name='Administration/Custom/Low Level/Base/Database Structure/Fields' action='action_model_fields' id='ir_model_model_fields'/>
         
-        ==========================================================
-        Translations
-        ==========================================================
+        <!-- Translations -->
         
         <record id='view_translation_form' model='ir.ui.view'>
             <field name='name'>Translations</field>
@@ -981,9 +957,8 @@
             <field name='view_id' ref='ir_access_view_tree'/>
         </record>
         <menuitem name='Administration/Security/Access Controls' action='ir_access_act' id='menu_ir_access_act'/>
-        ==========================================================
-        Rules
-        ==========================================================
+
+        <!-- Rules -->
         
         <record id='view_rule_group_form' model='ir.ui.view'>
             <field name='name'>Record rules</field>
