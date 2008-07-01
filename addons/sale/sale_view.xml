@@ -217,7 +217,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','in',('shipping_except','invoice_except')]</field>
         </record>
-        <menuitem id="next_id_78" name="All Sales Order" parent="sale.menu_sale_order"/><menuitem action="action_order_tree2" id="menu_action_order_tree2" parent="next_id_78"/>
+        <menuitem action="action_order_tree2" id="menu_action_order_tree2" parent="menu_action_order_tree_all"/>
         
         <record id="action_order_tree3" model="ir.actions.act_window">
             <field name="name">Sales Order To Be Invoiced</field>
@@ -227,7 +227,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','manual')]</field>
         </record>
-        <menuitem action="action_order_tree3" id="menu_action_order_tree3" parent="sale.next_id_78"/>
+        <menuitem action="action_order_tree3" id="menu_action_order_tree3" parent="sale.menu_action_order_tree_all"/>
         
         <record id="action_order_tree4" model="ir.actions.act_window">
             <field name="name">Sales Order in Progress</field>
@@ -237,7 +237,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','in',('progress','waiting_date','manual'))]</field>
         </record>
-        <menuitem action="action_order_tree4" id="menu_action_order_tree4" parent="sale.next_id_78" sequence="2"/>
+        <menuitem action="action_order_tree4" id="menu_action_order_tree4" parent="sale.menu_action_order_tree_all" sequence="2"/>
         
         
         <record id="action_order_tree5" model="ir.actions.act_window">
@@ -248,7 +248,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','draft')]</field>
         </record>
-        <menuitem action="action_order_tree5" id="menu_action_order_tree5" parent="sale.next_id_78" sequence="1"/>
+        <menuitem action="action_order_tree5" id="menu_action_order_tree5" parent="sale.menu_action_order_tree_all" sequence="1"/>
         
         <record id="action_order_tree7" model="ir.actions.act_window">
             <field name="name">My sales in shipping exception</field>
@@ -258,7 +258,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','in',('shipping_except','invoice_except')),('user_id','=',uid)]</field>
         </record>
-        <menuitem id="next_id_79" name="My Sales Order" parent="sale.menu_sale_order"/><menuitem action="action_order_tree7" id="menu_action_order_tree7" parent="next_id_79"/>
+        <menuitem action="action_order_tree7" id="menu_action_order_tree7" parent="menu_action_order_tree"/>
         
         <record id="action_order_tree8" model="ir.actions.act_window">
             <field name="name">My sales order waiting Invoice</field>
@@ -268,7 +268,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','manual'),('user_id','=',uid)]</field>
         </record>
-        <menuitem action="action_order_tree8" id="menu_action_order_tree8" parent="sale.next_id_79"/>
+        <menuitem action="action_order_tree8" id="menu_action_order_tree8" parent="sale.menu_action_order_tree"/>
         
         <record id="action_order_tree9" model="ir.actions.act_window">
             <field name="name">My sales order in progress</field>
@@ -278,7 +278,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','in',('progress','waiting_date','manual')),('user_id','=',uid)]</field>
         </record>
-        <menuitem action="action_order_tree9" id="menu_action_order_tree9" parent="sale.next_id_79" sequence="2"/>
+        <menuitem action="action_order_tree9" id="menu_action_order_tree9" parent="sale.menu_action_order_tree" sequence="2"/>
         
         
         <record id="action_order_tree10" model="ir.actions.act_window">
@@ -289,7 +289,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','draft'),('user_id','=',uid)]</field>
         </record>
-        <menuitem action="action_order_tree10" id="menu_action_order_tree10" parent="sale.next_id_79" sequence="1"/>
+        <menuitem action="action_order_tree10" id="menu_action_order_tree10" parent="sale.menu_action_order_tree" sequence="1"/>
         
         
         <record id="view_order_line_graph" model="ir.ui.view">
