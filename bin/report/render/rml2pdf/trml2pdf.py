@@ -771,8 +771,12 @@ class _rml_template(object):
 		r = _rml_flowable(self.doc,images=self.images, path=self.path)
 		for node_story in node_stories:
 			fis += r.render(node_story)
-			fis.append(PageCount())
+			if node_story==node_stories[-1]:
+
+				fis.append(PageCount())
+
 			fis.append(platypus.PageBreak())
+			
 		self.doc_tmpl.build(fis)
 
 def parseString(data, fout=None, images={}, path='.'):
