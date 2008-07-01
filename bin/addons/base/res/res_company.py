@@ -156,7 +156,7 @@ class res_company(osv.osv):
 
 			<drawCentredString x="10.5cm" y="1.7cm">[[ company.rml_footer1 ]]</drawCentredString>
 			<drawCentredString x="10.5cm" y="1.25cm">[[ company.rml_footer2 ]]</drawCentredString>
-			<drawCentredString x="10.5cm" y="0.8cm">Contact : [[ user.name ]]</drawCentredString>
+			<drawCentredString x="10.5cm" y="0.8cm">Contact : [[ user.name ]] - Page: <pageNumber/></drawCentredString>
 		</pageGraphics>
 	</pageTemplate>
 </header>"""
