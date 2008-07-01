@@ -475,6 +475,12 @@ form: module.record_id""" % (xml_id,)
 					values['icon'] = 'STOCK_EXECUTE'
 				if not values.get('name', False):
 					values['name'] = action_name
+			elif a_type=='act_wizard':
+				a_id = self.id_get(cr, 'ir.actions.%s'% a_type, a_action)
+				cr.execute('select name from ir_act_wizard where id=%d', (int(a_id),))
+				resw = cr.fetchone()
+				if (not values.get('name', False)) and resw:
+					values['name'] = resw[0]
 		if rec.hasAttribute('sequence'):
 			values['sequence'] = int(rec.getAttribute('sequence'))
 		if rec.hasAttribute('icon'):
