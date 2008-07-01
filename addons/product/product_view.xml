@@ -116,7 +116,7 @@
             <field name="view_id" ref="product_product_tree_view"/>
         </record>
         
-        <menuitem action="product_normal_action" id="menu_products" parent="product.menu_main_product"/>
+        <menuitem action="product_normal_action" id="menu_products" parent="product.menu_main_product" sequence="18"/>
         
         <record id="product_category_form_view" model="ir.ui.view">
             <field name="name">product.category.form</field>
@@ -152,7 +152,7 @@
             <field name="view_type">tree</field>
             <field name="view_id" ref="product_category_tree_view"/>
         </record>
-        <menuitem action="product_category_action" id="menu_product_category_action" parent="product.menu_main_product"/>
+        <menuitem action="product_category_action" id="menu_product_category_action" parent="product.menu_main_product" sequence="16"/>
         
         <record id="product_category_action_form" model="ir.actions.act_window">
             <field name="name">Products Categories</field>

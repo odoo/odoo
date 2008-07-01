@@ -141,7 +141,7 @@
         
         <!-- 
 		============
-		Timesheets 
+		Working Time
 		============
 		-->
         <record id="create_group" model="ir.ui.view">
@@ -149,18 +149,16 @@
             <field name="model">hr.timesheet.group</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Timesheet category">
+                <form string="Working Time Category">
                     <field name="name" select="1"/>
                     <field name="manager" select="1"/>
-                    <newline/>
-                    <separator colspan="4" string="Timesheets"/>
                     <newline/>
                     <field colspan="4" name="timesheet_id" nolabel="1" widget="one2many_list"/>
                 </form>
             </field>
         </record>
         <record id="edit_workgroup" model="ir.actions.act_window">
-            <field name="name">Timesheet Categories</field>
+            <field name="name">Working Time Categories</field>
             <field name="res_model">hr.timesheet.group</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="create_group"/>
@@ -172,7 +170,7 @@
             <field name="model">hr.timesheet</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Timesheet">
+                <tree string="Working Time">
                     <field name="name"/>
                     <field name="dayofweek"/>
                     <field name="hour_from"/>
@@ -185,7 +183,7 @@
             <field name="model">hr.timesheet</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Timesheet">
+                <form string="Working Time">
                     <field colspan="4" name="name" select="1"/>
                     <field name="date_from"/>
                     <field name="dayofweek" select="1"/>
@@ -260,7 +258,7 @@
             <field name="name">Categories of Employee</field>
             <field name="res_model">hr.employee.category</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
+            <field name="view_mode">tree,form</field>
         </record>
         <menuitem action="open_view_categ_form" groups="base.group_admin" id="menu_view_employee_category_form" parent="hr.menu_hr_configuration"/>
         
@@ -342,7 +340,7 @@
             </field>
         </record>
         <record id="open_ask_holidays" model="ir.actions.act_window">
-            <field name="name">Vacation Request</field>
+            <field name="name">Vacation Requests</field>
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_holiday"/>

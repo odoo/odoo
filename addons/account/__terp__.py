@@ -68,9 +68,9 @@
 		"project/project_security.xml",	
 		"account_assert_test.xml",
 	],
-#	"translations" : {
-#		"fr": "i18n/french_fr.csv"
-#	},
+	"translations" : {
+		"fr": "i18n/french_fr.csv"
+	},
 	"active": False,
 	"installable": True
 }

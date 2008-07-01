@@ -34,10 +34,10 @@ from osv import fields, osv
 
 class hr_timesheet_group(osv.osv):
 	_name = "hr.timesheet.group"
-	_description = "Timesheet"
+	_description = "Working Time"
 	_columns = {
 		'name' : fields.char("Group name", size=64, required=True),
-		'timesheet_id' : fields.one2many('hr.timesheet', 'tgroup_id', 'Timesheet'),
+		'timesheet_id' : fields.one2many('hr.timesheet', 'tgroup_id', 'Working Time'),
 		'manager' : fields.many2one('res.users', 'Workgroup manager'),
 	}
 	#
