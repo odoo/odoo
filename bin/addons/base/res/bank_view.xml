@@ -1,55 +1,55 @@
-<?xml version='1.0'?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
-        <record id='view_res_bank_form' model='ir.ui.view'>
-            <field name='name'>res.bank.form</field>
-            <field name='model'>res.bank</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Bank'>
-                    <field name='name' colspan='4' select='1'/>
-                    <field name='code' select='1'/>
-                    <field name='active' select='2'/>
-                    <field name='bic' select='1'/>
+        <record id="view_res_bank_form" model="ir.ui.view">
+            <field name="name">res.bank.form</field>
+            <field name="model">res.bank</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Bank">
+                    <field colspan="4" name="name" select="1"/>
+                    <field name="code" select="1"/>
+                    <field name="active" select="2"/>
+                    <field name="bic" select="1"/>
                     <newline/>
-                    <field name='street' select='2'/>
-                    <field name='street2' select='2'/>
+                    <field name="street" select="2"/>
+                    <field name="street2" select="2"/>
                     <newline/>
-                    <field name='zip'/>
-                    <field name='city'/>
+                    <field name="zip"/>
+                    <field name="city"/>
                     <newline/>
-                    <field name='country' select='2'/>
-                    <field name='state' select='2'/>
+                    <field name="country" select="2"/>
+                    <field name="state" select="2"/>
                     <newline/>
-                    <field name='phone'/>
-                    <field name='fax'/>
+                    <field name="phone"/>
+                    <field name="fax"/>
                     <newline/>
-                    <field name='email'/>
+                    <field name="email"/>
                 </form>
             </field>
         </record>
         
-        <record id='view_res_bank_tree' model='ir.ui.view'>
-            <field name='name'>res.bank.tree</field>
-            <field name='model'>res.bank</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree string='Banks'>
-                    <field name='name'/>
-                    <field name='code'/>
-                    <field name='country'/>
+        <record id="view_res_bank_tree" model="ir.ui.view">
+            <field name="name">res.bank.tree</field>
+            <field name="model">res.bank</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Banks">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="country"/>
                 </tree>
             </field>
         </record>
         
-        <record id='action_res_bank_form' model='ir.actions.act_window'>
-            <field name='name'>Banks</field>
-            <field name='res_model'>res.bank</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>tree,form</field>
+        <record id="action_res_bank_form" model="ir.actions.act_window">
+            <field name="name">Banks</field>
+            <field name="res_model">res.bank</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
         </record>
         
-        <menuitem sequence='12' groups='group_extended' action='action_res_bank_form' id='menu_action_res_bank_form' parent='menu_base_config'/>
+        <menuitem action="action_res_bank_form" groups="group_extended" id="menu_action_res_bank_form" parent="menu_base_config" sequence="12"/>
         
     </data>
 </terp>

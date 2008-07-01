@@ -1,39 +1,38 @@
-<?xml version='1.0'?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
-        <record id='wizard_base_module_import' model='ir.actions.wizard'>
-            <field name='name'>Import module</field>
-            <field name='wiz_name'>base.module.import</field>
+        <record id="wizard_base_module_import" model="ir.actions.wizard">
+            <field name="name">Import module</field>
+            <field name="wiz_name">base.module.import</field>
         </record>
-        <menuitem name='Administration/Modules Management/Import New Module' action='wizard_base_module_import' type='wizard' id='menu_wizard_module_import'/>
+        <menuitem action="wizard_base_module_import" id="menu_wizard_module_import" parent="base.menu_management" type="wizard"/>
         
-        <record id='wizard_update' model='ir.actions.wizard'>
-            <field name='name'>Download module list</field>
-            <field name='wiz_name'>module.module.update</field>
+        <record id="wizard_update" model="ir.actions.wizard">
+            <field name="name">Download module list</field>
+            <field name="wiz_name">module.module.update</field>
         </record>
-        <menuitem name='Administration/Modules Management/Update Modules List' groups='group_admin' icon='STOCK_CONVERT' action='wizard_update' type='wizard' id='menu_module_update'/>
+        <menuitem action="wizard_update" groups="group_admin" icon="STOCK_CONVERT" id="menu_module_update" parent="base.menu_management" type="wizard"/>
         
-        <wizard name='module.upgrade' id='wizard_upgrade' model='ir.module.module' string='Apply upgrades'/>
-        <menuitem name='Administration/Modules Management/Apply Upgrades' action='wizard_upgrade' type='wizard' id='menu_wizard_upgrade'/>
+        <wizard id="wizard_upgrade" model="ir.module.module" name="module.upgrade" string="Apply upgrades"/>
+        <menuitem action="wizard_upgrade" id="menu_wizard_upgrade" parent="base.menu_management" type="wizard"/>
         
-        <record id='wizard_lang_install' model='ir.actions.wizard'>
-            <field name='name'>Install new language file</field>
-            <field name='wiz_name'>module.lang.install</field>
+        <record id="wizard_lang_install" model="ir.actions.wizard">
+            <field name="name">Install new language file</field>
+            <field name="wiz_name">module.lang.install</field>
         </record>
-        <menuitem name='Administration/Translations/Load New Language' action='wizard_lang_install' type='wizard' id='menu_wizard_lang_install'/>
+        <menuitem action="wizard_lang_install" id="menu_wizard_lang_install" parent="base.menu_translation" type="wizard"/>
         
-        <record id='wizard_lang_export' model='ir.actions.wizard'>
-            <field name='name'>Export language</field>
-            <field name='wiz_name'>module.lang.export</field>
+        <record id="wizard_lang_export" model="ir.actions.wizard">
+            <field name="name">Export language</field>
+            <field name="wiz_name">module.lang.export</field>
         </record>
-        <menuitem name='Administration/Translations/Export Language' action='wizard_lang_export' type='wizard' id='menu_wizard_lang_export'/>
+        <menuitem action="wizard_lang_export" id="menu_wizard_lang_export" parent="base.menu_translation" type="wizard"/>
         
-        <record id='wizard_lang_import' model='ir.actions.wizard'>
-            <field name='name'>Import language</field>
-            <field name='wiz_name'>module.lang.import</field>
+        <record id="wizard_lang_import" model="ir.actions.wizard">
+            <field name="name">Import language</field>
+            <field name="wiz_name">module.lang.import</field>
         </record>
-        <menuitem name='Administration/Translations/Import Language' action='wizard_lang_import' type='wizard' id='menu_wizard_lang_import'/>
+        <menuitem action="wizard_lang_import" id="menu_wizard_lang_import" parent="base.menu_translation" type="wizard"/>
         
     </data>
 </terp>
-

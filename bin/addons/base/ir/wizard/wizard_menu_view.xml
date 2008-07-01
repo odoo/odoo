@@ -1,8 +1,8 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
         
-        <record model="ir.ui.view" id="view_model_menu_create">
+        <record id="view_model_menu_create" model="ir.ui.view">
             <field name="name">Create Menu</field>
             <field name="model">wizard.ir.model.menu.create</field>
             <field name="type">form</field>
@@ -12,27 +12,22 @@
                     <field name="menu_id"/>
                     <field name="model_id"/>
                     <newline/>
-                    <field name="view_ids" colspan="4">
-                        <tree string="Views" editable="bottom">
+                    <field colspan="4" name="view_ids">
+                        <tree editable="bottom" string="Views">
                             <field name="sequence"/>
                             <field name="view_type"/>
                             <field name="view_id"/>
                         </tree>
                     </field>
-                    <label string="" colspan="2"/>
+                    <label colspan="2" string=""/>
                     <group col="2" colspan="2">
-                        <button string="Cancel" special="cancel"/>
-                        <button string="Create Menu" name="menu_create" type="object"/>
+                        <button special="cancel" string="Cancel"/>
+                        <button name="menu_create" string="Create Menu" type="object"/>
                     </group>
                 </form>
             </field>
         </record>
-        <act_window name="Create Menu"
-		context="{'model_id': active_id}"
-		res_model="wizard.ir.model.menu.create"
-		view_mode="form"
-		target="new"
-		id="act_menu_create"/>
+        <act_window context="{'model_id': active_id}" id="act_menu_create" name="Create Menu" res_model="wizard.ir.model.menu.create" target="new" view_mode="form"/>
         
     </data>
 </terp>

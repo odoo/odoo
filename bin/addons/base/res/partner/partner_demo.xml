@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data noupdate="1">
         
@@ -33,15 +33,15 @@
             <field name="shortcut">M.</field>
         </record>
         
-        <record model="res.partner.function" id="function_director">
+        <record id="function_director" model="res.partner.function">
             <field name="name">Director</field>
             <field name="code">CEO</field>
         </record>
-        <record model="res.partner.function" id="function_it">
+        <record id="function_it" model="res.partner.function">
             <field name="name">Chief Technical Officer</field>
             <field name="code">CTO</field>
         </record>
-        <record model="res.partner.function" id="function_sale">
+        <record id="function_sale" model="res.partner.function">
             <field name="name">Salesman</field>
         </record>
         
@@ -114,31 +114,31 @@
         <record id="res_partner_asus" model="res.partner">
             <field name="name">ASUStek</field>
             <field name="user_id" ref="user_demo"/>
-            <field name="category_id" eval="[(6, 0, [ref('res_partner_category_9')])]"/>
+            <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
         </record>
         <record id="res_partner_agrolait" model="res.partner">
             <field name="name">Agrolait</field>
-            <field name="category_id" eval="[(6, 0, [ref('res_partner_category_8')])]"/>
+            <field eval="[(6, 0, [ref('res_partner_category_8')])]" name="category_id"/>
         </record>
         <record id="res_partner_c2c" model="res.partner">
             <field name="name">Camptocamp</field>
-            <field name="category_id" eval="[(6, 0, [ref('res_partner_category_10'), ref('res_partner_category_5')])]"/>
+            <field eval="[(6, 0, [ref('res_partner_category_10'), ref('res_partner_category_5')])]" name="category_id"/>
         </record>
         <record id="res_partner_sednacom" model="res.partner">
             <field name="name">Sednacom</field>
-            <field name="category_id" eval="[(6, 0, [ref('res_partner_category_5')])]"/>
+            <field eval="[(6, 0, [ref('res_partner_category_5')])]" name="category_id"/>
         </record>
         <record id="res_partner_thymbra" model="res.partner">
             <field name="name">Thymbra</field>
-            <field name="category_id" eval="[(6, 0, [ref('res_partner_category_4')])]"/>
+            <field eval="[(6, 0, [ref('res_partner_category_4')])]" name="category_id"/>
         </record>
         <record id="res_partner_desertic_hispafuentes" model="res.partner">
             <field name="name">Desertic - Hispafuentes</field>
-            <field name="category_id" eval="[(6, 0, [ref('res_partner_category_4')])]"/>
+            <field eval="[(6, 0, [ref('res_partner_category_4')])]" name="category_id"/>
         </record>
         <record id="res_partner_tinyatwork" model="res.partner">
             <field name="name">Tiny AT Work</field>
-            <field name="category_id" eval="[(6, 0, [ref('res_partner_category_5'), ref('res_partner_category_10')])]"/>
+            <field eval="[(6, 0, [ref('res_partner_category_5'), ref('res_partner_category_10')])]" name="category_id"/>
         </record>
         <record id="res_partner_2" model="res.partner">
             <field name="name">Bank Wealthy and sons</field>
@@ -146,72 +146,72 @@
         <record id="res_partner_3" model="res.partner">
             <field name="lang">en_US</field>
             <field name="name">China Export</field>
-            <field name="category_id" eval="[(6, 0, [ref('res_partner_category_9')])]"/>
+            <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
         </record>
         <record id="res_partner_4" model="res.partner">
             <field name="name">Distrib PC</field>
-            <field name="category_id" eval="[(6, 0, [ref('res_partner_category_9')])]"/>
+            <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
         </record>
         <record id="res_partner_5" model="res.partner">
             <field name="name">Ecole de Commerce de Liege</field>
-            <field name="category_id" eval="[(6, 0, [ref('res_partner_category_1')])]"/>
+            <field eval="[(6, 0, [ref('res_partner_category_1')])]" name="category_id"/>
         </record>
         <record id="res_partner_6" model="res.partner">
             <field name="name">Elec Import</field>
             <field name="user_id" ref="user_demo"/>
-            <field name="category_id" eval="[(6, 0, [ref('res_partner_category_9')])]"/>
+            <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
         </record>
         <record id="res_partner_maxtor" model="res.partner">
             <field name="name">Maxtor</field>
-            <field name="credit_limit" eval="32000.00"/>
+            <field eval="32000.00" name="credit_limit"/>
             <field name="user_id" ref="user_demo"/>
-            <field name="category_id" eval="[(6, 0, [ref('res_partner_category_9')])]"/>
+            <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
         </record>
         <record id="res_partner_seagate" model="res.partner">
             <field name="name">Seagate</field>
-            <field name="credit_limit" eval="5000.00"/>
+            <field eval="5000.00" name="credit_limit"/>
             <field name="user_id" ref="user_demo"/>
-            <field name="category_id" eval="[(6, 0, [ref('res_partner_category_9')])]"/>
+            <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
         </record>
         <record id="res_partner_8" model="res.partner">
             <field name="website">http://mediapole.net</field>
             <field name="name">Mediapole SPRL</field>
             <field name="user_id" ref="user_demo"/>
-            <field name="category_id" eval="[(6, 0, [ref('res_partner_category_1')])]"/>
+            <field eval="[(6, 0, [ref('res_partner_category_1')])]" name="category_id"/>
         </record>
         <record id="res_partner_9" model="res.partner">
             <field name="website">http://opensides.be</field>
             <field name="name">Opensides sprl</field>
-            <field name="credit_limit" eval="12000.00"/>
+            <field eval="12000.00" name="credit_limit"/>
             <field name="ref">os</field>
             <field name="user_id" ref="user_demo"/>
-            <field name="category_id" eval="[(6, 0, [ref('res_partner_category_1')])]"/>
+            <field eval="[(6, 0, [ref('res_partner_category_1')])]" name="category_id"/>
         </record>
         <record id="res_partner_10" model="res.partner">
             <field name="name">Tecsas</field>
             <field name="ean13">3020170000003</field>
-            <field name="category_id" eval="[(6, 0, [ref('res_partner_category_9')])]"/>
+            <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
         </record>
         <record id="res_partner_11" model="res.partner">
             <field name="name">Leclerc</field>
-            <field name="credit_limit" eval="1200.00"/>
+            <field eval="1200.00" name="credit_limit"/>
             <field name="user_id" ref="user_admin"/>
-            <field name="category_id" eval="[(6, 0, [ref('res_partner_category_0')])]"/>
+            <field eval="[(6, 0, [ref('res_partner_category_0')])]" name="category_id"/>
         </record>
         <record id="res_partner_14" model="res.partner">
             <field name="name">Centrale d'achats BML</field>
             <field name="ean13">3020178572427</field>
-            <field name="credit_limit" eval="15000.00"/>
+            <field eval="15000.00" name="credit_limit"/>
             <field name="parent_id" ref="res_partner_10"/>
-            <field name="category_id" eval="[(6, 0, [ref('res_partner_category_11')])]"/>
+            <field eval="[(6, 0, [ref('res_partner_category_11')])]" name="category_id"/>
         </record>
         <record id="res_partner_15" model="res.partner">
             <field name="name">Magazin BML 1</field>
             <field name="ean13">3020178570171</field>
             <field name="parent_id" ref="res_partner_14"/>
-            <field name="credit_limit" eval="1500.00"/>
+            <field eval="1500.00" name="credit_limit"/>
             <field name="user_id" ref="user_admin"/>
-            <field name="category_id" eval="[(6, 0, [ref('res_partner_category_11')])]"/>
+            <field eval="[(6, 0, [ref('res_partner_category_11')])]" name="category_id"/>
         </record>
         
         <!--
@@ -222,7 +222,7 @@
             <field name="city">Bruxelles</field>
             <field name="name">Benoit Mortier</field>
             <field name="zip">1030</field>
-            <field name="country_id" model="res.country" search="[('name','=','Belgium')]"/>
+            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
             <field name="email">info@opensides.be</field>
             <field name="phone">(+32)2 211 34 83</field>
             <field name="street">Rue des Palais 44, bte 33</field>
@@ -233,7 +233,7 @@
             <field name="city">Avignon CEDEX 09</field>
             <field name="name">Laurent Jacot</field>
             <field name="zip">84911</field>
-            <field name="country_id" model="res.country" search="[('name','=','France')]"/>
+            <field model="res.country" name="country_id" search="[('name','=','France')]"/>
             <field name="email">contact@tecsas.fr</field>
             <field name="phone">(+33)4.32.74.10.57</field>
             <field name="street">85 rue du traite de Rome</field>
@@ -244,7 +244,7 @@
             <field name="city">Louvain-la-Neuve</field>
             <field name="name">Thomas Passot</field>
             <field name="zip">1348</field>
-            <field name="country_id" model="res.country" search="[('name','=','Belgium')]"/>
+            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
             <field name="email">info@mediapole.net</field>
             <field name="phone">(+32).10.45.17.73</field>
             <field name="street">Rue de l'Angelique, 1</field>
@@ -255,7 +255,7 @@
             <field name="name">Tang</field>
             <field name="zip">23410</field>
             <field name="title">M.</field>
-            <field name="country_id" model="res.country" search="[('name','=','Taiwan')]"/>
+            <field model="res.country" name="country_id" search="[('name','=','Taiwan')]"/>
             <field name="street">31 Hong Kong street</field>
             <field name="type">default</field>
             <field name="partner_id" ref="res_partner_asus"/>
@@ -265,7 +265,7 @@
             <field name="name">Wong</field>
             <field name="zip">23540</field>
             <field name="title">M.</field>
-            <field name="country_id" model="res.country" search="[('name','=','China')]"/>
+            <field model="res.country" name="country_id" search="[('name','=','China')]"/>
             <field name="street">56 Beijing street</field>
             <field name="type">default</field>
             <field name="partner_id" ref="res_partner_maxtor"/>
@@ -275,7 +275,7 @@
             <field name="name">Etienne Lacarte</field>
             <field name="zip">2365</field>
             <field name="title">M.</field>
-            <field name="country_id" model="res.country" search="[('name','=','Belgium')]"/>
+            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
             <field name="street">23 rue du Vieux Bruges</field>
             <field name="type">default</field>
             <field name="partner_id" ref="res_partner_6"/>
@@ -285,7 +285,7 @@
             <field name="name">Jean Guy Lavente</field>
             <field name="zip">2541</field>
             <field name="title">M.</field>
-            <field name="country_id" model="res.country" search="[('name','=','Belgium')]"/>
+            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
             <field name="street">42 rue de la Lesse</field>
             <field name="type">default</field>
             <field name="partner_id" ref="res_partner_4"/>
@@ -295,7 +295,7 @@
             <field name="name">Sylvie Lelitre</field>
             <field name="zip">5478</field>
             <field name="title">Ms.</field>
-            <field name="country_id" model="res.country" search="[('name','=','Belgium')]"/>
+            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
             <field name="street">69 rue de Chimay</field>
             <field name="type">default</field>
             <field name="partner_id" ref="res_partner_agrolait"/>
@@ -305,7 +305,7 @@
             <field name="name">Arthur Grosbonnet</field>
             <field name="zip">75016</field>
             <field name="title">M.</field>
-            <field name="country_id" model="res.country" search="[('name','=','France')]"/>
+            <field model="res.country" name="country_id" search="[('name','=','France')]"/>
             <field name="street">1 rue Rockfeller</field>
             <field name="type">default</field>
             <field name="partner_id" ref="res_partner_2"/>
@@ -315,7 +315,7 @@
             <field name="name">Karine Lesbrouffe</field>
             <field name="zip">6985</field>
             <field name="title">Mss</field>
-            <field name="country_id" model="res.country" search="[('name','=','Belgium')]"/>
+            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
             <field name="street">2 Impasse de la Soif</field>
             <field name="type">default</field>
             <field name="partner_id" ref="res_partner_5"/>
@@ -325,7 +325,7 @@
             <field name="name">Zen</field>
             <field name="zip">4785552</field>
             <field name="title">M.</field>
-            <field name="country_id" model="res.country" search="[('name','=','China')]"/>
+            <field model="res.country" name="country_id" search="[('name','=','China')]"/>
             <field name="street">52 Chop Suey street</field>
             <field name="type">default</field>
             <field name="partner_id" ref="res_partner_3"/>

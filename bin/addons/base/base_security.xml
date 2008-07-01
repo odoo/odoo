@@ -1,653 +1,653 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data noupdate="1">
-        <record model="ir.model.access" id="access_ui_menu">
+        <record id="access_ui_menu" model="ir.model.access">
             <field name="name">UI menu</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.ui.menu')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.ui.menu')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_ui_menu_admin">
+        <record id="access_ui_menu_admin" model="ir.model.access">
             <field name="name">UI menu</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.ui.menu')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.ui.menu')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_act_window">
+        <record id="access_act_window" model="ir.model.access">
             <field name="name">Act window</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.actions.act_window')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.actions.act_window')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_act_window_admin">
+        <record id="access_act_window_admin" model="ir.model.access">
             <field name="name">Act window</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.actions.act_window')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.actions.act_window')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_actions">
+        <record id="access_actions" model="ir.model.access">
             <field name="name">Actions</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.actions.actions')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.actions.actions')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_actions_admin">
+        <record id="access_actions_admin" model="ir.model.access">
             <field name="name">Actions</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.actions.actions')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.actions.actions')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_actions_report_custom">
+        <record id="access_actions_report_custom" model="ir.model.access">
             <field name="name">Actions Report Custom</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.actions.report.custom')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.actions.report.custom')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_actions_report_custom_admin">
+        <record id="access_actions_report_custom_admin" model="ir.model.access">
             <field name="name">Actions Report Custom</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.actions.report.custom')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.actions.report.custom')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_actions_report_xml">
+        <record id="access_actions_report_xml" model="ir.model.access">
             <field name="name">Actions Report XML</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.actions.report.xml')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.actions.report.xml')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_actions_report_xml_admin">
+        <record id="access_actions_report_xml_admin" model="ir.model.access">
             <field name="name">Actions Report XML</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.actions.report.xml')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.actions.report.xml')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_actions_act_window_view">
+        <record id="access_actions_act_window_view" model="ir.model.access">
             <field name="name">Actions Act Window view</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.actions.act_window.view')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.actions.act_window.view')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_actions_act_window_view_admin">
+        <record id="access_actions_act_window_view_admin" model="ir.model.access">
             <field name="name">Actions Act Window view</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.actions.act_window.view')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.actions.act_window.view')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_actions_wizard">
+        <record id="access_actions_wizard" model="ir.model.access">
             <field name="name">Actions Wizard</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.actions.wizard')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.actions.wizard')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_actions_wizard_admin">
+        <record id="access_actions_wizard_admin" model="ir.model.access">
             <field name="name">Actions Wizard</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.actions.wizard')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.actions.wizard')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_actions_url">
+        <record id="access_actions_url" model="ir.model.access">
             <field name="name">Actions URL</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.actions.url')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.actions.url')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_actions_url_admin">
+        <record id="access_actions_url_admin" model="ir.model.access">
             <field name="name">Actions URL</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.actions.url')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.actions.url')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_res_groups">
+        <record id="access_res_groups" model="ir.model.access">
             <field name="name">Groups</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'res.groups')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'res.groups')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_res_groups_admin">
+        <record id="access_res_groups_admin" model="ir.model.access">
             <field name="name">Groups</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'res.groups')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'res.groups')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_res_roles">
+        <record id="access_res_roles" model="ir.model.access">
             <field name="name">Roles</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'res.roles')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'res.roles')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_res_roles_admin">
+        <record id="access_res_roles_admin" model="ir.model.access">
             <field name="name">Roles</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'res.roles')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'res.roles')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_res_lang">
+        <record id="access_res_lang" model="ir.model.access">
             <field name="name">Lang</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'res.lang')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'res.lang')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_res_lang_admin">
+        <record id="access_res_lang_admin" model="ir.model.access">
             <field name="name">Lang</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'res.lang')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'res.lang')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_res_country">
+        <record id="access_res_country" model="ir.model.access">
             <field name="name">Country</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'res.country')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'res.country')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_res_country_admin">
+        <record id="access_res_country_admin" model="ir.model.access">
             <field name="name">Country</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'res.country')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'res.country')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_res_country_state">
+        <record id="access_res_country_state" model="ir.model.access">
             <field name="name">Country State</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'res.country.state')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'res.country.state')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_res_country_state_admin">
+        <record id="access_res_country_state_admin" model="ir.model.access">
             <field name="name">Country State</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'res.country.state')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'res.country.state')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_res_currency">
+        <record id="access_res_currency" model="ir.model.access">
             <field name="name">Currency</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'res.currency')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'res.currency')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_res_currency_admin">
+        <record id="access_res_currency_admin" model="ir.model.access">
             <field name="name">Currency</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'res.currency')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'res.currency')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_res_currency_rate">
+        <record id="access_res_currency_rate" model="ir.model.access">
             <field name="name">Currency Rate</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'res.currency.rate')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'res.currency.rate')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_res_currency_rate_admin">
+        <record id="access_res_currency_rate_admin" model="ir.model.access">
             <field name="name">Currency Rate</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'res.currency.rate')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'res.currency.rate')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_res_company">
+        <record id="access_res_company" model="ir.model.access">
             <field name="name">Company</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'res.company')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'res.company')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_res_company_admin">
+        <record id="access_res_company_admin" model="ir.model.access">
             <field name="name">Company</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'res.company')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'res.company')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_res_users">
+        <record id="access_res_users" model="ir.model.access">
             <field name="name">Users</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'res.users')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'res.users')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_res_users_admin">
+        <record id="access_res_users_admin" model="ir.model.access">
             <field name="name">Users</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'res.users')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'res.users')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_cron">
+        <record id="access_cron" model="ir.model.access">
             <field name="name">Cron</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.cron')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.cron')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_cron_admin">
+        <record id="access_cron_admin" model="ir.model.access">
             <field name="name">Cron</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.cron')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.cron')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_model">
+        <record id="access_model" model="ir.model.access">
             <field name="name">Model</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.model')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.model')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_model_admin">
+        <record id="access_model_admin" model="ir.model.access">
             <field name="name">Model</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.model')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.model')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_model_fields">
+        <record id="access_model_fields" model="ir.model.access">
             <field name="name">Model Fields</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.model.fields')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.model.fields')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_model_fields_admin">
+        <record id="access_model_fields_admin" model="ir.model.access">
             <field name="name">Model Fields</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.model.fields')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.model.fields')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_model_access">
+        <record id="access_model_access" model="ir.model.access">
             <field name="name">Model Access</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.model.access')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.model.access')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_model_access_admin">
+        <record id="access_model_access_admin" model="ir.model.access">
             <field name="name">Model Access</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.model.access')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.model.access')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_model_data">
+        <record id="access_model_data" model="ir.model.access">
             <field name="name">Model Data</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.model.data')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.model.data')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_model_data_admin">
+        <record id="access_model_data_admin" model="ir.model.access">
             <field name="name">Model Data</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.model.data')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.model.data')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_report_custom">
+        <record id="access_report_custom" model="ir.model.access">
             <field name="name">Report Custom</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.report.custom')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.report.custom')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_report_custom_admin">
+        <record id="access_report_custom_admin" model="ir.model.access">
             <field name="name">Report Custom</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.report.custom')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.report.custom')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_report_custom_fields">
+        <record id="access_report_custom_fields" model="ir.model.access">
             <field name="name">Report Custom Fields</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.report.custom.fields')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.report.custom.fields')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_report_custom_fields_admin">
+        <record id="access_report_custom_fields_admin" model="ir.model.access">
             <field name="name">Report Custom Fields</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.report.custom.fields')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.report.custom.fields')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_rule_group">
+        <record id="access_rule_group" model="ir.model.access">
             <field name="name">Rule group</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.rule.group')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.rule.group')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_rule_group_admin">
+        <record id="access_rule_group_admin" model="ir.model.access">
             <field name="name">Rule group</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.rule.group')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.rule.group')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_rule">
+        <record id="access_rule" model="ir.model.access">
             <field name="name">Rule</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.rule')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.rule')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_rule_admin">
+        <record id="access_rule_admin" model="ir.model.access">
             <field name="name">Rule</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.rule')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.rule')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_sequence_type">
+        <record id="access_sequence_type" model="ir.model.access">
             <field name="name">Sequence Type</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.sequence.type')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.sequence.type')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_sequence_type_admin">
+        <record id="access_sequence_type_admin" model="ir.model.access">
             <field name="name">Sequence Type</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.sequence.type')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.sequence.type')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_sequence">
+        <record id="access_sequence" model="ir.model.access">
             <field name="name">Sequence</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.sequence')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.sequence')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_sequence_admin">
+        <record id="access_sequence_admin" model="ir.model.access">
             <field name="name">Sequence</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.sequence')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.sequence')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_view">
+        <record id="access_view" model="ir.model.access">
             <field name="name">View</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.ui.view')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.ui.view')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_view_admin">
+        <record id="access_view_admin" model="ir.model.access">
             <field name="name">View</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.ui.view')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.ui.view')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_workflow">
+        <record id="access_workflow" model="ir.model.access">
             <field name="name">Workflow</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'workflow')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'workflow')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_workflow_admin">
+        <record id="access_workflow_admin" model="ir.model.access">
             <field name="name">Workflow</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'workflow')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'workflow')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_workflow_activity">
+        <record id="access_workflow_activity" model="ir.model.access">
             <field name="name">Workflow Activity</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'workflow.activity')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'workflow.activity')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_workflow_activity_admin">
+        <record id="access_workflow_activity_admin" model="ir.model.access">
             <field name="name">Workflow Activity</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'workflow.activity')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'workflow.activity')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_workflow_transition">
+        <record id="access_workflow_transition" model="ir.model.access">
             <field name="name">Workflow Transition</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'workflow.transition')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'workflow.transition')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_workflow_transition_admin">
+        <record id="access_workflow_transition_admin" model="ir.model.access">
             <field name="name">Workflow Transition</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'workflow.transition')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'workflow.transition')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_module_repository">
+        <record id="access_module_repository" model="ir.model.access">
             <field name="name">Module Repository</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.module.repository')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.module.repository')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_module_repository_admin">
+        <record id="access_module_repository_admin" model="ir.model.access">
             <field name="name">Module Repository</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.module.repository')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.module.repository')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_module_category">
+        <record id="access_module_category" model="ir.model.access">
             <field name="name">Module Category</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.module.category')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.module.category')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_module_category_admin">
+        <record id="access_module_category_admin" model="ir.model.access">
             <field name="name">Module Category</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.module.category')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.module.category')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_module_module">
+        <record id="access_module_module" model="ir.model.access">
             <field name="name">Module</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.module.module')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.module.module')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_module_module_admin">
+        <record id="access_module_module_admin" model="ir.model.access">
             <field name="name">Module</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.module.module')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.module.module')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
-        <record model="ir.model.access" id="access_module_dependency">
+        <record id="access_module_dependency" model="ir.model.access">
             <field name="name">Module Dependency</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.module.module.dependency')]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="False"/>
-            <field name="perm_create" eval="False"/>
-            <field name="perm_unlink" eval="False"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.module.module.dependency')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
         </record>
-        <record model="ir.model.access" id="access_module_dependency_admin">
+        <record id="access_module_dependency_admin" model="ir.model.access">
             <field name="name">Module Dependency</field>
-            <field name="model_id" model="ir.model" search="[('model', '=', 'ir.module.module.dependency')]"/>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.module.module.dependency')]"/>
             <field name="group_id" ref="group_admin"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="True" name="perm_unlink"/>
         </record>
         
     </data>

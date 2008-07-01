@@ -1,53 +1,53 @@
-<?xml version='1.0'?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
         <!-- Properties -->
-        <record id='ir_property_view' model='ir.ui.view'>
-            <field name='name'>ir.property.form</field>
-            <field name='model'>ir.property</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Properties'>
-                    <separator string='Property' colspan='4'/>
-                    <field name='name' select='1'/>
-                    <field name='company_id' select='1'/>
-                    <field name='fields_id' colspan='4' select='1'/>
-                    <field name='value' colspan='4'/>
-                    <field name='res_id' colspan='4'/>
+        <record id="ir_property_view" model="ir.ui.view">
+            <field name="name">ir.property.form</field>
+            <field name="model">ir.property</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Properties">
+                    <separator colspan="4" string="Property"/>
+                    <field name="name" select="1"/>
+                    <field name="company_id" select="1"/>
+                    <field colspan="4" name="fields_id" select="1"/>
+                    <field colspan="4" name="value"/>
+                    <field colspan="4" name="res_id"/>
                 </form>
             </field>
         </record>
-        <record id='ir_property_view_tree' model='ir.ui.view'>
-            <field name='name'>ir.property.tree</field>
-            <field name='model'>ir.property</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree string='Properties'>
-                    <field name='name'/>
-                    <field name='company_id'/>
-                    <field name='fields_id'/>
+        <record id="ir_property_view_tree" model="ir.ui.view">
+            <field name="name">ir.property.tree</field>
+            <field name="model">ir.property</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Properties">
+                    <field name="name"/>
+                    <field name="company_id"/>
+                    <field name="fields_id"/>
                 </tree>
             </field>
         </record>
         
-        <record id='ir_property_form' model='ir.actions.act_window'>
-            <field name='name'>Default properties</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>ir.property</field>
-            <field name='view_type'>form</field>
-            <field name='domain'>[('res_id','=',False)]</field>
-            <field name='view_id' ref='ir_property_view_tree'/>
+        <record id="ir_property_form" model="ir.actions.act_window">
+            <field name="name">Default properties</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.property</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('res_id','=',False)]</field>
+            <field name="view_id" ref="ir_property_view_tree"/>
         </record>
-        <menuitem name='Administration/Custom/Properties/Default Properties' action='ir_property_form' id='menu_ir_property_form'/>
+        <menuitem id="next_id_15" name="Properties" parent="base.menu_custom"/><menuitem action="ir_property_form" id="menu_ir_property_form" parent="next_id_15"/>
         
-        <record id='ir_property_form_all' model='ir.actions.act_window'>
-            <field name='name'>All Properties</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>ir.property</field>
-            <field name='view_type'>form</field>
-            <field name='view_id' ref='ir_property_view_tree'/>
+        <record id="ir_property_form_all" model="ir.actions.act_window">
+            <field name="name">All Properties</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.property</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="ir_property_view_tree"/>
         </record>
-        <menuitem name='Administration/Custom/Properties/All Properties' action='ir_property_form_all' id='menu_ir_property_form_all'/>
+        <menuitem action="ir_property_form_all" id="menu_ir_property_form_all" parent="base.next_id_15"/>
         
     </data>
 </terp>

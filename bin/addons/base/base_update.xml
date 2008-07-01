@@ -1,4 +1,4 @@
-<?xml version='1.0'?>
+<?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
         <!--
@@ -6,60 +6,60 @@
 	Languages
 	======================
 	-->
-        <record id='view_lang' model='ir.ui.view'>
-            <field name='name'>Languages</field>
-            <field name='model'>res.lang</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Language'>
-                    <field name='name' select='1'/>
-                    <field name='code' select='1'/>
-                    <field name='translatable'/>
-                    <field name='direction'/>
+        <record id="view_lang" model="ir.ui.view">
+            <field name="name">Languages</field>
+            <field name="model">res.lang</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Language">
+                    <field name="name" select="1"/>
+                    <field name="code" select="1"/>
+                    <field name="translatable"/>
+                    <field name="direction"/>
                 </form>
             </field>
         </record>
-        <record id='action_lang' model='ir.actions.act_window'>
-            <field name='name'>Languages</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>res.lang</field>
-            <field name='view_type'>form</field>
+        <record id="action_lang" model="ir.actions.act_window">
+            <field name="name">Languages</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.lang</field>
+            <field name="view_type">form</field>
         </record>
-        <menuitem name='Administration/Custom/Interface/Languages' action='action_lang' id='menu_action_lang'/>
+        <menuitem id="next_id_2" name="Interface" parent="base.menu_custom"/><menuitem action="action_lang" id="menu_action_lang" parent="next_id_2"/>
         
         <!--
 	======================
 	Groups
 	======================
 	-->
-        <record id='view_groups_form' model='ir.ui.view'>
-            <field name='name'>res.groups.form</field>
-            <field name='model'>res.groups</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Groups'>
+        <record id="view_groups_form" model="ir.ui.view">
+            <field name="name">res.groups.form</field>
+            <field name="model">res.groups</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Groups">
                     <notebook>
-                        <page string='Group'>
-                            <field name='name' colspan='4' select='1'/>
-                            <field name='users' colspan='4'/>
-                            <field name='comment' colspan='4'/>
+                        <page string="Group">
+                            <field colspan="4" name="name" select="1"/>
+                            <field colspan="4" name="users"/>
+                            <field colspan="4" name="comment"/>
                         </page>
-                        <page string='Menus'>
-                            <field name='menu_access' colspan='4'/>
+                        <page string="Menus">
+                            <field colspan="4" name="menu_access"/>
                         </page>
-                        <page string='Security'>
-                            <field name='model_access' colspan='4'>
-                                <form string='Access Controls'>
-                                    <field name='name' select='1' colspan='4'/>
-                                    <field name='model_id' select='1'/>
+                        <page string="Security">
+                            <field colspan="4" name="model_access">
+                                <form string="Access Controls">
+                                    <field colspan="4" name="name" select="1"/>
+                                    <field name="model_id" select="1"/>
                                     <newline/>
-                                    <field name='perm_read'/>
-                                    <field name='perm_write'/>
-                                    <field name='perm_create'/>
-                                    <field name='perm_unlink'/>
+                                    <field name="perm_read"/>
+                                    <field name="perm_write"/>
+                                    <field name="perm_create"/>
+                                    <field name="perm_unlink"/>
                                 </form>
                             </field>
-                            <field name='rule_groups' colspan='4'/>
+                            <field colspan="4" name="rule_groups"/>
                         </page>
                     </notebook>
                 </form>
@@ -71,59 +71,59 @@
 	Users
 	======================
 	-->
-        <record id='view_users_form_simple_modif' model='ir.ui.view'>
-            <field name='name'>res.users.form.modif</field>
-            <field name='model'>res.users</field>
-            <field name='type'>form</field>
-            <field name='priority' eval='18'/>
-            <field name='arch' type='xml'>
-                <form string='Users'>
-                    <field name='password'/>
-                    <label string='Please note that you will have to logout and relog if you change your password.' colspan='4'/>
-                    <field name='context_lang'/>
-                    <field name='context_tz'/>
+        <record id="view_users_form_simple_modif" model="ir.ui.view">
+            <field name="name">res.users.form.modif</field>
+            <field name="model">res.users</field>
+            <field name="type">form</field>
+            <field eval="18" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Users">
+                    <field name="password"/>
+                    <label colspan="4" string="Please note that you will have to logout and relog if you change your password."/>
+                    <field name="context_lang"/>
+                    <field name="context_tz"/>
                     <newline/>
-                    <field name='signature' colspan='4'/>
+                    <field colspan="4" name="signature"/>
                 </form>
             </field>
         </record>
         
-        <record id='view_users_form' model='ir.ui.view'>
-            <field name='name'>res.users.form</field>
-            <field name='model'>res.users</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Users'>
+        <record id="view_users_form" model="ir.ui.view">
+            <field name="name">res.users.form</field>
+            <field name="model">res.users</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Users">
                     <notebook>
-                        <page string='User'>
-                            <field name='name' select='1'/>
-                            <field name='active' select='1'/>
-                            <field name='login' select='1'/>
-                            <field name='password'/>
-                            <field name='address_id'/>
-                            <field name='company_id' required='1'/>
-                            <field name='action_id' required='True'/>
-                            <field name='menu_id' domain='[(&apos;usage&apos;,&apos;=&apos;,&apos;menu&apos;)]' required='True'/>
-                            <field name='context_lang'/>
-                            <field name='context_tz'/>
-                            <field name='signature' colspan='4'/>
+                        <page string="User">
+                            <field name="name" select="1"/>
+                            <field name="active" select="1"/>
+                            <field name="login" select="1"/>
+                            <field name="password"/>
+                            <field name="address_id"/>
+                            <field name="company_id" required="1"/>
+                            <field name="action_id" required="True"/>
+                            <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
+                            <field name="context_lang"/>
+                            <field name="context_tz"/>
+                            <field colspan="4" name="signature"/>
                         </page>
-                        <page string='Security'>
-                            <field name='groups_id' colspan='4'/>
-                            <field name='roles_id' colspan='4'/>
+                        <page string="Security">
+                            <field colspan="4" name="groups_id"/>
+                            <field colspan="4" name="roles_id"/>
                         </page>
                     </notebook>
                 </form>
             </field>
         </record>
-        <record id='view_users_tree' model='ir.ui.view'>
-            <field name='name'>res.users.tree</field>
-            <field name='model'>res.users</field>
-            <field name='type'>tree</field>
-            <field name='arch' type='xml'>
-                <tree string='Users'>
-                    <field name='name'/>
-                    <field name='login'/>
+        <record id="view_users_tree" model="ir.ui.view">
+            <field name="name">res.users.tree</field>
+            <field name="model">res.users</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Users">
+                    <field name="name"/>
+                    <field name="login"/>
                 </tree>
             </field>
         </record>
@@ -133,43 +133,43 @@
 	Company
 	======================
 	-->
-        <record id='view_company_form' model='ir.ui.view'>
-            <field name='name'>res.company.form</field>
-            <field name='model'>res.company</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Company'>
+        <record id="view_company_form" model="ir.ui.view">
+            <field name="name">res.company.form</field>
+            <field name="model">res.company</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Company">
                     <notebook>
-                        <page string='General Information'>
-                            <field name='name' colspan='4' select='1'/>
-                            <field name='partner_id' select='1'/>
-                            <field name='parent_id' select='1'/>
-                            <field name='rml_header1'/>
-                            <field name='rml_footer1'/>
-                            <field name='rml_footer2'/>
-                            <field name='currency_id'/>
-                            <separator string='Your Logo - Use a size of about 450x150 pixels.' colspan='4'/>
-                            <field name='logo' widget='image' colspan='4'/>
+                        <page string="General Information">
+                            <field colspan="4" name="name" select="1"/>
+                            <field name="partner_id" select="1"/>
+                            <field name="parent_id" select="1"/>
+                            <field name="rml_header1"/>
+                            <field name="rml_footer1"/>
+                            <field name="rml_footer2"/>
+                            <field name="currency_id"/>
+                            <separator colspan="4" string="Your Logo - Use a size of about 450x150 pixels."/>
+                            <field colspan="4" name="logo" widget="image"/>
                         </page>
-                        <page string='Header/Footer'>
-                            <field name='rml_header' nolabel='1' colspan='4'/>
+                        <page string="Header/Footer">
+                            <field colspan="4" name="rml_header" nolabel="1"/>
                         </page>
-                        <page string='Internal Header/Footer'>
-                            <field name='rml_header2' nolabel='1' colspan='4'/>
+                        <page string="Internal Header/Footer">
+                            <field colspan="4" name="rml_header2" nolabel="1"/>
                         </page>
                     </notebook>
                 </form>
             </field>
         </record>
-        <record id='view_company_tree' model='ir.ui.view'>
-            <field name='name'>res.company.tree</field>
-            <field name='model'>res.company</field>
-            <field name='type'>tree</field>
-            <field name='field_parent'>child_ids</field>
-            <field name='arch' type='xml'>
-                <tree string='Companies'>
-                    <field name='name'/>
-                    <field name='partner_id'/>
+        <record id="view_company_tree" model="ir.ui.view">
+            <field name="name">res.company.tree</field>
+            <field name="model">res.company</field>
+            <field name="type">tree</field>
+            <field name="field_parent">child_ids</field>
+            <field name="arch" type="xml">
+                <tree string="Companies">
+                    <field name="name"/>
+                    <field name="partner_id"/>
                 </tree>
             </field>
         </record>
@@ -177,59 +177,59 @@
         
         
         
-        <record id='view_users_configuration_form' model='ir.ui.view'>
-            <field name='name'>res.users.confirm.form</field>
-            <field name='model'>res.users</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Configure User'>
-                    <separator col='4' string='Configure User' colspan='4'/>
+        <record id="view_users_configuration_form" model="ir.ui.view">
+            <field name="name">res.users.confirm.form</field>
+            <field name="model">res.users</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Configure User">
+                    <separator col="4" colspan="4" string="Configure User"/>
                     <newline/>
                     <notebook>
-                        <page string='User'>
-                            <field name='name' select='1'/>
-                            <field name='active' select='1'/>
-                            <field name='login' select='1'/>
-                            <field name='password'/>
-                            <field name='address_id'/>
-                            <field name='company_id' required='1'/>
-                            <field name='action_id' required='True'/>
-                            <field name='menu_id' domain='[(&apos;usage&apos;,&apos;=&apos;,&apos;menu&apos;)]' required='True'/>
-                            <field name='signature' colspan='4'/>
-                            <group col='4' colspan='4'>
-                                <button icon='gtk-cancel' special='cancel' string='Cancel'/>
-                                <button name='action_create' icon='gtk-ok' type='object' string='Save'/>
-                                <button name='action_create_new' icon='gtk-ok' type='object' string='Save + New'/>
+                        <page string="User">
+                            <field name="name" select="1"/>
+                            <field name="active" select="1"/>
+                            <field name="login" select="1"/>
+                            <field name="password"/>
+                            <field name="address_id"/>
+                            <field name="company_id" required="1"/>
+                            <field name="action_id" required="True"/>
+                            <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
+                            <field colspan="4" name="signature"/>
+                            <group col="4" colspan="4">
+                                <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                                <button icon="gtk-ok" name="action_create" string="Save" type="object"/>
+                                <button icon="gtk-ok" name="action_create_new" string="Save + New" type="object"/>
                             </group>
                             
                         </page>
-                        <page string='Security'>
-                            <field name='groups_id' colspan='4'/>
-                            <field name='roles_id' colspan='4'/>
+                        <page string="Security">
+                            <field colspan="4" name="groups_id"/>
+                            <field colspan="4" name="roles_id"/>
                         </page>
                     </notebook>
                 </form>
             </field>
         </record>
         
-        <record id='action_config_user_form' model='ir.actions.act_window'>
-            <field name='name'>Configure User</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>res.users</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>form</field>
-            <field name='view_id' ref='view_users_configuration_form'/>
-            <field name='target'>new</field>
+        <record id="action_config_user_form" model="ir.actions.act_window">
+            <field name="name">Configure User</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.users</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_users_configuration_form"/>
+            <field name="target">new</field>
         </record>
         
         
-        <record id='view_confirm_simple_view_form' model='ir.ui.view'>
-            <field name='name'>res.users.confirm.simple_view</field>
-            <field name='model'>res.config.view</field>
-            <field name='type'>form</field>
-            <field name='arch' type='xml'>
-                <form string='Configure simple view'>
-                    <separator string='Select between the simplified views or the extended views.'/>
+        <record id="view_confirm_simple_view_form" model="ir.ui.view">
+            <field name="name">res.users.confirm.simple_view</field>
+            <field name="model">res.config.view</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Configure simple view">
+                    <separator string="Select between the simplified views or the extended views."/>
                     <newline/>
                     <!--<label string="If you are testing or using OpenERP for the first time," colspan="2"/>
 
@@ -238,52 +238,52 @@
 to understand." colspan="2"/>
 
 				<newline/>-->
-                    <group colspan='4'>
-                        <field name='view' colspan='2'/>
+                    <group colspan="4">
+                        <field colspan="2" name="view"/>
                     </group>
                     <newline/>
-                    <separator string=''/>
+                    <separator string=""/>
                     <newline/>
                     
                     <group>
-                        <button icon='gtk-cancel' special='cancel' string='Cancel'/>
-                        <button name='action_set' icon='gtk-ok' type='object' string='Set'/>
+                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                        <button icon="gtk-ok" name="action_set" string="Set" type="object"/>
                     </group>
                     
                 </form>
             </field>
         </record>
         
-        <record id='action_config_simple_view_form' model='ir.actions.act_window'>
-            <field name='name'>Configure Simple View</field>
-            <field name='type'>ir.actions.act_window</field>
-            <field name='res_model'>res.config.view</field>
-            <field name='view_type'>form</field>
-            <field name='view_mode'>form</field>
-            <field name='target'>new</field>
+        <record id="action_config_simple_view_form" model="ir.actions.act_window">
+            <field name="name">Configure Simple View</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.config.view</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
         </record>
         
         
         
         <!-- register on configuratuion -->
         
-        <record id='config_wizard_step_user' model='ir.module.module.configuration.step'>
-            <field name='name'>Create User</field>
-            <field name='note'>Create some users</field>
-            <field name='action_id' ref='action_config_user_form'/>
-            <field name='state'>open</field>
-            <field name='sequence'>10</field>
+        <record id="config_wizard_step_user" model="ir.module.module.configuration.step">
+            <field name="name">Create User</field>
+            <field name="note">Create some users</field>
+            <field name="action_id" ref="action_config_user_form"/>
+            <field name="state">open</field>
+            <field name="sequence">10</field>
         </record>
         
-        <record id='config_wizard_simple_view' model='ir.module.module.configuration.step'>
-            <field name='name'>Select between the simplified views or the extended views.</field>
-            <field name='note'>Select between the simplified views or the extended views.
+        <record id="config_wizard_simple_view" model="ir.module.module.configuration.step">
+            <field name="name">Select between the simplified views or the extended views.</field>
+            <field name="note">Select between the simplified views or the extended views.
                 (If you are testing or using OpenERP for the first time,
                 we suggest you to use the simplified view, which has less features but is easier to understand.)
             </field>
-            <field name='action_id' ref='action_config_simple_view_form'/>
-            <field name='state'>open</field>
-            <field name='sequence'>5</field>
+            <field name="action_id" ref="action_config_simple_view_form"/>
+            <field name="state">open</field>
+            <field name="sequence">5</field>
         </record>
         
     </data>
