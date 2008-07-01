@@ -47,6 +47,7 @@
 #
 
 import time
+import types
 from xml import dom, xpath
 from xml.parsers import expat
 import string
@@ -142,7 +143,10 @@ class browse_record(object):
 			elif name in self._table._inherit_fields:
 				col = self._table._inherit_fields[name][2]
 			elif hasattr(self._table, name):
-				return lambda *args, **argv: getattr(self._table, name)(self._cr, self._uid, [self._id], *args, **argv)
+				if isinstance( getattr(self._table, name), (types.MethodType,types.LambdaType,types.FunctionType)):
+					return lambda *args, **argv: getattr(self._table, name)(self._cr, self._uid, [self._id], *args, **argv)
+				else:
+					return getattr(self._table, name)
 			else:
 				logger = netsvc.Logger()
 				logger.notifyChannel('orm', netsvc.LOG_ERROR, "Programming error: field '%s' does not exist in object '%s' !" % (name, self._table._name))
