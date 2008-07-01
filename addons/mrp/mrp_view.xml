@@ -2,7 +2,8 @@
 <terp>
     <data>
         
-        <menuitem name='Production Management' icon='terp-mrp' id='menu_mrp_root'/>
+        <menuitem
+		name='Production Management' icon='terp-mrp' id='menu_mrp_root'/>
         
         <!--
 	Property / Property Group
@@ -27,8 +28,18 @@
             <field name='view_type'>form</field>
             <field name='view_mode'>tree,form</field>
         </record>
-        <menuitem name='Production Management/Configuration' groups='base.group_admin' id='menu_mrp_configuration'/>
-        <menuitem name='Production Management/Configuration/Properties/Property Categories' action='mrp_property_group_action' id='menu_mrp_property_group_action'/>
+        <menuitem 
+			name='Configuration'
+			groups='base.group_admin' 
+			id='menu_mrp_configuration'/>
+        <menuitem 
+			parent='menu_mrp_configuration'
+			name='Properties' 
+			id='menu_mrp_property_group_action_prop'/>
+        <menuitem 
+			parent='menu_mrp_property_group_action_prop' 
+			action='mrp_property_group_action' 
+			id='menu_mrp_property_group_action'/>
         
         <record id='mrp_property_tree_view' model='ir.ui.view'>
             <field name='name'>mrp.property.tree</field>
@@ -64,7 +75,10 @@
             <field name='view_type'>form</field>
             <field name='view_mode'>tree,form</field>
         </record>
-        <menuitem name='Production Management/Configuration/Properties/Properties' action='mrp_property_action' id='menu_mrp_property_action'/>
+        <menuitem 
+			parent='menu_mrp_property_group_action_prop' 
+			action='mrp_property_action' 
+			id='menu_mrp_property_action'/>
         
         <!--
 	Workcenters
@@ -127,7 +141,10 @@
             <field name='view_type'>form</field>
             <field name='view_id' ref='mrp_workcenter_tree_view'/>
         </record>
-        <menuitem name='Production Management/Configuration/Workcenters' action='mrp_workcenter_action' id='menu_mrp_workcenter_action'/>
+        <menuitem 
+			parent='menu_mrp_configuration' 
+			action='mrp_workcenter_action' 
+			id='menu_mrp_workcenter_action'/>
         
         <!--
 	Routings
@@ -201,7 +218,10 @@
             <field name='view_type'>form</field>
             <field name='view_id' ref='mrp_routing_tree_view'/>
         </record>
-        <menuitem name='Production Management/Configuration/Routings' action='mrp_routing_action' id='menu_mrp_routing_action'/>
+        <menuitem 
+			parent='menu_mrp_configuration'
+			action='mrp_routing_action' 
+			id='menu_mrp_routing_action'/>
         
         <!--
 	Bill of Materials
@@ -273,27 +293,34 @@
             <field name='domain'>[('bom_id','=',False)]</field>
             <field name='view_id' ref='mrp_bom_tree_view'/>
         </record>
-        <menuitem name='Production Management/Configuration/Bill of Materials' action='mrp_bom_form_action' id='menu_mrp_bom_form_action'/>
+        <menuitem
+			parent='menu_mrp_configuration'
+			action='mrp_bom_form_action' id='menu_mrp_bom_form_action'/>
         
         <record id='mrp_bom_tree_action' model='ir.actions.act_window'>
-            <field name='name'>BOM Structure</field>
+            <field name='name'>BoM Structure</field>
             <field name='type'>ir.actions.act_window</field>
             <field name='res_model'>mrp.bom</field>
             <field name='view_type'>tree</field>
             <field name='domain'>[('bom_id','=',False)]</field>
             <field name='view_id' ref='mrp_bom_tree_view'/>
         </record>
-        <menuitem name='Production Management/Configuration/Bill of Materials/BOM Structure' action='mrp_bom_tree_action' id='menu_bom_tree'/>
-        
+        <menuitem
+			parent='menu_mrp_bom_form_action' 
+			action='mrp_bom_tree_action' 
+			id='menu_bom_tree'/>
+
         <record id='mrp_bom_form_action2' model='ir.actions.act_window'>
-            <field name='name'>BOM Lines</field>
+            <field name='name'>BoM Lines</field>
             <field name='type'>ir.actions.act_window</field>
             <field name='res_model'>mrp.bom</field>
             <field name='view_type'>form</field>
             <field name='view_id' ref='mrp_bom_tree_view'/>
         </record>
-        <menuitem name='Production Management/Configuration/Bill of Materials/BOM Lines' action='mrp_bom_form_action2' id='menu_mrp_bom_form_action2'/>
-        
+        <menuitem
+			parent='menu_mrp_bom_form_action' 
+			action='mrp_bom_form_action2' 
+			id='menu_mrp_bom_form_action2'/>
         
         <record id='action2' model='ir.actions.act_window'>
             <field name='name'>Bill of Materials Architecture</field>
@@ -439,16 +466,22 @@
             <field name='view_mode'>tree,form,calendar</field>
             <field name='view_id' ref='mrp_production_form_view'/>
         </record>
-        <menuitem name='Production Management/Production Orders' action='mrp_production_action' id='menu_mrp_production_action'/>
+        <menuitem 
+			   parent='menu_mrp_root'
+			action='mrp_production_action' id='menu_mrp_production_action'/>
+
         <record id='mrp_production_action2' model='ir.actions.act_window'>
-            <field name='name'>Production orders to start</field>
+            <field name='name'>Production Orders To Start</field>
             <field name='type'>ir.actions.act_window</field>
             <field name='res_model'>mrp.production</field>
             <field name='view_type'>form</field>
             <field name='view_mode'>tree,form</field>
             <field name='domain'>[('state','=','ready')]</field>
         </record>
-        <menuitem name='Production Management/Production Orders/Production Orders to Start' action='mrp_production_action2' id='menu_production_orders_start'/>
+        <menuitem
+			parent='menu_mrp_production_action'
+			action='mrp_production_action2' 
+			id='menu_production_orders_start'/>
         <record id='mrp_production_action3' model='ir.actions.act_window'>
             <field name='name'>Production orders in progress</field>
             <field name='type'>ir.actions.act_window</field>
