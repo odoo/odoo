@@ -40,6 +40,8 @@ import netsvc
 from config import config
 import logging
 
+from lxml import etree
+
 
 class ConvertError(Exception):
 	def __init__(self, doc, orig_excpt):
@@ -739,7 +741,21 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
 #
 # xml import/export
 #
-def convert_xml_import(cr, module, xmlstr, idref=None, mode='init', noupdate = False, report=None):
+def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate = False, report=None):
+	xmlstr = xmlfile.read()
+	xmlfile.seek(0)
+	relaxng_doc = etree.parse(file('import_xml.rng'))
+	relaxng = etree.RelaxNG(relaxng_doc)
+
+	doc = etree.parse(xmlfile)
+	try:
+		relaxng.assert_(doc)
+	except Exception, e:
+		logger = netsvc.Logger()
+		logger.notifyChannel('init', netsvc.LOG_ERROR, 'The XML file do not fit the required schema !')
+		logger.notifyChannel('init', netsvc.LOG_ERROR, relaxng.error_log.last_error)
+		raise
+
 	if not idref:
 		idref={}
 	if report is None:

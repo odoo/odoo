@@ -219,7 +219,7 @@ def load_module_graph(cr, graph, status=None, **kwargs):
 							if new_query:
 								cr.execute(new_query)
 					else:
-						tools.convert_xml_import(cr, m, tools.file_open(opj(m, filename)).read(), idref, mode=mode, **kwargs)
+						tools.convert_xml_import(cr, m, tools.file_open(opj(m, filename)), idref, mode=mode, **kwargs)
 			if hasattr(package, 'demo') or (package_demo and package_state != 'installed'):
 				status['progress'] = (float(statusi)+0.75)/len(graph)
 				for xml in package.datas.get('demo_xml', []):
@@ -228,7 +228,7 @@ def load_module_graph(cr, graph, status=None, **kwargs):
 					if ext == '.csv':
 						tools.convert_csv_import(cr, m, os.path.basename(xml), tools.file_open(opj(m, xml)).read(), idref, noupdate=True)
 					else:
-						tools.convert_xml_import(cr, m, tools.file_open(opj(m, xml)).read(), idref, noupdate=True, **kwargs)
+						tools.convert_xml_import(cr, m, tools.file_open(opj(m, xml)), idref, noupdate=True, **kwargs)
 				cr.execute('update ir_module_module set demo=%s where name=%s', (True, package.name))
 			package_todo.append(package.name)
 			cr.execute("update ir_module_module set state='installed' where state in ('to upgrade', 'to install') and name=%s", (package.name,))
