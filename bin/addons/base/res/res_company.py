@@ -41,7 +41,8 @@ class res_company(osv.osv):
 		'rml_header1': fields.char('Report Header', size=200),
 		'rml_footer1': fields.char('Report Footer 1', size=200),
 		'rml_footer2': fields.char('Report Footer 2', size=200),
-		'rml_header' : fields.text('Rml Header'),
+		'rml_header' : fields.text('RML Header'),
+		'rml_header2' : fields.text('RML Internal Header'),
 		'logo' : fields.binary('Logo'),
 		'currency_id': fields.many2one('res.currency', 'Currency', required=True),
 	}
@@ -109,6 +110,21 @@ class res_company(osv.osv):
 			level -= 1
 		return True
 	
+	def _get_header2(self,cr,uid,ids):
+		return """<header>
+	<pageTemplate>
+		<frame id="first" x1="1cm" y1="1.0cm" width="19.0cm" height="26.0cm"/>
+		<pageGraphics>
+			<setFont name="Helvetica" size="30"/>
+			<fill color="black"/>
+			<stroke color="black"/>
+			<drawString x="1cm" y="27.8cm">[[ company.partner_id.name ]]</drawString>
+			<lines>1cm 27.7cm 20cm 27.7cm</lines>
+			<drawRightString x="297.5" y="27.8cm"><pageNumber/> /  </drawRightString>
+			<drawString x="297.5" y="27.8cm"><pageCount/></drawString>
+		</pageGraphics>
+	</pageTemplate>
+</header>"""
 	def _get_header(self,cr,uid,ids):
 		try :
 			return tools.file_open('custom/corporate_rml_header.rml').read()
@@ -146,7 +162,8 @@ class res_company(osv.osv):
 </header>"""
 	_defaults = {
 		'currency_id': _get_euro,
-		'rml_header':_get_header 
+		'rml_header':_get_header,
+		'rml_header2': _get_header2
 	}
 
 	_constraints = [

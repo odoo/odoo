@@ -261,6 +261,7 @@ class rml_parse(object):
 		}
 		self.localcontext.update(context)
 		self.rml_header = user.company_id.rml_header
+		self.rml_header2 = user.company_id.rml_header2
 		self.logo = user.company_id.logo
 		self.name = name
 		self._regex = re.compile('\[\[(.+?)\]\]')
@@ -496,8 +497,11 @@ class rml_parse(object):
 					return found
 		return False
 
-	def _add_header(self, node):
-		rml_head =  self.rml_header
+	def _add_header(self, node, header=1):
+		if header==2:
+			rml_head =  self.rml_header2
+		else:
+			rml_head =  self.rml_header
 
 		# Refactor this patch, to use the minidom interface
 		if self.logo and (rml_head.find('company.logo')<0 or rml_head.find('<image')<0) and rml_head.find('<!--image')<0:
@@ -530,12 +534,12 @@ class rml_parse(object):
 		self.ids = ids
 		self.objects = objects
 
-	def _parse(self, rml_dom, objects, data, header=False):
+	def _parse(self, rml_dom, objects, data, header=0):
 		self.node_context = {}
 		self.dom = rml_dom
 		self._node = self.dom.documentElement
 		if header:
-			self._add_header(self._node)
+			self._add_header(self._node, header)
 		self._parse_node()
 		res = self.dom.documentElement.toxml('utf-8')
 		return res
