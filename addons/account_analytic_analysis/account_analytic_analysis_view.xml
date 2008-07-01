@@ -1,77 +1,74 @@
 <terp>
     <data>
-        
-        #---------------------------------------------------------------------------------------------------------
-        #  Analytic Account form 
-        #---------------------------------------------------------------------------------------------------------
-        
-        # Remove information on Account data => because they move on analysis sheet
-        # --------------------------------------------------------------------------
-        # create a page with invoicing informations
-        # --------------------------------------------------------------------------
+
+        <!--
+        Analytic Account form 
+
+        Remove information on Account data => because they move on analysis sheet
+        create a page with invoicing informations
+        -->
         <record model="ir.ui.view" id="hr_timesheet.account_analytic_account_form_form">
             <field name="name">account.analytic.account.invoice.form.inherit</field> 
             <field name="model">account.analytic.account</field> 
             <field name="type">form</field> 
             <field name="inherit_id" ref="account.view_account_analytic_account_form" />
-             
             <field name="priority" eval="18"/>
             <field name="arch" type="xml">
-                <notebook position="inside">
-                    <page string="Analysis summary">
-                        <separator string="Work done stats" colspan="4" />
-                         
-                        <field name="total_cost"/>
-                        <field name="remaining_ca"/>
-                        <field name="ca_invoiced"/>
-                        <field name="ca_theorical"/>
-                        <newline/>
-                        <!-- <field name="old"/> -->
-                        <field name="hours_quantity"/>
-                        <field name="hours_qtt_invoiced"/>
-                        <field name="remaining_hours"/>
-                        <newline/>
-                        <separator string="Analysis stats" colspan="4" />
-                         
-                        <field name="revenue_per_hour"/>
-                        <field name="real_margin"/>
-                        <field name="theorical_margin"/>
-                        <field name="real_margin_rate"/>
-                        <separator string="Key dates" colspan="4" />
-                         
-                        <field name="last_invoice_date"/>
-                         
-                        <field name="last_worked_invoiced_date" select="2"/>
-                        <field name="last_worked_date"/>
-                        <separator string="To be invoiced" colspan="4" />
-                        <field name="hours_qtt_non_invoiced"/>
-                        <field name="ca_to_invoice" select="2"/>
-                        
-                    </page>
-                    <page string="Stats by month">  
-                        <field name="month_ids" colspan="4" nolabel="1">
-                            <tree string="Month">
-                                <field name="month"/>
-                                <field name="unit_amount" widget="float_time"/>
-                            </tree>
-                        </field>
-                    </page>
-                    <page string="Stats by user"> 
-                        <field name="user_ids" colspan="4" nolabel="1">
-                            <tree string="Users">
-                                <field name="user"/>
-                                <field name="unit_amount" widget="float_time"/>
-                            </tree>
-                        </field>
-                    </page>
-                </notebook>
-                 
+                <form>
+                    <notebook position="inside">
+                        <page string="Analysis summary">
+                            <separator string="Work done stats" colspan="4" />
+
+                            <field name="total_cost"/>
+                            <field name="remaining_ca"/>
+                            <field name="ca_invoiced"/>
+                            <field name="ca_theorical"/>
+                            <newline/>
+                            <!-- <field name="old"/> -->
+                            <field name="hours_quantity"/>
+                            <field name="hours_qtt_invoiced"/>
+                            <field name="remaining_hours"/>
+                            <newline/>
+                            <separator string="Analysis stats" colspan="4" />
+
+                            <field name="revenue_per_hour"/>
+                            <field name="real_margin"/>
+                            <field name="theorical_margin"/>
+                            <field name="real_margin_rate"/>
+                            <separator string="Key dates" colspan="4" />
+
+                            <field name="last_invoice_date"/>
+
+                            <field name="last_worked_invoiced_date" select="2"/>
+                            <field name="last_worked_date"/>
+                            <separator string="To be invoiced" colspan="4" />
+                            <field name="hours_qtt_non_invoiced"/>
+                            <field name="ca_to_invoice" select="2"/>
+
+                        </page>
+                        <page string="Stats by month">  
+                            <field name="month_ids" colspan="4" nolabel="1">
+                                <tree string="Month">
+                                    <field name="month"/>
+                                    <field name="unit_amount" widget="float_time"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Stats by user"> 
+                            <field name="user_ids" colspan="4" nolabel="1">
+                                <tree string="Users">
+                                    <field name="user"/>
+                                    <field name="unit_amount" widget="float_time"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+
+                </form>
             </field>
         </record>
-        
-        #---------------------------------------------------------------------------------------------------------
-        #  Add information on Account analytic list for the project management
-        #---------------------------------------------------------------------------------------------------------
+
+        <!-- Add information on Account analytic list for the project management -->
         <record model="ir.ui.view" id="view_account_analytic_account_tree_c2c_2">
             <field name="name">account.analytic.account.tree</field>
             <field name="model">account.analytic.account</field>
@@ -89,19 +86,19 @@
             <field name="name">account.analytic.account.tree</field> 
             <field name="model">account.analytic.account</field> 
             <field name="inherit_id" ref="account.view_account_analytic_account_list" />
-             
+
             <field name="type">tree</field> 
             <field name="arch" type="xml"> 
                 <field name="date" position="before"> 
                     <field name="last_invoice_date"/>
-                     
+
                     <field name="ca_to_invoice"/>
                 </field>
-                 
+
             </field>
-             
+
         </record>
-        
+
         <record model="ir.ui.view" id="view_account_analytic_simplified">
             <field name="name">account.analytic.account.simplified.tree</field>
             <field name="model">account.analytic.account</field>
@@ -115,10 +112,10 @@
                     <field name="remaining_hours"/>
                     <field name="ca_to_invoice"/>
                     <field name="last_invoice_date"/>
-                     
+
                 </tree>
             </field>
         </record>
-        
+
     </data>
 </terp>

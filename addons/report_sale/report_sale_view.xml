@@ -2,12 +2,7 @@
 <terp>
     <data>
         
-        #
-        # Sales by products by month
-        #
-        
-        
-        
+        <!--  Sales by products by month -->
         <record id='view_order_product_form' model='ir.ui.view'>
             <field name='name'>report.sale.order.product.form</field>
             <field name='model'>report.sale.order.product</field>
@@ -59,9 +54,7 @@
         </record>
         <menuitem name='Sales Management/Reporting/All Months/Sales by Product' action='action_order_product_tree_all' id='menu_report_order_product_all'/>
         
-        #
-        # Sales by category by month
-        #
+        <!-- Sales by category by month -->
         
         <record id='view_order_category_form' model='ir.ui.view'>
             <field name='name'>report.sale.order.category.form</field>
@@ -124,9 +117,7 @@
         </record>
         <menuitem name='Sales Management/Reporting/All Months/Sales by Category of Products' action='action_order_category_tree_all' id='menu_report_order_category_all'/>
         
-        #
-        # Sales of the month
-        #
+        <!-- Sales of the month -->
         <record id='action_order_sale_list' model='ir.actions.act_window'>
             <field name='name'>Sales of the Month</field>
             <field name='res_model'>sale.order</field>

@@ -7,9 +7,7 @@
             <field name="on_create">True</field>
         </record>
         
-        #----------------------------------------------
-        # Activity
-        #----------------------------------------------
+        <!-- Activity -->
         <record model="workflow.activity" id="act_draft">
             <field name="wkf_id" ref="wkf_sale"/>
             <field name="flow_start">True</field>
@@ -117,9 +115,7 @@
             <field name="action">action_cancel()</field>
         </record>
         
-        #----------------------------------------------
-        # Transistion
-        #----------------------------------------------
+        <!-- Transistion -->
         
         <record model="workflow.transition" id="trans_invoice_end_done">
             <field name="act_from" ref="act_invoice_end"/>

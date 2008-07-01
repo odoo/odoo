@@ -20,10 +20,7 @@
             </field>
         </record>
         
-        # ------------------------------------------------------
-        # Case Sections
-        # ------------------------------------------------------
-        
+        <!-- Case Sections --> 
         <record id='crm_case_section_view_form' model='ir.ui.view'>
             <field name='name'>crm.case.section.form</field>
             <field name='model'>crm.case.section</field>
@@ -76,12 +73,7 @@
         </record>
         <menuitem name='CRM &amp; SRM/Cases/Cases by Section' groups='base.group_admin' action='crm_case_section_act_tree' id='menu_crm_case_section_act_tree'/>
         
-        
-        
-        # ------------------------------------------------------
-        # Case Categories
-        # ------------------------------------------------------
-        
+        <!-- Case Categories -->
         <record id='crm_case_categ-view' model='ir.ui.view'>
             <field name='name'>crm.case.categ.form</field>
             <field name='model'>crm.case.categ</field>
@@ -115,10 +107,7 @@
         </record>
         <menuitem name='CRM &amp; SRM/Configuration/Cases/Categories' groups='base.group_admin' action='crm_case_categ-act' id='menu_crm_case_categ-act'/>
         
-        # ------------------------------------------------------
-        # Case rules
-        # ------------------------------------------------------
-        
+        <!-- Case rules -->
         <record id='crm_case_rule-view' model='ir.ui.view'>
             <field name='name'>crm.case.rule.form</field>
             <field name='model'>crm.case.rule</field>
@@ -210,9 +199,7 @@
         <menuitem name='CRM &amp; SRM/Configuration/Cases/Rules' groups='base.group_admin' action='crm_case_rule-act' id='menu_crm_case_rule-act'/>
         
         
-        # ------------------------------------------------------
-        # Cases
-        # ------------------------------------------------------
+        <!-- Cases -->
         <record id='crm_case_log_tree-view' model='ir.ui.view'>
             <field name='name'>crm.case.log.tree</field>
             <field name='model'>crm.case.log</field>

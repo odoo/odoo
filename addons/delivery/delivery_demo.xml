@@ -1,10 +1,7 @@
 <?xml version="1.0"?>
 <terp>
     <data noupdate="1">
-        
-        #
-        # Create a transporter
-        # 
+        <!-- Create a transporter -->
         
         <record model="res.partner" id="delivery_partner">
             <field name="name">Default Transporter</field>
@@ -16,9 +13,7 @@
             <field name="partner_id" ref="delivery_partner"/>
         </record>
         
-        #
-        # Create a partner
-        # 
+        <!-- Create a partner -->
         
         <record model="product.product" id="delivery_product">
             <field name="name">Default Delivery</field>
@@ -26,9 +21,7 @@
             <field name="categ_id" search="[]" model="product.category"/>
         </record>
         
-        #
-        # Carrier
-        #
+        <!-- Carrier -->
         
         <record id="delivery_carrier" model="delivery.carrier">
             <field name="name">Default Delivery</field>
@@ -36,9 +29,7 @@
             <field name="product_id" ref="delivery_product"/>
         </record>
         
-        #
-        # Carrier Grids
-        #
+        <!-- Carrier Grids -->
         
         <record model="delivery.grid" id="delivery_grid">
             <field name="name">Default Delivery Grid</field>

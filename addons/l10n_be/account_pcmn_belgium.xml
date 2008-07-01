@@ -6381,9 +6381,7 @@
             <field name="parent_id" eval="[(6,0,[a79])]"/>
         </record>
         
-        #
-        # Tax Code Configuration
-        #
+        <!-- Tax Code Configuration -->
         <record model="account.tax.code" id="vat_code_op_base">
             <field name="name">I. Valeur des operations</field>
         </record>
@@ -6580,9 +6578,7 @@
         </record>
         
         
-        #
-        #  TVA - Taxe sur la Valeur Ajoutée
-        #
+        <!-- TVA - Taxe sur la Valeur Ajoutée -->
         <record model="account.tax" id="vat_6">
             <field name="name">VAT 6% - Ventes</field>
             <field name="amount" eval="0.06"/>
