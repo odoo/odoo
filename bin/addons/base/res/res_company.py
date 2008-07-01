@@ -134,21 +134,28 @@ class res_company(osv.osv):
 		<frame id="first" x1="1cm" y1="2.5cm" width="19.0cm" height="23.0cm"/>
 		<pageGraphics>
 			<!--logo-->
+
+		<image x="1.5cm" y="27cm" height="80.0" width="110.0">[[company.logo]]</image>
+
+
 			<setFont name="Helvetica" size="30"/>
 			<fill color="black"/>
 			<stroke color="black"/>
-			<image x="13cm" y="25.4cm" height="2.4cm" name="logo"/>
-			<drawString x="1cm" y="27.8cm">[[ company.partner_id.name ]]</drawString>
-			<lines>1cm 27.7cm 20cm 27.7cm</lines>
+			<!--drawString x="1cm" y="2cm">[[ company.partner_id.name ]]</drawString-->
+			<lines>1cm 27.1cm 20cm 27.1cm</lines>
+
 			<setFont name="Helvetica" size="10"/>
-			<drawRightString x="20cm" y="27.8cm">[[ company.rml_header1 ]]</drawRightString>
-			<drawString x="1cm" y="27.2cm">[[ company.partner_id.address and company.partner_id.address[0].street ]]</drawString>
-			<drawString x="1cm" y="26.8cm">[[ company.partner_id.address and company.partner_id.address[0].zip ]] [[ company.partner_id.address and company.partner_id.address[0].city ]] - [[ company.partner_id.address and company.partner_id.address[0].country_id and company.partner_id.address[0].country_id.name ]]</drawString>
-			<drawString x="1cm" y="26.4cm">Phone:</drawString>
-			<drawRightString x="7cm" y="26.4cm">[[ company.partner_id.address and company.partner_id.address[0].phone ]]</drawRightString>
-			<drawString x="1cm" y="26.0cm">Mail:</drawString>
-			<drawRightString x="7cm" y="26.0cm">[[ company.partner_id.address and company.partner_id.address[0].email ]]</drawRightString>
-			<lines>1cm 25.9cm 7cm 25.9cm</lines>
+			<drawRightString x="20cm" y="28cm">[[ company.rml_header1 ]]</drawRightString>
+
+
+			<drawString x="1cm" y="26.8cm">[[ company.partner_id.name ]]</drawString>
+			<drawString x="1cm" y="26.6cm">[[ company.partner_id.address and company.partner_id.address[0].street ]]</drawString>
+			<drawString x="1cm" y="26.3cm">[[ company.partner_id.address and company.partner_id.address[0].zip ]] [[ company.partner_id.address and company.partner_id.address[0].city ]] - [[ company.partner_id.address and company.partner_id.address[0].country_id and company.partner_id.address[0].country_id.name ]]</drawString>
+			<drawString x="1cm" y="26cm">Phone:</drawString>
+			<drawRightString x="7cm" y="25.8cm">[[ company.partner_id.address and company.partner_id.address[0].phone ]]</drawRightString>
+			<drawString x="1cm" y="25.4cm">Mail:</drawString>
+			<drawRightString x="7cm" y="25.4cm">[[ company.partner_id.address and company.partner_id.address[0].email ]]</drawRightString>
+			<lines>1cm 25.3cm 20cm 25.3cm</lines>
 
 			<!--page bottom-->
 
