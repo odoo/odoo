@@ -34,7 +34,6 @@
 		"hr",
 		"hr_timesheet",
 		"hr_timesheet_invoice",
-		"hr_timesheet_project",
 		"crm",
 		"project",
 		"board_project",

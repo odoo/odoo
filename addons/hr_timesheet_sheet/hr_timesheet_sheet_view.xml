@@ -173,11 +173,11 @@
         </record>
         
         <record id="act_hr_timesheet_sheet_form" model="ir.actions.act_window">
-            <field name="name">All Timesheets</field>
+            <field name="name">Timesheets</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr_timesheet_sheet.sheet</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="hr_timesheet_sheet_form"/>
+            <field name="view_id" eval="False"/>
         </record>
         <menuitem id="next_id_60" name="Timesheets" parent="hr.menu_hr_root"/><menuitem action="act_hr_timesheet_sheet_form" id="menu_act_hr_timesheet_sheet_form" parent="next_id_60"/>
         

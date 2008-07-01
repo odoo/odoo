@@ -6,8 +6,6 @@
 	 Fiscal Year
 	-->
         
-        <menuitem icon="terp-account" id="menu_finance" name="Financial Management"/>
-        <menuitem groups="base.group_admin" id="menu_finance_configuration" name="Configuration" parent="menu_finance" sequence="1"/>
         <menuitem id="base.menu_action_currency_form" parent="menu_finance_configuration" sequence="20"/>
         
         <record id="view_account_fiscalyear_form" model="ir.ui.view">
@@ -139,12 +137,12 @@
             </field>
         </record>
         <record id="action_account_form" model="ir.actions.act_window">
-            <field name="name">Accounts</field>
+            <field name="name">Financial Accounts</field>
             <field name="res_model">account.account</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem id="next_id_24" name="General Accounts" parent="account.menu_finance_configuration"/><menuitem action="action_account_form" id="menu_action_account_form" parent="next_id_24"/>
+        <menuitem id="account_account_menu" name="Financial Accounts" parent="account.menu_finance_configuration"/><menuitem action="action_account_form" id="menu_action_account_form" parent="account_account_menu"/>
         
         <record id="view_account_tree" model="ir.ui.view">
             <field name="name">account.account.tree</field>
@@ -169,7 +167,7 @@
             <field name="view_id" ref="view_account_tree"/>
             <field name="domain">[('code','=','0')]</field>
         </record>
-        <menuitem action="action_account_tree" id="menu_action_account_tree" parent="account.next_id_24"/>
+        <menuitem action="action_account_tree" id="menu_action_account_tree" parent="account.account_account_menu"/>
         
         <record id="view_account_list" model="ir.ui.view">
             <field name="name">account.account.list</field>
@@ -288,12 +286,13 @@
             </field>
         </record>
         <record id="action_account_journal_form" model="ir.actions.act_window">
-            <field name="name">Account journal</field>
+            <field name="name">Financial Journals</field>
             <field name="res_model">account.journal</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem id="next_id_25" name="Journal" parent="account.menu_finance_configuration"/><menuitem action="action_account_journal_form" id="menu_action_account_journal_form" parent="next_id_25"/>
+        <menuitem id="next_id_25" name="Journal" parent="account.menu_finance_configuration"/>
+		<menuitem action="action_account_journal_form" id="menu_action_account_journal_form" parent="next_id_25"/>
         
         <record id="view_bank_statement_tree" model="ir.ui.view">
             <field name="name">account.bank.statement.tree</field>
@@ -375,7 +374,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
         </record>
-        <menuitem id="next_id_26" name="Entries" parent="account.menu_finance"/><menuitem action="action_bank_statement_tree" id="menu_bank_statement_tree" parent="next_id_26"/>
+        <menuitem action="action_bank_statement_tree" id="menu_bank_statement_tree" parent="menu_finance_entries"/>
         
         <record id="action_bank_statement_draft_tree" model="ir.actions.act_window">
             <field name="name">Draft statements</field>
@@ -458,7 +457,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="action_account_type_form" groups="base.group_extended" id="menu_action_account_type_form" parent="account.next_id_24"/>
+        <menuitem action="action_account_type_form" groups="base.group_extended" id="menu_action_account_type_form" parent="account.account_account_menu"/>
         <!--
 	Entries
 	-->
@@ -547,8 +546,10 @@
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_tax_code_tree"/>
         </record>
-        <menuitem id="next_id_27" name="Taxes" parent="account.menu_finance_configuration"/><menuitem action="action_tax_code_list" id="menu_action_tax_code_list" parent="next_id_27" sequence="12"/>
-        <menuitem id="next_id_28" name="Taxes" parent="account.next_id_19"/><menuitem action="action_tax_code_tree" id="menu_action_tax_code_tree" parent="next_id_28" sequence="12"/>
+        <menuitem id="next_id_27" name="Taxes" parent="account.menu_finance_configuration"/>
+		<menuitem action="action_tax_code_list" id="menu_action_tax_code_list" parent="next_id_27" sequence="12"/>
+        <menuitem id="next_id_28" name="Taxes" parent="menu_finance_periodical_processing"/>
+		<menuitem action="action_tax_code_tree" id="menu_action_tax_code_tree" parent="next_id_28" sequence="12"/>
         
         
         <!--
@@ -630,10 +631,9 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_tax_tree"/>
         </record>
-        <menuitem action="action_tax_form" id="menu_action_tax_form" parent="account.next_id_27"/>
+        <menuitem action="action_tax_form" id="menu_action_tax_form" parent="menu_action_tax_tree"/>
         
         
-        <menuitem id="menu_finance_entries" name="Entries" parent="account.menu_finance" sequence="2"/>
         
         <!--
 	Entries Journal lines
@@ -649,7 +649,7 @@
             <field eval="True" name="object"/>
         </record>
         
-        <wizard id="action_move_journal_line_form" menu="False" model="account.move.line" name="account.move.journal" string="Standard entry"/>
+        <wizard id="action_move_journal_line_form" menu="False" model="account.move.line" name="account.move.journal" string="Standard Entry"/>
         <menuitem action="action_move_journal_line_form" id="menu_action_move_journal_line_form" parent="account.menu_finance_entries" type="wizard"/>
         
         <record id="action_move_journal_period_line_form" model="ir.actions.act_window">
@@ -911,7 +911,6 @@
         <menuitem action="wizard_account_chart" id="menu_action_account_tree2" parent="account.menu_finance_charts" type="wizard"/>
         <menuitem action="action_account_tree2" id="menu_action_account_tree3" parent="account.menu_action_account_tree2"/>
         
-        <menuitem id="menu_finance_periodical_processing" name="Periodical Processing" parent="account.menu_finance" sequence="3"/>
         
         
         <record id="view_bank_statement_reconcile_form" model="ir.ui.view">
@@ -984,7 +983,6 @@
         
         <act_window domain="[('reconcile_id', '=', active_id)]" id="act_account_acount_move_line_reconcile_open" name="Reconciled entries" res_model="account.move.line" src_model="account.move.reconcile"/>
         
-        <menuitem id="menu_finance_reporting" name="Reporting" parent="account.menu_finance" sequence="8"/>
         
         <!--
 	TODO:

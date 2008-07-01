@@ -2,7 +2,6 @@
 <terp>
     <data>
         <menuitem id="menu_main" name="Payment" parent="account.menu_finance"/>
-        <menuitem groups="base.group_admin" id="menu_main_configuration" name="Configuration" parent="account.menu_finance" sequence="1"/>
         
         <record id="view_payment_type_form" model="ir.ui.view">
             <field name="name">payment.type.form</field>
@@ -49,7 +48,7 @@
             <field name="view_mode">tree,form</field>
         </record>
         
-        <menuitem id="next_id_44" name="Payment" parent="account_payment.menu_main_configuration"/><menuitem action="action_payment_mode_form" id="menu_action_payment_mode_form" parent="next_id_44"/>
+        <menuitem id="next_id_44" name="Payment" parent="account.menu_finance_configuration"/><menuitem action="action_payment_mode_form" id="menu_action_payment_mode_form" parent="next_id_44"/>
         
         <record id="view_payment_order_form" model="ir.ui.view">
             <field name="name">payment.order.form</field>

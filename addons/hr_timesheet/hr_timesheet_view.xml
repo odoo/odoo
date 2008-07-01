@@ -42,7 +42,7 @@
         </record>
         
         <record id="act_hr_timesheet_line_today_form" model="ir.actions.act_window">
-            <field name="name">Hours Encoding</field>
+            <field name="name">Working Hours</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.analytic.timesheet</field>
             <field name="view_type">form</field>
@@ -50,45 +50,36 @@
         </record>
         <menuitem action="act_hr_timesheet_line_today_form" id="menu_act_hr_timesheet_line_today_form" parent="hr.menu_hr_root"/>
         
-        <record id="act_hr_timesheet_line_me_today_form" model="ir.actions.act_window">
-            <field name="name">My works of the day</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">hr.analytic.timesheet</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('date', '=', time.strftime('%Y-%m-%d')),('user_id','=',uid)]</field>
-        </record>
-        <menuitem id="next_id_46" name="For me" parent="hr_timesheet.menu_act_hr_timesheet_line_today_form"/><menuitem action="act_hr_timesheet_line_me_today_form" id="menu_act_hr_timesheet_line_me_today_form" parent="next_id_46"/>
-        
         <record id="act_hr_timesheet_line_me_all_form" model="ir.actions.act_window">
-            <field name="name">All my works</field>
+            <field name="name">My Working Hours</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.analytic.timesheet</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('user_id','=',uid)]</field>
         </record>
-        <menuitem action="act_hr_timesheet_line_me_all_form" id="menu_act_hr_timesheet_line_me_all_form" parent="hr_timesheet.next_id_46"/>
+        <menuitem action="act_hr_timesheet_line_me_all_form" id="menu_act_hr_timesheet_line_me_all_form" parent="hr_timesheet.menu_act_hr_timesheet_line_today_form"/>
+
         
+        <record id="act_hr_timesheet_line_evry1_all_form" model="ir.actions.act_window">
+            <field name="name">Workin Hours</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.analytic.timesheet</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem action="act_hr_timesheet_line_evry1_all_form" id="menu_act_hr_timesheet_line_evry1_all_form" parent="hr_timesheet.menu_act_hr_timesheet_line_today_form"/>
+         
         <record id="act_hr_timesheet_line_evry1_today_form" model="ir.actions.act_window">
-            <field name="name">All works of the day</field>
+            <field name="name">Working Hours of The Day</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.analytic.timesheet</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('date', '=',	time.strftime('%Y-%m-%d'))]</field>
         </record>
-        <menuitem id="next_id_47" name="For Everyone" parent="hr_timesheet.menu_act_hr_timesheet_line_today_form"/><menuitem action="act_hr_timesheet_line_evry1_today_form" id="menu_act_hr_timesheet_line_evry1_today_form" parent="next_id_47"/>
-        
-        <record id="act_hr_timesheet_line_evry1_all_form" model="ir.actions.act_window">
-            <field name="name">All works</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">hr.analytic.timesheet</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-        <menuitem action="act_hr_timesheet_line_evry1_all_form" id="menu_act_hr_timesheet_line_evry1_all_form" parent="hr_timesheet.next_id_47"/>
-        
+        <menuitem action="act_hr_timesheet_line_evry1_today_form" id="menu_act_hr_timesheet_line_evry1_today_form" parent="menu_act_hr_timesheet_line_evry1_all_form"/>
+       
         <record id="hr_timesheet_employee_extd_form" model="ir.ui.view">
             <field name="name">hr.timesheet.employee.extd_form</field>
             <field name="model">hr.employee</field>

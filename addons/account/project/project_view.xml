@@ -74,7 +74,8 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_account_analytic_account_tree"/>
         </record>
-        <menuitem id="next_id_39" name="Analytic Accounts" parent="account.menu_finance_configuration"/><menuitem action="action_account_analytic_account_form" id="account_analytic_def_account" parent="next_id_39"/>
+        <menuitem id="next_id_39" name="Analytic Accounts" parent="account.menu_finance_configuration"/>
+		<menuitem action="action_account_analytic_account_form" id="account_analytic_def_account" parent="next_id_39"/>
         
         <record id="action_account_analytic_account_tree2" model="ir.actions.act_window">
             <field name="name">Analytic Charts of Accounts</field>

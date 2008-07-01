@@ -27,7 +27,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem groups="base.group_admin" id="menu_mrp_configuration" name="Configuration"/>
+        <menuitem groups="base.group_admin" id="menu_mrp_configuration" name="Configuration" parent="menu_mrp_root"/>
         <menuitem id="menu_mrp_property_group_action_prop" name="Properties" parent="menu_mrp_configuration"/>
         <menuitem action="mrp_property_group_action" id="menu_mrp_property_group_action" parent="menu_mrp_property_group_action_prop"/>
         
@@ -437,7 +437,7 @@
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
-            <field name="view_id" ref="mrp_production_form_view"/>
+            <field name="view_id" eval="False"/>
         </record>
         <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_root"/>
 
@@ -451,14 +451,14 @@
         </record>
         <menuitem action="mrp_production_action2" id="menu_production_orders_start" parent="menu_mrp_production_action"/>
         <record id="mrp_production_action3" model="ir.actions.act_window">
-            <field name="name">Production orders in progress</field>
+            <field name="name">Production Orders in Progress</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','in_production')]</field>
         </record>
-        <menuitem id="next_id_76" name="Production Orders" parent="mrp.menu_mrp_root"/><menuitem action="mrp_production_action3" id="menu_mrp_production_action3" parent="next_id_76"/>
+        <menuitem action="mrp_production_action3" id="menu_mrp_production_action3" parent="mrp_production_action"/>
         <record id="mrp_production_action4" model="ir.actions.act_window">
             <field name="name">Production orders waiting goods</field>
             <field name="type">ir.actions.act_window</field>
@@ -467,7 +467,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','confirmed')]</field>
         </record>
-        <menuitem action="mrp_production_action4" id="menu_production_orders_waiting4" parent="mrp.next_id_76"/>
+        <menuitem action="mrp_production_action4" id="menu_production_orders_waiting4" parent="mrp.mrp_production_action"/>
         
         <record id="mrp_production_workcenter_form_view" model="ir.ui.view">
             <field name="name">mrp.production.workcenter.line.form</field>

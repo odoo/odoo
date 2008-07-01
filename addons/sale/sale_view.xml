@@ -181,11 +181,10 @@
             </field>
         </record>
         <record id="action_order_form" model="ir.actions.act_window">
-            <field name="name">Sales Order</field>
+            <field name="name">Sales Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="view_order_form"/>
         </record>
         <menuitem action="action_order_form" id="menu_sale_order" parent="sale.menu_sale_root"/>
         
