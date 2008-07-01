@@ -17,7 +17,9 @@
 <blockTableStyle id="Tableau2">
 <blockAlignment value="LEFT"/>
 <blockValign value="TOP"/>
-<lineStyle kind="GRID" colorName="black"/>
+<lineStyle kind="GRID" colorName="white"/>
+<lineStyle kind="LINEBELOW" colorName="#e6e6e6" />
+<lineStyle kind="OUTLINE" colorName="#e6e6e6" />
 <blockBackground colorName="#e6e6e6" start="0,0" stop="0,0"/>
 <blockBackground colorName="#e6e6e6" start="1,0" stop="1,0"/>
 <blockBackground colorName="#e6e6e6" start="2,0" stop="2,0"/>
@@ -28,6 +30,7 @@
 <blockTableStyle id="Tableau3">
 <blockAlignment value="LEFT"/>
 <blockValign value="TOP"/>
+<lineStyle kind="LINEABOVE" colorName="#e6e6e6"/>
 </blockTableStyle>
 <blockTableStyle id="Tableau5">
 <blockAlignment value="LEFT"/>
@@ -36,11 +39,21 @@
 <blockTableStyle id="Tableau6">
 <blockAlignment value="LEFT"/>
 <blockValign value="TOP"/>
+<lineStyle kind="LINEABOVE" colorName="black" start="1,0" stop="-1,0" />
+<lineStyle kind="LINEABOVE" colorName="black" start="1,2" stop="-1,2" />
 </blockTableStyle>
 <blockTableStyle id="Tableau4">
 <blockAlignment value="LEFT"/>
 <blockValign value="TOP"/>
 </blockTableStyle>
+
+<blockTableStyle id="Tableau7">
+<blockAlignment value="LEFT"/>
+<blockValign value="TOP"/>
+<lineStyle kind="LINEBELOW" colorName="#e6e6e6" />
+<blockBackground colorName="#e6e6e6" start="0,0" stop="-1,0"/>
+</blockTableStyle>
+
 <initialize>
 <paraStyle name="all" alignment="justify"/>
 </initialize>
@@ -70,8 +83,13 @@
 <paraStyle name="P24" fontName="Times-Roman" fontSize="7.0" leading="9"/>
 <paraStyle name="P25" fontName="Times-Bold" fontSize="9.0" leading="11" alignment="RIGHT"/>
 <paraStyle name="P26" fontName="Times-Roman" fontSize="9.0" leading="11" alignment="RIGHT"/>
-<paraStyle name="P27" fontName="Times-BoldItalic" fontSize="11.0" leading="14"/>
+<paraStyle name="P27" fontName="Times-Bold" fontSize="11.0" leading="14"/>
 <paraStyle name="P28" fontName="Times-BoldItalic" fontSize="11.0" leading="14" alignment="CENTER"/>
+<paraStyle name="P29" fontName="Times-Roman" fontSize="9.0" leading="11" alignment="LEFT"/>
+<paraStyle name="P30" fontName="Times-Roman" fontSize="9.0" leading="14"/>
+<paraStyle name="P31" fontName="Times-Roman" fontSize="9.0" leading="14"/>
+<paraStyle name="P32" fontName= "Helvetica" fontSize="9.0" leading="13"/>
+
 <paraStyle name="Standard" fontName="Times-Roman"/>
 <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
 <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
@@ -134,33 +152,61 @@
 <para style="P20">
 <font color="white"> </font>
 </para>
-<para style="P23">Your Order Reference : [[ o.client_order_ref or '' ]]</para>
-<para style="P23">Date Ordered : [[ o.date_order ]]</para>
-<para style="P23">Our salesman : [[ o.user_id.name ]]</para>
-<para style="P2">
+<blockTable colWidths="132.0,132.0,132.0,132.0" style="Tableau7">
+<tr>
+<td>
+<para style="P27">Your order reference </para>
+</td>
+<td>
+<para style="P27">Date ordered </para>
+</td>
+<td>
+<para style="P27">Our salesman </para>
+</td>
+<td>
+<para style="P27">Payment </para>
+</td>
+</tr>
+<tr>
+<td>
+<para style="P32">[[ o.client_order_ref ]]</para>
+</td>
+<td>
+<para style="P32">[[ o.date_order ]]</para>
+</td>
+<td>
+<para style="P32">[[ o.user_id.name ]]</para>
+</td>
+<td>
+<para style="P32">[[ o.client_ref and o.client_ref.property_payment_term and o.client_ref.property_payment_term[0] and o.client_ref.property_payment_term[0].name ]] </para>
+</td>
+</tr>
+</blockTable>
+<para style="P30">
 <font color="white"> </font>
 </para>
-<blockTable colWidths="256.0,46.0,56.0,59.0,56.0,54.0" repeatRows="1" style="Tableau2">
+
+<blockTable colWidths="246.0,46.0,56.0,69.0,56.0,54.0" repeatRows="1" style="Tableau2">
 <tr>
 <td>
 <para style="P27">Description</para>
 </td>
 <td>
-<para style="P28">Taxes</para>
+<para style="P27">Taxes</para>
 </td>
 <td>
-<para style="P28">Quantity</para>
+<para style="P27">Quantity</para>
 </td>
 <td>
-<para style="P28">Unit Price</para>
+<para style="P27">Unit Price</para>
 </td>
 <td>
-<para style="P28">
+<para style="P27">
 <font face="Times-Roman">Disc. (%)</font>
 </para>
 </td>
 <td>
-<para style="P28">Price</para>
+<para style="P27">Price</para>
 </td>
 </tr>
 </blockTable>
@@ -169,22 +215,22 @@
 <blockTable colWidths="256.0,46.0,56.0,59.0,56.0,54.0" style="Tableau3">
 <tr>
 <td>
-<para style="P7">[[ line.name ]]</para>
+<para style="P32">[[ line.name ]]</para>
 </td>
 <td>
-<para style="P8">[[ ', '.join(map(lambda x: x.name, line.tax_id))]]</para>
+<para style="P32">[[ ', '.join(map(lambda x: x.name, line.tax_id))]]</para>
 </td>
 <td>
-<para style="P9">[[ line.product_uos and line.product_uos_qty or line.product_uom_qty ]] [[ line.product_uos and line.product_uos.name or line.product_uom.name ]]</para>
+<para style="P32">[[ line.product_uos and line.product_uos_qty or line.product_uom_qty ]] [[ line.product_uos and line.product_uos.name or line.product_uom.name ]]</para>
 </td>
 <td>
-<para style="P9">[[ line.price_unit ]]</para>
+<para style="P32">[[ line.price_unit ]]</para>
 </td>
 <td>
-<para style="P9">[[ (line.discount and str(line.discount)+'%')or '' ]]</para>
+<para style="P32">[[ (line.discount and str(line.discount)+'%')or '' ]]</para>
 </td>
 <td>
-<para style="P9">[[ line.price_subtotal ]]</para>
+<para style="P32">[[ line.price_subtotal ]]</para>
 </td>
 </tr>
 </blockTable>
@@ -204,7 +250,7 @@
 </tr>
 </blockTable>
 </section>
-<blockTable colWidths="348.0,69.0,110.0" style="Tableau6">
+<blockTable colWidths="362.0,69.0,95.0" style="Tableau6">
 <tr>
 <td>
 <para style="P24">
@@ -215,7 +261,9 @@
 <para style="P25">Net Total&#xA0;:</para>
 </td>
 <td>
-<para style="P25">[[ o.amount_untaxed ]] [[ o.pricelist_id.currency_id.name ]]</para>
+<para style="P25">[[ o.amount_untaxed ]] [[ o.pricelist_id.currency_id.name ]]
+
+</para>
 </td>
 </tr>
 <tr>
