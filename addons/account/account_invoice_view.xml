@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
-        
+
         <!--
 		Invoices
 		-->
-        
+
         <record id="view_invoice_line_tree" model="ir.ui.view">
             <field name="name">account.invoice.line.tree</field>
             <field name="model">account.invoice.line</field>
@@ -41,7 +41,6 @@
                             <newline/>
                             <field name="price_subtotal"/>
                             <field colspan="4" name="invoice_line_tax_id"/>
-                             
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="note" nolabel="1"/>
@@ -85,7 +84,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="invoice_tree" model="ir.ui.view">
             <field name="name">account.invoice.tree</field>
             <field name="model">account.invoice</field>
@@ -105,7 +104,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="invoice_supplier_form" model="ir.ui.view">
             <field name="name">account.invoice.supplier.form</field>
             <field name="model">account.invoice</field>
@@ -146,7 +145,7 @@
                                         <field name="name"/>
                                         <field name="base" on_change="base_change(base)" readonly="1"/>
                                         <field name="amount" on_change="amount_change(amount)"/>
-                                        
+
                                         <field invisible="True" name="base_amount"/>
                                         <field invisible="True" name="tax_amount"/>
                                     </tree>
@@ -188,8 +187,8 @@
                 </form>
             </field>
         </record>
-        
-        
+
+
         <record id="invoice_form" model="ir.ui.view">
             <field name="name">account.invoice.form</field>
             <field name="model">account.invoice</field>
@@ -255,11 +254,39 @@
                 </form>
             </field>
         </record>
-        
-        <menuitem id="menu_finance_invoice" name="Invoices" parent="account.menu_finance" sequence="6"/>
-        
+
+        <record id="action_invoice_tree" model="ir.actions.act_window">
+            <field name="name">Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="invoice_tree"/>
+            <field name="context">{'type':'out_invoice'}</field>
+        </record>
+        <record id="action_invoice_tree_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="action_invoice_tree"/>
+        </record>
+        <record id="action_invoice_tree_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="invoice_form"/>
+            <field name="act_window_id" ref="action_invoice_tree"/>
+        </record>
+        <menuitem action="action_invoice_tree" id="menu_finance_invoice" parent="account.menu_finance_invoice"/>
+
         <record id="action_invoice_tree1" model="ir.actions.act_window">
-            <field name="name">Customer Invoice</field>
+            <field name="name">Customer Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field eval="False" name="view_id"/>
+            <field name="domain">[('type','=','out_invoice')]</field>
+            <field name="context">{'type':'out_invoice'}</field>
+        </record>
+        <menuitem action="action_invoice_tree1" id="menu_action_invoice_tree1" parent="account.menu_finance_invoice"/>
+        <record id="action_invoice_tree1_new" model="ir.actions.act_window">
+            <field name="name">New Customer Invoice</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
@@ -267,10 +294,20 @@
             <field name="domain">[('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice'}</field>
         </record>
-        <menuitem action="action_invoice_tree1" id="menu_action_invoice_tree1" parent="account.menu_finance_invoice"/>
-        
+        <menuitem action="action_invoice_tree1_new" id="menu_action_invoice_tree1_new" parent="action_invoice_tree1"/>
+
         <record id="action_invoice_tree2" model="ir.actions.act_window">
-            <field name="name">Supplier Invoice</field>
+            <field name="name">Supplier Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field eval="False" name="view_id"/>
+            <field name="domain">[('type','=','in_invoice')]</field>
+            <field name="context">{'type':'in_invoice'}</field>
+        </record>
+        <menuitem action="action_invoice_tree2" id="menu_action_invoice_tree2" parent="account.menu_finance_invoice"/>
+        <record id="action_invoice_tree2_new" model="ir.actions.act_window">
+            <field name="name">New Supplier Invoice</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
@@ -278,10 +315,21 @@
             <field name="domain">[('type','=','in_invoice')]</field>
             <field name="context">{'type':'in_invoice'}</field>
         </record>
-        <menuitem action="action_invoice_tree2" id="menu_action_invoice_tree2" parent="account.menu_finance_invoice"/>
-        
+        <menuitem action="action_invoice_tree2_new" id="menu_action_invoice_tree2_new" parent="action_invoice_tree2"/>
+
         <record id="action_invoice_tree3" model="ir.actions.act_window">
-            <field name="name">Customer Refund</field>
+            <field name="name">Customer Refunds</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field eval="False" name="view_id"/>
+            <field name="domain">[('type','=','out_refund')]</field>
+            <field name="context">{'type':'out_refund'}</field>
+        </record>
+        <menuitem action="action_invoice_tree3" id="menu_action_invoice_tree3" parent="account.menu_finance_invoice"/>
+
+        <record id="action_invoice_tree3_new" model="ir.actions.act_window">
+            <field name="name">New Customer Refund</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
@@ -289,10 +337,21 @@
             <field name="domain">[('type','=','out_refund')]</field>
             <field name="context">{'type':'out_refund'}</field>
         </record>
-        <menuitem action="action_invoice_tree3" id="menu_action_invoice_tree3" parent="account.menu_finance_invoice"/>
-        
+        <menuitem action="action_invoice_tree3_new" id="menu_action_invoice_tree3_new" parent="menu_action_invoice_tree3"/>
+
         <record id="action_invoice_tree4" model="ir.actions.act_window">
-            <field name="name">Supplier Refund</field>
+            <field name="name">Supplier Refunds</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field eval="False" name="view_id"/>
+            <field name="domain">[('type','=','in_refund')]</field>
+            <field name="context">{'type':'in_refund'}</field>
+        </record>
+        <menuitem action="action_invoice_tree4" id="menu_action_invoice_tree4" parent="account.menu_finance_invoice"/>
+
+        <record id="action_invoice_tree4_new" model="ir.actions.act_window">
+            <field name="name">New Supplier Refund</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
@@ -300,8 +359,9 @@
             <field name="domain">[('type','=','in_refund')]</field>
             <field name="context">{'type':'in_refund'}</field>
         </record>
-        <menuitem action="action_invoice_tree4" id="menu_action_invoice_tree4" parent="account.menu_finance_invoice"/>
-        
+        <menuitem action="action_invoice_tree4_new" id="menu_action_invoice_tree4_new" parent="menu_action_invoice_tree4"/>
+
+
         <record id="action_invoice_tree5" model="ir.actions.act_window">
             <field name="name">Draft Customer Invoices</field>
             <field name="res_model">account.invoice</field>
@@ -320,9 +380,9 @@
             <field name="view_id" ref="invoice_form"/>
             <field name="act_window_id" ref="action_invoice_tree5"/>
         </record>
-        
-        <menuitem id="next_id_35" name="Customer Invoice" parent="account.menu_finance_invoice"/><menuitem action="action_invoice_tree5" id="menu_invoice_draft" parent="next_id_35"/>
-        
+
+        <menuitem action="action_invoice_tree5" id="menu_invoice_draft" parent="action_invoice_tree1"/>
+
         <record id="action_invoice_tree6" model="ir.actions.act_window">
             <field name="name">PRO-FORMA Customer Invoices</field>
             <field name="res_model">account.invoice</field>
@@ -341,9 +401,9 @@
             <field name="view_id" ref="invoice_form"/>
             <field name="act_window_id" ref="action_invoice_tree6"/>
         </record>
-        
-        <menuitem action="action_invoice_tree6" id="menu_action_invoice_tree6" parent="account.next_id_35"/>
-        
+
+        <menuitem action="action_invoice_tree6" id="menu_action_invoice_tree6" parent="account.action_invoice_tree1"/>
+
         <record id="action_invoice_tree7" model="ir.actions.act_window">
             <field name="name">Open Customer Invoices</field>
             <field name="res_model">account.invoice</field>
@@ -362,9 +422,9 @@
             <field name="view_id" ref="invoice_form"/>
             <field name="act_window_id" ref="action_invoice_tree7"/>
         </record>
-        
-        <menuitem action="action_invoice_tree7" id="menu_action_invoice_tree7" parent="account.next_id_35"/>
-        
+
+        <menuitem action="action_invoice_tree7" id="menu_action_invoice_tree7" parent="account.action_invoice_tree1"/>
+
         <record id="action_invoice_tree8" model="ir.actions.act_window">
             <field name="name">Draft Supplier Invoices</field>
             <field name="res_model">account.invoice</field>
@@ -383,9 +443,9 @@
             <field name="view_id" ref="invoice_supplier_form"/>
             <field name="act_window_id" ref="action_invoice_tree8"/>
         </record>
-        
-        <menuitem id="next_id_36" name="Supplier Invoice" parent="account.menu_finance_invoice"/><menuitem action="action_invoice_tree8" id="menu_action_invoice_tree8" parent="next_id_36"/>
-        
+
+        <menuitem action="action_invoice_tree8" id="menu_action_invoice_tree8" parent="action_invoice_tree2"/>
+
         <record id="action_invoice_tree9" model="ir.actions.act_window">
             <field name="name">Open Supplier Invoices</field>
             <field name="res_model">account.invoice</field>
@@ -404,9 +464,9 @@
             <field name="view_id" ref="invoice_supplier_form"/>
             <field name="act_window_id" ref="action_invoice_tree9"/>
         </record>
-        
-        <menuitem action="action_invoice_tree9" id="menu_action_invoice_tree9" parent="account.next_id_36"/>
-        
+
+        <menuitem action="action_invoice_tree9" id="menu_action_invoice_tree9" parent="account.action_invoice_tree2"/>
+
         <record id="action_invoice_tree10" model="ir.actions.act_window">
             <field name="name">Draft Customer Refunds</field>
             <field name="res_model">account.invoice</field>
@@ -425,9 +485,9 @@
             <field name="view_id" ref="invoice_form"/>
             <field name="act_window_id" ref="action_invoice_tree10"/>
         </record>
-        
-        <menuitem id="next_id_37" name="Customer Refund" parent="account.menu_finance_invoice"/><menuitem action="action_invoice_tree10" id="menu_action_invoice_tree10" parent="next_id_37"/>
-        
+
+        <menuitem action="action_invoice_tree10" id="menu_action_invoice_tree10" parent="action_invoice_tree3"/>
+
         <record id="action_invoice_tree11" model="ir.actions.act_window">
             <field name="name">Open Customer Refunds</field>
             <field name="res_model">account.invoice</field>
@@ -446,9 +506,9 @@
             <field name="view_id" ref="invoice_form"/>
             <field name="act_window_id" ref="action_invoice_tree11"/>
         </record>
-        
-        <menuitem action="action_invoice_tree11" id="menu_action_invoice_tree11" parent="account.next_id_37"/>
-        
+
+        <menuitem action="action_invoice_tree11" id="menu_action_invoice_tree11" parent="account.action_invoice_tree3"/>
+
         <record id="action_invoice_tree12" model="ir.actions.act_window">
             <field name="name">Draft Supplier Refunds</field>
             <field name="res_model">account.invoice</field>
@@ -467,9 +527,9 @@
             <field name="view_id" ref="invoice_supplier_form"/>
             <field name="act_window_id" ref="action_invoice_tree12"/>
         </record>
-        
-        <menuitem id="next_id_38" name="Supplier Refund" parent="account.menu_finance_invoice"/><menuitem action="action_invoice_tree12" id="menu_action_invoice_tree12" parent="next_id_38"/>
-        
+
+        <menuitem action="action_invoice_tree12" id="menu_action_invoice_tree12" parent="action_invoice_tree4"/>
+
         <record id="action_invoice_tree13" model="ir.actions.act_window">
             <field name="name">Open Supplier Refunds</field>
             <field name="res_model">account.invoice</field>
@@ -488,35 +548,14 @@
             <field name="view_id" ref="invoice_supplier_form"/>
             <field name="act_window_id" ref="action_invoice_tree13"/>
         </record>
-        
-        <menuitem action="action_invoice_tree13" id="menu_action_invoice_tree13" parent="account.next_id_38"/>
-        
-        <record id="action_invoice_tree" model="ir.actions.act_window">
-            <field name="name">All Invoices</field>
-            <field name="res_model">account.invoice</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="invoice_tree"/>
-            <field name="context">{'type':'out_invoice'}</field>
-        </record>
-        <record id="action_invoice_tree_view1" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="act_window_id" ref="action_invoice_tree"/>
-        </record>
-        <record id="action_invoice_tree_view2" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="invoice_form"/>
-            <field name="act_window_id" ref="action_invoice_tree"/>
-        </record>
-        
-        <menuitem action="action_invoice_tree" id="menu_action_invoice_tree" parent="account.menu_finance_invoice"/>
-        
+
+        <menuitem action="action_invoice_tree13" id="menu_action_invoice_tree13" parent="account.action_invoice_tree4"/>
+
         <act_window domain="[('partner_id', '=', active_id),('state', '=', 'open')]" id="act_res_partner_2_account_invoice_opened" name="Open invoices" res_model="account.invoice" src_model="res.partner"/>
-        
+
         <act_window domain="[('journal_id', '=', active_id),('state', '=', 'open')]" id="act_account_journal_2_account_invoice_opened" name="Open invoices" res_model="account.invoice" src_model="account.journal"/>
-        
+
         <act_window domain="[('account_analytic_id', '=', active_id)]" id="act_account_analytic_account_2_account_invoice_line" name="Invoice lines" res_model="account.invoice.line" src_model="account.analytic.account"/>
-        
+
     </data>
 </terp>
