@@ -144,13 +144,12 @@ class res_company(osv.osv):
 		<pageGraphics>
 			<!-- You Logo - Change X,Y,Width and Height -->
 		<image x="1cm" y="27.6cm" height="40.0" >[[company.logo]]</image>
-			<setFont name="Helvetica" size="30"/>
+			<setFont name="Helvetica" size="8"/>
 			<fill color="black"/>
 			<stroke color="black"/>
 			<!--drawString x="1cm" y="27.8cm">[[ company.partner_id.name ]]</drawString-->
 			<lines>1cm 27.7cm 20cm 27.7cm</lines>
 
-			<setFont name="Times-Italic" size="10"/>
 			<drawRightString x="20cm" y="27.8cm">[[ company.rml_header1 ]]</drawRightString>
 
 
