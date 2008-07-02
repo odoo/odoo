@@ -98,12 +98,12 @@ class config_install_extra_modules(osv.osv_memory):
             ids = mod_obj.search(cr, uid, [('name', '=', 'hr_timesheet')])
             mod_obj.download(cr, uid, ids, context=context)
             cr.commit()
-            db, pool = pooler.restart_pool(cr.dbname, update_module=True)
+            #db, pool = pooler.restart_pool(cr.dbname, update_module=True)
         if  'hr_holidays_module' in res and res['hr_holidays_module']:
             ids = mod_obj.search(cr, uid, [('name', '=', 'hr_holidays')])
             mod_obj.download(cr, uid, ids, context=context)
             cr.commit()
-            db, pool = pooler.restart_pool(cr.dbname, update_module=True)
+            #db, pool = pooler.restart_pool(cr.dbname, update_module=True)
         return {
                 'view_type': 'form',
                 "view_mode": 'form',

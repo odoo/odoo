@@ -1552,7 +1552,7 @@ class account_config_fiscalyear(osv.osv_memory):
     }
     _defaults = {
         'date1': lambda *a: time.strftime('%Y-01-01'),
-        'date2': lambda *a: time.strftime('%Y-%m-%d'),
+        'date2': lambda *a: time.strftime('%Y-12-31'),
     }
     def action_create(self, cr, uid,ids, context=None):
     	res=self.read(cr,uid,ids)[0]
@@ -1596,14 +1596,15 @@ class account_config_journal_bank_accounts(osv.osv_memory):
 		if 'lines_id' in config_res and config_res['lines_id']:
 			lines=line_obj.read(cr,uid,config_res['lines_id'])
 			for res in lines:
-				if 'name' in res and 'bank_account_id' in res and 'view_id'  in res and 'sequence_id' in res:
+				sequence_ids=self.pool.get('ir.sequence').search(cr,uid,[('name','=','Account Journal')])
+				if 'name' in res and 'bank_account_id' in res and 'view_id'  in res and sequence_ids and len(sequence_ids):
 					vals={
 						  'name':res['name'],
 						  'type':'cash',
 						  'view_id':res['view_id'],
 						  'default_credit_account_id':res['bank_account_id'],
 						  'default_debit_account_id':res['bank_account_id'],
-						  'sequence_id':res['sequence_id']
+						  'sequence_id':sequence_ids[0]
 						  }
 					res_obj.create(cr, uid, vals, context=context)
 		return {
@@ -1627,10 +1628,7 @@ class account_config_journal_bank_accounts_line(osv.osv_memory):
 		'name':fields.char('Journal Name', size=64,required=True),
 		'bank_account_id':fields.many2one('account.account', 'Bank Account', required=True, domain=[('type','=','cash')]),
 		'view_id':fields.selection(_journal_view_get, 'Journal View', required=True),
-		'sequence_id':fields.many2one('ir.sequence', 'Sequence', required=True),
 		'journal_id':fields.many2one('account.config.journal.bank.account', 'Journal', required=True),
     }
-
-
 account_config_journal_bank_accounts_line()
 
