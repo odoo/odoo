@@ -111,51 +111,57 @@ class res_company(osv.osv):
 		return True
 	
 	def _get_header2(self,cr,uid,ids):
-		return """<header>
-	<pageTemplate>
-		<frame id="first" x1="1cm" y1="1.0cm" width="19.0cm" height="26.0cm"/>
+		return """
+		<header>
+		<pageTemplate>
+		<frame id="first" x1="1cm" y1="1.5cm" width="19.0cm" height="26.0cm"/>
 		<pageGraphics>
-			<setFont name="Helvetica" size="30"/>
-			<fill color="black"/>
-			<stroke color="black"/>
-			<drawString x="1cm" y="27.8cm">[[ company.partner_id.name ]]</drawString>
-			<lines>1cm 27.7cm 20cm 27.7cm</lines>
-			<drawRightString x="297.5" y="27.8cm"><pageNumber/> /  </drawRightString>
-			<drawString x="297.5" y="27.8cm"><pageCount/></drawString>
+		<setFont name="Helvetica" size="10"/>
+		<fill color="black"/>
+		<stroke color="black"/>
+		<setFont name="Helvetica" size="8"/>
+		<!--<drawString x="1cm" y="28.3cm">Currency: [[ company.currency_id.name ]]</drawString>-->
+		<drawString x="1cm" y="28.3cm"> [[ formatLang(time.strftime("%Y-%m-%d"), date=True) ]]  [[ time.strftime("%H:%M") ]]</drawString>
+		<setFont name="Helvetica-Bold" size="10"/>
+		<drawString x="9cm" y="28.3cm">[[ company.partner_id.name ]]</drawString>
+		<setFont name="Helvetica" size="8"/>
+		<drawRightString x="19.5cm" y="28.3cm"><pageNumber/> /  </drawRightString>
+		<drawString x="19.6cm" y="28.3cm"><pageCount/></drawString>
+		<stroke color="#aaaaaa"/>
+		<!--<drawString x="1cm" y="28.3cm">[[user.name]]</drawString>-->
+		<lines>1cm 28.1cm 20cm 28.1cm</lines>
 		</pageGraphics>
-	</pageTemplate>
+		</pageTemplate>
 </header>"""
 	def _get_header(self,cr,uid,ids):
 		try :
 			return tools.file_open('custom/corporate_rml_header.rml').read()
 		except:
-			return """<header>
+			return """
+	<header>
 	<pageTemplate>
-		<frame id="first" x1="1cm" y1="2.5cm" width="19.0cm" height="23.0cm"/>
+		<frame id="first" x1="1cm" y1="2.5cm" height="23.0cm" width="19cm"/>
 		<pageGraphics>
-			<!--logo-->
-
-		<image x="1.5cm" y="27cm" height="80.0" width="110.0">[[company.logo]]</image>
-
-
+			<!-- You Logo - Change X,Y,Width and Height -->
+		<image x="1cm" y="27.6cm" height="40.0" >[[company.logo]]</image>
 			<setFont name="Helvetica" size="30"/>
 			<fill color="black"/>
 			<stroke color="black"/>
-			<!--drawString x="1cm" y="2cm">[[ company.partner_id.name ]]</drawString-->
-			<lines>1cm 27.1cm 20cm 27.1cm</lines>
+			<!--drawString x="1cm" y="27.8cm">[[ company.partner_id.name ]]</drawString-->
+			<lines>1cm 27.7cm 20cm 27.7cm</lines>
 
-			<setFont name="Helvetica" size="10"/>
-			<drawRightString x="20cm" y="28cm">[[ company.rml_header1 ]]</drawRightString>
+			<setFont name="Times-Italic" size="10"/>
+			<drawRightString x="20cm" y="27.8cm">[[ company.rml_header1 ]]</drawRightString>
 
 
-			<drawString x="1cm" y="26.8cm">[[ company.partner_id.name ]]</drawString>
-			<drawString x="1cm" y="26.6cm">[[ company.partner_id.address and company.partner_id.address[0].street ]]</drawString>
-			<drawString x="1cm" y="26.3cm">[[ company.partner_id.address and company.partner_id.address[0].zip ]] [[ company.partner_id.address and company.partner_id.address[0].city ]] - [[ company.partner_id.address and company.partner_id.address[0].country_id and company.partner_id.address[0].country_id.name ]]</drawString>
-			<drawString x="1cm" y="26cm">Phone:</drawString>
-			<drawRightString x="7cm" y="25.8cm">[[ company.partner_id.address and company.partner_id.address[0].phone ]]</drawRightString>
-			<drawString x="1cm" y="25.4cm">Mail:</drawString>
-			<drawRightString x="7cm" y="25.4cm">[[ company.partner_id.address and company.partner_id.address[0].email ]]</drawRightString>
-			<lines>1cm 25.3cm 20cm 25.3cm</lines>
+			<drawString x="1cm" y="27.2cm">[[ company.partner_id.name ]]</drawString>
+			<drawString x="1cm" y="26.8cm">[[ company.partner_id.address and company.partner_id.address[0].street ]]</drawString>
+			<drawString x="1cm" y="26.4cm">[[ company.partner_id.address and company.partner_id.address[0].zip ]] [[ company.partner_id.address and company.partner_id.address[0].city ]] - [[ company.partner_id.address and company.partner_id.address[0].country_id and company.partner_id.address[0].country_id.name ]]</drawString>
+			<drawString x="1cm" y="26.0cm">Phone:</drawString>
+			<drawRightString x="7cm" y="26.0cm">[[ company.partner_id.address and company.partner_id.address[0].phone ]]</drawRightString>
+			<drawString x="1cm" y="25.6cm">Mail:</drawString>
+			<drawRightString x="7cm" y="25.6cm">[[ company.partner_id.address and company.partner_id.address[0].email ]]</drawRightString>
+			<lines>1cm 25.5cm 7cm 25.5cm</lines>
 
 			<!--page bottom-->
 
