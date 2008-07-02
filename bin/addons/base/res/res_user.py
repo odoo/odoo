@@ -196,7 +196,16 @@ class users(osv.osv):
 		data_id = dataobj._get_id(cr, 1, 'base', 'action_res_users_my')
 		return dataobj.browse(cr, uid, data_id, context).res_id
 
-	def action_create(self,cr,uid,ids,context={}):
+	def action_next(self,cr,uid,ids,context=None):
+		return{
+				'view_type': 'form',
+				"view_mode": 'form',
+				'res_model': 'ir.module.module.configuration.wizard',
+				'type': 'ir.actions.act_window',
+				'target':'new',
+		}
+
+	def action_continue(self,cr,uid,ids,context={}):
 		return {
 			    'view_type': 'form',
 			    "view_mode": 'form',
@@ -204,7 +213,7 @@ class users(osv.osv):
 			    'type': 'ir.actions.act_window',
 			    'target':'new',
 			   }
-	def action_create_new(self,cr,uid,ids,context={}):
+	def action_new(self,cr,uid,ids,context={}):
 		return {
 			    'view_type': 'form',
 			    "view_mode": 'form',

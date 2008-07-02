@@ -26,7 +26,7 @@
             <field name="view_type">form</field>
         </record>
         <menuitem id="next_id_2" name="Interface" parent="base.menu_custom"/><menuitem action="action_lang" id="menu_action_lang" parent="next_id_2"/>
-        
+
         <!--
 	======================
 	Groups
@@ -65,7 +65,7 @@
                 </form>
             </field>
         </record>
-        
+
         <!--
 	======================
 	Users
@@ -87,7 +87,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="view_users_form" model="ir.ui.view">
             <field name="name">res.users.form</field>
             <field name="model">res.users</field>
@@ -127,7 +127,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <!--
 	======================
 	Company
@@ -173,10 +173,10 @@
                 </tree>
             </field>
         </record>
-        
-        
-        
-        
+
+
+
+
         <record id="view_users_configuration_form" model="ir.ui.view">
             <field name="name">res.users.confirm.form</field>
             <field name="model">res.users</field>
@@ -197,11 +197,11 @@
                             <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
                             <field colspan="4" name="signature"/>
                             <group col="4" colspan="4">
-                                <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                                <button icon="gtk-ok" name="action_create" string="Save" type="object"/>
-                                <button icon="gtk-ok" name="action_create_new" string="Save + New" type="object"/>
+                                <button icon='gtk-cancel' name="action_next" type='object' string='Skip &amp; Continue'/>
+                                <button name='action_new' icon='gtk-ok' type='object' string='Add Other User'/>
+                                <button name='action_continue' icon='gtk-ok' type='object' string='Continue'/>
                             </group>
-                            
+
                         </page>
                         <page string="Security">
                             <field colspan="4" name="groups_id"/>
@@ -211,7 +211,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="action_config_user_form" model="ir.actions.act_window">
             <field name="name">Configure User</field>
             <field name="type">ir.actions.act_window</field>
@@ -221,8 +221,8 @@
             <field name="view_id" ref="view_users_configuration_form"/>
             <field name="target">new</field>
         </record>
-        
-        
+
+
         <record id="view_confirm_simple_view_form" model="ir.ui.view">
             <field name="name">res.users.confirm.simple_view</field>
             <field name="model">res.config.view</field>
@@ -244,16 +244,16 @@ to understand." colspan="2"/>
                     <newline/>
                     <separator string=""/>
                     <newline/>
-                    
+
                     <group>
                         <button icon="gtk-cancel" special="cancel" string="Cancel"/>
                         <button icon="gtk-ok" name="action_set" string="Set" type="object"/>
                     </group>
-                    
+
                 </form>
             </field>
         </record>
-        
+
         <record id="action_config_simple_view_form" model="ir.actions.act_window">
             <field name="name">Configure Simple View</field>
             <field name="type">ir.actions.act_window</field>
@@ -262,11 +262,11 @@ to understand." colspan="2"/>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-        
-        
-        
+
+
+
         <!-- register on configuratuion -->
-        
+
         <record id="config_wizard_step_user" model="ir.module.module.configuration.step">
             <field name="name">Create User</field>
             <field name="note">Create some users</field>
@@ -274,7 +274,7 @@ to understand." colspan="2"/>
             <field name="state">open</field>
             <field name="sequence">10</field>
         </record>
-        
+
         <record id="config_wizard_simple_view" model="ir.module.module.configuration.step">
             <field name="name">Select between the simplified views or the extended views.</field>
             <field name="note">Select between the simplified views or the extended views.
@@ -285,6 +285,6 @@ to understand." colspan="2"/>
             <field name="state">open</field>
             <field name="sequence">5</field>
         </record>
-        
+
     </data>
 </terp>
