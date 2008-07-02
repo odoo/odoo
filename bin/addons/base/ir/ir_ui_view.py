@@ -104,17 +104,11 @@ class view_sc(osv.osv):
 	_name = 'ir.ui.view_sc'
 	_columns = {
 		'name': fields.char('Shortcut Name', size=64, required=True),
-		'res_id': fields.integer('Resource Ref.', required=True),
+		'res_id': fields.many2one('ir.values','Resource Ref.', ondelete='cascade'),
 		'sequence': fields.integer('Sequence'),
 		'user_id': fields.many2one('res.users', 'User Ref.', required=True, ondelete='cascade'),
 		'resource': fields.char('Resource Name', size=64, required=True)
 	}
-	def create(self, cr, uid, vals, context=None):
-		id=self.pool.get('ir.values').search(cr,uid,[('res_id','=',vals['res_id'])])
-		if len(id):
-			return super(view_sc, self).create(cr, uid, vals, context=context)
-		else:
-			raise osv.except_osv('Note !','You can not add root node as shortcut !')
 
 	def get_sc(self, cr, uid, user_id, model='ir.ui.menu', context={}):
 		ids = self.search(cr, uid, [('user_id','=',user_id),('resource','=',model)], context=context)
@@ -123,5 +117,6 @@ class view_sc(osv.osv):
 	_order = 'sequence'
 	_defaults = {
 		'resource': lambda *a: 'ir.ui.menu',
+		'user_id': lambda obj, cr, uid, context: uid,
 	}
 view_sc()
