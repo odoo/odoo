@@ -1311,8 +1311,17 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','running')]</field>
         </record>
-        <menuitem id="next_id_34" name="Subscription Entries" parent="account.menu_finance_entries"/><menuitem action="action_subscription_form_running" id="menu_action_subscription_form_running" parent="next_id_34"/>
-        
+        <menuitem action="action_subscription_form_running" id="menu_action_subscription_form_running" parent="menu_action_subscription_form"/>
+
+        <record id="action_subscription_form_new" model="ir.actions.act_window">
+            <field name="name">New Subscription Entries</field>
+            <field name="res_model">account.subscription</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="view_subscription_form"/>
+        </record>
+        <menuitem action="action_subscription_form_new" id="menu_action_subscription_form_new" parent="menu_action_subscription_form"/>
+          
         <record id="view_subscription_line_form_complete" model="ir.ui.view">
             <field name="name">account.subscription.line.form</field>
             <field name="model">account.subscription.line</field>
@@ -1326,16 +1335,7 @@
                 </form>
             </field>
         </record>
-        <record id="action_subscription_line_form_running" model="ir.actions.act_window">
-            <field name="name">Next Entries</field>
-            <field name="res_model">account.subscription.line</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('move_id','=',False)]</field>
-        </record>
-        <menuitem action="action_subscription_line_form_running" id="menu_action_subscription_line_form_running" parent="account.next_id_34"/>
-        
-        
+
         <record id="action_move_line_tree1" model="ir.actions.act_window">
             <field name="name">Move line select</field>
             <field name="res_model">account.move.line</field>
