@@ -80,6 +80,7 @@ def _child_get(node, childs):
 class PageCount(platypus.Flowable):
 	def draw(self):
 		self.canv.beginForm("pageCount")
+		self.canv.setFont("Helvetica", utils.unit_get(8)
 		self.canv.drawString(0, 0, str(self.canv.getPageNumber()))
 		self.canv.endForm()
 
