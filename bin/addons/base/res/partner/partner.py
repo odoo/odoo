@@ -424,18 +424,10 @@ class res_partner_bank(osv.osv):
 	def name_get(self, cr, uid, ids, context=None):
 		if not len(ids):
 			return []
-		bank_type_obj = self.pool.get('res.partner.bank.type')
-
-		type_ids = bank_type_obj.search(cr, uid, [])
-		bank_type_names = {}
-		for bank_type in bank_type_obj.browse(cr, uid, type_ids,
-				context=context):
-			bank_type_names[bank_type.code] = bank_type.name
-
-		return [(r['id'], (bank_type_names[r['state']] or '') + (r['owner_name'] and \
-				(': ' + r['owner_name']) or '')) for r in self.read(cr, uid, ids,
-					[self._rec_name, 'owner_name'], context,
-					load='_classic_write')]
+		res = []
+		for id in self.browse(cr, uid, ids):
+			res.append((id.id,id.acc_number))
+		return res
 
 res_partner_bank()
 
