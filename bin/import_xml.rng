@@ -81,7 +81,7 @@
             <rng:attribute name="name"/>
             <rng:attribute name="id" />
             <rng:optional><rng:attribute name="menu" /></rng:optional>
-            <rng:attribute name="model" />
+            <rng:optional><rng:attribute name="model" /></rng:optional>
             <rng:attribute name="string" />
             <rng:optional><rng:attribute name="keyword" /></rng:optional>
             <rng:optional><rng:attribute name="multi" /></rng:optional>
@@ -196,7 +196,7 @@
                     <rng:ref name="function" />
                     <rng:ref name="ir_set" />
                 </rng:choice>
-            </rng:zeroOrMore> 
+            </rng:zeroOrMore>
         </rng:element>
     </rng:define>
 
