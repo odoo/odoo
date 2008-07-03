@@ -35,5 +35,17 @@ class res_partner_bank(osv.osv):
 	_columns = {
 		'iban': fields.char('IBAN', size=34, readonly=True, help="International Bank Account Number"),
 	}
+
+	def name_get(self, cr, uid, ids, context=None):
+		res = []
+		to_check_ids = []
+		for id in self.browse(cr, uid, ids):
+			if id.state=='iban':
+				res.append((id.id,id.iban))
+			else:
+				to_check_ids.append(id.id)
+		res += super(res_partner_bank, self).name_get(cr, uid, to_check_ids, context)
+		return res
+
 res_partner_bank()
 
