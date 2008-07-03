@@ -140,31 +140,30 @@ class res_company(osv.osv):
 			return """
 	<header>
 	<pageTemplate>
-		<frame id="first" x1="1cm" y1="2.5cm" height="23.0cm" width="19cm"/>
+		<frame id="first" x1="1.3cm" y1="2.5cm" height="23.0cm" width="19cm"/>
 		<pageGraphics>
 			<!-- You Logo - Change X,Y,Width and Height -->
-		<image x="1cm" y="27.6cm" height="40.0" >[[company.logo]]</image>
+		<image x="1.3cm" y="27.6cm" height="40.0" >[[company.logo]]</image>
 			<setFont name="Helvetica" size="8"/>
 			<fill color="black"/>
 			<stroke color="black"/>
-			<!--drawString x="1cm" y="27.8cm">[[ company.partner_id.name ]]</drawString-->
-			<lines>1cm 27.7cm 20cm 27.7cm</lines>
+			<lines>1.3cm 27.7cm 20cm 27.7cm</lines>
 
 			<drawRightString x="20cm" y="27.8cm">[[ company.rml_header1 ]]</drawRightString>
 
 
-			<drawString x="1cm" y="27.2cm">[[ company.partner_id.name ]]</drawString>
-			<drawString x="1cm" y="26.8cm">[[ company.partner_id.address and company.partner_id.address[0].street ]]</drawString>
-			<drawString x="1cm" y="26.4cm">[[ company.partner_id.address and company.partner_id.address[0].zip ]] [[ company.partner_id.address and company.partner_id.address[0].city ]] - [[ company.partner_id.address and company.partner_id.address[0].country_id and company.partner_id.address[0].country_id.name ]]</drawString>
-			<drawString x="1cm" y="26.0cm">Phone:</drawString>
+			<drawString x="1.3cm" y="27.2cm">[[ company.partner_id.name ]]</drawString>
+			<drawString x="1.3cm" y="26.8cm">[[ company.partner_id.address and company.partner_id.address[0].street ]]</drawString>
+			<drawString x="1.3cm" y="26.4cm">[[ company.partner_id.address and company.partner_id.address[0].zip ]] [[ company.partner_id.address and company.partner_id.address[0].city ]] - [[ company.partner_id.address and company.partner_id.address[0].country_id and company.partner_id.address[0].country_id.name ]]</drawString>
+			<drawString x="1.3cm" y="26.0cm">Phone:</drawString>
 			<drawRightString x="7cm" y="26.0cm">[[ company.partner_id.address and company.partner_id.address[0].phone ]]</drawRightString>
-			<drawString x="1cm" y="25.6cm">Mail:</drawString>
+			<drawString x="1.3cm" y="25.6cm">Mail:</drawString>
 			<drawRightString x="7cm" y="25.6cm">[[ company.partner_id.address and company.partner_id.address[0].email ]]</drawRightString>
-			<lines>1cm 25.5cm 7cm 25.5cm</lines>
+			<lines>1.3cm 25.5cm 7cm 25.5cm</lines>
 
 			<!--page bottom-->
 
-			<lines>1.5cm 2.15cm 19.9cm 2.15cm</lines>
+			<lines>1.2cm 2.15cm 19.9cm 2.15cm</lines>
 
 			<drawCentredString x="10.5cm" y="1.7cm">[[ company.rml_footer1 ]]</drawCentredString>
 			<drawCentredString x="10.5cm" y="1.25cm">[[ company.rml_footer2 ]]</drawCentredString>
