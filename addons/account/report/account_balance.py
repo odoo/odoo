@@ -40,8 +40,25 @@ class account_balance(report_sxw.rml_parse):
 			'lines': self.lines,
 			'sum_debit': self._sum_debit,
 			'sum_credit': self._sum_credit,
+			'get_fiscalyear':self.get_fiscalyear,
+			'get_periods':self.get_periods,
 		})
 		self.context = context
+	
+	def get_fiscalyear(self, form, ids={}, done=None, level=1):
+		fisc_id = form['fiscalyear']
+		self.cr.execute("select name from account_fiscalyear where id = %d" %(int(fisc_id)))
+		res=self.cr.fetchone()
+		return res and res[0]
+
+	def get_periods(self, form, ids={}, done=None, level=1):
+		period_ids = ",".join([str(x) for x in form['periods'][0][2] if x])
+		self.cr.execute("select name from account_period where id in (%s)" % (period_ids))
+		res=self.cr.fetchall()
+		result=''
+		for r in res:
+			result+=r[0]+","
+		return str(result[:-1])
 
 	def lines(self, form, ids={}, done=None, level=1):
 		if not ids:

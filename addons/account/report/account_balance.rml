@@ -74,23 +74,12 @@
     <paraStyle name="P1" fontName="Helvetica" fontSize="20.0" leading="25" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P2" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P3" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P4" fontName="Helvetica" fontSize="10.0" leading="13" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P5" fontName="Helvetica" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P6" fontName="Helvetica" fontSize="11.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P7" fontName="Helvetica" fontSize="11.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P9" fontName="Helvetica-Bold" alignment="CENTER" fontSize="11" leftIndent="-8.0"/>
     <paraStyle name="P10" fontName="Helvetica" fontSize="8.0" leading="14" spaceBefore="0.0" spaceAfter="6.0" alignment="RIGHT"/>
-    <paraStyle name="P11" fontName="Helvetica" fontSize="11.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P9" fontName="Helvetica-Bold" alignment="CENTER" fontSize="11" leftIndent="-8.0"/>
+    <paraStyle name="P9b" fontName="Helvetica" fontSize="8" leftIndent="-8.0" alignment="LEFT"/>
     <paraStyle name="P12" fontName="Helvetica" fontSize="8.0" leading="14" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P12a" fontName="Helvetica" fontSize="8.0" leading="14" alignment="left" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P13" fontName="Helvetica" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P14" rightIndent="17.0" leftIndent="-0.0" fontName="Times-Bold" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="Standard" fontName="Helvetica"/>
-    <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="List" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="Table Contents" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="Table Heading" fontName="Helvetica" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P12a" fontName="Helvetica" fontSize="8.0" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P14" rightIndent="17.0" leftIndent="-0.0" fontName="Helvetica" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
 
 
     <blockTableStyle id="TrLevel6">
@@ -152,7 +141,10 @@
 <para style="P2">
 <font color="white"> </font>
 </para>
-<!--    <para style="P9">Printing date: [[ formatLang(time.strftime('%Y-%m-%d'), date=True) ]] at [[ time.strftime('%H:%M:%S') ]]</para>-->
+<para style="P9b">[[ get_fiscalyear(data['form']) ]]: <i> [[ get_periods(data['form']) ]] </i></para>
+<para style="P2">
+<font color="white"> </font>
+</para>
     <blockTable colWidths="55,262.0,73.0,72.0,72.0" style="Table2" repeatRows="1">
       <tr>
         <td>
@@ -174,6 +166,7 @@
       <tr>
 		<td><para style="P14">[[ repeatIn(lines(data['form']), 'a') ]]<i>[[ a['code'] ]]</i></para></td>
         <td>
+
 	  <para style="P14">[[ setTag('tr','tr',{'style':'TrLevel'+str(a['level']), 'paraStyle':('Level'+str(a['level']))}) ]]<font></font>
           [[ a['name'] ]]</para>
         </td>
