@@ -116,11 +116,9 @@ class res_company(osv.osv):
 		<pageTemplate>
 		<frame id="first" x1="1cm" y1="1.5cm" width="19.0cm" height="26.5cm"/>
 		<pageGraphics>
-		<setFont name="Helvetica" size="10"/>
 		<fill color="black"/>
 		<stroke color="black"/>
 		<setFont name="Helvetica" size="8"/>
-		<!--<drawString x="1cm" y="28.3cm">Currency: [[ company.currency_id.name ]]</drawString>-->
 		<drawString x="1cm" y="28.3cm"> [[ formatLang(time.strftime("%Y-%m-%d"), date=True) ]]  [[ time.strftime("%H:%M") ]]</drawString>
 		<setFont name="Helvetica-Bold" size="10"/>
 		<drawString x="9.5cm" y="28.3cm">[[ company.partner_id.name ]]</drawString>
@@ -128,7 +126,6 @@ class res_company(osv.osv):
 		<drawRightString x="19.5cm" y="28.3cm"><pageNumber/> /  </drawRightString>
 		<drawString x="19.6cm" y="28.3cm"><pageCount/></drawString>
 		<stroke color="#aaaaaa"/>
-		<!--<drawString x="1cm" y="28.3cm">[[user.name]]</drawString>-->
 		<lines>1cm 28.1cm 20cm 28.1cm</lines>
 		</pageGraphics>
 		</pageTemplate>
