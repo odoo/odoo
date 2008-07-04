@@ -1,4 +1,5 @@
 #Copyright (c) Vincent Cardon <vincent.cardon@tranquil-it-systems.fr>
+# Denis Cardon <denis.cardon@tranquilitsystems.com> and Emmanuel RICHARD.
 #Ingenieur fondateur
 #Tranquil IT Systems
 
