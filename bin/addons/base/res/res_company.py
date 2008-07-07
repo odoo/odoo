@@ -114,19 +114,19 @@ class res_company(osv.osv):
 		return """
 		<header>
 		<pageTemplate>
-		<frame id="first" x1="1cm" y1="1.5cm" width="19.0cm" height="26.5cm"/>
+		<frame id="first" x1="1.3cm" y1="1.5cm" width="18.4cm" height="26.5cm"/>
 		<pageGraphics>
 		<fill color="black"/>
 		<stroke color="black"/>
 		<setFont name="Helvetica" size="8"/>
-		<drawString x="1cm" y="28.3cm"> [[ formatLang(time.strftime("%Y-%m-%d"), date=True) ]]  [[ time.strftime("%H:%M") ]]</drawString>
+		<drawString x="1.3cm" y="28.3cm"> [[ formatLang(time.strftime("%Y-%m-%d"), date=True) ]]  [[ time.strftime("%H:%M") ]]</drawString>
 		<setFont name="Helvetica-Bold" size="10"/>
-		<drawString x="9.5cm" y="28.3cm">[[ company.partner_id.name ]]</drawString>
+		<drawString x="9.8cm" y="28.3cm">[[ company.partner_id.name ]]</drawString>
 		<setFont name="Helvetica" size="8"/>
-		<drawRightString x="19.5cm" y="28.3cm"><pageNumber/> /  </drawRightString>
-		<drawString x="19.6cm" y="28.3cm"><pageCount/></drawString>
+		<drawRightString x="19.7cm" y="28.3cm"><pageNumber/> /  </drawRightString>
+		<drawString x="19.8cm" y="28.3cm"><pageCount/></drawString>
 		<stroke color="#aaaaaa"/>
-		<lines>1cm 28.1cm 20cm 28.1cm</lines>
+		<lines>1.3cm 28.1cm 20cm 28.1cm</lines>
 		</pageGraphics>
 		</pageTemplate>
 </header>"""
