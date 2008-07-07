@@ -91,6 +91,14 @@ class config_install_extra_modules(osv.osv_memory):
         'holidays_module':fields.boolean('Holidays module'),
 
     }
+    def action_cancel(self,cr,uid,ids,conect=None):
+        return {
+                'view_type': 'form',
+                "view_mode": 'form',
+                'res_model': 'ir.module.module.configuration.wizard',
+                'type': 'ir.actions.act_window',
+                'target':'new',
+         }
     def action_install(self, cr, uid, ids, context=None):
         res=self.read(cr,uid,ids)[0]
         mod_obj = self.pool.get('ir.module.module')

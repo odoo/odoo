@@ -2,7 +2,7 @@
 <terp>
     <data>
         <menuitem icon="terp-sale" id="menu_sale_root" name="Sales Management"/>
-        
+
         <record id="view_shop_form" model="ir.ui.view">
             <field name="name">sale.shop</field>
             <field name="model">sale.shop</field>
@@ -33,7 +33,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="action_shop_form" model="ir.actions.act_window">
             <field name="name">Shop</field>
             <field name="type">ir.actions.act_window</field>
@@ -43,7 +43,7 @@
         </record>
         <menuitem groups="base.group_admin" id="menu_shop_configuration" name="Configuration" parent="sale.menu_sale_root" sequence="1"/>
         <menuitem action="action_shop_form" id="menu_action_shop_form" parent="sale.menu_shop_configuration"/>
-        
+
         <record id="view_order_tree" model="ir.ui.view">
             <field name="name">sale.order.tree</field>
             <field name="model">sale.order</field>
@@ -61,7 +61,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_order_form" model="ir.ui.view">
             <field name="name">sale.order.form</field>
             <field name="model">sale.order</field>
@@ -187,7 +187,7 @@
             <field name="view_type">form</field>
         </record>
         <menuitem action="action_order_form" id="menu_sale_order" parent="sale.menu_sale_root"/>
-        
+
         <record id="action_order_tree" model="ir.actions.act_window">
             <field name="name">My Sales Order</field>
             <field name="type">ir.actions.act_window</field>
@@ -197,8 +197,8 @@
             <field name="domain">[('user_id','=',uid)]</field>
         </record>
         <menuitem action="action_order_tree" id="menu_action_order_tree" parent="sale.menu_sale_order"/>
-        
-        
+
+
         <record id="action_order_tree_all" model="ir.actions.act_window">
             <field name="name">All Sales Order</field>
             <field name="type">ir.actions.act_window</field>
@@ -207,8 +207,8 @@
             <field name="view_mode">tree,form</field>
         </record>
         <menuitem action="action_order_tree_all" id="menu_action_order_tree_all" parent="sale.menu_sale_order"/>
-        
-        
+
+
         <record id="action_order_tree2" model="ir.actions.act_window">
             <field name="name">Sales in Exception</field>
             <field name="type">ir.actions.act_window</field>
@@ -218,7 +218,7 @@
             <field name="domain">[('state','in',('shipping_except','invoice_except')]</field>
         </record>
         <menuitem action="action_order_tree2" id="menu_action_order_tree2" parent="menu_action_order_tree_all"/>
-        
+
         <record id="action_order_tree3" model="ir.actions.act_window">
             <field name="name">Sales Order To Be Invoiced</field>
             <field name="type">ir.actions.act_window</field>
@@ -228,7 +228,7 @@
             <field name="domain">[('state','=','manual')]</field>
         </record>
         <menuitem action="action_order_tree3" id="menu_action_order_tree3" parent="sale.menu_action_order_tree_all"/>
-        
+
         <record id="action_order_tree4" model="ir.actions.act_window">
             <field name="name">Sales Order in Progress</field>
             <field name="type">ir.actions.act_window</field>
@@ -238,8 +238,8 @@
             <field name="domain">[('state','in',('progress','waiting_date','manual'))]</field>
         </record>
         <menuitem action="action_order_tree4" id="menu_action_order_tree4" parent="sale.menu_action_order_tree_all" sequence="2"/>
-        
-        
+
+
         <record id="action_order_tree5" model="ir.actions.act_window">
             <field name="name">All Quotations</field>
             <field name="type">ir.actions.act_window</field>
@@ -249,7 +249,7 @@
             <field name="domain">[('state','=','draft')]</field>
         </record>
         <menuitem action="action_order_tree5" id="menu_action_order_tree5" parent="sale.menu_action_order_tree_all" sequence="1"/>
-        
+
         <record id="action_order_tree7" model="ir.actions.act_window">
             <field name="name">My sales in shipping exception</field>
             <field name="type">ir.actions.act_window</field>
@@ -259,7 +259,7 @@
             <field name="domain">[('state','in',('shipping_except','invoice_except')),('user_id','=',uid)]</field>
         </record>
         <menuitem action="action_order_tree7" id="menu_action_order_tree7" parent="menu_action_order_tree"/>
-        
+
         <record id="action_order_tree8" model="ir.actions.act_window">
             <field name="name">My sales order waiting Invoice</field>
             <field name="type">ir.actions.act_window</field>
@@ -269,7 +269,7 @@
             <field name="domain">[('state','=','manual'),('user_id','=',uid)]</field>
         </record>
         <menuitem action="action_order_tree8" id="menu_action_order_tree8" parent="sale.menu_action_order_tree"/>
-        
+
         <record id="action_order_tree9" model="ir.actions.act_window">
             <field name="name">My sales order in progress</field>
             <field name="type">ir.actions.act_window</field>
@@ -279,8 +279,8 @@
             <field name="domain">[('state','in',('progress','waiting_date','manual')),('user_id','=',uid)]</field>
         </record>
         <menuitem action="action_order_tree9" id="menu_action_order_tree9" parent="sale.menu_action_order_tree" sequence="2"/>
-        
-        
+
+
         <record id="action_order_tree10" model="ir.actions.act_window">
             <field name="name">My Quotations</field>
             <field name="type">ir.actions.act_window</field>
@@ -290,8 +290,8 @@
             <field name="domain">[('state','=','draft'),('user_id','=',uid)]</field>
         </record>
         <menuitem action="action_order_tree10" id="menu_action_order_tree10" parent="sale.menu_action_order_tree" sequence="1"/>
-        
-        
+
+
         <record id="view_order_line_graph" model="ir.ui.view">
             <field name="name">sale.order.line.graph</field>
             <field name="model">sale.order.line</field>
@@ -303,8 +303,8 @@
                 </graph>
             </field>
         </record>
-        
-        
+
+
         <record id="view_order_line_tree" model="ir.ui.view">
             <field name="name">sale.order.line.tree</field>
             <field name="model">sale.order.line</field>
@@ -337,7 +337,7 @@
                             <field name="product_uom_qty" readonly="1" select="2"/>
                             <field name="product_uom" readonly="2"/>
                             <field name="product_id" readonly="1" select="1"/>
-                            
+
                             <separator colspan="4" string="Manual Designation"/>
                             <field colspan="4" name="name" select="2"/>
                             <field name="price_unit" select="2"/>
@@ -365,8 +365,8 @@
                 </form>
             </field>
         </record>
-        
-        
+
+
         <record id="action_order_line_tree1" model="ir.actions.act_window">
             <field name="name">Sales Order Lines</field>
             <field name="type">ir.actions.act_window</field>
@@ -375,7 +375,7 @@
             <field name="view_id" ref="view_order_line_form2"/>
         </record>
         <menuitem action="action_order_line_tree1" id="menu_action_order_line_tree1" parent="sale.menu_sale_root"/>
-        
+
         <record id="action_order_line_tree2" model="ir.actions.act_window">
             <field name="name">Uninvoiced lines</field>
             <field name="type">ir.actions.act_window</field>
@@ -385,7 +385,7 @@
             <field name="domain">[('invoiced','&lt;&gt;', 1),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]</field>
         </record>
         <menuitem action="action_order_line_tree2" id="menu_action_order_line_tree2" parent="sale.menu_action_order_line_tree1"/>
-        
+
         <record id="action_order_line_tree3" model="ir.actions.act_window">
             <field name="name">Uninvoiced and Delivered Lines</field>
             <field name="type">ir.actions.act_window</field>
@@ -395,7 +395,7 @@
             <field name="domain">[('invoiced','&lt;&gt;', 1),('state','=','done')]</field>
         </record>
         <menuitem action="action_order_line_tree3" id="menu_action_order_line_tree3" parent="sale.menu_action_order_line_tree2"/>
-        
+
         <record id="action_order_line_tree4" model="ir.actions.act_window">
             <field name="name">All Sale Order Lines</field>
             <field name="type">ir.actions.act_window</field>
@@ -404,16 +404,16 @@
             <field name="view_mode">tree,form</field>
         </record>
         <menuitem action="action_order_line_tree4" id="menu_action_order_line_tree4" parent="sale.menu_action_order_line_tree1"/>
-        
+
         <act_window context="{'partner_id': active_id}" domain="[('partner_id', '=', active_id)]" id="act_res_partner_2_sale_order" name="Sales" res_model="sale.order" src_model="res.partner"/>
-        
+
         <act_window domain="[('product_id','=',active_id)]" id="action_order_line_product_tree" name="Product sales" res_model="sale.order.line" src_model="product.product"/>
-        
-        
-        
-        
+
+
+
+
         <!-- configartion view -->
-        
+
         <record id="view_config_picking_policy" model="ir.ui.view">
             <field name="name">Configure Picking Policy for Sale Order </field>
             <field name="model">sale.config.picking_policy</field>
@@ -424,13 +424,13 @@
                     <newline/>
                     <field name="picking_policy"/>
                     <group col="4" colspan="4">
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                        <button icon="gtk-cancel" name="action_cancel" type="object" special="cancel" string="Cancel"/>
                         <button icon="gtk-ok" name="set_default" string="Set Default" type="object"/>
                     </group>
                 </form>
             </field>
         </record>
-        
+
         <record id="action_config_picking_policy" model="ir.actions.act_window">
             <field name="name">Configure Picking Policy for Sale Order</field>
             <field name="type">ir.actions.act_window</field>
@@ -439,7 +439,7 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-        
+
         <!-- register configuration wizard -->
         <record id="config_wizard_step_sale_picking_policy" model="ir.module.module.configuration.step">
             <field name="name">Select the default picking policy for Sale Order</field>
@@ -447,7 +447,7 @@
             <field name="action_id" ref="action_config_picking_policy"/>
             <field name="state">open</field>
         </record>
-        
-        
+
+
     </data>
 </terp>

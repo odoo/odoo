@@ -864,4 +864,12 @@ class sale_config_picking_policy(osv.osv_memory):
 				'type': 'ir.actions.act_window',
 				'target':'new',
          }
+	def action_cancel(self,cr,uid,ids,conect=None):
+		return {
+			    'view_type': 'form',
+			    "view_mode": 'form',
+				'res_model': 'ir.module.module.configuration.wizard',
+				'type': 'ir.actions.act_window',
+				'target':'new',
+         }
 sale_config_picking_policy()

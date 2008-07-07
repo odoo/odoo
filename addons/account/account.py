@@ -1554,6 +1554,14 @@ class account_config_fiscalyear(osv.osv_memory):
         'date1': lambda *a: time.strftime('%Y-01-01'),
         'date2': lambda *a: time.strftime('%Y-12-31'),
     }
+    def action_cancel(self,cr,uid,ids,conect=None):
+		return {
+			    'view_type': 'form',
+			    "view_mode": 'form',
+				'res_model': 'ir.module.module.configuration.wizard',
+				'type': 'ir.actions.act_window',
+				'target':'new',
+         }
     def action_create(self, cr, uid,ids, context=None):
     	res=self.read(cr,uid,ids)[0]
     	if 'date1' in res and 'date2' in res:
@@ -1588,6 +1596,15 @@ class account_config_journal_bank_accounts(osv.osv_memory):
 		'name':fields.char('Journal Name', size=64),
 		'lines_id': fields.one2many('account.config.journal.bank.account.line', 'journal_id', 'Journal Lines'),
     }
+
+	def action_cancel(self,cr,uid,ids,conect=None):
+		return {
+			    'view_type': 'form',
+			    "view_mode": 'form',
+				'res_model': 'ir.module.module.configuration.wizard',
+				'type': 'ir.actions.act_window',
+				'target':'new',
+         }
 
 	def action_create(self, cr, uid, ids, context=None):
 		config_res=self.read(cr,uid,ids)[0]
