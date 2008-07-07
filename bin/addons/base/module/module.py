@@ -640,7 +640,7 @@ class module_configuration(osv.osv_memory):
 				'type': 'ir.actions.act_window',
 				'target':'new',
 			}
-        return {}
+        return {'type':'ir.actions.act_window_close'}
 
     def button_continue(self, cr, uid, ids, context=None):
     	item_obj = self.pool.get('ir.module.module.configuration.step')
@@ -657,7 +657,7 @@ class module_configuration(osv.osv_memory):
 				  'type': item.action_id.type,
 				  'target':item.action_id.target,
 			}
-        return {}
+        return {'type':'ir.actions.act_window_close' }
 module_configuration()
 
 
