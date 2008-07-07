@@ -967,10 +967,11 @@ class orm_template(object):
 		while ok:
 			sql_res_usr = None
 			if view_id:
-				#check for user specific view and get the view according to that
-				where = (model and (" and model='%s'" % (self._name,))) or ''
-				cr.execute('select arch,name,field_parent,ref_id,type,inherit_id from ir_ui_view_user where ref_id=%d and user_id=%d'+where, (view_id, user))
-				sql_res_usr = cr.fetchone()
+				if context.get('global_view', False) == 1 or context.get('global_view', False) == True :
+					#check for user specific view and get the view according to that
+					where = (model and (" and model='%s'" % (self._name,))) or ''
+					cr.execute('select arch,name,field_parent,ref_id,type,inherit_id from ir_ui_view_user where ref_id=%d and user_id=%d'+where, (view_id, user))
+					sql_res_usr = cr.fetchone()
 
 				if not sql_res_usr:
 					where = (model and (" and model='%s'" % (self._name,))) or ''
@@ -978,8 +979,10 @@ class orm_template(object):
 				else:
 					base = True
 			else:
-				cr.execute('select arch,name,field_parent,ref_id,type,inherit_id from ir_ui_view_user where model=%s and type=%s and user_id=%d order by priority', (self._name, view_type, user))
-				sql_res_usr = cr.fetchone()
+				if context.get('global_view', False) == 1 or context.get('global_view', False) == True :
+					cr.execute('select arch,name,field_parent,ref_id,type,inherit_id from ir_ui_view_user where model=%s and type=%s and user_id=%d order by priority', (self._name, view_type, user))
+					sql_res_usr = cr.fetchone()
+					
 				if not sql_res_usr:
 					cr.execute('select arch,name,field_parent,id,type,inherit_id from ir_ui_view where model=%s and type=%s order by priority', (self._name,view_type))
 				else:
