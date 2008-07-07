@@ -670,6 +670,9 @@ class mrp_procurement(osv.osv):
 		'product_uos_qty': fields.float('Quantity'),
 		'product_uos': fields.many2one('product.uom', 'Product UOM'),
 		'move_id': fields.many2one('stock.move', 'Reservation', ondelete='set null'),
+
+		'bom_id': fields.many2one('mrp.bom', 'BoM', ondelete='cascade', select=True),
+
 		'close_move': fields.boolean('Close Move at end', required=True),
 		'location_id': fields.many2one('stock.location', 'Location', required=True),
 		'procure_method': fields.selection([('make_to_stock','from stock'),('make_to_order','on order')], 'Procurement Method', states={'draft':[('readonly',False)], 'confirmed':[('readonly',False)]}, readonly=True),
@@ -875,6 +878,7 @@ class mrp_procurement(osv.osv):
 				'product_uos': procurement.product_uos and procurement.product_uos.id or False,
 				'location_src_id': procurement.location_id.id,
 				'location_dest_id': procurement.location_id.id,
+				'bom_id': prpcurement.bom_id and prpcurement.bom_id.id or False,
 				'date_planned': newdate,
 				'move_prod_id': res_id,
 			})
