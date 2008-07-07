@@ -242,6 +242,16 @@ class res_config_view(osv.osv_memory):
 	_defaults={
 		'view':lambda *args: 'simple',
 		}
+
+	def action_cancel(self,cr,uid,ids,conect=None):
+		print ' Cancel  action'
+		return {
+			    'view_type': 'form',
+			    "view_mode": 'form',
+				'res_model': 'ir.module.module.configuration.wizard',
+				'type': 'ir.actions.act_window',
+				'target':'new',
+         }
 	def action_set(self, cr, uid, ids, context=None):
 		res=self.read(cr,uid,ids)[0]
 		users_obj = self.pool.get('res.users')

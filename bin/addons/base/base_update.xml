@@ -197,7 +197,7 @@
                             <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
                             <field colspan="4" name="signature"/>
                             <group col="4" colspan="4">
-                                <button icon='gtk-cancel' name="action_next" type='object' string='Skip &amp; Continue'/>
+                                <button icon='gtk-cancel' special="cancel" name="action_next" type='object' string='Skip &amp; Continue'/>
                                 <button name='action_new' icon='gtk-ok' type='object' string='Add Other User'/>
                                 <button name='action_continue' icon='gtk-ok' type='object' string='Continue'/>
                             </group>
@@ -246,7 +246,7 @@ to understand." colspan="2"/>
                     <newline/>
 
                     <group>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                        <button icon="gtk-cancel" special="cancel" name="action_cancel" type="object" string="Cancel"/>
                         <button icon="gtk-ok" name="action_set" string="Set" type="object"/>
                     </group>
 
