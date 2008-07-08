@@ -72,33 +72,33 @@ class view(osv.osv):
 
 view()
 
-class UserView(osv.osv):
-	_name = 'ir.ui.view.user'
-	_columns = {
-		'name': fields.char('View Name',size=64,  required=True),
-		'model': fields.char('Model', size=64, required=True),
-		'priority': fields.integer('Priority', required=True),
-		'type': fields.selection((
-			('tree','Tree'),
-			('form','Form'),
-			('graph', 'Graph'),
-			('calendar', 'Calendar')), 'View Type', required=True),
-		'arch': fields.text('View Architecture', required=True),
-		'inherit_id': fields.many2one('ir.ui.view', 'Inherited View'),
-		'field_parent': fields.char('Childs Field',size=64),
-		'user_id': fields.many2one('res.users', 'User'),
-		'ref_id': fields.many2one('ir.ui.view', 'Inherited View'),
-	}
-	_defaults = {
-		'arch': lambda *a: '<?xml version="1.0"?>\n<tree title="Unknwown">\n\t<field name="name"/>\n</tree>',
-		'priority': lambda *a: 16
-	}
-	_order = "priority"
-	_constraints = [
-		(_check_xml, 'Invalid XML for View Architecture!', ['arch'])
-	]
-
-UserView()
+#class UserView(osv.osv):
+#	_name = 'ir.ui.view.user'
+#	_columns = {
+#		'name': fields.char('View Name',size=64,  required=True),
+#		'model': fields.char('Model', size=64, required=True),
+#		'priority': fields.integer('Priority', required=True),
+#		'type': fields.selection((
+#			('tree','Tree'),
+#			('form','Form'),
+#			('graph', 'Graph'),
+#			('calendar', 'Calendar')), 'View Type', required=True),
+#		'arch': fields.text('View Architecture', required=True),
+#		'inherit_id': fields.many2one('ir.ui.view', 'Inherited View'),
+#		'field_parent': fields.char('Childs Field',size=64),
+#		'user_id': fields.many2one('res.users', 'User'),
+#		'ref_id': fields.many2one('ir.ui.view', 'Inherited View'),
+#	}
+#	_defaults = {
+#		'arch': lambda *a: '<?xml version="1.0"?>\n<tree title="Unknwown">\n\t<field name="name"/>\n</tree>',
+#		'priority': lambda *a: 16
+#	}
+#	_order = "priority"
+#	_constraints = [
+#		(_check_xml, 'Invalid XML for View Architecture!', ['arch'])
+#	]
+#
+#UserView()
 
 class view_sc(osv.osv):
 	_name = 'ir.ui.view_sc'
