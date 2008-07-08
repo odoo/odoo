@@ -48,7 +48,8 @@
             <field name="view_id" ref="values_view_tree"/>
         </record>
         
-        <menuitem id="next_id_3" name="Low Level" parent="base.menu_custom"/><menuitem id="next_id_4" name="Base" parent="next_id_3"/><menuitem action="act_values_form" id="menu_values_form" parent="next_id_4"/>
+		<menuitem id="next_id_4" name="Low Level" parent="menu_custom"/>
+		<menuitem action="act_values_form" id="menu_values_form" parent="next_id_4"/>
         
         <!-- Sequences -->
         
@@ -747,7 +748,8 @@
             <field name="context">{'manual':True}</field>
             <field name="view_id" ref="view_model_tree"/>
         </record>
-        <menuitem id="next_id_9" name="Database Structure" parent="base.next_id_4"/><menuitem action="action_model_model" id="ir_model_model_menu" parent="next_id_9"/>
+        <menuitem id="next_id_9" name="Database Structure" parent="base.menu_custom"/>
+		<menuitem action="action_model_model" id="ir_model_model_menu" parent="next_id_9"/>
         
         <record id="action_model_fields" model="ir.actions.act_window">
             <field name="name">Fields</field>
