@@ -15,15 +15,40 @@
         <report auto="False" id="account_intracom" menu="False" model="account.move.line" name="account.intracom" string="IntraCom"/>
         
         <report id="account_move_line_list" model="account.tax.code" name="account.tax.code.entries" rml="account/report/account_tax_code.rml" string="All Entries"/>
-        
-        
+
         <report auto="False" id="account_vat_declaration" menu="False" model="account.tax.code" name="account.vat.declaration" rml="account/report/tax_report.rml" string="Taxes report"/>
         
-        <wizard id="wizard_vat_declaration" menu="False" model="account.tax.code" name="account.vat.declaration" string="Wizard taxes report"/>
-        
-        <menuitem action="wizard_vat_declaration" id="menu_wizard_vat_declaration" parent="account.menu_finance_reporting" type="wizard"/>
-        
-        
+		<menuitem
+			id="menu_tax_report"
+			string="Taxes Reports"
+			parent="account.menu_finance_reporting"/>
+
+        <wizard 
+			id="wizard_vat_declaration" 
+			menu="False" 
+			model="account.tax.code" 
+			name="account.vat.declaration" 
+			string="Print Taxes Report"/>
+        <menuitem
+			action="wizard_vat_declaration" 
+			id="menu_wizard_vat_declaration" 
+			parent="menu_tax_report" 
+			type="wizard"/>
+
+
+        <record id="action_tax_code_tree" model="ir.actions.act_window">
+            <field name="name">Chart of Taxes</field>
+            <field name="res_model">account.tax.code</field>
+            <field name="domain">[('parent_id','=',False)]</field>
+            <field name="view_type">tree</field>
+            <field name="view_id" ref="view_tax_code_tree"/>
+        </record>
+		<menuitem
+			action="action_tax_code_tree" 
+			id="menu_action_tax_code_tree"
+			parent="menu_tax_report"
+			sequence="12"/>
+ 
         <!--
 
 		<report id="analytic_journal"

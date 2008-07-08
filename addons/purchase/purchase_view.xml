@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
+        <record id="category_supplier" model="res.partner.category">
+            <field name="name">Suppliers</field>
+        </record>
         
         <menuitem icon="terp-purchase" id="menu_purchase_root" name="Purchase Management"/>
         
@@ -20,7 +23,7 @@
                             <newline/>
                             <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)"/>
                             <field name="date_order" select="2"/>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" select="1"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" domain="[('category_id','child_of', [%(category_supplier)d])]"/>
                             <field name="partner_address_id"/>
                             <field domain="[('type','=','purchase')]" name="pricelist_id"/>
                             <field name="partner_ref" select="2"/>

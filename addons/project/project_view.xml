@@ -399,8 +399,8 @@
             <field name="name">My Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
             <field name="domain">[('user_id', '=', uid)]</field>
-            <field name="view_id" ref="view_task_form2"/>
         </record>
         <menuitem action="action_view_task4" id="menu_action_view_task4" parent="project.menu_main"/>
         
@@ -411,7 +411,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('user_id', '=', uid),('state','=','pending')]</field>
         </record>
-        <menuitem id="next_id_55" name="My Tasks" parent="project.menu_main"/><menuitem action="action_view_task5_pending" id="menu_tasks_yours_pending" parent="next_id_55"/>
+        <menuitem action="action_view_task5_pending" id="menu_tasks_yours_pending" parent="menu_action_view_task4"/>
         
         <record id="action_view_task5" model="ir.actions.act_window">
             <field name="name">My Open Tasks</field>
@@ -420,7 +420,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('user_id', '=', uid),('state','=','open')]</field>
         </record>
-        <menuitem action="action_view_task5" id="menu_tasks_yours" parent="project.next_id_55"/>
+        <menuitem action="action_view_task5" id="menu_tasks_yours" parent="menu_action_view_task4"/>
         
         <record id="action_view_task5_prog" model="ir.actions.act_window">
             <field name="name">My Tasks in Progress</field>
@@ -429,8 +429,16 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('user_id', '=', uid),('state','=','open')]</field>
         </record>
-        <menuitem action="action_view_task5_prog" id="menu_tasks_yours_prog" parent="project.next_id_55"/>
-        
+        <menuitem action="action_view_task5_prog" id="menu_tasks_yours_prog" parent="menu_action_view_task4"/>
+
+        <record id="action_view_task_new" model="ir.actions.act_window">
+            <field name="name">New Task</field>
+            <field name="res_model">project.task</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+        </record>
+        <menuitem action="action_view_task_new" id="menu_action_view_task_new" parent="menu_action_view_task4"/>
+                
         <record id="action_view_task6" model="ir.actions.act_window">
             <field name="name">Open Tasks</field>
             <field name="res_model">project.task</field>

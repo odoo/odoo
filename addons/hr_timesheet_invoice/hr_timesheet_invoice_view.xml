@@ -118,7 +118,7 @@
         
         
         <record id="action_hr_analytic_timesheet_tree_invoiced_my" model="ir.actions.act_window">
-            <field name="name">My uninvoiced Entries</field>
+            <field name="name">My Uninvoiced Entries</field>
             <field name="res_model">account.analytic.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -128,17 +128,17 @@
          
         
         <record id="action_open_analytic_accounts" model="ir.actions.act_window">
-            <field name="name">Open analytic accounts</field>
+            <field name="name">Open Analytic Accounts</field>
             <field name="res_model">account.analytic.account</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','&lt;&gt;','close'),('type','&lt;&gt;','view')]</field>
         </record>
-        <menuitem id="next_id_59" name="Analytic Charts of Accounts" parent="account.menu_finance_charts"/><menuitem action="action_open_analytic_accounts" id="menu_action_open_analytic_accounts" parent="next_id_59"/>
+        <menuitem action="action_open_analytic_accounts" id="menu_action_open_analytic_accounts" parent="account.account_analytic_def_chart"/>
          
         
         <record id="action_open_invoice_analytic_accounts" model="ir.actions.act_window">
-            <field name="name">Unclosed invoiced accounts</field>
+            <field name="name">Unclosed Invoiceable Accounts</field>
             <field name="res_model">account.analytic.account</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -149,24 +149,24 @@
         
         
         <record id="action_draft_analytic_accounts" model="ir.actions.act_window">
-            <field name="name">Draft analytic accounts</field>
+            <field name="name">Draft Analytic Accounts</field>
             <field name="res_model">account.analytic.account</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','draft'),('type','&lt;&gt;','view')]</field>
         </record>
-        <menuitem action="action_draft_analytic_accounts" id="menu_action_draft_analytic_accounts" parent="hr_timesheet_invoice.next_id_59"/>
+        <menuitem action="action_draft_analytic_accounts" id="menu_action_draft_analytic_accounts" parent="account.account_analytic_def_chart"/>
          
         
         
         <record id="action_pending_analytic_accounts" model="ir.actions.act_window">
-            <field name="name">Pending analytic accounts</field>
+            <field name="name">Pending Analytic Accounts</field>
             <field name="res_model">account.analytic.account</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','pending'),('type','&lt;&gt;','view')]</field>
         </record>
-        <menuitem action="action_pending_analytic_accounts" id="menu_action_pending_analytic_accounts" parent="hr_timesheet_invoice.next_id_59"/>
+        <menuitem action="action_pending_analytic_accounts" id="menu_action_pending_analytic_accounts" parent="account.account_analytic_def_chart"/>
          
         
         

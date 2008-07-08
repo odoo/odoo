@@ -88,7 +88,7 @@ class product_pricelist(osv.osv):
 	_name = "product.pricelist"
 	_description = "Pricelist"
 	_columns = {
-		'name': fields.char('Name',size=64, required=True),
+		'name': fields.char('Name',size=64, required=True, translate=True),
 		'active': fields.boolean('Active'),
 		'type': fields.selection(_pricelist_type_get, 'Pricelist Type', required=True),
 		'version_id': fields.one2many('product.pricelist.version', 'pricelist_id', 'Pricelist Versions'),

@@ -85,7 +85,10 @@
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_account_analytic_account_tree"/>
         </record>
-        <menuitem action="action_account_analytic_account_tree2" id="account_analytic_def_chart" parent="account.next_id_39"/>
+        <menuitem
+			action="action_account_analytic_account_tree2" 
+			id="account_analytic_def_chart" 
+			parent="account.next_id_39"/>
         <menuitem action="action_account_analytic_account_tree2" id="account_analytic_chart" parent="account.menu_finance_charts"/>
         
         <menuitem id="next_id_40" name="Analytic" parent="account.menu_finance_reporting"/><menuitem action="action_account_analytic_account_tree2" id="account_analytic_chart_balance" parent="next_id_40"/>
@@ -251,7 +254,7 @@
         
         
         <record id="action_account_analytic_journal_tree2" model="ir.actions.act_window">
-            <field name="name">Entries by Journal</field>
+            <field name="name">Analytic Entries by Journal</field>
             <field name="res_model">account.analytic.journal</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_account_analytic_journal_tree"/>
