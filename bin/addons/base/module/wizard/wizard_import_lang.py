@@ -32,6 +32,7 @@ import wizard
 import tools
 import base64
 import pooler
+from tempfile import TemporaryFile
 
 view_form="""<?xml version="1.0"?>
 <form string="Import language">
@@ -56,8 +57,11 @@ class wizard_import_lang(wizard.interface):
 
 	def _import_lang(self, cr, uid, data, context):
 		form=data['form']
-		buf=base64.decodestring(data['form']['data']).split('\n')
-		tools.trans_load_data(cr.dbname, buf, form['code'], lang_name=form['name'])
+		#buf=base64.decodestring(form['data']).split('\n')
+		fileobj = TemporaryFile('w+')
+		fileobj.write( base64.decodestring(form['data']) )
+		tools.trans_load_data(cr.dbname, fileobj, form['code'], lang_name=form['name'])
+		fileobj.close()
 		return {}
 
 	states={

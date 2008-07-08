@@ -71,7 +71,7 @@ class ir_model(osv.osv):
 	def unlink(self, cr, user, ids, context=None):
 		for model in self.browse(cr, user, ids, context):
 			if model.state <> 'manual':
-				raise except_orm('Error', "You can not remove the model '%s' !" %(field.name,))
+				raise except_orm(_('Error'), _("You can not remove the model '%s' !") %(field.name,))
 		res = super(ir_model, self).unlink(cr, user, ids, context)
 		pooler.restart_pool(cr.dbname)
 		return res
@@ -138,7 +138,7 @@ class ir_model_fields(osv.osv):
 	def unlink(self, cr, user, ids, context=None):
 		for field in self.browse(cr, user, ids, context):
 			if field.state <> 'manual':
-				raise except_orm('Error', "You can not remove the field '%s' !" %(field.name,))
+				raise except_orm(_('Error'), _("You can not remove the field '%s' !") %(field.name,))
 		#
 		# MAY BE ADD A ALTER TABLE DROP ?
 		#
@@ -153,7 +153,7 @@ class ir_model_fields(osv.osv):
 		res = super(ir_model_fields,self).create(cr, user, vals, context)
 		if vals.get('state','base')=='manual':
 			if not vals['name'].startswith('x_'):
-				raise except_orm('Error', "Custom fields must have a name that starts with 'x_' !")
+				raise except_orm(_('Error'), _("Custom fields must have a name that starts with 'x_' !"))
 			if self.pool.get(vals['model']):
 				self.pool.get(vals['model']).__init__(self.pool, cr)
 				self.pool.get(vals['model'])._auto_init(cr,{})
@@ -207,7 +207,7 @@ class ir_model_access(osv.osv):
 				'WHERE a.group_id IS NULL AND m.model = %s', (model_name,))
 			r= cr.fetchall()
 			if r[0][0] == None:
-				return True
+				return False # by default, the user had no access
 
 		if not r[0][0]:
 			if raise_exception:
@@ -282,8 +282,9 @@ class ir_model_data(osv.osv):
 	def _update(self,cr, uid, model, module, values, xml_id=False, store=True, noupdate=False, mode='init', res_id=False):
 		warning = True
 		model_obj = self.pool.get(model)
+		context = {}	
 		if xml_id and ('.' in xml_id):
-			assert len(xml_id.split('.'))==2, '"%s" contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id' % (xml_id)
+			assert len(xml_id.split('.'))==2, _('"%s" contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id') % (xml_id)
 			warning = False
 			module, xml_id = xml_id.split('.')
 		if (not xml_id) and (not self.doinit):

@@ -121,9 +121,8 @@ class ir_translation(osv.osv, Cacheable):
 			return trans
 
 		if source:
-			source = source.strip().replace('\n',' ')
-			if isinstance(source, unicode):
-				source = source.encode('utf8')
+			#if isinstance(source, unicode):
+			#	source = source.encode('utf8')
 			cr.execute('select value ' \
 					'from ir_translation ' \
 					'where lang=%s ' \

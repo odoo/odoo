@@ -97,19 +97,19 @@ class _column(object):
 	def set(self, cr, obj, id, name, value, user=None, context=None):
 		cr.execute('update '+obj._table+' set '+name+'='+self._symbol_set[0]+' where id=%d', (self._symbol_set[1](value),id) )
 	def set_memory(self, cr, obj, id, name, value, user=None, context=None):
-		raise Exception, 'Not implemented set_memory method !'
+		raise Exception, _('Not implemented set_memory method !')
 
 	def get_memory(self, cr, obj, ids, name, context=None, values=None):
-		raise Exception, 'Not implemented get_memory method !'
+		raise Exception, _('Not implemented get_memory method !')
 	def get(self, cr, obj, ids, name, context=None, values=None):
-		raise Exception, 'undefined get method !'
+		raise Exception, _('undefined get method !')
 
 	def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None):
 		ids = obj.search(cr, uid, args+self._domain+[(name,'ilike',value)], offset, limit)
 		res = obj.read(cr, uid, ids, [name])
 		return [x[name] for x in res]
-	def search_memory(self, cr, obj, args, name, value, offset=0, limit=None, uid=None):
-		raise Exception, 'Not implemented search_memory method !'
+	def search_memory(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, context=None):
+		raise Exception, _('Not implemented search_memory method !')
 
 # ---------------------------------------------------------
 # Simple fields
@@ -362,8 +362,8 @@ class one2many(_column):
 				for id2 in (act[2] or []):
 					obj.datas[id2][self._fields_id] = id
 
-	def search_memory(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like'):
-		raise 'Not Implemented'
+	def search_memory(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like', context=None):
+		raise _('Not Implemented')
 
 	
 	def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
@@ -507,18 +507,19 @@ class many2many(_column):
 		if not values:
 			return
 		for act in values:
+			# TODO: use constants instead of these magic numbers
 			if act[0]==0:
-				raise 'Not Implemented'
+				raise _('Not Implemented')
 			elif act[0]==1:
-				raise 'Not Implemented'
+				raise _('Not Implemented')
 			elif act[0]==2:
-				raise 'Not Implemented'
+				raise _('Not Implemented')
 			elif act[0]==3:
-				raise 'Not Implemented'
+				raise _('Not Implemented')
 			elif act[0]==4:
-				raise 'Not Implemented'
+				raise _('Not Implemented')
 			elif act[0]==5:
-				raise 'Not Implemented'
+				raise _('Not Implemented')
 			elif act[0]==6:
 				obj.datas[id][name] = act[2]
 
@@ -675,3 +676,4 @@ class property(function):
 
 	def restart(self):
 		self.field_id = {}
+

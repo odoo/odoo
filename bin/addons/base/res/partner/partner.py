@@ -252,7 +252,7 @@ class res_partner(osv.osv):
 		try:
 			nextref = int(ref)+1
 		except e:
-			raise osv.except_osv('Warning', "Couldn't generate the next id because some partners have an alphabetic id !")
+			raise osv.except_osv(_('Warning'), _("Couldn't generate the next id because some partners have an alphabetic id !"))
 
 		# update the current partner
 		cr.execute("update res_partner set ref=%d where id=%d", (nextref, ids[0]))

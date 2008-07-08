@@ -60,12 +60,12 @@ class wizard_export_lang(wizard.interface):
 		lang_obj=pooler.get_pool(cr.dbname).get('res.lang')
 		ids=lang_obj.search(cr, uid, [('active', '=', True),])
 		langs=lang_obj.browse(cr, uid, ids)
-		return [(lang.code, lang.translatable and lang.name or 'New language') for lang in langs]
+		return [(lang.code, lang.translatable and lang.name or _('New language')) for lang in langs]
 
 	def _get_file(self, cr, uid, data, context):
 		file=tools.trans_generate(data['form']['lang'], 'all', dbname=cr.dbname)
 		buf=StringIO.StringIO()
-		writer=csv.writer(buf, 'TINY')
+		writer=csv.writer(buf, 'UNIX')
 		for row in file:
 			writer.writerow(row)
 		del file

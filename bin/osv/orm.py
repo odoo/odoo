@@ -115,7 +115,7 @@ class browse_record(object):
 		'''
 		if not context:
 			context = {}
-		assert id, 'Wrong ID for the browse record, got '+str(id)+ ', expected an integer.'
+		assert id, _('Wrong ID for the browse record, got %s, expected an integer.') % str(id)
 		self._list_class = list_class or browse_record_list
 		self._cr = cr
 		self._uid = uid
@@ -451,7 +451,7 @@ class orm_template(object):
 			#
 			for i in range(len(fields)):
 				if i>=len(line):
-					raise Exception, 'Please check that all your lines have %d cols.' % (len(fields),)
+					raise Exception, _('Please check that all your lines have %d columns.') % (len(fields),)
 				field = fields[i]
 				if field == ["id"]:
 					data_id= line[i]
@@ -623,7 +623,7 @@ class orm_template(object):
 		return (done, 0, 0, 0)
 
 	def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
-		raise 'The read method is not implemented on this object !'
+		raise _('The read method is not implemented on this object !')
 
 	def _validate(self, cr, uid, ids):
 		field_error = []
@@ -641,16 +641,16 @@ class orm_template(object):
 		return {}
 
 	def perm_read(self, cr, user, ids, context=None, details=True):
-		raise 'The perm_read method is not implemented on this object !'
+		raise _('The perm_read method is not implemented on this object !')
 
 	def unlink(self, cr, uid, ids, context=None):
-		raise 'The unlink method is not implemented on this object !'
+		raise _('The unlink method is not implemented on this object !')
 
 	def write(self, cr, user, ids, vals, context=None):
-		raise 'The write method is not implemented on this object !'
+		raise _('The write method is not implemented on this object !')
 
 	def create(self, cr, user, vals, context=None):
-		raise 'The create method is not implemented on this object !'
+		raise _('The create method is not implemented on this object !')
 
 	# returns the definition of each field in the object
 	# the optional fields parameter can limit the result to some fields
@@ -783,11 +783,11 @@ class orm_template(object):
 			# translate view
 			if ('lang' in context) and not result:
 				if node.hasAttribute('string') and node.getAttribute('string'):
-					trans = tools.translate(cr, user, self._name, 'view', context['lang'], node.getAttribute('string').encode('utf8'))
+					trans = tools.translate(cr, self._name, 'view', context['lang'], node.getAttribute('string').encode('utf8'))
 					if trans:
 						node.setAttribute('string', trans.decode('utf8'))
 				if node.hasAttribute('sum') and node.getAttribute('sum'):
-					trans = tools.translate(cr, user, self._name, 'view', context['lang'], node.getAttribute('sum').encode('utf8'))
+					trans = tools.translate(cr, self._name, 'view', context['lang'], node.getAttribute('sum').encode('utf8'))
 					if trans:
 						node.setAttribute('sum', trans.decode('utf8'))
 			#
@@ -947,7 +947,7 @@ class orm_template(object):
 								elif pos=='before':
 									node.parentNode.insertBefore(child, node)
 								else:
-									raise AttributeError, 'Unknown position in inherited view %s !' % pos
+									raise AttributeError, _('Unknown position in inherited view %s !') % pos
 				else:
 					attrs = ''.join([
 						' %s="%s"' % (attr, node2.getAttribute(attr))
@@ -955,7 +955,7 @@ class orm_template(object):
 						if attr != 'position'
 					])
 					tag = "<%s%s>" % (node2.localName, attrs)
-					raise AttributeError, "Couldn't find tag '%s' in parent view !" % tag
+					raise AttributeError, _("Couldn't find tag '%s' in parent view !") % tag
 			return doc_src.toxml(encoding="utf-8").replace('\t', '')
 
 		result = {'type':view_type, 'model':self._name}
@@ -1072,16 +1072,16 @@ class orm_template(object):
 
 	def search(self, cr, user, args, offset=0, limit=None, order=None,
 			context=None, count=False):
-		raise 'The search method is not implemented on this object !'
+		raise _('The search method is not implemented on this object !')
 
 	def name_get(self, cr, user, ids, context=None):
-		raise 'The name_get method is not implemented on this object !'
+		raise _('The name_get method is not implemented on this object !')
 
 	def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):
-		raise 'The name_search method is not implemented on this object !'
+		raise _('The name_search method is not implemented on this object !')
 
 	def copy(self, cr, uid, id, default=None, context=None):
-		raise 'The copy method is not implemented on this object !'
+		raise _('The copy method is not implemented on this object !')
 
 class orm_memory(orm_template):
 	_protected = ['read','write','create','default_get','perm_read','unlink','fields_get','fields_view_get','search','name_get','distinct_field_get','name_search','copy','import_data','search_count']
@@ -1303,7 +1303,7 @@ class orm(orm_template):
 			for k in self._columns:
 				if k in ('id','write_uid','write_date','create_uid','create_date'):
 					continue
-					#raise 'Can not define a column %s. Reserved keyword !' % (k,)
+					#raise _('Can not define a column %s. Reserved keyword !') % (k,)
 				f = self._columns[k]
 
 				if isinstance(f, fields.one2many):
@@ -1668,8 +1668,8 @@ class orm(orm_template):
 								','.join([str(x) for x in sub_ids]), d1,
 								self._order),d2)
 					if not cr.rowcount == len({}.fromkeys(sub_ids)):
-						raise except_orm('AccessError',
-								'You try to bypass an access rule (Document type: %s).' % self._description)
+						raise except_orm(_('AccessError'),
+								_('You try to bypass an access rule (Document type: %s).') % self._description)
 				else:
 					cr.execute('SELECT %s FROM \"%s\" WHERE id IN (%s) ORDER BY %s' % \
 							(','.join(fields_pre2 + ['id']), self._table,
@@ -1810,8 +1810,8 @@ class orm(orm_template):
 						(delta, self._table, ",".join(map(str, sub_ids))) )
 			res= cr.fetchone()
 			if res and res[0]:
-				raise except_orm('ConcurrencyException',
-						'This record was modified in the meanwhile')
+				raise except_orm(_('ConcurrencyException'),
+						_('This record was modified in the meanwhile'))
 
 		self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink')
 
@@ -1836,8 +1836,8 @@ class orm(orm_template):
 				cr.execute('SELECT id FROM "'+self._table+'" ' \
 						'WHERE id IN ('+str_d+')'+d1, sub_ids+d2)
 				if not cr.rowcount == len({}.fromkeys(ids)):
-					raise except_orm('AccessError',
-							'You try to bypass an access rule (Document type: %s).' % \
+					raise except_orm(_('AccessError'),
+							_('You try to bypass an access rule (Document type: %s).') % \
 									self._description)
 
 			cr.execute('delete from inherit ' \
@@ -1907,8 +1907,8 @@ class orm(orm_template):
 				if res and res[0]:
 					for field in vals:
 						if field in self._columns and self._columns[field]._classic_write:
-							raise except_orm('ConcurrencyException',
-									'This record was modified in the meanwhile')
+							raise except_orm(_('ConcurrencyException'),
+									_('This record was modified in the meanwhile'))
 
 		self.pool.get('ir.model.access').check(cr, user, self._name, 'write')
 
@@ -1940,14 +1940,14 @@ class orm(orm_template):
 					val = vals[field]
 				if isinstance(self._columns[field].selection, (tuple, list)):
 					if val not in dict(self._columns[field].selection):
-						raise except_orm('ValidateError',
-						'The value "%s" for the field "%s" is not in the selection' \
+						raise except_orm(_('ValidateError'),
+						_('The value "%s" for the field "%s" is not in the selection') \
 								% (vals[field], field))
 				else:
 					if val not in dict(self._columns[field].selection(
 						self, cr, user, context=context)):
-						raise except_orm('ValidateError',
-						'The value "%s" for the field "%s" is not in the selection' \
+						raise except_orm(_('ValidateError'),
+						_('The value "%s" for the field "%s" is not in the selection') \
 								% (vals[field], field))
 
 		if self._log_access:
@@ -1968,15 +1968,15 @@ class orm(orm_template):
 					cr.execute('SELECT id FROM "'+self._table+'" ' \
 							'WHERE id IN ('+ids_str+')'+d1, d2)
 					if not cr.rowcount == len({}.fromkeys(sub_ids)):
-						raise except_orm('AccessError',
-								'You try to bypass an access rule (Document type: %s).'% \
+						raise except_orm(_('AccessError'),
+								_('You try to bypass an access rule (Document type: %s).') % \
 										self._description)
 				else:
 					cr.execute('SELECT id FROM "'+self._table+'" WHERE id IN ('+ids_str+')')
 					if not cr.rowcount == len({}.fromkeys(sub_ids)):
-						raise except_orm('AccessError',
-								'You try to write on an record that doesn\'t exist ' \
-										'(Document type: %s).' % self._description)
+						raise except_orm(_('AccessError'),
+								_('You try to write on an record that doesn\'t exist ' \
+										'(Document type: %s).') % self._description)
 				if d1:
 					cr.execute('update "'+self._table+'" set '+string.join(upd0,',')+' ' \
 							'where id in ('+ids_str+')'+d1, upd1+ d2)
@@ -2105,14 +2105,14 @@ class orm(orm_template):
 					val = vals[field]
 				if isinstance(self._columns[field].selection, (tuple, list)):
 					if val not in dict(self._columns[field].selection):
-						raise except_orm('ValidateError',
-						'The value "%s" for the field "%s" is not in the selection' \
+						raise except_orm(_('ValidateError'),
+						_('The value "%s" for the field "%s" is not in the selection') \
 								% (vals[field], field))
 				else:
 					if val not in dict(self._columns[field].selection(
 						self, cr, user, context=context)):
-						raise except_orm('ValidateError',
-						'The value "%s" for the field "%s" is not in the selection' \
+						raise except_orm(_('ValidateError'),
+						_('The value "%s" for the field "%s" is not in the selection') \
 								% (vals[field], field))
 		if self._log_access:
 			upd0 += ',create_uid,create_date'
@@ -2178,7 +2178,7 @@ class orm(orm_template):
 	# TODO: Validate
 	#
 	def perm_write(self, cr, user, ids, fields, context=None):
-		raise 'This method does not exist anymore'
+		raise _('This method does not exist anymore')
 
 	# TODO: ameliorer avec NULL
 	def _where_calc(self, cr, user, args, active_test=True, context=None):
@@ -2202,10 +2202,10 @@ class orm(orm_template):
 		joins=[]
 		while i<len(args):
 			table=self
-			assert args[i][1] in ('like','!=','ilike','=like', 'not like', 'not ilike', 'not in','inselect','child_of','in','=','<>','<','>','>=','<='), 'Error ! Bad clause operand "%s".' % (args[i][1],)
+			assert args[i][1] in ('like','!=','ilike','=like', 'not like', 'not ilike', 'not in','inselect','child_of','in','=','<>','<','>','>=','<='), _('Error ! Bad clause operand "%s".') % (args[i][1],)
 			if args[i][1] == 'inselect':
-				raise except_orm('ValidateError',
-						'The clause \'inselect\' can not be used outside the orm!')
+				raise except_orm(_('ValidateError'),
+						_("The clause 'inselect' can not be used outside the orm!"))
 			if args[i][0] in self._inherit_fields:
 				table=self.pool.get(self._inherit_fields[args[i][0]][0])
 				if ('"'+table._table+'"' not in tables):
@@ -2373,7 +2373,7 @@ class orm(orm_template):
 #FIXME: this replace all (..., '=', False) values with 'is null' and this is
 # not what we want for real boolean fields. The problem is, we can't change it
 # easily because we use False everywhere instead of None
-# NOTE FAB: we can't use None because it is not accepted by XML-RPC, that's why
+# NOTE FAB: we can't use None becStay tunes ! ause it is not accepted by XML-RPC, that's why
 # boolean (0-1), None -> False
 # Ged> boolean fields are not always = 0 or 1
 				if (x[2] is False) and (x[1]=='='):
@@ -2442,7 +2442,7 @@ class orm(orm_template):
 
 	def _check_qorder(self, word):
 		if not regex_order.match(word):
-			raise except_orm('AccessError', 'Bad query.')
+			raise except_orm(_('AccessError'), _('Bad query.'))
 		return True
 
 	def search(self, cr, user, args, offset=0, limit=None, order=None,

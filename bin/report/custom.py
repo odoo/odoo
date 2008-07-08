@@ -571,7 +571,7 @@ class report_custom(report_int):
 		colors = map(lambda x:fill_style.Plain(bgcolor=x), misc.choice_colors(len(results)))
 
 		if reduce(lambda x,y : x+y, map(lambda x : x[1],results)) == 0.0:
-			raise('The sum of the data (2nd field) is null. \nWe can draw a pie chart !')
+			raise(_('The sum of the data (2nd field) is null.\nWe can draw a pie chart !'))
 
 		plot = pie_plot.T(data=results, arc_offsets=[0,10,0,10],
 						  shadow = (2, -2, fill_style.gray50),

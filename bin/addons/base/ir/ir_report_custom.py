@@ -31,6 +31,7 @@ from osv import fields,osv
 from osv.orm import browse_null
 import ir
 import report.custom
+from tools.translate import _
 
 class report_custom(osv.osv):
 	_name = 'ir.report.custom'
@@ -75,10 +76,10 @@ class report_custom(osv.osv):
 		
 			# required on field0 does not seem to work( cause we use o2m_l ?)
 			if not report.fields_child0:
-				raise osv.except_osv('Invalid operation :', 'Enter at least one field !')
+				raise osv.except_osv(_('Invalid operation'), _('Enter at least one field !'))
 			
 			if report.type in ['pie', 'bar', 'line'] and report.field_parent:
-				raise osv.except_osv('Invalid operation :', 'Tree can only be used in tabular reports')
+				raise osv.except_osv(_('Invalid operation'), _('Tree can only be used in tabular reports'))
 			
 			# Otherwise it won't build a good tree. See level.pop in custom.py.
 			if report.type == 'table' and report.field_parent and report.fields_child0 and not report.fields_child0[0].groupby:
@@ -86,7 +87,7 @@ class report_custom(osv.osv):
 
 			if report.type == 'pie':
 				if len(report.fields_child0) != 2:
-					raise osv.except_osv('Invalid operation :', 'Pie charts need exactly two fields')
+					raise osv.except_osv(_('Invalid operation'), _('Pie charts need exactly two fields'))
 				else:
 					c_f = {}
 					for i in range(2):
@@ -95,11 +96,11 @@ class report_custom(osv.osv):
 						for j in range(3):
 							c_f[i].append((not isinstance(eval('tmp.field_child'+str(j)), browse_null) and eval('tmp.field_child'+str(j)+'.ttype')) or None)
 					if not reduce(lambda x,y : x or y, map(lambda x: x in ['integer', 'float'], c_f[1])):
-						raise osv.except_osv('Invalid operation : ','Second field should be figures')
+						raise osv.except_osv(_('Invalid operation'), _('Second field should be figures'))
 					
 			if report.type == 'bar':
 				if len(report.fields_child0) < 2:
-					raise osv.except_osv('Invalid operation : ','Bar charts need at least two fields')
+					raise osv.except_osv(_('Invalid operation'), _('Bar charts need at least two fields'))
 				else:
 					c_f = {}
 					for i in range(len(report.fields_child0)):
@@ -112,7 +113,7 @@ class report_custom(osv.osv):
 							pass
 						else:
 							if not reduce(lambda x,y : x or y, map(lambda x: x in ['integer', 'float'], c_f[i])):
-								raise osv.except_osv('Invalid operation : ','Field %d should be a figure' %(i,))
+								raise osv.except_osv(_('Invalid operation'), _('Field %d should be a figure') %(i,))
 
 			if report.state=='subscribed':
 				continue
@@ -193,7 +194,7 @@ class report_custom_fields(osv.osv):
 					}
 				}
 			else:
-				print "Warning: using a relation field which uses an unknown object"
+				print _("Warning: using a relation field which uses an unknown object")	#TODO use the logger
 				return {'required': {next_level_field_name: True}}
 		else:
 			return {'domain': {next_level_field_name: []}}

@@ -48,8 +48,8 @@ class groups(osv.osv):
 	def write(self, cr, uid, ids, vals, context=None):
 		if 'name' in vals:
 			if vals['name'].startswith('-'):
-				raise osv.except_osv('Error',
-						'The name of the group can not start with "-"')
+				raise osv.except_osv(_('Error'),
+						_('The name of the group can not start with "-"'))
 		res = super(groups, self).write(cr, uid, ids, vals, context=context)
 		# Restart the cache on the company_get method
 		self.pool.get('ir.rule').domain_get()
@@ -58,8 +58,8 @@ class groups(osv.osv):
 	def create(self, cr, uid, vals, context=None):
 		if 'name' in vals:
 			if vals['name'].startswith('-'):
-				raise osv.except_osv('Error',
-						'The name of the group can not start with "-"')
+				raise osv.except_osv(_('Error'),
+						_('The name of the group can not start with "-"'))
 		return super(groups, self).create(cr, uid, vals, context=context)
 
 groups()
@@ -163,7 +163,7 @@ class users(osv.osv):
 
 	def unlink(self, cr, uid, ids):
 		if 1 in ids:
-			raise osv.except_osv('Can not remove root user !', 'You can not remove the root user as it is used internally for resources created by Tiny ERP (updates, module installation, ...)')
+			raise osv.except_osv(_('Can not remove root user!'), _('You can not remove the root user as it is used internally for resources created by Tiny ERP (updates, module installation, ...)'))
 		return super(users, self).unlink(cr, uid, ids)
 
 	def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):

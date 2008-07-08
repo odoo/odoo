@@ -40,12 +40,9 @@ import base64
 import addons
 
 import sql_db
+from tools.translate import _
 
 logging.basicConfig()
-
-#TODO: use translation system
-def _(str):
-	return str
 
 class db(netsvc.Service):
 	def __init__(self, name="db"):

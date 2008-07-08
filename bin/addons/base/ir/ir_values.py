@@ -29,6 +29,7 @@
 
 from osv import osv,fields
 import pickle
+from tools.translate import _
 
 class ir_values(osv.osv):
 	_name = 'ir.values'

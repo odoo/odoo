@@ -33,6 +33,7 @@ from osv import fields, osv
 import ir
 
 from tools.misc import currency
+from tools.translate import _
 
 import mx.DateTime
 from mx.DateTime import RelativeDateTime, now, DateTime, localtime
@@ -87,9 +88,9 @@ class res_currency(osv.osv):
 				code = from_currency.code
 			else:
 				code = to_currency.code
-			raise osv.except_osv('Error', 'No rate found \n' \
+			raise osv.except_osv(_('Error'), _('No rate found \n' \
 					'for the currency: %s \n' \
-					'at the date: %s' % (code, date))
+					'at the date: %s') % (code, date))
 		if to_currency_id==from_currency_id:
 			if round:
 				return self.round(cr, uid, to_currency, from_amount)

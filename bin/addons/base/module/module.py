@@ -264,13 +264,13 @@ class module(osv.osv):
 			ids = [ids]
 		for mod in self.read(cr, uid, ids, ['state'], context):
 			if mod['state'] in ('installed', 'to upgrade', 'to remove', 'to install'):
-				raise orm.except_orm('Error',
-						'You try to remove a module that is installed or will be installed')
+				raise orm.except_orm(_('Error'),
+						_('You try to remove a module that is installed or will be installed'))
 		return super(module, self).unlink(cr, uid, ids, context=context)
 
 	def state_change(self, cr, uid, ids, newstate, context={}, level=50):
 		if level<1:
-			raise Exception, 'Recursion error in modules dependencies !'
+			raise Exception, _('Recursion error in modules dependencies !')
 		demo = True
 		for module in self.browse(cr, uid, ids):
 			mdemo = True
@@ -288,7 +288,7 @@ class module(osv.osv):
 	def state_upgrade(self, cr, uid, ids, newstate, context=None, level=50):
 		dep_obj = self.pool.get('ir.module.module.dependency')
 		if level<1:
-			raise Exception, 'Recursion error in modules dependencies !'
+			raise Exception, _('Recursion error in modules dependencies !')
 		for module in self.browse(cr, uid, ids):
 			dep_ids = dep_obj.search(cr, uid, [('name', '=', module.name)])
 			if dep_ids:
@@ -320,7 +320,7 @@ class module(osv.osv):
 					m.state not in ('uninstalled','uninstallable','to remove')''', (module.name,))
 			res = cr.fetchall()
 			if res:
-				raise orm.except_orm('Error', 'The module you are trying to remove depends on installed modules :\n' + '\n'.join(map(lambda x: '\t%s: %s' % (x[0], x[1]), res)))
+				raise orm.except_orm(_('Error'), _('The module you are trying to remove depends on installed modules :\n %s') % '\n'.join(map(lambda x: '\t%s: %s' % (x[0], x[1]), res)))
 		self.write(cr, uid, ids, {'state': 'to remove'})
 		return True
 
@@ -420,9 +420,8 @@ class module(osv.osv):
 				index_page = urllib.urlopen(repository.url).read()
 			except IOError, e:
 				if e.errno == 21:
-					raise orm.except_orm('Error',
-							'This url \'%s\' must provide an html file '
-							'with links to zip modules' % (repository.url))
+					raise orm.except_orm(_('Error'),
+							_("This url '%s' must provide an html file with links to zip modules") % (repository.url))
 				else:
 					raise
 			modules = re.findall(repository.filter, index_page, re.I+re.M)
@@ -493,8 +492,7 @@ class module(osv.osv):
 				fp.write(zipfile)
 				fp.close()
 			except IOError, e:
-				raise orm.except_orm('Error', 'Can not create the module file:\n %s'
-						% (fname,))
+				raise orm.except_orm(_('Error'), _('Can not create the module file:\n %s') % (fname,))
 			terp = self.get_module_info(mod.name)
 			self.write(cr, uid, mod.id, {
 				'description': terp.get('description', ''),

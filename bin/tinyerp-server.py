@@ -185,7 +185,7 @@ if tools.config["translate_out"]:
 
 	logger.notifyChannel("init", netsvc.LOG_INFO, 'writing translation file for language %s to %s' % (tools.config["language"], tools.config["translate_out"]))
 	trans=tools.trans_generate(tools.config["language"], tools.config["translate_modules"])
-	writer=csv.writer(file(tools.config["translate_out"], "w"), 'TINY')
+	writer=csv.writer(file(tools.config["translate_out"], "w"), 'UNIX')
 	for row in trans:
 		writer.writerow(row)
 	del trans

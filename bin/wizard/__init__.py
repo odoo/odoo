@@ -55,14 +55,14 @@ class interface(netsvc.Service):
 		self.exportMethod(self.execute)
 		self.wiz_name = name
 		
-	def translate_view(self, cr, uid, node, state, lang):
+	def translate_view(self, cr, node, state, lang):
 		if node.nodeType == node.ELEMENT_NODE:
 			if node.hasAttribute('string') and node.getAttribute('string'):
-				trans = translate(cr, uid, self.wiz_name+','+state, 'wizard_view', lang, node.getAttribute('string').encode('utf8'))
+				trans = translate(cr, self.wiz_name+','+state, 'wizard_view', lang, node.getAttribute('string').encode('utf8'))
 				if trans:
 					node.setAttribute('string', trans.decode('utf8'))
 		for n in node.childNodes:
-			self.translate_view(cr, uid, n, state, lang)
+			self.translate_view(cr, n, state, lang)
 
 	def execute_cr(self, cr, uid, data, state='init', context=None):
 		if not context:
@@ -119,21 +119,21 @@ class interface(netsvc.Service):
 				if lang:
 					# translate fields
 					for field in fields:
-						trans = translate(cr, uid, self.wiz_name+','+state+','+field, 'wizard_field', lang)
+						trans = translate(cr, self.wiz_name+','+state+','+field, 'wizard_field', lang)
 						if trans:
 							fields[field]['string'] = trans
 
 					# translate arch
 					if not isinstance(arch, UpdateableStr):
 						doc = dom.minidom.parseString(arch)
-						self.translate_view(cr, uid, doc, state, lang)
+						self.translate_view(cr, doc, state, lang)
 						arch = doc.toxml()
 
 					# translate buttons
 					button_list = list(button_list)
 					for i, aa  in enumerate(button_list):
 						button_name = aa[0]
-						trans = translate(cr, uid, self.wiz_name+','+state+','+button_name, 'wizard_button', lang)
+						trans = translate(cr, self.wiz_name+','+state+','+button_name, 'wizard_button', lang)
 						if trans:
 							aa = list(aa)
 							aa[1] = trans

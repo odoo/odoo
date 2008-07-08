@@ -75,7 +75,7 @@ class move_module_wizard(wizard.interface):
 			fp.write(val)
 			fp.close()
 		except IOError, e:
-			raise wizard.except_wizard('Error !', 'Can not create the module file:\n'+'  '+fname+'!')
+			raise wizard.except_wizard(_('Error !'), _('Can not create the module file: %s !') % (fname,) )
 
 		pooler.get_pool(cr.dbname).get('ir.module.module').update_list(cr, uid)
 		return {'module_name': module_name}

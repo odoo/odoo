@@ -36,15 +36,15 @@ import netsvc
 from tools.misc import UpdateableStr
 
 
-class TINY(csv.excel):
+class UNIX_LINE_TERMINATOR(csv.excel):
 	lineterminator = '\n'
 
-csv.register_dialect("TINY", TINY)
+csv.register_dialect("UNIX", UNIX_LINE_TERMINATOR)
 
 #
 # TODO: a caching method
 #
-def translate(cr, uid, name, source_type, lang, source=None):
+def translate(cr, name, source_type, lang, source=None):
 	if source and name:
 		cr.execute('select value from ir_translation where lang=%s and type=%s and name=%s and src=%s', (lang, source_type, str(name), source))
 	elif name:
@@ -55,13 +55,13 @@ def translate(cr, uid, name, source_type, lang, source=None):
 	res = res_trans and res_trans[0] or False
 	return res
 
-def translate_code(cr, uid, source, context):
+def translate_code(cr, source, context):
 	lang = context.get('lang', False)
 	if lang:
-		return translate(cr, uid, None, 'code', lang, source)
+		return translate(cr, None, 'code', lang, source) or source
 	else:
 		return source
-_ = lambda source: translate_code(cr, uid, source, context)
+_ = lambda source: translate_code(cr, source, context)
 
 # Methods to export the translation file
 
@@ -126,14 +126,28 @@ def trans_generate(lang, modules, dbname=None):
 	uid = 1
 	l = pool.obj_pool.items()
 	l.sort()
-	out = [["type","name","res_id","src","value"]]
 
-	to_translate = []
+	query = 'SELECT name, model, res_id, module'	\
+			'  FROM ir_model_data'
+	if not 'all' in modules:
+		query += ' WHERE module IN (%s)' % ','.join(['%s']*len(modules))
+	query += ' ORDER BY module, model, name'
 	
-	if 'all' in modules:
-		cr.execute('select name,model,res_id,module from ir_model_data')
-	else:
-		cr.execute('select name,model,res_id,module from ir_model_data where module in ('+','.join(['%s']*len(modules))+')', modules)
+	query_param = not 'all' in modules and modules or None
+	cr.execute(query, query_param)
+
+	#if 'all' in modules:
+	#	cr.execute('select name,model,res_id,module from ir_model_data')
+	#else:
+	#	cr.execute('select name,model,res_id,module from ir_model_data where module in ('+','.join(['%s']*len(modules))+')', modules)
+
+
+	_to_translate = []
+	def push_translation(module, type, name, id, source):
+		tuple = (module, type, name, id, source)
+		if not tuple in _to_translate:
+			_to_translate.append(tuple)
+
 
 	for (xml_name,model,res_id,module) in cr.fetchall():
 		xml_name = module+'.'+xml_name
@@ -141,7 +155,7 @@ def trans_generate(lang, modules, dbname=None):
 		if model=='ir.ui.view':
 			d = xml.dom.minidom.parseString(obj.arch)
 			for t in trans_parse_view(d.documentElement):
-				to_translate.append(["view", obj.model, 0, t])
+				push_translation(module, 'view', obj.model, 0, t)
 		elif model=='ir.actions.wizard':
 			service_name = 'wizard.'+obj.wiz_name
 			obj2 = netsvc._service[service_name]
@@ -157,31 +171,31 @@ def trans_generate(lang, modules, dbname=None):
 						if 'string' in field_def:
 							source = field_def['string']
 							res_name = name + ',' + field_name
-							to_translate.append(["wizard_field", res_name,0,source])
+							push_translation(module, 'wizard_field', res_name, 0, source)
 
 					# export arch
 					arch = result['arch']
 					if not isinstance(arch, UpdateableStr):
 						d = xml.dom.minidom.parseString(arch)
 						for t in trans_parse_view(d.documentElement):
-							to_translate.append(["wizard_view", name, 0, t])
+							push_translation(module, 'wizard_view', name, 0, t)
 
 					# export button labels
 					for but_args in result['state']:
 						button_name = but_args[0]
 						button_label = but_args[1]
 						res_name = name + ',' + button_name
-						to_translate.append(["wizard_button", res_name, 0, button_label])
+						push_translation(module, 'wizard_button', res_name, 0, button_label)
 
 		elif model=='ir.model.fields':
 			field_name = obj.name
 			field_def = pool.get(obj.model)._columns[field_name]
 
 			name = obj.model + "," + field_name
-			to_translate.append(["field", name, 0, field_def.string.encode('utf8')])
+			push_translation(module, 'field', name, 0, field_def.string.encode('utf8'))
 
 			if field_def.help:
-				to_translate.append(["help", name, 0, field_def.help.encode('utf8')])
+				push_translation(module, 'help', name, 0, field_def.help.encode('utf8'))
 
 			if field_def.translate:
 				ids = pool.get(obj.model).search(cr, uid, [])
@@ -195,11 +209,11 @@ def trans_generate(lang, modules, dbname=None):
 						('res_id', '=', res_id),
 						])
 					if not model_data_ids:
-						to_translate.append(['model', name, 0, obj_value[field_name]])
+						push_translation(module, 'model', name, 0, obj_value[field_name])
 
 			if hasattr(field_def, 'selection') and isinstance(field_def.selection, (list, tuple)):
 				for key, val in field_def.selection:
-					to_translate.append(["selection", name, 0, val.encode('utf8')])
+					push_translation(module, 'selection', name, 0, val.encode('utf8'))
 
 		elif model=='ir.actions.report.xml':
 			name = obj.report_name
@@ -216,7 +230,7 @@ def trans_generate(lang, modules, dbname=None):
 				xmlstr = tools.file_open(fname).read()
 				d = xml.dom.minidom.parseString(xmlstr)
 				for t in parse_func(d.documentElement):
-					to_translate.append([report_type, name, 0, t])
+					push_translation(module, report_type, name, 0, t)
 			except IOError:
 				if fname:
 					logger.notifyChannel("init", netsvc.LOG_WARNING, "couldn't export translation for report %s %s %s" % (name, report_type, fname))
@@ -225,40 +239,57 @@ def trans_generate(lang, modules, dbname=None):
 		for field_name,field_def in pool.get(model)._columns.items():
 			if field_def.translate:
 				name = model + "," + field_name
-				to_translate.append(['model', name, xml_name, getattr(obj,field_name)])
+				push_translation(module, 'model', name, xml_name, getattr(obj, field_name))
 
-	# TODO: By module
-	# code
-	for root, dirs, files in os.walk(tools.config['root_path']):
-		for fname in fnmatch.filter(files, '*.py'):
-			frelativepath = join(root, fname)
-			code_string = tools.file_open(frelativepath, subdir='').read()
-			iter = re.finditer(
-				'[^a-zA-Z0-9_]_\([\s]*["\'](.*?)["\'][\s]*\)',
-				code_string)
-			sources = []
-			for i in iter:
-				to_translate.append(['code', frelativepath, 0, i.group(1).encode('utf8')])
+	# parse source code for _() calls
+	def get_module_from_path(path):
+		relative_addons_path = tools.config['addons_path'][len(tools.config['root_path'])+1:]
+		if path.startswith(relative_addons_path):
+			path = path[len(relative_addons_path)+1:]
+			return path.split(os.path.sep)[0]
+		return None
 
+	def parse_py_files(path):
+		for root, dirs, files in os.walk(path):
+			for fname in fnmatch.filter(files, '*.py'):
+				fabsolutepath = join(root, fname)
+				frelativepath = fabsolutepath[len(tools.config['root_path'])+1:]
+				module = get_module_from_path(frelativepath)
+				code_string = tools.file_open(fabsolutepath, subdir='').read()
+				iter = re.finditer(
+					'[^a-zA-Z0-9_]_\([\s]*["\'](.+?)["\'][\s]*\)',
+					code_string)
+				for i in iter:
+					push_translation(module, 'code', frelativepath, 0, i.group(1).encode('utf8'))
+
+
+	if 'all' in modules:
+		parse_py_files(tools.config['root_path'])
+	else:
+		for m in modules:
+			parse_py_files(join(tools.config['addons_path'], m))
+
+
+	out = [["module","type","name","res_id","src","value"]]	# header
 	# translate strings marked as to be translated
-	for a  in to_translate:
-		(type, name, id, source) = a
+	for module, type, name, id, source in _to_translate:
 		trans = trans_obj._get_source(cr, uid, name, type, lang, source)
-		out.append([type, name, id, source, trans or ''])
+		out.append([module, type, name, id, source, trans or ''])
 
 	cr.close()
 	return out
 
 def trans_load(db_name, filename, lang, strict=False):
 	logger = netsvc.Logger()
-	data=''
 	try:
-		data=file(filename,'r').read().split('\n')
+		fileobj = open(filename,'r')
 	except IOError:
 		logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't read file")
-	return trans_load_data(db_name, data, lang, strict=False)
+	r = trans_load_data(db_name, fileobj, lang, strict=False)
+	fileobj.close()
+	return r
 
-def trans_load_data(db_name, data, lang, strict=False, lang_name=None):
+def trans_load_data(db_name, fileobj, lang, strict=False, lang_name=None):
 	logger = netsvc.Logger()
 	logger.notifyChannel("init", netsvc.LOG_INFO,
 			'loading translation file for language %s' % (lang))
@@ -288,7 +319,8 @@ def trans_load_data(db_name, data, lang, strict=False, lang_name=None):
 		langs = lang_obj.read(cr, uid, lang_ids)
 		ls = map(lambda x: (x['code'],x['name']), langs)
 
-		reader = csv.reader(data)
+		fileobj.seek(0)
+		reader = csv.reader(fileobj, quotechar='"', delimiter=',')
 		# read the first line of the file (it contains columns titles)
 		for row in reader:
 			f = row
@@ -299,8 +331,9 @@ def trans_load_data(db_name, data, lang, strict=False, lang_name=None):
 		for row in reader:
 			line += 1
 			#try:
-			# skip empty rows and rows where the translation field is empty
-			if (not row) or (not row[4]):
+			# skip empty rows and rows where the translation field (=last fiefd) is empty
+			if (not row) or (not row[:-1]):
+				print "translate: skip %s" % repr(row)
 				continue
 
 			# dictionary which holds values for this line of the csv file
@@ -308,8 +341,8 @@ def trans_load_data(db_name, data, lang, strict=False, lang_name=None):
 			#  'src': ..., 'value': ...}
 			dic = {'lang': lang}
 			for i in range(len(f)):
-#					if trans_obj._columns[f[i]]._type == 'integer':
-#						row[i] = row[i] and int(row[i]) or False
+				if f[i] in ('module',):
+					continue
 				dic[f[i]] = row[i]
 
 			try:
