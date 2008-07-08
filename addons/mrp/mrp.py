@@ -878,7 +878,7 @@ class mrp_procurement(osv.osv):
 				'product_uos': procurement.product_uos and procurement.product_uos.id or False,
 				'location_src_id': procurement.location_id.id,
 				'location_dest_id': procurement.location_id.id,
-				'bom_id': prpcurement.bom_id and prpcurement.bom_id.id or False,
+				'bom_id': procurement.bom_id and procurement.bom_id.id or False,
 				'date_planned': newdate,
 				'move_prod_id': res_id,
 			})
