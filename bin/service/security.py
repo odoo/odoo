@@ -48,9 +48,9 @@ def check_super(passwd):
 		raise Exception('AccessDenied')
 	
 def check(db, uid, passwd):
-	# XXX FIXME: this should be db dependent
-	if _uid_cache.has_key(uid) and (_uid_cache[uid]==passwd):
+	if _uid_cache.get(db, {}).get(uid) == passwd:
 		return True
+		
 	cr = pooler.get_db(db).cursor()
 	cr.execute('select count(*) from res_users where id=%d and password=%s', (int(uid), passwd))
 	res = cr.fetchone()[0]
@@ -58,7 +58,11 @@ def check(db, uid, passwd):
 	if not bool(res):
 		raise Exception('AccessDenied')
 	if res:
-		_uid_cache[uid] = passwd
+		if _uid_cache.has_key(db):
+			ulist = _uid_cache[db]
+			ulist[uid] = passwd
+		else:
+			_uid_cache[db] = {uid:passwd}
 	return bool(res)
 
 def access(db, uid, passwd, sec_level, ids):
