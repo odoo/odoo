@@ -341,7 +341,7 @@
             <field name="res_model">res.company</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem id="next_id_7" name="Company's Structure" parent="base.menu_users"/><menuitem action="action_res_company_form" id="menu_action_res_company_form" parent="next_id_7"/>
+        <menuitem action="action_res_company_form" id="menu_action_res_company_form" parent="menu_action_res_company_tree"/>
         
         <!-- User Roles -->
         <record id="action_res_users" model="ir.actions.act_window">
@@ -385,30 +385,6 @@
             <field name="view_id" ref="view_users_form_simple_modif"/>
             <field name="act_window_id" ref="action_res_users_my"/>
         </record>
-        
-        
-        <record id="action_res_users_my_menu" model="ir.actions.act_window">
-            <field name="name">Change My Preferences</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.users</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('id','=',uid)]</field>
-        </record>
-        <record id="action_res_users_my_view1_menu" model="ir.actions.act_window.view">
-            <field eval="10" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="act_window_id" ref="action_res_users_my_menu"/>
-        </record>
-        <record id="action_res_users_my_view2_menu" model="ir.actions.act_window.view">
-            <field eval="20" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_users_form_simple_modif"/>
-            <field name="act_window_id" ref="action_res_users_my_menu"/>
-        </record>
-        
-        
-        <menuitem action="action_res_users_my_menu" id="menu_action_res_users_my" parent="base.menu_action_res_users"/>
         
         <record id="action_res_groups" model="ir.actions.act_window">
             <field name="name">Groups</field>
@@ -455,7 +431,7 @@
             <field name="res_model">res.roles</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem id="next_id_8" name="Roles Structure" parent="base.menu_users"/><menuitem action="action_res_roles_form" id="menu_action_res_roles_form" parent="next_id_8"/>
+        <menuitem action="action_res_roles_form" id="menu_action_res_roles_form" parent="menu_action_res_roles"/>
         
         <!-- View -->
         <record id="view_view_form" model="ir.ui.view">
