@@ -33,6 +33,7 @@ from osv import fields,osv,orm
 
 import mx.DateTime
 import base64
+from tools.translate import _
 
 MAX_LEVEL = 15
 AVAILABLE_STATES = [
@@ -619,8 +620,8 @@ class crm_case(osv.osv):
 		cases = self.browse(cr, uid, ids)
 		for case in cases:
 			if not case.email_from:
-				raise osv.except_osv('Error!',
-						'You must put a Partner eMail to use this action!')
+				raise osv.except_osv(_('Error!'),
+						_('You must put a Partner eMail to use this action!'))
 		self.__history(cr, uid, cases, 'Send', history=True, email=False)
 		for case in cases:
 			self.write(cr, uid, [case.id], {
@@ -683,7 +684,7 @@ class crm_case(osv.osv):
 				if case.section_id.parent_id.user_id:
 					data['user_id'] = case.section_id.parent_id.user_id.id
 			else:
-				raise osv.except_osv('Error !', 'You can not escalate this case.\nYou are already at the top level.')
+				raise osv.except_osv(_('Error !'), _('You can not escalate this case.\nYou are already at the top level.'))
 			self.write(cr, uid, ids, data)
 		self.__history(cr, uid, cases, 'escalate')
 		self._action(cr, uid, cases, 'escalate')

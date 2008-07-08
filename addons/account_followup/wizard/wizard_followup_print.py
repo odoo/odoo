@@ -34,6 +34,7 @@ import time
 
 import tools
 from osv import fields, osv
+from tools.translate import _
 
 _followup_wizard_date_form = """<?xml version="1.0"?>
 <form string="Select a date">
@@ -227,8 +228,8 @@ class followup_all_print(wizard.interface):
 		fups = {}
 		fup_ids = pool.get('account_followup.followup').search(cr, uid, [])
 		if not fup_ids:
-			raise wizard.except_wizard('No Follow up Defined',
-				'You must define at least one follow up for your company !')
+			raise wizard.except_wizard(_('No Follow up Defined'),
+				_('You must define at least one follow up for your company !'))
 		fup_id = fup_ids[0]
 
 		current_date = datetime.date(*time.strptime(data['form']['date'],

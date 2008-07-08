@@ -29,6 +29,7 @@
 
 import netsvc
 from osv import fields,osv,orm
+from tools.translate import _
 
 class delivery_carrier(osv.osv):
 	_name = "delivery.carrier"
@@ -116,7 +117,7 @@ class delivery_grid(osv.osv):
 				ok = True
 				break
 		if not ok:
-			raise except_osv('No price avaible !', 'No line matched this order in the choosed delivery grids !')
+			raise except_osv(_('No price avaible !'), _('No line matched this order in the choosed delivery grids !'))
 
 		return price
 

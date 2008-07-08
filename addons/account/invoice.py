@@ -37,6 +37,7 @@ import mx.DateTime
 from mx.DateTime import RelativeDateTime
 
 from tools import config
+from tools.translate import _
 
 class account_invoice(osv.osv):
 	def _amount_untaxed(self, cr, uid, ids, name, args, context={}):
@@ -82,7 +83,7 @@ class account_invoice(osv.osv):
 		cr.execute("select id from account_analytic_journal where type=%s limit 1", (tt,))
 		result = cr.fetchone()
 		if not result:
-			raise osv.except_osv('No Analytic Journal !', "You have to define an analytic journal of type '%s' !" % (tt,))
+			raise osv.except_osv(_('No Analytic Journal !'),("You have to define an analytic journal of type '%s' !") % (tt,))
 		return result[0]
 
 	def _get_type(self, cr, uid, context={}):
@@ -171,7 +172,7 @@ class account_invoice(osv.osv):
 			if t['state'] in ('draft', 'cancel'):
 				unlink_ids.append(t['id'])
 			else:
-				raise osv.except_osv('Invalid action !', 'Cannot delete invoice(s) which are already opened or paid !')
+				raise osv.except_osv(_('Invalid action !'), _('Cannot delete invoice(s) which are already opened or paid !'))
 		osv.osv.unlink(self, cr, uid, unlink_ids)
 		return True
 
@@ -378,7 +379,7 @@ class account_invoice(osv.osv):
 			if inv.move_id:
 				continue
 			if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding/2.0):
-				raise osv.except_osv('Bad total !', 'Please verify the price of the invoice !\nThe real total does not match the computed total.')
+				raise osv.except_osv(_('Bad total !'), _('Please verify the price of the invoice !\nThe real total does not match the computed total.'))
 			company_currency = inv.company_id.currency_id.id
 			# create the analytical lines
 			line_ids = self.read(cr, uid, [inv.id], ['invoice_line'])[0]['invoice_line']
@@ -398,13 +399,13 @@ class account_invoice(osv.osv):
 					key = (tax.tax_code_id.id, tax.base_code_id.id, tax.account_id.id)
 					tax_key.append(key)
 					if not key in compute_taxes:
-						raise osv.except_osv('Warning !', 'Global taxes defined, but not in invoice lines !')
+						raise osv.except_osv(_('Warning !'), _('Global taxes defined, but not in invoice lines !'))
 					base = compute_taxes[key]['base']
 					if abs(base - tax.base) > inv.company_id.currency_id.rounding:
-						raise osv.except_osv('Warning !', 'Tax base different !\nClick on compute to update tax base')
+						raise osv.except_osv(_('Warning !'), _('Tax base different !\nClick on compute to update tax base'))
 				for key in compute_taxes:
 					if not key in tax_key:
-						raise osv.except_osv('Warning !', 'Taxes missing !')
+						raise osv.except_osv(_('Warning !'), _('Taxes missing !'))
 
 			# one move line per tax line
 			iml += ait_obj.move_line_get(cr, uid, inv.id)
@@ -494,8 +495,8 @@ class account_invoice(osv.osv):
 			if journal.sequence_id:
 				name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
 			if journal.centralisation:
-				raise osv.except_osv('UserError',
-						'Can not create invoice move on centralized journal')
+				raise osv.except_osv(_('UserError'),
+						_('Can not create invoice move on centralized journal'))
 
 			move = {'name': name, 'line_id': line, 'journal_id': journal_id}
 			if inv.period_id:
@@ -684,7 +685,7 @@ class account_invoice(osv.osv):
 			if journal.sequence_id:
 				name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
 			else:
-				raise osv.except_osv('No piece number !', 'Can not create an automatic sequence for this piece !\n\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.')
+				raise osv.except_osv(_('No piece number !'), _('Can not create an automatic sequence for this piece !\n\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.'))
 		types = {'out_invoice': -1, 'in_invoice': 1, 'out_refund': 1, 'in_refund': -1}
 		direction = types[invoice.type]
 		l1 = {

@@ -36,6 +36,7 @@ import ir
 from mx import DateTime
 import pooler
 from tools import config
+from tools.translate import _
 
 #
 # Model definition
@@ -204,7 +205,7 @@ class purchase_order(osv.osv):
 					if not a:
 						a = ol.product_id.categ_id.property_account_expense_categ.id
 					if not a:
-						raise osv.except_osv('Error !', 'There is no expense account defined for this product: "%s" (id:%d)' % (ol.product_id.name, ol.product_id.id,))
+						raise osv.except_osv(_('Error !'), _('There is no expense account defined for this product: "%s" (id:%d)') % (ol.product_id.name, ol.product_id.id,))
 				else:
 					a = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category')
 				il.append(self.inv_line_create(a,ol))
@@ -339,7 +340,7 @@ class purchase_order_line(osv.osv):
 	def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,
 			partner_id, date_order=False):
 		if not pricelist:
-			raise osv.except_osv('No Pricelist !', 'You have to select a pricelist in the purchase form !\n Please set one before choosing a product.')
+			raise osv.except_osv(_('No Pricelist !'), _('You have to select a pricelist in the purchase form !\nPlease set one before choosing a product.'))
 		if not product:
 			return {'value': {'price_unit': 0.0, 'name':'','notes':''}, 'domain':{'product_uom':[]}}
 		lang=False
@@ -368,7 +369,7 @@ class purchase_order_line(osv.osv):
 		res3 = self.pool.get('product.uom').read(cr, uid, [prod_uom_po], ['category_id'])
 		domain = {'product_uom':[('category_id','=',res2[0]['category_id'][0])]}
 		if res2[0]['category_id'] != res3[0]['category_id']:
-			raise osv.except_osv('Wrong Product UOM !', 'You have to select a product UOM in the same category than the purchase UOM of the product')
+			raise osv.except_osv(_('Wrong Product UOM !'), _('You have to select a product UOM in the same category than the purchase UOM of the product'))
 
 		res['domain'] = domain
 		return res

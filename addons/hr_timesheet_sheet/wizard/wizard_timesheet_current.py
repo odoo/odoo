@@ -33,13 +33,14 @@ import netsvc
 import time
 import pooler
 from osv import osv
+from tools.translate import _
 
 class wiz_timesheet_open(wizard.interface):
 	def _open_timesheet(self, cr, uid, data, context):
 		pool = pooler.get_pool(cr.dbname)
 		user_ids = pool.get('hr.employee').search(cr, uid, [('user_id','=',uid)])
 		if not len(user_ids):
-			raise wizard.except_wizard('Error !', 'No employee defined for your user !')
+			raise wizard.except_wizard(_('Error !'), _('No employee defined for your user !'))
 		ts = pool.get('hr_timesheet_sheet.sheet')
 		ids = ts.search(cr, uid, [('user_id','=',uid),('state','=','draft'),('date_from','<=',time.strftime('%Y-%m-%d')), ('date_to','>=',time.strftime('%Y-%m-%d'))])
 		view_type = 'form,tree'

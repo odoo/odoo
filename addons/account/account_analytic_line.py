@@ -32,6 +32,7 @@ import time
 
 from osv import fields
 from osv import osv
+from tools.translate import _
 
 class account_analytic_line(osv.osv):
 	_name = 'account.analytic.line'
@@ -75,9 +76,9 @@ class account_analytic_line(osv.osv):
 			if not a:
 				a = prod.categ_id.property_account_expense_categ.id
 			if not a:
-				raise osv.except_osv('Error !',
-						'There is no expense account define ' \
-								'for this product: "%s" (id:%d)' % \
+				raise osv.except_osv(_('Error !'),
+						_('There is no expense account define ' \
+								'for this product: "%s" (id:%d)') % \
 								(prod.name, prod.id,))
 			amount = unit_amount * uom_obj._compute_price(cr, uid,
 					prod.uom_id.id, prod.standard_price, unit)

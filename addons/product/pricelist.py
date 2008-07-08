@@ -34,6 +34,7 @@ from osv import fields, osv
 from _common import rounding
 import time
 from tools import config
+from tools.translate import _
 
 class price_type(osv.osv):
 	"""
@@ -136,9 +137,9 @@ class product_pricelist(osv.osv):
 			plversion = cr.dictfetchone()
 
 			if not plversion:
-				raise osv.except_osv('Warning !',
-						'No active version for the selected pricelist !\n' \
-								'Please create or activate one.')
+				raise osv.except_osv(_('Warning !'),
+						_('No active version for the selected pricelist !\n' \
+								'Please create or activate one.'))
 
 			cr.execute('SELECT id, categ_id ' \
 					'FROM product_template ' \
@@ -154,10 +155,10 @@ class product_pricelist(osv.osv):
 						'WHERE id = %d', (categ,))
 				categ = cr.fetchone()[0]
 				if str(categ) in categ_ids:
-					raise osv.except_osv('Warning !',
-							'Could not resolve product category, ' \
+					raise osv.except_osv(_('Warning !'),
+							_('Could not resolve product category, ' \
 									'you have defined cyclic categories ' \
-									'of products!')
+									'of products!'))
 			if categ_ids:
 				categ_where = '(categ_id IN (' + ','.join(categ_ids) + '))'
 			else:

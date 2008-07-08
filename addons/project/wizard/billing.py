@@ -89,9 +89,9 @@ def _do_orders(self, cr, uid, data, context):
 		if not task.project_id.id in customers:
 			partner = task.partner_id or task.project_id.partner_id
 			if not partner.id:
-				raise wizard.except_wizard('Error !', 'No partner defined for the task or project.')
+				raise wizard.except_wizard(_('Error !'), _('No partner defined for the task or project.'))
 			if not task.project_id.pricelist_id.id:
-				raise wizard.except_wizard('Error !', 'No pricelist defined in the project definition.')
+				raise wizard.except_wizard(_('Error !'), _('No pricelist defined in the project definition.'))
 			adr = pooler.get_pool(cr.dbname).get('res.partner').address_get(cr, uid, [partner.id], ['default','invoice','shipping'])
 
 			a = partner.property_account_receivable.id

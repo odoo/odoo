@@ -31,6 +31,7 @@ import time
 import wizard
 import ir
 import pooler
+from tools.translate import _
 
 delivery_form = """<?xml version="1.0"?>
 <form string="Create deliveries">
@@ -47,7 +48,7 @@ def _delivery_default(self, cr, uid, data, context):
 	order_obj = pooler.get_pool(cr.dbname).get('sale.order')
 	order = order_obj.browse(cr, uid, data['ids'])[0]
 	if not order.state in ('draft'):
-		raise wizard.except_wizard('Order not in draft state !', 'The order state have to be draft to add delivery lines.')
+		raise wizard.except_wizard(_('Order not in draft state !'), _('The order state have to be draft to add delivery lines.'))
 
 	carrier_id = order.partner_id.property_delivery_carrier.id
 	return {'carrier_id': carrier_id}
@@ -60,7 +61,7 @@ def _delivery_set(self, cr, uid, data, context):
 	for order in order_objs:
 		grid_id = pooler.get_pool(cr.dbname).get('delivery.carrier').grid_get(cr, uid, [data['form']['carrier_id']],order.partner_shipping_id.id)
 		if not grid_id:
-			raise wizard.except_wizard('No grid avaible !', 'No grid matching for this carrier !')
+			raise wizard.except_wizard(_('No grid avaible !'), _('No grid matching for this carrier !'))
 		grid = pooler.get_pool(cr.dbname).get('delivery.grid').browse(cr, uid, [grid_id])[0]
 
 		line_obj.create(cr, uid, {

@@ -30,6 +30,7 @@
 import wizard
 import osv
 import pooler
+from tools.translate import _
 
 _transaction_form = '''<?xml version="1.0"?>
 <form string="Close Fiscal Year">
@@ -57,7 +58,7 @@ def _data_load(self, cr, uid, data, context):
 
 def _data_save(self, cr, uid, data, context):
 	if not data['form']['sure']:
-		raise wizard.except_wizard('UserError', 'Closing of fiscal year canceled, please check the box !')
+		raise wizard.except_wizard(_('UserError'), _('Closing of fiscal year canceled, please check the box !'))
 	pool = pooler.get_pool(cr.dbname)
 
 	fy_id = data['form']['fy_id']
@@ -66,17 +67,17 @@ def _data_save(self, cr, uid, data, context):
 		new_fyear = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy2_id'])
 		start_jp = new_fyear.start_journal_period_id
 		if not start_jp:
-			raise wizard.except_wizard('UserError',
-						'The new fiscal year should have a journal for new entries define on it')
+			raise wizard.except_wizard(_('UserError'),
+						_('The new fiscal year should have a journal for new entries define on it'))
 
 		new_journal = start_jp.journal_id
 
 		if not new_journal.default_credit_account_id or not new_journal.default_debit_account_id:
-			raise wizard.except_wizard('UserError',
-					'The journal must have default credit and debit account')
+			raise wizard.except_wizard(_('UserError'),
+					_('The journal must have default credit and debit account'))
 		if not new_journal.centralisation:
-			raise wizard.except_wizard('UserError',
-					'The journal must have centralised counterpart')
+			raise wizard.except_wizard(_('UserError'),
+					_('The journal must have centralised counterpart'))
 
 		query_line = pool.get('account.move.line')._query_get(cr, uid,
 				obj='account_move_line', context={'fiscalyear': fy_id})

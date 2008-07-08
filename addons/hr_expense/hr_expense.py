@@ -31,6 +31,7 @@ from mx import DateTime
 import time
 
 from osv import fields, osv
+from tools.translate import _
 
 def _employee_get(obj,cr,uid,context={}):
 	ids = obj.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
@@ -142,7 +143,7 @@ class hr_expense_expense(osv.osv):
 					'account_analytic_id': l.analytic_account.id,
 				}))
 			if not exp.employee_id.address_id:
-				raise osv.except_osv('Error !', 'The employee must have a contact address')
+				raise osv.except_osv(_('Error !'), _('The employee must have a contact address'))
 			acc = exp.employee_id.address_id.partner_id.property_account_payable.id
 			payment_term_id = exp.employee_id.address_id.partner_id.property_payment_term.id
 			inv = {

@@ -33,6 +33,7 @@ from osv import fields, osv
 import ir
 from mx import DateTime
 from tools import config
+from tools.translate import _
 
 class sale_shop(osv.osv):
 	_name = "sale.shop"
@@ -336,8 +337,8 @@ class sale_order(osv.osv):
 			for pick in sale.picking_ids:
 				if pick.state not in ('draft','cancel'):
 					raise osv.except_osv(
-						'Could not cancel sale order !',
-						'You must first cancel all packings attached to this sale order.')
+						_('Could not cancel sale order !'),
+						_('You must first cancel all packings attached to this sale order.'))
 			for r in self.read(cr,uid,ids,['picking_ids']):
 				for pick in r['picking_ids']:
 					wf_service = netsvc.LocalService("workflow")
@@ -345,8 +346,8 @@ class sale_order(osv.osv):
 			for inv in sale.invoice_ids:
 				if inv.state not in ('draft','cancel'):
 					raise osv.except_osv(
-						'Could not cancel this sale order !',
-						'You must first cancel all invoices attached to this sale order.')
+						_('Could not cancel this sale order !'),
+						_('You must first cancel all invoices attached to this sale order.'))
 			for r in self.read(cr,uid,ids,['invoice_ids']):
 				for inv in r['invoice_ids']:
 					wf_service = netsvc.LocalService("workflow")
@@ -386,7 +387,7 @@ class sale_order(osv.osv):
 	# if mode == 'canceled':
 	#	returns True if there is at least one canceled line, False otherwise
 	def test_state(self, cr, uid, ids, mode, *args):
-		assert mode in ('finished', 'canceled'), "invalid mode for test_state"
+		assert mode in ('finished', 'canceled'), _("invalid mode for test_state")
 		finished = True
 		canceled = False
 		write_done_ids = []
@@ -648,9 +649,9 @@ class sale_order_line(osv.osv):
 					if not a:
 						a = line.product_id.categ_id.property_account_income_categ.id
 					if not a:
-						raise osv.except_osv('Error !',
-								'There is no income account defined ' \
-										'for this product: "%s" (id:%d)' % \
+						raise osv.except_osv(_('Error !'),
+								_('There is no income account defined ' \
+										'for this product: "%s" (id:%d)') % \
 										(line.product_id.name, line.product_id.id,))
 				else:
 					a = self.pool.get('ir.property').get(cr, uid,
@@ -733,9 +734,9 @@ class sale_order_line(osv.osv):
 					'product_uos': []}}
 
 		if not pricelist:
-			raise osv.except_osv('No Pricelist !',
-					'You have to select a pricelist in the sale form !\n'
-					'Please set one before choosing a product.')
+			raise osv.except_osv(_('No Pricelist !'),
+					_('You have to select a pricelist in the sale form !\n'
+					'Please set one before choosing a product.'))
 
 		if not date_order:
 			date_order = time.strftime('%Y-%m-%d')
@@ -745,9 +746,9 @@ class sale_order_line(osv.osv):
 					'date': date_order,
 					})[pricelist]
 		if price is False:
-			raise osv.except_osv('No valid pricelist line found !',
-					"Couldn't find a pricelist line matching this product and quantity.\n"
-					"You have to change either the product, the quantity or the pricelist.")
+			raise osv.except_osv(_('No valid pricelist line found !'),
+					_("Couldn't find a pricelist line matching this product and quantity.\n"
+						"You have to change either the product, the quantity or the pricelist."))
 
 		product = product_obj.browse(cr, uid, product, context=context)
 

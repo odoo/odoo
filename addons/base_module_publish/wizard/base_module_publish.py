@@ -35,6 +35,7 @@ import urllib
 import base64
 
 import module_zip
+import tools
 
 intro_form = '''<?xml version="1.0"?>
 <form string="Module publication">
@@ -240,12 +241,12 @@ def _upload(self, cr, uid, datas, context):
 				('module', res['module_filename'], res['module_file'])
 			])
 		if result[0] == "1":
-			raise wizard.except_wizard('Error', 'Login failed!')
+			raise wizard.except_wizard(_('Error'), _('Login failed!'))
 		elif result[0] == "2":
-			raise wizard.except_wizard('Error',
-					'This version of the module is already exist on the server')
+			raise wizard.except_wizard(_('Error'),
+					_('This version of the module is already exist on the server'))
 		elif result[0] != "0":
-			raise wizard.except_wizard('Error', 'Failed to upload the file')
+			raise wizard.except_wizard(_('Error'), _('Failed to upload the file'))
 
 	updata = {
 		'link_name': mod.shortdesc or '',
@@ -287,7 +288,7 @@ def module_check(self, cr, uid, data, context):
 	pool = pooler.get_pool(cr.dbname)
 	module = pool.get('ir.module.module').browse(cr, uid, data['id'], context)
 	if module.state != 'installed':
-		raise wizard.except_wizard('Error', 'You could not publish a module that is not installed!')
+		raise wizard.except_wizard(_('Error'), _('You could not publish a module that is not installed!'))
 	return {
 		'name': module.name,
 		'shortdesc': module.shortdesc,

@@ -33,6 +33,7 @@ import netsvc
 from osv import fields,osv
 import ir
 from tools import config
+from tools.translate import _
 
 
 #----------------------------------------------------------
@@ -363,7 +364,7 @@ class stock_tracking(osv.osv):
 		return res
 
 	def unlink(self, cr ,uid, ids):
-		raise Exception, 'You can not remove a lot line !'
+		raise Exception, _('You can not remove a lot line !')
 stock_tracking()
 
 #----------------------------------------------------------
@@ -951,9 +952,9 @@ class stock_move(osv.osv):
 						acc_src = move.product_id.categ_id.\
 								property_stock_account_input_categ.id
 					if not acc_src:
-						raise osv.except_osv('Error!',
-								'There is no stock input account defined ' \
-										'for this product: "%s" (id: %d)' % \
+						raise osv.except_osv(_('Error!'),
+								_('There is no stock input account defined ' \
+										'for this product: "%s" (id: %d)') % \
 										(move.product_id.name,
 											move.product_id.id,))
 				if not acc_dest:
@@ -963,15 +964,15 @@ class stock_move(osv.osv):
 						acc_dest = move.product_id.categ_id.\
 								property_stock_account_output_categ.id
 					if not acc_dest:
-						raise osv.except_osv('Error!',
-								'There is no stock output account defined ' \
-										'for this product: "%s" (id: %d)' % \
+						raise osv.except_osv(_('Error!'),
+								_('There is no stock output account defined ' \
+										'for this product: "%s" (id: %d)') % \
 										(move.product_id.name,
 											move.product_id.id,))
 				if not move.product_id.categ_id.property_stock_journal.id:
-					raise osv.except_osv('Error!',
-							'There is no journal defined '\
-							'on the product category: "%s" (id: %d)' % \
+					raise osv.except_osv(_('Error!'),
+						_('There is no journal defined '\
+							'on the product category: "%s" (id: %d)') % \
 							(move.product_id.categ_id.name,
 								move.product_id.categ_id.id,))
 				journal_id = move.product_id.categ_id.property_stock_journal.id
@@ -1018,8 +1019,8 @@ class stock_move(osv.osv):
 	def unlink(self, cr, uid, ids, context=None):
 		for move in self.browse(cr, uid, ids, context=context):
 			if move.state != 'draft':
-				raise osv.except_osv('UserError',
-						'You can only delete draft moves.')
+				raise osv.except_osv(_('UserError'),
+						_('You can only delete draft moves.'))
 		return super(stock_move, self).unlink(
 			cr, uid, ids, context=context)
 

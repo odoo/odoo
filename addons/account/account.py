@@ -32,6 +32,7 @@ import netsvc
 from osv import fields, osv
 
 from tools.misc import currency
+from tools.translate import _
 
 import mx.DateTime
 from mx.DateTime import RelativeDateTime, now, DateTime, localtime
@@ -484,7 +485,7 @@ class account_fiscalyear(osv.osv):
 		ids = self.search(cr, uid, [('date_start', '<=', dt), ('date_stop', '>=', dt)])
 		if not ids:
 			if exception:
-				raise osv.except_osv('Error !', 'No fiscal year defined for this date !\nPlease create one.')
+				raise osv.except_osv(_('Error !'), _('No fiscal year defined for this date !\nPlease create one.'))
 			else:
 				return False
 		return ids[0]
@@ -517,7 +518,7 @@ class account_period(osv.osv):
 #CHECKME: shouldn't we check the state of the period?
 		ids = self.search(cr, uid, [('date_start','<=',dt),('date_stop','>=',dt)])
 		if not ids:
-			raise osv.except_osv('Error !', 'No period defined for this date !\nPlease create a fiscal year.')
+			raise osv.except_osv(_('Error !'), _('No period defined for this date !\nPlease create a fiscal year.'))
 		return ids
 account_period()
 
@@ -549,7 +550,7 @@ class account_journal_period(osv.osv):
 			cr.execute('select * from account_move_line where journal_id=%d and period_id=%d limit 1', (obj.journal_id.id, obj.period_id.id))
 			res = cr.fetchall()
 			if res:
-				raise osv.except_osv('Error !', 'You can not modify/delete a journal with entries for this period !')
+				raise osv.except_osv(_('Error !'), _('You can not modify/delete a journal with entries for this period !'))
 		return True
 
 	def write(self, cr, uid, ids, vals, context={}):
@@ -656,7 +657,7 @@ class account_move(osv.osv):
 		if self.validate(cr, uid, ids, context) and len(ids):
 			cr.execute('update account_move set state=%s where id in ('+','.join(map(str,ids))+')', ('posted',))
 		else:
-			raise osv.except_osv('Integrity Error !', 'You can not validate a non balanced entry !')
+			raise osv.except_osv(_('Integrity Error !'), _('You can not validate a non balanced entry !'))
 		return True
 
 	def button_validate(self, cursor, user, ids, context=None):
@@ -665,7 +666,7 @@ class account_move(osv.osv):
 	def button_cancel(self, cr, uid, ids, context={}):
 		for line in self.browse(cr, uid, ids, context):
 			if not line.journal_id.update_posted:
-				raise osv.except_osv('Error !', 'You can not modify a posted entry of this journal !')
+				raise osv.except_osv(_('Error !'), _('You can not modify a posted entry of this journal !'))
 		if len(ids):
 			cr.execute('update account_move set state=%s where id in ('+','.join(map(str,ids))+')', ('draft',))
 		return True
@@ -704,7 +705,7 @@ class account_move(osv.osv):
 			if journal.sequence_id:
 				vals['name'] = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
 			else:
-				raise osv.except_osv('Error', 'No sequence defined in the journal !')
+				raise osv.except_osv(_('Error'), _('No sequence defined in the journal !'))
 		if 'line_id' in vals:
 			c = context.copy()
 			c['novalidate'] = True
@@ -718,8 +719,8 @@ class account_move(osv.osv):
 		toremove = []
 		for move in self.browse(cr, uid, ids, context):
 			if move['state'] <> 'draft':
-				raise osv.except_osv('UserError',
-						'You can not delete posted movement: "%s"!' % \
+				raise osv.except_osv(_('UserError'),
+						_('You can not delete posted movement: "%s"!') % \
 								move['name'])
 			line_ids = map(lambda x: x.id, move.line_id)
 			context['journal_id'] = move.journal_id.id
@@ -741,16 +742,16 @@ class account_move(osv.osv):
 			account_id = move.journal_id.default_debit_account_id.id
 			mode2 = 'debit'
 			if not account_id:
-				raise osv.except_osv('UserError',
-						'There is no default default debit account defined \n' \
-								'on journal "%s"' % move.journal_id.name)
+				raise osv.except_osv(_('UserError'),
+						_('There is no default default debit account defined \n' \
+								'on journal "%s"') % move.journal_id.name)
 		else:
 			account_id = move.journal_id.default_credit_account_id.id
 			mode2 = 'credit'
 			if not account_id:
-				raise osv.except_osv('UserError',
-						'There is no default default credit account defined \n' \
-								'on journal "%s"' % move.journal_id.name)
+				raise osv.except_osv(_('UserError'),
+						_('There is no default default credit account defined \n' \
+								'on journal "%s"') % move.journal_id.name)
 
 		# find the first line of this move with the current mode
 		# or create it if it doesn't exist
@@ -805,11 +806,11 @@ class account_move(osv.osv):
 				if not company_id:
 					company_id = line.account_id.company_id.id
 				if not company_id == line.account_id.company_id.id:
-					raise osv.except_osv('Error', 'Couldn\'t create move between different companies')
+					raise osv.except_osv(_('Error'), _('Couldn\'t create move between different companies'))
 
 				if line.account_id.currency_id:
 					if line.account_id.currency_id.id != line.currency_id.id and (line.account_id.currency_id.id != line.account_id.company_id.currency_id.id or line.currency_id):
-							raise osv.except_osv('Error', 'Couldn\'t create move with currency different than the secondary currency of the account')
+							raise osv.except_osv(_('Error'), _('Couldn\'t create move with currency different than the secondary currency of the account'))
 
 			if abs(amount) < 0.0001:
 				if not len(line_draft_ids):
@@ -1372,7 +1373,7 @@ class account_model(osv.osv):
 		for model in self.browse(cr, uid, ids, context):
 			period_id = self.pool.get('account.period').find(cr,uid, context=context)
 			if not period_id:
-				raise osv.except_osv('No period found !', 'Unable to find a valid period !')
+				raise osv.except_osv(_('No period found !'), _('Unable to find a valid period !'))
 			period_id = period_id[0]
 			name = model.name
 			if model.journal_id.sequence_id:

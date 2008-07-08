@@ -30,6 +30,7 @@
 import wizard
 import pooler
 import time
+from tools.translate import _
 
 #
 # Create an final invoice based on selected timesheet lines
@@ -57,9 +58,9 @@ class final_invoice_create(wizard.interface):
 			partner = account.partner_id
 			amount_total=0.0
 			if (not partner) or not (account.pricelist_id):
-				raise wizard.except_wizard('Analytic account incomplete',
-						'Please fill in the partner and pricelist field '
-						'in the analytic account:\n%s' % (account.name,))
+				raise wizard.except_wizard(_('Analytic account incomplete'),
+						_('Please fill in the partner and pricelist field '
+						'in the analytic account:\n%s') % (account.name,))
 
 			date_due = False
 			if partner.property_payment_term:
@@ -188,7 +189,7 @@ class final_invoice_create(wizard.interface):
 			if data['form']['use_amount_max']:
 				if abs(account.amount_max - amount_total) > data['form']['balance_amount'] :
 					if not data['form']['balance_product']:
-						raise wizard.except_wizard('Balance product needed', 'Please fill a Balance product in the wizard')
+						raise wizard.except_wizard(_('Balance product needed'), _('Please fill a Balance product in the wizard'))
 					product = pool.get('product.product').browse(cr, uid, data['form']['balance_product'], context2)
 
 					taxes = product.taxes_id

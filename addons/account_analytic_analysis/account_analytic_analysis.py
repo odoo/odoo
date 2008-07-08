@@ -30,6 +30,7 @@
 import operator
 from osv import osv, fields
 from osv.orm import ID_MAX
+from tools.translate import _
 
 
 class account_analytic_account(osv.osv):
@@ -535,8 +536,8 @@ class account_analytic_account_summary_user(osv.osv):
 								','.join([str(x-((x/max_user - (x%max_user == 0 and 1 or 0)) *max_user)) for x in sub_ids]), d1,
 								self._order),d2)
 					if not cr.rowcount == len({}.fromkeys(sub_ids)):
-						raise except_orm('AccessError',
-								'You try to bypass an access rule (Document type: %s).' % self._description)
+						raise except_orm(_('AccessError'),
+								_('You try to bypass an access rule (Document type: %s).') % self._description)
 				else:
 					cr.execute('select %s from \"%s\" where id in (%s) ' \
 							'and account_id in (%s) ' \
@@ -712,8 +713,8 @@ class account_analytic_account_summary_month(osv.osv):
 								','.join([str(x)[-6:] for x in sub_ids]), d1,
 								self._order),d2)
 					if not cr.rowcount == len({}.fromkeys(sub_ids)):
-						raise except_orm('AccessError',
-								'You try to bypass an access rule (Document type: %s).' % self._description)
+						raise except_orm(_('AccessError'),
+								_('You try to bypass an access rule (Document type: %s).') % self._description)
 				else:
 					cr.execute('select %s from \"%s\" where id in (%s) ' \
 							'and account_id in (%s) ' \

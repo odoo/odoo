@@ -33,6 +33,7 @@ import pooler
 
 import time
 from osv import osv
+from tools.translate import _
 
 track_form = '''<?xml version="1.0"?>
 <form string="Tracking a move">
@@ -65,7 +66,7 @@ def _track_lines(self, cr, uid, data, context):
 
 	sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
 	if not sequence:
-		raise wizard.except_wizard('Error!', 'No production sequence defined')
+		raise wizard.except_wizard(_('Error!'), _('No production sequence defined'))
 	if data['form']['tracking_prefix']:
 		sequence=data['form']['tracking_prefix']+'/'+(sequence or '')
 

@@ -29,6 +29,7 @@ import wizard
 import netsvc
 import pooler
 from osv import fields, osv
+from tools.translate import _
 
 form = """<?xml version="1.0"?>
 <form string="Choose Fiscal Year">
@@ -44,10 +45,10 @@ def _remove_entries(self, cr, uid, data, context):
 	pool = pooler.get_pool(cr.dbname)
 	data_fyear = pool.get('account.fiscalyear').browse(cr,uid,data['form']['fyear_id'])
 	if not data_fyear.end_journal_period_id:
-		raise wizard.except_wizard('Error', 'No journal for ending writings have been defined for the fiscal year')
+		raise wizard.except_wizard(_('Error'), _('No journal for ending writings have been defined for the fiscal year'))
 	period_journal = data_fyear.end_journal_period_id
 	if not period_journal.journal_id.centralisation:
-		raise wizard.except_wizard('UserError', 'The journal must have centralised counterpart')
+		raise wizard.except_wizard(_('UserError'), _('The journal must have centralised counterpart'))
 	ids_move = pool.get('account.move').search(cr,uid,[('journal_id','=',period_journal.journal_id.id),('period_id','=',period_journal.period_id.id)])
 	pool.get('account.move').unlink(cr,uid,ids_move)
 	cr.execute('UPDATE account_journal_period ' \

@@ -58,8 +58,8 @@ def createzip(cr, uid, moduleid, context, b64enc=True, src=True):
 	module = module_obj.browse(cr, uid, moduleid)
 
 	if module.state != 'installed':
-		raise wizard.except_wizard('Error',
-				'Can not export module that is not installed!')
+		raise wizard.except_wizard(_('Error'),
+				_('Can not export module that is not installed!'))
 
 	ad = tools.config['addons_path']
 	if os.path.isdir(os.path.join(ad, module.name)):
@@ -73,7 +73,7 @@ def createzip(cr, uid, moduleid, context, b64enc=True, src=True):
 	elif os.path.isfile(os.path.join(ad, module.name + '.zip')):
 		val = file(os.path.join(ad, module.name + '.zip'), 'rb').read()
 	else:
-		raise wizard.except_wizard('Error', 'Could not find the module to export!')
+		raise wizard.except_wizard(_('Error'), _('Could not find the module to export!'))
 	if b64enc:
 		val =base64.encodestring(val)
 	return {'module_file':val, 'module_filename': module.name + '-' + \

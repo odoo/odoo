@@ -32,6 +32,7 @@ import netsvc
 from osv import fields, osv
 
 from tools.misc import currency
+from tools.translate import _
 
 import mx.DateTime
 from mx.DateTime import RelativeDateTime, now, DateTime, localtime
@@ -165,18 +166,18 @@ class account_bank_statement(osv.osv):
 				continue
 
 			if not (abs(st.balance_end - st.balance_end_real) < 0.0001):
-				raise osv.except_osv('Error !',
-						'The statement balance is incorrect !\n'
-						'Check that the ending balance equals the computed one.')
+				raise osv.except_osv(_('Error !'),
+						_('The statement balance is incorrect !\n'
+						'Check that the ending balance equals the computed one.'))
 			if (not st.journal_id.default_credit_account_id) \
 					or (not st.journal_id.default_debit_account_id):
-				raise osv.except_osv('Configration Error !',
-						'Please verify that an account is defined in the journal.')
+				raise osv.except_osv(_('Configration Error !'),
+						_('Please verify that an account is defined in the journal.'))
 
 			for line in st.move_line_ids:
 				if line.state <> 'valid':
-					raise osv.except_osv('Error !',
-							'The account entries lines are not valid.')
+					raise osv.except_osv(_('Error !'),
+							_('The account entries lines are not valid.'))
 
 			for move in st.line_ids:
 				move_id = account_move_obj.create(cr, uid, {
@@ -275,8 +276,8 @@ class account_bank_statement(osv.osv):
 							context=context).line_id],
 						context=context):
 					if line.state <> 'valid':
-						raise osv.except_osv('Error !',
-								'Account move line "%s" is not valid' % line.name)
+						raise osv.except_osv(_('Error !'),
+								_('Account move line "%s" is not valid') % line.name)
 
 				if move.reconcile_id and move.reconcile_id.line_ids:
 					torec += map(lambda x: x.id, move.reconcile_id.line_ids)
@@ -286,7 +287,7 @@ class account_bank_statement(osv.osv):
 						else:
 							account_move_line_obj.reconcile_partial(cr, uid, torec, 'statement', context)
 					except:
-						raise osv.except_osv('Error !', 'Unable to reconcile entry "%s": %.2f'%(move.name, move.amount))
+						raise osv.except_osv(_('Error !'), _('Unable to reconcile entry "%s": %.2f') % (move.name, move.amount))
 
 			done.append(st.id)
 		self.write(cr, uid, done, {'state':'confirm'}, context=context)

@@ -33,6 +33,7 @@
 from mx import DateTime
 import time
 from osv import fields,osv
+from tools.translate import _
 
 class subscription_document(osv.osv):
 	_name = "subscription.document"
@@ -111,7 +112,7 @@ class subscription_subscription(osv.osv):
 				id = int(id)
 				model = self.pool.get(model_name)
 			except:
-				raise osv.except_osv('Wrong Source Document !', 'Please provide another source document.\nThis one does not exist !')
+				raise osv.except_osv(_('Wrong Source Document !'), _('Please provide another source document.\nThis one does not exist !'))
 
 			default = {'state':'draft'}
 			doc_obj = self.pool.get('subscription.document')

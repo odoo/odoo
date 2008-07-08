@@ -30,6 +30,7 @@
 import wizard
 from osv import osv
 import pooler
+from tools.translate import _
 
 _journal_form = '''<?xml version="1.0"?>
 <form string="Standard entries">
@@ -48,7 +49,7 @@ def _validate_move(self, cr, uid, data, context={}):
 	move_obj = pool.get('account.move')
 	ids_move = move_obj.search(cr,uid,[('state','=','draft'),('journal_id','=',data['form']['journal_id']),('period_id','=',data['form']['period_id'])])
 	if not ids_move:
-		raise wizard.except_wizard('Warning', 'Specified Journal does not have any account move entries in draft state for this period')
+		raise wizard.except_wizard(_('Warning'), _('Specified Journal does not have any account move entries in draft state for this period'))
 	res = move_obj.button_validate(cr, uid, ids_move, context)
 	return {}
 
@@ -76,7 +77,7 @@ def _validate_move_lines(self, cr, uid, data, context={}):
 			move_ids.append(line.move_id.id)
 	move_ids = list(set(move_ids))
 	if not move_ids:
-		raise wizard.except_wizard('Warning', 'Selected Move lines does not have any account move enties in draft state')
+		raise wizard.except_wizard(_('Warning'), _('Selected Move lines does not have any account move enties in draft state'))
 	res = move_obj.button_validate(cr, uid, move_ids, context)
 	return {}
 

@@ -31,6 +31,7 @@
 import wizard
 import time
 import pooler
+from tools.translate import _
 
 si_form ='''<?xml version="1.0"?> 
 <form string="Sign in / Sign out">
@@ -82,7 +83,7 @@ def _get_empid(self, cr, uid, data, context):
 	if emp_id:
 		employee = emp_obj.read(cr, uid, emp_id)[0]
 		return {'name': employee['name'], 'state': employee['state'], 'emp_id': emp_id[0], 'date':False, 'server_date':time.strftime('%Y-%m-%d %H:%M:%S')}
-	raise wizard.except_wizard('UserError', 'No employee defined for your user !')
+	raise wizard.except_wizard(_('UserError'), _('No employee defined for your user !'))
 
 def _get_empid2(self, cr, uid, data, context):
 	res = _get_empid(self,cr, uid, data, context)
@@ -112,7 +113,7 @@ def _write(self, cr, uid, data, emp_id, context):
 		hour = round(round((hour + minimum / 2) / minimum) * minimum, 2)
 	res = timesheet_obj.default_get(cr, uid, ['product_id','product_uom_id'])
 	if not res['product_uom_id']:
-		raise wizard.except_wizard('UserError', 'No cost unit defined for this employee !')
+		raise wizard.except_wizard(_('UserError'), _('No cost unit defined for this employee !'))
 	up = timesheet_obj.on_change_unit_amount(cr, uid, False, res['product_id'], hour, res['product_uom_id'])['value']
 	res['name'] = data['form']['info']
 	res['account_id'] = data['form']['account_id']

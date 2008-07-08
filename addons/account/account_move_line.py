@@ -31,7 +31,7 @@
 import time
 import netsvc
 from osv import fields, osv
-
+from tools.translate import _
 
 class account_move_line(osv.osv):
 	_name = "account.move.line"
@@ -431,7 +431,7 @@ class account_move_line(osv.osv):
 		merges_rec = []
 		for line in self.browse(cr, uid, ids, context):
 			if line.reconcile_id:
-				raise 'Already Reconciled'
+				raise _('Already Reconciled')
 			if line.reconcile_partial_id:
 				for line2 in line.reconcile_partial_id.line_partial_ids:
 					if not line2.reconcile_id:
@@ -460,8 +460,8 @@ class account_move_line(osv.osv):
 		partner_id = False
 		for line in unrec_lines:
 			if line.state <> 'valid':
-				raise osv.except_osv('Error',
-						'Entry "%s" is not valid !' % line.name)
+				raise osv.except_osv(_('Error'),
+						_('Entry "%s" is not valid !') % line.name)
 			credit += line['credit']
 			debit += line['debit']
 			currency += line['amount_currency'] or 0.0
@@ -477,17 +477,17 @@ class account_move_line(osv.osv):
 		r = cr.fetchall()
 #TODO: move this check to a constraint in the account_move_reconcile object
 		if len(r) != 1:
-			raise osv.except_osv('Error', 'Entries are not of the same account or already reconciled ! ')
+			raise osv.except_osv(_('Error'), _('Entries are not of the same account or already reconciled ! '))
 		account = self.pool.get('account.account').browse(cr, uid, account_id, context=context)
 		if not account.reconcile:
-			raise osv.except_osv('Error', 'The account is not defined to be reconcile !')
+			raise osv.except_osv(_('Error'), _('The account is not defined to be reconcile !'))
 		if r[0][1] != None:
-			raise osv.except_osv('Error', 'Some entries are already reconciled !')
+			raise osv.except_osv(_('Error'), _('Some entries are already reconciled !'))
 
 		if (not self.pool.get('res.currency').is_zero(cr, uid, account.company_id.currency_id, writeoff)) or \
 		   (account.currency_id and (not self.pool.get('res.currency').is_zero(cr, uid, account.currency_id, currency))):
 			if not writeoff_acc_id:
-				raise osv.except_osv('Warning', 'You have to provide an account for the write off entry !')
+				raise osv.except_osv(_('Warning'), _('You have to provide an account for the write off entry !'))
 			if writeoff > 0:
 				debit = writeoff
 				credit = 0.0
@@ -629,7 +629,7 @@ class account_move_line(osv.osv):
 		account_obj = self.pool.get('account.account')
 
 		if ('account_id' in vals) and not account_obj.read(cr, uid, vals['account_id'], ['active'])['active']:
-			raise osv.except_osv('Bad account!', 'You can not use an inactive account!')
+			raise osv.except_osv(_('Bad account!'), _('You can not use an inactive account!'))
 		if update_check:
 			if ('account_id' in vals) or ('journal_id' in vals) or ('period_id' in vals) or ('move_id' in vals) or ('debit' in vals) or ('credit' in vals) or ('date' in vals):
 				self._update_check(cr, uid, ids, context)
@@ -647,7 +647,7 @@ class account_move_line(osv.osv):
 		result = cr.fetchall()
 		for (state,) in result:
 			if state=='done':
-				raise osv.except_osv('Error !', 'You can not add/modify entries in a closed journal.')
+				raise osv.except_osv(_('Error !'), _('You can not add/modify entries in a closed journal.'))
 		if not result:
 			journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context)
 			period = self.pool.get('account.period').browse(cr, uid, period_id, context)
@@ -662,9 +662,9 @@ class account_move_line(osv.osv):
 		done = {}
 		for line in self.browse(cr, uid, ids, context):
 			if line.move_id.state<>'draft':
-				raise osv.except_osv('Error !', 'You can not do this modification on a confirmed entry ! Please note that you can just change some non important fields !')
+				raise osv.except_osv(_('Error !'), _('You can not do this modification on a confirmed entry ! Please note that you can just change some non important fields !'))
 			if line.reconcile_id:
-				raise osv.except_osv('Error !', 'You can not do this modification on a reconciled entry ! Please note that you can just change some non important fields !')
+				raise osv.except_osv(_('Error !'), _('You can not do this modification on a reconciled entry ! Please note that you can just change some non important fields !'))
 			t = (line.journal_id.id, line.period_id.id)
 			if t not in done:
 				self._update_journal_check(cr, uid, line.journal_id.id, line.period_id.id, context)
@@ -677,7 +677,7 @@ class account_move_line(osv.osv):
 		account_obj = self.pool.get('account.account')
 
 		if ('account_id' in vals) and not account_obj.read(cr, uid, vals['account_id'], ['active'])['active']:
-			raise osv.except_osv('Bad account!', 'You can not use an inactive account!')
+			raise osv.except_osv(_('Bad account!'), _('You can not use an inactive account!'))
 		if 'journal_id' in vals and 'journal_id' not in context:
 			context['journal_id'] = vals['journal_id']
 		if 'period_id' in vals and 'period_id' not in context:
@@ -696,9 +696,9 @@ class account_move_line(osv.osv):
 				res = cr.fetchone()
 				if res:
 					if res[1] != 'draft':
-						raise osv.except_osv('UserError',
-								'The account move (%s) for centralisation ' \
-										'has been confirmed!' % res[2])
+						raise osv.except_osv(_('UserError'),
+								_('The account move (%s) for centralisation ' \
+										'has been confirmed!') % res[2])
 					vals['move_id'] = res[0]
 
 			if not vals.get('move_id', False):
@@ -712,7 +712,7 @@ class account_move_line(osv.osv):
 					move_id = self.pool.get('account.move').create(cr, uid, v, context)
 					vals['move_id'] = move_id
 				else:
-					raise osv.except_osv('No piece number !', 'Can not create an automatic sequence for this piece !\n\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.')
+					raise osv.except_osv(_('No piece number !'), _('Can not create an automatic sequence for this piece !\n\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.'))
 
 		ok = not (journal.type_control_ids or journal.account_control_ids)
 		if ('account_id' in vals):
@@ -736,7 +736,7 @@ class account_move_line(osv.osv):
 					ctx['date'] = vals['date']
 				vals['amount_currency'] = cur_obj.compute(cr, uid, account.company_id.currency_id.id, account.currency_id.id, vals.get('debit', 0.0)-vals.get('credit', 0.0), context=ctx)
 		if not ok:
-			raise osv.except_osv('Bad account !', 'You can not use this general account in this journal !')
+			raise osv.except_osv(_('Bad account !'), _('You can not use this general account in this journal !'))
 		result = super(osv.osv, self).create(cr, uid, vals, context)
 		if check:
 			self.pool.get('account.move').validate(cr, uid, [vals['move_id']], context)

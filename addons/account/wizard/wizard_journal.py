@@ -30,6 +30,7 @@
 import wizard
 from osv import osv
 import pooler
+from tools.translate import _
 
 _journal_form = '''<?xml version="1.0"?>
 <form string="Standard entries">
@@ -66,7 +67,7 @@ def _action_open_window(self, cr, uid, data, context):
 		name = pooler.get_pool(cr.dbname).get('account.journal').read(cr, uid, [form['journal_id']])[0]['name']
 		state = pooler.get_pool(cr.dbname).get('account.period').read(cr, uid, [form['period_id']])[0]['state']
 		if state == 'done':
-			raise wizard.except_wizard('UserError', 'This period is already closed !')
+			raise wizard.except_wizard(_('UserError'), _('This period is already closed !'))
 		jp.create(cr, uid, {'name':name, 'period_id': form['period_id'], 'journal_id':form['journal_id']})
 	ids = jp.search(cr, uid, [('journal_id','=',form['journal_id']), ('period_id','=',form['period_id'])])
 	jp = jp.browse(cr, uid, ids, context=context)[0]

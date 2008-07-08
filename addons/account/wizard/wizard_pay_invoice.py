@@ -31,6 +31,7 @@ import wizard
 import netsvc
 import pooler
 import time
+from tools.translate import _
 
 pay_form = '''<?xml version="1.0"?>
 <form string="Pay invoice">
@@ -68,7 +69,7 @@ def _pay_and_reconcile(self, cr, uid, data, context):
 
 	acc_id = journal.default_credit_account_id and journal.default_credit_account_id.id
 	if not acc_id:
-		raise wizard.except_wizard('Error !', 'Your journal must have a default credit and debit account.')
+		raise wizard.except_wizard(_('Error !'), _('Your journal must have a default credit and debit account.'))
 	pool.get('account.invoice').pay_and_reconcile(cr, uid, [data['id']],
 			amount, acc_id, period_id, journal_id, writeoff_account_id,
 			period_id, writeoff_journal_id, context, data['form']['name'])
@@ -108,7 +109,7 @@ def _get_period(self, cr, uid, data, context={}):
 		period_id = ids[0]
 	invoice = pool.get('account.invoice').browse(cr, uid, data['id'], context)
 	if invoice.state == 'draft':
-		raise wizard.except_wizard('Error !', _('Can not pay draft invoice.'))
+		raise wizard.except_wizard(_('Error !'), _('Can not pay draft invoice.'))
 	return {
 		'period_id': period_id,
 		'amount': invoice.amount_total,

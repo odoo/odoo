@@ -31,6 +31,7 @@ from mx import DateTime
 import time
 
 from osv import fields, osv
+from tools.translate import _
 
 class hr_timesheet_group(osv.osv):
 	_name = "hr.timesheet.group"
@@ -140,7 +141,7 @@ class hr_employee(osv.osv):
 	def sign_change(self, cr, uid, ids, context={}, dt=False):
 		for emp in self.browse(cr, uid, ids):
 			if not self._action_check(cr, uid, emp.id, dt, context):
-				raise osv.except_osv('Warning', 'You tried to sign with a date anterior to another event !\nTry to contact the administrator to correct attendances.')
+				raise osv.except_osv(_('Warning'), _('You tried to sign with a date anterior to another event !\nTry to contact the administrator to correct attendances.'))
 			res = {'action':'action', 'employee_id':emp.id}
 			if dt:
 				res['name'] = dt
@@ -151,7 +152,7 @@ class hr_employee(osv.osv):
 		id = False
 		for emp in self.browse(cr, uid, ids):
 			if not self._action_check(cr, uid, emp.id, dt, context):
-				raise osv.except_osv('Warning', 'You tried to sign out with a date anterior to another event !\nTry to contact the administrator to correct attendances.')
+				raise osv.except_osv(_('Warning'), _('You tried to sign out with a date anterior to another event !\nTry to contact the administrator to correct attendances.'))
 			res = {'action':'sign_out', 'employee_id':emp.id}
 			if dt:
 				res['name'] = dt
@@ -168,7 +169,7 @@ class hr_employee(osv.osv):
 		id = False
 		for emp in self.browse(cr, uid, ids):
 			if not self._action_check(cr, uid, emp.id, dt, context):
-				raise osv.except_osv('Warning', 'You tried to sign in with a date anterior to another event !\nTry to contact the administrator to correct attendances.')
+				raise osv.except_osv(_('Warning'), _('You tried to sign in with a date anterior to another event !\nTry to contact the administrator to correct attendances.'))
 			res = {'action':'sign_in', 'employee_id':emp.id}
 			if dt:
 				res['name'] = dt

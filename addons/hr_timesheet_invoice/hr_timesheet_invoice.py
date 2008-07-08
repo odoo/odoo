@@ -30,6 +30,7 @@
 
 from osv import fields, osv
 
+from tools.translate import _
 
 class hr_timesheet_invoice_factor(osv.osv):
 	_name = "hr_timesheet_invoice.factor"
@@ -93,8 +94,8 @@ class account_analytic_line(osv.osv):
 			select = [ids]
 		for line in self.browse(cr, uid, select):
 			if line.invoice_id:
-				raise osv.except_osv('Error !',
-						'You can not modify an invoiced analytic line!')
+				raise osv.except_osv(_('Error !'),
+						_('You can not modify an invoiced analytic line!'))
 		return True
 
 	def copy(self, cursor, user, obj_id, default=None, context=None):

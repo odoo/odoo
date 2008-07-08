@@ -27,6 +27,7 @@
 ###############################################################################
 import netsvc
 from osv import fields,osv
+from tools.translate import _
 
 
 # Overloaded stock_picking to manage carriers :
@@ -67,8 +68,8 @@ class stock_picking(osv.osv):
 			grid_id = carrier_obj.grid_get(cursor, user, [picking.carrier_id.id],
 					picking.address_id.id, context=context)
 			if not grid_id:
-				raise osv.except_osv('Warning',
-						'The carrier %s (id: %d) has no delivery grid!' \
+				raise osv.except_osv(_('Warning'),
+						_('The carrier %s (id: %d) has no delivery grid!') \
 								% (picking.carrier_id.name,
 									picking.carrier_id.id))
 			invoice = invoices[result[picking.id]]
