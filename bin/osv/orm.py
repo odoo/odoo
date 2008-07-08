@@ -963,35 +963,13 @@ class orm_template(object):
 		ok = True
 		model = True
 		sql_res = False
-		base = False
 		while ok:
-			sql_res_usr = None
 			if view_id:
-				if context.get('global_view', False) == 1 or context.get('global_view', False) == True :
-					#check for user specific view and get the view according to that
-					where = (model and (" and model='%s'" % (self._name,))) or ''
-					cr.execute('select arch,name,field_parent,ref_id,type,inherit_id from ir_ui_view_user where ref_id=%d and user_id=%d'+where, (view_id, user))
-					sql_res_usr = cr.fetchone()
-
-				if not sql_res_usr:
-					where = (model and (" and model='%s'" % (self._name,))) or ''
-					cr.execute('select arch,name,field_parent,id,type,inherit_id from ir_ui_view where id=%d'+where, (view_id,))
-				else:
-					base = True
+				where = (model and (" and model='%s'" % (self._name,))) or ''
+				cr.execute('SELECT arch,name,field_parent,id,type,inherit_id FROM ir_ui_view WHERE id=%d'+where, (view_id,))
 			else:
-				if context.get('global_view', False) == 1 or context.get('global_view', False) == True :
-					cr.execute('select arch,name,field_parent,ref_id,type,inherit_id from ir_ui_view_user where model=%s and type=%s and user_id=%d order by priority', (self._name, view_type, user))
-					sql_res_usr = cr.fetchone()
-					
-				if not sql_res_usr:
-					cr.execute('select arch,name,field_parent,id,type,inherit_id from ir_ui_view where model=%s and type=%s order by priority', (self._name,view_type))
-				else:
-					base = True
-			
-			if sql_res_usr is None:
-				sql_res = cr.fetchone()
-			else:
-				sql_res = sql_res_usr
+				cr.execute('SELECT arch,name,field_parent,id,type,inherit_id FROM ir_ui_view WHERE model=%s AND type=%s ORDER BY priority', (self._name,view_type))
+			sql_res = cr.fetchone()
 			if not sql_res:
 				break
 			ok = sql_res[5]
@@ -1006,21 +984,14 @@ class orm_template(object):
 
 			def _inherit_apply_rec(result, inherit_id):
 				# get all views which inherit from (ie modify) this view
-
-				cr.execute('select arch,id from ir_ui_view where inherit_id=%s and model=%s and id not in (select ref_id from ir_ui_view_user where inherit_id=%s and model=%s and user_id=%s)' , (inherit_id, self._name, inherit_id, self._name, user)) 
-				sql_inherit_part1 = cr.fetchall()
-				
-				cr.execute('select arch,ref_id from ir_ui_view_user where inherit_id=%d and model=%s and user_id=%d order by priority', (inherit_id, self._name, user))
+				cr.execute('select arch,id from ir_ui_view where inherit_id=%d and model=%s order by priority', (inherit_id, self._name))
 				sql_inherit = cr.fetchall()
-				
-				sql_inherit = sql_inherit_part1 + sql_inherit
 				for (inherit,id) in sql_inherit:
 					result = _inherit_apply(result, inherit)
 					result = _inherit_apply_rec(result, id)
 				return result
-			
-			if not base:
-				result['arch'] = _inherit_apply_rec(result['arch'], sql_res[3])
+
+			result['arch'] = _inherit_apply_rec(result['arch'], sql_res[3])
 
 			result['name'] = sql_res[1]
 			result['field_parent'] = sql_res[2] or False
