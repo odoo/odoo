@@ -1401,15 +1401,16 @@
             <field name="model">account.config.fiscalyear</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Configure Fiscal Year">
-                    <separator col="4" colspan="4" string="Configure Fiscal Year"/>
-                    <newline/>
+                <form string="Configure Your Fiscal Year">
+                    <separator col="4" colspan="4" string="Configure Your Fiscal Year"/>
                     <field name="name"/>
                     <field name="code"/>
                     <field name="date1"/>
                     <field name="date2"/>
+					<separator string="" colspan="4"/>
+					<label string="" colspan="2"/>
                     <group col="4" colspan="4">
-                        <button icon="gtk-cancel" special="cancel" string="Cancel" name="action_cancel" type="object"/>
+                        <button icon="gtk-cancel" special="cancel" string="Don't Create" name="action_cancel" type="object"/>
                         <button icon="gtk-ok" name="action_create" string="Create" type="object"/>
                     </group>
                 </form>

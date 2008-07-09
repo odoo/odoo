@@ -105,9 +105,9 @@ view_form_finish = """<?xml version="1.0"?>
 <form string="Setup">
 	<image name="gtk-dialog-info" colspan="2"/>
 	<group colspan="2" col="4">
-		<separator colspan="4" string="Installation done"/>
+		<separator colspan="4" string="Installation Done"/>
 		<label align="0.0" colspan="4" string="Your new database is now fully installed."/>
-		<label align="0.0" colspan="4" string="You can start using the system or continue the configuration using the menu Administration\Configuration"/>
+		<label align="0.0" colspan="4" string="You can start configuring the system or connect directly to the database using the default setup."/>
 	</group>
 </form>
 """
@@ -431,8 +431,8 @@ IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701""",
 			'actions': [_update],
 			'result': {'type': 'form', 'arch': view_form_finish, 'fields': {},
 				'state': [
-					('menu', 'Ok', 'gtk-ok', True),
-					('config', 'Start configuration', 'gtk-ok', True)
+					('menu', 'Use Directly'),
+					('config', 'Start Configuration', 'gtk-ok', True)
 				]
 			}
 		},

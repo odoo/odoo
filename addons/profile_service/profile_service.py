@@ -87,8 +87,8 @@ class config_install_extra_modules(osv.osv_memory):
     _name='config.install_extra_modules'
     _columns = {
         'name':fields.char('Name', size=64),
-        'timesheets_module':fields.boolean('Timesheets module'),
-        'holidays_module':fields.boolean('Holidays module'),
+        'timesheets_module':fields.boolean('Timesheets Management'),
+        'holidays_module':fields.boolean('Hollidays Management'),
 
     }
     def action_cancel(self,cr,uid,ids,conect=None):

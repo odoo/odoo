@@ -1548,10 +1548,11 @@ class account_config_fiscalyear(osv.osv_memory):
     _columns = {
 		'name':fields.char('Name', required=True,size=64),
 		'code':fields.char('Code', required=True,size=64),
-        'date1': fields.date('Start of period', required=True),
-        'date2': fields.date('End of period', required=True),
+        'date1': fields.date('Starting Date', required=True),
+        'date2': fields.date('Ending Date', required=True),
     }
     _defaults = {
+        'code': lambda *a: time.strftime('%Y'),
         'date1': lambda *a: time.strftime('%Y-01-01'),
         'date2': lambda *a: time.strftime('%Y-12-31'),
     }
