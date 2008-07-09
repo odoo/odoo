@@ -226,16 +226,11 @@
             <field name="model">ir.module.module.configuration.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Next Configuration Step">
-                    <group colspan="4">
-                        <separator string="Next Configuration Step"/>
-                        <newline/>
-                        <field name="name" nolabel="1"/>
-                    </group>
+                <form string="Next Configuration Step" width="400">
+					<separator string="Next Configuration Step" colspan="4" width="400"/>
+					<newline/>
+					<field name="name" nolabel="1" colspan="4"/>
                     <separator colspan="4" string=""/>
-                    <newline/>
-                    <group colspan="2">
-                    </group>
                     <group colspan="2">
                         <button colspan="1" icon="gtk-cancel" special="cancel" string="Cancel"/>
                         <!--<button name="button_skip" type='object' string="Skip" icon="gtk-ok"/>-->

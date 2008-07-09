@@ -654,7 +654,7 @@ class orm_template(object):
 
 	# returns the definition of each field in the object
 	# the optional fields parameter can limit the result to some fields
-	def fields_get(self, cr, user, fields=None, context=None):
+	def fields_get(self, cr, user, fields=None, context=None, read_access=True):
 		if context is None:
 			context = {}
 		res = {}
@@ -663,8 +663,6 @@ class orm_template(object):
 		for parent in self._inherits:
 			res.update(self.pool.get(parent).fields_get(cr, user, fields,
 				context))
-		read_access= model_access_obj.check(cr, user, self._name, 'write',
-				raise_exception=False)
 		for f in self._columns.keys():
 			res[f] = {'type': self._columns[f]._type}
 			for arg in ('string', 'readonly', 'states', 'size', 'required',
@@ -1114,7 +1112,6 @@ class orm_memory(orm_template):
 		return True
 
 	def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
-		self.pool.get('ir.model.access').check(cr, user, self._name, 'read')
 		if not fields:
 			fields = self._columns.keys()
 		result = []
@@ -1132,7 +1129,6 @@ class orm_memory(orm_template):
 		return result
 
 	def write(self, cr, user, ids, vals, context=None):
-		self.pool.get('ir.model.access').check(cr, user, self._name, 'write')
 		vals2 = {}
 		upd_todo = []
 		for field in vals:
@@ -1152,7 +1148,6 @@ class orm_memory(orm_template):
 		return id_new
 
 	def create(self, cr, user, vals, context=None):
-		self.pool.get('ir.model.access').check(cr, user, self._name, 'create')
 		self.next_id += 1
 		id_new = self.next_id
 		default = []
@@ -1623,6 +1618,10 @@ class orm(orm_template):
 				res[col]=(table, self._inherits[table], self.pool.get(table)._inherit_fields[col][2])
 		self._inherit_fields=res
 		self._inherits_reload_src()
+
+	def fields_get(self, cr, user, fields=None, context=None):
+		read_access= self.pool.get('ir.model.access').check(cr, user, self._name, 'write', raise_exception=False)
+		return super(orm, self).fields_get(cr, user, fields, context, read_access)
 
 	def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
 		if not context:
