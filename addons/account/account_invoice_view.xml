@@ -294,7 +294,7 @@
             <field name="domain">[('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice'}</field>
         </record>
-        <menuitem action="action_invoice_tree1_new" id="menu_action_invoice_tree1_new" parent="action_invoice_tree1"/>
+        <menuitem action="action_invoice_tree1_new" id="menu_action_invoice_tree1_new" parent="menu_action_invoice_tree1"/>
 
         <record id="action_invoice_tree2" model="ir.actions.act_window">
             <field name="name">Supplier Invoices</field>
@@ -381,7 +381,7 @@
             <field name="act_window_id" ref="action_invoice_tree5"/>
         </record>
 
-        <menuitem action="action_invoice_tree5" id="menu_invoice_draft" parent="action_invoice_tree1"/>
+        <menuitem action="action_invoice_tree5" id="menu_invoice_draft" parent="menu_action_invoice_tree1"/>
 
         <record id="action_invoice_tree6" model="ir.actions.act_window">
             <field name="name">PRO-FORMA Customer Invoices</field>
@@ -402,7 +402,7 @@
             <field name="act_window_id" ref="action_invoice_tree6"/>
         </record>
 
-        <menuitem action="action_invoice_tree6" id="menu_action_invoice_tree6" parent="account.action_invoice_tree1"/>
+        <menuitem action="action_invoice_tree6" id="menu_action_invoice_tree6" parent="menu_action_invoice_tree1"/>
 
         <record id="action_invoice_tree7" model="ir.actions.act_window">
             <field name="name">Open Customer Invoices</field>
@@ -423,7 +423,7 @@
             <field name="act_window_id" ref="action_invoice_tree7"/>
         </record>
 
-        <menuitem action="action_invoice_tree7" id="menu_action_invoice_tree7" parent="account.action_invoice_tree1"/>
+        <menuitem action="action_invoice_tree7" id="menu_action_invoice_tree7" parent="menu_action_invoice_tree1"/>
 
         <record id="action_invoice_tree8" model="ir.actions.act_window">
             <field name="name">Draft Supplier Invoices</field>
