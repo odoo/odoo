@@ -31,6 +31,7 @@ from osv import fields
 from osv import osv
 import time
 import netsvc
+import pooler
 
 
 class payment_type(osv.osv):
@@ -104,7 +105,7 @@ class payment_order(osv.osv):
 			('open','Confirmed'),
 			('cancel','Cancelled'),
 			('done','Done')], 'State', select=True),
-		'line_ids': fields.one2many('payment.line','order_id','Payment lines'),
+		'line_ids': fields.one2many('payment.line','order_id','Payment lines',states={'done':[('readonly',True)]}),
 		'total': fields.function(_total, string="Total", method=True,
 			type='float'),
 		'user_id': fields.many2one('res.users','User',required=True),
@@ -112,7 +113,7 @@ class payment_order(osv.osv):
 			('now', 'Directly'),
 			('due', 'Due date'),
 			('fixed', 'Fixed date')
-			], "Prefered date", required=True),
+			], "Prefered date", change_default=True, required=True),
 		'date_created': fields.date('Creation date', readonly=True),
 		'date_done': fields.date('Execution date', readonly=True),
 	}
@@ -164,22 +165,61 @@ class payment_line(osv.osv):
 		return partners
 
 	def translate(self, orig):
-		return {"to_pay": "credit",
+		return {
+#				"to_pay": "credit",
 				"due_date": "date_maturity",
 				"reference": "ref"}.get(orig, orig)
 
-	def info_owner(self, cr, uid, ids, name, args, context=None):
+	def info_owner(self, cr, uid, ids, name=None, args=None, context=None):
 		if not ids: return {}
 		result = {}
-		for id in ids:
-			result[id] = """Tiny SPRL
-126-12021213-07 (Fortis)
-Chaussee de Namlur 40
-1367 Grand Rosiere
-Belgique"""
+		info=''
+		for line in self.browse(cr, uid, ids, context=context):
+			owner=line.order_id.mode.bank_id.partner_id
+			result[line.id]=False
+			if owner.address:
+				for ads in owner.address:
+					if ads.type=='default':
+						st=ads.street and ads.street or ''
+						st1=ads.street2 and ads.street2 or ''
+						if 'zip_id' in ads:
+							zip_city= ads.zip_id and self.pool.get('res.partner.zip').name_get(cr,uid,[ads.zip_id.id])[0][1] or ''
+						else:
+							zip=ads.zip and ads.zip or ''
+							city= ads.city and ads.city or  ''
+							zip_city= zip + ' ' + city
+						cntry= ads.country_id and ads.country_id.name or ''
+						info=owner.name + "\n" + st + " " + st1 + "\n" + zip_city + "\n" +cntry
+						result[line.id]=info
+						break
 		return result
 
-	info_partner = info_owner
+	def info_partner(self, cr, uid, ids, name=None, args=None, context=None):
+		if not ids: return {}
+		result = {}
+		info=''
+		for line in self.browse(cr, uid, ids, context=context):
+			result[line.id]=False
+			if not line.partner_id:
+				break
+			partner = line.partner_id.name or ''
+			if line.partner_id.address:
+				for ads in line.partner_id.address:
+					if ads.type=='default':
+						st=ads.street and ads.street or ''
+						st1=ads.street2 and ads.street2 or ''
+						if 'zip_id' in ads:
+							zip_city= ads.zip_id and self.pool.get('res.partner.zip').name_get(cr,uid,[ads.zip_id.id])[0][1] or ''
+						else:
+							zip=ads.zip and ads.zip or ''
+							city= ads.city and ads.city or  ''
+							zip_city= zip + ' ' + city
+						cntry= ads.country_id and ads.country_id.name or ''
+						info=partner + "\n" + st + " " + st1 + "\n" + zip_city + "\n" +cntry
+						result[line.id]=info
+						break
+		return result
+
 	def select_by_name(self, cr, uid, ids, name, args, context=None):
 		if not ids: return {}
 
@@ -208,60 +248,60 @@ Belgique"""
 				res.setdefault(id, (False, ""))
 		return res
 
-	def _currency(self, cursor, user, ids, name, args, context=None):
-		if not ids:
-			return {}
-		res = {}
-
-		currency_obj = self.pool.get('res.currency')
-		account_obj = self.pool.get('account.account')
-		cursor.execute('''SELECT pl.id, ml.currency_id, ml.account_id
-		FROM account_move_line ml
-			INNER JOIN payment_line pl
-				ON (ml.id = pl.move_line_id)
-		WHERE pl.id in (''' + ','.join([str(x) for x in ids]) + ')')
-
-		res2 = {}
-		account_ids = []
-		for payment_line_id, currency_id, account_id in cursor.fetchall():
-			res2[payment_line_id] = [currency_id, account_id]
-			account_ids.append(account_id)
-
-		account2currency_id = {}
-		for account in account_obj.browse(cursor, user, account_ids,
-				context=context):
-			account2currency_id[account.id] = account.company_currency_id.id
-
-		for payment_line_id in ids:
-			if res2[payment_line_id][0]:
-				res[payment_line_id] = res2[payment_line_id][0]
-			else:
-				res[payment_line_id] = \
-						account2currency_id[res2[payment_line_id][1]]
-
-		currency_names = {}
-		for currency_id, name in currency_obj.name_get(cursor, user, res.values(),
-				context=context):
-			currency_names[currency_id] = name
-		for payment_line_id in ids:
-			res[payment_line_id] = (res[payment_line_id],
-					currency_names[res[payment_line_id]])
-		return res
-
-	def _to_pay_currency(self, cursor, user, ids, name , args, context=None):
-		if not ids:
-			return {}
-
-		cursor.execute('''SELECT pl.id,
-			CASE WHEN ml.amount_currency < 0
-				THEN - ml.amount_currency
-				ELSE ml.credit
-			END
-		FROM account_move_line ml
-			INNER JOIN payment_line pl
-				ON (ml.id = pl.move_line_id)
-		WHERE pl.id in (''' + ','.join([str(x) for x in ids]) + ')')
-		return dict(cursor.fetchall())
+#	def _currency(self, cursor, user, ids, name, args, context=None):
+#		if not ids:
+#			return {}
+#		res = {}
+#
+#		currency_obj = self.pool.get('res.currency')
+#		account_obj = self.pool.get('account.account')
+#		cursor.execute('''SELECT pl.id, ml.currency_id, ml.account_id
+#		FROM account_move_line ml
+#			INNER JOIN payment_line pl
+#				ON (ml.id = pl.move_line_id)
+#		WHERE pl.id in (''' + ','.join([str(x) for x in ids]) + ')')
+#
+#		res2 = {}
+#		account_ids = []
+#		for payment_line_id, currency_id, account_id in cursor.fetchall():
+#			res2[payment_line_id] = [currency_id, account_id]
+#			account_ids.append(account_id)
+#
+#		account2currency_id = {}
+#		for account in account_obj.browse(cursor, user, account_ids,
+#				context=context):
+#			account2currency_id[account.id] = account.company_currency_id.id
+#
+#		for payment_line_id in ids:
+#			if res2[payment_line_id][0]:
+#				res[payment_line_id] = res2[payment_line_id][0]
+#			else:
+#				res[payment_line_id] = \
+#						account2currency_id[res2[payment_line_id][1]]
+#
+#		currency_names = {}
+#		for currency_id, name in currency_obj.name_get(cursor, user, res.values(),
+#				context=context):
+#			currency_names[currency_id] = name
+#		for payment_line_id in ids:
+#			res[payment_line_id] = (res[payment_line_id],
+#					currency_names[res[payment_line_id]])
+#		return res
+#
+#	def _to_pay_currency(self, cursor, user, ids, name , args, context=None):
+#		if not ids:
+#			return {}
+#
+#		cursor.execute('''SELECT pl.id,
+#			CASE WHEN ml.amount_currency < 0
+#				THEN - ml.amount_currency
+#				ELSE ml.credit
+#			END
+#		FROM account_move_line ml
+#			INNER JOIN payment_line pl
+#				ON (ml.id = pl.move_line_id)
+#		WHERE pl.id in (''' + ','.join([str(x) for x in ids]) + ')')
+#		return dict(cursor.fetchall())
 
 	def _amount(self, cursor, user, ids, name, args, context=None):
 		if not ids:
@@ -274,7 +314,7 @@ Belgique"""
 			ctx = context.copy()
 			ctx['date'] = line.order_id.date_done or time.strftime('%Y-%m-%d')
 			res[line.id] = currency_obj.compute(cursor, user, line.currency.id,
-					line.move_line_id.account_id.company_currency_id.id,
+					line.company_currency_id.id,
 					line.amount_currency, context=ctx)
 		return res
 
@@ -291,28 +331,40 @@ Belgique"""
 				res[line.id] = time.strftime('%Y-%m-%d')
 		return res
 
+	def _get_currency(self, cr, uid, context):
+		user = self.pool.get('res.users').browse(cr, uid, uid)
+		if user.company_id:
+			return user.company_id.currency_id.id
+		else:
+			return self.pool.get('res.currency').search(cr, uid, [('rate','=',1.0)])[0]
+
+	def select_move_lines(*a):
+		print a
+		return []
+
 	_columns = {
 		'name': fields.char('Your Reference', size=64, required=True),
-		'communication': fields.char('Communication', size=64),
+		'communication': fields.char('Communication', size=64, required=True),
 		'communication2': fields.char('Communication 2', size=64),
-		'move_line_id': fields.many2one('account.move.line','Entry line',
-			required=True),
+		'move_line_id': fields.many2one('account.move.line','Entry line', domain=[('reconcile_id','=', False), ('account_id.type', '=','payable')]),
 		'amount_currency': fields.float('Amount', digits=(16,2),
 			required=True, help='Payment amount in the partner currency'),
-		'to_pay_currency': fields.function(_to_pay_currency, string='To Pay',
-			method=True, type='float',
-			help='Amount to pay in the partner currency'),
-		'currency': fields.function(_currency, string='Currency',
-			method=True, type='many2one', obj='res.currency'),
-		'bank_id': fields.many2one('res.partner.bank', 'Bank account'),
+#		'to_pay_currency': fields.function(_to_pay_currency, string='To Pay',
+#			method=True, type='float',
+#			help='Amount to pay in the partner currency'),
+#		'currency': fields.function(_currency, string='Currency',
+#			method=True, type='many2one', obj='res.currency'),
+		'currency': fields.many2one('res.currency','Currency',required=True),
+		'company_currency': fields.many2one('res.currency','Currency',readonly=True),
+		'bank_id': fields.many2one('res.partner.bank', 'Destination Bank account'),
 		'order_id': fields.many2one('payment.order', 'Order', required=True,
 			ondelete='cascade', select=True),
-		'partner_id': fields.many2one('res.partner', string="Partner"),
+		'partner_id': fields.many2one('res.partner', string="Partner",required=True),
 		'amount': fields.function(_amount, string='Amount',
 			method=True, type='float',
 			help='Payment amount in the company currency'),
-		'to_pay': fields.function(select_by_name, string="To Pay", method=True,
-			type='float', help='Amount to pay in the company currency'),
+#		'to_pay': fields.function(select_by_name, string="To Pay", method=True,
+#			type='float', help='Amount to pay in the company currency'),
 		'due_date': fields.function(select_by_name, string="Due date",
 			method=True, type='date'),
 		'date_created': fields.function(select_by_name, string="Creation date",
@@ -320,18 +372,20 @@ Belgique"""
 		'reference': fields.function(select_by_name, string="Ref", method=True,
 			type='char'),
 		'info_owner': fields.function(info_owner, string="Owner Account", method=True, type="text"),
-		'info_partner': fields.function(info_partner, string="Owner Account", method=True, type="text"),
+		'info_partner': fields.function(info_partner, string="Destination Account", method=True, type="text"),
 		'partner_payable': fields.function(partner_payable,
 			string="Partner payable", method=True, type='float'),
 		'value_date': fields.function(_value_date, string='Value Date',
 			method=True, type='date'),
-		'date': fields.date('Memo Date'),
-		'state': fields.selection([('normal','Normal'), ('structured','Structured')], 'State', required=True)
-	 }
+		'date': fields.date('Payment Date'),
+		'state': fields.selection([('normal','Free'), ('structured','Structured')], 'Communication Type', required=True)
+	}
 	_defaults = {
 		'name': lambda obj, cursor, user, context: obj.pool.get('ir.sequence'
 			).get(cursor, user, 'payment.line'),
-		'state': lambda *args: 'normal'
+		'state': lambda *args: 'normal',
+		'currency': _get_currency,
+		'company_currency': _get_currency,
 	}
 	_sql_constraints = [
 		('name_uniq', 'UNIQUE(name)', 'The payment line name must be unique!'),
@@ -339,24 +393,71 @@ Belgique"""
 
 	def onchange_move_line(self,cr,uid,ids,move_line_id,payment_type,context=None):
 		data={}
-		data['amount_currency']=data['to_pay_currency']=data['partner_id']=data['reference']=data['date_created']=data['bank_id']=False
+		data['amount_currency']=data['currency']=data['communication']=data['partner_id']=data['reference']=data['date_created']=data['bank_id']=False
 		if move_line_id:
 			line=self.pool.get('account.move.line').browse(cr,uid,move_line_id)
-			data['amount_currency']=data['to_pay_currency']=line.amount_to_pay
+			data['amount_currency']=line.amount_to_pay
 			data['partner_id']=line.partner_id.id
+			data['currency']=line.currency_id and line.currency_id.id or False
+			if not data['currency']:
+				data['currency']=line.invoice and line.invoice.currency_id.id or False
+			# calling onchange of partner and updating data dictionary
+			temp_dict=self.onchange_partner(cr,uid,ids,line.partner_id.id)
+			data.update(temp_dict['value'])
+
 			data['reference']=line.ref
 			data['date_created']=line.date_created
+			data['communication']=line.ref
 
 			if payment_type:
 				payment_mode = self.pool.get('payment.mode').browse(cr,uid,payment_type).type.code
 			else:
 				payment_mode=False
 
-			data['bank_id']=self.pool.get('account.move.line').line2bank(cr, uid,
-				[move_line_id],
-				payment_mode or 'manual', context)[move_line_id]
+#			data['bank_id']=self.pool.get('account.move.line').line2bank(cr, uid,
+#				[move_line_id],
+#				payment_mode or 'manual', context)[move_line_id]
 
 		return {'value': data}
 
+	def onchange_partner(self,cr,uid,ids,partner_id,context=None):
+		data={}
+		data['info_partner']=data['bank_id']=False
+
+		if partner_id:
+			part_obj=self.pool.get('res.partner').browse(cr,uid,partner_id)
+			partner=part_obj.name or ''
+
+			if part_obj.address:
+				for ads in part_obj.address:
+					if ads.type=='default':
+						st=ads.street and ads.street or ''
+						st1=ads.street2 and ads.street2 or ''
+
+						if 'zip_id' in ads:
+							zip_city= ads.zip_id and self.pool.get('res.partner.zip').name_get(cr,uid,[ads.zip_id.id])[0][1] or ''
+						else:
+							zip=ads.zip and ads.zip or ''
+							city= ads.city and ads.city or  ''
+							zip_city= zip + ' ' + city
+
+						cntry= ads.country_id and ads.country_id.name or ''
+						info=partner + "\n" + st + " " + st1 + "\n" + zip_city + "\n" +cntry
+
+						data['info_partner']=info
+
+			if part_obj.bank_ids and len(part_obj.bank_ids)==1:
+				data['bank_id']=self.pool.get('res.partner.bank').name_get(cr,uid,[part_obj.bank_ids[0].id])[0][0]
+
+		return {'value': data}
+
+	def fields_get(self, cr, uid, fields=None, context=None):
+		res = super(payment_line, self).fields_get(cr, uid, fields, context)
+		if 'communication2' in res:
+			res['communication2'].setdefault('states', {})
+			res['communication2']['states']['structured'] = [('readonly', True)]
+			res['communication2']['states']['normal'] = [('readonly', False)]
+
+		return res
 
 payment_line()
