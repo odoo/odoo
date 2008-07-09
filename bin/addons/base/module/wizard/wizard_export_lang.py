@@ -35,6 +35,9 @@ import StringIO
 import csv
 import pooler
 
+from osv import fields,osv
+
+'''
 view_form_init="""<?xml version="1.0"?>
 <form string="Export language">
 	<image name="gtk-dialog-info" colspan="2"/>
@@ -100,3 +103,56 @@ class wizard_export_lang(wizard.interface):
 		},
 	}
 wizard_export_lang('module.lang.export')
+'''
+
+class wizard_export_lang(osv.osv_memory):
+
+	def _get_languages(self, cr, uid, context):
+		lang_obj=pooler.get_pool(cr.dbname).get('res.lang')
+		ids=lang_obj.search(cr, uid, [('active', '=', True),])
+		langs=lang_obj.browse(cr, uid, ids)
+		return [(lang.code, lang.translatable and lang.name or _('New language')) for lang in langs]
+	
+
+	def act_cancel(self, cr, uid, ids, context=None):
+		#self.unlink(cr, uid, ids, context)
+		return {'type':'ir.actions.act_window_close' }
+
+	def act_destroy(self, *args):
+		return {'type':'ir.actions.act_window_close' }
+
+	def act_getfile(self, cr, uid, ids, context=None):
+		print "get filE"
+		this = self.browse(cr, uid, ids)[0]
+		print this.lang
+		# set the data
+		file=tools.trans_generate(this.lang, 'all', dbname=cr.dbname)
+		buf=StringIO.StringIO()
+		writer=csv.writer(buf, 'UNIX')
+		for row in file:
+			writer.writerow(row)
+		del file
+		out=base64.encodestring(buf.getvalue())
+		buf.close()
+
+		self.write(cr, uid, ids, {'state':'get','data':out}, context=context)
+		
+		return {
+				'view_type': 'form',
+				"view_mode": 'form',
+			    'res_model': self._name,
+			    'type': 'ir.actions.act_window',
+			    'target':'new',
+			}
+
+	_name = "wizard.module.lang.export"
+	_columns = {
+			'lang': fields.selection(_get_languages, 'Language',required=True),
+			'data': fields.binary('File', readonly=True),
+			'state': fields.selection( ( ('choose','choose'),	# choose language
+				                         ('get','get'),			# get the file
+										 #('end','end'),			# virtual state: unlink self
+			                           ) ),
+			}
+	_defaults = { 'state': lambda *a: 'choose', }
+wizard_export_lang()

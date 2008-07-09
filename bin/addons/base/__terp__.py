@@ -51,7 +51,6 @@
 		"module/module_wizard.xml",
 		"module/module_view.xml",
 		"module/module_report.xml",
-#		"module/move_module_wizard.xml",
 		"res/res_request_view.xml",
 		"res/res_lang_view.xml",
 		"res/partner/partner_report.xml",

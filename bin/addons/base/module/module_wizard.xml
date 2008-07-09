@@ -21,13 +21,41 @@
             <field name="wiz_name">module.lang.install</field>
         </record>
         <menuitem action="wizard_lang_install" id="menu_wizard_lang_install" parent="base.menu_translation" type="wizard"/>
-        
-        <record id="wizard_lang_export" model="ir.actions.wizard">
-            <field name="name">Export language</field>
-            <field name="wiz_name">module.lang.export</field>
+
+		<record id="wizard_lang_export" model="ir.ui.view">
+            <field name="name">Export Language</field>
+            <field name="model">wizard.module.lang.export</field>
+            <field name="type">form</field>
+			<field name="arch" type="xml">
+				<form col="4" string="Export language">
+					<image name="gtk-dialog-info"/>
+					<group col="2" states="choose">
+						<separator string="Export translation file" colspan="2"/>
+						<label align="0.0" string="Choose a language to export:"/>
+						<field name="lang" nolabel="1"/>
+                        <button icon="gtk-cancel" name="act_cancel" special="cancel" string="Cancel" type="object"/>
+                        <button icon="gtk-ok" name="act_getfile" string="Get file" type="object"/>
+					</group>
+					<group col="1" states="get">
+						<separator string="Export done" colspan="1"/>
+						<field name="data" readonly="1"/>
+						<label string="Save this document to a .CSV file and open it with your favourite spreadsheet software. The file encoding is UTF-8. You have to translate the latest column before reimporting it."/>
+                        <button icon="gtk-close" name="act_destroy" special="cancel" string="Close" type="object"/>
+					</group>
+<field name="state" readonly="1"/>
+				</form>
+			</field>
         </record>
-        <menuitem action="wizard_lang_export" id="menu_wizard_lang_export" parent="base.menu_translation" type="wizard"/>
-        
+		<record id="action_wizard_lang_export" model="ir.actions.act_window">
+            <field name="name">Export language</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wizard.module.lang.export</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        <menuitem action="action_wizard_lang_export" id="menu_wizard_lang_export" parent="base.menu_translation"/>
+
         <record id="wizard_lang_import" model="ir.actions.wizard">
             <field name="name">Import language</field>
             <field name="wiz_name">module.lang.import</field>
