@@ -227,14 +227,17 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Next Configuration Step">
-					<separator string="Next Configuration Step" colspan="4"/>
-					<field name="name" nolabel="1" colspan="4" width="500"/>
-					<separator colspan="4" string=""/>
-					<label string="" colspan="2"/>
-                    <group colspan="2" col="2">
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button icon="gtk-go-forward" name="button_continue" string="Continue" type="object"/>
-                    </group>
+					<image name="gtk-dialog-info"/>
+					<group>
+						<separator string="Next Configuration Step" colspan="4"/>
+						<field name="name" nolabel="1" colspan="4" width="500"/>
+						<separator colspan="4" string=""/>
+						<label string="" colspan="2"/>
+						<group colspan="2" col="2">
+							<button icon="gtk-cancel" special="cancel" string="Skip Step"/>
+							<button icon="gtk-go-forward" name="button_continue" string="Continue" type="object"/>
+						</group>
+					</group>
                 </form>
             </field>
         </record>

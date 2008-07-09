@@ -569,92 +569,89 @@ module_dependency()
 
 
 class module_config_wizard_step(osv.osv):
-    _name = 'ir.module.module.configuration.step'
-    _columns={
+	_name = 'ir.module.module.configuration.step'
+	_columns={
 		'name':fields.char('Name',size=64,required=True, select=True),
 		'note':fields.text('Text'),
 		'action_id':fields.many2one('ir.actions.act_window', 'Action', select=True,required=True, ondelete='cascade'),
 		'sequence':fields.integer('Sequence'),
 		'state':fields.selection([('open', 'Open'),('done', 'Done'),('skip','Skip')], string='State', required=True)
 	}
-    _defaults={
+	_defaults={
 		'state': lambda *a: 'open',
 		'sequence': lambda *a: 10,
 	}
-    _order="sequence"
+	_order="sequence"
 module_config_wizard_step()
 
 
 class module_configuration(osv.osv_memory):
-    _name='ir.module.module.configuration.wizard'
-
-    def _get_action_name(self, cr, uid, context={}):
+	_name='ir.module.module.configuration.wizard'
+	def _get_action_name(self, cr, uid, context={}):
 		item_obj = self.pool.get('ir.module.module.configuration.step')
 		item_ids = item_obj.search(cr, uid, [
-            ('state', '=', 'open'),
-            ], limit=1, context=context)
+			('state', '=', 'open'),
+			], limit=1, context=context)
 		if item_ids and len(item_ids):
 			item = item_obj.browse(cr, uid, item_ids[0], context=context)
 			return item.note
 		else:
-			return 'Thank You! All Configuration steps are installed'
+			return "Your database is now fully configured.\n\nClick 'Continue' and enyoy your OpenERP experience..."
 		return False
 
-
-
-    def _get_action(self, cr, uid, context={}):
+	def _get_action(self, cr, uid, context={}):
 		item_obj = self.pool.get('ir.module.module.configuration.step')
 		item_ids = item_obj.search(cr, uid, [
-            ('state', '=', 'open'),
-            ], limit=1, context=context)
+			('state', '=', 'open'),
+			], limit=1, context=context)
 		if item_ids:
 			item = item_obj.browse(cr, uid, item_ids[0], context=context)
 			return item.id
 		return False
 
-    _columns = {
+	_columns = {
 		'name': fields.text('Next Wizard',readonly=True),
 		'item_id':fields.many2one('ir.module.module.configuration.step', 'Next Configuration Wizard',invisible=True, readonly=True),
 
 	}
-    _defaults={
+	_defaults={
 		'item_id':_get_action,
 		'name':_get_action_name,
 
 	}
-    def button_skip(self,cr,uid,ids,context=None):
-    	item_obj = self.pool.get('ir.module.module.configuration.step')
-    	item_id=self.read(cr,uid,ids)[0]['item_id']
-        if item_id:
-            item = item_obj.browse(cr, uid, item_id, context=context)
-            item_obj.write(cr, uid, item.id, {
-                'state': 'skip',
-                }, context=context)
-            return{
+	def button_skip(self,cr,uid,ids,context=None):
+		item_obj = self.pool.get('ir.module.module.configuration.step')
+		item_id=self.read(cr,uid,ids)[0]['item_id']
+		if item_id:
+			item = item_obj.browse(cr, uid, item_id, context=context)
+			item_obj.write(cr, uid, item.id, {
+				'state': 'skip',
+				}, context=context)
+			return{
 				'view_type': 'form',
 				"view_mode": 'form',
 				'res_model': 'ir.module.module.configuration.wizard',
 				'type': 'ir.actions.act_window',
 				'target':'new',
 			}
-        return {'type':'ir.actions.act_window_close'}
+		return {'type':'ir.actions.act_window_close'}
 
-    def button_continue(self, cr, uid, ids, context=None):
-    	item_obj = self.pool.get('ir.module.module.configuration.step')
-    	item_id=self.read(cr,uid,ids)[0]['item_id']
-        if item_id:
-            item = item_obj.browse(cr, uid, item_id, context=context)
-            item_obj.write(cr, uid, item.id, {
-                'state': 'done',
-                }, context=context)
-            return{
+	def button_continue(self, cr, uid, ids, context=None):
+		item_obj = self.pool.get('ir.module.module.configuration.step')
+		item_id=self.read(cr,uid,ids)[0]['item_id']
+		if item_id:
+			item = item_obj.browse(cr, uid, item_id, context=context)
+			item_obj.write(cr, uid, item.id, {
+				'state': 'done',
+				}, context=context)
+			return{
 				  'view_type': item.action_id.view_type,
 				  'view_id':item.action_id.view_id and [item.action_id.view_id.id] or False,
 				  'res_model': item.action_id.res_model,
 				  'type': item.action_id.type,
 				  'target':item.action_id.target,
 			}
-        return {'type':'ir.actions.act_window_close' }
+		return {'type':'ir.actions.act_window_close' }
 module_configuration()
 
 

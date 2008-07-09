@@ -183,31 +183,20 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Configure User">
-                    <separator col="4" colspan="4" string="Configure User"/>
-                    <newline/>
-                    <notebook>
-                        <page string="User">
-                            <field name="name" select="1"/>
-                            <field name="active" select="1"/>
-                            <field name="login" select="1"/>
-                            <field name="password"/>
-                            <field name="address_id"/>
-                            <field name="company_id" required="1"/>
-                            <field name="action_id" required="True"/>
-                            <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
-                            <field colspan="4" name="signature"/>
-                            <group col="4" colspan="4">
-                                <button icon='gtk-cancel' special="cancel" name="action_next" type='object' string='Skip &amp; Continue'/>
-                                <button name='action_new' icon='gtk-ok' type='object' string='Add Other User'/>
-                                <button name='action_continue' icon='gtk-ok' type='object' string='Continue'/>
-                            </group>
-
-                        </page>
-                        <page string="Security">
-                            <field colspan="4" name="groups_id"/>
-                            <field colspan="4" name="roles_id"/>
-                        </page>
-                    </notebook>
+                    <separator col="4" colspan="4" string="Define a New User"/>
+					<field name="name" select="1"/>
+					<newline/>
+					<field name="login" select="1"/>
+					<field name="password"/>
+					<field colspan="4" name="signature"/>
+					<field colspan="4" name="groups_id"/>
+					<separator string="" colspan="4"/>
+					<label string="" colspan="2"/>
+					<group col="3" colspan="3">
+						<button icon='gtk-cancel' special="cancel" name="action_next" type='object' string='Skip &amp; Continue'/>
+						<button name='action_new' icon='gtk-ok' type='object' string='Add Another User'/>
+						<button name='action_continue' icon='gtk-ok' type='object' string='Continue'/>
+					</group>
                 </form>
             </field>
         </record>
@@ -229,27 +218,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Configure simple view">
-                    <separator string="Select between the simplified views or the extended views."/>
+                    <separator string="Choose the simple or extended views" colspan="4"/>
+					<field colspan="2" name="view"/>
                     <newline/>
-                    <!--<label string="If you are testing or using OpenERP for the first time," colspan="2"/>
-
-				<newline/>
-				<label string="We suggest you to use the simplified view, which has less features but is easier
-to understand." colspan="2"/>
-
-				<newline/>-->
-                    <group colspan="4">
-                        <field colspan="2" name="view"/>
-                    </group>
-                    <newline/>
-                    <separator string=""/>
-                    <newline/>
-
-                    <group>
-                        <button icon="gtk-cancel" special="cancel" name="action_cancel" type="object" string="Cancel"/>
+                    <separator string="" colspan="4"/>
+					<label string="" colspan="2"/>
+                    <group colspan="2" col="1">
                         <button icon="gtk-ok" name="action_set" string="Set" type="object"/>
                     </group>
-
                 </form>
             </field>
         </record>
@@ -269,7 +245,9 @@ to understand." colspan="2"/>
 
         <record id="config_wizard_step_user" model="ir.module.module.configuration.step">
             <field name="name">Create User</field>
-            <field name="note">Create some users</field>
+            <field name="note">Create your different users.
+You will be able to assign groups to users. Groups define the access rights of each users on the different objects of the system.
+			</field>
             <field name="action_id" ref="action_config_user_form"/>
             <field name="state">open</field>
             <field name="sequence">10</field>
@@ -278,8 +256,7 @@ to understand." colspan="2"/>
         <record id="config_wizard_simple_view" model="ir.module.module.configuration.step">
             <field name="name">Select between the simplified views or the extended views.</field>
             <field name="note">Select between the simplified views or the extended views.
-                (If you are testing or using OpenERP for the first time,
-                we suggest you to use the simplified view, which has less features but is easier to understand.)
+If you are testing or using OpenERP for the first time, we suggest you to use the simplified view, which has less features but is easier to understand. You will be able to switch to the extended view later.
             </field>
             <field name="action_id" ref="action_config_simple_view_form"/>
             <field name="state">open</field>
