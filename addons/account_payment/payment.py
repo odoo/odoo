@@ -231,6 +231,8 @@ class payment_line(osv.osv):
 			where pl.id in (%s)"""%
 			(self.translate(name), ','.join(map(str,ids))) )
 		res = dict(cr.fetchall())
+		print "res: ", res
+		print "name ", name
 
 		if name == 'partner_id':
 			partner_name = {}
@@ -314,7 +316,7 @@ class payment_line(osv.osv):
 			ctx = context.copy()
 			ctx['date'] = line.order_id.date_done or time.strftime('%Y-%m-%d')
 			res[line.id] = currency_obj.compute(cursor, user, line.currency.id,
-					line.company_currency_id.id,
+					line.company_currency.id,
 					line.amount_currency, context=ctx)
 		return res
 
@@ -338,9 +340,46 @@ class payment_line(osv.osv):
 		else:
 			return self.pool.get('res.currency').search(cr, uid, [('rate','=',1.0)])[0]
 
-	def select_move_lines(*a):
-		print a
-		return []
+#	def select_move_lines(*a):
+#		print a
+#		return []
+
+#	def create(self, cr, uid, vals, context):
+#		print "created!!!"
+#		vals['company_currency'] = self._get_currency(cr, uid, context)
+#		return super(payment_line, self).create(cr, uid, vals, context)
+
+	def _get_ml_inv_ref(self, cr, uid, ids, *a):
+		res={}
+		for id in self.browse(cr, uid, ids):
+			res[id.id] = ""
+			print "test"
+			if id.move_line_id:
+				print "blablabl"
+				res[id.id] = "pas de invoice"
+				if id.move_line_id.invoice:
+					res[id.id] = str(id.move_line_id.invoice.number)
+					if id.move_line_id.invoice.name: 
+						res[id.id] += " " + id.move_line_id.invoice.name
+		return res
+
+	def _get_ml_maturity_date(self, cr, uid, ids, *a):
+		res={}
+		for id in self.browse(cr, uid, ids):
+			if id.move_line_id:
+				res[id.id] = id.move_line_id.date_maturity
+			else:
+				res[id.id] = ""
+		return res
+
+	def _get_ml_created_date(self, cr, uid, ids, *a):
+		res={}
+		for id in self.browse(cr, uid, ids):
+			if id.move_line_id:
+				res[id.id] = id.move_line_id.date_created
+			else:
+				res[id.id] = ""
+		return res
 
 	_columns = {
 		'name': fields.char('Your Reference', size=64, required=True),
@@ -365,19 +404,22 @@ class payment_line(osv.osv):
 			help='Payment amount in the company currency'),
 #		'to_pay': fields.function(select_by_name, string="To Pay", method=True,
 #			type='float', help='Amount to pay in the company currency'),
-		'due_date': fields.function(select_by_name, string="Due date",
-			method=True, type='date'),
-		'date_created': fields.function(select_by_name, string="Creation date",
-			method=True, type='date'),
-		'reference': fields.function(select_by_name, string="Ref", method=True,
-			type='char'),
+#		'due_date': fields.function(select_by_name, string="Due date",
+#			method=True, type='date'),
+		'ml_date_created': fields.function(_get_ml_created_date, string="Effective Date",
+			method=True, type='date',help="Invoice Effective Date"),
+#		'reference': fields.function(select_by_name, string="Ref", method=True,
+#			type='char'),
+		'ml_maturity_date': fields.function(_get_ml_maturity_date, method=True, type='char', string='Maturity Date'),
+		'ml_inv_ref': fields.function(_get_ml_inv_ref, method=True, type='char', string='Invoice Ref'),
 		'info_owner': fields.function(info_owner, string="Owner Account", method=True, type="text"),
 		'info_partner': fields.function(info_partner, string="Destination Account", method=True, type="text"),
 		'partner_payable': fields.function(partner_payable,
 			string="Partner payable", method=True, type='float'),
-		'value_date': fields.function(_value_date, string='Value Date',
-			method=True, type='date'),
+#		'value_date': fields.function(_value_date, string='Value Date',
+#			method=True, type='date'),
 		'date': fields.date('Payment Date'),
+		'create_date': fields.datetime('Created' ,readonly=True),
 		'state': fields.selection([('normal','Free'), ('structured','Structured')], 'Communication Type', required=True)
 	}
 	_defaults = {
