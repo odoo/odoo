@@ -570,7 +570,6 @@ module_dependency()
 
 class module_config_wizard_step(osv.osv):
     _name = 'ir.module.module.configuration.step'
-
     _columns={
 		'name':fields.char('Name',size=64,required=True, select=True),
 		'note':fields.text('Text'),
