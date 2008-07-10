@@ -183,13 +183,19 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Configure User">
-                    <separator col="4" colspan="4" string="Define a New User"/>
-					<field name="name" select="1"/>
-					<newline/>
-					<field name="login" select="1"/>
-					<field name="password"/>
-					<field colspan="4" name="signature"/>
-					<field colspan="4" name="groups_id"/>
+					<notebook colspan="4">
+						<page string="User Definition">
+						<separator col="4" colspan="4" string="Define a New User"/>
+						<field name="name" select="1"/>
+						<newline/>
+						<field name="login" select="1"/>
+						<field name="password"/>
+						<field colspan="4" name="signature"/>
+						</page><page string="Access Rights">
+							<label string="Assign groups to set objects available for this user" colspan="4"/>
+							<field colspan="4" name="groups_id" nolabel="1"/>
+						</page>
+					</notebook>
 					<separator string="" colspan="4"/>
 					<label string="" colspan="2"/>
 					<group col="3" colspan="3">
