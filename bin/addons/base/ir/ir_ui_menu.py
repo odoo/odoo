@@ -29,6 +29,7 @@
 
 from osv import fields, osv
 from osv.orm import browse_null, browse_record
+import re
 
 def one_in(setA, setB):
 	"""Check the presence of an element of setA in setB
@@ -121,6 +122,15 @@ class ir_ui_menu(osv.osv):
 	def copy(self, cr, uid, id, default=None, context=None):
 		ir_values_obj = self.pool.get('ir.values')
 		res = super(ir_ui_menu, self).copy(cr, uid, id, context=context)
+		datas=self.read(cr,uid,[res],['name'])[0]
+		rex=re.compile('\([0-9]+\)')
+		concat=rex.findall(datas['name'])
+		if concat:
+			next_num=eval(concat[0])+1
+		        datas['name']=rex.sub(('(%d)'%next_num),datas['name'])
+		else:
+		        datas['name']=datas['name']+'(1)'
+		self.write(cr,uid,[res],{'name':datas['name']})
 		ids = ir_values_obj.search(cr, uid, [
 			('model', '=', 'ir.ui.menu'),
 			('res_id', '=', id),
