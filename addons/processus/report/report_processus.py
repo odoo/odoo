@@ -46,7 +46,6 @@ class report_graph_instance(object):
 			start = []
 			transitions = {}
 			for node in processus.node_ids:
-				print node.id, node.name, node.flow_start
 				nodes[node.id] = node
 				if node.flow_start:
 					start.append(node.id)
@@ -54,7 +53,7 @@ class report_graph_instance(object):
 					transitions[tr.id] = tr
 			g = tools.graph(nodes.keys(), map(lambda x: (x.node_from_id.id,x.node_to_id.id), transitions.values()))
 			g.process(start)
-			g.scale(200,250, 100, 10)
+			g.scale(250,250, 100, 10)
 
 			img = Image.new('RGB',(1024,768),'#ffffff')
 			g2 = processus_print.graph(img)
