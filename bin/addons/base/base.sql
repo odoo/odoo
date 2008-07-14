@@ -156,9 +156,6 @@ CREATE TABLE res_users (
 );
 alter table res_users add constraint res_users_login_uniq unique (login);
 
-insert into res_users (id,login,password,name,action_id,active) values (1,'root',NULL,'Root',NULL,False);
-select setval('res_users_id_seq', 2);
-
 CREATE TABLE res_groups (
     id serial NOT NULL,
     name varchar(32) NOT NULL,
@@ -336,3 +333,10 @@ CREATE TABLE ir_model_data (
     res_id integer, primary key(id)
 );
 
+---------------------------------
+-- Users
+---------------------------------
+insert into res_users (id,login,password,name,action_id,active) values (1,'root',NULL,'Root',NULL,False);
+insert into res_users (id,login,password,name,action_id,active) values (2,'admin','admin','Administrator',NULL,True);
+insert into ir_model_data (name,module,model,noupdate,res_id) values ('user_admin','base','res.users',True,2);
+select setval('res_users_id_seq', 3);
