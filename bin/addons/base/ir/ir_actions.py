@@ -279,7 +279,7 @@ class actions_server(osv.osv):
 		'trigger_object': fields.char('Trigger Object', size=128),
 		'trigger_object_id': fields.char('Trigger Object ID', size=128),
 		'message': fields.text('Message', translate=True),
-		'address': fields.char('Address', size=128),
+		'address': fields.char('Email Address', size=128),
 		'child_ids': fields.one2many('ir.actions.actions', 'parent_id', 'Others Actions'),
 		'usage': fields.char('Action Usage', size=32),
 		'type': fields.char('Report Type', size=32, required=True),
