@@ -744,7 +744,7 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
 def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate = False, report=None):
 	xmlstr = xmlfile.read()
 	xmlfile.seek(0)
-	relaxng_doc = etree.parse(file('import_xml.rng'))
+	relaxng_doc = etree.parse(file(os.path.join( config['root_path'], 'import_xml.rng' )))
 	relaxng = etree.RelaxNG(relaxng_doc)
 
 	doc = etree.parse(xmlfile)
