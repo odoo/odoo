@@ -12,7 +12,8 @@ This module allows you to manage your processus for the end-users.
     "demo_xml" : [],
     "update_xml" : [
         'processus_view.xml',
-        'ir.model.access.csv'],
+        'ir.model.access.csv',
+        "processus_report.xml"],
     "active": False,
     "installable": True
 }

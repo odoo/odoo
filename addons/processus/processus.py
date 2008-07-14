@@ -55,8 +55,8 @@ class processus_node(osv.osv):
         'model_id': fields.many2one('ir.model', 'Model', ondelete='set null'),
         'model_states': fields.char('States Expression', size=128),
         'flow_start': fields.boolean('Starting Flow'),
-        'transition_in': fields.one2many('processus.transition', 'node_from_id', 'Starting Transitions'),
-        'transition_out': fields.one2many('processus.transition', 'node_to_id', 'Ending Transitions'),
+        'transition_in': fields.one2many('processus.transition', 'node_to_id', 'Starting Transitions'),
+        'transition_out': fields.one2many('processus.transition', 'node_from_id', 'Ending Transitions'),
     }
     _defaults = {
         'kind': lambda *args: 'state',
