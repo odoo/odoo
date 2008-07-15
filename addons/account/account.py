@@ -1086,7 +1086,18 @@ class account_tax(osv.osv):
 		'ref_tax_sign': fields.float('Tax Code Sign', help="Usualy 1 or -1."),
 		'include_base_amount': fields.boolean('Include in base amount', help="Indicate if the amount of tax must be included in the base amount for the computation of the next taxes"),
 		'company_id': fields.many2one('res.company', 'Company', required=True),
+		'description': fields.char('Description', size=128, required=True),
 	}
+
+	def name_get(self, cr, uid, ids, context={}):
+           if not len(ids):
+                   return []
+           reads = self.read(cr, uid, ids, ['description'], context)
+           res = []
+           for record in reads:
+                   name = record['description']
+                   res.append((record['id'],name ))
+           return res
 
 	def _default_company(self, cr, uid, context={}):
 		user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
@@ -1367,7 +1378,13 @@ class account_model(osv.osv):
 		'ref': fields.char('Ref', size=64),
 		'journal_id': fields.many2one('account.journal', 'Journal', required=True),
 		'lines_id': fields.one2many('account.model.line', 'model_id', 'Model Entries'),
+		'legend' :fields.text('Legend',readonly=True,size=100),
 	}
+
+	_defaults = {
+	    'legend':lambda *a:'''You can specify year,month and date in the name of the model using the following labels:\n\n%(year)s : To Specify Year \n%(month)s : To Specify Month \n%(date) : Current Date\n\ne.g. My model on %(date)s''',
+        }
+
 	def generate(self, cr, uid, ids, datas={}, context={}):
 		move_ids = []
 		for model in self.browse(cr, uid, ids, context):

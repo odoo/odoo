@@ -559,7 +559,8 @@
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="Account Tax">
-                    <field name="name"/>
+                     <!--<field name="name"/>-->
+                    <field name="description" string="Name"/>
                 </tree>
             </field>
         </record>
@@ -573,6 +574,7 @@
                         <page string="Tax Definition">
                             <field name="name" select="1"/>
                             <field name="company_id"/>
+                            <field name="description" select="1"/>
                             <field name="tax_group" select="1"/>
                             <field name="active" select="2"/>
                             <field name="type"/>
@@ -1125,6 +1127,8 @@
                     <field name="ref" select="1"/>
                     <field name="journal_id" select="1"/>
                     <field colspan="4" name="lines_id" widget="one2many_list"/>
+                    <separator string="Legend" colspan="4"/>
+                    <field name="legend" colspan="4" nolabel="1"/>
                     <group col="1" colspan="4">
                         <button name="generate" string="Create entries" type="object"/>
                     </group>
