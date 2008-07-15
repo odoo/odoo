@@ -73,5 +73,9 @@
         
         <wizard id="wizard_validate_account_moves_line" menu="True" model="account.move.line" name="account.move_line.validate" string="Validate Account Moves"/>
         
+	<!-- Use Models -->
+        <wizard string="Use Models" model="account.model" name="account_use_models" menu="False" id="wizard_account_use_model"/>
+        <menuitem action="wizard_account_use_model" type="wizard" parent="account.menu_finance_periodical_processing" id="menu_account_use_model"/>
+
     </data>
 </terp>
