@@ -255,7 +255,8 @@ def load_module_graph(cr, graph, status=None, **kwargs):
 
 def register_classes():
 	module_list = os.listdir(ad)
-	module_list += [m for m in os.listdir(_ad) if m not in module_list]
+	module_names = [os.path.basename(m) for m in module_list]
+	module_list += [m for m in os.listdir(_ad) if m not in module_names]
 
 	for package in create_graph(module_list):
 		m = package.name
