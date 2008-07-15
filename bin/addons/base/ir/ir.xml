@@ -620,6 +620,7 @@
                         <page string="Object">
                             <field name="name" select="1"/>
                             <field name="model" select="1"/>
+                            <field name="parent_id" select="1"/>
                             <separator colspan="4" string="Fields"/>
                             <field colspan="4" context="{'manual':True}" name="field_id" nolabel="1">
                                 <tree string="Fields Description">
@@ -672,6 +673,7 @@
                 <tree string="Model Description">
                     <field name="name"/>
                     <field name="model"/>
+                    <field name="parent_id"/>
                 </tree>
             </field>
         </record>
@@ -1021,6 +1023,7 @@
             <field name="operand">user.company_id.id</field>
             <field name="rule_group" ref="property_rule_group"/>
         </record>
+        
         <record id="property_rule_bis" model="ir.rule">
             <field model="ir.model.fields" name="field_id" search="[('model', '=', 'ir.property'), ('name', '=', 'company_id')]"/>
             <field name="operator">=</field>
@@ -1028,51 +1031,60 @@
             <field name="rule_group" ref="property_rule_group2"/>
         </record>
         
-        <!--server action view-->
-        
-        <record id="view_server_action_form" model="ir.ui.view">
-            <field name="name">Server Action</field>
-            <field name="model">ir.actions.server</field>
+        <!--
+        ===============
+         Object Access
+        ===============
+        -->
+        <record id="view_model_form1" model="ir.ui.view">
+            <field name="name">ir.model.form1</field>
+            <field name="model">ir.model</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Server Action">
+                <form string="Model Description">
                     <field name="name" select="1"/>
-                    <field name="state" select="1"/>
-                    <field name="model_id" select="1"/>
-                    <field name="sequence" select="2"/>
-                    <field name="code" colspan="4"/>
-                    <field name="trigger_name" select="2"/>
-                    <field name="trigger_object" select="2"/>
-                    <field name="trigger_object_id"/>
-                    <field name="message" select="2" colspan="4"/>
-                    <field name="address" select="2"/>
-                    <field name="child_ids" colspan="4"/>
-                    <field name="usage"/>
-                    <field name="type"/>
+                    <field name="model" select="1"/>
+                    <field name="parent_id" select="1"/>
                 </form>
             </field>
         </record>
         
-        <record id="view_server_action_tree" model="ir.ui.view">
-            <field name="name">Server Actions</field>
-            <field name="model">ir.actions.server</field>
+        <record id="view_model_tree1" model="ir.ui.view">
+            <field name="name">ir.model.tree1</field>
+            <field name="model">ir.model</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Server Actions">
+                <tree string="Model Description">
                     <field name="name"/>
-                    <field name="state"/>
+                    <field name="model"/>
+                    <field name="parent_id"/>
                 </tree>
             </field>
         </record>
-
-        <record id="action_server_action" model="ir.actions.act_window">
-            <field name="name">Server Actions</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">ir.actions.server</field>
+        
+        <record model="ir.actions.act_window" id="action_model_sec">
+            <field name="name">Objects</field>
+            <field name="res_model">ir.model</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="view_server_action_tree"/>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" eval="False"/>
         </record>
-        <menuitem action="action_server_action" id="menu_server_action" parent="base.next_id_6"/>
-
+        
+        <record model="ir.actions.act_window.view" id="action_model_sec_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_model_tree1"/>
+            <field name="act_window_id" ref="action_model_sec" />
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="action_model_sec_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_model_form1"/>
+            <field name="act_window_id" ref="action_model_sec" />
+        </record>
+        
+        <menuitem action="action_model_sec" id="ir_model_model_menu1" parent="base.menu_security"/>
+        
     </data>
 </terp>
