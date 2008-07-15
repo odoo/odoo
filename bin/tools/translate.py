@@ -239,7 +239,10 @@ def trans_generate(lang, modules, dbname=None):
 				if fname:
 					logger.notifyChannel("init", netsvc.LOG_WARNING, "couldn't export translation for report %s %s %s" % (name, report_type, fname))
 
-		
+		for constraint in pool.get(model)._constraints:
+			msg = constraint[1]
+			push_translation(module, 'constraint', model, 0, msg.encode('utf8'))
+
 		for field_name,field_def in pool.get(model)._columns.items():
 			if field_def.translate:
 				name = model + "," + field_name

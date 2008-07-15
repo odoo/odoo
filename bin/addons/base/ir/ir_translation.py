@@ -43,6 +43,7 @@ TRANSLATION_TYPE = [
 	('xsl', 'XSL'),
 	('help', 'Help'),
 	('code', 'Code'),
+	('constraint', 'Constraint'),
 ]
 
 class ir_translation(osv.osv, Cacheable):
