@@ -121,6 +121,7 @@ class configmanager(object):
 		group.add_option("--i18n-export", dest="translate_out", help="export all sentences to be translated to a CSV file and exit")
 		group.add_option("--i18n-import", dest="translate_in", help="import a CSV file with translations and exit")
 		group.add_option("--modules", dest="translate_modules", help="specify modules to export. Use in combination with --i18n-export")
+		group.add_option("--addons-path", dest="addons_path", help="specify an alternative addons path.")
 		parser.add_option_group(group)
 
 		(opt, args) = parser.parse_args()
@@ -142,13 +143,13 @@ class configmanager(object):
 
 		# Verify that we want to log or not, if not the output will go to stdout
 		if self.options['logfile'] in ('None', 'False'):
-                    self.options['logfile'] = False
+			self.options['logfile'] = False
 		# the same for the pidfile
-                if self.options['pidfile'] in ('None', 'False'):
-                    self.options['pidfile'] = False
+		if self.options['pidfile'] in ('None', 'False'):
+			self.options['pidfile'] = False
 		
 		for arg in ('interface', 'port', 'db_name', 'db_user', 'db_password', 'db_host',
-				'db_port', 'logfile', 'pidfile', 'secure', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy', 'netinterface', 'netport', 'db_maxconn', 'commit_mode'):
+				'db_port', 'logfile', 'pidfile', 'secure', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy', 'netinterface', 'netport', 'db_maxconn', 'commit_mode', 'addons_path'):
 			if getattr(opt, arg):
 				self.options[arg] = getattr(opt, arg)
 
