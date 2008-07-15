@@ -34,7 +34,7 @@ import osv, tools, pooler
 import ir
 import netsvc
 from tools.misc import UpdateableStr
-
+import inspect
 
 class UNIX_LINE_TERMINATOR(csv.excel):
 	lineterminator = '\n'
@@ -55,13 +55,17 @@ def translate(cr, name, source_type, lang, source=None):
 	res = res_trans and res_trans[0] or False
 	return res
 
-def translate_code(cr, source, context):
-	lang = context.get('lang', False)
-	if lang:
-		return translate(cr, None, 'code', lang, source) or source
-	else:
-		return source
-_ = lambda source: translate_code(cr, source, context)
+class GettextAlias(object):
+    def __call__(self, source):
+        frame = inspect.stack()[1][0]
+        cr = frame.f_locals['cr']
+        context = frame.f_locals.get('context', {})
+        lang = context.get('lang', False)
+        if not lang:
+            return source
+        return translate(cr, None, 'code', lang, source) or source
+
+_ = GettextAlias()
 
 # Methods to export the translation file
 
