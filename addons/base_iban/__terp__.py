@@ -31,6 +31,10 @@
 	"author" : "Tiny",
 	"category" : "Generic Modules/Base",
 	"depends" : ["base"],
+	"description": """
+This module install the base for IBAN bank accounts. 
+
+	""",
 	"update_xml" : ["base_iban_view.xml"],
 	"init_xml" : ["base_iban_data.xml"],
 	"active": False,
