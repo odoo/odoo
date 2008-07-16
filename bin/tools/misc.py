@@ -61,7 +61,7 @@ def init_db(cr):
 		terp_file = addons.get_module_resource(i, '__terp__.py')
 		mod_path = addons.get_module_path(i)
 		info = False
-		if os.path.isfile(terp_file) and not os.path.isfile(mod_path+'.zip'):
+		if os.path.isfile(terp_file) and not os.path.isfile(mod_path):
 			info = eval(file(terp_file).read())
 		elif zipfile.is_zipfile(mod_path):
 			zfile = zipfile.ZipFile(mod_path)
@@ -189,15 +189,21 @@ def file_open(name, mode="r", subdir='addons'):
 			zipname = os.path.join(tail, zipname)
 		else:
 			zipname = tail
-		if zipfile.is_zipfile(head+'.zip'):
+
+		zname = head
+		if zipfile.is_zipfile(head + '.zip'):
+			zname = head + '.zip'
+
+		if zipfile.is_zipfile(zname):
 			import StringIO
-			zfile = zipfile.ZipFile(head+'.zip')
+			zfile = zipfile.ZipFile(zname)
 			try:
+				zname = os.path.splitext(zname)[0]
 				return StringIO.StringIO(zfile.read(os.path.join(
-					os.path.basename(head), zipname).replace(
+					os.path.basename(zname), zipname).replace(
 						os.sep, '/')))
 			except:
-				name2 = os.path.normpath(os.path.join(head + '.zip', zipname))
+				name2 = os.path.normpath(os.path.join(zname + '.zip', zipname))
 				pass
 	for i in (name2, name):
 		if i and os.path.isfile(i):

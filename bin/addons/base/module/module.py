@@ -38,9 +38,7 @@ import release
 import zipimport
 
 import wizard
-
-
-
+import addons
 
 ver_regexp = re.compile("^(\\d+)((\\.\\d+)*)([a-z]?)((_(pre|p|beta|alpha|rc)\\d*)*)(-r(\\d+))?$")
 suffix_regexp = re.compile("^(alpha|beta|rc|pre|p)(\\d*)$")
@@ -199,7 +197,7 @@ class module(osv.osv):
 
 	def get_module_info(self, name):
 		try:
-			f = tools.file_open(os.path.join(tools.config['addons_path'], name, '__terp__.py'))
+			f = tools.file_open(addons.get_module_resource(name, '__terp__.py'))
 			data = f.read()
 			info = eval(data)
 			if 'version' in info:
@@ -343,18 +341,17 @@ class module(osv.osv):
 					filepath = files[lang]
 					# if filepath does not contain :// we prepend the path of the module
 					if filepath.find('://') == -1:
-						filepath = os.path.join(tools.config['addons_path'], module['name'], filepath)
+						filepath = addons.get_module_resource(module['name'], filepath)
 					tools.trans_load(filepath, lang)
 		return True
 
 	# update the list of available packages
 	def update_list(self, cr, uid, context={}):
 		robj = self.pool.get('ir.module.repository')
-		adp = tools.config['addons_path']
 		res = [0, 0] # [update, add]
 
 		# iterate through installed modules and mark them as being so
-		for name in os.listdir(adp):
+		for name in addons.get_modules():
 			mod_name = name
 			if name[-4:]=='.zip':
 				mod_name=name[:-4]
@@ -384,19 +381,18 @@ class module(osv.osv):
 				self._update_category(cr, uid, ids[0], terp.get('category',
 					'Uncategorized'))
 				continue
-			terp_file = os.path.join(adp, name, '__terp__.py')
-			mod_path = os.path.join(adp, name)
+			terp_file = addons.get_module_resource(name, '__terp__.py')
+			mod_path = addons.get_module_path(name)
 			if os.path.isdir(mod_path) or os.path.islink(mod_path) or zipfile.is_zipfile(mod_path):
 				terp = self.get_module_info(mod_name)
 				if not terp or not terp.get('installable', True):
 					continue
-				if not os.path.isfile(os.path.join(adp, mod_name+'.zip')):
+				if not os.path.isfile(mod_path):
 					import imp
 					# XXX must restrict to only addons paths
 					imp.load_module(name, *imp.find_module(mod_name))
 				else:
 					import zipimport
-					mod_path = os.path.join(adp, mod_name+'.zip')
 					zimp = zipimport.zipimporter(mod_path)
 					zimp.load_module(mod_name)
 				id = self.create(cr, uid, {
@@ -472,7 +468,6 @@ class module(osv.osv):
 
 	def download(self, cr, uid, ids, download=True, context=None):
 		res = []
-		adp = tools.config['addons_path']
 		for mod in self.browse(cr, uid, ids, context=context):
 			if not mod.url:
 				continue
@@ -486,7 +481,7 @@ class module(osv.osv):
 			if not download:
 				continue
 			zipfile = urllib.urlopen(mod.url).read()
-			fname = os.path.join(adp, mod.name+'.zip')
+			fname = addons.get_module_path(mod.name)
 			try:
 				fp = file(fname, 'wb')
 				fp.write(zipfile)

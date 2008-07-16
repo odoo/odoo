@@ -134,9 +134,18 @@ class Node(Singleton):
 def get_module_path(module):
 	"""Return the path of the given module.
 	"""
+
 	if os.path.exists(opj(ad, module)):
 		return opj(ad, module)
-	return opj(_ad, module)
+
+	if os.path.exists(opj(ad, '%s.zip' % module)):
+		return opj(ad, '%s.zip' % module)
+
+	if os.path.exists(opj(_ad, module)):
+		return opj(_ad, module)
+
+	if os.path.exists(opj(_ad, '%s.zip' % module)):
+		return opj(_ad, '%s.zip' % module)
 
 def get_module_resource(module, *args):
 	"""Return the full path of a resource of the given module.
@@ -169,7 +178,7 @@ def create_graph(module_list, force=None):
 			module = module[:-4]
 		mod_path = get_module_path(module)
 		terp_file = get_module_resource(module, '__terp__.py')
-		if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path+'.zip'):
+		if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path):
 			try:
 				info = eval(tools.file_open(terp_file).read())
 			except:
@@ -283,12 +292,11 @@ def register_classes():
 		sys.stdout.flush()
 
 		mod_path = get_module_path(m)
-		if not os.path.isfile(mod_path + '.zip'):
+		if not os.path.isfile(mod_path):
 			# XXX must restrict to only addons paths
 			imp.load_module(m, *imp.find_module(m))
 		else:
 			import zipimport
-			mod_path = mod_path + '.zip'
 			try:
 				zimp = zipimport.zipimporter(mod_path)
 				zimp.load_module(m)
