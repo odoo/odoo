@@ -78,20 +78,8 @@ class osv_pool(netsvc.Service):
 				'Object %s doesn\'t exist' % str(obj))
 			if (not method in getattr(object,'_protected')) and len(args) \
 					and args[0] and len(object._inherits):
-				types = {obj: args[0]}
-				cr.execute('select inst_type,inst_id,obj_id \
-						from inherit \
-						where obj_type=%s \
-							and  obj_id in ('+','.join(map(str,args[0]))+')', (obj,))
-				for ty,id,id2 in cr.fetchall():
-					if not ty in types:
-						types[ty]=[]
-					types[ty].append(id)
-					types[obj].remove(id2)
-				for t,ids in types.items():
-					if len(ids):
-						object_t = pooler.get_pool(cr.dbname).get(t)
-						res = getattr(object_t,method)(cr, uid, ids, *args[1:], **kw)
+				object_t = pooler.get_pool(cr.dbname).get(obj)
+				res = getattr(object_t,method)(cr, uid, args, **kw)
 			else:
 				res = getattr(object,method)(cr, uid, *args, **kw)
 			return res

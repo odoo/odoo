@@ -1839,10 +1839,6 @@ class orm(orm_template):
 							_('You try to bypass an access rule (Document type: %s).') % \
 									self._description)
 
-			cr.execute('delete from inherit ' \
-					'where (obj_type=%s and obj_id in ('+str_d+')) ' \
-						'or (inst_type=%s and inst_id in ('+str_d+'))',
-						(self._name,)+tuple(sub_ids)+(self._name,)+tuple(sub_ids))
 			if d1:
 				cr.execute('delete from "'+self._table+'" ' \
 						'where id in ('+str_d+')'+d1, sub_ids+d2)
@@ -2086,7 +2082,6 @@ class orm(orm_template):
 			upd0 += ','+self._inherits[table]
 			upd1 += ',%d'
 			upd2.append(id)
-			cr.execute('insert into inherit (obj_type,obj_id,inst_type,inst_id) values (%s,%d,%s,%d)', (table,id,self._name,id_new))
 
 		for field in vals:
 			if self._columns[field]._classic_write:
