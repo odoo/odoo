@@ -153,8 +153,7 @@ class report_rml(report_int):
 			if child.name == 'import':
 				if child.hasProp('href'):
 					file = child.prop('href')
-					child.setProp('href', urllib.quote(str(
-						os.path.normpath(os.path.join(xsl_path, file)))))
+					child.setProp('href', urllib.quote(str(addons.get_report_resource(file, base=xsl_path))))
 
 		#TODO: get all the translation in one query. That means we have to:
 		# * build a list of items to translate,

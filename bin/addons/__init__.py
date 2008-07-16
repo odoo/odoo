@@ -157,9 +157,28 @@ def get_module_resource(module, *args):
 	"""
 	return opj(get_module_path(module), *args)
 
-def get_report_resource(resource):
-	"""Return the full path of the given report resource (addons/hr/reports/timesheet.xsl')
+def get_report_resource(resource, base=None):
+	"""Return the full path of the given report resource.
+	
+	>>>
+	>>> get_report_resource('addons/hr/reports/timesheet.xsl')
+	>>> get_report_resource('../../base/reports/rml_template.xsl', '/path/to/addons/hr/reports')
+	>>>
 	"""
+
+	if base:
+		# default location
+		fname = os.path.normpath(os.path.join(base, resource))
+		if os.path.exists(fname):
+			return fname
+
+		# check in base location
+		base = base.replace(ad, _ad)
+		fname = os.path.normpath(os.path.join(base, resource))
+		if os.path.exists(fname):
+			return fname
+
+		assert os.path.exists(fname), 'File does not exist: %s' % fname
 
 	fname = os.path.join(os.path.dirname(ad), resource)
 	if os.path.exists(fname):
