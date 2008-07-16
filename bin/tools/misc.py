@@ -50,25 +50,23 @@ else:
 
 # initialize a database with base/base.sql 
 def init_db(cr):
-	f = os.path.join(config['addons_path'], 'base/base.sql')
+	import addons
+	f = addons.get_module_resource('base', 'base.sql')
 	for line in file(f).read().split(';'):
 		if (len(line)>0) and (not line.isspace()):
 			cr.execute(line)
 	cr.commit()
 
-	opj = os.path.join
-	ad = config['addons_path']
-
-	for i in os.listdir(ad):
-		terp_file = opj(ad, i, '__terp__.py')
-		mod_path = opj(ad, i)
+	for i in addons.get_modules():
+		terp_file = addons.get_module_resource(i, '__terp__.py')
+		mod_path = addons.get_module_path(i)
 		info = False
-		if os.path.isfile(terp_file) and not os.path.isfile(opj(ad, i+'.zip')):
+		if os.path.isfile(terp_file) and not os.path.isfile(mod_path+'.zip'):
 			info = eval(file(terp_file).read())
 		elif zipfile.is_zipfile(mod_path):
 			zfile = zipfile.ZipFile(mod_path)
 			i = os.path.splitext(i)[0]
-			info = eval(zfile.read(opj(i, '__terp__.py')))
+			info = eval(zfile.read(addons.get_module_resource(i, '__terp__.py')))
 		if info:
 			categs = info.get('category', 'Uncategorized').split('/')
 			p_id = None
@@ -172,6 +170,8 @@ def exec_command_pipe(name, *args):
 
 def file_open(name, mode="r", subdir='addons'):
 	"""Open a file from the Tiny ERP root, using a subdir folder."""
+	if os.path.isabs(name) and os.path.exists(name):
+		pass
 	if subdir:
 		name = os.path.join(config['root_path'], subdir, name)
 	else:

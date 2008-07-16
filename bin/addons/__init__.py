@@ -132,9 +132,31 @@ class Node(Singleton):
 		return s
 
 def get_module_path(module):
+	"""Return the path of the given module.
+	"""
 	if os.path.exists(opj(ad, module)):
 		return opj(ad, module)
 	return opj(_ad, module)
+
+def get_module_resource(module, *args):
+	"""Return the full path of a resource of the given module.
+
+	@param module: the module
+	@param args: the resource path components
+
+	@return: absolute path to the resource
+	"""
+	return opj(get_module_path(module), *args)
+
+def get_modules():
+	"""Returns the list of module names
+	"""
+
+	module_list = os.listdir(ad)
+	module_names = [os.path.basename(m) for m in module_list]
+	module_list += [m for m in os.listdir(_ad) if m not in module_names]
+
+	return module_list
 
 def create_graph(module_list, force=None):
 	if not force:
@@ -146,7 +168,7 @@ def create_graph(module_list, force=None):
 		if module[-4:]=='.zip':
 			module = module[:-4]
 		mod_path = get_module_path(module)
-		terp_file = opj(mod_path, '__terp__.py')
+		terp_file = get_module_resource(module, '__terp__.py')
 		if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path+'.zip'):
 			try:
 				info = eval(tools.file_open(terp_file).read())
@@ -221,24 +243,24 @@ def load_module_graph(cr, graph, status=None, **kwargs):
 					logger.notifyChannel('init', netsvc.LOG_INFO, 'addon:%s:loading %s' % (m, filename))
 					name, ext = os.path.splitext(filename)
 					if ext == '.csv':
-						tools.convert_csv_import(cr, m, os.path.basename(filename), tools.file_open(opj(m, filename)).read(), idref, mode=mode)
+						tools.convert_csv_import(cr, m, os.path.basename(filename), tools.file_open(get_module_resource(m, filename)).read(), idref, mode=mode)
 					elif ext == '.sql':
-						queries = tools.file_open(opj(m, filename)).read().split(';')
+						queries = tools.file_open(get_module_resource(m, filename)).read().split(';')
 						for query in queries:
 							new_query = ' '.join(query.split())
 							if new_query:
 								cr.execute(new_query)
 					else:
-						tools.convert_xml_import(cr, m, tools.file_open(opj(m, filename)), idref, mode=mode, **kwargs)
+						tools.convert_xml_import(cr, m, tools.file_open(get_module_resource(m, filename)), idref, mode=mode, **kwargs)
 			if hasattr(package, 'demo') or (package_demo and package_state != 'installed'):
 				status['progress'] = (float(statusi)+0.75)/len(graph)
 				for xml in package.datas.get('demo_xml', []):
 					name, ext = os.path.splitext(xml)
 					logger.notifyChannel('init', netsvc.LOG_INFO, 'addon:%s:loading %s' % (m, xml))
 					if ext == '.csv':
-						tools.convert_csv_import(cr, m, os.path.basename(xml), tools.file_open(opj(m, xml)).read(), idref, noupdate=True)
+						tools.convert_csv_import(cr, m, os.path.basename(xml), tools.file_open(get_module_resource(m, xml)).read(), idref, noupdate=True)
 					else:
-						tools.convert_xml_import(cr, m, tools.file_open(opj(m, xml)), idref, noupdate=True, **kwargs)
+						tools.convert_xml_import(cr, m, tools.file_open(get_module_resource(m, xml)), idref, noupdate=True, **kwargs)
 				cr.execute('update ir_module_module set demo=%s where name=%s', (True, package.name))
 			package_todo.append(package.name)
 			cr.execute("update ir_module_module set state='installed' where state in ('to upgrade', 'to install') and name=%s", (package.name,))
@@ -254,10 +276,7 @@ def load_module_graph(cr, graph, status=None, **kwargs):
 	cr.commit()
 
 def register_classes():
-	module_list = os.listdir(ad)
-	module_names = [os.path.basename(m) for m in module_list]
-	module_list += [m for m in os.listdir(_ad) if m not in module_names]
-
+	module_list = get_modules()
 	for package in create_graph(module_list):
 		m = package.name
 		logger.notifyChannel('init', netsvc.LOG_INFO, 'addon:%s:registering classes' % m)
