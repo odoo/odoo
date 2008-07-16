@@ -276,7 +276,7 @@ class account_account(osv.osv):
 
 	_defaults = {
 		'sign': lambda *a: 1,
-		'type': lambda *a: 'view',
+		'type' : lambda *a :'view',
 		'reconcile': lambda *a: False,
 		'close_method': lambda *a: 'balance',
 		'company_id': _default_company,
@@ -1608,7 +1608,6 @@ account_config_fiscalyear()
 
 
 
-
 class account_config_journal_bank_accounts(osv.osv_memory):
 	_name='account.config.journal.bank.account'
 	_columns = {
@@ -1668,3 +1667,147 @@ class account_config_journal_bank_accounts_line(osv.osv_memory):
     }
 account_config_journal_bank_accounts_line()
 
+#  ----------------------------------------------
+#	Account Templates : Account, Tax and charts.
+#  ----------------------------------------------
+
+class account_tax_template(osv.osv):
+	_name = 'account.tax.template'
+account_tax()
+
+class account_account_template(osv.osv):
+	_name='account.account.template'
+	_description ='Templates for Accounts'
+	_order = "code"
+	_columns = {
+		'name': fields.char('Name', size=128, required=True, select=True),
+		'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign', required=True, help='Allows to change the displayed amount of the balance to see positive results instead of negative ones in expenses accounts.'),
+		'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Force all moves for this account to have this secondary currency."),
+		'code': fields.char('Code', size=64),
+		'type': fields.many2one('account.account.type', 'Account Type', required=True),
+		'reconcile': fields.boolean('Reconcile', help="Check this option if the user can make a reconciliation of the entries in this account."),
+		'shortcut': fields.char('Shortcut', size=12),
+		'note': fields.text('Note'),
+	}
+
+	_defaults = {
+		'sign': lambda *a: 1,
+		'reconcile': lambda *a: False,
+	}
+
+	def _check_recursion(self, cr, uid, ids):
+		level = 100
+		while len(ids):
+			cr.execute('select distinct parent_id from account_account_template_rel where child_id in ('+','.join(map(str,ids))+')')
+			ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+			if not level:
+				return False
+			level -= 1
+		return True
+
+	_constraints = [
+		(_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id'])
+	]
+
+
+	def name_get(self, cr, uid, ids, context={}):
+		if not len(ids):
+			return []
+		reads = self.read(cr, uid, ids, ['name','code'], context)
+		res = []
+		for record in reads:
+			name = record['name']
+			if record['code']:
+				name = record['code']+' - '+name
+			res.append((record['id'],name ))
+		return res
+
+
+account_account_template()
+
+class account_tax_template(osv.osv):
+
+	_name = 'account.tax.template'
+	_description = 'Templates for Taxes'
+
+	_columns = {
+		'name': fields.char('Tax Name', size=64, required=True),
+		'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the taxes lines from the lowest sequences to the higher ones. The order is important if you have a tax that have several tax children. In this case, the evaluation order is important."),
+#		'amount': fields.float('Amount', required=True, digits=(14,4)),
+#		'type': fields.selection( [('percent','Percent'), ('fixed','Fixed'), ('none','None'), ('code','Python Code')], 'Tax Type', required=True),
+		'type': fields.selection( [('percent','Percent'), ('fixed','Fixed'), ('none','None')],'Tax Type', required=True),
+#		'applicable_type': fields.selection( [('true','True'), ('code','Python Code')], 'Applicable Type', required=True),
+		'domain':fields.char('Domain', size=32, help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."),
+#		'account_collected_id':fields.many2one('account.account.template', 'Invoice Tax Account'),
+#		'account_paid_id':fields.many2one('account.account.template', 'Refund Tax Account'),
+#		'parent_id':fields.many2one('account.tax.template', 'Parent Tax Account', select=True),
+#		'child_ids':fields.one2many('account.tax.template', 'parent_id', 'Childs Tax Account'),
+#		'child_depend':fields.boolean('Tax on Childs', help="Indicate if the tax computation is based on the value computed for the computation of child taxes or based on the total amount."),
+#		'python_compute':fields.text('Python Code'),
+#		'python_compute_inv':fields.text('Python Code (reverse)'),
+#		'python_applicable':fields.text('Python Code'),
+		'tax_group': fields.selection([('vat','VAT'),('other','Other')], 'Tax Group', help="If a default tax if given in the partner it only override taxes from account (or product) of the same group."),
+
+		#
+		# Fields used for the VAT declaration
+		#
+#		'base_code_id': fields.many2one('account.tax.code', 'Base Code', help="Use this code for the VAT declaration."),
+#		'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', help="Use this code for the VAT declaration."),
+#		'base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
+#		'tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
+
+		# Same fields for refund invoices
+
+#		'ref_base_code_id': fields.many2one('account.tax.code', 'Base Code', help="Use this code for the VAT declaration."),
+#		'ref_tax_code_id': fields.many2one('account.tax.code', 'Tax Code', help="Use this code for the VAT declaration."),
+#		'ref_base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
+#		'ref_tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
+#		'include_base_amount': fields.boolean('Include in base amount', help="Indicate if the amount of tax must be included in the base amount for the computation of the next taxes."),
+		'description': fields.char('Description', size=128, required=True),
+	}
+
+	def name_get(self, cr, uid, ids, context={}):
+           if not len(ids):
+                   return []
+           reads = self.read(cr, uid, ids, ['description'], context)
+           res = []
+           for record in reads:
+                   name = record['description']
+                   res.append((record['id'],name ))
+           return res
+
+	_defaults = {
+#		'python_compute': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or None\n# partner : res.partner object or None\n\nresult = price_unit * 0.10''',
+#		'python_compute_inv': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or False\n\nresult = price_unit * 0.10''',
+#		'applicable_type': lambda *a: 'true',
+		'type': lambda *a: 'percent',
+#		'amount': lambda *a: 0,
+		'sequence': lambda *a: 1,
+		'tax_group': lambda *a: 'vat',
+#		'ref_tax_sign': lambda *a: 1,
+#		'ref_base_sign': lambda *a: 1,
+#		'tax_sign': lambda *a: 1,
+#		'base_sign': lambda *a: 1,
+#		'include_base_amount': lambda *a: False,
+#		'company_id': _default_company,
+	}
+	_order = 'sequence'
+
+
+account_tax_template()
+
+class account_chart_template(osv.osv):
+	_name="account.chart.template"
+	_description= "Templates for Account Chart"
+
+	_columns={
+		'name': fields.char('Name', size=64, required=True),
+		'account_root_id': fields.many2one('account.account.template','Root Account',required=True),
+    	'bank_account_view_id': fields.many2one('account.account.template','Bank Account',required=True),
+     	'property_receivable_id': fields.many2one('account.account.template','Receivable Account'),
+     	'property_payable_id': fields.many2one('account.account.template','Payable Account'),
+     	'property_account_expense_categ_id': fields.many2one('account.account.template','Expense Category Account'),
+     	'property_account_income_categ_id': fields.many2one('account.account.template','Income Category Account'),
+	}
+
+account_chart_template()
