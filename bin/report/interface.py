@@ -37,6 +37,7 @@ import netsvc
 import pooler
 
 import tools
+import addons
 import print_xml
 import render
 import urllib
@@ -121,7 +122,7 @@ class report_rml(report_int):
 		pos_xml = i.end()
 
 		doc = print_xml.document(cr, uid, {}, {})
-		tmpl_path = os.path.join(tools.config['root_path'], 'addons/custom/corporate_defaults.xml')
+		tmpl_path = addons.get_report_resource('addons/custom/corporate_defaults.xml')
 		doc.parse(tmpl_path, [uid], 'res.users', context)
 		corporate_header = doc.xml_get()
 		doc.close()
@@ -146,10 +147,8 @@ class report_rml(report_int):
 			return xml
 
 		# load XSL (parse it to the XML level)
-		styledoc = libxml2.parseDoc(tools.file_open(
-			os.path.join(tools.config['root_path'], self.xsl)).read())
-		xsl_path, tail = os.path.split(os.path.join(tools.config['root_path'],
-			self.xsl))
+		styledoc = libxml2.parseDoc(tools.file_open(addons.get_report_resource(self.xsl)).read())
+		xsl_path, tail = os.path.split(addons.get_report_resource(self.xsl))
 		for child in styledoc.children:
 			if child.name == 'import':
 				if child.hasProp('href'):

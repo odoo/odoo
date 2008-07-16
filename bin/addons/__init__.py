@@ -157,6 +157,15 @@ def get_module_resource(module, *args):
 	"""
 	return opj(get_module_path(module), *args)
 
+def get_report_resource(resource):
+	"""Return the full path of the given report resource (addons/hr/reports/timesheet.xsl')
+	"""
+
+	fname = os.path.join(os.path.dirname(ad), resource)
+	if os.path.exists(fname):
+		return fname
+	return os.path.join(os.path.dirname(_ad), resource)
+
 def get_modules():
 	"""Returns the list of module names
 	"""
