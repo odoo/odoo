@@ -45,8 +45,8 @@ logger = netsvc.Logger()
 
 opj = os.path.join
 
-_ad = opj(tools.config['root_path'], 'addons') 	# default addons path (base)
-ad = tools.config['addons_path']		# alternate addons path
+_ad = os.path.abspath(opj(tools.config['root_path'], 'addons')) 	# default addons path (base)
+ad = os.path.abspath(tools.config['addons_path'])			# alternate addons path
 
 sys.path.insert(1, _ad)
 if ad != _ad:
@@ -131,7 +131,7 @@ class Node(Singleton):
 			s += '%s`-> %s' % ('   ' * depth, c._pprint(depth+1))
 		return s
 
-def _get_module_path(module):
+def get_module_path(module):
 	if os.path.exists(opj(ad, module)):
 		return opj(ad, module)
 	return opj(_ad, module)
@@ -145,7 +145,7 @@ def create_graph(module_list, force=None):
 	for module in module_list:
 		if module[-4:]=='.zip':
 			module = module[:-4]
-		mod_path = _get_module_path(module)
+		mod_path = get_module_path(module)
 		terp_file = opj(mod_path, '__terp__.py')
 		if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path+'.zip'):
 			try:
@@ -263,7 +263,7 @@ def register_classes():
 		logger.notifyChannel('init', netsvc.LOG_INFO, 'addon:%s:registering classes' % m)
 		sys.stdout.flush()
 
-		mod_path = _get_module_path(m)
+		mod_path = get_module_path(m)
 		if not os.path.isfile(mod_path + '.zip'):
 			# XXX must restrict to only addons paths
 			imp.load_module(m, *imp.find_module(m))
