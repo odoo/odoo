@@ -1645,7 +1645,7 @@ class account_account_template(osv.osv):
 		'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign', required=True, help='Allows to change the displayed amount of the balance to see positive results instead of negative ones in expenses accounts.'),
 		'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Force all moves for this account to have this secondary currency."),
 		'code': fields.char('Code', size=64),
-		'type': fields.many2one('account.account.type', 'Account Type', required=True),
+		'type': fields.selection(_code_get, 'Account Type', required=True),
 		'reconcile': fields.boolean('Reconcile', help="Check this option if the user can make a reconciliation of the entries in this account."),
 		'shortcut': fields.char('Shortcut', size=12),
 		'note': fields.text('Note'),
@@ -1654,6 +1654,7 @@ class account_account_template(osv.osv):
 	_defaults = {
 		'sign': lambda *a: 1,
 		'reconcile': lambda *a: False,
+		'type' : lambda *a :'view',
 	}
 
 	def _check_recursion(self, cr, uid, ids):
