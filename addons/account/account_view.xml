@@ -559,7 +559,8 @@
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="Account Tax">
-                    <field name="name"/>
+                     <!--<field name="name"/>-->
+                    <field name="description" string="Name"/>
                 </tree>
             </field>
         </record>
@@ -573,6 +574,7 @@
                         <page string="Tax Definition">
                             <field name="name" select="1"/>
                             <field name="company_id"/>
+                            <field name="description" select="1"/>
                             <field name="tax_group" select="1"/>
                             <field name="active" select="2"/>
                             <field name="type"/>
@@ -1125,8 +1127,10 @@
                     <field name="ref" select="1"/>
                     <field name="journal_id" select="1"/>
                     <field colspan="4" name="lines_id" widget="one2many_list"/>
+                    <separator string="Legend" colspan="4"/>
+                    <field name="legend" colspan="4" nolabel="1"/>
                     <group col="1" colspan="4">
-                        <button name="generate" string="Create entries" type="object"/>
+                        <button name="%(wizard_account_use_model)d" string="Create entries" type="action" />
                     </group>
                 </form>
             </field>
@@ -1480,6 +1484,121 @@
             <field name="action_id" ref="action_config_journal_bank_account"/>
             <field name="state">open</field>
         </record>
+
+		<!-- Account Templates -->
+
+		<record id="view_account_template_form" model="ir.ui.view">
+            <field name="name">account.account.template.form</field>
+            <field name="model">account.account.template</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Account Template">
+                    <notebook>
+                        <page string="General Information">
+                            <field colspan="2" name="name" select="1"/>
+                           <!-- <field name="company_id" colspan="2" />-->
+                            <newline/>
+                            <field name="type" select="1"/>
+                            <field name="code" select="1"/>
+                            <field name="shortcut"/>
+                            <field name="sign"/>
+                            <field name="currency_id" select="2"/>
+                            <field name="reconcile"/>
+                        </page>
+                        <page string="Notes">
+                            <field colspan="4" name="note" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_template_form" model="ir.actions.act_window">
+            <field name="name">Account Templates</field>
+            <field name="res_model">account.account.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="account_account_template_menu" name="Templates" parent="account.menu_finance_configuration"/>
+        <menuitem action="action_account_template_form" id="menu_action_account_template_form" parent="account_account_template_menu"/>
+
+		<!-- Account Chart Templates -->
+
+		<record id="view_account_chart_template_form" model="ir.ui.view">
+            <field name="name">account.chart.template.form</field>
+            <field name="model">account.chart.template</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Account Chart Template">
+                    <field colspan="4" name="name" select="1"/>
+                    <newline/>
+                    <field name="account_root_id" select="1"/>
+                    <field name="bank_account_view_id" select="1"/>
+                    <field name="property_receivable_id"/>
+                    <field name="property_payable_id"/>
+                    <field name="property_account_expense_categ_id" />
+                    <field name="property_account_income_categ_id"/>
+                </form>
+            </field>
+        </record>
+        <record id="view_account_chart_template_tree" model="ir.ui.view">
+            <field name="name">account.chart.template.tree</field>
+            <field name="model">account.chart.template</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Account Chart Template">
+                    <field name="name"/>
+                    <field name="account_root_id"/>
+                    <field name="bank_account_view_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="action_account_chart_template_form" model="ir.actions.act_window">
+            <field name="name">Account Chart Templates</field>
+            <field name="res_model">account.chart.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem action="action_account_chart_template_form" id="menu_action_account_chart_template_form" parent="account_account_template_menu"/>
+
+		<!-- Account Tax Templates -->
+
+		<record id="view_account_tax_template_form" model="ir.ui.view">
+            <field name="name">account.tax.template.form</field>
+            <field name="model">account.tax.template</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Account Tax Template">
+                    <field colspan="4" name="name" select="1"/>
+                    <newline/>
+                    <field name="description" select="1" colspan="4"/>
+                    <newline/>
+                    <field name="sequence" select="1"/>
+                    <field name="type"/>
+                    <field name="domain"/>
+                    <field name="tax_group" />
+                </form>
+            </field>
+        </record>
+        <record id="view_account_tax_template_tree" model="ir.ui.view">
+            <field name="name">account.tax.template.tree</field>
+            <field name="model">account.tax.template</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Account Tax Template">
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+        <record id="action_account_tax_template_form" model="ir.actions.act_window">
+            <field name="name">Account Tax Templates</field>
+            <field name="res_model">account.tax.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem action="action_account_tax_template_form" id="menu_action_account_tax_template_form" parent="account_account_template_menu"/>
 
     </data>
 </terp>

@@ -60,3 +60,4 @@ import wizard_account_chart
 import wizard_move_line_select
 
 import wizard_validate_account_move
+import wizard_use_model
