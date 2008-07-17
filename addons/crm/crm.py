@@ -462,7 +462,6 @@ class crm_case(osv.osv):
 						write['date_action_last'] = time.strftime('%Y-%m-%d %H:%M:%S')
 						self.write(cr, uid, [case.id], write, context)
 						caseobj = self.pool.get('crm.case')
-						print 'Ok', action.name, action.act_mail_to_partner, action.act_mail_to_user, action.act_mail_to_watchers, action.act_mail_to_email, action.id
 						if action.act_remind_user:
 							caseobj.remind_user(cr, uid, [case.id], context, attach=action.act_remind_attach)
 						if action.act_remind_partner:
