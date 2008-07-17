@@ -161,6 +161,7 @@ def get_report_resource(resource, base=None):
 	"""Return the full path of the given report resource.
 	
 	>>>
+	>>> get_report_resource('hr/reports/timesheet.xsl')
 	>>> get_report_resource('addons/hr/reports/timesheet.xsl')
 	>>> get_report_resource('../../base/reports/rml_template.xsl', '/path/to/addons/hr/reports')
 	>>>
@@ -180,10 +181,13 @@ def get_report_resource(resource, base=None):
 
 		assert os.path.exists(fname), 'File does not exist: %s' % fname
 
-	fname = os.path.join(os.path.dirname(ad), resource)
+	if resource.startswith('addons'):
+		resource = resource.replace('addons', '', 1)
+
+	fname = os.path.join(ad, resource)
 	if os.path.exists(fname):
 		return fname
-	return os.path.join(os.path.dirname(_ad), resource)
+	return os.path.join(_ad, resource)
 
 def get_modules():
 	"""Returns the list of module names

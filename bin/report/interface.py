@@ -79,7 +79,7 @@ class report_rml(report_int):
 	def __init__(self, name, table, tmpl, xsl):
 		super(report_rml, self).__init__(name)
 		self.table = table
-		self.tmpl = tmpl
+		self.tmpl = addons.get_report_resource(tmpl)
 		self.xsl = xsl
 		self.bin_datas = {}
 		self.generators = {

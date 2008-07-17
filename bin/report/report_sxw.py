@@ -35,6 +35,7 @@ import osv
 from interface import  report_rml
 import re
 import tools
+import addons
 import pooler
 import netsvc
 import warnings
@@ -572,7 +573,7 @@ class report_sxw(report_rml):
 			rml = report_xml.report_rml_content
 			report_type = report_xml.report_type
 		else:
-			rml = tools.file_open(self.tmpl, subdir=None).read()
+			rml = tools.file_open(addons.get_report_resource(self.tmpl), subdir=None).read()
 			report_type= data.get('report_type', report_type)
 
 		if report_type == 'sxw' and report_xml:
@@ -625,7 +626,7 @@ class report_sxw(report_rml):
 
 			if self.header:
 				#Add corporate header/footer
-				rml = tools.file_open('custom/corporate_sxw_header.xml').read()
+				rml = tools.file_open(addons.get_report_resource('addons/custom/corporate_sxw_header.xml')).read()
 				rml_parser = self.parser(cr, uid, self.name2, context)
 				rml_parser.parents = sxw_parents
 				rml_parser.tag = sxw_tag

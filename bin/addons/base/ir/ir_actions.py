@@ -29,6 +29,7 @@
 
 from osv import fields,osv
 import tools
+import addons
 import time
 
 class actions(osv.osv):
@@ -71,7 +72,7 @@ class report_xml(osv.osv):
 			data = report[name + '_data']
 			if not data and report[name[:-8]]:
 				try:
-					fp = tools.file_open(report[name[:-8]], mode='rb')
+					fp = tools.file_open(addons.get_report_resource(report[name[:-8]]), mode='rb')
 					data = fp.read()
 				except:
 					data = False
