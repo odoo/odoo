@@ -1086,16 +1086,16 @@ class account_tax(osv.osv):
 		'ref_tax_sign': fields.float('Tax Code Sign', help="Usualy 1 or -1."),
 		'include_base_amount': fields.boolean('Include in base amount', help="Indicate if the amount of tax must be included in the base amount for the computation of the next taxes"),
 		'company_id': fields.many2one('res.company', 'Company', required=True),
-		'description': fields.char('Description', size=128, required=True),
+		'description': fields.char('Description', size=128),
 	}
 
 	def name_get(self, cr, uid, ids, context={}):
            if not len(ids):
                    return []
-           reads = self.read(cr, uid, ids, ['description'], context)
+           reads = self.read(cr, uid, ids, ['description','name'], context)
            res = []
            for record in reads:
-                   name = record['description']
+                   name =record['description'] and record['description'] or record['name']
                    res.append((record['id'],name ))
            return res
 
