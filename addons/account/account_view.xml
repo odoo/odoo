@@ -1130,7 +1130,7 @@
                     <separator string="Legend" colspan="4"/>
                     <field name="legend" colspan="4" nolabel="1"/>
                     <group col="1" colspan="4">
-                        <button name="generate" string="Create entries" type="object"/>
+                        <button name="%(wizard_account_use_model)d" string="Create entries" type="action" />
                     </group>
                 </form>
             </field>
@@ -1495,7 +1495,8 @@
                 <form string="Account Template">
                     <notebook>
                         <page string="General Information">
-                            <field colspan="4" name="name" select="1"/>
+                            <field colspan="2" name="name" select="1"/>
+                           <!-- <field name="company_id" colspan="2" />-->
                             <newline/>
                             <field name="type" select="1"/>
                             <field name="code" select="1"/>

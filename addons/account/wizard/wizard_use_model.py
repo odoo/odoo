@@ -21,8 +21,11 @@ fields = {
           }
 def _create_entries(self, cr, uid, data, context):
     pool_obj = pooler.get_pool(cr.dbname)
-    model_ids = data['form']['model'][0][2]
-    data_model = pool_obj.get('account.model').browse(cr,uid,model_ids)
+    if data['model']=='ir.ui.menu':
+        model_ids = data['form']['model'][0][2]
+        data_model = pool_obj.get('account.model').browse(cr,uid,model_ids)
+    else:
+        data_model = pool_obj.get('account.model').browse(cr,uid,data['ids'])
     move_ids = []
     for model in data_model:
 
@@ -90,8 +93,17 @@ class use_model(wizard.interface):
             'type': 'ir.actions.act_window'
         }
 
+    def _check(self, cr, uid, data, context):
+        if data['model']=='ir.ui.menu':
+             return 'init_form'
+        return 'create'
+
     states = {
         'init': {
+            'actions': [],
+            'result': {'type':'choice','next_state':_check}
+        },
+        'init_form': {
             'actions': [],
             'result': {'type':'form', 'arch':model_form, 'fields':model_fields, 'state':[('end','Cancel'),('create','Create Entries')]},
         },
