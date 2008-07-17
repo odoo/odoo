@@ -5,8 +5,8 @@
         <menuitem icon="terp-mrp" id="menu_mrp_root" name="Production Management"/>
         
         <!--
-	Property / Property Group
-	-->
+    Property / Property Group
+    -->
         
         <record id="mrp_property_group_form_view" model="ir.ui.view">
             <field name="name">mrp.property.group.form</field>
@@ -68,8 +68,8 @@
         <menuitem action="mrp_property_action" id="menu_mrp_property_action" parent="menu_mrp_property_group_action_prop"/>
         
         <!--
-	Workcenters
-	-->
+    Workcenters
+    -->
         
         <record id="mrp_workcenter_tree_view" model="ir.ui.view">
             <field name="name">mrp.workcenter.tree</field>
@@ -131,8 +131,8 @@
         <menuitem action="mrp_workcenter_action" id="menu_mrp_workcenter_action" parent="menu_mrp_configuration"/>
         
         <!--
-	Routings
-	-->
+    Routings
+    -->
         
         <record id="mrp_routing_workcenter_tree.view" model="ir.ui.view">
             <field name="name">mrp.routing.workcenter.tree</field>
@@ -205,8 +205,8 @@
         <menuitem action="mrp_routing_action" id="menu_mrp_routing_action" parent="menu_mrp_configuration"/>
         
         <!--
-	Bill of Materials
-	-->
+    Bill of Materials
+    -->
         
         <record id="mrp_bom_form_view" model="ir.ui.view">
             <field name="name">mrp.bom.form</field>
@@ -216,10 +216,10 @@
                 <form string="Bill of Material">
                     <notebook>
                         <page string="General Information">
-                            <field name="name" select="1"/>
-                            <field name="code" select="1"/>
                             <field name="product_id" on_change="onchange_product_id(product_id, name)" select="1"/>
                             <newline/>
+                            <field name="name" select="1"/>
+                            <field name="code" select="1"/>
                             <field name="product_uom"/>
                             <field name="product_qty"/>
                             <newline/>
@@ -340,8 +340,8 @@
         </record>
         
         <!--
-	Production Management
-	-->
+    Production Management
+    -->
         
         <record id="mrp_production_tree_view" model="ir.ui.view">
             <field name="name">mrp.production.tree</field>
@@ -391,9 +391,9 @@
                             <field name="product_qty"/>
                             <field name="product_uom"/>
                             <!--
-					<field name="product_uos_qty"/>
-					<field name="product_uos"/>
-					-->
+                    <field name="product_uos_qty"/>
+                    <field name="product_uos"/>
+                    -->
                             <field name="bom_id" select="2"/>
                             
                             <newline/>
@@ -564,8 +564,8 @@
         </record>
         
         <!--
-	Procurement
-	-->
+    Procurement
+    -->
         
         <record id="mrp_procurement_tree_view" model="ir.ui.view">
             <field name="name">mrp.procurement.tree</field>
@@ -693,9 +693,6 @@
                     <field name="product_uom"/>
                     <field name="product_min_qty"/>
                     <field name="product_max_qty"/>
-                    <!--
-				<field name="logic"/>
--->
                 </tree>
             </field>
         </record>
@@ -708,9 +705,6 @@
                     <field name="name" select="1"/>
                     <field name="active" select="1"/>
                     <field name="warehouse_id" select="1"/>
-                    <!--
-				<field name="logic"/>
--->
                     <field name="product_id" on_change="onchange_product_id(product_id)" select="1"/>
                     <field name="product_uom"/>
                     <field name="product_min_qty"/>
