@@ -1053,7 +1053,7 @@ class account_tax(osv.osv):
 	_name = 'account.tax'
 	_description = 'Tax'
 	_columns = {
-		'name': fields.char('Tax Name', size=64, required=True),
+		'name': fields.char('Tax Name', size=64, required=True, help="This name will be used to be displayed on reports"),
 		'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the taxes lines from the lowest sequences to the higher ones. The order is important if you have a tax that have several tax childs. In this case, the evaluation order is important."),
 		'amount': fields.float('Amount', required=True, digits=(14,4)),
 		'active': fields.boolean('Active'),
@@ -1086,18 +1086,17 @@ class account_tax(osv.osv):
 		'ref_tax_sign': fields.float('Tax Code Sign', help="Usualy 1 or -1."),
 		'include_base_amount': fields.boolean('Include in base amount', help="Indicate if the amount of tax must be included in the base amount for the computation of the next taxes"),
 		'company_id': fields.many2one('res.company', 'Company', required=True),
-		'description': fields.char('Description', size=128),
+		'description': fields.char('Internal Name', 32),
 	}
 
 	def name_get(self, cr, uid, ids, context={}):
-           if not len(ids):
-                   return []
-           reads = self.read(cr, uid, ids, ['description','name'], context)
-           res = []
-           for record in reads:
-                   name =record['description'] and record['description'] or record['name']
-                   res.append((record['id'],name ))
-           return res
+		if not len(ids):
+			return []
+		res = []
+		for record in self.read(cr, uid, ids, ['description','name'], context):
+			name = record['description'] and record['description'] or record['name']
+			res.append((record['id'],name ))
+		return res
 
 	def _default_company(self, cr, uid, context={}):
 		user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
@@ -1382,8 +1381,8 @@ class account_model(osv.osv):
 	}
 
 	_defaults = {
-	    'legend':lambda *a:'''You can specify year,month and date in the name of the model using the following labels:\n\n%(year)s : To Specify Year \n%(month)s : To Specify Month \n%(date) : Current Date\n\ne.g. My model on %(date)s''',
-    }
+		'legend':lambda *a:'''You can specify year, month and date in the name of the model using the following labels:\n\n%(year)s : To Specify Year \n%(month)s : To Specify Month \n%(date)s : Current Date\n\ne.g. My model on %(date)s''',
+	}
 
 account_model()
 
@@ -1522,48 +1521,47 @@ account_subscription_line()
 
 
 class account_config_fiscalyear(osv.osv_memory):
-    _name = 'account.config.fiscalyear'
-    _columns = {
+	_name = 'account.config.fiscalyear'
+	_columns = {
 		'name':fields.char('Name', required=True,size=64),
 		'code':fields.char('Code', required=True,size=64),
-        'date1': fields.date('Starting Date', required=True),
-        'date2': fields.date('Ending Date', required=True),
-    }
-    _defaults = {
-        'code': lambda *a: time.strftime('%Y'),
-        'date1': lambda *a: time.strftime('%Y-01-01'),
-        'date2': lambda *a: time.strftime('%Y-12-31'),
-    }
-    def action_cancel(self,cr,uid,ids,conect=None):
+		'date1': fields.date('Starting Date', required=True),
+		'date2': fields.date('Ending Date', required=True),
+	}
+	_defaults = {
+		'code': lambda *a: time.strftime('%Y'),
+		'date1': lambda *a: time.strftime('%Y-01-01'),
+		'date2': lambda *a: time.strftime('%Y-12-31'),
+	}
+	def action_cancel(self,cr,uid,ids,conect=None):
 		return {
-			    'view_type': 'form',
-			    "view_mode": 'form',
+				'view_type': 'form',
+				"view_mode": 'form',
 				'res_model': 'ir.module.module.configuration.wizard',
 				'type': 'ir.actions.act_window',
 				'target':'new',
-         }
-    def action_create(self, cr, uid,ids, context=None):
-    	res=self.read(cr,uid,ids)[0]
-    	if 'date1' in res and 'date2' in res:
-	        res_obj = self.pool.get('account.fiscalyear')
-	        start_date=res['date1']
-	        end_date=res['date2']
-	        name=res['name']#DateTime.strptime(start_date, '%Y-%m-%d').strftime('%m.%Y') + '-' + DateTime.strptime(end_date, '%Y-%m-%d').strftime('%m.%Y')
-	        vals={
-	          'name':name,
-	          'code':name,
-	          'date_start':start_date,
-	          'date_stop':end_date,
-	          }
-	        new_id=res_obj.create(cr, uid, vals, context=context)
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
+		}
+	def action_create(self, cr, uid,ids, context=None):
+		res=self.read(cr,uid,ids)[0]
+		if 'date1' in res and 'date2' in res:
+			res_obj = self.pool.get('account.fiscalyear')
+			start_date=res['date1']
+			end_date=res['date2']
+			name=res['name']#DateTime.strptime(start_date, '%Y-%m-%d').strftime('%m.%Y') + '-' + DateTime.strptime(end_date, '%Y-%m-%d').strftime('%m.%Y')
+			vals={
+				'name':name,
+				'code':name,
+				'date_start':start_date,
+				'date_stop':end_date,
+			}
+			new_id=res_obj.create(cr, uid, vals, context=context)
+		return {
+				'view_type': 'form',
+				"view_mode": 'form',
 				'res_model': 'ir.module.module.configuration.wizard',
 				'type': 'ir.actions.act_window',
 				'target':'new',
-
-         }
+		}
 
 account_config_fiscalyear()
 
@@ -1574,16 +1572,16 @@ class account_config_journal_bank_accounts(osv.osv_memory):
 	_columns = {
 		'name':fields.char('Journal Name', size=64),
 		'lines_id': fields.one2many('account.config.journal.bank.account.line', 'journal_id', 'Journal Lines'),
-    }
+	}
 
 	def action_cancel(self,cr,uid,ids,conect=None):
 		return {
-			    'view_type': 'form',
-			    "view_mode": 'form',
+				'view_type': 'form',
+				"view_mode": 'form',
 				'res_model': 'ir.module.module.configuration.wizard',
 				'type': 'ir.actions.act_window',
 				'target':'new',
-         }
+		}
 
 	def action_create(self, cr, uid, ids, context=None):
 		config_res=self.read(cr,uid,ids)[0]
@@ -1606,9 +1604,9 @@ class account_config_journal_bank_accounts(osv.osv_memory):
 		return {
 				'view_type': 'form',
 				"view_mode": 'form',
-			    'res_model': 'ir.module.module.configuration.wizard',
-			    'type': 'ir.actions.act_window',
-			    'target':'new',
+				'res_model': 'ir.module.module.configuration.wizard',
+				'type': 'ir.actions.act_window',
+				'target':'new',
 			}
 
 account_config_journal_bank_accounts()
@@ -1625,7 +1623,7 @@ class account_config_journal_bank_accounts_line(osv.osv_memory):
 		'bank_account_id':fields.many2one('account.account', 'Bank Account', required=True, domain=[('type','=','cash')]),
 		'view_id':fields.selection(_journal_view_get, 'Journal View', required=True),
 		'journal_id':fields.many2one('account.config.journal.bank.account', 'Journal', required=True),
-    }
+	}
 account_config_journal_bank_accounts_line()
 
 #  ----------------------------------------------
@@ -1725,18 +1723,17 @@ class account_tax_template(osv.osv):
 #		'ref_base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
 #		'ref_tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
 #		'include_base_amount': fields.boolean('Include in base amount', help="Indicate if the amount of tax must be included in the base amount for the computation of the next taxes."),
-		'description': fields.char('Description', size=128, required=True),
+		'description': fields.char('Internal Name', size=32),
 	}
 
 	def name_get(self, cr, uid, ids, context={}):
-           if not len(ids):
-                   return []
-           reads = self.read(cr, uid, ids, ['description'], context)
-           res = []
-           for record in reads:
-                   name = record['description']
-                   res.append((record['id'],name ))
-           return res
+		if not len(ids):
+			return []
+		res = []
+		for record in self.read(cr, uid, ids, ['description','name'], context):
+			name = record['description'] and record['description'] or record['name']
+			res.append((record['id'],name ))
+		return res
 
 	_defaults = {
 #		'python_compute': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or None\n# partner : res.partner object or None\n\nresult = price_unit * 0.10''',
@@ -1765,11 +1762,11 @@ class account_chart_template(osv.osv):
 	_columns={
 		'name': fields.char('Name', size=64, required=True),
 		'account_root_id': fields.many2one('account.account.template','Root Account',required=True),
-    	'bank_account_view_id': fields.many2one('account.account.template','Bank Account',required=True),
-     	'property_receivable_id': fields.many2one('account.account.template','Receivable Account'),
-     	'property_payable_id': fields.many2one('account.account.template','Payable Account'),
-     	'property_account_expense_categ_id': fields.many2one('account.account.template','Expense Category Account'),
-     	'property_account_income_categ_id': fields.many2one('account.account.template','Income Category Account'),
+		'bank_account_view_id': fields.many2one('account.account.template','Bank Account',required=True),
+		'property_receivable_id': fields.many2one('account.account.template','Receivable Account'),
+		'property_payable_id': fields.many2one('account.account.template','Payable Account'),
+		'property_account_expense_categ_id': fields.many2one('account.account.template','Expense Category Account'),
+		'property_account_income_categ_id': fields.many2one('account.account.template','Income Category Account'),
 	}
 
 account_chart_template()
