@@ -67,6 +67,56 @@ class GettextAlias(object):
 
 _ = GettextAlias()
 
+
+# class to handle po files
+class TinyPoFile(object):
+	def __init__(self, buffer):
+		self.buffer = buffer
+	
+	def __iter__(self):
+		self.buffer.seek(0)
+		return self
+	
+	def next(self):
+		type = name = res_id = source = trad = None
+		line = True
+			
+		line = self.buffer.readline().strip()
+		while line.startswith('#') or line == '':
+			if line.startwith('#:'):
+				type, name, res_id = line[2:].strip().split(':')
+			line = self.buffer.readline().strip()
+		if not line.startswith('msgid'):
+			raise Exception("malformed file")
+		source = line[7:-1]
+		line = self.buffer.readline().strip()
+		while not line.startwith('msgstr'):
+			if not line:
+				raise Exception('malformed file')
+			source += line[1:-1]
+			line = self.buffer.readline().strip()
+
+		trad = line[8:-1]
+		line = self.buffer.readline().strip()
+		while line:
+			trad += line[1:-1]
+			line = self.buffer.readline().strip()
+		
+		return type, name, res_id, source, trad
+
+	def write(self, type, name, res_id, source, trad):
+		def quote(str):
+			return '"%s"' % str.replace('"','\\"')
+
+		self.buffer.write("#, python-format\n" 	\
+				  "#: %s:%s:%s\n"	\
+				  "msgid %s\n"		\
+				  "msgstr %s\n\n"	\
+					% (type, name, str(res_id), quote(source), quote(trad))
+				)
+	
+
+
 # Methods to export the translation file
 
 def trans_parse_xsl(de):
@@ -246,7 +296,8 @@ def trans_generate(lang, modules, dbname=None):
 		for field_name,field_def in pool.get(model)._columns.items():
 			if field_def.translate:
 				name = model + "," + field_name
-				push_translation(module, 'model', name, xml_name, getattr(obj, field_name))
+				trad = getattr(obj, field_name) or ''
+				push_translation(module, 'model', name, xml_name, trad.encode('utf8'))
 
 	# parse source code for _() calls
 	def get_module_from_path(path):

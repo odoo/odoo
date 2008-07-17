@@ -122,36 +122,37 @@ class wizard_export_lang(osv.osv_memory):
 		return {'type':'ir.actions.act_window_close' }
 
 	def act_getfile(self, cr, uid, ids, context=None):
-		print "get filE"
 		this = self.browse(cr, uid, ids)[0]
-		print this.lang
-		# set the data
 		file=tools.trans_generate(this.lang, 'all', dbname=cr.dbname)
 		buf=StringIO.StringIO()
-		writer=csv.writer(buf, 'UNIX')
-		for row in file:
-			writer.writerow(row)
+		
+		if this.format == 'csv':
+			this.advice = _("Save this document to a .CSV file and open it with your favourite spreadsheet software. The file encoding is UTF-8. You have to translate the latest column before reimporting it.")
+			writer=csv.writer(buf, 'UNIX')
+			for row in file:
+				writer.writerow(row)
+		elif this.format == 'po':
+			this.advice = _("Save this document to a .po file and edit it with a specific software or a text editor. The file encoding is UTF-8.")
+			file.pop(0)
+			writer = tools.TinyPoFile(buf)
+			for module, type, name, res_id, src, trad in file:
+				writer.write(type, name, res_id, src, trad)
+		else:
+			raise osv_except(_('Bad file format'))
+
 		del file
 		out=base64.encodestring(buf.getvalue())
 		buf.close()
-
-		self.write(cr, uid, ids, {'state':'get','data':out}, context=context)
-		
-		return {
-				'view_type': 'form',
-				"view_mode": 'form',
-			    'res_model': self._name,
-			    'type': 'ir.actions.act_window',
-			    'target':'new',
-			}
+		return self.write(cr, uid, ids, {'state':'get', 'data':out, 'advice':this.advice}, context=context)
 
 	_name = "wizard.module.lang.export"
 	_columns = {
 			'lang': fields.selection(_get_languages, 'Language',required=True),
+			'format': fields.selection( ( ('csv','CSV File'), ('po','PO File') ), 'File Format', required=True),
 			'data': fields.binary('File', readonly=True),
+			'advice': fields.text('', readonly=True),
 			'state': fields.selection( ( ('choose','choose'),	# choose language
 				                         ('get','get'),			# get the file
-										 #('end','end'),			# virtual state: unlink self
 			                           ) ),
 			}
 	_defaults = { 'state': lambda *a: 'choose', }
