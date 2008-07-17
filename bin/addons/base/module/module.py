@@ -197,7 +197,7 @@ class module(osv.osv):
 
 	def get_module_info(self, name):
 		try:
-			f = tools.file_open(addons.get_module_resource(name, '__terp__.py'))
+			f = tools.file_open(os.path.join(name, '__terp__.py'))
 			data = f.read()
 			info = eval(data)
 			if 'version' in info:
@@ -387,13 +387,13 @@ class module(osv.osv):
 				terp = self.get_module_info(mod_name)
 				if not terp or not terp.get('installable', True):
 					continue
-				if not os.path.isfile(mod_path):
+				if not os.path.isfile(mod_path+'.zip'):
 					import imp
 					# XXX must restrict to only addons paths
 					imp.load_module(name, *imp.find_module(mod_name))
 				else:
 					import zipimport
-					zimp = zipimport.zipimporter(mod_path)
+					zimp = zipimport.zipimporter(mod_path+'.zip')
 					zimp.load_module(mod_name)
 				id = self.create(cr, uid, {
 					'name': mod_name,
@@ -481,7 +481,7 @@ class module(osv.osv):
 			if not download:
 				continue
 			zipfile = urllib.urlopen(mod.url).read()
-			fname = addons.get_module_path(mod.name)
+			fname = addons.get_module_path(mod.name+'.zip')
 			try:
 				fp = file(fname, 'wb')
 				fp.write(zipfile)

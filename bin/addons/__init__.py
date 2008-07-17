@@ -135,17 +135,13 @@ def get_module_path(module):
 	"""Return the path of the given module.
 	"""
 
-	if os.path.exists(opj(ad, module)):
+	if os.path.exists(opj(ad, module)) or os.path.exists(opj(ad, '%s.zip' % module)):
 		return opj(ad, module)
 
-	if os.path.exists(opj(ad, '%s.zip' % module)):
-		return opj(ad, '%s.zip' % module)
-
-	if os.path.exists(opj(_ad, module)):
+	if os.path.exists(opj(_ad, module)) or os.path.exists(opj(_ad, '%s.zip' % module)):
 		return opj(_ad, module)
 
-	if os.path.exists(opj(_ad, '%s.zip' % module)):
-		return opj(_ad, '%s.zip' % module)
+	raise IOError, 'Module not found : %s' % module
 
 def get_module_resource(module, *args):
 	"""Return the full path of a resource of the given module.
@@ -156,38 +152,6 @@ def get_module_resource(module, *args):
 	@return: absolute path to the resource
 	"""
 	return opj(get_module_path(module), *args)
-
-def get_report_resource(resource, base=None):
-	"""Return the full path of the given report resource.
-	
-	>>>
-	>>> get_report_resource('hr/reports/timesheet.xsl')
-	>>> get_report_resource('addons/hr/reports/timesheet.xsl')
-	>>> get_report_resource('../../base/reports/rml_template.xsl', '/path/to/addons/hr/reports')
-	>>>
-	"""
-
-	if base:
-		# default location
-		fname = os.path.normpath(os.path.join(base, resource))
-		if os.path.exists(fname):
-			return fname
-
-		# check in base location
-		base = base.replace(ad, _ad)
-		fname = os.path.normpath(os.path.join(base, resource))
-		if os.path.exists(fname):
-			return fname
-
-		assert os.path.exists(fname), 'File does not exist: %s' % fname
-
-	if resource.startswith('addons'):
-		resource = resource.replace('addons', '', 1)
-
-	fname = os.path.join(ad, resource)
-	if os.path.exists(fname):
-		return fname
-	return os.path.join(_ad, resource)
 
 def get_modules():
 	"""Returns the list of module names
@@ -284,24 +248,24 @@ def load_module_graph(cr, graph, status=None, **kwargs):
 					logger.notifyChannel('init', netsvc.LOG_INFO, 'addon:%s:loading %s' % (m, filename))
 					name, ext = os.path.splitext(filename)
 					if ext == '.csv':
-						tools.convert_csv_import(cr, m, os.path.basename(filename), tools.file_open(get_module_resource(m, filename)).read(), idref, mode=mode)
+						tools.convert_csv_import(cr, m, os.path.basename(filename), tools.file_open(opj(m, filename)).read(), idref, mode=mode)
 					elif ext == '.sql':
-						queries = tools.file_open(get_module_resource(m, filename)).read().split(';')
+						queries = tools.file_open(opj(m, filename)).read().split(';')
 						for query in queries:
 							new_query = ' '.join(query.split())
 							if new_query:
 								cr.execute(new_query)
 					else:
-						tools.convert_xml_import(cr, m, tools.file_open(get_module_resource(m, filename)), idref, mode=mode, **kwargs)
+						tools.convert_xml_import(cr, m, tools.file_open(opj(m, filename)), idref, mode=mode, **kwargs)
 			if hasattr(package, 'demo') or (package_demo and package_state != 'installed'):
 				status['progress'] = (float(statusi)+0.75)/len(graph)
 				for xml in package.datas.get('demo_xml', []):
 					name, ext = os.path.splitext(xml)
 					logger.notifyChannel('init', netsvc.LOG_INFO, 'addon:%s:loading %s' % (m, xml))
 					if ext == '.csv':
-						tools.convert_csv_import(cr, m, os.path.basename(xml), tools.file_open(get_module_resource(m, xml)).read(), idref, noupdate=True)
+						tools.convert_csv_import(cr, m, os.path.basename(xml), tools.file_open(opj(m, xml)).read(), idref, noupdate=True)
 					else:
-						tools.convert_xml_import(cr, m, tools.file_open(get_module_resource(m, xml)), idref, noupdate=True, **kwargs)
+						tools.convert_xml_import(cr, m, tools.file_open(opj(m, xml)), idref, noupdate=True, **kwargs)
 				cr.execute('update ir_module_module set demo=%s where name=%s', (True, package.name))
 			package_todo.append(package.name)
 			cr.execute("update ir_module_module set state='installed' where state in ('to upgrade', 'to install') and name=%s", (package.name,))
@@ -324,13 +288,13 @@ def register_classes():
 		sys.stdout.flush()
 
 		mod_path = get_module_path(m)
-		if not os.path.isfile(mod_path):
+		if not os.path.isfile(mod_path+'.zip'):
 			# XXX must restrict to only addons paths
 			imp.load_module(m, *imp.find_module(m))
 		else:
 			import zipimport
 			try:
-				zimp = zipimport.zipimporter(mod_path)
+				zimp = zipimport.zipimporter(mod_path+'.zip')
 				zimp.load_module(m)
 			except zipimport.ZipImportError:
 				logger.notifyChannel('init', netsvc.LOG_ERROR, 'Couldn\'t find module %s' % m)

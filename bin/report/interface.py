@@ -79,7 +79,7 @@ class report_rml(report_int):
 	def __init__(self, name, table, tmpl, xsl):
 		super(report_rml, self).__init__(name)
 		self.table = table
-		self.tmpl = addons.get_report_resource(tmpl)
+		self.tmpl = tmpl
 		self.xsl = xsl
 		self.bin_datas = {}
 		self.generators = {
@@ -122,7 +122,7 @@ class report_rml(report_int):
 		pos_xml = i.end()
 
 		doc = print_xml.document(cr, uid, {}, {})
-		tmpl_path = addons.get_report_resource('addons/custom/corporate_defaults.xml')
+		tmpl_path = addons.get_module_resource('custom', 'corporate_defaults.xml')
 		doc.parse(tmpl_path, [uid], 'res.users', context)
 		corporate_header = doc.xml_get()
 		doc.close()
@@ -147,13 +147,14 @@ class report_rml(report_int):
 			return xml
 
 		# load XSL (parse it to the XML level)
-		styledoc = libxml2.parseDoc(tools.file_open(addons.get_report_resource(self.xsl)).read())
-		xsl_path, tail = os.path.split(addons.get_report_resource(self.xsl))
+		styledoc = libxml2.parseDoc(tools.file_open(self.xsl).read())
+		xsl_path, tail = os.path.split(self.xsl)
 		for child in styledoc.children:
 			if child.name == 'import':
 				if child.hasProp('href'):
-					file = child.prop('href')
-					child.setProp('href', urllib.quote(str(addons.get_report_resource(file, base=xsl_path))))
+					imp_file = child.prop('href')
+					_x, imp_file = tools.file_open(imp_file, subdir=xsl_path, pathinfo=True)
+					child.setProp('href', urllib.quote(str(imp_file)))
 
 		#TODO: get all the translation in one query. That means we have to:
 		# * build a list of items to translate,
