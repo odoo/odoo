@@ -123,7 +123,9 @@ class wizard_export_lang(osv.osv_memory):
 
 	def act_getfile(self, cr, uid, ids, context=None):
 		this = self.browse(cr, uid, ids)[0]
-		file=tools.trans_generate(this.lang, 'all', dbname=cr.dbname)
+		mods = map(lambda m: m.name, this.modules)
+		mods.sort()
+		file=tools.trans_generate(this.lang, mods, dbname=cr.dbname)
 		buf=StringIO.StringIO()
 		
 		if this.format == 'csv':
@@ -135,8 +137,9 @@ class wizard_export_lang(osv.osv_memory):
 			this.advice = _("Save this document to a .po file and edit it with a specific software or a text editor. The file encoding is UTF-8.")
 			file.pop(0)
 			writer = tools.TinyPoFile(buf)
+			writer.write_infos(mods)
 			for module, type, name, res_id, src, trad in file:
-				writer.write(type, name, res_id, src, trad)
+				writer.write(module, type, name, res_id, src, trad)
 		else:
 			raise osv_except(_('Bad file format'))
 
@@ -149,6 +152,7 @@ class wizard_export_lang(osv.osv_memory):
 	_columns = {
 			'lang': fields.selection(_get_languages, 'Language',required=True),
 			'format': fields.selection( ( ('csv','CSV File'), ('po','PO File') ), 'File Format', required=True),
+			'modules': fields.many2many('ir.module.module', 'rel_modules_langexport', 'wiz_id', 'module_id', 'Modules', domain=[('state','=','installed')]),
 			'data': fields.binary('File', readonly=True),
 			'advice': fields.text('', readonly=True),
 			'state': fields.selection( ( ('choose','choose'),	# choose language
