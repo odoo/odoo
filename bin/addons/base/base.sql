@@ -329,4 +329,4 @@ CREATE TABLE ir_model_data (
     res_id integer, primary key(id)
 );
 
-INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, now(), now(), 'base', 'ir.model', %s)
+
