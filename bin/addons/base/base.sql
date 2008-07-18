@@ -336,7 +336,6 @@ CREATE TABLE ir_model_data (
 ---------------------------------
 -- Users
 ---------------------------------
-insert into res_users (id,login,password,name,action_id,active) values (1,'root',NULL,'Root',NULL,False);
-insert into res_users (id,login,password,name,action_id,active) values (2,'admin','admin','Administrator',NULL,True);
-insert into ir_model_data (name,module,model,noupdate,res_id) values ('user_admin','base','res.users',True,2);
-select setval('res_users_id_seq', 3);
+insert into res_users (id,login,password,name,action_id,active) values (1,'root','root','Root',NULL,True);
+insert into ir_model_data (name,module,model,noupdate,res_id) values ('user_root','base','res.users',True,1);
+select setval('res_users_id_seq', 2);

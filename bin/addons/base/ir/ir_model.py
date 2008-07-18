@@ -306,8 +306,8 @@ class ir_model_access(osv.osv):
     
     def check(self, cr, uid, model_name, mode='read',raise_exception=True):       
         assert mode in ['read','write','create','unlink'], 'Invalid access mode for security'
-        # Users root and admin have all access (Todo: exclude xml-rpc requests)
-        if uid==1 or uid==2:
+        # Users root have all access (Todo: exclude xml-rpc requests)
+        if uid==1:
             return True
         
         # We check if a specific rule exists
