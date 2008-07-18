@@ -36,9 +36,20 @@ import time
 import tools
 import pooler
 
+from pprint import pprint #FIXME: Dev
+
 def _get_fields_type(self, cr, uid, context=None):
     cr.execute('select distinct ttype,ttype from ir_model_fields')
     return cr.fetchall()
+
+
+class ir_model_type(osv.osv):
+    _name = 'ir.model.type'
+    _columns = {
+        'name': fields.char('Name', size=64, required=True),
+        #'model_id': fields.many2one('ir.model', 'Models'),
+    }
+ir_model_type()
 
 class ir_model(osv.osv):
     _name = 'ir.model'
@@ -49,13 +60,19 @@ class ir_model(osv.osv):
         'model': fields.char('Object Name', size=64, required=True, search=1),
         'info': fields.text('Information'),
         'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True),
-        'parent_id': fields.many2one('ir.model', 'Parent id'),
+        #'type_id': fields.one2many('ir.model.type', 'model_id', 'Type'),
+        #'type_id': fields.many2many('ir.model.type', 'ir_model_type_rel', 'model_id', 'type_id', 'Types'),
         'state': fields.selection([('manual','Custom Object'),('base','Base Field')],'Manualy Created',readonly=1),
     }
     _defaults = {
         'model': lambda *a: 'x_',
         'state': lambda self,cr,uid,ctx={}: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
     }
+    
+    #FIXME: We'll be back soon 
+    #_constraints = [
+    #    (_check_model_name, 'The model name must start with x_ and not contain any special character !', ['model']),
+    #]
     
     def _check_model_name(self, cr, uid, ids):
         for model in self.browse(cr, uid, ids):
@@ -65,27 +82,6 @@ class ir_model(osv.osv):
             if not re.match('^[a-z_A-Z0-9]+$',model.model):
                 return False
         return True
-    
-    # FIXME: What it was for ? 
-    #_constraints = [
-    #    (_check_model_name, 'The model name must start with x_ and not contain any special character !', ['model']),
-    #]
-    
-    def unlink(self, cr, user, ids, context=None):
-        for model in self.browse(cr, user, ids, context):
-            if model.state <> 'manual':
-                raise except_orm(_('Error'), _("You can not remove the model '%s' !") %(field.name,))
-        res = super(ir_model, self).unlink(cr, user, ids, context)
-        pooler.restart_pool(cr.dbname)
-        return res
-
-    def create(self, cr, user, vals, context=None):
-        if context and context.get('manual',False):
-            vals['state']='manual'
-        res = super(ir_model,self).create(cr, user, vals, context)
-        if vals.get('state','base')=='manual':
-            pooler.restart_pool(cr.dbname)
-        return res
 
     def instanciate(self, cr, user, model, context={}):
         class x_custom_model(osv.osv):
@@ -97,16 +93,129 @@ class ir_model(osv.osv):
             x_custom_model._rec_name = 'x_name'
         else:
             x_custom_model._rec_name = x_custom_model._columns.keys()[0]
-ir_model()
+    
+    def unlink(self, cr, user, ids, context=None):
+        #TODO Advanced
+        for model in self.browse(cr, user, ids, context):
+            if model.state <> 'manual':
+                raise except_orm(_('Error'), _("You can not remove the model '%s' !") %(field.name,))
+        res = super(ir_model, self).unlink(cr, user, ids, context)
+        pooler.restart_pool(cr.dbname)
+        return res
 
-class ir_model_tree(osv.osv):
-    _name = 'ir.model.tree'
-    _description = "Objects Tree"
-    _columns = {
-        'model_id': fields.many2one('ir.model', 'Model id', required=True),
-        'parent_id': fields.many2one('ir.model', 'Parent id', required=True),
-    } 
-ir_model_tree()
+    def create(self, cr, user, vals, context=None):
+        #TODO Advanced
+        if context and context.get('manual',False):
+            vals['state']='manual'
+        res = super(ir_model,self).create(cr, user, vals, context)
+        if vals.get('state','base')=='manual':
+            pooler.restart_pool(cr.dbname)
+        return res
+    
+    def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
+        result = super(osv.osv, self).read(cr, user, ids, fields, context, load)
+        if 'advanced' in context:
+            for res in result:
+                rules = self.pool.get('ir.model.access').search(cr, user, [('model_id', '=', res['id'])])
+                rules_br = self.pool.get('ir.model.access').browse(cr, user, rules)
+                for rule in rules_br:
+                    perm_list = []
+                    if rule.perm_read:
+                        perm_list.append('r')
+                    if rule.perm_write:
+                        perm_list.append('w')
+                    if rule.perm_create:
+                        perm_list.append('c')
+                    if rule.perm_unlink:
+                        perm_list.append('u')
+                    perms = ",".join(perm_list)
+                    res['group_%i'%rule.group_id.id] = perms
+        return result
+
+    def write(self, cr, user, ids, vals, context=None):
+        if 'advanced' in context:
+            perms_rel = ['create','read','unlink','write']
+            perms_all = ['c','r','u','w']
+            perms = []
+            vals_new = vals.copy()
+            
+            for val in vals:
+                if val[:6]=='group_':
+                    #Values
+                    group_id = int(val[6:])
+                    model_id = ids[0]
+                    if isinstance(vals[val], basestring):
+                        perms = list(set(vals[val].split(",")))
+                    
+                    #Syntax check
+                    for perm in perms:
+                        if perm not in perms_all:
+                            model_name = self.pool.get('ir.model').browse(cr, user, [model_id])[0].model
+                            group_name = self.pool.get('res.groups').browse(cr, user, [group_id])[0].name
+                            raise osv.except_osv('Error !', 'There is an invalid rule in "%s" for "Group %s". Valid rules are:\r\tc=create\r\tr=read\r\tu=unlink\r\tw=write\rYou must separate them by a coma, example: r,w'%(model_name, group_name))
+                    
+                    #Assign rights
+                    req = {}
+                    for i,perm in enumerate(perms_all):
+                        #if perm in perms:
+                        #    req['perm_%s'%perms_rel[i]] = True
+                        #else:
+                        #    req['perm_%s'%perms_rel[i]] = False
+                        req['perm_%s'%perms_rel[i]] = perm in perms and 'True' or 'False'
+                    
+                    #Apply rule
+                    sql = ''
+                    rules = self.pool.get('ir.model.access').search(cr, user, [('model_id', '=', model_id),('group_id', '=', group_id)])
+                    if rules:
+                        for k in req:
+                            sql += '%s=%s,'%(k,req[k])
+                        cr.execute("update ir_model_access set %s where id=%i"%(sql[:-1], rules[0]))
+                    else:
+                        model_name = self.pool.get('ir.model').browse(cr, user, [model_id])[0].name
+                        group_name = self.pool.get('res.groups').browse(cr, user, [group_id])[0].name
+                        rule_name = '%s %s'%(model_name,group_name)
+                        cr.execute('insert into ir_model_access \
+                            (name, model_id, group_id, perm_create, perm_read, perm_unlink, perm_write) \
+                            values (%s, %i, %i, %s, %s, %s, %s)',
+                            (rule_name, model_id, group_id,req['perm_create'], req['perm_read'], req['perm_unlink'], req['perm_write'],))
+                    vals_new.pop(val)
+        return super(osv.osv, self).write(cr, user, ids, vals_new, context)
+    
+    def fields_get(self, cr, user, fields=None, context=None, read_access=True):
+        result = super(osv.osv, self).fields_get(cr, user, fields, context)
+        if 'advanced' in context:
+            groups = self.pool.get('res.groups').search(cr, user, [])
+            groups_br = self.pool.get('res.groups').browse(cr, user, groups)
+            for group in groups_br:
+                result['group_%i'%group.id] = {'string': 'Group %s'%group.name,'type': 'char','size': 7}
+        return result
+    
+    def on_change_write(self, cr, user, ids, vals, context=None):
+        print 'prout'
+    
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False):
+        result = super(osv.osv, self).fields_view_get(cr, uid, view_id,view_type,context)
+        if view_type=='tree' and 'advanced' in context:
+            groups = self.pool.get('res.groups').search(cr, uid, [])
+            groups_br = self.pool.get('res.groups').browse(cr, uid, groups)
+            
+            #state = ''
+            #TODO: qqch du genre si un object n'a pas de secu
+            #for field in journal.view_id.columns_id:
+            #    if field.field=='state':
+            #        state = ' colors="red:state==\'draft\'"'
+            
+            cols = ['model']
+            xml = '''<?xml version="1.0"?><tree editable="top"><field name="model" readonly="1"/>'''
+            for group in groups_br:
+                #xml += '''<field name="group_%i" sum="%s" on_change="on_change_write()"/>''' % (group.id, group.name) #TODO: on_change
+                xml += '''<field name="group_%i" sum="%s"/>''' % (group.id, group.name)
+            xml += '''</tree>'''
+            
+            result['arch'] = xml
+            result['fields'] = self.fields_get(cr, uid, cols, context)
+        return result
+ir_model()
 
 class ir_model_fields(osv.osv):
     _name = 'ir.model.fields'
@@ -159,7 +268,6 @@ class ir_model_fields(osv.osv):
             vals['model']=model_data['model']
         if context and context.get('manual',False):
             vals['state']='manual'
-        print vals['name']
         res = super(ir_model_fields,self).create(cr, user, vals, context)
         if vals.get('state','base')=='manual':
             if not vals['name'].startswith('x_'):
@@ -186,7 +294,7 @@ class ir_model_access(osv.osv):
         res = False
         grouparr  = group.split('.')
         if grouparr:
-            cr.execute("select * from res_groups_users_rel where uid=" + str(uid) + " and gid in(select res_id from ir_model_data where module='%s' and name='%s')" % (grouparr[0], grouparr[1]))
+            cr.execute("select * from res_groups_users_rel where uid=" + str(uid) + " and gid in(select res_id from ir_model_data where module='%s' and name='%s')", (grouparr[0], grouparr[1],))
             r = cr.fetchall()    
             if not r:
                 res = False
@@ -196,44 +304,22 @@ class ir_model_access(osv.osv):
             res = False
         return res
     
-    def check_tree(self, cr, uid, model_name, mode):
-        cr.execute('SELECT MAX(CASE WHEN perm_'+mode+' THEN 1 else 0 END) '
-            'from ir_model_access a join ir_model m on (m.id=a.model_id) '
-                'join res_groups_users_rel gu on (gu.gid = a.group_id) '
-            'where m.model = %s and gu.uid = %s', (model_name, uid,))
-        res = cr.fetchall()[0][0]
-        if res==None:
-            cr.execute('select model from ir_model where id=(select parent_id from ir_model where model=%s)', (model_name,))
-            parent_name = cr.fetchall()
-            if len(parent_name)>0:
-                res = self.check_tree(cr, uid, parent_name[0][0], mode) # Recursiv until there is no parent
-                print '\tcheck %s = %s' % (parent_name[0][0], str(res))
-        return res
-    
-    def check(self, cr, uid, model_name, mode='read',raise_exception=True):        
+    def check(self, cr, uid, model_name, mode='read',raise_exception=True):       
         assert mode in ['read','write','create','unlink'], 'Invalid access mode for security'
-        
-        # We first check if a specific rule exists
-        cr.execute('SELECT MAX(CASE WHEN perm_'+mode+' THEN 1 else 0 END) '
-            'FROM ir_model_access a '
-                'JOIN ir_model m ON (a.model_id=m.id) '
-                'JOIN res_groups_users_rel gu ON (gu.gid = a.group_id) '
-            'WHERE m.model = %s AND gu.uid = %s', (model_name, uid,))
-        r = cr.fetchall()
-        
-        print '%s in %s = %s by %i'%(mode, model_name, str(r[0][0]), uid) # FIXME: REMOVE PLEASE
-        
         # Users root and admin have all access (Todo: exclude xml-rpc requests)
         if uid==1 or uid==2:
             return True
         
-        # Recursivly check parent if present
-        if r[0][0] == None:
-            res = self.check_tree(cr, uid, model_name, mode)
-        else:
-            res = r[0][0]
+        # We check if a specific rule exists
+        cr.execute('SELECT MAX(CASE WHEN perm_'+mode+' THEN 1 else 0 END) '
+            'from ir_model_access a join ir_model m on (m.id=a.model_id) '
+                'join res_groups_users_rel gu on (gu.gid = a.group_id) '
+            'where m.model = %s and gu.uid = %s', (model_name, uid,))
+        r = cr.fetchall()
         
-        if not res:
+        print '%s in %s = %s by %i'%(mode, model_name, str(r[0][0]), uid) # FIXME: REMOVE PLEASE
+        
+        if not r[0][0]:
             if raise_exception:
                 msgs = {
                         'read':   _('You can not read this document! (%s)'),
@@ -242,7 +328,7 @@ class ir_model_access(osv.osv):
                         'unlink': _('You can not delete this document! (%s)'),
                         }
                 raise except_orm(_('AccessError'), msgs[mode] % model_name )
-        return res
+        return r[0][0]
 
     check = tools.cache()(check)
 

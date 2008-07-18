@@ -48,181 +48,361 @@
 <!--
  Tree
 -->
-    <record id="base.model_ir_act_report_custom" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'ir.actions.actions')]"/>
-    </record>
-
-    <record id="base.model_ir_act_report_xml" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'ir.actions.actions')]"/>
-    </record>
+    <!--<record id="base.model_ir_act_report_custom" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'ir.actions.actions')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_ir_act_report_xml" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'ir.actions.actions')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_ir_sequence_type" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'ir.actions.actions')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_ir_act_report_custom" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'ir.actions.actions')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_ir_act_report_xml" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'ir.actions.actions')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_ir_act_wizard" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'ir.actions.actions')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_ir_act_url" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'ir.actions.actions')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_ir_act_server" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'ir.actions.actions')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_ir_act_window" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'ir.actions.actions')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_ir_act_window_view" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'ir.actions.act_window')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_ir_model_view" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'ir.model')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_ir_model_fields" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'ir.model')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_ir_model_access" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'ir.model')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_ir_model_data" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'ir.model')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_ir_exports_line" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'ir.exports')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_ir_module_category" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'ir.module.module')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_ir_module_module_configuration_step" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'ir.module.module')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_ir_module_module_configuration_wizard" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'ir.module.module')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_ir_module_module_dependency" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'ir.module.module')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_ir_module_repository" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'ir.module.module')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_ir_report_custom_fields" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'ir.report.custom')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_ir_rule_group" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'ir.rule')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_ir_ui_view_sc" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'ir.ui.view')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_res_partner_address" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'res.partner')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_res_partner_bank" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'res.partner')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_res_partner_bank_type" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'res.partner.bank')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_res_partner_bank_type_field" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'res.partner.bank.type')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_res_partner_canal" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'res.partner')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_res_partner_category" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'res.partner')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_res_partner_event" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'res.partner')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_res_partner_event_type" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'res.partner.event')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_res_partner_function" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'res.partner')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_res_partner_som" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'res.partner')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_res_partner_title" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'res.partner')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_res_request_history" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'res.request')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_res_request_link" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'res.request')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_wizard_ir_model_menu_create_line" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'wizard.ir.model.menu.create')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_wkf_activity" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'workflow')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_wkf_instance" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'workflow')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_wkf_transition" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'workflow')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_wkf_triggers" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'workflow')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_wkf_workitem" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'workflow')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_res_country_state" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'res.country')]"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record id="base.model_res_currency_rate" model="ir.model">-->
+    <!--    <field name="parent_id" search="[('model', '=', 'res.currency')]"/>-->
+    <!--</record>-->
     
-    <record id="base.model_ir_sequence_type" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'ir.actions.actions')]"/>
-    </record>
-
-    <record id="base.model_ir_act_report_custom" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'ir.actions.actions')]"/>
-    </record>
-
-    <record id="base.model_ir_act_report_xml" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'ir.actions.actions')]"/>
-    </record>
-
-    <record id="base.model_ir_act_wizard" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'ir.actions.actions')]"/>
-    </record>
-
-    <record id="base.model_ir_act_url" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'ir.actions.actions')]"/>
-    </record>
-
-    <record id="base.model_ir_act_server" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'ir.actions.actions')]"/>
-    </record>
-
-    <record id="base.model_ir_act_window" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'ir.actions.actions')]"/>
-    </record>
-
-    <record id="base.model_ir_act_window_view" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'ir.actions.act_window')]"/>
-    </record>
-
-    <record id="base.model_ir_model_tree" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'ir.model')]"/>
-    </record>
-
-    <record id="base.model_ir_model_fields" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'ir.model')]"/>
-    </record>
-
-    <record id="base.model_ir_model_access" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'ir.model')]"/>
-    </record>
-
-    <record id="base.model_ir_model_data" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'ir.model')]"/>
-    </record>
-
-    <record id="base.model_ir_exports_line" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'ir.exports')]"/>
-    </record>
-
-    <record id="base.model_ir_module_category" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'ir.module.module')]"/>
-    </record>
-
-    <record id="base.model_ir_module_module_configuration_step" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'ir.module.module')]"/>
-    </record>
-
-    <record id="base.model_ir_module_module_configuration_wizard" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'ir.module.module')]"/>
-    </record>
-
-    <record id="base.model_ir_module_module_dependency" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'ir.module.module')]"/>
-    </record>
-
-    <record id="base.model_ir_module_repository" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'ir.module.module')]"/>
-    </record>
-
-    <record id="base.model_ir_report_custom_fields" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'ir.report.custom')]"/>
-    </record>
-
-    <record id="base.model_ir_rule_group" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'ir.rule')]"/>
-    </record>
-
-    <record id="base.model_ir_ui_view_sc" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'ir.ui.view')]"/>
-    </record>
-
-    <record id="base.model_res_partner_address" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'res.partner')]"/>
-    </record>
-
-    <record id="base.model_res_partner_bank" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'res.partner')]"/>
-    </record>
-
-    <record id="base.model_res_partner_bank_type" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'res.partner.bank')]"/>
-    </record>
-
-    <record id="base.model_res_partner_bank_type_field" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'res.partner.bank.type')]"/>
-    </record>
-
-    <record id="base.model_res_partner_canal" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'res.partner')]"/>
-    </record>
-
-    <record id="base.model_res_partner_category" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'res.partner')]"/>
-    </record>
-
-    <record id="base.model_res_partner_event" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'res.partner')]"/>
-    </record>
-
-    <record id="base.model_res_partner_event_type" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'res.partner.event')]"/>
-    </record>
-
-    <record id="base.model_res_partner_function" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'res.partner')]"/>
-    </record>
-
-    <record id="base.model_res_partner_som" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'res.partner')]"/>
-    </record>
-
-    <record id="base.model_res_partner_title" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'res.partner')]"/>
-    </record>
-
-    <record id="base.model_res_request_history" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'res.request')]"/>
-    </record>
-
-    <record id="base.model_res_request_link" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'res.request')]"/>
-    </record>
-
-    <record id="base.model_wizard_ir_model_menu_create_line" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'wizard.ir.model.menu.create')]"/>
-    </record>
-
-    <record id="base.model_wkf_activity" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'workflow')]"/>
-    </record>
-
-    <record id="base.model_wkf_instance" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'workflow')]"/>
-    </record>
-
-    <record id="base.model_wkf_transition" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'workflow')]"/>
-    </record>
-
-    <record id="base.model_wkf_triggers" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'workflow')]"/>
-    </record>
-
-    <record id="base.model_wkf_workitem" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'workflow')]"/>
-    </record>
-
-    <record id="base.model_res_country_state" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'res.country')]"/>
-    </record>
-
-    <record id="base.model_res_currency_rate" model="ir.model">
-        <field name="parent_id" search="[('model', '=', 'res.currency')]"/>
-    </record>
+    
+    
+    
+    
+<!--    <record id="base.model_ir_act_report_custom" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_ir_actions_actions"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_ir_act_report_xml" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_ir_actions_actions"/>-->
+<!--    </record>-->
+<!--    -->
+<!--    <record id="base.model_ir_sequence_type" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_ir_actions_actions"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_ir_act_report_custom" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_ir_actions_actions"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_ir_act_report_xml" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_ir_actions_actions"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_ir_act_wizard" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_ir_actions_actions"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_ir_act_url" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_ir_actions_actions"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_ir_act_server" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_ir_actions_actions"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_ir_act_window" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_ir_actions_actions"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_ir_act_window_view" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_ir_actions_act_window"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_ir_model_view" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_ir_model"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_ir_model_fields" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_ir_model"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_ir_model_access" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_ir_model"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_ir_model_data" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_ir_model"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_ir_exports_line" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_ir_exports"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_ir_module_category" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_ir_module_module"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_ir_module_module_configuration_step" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_ir_module_module"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_ir_module_module_configuration_wizard" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_ir_module_module"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_ir_module_module_dependency" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_ir_module_module"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_ir_module_repository" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_ir_module_module"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_ir_report_custom_fields" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_ir_report_custom"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_ir_rule_group" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_ir_rule"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_ir_ui_view_sc" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_ir_ui_view"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_res_partner_address" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_res_partner"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_res_partner_bank" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_res_partner"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_res_partner_bank_type" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_res_partner_bank"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_res_partner_bank_type_field" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_res_partner_bank_type"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_res_partner_canal" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_res_partner"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_res_partner_category" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_res_partner"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_res_partner_event" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_res_partner"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_res_partner_event_type" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_res_partner_event"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_res_partner_function" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_res_partner"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_res_partner_som" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_res_partner"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_res_partner_title" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_res_partner"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_res_request_history" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_res_request"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_res_request_link" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_res_request"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_wizard_ir_model_menu_create_line" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_wizard_ir_model_menu_create"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_wkf_activity" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_workflow"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_wkf_instance" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_workflow"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_wkf_transition" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_workflow"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_wkf_triggers" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_workflow"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_wkf_workitem" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_workflow"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_res_country_state" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_res_country"/>-->
+<!--    </record>-->
+<!---->
+<!--    <record id="base.model_res_currency_rate" model="ir.model">-->
+<!--        <field name="parent_id" ref="base.model_res_currency"/>-->
+<!--    </record>-->
 
 <!--
  Access

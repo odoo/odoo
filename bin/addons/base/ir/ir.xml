@@ -620,7 +620,6 @@
                         <page string="Object">
                             <field name="name" select="1"/>
                             <field name="model" select="1"/>
-                            <field name="parent_id" select="1"/>
                             <separator colspan="4" string="Fields"/>
                             <field colspan="4" context="{'manual':True}" name="field_id" nolabel="1">
                                 <tree string="Fields Description">
@@ -673,7 +672,6 @@
                 <tree string="Model Description">
                     <field name="name"/>
                     <field name="model"/>
-                    <field name="parent_id"/>
                 </tree>
             </field>
         </record>
@@ -1032,59 +1030,26 @@
         </record>
         
         <!--
-        ===============
-         Object Access
-        ===============
+        ================
+         Object Security
+        ================
         -->
-        <record id="view_model_form1" model="ir.ui.view">
-            <field name="name">ir.model.form1</field>
-            <field name="model">ir.model</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Model Description">
-                    <field name="name" select="1"/>
-                    <field name="model" select="1"/>
-                    <field name="parent_id" select="1"/>
-                </form>
-            </field>
-        </record>
-        
-        <record id="view_model_tree1" model="ir.ui.view">
-            <field name="name">ir.model.tree1</field>
+        <record id="view_model_tree" model="ir.ui.view">
+            <field name="name">Objects Security Tree</field>
             <field name="model">ir.model</field>
             <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Model Description">
-                    <field name="name"/>
-                    <field name="model"/>
-                    <field name="parent_id"/>
-                </tree>
-            </field>
         </record>
         
-        <record model="ir.actions.act_window" id="action_model_sec">
-            <field name="name">Objects</field>
+        <record model="ir.actions.act_window" id="action_model_view_security">
+            <field name="name">Objects Security</field>
             <field name="res_model">ir.model</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
-            <field name="view_id" eval="False"/>
+            <field name="view_id" ref="view_model_tree"/>
+            <field name="context">{'advanced':True}</field>
         </record>
         
-        <record model="ir.actions.act_window.view" id="action_model_sec_tree">
-            <field name="sequence" eval="1"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_model_tree1"/>
-            <field name="act_window_id" ref="action_model_sec" />
-        </record>
-        
-        <record model="ir.actions.act_window.view" id="action_model_sec_form">
-            <field name="sequence" eval="2"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_model_form1"/>
-            <field name="act_window_id" ref="action_model_sec" />
-        </record>
-        
-        <menuitem action="action_model_sec" id="ir_model_model_menu1" parent="base.menu_security"/>
+        <menuitem action="action_model_view_security" id="ir_model_model_menu69" parent="base.menu_security"/>
         
     </data>
 </terp>
