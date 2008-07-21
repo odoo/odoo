@@ -1600,5 +1600,45 @@
 
         <menuitem action="action_account_tax_template_form" id="menu_action_account_tax_template_form" parent="account_account_template_menu"/>
 
+		<!--  Wizard for Multi Charts of Accounts : BOB Import -->
+
+		<record id="view_wizard_multi_chart" model="ir.ui.view">
+            <field name="name">Create Multiple Charts of Accounts</field>
+            <field name="model">wizard.multi.charts.accounts</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Create Multiple Charts of Accounts">
+                	<field name="company_id" />
+                	<field name="chart_template_id" />
+                    <field colspan="4" mode="tree" name="bank_accounts_id" nolabel="1" widget="one2many_list">
+                        <form string="Bank Information">
+                            <field name="acc_no"/>
+                            <field name="bank_id"/>
+                            <field name="currency_id"/>
+                        </form>
+                        <tree editable="bottom" string="Bank Information">
+                            <field name="acc_no"/>
+                            <field name="bank_id"/>
+                            <field name="currency_id"/>
+                        </tree>
+                    </field>
+                    <group col="4" colspan="4">
+                        <button icon="gtk-cancel" special="cancel" type="object" string="Cancel"/>
+                        <button icon="gtk-ok" name="action_create" string="Create" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_wizard_multi_chart" model="ir.actions.act_window">
+            <field name="name">Create Multiple Charts of Accounts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wizard.multi.charts.accounts</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+		<menuitem parent="account.menu_finance_configuration" action="action_wizard_multi_chart" id="menu_wizard_bob"/>
     </data>
 </terp>

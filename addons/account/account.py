@@ -1773,3 +1773,34 @@ class account_chart_template(osv.osv):
 	}
 
 account_chart_template()
+
+# Multi charts of Accounts wizard
+
+class wizard_multi_charts_accounts(osv.osv_memory):
+	_name='wizard.multi.charts.accounts'
+	_columns = {
+		'company_id':fields.many2one('res.company','Company',required=True),
+		'chart_template_id': fields.many2one('account.chart.template','Chart Template',required=True),
+		'bank_accounts_id': fields.one2many('account.bank.accounts.wizard.bob', 'bank_account_id', 'Bank Accounts',required=True),
+    }
+
+#	def action_cancel(self,cr,uid,ids,conect=None):
+#		return {}
+
+	def action_create(self, cr, uid, ids, context=None):
+#		print "created"
+#		TODO: Here :Pending
+		return {}
+
+wizard_multi_charts_accounts()
+
+class account_bank_accounts_wizard_bob(osv.osv_memory):
+	_name='account.bank.accounts.wizard.bob'
+
+	_columns = {
+		'acc_no':fields.many2one('res.partner.bank','Account No.',required=True),
+		'bank_account_id':fields.many2one('wizard.multi.charts.accounts', 'Bank Account', required=True),
+		'bank_id':fields.many2one('res.bank','Bank', required=True),
+		'currency_id':fields.many2one('res.currency', 'Currency'),
+    }
+account_bank_accounts_wizard_bob()
