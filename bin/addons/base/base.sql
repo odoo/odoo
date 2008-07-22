@@ -2,13 +2,6 @@
 -- Pure SQL
 -------------------------------------------------------------------------
 
-CREATE TABLE inherit (
-    obj_type varchar(128) not null,
-    obj_id int not null,
-    inst_type varchar(128) not null,
-    inst_id int not null
-);
-
 -------------------------------------------------------------------------
 -- IR dictionary
 -------------------------------------------------------------------------
@@ -335,4 +328,5 @@ CREATE TABLE ir_model_data (
     model character varying(64) NOT NULL,
     res_id integer, primary key(id)
 );
+
 

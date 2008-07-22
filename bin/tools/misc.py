@@ -50,25 +50,23 @@ else:
 
 # initialize a database with base/base.sql 
 def init_db(cr):
-	f = os.path.join(config['addons_path'], 'base/base.sql')
+	import addons
+	f = addons.get_module_resource('base', 'base.sql')
 	for line in file(f).read().split(';'):
 		if (len(line)>0) and (not line.isspace()):
 			cr.execute(line)
 	cr.commit()
 
-	opj = os.path.join
-	ad = config['addons_path']
-
-	for i in os.listdir(ad):
-		terp_file = opj(ad, i, '__terp__.py')
-		mod_path = opj(ad, i)
+	for i in addons.get_modules():
+		terp_file = addons.get_module_resource(i, '__terp__.py')
+		mod_path = addons.get_module_path(i)
 		info = False
-		if os.path.isfile(terp_file) and not os.path.isfile(opj(ad, i+'.zip')):
+		if os.path.isfile(terp_file) and not os.path.isfile(mod_path+'.zip'):
 			info = eval(file(terp_file).read())
-		elif zipfile.is_zipfile(mod_path):
-			zfile = zipfile.ZipFile(mod_path)
+		elif zipfile.is_zipfile(mod_path+'.zip'):
+			zfile = zipfile.ZipFile(mod_path+'.zip')
 			i = os.path.splitext(i)[0]
-			info = eval(zfile.read(opj(i, '__terp__.py')))
+			info = eval(zfile.read(os.path.join(i, '__terp__.py')))
 		if info:
 			categs = info.get('category', 'Uncategorized').split('/')
 			p_id = None
@@ -170,12 +168,55 @@ def exec_command_pipe(name, *args):
 #file_path_root = os.getcwd()
 #file_path_addons = os.path.join(file_path_root, 'addons')
 
-def file_open(name, mode="r", subdir='addons'):
-	"""Open a file from the Tiny ERP root, using a subdir folder."""
+def file_open(name, mode="r", subdir='addons', pathinfo=False):
+	"""Open a file from the Tiny ERP root, using a subdir folder.
+
+	>>> file_open('hr/report/timesheer.xsl')
+	>>> file_open('addons/hr/report/timesheet.xsl')
+	>>> file_open('../../base/report/rml_template.xsl', subdir='addons/hr/report', pathinfo=True)
+
+	@param name: name of the file
+	@param mode: file open mode
+	@param subdir: subdirectory
+	@param pathinfo: if True returns tupple (fileobject, filepath)
+
+	@return: fileobject if pathinfo is False else (fileobject, filepath)
+	"""
+
+	adp = os.path.normcase(os.path.abspath(config['addons_path']))
+	rtp = os.path.normcase(os.path.abspath(config['root_path']))
+
+	if name.replace(os.path.sep, '/').startswith('addons/'):
+		subdir = 'addons'
+		name = name[7:]
+
+	# First try to locate in addons_path
 	if subdir:
-		name = os.path.join(config['root_path'], subdir, name)
+		subdir2 = subdir
+		if subdir2.replace(os.path.sep, '/').startswith('addons/'):
+			subdir2 = subdir2[7:]
+
+		subdir2 = (subdir2 != 'addons' or None) and subdir2
+
+		try:
+			if subdir2:
+				fn = os.path.join(adp, subdir2, name)
+			else:
+				fn = os.path.join(adp, name)
+			fn = os.path.normpath(fn)
+			fo = file_open(fn, mode=mode, subdir=None, pathinfo=pathinfo)
+			if pathinfo:
+				return fo, fn
+			return fo
+		except IOError, e:
+			pass
+
+	if subdir:
+		name = os.path.join(rtp, subdir, name)
 	else:
-		name = os.path.join(config['root_path'], name)
+		name = os.path.join(rtp, name)
+
+	name = os.path.normpath(name)
 
 	# Check for a zipfile in the path
 	head = name
@@ -193,15 +234,22 @@ def file_open(name, mode="r", subdir='addons'):
 			import StringIO
 			zfile = zipfile.ZipFile(head+'.zip')
 			try:
-				return StringIO.StringIO(zfile.read(os.path.join(
+				fo = StringIO.StringIO(zfile.read(os.path.join(
 					os.path.basename(head), zipname).replace(
 						os.sep, '/')))
+
+				if pathinfo:
+					return fo, name
+				return fo
 			except:
 				name2 = os.path.normpath(os.path.join(head + '.zip', zipname))
 				pass
 	for i in (name2, name):
 		if i and os.path.isfile(i):
-			return file(i, mode)
+			fo = file(i, mode)
+			if pathinfo:
+				return fo, i
+			return fo
 
 	raise IOError, 'File not found : '+str(name)
 

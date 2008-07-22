@@ -290,11 +290,14 @@ class graph(object):
 		return self.result
 
 if __name__=='__main__':
-	starting_node = ['mrp']  # put here nodes with flow_start=True
-	nodes = ['project','account','hr','base','product','mrp','test']
+	starting_node = ['profile']  # put here nodes with flow_start=True
+	nodes = ['project','account','hr','base','product','mrp','test','profile']
 	transitions = [
+		('profile','mrp'),
 		('mrp','project'),
 		('project','product'),
+		('mrp','hr'),
+		('mrp','test'),
 		('project','account'),
 		('project','hr'),
 		('product','base'),
