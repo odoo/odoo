@@ -180,7 +180,9 @@ class configmanager(object):
 				update[i] = 1
 		self.options['update'] = update
 
-		self.options['translate_modules'] = opt.translate_modules and opt.translate_modules.split(',') or ['all']
+		self.options['translate_modules'] = opt.translate_modules and map(lambda m: m.strip(), opt.translate_modules.split(',')) or ['all']
+		self.options['translate_modules'].sort()
+		
 		if opt.pg_path:
 			self.options['pg_path'] = opt.pg_path
 
