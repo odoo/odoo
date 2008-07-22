@@ -22,7 +22,23 @@
             <field name="code">view</field>
             <field name="close_method">none</field>
         </record>
-        <record id="account_type_income" model="account.account.type">
+        <record id="account_type_root" model="account.account.type">
+            <field name="name">Root</field>
+            <field name="code">root</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="account_type_consolidation" model="account.account.type">
+            <field name="name">Consolidation</field>
+            <field name="code">consolidation</field>
+            <field name="close_method">none</field>
+        </record>
+
+        <record id="account_type_others" model="account.account.type">
+            <field name="name">Others</field>
+            <field name="code">others</field>
+            <field name="close_method">none</field>
+        </record>
+        <!--<record id="account_type_income" model="account.account.type">
             <field name="name">Income</field>
             <field name="code">income</field>
             <field name="close_method">unreconciled</field>
@@ -57,6 +73,6 @@
             <field name="name">Closed</field>
             <field name="code">closed</field>
             <field name="close_method">none</field>
-        </record>
+        </record>-->
     </data>
 </terp>
