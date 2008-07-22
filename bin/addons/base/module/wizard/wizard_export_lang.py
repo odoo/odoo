@@ -125,25 +125,15 @@ class wizard_export_lang(osv.osv_memory):
 		this = self.browse(cr, uid, ids)[0]
 		mods = map(lambda m: m.name, this.modules)
 		mods.sort()
-		file=tools.trans_generate(this.lang, mods, dbname=cr.dbname)
 		buf=StringIO.StringIO()
-		
+	
+		tools.trans_export(this.lang, mods, buf, this.format, dbname=cr.dbname)
+
 		if this.format == 'csv':
 			this.advice = _("Save this document to a .CSV file and open it with your favourite spreadsheet software. The file encoding is UTF-8. You have to translate the latest column before reimporting it.")
-			writer=csv.writer(buf, 'UNIX')
-			for row in file:
-				writer.writerow(row)
 		elif this.format == 'po':
 			this.advice = _("Save this document to a .po file and edit it with a specific software or a text editor. The file encoding is UTF-8.")
-			file.pop(0)
-			writer = tools.TinyPoFile(buf)
-			writer.write_infos(mods)
-			for module, type, name, res_id, src, trad in file:
-				writer.write(module, type, name, res_id, src, trad)
-		else:
-			raise osv_except(_('Bad file format'))
-
-		del file
+		
 		out=base64.encodestring(buf.getvalue())
 		buf.close()
 		return self.write(cr, uid, ids, {'state':'get', 'data':out, 'advice':this.advice}, context=context)

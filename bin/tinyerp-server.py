@@ -184,11 +184,12 @@ if tools.config["translate_out"]:
 	import csv
 
 	logger.notifyChannel("init", netsvc.LOG_INFO, 'writing translation file for language %s to %s' % (tools.config["language"], tools.config["translate_out"]))
-	trans=tools.trans_generate(tools.config["language"], tools.config["translate_modules"])
-	writer=csv.writer(file(tools.config["translate_out"], "w"), 'UNIX')
-	for row in trans:
-		writer.writerow(row)
-	del trans
+
+	fileformat = os.path.splitext(tools.config["translate_out"])[-1][1:].lower()
+	buf = file(tools.config["translate_out"], "w")
+	tools.trans_export(tools.config["language"], tools.config["translate_modules"], buf, fileformat)
+	buf.close()
+	
 	logger.notifyChannel("init", netsvc.LOG_INFO, 'translation file written succesfully')
 	sys.exit(0)
 

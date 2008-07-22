@@ -169,6 +169,23 @@ class TinyPoFile(object):
 
 # Methods to export the translation file
 
+def trans_export(lang, modules, buffer, format, dbname=None):
+	trans = trans_generate(lang, modules, dbname)
+	if format == 'csv':
+		writer=csv.writer(buffer, 'UNIX')
+		for row in trans:
+			writer.writerow(row)
+	elif format == 'po':
+		trans.pop(0)
+		writer = tools.TinyPoFile(buffer)
+		writer.write_infos(modules)
+		for module, type, name, res_id, src, trad in trans:
+			writer.write(module, type, name, res_id, src, trad)
+	else:
+		raise Exception(_('Bad file format'))
+	del trans
+	
+
 def trans_parse_xsl(de):
 	res = []
 	for n in [i for i in de.childNodes if (i.nodeType == i.ELEMENT_NODE)]:
