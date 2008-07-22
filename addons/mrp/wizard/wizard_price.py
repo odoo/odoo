@@ -32,24 +32,24 @@ import wizard
 
 price_form = '''<?xml version="1.0"?>
 <form string="Paid ?">
-	<field name="number"/>
+    <field name="number"/>
 </form>'''
 
 price_fields = {
-	'number': {'string':'Number of products to produce', 'type':'integer', 'required':True},
+    'number': {'string':'Number of products to produce', 'type':'integer', 'required':True},
 }
 
 class wizard_price(wizard.interface):
-	states = {
-		'init': {
-			'actions': [], 
-			'result': {'type':'form', 'arch':price_form, 'fields':price_fields, 'state':[('end','Cancel'),('price','Print product price') ]}
-		},
-		'price': {
-			'actions': [],
-			'result': {'type':'print', 'report':'product.price', 'state':'end'}
-		}
-	}
+    states = {
+        'init': {
+            'actions': [], 
+            'result': {'type':'form', 'arch':price_form, 'fields':price_fields, 'state':[('end','Cancel'),('price','Print product price') ]}
+        },
+        'price': {
+            'actions': [],
+            'result': {'type':'print', 'report':'product.price', 'state':'end'}
+        }
+    }
 wizard_price('product_price')
 
 

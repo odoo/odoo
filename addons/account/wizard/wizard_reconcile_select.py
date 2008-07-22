@@ -31,34 +31,34 @@ import wizard
 
 _journal_form = '''<?xml version="1.0"?>
 <form string="%s">
-	<field name="account_id"/>
+    <field name="account_id"/>
 </form>''' % ('Reconciliation',)
 
 _journal_fields = {
-	'account_id': {'string':'Account', 'type':'many2one', 'relation':'account.account','domain': [('reconcile','=',1)], 'required':True},
+    'account_id': {'string':'Account', 'type':'many2one', 'relation':'account.account','domain': [('reconcile','=',1)], 'required':True},
 }
 
 def _action_open_window(self, cr, uid, data, context):
-	return {
-		'domain': "[('account_id','=',%d),('reconcile_id','=',False),('state','<>','draft')]" % data['form']['account_id'],
-		'name': 'Reconciliation',
-		'view_type': 'form',
-		'view_mode': 'tree,form',
-		'view_id': False,
-		'res_model': 'account.move.line',
-		'type': 'ir.actions.act_window'
-	}
+    return {
+        'domain': "[('account_id','=',%d),('reconcile_id','=',False),('state','<>','draft')]" % data['form']['account_id'],
+        'name': 'Reconciliation',
+        'view_type': 'form',
+        'view_mode': 'tree,form',
+        'view_id': False,
+        'res_model': 'account.move.line',
+        'type': 'ir.actions.act_window'
+    }
 
 class wiz_rec_select(wizard.interface):
-	states = {
-		'init': {
-			'actions': [],
-			'result': {'type': 'form', 'arch':_journal_form, 'fields':_journal_fields, 'state':[('end','Cancel'),('open','Open for reconciliation')]}
-		},
-		'open': {
-			'actions': [],
-			'result': {'type': 'action', 'action': _action_open_window, 'state':'end'}
-		}
-	}
+    states = {
+        'init': {
+            'actions': [],
+            'result': {'type': 'form', 'arch':_journal_form, 'fields':_journal_fields, 'state':[('end','Cancel'),('open','Open for reconciliation')]}
+        },
+        'open': {
+            'actions': [],
+            'result': {'type': 'action', 'action': _action_open_window, 'state':'end'}
+        }
+    }
 wiz_rec_select('account.move.line.reconcile.select')
 

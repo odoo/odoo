@@ -33,64 +33,64 @@ import netsvc
 
 ARCH = '''<?xml version="1.0"?>
 <form string="Make packing">
-	<field name="pickings" nolabel="1" colspan="4"
-		width="600" height="300"/>
+    <field name="pickings" nolabel="1" colspan="4"
+        width="600" height="300"/>
 </form>'''
 
 FIELDS = {
-	'pickings': {
-		'string': 'Packings',
-		'type': 'one2many',
-		'relation': 'stock.picking',
-		'readonly': True,
-	},
+    'pickings': {
+        'string': 'Packings',
+        'type': 'one2many',
+        'relation': 'stock.picking',
+        'readonly': True,
+    },
 }
 
 def _get_value(obj, cursor, user, data, context):
-	pool = pooler.get_pool(cursor.dbname)
-	picking_obj = pool.get('stock.picking')
+    pool = pooler.get_pool(cursor.dbname)
+    picking_obj = pool.get('stock.picking')
 
-	picking_ids = picking_obj.search(cursor, user, [
-		('id', 'in', data['ids']),
-		('state', '<>', 'done'),
-		('state', '<>', 'cancel')], context=context)
-	return {'pickings': picking_ids}
+    picking_ids = picking_obj.search(cursor, user, [
+        ('id', 'in', data['ids']),
+        ('state', '<>', 'done'),
+        ('state', '<>', 'cancel')], context=context)
+    return {'pickings': picking_ids}
 
 def _make_packing(obj, cursor, user, data, context):
-	wkf_service = netsvc.LocalService('workflow')
-	pool = pooler.get_pool(cursor.dbname)
-	picking_obj = pool.get('stock.picking')
-	ids = [x[1] for x in data['form']['pickings']]
+    wkf_service = netsvc.LocalService('workflow')
+    pool = pooler.get_pool(cursor.dbname)
+    picking_obj = pool.get('stock.picking')
+    ids = [x[1] for x in data['form']['pickings']]
 
-	picking_obj.force_assign(cursor, user, ids)
-	picking_obj.action_move(cursor, user, ids)
-	for picking_id in ids:
-		wkf_service.trg_validate(user, 'stock.picking', picking_id,
-				'button_done', cursor)
-	return {}
+    picking_obj.force_assign(cursor, user, ids)
+    picking_obj.action_move(cursor, user, ids)
+    for picking_id in ids:
+        wkf_service.trg_validate(user, 'stock.picking', picking_id,
+                'button_done', cursor)
+    return {}
 
 class stock_picking_make(wizard.interface):
-	states = {
-		'init': {
-			'actions': [_get_value],
-			'result': {
-				'type': 'form',
-				'arch': ARCH,
-				'fields': FIELDS,
-				'state': [
-					('end', 'Cancel', 'gtk-cancel'),
-					('make', 'Ok', 'gtk-ok', True)
-				],
-			},
-		},
-		'make': {
-			'actions': [_make_packing],
-			'result': {
-				'type': 'state',
-				'state':'end',
-			},
-		},
-	}
+    states = {
+        'init': {
+            'actions': [_get_value],
+            'result': {
+                'type': 'form',
+                'arch': ARCH,
+                'fields': FIELDS,
+                'state': [
+                    ('end', 'Cancel', 'gtk-cancel'),
+                    ('make', 'Ok', 'gtk-ok', True)
+                ],
+            },
+        },
+        'make': {
+            'actions': [_make_packing],
+            'result': {
+                'type': 'state',
+                'state':'end',
+            },
+        },
+    }
 
 stock_picking_make('stock.picking.make')
 

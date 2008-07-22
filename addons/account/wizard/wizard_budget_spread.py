@@ -32,31 +32,31 @@ import netsvc
 
 _spread_form = '''<?xml version="1.0"?>
 <form string="Spread">
-	<field name="fiscalyear"/>
-	<field name="amount"/>
+    <field name="fiscalyear"/>
+    <field name="amount"/>
 </form>'''
 
 _spread_fields = {
-	'fiscalyear': {'string':'Fiscal Year', 'type':'many2one', 'relation':'account.fiscalyear', 'required':True},
-	'amount': {'string':'Amount', 'type':'float', 'digits':(16,2)},
+    'fiscalyear': {'string':'Fiscal Year', 'type':'many2one', 'relation':'account.fiscalyear', 'required':True},
+    'amount': {'string':'Amount', 'type':'float', 'digits':(16,2)},
 }
 
 class wizard_budget_spread(wizard.interface):
-	def _spread(self, cr, uid, data, context):
-		service = netsvc.LocalService("object_proxy")
-		form = data['form']
-		res = service.execute(cr.dbname, uid, 'account.budget.post', 'spread', data['ids'], form['fiscalyear'], form['amount'])
-		return {}
+    def _spread(self, cr, uid, data, context):
+        service = netsvc.LocalService("object_proxy")
+        form = data['form']
+        res = service.execute(cr.dbname, uid, 'account.budget.post', 'spread', data['ids'], form['fiscalyear'], form['amount'])
+        return {}
 
-	states = {
-		'init': {
-			'actions': [],
-			'result': {'type':'form', 'arch':_spread_form, 'fields':_spread_fields, 'state':[('end','Cancel'),('spread','Spread')]}
-		},
-		'spread': {
-			'actions': [_spread],
-			'result': {'type':'state', 'state':'end'}
-		}
-	}
+    states = {
+        'init': {
+            'actions': [],
+            'result': {'type':'form', 'arch':_spread_form, 'fields':_spread_fields, 'state':[('end','Cancel'),('spread','Spread')]}
+        },
+        'spread': {
+            'actions': [_spread],
+            'result': {'type':'state', 'state':'end'}
+        }
+    }
 wizard_budget_spread('account.budget.spread')
 

@@ -26,12 +26,12 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 {
-	"name" : "VAT",
-	"version" : "1.0",
-	"author" : "Tiny",
-	"category" : "Generic Modules/Base",
-	"depends" : ["base"],
-	"update_xml" : ["base_vat_data.xml"],
-	"active": False,
-	"installable": True
+    "name" : "VAT",
+    "version" : "1.0",
+    "author" : "Tiny",
+    "category" : "Generic Modules/Base",
+    "depends" : ["base"],
+    "update_xml" : ["base_vat_data.xml"],
+    "active": False,
+    "installable": True
 }

@@ -43,91 +43,91 @@ track_form = '''<?xml version="1.0"?>
 </form>
 '''
 fields = {
-		'tracking_prefix': {
-			'string': 'Tracking prefix',
-			'type': 'char',
-			'size': 64,
-		},
-		'quantity': {
-			'string': 'Quantity per lot',
-			'type': 'float',
-			'default': 1,
-		}
+        'tracking_prefix': {
+            'string': 'Tracking prefix',
+            'type': 'char',
+            'size': 64,
+        },
+        'quantity': {
+            'string': 'Quantity per lot',
+            'type': 'float',
+            'default': 1,
+        }
 }
 
 def _track_lines(self, cr, uid, data, context):
-	move_id = data['id']
+    move_id = data['id']
 
-	pool = pooler.get_pool(cr.dbname)
-	prodlot_obj = pool.get('stock.production.lot')
-	move_obj = pool.get('stock.move')
-	production_obj = pool.get('mrp.production')
-	ir_sequence_obj = pool.get('ir.sequence')
+    pool = pooler.get_pool(cr.dbname)
+    prodlot_obj = pool.get('stock.production.lot')
+    move_obj = pool.get('stock.move')
+    production_obj = pool.get('mrp.production')
+    ir_sequence_obj = pool.get('ir.sequence')
 
-	sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
-	if not sequence:
-		raise wizard.except_wizard(_('Error!'), _('No production sequence defined'))
-	if data['form']['tracking_prefix']:
-		sequence=data['form']['tracking_prefix']+'/'+(sequence or '')
+    sequence = ir_sequence_obj.get(cr, uid, 'stock.lot.serial')
+    if not sequence:
+        raise wizard.except_wizard(_('Error!'), _('No production sequence defined'))
+    if data['form']['tracking_prefix']:
+        sequence=data['form']['tracking_prefix']+'/'+(sequence or '')
 
-	move = move_obj.browse(cr, uid, [move_id])[0]
-	quantity=data['form']['quantity']
-	if quantity <= 0 or move.product_qty == 0:
-		return {}
-	uos_qty=quantity/move.product_qty*move.product_uos_qty
+    move = move_obj.browse(cr, uid, [move_id])[0]
+    quantity=data['form']['quantity']
+    if quantity <= 0 or move.product_qty == 0:
+        return {}
+    uos_qty=quantity/move.product_qty*move.product_uos_qty
 
-	quantity_rest = move.product_qty%quantity
-	uos_qty_rest = quantity_rest/move.product_qty*move.product_uos_qty
+    quantity_rest = move.product_qty%quantity
+    uos_qty_rest = quantity_rest/move.product_qty*move.product_uos_qty
 
-	update_val = {
-		'product_qty': quantity,
-		'product_uos_qty': uos_qty,
-	}
-	new_move = []
-	for idx in range(int(move.product_qty//quantity)):
-		if idx:
-			current_move = move_obj.copy(cr, uid, move.id, {'state': move.state, 'production_id': move.production_id.id})
-			new_move.append(current_move)
-		else:
-			current_move = move.id
-		new_prodlot = prodlot_obj.create(cr, uid, {'name': sequence, 'ref': '%d'%idx}, {'product_id': move.product_id.id})
-		update_val['prodlot_id'] = new_prodlot
-		move_obj.write(cr, uid, [current_move], update_val)
-		production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
-	
-	if quantity_rest > 0:
-		idx = int(move.product_qty//quantity)
-		update_val['product_qty']=quantity_rest
-		update_val['product_uos_qty']=uos_qty_rest
-		if idx:
-			current_move = move_obj.copy(cr, uid, move.id, {'state': move.state, 'production_id': move.production_id.id})
-			new_move.append(current_move)
-		else:
-			current_move = move.id
-		new_prodlot = prodlot_obj.create(cr, uid, {'name': sequence, 'ref': '%d'%idx})
-		update_val['prodlot_id'] = new_prodlot
-		move_obj.write(cr, uid, [current_move], update_val)
+    update_val = {
+        'product_qty': quantity,
+        'product_uos_qty': uos_qty,
+    }
+    new_move = []
+    for idx in range(int(move.product_qty//quantity)):
+        if idx:
+            current_move = move_obj.copy(cr, uid, move.id, {'state': move.state, 'production_id': move.production_id.id})
+            new_move.append(current_move)
+        else:
+            current_move = move.id
+        new_prodlot = prodlot_obj.create(cr, uid, {'name': sequence, 'ref': '%d'%idx}, {'product_id': move.product_id.id})
+        update_val['prodlot_id'] = new_prodlot
+        move_obj.write(cr, uid, [current_move], update_val)
+        production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
+    
+    if quantity_rest > 0:
+        idx = int(move.product_qty//quantity)
+        update_val['product_qty']=quantity_rest
+        update_val['product_uos_qty']=uos_qty_rest
+        if idx:
+            current_move = move_obj.copy(cr, uid, move.id, {'state': move.state, 'production_id': move.production_id.id})
+            new_move.append(current_move)
+        else:
+            current_move = move.id
+        new_prodlot = prodlot_obj.create(cr, uid, {'name': sequence, 'ref': '%d'%idx})
+        update_val['prodlot_id'] = new_prodlot
+        move_obj.write(cr, uid, [current_move], update_val)
 
-	products = production_obj.read(cr, uid, production_ids, ['move_lines'])
-	for p in products:
-		for new in new_move:
-			if new not in p['move_lines']:
-				p['move_lines'].append(new)
-		production_obj.write(cr, uid, [p['id']], {'move_lines': [(6, 0, p['move_lines'])]})
+    products = production_obj.read(cr, uid, production_ids, ['move_lines'])
+    for p in products:
+        for new in new_move:
+            if new not in p['move_lines']:
+                p['move_lines'].append(new)
+        production_obj.write(cr, uid, [p['id']], {'move_lines': [(6, 0, p['move_lines'])]})
 
-	return {}
+    return {}
 
 class wizard_track_move(wizard.interface):
-	states = {
-		'init': {
-			'actions': [],
-			'result': {'type': 'form', 'arch': track_form, 'fields': fields, 'state': [('end', 'Cancel', 'gtk-cancel'), ('track', 'Ok', 'gtk-ok')]},
-			},
-		'track': {
-			'actions': [_track_lines],
-			'result': {'type':'state', 'state':'end'}
-		}
-	}
+    states = {
+        'init': {
+            'actions': [],
+            'result': {'type': 'form', 'arch': track_form, 'fields': fields, 'state': [('end', 'Cancel', 'gtk-cancel'), ('track', 'Ok', 'gtk-ok')]},
+            },
+        'track': {
+            'actions': [_track_lines],
+            'result': {'type':'state', 'state':'end'}
+        }
+    }
 
 wizard_track_move('stock.move.track')
 

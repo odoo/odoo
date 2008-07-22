@@ -26,20 +26,20 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 {
-	"name" : "Charts of Accounts",
-	"version" : "1.1",
-	"depends" : ["account"],
-	"author" : "Tiny",
-	"description": """Remove minimal account chart""",
-	"website" : "http://tinyerp.com/module_account.html",
-	"category" : "Generic Modules/Accounting",
-	"init_xml" : [
-	],
-	"demo_xml" : [
-	],
-	"update_xml" : [
+    "name" : "Charts of Accounts",
+    "version" : "1.1",
+    "depends" : ["account"],
+    "author" : "Tiny",
+    "description": """Remove minimal account chart""",
+    "website" : "http://tinyerp.com/module_account.html",
+    "category" : "Generic Modules/Accounting",
+    "init_xml" : [
+    ],
+    "demo_xml" : [
+    ],
+    "update_xml" : [
 # Must be loaded by each modules
-#		"account_chart.xml",
-	],
-	"installable": True
+#       "account_chart.xml",
+    ],
+    "installable": True
 }

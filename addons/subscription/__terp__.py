@@ -26,14 +26,14 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 {
-	"name" : "Subscription and recurring operations",
-	"version" : "1.0",
-	"author" : "Tiny",
-	"category" : "Generic Modules/Others",
-	"depends" : ["base"],
-	"init_xml" : [],
-	"demo_xml" : [],
-	"update_xml" : ["subscription_view.xml"],
-	"active": False,
-	"installable": True
+    "name" : "Subscription and recurring operations",
+    "version" : "1.0",
+    "author" : "Tiny",
+    "category" : "Generic Modules/Others",
+    "depends" : ["base"],
+    "init_xml" : [],
+    "demo_xml" : [],
+    "update_xml" : ["subscription_view.xml"],
+    "active": False,
+    "installable": True
 }

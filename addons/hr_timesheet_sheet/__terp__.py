@@ -26,12 +26,12 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 {
-	"name" : "Timesheets",
-	"version" : "1.0",
-	"author" : "Tiny",
-	"category" : "Generic Modules/Human Resources",
-	"website" : "http://tinyerp.com/module_hr.html",
-	"description": """
+    "name" : "Timesheets",
+    "version" : "1.0",
+    "author" : "Tiny",
+    "category" : "Generic Modules/Human Resources",
+    "website" : "http://tinyerp.com/module_hr.html",
+    "description": """
 This module help you easily encode and validate timesheet and attendances
 within the same view. The upper part of the view is for attendances and
 track (sign in/sign out) events. The lower part is for timesheet.
@@ -49,11 +49,11 @@ This module also implement a complete timesheet validation process:
 The validation can be configured in te company:
 * Period size (day, week, month, year)
 * Maximal difference between timesheet and attendances
-	""",
-	"depends" : ["hr_timesheet", "hr_timesheet_invoice"],
-	"init_xml" : [],
-	"demo_xml" : ["hr_timesheet_sheet_demo.xml",],
-	"update_xml" : ["hr_timesheet_sheet_view.xml", "hr_timesheet_workflow.xml"],
-	"active": False,
-	"installable": True
+    """,
+    "depends" : ["hr_timesheet", "hr_timesheet_invoice"],
+    "init_xml" : [],
+    "demo_xml" : ["hr_timesheet_sheet_demo.xml",],
+    "update_xml" : ["hr_timesheet_sheet_view.xml", "hr_timesheet_workflow.xml"],
+    "active": False,
+    "installable": True
 }

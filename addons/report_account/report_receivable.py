@@ -30,44 +30,44 @@
 from osv import fields,osv
 
 def _code_get(self, cr, uid, context={}):
-	acc_type_obj = self.pool.get('account.account.type')
-	ids = acc_type_obj.search(cr, uid, [])
-	res = acc_type_obj.read(cr, uid, ids, ['code', 'name'], context)
-	return [(r['code'], r['name']) for r in res]
+    acc_type_obj = self.pool.get('account.account.type')
+    ids = acc_type_obj.search(cr, uid, [])
+    res = acc_type_obj.read(cr, uid, ids, ['code', 'name'], context)
+    return [(r['code'], r['name']) for r in res]
 
 
 class report_account_receivable(osv.osv):
-	_name = "report.account.receivable"
-	_description = "Receivable accounts"
-	_auto = False
-	_columns = {
-		'name': fields.char('Week of Year', size=7, readonly=True),
-		'type': fields.selection(_code_get, 'Account Type', required=True),
-		'balance':fields.float('Balance', readonly=True),
-		'debit':fields.float('Debit', readonly=True),
-		'credit':fields.float('Credit', readonly=True),
-	}
-	_order = 'name desc'
-	def init(self, cr):
-		cr.execute("""
-			create or replace view report_account_receivable as (
-				select
-					min(l.id) as id,
-					to_char(date,'YYYY:IW') as name,
-					sum(l.debit-l.credit) as balance,
-					sum(l.debit) as debit,
-					sum(l.credit) as credit,
-					a.type
-				from
-					account_move_line l
-				left join
-					account_account a on (l.account_id=a.id)
-				where
-					l.state <> 'draft'
-				group by
-					to_char(date,'YYYY:IW'), a.type
-			)""")
+    _name = "report.account.receivable"
+    _description = "Receivable accounts"
+    _auto = False
+    _columns = {
+        'name': fields.char('Week of Year', size=7, readonly=True),
+        'type': fields.selection(_code_get, 'Account Type', required=True),
+        'balance':fields.float('Balance', readonly=True),
+        'debit':fields.float('Debit', readonly=True),
+        'credit':fields.float('Credit', readonly=True),
+    }
+    _order = 'name desc'
+    def init(self, cr):
+        cr.execute("""
+            create or replace view report_account_receivable as (
+                select
+                    min(l.id) as id,
+                    to_char(date,'YYYY:IW') as name,
+                    sum(l.debit-l.credit) as balance,
+                    sum(l.debit) as debit,
+                    sum(l.credit) as credit,
+                    a.type
+                from
+                    account_move_line l
+                left join
+                    account_account a on (l.account_id=a.id)
+                where
+                    l.state <> 'draft'
+                group by
+                    to_char(date,'YYYY:IW'), a.type
+            )""")
 report_account_receivable()
 
-					#a.type in ('receivable','payable')
+                    #a.type in ('receivable','payable')
 

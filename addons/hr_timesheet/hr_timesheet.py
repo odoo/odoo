@@ -33,99 +33,99 @@ from osv import osv
 
 
 class hr_employee(osv.osv):
-	_name = "hr.employee"
-	_inherit = "hr.employee"
-	_columns = {
-		'product_id': fields.many2one('product.product', 'Product'),
-		'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal')
-	}
+    _name = "hr.employee"
+    _inherit = "hr.employee"
+    _columns = {
+        'product_id': fields.many2one('product.product', 'Product'),
+        'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal')
+    }
 hr_employee()
 
 
 class hr_analytic_timesheet(osv.osv):
-	_name = "hr.analytic.timesheet"
-	_table = 'hr_analytic_timesheet'
-	_description = "Timesheet line"
-	_inherits = {'account.analytic.line': 'line_id'}
-	_order = "id desc"
-	_columns = {
-		'line_id' : fields.many2one('account.analytic.line', 'Analytic line', ondelete='cascade'),
-	}
+    _name = "hr.analytic.timesheet"
+    _table = 'hr_analytic_timesheet'
+    _description = "Timesheet line"
+    _inherits = {'account.analytic.line': 'line_id'}
+    _order = "id desc"
+    _columns = {
+        'line_id' : fields.many2one('account.analytic.line', 'Analytic line', ondelete='cascade'),
+    }
 
-	def unlink(self, cr, uid, ids, context={}):
-		toremove = {}
-		for obj in self.browse(cr, uid, ids, context):
-			toremove[obj.line_id.id] = True
-		self.pool.get('account.analytic.line').unlink(cr, uid, toremove.keys(), context)
-		return super(hr_analytic_timesheet, self).unlink(cr, uid, ids, context)
-
-
-	def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount, unit, context={}):
-		res = {}
-		if prod_id and unit_amount:
-			res = self.pool.get('account.analytic.line').on_change_unit_amount(cr, uid, id, prod_id, unit_amount,unit, context)
-		return res
-
-	def _getEmployeeProduct(self, cr, uid, context):
-		emp_obj = self.pool.get('hr.employee')
-		emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))])
-		if emp_id:
-			emp=emp_obj.browse(cr, uid, emp_id[0], context)
-			if emp.product_id:
-				return emp.product_id.id
-		return False
-
-	def _getEmployeeUnit(self, cr, uid, context):
-		emp_obj = self.pool.get('hr.employee')
-		emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))])
-		if emp_id:
-			emp=emp_obj.browse(cr, uid, emp_id[0], context)
-			if emp.product_id:
-				return emp.product_id.uom_id.id
-		return False
-
-	def _getGeneralAccount(self, cr, uid, context):
-		emp_obj = self.pool.get('hr.employee')
-		emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))])
-		if emp_id:
-			emp = self.pool.get('hr.employee').browse(cr, uid, emp_id[0], context=context)
-			if bool(emp.product_id):
-				a =  emp.product_id.product_tmpl_id.property_account_expense.id
-				if not a:
-					a = emp.product_id.categ_id.property_account_expense_categ.id
-				if a:
-					return a
-		return False
-
-	def _getAnalyticJournal(self, cr, uid, context):
-		emp_obj = self.pool.get('hr.employee')
-		emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))])
-		if emp_id:
-			emp = self.pool.get('hr.employee').browse(cr, uid, emp_id[0], context=context)
-			if emp.journal_id:
-				return emp.journal_id.id
-		return False
+    def unlink(self, cr, uid, ids, context={}):
+        toremove = {}
+        for obj in self.browse(cr, uid, ids, context):
+            toremove[obj.line_id.id] = True
+        self.pool.get('account.analytic.line').unlink(cr, uid, toremove.keys(), context)
+        return super(hr_analytic_timesheet, self).unlink(cr, uid, ids, context)
 
 
-	_defaults = {
-		'product_uom_id' : _getEmployeeUnit,
-		'product_id' : _getEmployeeProduct,
-		'general_account_id' : _getGeneralAccount,
-		'journal_id' : _getAnalyticJournal,
-		'date' : lambda self,cr,uid,ctx: ctx.get('date', time.strftime('%Y-%m-%d')),
-		'user_id' : lambda obj, cr, uid, ctx : ctx.get('user_id', uid),
-	}
+    def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount, unit, context={}):
+        res = {}
+        if prod_id and unit_amount:
+            res = self.pool.get('account.analytic.line').on_change_unit_amount(cr, uid, id, prod_id, unit_amount,unit, context)
+        return res
+
+    def _getEmployeeProduct(self, cr, uid, context):
+        emp_obj = self.pool.get('hr.employee')
+        emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))])
+        if emp_id:
+            emp=emp_obj.browse(cr, uid, emp_id[0], context)
+            if emp.product_id:
+                return emp.product_id.id
+        return False
+
+    def _getEmployeeUnit(self, cr, uid, context):
+        emp_obj = self.pool.get('hr.employee')
+        emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))])
+        if emp_id:
+            emp=emp_obj.browse(cr, uid, emp_id[0], context)
+            if emp.product_id:
+                return emp.product_id.uom_id.id
+        return False
+
+    def _getGeneralAccount(self, cr, uid, context):
+        emp_obj = self.pool.get('hr.employee')
+        emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))])
+        if emp_id:
+            emp = self.pool.get('hr.employee').browse(cr, uid, emp_id[0], context=context)
+            if bool(emp.product_id):
+                a =  emp.product_id.product_tmpl_id.property_account_expense.id
+                if not a:
+                    a = emp.product_id.categ_id.property_account_expense_categ.id
+                if a:
+                    return a
+        return False
+
+    def _getAnalyticJournal(self, cr, uid, context):
+        emp_obj = self.pool.get('hr.employee')
+        emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))])
+        if emp_id:
+            emp = self.pool.get('hr.employee').browse(cr, uid, emp_id[0], context=context)
+            if emp.journal_id:
+                return emp.journal_id.id
+        return False
 
 
-	def on_change_user_id(self, cr, uid, ids, user_id):
-		if not user_id:
-			return {}
-		return {'value' : {
-			'product_id' : self._getEmployeeProduct(cr,user_id, context= {}),
-			'product_uom_id' : self._getEmployeeUnit(cr, user_id, context= {}),
-			'general_account_id' :self. _getGeneralAccount(cr, user_id, context= {}),
-			'journal_id' : self._getAnalyticJournal(cr, user_id, context= {}),
-						   }}
+    _defaults = {
+        'product_uom_id' : _getEmployeeUnit,
+        'product_id' : _getEmployeeProduct,
+        'general_account_id' : _getGeneralAccount,
+        'journal_id' : _getAnalyticJournal,
+        'date' : lambda self,cr,uid,ctx: ctx.get('date', time.strftime('%Y-%m-%d')),
+        'user_id' : lambda obj, cr, uid, ctx : ctx.get('user_id', uid),
+    }
+
+
+    def on_change_user_id(self, cr, uid, ids, user_id):
+        if not user_id:
+            return {}
+        return {'value' : {
+            'product_id' : self._getEmployeeProduct(cr,user_id, context= {}),
+            'product_uom_id' : self._getEmployeeUnit(cr, user_id, context= {}),
+            'general_account_id' :self. _getGeneralAccount(cr, user_id, context= {}),
+            'journal_id' : self._getAnalyticJournal(cr, user_id, context= {}),
+                           }}
 
 
 

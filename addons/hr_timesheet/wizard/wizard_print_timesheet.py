@@ -34,52 +34,52 @@ import netsvc
 
 dates_form = '''<?xml version="1.0"?>
 <form string="Choose your month">
-	<field name="month" />
-	<field name="year" />
-	<field name="user_id" colspan="3" />
+    <field name="month" />
+    <field name="year" />
+    <field name="user_id" colspan="3" />
 </form>'''
 
 
 dates_form_ro = '''<?xml version="1.0"?>
 <form string="Choose your month">
-	<field name="month" />
-	<field name="year" />
-	<field name="user_id" colspan="3" readonly="1"/>
+    <field name="month" />
+    <field name="year" />
+    <field name="user_id" colspan="3" readonly="1"/>
 </form>'''
 
 dates_fields = {
-	'month': dict(string=u'Month', type='selection', required=True, selection=[(x, datetime.date(2000, x, 1).strftime('%B')) for x in range(1, 13)]),
-	'year': dict(string=u'Year', type=u'integer', required=True),
-	'user_id' : dict(string=u'User', type='many2one', relation='res.users', required=True),
+    'month': dict(string=u'Month', type='selection', required=True, selection=[(x, datetime.date(2000, x, 1).strftime('%B')) for x in range(1, 13)]),
+    'year': dict(string=u'Year', type=u'integer', required=True),
+    'user_id' : dict(string=u'User', type='many2one', relation='res.users', required=True),
 }
 
 def _get_value(self, cr, uid, data, context):
-	today = datetime.date.today()
-	return dict(month=today.month, year=today.year, user_id=uid)
+    today = datetime.date.today()
+    return dict(month=today.month, year=today.year, user_id=uid)
 
 class wizard_report(wizard.interface):
-	states = {
-		'init': {
-			'actions': [_get_value], 
-			'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[ ('end','Cancel','gtk-cancel'),('report','Print','gtk-print')]}
-		},
-		'report': {
-			'actions': [],
-			'result': {'type':'print', 'report':'hr.analytical.timesheet', 'state':'end'}
-		}
-	}
+    states = {
+        'init': {
+            'actions': [_get_value], 
+            'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[ ('end','Cancel','gtk-cancel'),('report','Print','gtk-print')]}
+        },
+        'report': {
+            'actions': [],
+            'result': {'type':'print', 'report':'hr.analytical.timesheet', 'state':'end'}
+        }
+    }
 wizard_report('hr.analytical.timesheet')
 
 class wizard_report_my(wizard.interface):
-	states = {
-		'init': {
-			'actions': [_get_value], 
-			'result': {'type':'form', 'arch':dates_form_ro, 'fields':dates_fields, 'state':[ ('end','Cancel','gtk-cancel'),('report','Print','gtk-print')]}
-		},
-		'report': {
-			'actions': [],
-			'result': {'type':'print', 'report':'hr.analytical.timesheet', 'state':'end'}
-		}
-	}
+    states = {
+        'init': {
+            'actions': [_get_value], 
+            'result': {'type':'form', 'arch':dates_form_ro, 'fields':dates_fields, 'state':[ ('end','Cancel','gtk-cancel'),('report','Print','gtk-print')]}
+        },
+        'report': {
+            'actions': [],
+            'result': {'type':'print', 'report':'hr.analytical.timesheet', 'state':'end'}
+        }
+    }
 wizard_report_my('hr.analytical.timesheet.my')
 

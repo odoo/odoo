@@ -74,9 +74,9 @@ def write_field(out, key, value):
 def write_fields(out, fields):
     out.write(HEAD)
     for key in fields:
-	value = fields[key]
-        write_field(out, key, value)
-#       write_field(out, key+"a", value) # pour copie-carbone sur autres pages
+	    value = fields[key]
+	    write_field(out, key, value)
+#        write_field(out, key+"a", value) # pour copie-carbone sur autres pages
     out.write(TAIL)
 
 def extract_keys_from_pdf(filename):

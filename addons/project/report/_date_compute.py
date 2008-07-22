@@ -36,66 +36,66 @@ import pooler
 # TODO: improve sequences code
 #
 def _compute_tasks(cr, uid, task_list, date_begin):
-	sequences = []
-	users = {}
-	tasks = {}
-	last_date = date_begin
-	for task in task_list:
-		# TODO: reorder ! with dependencies
-		if not task.planned_hours:
-			continue
-		if task.state in ('open','progress') and task.user_id:
+    sequences = []
+    users = {}
+    tasks = {}
+    last_date = date_begin
+    for task in task_list:
+        # TODO: reorder ! with dependencies
+        if not task.planned_hours:
+            continue
+        if task.state in ('open','progress') and task.user_id:
 
-			# Find the starting date of the task
-			if task.user_id.id in users:
-				date_start = users[task.user_id.id]
-			else:
-				date_start = date_begin
-			if task.start_sequence:
-				sequences.sort()
-				for (seq,dt) in sequences:
-					if seq<task.sequence:
-						date_start = max(dt,date_start)
-					else:
-						break
+            # Find the starting date of the task
+            if task.user_id.id in users:
+                date_start = users[task.user_id.id]
+            else:
+                date_start = date_begin
+            if task.start_sequence:
+                sequences.sort()
+                for (seq,dt) in sequences:
+                    if seq<task.sequence:
+                        date_start = max(dt,date_start)
+                    else:
+                        break
 
-			if task.date_start:
-				task_date_start = DateTime.strptime(task.date_start, '%Y-%m-%d %H:%M:%S')
-				if DateTime.cmp(date_start, task_date_start) < 0:
-					date_start = task_date_start
+            if task.date_start:
+                task_date_start = DateTime.strptime(task.date_start, '%Y-%m-%d %H:%M:%S')
+                if DateTime.cmp(date_start, task_date_start) < 0:
+                    date_start = task_date_start
 
 
-			# Compute the closing date of the task
-			tasks[task.id] = []
-			res = pooler.get_pool(cr.dbname).get('hr.timesheet.group').interval_get(cr, uid, task.project_id.timesheet_id.id, date_start, task.planned_hours)
-			for (d1,d2) in res:
-				tasks[task.id].append((d1, d2, task.name, task.user_id.login))
-			date_close = tasks[task.id][-1][1]
+            # Compute the closing date of the task
+            tasks[task.id] = []
+            res = pooler.get_pool(cr.dbname).get('hr.timesheet.group').interval_get(cr, uid, task.project_id.timesheet_id.id, date_start, task.planned_hours)
+            for (d1,d2) in res:
+                tasks[task.id].append((d1, d2, task.name, task.user_id.login))
+            date_close = tasks[task.id][-1][1]
 
-			# Store result
-			users[task.user_id.id] = date_close
-			sequences.append((task.sequence, date_close))
-			if date_close>last_date:
-				last_date=date_close
-	return tasks, last_date
+            # Store result
+            users[task.user_id.id] = date_close
+            sequences.append((task.sequence, date_close))
+            if date_close>last_date:
+                last_date=date_close
+    return tasks, last_date
 
 def _compute_project(cr, uid, project, date_begin):
-	tasks, last_date = _compute_tasks(cr, uid, project.tasks, date_begin)
-	for proj in project.child_id:
-		d0 = DateTime.strptime(proj.date_start,'%Y-%m-%d')
-		if d0 > last_date:
-			last_date = d0
-		t2, l2 = _compute_project(cr, uid, proj, last_date)
-		tasks.update(t2)
-		last_date = l2
-	return tasks, last_date
+    tasks, last_date = _compute_tasks(cr, uid, project.tasks, date_begin)
+    for proj in project.child_id:
+        d0 = DateTime.strptime(proj.date_start,'%Y-%m-%d')
+        if d0 > last_date:
+            last_date = d0
+        t2, l2 = _compute_project(cr, uid, proj, last_date)
+        tasks.update(t2)
+        last_date = l2
+    return tasks, last_date
 
 def _project_compute(cr, uid, project_id):
-	project = pooler.get_pool(cr.dbname).get('project.project').browse(cr, uid, project_id)
-	if project.date_start:
-		date_begin = DateTime.strptime(project.date_start, '%Y-%m-%d')
-	else:
-		date_begin = DateTime.now()
-	tasks, last_date = _compute_project(cr, uid, project, date_begin)
-	return tasks, last_date
+    project = pooler.get_pool(cr.dbname).get('project.project').browse(cr, uid, project_id)
+    if project.date_start:
+        date_begin = DateTime.strptime(project.date_start, '%Y-%m-%d')
+    else:
+        date_begin = DateTime.now()
+    tasks, last_date = _compute_project(cr, uid, project, date_begin)
+    return tasks, last_date
 

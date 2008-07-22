@@ -31,21 +31,21 @@ import time
 from report import report_sxw
 
 class sale_prepare(report_sxw.rml_parse):
-	def __init__(self, cr, uid, name, context):
-		super(sale_prepare, self).__init__(cr, uid, name, context)
-		self.localcontext.update( {
-			'allotment': self._allotment,
-		})
-		
-	def _allotment(self, object):
-		allotments = {}
-		for line in object.order_line:
-			if line.address_allotment_id:
-				allotments.setdefault(line.address_allotment_id.id, ([line.address_allotment_id],[]) )
-			else:
-				allotments.setdefault(line.address_allotment_id.id, ([],[]) )
-			allotments[line.address_allotment_id.id][1].append(line)
-		return allotments.values()
+    def __init__(self, cr, uid, name, context):
+        super(sale_prepare, self).__init__(cr, uid, name, context)
+        self.localcontext.update( {
+            'allotment': self._allotment,
+        })
+        
+    def _allotment(self, object):
+        allotments = {}
+        for line in object.order_line:
+            if line.address_allotment_id:
+                allotments.setdefault(line.address_allotment_id.id, ([line.address_allotment_id],[]) )
+            else:
+                allotments.setdefault(line.address_allotment_id.id, ([],[]) )
+            allotments[line.address_allotment_id.id][1].append(line)
+        return allotments.values()
 
 report_sxw.report_sxw('report.sale.order.prepare.allot', 'sale.order', 'addons/sale/report/prepare_allot.rml',parser=sale_prepare)
 

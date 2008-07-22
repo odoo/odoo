@@ -26,8 +26,8 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 def rounding(f, r):
-	if not r:
-		return f
-	return round(f / r) * r
+    if not r:
+        return f
+    return round(f / r) * r
 
 

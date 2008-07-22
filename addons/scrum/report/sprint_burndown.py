@@ -42,57 +42,57 @@ import pychart.legend
 import _burndown
 
 class external_pdf(render):
-	def __init__(self, pdf):
-		render.__init__(self)
-		self.pdf = pdf
-		self.output_type='pdf'
-	def _render(self):
-		return self.pdf
+    def __init__(self, pdf):
+        render.__init__(self)
+        self.pdf = pdf
+        self.output_type='pdf'
+    def _render(self):
+        return self.pdf
 
 class report_tasks(report_int):
-	def create(self, cr, uid, ids, datas, context={}):
-		io = StringIO.StringIO()
+    def create(self, cr, uid, ids, datas, context={}):
+        io = StringIO.StringIO()
 
-		canv = canvas.init(fname=io, format='pdf')
-		canv.set_author("Tiny ERP")
+        canv = canvas.init(fname=io, format='pdf')
+        canv.set_author("Tiny ERP")
 
-		cr.execute('select id,date_start,date_stop from scrum_sprint where id=%d', (datas['id'],))
-		for (id,date_start,date_stop) in cr.fetchall():
-			date_to_int = lambda x: int(x.ticks())
-			int_to_date = lambda x: '/a60{}'+DateTime.localtime(x).strftime('%d/%m/%Y')
+        cr.execute('select id,date_start,date_stop from scrum_sprint where id=%d', (datas['id'],))
+        for (id,date_start,date_stop) in cr.fetchall():
+            date_to_int = lambda x: int(x.ticks())
+            int_to_date = lambda x: '/a60{}'+DateTime.localtime(x).strftime('%d/%m/%Y')
 
-			cr.execute('select id from project_task where product_backlog_id in(select id from scrum_product_backlog where sprint_id=%d)', (id,))
+            cr.execute('select id from project_task where product_backlog_id in(select id from scrum_product_backlog where sprint_id=%d)', (id,))
 
-			ids = map(lambda x: x[0], cr.fetchall())
-			datas = _burndown.compute_burndown(cr, uid, ids, date_start, date_stop)
+            ids = map(lambda x: x[0], cr.fetchall())
+            datas = _burndown.compute_burndown(cr, uid, ids, date_start, date_stop)
 
-			max_hour = reduce(lambda x,y: max(y[1],x), datas, 0)
+            max_hour = reduce(lambda x,y: max(y[1],x), datas, 0)
 
-			date_to_int = lambda x: int(x.ticks())
-			int_to_date = lambda x: '/a60{}'+DateTime.localtime(x).strftime('%d %m %Y')
+            date_to_int = lambda x: int(x.ticks())
+            int_to_date = lambda x: '/a60{}'+DateTime.localtime(x).strftime('%d %m %Y')
 
-			def _interval_get(*args):
-				result = []
-				for i in range(20):
-					d = DateTime.localtime(datas[0][0] + (((datas[-1][0]-datas[0][0])/20)*(i+1)))
-					res = DateTime.DateTime(d.year, d.month, d.day).ticks()
-					if (not result) or result[-1]<>res:
-						result.append(res)
-				return result
+            def _interval_get(*args):
+                result = []
+                for i in range(20):
+                    d = DateTime.localtime(datas[0][0] + (((datas[-1][0]-datas[0][0])/20)*(i+1)))
+                    res = DateTime.DateTime(d.year, d.month, d.day).ticks()
+                    if (not result) or result[-1]<>res:
+                        result.append(res)
+                return result
 
-			ar = area.T(x_grid_style=line_style.gray50_dash1,
-				x_axis=axis.X(label="Date", format=int_to_date),
-				y_axis=axis.Y(label="Burndown Chart - Planned Hours"),
-				x_grid_interval=_interval_get,
-				x_range = (datas[0][0],datas[-1][0]),
-				y_range = (0,max_hour),
-				legend = None,
-				size = (680,450))
-			ar.add_plot(line_plot.T(data=datas))
-			ar.draw(canv)
-		canv.close()
+            ar = area.T(x_grid_style=line_style.gray50_dash1,
+                x_axis=axis.X(label="Date", format=int_to_date),
+                y_axis=axis.Y(label="Burndown Chart - Planned Hours"),
+                x_grid_interval=_interval_get,
+                x_range = (datas[0][0],datas[-1][0]),
+                y_range = (0,max_hour),
+                legend = None,
+                size = (680,450))
+            ar.add_plot(line_plot.T(data=datas))
+            ar.draw(canv)
+        canv.close()
 
-		self.obj = external_pdf(io.getvalue())
-		self.obj.render()
-		return (self.obj.pdf, 'pdf')
+        self.obj = external_pdf(io.getvalue())
+        self.obj.render()
+        return (self.obj.pdf, 'pdf')
 report_tasks('report.scrum.sprint.burndown')

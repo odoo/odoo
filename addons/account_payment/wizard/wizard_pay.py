@@ -35,39 +35,39 @@ import time
 
 
 def _launch_wizard(self, cr, uid, data, context):
-	"""
-	Search for a wizard to launch according to the type.
-	If type is manual. just confirm the order.
-	"""
+    """
+    Search for a wizard to launch according to the type.
+    If type is manual. just confirm the order.
+    """
 
-	order_ref= pooler.get_pool(cr.dbname).get('payment.order')
-	order= order_ref.browse(cr,uid,data['id'],context)
-	t= order.mode and order.mode.type.code or 'manual'
-	if t == 'manual' :
-		order_ref.set_done(cr,uid,data['id'],context)
-		return {}
+    order_ref= pooler.get_pool(cr.dbname).get('payment.order')
+    order= order_ref.browse(cr,uid,data['id'],context)
+    t= order.mode and order.mode.type.code or 'manual'
+    if t == 'manual' :
+        order_ref.set_done(cr,uid,data['id'],context)
+        return {}
 
-	gw= order_ref.get_wizard(t)
-	if not gw:
-		order_ref.set_done(cr,uid,data['id'],context)
-		return {}		
+    gw= order_ref.get_wizard(t)
+    if not gw:
+        order_ref.set_done(cr,uid,data['id'],context)
+        return {}       
 
-	mod_obj = pooler.get_pool(cr.dbname).get('ir.model.data')
-	act_obj = pooler.get_pool(cr.dbname).get('ir.actions.wizard')
-	module, wizard= gw
-	result = mod_obj._get_id(cr, uid, module, wizard)
-	id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
-	result = act_obj.read(cr, uid, [id])[0]
-	#result['context'] = str({'fiscalyear': data['form']['fiscalyear']})
-	return result
+    mod_obj = pooler.get_pool(cr.dbname).get('ir.model.data')
+    act_obj = pooler.get_pool(cr.dbname).get('ir.actions.wizard')
+    module, wizard= gw
+    result = mod_obj._get_id(cr, uid, module, wizard)
+    id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
+    result = act_obj.read(cr, uid, [id])[0]
+    #result['context'] = str({'fiscalyear': data['form']['fiscalyear']})
+    return result
 
 
 class wizard_pay(wizard.interface):
 
-	states= {'init' : {'actions': [],		
-					   'result':{'type':'action',
-								 'action':_launch_wizard,
-								 'state':'end'}
-					   }
-			 }
+    states= {'init' : {'actions': [],       
+                       'result':{'type':'action',
+                                 'action':_launch_wizard,
+                                 'state':'end'}
+                       }
+             }
 wizard_pay('pay_payment')

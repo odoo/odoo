@@ -37,67 +37,67 @@ from tools.translate import _
 
 _aged_trial_form = """<?xml version="1.0"?>
 <form string="Aged Trial Balance">
-	<field name="company_id"/>
-	<newline/>
-	<field name="fiscalyear"/>
-	<newline/>
-	<field name="period_length"/>
-	<newline/>
-	<field name="sorting_on"/>
-	<newline/>
-	<field name="computation"/>
+    <field name="company_id"/>
+    <newline/>
+    <field name="fiscalyear"/>
+    <newline/>
+    <field name="period_length"/>
+    <newline/>
+    <field name="sorting_on"/>
+    <newline/>
+    <field name="computation"/>
 </form>"""
 
 _aged_trial_fields = {
-	'company_id': {'string': 'Company', 'type': 'many2one', 'relation': 'res.company', 'required': True},
-	'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear',
-		'help': 'Keep empty for all open fiscal year'},
-	'period_length': {'string': 'Period length (days)', 'type': 'integer', 'required': True, 'default': lambda *a:30},
-	'sorting_on':{'string': 'Sorting On', 'type': 'selection', 'selection': [('partner','By Partner Name (asc)'), ('amount','By Amount (desc)')],'required': True, 'default': lambda *a:'partner'},
-	'computation':{'string': 'Computational Method', 'type': 'selection', 'selection': [("\'receivable\'",'On Receivables Only'), ("\'payable\'",'On Payables Only'), ("\'receivable\',\'payable\'",'On Receivables & Payables')], 'required': True, 'default': lambda *a:"\'receivable\'"}
+    'company_id': {'string': 'Company', 'type': 'many2one', 'relation': 'res.company', 'required': True},
+    'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear',
+        'help': 'Keep empty for all open fiscal year'},
+    'period_length': {'string': 'Period length (days)', 'type': 'integer', 'required': True, 'default': lambda *a:30},
+    'sorting_on':{'string': 'Sorting On', 'type': 'selection', 'selection': [('partner','By Partner Name (asc)'), ('amount','By Amount (desc)')],'required': True, 'default': lambda *a:'partner'},
+    'computation':{'string': 'Computational Method', 'type': 'selection', 'selection': [("\'receivable\'",'On Receivables Only'), ("\'payable\'",'On Payables Only'), ("\'receivable\',\'payable\'",'On Receivables & Payables')], 'required': True, 'default': lambda *a:"\'receivable\'"}
 }
 
 def _calc_dates(self, cr, uid, data, context):
-	res = {}
-	period_length = data['form']['period_length']
-	if period_length<=0:
-		raise wizard.except_wizard(_('UserError'), _('You must enter a period length that cannot be 0 or below !'))
-	start = now()
-	for i in range(5)[::-1]:
-		stop = start-RelativeDateTime(days=period_length)
-		res[str(i)] = {
-			'name' : str((5-i)*period_length)+' days',
-			'stop': start.strftime('%Y-%m-%d'),
-			'start' : stop.strftime('%Y-%m-%d'),
-		}
-		start = stop - RelativeDateTime(days=1)
-	return res
+    res = {}
+    period_length = data['form']['period_length']
+    if period_length<=0:
+        raise wizard.except_wizard(_('UserError'), _('You must enter a period length that cannot be 0 or below !'))
+    start = now()
+    for i in range(5)[::-1]:
+        stop = start-RelativeDateTime(days=period_length)
+        res[str(i)] = {
+            'name' : str((5-i)*period_length)+' days',
+            'stop': start.strftime('%Y-%m-%d'),
+            'start' : stop.strftime('%Y-%m-%d'),
+        }
+        start = stop - RelativeDateTime(days=1)
+    return res
 
 class wizard_report(wizard.interface):
-	def _get_defaults(self, cr, uid, data, context):
-		fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
-		data['form']['fiscalyear'] = fiscalyear_obj.find(cr, uid)
+    def _get_defaults(self, cr, uid, data, context):
+        fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
+        data['form']['fiscalyear'] = fiscalyear_obj.find(cr, uid)
 
-		user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid, context=context)
-		if user.company_id:
-			company_id = user.company_id.id
-		else:
-			company_id = pooler.get_pool(cr.dbname).get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
-		data['form']['company_id'] = company_id
+        user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid, context=context)
+        if user.company_id:
+            company_id = user.company_id.id
+        else:
+            company_id = pooler.get_pool(cr.dbname).get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
+        data['form']['company_id'] = company_id
 
-		return data['form']
+        return data['form']
 
 
-	states = {
-		'init': {
-			'actions': [_get_defaults],
-			'result': {'type':'form', 'arch':_aged_trial_form, 'fields':_aged_trial_fields, 'state':[('end','Cancel'),('print','Print Aged Partner Balance')]},
-		},
-		'print': {
-			'actions': [_calc_dates],
-			'result': {'type':'print', 'report':'account.aged.trial.balance', 'state':'end'},
-		},
-	}
+    states = {
+        'init': {
+            'actions': [_get_defaults],
+            'result': {'type':'form', 'arch':_aged_trial_form, 'fields':_aged_trial_fields, 'state':[('end','Cancel'),('print','Print Aged Partner Balance')]},
+        },
+        'print': {
+            'actions': [_calc_dates],
+            'result': {'type':'print', 'report':'account.aged.trial.balance', 'state':'end'},
+        },
+    }
 
 wizard_report('account.aged.trial.balance')
 

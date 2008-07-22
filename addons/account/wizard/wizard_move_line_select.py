@@ -31,35 +31,35 @@ import wizard
 import pooler
 
 class wizard_move_line_select(wizard.interface):
-	def _open_window(self, cr, uid, data, context):
-		mod_obj = pooler.get_pool(cr.dbname).get('ir.model.data')
-		act_obj = pooler.get_pool(cr.dbname).get('ir.actions.act_window')
-		fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
+    def _open_window(self, cr, uid, data, context):
+        mod_obj = pooler.get_pool(cr.dbname).get('ir.model.data')
+        act_obj = pooler.get_pool(cr.dbname).get('ir.actions.act_window')
+        fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
 
-		if not context.get('fiscalyear', False):
-			fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('state', '=', 'draft')])
-		else:
-			fiscalyear_ids = [context['fiscalyear']]
+        if not context.get('fiscalyear', False):
+            fiscalyear_ids = fiscalyear_obj.search(cr, uid, [('state', '=', 'draft')])
+        else:
+            fiscalyear_ids = [context['fiscalyear']]
 
-		fiscalyears = fiscalyear_obj.browse(cr, uid, fiscalyear_ids)
-		period_ids = []
-		for fiscalyear in fiscalyears:
-			for period in fiscalyear.period_ids:
-				period_ids.append(period.id)
-		domain = str(('period_id', 'in', period_ids))
+        fiscalyears = fiscalyear_obj.browse(cr, uid, fiscalyear_ids)
+        period_ids = []
+        for fiscalyear in fiscalyears:
+            for period in fiscalyear.period_ids:
+                period_ids.append(period.id)
+        domain = str(('period_id', 'in', period_ids))
 
-		result = mod_obj._get_id(cr, uid, 'account', 'action_move_line_tree1')
-		id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
-		result = act_obj.read(cr, uid, [id])[0]
-		result['context'] = str({'fiscalyear': context.get('fiscalyear', False)})
-		result['domain']=result['domain'][0:-1]+','+domain+result['domain'][-1]
-		return result
+        result = mod_obj._get_id(cr, uid, 'account', 'action_move_line_tree1')
+        id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
+        result = act_obj.read(cr, uid, [id])[0]
+        result['context'] = str({'fiscalyear': context.get('fiscalyear', False)})
+        result['domain']=result['domain'][0:-1]+','+domain+result['domain'][-1]
+        return result
 
-	states = {
-		'init': {
-			'actions': [],
-			'result': {'type': 'action', 'action': _open_window, 'state': 'end'}
-		}
-	}
+    states = {
+        'init': {
+            'actions': [],
+            'result': {'type': 'action', 'action': _open_window, 'state': 'end'}
+        }
+    }
 wizard_move_line_select('account.move.line.select')
 

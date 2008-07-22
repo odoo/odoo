@@ -32,27 +32,27 @@ import pooler
 
 duplicate_form = '''<?xml version="1.0"?>
 <form string="Duplicate account charts">
-	<field name="company_id"/>
+    <field name="company_id"/>
 </form>'''
 
 duplicate_fields = {
-	'company_id': {'string': 'Company', 'type': 'many2one', 'relation': 'res.company', 'required': True},
+    'company_id': {'string': 'Company', 'type': 'many2one', 'relation': 'res.company', 'required': True},
 }
 
 def _do_duplicate(self, cr, uid, data, context):
-	account_obj = pooler.get_pool(cr.dbname).get('account.account')
-	account_obj.copy(cr, uid, data['id'], data['form'], context=context)
-	return {}
+    account_obj = pooler.get_pool(cr.dbname).get('account.account')
+    account_obj.copy(cr, uid, data['id'], data['form'], context=context)
+    return {}
 
 class wizard_account_duplicate(wizard.interface):
-	states = {
-		'init': {
-			'actions': [],
-			'result': {'type': 'form', 'arch': duplicate_form, 'fields': duplicate_fields, 'state': (('end', 'Cancel'), ('duplicate', 'Duplicate'))},
-		},
-		'duplicate': {
-			'actions': [_do_duplicate],
-			'result': {'type': 'state', 'state': 'end'},
-		},
-	}
+    states = {
+        'init': {
+            'actions': [],
+            'result': {'type': 'form', 'arch': duplicate_form, 'fields': duplicate_fields, 'state': (('end', 'Cancel'), ('duplicate', 'Duplicate'))},
+        },
+        'duplicate': {
+            'actions': [_do_duplicate],
+            'result': {'type': 'state', 'state': 'end'},
+        },
+    }
 wizard_account_duplicate('account.wizard.account.duplicate')

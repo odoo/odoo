@@ -35,49 +35,49 @@ import netsvc
 
 btt_form = """<?xml version="1.0" ?>
 <form string="Create Tasks">
-	<field name="user_id"/>
+    <field name="user_id"/>
 </form>"""
 
 btt_fields = {
-	'user_id' : {'string':'Assign To', 'type':'many2one', 'relation':'res.users'},
+    'user_id' : {'string':'Assign To', 'type':'many2one', 'relation':'res.users'},
 }
 
 def _do_create(self, cr, uid, data, context):
-	backlogs = pooler.get_pool(cr.dbname).get('scrum.product.backlog').browse(cr, uid, data['ids'])
-	ids = []
-	for backlog in backlogs:
-		task = pooler.get_pool(cr.dbname).get('scrum.task')
-		ids.append(task.create(cr, uid, {
-			'product_backlog_id': backlog.id,
-			'name': backlog.name,
-			'description': backlog.note,
-			'project_id': backlog.project_id.id,
-			'user_id': (backlog.user_id and backlog.user_id.id) or uid,
-			'priority': backlog.priority
-		}))
+    backlogs = pooler.get_pool(cr.dbname).get('scrum.product.backlog').browse(cr, uid, data['ids'])
+    ids = []
+    for backlog in backlogs:
+        task = pooler.get_pool(cr.dbname).get('scrum.task')
+        ids.append(task.create(cr, uid, {
+            'product_backlog_id': backlog.id,
+            'name': backlog.name,
+            'description': backlog.note,
+            'project_id': backlog.project_id.id,
+            'user_id': (backlog.user_id and backlog.user_id.id) or uid,
+            'priority': backlog.priority
+        }))
 
-	value = {
-		'domain': "[('product_backlog_id','in',["+','.join(map(str,data['ids']))+"])]",
-		'name': 'Open Backlog Tasks',
-		'view_type': 'form',
-		'view_mode': 'tree,form',
-		'res_model': 'scrum.task',
-		'view_id': False,
-		'type': 'ir.actions.act_window'
-	}
-	return value
+    value = {
+        'domain': "[('product_backlog_id','in',["+','.join(map(str,data['ids']))+"])]",
+        'name': 'Open Backlog Tasks',
+        'view_type': 'form',
+        'view_mode': 'tree,form',
+        'res_model': 'scrum.task',
+        'view_id': False,
+        'type': 'ir.actions.act_window'
+    }
+    return value
 
 class wiz_btt(wizard.interface):
-	states = {
-		'init':{
-			'actions': [],
-			'result': {'type':'form', 'arch':btt_form, 'fields':btt_fields, 'state':[('end', 'Cancel'), ('create', 'Create Tasks')] },
-		},
-		'create':{
-			'actions': [],
-			'result': {'type':'action', 'action': _do_create, 'state':'end'},
-		},
-	}
+    states = {
+        'init':{
+            'actions': [],
+            'result': {'type':'form', 'arch':btt_form, 'fields':btt_fields, 'state':[('end', 'Cancel'), ('create', 'Create Tasks')] },
+        },
+        'create':{
+            'actions': [],
+            'result': {'type':'action', 'action': _do_create, 'state':'end'},
+        },
+    }
 wiz_btt('scrum.product.backlog.task.create')
 
 # vim:noexpandtab:tw=0

@@ -26,23 +26,23 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 {
-	"name":"Service company profile",
-	"version":"1.0",
-	"author":"Tiny",
-	"category":"Profile",
-	"depends":[
-		"hr",
-		"hr_timesheet",
-		"hr_timesheet_invoice",
-		"crm",
-		"project",
-		"board_project",
-		"account_analytic_analysis"
-	],
-	#"board_project",
-	#"board_account"],
-	"demo_xml":[],
-	"update_xml":["profile_service.xml"],
-	"active":False,
-	"installable":True,
+    "name":"Service company profile",
+    "version":"1.0",
+    "author":"Tiny",
+    "category":"Profile",
+    "depends":[
+        "hr",
+        "hr_timesheet",
+        "hr_timesheet_invoice",
+        "crm",
+        "project",
+        "board_project",
+        "account_analytic_analysis"
+    ],
+    #"board_project",
+    #"board_account"],
+    "demo_xml":[],
+    "update_xml":["profile_service.xml"],
+    "active":False,
+    "installable":True,
 }

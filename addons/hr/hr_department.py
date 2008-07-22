@@ -31,57 +31,57 @@ from osv import fields,osv
 import tools
 
 class hr_department(osv.osv):
-	_name = "hr.department"
-	_columns = {
-		'name': fields.char('Department Name', size=64, required=True),
-		'company_id': fields.many2one('res.company', 'Company', select=True, required=True),
-		'parent_id': fields.many2one('hr.department', 'Parent Department', select=True),
-		'child_ids': fields.one2many('hr.department', 'parent_id', 'Childs Departments'),
-		'note': fields.text('Note'),
-		'manager_id': fields.many2one('res.users', 'Manager', required=True),
-		'member_ids': fields.many2many('res.users', 'hr_department_user_rel', 'department_id', 'user_id', 'Members'),
-	}
-	def _get_members(self,cr, uid, context={}):
-		mids = self.search(cr, uid, [('manager_id','=',uid)])
-		result = {uid:1}
-		for m in self.browse(cr, uid, mids, context):
-			for user in m.member_ids:
-				result[user.id] = 1
-		return result.keys()
-	def _check_recursion(self, cr, uid, ids):
-		level = 100
-		while len(ids):
-			cr.execute('select distinct parent_id from hr_department where id in ('+','.join(map(str,ids))+')')
-			ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-			if not level:
-				return False
-			level -= 1
-		return True
-	_constraints = [
-		(_check_recursion, 'Error! You can not create recursive departments.', ['parent_id'])
-	]
+    _name = "hr.department"
+    _columns = {
+        'name': fields.char('Department Name', size=64, required=True),
+        'company_id': fields.many2one('res.company', 'Company', select=True, required=True),
+        'parent_id': fields.many2one('hr.department', 'Parent Department', select=True),
+        'child_ids': fields.one2many('hr.department', 'parent_id', 'Childs Departments'),
+        'note': fields.text('Note'),
+        'manager_id': fields.many2one('res.users', 'Manager', required=True),
+        'member_ids': fields.many2many('res.users', 'hr_department_user_rel', 'department_id', 'user_id', 'Members'),
+    }
+    def _get_members(self,cr, uid, context={}):
+        mids = self.search(cr, uid, [('manager_id','=',uid)])
+        result = {uid:1}
+        for m in self.browse(cr, uid, mids, context):
+            for user in m.member_ids:
+                result[user.id] = 1
+        return result.keys()
+    def _check_recursion(self, cr, uid, ids):
+        level = 100
+        while len(ids):
+            cr.execute('select distinct parent_id from hr_department where id in ('+','.join(map(str,ids))+')')
+            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+            if not level:
+                return False
+            level -= 1
+        return True
+    _constraints = [
+        (_check_recursion, 'Error! You can not create recursive departments.', ['parent_id'])
+    ]
 
 hr_department()
 
 
 class ir_action_window(osv.osv):
-	_inherit = 'ir.actions.act_window'
+    _inherit = 'ir.actions.act_window'
 
-	def read(self, cr, uid, ids, fields=None, context=None,
-			load='_classic_read'):
-		select = ids
-		if isinstance(ids, (int, long)):
-			select = [ids]
-		res = super(ir_action_window, self).read(cr, uid, select, fields=fields,
-				context=context, load=load)
-		for r in res:
-			mystring = 'department_users_get()'
-			if mystring in (r.get('domain', '[]') or ''):
-				r['domain'] = r['domain'].replace(mystring, str(
-					self.pool.get('hr.department')._get_members(cr, uid)))
-		if isinstance(ids, (int, long)):
-			return res[0]
-		return res
+    def read(self, cr, uid, ids, fields=None, context=None,
+            load='_classic_read'):
+        select = ids
+        if isinstance(ids, (int, long)):
+            select = [ids]
+        res = super(ir_action_window, self).read(cr, uid, select, fields=fields,
+                context=context, load=load)
+        for r in res:
+            mystring = 'department_users_get()'
+            if mystring in (r.get('domain', '[]') or ''):
+                r['domain'] = r['domain'].replace(mystring, str(
+                    self.pool.get('hr.department')._get_members(cr, uid)))
+        if isinstance(ids, (int, long)):
+            return res[0]
+        return res
 
 ir_action_window()
 

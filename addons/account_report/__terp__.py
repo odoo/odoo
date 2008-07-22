@@ -26,19 +26,19 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 {
-	"name" : "Reporting for accounting",
-	"version" : "1.0",
-	"depends" : ["account"],
-	"author" : "Tiny",
-	"description": """Financial and accounting reporting""",
-	"website" : "http://tinyerp.com/module_account.html",
-	"category" : "Generic Modules/Accounting",
-	"init_xml" : [ ],
-	"demo_xml" : [ ],
-	"update_xml" : [ "account_view.xml","account_report.xml" ],
-#	"translations" : {
-#		"fr": "i18n/french_fr.csv"
-#	},
-	"active": False,
-	"installable": True
+    "name" : "Reporting for accounting",
+    "version" : "1.0",
+    "depends" : ["account"],
+    "author" : "Tiny",
+    "description": """Financial and accounting reporting""",
+    "website" : "http://tinyerp.com/module_account.html",
+    "category" : "Generic Modules/Accounting",
+    "init_xml" : [ ],
+    "demo_xml" : [ ],
+    "update_xml" : [ "account_view.xml","account_report.xml" ],
+#   "translations" : {
+#       "fr": "i18n/french_fr.csv"
+#   },
+    "active": False,
+    "installable": True
 }

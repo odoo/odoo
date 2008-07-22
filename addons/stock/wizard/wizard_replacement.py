@@ -31,35 +31,35 @@ import wizard
 
 class wizard_replacement(wizard.interface):
 
-	def getComposant(self, cr, uid, data, context):
-		return {}
+    def getComposant(self, cr, uid, data, context):
+        return {}
 
-	def replaceComposant(self, cr, uid, data, context):
-		return {}
+    def replaceComposant(self, cr, uid, data, context):
+        return {}
 
-	comp_form = '''<?xml version="1.0"?><form string="Replace a component"><label string="Component" colspan="4"/></form>'''
-	comp_fields = {}
+    comp_form = '''<?xml version="1.0"?><form string="Replace a component"><label string="Component" colspan="4"/></form>'''
+    comp_fields = {}
 
-	replace_form = '''<?xml version="1.0"?><form string="Replace result"><label string="Replacing successful !" colspan="4" /></form>'''
-	replace_fields = {}
+    replace_form = '''<?xml version="1.0"?><form string="Replace result"><label string="Replacing successful !" colspan="4" /></form>'''
+    replace_fields = {}
 
-	states = {
-			'init' : {
-				'actions' : [getComposant],
-				'result' : {
-					'type' : 'form',
-					'arch' : comp_form,
-					'fields' : comp_fields,
-					'state' : [('end', 'Cancel'), ('replace', 'Replace')]}
-				},
-			'replace' : {
-				'action' : [replaceComposant],
-				'result' : {
-					'type' : 'form',
-					'arch' : replace_form,
-					'fields' : replace_fields,
-					'state' : [('end', 'Ok')]}
-				},
-			}
+    states = {
+            'init' : {
+                'actions' : [getComposant],
+                'result' : {
+                    'type' : 'form',
+                    'arch' : comp_form,
+                    'fields' : comp_fields,
+                    'state' : [('end', 'Cancel'), ('replace', 'Replace')]}
+                },
+            'replace' : {
+                'action' : [replaceComposant],
+                'result' : {
+                    'type' : 'form',
+                    'arch' : replace_form,
+                    'fields' : replace_fields,
+                    'state' : [('end', 'Ok')]}
+                },
+            }
 
 wizard_replacement('stock.move.replace')

@@ -26,34 +26,34 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 {
-	"name" : "Human Resources",
-	"version" : "1.0",
-	"author" : "Tiny",
-	"category" : "Generic Modules/Human Resources",
-	"website" : "http://tinyerp.com/module_hr.html",
-	"description": """
-	Module for human resource management. You can manage:
-	* Employees and hierarchies
-	* Work hours sheets
-	* Attendances and sign in/out system
-	* Holidays
+    "name" : "Human Resources",
+    "version" : "1.0",
+    "author" : "Tiny",
+    "category" : "Generic Modules/Human Resources",
+    "website" : "http://tinyerp.com/module_hr.html",
+    "description": """
+    Module for human resource management. You can manage:
+    * Employees and hierarchies
+    * Work hours sheets
+    * Attendances and sign in/out system
+    * Holidays
 
-	Different reports are also provided, mainly for attendance statistics.
-	""",
-	"depends" : ["base"],
-	"init_xml" : [],
-	"demo_xml" : [
-		"hr_demo.xml", 
-		"hr_bel_holidays_2005.xml",
-		"hr_department_demo.xml",
-	],
-	"update_xml" : [
-		"hr_view.xml", 
-		"hr_report.xml", 
-		"hr_wizard.xml",
-		"hr_department_view.xml",
-		"hr_security.xml",
-	],
-	"active": False,
-	"installable": True
+    Different reports are also provided, mainly for attendance statistics.
+    """,
+    "depends" : ["base"],
+    "init_xml" : [],
+    "demo_xml" : [
+        "hr_demo.xml", 
+        "hr_bel_holidays_2005.xml",
+        "hr_department_demo.xml",
+    ],
+    "update_xml" : [
+        "hr_view.xml", 
+        "hr_report.xml", 
+        "hr_wizard.xml",
+        "hr_department_view.xml",
+        "hr_security.xml",
+    ],
+    "active": False,
+    "installable": True
 }

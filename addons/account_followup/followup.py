@@ -31,36 +31,36 @@
 from osv import fields, osv
 
 class followup(osv.osv):
-	_name = 'account_followup.followup'
-	_description = 'Follow-Ups'
-	_columns = {
-		'name': fields.char('Name', size=64, required=True),
-		'description': fields.text('Description'),
-		'followup_line': fields.one2many('account_followup.followup.line', 'followup_id', 'Follow-Up'),
-		'company_id': fields.many2one('res.company', 'Company'),
-	}
+    _name = 'account_followup.followup'
+    _description = 'Follow-Ups'
+    _columns = {
+        'name': fields.char('Name', size=64, required=True),
+        'description': fields.text('Description'),
+        'followup_line': fields.one2many('account_followup.followup.line', 'followup_id', 'Follow-Up'),
+        'company_id': fields.many2one('res.company', 'Company'),
+    }
 followup()
 
 class followup_line(osv.osv):
-	_name = 'account_followup.followup.line'
-	_description = 'Follow-Ups Criteria'
-	_columns = {
-		'name': fields.char('Name', size=64, required=True),
-		'sequence': fields.integer('Sequence'),
-		'delay': fields.integer('Days of delay'),
-		'start': fields.selection([('days','Net Days'),('end_of_month','End of Month')], 'Type of Term', size=64, required=True),
-		'followup_id': fields.many2one('account_followup.followup', 'Follow Ups', required=True, ondelete="cascade"),
-		'description': fields.text('Printed Message'),
-		#'prints': fields.one2many('account_followup.followup.print', 'line_id'),
-	}
+    _name = 'account_followup.followup.line'
+    _description = 'Follow-Ups Criteria'
+    _columns = {
+        'name': fields.char('Name', size=64, required=True),
+        'sequence': fields.integer('Sequence'),
+        'delay': fields.integer('Days of delay'),
+        'start': fields.selection([('days','Net Days'),('end_of_month','End of Month')], 'Type of Term', size=64, required=True),
+        'followup_id': fields.many2one('account_followup.followup', 'Follow Ups', required=True, ondelete="cascade"),
+        'description': fields.text('Printed Message'),
+        #'prints': fields.one2many('account_followup.followup.print', 'line_id'),
+    }
 followup_line()
 
 class account_move_line(osv.osv):
-	_name = 'account.move.line'
-	_inherit = 'account.move.line'
-	_columns = {
-		'followup_line_id': fields.many2one('account_followup.followup.line', 'Follow-up Level'),
-		'followup_date': fields.date('Latest Follow-up'),
-	}
+    _name = 'account.move.line'
+    _inherit = 'account.move.line'
+    _columns = {
+        'followup_line_id': fields.many2one('account_followup.followup.line', 'Follow-up Level'),
+        'followup_date': fields.date('Latest Follow-up'),
+    }
 account_move_line()
 

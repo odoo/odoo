@@ -30,15 +30,15 @@
 from report.interface import report_rml
 
 class report_custom(report_rml):
-	def create(self, uid, ids, datas, context):
-		datas.setdefault('form', {})
-		datas['form'].setdefault('weight', 3.0)
+    def create(self, uid, ids, datas, context):
+        datas.setdefault('form', {})
+        datas['form'].setdefault('weight', 3.0)
 
-		datas['model'] = 'stock.move.lot'
-		datas['ids'] = ids
-		del datas['id']
+        datas['model'] = 'stock.move.lot'
+        datas['ids'] = ids
+        del datas['id']
 
-		return (super(report_custom, self).create(uid, ids, datas, context), 'pdf')
+        return (super(report_custom, self).create(uid, ids, datas, context), 'pdf')
 
 report_custom('report.stock.move.lot.ups_xml', 'stock.move.lot', 'addons/stock/report/UPS.xml', None)
 

@@ -37,30 +37,30 @@ import pooler
 
 _subscription_form = '''<?xml version="1.0"?>
 <form string="%s">
-	<seperator string="Generate entries before:" colspan="4"/>
-	<field name="date"/>
+    <seperator string="Generate entries before:" colspan="4"/>
+    <field name="date"/>
 </form>''' % ('Subscription Compute',)
 
 _subscription_fields = {
-	'date': {'string':'Date', 'type':'date', 'default':lambda *a: time.strftime('%Y-%m-%d'), 'required':True},
+    'date': {'string':'Date', 'type':'date', 'default':lambda *a: time.strftime('%Y-%m-%d'), 'required':True},
 }
 
 class wiz_subscription(wizard.interface):
-	def _action_generate(self, cr, uid, data, context):
-		cr.execute('select id from account_subscription_line where date<%s and move_id is null', (data['form']['date'],))
-		ids = map(lambda x: x[0], cr.fetchall())
-		pooler.get_pool(cr.dbname).get('account.subscription.line').move_create(cr, uid, ids)
-		return {}
+    def _action_generate(self, cr, uid, data, context):
+        cr.execute('select id from account_subscription_line where date<%s and move_id is null', (data['form']['date'],))
+        ids = map(lambda x: x[0], cr.fetchall())
+        pooler.get_pool(cr.dbname).get('account.subscription.line').move_create(cr, uid, ids)
+        return {}
 
-	states = {
-		'init': {
-			'actions': [],
-			'result': {'type': 'form', 'arch':_subscription_form, 'fields':_subscription_fields, 'state':[('end','Cancel'),('generate','Compute Entry Dates')]}
-		},
-		'generate': {
-			'actions': [_action_generate],
-			'result': {'type': 'state', 'state':'end'}
-		}
-	}
+    states = {
+        'init': {
+            'actions': [],
+            'result': {'type': 'form', 'arch':_subscription_form, 'fields':_subscription_fields, 'state':[('end','Cancel'),('generate','Compute Entry Dates')]}
+        },
+        'generate': {
+            'actions': [_action_generate],
+            'result': {'type': 'state', 'state':'end'}
+        }
+    }
 wiz_subscription('account.subscription.generate')
 

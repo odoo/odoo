@@ -31,32 +31,32 @@ import wizard
 
 _transaction_form = '''<?xml version="1.0"?>
 <form string="Close Period">
-	<separator string="Are you sure ?" colspan="4"/>
-	<field name="sure"/>
+    <separator string="Are you sure ?" colspan="4"/>
+    <field name="sure"/>
 </form>'''
 
 _transaction_fields = {
-	'sure': {'string':'Check this box', 'type':'boolean'},
+    'sure': {'string':'Check this box', 'type':'boolean'},
 }
 
 def _data_save(self, cr, uid, data, context):
-	mode = 'done'
-	if data['form']['sure']:
-		for id in data['ids']:
-			cr.execute('update account_journal_period set state=%s where period_id=%d', (mode, id))
-			cr.execute('update account_period set state=%s where id=%d', (mode, id))
-	return {}
+    mode = 'done'
+    if data['form']['sure']:
+        for id in data['ids']:
+            cr.execute('update account_journal_period set state=%s where period_id=%d', (mode, id))
+            cr.execute('update account_period set state=%s where id=%d', (mode, id))
+    return {}
 
 class wiz_journal_close(wizard.interface):
-	states = {
-		'init': {
-			'actions': [],
-			'result': {'type': 'form', 'arch':_transaction_form, 'fields':_transaction_fields, 'state':[('end','Cancel'),('close','Close Period')]}
-		},
-		'close': {
-			'actions': [_data_save],
-			'result': {'type': 'state', 'state':'end'}
-		}
-	}
+    states = {
+        'init': {
+            'actions': [],
+            'result': {'type': 'form', 'arch':_transaction_form, 'fields':_transaction_fields, 'state':[('end','Cancel'),('close','Close Period')]}
+        },
+        'close': {
+            'actions': [_data_save],
+            'result': {'type': 'state', 'state':'end'}
+        }
+    }
 wiz_journal_close('account.period.close')
 

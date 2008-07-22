@@ -26,14 +26,14 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 {
-	"name" : "Multi company for accounting module",
-	"version" : "0.1",
-	"author" : "Tiny",
-	"depends" : ["base", "account", "multi_company"],
-	"category" : "Generic Modules/Accounting",
-	"init_xml" : [],
-	"demo_xml" : ["multi_company_account_demo.xml",],
-	"update_xml" : ["multi_company_account_data.xml", "multi_company_account_view.xml",],
-	"active": False,
-	"installable": True
+    "name" : "Multi company for accounting module",
+    "version" : "0.1",
+    "author" : "Tiny",
+    "depends" : ["base", "account", "multi_company"],
+    "category" : "Generic Modules/Accounting",
+    "init_xml" : [],
+    "demo_xml" : ["multi_company_account_demo.xml",],
+    "update_xml" : ["multi_company_account_data.xml", "multi_company_account_view.xml",],
+    "active": False,
+    "installable": True
 }

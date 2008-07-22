@@ -63,15 +63,15 @@
 # - COGS account type fixed
 #
 {
-	"name" : "United Kingdom - minimal",
-	"version" : "1.1",
-	"author" : "Seath Solutions Ltd",
-	"website": "http://www.seathsolutions.com",
-	"category" : "Localisation/Account charts",
-	"depends" : ["base", "account", "base_iban", "base_vat", "account_chart"],
-	"init_xml" : [],
-	"demo_xml" : [],
-	"update_xml" : ["../account_chart/account_chart.xml", "account_chart.xml",
-		"account_tax.xml"],
-	"installable": True
+    "name" : "United Kingdom - minimal",
+    "version" : "1.1",
+    "author" : "Seath Solutions Ltd",
+    "website": "http://www.seathsolutions.com",
+    "category" : "Localisation/Account charts",
+    "depends" : ["base", "account", "base_iban", "base_vat", "account_chart"],
+    "init_xml" : [],
+    "demo_xml" : [],
+    "update_xml" : ["../account_chart/account_chart.xml", "account_chart.xml",
+        "account_tax.xml"],
+    "installable": True
 }

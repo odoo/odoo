@@ -34,743 +34,743 @@ from tools.translate import _
 
 
 class account_analytic_account(osv.osv):
-	_name = "account.analytic.account"
-	_inherit = "account.analytic.account"
+    _name = "account.analytic.account"
+    _inherit = "account.analytic.account"
 
-	def _ca_invoiced_calc(self, cr, uid, ids, name, arg, context={}):
-		res = {}
-		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-		if ids2:
-			acc_set = ",".join(map(str, ids2))
-			cr.execute("select account_analytic_line.account_id, sum(amount) \
-					from account_analytic_line \
-					join account_analytic_journal \
-						on account_analytic_line.journal_id = account_analytic_journal.id  \
-					where account_analytic_line.account_id IN (%s) \
-						and account_analytic_journal.type = 'sale' \
-					group by account_analytic_line.account_id" % acc_set)
-			for account_id, sum in cr.fetchall():
-				res[account_id] = round(sum,2)
-		for obj_id in ids:
-			res.setdefault(obj_id, 0.0)
-			for child_id in self.search(cr, uid,
-					[('parent_id', 'child_of', [obj_id])]):
-				if child_id != obj_id:
-					res[obj_id] += res.get(child_id, 0.0)
-		for id in ids:
-			res[id] = round(res.get(id, 0.0),2)
-		return res
+    def _ca_invoiced_calc(self, cr, uid, ids, name, arg, context={}):
+        res = {}
+        ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+        if ids2:
+            acc_set = ",".join(map(str, ids2))
+            cr.execute("select account_analytic_line.account_id, sum(amount) \
+                    from account_analytic_line \
+                    join account_analytic_journal \
+                        on account_analytic_line.journal_id = account_analytic_journal.id  \
+                    where account_analytic_line.account_id IN (%s) \
+                        and account_analytic_journal.type = 'sale' \
+                    group by account_analytic_line.account_id" % acc_set)
+            for account_id, sum in cr.fetchall():
+                res[account_id] = round(sum,2)
+        for obj_id in ids:
+            res.setdefault(obj_id, 0.0)
+            for child_id in self.search(cr, uid,
+                    [('parent_id', 'child_of', [obj_id])]):
+                if child_id != obj_id:
+                    res[obj_id] += res.get(child_id, 0.0)
+        for id in ids:
+            res[id] = round(res.get(id, 0.0),2)
+        return res
 
-	def _ca_to_invoice_calc(self, cr, uid, ids, name, arg, context={}):
-		res = {}
-		res2 = {}
-		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-		if ids2:
-			# Amount uninvoiced hours to invoice at sale price
-			acc_set = ",".join(map(str, ids2))
-			cr.execute("""SELECT account_analytic_account.id, \
-						sum (product_template.list_price * \
-							account_analytic_line.unit_amount * \
-							((100-hr_timesheet_invoice_factor.factor)/100)) \
-							AS ca_to_invoice \
-					FROM product_template \
-					join product_product \
-						on product_template.id = product_product.product_tmpl_id \
-					JOIN account_analytic_line \
-						on account_analytic_line.product_id = product_product.id \
-					JOIN account_analytic_journal \
-						on account_analytic_line.journal_id = account_analytic_journal.id \
-					JOIN account_analytic_account \
-						on account_analytic_account.id = account_analytic_line.account_id \
-					JOIN hr_timesheet_invoice_factor \
-						on hr_timesheet_invoice_factor.id = account_analytic_account.to_invoice \
-					WHERE account_analytic_account.id IN (%s) \
-						AND account_analytic_line.invoice_id is null \
-						AND account_analytic_line.to_invoice IS NOT NULL \
-					GROUP BY account_analytic_account.id;"""%acc_set)
-			for account_id, sum in cr.fetchall():
-				res[account_id] = round(sum,2)
+    def _ca_to_invoice_calc(self, cr, uid, ids, name, arg, context={}):
+        res = {}
+        res2 = {}
+        ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+        if ids2:
+            # Amount uninvoiced hours to invoice at sale price
+            acc_set = ",".join(map(str, ids2))
+            cr.execute("""SELECT account_analytic_account.id, \
+                        sum (product_template.list_price * \
+                            account_analytic_line.unit_amount * \
+                            ((100-hr_timesheet_invoice_factor.factor)/100)) \
+                            AS ca_to_invoice \
+                    FROM product_template \
+                    join product_product \
+                        on product_template.id = product_product.product_tmpl_id \
+                    JOIN account_analytic_line \
+                        on account_analytic_line.product_id = product_product.id \
+                    JOIN account_analytic_journal \
+                        on account_analytic_line.journal_id = account_analytic_journal.id \
+                    JOIN account_analytic_account \
+                        on account_analytic_account.id = account_analytic_line.account_id \
+                    JOIN hr_timesheet_invoice_factor \
+                        on hr_timesheet_invoice_factor.id = account_analytic_account.to_invoice \
+                    WHERE account_analytic_account.id IN (%s) \
+                        AND account_analytic_line.invoice_id is null \
+                        AND account_analytic_line.to_invoice IS NOT NULL \
+                    GROUP BY account_analytic_account.id;"""%acc_set)
+            for account_id, sum in cr.fetchall():
+                res[account_id] = round(sum,2)
 
-			# Expense amount and purchase invoice
-			acc_set = ",".join(map(str, ids2))
-			cr.execute ("select account_analytic_line.account_id, sum(amount) \
-					from account_analytic_line \
-					join account_analytic_journal \
-						on account_analytic_line.journal_id = account_analytic_journal.id \
-					where account_analytic_line.account_id IN (%s) \
-						and account_analytic_journal.type = 'purchase' \
-					GROUP BY account_analytic_line.account_id;"%acc_set)
-			for account_id, sum in cr.fetchall():
-				res2[account_id] = round(sum,2)
-		for obj_id in ids:
-			res.setdefault(obj_id, 0.0)
-			res2.setdefault(obj_id, 0.0)
-			for child_id in self.search(cr, uid,
-					[('parent_id', 'child_of', [obj_id])]):
-				if child_id != obj_id:
-					res[obj_id] += res.get(child_id, 0.0)
-					res2[obj_id] += res2.get(child_id, 0.0)
-		# sum both result on account_id
-		for id in ids:
-			res[id] = round(res.get(id, 0.0),2) + round(res2.get(id, 0.0),2)
-		return res
+            # Expense amount and purchase invoice
+            acc_set = ",".join(map(str, ids2))
+            cr.execute ("select account_analytic_line.account_id, sum(amount) \
+                    from account_analytic_line \
+                    join account_analytic_journal \
+                        on account_analytic_line.journal_id = account_analytic_journal.id \
+                    where account_analytic_line.account_id IN (%s) \
+                        and account_analytic_journal.type = 'purchase' \
+                    GROUP BY account_analytic_line.account_id;"%acc_set)
+            for account_id, sum in cr.fetchall():
+                res2[account_id] = round(sum,2)
+        for obj_id in ids:
+            res.setdefault(obj_id, 0.0)
+            res2.setdefault(obj_id, 0.0)
+            for child_id in self.search(cr, uid,
+                    [('parent_id', 'child_of', [obj_id])]):
+                if child_id != obj_id:
+                    res[obj_id] += res.get(child_id, 0.0)
+                    res2[obj_id] += res2.get(child_id, 0.0)
+        # sum both result on account_id
+        for id in ids:
+            res[id] = round(res.get(id, 0.0),2) + round(res2.get(id, 0.0),2)
+        return res
 
-	def _hours_qtt_non_invoiced_calc (self, cr, uid, ids, name, arg, context={}):
-		res = {}
-		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-		if ids2:
-			acc_set = ",".join(map(str, ids2))
-			cr.execute("select account_analytic_line.account_id, sum(unit_amount) \
-					from account_analytic_line \
-					join account_analytic_journal \
-						on account_analytic_line.journal_id = account_analytic_journal.id \
-					where account_analytic_line.account_id IN (%s) \
-						and account_analytic_journal.type='general' \
-						and invoice_id is null \
-						AND to_invoice IS NOT NULL \
-					GROUP BY account_analytic_line.account_id;"%acc_set)
-			for account_id, sum in cr.fetchall():
-				res[account_id] = round(sum,2)
-		for obj_id in ids:
-			res.setdefault(obj_id, 0.0)
-			for child_id in self.search(cr, uid,
-					[('parent_id', 'child_of', [obj_id])]):
-				if child_id != obj_id:
-					res[obj_id] += res.get(child_id, 0.0)
-		for id in ids:
-			res[id] = round(res.get(id, 0.0),2)
-		return res
+    def _hours_qtt_non_invoiced_calc (self, cr, uid, ids, name, arg, context={}):
+        res = {}
+        ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+        if ids2:
+            acc_set = ",".join(map(str, ids2))
+            cr.execute("select account_analytic_line.account_id, sum(unit_amount) \
+                    from account_analytic_line \
+                    join account_analytic_journal \
+                        on account_analytic_line.journal_id = account_analytic_journal.id \
+                    where account_analytic_line.account_id IN (%s) \
+                        and account_analytic_journal.type='general' \
+                        and invoice_id is null \
+                        AND to_invoice IS NOT NULL \
+                    GROUP BY account_analytic_line.account_id;"%acc_set)
+            for account_id, sum in cr.fetchall():
+                res[account_id] = round(sum,2)
+        for obj_id in ids:
+            res.setdefault(obj_id, 0.0)
+            for child_id in self.search(cr, uid,
+                    [('parent_id', 'child_of', [obj_id])]):
+                if child_id != obj_id:
+                    res[obj_id] += res.get(child_id, 0.0)
+        for id in ids:
+            res[id] = round(res.get(id, 0.0),2)
+        return res
 
-	def _hours_quantity_calc(self, cr, uid, ids, name, arg, context={}):
-		res = {}
-		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-		if ids2:
-			acc_set = ",".join(map(str, ids2))
-			cr.execute("select account_analytic_line.account_id,sum(unit_amount) \
-					from account_analytic_line \
-					join account_analytic_journal \
-						on account_analytic_line.journal_id = account_analytic_journal.id \
-					where account_analytic_line.account_id IN (%s) \
-						and account_analytic_journal.type='general' \
-					GROUP BY account_analytic_line.account_id"%acc_set)
-			for account_id, sum in cr.fetchall():
-				res[account_id] = round(sum,2)
-		for obj_id in ids:
-			res.setdefault(obj_id, 0.0)
-			for child_id in self.search(cr, uid,
-					[('parent_id', 'child_of', [obj_id])]):
-				if child_id != obj_id:
-					res[obj_id] += res.get(child_id, 0.0)
-		for id in ids:
-			res[id] = round(res.get(id, 0.0),2)
-		return res
+    def _hours_quantity_calc(self, cr, uid, ids, name, arg, context={}):
+        res = {}
+        ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+        if ids2:
+            acc_set = ",".join(map(str, ids2))
+            cr.execute("select account_analytic_line.account_id,sum(unit_amount) \
+                    from account_analytic_line \
+                    join account_analytic_journal \
+                        on account_analytic_line.journal_id = account_analytic_journal.id \
+                    where account_analytic_line.account_id IN (%s) \
+                        and account_analytic_journal.type='general' \
+                    GROUP BY account_analytic_line.account_id"%acc_set)
+            for account_id, sum in cr.fetchall():
+                res[account_id] = round(sum,2)
+        for obj_id in ids:
+            res.setdefault(obj_id, 0.0)
+            for child_id in self.search(cr, uid,
+                    [('parent_id', 'child_of', [obj_id])]):
+                if child_id != obj_id:
+                    res[obj_id] += res.get(child_id, 0.0)
+        for id in ids:
+            res[id] = round(res.get(id, 0.0),2)
+        return res
 
-	def _total_cost_calc(self, cr, uid, ids, name, arg, context={}):
-		res = {}
-		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-		if ids2:
-			acc_set = ",".join(map(str, ids2))
-			cr.execute("""select account_analytic_line.account_id,sum(amount) \
-					from account_analytic_line \
-					join account_analytic_journal \
-						on account_analytic_line.journal_id = account_analytic_journal.id \
-					where account_analytic_line.account_id IN (%s) \
-						and amount<0 \
-					GROUP BY account_analytic_line.account_id"""%acc_set)
-			for account_id, sum in cr.fetchall():
-				res[account_id] = round(sum,2)
-		for obj_id in ids:
-			res.setdefault(obj_id, 0.0)
-			for child_id in self.search(cr, uid,
-					[('parent_id', 'child_of', [obj_id])]):
-				if child_id != obj_id:
-					res[obj_id] += res.get(child_id, 0.0)
-		for id in ids:
-			res[id] = round(res.get(id, 0.0),2)
-		return res
+    def _total_cost_calc(self, cr, uid, ids, name, arg, context={}):
+        res = {}
+        ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+        if ids2:
+            acc_set = ",".join(map(str, ids2))
+            cr.execute("""select account_analytic_line.account_id,sum(amount) \
+                    from account_analytic_line \
+                    join account_analytic_journal \
+                        on account_analytic_line.journal_id = account_analytic_journal.id \
+                    where account_analytic_line.account_id IN (%s) \
+                        and amount<0 \
+                    GROUP BY account_analytic_line.account_id"""%acc_set)
+            for account_id, sum in cr.fetchall():
+                res[account_id] = round(sum,2)
+        for obj_id in ids:
+            res.setdefault(obj_id, 0.0)
+            for child_id in self.search(cr, uid,
+                    [('parent_id', 'child_of', [obj_id])]):
+                if child_id != obj_id:
+                    res[obj_id] += res.get(child_id, 0.0)
+        for id in ids:
+            res[id] = round(res.get(id, 0.0),2)
+        return res
 
-	def _ca_theorical_calc(self, cr, uid, ids, name, arg, context={}):
-		res = {}
-		res2 = {}
-		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-		if ids2:
-			acc_set = ",".join(map(str, ids2))
-			# First part with expense and purchase
-			cr.execute("""select account_analytic_line.account_id,sum(amount) \
-					from account_analytic_line \
-					join account_analytic_journal \
-						on account_analytic_line.journal_id = account_analytic_journal.id \
-					where account_analytic_line.account_id IN (%s) \
-						and account_analytic_journal.type = 'purchase' \
-					GROUP BY account_analytic_line.account_id"""%acc_set)
-			for account_id, sum in cr.fetchall():
-				res[account_id] = round(sum,2)
+    def _ca_theorical_calc(self, cr, uid, ids, name, arg, context={}):
+        res = {}
+        res2 = {}
+        ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+        if ids2:
+            acc_set = ",".join(map(str, ids2))
+            # First part with expense and purchase
+            cr.execute("""select account_analytic_line.account_id,sum(amount) \
+                    from account_analytic_line \
+                    join account_analytic_journal \
+                        on account_analytic_line.journal_id = account_analytic_journal.id \
+                    where account_analytic_line.account_id IN (%s) \
+                        and account_analytic_journal.type = 'purchase' \
+                    GROUP BY account_analytic_line.account_id"""%acc_set)
+            for account_id, sum in cr.fetchall():
+                res[account_id] = round(sum,2)
 
-			# Second part with timesheet (with invoice factor)
-			acc_set = ",".join(map(str, ids2))
-			cr.execute("""select account_analytic_line.account_id as account_id, \
-						sum((account_analytic_line.unit_amount * pt.list_price) \
-							- (account_analytic_line.unit_amount * pt.list_price \
-								* hr.factor)) as somme
-					from account_analytic_line \
-					join account_analytic_journal \
-						on account_analytic_line.journal_id = account_analytic_journal.id \
-					join product_product pp \
-						on (account_analytic_line.product_id = pp.id) \
-					join product_template pt \
-						on (pp.product_tmpl_id = pt.id) \
-					join account_analytic_account a \
-						on (a.id=account_analytic_line.account_id) \
-					join hr_timesheet_invoice_factor hr \
-						on (hr.id=a.to_invoice) \
-				where account_analytic_line.account_id IN (%s) \
-					and a.to_invoice IS NOT NULL \
-				GROUP BY account_analytic_line.account_id"""%acc_set)
-			for account_id, sum in cr.fetchall():
-				res2[account_id] = round(sum,2)
+            # Second part with timesheet (with invoice factor)
+            acc_set = ",".join(map(str, ids2))
+            cr.execute("""select account_analytic_line.account_id as account_id, \
+                        sum((account_analytic_line.unit_amount * pt.list_price) \
+                            - (account_analytic_line.unit_amount * pt.list_price \
+                                * hr.factor)) as somme
+                    from account_analytic_line \
+                    join account_analytic_journal \
+                        on account_analytic_line.journal_id = account_analytic_journal.id \
+                    join product_product pp \
+                        on (account_analytic_line.product_id = pp.id) \
+                    join product_template pt \
+                        on (pp.product_tmpl_id = pt.id) \
+                    join account_analytic_account a \
+                        on (a.id=account_analytic_line.account_id) \
+                    join hr_timesheet_invoice_factor hr \
+                        on (hr.id=a.to_invoice) \
+                where account_analytic_line.account_id IN (%s) \
+                    and a.to_invoice IS NOT NULL \
+                GROUP BY account_analytic_line.account_id"""%acc_set)
+            for account_id, sum in cr.fetchall():
+                res2[account_id] = round(sum,2)
 
-		for obj_id in ids:
-			res.setdefault(obj_id, 0.0)
-			res2.setdefault(obj_id, 0.0)
-			for child_id in self.search(cr, uid,
-					[('parent_id', 'child_of', [obj_id])]):
-				if child_id != obj_id:
-					res[obj_id] += res.get(child_id, 0.0)
-					res[obj_id] += res2.get(child_id, 0.0)
+        for obj_id in ids:
+            res.setdefault(obj_id, 0.0)
+            res2.setdefault(obj_id, 0.0)
+            for child_id in self.search(cr, uid,
+                    [('parent_id', 'child_of', [obj_id])]):
+                if child_id != obj_id:
+                    res[obj_id] += res.get(child_id, 0.0)
+                    res[obj_id] += res2.get(child_id, 0.0)
 
-		# sum both result on account_id
-		for id in ids:
-			res[id] = round(res.get(id, 0.0),2) + round(res2.get(id, 0.0),2)
-		return res
+        # sum both result on account_id
+        for id in ids:
+            res[id] = round(res.get(id, 0.0),2) + round(res2.get(id, 0.0),2)
+        return res
 
-	def _last_worked_date_calc (self, cr, uid, ids, name, arg, context={}):
-		res = {}
-		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-		if ids2:
-			acc_set = ",".join(map(str, ids2))
-			cr.execute("select account_analytic_line.account_id, max(date) \
-					from account_analytic_line \
-					where account_id IN (%s) \
-						and invoice_id is null \
-					GROUP BY account_analytic_line.account_id" % acc_set)
-			for account_id, sum in cr.fetchall():
-				res[account_id] = sum
-		for obj_id in ids:
-			res.setdefault(obj_id, '')
-			for child_id in self.search(cr, uid,
-					[('parent_id', 'child_of', [obj_id])]):
-				if res[obj_id] < res.get(child_id, ''):
-					res[obj_id] = res.get(child_id, '')
-		for id in ids:
-			res[id] = res.get(id, '')
-		return res
+    def _last_worked_date_calc (self, cr, uid, ids, name, arg, context={}):
+        res = {}
+        ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+        if ids2:
+            acc_set = ",".join(map(str, ids2))
+            cr.execute("select account_analytic_line.account_id, max(date) \
+                    from account_analytic_line \
+                    where account_id IN (%s) \
+                        and invoice_id is null \
+                    GROUP BY account_analytic_line.account_id" % acc_set)
+            for account_id, sum in cr.fetchall():
+                res[account_id] = sum
+        for obj_id in ids:
+            res.setdefault(obj_id, '')
+            for child_id in self.search(cr, uid,
+                    [('parent_id', 'child_of', [obj_id])]):
+                if res[obj_id] < res.get(child_id, ''):
+                    res[obj_id] = res.get(child_id, '')
+        for id in ids:
+            res[id] = res.get(id, '')
+        return res
 
-	def _last_invoice_date_calc (self, cr, uid, ids, name, arg, context={}):
-		res = {}
-		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-		if ids2:
-			acc_set = ",".join(map(str, ids2))
-			cr.execute ("select account_analytic_line.account_id, \
-						date(max(account_invoice.date_invoice)) \
-					from account_analytic_line \
-					join account_invoice \
-						on account_analytic_line.invoice_id = account_invoice.id \
-					where account_analytic_line.account_id IN (%s) \
-						and account_analytic_line.invoice_id is not null \
-					GROUP BY account_analytic_line.account_id"%acc_set)
-			for account_id, sum in cr.fetchall():
-				res[account_id] = sum
-		for obj_id in ids:
-			res.setdefault(obj_id, '')
-			for child_id in self.search(cr, uid,
-					[('parent_id', 'child_of', [obj_id])]):
-				if res[obj_id] < res.get(child_id, ''):
-					res[obj_id] = res.get(child_id, '')
-		for id in ids:
-			res[id] = res.get(id, '')
-		return res
+    def _last_invoice_date_calc (self, cr, uid, ids, name, arg, context={}):
+        res = {}
+        ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+        if ids2:
+            acc_set = ",".join(map(str, ids2))
+            cr.execute ("select account_analytic_line.account_id, \
+                        date(max(account_invoice.date_invoice)) \
+                    from account_analytic_line \
+                    join account_invoice \
+                        on account_analytic_line.invoice_id = account_invoice.id \
+                    where account_analytic_line.account_id IN (%s) \
+                        and account_analytic_line.invoice_id is not null \
+                    GROUP BY account_analytic_line.account_id"%acc_set)
+            for account_id, sum in cr.fetchall():
+                res[account_id] = sum
+        for obj_id in ids:
+            res.setdefault(obj_id, '')
+            for child_id in self.search(cr, uid,
+                    [('parent_id', 'child_of', [obj_id])]):
+                if res[obj_id] < res.get(child_id, ''):
+                    res[obj_id] = res.get(child_id, '')
+        for id in ids:
+            res[id] = res.get(id, '')
+        return res
 
-	def _last_worked_invoiced_date_calc (self, cr, uid, ids, name, arg, context={}):
-		res = {}
-		ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-		if ids2:
-			acc_set = ",".join(map(str, ids2))
-			cr.execute("select account_analytic_line.account_id, max(date) \
-					from account_analytic_line \
-					where account_id IN (%s) \
-						and invoice_id is not null \
-					GROUP BY account_analytic_line.account_id;"%acc_set)
-			for account_id, sum in cr.fetchall():
-				res[account_id] = sum
-		for obj_id in ids:
-			res.setdefault(obj_id, '')
-			for child_id in self.search(cr, uid,
-					[('parent_id', 'child_of', [obj_id])]):
-				if res[obj_id] < res.get(child_id, ''):
-					res[obj_id] = res.get(child_id, '')
-		for id in ids:
-			res[id] = res.get(id, '')
-		return res
+    def _last_worked_invoiced_date_calc (self, cr, uid, ids, name, arg, context={}):
+        res = {}
+        ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+        if ids2:
+            acc_set = ",".join(map(str, ids2))
+            cr.execute("select account_analytic_line.account_id, max(date) \
+                    from account_analytic_line \
+                    where account_id IN (%s) \
+                        and invoice_id is not null \
+                    GROUP BY account_analytic_line.account_id;"%acc_set)
+            for account_id, sum in cr.fetchall():
+                res[account_id] = sum
+        for obj_id in ids:
+            res.setdefault(obj_id, '')
+            for child_id in self.search(cr, uid,
+                    [('parent_id', 'child_of', [obj_id])]):
+                if res[obj_id] < res.get(child_id, ''):
+                    res[obj_id] = res.get(child_id, '')
+        for id in ids:
+            res[id] = res.get(id, '')
+        return res
 
-	def _remaining_hours_calc(self, cr, uid, ids, name, arg, context={}):
-		res = {}
-		for account in self.browse(cr, uid, ids):
-			if account.quantity_max <> 0:
-				res[account.id] = account.quantity_max - account.hours_quantity
-			else:
-				res[account.id]=0.0
-		for id in ids:
-			res[id] = round(res.get(id, 0.0),2)
-		return res
+    def _remaining_hours_calc(self, cr, uid, ids, name, arg, context={}):
+        res = {}
+        for account in self.browse(cr, uid, ids):
+            if account.quantity_max <> 0:
+                res[account.id] = account.quantity_max - account.hours_quantity
+            else:
+                res[account.id]=0.0
+        for id in ids:
+            res[id] = round(res.get(id, 0.0),2)
+        return res
 
-	def _hours_qtt_invoiced_calc(self, cr, uid, ids, name, arg, context={}):
-		res = {}
-		for account in self.browse(cr, uid, ids):
-			res[account.id] = account.hours_quantity - account.hours_qtt_non_invoiced
-			if res[account.id] < 0:
-				res[account.id]=0.0
-		for id in ids:
-			res[id] = round(res.get(id, 0.0),2)
-		return res
+    def _hours_qtt_invoiced_calc(self, cr, uid, ids, name, arg, context={}):
+        res = {}
+        for account in self.browse(cr, uid, ids):
+            res[account.id] = account.hours_quantity - account.hours_qtt_non_invoiced
+            if res[account.id] < 0:
+                res[account.id]=0.0
+        for id in ids:
+            res[id] = round(res.get(id, 0.0),2)
+        return res
 
-	def _revenue_per_hour_calc(self, cr, uid, ids, name, arg, context={}):
-		res = {}
-		for account in self.browse(cr, uid, ids):
-			if account.hours_qtt_invoiced == 0:
-				res[account.id]=0.0
-			else:
-				res[account.id] = account.ca_invoiced / account.hours_qtt_invoiced
-		for id in ids:
-			res[id] = round(res.get(id, 0.0),2)
-		return res
+    def _revenue_per_hour_calc(self, cr, uid, ids, name, arg, context={}):
+        res = {}
+        for account in self.browse(cr, uid, ids):
+            if account.hours_qtt_invoiced == 0:
+                res[account.id]=0.0
+            else:
+                res[account.id] = account.ca_invoiced / account.hours_qtt_invoiced
+        for id in ids:
+            res[id] = round(res.get(id, 0.0),2)
+        return res
 
-	def _real_margin_rate_calc(self, cr, uid, ids, name, arg, context={}):
-		res = {}
-		for account in self.browse(cr, uid, ids):
-			if account.ca_invoiced == 0:
-				res[account.id]=0.0
-			elif account.real_margin <> 0.0:
-				res[account.id] = (account.ca_invoiced / account.real_margin) * 100
-			else:
-				res[account.id] = 0.0
-		for id in ids:
-			res[id] = round(res.get(id, 0.0),2)
-		return res
+    def _real_margin_rate_calc(self, cr, uid, ids, name, arg, context={}):
+        res = {}
+        for account in self.browse(cr, uid, ids):
+            if account.ca_invoiced == 0:
+                res[account.id]=0.0
+            elif account.real_margin <> 0.0:
+                res[account.id] = (account.ca_invoiced / account.real_margin) * 100
+            else:
+                res[account.id] = 0.0
+        for id in ids:
+            res[id] = round(res.get(id, 0.0),2)
+        return res
 
-	def _remaining_ca_calc(self, cr, uid, ids, name, arg, context={}):
-		res = {}
-		for account in self.browse(cr, uid, ids):
-			if account.amount_max <> 0:
-				res[account.id] = account.amount_max - account.ca_invoiced
-			else:
-				res[account.id]=0.0
-		for id in ids:
-			res[id] = round(res.get(id, 0.0),2)
-		return res
+    def _remaining_ca_calc(self, cr, uid, ids, name, arg, context={}):
+        res = {}
+        for account in self.browse(cr, uid, ids):
+            if account.amount_max <> 0:
+                res[account.id] = account.amount_max - account.ca_invoiced
+            else:
+                res[account.id]=0.0
+        for id in ids:
+            res[id] = round(res.get(id, 0.0),2)
+        return res
 
-	def _real_margin_calc(self, cr, uid, ids, name, arg, context={}):
-		res = {}
-		for account in self.browse(cr, uid, ids):
-			res[account.id] = account.ca_invoiced + account.total_cost
-		for id in ids:
-			res[id] = round(res.get(id, 0.0),2)
-		return res
+    def _real_margin_calc(self, cr, uid, ids, name, arg, context={}):
+        res = {}
+        for account in self.browse(cr, uid, ids):
+            res[account.id] = account.ca_invoiced + account.total_cost
+        for id in ids:
+            res[id] = round(res.get(id, 0.0),2)
+        return res
 
-	def _theorical_margin_calc(self, cr, uid, ids, name, arg, context={}):
-		res = {}
-		for account in self.browse(cr, uid, ids):
-			res[account.id] = account.ca_theorical + account.total_cost
-		for id in ids:
-			res[id] = round(res.get(id, 0.0),2)
-		return res
+    def _theorical_margin_calc(self, cr, uid, ids, name, arg, context={}):
+        res = {}
+        for account in self.browse(cr, uid, ids):
+            res[account.id] = account.ca_theorical + account.total_cost
+        for id in ids:
+            res[id] = round(res.get(id, 0.0),2)
+        return res
 
-	def _month(self, cr, uid, ids, name, arg, context=None):
-		res = {}
-		for id in ids:
-			ids2 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
-			cr.execute('SELECT DISTINCT(month_id) FROM account_analytic_analysis_summary_month ' \
-					'WHERE account_id in (' + ','.join([str(x) for x in ids2]) + ') ' \
-						'AND unit_amount <> 0.0')
-			res[id] = [int(id * 1000000 + int(x[0])) for x in cr.fetchall()]
-		return res
+    def _month(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for id in ids:
+            ids2 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
+            cr.execute('SELECT DISTINCT(month_id) FROM account_analytic_analysis_summary_month ' \
+                    'WHERE account_id in (' + ','.join([str(x) for x in ids2]) + ') ' \
+                        'AND unit_amount <> 0.0')
+            res[id] = [int(id * 1000000 + int(x[0])) for x in cr.fetchall()]
+        return res
 
-	def _user(self, cr, uid, ids, name, arg, context=None):
-		res = {}
-		cr.execute('SELECT MAX(id) FROM res_users')
-		max_user = cr.fetchone()[0]
-		for id in ids:
-			ids2 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
-			cr.execute('SELECT DISTINCT("user") FROM account_analytic_analysis_summary_user ' \
-					'WHERE account_id in (' + ','.join([str(x) for x in ids2]) + ') ' \
-						'AND unit_amount <> 0.0')
-			res[id] = [int((id * max_user) + x[0]) for x in cr.fetchall()]
-		return res
+    def _user(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        cr.execute('SELECT MAX(id) FROM res_users')
+        max_user = cr.fetchone()[0]
+        for id in ids:
+            ids2 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
+            cr.execute('SELECT DISTINCT("user") FROM account_analytic_analysis_summary_user ' \
+                    'WHERE account_id in (' + ','.join([str(x) for x in ids2]) + ') ' \
+                        'AND unit_amount <> 0.0')
+            res[id] = [int((id * max_user) + x[0]) for x in cr.fetchall()]
+        return res
 
-	_columns ={
-		'ca_invoiced': fields.function(_ca_invoiced_calc, method=True, type='float', string='Invoiced amount'),
-		'total_cost': fields.function(_total_cost_calc, method=True, type='float', string='Total cost'),
-		'ca_to_invoice': fields.function(_ca_to_invoice_calc, method=True, type='float', string='Uninvoiced amount'),
-		'ca_theorical': fields.function(_ca_theorical_calc, method=True, type='float', string='Theorical revenue'),
-		'hours_quantity': fields.function(_hours_quantity_calc, method=True, type='float', string='Hours tot'),
-		'last_invoice_date': fields.function(_last_invoice_date_calc, method=True, type='date', string='Last invoice date'),
-		'last_worked_invoiced_date': fields.function(_last_worked_invoiced_date_calc, method=True, type='date', string='Last invoiced worked date'),
-		'last_worked_date': fields.function(_last_worked_date_calc, method=True, type='date', string='Last worked date'),
-		'hours_qtt_non_invoiced': fields.function(_hours_qtt_non_invoiced_calc, method=True, type='float', string='Uninvoiced hours'),
-		'hours_qtt_invoiced': fields.function(_hours_qtt_invoiced_calc, method=True, type='float', string='Invoiced hours'),
-		'remaining_hours': fields.function(_remaining_hours_calc, method=True, type='float', string='Remaining hours'),
-		'remaining_ca': fields.function(_remaining_ca_calc, method=True, type='float', string='Remaining revenue'),
-		'revenue_per_hour': fields.function(_revenue_per_hour_calc, method=True, type='float', string='Revenue per hours (real)'),
-		'real_margin': fields.function(_real_margin_calc, method=True, type='float', string='Real margin'),
-		'theorical_margin': fields.function(_theorical_margin_calc, method=True, type='float', string='Theorical margin'),
-		'real_margin_rate': fields.function(_real_margin_rate_calc, method=True, type='float', string='Real margin rate (%)'),
-		'month_ids': fields.function(_month, method=True, type='many2many', relation='account_analytic_analysis.summary.month', string='Month'),
-		'user_ids': fields.function(_user, method=True, type="many2many", relation='account_analytic_analysis.summary.user', string='User'),
-	}
+    _columns ={
+        'ca_invoiced': fields.function(_ca_invoiced_calc, method=True, type='float', string='Invoiced amount'),
+        'total_cost': fields.function(_total_cost_calc, method=True, type='float', string='Total cost'),
+        'ca_to_invoice': fields.function(_ca_to_invoice_calc, method=True, type='float', string='Uninvoiced amount'),
+        'ca_theorical': fields.function(_ca_theorical_calc, method=True, type='float', string='Theorical revenue'),
+        'hours_quantity': fields.function(_hours_quantity_calc, method=True, type='float', string='Hours tot'),
+        'last_invoice_date': fields.function(_last_invoice_date_calc, method=True, type='date', string='Last invoice date'),
+        'last_worked_invoiced_date': fields.function(_last_worked_invoiced_date_calc, method=True, type='date', string='Last invoiced worked date'),
+        'last_worked_date': fields.function(_last_worked_date_calc, method=True, type='date', string='Last worked date'),
+        'hours_qtt_non_invoiced': fields.function(_hours_qtt_non_invoiced_calc, method=True, type='float', string='Uninvoiced hours'),
+        'hours_qtt_invoiced': fields.function(_hours_qtt_invoiced_calc, method=True, type='float', string='Invoiced hours'),
+        'remaining_hours': fields.function(_remaining_hours_calc, method=True, type='float', string='Remaining hours'),
+        'remaining_ca': fields.function(_remaining_ca_calc, method=True, type='float', string='Remaining revenue'),
+        'revenue_per_hour': fields.function(_revenue_per_hour_calc, method=True, type='float', string='Revenue per hours (real)'),
+        'real_margin': fields.function(_real_margin_calc, method=True, type='float', string='Real margin'),
+        'theorical_margin': fields.function(_theorical_margin_calc, method=True, type='float', string='Theorical margin'),
+        'real_margin_rate': fields.function(_real_margin_rate_calc, method=True, type='float', string='Real margin rate (%)'),
+        'month_ids': fields.function(_month, method=True, type='many2many', relation='account_analytic_analysis.summary.month', string='Month'),
+        'user_ids': fields.function(_user, method=True, type="many2many", relation='account_analytic_analysis.summary.user', string='User'),
+    }
 account_analytic_account()
 
 class account_analytic_account_summary_user(osv.osv):
-	_name = "account_analytic_analysis.summary.user"
-	_description = "Hours summary by user"
-	_order='user'
-	_auto = False
-	_rec_name = 'user'
+    _name = "account_analytic_analysis.summary.user"
+    _description = "Hours summary by user"
+    _order='user'
+    _auto = False
+    _rec_name = 'user'
 
-	def _unit_amount(self, cr, uid, ids, name, arg, context=None):
-		res = {}
-		account_obj = self.pool.get('account.analytic.account')
-		cr.execute('SELECT MAX(id) FROM res_users')
-		max_user = cr.fetchone()[0]
-		account_ids = [int(str(x/max_user - (x%max_user == 0 and 1 or 0))) for x in ids]
-		user_ids = [int(str(x-((x/max_user - (x%max_user == 0 and 1 or 0)) *max_user))) for x in ids]
-		account_ids2 = account_obj.search(cr, uid, [('parent_id', 'child_of', account_ids)])
-		user_set = ','.join([str(x) for x in user_ids])
-		if account_ids2:
-			acc_set = ','.join([str(x) for x in account_ids2])
-			cr.execute('SELECT id, unit_amount ' \
-					'FROM account_analytic_analysis_summary_user ' \
-					'WHERE account_id in (%s) ' \
-						'AND "user" in (%s) ' % \
-						(acc_set, user_set))
-			for sum_id, unit_amount in cr.fetchall():
-				res[sum_id] = unit_amount
-		for obj_id in ids:
-			res.setdefault(obj_id, 0.0)
-			for child_id in account_obj.search(cr, uid,
-					[('parent_id', 'child_of', [int(str(obj_id/max_user - (obj_id%max_user == 0 and 1 or 0)))])]):
-				if child_id != int(str(obj_id/max_user - (obj_id%max_user == 0 and 1 or 0))):
-					res[obj_id] += res.get((child_id * max_user) + obj_id -((obj_id/max_user - (obj_id%max_user == 0 and 1 or 0)) * max_user), 0.0)
-		for id in ids:
-			res[id] = round(res.get(id, 0.0), 2)
-		return res
+    def _unit_amount(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        account_obj = self.pool.get('account.analytic.account')
+        cr.execute('SELECT MAX(id) FROM res_users')
+        max_user = cr.fetchone()[0]
+        account_ids = [int(str(x/max_user - (x%max_user == 0 and 1 or 0))) for x in ids]
+        user_ids = [int(str(x-((x/max_user - (x%max_user == 0 and 1 or 0)) *max_user))) for x in ids]
+        account_ids2 = account_obj.search(cr, uid, [('parent_id', 'child_of', account_ids)])
+        user_set = ','.join([str(x) for x in user_ids])
+        if account_ids2:
+            acc_set = ','.join([str(x) for x in account_ids2])
+            cr.execute('SELECT id, unit_amount ' \
+                    'FROM account_analytic_analysis_summary_user ' \
+                    'WHERE account_id in (%s) ' \
+                        'AND "user" in (%s) ' % \
+                        (acc_set, user_set))
+            for sum_id, unit_amount in cr.fetchall():
+                res[sum_id] = unit_amount
+        for obj_id in ids:
+            res.setdefault(obj_id, 0.0)
+            for child_id in account_obj.search(cr, uid,
+                    [('parent_id', 'child_of', [int(str(obj_id/max_user - (obj_id%max_user == 0 and 1 or 0)))])]):
+                if child_id != int(str(obj_id/max_user - (obj_id%max_user == 0 and 1 or 0))):
+                    res[obj_id] += res.get((child_id * max_user) + obj_id -((obj_id/max_user - (obj_id%max_user == 0 and 1 or 0)) * max_user), 0.0)
+        for id in ids:
+            res[id] = round(res.get(id, 0.0), 2)
+        return res
 
-	_columns = {
-		'account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
-		'unit_amount': fields.function(_unit_amount, method=True, type='float',
-			string='Total Time'),
-		'user' : fields.many2one('res.users', 'User'),
-	}
-	def init(self, cr):
-		cr.execute('CREATE OR REPLACE VIEW account_analytic_analysis_summary_user AS (' \
-				'SELECT ' \
-					'(u.account_id * u.max_user) + u."user" AS id, ' \
-					'u.account_id AS account_id, ' \
-					'u."user" AS "user", ' \
-					'COALESCE(SUM(l.unit_amount), 0.0) AS unit_amount ' \
-				'FROM ' \
-					'(SELECT ' \
-						'a.id AS account_id, ' \
-						'u1.id AS "user", ' \
-						'MAX(u2.id) AS max_user ' \
-					'FROM ' \
-						'res_users AS u1, ' \
-						'res_users AS u2, ' \
-						'account_analytic_account AS a ' \
-					'GROUP BY u1.id, a.id ' \
-					') AS u ' \
-				'LEFT JOIN ' \
-					'(SELECT ' \
-						'l.account_id AS account_id, ' \
-						'l.user_id AS "user", ' \
-						'SUM(l.unit_amount) AS unit_amount ' \
-					'FROM account_analytic_line AS l, ' \
-						'account_analytic_journal AS j ' \
-					'WHERE j.type = \'general\' ' \
-					'GROUP BY l.account_id, l.user_id ' \
-					') AS l '
-					'ON (' \
-						'u.account_id = l.account_id ' \
-						'AND u."user" = l."user"' \
-					') ' \
-				'GROUP BY u."user", u.account_id, u.max_user' \
-				')')
+    _columns = {
+        'account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
+        'unit_amount': fields.function(_unit_amount, method=True, type='float',
+            string='Total Time'),
+        'user' : fields.many2one('res.users', 'User'),
+    }
+    def init(self, cr):
+        cr.execute('CREATE OR REPLACE VIEW account_analytic_analysis_summary_user AS (' \
+                'SELECT ' \
+                    '(u.account_id * u.max_user) + u."user" AS id, ' \
+                    'u.account_id AS account_id, ' \
+                    'u."user" AS "user", ' \
+                    'COALESCE(SUM(l.unit_amount), 0.0) AS unit_amount ' \
+                'FROM ' \
+                    '(SELECT ' \
+                        'a.id AS account_id, ' \
+                        'u1.id AS "user", ' \
+                        'MAX(u2.id) AS max_user ' \
+                    'FROM ' \
+                        'res_users AS u1, ' \
+                        'res_users AS u2, ' \
+                        'account_analytic_account AS a ' \
+                    'GROUP BY u1.id, a.id ' \
+                    ') AS u ' \
+                'LEFT JOIN ' \
+                    '(SELECT ' \
+                        'l.account_id AS account_id, ' \
+                        'l.user_id AS "user", ' \
+                        'SUM(l.unit_amount) AS unit_amount ' \
+                    'FROM account_analytic_line AS l, ' \
+                        'account_analytic_journal AS j ' \
+                    'WHERE j.type = \'general\' ' \
+                    'GROUP BY l.account_id, l.user_id ' \
+                    ') AS l '
+                    'ON (' \
+                        'u.account_id = l.account_id ' \
+                        'AND u."user" = l."user"' \
+                    ') ' \
+                'GROUP BY u."user", u.account_id, u.max_user' \
+                ')')
 
-	def _read_flat(self, cr, user, ids, fields, context=None, load='_classic_read'):
-		if not context:
-			context={}
-		if not ids:
-			return []
+    def _read_flat(self, cr, user, ids, fields, context=None, load='_classic_read'):
+        if not context:
+            context={}
+        if not ids:
+            return []
 
-		if fields==None:
-			fields = self._columns.keys()
+        if fields==None:
+            fields = self._columns.keys()
 
-		# construct a clause for the rules :
-		d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
+        # construct a clause for the rules :
+        d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
 
-		# all inherited fields + all non inherited fields for which the attribute whose name is in load is True
-		fields_pre = filter(lambda x: x in self._columns and getattr(self._columns[x],'_classic_write'), fields) + self._inherits.values()
+        # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
+        fields_pre = filter(lambda x: x in self._columns and getattr(self._columns[x],'_classic_write'), fields) + self._inherits.values()
 
-		res = []
-		cr.execute('SELECT MAX(id) FROM res_users')
-		max_user = cr.fetchone()[0]
-		if len(fields_pre) :
-			fields_pre2 = map(lambda x: (x in ('create_date', 'write_date')) and ('date_trunc(\'second\', '+x+') as '+x) or '"'+x+'"', fields_pre)
-			for i in range((len(ids) / ID_MAX) + ((len(ids) % ID_MAX) and 1 or 0)):
-				sub_ids = ids[ID_MAX * i:ID_MAX * (i + 1)]
-				if d1:
-					cr.execute('select %s from \"%s\" where id in (%s) ' \
-							'and account_id in (%s) ' \
-							'and "user" in (%s) and %s order by %s' % \
-							(','.join(fields_pre2 + ['id']), self._table,
-								','.join([str(x) for x in sub_ids]),
-								','.join([str(x/max_user - (x%max_user == 0 and 1 or 0)) for x in sub_ids]),
-								','.join([str(x-((x/max_user - (x%max_user == 0 and 1 or 0)) *max_user)) for x in sub_ids]), d1,
-								self._order),d2)
-					if not cr.rowcount == len({}.fromkeys(sub_ids)):
-						raise except_orm(_('AccessError'),
-								_('You try to bypass an access rule (Document type: %s).') % self._description)
-				else:
-					cr.execute('select %s from \"%s\" where id in (%s) ' \
-							'and account_id in (%s) ' \
-							'and "user" in (%s) order by %s' % \
-							(','.join(fields_pre2 + ['id']), self._table,
-								','.join([str(x) for x in sub_ids]),
-								','.join([str(x/max_user - (x%max_user == 0 and 1 or 0)) for x in sub_ids]),
-								','.join([str(x-((x/max_user - (x%max_user == 0 and 1 or 0)) *max_user)) for x in sub_ids]),
-								self._order))
-				res.extend(cr.dictfetchall())
-		else:
-			res = map(lambda x: {'id': x}, ids)
+        res = []
+        cr.execute('SELECT MAX(id) FROM res_users')
+        max_user = cr.fetchone()[0]
+        if len(fields_pre) :
+            fields_pre2 = map(lambda x: (x in ('create_date', 'write_date')) and ('date_trunc(\'second\', '+x+') as '+x) or '"'+x+'"', fields_pre)
+            for i in range((len(ids) / ID_MAX) + ((len(ids) % ID_MAX) and 1 or 0)):
+                sub_ids = ids[ID_MAX * i:ID_MAX * (i + 1)]
+                if d1:
+                    cr.execute('select %s from \"%s\" where id in (%s) ' \
+                            'and account_id in (%s) ' \
+                            'and "user" in (%s) and %s order by %s' % \
+                            (','.join(fields_pre2 + ['id']), self._table,
+                                ','.join([str(x) for x in sub_ids]),
+                                ','.join([str(x/max_user - (x%max_user == 0 and 1 or 0)) for x in sub_ids]),
+                                ','.join([str(x-((x/max_user - (x%max_user == 0 and 1 or 0)) *max_user)) for x in sub_ids]), d1,
+                                self._order),d2)
+                    if not cr.rowcount == len({}.fromkeys(sub_ids)):
+                        raise except_orm(_('AccessError'),
+                                _('You try to bypass an access rule (Document type: %s).') % self._description)
+                else:
+                    cr.execute('select %s from \"%s\" where id in (%s) ' \
+                            'and account_id in (%s) ' \
+                            'and "user" in (%s) order by %s' % \
+                            (','.join(fields_pre2 + ['id']), self._table,
+                                ','.join([str(x) for x in sub_ids]),
+                                ','.join([str(x/max_user - (x%max_user == 0 and 1 or 0)) for x in sub_ids]),
+                                ','.join([str(x-((x/max_user - (x%max_user == 0 and 1 or 0)) *max_user)) for x in sub_ids]),
+                                self._order))
+                res.extend(cr.dictfetchall())
+        else:
+            res = map(lambda x: {'id': x}, ids)
 
-		for f in fields_pre:
-			if self._columns[f].translate:
-				ids = map(lambda x: x['id'], res)
-				res_trans = self.pool.get('ir.translation')._get_ids(cr, user, self._name+','+f, 'model', context.get('lang', False) or 'en_US', ids)
-				for r in res:
-					r[f] = res_trans.get(r['id'], False) or r[f]
+        for f in fields_pre:
+            if self._columns[f].translate:
+                ids = map(lambda x: x['id'], res)
+                res_trans = self.pool.get('ir.translation')._get_ids(cr, user, self._name+','+f, 'model', context.get('lang', False) or 'en_US', ids)
+                for r in res:
+                    r[f] = res_trans.get(r['id'], False) or r[f]
 
-		for table in self._inherits:
-			col = self._inherits[table]
-			cols = intersect(self._inherit_fields.keys(), fields)
-			if not cols:
-				continue
-			res2 = self.pool.get(table).read(cr, user, [x[col] for x in res], cols, context, load)
+        for table in self._inherits:
+            col = self._inherits[table]
+            cols = intersect(self._inherit_fields.keys(), fields)
+            if not cols:
+                continue
+            res2 = self.pool.get(table).read(cr, user, [x[col] for x in res], cols, context, load)
 
-			res3 = {}
-			for r in res2:
-				res3[r['id']] = r
-				del r['id']
+            res3 = {}
+            for r in res2:
+                res3[r['id']] = r
+                del r['id']
 
-			for record in res:
-				record.update(res3[record[col]])
-				if col not in fields:
-					del record[col]
+            for record in res:
+                record.update(res3[record[col]])
+                if col not in fields:
+                    del record[col]
 
-		# all fields which need to be post-processed by a simple function (symbol_get)
-		fields_post = filter(lambda x: x in self._columns and self._columns[x]._symbol_get, fields)
-		if fields_post:
-			# maybe it would be faster to iterate on the fields then on res, so that we wouldn't need
-			# to get the _symbol_get in each occurence
-			for r in res:
-				for f in fields_post:
-					r[f] = self.columns[f]._symbol_get(r[f])
-		ids = map(lambda x: x['id'], res)
+        # all fields which need to be post-processed by a simple function (symbol_get)
+        fields_post = filter(lambda x: x in self._columns and self._columns[x]._symbol_get, fields)
+        if fields_post:
+            # maybe it would be faster to iterate on the fields then on res, so that we wouldn't need
+            # to get the _symbol_get in each occurence
+            for r in res:
+                for f in fields_post:
+                    r[f] = self.columns[f]._symbol_get(r[f])
+        ids = map(lambda x: x['id'], res)
 
-		# all non inherited fields for which the attribute whose name is in load is False
-		fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields)
-		for f in fields_post:
-			# get the value of that field for all records/ids
-			res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=res)
-			for record in res:
-				record[f] = res2[record['id']]
+        # all non inherited fields for which the attribute whose name is in load is False
+        fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields)
+        for f in fields_post:
+            # get the value of that field for all records/ids
+            res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=res)
+            for record in res:
+                record[f] = res2[record['id']]
 
-		return res
+        return res
 
 account_analytic_account_summary_user()
 
 class account_analytic_account_summary_month(osv.osv):
-	_name = "account_analytic_analysis.summary.month"
-	_description = "Hours summary by month"
-	_auto = False
-	_rec_name = 'month'
-	_order = 'month'
+    _name = "account_analytic_analysis.summary.month"
+    _description = "Hours summary by month"
+    _auto = False
+    _rec_name = 'month'
+    _order = 'month'
 
-	def _unit_amount(self, cr, uid, ids, name, arg, context=None):
-		res = {}
-		account_obj = self.pool.get('account.analytic.account')
-		account_ids = [int(str(int(x))[:-6]) for x in ids]
-		month_ids = [int(str(int(x))[-6:]) for x in ids]
-		account_ids2 = account_obj.search(cr, uid, [('parent_id', 'child_of', account_ids)])
-		month_set = ','.join([str(x) for x in month_ids])
-		if account_ids2:
-			acc_set = ','.join([str(x) for x in account_ids2])
-			cr.execute('SELECT id, unit_amount ' \
-					'FROM account_analytic_analysis_summary_month ' \
-					'WHERE account_id in (%s) ' \
-						'AND month_id in (%s) ' % \
-						(acc_set, month_set))
-			for sum_id, unit_amount in cr.fetchall():
-				res[sum_id] = unit_amount
-		for obj_id in ids:
-			res.setdefault(obj_id, 0.0)
-			for child_id in account_obj.search(cr, uid,
-					[('parent_id', 'child_of', [int(str(int(obj_id))[:-6])])]):
-				if child_id != int(str(int(obj_id))[:-6]):
-					res[obj_id] += res.get(int(child_id * 1000000 + int(obj_id)), 0.0)
-		for id in ids:
-			res[id] = round(res.get(id, 0.0), 2)
-		return res
+    def _unit_amount(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        account_obj = self.pool.get('account.analytic.account')
+        account_ids = [int(str(int(x))[:-6]) for x in ids]
+        month_ids = [int(str(int(x))[-6:]) for x in ids]
+        account_ids2 = account_obj.search(cr, uid, [('parent_id', 'child_of', account_ids)])
+        month_set = ','.join([str(x) for x in month_ids])
+        if account_ids2:
+            acc_set = ','.join([str(x) for x in account_ids2])
+            cr.execute('SELECT id, unit_amount ' \
+                    'FROM account_analytic_analysis_summary_month ' \
+                    'WHERE account_id in (%s) ' \
+                        'AND month_id in (%s) ' % \
+                        (acc_set, month_set))
+            for sum_id, unit_amount in cr.fetchall():
+                res[sum_id] = unit_amount
+        for obj_id in ids:
+            res.setdefault(obj_id, 0.0)
+            for child_id in account_obj.search(cr, uid,
+                    [('parent_id', 'child_of', [int(str(int(obj_id))[:-6])])]):
+                if child_id != int(str(int(obj_id))[:-6]):
+                    res[obj_id] += res.get(int(child_id * 1000000 + int(obj_id)), 0.0)
+        for id in ids:
+            res[id] = round(res.get(id, 0.0), 2)
+        return res
 
-	_columns = {
-		'account_id': fields.many2one('account.analytic.account', 'Analytic Account',
-			readonly=True),
-		'unit_amount': fields.function(_unit_amount, method=True, type='float',
-			string='Total Time'),
-		'month': fields.char('Month', size=25, readonly=True),
-	}
-	def init(self, cr):
-		cr.execute('CREATE OR REPLACE VIEW account_analytic_analysis_summary_month AS (' \
-				'SELECT ' \
-					'(TO_NUMBER(TO_CHAR(d.month, \'YYYYMM\'), \'999999\') + (d.account_id  * 1000000))::integer AS id, ' \
-					'd.account_id AS account_id, ' \
-					'TO_CHAR(d.month, \'Mon YYYY\') AS month, ' \
-					'TO_CHAR(d.month, \'YYYYMM\') AS month_id, ' \
-					'COALESCE(SUM(l.unit_amount), 0.0) AS unit_amount ' \
-				'FROM ' \
-					'(SELECT ' \
-						'd2.account_id, ' \
-						'd2.month ' \
-					'FROM ' \
-						'(SELECT ' \
-							'a.id AS account_id, ' \
-							'l.month AS month ' \
-						'FROM ' \
-							'(SELECT ' \
-								'DATE_TRUNC(\'month\', l.date) AS month ' \
-							'FROM account_analytic_line AS l, ' \
-								'account_analytic_journal AS j ' \
-							'WHERE j.type = \'general\' ' \
-							'GROUP BY DATE_TRUNC(\'month\', l.date) ' \
-							') AS l, ' \
-							'account_analytic_account AS a ' \
-						'GROUP BY l.month, a.id ' \
-						') AS d2 ' \
-					'GROUP BY d2.account_id, d2.month ' \
-					') AS d ' \
-				'LEFT JOIN ' \
-					'(SELECT ' \
-						'l.account_id AS account_id, ' \
-						'DATE_TRUNC(\'month\', l.date) AS month, ' \
-						'SUM(l.unit_amount) AS unit_amount ' \
-					'FROM account_analytic_line AS l, ' \
-						'account_analytic_journal AS j ' \
-					'WHERE j.type = \'general\' ' \
-					'GROUP BY l.account_id, DATE_TRUNC(\'month\', l.date) ' \
-					') AS l '
-					'ON (' \
-						'd.account_id = l.account_id ' \
-						'AND d.month = l.month' \
-					') ' \
-				'GROUP BY d.month, d.account_id ' \
-				')')
+    _columns = {
+        'account_id': fields.many2one('account.analytic.account', 'Analytic Account',
+            readonly=True),
+        'unit_amount': fields.function(_unit_amount, method=True, type='float',
+            string='Total Time'),
+        'month': fields.char('Month', size=25, readonly=True),
+    }
+    def init(self, cr):
+        cr.execute('CREATE OR REPLACE VIEW account_analytic_analysis_summary_month AS (' \
+                'SELECT ' \
+                    '(TO_NUMBER(TO_CHAR(d.month, \'YYYYMM\'), \'999999\') + (d.account_id  * 1000000))::integer AS id, ' \
+                    'd.account_id AS account_id, ' \
+                    'TO_CHAR(d.month, \'Mon YYYY\') AS month, ' \
+                    'TO_CHAR(d.month, \'YYYYMM\') AS month_id, ' \
+                    'COALESCE(SUM(l.unit_amount), 0.0) AS unit_amount ' \
+                'FROM ' \
+                    '(SELECT ' \
+                        'd2.account_id, ' \
+                        'd2.month ' \
+                    'FROM ' \
+                        '(SELECT ' \
+                            'a.id AS account_id, ' \
+                            'l.month AS month ' \
+                        'FROM ' \
+                            '(SELECT ' \
+                                'DATE_TRUNC(\'month\', l.date) AS month ' \
+                            'FROM account_analytic_line AS l, ' \
+                                'account_analytic_journal AS j ' \
+                            'WHERE j.type = \'general\' ' \
+                            'GROUP BY DATE_TRUNC(\'month\', l.date) ' \
+                            ') AS l, ' \
+                            'account_analytic_account AS a ' \
+                        'GROUP BY l.month, a.id ' \
+                        ') AS d2 ' \
+                    'GROUP BY d2.account_id, d2.month ' \
+                    ') AS d ' \
+                'LEFT JOIN ' \
+                    '(SELECT ' \
+                        'l.account_id AS account_id, ' \
+                        'DATE_TRUNC(\'month\', l.date) AS month, ' \
+                        'SUM(l.unit_amount) AS unit_amount ' \
+                    'FROM account_analytic_line AS l, ' \
+                        'account_analytic_journal AS j ' \
+                    'WHERE j.type = \'general\' ' \
+                    'GROUP BY l.account_id, DATE_TRUNC(\'month\', l.date) ' \
+                    ') AS l '
+                    'ON (' \
+                        'd.account_id = l.account_id ' \
+                        'AND d.month = l.month' \
+                    ') ' \
+                'GROUP BY d.month, d.account_id ' \
+                ')')
 
-	def _read_flat(self, cr, user, ids, fields, context=None, load='_classic_read'):
-		if not context:
-			context={}
-		if not ids:
-			return []
+    def _read_flat(self, cr, user, ids, fields, context=None, load='_classic_read'):
+        if not context:
+            context={}
+        if not ids:
+            return []
 
-		if fields==None:
-			fields = self._columns.keys()
+        if fields==None:
+            fields = self._columns.keys()
 
-		# construct a clause for the rules :
-		d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
+        # construct a clause for the rules :
+        d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
 
-		# all inherited fields + all non inherited fields for which the attribute whose name is in load is True
-		fields_pre = filter(lambda x: x in self._columns and getattr(self._columns[x],'_classic_write'), fields) + self._inherits.values()
+        # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
+        fields_pre = filter(lambda x: x in self._columns and getattr(self._columns[x],'_classic_write'), fields) + self._inherits.values()
 
-		res = []
-		if len(fields_pre) :
-			fields_pre2 = map(lambda x: (x in ('create_date', 'write_date')) and ('date_trunc(\'second\', '+x+') as '+x) or '"'+x+'"', fields_pre)
-			for i in range((len(ids) / ID_MAX) + ((len(ids) % ID_MAX) and 1 or 0)):
-				sub_ids = ids[ID_MAX * i:ID_MAX * (i + 1)]
-				if d1:
-					cr.execute('select %s from \"%s\" where id in (%s) ' \
-							'and account_id in (%s) ' \
-							'and month_id in (%s) and %s order by %s' % \
-							(','.join(fields_pre2 + ['id']), self._table,
-								','.join([str(x) for x in sub_ids]),
-								','.join([str(x)[:-6] for x in sub_ids]),
-								','.join([str(x)[-6:] for x in sub_ids]), d1,
-								self._order),d2)
-					if not cr.rowcount == len({}.fromkeys(sub_ids)):
-						raise except_orm(_('AccessError'),
-								_('You try to bypass an access rule (Document type: %s).') % self._description)
-				else:
-					cr.execute('select %s from \"%s\" where id in (%s) ' \
-							'and account_id in (%s) ' \
-							'and month_id in (%s) order by %s' % \
-							(','.join(fields_pre2 + ['id']), self._table,
-								','.join([str(x) for x in sub_ids]),
-								','.join([str(x)[:-6] for x in sub_ids]),
-								','.join([str(x)[-6:] for x in sub_ids]),
-								self._order))
-				res.extend(cr.dictfetchall())
-		else:
-			res = map(lambda x: {'id': x}, ids)
+        res = []
+        if len(fields_pre) :
+            fields_pre2 = map(lambda x: (x in ('create_date', 'write_date')) and ('date_trunc(\'second\', '+x+') as '+x) or '"'+x+'"', fields_pre)
+            for i in range((len(ids) / ID_MAX) + ((len(ids) % ID_MAX) and 1 or 0)):
+                sub_ids = ids[ID_MAX * i:ID_MAX * (i + 1)]
+                if d1:
+                    cr.execute('select %s from \"%s\" where id in (%s) ' \
+                            'and account_id in (%s) ' \
+                            'and month_id in (%s) and %s order by %s' % \
+                            (','.join(fields_pre2 + ['id']), self._table,
+                                ','.join([str(x) for x in sub_ids]),
+                                ','.join([str(x)[:-6] for x in sub_ids]),
+                                ','.join([str(x)[-6:] for x in sub_ids]), d1,
+                                self._order),d2)
+                    if not cr.rowcount == len({}.fromkeys(sub_ids)):
+                        raise except_orm(_('AccessError'),
+                                _('You try to bypass an access rule (Document type: %s).') % self._description)
+                else:
+                    cr.execute('select %s from \"%s\" where id in (%s) ' \
+                            'and account_id in (%s) ' \
+                            'and month_id in (%s) order by %s' % \
+                            (','.join(fields_pre2 + ['id']), self._table,
+                                ','.join([str(x) for x in sub_ids]),
+                                ','.join([str(x)[:-6] for x in sub_ids]),
+                                ','.join([str(x)[-6:] for x in sub_ids]),
+                                self._order))
+                res.extend(cr.dictfetchall())
+        else:
+            res = map(lambda x: {'id': x}, ids)
 
-		for f in fields_pre:
-			if self._columns[f].translate:
-				ids = map(lambda x: x['id'], res)
-				res_trans = self.pool.get('ir.translation')._get_ids(cr, user, self._name+','+f, 'model', context.get('lang', False) or 'en_US', ids)
-				for r in res:
-					r[f] = res_trans.get(r['id'], False) or r[f]
+        for f in fields_pre:
+            if self._columns[f].translate:
+                ids = map(lambda x: x['id'], res)
+                res_trans = self.pool.get('ir.translation')._get_ids(cr, user, self._name+','+f, 'model', context.get('lang', False) or 'en_US', ids)
+                for r in res:
+                    r[f] = res_trans.get(r['id'], False) or r[f]
 
-		for table in self._inherits:
-			col = self._inherits[table]
-			cols = intersect(self._inherit_fields.keys(), fields)
-			if not cols:
-				continue
-			res2 = self.pool.get(table).read(cr, user, [x[col] for x in res], cols, context, load)
+        for table in self._inherits:
+            col = self._inherits[table]
+            cols = intersect(self._inherit_fields.keys(), fields)
+            if not cols:
+                continue
+            res2 = self.pool.get(table).read(cr, user, [x[col] for x in res], cols, context, load)
 
-			res3 = {}
-			for r in res2:
-				res3[r['id']] = r
-				del r['id']
+            res3 = {}
+            for r in res2:
+                res3[r['id']] = r
+                del r['id']
 
-			for record in res:
-				record.update(res3[record[col]])
-				if col not in fields:
-					del record[col]
+            for record in res:
+                record.update(res3[record[col]])
+                if col not in fields:
+                    del record[col]
 
-		# all fields which need to be post-processed by a simple function (symbol_get)
-		fields_post = filter(lambda x: x in self._columns and self._columns[x]._symbol_get, fields)
-		if fields_post:
-			# maybe it would be faster to iterate on the fields then on res, so that we wouldn't need
-			# to get the _symbol_get in each occurence
-			for r in res:
-				for f in fields_post:
-					r[f] = self.columns[f]._symbol_get(r[f])
-		ids = map(lambda x: x['id'], res)
+        # all fields which need to be post-processed by a simple function (symbol_get)
+        fields_post = filter(lambda x: x in self._columns and self._columns[x]._symbol_get, fields)
+        if fields_post:
+            # maybe it would be faster to iterate on the fields then on res, so that we wouldn't need
+            # to get the _symbol_get in each occurence
+            for r in res:
+                for f in fields_post:
+                    r[f] = self.columns[f]._symbol_get(r[f])
+        ids = map(lambda x: x['id'], res)
 
-		# all non inherited fields for which the attribute whose name is in load is False
-		fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields)
-		for f in fields_post:
-			# get the value of that field for all records/ids
-			res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=res)
-			for record in res:
-				record[f] = res2[record['id']]
+        # all non inherited fields for which the attribute whose name is in load is False
+        fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields)
+        for f in fields_post:
+            # get the value of that field for all records/ids
+            res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=res)
+            for record in res:
+                record[f] = res2[record['id']]
 
-		return res
+        return res
 
 account_analytic_account_summary_month()
 

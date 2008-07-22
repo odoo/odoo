@@ -32,26 +32,26 @@ import wizard
 
 dates_form = '''<?xml version="1.0"?>
 <form string="Select period">
-	<field name="date1"/>
-	<field name="date2"/>
+    <field name="date1"/>
+    <field name="date2"/>
 </form>'''
 
 dates_fields = {
-	'date1': {'string':'Start of period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-01-01')},
-	'date2': {'string':'End of period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
+    'date1': {'string':'Start of period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-01-01')},
+    'date2': {'string':'End of period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
 }
 
 class wizard_report(wizard.interface):
-	states = {
-		'init': {
-			'actions': [], 
-			'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('end','Cancel'),('report','Print')]}
-		},
-		'report': {
-			'actions': [],
-			'result': {'type':'print', 'report':'account.budget', 'state':'end'}
-		}
-	}
+    states = {
+        'init': {
+            'actions': [], 
+            'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('end','Cancel'),('report','Print')]}
+        },
+        'report': {
+            'actions': [],
+            'result': {'type':'print', 'report':'account.budget', 'state':'end'}
+        }
+    }
 wizard_report('account.budget.report')
 
 

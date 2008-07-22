@@ -33,11 +33,11 @@ from osv import fields, osv
 
 
 class res_partner(osv.osv):
-	_name = 'res.partner'
-	_inherit = 'res.partner'
-	_columns = {
-		'sales': fields.one2many('sale.order', 'partner_id', 'Sales'),
-	}
+    _name = 'res.partner'
+    _inherit = 'res.partner'
+    _columns = {
+        'sales': fields.one2many('sale.order', 'partner_id', 'Sales'),
+    }
 
 res_partner()
 

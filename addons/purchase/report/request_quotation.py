@@ -34,10 +34,10 @@ from osv import osv
 import pooler
 
 class request_quotation(report_sxw.rml_parse):
-	def __init__(self, cr, uid, name, context):
-		super(request_quotation, self).__init__(cr, uid, name, context)
-		self.localcontext.update({
-			'time': time,
-			'user': self.pool.get('res.users').browse(cr, uid, uid, context)
-		})
+    def __init__(self, cr, uid, name, context):
+        super(request_quotation, self).__init__(cr, uid, name, context)
+        self.localcontext.update({
+            'time': time,
+            'user': self.pool.get('res.users').browse(cr, uid, uid, context)
+        })
 report_sxw.report_sxw('report.purchase.quotation','purchase.order','addons/purchase/report/request_quotation.rml',parser=request_quotation)

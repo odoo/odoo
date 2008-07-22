@@ -31,18 +31,18 @@
 from osv import fields, osv
 
 class res_partner(osv.osv):
-	_inherit = 'res.partner'
-	_columns = {
-		'property_delivery_carrier': fields.property(
-		  'delivery.carrier',
-		  type='many2one', 
-		  relation='delivery.carrier', 
-		  string="Delivery Method", 
-		  method=True,
-		  view_load=True,
-		  group_name="Delivery Properties",
-		  help="This carrier will be used, instead of the default one, for delivering goods to the current partner"),
-	}
+    _inherit = 'res.partner'
+    _columns = {
+        'property_delivery_carrier': fields.property(
+          'delivery.carrier',
+          type='many2one', 
+          relation='delivery.carrier', 
+          string="Delivery Method", 
+          method=True,
+          view_load=True,
+          group_name="Delivery Properties",
+          help="This carrier will be used, instead of the default one, for delivering goods to the current partner"),
+    }
 res_partner()
 
 

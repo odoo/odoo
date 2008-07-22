@@ -35,56 +35,56 @@ import pooler
 from osv import osv
 
 def action_traceability(type='move_history_ids', field='tracking_id'):
-	def open_tab(self, cr, uid, data, context):
-		obj = pooler.get_pool(cr.dbname).get('stock.move')
-		ids = obj.search(cr, uid, [(field, 'in', data['ids'])])
-		cr.execute('select id from ir_ui_view where model=%s and field_parent=%s and type=%s', ('stock.move', type, 'tree'))
-		view_id = cr.fetchone()[0]
-		value = {
-			'domain': "[('id','in',["+','.join(map(str,ids))+"])]",
-			'name': ((type=='move_history_ids') and 'Upstream Traceability') or 'Downstream Traceability',
-			'view_type': 'tree',
-			'res_model': 'stock.move',
-			'field_parent': type,
-			'view_id': (view_id,'View'),
-			'type': 'ir.actions.act_window'
-		}
-		return value
-	return open_tab
+    def open_tab(self, cr, uid, data, context):
+        obj = pooler.get_pool(cr.dbname).get('stock.move')
+        ids = obj.search(cr, uid, [(field, 'in', data['ids'])])
+        cr.execute('select id from ir_ui_view where model=%s and field_parent=%s and type=%s', ('stock.move', type, 'tree'))
+        view_id = cr.fetchone()[0]
+        value = {
+            'domain': "[('id','in',["+','.join(map(str,ids))+"])]",
+            'name': ((type=='move_history_ids') and 'Upstream Traceability') or 'Downstream Traceability',
+            'view_type': 'tree',
+            'res_model': 'stock.move',
+            'field_parent': type,
+            'view_id': (view_id,'View'),
+            'type': 'ir.actions.act_window'
+        }
+        return value
+    return open_tab
 
 class wiz_journal(wizard.interface):
-	states = {
-		'init': {
-			'actions': [],
-			'result': {'type': 'action', 'action': action_traceability(), 'state':'end'}
-		}
-	}
+    states = {
+        'init': {
+            'actions': [],
+            'result': {'type': 'action', 'action': action_traceability(), 'state':'end'}
+        }
+    }
 wiz_journal('stock.traceability.aval')
 
 class wiz_journal2(wizard.interface):
-	states = {
-		'init': {
-			'actions': [],
-			'result': {'type': 'action', 'action': action_traceability('move_history_ids2'), 'state':'end'}
-		}
-	}
+    states = {
+        'init': {
+            'actions': [],
+            'result': {'type': 'action', 'action': action_traceability('move_history_ids2'), 'state':'end'}
+        }
+    }
 wiz_journal2('stock.traceability.amont')
 
 class wiz_journal3(wizard.interface):
-	states = {
-		'init': {
-			'actions': [],
-			'result': {'type': 'action', 'action': action_traceability(field='prodlot_id'), 'state':'end'}
-		}
-	}
+    states = {
+        'init': {
+            'actions': [],
+            'result': {'type': 'action', 'action': action_traceability(field='prodlot_id'), 'state':'end'}
+        }
+    }
 wiz_journal3('stock.traceability.lot.amont')
 
 class wiz_journal4(wizard.interface):
-	states = {
-		'init': {
-			'actions': [],
-			'result': {'type': 'action', 'action': action_traceability('move_history_ids2', 'prodlot_id'), 'state':'end'}
-		}
-	}
+    states = {
+        'init': {
+            'actions': [],
+            'result': {'type': 'action', 'action': action_traceability('move_history_ids2', 'prodlot_id'), 'state':'end'}
+        }
+    }
 wiz_journal4('stock.traceability.lot.aval')
 

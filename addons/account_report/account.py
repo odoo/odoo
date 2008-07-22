@@ -38,141 +38,141 @@ from mx.DateTime import RelativeDateTime, now, DateTime, localtime
 
 
 class account_report(osv.osv):
-	_name = "account.report.report"
-	_description = "Account reporting"
-	_color = [
-			('', ''),
-			('green','Green'),
-			('red','Red'),
-			('pink','Pink'),
-			('blue','Blue'),
-			('yellow','Yellow'),
-			('cyan','Cyan'),
-			('lightblue','Light Blue'),
-			('orange','Orange'),
-			]
-	_style = [
-			('1','Header 1'),
-			('2','Header 2'),
-			('3','Header 3'),
-			('4','Header 4'),
-			('5','Normal'),
-			('6', 'Small'),
-			]
+    _name = "account.report.report"
+    _description = "Account reporting"
+    _color = [
+            ('', ''),
+            ('green','Green'),
+            ('red','Red'),
+            ('pink','Pink'),
+            ('blue','Blue'),
+            ('yellow','Yellow'),
+            ('cyan','Cyan'),
+            ('lightblue','Light Blue'),
+            ('orange','Orange'),
+            ]
+    _style = [
+            ('1','Header 1'),
+            ('2','Header 2'),
+            ('3','Header 3'),
+            ('4','Header 4'),
+            ('5','Normal'),
+            ('6', 'Small'),
+            ]
 
-	def _amount_get(self, cr, uid, ids, field_name, arg, context={}):
-		def _calc_credit(*code):
-			acc = self.pool.get('account.account')
-			acc_id = acc.search(cr, uid, [('code','in',code)])
-			return reduce(lambda y,x=0: x.credit+y, acc.browse(cr, uid, acc_id, context),0)
-		def _calc_debit(*code):
-			acc = self.pool.get('account.account')
-			acc_id = acc.search(cr, uid, [('code','in',code)])
-			return reduce(lambda y,x=0: x.debit+y, acc.browse(cr, uid, acc_id, context),0)
-		def _calc_balance(*code):
-			acc = self.pool.get('account.account')
-			acc_id = acc.search(cr, uid, [('code','in',code)])
-			return reduce(lambda y,x=0: x.balance+y, acc.browse(cr, uid, acc_id, context),0)
-		def _calc_report(*code):
-			acc = self.pool.get('account.report.report')
-			acc_id = acc.search(cr, uid, [('code','in',code)])
-			return reduce(lambda y,x=0: x.amount+y, acc.browse(cr, uid, acc_id, context),0)
-		result = {}
-		for rep in self.browse(cr, uid, ids, context):
-			objdict = {
-				'debit': _calc_debit,
-				'credit': _calc_credit,
-				'balance': _calc_balance,
-				'report': _calc_report,
-			}
-			if field_name=='status':
-				fld_name = 'expression_status'
-			else:
-				fld_name = 'expression'
-			try:
-				val = eval(getattr(rep, fld_name), objdict)
-			except:
-				val = 0.0
-			if field_name=='status':
-				if val<-1:
-					result[rep.id] = 'very bad'
-				elif val<0:
-					result[rep.id] = 'bad'
-				elif val==0:
-					result[rep.id] = 'normal'
-				elif val<1:
-					result[rep.id] = 'good'
-				else:
-					result[rep.id] = 'excellent'
-			else:
-				result[rep.id] =  val
-		return result
+    def _amount_get(self, cr, uid, ids, field_name, arg, context={}):
+        def _calc_credit(*code):
+            acc = self.pool.get('account.account')
+            acc_id = acc.search(cr, uid, [('code','in',code)])
+            return reduce(lambda y,x=0: x.credit+y, acc.browse(cr, uid, acc_id, context),0)
+        def _calc_debit(*code):
+            acc = self.pool.get('account.account')
+            acc_id = acc.search(cr, uid, [('code','in',code)])
+            return reduce(lambda y,x=0: x.debit+y, acc.browse(cr, uid, acc_id, context),0)
+        def _calc_balance(*code):
+            acc = self.pool.get('account.account')
+            acc_id = acc.search(cr, uid, [('code','in',code)])
+            return reduce(lambda y,x=0: x.balance+y, acc.browse(cr, uid, acc_id, context),0)
+        def _calc_report(*code):
+            acc = self.pool.get('account.report.report')
+            acc_id = acc.search(cr, uid, [('code','in',code)])
+            return reduce(lambda y,x=0: x.amount+y, acc.browse(cr, uid, acc_id, context),0)
+        result = {}
+        for rep in self.browse(cr, uid, ids, context):
+            objdict = {
+                'debit': _calc_debit,
+                'credit': _calc_credit,
+                'balance': _calc_balance,
+                'report': _calc_report,
+            }
+            if field_name=='status':
+                fld_name = 'expression_status'
+            else:
+                fld_name = 'expression'
+            try:
+                val = eval(getattr(rep, fld_name), objdict)
+            except:
+                val = 0.0
+            if field_name=='status':
+                if val<-1:
+                    result[rep.id] = 'very bad'
+                elif val<0:
+                    result[rep.id] = 'bad'
+                elif val==0:
+                    result[rep.id] = 'normal'
+                elif val<1:
+                    result[rep.id] = 'good'
+                else:
+                    result[rep.id] = 'excellent'
+            else:
+                result[rep.id] =  val
+        return result
 
-	def onchange_parent_id(self, cr, uid, ids, parent_id):
-		v={}
-		if parent_id:
-			acc=self.pool.get('account.report.report').browse(cr,uid,parent_id)
-			v['type']=acc.type
-			if int(acc.style) < 6:
-				v['style'] = str(int(acc.style)+1)
-		return {'value': v}
+    def onchange_parent_id(self, cr, uid, ids, parent_id):
+        v={}
+        if parent_id:
+            acc=self.pool.get('account.report.report').browse(cr,uid,parent_id)
+            v['type']=acc.type
+            if int(acc.style) < 6:
+                v['style'] = str(int(acc.style)+1)
+        return {'value': v}
 
-	_columns = {
-		'name': fields.char('Name', size=64, required=True),
-		'active': fields.boolean('Active'),
-		'sequence': fields.integer('Sequence'),
-		'code': fields.char('Code', size=64, required=True),
-		'type': fields.selection([
-			('fiscal', 'Fiscal statement'),
-			('indicator','Indicator'),
-			('other','Others')],
-			'Type', required=True),
-		'expression': fields.char('Expression', size=240, required=True),
-		'expression_status': fields.char('Status expression', size=240, required=True),
-		'parent_id': fields.many2one('account.report.report', 'Parent'),
-		'child_ids': fields.one2many('account.report.report', 'parent_id', 'Childs'),
-		'note': fields.text('Note'),
-		'amount': fields.function(_amount_get, method=True, string='Value'),
-		'status': fields.function(_amount_get,
-			method=True,
-			type="selection",
-			selection=[
-				('very bad', 'Very Bad'),
-				('bad', 'Bad'),
-				('normal', ''),
-				('good', 'Good'),
-				('excellent', 'Excellent')
-			],
-			string='Status'),
-		'style': fields.selection(_style, 'Style', required=True),
-		'color_font' : fields.selection(_color, 'Font Color', help="Font Color for the report"),
-		'color_back' : fields.selection(_color, 'Back Color')
-	}
-	_defaults = {
-		'style': lambda *args: '5',
-		'active': lambda *args: True,
-		'type': lambda *args: 'indicator',
-	}
+    _columns = {
+        'name': fields.char('Name', size=64, required=True),
+        'active': fields.boolean('Active'),
+        'sequence': fields.integer('Sequence'),
+        'code': fields.char('Code', size=64, required=True),
+        'type': fields.selection([
+            ('fiscal', 'Fiscal statement'),
+            ('indicator','Indicator'),
+            ('other','Others')],
+            'Type', required=True),
+        'expression': fields.char('Expression', size=240, required=True),
+        'expression_status': fields.char('Status expression', size=240, required=True),
+        'parent_id': fields.many2one('account.report.report', 'Parent'),
+        'child_ids': fields.one2many('account.report.report', 'parent_id', 'Childs'),
+        'note': fields.text('Note'),
+        'amount': fields.function(_amount_get, method=True, string='Value'),
+        'status': fields.function(_amount_get,
+            method=True,
+            type="selection",
+            selection=[
+                ('very bad', 'Very Bad'),
+                ('bad', 'Bad'),
+                ('normal', ''),
+                ('good', 'Good'),
+                ('excellent', 'Excellent')
+            ],
+            string='Status'),
+        'style': fields.selection(_style, 'Style', required=True),
+        'color_font' : fields.selection(_color, 'Font Color', help="Font Color for the report"),
+        'color_back' : fields.selection(_color, 'Back Color')
+    }
+    _defaults = {
+        'style': lambda *args: '5',
+        'active': lambda *args: True,
+        'type': lambda *args: 'indicator',
+    }
 
-	def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
-		if not args:
-			args=[]
-		if not context:
-			context={}
-		ids = []
-		if name:
-			ids = self.search(cr, user, [('code','=',name)]+ args, limit=limit, context=context)
-			if not ids:
-				ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
-		else:
-			ids = self.search(cr, user, args, limit=limit, context=context)
-		return self.name_get(cr, user, ids, context=context)
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+        if not args:
+            args=[]
+        if not context:
+            context={}
+        ids = []
+        if name:
+            ids = self.search(cr, user, [('code','=',name)]+ args, limit=limit, context=context)
+            if not ids:
+                ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
+        else:
+            ids = self.search(cr, user, args, limit=limit, context=context)
+        return self.name_get(cr, user, ids, context=context)
 
-	_constraints = [
-	#TODO Put an expression to valid expression and expression_status
-	]
-	_sql_constraints = [
-		('code_uniq', 'unique (code)', 'The code of the report entry must be unique !')
-	]
+    _constraints = [
+    #TODO Put an expression to valid expression and expression_status
+    ]
+    _sql_constraints = [
+        ('code_uniq', 'unique (code)', 'The code of the report entry must be unique !')
+    ]
 
 account_report()

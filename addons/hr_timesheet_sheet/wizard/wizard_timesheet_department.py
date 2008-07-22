@@ -35,85 +35,85 @@ import pooler
 from osv import osv
 
 class wiz_timesheet_open(wizard.interface):
-	def _open_timesheet(self, cr, uid, data, context):
-		pool = pooler.get_pool(cr.dbname)
-		dep_ids = pool.get('hr.department').search(cr, uid, [('manager_id','=',uid)])
-		user_ids = {}
-		for dep in pool.get('hr.department').browse(cr, uid, dep_ids, context):
-			for user in dep.member_ids:
-				user_ids[user.id] = 1
-		value = {
-			'domain': "[('user_id', 'in', "+str(user_ids.keys())+")]",
-			'name': 'Timesheets',
-			'view_type': 'form',
-			'view_mode': 'tree,form',
-			'res_model': 'hr_timesheet_sheet.sheet',
-			'view_id': False,
-			'type': 'ir.actions.act_window'
-		}
-		return value
+    def _open_timesheet(self, cr, uid, data, context):
+        pool = pooler.get_pool(cr.dbname)
+        dep_ids = pool.get('hr.department').search(cr, uid, [('manager_id','=',uid)])
+        user_ids = {}
+        for dep in pool.get('hr.department').browse(cr, uid, dep_ids, context):
+            for user in dep.member_ids:
+                user_ids[user.id] = 1
+        value = {
+            'domain': "[('user_id', 'in', "+str(user_ids.keys())+")]",
+            'name': 'Timesheets',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'hr_timesheet_sheet.sheet',
+            'view_id': False,
+            'type': 'ir.actions.act_window'
+        }
+        return value
 
-	states = {
-		'init' : {
-			'actions' : [],
-			'result' : {'type':'action', 'action':_open_timesheet, 'state':'end'}
-		}
-	}
+    states = {
+        'init' : {
+            'actions' : [],
+            'result' : {'type':'action', 'action':_open_timesheet, 'state':'end'}
+        }
+    }
 wiz_timesheet_open('hr_timesheet_sheet.department.open')
 
 class wiz_timesheet_confirm_open(wizard.interface):
-	def _open_timesheet(self, cr, uid, data, context):
-		pool = pooler.get_pool(cr.dbname)
-		dep_ids = pool.get('hr.department').search(cr, uid, [('manager_id','=',uid)])
-		user_ids = {}
-		for dep in pool.get('hr.department').browse(cr, uid, dep_ids, context):
-			for user in dep.member_ids:
-				user_ids[user.id] = 1
-		value = {
-			'domain': "[('user_id', 'in', "+str(user_ids.keys())+"),('state','=','draft')]",
-			'name': 'Timesheets',
-			'view_type': 'form',
-			'view_mode': 'tree,form',
-			'res_model': 'hr_timesheet_sheet.sheet',
-			'view_id': False,
-			'type': 'ir.actions.act_window'
-		}
-		return value
+    def _open_timesheet(self, cr, uid, data, context):
+        pool = pooler.get_pool(cr.dbname)
+        dep_ids = pool.get('hr.department').search(cr, uid, [('manager_id','=',uid)])
+        user_ids = {}
+        for dep in pool.get('hr.department').browse(cr, uid, dep_ids, context):
+            for user in dep.member_ids:
+                user_ids[user.id] = 1
+        value = {
+            'domain': "[('user_id', 'in', "+str(user_ids.keys())+"),('state','=','draft')]",
+            'name': 'Timesheets',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'hr_timesheet_sheet.sheet',
+            'view_id': False,
+            'type': 'ir.actions.act_window'
+        }
+        return value
 
-	states = {
-		'init' : {
-			'actions' : [],
-			'result' : {'type':'action', 'action':_open_timesheet, 'state':'end'}
-		}
-	}
+    states = {
+        'init' : {
+            'actions' : [],
+            'result' : {'type':'action', 'action':_open_timesheet, 'state':'end'}
+        }
+    }
 wiz_timesheet_confirm_open('hr_timesheet_sheet.department.confirm.open')
 
 
 class wiz_timesheet_validate_open(wizard.interface):
-	def _open_timesheet(self, cr, uid, data, context):
-		pool = pooler.get_pool(cr.dbname)
-		dep_ids = pool.get('hr.department').search(cr, uid, [('manager_id','=',uid)])
-		user_ids = {}
-		for dep in pool.get('hr.department').browse(cr, uid, dep_ids, context):
-			for user in dep.member_ids:
-				user_ids[user.id] = 1
-		value = {
-			'domain': "[('user_id', 'in', "+str(user_ids.keys())+"),('state','=','confirm')]",
-			'name': 'Timesheets',
-			'view_type': 'form',
-			'view_mode': 'tree,form',
-			'res_model': 'hr_timesheet_sheet.sheet',
-			'view_id': False,
-			'type': 'ir.actions.act_window'
-		}
-		return value
+    def _open_timesheet(self, cr, uid, data, context):
+        pool = pooler.get_pool(cr.dbname)
+        dep_ids = pool.get('hr.department').search(cr, uid, [('manager_id','=',uid)])
+        user_ids = {}
+        for dep in pool.get('hr.department').browse(cr, uid, dep_ids, context):
+            for user in dep.member_ids:
+                user_ids[user.id] = 1
+        value = {
+            'domain': "[('user_id', 'in', "+str(user_ids.keys())+"),('state','=','confirm')]",
+            'name': 'Timesheets',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'hr_timesheet_sheet.sheet',
+            'view_id': False,
+            'type': 'ir.actions.act_window'
+        }
+        return value
 
-	states = {
-		'init' : {
-			'actions' : [],
-			'result' : {'type':'action', 'action':_open_timesheet, 'state':'end'}
-		}
-	}
+    states = {
+        'init' : {
+            'actions' : [],
+            'result' : {'type':'action', 'action':_open_timesheet, 'state':'end'}
+        }
+    }
 wiz_timesheet_validate_open('hr_timesheet_sheet.department.validate.open')
 
 

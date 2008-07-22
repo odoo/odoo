@@ -30,8 +30,8 @@
 from osv import fields, osv
 
 class base_setup(osv.osv):
-	_name="base_setup.base_setup"
-	_columns={
-		'name': fields.char("Name", size=128),
-	}
+    _name="base_setup.base_setup"
+    _columns={
+        'name': fields.char("Name", size=128),
+    }
 base_setup()

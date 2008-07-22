@@ -26,17 +26,17 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 {
-	"name" : "IBAN",
-	"version" : "1.0",
-	"author" : "Tiny",
-	"category" : "Generic Modules/Base",
-	"depends" : ["base"],
-	"description": """
+    "name" : "IBAN",
+    "version" : "1.0",
+    "author" : "Tiny",
+    "category" : "Generic Modules/Base",
+    "depends" : ["base"],
+    "description": """
 This module install the base for IBAN bank accounts. 
 
-	""",
-	"update_xml" : ["base_iban_view.xml"],
-	"init_xml" : ["base_iban_data.xml"],
-	"active": False,
-	"installable": True
+    """,
+    "update_xml" : ["base_iban_view.xml"],
+    "init_xml" : ["base_iban_data.xml"],
+    "active": False,
+    "installable": True
 }

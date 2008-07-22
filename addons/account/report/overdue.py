@@ -35,30 +35,30 @@ from report import report_sxw
 import pooler
 
 class Overdue(report_sxw.rml_parse):
-	def __init__(self, cr, uid, name, context):
-		super(Overdue, self).__init__(cr, uid, name, context)
-		self.localcontext.update( {
-			'time' : time,
-			'adr_get' : self._adr_get,
-			'getLines' : self._lines_get,
-		})
+    def __init__(self, cr, uid, name, context):
+        super(Overdue, self).__init__(cr, uid, name, context)
+        self.localcontext.update( {
+            'time' : time,
+            'adr_get' : self._adr_get,
+            'getLines' : self._lines_get,
+        })
 
-	def _adr_get(self, partner, type):
-		res_partner = pooler.get_pool(self.cr.dbname).get('res.partner')
-		res_partner_address = pooler.get_pool(self.cr.dbname).get('res.partner.address')
-		addresses = res_partner.address_get(self.cr, self.uid, [partner.id], [type])
-		adr_id = addresses and addresses[type] or False
-		return adr_id and res_partner_address.read(self.cr, self.uid, [adr_id])[0] or False
+    def _adr_get(self, partner, type):
+        res_partner = pooler.get_pool(self.cr.dbname).get('res.partner')
+        res_partner_address = pooler.get_pool(self.cr.dbname).get('res.partner.address')
+        addresses = res_partner.address_get(self.cr, self.uid, [partner.id], [type])
+        adr_id = addresses and addresses[type] or False
+        return adr_id and res_partner_address.read(self.cr, self.uid, [adr_id])[0] or False
 
-	def _lines_get(self, partner):
-		moveline_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
-		movelines = moveline_obj.search(self.cr, self.uid,
-				[('partner_id', '=', partner.id),
-					('account_id.type', 'in', ['receivable', 'payable']),
-					('state', '<>', 'draft'), ('reconcile_id', '=', False)])
-		movelines = moveline_obj.browse(self.cr, self.uid, movelines)
-		return movelines
+    def _lines_get(self, partner):
+        moveline_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
+        movelines = moveline_obj.search(self.cr, self.uid,
+                [('partner_id', '=', partner.id),
+                    ('account_id.type', 'in', ['receivable', 'payable']),
+                    ('state', '<>', 'draft'), ('reconcile_id', '=', False)])
+        movelines = moveline_obj.browse(self.cr, self.uid, movelines)
+        return movelines
 
 report_sxw.report_sxw('report.account.overdue', 'res.partner',
-		'addons/account/report/overdue.rml', parser=Overdue)
+        'addons/account/report/overdue.rml', parser=Overdue)
 

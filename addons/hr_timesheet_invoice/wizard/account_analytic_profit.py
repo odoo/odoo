@@ -32,53 +32,53 @@ import datetime
 
 form='''<?xml version="1.0"?>
 <form string="Choose">
-	<field name="date_from"/>
-	<field name="date_to"/>
-	<field name="journal_ids" colspan="4"/>
-	<field name="employee_ids" colspan="4"/>
+    <field name="date_from"/>
+    <field name="date_to"/>
+    <field name="journal_ids" colspan="4"/>
+    <field name="employee_ids" colspan="4"/>
 </form>'''
 
 class wizard_report(wizard.interface):
-	def _date_from(*a):
-		return datetime.datetime.today().strftime('%Y-%m-1')
-	def _date_to(*a):
-		return datetime.datetime.today().strftime('%Y-%m-%d')
+    def _date_from(*a):
+        return datetime.datetime.today().strftime('%Y-%m-1')
+    def _date_to(*a):
+        return datetime.datetime.today().strftime('%Y-%m-%d')
 
-	fields={
-		'date_from':{
-			'string':'From',
-			'type':'date',
-			'required':True,
-			'default':_date_from,
-		},
-		'date_to':{
-			'string':'To',
-			'type':'date',
-			'required':True,
-			'default':_date_to,
-		},
-		'journal_ids':{
-			'string':'Journal',
-			'type':'many2many',
-			'relation':'account.analytic.journal',
-			'required':True,
-		},
-		'employee_ids':{
-			'string':'Employee',
-			'type':'many2many',
-			'relation':'res.users',
-			'required':True,
-		},
-	}
+    fields={
+        'date_from':{
+            'string':'From',
+            'type':'date',
+            'required':True,
+            'default':_date_from,
+        },
+        'date_to':{
+            'string':'To',
+            'type':'date',
+            'required':True,
+            'default':_date_to,
+        },
+        'journal_ids':{
+            'string':'Journal',
+            'type':'many2many',
+            'relation':'account.analytic.journal',
+            'required':True,
+        },
+        'employee_ids':{
+            'string':'Employee',
+            'type':'many2many',
+            'relation':'res.users',
+            'required':True,
+        },
+    }
 
-	states={
-		'init':{
-			'actions':[],
-			'result':{'type':'form', 'arch':form, 'fields':fields, 'state':[('end', 'Cancel'), ('report', 'Print')]}
-		},
-		'report':{
-			'actions':[],
-			'result':{'type':'print', 'report':'account.analytic.profit', 'state':'end'}
-		}
-	}
+    states={
+        'init':{
+            'actions':[],
+            'result':{'type':'form', 'arch':form, 'fields':fields, 'state':[('end', 'Cancel'), ('report', 'Print')]}
+        },
+        'report':{
+            'actions':[],
+            'result':{'type':'print', 'report':'account.analytic.profit', 'state':'end'}
+        }
+    }
 wizard_report('account.analytic.profit')

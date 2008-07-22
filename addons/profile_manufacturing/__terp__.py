@@ -26,13 +26,13 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 {
-	"name":"Manufacturing industry profile",
-	"version":"1.0",
-	"author":"Tiny",
-	"category":"Profile",
-	"depends":["mrp", "crm", "sale", "delivery","board_manufacturing"],
-	"demo_xml":[],
-	"update_xml":[],
-	"active":False,
-	"installable":True,
+    "name":"Manufacturing industry profile",
+    "version":"1.0",
+    "author":"Tiny",
+    "category":"Profile",
+    "depends":["mrp", "crm", "sale", "delivery","board_manufacturing"],
+    "demo_xml":[],
+    "update_xml":[],
+    "active":False,
+    "installable":True,
 }

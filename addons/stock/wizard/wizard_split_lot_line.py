@@ -39,47 +39,47 @@ arch = UpdateableStr()
 fields = {}
 
 def make_default(val):
-	def fct(obj, cr, uid):
-		return val
-	return fct
+    def fct(obj, cr, uid):
+        return val
+    return fct
 
 def _get_moves(self, cr, uid, data, context):
-	pick_obj = pooler.get_pool(cr.dbname).get('stock.picking')
-	pick = pick_obj.browse(cr, uid, [data['id']])[0]
-	res = {}
-	fields.clear()
-	arch_lst = ['<?xml version="1.0"?>', '<form string="Split lines">', '<label string="Indicate here the quantity of the new line. A quantity of zero will not split the line." colspan="4"/>']
-	for m in [line for line in pick.move_lines]:
-		quantity = m.product_qty
-		arch_lst.append('<field name="move%s" />\n<newline />' % (m.id,))
-		fields['move%s' % m.id] = {'string' : m.product_id.name, 'type' : 'float', 'required' : True, 'default' : make_default(quantity)}
-		res.setdefault('moves', []).append(m.id)
-	arch_lst.append('</form>')
-	arch.string = '\n'.join(arch_lst)
-	return res
+    pick_obj = pooler.get_pool(cr.dbname).get('stock.picking')
+    pick = pick_obj.browse(cr, uid, [data['id']])[0]
+    res = {}
+    fields.clear()
+    arch_lst = ['<?xml version="1.0"?>', '<form string="Split lines">', '<label string="Indicate here the quantity of the new line. A quantity of zero will not split the line." colspan="4"/>']
+    for m in [line for line in pick.move_lines]:
+        quantity = m.product_qty
+        arch_lst.append('<field name="move%s" />\n<newline />' % (m.id,))
+        fields['move%s' % m.id] = {'string' : m.product_id.name, 'type' : 'float', 'required' : True, 'default' : make_default(quantity)}
+        res.setdefault('moves', []).append(m.id)
+    arch_lst.append('</form>')
+    arch.string = '\n'.join(arch_lst)
+    return res
 
 def _split_lines(self, cr, uid, data, context):
-	move_obj = pooler.get_pool(cr.dbname).get('stock.move')
-	for move in move_obj.browse(cr, uid, data['form']['moves']):
-		quantity = data['form']['move%s' % move.id]
-		if 0 < quantity < move.product_qty:
-			new_qty = move.product_qty - quantity
-			new_uos_qty = new_qty / move.product_qty * move.product_uos_qty
-			new_obj = move_obj.copy(cr, uid, move.id, {'product_qty' : new_qty, 'product_uos_qty': new_uos_qty, 'state':move.state})
-			uos_qty = quantity / move.product_qty * move.product_uos_qty
-			move_obj.write(cr, uid, [move.id], {'product_qty' : quantity, 'product_uos_qty': uos_qty})
-	return {}
+    move_obj = pooler.get_pool(cr.dbname).get('stock.move')
+    for move in move_obj.browse(cr, uid, data['form']['moves']):
+        quantity = data['form']['move%s' % move.id]
+        if 0 < quantity < move.product_qty:
+            new_qty = move.product_qty - quantity
+            new_uos_qty = new_qty / move.product_qty * move.product_uos_qty
+            new_obj = move_obj.copy(cr, uid, move.id, {'product_qty' : new_qty, 'product_uos_qty': new_uos_qty, 'state':move.state})
+            uos_qty = quantity / move.product_qty * move.product_uos_qty
+            move_obj.write(cr, uid, [move.id], {'product_qty' : quantity, 'product_uos_qty': uos_qty})
+    return {}
 
 class wizard_split_move(wizard.interface):
-	states = {
-		'init': {
-			'actions': [_get_moves],
-			'result': {'type':'form', 'arch':arch, 'fields':fields, 'state':[('end','Cancel'),('split','Split')]}
-		},
-		'split': {
-			'actions': [_split_lines],
-			'result': {'type':'state', 'state':'end'}
-		}
-	}
+    states = {
+        'init': {
+            'actions': [_get_moves],
+            'result': {'type':'form', 'arch':arch, 'fields':fields, 'state':[('end','Cancel'),('split','Split')]}
+        },
+        'split': {
+            'actions': [_split_lines],
+            'result': {'type':'state', 'state':'end'}
+        }
+    }
 wizard_split_move('stock.move.split')
 

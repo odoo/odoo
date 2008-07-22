@@ -36,41 +36,41 @@ from osv import osv
 from tools.translate import _
 
 class wiz_timesheet_open(wizard.interface):
-	def _open_timesheet(self, cr, uid, data, context):
-		pool = pooler.get_pool(cr.dbname)
-		user_ids = pool.get('hr.employee').search(cr, uid, [('user_id','=',uid)])
-		if not len(user_ids):
-			raise wizard.except_wizard(_('Error !'), _('No employee defined for your user !'))
-		ts = pool.get('hr_timesheet_sheet.sheet')
-		ids = ts.search(cr, uid, [('user_id','=',uid),('state','=','draft'),('date_from','<=',time.strftime('%Y-%m-%d')), ('date_to','>=',time.strftime('%Y-%m-%d'))])
-		view_type = 'form,tree'
-		if len(ids) > 1:
-			view_type = 'tree,form'
-			domain = "[('id','in',["+','.join(map(str,ids))+"]),('user_id', '=', uid)]"
-		elif len(ids)==1:
-			ts.write(cr, uid, ids, {'date_current': time.strftime('%Y-%m-%d')})
-			domain = "[('user_id', '=', uid)]"
-		else:
-			domain = "[('user_id', '=', uid)]"
-		value = {
-			'domain': domain,
-			'name': 'Open timesheet',
-			'view_type': 'form',
-			'view_mode': view_type,
-			'res_model': 'hr_timesheet_sheet.sheet',
-			'view_id': False,
-			'type': 'ir.actions.act_window'
-		}
-		if len(ids) == 1:
-			value['res_id'] = ids[0]
-		return value
+    def _open_timesheet(self, cr, uid, data, context):
+        pool = pooler.get_pool(cr.dbname)
+        user_ids = pool.get('hr.employee').search(cr, uid, [('user_id','=',uid)])
+        if not len(user_ids):
+            raise wizard.except_wizard(_('Error !'), _('No employee defined for your user !'))
+        ts = pool.get('hr_timesheet_sheet.sheet')
+        ids = ts.search(cr, uid, [('user_id','=',uid),('state','=','draft'),('date_from','<=',time.strftime('%Y-%m-%d')), ('date_to','>=',time.strftime('%Y-%m-%d'))])
+        view_type = 'form,tree'
+        if len(ids) > 1:
+            view_type = 'tree,form'
+            domain = "[('id','in',["+','.join(map(str,ids))+"]),('user_id', '=', uid)]"
+        elif len(ids)==1:
+            ts.write(cr, uid, ids, {'date_current': time.strftime('%Y-%m-%d')})
+            domain = "[('user_id', '=', uid)]"
+        else:
+            domain = "[('user_id', '=', uid)]"
+        value = {
+            'domain': domain,
+            'name': 'Open timesheet',
+            'view_type': 'form',
+            'view_mode': view_type,
+            'res_model': 'hr_timesheet_sheet.sheet',
+            'view_id': False,
+            'type': 'ir.actions.act_window'
+        }
+        if len(ids) == 1:
+            value['res_id'] = ids[0]
+        return value
 
-	states = {
-		'init' : {
-			'actions' : [],
-			'result' : {'type':'action', 'action':_open_timesheet, 'state':'end'}
-		}
-	}
+    states = {
+        'init' : {
+            'actions' : [],
+            'result' : {'type':'action', 'action':_open_timesheet, 'state':'end'}
+        }
+    }
 wiz_timesheet_open('hr_timesheet_sheet.current.open')
 
 # vim:noexpandtab:tw=0

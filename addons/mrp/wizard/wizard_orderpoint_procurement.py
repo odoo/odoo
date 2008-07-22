@@ -38,38 +38,38 @@ import pooler
 
 parameter_form = '''<?xml version="1.0"?>
 <form string="Parameters" colspan="4">
-	<field name="automatic" />
+    <field name="automatic" />
 </form>'''
 
 parameter_fields = {
-	'automatic': {'string': 'Automatic orderpoint', 'type': 'boolean', 'help': 'If the stock of a product is under 0, it will act like an orderpoint', 'default': lambda *a: False},
+    'automatic': {'string': 'Automatic orderpoint', 'type': 'boolean', 'help': 'If the stock of a product is under 0, it will act like an orderpoint', 'default': lambda *a: False},
 }
 
 def _procure_calculation_orderpoint(self, db_name, uid, data, context):
-	db, pool = pooler.get_db_and_pool(db_name)
-	cr = db.cursor()
-	proc_obj = pool.get('mrp.procurement')
-	automatic = data['form']['automatic']
-	proc_obj.run_orderpoint_confirm(cr, uid, automatic=automatic,\
-			use_new_cursor=cr.dbname, context=context, user_id=uid)
-	return {}
+    db, pool = pooler.get_db_and_pool(db_name)
+    cr = db.cursor()
+    proc_obj = pool.get('mrp.procurement')
+    automatic = data['form']['automatic']
+    proc_obj.run_orderpoint_confirm(cr, uid, automatic=automatic,\
+            use_new_cursor=cr.dbname, context=context, user_id=uid)
+    return {}
 
 def _procure_calculation(self, cr, uid, data, context):
-	threaded_calculation = threading.Thread(target=_procure_calculation_orderpoint, args=(self, cr.dbname, uid, data, context))
-	threaded_calculation.start()
-	return {}
+    threaded_calculation = threading.Thread(target=_procure_calculation_orderpoint, args=(self, cr.dbname, uid, data, context))
+    threaded_calculation.start()
+    return {}
 
 class procurement_compute(wizard.interface):
-	states = {
-		'init': {
-			'actions': [],
-			'result': {'type': 'form', 'arch':parameter_form, 'fields': parameter_fields, 'state':[('end','Cancel'),('compute','Compute Procurements')]}
-		},
-		'compute': {
-			'actions': [_procure_calculation],
-			'result': {'type': 'state', 'state':'end'}
-		},
-	}
+    states = {
+        'init': {
+            'actions': [],
+            'result': {'type': 'form', 'arch':parameter_form, 'fields': parameter_fields, 'state':[('end','Cancel'),('compute','Compute Procurements')]}
+        },
+        'compute': {
+            'actions': [_procure_calculation],
+            'result': {'type': 'state', 'state':'end'}
+        },
+    }
 procurement_compute('mrp.procurement.orderpoint.compute')
 
 

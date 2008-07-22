@@ -38,64 +38,64 @@ import Image
 
 
 class report_graph_instance(object):
-	def __init__(self, cr, uid, ids, data):
-		current_object = 'sale.order'
-		pool = pooler.get_pool(cr.dbname)
-		for processus in pool.get('processus.processus').browse(cr, uid, ids):
-			nodes = {}
-			start = []
-			transitions = {}
-			for node in processus.node_ids:
-				nodes[node.id] = node
-				if node.flow_start:
-					start.append(node.id)
-				for tr in node.transition_out:
-					transitions[tr.id] = tr
-			g = tools.graph(nodes.keys(), map(lambda x: (x.node_from_id.id,x.node_to_id.id), transitions.values()))
-			g.process(start)
-			g.scale(250,250, 100, 10)
+    def __init__(self, cr, uid, ids, data):
+        current_object = 'sale.order'
+        pool = pooler.get_pool(cr.dbname)
+        for processus in pool.get('processus.processus').browse(cr, uid, ids):
+            nodes = {}
+            start = []
+            transitions = {}
+            for node in processus.node_ids:
+                nodes[node.id] = node
+                if node.flow_start:
+                    start.append(node.id)
+                for tr in node.transition_out:
+                    transitions[tr.id] = tr
+            g = tools.graph(nodes.keys(), map(lambda x: (x.node_from_id.id,x.node_to_id.id), transitions.values()))
+            g.process(start)
+            g.scale(250,250, 100, 10)
 
-			img = Image.new('RGB',(1024,768),'#ffffff')
-			g2 = processus_print.graph(img)
-			positions = g.result
-			for name,node in positions.items():
-				start_color = (nodes[name].model_id.model==current_object)
-				g2.node(node['y'],node['x'], {
-					'title': nodes[name].name,
-					'menu': nodes[name].menu_id.complete_name
-				}, start_color=start_color)
-			for name,transition in transitions.items():
-				if transition.transition_ids:
-					g2.arrow_role((positions[transition.node_from_id.id]['y'], positions[transition.node_from_id.id]['x']),
-						(positions[transition.node_to_id.id]['y'], positions[transition.node_to_id.id]['x']))
-				g2.arrow((positions[transition.node_from_id.id]['y'], positions[transition.node_from_id.id]['x']),
-					(positions[transition.node_to_id.id]['y'], positions[transition.node_to_id.id]['x']))
-		img.save('/tmp/a.pdf')
-		self.result = file('/tmp/a.pdf').read()
-		self.done = True
+            img = Image.new('RGB',(1024,768),'#ffffff')
+            g2 = processus_print.graph(img)
+            positions = g.result
+            for name,node in positions.items():
+                start_color = (nodes[name].model_id.model==current_object)
+                g2.node(node['y'],node['x'], {
+                    'title': nodes[name].name,
+                    'menu': nodes[name].menu_id.complete_name
+                }, start_color=start_color)
+            for name,transition in transitions.items():
+                if transition.transition_ids:
+                    g2.arrow_role((positions[transition.node_from_id.id]['y'], positions[transition.node_from_id.id]['x']),
+                        (positions[transition.node_to_id.id]['y'], positions[transition.node_to_id.id]['x']))
+                g2.arrow((positions[transition.node_from_id.id]['y'], positions[transition.node_from_id.id]['x']),
+                    (positions[transition.node_to_id.id]['y'], positions[transition.node_to_id.id]['x']))
+        img.save('/tmp/a.pdf')
+        self.result = file('/tmp/a.pdf').read()
+        self.done = True
 
-	def is_done(self):
-		return self.done
+    def is_done(self):
+        return self.done
 
-	def get(self):
-		if self.done:
-			return self.result
-		else:
-			return None
+    def get(self):
+        if self.done:
+            return self.result
+        else:
+            return None
 
 class report_graph(report.interface.report_int):
-	def __init__(self, name, table):
-		report.interface.report_int.__init__(self, name)
-		self.table = table
+    def __init__(self, name, table):
+        report.interface.report_int.__init__(self, name)
+        self.table = table
 
-	def result(self):
-		if self.obj.is_done():
-			return (True, self.obj.get(), 'pdf')
-		else:
-			return (False, False, False)
+    def result(self):
+        if self.obj.is_done():
+            return (True, self.obj.get(), 'pdf')
+        else:
+            return (False, False, False)
 
-	def create(self, cr, uid, ids, data, context={}):
-		self.obj = report_graph_instance(cr, uid, ids, data)
-		return (self.obj.get(), 'pdf')
+    def create(self, cr, uid, ids, data, context={}):
+        self.obj = report_graph_instance(cr, uid, ids, data)
+        return (self.obj.get(), 'pdf')
 
 report_graph('report.processus.processus.print', 'processus.processus')

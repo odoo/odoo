@@ -30,39 +30,39 @@
 from osv import fields,osv
 
 class  report_task_user_pipeline_open (osv.osv):
-	_name = "report.task.user.pipeline.open"
-	_description = "Tasks by user and project"
-	_auto = False
-	_columns = {
-		'user_id':fields.many2one('res.users', 'User', readonly=True),
-		'task_nbr': fields.float('Task Number', readonly=True),
-		'task_hrs': fields.float('Task Hours', readonly=True),
-		'task_progress': fields.float('Task Progress', readonly=True),
-		'company_id' : fields.many2one('res.company', 'Company'),
-		'task_state': fields.selection([('draft', 'Draft'),('open', 'Open'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done'),('no','No Task')], 'State', readonly=True),
-	}
+    _name = "report.task.user.pipeline.open"
+    _description = "Tasks by user and project"
+    _auto = False
+    _columns = {
+        'user_id':fields.many2one('res.users', 'User', readonly=True),
+        'task_nbr': fields.float('Task Number', readonly=True),
+        'task_hrs': fields.float('Task Hours', readonly=True),
+        'task_progress': fields.float('Task Progress', readonly=True),
+        'company_id' : fields.many2one('res.company', 'Company'),
+        'task_state': fields.selection([('draft', 'Draft'),('open', 'Open'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done'),('no','No Task')], 'State', readonly=True),
+    }
 
-	def init(self, cr):
-		cr.execute('''
-			create or replace view report_task_user_pipeline_open as (
-				select
-					u.id as id,
-					u.id as user_id,
-					u.company_id as company_id,
-					count(t.*) as task_nbr,
-					sum(t.planned_hours) as task_hrs,
-					sum(t.planned_hours * (100 - t.progress) / 100) as task_progress,
-					case when t.state is null then 'no' else t.state end as task_state
-				from
-					res_users u
-				left join 
-					project_task t on (u.id = t.user_id)
-				where
-					u.active
-				group by
-					u.id, u.company_id, t.state
-			)
-		''')
+    def init(self, cr):
+        cr.execute('''
+            create or replace view report_task_user_pipeline_open as (
+                select
+                    u.id as id,
+                    u.id as user_id,
+                    u.company_id as company_id,
+                    count(t.*) as task_nbr,
+                    sum(t.planned_hours) as task_hrs,
+                    sum(t.planned_hours * (100 - t.progress) / 100) as task_progress,
+                    case when t.state is null then 'no' else t.state end as task_state
+                from
+                    res_users u
+                left join 
+                    project_task t on (u.id = t.user_id)
+                where
+                    u.active
+                group by
+                    u.id, u.company_id, t.state
+            )
+        ''')
 report_task_user_pipeline_open()
 
 

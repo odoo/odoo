@@ -31,93 +31,93 @@ import time
 from report import report_sxw
 
 class account_balance(report_sxw.rml_parse):
-	def __init__(self, cr, uid, name, context):
-		super(account_balance, self).__init__(cr, uid, name, context)
-		self.sum_debit = 0.0
-		self.sum_credit = 0.0
-		self.localcontext.update({
-			'time': time,
-			'lines': self.lines,
-			'sum_debit': self._sum_debit,
-			'sum_credit': self._sum_credit,
-			'get_fiscalyear':self.get_fiscalyear,
-			'get_periods':self.get_periods,
-		})
-		self.context = context
-	
-	def get_fiscalyear(self, form):
-		fisc_id = form['fiscalyear']
-		if not(fisc_id):
-			return ''
-		self.cr.execute("select name from account_fiscalyear where id = %d" %(int(fisc_id)))
-		res=self.cr.fetchone()
-		return res and res[0] or ''
+    def __init__(self, cr, uid, name, context):
+        super(account_balance, self).__init__(cr, uid, name, context)
+        self.sum_debit = 0.0
+        self.sum_credit = 0.0
+        self.localcontext.update({
+            'time': time,
+            'lines': self.lines,
+            'sum_debit': self._sum_debit,
+            'sum_credit': self._sum_credit,
+            'get_fiscalyear':self.get_fiscalyear,
+            'get_periods':self.get_periods,
+        })
+        self.context = context
+    
+    def get_fiscalyear(self, form):
+        fisc_id = form['fiscalyear']
+        if not(fisc_id):
+            return ''
+        self.cr.execute("select name from account_fiscalyear where id = %d" %(int(fisc_id)))
+        res=self.cr.fetchone()
+        return res and res[0] or ''
 
-	def get_periods(self, form):
-		period_ids = ",".join([str(x) for x in form['periods'][0][2] if x])
-		self.cr.execute("select name from account_period where id in (%s)" % (period_ids))
-		res=self.cr.fetchall()
-		result=''
-		for r in res:
-			result+=r[0]+","
-		return str(result and result[:-1]) or ''
+    def get_periods(self, form):
+        period_ids = ",".join([str(x) for x in form['periods'][0][2] if x])
+        self.cr.execute("select name from account_period where id in (%s)" % (period_ids))
+        res=self.cr.fetchall()
+        result=''
+        for r in res:
+            result+=r[0]+","
+        return str(result and result[:-1]) or ''
 
-	def lines(self, form, ids={}, done=None, level=1):
-		if not ids:
-			ids = self.ids
-		if not ids:
-			return []
-		if not done:
-			done={}
-		result = []
-		ctx = self.context.copy()
-		ctx['fiscalyear'] = form['fiscalyear']
-		ctx['periods'] = form['periods'][0][2]
-		ctx['target_move'] = form['target_move']
-		accounts = self.pool.get('account.account').browse(self.cr, self.uid, ids, ctx)
-		def cmp_code(x, y):
-			return cmp(x.code, y.code)
-		accounts.sort(cmp_code)
-		for account in accounts:
-			if account.id in done:
-				continue
-			done[account.id] = 1
-			res = {
-				'code': account.code,
-				'name': account.name,
-				'level': level,
-				'debit': account.debit,
-				'credit': account.credit,
-				'balance': account.balance,
-				'leef': not bool(account.child_id)
-			}
-			self.sum_debit += account.debit
-			self.sum_credit += account.credit
-			if not (res['credit'] or res['debit']) and not account.child_id:
-				continue
-			if account.child_id:
-				def _check_rec(account):
-					if not account.child_id:
-						return bool(account.credit or account.debit)
-					for c in account.child_id:
-						if _check_rec(c):
-							return True
-					return False
-				if not _check_rec(account):
-					continue
+    def lines(self, form, ids={}, done=None, level=1):
+        if not ids:
+            ids = self.ids
+        if not ids:
+            return []
+        if not done:
+            done={}
+        result = []
+        ctx = self.context.copy()
+        ctx['fiscalyear'] = form['fiscalyear']
+        ctx['periods'] = form['periods'][0][2]
+        ctx['target_move'] = form['target_move']
+        accounts = self.pool.get('account.account').browse(self.cr, self.uid, ids, ctx)
+        def cmp_code(x, y):
+            return cmp(x.code, y.code)
+        accounts.sort(cmp_code)
+        for account in accounts:
+            if account.id in done:
+                continue
+            done[account.id] = 1
+            res = {
+                'code': account.code,
+                'name': account.name,
+                'level': level,
+                'debit': account.debit,
+                'credit': account.credit,
+                'balance': account.balance,
+                'leef': not bool(account.child_id)
+            }
+            self.sum_debit += account.debit
+            self.sum_credit += account.credit
+            if not (res['credit'] or res['debit']) and not account.child_id:
+                continue
+            if account.child_id:
+                def _check_rec(account):
+                    if not account.child_id:
+                        return bool(account.credit or account.debit)
+                    for c in account.child_id:
+                        if _check_rec(c):
+                            return True
+                    return False
+                if not _check_rec(account):
+                    continue
 
-			result.append(res)
-			if account.child_id:
-				ids2 = [(x.code,x.id) for x in account.child_id]
-				ids2.sort()
-				result += self.lines(form, [x[1] for x in ids2], done, level+1)
-		return result
+            result.append(res)
+            if account.child_id:
+                ids2 = [(x.code,x.id) for x in account.child_id]
+                ids2.sort()
+                result += self.lines(form, [x[1] for x in ids2], done, level+1)
+        return result
 
-	def _sum_credit(self):
-		return self.sum_credit
+    def _sum_credit(self):
+        return self.sum_credit
 
-	def _sum_debit(self):
-		return self.sum_debit
+    def _sum_debit(self):
+        return self.sum_debit
 
 report_sxw.report_sxw('report.account.account.balance', 'account.account', 'addons/account/report/account_balance.rml', parser=account_balance, header=2)
 

@@ -30,48 +30,48 @@
 from osv import osv, fields
 
 class report_stock_prodlots(osv.osv):
-	_name = "report.stock.prodlots"
-	_description = "Stock report by production lots"
-	_auto = False
-	_columns = {
-			'name': fields.float('Quantity', readonly=True),
-			'location_id': fields.many2one('stock.location', 'Location', readonly=True, select=True),
-			'product_id': fields.many2one('product.product', 'Product', readonly=True, select=True),
-			'prodlot_id': fields.many2one('stock.production.lot', 'Production lot', readonly=True, select=True),
-	}
-	def init(self, cr):
-		cr.execute("""
-			create or replace view report_stock_prodlots as (
-				select max(id) as id,
-					location_id,
-					product_id,
-					prodlot_id,
-					sum(qty) as name
-				from (
-					select -max(sm.id) as id,
-						sm.location_id,
-						sm.product_id,
-						sm.prodlot_id,
-						-sum(sm.product_qty) as qty
-					from stock_move as sm
-					left join stock_location sl
-						on (sl.id = sm.location_id)
-					where state = 'done'
-						and sl.usage = 'internal'
-					group by sm.location_id, sm.product_id, sm.product_uom, sm.prodlot_id
-					union all
-					select max(sm.id) as id,
-						sm.location_dest_id as location_id,
-						sm.product_id,
-						sm.prodlot_id,
-						sum(sm.product_qty) as qty
-					from stock_move as sm
-					left join stock_location sl
-						on (sl.id = sm.location_dest_id)
-					where sm.state = 'done'
-						and sl.usage = 'internal'
-					group by sm.location_dest_id, sm.product_id, sm.product_uom, sm.prodlot_id
-				) as report
-				group by location_id, product_id, prodlot_id
-			)""")
+    _name = "report.stock.prodlots"
+    _description = "Stock report by production lots"
+    _auto = False
+    _columns = {
+            'name': fields.float('Quantity', readonly=True),
+            'location_id': fields.many2one('stock.location', 'Location', readonly=True, select=True),
+            'product_id': fields.many2one('product.product', 'Product', readonly=True, select=True),
+            'prodlot_id': fields.many2one('stock.production.lot', 'Production lot', readonly=True, select=True),
+    }
+    def init(self, cr):
+        cr.execute("""
+            create or replace view report_stock_prodlots as (
+                select max(id) as id,
+                    location_id,
+                    product_id,
+                    prodlot_id,
+                    sum(qty) as name
+                from (
+                    select -max(sm.id) as id,
+                        sm.location_id,
+                        sm.product_id,
+                        sm.prodlot_id,
+                        -sum(sm.product_qty) as qty
+                    from stock_move as sm
+                    left join stock_location sl
+                        on (sl.id = sm.location_id)
+                    where state = 'done'
+                        and sl.usage = 'internal'
+                    group by sm.location_id, sm.product_id, sm.product_uom, sm.prodlot_id
+                    union all
+                    select max(sm.id) as id,
+                        sm.location_dest_id as location_id,
+                        sm.product_id,
+                        sm.prodlot_id,
+                        sum(sm.product_qty) as qty
+                    from stock_move as sm
+                    left join stock_location sl
+                        on (sl.id = sm.location_dest_id)
+                    where sm.state = 'done'
+                        and sl.usage = 'internal'
+                    group by sm.location_dest_id, sm.product_id, sm.product_uom, sm.prodlot_id
+                ) as report
+                group by location_id, product_id, prodlot_id
+            )""")
 report_stock_prodlots()

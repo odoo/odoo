@@ -31,26 +31,26 @@ import wizard
 import pooler
 
 def _action_open_window(self, cr, uid, data, context):
-	mod_obj = pooler.get_pool(cr.dbname).get('ir.model.data')
-	act_obj = pooler.get_pool(cr.dbname).get('ir.actions.act_window')
+    mod_obj = pooler.get_pool(cr.dbname).get('ir.model.data')
+    act_obj = pooler.get_pool(cr.dbname).get('ir.actions.act_window')
 
-	result = mod_obj._get_id(cr, uid, 'account', 'action_move_line_select')
-	id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
-	result = act_obj.read(cr, uid, [id])[0]
+    result = mod_obj._get_id(cr, uid, 'account', 'action_move_line_select')
+    id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
+    result = act_obj.read(cr, uid, [id])[0]
 
-	cr.execute('select journal_id,period_id from account_journal_period where id=%d', (data['id'],))
-	journal_id,period_id = cr.fetchone()
+    cr.execute('select journal_id,period_id from account_journal_period where id=%d', (data['id'],))
+    journal_id,period_id = cr.fetchone()
 
-	result['domain'] = str([('journal_id', '=', journal_id), ('period_id', '=', period_id)])
-	result['context'] = str({'journal_id': journal_id, 'period_id': period_id})
-	return result
+    result['domain'] = str([('journal_id', '=', journal_id), ('period_id', '=', period_id)])
+    result['context'] = str({'journal_id': journal_id, 'period_id': period_id})
+    return result
 
 class wiz_journal(wizard.interface):
-	states = {
-		'init': {
-			'actions': [],
-			'result': {'type': 'action', 'action': _action_open_window, 'state':'end'}
-		}
-	}
+    states = {
+        'init': {
+            'actions': [],
+            'result': {'type': 'action', 'action': _action_open_window, 'state':'end'}
+        }
+    }
 wiz_journal('account.move.journal.select')
 

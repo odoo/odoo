@@ -30,12 +30,12 @@
 from osv import osv, fields
 
 #class custom_material(osv.osv):
-#	_name = 'network.material'
-#	_inherit = 'network.material'
-#	_columns = {
-#	}
-#	_defaults = {
-#	}
+#   _name = 'network.material'
+#   _inherit = 'network.material'
+#   _columns = {
+#   }
+#   _defaults = {
+#   }
 #custom_material()
 
 

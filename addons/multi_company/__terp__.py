@@ -26,14 +26,14 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 {
-	"name" : "Multi company base module",
-	"version" : "0.1",
-	"author" : "Tiny",
-	"depends" : ["base"],
-	"category" : "Generic Modules/Base",
-	"init_xml" : [],
-	"demo_xml" : ["multi_company_demo.xml",],
-	"update_xml" : [],
-	"active": False,
-	"installable": True
+    "name" : "Multi company base module",
+    "version" : "0.1",
+    "author" : "Tiny",
+    "depends" : ["base"],
+    "category" : "Generic Modules/Base",
+    "init_xml" : [],
+    "demo_xml" : ["multi_company_demo.xml",],
+    "update_xml" : [],
+    "active": False,
+    "installable": True
 }

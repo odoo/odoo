@@ -26,22 +26,22 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 {
-	"name" : "Project Management",
-	"version": "1.0",
-	"author" : "Tiny",
-	"website" : "http://tinyerp.com/module_project.html",
-	"category" : "Generic Modules/Projects & Services",
-	"depends" : ["product", "account", "hr"],
-	"description": "Project management module that track multi-level projects, tasks, works done on tasks, eso. It is able to render planning, order tasks, eso.",
-	"init_xml" : [],
-	"demo_xml" : ["project_demo.xml"],
-	"update_xml": [
-		"project_data.xml", 
-		"project_wizard.xml", 
-		"project_view.xml", 
-		"project_report.xml", 
-		"project_security.xml"
-	],
-	"active": False,
-	"installable": True
+    "name" : "Project Management",
+    "version": "1.0",
+    "author" : "Tiny",
+    "website" : "http://tinyerp.com/module_project.html",
+    "category" : "Generic Modules/Projects & Services",
+    "depends" : ["product", "account", "hr"],
+    "description": "Project management module that track multi-level projects, tasks, works done on tasks, eso. It is able to render planning, order tasks, eso.",
+    "init_xml" : [],
+    "demo_xml" : ["project_demo.xml"],
+    "update_xml": [
+        "project_data.xml", 
+        "project_wizard.xml", 
+        "project_view.xml", 
+        "project_report.xml", 
+        "project_security.xml"
+    ],
+    "active": False,
+    "installable": True
 }

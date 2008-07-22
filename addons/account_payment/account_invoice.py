@@ -31,28 +31,28 @@ from osv import fields, osv
 from mx import DateTime
 
 class Invoice(osv.osv):
-	_inherit = 'account.invoice'
+    _inherit = 'account.invoice'
 
-	def _amount_to_pay(self, cursor, user, ids, name, args, context=None):
-		'''Return the amount still to pay regarding all the payment orders'''
-		if not ids:
-			return {}
-		res = {}
-		for invoice in self.browse(cursor, user, ids, context=context):
-			res[invoice.id] = 0.0
-			if invoice.move_id:
-				for line in invoice.move_id.line_id:
-					if not line.date_maturity or \
-							DateTime.strptime(line.date_maturity, '%Y-%m-%d') \
-							< DateTime.now():
-						res[invoice.id] += line.amount_to_pay
-		return res
+    def _amount_to_pay(self, cursor, user, ids, name, args, context=None):
+        '''Return the amount still to pay regarding all the payment orders'''
+        if not ids:
+            return {}
+        res = {}
+        for invoice in self.browse(cursor, user, ids, context=context):
+            res[invoice.id] = 0.0
+            if invoice.move_id:
+                for line in invoice.move_id.line_id:
+                    if not line.date_maturity or \
+                            DateTime.strptime(line.date_maturity, '%Y-%m-%d') \
+                            < DateTime.now():
+                        res[invoice.id] += line.amount_to_pay
+        return res
 
-	_columns = {
-		'amount_to_pay': fields.function(_amount_to_pay, method=True,
-			type='float', string='Amount to be paid',
-			help='The amount which should be paid at the current date\n' \
-					'minus the amount which is already in payment order'),
-	}
+    _columns = {
+        'amount_to_pay': fields.function(_amount_to_pay, method=True,
+            type='float', string='Amount to be paid',
+            help='The amount which should be paid at the current date\n' \
+                    'minus the amount which is already in payment order'),
+    }
 
 Invoice()
