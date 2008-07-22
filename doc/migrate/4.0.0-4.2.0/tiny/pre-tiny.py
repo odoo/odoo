@@ -54,15 +54,15 @@ options.db_name = 'terp' # default value
 parser.parse_args(values=options)
 
 if hasattr(options, 'config'):
-	configparser = ConfigParser.ConfigParser()
-	configparser.read([options.config])
-	for name, value in configparser.items('options'):
-		if not (hasattr(options, name) and getattr(options, name)):
-			if value in ('true', 'True'):
-				value = True
-			if value in ('false', 'False'):
-				value = False
-			setattr(options, name, value)
+    configparser = ConfigParser.ConfigParser()
+    configparser.read([options.config])
+    for name, value in configparser.items('options'):
+        if not (hasattr(options, name) and getattr(options, name)):
+            if value in ('true', 'True'):
+                value = True
+            if value in ('false', 'False'):
+                value = False
+            setattr(options, name, value)
 
 raise Exception('This script is provided as an example, you must custom it before')
 
@@ -84,18 +84,18 @@ cr.execute('SELECT code from res_country where code is not null group by code')
 res = cr.fetchall()
 
 for c in res:
-	cr.execute('SELECT max(id) from res_country where code = %s group by code', (c[0],))
-	res2 = cr.fetchone()
-	cr.execute('SELECT id from res_country where code = %s', (c[0],))
-	ids = ','.join(map(lambda x: str(x[0]), cr.fetchall()))
-	cr.execute('UPDATE res_partner_address set country_id = %d where country_id in ('+ids+')', (res2[0],))
-	cr.execute('DELETE FROM res_country WHERE code = %s and id <> %d', (c[0], res2[0],))
+    cr.execute('SELECT max(id) from res_country where code = %s group by code', (c[0],))
+    res2 = cr.fetchone()
+    cr.execute('SELECT id from res_country where code = %s', (c[0],))
+    ids = ','.join(map(lambda x: str(x[0]), cr.fetchall()))
+    cr.execute('UPDATE res_partner_address set country_id = %d where country_id in ('+ids+')', (res2[0],))
+    cr.execute('DELETE FROM res_country WHERE code = %s and id <> %d', (c[0], res2[0],))
 cr.commit()
 
 
 cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_account_analytic_planning_stat\'')
 if cr.fetchall():
-	cr.execute('DROP VIEW report_account_analytic_planning_stat')
+    cr.execute('DROP VIEW report_account_analytic_planning_stat')
 cr.commit()
 
 
@@ -104,59 +104,59 @@ res = cr.fetchall()
 
 
 for p in res:
-	cr.execute('SELECT max(id) FROM res_partner WHERE name = %s GROUP BY name', (p[0],))
-	res2 = cr.fetchone()
-	cr.execute('UPDATE res_partner set active = False WHERE name = %s and id <> %d', (p[0], res2[0],))
-	cr.execute('SELECT id FROM res_partner WHERE name = %s AND id <> %d', (p[0], res2[0],))
-	res3 = cr.fetchall()
-	i = 0
-	for id in res3:
-		name = p[0]+' old'
-		if i:
-			name = name + ' ' + str(i)
-		cr.execute('UPDATE res_partner set name = %s WHERE id = %d', (name, id[0]))
-		i += 1
+    cr.execute('SELECT max(id) FROM res_partner WHERE name = %s GROUP BY name', (p[0],))
+    res2 = cr.fetchone()
+    cr.execute('UPDATE res_partner set active = False WHERE name = %s and id <> %d', (p[0], res2[0],))
+    cr.execute('SELECT id FROM res_partner WHERE name = %s AND id <> %d', (p[0], res2[0],))
+    res3 = cr.fetchall()
+    i = 0
+    for id in res3:
+        name = p[0]+' old'
+        if i:
+            name = name + ' ' + str(i)
+        cr.execute('UPDATE res_partner set name = %s WHERE id = %d', (name, id[0]))
+        i += 1
 cr.commit()
 
 cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_account_analytic_line_to_invoice\'')
 if cr.fetchall():
-	cr.execute('DROP VIEW report_account_analytic_line_to_invoice')
+    cr.execute('DROP VIEW report_account_analytic_line_to_invoice')
 cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_timesheet_invoice\'')
 if cr.fetchall():
-	cr.execute('drop VIEW report_timesheet_invoice')
+    cr.execute('drop VIEW report_timesheet_invoice')
 cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_purchase_order_category\'')
 if cr.fetchall():
-	cr.execute('drop VIEW report_purchase_order_category')
+    cr.execute('drop VIEW report_purchase_order_category')
 cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_purchase_order_product\'')
 if cr.fetchall():
-	cr.execute('drop VIEW report_purchase_order_product')
+    cr.execute('drop VIEW report_purchase_order_product')
 cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_sale_order_category\'')
 if cr.fetchall():
-	cr.execute('drop VIEW report_sale_order_category')
+    cr.execute('drop VIEW report_sale_order_category')
 cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_sale_order_product\'')
 if cr.fetchall():
-	cr.execute('drop VIEW report_sale_order_product')
+    cr.execute('drop VIEW report_sale_order_product')
 cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_timesheet_user\'')
 if cr.fetchall():
-	cr.execute('drop VIEW report_timesheet_user')
+    cr.execute('drop VIEW report_timesheet_user')
 cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_task_user_pipeline_open\'')
 if cr.fetchall():
-	cr.execute('drop VIEW report_task_user_pipeline_open')
+    cr.execute('drop VIEW report_task_user_pipeline_open')
 cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'hr_timesheet_sheet_sheet_day\'')
 if cr.fetchall():
-	cr.execute('drop VIEW hr_timesheet_sheet_sheet_day')
+    cr.execute('drop VIEW hr_timesheet_sheet_sheet_day')
 cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'hr_timesheet_sheet_sheet_account\'')
 if cr.fetchall():
-	cr.execute('drop VIEW hr_timesheet_sheet_sheet_account')
+    cr.execute('drop VIEW hr_timesheet_sheet_sheet_account')
 cr.execute('SELECT viewname from pg_views where viewname = \'sale_journal_sale_stats\'')
 if cr.fetchall():
-	cr.execute('drop VIEW sale_journal_sale_stats')
+    cr.execute('drop VIEW sale_journal_sale_stats')
 cr.execute('SELECT viewname from pg_views where viewname = \'sale_journal_picking_stats\'')
 if cr.fetchall():
-	cr.execute('drop VIEW sale_journal_picking_stats')
+    cr.execute('drop VIEW sale_journal_picking_stats')
 cr.execute('SELECT viewname from pg_views where viewname = \'sale_journal_invoice_type_stats\'')
 if cr.fetchall():
-	cr.execute('drop VIEW sale_journal_invoice_type_stats')
+    cr.execute('drop VIEW sale_journal_invoice_type_stats')
 
 cr.execute('ALTER TABLE product_template ALTER list_price TYPE numeric(16,2)')
 cr.execute('ALTER TABLE product_template ALTER standard_price TYPE numeric(16,2)')
@@ -171,13 +171,13 @@ cr.commit()
 
 cr.execute('SELECT tablename FROM pg_tables WHERE tablename = \'subscription_document_fields\'')
 if cr.fetchall():
-	cr.execute('DROP TABLE subscription_document_fields')
+    cr.execute('DROP TABLE subscription_document_fields')
 cr.execute('SELECT tablename FROM pg_tables WHERE tablename = \'subscription_document\'')
 if cr.fetchall():
-	cr.execute('DROP TABLE subscription_document')
+    cr.execute('DROP TABLE subscription_document')
 cr.execute('SELECT tablename FROM pg_tables WHERE tablename = \'subscription_subscription_history\'')
 if cr.fetchall():
-	cr.execute('DROP TABLE subscription_subscription_history')
+    cr.execute('DROP TABLE subscription_subscription_history')
 cr.commit()
 
 # -------------------- #
@@ -186,9 +186,9 @@ cr.commit()
 
 cr.execute('SELECT a.attname FROM pg_class c, pg_attribute a WHERE c.relname = \'res_currency_rate\' AND a.attname = \'rate_old\' AND c.oid = a.attrelid')
 if not cr.fetchall():
-	cr.execute('ALTER TABLE res_currency_rate ADD rate_old NUMERIC(12,6)')
-	cr.execute('UPDATE res_currency_rate SET rate_old = rate')
-	cr.execute('UPDATE res_currency_rate SET rate = (1 / rate_old)')
+    cr.execute('ALTER TABLE res_currency_rate ADD rate_old NUMERIC(12,6)')
+    cr.execute('UPDATE res_currency_rate SET rate_old = rate')
+    cr.execute('UPDATE res_currency_rate SET rate = (1 / rate_old)')
 cr.commit()
 
 cr.close

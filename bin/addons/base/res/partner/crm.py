@@ -35,72 +35,72 @@ from osv import fields,osv
 # Sale/Purchase Canal, Media
 #
 class res_partner_canal(osv.osv):
-	_name = "res.partner.canal"
-	_description = "Channels"
-	_columns = {
-		'name': fields.char('Channel Name',size=64, required=True),
-		'active': fields.boolean('Active'),
-	}
-	_defaults = {
-		'active': lambda *a: 1,
-	}
+    _name = "res.partner.canal"
+    _description = "Channels"
+    _columns = {
+        'name': fields.char('Channel Name',size=64, required=True),
+        'active': fields.boolean('Active'),
+    }
+    _defaults = {
+        'active': lambda *a: 1,
+    }
 res_partner_canal()
 
 #
 # Partner: State of Mind
 #
 class res_partner_som(osv.osv):
-	_name = "res.partner.som"
-	_columns = {
-		'name': fields.char('State of Mind',size=64, required=True),
-		'factor': fields.float('Factor', required=True)
-	}
+    _name = "res.partner.som"
+    _columns = {
+        'name': fields.char('State of Mind',size=64, required=True),
+        'factor': fields.float('Factor', required=True)
+    }
 res_partner_som()
 
 def _links_get(self, cr, uid, context={}):
-	obj = self.pool.get('res.request.link')
-	ids = obj.search(cr, uid, [])
-	res = obj.read(cr, uid, ids, ['object', 'name'], context)
-	return [(r['object'], r['name']) for r in res]
+    obj = self.pool.get('res.request.link')
+    ids = obj.search(cr, uid, [])
+    res = obj.read(cr, uid, ids, ['object', 'name'], context)
+    return [(r['object'], r['name']) for r in res]
 
 class res_partner_event(osv.osv):
-	_name = "res.partner.event"
-	_columns = {
-		'name': fields.char('Events',size=64, required=True),
-		'som': fields.many2one('res.partner.som', 'State of Mind'),
-		'description': fields.text('Description'),
-		'planned_cost': fields.float('Planned Cost'),
-		'planned_revenue': fields.float('Planned Revenue'),
-		'probability': fields.float('Probability (0.50)'),
-		'document': fields.reference('Document', selection=_links_get, size=128),
-		'partner_id': fields.many2one('res.partner', 'Partner', select=True),
-		'date': fields.datetime('Date', size=16),
-		'user_id': fields.many2one('res.users', 'User'),
-		'canal_id': fields.many2one('res.partner.canal', 'Channel'),
-		'partner_type': fields.selection([('customer','Customer'),('retailer','Retailer'),('prospect','Commercial Prospect')], 'Partner Relation'),
-		'type': fields.selection([('sale','Sale Opportunity'),('purchase','Purchase Offer'),('prospect','Prospect Contact')], 'Type of Event'),
-		'event_ical_id': fields.char('iCal id', size=64),
-	}
-	_order = 'date desc'
-	_defaults = {
-		'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-	}
+    _name = "res.partner.event"
+    _columns = {
+        'name': fields.char('Events',size=64, required=True),
+        'som': fields.many2one('res.partner.som', 'State of Mind'),
+        'description': fields.text('Description'),
+        'planned_cost': fields.float('Planned Cost'),
+        'planned_revenue': fields.float('Planned Revenue'),
+        'probability': fields.float('Probability (0.50)'),
+        'document': fields.reference('Document', selection=_links_get, size=128),
+        'partner_id': fields.many2one('res.partner', 'Partner', select=True),
+        'date': fields.datetime('Date', size=16),
+        'user_id': fields.many2one('res.users', 'User'),
+        'canal_id': fields.many2one('res.partner.canal', 'Channel'),
+        'partner_type': fields.selection([('customer','Customer'),('retailer','Retailer'),('prospect','Commercial Prospect')], 'Partner Relation'),
+        'type': fields.selection([('sale','Sale Opportunity'),('purchase','Purchase Offer'),('prospect','Prospect Contact')], 'Type of Event'),
+        'event_ical_id': fields.char('iCal id', size=64),
+    }
+    _order = 'date desc'
+    _defaults = {
+        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+    }
 res_partner_event()
 
 
 class res_partner_event_type(osv.osv):
-	_name = "res.partner.event.type"
-	_description = "Partner Events"
-	_columns = {
-		'name': fields.char('Event Type',size=64, required=True),
-		'key': fields.char('Key', size=64, required=True),
-		'active': fields.boolean('Active'),
-	}
-	_defaults = {
-		'active': lambda *a: 1
-	}
-	def check(self, cr, uid, key, context={}):
-		return self.search(cr, uid, [('key','=',key)])
+    _name = "res.partner.event.type"
+    _description = "Partner Events"
+    _columns = {
+        'name': fields.char('Event Type',size=64, required=True),
+        'key': fields.char('Key', size=64, required=True),
+        'active': fields.boolean('Active'),
+    }
+    _defaults = {
+        'active': lambda *a: 1
+    }
+    def check(self, cr, uid, key, context={}):
+        return self.search(cr, uid, [('key','=',key)])
 res_partner_event_type()
 
 

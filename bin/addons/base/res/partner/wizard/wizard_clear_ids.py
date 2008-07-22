@@ -31,16 +31,16 @@ import wizard
 import netsvc
 
 class wizard_clear_ids(wizard.interface):
-	def _clear_ids(self, cr, uid, data, context):
-		service = netsvc.LocalService("object_proxy")
-		service.execute(cr.dbname, uid, 'res.partner', 'write', data['ids'], {'ref': False})
-		return {}
-		
-	states = {
-		'init': {
-			'actions': [_clear_ids],
-			'result': {'type':'state', 'state':'end'}
-		}
-	}
+    def _clear_ids(self, cr, uid, data, context):
+        service = netsvc.LocalService("object_proxy")
+        service.execute(cr.dbname, uid, 'res.partner', 'write', data['ids'], {'ref': False})
+        return {}
+        
+    states = {
+        'init': {
+            'actions': [_clear_ids],
+            'result': {'type':'state', 'state':'end'}
+        }
+    }
 wizard_clear_ids('res.partner.clear_ids')
 

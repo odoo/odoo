@@ -44,38 +44,38 @@ import threading
 #     _render
 #
 class render(object):
-	def __init__(self, bin_datas={}, path='.'):
-		self.done = False
-		self.bin_datas = bin_datas
-		self.path = path
-	
-	def _render(self):
-		return None
+    def __init__(self, bin_datas={}, path='.'):
+        self.done = False
+        self.bin_datas = bin_datas
+        self.path = path
+    
+    def _render(self):
+        return None
 
-	def render(self):
-		self.done = False
-		result = self._render()
-		self._result = result
-		self.done = True
-		return True
-	
-	def is_done(self):
-		res = self.done
-		return res
+    def render(self):
+        self.done = False
+        result = self._render()
+        self._result = result
+        self.done = True
+        return True
+    
+    def is_done(self):
+        res = self.done
+        return res
 
-	def get(self):
-		if self.is_done():
-			return self._result
-		else:
-			return None
+    def get(self):
+        if self.is_done():
+            return self._result
+        else:
+            return None
 
 if __name__=='__main__':
-	import time
-	print 'Multi-thread code !'
-	r = render()
-	r.render()
-	while not r.is_done():
-		print 'not yet!'
-		time.sleep(1)
-	print 'done!'
+    import time
+    print 'Multi-thread code !'
+    r = render()
+    r.render()
+    while not r.is_done():
+        print 'not yet!'
+        time.sleep(1)
+    print 'done!'
 

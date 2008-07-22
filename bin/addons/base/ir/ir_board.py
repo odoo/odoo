@@ -30,12 +30,12 @@
 from osv import fields,osv
 
 class board(osv.osv):
-	_name = 'ir.board'
-	def create(self, cr, user, vals, context={}):
-		return False
-	def copy(self, cr, uid, id, default=None, context={}):
-		return False
-	_columns = {
-		'name': fields.char('Board', size=64),
-	}
+    _name = 'ir.board'
+    def create(self, cr, user, vals, context={}):
+        return False
+    def copy(self, cr, uid, id, default=None, context={}):
+        return False
+    _columns = {
+        'name': fields.char('Board', size=64),
+    }
 board()

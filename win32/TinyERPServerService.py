@@ -72,15 +72,15 @@ class TinyERPServerService(win32serviceutil.ServiceFramework):
 
 
     def StartTERP(self):
-	# The server finds now its configuration automatically on Windows
-	# We start the ERP Server as an independent process, but we keep its handle
-	# The server's binary must be one directory above the service's binary (when py2exe'd the python libraries shouldn' mix)
-	service_dir = os.path.dirname(sys.argv[0])
-	server_dir = os.path.split(service_dir)[0]
-	server_path = os.path.join(server_dir, 'tinyerp-server.exe')
-	self.terpprocess = subprocess.Popen([server_path], \
+    # The server finds now its configuration automatically on Windows
+    # We start the ERP Server as an independent process, but we keep its handle
+    # The server's binary must be one directory above the service's binary (when py2exe'd the python libraries shouldn' mix)
+    service_dir = os.path.dirname(sys.argv[0])
+    server_dir = os.path.split(service_dir)[0]
+    server_path = os.path.join(server_dir, 'tinyerp-server.exe')
+    self.terpprocess = subprocess.Popen([server_path], \
                                             cwd=server_dir,
-					    creationflags=win32process.CREATE_NO_WINDOW)
+                        creationflags=win32process.CREATE_NO_WINDOW)
 
 
     def StartControl(self,ws):
@@ -89,15 +89,15 @@ class TinyERPServerService(win32serviceutil.ServiceFramework):
         self.stopping = True
 
     def SvcDoRun(self):
-	# Start Tiny ERP Server itself
+    # Start Tiny ERP Server itself
         self.StartTERP()
         # start the loop waiting for the Service Manager's stop signal
-	thread.start_new_thread(self.StartControl, (self.hWaitStop,))
-	# Log a info message that the server is running
-	servicemanager.LogInfoMsg("Tiny ERP Server up and running")
-	# verification if the server is really running, else quit with an error
+    thread.start_new_thread(self.StartControl, (self.hWaitStop,))
+    # Log a info message that the server is running
+    servicemanager.LogInfoMsg("Tiny ERP Server up and running")
+    # verification if the server is really running, else quit with an error
         self.terpprocess.wait()
-       	if not self.stopping:
+        if not self.stopping:
             sys.exit("Tiny ERP Server check: server not running, check the logfile for more info")
 
 

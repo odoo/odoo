@@ -34,89 +34,89 @@ import netsvc
 import os
 
 def _check_xml(self, cr, uid, ids, context={}):
-	for view in self.browse(cr, uid, ids, context):
-		eview = etree.fromstring(view.arch)
-		frng = tools.file_open(os.path.join('base','rng',view.type+'.rng'))
-		relaxng = etree.RelaxNG(file=frng)
-		if not relaxng.validate(eview):
-			logger = netsvc.Logger()
-			logger.notifyChannel('init', netsvc.LOG_ERROR, 'The view do not fit the required schema !')
-			logger.notifyChannel('init', netsvc.LOG_ERROR, relaxng.error_log.last_error)
-			print view.arch
-			return False
-	return True
+    for view in self.browse(cr, uid, ids, context):
+        eview = etree.fromstring(view.arch)
+        frng = tools.file_open(os.path.join('base','rng',view.type+'.rng'))
+        relaxng = etree.RelaxNG(file=frng)
+        if not relaxng.validate(eview):
+            logger = netsvc.Logger()
+            logger.notifyChannel('init', netsvc.LOG_ERROR, 'The view do not fit the required schema !')
+            logger.notifyChannel('init', netsvc.LOG_ERROR, relaxng.error_log.last_error)
+            print view.arch
+            return False
+    return True
 
 class view(osv.osv):
-	_name = 'ir.ui.view'
-	_columns = {
-		'name': fields.char('View Name',size=64,  required=True),
-		'model': fields.char('Model', size=64, required=True),
-		'priority': fields.integer('Priority', required=True),
-		'type': fields.selection((
-			('tree','Tree'),
-			('form','Form'),
-			('graph', 'Graph'),
-			('calendar', 'Calendar')), 'View Type', required=True),
-		'arch': fields.text('View Architecture', required=True),
-		'inherit_id': fields.many2one('ir.ui.view', 'Inherited View'),
-		'field_parent': fields.char('Childs Field',size=64),
-	}
-	_defaults = {
-		'arch': lambda *a: '<?xml version="1.0"?>\n<tree title="Unknwown">\n\t<field name="name"/>\n</tree>',
-		'priority': lambda *a: 16
-	}
-	_order = "priority"
-	_constraints = [
-		(_check_xml, 'Invalid XML for View Architecture!', ['arch'])
-	]
+    _name = 'ir.ui.view'
+    _columns = {
+        'name': fields.char('View Name',size=64,  required=True),
+        'model': fields.char('Model', size=64, required=True),
+        'priority': fields.integer('Priority', required=True),
+        'type': fields.selection((
+            ('tree','Tree'),
+            ('form','Form'),
+            ('graph', 'Graph'),
+            ('calendar', 'Calendar')), 'View Type', required=True),
+        'arch': fields.text('View Architecture', required=True),
+        'inherit_id': fields.many2one('ir.ui.view', 'Inherited View'),
+        'field_parent': fields.char('Childs Field',size=64),
+    }
+    _defaults = {
+        'arch': lambda *a: '<?xml version="1.0"?>\n<tree title="Unknwown">\n\t<field name="name"/>\n</tree>',
+        'priority': lambda *a: 16
+    }
+    _order = "priority"
+    _constraints = [
+        (_check_xml, 'Invalid XML for View Architecture!', ['arch'])
+    ]
 
 view()
 
 #class UserView(osv.osv):
-#	_name = 'ir.ui.view.user'
-#	_columns = {
-#		'name': fields.char('View Name',size=64,  required=True),
-#		'model': fields.char('Model', size=64, required=True),
-#		'priority': fields.integer('Priority', required=True),
-#		'type': fields.selection((
-#			('tree','Tree'),
-#			('form','Form'),
-#			('graph', 'Graph'),
-#			('calendar', 'Calendar')), 'View Type', required=True),
-#		'arch': fields.text('View Architecture', required=True),
-#		'inherit_id': fields.many2one('ir.ui.view', 'Inherited View'),
-#		'field_parent': fields.char('Childs Field',size=64),
-#		'user_id': fields.many2one('res.users', 'User'),
-#		'ref_id': fields.many2one('ir.ui.view', 'Inherited View'),
-#	}
-#	_defaults = {
-#		'arch': lambda *a: '<?xml version="1.0"?>\n<tree title="Unknwown">\n\t<field name="name"/>\n</tree>',
-#		'priority': lambda *a: 16
-#	}
-#	_order = "priority"
-#	_constraints = [
-#		(_check_xml, 'Invalid XML for View Architecture!', ['arch'])
-#	]
+#   _name = 'ir.ui.view.user'
+#   _columns = {
+#       'name': fields.char('View Name',size=64,  required=True),
+#       'model': fields.char('Model', size=64, required=True),
+#       'priority': fields.integer('Priority', required=True),
+#       'type': fields.selection((
+#           ('tree','Tree'),
+#           ('form','Form'),
+#           ('graph', 'Graph'),
+#           ('calendar', 'Calendar')), 'View Type', required=True),
+#       'arch': fields.text('View Architecture', required=True),
+#       'inherit_id': fields.many2one('ir.ui.view', 'Inherited View'),
+#       'field_parent': fields.char('Childs Field',size=64),
+#       'user_id': fields.many2one('res.users', 'User'),
+#       'ref_id': fields.many2one('ir.ui.view', 'Inherited View'),
+#   }
+#   _defaults = {
+#       'arch': lambda *a: '<?xml version="1.0"?>\n<tree title="Unknwown">\n\t<field name="name"/>\n</tree>',
+#       'priority': lambda *a: 16
+#   }
+#   _order = "priority"
+#   _constraints = [
+#       (_check_xml, 'Invalid XML for View Architecture!', ['arch'])
+#   ]
 #
 #UserView()
 
 class view_sc(osv.osv):
-	_name = 'ir.ui.view_sc'
-	_columns = {
-		'name': fields.char('Shortcut Name', size=64, required=True),
-		'res_id': fields.many2one('ir.values','Resource Ref.', ondelete='cascade'),
-		'sequence': fields.integer('Sequence'),
-		'user_id': fields.many2one('res.users', 'User Ref.', required=True, ondelete='cascade'),
-		'resource': fields.char('Resource Name', size=64, required=True)
-	}
+    _name = 'ir.ui.view_sc'
+    _columns = {
+        'name': fields.char('Shortcut Name', size=64, required=True),
+        'res_id': fields.many2one('ir.values','Resource Ref.', ondelete='cascade'),
+        'sequence': fields.integer('Sequence'),
+        'user_id': fields.many2one('res.users', 'User Ref.', required=True, ondelete='cascade'),
+        'resource': fields.char('Resource Name', size=64, required=True)
+    }
 
-	def get_sc(self, cr, uid, user_id, model='ir.ui.menu', context={}):
-		ids = self.search(cr, uid, [('user_id','=',user_id),('resource','=',model)], context=context)
-		return self.read(cr, uid, ids, ['res_id','name'], context=context)
+    def get_sc(self, cr, uid, user_id, model='ir.ui.menu', context={}):
+        ids = self.search(cr, uid, [('user_id','=',user_id),('resource','=',model)], context=context)
+        return self.read(cr, uid, ids, ['res_id','name'], context=context)
 
-	_order = 'sequence'
-	_defaults = {
-		'resource': lambda *a: 'ir.ui.menu',
-		'user_id': lambda obj, cr, uid, context: uid,
-	}
+    _order = 'sequence'
+    _defaults = {
+        'resource': lambda *a: 'ir.ui.menu',
+        'user_id': lambda obj, cr, uid, context: uid,
+    }
 view_sc()

@@ -32,12 +32,12 @@ from osv.orm import browse_null, browse_record
 import re
 
 def one_in(setA, setB):
-	"""Check the presence of an element of setA in setB
-	"""
-	for x in setA:
-		if x in setB:
-			return True
-	return False
+    """Check the presence of an element of setA in setB
+    """
+    for x in setA:
+        if x in setB:
+            return True
+    return False
 
 icons = map(lambda x: (x,x), ['STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
 'STOCK_CANCEL', 'STOCK_CDROM', 'STOCK_CLEAR', 'STOCK_CLOSE', 'STOCK_COLOR_PICKER',
@@ -68,143 +68,143 @@ icons = map(lambda x: (x,x), ['STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_
 ])
 
 class many2many_unique(fields.many2many):
-	def set(self, cr, obj, id, name, values, user=None, context=None):
-		if not values:
-			return
-		val = values[:]
-		for act in values:
-			if act[0]==4:
-				cr.execute('SELECT * FROM '+self._rel+' \
-						WHERE '+self._id1+'=%d AND '+self._id2+'=%d', (id, act[1]))
-				if cr.fetchall():
-					val.remove(act)
-		return super(many2many_unique, self).set(cr, obj, id, name, val, user=user,
-				context=context)
+    def set(self, cr, obj, id, name, values, user=None, context=None):
+        if not values:
+            return
+        val = values[:]
+        for act in values:
+            if act[0]==4:
+                cr.execute('SELECT * FROM '+self._rel+' \
+                        WHERE '+self._id1+'=%d AND '+self._id2+'=%d', (id, act[1]))
+                if cr.fetchall():
+                    val.remove(act)
+        return super(many2many_unique, self).set(cr, obj, id, name, val, user=user,
+                context=context)
 
 
 class ir_ui_menu(osv.osv):
-	_name = 'ir.ui.menu'
-	def search(self, cr, uid, args, offset=0, limit=2000, order=None,
-			context=None, count=False):
-		if context is None:
-			context = {}
-		ids = osv.orm.orm.search(self, cr, uid, args, offset, limit, order,
-				context=context)
-		if uid==1:
-			return ids
-		user_groups = self.pool.get('res.users').read(cr, uid, [uid])[0]['groups_id']
-		result = []
-		for menu in self.browse(cr, uid, ids):
-			if not len(menu.groups_id):
-				result.append(menu.id)
-				continue
-			for g in menu.groups_id:
-				if g.id in user_groups:
-					result.append(menu.id)
-					break
-		return result
+    _name = 'ir.ui.menu'
+    def search(self, cr, uid, args, offset=0, limit=2000, order=None,
+            context=None, count=False):
+        if context is None:
+            context = {}
+        ids = osv.orm.orm.search(self, cr, uid, args, offset, limit, order,
+                context=context)
+        if uid==1:
+            return ids
+        user_groups = self.pool.get('res.users').read(cr, uid, [uid])[0]['groups_id']
+        result = []
+        for menu in self.browse(cr, uid, ids):
+            if not len(menu.groups_id):
+                result.append(menu.id)
+                continue
+            for g in menu.groups_id:
+                if g.id in user_groups:
+                    result.append(menu.id)
+                    break
+        return result
 
-	def _get_full_name(self, cr, uid, ids, name, args, context):
- 		res = {}
-		for m in self.browse(cr, uid, ids, context=context):
-			res[m.id] = self._get_one_full_name(m)
-		return res
+    def _get_full_name(self, cr, uid, ids, name, args, context):
+        res = {}
+        for m in self.browse(cr, uid, ids, context=context):
+            res[m.id] = self._get_one_full_name(m)
+        return res
 
-	def _get_one_full_name(self, menu, level=6):
-		if level<=0:
-			return '...'
-		if menu.parent_id:
-			parent_path = self._get_one_full_name(menu.parent_id, level-1) + "/"
-		else:
-			parent_path = ''
-		return parent_path + menu.name
+    def _get_one_full_name(self, menu, level=6):
+        if level<=0:
+            return '...'
+        if menu.parent_id:
+            parent_path = self._get_one_full_name(menu.parent_id, level-1) + "/"
+        else:
+            parent_path = ''
+        return parent_path + menu.name
 
-	def copy(self, cr, uid, id, default=None, context=None):
-		ir_values_obj = self.pool.get('ir.values')
-		res = super(ir_ui_menu, self).copy(cr, uid, id, context=context)
-		datas=self.read(cr,uid,[res],['name'])[0]
-		rex=re.compile('\([0-9]+\)')
-		concat=rex.findall(datas['name'])
-		if concat:
-			next_num=eval(concat[0])+1
-		        datas['name']=rex.sub(('(%d)'%next_num),datas['name'])
-		else:
-		        datas['name']=datas['name']+'(1)'
-		self.write(cr,uid,[res],{'name':datas['name']})
-		ids = ir_values_obj.search(cr, uid, [
-			('model', '=', 'ir.ui.menu'),
-			('res_id', '=', id),
-			])
-		for iv in ir_values_obj.browse(cr, uid, ids):
-			new_id = ir_values_obj.copy(cr, uid, iv.id,
-					default={'res_id': res}, context=context)
-		return res
+    def copy(self, cr, uid, id, default=None, context=None):
+        ir_values_obj = self.pool.get('ir.values')
+        res = super(ir_ui_menu, self).copy(cr, uid, id, context=context)
+        datas=self.read(cr,uid,[res],['name'])[0]
+        rex=re.compile('\([0-9]+\)')
+        concat=rex.findall(datas['name'])
+        if concat:
+            next_num=eval(concat[0])+1
+            datas['name']=rex.sub(('(%d)'%next_num),datas['name'])
+        else:
+            datas['name']=datas['name']+'(1)'
+        self.write(cr,uid,[res],{'name':datas['name']})
+        ids = ir_values_obj.search(cr, uid, [
+            ('model', '=', 'ir.ui.menu'),
+            ('res_id', '=', id),
+            ])
+        for iv in ir_values_obj.browse(cr, uid, ids):
+            new_id = ir_values_obj.copy(cr, uid, iv.id,
+                    default={'res_id': res}, context=context)
+        return res
 
-	def _action(self, cursor, user, ids, name, arg, context=None):
-		res = {}
-		values_obj = self.pool.get('ir.values')
-		value_ids = values_obj.search(cursor, user, [
-			('model', '=', self._name), ('key', '=', 'action'),
-			('key2', '=', 'tree_but_open'), ('res_id', 'in', ids)],
-			context=context)
-		values_action = {}
-		for value in values_obj.browse(cursor, user, value_ids,
-				context=context):
-			values_action[value.res_id] = value.value
-		for menu_id in ids:
-			res[menu_id] = values_action.get(menu_id, False)
-		return res
+    def _action(self, cursor, user, ids, name, arg, context=None):
+        res = {}
+        values_obj = self.pool.get('ir.values')
+        value_ids = values_obj.search(cursor, user, [
+            ('model', '=', self._name), ('key', '=', 'action'),
+            ('key2', '=', 'tree_but_open'), ('res_id', 'in', ids)],
+            context=context)
+        values_action = {}
+        for value in values_obj.browse(cursor, user, value_ids,
+                context=context):
+            values_action[value.res_id] = value.value
+        for menu_id in ids:
+            res[menu_id] = values_action.get(menu_id, False)
+        return res
 
-	def _action_inv(self, cursor, user, menu_id, name, value, arg, context=None):
-		if context is None:
-			context = {}
-		ctx = context.copy()
-		if 'read_delta' in ctx:
-			del ctx['read_delta']
-		values_obj = self.pool.get('ir.values')
-		values_ids = values_obj.search(cursor, user, [
-			('model', '=', self._name), ('key', '=', 'action'),
-			('key2', '=', 'tree_but_open'), ('res_id', '=', menu_id)],
-			context=context)
-		if values_ids:
-			values_obj.write(cursor, user, values_ids[0], {'value': value},
-					context=ctx)
-		else:
-			values_obj.create(cursor, user, {
-				'name': 'Menuitem',
-				'model': self._name,
-				'value': value,
-				'object': True,
-				'key': 'action',
-				'key2': 'tree_but_open',
-				'res_id': menu_id,
-				}, context=ctx)
+    def _action_inv(self, cursor, user, menu_id, name, value, arg, context=None):
+        if context is None:
+            context = {}
+        ctx = context.copy()
+        if 'read_delta' in ctx:
+            del ctx['read_delta']
+        values_obj = self.pool.get('ir.values')
+        values_ids = values_obj.search(cursor, user, [
+            ('model', '=', self._name), ('key', '=', 'action'),
+            ('key2', '=', 'tree_but_open'), ('res_id', '=', menu_id)],
+            context=context)
+        if values_ids:
+            values_obj.write(cursor, user, values_ids[0], {'value': value},
+                    context=ctx)
+        else:
+            values_obj.create(cursor, user, {
+                'name': 'Menuitem',
+                'model': self._name,
+                'value': value,
+                'object': True,
+                'key': 'action',
+                'key2': 'tree_but_open',
+                'res_id': menu_id,
+                }, context=ctx)
 
-	_columns = {
-		'name': fields.char('Menu', size=64, required=True, translate=True),
-		'sequence': fields.integer('Sequence'),
-		'child_id' : fields.one2many('ir.ui.menu', 'parent_id','Child ids'),
-		'parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', select=True),
-		'groups_id': many2many_unique('res.groups', 'ir_ui_menu_group_rel',
-			'menu_id', 'gid', 'Groups'),
-		'complete_name': fields.function(_get_full_name, method=True,
-			string='Complete Name', type='char', size=128),
-		'icon': fields.selection(icons, 'Icon', size=64),
-		'action': fields.function(_action, fnct_inv=_action_inv,
-			method=True, type='reference', string='Action',
-			selection=[
-				('ir.actions.report.custom', 'ir.actions.report.custom'),
-				('ir.actions.report.xml', 'ir.actions.report.xml'),
-				('ir.actions.act_window', 'ir.actions.act_window'),
-				('ir.actions.wizard', 'ir.actions.wizard'),
+    _columns = {
+        'name': fields.char('Menu', size=64, required=True, translate=True),
+        'sequence': fields.integer('Sequence'),
+        'child_id' : fields.one2many('ir.ui.menu', 'parent_id','Child ids'),
+        'parent_id': fields.many2one('ir.ui.menu', 'Parent Menu', select=True),
+        'groups_id': many2many_unique('res.groups', 'ir_ui_menu_group_rel',
+            'menu_id', 'gid', 'Groups'),
+        'complete_name': fields.function(_get_full_name, method=True,
+            string='Complete Name', type='char', size=128),
+        'icon': fields.selection(icons, 'Icon', size=64),
+        'action': fields.function(_action, fnct_inv=_action_inv,
+            method=True, type='reference', string='Action',
+            selection=[
+                ('ir.actions.report.custom', 'ir.actions.report.custom'),
+                ('ir.actions.report.xml', 'ir.actions.report.xml'),
+                ('ir.actions.act_window', 'ir.actions.act_window'),
+                ('ir.actions.wizard', 'ir.actions.wizard'),
                                 ('ir.actions.url', 'ir.actions.act_url'),
-				]),
-	}
-	_defaults = {
-		'icon' : lambda *a: 'STOCK_OPEN',
-		'sequence' : lambda *a: 10
-	}
-	_order = "sequence,id"
+                ]),
+    }
+    _defaults = {
+        'icon' : lambda *a: 'STOCK_OPEN',
+        'sequence' : lambda *a: 10
+    }
+    _order = "sequence,id"
 ir_ui_menu()
 
 

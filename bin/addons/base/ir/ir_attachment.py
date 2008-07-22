@@ -30,16 +30,16 @@
 from osv import fields,osv
 
 class ir_attachment(osv.osv):
-	_name = 'ir.attachment'
-	_columns = {
-		'name': fields.char('Attachment Name',size=64, required=True),
-		'datas': fields.binary('Data'),
-		'datas_fname': fields.char('Data Filename',size=64),
-		'description': fields.text('Description'),
-		# Not required due to the document module !
-		'res_model': fields.char('Resource Model',size=64, readonly=True),
-		'res_id': fields.integer('Resource ID', readonly=True),
-		'link': fields.char('Link', size=256)
-	}
+    _name = 'ir.attachment'
+    _columns = {
+        'name': fields.char('Attachment Name',size=64, required=True),
+        'datas': fields.binary('Data'),
+        'datas_fname': fields.char('Data Filename',size=64),
+        'description': fields.text('Description'),
+        # Not required due to the document module !
+        'res_model': fields.char('Resource Model',size=64, readonly=True),
+        'res_id': fields.integer('Resource ID', readonly=True),
+        'link': fields.char('Link', size=256)
+    }
 ir_attachment()
 

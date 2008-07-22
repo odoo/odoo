@@ -53,15 +53,15 @@ options.db_name = 'terp' # default value
 parser.parse_args(values=options)
 
 if hasattr(options, 'config'):
-	configparser = ConfigParser.ConfigParser()
-	configparser.read([options.config])
-	for name, value in configparser.items('options'):
-		if not (hasattr(options, name) and getattr(options, name)):
-			if value in ('true', 'True'):
-				value = True
-			if value in ('false', 'False'):
-				value = False
-			setattr(options, name, value)
+    configparser = ConfigParser.ConfigParser()
+    configparser.read([options.config])
+    for name, value in configparser.items('options'):
+        if not (hasattr(options, name) and getattr(options, name)):
+            if value in ('true', 'True'):
+                value = True
+            if value in ('false', 'False'):
+                value = False
+            setattr(options, name, value)
 
 # -----
 
@@ -86,10 +86,10 @@ cr.commit()
 # --------------- #
 
 while True:
-	cr.execute("select id from ir_ui_menu where (id not in (select parent_id from ir_ui_menu where parent_id is not null)) and (id not in (select res_id from ir_values where model='ir.ui.menu'))")
-	if not cr.rowcount:
-		break
-	cr.execute("delete from ir_ui_menu where (id not in (select parent_id from ir_ui_menu where parent_id is not null)) and (id not in (select res_id from ir_values where model='ir.ui.menu'))")
+    cr.execute("select id from ir_ui_menu where (id not in (select parent_id from ir_ui_menu where parent_id is not null)) and (id not in (select res_id from ir_values where model='ir.ui.menu'))")
+    if not cr.rowcount:
+        break
+    cr.execute("delete from ir_ui_menu where (id not in (select parent_id from ir_ui_menu where parent_id is not null)) and (id not in (select res_id from ir_values where model='ir.ui.menu'))")
 cr.commit()
 
 # ----------------------------------------- #
@@ -114,7 +114,7 @@ It is not possible to migrate the data automatically so you need to create the o
 And then update the field uos_id of the table account_invoice to match the new id of product_uom.
 
 EXAMPLE:
-	UPDATE account_invoice SET uos_id = new_id WHERE uos_id = old_id;
+    UPDATE account_invoice SET uos_id = new_id WHERE uos_id = old_id;
 """
 
 cr.close()

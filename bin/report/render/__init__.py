@@ -33,6 +33,6 @@ from rml import rml, rml2html
 from render import render
 
 try:
-	import Image
+    import Image
 except:
-	print 'WARNING; Python Imaging not installed, you can use only .JPG pictures !'
+    print 'WARNING; Python Imaging not installed, you can use only .JPG pictures !'

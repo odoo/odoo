@@ -53,15 +53,15 @@ options.db_name = 'terp' # default value
 parser.parse_args(values=options)
 
 if hasattr(options, 'config'):
-	configparser = ConfigParser.ConfigParser()
-	configparser.read([options.config])
-	for name, value in configparser.items('options'):
-		if not (hasattr(options, name) and getattr(options, name)):
-			if value in ('true', 'True'):
-				value = True
-			if value in ('false', 'False'):
-				value = False
-			setattr(options, name, value)
+    configparser = ConfigParser.ConfigParser()
+    configparser.read([options.config])
+    for name, value in configparser.items('options'):
+        if not (hasattr(options, name) and getattr(options, name)):
+            if value in ('true', 'True'):
+                value = True
+            if value in ('false', 'False'):
+                value = False
+            setattr(options, name, value)
 
 # -----
 

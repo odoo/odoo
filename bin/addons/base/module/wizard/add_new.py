@@ -49,48 +49,48 @@ _info_arch = '''<?xml version="1.0"?>
 _info_fields = {}
 
 class wizard_install_module(wizard.interface):
-	def watch_dir(self, cr, uid, data, context):
-		mod_obj = pooler.get_pool(cr.dbname).get('ir.module.module')
-		all_mods = mod_obj.read(cr, uid, mod_obj.search(cr, uid, []), ['name', 'state'])
-		known_modules = [x['name'] for x in all_mods]
-		ls_ad = glob.glob(os.path.join(tools.config['addons_path'], '*', '__terp__.py'))
-		modules = [module_name_re.match(name).group(1) for name in ls_ad]
-		for fname in os.listdir(tools.config['addons_path']):
-			if zipfile.is_zipfile(fname):
-				modules.append( fname.split('.')[0])
-		for module in modules:
-			if module in known_modules:
-				continue
-			terp = mod_obj.get_module_info(module)
-			if not terp.get('installable', True):
-				continue
-			imp.load_module(module, *imp.find_module(module))
-			mod_id = mod_obj.create(cr, uid, {
-				'name': module, 
-				'state': 'uninstalled',
-				'description': terp.get('description', ''),
-				'shortdesc': terp.get('name', ''),
-				'author': terp.get('author', 'Unknown')})
-			dependencies = terp.get('depends', [])
-			for d in dependencies:
-				cr.execute('insert into ir_module_module_dependency (module_id,name) values (%s, %s)', (mod_id, d))
-		for module in known_modules:
-			terp = mod_obj.get_module_info(module)
-			if terp.get('installable', True):
-				for mod in all_mods:
-					if mod['name'] == module and mod['state'] == 'uninstallable':
-						mod_obj.write(cr, uid, [mod['id']], {'state': 'uninstalled'})
-		return {}
+    def watch_dir(self, cr, uid, data, context):
+        mod_obj = pooler.get_pool(cr.dbname).get('ir.module.module')
+        all_mods = mod_obj.read(cr, uid, mod_obj.search(cr, uid, []), ['name', 'state'])
+        known_modules = [x['name'] for x in all_mods]
+        ls_ad = glob.glob(os.path.join(tools.config['addons_path'], '*', '__terp__.py'))
+        modules = [module_name_re.match(name).group(1) for name in ls_ad]
+        for fname in os.listdir(tools.config['addons_path']):
+            if zipfile.is_zipfile(fname):
+                modules.append( fname.split('.')[0])
+        for module in modules:
+            if module in known_modules:
+                continue
+            terp = mod_obj.get_module_info(module)
+            if not terp.get('installable', True):
+                continue
+            imp.load_module(module, *imp.find_module(module))
+            mod_id = mod_obj.create(cr, uid, {
+                'name': module, 
+                'state': 'uninstalled',
+                'description': terp.get('description', ''),
+                'shortdesc': terp.get('name', ''),
+                'author': terp.get('author', 'Unknown')})
+            dependencies = terp.get('depends', [])
+            for d in dependencies:
+                cr.execute('insert into ir_module_module_dependency (module_id,name) values (%s, %s)', (mod_id, d))
+        for module in known_modules:
+            terp = mod_obj.get_module_info(module)
+            if terp.get('installable', True):
+                for mod in all_mods:
+                    if mod['name'] == module and mod['state'] == 'uninstallable':
+                        mod_obj.write(cr, uid, [mod['id']], {'state': 'uninstalled'})
+        return {}
 
-	states = {
-		'init': {
-			'actions': [], 
-			'result': {'type':'form', 'arch': _info_arch, 'fields': _info_fields, 'state':[('end','Cancel','gtk-cancel'),('addmod','Check new modules','gtk-ok')]}
-		},
-		'addmod': {
-			'actions': [watch_dir],
-			'result': {'type':'state', 'state':'end'}
-		},
-	}
+    states = {
+        'init': {
+            'actions': [], 
+            'result': {'type':'form', 'arch': _info_arch, 'fields': _info_fields, 'state':[('end','Cancel','gtk-cancel'),('addmod','Check new modules','gtk-ok')]}
+        },
+        'addmod': {
+            'actions': [watch_dir],
+            'result': {'type':'state', 'state':'end'}
+        },
+    }
 wizard_install_module('module.module.scan')
 

@@ -35,121 +35,121 @@ import tools
 
 view_form_end = """<?xml version="1.0"?>
 <form string="System upgrade done">
-	<separator string="System upgrade done"/>
-	<label align="0.0" string="The modules have been upgraded / installed !" colspan="4"/>
-	<label align="0.0" string="You may have to reinstall some language pack." colspan="4"/>
-	<label align="0.0" string="We suggest you to reload the menu tab (Ctrl+t Ctrl+r)." colspan="4"/>
+    <separator string="System upgrade done"/>
+    <label align="0.0" string="The modules have been upgraded / installed !" colspan="4"/>
+    <label align="0.0" string="You may have to reinstall some language pack." colspan="4"/>
+    <label align="0.0" string="We suggest you to reload the menu tab (Ctrl+t Ctrl+r)." colspan="4"/>
 </form>"""
 
 view_form = """<?xml version="1.0"?>
 <form string="System Upgrade">
-	<image name="gtk-dialog-info" colspan="2"/>
-	<group colspan="2" col="4">
-		<label align="0.0" string="Your system will be upgraded." colspan="4"/>
-		<label align="0.0" string="Note that this operation my take a few minutes." colspan="4"/>
-		<separator string="Modules to update"/>
-		<field name="module_info" nolabel="1" colspan="4"/>
-		<separator string="Modules to download"/>
-		<field name="module_download" nolabel="1" colspan="4"/>
-	</group>
+    <image name="gtk-dialog-info" colspan="2"/>
+    <group colspan="2" col="4">
+        <label align="0.0" string="Your system will be upgraded." colspan="4"/>
+        <label align="0.0" string="Note that this operation my take a few minutes." colspan="4"/>
+        <separator string="Modules to update"/>
+        <field name="module_info" nolabel="1" colspan="4"/>
+        <separator string="Modules to download"/>
+        <field name="module_download" nolabel="1" colspan="4"/>
+    </group>
 </form>"""
 
 view_field = {
-	"module_info": {'type': 'text', 'string': 'Modules to update',
-		'readonly': True},
-	"module_download": {'type': 'text', 'string': 'Modules to download',
-		'readonly': True},
+    "module_info": {'type': 'text', 'string': 'Modules to update',
+        'readonly': True},
+    "module_download": {'type': 'text', 'string': 'Modules to download',
+        'readonly': True},
 }
 
 class wizard_info_get(wizard.interface):
-	def _get_install(self, cr, uid, data, context):
-		pool=pooler.get_pool(cr.dbname)
-		mod_obj = pool.get('ir.module.module')
-		ids = mod_obj.search(cr, uid, [
-			('state', 'in', ['to upgrade', 'to remove', 'to install'])])
-		res = mod_obj.read(cr, uid, ids, ['name','state'], context)
-		url = mod_obj.download(cr, uid, ids, download=False, context=context)
-		return {'module_info': '\n'.join(map(lambda x: x['name']+' : '+x['state'], res)),
-				'module_download': '\n'.join(url)}
+    def _get_install(self, cr, uid, data, context):
+        pool=pooler.get_pool(cr.dbname)
+        mod_obj = pool.get('ir.module.module')
+        ids = mod_obj.search(cr, uid, [
+            ('state', 'in', ['to upgrade', 'to remove', 'to install'])])
+        res = mod_obj.read(cr, uid, ids, ['name','state'], context)
+        url = mod_obj.download(cr, uid, ids, download=False, context=context)
+        return {'module_info': '\n'.join(map(lambda x: x['name']+' : '+x['state'], res)),
+                'module_download': '\n'.join(url)}
 
-	def _check_upgrade_module(self,cr,uid,data,context):
-		db, pool = pooler.get_db_and_pool(cr.dbname)
-		cr = db.cursor()
-		mod_obj = pool.get('ir.module.module')
-		ids = mod_obj.search(cr, uid, [
-			('state', 'in', ['to upgrade', 'to remove', 'to install'])])
-		if ids and len(ids):
-			return 'next'
-		else:
-			return 'end'
+    def _check_upgrade_module(self,cr,uid,data,context):
+        db, pool = pooler.get_db_and_pool(cr.dbname)
+        cr = db.cursor()
+        mod_obj = pool.get('ir.module.module')
+        ids = mod_obj.search(cr, uid, [
+            ('state', 'in', ['to upgrade', 'to remove', 'to install'])])
+        if ids and len(ids):
+            return 'next'
+        else:
+            return 'end'
 
-	def _upgrade_module(self, cr, uid, data, context):
-		db, pool = pooler.get_db_and_pool(cr.dbname)
-		cr = db.cursor()
-		mod_obj = pool.get('ir.module.module')
-		ids = mod_obj.search(cr, uid, [
-			('state', 'in', ['to upgrade', 'to remove', 'to install'])])
-		mod_obj.download(cr, uid, ids, context=context)
-		cr.commit()
-		db, pool = pooler.restart_pool(cr.dbname, update_module=True)
+    def _upgrade_module(self, cr, uid, data, context):
+        db, pool = pooler.get_db_and_pool(cr.dbname)
+        cr = db.cursor()
+        mod_obj = pool.get('ir.module.module')
+        ids = mod_obj.search(cr, uid, [
+            ('state', 'in', ['to upgrade', 'to remove', 'to install'])])
+        mod_obj.download(cr, uid, ids, context=context)
+        cr.commit()
+        db, pool = pooler.restart_pool(cr.dbname, update_module=True)
 
-		lang_obj=pool.get('res.lang')
-		lang_ids=lang_obj.search(cr, uid, [])
-		langs=lang_obj.browse(cr, uid, lang_ids)
-		for lang in langs:
-			if lang.code and lang.code != 'en_US':
-				filename=os.path.join(tools.config["root_path"], "i18n", lang.code + ".csv")
-				tools.trans_load(cr.dbname, filename, lang.code)
-		return {}
+        lang_obj=pool.get('res.lang')
+        lang_ids=lang_obj.search(cr, uid, [])
+        langs=lang_obj.browse(cr, uid, lang_ids)
+        for lang in langs:
+            if lang.code and lang.code != 'en_US':
+                filename=os.path.join(tools.config["root_path"], "i18n", lang.code + ".csv")
+                tools.trans_load(cr.dbname, filename, lang.code)
+        return {}
 
-	def _config(self, cr, uid, data, context=None):
-		return {
+    def _config(self, cr, uid, data, context=None):
+        return {
                 'view_type': 'form',
                 "view_mode": 'form',
-				'res_model': 'ir.module.module.configuration.wizard',
-				'type': 'ir.actions.act_window',
-				'target':'new',
+                'res_model': 'ir.module.module.configuration.wizard',
+                'type': 'ir.actions.act_window',
+                'target':'new',
          }
 
-	states = {
-		'init': {
-			'actions': [],
-			'result' : {'type': 'choice', 'next_state': _check_upgrade_module }
-		},
-		'next': {
-			'actions': [_get_install],
-			'result': {'type':'form', 'arch':view_form, 'fields': view_field,
-				'state':[
-					('end', 'Cancel', 'gtk-cancel'),
-					('start', 'Start Upgrade', 'gtk-ok', True)
-				]
-			}
-		},
-		'start': {
-			'actions': [_upgrade_module],
-			'result': {'type':'form', 'arch':view_form_end, 'fields': {},
-				'state':[
-					('end', 'Close', 'gtk-close', True),
-					('config', 'Start configuration', 'gtk-ok', True)
-				]
-			}
-		},
-		'end': {
-			'actions': [],
-			'result': {'type':'form', 'arch':view_form_end, 'fields': {},
-				'state':[
-					('end', 'Close', 'gtk-close', True),
-					('config', 'Start configuration', 'gtk-ok', True)
-				]
-			}
-		},
-		'config':{
+    states = {
+        'init': {
+            'actions': [],
+            'result' : {'type': 'choice', 'next_state': _check_upgrade_module }
+        },
+        'next': {
+            'actions': [_get_install],
+            'result': {'type':'form', 'arch':view_form, 'fields': view_field,
+                'state':[
+                    ('end', 'Cancel', 'gtk-cancel'),
+                    ('start', 'Start Upgrade', 'gtk-ok', True)
+                ]
+            }
+        },
+        'start': {
+            'actions': [_upgrade_module],
+            'result': {'type':'form', 'arch':view_form_end, 'fields': {},
+                'state':[
+                    ('end', 'Close', 'gtk-close', True),
+                    ('config', 'Start configuration', 'gtk-ok', True)
+                ]
+            }
+        },
+        'end': {
+            'actions': [],
+            'result': {'type':'form', 'arch':view_form_end, 'fields': {},
+                'state':[
+                    ('end', 'Close', 'gtk-close', True),
+                    ('config', 'Start configuration', 'gtk-ok', True)
+                ]
+            }
+        },
+        'config':{
             'result': {
                 'type': 'action',
                 'action': _config,
                 'state': 'end',
             },
-		}
-	}
+        }
+    }
 wizard_info_get('module.upgrade')
 
