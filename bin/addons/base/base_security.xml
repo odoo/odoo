@@ -650,5 +650,13 @@
             <field eval="True" name="perm_unlink"/>
         </record>
         
+        <record id="access_ui_menu" model="ir.model.access">
+            <field name="name">Internal Request</field>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'res.request')]"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="True" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
+        </record>
     </data>
 </terp>
