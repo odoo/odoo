@@ -205,7 +205,7 @@ class ir_rule(osv.osv):
 		query_global, val_global = _query(clause_global, 'OR')
 		if query_global:
 			if query:
-				query = '('+query+') AND '+query_global
+				query = '('+query+') OR '+query_global
 				val.extend(val_global)
 			else:
 				query = query_global

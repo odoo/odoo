@@ -625,14 +625,17 @@ class orm_template(object):
 	def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
 		raise _('The read method is not implemented on this object !')
 
-	def _validate(self, cr, uid, ids):
+	def _validate(self, cr, uid, ids, context=None):
+		context = context or {}
+		lng = context.get('lang', False) or 'en_US'
+		trans = self.pool.get('ir.translation')
 		field_error = []
 		field_err_str = []
-		for field in self._constraints:
-			if not field[0](self, cr, uid, ids):
-				if len(field)>1:
-					field_error+=field[2]
-				field_err_str.append(field[1])
+		for constraint in self._constraints:
+			fun, msg, fields = constraint
+			if not fun(self, cr, uid, ids):
+				field_error += fields
+				field_err_str.append( trans._get_source(cr, uid, self._name, 'constraint', lng, source=msg) or msg )
 		if len(field_err_str):
 			cr.rollback()
 			raise except_orm('ValidateError', ('\n'.join(field_err_str), ','.join(field_error)))
@@ -1141,7 +1144,7 @@ class orm_memory(orm_template):
 			self.datas[id_new]['internal.date_access'] = time.time()
 			for field in upd_todo:
 				self._columns[field].set_memory(cr, self, id_new, field, vals[field], user, context)
-		self._validate(cr, user, [id_new])
+		self._validate(cr, user, [id_new], context)
 		wf_service = netsvc.LocalService("workflow")
 		wf_service.trg_write(user, self._name, id_new, cr)
 		self.clear()
@@ -1167,7 +1170,7 @@ class orm_memory(orm_template):
 		self.datas[id_new]['internal.date_access'] = time.time()
 		for field in upd_todo:
 			self._columns[field].set_memory(cr, self, id_new, field, vals[field], user, context)
-		self._validate(cr, user, [id_new])
+		self._validate(cr, user, [id_new], context)
 		wf_service = netsvc.LocalService("workflow")
 		wf_service.trg_create(user, self._name, id_new, cr)
 		self.clear()
@@ -1839,10 +1842,6 @@ class orm(orm_template):
 							_('You try to bypass an access rule (Document type: %s).') % \
 									self._description)
 
-			cr.execute('delete from inherit ' \
-					'where (obj_type=%s and obj_id in ('+str_d+')) ' \
-						'or (inst_type=%s and inst_id in ('+str_d+'))',
-						(self._name,)+tuple(sub_ids)+(self._name,)+tuple(sub_ids))
 			if d1:
 				cr.execute('delete from "'+self._table+'" ' \
 						'where id in ('+str_d+')'+d1, sub_ids+d2)
@@ -2010,7 +2009,7 @@ class orm(orm_template):
 					v[val]=vals[val]
 			self.pool.get(table).write(cr, user, nids, v, context)
 
-		self._validate(cr, user, ids)
+		self._validate(cr, user, ids, context)
 
 		if context.has_key('read_delta'):
 			del context['read_delta']
@@ -2086,7 +2085,6 @@ class orm(orm_template):
 			upd0 += ','+self._inherits[table]
 			upd1 += ',%d'
 			upd2.append(id)
-			cr.execute('insert into inherit (obj_type,obj_id,inst_type,inst_id) values (%s,%d,%s,%d)', (table,id,self._name,id_new))
 
 		for field in vals:
 			if self._columns[field]._classic_write:
@@ -2122,7 +2120,7 @@ class orm(orm_template):
 		for field in upd_todo:
 			self._columns[field].set(cr, self, id_new, field, vals[field], user, context)
 
-		self._validate(cr, user, [id_new])
+		self._validate(cr, user, [id_new], context)
 
 		wf_service = netsvc.LocalService("workflow")
 		wf_service.trg_create(user, self._name, id_new, cr)

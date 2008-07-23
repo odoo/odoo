@@ -43,6 +43,7 @@ TRANSLATION_TYPE = [
 	('xsl', 'XSL'),
 	('help', 'Help'),
 	('code', 'Code'),
+	('constraint', 'Constraint'),
 ]
 
 class ir_translation(osv.osv, Cacheable):
@@ -138,12 +139,10 @@ class ir_translation(osv.osv, Cacheable):
 						'and name=%s',
 					(lang, tt, str(name)))
 		res = cr.fetchone()
-		if res:
-			self.add((lang, tt, name, source), res[0])
-			return res[0]
-		else:
-			self.add((lang, tt, name, source), False)
-			return False
+		
+		trad = res and res[0] or ''
+		self.add((lang, tt, name, source), trad)
+		return trad
 
 	def unlink(self, cursor, user, ids, context=None):
 		self.clear()

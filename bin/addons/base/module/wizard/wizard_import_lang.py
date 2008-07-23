@@ -57,10 +57,16 @@ class wizard_import_lang(wizard.interface):
 
 	def _import_lang(self, cr, uid, data, context):
 		form=data['form']
-		#buf=base64.decodestring(form['data']).split('\n')
 		fileobj = TemporaryFile('w+')
 		fileobj.write( base64.decodestring(form['data']) )
-		tools.trans_load_data(cr.dbname, fileobj, form['code'], lang_name=form['name'])
+
+		# now we determine the file format
+		fileobj.seek(0)
+		first_line = fileobj.readline().strip()
+		fileformat = first_line.endswith("type,name,res_id,src,value") and 'csv' or 'po'
+		fileobj.seek(0)
+
+		tools.trans_load_data(cr.dbname, fileobj, fileformat, form['code'], lang_name=form['name'])
 		fileobj.close()
 		return {}
 

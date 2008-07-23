@@ -115,11 +115,11 @@ class configmanager(object):
 
 		group = optparse.OptionGroup(parser, "Internationalisation options",
 			"Use these options to translate Tiny ERP to another language."
-			"See i18n section of the user manual. Option '-l' is mandatory.")
+			"See i18n section of the user manual. Options '-l' and '-d' are mandatory.")
 
 		group.add_option('-l', "--language", dest="language", help="specify the language of the translation file. Use it with --i18n-export and --i18n-import")
-		group.add_option("--i18n-export", dest="translate_out", help="export all sentences to be translated to a CSV file and exit")
-		group.add_option("--i18n-import", dest="translate_in", help="import a CSV file with translations and exit")
+		group.add_option("--i18n-export", dest="translate_out", help="export all sentences to be translated to a CSV or a PO file and exit")
+		group.add_option("--i18n-import", dest="translate_in", help="import a CSV or a PO file with translations and exit")
 		group.add_option("--modules", dest="translate_modules", help="specify modules to export. Use in combination with --i18n-export")
 		group.add_option("--addons-path", dest="addons_path", help="specify an alternative addons path.")
 		parser.add_option_group(group)
@@ -180,7 +180,9 @@ class configmanager(object):
 				update[i] = 1
 		self.options['update'] = update
 
-		self.options['translate_modules'] = opt.translate_modules and opt.translate_modules.split(',') or ['all']
+		self.options['translate_modules'] = opt.translate_modules and map(lambda m: m.strip(), opt.translate_modules.split(',')) or ['all']
+		self.options['translate_modules'].sort()
+		
 		if opt.pg_path:
 			self.options['pg_path'] = opt.pg_path
 

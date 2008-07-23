@@ -45,8 +45,8 @@ logger = netsvc.Logger()
 
 opj = os.path.join
 
-_ad = opj(tools.config['root_path'], 'addons') 	# default addons path (base)
-ad = tools.config['addons_path']		# alternate addons path
+_ad = os.path.abspath(opj(tools.config['root_path'], 'addons')) 	# default addons path (base)
+ad = os.path.abspath(tools.config['addons_path'])			# alternate addons path
 
 sys.path.insert(1, _ad)
 if ad != _ad:
@@ -131,10 +131,37 @@ class Node(Singleton):
 			s += '%s`-> %s' % ('   ' * depth, c._pprint(depth+1))
 		return s
 
-def _get_module_path(module):
-	if os.path.exists(opj(ad, module)):
+def get_module_path(module):
+	"""Return the path of the given module.
+	"""
+
+	if os.path.exists(opj(ad, module)) or os.path.exists(opj(ad, '%s.zip' % module)):
 		return opj(ad, module)
-	return opj(_ad, module)
+
+	if os.path.exists(opj(_ad, module)) or os.path.exists(opj(_ad, '%s.zip' % module)):
+		return opj(_ad, module)
+
+	raise IOError, 'Module not found : %s' % module
+
+def get_module_resource(module, *args):
+	"""Return the full path of a resource of the given module.
+
+	@param module: the module
+	@param args: the resource path components
+
+	@return: absolute path to the resource
+	"""
+	return opj(get_module_path(module), *args)
+
+def get_modules():
+	"""Returns the list of module names
+	"""
+
+	module_list = os.listdir(ad)
+	module_names = [os.path.basename(m) for m in module_list]
+	module_list += [m for m in os.listdir(_ad) if m not in module_names]
+
+	return module_list
 
 def create_graph(module_list, force=None):
 	if not force:
@@ -145,9 +172,9 @@ def create_graph(module_list, force=None):
 	for module in module_list:
 		if module[-4:]=='.zip':
 			module = module[:-4]
-		mod_path = _get_module_path(module)
-		terp_file = opj(mod_path, '__terp__.py')
-		if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path+'.zip'):
+		mod_path = get_module_path(module)
+		terp_file = get_module_resource(module, '__terp__.py')
+		if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path):
 			try:
 				info = eval(tools.file_open(terp_file).read())
 			except:
@@ -254,24 +281,20 @@ def load_module_graph(cr, graph, status=None, **kwargs):
 	cr.commit()
 
 def register_classes():
-	module_list = os.listdir(ad)
-	module_names = [os.path.basename(m) for m in module_list]
-	module_list += [m for m in os.listdir(_ad) if m not in module_names]
-
+	module_list = get_modules()
 	for package in create_graph(module_list):
 		m = package.name
 		logger.notifyChannel('init', netsvc.LOG_INFO, 'addon:%s:registering classes' % m)
 		sys.stdout.flush()
 
-		mod_path = _get_module_path(m)
-		if not os.path.isfile(mod_path + '.zip'):
+		mod_path = get_module_path(m)
+		if not os.path.isfile(mod_path+'.zip'):
 			# XXX must restrict to only addons paths
 			imp.load_module(m, *imp.find_module(m))
 		else:
 			import zipimport
-			mod_path = mod_path + '.zip'
 			try:
-				zimp = zipimport.zipimporter(mod_path)
+				zimp = zipimport.zipimporter(mod_path+'.zip')
 				zimp.load_module(m)
 			except zipimport.ZipImportError:
 				logger.notifyChannel('init', netsvc.LOG_ERROR, 'Couldn\'t find module %s' % m)

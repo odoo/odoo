@@ -35,6 +35,7 @@ import ir
 import netsvc
 from tools.misc import UpdateableStr
 import inspect
+import mx.DateTime as mxdt
 
 class UNIX_LINE_TERMINATOR(csv.excel):
 	lineterminator = '\n'
@@ -67,7 +68,123 @@ class GettextAlias(object):
 
 _ = GettextAlias()
 
+
+# class to handle po files
+class TinyPoFile(object):
+	def __init__(self, buffer):
+		self.buffer = buffer
+	
+	def __iter__(self):
+		self.buffer.seek(0)
+		self.lines = self.buffer.readlines()
+		self.first = True
+		return self
+	
+	def next(self):
+		def unquote(str):
+			return str[1:-1].replace("\\n", "\n")	\
+					        .replace('\\"', "\"")	
+
+		type = name = res_id = source = trad = None
+
+		line = None
+		while not line:
+			if 0 == len(self.lines):
+				raise StopIteration()
+			line = self.lines.pop(0).strip()
+		
+		while line.startswith('#'):
+			if line.startswith('#:'):
+				type, name, res_id = line[2:].strip().split(':')
+			line = self.lines.pop(0).strip()
+		if not line.startswith('msgid'):
+			raise Exception("malformed file")
+		source = line[7:-1]
+		line = self.lines.pop(0).strip()
+		if not source and self.first:
+			# if the source is "" and it's the first msgid, it's the special 
+			# msgstr with the informations about the traduction and the 
+			# traductor; we skip it
+			while line:
+				line = self.lines.pop(0).strip()
+			return next()				
+			
+		while not line.startswith('msgstr'):
+			if not line:
+				raise Exception('malformed file')
+			source += unquote(line)
+			line = self.lines.pop(0).strip()
+
+		trad = line[8:-1]
+		line = self.lines.pop(0).strip()
+		while line:
+			trad += unquote(line)
+			line = self.lines.pop(0).strip()
+		
+		self.first = False
+		return type, name, res_id, source, trad
+
+	def write_infos(self, modules):
+		import release
+		self.buffer.write("# Translation of %(project)s.\n" \
+		  				  "# This file containt the translation of the following modules:\n" \
+						  "%(modules)s" \
+						  "#\n" \
+						  "msgid \"\"\n" \
+						  "msgstr \"\"\n" \
+						  "\"Project-Id-Version: %(project)s %(version)s\"\n"	\
+						  "\"Report-Msgid-Bugs-To: %(bugmail)s\"\n"	\
+						  "\"POT-Creation-Date: %(now)s\"\n"		\
+						  "\"PO-Revision-Date: %(now)s\"\n"			\
+						  "\"Last-Translator: <>\"\n" \
+						  "\"Language-Team: \"\n"	\
+						  "\"MIME-Version: 1.0\"\n"	\
+						  "\"Content-Type: text/plain; charset=UTF-8\"\n"	\
+						  "\"Content-Transfer-Encoding: \"\n"		\
+						  "\"Plural-Forms: \"\n"	\
+						  "\n"
+
+						  % { 'project': release.description,
+							  'version': release.version,
+							  'modules': reduce(lambda s, m: s + "#\t* %s\n" % m, modules, ""),
+							  'bugmail': 'support@tinyerp.com',		#TODO: use variable from release
+							  'now': mxdt.ISO.strUTC(mxdt.ISO.DateTime.utc()),
+							}
+						  )
+
+	def write(self, module, type, name, res_id, source, trad):
+		def quote(str):
+			return '"%s"' % str.replace('"','\\"') \
+			                   .replace('\n', '\\n"\n"')
+
+		self.buffer.write("#. module: %s\n" 	\
+						  "#, python-format\n"	\
+						  "#: %s:%s:%s\n"	\
+						  "msgid %s\n"		\
+						  "msgstr %s\n\n"	\
+							% (module, type, name, str(res_id), quote(source), quote(trad))
+						)
+	
+
+
 # Methods to export the translation file
+
+def trans_export(lang, modules, buffer, format, dbname=None):
+	trans = trans_generate(lang, modules, dbname)
+	if format == 'csv':
+		writer=csv.writer(buffer, 'UNIX')
+		for row in trans:
+			writer.writerow(row)
+	elif format == 'po':
+		trans.pop(0)
+		writer = tools.TinyPoFile(buffer)
+		writer.write_infos(modules)
+		for module, type, name, res_id, src, trad in trans:
+			writer.write(module, type, name, res_id, src, trad)
+	else:
+		raise Exception(_('Bad file format'))
+	del trans
+	
 
 def trans_parse_xsl(de):
 	res = []
@@ -123,6 +240,9 @@ def trans_generate(lang, modules, dbname=None):
 	logger = netsvc.Logger()
 	if not dbname:
 		dbname=tools.config['db_name']
+	if not modules:
+		modules = ['all']
+
 	pool = pooler.get_pool(dbname)
 	trans_obj = pool.get('ir.translation')
 	model_data_obj = pool.get('ir.model.data')
@@ -239,11 +359,15 @@ def trans_generate(lang, modules, dbname=None):
 				if fname:
 					logger.notifyChannel("init", netsvc.LOG_WARNING, "couldn't export translation for report %s %s %s" % (name, report_type, fname))
 
-		
+		for constraint in pool.get(model)._constraints:
+			msg = constraint[1]
+			push_translation(module, 'constraint', model, 0, msg.encode('utf8'))
+
 		for field_name,field_def in pool.get(model)._columns.items():
 			if field_def.translate:
 				name = model + "," + field_name
-				push_translation(module, 'model', name, xml_name, getattr(obj, field_name))
+				trad = getattr(obj, field_name) or ''
+				push_translation(module, 'model', name, xml_name, trad)
 
 	# parse source code for _() calls
 	def get_module_from_path(path):
@@ -251,27 +375,22 @@ def trans_generate(lang, modules, dbname=None):
 		if path.startswith(relative_addons_path):
 			path = path[len(relative_addons_path)+1:]
 			return path.split(os.path.sep)[0]
-		return None
-
-	def parse_py_files(path):
-		for root, dirs, files in os.walk(path):
-			for fname in fnmatch.filter(files, '*.py'):
-				fabsolutepath = join(root, fname)
-				frelativepath = fabsolutepath[len(tools.config['root_path'])+1:]
-				module = get_module_from_path(frelativepath)
+		return 'base'	# files that are not in a module are considered as being in 'base' module
+	
+	modobj = pool.get('ir.module.module')
+	for root, dirs, files in os.walk(tools.config['root_path']):
+		for fname in fnmatch.filter(files, '*.py'):
+			fabsolutepath = join(root, fname)
+			frelativepath = fabsolutepath[len(tools.config['root_path'])+1:]
+			module = get_module_from_path(frelativepath)
+			is_mod_installed = modobj.search(cr, uid, [('state', '=', 'installed'), ('name', '=', module)]) <> []
+			if (('all' in modules) or (module in modules)) and is_mod_installed:
 				code_string = tools.file_open(fabsolutepath, subdir='').read()
 				iter = re.finditer(
 					'[^a-zA-Z0-9_]_\([\s]*["\'](.+?)["\'][\s]*\)',
 					code_string)
 				for i in iter:
 					push_translation(module, 'code', frelativepath, 0, i.group(1).encode('utf8'))
-
-
-	if 'all' in modules:
-		parse_py_files(tools.config['root_path'])
-	else:
-		for m in modules:
-			parse_py_files(join(tools.config['addons_path'], m))
 
 
 	out = [["module","type","name","res_id","src","value"]]	# header
@@ -287,13 +406,15 @@ def trans_load(db_name, filename, lang, strict=False):
 	logger = netsvc.Logger()
 	try:
 		fileobj = open(filename,'r')
+		fileformat = os.path.splitext(filename)[-1][1:].lower()
+		r = trans_load_data(db_name, fileobj, fileformat, lang, strict=False)
+		fileobj.close()
+		return r
 	except IOError:
 		logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't read file")
-	r = trans_load_data(db_name, fileobj, lang, strict=False)
-	fileobj.close()
-	return r
+		return None
 
-def trans_load_data(db_name, fileobj, lang, strict=False, lang_name=None):
+def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=None):
 	logger = netsvc.Logger()
 	logger.notifyChannel("init", netsvc.LOG_INFO,
 			'loading translation file for language %s' % (lang))
@@ -324,11 +445,18 @@ def trans_load_data(db_name, fileobj, lang, strict=False, lang_name=None):
 		ls = map(lambda x: (x['code'],x['name']), langs)
 
 		fileobj.seek(0)
-		reader = csv.reader(fileobj, quotechar='"', delimiter=',')
-		# read the first line of the file (it contains columns titles)
-		for row in reader:
-			f = row
-			break
+
+		if fileformat == 'csv':
+			reader = csv.reader(fileobj, quotechar='"', delimiter=',')
+			# read the first line of the file (it contains columns titles)
+			for row in reader:
+				f = row
+				break
+		elif fileformat == 'po':
+			reader = TinyPoFile(fileobj)
+			f = ['type', 'name', 'res_id', 'src', 'value']
+		else:
+			raise Exception(_('Bad file format'))
 
 		# read the rest of the file
 		line = 1
@@ -336,8 +464,8 @@ def trans_load_data(db_name, fileobj, lang, strict=False, lang_name=None):
 			line += 1
 			#try:
 			# skip empty rows and rows where the translation field (=last fiefd) is empty
-			if (not row) or (not row[:-1]):
-				print "translate: skip %s" % repr(row)
+			if (not row) or (not row[-1]):
+				#print "translate: skip %s" % repr(row)
 				continue
 
 			# dictionary which holds values for this line of the csv file
