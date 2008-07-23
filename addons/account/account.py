@@ -1555,6 +1555,7 @@ class account_config_fiscalyear(osv.osv_memory):
 				'date_stop':end_date,
 			}
 			new_id=res_obj.create(cr, uid, vals, context=context)
+			res_obj.create_period(cr,uid,[new_id])
 		return {
 				'view_type': 'form',
 				"view_mode": 'form',
