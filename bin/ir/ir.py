@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
@@ -42,3 +43,6 @@ def ir_get(cr, uid, key, key2, models, meta=False, context={}, res_id_req=False)
     obj = pooler.get_pool(cr.dbname).get('ir.values')
     res = obj.get(cr, uid, key, key2, models, meta=meta, context=context, res_id_req=res_id_req)
     return res
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

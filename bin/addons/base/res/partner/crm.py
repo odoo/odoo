@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -103,4 +104,7 @@ class res_partner_event_type(osv.osv):
         return self.search(cr, uid, [('key','=',key)])
 res_partner_event_type()
 
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

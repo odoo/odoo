@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
@@ -335,7 +336,6 @@ class cacheable_osv(osv, Cacheable):
 
 #cacheable_osv = osv
 
-# vim:noexpandtab:
 
 #class FakePool(object):
 #   def __init__(self, module):
@@ -356,4 +356,7 @@ class cacheable_osv(osv, Cacheable):
 #               self.pool = fake_pool
 
 #       return fake_class()
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

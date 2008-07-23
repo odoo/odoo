@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
@@ -105,3 +106,6 @@ class TinyERPServerService(win32serviceutil.ServiceFramework):
 if __name__=='__main__':
     # Do with the service whatever option is passed in the command line
     win32serviceutil.HandleCommandLine(TinyERPServerService)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

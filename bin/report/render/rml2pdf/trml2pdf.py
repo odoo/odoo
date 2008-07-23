@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
@@ -26,7 +27,6 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
 
 # trml2pdf - An RML to PDF converter
 # Copyright (C) 2003, Fabien Pinckaers, UCL, FSA
@@ -805,3 +805,6 @@ if __name__=="__main__":
     else:
         print 'Usage: trml2pdf input.rml >output.pdf'
         print 'Try \'trml2pdf --help\' for more information.'
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

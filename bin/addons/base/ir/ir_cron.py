@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -129,3 +130,6 @@ class ir_cron(osv.osv, netsvc.Agent):
         if not check:
             self.setAlarm(self._poolJobs, int(time.time())+next_wait, [db_name])
 ir_cron()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

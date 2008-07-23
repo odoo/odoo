@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
@@ -330,4 +331,7 @@ if __name__=='__main__':
             draw.line( (int(g.result[nodefrom]['x']), int(g.result[nodefrom]['y']),int(g.result[nodeto]['x']),int(g.result[nodeto]['y'])),(128,128,128) )
 
     img.save("graph.png", "PNG")
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

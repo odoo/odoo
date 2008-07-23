@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
@@ -73,3 +74,6 @@ def access(db, uid, passwd, sec_level, ids):
     if not res:
         raise Exception('Bad username or password')
     return res[0]
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

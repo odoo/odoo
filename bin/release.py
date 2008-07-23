@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
@@ -46,3 +47,6 @@ url = 'http://www.tinyerp.com'
 author = 'Tiny.be'
 author_email = 'info@tiny.be'
 license = 'GPL-2'
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -86,3 +86,6 @@ class wizard_import_lang(wizard.interface):
         },
     }
 wizard_import_lang('module.lang.import')
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

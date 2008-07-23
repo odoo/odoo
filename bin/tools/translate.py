@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
@@ -536,4 +537,7 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
                 "translation file loaded succesfully")
     except IOError:
         logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't read file")
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

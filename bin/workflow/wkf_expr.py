@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
@@ -107,4 +108,7 @@ def check(cr, workitem, ident, transition, signal):
         ok = ok and serv.execute_cr(cr, uid, 'res.roles', 'check', user_roles, transition['role_id'])
     ok = ok and _eval_expr(cr, ident, workitem, transition['condition'])
     return ok
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

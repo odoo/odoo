@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 # -*- encoding: iso-8859-1 -*-
 ##############################################################################
 #
@@ -675,4 +676,7 @@ class property(function):
 
     def restart(self):
         self.field_id = {}
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

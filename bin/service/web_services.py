@@ -512,4 +512,6 @@ class report_spool(netsvc.Service):
 
 report_spool()
 
-# vim:noexpandtab
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

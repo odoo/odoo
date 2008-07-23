@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
@@ -193,3 +194,6 @@ def _join_test(cr, trans_id, inst_id, ident, stack):
             for (id,) in trans_ids:
                 cr.execute('delete from wkf_witm_trans where trans_id=%d and inst_id=%d', (id,inst_id))
             create(cr, [activity], inst_id, ident, stack)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

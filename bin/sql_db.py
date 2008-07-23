@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
@@ -153,4 +154,7 @@ def init():
 psycopg.register_type(psycopg.new_type((1082,), "date", lambda x:x))
 psycopg.register_type(psycopg.new_type((1083,), "time", lambda x:x))
 psycopg.register_type(psycopg.new_type((1114,), "datetime", lambda x:x))
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

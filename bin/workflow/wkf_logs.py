@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
@@ -33,3 +34,6 @@
 def log(cr,ident,act_id,info=''):
     pass
     #cr.execute('insert into wkf_logs (res_type, res_id, uid, act_id, time, info) values (%s,%d,%d,%d,current_time,%s)', (ident[1],int(ident[2]),int(ident[0]),int(act_id),info))
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

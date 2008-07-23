@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -89,4 +90,7 @@ cr.execute("delete from ir_values where model = 'ir.ui.menu' and res_id is null"
 cr.commit()
 
 cr.close()
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

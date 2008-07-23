@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -229,4 +230,7 @@ def register_all(db):
             report_rml('report.'+r['report_name'], r['model'],
                     opj('addons',r['report_xml']),
                     r['report_xsl'] and opj('addons',r['report_xsl']))
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

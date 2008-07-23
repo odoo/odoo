@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -48,3 +49,6 @@ class ir_exports_line(osv.osv):
         'export_id': fields.many2one('ir.exports', 'Exportation', select=True, ondelete='cascade'),
     }
 ir_exports_line()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

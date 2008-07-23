@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be)
@@ -29,3 +30,6 @@ class except_wkf(Exception):
     def __init__(self, name, value):
         self.name = name
         self.value = value
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

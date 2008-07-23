@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
@@ -83,4 +84,7 @@ def _update_end(cr, inst_id, ident):
             for act_name in act_names:
                 validate(cr, i[0], (ident[0],i[1],i[2]), 'subflow.'+act_name[0])
     return ok
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -206,4 +207,7 @@ class report_custom_fields(osv.osv):
     onchange_field_child1 = get_field_child_onchange_method(1)  
     onchange_field_child2 = get_field_child_onchange_method(2)  
 report_custom_fields()
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

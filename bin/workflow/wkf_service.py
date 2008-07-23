@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
@@ -110,3 +111,6 @@ class workflow_service(netsvc.Service):
                     # redirect all those workitems to the wkf instance of the new resource
                     cr.execute('update wkf_workitem set subflow_id=%d where id=%d', (new_id[0], item_id))
 workflow_service()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
