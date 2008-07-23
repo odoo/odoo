@@ -30,6 +30,7 @@
 from osv import fields,osv
 import tools
 import time
+from tools.config import config
 
 class actions(osv.osv):
 	_name = 'ir.actions.actions'
@@ -316,11 +317,17 @@ class actions_server(osv.osv):
 					'cr': cr,
 					'uid': uid
 				}
-				print action.code
 				exec action.code in localdict
-				print localdict.keys()
 				if 'action' in localdict:
 					return localdict['action']
+			if action.state == 'email':
+				user = "%s@yahoo.co.in," % (config['smtp_user'])
+				subject = action.name
+				body = action.message
+				if tools.email_send_attach(user, action.address, subject, body) == True:
+					print 'email send successfully'
+				else:
+					print 'email sending failed'
 		return False
 actions_server()
 
