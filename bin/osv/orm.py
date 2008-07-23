@@ -635,7 +635,7 @@ class orm_template(object):
             fun, msg, fields = constraint
             if not fun(self, cr, uid, ids):
                 field_error += fields
-                field_err_str.append( trans._get_source(cr, uid, self._name, 'constraint', lng, source=msg) )
+                field_err_str.append( trans._get_source(cr, uid, self._name, 'constraint', lng, source=msg) or msg )
         if len(field_err_str):
             cr.rollback()
             raise except_orm('ValidateError', ('\n'.join(field_err_str), ','.join(field_error)))

@@ -335,7 +335,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
 #----------------------------------------------------------
 # Emails
 #----------------------------------------------------------
-def email_send_attach(email_from, email_to, subject, body, email_cc=None, email_bcc=None, on_error=False, reply_to=False, attach=None, tinycrm=False):
+def email_send_attach(email_from, email_to, subject, body, email_cc=None, email_bcc=None, on_error=False, reply_to=False, attach=None, tinycrm=False, ssl=False, debug=False):
     """Send an email."""
     if not email_cc:
         email_cc=[]
@@ -375,6 +375,14 @@ def email_send_attach(email_from, email_to, subject, body, email_cc=None, email_
         msg.attach(part)
     try:
         s = smtplib.SMTP()
+	
+        if debug:
+            s.debuglevel = 5		
+        if ssl:
+            s.ehlo()
+            s.starttls()
+            s.ehlo()
+      
         s.connect(config['smtp_server'])
         if config['smtp_user'] or config['smtp_password']:
             s.login(config['smtp_user'], config['smtp_password'])
@@ -383,6 +391,8 @@ def email_send_attach(email_from, email_to, subject, body, email_cc=None, email_
     except Exception, e:
         import logging
         logging.getLogger().error(str(e))
+        return False
+
     return True
 
 #----------------------------------------------------------
