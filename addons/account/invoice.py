@@ -35,7 +35,6 @@ import ir
 import pooler
 import mx.DateTime
 from mx.DateTime import RelativeDateTime
-
 from tools import config
 from tools.translate import _
 
