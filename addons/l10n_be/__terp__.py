@@ -34,6 +34,6 @@
 		"account_chart"],
 	"init_xml" : [],
 	"demo_xml" : ["account_demo.xml","account.report.report.csv"],
-	"update_xml" : ["../account_chart/account_chart.xml", "account_pcmn_belgium.xml"],
+	"update_xml" : ["../account_chart/account_chart.xml", "account_pcmn_belgium.xml", "l10n_be_wizard.xml", "l10n_be_sequence.xml"],
 	"installable": True
 }
