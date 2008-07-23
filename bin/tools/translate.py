@@ -240,6 +240,9 @@ def trans_generate(lang, modules, dbname=None):
 	logger = netsvc.Logger()
 	if not dbname:
 		dbname=tools.config['db_name']
+	if not modules:
+		modules = ['all']
+
 	pool = pooler.get_pool(dbname)
 	trans_obj = pool.get('ir.translation')
 	model_data_obj = pool.get('ir.model.data')
