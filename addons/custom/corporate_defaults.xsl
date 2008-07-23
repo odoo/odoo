@@ -75,7 +75,7 @@
 		<lines>1.5cm 1.2cm 19.9cm 1.2cm</lines>
 		<drawCentredString x="10.5cm" y="1.7cm"><xsl:value-of select="//corporate-header/corporation/rml_footer1"/></drawCentredString>
 		<drawCentredString x="10.5cm" y="1.25cm"><xsl:value-of select="//corporate-header/corporation/rml_footer2"/></drawCentredString>
-		<drawCentredString x="10.5cm" y="0.8cm">Your contact : <xsl:value-of select="//corporate-header/user/name"/></drawCentredString>
+<!--		<drawCentredString x="10.5cm" y="0.8cm">Your contact : <xsl:value-of select="//corporate-header/user/name"/></drawCentredString>-->
 	</xsl:template>
 
 	<xsl:template name="first_page_frames">
