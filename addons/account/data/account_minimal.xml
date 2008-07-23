@@ -10,7 +10,7 @@
             <field name="code">0</field>
             <field name="name">Minimal account chart</field>
             <field name="close_method">none</field>
-            <!--<field eval="[]" name="parent_id"/>-->
+            <field eval="0" name="parent_id"/>
             <field name="type">view</field>
         </record>
 
@@ -34,7 +34,7 @@
         <record id="cash" model="account.account">
             <field name="name">Petty Cash</field>
             <field name="code">57</field>
-            <field name="type">others</field>
+            <field name="type">cash</field>
             <field eval="ref('minimal_0')" name="parent_id"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
@@ -42,14 +42,14 @@
         <record id="a_expense" model="account.account">
             <field name="name">Products Purchase</field>
             <field name="code">600</field>
-            <field name="type">others</field>
+            <field name="type">expense</field>
             <field eval="ref('minimal_0')" name="parent_id"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="a_sale" model="account.account">
             <field name="name">Products Sales</field>
             <field name="code">701</field>
-            <field name="type">others</field>
+            <field name="type">income</field>
             <field eval="ref('minimal_0')" name="parent_id"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
