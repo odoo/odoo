@@ -36,20 +36,9 @@ import time
 import tools
 import pooler
 
-from pprint import pprint #FIXME: Dev
-
 def _get_fields_type(self, cr, uid, context=None):
     cr.execute('select distinct ttype,ttype from ir_model_fields')
     return cr.fetchall()
-
-
-#class ir_model_type(osv.osv):
-#    _name = 'ir.model.type'
-#    _columns = {
-#        'name': fields.char('Name', size=64, required=True),
-#        'model_id': fields.one2many('ir.model', 'type_id', 'Models'),
-#    }
-#ir_model_type()
 
 class ir_model(osv.osv):
     _name = 'ir.model'
@@ -60,8 +49,7 @@ class ir_model(osv.osv):
         'model': fields.char('Object Name', size=64, required=True, search=1),
         'info': fields.text('Information'),
         'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True),
-        #'type_id': fields.many2one('ir.model.type', 'Type'),
-        'type_id': fields.selection([('system','System'),('base','Base'),('addons','Addons')],'Type'),
+        'type': fields.selection([('system','System'),('base','Base'),('addons','Addons')],'Type'),
         'state': fields.selection([('manual','Custom Object'),('base','Base Field')],'Manualy Created',readonly=1),
     }
     _defaults = {
@@ -104,7 +92,7 @@ class ir_model(osv.osv):
         return res
 
     def create(self, cr, user, vals, context=None):
-        if 'advanced' in context:
+        if context and 'advanced' in context:
             raise osv.except_osv('Error !', 'You cannot add an entry to this view !')
         else:
             if context.get('manual',False):
@@ -116,7 +104,7 @@ class ir_model(osv.osv):
     
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         result = super(osv.osv, self).read(cr, user, ids, fields, context, load)
-        if 'advanced' in context:
+        if context and 'advanced' in context:
             for res in result:
                 rules = self.pool.get('ir.model.access').search(cr, user, [('model_id', '=', res['id'])])
                 rules_br = self.pool.get('ir.model.access').browse(cr, user, rules)
@@ -136,7 +124,7 @@ class ir_model(osv.osv):
 
     def write(self, cr, user, ids, vals, context=None):
         vals_new = vals.copy()
-        if 'advanced' in context:
+        if context and 'advanced' in context:
             perms_rel = ['create','read','unlink','write']
             perms_all = ['c','r','u','w']
             perms = []
@@ -194,8 +182,8 @@ class ir_model(osv.osv):
             groups = self.pool.get('res.groups').search(cr, uid, [])
             groups_br = self.pool.get('res.groups').browse(cr, uid, groups)
             
-            cols = ['model']
-            xml = '''<?xml version="1.0"?><tree editable="top"><field name="model" readonly="1"/>'''
+            cols = ['model', 'type']
+            xml = '''<?xml version="1.0"?><tree editable="top"><field name="model" readonly="1"/><field name="type" readonly="1"/>'''
             for group in groups_br:
                 xml += '''<field name="group_%i" sum="%s"/>''' % (group.id, group.name)
             xml += '''</tree>'''
@@ -526,10 +514,8 @@ class ir_model_data(osv.osv):
         return True
 ir_model_data()
 
-
-
-class ir_model_security(osv.osv):
-    _name = 'ir.model.security'
+class ir_model_config(osv.osv):
+    _name = 'ir.model.config'
     _columns = {
         'password': fields.char('Password', size=64, invisible=True),
     }
@@ -544,7 +530,6 @@ class ir_model_security(osv.osv):
         }
     
     def action_update_pw(self, cr, uid, ids, context={}):
-        from pprint import pprint
         res = self.read(cr,uid,ids)[0]
         root = self.pool.get('res.users').browse(cr, uid, [1])[0]
         self.unlink(cr, uid, [res['id']])
@@ -556,5 +541,4 @@ class ir_model_security(osv.osv):
             'type': 'ir.actions.act_window',
             'target':'new',
         }
-ir_model_security()
-
+ir_model_config()
