@@ -40,10 +40,10 @@
                             <newline/>
                             <field name="categ_id" select="1"/>
                             <field name="type" select="2"/>
-                            <field digits="(14, 3)" groups="base.group_extended" name="volume"/>
+                            <field digits="(14, 3)" groups="base.group_extended" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
                             <newline/>
-                            <field digits="(14, 3)" groups="base.group_extended" name="weight"/>
-                            <field digits="(14, 3)" groups="base.group_extended" name="weight_net"/>
+                            <field digits="(14, 3)" groups="base.group_extended" name="weight" attrs="{'readonly':[('type','=','service')]}"/>
+                            <field digits="(14, 3)" groups="base.group_extended" name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
                             <field name="procure_method"/>
                             <field name="state" select="2"/>
                             <field name="uom_id"/>
@@ -54,7 +54,7 @@
                             <field name="supply_method"/>
                             <field name="active" select="2"/>
                             <newline/>
-                            <field name="sale_delay"/>
+                            <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',0)]}"/>
                             <field name="sale_ok" select="2"/>
                             <field name="produce_delay"/>
                             <field name="purchase_ok" select="2"/>
