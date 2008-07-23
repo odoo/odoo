@@ -43,13 +43,13 @@ def _get_fields_type(self, cr, uid, context=None):
     return cr.fetchall()
 
 
-class ir_model_type(osv.osv):
-    _name = 'ir.model.type'
-    _columns = {
-        'name': fields.char('Name', size=64, required=True),
-        #'model_id': fields.many2one('ir.model', 'Models'),
-    }
-ir_model_type()
+#class ir_model_type(osv.osv):
+#    _name = 'ir.model.type'
+#    _columns = {
+#        'name': fields.char('Name', size=64, required=True),
+#        'model_id': fields.one2many('ir.model', 'type_id', 'Models'),
+#    }
+#ir_model_type()
 
 class ir_model(osv.osv):
     _name = 'ir.model'
@@ -60,8 +60,8 @@ class ir_model(osv.osv):
         'model': fields.char('Object Name', size=64, required=True, search=1),
         'info': fields.text('Information'),
         'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True),
-        #'type_id': fields.one2many('ir.model.type', 'model_id', 'Type'),
-        #'type_id': fields.many2many('ir.model.type', 'ir_model_type_rel', 'model_id', 'type_id', 'Types'),
+        #'type_id': fields.many2one('ir.model.type', 'Type'),
+        'type_id': fields.selection([('system','System'),('base','Base'),('addons','Addons')],'Type'),
         'state': fields.selection([('manual','Custom Object'),('base','Base Field')],'Manualy Created',readonly=1),
     }
     _defaults = {
@@ -98,19 +98,21 @@ class ir_model(osv.osv):
         #TODO Advanced
         for model in self.browse(cr, user, ids, context):
             if model.state <> 'manual':
-                raise except_orm(_('Error'), _("You can not remove the model '%s' !") %(field.name,))
+                raise except_orm(_('Error'), _("You can not remove the model '%s' !") %(model.name,))
         res = super(ir_model, self).unlink(cr, user, ids, context)
         pooler.restart_pool(cr.dbname)
         return res
 
     def create(self, cr, user, vals, context=None):
-        #TODO Advanced
-        if context and context.get('manual',False):
-            vals['state']='manual'
-        res = super(ir_model,self).create(cr, user, vals, context)
-        if vals.get('state','base')=='manual':
-            pooler.restart_pool(cr.dbname)
-        return res
+        if 'advanced' in context:
+            raise osv.except_osv('Error !', 'You cannot add an entry to this view !')
+        else:
+            if context.get('manual',False):
+                vals['state']='manual'
+            res = super(ir_model,self).create(cr, user, vals, context)
+            if vals.get('state','base')=='manual':
+                pooler.restart_pool(cr.dbname)
+            return res
     
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         result = super(osv.osv, self).read(cr, user, ids, fields, context, load)
@@ -133,14 +135,14 @@ class ir_model(osv.osv):
         return result
 
     def write(self, cr, user, ids, vals, context=None):
+        vals_new = vals.copy()
         if 'advanced' in context:
             perms_rel = ['create','read','unlink','write']
             perms_all = ['c','r','u','w']
             perms = []
-            vals_new = vals.copy()
             
             for val in vals:
-                if val[:6]=='group_':
+                if len(val)>5 and val[:6]=='group_':
                     #Values
                     group_id = int(val[6:])
                     model_id = ids[0]
@@ -152,15 +154,11 @@ class ir_model(osv.osv):
                         if perm not in perms_all:
                             model_name = self.pool.get('ir.model').browse(cr, user, [model_id])[0].model
                             group_name = self.pool.get('res.groups').browse(cr, user, [group_id])[0].name
-                            raise osv.except_osv('Error !', 'There is an invalid rule in "%s" for "Group %s". Valid rules are:\r\tc=create\r\tr=read\r\tu=unlink\r\tw=write\rYou must separate them by a coma, example: r,w'%(model_name, group_name))
+                            raise osv.except_osv('Error !', _('There is an invalid rule in "%s" for "Group %s". Valid rules are:\r\tc=create\r\tr=read\r\tu=unlink\r\tw=write\rYou must separate them by a coma, example: r,w')%(model_name, group_name))
                     
                     #Assign rights
                     req = {}
                     for i,perm in enumerate(perms_all):
-                        #if perm in perms:
-                        #    req['perm_%s'%perms_rel[i]] = True
-                        #else:
-                        #    req['perm_%s'%perms_rel[i]] = False
                         req['perm_%s'%perms_rel[i]] = perm in perms and 'True' or 'False'
                     
                     #Apply rule
@@ -190,25 +188,15 @@ class ir_model(osv.osv):
                 result['group_%i'%group.id] = {'string': 'Group %s'%group.name,'type': 'char','size': 7}
         return result
     
-    def on_change_write(self, cr, user, ids, vals, context=None):
-        print 'prout'
-    
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False):
         result = super(osv.osv, self).fields_view_get(cr, uid, view_id,view_type,context)
         if view_type=='tree' and 'advanced' in context:
             groups = self.pool.get('res.groups').search(cr, uid, [])
             groups_br = self.pool.get('res.groups').browse(cr, uid, groups)
             
-            #state = ''
-            #TODO: qqch du genre si un object n'a pas de secu
-            #for field in journal.view_id.columns_id:
-            #    if field.field=='state':
-            #        state = ' colors="red:state==\'draft\'"'
-            
             cols = ['model']
             xml = '''<?xml version="1.0"?><tree editable="top"><field name="model" readonly="1"/>'''
             for group in groups_br:
-                #xml += '''<field name="group_%i" sum="%s" on_change="on_change_write()"/>''' % (group.id, group.name) #TODO: on_change
                 xml += '''<field name="group_%i" sum="%s"/>''' % (group.id, group.name)
             xml += '''</tree>'''
             
@@ -537,4 +525,36 @@ class ir_model_data(osv.osv):
                     logger.notifyChannel('init', netsvc.LOG_ERROR, 'Could not delete id: %d of model %s\tThere should be some relation that points to this resource\tYou should manually fix this and restart --update=module' % (id, model))
         return True
 ir_model_data()
+
+
+
+class ir_model_security(osv.osv):
+    _name = 'ir.model.security'
+    _columns = {
+        'password': fields.char('Password', size=64, invisible=True),
+    }
+
+    def action_cancel(self, cr, uid, ids, context={}):
+        return {
+            'view_type': 'form',
+            "view_mode": 'form',
+            'res_model': 'ir.module.module.configuration.wizard',
+            'type': 'ir.actions.act_window',
+            'target':'new',
+        }
+    
+    def action_update_pw(self, cr, uid, ids, context={}):
+        from pprint import pprint
+        res = self.read(cr,uid,ids)[0]
+        root = self.pool.get('res.users').browse(cr, uid, [1])[0]
+        self.unlink(cr, uid, [res['id']])
+        self.pool.get('res.users').write(cr, uid, [root.id], {'password':res['password']})
+        return {
+            'view_type': 'form',
+            "view_mode": 'form',
+            'res_model': 'ir.module.module.configuration.wizard',
+            'type': 'ir.actions.act_window',
+            'target':'new',
+        }
+ir_model_security()
 
