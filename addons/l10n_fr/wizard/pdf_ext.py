@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
@@ -96,4 +97,7 @@ def testfill_pdf(infile, outfile):
     for key in keys:
         fields.append( (key, key, '') )
     fill_pdf(infile, outfile, fields)
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

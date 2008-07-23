@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
@@ -26,7 +27,6 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 #!/usr/bin/python
-# -*- encoding: utf-8 -*-
 
 import re
 import smtplib
@@ -320,3 +320,6 @@ if __name__ == '__main__':
     msg_txt = email.message_from_file(sys.stdin)
 
     parser.parse(msg_txt)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

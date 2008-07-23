@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -31,3 +32,6 @@ import hr_timesheet_invoice_create
 import account_analytic_profit
 import hr_timesheet_final_invoice_create
 import wizard_account_analytic_cost_ledger_report
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

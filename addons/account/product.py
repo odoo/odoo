@@ -88,3 +88,6 @@ class product_template(osv.osv):
             help="This account will be used, instead of the default one, to value outgoing stock for the current product"),
     }
 product_template()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

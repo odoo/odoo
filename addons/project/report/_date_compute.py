@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -98,4 +99,7 @@ def _project_compute(cr, uid, project_id):
         date_begin = DateTime.now()
     tasks, last_date = _compute_project(cr, uid, project, date_begin)
     return tasks, last_date
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

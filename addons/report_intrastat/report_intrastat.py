@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -125,4 +126,7 @@ class report_intrastat(osv.osv):
                 group by to_char(m.create_date, 'YYYY-MM-01'), pt.intrastat_id, c.code, pc.code, l.usage, dl.usage, ppl.currency_id, spl.currency_id
             )""")
 report_intrastat()
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

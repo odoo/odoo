@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -63,4 +64,7 @@ class accounting_report(report_sxw.rml_parse):
 report_sxw.report_sxw('report.accounting.report', 'account.report.report',
         'addons/account_report/report/accounting_report.rml',
         parser=accounting_report, header=False)
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -122,3 +123,6 @@ class board_note(osv.osv):
         'date': lambda object,cr,uid,context: time.strftime('%Y-%m-%d'),
     }
 board_note()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

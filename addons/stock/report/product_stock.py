@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -101,4 +102,7 @@ class report_stock(report_int):
         self.obj.render()
         return (self.obj.pdf, 'pdf')
 report_stock('report.stock.product.history')
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

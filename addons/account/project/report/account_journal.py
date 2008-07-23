@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -51,4 +52,7 @@ class journal_print(report_sxw.rml_parse):
             'sum_lines': self._sum_lines,
         }
 report_sxw.report_sxw('report.account.analytic.journal.print', 'account.analytic.journal', 'addons/account/project/report/analytic_journal.rml',parser=journal_print)
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

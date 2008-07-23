@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
@@ -78,4 +79,7 @@ def createzip(cr, uid, moduleid, context, b64enc=True, src=True):
         val =base64.encodestring(val)
     return {'module_file':val, 'module_filename': module.name + '-' + \
             (module.installed_version or '0') + '.zip'}
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

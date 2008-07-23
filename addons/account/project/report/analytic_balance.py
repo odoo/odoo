@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -165,4 +166,7 @@ class account_analytic_balance(report_sxw.rml_parse):
 report_sxw.report_sxw('report.account.analytic.account.balance',
         'account.analytic.account', 'addons/account/project/report/analytic_balance.rml',
         parser=account_analytic_balance, header=False)
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

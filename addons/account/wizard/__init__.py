@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -60,4 +61,7 @@ import wizard_account_chart
 import wizard_move_line_select
 
 import wizard_validate_account_move
-import wizard_use_model
+import wizard_use_model# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

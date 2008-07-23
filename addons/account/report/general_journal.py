@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -96,4 +97,7 @@ class journal_print(report_sxw.rml_parse):
         self.cr.execute('select sum(credit) from account_move_line where period_id in (' + self.period_ids + ') and journal_id in (' + self.journal_ids + ') and state<>\'draft\'')
         return self.cr.fetchone()[0] or 0.0
 report_sxw.report_sxw('report.account.general.journal', 'account.journal.period', 'addons/account/report/general_journal.rml',parser=journal_print)
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

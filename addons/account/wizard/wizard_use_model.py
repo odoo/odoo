@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 import wizard
 import time
 import datetime
@@ -117,4 +118,7 @@ class use_model(wizard.interface):
             }
     }
 
-use_model("account_use_models")
+use_model("account_use_models")# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

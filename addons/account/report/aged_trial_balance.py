@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -189,3 +190,6 @@ report_sxw.report_sxw(
     'res.partner',
     'addons/account/report/aged_trial_balance.rml',
     parser=aged_trial_report, header=False)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

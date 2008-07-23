@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -172,4 +173,6 @@ class wiz_si_so(wizard.interface):
     }
 wiz_si_so('hr_timesheet.si_so')
 
-# vim:noexpandtab:tw=0
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

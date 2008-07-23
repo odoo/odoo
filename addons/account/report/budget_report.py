@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -71,4 +72,7 @@ class budget_report(report_sxw.rml_parse):
             res.append({'name': a.name, 'code': a.code, 'achievements': achievements})
         return res
 report_sxw.report_sxw('report.account.budget', 'account.budget.post', 'addons/account/report/budget_report.rml',parser=budget_report)
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

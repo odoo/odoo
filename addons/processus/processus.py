@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2005-TODAY TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -100,4 +101,7 @@ class processus_transition_action(osv.osv):
 processus_transition_action()
 
 
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

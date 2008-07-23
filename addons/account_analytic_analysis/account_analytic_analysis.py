@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 # -*- coding: utf-8 -*- 
 ##############################################################################
 #
@@ -773,4 +774,7 @@ class account_analytic_account_summary_month(osv.osv):
         return res
 
 account_analytic_account_summary_month()
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

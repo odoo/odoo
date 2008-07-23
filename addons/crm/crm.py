@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -769,4 +770,7 @@ class crm_case_history(osv.osv):
         'log_id': fields.many2one('crm.case.log','Log',ondelete='cascade'),
     }
 crm_case_history()
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

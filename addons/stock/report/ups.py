@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -41,4 +42,7 @@ class report_custom(report_rml):
         return (super(report_custom, self).create(uid, ids, datas, context), 'pdf')
 
 report_custom('report.stock.move.lot.ups_xml', 'stock.move.lot', 'addons/stock/report/UPS.xml', None)
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

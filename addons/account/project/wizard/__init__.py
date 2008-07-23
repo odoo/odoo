@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -33,3 +34,6 @@ import wizard_account_analytic_inverted_balance_report
 import wizard_account_analytic_cost_ledger_report
 import wizard_account_analytic_cost_ledger_for_journal_report
 import wizard_account_analytic_analytic_check
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

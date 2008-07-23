@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -75,3 +76,6 @@ class report_stock_prodlots(osv.osv):
                 group by location_id, product_id, prodlot_id
             )""")
 report_stock_prodlots()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

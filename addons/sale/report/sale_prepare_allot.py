@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -48,4 +49,7 @@ class sale_prepare(report_sxw.rml_parse):
         return allotments.values()
 
 report_sxw.report_sxw('report.sale.order.prepare.allot', 'sale.order', 'addons/sale/report/prepare_allot.rml',parser=sale_prepare)
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

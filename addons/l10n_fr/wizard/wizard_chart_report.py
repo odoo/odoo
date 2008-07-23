@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 #Copyright (c) Vincent Cardon <vincent.cardon@tranquil-it-systems.fr>
 # Denis Cardon <denis.cardon@tranquilitsystems.com> and Emmanuel RICHARD.
 #Ingenieur fondateur
@@ -591,4 +592,7 @@ class wizard_report(wizard.interface):
                 },
           }
 wizard_report('account.chart.report')
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

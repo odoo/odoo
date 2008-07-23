@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -176,4 +177,7 @@ report_sxw.report_sxw(
         'account.analytic.account',
         'addons/hr_timesheet_invoice/report/cost_ledger.rml',
         parser=account_analytic_cost_ledger, header=False)
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -107,3 +107,6 @@ class report_mrp_inout(osv.osv):
 
 report_mrp_inout()
 
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

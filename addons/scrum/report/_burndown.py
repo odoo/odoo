@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -70,4 +71,7 @@ def compute_burndown(cr, uid, tasks_id, date_start, date_stop):
     result.append( (int(time.mktime(time.strptime(date_stop,'%Y-%m-%d'))), 0) )
     return result
 
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 import Image
 import ImageDraw
 import ImageFont
@@ -163,3 +164,6 @@ if __name__=='__main__':
 
     #img.show()
     img.save('a.pdf')
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

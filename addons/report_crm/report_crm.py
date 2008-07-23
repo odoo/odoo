@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -112,3 +113,6 @@ class report_crm_case_categ(osv.osv):
                 group by to_char(c.create_date, 'YYYY-MM-01'), c.state, c.categ_id, c.section_id
             )""")
 report_crm_case_categ()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -185,4 +186,6 @@ class report_custom(report_rml):
         return self.post_process_xml_data(cr, uid, xml, context)
 
 report_custom('report.hr.timesheet.allweeks', 'hr.employee', '', 'addons/hr/report/timesheet.xsl')
-# vim:noexpandtab:tw=0
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

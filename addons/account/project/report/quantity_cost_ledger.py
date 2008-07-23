@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -137,4 +138,7 @@ report_sxw.report_sxw('report.account.analytic.account.quantity_cost_ledger',
         'account.analytic.account',
         'addons/account/project/report/quantity_cost_ledger.rml',
         parser=account_analytic_quantity_cost_ledger, header=False)
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -130,3 +131,6 @@ class report_tasks(report_int):
         self.obj.render()
         return (self.obj.pdf,'pdf')
 report_tasks('report.project.tasks.burndown')
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

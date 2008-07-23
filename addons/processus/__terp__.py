@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 {
     "name" : "Enterprise Processus",
     "version" : "1.0",
@@ -17,3 +18,6 @@ This module allows you to manage your processus for the end-users.
     "active": False,
     "installable": True
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

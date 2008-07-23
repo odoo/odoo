@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -61,4 +62,7 @@ class Overdue(report_sxw.rml_parse):
 
 report_sxw.report_sxw('report.account.overdue', 'res.partner',
         'addons/account/report/overdue.rml', parser=Overdue)
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

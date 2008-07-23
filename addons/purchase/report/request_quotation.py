@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -41,3 +41,6 @@ class request_quotation(report_sxw.rml_parse):
             'user': self.pool.get('res.users').browse(cr, uid, uid, context)
         })
 report_sxw.report_sxw('report.purchase.quotation','purchase.order','addons/purchase/report/request_quotation.rml',parser=request_quotation)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

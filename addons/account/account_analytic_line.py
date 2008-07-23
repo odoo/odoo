@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 
 ##############################################################################
 #
@@ -129,3 +130,6 @@ class timesheet_invoice(osv.osv):
                 account_id
         )""")
 timesheet_invoice()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

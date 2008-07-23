@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2005-TODAY TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -26,3 +27,6 @@
 ##############################################################################
 
 import report_processus
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
