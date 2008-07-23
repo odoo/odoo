@@ -359,7 +359,6 @@ def email_send_attach(email_from, email_to, subject, body, email_cc=None, email_
 	if reply_to:
 		msg['Reply-To'] = reply_to
 	msg['To'] = COMMASPACE.join(email_to)
-	print '************', msg['To']
 	if email_cc:
 		msg['Cc'] = COMMASPACE.join(email_cc)
 	if email_bcc:
@@ -393,6 +392,8 @@ def email_send_attach(email_from, email_to, subject, body, email_cc=None, email_
 	except Exception, e:
 		import logging
 		logging.getLogger().error(str(e))
+		return False
+	
 	return True
 
 #----------------------------------------------------------

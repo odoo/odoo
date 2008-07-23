@@ -31,6 +31,7 @@ from osv import fields,osv
 import tools
 import time
 from tools.config import config
+import netsvc
 
 class actions(osv.osv):
 	_name = 'ir.actions.actions'
@@ -307,6 +308,7 @@ class actions_server(osv.osv):
 	#   False : Finnished correctly
 	#   ACTION_ID : Action to launch
 	def run(self, cr, uid, ids, context={}):
+		logger = netsvc.Logger()
 		for action in self.browse(cr, uid, ids, context):
 			if action.state=='python':
 				localdict = {
@@ -325,9 +327,9 @@ class actions_server(osv.osv):
 				subject = action.name
 				body = action.message
 				if tools.email_send_attach(user, action.address, subject, body) == True:
-					print 'email send successfully'
+					logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (user))
 				else:
-					print 'email sending failed'
+					logger.notifyChannel('email', netsvc.LOG_ERROR, 'Failed to send email to : %s' % (user))
 		return False
 actions_server()
 
