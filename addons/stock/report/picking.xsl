@@ -21,31 +21,36 @@
 	<!-- report specific "graphics" -->
 	
 	<xsl:template name="first_page_graphics_report">
-		<setFont name="Helvetica" size="16"/>
-		<drawCentredString x="105mm" y="28cm" t="1">PACKINGLIST</drawCentredString>
+		<setFont name="Helvetica" size="14"/>
+		<drawRightString x="200mm" y="25.5cm" t="1">Packing List</drawRightString>
 	</xsl:template>
 	
 	<!-- stylesheet -->
 
 	<xsl:template name="stylesheet">
 		<blockTableStyle id="infos">
-			 <blockFont name="Helvetica-Bold" size="10" start="0,0" stop="-1,0"/>
-			 <blockBackground colorName="grey" start="0,0" stop="-1,0"/>
-			 <blockTextColor colorName="white" start="0,0" stop="-1,0"/>
-			 <lineStyle kind="GRID" colorName="black"/>
+			 <blockAlignment value="CENTRE" />
+			<blockFont name="Helvetica-Bold" size="8" start="0,0" stop="-1,0"/>
+			<blockValign value="TOP"/>
+			<lineStyle kind="LINEABOVE" colorName="#cccccc" />
+			<lineStyle kind="LINEBELOW" colorName="#cccccc" />
+			<lineStyle kind="LINEAFTER" colorName="#cccccc" />
+			<lineStyle kind="LINEBEFORE" colorName="#cccccc" />
+			<blockBackground colorName="#e0e0e0" start="0,0" stop="-1,0"/>
 		</blockTableStyle>
 		<blockTableStyle id="products">
-			 <blockBackground colorName="lightgrey" start="0,0" stop="-1,0"/>
-			 <blockFont name="Helvetica-Bold" size="10" start="0,0" stop="-1,0"/>
-			 <lineStyle kind="LINEBELOW" colorName="black" start="0,0" stop="-1,0"/>
-			 <blockValign value="TOP"/>
-			 <blockAlignment value="RIGHT" start="3,0" stop="3,-1"/>
-			 <blockAlignment value="RIGHT" start="6,0" stop="6,-1"/>
+ 	        <blockAlignment value="LEFT" start="0,0" stop="0,-1"/>
+			<blockFont name="Helvetica-Bold" size="8" start="0,0" stop="-1,0"/>
+			<blockAlignment value="CENTER" start="1,0" stop="-1,0"/>
+			<blockAlignment value="RIGHT" start="2,1" stop="-1,-1"/>
+			<blockValign value="TOP"/>
+			<lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0" />
+			<lineStyle kind="LINEBELOW" colorName="#e0e0e0"  start="0,1" stop="-1,-2" />
 		</blockTableStyle>
 		<paraStyle name="address-title" fontName="Helvetica-Bold" fontSize="8" alignment="left"/>
 		<paraStyle name="address" fontName="Helvetica" fontSize="8" alignment="left" leftIndent="1cm"/>
-		<paraStyle name="prod" fontName="Helvetica" fontSize="10" alignment="left"/>
-		<paraStyle name="prod-right" fontName="Helvetica" fontSize="10" alignment="right"/>
+		<paraStyle name="prod" fontName="Helvetica" fontSize="8" alignment="left"/>
+		<paraStyle name="prod-right" fontName="Helvetica" fontSize="8" alignment="right"/>
 	</xsl:template>
 	
 	<xsl:template name="story">
@@ -74,12 +79,10 @@
 -->		
 		<!-- start of address frame -->
 		
-		<para style="address-title" t="1">
-			Shipping Address:
-		</para>
-	
-		<xsl:apply-templates select="corporation" mode="shipping"/>
-		<xsl:apply-templates select="address" mode="shipping"/>
+		<para style="address-title" t="1">Shipping Address:</para>
+		
+			<xsl:apply-templates select="corporation" mode="shipping"/>
+			<xsl:apply-templates select="address" mode="shipping"/>
 	
 		<!-- end of address frame -->
 	
@@ -88,12 +91,8 @@
 		<!-- start of products frame -->
 	
 		<para>
-			<b t="1">Recipient</b>: <xsl:apply-templates select="address" mode="header"/> 
-		</para>
-		<para t="1">
-			Concerns: <xsl:value-of select="picking-name"/>
-		</para>
-	
+			<font face="Helvetica-Bold" size="8">Recipient</font>:<font face="Helvetica" size="8"><xsl:apply-templates select="address" mode="header"/></font> </para>
+		<para style="prod" t="1">Concerns:<xsl:value-of select="picking-name"/></para>
 		<spacer length="1cm" width="1mm"/>
 	
 		<blockTable colWidths="4cm,4cm,6cm,4cm" style="infos">
@@ -103,10 +102,10 @@
 			<td t="1">Packing Date</td>
 			<td t="1">Shipping Date</td>
 		</tr><tr>
-			<td><para><xsl:value-of select="corporation/id"/></para></td>
-			<td><para><xsl:value-of select="picking-id"/></para></td>
-			<td><para><xsl:value-of select="picking-date"/></para></td>
-			<td><para><xsl:value-of select="expedition-date"/></para></td>
+			<td><para style="address"><xsl:value-of select="corporation/id"/></para></td>
+			<td><para style="address"><xsl:value-of select="picking-id"/></para></td>
+			<td><para style="address"><xsl:value-of select="picking-date"/></para></td>
+			<td><para style="address"><xsl:value-of select="expedition-date"/></para></td>
 		</tr>
 		</blockTable>
 	</xsl:template>
@@ -150,6 +149,7 @@
 		<setNextTemplate name="other_pages"/>
 		<blockTable colWidths="2cm,2.2cm,2.2cm,2.5cm,2cm,4.5cm,2.1cm" style="products" repeatRows="1">
 			<tr>
+				<setFont name="Helvetica-Bold"/>
 				<td t="1">Product</td>
 				<td t="1">Tracking</td>
 				<td t="1">Serial</td>
