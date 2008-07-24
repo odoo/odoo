@@ -35,8 +35,9 @@
 	"depends" : [],
 	"init_xml" : [
 		"base_data.xml",
-		"base_security.xml",
 		"base_menu.xml",
+		"base_security.xml",
+		"res/res_security.xml",
 	],
 	"demo_xml" : [
 		"base_demo.xml",

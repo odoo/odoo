@@ -518,6 +518,7 @@ class ir_model_config(osv.osv):
     _name = 'ir.model.config'
     _columns = {
         'password': fields.char('Password', size=64, invisible=True),
+        'password_check': fields.char('  confirmation', size=64, invisible=True),
     }
 
     def action_cancel(self, cr, uid, ids, context={}):
@@ -533,12 +534,15 @@ class ir_model_config(osv.osv):
         res = self.read(cr,uid,ids)[0]
         root = self.pool.get('res.users').browse(cr, uid, [1])[0]
         self.unlink(cr, uid, [res['id']])
-        self.pool.get('res.users').write(cr, uid, [root.id], {'password':res['password']})
-        return {
-            'view_type': 'form',
-            "view_mode": 'form',
-            'res_model': 'ir.module.module.configuration.wizard',
-            'type': 'ir.actions.act_window',
-            'target':'new',
-        }
+        if res['password']==res['password_check']:
+            self.pool.get('res.users').write(cr, uid, [root.id], {'password':res['password']})
+            return {
+                'view_type': 'form',
+                "view_mode": 'form',
+                'res_model': 'ir.module.module.configuration.wizard',
+                'type': 'ir.actions.act_window',
+                'target':'new',
+            }
+        else:
+            raise except_orm(_('Error'), _("Password mismatch !"))
 ir_model_config()

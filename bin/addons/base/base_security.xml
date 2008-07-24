@@ -25,6 +25,8 @@
                 <separator col="4" colspan="4" string="Set password to the root user"/>
                 <newline/>
                 <field name="password"/>
+                <newline/>
+                <field name="password_check"/>
                 <group col="4" colspan="4">
                     <button icon="gtk-cancel" name="action_cancel" type="object" string="Cancel" special="cancel"/>
                     <button icon="gtk-ok" name="action_update_pw" type="object" string="Update"/>
@@ -79,57 +81,11 @@
 <!--
  Objects Groups
 -->
-<!-- No XML-ID's -->
-    <!--<record model="ir.model" id="base.model_ir_model">-->
-    <!--    <field name="model" model="ir.model" search="[('model', '=', 'ir.actions.act_window')]"/>-->
-    <!--    <field name="type">system</field>-->
-    <!--</record>-->
-    
-    <!--<record model="ir.model" id="base.model_ir_model_custom">-->
-    <!--    <field name="type">system</field>-->
-    <!--</record>-->
-    
-    <!--<record model="ir.model" id="base.model_ir_model_custom_fields">-->
-    <!--    <field name="type">system</field>-->
-    <!--</record>-->
-    
-    <!--<record model="ir.model" id="base.model_ir_module_module_configuration">-->
-    <!--    <field name="type">system</field>-->
-    <!--</record>-->
-    
-<!-- Base -->
-    <record model="ir.model" id="base.model_res_bank">
-        <field name="type">base</field>
-    </record>
-    
-    <record model="ir.model" id="base.model_res_payterm">
-        <field name="type">base</field>
-    </record>
-    
-    <record model="ir.model" id="base.model_res_currency">
-        <field name="type">base</field>
-    </record>
-    
-    <record model="ir.model" id="base.model_res_currency_rate">
-        <field name="type">base</field>
-    </record>
-    
-    <record model="ir.model" id="base.model_res_company">
-        <field name="type">base</field>
-    </record>
-    
-    <record model="ir.model" id="base.model_res_groups">
-        <field name="type">base</field>
-    </record>
-    
-    <record model="ir.model" id="base.model_res_roles">
-        <field name="type">base</field>
-    </record>
     
 <!-- System -->
-    <record model="ir.model" id="base.model_ir_actions">
-        <field name="type">system</field>
-    </record>
+    <!--<record model="ir.model" id=".model_ir_actions">-->
+    <!--    <field name="type">system</field>-->
+    <!--</record>-->
     
     <record model="ir.model" id="base.model_ir_act_report_custom">
         <field name="type">system</field>
@@ -168,10 +124,6 @@
     </record>
 
     <record model="ir.model" id="base.model_ir_ui_menu">
-        <field name="type">system</field>
-    </record>
-
-    <record model="ir.model" id="base.model_res_users">
         <field name="type">system</field>
     </record>
 
