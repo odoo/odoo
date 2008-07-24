@@ -319,6 +319,26 @@
         <field name="perm_unlink" eval="0"/>
     </record>
     
+    <record model="ir.model.access" id="access_ir_model_data_employee">
+        <field name="name">ir.model.data Employee</field>
+        <field model="ir.model" name="model_id" ref="model_ir_model_data"/>
+        <field name="group_id" ref="group_employee"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    
+    <record model="ir.model.access" id="access_ir_act_window_view_employee">
+        <field name="name">ir.act_window.view Employee</field>
+        <field model="ir.model" name="model_id" ref="model_ir_act_window_view"/>
+        <field name="group_id" ref="group_employee"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    
     <record model="ir.model.access" id="access_ir_ui_view_employee">
         <field name="name">ir.ui.view Employee</field>
         <field model="ir.model" name="model_id" ref="model_ir_ui_view"/>
