@@ -70,7 +70,12 @@ class view(osv.osv):
     _constraints = [
         (_check_xml, 'Invalid XML for View Architecture!', ['arch'])
     ]
-
+    
+    def write(self, cr, uid, ids, vals, context={}):
+    	print ids, vals
+    	result = super(view, self).write(cr, uid, ids, vals, context)
+    	return result
+    
 view()
 
 class UserView(osv.osv):
