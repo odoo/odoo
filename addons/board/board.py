@@ -72,7 +72,6 @@ class board_board(osv.osv):
         view = {
             'arch': self.create_view(cr, uid, ids[0], context),
         }
-        print board
         self.pool.get('ir.ui.view').write(cr, uid, [board['view_id'][0]], view)
         
         return result

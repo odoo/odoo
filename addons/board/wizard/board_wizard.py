@@ -54,7 +54,7 @@ def board_menu_create(self, cr, uid, data, context):
         'view_type':'form',
         'view_mode':'form',
         'res_model': 'board.board',
-        'view_id': board.view_id,
+        'view_id': board.view_id.id,
     })
     pool.get('ir.ui.menu').create(cr, uid, {
         'name': data['form']['menu_name'],
