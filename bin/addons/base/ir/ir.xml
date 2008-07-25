@@ -829,7 +829,8 @@
                     <field colspan="4" name="parent_id" select="1"/>
                     <field name="action"/>
                     <field colspan="4" name="groups_id"/>
-                    <field name="icon"/>
+					<field name="icon" on_change="onchange_icon(icon)"/>
+					<field name="icon_pict" widget="picture" nolabel="1"/>
                 </form>
             </field>
         </record>
