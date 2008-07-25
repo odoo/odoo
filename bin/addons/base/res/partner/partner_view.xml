@@ -21,6 +21,17 @@
                 </form>
             </field>
         </record>
+        <record id="view_partner_function_tree" model="ir.ui.view">
+            <field name="name">res.partner.function.tree</field>
+            <field name="model">res.partner.function</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Partner Functions">
+                    <field name="code"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
         <record id="action_partner_function_form" model="ir.actions.act_window">
             <field name="name">Partner Functions</field>
             <field name="type">ir.actions.act_window</field>
