@@ -180,6 +180,17 @@ class ir_ui_menu(osv.osv):
                 'key2': 'tree_but_open',
                 'res_id': menu_id,
                 }, context=ctx)
+    
+    def _get_icon_pict(self, cr, uid, ids, name, args, context):
+        res = {}
+        for m in self.browse(cr, uid, ids, context=context):
+            res[m.id] = ('stock', (m.icon,'ICON_SIZE_MENU'))
+        return res
+    
+    def onchange_icon(self, cr, uid, ids, icon):
+        if not icon:
+            return {}
+        return {'type': {'icon_pict': 'picture'}, 'value': {'icon_pict': ('stock', (icon,'ICON_SIZE_MENU'))}}
 
     _columns = {
         'name': fields.char('Menu', size=64, required=True, translate=True),
@@ -191,6 +202,7 @@ class ir_ui_menu(osv.osv):
         'complete_name': fields.function(_get_full_name, method=True,
             string='Complete Name', type='char', size=128),
         'icon': fields.selection(icons, 'Icon', size=64),
+        'icon_pict': fields.function(_get_icon_pict, method=True, type='picture'),
         'action': fields.function(_action, fnct_inv=_action_inv,
             method=True, type='reference', string='Action',
             selection=[
@@ -203,6 +215,7 @@ class ir_ui_menu(osv.osv):
     }
     _defaults = {
         'icon' : lambda *a: 'STOCK_OPEN',
+        'icon_pict': lambda *a: ('stock', ('STOCK_OPEN','ICON_SIZE_MENU')),
         'sequence' : lambda *a: 10
     }
     _order = "sequence,id"
