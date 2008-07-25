@@ -33,10 +33,64 @@ from osv import fields,osv
 
 class board_board(osv.osv):
     _name = 'board.board'
+    
+    def create_view(self, cr, uid, ids, context):
+        
+        board = self.pool.get('board.board').browse(cr, uid, ids, context)
+        left = []
+        right = []
+        for line in board.line_ids:
+            linestr = '<action string="%s" name="%d" colspan="4"' % (line.name, line.action_id.id)
+            if line.height:
+                linestr+=(' height="%d"' % (line.height,))
+            if line.width:
+                linestr+=(' width="%d"' % (line.width,))
+            linestr += '/>'
+            if line.position=='left':
+                left.append(linestr)
+            else:
+                right.append(linestr)
+        arch = """<?xml version="1.0"?>
+            <form string="My Board">
+            <hpaned>
+                <child1>
+                    %s
+                </child1>
+                <child2>
+                    %s
+                </child2>
+            </hpaned>
+            </form>""" % ('\n'.join(left), '\n'.join(right))
+        
+        return arch
+
+    def write(self, cr, uid, ids, vals, context={}):
+        result = super(board_board, self).write(cr, uid, ids, vals, context)
+        cr.commit()
+        
+        board = self.pool.get('board.board').read(cr, uid, ids)[0]
+        view = {
+            'arch': self.create_view(cr, uid, ids[0], context),
+        }
+        print board
+        self.pool.get('ir.ui.view').write(cr, uid, [board['view_id'][0]], view)
+        
+        return result
+    
     def create(self, cr, user, vals, context=None):
         if not 'name' in vals:
             return False
-        return super(board_board, self).create(cr, user, vals, context)
+        id = super(board_board, self).create(cr, user, vals, context)
+        view_id = self.pool.get('ir.ui.view').create(cr, user, {
+            'name': vals['name'],
+            'model':'board.board',
+            'priority':16,
+            'type': 'form',
+            'arch': self.create_view(cr, user, id, context),
+        })
+        self.pool.get('board.board').write(cr, user, [id], {'view_id':view_id})
+        return id
+    
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False):
         if context and ('view' in context):
             board = self.pool.get('board.board').browse(cr, user, int(context['view']), context)
@@ -74,6 +128,7 @@ class board_board(osv.osv):
         return res
     _columns = {
         'name': fields.char('Dashboard', size=64, required=True),
+        'view_id': fields.many2one('ir.ui.view', 'Board View'),
         'line_ids': fields.one2many('board.board.line', 'board_id', 'Action Views')
     }
 board_board()
