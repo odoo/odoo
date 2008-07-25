@@ -4,30 +4,29 @@
         <assert model="account.move" search="[]" string="For all account moves, the state is valid implies that the sum of credits equals the sum of debits">
             <test expr="not len(line_id) or line_id[0].state != 'valid' or (sum([l.debit - l.credit for l in line_id]) &lt;= 0.00001)"/>
         </assert>
-        
+
         <!--assert model="account.invoice" search="[]" string="If the invoice is paid, third party accounting lines must be reconciled">
 			<test expr="not state == 'paid' or ..." />
 		</assert-->
-        
+
         <assert model="account.account" search="[]" string="For all accounts, the balance is equal to the sum of the balance of its childs">
             <test expr="not len(child_id) or (balance - sum([c.balance for c in child_id]) &lt;= 0.00001)"/>
         </assert>
-        
+
         <assert model="account.move.line" search="[('account_id.type', '=', 'view')]" string="Accounts of view type do not contain any move line">
             <test expr="False"/>
         </assert>
-        
+
         <assert model="account.invoice" search="[('state', 'in', ['paid', 'open'])]" string="The total amount of all paid or open invoices is correctly computed">
             <test expr="sum([l.price_subtotal for l in invoice_line]) - amount_untaxed &lt;= 0.00001"/>
         </assert>
-        
+
         <assert model="account.move.reconcile" search="[]" string="For each reconciliation, the sum of credits equals the sum of debits">
             <test expr="sum([l.debit - l.credit for l in line_id]) &lt;= 0.00001"/>
         </assert>
-        
+
         <assert model="account.account" search="[]" string="Every account must have at least one parent account of type '0'">
-            <test expr="not parent_id or '0' in [p.code for p in parent_id]"/>
-             
+            <test expr="not parent_id or (code!='0')"/>
         </assert>
     </data>
 </terp>
