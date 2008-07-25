@@ -271,7 +271,7 @@ class account_account(osv.osv):
 		'child_parent_ids':fields.one2many('account.account','parent_id','Children'),
 		'child_consol_ids':fields.many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', 'Consolidated Children',domain=[('type','=','root'), ('type', '=', 'consolidation')]),
 #		'child_id': fields.many2many('account.account', 'account_account_rel', 'parent_id', 'child_id', 'Children'),
-		'child_id': filelds.function(_get_child_ids, method=True, type='many2many',relation="account.account",string="Children Accounts"),
+		'child_id': fields.function(_get_child_ids, method=True, type='many2many',relation="account.account",string="Children Accounts"),
 		'balance': fields.function(_balance, digits=(16,2), method=True, string='Balance'),
 		'credit': fields.function(_credit, digits=(16,2), method=True, string='Credit'),
 		'debit': fields.function(_debit, digits=(16,2), method=True, string='Debit'),
