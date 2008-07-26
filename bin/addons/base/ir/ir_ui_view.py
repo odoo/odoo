@@ -62,7 +62,7 @@ class view(osv.osv):
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View'),
         'field_parent': fields.char('Childs Field',size=64),
         'user_id': fields.many2one('res.users', 'User'),
-        'ref_id': fields.many2one('ir.ui.view', 'Inherited View'),
+        'ref_id': fields.many2one('ir.ui.view', 'Orignal View'),
     }
     _defaults = {
         'arch': lambda *a: '<?xml version="1.0"?>\n<tree title="Unknwown">\n\t<field name="name"/>\n</tree>',
@@ -74,8 +74,20 @@ class view(osv.osv):
     ]
     
     def write(self, cr, uid, ids, vals, context={}):
+        vids = self.pool.get('ir.ui.view').search(cr, uid, [('user_id','=',uid), ('ref_id','=',ids[0])])
+        if not vids and context.get('tiny', True) == True:
+            default = {}
+            default['user_id'] = uid
+            default['ref_id'] = ids[0]
+            nids = super(view, self).copy(cr, uid, ids[0], default, context=context)
+            return True
+        
     	result = super(view, self).write(cr, uid, ids, vals, context)
     	return result
+    
+    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
+        result = super(view,self).read(cr, uid, ids, fields, context, load)
+        return result
     
 view()
 
