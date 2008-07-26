@@ -74,50 +74,28 @@ class view(osv.osv):
     ]
     
     def write(self, cr, uid, ids, vals, context={}):
-        vids = self.pool.get('ir.ui.view').search(cr, uid, [('user_id','=',uid), ('ref_id','=',ids[0])])
-        if not vids and context.get('tiny', True) == True:
-            default = {}
-            default['user_id'] = uid
-            default['ref_id'] = ids[0]
-            nids = super(view, self).copy(cr, uid, ids[0], default, context=context)
-            return True
+        exist = self.pool.get('ir.ui.view').browse(cr, uid, ids[0])
+        if exist.model == 'board.board':
+            if not exist.ref_id.id:
+                vids = self.pool.get('ir.ui.view').search(cr, uid, [('user_id','=',uid), ('ref_id','=',ids[0])])
+                if not vids:
+                    if context.get('tiny') == 'base':
+                        result = super(view, self).write(cr, uid, ids, vals, context)
+                        return result
+                    else:
+                        default = {}
+                        default['user_id'] = uid
+                        default['ref_id'] = ids[0]
+                        nids = super(view, self).copy(cr, uid, ids[0], default, context=context)
+                        result = super(view, self).write(cr, uid, [nids], vals, context)
+                        return result
+                else:
+                    result = super(view, self).write(cr, uid, vids, vals, context)
+                    return result
         
     	result = super(view, self).write(cr, uid, ids, vals, context)
     	return result
-    
-    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        result = super(view,self).read(cr, uid, ids, fields, context, load)
-        return result
-    
 view()
-
-#class UserView(osv.osv):
-#   _name = 'ir.ui.view.user'
-#   _columns = {
-#       'name': fields.char('View Name',size=64,  required=True),
-#       'model': fields.char('Model', size=64, required=True),
-#       'priority': fields.integer('Priority', required=True),
-#       'type': fields.selection((
-#           ('tree','Tree'),
-#           ('form','Form'),
-#           ('graph', 'Graph'),
-#           ('calendar', 'Calendar')), 'View Type', required=True),
-#       'arch': fields.text('View Architecture', required=True),
-#       'inherit_id': fields.many2one('ir.ui.view', 'Inherited View'),
-#       'field_parent': fields.char('Childs Field',size=64),
-#       'user_id': fields.many2one('res.users', 'User'),
-#       'ref_id': fields.many2one('ir.ui.view', 'Inherited View'),
-#   }
-#   _defaults = {
-#       'arch': lambda *a: '<?xml version="1.0"?>\n<tree title="Unknwown">\n\t<field name="name"/>\n</tree>',
-#       'priority': lambda *a: 16
-#   }
-#   _order = "priority"
-#   _constraints = [
-#       (_check_xml, 'Invalid XML for View Architecture!', ['arch'])
-#   ]
-#
-#UserView()
 
 class view_sc(osv.osv):
     _name = 'ir.ui.view_sc'
