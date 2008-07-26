@@ -69,10 +69,14 @@ class board_board(osv.osv):
         cr.commit()
         
         board = self.pool.get('board.board').read(cr, uid, ids)[0]
-        view = {
-            'arch': self.create_view(cr, uid, ids[0], context),
-        }
-        self.pool.get('ir.ui.view').write(cr, uid, [board['view_id'][0]], view)
+        
+        view = self.create_view(cr, uid, ids[0], context)
+        id = board['view_id'][0]
+        
+        cr.execute("update ir_ui_view set arch='%s' where id=%d" % (view, id))
+        cr.commit()
+        
+        #self.pool.get('ir.ui.view').write(cr, uid, [], view, {'tiny':'base'})
         
         return result
     
@@ -91,40 +95,14 @@ class board_board(osv.osv):
         return id
     
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False):
-        if context and ('view' in context):
-            board = self.pool.get('board.board').browse(cr, user, int(context['view']), context)
-            left = []
-            right = []
-            for line in board.line_ids:
-                linestr = '<action string="%s" name="%d" colspan="4"' % (line.name, line.action_id.id)
-                if line.height:
-                    linestr+=(' height="%d"' % (line.height,))
-                if line.width:
-                    linestr+=(' width="%d"' % (line.width,))
-                linestr += '/>'
-                if line.position=='left':
-                    left.append(linestr)
-                else:
-                    right.append(linestr)
-            arch = """<form string="My Board">
-<hpaned>
-    <child1>
-        %s
-    </child1>
-    <child2>
-        %s
-    </child2>
-</hpaned>
-</form>""" % ('\n'.join(left), '\n'.join(right))
-            result = {
-                'toolbar': {'print':[],'action':[],'relate':[]},
-                'fields': {},
-                'arch': arch
-            }
-            return result
+        res = {}
+        vids = self.pool.get('ir.ui.view').search(cr, user, [('user_id','=',user), ('ref_id','=',view_id)])
+        if vids:
+            view_id = vids[0]
         res = super(board_board, self).fields_view_get(cr, user, view_id, view_type, context, toolbar)
         res['toolbar'] = {'print':[],'action':[],'relate':[]}
         return res
+    
     _columns = {
         'name': fields.char('Dashboard', size=64, required=True),
         'view_id': fields.many2one('ir.ui.view', 'Board View'),
