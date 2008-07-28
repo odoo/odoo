@@ -58,17 +58,21 @@ def _data_load(self, cr, uid, data, context):
 
 def _data_save(self, cr, uid, data, context):
 	if not data['form']['sure']:
-		raise wizard.except_wizard(_('UserError'), _('Closing of fiscal year canceled, please check the box !'))
+		raise wizard.except_wizard(_('UserError'), _('Closing of fiscal year cancelled, please check the box !'))
 	pool = pooler.get_pool(cr.dbname)
 
 	fy_id = data['form']['fy_id']
 	if data['form']['report_new']:
-		period = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy2_id']).period_ids[0]
+		periods_fy2 = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy2_id']).period_ids
+		if not periods_fy2:
+			raise wizard.except_wizard(_('UserError'),
+						_('There are no periods defined on New Fiscal Year.'))
+		period=periods_fy2[0]
 		new_fyear = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy2_id'])
 		start_jp = new_fyear.start_journal_period_id
 		if not start_jp:
 			raise wizard.except_wizard(_('UserError'),
-						_('The new fiscal year should have a journal for new entries define on it'))
+						_('The new fiscal year should have a journal for new entries defined on it.'))
 
 		new_journal = start_jp.journal_id
 
