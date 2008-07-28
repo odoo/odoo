@@ -2187,12 +2187,7 @@ class orm(orm_template):
         # if the object has a field named 'active', filter out all inactive
         # records unless they were explicitely asked for
         if 'active' in self._columns and (active_test and context.get('active_test', True)):
-            i = 0
-            active_found = False
-            while i<len(args):
-                if args[i][0]=='active':
-                    active_found = True
-                i += 1
+            active_found = reduce( lambda x, y: x or y == 'active', args, False )
             if not active_found:
                 args.append(('active', '=', 1))
 
