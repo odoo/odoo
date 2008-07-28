@@ -390,45 +390,7 @@
         <field name="view_type">form</field>
     </record>
     <menuitem action="action_res_groups" id="menu_action_res_groups" parent="base.menu_users"/>
-    
-    <record id="view_roles_form" model="ir.ui.view">
-        <field name="name">res.roles.form</field>
-        <field name="model">res.roles</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form string="Role">
-                <field colspan="4" name="name" select="1"/>
-                <field colspan="4" name="parent_id"/>
-            </form>
-        </field>
-    </record>
-    <record id="view_roles_tree" model="ir.ui.view">
-        <field name="name">res.roles.tree</field>
-        <field name="model">res.roles</field>
-        <field name="type">tree</field>
-        <field name="field_parent">child_id</field>
-        <field name="arch" type="xml">
-            <tree string="Roles">
-                <field name="name"/>
-            </tree>
-        </field>
-    </record>
-    <record id="action_res_roles" model="ir.actions.act_window">
-        <field name="name">Roles Structure</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">res.roles</field>
-        <field name="view_type">tree</field>
-        <field eval="[('parent_id','=',False)]" name="domain"/>
-    </record>
-    <menuitem action="action_res_roles" id="menu_action_res_roles" parent="base.menu_users"/>
-    
-    <record id="action_res_roles_form" model="ir.actions.act_window">
-        <field name="name">Roles</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">res.roles</field>
-        <field name="view_type">form</field>
-    </record>
-    <menuitem action="action_res_roles_form" id="menu_action_res_roles_form" parent="menu_action_res_roles"/>
+
     
 <!-- View -->
     <record id="view_view_form" model="ir.ui.view">
@@ -653,6 +615,17 @@
                             <button colspan="2" name="%(act_menu_create)d" string="Create a Menu" type="action"/>
                         </group>
                     </page>
+                    <page string="Access">
+                        <field colspan="4" name="access" select="1">
+                            <tree string="Access Rules" editable="top">
+                                <field name="group_id"/>
+                                <field name="perm_read"/>
+                                <field name="perm_write"/>
+                                <field name="perm_create"/>
+                                <field name="perm_unlink"/>
+                            </tree>
+                        </field>
+                    </page>
                     <page string="Information">
                         <field colspan="4" name="info" nolabel="1" select="1"/>
                     </page>
@@ -818,14 +791,20 @@ Menu Edition
         <field name="model">ir.ui.menu</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Menu">
-                <field name="complete_name"/>
-                <field name="name" select="1"/>
-                <field name="sequence"/>
-                <field colspan="4" name="parent_id" select="1"/>
-                <field name="action"/>
-                <field colspan="4" name="groups_id"/>
-                <field name="icon"/>
+            <form string="Menus">
+                <notebook>
+                    <page string="Menu">
+                        <field name="complete_name"/>
+                        <field name="name" select="1"/>
+                        <field name="sequence"/>
+                        <field colspan="4" name="parent_id" select="1"/>
+                        <field name="action"/>
+                        <field name="icon"/>
+                    </page>
+                    <page string="Groups">
+                        <field colspan="4" name="groups_id"/>
+                    </page>
+                </notebook>
             </form>
         </field>
     </record>
@@ -930,24 +909,138 @@ Cron Jobs
         <field name="view_id" ref="ir_access_view_tree"/>
     </record>
 
+    <record id="property_rule_group" model="ir.rule.group">
+        <field name="name">Property multi-company</field>
+        <field model="ir.model" name="model_id" search="[('model', '=', 'ir.property')]"/>
+        <field eval="True" name="global"/>
+    </record>
+    <record id="property_rule_group2" model="ir.rule.group">
+        <field name="name">Property multi-company 2</field>
+        <field model="ir.model" name="model_id" search="[('model', '=', 'ir.property')]"/>
+        <field eval="True" name="global"/>
+    </record>
+    <record id="property_rule" model="ir.rule">
+        <field model="ir.model.fields" name="field_id" search="[('model', '=', 'ir.property'), ('name', '=', 'company_id')]"/>
+        <field name="operator">child_of</field>
+        <field name="operand">user.company_id.id</field>
+        <field name="rule_group" ref="property_rule_group"/>
+    </record>
+    
+    <record id="property_rule_bis" model="ir.rule">
+        <field model="ir.model.fields" name="field_id" search="[('model', '=', 'ir.property'), ('name', '=', 'company_id')]"/>
+        <field name="operator">=</field>
+        <field name="operand">False</field>
+        <field name="rule_group" ref="property_rule_group2"/>
+    </record>
+
+<!--
+================
+ Security
+================
+-->
+<!--Objects Access-->
+    <record id="view_model_tree" model="ir.ui.view">
+        <field name="name">Objects Security Tree</field>
+        <field name="model">ir.model</field>
+        <field name="type">tree</field>
+    </record>
+    
+    <record model="ir.actions.act_window" id="action_model_view_security">
+        <field name="name">Define Access</field>
+        <field name="res_model">ir.model</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form,tree</field>
+        <field name="view_id" ref="view_model_tree"/>
+        <field name="context">{'advanced':True}</field>
+    </record>
+    
+    <menuitem sequence="1" id="menu_objects_security" parent="base.menu_security" name="Access"/>
+        <menuitem sequence="1" action="action_model_view_security" id="menu_objects_security_view" parent="base.menu_objects_security" name="Define Access"/>
+        <menuitem sequence="2" action="ir_access_act" id="menu_ir_access_act" parent="base.menu_objects_security" name="Export/Import Access"/>
+
+<!--Menus-->
+    <menuitem sequence="2" id="menu_menus_security" parent="base.menu_security" name="Menus"/>
+        <menuitem sequence="1" action="grant_menu_access" id="menu_grant_menu_access" parent="base.menu_menus_security" name="Define Menus"/>
+
+<!--Roles-->
+    <record id="view_roles_form" model="ir.ui.view">
+        <field name="name">res.roles.form</field>
+        <field name="model">res.roles</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Roles">
+                <notebook>
+                    <page string="Role">
+                        <field colspan="4" name="name" select="1"/>
+                        <field colspan="4" name="parent_id"/>
+                    </page>
+                    <page string="Users">
+                        <field colspan="4" name="users"/>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+    
+    <record id="view_roles_tree" model="ir.ui.view">
+        <field name="name">res.roles.tree</field>
+        <field name="model">res.roles</field>
+        <field name="type">tree</field>
+        <field name="field_parent">child_id</field>
+        <field name="arch" type="xml">
+            <tree string="Roles">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record id="action_res_roles" model="ir.actions.act_window">
+        <field name="name">Roles Structure</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.roles</field>
+        <field name="view_type">tree</field>
+        <field eval="[('parent_id','=',False)]" name="domain"/>
+    </record>
+    
+    <record id="action_res_roles_form" model="ir.actions.act_window">
+        <field name="name">Roles</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.roles</field>
+        <field name="view_type">form</field>
+    </record>
+
+    <menuitem sequence="3" id="menu_action_res_roles" parent="base.menu_security" name="Roles"/>
+        <menuitem sequence="1" action="action_res_roles_form" id="menu_action_res_roles_form" parent="menu_action_res_roles" name="Define Roles"/>
+
 <!-- Rules -->
     <record id="view_rule_group_form" model="ir.ui.view">
         <field name="name">Record rules</field>
         <field name="model">ir.rule.group</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Record rules">
-                <field name="model_id"/>
-                <field name="global"/>
-                <field colspan="4" name="name"/>
-                <group col="6" colspan="4" expand="1">
-                    <field colspan="6" name="rules" nolabel="1"/>
-                    <label align="0.0" colspan="6" string="The rule is satisfied if all test are True (AND)"/>
-                    <label align="0.0" colspan="6" string="Multiple rules on same objects are joined using operator OR"/>
-                </group>
+            <form string="Rules">
+                <notebook>
+                    <page string="Rule">
+                        <field name="model_id"/>
+                        <field name="global"/>
+                        <field colspan="4" name="name"/>
+                        <group col="6" colspan="4" expand="1">
+                            <field colspan="6" name="rules" nolabel="1"/>
+                            <label align="0.0" colspan="6" string="The rule is satisfied if all test are True (AND)"/>
+                            <label align="0.0" colspan="6" string="Multiple rules on same objects are joined using operator OR"/>
+                        </group>
+                    </page>
+                    <page string="Groups">
+                        <field colspan="4" name="groups"/>
+                    </page>
+                    <page string="Users">
+                        <field colspan="4" name="users"/>
+                    </page>
+                </notebook>
             </form>
         </field>
     </record>
+    
     <record id="view_rule_group_tree" model="ir.ui.view">
         <field name="name">Record rules</field>
         <field name="model">ir.rule.group</field>
@@ -990,64 +1083,16 @@ Cron Jobs
             </tree>
         </field>
     </record>
+    
     <record id="action_rule" model="ir.actions.act_window">
         <field name="name">Record Rules</field>
         <field name="res_model">ir.rule.group</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="view_rule_group_tree"/>
     </record>
-    <menuitem action="action_rule" id="menu_action_rule" parent="base.menu_security"/>
     
-    <record id="property_rule_group" model="ir.rule.group">
-        <field name="name">Property multi-company</field>
-        <field model="ir.model" name="model_id" search="[('model', '=', 'ir.property')]"/>
-        <field eval="True" name="global"/>
-    </record>
-    <record id="property_rule_group2" model="ir.rule.group">
-        <field name="name">Property multi-company 2</field>
-        <field model="ir.model" name="model_id" search="[('model', '=', 'ir.property')]"/>
-        <field eval="True" name="global"/>
-    </record>
-    <record id="property_rule" model="ir.rule">
-        <field model="ir.model.fields" name="field_id" search="[('model', '=', 'ir.property'), ('name', '=', 'company_id')]"/>
-        <field name="operator">child_of</field>
-        <field name="operand">user.company_id.id</field>
-        <field name="rule_group" ref="property_rule_group"/>
-    </record>
-    
-    <record id="property_rule_bis" model="ir.rule">
-        <field model="ir.model.fields" name="field_id" search="[('model', '=', 'ir.property'), ('name', '=', 'company_id')]"/>
-        <field name="operator">=</field>
-        <field name="operand">False</field>
-        <field name="rule_group" ref="property_rule_group2"/>
-    </record>
-
-<!--
-================
- Security
-================
--->
-    <record id="view_model_tree" model="ir.ui.view">
-        <field name="name">Objects Security Tree</field>
-        <field name="model">ir.model</field>
-        <field name="type">tree</field>
-    </record>
-    
-    <record model="ir.actions.act_window" id="action_model_view_security">
-        <field name="name">Objects Security</field>
-        <field name="res_model">ir.model</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">form,tree</field>
-        <field name="view_id" ref="view_model_tree"/>
-        <field name="context">{'advanced':True}</field>
-    </record>
-    
-    <menuitem id="menu_objects_security" parent="base.menu_security" name="Objects"/>
-        <menuitem sequence="1" action="action_model_view_security" id="menu_objects_security_view" parent="base.menu_objects_security"/>
-        <menuitem sequence="2" action="ir_access_act" id="menu_ir_access_act" parent="base.menu_objects_security" name="Access Rules to export/import"/>
-        
-    <menuitem id="menu_menus_security" parent="base.menu_security" name="Menus"/>
-        <menuitem sequence="1" action="grant_menu_access" id="menu_grant_menu_access" parent="base.menu_menus_security"/>
+    <menuitem sequence="4" id="menu_rules_security" parent="base.menu_security" name="Rules"/>
+        <menuitem action="action_rule" id="menu_action_rule" parent="base.menu_rules_security" name="Define Rules"/>
 
     </data>
 </terp>

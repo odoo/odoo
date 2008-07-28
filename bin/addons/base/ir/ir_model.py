@@ -51,6 +51,7 @@ class ir_model(osv.osv):
         'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True),
         'type': fields.selection([('system','System'),('base','Base'),('addons','Addons')],'Type'),
         'state': fields.selection([('manual','Custom Object'),('base','Base Field')],'Manualy Created',readonly=1),
+        'access': fields.one2many('ir.model.access', 'model_id', 'Access'),
     }
     _defaults = {
         'model': lambda *a: 'x_',
@@ -83,7 +84,6 @@ class ir_model(osv.osv):
             x_custom_model._rec_name = x_custom_model._columns.keys()[0]
     
     def unlink(self, cr, user, ids, context=None):
-        #TODO Advanced
         for model in self.browse(cr, user, ids, context):
             if model.state <> 'manual':
                 raise except_orm(_('Error'), _("You can not remove the model '%s' !") %(model.name,))
@@ -103,27 +103,28 @@ class ir_model(osv.osv):
             return res
     
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
-        result = super(osv.osv, self).read(cr, user, ids, fields, context, load)
+        result = super(osv.osv, self).read(cr, user, ids, fields, context, load)        
         if context and 'advanced' in context:
             for res in result:
                 rules = self.pool.get('ir.model.access').search(cr, user, [('model_id', '=', res['id'])])
                 rules_br = self.pool.get('ir.model.access').browse(cr, user, rules)
-                for rule in rules_br:
+                # Take into account the last found rule
+                rules_br_len = len(rules_br) - 1
+                if rules_br_len>-1:
                     perm_list = []
-                    if rule.perm_read:
+                    if rules_br[rules_br_len].perm_read:
                         perm_list.append('r')
-                    if rule.perm_write:
+                    if rules_br[rules_br_len].perm_write:
                         perm_list.append('w')
-                    if rule.perm_create:
+                    if rules_br[rules_br_len].perm_create:
                         perm_list.append('c')
-                    if rule.perm_unlink:
+                    if rules_br[rules_br_len].perm_unlink:
                         perm_list.append('u')
                     perms = ",".join(perm_list)
-                    res['group_%i'%rule.group_id.id] = perms
+                    res['group_%i'%rules_br[rules_br_len].group_id.id] = perms
         return result
 
     def write(self, cr, user, ids, vals, context=None):
-        vals_new = vals.copy()
         if context and 'advanced' in context:
             perms_rel = ['create','read','unlink','write']
             perms_all = ['c','r','u','w']
@@ -142,7 +143,7 @@ class ir_model(osv.osv):
                         if perm not in perms_all:
                             model_name = self.pool.get('ir.model').browse(cr, user, [model_id])[0].model
                             group_name = self.pool.get('res.groups').browse(cr, user, [group_id])[0].name
-                            raise osv.except_osv('Error !', _('There is an invalid rule in "%s" for "Group %s". Valid rules are:\r\tc=create\r\tr=read\r\tu=unlink\r\tw=write\rYou must separate them by a coma, example: r,w')%(model_name, group_name))
+                            raise osv.except_osv('Error !', _('There is an invalid rule in "%s" for "Group %s". Valid rules are:\r\tc=create\r\tr=read\r\tu=unlink (delete)\r\tw=write\rYou must separate them by a coma, example: r,w')%(model_name, group_name))
                     
                     #Assign rights
                     req = {}
@@ -153,9 +154,10 @@ class ir_model(osv.osv):
                     sql = ''
                     rules = self.pool.get('ir.model.access').search(cr, user, [('model_id', '=', model_id),('group_id', '=', group_id)])
                     if rules:
+                        rule_len = len(rules) - 1
                         for k in req:
                             sql += '%s=%s,'%(k,req[k])
-                        cr.execute("update ir_model_access set %s where id=%i"%(sql[:-1], rules[0]))
+                        cr.execute("update ir_model_access set %s where id=%i"%(sql[:-1], rules[rule_len]))
                     else:
                         model_name = self.pool.get('ir.model').browse(cr, user, [model_id])[0].name
                         group_name = self.pool.get('res.groups').browse(cr, user, [group_id])[0].name
@@ -164,8 +166,9 @@ class ir_model(osv.osv):
                             (name, model_id, group_id, perm_create, perm_read, perm_unlink, perm_write) \
                             values (%s, %i, %i, %s, %s, %s, %s)',
                             (rule_name, model_id, group_id,req['perm_create'], req['perm_read'], req['perm_unlink'], req['perm_write'],))
-                    vals_new.pop(val)
-        return super(osv.osv, self).write(cr, user, ids, vals_new, context)
+            return 1
+        else:
+            return super(osv.osv, self).write(cr, user, ids, vals, context)
     
     def fields_get(self, cr, user, fields=None, context=None, read_access=True):
         result = super(osv.osv, self).fields_get(cr, user, fields, context)
@@ -517,8 +520,8 @@ ir_model_data()
 class ir_model_config(osv.osv):
     _name = 'ir.model.config'
     _columns = {
-        'password': fields.char('Password', size=64, invisible=True),
-        'password_check': fields.char('  confirmation', size=64, invisible=True),
+        'password': fields.char('Password', size=64),
+        'password_check': fields.char('confirmation', size=64),
     }
 
     def action_cancel(self, cr, uid, ids, context={}):
@@ -534,15 +537,16 @@ class ir_model_config(osv.osv):
         res = self.read(cr,uid,ids)[0]
         root = self.pool.get('res.users').browse(cr, uid, [1])[0]
         self.unlink(cr, uid, [res['id']])
-        if res['password']==res['password_check']:
-            self.pool.get('res.users').write(cr, uid, [root.id], {'password':res['password']})
-            return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.module.module.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-            }
-        else:
+        if res['password']!=res['password_check']:
             raise except_orm(_('Error'), _("Password mismatch !"))
+        elif not res['password']:
+            raise except_orm(_('Error'), _("Password empty !"))
+        self.pool.get('res.users').write(cr, uid, [root.id], {'password':res['password']})
+        return {
+            'view_type': 'form',
+            "view_mode": 'form',
+            'res_model': 'ir.module.module.configuration.wizard',
+            'type': 'ir.actions.act_window',
+            'target':'new',
+        }
 ir_model_config()

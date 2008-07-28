@@ -70,7 +70,8 @@ class roles(osv.osv):
     _columns = {
         'name': fields.char('Role Name', size=64, required=True),
         'parent_id': fields.many2one('res.roles', 'Parent', select=True),
-        'child_id': fields.one2many('res.roles', 'parent_id', 'Childs')
+        'child_id': fields.one2many('res.roles', 'parent_id', 'Childs'),
+        'users': fields.many2many('res.users', 'res_roles_users_rel', 'rid', 'uid', 'Users'),
     }
     _defaults = {
     }
@@ -107,6 +108,7 @@ class users(osv.osv):
         'menu_id': fields.many2one('ir.actions.actions', 'Menu Action'),
         'groups_id': fields.many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', 'Groups'),
         'roles_id': fields.many2many('res.roles', 'res_roles_users_rel', 'uid', 'rid', 'Roles'),
+        'rules_id': fields.many2many('ir.rule.group', 'user_rule_group_rel', 'rule_group_id', 'user_id', 'Rules'),
         'company_id': fields.many2one('res.company', 'Company'),
         'context_lang': fields.selection(_lang_get, 'Language', required=True),
         'context_tz': fields.selection(_tz_get,  'Timezone', size=64)
@@ -233,7 +235,7 @@ class users(osv.osv):
         }
 users()
 
-class groups2(osv.osv):
+class groups2(osv.osv): ##FIXME: Is there a reason to inherit this object ?
     _inherit = 'res.groups'
     _columns = {
         'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users'),

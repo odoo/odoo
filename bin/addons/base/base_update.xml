@@ -41,25 +41,34 @@
                     <notebook>
                         <page string="Group">
                             <field colspan="4" name="name" select="1"/>
-                            <field colspan="4" name="users"/>
                             <field colspan="4" name="comment"/>
                         </page>
-                        <page string="Menus">
-                            <field colspan="4" name="menu_access"/>
+                        <page string="Users">
+                            <field colspan="4" name="users"/>
                         </page>
-                        <page string="Security">
-                            <field colspan="4" name="model_access">
-                                <form string="Access Controls">
-                                    <field colspan="4" name="name" select="1"/>
-                                    <field name="model_id" select="1"/>
-                                    <newline/>
+                        <page string="Access">
+                            <field colspan="4" name="model_access" select="1">
+                                <tree string="Access Rules" editable="top">
+                                    <field name="model_id"/>
                                     <field name="perm_read"/>
                                     <field name="perm_write"/>
                                     <field name="perm_create"/>
                                     <field name="perm_unlink"/>
-                                </form>
+                                    <field name="name"/>
+                                </tree>
                             </field>
-                            <field colspan="4" name="rule_groups"/>
+                        </page>
+                        <page string="Menus">
+                            <field colspan="4" name="menu_access"/>
+                        </page>
+                        <page string="Rules">
+                            <field colspan="4" name="rule_groups">
+                                <tree string="Rules">
+                                    <field name="name"/>
+                                    <field name="model_id"/>
+                                    <field name="global"/>
+                                </tree>
+                            </field>
                         </page>
                     </notebook>
                 </form>
@@ -108,9 +117,14 @@
                             <field name="context_tz"/>
                             <field colspan="4" name="signature"/>
                         </page>
-                        <page string="Security">
-                            <field colspan="4" name="groups_id"/>
-                            <field colspan="4" name="roles_id"/>
+                        <page string="Groups">
+                            <field colspan="4" name="groups_id" select="1"/>
+                        </page>
+                        <page string="Roles">
+                            <field colspan="4" name="roles_id" select="1"/>
+                        </page>
+                        <page string="Rules">
+                            <field colspan="4" name="rules_id" select="1"/>
                         </page>
                     </notebook>
                 </form>
