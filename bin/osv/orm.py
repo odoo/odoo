@@ -2194,38 +2194,33 @@ class orm(orm_template):
         i = 0
         tables=['"'+self._table+'"']
         joins=[]
-        while i<len(args):
+        for i, argument in zip(range(len(args)), args):
             table=self
-            assert args[i][1] in ('like','!=','ilike','=like', 'not like', 'not ilike', 'not in','inselect','child_of','in','=','<>','<','>','>=','<='), _('Error ! Bad clause operand "%s".') % (args[i][1],)
-            if args[i][1] == 'inselect':
+            assert argument[1] in ('like','!=','ilike','=like', 'not like', 'not ilike', 'not in','inselect','child_of','in','=','<>','<','>','>=','<='), _('Error ! Bad clause operand "%s".') % (argument[1],)
+            if argument[1] == 'inselect':
                 raise except_orm(_('ValidateError'),
                         _("The clause 'inselect' can not be used outside the orm!"))
-            if args[i][0] in self._inherit_fields:
-                table=self.pool.get(self._inherit_fields[args[i][0]][0])
+            if argument[0] in self._inherit_fields:
+                table=self.pool.get(self._inherit_fields[argument[0]][0])
                 if ('"'+table._table+'"' not in tables):
                     tables.append('"'+table._table+'"')
                     joins.append(('id', 'join', '%s.%s' % (self._table, self._inherits[table._name]), table))
-            fargs = args[i][0].split('.', 1)
+            fargs = argument[0].split('.', 1)
             field = table._columns.get(fargs[0],False)
             if not field:
-                if args[i][0] == 'id' and args[i][1] == 'child_of':
-                    ids2 = args[i][2]
+                if argument[0] == 'id' and argument[1] == 'child_of':
+                    ids2 = argument[2]
                     def _rec_get(ids, table, parent):
                         if not ids:
                             return []
                         ids2 = table.search(cr, user, [(parent, 'in', ids)], context=context)
                         return ids + _rec_get(ids2, table, parent)
-                    args[i] = (args[i][0], 'in', ids2 + _rec_get(ids2, table, table._parent_name), table)
-                i+=1
+                    args[i] = (argument[0], 'in', ids2 + _rec_get(ids2, table, table._parent_name), table)
                 continue
             if len(fargs) > 1:
                 if field._type == 'many2one':
-                    args[i] = (fargs[0], 'in', self.pool.get(field._obj).search(cr, user, [(fargs[1], args[i][1], args[i][2])], context=context))
-                    i+=1
-                    continue
-                else:
-                    i+=1
-                    continue
+                    args[i] = (fargs[0], 'in', self.pool.get(field._obj).search(cr, user, [(fargs[1], argument[1], argument[2])], context=context))
+                continue
             if field._properties:
                 arg = [args.pop(i)]
                 j = i
@@ -2238,15 +2233,14 @@ class orm(orm_template):
                     args.extend(field.search(cr, user, self, arg[0][0], arg))
                 if field.store:
                     args.extend(arg)
-                i+=1
             elif field._type=='one2many':
                 field_obj = self.pool.get(field._obj)
 
-                if isinstance(args[i][2], basestring):
+                if isinstance(argument[2], basestring):
                     # get the ids of the records of the "distant" resource
-                    ids2 = [x[0] for x in field_obj.name_search(cr, user, args[i][2], [], args[i][1])]
+                    ids2 = [x[0] for x in field_obj.name_search(cr, user, argument[2], [], argument[1])]
                 else:
-                    ids2 = args[i][2]
+                    ids2 = argument[2]
                 if not ids2:
                     args[i] = ('id','=','0')
                 else:
@@ -2260,15 +2254,14 @@ class orm(orm_template):
                             ids3.extend([x[0] for x in cr.fetchall()])
 
                     args[i] = ('id', 'in', ids3)
-                i+=1
 
             elif field._type=='many2many':
                 #FIXME
-                if args[i][1]=='child_of':
-                    if isinstance(args[i][2], basestring):
-                        ids2 = [x[0] for x in self.pool.get(field._obj).name_search(cr, user, args[i][2], [], 'like')]
+                if argument[1]=='child_of':
+                    if isinstance(argument[2], basestring):
+                        ids2 = [x[0] for x in self.pool.get(field._obj).name_search(cr, user, argument[2], [], 'like')]
                     else:
-                        ids2 = args[i][2]
+                        ids2 = argument[2]
                     def _rec_get(ids, table, parent):
                         if not ids:
                             return []
@@ -2283,59 +2276,56 @@ class orm(orm_template):
                         return ids
                     args[i] = ('id','in',_rec_convert(ids2+_rec_get(ids2, self.pool.get(field._obj), table._parent_name)))
                 else:
-                    if isinstance(args[i][2], basestring):
-                        res_ids = [x[0] for x in self.pool.get(field._obj).name_search(cr, user, args[i][2], [], args[i][1])]
+                    if isinstance(argument[2], basestring):
+                        res_ids = [x[0] for x in self.pool.get(field._obj).name_search(cr, user, argument[2], [], argument[1])]
                     else:
-                        res_ids = args[i][2]
+                        res_ids = argument[2]
                     if not len(res_ids):
                         args[i] = ('id', 'in', [0])
                     else:
                         cr.execute('select "'+field._id1+'" from "'+field._rel+'" where "'+field._id2+'" in ('+','.join(map(str, res_ids))+')')
                         args[i] = ('id', 'in', map(lambda x: x[0], cr.fetchall()))
-                i+=1
 
             elif field._type=='many2one':
-                if args[i][1]=='child_of':
-                    if isinstance(args[i][2], basestring):
-                        ids2 = [x[0] for x in self.pool.get(field._obj).name_search(cr, user, args[i][2], [], 'like')]
+                if argument[1]=='child_of':
+                    if isinstance(argument[2], basestring):
+                        ids2 = [x[0] for x in self.pool.get(field._obj).name_search(cr, user, argument[2], [], 'like')]
                     else:
-                        ids2 = args[i][2]
+                        ids2 = argument[2]
                     def _rec_get(ids, table, parent):
                         if not ids:
                             return []
                         ids2 = table.search(cr, user, [(parent, 'in', ids)], context=context)
                         return ids + _rec_get(ids2, table, parent)
                     if field._obj <> table._name:
-                        args[i] = (args[i][0],'in',ids2+_rec_get(ids2, self.pool.get(field._obj), table._parent_name), table)
+                        args[i] = (argument[0],'in',ids2+_rec_get(ids2, self.pool.get(field._obj), table._parent_name), table)
                     else:
-                        args[i] = ('id','in',ids2+_rec_get(ids2, table, args[i][0]), table)
+                        args[i] = ('id','in',ids2+_rec_get(ids2, table, argument[0]), table)
                 else:
-                    if isinstance(args[i][2], basestring):
-                        res_ids = self.pool.get(field._obj).name_search(cr, user, args[i][2], [], args[i][1])
-                        args[i] = (args[i][0],'in',map(lambda x: x[0], res_ids), table)
+                    if isinstance(argument[2], basestring):
+                        res_ids = self.pool.get(field._obj).name_search(cr, user, argument[2], [], argument[1])
+                        args[i] = (argument[0],'in',map(lambda x: x[0], res_ids), table)
                     else:
                         args[i] += (table,)
-                i+=1
             else:
                 if field.translate:
-                    if args[i][1] in ('like', 'ilike', 'not like', 'not ilike'):
-                        args[i] = (args[i][0], args[i][1], '%%%s%%' % args[i][2])
+                    if argument[1] in ('like', 'ilike', 'not like', 'not ilike'):
+                        args[i] = (argument[0], argument[1], '%%%s%%' % argument[2])
                     query1 = '(SELECT res_id FROM ir_translation ' \
                             'WHERE name = %s AND lang = %s ' \
                                 'AND type = %s ' \
-                                'AND VALUE ' + args[i][1] + ' %s)'
-                    query2 = [table._name + ',' + args[i][0],
+                                'AND VALUE ' + argument[1] + ' %s)'
+                    query2 = [table._name + ',' + argument[0],
                             context.get('lang', False) or 'en_US',
                             'model',
-                            args[i][2]]
+                            argument[2]]
                     query1 += ' UNION '
                     query1 += '(SELECT id FROM "' + table._table + '" ' \
-                            'WHERE "' + args[i][0] + '" ' + args[i][1] + ' %s)'
-                    query2 += [args[i][2]]
+                            'WHERE "' + argument[0] + '" ' + argument[1] + ' %s)'
+                    query2 += [argument[2]]
                     args[i] = ('id', 'inselect', (query1, query2), table)
                 else:
                     args[i] += (table,)
-                i+=1
         args.extend(joins)
 
         qu1, qu2 = [], []
