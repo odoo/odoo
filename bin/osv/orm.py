@@ -1386,14 +1386,16 @@ class orm(orm_template):
                                 # columns with the name 'type' cannot be changed for an unknown reason?!
                                 if k != 'type':
                                     if f_pg_size > f.size:
-                                        logger.notifyChannel('init', netsvc.LOG_WARNING, "column '%s' in table '%s' has changed size (DB = %d, def = %d), strings will be truncated !" % (k, self._table, f_pg_size, f.size))
-#TODO: check si y a des donnees qui vont poser probleme (select char_length(...))
-#TODO: issue a log message even if f_pg_size < f.size
-                                    cr.execute("ALTER TABLE \"%s\" RENAME COLUMN \"%s\" TO temp_change_size" % (self._table,k))
-                                    cr.execute("ALTER TABLE \"%s\" ADD COLUMN \"%s\" VARCHAR(%d)" % (self._table,k,f.size))
-                                    cr.execute("UPDATE \"%s\" SET \"%s\"=temp_change_size::VARCHAR(%d)" % (self._table,k,f.size))
-                                    cr.execute("ALTER TABLE \"%s\" DROP COLUMN temp_change_size" % (self._table,))
-                                    cr.commit()
+                                        logger.notifyChannel('init', netsvc.LOG_WARNING, "column '%s' in table '%s' has changed size (DB = %d, def = %d), DB size will be kept !" % (k, self._table, f_pg_size, f.size))
+                                    # If actual DB size is < than new
+                                    # We update varchar size, otherwise, we keep DB size
+                                    # to avoid truncated string...
+                                    if f_pg_size < f.size:
+                                        cr.execute("ALTER TABLE \"%s\" RENAME COLUMN \"%s\" TO temp_change_size" % (self._table,k))
+                                        cr.execute("ALTER TABLE \"%s\" ADD COLUMN \"%s\" VARCHAR(%d)" % (self._table,k,f.size))
+                                        cr.execute("UPDATE \"%s\" SET \"%s\"=temp_change_size::VARCHAR(%d)" % (self._table,k,f.size))
+                                        cr.execute("ALTER TABLE \"%s\" DROP COLUMN temp_change_size" % (self._table,))
+                                        cr.commit()
                             # if the field is required and hasn't got a NOT NULL constraint
                             if f.required and f_pg_notnull == 0:
                                 # set the field to the default value if any
