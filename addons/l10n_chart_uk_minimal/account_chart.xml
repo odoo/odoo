@@ -1,387 +1,387 @@
 <?xml version="1.0" encoding="utf-8"?>
 <terp>
-    
-    
-    
+
+
+
     <data noupdate="1">
-        
-        
-        
+
+
+
         <!-- Top level of main chart -->
-        
-        
-        
+
+
+
         <record id="chart0" model="account.account">
-            
+
             <field name="code">0</field>
-            
+
             <field name="name">Account Chart UK</field>
-            
+
             <field name="close_method">none</field>
-            
-            <field eval="[]" name="parent_id"/>
-            
+
+            <field eval="0" name="parent_id"/>
+
             <field name="type">view</field>
-            
+
             <field eval="1" name="sign"/>
         </record>
-        
-        
-        
+
+
+
         <!-- Balance Sheet -->
-        
-        
-        
+
+
+
         <record id="bal" model="account.account">
-            
+
             <field name="name">Balance Sheet</field>
-            
+
             <field name="close_method">none</field>
-            
-            <field eval="[(6, 0, [ref('chart0')])]" name="parent_id"/>
-            
+
+            <field ref="chart0" name="parent_id"/>
+
             <field name="type">view</field>
-            
+
             <field eval="1" name="sign"/>
         </record>
-        
-        
-        
+
+
+
         <record id="fas" model="account.account">
-            
+
             <field name="name">Fixed Assets</field>
-            
+
             <field name="close_method">none</field>
-            
-            <field eval="[(6, 0, [ref('bal')])]" name="parent_id"/>
-            
+
+            <field ref="bal" name="parent_id"/>
+
             <field name="type">view</field>
-            
+
             <field eval="1" name="sign"/>
         </record>
-        
-        
-        
+
+
+
         <record id="xfa" model="account.account">
-            
+
             <field name="name">Fixed Asset Account</field>
-            
+
             <field name="close_method">balance</field>
-            
-            <field eval="[(6, 0, [ref('fas')])]" name="parent_id"/>
-            
+
+            <field ref="fas" name="parent_id"/>
+
             <field name="type">asset</field>
-            
+
             <field eval="1" name="sign"/>
         </record>
-        
-        
-        
+
+
+
         <record id="nca" model="account.account">
-            
+
             <field name="name">Net Current Assets</field>
-            
+
             <field name="close_method">none</field>
-            
-            <field eval="[(6, 0, [ref('bal')])]" name="parent_id"/>
-            
+
+            <field ref="bal" name="parent_id"/>
+
             <field name="type">view</field>
-            
+
             <field eval="1" name="sign"/>
         </record>
-        
-        
-        
+
+
+
         <record id="cas" model="account.account">
-            
+
             <field name="name">Current Assets</field>
-            
+
             <field name="close_method">none</field>
-            
-            <field eval="[(6, 0, [ref('nca')])]" name="parent_id"/>
-            
+
+            <field ref="nca" name="parent_id"/>
+
             <field name="type">view</field>
-            
+
             <field eval="1" name="sign"/>
         </record>
-        
-        
-        
+
+
+
         <record id="stk" model="account.account">
-            
+
             <field name="code"/>
-            
+
             <field name="name">Purchased Stocks</field>
-            
+
             <field name="close_method">unreconciled</field>
-            
-            <field eval="[(6, 0, [ref('cas')])]" name="parent_id"/>
-            
+
+            <field ref="cas" name="parent_id"/>
+
             <field name="type">asset</field>
-            
+
             <field eval="1" name="sign"/>
         </record>
-        
-        
-        
+
+
+
         <record id="a_recv" model="account.account">
-            
+
             <field name="code"/>
-            
+
             <field name="name">Debtors</field>
-            
+
             <field name="close_method">balance</field>
-            
-            <field eval="[(6, 0, [ref('cas')])]" name="parent_id"/>
-            
+
+            <field ref="cas" name="parent_id"/>
+
             <field name="type">receivable</field>
-            
+
             <field eval="1" name="sign"/>
             <field eval="True" name="reconcile"/>
-            
+
         </record>
-        
+
         <record id="account.property_account_receivable" model="ir.property">
-            
+
             <field eval="'account.account,'+str(a_recv)" name="value"/>
-            
+
         </record>
-        
-        
-        
+
+
+
         <record id="ova" model="account.account">
-            
+
             <field name="name">Output VAT</field>
-            
+
             <field name="close_method">balance</field>
-            
-            <field eval="[(6, 0, [ref('cas')])]" name="parent_id"/>
-            
+
+            <field ref="cas" name="parent_id"/>
+
             <field name="type">tax</field>
-            
+
             <field eval="1" name="sign"/>
         </record>
-        
-        
-        
+
+
+
         <record id="bnk" model="account.account">
-            
+
             <field name="name">Bank Current Account</field>
-            
+
             <field name="close_method">balance</field>
-            
-            <field eval="[(6, 0, [ref('cas')])]" name="parent_id"/>
-            
+
+            <field ref="cas" name="parent_id"/>
+
             <field name="type">cash</field>
-            
+
             <field eval="1" name="sign"/>
         </record>
-        
-        
-        
+
+
+
         <record id="cash" model="account.account">
-            
+
             <field name="code"/>
-            
+
             <field name="name">Cash</field>
-            
+
             <field name="close_method">balance</field>
-            
-            <field eval="[(6, 0, [ref('cas')])]" name="parent_id"/>
-            
+
+            <field ref="cas" name="parent_id"/>
+
             <field name="type">cash</field>
-            
+
             <field eval="1" name="sign"/>
         </record>
-        
-        
-        
+
+
+
         <record id="cli" model="account.account">
-            
+
             <field name="name">Current Liabilities</field>
-            
+
             <field name="close_method">none</field>
-            
-            <field eval="[(6, 0, [ref('nca')])]" name="parent_id"/>
-            
+
+            <field ref="nca" name="parent_id"/>
+
             <field name="type">view</field>
-            
+
             <field eval="1" name="sign"/>
         </record>
-        
-        
-        
+
+
+
         <record id="a_pay" model="account.account">
-            
+
             <field name="code"/>
-            
+
             <field name="name">Creditors</field>
-            
+
             <field name="close_method">balance</field>
-            
-            <field eval="[(6, 0, [ref('cli')])]" name="parent_id"/>
-            
+
+            <field ref="cli" name="parent_id"/>
+
             <field name="type">payable</field>
-            
+
             <field eval="1" name="sign"/>
             <field eval="True" name="reconcile"/>
-            
+
         </record>
-        
+
         <record id="account.property_account_payable" model="ir.property">
-            
+
             <field eval="'account.account,'+str(a_pay)" name="value"/>
-            
+
         </record>
-        
-        
-        
+
+
+
         <record id="iva" model="account.account">
-            
+
             <field name="name">Input VAT</field>
-            
+
             <field name="close_method">balance</field>
-            
-            <field eval="[(6, 0, [ref('cli')])]" name="parent_id"/>
-            
+
+            <field ref="cli" name="parent_id"/>
+
             <field name="type">tax</field>
-            
+
             <field eval="1" name="sign"/>
         </record>
-        
-        
-        
+
+
+
         <!-- Profit and Loss -->
-        
-        
-        
+
+
+
         <record id="gpf" model="account.account">
-            
+
             <field name="name">Profit and Loss</field>
-            
+
             <field name="close_method">none</field>
-            
-            <field eval="[(6, 0, [ref('chart0')])]" name="parent_id"/>
-            
+
+            <field ref="chart0" name="parent_id"/>
+
             <field name="type">view</field>
-            
+
             <field eval="1" name="sign"/>
         </record>
-        
-        
-        
+
+
+
         <record id="rev" model="account.account">
-            
+
             <field name="name">Revenue</field>
-            
+
             <field name="close_method">none</field>
-            
-            <field eval="[(6, 0, [ref('gpf')])]" name="parent_id"/>
-            
+
+            <field ref="gpf" name="parent_id"/>
+
             <field name="type">view</field>
-            
+
             <field eval="1" name="sign"/>
         </record>
-        
-        
-        
+
+
+
         <record id="a_sale" model="account.account">
-            
+
             <field name="code"/>
-            
+
             <field name="name">Product Sales</field>
-            
+
             <field name="close_method">unreconciled</field>
-            
-            <field eval="[(6, 0, [ref('rev')])]" name="parent_id"/>
-            
+
+            <field ref="rev" name="parent_id"/>
+
             <field name="type">income</field>
-            
+
             <field eval="1" name="sign"/>
         </record>
-        
+
         <record id="account.property_account_income_categ" model="ir.property">
-            
+
             <field eval="'account.account,'+str(a_sale)" name="value"/>
-            
+
         </record>
-        
-        
-        
+
+
+
         <record id="cos" model="account.account">
-            
+
             <field name="name">Cost of Sales</field>
-            
+
             <field name="close_method">none</field>
-            
-            <field eval="[(6, 0, [ref('gpf')])]" name="parent_id"/>
-            
+
+            <field ref="gpf" name="parent_id"/>
+
             <field name="type">view</field>
-            
+
             <field eval="1" name="sign"/>
         </record>
-        
-        
-        
+
+
+
         <record id="cog" model="account.account">
-            
+
             <field name="code"/>
-            
+
             <field name="name">Cost of Goods Sold</field>
-            
+
             <field name="close_method">unreconciled</field>
-            
-            <field eval="[(6, 0, [ref('cos')])]" name="parent_id"/>
-            
+
+            <field ref="cos" name="parent_id"/>
+
             <field name="type">expense</field>
-            
+
             <field eval="1" name="sign"/>
         </record>
-        
-        
-        
+
+
+
         <record id="ovr" model="account.account">
-            
+
             <field name="name">Overheads</field>
-            
+
             <field name="close_method">none</field>
-            
-            <field eval="[(6, 0, [ref('gpf')])]" name="parent_id"/>
-            
+
+            <field ref="gpf" name="parent_id"/>
+
             <field name="type">view</field>
-            
+
             <field eval="1" name="sign"/>
         </record>
-        
-        
-        
+
+
+
         <record id="a_expense" model="account.account">
-            
+
             <field name="code"/>
-            
+
             <field name="name">Expenses</field>
-            
+
             <field name="close_method">unreconciled</field>
-            
-            <field eval="[(6, 0, [ref('ovr')])]" name="parent_id"/>
-            
+
+            <field ref="ovr" name="parent_id"/>
+
             <field name="type">expense</field>
-            
+
             <field eval="1" name="sign"/>
         </record>
-        
+
         <record id="account.property_account_expense_categ" model="ir.property">
-            
+
             <field eval="'account.account,'+str(a_expense)" name="value"/>
-            
+
         </record>
-        
-        
-        
-        
-        
+
+
+
+
+
     </data>
-    
-    
-    
+
+
+
 </terp>

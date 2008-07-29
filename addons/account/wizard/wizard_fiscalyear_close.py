@@ -64,7 +64,11 @@ def _data_save(self, cr, uid, data, context):
 
     fy_id = data['form']['fy_id']
     if data['form']['report_new']:
-        period = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy2_id']).period_ids[0]
+        periods_fy2 = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy2_id']).period_ids
+        if not periods_fy2:
+            raise wizard.except_wizard(_('UserError'),
+                        _('There are no periods defined on New Fiscal Year.'))
+        period=periods_fy2[0]
         new_fyear = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy2_id'])
         start_jp = new_fyear.start_journal_period_id
         if not start_jp:

@@ -48,15 +48,27 @@ class account_balance(report_sxw.rml_parse):
     
     def get_fiscalyear(self, form):
         fisc_id = form['fiscalyear']
-        if not(fisc_id):
-            return ''
-        self.cr.execute("select name from account_fiscalyear where id = %d" %(int(fisc_id)))
-        res=self.cr.fetchone()
-        return res and res[0] or ''
+        if fisc_id:
+            self.cr.execute("select name from account_fiscalyear where id = %d" %(int(fisc_id)))
+        else:
+            self.cr.execute("select name from account_fiscalyear where state='draft'")
+        res=self.cr.fetchall()
+        result=''
+        for r in res:
+            result+=r[0]+","
+        return str(result and result[:-1]) or ''
+
 
     def get_periods(self, form):
-        period_ids = ",".join([str(x) for x in form['periods'][0][2] if x])
-        self.cr.execute("select name from account_period where id in (%s)" % (period_ids))
+        periods=form['periods'][0][2]
+        if periods:
+            period_ids = ",".join([str(x) for x in form['periods'][0][2] if x])
+            self.cr.execute("select name from account_period where id in (%s)" % (period_ids))
+        else:
+            if form['fiscalyear']:
+                self.cr.execute("select name from account_period where fiscalyear_id = %d"%(int(form['fiscalyear'])))
+            else:
+                self.cr.execute("select name from account_period")
         res=self.cr.fetchall()
         result=''
         for r in res:

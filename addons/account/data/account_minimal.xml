@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data noupdate="True">
-        
+
         <!--
 	Minimal Tiny ERP Account Chart
 	-->
-        
+
         <record id="minimal_0" model="account.account">
             <field name="code">0</field>
             <field name="name">Minimal account chart</field>
             <field name="close_method">none</field>
-            <field eval="[]" name="parent_id"/>
+            <field eval="0" name="parent_id"/>
             <field name="type">view</field>
         </record>
-        
+
         <record id="a_recv" model="account.account">
             <field name="name">Main Receivable</field>
             <field name="code">40</field>
             <field name="type">receivable</field>
-            <field eval="[(6,0,[ref('minimal_0')])]" name="parent_id"/>
+            <field eval="ref('minimal_0')" name="parent_id"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="True" name="reconcile"/>
         </record>
@@ -26,34 +26,34 @@
             <field name="name">Main Payable</field>
             <field name="code">440</field>
             <field name="type">payable</field>
-            <field eval="[(6,0,[ref('minimal_0')])]" name="parent_id"/>
+            <field eval="ref('minimal_0')" name="parent_id"/>
             <field name="company_id" ref="base.main_company"/>
             <field eval="True" name="reconcile"/>
         </record>
-        
+
         <record id="cash" model="account.account">
             <field name="name">Petty Cash</field>
             <field name="code">57</field>
             <field name="type">cash</field>
-            <field eval="[(6,0,[ref('minimal_0')])]" name="parent_id"/>
+            <field eval="ref('minimal_0')" name="parent_id"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
-        
+
         <record id="a_expense" model="account.account">
             <field name="name">Products Purchase</field>
             <field name="code">600</field>
             <field name="type">expense</field>
-            <field eval="[(6,0,[ref('minimal_0')])]" name="parent_id"/>
+            <field eval="ref('minimal_0')" name="parent_id"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
         <record id="a_sale" model="account.account">
             <field name="name">Products Sales</field>
             <field name="code">701</field>
             <field name="type">income</field>
-            <field eval="[(6,0,[ref('minimal_0')])]" name="parent_id"/>
+            <field eval="ref('minimal_0')" name="parent_id"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
-        
+
         <record forcecreate="True" id="property_account_receivable" model="ir.property">
             <field name="name">property_account_receivable</field>
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_account_receivable')]"/>
@@ -72,6 +72,6 @@
             <field eval="False" name="value"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
-        
+
     </data>
 </terp>

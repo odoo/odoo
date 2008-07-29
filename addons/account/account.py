@@ -246,14 +246,33 @@ class account_account(osv.osv):
             result[rec.id] = (rec.company_id.currency_id.id,rec.company_id.currency_id.code)
         return result
 
+    def _get_child_ids(self, cr, uid, ids, field_name, arg, context={}):
+        result={}
+        for record in self.browse(cr, uid, ids, context):
+            if record.child_parent_ids:
+                result[record.id]=[x.id for x in record.child_parent_ids]
+            else:
+                result[record.id]=[]
+
+            if record.child_consol_ids:
+                for acc in record.child_consol_ids:
+                    result[record.id].append(acc.id)
+
+        return result
+
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
         'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign', required=True, help='Allows to change the displayed amount of the balance to see positive results instead of negative ones in expenses accounts'),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Force all moves for this account to have this secondary currency."),
         'code': fields.char('Code', size=64),
         'type': fields.selection(_code_get, 'Account Type', required=True),
-        'parent_id': fields.many2many('account.account', 'account_account_rel', 'child_id', 'parent_id', 'Parents'),
-        'child_id': fields.many2many('account.account', 'account_account_rel', 'parent_id', 'child_id', 'Children'),
+#        'parent_id': fields.many2many('account.account', 'account_account_rel', 'child_id', 'parent_id', 'Parents'),
+        'parent_id': fields.many2one('account.account','Parent'),
+        'child_parent_ids':fields.one2many('account.account','parent_id','Children'),
+        'child_consol_ids':fields.many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', 'Consolidated Children',domain=[('type','=','root'), ('type', '=', 'consolidation')]),
+        'child_id': fields.function(_get_child_ids, method=True, type='many2many',relation="account.account",string="Children Accounts"),
+
+#        'child_id': fields.many2many('account.account', 'account_account_rel', 'parent_id', 'child_id', 'Children'),
         'balance': fields.function(_balance, digits=(16,2), method=True, string='Balance'),
         'credit': fields.function(_credit, digits=(16,2), method=True, string='Credit'),
         'debit': fields.function(_debit, digits=(16,2), method=True, string='Debit'),
@@ -283,15 +302,37 @@ class account_account(osv.osv):
         'active': lambda *a: True,
     }
 
+#    def _check_recursion(self, cr, uid, ids):
+#        level = 100
+#        while len(ids):
+#            cr.execute('select distinct parent_id from account_account_rel where child_id in ('+','.join(map(str,ids))+')')
+#            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+#            if not level:
+#                return False
+#            level -= 1
+#        return True
+
     def _check_recursion(self, cr, uid, ids):
-        level = 100
-        while len(ids):
-            cr.execute('select distinct parent_id from account_account_rel where child_id in ('+','.join(map(str,ids))+')')
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-            if not level:
+        obj_self=self.browse(cr,uid,ids[0])
+        p_id=obj_self.parent_id and obj_self.parent_id.id
+
+        if (obj_self in obj_self.child_consol_ids) or (p_id and (p_id is obj_self.id)):
+            return False
+
+        while(ids):
+            cr.execute('select distinct child_id from account_account_consol_rel where parent_id in ('+','.join(map(str,ids))+')')
+            child_ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+            c_ids=child_ids
+            if (p_id and (p_id in c_ids)) or (obj_self.id in c_ids):
                 return False
-            level -= 1
+            while len(c_ids):
+                s_ids=self.search(cr,uid,[('parent_id','in',c_ids)])
+                if p_id and (p_id in s_ids):
+                    return False
+                c_ids=s_ids
+            ids=child_ids
         return True
+
 
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id'])
