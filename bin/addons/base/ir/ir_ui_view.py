@@ -73,6 +73,23 @@ class view(osv.osv):
         (_check_xml, 'Invalid XML for View Architecture!', ['arch'])
     ]
     
+    def read(self,cr, uid, ids, fields=None, context={}, load='_classic_read'):
+
+        if type(ids) != type([]):
+            ids = [ids]
+            
+        result = super(view, self).read(cr, uid, ids, fields, context, load)
+        
+        if context.get('read', False) != 'default':
+            for rs in result:
+                if rs.get('model',False) == 'board.board':
+                    cr.execute("select id,arch,ref_id from ir_ui_view where user_id=%d and ref_id=%d", (uid, rs['id']))
+                    oview = cr.dictfetchall()
+                    if oview:
+                        rs['arch'] = oview[0]['arch']
+                
+        return result
+    
     def write(self, cr, uid, ids, vals, context={}):
         exist = self.pool.get('ir.ui.view').browse(cr, uid, ids[0])
         if exist.model == 'board.board':
@@ -87,13 +104,14 @@ class view(osv.osv):
                         default['user_id'] = uid
                         default['ref_id'] = ids[0]
                         nids = super(view, self).copy(cr, uid, ids[0], default, context=context)
-                        result = super(view, self).write(cr, uid, [nids], vals, context)
+                        result = super(view, self).write(cr, uid, [nids], vals, {})
                         return result
                 else:
                     result = super(view, self).write(cr, uid, vids, vals, context)
                     return result
         
     	result = super(view, self).write(cr, uid, ids, vals, context)
+        cr.commit()
     	return result
 view()
 
