@@ -497,7 +497,6 @@ class account_fiscalyear(osv.osv):
 
 	_defaults = {
 		'state': lambda *a: 'draft',
-#		'period_ids':lambda *a:[3],
 	}
 	_order = "date_start"
 	def create_period3(self,cr, uid, ids, context={}):
