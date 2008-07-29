@@ -2191,7 +2191,6 @@ class orm(orm_template):
             if not active_found:
                 args.append(('active', '=', 1))
 
-        i = 0
         tables=['"'+self._table+'"']
         joins=[]
         for i, argument in zip(range(len(args)), args):
