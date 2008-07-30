@@ -211,7 +211,7 @@ class product_pricelist(osv.osv):
                     price = currency_obj.compute(cr, uid,
                             price_type.currency_id.id, res['currency_id'],
                             product_obj.price_get(cr, uid, [prod_id],
-                                price_type.field, context)[prod_id], round=False)
+                                price_type.field)[prod_id], round=False)
 
                 price_limit = price
 
@@ -226,12 +226,12 @@ class product_pricelist(osv.osv):
                 # False means no valid line found ! But we may not raise an
                 # exception here because it breaks the search
                 price = False
-            result[id] = price
+            result[id] = price            
             if context and ('uom' in context):
                 product = product_obj.browse(cr, uid, prod_id)
                 uom = product.uos_id or product.uom_id
                 result[id] = self.pool.get('product.uom')._compute_price(cr,
-                        uid, uom.id, result[id], context['uom'])
+                        uid, uom.id, result[id], context['uom'])                
         return result
 
 product_pricelist()
