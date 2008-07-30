@@ -113,15 +113,6 @@ class users(osv.osv):
         'context_lang': fields.selection(_lang_get, 'Language', required=True),
         'context_tz': fields.selection(_tz_get,  'Timezone', size=64)
     }
-    def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        result = super(users, self).read(cr, uid, ids, fields, context, load)
-        canwrite = self.pool.get('ir.model.access').check(cr, uid, 'res.users', 'write', raise_exception=False)
-        if not canwrite:
-            for r in result:
-                if 'password' in r:
-                    r['password'] = '********'
-        return result
-
     _sql_constraints = [
         ('login_key', 'UNIQUE (login)', 'You can not have two users with the same login !')
     ]
@@ -153,7 +144,7 @@ class users(osv.osv):
         if (ids == [uid]):
             ok = True
             for k in values.keys():
-                if k not in ('password','signature','action_id', 'context_lang', 'context_tz'):
+                if k not in ('password', 'signature', 'action_id', 'context_lang', 'context_tz'):
                     ok=False
             if ok:
                 uid = 1
@@ -163,9 +154,18 @@ class users(osv.osv):
         self.pool.get('ir.rule').domain_get()
         return res
 
+    def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
+        result = super(users, self).read(cr, uid, ids, fields, context, load)
+        canwrite = self.pool.get('ir.model.access').check(cr, uid, 'res.users', 'write', raise_exception=False)
+        if not canwrite:
+            for r in result:
+                if 'password' in r:
+                    r['password'] = '********'
+        return result
+
     def unlink(self, cr, uid, ids):
         if 1 in ids:
-            raise osv.except_osv(_('Can not remove root user!'), _('You can not remove the root user as it is used internally for resources created by Tiny ERP (updates, module installation, ...)'))
+            raise osv.except_osv(_('Can not remove root user!'), _('You can not remove the root user as it is used internally for resources created by Open ERP (updates, module installation, ...)'))
         return super(users, self).unlink(cr, uid, ids)
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):

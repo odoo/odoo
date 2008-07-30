@@ -32,6 +32,8 @@ import ir, re
 import netsvc
 from osv.orm import except_orm
 
+from pprint import pprint
+
 import time
 import tools
 import pooler
@@ -106,28 +108,33 @@ class ir_model(osv.osv):
         result = super(osv.osv, self).read(cr, user, ids, fields, context, load)        
         if context and 'advanced' in context:
             for res in result:
-                rules = self.pool.get('ir.model.access').search(cr, user, [('model_id', '=', res['id'])])
-                rules_br = self.pool.get('ir.model.access').browse(cr, user, rules)
-                # Take into account the last found rule
-                rules_br_len = len(rules_br) - 1
-                if rules_br_len>-1:
-                    perm_list = []
-                    if rules_br[rules_br_len].perm_read:
-                        perm_list.append('r')
-                    if rules_br[rules_br_len].perm_write:
-                        perm_list.append('w')
-                    if rules_br[rules_br_len].perm_create:
-                        perm_list.append('c')
-                    if rules_br[rules_br_len].perm_unlink:
-                        perm_list.append('u')
-                    perms = ",".join(perm_list)
-                    res['group_%i'%rules_br[rules_br_len].group_id.id] = perms
+                if 'access' in res:
+                    rules_br = self.pool.get('ir.model.access').browse(cr, user, res['access'])
+                else:
+                    rules = self.pool.get('ir.model.access').search(cr, user, [('model_id', '=', res['id'])])
+                    rules_br = self.pool.get('ir.model.access').browse(cr, user, rules)
+                if len(rules_br)>0:
+                    for rule in rules_br:
+                        perm_list = []
+                        if rule.perm_read:
+                            perm_list.append('r')
+                        if rule.perm_write:
+                            perm_list.append('w')
+                        if rule.perm_create:
+                            perm_list.append('c')
+                        if rule.perm_unlink:
+                            perm_list.append('u')
+                        perms = ",".join(perm_list)
+                        res['group_%i'%rule.group_id.id] = perms
+            pprint(result)
         return result
 
     def write(self, cr, user, ids, vals, context=None):
+        vals_new = vals.copy()
+        
         if context and 'advanced' in context:
-            perms_rel = ['create','read','unlink','write']
-            perms_all = ['c','r','u','w']
+            perms_rel = ['read','write','create','unlink']
+            perms_all = ['r','w','c','u']
             perms = []
             
             for val in vals:
@@ -158,6 +165,7 @@ class ir_model(osv.osv):
                         for k in req:
                             sql += '%s=%s,'%(k,req[k])
                         cr.execute("update ir_model_access set %s where id=%i"%(sql[:-1], rules[rule_len]))
+                        print "update ir_model_access set %s where id=%i"%(sql[:-1], rules[rule_len])
                     else:
                         model_name = self.pool.get('ir.model').browse(cr, user, [model_id])[0].name
                         group_name = self.pool.get('res.groups').browse(cr, user, [group_id])[0].name
@@ -166,9 +174,9 @@ class ir_model(osv.osv):
                             (name, model_id, group_id, perm_create, perm_read, perm_unlink, perm_write) \
                             values (%s, %i, %i, %s, %s, %s, %s)',
                             (rule_name, model_id, group_id,req['perm_create'], req['perm_read'], req['perm_unlink'], req['perm_write'],))
-            return 1
-        else:
-            return super(osv.osv, self).write(cr, user, ids, vals, context)
+            #return 1
+                    del vals_new[val]
+        return super(osv.osv, self).write(cr, user, ids, vals_new, context)
     
     def fields_get(self, cr, user, fields=None, context=None, read_access=True):
         result = super(osv.osv, self).fields_get(cr, user, fields, context)
@@ -283,11 +291,12 @@ class ir_model_access(osv.osv):
             res = False
         return res
     
-    def check(self, cr, uid, model_name, mode='read',raise_exception=True):       
-        assert mode in ['read','write','create','unlink'], 'Invalid access mode for security'
+    def check(self, cr, uid, model_name, mode='read',raise_exception=True):
         # Users root have all access (Todo: exclude xml-rpc requests)
         if uid==1:
             return True
+        
+        assert mode in ['read','write','create','unlink'], 'Invalid access mode for security'
         
         # We check if a specific rule exists
         cr.execute('SELECT MAX(CASE WHEN perm_'+mode+' THEN 1 else 0 END) '
@@ -324,6 +333,10 @@ class ir_model_access(osv.osv):
         return res
     def unlink(self, cr, uid, *args, **argv):
         res = super(ir_model_access, self).unlink(cr, uid, *args, **argv)
+        self.check()
+        return res
+    def read(self, cr, uid, *args, **argv):
+        res = super(ir_model_access, self).read(cr, uid, *args, **argv)
         self.check()
         return res
 ir_model_access()
