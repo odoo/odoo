@@ -107,6 +107,7 @@ class general_ledger(report_sxw.rml_parse):
         ctx = self.context.copy()
         ctx['fiscalyear'] = form['fiscalyear']
         ctx['periods'] = form['periods'][0][2]
+        ctx['state']=form['state']
         query = self.pool.get('account.move.line')._query_get(self.cr, self.uid, context=ctx)
         self.cr.execute("SELECT l.date, j.code, l.ref, l.name, l.debit, l.credit "\
             "FROM account_move_line l, account_journal j "\
@@ -126,6 +127,7 @@ class general_ledger(report_sxw.rml_parse):
         ctx = self.context.copy()
         ctx['fiscalyear'] = form['fiscalyear']
         ctx['periods'] = form['periods'][0][2]
+        ctx['state']=form['state']
         query = self.pool.get('account.move.line')._query_get(self.cr, self.uid, context=ctx)
         self.cr.execute("SELECT sum(debit) "\
                 "FROM account_move_line l "\
@@ -136,6 +138,7 @@ class general_ledger(report_sxw.rml_parse):
         ctx = self.context.copy()
         ctx['fiscalyear'] = form['fiscalyear']
         ctx['periods'] = form['periods'][0][2]
+        ctx['state']=form['state']
         query = self.pool.get('account.move.line')._query_get(self.cr, self.uid, context=ctx)
         self.cr.execute("SELECT sum(credit) "\
                 "FROM account_move_line l "\
@@ -148,6 +151,7 @@ class general_ledger(report_sxw.rml_parse):
         ctx = self.context.copy()
         ctx['fiscalyear'] = form['fiscalyear']
         ctx['periods'] = form['periods'][0][2]
+        ctx['state']=form['state']
         query = self.pool.get('account.move.line')._query_get(self.cr, self.uid, context=ctx)
         self.cr.execute("SELECT sum(debit) "\
                 "FROM account_move_line l "\
@@ -161,6 +165,7 @@ class general_ledger(report_sxw.rml_parse):
         ctx = self.context.copy()
         ctx['fiscalyear'] = form['fiscalyear']
         ctx['periods'] = form['periods'][0][2]
+        ctx['state']=form['state']
         query = self.pool.get('account.move.line')._query_get(self.cr, self.uid, context=ctx)
         self.cr.execute("SELECT sum(credit) "\
                 "FROM account_move_line l "\

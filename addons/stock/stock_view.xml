@@ -1185,6 +1185,31 @@
             <field eval="'ir.actions.act_window,%d'%act_product_location_open" name="value"/>
             <field eval="True" name="object"/>
         </record>
+
+		<record id="stock_picking_move_wizard_form" model="ir.ui.view">
+            <field name="name">stock.picking.move.wizard.form</field>
+            <field name="model">stock.picking.move.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+				<form string="Move Lines">   
+                     <field name="address_id" invisible="True"/>
+					<field name="picking_id" invisible="True"/>
+                    <field domain="[('picking_id','&lt;&gt;',picking_id),('address_id','=',address_id),('state','in',['confirmed','assigned'])]" name="move_ids" select="1"/><newline/>
+					<group colspan="4">
+						<button special="cancel" string="Cancel"/>
+	                    <button name="action_move" string="Add" type="object"/>						
+					</group>
+                </form>
+            </field>
+        </record>
+
+		<act_window name="Get move lines"
+		context="{'action_id': active_id}"
+		res_model="stock.picking.move.wizard"
+		src_model="stock.picking"
+		view_mode="form"
+		target="new"
+		id="act_stock_picking_move_wizard"/>
         
         
         

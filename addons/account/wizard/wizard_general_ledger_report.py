@@ -35,18 +35,21 @@ dates_form = '''<?xml version="1.0"?>
 <form string="Select period">
     <field name="fiscalyear" colspan="4"/>
     <field name="periods" colspan="4"/>
+    <field name="state" colspan="4"/>
 </form>'''
 
 dates_fields = {
     'fiscalyear': {'string': 'Fiscal year', 'type': 'many2one', 'relation': 'account.fiscalyear',
         'help': 'Keep empty for all open fiscal year'},
-    'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty'}
+    'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty'},
+    'state':{'string':'State','type':'selection','selection': [('draft','Draft'), ('posted','Posted'),('all','All')],}
 }
 
 class wizard_report(wizard.interface):
     def _get_defaults(self, cr, uid, data, context):
         fiscalyear_obj = pooler.get_pool(cr.dbname).get('account.fiscalyear')
         data['form']['fiscalyear'] = fiscalyear_obj.find(cr, uid)
+        data['form']['state']='all'
         return data['form']
 
     states = {

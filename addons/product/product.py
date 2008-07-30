@@ -414,6 +414,16 @@ class product_product(osv.osv):
         'price_margin': fields.float('Price Margin', digits=(16, int(config['price_accuracy']))),
     }
 
+    def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):        
+        if uom_id and uom_po_id:
+            uom_obj=self.pool.get('product.uom')
+            uom=uom_obj.browse(cursor,user,[uom_id])[0]
+            uom_po=uom_obj.browse(cursor,user,[uom_po_id])[0]
+            print uom.category_id.id , uom_po.category_id.id
+            if uom.category_id.id != uom_po.category_id.id:
+                return {'value': {'uom_po_id': uom_id}}
+        return False
+
     def _check_ean_key(self, cr, uid, ids):
         for partner in self.browse(cr, uid, ids):
             if not partner.ean13:

@@ -82,7 +82,7 @@ class partner_balance(report_sxw.rml_parse):
             return []
         account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
         line_query = account_move_line_obj._query_get(self.cr, self.uid, obj='l',
-                context={'fiscalyear': self.datas['form']['fiscalyear']})
+                context={'fiscalyear': self.datas['form']['fiscalyear'],'state':self.datas['form']['state']})
         self.cr.execute(
             "SELECT p.ref, p.name, sum(debit) as debit, sum(credit) as credit, " \
                     "CASE WHEN sum(debit) > sum(credit) " \
@@ -120,7 +120,7 @@ class partner_balance(report_sxw.rml_parse):
         account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
         line_query = account_move_line_obj._query_get(self.cr, self.uid,
                 obj='account_move_line',
-                context={'fiscalyear': self.datas['form']['fiscalyear']})
+                context={'fiscalyear': self.datas['form']['fiscalyear'],'state':self.datas['form']['state']})
         self.cr.execute(
                 'SELECT sum(debit) ' \
                 'FROM account_move_line ' \
@@ -138,7 +138,7 @@ class partner_balance(report_sxw.rml_parse):
         account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
         line_query = account_move_line_obj._query_get(self.cr, self.uid,
                 obj='account_move_line',
-                context={'fiscalyear': self.datas['form']['fiscalyear']})
+                context={'fiscalyear': self.datas['form']['fiscalyear'],'state':self.datas['form']['state']})
         self.cr.execute(
                 'SELECT sum(credit) ' \
                 'FROM account_move_line ' \
@@ -156,7 +156,7 @@ class partner_balance(report_sxw.rml_parse):
         account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
         line_query = account_move_line_obj._query_get(self.cr, self.uid,
                 obj='account_move_line',
-                context={'fiscalyear': self.datas['form']['fiscalyear']})
+                context={'fiscalyear': self.datas['form']['fiscalyear'],'state':self.datas['form']['state']})
         self.cr.execute(
                 'SELECT sum(debit-credit) ' \
                 'FROM account_move_line ' \
@@ -175,7 +175,7 @@ class partner_balance(report_sxw.rml_parse):
         account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
         line_query = account_move_line_obj._query_get(self.cr, self.uid,
                 obj='account_move_line',
-                context={'fiscalyear': self.datas['form']['fiscalyear']})
+                context={'fiscalyear': self.datas['form']['fiscalyear'],'state':self.datas['form']['state']})
         self.cr.execute(
             'SELECT CASE WHEN sum(debit) > sum(credit) ' \
                     'THEN sum(debit - credit) ' \
@@ -197,7 +197,7 @@ class partner_balance(report_sxw.rml_parse):
         account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
         line_query = account_move_line_obj._query_get(self.cr, self.uid,
                 obj='account_move_line',
-                context={'fiscalyear': self.datas['form']['fiscalyear']})
+                context={'fiscalyear': self.datas['form']['fiscalyear'],'state':self.datas['form']['state']})
         self.cr.execute(
             'SELECT CASE WHEN sum(debit) < sum(credit) ' \
                     'THEN sum(credit - debit) ' \

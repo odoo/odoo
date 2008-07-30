@@ -1185,5 +1185,61 @@ class product_product(osv.osv):
     }
 product_product()
 
+# Move wizard : 
+#    get confirm or assign stock move lines of partner and put in current picking.
+class stock_picking_move_wizard(osv.osv_memory):
+    _name='stock.picking.move.wizard'
+    def _get_picking(self,cr, uid, ctx):
+        if 'action_id' in ctx:
+            return ctx['action_id']
+        return False 
+    def _get_move_lines(self,cr,uid,ctx):
+        move_obj=self.pool.get('stock.move')
+        picking_obj=self.pool.get('stock.picking')
+        if 'action_id' in ctx:
+            picking=picking_obj.browse(cr,uid,[ctx['action_id']])
+            if picking and len(picking):
+                move_line_ids=move_obj.search(cr,uid,[('state','in',['confirmed','assigned']),('address_id','=',picking[0].address_id.id)])                
+                move_lines=move_obj.read(cr,uid,move_line_ids)
+                #res=[]
+                #for move_line in move_lines:
+                #    res.append((0,0,move_line))
+                return [{'move_ids':(0,0,move_lines)}]
+        return []
+    def _get_picking_address(self,cr,uid,ctx):        
+        picking_obj=self.pool.get('stock.picking')
+        if 'action_id' in ctx:
+            picking=picking_obj.browse(cr,uid,[ctx['action_id']])[0]
+            return picking.address_id and picking.address_id.id
+        return False
+            
+            
+    _columns={
+        'name':fields.char('Name',size=64,invisible=True),
+        #'move_lines': fields.one2many('stock.move', 'picking_id', 'Move lines',readonly=True),
+        'move_ids': fields.many2many('stock.move', 'picking_move_wizard_rel', 'picking_move_wizard_id', 'move_id', 'Move lines'),
+        'address_id' : fields.many2one('res.partner.address', 'Dest. Address',invisible=True),
+        'picking_id': fields.many2one('stock.picking', 'Packing list', select=True,invisible=True),
+    }
+    _defaults={
+        'picking_id':_get_picking,
+        'address_id':_get_picking_address,
+    }
+    def action_move(self,cr,uid,ids,context=None):
+        move_obj=self.pool.get('stock.move')
+        picking_obj=self.pool.get('stock.picking')
+        for act in self.read(cr,uid,ids):
+            move_lines=move_obj.browse(cr,uid,act['move_ids'])
+            for line in move_lines:
+                 picking_obj.write(cr,uid,[line.picking_id.id],{'move_lines':[(1,line.id,{'picking_id':act['picking_id']})]})                 
+                 picking_obj.write(cr,uid,[act['picking_id']],{'move_lines':[(1,line.id,{'picking_id':act['picking_id']})]})
+                 cr.commit()
+                 old_picking=picking_obj.read(cr,uid,[line.picking_id.id])[0]
+                 if not len(old_picking['move_lines']):
+                    picking_obj.write(cr,uid,[old_picking['id']],{'state':'done'})
+        return {'type':'ir.actions.act_window_close' }
+            
+stock_picking_move_wizard()        
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -46,7 +46,7 @@
                             <field digits="(14, 3)" groups="base.group_extended" name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
                             <field name="procure_method"/>
                             <field name="state" select="2"/>
-                            <field name="uom_id"/>
+                            <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)"/>
                             <field name="uom_po_id"/>
                             <field groups="base.group_extended" name="product_manager" select="2"/>
                         </page>

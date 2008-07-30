@@ -47,6 +47,8 @@ _aged_trial_form = """<?xml version="1.0"?>
     <field name="sorting_on"/>
     <newline/>
     <field name="computation"/>
+    <newline/>
+    <field name="state"/>
 </form>"""
 
 _aged_trial_fields = {
@@ -55,7 +57,8 @@ _aged_trial_fields = {
         'help': 'Keep empty for all open fiscal year'},
     'period_length': {'string': 'Period length (days)', 'type': 'integer', 'required': True, 'default': lambda *a:30},
     'sorting_on':{'string': 'Sorting On', 'type': 'selection', 'selection': [('partner','By Partner Name (asc)'), ('amount','By Amount (desc)')],'required': True, 'default': lambda *a:'partner'},
-    'computation':{'string': 'Computational Method', 'type': 'selection', 'selection': [("\'receivable\'",'On Receivables Only'), ("\'payable\'",'On Payables Only'), ("\'receivable\',\'payable\'",'On Receivables & Payables')], 'required': True, 'default': lambda *a:"\'receivable\'"}
+    'computation':{'string': 'Computational Method', 'type': 'selection', 'selection': [("\'receivable\'",'On Receivables Only'), ("\'payable\'",'On Payables Only'), ("\'receivable\',\'payable\'",'On Receivables & Payables')], 'required': True, 'default': lambda *a:"\'receivable\'"},
+    'state':{'string':'State','type':'selection','selection': [('draft','Draft'), ('posted','Posted'),('all','All')],}
 }
 
 def _calc_dates(self, cr, uid, data, context):
@@ -85,7 +88,7 @@ class wizard_report(wizard.interface):
         else:
             company_id = pooler.get_pool(cr.dbname).get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
         data['form']['company_id'] = company_id
-
+        data['form']['state']='all'
         return data['form']
 
 

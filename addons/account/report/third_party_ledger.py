@@ -49,7 +49,7 @@ class third_party_ledger(report_sxw.rml_parse):
     def preprocess(self, objects, data, ids):
         account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
         line_query = account_move_line_obj._query_get(self.cr, self.uid, obj='line',
-                context={'fiscalyear': data['form']['fiscalyear']})
+                context={'fiscalyear': data['form']['fiscalyear'],'state':data['form']['state']})
         self.cr.execute(
                 "SELECT DISTINCT line.partner_id " \
                 "FROM account_move_line AS line, account_account AS account " \
@@ -79,7 +79,7 @@ class third_party_ledger(report_sxw.rml_parse):
     def lines(self, partner):
         account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
         line_query = account_move_line_obj._query_get(self.cr, self.uid, obj='l',
-                context={'fiscalyear': self.datas['form']['fiscalyear']})
+                context={'fiscalyear': self.datas['form']['fiscalyear'],'state':self.datas['form']['state']})
         self.cr.execute(
                 "SELECT l.date, j.code, l.ref, l.name, l.debit, l.credit " \
                 "FROM account_move_line l " \
@@ -103,7 +103,7 @@ class third_party_ledger(report_sxw.rml_parse):
         account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
         line_query = account_move_line_obj._query_get(self.cr, self.uid,
                 obj='account_move_line',
-                context={'fiscalyear': self.datas['form']['fiscalyear']})
+                context={'fiscalyear': self.datas['form']['fiscalyear'],'state':self.datas['form']['state']})
         self.cr.execute(
                 "SELECT sum(debit) " \
                 "FROM account_move_line " \
@@ -119,7 +119,7 @@ class third_party_ledger(report_sxw.rml_parse):
         account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
         line_query = account_move_line_obj._query_get(self.cr, self.uid,
                 obj='account_move_line',
-                context={'fiscalyear': self.datas['form']['fiscalyear']})
+                context={'fiscalyear': self.datas['form']['fiscalyear'],'state':self.datas['form']['state']})
         self.cr.execute(
                 "SELECT sum(credit) " \
                 "FROM account_move_line " \
@@ -137,7 +137,7 @@ class third_party_ledger(report_sxw.rml_parse):
         account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
         line_query = account_move_line_obj._query_get(self.cr, self.uid,
                 obj='account_move_line',
-                context={'fiscalyear': self.datas['form']['fiscalyear']})
+                context={'fiscalyear': self.datas['form']['fiscalyear'],'state':self.datas['form']['state']})
         self.cr.execute(
                 "SELECT sum(debit) " \
                 "FROM account_move_line " \
@@ -155,7 +155,7 @@ class third_party_ledger(report_sxw.rml_parse):
         account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
         line_query = account_move_line_obj._query_get(self.cr, self.uid,
                 obj='account_move_line',
-                context={'fiscalyear': self.datas['form']['fiscalyear']})
+                context={'fiscalyear': self.datas['form']['fiscalyear'],'state':self.datas['form']['state']})
         self.cr.execute(
                 "SELECT sum(credit) " \
                 "FROM account_move_line " \

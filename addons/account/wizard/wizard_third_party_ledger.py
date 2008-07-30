@@ -39,6 +39,8 @@ dates_form = '''<?xml version="1.0"?>
     <newline/>
     <field name="date1"/>
     <field name="date2"/>
+    <newline/>
+    <field name="state" colspan="4"/>
 </form>'''
 
 dates_fields = {
@@ -47,6 +49,7 @@ dates_fields = {
         'help': 'Keep empty for all open fiscal year'},
     'date1': {'string':'Start of period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-01-01')},
     'date2': {'string':'End of period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
+    'state':{'string':'State','type':'selection','selection': [('draft','Draft'), ('posted','Posted'),('all','All')],}
 }
 
 class wizard_report(wizard.interface):
@@ -60,7 +63,7 @@ class wizard_report(wizard.interface):
         else:
             company_id = pooler.get_pool(cr.dbname).get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
         data['form']['company_id'] = company_id
-
+        data['form']['state']='all'
         return data['form']
 
     states = {
