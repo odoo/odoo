@@ -9,9 +9,12 @@ class expression( object ):
     >>> e = [('foo', '=', 'bar')]
     >>> expression(e).parse().to_sql()
     'foo = bar'
-    >>> e = [('field', '=', 'value'), ('field', '!=', 'value')]
+    >>> e = [('id', 'in', [1,2,3])]
     >>> expression(e).parse().to_sql()
-    '( field = value AND field != value )'
+    'id in (1, 2, 3)'
+    >>> e = [('field', '=', 'value'), ('field', '<>', 'value')]
+    >>> expression(e).parse().to_sql()
+    '( field = value AND field <> value )'
     >>> e = [('&', ('field', '<', 'value'), ('field', '>', 'value'))]
     >>> expression(e).parse().to_sql()
     '( field < value AND field > value )'
@@ -39,13 +42,18 @@ class expression( object ):
     """
 
     def _is_operator( self, element ):
-        return isinstance( element, str ) and element in ['&','|']
+        return isinstance( element, str ) \
+           and element in ['&','|']
 
     def _is_leaf( self, element ):
-        return isinstance( element, tuple ) and len( element ) == 3 and element[1] in ['=', '<>', '!=', '<=', '<', '>', '>=', 'like', 'not like', 'ilike', 'not ilike'] 
+        return isinstance( element, tuple ) \
+           and len( element ) == 3 \
+           and element[1] in ('=', '<>', '<=', '<', '>', '>=', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of') 
 
     def _is_expression( self, element ):
-        return isinstance( element, tuple ) and len( element ) > 2 and self._is_operator( element[0] )
+        return isinstance( element, tuple ) \
+           and len( element ) > 2 \
+           and self._is_operator( element[0] )
 
     def __init__( self, exp ):
         if isinstance( exp, tuple ):
@@ -68,6 +76,8 @@ class expression( object ):
         self.left, self.right = None, None
         if self._is_leaf(self.exp):
             self.left, self.operator, self.right = self.exp
+            if isinstance(self.right, list):
+                self.right = tuple(self.right)
         elif not self._is_expression( self.exp ):
             raise ValueError, 'Bad expression: %r' % (self.exp,)
 
