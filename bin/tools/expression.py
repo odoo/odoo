@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-class expression( object ):
+class expression(object):
     """
     parse a domain expression
     examples:
@@ -41,31 +41,31 @@ class expression( object ):
     ValueError: Bad expression: ('&', ('fail', 'is', 'True'))
     """
 
-    def _is_operator( self, element ):
-        return isinstance( element, str ) \
+    def _is_operator(self, element):
+        return isinstance(element, str) \
            and element in ['&','|']
 
-    def _is_leaf( self, element ):
-        return isinstance( element, tuple ) \
-           and len( element ) == 3 \
+    def _is_leaf(self, element):
+        return isinstance(element, tuple) \
+           and len(element) == 3 \
            and element[1] in ('=', '<>', '<=', '<', '>', '>=', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of') 
 
-    def _is_expression( self, element ):
-        return isinstance( element, tuple ) \
-           and len( element ) > 2 \
-           and self._is_operator( element[0] )
+    def _is_expression(self, element):
+        return isinstance(element, tuple) \
+           and len(element) > 2 \
+           and self._is_operator(element[0])
 
-    def __init__( self, exp ):
-        if isinstance( exp, tuple ):
-            if not self._is_leaf( exp ) and not self._is_operator( exp[0] ):
-                exp = list( exp )
-        if isinstance( exp, list ):
-            if len( exp ) == 1 and self._is_leaf( exp[0] ):
+    def __init__(self, exp):
+        if isinstance(exp, tuple):
+            if not self._is_leaf(exp) and not self._is_operator(exp[0]):
+                exp = list(exp)
+        if isinstance(exp, list):
+            if len(exp) == 1 and self._is_leaf(exp[0]):
                 exp = exp[0]
             else:
-                if not self._is_operator( exp[0][0] ):
-                    exp.insert( 0, '&' )
-                    exp = tuple( exp )
+                if not self._is_operator(exp[0][0]):
+                    exp.insert(0, '&')
+                    exp = tuple(exp)
                 else:
                     exp = exp[0]
 
@@ -78,21 +78,24 @@ class expression( object ):
             self.left, self.operator, self.right = self.exp
             if isinstance(self.right, list):
                 self.right = tuple(self.right)
-        elif not self._is_expression( self.exp ):
+        elif not self._is_expression(self.exp):
             raise ValueError, 'Bad expression: %r' % (self.exp,)
 
-    def parse( self ):
-       if not self._is_leaf( self.exp ) and self._is_expression( self.exp ):
+    def parse(self):
+        if self._is_leaf(self.exp):
+            pass
+
+        elif self._is_expression(self.exp):
             self.operator = self.exp[0]
 
             for element in self.exp[1:]:
-                if not self._is_operator( element ):
-                    self.children.append( expression(element).parse() )
-       return self
+                if not self._is_operator(element):
+                    self.children.append(expression(element).parse())
+        return self
 
-    def to_sql( self ):
-        if self._is_leaf( self.exp ):
-            return "%s %s %s" % ( self.left, self.operator, self.right )
+    def to_sql(self):
+        if self._is_leaf(self.exp):
+            return "%s %s %s" % (self.left, self.operator, self.right)
         else:
             return "( %s )" % (" %s " % {'&' : 'AND', '|' : 'OR' }[self.operator]).join([child.to_sql() for child in self.children])
 
