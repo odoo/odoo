@@ -38,8 +38,8 @@ class workflow(osv.osv):
     _log_access = False
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'osv': fields.char('Resource Model', size=64, required=True),
-        'on_create': fields.boolean('On Create'),
+        'osv': fields.char('Resource Model', size=64, required=True,select=True),
+        'on_create': fields.boolean('On Create', select=True),
         'activities': fields.one2many('workflow.activity', 'wkf_id', 'Activities'),
     }
     _defaults = {
@@ -142,11 +142,11 @@ class wkf_instance(osv.osv):
     _rec_name = 'res_type'
     _log_access = False
     _columns = {
-        'wkf_id': fields.many2one('workflow', 'Workflow', ondelete='restrict'),
+        'wkf_id': fields.many2one('workflow', 'Workflow', ondelete='restrict', select=True),
         'uid': fields.integer('User ID'),
-        'res_id': fields.integer('Resource ID'),
-        'res_type': fields.char('Resource Model', size=64),
-        'state': fields.char('State', size=32),
+        'res_id': fields.integer('Resource ID', select=True),
+        'res_type': fields.char('Resource Model', size=64, select=True),
+        'state': fields.char('State', size=32, select=True),
     }
     def _auto_init(self, cr, context={}):
         super(wkf_instance, self)._auto_init(cr, context)
@@ -154,6 +154,11 @@ class wkf_instance(osv.osv):
         if not cr.fetchone():
             cr.execute('CREATE INDEX wkf_instance_res_id_res_type_state_index ON wkf_instance (res_id, res_type, state)')
             cr.commit()
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'wkf_instance_res_id_wkf_id_index\'')
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX wkf_instance_res_id_wkf_id_index ON wkf_instance (res_id, wkf_id)')
+            cr.commit()
+
 wkf_instance()
 
 class wkf_workitem(osv.osv):
@@ -162,10 +167,10 @@ class wkf_workitem(osv.osv):
     _log_access = False
     _rec_name = 'state'
     _columns = {
-        'act_id': fields.many2one('workflow.activity', 'Activity', required=True, ondelete="cascade"),
-        'subflow_id': fields.many2one('workflow.instance', 'Subflow', ondelete="cascade"),
-        'inst_id': fields.many2one('workflow.instance', 'Instance', required=True, ondelete="cascade", select=1),
-        'state': fields.char('State', size=64),
+        'act_id': fields.many2one('workflow.activity', 'Activity', required=True, ondelete="cascade", select=True),
+        'subflow_id': fields.many2one('workflow.instance', 'Subflow', ondelete="cascade", select=True),
+        'inst_id': fields.many2one('workflow.instance', 'Instance', required=True, ondelete="cascade", select=True),
+        'state': fields.char('State', size=64, select=True),
     }
 wkf_workitem()
 
