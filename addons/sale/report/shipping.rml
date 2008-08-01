@@ -1,9 +1,12 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
   <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
-    <pageTemplate id="first">
-      <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
-    </pageTemplate>
+     <pageTemplate id="first" title="Test">
+       <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
+       <pageGraphics>
+	    	<drawString x="2" y="0.8cm"> [[ formatLang(time.strftime("%Y-%m-%d"), date=True) ]]  [[ time.strftime("%H:%M") ]]</drawString>
+	   </pageGraphics>
+     </pageTemplate>
   </template>
   <stylesheet>
     <blockTableStyle id="Standard_Outline">
@@ -11,65 +14,78 @@
       <blockValign value="TOP"/>
     </blockTableStyle>
     <blockTableStyle id="Table1">
-      <blockAlignment value="LEFT"/>
-      <blockValign value="TOP"/>
-      <lineStyle kind="GRID" colorName="black"/>
+      <blockAlignment value="LEFT" start="0,0" stop="0,-1"/>
+	  <blockFont name="Helvetica-Bold" size="8" start="0,0" stop="-1,0"/>
+	  <blockAlignment value="LEFT" start="1,0" stop="-1,0"/>
+	  <blockAlignment value="LEFT" start="2,1" stop="-1,-1"/>
+	  <blockValign value="LEFT"/>
     </blockTableStyle>
     <blockTableStyle id="Table2">
-      <blockAlignment value="LEFT"/>
-      <blockValign value="TOP"/>
+        <blockAlignment value="CENTRE" />
+    	<blockFont name="Helvetica-Bold" size="8" start="0,0" stop="-1,0"/>
+		<blockValign value="TOP"/>
+		<lineStyle kind="LINEABOVE" colorName="#cccccc" />
+		<lineStyle kind="LINEBELOW" colorName="#cccccc" />
+		<lineStyle kind="LINEAFTER" colorName="#cccccc" />
+		<lineStyle kind="LINEBEFORE" colorName="#cccccc" />
+		<blockBackground colorName="#e0e0e0" start="0,0" stop="-1,0"/>
     </blockTableStyle>
     <blockTableStyle id="Table3">
-      <blockAlignment value="LEFT"/>
-      <blockValign value="TOP"/>
-      <lineStyle kind="GRID" colorName="black"/>
-      <blockBackground colorName="#808080" start="0,0" stop="0,0"/>
-      <blockBackground colorName="#808080" start="1,0" stop="1,0"/>
-      <blockBackground colorName="#808080" start="2,0" stop="2,0"/>
-      <blockBackground colorName="#808080" start="3,0" stop="3,0"/>
+        <blockAlignment value="LEFT" start="0,0" stop="0,-1"/>
+    	<blockFont name="Helvetica-Bold" size="8" start="0,0" stop="-1,0"/>
+		<blockAlignment value="CENTER" start="1,0" stop="-1,0"/>
+		<blockAlignment value="RIGHT" start="2,1" stop="-1,-1"/>
+		<blockValign value="TOP"/>
+		<lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0" />
+		<lineStyle kind="LINEBELOW" colorName="#e0e0e0"  start="0,1" stop="-1,-2" />
     </blockTableStyle>
     <blockTableStyle id="Table4">
-      <blockAlignment value="LEFT"/>
-      <blockValign value="TOP"/>
-      <lineStyle kind="GRID" colorName="black"/>
-      <blockBackground colorName="#cccccc" start="0,0" stop="0,0"/>
-      <blockBackground colorName="#cccccc" start="1,0" stop="1,0"/>
-      <blockBackground colorName="#cccccc" start="2,0" stop="2,0"/>
-      <blockBackground colorName="#cccccc" start="3,0" stop="3,0"/>
+        <blockAlignment value="LEFT" start="0,0" stop="0,-1"/>
+		<blockFont name="Helvetica-Bold" size="8" start="0,0" stop="-1,0"/>
+		<blockAlignment value="CENTER" start="1,0" stop="-1,0"/>
+		<blockAlignment value="RIGHT" start="2,1" stop="-1,-1"/>
+		<blockValign value="TOP"/>
+		<lineStyle kind="LINEBELOW" colorName="#e0e0e0" start="0,0" stop="-1,0" />
+		<lineStyle kind="LINEBELOW" colorName="#e0e0e0"  start="0,1" stop="-1,-2" />
+
     </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
-    <paraStyle name="P1" fontName="Times-Roman" fontSize="9.0" leading="11" alignment="CENTER"/>
-    <paraStyle name="P2" fontName="Times-Roman" fontSize="12.0" leading="15" alignment="CENTER"/>
-    <paraStyle name="P3" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="CENTER"/>
-    <paraStyle name="P4" fontName="Times-Roman" fontSize="9.0" leading="11" alignment="LEFT"/>
-    <paraStyle name="P5" fontName="Times-Roman"/>
-    <paraStyle name="P6" fontName="Times-Roman" fontSize="10.0" leading="13"/>
-    <paraStyle name="P7" fontName="Times-Roman" fontSize="10.0" leading="13"/>
-    <paraStyle name="P8" fontName="Times-Bold" fontSize="8.0" leading="10" alignment="CENTER"/>
-    <paraStyle name="P9" fontName="Times-Bold" fontSize="8.0" leading="10" alignment="CENTER"/>
-    <paraStyle name="P10" fontName="Times-Roman" fontSize="8.0" leading="10" alignment="CENTER"/>
-    <paraStyle name="P11" fontName="Times-Roman" fontSize="7.0" leading="9"/>
-    <paraStyle name="P12" fontName="Times-Roman" fontSize="8.0" leading="10" alignment="CENTER"/>
-    <paraStyle name="P13" fontName="Times-Roman" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P14" fontName="Times-Roman" fontSize="10.0" leading="13" alignment="LEFT"/>
-    <paraStyle name="P15" fontName="Times-Roman" fontSize="10.0" leading="13" alignment="RIGHT"/>
-    <paraStyle name="P16" fontName="Times-Roman" fontSize="8.0" leading="10" alignment="LEFT"/>
-    <paraStyle name="P17" fontName="Times-Roman" fontSize="8.0" leading="10" alignment="LEFT"/>
-    <paraStyle name="P18" fontName="Times-Roman" fontSize="6.0" leading="8"/>
-    <paraStyle name="P19" fontName="Times-Roman" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="Standard" fontName="Times-Roman"/>
-    <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="Footer" fontName="Times-Roman"/>
-    <paraStyle name="Table Contents" fontName="Times-Roman"/>
-    <paraStyle name="Table Heading" fontName="Times-Roman" alignment="CENTER"/>
-    <paraStyle name="Horizontal Line" fontName="Times-Roman" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="14.0"/>
+    <paraStyle name="P1" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER"/>
+    <paraStyle name="P2" fontName="Helvetica" fontSize="14.0" leading="15" alignment="RIGHT"/>
+    <paraStyle name="P3" fontName="Helvetica" fontSize="14.0" leading="14" alignment="LEFT"/>
+    <paraStyle name="P4" fontName="Helvetica" fontSize="8.0" leading="11" alignment="LEFT"/>
+    <paraStyle name="P5" fontName="Helvetica-Bold" fontSize="8.0" leading="14" alignment="LEFT"/>
+    <paraStyle name="P6" fontName="Helvetica" fontSize="8.0" leading="13"/>
+    <paraStyle name="P7" fontName="Helvetica" fontSize="8.0" leading="13"/>
+    <paraStyle name="P8" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER"/>
+    <paraStyle name="P9" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER"/>
+    <paraStyle name="P10" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER"/>
+    <paraStyle name="P11" fontName="Helvetica" fontSize="7.0" leading="9"/>
+    <paraStyle name="P12" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT"/>
+    <paraStyle name="P13" fontName="Helvetica" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P14" fontName="Helvetica-Bold" fontSize="8.0" leading="13" alignment="LEFT"/>
+    <paraStyle name="P15" fontName="Helvetica" fontSize="8.0" leading="13" alignment="LEFT"/>
+    <paraStyle name="P16" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT"/>
+    <paraStyle name="P17" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT"/>
+    <paraStyle name="P18" fontName="Helvetica" fontSize="6.0" leading="8"/>
+    <paraStyle name="P19" fontName="Helvetica" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Standard" fontName="Helvetica"/>
+    <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Footer" fontName="Helvetica"/>
+    <paraStyle name="Table Contents" fontName="Helvetica"/>
+    <paraStyle name="Table Heading" fontName="Helvetica" alignment="CENTER"/>
+    <paraStyle name="Horizontal Line" fontName="Helvetica" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="14.0"/>
   </stylesheet>
   <story>
     <para style="P1">[[ repeatIn(objects, 'o') ]]</para>
-    <para style="P2">Delivery order [[ o.sale_id.name ]]</para>
-    <para style="P3">
+     <para style="P2">Delivery order</para>
+     <para style="Standard">
+      <font color="white"> </font>
+    </para>
+    <para style="P3">Order N&#xB0; : [[ o.sale_id.name ]]</para>
+    <para style="Standard">
       <font color="white"> </font>
     </para>
     <para style="P4">[[ not(o.sale_id) and 'Error, no sale order attached to this picking !' or '' ]]</para>
@@ -132,7 +148,7 @@
           <para style="P12">Reference</para>
         </td>
         <td>
-          <para style="P12">Designation</para>
+          <para style="P14">Designation</para>
         </td>
         <td>
           <para style="P12">Quantity</para>
@@ -147,16 +163,16 @@
       <blockTable colWidths="93.0,244.0,85.0,59.0" style="Table4">
         <tr>
           <td>
-            <para style="P14">[[line.product_id.code]]</para>
+            <para style="P15">[[line.product_id.code]]</para>
           </td>
           <td>
-            <para style="P14">[[line.product_id.name]]</para>
+            <para style="P16">[[line.product_id.name]]</para>
           </td>
           <td>
             <para style="P15">[[line.product_qty]]</para>
           </td>
           <td>
-            <para style="P14">[[line.product_uom.name]]</para>
+            <para style="P15">[[line.product_uom.name]]</para>
           </td>
         </tr>
         <tr>
@@ -185,4 +201,3 @@
     </para>
   </story>
 </document>
-
