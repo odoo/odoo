@@ -69,13 +69,13 @@ class fake_cursor:
             sql = sql.encode('utf-8')
         if self.sql_log:
             now = mdt.now()
+            print "SQL LOG query:", sql
+            print "SQL LOG params:", repr(p)
         if p:
             res = self.obj.execute(sql, p)
         else:
             res = self.obj.execute(sql)
         if self.sql_log:
-            print "SQL LOG query:", sql
-            print "SQL LOG params:", repr(p)
             self.count+=1
             res_from = re_from.match(sql.lower())
             if res_from:

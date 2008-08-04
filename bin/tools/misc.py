@@ -35,7 +35,7 @@ import os, time, sys
 import inspect
 
 import psycopg
-import netsvc
+#import netsvc
 from config import config
 #import tools
 

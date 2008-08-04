@@ -2187,10 +2187,23 @@ class orm(orm_template):
         # if the object has a field named 'active', filter out all inactive
         # records unless they were explicitely asked for
         if 'active' in self._columns and (active_test and context.get('active_test', True)):
-            active_found = reduce( lambda x, y: x or y == 'active', args, False )
-            if not active_found:
-                args.append(('active', '=', 1))
+            args = [('&', ('active', '=', 1), tuple(args))]
+            #active_found = reduce( lambda x, y: x or y == 'active', args, False )
+            #if not active_found:
+            #    args.append(('active', '=', 1))
 
+        if args:
+            import expression
+            e = expression.expression(args)
+            e.parse(cr, user, self, context)
+            tables = e.get_tables()
+            qu1, qu2 = e.to_sql()
+            qu1 = qu1 and [qu1] or []
+        else:
+            qu1, qu2, tables = [], [], ['"%s"' % self._table]
+
+        print "expression: %r\n%r\n%r\n%r" % (args, qu1, qu2, tables)
+        """
         tables=['"'+self._table+'"']
         joins=[]
         for i, argument in zip(range(len(args)), args):
@@ -2220,7 +2233,7 @@ class orm(orm_template):
                 if field._type == 'many2one':
                     args[i] = (fargs[0], 'in', self.pool.get(field._obj).search(cr, user, [(fargs[1], argument[1], argument[2])], context=context))
                 continue
-            if field._properties:
+            if field._properties: # = fields function
                 arg = [args.pop(i)]
                 j = i
                 while j<len(args):
@@ -2356,7 +2369,7 @@ class orm(orm_template):
 #FIXME: this replace all (..., '=', False) values with 'is null' and this is
 # not what we want for real boolean fields. The problem is, we can't change it
 # easily because we use False everywhere instead of None
-# NOTE FAB: we can't use None becStay tunes ! ause it is not accepted by XML-RPC, that's why
+# NOTE FAB: we can't use None because it is not accepted by XML-RPC, that's why
 # boolean (0-1), None -> False
 # Ged> boolean fields are not always = 0 or 1
                 if (x[2] is False) and (x[1]=='='):
@@ -2421,6 +2434,7 @@ class orm(orm_template):
                     qu2+=x[2]
                 else:
                     qu1.append(' (1=0)')
+"""
         return (qu1,qu2,tables)
 
     def _check_qorder(self, word):
