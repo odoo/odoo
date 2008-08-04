@@ -28,6 +28,7 @@
 ##############################################################################
 
 from osv import fields,osv
+from osv.orm import except_orm
 import tools
 import pytz
 
@@ -72,6 +73,7 @@ class roles(osv.osv):
         'parent_id': fields.many2one('res.roles', 'Parent', select=True),
         'child_id': fields.one2many('res.roles', 'parent_id', 'Childs'),
         'users': fields.many2many('res.users', 'res_roles_users_rel', 'rid', 'uid', 'Users'),
+        'groups': fields.many2many('res.groups', 'res_roles_groups_rel', 'rid', 'gid', 'Groups'),
     }
     _defaults = {
     }
@@ -108,7 +110,7 @@ class users(osv.osv):
         'menu_id': fields.many2one('ir.actions.actions', 'Menu Action'),
         'groups_id': fields.many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', 'Groups'),
         'roles_id': fields.many2many('res.roles', 'res_roles_users_rel', 'uid', 'rid', 'Roles'),
-        'rules_id': fields.many2many('ir.rule.group', 'user_rule_group_rel', 'rule_group_id', 'user_id', 'Rules'),
+        'rules_id': fields.many2many('ir.rule.group', 'user_rule_group_rel', 'user_id', 'rule_group_id', 'Rules'),
         'company_id': fields.many2one('res.company', 'Company'),
         'context_lang': fields.selection(_lang_get, 'Language', required=True),
         'context_tz': fields.selection(_tz_get,  'Timezone', size=64)
@@ -141,26 +143,29 @@ class users(osv.osv):
     company_get = tools.cache()(company_get)
 
     def write(self, cr, uid, ids, values, *args, **argv):
+        ok = False
+        res = {}
         if (ids == [uid]):
-            ok = True
             for k in values.keys():
-                if k not in ('password', 'signature', 'action_id', 'context_lang', 'context_tz'):
-                    ok=False
-            if ok:
-                uid = 1
-        res = super(users, self).write(cr, uid, ids, values, *args, **argv)
-        self.company_get()
-        # Restart the cache on the company_get method
-        self.pool.get('ir.rule').domain_get()
+                if k in ('password', 'signature', 'action_id', 'context_lang', 'context_tz'):
+                    ok=True
+        if ok or uid==1:
+            res = super(users, self).write(cr, uid, ids, values, *args, **argv)
+            self.company_get()
+            # Restart the cache on the company_get method
+            self.pool.get('ir.rule').domain_get()
+        else:
+            raise except_orm(_('AccessError'), 'You can not write in this document (res.users)')
         return res
 
     def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
         result = super(users, self).read(cr, uid, ids, fields, context, load)
-        canwrite = self.pool.get('ir.model.access').check(cr, uid, 'res.users', 'write', raise_exception=False)
-        if not canwrite:
-            for r in result:
-                if 'password' in r:
-                    r['password'] = '********'
+        #canwrite = self.pool.get('ir.model.access').check(cr, uid, 'res.users', 'write', raise_exception=False)
+        #if not canwrite and ids!=[uid]:
+        #    for r in result:
+        #        if 'password' in r:
+        #            r['password'] = '********'
+        #    result=r
         return result
 
     def unlink(self, cr, uid, ids):
@@ -239,6 +244,7 @@ class groups2(osv.osv): ##FIXME: Is there a reason to inherit this object ?
     _inherit = 'res.groups'
     _columns = {
         'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users'),
+        'roles': fields.many2many('res.roles', 'res_roles_groups_rel', 'gid', 'rid', 'Roles'),
     }
 groups2()
 

@@ -126,7 +126,6 @@ class ir_model(osv.osv):
                             perm_list.append('u')
                         perms = ",".join(perm_list)
                         res['group_%i'%rule.group_id.id] = perms
-            pprint(result)
         return result
 
     def write(self, cr, user, ids, vals, context=None):
@@ -296,13 +295,13 @@ class ir_model_access(osv.osv):
         if uid==1:
             return True
         
-        assert mode in ['read','write','create','unlink'], 'Invalid access mode for security'
+        assert mode in ['read','write','create','unlink'], 'Invalid access mode'
         
         # We check if a specific rule exists
         cr.execute('SELECT MAX(CASE WHEN perm_'+mode+' THEN 1 else 0 END) '
             'from ir_model_access a join ir_model m on (m.id=a.model_id) '
                 'join res_groups_users_rel gu on (gu.gid = a.group_id) '
-            'where m.model = %s and gu.uid = %s', (model_name, uid,))
+            'where m.model=%s and gu.uid=%s', (model_name, uid,))
         r = cr.fetchall()
         
         print '%s in %s = %s by %i'%(mode, model_name, str(r[0][0]), uid) # FIXME: REMOVE PLEASE

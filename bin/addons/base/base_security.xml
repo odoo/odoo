@@ -3,6 +3,33 @@
 <data noupdate="1">
 
 <!--
+ Users Groups
+-->
+    <record model="res.groups" id="group_erp_manager">
+        <field name="name">ERP Manager</field>
+    </record>
+    
+    <record model="res.groups" id="group_employee">
+        <field name="name">Employee</field>
+    </record>
+
+    <record model="res.groups" id="group_account_manager">
+        <field name="name">Account Manager</field>
+    </record>
+
+    <record model="res.groups" id="group_request">
+        <field name="name">Request</field>
+    </record>
+    
+    <record model="res.groups" id="group_extended">
+        <field name="name">Extended View</field>
+    </record>
+    
+    <!--<record model="res.groups" id="group_partner">-->
+    <!--    <field name="name">Partner </field>-->
+    <!--</record>-->
+
+<!--
  Users
 -->
     <record model="res.users" id="base.user_root">
@@ -49,33 +76,6 @@
        <field name="note">You must define a new password for the Root user !</field>
        <field name="action_id" ref="action_config_root_pw"/>
        <field name="state">open</field>
-    </record>
-
-<!--
- Users Groups
--->
-    <record model="res.groups" id="group_erp_manager">
-        <field name="name">ERP Manager</field>
-    </record>
-    
-    <record model="res.groups" id="group_employee">
-        <field name="name">Employee</field>
-    </record>
-    
-    <!--<record model="res.groups" id="group_partner">-->
-    <!--    <field name="name">Partner </field>-->
-    <!--</record>-->
-
-    <record model="res.groups" id="group_account_manager">
-        <field name="name">Account Manager</field>
-    </record>
-
-    <record model="res.groups" id="group_request">
-        <field name="name">Request</field>
-    </record>
-    
-    <record model="res.groups" id="group_extended">
-        <field name="name">Extended View</field>
     </record>
 
 <!--
