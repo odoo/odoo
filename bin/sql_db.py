@@ -44,6 +44,7 @@ re_from = re.compile('.* from "?([a-zA-Z_0-9]+)"? .*$');
 re_into = re.compile('.* into "?([a-zA-Z_0-9]+)"? .*$');
 
 class fake_cursor:
+    IN_MAX = 1000
     nbr = 0
     _tables = {}
     sql_from_log = {}

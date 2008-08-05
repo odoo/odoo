@@ -62,9 +62,6 @@ import tools
 
 from tools.config import config
 
-prof = 0
-ID_MAX = 1000
-
 regex_order = re.compile('^([a-zA-Z0-9_]+( desc)?( asc)?,?)+$', re.I)
 
 def intersect(la, lb):
@@ -1664,8 +1661,8 @@ class orm(orm_template):
         res = []
         if len(fields_pre) :
             fields_pre2 = map(lambda x: (x in ('create_date', 'write_date')) and ('date_trunc(\'second\', '+x+') as '+x) or '"'+x+'"', fields_pre)
-            for i in range((len(ids) / ID_MAX) + ((len(ids) % ID_MAX) and 1 or 0)):
-                sub_ids = ids[ID_MAX * i:ID_MAX * (i + 1)]
+            for i in range(0, len(ids), cr.IN_MAX):
+                sub_ids = ids[i:i+cr.IN_MAX]
                 if d1:
                     cr.execute('SELECT %s FROM \"%s\" WHERE id IN (%s) AND %s ORDER BY %s' % \
                             (','.join(fields_pre2 + ['id']), self._table,
@@ -1807,8 +1804,8 @@ class orm(orm_template):
 
         delta= context.get('read_delta',False)
         if delta and self._log_access:
-            for i in range((len(ids) / ID_MAX) + ((len(ids) % ID_MAX) and 1 or 0)):
-                sub_ids = ids[ID_MAX * i:ID_MAX * (i + 1)]
+            for i in range(0, len(ids), cr.IN_MAX):
+                sub_ids = ids[i:i+cr.IN_MAX]
                 cr.execute("select  (now()  - min(write_date)) <= '%s'::interval " \
                         "from \"%s\" where id in (%s)" %
                         (delta, self._table, ",".join(map(str, sub_ids))) )
@@ -1833,8 +1830,8 @@ class orm(orm_template):
         if d1:
             d1 = ' AND '+d1
 
-        for i in range((len(ids) / ID_MAX) + ((len(ids) % ID_MAX) and 1 or 0)):
-            sub_ids = ids[ID_MAX * i:ID_MAX * (i + 1)]
+        for i in range(0, len(ids), cr.IN_MAX):
+            sub_ids = ids[i:i+cr.IN_MAX]
             str_d = string.join(('%d',)*len(sub_ids),',')
             if d1:
                 cr.execute('SELECT id FROM "'+self._table+'" ' \
@@ -1898,8 +1895,8 @@ class orm(orm_template):
             ids = [ids]
         delta= context.get('read_delta',False)
         if delta and self._log_access:
-            for i in range((len(ids) / ID_MAX) + ((len(ids) % ID_MAX) and 1 or 0)):
-                sub_ids = ids[ID_MAX * i:ID_MAX * (i + 1)]
+            for i in range(0, len(ids), cr.IN_MAX):
+                sub_ids = ids[i:i+cr.IN_MAX]
                 cr.execute("select  (now()  - min(write_date)) <= '%s'::interval " \
                         "from %s where id in (%s)" %
                         (delta,self._table, ",".join(map(str, sub_ids))))
@@ -1961,8 +1958,8 @@ class orm(orm_template):
             if d1:
                 d1 = ' and '+d1
 
-            for i in range((len(ids) / ID_MAX) + ((len(ids) % ID_MAX) and 1 or 0)):
-                sub_ids = ids[ID_MAX * i:ID_MAX * (i + 1)]
+            for i in range(0, len(ids), cr.IN_MAX):
+                sub_ids = ids[i:i+cr.IN_MAX]
                 ids_str = string.join(map(str, sub_ids),',')
                 if d1:
                     cr.execute('SELECT id FROM "'+self._table+'" ' \
@@ -1998,8 +1995,8 @@ class orm(orm_template):
         for table in self._inherits:
             col = self._inherits[table]
             nids = []
-            for i in range((len(ids) / ID_MAX) + ((len(ids) % ID_MAX) and 1 or 0)):
-                sub_ids = ids[ID_MAX * i:ID_MAX * (i + 1)]
+            for i in range(0, len(ids), cr.IN_MAX):
+                sub_ids = ids[i:i+cr.IN_MAX]
                 ids_str = string.join(map(str, sub_ids),',')
                 cr.execute('select distinct "'+col+'" from "'+self._table+'" ' \
                         'where id in ('+ids_str+')', upd1)
@@ -2363,8 +2360,8 @@ class orm(orm_template):
         ids_parent = ids[:]
         while len(ids_parent):
             ids_parent2 = []
-            for i in range((len(ids) / ID_MAX) + ((len(ids) % ID_MAX) and 1 or 0)):
-                sub_ids_parent = ids_parent[ID_MAX * i:ID_MAX * (i + 1)]
+            for i in range(0, len(ids), cr.IN_MAX):
+                sub_ids_parent = ids_parent[i:i+cr.IN_MAX]
                 cr.execute('SELECT distinct "'+parent+'"'+
                     ' FROM "'+self._table+'" ' \
                     'WHERE id in ('+','.join(map(str, sub_ids_parent))+')')

@@ -61,10 +61,9 @@ class expression(object):
 
     
     def __execute_recursive_in(self, cr, s, f, w, ids):
-        ID_MAX = 1000
         res = []
-        for i in range(0, len(ids), ID_MAX):
-            subids = ids[i:i+ID_MAX]
+        for i in range(0, len(ids), cr.IN_MAX):
+            subids = ids[i:i+cr.IN_MAX]
             cr.execute('SELECT "%s"'    \
                        '  FROM "%s"'    \
                        ' WHERE "%s" in (%s)' % (s, f, w, ','.join(['%d']*len(subids))),
