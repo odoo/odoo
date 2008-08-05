@@ -144,7 +144,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem id="account_account_menu" name="Financial Accounts" parent="account.menu_finance_configuration"/><menuitem action="action_account_form" id="menu_action_account_form" parent="account_account_menu"/>
+        <menuitem id="account_account_menu" name="Financial Accounts" parent="account.menu_finance_configuration"/>
+        <menuitem action="action_account_form" id="menu_action_account_form" parent="account_account_menu"/>
 
         <record id="view_account_tree" model="ir.ui.view">
             <field name="name">account.account.tree</field>

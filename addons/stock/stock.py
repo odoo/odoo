@@ -392,7 +392,7 @@ class stock_picking(osv.osv):
             ('assigned','Assigned'),
             ('done','Done'),
             ('cancel','Cancel'),
-            ], 'State', readonly=True),
+            ], 'State', readonly=True, select=True),
         'date':fields.datetime('Date create'),
 
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Move lines'),
@@ -402,7 +402,8 @@ class stock_picking(osv.osv):
         'invoice_state':fields.selection([
             ("invoiced","Invoiced"),
             ("2binvoiced","To be invoiced"),
-            ("none","Not from Packing")], "Invoice state"),
+            ("none","Not from Packing")], "Invoice state", 
+            select=True),
     }
     _defaults = {
         'name': lambda *a: '/',
@@ -437,9 +438,7 @@ class stock_picking(osv.osv):
         self.action_explode(cr, uid, ids)
         for picking in self.browse(cr, uid, ids):
             todo = []
-            for r in picking.move_lines:
-                if r.location_dest_id.chained_location_type:
-                    todo.append(r)
+            todo.extend( filter( lambda r: r.location_dest_id.chained_location_type, picking.move_lines) )
             if todo:
                 loc = self.pool.get('stock.location').chained_location_get(cr, uid, todo[0].location_dest_id, todo[0].picking_id and todo[0].picking_id.address_id and todo[0].picking_id.address_id.partner_id, todo[0].product_id)
                 ptype = self.pool.get('stock.location').picking_type_get(cr, uid, todo[0].location_dest_id, loc)
@@ -771,7 +770,7 @@ class stock_move(osv.osv):
         'date': fields.datetime('Date Created'),
         'date_planned': fields.date('Scheduled date', required=True),
 
-        'product_id': fields.many2one('product.product', 'Product', required=True),
+        'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
 
         'product_qty': fields.float('Quantity', required=True),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
@@ -779,8 +778,8 @@ class stock_move(osv.osv):
         'product_uos': fields.many2one('product.uom', 'Product UOS'),
         'product_packaging' : fields.many2one('product.packaging', 'Packaging'),
 
-        'location_id': fields.many2one('stock.location', 'Source Location', required=True),
-        'location_dest_id': fields.many2one('stock.location', 'Dest. Location', required=True),
+        'location_id': fields.many2one('stock.location', 'Source Location', required=True, select=True),
+        'location_dest_id': fields.many2one('stock.location', 'Dest. Location', required=True, select=True),
         'address_id' : fields.many2one('res.partner.address', 'Dest. Address'),
 
         'prodlot_id' : fields.many2one('stock.production.lot', 'Production lot', help="Production lot is used to put a serial number on the production"),
