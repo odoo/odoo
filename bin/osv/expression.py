@@ -88,7 +88,6 @@ class expression(object):
                     exp = exp[0]
 
         self.__exp = exp
-        self.__iexp = exp
         self.__operator = '&'
         self.__children = []
 
@@ -317,7 +316,6 @@ class expression(object):
                 query = '(%s AND (%s))' % (joins, query)
             if isinstance(params, basestring):
                 params = [params]
-            #print 'SQL:', repr(self.__iexp), '->', query
             return (query, params)
 
         else:
