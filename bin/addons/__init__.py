@@ -270,6 +270,24 @@ def load_module_graph(cr, graph, status=None, **kwargs):
                 cr.execute('update ir_module_module set demo=%s where name=%s', (True, package.name))
             package_todo.append(package.name)
             cr.execute("update ir_module_module set state='installed' where state in ('to upgrade', 'to install') and name=%s", (package.name,))
+        
+        # check if all model of the module have at least a access rule.
+        cr.execute("""  SELECT name 
+                         FROM ir_model m 
+                        WHERE EXISTS (SELECT 1 
+                                        FROM ir_model_data 
+                                       WHERE module = %s 
+                                         AND model = m.name
+                                      ) 
+                          AND NOT EXISTS (SELECT 1
+                                            FROM ir_model_access
+                                           WHERE model_id = m.id
+                                          )
+                   """, (m,))
+
+        for (model,) in cr.fetchall():
+            logger.notifyChannel('init', netsvc.LOG_WARNING, 'addon:%s:object %s has no access rules!' % (m,model,))
+
         cr.commit()
         statusi+=1
 
