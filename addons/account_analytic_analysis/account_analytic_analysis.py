@@ -30,7 +30,6 @@
 ##############################################################################
 import operator
 from osv import osv, fields
-from osv.orm import ID_MAX
 from tools.translate import _
 
 
@@ -525,8 +524,8 @@ class account_analytic_account_summary_user(osv.osv):
         max_user = cr.fetchone()[0]
         if len(fields_pre) :
             fields_pre2 = map(lambda x: (x in ('create_date', 'write_date')) and ('date_trunc(\'second\', '+x+') as '+x) or '"'+x+'"', fields_pre)
-            for i in range((len(ids) / ID_MAX) + ((len(ids) % ID_MAX) and 1 or 0)):
-                sub_ids = ids[ID_MAX * i:ID_MAX * (i + 1)]
+            for i in range(0, len(ids), cr.IN_MAX):
+                sub_ids = ids[i:i+cr.IN_MAX]
                 if d1:
                     cr.execute('select %s from \"%s\" where id in (%s) ' \
                             'and account_id in (%s) ' \
@@ -702,8 +701,8 @@ class account_analytic_account_summary_month(osv.osv):
         res = []
         if len(fields_pre) :
             fields_pre2 = map(lambda x: (x in ('create_date', 'write_date')) and ('date_trunc(\'second\', '+x+') as '+x) or '"'+x+'"', fields_pre)
-            for i in range((len(ids) / ID_MAX) + ((len(ids) % ID_MAX) and 1 or 0)):
-                sub_ids = ids[ID_MAX * i:ID_MAX * (i + 1)]
+            for i in range(0, len(ids), cr.IN_MAX):
+                sub_ids = ids[i:i+cr.IN_MAX]
                 if d1:
                     cr.execute('select %s from \"%s\" where id in (%s) ' \
                             'and account_id in (%s) ' \
