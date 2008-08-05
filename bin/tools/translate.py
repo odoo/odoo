@@ -60,10 +60,9 @@ def translate(cr, name, source_type, lang, source=None):
 class GettextAlias(object):
     def __call__(self, source):
         frame = inspect.stack()[1][0]
-        cr = frame.f_locals['cr']
-        context = frame.f_locals.get('context', {})
-        lang = context.get('lang', False)
-        if not lang:
+        cr = frame.f_locals.get('cr')
+        lang = frame.f_locals.get('context', {}).get('lang', False)
+        if not (lang and cr):
             return source
         return translate(cr, None, 'code', lang, source) or source
 

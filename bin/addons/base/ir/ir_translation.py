@@ -64,16 +64,29 @@ class ir_translation(osv.osv, Cacheable):
 
     _columns = {
         'name': fields.char('Field Name', size=128, required=True),
-        'res_id': fields.integer('Resource ID'),
+        'res_id': fields.integer('Resource ID', select=True),
         'lang': fields.selection(_get_language, string='Language', size=5),
-        'type': fields.selection(TRANSLATION_TYPE, string='Type', size=16),
+        'type': fields.selection(TRANSLATION_TYPE, string='Type', size=16, select=True),
         'src': fields.text('Source'),
         'value': fields.text('Translation Value'),
     }
-    _sql = """
-        create index ir_translation_ltn on ir_translation (lang,type,name);
-        create index ir_translation_res_id on ir_translation (res_id);
-    """
+
+    def _auto_init(self, cr, context={}):
+        super(ir_translation, self)._auto_init(cr, context)
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_ltns',))
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX ir_translation_ltns ON ir_translation (lang, type, name, src)')
+            cr.commit()
+
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_ltn',))
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX ir_translation_ltn ON ir_translation (lang, type, name)')
+            cr.commit()
+
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_lts',))
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX ir_translation_lts ON ir_translation (lang, type, src)')
+            cr.commit()
 
     def _get_ids(self, cr, uid, name, tt, lang, ids):
         translations, to_fetch = {}, []

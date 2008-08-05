@@ -34,6 +34,7 @@ import netsvc,logging
 class configmanager(object):
     def __init__(self, fname=None):
         self.options = {
+            'email_from':False,
             'verbose': False,
             'interface': '',    # this will bind the server to all interfaces
             'port': '8069',
@@ -95,7 +96,9 @@ class configmanager(object):
         parser.add_option('--debug', dest='debug_mode', action='store_true', default=False, help='enable debug mode')
         parser.add_option("--assert-exit-level", dest='assert_exit_level', help="specify the level at which a failed assertion will stop the server " + str(assert_exit_levels))
         parser.add_option("-S", "--secure", dest="secure", action="store_true", help="launch server over https instead of http", default=False)
+        parser.add_option('--email-from', dest='email_from', default='', help='specify the SMTP email address for sending email')
         parser.add_option('--smtp', dest='smtp_server', default='', help='specify the SMTP server for sending email')
+        parser.add_option('--smtp-ssl', dest='smtp_ssl', default='', help='specify the SMTP server support SSL or not')
         parser.add_option('--smtp-user', dest='smtp_user', default='', help='specify the SMTP username for sending email')
         parser.add_option('--smtp-password', dest='smtp_password', default='', help='specify the SMTP password for sending email')
         parser.add_option('--price_accuracy', dest='price_accuracy', default='2', help='specify the price accuracy')
@@ -150,7 +153,7 @@ class configmanager(object):
             self.options['pidfile'] = False
         
         for arg in ('interface', 'port', 'db_name', 'db_user', 'db_password', 'db_host',
-                'db_port', 'logfile', 'pidfile', 'secure', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy', 'netinterface', 'netport', 'db_maxconn', 'commit_mode', 'addons_path'):
+                'db_port', 'logfile', 'pidfile', 'secure', 'smtp_ssl', 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy', 'netinterface', 'netport', 'db_maxconn', 'commit_mode', 'addons_path'):
             if getattr(opt, arg):
                 self.options[arg] = getattr(opt, arg)
 

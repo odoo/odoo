@@ -324,13 +324,13 @@ class actions_server(osv.osv):
                 if 'action' in localdict:
                     return localdict['action']
             if action.state == 'email':
-                user = "%s@yahoo.co.in," % (config['smtp_user'])
+                user = config['email_from']
                 subject = action.name
                 body = action.message
-                if tools.email_send_attach(user, action.address, subject, body) == True:
-                    logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (user))
+                if tools.email_send_attach(user, action.address, subject, body, debug=False) == True:
+                    logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (action.address))
                 else:
-                    logger.notifyChannel('email', netsvc.LOG_ERROR, 'Failed to send email to : %s' % (user))
+                    logger.notifyChannel('email', netsvc.LOG_ERROR, 'Failed to send email to : %s' % (action.address))
         return False
 actions_server()
 
