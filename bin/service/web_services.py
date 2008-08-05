@@ -329,8 +329,14 @@ class common(netsvc.Service):
         logger.notifyChannel("web-service", netsvc.LOG_INFO, "%s from '%s' using database '%s'" % (msg, login, db))
         return res or False
 
-    def about(self):
-        return _('''
+    def about(self, extended=False):
+        """Return information about the OpenERP Server.
+
+        @param extended: if True then return version info
+        @return string if extended is False else tuple
+        """
+
+        info = _('''
 
 OpenERP is an ERP+CRM program for small and medium businesses.
 
@@ -338,6 +344,10 @@ The whole source code is distributed under the terms of the
 GNU Public Licence.
 
 (c) 2003-TODAY, Fabien Pinckaers - Tiny sprl''')
+
+        if extended:
+            return info, tinyerp_version
+        return info
 
     def timezone_get(self, db, login, password):
         return time.tzname[0]
