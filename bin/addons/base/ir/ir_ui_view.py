@@ -105,14 +105,13 @@ class view(osv.osv):
             
         result = super(view, self).read(cr, uid, ids, fields, context, load)
         
-        if context.get('read', False) != 'custom':
-            for rs in result:
-                if rs.get('model',False) == 'board.board':
-                    cr.execute("select id,arch,ref_id from ir_ui_view_custom where user_id=%d and ref_id=%d", (uid, rs['id']))
-                    oview = cr.dictfetchall()
-                    if oview:
-                        rs['arch'] = oview[0]['arch']
-                
+        for rs in result:
+            if rs.get('model',False) == 'board.board':
+                cr.execute("select id,arch,ref_id from ir_ui_view_custom where user_id=%d and ref_id=%d", (uid, rs['id']))
+                oview = cr.dictfetchall()
+                if oview:
+                    rs['arch'] = oview[0]['arch']
+        
         return result
     
     def write(self, cr, uid, ids, vals, context={}):
@@ -120,8 +119,6 @@ class view(osv.osv):
         if exist.model == 'board.board':
             vids = self.pool.get('ir.ui.view.custom').search(cr, uid, [('user_id','=',uid), ('ref_id','=',ids[0])])
             if not vids:
-#                if context.get('write') == 'custom':
-                
                 old = self.pool.get('ir.ui.view').read(cr, uid, ids)[0]
 
                 del old['id']
@@ -131,6 +128,9 @@ class view(osv.osv):
                 result = self.pool.get('ir.ui.view.custom').write(cr, uid, [nid], vals)
                 return result
             else:
+                nid = vids
+                result = self.pool.get('ir.ui.view.custom').write(cr, uid, nid, vals)
+                    
                 result = super(view, self).write(cr, uid, vids, vals, context)
                 return result
         
