@@ -52,7 +52,7 @@ class expression(object):
     def _is_leaf(self, element):
         return isinstance(element, tuple) \
            and len(element) == 3 \
-           and element[1] in ('=', '<>', '<=', '<', '>', '>=', '=like', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of') 
+           and element[1] in ('=', '!=', '<>', '<=', '<', '>', '>=', '=like', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of') 
 
     def _is_expression(self, element):
         return isinstance(element, tuple) \
