@@ -114,7 +114,7 @@ class board_line(osv.osv):
     _name = 'board.board.line'
     _order = 'position,sequence'
     _columns = {
-        'name': fields.char('Board', size=64, required=True),
+        'name': fields.char('Title', size=64, required=True),
         'sequence': fields.integer('Sequence'),
         'height': fields.integer('Height'),
         'width': fields.integer('Width'),
