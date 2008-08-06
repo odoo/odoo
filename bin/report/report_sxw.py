@@ -189,11 +189,14 @@ class _date_format(str, _format):
     def __str__(self):
         if not self.object._context:
             return self.name
+
         if self.name:
-            datedata = time.strptime(self.name, DT_FORMAT)
-            return time.strftime(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'),
+            try :
+                datedata = time.strptime(self.name, DT_FORMAT)
+                return time.strftime(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'),
                     datedata)
-        return ''
+            except :
+                pass 
 
 _fields_process = {
     'float': _float_format,
