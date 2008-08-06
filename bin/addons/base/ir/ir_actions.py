@@ -331,6 +331,11 @@ class actions_server(osv.osv):
                     logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (action.address))
                 else:
                     logger.notifyChannel('email', netsvc.LOG_ERROR, 'Failed to send email to : %s' % (action.address))
+            if action.state == 'sms':
+                if tools.sms_send(user, password, api_id, text, to) == True:
+                    logger.notifyChannel('sms', netsvc.LOG_INFO, 'SMS successfully send to : %s' % (action.address))
+                else:
+                    logger.notifyChannel('sms', netsvc.LOG_ERROR, 'Failed to send SMS to : %s' % (action.address))
         return False
 actions_server()
 
