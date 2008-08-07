@@ -52,14 +52,14 @@ class expression(object):
     def _is_leaf(self, element):
         return isinstance(element, tuple) \
            and len(element) == 3 \
-           and element[1] in ('=', '!=', '<>', '<=', '<', '>', '>=', '=like', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of') 
+           and element[1] in ('=', '!=', '<>', '<=', '<', '>', '>=', '=like', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of')
 
     def _is_expression(self, element):
         return isinstance(element, tuple) \
            and len(element) > 2 \
            and self._is_operator(element[0])
 
-    
+
     def __execute_recursive_in(self, cr, s, f, w, ids):
         res = []
         for i in range(0, len(ids), cr.IN_MAX):
@@ -81,8 +81,11 @@ class expression(object):
                 exp = exp[0]
             else:
                 if not self._is_operator(exp[0][0]):
-                    exp.insert(0, '&')
-                    exp = tuple(exp)
+                    if isinstance(exp[0],list):
+                        exp=tuple(exp[0])
+                    else:
+                        exp.insert(0, '&')
+                        exp = tuple(exp)
                 else:
                     exp = exp[0]
 
@@ -109,7 +112,7 @@ class expression(object):
                 return []
             ids2 = table.search(cr, uid, [(parent, 'in', ids)], context=context)
             return ids + _rec_get(ids2, table, parent)
-        
+
         if not self.__exp:
             return self
 
@@ -134,7 +137,7 @@ class expression(object):
                     self.__right = table.pool.get(field._obj).search(cr, uid, [(fargs[1], self.__operator, self.__right)], context=context)
                     self.__operator = 'in'
                 return self
-            
+
             field_obj = table.pool.get(field._obj)
             if field._properties:
                 # this is a function field
@@ -150,7 +153,7 @@ class expression(object):
                     self.__table = None
                     self.__tables, self.__joins = [], []
                     self.__children = []
-                    
+
                     if field._fnct_search:
                         subexp = field.search(cr, uid, table, self.__left, [self.__exp])
                         self.__children.append(expression(subexp).parse(cr, uid, table, context))
@@ -178,12 +181,12 @@ class expression(object):
                         ids2 = [x[0] for x in field_obj.name_search(cr, uid, self.__right, [], 'like')]
                     else:
                         ids2 = self.__right
-                   
+
                     def _rec_convert(ids):
                         if field_obj == table:
                             return ids
                         return self.__execute_recursive_in(cr, field._id1, field._rel, field._id2, ids)
-                    
+
                     self.__left, self.__operator, self.__right = 'id', 'in', _rec_convert(ids2 + _rec_get(ids2, field_obj, self.__table._parent_name))
                 else:
                     if isinstance(self.__right, basestring):
@@ -197,7 +200,7 @@ class expression(object):
                         ids2 = [x[0] for x in field_obj.search_name(cr, uid, self.__right, [], 'like')]
                     else:
                         ids2 = list(self.__right)
-                        
+
                     self.__operator = 'in'
                     if field._obj <> self.__table._name:
                         self.__right = ids2 + _rec_get(ids2, field_obj, self.__table._parent_name)
@@ -209,7 +212,7 @@ class expression(object):
                         res_ids = field_obj.name_search(cr, uid, self.__right, [], self.__operator)
                         self.__operator = 'in'
                         self.__right = map(lambda x: x[0], res_ids)
-            else: 
+            else:
                 # other field type
                 if field.translate:
                     if self.__operator in ('like', 'ilike', 'not like', 'not ilike'):
@@ -263,7 +266,7 @@ class expression(object):
                 len_after = len(params)
                 check_nulls = len_after <> len_before
                 query = '(1=0)'
-                
+
                 if len_after:
                     if self.__left == 'id':
                         instr = ','.join(['%d'] * len_after)
@@ -293,7 +296,7 @@ class expression(object):
                             query = '(%s.%s %s %s)' % (self.__table._table, self.__left, op, format)
                         else:
                             query = "(%s.%s %s '%s')" % (self.__table._table, self.__left, op, self.__right)
- 
+
                         add_null = False
                         if like:
                             if isinstance(self.__right, str):
@@ -325,11 +328,11 @@ class expression(object):
 
     def __get_tables(self):
         return self.__tables + [child.__get_tables() for child in self.__children]
-    
+
     def get_tables(self):
         return [ '"%s"' % t for t in set(flatten(self.__get_tables()))]
 
-    #def 
+    #def
 
 if __name__ == '__main__':
     pass
