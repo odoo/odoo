@@ -196,7 +196,8 @@ class _date_format(str, _format):
                 return time.strftime(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y'),
                     datedata)
             except :
-                pass 
+                pass
+	return '' 
 
 _fields_process = {
     'float': _float_format,
