@@ -60,7 +60,7 @@ from reportlab import platypus
 import utils
 import color
 import os
-
+ftitle=""
 #
 # Change this to UTF-8 if you plan tu use Reportlab's UTF-8 support
 #
@@ -110,7 +110,7 @@ class _rml_styles(object):
         for attr in ['fontName', 'bulletFontName', 'bulletText']:
             if node.hasAttribute(attr):
                 data[attr] = node.getAttribute(attr)
-        for attr in ['fontSize', 'leftIndent', 'rightIndent', 'spaceBefore', 'spaceAfter', 
+        for attr in ['fontSize', 'leftIndent', 'rightIndent', 'spaceBefore', 'spaceAfter',
             'firstLineIndent', 'bulletIndent', 'bulletFontSize', 'leading',
             'borderWidth','borderPadding','borderRadius']:
             if node.hasAttribute(attr):
@@ -248,6 +248,9 @@ class _rml_canvas(object):
         self.doc = doc
         self.images = images
         self.path = path
+        global ftitle
+        if  ftitle:
+            self.canvas.setTitle(ftitle)
 
     def _textual(self, node, x=0, y=0):
         rc = ''
@@ -701,7 +704,7 @@ class _rml_flowable(object):
         node = node_story.firstChild
         while node:
             if node.nodeType == node.ELEMENT_NODE:
-                flow = self._flowable(node) 
+                flow = self._flowable(node)
                 if flow:
                     if type(flow) == type([]):
                         story = story + flow
@@ -777,11 +780,13 @@ class _rml_template(object):
                 fis.append(PageCount())
 
             fis.append(platypus.PageBreak())
-            
+
         self.doc_tmpl.build(fis)
 
-def parseString(data, fout=None, images={}, path='.'):
+def parseString(data, fout=None, images={}, path='.',title=None):
     r = _rml_doc(data, images, path)
+    global ftitle
+    ftitle=title
     if fout:
         fp = file(fout,'wb')
         r.render(fp)

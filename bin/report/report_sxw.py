@@ -197,7 +197,7 @@ class _date_format(str, _format):
                     datedata)
             except :
                 pass
-	return '' 
+	return ''
 
 _fields_process = {
     'float': _float_format,
@@ -415,7 +415,7 @@ class rml_parse(object):
         res = self._regex.findall(text)
         todo = []
         # translate the text
-        # the "split [[]] if not match [[]]" is not very nice, but I 
+        # the "split [[]] if not match [[]]" is not very nice, but I
         # don't see how I could do it better...
         # what I'd like to do is a re.sub(NOT pattern, func, string)
         # but I don't know how to do that...
@@ -444,7 +444,7 @@ class rml_parse(object):
                 #if not isinstance(newtext, basestring):
                 newtext = str(newtext)
                 # if there are two [[]] blocks the same, it will replace both
-                # but it's ok because it should evaluate to the same thing 
+                # but it's ok because it should evaluate to the same thing
                 # anyway
                 text = text.replace('[['+key+']]', newtext.decode('utf8'))
         self._node.data = text
@@ -485,7 +485,7 @@ class rml_parse(object):
                 self.localcontext.update(self.node_context[self._node])
             if self._node.nodeType in (self._node.CDATA_SECTION_NODE, self._node.TEXT_NODE):
 #               if self._node in self.already:
-#                   self.already[self._node] += 1 
+#                   self.already[self._node] += 1
 #                   print "second pass!", self.already[self._node], '---%s---' % self._node.data
 #               else:
 #                   self.already[self._node] = 0
@@ -660,7 +660,8 @@ class report_sxw(report_rml):
                 logo = base64.decodestring(rml_parser.logo)
 
         create_doc = self.generators[report_type]
-        pdf = create_doc(rml2, logo)
+        title = ir_actions_report_xml_obj.browse(cr,uid,report_xml_ids)[0].name
+        pdf = create_doc(rml2, logo,title)
         return (pdf, report_type)
 
 
