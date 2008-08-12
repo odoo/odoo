@@ -10,10 +10,6 @@
             <field name="name">Customer Executive</field>
         </record>
         
-        <record id="base.user_admin" model="res.users">
-            <field eval="[ (4 ,ref('base.group_admin')), (4, ref('group_crm_manager')), (4, ref('group_crm_member')) ]" name="groups_id"/>
-        </record>
-        
         <!-- CRM Case security -->
         <record id="access_crm_case" model="ir.model.access">
             <field name="name">CRM Case</field>

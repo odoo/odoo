@@ -10,10 +10,6 @@
             <field name="name">Workers</field>
         </record>
         
-        <record id="base.user_admin" model="res.users">
-            <field eval="[(4 ,ref('group_production_manager')) ,(4, ref('group_production_worker'))]" name="groups_id"/>
-        </record>
-        
         <record id="mrp.group_production_manager" model="res.groups">
             <field eval="[(6,0,[ref('mrp.menu_mrp_root'),ref('mrp.menu_mrp_configuration'),ref('mrp.menu_mrp_production_action'),ref('mrp.menu_production_orders_start'),ref('mrp.menu_mrp_production_action3'),ref('mrp.menu_production_orders_waiting4'),ref('mrp.menu_mrp_bom_form_action'),ref('mrp.menu_mrp_routing_action'),ref('mrp.menu_mrp_workcenter_action'),ref('mrp.menu_bom_tree'),ref('mrp.menu_mrp_bom_form_action2'),ref('mrp.menu_mrp_property_group_action'),ref('mrp.menu_mrp_property_action'),ref('mrp.menu_mrp_procurement_action'),ref('mrp.menu_mrp_procurement_action2'),ref('mrp.menu_mrp_procurement_action3'),ref('mrp.menu_mrp_procurement_action11'),ref('mrp.menu_wiz_mrp_proc1'),ref('mrp.menu_mrp_procurement_action')])]" name="menu_access"/>
         </record>

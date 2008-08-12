@@ -6,10 +6,6 @@
             <field name="name">Purchase Manager</field>
         </record>
         
-        <record id="base.user_admin" model="res.users">
-            <field eval="[(4 ,ref('group_purchase_manager'))]" name="groups_id"/>
-        </record>
-        
         <record id="ir_model_access_stockmove0" model="ir.model.access">
             <field model="ir.model" name="model_id" search="[('name','=','Stock Move')]"/>
             <field eval="1" name="perm_read"/>

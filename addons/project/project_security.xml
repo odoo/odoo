@@ -10,10 +10,6 @@
             <field name="name">Project Member</field>
         </record>
         
-        <record id="base.user_admin" model="res.users">
-            <field eval="[(4, ref('group_project_manager')), (4, ref('group_project_member'))]" name="groups_id"/>
-        </record>
-        
         <!-- Project security -->
         <record id="access_project" model="ir.model.access">
             <field name="name">Project</field>
