@@ -1,6 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2008 Camptocamp SA
 #
 # $Id$
 #
@@ -60,11 +61,6 @@ class ir_model(osv.osv):
         'state': lambda self,cr,uid,ctx={}: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
     }
     
-    #FIXME: We'll be back soon 
-    #_constraints = [
-    #    (_check_model_name, 'The model name must start with x_ and not contain any special character !', ['model']),
-    #]
-    
     def _check_model_name(self, cr, uid, ids):
         for model in self.browse(cr, uid, ids):
             if model.state=='manual':
@@ -73,6 +69,11 @@ class ir_model(osv.osv):
             if not re.match('^[a-z_A-Z0-9]+$',model.model):
                 return False
         return True
+    
+    #FIXME: We'll be back soon 
+    #_constraints = [
+    #    (_check_model_name, 'The model name must start with x_ and not contain any special character !', ['model']),
+    #]
 
     def instanciate(self, cr, user, model, context={}):
         class x_custom_model(osv.osv):
@@ -193,7 +194,7 @@ class ir_model(osv.osv):
             groups_br = self.pool.get('res.groups').browse(cr, uid, groups)
             
             cols = ['model', 'type']
-            xml = '''<?xml version="1.0"?><tree editable="top"><field name="model" readonly="1"/><field name="type" readonly="1"/>'''
+            xml = '''<?xml version="1.0"?><tree editable="top"><field name="model" readonly="1"/>'''
             for group in groups_br:
                 xml += '''<field name="group_%i" sum="%s"/>''' % (group.id, group.name)
             xml += '''</tree>'''
@@ -280,7 +281,7 @@ class ir_model_access(osv.osv):
         res = False
         grouparr  = group.split('.')
         if grouparr:
-            cr.execute("select * from res_groups_users_rel where uid=" + str(uid) + " and gid in(select res_id from ir_model_data where module='%s' and name='%s')", (grouparr[0], grouparr[1],))
+            cr.execute("select * from res_groups_users_rel where uid=" + str(uid) + " and gid in(select res_id from ir_model_data where module=%s and name=%s)", (grouparr[0], grouparr[1],))
             r = cr.fetchall()    
             if not r:
                 res = False
@@ -288,6 +289,15 @@ class ir_model_access(osv.osv):
                 res = True
         else:
             res = False
+        return res
+    
+    def check_groups_by_id(self, cr, uid, group_id):
+        cr.execute("select * from res_groups_users_rel where uid=%i and gid=%i", (uid, group_id,))
+        r = cr.fetchall()    
+        if not r:
+            res = False
+        else:
+            res = True
         return res
     
     def check(self, cr, uid, model_name, mode='read',raise_exception=True):

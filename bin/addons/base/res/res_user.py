@@ -1,6 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2008 Camptocamp SA
 #
 # $Id$
 #
@@ -73,7 +74,7 @@ class roles(osv.osv):
         'parent_id': fields.many2one('res.roles', 'Parent', select=True),
         'child_id': fields.one2many('res.roles', 'parent_id', 'Childs'),
         'users': fields.many2many('res.users', 'res_roles_users_rel', 'rid', 'uid', 'Users'),
-        'groups': fields.many2many('res.groups', 'res_roles_groups_rel', 'rid', 'gid', 'Groups'),
+        #'groups': fields.many2many('res.groups', 'res_roles_groups_rel', 'rid', 'gid', 'Groups'),
     }
     _defaults = {
     }
@@ -156,17 +157,23 @@ class users(osv.osv):
             self.pool.get('ir.rule').domain_get()
         else:
             raise except_orm(_('AccessError'), 'You can not write in this document (res.users)')
+        
+        #Only root can change root password
+        user_obj_towrite=self.pool.get('res.users').read(cr, uid, uid)
+        if user_obj_towrite['login']=='root' and uid!=1:
+            raise osv.except_osv('UserError', 'Only admin user can change admin password')
         return res
 
-    def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        result = super(users, self).read(cr, uid, ids, fields, context, load)
+    #def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
+        #result = super(users, self).read(cr, uid, ids, fields, context, load)
+        #print result
         #canwrite = self.pool.get('ir.model.access').check(cr, uid, 'res.users', 'write', raise_exception=False)
         #if not canwrite and ids!=[uid]:
         #    for r in result:
         #        if 'password' in r:
         #            r['password'] = '********'
         #    result=r
-        return result
+        #return result
 
     def unlink(self, cr, uid, ids):
         if 1 in ids:
@@ -244,7 +251,7 @@ class groups2(osv.osv): ##FIXME: Is there a reason to inherit this object ?
     _inherit = 'res.groups'
     _columns = {
         'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users'),
-        'roles': fields.many2many('res.roles', 'res_roles_groups_rel', 'gid', 'rid', 'Roles'),
+        #'roles': fields.many2many('res.roles', 'res_roles_groups_rel', 'gid', 'rid', 'Roles'),
     }
 groups2()
 

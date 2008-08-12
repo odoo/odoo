@@ -643,7 +643,7 @@
             <tree string="Model Description">
                 <field name="name"/>
                 <field name="model"/>
-                <field name="type"/>
+                <!--<field name="type"/>-->
             </tree>
         </field>
     </record>
@@ -947,7 +947,7 @@ Cron Jobs
     </record>
     
     <record model="ir.actions.act_window" id="action_model_view_security">
-        <field name="name">Define Access</field>
+        <field name="name">Access Structure</field>
         <field name="res_model">ir.model</field>
         <field name="view_type">form</field>
         <field name="view_mode">form,tree</field>
@@ -956,12 +956,12 @@ Cron Jobs
     </record>
     
     <menuitem sequence="1" id="menu_objects_security" parent="base.menu_security" name="Access"/>
-        <menuitem sequence="1" action="action_model_view_security" id="menu_objects_security_view" parent="base.menu_objects_security" name="Define Access"/>
+        <menuitem sequence="1" action="action_model_view_security" id="menu_objects_security_view" parent="base.menu_objects_security" name="Access Structure"/>
         <menuitem sequence="2" action="ir_access_act" id="menu_ir_access_act" parent="base.menu_objects_security" name="Export/Import Access"/>
 
 <!--Menus-->
-    <menuitem sequence="2" id="menu_menus_security" parent="base.menu_security" name="Menus"/>
-        <menuitem sequence="1" action="grant_menu_access" id="menu_grant_menu_access" parent="base.menu_menus_security" name="Define Menus"/>
+    <!--<menuitem sequence="2" id="menu_menus_security" parent="base.menu_security" name="Menus"/>-->
+        <menuitem sequence="2" action="grant_menu_access" id="menu_grant_menu_access" parent="base.menu_security" name="Menus Structure"/>
 
 <!--Roles-->
     <record id="view_roles_form" model="ir.ui.view">
@@ -978,9 +978,9 @@ Cron Jobs
                     <page string="Users">
                         <field colspan="4" name="users"/>
                     </page>
-                    <page string="Groups">
-                        <field colspan="4" name="groups"/>
-                    </page>
+                    <!--<page string="Groups">-->
+                    <!--    <field colspan="4" name="groups"/>-->
+                    <!--</page>-->
                 </notebook>
             </form>
         </field>
@@ -1013,8 +1013,8 @@ Cron Jobs
         <field name="view_type">form</field>
     </record>
 
-    <menuitem sequence="3" id="menu_action_res_roles" parent="base.menu_security" name="Roles"/>
-        <menuitem sequence="1" action="action_res_roles_form" id="menu_action_res_roles_form" parent="menu_action_res_roles" name="Define Roles"/>
+    <!--<menuitem sequence="3" id="menu_action_res_roles" parent="base.menu_security" name="Roles"/>-->
+        <menuitem sequence="3" action="action_res_roles_form" id="menu_action_res_roles_form" parent="base.menu_security" name="Roles Structure"/>
 
 <!-- Rules -->
     <record id="view_rule_group_form" model="ir.ui.view">
@@ -1095,8 +1095,8 @@ Cron Jobs
         <field name="view_id" ref="view_rule_group_tree"/>
     </record>
     
-    <menuitem sequence="4" id="menu_rules_security" parent="base.menu_security" name="Rules"/>
-        <menuitem action="action_rule" id="menu_action_rule" parent="base.menu_rules_security" name="Define Rules"/>
+    <!--<menuitem sequence="4" id="menu_rules_security" parent="base.menu_security" name="Rules"/>-->
+        <menuitem sequence="4" action="action_rule" id="menu_action_rule" parent="base.menu_security" name="Rules Structure"/>
 
     </data>
 </terp>

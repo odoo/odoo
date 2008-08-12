@@ -2,6 +2,7 @@
 ##############################################################################
 #
 # Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2008 Camptocamp SA
 #
 # $Id$
 #
@@ -823,30 +824,37 @@ class orm_template(object):
 		if not context:
 			context={}
 		fields_def = self.__view_look_dom(cr, user, node, context=context)
-
+		
 		buttons = xpath.Evaluate('//button', node)
 		if buttons:
 			for button in buttons:
 				if button.getAttribute('type') == 'object':
 					continue
-
+				
 				ok = True
-
+				
 				serv = netsvc.LocalService('object_proxy')
 				user_roles = serv.execute_cr(cr, user, 'res.users', 'read', [user], ['roles_id'])[0]['roles_id']
 				cr.execute("select role_id from wkf_transition where signal='%s'" % button.getAttribute('name'))
 				roles = cr.fetchall()
 				for role in roles:
 					if role[0]:
+						# Check if group is in role
+						#cr.execute("select gid from res_roles_groups_rel where rid=%i", (role[0],))
+						#groups = cr.fetchall()
+						#if len(groups)>0:
+						#	for group in groups:
+						#		ok = self.pool.get('ir.model.access').check_groups_by_id(cr, user, group[0])
+						#else:
 						ok = ok and serv.execute_cr(cr, user, 'res.roles', 'check', user_roles, role[0])
-
+					
 				if not ok:
 					button.setAttribute('readonly', '1')
 				else:
 					button.setAttribute('readonly', '0')
-
+				print ok
+			
 		arch = node.toxml(encoding="utf-8").replace('\t', '')
-
 		fields = self.fields_get(cr, user, fields_def.keys(), context)
 		for field in fields_def:
 			fields[field].update(fields_def[field])
