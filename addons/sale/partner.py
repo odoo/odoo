@@ -32,15 +32,15 @@
 from osv import fields, osv
 
 
-class res_partner(osv.osv):
-    _name = 'res.partner'
-    _inherit = 'res.partner'
-    _columns = {
-        'sales': fields.one2many('sale.order', 'partner_id', 'Sales'),
-    }
-
-res_partner()
-
+#class res_partner(osv.osv):
+#    _name = 'res.partner'
+#    _inherit = 'res.partner'
+#    _columns = {
+#        'sales': fields.one2many('sale.order', 'partner_id', 'Sales'),
+#    }
+#
+#res_partner()
+#
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
