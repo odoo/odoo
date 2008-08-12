@@ -68,16 +68,14 @@ class board_board(osv.osv):
         result = super(board_board, self).write(cr, uid, ids, vals, context)
         cr.commit()
         
-        board = self.pool.get('board.board').read(cr, uid, ids)[0]
+        board = self.pool.get('board.board').browse(cr, uid, ids[0])
         
         view = self.create_view(cr, uid, ids[0], context)
-        id = board['view_id'][0]
+        id = board.view_id.id
         
         cr.execute("update ir_ui_view set arch='%s' where id=%d" % (view, id))
         cr.commit()
-        
-        #self.pool.get('ir.ui.view').write(cr, uid, [], view, {'tiny':'base'})
-        
+                
         return result
     
     def create(self, cr, user, vals, context=None):
@@ -91,15 +89,20 @@ class board_board(osv.osv):
             'type': 'form',
             'arch': self.create_view(cr, user, id, context),
         })
-        self.pool.get('board.board').write(cr, user, [id], {'view_id':view_id})
+        vals['view_id'] = view_id
+        super(board_board, self).write(cr, user, [id], vals, context)
         return id
     
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False):
         res = {}
-        vids = self.pool.get('ir.ui.view').search(cr, user, [('user_id','=',user), ('ref_id','=',view_id)])
+        res = super(board_board, self).fields_view_get(cr, user, view_id, view_type, context, toolbar)
+        
+        vids = self.pool.get('ir.ui.view.custom').search(cr, user, [('user_id','=',user), ('ref_id','=',view_id)])
         if vids:
             view_id = vids[0]
-        res = super(board_board, self).fields_view_get(cr, user, view_id, view_type, context, toolbar)
+            arch = self.pool.get('ir.ui.view.custom').browse(cr, user, view_id)
+            res['arch'] = arch.arch
+            
         res['toolbar'] = {'print':[],'action':[],'relate':[]}
         return res
     
@@ -114,7 +117,7 @@ class board_line(osv.osv):
     _name = 'board.board.line'
     _order = 'position,sequence'
     _columns = {
-        'name': fields.char('Board', size=64, required=True),
+        'name': fields.char('Title', size=64, required=True),
         'sequence': fields.integer('Sequence'),
         'height': fields.integer('Height'),
         'width': fields.integer('Width'),
