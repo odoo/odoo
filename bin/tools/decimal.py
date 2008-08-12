@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 # Copyright (c) 2004 Python Software Foundation.
 # All rights reserved.
 
@@ -3077,3 +3078,6 @@ def _string2exact(s):
 if __name__ == '__main__':
     import doctest, sys
     doctest.testmod(sys.modules[__name__])
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

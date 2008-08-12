@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
@@ -75,8 +76,8 @@ import tools
 import time
 
 if sys.platform=='win32':
-	import mx.DateTime
-	mx.DateTime.strptime = lambda x,y: mx.DateTime.mktime(time.strptime(x, y))
+    import mx.DateTime
+    mx.DateTime.strptime = lambda x,y: mx.DateTime.mktime(time.strptime(x, y))
 
 #os.chdir(tools.file_path_root)
 
@@ -98,18 +99,18 @@ import pooler
 
 # try to connect to the database
 try:
-#	pooler.init()
-	pass
+#   pooler.init()
+    pass
 except psycopg.OperationalError, err:
-	logger.notifyChannel("init", netsvc.LOG_ERROR, "could not connect to database '%s'!" % (tools.config["db_name"],))
+    logger.notifyChannel("init", netsvc.LOG_ERROR, "could not connect to database '%s'!" % (tools.config["db_name"],))
 
-	msg = str(err).replace("FATAL:","").strip()
-	db_msg = "database \"%s\" does not exist" % (tools.config["db_name"],)
-	
-	# Note: this is ugly but since psycopg only uses one exception for all errors
-	# I don't think it's possible to do differently
-	if msg == db_msg:
-		print """
+    msg = str(err).replace("FATAL:","").strip()
+    db_msg = "database \"%s\" does not exist" % (tools.config["db_name"],)
+    
+    # Note: this is ugly but since psycopg only uses one exception for all errors
+    # I don't think it's possible to do differently
+    if msg == db_msg:
+        print """
     this database does not exist
 
 You need to create it using the command:
@@ -126,42 +127,42 @@ Two accounts will be created by default:
     2. login: demo       password : demo
 
 """ % (tools.config["db_name"])
-	else:
-		print "\n    "+msg+"\n"
-	sys.exit(1)
+    else:
+        print "\n    "+msg+"\n"
+    sys.exit(1)
 
 db_name = tools.config["db_name"]
 
 # test whether it is needed to initialize the db (the db is empty)
 try:
-	cr = pooler.get_db_only(db_name).cursor()
+    cr = pooler.get_db_only(db_name).cursor()
 except psycopg.OperationalError:
-	logger.notifyChannel("init", netsvc.LOG_INFO, "could not connect to database '%s'!" % db_name,)
-	cr = None
+    logger.notifyChannel("init", netsvc.LOG_INFO, "could not connect to database '%s'!" % db_name,)
+    cr = None
 if cr:
-	cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname='ir_ui_menu'")
-	if len(cr.fetchall())==0:
+    cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname='ir_ui_menu'")
+    if len(cr.fetchall())==0:
 #if False:
-		logger.notifyChannel("init", netsvc.LOG_INFO, "init db")
-		tools.init_db(cr)
-		# in that case, force --init=all
-		tools.config["init"]["all"] = 1
-		tools.config['update']['all'] = 1
-		if not tools.config['without_demo']:
-			tools.config["demo"]['all'] = 1
-	cr.close()
+        logger.notifyChannel("init", netsvc.LOG_INFO, "init db")
+        tools.init_db(cr)
+        # in that case, force --init=all
+        tools.config["init"]["all"] = 1
+        tools.config['update']['all'] = 1
+        if not tools.config['without_demo']:
+            tools.config["demo"]['all'] = 1
+    cr.close()
 
 #----------------------------------------------------------
 # launch modules install/upgrade/removes if needed
 #----------------------------------------------------------
 if tools.config['upgrade']:
-	print 'Upgrading new modules...'
-	import tools.upgrade
-	(toinit, toupdate) = tools.upgrade.upgrade()
-	for m in toinit:
-		tools.config['init'][m] = 1
-	for m in toupdate:
-		tools.config['update'][m] = 1
+    print 'Upgrading new modules...'
+    import tools.upgrade
+    (toinit, toupdate) = tools.upgrade.upgrade()
+    for m in toinit:
+        tools.config['init'][m] = 1
+    for m in toupdate:
+        tools.config['update'][m] = 1
 
 #----------------------------------------------------------
 # import basic modules 
@@ -175,27 +176,27 @@ import addons
 
 addons.register_classes()
 if tools.config['init'] or tools.config['update']:
-	pooler.get_db_and_pool(tools.config['db_name'], update_module=True)
+    pooler.get_db_and_pool(tools.config['db_name'], update_module=True)
 
 #----------------------------------------------------------
 # translation stuff
 #----------------------------------------------------------
 if tools.config["translate_out"]:
-	import csv
+    import csv
 
-	logger.notifyChannel("init", netsvc.LOG_INFO, 'writing translation file for language %s to %s' % (tools.config["language"], tools.config["translate_out"]))
+    logger.notifyChannel("init", netsvc.LOG_INFO, 'writing translation file for language %s to %s' % (tools.config["language"], tools.config["translate_out"]))
 
-	fileformat = os.path.splitext(tools.config["translate_out"])[-1][1:].lower()
-	buf = file(tools.config["translate_out"], "w")
-	tools.trans_export(tools.config["language"], tools.config["translate_modules"], buf, fileformat)
-	buf.close()
-	
-	logger.notifyChannel("init", netsvc.LOG_INFO, 'translation file written succesfully')
-	sys.exit(0)
+    fileformat = os.path.splitext(tools.config["translate_out"])[-1][1:].lower()
+    buf = file(tools.config["translate_out"], "w")
+    tools.trans_export(tools.config["language"], tools.config["translate_modules"], buf, fileformat)
+    buf.close()
+    
+    logger.notifyChannel("init", netsvc.LOG_INFO, 'translation file written succesfully')
+    sys.exit(0)
 
 if tools.config["translate_in"]:
-	tools.trans_load(tools.config["db_name"], tools.config["translate_in"], tools.config["language"])
-	sys.exit(0)
+    tools.trans_load(tools.config["db_name"], tools.config["translate_in"], tools.config["language"])
+    sys.exit(0)
 
 #----------------------------------------------------------------------------------
 # if we don't want the server to continue to run after initialization, we quit here
@@ -209,69 +210,72 @@ if tools.config["stop_after_init"]:
 #----------------------------------------------------------
 
 if tools.config['xmlrpc']:
-	try:
-		port = int(tools.config["port"])
-	except Exception:
-		logger.notifyChannel("init", netsvc.LOG_ERROR, "invalid port '%s'!" % (tools.config["port"],))
-		sys.exit(1)
-	interface = tools.config["interface"]
-	secure = tools.config["secure"]
-	
-	httpd = netsvc.HttpDaemon(interface,port, secure)
-	
-	if tools.config["xmlrpc"]:
-		xml_gw = netsvc.xmlrpc.RpcGateway('web-services')
-		httpd.attach("/xmlrpc", xml_gw )
-		logger.notifyChannel("web-services", netsvc.LOG_INFO,
-				"starting XML-RPC" + \
-						(tools.config['secure'] and ' Secure' or '') + \
-						" services, port " + str(port))
+    try:
+        port = int(tools.config["port"])
+    except Exception:
+        logger.notifyChannel("init", netsvc.LOG_ERROR, "invalid port '%s'!" % (tools.config["port"],))
+        sys.exit(1)
+    interface = tools.config["interface"]
+    secure = tools.config["secure"]
+    
+    httpd = netsvc.HttpDaemon(interface,port, secure)
+    
+    if tools.config["xmlrpc"]:
+        xml_gw = netsvc.xmlrpc.RpcGateway('web-services')
+        httpd.attach("/xmlrpc", xml_gw )
+        logger.notifyChannel("web-services", netsvc.LOG_INFO,
+                "starting XML-RPC" + \
+                        (tools.config['secure'] and ' Secure' or '') + \
+                        " services, port " + str(port))
 
-	#
-	#if tools.config["soap"]:
-	#	soap_gw = netsvc.xmlrpc.RpcGateway('web-services')
-	#	httpd.attach("/soap", soap_gw )
-	#	logger.notifyChannel("web-services", netsvc.LOG_INFO, 'starting SOAP services, port '+str(port))
-	#
+    #
+    #if tools.config["soap"]:
+    #   soap_gw = netsvc.xmlrpc.RpcGateway('web-services')
+    #   httpd.attach("/soap", soap_gw )
+    #   logger.notifyChannel("web-services", netsvc.LOG_INFO, 'starting SOAP services, port '+str(port))
+    #
 
 if tools.config['netrpc']:
-	try:
-		netport = int(tools.config["netport"])
-	except Exception:
-		logger.notifyChannel("init", netsvc.LOG_ERROR, "invalid port '%s'!" % (tools.config["netport"],))
-		sys.exit(1)
-	netinterface = tools.config["netinterface"]
-	
-	tinySocket = netsvc.TinySocketServerThread(netinterface, netport, False)
-	logger.notifyChannel("web-services", netsvc.LOG_INFO, "starting netrpc service, port "+str(netport))
+    try:
+        netport = int(tools.config["netport"])
+    except Exception:
+        logger.notifyChannel("init", netsvc.LOG_ERROR, "invalid port '%s'!" % (tools.config["netport"],))
+        sys.exit(1)
+    netinterface = tools.config["netinterface"]
+    
+    tinySocket = netsvc.TinySocketServerThread(netinterface, netport, False)
+    logger.notifyChannel("web-services", netsvc.LOG_INFO, "starting netrpc service, port "+str(netport))
 
 def handler(signum, frame):
-	from tools import config
-	if tools.config['netrpc']:
-		tinySocket.stop()
-	if tools.config['xmlrpc']:
-		httpd.stop()
-	netsvc.Agent.quit()
-	if config['pidfile']:
-		os.unlink(config['pidfile'])
-	sys.exit(0)
+    from tools import config
+    if tools.config['netrpc']:
+        tinySocket.stop()
+    if tools.config['xmlrpc']:
+        httpd.stop()
+    netsvc.Agent.quit()
+    if config['pidfile']:
+        os.unlink(config['pidfile'])
+    sys.exit(0)
 
 from tools import config
 if config['pidfile']:
-	fd=open(config['pidfile'], 'w')
-	pidtext="%d" % (os.getpid())
-	fd.write(pidtext)
-	fd.close()
+    fd=open(config['pidfile'], 'w')
+    pidtext="%d" % (os.getpid())
+    fd.write(pidtext)
+    fd.close()
 
 signal.signal(signal.SIGINT, handler)
 signal.signal(signal.SIGTERM, handler)
 
 logger.notifyChannel("web-services", netsvc.LOG_INFO, 'the server is running, waiting for connections...')
 if tools.config['netrpc']:
-	tinySocket.start()
+    tinySocket.start()
 if tools.config['xmlrpc']:
-	httpd.start()
+    httpd.start()
 #dispatcher.run()
 
 while True:
-	time.sleep(1)
+    time.sleep(1)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

@@ -1,6 +1,8 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2008 Camptocamp SA
 #
 # $Id$
 #
@@ -46,16 +48,10 @@
 	],
 	"update_xml" : [
 		"base_update.xml",
-		"ir/wizard/wizard_menu_view.xml",
 		"ir/ir.xml",
+		"ir/wizard/wizard_menu_view.xml",
 		"ir/workflow/workflow_view.xml",
 		"res/ir_property_view.xml",
-		"module/module_data.xml",
-		"module/module_wizard.xml",
-		"module/module_view.xml",
-		"module/module_report.xml",
-		"res/res_request_view.xml",
-		"res/res_lang_view.xml",
 		"res/partner/partner_report.xml",
 		"res/partner/partner_view.xml",
 		"res/partner/partner_wizard.xml",
@@ -63,9 +59,15 @@
 		"res/partner/crm_view.xml",
 		"res/bank_view.xml",
 		"res/country_view.xml",
+		"res/res_request_view.xml",
+		"res/res_lang_view.xml",
 		"res/res_currency_view.xml",
 		"res/res_request_view.xml",
 		"res/res_lang_view.xml",
+		"module/module_data.xml",
+		"module/module_wizard.xml",
+		"module/module_view.xml",
+		"module/module_report.xml",
 		"module/module_data.xml",
 		"module/module_wizard.xml",
 		"module/module_view.xml",

@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -53,15 +54,15 @@ options.db_name = 'terp' # default value
 parser.parse_args(values=options)
 
 if hasattr(options, 'config'):
-	configparser = ConfigParser.ConfigParser()
-	configparser.read([options.config])
-	for name, value in configparser.items('options'):
-		if not (hasattr(options, name) and getattr(options, name)):
-			if value in ('true', 'True'):
-				value = True
-			if value in ('false', 'False'):
-				value = False
-			setattr(options, name, value)
+    configparser = ConfigParser.ConfigParser()
+    configparser.read([options.config])
+    for name, value in configparser.items('options'):
+        if not (hasattr(options, name) and getattr(options, name)):
+            if value in ('true', 'True'):
+                value = True
+            if value in ('false', 'False'):
+                value = False
+            setattr(options, name, value)
 
 # -----
 
@@ -79,18 +80,18 @@ cr = db.cursor()
 # ------------------------- #
 
 def change_column(cr, table, column, new_type, copy):
-	commands = [
-		"ALTER TABLE %s RENAME COLUMN %s TO temp_column" % (table, column),
-		"ALTER TABLE %s ADD COLUMN %s %s" % (table, column, new_type),
-		"ALTER TABLE %s DROP COLUMN temp_column" % table
-	]
-	if copy:
-		commands.insert(
-			2, 
-			"UPDATE %s SET %s=temp_column::%s" % (table, column, new_type))
+    commands = [
+        "ALTER TABLE %s RENAME COLUMN %s TO temp_column" % (table, column),
+        "ALTER TABLE %s ADD COLUMN %s %s" % (table, column, new_type),
+        "ALTER TABLE %s DROP COLUMN temp_column" % table
+    ]
+    if copy:
+        commands.insert(
+            2, 
+            "UPDATE %s SET %s=temp_column::%s" % (table, column, new_type))
 
-	for command in commands:
-		cr.execute(command)
+    for command in commands:
+        cr.execute(command)
 
 #change_column(cr, 'crm_case', 'date_closed', 'timestamp', True)
 cr.commit()
@@ -101,7 +102,7 @@ cr.commit()
 
 cr.execute("SELECT name FROM ir_module_module")
 if not cr.rowcount:
-	for module in set(['base', 'marketing', 'subscription', 'account', 'base_partner_relation', 'audittrail', 'account_followup', 'product', 'hr', 'l10n_simple', 'crm', 'stock', 'hr_timesheet', 'purchase', 'report_purchase', 'mrp', 'sale', 'report_sale', 'delivery', 'project', 'sale_crm', 'hr_timesheet_project', 'scrum', 'report_project',
+    for module in set(['base', 'marketing', 'subscription', 'account', 'base_partner_relation', 'audittrail', 'account_followup', 'product', 'hr', 'l10n_simple', 'crm', 'stock', 'hr_timesheet', 'purchase', 'report_purchase', 'mrp', 'sale', 'report_sale', 'delivery', 'project', 'sale_crm', 'hr_timesheet_project', 'scrum', 'report_project',
 'account_followup',
 'account',
 'audittrail',
@@ -131,8 +132,8 @@ if not cr.rowcount:
 'sandwich',
 'scrum',
 'stock']):
-		cr.execute("INSERT INTO ir_module_module (name, state) VALUES ('%s', 'installed')" % module)
-	cr.commit()
+        cr.execute("INSERT INTO ir_module_module (name, state) VALUES ('%s', 'installed')" % module)
+    cr.commit()
 
 
 # ----------------------------------------------------- #
@@ -140,11 +141,14 @@ if not cr.rowcount:
 # ----------------------------------------------------- #
 
 for line in (
-		"ALTER TABLE ir_module_module ADD demo BOOLEAN DEFAULT False",
-		"delete from ir_values where value like '%,False'",
-		"""UPDATE ir_ui_view set arch='<?xml version="1.0"?><tree string="Menu" toolbar="1"><field icon="icon" name="name"/></tree>' where name='ir.ui.menu.tree' and type='tree' and field_parent='child_id'""",
-	):
-	cr.execute(line)
+        "ALTER TABLE ir_module_module ADD demo BOOLEAN DEFAULT False",
+        "delete from ir_values where value like '%,False'",
+        """UPDATE ir_ui_view set arch='<?xml version="1.0"?><tree string="Menu" toolbar="1"><field icon="icon" name="name"/></tree>' where name='ir.ui.menu.tree' and type='tree' and field_parent='child_id'""",
+    ):
+    cr.execute(line)
 
 cr.commit()
 cr.close()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

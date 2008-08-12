@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -53,15 +54,15 @@ options.db_name = 'terp' # default value
 parser.parse_args(values=options)
 
 if hasattr(options, 'config'):
-	configparser = ConfigParser.ConfigParser()
-	configparser.read([options.config])
-	for name, value in configparser.items('options'):
-		if not (hasattr(options, name) and getattr(options, name)):
-			if value in ('true', 'True'):
-				value = True
-			if value in ('false', 'False'):
-				value = False
-			setattr(options, name, value)
+    configparser = ConfigParser.ConfigParser()
+    configparser.read([options.config])
+    for name, value in configparser.items('options'):
+        if not (hasattr(options, name) and getattr(options, name)):
+            if value in ('true', 'True'):
+                value = True
+            if value in ('false', 'False'):
+                value = False
+            setattr(options, name, value)
 
 # -----
 
@@ -79,18 +80,18 @@ cr = db.cursor()
 # ------------------------- #
 
 def change_column(cr, table, column, new_type, copy):
-	commands = [
-		"ALTER TABLE %s RENAME COLUMN %s TO temp_column" % (table, column),
-		"ALTER TABLE %s ADD COLUMN %s %s" % (table, column, new_type),
-		"ALTER TABLE %s DROP COLUMN temp_column" % table
-	]
-	if copy:
-		commands.insert(
-			2, 
-			"UPDATE %s SET %s=temp_column::%s" % (table, column, new_type))
+    commands = [
+        "ALTER TABLE %s RENAME COLUMN %s TO temp_column" % (table, column),
+        "ALTER TABLE %s ADD COLUMN %s %s" % (table, column, new_type),
+        "ALTER TABLE %s DROP COLUMN temp_column" % table
+    ]
+    if copy:
+        commands.insert(
+            2, 
+            "UPDATE %s SET %s=temp_column::%s" % (table, column, new_type))
 
-	for command in commands:
-		cr.execute(command)
+    for command in commands:
+        cr.execute(command)
 
 change_column(cr, 'account_account_type', 'code_from', 'varchar(10)', False)
 change_column(cr, 'account_account_type', 'code_to', 'varchar(10)', False)
@@ -101,17 +102,20 @@ cr.commit()
 # ----------------------------------------------------- #
 
 for line in (
-		"alter table ir_model_fields add group_name varchar(64)",
-		"alter table ir_model_fields add view_load boolean",
-		"alter table ir_model_fields alter group_name set default ''",
-		"alter table ir_model_fields alter view_load set default False",
-		"delete from ir_values where value like '%,False'",
-	):
-	try:
-		cr.execute(line)
-	except psycopg.ProgrammingError, e:
-		cr.commit()
-		print e
+        "alter table ir_model_fields add group_name varchar(64)",
+        "alter table ir_model_fields add view_load boolean",
+        "alter table ir_model_fields alter group_name set default ''",
+        "alter table ir_model_fields alter view_load set default False",
+        "delete from ir_values where value like '%,False'",
+    ):
+    try:
+        cr.execute(line)
+    except psycopg.ProgrammingError, e:
+        cr.commit()
+        print e
 
 cr.commit()
 cr.close()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

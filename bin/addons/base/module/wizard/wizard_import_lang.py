@@ -1,4 +1,4 @@
-# -*- coding: iso-8859-1 -*-
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -36,53 +36,56 @@ from tempfile import TemporaryFile
 
 view_form="""<?xml version="1.0"?>
 <form string="Import language">
-	<image name="gtk-dialog-info" colspan="2"/>
-	<group colspan="2" col="4">
-		<separator string="Import new language" colspan="4"/>
-		<field name="name"/>
-		<field name="code"/>
-		<field name="data" colspan="3"/>
-		<label string="You have to import a .CSV file wich is encoded in UTF-8.\nPlease check that the first line of your file is:" colspan="4" align="0.0"/>
-		<label string="type,name,res_id,src,value" colspan="4"/>
-	</group>
+    <image name="gtk-dialog-info" colspan="2"/>
+    <group colspan="2" col="4">
+        <separator string="Import new language" colspan="4"/>
+        <field name="name"/>
+        <field name="code"/>
+        <field name="data" colspan="3"/>
+        <label string="You have to import a .CSV file wich is encoded in UTF-8.\nPlease check that the first line of your file is:" colspan="4" align="0.0"/>
+        <label string="type,name,res_id,src,value" colspan="4"/>
+    </group>
 </form>"""
 
 fields_form={
-	'name':{'string':'Language name', 'type':'char', 'size':64, 'required':True},
-	'code':{'string':'Code (eg:en__US)', 'type':'char', 'size':5, 'required':True},
-	'data':{'string':'File', 'type':'binary', 'required':True},
+    'name':{'string':'Language name', 'type':'char', 'size':64, 'required':True},
+    'code':{'string':'Code (eg:en__US)', 'type':'char', 'size':5, 'required':True},
+    'data':{'string':'File', 'type':'binary', 'required':True},
 }
 
 class wizard_import_lang(wizard.interface):
 
-	def _import_lang(self, cr, uid, data, context):
-		form=data['form']
-		fileobj = TemporaryFile('w+')
-		fileobj.write( base64.decodestring(form['data']) )
+    def _import_lang(self, cr, uid, data, context):
+        form=data['form']
+        fileobj = TemporaryFile('w+')
+        fileobj.write( base64.decodestring(form['data']) )
 
-		# now we determine the file format
-		fileobj.seek(0)
-		first_line = fileobj.readline().strip()
-		fileformat = first_line.endswith("type,name,res_id,src,value") and 'csv' or 'po'
-		fileobj.seek(0)
+        # now we determine the file format
+        fileobj.seek(0)
+        first_line = fileobj.readline().strip()
+        fileformat = first_line.endswith("type,name,res_id,src,value") and 'csv' or 'po'
+        fileobj.seek(0)
 
-		tools.trans_load_data(cr.dbname, fileobj, fileformat, form['code'], lang_name=form['name'])
-		fileobj.close()
-		return {}
+        tools.trans_load_data(cr.dbname, fileobj, fileformat, form['code'], lang_name=form['name'])
+        fileobj.close()
+        return {}
 
-	states={
-		'init':{
-			'actions': [],
-			'result': {'type': 'form', 'arch': view_form, 'fields': fields_form,
-				'state':[
-					('end', 'Cancel', 'gtk-cancel'),
-					('finish', 'Ok', 'gtk-ok', True)
-				]
-			}
-		},
-		'finish':{
-			'actions':[],
-			'result':{'type':'action', 'action':_import_lang, 'state':'end'}
-		},
-	}
+    states={
+        'init':{
+            'actions': [],
+            'result': {'type': 'form', 'arch': view_form, 'fields': fields_form,
+                'state':[
+                    ('end', 'Cancel', 'gtk-cancel'),
+                    ('finish', 'Ok', 'gtk-ok', True)
+                ]
+            }
+        },
+        'finish':{
+            'actions':[],
+            'result':{'type':'action', 'action':_import_lang, 'state':'end'}
+        },
+    }
 wizard_import_lang('module.lang.import')
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

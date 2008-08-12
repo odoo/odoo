@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
@@ -36,60 +37,63 @@ import tools
 
 # remove an existing version of modules if it exist
 def remove(name):
-	adp = tools.config['addons_path']
-	addons = os.listdir(adp)
-	if name in addons:
-		try:
-			shutil.rmtree(os.path.join(adp, name))
-		except:
-			print "Unable to remove module %s !" % name
+    adp = tools.config['addons_path']
+    addons = os.listdir(adp)
+    if name in addons:
+        try:
+            shutil.rmtree(os.path.join(adp, name))
+        except:
+            print "Unable to remove module %s !" % name
 
 def install(name, url):
-	tar = tarfile.open(mode="r|gz", fileobj=urllib2.urlopen(url))
-	for tarinfo in tar:
-		tar.extract(tarinfo, tools.config['addons_path'])
+    tar = tarfile.open(mode="r|gz", fileobj=urllib2.urlopen(url))
+    for tarinfo in tar:
+        tar.extract(tarinfo, tools.config['addons_path'])
 
 def upgrade():
-	import pooler
-	cr = pooler.db.cursor()
+    import pooler
+    cr = pooler.db.cursor()
 
-	toinit = []
-	toupdate = []
+    toinit = []
+    toupdate = []
 
-#	print 'Check for correct rights (create and unlink on addons)...'
-	# todo: touch addons/test.txt
-	# todo: rm addons/test.txt
+#   print 'Check for correct rights (create and unlink on addons)...'
+    # todo: touch addons/test.txt
+    # todo: rm addons/test.txt
 
-	print 'Check for modules to remove...'
-	cr.execute('select id,name,url from ir_module_module where state=%s', ('to remove',))
-	for module_id,name,url in cr.fetchall():
-		print '\tremoving module %s' % name
-		remove(name)
-		cr.execute('update ir_module_module set state=%s where id=%d', ('uninstalled', module_id))
-		cr.commit()
+    print 'Check for modules to remove...'
+    cr.execute('select id,name,url from ir_module_module where state=%s', ('to remove',))
+    for module_id,name,url in cr.fetchall():
+        print '\tremoving module %s' % name
+        remove(name)
+        cr.execute('update ir_module_module set state=%s where id=%d', ('uninstalled', module_id))
+        cr.commit()
 
-	print 'Check for modules to upgrade...'
-	cr.execute('select id,name,url from ir_module_module where state=%s', ('to upgrade',))
-	for module_id,name,url in cr.fetchall():
-		print '\tupgrading module %s' % name
-		remove(name)
-		install(name, url)
-		cr.execute('update ir_module_module set state=%s where id=%d', ('installed', module_id))
-		cr.commit()
-		toupdate.append(name)
+    print 'Check for modules to upgrade...'
+    cr.execute('select id,name,url from ir_module_module where state=%s', ('to upgrade',))
+    for module_id,name,url in cr.fetchall():
+        print '\tupgrading module %s' % name
+        remove(name)
+        install(name, url)
+        cr.execute('update ir_module_module set state=%s where id=%d', ('installed', module_id))
+        cr.commit()
+        toupdate.append(name)
 
-	print 'Check for modules to install...'
-	cr.execute('select id,name,url from ir_module_module where state=%s', ('to install',))
-	for module_id,name,url in cr.fetchall():
-		print '\tinstalling module %s' % name
-		install(name, url)
-		cr.execute('update ir_module_module set state=%s where id=%d', ('installed', module_id))
-		cr.commit()
-		toinit.append(name)
+    print 'Check for modules to install...'
+    cr.execute('select id,name,url from ir_module_module where state=%s', ('to install',))
+    for module_id,name,url in cr.fetchall():
+        print '\tinstalling module %s' % name
+        install(name, url)
+        cr.execute('update ir_module_module set state=%s where id=%d', ('installed', module_id))
+        cr.commit()
+        toinit.append(name)
 
-	print 'Initializing all datas...'
+    print 'Initializing all datas...'
 
-	cr.commit()
-	cr.close()
-	return (toinit, toupdate)
+    cr.commit()
+    cr.close()
+    return (toinit, toupdate)
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

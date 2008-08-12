@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 #Copyright (c) 2004-2005, CherryPy Team (team@cherrypy.org)
 #All rights reserved.
 #
@@ -263,3 +264,6 @@ class local(_localbase):
     __del__ = __del__()
 
 from threading import currentThread, enumerate, RLock
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

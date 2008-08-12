@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -32,20 +33,24 @@ import rml2pdf
 import rml2html as htmlizer
 
 class rml(render.render):
-	def __init__(self, xml, datas={}, path='.'):
-		render.render.__init__(self, datas)
-		self.xml = xml
-		self.output_type = 'pdf'
-		self.path = path
+    def __init__(self, xml, datas={}, path='.',title=None):
+        render.render.__init__(self, datas)
+        self.xml = xml
+        self.output_type = 'pdf'
+        self.path = path
+        self.title=title
 
-	def _render(self):
-		return rml2pdf.parseString(self.xml, images=self.bin_datas, path=self.path)
+    def _render(self):
+        return rml2pdf.parseString(self.xml, images=self.bin_datas, path=self.path,title=self.title)
 
 class rml2html(render.render):
-	def __init__(self, xml, datas={}):
-		super(rml2html, self).__init__(datas)
-		self.xml = xml
-		self.output_type = 'html'
-	
-	def _render(self):
-		return htmlizer.parseString(self.xml)
+    def __init__(self, xml, datas={}):
+        super(rml2html, self).__init__(datas)
+        self.xml = xml
+        self.output_type = 'html'
+
+    def _render(self):
+        return htmlizer.parseString(self.xml)
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

@@ -1098,5 +1098,75 @@ Cron Jobs
     <!--<menuitem sequence="4" id="menu_rules_security" parent="base.menu_security" name="Rules"/>-->
         <menuitem sequence="4" action="action_rule" id="menu_action_rule" parent="base.menu_security" name="Rules Structure"/>
 
+ <menuitem action="action_rule" id="menu_action_rule" parent="base.menu_security"/>
+        
+        <record id="property_rule_group" model="ir.rule.group">
+            <field name="name">Property multi-company</field>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.property')]"/>
+            <field eval="True" name="global"/>
+        </record>
+        <record id="property_rule_group2" model="ir.rule.group">
+            <field name="name">Property multi-company 2</field>
+            <field model="ir.model" name="model_id" search="[('model', '=', 'ir.property')]"/>
+            <field eval="True" name="global"/>
+        </record>
+        <record id="property_rule" model="ir.rule">
+            <field model="ir.model.fields" name="field_id" search="[('model', '=', 'ir.property'), ('name', '=', 'company_id')]"/>
+            <field name="operator">child_of</field>
+            <field name="operand">user.company_id.id</field>
+            <field name="rule_group" ref="property_rule_group"/>
+        </record>
+        <record id="property_rule_bis" model="ir.rule">
+            <field model="ir.model.fields" name="field_id" search="[('model', '=', 'ir.property'), ('name', '=', 'company_id')]"/>
+            <field name="operator">=</field>
+            <field name="operand">False</field>
+            <field name="rule_group" ref="property_rule_group2"/>
+        </record>
+        
+<!--server action view-->
+        <record id="view_server_action_form" model="ir.ui.view">
+            <field name="name">Server Action</field>
+            <field name="model">ir.actions.server</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Server Action">
+                    <field name="name" select="1"/>
+                    <field name="state" select="1"/>
+                    <field name="model_id" select="1"/>
+                    <field name="sequence" select="2"/>
+                    <field name="code" colspan="4"/>
+                    <field name="trigger_name" select="2"/>
+                    <field name="trigger_object" select="2"/>
+                    <field name="trigger_object_id"/>
+                    <field name="message" select="2" colspan="4"/>
+                    <field name="address" select="2"/>
+                    <field name="child_ids" colspan="4"/>
+                    <field name="usage"/>
+                    <field name="type"/>
+                </form>
+            </field>
+        </record>
+        
+        <record id="view_server_action_tree" model="ir.ui.view">
+            <field name="name">Server Actions</field>
+            <field name="model">ir.actions.server</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Server Actions">
+                    <field name="name"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="action_server_action" model="ir.actions.act_window">
+            <field name="name">Server Actions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.actions.server</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_server_action_tree"/>
+        </record>
+        <menuitem action="action_server_action" id="menu_server_action" parent="base.next_id_6"/>
+        
     </data>
 </terp>

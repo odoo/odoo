@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -31,20 +32,23 @@ from osv import fields,osv
 
 
 class ir_exports(osv.osv):
-	_name = "ir.exports"
-	_columns = {
-		'name': fields.char('Export name', size=128),
-		'resource': fields.char('Resource', size=128),
-		'export_fields': fields.one2many('ir.exports.line', 'export_id',
-										 'Export Id'),
-	}
+    _name = "ir.exports"
+    _columns = {
+        'name': fields.char('Export name', size=128),
+        'resource': fields.char('Resource', size=128),
+        'export_fields': fields.one2many('ir.exports.line', 'export_id',
+                                         'Export Id'),
+    }
 ir_exports()
 
 
 class ir_exports_line(osv.osv):
-	_name = 'ir.exports.line'
-	_columns = {
-		'name': fields.char('Field name', size=64),
-		'export_id': fields.many2one('ir.exports', 'Exportation', select=True, ondelete='cascade'),
-	}
+    _name = 'ir.exports.line'
+    _columns = {
+        'name': fields.char('Field name', size=64),
+        'export_id': fields.many2one('ir.exports', 'Exportation', select=True, ondelete='cascade'),
+    }
 ir_exports_line()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

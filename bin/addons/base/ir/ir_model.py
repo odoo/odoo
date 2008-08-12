@@ -247,6 +247,9 @@ class ir_model_fields(osv.osv):
         for field in self.browse(cr, user, ids, context):
             if field.state <> 'manual':
                 raise except_orm(_('Error'), _("You can not remove the field '%s' !") %(field.name,))
+        #
+        # MAY BE ADD A ALTER TABLE DROP ?
+        #
         return super(ir_model_fields, self).unlink(cr, user, ids, context)
 
     def create(self, cr, user, vals, context=None):

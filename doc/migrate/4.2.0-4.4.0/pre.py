@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -54,15 +54,15 @@ options.db_name = 'terp' # default value
 parser.parse_args(values=options)
 
 if hasattr(options, 'config'):
-	configparser = ConfigParser.ConfigParser()
-	configparser.read([options.config])
-	for name, value in configparser.items('options'):
-		if not (hasattr(options, name) and getattr(options, name)):
-			if value in ('true', 'True'):
-				value = True
-			if value in ('false', 'False'):
-				value = False
-			setattr(options, name, value)
+    configparser = ConfigParser.ConfigParser()
+    configparser.read([options.config])
+    for name, value in configparser.items('options'):
+        if not (hasattr(options, name) and getattr(options, name)):
+            if value in ('true', 'True'):
+                value = True
+            if value in ('false', 'False'):
+                value = False
+            setattr(options, name, value)
 
 # -----
 
@@ -80,8 +80,8 @@ cr = db.cursor()
 # ------------------------------ #
 
 cr.execute('ALTER TABLE ir_attachment \
-		ALTER COLUMN res_model DROP NOT NULL, \
-		ALTER COLUMN res_id DROP NOT NULL')
+        ALTER COLUMN res_model DROP NOT NULL, \
+        ALTER COLUMN res_id DROP NOT NULL')
 cr.commit()
 
 # ---------------------------------- #
@@ -96,13 +96,13 @@ a.attname='date_deadline' AND c.oid=a.attrelid AND a.atttypid=t.oid""")
 
 res = cr.dictfetchall()
 if res[0]['typname'] != 'timestamp':
-	for line in (
-		"ALTER TABLE crm_case RENAME date_deadline TO date_deadline_bak",
-		"ALTER TABLE crm_case ADD date_deadline timestamp",
-		"UPDATE crm_case SET date_deadline = date_deadline_bak",
-		"ALTER TABLE crm_case DROP date_deadline_bak",
-		):
-		cr.execute(line)
+    for line in (
+        "ALTER TABLE crm_case RENAME date_deadline TO date_deadline_bak",
+        "ALTER TABLE crm_case ADD date_deadline timestamp",
+        "UPDATE crm_case SET date_deadline = date_deadline_bak",
+        "ALTER TABLE crm_case DROP date_deadline_bak",
+        ):
+        cr.execute(line)
 cr.commit()
 
 cr.execute('drop view report_task_user_pipeline_open');
@@ -115,3 +115,6 @@ cr.commit()
 
 
 cr.close()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -32,131 +33,147 @@ from osv.osv  import Cacheable
 import tools
 
 TRANSLATION_TYPE = [
-	('field', 'Field'),
-	('model', 'Model'),
-	('rml', 'RML'),
-	('selection', 'Selection'),
-	('view', 'View'),
-	('wizard_button', 'Wizard Button'),
-	('wizard_field', 'Wizard Field'),
-	('wizard_view', 'Wizard View'),
-	('xsl', 'XSL'),
-	('help', 'Help'),
-	('code', 'Code'),
-	('constraint', 'Constraint'),
+    ('field', 'Field'),
+    ('model', 'Model'),
+    ('rml', 'RML'),
+    ('selection', 'Selection'),
+    ('view', 'View'),
+    ('wizard_button', 'Wizard Button'),
+    ('wizard_field', 'Wizard Field'),
+    ('wizard_view', 'Wizard View'),
+    ('xsl', 'XSL'),
+    ('help', 'Help'),
+    ('code', 'Code'),
+    ('constraint', 'Constraint'),
 ]
 
 class ir_translation(osv.osv, Cacheable):
-	_name = "ir.translation"
-	_log_access = False
+    _name = "ir.translation"
+    _log_access = False
 
-	def _get_language(self, cr, uid, context):
-		lang_obj = self.pool.get('res.lang')
-		lang_ids = lang_obj.search(cr, uid, [('translatable', '=', True)],
-				context=context)
-		langs = lang_obj.browse(cr, uid, lang_ids, context=context)
-		res = [(lang.code, lang.name) for lang in langs]
-		for lang_dict in tools.scan_languages():
-			if lang_dict not in res:
-				res.append(lang_dict)
-		return res
+    def _get_language(self, cr, uid, context):
+        lang_obj = self.pool.get('res.lang')
+        lang_ids = lang_obj.search(cr, uid, [('translatable', '=', True)],
+                context=context)
+        langs = lang_obj.browse(cr, uid, lang_ids, context=context)
+        res = [(lang.code, lang.name) for lang in langs]
+        for lang_dict in tools.scan_languages():
+            if lang_dict not in res:
+                res.append(lang_dict)
+        return res
 
-	_columns = {
-		'name': fields.char('Field Name', size=128, required=True),
-		'res_id': fields.integer('Resource ID'),
-		'lang': fields.selection(_get_language, string='Language', size=5),
-		'type': fields.selection(TRANSLATION_TYPE, string='Type', size=16),
-		'src': fields.text('Source'),
-		'value': fields.text('Translation Value'),
-	}
-	_sql = """
-		create index ir_translation_ltn on ir_translation (lang,type,name);
-		create index ir_translation_res_id on ir_translation (res_id);
-	"""
+    _columns = {
+        'name': fields.char('Field Name', size=128, required=True),
+        'res_id': fields.integer('Resource ID', select=True),
+        'lang': fields.selection(_get_language, string='Language', size=5),
+        'type': fields.selection(TRANSLATION_TYPE, string='Type', size=16, select=True),
+        'src': fields.text('Source'),
+        'value': fields.text('Translation Value'),
+    }
 
-	def _get_ids(self, cr, uid, name, tt, lang, ids):
-		translations, to_fetch = {}, []
-		for id in ids:
-			trans = self.get((lang, name, id))
-			if trans is not None:
-				translations[id] = trans
-			else:
-				to_fetch.append(id)
-		if to_fetch:
-			cr.execute('select res_id,value ' \
-					'from ir_translation ' \
-					'where lang=%s ' \
-						'and type=%s ' \
-						'and name=%s ' \
-						'and res_id in ('+','.join(map(str, to_fetch))+')',
-					(lang,tt,name))
-			for res_id, value in cr.fetchall():
-				self.add((lang, tt, name, res_id), value)
-				translations[res_id] = value
-		for res_id in ids:
-			if res_id not in translations:
-				self.add((lang, tt, name, res_id), False)
-				translations[res_id] = False
-		return translations
+    def _auto_init(self, cr, context={}):
+        super(ir_translation, self)._auto_init(cr, context)
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_ltns',))
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX ir_translation_ltns ON ir_translation (lang, type, name, src)')
+            cr.commit()
 
-	def _set_ids(self, cr, uid, name, tt, lang, ids, value):
-		cr.execute('delete from ir_translation ' \
-				'where lang=%s ' \
-					'and type=%s ' \
-					'and name=%s ' \
-					'and res_id in ('+','.join(map(str,ids))+')',
-				(lang,tt,name))
-		for id in ids:
-			self.create(cr, uid, {
-				'lang':lang,
-				'type':tt,
-				'name':name,
-				'res_id':id,
-				'value':value,
-				})
-		return len(ids)
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_ltn',))
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX ir_translation_ltn ON ir_translation (lang, type, name)')
+            cr.commit()
 
-	def _get_source(self, cr, uid, name, tt, lang, source=None):
-		trans = self.get((lang, tt, name, source))
-		if trans is not None:
-			return trans
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_lts',))
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX ir_translation_lts ON ir_translation (lang, type, src)')
+            cr.commit()
 
-		if source:
-			#if isinstance(source, unicode):
-			#	source = source.encode('utf8')
-			cr.execute('select value ' \
-					'from ir_translation ' \
-					'where lang=%s ' \
-						'and type=%s ' \
-						'and name=%s ' \
-						'and src=%s',
-					(lang, tt, str(name), source))
-		else:
-			cr.execute('select value ' \
-					'from ir_translation ' \
-					'where lang=%s ' \
-						'and type=%s ' \
-						'and name=%s',
-					(lang, tt, str(name)))
-		res = cr.fetchone()
-		
-		trad = res and res[0] or ''
-		self.add((lang, tt, name, source), trad)
-		return trad
+    def _get_ids(self, cr, uid, name, tt, lang, ids):
+        translations, to_fetch = {}, []
+        for id in ids:
+            trans = self.get((lang, name, id))
+            if trans is not None:
+                translations[id] = trans
+            else:
+                to_fetch.append(id)
+        if to_fetch:
+            cr.execute('select res_id,value ' \
+                    'from ir_translation ' \
+                    'where lang=%s ' \
+                        'and type=%s ' \
+                        'and name=%s ' \
+                        'and res_id in ('+','.join(map(str, to_fetch))+')',
+                    (lang,tt,name))
+            for res_id, value in cr.fetchall():
+                self.add((lang, tt, name, res_id), value)
+                translations[res_id] = value
+        for res_id in ids:
+            if res_id not in translations:
+                self.add((lang, tt, name, res_id), False)
+                translations[res_id] = False
+        return translations
 
-	def unlink(self, cursor, user, ids, context=None):
-		self.clear()
-		return super(ir_translation, self).unlink(cusor, user, ids,
-				context=context)
+    def _set_ids(self, cr, uid, name, tt, lang, ids, value):
+        cr.execute('delete from ir_translation ' \
+                'where lang=%s ' \
+                    'and type=%s ' \
+                    'and name=%s ' \
+                    'and res_id in ('+','.join(map(str,ids))+')',
+                (lang,tt,name))
+        for id in ids:
+            self.create(cr, uid, {
+                'lang':lang,
+                'type':tt,
+                'name':name,
+                'res_id':id,
+                'value':value,
+                })
+        return len(ids)
 
-	def create(self, cursor, user, vals, context=None):
-		self.clear()
-		return super(ir_translation, self).create(cursor, user, vals,
-				context=context)
+    def _get_source(self, cr, uid, name, tt, lang, source=None):
+        trans = self.get((lang, tt, name, source))
+        if trans is not None:
+            return trans
 
-	def write(self, cursor, user, ids, vals, context=None):
-		self.clear()
-		return super(ir_translation, self).write(cursor, user, ids, vals,
-				context=context)
+        if source:
+            #if isinstance(source, unicode):
+            #   source = source.encode('utf8')
+            cr.execute('select value ' \
+                    'from ir_translation ' \
+                    'where lang=%s ' \
+                        'and type=%s ' \
+                        'and name=%s ' \
+                        'and src=%s',
+                    (lang, tt, str(name), source))
+        else:
+            cr.execute('select value ' \
+                    'from ir_translation ' \
+                    'where lang=%s ' \
+                        'and type=%s ' \
+                        'and name=%s',
+                    (lang, tt, str(name)))
+        res = cr.fetchone()
+        
+        trad = res and res[0] or ''
+        self.add((lang, tt, name, source), trad)
+        return trad
+
+    def unlink(self, cursor, user, ids, context=None):
+        self.clear()
+        return super(ir_translation, self).unlink(cusor, user, ids,
+                context=context)
+
+    def create(self, cursor, user, vals, context=None):
+        self.clear()
+        return super(ir_translation, self).create(cursor, user, vals,
+                context=context)
+
+    def write(self, cursor, user, ids, vals, context=None):
+        self.clear()
+        return super(ir_translation, self).write(cursor, user, ids, vals,
+                context=context)
 
 ir_translation()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -53,15 +54,15 @@ options.db_name = 'terp' # default value
 parser.parse_args(values=options)
 
 if hasattr(options, 'config'):
-	configparser = ConfigParser.ConfigParser()
-	configparser.read([options.config])
-	for name, value in configparser.items('options'):
-		if not (hasattr(options, name) and getattr(options, name)):
-			if value in ('true', 'True'):
-				value = True
-			if value in ('false', 'False'):
-				value = False
-			setattr(options, name, value)
+    configparser = ConfigParser.ConfigParser()
+    configparser.read([options.config])
+    for name, value in configparser.items('options'):
+        if not (hasattr(options, name) and getattr(options, name)):
+            if value in ('true', 'True'):
+                value = True
+            if value in ('false', 'False'):
+                value = False
+            setattr(options, name, value)
 
 # -----
 
@@ -91,23 +92,23 @@ cr.execute("SELECT c.relname FROM pg_class c, pg_attribute a WHERE c.relname='re
 partners=[]
 drop_payment_term=False
 if cr.rowcount:
-	drop_payment_term=True
-	cr.execute("select id, payment_term from res_partner where payment_term is not null")
-	partners = cr.dictfetchall()
+    drop_payment_term=True
+    cr.execute("select id, payment_term from res_partner where payment_term is not null")
+    partners = cr.dictfetchall()
 
 # loop over them
 
 for partner in partners:
-	value = 'account.payment.term,%d' % partner['payment_term']
-	res_id = 'res.partner,%d' % partner['id']
-	cr.execute(
-		"insert into ir_property(name, value, res_id, company_id, fields_id) "\
-		"values(%s, %s, %s, %d, %d)", 
-		('property_payment_term', value, res_id, company_id, fields_id))
+    value = 'account.payment.term,%d' % partner['payment_term']
+    res_id = 'res.partner,%d' % partner['id']
+    cr.execute(
+        "insert into ir_property(name, value, res_id, company_id, fields_id) "\
+        "values(%s, %s, %s, %d, %d)", 
+        ('property_payment_term', value, res_id, company_id, fields_id))
 
 # remove the field
 if drop_payment_term:
-	cr.execute("alter table res_partner drop column payment_term")
+    cr.execute("alter table res_partner drop column payment_term")
 cr.execute("delete from ir_model_fields where model = 'res.partner' and name = 'payment_term'")
 
 cr.commit()
@@ -124,10 +125,10 @@ registered_reports = cr.fetchall()
 reg_reports_ids = ','.join([str(id) for (id,) in registered_reports])
 
 for report in reports_wh_duplicates:
-	cr.execute("select id from ir_act_report_xml where model=%s and report_name=%s and id not in ("+reg_reports_ids+")", (report['model'], report['report_name']))
-	(id,) = cr.fetchone()
-	cr.execute("delete from ir_act_report_xml where id=%d", (id,))
-	cr.execute("delete from ir_values where value='ir.actions.report.xml,%d'", (id,))
+    cr.execute("select id from ir_act_report_xml where model=%s and report_name=%s and id not in ("+reg_reports_ids+")", (report['model'], report['report_name']))
+    (id,) = cr.fetchone()
+    cr.execute("delete from ir_act_report_xml where id=%d", (id,))
+    cr.execute("delete from ir_values where value='ir.actions.report.xml,%d'", (id,))
 
 cr.commit()
 
@@ -148,4 +149,7 @@ cr.execute("delete from ir_values where key='action' and model='ir.ui.menu' and 
 cr.commit()
 
 cr.close()
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

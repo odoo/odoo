@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be)
@@ -45,13 +46,16 @@ done = []
 
 print 'digraph G {'
 while len(modules):
-	f = modules.pop(0)
-	done.append(f)
-	if os.path.isfile(os.path.join(f,"__terp__.py")):
-		info=eval(file(os.path.join(f,"__terp__.py")).read())
-		if info.get('installable', True):
-			for name in info['depends']:
-				if name not in done+modules:
-					modules.append(name)
-				print '\t%s -> %s;' % (f, name)
+    f = modules.pop(0)
+    done.append(f)
+    if os.path.isfile(os.path.join(f,"__terp__.py")):
+        info=eval(file(os.path.join(f,"__terp__.py")).read())
+        if info.get('installable', True):
+            for name in info['depends']:
+                if name not in done+modules:
+                    modules.append(name)
+                print '\t%s -> %s;' % (f, name)
 print '}'
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

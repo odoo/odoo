@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -30,12 +31,15 @@
 from osv import fields,osv
 
 class board(osv.osv):
-	_name = 'ir.board'
-	def create(self, cr, user, vals, context={}):
-		return False
-	def copy(self, cr, uid, id, default=None, context={}):
-		return False
-	_columns = {
-		'name': fields.char('Board', size=64),
-	}
+    _name = 'ir.board'
+    def create(self, cr, user, vals, context={}):
+        return False
+    def copy(self, cr, uid, id, default=None, context={}):
+        return False
+    _columns = {
+        'name': fields.char('Board', size=64),
+    }
 board()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

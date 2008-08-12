@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -54,15 +54,15 @@ options.db_name = 'terp' # default value
 parser.parse_args(values=options)
 
 if hasattr(options, 'config'):
-	configparser = ConfigParser.ConfigParser()
-	configparser.read([options.config])
-	for name, value in configparser.items('options'):
-		if not (hasattr(options, name) and getattr(options, name)):
-			if value in ('true', 'True'):
-				value = True
-			if value in ('false', 'False'):
-				value = False
-			setattr(options, name, value)
+    configparser = ConfigParser.ConfigParser()
+    configparser.read([options.config])
+    for name, value in configparser.items('options'):
+        if not (hasattr(options, name) and getattr(options, name)):
+            if value in ('true', 'True'):
+                value = True
+            if value in ('false', 'False'):
+                value = False
+            setattr(options, name, value)
 
 # -----
 
@@ -82,13 +82,13 @@ cr = db.cursor()
 cr.execute("""SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size FROM pg_class c,pg_attribute a,pg_type t WHERE c.relname='res_currency' AND a.attname='rounding' AND c.oid=a.attrelid AND a.atttypid=t.oid""")
 res = cr.dictfetchall()
 if res[0]['typname'] != 'numeric':
-	for line in (
-		"ALTER TABLE res_currency RENAME rounding TO rounding_bak",
-		"ALTER TABLE res_currency ADD rounding NUMERIC(12,6)",
-		"UPDATE res_currency SET rounding = power(10, - rounding_bak)",
-		"ALTER TABLE res_currency DROP rounding_bak",
-		):
-		cr.execute(line)
+    for line in (
+        "ALTER TABLE res_currency RENAME rounding TO rounding_bak",
+        "ALTER TABLE res_currency ADD rounding NUMERIC(12,6)",
+        "UPDATE res_currency SET rounding = power(10, - rounding_bak)",
+        "ALTER TABLE res_currency DROP rounding_bak",
+        ):
+        cr.execute(line)
 cr.commit()
 
 # ----------------------------- #
@@ -97,7 +97,7 @@ cr.commit()
 
 cr.execute('SELECT conname FROM pg_constraint where conname = \'ir_ui_view_type\'')
 if cr.fetchall():
-	cr.execute('ALTER TABLE ir_ui_view DROP CONSTRAINT ir_ui_view_type')
+    cr.execute('ALTER TABLE ir_ui_view DROP CONSTRAINT ir_ui_view_type')
 cr.commit()
 
 # ------------------------ #
@@ -106,7 +106,7 @@ cr.commit()
 
 cr.execute('SELECT a.attname FROM pg_class c, pg_attribute a WHERE c.relname = \'res_partner_bank\' AND a.attname = \'iban\' AND c.oid = a.attrelid')
 if cr.fetchall():
-	cr.execute('ALTER TABLE res_partner_bank RENAME iban TO acc_number')
+    cr.execute('ALTER TABLE res_partner_bank RENAME iban TO acc_number')
 cr.commit()
 
 # ------------------------------------------- #
@@ -115,12 +115,12 @@ cr.commit()
 
 cr.execute('SELECT a.attname FROM pg_class c, pg_attribute a WHERE c.relname = \'ir_model\' AND a.attname = \'perm_id\' AND c.oid = a.attrelid')
 if not cr.fetchall():
-	cr.execute("ALTER TABLE ir_model ADD perm_id int references perm on delete set null")
+    cr.execute("ALTER TABLE ir_model ADD perm_id int references perm on delete set null")
 cr.commit()
 
 cr.execute('SELECT a.attname FROM pg_class c, pg_attribute a WHERE c.relname = \'ir_model_fields\' AND a.attname = \'perm_id\' AND c.oid = a.attrelid')
 if not cr.fetchall():
-	cr.execute("ALTER TABLE ir_model_fields ADD perm_id int references perm on delete set null")
+    cr.execute("ALTER TABLE ir_model_fields ADD perm_id int references perm on delete set null")
 cr.commit()
 
 
@@ -138,9 +138,9 @@ cr.commit()
 cr.execute('SELECT model_id FROM ir_model_access')
 res= cr.fetchall()
 for r in res:
-	cr.execute('SELECT id FROM ir_model_access WHERE model_id = %d AND group_id IS NULL', (r[0],))
-	if not cr.fetchall():
-		cr.execute("INSERT into ir_model_access (name,model_id,group_id) VALUES ('Auto-generated access by migration',%d,NULL)",(r[0],))
+    cr.execute('SELECT id FROM ir_model_access WHERE model_id = %d AND group_id IS NULL', (r[0],))
+    if not cr.fetchall():
+        cr.execute("INSERT into ir_model_access (name,model_id,group_id) VALUES ('Auto-generated access by migration',%d,NULL)",(r[0],))
 cr.commit()
 
 # ------------------------------------------------- #
@@ -149,7 +149,7 @@ cr.commit()
 
 cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_account_analytic_line_to_invoice\'')
 if cr.fetchall():
-	cr.execute('DROP VIEW report_account_analytic_line_to_invoice')
+    cr.execute('DROP VIEW report_account_analytic_line_to_invoice')
 cr.commit()
 
 # --------------------------- #
@@ -158,7 +158,7 @@ cr.commit()
 
 cr.execute('SELECT * FROM pg_class c, pg_attribute a WHERE c.relname=\'hr_employee\' AND a.attname=\'state\' AND c.oid=a.attrelid')
 if cr.fetchall():
-	cr.execute('ALTER TABLE hr_employee DROP state')
+    cr.execute('ALTER TABLE hr_employee DROP state')
 cr.commit()
 
 # ------------ #
@@ -167,10 +167,10 @@ cr.commit()
 
 cr.execute('SELECT id FROM ir_values where model=\'res.users\' AND key=\'meta\' AND name=\'tz\'')
 if not cr.fetchall():
-	import pytz, pickle
-	meta = pickle.dumps({'type':'selection', 'string':'Timezone', 'selection': [(x, x) for x in pytz.all_timezones]})
-	value = pickle.dumps(False)
-	cr.execute('INSERT INTO ir_values (name, key, model, meta, key2, object, value) VALUES (\'tz\', \'meta\', \'res.users\', %s, \'tz\', %s, %s)', (meta,False, value))
+    import pytz, pickle
+    meta = pickle.dumps({'type':'selection', 'string':'Timezone', 'selection': [(x, x) for x in pytz.all_timezones]})
+    value = pickle.dumps(False)
+    cr.execute('INSERT INTO ir_values (name, key, model, meta, key2, object, value) VALUES (\'tz\', \'meta\', \'res.users\', %s, \'tz\', %s, %s)', (meta,False, value))
 cr.commit()
 
 # ------------------------- #
@@ -179,36 +179,36 @@ cr.commit()
 
 cr.execute('SELECT a.attname FROM pg_class c, pg_attribute a, pg_type t WHERE c.relname = \'product_uom\' AND a.attname = \'factor\' AND c.oid = a.attrelid AND a.atttypid = t.oid AND t.typname = \'float8\'')
 if cr.fetchall():
-	cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_account_analytic_planning_stat_account\'')
-	if cr.fetchall():
-		cr.execute('DROP VIEW report_account_analytic_planning_stat_account')
-	cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_account_analytic_planning_stat\'')
-	if cr.fetchall():
-		cr.execute('DROP VIEW report_account_analytic_planning_stat')
-	cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_account_analytic_planning_stat_user\'')
-	if cr.fetchall():
-		cr.execute('DROP VIEW report_account_analytic_planning_stat_user')
-	cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_purchase_order_product\'')
-	if cr.fetchall():
-		cr.execute('DROP VIEW report_purchase_order_product')
-	cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_purchase_order_category\'')
-	if cr.fetchall():
-		cr.execute('DROP VIEW report_purchase_order_category')
-	cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_sale_order_product\'')
-	if cr.fetchall():
-		cr.execute('DROP VIEW report_sale_order_product')
-	cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_sale_order_category\'')
-	if cr.fetchall():
-		cr.execute('DROP VIEW report_sale_order_category')
-	cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_hr_timesheet_invoice_journal\'')
-	if cr.fetchall():
-		cr.execute('DROP VIEW report_hr_timesheet_invoice_journal')
+    cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_account_analytic_planning_stat_account\'')
+    if cr.fetchall():
+        cr.execute('DROP VIEW report_account_analytic_planning_stat_account')
+    cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_account_analytic_planning_stat\'')
+    if cr.fetchall():
+        cr.execute('DROP VIEW report_account_analytic_planning_stat')
+    cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_account_analytic_planning_stat_user\'')
+    if cr.fetchall():
+        cr.execute('DROP VIEW report_account_analytic_planning_stat_user')
+    cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_purchase_order_product\'')
+    if cr.fetchall():
+        cr.execute('DROP VIEW report_purchase_order_product')
+    cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_purchase_order_category\'')
+    if cr.fetchall():
+        cr.execute('DROP VIEW report_purchase_order_category')
+    cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_sale_order_product\'')
+    if cr.fetchall():
+        cr.execute('DROP VIEW report_sale_order_product')
+    cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_sale_order_category\'')
+    if cr.fetchall():
+        cr.execute('DROP VIEW report_sale_order_category')
+    cr.execute('SELECT viewname FROM pg_views WHERE viewname = \'report_hr_timesheet_invoice_journal\'')
+    if cr.fetchall():
+        cr.execute('DROP VIEW report_hr_timesheet_invoice_journal')
 
-	cr.execute('ALTER TABLE product_uom RENAME COLUMN factor to temp_column')
-	cr.execute('ALTER TABLE product_uom ADD COLUMN factor NUMERIC(12,6)')
-	cr.execute('UPDATE product_uom SET factor = temp_column')
-	cr.execute('ALTER TABLE product_uom ALTER factor SET NOT NULL')
-	cr.execute('ALTER TABLE product_uom DROP COLUMN temp_column')
+    cr.execute('ALTER TABLE product_uom RENAME COLUMN factor to temp_column')
+    cr.execute('ALTER TABLE product_uom ADD COLUMN factor NUMERIC(12,6)')
+    cr.execute('UPDATE product_uom SET factor = temp_column')
+    cr.execute('ALTER TABLE product_uom ALTER factor SET NOT NULL')
+    cr.execute('ALTER TABLE product_uom DROP COLUMN temp_column')
 cr.commit()
 
 
@@ -218,7 +218,7 @@ cr.commit()
 
 cr.execute('SELECT conname FROM pg_constraint where conname = \'stock_production_lot_name_uniq\'')
 if cr.fetchall():
-	cr.execute('ALTER TABLE stock_production_lot DROP CONSTRAINT stock_production_lot_name_uniq')
+    cr.execute('ALTER TABLE stock_production_lot DROP CONSTRAINT stock_production_lot_name_uniq')
 cr.commit()
 
 # ------------------------------------ #
@@ -235,19 +235,22 @@ cr.commit()
 
 cr.execute('SELECT indexname FROm pg_indexes WHERE indexname = \'ir_act_report_xml_pkey\' and tablename = \'ir_act_report_xml\'')
 if not cr.fetchall():
-	cr.execute('ALTER TABLE ir_act_report_xml ADD PRIMARY KEY (id)')
+    cr.execute('ALTER TABLE ir_act_report_xml ADD PRIMARY KEY (id)')
 cr.execute('SELECT indexname FROm pg_indexes WHERE indexname = \'ir_act_report_custom_pkey\' and tablename = \'ir_act_report_custom\'')
 if not cr.fetchall():
-	cr.execute('ALTER TABLE ir_act_report_custom ADD PRIMARY KEY (id)')
+    cr.execute('ALTER TABLE ir_act_report_custom ADD PRIMARY KEY (id)')
 cr.execute('SELECT indexname FROm pg_indexes WHERE indexname = \'ir_act_group_pkey\' and tablename = \'ir_act_group\'')
 if not cr.fetchall():
-	cr.execute('ALTER TABLE ir_act_group ADD PRIMARY KEY (id)')
+    cr.execute('ALTER TABLE ir_act_group ADD PRIMARY KEY (id)')
 cr.execute('SELECT indexname FROm pg_indexes WHERE indexname = \'ir_act_execute_pkey\' and tablename = \'ir_act_execute\'')
 if not cr.fetchall():
-	cr.execute('ALTER TABLE ir_act_execute ADD PRIMARY KEY (id)')
+    cr.execute('ALTER TABLE ir_act_execute ADD PRIMARY KEY (id)')
 cr.execute('SELECT indexname FROm pg_indexes WHERE indexname = \'ir_act_wizard_pkey\' and tablename = \'ir_act_wizard\'')
 if not cr.fetchall():
-	cr.execute('ALTER TABLE ir_act_wizard ADD PRIMARY KEY (id)')
+    cr.execute('ALTER TABLE ir_act_wizard ADD PRIMARY KEY (id)')
 cr.commit()
 
 cr.close
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

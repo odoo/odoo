@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
@@ -33,6 +34,9 @@ from rml import rml, rml2html
 from render import render
 
 try:
-	import Image
+    import Image
 except:
-	print 'WARNING; Python Imaging not installed, you can use only .JPG pictures !'
+    print 'WARNING; Python Imaging not installed, you can use only .JPG pictures !'
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
