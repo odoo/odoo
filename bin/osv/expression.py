@@ -143,7 +143,7 @@ class expression(object):
                 # this is a function field
                 if not field._fnct_search and not field.store:
                     # the function field doesn't provide a search function and doesn't store values in the database, so we must ignore it : we generate a dummy leaf
-                    self.__left, self__operator, self.__right = 1, '=', 1
+                    self.__left, self.__operator, self.__right = 1, '=', 1
                     self.__exp = '' # force to generate an empty sql expression
                 else:
                     # we need to replace this leaf to a '&' expression
