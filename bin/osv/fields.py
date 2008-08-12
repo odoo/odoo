@@ -49,12 +49,14 @@ import warnings
 
 import tools
 
+
 def _symbol_set(symb):
-    if symb==None or symb==False:
+    if symb == None or symb == False:
         return None
     elif isinstance(symb, unicode):
         return symb.encode('utf-8')
     return str(symb)
+
 
 class _column(object):
     _classic_read = True
@@ -79,13 +81,13 @@ class _column(object):
         self.ondelete = ondelete
         self.translate = translate
         self._domain = domain or []
-        self.relate =False
+        self.relate = False
         self._context = context
         self.group_name = False
         self.write = False
         self.read = False
         self.view_load = 0
-        self.select=select
+        self.select = select
         for a in args:
             if args[a]:
                 setattr(self, a, args[a])
@@ -96,21 +98,25 @@ class _column(object):
         pass
 
     def set(self, cr, obj, id, name, value, user=None, context=None):
-        cr.execute('update '+obj._table+' set '+name+'='+self._symbol_set[0]+' where id=%d', (self._symbol_set[1](value),id) )
+        cr.execute('update '+obj._table+' set '+name+'='+self._symbol_set[0]+' where id=%d', (self._symbol_set[1](value), id))
+
     def set_memory(self, cr, obj, id, name, value, user=None, context=None):
-        raise Exception, _('Not implemented set_memory method !')
+        raise Exception(_('Not implemented set_memory method !'))
 
     def get_memory(self, cr, obj, ids, name, context=None, values=None):
-        raise Exception, _('Not implemented get_memory method !')
+        raise Exception(_('Not implemented get_memory method !'))
+
     def get(self, cr, obj, ids, name, context=None, values=None):
-        raise Exception, _('undefined get method !')
+        raise Exception(_('undefined get method !'))
 
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None):
-        ids = obj.search(cr, uid, args+self._domain+[(name,'ilike',value)], offset, limit)
+        ids = obj.search(cr, uid, args+self._domain+[(name, 'ilike', value)], offset, limit)
         res = obj.read(cr, uid, ids, [name])
         return [x[name] for x in res]
+
     def search_memory(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, context=None):
-        raise Exception, _('Not implemented search_memory method !')
+        raise Exception(_('Not implemented search_memory method !'))
+
 
 # ---------------------------------------------------------
 # Simple fields
@@ -121,34 +127,38 @@ class boolean(_column):
     _symbol_f = lambda x: x and 'True' or 'False'
     _symbol_set = (_symbol_c, _symbol_f)
 
+
 class integer(_column):
     _type = 'integer'
     _symbol_c = '%d'
     _symbol_f = lambda x: int(x or 0)
     _symbol_set = (_symbol_c, _symbol_f)
 
+
 class reference(_column):
     _type = 'reference'
+
     def __init__(self, string, selection, size, **args):
         _column.__init__(self, string=string, size=size, selection=selection, **args)
 
+
 class char(_column):
     _type = 'char'
-    
+
     def __init__(self, string, size, **args):
         _column.__init__(self, string=string, size=size, **args)
         self._symbol_set = (self._symbol_c, self._symbol_set_char)
-        
+
     # takes a string (encoded in utf8) and returns a string (encoded in utf8)
     def _symbol_set_char(self, symb):
-        #TODO: 
-        # * we need to remove the "symb==False" from the next line BUT 
+        #TODO:
+        # * we need to remove the "symb==False" from the next line BUT
         #   for now too many things rely on this broken behavior
         # * the symb==None test should be common to all data types
-        if symb==None or symb==False:
+        if symb == None or symb == False:
             return None
 
-        # we need to convert the string to a unicode object to be able 
+        # we need to convert the string to a unicode object to be able
         # to evaluate its length (and possibly truncate it) reliably
         if isinstance(symb, str):
             u_symb = unicode(symb, 'utf8')
@@ -158,28 +168,35 @@ class char(_column):
             u_symb = unicode(symb)
         return u_symb.encode('utf8')[:self.size]
 
+
 class text(_column):
     _type = 'text'
 
 import __builtin__
+
 
 class float(_column):
     _type = 'float'
     _symbol_c = '%f'
     _symbol_f = lambda x: __builtin__.float(x or 0.0)
     _symbol_set = (_symbol_c, _symbol_f)
+
     def __init__(self, string='unknown', digits=None, **args):
         _column.__init__(self, string=string, **args)
         self.digits = digits
 
+
 class date(_column):
     _type = 'date'
+
 
 class datetime(_column):
     _type = 'datetime'
 
+
 class time(_column):
     _type = 'time'
+
 
 class binary(_column):
     _type = 'binary'
@@ -187,9 +204,10 @@ class binary(_column):
     _symbol_f = lambda symb: symb and psycopg.Binary(symb) or None
     _symbol_set = (_symbol_c, _symbol_f)
 
+
 class selection(_column):
     _type = 'selection'
-    
+
     def __init__(self, selection, string='unknown', **args):
         _column.__init__(self, string=string, **args)
         self.selection = selection
@@ -211,7 +229,7 @@ class one2one(_column):
     _classic_read = False
     _classic_write = True
     _type = 'one2one'
-    
+
     def __init__(self, obj, string='unknown', **args):
         warnings.warn("The one2one field doesn't work anymore", DeprecationWarning)
         _column.__init__(self, string=string, **args)
@@ -219,25 +237,26 @@ class one2one(_column):
 
     def set(self, cr, obj_src, id, field, act, user=None, context=None):
         if not context:
-            context={}
+            context = {}
         obj = obj_src.pool.get(self._obj)
         self._table = obj_src.pool.get(self._obj)._table
-        if act[0]==0:
+        if act[0] == 0:
             id_new = obj.create(cr, user, act[1])
-            cr.execute('update '+obj_src._table+' set '+field+'=%d where id=%d', (id_new,id))
+            cr.execute('update '+obj_src._table+' set '+field+'=%d where id=%d', (id_new, id))
         else:
             cr.execute('select '+field+' from '+obj_src._table+' where id=%d', (act[0],))
-            id =cr.fetchone()[0]
-            obj.write(cr, user, [id] , act[1], context=context)
+            id = cr.fetchone()[0]
+            obj.write(cr, user, [id], act[1], context=context)
 
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None):
-        return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name','like',value)], offset, limit)
+        return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name', 'like', value)], offset, limit)
+
 
 class many2one(_column):
     _classic_read = False
     _classic_write = True
     _type = 'many2one'
-    
+
     def __init__(self, obj, string='unknown', **args):
         _column.__init__(self, string=string, **args)
         self._obj = obj
@@ -254,9 +273,9 @@ class many2one(_column):
 
     def get(self, cr, obj, ids, name, user=None, context=None, values=None):
         if not context:
-            context={}
+            context = {}
         if not values:
-            values={}
+            values = {}
         res = {}
         for r in values:
             res[r['id']] = r[name]
@@ -268,10 +287,10 @@ class many2one(_column):
         try:
             names = dict(obj.name_get(cr, user, filter(None, res.values()), context))
         except except_orm:
-            names={}
+            names = {}
 
             iids = filter(None, res.values())
-            cr.execute('select id,'+obj._rec_name+' from '+obj._table+' where id in ('+','.join(map(str,iids))+')')
+            cr.execute('select id,'+obj._rec_name+' from '+obj._table+' where id in ('+','.join(map(str, iids))+')')
             for res22 in cr.fetchall():
                 names[res22[0]] = res22[1]
 
@@ -284,36 +303,37 @@ class many2one(_column):
 
     def set(self, cr, obj_src, id, field, values, user=None, context=None):
         if not context:
-            context={}
+            context = {}
         obj = obj_src.pool.get(self._obj)
         self._table = obj_src.pool.get(self._obj)._table
         if type(values)==type([]):
             for act in values:
-                if act[0]==0:
+                if act[0] == 0:
                     id_new = obj.create(cr, act[2])
-                    cr.execute('update '+obj_src._table+' set '+field+'=%d where id=%d', (id_new,id))
-                elif act[0]==1:
+                    cr.execute('update '+obj_src._table+' set '+field+'=%d where id=%d', (id_new, id))
+                elif act[0] == 1:
                     obj.write(cr, [act[1]], act[2], context=context)
-                elif act[0]==2:
+                elif act[0] == 2:
                     cr.execute('delete from '+self._table+' where id=%d', (act[1],))
-                elif act[0]==3 or act[0]==5:
+                elif act[0] == 3 or act[0] == 5:
                     cr.execute('update '+obj_src._table+' set '+field+'=null where id=%d', (id,))
-                elif act[0]==4:
-                    cr.execute('update '+obj_src._table+' set '+field+'=%d where id=%d', (act[1],id))
+                elif act[0] == 4:
+                    cr.execute('update '+obj_src._table+' set '+field+'=%d where id=%d', (act[1], id))
         else:
             if values:
-                cr.execute('update '+obj_src._table+' set '+field+'=%d where id=%d', (values,id))
+                cr.execute('update '+obj_src._table+' set '+field+'=%d where id=%d', (values, id))
             else:
                 cr.execute('update '+obj_src._table+' set '+field+'=null where id=%d', (id,))
 
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None):
-        return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name','like',value)], offset, limit)
+        return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name', 'like', value)], offset, limit)
+
 
 class one2many(_column):
     _classic_read = False
     _classic_write = False
     _type = 'one2many'
-    
+
     def __init__(self, obj, fields_id, string='unknown', limit=None, **args):
         _column.__init__(self, string=string, **args)
         self._obj = obj
@@ -330,42 +350,41 @@ class one2many(_column):
         res = {}
         for id in ids:
             res[id] = []
-        ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id,'in',ids)], limit=self._limit)
+        ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id, 'in', ids)], limit=self._limit)
         for r in obj.pool.get(self._obj).read(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
             if r[self._fields_id] in res:
-                res[r[self._fields_id]].append( r['id'] )
+                res[r[self._fields_id]].append(r['id'])
         return res
 
     def set_memory(self, cr, obj, id, field, values, user=None, context=None):
         if not context:
-            context={}
+            context = {}
         if not values:
             return
         obj = obj.pool.get(self._obj)
         for act in values:
-            if act[0]==0:
+            if act[0] == 0:
                 act[2][self._fields_id] = id
                 obj.create(cr, user, act[2], context=context)
-            elif act[0]==1:
-                obj.write(cr, user, [act[1]] , act[2], context=context)
-            elif act[0]==2:
+            elif act[0] == 1:
+                obj.write(cr, user, [act[1]], act[2], context=context)
+            elif act[0] == 2:
                 obj.unlink(cr, user, [act[1]], context=context)
-            elif act[0]==3:
+            elif act[0] == 3:
                 obj.datas[act[1]][self._fields_id] = False
-            elif act[0]==4:
+            elif act[0] == 4:
                 obj.datas[act[1]] = id
-            elif act[0]==5:
+            elif act[0] == 5:
                 for o in obj.datas.values():
-                    if o[self._fields_id]==id:
+                    if o[self._fields_id] == id:
                         o[self._fields_id] = False
-            elif act[0]==6:
+            elif act[0] == 6:
                 for id2 in (act[2] or []):
                     obj.datas[id2][self._fields_id] = id
 
     def search_memory(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like', context=None):
         raise _('Not Implemented')
 
-    
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
         if not context:
             context = {}
@@ -374,33 +393,33 @@ class one2many(_column):
         res = {}
         for id in ids:
             res[id] = []
-        ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id,'in',ids)], limit=self._limit)
+        ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id, 'in', ids)], limit=self._limit)
         for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
-            res[r[self._fields_id]].append( r['id'] )
+            res[r[self._fields_id]].append(r['id'])
         return res
 
     def set(self, cr, obj, id, field, values, user=None, context=None):
         if not context:
-            context={}
+            context = {}
         if not values:
             return
         _table = obj.pool.get(self._obj)._table
         obj = obj.pool.get(self._obj)
         for act in values:
-            if act[0]==0:
+            if act[0] == 0:
                 act[2][self._fields_id] = id
                 obj.create(cr, user, act[2], context=context)
-            elif act[0]==1:
-                obj.write(cr, user, [act[1]] , act[2], context=context)
-            elif act[0]==2:
+            elif act[0] == 1:
+                obj.write(cr, user, [act[1]], act[2], context=context)
+            elif act[0] == 2:
                 obj.unlink(cr, user, [act[1]], context=context)
-            elif act[0]==3:
+            elif act[0] == 3:
                 cr.execute('update '+_table+' set '+self._fields_id+'=null where id=%d', (act[1],))
-            elif act[0]==4:
-                cr.execute('update '+_table+' set '+self._fields_id+'=%d where id=%d', (id,act[1]))
-            elif act[0]==5:
+            elif act[0] == 4:
+                cr.execute('update '+_table+' set '+self._fields_id+'=%d where id=%d', (id, act[1]))
+            elif act[0] == 5:
                 cr.execute('update '+_table+' set '+self._fields_id+'=null where '+self._fields_id+'=%d', (id,))
-            elif act[0]==6:
+            elif act[0] == 6:
                 if not act[2]:
                     ids2 = [0]
                 else:
@@ -408,8 +427,10 @@ class one2many(_column):
                 cr.execute('update '+_table+' set '+self._fields_id+'=NULL where '+self._fields_id+'=%d and id not in ('+','.join(map(str, ids2))+')', (id,))
                 if act[2]:
                     cr.execute('update '+_table+' set '+self._fields_id+'=%d where id in ('+','.join(map(str, act[2]))+')', (id,))
+
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like'):
         return obj.pool.get(self._obj).name_search(cr, uid, value, self._domain, offset, limit)
+
 
 #
 # Values: (0, 0,  { fields })    create
@@ -424,7 +445,7 @@ class many2many(_column):
     _classic_read = False
     _classic_write = False
     _type = 'many2many'
-    
+
     def __init__(self, obj, rel, id1, id2, string='unknown', limit=None, **args):
         _column.__init__(self, string=string, **args)
         self._obj = obj
@@ -435,15 +456,15 @@ class many2many(_column):
 
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
         if not context:
-            context={}
+            context = {}
         if not values:
-            values={}
+            values = {}
         res = {}
         if not ids:
             return res
         for id in ids:
             res[id] = []
-        ids_s = ','.join(map(str,ids))
+        ids_s = ','.join(map(str, ids))
         limit_str = self._limit is not None and ' limit %d' % self._limit or ''
         obj = obj.pool.get(self._obj)
 
@@ -463,39 +484,39 @@ class many2many(_column):
 
     def set(self, cr, obj, id, name, values, user=None, context=None):
         if not context:
-            context={}
+            context = {}
         if not values:
             return
         obj = obj.pool.get(self._obj)
         for act in values:
-            if act[0]==0:
+            if act[0] == 0:
                 idnew = obj.create(cr, user, act[2])
-                cr.execute('insert into '+self._rel+' ('+self._id1+','+self._id2+') values (%d,%d)', (id,idnew))
-            elif act[0]==1:
-                obj.write(cr, user, [act[1]] , act[2], context=context)
-            elif act[0]==2:
+                cr.execute('insert into '+self._rel+' ('+self._id1+','+self._id2+') values (%d,%d)', (id, idnew))
+            elif act[0] == 1:
+                obj.write(cr, user, [act[1]], act[2], context=context)
+            elif act[0] == 2:
                 obj.unlink(cr, user, [act[1]], context=context)
-            elif act[0]==3:
-                cr.execute('delete from '+self._rel+' where ' +  self._id1 + '=%d and '+ self._id2 + '=%d', (id,act[1]))
-            elif act[0]==4:
-                cr.execute('insert into '+self._rel+' ('+self._id1+','+self._id2+') values (%d,%d)', (id,act[1]))
-            elif act[0]==5:
+            elif act[0] == 3:
+                cr.execute('delete from '+self._rel+' where ' + self._id1 + '=%d and '+ self._id2 + '=%d', (id, act[1]))
+            elif act[0] == 4:
+                cr.execute('insert into '+self._rel+' ('+self._id1+','+self._id2+') values (%d,%d)', (id, act[1]))
+            elif act[0] == 5:
                 cr.execute('update '+self._rel+' set '+self._id2+'=null where '+self._id2+'=%d', (id,))
-            elif act[0]==6:
+            elif act[0] == 6:
 
-                d1, d2 = obj.pool.get('ir.rule').domain_get(cr, user, obj._name) 
+                d1, d2 = obj.pool.get('ir.rule').domain_get(cr, user, obj._name)
                 if d1:
                     d1 = ' and '+d1
-                cr.execute('delete from '+self._rel+' where '+self._id1+'=%d AND '+self._id2+' IN (SELECT '+self._rel+'.'+self._id2+' FROM '+self._rel+', '+obj._table+' WHERE '+self._rel+'.'+self._id1+'=%d AND '+self._rel+'.'+self._id2+' = '+obj._table+'.id '+ d1 +')', [id, id]+d2 )
+                cr.execute('delete from '+self._rel+' where '+self._id1+'=%d AND '+self._id2+' IN (SELECT '+self._rel+'.'+self._id2+' FROM '+self._rel+', '+obj._table+' WHERE '+self._rel+'.'+self._id1+'=%d AND '+self._rel+'.'+self._id2+' = '+obj._table+'.id '+ d1 +')', [id, id]+d2)
 
-                for act_nbr in act[2]: 
+                for act_nbr in act[2]:
                     cr.execute('insert into '+self._rel+' ('+self._id1+','+self._id2+') values (%d, %d)', (id, act_nbr))
 
     #
     # TODO: use a name_search
     #
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like'):
-        return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name',operator,value)], offset, limit)
+        return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name', operator, value)], offset, limit)
 
     def get_memory(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
         result = {}
@@ -508,32 +529,31 @@ class many2many(_column):
             return
         for act in values:
             # TODO: use constants instead of these magic numbers
-            if act[0]==0:
+            if act[0] == 0:
                 raise _('Not Implemented')
-            elif act[0]==1:
+            elif act[0] == 1:
                 raise _('Not Implemented')
-            elif act[0]==2:
+            elif act[0] == 2:
                 raise _('Not Implemented')
-            elif act[0]==3:
+            elif act[0] == 3:
                 raise _('Not Implemented')
-            elif act[0]==4:
+            elif act[0] == 4:
                 raise _('Not Implemented')
-            elif act[0]==5:
+            elif act[0] == 5:
                 raise _('Not Implemented')
-            elif act[0]==6:
+            elif act[0] == 6:
                 obj.datas[id][name] = act[2]
 
 
 # ---------------------------------------------------------
 # Function fields
 # ---------------------------------------------------------
-
 class function(_column):
     _classic_read = False
     _classic_write = False
     _type = 'function'
     _properties = True
-    
+
     def __init__(self, fnct, arg=None, fnct_inv=None, fnct_inv_arg=None, type='float', fnct_search=None, obj=None, method=False, store=False, **args):
         _column.__init__(self, **args)
         self._obj = obj
@@ -553,7 +573,7 @@ class function(_column):
             self._symbol_c = '%f'
             self._symbol_f = lambda x: __builtin__.float(x or 0.0)
             self._symbol_set = (self._symbol_c, self._symbol_f)
-        
+
     def search(self, cr, uid, obj, name, args):
         if not self._fnct_search:
             #CHECKME: should raise an exception
@@ -562,9 +582,9 @@ class function(_column):
 
     def get(self, cr, obj, ids, name, user=None, context=None, values=None):
         if not context:
-            context={}
+            context = {}
         if not values:
-            values={}
+            values = {}
         res = {}
         table = obj._table
         if self._method:
@@ -575,9 +595,10 @@ class function(_column):
 
     def set(self, cr, obj, id, name, value, user=None, context=None):
         if not context:
-            context={}
+            context = {}
         if self._fnct_inv:
             self._fnct_inv(obj, cr, user, id, name, value, self._fnct_inv_arg, context)
+
 
 # ---------------------------------------------------------
 # Serialized fields
@@ -596,7 +617,7 @@ class property(function):
 
     def _fnct_write(self, obj, cr, uid, id, prop, id_val, val, context=None):
         if not context:
-            context={}
+            context = {}
         (obj_dest,) = val
         definition_id = self._field_get(cr, uid, obj._name, prop)
 
@@ -629,7 +650,7 @@ class property(function):
 
     def _fnct_read(self, obj, cr, uid, ids, prop, val, context=None):
         if not context:
-            context={}
+            context = {}
         property = obj.pool.get('ir.property')
         definition_id = self._field_get(cr, uid, obj._name, prop)
 
@@ -646,7 +667,7 @@ class property(function):
 
         res = {}
         for id in ids:
-            res[id]= default_val
+            res[id] = default_val
         for prop in property.browse(cr, uid, nids):
             res[int(prop.res_id.split(',')[1])] = (prop.value and \
                     int(prop.value.split(',')[1])) or False

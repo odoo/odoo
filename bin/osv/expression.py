@@ -3,6 +3,7 @@
 
 from tools import flatten
 
+
 class expression(object):
     """
     parse a domain expression
@@ -47,7 +48,7 @@ class expression(object):
 
     def _is_operator(self, element):
         return isinstance(element, str) \
-           and element in ['&','|']
+           and element in ['&', '|']
 
     def _is_leaf(self, element):
         return isinstance(element, tuple) \
@@ -103,7 +104,7 @@ class expression(object):
             if isinstance(self.__right, list):
                 self.__right = tuple(self.__right)
         elif exp and not self._is_expression(self.__exp):
-            raise ValueError, 'Bad expression: %r' % (self.__exp,)
+            raise ValueError('Bad expression: %r' % (self.__exp,))
 
     def parse(self, cr, uid, table, context):
 
@@ -162,7 +163,7 @@ class expression(object):
 
                     self.__left, self.__right = None, None
                     self.__operator = '&'
-                    self.__exp = ('&',) + tuple( [tuple(e.__exp) for e in self.__children] )
+                    self.__exp = ('&',) + tuple([tuple(e.__exp) for e in self.__children])
 
             elif field._type == 'one2many':
                 if isinstance(self.__right, basestring):
@@ -202,7 +203,7 @@ class expression(object):
                         ids2 = list(self.__right)
 
                     self.__operator = 'in'
-                    if field._obj <> self.__table._name:
+                    if field._obj != self.__table._name:
                         self.__right = ids2 + _rec_get(ids2, field_obj, self.__table._parent_name)
                     else:
                         self.__right = ids2 + _rec_get(ids2, self.__table, self.__left)
@@ -264,7 +265,7 @@ class expression(object):
                         del params[i]
 
                 len_after = len(params)
-                check_nulls = len_after <> len_before
+                check_nulls = len_after != len_before
                 query = '(1=0)'
 
                 if len_after:
@@ -323,14 +324,14 @@ class expression(object):
         else:
             children = [child.to_sql() for child in self.__children]
             params = flatten([child[1] for child in children])
-            query = "( %s )" % (" %s " % {'&' : 'AND', '|' : 'OR' }[self.__operator]).join([child[0] for child in children if child[0]])
+            query = "( %s )" % (" %s " % {'&': 'AND', '|': 'OR'}[self.__operator]).join([child[0] for child in children if child[0]])
             return (query, params)
 
     def __get_tables(self):
         return self.__tables + [child.__get_tables() for child in self.__children]
 
     def get_tables(self):
-        return [ '"%s"' % t for t in set(flatten(self.__get_tables()))]
+        return ['"%s"' % t for t in set(flatten(self.__get_tables()))]
 
     #def
 
