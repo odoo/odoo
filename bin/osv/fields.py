@@ -1,5 +1,4 @@
 # -*- encoding: utf-8 -*-
-# -*- encoding: iso-8859-1 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
