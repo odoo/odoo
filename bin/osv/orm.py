@@ -48,7 +48,6 @@
 
 import time
 import types
-from xml import dom, xpath
 import string
 import netsvc
 import re
@@ -57,6 +56,14 @@ import pickle
 
 import fields
 import tools
+
+import sys
+try:
+    from xml import dom, xpath
+except ImportError:
+    sys.stderr.write("ERROR: Import xpath module\n")
+    sys.stderr.write("ERROR: Try to install the old python-xml package\n")
+    sys.exit(2)
 
 from tools.config import config
 
