@@ -571,7 +571,9 @@ class report_sxw(report_rml):
                 [('report_name', '=', self.name[7:])], context=context)
         report_type = 'pdf'
         report_xml = None
+        title=''
         if report_xml_ids:
+            title = ir_actions_report_xml_obj.browse(cr,uid,report_xml_ids)[0].name
             report_xml = ir_actions_report_xml_obj.browse(cr, uid, report_xml_ids[0],
                     context=context)
             rml = report_xml.report_rml_content
@@ -660,7 +662,6 @@ class report_sxw(report_rml):
                 logo = base64.decodestring(rml_parser.logo)
 
         create_doc = self.generators[report_type]
-        title = ir_actions_report_xml_obj.browse(cr,uid,report_xml_ids)[0].name
         pdf = create_doc(rml2, logo,title)
         return (pdf, report_type)
 
