@@ -132,6 +132,7 @@ class account_account(osv.osv):
     _order = "code"
     _name = "account.account"
     _description = "Account"
+    _parent_store = True
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
@@ -267,7 +268,7 @@ class account_account(osv.osv):
         'code': fields.char('Code', size=64),
         'type': fields.selection(_code_get, 'Account Type', required=True),
 #        'parent_id': fields.many2many('account.account', 'account_account_rel', 'child_id', 'parent_id', 'Parents'),
-        'parent_id': fields.many2one('account.account','Parent'),
+        'parent_id': fields.many2one('account.account','Parent', ondelete='cascade'),
         'child_parent_ids':fields.one2many('account.account','parent_id','Children'),
         'child_consol_ids':fields.many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', 'Consolidated Children',domain=[('type','=','root'), ('type', '=', 'consolidation')]),
         'child_id': fields.function(_get_child_ids, method=True, type='many2many',relation="account.account",string="Children Accounts"),
@@ -285,6 +286,9 @@ class account_account(osv.osv):
         'company_currency_id': fields.function(_get_company_currency, method=True, type='many2one', relation='res.currency', string='Company Currency'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'active': fields.boolean('Active', select=2),
+
+        'parent_left': fields.integer('Parent Left', select=1),
+        'parent_right': fields.integer('Parent Right', select=1),
     }
 
     def _default_company(self, cr, uid, context={}):
