@@ -345,16 +345,10 @@ class orm_template(object):
                         (('field_'+self._table+'_'+k)[:64], context['module'], 'ir.model.fields', id)
                     )
             else:
-<<<<<<< TREE
-                for key,val in vals.items():
-                    if cols[k][key]<>vals[key]:
-                        cr.execute('update ir_model_fields set field_description=%s where model=%s and name=%s', (vals['field_description'],vals['model'],vals['name']))
-=======
                 for key, val in vals.items():
                     if cols[k][key] != vals[key]:
-                        print 'Different', cols[k][key], vals[key], k, key, self._name
+                        #print 'Different', cols[k][key], vals[key], k, key, self._name
                         cr.execute('update ir_model_fields set field_description=%s where model=%s and name=%s', (vals['field_description'], vals['model'], vals['name']))
->>>>>>> MERGE-SOURCE
                         cr.commit()
                         cr.execute("""UPDATE ir_model_fields SET
                             model_id=%s, field_description=%s, ttype=%s, relate=%s, relation=%s,
