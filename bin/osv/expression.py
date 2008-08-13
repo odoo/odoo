@@ -81,6 +81,8 @@ class expression(object):
             if len(exp) == 1 and self._is_leaf(exp[0]):
                 exp = exp[0]
             else:
+                if len(exp) == 3 and self._is_leaf(tuple(exp)):
+                    exp=[exp]
                 if not self._is_operator(exp[0][0]):
                     if isinstance(exp[0],list):
                         exp=tuple(exp[0])
