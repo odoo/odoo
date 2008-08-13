@@ -284,6 +284,7 @@ class orm_template(object):
     _defaults = {}
     _rec_name = 'name'
     _parent_name = 'parent_id'
+    _parent_store = False
     _date_name = 'date'
     _order = 'id'
     _sequence = None
@@ -344,10 +345,16 @@ class orm_template(object):
                         (('field_'+self._table+'_'+k)[:64], context['module'], 'ir.model.fields', id)
                     )
             else:
+<<<<<<< TREE
+                for key,val in vals.items():
+                    if cols[k][key]<>vals[key]:
+                        cr.execute('update ir_model_fields set field_description=%s where model=%s and name=%s', (vals['field_description'],vals['model'],vals['name']))
+=======
                 for key, val in vals.items():
                     if cols[k][key] != vals[key]:
                         print 'Different', cols[k][key], vals[key], k, key, self._name
                         cr.execute('update ir_model_fields set field_description=%s where model=%s and name=%s', (vals['field_description'], vals['model'], vals['name']))
+>>>>>>> MERGE-SOURCE
                         cr.commit()
                         cr.execute("""UPDATE ir_model_fields SET
                             model_id=%s, field_description=%s, ttype=%s, relate=%s, relation=%s,
@@ -1255,8 +1262,27 @@ class orm(orm_template):
 
     _log_access = True
     _table = None
-    _protected = ['read', 'write', 'create', 'default_get', 'perm_read', 'unlink', 'fields_get', 'fields_view_get', 'search', 'name_get', 'distinct_field_get', 'name_search', 'copy', 'import_data', 'search_count']
+    _protected = ['read','write','create','default_get','perm_read','unlink','fields_get','fields_view_get','search','name_get','distinct_field_get','name_search','copy','import_data','search_count']
+    def __parent_store_compute(self, cr):
+        logger = netsvc.Logger()
+        logger.notifyChannel('init', netsvc.LOG_INFO, 'Computing parent left and right for table %s...' % (self._table, ))
+        def browse_rec(root, pos=0):
+# TODO: set order
+            where = self._parent_name+'='+str(root)
+            if not root:
+                where = self._parent_name+' IS NULL'
+            cr.execute('SELECT id FROM '+self._table+' WHERE '+where)
+            pos2 = pos + 1
+            childs = cr.fetchall()
+            for id in childs:
+                pos2 = browse_rec(id[0], pos2)
+            cr.execute('update '+self._table+' set parent_left=%d, parent_right=%d where id=%d', (pos,pos2,root))
+            return pos2+1
+        browse_rec(None)
+        return True
+
     def _auto_init(self, cr, context={}):
+        store_compute =  False
         logger = netsvc.Logger()
         create = False
         self._field_create(cr, context=context)
@@ -1266,6 +1292,23 @@ class orm(orm_template):
                 cr.execute("CREATE TABLE \"%s\" (id SERIAL NOT NULL, PRIMARY KEY(id)) WITH OIDS" % self._table)
                 create = True
             cr.commit()
+            if self._parent_store:
+                cr.execute("""SELECT c.relname
+                    FROM pg_class c, pg_attribute a
+                    WHERE c.relname=%s AND a.attname=%s AND c.oid=a.attrelid
+                    """, (self._table, 'parent_left'))
+                if not cr.rowcount:
+                    if 'parent_left' not in self._columns:
+                        logger.notifyChannel('init', netsvc.LOG_ERROR, 'create a column parent_left on object %s: fields.integer(\'Left Parent\', select=1)' % (self._table, ))
+                    if 'parent_right' not in self._columns:
+                        logger.notifyChannel('init', netsvc.LOG_ERROR, 'create a column parent_right on object %s: fields.integer(\'Right Parent\', select=1)' % (self._table, ))
+                    if self._columns[self._parent_name].ondelete<>'cascade':
+                        logger.notifyChannel('init', netsvc.LOG_ERROR, "the columns %s on object must be set as ondelete='cascasde'" % (self._name, self._parent_name))
+                    cr.execute("ALTER TABLE \"%s\" ADD COLUMN \"%s\" INTEGER" % (self._table, 'parent_left'))
+                    cr.execute("ALTER TABLE \"%s\" ADD COLUMN \"%s\" INTEGER" % (self._table, 'parent_right'))
+                    cr.commit()
+                    store_compute = True
+
             if self._log_access:
                 logs = {
                     'create_uid': 'INTEGER REFERENCES res_users ON DELETE SET NULL',
@@ -1475,6 +1518,8 @@ class orm(orm_template):
                     if line2:
                         cr.execute(line2)
                         cr.commit()
+        if store_compute:
+            self.__parent_store_compute(cr)
 
     def __init__(self, cr):
         super(orm, self).__init__(cr)
@@ -2012,6 +2057,48 @@ class orm(orm_template):
             self.pool.get(table).write(cr, user, nids, v, context)
 
         self._validate(cr, user, ids, context)
+# TODO: use _order to set dest at the right position and not first node of parent
+        if self._parent_store and self._parent_name in vals:
+            cr.execute('select parent_left,parent_right from '+self._table+' where id=%d', (vals[self._parent_name],))
+            res = cr.fetchone()
+            if res:
+                pleft,pright = res
+            else:
+                cr.execute('select max(parent_right),max(parent_right)+1 from '+self._table)
+                pleft,pright = cr.fetchone()
+            cr.execute('select parent_left,parent_right,id from '+self._table+' where id in ('+','.join(map(lambda x:'%d',ids))+')', ids)
+            dest = pleft + 1
+            for cleft,cright,cid in cr.fetchall():
+                if cleft > pleft:
+                    treeshift  = pleft - cleft + 1
+                    leftbound  = pleft+1
+                    rightbound = cleft-1
+                    cwidth     = cright-cleft+1
+                    leftrange = cright
+                    rightrange  = pleft
+                else:
+                    treeshift  = pleft - cright
+                    leftbound  = cright + 1
+                    rightbound = pleft
+                    cwidth     = cleft-cright-1
+                    leftrange  = pleft+1
+                    rightrange = cleft
+                cr.execute('UPDATE '+self._table+'''
+                    SET
+                        parent_left = CASE
+                            WHEN parent_left BETWEEN %d AND %d THEN parent_left + %d
+                            WHEN parent_left BETWEEN %d AND %d THEN parent_left + %d
+                            ELSE parent_left
+                        END,
+                        parent_right = CASE
+                            WHEN parent_right BETWEEN %d AND %d THEN parent_right + %d
+                            WHEN parent_right BETWEEN %d AND %d THEN parent_right + %d
+                            ELSE parent_right
+                        END
+                    WHERE
+                        parent_left<%d OR parent_right>%d;
+                ''', (leftbound,rightbound,cwidth,cleft,cright,treeshift,leftbound,rightbound,
+                    cwidth,cleft,cright,treeshift,leftrange,rightrange))
 
         if 'read_delta' in context:
             del context['read_delta']
@@ -2123,6 +2210,18 @@ class orm(orm_template):
             self._columns[field].set(cr, self, id_new, field, vals[field], user, context)
 
         self._validate(cr, user, [id_new], context)
+
+        if self._parent_store:
+            parent = vals.get(self._parent_name, False)
+            if parent:
+                cr.execute('select parent_left from '+self._table+' where id=%d', (parent,))
+                pleft = cr.fetchone()[0]
+            else:
+                cr.execute('select max(parent_right) from '+self._table)
+                pleft = cr.fetchone()[0]
+            cr.execute('update '+self._table+' set parent_left=%d,parent_right=%d', (pleft+1,pleft+2))
+            cr.execute('update '+self._table+' set parent_left=parent_left+2 where parent_left>%d', (pleft,))
+            cr.execute('update '+self._table+' set parent_right=parent_right+2 where parent_right>%d', (pleft,))
 
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_create(user, self._name, id_new, cr)
