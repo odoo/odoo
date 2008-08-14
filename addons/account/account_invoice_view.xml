@@ -408,7 +408,7 @@
             <field name="name">Unpaid Customer Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="domain">[('state','<>','draft'),('reconciled','=',False),('type','=','out_invoice')]</field>
+            <field name="domain">[('state','!=','draft'),('reconciled','=',False),('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice'}</field>
         </record>
         <record id="action_invoice_tree7_view1" model="ir.actions.act_window.view">
@@ -450,7 +450,7 @@
             <field name="name">Unpaid Supplier Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="domain">[('state','<>','draft'),('reconciled','=',False),('type','=','in_invoice')]</field>
+            <field name="domain">[('state','!=','draft'),('reconciled','=',False),('type','=','in_invoice')]</field>
             <field name="context">{'type':'in_invoice'}</field>
         </record>
         <record id="action_invoice_tree9_view1" model="ir.actions.act_window.view">
@@ -492,7 +492,7 @@
             <field name="name">Unpaid Customer Refunds</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="domain">[('state','<>','draft'),('reconciled','=',False),('type','=','out_refund')]</field>
+            <field name="domain">[('state','!=','draft'),('reconciled','=',False),('type','=','out_refund')]</field>
             <field name="context">{'type':'out_refund'}</field>
         </record>
         <record id="action_invoice_tree11_view1" model="ir.actions.act_window.view">
@@ -534,7 +534,7 @@
             <field name="name">Unpaid Supplier Refunds</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="domain">[('state','<>','draft'),('reconciled','=',False),('type','=','in_refund')]</field>
+            <field name="domain">[('state','!=','draft'),('reconciled','=',False),('type','=','in_refund')]</field>
             <field name="context">{'type':'in_refund'}</field>
         </record>
         <record id="action_invoice_tree13_view1" model="ir.actions.act_window.view">
@@ -551,9 +551,9 @@
 
         <menuitem action="action_invoice_tree13" id="menu_action_invoice_tree13" parent="menu_action_invoice_tree4"/>
 
-        <act_window domain="[('partner_id','=',active_id),('state','<>','draft'),('reconciled','=',False)]" id="act_res_partner_2_account_invoice_opened" name="Unpaid invoices" res_model="account.invoice" src_model="res.partner"/>
+        <act_window domain="[('partner_id','=',active_id),('state','!=','draft'),('reconciled','=',False)]" id="act_res_partner_2_account_invoice_opened" name="Unpaid invoices" res_model="account.invoice" src_model="res.partner"/>
 
-        <act_window domain="[('journal_id','=',active_id),('state','<>','draft'),('reconciled','=',False)]" id="act_account_journal_2_account_invoice_opened" name="Unpaid invoices" res_model="account.invoice" src_model="account.journal"/>
+        <act_window domain="[('journal_id','=',active_id),('state','!=','draft'),('reconciled','=',False)]" id="act_account_journal_2_account_invoice_opened" name="Unpaid invoices" res_model="account.invoice" src_model="account.journal"/>
 
         <act_window domain="[('account_analytic_id', '=', active_id)]" id="act_account_analytic_account_2_account_invoice_line" name="Invoice lines" res_model="account.invoice.line" src_model="account.analytic.account"/>
 
