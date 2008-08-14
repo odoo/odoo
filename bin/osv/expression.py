@@ -69,7 +69,7 @@ class expression(object):
             left, operator, right = e
 
             if left in table._inherit_fields:
-                working_table = table.pool.get(table._inherit_fields[self.__left][0])
+                working_table = table.pool.get(table._inherit_fields[left][0])
                 if working_table not in self.__tables.values():
                     self.__joins.append('%s.%s' % (table._table, table._inherits[working_table._name]))
             
