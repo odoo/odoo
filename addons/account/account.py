@@ -1127,7 +1127,7 @@ class account_tax(osv.osv):
         'ref_tax_sign': fields.float('Tax Code Sign', help="Usualy 1 or -1."),
         'include_base_amount': fields.boolean('Include in base amount', help="Indicate if the amount of tax must be included in the base amount for the computation of the next taxes"),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'description': fields.char('Internal Name', 32),
+        'description': fields.char('Internal Name',size=32),
     }
 
     def name_get(self, cr, uid, ids, context={}):

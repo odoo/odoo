@@ -674,6 +674,8 @@
                     <field name="journal_id"/>
                     <field name="debit" sum="Total debit"/>
                     <field name="credit" sum="Total credit"/>
+                    <field name="account_tax_id"/>
+                    <field name="analytic_account_id"/>
                     <field name="amount_currency"/>
                     <field name="currency_id"/>
                     <field name="state"/>
@@ -716,6 +718,9 @@
                             <newline/>
                             <field name="tax_code_id"/>
                             <field name="tax_amount"/>
+                            <newline/>
+                            <field name="account_tax_id"/>
+                            <field name="analytic_account_id"/>
 
                             <separator colspan="4" string="State"/>
                             <field name="journal_id" select="2"/>
@@ -764,6 +769,9 @@
                             <field name="date_created"/>
                             <field name="date_created"/>
                             <field name="blocked" select="3"/>
+                            <newline/>
+                            <field name="account_tax_id"/>
+                            <field name="analytic_account_id"/>
 
                             <separator colspan="4" string="State"/>
                             <newline/>
@@ -1365,6 +1373,8 @@
                     <field name="tax_amount"/>
                     <field name="debit" sum="Total debit"/>
                     <field name="credit" sum="Total credit"/>
+                    <field name="account_tax_id"/>
+                    <field name="analytic_account_id"/>
                     <field name="state"/>
                 </tree>
             </field>
