@@ -122,7 +122,7 @@ class account_invoice(osv.osv):
             ('draft','Draft'),
             ('proforma','Pro-forma'),
             ('open','Open'),
-            ('paid','Paid'),
+            ('paid','Done'),
             ('cancel','Canceled')
         ],'State', select=True, readonly=True),
 
@@ -149,9 +149,9 @@ class account_invoice(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Journal', required=True,readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'check_total': fields.float('Total', digits=(16,2), states={'open':[('readonly',True)],'close':[('readonly',True)]}),
-        'reconciled': fields.function(_reconciled, method=True, string='Reconciled', type='boolean'),
+        'reconciled': fields.function(_reconciled, method=True, string='Paid/Reconciled', type='boolean'),
         'partner_bank': fields.many2one('res.partner.bank', 'Bank Account',
-            help='The bank account to pay or to be paid'),
+            help='The bank account to pay to or to be paid from'),
     }
     _defaults = {
         'type': _get_type,
