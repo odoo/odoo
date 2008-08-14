@@ -48,6 +48,8 @@ if sys.version_info[:2] < (2, 4):
 else:
     from threading import local
 
+from itertools import izip
+
 # initialize a database with base/base.sql 
 def init_db(cr):
     import addons
@@ -288,7 +290,22 @@ def flatten(list):
             r.append(e)
     return r
 
-
+reverse_enumerate = lambda l: izip(xrange(len(l)-1, -1, -1), reversed(l))
+reverse_enumerate.__doc__ = \
+"""Like enumerate but in the other sens
+>>> a = ['a', 'b', 'c']
+>>> it = reverse_enumerate(a)
+>>> it.next()
+(2, 'c')
+>>> it.next()
+(1, 'b')
+>>> it.next()
+(0, 'a')
+>>> it.next()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+StopIteration
+"""
 
 #----------------------------------------------------------
 # Emails
