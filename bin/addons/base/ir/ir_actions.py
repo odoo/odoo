@@ -255,6 +255,25 @@ class act_url(osv.osv):
     }
 act_url()
 
+def _get_fields(self, cr, uid, context={}):
+    
+    return [('key','Email Value')]
+
+def model_get(self, cr, uid, context={}):
+    wkf_pool = self.pool.get('workflow')
+    ids = wkf_pool.search(cr, uid, [])
+    osvs = wkf_pool.read(cr, uid, ids, ['osv'])
+    
+    res = []
+    mpool = self.pool.get('ir.model')
+    for osv in osvs:
+        model = osv.get('osv')
+        id = mpool.search(cr, uid, [('model','=',model)])
+        name = mpool.read(cr, uid, id)[0]['name']
+        res.append((model, name))
+        
+    return res
+    
 #
 # Actions that are run on the server side
 #
@@ -274,15 +293,16 @@ class actions_server(osv.osv):
             ('object_write','Write Object'),
             ('client_action','Client Action'),
             ('other','Others Actions'),
-        ], 'Action State', required=True, size=32),
+        ], 'Action State', required=True, size=32, change_default=True),
         'code': fields.text('Python Code'),
         'sequence': fields.integer('Sequence'),
         'model_id': fields.many2one('ir.model', 'Model', required=True),
         'trigger_name': fields.char('Trigger Name', size=128),
-        'trigger_object': fields.char('Trigger Object', size=128),
-        'trigger_object_id': fields.char('Trigger Object ID', size=128),
+        'trigger_obj_id': fields.reference('Trigger On', selection=model_get, size=128),
+        #'trigger_object': fields.char('Trigger Object', size=128),
+        #'trigger_object_id': fields.char('Trigger Object ID', size=128),
         'message': fields.text('Message', translate=True),
-        'address': fields.char('Email Address', size=128),
+        'address': fields.selection(_get_fields ,'Email / SMS', size=128),
         'child_ids': fields.one2many('ir.actions.actions', 'parent_id', 'Others Actions'),
         'usage': fields.char('Action Usage', size=32),
         'type': fields.char('Report Type', size=32, required=True),
@@ -301,6 +321,7 @@ class actions_server(osv.osv):
 # If you plan to return an action, assign: action = {...}
 """
     }
+
     #
     # Context should contains:
     #   ids : original ids
@@ -331,11 +352,18 @@ class actions_server(osv.osv):
                     logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (action.address))
                 else:
                     logger.notifyChannel('email', netsvc.LOG_ERROR, 'Failed to send email to : %s' % (action.address))
+            if action.state == 'trigger':
+                #wf_service = netsvc.LocalService("workflow")
+                print action.trigger_obj_id
+                #wf_service.trg_validate(uid, )
             if action.state == 'sms':
                 if tools.sms_send(user, password, api_id, text, to) == True:
                     logger.notifyChannel('sms', netsvc.LOG_INFO, 'SMS successfully send to : %s' % (action.address))
                 else:
                     logger.notifyChannel('sms', netsvc.LOG_ERROR, 'Failed to send SMS to : %s' % (action.address))
+            if action.state == 'other':
+                print 'Actions to be Execute', action.child_ids
+
         return False
 actions_server()
 

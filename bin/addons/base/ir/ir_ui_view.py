@@ -116,7 +116,7 @@ class view(osv.osv):
 
             return result
 
-    	return super(view, self).write(cr, uid, ids, vals, context)
+        return super(view, self).write(cr, uid, ids, vals, context)
 view()
 
 class view_sc(osv.osv):

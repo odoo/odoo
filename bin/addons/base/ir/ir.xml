@@ -1043,13 +1043,19 @@
                     <field name="state" select="1"/>
                     <field name="model_id" select="1"/>
                     <field name="sequence" select="2"/>
-                    <field name="code" colspan="4"/>
-                    <field name="trigger_name" select="2"/>
-                    <field name="trigger_object" select="2"/>
-                    <field name="trigger_object_id"/>
-                    <field name="message" select="2" colspan="4"/>
-                    <field name="address" select="2"/>
-                    <field name="child_ids" colspan="4"/>
+                    <separator colspan="4" string="Python code"/>
+                    <field name="code" colspan="4" attrs="{'readonly':[('state','!=','python')]}"/>
+
+                    <separator colspan="4" string="Trigger Configuration"/>
+                    <field name="trigger_obj_id" select="2" colspan="4" attrs="{'readonly':[('state','!=','trigger')]}"/>
+                    <field name="trigger_name" select="2" attrs="{'readonly':[('state','!=','trigger')]}"/>
+<!--                    <field name="trigger_object_id" attrs="{'readonly':[('state','!=','trigger')]}"/>-->
+                    <separator colspan="4" string="Email Configuration"/>
+                    <field name="address" select="2" attrs="{'readonly':[('state','=','python'),('state','=','dummy'),('state','=','trigger'), ('state','=','object_create'), ('state','=','object_write'), ('state','=','client_action'), ('state','=','other')]}"/>
+                    <field name="message" select="2" colspan="4" attrs="{'readonly':[('state','=','python'),('state','=','dummy'),('state','=','trigger'), ('state','=','object_create'), ('state','=','object_write'), ('state','=','client_action'), ('state','=','other')]}"/>
+                    
+                    <separator colspan="4" string="Other Actions Configuration"/>
+                    <field name="child_ids" colspan="4" attrs="{'readonly':[('state','!=','other')]}"/>
                     <field name="usage"/>
                     <field name="type"/>
                 </form>
