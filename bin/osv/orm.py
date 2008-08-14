@@ -2212,7 +2212,7 @@ class orm(orm_template):
                 pleft = cr.fetchone()[0]
             else:
                 cr.execute('select max(parent_right) from '+self._table)
-                pleft = cr.fetchone()[0]
+                pleft = cr.fetchone()[0] or 0
             cr.execute('update '+self._table+' set parent_left=%d,parent_right=%d', (pleft+1,pleft+2))
             cr.execute('update '+self._table+' set parent_left=parent_left+2 where parent_left>%d', (pleft,))
             cr.execute('update '+self._table+' set parent_right=parent_right+2 where parent_right>%d', (pleft,))
