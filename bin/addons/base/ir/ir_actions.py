@@ -352,17 +352,39 @@ class actions_server(osv.osv):
                     logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (action.address))
                 else:
                     logger.notifyChannel('email', netsvc.LOG_ERROR, 'Failed to send email to : %s' % (action.address))
+
             if action.state == 'trigger':
-                #wf_service = netsvc.LocalService("workflow")
-                print action.trigger_obj_id
-                #wf_service.trg_validate(uid, )
+                wf_service = netsvc.LocalService("workflow")
+                res = str(action.trigger_obj_id).split(',')
+                model = res[0]
+                id = res[1]
+                wf_service.trg_validate(uid, model, int(id), action.trigger_name, cr)
+                
             if action.state == 'sms':
                 if tools.sms_send(user, password, api_id, text, to) == True:
                     logger.notifyChannel('sms', netsvc.LOG_INFO, 'SMS successfully send to : %s' % (action.address))
                 else:
                     logger.notifyChannel('sms', netsvc.LOG_ERROR, 'Failed to send SMS to : %s' % (action.address))
             if action.state == 'other':
-                print 'Actions to be Execute', action.child_ids
+                localdict = {
+                    'self': self.pool.get(action.model_id.model),
+                    'context': context,
+                    'time': time,
+                    'ids': ids,
+                    'cr': cr,
+                    'uid': uid
+                }
+                
+                for act in action.child_ids:
+                    code = """
+                        action = {
+                            'res_model': %s,
+                            'type': %s,
+                            'name': %s,
+                            'usage': %s,
+                        }
+                    """ % (action.model_id.model, act.type, act.name, act.usage)
+                    exec action.code in localdict
 
         return False
 actions_server()
