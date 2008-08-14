@@ -2280,7 +2280,10 @@ class orm(orm_template):
         # if the object has a field named 'active', filter out all inactive
         # records unless they were explicitely asked for
         if 'active' in self._columns and (active_test and context.get('active_test', True)):
-            args = [('&', ('active', '=', 1), tuple(args))]
+            if args:
+                args = ['&', ('active', '=', 1)] + args
+            else:
+                args = [('active', '=', 1)]
 
         if args:
             import expression

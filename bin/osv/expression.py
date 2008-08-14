@@ -1,67 +1,28 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
-from tools import flatten
+from tools import flatten, reverse_enumerate
 
 
 class expression(object):
     """
     parse a domain expression
-    examples:
-
-    >>> e = [('foo', '=', 'bar')]
-    >>> expression(e).parse().to_sql()
-    'foo = bar'
-    >>> e = [('id', 'in', [1,2,3])]
-    >>> expression(e).parse().to_sql()
-    'id in (1, 2, 3)'
-    >>> e = [('field', '=', 'value'), ('field', '<>', 'value')]
-    >>> expression(e).parse().to_sql()
-    '( field = value AND field <> value )'
-    >>> e = [('&', ('field', '<', 'value'), ('field', '>', 'value'))]
-    >>> expression(e).parse().to_sql()
-    '( field < value AND field > value )'
-    >>> e = [('|', ('field', '=', 'value'), ('field', '=', 'value'))]
-    >>> expression(e).parse().to_sql()
-    '( field = value OR field = value )'
-    >>> e = [('&', ('field1', '=', 'value'), ('field2', '=', 'value'), ('|', ('field3', '<>', 'value'), ('field4', '=', 'value')))]
-    >>> expression(e).parse().to_sql()
-    '( field1 = value AND field2 = value AND ( field3 <> value OR field4 = value ) )'
-    >>> e = [('&', ('|', ('a', '=', '1'), ('b', '=', '2')), ('|', ('c', '=', '3'), ('d', '=', '4')))]
-    >>> expression(e).parse().to_sql()
-    '( ( a = 1 OR b = 2 ) AND ( c = 3 OR d = 4 ) )'
-    >>> e = [('|', (('a', '=', '1'), ('b', '=', '2')), (('c', '=', '3'), ('d', '=', '4')))]
-    >>> expression(e).parse().to_sql()
-    '( ( a = 1 AND b = 2 ) OR ( c = 3 AND d = 4 ) )'
-    >>> expression(e).parse().get_tables()
-    []
-    >>> expression('fail').parse().to_sql()
-    Traceback (most recent call last):
-    ...
-    ValueError: Bad expression: 'fail'
-    >>> e = [('fail', 'is', 'True')]
-    >>> expression(e).parse().to_sql()
-    Traceback (most recent call last):
-    ...
-    ValueError: Bad expression: ('&', ('fail', 'is', 'True'))
+    use a real polish notation
+    leafs are still in a ('foo', '=', 'bar') format
+    For more info: http://...
     """
 
     def _is_operator(self, element):
         return isinstance(element, str) \
-           and element in ['&', '|']
+           and element in ['&', '|', '!']
 
     def _is_leaf(self, element):
         return isinstance(element, tuple) \
            and len(element) == 3 \
            and element[1] in ('=', '!=', '<>', '<=', '<', '>', '>=', '=like', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of')
 
-    def _is_expression(self, element):
-        return isinstance(element, tuple) \
-           and len(element) > 2 \
-           and self._is_operator(element[0])
-
-
     def __execute_recursive_in(self, cr, s, f, w, ids):
+        #deprecated -> use _left and _right...
         res = []
         for i in range(0, len(ids), cr.IN_MAX):
             subids = ids[i:i+cr.IN_MAX]
@@ -74,41 +35,21 @@ class expression(object):
 
 
     def __init__(self, exp):
-        if exp and isinstance(exp, tuple):
-            if not self._is_leaf(exp) and not self._is_operator(exp[0]):
-                exp = list(exp)
-        if exp and isinstance(exp, list):
-            if len(exp) == 1 and self._is_leaf(exp[0]):
-                exp = exp[0]
-            else:
-                if len(exp) == 3 and self._is_leaf(tuple(exp)):
-                    exp=[exp]
-                if not self._is_operator(exp[0][0]):
-                    if isinstance(exp[0],list):
-                        exp=tuple(exp[0])
-                    else:
-                        exp.insert(0, '&')
-                        exp = tuple(exp)
-                else:
-                    exp = exp[0]
+
+        # check if the expression is valid
+        if not reduce(lambda acc, val: acc and (self._is_operator(val) or self._is_leaf(val)), exp, True):
+            raise ValueError('Bad expression: %r' % (exp,))
 
         self.__exp = exp
-        self.__operator = '&'
-        self.__children = []
-
-        self.__tables = []
+        self.__tables = {}  # used to store the table to use for the sql generation. key = index of the leaf
         self.__joins = []
-        self.__table = None
+        self.__main_table = None # 'root' table. set by parse()
 
-        self.__left, self.__right = None, None
-        if self._is_leaf(self.__exp):
-            self.__left, self.__operator, self.__right = self.__exp
-            if isinstance(self.__right, list):
-                self.__right = tuple(self.__right)
-        elif exp and not self._is_expression(self.__exp):
-            raise ValueError('Bad expression: %r' % (self.__exp,))
+        self.__DUMMY_LEAF = (1, '=', 1) # a dummy leaf that must not be parsed or sql generated
+
 
     def parse(self, cr, uid, table, context):
+        """ transform the leafs of the expression """
 
         def _rec_get(ids, table, parent):
             if not ids:
@@ -119,228 +60,225 @@ class expression(object):
         if not self.__exp:
             return self
 
-        if self._is_leaf(self.__exp):
-            self.__table = table
-            self.__tables.append(self.__table._table)
-            if self.__left in table._inherit_fields:
-                self.__table = table.pool.get(table._inherit_fields[self.__left][0])
-                if self.__table._table not in self.__tables:
-                    self.__tables.append(self.__table._table)
-                    self.__joins.append('%s.%s' % (table._table, table._inherits[self.__table._name]))
-            fargs = self.__left.split('.', 1)
-            field = self.__table._columns.get(fargs[0], False)
+        self.__main_table = table
+        working_table = table
+        
+        for i, e in enumerate(self.__exp):
+            if self._is_operator(e) or e == self.__DUMMY_LEAF:
+                continue
+            left, operator, right = e
+
+            if left in table._inherit_fields:
+                working_table = table.pool.get(table._inherit_fields[self.__left][0])
+                if working_table not in self.__tables.values():
+                    self.__joins.append('%s.%s' % (table._table, table._inherits[working_table._name]))
+            
+            self.__tables[i] = working_table
+            
+            fargs = left.split('.', 1)
+            field = working_table._columns.get(fargs[0], False)
             if not field:
-                if self.__left == 'id' and self.__operator == 'child_of':
-                    self.__right += _rec_get(self.__right, self.__table, self.__table._parent_name)
-                    self.__operator = 'in'
-                return self
+                if left == 'id' and operator == 'child_of':
+                    right += _rec_get(right, working_table, working_table._parent_name)
+                    self.__exp[i] = ('id', 'in', right)
+                continue
+            
+            field_obj = table.pool.get(field._obj)
             if len(fargs) > 1:
                 if field._type == 'many2one':
-                    self.__left = fargs[0]
-                    self.__right = table.pool.get(field._obj).search(cr, uid, [(fargs[1], self.__operator, self.__right)], context=context)
-                    self.__operator = 'in'
-                return self
+                    right = field_obj.search(cr, uid, [(fargs[1], operator, right)], context=context)
+                    self.__exp[i] = (fargs[0], 'in', right)
+                continue
 
-            field_obj = table.pool.get(field._obj)
             if field._properties:
                 # this is a function field
-                if not field._fnct_search and not field.store:
-                    # the function field doesn't provide a search function and doesn't store values in the database, so we must ignore it : we generate a dummy leaf
-                    self.__left, self.__operator, self.__right = 1, '=', 1
-                    self.__exp = '' # force to generate an empty sql expression
-                else:
-                    # we need to replace this leaf to a '&' expression
-                    # we clone ourself...
-                    import copy
-                    newexp = copy.copy(self)
-                    self.__table = None
-                    self.__tables, self.__joins = [], []
-                    self.__children = []
+                if not field.store:
+                    if not field._fnct_search:
+                        # the function field doesn't provide a search function and doesn't store
+                        # values in the database, so we must ignore it : we generate a dummy leaf
+                        self.__exp[i] = self.__DUMMY_LEAF
+                    else:
+                        subexp = field.search(cr, uid, table, left, [self.__exp[i]])
+                        # we assume that the expression is valid 
+                        # we create a dummy leaf for forcing the parsing of the resulting expression
+                        self.__exp[i] = '&'
+                        self.__exp.insert(i + 1, self.__DUMMY_LEAF)
+                        for j, se in enumerate(subexp):
+                            self.__exp.insert(i + 2 + j, se)
+                
+                # else, the value of the field is store in the database, so we search on it
 
-                    if field._fnct_search:
-                        subexp = field.search(cr, uid, table, self.__left, [self.__exp])
-                        self.__children.append(expression(subexp).parse(cr, uid, table, context))
-                    if field.store:
-                        self.__children.append(newexp)
-
-                    self.__left, self.__right = None, None
-                    self.__operator = '&'
-                    self.__exp = ('&',) + tuple([tuple(e.__exp) for e in self.__children])
 
             elif field._type == 'one2many':
-                if isinstance(self.__right, basestring):
-                    ids2 = [x[0] for x in field_obj.name_search(cr, uid, self.__right, [], self.__operator)]
+                if isinstance(right, basestring):
+                    ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator)]
                 else:
-                    ids2 = self.__right
+                    ids2 = list(right)
                 if not ids2:
-                    self.__left, self.__operator, self.__right = 'id', '=', '0'
+                    self.__exp[i] = ('id', '=', '0')
                 else:
-                    self.__left, self.__operator, self.__right = 'id', 'in', self.__execute_recursive_in(cr, field._fields_id, field_obj._table, 'id', ids2)
+                    self.__exp[i] = ('id', 'in', self.__execute_recursive_in(cr, field._fields_id, field_obj._table, 'id', ids2))
 
             elif field._type == 'many2many':
                 #FIXME
-                if self.__operator == 'child_of':
-                    if isinstance(self.__right, basestring):
-                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, self.__right, [], 'like')]
+                if operator == 'child_of':
+                    if isinstance(right, basestring):
+                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'like')]
                     else:
-                        ids2 = self.__right
+                        ids2 = list(right)
 
                     def _rec_convert(ids):
                         if field_obj == table:
                             return ids
                         return self.__execute_recursive_in(cr, field._id1, field._rel, field._id2, ids)
 
-                    self.__left, self.__operator, self.__right = 'id', 'in', _rec_convert(ids2 + _rec_get(ids2, field_obj, self.__table._parent_name))
+                    self.__exp[i] = ('id', 'in', _rec_convert(ids2 + _rec_get(ids2, field_obj, working_table._parent_name)))
                 else:
-                    if isinstance(self.__right, basestring):
-                        res_ids = [x[0] for x in field_obj.name_search(cr, uid, self.__right, [], self.__operator)]
+                    if isinstance(right, basestring):
+                        res_ids = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator)]
                     else:
-                        res_ids = self.__right
-                    self.__left, self.__operator, self.__right = 'id', 'in', self.__execute_recursive_in(cr, field._id1, field._rel, field._id2, res_ids) or [0]
+                        res_ids = list(right)
+                    self.__exp[i] = ('id', 'in', self.__execute_recursive_in(cr, field._id1, field._rel, field._id2, res_ids) or [0])
             elif field._type == 'many2one':
-                if self.__operator == 'child_of':
-                    if isinstance(self.__right, basestring):
-                        ids2 = [x[0] for x in field_obj.search_name(cr, uid, self.__right, [], 'like')]
+                if operator == 'child_of':
+                    if isinstance(right, basestring):
+                        ids2 = [x[0] for x in field_obj.search_name(cr, uid, right, [], 'like')]
                     else:
-                        ids2 = list(self.__right)
+                        ids2 = list(right)
 
                     self.__operator = 'in'
-                    if field._obj != self.__table._name:
-                        self.__right = ids2 + _rec_get(ids2, field_obj, self.__table._parent_name)
+                    if field._obj != working_table._name:
+                        right = ids2 + _rec_get(ids2, field_obj, working_table._parent_name)
                     else:
-                        self.__right = ids2 + _rec_get(ids2, self.__table, self.__left)
-                        self.__left = 'id'
+                        right = ids2 + _rec_get(ids2, working_table, left)
+                        left = 'id'
+                    self.__exp[i] = (left, 'in', right)
                 else:
-                    if isinstance(self.__right, basestring):
-                        res_ids = field_obj.name_search(cr, uid, self.__right, [], self.__operator)
-                        self.__operator = 'in'
-                        self.__right = map(lambda x: x[0], res_ids)
+                    if isinstance(right, basestring):
+                        res_ids = field_obj.name_search(cr, uid, right, [], operator)
+                        right = map(lambda x: x[0], res_ids)
+                        self.__exp[i] = (left, 'in', right)
             else:
                 # other field type
                 if field.translate:
-                    if self.__operator in ('like', 'ilike', 'not like', 'not ilike'):
-                        self.__right = '%%%s%%' % self.__right
+                    if operator in ('like', 'ilike', 'not like', 'not ilike'):
+                        right = '%%%s%%' % right
 
                     query1 = '( SELECT res_id'          \
                              '    FROM ir_translation'  \
                              '   WHERE name = %s'       \
                              '     AND lang = %s'       \
                              '     AND type = %s'       \
-                             '     AND value ' + self.__operator + ' %s'    \
+                             '     AND value ' + operator + ' %s'    \
                              ') UNION ('                \
                              '  SELECT id'              \
-                             '    FROM "' + self.__table._table + '"'       \
-                             '   WHERE "' + self.__left + '" ' + self.__operator + ' %s' \
+                             '    FROM "' + working_table._table + '"'       \
+                             '   WHERE "' + left + '" ' + operator + ' %s' \
                              ')'
-                    query2 = [self.__table._name + ',' + self.__left,
+                    query2 = [working_table._name + ',' + left,
                               context.get('lang', False) or 'en_US',
                               'model',
-                              self.__right,
-                              self.__right,
+                              right,
+                              right,
                              ]
 
-                    self.__left = 'id'
-                    self.__operator = 'inselect'
-                    self.__right = (query1, query2,)
+                    self.__exp[i] = ('id', 'inselect', (query1, query2))
 
-
-        elif self._is_expression(self.__exp):
-            self.__operator = self.__exp[0]
-
-            for element in self.__exp[1:]:
-                if not self._is_operator(element):
-                    self.__children.append(expression(element).parse(cr, uid, table, context))
         return self
 
-    def to_sql(self):
-        if not self.__exp:
-            return ('', [])
-        elif self._is_leaf(self.__exp):
-            if self.__operator == 'inselect':
-                query = '(%s.%s in (%s))' % (self.__table._table, self.__left, self.__right[0])
-                params = self.__right[1]
-            elif self.__operator in ['in', 'not in']:
-                params = self.__right[:]
-                len_before = len(params)
-                for i in range(len_before)[::-1]:
-                    if params[i] == False:
-                        del params[i]
+    def __leaf_to_sql(self, leaf, table):
+        left, operator, right = leaf
 
-                len_after = len(params)
-                check_nulls = len_after != len_before
-                query = '(1=0)'
+        if operator == 'inselect':
+            query = '(%s.%s in (%s))' % (table._table, left, right[0])
+            params = right[1]
+        elif operator in ['in', 'not in']:
+            params = right[:]
+            len_before = len(params)
+            for i in range(len_before)[::-1]:
+                if params[i] == False:
+                    del params[i]
 
-                if len_after:
-                    if self.__left == 'id':
-                        instr = ','.join(['%d'] * len_after)
-                    else:
-                        instr = ','.join([self.__table._columns[self.__left]._symbol_set[0]] * len_after)
+            len_after = len(params)
+            check_nulls = len_after != len_before
+            query = '(1=0)'
 
-                    query = '(%s.%s %s (%s))' % (self.__table._table, self.__left, self.__operator, instr)
-
-                if check_nulls:
-                    query = '(%s OR %s IS NULL)' % (query, self.__left)
-            else:
-                params = []
-                if self.__right is False and self.__operator == '=':
-                    query = '%s IS NULL' % self.__left
-                elif self.__right is False and self.__operator == '<>':
-                    query = '%s IS NOT NULL' % self.__left
+            if len_after:
+                if left == 'id':
+                     instr = ','.join(['%d'] * len_after)
                 else:
-                    if self.__left == 'id':
-                        query = '%s.id %s %%s' % (self.__table._table, self.__operator)
-                        params = self.__right
-                    else:
-                        like = self.__operator in ('like', 'ilike', 'not like', 'not ilike')
+                    instr = ','.join([table._columns[left]._symbol_set[0]] * len_after)
+                query = '(%s.%s %s (%s))' % (table._table, left, operator, instr)
 
-                        op = self.__operator == '=like' and 'like' or self.__operator
-                        if self.__left in self.__table._columns:
-                            format = like and '%s' or self.__table._columns[self.__left]._symbol_set[0]
-                            query = '(%s.%s %s %s)' % (self.__table._table, self.__left, op, format)
-                        else:
-                            query = "(%s.%s %s '%s')" % (self.__table._table, self.__left, op, self.__right)
-
-                        add_null = False
-                        if like:
-                            if isinstance(self.__right, str):
-                                str_utf8 = self.__right
-                            elif isinstance(self.__right, unicode):
-                                str_utf8 = self.__right.encode('utf-8')
-                            else:
-                                str_utf8 = str(self.__right)
-                            params = '%%%s%%' % str_utf8
-                            add_null = not str_utf8
-                        elif self.__left in self.__table._columns:
-                            params = self.__table._columns[self.__left]._symbol_set[1](self.__right)
-
-                        if add_null:
-                            query = '(%s OR %s IS NULL)' % (query, self.__left)
-
-            joins = ' AND '.join(map(lambda j: '%s.id = %s' % (self.__table._table, j), self.__joins))
-            if joins:
-                query = '(%s AND (%s))' % (joins, query)
-            if isinstance(params, basestring):
-                params = [params]
-            return (query, params)
-
+            if check_nulls:
+                query = '(%s OR %s IS NULL)' % (query, left)
         else:
-            children = [child.to_sql() for child in self.__children]
-            params = flatten([child[1] for child in children])
-            query = "( %s )" % (" %s " % {'&': 'AND', '|': 'OR'}[self.__operator]).join([child[0] for child in children if child[0]])
-            return (query, params)
+            params = []
+            if right is False and operator == '=':
+                query = '%s IS NULL' % left
+            elif right is False and operator in ['<>', '!=']:
+                query = '%s IS NOT NULL' % left
+            else:
+                if left == 'id':
+                    query = '%s.id %s %%s' % (table._table, operator)
+                    params = right
+                else:
+                    like = operator in ('like', 'ilike', 'not like', 'not ilike')
 
-    def __get_tables(self):
-        return self.__tables + [child.__get_tables() for child in self.__children]
+                    op = operator == '=like' and 'like' or operator
+                    if left in table._columns:
+                        format = like and '%s' or table._columns[left]._symbol_set[0]
+                        query = '(%s.%s %s %s)' % (table._table, left, op, format)
+                    else:
+                        query = "(%s.%s %s '%s')" % (table._table, left, op, right)
+
+                    add_null = False
+                    if like:
+                        if isinstance(right, str):
+                            str_utf8 = right
+                        elif isinstance(right, unicode):
+                            str_utf8 = right.encode('utf-8')
+                        else:
+                            str_utf8 = str(right)
+                        params = '%%%s%%' % str_utf8
+                        add_null = not str_utf8
+                    elif left in table._columns:
+                        params = table._columns[left]._symbol_set[1](right)
+
+                    if add_null:
+                        query = '(%s OR %s IS NULL)' % (query, left)
+
+        if isinstance(params, basestring):
+            params = [params]
+        return (query, params)
+
+
+    def to_sql(self):
+        stack = []
+        params = []
+        for i, e in reverse_enumerate(self.__exp):
+            if self._is_leaf(e):
+                table = self.__tables.has_key(i) and self.__tables[i] or self.__main_table
+                q, p = self.__leaf_to_sql(e, table)
+                params.insert(0, p)
+                stack.append(q)
+            else:
+                if e == '!':
+                    stack.append('(NOT (%s))' % (stack.pop(),))
+                else:
+                    ops = {'&': ' AND ', '|': ' OR '}
+                    q1 = stack.pop()
+                    q2 = stack.pop()
+                    stack.append('(%s %s %s)' % (q1, ops[e], q2,))
+        
+        query = ' AND '.join(reversed(stack))
+        joins = ' AND '.join(map(lambda j: '%s.id = %s' % (self.__main_table._table, j), self.__joins))
+        if joins:
+            query = '(%s AND (%s))' % (joins, query)
+        return (query, flatten(params))
 
     def get_tables(self):
-        return ['"%s"' % t for t in set(flatten(self.__get_tables()))]
-
-    #def
-
-if __name__ == '__main__':
-    pass
-    #import doctest
-    #doctest.testmod()
+        return ['"%s"' % t._table for t in set(self.__tables.values())]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
