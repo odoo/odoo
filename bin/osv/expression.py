@@ -61,13 +61,13 @@ class expression(object):
             return self
 
         self.__main_table = table
-        working_table = table
         
         for i, e in enumerate(self.__exp):
             if self._is_operator(e) or e == self.__DUMMY_LEAF:
                 continue
             left, operator, right = e
 
+            working_table = table
             if left in table._inherit_fields:
                 working_table = table.pool.get(table._inherit_fields[left][0])
                 if working_table not in self.__tables.values():
