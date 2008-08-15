@@ -52,10 +52,18 @@ class expression(object):
         """ transform the leafs of the expression """
 
         def _rec_get(ids, table, parent):
-            if not ids:
-                return []
-            ids2 = table.search(cr, uid, [(parent, 'in', ids)], context=context)
-            return ids + _rec_get(ids2, table, parent)
+            if table._parent_store:
+                doms = []
+                for o in table.browse(cr, uid, ids, context=context):
+                    if doms:
+                        doms.insert(0,'|')
+                    doms.append(['&',('parent_left','<',o.parent_right),('parent_left','>=',o.parent_left)])
+                return table.search(cr, uid, doms, context=context)
+            else:
+                if not ids:
+                    return []
+                ids2 = table.search(cr, uid, [(parent, 'in', ids)], context=context)
+                return ids + _rec_get(ids2, table, parent)
 
         if not self.__exp:
             return self
