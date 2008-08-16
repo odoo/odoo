@@ -59,6 +59,7 @@ class fake_cursor:
         self.dbname = dbname
 
     def execute(self, sql, params=None):
+        print sql, params
         if not params:
             params=()
         def base_string(s):

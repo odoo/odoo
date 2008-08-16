@@ -1375,7 +1375,7 @@ class orm(orm_template):
                                 if not default:
                                     cr.execute("UPDATE \"%s\" SET \"%s\"=NULL" % (self._table, k))
                                 else:
-                                    cr.execute("UPDATE \"%s\" SET \"%s\"='%s'" % (self._table, k, default))
+                                    cr.execute("UPDATE \"%s\" SET \"%s\"=%%s" % (self._table, k), (default,))
                             if isinstance(f, fields.function):
                                 cr.execute('select id from '+self._table)
                                 ids_lst = map(lambda x: x[0], cr.fetchall())

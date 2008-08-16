@@ -35,21 +35,20 @@ class expression(object):
 
 
     def __init__(self, exp):
-
         # check if the expression is valid
         if not reduce(lambda acc, val: acc and (self._is_operator(val) or self._is_leaf(val)), exp, True):
-            raise ValueError('Bad expression: %r' % (exp,))
-
+            raise ValueError('Bad domain expression: %r' % (exp,))
         self.__exp = exp
         self.__tables = {}  # used to store the table to use for the sql generation. key = index of the leaf
         self.__joins = []
         self.__main_table = None # 'root' table. set by parse()
-
         self.__DUMMY_LEAF = (1, '=', 1) # a dummy leaf that must not be parsed or sql generated
 
 
     def parse(self, cr, uid, table, context):
         """ transform the leafs of the expression """
+        if not self.__exp:
+            return self
 
         def _rec_get(ids, table, parent):
             if table._parent_store:
@@ -57,7 +56,7 @@ class expression(object):
                 for o in table.browse(cr, uid, ids, context=context):
                     if doms:
                         doms.insert(0,'|')
-                    doms.append(['&',('parent_left','<',o.parent_right),('parent_left','>=',o.parent_left)])
+                    doms += ['&',('parent_left','<',o.parent_right),('parent_left','>=',o.parent_left)]
                 return table.search(cr, uid, doms, context=context)
             else:
                 if not ids:
@@ -65,11 +64,8 @@ class expression(object):
                 ids2 = table.search(cr, uid, [(parent, 'in', ids)], context=context)
                 return ids + _rec_get(ids2, table, parent)
 
-        if not self.__exp:
-            return self
-
         self.__main_table = table
-        
+
         for i, e in enumerate(self.__exp):
             if self._is_operator(e) or e == self.__DUMMY_LEAF:
                 continue
@@ -80,9 +76,9 @@ class expression(object):
                 working_table = table.pool.get(table._inherit_fields[left][0])
                 if working_table not in self.__tables.values():
                     self.__joins.append('%s.%s' % (table._table, table._inherits[working_table._name]))
-            
+
             self.__tables[i] = working_table
-            
+
             fargs = left.split('.', 1)
             field = working_table._columns.get(fargs[0], False)
             if not field:
@@ -90,7 +86,7 @@ class expression(object):
                     right += _rec_get(right, working_table, working_table._parent_name)
                     self.__exp[i] = ('id', 'in', right)
                 continue
-            
+
             field_obj = table.pool.get(field._obj)
             if len(fargs) > 1:
                 if field._type == 'many2one':
