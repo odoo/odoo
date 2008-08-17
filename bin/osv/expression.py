@@ -17,12 +17,11 @@ class expression(object):
            and element in ['&', '|', '!']
 
     def _is_leaf(self, element):
-        return isinstance(element, tuple) \
+        return (isinstance(element, tuple) or isinstance(element, list)) \
            and len(element) == 3 \
-           and element[1] in ('=', '!=', '<>', '<=', '<', '>', '>=', '=like', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of')
+           and element[1] in ('=', '!=', '<>', '<=', '<', '>', '>=', '=like', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of', 'inselect')
 
     def __execute_recursive_in(self, cr, s, f, w, ids):
-        #deprecated -> use _left and _right...
         res = []
         for i in range(0, len(ids), cr.IN_MAX):
             subids = ids[i:i+cr.IN_MAX]
@@ -50,23 +49,30 @@ class expression(object):
         if not self.__exp:
             return self
 
-        def _rec_get(ids, table, parent):
-            if table._parent_store:
+        def _rec_get(ids, table, parent, left='id', prefix=''):
+            if table._parent_store and (not table.pool._init):
+# TODO: Improve where joins are implemented for many with '.', replace by:
+# doms += ['&',(prefix+'.parent_left','<',o.parent_right),(prefix+'.parent_left','>=',o.parent_left)]
                 doms = []
                 for o in table.browse(cr, uid, ids, context=context):
                     if doms:
                         doms.insert(0,'|')
                     doms += ['&',('parent_left','<',o.parent_right),('parent_left','>=',o.parent_left)]
-                return table.search(cr, uid, doms, context=context)
+                if prefix:
+                    return [(left, 'in', table.search(cr, uid, doms, context=context))]
+                return doms
             else:
                 if not ids:
                     return []
                 ids2 = table.search(cr, uid, [(parent, 'in', ids)], context=context)
-                return ids + _rec_get(ids2, table, parent)
+                return [(prefix+left, 'in', ids2+ids)]
 
         self.__main_table = table
 
-        for i, e in enumerate(self.__exp):
+        i = -1
+        while i+1<len(self.__exp):
+            i+=1
+            e = self.__exp[i]
             if self._is_operator(e) or e == self.__DUMMY_LEAF:
                 continue
             left, operator, right = e
@@ -83,8 +89,8 @@ class expression(object):
             field = working_table._columns.get(fargs[0], False)
             if not field:
                 if left == 'id' and operator == 'child_of':
-                    right += _rec_get(right, working_table, working_table._parent_name)
-                    self.__exp[i] = ('id', 'in', right)
+                    dom = _rec_get(right, working_table, working_table._parent_name)
+                    self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
                 continue
 
             field_obj = table.pool.get(field._obj)
@@ -152,11 +158,10 @@ class expression(object):
 
                     self.__operator = 'in'
                     if field._obj != working_table._name:
-                        right = ids2 + _rec_get(ids2, field_obj, working_table._parent_name)
+                        dom = _rec_get(ids2, field_obj, working_table._parent_name, left=left, prefix=left+'.')
                     else:
-                        right = ids2 + _rec_get(ids2, working_table, left)
-                        left = 'id'
-                    self.__exp[i] = (left, 'in', right)
+                        dom = _rec_get(ids2, working_table, left)
+                    self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
                 else:
                     if isinstance(right, basestring):
                         res_ids = field_obj.name_search(cr, uid, right, [], operator)

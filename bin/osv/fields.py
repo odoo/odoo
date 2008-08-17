@@ -63,6 +63,7 @@ class _column(object):
     _properties = False
     _type = 'unknown'
     _obj = None
+    _multi = False
     _symbol_c = '%s'
     _symbol_f = _symbol_set
     _symbol_set = (_symbol_c, _symbol_f)
@@ -553,13 +554,17 @@ class function(_column):
     _type = 'function'
     _properties = True
 
-    def __init__(self, fnct, arg=None, fnct_inv=None, fnct_inv_arg=None, type='float', fnct_search=None, obj=None, method=False, store=False, **args):
+#
+# multi: compute several fields in one call
+#
+    def __init__(self, fnct, arg=None, fnct_inv=None, fnct_inv_arg=None, type='float', fnct_search=None, obj=None, method=False, store=False, multi=False, **args):
         _column.__init__(self, **args)
         self._obj = obj
         self._method = method
         self._fnct = fnct
         self._fnct_inv = fnct_inv
         self._arg = arg
+        self._multi = multi
         if 'relation' in args:
             self._obj = args['relation']
         self._fnct_inv_arg = fnct_inv_arg
@@ -585,12 +590,10 @@ class function(_column):
         if not values:
             values = {}
         res = {}
-        table = obj._table
         if self._method:
-            # TODO get HAS to receive uid for permissions !
             return self._fnct(obj, cr, user, ids, name, self._arg, context)
         else:
-            return self._fnct(cr, table, ids, name, self._arg, context)
+            return self._fnct(cr, obj._table, ids, name, self._arg, context)
 
     def set(self, cr, obj, id, name, value, user=None, context=None):
         if not context:

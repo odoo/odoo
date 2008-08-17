@@ -54,6 +54,10 @@ def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False)
         pool = osv.osv.osv_pool()
         pool_dic[db_name] = pool
         addons.load_modules(db, force_demo, status, update_module)
+        cr = db.cursor()
+        pool.init_set(cr, False)
+        cr.commit()
+        cr.close()
 
         if not update_module:
             import report

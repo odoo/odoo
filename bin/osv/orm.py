@@ -1257,7 +1257,7 @@ class orm(orm_template):
     _log_access = True
     _table = None
     _protected = ['read','write','create','default_get','perm_read','unlink','fields_get','fields_view_get','search','name_get','distinct_field_get','name_search','copy','import_data','search_count']
-    def __parent_store_compute(self, cr):
+    def _parent_store_compute(self, cr):
         logger = netsvc.Logger()
         logger.notifyChannel('init', netsvc.LOG_INFO, 'Computing parent left and right for table %s...' % (self._table, ))
         def browse_rec(root, pos=0):
@@ -1375,7 +1375,7 @@ class orm(orm_template):
                                 if not default:
                                     cr.execute("UPDATE \"%s\" SET \"%s\"=NULL" % (self._table, k))
                                 else:
-                                    cr.execute("UPDATE \"%s\" SET \"%s\"=%%s" % (self._table, k), (default,))
+                                    cr.execute("UPDATE \"%s\" SET \"%s\"='%s'" % (self._table, k, default))
                             if isinstance(f, fields.function):
                                 cr.execute('select id from '+self._table)
                                 ids_lst = map(lambda x: x[0], cr.fetchall())
@@ -1513,7 +1513,7 @@ class orm(orm_template):
                         cr.execute(line2)
                         cr.commit()
         if store_compute:
-            self.__parent_store_compute(cr)
+            self._parent_store_compute(cr)
 
     def __init__(self, cr):
         super(orm, self).__init__(cr)
@@ -1758,11 +1758,33 @@ class orm(orm_template):
 
         # all non inherited fields for which the attribute whose name is in load is False
         fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields)
+
+        # Compute POST fields
+        todo = {}
         for f in fields_post:
-            # get the value of that field for all records/ids
-            res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=res)
-            for record in res:
-                record[f] = res2[record['id']]
+            todo.setdefault(self._columns[f]._multi, [])
+            todo[self._columns[f]._multi].append(f)
+        print 'TODO', todo
+        for key,val in todo.items():
+            if key:
+                print '* KEY', key
+                res2 = self._columns[val[0]].get(cr, self, ids, val, user, context=context, values=res)
+                print '* KEY RES', res2, val, ids
+                for pos in range(len(val)):
+                    for record in res:
+                        record[val[pos]] = res2[record['id']][pos]
+            else:
+                print 'KEY NOT', key
+                for f in val:
+                    res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=res)
+                    for record in res:
+                        record[f] = res2[record['id']]
+
+#for f in fields_post:
+#    # get the value of that field for all records/ids
+#    res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=res)
+#    for record in res:
+#        record[f] = res2[record['id']]
 
         readonly = None
         for vals in res:
@@ -2052,47 +2074,50 @@ class orm(orm_template):
 
         self._validate(cr, user, ids, context)
 # TODO: use _order to set dest at the right position and not first node of parent
-        if self._parent_store and self._parent_name in vals:
-            cr.execute('select parent_left,parent_right from '+self._table+' where id=%d', (vals[self._parent_name],))
-            res = cr.fetchone()
-            if res:
-                pleft,pright = res
+        if self._parent_store and (self._parent_name in vals):
+            if self.pool._init:
+                self.pool._init_parent[self._name]=True
             else:
-                cr.execute('select max(parent_right),max(parent_right)+1 from '+self._table)
-                pleft,pright = cr.fetchone()
-            cr.execute('select parent_left,parent_right,id from '+self._table+' where id in ('+','.join(map(lambda x:'%d',ids))+')', ids)
-            dest = pleft + 1
-            for cleft,cright,cid in cr.fetchall():
-                if cleft > pleft:
-                    treeshift  = pleft - cleft + 1
-                    leftbound  = pleft+1
-                    rightbound = cleft-1
-                    cwidth     = cright-cleft+1
-                    leftrange = cright
-                    rightrange  = pleft
+                cr.execute('select parent_left,parent_right from '+self._table+' where id=%d', (vals[self._parent_name],))
+                res = cr.fetchone()
+                if res:
+                    pleft,pright = res
                 else:
-                    treeshift  = pleft - cright
-                    leftbound  = cright + 1
-                    rightbound = pleft
-                    cwidth     = cleft-cright-1
-                    leftrange  = pleft+1
-                    rightrange = cleft
-                cr.execute('UPDATE '+self._table+'''
-                    SET
-                        parent_left = CASE
-                            WHEN parent_left BETWEEN %d AND %d THEN parent_left + %d
-                            WHEN parent_left BETWEEN %d AND %d THEN parent_left + %d
-                            ELSE parent_left
-                        END,
-                        parent_right = CASE
-                            WHEN parent_right BETWEEN %d AND %d THEN parent_right + %d
-                            WHEN parent_right BETWEEN %d AND %d THEN parent_right + %d
-                            ELSE parent_right
-                        END
-                    WHERE
-                        parent_left<%d OR parent_right>%d;
-                ''', (leftbound,rightbound,cwidth,cleft,cright,treeshift,leftbound,rightbound,
-                    cwidth,cleft,cright,treeshift,leftrange,rightrange))
+                    cr.execute('select max(parent_right),max(parent_right)+1 from '+self._table)
+                    pleft,pright = cr.fetchone()
+                cr.execute('select parent_left,parent_right,id from '+self._table+' where id in ('+','.join(map(lambda x:'%d',ids))+')', ids)
+                dest = pleft + 1
+                for cleft,cright,cid in cr.fetchall():
+                    if cleft > pleft:
+                        treeshift  = pleft - cleft + 1
+                        leftbound  = pleft+1
+                        rightbound = cleft-1
+                        cwidth     = cright-cleft+1
+                        leftrange = cright
+                        rightrange  = pleft
+                    else:
+                        treeshift  = pleft - cright
+                        leftbound  = cright + 1
+                        rightbound = pleft
+                        cwidth     = cleft-cright-1
+                        leftrange  = pleft+1
+                        rightrange = cleft
+                    cr.execute('UPDATE '+self._table+'''
+                        SET
+                            parent_left = CASE
+                                WHEN parent_left BETWEEN %d AND %d THEN parent_left + %d
+                                WHEN parent_left BETWEEN %d AND %d THEN parent_left + %d
+                                ELSE parent_left
+                            END,
+                            parent_right = CASE
+                                WHEN parent_right BETWEEN %d AND %d THEN parent_right + %d
+                                WHEN parent_right BETWEEN %d AND %d THEN parent_right + %d
+                                ELSE parent_right
+                            END
+                        WHERE
+                            parent_left<%d OR parent_right>%d;
+                    ''', (leftbound,rightbound,cwidth,cleft,cright,treeshift,leftbound,rightbound,
+                        cwidth,cleft,cright,treeshift,leftrange,rightrange))
 
         if 'read_delta' in context:
             del context['read_delta']
@@ -2206,16 +2231,19 @@ class orm(orm_template):
         self._validate(cr, user, [id_new], context)
 
         if self._parent_store:
-            parent = vals.get(self._parent_name, False)
-            if parent:
-                cr.execute('select parent_left from '+self._table+' where id=%d', (parent,))
-                pleft = cr.fetchone()[0]
+            if self.pool._init:
+                self.pool._init_parent[self._name]=True
             else:
-                cr.execute('select max(parent_right) from '+self._table)
-                pleft = cr.fetchone()[0] or 0
-            cr.execute('update '+self._table+' set parent_left=%d,parent_right=%d', (pleft+1,pleft+2))
-            cr.execute('update '+self._table+' set parent_left=parent_left+2 where parent_left>%d', (pleft,))
-            cr.execute('update '+self._table+' set parent_right=parent_right+2 where parent_right>%d', (pleft,))
+                parent = vals.get(self._parent_name, False)
+                if parent:
+                    cr.execute('select parent_left from '+self._table+' where id=%d', (parent,))
+                    pleft = cr.fetchone()[0]
+                else:
+                    cr.execute('select max(parent_right) from '+self._table)
+                    pleft = cr.fetchone()[0] or 0
+                cr.execute('update '+self._table+' set parent_left=%d,parent_right=%d', (pleft+1,pleft+2))
+                cr.execute('update '+self._table+' set parent_left=parent_left+2 where parent_left>%d', (pleft,))
+                cr.execute('update '+self._table+' set parent_right=parent_right+2 where parent_right>%d', (pleft,))
 
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_create(user, self._name, id_new, cr)
@@ -2281,7 +2309,7 @@ class orm(orm_template):
         # records unless they were explicitely asked for
         if 'active' in self._columns and (active_test and context.get('active_test', True)):
             if args:
-                args = ['&', ('active', '=', 1)] + args
+                args.insert(0, ('active', '=', 1))
             else:
                 args = [('active', '=', 1)]
 

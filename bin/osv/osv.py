@@ -60,6 +60,8 @@ class osv_pool(netsvc.Service):
         self.created = []
         self._sql_error = {}
         self._store_function = {}
+        self._init = True
+        self._init_parent = {}
         netsvc.Service.__init__(self, 'object_proxy', audience='')
         self.joinGroup('web-services')
         self.exportMethod(self.exportedMethods)
@@ -67,6 +69,17 @@ class osv_pool(netsvc.Service):
         self.exportMethod(self.exec_workflow)
         self.exportMethod(self.execute)
         self.exportMethod(self.execute_cr)
+
+    def init_set(self, cr, mode):
+        if mode<>self._init:
+            if mode:
+                self._init_parent={}
+            if not mode:
+                for o in self._init_parent:
+                    self.get(o)._parent_store_compute(cr)
+            self._init = mode
+            return True
+        return False
 
     def execute_cr(self, cr, uid, obj, method, *args, **kw):
         try:
