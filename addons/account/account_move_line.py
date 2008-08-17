@@ -317,8 +317,8 @@ class account_move_line(osv.osv):
         'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optionnal other currency if it is a multi-currency entry."),
         'currency_id': fields.many2one('res.currency', 'Currency', help="The optionnal other currency if it is a multi-currency entry."),
 
-        'period_id': fields.many2one('account.period', 'Period', required=True),
-        'journal_id': fields.many2one('account.journal', 'Journal', required=True),
+        'period_id': fields.many2one('account.period', 'Period', required=True, select=2),
+        'journal_id': fields.many2one('account.journal', 'Journal', required=True, select=1),
         'blocked': fields.boolean('Litigation', help="You can check this box to mark the entry line as a litigation with the associated partner"),
 
         'partner_id': fields.many2one('res.partner', 'Partner Ref.'),

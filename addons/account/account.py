@@ -156,89 +156,46 @@ class account_account(osv.osv):
         return super(account_account,self).search(cr, uid, args, offset, limit,
                 order, context=context, count=count)
 
-    def _credit(self, cr, uid, ids, field_name, arg, context={}):
-        acc_set = ",".join(map(str, ids))
-        query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-        cr.execute(("SELECT a.id, " \
-                    "SUM(COALESCE(l.credit * a.sign, 0)) " \
-                "FROM account_account a " \
-                    "LEFT JOIN account_move_line l " \
-                    "ON (a.id = l.account_id) " \
-                "WHERE a.type != 'view' " \
-                    "AND a.id IN (%s) " \
-                    "AND " + query + " " \
-                    "AND a.active " \
-                "GROUP BY a.id") % (acc_set, ))
-        res2 = cr.fetchall()
-        res = {}
-        for id in ids:
-            res[id] = 0.0
-        for account_id, sum in res2:
-            res[account_id] += sum
-        return res
+#    def _credit(self, cr, uid, ids, field_name, arg, context={}):
+#        return self.__compute(cr, uid, ids, field_name, arg, context, 'COALESCE(SUM(l.credit), 0)')
+#
+#    def _debit(self, cr, uid, ids, field_name, arg, context={}):
+#        return self.__compute(cr, uid, ids, field_name, arg, context, 'COALESCE(SUM(l.debit), 0)')
+#
+#    def _balance(self, cr, uid, ids, field_name, arg, context={}):
+#        return self.__compute(cr, uid, ids, field_name, arg, context, 'COALESCE(SUM(l.debit) - SUM(l.credit), 0)')
 
-    def _debit(self, cr, uid, ids, field_name, arg, context={}):
-        acc_set = ",".join(map(str, ids))
-        query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-        cr.execute(("SELECT a.id, " \
-                    "SUM(COALESCE(l.debit * a.sign, 0)) " \
-                "FROM account_account a " \
-                    "LEFT JOIN account_move_line l " \
-                    "ON (a.id = l.account_id) " \
-                "WHERE a.type != 'view' " \
-                    "AND a.id IN (%s) " \
-                    "AND " + query + " " \
-                    "AND a.active " \
-                "GROUP BY a.id") % (acc_set, ))
-        res2 = cr.fetchall()
-        res = {}
-        for id in ids:
-            res[id] = 0.0
-        for account_id, sum in res2:
-            res[account_id] += sum
-        return res
-
-    def _balance(self, cr, uid, ids, field_name, arg, context={}):
+    def __compute(self, cr, uid, ids, field_names, arg, context={}, query=''):
+        mapping = {
+            'balance': "COALESCE(SUM(l.debit) - SUM(l.credit), 0) as balance ",
+            'debit': "COALESCE(SUM(l.debit), 0) as debit ",
+            'credit': "COALESCE(SUM(l.credit), 0) as credit "
+        }
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-        ids2 = {}.fromkeys(ids + ids2).keys()
         acc_set = ",".join(map(str, ids2))
         query = self.pool.get('account.move.line')._query_get(cr, uid,
                 context=context)
-        cr.execute(("SELECT a.id, " \
-                    "SUM((COALESCE(l.debit, 0) - COALESCE(l.credit, 0))) " \
-                "FROM account_account a " \
-                    "LEFT JOIN account_move_line l " \
-                    "ON (a.id=l.account_id) " \
-                "WHERE a.type != 'view' " \
-                    "AND a.id IN (%s) " \
+        cr.execute(("SELECT l.account_id, " +\
+                ' , '.join(map(lambda x: mapping[x], field_names)) +
+                "FROM " \
+                    "account_move_line l " \
+                "WHERE " \
+                    "l.account_id IN (%s) " \
                     "AND " + query + " " \
-                    "AND a.active " \
-                "GROUP BY a.id") % (acc_set, ))
-        res = {}
-        for account_id, sum in cr.fetchall():
-            res[account_id] = round(sum,2)
-        cr.execute("SELECT a.id, a.company_id " \
-                "FROM account_account a " \
-                "WHERE id IN (%s)" % acc_set)
-        resc = dict(cr.fetchall())
-        cr.execute("SELECT id, currency_id FROM res_company")
-        rescur = dict(cr.fetchall())
+                "GROUP BY l.account_id") % (acc_set, ))
 
+        accounts = {}
+        for res in cr.fetchall():
+            accounts[res[0]] = res[1:]
+
+        res = {}
         for id in ids:
-            ids3 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
-            to_currency_id = rescur[resc[id]]
-            for idx in ids3:
-                if idx <> id:
-                    res.setdefault(id, 0.0)
-                    if resc[idx]<>resc[id] and resc[idx] and resc[id]:
-                        from_currency_id = rescur[resc[idx]]
-                        res[id] += self.pool.get('res.currency').compute(cr,
-                                uid, from_currency_id, to_currency_id,
-                                res.get(idx, 0.0), context=context)
-                    else:
-                        res[id] += res.get(idx, 0.0)
-        for id in ids:
-            res[id] = round(res.get(id,0.0), 2)
+            res[id] = map(lambda x: 0.0, field_names)
+            ids2 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
+            for i in ids2:
+                for a in range(len(field_names)):
+                    res[id][a] += accounts.get(i, (0.0,0.0,0.0))[a]
+        print res
         return res
 
     def _get_company_currency(self, cr, uid, ids, field_name, arg, context={}):
@@ -274,9 +231,9 @@ class account_account(osv.osv):
         'child_id': fields.function(_get_child_ids, method=True, type='many2many',relation="account.account",string="Children Accounts"),
 
 #        'child_id': fields.many2many('account.account', 'account_account_rel', 'parent_id', 'child_id', 'Children'),
-        'balance': fields.function(_balance, digits=(16,2), method=True, string='Balance'),
-        'credit': fields.function(_credit, digits=(16,2), method=True, string='Credit'),
-        'debit': fields.function(_debit, digits=(16,2), method=True, string='Debit'),
+        'balance': fields.function(__compute, digits=(16,2), method=True, string='Balance', multi='balance'),
+        'credit': fields.function(__compute, digits=(16,2), method=True, string='Credit', multi='balance'),
+        'debit': fields.function(__compute, digits=(16,2), method=True, string='Debit', multi='balance'),
         'reconcile': fields.boolean('Reconcile', help="Check this account if the user can make a reconciliation of the entries in this account."),
         'shortcut': fields.char('Shortcut', size=12),
         'close_method': fields.selection([('none','None'), ('balance','Balance'), ('detail','Detail'),('unreconciled','Unreconciled')], 'Deferral Method', required=True, help="Tell Tiny ERP how to process the entries of this account when you close a fiscal year. None removes all entries to start with an empty account for the new fiscal year. Balance creates only one entry to keep the balance for the new fiscal year. Detail keeps the detail of all entries of the preceeding years. Unreconciled keeps the detail of unreconciled entries only."),
