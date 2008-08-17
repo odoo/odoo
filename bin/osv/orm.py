@@ -1764,17 +1764,13 @@ class orm(orm_template):
         for f in fields_post:
             todo.setdefault(self._columns[f]._multi, [])
             todo[self._columns[f]._multi].append(f)
-        print 'TODO', todo
         for key,val in todo.items():
             if key:
-                print '* KEY', key
                 res2 = self._columns[val[0]].get(cr, self, ids, val, user, context=context, values=res)
-                print '* KEY RES', res2, val, ids
                 for pos in range(len(val)):
                     for record in res:
                         record[val[pos]] = res2[record['id']][pos]
             else:
-                print 'KEY NOT', key
                 for f in val:
                     res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=res)
                     for record in res:
