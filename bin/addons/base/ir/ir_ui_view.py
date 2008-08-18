@@ -67,7 +67,7 @@ class view(osv.osv):
             ('graph', 'Graph'),
             ('calendar', 'Calendar')), 'View Type', required=True),
         'arch': fields.text('View Architecture', required=True),
-        'inherit_id': fields.many2one('ir.ui.view', 'Inherited View'),
+        'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade'),
         'field_parent': fields.char('Childs Field',size=64),
     }
     _defaults = {
