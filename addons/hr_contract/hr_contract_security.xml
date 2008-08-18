@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<terp>
+<data noupdate="1">
+<!--
+ Access
+-->
+    <record model="ir.model.access" id="access_hr_contract_base.group_employee">
+        <field name="name">hr_contract base.group_employee</field>
+        <field name="model_id" model="ir.model" ref="model_hr_contract"/>
+        <field name="group_id" ref="base.group_employee"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record model="ir.model.access" id="access_hr_contract_group_hr_manager">
+        <field name="name">hr_contract group_hr_manager</field>
+        <field name="model_id" model="ir.model" ref="model_hr_contract"/>
+        <field name="group_id" ref="group_hr_manager"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <record model="ir.model.access" id="access_hr_contract_wage_type_group_hr_manager">
+        <field name="name">hr_contract_wage_type group_hr_manager</field>
+        <field name="model_id" model="ir.model" ref="model_hr_contract_wage_type"/>
+        <field name="group_id" ref="group_hr_manager"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <record model="ir.model.access" id="access_hr_contract_wage_type_base.group_employee">
+        <field name="name">hr_contract_wage_type base.group_employee</field>
+        <field name="model_id" model="ir.model" ref="model_hr_contract_wage_type"/>
+        <field name="group_id" ref="base.group_employee"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record model="ir.model.access" id="access_hr_contract_wage_type_period_group_hr_manager">
+        <field name="name">hr_contract_wage_type_period group_hr_manager</field>
+        <field name="model_id" model="ir.model" ref="model_hr_contract_wage_type_period"/>
+        <field name="group_id" ref="group_hr_manager"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <record model="ir.model.access" id="access_hr_contract_wage_type_period_base.group_employee">
+        <field name="name">hr_contract_wage_type_period base.group_employee</field>
+        <field name="model_id" model="ir.model" ref="model_hr_contract_wage_type_period"/>
+        <field name="group_id" ref="base.group_employee"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record model="ir.model.access" id="access_hr_employee_marital_status_group_hr_manager">
+        <field name="name">hr_employee_marital_status group_hr_manager</field>
+        <field name="model_id" model="ir.model" ref="model_hr_employee_marital_status"/>
+        <field name="group_id" ref="group_hr_manager"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <record model="ir.model.access" id="access_hr_employee_marital_status_base.group_employee">
+        <field name="name">hr_employee_marital_status base.group_employee</field>
+        <field name="model_id" model="ir.model" ref="model_hr_employee_marital_status"/>
+        <field name="group_id" ref="base.group_employee"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record model="ir.model.access" id="access_hr_expense_expense_base.group_employee">
+        <field name="name">hr_expense_expense base.group_employee</field>
+        <field name="model_id" model="ir.model" ref="model_hr_expense_expense"/>
+        <field name="group_id" ref="base.group_employee"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <record model="ir.model.access" id="access_hr_expense_expense_group_hr_manager">
+        <field name="name">hr_expense_expense group_hr_manager</field>
+        <field name="model_id" model="ir.model" ref="model_hr_expense_expense"/>
+        <field name="group_id" ref="group_hr_manager"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <record model="ir.model.access" id="access_hr_timesheet_invoice_factor_group_hr_manager">
+        <field name="name">hr_timesheet_invoice_factor group_hr_manager</field>
+        <field name="model_id" model="ir.model" ref="model_hr_timesheet_invoice_factor"/>
+        <field name="group_id" ref="group_hr_manager"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <record model="ir.model.access" id="access_hr_timesheet_invoice_factor_base.group_employee">
+        <field name="name">hr_timesheet_invoice_factor base.group_employee</field>
+        <field name="model_id" model="ir.model" ref="model_hr_timesheet_invoice_factor"/>
+        <field name="group_id" ref="base.group_employee"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record model="ir.model.access" id="access_hr_timesheet_sheet_sheet_base.group_employee">
+        <field name="name">hr_timesheet_sheet_sheet base.group_employee</field>
+        <field name="model_id" model="ir.model" ref="model_hr_timesheet_sheet_sheet"/>
+        <field name="group_id" ref="base.group_employee"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record model="ir.model.access" id="access_hr_timesheet_sheet_sheet_group_hr_manager">
+        <field name="name">hr_timesheet_sheet_sheet group_hr_manager</field>
+        <field name="model_id" model="ir.model" ref="model_hr_timesheet_sheet_sheet"/>
+        <field name="group_id" ref="group_hr_manager"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+</data>
+</terp>
