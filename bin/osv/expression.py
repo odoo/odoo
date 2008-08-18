@@ -9,17 +9,18 @@ class expression(object):
     parse a domain expression
     use a real polish notation
     leafs are still in a ('foo', '=', 'bar') format
-    For more info: http://...
+    For more info: http://christophe-simonis-at-tiny.blogspot.com/2008/08/new-new-domain-notation.html 
     """
 
     def _is_operator(self, element):
         return isinstance(element, str) \
            and element in ['&', '|', '!']
 
-    def _is_leaf(self, element):
+    def _is_leaf(self, element, internal=False):
         return (isinstance(element, tuple) or isinstance(element, list)) \
            and len(element) == 3 \
-           and element[1] in ('=', '!=', '<>', '<=', '<', '>', '>=', '=like', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of', 'inselect')
+           and element[1] in ('=', '!=', '<>', '<=', '<', '>', '>=', '=like', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of')
+           and ((not internal) or element[1] in ('inselect',))
 
     def __execute_recursive_in(self, cr, s, f, w, ids):
         res = []
@@ -266,7 +267,7 @@ class expression(object):
         stack = []
         params = []
         for i, e in reverse_enumerate(self.__exp):
-            if self._is_leaf(e):
+            if self._is_leaf(e, internal=True):
                 table = self.__tables.has_key(i) and self.__tables[i] or self.__main_table
                 q, p = self.__leaf_to_sql(e, table)
                 params.insert(0, p)
