@@ -2333,8 +2333,6 @@ class orm(orm_template):
         # compute the where, order by, limit and offset clauses
         (qu1, qu2, tables) = self._where_calc(cr, user, args, context=context)
 
-        print "self: %r\nqu1: %r\nqu2: %r\ntables: %r\n" % (self, qu1, qu2, tables,)
-
         if len(qu1):
             qu1 = ' where '+string.join(qu1, ' and ')
         else:
