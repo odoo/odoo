@@ -60,8 +60,7 @@
             <field name="name">Requests</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.request</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="res_request_tree-view"/>
+            <field name="view_id" eval="False"/>
         </record>
         <menuitem id="next_id_12" name="Requests" parent="base.next_id_4"/><menuitem action="res_request-act" id="menu_res_request_act" parent="next_id_12"/>
         
@@ -90,11 +89,11 @@
         </record>
         
         <record id="res_request_link-act" model="ir.actions.act_window">
-            <field name="name">Request</field>
+            <field name="name">Accepted Links in Requests</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.request.link</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="res_request_link-view"/>
+            <field name="view_id" eval="False"/>
         </record>
         <menuitem action="res_request_link-act" id="menu_res_request_link_act" parent="base.next_id_12"/>
         
