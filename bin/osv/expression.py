@@ -19,7 +19,7 @@ class expression(object):
     def _is_leaf(self, element, internal=False):
         return (isinstance(element, tuple) or isinstance(element, list)) \
            and len(element) == 3 \
-           and element[1] in ('=', '!=', '<>', '<=', '<', '>', '>=', '=like', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of')
+           and element[1] in ('=', '!=', '<>', '<=', '<', '>', '>=', '=like', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of') \
            and ((not internal) or element[1] in ('inselect',))
 
     def __execute_recursive_in(self, cr, s, f, w, ids):
