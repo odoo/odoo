@@ -147,8 +147,8 @@ class ir_model_fields(osv.osv):
 
     def create(self, cr, user, vals, context=None):
         if 'model_id' in vals:
-            model_data=self.pool.get('ir.model').read(cr,user,vals['model_id'])
-            vals['model']=model_data['model']
+            model_data=self.pool.get('ir.model').browse(cr,user,vals['model_id'])
+            vals['model']=model_data.model
         if context and context.get('manual',False):
             vals['state']='manual'
         res = super(ir_model_fields,self).create(cr, user, vals, context)
