@@ -968,7 +968,15 @@ class orm_template(object):
                 where = (model and (" and model='%s'" % (self._name,))) or ''
                 cr.execute('SELECT arch,name,field_parent,id,type,inherit_id FROM ir_ui_view WHERE id=%d'+where, (view_id,))
             else:
-                cr.execute('SELECT arch,name,field_parent,id,type,inherit_id FROM ir_ui_view WHERE model=%s AND type=%s ORDER BY priority', (self._name, view_type))
+                cr.execute('''SELECT
+                        arch,name,field_parent,id,type,inherit_id
+                    FROM
+                        ir_ui_view
+                    WHERE 
+                        model=%s AND
+                        type=%s AND 
+                        inherit_id IS NULL
+                    ORDER BY priority''', (self._name, view_type))
             sql_res = cr.fetchone()
             if not sql_res:
                 break
