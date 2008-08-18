@@ -17,10 +17,12 @@ class expression(object):
            and element in ['&', '|', '!']
 
     def _is_leaf(self, element, internal=False):
+        OPS = ('=', '!=', '<>', '<=', '<', '>', '>=', '=like', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of')
+        INTERNAL_OPS = OPS + ('inselect',)
         return (isinstance(element, tuple) or isinstance(element, list)) \
            and len(element) == 3 \
-           and element[1] in ('=', '!=', '<>', '<=', '<', '>', '>=', '=like', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of') \
-           and ((not internal) or element[1] in ('inselect',))
+           and (((not internal) and element[1] in OPS) \
+                or (internal and element[1] in INTERNAL_OPS))
 
     def __execute_recursive_in(self, cr, s, f, w, ids):
         res = []
@@ -268,7 +270,7 @@ class expression(object):
         params = []
         for i, e in reverse_enumerate(self.__exp):
             if self._is_leaf(e, internal=True):
-                table = self.__tables.has_key(i) and self.__tables[i] or self.__main_table
+                table = self.__tables.get(i, self.__main_table)
                 q, p = self.__leaf_to_sql(e, table)
                 params.insert(0, p)
                 stack.append(q)
