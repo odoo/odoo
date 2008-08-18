@@ -28,6 +28,7 @@
 ###############################################################################
 import socket
 import cPickle
+import cStringIO
 import marshal
 
 class Myexception(Exception):
@@ -82,7 +83,11 @@ class mysocket:
             if chunk == '':
                 raise RuntimeError, "socket connection broken"
             msg = msg + chunk
-        res = cPickle.loads(msg)
+        msgio = cStringIO.StringIO(msg)
+        unpickler = cPickle.Unpickler(msgio)
+        unpickler.find_global = None
+        res = unpickler.load()
+
         if isinstance(res[0],Exception):
             if exception:
                 raise Myexception(str(res[0]), str(res[1]))
