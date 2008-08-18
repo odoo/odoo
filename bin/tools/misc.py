@@ -290,22 +290,22 @@ def flatten(list):
             r.append(e)
     return r
 
-reverse_enumerate = lambda l: izip(xrange(len(l)-1, -1, -1), reversed(l))
-reverse_enumerate.__doc__ = \
-"""Like enumerate but in the other sens
->>> a = ['a', 'b', 'c']
->>> it = reverse_enumerate(a)
->>> it.next()
-(2, 'c')
->>> it.next()
-(1, 'b')
->>> it.next()
-(0, 'a')
->>> it.next()
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-StopIteration
-"""
+def reverse_enumerate(l):
+    """Like enumerate but in the other sens
+    >>> a = ['a', 'b', 'c']
+    >>> it = reverse_enumerate(a)
+    >>> it.next()
+    (2, 'c')
+    >>> it.next()
+    (1, 'b')
+    >>> it.next()
+    (0, 'a')
+    >>> it.next()
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    StopIteration
+    """
+    return izip(xrange(len(l)-1, -1, -1), reversed(l))
 
 #----------------------------------------------------------
 # Emails
