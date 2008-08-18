@@ -1,20 +1,20 @@
 <?xml version='1.0'?>
 <terp>
 <data>
-    <!--
-     Groups
-    -->
+<!--
+ Groups
+-->
     <record model="res.groups" id="group_board">
         <field name="name">Board User</field>
     </record>
-    
+
     <record model="res.groups" id="group_board_manager">
         <field name="name">Board Manager</field>
     </record>
-    
-    <!--
-     Access
-    -->
+
+<!--
+ Access
+-->
     <record model="ir.model.access" id="access_board_board_group_board">
         <field name="name">board_board group_board</field>
         <field name="model_id" model="ir.model" ref="model_board_board"/>
