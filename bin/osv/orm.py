@@ -611,7 +611,7 @@ class orm_template(object):
                 context2 = context.copy()
                 context2['lang'] = lang
                 self.write(cr, uid, [id], translate[lang], context2)
-            if config.get('import_partial', False) and filename: # and (not (counter%100)) :
+            if config.get('import_partial', False) and filename and (not (counter%100)) :
                 data = pickle.load(file(config.get('import_partial')))
                 data[filename] = initial_size - len(datas) + data.get(filename, 0)
                 pickle.dump(data, file(config.get('import_partial'),'wb'))
