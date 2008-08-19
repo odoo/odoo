@@ -177,20 +177,21 @@ class account_account(osv.osv):
         }
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         acc_set = ",".join(map(str, ids2))
-        query = self.pool.get('account.move.line')._query_get(cr, uid,
-                context=context)
-        cr.execute(("SELECT l.account_id, " +\
-                ' , '.join(map(lambda x: mapping[x], field_names)) +
-                "FROM " \
-                    "account_move_line l " \
-                "WHERE " \
-                    "l.account_id IN (%s) " \
-                    "AND " + query + " " \
-                "GROUP BY l.account_id") % (acc_set, ))
-
         accounts = {}
-        for res in cr.fetchall():
-            accounts[res[0]] = res[1:]
+        if ids2:
+            query = self.pool.get('account.move.line')._query_get(cr, uid,
+                    context=context)
+            cr.execute(("SELECT l.account_id, " +\
+                    ' , '.join(map(lambda x: mapping[x], field_names)) +
+                    "FROM " \
+                        "account_move_line l " \
+                    "WHERE " \
+                        "l.account_id IN (%s) " \
+                        "AND " + query + " " \
+                    "GROUP BY l.account_id") % (acc_set, ))
+
+            for res in cr.fetchall():
+                accounts[res[0]] = res[1:]
 
         res = {}
         for id in ids:
