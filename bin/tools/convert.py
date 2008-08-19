@@ -42,6 +42,7 @@ from config import config
 import logging
 
 from lxml import etree
+import pickle
 
 
 class ConvertError(Exception):
@@ -728,16 +729,16 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
     reader = csv.reader(input, quotechar='"', delimiter=',')
     fields = reader.next()
 
-    import pickle
     if config.get('import_partial'):
+        fname_partial = module + '/'+ fname
         if not os.path.isfile(config.get('import_partial')):
             pickle.dump({}, file(config.get('import_partial'),'w+'))
         data = pickle.load(file(config.get('import_partial')))
-        if fname in data:
-            if not data[fname]:
+        if fname_partial in data:
+            if not data[fname_partial]:
                 return
             else:
-                for i in range(data[fname]):
+                for i in range(data[fname_partial]):
                     reader.next()
 
     if not (mode == 'init' or 'id' in fields):
@@ -749,10 +750,11 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         if (not line) or not reduce(lambda x,y: x or y, line) :
             continue
         datas.append( map(lambda x:x.decode('utf8').encode('utf8'), line))
-    pool.get(model).import_data(cr, uid, fields, datas,mode, module,noupdate,filename=fname)
+    pool.get(model).import_data(cr, uid, fields, datas,mode, module,noupdate,filename=fname_partial)
+
     if config.get('import_partial'):
         data = pickle.load(file(config.get('import_partial')))
-        data[fname] = 0
+        data[fname_partial] = 0
         pickle.dump(data, file(config.get('import_partial'),'wb'))
 
 #
