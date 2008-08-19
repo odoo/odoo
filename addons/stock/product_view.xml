@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<terp>
+    <data>
+
+        <record id="view_category_property_form" model="ir.ui.view">
+            <field name="name">product.category.stock.property.form.inherit</field>
+            <field name="model">product.category</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <group string="Properties" position="inside">
+					<separator string="Stock Accounting" colspan="4"/>
+                    <field name="property_stock_account_input_categ"/>
+                    <field name="property_stock_account_output_categ"/>
+                    <field name="property_stock_journal"/>
+                </group>
+            </field>
+        </record>
+
+
+
+        <record id="view_template_property_form" model="ir.ui.view">
+            <field name="name">product.template.stock.property.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <page string="Properties" position="inside">
+                    <separator string="Counter-Part Locations" colspan="4"/>
+                    <field name="property_stock_procurement"/>
+                    <field name="property_stock_production"/>
+                    <field name="property_stock_inventory"/>
+                    <separator string="Accounting Entries" colspan="4"/>
+                    <field name="property_stock_account_input"/>
+                    <field name="property_stock_account_output"/>
+                </page>
+            </field>
+        </record>
+
+
+        <record id="view_normal_property_form" model="ir.ui.view">
+            <field name="name">product.normal.stock.property.form.inherit</field>
+            <field name="model">product.product</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <page string="Properties" position="inside">
+                    <separator string="Counter-Part Locations" colspan="4"/>
+                    <field name="property_stock_procurement"/>
+                    <field name="property_stock_production"/>
+                    <field name="property_stock_inventory"/>
+                    <separator string="Accounting Entries" colspan="4"/>
+                    <field name="property_stock_account_input"/>
+                    <field name="property_stock_account_output"/>
+                </page>
+            </field>
+        </record>
+
+
+    </data>
+</terp>
