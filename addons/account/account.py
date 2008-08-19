@@ -195,6 +195,9 @@ class account_account(osv.osv):
             for i in ids2:
                 for a in range(len(field_names)):
                     res[id][a] += accounts.get(i, (0.0,0.0,0.0))[a]
+# TODO: if account.type is consolidation: compute all childs like before +
+# currency conversion
+
         return res
 
     def _get_company_currency(self, cr, uid, ids, field_name, arg, context={}):
