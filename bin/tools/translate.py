@@ -37,6 +37,8 @@ import netsvc
 from tools.misc import UpdateableStr
 import inspect
 import mx.DateTime as mxdt
+import tempfile
+import tarfile
 
 class UNIX_LINE_TERMINATOR(csv.excel):
     lineterminator = '\n'
@@ -170,19 +172,45 @@ class TinyPoFile(object):
 # Methods to export the translation file
 
 def trans_export(lang, modules, buffer, format, dbname=None):
+
+    def _process(format, modules, rows, buffer, lang, newlang):
+        if format == 'csv':
+            writer=csv.writer(buffer, 'UNIX')
+            for row in rows:
+                writer.writerow(row)
+        elif format == 'po':
+            rows.pop(0)
+            writer = tools.TinyPoFile(buffer)
+            writer.write_infos(modules)
+            for module, type, name, res_id, src, trad in rows:
+                writer.write(module, type, name, res_id, src, trad)
+        elif format == 'tgz':
+            rows.pop(0)
+            rows_by_module = {}
+            for row in rows:
+                module = row[0]
+                rows_by_module.setdefault(module, []).append(row)
+            
+            tmpdir = tempfile.mkdtemp()
+            for mod, modrows in rows_by_module.items():
+                tmpmoddir = join(tmpdir, mod, 'i18n')
+                os.makedirs(tmpmoddir)
+                pofilename = (newlang and mod or lang) + ".po" + (newlang and 't' or '')
+                buf = open(join(tmpmoddir, pofilename), 'w')
+                _process('po', [mod], modrows, buf, lang, newlang)
+
+            tar = tarfile.open(fileobj=buffer, mode='w|gz')
+            tar.add(tmpdir, '/')
+            tar.close()
+
+        else:
+            raise Exception(_('Bad file format'))
+
+    newlang = not bool(lang)
+    if newlang:
+        lang = 'en_US'
     trans = trans_generate(lang, modules, dbname)
-    if format == 'csv':
-        writer=csv.writer(buffer, 'UNIX')
-        for row in trans:
-            writer.writerow(row)
-    elif format == 'po':
-        trans.pop(0)
-        writer = tools.TinyPoFile(buffer)
-        writer.write_infos(modules)
-        for module, type, name, res_id, src, trad in trans:
-            writer.write(module, type, name, res_id, src, trad)
-    else:
-        raise Exception(_('Bad file format'))
+    _process(format, modules, trans, buffer, lang, newlang)
     del trans
     
 

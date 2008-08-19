@@ -184,7 +184,11 @@ if tools.config['init'] or tools.config['update']:
 if tools.config["translate_out"]:
     import csv
 
-    logger.notifyChannel("init", netsvc.LOG_INFO, 'writing translation file for language %s to %s' % (tools.config["language"], tools.config["translate_out"]))
+    if tools.config["language"]:
+        msg = "language %s" % (tools.config["language"],)
+    else:
+        msg = "new language"
+    logger.notifyChannel("init", netsvc.LOG_INFO, 'writing translation file for %s to %s' % (msg, tools.config["translate_out"]))
 
     fileformat = os.path.splitext(tools.config["translate_out"])[-1][1:].lower()
     buf = file(tools.config["translate_out"], "w")

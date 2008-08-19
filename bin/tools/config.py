@@ -119,18 +119,21 @@ class configmanager(object):
 
         group = optparse.OptionGroup(parser, "Internationalisation options",
             "Use these options to translate Tiny ERP to another language."
-            "See i18n section of the user manual. Options '-l' and '-d' are mandatory.")
+            "See i18n section of the user manual. Option '-d' is mandatory."
+            "Option '-l' is mandatory in case of importation"
+            )
 
-        group.add_option('-l', "--language", dest="language", help="specify the language of the translation file. Use it with --i18n-export and --i18n-import")
-        group.add_option("--i18n-export", dest="translate_out", help="export all sentences to be translated to a CSV or a PO file and exit")
-        group.add_option("--i18n-import", dest="translate_in", help="import a CSV or a PO file with translations and exit")
+        group.add_option('-l', "--language", dest="language", help="specify the language of the translation file. Use it with --i18n-export or --i18n-import")
+        group.add_option("--i18n-export", dest="translate_out", help="export all sentences to be translated to a CSV file, a PO file or a TGZ archive and exit")
+        group.add_option("--i18n-import", dest="translate_in", help="import a CSV or a PO file with translations and exit. The '-l' option is required.")
         group.add_option("--modules", dest="translate_modules", help="specify modules to export. Use in combination with --i18n-export")
         group.add_option("--addons-path", dest="addons_path", help="specify an alternative addons path.")
         parser.add_option_group(group)
 
         (opt, args) = parser.parse_args()
 
-        assert not ((opt.translate_in or opt.translate_out) and (not opt.language or not opt.db_name)), "the i18n-import and i18n-export options cannot be used without the language (-l) and database (-d) options"
+        assert not (opt.translate_in and (not opt.language or not opt.db_name)), "the i18n-import option cannot be used without the language (-l) and the database (-d) options"
+        assert not (opt.translate_out and (not opt.db_name)), "the i18n-export option cannot be used without the database (-d) option"
 
         # place/search the config file on Win32 near the server installation
         # (../etc from the server)
