@@ -31,6 +31,7 @@
 import time
 from osv import fields
 from osv import osv
+from osv.orm import except_orm
 
 
 class hr_employee(osv.osv):
@@ -116,7 +117,16 @@ class hr_analytic_timesheet(osv.osv):
         'date' : lambda self,cr,uid,ctx: ctx.get('date', time.strftime('%Y-%m-%d')),
         'user_id' : lambda obj, cr, uid, ctx : ctx.get('user_id', uid),
     }
-
+    def create(self, cr, uid, vals, context={}):
+        try:
+            res = super(hr_analytic_timesheet, self).create(cr, uid, vals, context)
+            return res
+        except Exception,e:
+            if 'journal_id' in e.args[0]:
+                raise except_orm(_('ValidateError'),
+                     _('No analytic journal available for this employee.\nDefine an employee for the selected user and assign an analytic journal.'))
+            else:
+                raise
 
     def on_change_user_id(self, cr, uid, ids, user_id):
         if not user_id:
@@ -126,10 +136,7 @@ class hr_analytic_timesheet(osv.osv):
             'product_uom_id' : self._getEmployeeUnit(cr, user_id, context= {}),
             'general_account_id' :self. _getGeneralAccount(cr, user_id, context= {}),
             'journal_id' : self._getAnalyticJournal(cr, user_id, context= {}),
-                           }}
-
-
-
+        }}
 hr_analytic_timesheet()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
