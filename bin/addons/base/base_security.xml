@@ -24,10 +24,6 @@
     <record model="res.groups" id="group_extended">
         <field name="name">Extended View</field>
     </record>
-    
-    <!--<record model="res.groups" id="group_partner">-->
-    <!--    <field name="name">Partner </field>-->
-    <!--</record>-->
 
 <!--
  Users
@@ -80,13 +76,7 @@
 
 <!--
  Objects Groups
--->
-    
-<!-- System -->
-    <!--<record model="ir.model" id=".model_ir_actions">-->
-    <!--    <field name="type">system</field>-->
-    <!--</record>-->
-    
+-->  
     <record model="ir.model" id="base.model_ir_act_report_custom">
         <field name="type">system</field>
     </record>
@@ -132,14 +122,6 @@
     </record>
 
     <record model="ir.model" id="base.model_ir_report_custom_fields">
-        <field name="type">system</field>
-    </record>
-
-    <record model="ir.model" id="base.model_res_lang">
-        <field name="type">system</field>
-    </record>
-
-    <record model="ir.model" id="base.model_res_request">
         <field name="type">system</field>
     </record>
     
@@ -271,26 +253,6 @@
         <field name="type">system</field>
     </record>
     
-    <record model="ir.model" id="base.model_res_country">
-        <field name="type">system</field>
-    </record>
-    
-    <record model="ir.model" id="base.model_res_country_state">
-        <field name="type">system</field>
-    </record>
-    
-    <record model="ir.model" id="base.model_res_config_view">
-        <field name="type">system</field>
-    </record>
-    
-    <record model="ir.model" id="base.model_res_request_link">
-        <field name="type">system</field>
-    </record>
-    
-    <record model="ir.model" id="base.model_res_request_history">
-        <field name="type">system</field>
-    </record>
-    
     <record model="ir.model" id="base.model_ir_property">
         <field name="type">system</field>
     </record>
@@ -299,6 +261,28 @@
 <!--
  Access
 -->
+<!--Don't remove after-->
+    <record model="ir.model.access" id="access_ir_actions_employee">
+        <field name="name">ir.actions.actions Employee</field>
+        <field model="ir.model" name="model_id" search="[('model', '=', 'ir.actions.actions')]"/>
+        <field name="group_id" ref="group_employee"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    
+    <record model="ir.model.access" id="access_ir_actions_act_window_employee">
+        <field name="name">ir.actions.act_window Employee</field>
+        <field model="ir.model" name="model_id" search="[('model', '=', 'ir.actions.act_window')]"/>
+        <field name="group_id" ref="group_employee"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+<!--Don't remove before-->
+
     <record model="ir.model.access" id="access_ir_act_window_group_employee">
         <field name="name">ir_act_window group_employee</field>
         <field name="model_id" model="ir.model" ref="model_ir_act_window"/>

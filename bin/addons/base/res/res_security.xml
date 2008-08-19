@@ -20,21 +20,46 @@
 <!--
  Objects Groups
 -->
+    <record model="ir.model" id="base.model_res_lang">
+        <field name="type">base</field>
+    </record>
 
-<!-- System -->
+    <record model="ir.model" id="base.model_res_request">
+        <field name="type">base</field>
+    </record>
+    
     <record model="ir.model" id="base.model_res_users">
-        <field name="type">system</field>
+        <field name="type">base</field>
     </record>
     
     <record model="ir.model" id="base.model_res_groups">
-        <field name="type">system</field>
+        <field name="type">base</field>
     </record>
     
     <record model="ir.model" id="base.model_res_roles">
-        <field name="type">system</field>
+        <field name="type">base</field>
+    </record>
+    
+    <record model="ir.model" id="base.model_res_country_state">
+        <field name="type">base</field>
+    </record>
+    
+    <record model="ir.model" id="base.model_res_config_view">
+        <field name="type">base</field>
+    </record>
+    
+    <record model="ir.model" id="base.model_res_request_link">
+        <field name="type">base</field>
+    </record>
+    
+    <record model="ir.model" id="base.model_res_request_history">
+        <field name="type">base</field>
     </record>
 
-<!-- Base -->
+    <record model="ir.model" id="base.model_res_country">
+        <field name="type">base</field>
+    </record>
+    
     <record model="ir.model" id="base.model_res_bank">
         <field name="type">base</field>
     </record>
@@ -367,7 +392,7 @@
         <field name="model_id" model="ir.model" ref="model_res_users"/>
         <field name="group_id" ref="group_employee"/>
         <field name="perm_read" eval="1"/>
-        <field name="perm_write" eval="0"/>
+        <field name="perm_write" eval="1"/>
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>

@@ -48,9 +48,9 @@
 	],
 	"update_xml" : [
 		"base_update.xml",
-		"ir/ir.xml",
 		"ir/wizard/wizard_menu_view.xml",
 		"ir/workflow/workflow_view.xml",
+		"ir/ir.xml",
 		"res/ir_property_view.xml",
 		"res/partner/partner_report.xml",
 		"res/partner/partner_view.xml",
