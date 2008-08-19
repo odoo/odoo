@@ -2336,6 +2336,7 @@ class orm(orm_template):
         else:
             qu1, qu2, tables = [], [], ['"%s"' % self._table]
 
+        print 'WC RES', qu1, qu2, tables
         return (qu1, qu2, tables)
 
     def _check_qorder(self, word):
@@ -2345,10 +2346,12 @@ class orm(orm_template):
 
     def search(self, cr, user, args, offset=0, limit=None, order=None,
             context=None, count=False):
+        print 'SEARCH', self._name, args
         if not context:
             context = {}
         # compute the where, order by, limit and offset clauses
         (qu1, qu2, tables) = self._where_calc(cr, user, args, context=context)
+        print qu1, qu2, tables
 
         if len(qu1):
             qu1 = ' where '+string.join(qu1, ' and ')

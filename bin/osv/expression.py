@@ -84,7 +84,8 @@ class expression(object):
             if left in table._inherit_fields:
                 working_table = table.pool.get(table._inherit_fields[left][0])
                 if working_table not in self.__tables.values():
-                    self.__joins.append('%s.%s' % (table._table, table._inherits[working_table._name]))
+                    self.__joins.append(('%s.%s=%s.%s' % (working_table._table, 'id', table._table, table._inherits[working_table._name]), working_table._table))
+                    print 'JOINS', self.__joins
 
             self.__tables[i] = working_table
 
@@ -286,13 +287,13 @@ class expression(object):
                     stack.append('(%s %s %s)' % (q1, ops[e], q2,))
         
         query = ' AND '.join(reversed(stack))
-        joins = ' AND '.join(map(lambda j: '%s.id = %s' % (self.__main_table._table, j), self.__joins))
+        joins = ' AND '.join(map(lambda j: j[0], self.__joins))
         if joins:
-            query = '(%s AND (%s))' % (joins, query)
+            query = '(%s) AND (%s)' % (joins, query)
         return (query, flatten(params))
 
     def get_tables(self):
-        return ['"%s"' % t._table for t in set(self.__tables.values())]
+        return ['"%s"' % t._table for t in set(self.__tables.values()+[self.__main_table])]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
