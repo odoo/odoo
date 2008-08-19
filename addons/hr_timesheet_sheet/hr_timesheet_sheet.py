@@ -276,8 +276,16 @@ class hr_timesheet_sheet(osv.osv):
                 return False
         return True
 
+    def _date_current_check(self, cr, uid, ids):
+        for sheet in self.browse(cr, uid, ids):
+            if sheet.date_current < sheet.date_from or sheet.date_current > sheet.date_to:
+                return False
+        return True
+
+
     _constraints = [
-        (_sheet_date, 'You can not have 2 timesheets that overlaps !', ['date_from','date_to'])
+        (_sheet_date, 'You can not have 2 timesheets that overlaps !', ['date_from','date_to']),
+        (_date_current_check, 'You must select a Current date wich is in the timesheet dates !', ['date_current']),
     ]
 
     def action_set_to_draft(self, cr, uid, ids, *args):
