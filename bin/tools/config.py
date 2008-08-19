@@ -114,7 +114,7 @@ class configmanager(object):
         group.add_option("--db_host", dest="db_host", help="specify the database host") 
         group.add_option("--db_port", dest="db_port", help="specify the database port") 
         group.add_option("--db_maxconn", dest="db_maxconn", default='64', help="specify the the maximum number of physical connections to posgresql")
-        group.add_option("-C", "--commit-mode", dest="import_partial", help="Several commit during one file importation. Use this for big data importation. Provide a filename to store intermediate state.", default=False)
+        group.add_option("-P", "--import-partial", dest="import_partial", help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.", default=False)
         parser.add_option_group(group)
 
         group = optparse.OptionGroup(parser, "Internationalisation options",
