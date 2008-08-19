@@ -47,7 +47,8 @@ def _procure_confirm(self, cr, uid, schedule_cycle=1.0, po_cycle=1.0,\
         cr = pooler.get_db(use_new_cursor).cursor()
     wf_service = netsvc.LocalService("workflow")
 
-    ids=orderpoint_obj.search(cr,uid,[],offset=offset,limit=100)
+    procurement_obj = pooler.get_pool(cr.dbname).get('mrp.procurement')
+    ids = procurement_obj.search(cr, uid, [('state', '=', 'exception')], order='date_planned')
     for id in ids:
         wf_service.trg_validate(uid, 'mrp.procurement', id, 'button_restart', cr)
     if use_new_cursor:
@@ -62,7 +63,6 @@ def _procure_confirm(self, cr, uid, schedule_cycle=1.0, po_cycle=1.0,\
     report_except = 0
     report_later = 0
     ids = [1]
-    procurement_obj = pooler.get_pool(cr.dbname).get('mrp.procurement')
     while len(ids):
         cr.execute('select id from mrp_procurement where state=%s and procure_method=%s order by date_planned limit 500 offset %d', ('confirmed','make_to_order',offset))
         ids = map(lambda x:x[0], cr.fetchall())
@@ -195,10 +195,7 @@ def _procure_orderpoint_confirm(self, cr, uid, automatic=False,\
     if automatic:
         create_automatic_op(cr, uid, context=context)
     while ids:
-        cr.execute('SELECT id ' \
-                'FROM stock_warehouse_orderpoint ' \
-                'WHERE active OFFSET %d LIMIT 100', (offset,))
-        ids = map(lambda x: x[0], cr.fetchall())
+        ids=orderpoint_obj.search(cr,uid,[],offset=offset,limit=100)
         for op in orderpoint_obj.browse(cr, uid, ids):
             #if op.procurement_id and op.procurement_id.purchase_id:
             #   if (op.procurement_id.purchase_id.state=='confirmed'):
