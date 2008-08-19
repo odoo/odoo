@@ -657,7 +657,7 @@ form: module.record_id""" % (xml_id,)
         id = self.pool.get('ir.model.data')._update(cr, self.uid, rec_model, self.module, res, rec_id or False, not self.isnoupdate(data_node), noupdate=self.isnoupdate(data_node), mode=self.mode )
         if rec_id:
             self.idref[rec_id] = int(id)
-        if config.get('commit_mode', False):
+        if config.get('import_partial', False):
             cr.commit()
         return rec_model, id
 
@@ -724,6 +724,15 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
 
     pool = pooler.get_pool(cr.dbname)
 
+    import pickle
+    if config.get('import_partial'):
+        if not os.path.isfile(config.get('import_partial')):
+            pickle.dump({}, file(config.get('import_partial'),'w+'))
+        data = pickle.load(file(config.get('import_partial')))
+        if fname in data:
+            if not data[fname]:
+                return
+
     input = StringIO.StringIO(csvcontent)
     reader = csv.reader(input, quotechar='"', delimiter=',')
     fields = reader.next()
@@ -738,6 +747,10 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
             continue
         datas.append( map(lambda x:x.decode('utf8').encode('utf8'), line))
     pool.get(model).import_data(cr, uid, fields, datas,mode, module,noupdate)
+    if config.get('import_partial'):
+        data = pickle.load(file(config.get('import_partial')))
+        data[fname] = 0
+        pickle.dump(data, file(config.get('import_partial'),'wb'))
 
 #
 # xml import/export

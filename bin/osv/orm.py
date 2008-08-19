@@ -593,28 +593,28 @@ class orm_template(object):
 
         while len(datas):
             res = {}
-            try:
-                (res, other, warning, translate, data_id) = \
-                        process_liness(self, datas, [], fields_def)
-                if warning:
-                    cr.rollback()
-                    return (-1, res, warning, '')
-                id = self.pool.get('ir.model.data')._update(cr, uid, self._name,
-                        current_module, res, xml_id=data_id, mode=mode,
-                        noupdate=noupdate)
-                for lang in translate:
-                    context2 = context.copy()
-                    context2['lang'] = lang
-                    self.write(cr, uid, [id], translate[lang], context2)
-                if config.get('commit_mode', False):
-                    cr.commit()
-            except Exception, e:
-                logger.notifyChannel("import", netsvc.LOG_ERROR, e)
+            #try:
+            (res, other, warning, translate, data_id) = \
+                    process_liness(self, datas, [], fields_def)
+            if warning:
                 cr.rollback()
-                try:
-                    return (-1, res, e[0], warning)
-                except:
-                    return (-1, res, e[0], '')
+                return (-1, res, warning, '')
+            id = self.pool.get('ir.model.data')._update(cr, uid, self._name,
+                    current_module, res, xml_id=data_id, mode=mode,
+                    noupdate=noupdate)
+            for lang in translate:
+                context2 = context.copy()
+                context2['lang'] = lang
+                self.write(cr, uid, [id], translate[lang], context2)
+            if config.get('import_partial', False):
+                cr.commit()
+            #except Exception, e:
+            #    logger.notifyChannel("import", netsvc.LOG_ERROR, e)
+            #    cr.rollback()
+            #    try:
+            #        return (-1, res, e[0], warning)
+            #    except:
+            #        return (-1, res, e[0], '')
             done += 1
         #
         # TODO: Send a request with the result and multi-thread !

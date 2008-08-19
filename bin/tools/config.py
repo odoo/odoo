@@ -58,7 +58,7 @@ class configmanager(object):
             'addons_path': None,
             'root_path': None,
             'debug_mode': False,
-            'commit_mode': False,
+            'import_partial': "",
             'pidfile': None,
             'logfile': None,
             'secure': False,
@@ -114,7 +114,7 @@ class configmanager(object):
         group.add_option("--db_host", dest="db_host", help="specify the database host") 
         group.add_option("--db_port", dest="db_port", help="specify the database port") 
         group.add_option("--db_maxconn", dest="db_maxconn", default='64', help="specify the the maximum number of physical connections to posgresql")
-        group.add_option("-C", "--commit-mode", dest="commit_mode", action="store_true", help="Several commit during one file importation. Use this for big data importation.", default=False)
+        group.add_option("-C", "--commit-mode", dest="import_partial", help="Several commit during one file importation. Use this for big data importation. Provide a filename to store intermediate state.", default=False)
         parser.add_option_group(group)
 
         group = optparse.OptionGroup(parser, "Internationalisation options",
@@ -156,7 +156,7 @@ class configmanager(object):
             self.options['pidfile'] = False
         
         for arg in ('interface', 'port', 'db_name', 'db_user', 'db_password', 'db_host',
-                'db_port', 'logfile', 'pidfile', 'secure', 'smtp_ssl', 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy', 'netinterface', 'netport', 'db_maxconn', 'commit_mode', 'addons_path'):
+                'db_port', 'logfile', 'pidfile', 'secure', 'smtp_ssl', 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy', 'netinterface', 'netport', 'db_maxconn', 'import_partial', 'addons_path'):
             if getattr(opt, arg):
                 self.options[arg] = getattr(opt, arg)
 

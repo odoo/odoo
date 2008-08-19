@@ -255,10 +255,6 @@ class act_url(osv.osv):
     }
 act_url()
 
-def _get_fields(self, cr, uid, context={}):
-    
-    return [('key','Email Value')]
-
 def model_get(self, cr, uid, context={}):
     wkf_pool = self.pool.get('workflow')
     ids = wkf_pool.search(cr, uid, [])
@@ -273,8 +269,60 @@ def model_get(self, cr, uid, context={}):
         res.append((model, name))
         
     return res
-    
+
+#class ir_model_fields(osv.osv):
+#    _inherit = 'ir.model.fields'
+#    _rec_name = 'complete_name'
+#    _columns = {
+#        'complete_name': fields.char('Complete Name', required=True, size=64, select=1),
+#    }
 #
+#    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=80):
+#        def get_fields(cr, uid, field, rel):
+#            result = []
+#            mobj = self.pool.get('ir.model')
+#            id = mobj.search(cr, uid, [('model','=',rel)])
+#            
+#            obj = self.pool.get('ir.model.fields')
+#            ids = obj.search(cr, uid, [('model_id','in',id)])
+#            records = obj.read(cr, uid, ids)
+#            for record in records:
+#                id = record['id']
+#                fld = field + '/' + record['name']
+#                
+#                result.append((id, fld))
+#            return result
+#        
+#        if not args:
+#            args=[]
+#        if not context:
+#            context={}
+#            return super(ir_model_fields, self).name_search(cr, uid, name, args, operator, context, limit)
+#        
+#        result = []
+#        obj = self.pool.get('ir.model.fields')
+#        ids = obj.search(cr, uid, args)
+#        records = obj.read(cr, uid, ids)
+#        for record in records:
+#            id = record['id']
+#            field = record['name']
+#            
+#            if record['ttype'] == 'many2one':
+#                rel = record['relation']
+#                res = get_fields(cr, uid, field, record['relation'])
+#                for rs in res:
+#                    result.append(rs)
+#
+#            result.append((id, field))
+#        
+#        for rs in result:
+#            obj.write(cr, uid, [rs[0]], {'complete_name':rs[1]})
+#        
+#        #result = super(ir_model_fields, self).name_search(cr, uid, name, [['complete_name','ilike',name]], operator, context, limit)
+#        return result
+#
+#ir_model_fields()
+##
 # Actions that are run on the server side
 #
 class actions_server(osv.osv):
@@ -302,7 +350,8 @@ class actions_server(osv.osv):
         #'trigger_object': fields.char('Trigger Object', size=128),
         #'trigger_object_id': fields.char('Trigger Object ID', size=128),
         'message': fields.text('Message', translate=True),
-        'address': fields.selection(_get_fields ,'Email / SMS', size=128),
+        'address': fields.many2one('ir.model.fields', 'Email From / SMS'),
+        #selection(_get_fields ,'Email / SMS', size=128),
         'child_ids': fields.one2many('ir.actions.actions', 'parent_id', 'Others Actions'),
         'usage': fields.char('Action Usage', size=32),
         'type': fields.char('Report Type', size=32, required=True),
@@ -321,6 +370,11 @@ class actions_server(osv.osv):
 # If you plan to return an action, assign: action = {...}
 """
     }
+
+#    def on_change_model(self, cr, uid, ids, model_id):
+#        print '**************** : method called'
+#        res = {'value' : {'address': [('key1','Email Value One')]} }
+#        return res
 
     #
     # Context should contains:
@@ -344,9 +398,14 @@ class actions_server(osv.osv):
                 exec action.code in localdict
                 if 'action' in localdict:
                     return localdict['action']
+                
             if action.state == 'email':
                 user = config['email_from']
                 subject = action.name
+                
+                #TODO : Apply Mail merge in to the Content of the Email
+                print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ',context
+                
                 body = action.message
                 if tools.email_send_attach(user, action.address, subject, body, debug=False) == True:
                     logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (action.address))
@@ -361,10 +420,12 @@ class actions_server(osv.osv):
                 wf_service.trg_validate(uid, model, int(id), action.trigger_name, cr)
                 
             if action.state == 'sms':
+                #TODO: Apply mearge with the field
                 if tools.sms_send(user, password, api_id, text, to) == True:
                     logger.notifyChannel('sms', netsvc.LOG_INFO, 'SMS successfully send to : %s' % (action.address))
                 else:
                     logger.notifyChannel('sms', netsvc.LOG_ERROR, 'Failed to send SMS to : %s' % (action.address))
+                    
             if action.state == 'other':
                 localdict = {
                     'self': self.pool.get(action.model_id.model),
@@ -376,15 +437,10 @@ class actions_server(osv.osv):
                 }
                 
                 for act in action.child_ids:
-                    code = """
-                        action = {
-                            'res_model': %s,
-                            'type': %s,
-                            'name': %s,
-                            'usage': %s,
-                        }
-                    """ % (action.model_id.model, act.type, act.name, act.usage)
-                    exec action.code in localdict
+                    code = """action = {'model':'%s','type':'%s', %s}""" % (action.model_id.model, act.type, act.usage)
+                    exec code in localdict
+                    if 'action' in localdict:
+                        return localdict['action']
 
         return False
 actions_server()
