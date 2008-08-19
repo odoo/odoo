@@ -236,7 +236,10 @@ class osv(orm.orm):
         parent_name = hasattr(cls, '_inherit') and cls._inherit
         if parent_name:
             parent_class = pool.get(parent_name).__class__
-            assert parent_class, "parent class %s does not exist !" % parent_name
+
+            print cls
+            print cls._name
+            assert pool.get(parent_name), "parent class %s does not exist in module %s !" % (parent_name, module)
             nattr = {}
             for s in ('_columns', '_defaults', '_inherits', '_constraints', '_sql_constraints'):
                 new = copy.copy(getattr(pool.get(parent_name), s))

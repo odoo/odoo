@@ -730,6 +730,7 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         if fname in data:
             if not data[fname]:
                 return
+
     input = StringIO.StringIO(csvcontent)
     reader = csv.reader(input, quotechar='"', delimiter=',')
     fields = reader.next()
