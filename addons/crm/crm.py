@@ -379,7 +379,7 @@ class crm_case(osv.osv):
         'priority': lambda *a: AVAILABLE_PRIORITIES[2][0],
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
-    _order = 'priority, date_deadline desc, id desc'
+    _order = 'priority, date_deadline desc, date desc,id desc'
 
     def _action(self, cr, uid, cases, state_to, scrit=None, context={}):
         if not scrit:
