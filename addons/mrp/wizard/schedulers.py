@@ -47,8 +47,9 @@ def _procure_confirm(self, cr, uid, schedule_cycle=1.0, po_cycle=1.0,\
         cr = pooler.get_db(use_new_cursor).cursor()
     wf_service = netsvc.LocalService("workflow")
 
+    orderpoint_obj = pooler.get_pool(cr.dbname).get('stock.warehouse.orderpoint')
     procurement_obj = pooler.get_pool(cr.dbname).get('mrp.procurement')
-    ids = procurement_obj.search(cr, uid, [('state', '=', 'exception')], order='date_planned')
+    ids=orderpoint_obj.search(cr,uid,[], order="date_planned")
     for id in ids:
         wf_service.trg_validate(uid, 'mrp.procurement', id, 'button_restart', cr)
     if use_new_cursor:
