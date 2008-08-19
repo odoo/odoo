@@ -6,6 +6,7 @@
             <rng:optional><rng:attribute name="col"/></rng:optional>
             <rng:optional><rng:attribute name="editable"/></rng:optional>
             <rng:optional><rng:attribute name="type"/></rng:optional>
+            <rng:optional><rng:attribute name="position"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="notebook"/>
@@ -16,6 +17,7 @@
                     <rng:ref name="label" />
                     <rng:ref name="separator"/>
                     <rng:ref name="image"/>
+                    <rng:ref name="form"/>
                     <rng:element name="newline"><rng:empty/></rng:element>
                     <rng:element name="properties"><rng:empty/></rng:element>
                 </rng:choice>
@@ -30,10 +32,13 @@
             <rng:optional><rng:attribute name="color"/></rng:optional>
             <rng:optional><rng:attribute name="editable"/></rng:optional>
             <rng:optional><rng:attribute name="toolbar"/></rng:optional>
+            <rng:optional><rng:attribute name="position"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="field"/>
                     <rng:ref name="separator"/>
+                    <rng:ref name="tree"/>
+                    <rng:ref name="group"/>
                     <rng:element name="newline"><rng:empty/></rng:element>
                 </rng:choice>
             </rng:zeroOrMore>
