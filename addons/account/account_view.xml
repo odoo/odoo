@@ -172,27 +172,6 @@
         </record>
         <menuitem action="action_account_tree" id="menu_action_account_tree" parent="account.account_account_menu"/>
 
-        <record id="view_account_list" model="ir.ui.view">
-            <field name="name">account.account.list</field>
-            <field name="model">account.account</field>
-            <field name="type">tree</field>
-            <field name="field_parent">child_id</field>
-            <field eval="6" name="priority"/>
-            <field name="arch" type="xml">
-                <tree string="Chart of Accounts">
-                    <field name="code"/>
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
-        <record id="action_account_tree2" model="ir.actions.act_window">
-            <field name="name">Fast Chart of Accounts</field>
-            <field name="res_model">account.account</field>
-            <field name="view_type">tree</field>
-            <field name="view_id" ref="view_account_list"/>
-            <field name="domain">[('code','=','0')]</field>
-        </record>
-
         <!--
 	Journal
 

@@ -129,7 +129,8 @@ class account_tax(osv.osv):
 account_tax()
 
 class account_account(osv.osv):
-    _order = "code"
+    _order = "parent_left"
+    _parent_order = "code"
     _name = "account.account"
     _description = "Account"
     _parent_store = True
