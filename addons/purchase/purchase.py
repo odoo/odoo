@@ -366,6 +366,22 @@ class purchase_order_line(osv.osv):
         res = {'value': {'price_unit': price, 'name':prod_name, 'taxes_id':prod['supplier_taxes_id'], 'date_planned': dt,'notes':prod['description_purchase'], 'product_uom': uom}}
         domain = {}
 
+        if res['value']['taxes_id']:
+            taxes = self.pool.get('account.tax').browse(cr, uid,
+                    [x.id for x in product.supplier_taxes_id])
+            taxep = None
+            if partner_id:
+                taxep = self.pool.get('res.partner').browse(cr, uid,
+                        partner_id).property_account_supplier_tax
+            if not taxep or not taxep.id:
+                res['value']['taxes_id'] = [x.id for x in product.taxes_id]
+            else:
+                res5 = [taxep.id]
+                for t in taxes:
+                    if not t.tax_group==taxep.tax_group:
+                        res5.append(t.id)
+                res['value']['taxes_id'] = res5
+
         res2 = self.pool.get('product.uom').read(cr, uid, [uom], ['category_id'])
         res3 = self.pool.get('product.uom').read(cr, uid, [prod_uom_po], ['category_id'])
         domain = {'product_uom':[('category_id','=',res2[0]['category_id'][0])]}

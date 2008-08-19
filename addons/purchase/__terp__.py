@@ -45,7 +45,8 @@
         "purchase_report.xml", 
         "purchase_wizard.xml",
         "stock_view.xml",
-        "purchase_security.xml"
+        "purchase_security.xml",
+        "partner_view.xml"
     ],
     "active": False,
     "installable": True

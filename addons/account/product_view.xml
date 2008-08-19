@@ -15,7 +15,7 @@
                 </field>
             </field>
         </record>
-        
+
         <record id="product_template_form_view" model="ir.ui.view">
             <field name="name">product.template.product.form.inherit</field>
             <field name="model">product.template</field>
@@ -30,5 +30,55 @@
                 </field>
             </field>
         </record>
+
+
+
+        <record id="view_category_property_form" model="ir.ui.view">
+            <field name="name">product.category.property.form.inherit</field>
+            <field name="model">product.category</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <group string="Properties" position="inside">
+                    <field name="property_account_income_categ"/>
+                    <field name="property_account_expense_categ"/>
+                </group>
+            </field>
+        </record>
+
+
+
+        <record id="view_template_property_form" model="ir.ui.view">
+            <field name="name">product.template.property.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <page string="Properties" position="inside">
+                    <separator string="Sales Properties" colspan="2"/>
+                    <separator string="Purchases Properties" colspan="2"/>
+                    <field name="property_account_income"/>
+                    <field name="property_account_expense"/>
+                </page>
+            </field>
+        </record>
+
+
+        <record id="view_normal_property_form" model="ir.ui.view">
+            <field name="name">product.normal.property.form.inherit</field>
+            <field name="model">product.product</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <page string="Properties" position="inside">
+                    <separator string="Sales Properties" colspan="2"/>
+                    <separator string="Purchases Properties" colspan="2"/>
+                    <field name="property_account_income"/>
+                    <field name="property_account_expense"/>
+                </page>
+            </field>
+        </record>
+
+
     </data>
 </terp>

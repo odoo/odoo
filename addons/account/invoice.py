@@ -790,9 +790,9 @@ class account_invoice_line(osv.osv):
         taxep=None
         if partner_id:
             lang=self.pool.get('res.partner').read(cr, uid, [partner_id])[0]['lang']
-            taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_tax
         tax_obj = self.pool.get('account.tax')
         if type in ('out_invoice', 'out_refund'):
+            taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_supplier_tax
             if not taxep or not taxep.id:
                 tax_id = map(lambda x: x.id, res.taxes_id)
             else:
@@ -801,6 +801,7 @@ class account_invoice_line(osv.osv):
                     if not t.tax_group==taxep.tax_group:
                         tax_id.append(t.id)
         else:
+            taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_tax
             if not taxep or not taxep.id:
                 tax_id = map(lambda x: x.id, res.supplier_taxes_id)
             else:

@@ -40,7 +40,6 @@ class res_partner(osv.osv):
           string="Delivery Method", 
           method=True,
           view_load=True,
-          group_name="Delivery Properties",
           help="This carrier will be used, instead of the default one, for delivering goods to the current partner"),
     }
 res_partner()

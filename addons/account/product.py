@@ -42,7 +42,6 @@ class product_category(osv.osv):
             string="Income Account",
             method=True,
             view_load=True,
-            group_name="Accounting Properties",
             help="This account will be used, instead of the default one, to value incoming stock for the current product category"),
         'property_account_expense_categ': fields.property(
             'account.account',
@@ -51,7 +50,6 @@ class product_category(osv.osv):
             string="Expense Account",
             method=True,
             view_load=True,
-            group_name="Accounting Properties",
             help="This account will be used, instead of the default one, to value outgoing stock for the current product category"),
     }
 product_category()
@@ -75,7 +73,6 @@ class product_template(osv.osv):
             string="Income Account",
             method=True,
             view_load=True,
-            group_name="Accounting Properties",
             help="This account will be used, instead of the default one, to value incoming stock for the current product"),
         'property_account_expense': fields.property(
             'account.account',
@@ -84,7 +81,6 @@ class product_template(osv.osv):
             string="Expense Account",
             method=True,
             view_load=True,
-            group_name="Accounting Properties",
             help="This account will be used, instead of the default one, to value outgoing stock for the current product"),
     }
 product_template()

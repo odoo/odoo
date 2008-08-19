@@ -41,7 +41,6 @@ class res_partner(osv.osv):
           string="Purchase Pricelist", 
           method=True,
           view_load=True,
-          group_name="Pricelists Properties",
           help="This pricelist will be used, instead of the default one, for purchases from the current partner"),
     }
 res_partner()

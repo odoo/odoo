@@ -43,7 +43,6 @@ class res_partner(osv.osv):
             string="Sale Pricelist", 
             method=True,
             view_load=True,
-            group_name="Pricelists Properties",
             help="This pricelist will be used, instead of the default one, \
                     for sales to the current partner"),
     }
