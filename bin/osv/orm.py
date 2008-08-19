@@ -53,6 +53,8 @@ import string
 import netsvc
 import re
 
+import pickle
+
 import fields
 import tools
 
@@ -432,7 +434,7 @@ class orm_template(object):
         return datas
 
     def import_data(self, cr, uid, fields, datas, mode='init',
-            current_module=None, noupdate=False, context=None):
+            current_module=None, noupdate=False, context=None, filename=None):
         if not context:
             context = {}
         fields = map(lambda x: x.split('/'), fields)
@@ -591,7 +593,10 @@ class orm_template(object):
         fields_def = self.fields_get(cr, uid, context=context)
         done = 0
 
+        initial_size = len(datas)
+        counter = 0
         while len(datas):
+            counter += 1
             res = {}
             #try:
             (res, other, warning, translate, data_id) = \
@@ -606,8 +611,12 @@ class orm_template(object):
                 context2 = context.copy()
                 context2['lang'] = lang
                 self.write(cr, uid, [id], translate[lang], context2)
-            if config.get('import_partial', False):
+            if config.get('import_partial', False) and filename: # and (not (counter%100)) :
+                data = pickle.load(file(config.get('import_partial')))
+                data[filename] = initial_size - len(datas) + data.get(filename, 0)
+                pickle.dump(data, file(config.get('import_partial'),'wb'))
                 cr.commit()
+
             #except Exception, e:
             #    logger.notifyChannel("import", netsvc.LOG_ERROR, e)
             #    cr.rollback()
