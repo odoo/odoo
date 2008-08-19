@@ -726,7 +726,9 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
 
     import pickle
     if config.get('import_partial'):
-        data = pickle.load(config.get('import_partial'))
+        if not os.path.isfile(config.get('import_partial')):
+            pickle.dump({}, file(config.get('import_partial'),'w+'))
+        data = pickle.load(file(config.get('import_partial')))
         if fname in data:
             if not data[fname]:
                 return
@@ -746,9 +748,9 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
         datas.append( map(lambda x:x.decode('utf8').encode('utf8'), line))
     pool.get(model).import_data(cr, uid, fields, datas,mode, module,noupdate)
     if config.get('import_partial'):
-        data = pickle.load(config.get('import_partial'))
+        data = pickle.load(file(config.get('import_partial')))
         data[fname] = 0
-        pickle.save(config.get('import_partial'), data)
+        pickle.dump(data, file(config.get('import_partial'),'wb'))
 
 #
 # xml import/export

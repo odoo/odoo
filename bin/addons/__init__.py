@@ -327,6 +327,9 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
     if force_demo:
         force.append('demo')
     if update_module:
+        for module in tools.config['init']:
+            cr.execute('update ir_module_module set state=%s where state=%s and name=%s', ('to install', 'uninstalled', module))
+            cr.commit()
         cr.execute("select name from ir_module_module where state in ('installed', 'to install', 'to upgrade','to remove')")
     else:
         cr.execute("select name from ir_module_module where state in ('installed', 'to upgrade', 'to remove')")
