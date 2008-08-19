@@ -8,7 +8,10 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <field name="active" position="after">
-                    <field name="vat"/>
+                    <group colspan="2">
+                        <field name="vat_subject"/>
+                        <field name="vat"/>
+                    </group>
                 </field>
             </field>
         </record>
