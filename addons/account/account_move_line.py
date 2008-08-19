@@ -792,6 +792,7 @@ class account_move_line(osv.osv):
             raise osv.except_osv(_('Bad account !'), _('You can not use this general account in this journal !'))
 
         tax_go=False
+
         if 'account_tax_id' in vals and vals['account_tax_id']:
             tax_id=tax_obj.browse(cr,uid,vals['account_tax_id'])
 
@@ -803,6 +804,20 @@ class account_move_line(osv.osv):
                 vals['credit'] +=vals['amount_taxed']
             fields=[x for x in vals]
             tax_go=True
+
+        if 'analytic_account_id' in vals and vals['analytic_account_id']:
+
+            if journal.analytic_journal_id:
+                vals['analytic_lines'] = [(0,0, {
+                        'name': vals['name'],
+                        'date': vals['date'],
+                        'account_id': vals['analytic_account_id'],
+                        'unit_amount': vals['quantity'],
+                        'amount': vals['debit'] or vals['credit'],
+                        'general_account_id': vals['account_id'],
+                        'journal_id': journal.analytic_journal_id.id,
+                        'ref': vals['ref'],
+                    })]
 
         result = super(osv.osv, self).create(cr, uid, vals, context)
         if tax_go:
@@ -822,8 +837,6 @@ class account_bank_statement_reconcile(osv.osv):
         'line_ids': fields.many2many('account.move.line', 'account_bank_statement_line_rel', 'statement_id', 'line_id', 'Entries'),
     }
 account_bank_statement_reconcile()
-
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
