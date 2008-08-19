@@ -4,58 +4,48 @@
 <!--
  Objects Groups
 -->
-    <record model="ir.model" id="model_account_analytic_account">
+    <record model="ir.model" id="account.model_account_analytic_account">
         <field name="type">addons</field>
     </record>
-    
-    <record model="ir.model" id="model_account_analytic_budget_post">
+
+    <record model="ir.model" id="account.model_account_analytic_journal">
         <field name="type">addons</field>
     </record>
-    
-    <record model="ir.model" id="model_account_analytic_budget_post_dotation">
-        <field name="type">addons</field>
-    </record>
-    
-    <record model="ir.model" id="model_account_analytic_journal">
-        <field name="type">addons</field>
-    </record>
+
+    <!--<record model="ir.model" id="account.model_account_analytic_budget_post">-->
+    <!--    <field name="type">addons</field>-->
+    <!--</record>-->
+    <!---->
+    <!--<record model="ir.model" id="account.model_account_analytic_budget_post_dotation">-->
+    <!--    <field name="type">addons</field>-->
+    <!--</record>-->
 
 <!--
  Access
 -->
+    <record model="ir.model.access" id="access_account_analytic_account_account.group_account_user">
+        <field name="name">account_analytic_account account.group_account_user</field>
+        <field name="model_id" model="ir.model" ref="account.model_account_analytic_account"/>
+        <field name="group_id" ref="account.group_account_user"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
     <record model="ir.model.access" id="access_account_analytic_account_base.group_employee">
         <field name="name">account_analytic_account base.group_employee</field>
-        <field name="model_id" model="ir.model" ref="model_account_analytic_account"/>
+        <field name="model_id" model="ir.model" ref="account.model_account_analytic_account"/>
         <field name="group_id" ref="base.group_employee"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
-    </record>
-
-    <record model="ir.model.access" id="access_account_analytic_account_account.group_account_user">
-        <field name="name">account_analytic_account account.group_account_user</field>
-        <field name="model_id" model="ir.model" ref="model_account_analytic_account"/>
-        <field name="group_id" ref="account.group_account_user"/>
-        <field name="perm_read" eval="1"/>
-        <field name="perm_write" eval="1"/>
-        <field name="perm_create" eval="1"/>
-        <field name="perm_unlink" eval="1"/>
-    </record>
-
-    <record model="ir.model.access" id="access_account_analytic_journal_account.group_account_user">
-        <field name="name">account_analytic_journal account.group_account_user</field>
-        <field name="model_id" model="ir.model" ref="model_account_analytic_journal"/>
-        <field name="group_id" ref="account.group_account_user"/>
-        <field name="perm_read" eval="1"/>
-        <field name="perm_write" eval="1"/>
-        <field name="perm_create" eval="1"/>
-        <field name="perm_unlink" eval="1"/>
     </record>
 
     <record model="ir.model.access" id="access_account_analytic_journal_base.group_employee">
         <field name="name">account_analytic_journal base.group_employee</field>
-        <field name="model_id" model="ir.model" ref="model_account_analytic_journal"/>
+        <field name="model_id" model="ir.model" ref="account.model_account_analytic_journal"/>
         <field name="group_id" ref="base.group_employee"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="0"/>
@@ -63,6 +53,35 @@
         <field name="perm_unlink" eval="0"/>
     </record>
 
+    <record model="ir.model.access" id="access_account_analytic_journal_account.group_account_user">
+        <field name="name">account_analytic_journal account.group_account_user</field>
+        <field name="model_id" model="ir.model" ref="account.model_account_analytic_journal"/>
+        <field name="group_id" ref="account.group_account_user"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+
+    <!--<record model="ir.model.access" id="access_account_budget_post_account.group_account_manager">-->
+    <!--    <field name="name">account_budget_post account.group_account_manager</field>-->
+    <!--    <field name="model_id" model="ir.model" ref="account.model_account_budget_post"/>-->
+    <!--    <field name="group_id" ref="account.group_account_manager"/>-->
+    <!--    <field name="perm_read" eval="1"/>-->
+    <!--    <field name="perm_write" eval="1"/>-->
+    <!--    <field name="perm_create" eval="1"/>-->
+    <!--    <field name="perm_unlink" eval="1"/>-->
+    <!--</record>-->
+    <!---->
+    <!--<record model="ir.model.access" id="access_account_budget_post_dotation_account.group_account_manager">-->
+    <!--    <field name="name">account_budget_post_dotation account.group_account_manager</field>-->
+    <!--    <field name="model_id" model="ir.model" ref="account.model_account_budget_post_dotation"/>-->
+    <!--    <field name="group_id" ref="account.group_account_manager"/>-->
+    <!--    <field name="perm_read" eval="1"/>-->
+    <!--    <field name="perm_write" eval="1"/>-->
+    <!--    <field name="perm_create" eval="1"/>-->
+    <!--    <field name="perm_unlink" eval="1"/>-->
+    <!--</record>-->
 
 </data>
 </terp>
