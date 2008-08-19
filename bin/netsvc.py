@@ -160,15 +160,8 @@ def init_logger():
         logf = config['logfile']
         # test if the directories exist, else create them
         try:
-            if not os.path.exists(os.path.dirname(logf)):
-                os.makedirs(os.path.dirname(logf))
-            try:
-                fd = open(logf, 'a')
-                handler = logging.StreamHandler(fd)
-            except IOError:
-                sys.stderr.write("ERROR: couldn't open the logfile\n")
-                handler = logging.StreamHandler(sys.stdout)
-        except OSError:
+            handler = logging.handlers.TimedRotatingFileHandler(logf,'D',1,30) 
+        except:
             sys.stderr.write("ERROR: couldn't create the logfile directory\n")
             handler = logging.StreamHandler(sys.stdout)
     else:

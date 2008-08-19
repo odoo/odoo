@@ -165,19 +165,11 @@ class osv_pool(netsvc.Service):
 
     #TODO: pass a list of modules to load
     def instanciate(self, module, cr):
-#       print "module list:", module_list
-#       for module in module_list:
         res = []
         class_list = module_class_list.get(module, [])
-#           if module not in self.module_object_list:
-#       print "%s class_list:" % module, class_list
         for klass in class_list:
             res.append(klass.createInstance(self, module, cr))
         return res
-#           else:
-#               print "skipping module", module
-
-#pooler.get_pool(cr.dbname) = osv_pool()
 
 class osv_memory(orm.orm_memory):
     #__metaclass__ = inheritor
@@ -236,9 +228,6 @@ class osv(orm.orm):
         parent_name = hasattr(cls, '_inherit') and cls._inherit
         if parent_name:
             parent_class = pool.get(parent_name).__class__
-
-            print cls
-            print cls._name
             assert pool.get(parent_name), "parent class %s does not exist in module %s !" % (parent_name, module)
             nattr = {}
             for s in ('_columns', '_defaults', '_inherits', '_constraints', '_sql_constraints'):

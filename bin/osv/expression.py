@@ -68,7 +68,7 @@ class expression(object):
                 if not ids:
                     return []
                 ids2 = table.search(cr, uid, [(parent, 'in', ids)], context=context)
-                return [(prefix+left, 'in', ids2+ids)]
+                return [(prefix+left, 'in', ids + _rec_get(ids2, table, parent))]
 
         self.__main_table = table
 
@@ -164,9 +164,11 @@ class expression(object):
 
                     self.__operator = 'in'
                     if field._obj != working_table._name:
-                        dom = _rec_get(ids2, field_obj, working_table._parent_name,)
+                        dom = _rec_get(ids2, field_obj, working_table._parent_name, left=left)
+                        print 'Diff', dom, field._obj
                     else:
                         dom = _rec_get(ids2, working_table, left)
+                        print 'Same', dom
                     self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
                 else:
                     if isinstance(right, basestring):
