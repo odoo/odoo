@@ -187,10 +187,10 @@ class wizard_base_setup(wizard.interface):
         form=data['form']
         if 'profile' in data['form'] and data['form']['profile'] > 0:
             module_obj=pool.get('ir.module.module')
-            module_obj.state_change(cr, uid, [data['form']['profile']], 'to install', context)
+            module_obj.state_update(cr, uid, [data['form']['profile']], 'to install', ['uninstalled'], context)
         if 'charts' in data['form'] and data['form']['charts'] > 0:
             module_obj=pool.get('ir.module.module')
-            module_obj.state_change(cr, uid, [data['form']['charts']], 'to install', context)
+            module_obj.state_update(cr, uid, [data['form']['charts']], 'to install', ['uninstalled'], context)
 
         company_obj=pool.get('res.company')
         partner_obj=pool.get('res.partner')
