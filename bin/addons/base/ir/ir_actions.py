@@ -299,6 +299,9 @@ class ir_model_fields(osv.osv):
             context={}
             return super(ir_model_fields, self).name_search(cr, uid, name, args, operator, context, limit)
         
+        if context.get('key') != 'server_action':
+            return super(ir_model_fields, self).name_search(cr, uid, name, args, operator, context, limit)
+        
         result = []
         obj = self.pool.get('ir.model.fields')
         ids = obj.search(cr, uid, args)
