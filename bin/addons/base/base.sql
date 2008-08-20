@@ -43,8 +43,7 @@ CREATE TABLE ir_model_fields (
   state varchar(64) default 'base',
   view_load boolean,
   relate boolean default False,
-  primary key(id),
-  group_name varchar(128)
+  primary key(id)
 );
 
 
