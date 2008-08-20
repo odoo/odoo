@@ -318,7 +318,12 @@ class ir_model_fields(osv.osv):
         for rs in result:
             obj.write(cr, uid, [rs[0]], {'complete_name':rs[1]})
         
-        #result = super(ir_model_fields, self).name_search(cr, uid, name, [['complete_name','ilike',name]], operator, context, limit)
+        iids = []
+        for rs in result:
+            iids.append(rs[0])
+            
+        result = super(ir_model_fields, self).name_search(cr, uid, name, [('complete_name','ilike',name), ('id','in',iids)], operator, context, limit)
+        
         return result
 
 ir_model_fields()
