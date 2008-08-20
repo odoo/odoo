@@ -330,6 +330,7 @@ class ir_model_fields(osv.osv):
         return result
 
 ir_model_fields()
+
 ##
 # Actions that are run on the server side
 #
@@ -379,11 +380,6 @@ class actions_server(osv.osv):
 """
     }
 
-#    def on_change_model(self, cr, uid, ids, model_id):
-#        print '**************** : method called'
-#        res = {'value' : {'address': [('key1','Email Value One')]} }
-#        return res
-
     #
     # Context should contains:
     #   ids : original ids
@@ -411,14 +407,23 @@ class actions_server(osv.osv):
                 user = config['email_from']
                 subject = action.name
                 
-                #TODO : Apply Mail merge in to the Content of the Email
-                print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ',context
+                obj_pool = self.pool.get(action.model_id.model)
+                id = context.get('active_id')
+                obj = obj_pool.browse(cr, uid, id)
+                
+                fields = action.address.complete_name.split('/')
+                for field in fields:
+                    obj = getattr(obj, field)
+                
+                address = obj
                 
                 body = action.message
-                if tools.email_send_attach(user, action.address, subject, body, debug=False) == True:
-                    logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (action.address))
+                #TODO : Apply Mail merge in to the Content of the Email
+                
+                if tools.email_send_attach(user, address, subject, body, debug=True) == True:
+                    logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (address))
                 else:
-                    logger.notifyChannel('email', netsvc.LOG_ERROR, 'Failed to send email to : %s' % (action.address))
+                    logger.notifyChannel('email', netsvc.LOG_ERROR, 'Failed to send email to : %s' % (address))
 
             if action.state == 'trigger':
                 wf_service = netsvc.LocalService("workflow")
