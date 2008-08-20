@@ -267,41 +267,27 @@ class module(osv.osv):
                         _('You try to remove a module that is installed or will be installed'))
         return super(module, self).unlink(cr, uid, ids, context=context)
 
-    def state_change(self, cr, uid, ids, newstate, context={}, level=50):
+    def state_update(self, cr, uid, ids, newstate, states_to_update, context={}, level=50):
         if level<1:
-            raise Exception, _('Recursion error in modules dependencies !')
+            raise orm.except_orm(_('Error'), _('Recursion error in modules dependencies !'))
         demo = True
         for module in self.browse(cr, uid, ids):
             mdemo = True
             for dep in module.dependencies_id:
-                ids2 = self.search(cr, uid, [('name','=',dep.name)])
-                mdemo = self.state_change(cr, uid, ids2, newstate, context, level-1,)\
-                        and mdemo
+                if dep.state == 'unknown':
+                    raise orm.except_orm(_('Error'), _('Unmet dependency: %s') % (dep.name,))
+                if dep.state != newstate:
+                    ids2 = self.search(cr, uid, [('name','=',dep.name)])
+                    mdemo = self.state_update(cr, uid, ids2, newstate, states_to_update, context, level-1,) and mdemo
             if not module.dependencies_id:
                 mdemo = module.demo
-            if module.state == 'uninstalled':
+            if module.state in states_to_update:
                 self.write(cr, uid, [module.id], {'state': newstate, 'demo':mdemo})
             demo = demo and mdemo
         return demo
 
-    def state_upgrade(self, cr, uid, ids, newstate, context=None, level=50):
-        dep_obj = self.pool.get('ir.module.module.dependency')
-        if level<1:
-            raise Exception, _('Recursion error in modules dependencies !')
-        for module in self.browse(cr, uid, ids):
-            dep_ids = dep_obj.search(cr, uid, [('name', '=', module.name)])
-            if dep_ids:
-                ids2 = []
-                for dep in dep_obj.browse(cr, uid, dep_ids):
-                    if dep.module_id.state != 'to upgrade':
-                        ids2.append(dep.module_id.id)
-                self.state_upgrade(cr, uid, ids2, newstate, context, level)
-            if module.state == 'installed':
-                self.write(cr, uid, module.id, {'state': newstate})
-        return True
-
     def button_install(self, cr, uid, ids, context={}):
-        return self.state_change(cr, uid, ids, 'to install', context)
+        return self.state_update(cr, uid, ids, 'to install', ['uninstalled'], context)
 
     def button_install_cancel(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'uninstalled', 'demo':False})
@@ -327,7 +313,7 @@ class module(osv.osv):
         self.write(cr, uid, ids, {'state': 'installed'})
         return True
     def button_upgrade(self, cr, uid, ids, context=None):
-        return self.state_upgrade(cr, uid, ids, 'to upgrade', context)
+        return self.state_update(cr, uid, ids, 'to upgrade', ['installed'], context)
     def button_upgrade_cancel(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'installed'})
         return True
