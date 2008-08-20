@@ -1059,6 +1059,8 @@
 							<separator colspan="4" string="Email Configuration"/>
 							<field name="address" domain="[('model_id','=',model_id)]"/>
 							<field name="message" select="2" colspan="4"/>
+							<newline/>
+							<label colspan="4" string="Use o to access the current object, you can use the any attributes which is belongs to current selected obect with o, i.e. o.partner_id.name for Invoice Object"/>
 						</page>
 						
 						<page string="Other Actions" attrs="{'invisible':[('state','!=','other')]}">
@@ -1091,7 +1093,7 @@
             <field name="res_model">ir.actions.server</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_server_action_tree"/>
-            <field name="context">{'key':'myval'}</field>
+            <field name="context">{'key':'server_action'}</field>
         </record>
         <menuitem action="action_server_action" id="menu_server_action" parent="base.next_id_6"/>
 		

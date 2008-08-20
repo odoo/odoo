@@ -64,6 +64,7 @@ class configmanager(object):
             'secure': False,
             'smtp_server': 'localhost',
             'smtp_user': False,
+            'smtp_port':25,
             'smtp_password': False,
             'stop_after_init': False,   # this will stop the server after initialization
             'price_accuracy': 2,
@@ -96,8 +97,10 @@ class configmanager(object):
         parser.add_option('--debug', dest='debug_mode', action='store_true', default=False, help='enable debug mode')
         parser.add_option("--assert-exit-level", dest='assert_exit_level', help="specify the level at which a failed assertion will stop the server " + str(assert_exit_levels))
         parser.add_option("-S", "--secure", dest="secure", action="store_true", help="launch server over https instead of http", default=False)
+        
         parser.add_option('--email-from', dest='email_from', default='', help='specify the SMTP email address for sending email')
         parser.add_option('--smtp', dest='smtp_server', default='', help='specify the SMTP server for sending email')
+        parser.add_option('--smtp-port', dest='smtp_port', default='25', help='specify the SMTP port')
         parser.add_option('--smtp-ssl', dest='smtp_ssl', default='', help='specify the SMTP server support SSL or not')
         parser.add_option('--smtp-user', dest='smtp_user', default='', help='specify the SMTP username for sending email')
         parser.add_option('--smtp-password', dest='smtp_password', default='', help='specify the SMTP password for sending email')
@@ -156,7 +159,7 @@ class configmanager(object):
             self.options['pidfile'] = False
         
         for arg in ('interface', 'port', 'db_name', 'db_user', 'db_password', 'db_host',
-                'db_port', 'logfile', 'pidfile', 'secure', 'smtp_ssl', 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy', 'netinterface', 'netport', 'db_maxconn', 'import_partial', 'addons_path'):
+                'db_port', 'logfile', 'pidfile', 'secure', 'smtp_ssl', 'smtp_port', 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'price_accuracy', 'netinterface', 'netport', 'db_maxconn', 'import_partial', 'addons_path'):
             if getattr(opt, arg):
                 self.options[arg] = getattr(opt, arg)
 

@@ -270,58 +270,67 @@ def model_get(self, cr, uid, context={}):
         
     return res
 
-#class ir_model_fields(osv.osv):
-#    _inherit = 'ir.model.fields'
-#    _rec_name = 'complete_name'
-#    _columns = {
-#        'complete_name': fields.char('Complete Name', required=True, size=64, select=1),
-#    }
-#
-#    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=80):
-#        def get_fields(cr, uid, field, rel):
-#            result = []
-#            mobj = self.pool.get('ir.model')
-#            id = mobj.search(cr, uid, [('model','=',rel)])
-#            
-#            obj = self.pool.get('ir.model.fields')
-#            ids = obj.search(cr, uid, [('model_id','in',id)])
-#            records = obj.read(cr, uid, ids)
-#            for record in records:
-#                id = record['id']
-#                fld = field + '/' + record['name']
-#                
-#                result.append((id, fld))
-#            return result
-#        
-#        if not args:
-#            args=[]
-#        if not context:
-#            context={}
-#            return super(ir_model_fields, self).name_search(cr, uid, name, args, operator, context, limit)
-#        
-#        result = []
-#        obj = self.pool.get('ir.model.fields')
-#        ids = obj.search(cr, uid, args)
-#        records = obj.read(cr, uid, ids)
-#        for record in records:
-#            id = record['id']
-#            field = record['name']
-#            
-#            if record['ttype'] == 'many2one':
-#                rel = record['relation']
-#                res = get_fields(cr, uid, field, record['relation'])
-#                for rs in res:
-#                    result.append(rs)
-#
-#            result.append((id, field))
-#        
-#        for rs in result:
-#            obj.write(cr, uid, [rs[0]], {'complete_name':rs[1]})
-#        
-#        #result = super(ir_model_fields, self).name_search(cr, uid, name, [['complete_name','ilike',name]], operator, context, limit)
-#        return result
-#
-#ir_model_fields()
+class ir_model_fields(osv.osv):
+    _inherit = 'ir.model.fields'
+    _rec_name = 'complete_name'
+    _columns = {
+        'complete_name': fields.char('Complete Name', required=True, size=64, select=1),
+    }
+
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=80):
+        def get_fields(cr, uid, field, rel):
+            result = []
+            mobj = self.pool.get('ir.model')
+            id = mobj.search(cr, uid, [('model','=',rel)])
+            
+            obj = self.pool.get('ir.model.fields')
+            ids = obj.search(cr, uid, [('model_id','in',id)])
+            records = obj.read(cr, uid, ids)
+            for record in records:
+                id = record['id']
+                fld = field + '/' + record['name']
+                
+                result.append((id, fld))
+            return result
+        
+        if not args:
+            args=[]
+        if not context:
+            context={}
+            return super(ir_model_fields, self).name_search(cr, uid, name, args, operator, context, limit)
+        
+        if context.get('key') != 'server_action':
+            return super(ir_model_fields, self).name_search(cr, uid, name, args, operator, context, limit)
+        
+        result = []
+        obj = self.pool.get('ir.model.fields')
+        ids = obj.search(cr, uid, args)
+        records = obj.read(cr, uid, ids)
+        for record in records:
+            id = record['id']
+            field = record['name']
+            
+            if record['ttype'] == 'many2one':
+                rel = record['relation']
+                res = get_fields(cr, uid, field, record['relation'])
+                for rs in res:
+                    result.append(rs)
+
+            result.append((id, field))
+        
+        for rs in result:
+            obj.write(cr, uid, [rs[0]], {'complete_name':rs[1]})
+        
+        iids = []
+        for rs in result:
+            iids.append(rs[0])
+            
+        result = super(ir_model_fields, self).name_search(cr, uid, name, [('complete_name','ilike',name), ('id','in',iids)], operator, context, limit)
+        
+        return result
+
+ir_model_fields()
+
 ##
 # Actions that are run on the server side
 #
@@ -371,11 +380,6 @@ class actions_server(osv.osv):
 """
     }
 
-#    def on_change_model(self, cr, uid, ids, model_id):
-#        print '**************** : method called'
-#        res = {'value' : {'address': [('key1','Email Value One')]} }
-#        return res
-
     #
     # Context should contains:
     #   ids : original ids
@@ -403,14 +407,23 @@ class actions_server(osv.osv):
                 user = config['email_from']
                 subject = action.name
                 
-                #TODO : Apply Mail merge in to the Content of the Email
-                print '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ',context
+                obj_pool = self.pool.get(action.model_id.model)
+                id = context.get('active_id')
+                obj = obj_pool.browse(cr, uid, id)
+                
+                fields = action.address.complete_name.split('/')
+                for field in fields:
+                    obj = getattr(obj, field)
+                
+                address = obj
                 
                 body = action.message
-                if tools.email_send_attach(user, action.address, subject, body, debug=False) == True:
-                    logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (action.address))
+                #TODO : Apply Mail merge in to the Content of the Email
+                
+                if tools.email_send_attach(user, address, subject, body, debug=False) == True:
+                    logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (address))
                 else:
-                    logger.notifyChannel('email', netsvc.LOG_ERROR, 'Failed to send email to : %s' % (action.address))
+                    logger.notifyChannel('email', netsvc.LOG_ERROR, 'Failed to send email to : %s' % (address))
 
             if action.state == 'trigger':
                 wf_service = netsvc.LocalService("workflow")
