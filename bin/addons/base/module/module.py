@@ -266,23 +266,6 @@ class module(osv.osv):
                 raise orm.except_orm(_('Error'),
                         _('You try to remove a module that is installed or will be installed'))
         return super(module, self).unlink(cr, uid, ids, context=context)
-
-    def state_change(self, cr, uid, ids, newstate, context={}, level=50):
-        if level<1:
-            raise Exception, _('Recursion error in modules dependencies !')
-        demo = True
-        for module in self.browse(cr, uid, ids):
-            mdemo = True
-            for dep in module.dependencies_id:
-                ids2 = self.search(cr, uid, [('name','=',dep.name)])
-                mdemo = self.state_change(cr, uid, ids2, newstate, context, level-1,)\
-                        and mdemo
-            if not module.dependencies_id:
-                mdemo = module.demo
-            if module.state == 'uninstalled':
-                self.write(cr, uid, [module.id], {'state': newstate, 'demo':mdemo})
-            demo = demo and mdemo
-        return demo
     
     def state_update(self, cr, uid, ids, newstate, states_to_update, context={}, level=50):
         if level<1:
