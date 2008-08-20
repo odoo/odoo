@@ -420,7 +420,7 @@ class actions_server(osv.osv):
                 body = action.message
                 #TODO : Apply Mail merge in to the Content of the Email
                 
-                if tools.email_send_attach(user, address, subject, body, debug=True) == True:
+                if tools.email_send_attach(user, address, subject, body, debug=False) == True:
                     logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (address))
                 else:
                     logger.notifyChannel('email', netsvc.LOG_ERROR, 'Failed to send email to : %s' % (address))
