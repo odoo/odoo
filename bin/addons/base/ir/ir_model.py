@@ -121,7 +121,7 @@ class ir_model_fields(osv.osv):
 
         'groups': fields.many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id', 'Groups'),
         'view_load': fields.boolean('View Auto-Load'),
-        'complete_name': fields.char('Complete Name', required=True, size=64, select=1),
+        'group_name': fields.char('Group Name', size=128),
     }
     _defaults = {
         'relate': lambda *a: 0,
