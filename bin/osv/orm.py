@@ -594,6 +594,9 @@ class orm_template(object):
         done = 0
 
         initial_size = len(datas)
+        if config.get('import_partial', False) and filename:
+            data = pickle.load(file(config.get('import_partial')))
+            original_value =  data['files'].get(filename, 0)
         counter = 0
         while len(datas):
             counter += 1
@@ -613,7 +616,7 @@ class orm_template(object):
                 self.write(cr, uid, [id], translate[lang], context2)
             if config.get('import_partial', False) and filename and (not (counter%100)) :
                 data = pickle.load(file(config.get('import_partial')))
-                data[filename] = initial_size - len(datas) + data.get(filename, 0)
+                data['files'][filename] = initial_size - len(datas) + original_value
                 pickle.dump(data, file(config.get('import_partial'),'wb'))
                 cr.commit()
 

@@ -729,17 +729,20 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
     reader = csv.reader(input, quotechar='"', delimiter=',')
     fields = reader.next()
 
+    fname_partial = ""
     if config.get('import_partial'):
         fname_partial = module + '/'+ fname
         if not os.path.isfile(config.get('import_partial')):
-            pickle.dump({}, file(config.get('import_partial'),'w+'))
-        data = pickle.load(file(config.get('import_partial')))
-        if fname_partial in data:
-            if not data[fname_partial]:
-                return
-            else:
-                for i in range(data[fname_partial]):
-                    reader.next()
+            pickle.dump({'files':{},'ids':{module:idref}}, file(config.get('import_partial'),'w+'))
+        else:
+            data = pickle.load(file(config.get('import_partial')))
+            if fname_partial in data['files']:
+                #idref.update(data['ids'][module])
+                if not data['files'][fname_partial]:
+                    return
+                else:
+                    for i in range(data['files'][fname_partial]):
+                        reader.next()
 
     if not (mode == 'init' or 'id' in fields):
         return
@@ -754,7 +757,8 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
 
     if config.get('import_partial'):
         data = pickle.load(file(config.get('import_partial')))
-        data[fname_partial] = 0
+        data['files'][fname_partial] = 0
+        #data['ids'][module] = idref
         pickle.dump(data, file(config.get('import_partial'),'wb'))
 
 #
