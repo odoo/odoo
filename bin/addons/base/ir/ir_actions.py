@@ -33,6 +33,7 @@ import tools
 import time
 from tools.config import config
 import netsvc
+import re
 
 class actions(osv.osv):
     _name = 'ir.actions.actions'
@@ -377,19 +378,51 @@ class actions_server(osv.osv):
 """
     }
     
-    def get_address(self, cr, uid, action):
+    def get_field_value(self, cr, uid, action, context):
         obj_pool = self.pool.get(action.model_id.model)
         id = context.get('active_id')
         obj = obj_pool.browse(cr, uid, id)
         
-        fields = action.address.complete_name.split('/')
+        fields = None
+        
+        if '/' in action.address.complete_name:
+            fields = action.address.complete_name.split('/')
+        elif '.' in action.address.complete_name:
+            fields = action.address.complete_name.split('.')
+            
         for field in fields:
-            obj = getattr(obj, field)
+            try:
+                obj = getattr(obj, field)
+            except Exception,e :
+                logger.notifyChannel('Workflow', netsvc.LOG_ERROR, 'Failed to parse : %s' % (match.group()))
         
         return obj
 
-    def merge_message(self, cr, uid, action):
-        return action.message
+    def merge_message(self, cr, uid, action, context):
+        logger = netsvc.Logger()
+        def merge(match):
+            
+            obj_pool = self.pool.get(action.model_id.model)
+            id = context.get('active_id')
+            obj = obj_pool.browse(cr, uid, id)
+        
+            field = match.group()
+            field = field.replace('[','')
+            field = field.replace(']','')
+            field = field.strip()
+
+            fields = field.split('.')
+            for field in fields:
+                try:
+                    obj = getattr(obj, field)
+                except Exception,e :
+                    logger.notifyChannel('Workflow', netsvc.LOG_ERROR, 'Failed to parse : %s' % (match.group()))
+            
+            return str(obj)
+        
+        com = re.compile('\[\[(.+?)\]\]')
+        message = com.sub(merge, str(action.message))
+        return message
     
     #
     # Context should contains:
@@ -418,8 +451,8 @@ class actions_server(osv.osv):
                 user = config['email_from']
                 subject = action.name
                 
-                address = self.get_address(cr, uid, action)
-                body = self.merge_message(cr, uid, action)
+                address = self.get_field_value(cr, uid, action, context)
+                body = self.merge_message(cr, uid, action, context)
                 #TODO : Apply Mail merge in to the Content of the Email
                 
                 if tools.email_send_attach(user, address, subject, body, debug=False) == True:

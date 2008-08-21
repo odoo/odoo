@@ -1055,12 +1055,12 @@
 		                    <field name="trigger_name" select="2"/>
 						</page>
 						
-						<page string="Email" attrs="{'invisible':[('state','=','python'),('state','=','dummy'),('state','=','trigger'), ('state','=','object_create'), ('state','=','object_write'), ('state','=','client_action'), ('state','=','other')]}">
+						<page string="Email / SMS" attrs="{'invisible':[('state','=','python'),('state','=','dummy'),('state','=','trigger'), ('state','=','object_create'), ('state','=','object_write'), ('state','=','client_action'), ('state','=','other')]}">
 							<separator colspan="4" string="Email Configuration"/>
 							<field name="address" domain="[('model_id','=',model_id)]"/>
 							<field name="message" select="2" colspan="4"/>
 							<newline/>
-							<label colspan="4" string="Use o to access the current object, you can use the any attributes which is belongs to current selected obect with o, i.e. o.partner_id.name for Invoice Object"/>
+							<label colspan="4" string="Access all the fields related to the current object easily just by defining name of the attribute, i.e. [[partner_id.name]] for Invoice Object"/>
 						</page>
 						
 						<page string="Other Actions" attrs="{'invisible':[('state','!=','other')]}">

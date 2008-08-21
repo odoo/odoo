@@ -394,7 +394,7 @@ def email_send_attach(email_from, email_to, subject, body, email_cc=None, email_
     if tinycrm:
         msg['Message-Id'] = '<'+str(time.time())+'-tinycrm-'+str(tinycrm)+'@'+socket.gethostname()+'>'
     msg['Date'] = formatdate(localtime=True)
-    msg.attach( MIMEText(body or '', _charset='utf-8') )
+    msg.attach( MIMEText(body or '', _charset='utf-8', _subtype="html"))
     for (fname,fcontent) in attach:
         part = MIMEBase('application', "octet-stream")
         part.set_payload( fcontent )
