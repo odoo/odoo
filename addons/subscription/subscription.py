@@ -42,7 +42,7 @@ class subscription_document(osv.osv):
     _columns = {
         'name': fields.char('Name', size=60, required=True),
         'active': fields.boolean('Active'),
-        'model': fields.many2one('ir.model', 'Model', required=True),
+        'model': fields.many2one('ir.model', 'Object', required=True),
         'field_ids': fields.one2many('subscription.document.fields', 'document_id', 'Fields')
     }
     _defaults = {

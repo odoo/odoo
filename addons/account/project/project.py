@@ -35,7 +35,7 @@ from osv import fields
 from osv import osv
 
 #
-# Model definition
+# Object definition
 #
 
 class account_analytic_account(osv.osv):

@@ -53,7 +53,7 @@ class processus_node(osv.osv):
         'kind': fields.selection([('state','State'),('router','Router'),('subflow','Subflow')],'Kind of Node', required=True),
         'menu_id': fields.many2one('ir.ui.menu', 'Related Menu'),
         'note': fields.text('Notes'),
-        'model_id': fields.many2one('ir.model', 'Model', ondelete='set null'),
+        'model_id': fields.many2one('ir.model', 'Object', ondelete='set null'),
         'model_states': fields.char('States Expression', size=128),
         'flow_start': fields.boolean('Starting Flow'),
         'transition_in': fields.one2many('processus.transition', 'node_to_id', 'Starting Transitions'),
