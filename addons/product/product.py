@@ -262,7 +262,7 @@ class product_template(osv.osv):
         'purchase_ok': fields.boolean('Can be Purchased', help="Determine if the product is visible in the list of products within a selection from a purchase order line."),
         'uom_id': fields.many2one('product.uom', 'Default UOM', required=True),
         'uom_po_id': fields.many2one('product.uom', 'Purchase UOM', required=True),
-        'state': fields.selection([('draft', 'In Development'),('sellable','In Production'),('end','End of Lifecycle'),('obsolete','Obsolete')], 'Status', help="Tells the user if he can use the product or not."),
+        'state': fields.selection([('',''),('draft', 'In Development'),('sellable','In Production'),('end','End of Lifecycle'),('obsolete','Obsolete')], 'Status', help="Tells the user if he can use the product or not."),
         'uos_id' : fields.many2one('product.uom', 'Unit of Sale',
             help='Keep empty to use the default UOM'),
         'uos_coeff': fields.float('UOM -> UOS Coeff', digits=(16,4),
