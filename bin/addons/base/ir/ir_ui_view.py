@@ -86,7 +86,6 @@ class view(osv.osv):
             ids = [ids]
 
         result = super(view, self).read(cr, uid, ids, fields, context, load)
-        print '************************** : ',result
         
         for rs in result:
             if rs.get('model') == 'board.board':

@@ -279,6 +279,7 @@ class ir_model_fields(osv.osv):
     }
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=80):
+
         def get_fields(cr, uid, field, rel):
             result = []
             mobj = self.pool.get('ir.model')
