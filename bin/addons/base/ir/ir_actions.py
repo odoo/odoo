@@ -376,7 +376,21 @@ class actions_server(osv.osv):
 # If you plan to return an action, assign: action = {...}
 """
     }
+    
+    def get_address(self, cr, uid, action):
+        obj_pool = self.pool.get(action.model_id.model)
+        id = context.get('active_id')
+        obj = obj_pool.browse(cr, uid, id)
+        
+        fields = action.address.complete_name.split('/')
+        for field in fields:
+            obj = getattr(obj, field)
+        
+        return obj
 
+    def merge_message(self, cr, uid, action):
+        return action.message
+    
     #
     # Context should contains:
     #   ids : original ids
@@ -404,17 +418,8 @@ class actions_server(osv.osv):
                 user = config['email_from']
                 subject = action.name
                 
-                obj_pool = self.pool.get(action.model_id.model)
-                id = context.get('active_id')
-                obj = obj_pool.browse(cr, uid, id)
-                
-                fields = action.address.complete_name.split('/')
-                for field in fields:
-                    obj = getattr(obj, field)
-                
-                address = obj
-                
-                body = action.message
+                address = self.get_address(cr, uid, action)
+                body = self.merge_message(cr, uid, action)
                 #TODO : Apply Mail merge in to the Content of the Email
                 
                 if tools.email_send_attach(user, address, subject, body, debug=False) == True:
