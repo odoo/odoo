@@ -5,6 +5,10 @@
 <!--
  Users Groups
 -->
+    <record model="res.groups" id="group_system">
+        <field name="name">System</field>
+    </record>
+    
     <record model="res.groups" id="group_erp_manager">
         <field name="name">ERP Manager</field>
     </record>
@@ -19,6 +23,10 @@
 
     <record model="res.groups" id="group_request">
         <field name="name">Request</field>
+    </record>
+
+    <record model="res.groups" id="group_cron">
+        <field name="name">Cron Jobs</field>
     </record>
     
     <record model="res.groups" id="group_extended">
@@ -261,6 +269,7 @@
 <!--
  Access
 -->
+
 <!--Don't remove after-->
     <record model="ir.model.access" id="access_ir_actions_employee">
         <field name="name">ir.actions.actions Employee</field>
@@ -281,6 +290,96 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
+    
+    <record model="ir.model.access" id="access_ir_actions_act_window_employee">
+        <field name="name">ir.actions.act_window_close System</field>
+        <field model="ir.model" name="model_id" search="[('model', '=', 'ir.actions.act_window_close')]"/>
+        <field name="group_id" ref="group_system"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    
+    <record model="ir.model.access" id="access_ir_actions_act_window_employee">
+        <field name="name">ir.actions.act_window_close System</field>
+        <field model="ir.model" name="model_id" search="[('model', '=', 'ir.actions.report.xml')]"/>
+        <field name="group_id" ref="group_system"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    
+    <record model="ir.model.access" id="access_ir_actions_act_window_employee">
+        <field name="name">ir.actions.act_window_close System</field>
+        <field model="ir.model" name="model_id" search="[('model', '=', 'ir.actions.wizard')]"/>
+        <field name="group_id" ref="group_system"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    
+    <record model="ir.model.access" id="access_workflow_group_system">
+        <field name="name">workflow group_system</field>
+        <field name="model_id" model="ir.model" search="[('model', '=', 'workflow')]"/>
+        <field name="group_id" ref="group_system"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record model="ir.model.access" id="access_workflow_activity_group_system">
+        <field name="name">workflow_activity group_system</field>
+        <field name="model_id" model="ir.model" search="[('model', '=', 'workflow.activity')]"/>
+        <field name="group_id" ref="group_system"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record model="ir.model.access" id="access_workflow_instance_group_system">
+        <field name="name">workflow_instance group_system</field>
+        <field name="model_id" model="ir.model" search="[('model', '=', 'workflow.instance')]"/>
+        <field name="group_id" ref="group_system"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record model="ir.model.access" id="access_workflow_transition_group_system">
+        <field name="name">workflow_transition group_system</field>
+        <field name="model_id" model="ir.model" search="[('model', '=', 'workflow.transition')]"/>
+        <field name="group_id" ref="group_system"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record model="ir.model.access" id="access_workflow_triggers_group_system">
+        <field name="name">workflow_triggers group_system</field>
+        <field name="model_id" model="ir.model" search="[('model', '=', 'workflow.triggers')]"/>
+        <field name="group_id" ref="group_system"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+
+    <record model="ir.model.access" id="access_workflow_workitem_group_system">
+        <field name="name">workflow_workitem group_system</field>
+        <field name="model_id" model="ir.model" search="[('model', '=', 'workflow.workitem')]"/>
+        <field name="group_id" ref="group_system"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
 <!--Don't remove before-->
 
     <record model="ir.model.access" id="access_ir_act_window_group_employee">
@@ -292,7 +391,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_ir_act_window_view_group_employee">
         <field name="name">ir_act_window_view group_employee</field>
         <field name="model_id" model="ir.model" ref="model_ir_act_window_view"/>
@@ -302,7 +400,78 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
+    <record model="ir.model.access" id="access_ir_attachment_group_system">
+        <field name="name">ir_attachment group_system</field>
+        <field name="model_id" model="ir.model" ref="model_ir_attachment"/>
+        <field name="group_id" ref="group_system"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record model="ir.model.access" id="access_ir_cron_group_cron">
+        <field name="name">ir_cron group_cron</field>
+        <field name="model_id" model="ir.model" ref="model_ir_cron"/>
+        <field name="group_id" ref="group_cron"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+    <record model="ir.model.access" id="access_ir_default_group_system">
+        <field name="name">ir_default group_system</field>
+        <field name="model_id" model="ir.model" ref="model_ir_default"/>
+        <field name="group_id" ref="group_system"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record model="ir.model.access" id="access_ir_exports_group_system">
+        <field name="name">ir_exports group_system</field>
+        <field name="model_id" model="ir.model" ref="model_ir_exports"/>
+        <field name="group_id" ref="group_system"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record model="ir.model.access" id="access_ir_exports_line_group_system">
+        <field name="name">ir_exports_line group_system</field>
+        <field name="model_id" model="ir.model" ref="model_ir_exports_line"/>
+        <field name="group_id" ref="group_system"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record model="ir.model.access" id="access_ir_model_group_system">
+        <field name="name">ir_model group_system</field>
+        <field name="model_id" model="ir.model" ref="model_ir_model"/>
+        <field name="group_id" ref="group_system"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record model="ir.model.access" id="access_ir_model_access_group_system">
+        <field name="name">ir_model_access group_system</field>
+        <field name="model_id" model="ir.model" ref="model_ir_model_access"/>
+        <field name="group_id" ref="group_system"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record model="ir.model.access" id="access_ir_model_config_group_system">
+        <field name="name">ir_model_config group_system</field>
+        <field name="model_id" model="ir.model" ref="model_ir_model_config"/>
+        <field name="group_id" ref="group_system"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
     <record model="ir.model.access" id="access_ir_model_data_group_employee">
         <field name="name">ir_model_data group_employee</field>
         <field name="model_id" model="ir.model" ref="model_ir_model_data"/>
@@ -312,7 +481,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_ir_model_fields_group_employee">
         <field name="name">ir_model_fields group_employee</field>
         <field name="model_id" model="ir.model" ref="model_ir_model_fields"/>
@@ -322,7 +490,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_ir_module_category_group_employee">
         <field name="name">ir_module_category group_employee</field>
         <field name="model_id" model="ir.model" ref="model_ir_module_category"/>
@@ -332,7 +499,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_ir_module_module_group_employee">
         <field name="name">ir_module_module group_employee</field>
         <field name="model_id" model="ir.model" ref="model_ir_module_module"/>
@@ -342,7 +508,42 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
+    <record model="ir.model.access" id="access_ir_module_module_configuration_step_group_system">
+        <field name="name">ir_module_module_configuration_step group_system</field>
+        <field name="model_id" model="ir.model" ref="model_ir_module_module_configuration_step"/>
+        <field name="group_id" ref="group_system"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record model="ir.model.access" id="access_ir_module_module_configuration_wizard_group_system">
+        <field name="name">ir_module_module_configuration_wizard group_system</field>
+        <field name="model_id" model="ir.model" ref="model_ir_module_module_configuration_wizard"/>
+        <field name="group_id" ref="group_system"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record model="ir.model.access" id="access_ir_module_module_dependency_group_system">
+        <field name="name">ir_module_module_dependency group_system</field>
+        <field name="model_id" model="ir.model" ref="model_ir_module_module_dependency"/>
+        <field name="group_id" ref="group_system"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record model="ir.model.access" id="access_ir_module_repository_group_system">
+        <field name="name">ir_module_repository group_system</field>
+        <field name="model_id" model="ir.model" ref="model_ir_module_repository"/>
+        <field name="group_id" ref="group_system"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
     <record model="ir.model.access" id="access_ir_property_group_employee">
         <field name="name">ir_property group_employee</field>
         <field name="model_id" model="ir.model" ref="model_ir_property"/>
@@ -352,7 +553,24 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
+    <record model="ir.model.access" id="access_ir_report_custom_group_system">
+        <field name="name">ir_report_custom group_system</field>
+        <field name="model_id" model="ir.model" ref="model_ir_report_custom"/>
+        <field name="group_id" ref="group_system"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record model="ir.model.access" id="access_ir_report_custom_fields_group_system">
+        <field name="name">ir_report_custom_fields group_system</field>
+        <field name="model_id" model="ir.model" ref="model_ir_report_custom_fields"/>
+        <field name="group_id" ref="group_system"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
     <record model="ir.model.access" id="access_ir_rule_group_employee">
         <field name="name">ir_rule group_employee</field>
         <field name="model_id" model="ir.model" ref="model_ir_rule"/>
@@ -362,7 +580,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_ir_rule_group_group_employee">
         <field name="name">ir_rule_group group_employee</field>
         <field name="model_id" model="ir.model" ref="model_ir_rule_group"/>
@@ -372,7 +589,33 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
+    <record model="ir.model.access" id="access_ir_sequence_group_employee">
+        <field name="name">ir_sequence group_employee</field>
+        <field name="model_id" model="ir.model" ref="model_ir_sequence"/>
+        <field name="group_id" ref="group_employee"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record model="ir.model.access" id="access_ir_sequence_type_group_employee">
+        <field name="name">ir_sequence_type group_employee</field>
+        <field name="model_id" model="ir.model" ref="model_ir_sequence_type"/>
+        <field name="group_id" ref="group_employee"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record model="ir.model.access" id="access_ir_translation_group_system">
+        <field name="name">ir_translation group_system</field>
+        <field name="model_id" model="ir.model" ref="model_ir_translation"/>
+        <field name="group_id" ref="group_system"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
     <record model="ir.model.access" id="access_ir_ui_menu_group_employee">
         <field name="name">ir_ui_menu group_employee</field>
         <field name="model_id" model="ir.model" ref="model_ir_ui_menu"/>
@@ -382,7 +625,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_ir_ui_view_group_employee">
         <field name="name">ir_ui_view group_employee</field>
         <field name="model_id" model="ir.model" ref="model_ir_ui_view"/>
@@ -392,7 +634,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_ir_ui_view_sc_group_employee">
         <field name="name">ir_ui_view_sc group_employee</field>
         <field name="model_id" model="ir.model" ref="model_ir_ui_view_sc"/>
@@ -402,7 +643,15 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
+    <record model="ir.model.access" id="access_ir_values_group_erp_manager">
+        <field name="name">ir_values group_erp_manager</field>
+        <field name="model_id" model="ir.model" ref="model_ir_values"/>
+        <field name="group_id" ref="group_erp_manager"/>
+        <field name="perm_read" eval="0"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
     <record model="ir.model.access" id="access_ir_values_group_employee">
         <field name="name">ir_values group_employee</field>
         <field name="model_id" model="ir.model" ref="model_ir_values"/>
@@ -412,13 +661,30 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
-    <record model="ir.model.access" id="access_ir_values_group_erp_manager">
-        <field name="name">ir_values group_erp_manager</field>
-        <field name="model_id" model="ir.model" ref="model_ir_values"/>
-        <field name="group_id" ref="group_erp_manager"/>
-        <field name="perm_read" eval="0"/>
-        <field name="perm_write" eval="1"/>
+    <record model="ir.model.access" id="access_wizard_ir_model_menu_create_group_system">
+        <field name="name">wizard_ir_model_menu_create group_system</field>
+        <field name="model_id" model="ir.model" ref="model_wizard_ir_model_menu_create"/>
+        <field name="group_id" ref="group_system"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record model="ir.model.access" id="access_wizard_ir_model_menu_create_line_group_system">
+        <field name="name">wizard_ir_model_menu_create_line group_system</field>
+        <field name="model_id" model="ir.model" ref="model_wizard_ir_model_menu_create_line"/>
+        <field name="group_id" ref="group_system"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record model="ir.model.access" id="access_wizard_module_lang_export_group_system">
+        <field name="name">wizard_module_lang_export group_system</field>
+        <field name="model_id" model="ir.model" ref="model_wizard_module_lang_export"/>
+        <field name="group_id" ref="group_system"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>

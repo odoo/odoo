@@ -1,14 +1,4 @@
-<?xml version="1.0"?>
-<terp>
-<data noupdate="1">
-
-<!--
- Users
--->
-
-<!--
- Users Groups
--->
+<?xml version="1.0" encoding="utf-8"?><terp><data noupdate="1">
     <record model="res.groups" id="group_account_manager">
         <field name="name">Account Manager</field>
     </record>
@@ -18,175 +8,125 @@
     </record>
 
 <!--
- Objects Groups
+ Object Groups
 -->
-    <record model="ir.model" id="base.model_res_lang">
+    <record model="ir.model" id="model_res_currency">
         <field name="type">base</field>
     </record>
-
-    <record model="ir.model" id="base.model_res_request">
+    <record model="ir.model" id="model_res_partner_bank_type_field">
         <field name="type">base</field>
     </record>
-    
-    <record model="ir.model" id="base.model_res_users">
+    <record model="ir.model" id="model_res_partner_category">
         <field name="type">base</field>
     </record>
-    
-    <record model="ir.model" id="base.model_res_groups">
+    <record model="ir.model" id="model_res_partner_address">
         <field name="type">base</field>
     </record>
-    
-    <record model="ir.model" id="base.model_res_roles">
+    <record model="ir.model" id="model_res_partner">
         <field name="type">base</field>
     </record>
-    
-    <record model="ir.model" id="base.model_res_country_state">
+    <record model="ir.model" id="model_res_partner_event">
         <field name="type">base</field>
     </record>
-    
-    <record model="ir.model" id="base.model_res_config_view">
+    <record model="ir.model" id="model_res_request">
         <field name="type">base</field>
     </record>
-    
-    <record model="ir.model" id="base.model_res_request_link">
+    <record model="ir.model" id="model_res_partner_bank_type">
         <field name="type">base</field>
     </record>
-    
-    <record model="ir.model" id="base.model_res_request_history">
+    <record model="ir.model" id="model_res_lang">
         <field name="type">base</field>
     </record>
-
-    <record model="ir.model" id="base.model_res_country">
+    <record model="ir.model" id="model_res_request_link">
         <field name="type">base</field>
     </record>
-    
-    <record model="ir.model" id="base.model_res_bank">
+    <record model="ir.model" id="model_res_partner_bank">
         <field name="type">base</field>
     </record>
-    
-    <record model="ir.model" id="base.model_res_payterm">
+    <record model="ir.model" id="model_res_groups">
         <field name="type">base</field>
     </record>
-    
-    <record model="ir.model" id="base.model_res_currency">
+    <record model="ir.model" id="model_res_partner_title">
         <field name="type">base</field>
     </record>
-    
-    <record model="ir.model" id="base.model_res_currency_rate">
+    <record model="ir.model" id="model_res_partner_som">
         <field name="type">base</field>
     </record>
-    
-    <record model="ir.model" id="base.model_res_company">
+    <record model="ir.model" id="model_res_company">
         <field name="type">base</field>
     </record>
-    
-    <record model="ir.model" id="base.model_res_partner">
+    <record model="ir.model" id="model_res_partner_function">
         <field name="type">base</field>
     </record>
-    
-    <record model="ir.model" id="base.model_res_partner">
+    <record model="ir.model" id="model_res_request_history">
         <field name="type">base</field>
     </record>
-    
-    <record model="ir.model" id="base.model_res_partner_function">
+    <record model="ir.model" id="model_res_users">
         <field name="type">base</field>
     </record>
-    
-    <record model="ir.model" id="base.model_res_partner_title">
+    <record model="ir.model" id="model_res_country">
         <field name="type">base</field>
     </record>
-    
-    <record model="ir.model" id="base.model_res_partner_bank">
+    <record model="ir.model" id="model_res_partner_canal">
         <field name="type">base</field>
     </record>
-    
-    <record model="ir.model" id="base.model_res_partner_bank_type">
+    <record model="ir.model" id="model_res_country_state">
         <field name="type">base</field>
     </record>
-    
-    <record model="ir.model" id="base.model_res_partner_bank_type_field">
+    <record model="ir.model" id="model_res_currency_rate">
         <field name="type">base</field>
     </record>
-    
-    <record model="ir.model" id="base.model_res_partner_som">
+    <record model="ir.model" id="model_res_partner_event_type">
         <field name="type">base</field>
     </record>
-    
-    <record model="ir.model" id="base.model_res_partner_event">
-        <field name="type">base</field>
-    </record>
-    
-    <record model="ir.model" id="base.model_res_partner_event_type">
-        <field name="type">base</field>
-    </record>
-    
-    <record model="ir.model" id="base.model_res_partner_category">
-        <field name="type">base</field>
-    </record>
-
 <!--
- Access
+ Object Access
 -->
-    <record model="ir.model.access" id="access_res_company_group_employee">
-        <field name="name">res_company group_employee</field>
+    <record model="ir.model.access" id="access_res_company_base.group_erp_manager">
+        <field name="name">res_company base.group_erp_manager</field>
         <field name="model_id" model="ir.model" ref="model_res_company"/>
-        <field name="group_id" ref="group_employee"/>
-        <field name="perm_read" eval="1"/>
-        <field name="perm_write" eval="0"/>
-        <field name="perm_create" eval="0"/>
-        <field name="perm_unlink" eval="0"/>
-    </record>
-
-    <record model="ir.model.access" id="access_res_company_group_erp_manager">
-        <field name="name">res_company group_erp_manager</field>
-        <field name="model_id" model="ir.model" ref="model_res_company"/>
-        <field name="group_id" ref="group_erp_manager"/>
+        <field name="group_id" ref="base.group_erp_manager"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
-    <record model="ir.model.access" id="access_res_country_group_employee">
-        <field name="name">res_country group_employee</field>
+    <record model="ir.model.access" id="access_res_company_base.group_employee">
+        <field name="name">res_company base.group_employee</field>
+        <field name="model_id" model="ir.model" ref="model_res_company"/>
+        <field name="group_id" ref="base.group_employee"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record model="ir.model.access" id="access_res_country_base.group_employee">
+        <field name="name">res_country base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_res_country"/>
-        <field name="group_id" ref="group_employee"/>
+        <field name="group_id" ref="base.group_employee"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
-    <record model="ir.model.access" id="access_res_country_state_group_employee">
-        <field name="name">res_country_state group_employee</field>
+    <record model="ir.model.access" id="access_res_country_state_base.group_employee">
+        <field name="name">res_country_state base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_res_country_state"/>
-        <field name="group_id" ref="group_employee"/>
+        <field name="group_id" ref="base.group_employee"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
-    <record model="ir.model.access" id="access_res_currency_group_employee">
-        <field name="name">res_currency group_employee</field>
+    <record model="ir.model.access" id="access_res_currency_base.group_employee">
+        <field name="name">res_currency base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_res_currency"/>
-        <field name="group_id" ref="group_employee"/>
+        <field name="group_id" ref="base.group_employee"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
-    <record model="ir.model.access" id="access_res_currency_rate_group_employee">
-        <field name="name">res_currency_rate group_employee</field>
-        <field name="model_id" model="ir.model" ref="model_res_currency_rate"/>
-        <field name="group_id" ref="group_employee"/>
-        <field name="perm_read" eval="1"/>
-        <field name="perm_write" eval="0"/>
-        <field name="perm_create" eval="0"/>
-        <field name="perm_unlink" eval="0"/>
-    </record>
-
     <record model="ir.model.access" id="access_res_currency_rate_group_account_manager">
         <field name="name">res_currency_rate group_account_manager</field>
         <field name="model_id" model="ir.model" ref="model_res_currency_rate"/>
@@ -196,157 +136,267 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
-    <record model="ir.model.access" id="access_res_groups_group_employee">
-        <field name="name">res_groups group_employee</field>
-        <field name="model_id" model="ir.model" ref="model_res_groups"/>
-        <field name="group_id" ref="group_employee"/>
+    <record model="ir.model.access" id="access_res_currency_rate_base.group_employee">
+        <field name="name">res_currency_rate base.group_employee</field>
+        <field name="model_id" model="ir.model" ref="model_res_currency_rate"/>
+        <field name="group_id" ref="base.group_employee"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
-    <record model="ir.model.access" id="access_res_groups_group_erp_manager">
-        <field name="name">res_groups group_erp_manager</field>
+    <record model="ir.model.access" id="access_res_groups_base.group_erp_manager">
+        <field name="name">res_groups base.group_erp_manager</field>
         <field name="model_id" model="ir.model" ref="model_res_groups"/>
-        <field name="group_id" ref="group_erp_manager"/>
+        <field name="group_id" ref="base.group_erp_manager"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
-    <record model="ir.model.access" id="access_res_lang_group_employee">
-        <field name="name">res_lang group_employee</field>
+    <record model="ir.model.access" id="access_res_groups_base.group_employee">
+        <field name="name">res_groups base.group_employee</field>
+        <field name="model_id" model="ir.model" ref="model_res_groups"/>
+        <field name="group_id" ref="base.group_employee"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record model="ir.model.access" id="access_res_lang_base.group_employee">
+        <field name="name">res_lang base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_res_lang"/>
-        <field name="group_id" ref="group_employee"/>
+        <field name="group_id" ref="base.group_employee"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
-    <record model="ir.model.access" id="access_res_partner_group_employee">
-        <field name="name">res_partner group_employee</field>
+    <record model="ir.model.access" id="access_res_partner_group_partner_manager">
+        <field name="name">res_partner group_partner_manager</field>
         <field name="model_id" model="ir.model" ref="model_res_partner"/>
-        <field name="group_id" ref="group_employee"/>
+        <field name="group_id" ref="group_partner_manager"/>
+        <field name="perm_read" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+    <record model="ir.model.access" id="access_res_partner_base.group_employee">
+        <field name="name">res_partner base.group_employee</field>
+        <field name="model_id" model="ir.model" ref="model_res_partner"/>
+        <field name="group_id" ref="base.group_employee"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_create" eval="1"/>
-        <field name="perm_unlink" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
     </record>
-
-    <record model="ir.model.access" id="access_res_partner_address_group_employee">
-        <field name="name">res_partner_address group_employee</field>
+    <record model="ir.model.access" id="access_res_partner_address_group_partner_manager">
+        <field name="name">res_partner_address group_partner_manager</field>
         <field name="model_id" model="ir.model" ref="model_res_partner_address"/>
-        <field name="group_id" ref="group_employee"/>
+        <field name="group_id" ref="group_partner_manager"/>
+        <field name="perm_read" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+    <record model="ir.model.access" id="access_res_partner_address_base.group_employee">
+        <field name="name">res_partner_address base.group_employee</field>
+        <field name="model_id" model="ir.model" ref="model_res_partner_address"/>
+        <field name="group_id" ref="base.group_employee"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_create" eval="1"/>
-        <field name="perm_unlink" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
     </record>
-
-    <record model="ir.model.access" id="access_res_partner_bank_group_employee">
-        <field name="name">res_partner_bank group_employee</field>
+    <record model="ir.model.access" id="access_res_partner_bank_base.group_employee">
+        <field name="name">res_partner_bank base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_res_partner_bank"/>
-        <field name="group_id" ref="group_employee"/>
+        <field name="group_id" ref="base.group_employee"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record model="ir.model.access" id="access_res_partner_bank_group_partner_manager">
+        <field name="name">res_partner_bank group_partner_manager</field>
+        <field name="model_id" model="ir.model" ref="model_res_partner_bank"/>
+        <field name="group_id" ref="group_partner_manager"/>
+        <field name="perm_read" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
-    <record model="ir.model.access" id="access_res_partner_bank_type_group_employee">
-        <field name="name">res_partner_bank_type group_employee</field>
+    <record model="ir.model.access" id="access_res_partner_bank_type_group_partner_manager">
+        <field name="name">res_partner_bank_type group_partner_manager</field>
         <field name="model_id" model="ir.model" ref="model_res_partner_bank_type"/>
-        <field name="group_id" ref="group_employee"/>
+        <field name="group_id" ref="group_partner_manager"/>
+        <field name="perm_read" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+    <record model="ir.model.access" id="access_res_partner_bank_type_base.group_employee">
+        <field name="name">res_partner_bank_type base.group_employee</field>
+        <field name="model_id" model="ir.model" ref="model_res_partner_bank_type"/>
+        <field name="group_id" ref="base.group_employee"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_create" eval="1"/>
-        <field name="perm_unlink" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
     </record>
-
-    <record model="ir.model.access" id="access_res_partner_bank_type_field_group_employee">
-        <field name="name">res_partner_bank_type_field group_employee</field>
+    <record model="ir.model.access" id="access_res_partner_bank_type_field_group_partner_manager">
+        <field name="name">res_partner_bank_type_field group_partner_manager</field>
         <field name="model_id" model="ir.model" ref="model_res_partner_bank_type_field"/>
-        <field name="group_id" ref="group_employee"/>
+        <field name="group_id" ref="group_partner_manager"/>
+        <field name="perm_read" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+    <record model="ir.model.access" id="access_res_partner_bank_type_field_base.group_employee">
+        <field name="name">res_partner_bank_type_field base.group_employee</field>
+        <field name="model_id" model="ir.model" ref="model_res_partner_bank_type_field"/>
+        <field name="group_id" ref="base.group_employee"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_create" eval="1"/>
-        <field name="perm_unlink" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
     </record>
-
-    <record model="ir.model.access" id="access_res_partner_canal_group_employee">
-        <field name="name">res_partner_canal group_employee</field>
+    <record model="ir.model.access" id="access_res_partner_canal_base.group_employee">
+        <field name="name">res_partner_canal base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_res_partner_canal"/>
-        <field name="group_id" ref="group_employee"/>
+        <field name="group_id" ref="base.group_employee"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record model="ir.model.access" id="access_res_partner_canal_group_partner_manager">
+        <field name="name">res_partner_canal group_partner_manager</field>
+        <field name="model_id" model="ir.model" ref="model_res_partner_canal"/>
+        <field name="group_id" ref="group_partner_manager"/>
+        <field name="perm_read" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
-    <record model="ir.model.access" id="access_res_partner_category_group_employee">
-        <field name="name">res_partner_category group_employee</field>
+    <record model="ir.model.access" id="access_res_partner_category_base.group_employee">
+        <field name="name">res_partner_category base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_res_partner_category"/>
-        <field name="group_id" ref="group_employee"/>
+        <field name="group_id" ref="base.group_employee"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record model="ir.model.access" id="access_res_partner_category_group_partner_manager">
+        <field name="name">res_partner_category group_partner_manager</field>
+        <field name="model_id" model="ir.model" ref="model_res_partner_category"/>
+        <field name="group_id" ref="group_partner_manager"/>
+        <field name="perm_read" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
-    <record model="ir.model.access" id="access_res_partner_event_group_employee">
-        <field name="name">res_partner_event group_employee</field>
+    <record model="ir.model.access" id="access_res_partner_event_group_partner_manager">
+        <field name="name">res_partner_event group_partner_manager</field>
         <field name="model_id" model="ir.model" ref="model_res_partner_event"/>
-        <field name="group_id" ref="group_employee"/>
+        <field name="group_id" ref="group_partner_manager"/>
+        <field name="perm_read" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+    <record model="ir.model.access" id="access_res_partner_event_base.group_employee">
+        <field name="name">res_partner_event base.group_employee</field>
+        <field name="model_id" model="ir.model" ref="model_res_partner_event"/>
+        <field name="group_id" ref="base.group_employee"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_create" eval="1"/>
-        <field name="perm_unlink" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
     </record>
-
-    <record model="ir.model.access" id="access_res_partner_event_type_group_employee">
-        <field name="name">res_partner_event_type group_employee</field>
+    <record model="ir.model.access" id="access_res_partner_event_type_group_partner_manager">
+        <field name="name">res_partner_event_type group_partner_manager</field>
         <field name="model_id" model="ir.model" ref="model_res_partner_event_type"/>
-        <field name="group_id" ref="group_employee"/>
+        <field name="group_id" ref="group_partner_manager"/>
+        <field name="perm_read" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="1"/>
+    </record>
+    <record model="ir.model.access" id="access_res_partner_event_type_base.group_employee">
+        <field name="name">res_partner_event_type base.group_employee</field>
+        <field name="model_id" model="ir.model" ref="model_res_partner_event_type"/>
+        <field name="group_id" ref="base.group_employee"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_create" eval="1"/>
-        <field name="perm_unlink" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
     </record>
-
-    <record model="ir.model.access" id="access_res_partner_function_group_employee">
-        <field name="name">res_partner_function group_employee</field>
+    <record model="ir.model.access" id="access_res_partner_function_base.group_employee">
+        <field name="name">res_partner_function base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_res_partner_function"/>
-        <field name="group_id" ref="group_employee"/>
+        <field name="group_id" ref="base.group_employee"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record model="ir.model.access" id="access_res_partner_function_group_partner_manager">
+        <field name="name">res_partner_function group_partner_manager</field>
+        <field name="model_id" model="ir.model" ref="model_res_partner_function"/>
+        <field name="group_id" ref="group_partner_manager"/>
+        <field name="perm_read" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
-    <record model="ir.model.access" id="access_res_partner_som_group_employee">
-        <field name="name">res_partner_som group_employee</field>
+    <record model="ir.model.access" id="access_res_partner_som_base.group_employee">
+        <field name="name">res_partner_som base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_res_partner_som"/>
-        <field name="group_id" ref="group_employee"/>
+        <field name="group_id" ref="base.group_employee"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record model="ir.model.access" id="access_res_partner_som_group_partner_manager">
+        <field name="name">res_partner_som group_partner_manager</field>
+        <field name="model_id" model="ir.model" ref="model_res_partner_som"/>
+        <field name="group_id" ref="group_partner_manager"/>
+        <field name="perm_read" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
-    <record model="ir.model.access" id="access_res_partner_title_group_employee">
-        <field name="name">res_partner_title group_employee</field>
+    <record model="ir.model.access" id="access_res_partner_title_base.group_employee">
+        <field name="name">res_partner_title base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_res_partner_title"/>
-        <field name="group_id" ref="group_employee"/>
+        <field name="group_id" ref="base.group_employee"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
+    <record model="ir.model.access" id="access_res_partner_title_group_partner_manager">
+        <field name="name">res_partner_title group_partner_manager</field>
+        <field name="model_id" model="ir.model" ref="model_res_partner_title"/>
+        <field name="group_id" ref="group_partner_manager"/>
+        <field name="perm_read" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
+    <record model="ir.model.access" id="access_res_request_base.group_employee">
+        <field name="name">res_request base.group_employee</field>
+        <field name="model_id" model="ir.model" ref="model_res_request"/>
+        <field name="group_id" ref="base.group_employee"/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_create" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+    </record>
     <record model="ir.model.access" id="access_res_request_group_request">
         <field name="name">res_request group_request</field>
         <field name="model_id" model="ir.model" ref="model_res_request"/>
@@ -356,56 +406,40 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
-    <record model="ir.model.access" id="access_res_request_group_employee">
-        <field name="name">res_request group_employee</field>
-        <field name="model_id" model="ir.model" ref="model_res_request"/>
-        <field name="group_id" ref="group_employee"/>
-        <field name="perm_read" eval="1"/>
-        <field name="perm_write" eval="0"/>
-        <field name="perm_create" eval="0"/>
-        <field name="perm_unlink" eval="0"/>
-    </record>
-
-    <record model="ir.model.access" id="access_res_request_history_group_employee">
-        <field name="name">res_request_history group_employee</field>
+    <record model="ir.model.access" id="access_res_request_history_base.group_employee">
+        <field name="name">res_request_history base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_res_request_history"/>
-        <field name="group_id" ref="group_employee"/>
+        <field name="group_id" ref="base.group_employee"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
-    <record model="ir.model.access" id="access_res_request_link_group_employee">
-        <field name="name">res_request_link group_employee</field>
+    <record model="ir.model.access" id="access_res_request_link_base.group_employee">
+        <field name="name">res_request_link base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_res_request_link"/>
-        <field name="group_id" ref="group_employee"/>
+        <field name="group_id" ref="base.group_employee"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
-    <record model="ir.model.access" id="access_res_users_group_employee">
-        <field name="name">res_users group_employee</field>
+    <record model="ir.model.access" id="access_res_users_base.group_employee">
+        <field name="name">res_users base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_res_users"/>
-        <field name="group_id" ref="group_employee"/>
+        <field name="group_id" ref="base.group_employee"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
-    <record model="ir.model.access" id="access_res_users_group_erp_manager">
-        <field name="name">res_users group_erp_manager</field>
+    <record model="ir.model.access" id="access_res_users_base.group_erp_manager">
+        <field name="name">res_users base.group_erp_manager</field>
         <field name="model_id" model="ir.model" ref="model_res_users"/>
-        <field name="group_id" ref="group_erp_manager"/>
+        <field name="group_id" ref="base.group_erp_manager"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
-</data>
-</terp>
+</data></terp>

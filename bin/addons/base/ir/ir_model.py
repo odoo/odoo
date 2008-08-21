@@ -33,8 +33,6 @@ import ir, re
 import netsvc
 from osv.orm import except_orm
 
-from pprint import pprint
-
 import time
 import tools
 import pooler
@@ -165,7 +163,6 @@ class ir_model(osv.osv):
                         for k in req:
                             sql += '%s=%s,'%(k,req[k])
                         cr.execute("update ir_model_access set %s where id=%i"%(sql[:-1], rules[rule_len]))
-                        print "update ir_model_access set %s where id=%i"%(sql[:-1], rules[rule_len])
                     else:
                         model_name = self.pool.get('ir.model').browse(cr, user, [model_id])[0].name
                         group_name = self.pool.get('res.groups').browse(cr, user, [group_id])[0].name
@@ -184,7 +181,7 @@ class ir_model(osv.osv):
             groups = self.pool.get('res.groups').search(cr, user, [])
             groups_br = self.pool.get('res.groups').browse(cr, user, groups)
             for group in groups_br:
-                result['group_%i'%group.id] = {'string': 'Group %s'%group.name,'type': 'char','size': 7}
+                result['group_%i'%group.id] = {'string': '%s'%group.name,'type': 'char','size': 7}
         return result
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False):
@@ -316,8 +313,6 @@ class ir_model_access(osv.osv):
                 'join res_groups_users_rel gu on (gu.gid = a.group_id) '
             'where m.model=%s and gu.uid=%s', (model_name, uid,))
         r = cr.fetchall()
-        
-        print '%s in %s = %s by %i'%(mode, model_name, str(r[0][0]), uid) # FIXME: REMOVE PLEASE
         
         if not r[0][0]:
             if raise_exception:
