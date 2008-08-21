@@ -33,8 +33,8 @@ from osv import fields,osv
 class ir_default(osv.osv):
     _name = 'ir.default'
     _columns = {
-        'field_tbl': fields.char('Model',size=64),
-        'field_name': fields.char('Model field',size=64),
+        'field_tbl': fields.char('Object',size=64),
+        'field_name': fields.char('Object field',size=64),
         'value': fields.char('Default Value',size=64),
         'uid': fields.many2one('res.users', 'Users'),
         'page': fields.char('View',size=64),

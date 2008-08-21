@@ -59,7 +59,7 @@ class ir_values(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=128),
-        'model': fields.char('Model', size=128),
+        'model': fields.char('Object', size=128),
         'value': fields.text('Value'),
         'value_unpickle': fields.function(_value_unpickle, fnct_inv=_value_pickle,
             method=True, type='text', string='Value'),

@@ -60,7 +60,7 @@ class view(osv.osv):
     _name = 'ir.ui.view'
     _columns = {
         'name': fields.char('View Name',size=64,  required=True),
-        'model': fields.char('Model', size=64, required=True),
+        'model': fields.char('Object', size=64, required=True),
         'priority': fields.integer('Priority', required=True),
         'type': fields.selection((
             ('tree','Tree'),
