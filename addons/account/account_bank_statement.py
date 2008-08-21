@@ -435,7 +435,7 @@ class account_bank_statement_reconcile(osv.osv):
                     td = 'P '
             else:
                 currency_id = company_currency_id
-            res.append((o.id, '%s[%.2f/%.2f]' % (td,
+            res.append((o.id, '%s[%.2f-%.2f]' % (td,
                 res_currency_obj.compute(cursor, user, company_currency_id,
                     currency_id, o.total_entry, context=context),
                 res_currency_obj.compute(cursor, user, company_currency_id,
