@@ -237,6 +237,7 @@ class task(osv.osv):
         'sequence': lambda *a: 10,
         'active': lambda *a: True,
         'date_start': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'start_sequence': lambda *a: True
     }
     _order = "state, sequence, priority, date_deadline, id"
 
