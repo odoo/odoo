@@ -1,30 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?>
-<terp>
-<data noupdate="1">
-<!--
- Users Groups
--->
+<?xml version="1.0" encoding="utf-8"?><terp><data noupdate="1">
     <record id="group_project_manager" model="res.groups">
         <field name="name">Project Manager</field>
     </record>
 
+
 <!--
- Objects Groups
+ Object Groups
 -->
     <record model="ir.model" id="model_project_project">
         <field name="type">addons</field>
     </record>
-    
     <record model="ir.model" id="model_project_task">
         <field name="type">addons</field>
     </record>
-    
     <record model="ir.model" id="model_project_task_work">
         <field name="type">addons</field>
     </record>
-
 <!--
- Access
+ Object Access
 -->
     <record model="ir.model.access" id="access_project_project_base.group_employee">
         <field name="name">project_project base.group_employee</field>
@@ -35,7 +28,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_project_project_group_project_manager">
         <field name="name">project_project group_project_manager</field>
         <field name="model_id" model="ir.model" ref="model_project_project"/>
@@ -45,7 +37,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_project_task_base.group_employee">
         <field name="name">project_task base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_project_task"/>
@@ -55,7 +46,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_project_task_group_project_manager">
         <field name="name">project_task group_project_manager</field>
         <field name="model_id" model="ir.model" ref="model_project_task"/>
@@ -65,7 +55,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_project_task_account.group_project_member">
         <field name="name">project_task account.group_project_member</field>
         <field name="model_id" model="ir.model" ref="model_project_task"/>
@@ -75,7 +64,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_project_task_work_base.group_employee">
         <field name="name">project_task_work base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_project_task_work"/>
@@ -85,7 +73,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_project_task_work_group_project_manager">
         <field name="name">project_task_work group_project_manager</field>
         <field name="model_id" model="ir.model" ref="model_project_task_work"/>
@@ -95,7 +82,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_project_task_work_account.group_project_member">
         <field name="name">project_task_work account.group_project_member</field>
         <field name="model_id" model="ir.model" ref="model_project_task_work"/>
@@ -105,6 +91,4 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
-</data>
-</terp>
+</data></terp>

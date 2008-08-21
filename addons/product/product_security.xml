@@ -1,15 +1,28 @@
-<?xml version="1.0" encoding="utf-8"?>
-<terp>
-<data noupdate="1">
-<!--
- Groups
--->
+<?xml version="1.0" encoding="utf-8"?><terp><data noupdate="1">
     <record id="group_product_manager" model="res.groups">
         <field name="name">Product Manager</field>
     </record>
 
 <!--
- Objects Groups
+ Object Groups
+-->
+    <record model="ir.model" id="model_product_pricelist_item">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_product_pricelist">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_product_pricelist_version">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_product_product">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_product_template">
+        <field name="type">addons</field>
+    </record>
+<!--
+ Object Access
 -->
     <record model="ir.model.access" id="access_product_pricelist_base.group_employee">
         <field name="name">product_pricelist base.group_employee</field>
@@ -20,7 +33,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_product_pricelist_group_product_manager">
         <field name="name">product_pricelist group_product_manager</field>
         <field name="model_id" model="ir.model" ref="model_product_pricelist"/>
@@ -30,7 +42,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_product_pricelist_item_base.group_employee">
         <field name="name">product_pricelist_item base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_product_pricelist_item"/>
@@ -40,7 +51,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_product_pricelist_item_group_product_manager">
         <field name="name">product_pricelist_item group_product_manager</field>
         <field name="model_id" model="ir.model" ref="model_product_pricelist_item"/>
@@ -50,7 +60,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_product_pricelist_version_group_product_manager">
         <field name="name">product_pricelist_version group_product_manager</field>
         <field name="model_id" model="ir.model" ref="model_product_pricelist_version"/>
@@ -60,7 +69,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_product_pricelist_version_base.group_employee">
         <field name="name">product_pricelist_version base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_product_pricelist_version"/>
@@ -70,7 +78,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_product_product_base.group_employee">
         <field name="name">product_product base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_product_product"/>
@@ -80,7 +87,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_product_product_group_product_manager">
         <field name="name">product_product group_product_manager</field>
         <field name="model_id" model="ir.model" ref="model_product_product"/>
@@ -90,7 +96,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_product_template_base.group_employee">
         <field name="name">product_template base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_product_template"/>
@@ -100,7 +105,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_product_template_group_product_manager">
         <field name="name">product_template group_product_manager</field>
         <field name="model_id" model="ir.model" ref="model_product_template"/>
@@ -110,6 +114,4 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
-</data>
-</terp>
+</data></terp>

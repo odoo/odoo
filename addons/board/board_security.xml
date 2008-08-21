@@ -1,9 +1,4 @@
-<?xml version='1.0'?>
-<terp>
-<data>
-<!--
- Groups
--->
+<?xml version="1.0" encoding="utf-8"?><terp><data noupdate="1">
     <record model="res.groups" id="group_board">
         <field name="name">Board User</field>
     </record>
@@ -13,7 +8,19 @@
     </record>
 
 <!--
- Access
+ Object Groups
+-->
+    <record model="ir.model" id="model_board_note">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_board_board">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_board_note_type">
+        <field name="type">addons</field>
+    </record>
+<!--
+ Object Access
 -->
     <record model="ir.model.access" id="access_board_board_group_board">
         <field name="name">board_board group_board</field>
@@ -24,7 +31,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_board_board_group_board_manager">
         <field name="name">board_board group_board_manager</field>
         <field name="model_id" model="ir.model" ref="model_board_board"/>
@@ -34,7 +40,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_board_note_group_board">
         <field name="name">board_note group_board</field>
         <field name="model_id" model="ir.model" ref="model_board_note"/>
@@ -44,7 +49,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_board_note_group_board_manager">
         <field name="name">board_note group_board_manager</field>
         <field name="model_id" model="ir.model" ref="model_board_note"/>
@@ -54,7 +58,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_board_note_type_group_board">
         <field name="name">board_note_type group_board</field>
         <field name="model_id" model="ir.model" ref="model_board_note_type"/>
@@ -64,7 +67,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_board_note_type_group_board_manager">
         <field name="name">board_note_type group_board_manager</field>
         <field name="model_id" model="ir.model" ref="model_board_note_type"/>
@@ -74,6 +76,4 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
-</data>
-</terp>
+</data></terp>

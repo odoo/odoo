@@ -1,9 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<terp>
-<data noupdate="1">
-<!--
- Groups
--->
+<?xml version="1.0" encoding="utf-8"?><terp><data noupdate="1">
     <record id="group_account_invoice" model="res.groups">
         <field name="name">Financial Invoice</field>
     </record>
@@ -27,9 +22,98 @@
     <record id="group_account_payment" model="res.groups">
         <field name="name">Account Payment</field>
     </record>
-
 <!--
- Access
+ Object Groups
+-->
+    <record model="ir.model" id="model_account_invoice_tax">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_account_journal_column">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_account_move">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_account_bank_statement">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_account_journal">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_account_subscription_line">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_account_journal_view">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_account_invoice">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_account_tax">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_account_payment_term">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_account_account_type">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_account_account">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_account_move_reconcile">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_account_journal_period">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_account_bank_statement_line">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_account_payment_term_line">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_account_fiscalyear">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_account_analytic_account">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_account_model">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_account_bank_statement_reconcile_line">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_account_bank_statement_reconcile">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_account_analytic_journal">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_account_move_line">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_account_tax_code">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_account_analytic_line">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_account_invoice_line">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_account_period">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_account_model_line">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_account_subscription">
+        <field name="type">addons</field>
+    </record>
+<!--
+ Object Access
 -->
     <record model="ir.model.access" id="access_account_account_base.group_employee">
         <field name="name">account_account base.group_employee</field>
@@ -40,7 +124,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_account_account_type_base.group_employee">
         <field name="name">account_account_type base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_account_account_type"/>
@@ -50,7 +133,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_account_analytic_account_base.group_employee">
         <field name="name">account_analytic_account base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_account_analytic_account"/>
@@ -60,7 +142,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_account_analytic_journal_base.group_employee">
         <field name="name">account_analytic_journal base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_account_analytic_journal"/>
@@ -70,7 +151,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_account_analytic_line_base.group_employee">
         <field name="name">account_analytic_line base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_account_analytic_line"/>
@@ -80,7 +160,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_account_bank_statement_group_account_manager">
         <field name="name">account_bank_statement group_account_manager</field>
         <field name="model_id" model="ir.model" ref="model_account_bank_statement"/>
@@ -90,7 +169,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_account_bank_statement_line_group_account_manager">
         <field name="name">account_bank_statement_line group_account_manager</field>
         <field name="model_id" model="ir.model" ref="model_account_bank_statement_line"/>
@@ -100,7 +178,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_account_bank_statement_reconcile_group_account_manager">
         <field name="name">account_bank_statement_reconcile group_account_manager</field>
         <field name="model_id" model="ir.model" ref="model_account_bank_statement_reconcile"/>
@@ -110,7 +187,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_account_bank_statement_reconcile_line_group_account_manager">
         <field name="name">account_bank_statement_reconcile_line group_account_manager</field>
         <field name="model_id" model="ir.model" ref="model_account_bank_statement_reconcile_line"/>
@@ -120,7 +196,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_account_fiscalyear_base.group_employee">
         <field name="name">account_fiscalyear base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_account_fiscalyear"/>
@@ -130,7 +205,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_account_invoice_group_sale_manager">
         <field name="name">account_invoice group_sale_manager</field>
         <field name="model_id" model="ir.model" ref="model_account_invoice"/>
@@ -140,7 +214,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_account_invoice_line_group_sale_manager">
         <field name="name">account_invoice_line group_sale_manager</field>
         <field name="model_id" model="ir.model" ref="model_account_invoice_line"/>
@@ -150,7 +223,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_account_invoice_tax_group_sale_manager">
         <field name="name">account_invoice_tax group_sale_manager</field>
         <field name="model_id" model="ir.model" ref="model_account_invoice_tax"/>
@@ -160,7 +232,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_account_invoice_group_project_member">
         <field name="name">account_invoice group_project_member</field>
         <field name="model_id" model="ir.model" ref="model_account_invoice"/>
@@ -170,7 +241,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_account_invoice_line_group_project_member">
         <field name="name">account_invoice_line group_project_member</field>
         <field name="model_id" model="ir.model" ref="model_account_invoice_line"/>
@@ -180,7 +250,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_account_invoice_tax_group_project_member">
         <field name="name">account_invoice_tax group_project_member</field>
         <field name="model_id" model="ir.model" ref="model_account_invoice_tax"/>
@@ -190,7 +259,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_account_journal_base.group_employee">
         <field name="name">account_journal base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_account_journal"/>
@@ -200,7 +268,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_account_journal_column_base.group_employee">
         <field name="name">account_journal_column base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_account_journal_column"/>
@@ -210,7 +277,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_account_journal_period_base.group_employee">
         <field name="name">account_journal_period base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_account_journal_period"/>
@@ -220,7 +286,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_account_journal_view_base.group_employee">
         <field name="name">account_journal_view base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_account_journal_view"/>
@@ -230,7 +295,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_account_model_base.group_erp_manager">
         <field name="name">account_model base.group_erp_manager</field>
         <field name="model_id" model="ir.model" ref="model_account_model"/>
@@ -240,7 +304,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_account_model_line_base.group_erp_manager">
         <field name="name">account_model_line base.group_erp_manager</field>
         <field name="model_id" model="ir.model" ref="model_account_model_line"/>
@@ -250,7 +313,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_account_move_group_sale_manager">
         <field name="name">account_move group_sale_manager</field>
         <field name="model_id" model="ir.model" ref="model_account_move"/>
@@ -260,7 +322,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_account_move_line_group_sale_manager">
         <field name="name">account_move_line group_sale_manager</field>
         <field name="model_id" model="ir.model" ref="model_account_move_line"/>
@@ -270,7 +331,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_account_move_reconcile_group_sale_manager">
         <field name="name">account_move_reconcile group_sale_manager</field>
         <field name="model_id" model="ir.model" ref="model_account_move_reconcile"/>
@@ -280,7 +340,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_account_payment_term_group_account_payment">
         <field name="name">account_payment_term group_account_payment</field>
         <field name="model_id" model="ir.model" ref="model_account_payment_term"/>
@@ -290,7 +349,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_account_payment_term_line_group_account_payment">
         <field name="name">account_payment_term_line group_account_payment</field>
         <field name="model_id" model="ir.model" ref="model_account_payment_term_line"/>
@@ -300,7 +358,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_account_payment_term_base.group_employee">
         <field name="name">account_payment_term base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_account_payment_term"/>
@@ -310,7 +367,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_account_payment_term_line_base.group_employee">
         <field name="name">account_payment_term_line base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_account_payment_term_line"/>
@@ -320,7 +376,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_account_period_base.group_employee">
         <field name="name">account_period base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_account_period"/>
@@ -330,7 +385,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_account_subscription_base.group_erp_manager">
         <field name="name">account_subscription base.group_erp_manager</field>
         <field name="model_id" model="ir.model" ref="model_account_subscription"/>
@@ -340,7 +394,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_account_subscription_line_base.group_erp_manager">
         <field name="name">account_subscription_line base.group_erp_manager</field>
         <field name="model_id" model="ir.model" ref="model_account_subscription_line"/>
@@ -350,7 +403,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_account_tax_base.group_employee">
         <field name="name">account_tax base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_account_tax"/>
@@ -360,7 +412,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_account_tax_code_base.group_employee">
         <field name="name">account_tax_code base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_account_tax_code"/>
@@ -370,6 +421,4 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
-</data>
-</terp>
+</data></terp>

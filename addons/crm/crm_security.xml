@@ -1,9 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<terp>
-<data noupdate="1">
-<!--
- User Groups
--->
+<?xml version="1.0" encoding="utf-8"?><terp><data noupdate="1">
     <record id="group_crm_manager" model="res.groups">
         <field name="name">Customer Executive - Manager</field>
     </record>
@@ -15,28 +10,23 @@
 <!--
  Object Groups
 -->
-    <record model="ir.model" id="base.crm_case">
+    <record model="ir.model" id="model_crm_case_rule">
         <field name="type">addons</field>
     </record>
-    
-    <record model="ir.model" id="base.crm_case_log">
+    <record model="ir.model" id="model_crm_case">
         <field name="type">addons</field>
     </record>
-    
-    <record model="ir.model" id="base.crm_case_rule">
+    <record model="ir.model" id="model_crm_case_log">
         <field name="type">addons</field>
     </record>
-    
-    <record model="ir.model" id="base.crm_case_section">
+    <record model="ir.model" id="model_crm_segmentation">
         <field name="type">addons</field>
     </record>
-    
-    <record model="ir.model" id="base.crm_segmentation">
+    <record model="ir.model" id="model_crm_case_section">
         <field name="type">addons</field>
     </record>
-
 <!--
- Access
+ Object Access
 -->
     <record model="ir.model.access" id="access_crm_case_group_crm_user">
         <field name="name">crm_case group_crm_user</field>
@@ -47,27 +37,24 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
-    <record model="ir.model.access" id="access_crm_case_group_employee">
-        <field name="name">crm_case group_employee</field>
+    <record model="ir.model.access" id="access_crm_case_base.group_employee">
+        <field name="name">crm_case base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_crm_case"/>
-        <field name="group_id" ref="group_employee"/>
+        <field name="group_id" ref="base.group_employee"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
-    <record model="ir.model.access" id="access_crm_case_log_group_employee">
-        <field name="name">crm_case_log group_employee</field>
+    <record model="ir.model.access" id="access_crm_case_log_base.group_employee">
+        <field name="name">crm_case_log base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_crm_case_log"/>
-        <field name="group_id" ref="group_employee"/>
+        <field name="group_id" ref="base.group_employee"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_crm_case_log_group_crm_user">
         <field name="name">crm_case_log group_crm_user</field>
         <field name="model_id" model="ir.model" ref="model_crm_case_log"/>
@@ -77,7 +64,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_crm_case_rule_group_crm_manager">
         <field name="name">crm_case_rule group_crm_manager</field>
         <field name="model_id" model="ir.model" ref="model_crm_case_rule"/>
@@ -87,17 +73,15 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
-    <record model="ir.model.access" id="access_crm_case_rule_group_employee">
-        <field name="name">crm_case_rule group_employee</field>
+    <record model="ir.model.access" id="access_crm_case_rule_base.group_employee">
+        <field name="name">crm_case_rule base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_crm_case_rule"/>
-        <field name="group_id" ref="group_employee"/>
+        <field name="group_id" ref="base.group_employee"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_crm_case_section_group_crm_manager">
         <field name="name">crm_case_section group_crm_manager</field>
         <field name="model_id" model="ir.model" ref="model_crm_case_section"/>
@@ -107,27 +91,24 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
-    <record model="ir.model.access" id="access_crm_case_section_group_employee">
-        <field name="name">crm_case_section group_employee</field>
+    <record model="ir.model.access" id="access_crm_case_section_base.group_employee">
+        <field name="name">crm_case_section base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_crm_case_section"/>
-        <field name="group_id" ref="group_employee"/>
+        <field name="group_id" ref="base.group_employee"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
-    <record model="ir.model.access" id="access_crm_segmentation_group_employee">
-        <field name="name">crm_segmentation group_employee</field>
+    <record model="ir.model.access" id="access_crm_segmentation_base.group_employee">
+        <field name="name">crm_segmentation base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_crm_segmentation"/>
-        <field name="group_id" ref="group_employee"/>
+        <field name="group_id" ref="base.group_employee"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_crm_segmentation_group_crm_manager">
         <field name="name">crm_segmentation group_crm_manager</field>
         <field name="model_id" model="ir.model" ref="model_crm_segmentation"/>
@@ -137,6 +118,4 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
-</data>
-</terp>
+</data></terp>

@@ -1,70 +1,52 @@
-<?xml version="1.0" encoding="utf-8"?>
-<terp>
-<data>
-<!--
- Groups
--->
+<?xml version="1.0" encoding="utf-8"?><terp><data noupdate="1">
     <record id="group_production_manager" model="res.groups">
         <field name="name">Production Manager</field>
     </record>
 
 <!--
- Objects Groups
+ Object Groups
 -->
-    <record model="ir.model" id="mrp.model_mrp_bom">
+    <record model="ir.model" id="model_stock_warehouse_orderpoint">
         <field name="type">addons</field>
     </record>
-    
-    <record model="ir.model" id="mrp.model_mrp_bom_revision">
-        <field name="type">addons</field>
-    </record>
-    
-    <record model="ir.model" id="mrp.model_mrp_procurement">
-        <field name="type">addons</field>
-    </record>
-    
-    <record model="ir.model" id="mrp.model_mrp_production">
-        <field name="type">addons</field>
-    </record>
-    
-    <record model="ir.model" id="mrp.model_mrp_production_product_line">
-        <field name="type">addons</field>
-    </record>
-    
-    <record model="ir.model" id="mrp.model_mrp_production_workcenter_line">
-        <field name="type">addons</field>
-    </record>
-    
-    <record model="ir.model" id="mrp.model_mrp_property">
-        <field name="type">addons</field>
-    </record>
-    
-    <record model="ir.model" id="mrp.model_mrp_property_group">
-        <field name="type">addons</field>
-    </record>
-    
-    <record model="ir.model" id="mrp.model_mrp_routing">
-        <field name="type">addons</field>
-    </record>
-    
-    <record model="ir.model" id="mrp.model_mrp_routing_workcenter">
-        <field name="type">addons</field>
-    </record>
-    
-    <record model="ir.model" id="mrp.model_mrp_workcenter">
-        <field name="type">addons</field>
-    </record>
-    
     <record model="ir.model" id="stock.model_stock_move">
         <field name="type">addons</field>
     </record>
-    
-    <record model="ir.model" id="mrp.model_stock_warehouse_orderpoint">
+    <record model="ir.model" id="model_mrp_production_product_line">
         <field name="type">addons</field>
     </record>
-    
+    <record model="ir.model" id="model_mrp_production">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_mrp_procurement">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_mrp_workcenter">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_mrp_production_workcenter_line">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_mrp_bom">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_mrp_routing_workcenter">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_mrp_routing">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_mrp_bom_revision">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_mrp_property_group">
+        <field name="type">addons</field>
+    </record>
+    <record model="ir.model" id="model_mrp_property">
+        <field name="type">addons</field>
+    </record>
 <!--
- Access
+ Object Access
 -->
     <record model="ir.model.access" id="access_mrp_bom_group_production_manager">
         <field name="name">mrp_bom group_production_manager</field>
@@ -75,7 +57,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_mrp_bom_base.group_employee">
         <field name="name">mrp_bom base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_mrp_bom"/>
@@ -85,7 +66,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_mrp_bom_revision_base.group_employee">
         <field name="name">mrp_bom_revision base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_mrp_bom_revision"/>
@@ -95,7 +75,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_mrp_bom_revision_group_production_manager">
         <field name="name">mrp_bom_revision group_production_manager</field>
         <field name="model_id" model="ir.model" ref="model_mrp_bom_revision"/>
@@ -105,7 +84,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_mrp_procurement_base.group_employee">
         <field name="name">mrp_procurement base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_mrp_procurement"/>
@@ -115,7 +93,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_mrp_procurement_group_production_manager">
         <field name="name">mrp_procurement group_production_manager</field>
         <field name="model_id" model="ir.model" ref="model_mrp_procurement"/>
@@ -125,7 +102,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_mrp_production_base.group_employee">
         <field name="name">mrp_production base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_mrp_production"/>
@@ -135,7 +111,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_mrp_production_group_production_manager">
         <field name="name">mrp_production group_production_manager</field>
         <field name="model_id" model="ir.model" ref="model_mrp_production"/>
@@ -145,7 +120,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_mrp_production_product_line_group_production_manager">
         <field name="name">mrp_production_product_line group_production_manager</field>
         <field name="model_id" model="ir.model" ref="model_mrp_production_product_line"/>
@@ -155,7 +129,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_mrp_production_product_line_base.group_employee">
         <field name="name">mrp_production_product_line base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_mrp_production_product_line"/>
@@ -165,7 +138,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_mrp_production_workcenter_line_base.group_employee">
         <field name="name">mrp_production_workcenter_line base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_mrp_production_workcenter_line"/>
@@ -175,7 +147,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_mrp_production_workcenter_line_group_production_manager">
         <field name="name">mrp_production_workcenter_line group_production_manager</field>
         <field name="model_id" model="ir.model" ref="model_mrp_production_workcenter_line"/>
@@ -185,7 +156,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_mrp_property_base.group_employee">
         <field name="name">mrp_property base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_mrp_property"/>
@@ -195,7 +165,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_mrp_property_group_production_manager">
         <field name="name">mrp_property group_production_manager</field>
         <field name="model_id" model="ir.model" ref="model_mrp_property"/>
@@ -205,7 +174,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_mrp_property_group_base.group_employee">
         <field name="name">mrp_property_group base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_mrp_property_group"/>
@@ -215,7 +183,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_mrp_property_group_group_production_manager">
         <field name="name">mrp_property_group group_production_manager</field>
         <field name="model_id" model="ir.model" ref="model_mrp_property_group"/>
@@ -225,7 +192,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_mrp_routing_group_production_manager">
         <field name="name">mrp_routing group_production_manager</field>
         <field name="model_id" model="ir.model" ref="model_mrp_routing"/>
@@ -235,7 +201,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_mrp_routing_base.group_employee">
         <field name="name">mrp_routing base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_mrp_routing"/>
@@ -245,7 +210,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_mrp_routing_workcenter_group_production_manager">
         <field name="name">mrp_routing_workcenter group_production_manager</field>
         <field name="model_id" model="ir.model" ref="model_mrp_routing_workcenter"/>
@@ -255,7 +219,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_mrp_routing_workcenter_base.group_employee">
         <field name="name">mrp_routing_workcenter base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_mrp_routing_workcenter"/>
@@ -265,7 +228,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_mrp_workcenter_base.group_employee">
         <field name="name">mrp_workcenter base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_mrp_workcenter"/>
@@ -275,7 +237,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_mrp_workcenter_group_production_manager">
         <field name="name">mrp_workcenter group_production_manager</field>
         <field name="model_id" model="ir.model" ref="model_mrp_workcenter"/>
@@ -285,7 +246,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_stock_move_group_production_manager">
         <field name="name">stock_move group_production_manager</field>
         <field name="model_id" model="ir.model" ref="stock.model_stock_move"/>
@@ -295,7 +255,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
     <record model="ir.model.access" id="access_stock_move_base.group_employee">
         <field name="name">stock_move base.group_employee</field>
         <field name="model_id" model="ir.model" ref="stock.model_stock_move"/>
@@ -305,7 +264,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_stock_warehouse_orderpoint_base.group_employee">
         <field name="name">stock_warehouse_orderpoint base.group_employee</field>
         <field name="model_id" model="ir.model" ref="model_stock_warehouse_orderpoint"/>
@@ -315,7 +273,6 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-
     <record model="ir.model.access" id="access_stock_warehouse_orderpoint_group_production_manager">
         <field name="name">stock_warehouse_orderpoint group_production_manager</field>
         <field name="model_id" model="ir.model" ref="model_stock_warehouse_orderpoint"/>
@@ -325,6 +282,4 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-
-</data>
-</terp>
+</data></terp>
