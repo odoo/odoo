@@ -1581,5 +1581,33 @@
 
         <menuitem action="action_account_tax_template_form" id="menu_action_account_tax_template_form" parent="account_account_template_menu"/>
 
+		<!-- wizard account duplicate chart -->
+		<record id="view_wizard_account_duplicate_chart" model="ir.ui.view">
+			<field name="name">wizard.account.chart.duplicate.form</field>
+			<field name="model">wizard.account.chart.duplicate</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Duplicate Account Chart">
+						<field name="account_id"/>
+						<field name="company_id"/>
+						<newline/>
+						<group colspan="4">
+							<button icon="gtk-cancel" special="cancel" type="object" string="Cancel"/>
+	                        <button icon="gtk-ok" name="action_create" string="Create" type="object"/>
+						</group>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_wizard_account_duplicate_chart_form" model="ir.actions.act_window">
+            <field name="name">Duplicate Account Chart</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wizard.account.chart.duplicate</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        <menuitem action="action_wizard_account_duplicate_chart_form" id="menu_action_wizard_account_duplicate_chart_form" parent="account_account_menu"/>
+
     </data>
 </terp>

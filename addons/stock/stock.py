@@ -1216,7 +1216,7 @@ class stock_picking_move_wizard(osv.osv_memory):
     _columns={
         'name':fields.char('Name',size=64,invisible=True),
         #'move_lines': fields.one2many('stock.move', 'picking_id', 'Move lines',readonly=True),
-        'move_ids': fields.many2many('stock.move', 'picking_move_wizard_rel', 'picking_move_wizard_id', 'move_id', 'Move lines'),
+        'move_ids': fields.many2many('stock.move', 'picking_move_wizard_rel', 'picking_move_wizard_id', 'move_id', 'Move lines',required=True),
         'address_id' : fields.many2one('res.partner.address', 'Dest. Address',invisible=True),
         'picking_id': fields.many2one('stock.picking', 'Packing list', select=True,invisible=True),
     }
