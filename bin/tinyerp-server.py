@@ -50,7 +50,7 @@ __builtin__.__dict__['tinyerp_version_string'] = "Tiny ERP Server " + __version_
 #----------------------------------------------------------
 # python imports
 #----------------------------------------------------------
-import sys,os,signal
+import sys, os, signal
 #----------------------------------------------------------
 # ubuntu 8.04 has obsoleted `pyxml` package and installs here.
 # the path needs to be updated before any `import xml`
@@ -75,9 +75,9 @@ logger = netsvc.Logger()
 import tools
 import time
 
-if sys.platform=='win32':
+if sys.platform == 'win32':
     import mx.DateTime
-    mx.DateTime.strptime = lambda x,y: mx.DateTime.mktime(time.strptime(x, y))
+    mx.DateTime.strptime = lambda x, y: mx.DateTime.mktime(time.strptime(x, y))
 
 #os.chdir(tools.file_path_root)
 
@@ -104,9 +104,9 @@ try:
 except psycopg.OperationalError, err:
     logger.notifyChannel("init", netsvc.LOG_ERROR, "could not connect to database '%s'!" % (tools.config["db_name"],))
 
-    msg = str(err).replace("FATAL:","").strip()
+    msg = str(err).replace("FATAL:", "").strip()
     db_msg = "database \"%s\" does not exist" % (tools.config["db_name"],)
-    
+
     # Note: this is ugly but since psycopg only uses one exception for all errors
     # I don't think it's possible to do differently
     if msg == db_msg:
@@ -165,7 +165,7 @@ if tools.config['upgrade']:
         tools.config['update'][m] = 1
 
 #----------------------------------------------------------
-# import basic modules 
+# import basic modules
 #----------------------------------------------------------
 import osv, workflow, report, service
 
@@ -184,13 +184,17 @@ if tools.config['init'] or tools.config['update']:
 if tools.config["translate_out"]:
     import csv
 
-    logger.notifyChannel("init", netsvc.LOG_INFO, 'writing translation file for language %s to %s' % (tools.config["language"], tools.config["translate_out"]))
+    if tools.config["language"]:
+        msg = "language %s" % (tools.config["language"],)
+    else:
+        msg = "new language"
+    logger.notifyChannel("init", netsvc.LOG_INFO, 'writing translation file for %s to %s' % (msg, tools.config["translate_out"]))
 
     fileformat = os.path.splitext(tools.config["translate_out"])[-1][1:].lower()
     buf = file(tools.config["translate_out"], "w")
     tools.trans_export(tools.config["language"], tools.config["translate_modules"], buf, fileformat)
     buf.close()
-    
+
     logger.notifyChannel("init", netsvc.LOG_INFO, 'translation file written succesfully')
     sys.exit(0)
 
@@ -217,12 +221,12 @@ if tools.config['xmlrpc']:
         sys.exit(1)
     interface = tools.config["interface"]
     secure = tools.config["secure"]
-    
-    httpd = netsvc.HttpDaemon(interface,port, secure)
-    
+
+    httpd = netsvc.HttpDaemon(interface, port, secure)
+
     if tools.config["xmlrpc"]:
         xml_gw = netsvc.xmlrpc.RpcGateway('web-services')
-        httpd.attach("/xmlrpc", xml_gw )
+        httpd.attach("/xmlrpc", xml_gw)
         logger.notifyChannel("web-services", netsvc.LOG_INFO,
                 "starting XML-RPC" + \
                         (tools.config['secure'] and ' Secure' or '') + \
@@ -242,9 +246,10 @@ if tools.config['netrpc']:
         logger.notifyChannel("init", netsvc.LOG_ERROR, "invalid port '%s'!" % (tools.config["netport"],))
         sys.exit(1)
     netinterface = tools.config["netinterface"]
-    
+
     tinySocket = netsvc.TinySocketServerThread(netinterface, netport, False)
     logger.notifyChannel("web-services", netsvc.LOG_INFO, "starting netrpc service, port "+str(netport))
+
 
 def handler(signum, frame):
     from tools import config
@@ -259,8 +264,8 @@ def handler(signum, frame):
 
 from tools import config
 if config['pidfile']:
-    fd=open(config['pidfile'], 'w')
-    pidtext="%d" % (os.getpid())
+    fd = open(config['pidfile'], 'w')
+    pidtext = "%d" % (os.getpid())
     fd.write(pidtext)
     fd.close()
 

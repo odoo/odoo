@@ -33,7 +33,7 @@ from osv import fields,osv
 class wizard_model_menu(osv.osv_memory):
     _name = 'wizard.ir.model.menu.create'
     _columns = {
-        'model_id': fields.many2one('ir.model','Model', required=True),
+        'model_id': fields.many2one('ir.model','Object', required=True),
         'menu_id': fields.many2one('ir.ui.menu', 'Parent Menu', required=True),
         'name': fields.char('Menu Name', size=64, required=True),
         'view_ids': fields.one2many('wizard.ir.model.menu.create.line', 'wizard_id', 'Views'),

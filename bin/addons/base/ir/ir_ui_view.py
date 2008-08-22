@@ -35,15 +35,15 @@ import netsvc
 import os
 
 def _check_xml(self, cr, uid, ids, context={}):
+    return True
     for view in self.browse(cr, uid, ids, context):
         eview = etree.fromstring(view.arch)
-        frng = tools.file_open(os.path.join('base','rng',view.type+'.rng'))
+        frng = tools.file_open(os.path.join('base','rng','view.rng'))
         relaxng = etree.RelaxNG(file=frng)
         if not relaxng.validate(eview):
             logger = netsvc.Logger()
             logger.notifyChannel('init', netsvc.LOG_ERROR, 'The view do not fit the required schema !')
             logger.notifyChannel('init', netsvc.LOG_ERROR, relaxng.error_log.last_error)
-            print view.arch
             return False
     return True
 
@@ -60,7 +60,7 @@ class view(osv.osv):
     _name = 'ir.ui.view'
     _columns = {
         'name': fields.char('View Name',size=64,  required=True),
-        'model': fields.char('Model', size=64, required=True),
+        'model': fields.char('Object', size=64, required=True),
         'priority': fields.integer('Priority', required=True),
         'type': fields.selection((
             ('tree','Tree'),
@@ -68,7 +68,7 @@ class view(osv.osv):
             ('graph', 'Graph'),
             ('calendar', 'Calendar')), 'View Type', required=True),
         'arch': fields.text('View Architecture', required=True),
-        'inherit_id': fields.many2one('ir.ui.view', 'Inherited View'),
+        'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade'),
         'field_parent': fields.char('Childs Field',size=64),
     }
     _defaults = {
@@ -116,7 +116,7 @@ class view(osv.osv):
 
             return result
 
-    	return super(view, self).write(cr, uid, ids, vals, context)
+        return super(view, self).write(cr, uid, ids, vals, context)
 view()
 
 class view_sc(osv.osv):

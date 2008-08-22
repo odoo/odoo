@@ -55,7 +55,7 @@ class report_custom(osv.osv):
     _columns = {
         'name': fields.char('Report Name', size=64, required=True, translate=True),
         'type': fields.char('Report Type', size=32, required=True),
-        'model':fields.char('Model', size=64, required=True),
+        'model':fields.char('Object', size=64, required=True),
         'report_id': fields.integer('Report Ref.', required=True),
         'usage': fields.char('Action Usage', size=32),
         'multi': fields.boolean('On multiple doc.', help="If set to true, the action will not be displayed on the right toolbar of a form views.")
@@ -99,7 +99,7 @@ class report_xml(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'type': fields.char('Report Type', size=32, required=True),
-        'model': fields.char('Model', size=64, required=True),
+        'model': fields.char('Object', size=64, required=True),
         'report_name': fields.char('Internal Name', size=64, required=True),
         'report_xsl': fields.char('XSL path', size=256),
         'report_xml': fields.char('XML path', size=256),
@@ -173,8 +173,8 @@ class act_window(osv.osv):
         'view_id': fields.many2one('ir.ui.view', 'View Ref.', ondelete='cascade'),
         'domain': fields.char('Domain Value', size=250),
         'context': fields.char('Context Value', size=250),
-        'res_model': fields.char('Model', size=64),
-        'src_model': fields.char('Source model', size=64),
+        'res_model': fields.char('Object', size=64),
+        'src_model': fields.char('Source Object', size=64),
         'target': fields.selection([('current','Current Window'),('new','New Window')], 'Target Window'),
         'view_type': fields.selection((('tree','Tree'),('form','Form')),string='Type of view'),
         'view_mode': fields.char('Mode of view', size=250),
@@ -255,7 +255,83 @@ class act_url(osv.osv):
     }
 act_url()
 
-#
+def model_get(self, cr, uid, context={}):
+    wkf_pool = self.pool.get('workflow')
+    ids = wkf_pool.search(cr, uid, [])
+    osvs = wkf_pool.read(cr, uid, ids, ['osv'])
+    
+    res = []
+    mpool = self.pool.get('ir.model')
+    for osv in osvs:
+        model = osv.get('osv')
+        id = mpool.search(cr, uid, [('model','=',model)])
+        name = mpool.read(cr, uid, id)[0]['name']
+        res.append((model, name))
+        
+    return res
+
+class ir_model_fields(osv.osv):
+    _inherit = 'ir.model.fields'
+    _rec_name = 'complete_name'
+    _columns = {
+        'complete_name': fields.char('Complete Name', required=True, size=64, select=1),
+    }
+
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=80):
+        def get_fields(cr, uid, field, rel):
+            result = []
+            mobj = self.pool.get('ir.model')
+            id = mobj.search(cr, uid, [('model','=',rel)])
+            
+            obj = self.pool.get('ir.model.fields')
+            ids = obj.search(cr, uid, [('model_id','in',id)])
+            records = obj.read(cr, uid, ids)
+            for record in records:
+                id = record['id']
+                fld = field + '/' + record['name']
+                
+                result.append((id, fld))
+            return result
+        
+        if not args:
+            args=[]
+        if not context:
+            context={}
+            return super(ir_model_fields, self).name_search(cr, uid, name, args, operator, context, limit)
+        
+        if context.get('key') != 'server_action':
+            return super(ir_model_fields, self).name_search(cr, uid, name, args, operator, context, limit)
+        
+        result = []
+        obj = self.pool.get('ir.model.fields')
+        ids = obj.search(cr, uid, args)
+        records = obj.read(cr, uid, ids)
+        for record in records:
+            id = record['id']
+            field = record['name']
+            
+            if record['ttype'] == 'many2one':
+                rel = record['relation']
+                res = get_fields(cr, uid, field, record['relation'])
+                for rs in res:
+                    result.append(rs)
+
+            result.append((id, field))
+        
+        for rs in result:
+            obj.write(cr, uid, [rs[0]], {'complete_name':rs[1]})
+        
+        iids = []
+        for rs in result:
+            iids.append(rs[0])
+            
+        result = super(ir_model_fields, self).name_search(cr, uid, name, [('complete_name','ilike',name), ('id','in',iids)], operator, context, limit)
+        
+        return result
+
+ir_model_fields()
+
+##
 # Actions that are run on the server side
 #
 class actions_server(osv.osv):
@@ -274,15 +350,17 @@ class actions_server(osv.osv):
             ('object_write','Write Object'),
             ('client_action','Client Action'),
             ('other','Others Actions'),
-        ], 'Action State', required=True, size=32),
+        ], 'Action State', required=True, size=32, change_default=True),
         'code': fields.text('Python Code'),
         'sequence': fields.integer('Sequence'),
-        'model_id': fields.many2one('ir.model', 'Model', required=True),
+        'model_id': fields.many2one('ir.model', 'Object', required=True),
         'trigger_name': fields.char('Trigger Name', size=128),
-        'trigger_object': fields.char('Trigger Object', size=128),
-        'trigger_object_id': fields.char('Trigger Object ID', size=128),
+        'trigger_obj_id': fields.reference('Trigger On', selection=model_get, size=128),
+        #'trigger_object': fields.char('Trigger Object', size=128),
+        #'trigger_object_id': fields.char('Trigger Object ID', size=128),
         'message': fields.text('Message', translate=True),
-        'address': fields.char('Email Address', size=128),
+        'address': fields.many2one('ir.model.fields', 'Email From / SMS'),
+        #selection(_get_fields ,'Email / SMS', size=128),
         'child_ids': fields.one2many('ir.actions.actions', 'parent_id', 'Others Actions'),
         'usage': fields.char('Action Usage', size=32),
         'type': fields.char('Report Type', size=32, required=True),
@@ -301,6 +379,7 @@ class actions_server(osv.osv):
 # If you plan to return an action, assign: action = {...}
 """
     }
+
     #
     # Context should contains:
     #   ids : original ids
@@ -323,19 +402,59 @@ class actions_server(osv.osv):
                 exec action.code in localdict
                 if 'action' in localdict:
                     return localdict['action']
+                
             if action.state == 'email':
                 user = config['email_from']
                 subject = action.name
+                
+                obj_pool = self.pool.get(action.model_id.model)
+                id = context.get('active_id')
+                obj = obj_pool.browse(cr, uid, id)
+                
+                fields = action.address.complete_name.split('/')
+                for field in fields:
+                    obj = getattr(obj, field)
+                
+                address = obj
+                
                 body = action.message
-                if tools.email_send_attach(user, action.address, subject, body, debug=False) == True:
-                    logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (action.address))
+                #TODO : Apply Mail merge in to the Content of the Email
+                
+                if tools.email_send_attach(user, address, subject, body, debug=False) == True:
+                    logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (address))
                 else:
-                    logger.notifyChannel('email', netsvc.LOG_ERROR, 'Failed to send email to : %s' % (action.address))
+                    logger.notifyChannel('email', netsvc.LOG_ERROR, 'Failed to send email to : %s' % (address))
+
+            if action.state == 'trigger':
+                wf_service = netsvc.LocalService("workflow")
+                res = str(action.trigger_obj_id).split(',')
+                model = res[0]
+                id = res[1]
+                wf_service.trg_validate(uid, model, int(id), action.trigger_name, cr)
+                
             if action.state == 'sms':
+                #TODO: Apply mearge with the field
                 if tools.sms_send(user, password, api_id, text, to) == True:
                     logger.notifyChannel('sms', netsvc.LOG_INFO, 'SMS successfully send to : %s' % (action.address))
                 else:
                     logger.notifyChannel('sms', netsvc.LOG_ERROR, 'Failed to send SMS to : %s' % (action.address))
+                    
+            if action.state == 'other':
+                localdict = {
+                    'self': self.pool.get(action.model_id.model),
+                    'context': context,
+                    'time': time,
+                    'ids': ids,
+                    'cr': cr,
+                    'uid': uid
+                }
+                
+                for act in action.child_ids:
+                    code = """action = {'model':'%s','type':'%s', %s}""" % (action.model_id.model, act.type, act.usage)
+                    exec code in localdict
+                    if 'action' in localdict:
+                        return localdict['action']
+
         return False
 actions_server()
 

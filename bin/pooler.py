@@ -36,6 +36,7 @@ import netsvc
 db_dic = {}
 pool_dic = {}
 
+
 def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False):
     if not status:
         status={}
@@ -46,13 +47,17 @@ def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False)
         logger.notifyChannel('pooler', netsvc.LOG_INFO, 'Connecting to %s' % (db_name))
         db = sql_db.db_connect(db_name)
         db_dic[db_name] = db
-    
+
     if db_name in pool_dic:
         pool = pool_dic[db_name]
     else:
         pool = osv.osv.osv_pool()
         pool_dic[db_name] = pool
         addons.load_modules(db, force_demo, status, update_module)
+        cr = db.cursor()
+        pool.init_set(cr, False)
+        cr.commit()
+        cr.close()
 
         if not update_module:
             import report
@@ -60,10 +65,12 @@ def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False)
             pool.get('ir.cron')._poolJobs(db.dbname)
     return db, pool
 
+
 def restart_pool(db_name, force_demo=False, update_module=False):
 #   del db_dic[db_name]
     del pool_dic[db_name]
     return get_db_and_pool(db_name, force_demo, update_module=update_module)
+
 
 def close_db(db_name):
     if db_name in db_dic:
@@ -71,6 +78,7 @@ def close_db(db_name):
         del db_dic[db_name]
     if db_name in pool_dic:
         del pool_dic[db_name]
+
 
 def get_db_only(db_name):
     if db_name in db_dic:
@@ -80,9 +88,11 @@ def get_db_only(db_name):
         db_dic[db_name] = db
     return db
 
+
 def get_db(db_name):
 #   print "get_db", db_name
     return get_db_and_pool(db_name)[0]
+
 
 def get_pool(db_name, force_demo=False, status=None, update_module=False):
 #   print "get_pool", db_name
@@ -93,6 +103,7 @@ def get_pool(db_name, force_demo=False, status=None, update_module=False):
 #   print "pool", pool
     return pool
 #   return get_db_and_pool(db_name)[1]
+
 
 def init():
     global db

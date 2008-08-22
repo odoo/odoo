@@ -34,7 +34,7 @@ import tools
 
 TRANSLATION_TYPE = [
     ('field', 'Field'),
-    ('model', 'Model'),
+    ('model', 'Object'),
     ('rml', 'RML'),
     ('selection', 'Selection'),
     ('view', 'View'),

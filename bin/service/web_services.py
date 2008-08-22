@@ -56,6 +56,7 @@ class db(netsvc.Service):
         self.exportMethod(self.list)
         self.exportMethod(self.list_lang)
         self.exportMethod(self.change_admin_password)
+        self.exportMethod(self.server_version)
         self.actions = {}
         self.id = 0
         self.id_protect = threading.Semaphore()
@@ -281,6 +282,12 @@ class db(netsvc.Service):
             lang = os.path.basename(fname).split(".")[0]
             return (lang, lang_dict.get(lang, lang))
         return [lang_tuple(fname) for fname in file_list]
+
+    def server_version(self):
+        """ Return the version of the server
+            Used by the client to verify the compatibility with its own version
+        """
+        return tinyerp_version
 db()
 
 class common(netsvc.Service):

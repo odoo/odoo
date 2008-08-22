@@ -48,6 +48,8 @@ if sys.version_info[:2] < (2, 4):
 else:
     from threading import local
 
+from itertools import izip
+
 # initialize a database with base/base.sql 
 def init_db(cr):
     import addons
@@ -288,7 +290,22 @@ def flatten(list):
             r.append(e)
     return r
 
-
+def reverse_enumerate(l):
+    """Like enumerate but in the other sens
+    >>> a = ['a', 'b', 'c']
+    >>> it = reverse_enumerate(a)
+    >>> it.next()
+    (2, 'c')
+    >>> it.next()
+    (1, 'b')
+    >>> it.next()
+    (0, 'a')
+    >>> it.next()
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    StopIteration
+    """
+    return izip(xrange(len(l)-1, -1, -1), reversed(l))
 
 #----------------------------------------------------------
 # Emails
@@ -321,7 +338,15 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
         msg['Message-Id'] = '<'+str(time.time())+'-tinycrm-'+str(tinycrm)+'@'+socket.gethostname()+'>'
     try:
         s = smtplib.SMTP()
-        s.connect(config['smtp_server'])
+    
+        if debug:
+            s.debuglevel = 5        
+        if ssl:
+            s.ehlo()
+            s.starttls()
+            s.ehlo()
+      
+        s.connect(config['smtp_server'], config['smtp_port'])
         if config['smtp_user'] or config['smtp_password']:
             s.login(config['smtp_user'], config['smtp_password'])
         s.sendmail(email_from, flatten([email_to, email_cc, email_bcc]), msg.as_string())
@@ -386,7 +411,7 @@ def email_send_attach(email_from, email_to, subject, body, email_cc=None, email_
             s.starttls()
             s.ehlo()
       
-        s.connect(config['smtp_server'])
+        s.connect(config['smtp_server'], config['smtp_port'])
         if config['smtp_user'] or config['smtp_password']:
             s.login(config['smtp_user'], config['smtp_password'])
         s.sendmail(email_from, flatten([email_to, email_cc, email_bcc]), msg.as_string())

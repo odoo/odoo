@@ -97,9 +97,9 @@ class res_company(osv.osv):
 
     def _get_euro(self, cr, uid, context={}):
         try:
-            return self.pool.get('res.currency').search(cr, uid, [('rate', '=', 1.0),])[0]
+            return self.pool.get('res.currency').search(cr, uid, [])[0]
         except:
-            return 1
+            return False
     
     def _check_recursion(self, cr, uid, ids):
         level = 100

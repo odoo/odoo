@@ -46,6 +46,7 @@
         <field name="res_model">ir.values</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="values_view_tree"/>
+        <field name="context">{'read':'default'}</field>
     </record>
     
     <menuitem id="next_id_4" name="Low Level" parent="menu_custom"/>
@@ -130,6 +131,7 @@
                 <field name="name" select="1"/>
                 <field name="type" select="1"/>
                 <field name="usage"/>
+                <field name="parent_id"/>
             </form>
         </field>
     </record>
@@ -391,6 +393,44 @@
     </record>
     <menuitem action="action_res_groups" id="menu_action_res_groups" parent="base.menu_users"/>
 
+    <record id="view_roles_form" model="ir.ui.view">
+        <field name="name">res.roles.form</field>
+        <field name="model">res.roles</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Role">
+                <field colspan="4" name="name" select="1"/>
+                <field colspan="4" name="parent_id"/>
+            </form>
+        </field>
+    </record>
+    <record id="view_roles_tree" model="ir.ui.view">
+        <field name="name">res.roles.tree</field>
+        <field name="model">res.roles</field>
+        <field name="type">tree</field>
+        <field name="field_parent">child_id</field>
+        <field name="arch" type="xml">
+            <tree string="Roles">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+    <record id="action_res_roles" model="ir.actions.act_window">
+        <field name="name">Roles Structure</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.roles</field>
+        <field name="view_type">tree</field>
+        <field eval="[('parent_id','=',False)]" name="domain"/>
+    </record>
+    <menuitem action="action_res_roles" id="menu_action_res_roles" parent="base.menu_users"/>
+    
+    <record id="action_res_roles_form" model="ir.actions.act_window">
+        <field name="name">Roles</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.roles</field>
+        <field name="view_type">form</field>
+    </record>
+    <menuitem action="action_res_roles_form" id="menu_action_res_roles_form" parent="menu_action_res_roles"/>
     
 <!-- View -->
     <record id="view_view_form" model="ir.ui.view">
@@ -799,7 +839,8 @@ Menu Edition
                         <field name="sequence"/>
                         <field colspan="4" name="parent_id" select="1"/>
                         <field name="action"/>
-                        <field name="icon"/>
+                        <field name="icon" on_change="onchange_icon(icon)"/>
+                        <field name="icon_pict" widget="picture" nolabel="1"/>
                     </page>
                     <page string="Groups">
                         <field colspan="4" name="groups_id"/>
@@ -1129,22 +1170,42 @@ Cron Jobs
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Server Action">
-                    <field name="name" select="1"/>
+                	<field name="name" select="1"/>
                     <field name="state" select="1"/>
                     <field name="model_id" select="1"/>
                     <field name="sequence" select="2"/>
-                    <field name="code" colspan="4"/>
-                    <field name="trigger_name" select="2"/>
-                    <field name="trigger_object" select="2"/>
-                    <field name="trigger_object_id"/>
-                    <field name="message" select="2" colspan="4"/>
-                    <field name="address" select="2"/>
-                    <field name="child_ids" colspan="4"/>
+                	<notebook colspan="4">
+                		<page string="Python Code" attrs="{'invisible':[('state','!=','python')]}">
+		                    <separator colspan="4" string="Python code"/>
+		                    <field name="code" colspan="4" nolabel="1" />
+						</page>
+						
+						<page string="Trigger" attrs="{'invisible':[('state','!=','trigger')]}">
+							<separator colspan="4" string="Trigger Configuration"/>
+		                    <field name="trigger_obj_id" select="2" colspan="4"/>
+		                    <field name="trigger_name" select="2"/>
+						</page>
+						
+						<page string="Email" attrs="{'invisible':[('state','=','python'),('state','=','dummy'),('state','=','trigger'), ('state','=','object_create'), ('state','=','object_write'), ('state','=','client_action'), ('state','=','other')]}">
+							<separator colspan="4" string="Email Configuration"/>
+							<field name="address" domain="[('model_id','=',model_id)]"/>
+							<field name="message" select="2" colspan="4"/>
+							<newline/>
+							<label colspan="4" string="Use o to access the current object, you can use the any attributes which is belongs to current selected obect with o, i.e. o.partner_id.name for Invoice Object"/>
+						</page>
+						
+						<page string="Other Actions" attrs="{'invisible':[('state','!=','other')]}">
+							<separator colspan="4" string="Other Actions Configuration"/>
+                    		<field name="child_ids" nolabel="1" colspan="4" />
+						</page>
+						
+					</notebook>
                     <field name="usage"/>
                     <field name="type"/>
                 </form>
             </field>
         </record>
+
         
         <record id="view_server_action_tree" model="ir.ui.view">
             <field name="name">Server Actions</field>
@@ -1164,8 +1225,23 @@ Cron Jobs
             <field name="res_model">ir.actions.server</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_server_action_tree"/>
+            <field name="context">{'key':'server_action'}</field>
         </record>
         <menuitem action="action_server_action" id="menu_server_action" parent="base.next_id_6"/>
+        
+        <record id="view_model_fields_tree" model="ir.ui.view">
+            <field name="name">ir.model.fields.tree</field>
+            <field name="model">ir.model.fields</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Fields">
+                	<field name="complete_name"/>
+                	<field name="model_id"/>
+                    <field name="name"/>
+                    <field name="field_description"/>
+                </tree>
+            </field>
+        </record>
         
     </data>
 </terp>

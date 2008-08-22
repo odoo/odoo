@@ -38,7 +38,7 @@ class report_custom(osv.osv):
     _name = 'ir.report.custom'
     _columns = {
         'name': fields.char('Report Name', size=64, required=True, translate=True),
-        'model_id': fields.many2one('ir.model','Model', required=True, change_default=True),
+        'model_id': fields.many2one('ir.model','Object', required=True, change_default=True),
         'type': fields.selection([('table','Tabular'),('pie','Pie Chart'),('bar','Bar Chart'),('line','Line Plot')], "Report Type", size=64, required='True'),
         'title': fields.char("Report title", size=64, required='True', translate=True),
         'print_format': fields.selection((('A4','a4'),('A5','a5')), 'Print format', required=True),

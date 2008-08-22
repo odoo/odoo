@@ -60,6 +60,8 @@ class osv_pool(netsvc.Service):
         self.created = []
         self._sql_error = {}
         self._store_function = {}
+        self._init = True
+        self._init_parent = {}
         netsvc.Service.__init__(self, 'object_proxy', audience='')
         self.joinGroup('web-services')
         self.exportMethod(self.exportedMethods)
@@ -67,6 +69,17 @@ class osv_pool(netsvc.Service):
         self.exportMethod(self.exec_workflow)
         self.exportMethod(self.execute)
         self.exportMethod(self.execute_cr)
+
+    def init_set(self, cr, mode):
+        if mode<>self._init:
+            if mode:
+                self._init_parent={}
+            if not mode:
+                for o in self._init_parent:
+                    self.get(o)._parent_store_compute(cr)
+            self._init = mode
+            return True
+        return False
 
     def execute_cr(self, cr, uid, obj, method, *args, **kw):
         try:
@@ -152,19 +165,11 @@ class osv_pool(netsvc.Service):
 
     #TODO: pass a list of modules to load
     def instanciate(self, module, cr):
-#       print "module list:", module_list
-#       for module in module_list:
         res = []
         class_list = module_class_list.get(module, [])
-#           if module not in self.module_object_list:
-#       print "%s class_list:" % module, class_list
         for klass in class_list:
             res.append(klass.createInstance(self, module, cr))
         return res
-#           else:
-#               print "skipping module", module
-
-#pooler.get_pool(cr.dbname) = osv_pool()
 
 class osv_memory(orm.orm_memory):
     #__metaclass__ = inheritor
@@ -223,7 +228,7 @@ class osv(orm.orm):
         parent_name = hasattr(cls, '_inherit') and cls._inherit
         if parent_name:
             parent_class = pool.get(parent_name).__class__
-            assert parent_class, "parent class %s does not exist !" % parent_name
+            assert pool.get(parent_name), "parent class %s does not exist in module %s !" % (parent_name, module)
             nattr = {}
             for s in ('_columns', '_defaults', '_inherits', '_constraints', '_sql_constraints'):
                 new = copy.copy(getattr(pool.get(parent_name), s))

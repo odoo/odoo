@@ -46,7 +46,7 @@ class ir_model(osv.osv):
     _description = "Objects"
     _rec_name = 'name'
     _columns = {
-        'name': fields.char('Model Name', size=64, translate=True, required=True),
+        'name': fields.char('Object Name', size=64, translate=True, required=True),
         'model': fields.char('Object Name', size=64, required=True, search=1),
         'info': fields.text('Information'),
         'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True),
@@ -82,9 +82,7 @@ class ir_model(osv.osv):
         x_custom_model.createInstance(self.pool, '', cr)
         if 'x_name' in x_custom_model._columns:
             x_custom_model._rec_name = 'x_name'
-        else:
-            x_custom_model._rec_name = x_custom_model._columns.keys()[0]
-    
+
     def unlink(self, cr, user, ids, context=None):
         for model in self.browse(cr, user, ids, context):
             if model.state <> 'manual':
@@ -208,8 +206,8 @@ class ir_model_fields(osv.osv):
     _columns = {
         'name': fields.char('Name', required=True, size=64, select=1),
         'model': fields.char('Object Name', size=64, required=True),
-        'relation': fields.char('Model Relation', size=64),
-        'model_id': fields.many2one('ir.model', 'Model id', required=True, select=True, ondelete='cascade'),
+        'relation': fields.char('Object Relation', size=64),
+        'model_id': fields.many2one('ir.model', 'Object id', required=True, select=True, ondelete='cascade'),
         'field_description': fields.char('Field Label', required=True, size=256),
         'relate': fields.boolean('Click and Relate'),
 
@@ -252,8 +250,8 @@ class ir_model_fields(osv.osv):
 
     def create(self, cr, user, vals, context=None):
         if 'model_id' in vals:
-            model_data=self.pool.get('ir.model').read(cr,user,vals['model_id'])
-            vals['model']=model_data['model']
+            model_data=self.pool.get('ir.model').browse(cr,user,vals['model_id'])
+            vals['model']=model_data.model
         if context and context.get('manual',False):
             vals['state']='manual'
         res = super(ir_model_fields,self).create(cr, user, vals, context)
@@ -270,7 +268,7 @@ class ir_model_access(osv.osv):
     _name = 'ir.model.access'
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'model_id': fields.many2one('ir.model', 'Model', required=True),
+        'model_id': fields.many2one('ir.model', 'Object', required=True),
         'group_id': fields.many2one('res.groups', 'Group'),
         'perm_read': fields.boolean('Read Access'),
         'perm_write': fields.boolean('Write Access'),
@@ -353,7 +351,7 @@ class ir_model_data(osv.osv):
     _name = 'ir.model.data'
     _columns = {
         'name': fields.char('XML Identifier', required=True, size=64),
-        'model': fields.char('Model', required=True, size=64),
+        'model': fields.char('Object', required=True, size=64),
         'module': fields.char('Module', required=True, size=64),
         'res_id': fields.integer('Resource ID'),
         'noupdate': fields.boolean('Non Updatable'),
@@ -571,3 +569,5 @@ class ir_model_config(osv.osv):
             'target':'new',
         }
 ir_model_config()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
