@@ -57,6 +57,7 @@ class ir_model(osv.osv):
     _defaults = {
         'model': lambda *a: 'x_',
         'state': lambda self,cr,uid,ctx={}: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
+        'type': 'addons',
     }
     
     def _check_model_name(self, cr, uid, ids):
@@ -68,7 +69,7 @@ class ir_model(osv.osv):
                 return False
         return True
     
-    #FIXME: We'll be back soon 
+    #FIXME: Will be back soon 
     #_constraints = [
     #    (_check_model_name, 'The model name must start with x_ and not contain any special character !', ['model']),
     #]
