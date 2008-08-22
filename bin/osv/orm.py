@@ -960,9 +960,9 @@ class orm_template(object):
                         arch,name,field_parent,id,type,inherit_id
                     FROM
                         ir_ui_view
-                    WHERE 
+                    WHERE
                         model=%s AND
-                        type=%s AND 
+                        type=%s AND
                         inherit_id IS NULL
                     ORDER BY priority''', (self._name, view_type))
             sql_res = cr.fetchone()
@@ -1115,17 +1115,18 @@ class orm_memory(orm_template):
         if not fields:
             fields = self._columns.keys()
         result = []
-        for id in ids:
-            r = {'id': id}
-            for f in fields:
-                r[f] = self.datas[id].get(f, False)
-            result.append(r)
-            self.datas[id]['internal.date_access'] = time.time()
-        fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields)
-        for f in fields_post:
-            res2 = self._columns[f].get_memory(cr, self, ids, f, user, context=context, values=False)
-            for record in result:
-                record[f] = res2[record['id']]
+        if self.datas:
+            for id in ids:
+                r = {'id': id}
+                for f in fields:
+                    r[f] = self.datas[id].get(f, False)
+                result.append(r)
+                self.datas[id]['internal.date_access'] = time.time()
+            fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields)
+            for f in fields_post:
+                res2 = self._columns[f].get_memory(cr, self, ids, f, user, context=context, values=False)
+                for record in result:
+                    record[f] = res2[record['id']]
         return result
 
     def write(self, cr, user, ids, vals, context=None):
