@@ -324,7 +324,6 @@ class orm_template(object):
                 'ttype': f._type,
                 'relate': (f.relate and 1) or 0,
                 'relation': f._obj or 'NULL',
-                #'group_name': f.group_name or '',
                 'view_load': (f.view_load and 1) or 0,
                 'select_level': str(f.select or 0)
             }
@@ -801,28 +800,6 @@ class orm_template(object):
                     trans = tools.translate(cr, self._name, 'view', context['lang'], node.getAttribute('sum').encode('utf8'))
                     if trans:
                         node.setAttribute('sum', trans.decode('utf8'))
-            #
-            # Add view for properties !
-            #
-            if node.localName == 'properties':
-                parent = node.parentNode
-                doc = node.ownerDocument
-                models = map(lambda x: "'"+x+"'", [self._name] + self._inherits.keys())
-                cr.execute('select id,name,group_name from ir_model_fields where model in ('+','.join(models)+') and view_load order by group_name, id')
-                oldgroup = None
-                res = cr.fetchall()
-                for id, fname, gname in res:
-                    if oldgroup != gname:
-                        child = doc.createElement('separator')
-                        child.setAttribute('string', gname.decode('utf-8'))
-                        child.setAttribute('colspan', "4")
-                        oldgroup = gname
-                        parent.insertBefore(child, node)
-
-                    child = doc.createElement('field')
-                    child.setAttribute('name', fname.decode('utf-8'))
-                    parent.insertBefore(child, node)
-                parent.removeChild(node)
 
         if childs:
             for f in node.childNodes:

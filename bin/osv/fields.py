@@ -83,7 +83,6 @@ class _column(object):
         self._domain = domain or []
         self.relate = False
         self._context = context
-        self.group_name = False
         self.write = False
         self.read = False
         self.view_load = 0
