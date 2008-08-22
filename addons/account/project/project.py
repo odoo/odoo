@@ -237,6 +237,14 @@ class account_analytic_journal(osv.osv):
     }
 account_analytic_journal()
 
+class account_journal(osv.osv):
+    _inherit="account.journal"
+
+    _columns = {
+        'analytic_journal_id':fields.many2one('account.analytic.journal','Analytic Journal'),
+    }
+account_journal()
+
 
 # ---------------------------------------------------------
 # Budgets
