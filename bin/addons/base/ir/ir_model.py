@@ -189,7 +189,7 @@ class ir_model_access(osv.osv):
     def check(self, cr, uid, model_name, mode='read',raise_exception=True):
         assert mode in ['read','write','create','unlink'], 'Invalid access mode for security'
         if uid == 1:
-            return True # TODO: check security: don't allow xml-rpc request with uid == 1
+            return True
 
         cr.execute('SELECT MAX(CASE WHEN perm_'+mode+' THEN 1 else 0 END) '
             'FROM ir_model_access a '
@@ -207,7 +207,8 @@ class ir_model_access(osv.osv):
                 'WHERE a.group_id IS NULL AND m.model = %s', (model_name,))
             r= cr.fetchall()
             if r[0][0] == None:
-                return False # by default, the user had no access
+                return True # Changed waiting final rules
+                #return False # by default, the user had no access
 
         if not r[0][0]:
             if raise_exception:
