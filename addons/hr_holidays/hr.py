@@ -57,7 +57,7 @@ class hr_holidays(osv.osv):
         'date_to' : fields.datetime('Vacation end day',required=True,readonly=True, states={'draft':[('readonly',False)]}),
         'holiday_status' : fields.many2one("hr.holidays.status", "Holiday's Status", required=True,readonly=True, states={'draft':[('readonly',False)]}),
         'employee_id' : fields.many2one('hr.employee', 'Employee', select=True, invisible=False, readonly=True, states={'draft':[('readonly',False)]}),
-        'user_id':fields.many2one('res.users', 'Employee_id', states={'draft':[('readonly',False)]}, relate=True, select=True, readonly=True),
+        'user_id':fields.many2one('res.users', 'Employee_id', states={'draft':[('readonly',False)]}, select=True, readonly=True),
         'manager_id' : fields.many2one('hr.employee', 'Holiday manager', invisible=False, readonly=True),
         'notes' : fields.text('Notes',readonly=True, states={'draft':[('readonly',False)]}),
         'number_of_days': fields.float('Number of Days in this Holiday Request',required=True, states={'draft':[('readonly',False)]}, readonly=True),
