@@ -102,6 +102,49 @@ class sale_order(osv.osv):
             res[id] = cur_obj.round(cr, uid, cur, untax.get(id, 0.0) + tax.get(id, 0.0))
         return res
 
+    def _picked_rate(self, cr, uid, ids, name, arg, context=None):
+        if not ids: return {}
+        res = {}
+        for id in ids:
+            res[id] = [0.0,0.0]
+        cr.execute('''SELECT
+                p.sale_id,sum(m.product_qty), m.state
+            FROM
+                stock_move m
+            LEFT JOIN
+                stock_picking p on (p.id=m.picking_id)
+            WHERE
+                p.sale_id in ('''+','.join(map(str,ids))+''')
+            GROUP BY m.state, p.sale_id''')
+        for oid,nbr,state in cr.fetchall():
+            if state=='cancel':
+                continue
+            if state=='done':
+                res[oid][0] += nbr or 0.0
+                res[oid][1] += nbr or 0.0
+            else:
+                res[oid][1] += nbr or 0.0
+        print res
+        for r in res:
+            if not res[r][1]:
+                res[r] = 0.0
+            else:
+                res[r] = 100.0 * res[r][0] / res[r][1]
+        return res
+
+    def _invoiced_rate(self, cursor, user, ids, name, arg, context=None):
+        res = {}
+        for sale in self.browse(cursor, user, ids, context=context):
+            tot = 0.0
+            for invoice in sale.invoice_ids:
+                if invoice.state not in ('draft','cancel'):
+                    tot += invoice.amount_untaxed
+            if tot:
+                res[sale.id] = tot * 100.0 / sale.amount_untaxed
+            else:
+                res[sale.id] = 0.0
+        return res
+
     def _invoiced(self, cursor, user, ids, name, arg, context=None):
         res = {}
         for sale in self.browse(cursor, user, ids, context=context):
@@ -187,6 +230,8 @@ class sale_order(osv.osv):
         'invoice_ids': fields.many2many('account.invoice', 'sale_order_invoice_rel', 'order_id', 'invoice_id', 'Invoice', help="This is the list of invoices that have been generated for this sale order. The same sale order may have been invoiced in several times (by line for example)."),
         'picking_ids': fields.one2many('stock.picking', 'sale_id', 'Packing List', readonly=True, help="This is the list of picking list that have been generated for this invoice"),
         'shipped':fields.boolean('Picked', readonly=True),
+        'picked_rate': fields.function(_picked_rate, method=True, string='Picked', type='float'),
+        'invoiced_rate': fields.function(_invoiced_rate, method=True, string='Invoiced', type='float'),
         'invoiced': fields.function(_invoiced, method=True, string='Paid',
             fnct_search=_invoiced_search, type='boolean'),
         'note': fields.text('Notes'),
