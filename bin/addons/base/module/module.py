@@ -578,7 +578,7 @@ class module_configuration(osv.osv_memory):
             item = item_obj.browse(cr, uid, item_ids[0], context=context)
             return item.note
         else:
-            return "Your database is now fully configured.\n\nClick 'Continue' and enyoy your OpenERP experience..."
+            return "Your database is now fully configured.\n\nClick 'Continue' and enjoy your OpenERP experience..."
         return False
 
     def _get_action(self, cr, uid, context={}):
