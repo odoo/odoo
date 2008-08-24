@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<terp>
+<data>
+	<record model="account.account" id="auction_income_view">
+		<field name="name">Auction Adjudications</field>
+		<field name="code">0</field>
+		<field name="type">view</field>
+		<field name="currency_id" search="[('name','=','EUR')]"/>
+		<field name="parent_id" type="list">
+			<value search="[('type','=','view'),('code','=','7')]" model="account.account"/>
+		</field>
+	</record>
+
+	<record model="account.account" id="auction_expense_view">
+		<field name="name">Auction Adjudication Expenses</field>
+		<field name="code">0</field>
+		<field name="type">view</field>
+		<field name="currency_id" search="[('name','=','EUR')]"/>
+		<field name="parent_id" type="list">
+			<value search="[('type','=','view'),('code','=','6')]" model="account.account"/>
+		</field>
+	</record>
+
+	<record model="account.account" id="auction_income">
+		<field name="name">Auction Adjudications</field>
+		<field name="code">7x*</field>
+		<field name="type">income</field>
+		<field name="currency_id" search="[('name','=','EUR')]"/>
+		<field name="parent_id" eval="[auction_income_view]"/>
+	</record>
+	<record model="account.account" id="auction_expense">
+		<field name="name">Auction Adjudication Expenses</field>
+		<field name="code">6x*</field>
+		<field name="type">expense</field>
+		<field name="currency_id" search="[('name','=','EUR')]"/>
+		<field name="parent_id" eval="[auction_expense_view]"/>
+	</record>
+
+	<record model="account.account" id="auction_income_costs">
+		<field name="name">Auction Buyer Costs</field>
+		<field name="code">7x*</field>
+		<field name="type">tax</field>
+		<field name="currency_id" search="[('name','=','EUR')]"/>
+		<field name="parent_id" eval="[auction_income_view]"/>
+	</record>
+	<record model="account.account" id="auction_expense_costs">
+		<field name="name">Auction Seller Costs</field>
+		<field name="code">6x*</field>
+		<field name="type">tax</field>
+		<field name="currency_id" search="[('name','=','EUR')]"/>
+		<field name="parent_id" eval="[auction_expense_view]"/>
+	</record>
+
+	<record model="account.tax" id="tax_buyer_author">
+		<field name="name">Author rights (4%)</field>
+		<field name="type">percent</field>
+		<field name="applicable_type">code</field>
+		<field name="amount">0.04</field>
+		<field name="domain">sabam</field>
+		<field name="account_collected_id" ref="auction_income_costs"/>
+		<field name="account_paid_id" ref="auction_income_costs"/>
+		<field name="python_applicable">result = (price_unit&gt;=1250)</field>
+	</record>
+	<record model="account.tax" id="tax_buyer">
+		<field name="name">Buyer Costs (20%)</field>
+		<field name="type">percent</field>
+		<field name="amount">0.20</field>
+		<field name="domain">auction</field>
+		<field name="account_collected_id" ref="auction_income_costs"/>
+		<field name="account_paid_id" ref="auction_income_costs"/>
+	</record>
+	<record model="account.tax" id="tax_seller">
+		<field name="name">Seller Costs (12%)</field>
+		<field name="type">percent</field>
+		<field name="amount">-0.12</field>
+		<field name="domain">auction</field>
+		<field name="account_collected_id" ref="auction_expense_costs"/>
+		<field name="account_paid_id" ref="auction_expense_costs"/>
+	</record>
+
+	<ir_set>
+		<field name="keys" eval="[('meta','res.partner'),('name','auction.seller.costs')]"/>
+		<field name="args" eval="[]"/>
+		<field name="name">account.seller.costs</field>
+		<field name="value" eval="tax_seller"/>
+		<field name="meta" eval="{'type':'many2one', 'string':'Seller Costs', 'relation':'account.tax'}"/>
+	</ir_set>
+
+
+
+	<record id="product.product_product_pc2" model="product.product">
+		<field name="list_price">770.0</field>
+		<field name="standard_price">700.0</field>
+
+	</record>
+
+</data>
+</terp>

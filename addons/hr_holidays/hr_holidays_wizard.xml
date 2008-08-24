@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<terp>
+	<data>
+	<wizard string="Print Summary of Holidays"
+		  name="hr.holidays.summary"
+		  id="holidays_summary"/>
+
+	<menuitem name="Print Summary of Holidays" parent="hr.menu_hr_reporting"
+		 action="holidays_summary"
+		 type="wizard"
+		 id="menu_holidays_summary"/>
+
+	<wizard string="Print Summary of Employee's Holidays"
+		model="hr.employee" name="hr.holidays.summary.employee"
+		keyword="client_print_multi" id="wizard_holidays_summary" />
+ 	</data>
+</terp>

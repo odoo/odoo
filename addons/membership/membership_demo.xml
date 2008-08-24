@@ -1,0 +1,198 @@
+<?xml version="1.0"?>
+<terp>
+	<data>
+
+<!-- Demo Data for Membership Product -->
+	<record id="member_product_0" model="product.product">
+		<field name="membership">True</field>
+		<field name="membership_date_from">2008-01-01</field>
+		<field name="membership_date_to">2009-06-01</field>
+		<field name="name">Membership Product - 1</field>
+		<field name="categ_id" ref="product.cat1"/>
+		<field name="type">service</field>
+	</record>
+	<record id="member_product_1" model="product.product">
+		<field name="membership">True</field>
+		<field name="membership_date_from">2008-01-01</field>
+		<field name="membership_date_to">2009-08-01</field>
+		<field name="name">Membership Product - 2</field>
+		<field name="categ_id" ref="product.cat1"/>
+		<field name="type">service</field>
+	</record>
+
+<!-- Demo data for paid member -->
+	<record id="paid_member_0" model="res.partner">
+		<field name="name">Member Partner - Paid</field>
+	</record>
+
+<!-- Demo data for invoiced member -->
+	<record id="inv_member_0" model="res.partner">
+		<field name="name">Member Partner - Invoice</field>
+	</record>
+
+<!-- Demo data for cancel member -->
+	<record id="cancel_member_0" model="res.partner">
+		<field name="name">Member Partner - Cancel</field>
+		<field name="membership_cancel">2008-01-01</field>
+	</record>
+
+<!-- Demo data for waiting member -->
+	<record id="waiting_member_0" model="res.partner">
+		<field name="name">Member Partner - Waiting</field>
+	</record>
+
+<!-- Demo data for res.partner.address -->
+	<record id="res_partner_address_0" model="res.partner.address">
+		<field name="partner_id" ref="membership.paid_member_0"/>
+	</record>
+
+<!-- Demo data for Accounts -->
+	<record id="account_account_membershipaccount0" model="account.account">
+		<field name="name">membership account</field>
+		<field name="code">1254</field>
+		<field name="company_id" ref="base.main_company"/>
+		<field name="close_method">balance</field>
+		<field eval="1" name="sign"/>
+		<field eval="1" name="active"/>
+		<field name="type">asset</field>
+		<field eval="1" name="reconcile"/>
+	</record>
+
+<!-- Demo data for Invoices -->
+	<record id="account_invoice_0" model="account.invoice">
+		<field name="account_id" ref="account_account_membershipaccount0"/>
+		<field name="company_id" ref="base.main_company"/>
+		<field name="currency_id" ref="base.EUR"/>
+		<field name="address_invoice_id" ref="res_partner_address_0"/>
+		<field name="partner_id" ref="membership.paid_member_0"/>
+		<field name="date_invoice">2008-05-09</field>
+		<field name="journal_id" ref="account.sales_journal"/>
+		<field name="state">paid</field>
+		<field name="type">out_invoice</field>
+	</record>
+	<record id="account_invoice_1" model="account.invoice">
+		<field name="account_id" ref="account_account_membershipaccount0"/>
+		<field name="company_id" ref="base.main_company"/>
+		<field name="currency_id" ref="base.EUR"/>
+		<field name="address_invoice_id" ref="res_partner_address_0"/>
+		<field name="partner_id" ref="membership.inv_member_0"/>
+		<field name="date_invoice">2008-05-09</field>
+		<field name="journal_id" ref="account.sales_journal"/>
+		<field name="state">open</field>
+		<field name="type">out_invoice</field>
+	</record>
+	<record id="account_invoice_2" model="account.invoice">
+		<field name="account_id" ref="account_account_membershipaccount0"/>
+		<field name="company_id" ref="base.main_company"/>
+		<field name="currency_id" ref="base.EUR"/>
+		<field name="address_invoice_id" ref="res_partner_address_0"/>
+		<field name="partner_id" ref="membership.cancel_member_0"/>
+		<field name="date_invoice">2008-05-09</field>
+		<field name="journal_id" ref="account.sales_journal"/>
+		<field name="state">cancel</field>
+		<field name="type">out_invoice</field>
+	</record>
+	<record id="account_invoice_3" model="account.invoice">
+		<field name="account_id" ref="account_account_membershipaccount0"/>
+		<field name="company_id" ref="base.main_company"/>
+		<field name="currency_id" ref="base.EUR"/>
+		<field name="address_invoice_id" ref="res_partner_address_0"/>
+		<field name="partner_id" ref="membership.waiting_member_0"/>
+		<field name="date_invoice">2008-05-09</field>
+		<field name="journal_id" ref="account.sales_journal"/>
+		<field name="state">draft</field>
+		<field name="type">out_invoice</field>
+	</record>
+
+<!-- Demo data for invoice line -->
+	<record id="account_invoice_line_membershipproduct0" model="account.invoice.line">
+		<field name="name">Membership Product - 1</field>
+		<field name="invoice_id" ref="account_invoice_0"/>
+		<field eval="1.0" name="price_unit"/>
+		<field eval="1.0" name="quantity"/>
+		<field name="account_id" ref="account_account_membershipaccount0"/>
+		<field name="product_id" ref="membership.member_product_0"/>
+		<field name="account_analytic_id" ref="account.analytic_project_2"/>
+	</record>
+	<record id="account_invoice_line_membershipproduct1" model="account.invoice.line">
+		<field name="name">Membership Product - 2</field>
+		<field name="invoice_id" ref="account_invoice_1"/>
+		<field eval="1.0" name="price_unit"/>
+		<field eval="1.0" name="quantity"/>
+		<field name="account_id" ref="account_account_membershipaccount0"/>
+		<field name="product_id" ref="membership.member_product_1"/>
+		<field name="account_analytic_id" ref="account.analytic_project_2"/>
+	</record>
+	<record id="account_invoice_line_membershipproduct2" model="account.invoice.line">
+		<field name="name">Membership Product - 2</field>
+		<field name="invoice_id" ref="account_invoice_2"/>
+		<field eval="1.0" name="price_unit"/>
+		<field eval="1.0" name="quantity"/>
+		<field name="account_id" ref="account_account_membershipaccount0"/>
+		<field name="product_id" ref="membership.member_product_1"/>
+		<field name="account_analytic_id" ref="account.analytic_project_2"/>
+	</record>
+	<record id="account_invoice_line_membershipproduct3" model="account.invoice.line">
+		<field name="name">Membership Product - 2</field>
+		<field name="invoice_id" ref="account_invoice_3"/>
+		<field eval="1.0" name="price_unit"/>
+		<field eval="1.0" name="quantity"/>
+		<field name="account_id" ref="account_account_membershipaccount0"/>
+		<field name="product_id" ref="membership.member_product_1"/>
+		<field name="account_analytic_id" ref="account.analytic_project_2"/>
+	</record>
+
+<!-- Demo data for membership line -->
+	<record id="member_line_1" model="membership.membership_line">
+		<field name="date_from">2008-01-01</field>
+		<field name="date_to">2009-08-01</field>
+		<field name="account_invoice_line" ref="account_invoice_line_membershipproduct0" />
+		<field name="state">paid</field>
+		<field name="partner" ref="paid_member_0"/>
+	</record>
+	<record id="member_line_2" model="membership.membership_line">
+		<field name="date_from">2008-01-01</field>
+		<field name="date_to">2009-08-01</field>
+		<field name="account_invoice_line" ref="account_invoice_line_membershipproduct1" />
+		<field name="state">invoiced</field>
+		<field name="partner" ref="inv_member_0"/>
+	</record>
+	<record id="member_line_3" model="membership.membership_line">
+		<field name="date_from">2008-01-01</field>
+		<field name="date_to">2009-08-01</field>
+		<field name="date_cancel">2008-08-05</field>
+		<field name="account_invoice_line" ref="account_invoice_line_membershipproduct2" />
+		<field name="state">canceled</field>
+		<field name="partner" ref="cancel_member_0"/>
+	</record>
+	<record id="member_line_3" model="membership.membership_line">
+		<field name="date_from">2008-01-01</field>
+		<field name="date_to">2009-08-01</field>
+		<field name="account_invoice_line" ref="account_invoice_line_membershipproduct3" />
+		<field name="state">waiting</field>
+		<field name="partner" ref="waiting_member_0"/>
+	</record>
+
+<!-- Demo data for free member -->
+	<record id="free_member_0" model="res.partner">
+		<field name="name">Member Partner - Free</field>
+		<field name="free_member">True</field>
+	</record>
+
+<!-- Demo data for associate member -->
+	<record id="associate_member_0" model="res.partner">
+		<field name="name">Member Partner - Associate</field>
+		<field name="associate_member" ref="paid_member_0"/>
+	</record>
+	<record id="associate_member_1" model="res.partner">
+		<field name="name">Partner - Associate</field>
+		<field name="associate_member" ref="paid_member_0"/>
+	</record>
+
+<!-- Demo data for non member -->
+	<record id="non_member_0" model="res.partner">
+		<field name="name">Member Partner - None</field>
+	</record>
+
+	</data>
+</terp>

@@ -1,0 +1,155 @@
+# -*- encoding: utf-8 -*-
+##############################################################################
+#
+# Copyright (c) 2004 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#                    Fabien Pinckaers <fp@tiny.Be>
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+##############################################################################
+
+import os, time, datetime
+
+import netsvc, tools
+
+import report.print_xml
+import report.render
+import report.common
+from report.interface import report_rml
+
+def toxml(val):
+    return val.replace('&', '&amp;').replace('<','&lt;').replace('>','&gt;').decode('utf-8').encode('latin1')
+
+class report_custom(report_rml):
+    def __init__(self, name, table, tmpl, xsl):
+        report_rml.__init__(self, name, table, tmpl, xsl)
+
+    def create_xml(self,cr, uid, ids, datas, context={}):
+        service = netsvc.LocalService("object_proxy")
+
+#       start_time = time.clock()
+
+#           lots = service.execute(cr.dbname,uid, 'auction.lots', 'read', ids, ['obj_price','ach_pay_id','ach_login','obj_comm','lot_est1','lot_est2','bord_vnd_id','ach_emp','auction_id'])
+        lots = service.execute(cr.dbname,uid, 'auction.lots', 'read', ids, ['obj_price','ach_login','obj_comm','lot_est1','lot_est2','bord_vnd_id','ach_emp','auction_id'])
+        auction = service.execute(cr.dbname,uid, 'auction.dates', 'read', [lots[0]['auction_id'][0]])[0]
+
+#       mid_time = time.clock()
+
+        unsold = comm = emp = paid = unpaid = 0
+        est1 = est2 = adj = 0
+        paid_ids = []
+        unpaid_ids = []
+        buyer = {}
+        seller = {}
+        debit = 0
+
+        for l in lots:
+            if l['lot_est2']:
+                est2 += l['lot_est2'] or 0.0
+
+            if l['lot_est1']:
+                est1 += l['lot_est1'] or 0.0
+
+            if l['obj_price']:
+                adj += l['obj_price'] or 0.0
+
+            if l['obj_comm']:
+                comm += 1
+
+            if l['ach_emp']:
+                emp += 1
+
+            if l['ach_pay_id']:
+                paid_ids.append(l['id'])
+                paid += l['obj_price']
+            else:
+                unpaid_ids.append(l['id'])
+                unpaid += l['obj_price']
+
+            if l['obj_price']==0:
+                unsold+=1
+
+            buyer[l['ach_login']]=1
+            seller[l['bord_vnd_id']]=1
+
+#       mid_time2 = time.clock()
+
+#       costs = service.execute(cr.dbname,uid, 'auction.lots', 'compute_buyer_costs', paid_ids)
+#       for cost in costs:
+#           paid += cost['amount']
+#
+#       costs = service.execute(cr.dbname,uid, 'auction.lots', 'compute_buyer_costs', unpaid_ids)
+#       for cost in costs:
+#           unpaid += cost['amount']
+
+#       mid_time3 = time.clock()
+
+        debit = adj
+        costs = service.execute(cr.dbname,uid, 'auction.lots', 'compute_seller_costs', ids)
+        for cost in costs:
+            debit += cost['amount']
+
+#       mid_time4 = time.clock()
+
+        xml = '''<?xml version="1.0" encoding="ISO-8859-1"?>
+<report>
+    <date>%s</date>
+    <auction>
+        <title>%s</title>
+        <date>%s</date>
+    </auction>
+    <objects>
+        <obj_nbr>%d</obj_nbr>
+        <est_min>%.2f</est_min>
+        <est_max>%.2f</est_max>
+        <unsold>%d</unsold>
+        <obj_price>%.2f</obj_price>
+    </objects>
+    <buyer>
+        <buy_nbr>%d</buy_nbr>
+        <paid_nbr>%d</paid_nbr>
+        <comm_nbr>%d</comm_nbr>
+        <taken_nbr>%d</taken_nbr>
+        <credit>%.2f</credit>
+        <paid>%.2f</paid>
+    </buyer>
+    <seller>
+        <sell_nbr>%d</sell_nbr>
+        <debit>%.2f</debit>
+    </seller>
+</report>''' % (time.strftime('%d/%m/%Y'), toxml(auction['name']), auction['auction1'], len(lots), est1, est2, unsold, adj, len(buyer), len(paid_ids), comm, emp, unpaid, paid, len(seller), debit)
+
+#       file('/tmp/terp.xml','wb+').write(xml)
+#       end_time = time.clock()
+#       print "db:", mid_time-start_time
+#       print "addition:", mid_time2-mid_time
+#       print "buyer costs:", mid_time3-mid_time2
+#       print "seller costs:", mid_time4-mid_time3
+#       print "rest:", end_time-mid_time4
+#       print "total:", end_time-start_time
+        return self.post_process_xml_data(cr, uid, xml, context)
+
+report_custom('report.auction.total', 'auction.lots', '', 'addons/auction/report/total.xsl')
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

@@ -1,0 +1,30 @@
+# -*- encoding: utf-8 -*-
+{
+    "name" : "Base Contact",
+    "version" : "1.0",
+    "author" : "Tiny",
+    "website" : "http://tinyerp.com",
+    "category" : "Generic Modules/Base Contact",
+    "description": """
+        This module allows you to manage entirely your contacts. 
+
+    It lets you define 
+        *contacts unrelated to a partner,
+        *contacts working at several adresses (possibly for different partners), 
+        *contacts with possibly different functions for each of its job's addresses
+
+    It also add a new menuitem located in 
+        Partners \ Contacts
+
+
+    Pay attention that this module converts the existing addresses into "addresses + contacts". It means that some fields of the addresses will be missing (like the contact name), since these are supposed to be defined in an other object.
+    """,
+    "depends" : ["base"],
+    "init_xml" : [],
+    "demo_xml" : [],
+    "update_xml" : ['base_contact_view.xml'],
+    "active": False,
+    "installable": True
+}
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
