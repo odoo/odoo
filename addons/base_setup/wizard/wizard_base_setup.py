@@ -38,13 +38,13 @@ view_form_profit = """<?xml version="1.0"?>
 <form string="Setup">
     <image name="gtk-dialog-info"/>
     <group>
-        <separator string="Select a profile" colspan="2"/>
+        <separator string="Select a Profile" colspan="2"/>
         <newline/>
         <field align="0.0" name="profile"/>
         <newline/>
-        <label string="A profile sets a pre-selection of modules for enterprise needs." colspan="2" align="0.0"/>
+        <label string="A profile sets a pre-selection of modules for specific needs. These profiles have been setup to help you discover the different aspects of OpenERP. This is just an overview, we have 300+ available modules." colspan="2" align="0.0"/>
         <newline/>
-        <label string="You'll be able to install others modules later through the Administration menu." colspan="2" align="0.0"/>
+        <label string="You'll be able to install more modules later through the Administration menu." colspan="2" align="0.0"/>
     </group>
 </form>"""
 
@@ -52,13 +52,13 @@ view_form_charts = """<?xml version="1.0"?>
 <form string="Setup">
     <image name="gtk-dialog-info" colspan="2"/>
     <group>
-        <separator string="Select a chart of accounts" colspan="2"/>
+        <separator string="Select a Chart of Accounts" colspan="2"/>
         <newline/>
         <field name="charts" align="0.0"/>
         <newline/>
-        <label string="There are many other chart of accounts available on the OpenERP website." colspan="2" align="0.0"/>
+        <label string="There are much more charts of accounts available on the OpenERP website." colspan="2" align="0.0"/>
         <newline/>
-        <label string="If you don't select one now, you'll be able to install an other one through the Administration menu." colspan="2" align="0.0"/>
+        <label string="If you don't select one now, you'll be able to install another one through the Administration menu." colspan="2" align="0.0"/>
     </group>
 </form>"""
 
@@ -66,7 +66,7 @@ view_form_company = """<?xml version="1.0"?>
 <form string="Setup">
     <image name="gtk-dialog-info" colspan="2"/>
     <group>
-        <separator string="Define main company" colspan="4"/>
+        <separator string="Define Main Company" colspan="4"/>
         <newline/>
         <field name="name" align="0.0" colspan="4" required="True"/>
         <newline/>
@@ -432,8 +432,8 @@ IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701""",
             'actions': [_update],
             'result': {'type': 'form', 'arch': view_form_finish, 'fields': {},
                 'state': [
-                    ('menu', 'Use Directly'),
-                    ('config', 'Start Configuration', 'gtk-ok', True)
+                    ('menu', 'Use Directly', 'gtk-ok'),
+                    ('config', 'Start Configuration', 'gtk-go-forward', True)
                 ]
             }
         },
