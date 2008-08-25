@@ -418,7 +418,7 @@ class actions_server(osv.osv):
         
         return obj
 
-    def merge_message(self, cr, uid, action, context):
+    def merge_message(self, cr, uid, keystr, action, context):
         logger = netsvc.Logger()
         def merge(match):
             
@@ -441,7 +441,7 @@ class actions_server(osv.osv):
             return str(obj)
         
         com = re.compile('\[\[(.+?)\]\]')
-        message = com.sub(merge, str(action.message))
+        message = com.sub(merge, keystr)
         return message
     
     #
@@ -471,7 +471,7 @@ class actions_server(osv.osv):
                 user = config['email_from']
                 subject = action.name
                 
-                address = self.get_field_value(cr, uid, action, context)
+                address = self.get_field_value(cr, uid, str(action.message), action, context)
                 body = self.merge_message(cr, uid, action, context)
                 
                 if tools.email_send_attach(user, address, subject, body, debug=False) == True:
@@ -508,7 +508,22 @@ class actions_server(osv.osv):
                     exec code in localdict
                     if 'action' in localdict:
                         return localdict['action']
-
+            if action.state == 'object_write':
+                res = {}
+                for exp in action.fields_lines:
+                    euq = exp.value
+                    if exp.type == 'equation':
+                        expr = self.merge_message(cr, uid, euq, action, context)
+                        expr = eval(expr)
+                    else:
+                        expr = exp.value
+                    res[exp.col1.name] = expr
+                obj_pool = self.pool.get(action.model_id.model)
+                obj_pool.write(cr, uid, [context.get('active_id')], res)
+                
+            if action.state == 'object_create':
+                pass
+                
         return False
 actions_server()
 
