@@ -488,6 +488,11 @@ class account_move_line(osv.osv):
         return r_id
 
     def view_header_get(self, cr, user, view_id, view_type, context):
+        if context.get('account_id', False):
+            cr.execute('select code from account_account where id=%d', (context['account_id'],))
+            res = cr.fetchone()
+            res = _('Entries: ')+ (res[0] or '')
+            return res
         if (not context.get('journal_id', False)) or (not context.get('period_id', False)):
             return False
         cr.execute('select code from account_journal where id=%d', (context['journal_id'],))
@@ -495,8 +500,8 @@ class account_move_line(osv.osv):
         cr.execute('select code from account_period where id=%d', (context['period_id'],))
         p = cr.fetchone()[0] or ''
         if j or p:
-            return j+':'+p
-        return 'Journal'
+            return j+(p and (':'+p) or '')
+        return False
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False):
         result = super(osv.osv, self).fields_view_get(cr, uid, view_id,view_type,context)
@@ -709,7 +714,6 @@ class account_move_line(osv.osv):
             tax_id=tax_obj.browse(cr,uid,vals['account_tax_id'])
             total = vals['credit'] or (-vals['debit'])
             for tax in tax_obj.compute(cr,uid,[tax_id],total,1.00):
-                print 'Processing Tax', tax
                 self.write(cr, uid,[result], {
                     'tax_code_id': tax['base_code_id'],
                     'tax_amount': tax['base_sign'] * total
@@ -729,7 +733,6 @@ class account_move_line(osv.osv):
                     'credit': tax['amount']>0 and tax['amount'] or 0.0,
                     'debit': tax['amount']<0 and -tax['amount'] or 0.0,
                 }
-                print data
                 self.create(cr, uid, data, context)
         if check:
             self.pool.get('account.move').validate(cr, uid, [vals['move_id']], context)

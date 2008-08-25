@@ -1136,6 +1136,8 @@ class product_product(osv.osv):
     # Utiliser browse pour limiter les queries !
     #
     def view_header_get(self, cr, user, view_id, view_type, context):
+        res = super(product_product, self).view_header_get(cr, user, view_id, view_type, context)
+        if res: return res
         if (not context.get('location', False)):
             return False
         cr.execute('select name from stock_location where id=%d', (context['location'],))

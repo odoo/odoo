@@ -124,10 +124,9 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-                <field name="client_order_ref" position="after">
+                <separator string="Notes" position="before">
                     <field name="carrier_id"/>
-                     
-                </field>
+                </separator>
             </field>
         </record>
         
