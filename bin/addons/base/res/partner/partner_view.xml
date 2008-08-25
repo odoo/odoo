@@ -472,11 +472,12 @@
         <menuitem id="next_id_13" name="Categories" parent="base.menu_base_config"/><menuitem action="action_partner_category" id="menu_partner_category" parent="next_id_13"/>
         
         <record id="action_partner_by_category" model="ir.actions.act_window">
-            <field name="name">Partners By Category</field>
+            <field name="name" eval="False"/>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('category_id','child_of', [active_id])]</field>
+            <field name="context">{'category_id':active_id}</field>
         </record>
         <record id="ir_action_partner_by_category" model="ir.values">
             <field eval="'tree_but_open'" name="key2"/>

@@ -262,6 +262,14 @@ class res_partner(osv.osv):
         # update the current partner
         cr.execute("update res_partner set ref=%d where id=%d", (nextref, ids[0]))
         return True
+
+    def view_header_get(self, cr, uid, view_id, view_type, context):
+        res = super(res_partner, self).view_header_get(cr, uid, view_id, view_type, context)
+        if res: return res
+        if (not context.get('category_id', False)):
+            return False
+        return _('Partners: ')+self.pool.get('res.partner.category').browse(cr, uid, context['category_id'], context).name
+
 res_partner()
 
 class res_partner_address(osv.osv):
