@@ -1,0 +1,399 @@
+<?xml version="1.0"?>
+<terp>
+	<data>
+
+	<!-- EVENTS  -->
+		<menuitem name="Events Organisation" id="menu_event_main" icon="terp-calendar" />
+
+	<!-- EVENTS/CONFIGURATION/TYPE OF EVENTS -->
+		<record model="ir.ui.view" id="view_event_type_form">
+			<field name="name">Event type</field>
+			<field name="model">event.type</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Event Type">
+					<field name="name" select="1"/>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_event_type_tree">
+			<field name="name">Event type</field>
+			<field name="model">event.type</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Event Type">
+					<field name="name"/>
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="action_event_type">
+			<field name="res_model">event.type</field>
+			<field name="view_type">form</field>
+		</record>
+		<menuitem name="Configuration" id="menu_event_config" parent="menu_event_main" />
+		<menuitem name="Types of Events" id="menu_event_type" action="action_event_type" parent="menu_event_config"/>
+
+		<!-- The base section for all events -->
+
+		<record model="ir.actions.act_window" id="action_event_categories">
+			<field name="name">Events by section</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">crm.case.section</field>
+			<field name="domain" eval="[('parent_id','=',False)]" />
+			<field name="view_type">tree</field>
+		</record>
+		<menuitem name="Events by Categories" id="menu_action_event_categories" action="action_event_categories" parent="menu_event_main"/>
+
+
+	<!-- Events Organisation/CONFIGURATION/EVENTS  -->
+
+		<record model="ir.ui.view" id="view_event_form">
+			<field name="name">Events</field>
+			<field name="model">event.event</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Events">
+					<notebook>
+					<page string="Information">
+						<separator string="Event description" colspan="4"/>
+						<field name="name" string="Event" select="1" colspan="4"/>
+						<field name="parent_id" domain="[('parent_id','child_of','Event')]" string="Category"/>
+						<field name="type"/>
+						<field name="user_id" select="1"/>
+						<field name="active"/>
+						<field name="date_begin" select="1"/>
+						<field name="date_end" select="2"/>
+						<field name="register_min" select="2"/>
+						<field name="register_max" select="2"/>
+						<field name="budget_id"/>
+						<field name="product_id" required="1"/>
+						<separator string="Tasks management" colspan="4"/>
+						<field name="project_id"/>
+						<button string="Create Retro-Planning" name="%(event.event_wiz)d" type="action"/>
+						<separator string="Status" colspan="4"/>
+						<field name="state" select="1"/>
+						<group col="4" colspan="2">
+							<button string="Confirm Event" name="button_confirm" states="draft" type="object"/>
+							<button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object"/>
+							<button string="Event Done" name="button_done" states="confirm" type="object"/>
+							<button string="Set To Draft" name="button_draft" states="confirm,cancel,done" type="object"/>
+						</group>
+					</page>
+					<page string="Mailing">
+						<field name="mail_auto_registr"/>
+						<newline/><newline/>
+						<field name="mail_registr"/>
+						<newline/>
+						<field name="mail_auto_confirm"/>
+						<newline/><newline/>
+						<field name="mail_confirm"/>
+						<newline/>
+					</page>
+					<page string="Statistics">
+						<separator string="Registrations" colspan="4"/>
+						<field name="register_current"/>
+						<field name="register_prospect"/>
+						<separator string="Remaining Tasks" colspan="4"/>
+						<field name="task_ids" colspan="4" nolabel="1" widget="one2many_list" >
+								<tree string="All tasks" colors="red:date_deadline&lt;current_date and state=='draft';blue:date_deadline==current_date and state=='draft';grey:state=='cancel' or state=='close'">
+									<field name="sequence"/>
+									<field name="name"/>
+									<field name="user_id" />
+									<field name="date_deadline" />
+									<field name="planned_hours" widget="float_time"/>
+									<field name="effective_hours" widget="float_time"/>
+									<field name="state" />
+								</tree>
+						</field>
+					</page>
+					</notebook>
+			</form>
+			</field>
+		</record>
+
+		<!-- event.event tree view -->
+		<record model="ir.ui.view" id="view_event_tree">
+			<field name="name">event.event.tree</field>
+			<field name="model">event.event</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Events" colors="red:register_min>register_current">
+					<field name="name" string="Name"/>
+					<field name="user_id"/>
+					<field name="date_begin"/>
+					<field name="register_min"/>
+					<field name="register_current"/>
+					<field name="state"/>
+				</tree>
+			</field>
+		</record>
+
+	<!-- Events Organisation/CONFIGURATION/EVENTS  -->
+		<record model="ir.actions.act_window" id="action_new_event_form">
+			<field name="name">New event</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">event.event</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form,tree</field>
+		</record>
+		<menuitem parent="menu_event_config" id="menu_event_new_event" action="action_new_event_form" />
+
+
+		<record model="ir.actions.act_window" id="action_event_view">
+			<field name="name">Events</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">event.event</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<menuitem name="All Events" id="menu_event_event" action="action_event_view" parent="menu_event_main"/>
+
+		<record model="ir.actions.act_window" id="action_event_view_draft">
+			<field name="name">Draft Events</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">event.event</field>
+			<field name="domain">[('state','=','draft')]</field>
+		</record>
+		<menuitem
+			parent="menu_event_event"
+			id="menu_event_event_draft"
+			action="action_event_view_draft" />
+		<record model="ir.actions.act_window" id="action_event_view_confirm">
+			<field name="name">Confirmed Events</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">event.event</field>
+			<field name="domain">[('state','=','confirm')]</field>
+		</record>
+		<menuitem parent="menu_event_event"
+			id="menu_event_event_confi.rm"
+			action="action_event_view_confirm" />
+
+
+	<!-- EVENTS/REGISTRATIONS/EVENTS  -->
+
+		<!-- Registration view (form) by _inherits  .................. -->
+		<record model="ir.ui.view" id="event_registration_tree">
+			<field name="name">event.registration.tree</field>
+			<field name="model">event.registration</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Registration">
+					<field name="id"/>
+					<field name="date"/>
+					<field name="event_id"/>
+					<field name="partner_id"/>
+					<field name="nb_register"/>
+					<field name="state"/>
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="event_registration_form">
+			<field name="name">event.registration.form</field>
+			<field name="model">event.registration</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Registration">
+					<notebook>
+					<page string="General">
+						<field name="event_id" select="1" on_change="onchange_event(event_id, partner_invoice_id)" colspan="1"/>
+						<field name="nb_register"/>
+						<newline/>
+						<field name="partner_id" required="1" select="1" on_change="onchange_partner_id(partner_id,event_id, email_from)" />
+						<field name="partner_invoice_id" on_change="onchange_partner_invoice_id(event_id, partner_invoice_id)"/>
+						<field name="partner_address_id" select="2" on_change="onchange_contact_id(partner_address_id)" colspan="3"/>
+						<field name="email_from" select="2"/>
+						<button name="remind_partner" string="Send Reminder" states="open,pending" type="object" colspan="2"/>
+						<field name="user_id" select="1"/>
+						<button name="remind_user" string="Send Reminder" states="open,pending" type="object" colspan="2"/>
+						<newline/>
+						<separator colspan="4"/>
+						<field name="unit_price" select="2"/>
+						<separator string="Badge" colspan="4"/>
+						<field name="badge_title" select="2"/>
+						<field name="badge_name" select="2" on_change="onchange_badge_name(badge_name)"/>
+						<field name="badge_partner" select="2"/>
+						<newline/>
+						<separator colspan="4"/>
+						<group col="8" colspan="4">
+							<field name="state" select="1" colspan="2"/>
+							<button name="button_reg_close" string="Registration Invoiced" states="open" type="object"/>
+							<button name="button_reg_open" string="Confirm Registration" states="draft" type="object"/>
+							<button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object"/>
+						</group>
+					</page>
+					<page string="Extra Info">
+						<field name="name" select="1" colspan="4"/>
+						<field name="id" select="1"/>
+						<field name="active" select="2"/>
+						<field name="email_cc" colspan="4"/>
+						<field name="categ_id" select="2" on_change="onchange_categ_id(categ_id)"/>
+						<separator colspan="4" string="Dates"/>
+						<field name="create_date"/>
+						<field name="date_closed"/>
+						<field name="date_action_last"/>
+						<field name="date_action_next"/>
+						<separator colspan="4" string="References"/>
+						<field name="ref" colspan="4"/>
+						<field name="ref2" colspan="4"/>
+					</page>
+					<page string="History">
+						<field name="history_line" colspan="4" nolabel="1" mode="tree,form">						<form string="Communication history">
+								<field name="date"/>
+								<field name="som"/>
+								<newline/>
+								<field name="canal_id"/>
+								<field name="email"/>
+								<newline/>
+								<field name="description" colspan="4"/>
+							</form>
+							<tree string="Communication history">
+								<field name="date"/>
+								<field name="description"/>
+								<field name="som"/>
+								<field name="user_id"/>
+								<field name="canal_id"/>
+							</tree>
+						</field>
+						<field name="log_ids" nolabel="1" colspan="4" mode="tree,form" readonly="1">
+							<tree string="Actions">
+								<separator string="Action Information" colspan="4"/>
+								<field name="name"/>
+								<field name="date"/>
+								<field name="user_id"/>
+							</tree>
+							<form string="Actions">
+								<separator string="Action Information" colspan="4"/>
+								<field name="name" colspan="4"/>
+								<field name="date" select="2"/>
+								<field name="user_id" select="2"/>
+							</form>
+						</field>
+					</page>
+					<page string="Payments">
+						<field name="invoice_label" select="1"/>
+						<field name="tobe_invoiced" select="1"/>
+						<field name="invoice_id"/>
+					</page>
+					</notebook>
+				</form>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="action_registration">
+		  <field name="name">Registrations</field>
+		  <field name="res_model">event.registration</field>
+		  <field name="view_type">form</field>
+		  <field name="domain"></field>
+		  <field name="view_mode">tree,form</field>
+		</record>
+		<menuitem
+			name="All Registrations"
+			id="menu_action_registration" parent="menu_event_main"
+			action="action_registration"/>
+		<record model="ir.actions.act_window" id="action_registration_draft">
+		  <field name="name">Unconfirmed Registrations</field>
+		  <field name="res_model">event.registration</field>
+		  <field name="view_type">form</field>
+		  <field name="domain">[('state','=','draft')]</field>
+		  <field name="view_mode">tree,form</field>
+		</record>
+		<menuitem
+			parent="menu_action_registration"
+			id="menu_action_registration_draft"
+			action="action_registration_draft"/>
+		<record model="ir.actions.act_window" id="action_registration_confirm">
+		  <field name="name">Confirmed Registrations</field>
+		  <field name="res_model">event.registration</field>
+		  <field name="view_type">form</field>
+		  <field name="domain">[('state','in',('open','done'))]</field>
+		</record>
+		<menuitem
+			parent="menu_action_registration"
+			id="menu_action_registration_confirm"
+			action="action_registration_confirm"/>
+
+
+	<!-- report , event on registration... start -->
+		<record model="ir.ui.view" id="report_event_registration_tree">
+			<field name="name">report.event.registration.tree</field>
+			<field name="model">report.event.registration</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Event on Registration">
+					<field name="name" select="1"/>
+					<field name="date_begin" select="1"/>
+					<field name="date_end"/>
+					<field name="draft_state" select="2"/>
+					<field name="confirm_state" select="2"/>
+					<field name="register_max" select="2"/>
+				</tree>
+			</field>
+		</record>
+
+		<record model ="ir.ui.view" id="report_event_registration_graph">
+			<field name="name">report.event.registration.graph</field>
+			<field name="model">report.event.registration</field>
+			<field name="type">graph</field>
+			<field name="arch" type="xml">
+				<graph string="Event on Registration" type="bar">
+					<field name="name"/>
+					<field name="draft_state" operator="+"/>
+					<field name="confirm_state" operator="+"/>
+					<field name="register_max" operator="+"/>
+				</graph>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="action_event_registration">
+			<field name="name">Events On Registrations</field>
+			<field name="res_model">report.event.registration</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,graph</field>
+		</record>
+		<menuitem name="Reporting" id="menu_report_event" parent="menu_event_main"/>
+		<menuitem parent="menu_report_event" action="action_event_registration" id="menu_report_event_registration"/>
+	<!-- end... -->
+
+
+	<!-- report , event  type on registration... start -->
+		<record model="ir.ui.view" id="report_event_type_registration_tree">
+			<field name="name">report.event.type.registration.tree</field>
+			<field name="model">report.event.type.registration</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Registration By Event Types">
+					<field name="name" select="1"/>
+					<field name="nbevent"/>
+					<field name="draft_state" select="2"/>
+					<field name="confirm_state" select="2"/>
+				</tree>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="report_event_type_registration_graph">
+			<field name="name">report.event.type.registration.graph</field>
+			<field name="model">report.event.type.registration</field>
+			<field name="type">graph</field>
+			<field name="arch" type="xml">
+				<graph string="Registration By Event Types" type="bar">
+					<field name="name"/>
+					<field name="draft_state" operator="+"/>
+					<field name="confirm_state" operator="+"/>
+				</graph>
+			</field>
+		</record>
+
+		<record model="ir.actions.act_window" id="action_event_type_registration">
+			<field name="name">Registration By Event Types</field>
+			<field name="res_model">report.event.type.registration</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">graph,tree</field>
+		</record>
+			<menuitem parent="menu_report_event" action="action_event_type_registration" id="menu_report_event_type_registration"/>
+
+	<!-- end...  -->
+	</data>
+</terp>

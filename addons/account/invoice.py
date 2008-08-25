@@ -499,14 +499,18 @@ class account_invoice(osv.osv):
                         _('Can not create invoice move on centralized journal'))
 
             move = {'name': name, 'line_id': line, 'journal_id': journal_id}
-            if inv.period_id:
-                move['period_id'] = inv.period_id.id
+            period_id=inv.period_id and inv.period_id.id or False
+            if not period_id:
+                period_ids= self.pool.get('account.period').search(cr,uid,[('date_start','<=',inv.date_invoice),('date_stop','>=',inv.date_invoice)])
+                if len(period_ids):
+                    period_id=period_ids[0]
+            if period_id:
+                move['period_id'] = period_id
                 for i in line:
-                    i[2]['period_id'] = inv.period_id.id
-
+                    i[2]['period_id'] = period_id
             move_id = self.pool.get('account.move').create(cr, uid, move)
             # make the invoice point to that move
-            self.write(cr, uid, [inv.id], {'move_id': move_id})
+            self.write(cr, uid, [inv.id], {'move_id': move_id,'period_id':period_id})
             self.pool.get('account.move').post(cr, uid, [move_id])
         self._log_event(cr, uid, ids)
         return True

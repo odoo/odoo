@@ -1,0 +1,76 @@
+<?xml version="1.0" ?>
+<terp>
+	<data>
+
+	<record model="project.gtd.context" id="context_office">
+		<field name="name">Office</field>
+		<field name="sequence">0</field>
+		<field name="project_default_id" ref="project.project_project_9"/>
+	</record>
+	<record model="project.gtd.context" id="context_travel">
+		<field name="name">Travel</field>
+		<field name="sequence">2</field>
+		<field name="project_default_id" ref="project.project_project_9"/>
+	</record>
+	<record model="project.gtd.context" id="context_car">
+		<field name="name">Car</field>
+		<field name="sequence">1</field>
+		<field name="project_default_id" ref="project.project_project_9"/>
+	</record>
+	<record model="project.gtd.context" id="context_home">
+		<field name="name">Home</field>
+		<field name="sequence">3</field>
+		<field name="project_default_id" ref="project.project_project_9"/>
+	</record>
+
+	<record model="project.gtd.timebox" id="timebox_daily">
+		<field name="name">Daily</field>
+		<field name="user_id" ref="base.user_admin"/>
+		<field name="type">daily</field>
+		<field name="context1_id" ref="context_office"/>
+		<field name="context2_id" ref="context_car"/>
+		<field name="context3_id" ref="context_travel"/>
+		<field name="context4_id" ref="context_home"/>
+		<field name="col_project" eval="False"/>
+		<field name="col_effective_hours" eval="True"/>
+		<field name="col_date_start" eval="False"/>
+	</record>
+	<record model="project.gtd.timebox" id="timebox_weekly">
+		<field name="name">Weekly</field>
+		<field name="user_id" ref="base.user_admin"/>
+		<field name="parent_id" ref="timebox_daily"/>
+		<field name="type">weekly</field>
+		<field name="context1_id" ref="context_office"/>
+		<field name="context2_id" ref="context_car"/>
+		<field name="context3_id" ref="context_travel"/>
+		<field name="context4_id" ref="context_home"/>
+		<field name="col_deadline" eval="True"/>
+		<field name="col_effective_hours" eval="True"/>
+	</record>
+	<record model="project.gtd.timebox" id="timebox_monthly">
+		<field name="name">Monthly</field>
+		<field name="user_id" ref="base.user_admin"/>
+		<field name="type">other</field>
+		<field name="parent_id" ref="timebox_weekly"/>
+		<field name="context1_id" ref="context_office"/>
+		<field name="context2_id" ref="context_car"/>
+		<field name="context3_id" ref="context_travel"/>
+		<field name="context4_id" ref="context_home"/>
+		<field name="col_deadline" eval="True"/>
+		<field name="col_effective_hours" eval="True"/>
+	</record>
+	<record model="project.gtd.timebox" id="timebox_lt">
+		<field name="name">Long Term</field>
+		<field name="user_id" ref="base.user_admin"/>
+		<field name="type">other</field>
+		<field name="parent_id" ref="timebox_monthly"/>
+		<field name="context1_id" ref="context_office"/>
+		<field name="context2_id" ref="context_car"/>
+		<field name="context3_id" ref="context_travel"/>
+		<field name="context4_id" ref="context_home"/>
+		<field name="col_deadline" eval="True"/>
+		<field name="col_effective_hours" eval="True"/>
+	</record>
+
+	</data>
+</terp>

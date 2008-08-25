@@ -38,21 +38,51 @@
         </record>
 
 
+        <record id="view_normal_property_acc.form" model="ir.ui.view">
+            <field name="name">product.normal.stock.acc.property.form.inherit</field>
+            <field name="model">product.product</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <field name="property_account_expense" position="after">
+                    <field name="property_stock_account_input"/>
+                    <field name="property_stock_account_output"/>
+                </field>
+			</field>
+		</record>
+
+        <record id="view_normal_stock_property_form" model="ir.ui.view">
+            <field name="name">product.normal.stock.form.inherit</field>
+            <field name="model">product.product</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <group name="status" position="after">
+					<group colspan="2" col="2">
+                    <separator string="Stocks" colspan="4"/>
+						<field name="qty_available"/>
+						<field name="virtual_available"/>
+						<field name="incoming_qty"/>
+						<field name="outgoing_qty"/>
+					</group>
+                </group>
+            </field>
+        </record>
+
         <record id="view_normal_property_form" model="ir.ui.view">
             <field name="name">product.normal.stock.property.form.inherit</field>
             <field name="model">product.product</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <page string="Properties" position="inside">
-                    <separator string="Counter-Part Locations" colspan="4"/>
-                    <field name="property_stock_procurement"/>
-                    <field name="property_stock_production"/>
-                    <field name="property_stock_inventory"/>
-                    <separator string="Accounting Entries" colspan="4"/>
-                    <field name="property_stock_account_input"/>
-                    <field name="property_stock_account_output"/>
-                </page>
+                <group name="store" position="after">
+					<group col="2" colspan="2" name="store">
+						<separator string="Counter-Part Locations" colspan="2"/>
+						<field name="property_stock_procurement"/>
+						<field name="property_stock_production"/>
+						<field name="property_stock_inventory"/>
+					</group>
+                </group>
             </field>
         </record>
 

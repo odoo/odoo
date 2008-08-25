@@ -7,12 +7,19 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <field name="product_manager" position="after">
-                    <newline/>
-                    <field colspan="4" name="supplier_taxes_id"/>
-                    <field colspan="4" name="taxes_id"/>
-                    <newline/>
-                </field>
+                <notebook position="inside">
+                    <page string="Accounting">
+                        <separator string="Sales" colspan="2"/>
+                        <separator string="Purchases" colspan="2"/>
+                        <field name="property_account_income"/>
+                        <field name="property_account_expense"/>
+
+                        <separator string="Sale Taxes" colspan="2"/>
+                        <separator string="Purchase Taxes" colspan="2"/>
+                        <field name="taxes_id" nolabel="1" colspan="2"/>
+                        <field name="supplier_taxes_id" nolabel="1" colspan="2"/>
+                    </page>
+                </notebook>
             </field>
         </record>
 
@@ -22,13 +29,17 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <field name="cost_method" position="after">
-                    <newline/>
-                    <field colspan="4" name="supplier_taxes_id"/>
-                    <field colspan="4" name="taxes_id"/>
-                    <newline/>
-                </field>
-            </field>
+                <notebook position="inside">
+                    <page string="Accounting">
+                        <separator string="Sales" colspan="2"/>
+                        <separator string="Purchases" colspan="2"/>
+                        <field name="property_account_income"/>
+                        <field name="property_account_expense"/>
+                        <field name="supplier_taxes_id"/>
+                        <field name="taxes_id"/>
+                    </page>
+                </notebook>
+             </field>
         </record>
 
 
@@ -45,40 +56,6 @@
                 </group>
             </field>
         </record>
-
-
-
-        <record id="view_template_property_form" model="ir.ui.view">
-            <field name="name">product.template.property.form.inherit</field>
-            <field name="model">product.template</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="product.product_template_form_view"/>
-            <field name="arch" type="xml">
-                <page string="Properties" position="inside">
-                    <separator string="Sales Properties" colspan="2"/>
-                    <separator string="Purchases Properties" colspan="2"/>
-                    <field name="property_account_income"/>
-                    <field name="property_account_expense"/>
-                </page>
-            </field>
-        </record>
-
-
-        <record id="view_normal_property_form" model="ir.ui.view">
-            <field name="name">product.normal.property.form.inherit</field>
-            <field name="model">product.product</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
-            <field name="arch" type="xml">
-                <page string="Properties" position="inside">
-                    <separator string="Sales Properties" colspan="2"/>
-                    <separator string="Purchases Properties" colspan="2"/>
-                    <field name="property_account_income"/>
-                    <field name="property_account_expense"/>
-                </page>
-            </field>
-        </record>
-
 
     </data>
 </terp>

@@ -54,8 +54,8 @@
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="partner_shipping_id"/>
-                    <field name="shipped"/>
-                    <field name="invoiced"/>
+                    <field name="picked_rate" widget="progressbar"/>
+                    <field name="invoiced_rate" widget="progressbar"/>
                     <field name="amount_untaxed"/>
                     <field name="state"/>
                 </tree>
@@ -167,6 +167,7 @@
                             <field groups="base.group_extended" name="origin"/>
                             <field groups="base.group_extended" name="invoice_quantity" attrs="{'readonly':[('order_policy','=','picking')]}"/>
                             <field name="client_order_ref"/>
+							<field name="payment_term"/>
                             <separator colspan="4" string="Notes"/>
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>

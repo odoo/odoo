@@ -246,12 +246,12 @@ class product_template(osv.osv):
         'description_sale': fields.text('Sale Description'),
         'type': fields.selection([('product','Stockable Product'),('consu', 'Consumable'),('service','Service')], 'Product Type', required=True),
         'supply_method': fields.selection([('produce','Produce'),('buy','Buy')], 'Supply method', required=True),
-        'sale_delay': fields.float('Customer lead time', help="This is the average time between the confirmation of the customer order and the delivery of the finnished products. It's the time you promise to your customers."),
-        'produce_delay': fields.float('Manufacturing lead time', help="Average time to produce this product. This is only for the production order and, if it is a multi-level bill of material, it's only for the level of this product. Different delays will be summed for all levels and purchase orders."),
+        'sale_delay': fields.float('Customer Lead Time', help="This is the average time between the confirmation of the customer order and the delivery of the finnished products. It's the time you promise to your customers."),
+        'produce_delay': fields.float('Manufacturing Lead Time', help="Average time to produce this product. This is only for the production order and, if it is a multi-level bill of material, it's only for the level of this product. Different delays will be summed for all levels and purchase orders."),
         'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procure Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until refurnishing. 'Make to Order': When needed, purchase or produce for the procurement request."),
         'rental': fields.boolean('Rentable product'),
         'categ_id': fields.many2one('product.category','Category', required=True, change_default=True),
-        'list_price': fields.float('Public Price', digits=(16, int(config['price_accuracy']))),
+        'list_price': fields.float('Sale Price', digits=(16, int(config['price_accuracy']))),
         'standard_price': fields.float('Cost Price', required=True, digits=(16, int(config['price_accuracy']))),
         'volume': fields.float('Volume'),
         'weight': fields.float('Gross weight'),
@@ -268,10 +268,13 @@ class product_template(osv.osv):
         'uos_coeff': fields.float('UOM -> UOS Coeff', digits=(16,4),
             help='Coefficient to convert UOM to UOS\n'
             ' uom = uos * coeff'),
-        'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure type', required=True),
-        'tracking': fields.boolean('Track lots'),
-        'seller_delay': fields.function(_calc_seller_delay, method=True, type='integer', string='Supplier lead time', help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
+        'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type', required=True),
+        'tracking': fields.boolean('Track Lots', help="Force to use a Production Lot number during stock operations for traceability."),
+        'seller_delay': fields.function(_calc_seller_delay, method=True, type='integer', string='Supplier Lead Time', help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
         'seller_ids': fields.one2many('product.supplierinfo', 'product_id', 'Partners'),
+        'loc_rack': fields.char('Rack', size=16),
+        'loc_row': fields.char('Row', size=16),
+        'loc_case': fields.char('Case', size=16),
     }
 
     def _get_uom_id(self, cr, uid, *args):
@@ -410,8 +413,8 @@ class product_product(osv.osv):
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True),
         'ean13': fields.char('EAN13', size=13),
         'packaging' : fields.one2many('product.packaging', 'product_id', 'Palettization', help="Gives the different ways to package the same product. This has no impact on the packing order and is mainly used if you use the EDI module."),
-        'price_extra': fields.float('Price Extra', digits=(16, int(config['price_accuracy']))),
-        'price_margin': fields.float('Price Margin', digits=(16, int(config['price_accuracy']))),
+        'price_extra': fields.float('Variant Price Extra', digits=(16, int(config['price_accuracy']))),
+        'price_margin': fields.float('Variant Price Margin', digits=(16, int(config['price_accuracy']))),
     }
 
     def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):        
@@ -580,7 +583,7 @@ class product_supplierinfo(osv.osv):
         'qty' : fields.float('Minimal quantity', required=True),
         'product_id' : fields.many2one('product.template', 'Product', required=True, ondelete='cascade', select=True),
         'delay' : fields.integer('Delivery delay', required=True),
-        'pricelist_ids': fields.one2many('pricelist.partnerinfo', 'suppinfo_id', 'Pricelist'),
+        'pricelist_ids': fields.one2many('pricelist.partnerinfo', 'suppinfo_id', 'Supplier Pricelist'),
     }
     _defaults = {
         'qty': lambda *a: 0.0,
