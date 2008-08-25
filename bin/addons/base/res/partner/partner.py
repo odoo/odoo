@@ -138,7 +138,7 @@ class res_partner(osv.osv):
         'parent_id': fields.many2one('res.partner','Main Company', select=2),
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Partner Ref.'),
         'ref': fields.char('Code', size=64),
-        'lang': fields.selection(_lang_get, 'Language', size=5),
+        'lang': fields.selection(_lang_get, 'Language', size=5, help="If the selected language is loaded in the system, all documents related to this partner will be printed in this language. If not, it will be english."),
         'user_id': fields.many2one('res.users', 'Dedicated Salesman', help='The internal user that is in charge of communicating with this partner if any.'),
         'responsible': fields.many2one('res.users', 'Users'),
         'vat': fields.char('VAT',size=32 ,help="Value Added Tax number"),
@@ -152,9 +152,12 @@ class res_partner(osv.osv):
         'credit_limit': fields.float(string='Credit Limit'),
         'ean13': fields.char('EAN13', size=13),
         'active': fields.boolean('Active'),
+        'customer': fields.boolean('Customer'),
+        'supplier': fields.boolean('Supplier'),
     }
     _defaults = {
         'active': lambda *a: 1,
+        'customer': lambda *a: 1,
     }
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The name of the partner must be unique !')
@@ -262,7 +265,7 @@ class res_partner(osv.osv):
 res_partner()
 
 class res_partner_address(osv.osv):
-    _description ='Partner Contact'
+    _description ='Partner Addresses'
     _name = 'res.partner.address'
     _order = 'id'
     _columns = {

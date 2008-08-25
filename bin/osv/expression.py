@@ -70,7 +70,7 @@ class expression(object):
                         return []
                     ids2 = table.search(cr, uid, [(parent, 'in', ids)], context=context)
                     return ids+rg(ids2, table, parent)
-                return [(prefix+left, 'in', rg(ids2, table, parent))]
+                return [(left, 'in', rg(ids2, table, parent))]
 
         self.__main_table = table
 
@@ -148,7 +148,7 @@ class expression(object):
                         return self.__execute_recursive_in(cr, field._id1, field._rel, field._id2, ids)
                     
                     dom = _rec_get(ids2, field_obj, working_table._parent_name)
-                    ids2 = field_obj.search(cr, uid, doms, context=context)
+                    ids2 = field_obj.search(cr, uid, dom, context=context)
                     self.__exp[i] = ('id', 'in', _rec_convert(ids2))
                 else:
                     if isinstance(right, basestring):
@@ -165,7 +165,7 @@ class expression(object):
 
                     self.__operator = 'in'
                     if field._obj != working_table._name:
-                        dom = _rec_get(ids2, field_obj, working_table._parent_name, left=left)
+                        dom = _rec_get(ids2, field_obj, working_table._parent_name, left=left, prefix=field._obj)
                     else:
                         dom = _rec_get(ids2, working_table, left)
                     self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
