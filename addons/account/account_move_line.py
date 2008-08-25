@@ -404,7 +404,11 @@ class account_move_line(osv.osv):
             account_id = line['account_id']['id']
             partner_id = (line['partner_id'] and line['partner_id']['id']) or False
         writeoff = debit - credit
-        date = time.strftime('%Y-%m-%d')
+        # Ifdate_p in context => take this date
+        if context.has_key('date_p') and context['date_p']:
+            date=context['date_p']
+        else:
+            date = time.strftime('%Y-%m-%d')
 
         cr.execute('SELECT account_id, reconcile_id \
                 FROM account_move_line \
@@ -435,9 +439,15 @@ class account_move_line(osv.osv):
                 self_credit = 0.0
                 self_debit = -writeoff
 
+            # If comment exist in context, take it
+            if context['comment']:
+                libelle=context['comment']
+            else:
+                libelle='Write-Off'
+
             writeoff_lines = [
                 (0, 0, {
-                    'name':'Write-Off',
+                    'name':libelle,
                     'debit':self_debit,
                     'credit':self_credit,
                     'account_id':account_id,
@@ -447,7 +457,7 @@ class account_move_line(osv.osv):
                     'amount_currency': account.currency_id.id and -currency or 0.0
                 }),
                 (0, 0, {
-                    'name':'Write-Off',
+                    'name':libelle,
                     'debit':debit,
                     'credit':credit,
                     'account_id':writeoff_acc_id,
