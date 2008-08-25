@@ -454,7 +454,6 @@ class actions_server(osv.osv):
                 
                 address = self.get_field_value(cr, uid, action, context)
                 body = self.merge_message(cr, uid, action, context)
-                #TODO : Apply Mail merge in to the Content of the Email
                 
                 if tools.email_send_attach(user, address, subject, body, debug=False) == True:
                     logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (address))
