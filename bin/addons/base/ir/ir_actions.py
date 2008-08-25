@@ -333,6 +333,23 @@ class ir_model_fields(osv.osv):
 
 ir_model_fields()
 
+class server_object_lines(osv.osv):
+    _name = 'ir.server.object.lines'
+    _sequence = 'ir_actions_id_seq'
+    _columns = {
+        'server_id': fields.many2one('ir.actions.server', 'Object Mapping'),
+        'col1': fields.many2one('ir.model.fields', 'Destination', required=True),
+        'value': fields.text('Value', required=True),
+        'type': fields.selection([
+            ('value','Value'),
+            ('equation','Formula')
+        ], 'Type', required=True, size=32, change_default=True),
+    }
+    _defaults = {
+        'type': lambda *a: 'equation',
+    }
+server_object_lines()
+
 ##
 # Actions that are run on the server side
 #
@@ -363,6 +380,8 @@ class actions_server(osv.osv):
         'child_ids': fields.one2many('ir.actions.actions', 'parent_id', 'Others Actions'),
         'usage': fields.char('Action Usage', size=32),
         'type': fields.char('Report Type', size=32, required=True),
+        'srcmodel_id': fields.many2one('ir.model', 'Model', required=True),
+        'fields_lines': fields.one2many('ir.server.object.lines', 'server_id', 'Fields Mapping'),
     }
     _defaults = {
         'state': lambda *a: 'dummy',

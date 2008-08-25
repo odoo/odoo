@@ -1063,6 +1063,23 @@
 							<label colspan="4" string="Access all the fields related to the current object easily just by defining name of the attribute, i.e. [[partner_id.name]] for Invoice Object"/>
 						</page>
 						
+						<page string="Create / Write" attrs="{'invisible':[('state','=','python'),('state','=','dummy'),('state','=','trigger'), ('state','=','sms'), ('state','=','email'), ('state','=','client_action'), ('state','=','other')]}">
+							<separator colspan="4" string="Fields Mapping"/>
+							<field name="srcmodel_id" select="2"/>
+							<field name="fields_lines" nolabel="1" select="2" colspan="4">
+								<tree string="Field Mappings" editable="top">
+									<field name="col1" domain="[('model_id','=',parent.srcmodel_id)]"/>
+									<field name="type"/>
+									<field name="value"/>
+								</tree>
+								<form string="Field Mapping"> 
+									<field name="col1" domain="[('model_id','=',parent.srcmodel_id)]"/>
+									<field name="type"/>
+									<field name="value" colapsn="4"/>
+								</form>
+							</field>
+						</page>
+						
 						<page string="Other Actions" attrs="{'invisible':[('state','!=','other')]}">
 							<separator colspan="4" string="Other Actions Configuration"/>
                     		<field name="child_ids" nolabel="1" colspan="4" />
