@@ -139,7 +139,7 @@ class account_account(osv.osv):
             context=None, count=False):
         if context is None:
             context = {}
-        pos = 0        
+        pos = 0
         while pos<len(args):
             if args[pos][0]=='code' and args[pos][1] in ('like','ilike'):
                 args[pos][1]='=like'
@@ -156,7 +156,7 @@ class account_account(osv.osv):
                 ids1 = super(account_account,self).search(cr, uid, [('type','in',ids3)])
                 ids1 += map(lambda x: x.id, jour.account_control_ids)
                 args[pos] = ('id','in',ids1)
-            pos+=1        
+            pos+=1
         return super(account_account,self).search(cr, uid, args, offset, limit,
                 order, context=context, count=count)
 
@@ -346,7 +346,7 @@ class account_account(osv.osv):
             res.append((record['id'],name ))
         return res
 
-    def copy(self, cr, uid, id, default={}, context={}):        
+    def copy(self, cr, uid, id, default={}, context={}):
         account = self.browse(cr, uid, id, context=context)
         new_child_ids = []
         default['parent_id'] = False
@@ -423,6 +423,7 @@ class account_journal(osv.osv):
         'user_id': fields.many2one('res.users', 'User', help="The responsible user of this journal"),
         'groups_id': fields.many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', 'Groups'),
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
+        'entry_posted': fields.boolean('Skip \'Draft\' State of Created Entries', help='Check this box if you don\'t want that new account moves pass through the draft state'),
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -715,6 +716,7 @@ class account_move(osv.osv):
                 vals['name'] = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
             else:
                 raise osv.except_osv(_('Error'), _('No sequence defined in the journal !'))
+        accnt_journal = self.pool.get('account.journal').browse(cr, uid, vals['journal_id'])
         if 'line_id' in vals:
             c = context.copy()
             c['novalidate'] = True
@@ -1782,7 +1784,7 @@ class account_chart_template(osv.osv):
 account_chart_template()
 
 class wizard_account_chart_duplicate(osv.osv_memory):
-    """    
+    """
     Create a new account chart for a new company.
     Wizards ask:
         * an accuont chart (parent_id,=,False)
@@ -1790,27 +1792,27 @@ class wizard_account_chart_duplicate(osv.osv_memory):
     Then, the wizard:
         * duplicates all accounts and assign to the right company
         * duplicates all taxes, changing account assignations
-        * duplicate all accounting properties and assign correctly                     
+        * duplicate all accounting properties and assign correctly
     """
     _name = 'wizard.account.chart.duplicate'
     _columns = {
         'name':fields.char('Name',size=64),
         'account_id':fields.many2one('account.account','Account Chart',required=True,domain=[('parent_id','=',False)]),
-        'company_id':fields.many2one('res.company','Company',required=True), 
-        
-    }    
-    
+        'company_id':fields.many2one('res.company','Company',required=True),
+
+    }
+
     def action_create(self, cr, uid,ids, context=None):
         res=self.read(cr,uid,ids)[0]
         if res.get('account_id',False) and res.get('company_id',False):
-            account_obj=self.pool.get('account.account') 
+            account_obj=self.pool.get('account.account')
             account_tax_obj=self.pool.get('account.tax')
             property_obj=self.pool.get('ir.property')
             # duplicate all accounts
             account_obj.copy(cr,uid,res['account_id'],default={'company_id':res['company_id']})
-            # duplicate all taxes 
+            # duplicate all taxes
             tax_ids=account_tax_obj.search(cr,uid,[])
-            for tax in account_tax_obj.browse(cr,uid,tax_ids):        
+            for tax in account_tax_obj.browse(cr,uid,tax_ids):
                 val={'company_id':res['company_id']}
                 if tax.account_collected_id:
                     new_invoice_account_ids=account_obj.search(cr,uid,[('name','=',tax.account_collected_id.name),('company_id','=',res['company_id'])])
@@ -1818,7 +1820,7 @@ class wizard_account_chart_duplicate(osv.osv_memory):
                 if tax.account_paid_id:
                     new_refund_account_ids=account_obj.search(cr,uid,[('name','=',tax.account_paid_id.name),('company_id','=',res['company_id'])])
                     val['account_paid_id']=len(new_refund_account_ids) and new_refund_account_ids[0] or False
-                account_tax_obj.copy(cr,uid,tax.id,default=val)            
+                account_tax_obj.copy(cr,uid,tax.id,default=val)
             # duplicate all accouting properties
             property_ids=property_obj.search(cr,uid,[('value','=like','account.account,%')])
             for property in property_obj.browse(cr,uid,property_ids):
@@ -1830,7 +1832,7 @@ class wizard_account_chart_duplicate(osv.osv_memory):
                                 'value':'account.account,'+str(new_account_ids[0]),
                                 'company_id':res['company_id']
                             })
-                    
+
         return {'type':'ir.actions.act_window_close'}
 
 wizard_account_chart_duplicate()

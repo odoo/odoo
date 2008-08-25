@@ -732,7 +732,9 @@ class account_move_line(osv.osv):
                 print data
                 self.create(cr, uid, data, context)
         if check:
-            self.pool.get('account.move').validate(cr, uid, [vals['move_id']], context)
+            tmp = self.pool.get('account.move').validate(cr, uid, [vals['move_id']], context)
+            if journal.entry_posted and tmp:
+                self.pool.get('account.move').write(cr,uid, [vals['move_id']],{'state':'posted'})
         return result
 account_move_line()
 
