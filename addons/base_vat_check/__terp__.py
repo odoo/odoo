@@ -27,15 +27,15 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 {
-    "name":"Accounting only profile",
-    "version":"1.0",
-    "author":"Tiny",
-    "category":"Profile",
-    "depends":["account","report_analytic","board_account","account_followup",'invoice_payment_tab'],
-    "demo_xml":[],
-    "update_xml":[],
-    "active":False,
-    "installable":True,
+    "name": "VAT Check",
+    "description": "Add a check of the VAT Number. Idea and code from Tryton (c2bk)",
+    "version": "1.0",
+    "author": "Tiny",
+    "category": "Generic Modules/Base",
+    "depends": ["base", "base_vat"],
+    "update_xml": [],
+    "active": False,
+    "installable": True,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
