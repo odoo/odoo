@@ -92,6 +92,8 @@ def attr_get(node, attrs, dict={}):
                 res[key] = bool_get(node.getAttribute(key))
             elif dict[key]=='int':
                 res[key] = int(node.getAttribute(key))
+            elif dict[key]=='unit':
+                res[key] = unit_get(node.getAttribute(name))
     return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
