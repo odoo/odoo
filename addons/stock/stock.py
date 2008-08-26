@@ -606,15 +606,14 @@ class stock_picking(osv.osv):
         for picking in self.browse(cursor, user, ids, context=context):
             if picking.invoice_state != '2binvoiced':
                 continue
-
+            payment_term_id = False
             partner = picking.address_id.partner_id
             if type in ('out_invoice', 'out_refund'):
                 account_id = partner.property_account_receivable.id
+                payment_term_id= picking.sale_id.payment_term.id
             else:
                 account_id = partner.property_account_payable.id
-            payment_term_id = False
-            if partner.property_payment_term:
-                payment_term_id = partner.property_payment_term.id
+#                payment_term_id = picking.purchase_id.payment_term.id
 
             address_contact_id, address_invoice_id = \
                     self._get_address_invoice(cursor, user, picking).values()
@@ -1136,6 +1135,8 @@ class product_product(osv.osv):
     # Utiliser browse pour limiter les queries !
     #
     def view_header_get(self, cr, user, view_id, view_type, context):
+        res = super(product_product, self).view_header_get(cr, user, view_id, view_type, context)
+        if res: return res
         if (not context.get('location', False)):
             return False
         cr.execute('select name from stock_location where id=%d', (context['location'],))

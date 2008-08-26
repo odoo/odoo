@@ -7,9 +7,12 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <page string="Properties" position="inside">
-                    <separator string="Sales" colspan="4"/>
-                    <field name="property_product_pricelist"/>
+                <page string="Sales &amp; Purchases" position="inside">
+                    <newline/>
+                    <group col="2" colspan="2">
+                        <separator string="Sales" colspan="2"/>
+                        <field name="property_product_pricelist"/>
+                    </group>
                 </page>
             </field>
         </record>

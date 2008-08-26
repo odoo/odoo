@@ -228,7 +228,7 @@ class sale_order(osv.osv):
 
         'order_line': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'invoice_ids': fields.many2many('account.invoice', 'sale_order_invoice_rel', 'order_id', 'invoice_id', 'Invoice', help="This is the list of invoices that have been generated for this sale order. The same sale order may have been invoiced in several times (by line for example)."),
-        'picking_ids': fields.one2many('stock.picking', 'sale_id', 'Packing List', readonly=True, help="This is the list of picking list that have been generated for this invoice"),
+        'picking_ids': fields.one2many('stock.picking', 'sale_id', 'Related Packings', readonly=True, help="This is the list of picking list that have been generated for this invoice"),
         'shipped':fields.boolean('Picked', readonly=True),
         'picked_rate': fields.function(_picked_rate, method=True, string='Picked', type='float'),
         'invoiced_rate': fields.function(_invoiced_rate, method=True, string='Invoiced', type='float'),
@@ -239,6 +239,7 @@ class sale_order(osv.osv):
         'amount_tax': fields.function(_amount_tax, method=True, string='Taxes'),
         'amount_total': fields.function(_amount_total, method=True, string='Total'),
         'invoice_quantity': fields.selection([('order','Ordered Quantities'),('procurement','Shipped Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice). Ordered and delivered quantities may not be the same. You have to choose if you invoice based on ordered or shipped quantities. If the product is a service, shipped quantities means hours spent on the associated tasks."),
+        'payment_term' : fields.many2one('account.payment.term', 'Payment Term'),
     }
     _defaults = {
         'picking_policy': lambda *a: 'direct',
@@ -281,10 +282,11 @@ class sale_order(osv.osv):
 
     def onchange_partner_id(self, cr, uid, ids, part):
         if not part:
-            return {'value':{'partner_invoice_id': False, 'partner_shipping_id':False, 'partner_order_id':False}}
+            return {'value':{'partner_invoice_id': False, 'partner_shipping_id':False, 'partner_order_id':False, 'payment_term' : False}}
         addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['delivery','invoice','contact'])
         pricelist = self.pool.get('res.partner').browse(cr, uid, part).property_product_pricelist.id
-        return {'value':{'partner_invoice_id': addr['invoice'], 'partner_order_id':addr['contact'], 'partner_shipping_id':addr['delivery'], 'pricelist_id': pricelist}}
+        payment_term = self.pool.get('res.partner').browse(cr, uid, part).property_payment_term.id
+        return {'value':{'partner_invoice_id': addr['invoice'], 'partner_order_id':addr['contact'], 'partner_shipping_id':addr['delivery'], 'pricelist_id': pricelist, 'payment_term' : payment_term}}
 
     def button_dummy(self, cr, uid, ids, context={}):
         return True
@@ -298,8 +300,8 @@ class sale_order(osv.osv):
 
     def _make_invoice(self, cr, uid, order, lines):
         a = order.partner_id.property_account_receivable.id
-        if order.partner_id and order.partner_id.property_payment_term.id:
-            pay_term = order.partner_id.property_payment_term.id
+        if order.payment_term:
+            pay_term = order.payment_term.id
         else:
             pay_term = False
         for preinv in order.invoice_ids:

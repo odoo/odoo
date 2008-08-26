@@ -51,7 +51,7 @@
             <field name="arch" type="xml">
                 <tree string="Sales orders">
                     <field name="date_order"/>
-                    <field name="name"/>
+                    <field name="name" string="Reference"/>
                     <field name="partner_id"/>
                     <field name="partner_shipping_id"/>
                     <field name="picked_rate" widget="progressbar"/>
@@ -68,16 +68,17 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sales order">
-                    <notebook>
+					<group col="6" colspan="4">
+						<field name="name" select="1"/>
+						<field name="client_order_ref"/>
+						<field name="shipped" select="2"/>
+						<field name="shop_id" on_change="onchange_shop_id(shop_id)" select="2"/>
+						<field name="date_order" select="1"/>
+						<field name="invoiced" select="2"/>
+					</group>
+                    <notebook colspan="4">
                         <page string="Sale Order">
-                            <field name="name" select="1"/>
-                            <group col="4" colspan="2">
-                                <field name="shipped" select="2"/>
-                                <field name="invoiced" select="2"/>
-                            </group>
-                            <newline/>
-                            <field name="date_order" select="1"/>
-                            <field name="shop_id" on_change="onchange_shop_id(shop_id)" select="2"/>
+
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)" required="1" select="1"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_order_id"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id"/>
@@ -166,14 +167,13 @@
                             <field name="order_policy"/>
                             <field groups="base.group_extended" name="origin"/>
                             <field groups="base.group_extended" name="invoice_quantity" attrs="{'readonly':[('order_policy','=','picking')]}"/>
-                            <field name="client_order_ref"/>
+							<field name="payment_term"/>
                             <separator colspan="4" string="Notes"/>
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
                         <page groups="base.group_extended" string="History">
                             <separator colspan="4" string="Related invoices"/>
                             <field colspan="4" name="invoice_ids" nolabel="1"/>
-                            <separator colspan="4" string="Related packings"/>
                             <field colspan="4" name="picking_ids" nolabel="1"/>
                         </page>
                     </notebook>

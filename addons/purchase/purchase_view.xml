@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
-        <record id="category_supplier" model="res.partner.category">
-            <field name="name">Suppliers</field>
-        </record>
-        
         <menuitem icon="terp-purchase" id="menu_purchase_root" name="Purchase Management"/>
         
         <record id="purchase_order_form" model="ir.ui.view">
@@ -13,23 +9,23 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Purchase Order">
-                    <notebook>
+					<group col="6" colspan="4">
+						<field name="name" select="1"/>
+						<field name="shipped" select="2"/>
+						<field name="invoiced" select="2"/>
+						<newline/>
+						<field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)"/>
+						<field name="origin" select="2"/>
+						<field name="date_order" select="2"/>
+					</group>
+                    <notebook colspan="4">
                         <page string="Purchase Order">
-                            <field name="name" select="1"/>
-                            <group col="4" colspan="2">
-                                <field name="shipped" select="2"/>
-                                <field name="invoiced" select="2"/>
-                            </group>
-                            <newline/>
-                            <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)"/>
-                            <field name="date_order" select="2"/>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" domain="[('category_id','child_of', [%(category_supplier)d])]"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" domain="[('supplier','=', 1)]"/>
                             <field name="partner_address_id"/>
                             <field domain="[('type','=','purchase')]" name="pricelist_id"/>
                             <field name="partner_ref" select="2"/>
                             <newline/>
                             <field colspan="4" name="order_line" nolabel="1" widget="one2many_list"/>
-                            <separator colspan="4" select="2" string="Document State"/>
                             <group col="7" colspan="4">
                                 <field name="amount_untaxed" sum="Untaxed amount"/>
                                 <field name="amount_tax"/>
@@ -53,7 +49,6 @@
                             <field name="dest_address_id" on_change="onchange_dest_address_id(dest_address_id)"/>
                             <field name="location_id"/>
                             <field name="invoice_method"/>
-                            <field name="origin" select="2"/>
                             <newline/>
                             <field name="validator"/>
                             <field name="date_approve"/>

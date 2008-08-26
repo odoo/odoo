@@ -27,27 +27,15 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 {
-    "name" : "Stock Management",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "website" : "http://tinyerp.com/module_stock.html",
-    "depends" : ["product", "account"],
-    "category" : "Generic Modules/Inventory Control",
-    "init_xml" : [],
-    "demo_xml" : ["stock_demo.xml"],
-    "update_xml" : [
-        "stock_workflow.xml", 
-        "stock_data.xml", 
-        "stock_incoterms.xml","stock_wizard.xml", 
-        "stock_view.xml", 
-        "stock_report.xml", 
-        "stock_sequence.xml", 
-        "product_data.xml",
-        "product_view.xml",
-        "partner_view.xml"
-    ],
+    "name": "VAT Check",
+    "description": "Add a check of the VAT Number. Idea and code from Tryton (c2bk)",
+    "version": "1.0",
+    "author": "Tiny",
+    "category": "Generic Modules/Base",
+    "depends": ["base", "base_vat"],
+    "update_xml": [],
     "active": False,
-    "installable": True
+    "installable": True,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

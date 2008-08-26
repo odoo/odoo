@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
 # $Id$
 #
@@ -25,30 +25,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-###############################################################################
-{
-    "name" : "Stock Management",
-    "version" : "1.0",
-    "author" : "Tiny",
-    "website" : "http://tinyerp.com/module_stock.html",
-    "depends" : ["product", "account"],
-    "category" : "Generic Modules/Inventory Control",
-    "init_xml" : [],
-    "demo_xml" : ["stock_demo.xml"],
-    "update_xml" : [
-        "stock_workflow.xml", 
-        "stock_data.xml", 
-        "stock_incoterms.xml","stock_wizard.xml", 
-        "stock_view.xml", 
-        "stock_report.xml", 
-        "stock_sequence.xml", 
-        "product_data.xml",
-        "product_view.xml",
-        "partner_view.xml"
-    ],
-    "active": False,
-    "installable": True
-}
+#
+##############################################################################
+
+import partner
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
