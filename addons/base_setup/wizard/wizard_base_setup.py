@@ -62,20 +62,6 @@ view_form_charts = """<?xml version="1.0"?>
     </group>
 </form>"""
 
-view_form_vatcheck = """<?xml version="1.0"?>
-<form string="Setup">
-    <image name="gtk-dialog-info" colspan="2"/>
-    <group>
-        <separator string="Install 'base_vat_check' module" colspan="2"/>
-        <newline/>
-        <field name="vatcheck" align="0.0"/>
-        <newline/>
-        <label string="This module allow you to force the validation of the VAT number. This module is optional but highly recommanded." colspan="2" align="0.0"/>
-        <newline/>
-        <label string="If you don't install it now, you'll be able to install it through the Administration menu." colspan="2" align="0.0"/>
-    </group>
-</form>"""
-
 view_form_company = """<?xml version="1.0"?>
 <form string="Setup">
     <image name="gtk-dialog-info" colspan="2"/>
@@ -110,8 +96,6 @@ view_form_update = """<?xml version="1.0"?>
         <field name="profile" align="0.0" readonly="1"/>
         <newline/>
         <field name="charts" align="0.0" readonly="1"/>
-        <newline/>
-        <field name="vatcheck" align="0.0" readonly="1"/>
         <newline/>
         <field name="name" align="0.0" readonly="1"/>
     </group>
@@ -201,16 +185,12 @@ class wizard_base_setup(wizard.interface):
     def _update(self, cr, uid, data, context):
         pool=pooler.get_pool(cr.dbname)
         form=data['form']
-        module_obj=pool.get('ir.module.module')
-
-        if 'profile' in form and form['profile'] > 0:
-            module_obj.state_update(cr, uid, [form['profile']], 'to install', ['uninstalled'], context)
-        if 'charts' in form and form['charts'] > 0:
-            module_obj.state_update(cr, uid, [form['charts']], 'to install', ['uninstalled'], context)
-        if 'vatcheck' in form and form['vatcheck']:
-            mid = module_obj.search(cr, uid, [('name', '=', 'base_vat_check')], context=context)
-            if mid:
-                module_obj.state_update(cr, uid, mid, 'to install', ['uninstalled'], context)
+        if 'profile' in data['form'] and data['form']['profile'] > 0:
+            module_obj=pool.get('ir.module.module')
+            module_obj.state_update(cr, uid, [data['form']['profile']], 'to install', ['uninstalled'], context)
+        if 'charts' in data['form'] and data['form']['charts'] > 0:
+            module_obj=pool.get('ir.module.module')
+            module_obj.state_update(cr, uid, [data['form']['charts']], 'to install', ['uninstalled'], context)
 
         company_obj=pool.get('res.company')
         partner_obj=pool.get('res.partner')
@@ -291,7 +271,7 @@ class wizard_base_setup(wizard.interface):
     def _previous(self, cr, uid, data, context):
         if 'profile' not in data['form'] or data['form']['profile'] <= 0:
             return 'init'
-        return 'vatcheck'
+        return 'charts'
 
     def _config(self, cr, uid, data, context=None):
         users_obj=pooler.get_pool(cr.dbname).get('res.users')
@@ -326,11 +306,6 @@ class wizard_base_setup(wizard.interface):
             'selection':_get_charts,
             'default': -1,
             'required': True,
-        },
-        'vatcheck':{
-            'string': "Install 'base_vat_check' module",
-            'type': 'boolean',
-            'default': False,
         },
         'name':{
             'string': 'Company Name',
@@ -427,15 +402,6 @@ IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701""",
             'result': {'type': 'form', 'arch': view_form_charts, 'fields': fields,
                 'state':[
                     ('init', 'Previous', 'gtk-go-back'),
-                    ('vatcheck', 'Next', 'gtk-go-forward', True)
-                ]
-            }
-        },
-        'vatcheck':{
-            'actions':[],
-            'result': {'type': 'form', 'arch': view_form_vatcheck, 'fields': fields,
-                'state': [
-                    ('charts', 'Previous', 'gtk-go-back'),
                     ('company', 'Next', 'gtk-go-forward', True)
                 ]
             }
@@ -458,7 +424,7 @@ IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701""",
             'result': {'type': 'form', 'arch': view_form_update, 'fields': fields,
                 'state': [
                     ('company', 'Previous', 'gtk-go-back'),
-                    ('finish', 'Install', 'gtk-save', True)
+                    ('finish', 'Install', 'gtk-ok', True)
                 ]
             }
         },
