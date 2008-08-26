@@ -50,14 +50,12 @@ class ir_model(osv.osv):
         'model': fields.char('Object Name', size=64, required=True, search=1),
         'info': fields.text('Information'),
         'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True),
-        'type': fields.selection([('system','System'),('base','Base'),('addons','Addons')],'Type'),
         'state': fields.selection([('manual','Custom Object'),('base','Base Field')],'Manualy Created',readonly=1),
         'access': fields.one2many('ir.model.access', 'model_id', 'Access'),
     }
     _defaults = {
         'model': lambda *a: 'x_',
         'state': lambda self,cr,uid,ctx={}: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
-        'type': 'addons',
     }
     
     def _check_model_name(self, cr, uid, ids):
