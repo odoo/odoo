@@ -26,6 +26,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
+#
+# The methods "check_vat_[a-z]{2}" are copyrighted:
+#    - Cedric Krier.
+#    - Bertrand Chenal
+#    - B2CK
+# 
 
 from osv import osv
 
@@ -52,7 +58,7 @@ class res_partner(osv.osv):
 
     _constraints = [(check_vat, "The VAT doesn't seem to be correct.", ["vat"])]
     
-    # code from the following methods come from Tryton (c2bk)
+    # code from the following methods come from Tryton (B2CK)
     # http://www.tryton.org/hgwebdir.cgi/modules/relationship/file/544d1de586d9/party.py 
     def check_vat_at(self, vat):
         '''
