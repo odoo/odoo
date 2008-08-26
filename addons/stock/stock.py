@@ -76,7 +76,7 @@ class stock_location(osv.osv):
     _description = "Location"
     _parent_name = "location_id"
     _columns = {
-        'name': fields.char('Location Name', size=64, required=True),
+        'name': fields.char('Location Name', size=64, required=True, translate=True),
         'active': fields.boolean('Active'),
         'usage': fields.selection([('supplier','Supplier Location'),('view','View'),('internal','Internal Location'),('customer','Customer Location'),('inventory','Inventory'),('procurement','Procurement'),('production','Production')], 'Location type'),
         'allocation_method': fields.selection([('fifo','FIFO'),('lifo','LIFO'),('nearest','Nearest')], 'Allocation Method', required=True),

@@ -40,6 +40,7 @@ class res_partner(osv.osv):
             'product.pricelist',
             type='many2one', 
             relation='product.pricelist', 
+            domain=[('type','=','sale')],
             string="Sale Pricelist", 
             method=True,
             view_load=True,
