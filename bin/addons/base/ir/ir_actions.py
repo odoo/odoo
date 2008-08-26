@@ -380,7 +380,7 @@ class actions_server(osv.osv):
         'child_ids': fields.one2many('ir.actions.actions', 'parent_id', 'Others Actions'),
         'usage': fields.char('Action Usage', size=32),
         'type': fields.char('Report Type', size=32, required=True),
-        'srcmodel_id': fields.many2one('ir.model', 'Model', required=True),
+        'srcmodel_id': fields.many2one('ir.model', 'Model'),
         'fields_lines': fields.one2many('ir.server.object.lines', 'server_id', 'Fields Mapping'),
     }
     _defaults = {
@@ -522,7 +522,18 @@ class actions_server(osv.osv):
                 obj_pool.write(cr, uid, [context.get('active_id')], res)
                 
             if action.state == 'object_create':
-                pass
+                res = {}
+                for exp in action.fields_lines:
+                    euq = exp.value
+                    if exp.type == 'equation':
+                        expr = self.merge_message(cr, uid, euq, action, context)
+                        expr = eval(expr)
+                    else:
+                        expr = exp.value
+                    res[exp.col1.name] = expr
+                obj_pool = self.pool.get(action.model_id.model)
+                id = context.get('active_id')
+                obj_pool.copy(cr, uid, id, res)
                 
         return False
 actions_server()
