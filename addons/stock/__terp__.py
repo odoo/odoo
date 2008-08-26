@@ -43,7 +43,8 @@
         "stock_report.xml", 
         "stock_sequence.xml", 
         "product_data.xml",
-        "product_view.xml"
+        "product_view.xml",
+        "partner_view.xml"
     ],
     "active": False,
     "installable": True
