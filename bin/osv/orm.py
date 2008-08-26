@@ -768,7 +768,7 @@ class orm_template(object):
                 fields[node.getAttribute('name')] = attrs
 
         elif node.nodeType==node.ELEMENT_NODE and node.localName in ('form', 'tree'):
-            result = self.view_header_get(cr, user, False, node.localName, context)
+            result = self.pool.get(self._name).view_header_get(cr, user, False, node.localName, context)
             if result:
                 node.setAttribute('string', result.decode('utf-8'))
         if node.nodeType == node.ELEMENT_NODE and node.hasAttribute('groups'):

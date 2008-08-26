@@ -33,6 +33,7 @@ import tools
 import time
 from tools.config import config
 import netsvc
+import re
 
 class actions(osv.osv):
     _name = 'ir.actions.actions'
@@ -278,6 +279,7 @@ class ir_model_fields(osv.osv):
     }
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=80):
+
         def get_fields(cr, uid, field, rel):
             result = []
             mobj = self.pool.get('ir.model')
@@ -331,6 +333,23 @@ class ir_model_fields(osv.osv):
 
 ir_model_fields()
 
+class server_object_lines(osv.osv):
+    _name = 'ir.server.object.lines'
+    _sequence = 'ir_actions_id_seq'
+    _columns = {
+        'server_id': fields.many2one('ir.actions.server', 'Object Mapping'),
+        'col1': fields.many2one('ir.model.fields', 'Destination', required=True),
+        'value': fields.text('Value', required=True),
+        'type': fields.selection([
+            ('value','Value'),
+            ('equation','Formula')
+        ], 'Type', required=True, size=32, change_default=True),
+    }
+    _defaults = {
+        'type': lambda *a: 'equation',
+    }
+server_object_lines()
+
 ##
 # Actions that are run on the server side
 #
@@ -356,14 +375,13 @@ class actions_server(osv.osv):
         'model_id': fields.many2one('ir.model', 'Object', required=True),
         'trigger_name': fields.char('Trigger Name', size=128),
         'trigger_obj_id': fields.reference('Trigger On', selection=model_get, size=128),
-        #'trigger_object': fields.char('Trigger Object', size=128),
-        #'trigger_object_id': fields.char('Trigger Object ID', size=128),
         'message': fields.text('Message', translate=True),
         'address': fields.many2one('ir.model.fields', 'Email From / SMS'),
-        #selection(_get_fields ,'Email / SMS', size=128),
         'child_ids': fields.one2many('ir.actions.actions', 'parent_id', 'Others Actions'),
         'usage': fields.char('Action Usage', size=32),
         'type': fields.char('Report Type', size=32, required=True),
+        'srcmodel_id': fields.many2one('ir.model', 'Model', required=True),
+        'fields_lines': fields.one2many('ir.server.object.lines', 'server_id', 'Fields Mapping'),
     }
     _defaults = {
         'state': lambda *a: 'dummy',
@@ -379,7 +397,53 @@ class actions_server(osv.osv):
 # If you plan to return an action, assign: action = {...}
 """
     }
+    
+    def get_field_value(self, cr, uid, action, context):
+        obj_pool = self.pool.get(action.model_id.model)
+        id = context.get('active_id')
+        obj = obj_pool.browse(cr, uid, id)
+        
+        fields = None
+        
+        if '/' in action.address.complete_name:
+            fields = action.address.complete_name.split('/')
+        elif '.' in action.address.complete_name:
+            fields = action.address.complete_name.split('.')
+            
+        for field in fields:
+            try:
+                obj = getattr(obj, field)
+            except Exception,e :
+                logger.notifyChannel('Workflow', netsvc.LOG_ERROR, 'Failed to parse : %s' % (match.group()))
+        
+        return obj
 
+    def merge_message(self, cr, uid, keystr, action, context):
+        logger = netsvc.Logger()
+        def merge(match):
+            
+            obj_pool = self.pool.get(action.model_id.model)
+            id = context.get('active_id')
+            obj = obj_pool.browse(cr, uid, id)
+        
+            field = match.group()
+            field = field.replace('[','')
+            field = field.replace(']','')
+            field = field.strip()
+
+            fields = field.split('.')
+            for field in fields:
+                try:
+                    obj = getattr(obj, field)
+                except Exception,e :
+                    logger.notifyChannel('Workflow', netsvc.LOG_ERROR, 'Failed to parse : %s' % (match.group()))
+            
+            return str(obj)
+        
+        com = re.compile('\[\[(.+?)\]\]')
+        message = com.sub(merge, keystr)
+        return message
+    
     #
     # Context should contains:
     #   ids : original ids
@@ -407,18 +471,8 @@ class actions_server(osv.osv):
                 user = config['email_from']
                 subject = action.name
                 
-                obj_pool = self.pool.get(action.model_id.model)
-                id = context.get('active_id')
-                obj = obj_pool.browse(cr, uid, id)
-                
-                fields = action.address.complete_name.split('/')
-                for field in fields:
-                    obj = getattr(obj, field)
-                
-                address = obj
-                
-                body = action.message
-                #TODO : Apply Mail merge in to the Content of the Email
+                address = self.get_field_value(cr, uid, str(action.message), action, context)
+                body = self.merge_message(cr, uid, action, context)
                 
                 if tools.email_send_attach(user, address, subject, body, debug=False) == True:
                     logger.notifyChannel('email', netsvc.LOG_INFO, 'Email successfully send to : %s' % (address))
@@ -454,7 +508,22 @@ class actions_server(osv.osv):
                     exec code in localdict
                     if 'action' in localdict:
                         return localdict['action']
-
+            if action.state == 'object_write':
+                res = {}
+                for exp in action.fields_lines:
+                    euq = exp.value
+                    if exp.type == 'equation':
+                        expr = self.merge_message(cr, uid, euq, action, context)
+                        expr = eval(expr)
+                    else:
+                        expr = exp.value
+                    res[exp.col1.name] = expr
+                obj_pool = self.pool.get(action.model_id.model)
+                obj_pool.write(cr, uid, [context.get('active_id')], res)
+                
+            if action.state == 'object_create':
+                pass
+                
         return False
 actions_server()
 

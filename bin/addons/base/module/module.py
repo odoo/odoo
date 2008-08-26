@@ -578,7 +578,7 @@ class module_configuration(osv.osv_memory):
             item = item_obj.browse(cr, uid, item_ids[0], context=context)
             return item.note
         else:
-            return "Your database is now fully configured.\n\nClick 'Continue' and enyoy your OpenERP experience..."
+            return "Your database is now fully configured.\n\nClick 'Continue' and enjoy your OpenERP experience..."
         return False
 
     def _get_action(self, cr, uid, context={}):
@@ -591,15 +591,20 @@ class module_configuration(osv.osv_memory):
             return item.id
         return False
 
+    def _progress_get(self,cr,uid, context={}):
+        total = self.pool.get('ir.module.module.configuration.step').search_count(cr, uid, [], context)
+        todo = self.pool.get('ir.module.module.configuration.step').search_count(cr, uid, [('state','<>','open')], context)
+        return max(5.0,round(todo*100/total))
+
     _columns = {
         'name': fields.text('Next Wizard',readonly=True),
+        'progress': fields.float('Configuration Progress', readonly=True),
         'item_id':fields.many2one('ir.module.module.configuration.step', 'Next Configuration Wizard',invisible=True, readonly=True),
-
     }
     _defaults={
+        'progress': _progress_get,
         'item_id':_get_action,
         'name':_get_action_name,
-
     }
     def button_skip(self,cr,uid,ids,context=None):
         item_obj = self.pool.get('ir.module.module.configuration.step')

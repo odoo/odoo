@@ -224,23 +224,24 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Next Configuration Step">
-					<image name="gtk-dialog-info"/>
-					<group>
-						<separator string="Next Configuration Step" colspan="4"/>
-						<field name="name" nolabel="1" colspan="4" width="500"/>
-						<separator colspan="4" string=""/>
-						<label string="" colspan="2"/>
-						<group colspan="2" col="2">
-							<button icon="gtk-cancel" special="cancel" string="Skip Step"/>
-							<button icon="gtk-go-forward" name="button_continue" string="Continue" type="object"/>
-						</group>
-					</group>
+                    <image name="gtk-dialog-info"/>
+                    <group>
+                        <separator string="Next Configuration Step" colspan="4"/>
+                        <field name="name" nolabel="1" colspan="4" width="500"/>
+                        <field name="progress" widget="progressbar"/>
+                        <separator colspan="4" string=""/>
+                        <label string="" colspan="2"/>
+                        <group colspan="2" col="2">
+                            <button icon="gtk-cancel" special="cancel" string="Skip Step"/>
+                            <button icon="gtk-go-forward" name="button_continue" string="Continue" type="object"/>
+                        </group>
+                    </group>
                 </form>
             </field>
         </record>
         
         <record id="action_config_wizard_form" model="ir.actions.act_window">
-            <field name="name">Main Configuration Window</field>
+            <field name="name">Configuration Wizard</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.module.module.configuration.wizard</field>
             <field name="view_type">form</field>

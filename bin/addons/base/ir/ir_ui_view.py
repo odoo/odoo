@@ -80,7 +80,7 @@ class view(osv.osv):
         (_check_xml, 'Invalid XML for View Architecture!', ['arch'])
     ]
     
-    def read(self,cr, uid, ids, fields=None, context={}, load='_classic_read'):
+    def read(self, cr, uid, ids, fields=None, context={}, load='_classic_read'):
 
         if not isinstance(ids, (list, tuple)):
             ids = [ids]
@@ -93,6 +93,7 @@ class view(osv.osv):
                 oview = cr.dictfetchall()
                 if oview:
                     rs['arch'] = oview[0]['arch']
+        
         
         return result
     
@@ -107,7 +108,7 @@ class view(osv.osv):
             vals2 = {'user_id': uid, 'ref_id': ids[0], 'arch': vals.pop('arch')}
 
             # write fields except arch to the `ir.ui.view`
-            result = super(view, self).write(cr, uid, vids, vals, context)
+            result = super(view, self).write(cr, uid, ids, vals, context)
 
             if not vids:
                 self.pool.get('ir.ui.view.custom').create(cr, uid, vals2)

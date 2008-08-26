@@ -260,12 +260,11 @@ class res_config_view(osv.osv_memory):
     _name='res.config.view'
     _columns = {
         'name':fields.char('Name', size=64),
-        'view': fields.selection([('simple','Simple'),('extended','Extended')], 'View', required=True ),
-
+        'view': fields.selection([('simple','Simplified Interface'),('extended','Extended Interface')], 'View Mode', required=True ),
     }
     _defaults={
         'view':lambda *args: 'simple',
-        }
+    }
 
     def action_cancel(self,cr,uid,ids,conect=None):
         print ' Cancel  action'
