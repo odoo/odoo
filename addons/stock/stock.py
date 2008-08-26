@@ -1196,10 +1196,14 @@ class stock_picking_move_wizard(osv.osv_memory):
     def _get_move_lines(self,cr,uid,ctx):
         move_obj=self.pool.get('stock.move')
         picking_obj=self.pool.get('stock.picking')
-        if 'action_id' in ctx:
+        if ctx.get('action_id',False):
             picking=picking_obj.browse(cr,uid,[ctx['action_id']])
             if picking and len(picking):
-                move_line_ids=move_obj.search(cr,uid,[('state','in',['confirmed','assigned']),('address_id','=',picking[0].address_id.id)])                
+                if picking[0].address_id:
+                    move_line_ids=move_obj.search(cr,uid,[('state','in',['confirmed','assigned']),('address_id','=',picking[0].address_id.id)])                
+                else:
+                    move_line_ids=move_obj.search(cr,uid,[('state','in',['confirmed','assigned'])])
+                print move_line_ids
                 move_lines=move_obj.read(cr,uid,move_line_ids)
                 #res=[]
                 #for move_line in move_lines:
@@ -1208,9 +1212,9 @@ class stock_picking_move_wizard(osv.osv_memory):
         return []
     def _get_picking_address(self,cr,uid,ctx):        
         picking_obj=self.pool.get('stock.picking')
-        if 'action_id' in ctx:
+        if ctx.get('action_id',False):
             picking=picking_obj.browse(cr,uid,[ctx['action_id']])[0]
-            return picking.address_id and picking.address_id.id
+            return picking.address_id and picking.address_id.id or False
         return False
             
             
