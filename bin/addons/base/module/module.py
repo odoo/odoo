@@ -461,14 +461,14 @@ class module(osv.osv):
             match = re.search('-([a-zA-Z0-9\._-]+)(\.zip)', mod.url, re.I)
             version = '0'
             if match:
-                version = match.group(1)
+                version = match.group(1)            
             if vercmp(mod.installed_version or '0', version) >= 0:
                 continue
             res.append(mod.url)
             if not download:
                 continue
             zipfile = urllib.urlopen(mod.url).read()
-            fname = addons.get_module_path(mod.name+'.zip')
+            fname = addons.get_module_path(mod.name+'.zip')            
             try:
                 fp = file(fname, 'wb')
                 fp.write(zipfile)
@@ -516,6 +516,15 @@ class module(osv.osv):
             p_id = c_id
             categs = categs[1:]
         self.write(cr, uid, [id], {'category_id': p_id})
+
+    def action_install(self,cr,uid,ids,context=None):
+        self.write(cr , uid, ids ,{'state' : 'to install'})        
+        self.download(cr, uid, ids, context=context)
+        for id in ids:
+            cr.execute("select m.id as id from ir_module_module_dependency d inner join ir_module_module m on (m.name=d.name) where d.module_id=%d and m.state='uninstalled'",(id,))
+            dep_ids = map(lambda x:x[0],cr.fetchall())
+            if len(dep_ids):                    
+                self.action_install(cr,uid,dep_ids,context=context)
 module()
 
 class module_dependency(osv.osv):

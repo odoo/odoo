@@ -1119,9 +1119,11 @@ class orm_memory(orm_template):
             for id in ids:
                 r = {'id': id}
                 for f in fields:
-                    r[f] = self.datas[id].get(f, False)
+                    if id in self.datas:
+                        r[f] = self.datas[id].get(f, False)
                 result.append(r)
-                self.datas[id]['internal.date_access'] = time.time()
+                if id in self.datas:
+                    self.datas[id]['internal.date_access'] = time.time()
             fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields)
             for f in fields_post:
                 res2 = self._columns[f].get_memory(cr, self, ids, f, user, context=context, values=False)
