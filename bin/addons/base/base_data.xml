@@ -1275,7 +1275,7 @@
             <field name="type">default</field>
             <field model="res.country" name="country_id" ref="be"/>
         </record>
-        
+       
         <!-- Currencies -->
         <record id="EUR" model="res.currency">
             <field name="name">EUR</field>
@@ -1289,11 +1289,26 @@
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
         
+        <!-- Basic Company  -->
+        <record id="main_company" model="res.company">
+            <field name="name">Tiny sprl</field>
+            <field name="partner_id" ref="main_partner"/>
+            <field name="rml_header1">Free Business Solutions</field>
+            <field name="rml_footer1">Web: http://tiny.be - Tel: (+32).81.81.37.00 - Bank: CPH 126-2013269-07</field>
+            <field name="rml_footer2">IBAN: BE74 1262 0132 6907 - SWIFT: GKCCBEBB - VAT: BE0477.472.701</field>
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        
+         <record id="EUR" model="res.currency">
+            <field name="company_id" ref="main_company"/>
+        </record>
+        
         <record id="USD" model="res.currency">
             <field name="name">USD</field>
             <field name="code">USD</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
         </record>
         <record id="rateUSD" model="res.currency.rate">
             <field name="rate">1.3785</field>
@@ -1306,6 +1321,7 @@
             <field name="code">VEB</field>
             <field name="rounding">2.95</field>
             <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
         </record>
         <record id="rateVEB" model="res.currency.rate">
             <field name="rate">1.0</field>
@@ -1313,12 +1329,12 @@
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
         
-        
         <record id="CAD" model="res.currency">
             <field name="name">CAD</field>
             <field name="code">CAD</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
         </record>
         <record id="rateCAD" model="res.currency.rate">
             <field name="rate">1.451</field>
@@ -1332,6 +1348,7 @@
             <field name="code">CHF</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
         </record>
         <record id="rateCHF" model="res.currency.rate">
             <field name="rate">1.644</field>
@@ -1344,6 +1361,7 @@
             <field name="code">BRL</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
         </record>
         <record id="rateBRL" model="res.currency.rate">
             <field name="rate">2.588</field>
@@ -1356,6 +1374,7 @@
             <field name="code">CNY</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
         </record>
         <record id="rateCNY" model="res.currency.rate">
             <field name="rate">10.4311</field>
@@ -1370,6 +1389,7 @@
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
             <field eval="False" name="active"/>
+            <field name="company_id" ref="main_company"/>
         </record>
         
         <record id="CZK" model="res.currency">
@@ -1378,6 +1398,7 @@
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
             <field eval="False" name="active"/>
+            <field name="company_id" ref="main_company"/>
         </record>
         
         <record id="DKK" model="res.currency">
@@ -1385,6 +1406,7 @@
             <field name="code">DKK</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
         </record>
         <record id="rateDKK" model="res.currency.rate">
             <field name="rate">7.4416</field>
@@ -1399,6 +1421,7 @@
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
             <field eval="False" name="active"/>
+            <field name="company_id" ref="main_company"/>
         </record>
         
         <record id="IDR" model="res.currency">
@@ -1407,6 +1430,7 @@
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
             <field eval="False" name="active"/>
+            <field name="company_id" ref="main_company"/>
         </record>
         
         <record id="LVL" model="res.currency">
@@ -1414,6 +1438,7 @@
             <field name="code">LVL</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
         </record>
         <record id="rateLVL" model="res.currency.rate">
             <field name="rate">0.71</field>
@@ -1427,6 +1452,7 @@
             <field name="code">NOK</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
         </record>
         <record id="rateNOK" model="res.currency.rate">
             <field name="rate">7.93</field>
@@ -1440,6 +1466,7 @@
             <field name="code">PAB</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
         </record>
         <record id="ratePAB" model="res.currency.rate">
             <field name="rate">1.3813</field>
@@ -1462,6 +1489,7 @@
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
             <field eval="False" name="active"/>
+            <field name="company_id" ref="main_company"/>
         </record>
         
         <record id="GBP" model="res.currency">
@@ -1469,6 +1497,7 @@
             <field name="code">GBP</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
         </record>
         <record id="rateGBP" model="res.currency.rate">
             <field name="rate">0.675</field>
@@ -1482,16 +1511,7 @@
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
             <field eval="False" name="active"/>
-        </record>
-        
-        
-        <record id="main_company" model="res.company">
-            <field name="name">Tiny sprl</field>
-            <field name="partner_id" ref="main_partner"/>
-            <field name="rml_header1">Free Business Solutions</field>
-            <field name="rml_footer1">Web: http://tiny.be - Tel: (+32).81.81.37.00 - Bank: CPH 126-2013269-07</field>
-            <field name="rml_footer2">IBAN: BE74 1262 0132 6907 - SWIFT: GKCCBEBB - VAT: BE0477.472.701</field>
-            <field name="currency_id" ref="EUR"/>
+            <field name="company_id" ref="main_company"/>
         </record>
         
         <assert id="main_company" model="res.company">
