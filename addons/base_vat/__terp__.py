@@ -28,6 +28,7 @@
 ###############################################################################
 {
     "name" : "VAT",
+    "description": "Enable the VAT Number for the partner. Check the validity of that VAT Number (idea and code from Tryton (c2bk)).",
     "version" : "1.0",
     "author" : "Tiny",
     "category" : "Generic Modules/Base",
