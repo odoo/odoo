@@ -382,6 +382,10 @@ class actions_server(osv.osv):
         'type': fields.char('Report Type', size=32, required=True),
         'srcmodel_id': fields.many2one('ir.model', 'Model'),
         'fields_lines': fields.one2many('ir.server.object.lines', 'server_id', 'Fields Mapping'),
+        'otype': fields.selection([
+            ('copy','Create in Same Model'),
+            ('new','Create in Other Model')
+        ], 'Create Model', required=True, size=32, change_default=True),
     }
     _defaults = {
         'state': lambda *a: 'dummy',

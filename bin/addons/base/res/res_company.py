@@ -46,6 +46,7 @@ class res_company(osv.osv):
         'rml_header2' : fields.text('RML Internal Header'),
         'logo' : fields.binary('Logo'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
+        'currency_ids': fields.one2many('res.currency', 'company_id', 'Currency Rates'),
     }
     
     def _get_child_ids(self, cr, uid, uid2, context={}):
