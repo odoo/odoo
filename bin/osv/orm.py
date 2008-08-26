@@ -1119,9 +1119,11 @@ class orm_memory(orm_template):
             for id in ids:
                 r = {'id': id}
                 for f in fields:
-                    r[f] = self.datas[id].get(f, False)
+                    if id in self.datas:
+                        r[f] = self.datas[id].get(f, False)
                 result.append(r)
-                self.datas[id]['internal.date_access'] = time.time()
+                if id in self.datas:
+                    self.datas[id]['internal.date_access'] = time.time()
             fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields)
             for f in fields_post:
                 res2 = self._columns[f].get_memory(cr, self, ids, f, user, context=context, values=False)
@@ -1192,7 +1194,7 @@ class orm_memory(orm_template):
         res = ir_values_obj.get(cr, uid, 'default', False, [self._name])
         for id, field, field_value in res:
             if field in fields_list:
-                fld_def = (field in self._columns)
+                fld_def = (field in self._columns) and self._columns[field] or self._inherit_fields[field][2]
                 if fld_def._type in ('many2one', 'one2one'):
                     obj = self.pool.get(fld_def._obj)
                     if not obj.search(cr, uid, [('id', '=', field_value)]):
