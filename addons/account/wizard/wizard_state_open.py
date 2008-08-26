@@ -1,10 +1,8 @@
-# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
-# $Id$
-#
+# #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -28,44 +26,39 @@
 #
 ##############################################################################
 
-import wizard_automatic_reconcile
-import wizard_reconcile_select
-import wizard_unreconcile_select
-import wizard_reconcile
-import wizard_unreconcile
-import wizard_refund
-import wizard_pay_invoice
+import wizard
+import pooler
+import netsvc
 
-import wizard_journal
-import wizard_journal_select
-import wizard_bank_reconcile
-import wizard_budget_spread
-import wizard_subscription_generate
+form = '''<?xml version="1.0"?>
+<form string="Open Invoice">
+    <label string="Are you sure you want to open this invoice ?"/>
+    <newline/>
+    <label string="(Invoice should be unreconciled if you want to open it)"/>
+</form>'''
 
-import wizard_aged_trial_balance
-import wizard_budget_report
-import wizard_general_ledger_report
-import wizard_third_party_ledger
-import wizard_account_balance_report
-import wizard_partner_balance_report
+fields = {
+}
 
-import wizard_period_close
-import wizard_fiscalyear_close
-import wizard_open_closed_fiscalyear
+def _change_inv_state(self, cr, uid, data, context):
+    pool_obj = pooler.get_pool(cr.dbname)
+    data_inv = pool_obj.get('account.invoice').browse(cr, uid, data['ids'][0])
+    if data_inv.reconciled:
+        raise wizard.except_wizard('Warning', 'Invoice is already reconciled')
+    wf_service = netsvc.LocalService("workflow")
+    res = wf_service.trg_validate(uid, 'account.invoice', data['ids'][0], 'open_test', cr)
+    return {}
 
-import wizard_vat
-
-import wizard_invoice_state
-import wizard_account_duplicate
-import wizard_account_chart
-import wizard_move_line_select
-
-import wizard_validate_account_move
-import wizard_use_model
-
-import wizard_state_open
-
+class wiz_state_open(wizard.interface):
+    states = {
+        'init': {
+            'actions': [],
+            'result': {'type':'form', 'arch':form, 'fields':fields, 'state':[('yes','Yes'),('end','No')]}
+        },
+        'yes': {
+            'actions': [_change_inv_state],
+            'result': {'type':'state', 'state':'end'}
+        }
+    }
+wiz_state_open('account.wizard_paid_open')
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
