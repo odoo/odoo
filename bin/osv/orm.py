@@ -638,16 +638,17 @@ class orm_template(object):
         context = context or {}
         lng = context.get('lang', False) or 'en_US'
         trans = self.pool.get('ir.translation')
-        field_error = []
-        field_err_str = []
+        error_msgs = []
         for constraint in self._constraints:
             fun, msg, fields = constraint
             if not fun(self, cr, uid, ids):
-                field_error += fields
-                field_err_str.append(trans._get_source(cr, uid, self._name, 'constraint', lng, source=msg) or msg)
-        if len(field_err_str):
+                translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, source=msg) or msg
+                error_msgs.append(
+                        _("Error occur when validation the fields %s: %s") % (','.join(fields), translated_msg)
+                )      
+        if error_msgs:
             cr.rollback()
-            raise except_orm('ValidateError', ('\n'.join(field_err_str), ','.join(field_error)))
+            raise except_orm('ValidateError', '\n'.join(error_msgs))
 
     def default_get(self, cr, uid, fields_list, context=None):
         return {}
