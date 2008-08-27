@@ -124,7 +124,6 @@ class sale_order(osv.osv):
                 res[oid][1] += nbr or 0.0
             else:
                 res[oid][1] += nbr or 0.0
-        print res
         for r in res:
             if not res[r][1]:
                 res[r] = 0.0

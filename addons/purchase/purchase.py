@@ -77,13 +77,55 @@ class purchase_order(osv.osv):
 
     def _amount_total(self, cr, uid, ids, field_name, arg, context):
         res = {}
-        untax = self._amount_untaxed(cr, uid, ids, field_name, arg, context) 
+        untax = self._amount_untaxed(cr, uid, ids, field_name, arg, context)
         tax = self._amount_tax(cr, uid, ids, field_name, arg, context)
         cur_obj=self.pool.get('res.currency')
         for id in ids:
             order=self.browse(cr, uid, [id])[0]
             cur=order.pricelist_id.currency_id
             res[id] = cur_obj.round(cr, uid, cur, untax.get(id, 0.0) + tax.get(id, 0.0))
+        return res
+
+    def _invoiced_rate(self, cursor, user, ids, name, arg, context=None):
+        res = {}
+        for purchase in self.browse(cursor, user, ids, context=context):
+            tot = 0.0
+
+            if purchase.invoice_id.state not in ('draft','cancel'):
+                tot += purchase.invoice_id.amount_untaxed
+            if tot:
+                res[purchase.id] = tot * 100.0 / purchase.amount_untaxed
+            else:
+                res[purchase.id] = 0.0
+        return res
+
+    def _shipped_rate(self, cr, uid, ids, name, arg, context=None):
+        if not ids: return {}
+        res = {}
+        for id in ids:
+            res[id] = [0.0,0.0]
+        cr.execute('''SELECT
+                p.purchase_id,sum(m.product_qty), m.state
+            FROM
+                stock_move m
+            LEFT JOIN
+                stock_picking p on (p.id=m.picking_id)
+            WHERE
+                p.purchase_id in ('''+','.join(map(str,ids))+''')
+            GROUP BY m.state, p.purchase_id''')
+        for oid,nbr,state in cr.fetchall():
+            if state=='cancel':
+                continue
+            if state=='done':
+                res[oid][0] += nbr or 0.0
+                res[oid][1] += nbr or 0.0
+            else:
+                res[oid][1] += nbr or 0.0
+        for r in res:
+            if not res[r][1]:
+                res[r] = 0.0
+            else:
+                res[r] = 100.0 * res[r][0] / res[r][1]
         return res
 
     _columns = {
@@ -108,7 +150,9 @@ class purchase_order(osv.osv):
         'invoice_id': fields.many2one('account.invoice', 'Invoice', readonly=True),
         'picking_ids': fields.one2many('stock.picking', 'purchase_id', 'Picking List', readonly=True, help="This is the list of picking list that have been generated for this purchase"),
         'shipped':fields.boolean('Received', readonly=True, select=True),
+        'shipped_rate': fields.function(_shipped_rate, method=True, string='Received', type='float'),
         'invoiced':fields.boolean('Invoiced & Paid', readonly=True, select=True),
+        'invoiced_rate': fields.function(_invoiced_rate, method=True, string='Invoiced', type='float'),
         'invoice_method': fields.selection([('manual','Manual'),('order','From order'),('picking','From picking')], 'Invoicing Control', required=True),
 
         'amount_untaxed': fields.function(_amount_untaxed, method=True, string='Untaxed Amount'),
@@ -164,7 +208,7 @@ class purchase_order(osv.osv):
         for id in ids:
             self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
         return True
-    
+
     def wkf_warn_buyer(self, cr, uid, ids):
         self.write(cr, uid, ids, {'state' : 'wait', 'validator' : uid})
         request = pooler.get_pool(cr.dbname).get('res.request')
@@ -175,7 +219,7 @@ class purchase_order(osv.osv):
                 if manager and not (manager.id in managers):
                     managers.append(manager.id)
             for manager_id in managers:
-                request.create(cr, uid, 
+                request.create(cr, uid,
                       {'name' : "Purchase amount over the limit",
                        'act_from' : uid,
                        'act_to' : manager_id,
@@ -310,7 +354,7 @@ class purchase_order_line(osv.osv):
             cur = line.order_id.pricelist_id.currency_id
             res[line.id] = cur_obj.round(cr, uid, cur, line.price_unit * line.product_qty)
         return res
-    
+
     _columns = {
         'name': fields.char('Description', size=64, required=True),
         'product_qty': fields.float('Quantity', required=True, digits=(16,2)),
