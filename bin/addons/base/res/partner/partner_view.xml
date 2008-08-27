@@ -203,11 +203,11 @@
                 <form string="Partners">
                     <group colspan="4" col="6">
                         <field name="name" select="1"/>
-                        <field name="customer" select="1"/>
-                        <field name="supplier" select="2"/>
-                        <field domain="[('domain', '=', 'partner')]" name="title"/>
                         <field name="ref" select="1"/>
+                        <field name="customer" select="1"/>
+                        <field domain="[('domain', '=', 'partner')]" name="title"/>
                         <field name="lang" select="2"/>
+                        <field name="supplier" select="2"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General">
@@ -249,6 +249,7 @@
                             <field name="website" widget="url"/>
                             <field name="date" select="2"/>
                             <field name="parent_id"/>
+                            <newline/>
                         </page>
                         <page string="History">
                             <field colspan="4" name="events" nolabel="1" widget="one2many_list"/>
@@ -279,7 +280,11 @@
             <field name="view_id" ref="view_partner_form"/>
             <field name="act_window_id" ref="action_partner_form"/>
         </record>
-        <menuitem action="action_partner_form" id="menu_partner_form" parent="base.menu_base_partner"/>
+        <menuitem
+            action="action_partner_form" 
+            id="menu_partner_form" 
+            parent="base.menu_base_partner" 
+            sequence="2"/>
 
         <record id="action_partner_customer_form" model="ir.actions.act_window">
             <field name="name">Customers Partners</field>
@@ -469,8 +474,8 @@
             <field name="view_id" ref="view_partner_category_tree"/>
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
-        <menuitem id="next_id_13" name="Categories" parent="base.menu_base_config"/><menuitem action="action_partner_category" id="menu_partner_category" parent="next_id_13"/>
-        
+        <menuitem action="action_partner_category" id="menu_partner_category_main" parent="base.menu_base_partner" sequence="1"/>
+
         <record id="action_partner_by_category" model="ir.actions.act_window">
             <field name="name" eval="False"/>
             <field name="res_model">res.partner</field>
@@ -486,19 +491,14 @@
             <field eval="'ir.actions.act_window,%d'%action_partner_by_category" name="value"/>
             <field eval="True" name="object"/>
         </record>
-        
-        
-        <menuitem action="action_partner_category" id="menu_partner_category_main" parent="base.menu_base_partner" sequence="1"/>
-        
+
         <record id="action_partner_category_form" model="ir.actions.act_window">
-            <field name="name">Partner categories</field>
+            <field name="name">Partner Categories</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.category</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem action="action_partner_category_form" id="menu_partner_category_form" parent="base.next_id_13"/>
-        
-        
-        
+        <menuitem action="action_partner_category_form" id="menu_partner_category_form" parent="base.menu_base_config"/>
+
     </data>
 </terp>
