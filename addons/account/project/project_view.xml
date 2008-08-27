@@ -44,15 +44,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Analytic account">
-                    <notebook>
+                    <field name="name" select="1"/>
+                    <field name="code" select="1"/>
+                    <field name="parent_id" on_change="on_change_parent(parent_id)"/>
+                    <field name="company_id" select="2"/>
+                    <field name="type" select="2"/>
+                    <field name="partner_id" select="1"/>
+                    <notebook colspan="4">
                         <page string="Account Data">
-                            <field name="name" select="1"/>
-                            <field name="code" select="1"/>
-                            <field name="parent_id" on_change="on_change_parent(parent_id)"/>
-                            <field name="company_id" select="2"/>
-                            <field name="type" select="2"/>
-                            <field name="partner_id" select="1"/>
-                            <newline/>
                             <field name="date_start"/>
                             <field name="date" select="2"/>
                             <field name="active" select="2"/>
@@ -75,7 +74,7 @@
             <field name="view_id" ref="view_account_analytic_account_tree"/>
         </record>
         <menuitem id="next_id_39" name="Analytic Accounts" parent="account.menu_finance_configuration"/>
-		<menuitem action="action_account_analytic_account_form" id="account_analytic_def_account" parent="next_id_39"/>
+        <menuitem action="action_account_analytic_account_form" id="account_analytic_def_account" parent="next_id_39"/>
 
         <record id="action_account_analytic_account_tree2" model="ir.actions.act_window">
             <field name="name">Analytic Chart of Accounts</field>
@@ -86,9 +85,9 @@
             <field name="view_id" ref="view_account_analytic_account_tree"/>
         </record>
         <menuitem
-			action="action_account_analytic_account_tree2"
-			id="account_analytic_def_chart"
-			parent="account.next_id_39"/>
+            action="action_account_analytic_account_tree2"
+            id="account_analytic_def_chart"
+            parent="account.next_id_39"/>
         <menuitem action="action_account_analytic_account_tree2" id="account_analytic_chart" parent="account.menu_finance_charts"/>
 
         <menuitem id="next_id_40" name="Analytic" parent="account.menu_finance_reporting"/><menuitem action="action_account_analytic_account_tree2" id="account_analytic_chart_balance" parent="next_id_40"/>

@@ -111,22 +111,23 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Account">
-                    <notebook>
+					<group col="6" colspan="4">
+					<field name="name" select="1"/>
+					<field name="code" select="1"/>
+					<field name="type" select="1"/>
+					<field name="company_id" select="2"/>
+					<field name="parent_id"/>
+					<field name="active"/>
+					</group>
+                    <notebook colspan="4">
                         <page string="General Information">
-                            <field colspan="4" name="name" select="1"/>
-                            <field name="company_id" select="2"/>
-                            <field name="active"/>
                             <newline/>
-                            <field name="type" select="1"/>
-                            <field name="code" select="1"/>
-                            <field name="shortcut"/>
                             <field name="sign"/>
 
                             <field name="currency_id" select="2"/>
                             <field name="close_method"/>
                             <field name="reconcile"/>
                             <newline/>
-                            <field name="parent_id"/>
                             <newline/>
                             <field name="child_consol_ids" colspan="4"/>
                             <field colspan="4" name="tax_ids"/>

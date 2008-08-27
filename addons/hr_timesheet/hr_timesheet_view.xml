@@ -95,10 +95,12 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <field name="notes" position="after">
-                    <field name="product_id"/>
-                    <field name="journal_id"/>
-                </field>
+                <notebook position="inside">
+					<page string="Timesheets">
+						<field name="product_id"/>
+						<field name="journal_id"/>
+					</page>
+                </notebook>
             </field>
         </record>
     </data>

@@ -121,18 +121,27 @@ class hr_employee(osv.osv):
         'name' : fields.char("Employee", size=128, required=True),
         'active' : fields.boolean('Active'),
         'company_id': fields.many2one('res.company', 'Company'),
+        'user_id' : fields.many2one('res.users', 'Related User'),
+
+        'country_id' : fields.many2one('res.country', 'Nationality'),
+        'birthday' : fields.date("Started on"),
+        'ssnid': fields.char('SSN No', size=32),
+        'sinid': fields.char('SIN No', size=32),
+        'otherid': fields.char('Other ID', size=32),
+        'gender': fields.selection([('',''),('male','Male'),('female','Female')], 'Gender'),
+        'marital': fields.selection([('maried','Maried'),('unmaried','Unmaried'),('divorced','Divorced'),('other','Other')],'Marital Status', size=32),
+
         'address_id': fields.many2one('res.partner.address', 'Contact address'),
-        'state': fields.function(_state, method=True, type='selection', selection=[('absent', 'Absent'), ('present', 'Present')], string='Attendance'),
-        'started' : fields.date("Started on"),
+        'work_phone': fields.char('Work Phone', size=32),
+        'work_email': fields.char('Work Email', size=128),
+        'work_location': fields.char('Office Location', size=32),
+
         'notes': fields.text('Notes'),
-        'attendances' : fields.one2many('hr.attendance', 'employee_id', "Employee's attendances"),
-        'holidays' : fields.one2many('hr.holidays', 'employee_id', "Employee's holidays"),
-        'workgroups' : fields.many2many('hr.timesheet.group', 'hr_timesheet_employee_rel', 'emp_id', 'tgroup_id', "Employee's work team"),
-        'user_id' : fields.many2one('res.users', 'Tiny ERP User'),
+        'state': fields.function(_state, method=True, type='selection', selection=[('absent', 'Absent'), ('present', 'Present')], string='Attendance'),
+
+        'parent_id': fields.many2one('hr.employee', 'Manager', select=True),
         'category_id' : fields.many2one('hr.employee.category', 'Category'),
-        'regime' : fields.float('Workhours by week'),
-        'holiday_max' : fields.integer("Number of holidays"),
-        'parent_id': fields.many2one('hr.employee', 'Boss', select=True),
+
         'child_ids': fields.one2many('hr.employee', 'parent_id','Subordinates'),
     }
     _defaults = {
