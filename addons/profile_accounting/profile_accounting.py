@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
@@ -32,17 +31,14 @@ import pooler
 
 class config_install_extra_modules(osv.osv_memory):
     _name='config.install_extra_modules'
-    _rec_name = 'crm_configuration'
     _columns = {
-        'crm_configuration':fields.boolean('CRM & Calendars', help="This installs the customer relationship features like: leads and opportunities tracking, shared calendar, jobs tracking, bug tracker, and so on."),
-        'hr_timesheet':fields.boolean('Timesheets', help="Timesheets allows you to track time and costs spent on different projects, represented by analytic accounts."),
-        'hr_timesheet_invoice':fields.boolean('Invoice on Timesheets', help="There are different invoicing methods in OpenERP: from sale orders, from shippings, ... Install this module if you plan to invoice your customers based on time spent on projects."),
-        'hr_holidays':fields.boolean('Holidays Management', help="Tracks the full holidays management process, from the employee's request to the global planning."),
-        'hr_expense':fields.boolean('Expenses Tracking', help="Tracks the personal expenses process, from the employee expense encoding, to the reimbursement of the employee up to the reinvoicing to the final customer."),
-        'account_budget_crossover':fields.boolean('Analytic Budgets', help="Allows you to manage analytic budgets by journals. This module is used to manage budgets of your projects."),
-        'project_gtd':fields.boolean('Getting Things Done', help="GTD is a methodology to efficiently organise yourself and your tasks. This module fully integrates GTD principle with OpenERP's project management."),
-        'scrum':fields.boolean('Scrum Methodology', help="Scrum is an 'agile development methodology', mainly used in IT projects. It helps you to manage teams, long term roadmaps, sprints, and so on."),
-        'base_contact':fields.boolean('Contacts Management', help="Allows you to manage partners (enterprises), addresses of partners and contacts of these partners (employee/people). Install this if you plan to manage your relationships with partners and contacts."),
+        'name':fields.char('Name', size=64),
+        'account_analytic_analysis':fields.boolean('Analytic Accounting'),
+        'account_analytic_plans':fields.boolean('Multiple Analytic Plans'),
+        'account_payment':fields.boolean('Suppliers Payment Management'),
+        'account_asset':fields.boolean('Asset Management'),
+        'hr_timesheet_invoice':fields.boolean('Invoice on Analytic Entries'),
+        'account_budget_crossover':fields.boolean('Analytic Budgets'),
     }
     def action_cancel(self,cr,uid,ids,conect=None):
         return {
@@ -52,14 +48,16 @@ class config_install_extra_modules(osv.osv_memory):
                 'type': 'ir.actions.act_window',
                 'target':'new',
          }
+        
+    
     def action_install(self, cr, uid, ids, context=None):
         result=self.read(cr,uid,ids)        
         mod_obj = self.pool.get('ir.module.module')
         for res in result:
             for r in res:
-                if r<>'id' and res[r]:                
-                    ids = mod_obj.search(cr, uid, [('name', '=', r)])   
-                    mod_obj.action_install(cr,uid,ids,context=context)                       
+                if r<>'id' and res[r]:
+                    ids += mod_obj.search(cr, uid, [('name', '=', r)])
+                    mod_obj.action_install(cr, uid, ids, context=context)           
         cr.commit()
         db, pool = pooler.restart_pool(cr.dbname, update_module=True)
         return {
@@ -69,6 +67,8 @@ class config_install_extra_modules(osv.osv_memory):
                 'type': 'ir.actions.act_window',
                 'target':'new',
             }
+    
+    
 config_install_extra_modules()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
