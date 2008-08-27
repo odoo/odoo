@@ -87,7 +87,9 @@ def _wo_check(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     invoice = pool.get('account.invoice').browse(cr, uid, data['id'], context)
     journal = pool.get('account.journal').browse(cr, uid, data['form']['journal_id'], context)
-    if invoice.company_id.currency_id.id<>journal.currency.id or journal.currency.id <> invoice.currency_id.id:
+    if invoice.company_id.currency_id.id <> invoice.currency_id.id:
+        return 'addendum'
+    if journal.currency and (journal.currency.id <> invoice.currency_id.id):
         return 'addendum'
     if pool.get('res.currency').is_zero(cr, uid, invoice.currency_id,
             (data['form']['amount'] - invoice.amount_total)):
