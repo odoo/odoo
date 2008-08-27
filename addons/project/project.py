@@ -92,6 +92,16 @@ class project(osv.osv):
         pricelist = self.pool.get('res.partner').browse(cr, uid, part).property_product_pricelist.id
         return {'value':{'contact_id': addr['contact'], 'pricelist_id': pricelist}}
 
+    def _progress_rate(self, cursor, user, ids, name, arg, context=None):
+        res = {}
+        for project in self.browse(cursor, user, ids, context=context):
+            tot = 0.0
+            if project.state not in ('cancelled'):
+                tot += project.effective_hours * 100.0 / project.planned_hours
+            res[project.id] = tot
+        return res
+
+
     _columns = {
         'name': fields.char("Project name", size=128, required=True),
         'active': fields.boolean('Active'),
@@ -105,6 +115,7 @@ class project(osv.osv):
         'child_id': fields.one2many('project.project', 'parent_id', 'Subproject'),
         'planned_hours': fields.function(_calc_planned, method=True, string='Planned hours'),
         'effective_hours': fields.function(_calc_effective, method=True, string='Hours spent'),
+        'progress_rate': fields.function(_progress_rate, method=True, string='Progress', type='float'),
         'date_start': fields.date('Project started on'),
         'date_end': fields.date('Project should end on'),
         'tariff': fields.float('Sales price'),
