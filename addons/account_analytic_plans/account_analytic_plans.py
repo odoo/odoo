@@ -171,7 +171,6 @@ class account_analytic_plan_instance(osv.osv):
     def create(self, cr, uid, vals, context=None):
         if context and 'journal_id' in context:
             journal= self.pool.get('account.journal').browse(cr,uid,context['journal_id'])
-            vals.update({'plan_id': journal.plan_id.id})
 
             pids = self.pool.get('account.analytic.plan.instance').search(cr, uid, [('name','=',vals['name']),('code','=',vals['code']),('plan_id','<>',False)])
             if pids:
@@ -194,32 +193,26 @@ class account_analytic_plan_instance(osv.osv):
 
     def write(self, cr, uid, ids, vals, context={}, check=True, update_check=True):
         this = self.browse(cr,uid,ids[0])
-        res = self.pool.get('account.analytic.plan.line').search(cr,uid,[('plan_id','=',this.plan_id.id)])
-        for i in res:
-            item = self.pool.get('account.analytic.plan.line').browse(cr,uid,i)
-            total_per_plan = 0
-            for j in self.pool.get('account.analytic.plan.instance.line').search(cr,uid,[('plan_id','=',this.id),('analytic_account_id','child_of',[item.root_analytic_id.id])]):
-                plan_line = self.pool.get('account.analytic.plan.instance.line').browse(cr,uid,j)
-                unchanged = True
-                temp_list=['account1_ids','account2_ids','account3_ids','account4_ids','account5_ids','account6_ids']
-                for l in temp_list:
-                    if vals.has_key(l):
-                        for tempo in vals[l]:
-                            if tempo[1] == plan_line.id:
-                                unchanged = False
-                                if tempo[2] != False:
-                                    total_per_plan += tempo[2]['rate']
-                            if tempo[1] == 0:
-                                if self.pool.get('account.analytic.account').search(cr,uid,[('parent_id','child_of',[item.root_analytic_id.id]),('id','=',tempo[2]['analytic_account_id'])]):
-                                    total_per_plan += tempo[2]['rate']
-                if unchanged:
-                    total_per_plan += plan_line.rate
-            if total_per_plan < item.min_required or total_per_plan > item.max_required:
-                raise osv.except_osv("Value Error" ,"The Total Should be Between " + str(item.min_required) + " and " + str(item.max_required))
-        if context.get('journal_id',False):
-            new_copy=self.copy(cr, uid, ids[0], context=context)
-            vals['plan_id']=this.plan_id.id
-        return super(account_analytic_plan_instance, self).write(cr, uid, ids, vals, context)
+        if this.plan_id and not vals.has_key('plan_id'):
+            #this instance is a model, so we have to create a new plan instance instead of modifying it
+            #copy the existing model
+            temp_id = self.copy(cr, uid, this.id, None, context)
+            #get the list of the invoice line that were linked to the model
+            list = self.pool.get('account.invoice.line').search(cr,uid,[('analytics_id','=',this.id)])
+            #make them link to the copy
+            self.pool.get('account.invoice.line').write(cr, uid, list, {'analytics_id':temp_id}, context)
+
+            #and finally modify the old model to be not a model anymore
+            vals['plan_id'] = False 
+            if not vals.has_key['name']:
+                vals['name'] = this.name+'*'
+            if not vals.has_key['code']:
+                vals['code'] = this.code+'*'
+            return self.write(cr, uid, [this.id],vals, context)        
+        else:
+            #this plan instance isn't a model, so a simple write is fine
+            return super(account_analytic_plan_instance, self).write(cr, uid, ids, vals, context)
+
 account_analytic_plan_instance()
 
 class account_analytic_plan_instance_line(osv.osv):
