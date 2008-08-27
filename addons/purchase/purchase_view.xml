@@ -2,7 +2,7 @@
 <terp>
     <data>
         <menuitem icon="terp-purchase" id="menu_purchase_root" name="Purchase Management"/>
-        
+
         <record id="purchase_order_form" model="ir.ui.view">
             <field name="name">purchase.order.form</field>
             <field name="model">purchase.order</field>
@@ -38,9 +38,9 @@
                                 <button name="purchase_appbuyer" states="wait_auth" string="Approve Purchase"/>
                                 <button name="purchase_approve" states="confirmed" string="Approved by Supplier"/>
                                 <button name="purchase_cancel" states="draft,confirmed,wait_auth" string="Cancel Purchase Order"/>
-                                
+
                                 <button name="purchase_cancel" states="approved" string="Cancel Purchase Order"/>
-                                
+
                                 <button name="shipping_ok" states="except_shipping" string="Shipping Done"/>
                                 <button name="invoice_ok" states="except_invoice" string="Invoice Done"/>
                             </group>
@@ -60,7 +60,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="purchase_form_action" model="ir.actions.act_window">
             <field name="name">Purchase Orders</field>
             <field name="type">ir.actions.act_window</field>
@@ -107,7 +107,7 @@
         </record>
         <menuitem action="purchase_form_action_new" id="menu_purchase_form_action_new" parent="purchase.menu_purchase_root"/>
 
-        
+
         <record id="purchase_order_tree" model="ir.ui.view">
             <field name="name">purchase.order.tree</field>
             <field name="model">purchase.order</field>
@@ -118,15 +118,15 @@
                     <field name="date_order"/>
                     <field name="partner_id"/>
                     <field name="location_id"/>
-                    <field name="invoiced" string="Paid"/>
-                    <field name="shipped"/>
+                    <field name="invoiced_rate" widget="progressbar"/>
+                    <field name="shipped_rate" widget="progressbar"/>
                     <field name="amount_untaxed"/>
                     <field name="origin"/>
                     <field name="state"/>
                 </tree>
             </field>
         </record>
-        
+
         <record id="purchase_order_line_form" model="ir.ui.view">
             <field name="name">purchase.order.line.form</field>
             <field name="model">purchase.order.line</field>
@@ -152,7 +152,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="purchase_order_line_tree" model="ir.ui.view">
             <field name="name">purchase.order.line.tree</field>
             <field name="model">purchase.order.line</field>
@@ -169,7 +169,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <act_window context="{'partner_id': active_id}" domain="[('partner_id', '=', active_id)]" id="act_res_partner_2_purchase_order" name="Purchase orders" res_model="purchase.order" src_model="res.partner"/>
     </data>
 </terp>
