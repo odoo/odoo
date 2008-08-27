@@ -203,9 +203,18 @@ class task(osv.osv):
             res[task_id] = sum
         return res
 
+    def _progress_rate(self, cursor, user, ids, name, arg, context=None):
+        res = {}
+        for task in self.browse(cursor, user, ids, context=context):
+            tot = 0.0
+            if task.state not in ('draft','cancelled'):
+                tot += task.effective_hours * 100.0 / task.planned_hours
+            res[task.id] = tot
+        return res
+
     _columns = {
-        'name': fields.char('Task summary', size=128, required=True),
         'active': fields.boolean('Active'),
+        'name': fields.char('Task summary', size=128, required=True),
         'description': fields.text('Description'),
         'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Importance'),
         'sequence': fields.integer('Sequence'),
@@ -222,6 +231,7 @@ class task(osv.osv):
         'start_sequence': fields.boolean('Wait for previous sequences'),
         'planned_hours': fields.float('Plan. hours'),
         'effective_hours': fields.function(_hours_effect, method=True, string='Eff. Hours'),
+        'progress_rate': fields.function(_progress_rate, method=True, string='Progress', type='float'),
         'progress': fields.integer('Progress (0-100)'),
         'billable': fields.boolean('To be invoiced'),
         'invoice_id': fields.many2one('account.invoice','Generated Invoice'),
