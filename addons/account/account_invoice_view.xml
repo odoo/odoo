@@ -164,6 +164,7 @@
                                     <button name="invoice_open" states="draft,proforma" string="Validate"/>
                                     <button name="invoice_cancel" states="draft,proforma,sale,open" string="Cancel"/>
                                     <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
+                                    <button name='%(wizard_paid_open)d' type='action' string='Re-Open' states='paid'/>
                                 </group>
                             </group>
                         </page>
@@ -232,6 +233,7 @@
                                     <button name="invoice_open" states="draft,proforma" string="Create"/>
                                     <button name="invoice_cancel" states="draft,proforma,sale,open" string="Cancel"/>
                                     <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
+                                    <button name='%(wizard_paid_open)d' type='action' string='Re-Open' states='paid'/>
                                 </group>
                             </group>
                         </page>
