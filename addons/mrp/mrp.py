@@ -332,7 +332,7 @@ class mrp_production(osv.osv):
         'product_lines': fields.one2many('mrp.production.product.line', 'production_id', 'Scheduled goods'),
         'workcenter_lines': fields.one2many('mrp.production.workcenter.line', 'production_id', 'Workcenters Utilisation'),
 
-        'state': fields.selection([('draft','Draft'),('picking_except', 'Packing Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Canceled'),('done','Done')],'State', readonly=True)
+        'state': fields.selection([('draft','Draft'),('picking_except', 'Packing Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Canceled'),('done','Done')],'Status', readonly=True)
     }
     _defaults = {
         'priority': lambda *a: '1',
@@ -685,7 +685,7 @@ class mrp_procurement(osv.osv):
         'property_ids': fields.many2many('mrp.property', 'mrp_procurement_property_rel', 'procurement_id','property_id', 'Properties'),
 
         'message': fields.char('Latest error', size=64),
-        'state': fields.selection([('draft','Draft'),('confirmed','Confirmed'),('exception','Exception'),('running','Running'),('cancel','Cancel'),('done','Done'),('waiting','Waiting')], 'State')
+        'state': fields.selection([('draft','Draft'),('confirmed','Confirmed'),('exception','Exception'),('running','Running'),('cancel','Cancel'),('done','Done'),('waiting','Waiting')], 'Status')
     }
     _defaults = {
         'state': lambda *a: 'draft',

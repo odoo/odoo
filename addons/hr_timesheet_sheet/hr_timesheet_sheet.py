@@ -222,8 +222,8 @@ class hr_timesheet_sheet(osv.osv):
                 'new': [('readonly', False)]}
             ),
         'attendances_ids' : one2many_mod2('hr.attendance', 'sheet_id', 'Attendances', readonly=True, states={'draft':[('readonly',False)],'new':[('readonly',False)]}),
-        'state' : fields.selection([('new', 'New'),('draft','Draft'),('confirm','Confirmed'),('done','Done')], 'State', select=True, required=True, readonly=True),
-        'state_attendance' : fields.function(_state_attendance, method=True, type='selection', selection=[('absent', 'Absent'), ('present', 'Present'),('none','No employee defined')], string='Current state'),
+        'state' : fields.selection([('new', 'New'),('draft','Draft'),('confirm','Confirmed'),('done','Done')], 'Status', select=True, required=True, readonly=True),
+        'state_attendance' : fields.function(_state_attendance, method=True, type='selection', selection=[('absent', 'Absent'), ('present', 'Present'),('none','No employee defined')], string='Current Status'),
         'total_attendance_day': fields.function(_total_day, method=True, string='Total Attendance'),
         'total_timesheet_day': fields.function(_total_day, method=True, string='Total Timesheet'),
         'total_difference_day': fields.function(_total_day, method=True, string='Difference'),

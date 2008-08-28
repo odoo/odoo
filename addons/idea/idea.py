@@ -127,7 +127,7 @@ class idea_idea(osv.osv):
         'count_votes' : fields.function(_vote_count, method=True, string="Count of votes", type="integer"),
         'count_comments': fields.function(_comment_count, method=True, string="Count of comments", type="integer"),
         'category_id': fields.many2one('idea.category', 'Category', required=True ),
-        'state': fields.selection([('draft','Draft'),('open','Opened'),('close','Accepted'),('cancel','Canceled')], 'State', readonly=True),
+        'state': fields.selection([('draft','Draft'),('open','Opened'),('close','Accepted'),('cancel','Canceled')], 'Status', readonly=True),
         'stat_vote_ids': fields.one2many('idea.vote.stat', 'idea_id', 'Statistics', readonly=True),
     }
 

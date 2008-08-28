@@ -463,7 +463,7 @@ class account_fiscalyear(osv.osv):
         'date_start': fields.date('Start date', required=True),
         'date_stop': fields.date('End date', required=True),
         'period_ids': fields.one2many('account.period', 'fiscalyear_id', 'Periods'),
-        'state': fields.selection([('draft','Draft'), ('done','Done')], 'State', redonly=True),
+        'state': fields.selection([('draft','Draft'), ('done','Done')], 'Status', redonly=True),
     }
 
     _defaults = {
@@ -510,7 +510,7 @@ class account_period(osv.osv):
         'date_start': fields.date('Start of period', required=True, states={'done':[('readonly',True)]}),
         'date_stop': fields.date('End of period', required=True, states={'done':[('readonly',True)]}),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True, states={'done':[('readonly',True)]}, select=True),
-        'state': fields.selection([('draft','Draft'), ('done','Done')], 'State', readonly=True)
+        'state': fields.selection([('draft','Draft'), ('done','Done')], 'Status', readonly=True)
     }
     _defaults = {
         'state': lambda *a: 'draft',
@@ -552,7 +552,7 @@ class account_journal_period(osv.osv):
         'period_id': fields.many2one('account.period', 'Period', required=True, ondelete="cascade"),
         'icon': fields.function(_icon_get, method=True, string='Icon', type='string'),
         'active': fields.boolean('Active', required=True),
-        'state': fields.selection([('draft','Draft'), ('printed','Printed'), ('done','Done')], 'State', required=True, readonly=True)
+        'state': fields.selection([('draft','Draft'), ('printed','Printed'), ('done','Done')], 'Status', required=True, readonly=True)
     }
 
     def _check(self, cr, uid, ids, context={}):
@@ -627,7 +627,7 @@ class account_move(osv.osv):
         'ref': fields.char('Ref', size=64),
         'period_id': fields.many2one('account.period', 'Period', required=True, states={'posted':[('readonly',True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, states={'posted':[('readonly',True)]}),
-        'state': fields.selection([('draft','Draft'), ('posted','Posted')], 'State', required=True, readonly=True),
+        'state': fields.selection([('draft','Draft'), ('posted','Posted')], 'Status', required=True, readonly=True),
         'line_id': fields.one2many('account.move.line', 'move_id', 'Entries', states={'posted':[('readonly',True)]}),
     }
     _defaults = {
@@ -1447,7 +1447,7 @@ class account_subscription(osv.osv):
         'period_total': fields.integer('Number of period', required=True),
         'period_nbr': fields.integer('Period', required=True),
         'period_type': fields.selection([('day','days'),('month','month'),('year','year')], 'Period Type', required=True),
-        'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'State', required=True, readonly=True),
+        'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'Status', required=True, readonly=True),
 
         'lines_id': fields.one2many('account.subscription.line', 'subscription_id', 'Subscription Lines')
     }

@@ -340,7 +340,7 @@ class crm_case(osv.osv):
         'user_id': fields.many2one('res.users', 'User Responsible'),
         'history_line': fields.one2many('crm.case.history', 'case_id', 'Communication'),
         'log_ids': fields.one2many('crm.case.log', 'case_id', 'Logs History'),
-        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
+        'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
         'ref' : fields.reference('Reference', selection=_links_get, size=128),
         'ref2' : fields.reference('Reference 2', selection=_links_get, size=128),
 

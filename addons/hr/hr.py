@@ -255,30 +255,3 @@ class hr_attendance(osv.osv):
     _order = 'name desc'
 hr_attendance()
 
-class hr_holidays_status(osv.osv):
-    _name = "hr.holidays.status"
-    _description = "Holidays Status"
-    _columns = {
-        'name' : fields.char('Holiday Status', size=64, required=True, translate=True),
-    }
-hr_holidays_status()
-
-class hr_holidays(osv.osv):
-    _name = "hr.holidays"
-    _description = "Holidays"
-    _columns = {
-        'name' : fields.char('Description', required=True, size=64),
-        'date_from' : fields.datetime('Vacation start day', required=True),
-        'date_to' : fields.datetime('Vacation end day'),
-        'holiday_status' : fields.many2one("hr.holidays.status", "Holiday's Status"),
-        'employee_id' : fields.many2one('hr.employee', 'Employee', select=True),
-    }
-    _defaults = {
-        'employee_id' : _employee_get
-    }
-    _order = 'date_from desc'
-hr_holidays()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

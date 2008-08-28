@@ -45,7 +45,7 @@ class report_account_analytic_planning(osv.osv):
         'stat_ids': fields.one2many('report_account_analytic.planning.stat', 'planning_id', 'Planning analysis', readonly=True),
         'stat_user_ids': fields.one2many('report_account_analytic.planning.stat.user', 'planning_id', 'Planning by user', readonly=True),
         'stat_account_ids': fields.one2many('report_account_analytic.planning.stat.account', 'planning_id', 'Planning by account', readonly=True),
-        'state': fields.selection([('open','Open'),('done','Done')], 'State', required=True)
+        'state': fields.selection([('open','Open'),('done','Done')], 'Status', required=True)
     }
     _defaults = {
         'name': lambda *a: time.strftime('%Y-%m-%d'),

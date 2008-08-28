@@ -40,7 +40,7 @@ class  report_task_user_pipeline_open (osv.osv):
         'task_hrs': fields.float('Task Hours', readonly=True),
         'task_progress': fields.float('Task Progress', readonly=True),
         'company_id' : fields.many2one('res.company', 'Company'),
-        'task_state': fields.selection([('draft', 'Draft'),('open', 'Open'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done'),('no','No Task')], 'State', readonly=True),
+        'task_state': fields.selection([('draft', 'Draft'),('open', 'Open'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done'),('no','No Task')], 'Status', readonly=True),
     }
 
     def init(self, cr):

@@ -113,7 +113,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('invoice_id','=',False),('to_invoice','!=',False)]</field>
         </record>
-        <menuitem action="action_hr_analytic_timesheet_tree_invoiced" id="menu_hr_analytic_timesheet_tree_invoiced" parent="hr_timesheet_invoice.menu_hr_analytic_timesheet_tree"/>
+        <menuitem action="action_hr_analytic_timesheet_tree_invoiced" id="menu_hr_analytic_timesheet_tree_invoiced" parent="menu_hr_analytic_timesheet_tree"/>
          
         
         
@@ -124,7 +124,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('invoice_id','=',False),('to_invoice','!=',False),('user_id','=',uid)]</field>
         </record>
-        <menuitem action="action_hr_analytic_timesheet_tree_invoiced_my" id="menu_hr_analytic_timesheet_tree_invoiced_my" parent="hr_timesheet_invoice.menu_hr_analytic_timesheet_tree_invoiced"/>
+        <menuitem action="action_hr_analytic_timesheet_tree_invoiced_my" id="menu_hr_analytic_timesheet_tree_invoiced_my" parent="menu_hr_analytic_timesheet_tree"/>
          
         
         <record id="action_open_analytic_accounts" model="ir.actions.act_window">

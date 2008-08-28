@@ -22,7 +22,7 @@ class crossovered_budget(osv.osv):
         'validating_user_id': fields.many2one('res.users','Validate User', readonly=True),
         'date_from': fields.date('Start Date',required=True,states={'done':[('readonly',True)]}),
         'date_to': fields.date('End Date',required=True,states={'done':[('readonly',True)]}),
-        'state' : fields.selection([('draft','Draft'),('confirm','Confirmed'),('validate','Validated'),('done','Done'),('cancel', 'Cancelled')], 'State', select=True, required=True, readonly=True),
+        'state' : fields.selection([('draft','Draft'),('confirm','Confirmed'),('validate','Validated'),('done','Done'),('cancel', 'Cancelled')], 'Status', select=True, required=True, readonly=True),
         'crossovered_budget_line': fields.one2many('crossovered.budget.lines', 'crossovered_budget_id', 'Budget Lines',states={'done':[('readonly',True)]} ),
     }
 

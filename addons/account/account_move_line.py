@@ -267,7 +267,7 @@ class account_move_line(osv.osv):
         'centralisation': fields.selection([('normal','Normal'),('credit','Credit Centralisation'),('debit','Debit Centralisation')], 'Centralisation', size=6),
         'balance': fields.function(_balance, method=True, string='Balance'),
         'active': fields.boolean('Active'),
-        'state': fields.selection([('draft','Draft'), ('valid','Valid')], 'State', readonly=True),
+        'state': fields.selection([('draft','Draft'), ('valid','Valid')], 'Status', readonly=True),
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Account'),
         'tax_amount': fields.float('Tax/Base Amount', digits=(16,2), select=True),
         'invoice': fields.function(_invoice, method=True, string='Invoice',

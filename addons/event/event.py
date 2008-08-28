@@ -133,7 +133,7 @@ class event(osv.osv):
         'task_ids': one2many_mod_task('project.task', 'project_id', "Project tasks", readonly=True, domain="[('state','&lt;&gt;', 'done')]"),
         'date_begin': fields.datetime('Beginning date', required=True),
         'date_end': fields.datetime('Ending date', required=True),
-        'state': fields.selection([('draft','Draft'),('confirm','Confirmed'),('done','Done'),('cancel','Canceled')], 'State', readonly=True, required=True),
+        'state': fields.selection([('draft','Draft'),('confirm','Confirmed'),('done','Done'),('cancel','Canceled')], 'Status', readonly=True, required=True),
         'mail_auto_registr':fields.boolean('Mail Auto Register',help='A mail is send when the registration is confirmed'),
         'mail_auto_confirm':fields.boolean('Mail Auto Confirm',help='A mail is send when the event is confimed'),
         'mail_registr':fields.text('Mail Register',help='Template for the mail'),

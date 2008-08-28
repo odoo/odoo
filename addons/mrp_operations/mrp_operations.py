@@ -62,7 +62,7 @@ class mrp_production_workcenter_line(osv.osv):
         return result
 
     _columns = {
-        'state': fields.selection([('draft','Draft'),('confirm', 'Confirm'),('cancel','Canceled'),('done','Done')],'State', readonly=True),
+        'state': fields.selection([('draft','Draft'),('confirm', 'Confirm'),('cancel','Canceled'),('done','Done')],'Status', readonly=True),
 #       'date_start': fields.datetime('Start Date'),
 #       'date_finnished': fields.datetime('End Date'),
 #       'delay': fields.function(_calc_delay, method=True, string='Delay', help="This is delay between operation start and stop in this workcenter"),
@@ -127,7 +127,7 @@ class mrp_operations_operation_code(osv.osv):
     _columns={
         'name': fields.char('Operation Name',size=64, required=True),
         'code': fields.char('Code', size=16, required=True),
-        'start_stop': fields.selection([('start','Start'),('stop','Stop'),('done','Done')], 'State', required=True),
+        'start_stop': fields.selection([('start','Start'),('stop','Stop'),('done','Done')], 'Status', required=True),
     }
 mrp_operations_operation_code()
 

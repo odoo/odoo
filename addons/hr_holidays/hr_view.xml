@@ -6,10 +6,15 @@
 		<record model="ir.ui.view" id="edit_holiday_inherit_new">
 			<field name="name">hr.holidays.form.inherit</field>
 			<field name="model">hr.holidays</field>
-			<field name="inherit_id" ref="hr.edit_holiday"/>
 			<field name="type">form</field>
+			<field name="inherit_id" eval="False"/>
 			<field name="arch" type="xml">
-				<field name="holiday_status" position="after">
+                <form string="Employee holidays">
+                    <field colspan="4" name="name" select="1"/>
+                    <field name="date_from" select="1"/>
+                    <field name="date_to" select="1"/>
+                    <newline/>
+                    <field name="holiday_status" select="1"/>
 					<group col="12" colspan="2">
 						<button string="Confirm" name="confirm" states="draft" type="workflow"/>
 						<button string="Validate" name="validate" states="confirm" type="workflow"/>
@@ -25,6 +30,7 @@
 					<field name="employee_id" select="1" />
 					<newline />
 					<field name="number_of_days" colspan="2"/>
+                </form>
 				</field>
 			</field>
 		</record>
@@ -32,12 +38,16 @@
 		<record model="ir.ui.view" id="view_holiday">
 			<field name="name">hr.holidays.tree</field>
 			<field name="model">hr.holidays</field>
-			<field name="inherit_id" ref="hr.view_holiday"/>
+			<field name="inherit_id" eval="False"/>
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
-				<field name="holiday_status" position="after">
+                <tree string="Employee holidays">
+                    <field name="name"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="holiday_status"/>
 					<field name="state"/>
-				</field>
+                </tree>
 			</field>
 		</record>
 
@@ -58,27 +68,37 @@
 		<record model="ir.ui.view" id="edit_holiday_status_form">
 			<field name="name">hr.holidays.status.form</field>
 			<field name="model">hr.holidays.status</field>
-			<field name="inherit_id" ref="hr.edit_holiday_status"/>
+			<field name="inherit_id" eval="False"/>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<field name="name" position="after">
+                <form string="Define holiday status">
+                    <field colspan="4" name="name" select="1"/>
 					<field name="color_name" select="2"/>
 					<field name="section_id"  select="1" />
-				</field>
+                </form>
 			</field>
 		</record>
 		<record model="ir.ui.view" id="view_holiday_status_tree">
 			<field name="name">hr.holidays.status.tree</field>
 			<field name="model">hr.holidays.status</field>
-			<field name="inherit_id" ref="hr.view_holiday_status"/>
+			<field name="inherit_id" eval="False"/>
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
-				<field name="name" position="after">
+                <tree string="Holiday status">
+                    <field name="name"/>
 					<field name="color_name" />
 					<field name="section_id" />
-				</field>
+                </tree>
 			</field>
 		</record>
+        <record id="open_view_holiday_status" model="ir.actions.act_window">
+            <field name="name">Holiday Status</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.holidays.status</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem action="open_view_holiday_status" groups="base.group_admin" id="menu_open_view_holiday_status" parent="hr.menu_hr_configuration"/>
 
 		<!-- holidays per user -->
 		<record model="ir.ui.view" id="view_holidays_per_user_form">

@@ -155,45 +155,5 @@
             <field eval="True" name="perm_create"/>
             <field eval="True" name="perm_unlink"/>
         </record>
-        
-        <!-- Holiday Status security -->
-        <record id="access_hr_holiday_status" model="ir.model.access">
-            <field name="name">HR Holiday Status</field>
-            <field model="ir.model" name="model_id" search="[('model', '=', 'hr.holidays.status')]"/>
-            <field eval="True" name="perm_read"/>
-            <field eval="False" name="perm_write"/>
-            <field eval="False" name="perm_create"/>
-            <field eval="False" name="perm_unlink"/>
-        </record>
-        
-        <record id="access_hr_holiday_status_manager" model="ir.model.access">
-            <field name="name">HR Holiday Status</field>
-            <field model="ir.model" name="model_id" search="[('model', '=', 'hr.holidays.status')]"/>
-            <field name="group_id" ref="group_hr_manager"/>
-            <field eval="True" name="perm_read"/>
-            <field eval="True" name="perm_write"/>
-            <field eval="True" name="perm_create"/>
-            <field eval="True" name="perm_unlink"/>
-        </record>
-        
-        <!-- Holidays security -->
-        <record id="access_hr_holiday" model="ir.model.access">
-            <field name="name">HR Holidays</field>
-            <field model="ir.model" name="model_id" search="[('model', '=', 'hr.holidays')]"/>
-            <field eval="True" name="perm_read"/>
-            <field eval="False" name="perm_write"/>
-            <field eval="False" name="perm_create"/>
-            <field eval="False" name="perm_unlink"/>
-        </record>
-        
-        <record id="access_hr_holiday_employee" model="ir.model.access">
-            <field name="name">HR Holidays</field>
-            <field model="ir.model" name="model_id" search="[('model', '=', 'hr.holidays')]"/>
-            <field name="group_id" ref="group_hr_employee"/>
-            <field eval="True" name="perm_read"/>
-            <field eval="True" name="perm_write"/>
-            <field eval="True" name="perm_create"/>
-            <field eval="True" name="perm_unlink"/>
-        </record>
     </data>
 </terp>

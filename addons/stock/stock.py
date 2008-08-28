@@ -392,7 +392,7 @@ class stock_picking(osv.osv):
             ('assigned','Assigned'),
             ('done','Done'),
             ('cancel','Cancel'),
-            ], 'State', readonly=True, select=True),
+            ], 'Status', readonly=True, select=True),
         'date':fields.datetime('Date create'),
 
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Move lines'),
@@ -402,7 +402,7 @@ class stock_picking(osv.osv):
         'invoice_state':fields.selection([
             ("invoiced","Invoiced"),
             ("2binvoiced","To be invoiced"),
-            ("none","Not from Packing")], "Invoice state", 
+            ("none","Not from Packing")], "Invoice Status", 
             select=True),
     }
     _defaults = {
@@ -801,7 +801,7 @@ class stock_move(osv.osv):
 
         'note': fields.text('Notes'),
 
-        'state': fields.selection([('draft','Draft'),('waiting','Waiting'),('confirmed','Confirmed'),('assigned','Assigned'),('done','Done'),('cancel','cancel')], 'State', readonly=True, select=True),
+        'state': fields.selection([('draft','Draft'),('waiting','Waiting'),('confirmed','Confirmed'),('assigned','Assigned'),('done','Done'),('cancel','cancel')], 'Status', readonly=True, select=True),
         'price_unit': fields.float('Unit Price',
             digits=(16, int(config['price_accuracy']))),
     }
@@ -1041,7 +1041,7 @@ class stock_inventory(osv.osv):
         'date_done': fields.datetime('Date done'),
         'inventory_line_id': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', readonly=True, states={'draft':[('readonly',False)]}),
         'move_ids': fields.many2many('stock.move', 'stock_inventory_move_rel', 'inventory_id', 'move_id', 'Created Moves'),
-        'state': fields.selection( (('draft','Draft'),('done','Done')), 'State', readonly=True),
+        'state': fields.selection( (('draft','Draft'),('done','Done')), 'Status', readonly=True),
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
