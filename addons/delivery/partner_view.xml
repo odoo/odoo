@@ -7,9 +7,11 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <page string="Properties" position="inside">
-                    <separator string="Deliveries" colspan="4"/>
-                    <field name="property_delivery_carrier"/>
+                <page string="Sales &amp; Purchases" position="inside">
+					<group colspan="2" col="2">
+						<separator string="Deliveries" colspan="4"/>
+                    	<field name="property_delivery_carrier"/>
+					</group>
                 </page>
             </field>
         </record>
