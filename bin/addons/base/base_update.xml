@@ -38,17 +38,16 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Groups">
-                    <notebook>
-                        <page string="Group">
-                            <field colspan="4" name="name" select="1"/>
-                            <field colspan="4" name="users"/>
-                            <field colspan="4" name="comment"/>
+                    <field colspan="4" name="name" select="1"/>
+                    <notebook colspan="4">
+                        <page string="Users">
+                            <field colspan="4" name="users" nolabel="1"/>
                         </page>
                         <page string="Menus">
-                            <field colspan="4" name="menu_access"/>
+                            <field colspan="4" name="menu_access" nolabel="1"/>
                         </page>
-                        <page string="Security">
-                            <field colspan="4" name="model_access">
+                        <page string="Access Rights">
+                            <field colspan="4" name="model_access" nolabel="1">
                                 <form string="Access Controls">
                                     <field colspan="4" name="name" select="1"/>
                                     <field name="model_id" select="1"/>
@@ -59,7 +58,11 @@
                                     <field name="perm_unlink"/>
                                 </form>
                             </field>
-                            <field colspan="4" name="rule_groups"/>
+                        </page>
+                        <page string="Rules">
+                            <field colspan="4" name="rule_groups" nolabel="1"/>
+                        </page><page string="Notes">
+                            <field colspan="4" name="comment" nolabel="1"/>
                         </page>
                     </notebook>
                 </form>
@@ -94,12 +97,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Users">
-                    <notebook>
+                    <field name="name" select="1"/>
+                    <field name="active" select="1"/>
+                    <field name="login" select="1"/>
+                    <field name="password"/>
+                    <notebook colspan="4">
                         <page string="User">
-                            <field name="name" select="1"/>
-                            <field name="active" select="1"/>
-                            <field name="login" select="1"/>
-                            <field name="password"/>
                             <field name="address_id"/>
                             <field name="company_id" required="1"/>
                             <field name="action_id" required="True"/>
@@ -108,9 +111,11 @@
                             <field name="context_tz"/>
                             <field colspan="4" name="signature"/>
                         </page>
-                        <page string="Security">
-                            <field colspan="4" name="groups_id"/>
-                            <field colspan="4" name="roles_id"/>
+                        <page string="Groups">
+                            <field colspan="4" nolabel="1" name="groups_id"/>
+                        </page>
+                        <page string="Roles">
+                            <field colspan="4" nolabel="1" name="roles_id"/>
                         </page>
                     </notebook>
                 </form>
@@ -139,11 +144,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Company">
-                    <notebook>
+                    <field colspan="4" name="name" select="1"/>
+                    <field name="partner_id" select="1"/>
+                    <field name="parent_id" select="1"/>
+                    <notebook colspan="4">
                         <page string="General Information">
-                            <field colspan="4" name="name" select="1"/>
-                            <field name="partner_id" select="1"/>
-                            <field name="parent_id" select="1"/>
                             <field name="rml_header1"/>
                             <field name="rml_footer1"/>
                             <field name="rml_footer2"/>
