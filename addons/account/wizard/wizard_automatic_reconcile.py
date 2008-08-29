@@ -73,7 +73,7 @@ _reconcile_fields = {
         'type': 'many2many',
         'relation': 'account.account',
         'domain': [('reconcile','=',1)],
-        'required': True
+        'help': 'If no account is specified, the reconciliation will be made using every accounts that can be reconcilied',
     },
     'writeoff_acc_id': {
         'string': 'Account',
@@ -226,8 +226,8 @@ def _reconcile(self, cr, uid, data, context):
     max_amount = form.get('max_amount', 0.0)
     power = form['power']
     reconciled = unreconciled = 0
-    if not form['account_ids']:
-        return {'reconciled':0, 'unreconciled':[0]}
+    if not form['account_ids'][0][2]:
+        form['account_ids'][0][2] = pooler.get_pool(cr.dbname).get('account.account').search(cr, uid, [('reconcile','=',True)])
     for account_id in form['account_ids'][0][2]:
     
         # reconcile automatically all transactions from partners whose balance is 0
@@ -264,6 +264,7 @@ def _reconcile(self, cr, uid, data, context):
             "WHERE account_id=%d " \
             "AND reconcile_id IS NULL " \
             "AND state <> 'draft' " \
+            "AND partner_id IS NOT NULL " \
             "GROUP BY partner_id " \
             "HAVING count(*)>1",
             (account_id,))
