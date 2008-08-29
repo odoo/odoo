@@ -122,10 +122,10 @@ def _partner_title_get(self, cr, uid, context={}):
 
 def _lang_get(self, cr, uid, context={}):
     obj = self.pool.get('res.lang')
-    ids = obj.search(cr, uid, [])
+    ids = obj.search(cr, uid, [], context=context)
     res = obj.read(cr, uid, ids, ['code', 'name'], context)
-    res = [(r['code'], r['name']) for r in res]
-    return res + [(False, '')]
+    return [(r['code'], r['name']) for r in res]
+    
 
 class res_partner(osv.osv):
     _description='Partner'
