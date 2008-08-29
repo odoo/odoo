@@ -87,18 +87,33 @@
             <field name="view_id" ref="view_employee_tree"/>
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
-
-        <menuitem action="open_view_employee_tree" id="menu_open_view_employee_tree" parent="hr.menu_hr_root"/>
-
         
         <record id="open_view_employee_list" model="ir.actions.act_window">
             <field name="name">Employees</field>
             <field name="res_model">hr.employee</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_employee_list"/>
         </record>
-        <menuitem action="open_view_employee_list" id="menu_open_view_employee_list" parent="hr.menu_open_view_employee_tree"/>
+        <menuitem
+			action="open_view_employee_list"
+			id="menu_open_view_employee_list"
+			parent="hr.menu_hr_root"/>
+        <menuitem
+			action="open_view_employee_tree"
+			id="menu_open_view_employee_tree"
+			parent="menu_open_view_employee_list"/>
+
+       <record id="open_view_employee_list_my" model="ir.actions.act_window">
+            <field name="name">My Employees</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('parent_id.user_id','=',uid)]</field>
+        </record>
+        <menuitem
+			action="open_view_employee_list_my"
+			id="menu_open_view_employee_list_my"
+			parent="menu_open_view_employee_list"/>
 
         <record id="open_view_employee_new" model="ir.actions.act_window">
             <field name="name">New Employee</field>
@@ -106,8 +121,11 @@
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
         </record>
-        <menuitem action="open_view_employee_new" id="menu_open_view_employee_new" parent="hr.menu_open_view_employee_tree"/>
-        
+        <menuitem
+			action="open_view_employee_new"
+			id="menu_open_view_employee_new" 
+			parent="menu_open_view_employee_list"/>
+
         <!--
         =======================
         Employee architecture
@@ -301,90 +319,7 @@
         <menuitem id="menu_hr_attendance" name="Attendances" parent="hr.menu_hr_root"/>
         <menuitem action="open_view_attendance" id="menu_open_view_attendance" parent="hr.menu_hr_attendance"/>
         
-        <!-- Holidays -->
-        <record id="edit_holiday" model="ir.ui.view">
-            <field name="name">hr.holidays.form</field>
-            <field name="model">hr.holidays</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Employee holidays">
-                    <field colspan="4" name="name" select="1"/>
-                    <field name="date_from" select="1"/>
-                    <field name="date_to" select="1"/>
-                    <newline/>
-                    <field name="holiday_status" select="1"/>
-                </form>
-            </field>
-        </record>
-        <record id="view_holiday" model="ir.ui.view">
-            <field name="name">hr.holidays.tree</field>
-            <field name="model">hr.holidays</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Employee holidays">
-                    <field name="name"/>
-                    <field name="date_from"/>
-                    <field name="date_to"/>
-                    <field name="holiday_status"/>
-                </tree>
-            </field>
-        </record>
         
-        <record id="ask_holiday" model="ir.ui.view">
-            <field name="name">hr.holidays.ask_form</field>
-            <field name="model">hr.holidays</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Vacations requests">
-                    <field name="name" select="1"/>
-                    <field name="holiday_status"/>
-                    <field colspan="4" name="employee_id" select="1"/>
-                    <newline/>
-                    <field name="date_from" select="1"/>
-                    <field name="date_to" select="1"/>
-                </form>
-            </field>
-        </record>
-        <record id="open_ask_holidays" model="ir.actions.act_window">
-            <field name="name">Vacation Requests</field>
-            <field name="res_model">hr.holidays</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="view_holiday"/>
-        </record>
-        <menuitem action="open_ask_holidays" id="menu_open_ask_holidays" parent="hr.menu_hr_attendance"/>
-        
-        <!-- Some Configuration (holiday type, attendance reasons) -->
-        
-        <record id="edit_holiday_status" model="ir.ui.view">
-            <field name="name">hr.holidays.status.form</field>
-            <field name="model">hr.holidays.status</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Define holiday status">
-                    <field colspan="4" name="name" select="1"/>
-                </form>
-            </field>
-        </record>
-        <record id="view_holiday_status" model="ir.ui.view">
-            <field name="name">hr.holidays.status.tree</field>
-            <field name="model">hr.holidays.status</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Holiday status">
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
-        <record id="open_view_holiday_status" model="ir.actions.act_window">
-            <field name="name">Holiday Status</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">hr.holidays.status</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_holiday_status"/>
-        </record>
-        <menuitem action="open_view_holiday_status" id="menu_open_view_holiday_status" parent="hr.menu_hr_configuration"/>
-
         <record id="edit_attendance_reason" model="ir.ui.view">
             <field name="name">hr.action.reason.form</field>
             <field name="model">hr.action.reason</field>
