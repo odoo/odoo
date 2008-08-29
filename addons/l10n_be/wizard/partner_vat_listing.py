@@ -20,7 +20,7 @@ form = """<?xml version="1.0"?>
 fields = {
     'fyear': {'string': 'Fiscal Year', 'type': 'many2one', 'relation': 'account.fiscalyear', 'required': True,},
     'mand_id':{'string':'MandataireId','type':'char','size':'30','required': True,},
-    'limit_amount':{'string':'Limit Amount','type':'int','required': True, },
+    'limit_amount':{'string':'Limit Amount','type':'integer','required': True, },
     'test_xml': {'string':'Test XML file', 'type':'boolean', },
    }
 msg_form = """<?xml version="1.0"?>
@@ -46,7 +46,7 @@ class wizard_vat(wizard.interface):
         seq_controlref = pooler.get_pool(cr.dbname).get('ir.sequence').get(cr, uid,'controlref')
         seq_declarantnum = pooler.get_pool(cr.dbname).get('ir.sequence').get(cr, uid,'declarantnum')
         obj_cmpny = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid).company_id
-        company_vat = obj_cmpny.partner_id.vat 
+        company_vat = obj_cmpny.partner_id.vat
         if not company_vat: #if not vat_company:
             raise wizard.except_wizard('Data Insufficient','No VAT Number Associated with Main Company!')
 
