@@ -102,10 +102,10 @@ class _column(object):
     def set_memory(self, cr, obj, id, name, value, user=None, context=None):
         raise Exception(_('Not implemented set_memory method !'))
 
-    def get_memory(self, cr, obj, ids, name, context=None, values=None):
+    def get_memory(self, cr, obj, ids, name, user=None, context=None, values=None):
         raise Exception(_('Not implemented get_memory method !'))
 
-    def get(self, cr, obj, ids, name, context=None, values=None):
+    def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
         raise Exception(_('undefined get method !'))
 
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None):
@@ -203,6 +203,33 @@ class binary(_column):
     _symbol_f = lambda symb: symb and psycopg.Binary(symb) or None
     _symbol_set = (_symbol_c, _symbol_f)
 
+    _classic_read = False
+    
+    def get_memory(self, cr, obj, ids, name, user=None, context=None, values=None):
+        if not context:
+            context = {}
+        if not values:
+            values = []
+
+        def convert(b):
+            if not b:
+                return b
+            return '%d bytes' % b
+
+        res = {}
+        for i in ids:
+            val = None
+            for v in values:
+                if v['id'] == i:
+                    val = v[name]
+                    break
+            res.setdefault(i, val)
+            if context.get('get_binary_size', True):
+                res[i] = convert(val) 
+
+        return res
+
+    get = get_memory
 
 class selection(_column):
     _type = 'selection'
