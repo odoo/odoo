@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<terp>
+    <data>
+        <record id="view_confirm_install_module_form" model="ir.ui.view">
+            <field name="name">Install extra modules</field>
+            <field name="model">config.install_extra_modules</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Install Extra Module">
+					<separator string="Project Management" colspan="4"/>
+                    <field name="project"/>
+                    <field name="event"/>
+                    <separator string="Resources Management" colspan="4"/>
+                    <field name="hr_expense"/>
+                    <separator string="Relationship Management" colspan="4"/>
+                    <field name="crm_configuration"/>
+                    <field name="crm"/>
+					<separator string="" colspan="4"/>
+					<label string="" colspan="2"/>
+                    <group col="4" colspan="2">
+                        <button special="cancel" string="Cancel" name="action_cancel" type="object" icon='gtk-cancel'/>
+                        <button name="action_install" string="Install" icon='gtk-ok' type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_config_install_module" model="ir.actions.act_window">
+            <field name="name">Install Extra Modules</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">config.install_extra_modules</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+      <record model="ir.module.module.configuration.step"
+            id="config_install_module">
+            <field name="name">Install Extra modules</field>
+            <field name="note">Install more modules. A few modules are proposed according to the service profile you selected. You will be able to install them based on our requirements.</field>
+            <field name="action_id" ref="action_config_install_module"/>
+            <field name="state">open</field>
+        </record>
+    </data>
+</terp>

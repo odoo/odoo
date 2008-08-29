@@ -77,13 +77,55 @@ class purchase_order(osv.osv):
 
     def _amount_total(self, cr, uid, ids, field_name, arg, context):
         res = {}
-        untax = self._amount_untaxed(cr, uid, ids, field_name, arg, context) 
+        untax = self._amount_untaxed(cr, uid, ids, field_name, arg, context)
         tax = self._amount_tax(cr, uid, ids, field_name, arg, context)
         cur_obj=self.pool.get('res.currency')
         for id in ids:
             order=self.browse(cr, uid, [id])[0]
             cur=order.pricelist_id.currency_id
             res[id] = cur_obj.round(cr, uid, cur, untax.get(id, 0.0) + tax.get(id, 0.0))
+        return res
+
+    def _invoiced_rate(self, cursor, user, ids, name, arg, context=None):
+        res = {}
+        for purchase in self.browse(cursor, user, ids, context=context):
+            tot = 0.0
+
+            if purchase.invoice_id.state not in ('draft','cancel'):
+                tot += purchase.invoice_id.amount_untaxed
+            if tot:
+                res[purchase.id] = tot * 100.0 / purchase.amount_untaxed
+            else:
+                res[purchase.id] = 0.0
+        return res
+
+    def _shipped_rate(self, cr, uid, ids, name, arg, context=None):
+        if not ids: return {}
+        res = {}
+        for id in ids:
+            res[id] = [0.0,0.0]
+        cr.execute('''SELECT
+                p.purchase_id,sum(m.product_qty), m.state
+            FROM
+                stock_move m
+            LEFT JOIN
+                stock_picking p on (p.id=m.picking_id)
+            WHERE
+                p.purchase_id in ('''+','.join(map(str,ids))+''')
+            GROUP BY m.state, p.purchase_id''')
+        for oid,nbr,state in cr.fetchall():
+            if state=='cancel':
+                continue
+            if state=='done':
+                res[oid][0] += nbr or 0.0
+                res[oid][1] += nbr or 0.0
+            else:
+                res[oid][1] += nbr or 0.0
+        for r in res:
+            if not res[r][1]:
+                res[r] = 0.0
+            else:
+                res[r] = 100.0 * res[r][0] / res[r][1]
         return res
 
     _columns = {
@@ -99,16 +141,18 @@ class purchase_order(osv.osv):
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', states={'posted':[('readonly',True)]}),
         'location_id': fields.many2one('stock.location', 'Delivery destination', required=True),
 
-        'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}),
+        'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, help="The pricelist sets the currency used for this purchase order. It also computes the supplier price for the selected products/quantities."),
 
-        'state': fields.selection([('draft', 'Request for Quotation'), ('wait', 'Waiting'), ('confirmed', 'Confirmed'), ('approved', 'Approved'),('except_picking', 'Shipping Exception'), ('except_invoice', 'Invoice Exception'), ('done', 'Done'), ('cancel', 'Cancelled')], 'Order State', readonly=True, help="The state of the purchase order or the quotation request. A quotation is a purchase order in a 'Draft' state. Then the order has to be confirmed by the user, the state switch to 'Confirmed'. Then the supplier must confirm the order to change the state to 'Approved'. When the purchase order is paid and received, the state becomes 'Done'. If a cancel action occurs in the invoice or in the reception of goods, the state becomes in exception.", select=True),
-        'order_line': fields.one2many('purchase.order.line', 'order_id', 'Order State', states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}),
+        'state': fields.selection([('draft', 'Request for Quotation'), ('wait', 'Waiting'), ('confirmed', 'Confirmed'), ('approved', 'Approved'),('except_picking', 'Shipping Exception'), ('except_invoice', 'Invoice Exception'), ('done', 'Done'), ('cancel', 'Cancelled')], 'Order Status', readonly=True, help="The state of the purchase order or the quotation request. A quotation is a purchase order in a 'Draft' state. Then the order has to be confirmed by the user, the state switch to 'Confirmed'. Then the supplier must confirm the order to change the state to 'Approved'. When the purchase order is paid and received, the state becomes 'Done'. If a cancel action occurs in the invoice or in the reception of goods, the state becomes in exception.", select=True),
+        'order_line': fields.one2many('purchase.order.line', 'order_id', 'Order Lines', states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}),
         'validator' : fields.many2one('res.users', 'Validated by', readonly=True),
         'notes': fields.text('Notes'),
         'invoice_id': fields.many2one('account.invoice', 'Invoice', readonly=True),
         'picking_ids': fields.one2many('stock.picking', 'purchase_id', 'Picking List', readonly=True, help="This is the list of picking list that have been generated for this purchase"),
         'shipped':fields.boolean('Received', readonly=True, select=True),
+        'shipped_rate': fields.function(_shipped_rate, method=True, string='Received', type='float'),
         'invoiced':fields.boolean('Invoiced & Paid', readonly=True, select=True),
+        'invoiced_rate': fields.function(_invoiced_rate, method=True, string='Invoiced', type='float'),
         'invoice_method': fields.selection([('manual','Manual'),('order','From order'),('picking','From picking')], 'Invoicing Control', required=True),
 
         'amount_untaxed': fields.function(_amount_untaxed, method=True, string='Untaxed Amount'),
@@ -164,7 +208,7 @@ class purchase_order(osv.osv):
         for id in ids:
             self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
         return True
-    
+
     def wkf_warn_buyer(self, cr, uid, ids):
         self.write(cr, uid, ids, {'state' : 'wait', 'validator' : uid})
         request = pooler.get_pool(cr.dbname).get('res.request')
@@ -175,7 +219,7 @@ class purchase_order(osv.osv):
                 if manager and not (manager.id in managers):
                     managers.append(manager.id)
             for manager_id in managers:
-                request.create(cr, uid, 
+                request.create(cr, uid,
                       {'name' : "Purchase amount over the limit",
                        'act_from' : uid,
                        'act_to' : manager_id,
@@ -310,7 +354,7 @@ class purchase_order_line(osv.osv):
             cur = line.order_id.pricelist_id.currency_id
             res[line.id] = cur_obj.round(cr, uid, cur, line.price_unit * line.product_qty)
         return res
-    
+
     _columns = {
         'name': fields.char('Description', size=64, required=True),
         'product_qty': fields.float('Quantity', required=True, digits=(16,2)),
@@ -331,7 +375,7 @@ class purchase_order_line(osv.osv):
     }
     _table = 'purchase_order_line'
     _name = 'purchase.order.line'
-    _description = 'Purchase Order line'
+    _description = 'Purchase Order lines'
     def copy(self, cr, uid, id, default=None,context={}):
         if not default:
             default = {}
@@ -365,6 +409,22 @@ class purchase_order_line(osv.osv):
 
         res = {'value': {'price_unit': price, 'name':prod_name, 'taxes_id':prod['supplier_taxes_id'], 'date_planned': dt,'notes':prod['description_purchase'], 'product_uom': uom}}
         domain = {}
+
+        if res['value']['taxes_id']:
+            taxes = self.pool.get('account.tax').browse(cr, uid,
+                    [x.id for x in product.supplier_taxes_id])
+            taxep = None
+            if partner_id:
+                taxep = self.pool.get('res.partner').browse(cr, uid,
+                        partner_id).property_account_supplier_tax
+            if not taxep or not taxep.id:
+                res['value']['taxes_id'] = [x.id for x in product.taxes_id]
+            else:
+                res5 = [taxep.id]
+                for t in taxes:
+                    if not t.tax_group==taxep.tax_group:
+                        res5.append(t.id)
+                res['value']['taxes_id'] = res5
 
         res2 = self.pool.get('product.uom').read(cr, uid, [uom], ['category_id'])
         res3 = self.pool.get('product.uom').read(cr, uid, [prod_uom_po], ['category_id'])

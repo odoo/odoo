@@ -122,7 +122,7 @@ class account_invoice(osv.osv):
             ('draft','Draft'),
             ('proforma','Pro-forma'),
             ('open','Open'),
-            ('paid','Paid'),
+            ('paid','Done'),
             ('cancel','Canceled')
         ],'State', select=True, readonly=True),
 
@@ -149,9 +149,9 @@ class account_invoice(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Journal', required=True,readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'check_total': fields.float('Total', digits=(16,2), states={'open':[('readonly',True)],'close':[('readonly',True)]}),
-        'reconciled': fields.function(_reconciled, method=True, string='Reconciled', type='boolean'),
+        'reconciled': fields.function(_reconciled, method=True, string='Paid/Reconciled', type='boolean'),
         'partner_bank': fields.many2one('res.partner.bank', 'Bank Account',
-            help='The bank account to pay or to be paid'),
+            help='The bank account to pay to or to be paid from'),
     }
     _defaults = {
         'type': _get_type,
@@ -499,14 +499,18 @@ class account_invoice(osv.osv):
                         _('Can not create invoice move on centralized journal'))
 
             move = {'name': name, 'line_id': line, 'journal_id': journal_id}
-            if inv.period_id:
-                move['period_id'] = inv.period_id.id
+            period_id=inv.period_id and inv.period_id.id or False
+            if not period_id:
+                period_ids= self.pool.get('account.period').search(cr,uid,[('date_start','<=',inv.date_invoice),('date_stop','>=',inv.date_invoice)])
+                if len(period_ids):
+                    period_id=period_ids[0]
+            if period_id:
+                move['period_id'] = period_id
                 for i in line:
-                    i[2]['period_id'] = inv.period_id.id
-
+                    i[2]['period_id'] = period_id
             move_id = self.pool.get('account.move').create(cr, uid, move)
             # make the invoice point to that move
-            self.write(cr, uid, [inv.id], {'move_id': move_id})
+            self.write(cr, uid, [inv.id], {'move_id': move_id,'period_id':period_id})
             self.pool.get('account.move').post(cr, uid, [move_id])
         self._log_event(cr, uid, ids)
         return True
@@ -681,20 +685,30 @@ class account_invoice(osv.osv):
         invoice = self.browse(cr, uid, ids[0])
         src_account_id = invoice.account_id.id
         journal = self.pool.get('account.journal').browse(cr, uid, pay_journal_id)
-        if not name:
-            if journal.sequence_id:
-                name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
-            else:
-                raise osv.except_osv(_('No piece number !'), _('Can not create an automatic sequence for this piece !\n\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.'))
+        if journal.sequence_id:
+            name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
+        else:
+            raise osv.except_osv(_('No piece number !'), _('Can not create an automatic sequence for this piece !\n\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.'))
+        # Take the seq as name for move
+        if journal.sequence_id:
+            seq = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
+        else:
+            raise osv.except_osv('No piece number !', 'Can not create an automatic sequence for this piece !\n\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.')
         types = {'out_invoice': -1, 'in_invoice': 1, 'out_refund': 1, 'in_refund': -1}
         direction = types[invoice.type]
+        #take the choosen date
+        if context.has_key('date_p') and context['date_p']:
+            date=context['date_p']
+        else:
+            date=time.strftime('%Y-%m-%d')
         l1 = {
             'name': name,
             'debit': direction * pay_amount>0 and direction * pay_amount,
             'credit': direction * pay_amount<0 and - direction * pay_amount,
             'account_id': src_account_id,
             'partner_id': invoice.partner_id.id,
-            'date': time.strftime('%Y-%m-%d'),
+            'date': date,
+            'ref':invoice.number,
         }
         l2 = {
             'name':name,
@@ -702,11 +716,12 @@ class account_invoice(osv.osv):
             'credit': direction * pay_amount>0 and direction * pay_amount,
             'account_id': pay_account_id,
             'partner_id': invoice.partner_id.id,
-            'date': time.strftime('%Y-%m-%d'),
+            'date': date,
+            'ref':invoice.number,
         }
 
         lines = [(0, 0, l1), (0, 0, l2)]
-        move = {'name': name, 'line_id': lines, 'journal_id': pay_journal_id, 'period_id': period_id}
+        move = {'name': seq, 'line_id': lines, 'journal_id': pay_journal_id, 'period_id': period_id}
         move_id = self.pool.get('account.move').create(cr, uid, move)
 
         line_ids = []
@@ -790,9 +805,9 @@ class account_invoice_line(osv.osv):
         taxep=None
         if partner_id:
             lang=self.pool.get('res.partner').read(cr, uid, [partner_id])[0]['lang']
-            taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_tax
         tax_obj = self.pool.get('account.tax')
         if type in ('out_invoice', 'out_refund'):
+            taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_supplier_tax
             if not taxep or not taxep.id:
                 tax_id = map(lambda x: x.id, res.taxes_id)
             else:
@@ -801,6 +816,7 @@ class account_invoice_line(osv.osv):
                     if not t.tax_group==taxep.tax_group:
                         tax_id.append(t.id)
         else:
+            taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_tax
             if not taxep or not taxep.id:
                 tax_id = map(lambda x: x.id, res.supplier_taxes_id)
             else:

@@ -49,9 +49,9 @@ class account_move_line(osv.osv):
         if state:
             if state.lower() not in ['all']:
                 where_move_state= " AND "+obj+".move_id in (select id from account_move where account_move.state = '"+state+"')"
-        
+
         if context.get('periods', False):
-            ids = ','.join([str(x) for x in context['periods']])            
+            ids = ','.join([str(x) for x in context['periods']])
             return obj+".active AND "+obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) AND id in (%s)) %s" % (fiscalyear_clause, ids,where_move_state)
         else:
             return obj+".active AND "+obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) %s)" % (fiscalyear_clause,where_move_state)
@@ -71,6 +71,7 @@ class account_move_line(osv.osv):
             return data
 
         period_obj = self.pool.get('account.period')
+        tax_obj=self.pool.get('account.tax')
 
         # Compute the current move
         move_id = False
@@ -86,6 +87,7 @@ class account_move_line(osv.osv):
                     (context['journal_id'], context['period_id'], uid, 'draft'))
                 res = cr.fetchone()
                 move_id = (res and res[0]) or False
+
                 if not move_id:
                     return data
                 else:
@@ -111,102 +113,39 @@ class account_move_line(osv.osv):
 
         total = 0
         ref_id = False
-        taxes = {}
         move = self.pool.get('account.move').browse(cr, uid, move_id, context)
+
         for l in move.line_id:
             partner_id = partner_id or l.partner_id.id
             ref_id = ref_id or l.ref
-            total += (l.debit - l.credit)
-            for tax in l.account_id.tax_ids:
-                if move.journal_id.type == 'sale':
-                    if l.debit:
-                        code = tax.ref_tax_code_id.id
-                        acc = tax.account_paid_id.id
-                    else:
-                        code = tax.tax_code_id.id
-                        acc = tax.account_collected_id.id
-                else:
-                    if l.debit:
-                        code = tax.tax_code_id.id
-                        acc = tax.account_collected_id.id
-                    else:
-                        code = tax.ref_tax_code_id.id
-                        acc = tax.account_paid_id.id
-                taxes.setdefault((acc, code), False)
-            taxes[(l.account_id.id, l.tax_code_id.id)] = True
+            total += (l.debit or 0.0) - (l.credit or 0.0)
             if 'name' in fields:
-                data.setdefault('name', l.name)
-
+               data.setdefault('name', l.name)
         if 'ref' in fields:
             data['ref'] = ref_id
         if 'partner_id' in fields:
             data['partner_id'] = partner_id
 
-        if move.journal_id.type in ('purchase', 'sale'):
-            for t in taxes:
-                if not taxes[t] and t[0]:
-                    s = 0
-                    tax_amount = 0
-                    for l in move.line_id:
-                        if move.journal_id.type == 'sale':
-                            if l.debit:
-                                field_base = 'ref_'
-                                key = 'account_paid_id'
-                            else:
-                                field_base = ''
-                                key = 'account_collected_id'
-                        else:
-                            if l.debit:
-                                field_base = ''
-                                key = 'account_collected_id'
-                            else:
-                                field_base = 'ref_'
-                                key = 'account_paid_id'
-                        for tax in self.pool.get('account.tax').compute(cr, uid,
-                                l.account_id.tax_ids, l.debit or l.credit, 1, False):
-                            if (tax[key] == t[0]) \
-                                    and (tax[field_base + 'tax_code_id'] == t[1]):
-                                if l.debit:
-                                    s += tax['amount']
-                                else:
-                                    s -= tax['amount']
-                                tax_amount += tax['amount'] * \
-                                        tax[field_base + 'tax_sign']
-                    if ('debit' in fields) or ('credit' in fields):
-                        data['debit'] = s>0  and s or 0.0
-                        data['credit'] = s<0  and -s or 0.0
-
-                    if 'tax_code_id' in fields:
-                        data['tax_code_id'] = t[1]
-                    if 'account_id' in fields:
-                        data['account_id'] = t[0]
-                    if 'tax_amount' in fields:
-                        data['tax_amount'] = tax_amount
-                    #
-                    # Compute line for tax T
-                    #
-                    return data
-
-        #
-        # Compute latest line
-        #
-        if ('debit' in fields) or ('credit' in fields):
-            data['credit'] = total>0 and total
-            data['debit'] = total<0 and -total
-        if 'account_id' in fields:
-            if total >= 0:
-                data['account_id'] = move.journal_id.default_credit_account_id.id or False
+        if move.journal_id.type == 'purchase':
+            if total>0:
+                account = move.journal_id.default_credit_account_id
             else:
-                data['account_id'] = move.journal_id.default_debit_account_id.id or False
-        if 'account_id' in fields and data['account_id']:
-            account = self.pool.get('account.account').browse(cr, uid, data['account_id'])
-            data['tax_code_id'] = self._default_get_tax(cr, uid, account )
-        return data
+                account = move.journal_id.default_debit_account_id
+        else:
+            if total>0:
+                account = move.journal_id.default_credit_account_id
+            else:
+                account = move.journal_id.default_debit_account_id
 
-    def _default_get_tax(self, cr, uid, account, debit=0, credit=0, context={}):
-        if account.tax_ids:
-            return account.tax_ids[0].base_code_id.id
-        return False
+        data['account_id'] = account.id
+        if account and account.tax_ids:
+            for tax in self.pool.get('account.tax').compute_inv(cr,uid,[account.tax_ids[0]],total,1.00):
+                total -= tax['amount']
+            data['account_tax_id'] = account.tax_ids[0].id
+        s = -total
+        data['debit'] = s>0  and s or 0.0
+        data['credit'] = s<0  and -s or 0.0
+        return data
 
     def _on_create_write(self, cr, uid, id, context={}):
         ml = self.browse(cr, uid, id, context)
@@ -307,7 +246,6 @@ class account_move_line(osv.osv):
         'debit': fields.float('Debit', digits=(16,2)),
         'credit': fields.float('Credit', digits=(16,2)),
         'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade", domain=[('type','<>','view'), ('type', '<>', 'closed')], select=2),
-
         'move_id': fields.many2one('account.move', 'Move', ondelete="cascade", states={'valid':[('readonly',True)]}, help="The move of this entry line.", select=2),
 
         'ref': fields.char('Ref.', size=32),
@@ -317,8 +255,8 @@ class account_move_line(osv.osv):
         'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optionnal other currency if it is a multi-currency entry."),
         'currency_id': fields.many2one('res.currency', 'Currency', help="The optionnal other currency if it is a multi-currency entry."),
 
-        'period_id': fields.many2one('account.period', 'Period', required=True),
-        'journal_id': fields.many2one('account.journal', 'Journal', required=True),
+        'period_id': fields.many2one('account.period', 'Period', required=True, select=2),
+        'journal_id': fields.many2one('account.journal', 'Journal', required=True, select=1),
         'blocked': fields.boolean('Litigation', help="You can check this box to mark the entry line as a litigation with the associated partner"),
 
         'partner_id': fields.many2one('res.partner', 'Partner Ref.'),
@@ -329,11 +267,15 @@ class account_move_line(osv.osv):
         'centralisation': fields.selection([('normal','Normal'),('credit','Credit Centralisation'),('debit','Debit Centralisation')], 'Centralisation', size=6),
         'balance': fields.function(_balance, method=True, string='Balance'),
         'active': fields.boolean('Active'),
-        'state': fields.selection([('draft','Draft'), ('valid','Valid')], 'State', readonly=True),
+        'state': fields.selection([('draft','Draft'), ('valid','Valid')], 'Status', readonly=True),
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Account'),
         'tax_amount': fields.float('Tax/Base Amount', digits=(16,2), select=True),
         'invoice': fields.function(_invoice, method=True, string='Invoice',
             type='many2one', relation='account.invoice', fnct_search=_invoice_search),
+        'account_tax_id':fields.many2one('account.tax', 'Tax'),
+        'analytic_account_id' : fields.many2one('account.analytic.account', 'Analytic Account'),
+#TODO: remove this
+        'amount_taxed':fields.float("Taxed Amount",digits=(16,2)),
     }
 
     def _get_date(self, cr, uid, context):
@@ -394,34 +336,22 @@ class account_move_line(osv.osv):
         (_check_no_closed, 'You can not create move line on closed account.', ['account_id']),
     ]
 
+    #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
+
     def onchange_partner_id(self, cr, uid, ids, move_id, partner_id, account_id=None, debit=0, credit=0, journal=False):
         if (not partner_id) or account_id:
             return {}
         part = self.pool.get('res.partner').browse(cr, uid, partner_id)
         id1 = part.property_account_payable.id
         id2 =  part.property_account_receivable.id
-        cr.execute('select sum(debit-credit) from account_move_line where (reconcile_id is null) and partner_id=%d and account_id=%d', (partner_id, id2))
-        balance = cr.fetchone()[0] or 0.0
         val = {}
-        if (not debit) and (not credit):
-            if abs(balance)>0.01:
-                val['credit'] = ((balance>0) and balance) or 0
-                val['debit'] = ((balance<0) and -balance) or 0
-                val['account_id'] = id2
-            else:
-                cr.execute('select sum(debit-credit) from account_move_line where (reconcile_id is null) and partner_id=%d and account_id=%d', (partner_id, id1))
-                balance = cr.fetchone()[0] or 0.0
-                val['credit'] = ((balance>0) and balance) or 0
-                val['debit'] = ((balance<0) and -balance) or 0
-                val['account_id'] = id1
-        else:
-            val['account_id'] =  (debit>0) and id2 or id1
         if journal:
             jt = self.pool.get('account.journal').browse(cr, uid, journal).type
             if jt=='sale':
                 val['account_id'] =  id2
             elif jt=='purchase':
                 val['account_id'] =  id1
+        # Compute Maturity Date in val !
         return {'value':val}
 
     #
@@ -474,7 +404,11 @@ class account_move_line(osv.osv):
             account_id = line['account_id']['id']
             partner_id = (line['partner_id'] and line['partner_id']['id']) or False
         writeoff = debit - credit
-        date = time.strftime('%Y-%m-%d')
+        # Ifdate_p in context => take this date
+        if context.has_key('date_p') and context['date_p']:
+            date=context['date_p']
+        else:
+            date = time.strftime('%Y-%m-%d')
 
         cr.execute('SELECT account_id, reconcile_id \
                 FROM account_move_line \
@@ -505,9 +439,15 @@ class account_move_line(osv.osv):
                 self_credit = 0.0
                 self_debit = -writeoff
 
+            # If comment exist in context, take it
+            if context['comment']:
+                libelle=context['comment']
+            else:
+                libelle='Write-Off'
+
             writeoff_lines = [
                 (0, 0, {
-                    'name':'Write-Off',
+                    'name':libelle,
                     'debit':self_debit,
                     'credit':self_credit,
                     'account_id':account_id,
@@ -517,7 +457,7 @@ class account_move_line(osv.osv):
                     'amount_currency': account.currency_id.id and -currency or 0.0
                 }),
                 (0, 0, {
-                    'name':'Write-Off',
+                    'name':libelle,
                     'debit':debit,
                     'credit':credit,
                     'account_id':writeoff_acc_id,
@@ -558,6 +498,11 @@ class account_move_line(osv.osv):
         return r_id
 
     def view_header_get(self, cr, user, view_id, view_type, context):
+        if context.get('account_id', False):
+            cr.execute('select code from account_account where id=%d', (context['account_id'],))
+            res = cr.fetchone()
+            res = _('Entries: ')+ (res[0] or '')
+            return res
         if (not context.get('journal_id', False)) or (not context.get('period_id', False)):
             return False
         cr.execute('select code from account_journal where id=%d', (context['journal_id'],))
@@ -565,8 +510,8 @@ class account_move_line(osv.osv):
         cr.execute('select code from account_period where id=%d', (context['period_id'],))
         p = cr.fetchone()[0] or ''
         if j or p:
-            return j+':'+p
-        return 'Journal'
+            return j+(p and (':'+p) or '')
+        return False
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False):
         result = super(osv.osv, self).fields_view_get(cr, uid, view_id,view_type,context)
@@ -632,7 +577,19 @@ class account_move_line(osv.osv):
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
         if not context:
             context={}
+        raise_ex=False
         account_obj = self.pool.get('account.account')
+        acc=account_obj.browse(cr,uid,ids)[0]
+
+        if ('debit' in vals and 'credit' in vals)  and not vals['debit'] and not vals['credit']:
+            raise_ex=True
+        if ('debit' in vals and 'credit' not in vals) and  not vals['debit'] and not acc.credit:
+            raise_ex=True
+        if ('credit' in vals and 'debit' not in vals) and  not vals['credit'] and not acc.debit:
+            raise_ex=True
+
+        if raise_ex:
+            raise osv.except_osv(_('Wrong Accounting Entry!'), _('Both Credit and Debit cannot be zero!'))
 
         if ('account_id' in vals) and not account_obj.read(cr, uid, vals['account_id'], ['active'])['active']:
             raise osv.except_osv(_('Bad account!'), _('You can not use an inactive account!'))
@@ -680,7 +637,9 @@ class account_move_line(osv.osv):
     def create(self, cr, uid, vals, context=None, check=True):
         if not context:
             context={}
+
         account_obj = self.pool.get('account.account')
+        tax_obj=self.pool.get('account.tax')
 
         if ('account_id' in vals) and not account_obj.read(cr, uid, vals['account_id'], ['active'])['active']:
             raise osv.except_osv(_('Bad account!'), _('You can not use an inactive account!'))
@@ -692,7 +651,9 @@ class account_move_line(osv.osv):
             m = self.pool.get('account.move').browse(cr, uid, vals['move_id'])
             context['journal_id'] = m.journal_id.id
             context['period_id'] = m.period_id.id
+
         self._update_journal_check(cr, uid, context['journal_id'], context['period_id'], context)
+
         move_id = vals.get('move_id', False)
         journal = self.pool.get('account.journal').browse(cr, uid, context['journal_id'])
         if not move_id:
@@ -743,9 +704,50 @@ class account_move_line(osv.osv):
                 vals['amount_currency'] = cur_obj.compute(cr, uid, account.company_id.currency_id.id, account.currency_id.id, vals.get('debit', 0.0)-vals.get('credit', 0.0), context=ctx)
         if not ok:
             raise osv.except_osv(_('Bad account !'), _('You can not use this general account in this journal !'))
+
         result = super(osv.osv, self).create(cr, uid, vals, context)
+        if 'analytic_account_id' in vals and vals['analytic_account_id']:
+            if journal.analytic_journal_id:
+                vals['analytic_lines'] = [(0,0, {
+                        'name': vals['name'],
+                        'date': vals['date'],
+                        'account_id': vals['analytic_account_id'],
+                        'unit_amount': vals['quantity'],
+                        'amount': vals['debit'] or vals['credit'],
+                        'general_account_id': vals['account_id'],
+                        'journal_id': journal.analytic_journal_id.id,
+                        'ref': vals['ref'],
+                    })]
+
+        # CREATE Taxes
+        if 'account_tax_id' in vals and vals['account_tax_id']:
+            tax_id=tax_obj.browse(cr,uid,vals['account_tax_id'])
+            total = vals['credit'] or (-vals['debit'])
+            for tax in tax_obj.compute(cr,uid,[tax_id],total,1.00):
+                self.write(cr, uid,[result], {
+                    'tax_code_id': tax['base_code_id'],
+                    'tax_amount': tax['base_sign'] * total
+                })
+                data = {
+                    'move_id': vals['move_id'],
+                    'journal_id': vals['journal_id'],
+                    'period_id': vals['period_id'],
+                    'name': vals['name']+' '+tax['name'],
+                    'date': vals['date'],
+                    'partner_id': vals.get('partner_id',False),
+                    'ref': vals.get('ref',False),
+                    'account_tax_id': False,
+                    'tax_code_id': tax['tax_code_id'],
+                    'tax_amount': tax['tax_sign'] * tax['amount'],
+                    'account_id': tax['account_paid_id'], # or collected ?
+                    'credit': tax['amount']>0 and tax['amount'] or 0.0,
+                    'debit': tax['amount']<0 and -tax['amount'] or 0.0,
+                }
+                self.create(cr, uid, data, context)
         if check:
-            self.pool.get('account.move').validate(cr, uid, [vals['move_id']], context)
+            tmp = self.pool.get('account.move').validate(cr, uid, [vals['move_id']], context)
+            if journal.entry_posted and tmp:
+                self.pool.get('account.move').write(cr,uid, [vals['move_id']],{'state':'posted'})
         return result
 account_move_line()
 
@@ -756,8 +758,6 @@ class account_bank_statement_reconcile(osv.osv):
         'line_ids': fields.many2many('account.move.line', 'account_bank_statement_line_rel', 'statement_id', 'line_id', 'Entries'),
     }
 account_bank_statement_reconcile()
-
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

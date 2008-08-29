@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<terp>
+<data>
+
+	<record model="ir.ui.view" id="view_order_form_inherit">
+		<field name="name">sale.order.form.inherit</field>
+		<field name="model">sale.order</field>
+		<field name="type">form</field>
+		<field name="inherit_id" ref="sale.view_order_form"/>
+		<field name="arch" type="xml">
+			<field name="project_id" select="2" position="replace"/>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="view_order_form_inherit2">
+		<field name="name">sale.order.form.inherit2</field>
+		<field name="model">sale.order</field>
+		<field name="type">form</field>
+		<field name="inherit_id" ref="sale.view_order_form"/>
+		<field name="arch" type="xml">
+			<field name="product_id"
+				on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], True, parent.date_order)"
+				context="partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom"
+				select="1" position="after">
+				<field name="analytics_id" domain="[('plan_id','&lt;&gt;',False)]"/>
+			</field>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="view_order_line_form2_inherit">
+		<field name="name">sale.order.line.form2.inherit</field>
+		<field name="model">sale.order.line</field>
+		<field name="type">form</field>
+		<field name="inherit_id" ref="sale.view_order_line_form2"/>
+		<field name="arch" type="xml">
+			<field name="product_id" readonly="1" select="1" position="after">
+				<field name="analytics_id" domain="[('plan_id','&lt;&gt;',False)]"/>
+			</field>
+		</field>
+	</record>
+
+</data>
+</terp>

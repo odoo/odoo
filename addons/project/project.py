@@ -92,6 +92,16 @@ class project(osv.osv):
         pricelist = self.pool.get('res.partner').browse(cr, uid, part).property_product_pricelist.id
         return {'value':{'contact_id': addr['contact'], 'pricelist_id': pricelist}}
 
+    def _progress_rate(self, cursor, user, ids, name, arg, context=None):
+        res = {}
+        for project in self.browse(cursor, user, ids, context=context):
+            tot = 0.0
+            if project.state not in ('cancelled'):
+                tot += project.effective_hours * 100.0 / project.planned_hours
+            res[project.id] = tot
+        return res
+
+
     _columns = {
         'name': fields.char("Project name", size=128, required=True),
         'active': fields.boolean('Active'),
@@ -105,6 +115,7 @@ class project(osv.osv):
         'child_id': fields.one2many('project.project', 'parent_id', 'Subproject'),
         'planned_hours': fields.function(_calc_planned, method=True, string='Planned hours'),
         'effective_hours': fields.function(_calc_effective, method=True, string='Hours spent'),
+        'progress_rate': fields.function(_progress_rate, method=True, string='Progress', type='float'),
         'date_start': fields.date('Project started on'),
         'date_end': fields.date('Project should end on'),
         'tariff': fields.float('Sales price'),
@@ -123,7 +134,7 @@ class project(osv.osv):
         'warn_footer': fields.text('Mail footer'),
         'notes': fields.text('Notes'),
         'timesheet_id': fields.many2one('hr.timesheet.group', 'Working hours'),
-        'state': fields.selection([('open', 'Open'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', required=True),
+        'state': fields.selection([('open', 'Open'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'Status', required=True),
      }
 
     _defaults = {
@@ -203,14 +214,23 @@ class task(osv.osv):
             res[task_id] = sum
         return res
 
+    def _progress_rate(self, cursor, user, ids, name, arg, context=None):
+        res = {}
+        for task in self.browse(cursor, user, ids, context=context):
+            tot = 0.0
+            if task.state not in ('draft','cancelled'):
+                tot += task.effective_hours * 100.0 / task.planned_hours
+            res[task.id] = tot
+        return res
+
     _columns = {
-        'name': fields.char('Task summary', size=128, required=True),
         'active': fields.boolean('Active'),
+        'name': fields.char('Task summary', size=128, required=True),
         'description': fields.text('Description'),
         'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Importance'),
         'sequence': fields.integer('Sequence'),
         'type': fields.many2one('project.task.type', 'Type'),
-        'state': fields.selection([('draft', 'Draft'),('open', 'Open'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State'),
+        'state': fields.selection([('draft', 'Draft'),('open', 'Open'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'Status'),
         'date_start': fields.datetime('Date'),
         'date_deadline': fields.datetime('Deadline'),
         'date_close': fields.datetime('Date Closed', readonly=True),
@@ -222,6 +242,7 @@ class task(osv.osv):
         'start_sequence': fields.boolean('Wait for previous sequences'),
         'planned_hours': fields.float('Plan. hours'),
         'effective_hours': fields.function(_hours_effect, method=True, string='Eff. Hours'),
+        'progress_rate': fields.function(_progress_rate, method=True, string='Progress', type='float'),
         'progress': fields.integer('Progress (0-100)'),
         'billable': fields.boolean('To be invoiced'),
         'invoice_id': fields.many2one('account.invoice','Generated Invoice'),
@@ -237,6 +258,7 @@ class task(osv.osv):
         'sequence': lambda *a: 10,
         'active': lambda *a: True,
         'date_start': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'start_sequence': lambda *a: True
     }
     _order = "state, sequence, priority, date_deadline, id"
 

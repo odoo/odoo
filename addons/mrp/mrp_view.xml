@@ -381,24 +381,28 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Production orders">
-                    <notebook>
-                        <page string="General">
-                            <field colspan="4" name="name" select="1"/>
-                            <field name="date_planned" select="1"/>
-                            <field name="priority"/>
-                            
-                            <field name="product_id" on_change="product_id_change(product_id)" select="1"/>
-                            <field name="product_qty"/>
-                            <field name="product_uom"/>
-                            <!--
-                    <field name="product_uos_qty"/>
-                    <field name="product_uos"/>
-                    -->
-                            <field name="bom_id" select="2"/>
-                            
-                            <newline/>
+					<group colspan="4" col="6">
+						<field name="name" select="1"/>
+						<field name="date_planned" select="1"/>
+						<field name="priority"/>
+						
+						<field name="product_id" on_change="product_id_change(product_id)" select="1"/>
+						<field name="product_qty"/>
+						<field name="product_uom"/>
+						<group colspan="6" col="6">
+							<label string="" colspan="2"/>
+							<field name="product_uos_qty" groups="product.group_uos"/>
+							<field name="product_uos" groups="product.group_uos"/>
+						</group>
+					</group>
+
+                    <notebook colspan="4">
+                        <page string="Consumed Products">
                             <field name="location_src_id" select="2"/>
                             <field name="location_dest_id"/>
+                            <field name="bom_id" select="2"/>
+                            <field name="origin" select="1"/>
+                            <newline/>
                             
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list"/>
                             <group col="9" colspan="4">
@@ -412,20 +416,20 @@
                                 <button name="button_recreate" states="picking_except" string="Recreate Picking"/>
                             </group>
                         </page>
-                        <page string="Scheduled goods">
+                        <page string="Scheduled Products">
                             <field colspan="4" name="product_lines" nolabel="1" widget="one2many_list"/>
+                        </page>
+                        <page string="Finnished Products">
+                            <field colspan="4" name="move_created_ids" nolabel="1"/>
                         </page>
                         <page string="Workcenters">
                             <field colspan="4" name="workcenter_lines" nolabel="1" widget="one2many_list"/>
                         </page>
-                        <page string="Other Info">
+                        <page string="Extra Information">
                             <field name="date_start" select="2"/>
                             <field name="date_finnished"/>
                             <field name="picking_id"/>
-                            <field name="origin" select="1"/>
                             <field name="move_prod_id"/>
-                            <newline/>
-                            <field colspan="4" name="move_created_ids" nolabel="1"/>
                         </page>
                     </notebook>
                 </form>
@@ -446,7 +450,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('state','=','ready')]</field>
         </record>
         <menuitem action="mrp_production_action2" id="menu_production_orders_start" parent="menu_mrp_production_action"/>
@@ -455,19 +459,28 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('state','=','in_production')]</field>
         </record>
         <menuitem action="mrp_production_action3" id="menu_mrp_production_action3" parent="menu_mrp_production_action"/>
         <record id="mrp_production_action4" model="ir.actions.act_window">
-            <field name="name">Production orders waiting goods</field>
+            <field name="name">Production Orders Waiting Products</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('state','=','confirmed')]</field>
         </record>
         <menuitem action="mrp_production_action4" id="menu_production_orders_waiting4" parent="mrp.menu_mrp_production_action"/>
+        
+         <record id="mrp_production_new" model="ir.actions.act_window">
+            <field name="name">New Production Order</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.production</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree,calendar</field>
+        </record>
+        <menuitem action="mrp_production_new" id="menu_production_orders_new" parent="mrp.menu_mrp_production_action"/>
         
         <record id="mrp_production_workcenter_form_view" model="ir.ui.view">
             <field name="name">mrp.production.workcenter.line.form</field>
@@ -538,7 +551,7 @@
             <field name="model">mrp.production.product.line</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Scheduled goods">
+                <form string="Scheduled Products">
                     <field name="name"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
@@ -553,7 +566,7 @@
             <field name="model">mrp.production.product.line</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Scheduled goods">
+                <tree string="Scheduled Products">
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom"/>
@@ -591,34 +604,51 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Procurement">
-                    <separator colspan="4" string="General Information"/>
-                    <field colspan="4" name="name" select="1"/>
-                    <field name="priority"/>
-                    <field name="date_planned" select="1"/>
-                    <field name="procure_method" select="2"/>
-                    <field name="date_close" select="2"/>
-                    <newline/>
-                    <field name="product_qty"/>
-                    <field name="product_uom"/>
-                    <field name="product_uos_qty"/>
-                    <field name="product_uos"/>
-                    <field name="product_id" select="1"/>
-                    <field name="location_id" select="2"/>
-                    <newline/>
-                    <field name="origin" select="2"/>
-                    <field name="move_id"/>
-                    <newline/>
-                    <field colspan="4" name="message"/>
-                    <separator colspan="4" string="Properties"/>
-                    <field colspan="4" name="property_ids" nolabel="1"/>
-                    <group col="7" colspan="4">
-                        <field name="state" readonly="1" select="2"/>
-                        <button name="button_confirm" states="draft" string="Confirm"/>
-                        <button name="button_restart" states="exception" string="Retry"/>
-                        <button name="button_cancel" states="exception,waiting" string="Cancel"/>
-                        <button name="button_check" states="confirmed" string="Run procurement"/>
-                        <button name="button_cancel" states="draft,running" string="Cancel"/>
-                    </group>
+					<notebook>
+					<page string="Procurement Details">
+						<group col="2" colspan="2">
+							<separator colspan="2" string="References"/>
+							<field name="name" select="1" string="Procurement Reason"/>
+							<field name="origin" select="2"/>
+						</group>
+						<group col="2" colspan="2">
+							<separator colspan="2" string="Planification"/>
+							<field name="date_planned" select="1"/>
+							<field name="procure_method" select="2"/>
+							<field name="priority"/>
+						</group>
+
+						<separator colspan="4" string="Product &amp; Location"/>
+						<field name="product_id" select="1"/>
+						<field name="location_id" select="2"/>
+						<field name="product_qty"/>
+						<field name="product_uom"/>
+
+						<field name="product_uos_qty" groups="product.group_uos"/>
+						<field name="product_uos" groups="product.group_uos"/>
+
+						<separator colspan="4" string="Status"/>
+						<field colspan="4" name="message" readonly="1"/>
+						<field name="state" readonly="1" select="2"/>
+						<group col="7" colspan="2">
+							<button name="button_confirm" states="draft" string="Confirm"/>
+							<button name="button_restart" states="exception" string="Retry"/>
+							<button name="button_cancel" states="exception,waiting" string="Cancel"/>
+							<button name="button_check" states="confirmed" string="Run procurement"/>
+							<button name="button_cancel" states="draft,running" string="Cancel"/>
+						</group>
+					</page>
+					<page string="Extra Information">
+						<separator colspan="4" string="Details"/>
+						<field name="bom_id" select="2"/>
+						<field name="move_id"/>
+						<field name="date_close" select="2"/>
+						<field name="close_move"/>
+						<field name="purchase_id"/>
+						<separator colspan="4" string="Properties"/>
+						<field colspan="4" name="property_ids" nolabel="1"/>
+					</page>
+					</notebook>
                 </form>
             </field>
         </record>
@@ -627,7 +657,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.procurement</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="mrp_procurement_form_view"/>
+            <field name="view_id" eval="False"/>
         </record>
         <menuitem action="mrp_procurement_action" id="menu_mrp_procurement_action" parent="mrp.menu_mrp_root"/>
         
@@ -679,6 +709,15 @@
             <field name="domain">[('state','=','exception'), ('message', '=', '')]</field>
         </record>
         <menuitem action="mrp_procurement_action11" id="menu_mrp_procurement_action11" parent="mrp.menu_mrp_procurement_action5"/>
+        
+         <record id="mrp_procurement_new" model="ir.actions.act_window">
+            <field name="name">New Procurement</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.procurement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+        </record>
+        <menuitem action="mrp_procurement_new" id="menu_mrp_procurement_new" parent="mrp.menu_mrp_procurement_action5"/>
         
         <!-- Order Point -->
         <record id="view_warehouse_orderpoint_tree" model="ir.ui.view">

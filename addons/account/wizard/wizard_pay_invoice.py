@@ -68,6 +68,13 @@ def _pay_and_reconcile(self, cr, uid, data, context):
         ctx = {'date':data['form']['date']}
         amount = cur_obj.compute(cr, uid, journal.currency.id, invoice.company_id.currency_id.id, amount, context=ctx)
 
+    
+    # Take the choosen date
+    if form.has_key('comment'):
+        context={'date_p':form['date'],'comment':form['comment']}
+    else:
+        context={'date_p':form['date'],'comment':False}
+
     acc_id = journal.default_credit_account_id and journal.default_credit_account_id.id
     if not acc_id:
         raise wizard.except_wizard(_('Error !'), _('Your journal must have a default credit and debit account.'))
@@ -80,7 +87,9 @@ def _wo_check(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     invoice = pool.get('account.invoice').browse(cr, uid, data['id'], context)
     journal = pool.get('account.journal').browse(cr, uid, data['form']['journal_id'], context)
-    if invoice.company_id.currency_id.id<>journal.currency.id:
+    if invoice.company_id.currency_id.id <> invoice.currency_id.id:
+        return 'addendum'
+    if journal.currency and (journal.currency.id <> invoice.currency_id.id):
         return 'addendum'
     if pool.get('res.currency').is_zero(cr, uid, invoice.currency_id,
             (data['form']['amount'] - invoice.amount_total)):
@@ -92,11 +101,13 @@ _transaction_add_form = '''<?xml version="1.0"?>
     <separator string="Write-Off Move" colspan="4"/>
     <field name="writeoff_acc_id"/>
     <field name="writeoff_journal_id"/>
+    <field name="comment"/>
 </form>'''
 
 _transaction_add_fields = {
     'writeoff_acc_id': {'string':'Write-Off account', 'type':'many2one', 'relation':'account.account', 'required':True},
     'writeoff_journal_id': {'string': 'Write-Off journal', 'type': 'many2one', 'relation':'account.journal', 'required':True},
+    'comment': {'string': 'Entry Name', 'type':'char', 'size': 64, 'required':True},
 }
 
 def _get_value_addendum(self, cr, uid, data, context={}):

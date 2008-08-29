@@ -35,20 +35,33 @@ class res_partner(osv.osv):
     _name = 'res.partner'
     _inherit = 'res.partner'
     _description = 'Partner'
-    def _credit_get(self, cr, uid, ids, name, arg, context):
-        res={}
+    def _credit_debit_get(self, cr, uid, ids, field_names, arg, context):
         query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-        for id in ids:
-            cr.execute("select sum(debit-credit) from account_move_line as l where account_id in (select id from account_account where type = %s and active) and partner_id=%d and reconcile_id is null and "+query, ('receivable', id))
-            res[id]=cr.fetchone()[0] or 0.0
-        return res
-
-    def _debit_get(self, cr, uid, ids, name, arg, context):
-        res={}
-        query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-        for id in ids:
-            cr.execute("select sum(debit-credit) from account_move_line as l where account_id in (select id from account_account where type = %s and active) and partner_id=%d and reconcile_id is null and "+query, ('payable', id))
-            res[id]=cr.fetchone()[0] or 0.0
+        cr.execute(("""select
+                l.partner_id, a.type, sum(l.debit-l.credit) 
+            from
+                account_move_line l
+            left join
+                account_account a on (l.account_id=a.id)
+            where
+                a.type in ('receivable','payable') and
+                l.partner_id in (%s) and
+                l.reconcile_id is null and
+                """ % (','.join(map(str, ids)),))+query+"""
+            group by
+                l.partner_id, a.type
+            """)
+        tinvert = {
+            'credit': 'receivable',
+            'debit': 'payable'
+        }
+        maps = {}
+        for i in range(len(field_names)):
+            maps[{'credit': 'receivable', 'debit': 'payable' }[field_names[i]]] = i
+        res = {}.fromkeys(ids, map(lambda x: 0.0, field_names))
+        for pid,type,val in cr.fetchall():
+            if type in maps:
+                res[pid][maps[type]] = val
         return res
 
     def _credit_search(self, cr, uid, obj, name, args):
@@ -74,8 +87,8 @@ class res_partner(osv.osv):
         return [('id','in',map(lambda x:x[0], res))]
 
     _columns = {
-        'credit': fields.function(_credit_get, fnct_search=_credit_search, method=True, string='Total Receivable'),
-        'debit': fields.function(_debit_get, fnct_search=_debit_search, method=True, string='Total Payable'),
+        'credit': fields.function(_credit_debit_get, fnct_search=_credit_search, method=True, string='Total Receivable', multi='dc'),
+        'debit': fields.function(_credit_debit_get, fnct_search=_debit_search, method=True, string='Total Payable', multi='dc'),
         'debit_limit': fields.float('Payable Limit'),
         'property_account_payable': fields.property(
             'account.account',
@@ -84,7 +97,6 @@ class res_partner(osv.osv):
             string="Account Payable",
             method=True,
             view_load=True,
-            group_name="Accounting Properties",
             domain="[('type', '=', 'payable')]",
             help="This account will be used, instead of the default one, as the payable account for the current partner",
             required=True),
@@ -95,10 +107,17 @@ class res_partner(osv.osv):
             string="Account Receivable",
             method=True,
             view_load=True,
-            group_name="Accounting Properties",
             domain="[('type', '=', 'receivable')]",
             help="This account will be used, instead of the default one, as the receivable account for the current partner",
             required=True),
+        'property_account_supplier_tax': fields.property(
+            'account.tax',
+            type='many2one',
+            relation='account.tax',
+            string="Default Supplier Tax",
+            method=True,
+            view_load=True,
+            help="This tax will be used, instead of the default one for supplier invoices."),
         'property_account_tax': fields.property(
             'account.tax',
             type='many2one',
@@ -106,8 +125,7 @@ class res_partner(osv.osv):
             string="Default Tax",
             method=True,
             view_load=True,
-            group_name="Accounting Properties",
-            help="This tax will be used, instead of the default one."),
+            help="This tax will be used, instead of the default one for customers."),
         'property_payment_term': fields.property(
             'account.payment.term',
             type='many2one',
@@ -115,7 +133,6 @@ class res_partner(osv.osv):
             string ='Payment Term',
             method=True,
             view_load=True,
-            group_name="Accounting Properties",
             help="This payment term will be used, instead of the default one, for the current partner"),
         'ref_companies': fields.one2many('res.company', 'partner_id',
             'Companies that refers to partner'),

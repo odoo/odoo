@@ -35,7 +35,7 @@ from osv import fields
 from osv import osv
 
 #
-# Model definition
+# Object definition
 #
 
 class account_analytic_account(osv.osv):
@@ -236,6 +236,14 @@ class account_analytic_journal(osv.osv):
         'type': lambda *a: 'general',
     }
 account_analytic_journal()
+
+class account_journal(osv.osv):
+    _inherit="account.journal"
+
+    _columns = {
+        'analytic_journal_id':fields.many2one('account.analytic.journal','Analytic Journal'),
+    }
+account_journal()
 
 
 # ---------------------------------------------------------

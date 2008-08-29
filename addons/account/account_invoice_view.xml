@@ -112,12 +112,12 @@
             <field name="priority">2</field>
             <field name="arch" type="xml">
                 <form string="Supplier invoice">
-                    <notebook>
+                    <field domain="[('type', '=', 'purchase')]" name="journal_id" select="2"/>
+                    <field name="type" readonly="1" select="2"/>
+                    <field name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank)" select="1"/>
+                    <field domain="[('partner_id','=',partner_id)]" name="address_invoice_id"/>
+                    <notebook colspan="4">
                         <page string="Invoice">
-                            <field domain="[('type', '=', 'purchase')]" name="journal_id" select="2"/>
-                            <field name="type" readonly="1" select="2"/>
-                            <field name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank)" select="1"/>
-                            <field domain="[('partner_id','=',partner_id)]" name="address_invoice_id"/>
                             <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" name="account_id"/>
                             <field name="date_due" select="1"/>
                             <field domain="[('partner_id', '=', partner_id)]" name="partner_bank" on_change="onchange_partner_bank(partner_bank)" select="2"/>
@@ -164,6 +164,7 @@
                                     <button name="invoice_open" states="draft,proforma" string="Validate"/>
                                     <button name="invoice_cancel" states="draft,proforma,sale,open" string="Cancel"/>
                                     <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
+                                    <button name='%(wizard_paid_open)d' type='action' string='Re-Open' states='paid'/>
                                 </group>
                             </group>
                         </page>
@@ -195,12 +196,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Invoice">
-                    <notebook>
+                    <field name="journal_id" select="2"/>
+                    <field name="type" readonly="1" select="2"/>
+                    <field name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term)" select="1"/>
+                    <field domain="[('partner_id','=',partner_id)]" name="address_invoice_id"/>
+                    <notebook colspan="4">
                         <page string="Invoice">
-                            <field name="journal_id" select="2"/>
-                            <field name="type" readonly="1" select="2"/>
-                            <field name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term)" select="1"/>
-                            <field domain="[('partner_id','=',partner_id)]" name="address_invoice_id"/>
                             <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" name="account_id"/>
                             <field name="payment_term" on_change="onchange_payment_term_date_invoice(payment_term, date_invoice)"/>
                             <field name="name" select="2"/>
@@ -232,6 +233,7 @@
                                     <button name="invoice_open" states="draft,proforma" string="Create"/>
                                     <button name="invoice_cancel" states="draft,proforma,sale,open" string="Cancel"/>
                                     <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
+                                    <button name='%(wizard_paid_open)d' type='action' string='Re-Open' states='paid'/>
                                 </group>
                             </group>
                         </page>
@@ -405,10 +407,10 @@
         <menuitem action="action_invoice_tree6" id="menu_action_invoice_tree6" parent="menu_action_invoice_tree1"/>
 
         <record id="action_invoice_tree7" model="ir.actions.act_window">
-            <field name="name">Open Customer Invoices</field>
+            <field name="name">Unpaid Customer Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="domain">[('state','=','open'),('type','=','out_invoice')]</field>
+            <field name="domain">[('state','!=','draft'),('reconciled','=',False),('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice'}</field>
         </record>
         <record id="action_invoice_tree7_view1" model="ir.actions.act_window.view">
@@ -447,10 +449,10 @@
         <menuitem action="action_invoice_tree8" id="menu_action_invoice_tree8" parent="menu_action_invoice_tree2"/>
 
         <record id="action_invoice_tree9" model="ir.actions.act_window">
-            <field name="name">Open Supplier Invoices</field>
+            <field name="name">Unpaid Supplier Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="domain">[('state','=','open'),('type','=','in_invoice')]</field>
+            <field name="domain">[('state','!=','draft'),('reconciled','=',False),('type','=','in_invoice')]</field>
             <field name="context">{'type':'in_invoice'}</field>
         </record>
         <record id="action_invoice_tree9_view1" model="ir.actions.act_window.view">
@@ -489,10 +491,10 @@
         <menuitem action="action_invoice_tree10" id="menu_action_invoice_tree10" parent="menu_action_invoice_tree3"/>
 
         <record id="action_invoice_tree11" model="ir.actions.act_window">
-            <field name="name">Open Customer Refunds</field>
+            <field name="name">Unpaid Customer Refunds</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="domain">[('state','=','open'),('type','=','out_refund')]</field>
+            <field name="domain">[('state','!=','draft'),('reconciled','=',False),('type','=','out_refund')]</field>
             <field name="context">{'type':'out_refund'}</field>
         </record>
         <record id="action_invoice_tree11_view1" model="ir.actions.act_window.view">
@@ -531,10 +533,10 @@
         <menuitem action="action_invoice_tree12" id="menu_action_invoice_tree12" parent="menu_action_invoice_tree4"/>
 
         <record id="action_invoice_tree13" model="ir.actions.act_window">
-            <field name="name">Open Supplier Refunds</field>
+            <field name="name">Unpaid Supplier Refunds</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="domain">[('state','=','open'),('type','=','in_refund')]</field>
+            <field name="domain">[('state','!=','draft'),('reconciled','=',False),('type','=','in_refund')]</field>
             <field name="context">{'type':'in_refund'}</field>
         </record>
         <record id="action_invoice_tree13_view1" model="ir.actions.act_window.view">
@@ -551,9 +553,9 @@
 
         <menuitem action="action_invoice_tree13" id="menu_action_invoice_tree13" parent="menu_action_invoice_tree4"/>
 
-        <act_window domain="[('partner_id', '=', active_id),('state', '=', 'open')]" id="act_res_partner_2_account_invoice_opened" name="Open invoices" res_model="account.invoice" src_model="res.partner"/>
+        <act_window domain="[('partner_id','=',active_id),('state','!=','draft'),('reconciled','=',False)]" id="act_res_partner_2_account_invoice_opened" name="Unpaid invoices" res_model="account.invoice" src_model="res.partner"/>
 
-        <act_window domain="[('journal_id', '=', active_id),('state', '=', 'open')]" id="act_account_journal_2_account_invoice_opened" name="Open invoices" res_model="account.invoice" src_model="account.journal"/>
+        <act_window domain="[('journal_id','=',active_id),('state','!=','draft'),('reconciled','=',False)]" id="act_account_journal_2_account_invoice_opened" name="Unpaid invoices" res_model="account.invoice" src_model="account.journal"/>
 
         <act_window domain="[('account_analytic_id', '=', active_id)]" id="act_account_analytic_account_2_account_invoice_line" name="Invoice lines" res_model="account.invoice.line" src_model="account.analytic.account"/>
 

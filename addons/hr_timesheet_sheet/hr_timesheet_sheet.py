@@ -222,8 +222,8 @@ class hr_timesheet_sheet(osv.osv):
                 'new': [('readonly', False)]}
             ),
         'attendances_ids' : one2many_mod2('hr.attendance', 'sheet_id', 'Attendances', readonly=True, states={'draft':[('readonly',False)],'new':[('readonly',False)]}),
-        'state' : fields.selection([('new', 'New'),('draft','Draft'),('confirm','Confirmed'),('done','Done')], 'State', select=True, required=True, readonly=True),
-        'state_attendance' : fields.function(_state_attendance, method=True, type='selection', selection=[('absent', 'Absent'), ('present', 'Present'),('none','No employee defined')], string='Current state'),
+        'state' : fields.selection([('new', 'New'),('draft','Draft'),('confirm','Confirmed'),('done','Done')], 'Status', select=True, required=True, readonly=True),
+        'state_attendance' : fields.function(_state_attendance, method=True, type='selection', selection=[('absent', 'Absent'), ('present', 'Present'),('none','No employee defined')], string='Current Status'),
         'total_attendance_day': fields.function(_total_day, method=True, string='Total Attendance'),
         'total_timesheet_day': fields.function(_total_day, method=True, string='Total Timesheet'),
         'total_difference_day': fields.function(_total_day, method=True, string='Difference'),
@@ -276,8 +276,16 @@ class hr_timesheet_sheet(osv.osv):
                 return False
         return True
 
+    def _date_current_check(self, cr, uid, ids):
+        for sheet in self.browse(cr, uid, ids):
+            if sheet.date_current < sheet.date_from or sheet.date_current > sheet.date_to:
+                return False
+        return True
+
+
     _constraints = [
-        (_sheet_date, 'You can not have 2 timesheets that overlaps !', ['date_from','date_to'])
+        (_sheet_date, 'You can not have 2 timesheets that overlaps !', ['date_from','date_to']),
+        (_date_current_check, 'You must select a Current date wich is in the timesheet dates !', ['date_current']),
     ]
 
     def action_set_to_draft(self, cr, uid, ids, *args):

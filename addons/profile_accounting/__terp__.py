@@ -31,9 +31,9 @@
     "version":"1.0",
     "author":"Tiny",
     "category":"Profile",
-    "depends":["account","report_analytic","board_account","account_followup"],
+    "depends":["account","report_analytic","board_account","account_followup",'invoice_payment_tab'],
     "demo_xml":[],
-    "update_xml":[],
+    "update_xml":["profile_accounting.xml"],
     "active":False,
     "installable":True,
 }

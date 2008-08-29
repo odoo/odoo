@@ -2,9 +2,21 @@
 <terp>
     <data>
         
-        <wizard id="wizard_sale_order_make_invoice" keyword="client_action_multi" model="sale.order" name="sale.order.make_invoice" string="Make invoices"/>
+        <wizard
+			id="wizard_sale_order_make_invoice" 
+			keyword="client_action_multi" 
+			model="sale.order" 
+			name="sale.order.make_invoice" 
+			multi="True"
+			string="Make invoices"/>
         
-        <wizard id="wizard_sale_order_line_invoice" keyword="client_action_multi" model="sale.order.line" name="sale.order.line.make_invoice" string="Make invoices"/>
+        <wizard
+			id="wizard_sale_order_line_invoice" 
+			keyword="client_action_multi"
+			model="sale.order.line" 
+			name="sale.order.line.make_invoice" 
+			multi="True"
+			string="Make invoices"/>
         
     </data>
 </terp>

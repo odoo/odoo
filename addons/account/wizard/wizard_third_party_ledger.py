@@ -49,7 +49,7 @@ dates_fields = {
         'help': 'Keep empty for all open fiscal year'},
     'date1': {'string':'Start of period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-01-01')},
     'date2': {'string':'End of period', 'type':'date', 'required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
-    'state':{'string':'State','type':'selection','selection': [('draft','Draft'), ('posted','Posted'),('all','All')],}
+    'state':{'string':'Target Moves','type':'selection','selection': [('all','All Entries'),('posted','All Posted Entries')]}
 }
 
 class wizard_report(wizard.interface):

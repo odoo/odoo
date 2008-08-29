@@ -1,35 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
-        <record id="category_supplier" model="res.partner.category">
-            <field name="name">Suppliers</field>
-        </record>
-        
         <menuitem icon="terp-purchase" id="menu_purchase_root" name="Purchase Management"/>
-        
+
         <record id="purchase_order_form" model="ir.ui.view">
             <field name="name">purchase.order.form</field>
             <field name="model">purchase.order</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Purchase Order">
-                    <notebook>
+					<group col="6" colspan="4">
+						<field name="name" select="1"/>
+						<field name="shipped" select="2"/>
+						<field name="invoiced" select="2"/>
+						<newline/>
+						<field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)"/>
+						<field name="origin" select="2"/>
+						<field name="date_order" select="2"/>
+					</group>
+                    <notebook colspan="4">
                         <page string="Purchase Order">
-                            <field name="name" select="1"/>
-                            <group col="4" colspan="2">
-                                <field name="shipped" select="2"/>
-                                <field name="invoiced" select="2"/>
-                            </group>
-                            <newline/>
-                            <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)"/>
-                            <field name="date_order" select="2"/>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" domain="[('category_id','child_of', [%(category_supplier)d])]"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" domain="[('supplier','=', 1)]"/>
                             <field name="partner_address_id"/>
                             <field domain="[('type','=','purchase')]" name="pricelist_id"/>
                             <field name="partner_ref" select="2"/>
                             <newline/>
                             <field colspan="4" name="order_line" nolabel="1" widget="one2many_list"/>
-                            <separator colspan="4" select="2" string="Document State"/>
                             <group col="7" colspan="4">
                                 <field name="amount_untaxed" sum="Untaxed amount"/>
                                 <field name="amount_tax"/>
@@ -42,19 +38,21 @@
                                 <button name="purchase_appbuyer" states="wait_auth" string="Approve Purchase"/>
                                 <button name="purchase_approve" states="confirmed" string="Approved by Supplier"/>
                                 <button name="purchase_cancel" states="draft,confirmed,wait_auth" string="Cancel Purchase Order"/>
-                                
+
                                 <button name="purchase_cancel" states="approved" string="Cancel Purchase Order"/>
-                                
+
                                 <button name="shipping_ok" states="except_shipping" string="Shipping Done"/>
                                 <button name="invoice_ok" states="except_invoice" string="Invoice Done"/>
                             </group>
                         </page>
-                        <page string="Extra Infos">
+                        <page string="Delivery &amp; Invoices">
+							<separator string="Delivery" colspan="2"/>
+							<separator string="Invoice Control" colspan="2"/>
                             <field name="dest_address_id" on_change="onchange_dest_address_id(dest_address_id)"/>
-                            <field name="location_id"/>
                             <field name="invoice_method"/>
-                            <field name="origin" select="2"/>
+                            <field name="location_id"/>
                             <newline/>
+							<separator string="Purchase Control" colspan="4"/>
                             <field name="validator"/>
                             <field name="date_approve"/>
                         </page>
@@ -65,7 +63,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="purchase_form_action" model="ir.actions.act_window">
             <field name="name">Purchase Orders</field>
             <field name="type">ir.actions.act_window</field>
@@ -112,7 +110,7 @@
         </record>
         <menuitem action="purchase_form_action_new" id="menu_purchase_form_action_new" parent="purchase.menu_purchase_root"/>
 
-        
+
         <record id="purchase_order_tree" model="ir.ui.view">
             <field name="name">purchase.order.tree</field>
             <field name="model">purchase.order</field>
@@ -123,15 +121,15 @@
                     <field name="date_order"/>
                     <field name="partner_id"/>
                     <field name="location_id"/>
-                    <field name="invoiced" string="Paid"/>
-                    <field name="shipped"/>
+                    <field name="invoiced_rate" widget="progressbar"/>
+                    <field name="shipped_rate" widget="progressbar"/>
                     <field name="amount_untaxed"/>
                     <field name="origin"/>
                     <field name="state"/>
                 </tree>
             </field>
         </record>
-        
+
         <record id="purchase_order_line_form" model="ir.ui.view">
             <field name="name">purchase.order.line.form</field>
             <field name="model">purchase.order.line</field>
@@ -157,7 +155,7 @@
                 </form>
             </field>
         </record>
-        
+
         <record id="purchase_order_line_tree" model="ir.ui.view">
             <field name="name">purchase.order.line.tree</field>
             <field name="model">purchase.order.line</field>
@@ -174,7 +172,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <act_window context="{'partner_id': active_id}" domain="[('partner_id', '=', active_id)]" id="act_res_partner_2_purchase_order" name="Purchase orders" res_model="purchase.order" src_model="res.partner"/>
     </data>
 </terp>

@@ -42,7 +42,6 @@ class res_partner(osv.osv):
           string="Customer Location", 
           method=True,
           view_load=True,
-          group_name="Inventory Properties",
           help="This stock location will be used, instead of the default one, as the destination location for goods you send to this partner"),
         'property_stock_supplier': fields.property(
           'stock.location',
@@ -51,7 +50,6 @@ class res_partner(osv.osv):
           string="Supplier Location", 
           method=True,
           view_load=True,
-          group_name="Inventory Properties",
           help="This stock location will be used, instead of the default one, as the source location for goods you receive from the current partner"),
     }
 res_partner()

@@ -37,12 +37,24 @@
                 </tree>
             </field>
         </record>
+
+        <record id="view_order_product_graph" model="ir.ui.view">
+             <field name="name">report.sale.order.product.graph</field>
+             <field name="model">report.sale.order.product</field>
+             <field name="type">graph</field>
+             <field name="arch" type="xml">
+                 <graph string="Sales by Product" type="pie">
+                     <field name="product_id"/>
+                     <field name="price_average"/>
+                 </graph>
+             </field>
+        </record>
         
         <record id="action_order_product_tree" model="ir.actions.act_window">
             <field name="name">Sales by Product (this month)</field>
             <field name="res_model">report.sale.order.product</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">graph,tree</field>
             <field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
         </record>
         <menuitem id="next_id_80" name="Reporting" parent="sale.menu_sale_root"/><menuitem id="next_id_81" name="This Month" parent="next_id_80"/><menuitem action="action_order_product_tree" id="menu_report_order_product" parent="next_id_81"/>
@@ -50,7 +62,7 @@
             <field name="name">Sales by Product</field>
             <field name="res_model">report.sale.order.product</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">graph,tree</field>
         </record>
         <menuitem id="next_id_82" name="All Months" parent="report_sale.next_id_80"/><menuitem action="action_order_product_tree_all" id="menu_report_order_product_all" parent="next_id_82"/>
         
@@ -105,7 +117,7 @@
             <field name="name">Sales by Category of Product (this month)</field>
             <field name="res_model">report.sale.order.category</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">graph,tree</field>
             <field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
         </record>
         <menuitem action="action_order_category_tree" id="menu_report_order_category" parent="report_sale.next_id_81"/>
@@ -113,16 +125,27 @@
             <field name="name">Sales by Category of Products</field>
             <field name="res_model">report.sale.order.category</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,graph</field>
+            <field name="view_mode">graph,tree</field>
         </record>
         <menuitem action="action_order_category_tree_all" id="menu_report_order_category_all" parent="report_sale.next_id_82"/>
         
         <!-- Sales of the month -->
+        <record id="view_order_graph" model="ir.ui.view">
+             <field name="name">sale.order.graph</field>
+             <field name="model">sale.order</field>
+             <field name="type">graph</field>
+             <field name="arch" type="xml">
+                 <graph string="Sales orders" type="pie">
+                     <field name="partner_id"/>
+                     <field name="amount_untaxed"/>
+                 </graph>
+             </field>
+        </record>
         <record id="action_order_sale_list" model="ir.actions.act_window">
             <field name="name">Sales of the Month</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">graph,tree,form</field>
             <field name="domain">[('date_order','&gt;=',time.strftime('%Y-%m-01')),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]</field>
         </record>
         <menuitem action="action_order_sale_list" id="menu_report_order_sale_list" parent="report_sale.next_id_81"/>

@@ -52,7 +52,10 @@ class wizard_move_line_select(wizard.interface):
         result = mod_obj._get_id(cr, uid, 'account', 'action_move_line_tree1')
         id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
         result = act_obj.read(cr, uid, [id])[0]
-        result['context'] = str({'fiscalyear': context.get('fiscalyear', False)})
+        result['context'] = {
+            'fiscalyear': context.get('fiscalyear', False),
+            'account_id': data['id']
+        }
         result['domain']=result['domain'][0:-1]+','+domain+result['domain'][-1]
         return result
 

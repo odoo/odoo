@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data noupdate="1">
-        
+
         <!--
 	Case Sections
 	-->
-        
+
         <record id="section_support" model="crm.case.section">
             <field name="name">Helpdesk and Support</field>
             <field name="code">support</field>
@@ -18,11 +18,11 @@
             <field name="name">Supplier complaints</field>
             <field name="code">purchase</field>
         </record>
-        
+
         <!--
 	Case Categories
 	-->
-        
+
         <record id="categ1" model="crm.case.categ">
             <field name="name">Computer Crashed</field>
             <field name="section_id" ref="section_support"/>
@@ -47,9 +47,9 @@
             <field name="name">Furnitures</field>
             <field name="section_id" ref="section_purchase"/>
         </record>
-        
+
         <!-- Specific menus -->
-        
+
         <!--
 	<record model="ir.actions.act_window" id="crm_case_categ2-act">
 		<field name="name">crm.case.form</field>
@@ -60,11 +60,9 @@
 	</record>
 	<menuitem name="CRM &amp; SRM/Helpdesk/Helpdesk Cases" id="menu_crm_case_categ2-act" action="crm_case_categ2-act"/>
 	-->
-        
-        <function eval="([section_support], 'Helpdesk', ref('menu_crm'))" model="crm.case.section" name="menu_create"/>
-        
+
         <!-- Demo Cases -->
-        
+
         <record model="crm.case">
             <field name="name">Think about Tiny ERP</field>
             <field name="priority">3</field>
@@ -81,7 +79,7 @@
             <field eval="time.strftime('%Y-%m-24')" name="date_deadline"/>
             <field model="res.partner.canal" name="canal_id" search="[]"/>
         </record>
-        
+
         <record id="case1" model="crm.case">
             <field name="name">Need a new eCommerce Website</field>
             <field name="priority">4</field>
@@ -105,7 +103,7 @@
         <function model="crm.case" name="case_log">
             <value eval="[ref('case1')]" model="crm.case"/>
         </function>
-        
+
         <record id="case2" model="crm.case">
             <field name="name">Hdd Crashed unexpectedly</field>
             <field name="priority">3</field>
@@ -121,7 +119,7 @@
             <field eval="time.strftime('%Y-%m-10')" name="date_deadline"/>
             <field model="res.partner.canal" name="canal_id" search="[]"/>
         </record>
-        
+
         <record id="case3" model="crm.case">
             <field name="name">Need a new eCommerce Website</field>
             <field name="priority">3</field>
@@ -145,7 +143,7 @@
         <function model="crm.case" name="case_log">
             <value eval="[ref('case3')]" model="crm.case"/>
         </function>
-        
+
         <record id="case4" model="crm.case">
             <field name="name">Need a new eCommerce Website</field>
             <field name="priority">3</field>
@@ -169,7 +167,7 @@
         <function model="crm.case" name="case_log">
             <value eval="[ref('case4')]" model="crm.case"/>
         </function>
-        
+
         <record id="case5" model="crm.case">
             <field name="name">Bug in program</field>
             <field name="priority">3</field>
@@ -188,7 +186,7 @@
         <function model="crm.case" name="case_open">
             <value eval="[ref('case5')]" model="crm.case"/>
         </function>
-        
+
         <record id="case6" model="crm.case">
             <field name="name">Server is down</field>
             <field name="priority">3</field>
@@ -216,7 +214,7 @@
         <function model="crm.case" name="case_pending">
             <value eval="[ref('case6')]" model="crm.case"/>
         </function>
-        
+
         <record id="case7" model="crm.case">
             <field name="name">Disk failure</field>
             <field name="priority">2</field>
@@ -238,7 +236,7 @@
         <function model="crm.case" name="case_log">
             <value eval="[ref('case7')]" model="crm.case"/>
         </function>
-        
+
         <record id="case8" model="crm.case">
             <field name="name">Missing hardware</field>
             <field name="priority">3</field>
@@ -260,7 +258,7 @@
         <function model="crm.case" name="case_log">
             <value eval="[ref('case8')]" model="crm.case"/>
         </function>
-        
+
         <record id="case9" model="crm.case">
             <field name="name">Need a new eCommerce Website</field>
             <field name="priority">4</field>
@@ -284,7 +282,7 @@
         <function model="crm.case" name="case_log">
             <value eval="[ref('case9')]" model="crm.case"/>
         </function>
-        
+
         <record id="case10" model="crm.case">
             <field name="name">Need a new module</field>
             <field name="priority">3</field>
@@ -313,7 +311,7 @@
         <function model="crm.case" name="case_close">
             <value eval="[ref('case10')]" model="crm.case"/>
         </function>
-        
+
         <record id="case11" model="crm.case">
             <field name="name">Need support on module</field>
             <field name="priority">1</field>
@@ -335,7 +333,7 @@
         <function model="crm.case" name="case_log">
             <value eval="[ref('case11')]" model="crm.case"/>
         </function>
-        
+
         <record id="case12" model="crm.case">
             <field name="name">Bad packing</field>
             <field name="priority">2</field>
@@ -356,7 +354,7 @@
         <function model="crm.case" name="case_log">
             <value eval="[ref('case12')]" model="crm.case"/>
         </function>
-        
+
         <record id="case13" model="crm.case">
             <field name="name">Need quotation</field>
             <field name="priority">3</field>
@@ -383,7 +381,7 @@
         <function model="crm.case" name="case_close">
             <value eval="[ref('case13')]" model="crm.case"/>
         </function>
-        
+
         <record id="case14" model="crm.case">
             <field name="name">New server</field>
             <field name="priority">1</field>
@@ -404,7 +402,7 @@
         <function model="crm.case" name="case_log">
             <value eval="[ref('case14')]" model="crm.case"/>
         </function>
-        
+
         <record id="case15" model="crm.case">
             <field name="name">Formation</field>
             <field name="priority">4</field>
@@ -431,7 +429,7 @@
         <function model="crm.case" name="case_log">
             <value eval="[ref('case15')]" model="crm.case"/>
         </function>
-        
+
         <record id="case16" model="crm.case">
             <field name="name">Need new specific reports</field>
             <field name="priority">3</field>
@@ -453,15 +451,15 @@
         <function model="crm.case" name="case_log">
             <value eval="[ref('case16')]" model="crm.case"/>
         </function>
-        
+
         <record id="case17" model="crm.case">
             <field name="name">Server down</field>
             <field name="priority">3</field>
             <field name="description">Server is down, doesn't answser to pingz
                 Should check if still running, and if network still up (need to be in front of the server)
-                
+
                 Very very very high priority, as I cannot svn up/ci/st without the server
-                
+
                 (btw : this is only demo data. no stress dear sysadmin :))
             </field>
             <field name="section_id" ref="section_support"/>
@@ -481,6 +479,6 @@
         <function model="crm.case" name="case_log">
             <value eval="[ref('case17')]" model="crm.case"/>
         </function>
-        
+
     </data>
 </terp>

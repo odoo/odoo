@@ -31,44 +31,84 @@
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Product">
+                    <group colspan="2" col="4">
+                        <separator string="Product Description" colspan="4"/>
+                        <field name="name" select="1"/>
+                        <field name="default_code" select="1"/>
+                        <field groups="base.group_extended" name="variants" select="2"/>
+                        <field groups="base.group_extended" name="ean13" select="2"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <separator string="Product Type" colspan="2"/>
+                        <field name="sale_ok" select="2"/>
+                        <field name="purchase_ok" select="2"/>
+                        <field groups="base.group_extended" name="rental" select="2"/>
+                    </group>
                     <notebook>
                         <page string="Information">
-                            <field name="name" select="1"/>
-                            <field name="default_code" select="1"/>
-                            <field groups="base.group_extended" name="variants" select="2"/>
-                            <field groups="base.group_extended" name="ean13" select="2"/>
-                            <newline/>
-                            <field name="categ_id" select="1"/>
-                            <field name="type" select="2"/>
-                            <field digits="(14, 3)" groups="base.group_extended" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
-                            <newline/>
-                            <field digits="(14, 3)" groups="base.group_extended" name="weight" attrs="{'readonly':[('type','=','service')]}"/>
-                            <field digits="(14, 3)" groups="base.group_extended" name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
-                            <field name="procure_method"/>
-                            <field name="state" select="2"/>
-                            <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)"/>
-                            <field name="uom_po_id"/>
-                            <field groups="base.group_extended" name="product_manager" select="2"/>
+                            <group colspan="2" col="2">
+                                <separator string="Procurement" colspan="2"/>
+                                <field name="type" select="2"/>
+                                <field name="procure_method"/>
+                                <field name="supply_method"/>
+                            </group>
+
+                            <group colspan="2" col="2">
+                                <separator string="Weigths" colspan="2"/>
+                                <field digits="(14, 3)" groups="base.group_extended" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
+                                <field digits="(14, 3)" groups="base.group_extended" name="weight" attrs="{'readonly':[('type','=','service')]}"/>
+                                <field digits="(14, 3)" groups="base.group_extended" name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
+                            </group>
+
+                            <group colspan="2" col="2" name="status">
+                                <separator string="Status" colspan="2"/>
+                                <field name="categ_id" select="1"/>
+                                <field name="state" select="2"/>
+                                <field groups="base.group_extended" name="product_manager" select="2"/>
+                            </group>
+
+                            <group colspan="2" col="2" name="uom">
+                                <separator string="Lots" colspan="2"/>
+                                <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)"/>
+                                <field name="uom_po_id"/>
+                                <field name="tracking"/>
+                            </group>
+
+                            <group colspan="2" col="2" name="uom">
+                                <separator string="Second UoM" colspan="2"/>
+                                <field name="uos_id"/>
+                                <field name="uos_coeff"/>
+                                <field name="mes_type"/>
+                            </group>
+
                         </page>
-                        <page string="Procurement">
-                            <field name="supply_method"/>
-                            <field name="active" select="2"/>
-                            <newline/>
-                            <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',0)]}"/>
-                            <field name="sale_ok" select="2"/>
-                            <field name="produce_delay"/>
-                            <field name="purchase_ok" select="2"/>
-                            <field name="warranty"/>
-                            <field groups="base.group_extended" name="rental" select="2"/>
-                            <newline/>
-                            <field name="list_price"/>
+                        <page string="Procurement &amp; Locations">
+                            <group colspan="2" col="2" name="delay">
+                                <separator string="Delays" colspan="2"/>
+                                <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',0)]}"/>
+                                <field name="produce_delay"/>
+                                <field name="warranty"/>
+                            </group>
+                            <group colspan="2" col="2" name="store">
+                                <separator string="Storage Localisation" colspan="2"/>
+                                <field name="loc_rack"/>
+                                <field name="loc_row"/>
+                                <field name="loc_case"/>
+                            </group>
+
+                            <group colspan="2" col="2" name="misc">
+                                <separator string="Miscelleanous" colspan="2"/>
+                                <field name="active" select="2"/>
+                            </group>
+
+                        </page>
+                        <page string="Prices">
+                            <separator string="Base Prices" colspan="4"/>
                             <field name="standard_price"/>
+                            <field name="list_price"/>
                             <field groups="base.group_extended" name="cost_method"/>
                             <newline/>
-                            <field groups="base.group_uos" name="uos_id"/>
-                            <field groups="base.group_uos" name="uos_coeff"/>
-                            <newline/>
-                            <field colspan="4" name="seller_ids" nolabel="1" widget="one2many_list"/>
+                            <field colspan="4" name="seller_ids" nolabel="1" mode="form,tree"/>
                         </page>
                         <page string="Descriptions">
                             <separator string="Description"/>
@@ -79,8 +119,6 @@
                             <field colspan="4" name="description_purchase" nolabel="1"/>
                         </page>
                         <page groups="base.group_extended" string="Packaging">
-                            <field name="mes_type"/>
-                            <field name="tracking"/>
                             <field colspan="4" name="packaging" nolabel="1">
                                 <form string="Packaging">
                                     <field name="ean" select="1"/>
@@ -100,9 +138,6 @@
                                     <field colspan="4" name="name" select="1"/>
                                 </form>
                             </field>
-                        </page>
-                        <page groups="base.group_extended" string="Properties">
-                            <properties/>
                         </page>
                     </notebook>
                 </form>
@@ -127,9 +162,7 @@
                     <field name="name" select="1"/>
                     <field name="parent_id"/>
                     <field name="sequence"/>
-                    <group colspan="4" groups="base.group_extended">
-                        <properties/>
-                    </group>
+                    <newline/>
                 </form>
             </field>
         </record>
@@ -165,12 +198,13 @@
         
         
         <record id="product_normal_action_tree" model="ir.actions.act_window">
-            <field name="name">product.normal.action.tree</field>
+            <field name="name" eval="False"/>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('categ_id','child_of',[active_id])]</field>
+            <field name="context">{'categ_id':active_id}</field>
         </record>
         <record id="ir_product_category_open" model="ir.values">
             <field eval="'tree_but_open'" name="key2"/>
@@ -439,9 +473,6 @@
                             <field colspan="4" name="description_sale" nolabel="1"/>
                             <separator string="Purchase Description"/>
                             <field colspan="4" name="description_purchase" nolabel="1"/>
-                        </page>
-                        <page string="Properties">
-                            <properties/>
                         </page>
                     </notebook>
                 </form>

@@ -38,6 +38,7 @@
     "update_xml" : [
         "delivery_view.xml",
         "delivery_wizard.xml",
+        "partner_view.xml",
         "ir.model.access.csv",
     ],
     "active": False,

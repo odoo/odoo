@@ -37,7 +37,6 @@
     * Employees and hierarchies
     * Work hours sheets
     * Attendances and sign in/out system
-    * Holidays
 
     Different reports are also provided, mainly for attendance statistics.
     """,
@@ -45,7 +44,6 @@
     "init_xml" : [],
     "demo_xml" : [
         "hr_demo.xml", 
-        "hr_bel_holidays_2005.xml",
         "hr_department_demo.xml",
     ],
     "update_xml" : [

@@ -37,9 +37,9 @@ class delivery_carrier(osv.osv):
     _description = "Carrier and delivery grids"
     _columns = {
         'name': fields.char('Carrier', size=64, required=True),
-        'partner_id': fields.many2one('res.partner', 'Carrier partner', required=True),
-        'product_id': fields.many2one('product.product', 'Delivery product', required=True),
-        'grids_id': fields.one2many('delivery.grid', 'carrier_id', 'Delivery grids'),
+        'partner_id': fields.many2one('res.partner', 'Carrier Partner', required=True),
+        'product_id': fields.many2one('product.product', 'Delivery Product', required=True),
+        'grids_id': fields.one2many('delivery.grid', 'carrier_id', 'Delivery Grids'),
         'active': fields.boolean('Active')
     }
     _defaults = {
@@ -66,7 +66,7 @@ delivery_carrier()
 
 class delivery_grid(osv.osv):
     _name = "delivery.grid"
-    _description = "Delivery grid"
+    _description = "Delivery Grid"
     _columns = {
         'name': fields.char('Grid Name', size=64, required=True),
         'sequence': fields.integer('Sequence', size=64, required=True),

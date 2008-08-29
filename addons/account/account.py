@@ -129,9 +129,11 @@ class account_tax(osv.osv):
 account_tax()
 
 class account_account(osv.osv):
-    _order = "code"
+    _order = "parent_left"
+    _parent_order = "code"
     _name = "account.account"
     _description = "Account"
+    _parent_store = True
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
@@ -139,6 +141,9 @@ class account_account(osv.osv):
             context = {}
         pos = 0
         while pos<len(args):
+            if args[pos][0]=='code' and args[pos][1] in ('like','ilike'):
+                args[pos][1]='=like'
+                args[pos][2]=str(args[pos][2])+'%'
             if args[pos][0]=='journal_id':
                 if not args[pos][2]:
                     del args[pos]
@@ -155,89 +160,49 @@ class account_account(osv.osv):
         return super(account_account,self).search(cr, uid, args, offset, limit,
                 order, context=context, count=count)
 
-    def _credit(self, cr, uid, ids, field_name, arg, context={}):
-        acc_set = ",".join(map(str, ids))
-        query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-        cr.execute(("SELECT a.id, " \
-                    "SUM(COALESCE(l.credit * a.sign, 0)) " \
-                "FROM account_account a " \
-                    "LEFT JOIN account_move_line l " \
-                    "ON (a.id = l.account_id) " \
-                "WHERE a.type != 'view' " \
-                    "AND a.id IN (%s) " \
-                    "AND " + query + " " \
-                    "AND a.active " \
-                "GROUP BY a.id") % (acc_set, ))
-        res2 = cr.fetchall()
-        res = {}
-        for id in ids:
-            res[id] = 0.0
-        for account_id, sum in res2:
-            res[account_id] += sum
-        return res
+#    def _credit(self, cr, uid, ids, field_name, arg, context={}):
+#        return self.__compute(cr, uid, ids, field_name, arg, context, 'COALESCE(SUM(l.credit), 0)')
+#
+#    def _debit(self, cr, uid, ids, field_name, arg, context={}):
+#        return self.__compute(cr, uid, ids, field_name, arg, context, 'COALESCE(SUM(l.debit), 0)')
+#
+#    def _balance(self, cr, uid, ids, field_name, arg, context={}):
+#        return self.__compute(cr, uid, ids, field_name, arg, context, 'COALESCE(SUM(l.debit) - SUM(l.credit), 0)')
 
-    def _debit(self, cr, uid, ids, field_name, arg, context={}):
-        acc_set = ",".join(map(str, ids))
-        query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-        cr.execute(("SELECT a.id, " \
-                    "SUM(COALESCE(l.debit * a.sign, 0)) " \
-                "FROM account_account a " \
-                    "LEFT JOIN account_move_line l " \
-                    "ON (a.id = l.account_id) " \
-                "WHERE a.type != 'view' " \
-                    "AND a.id IN (%s) " \
-                    "AND " + query + " " \
-                    "AND a.active " \
-                "GROUP BY a.id") % (acc_set, ))
-        res2 = cr.fetchall()
-        res = {}
-        for id in ids:
-            res[id] = 0.0
-        for account_id, sum in res2:
-            res[account_id] += sum
-        return res
-
-    def _balance(self, cr, uid, ids, field_name, arg, context={}):
+    def __compute(self, cr, uid, ids, field_names, arg, context={}, query=''):
+        mapping = {
+            'balance': "COALESCE(SUM(l.debit) - SUM(l.credit), 0) as balance ",
+            'debit': "COALESCE(SUM(l.debit), 0) as debit ",
+            'credit': "COALESCE(SUM(l.credit), 0) as credit "
+        }
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-        ids2 = {}.fromkeys(ids + ids2).keys()
         acc_set = ",".join(map(str, ids2))
-        query = self.pool.get('account.move.line')._query_get(cr, uid,
-                context=context)
-        cr.execute(("SELECT a.id, " \
-                    "SUM((COALESCE(l.debit, 0) - COALESCE(l.credit, 0))) " \
-                "FROM account_account a " \
-                    "LEFT JOIN account_move_line l " \
-                    "ON (a.id=l.account_id) " \
-                "WHERE a.type != 'view' " \
-                    "AND a.id IN (%s) " \
-                    "AND " + query + " " \
-                    "AND a.active " \
-                "GROUP BY a.id") % (acc_set, ))
-        res = {}
-        for account_id, sum in cr.fetchall():
-            res[account_id] = round(sum,2)
-        cr.execute("SELECT a.id, a.company_id " \
-                "FROM account_account a " \
-                "WHERE id IN (%s)" % acc_set)
-        resc = dict(cr.fetchall())
-        cr.execute("SELECT id, currency_id FROM res_company")
-        rescur = dict(cr.fetchall())
+        accounts = {}
+        if ids2:
+            query = self.pool.get('account.move.line')._query_get(cr, uid,
+                    context=context)
+            cr.execute(("SELECT l.account_id, " +\
+                    ' , '.join(map(lambda x: mapping[x], field_names)) +
+                    "FROM " \
+                        "account_move_line l " \
+                    "WHERE " \
+                        "l.account_id IN (%s) " \
+                        "AND " + query + " " \
+                    "GROUP BY l.account_id") % (acc_set, ))
 
+            for res in cr.fetchall():
+                accounts[res[0]] = res[1:]
+
+        res = {}
         for id in ids:
-            ids3 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
-            to_currency_id = rescur[resc[id]]
-            for idx in ids3:
-                if idx <> id:
-                    res.setdefault(id, 0.0)
-                    if resc[idx]<>resc[id] and resc[idx] and resc[id]:
-                        from_currency_id = rescur[resc[idx]]
-                        res[id] += self.pool.get('res.currency').compute(cr,
-                                uid, from_currency_id, to_currency_id,
-                                res.get(idx, 0.0), context=context)
-                    else:
-                        res[id] += res.get(idx, 0.0)
-        for id in ids:
-            res[id] = round(res.get(id,0.0), 2)
+            res[id] = map(lambda x: 0.0, field_names)
+            ids2 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
+            for i in ids2:
+                for a in range(len(field_names)):
+                    res[id][a] += accounts.get(i, (0.0,0.0,0.0))[a]
+# TODO: if account.type is consolidation: compute all childs like before +
+# currency conversion
+
         return res
 
     def _get_company_currency(self, cr, uid, ids, field_name, arg, context={}):
@@ -267,15 +232,15 @@ class account_account(osv.osv):
         'code': fields.char('Code', size=64),
         'type': fields.selection(_code_get, 'Account Type', required=True),
 #        'parent_id': fields.many2many('account.account', 'account_account_rel', 'child_id', 'parent_id', 'Parents'),
-        'parent_id': fields.many2one('account.account','Parent'),
+        'parent_id': fields.many2one('account.account','Parent', ondelete='cascade'),
         'child_parent_ids':fields.one2many('account.account','parent_id','Children'),
         'child_consol_ids':fields.many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', 'Consolidated Children',domain=[('type','=','root'), ('type', '=', 'consolidation')]),
         'child_id': fields.function(_get_child_ids, method=True, type='many2many',relation="account.account",string="Children Accounts"),
 
 #        'child_id': fields.many2many('account.account', 'account_account_rel', 'parent_id', 'child_id', 'Children'),
-        'balance': fields.function(_balance, digits=(16,2), method=True, string='Balance'),
-        'credit': fields.function(_credit, digits=(16,2), method=True, string='Credit'),
-        'debit': fields.function(_debit, digits=(16,2), method=True, string='Debit'),
+        'balance': fields.function(__compute, digits=(16,2), method=True, string='Balance', multi='balance'),
+        'credit': fields.function(__compute, digits=(16,2), method=True, string='Credit', multi='balance'),
+        'debit': fields.function(__compute, digits=(16,2), method=True, string='Debit', multi='balance'),
         'reconcile': fields.boolean('Reconcile', help="Check this account if the user can make a reconciliation of the entries in this account."),
         'shortcut': fields.char('Shortcut', size=12),
         'close_method': fields.selection([('none','None'), ('balance','Balance'), ('detail','Detail'),('unreconciled','Unreconciled')], 'Deferral Method', required=True, help="Tell Tiny ERP how to process the entries of this account when you close a fiscal year. None removes all entries to start with an empty account for the new fiscal year. Balance creates only one entry to keep the balance for the new fiscal year. Detail keeps the detail of all entries of the preceeding years. Unreconciled keeps the detail of unreconciled entries only."),
@@ -285,6 +250,9 @@ class account_account(osv.osv):
         'company_currency_id': fields.function(_get_company_currency, method=True, type='many2one', relation='res.currency', string='Company Currency'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'active': fields.boolean('Active', select=2),
+
+        'parent_left': fields.integer('Parent Left', select=1),
+        'parent_right': fields.integer('Parent Right', select=1),
     }
 
     def _default_company(self, cr, uid, context={}):
@@ -378,7 +346,7 @@ class account_account(osv.osv):
             res.append((record['id'],name ))
         return res
 
-    def copy(self, cr, uid, id, default=None, context={}):
+    def copy(self, cr, uid, id, default={}, context={}):
         account = self.browse(cr, uid, id, context=context)
         new_child_ids = []
         default['parent_id'] = False
@@ -455,6 +423,7 @@ class account_journal(osv.osv):
         'user_id': fields.many2one('res.users', 'User', help="The responsible user of this journal"),
         'groups_id': fields.many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', 'Groups'),
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
+        'entry_posted': fields.boolean('Skip \'Draft\' State for Created Entries', help='Check this box if you don\'t want that new account moves pass through the \'draft\' state and goes direclty to the \'posted state\' without any manual validation.'),
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -494,7 +463,7 @@ class account_fiscalyear(osv.osv):
         'date_start': fields.date('Start date', required=True),
         'date_stop': fields.date('End date', required=True),
         'period_ids': fields.one2many('account.period', 'fiscalyear_id', 'Periods'),
-        'state': fields.selection([('draft','Draft'), ('done','Done')], 'State', redonly=True),
+        'state': fields.selection([('draft','Draft'), ('done','Done')], 'Status', redonly=True),
     }
 
     _defaults = {
@@ -541,7 +510,7 @@ class account_period(osv.osv):
         'date_start': fields.date('Start of period', required=True, states={'done':[('readonly',True)]}),
         'date_stop': fields.date('End of period', required=True, states={'done':[('readonly',True)]}),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True, states={'done':[('readonly',True)]}, select=True),
-        'state': fields.selection([('draft','Draft'), ('done','Done')], 'State', readonly=True)
+        'state': fields.selection([('draft','Draft'), ('done','Done')], 'Status', readonly=True)
     }
     _defaults = {
         'state': lambda *a: 'draft',
@@ -583,7 +552,7 @@ class account_journal_period(osv.osv):
         'period_id': fields.many2one('account.period', 'Period', required=True, ondelete="cascade"),
         'icon': fields.function(_icon_get, method=True, string='Icon', type='string'),
         'active': fields.boolean('Active', required=True),
-        'state': fields.selection([('draft','Draft'), ('printed','Printed'), ('done','Done')], 'State', required=True, readonly=True)
+        'state': fields.selection([('draft','Draft'), ('printed','Printed'), ('done','Done')], 'Status', required=True, readonly=True)
     }
 
     def _check(self, cr, uid, ids, context={}):
@@ -658,7 +627,7 @@ class account_move(osv.osv):
         'ref': fields.char('Ref', size=64),
         'period_id': fields.many2one('account.period', 'Period', required=True, states={'posted':[('readonly',True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, states={'posted':[('readonly',True)]}),
-        'state': fields.selection([('draft','Draft'), ('posted','Posted')], 'State', required=True, readonly=True),
+        'state': fields.selection([('draft','Draft'), ('posted','Posted')], 'Status', required=True, readonly=True),
         'line_id': fields.one2many('account.move.line', 'move_id', 'Entries', states={'posted':[('readonly',True)]}),
     }
     _defaults = {
@@ -747,6 +716,7 @@ class account_move(osv.osv):
                 vals['name'] = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
             else:
                 raise osv.except_osv(_('Error'), _('No sequence defined in the journal !'))
+        accnt_journal = self.pool.get('account.journal').browse(cr, uid, vals['journal_id'])
         if 'line_id' in vals:
             c = context.copy()
             c['novalidate'] = True
@@ -1127,7 +1097,7 @@ class account_tax(osv.osv):
         'ref_tax_sign': fields.float('Tax Code Sign', help="Usualy 1 or -1."),
         'include_base_amount': fields.boolean('Include in base amount', help="Indicate if the amount of tax must be included in the base amount for the computation of the next taxes"),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'description': fields.char('Internal Name', 32),
+        'description': fields.char('Internal Name',size=32),
     }
 
     def name_get(self, cr, uid, ids, context={}):
@@ -1477,7 +1447,7 @@ class account_subscription(osv.osv):
         'period_total': fields.integer('Number of period', required=True),
         'period_nbr': fields.integer('Period', required=True),
         'period_type': fields.selection([('day','days'),('month','month'),('year','year')], 'Period Type', required=True),
-        'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'State', required=True, readonly=True),
+        'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'Status', required=True, readonly=True),
 
         'lines_id': fields.one2many('account.subscription.line', 'subscription_id', 'Subscription Lines')
     }
@@ -1686,7 +1656,7 @@ class account_account_template(osv.osv):
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Force all moves for this account to have this secondary currency."),
         'code': fields.char('Code', size=64),
         'type': fields.selection(_code_get, 'Account Type', required=True),
-        'reconcile': fields.boolean('Reconcile', help="Check this option if the user can make a reconciliation of the entries in this account."),
+        'reconcile': fields.boolean('Allow Reconciliation', help="Check this option if the user can make a reconciliation of the entries in this account."),
         'shortcut': fields.char('Shortcut', size=12),
         'note': fields.text('Note'),
     }
@@ -1812,6 +1782,60 @@ class account_chart_template(osv.osv):
     }
 
 account_chart_template()
+
+class wizard_account_chart_duplicate(osv.osv_memory):
+    """
+    Create a new account chart for a new company.
+    Wizards ask:
+        * an accuont chart (parent_id,=,False)
+        * a company
+    Then, the wizard:
+        * duplicates all accounts and assign to the right company
+        * duplicates all taxes, changing account assignations
+        * duplicate all accounting properties and assign correctly
+    """
+    _name = 'wizard.account.chart.duplicate'
+    _columns = {
+        'name':fields.char('Name',size=64),
+        'account_id':fields.many2one('account.account','Account Chart',required=True,domain=[('parent_id','=',False)]),
+        'company_id':fields.many2one('res.company','Company',required=True),
+
+    }
+
+    def action_create(self, cr, uid,ids, context=None):
+        res=self.read(cr,uid,ids)[0]
+        if res.get('account_id',False) and res.get('company_id',False):
+            account_obj=self.pool.get('account.account')
+            account_tax_obj=self.pool.get('account.tax')
+            property_obj=self.pool.get('ir.property')
+            # duplicate all accounts
+            account_obj.copy(cr,uid,res['account_id'],default={'company_id':res['company_id']})
+            # duplicate all taxes
+            tax_ids=account_tax_obj.search(cr,uid,[])
+            for tax in account_tax_obj.browse(cr,uid,tax_ids):
+                val={'company_id':res['company_id']}
+                if tax.account_collected_id:
+                    new_invoice_account_ids=account_obj.search(cr,uid,[('name','=',tax.account_collected_id.name),('company_id','=',res['company_id'])])
+                    val['account_collected_id']=len(new_invoice_account_ids) and new_invoice_account_ids[0] or False
+                if tax.account_paid_id:
+                    new_refund_account_ids=account_obj.search(cr,uid,[('name','=',tax.account_paid_id.name),('company_id','=',res['company_id'])])
+                    val['account_paid_id']=len(new_refund_account_ids) and new_refund_account_ids[0] or False
+                account_tax_obj.copy(cr,uid,tax.id,default=val)
+            # duplicate all accouting properties
+            property_ids=property_obj.search(cr,uid,[('value','=like','account.account,%')])
+            for property in property_obj.browse(cr,uid,property_ids):
+                account=account_obj.browse(cr,uid,property.value[1])
+                if account:
+                    new_account_ids=account_obj.search(cr,uid,[('name','=',account.name),('company_id','=',res['company_id'])])
+                    if len(new_account_ids):
+                        property_obj.copy(cr,uid,property.id,default={
+                                'value':'account.account,'+str(new_account_ids[0]),
+                                'company_id':res['company_id']
+                            })
+
+        return {'type':'ir.actions.act_window_close'}
+
+wizard_account_chart_duplicate()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

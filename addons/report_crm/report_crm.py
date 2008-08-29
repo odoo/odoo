@@ -51,7 +51,7 @@ class report_crm_case_user(osv.osv):
         'amount_revenue_prob': fields.float('Est. Rev*Prob.', readonly=True),
         'nbr': fields.integer('# of Cases', readonly=True),
         'probability': fields.float('Avg. Probability', readonly=True),
-        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
+        'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
         'delay_close': fields.char('Delay to close', size=20, readonly=True),
     }
     _order = 'name desc, user_id, section_id'
@@ -89,7 +89,7 @@ class report_crm_case_categ(osv.osv):
         'amount_revenue_prob': fields.float('Est. Rev*Prob.', readonly=True),
         'nbr': fields.integer('# of Cases', readonly=True),
         'probability': fields.float('Avg. Probability', readonly=True),
-        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
+        'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
         'delay_close': fields.char('Delay Close', size=20, readonly=True),
     }
     _order = 'name desc, categ_id, section_id'

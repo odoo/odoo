@@ -138,7 +138,7 @@ class account_bank_statement(osv.osv):
         'currency': fields.function(_currency, method=True, string='Currency',
             type='many2one', relation='res.currency'),
     }
-    
+
     _defaults = {
         'name': lambda self, cr, uid, context=None: \
                 self.pool.get('ir.sequence').get(cr, uid, 'account.bank.statement'),
@@ -289,6 +289,8 @@ class account_bank_statement(osv.osv):
                     except:
                         raise osv.except_osv(_('Error !'), _('Unable to reconcile entry "%s": %.2f') % (move.name, move.amount))
 
+                if st.journal_id.entry_posted:
+                    account_move_obj.write(cr, uid, [move_id], {'state':'posted'})
             done.append(st.id)
         self.write(cr, uid, done, {'state':'confirm'}, context=context)
         return True
@@ -435,7 +437,7 @@ class account_bank_statement_reconcile(osv.osv):
                     td = 'P '
             else:
                 currency_id = company_currency_id
-            res.append((o.id, '%s[%.2f/%.2f]' % (td,
+            res.append((o.id, '%s[%.2f-%.2f]' % (td,
                 res_currency_obj.compute(cursor, user, company_currency_id,
                     currency_id, o.total_entry, context=context),
                 res_currency_obj.compute(cursor, user, company_currency_id,

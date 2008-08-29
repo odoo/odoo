@@ -61,7 +61,11 @@ import wizard_account_chart
 import wizard_move_line_select
 
 import wizard_validate_account_move
-import wizard_use_model# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+import wizard_use_model
+
+import wizard_state_open
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

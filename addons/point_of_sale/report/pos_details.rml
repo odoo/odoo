@@ -1,0 +1,210 @@
+<?xml version="1.0"?>
+<document filename="test.pdf">
+    <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+        <pageTemplate id="first">
+            <frame id="first" x1="5.0" y1="57.0" width="590" height="828"/>
+        </pageTemplate>
+    </template>
+    <stylesheet>
+        <blockTableStyle id="Standard_Outline">
+            <blockAlignment value="LEFT"/>
+            <blockValign value="TOP"/>
+        </blockTableStyle>
+        <blockTableStyle id="Tableau8">
+            <blockAlignment value="LEFT"/>
+            <blockValign value="TOP"/>
+            <lineStyle kind="GRID" colorName="black"/>
+            <blockBackground colorName="#dddddd" start="0,0" stop="-1,0"/>
+        </blockTableStyle>
+        <blockTableStyle id="Tableau6">
+            <blockAlignment value="LEFT"/>
+            <blockValign value="TOP"/>
+            <lineStyle kind="GRID" colorName="grey"/>
+            <blockBackground colorName="#e6e6e6" start="0,-1" stop="-1,-1"/>
+        </blockTableStyle>
+        <blockTableStyle id="Tableau7">
+            <blockAlignment value="LEFT"/>
+            <blockValign value="TOP"/>
+        </blockTableStyle>
+        <blockTableStyle id="Table1">
+            <blockAlignment value="LEFT"/>
+            <blockValign value="TOP"/>
+        </blockTableStyle>
+        <blockTableStyle id="tmpTable1">
+            <blockAlignment value="LEFT"/>
+            <blockValign value="TOP"/>
+        </blockTableStyle>
+        <blockTableStyle id="tmpTable2">
+            <blockAlignment value="CENTER"/>
+            <blockValign value="TOP"/>
+        </blockTableStyle>
+        <blockTableStyle id="tmpTable3">
+            <blockAlignment value="LEFT"/>
+            <blockValign value="TOP"/>
+            <lineStyle kind="GRID" colorName="black"/>
+        </blockTableStyle>
+        <blockTableStyle id="tmpTable4">
+            <blockAlignment value="LEFT"/>
+            <blockValign value="TOP"/>
+            <lineStyle kind="GRID" colorName="black"/>
+        </blockTableStyle>
+        <initialize>
+            <paraStyle name="all" alignment="justify"/>
+        </initialize>
+        <paraStyle name="P1" fontName="Times-Roman" fontSize="11.0" leading="14"/>
+        <paraStyle name="P2" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+        <paraStyle name="P3" fontName="Times-Roman" fontSize="8.0" leading="14" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+        <paraStyle name="P4" fontName="Times-Roman" fontSize="8.0" leading="14" spaceBefore="0.0" spaceAfter="6.0"/>
+        <paraStyle name="P5" fontName="Times-Roman" fontSize="8.0" leading="14" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+        <paraStyle name="P6" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+        <paraStyle name="P7" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+        <paraStyle name="P16" fontName="Times-Roman" fontSize="8.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+        <paraStyle name="P17" fontName="Times-Bold" fontSize="8.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+        <paraStyle name="P8" fontName="Times-Roman" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="0.0"/>
+        <paraStyle name="P9" fontName="Times-Roman" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="6.0"/>
+        <paraStyle name="P10" fontName="Times-Roman" fontSize="11.0" leading="14" spaceBefore="0.0" spaceAfter="6.0"/>
+        <paraStyle name="P11" fontName="Times-Roman" fontSize="11.0" leading="14" spaceBefore="0.0" spaceAfter="6.0"/>
+        <paraStyle name="P12" fontName="Times-Roman" fontSize="11.0" leading="14" spaceBefore="0.0" spaceAfter="6.0"/>
+        <paraStyle name="P13" fontName="Times-Bold" fontSize="10.0" leading="13" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+        <paraStyle name="Standard" fontName="Times-Roman"/>
+        <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+        <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
+        <paraStyle name="Heading1" fontName="Helvetica" alignment="CENTER" fontSize="14.0" leading="15" spaceBefore="10.0" spaceAfter="6.0"/>
+        <paraStyle name="List" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+        <paraStyle name="Table Contents" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+        <paraStyle name="Table Heading" fontName="Times-Roman" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
+        <paraStyle name="Caption" fontName="Times-Italic" fontSize="14.0" leading="18" spaceBefore="10.0" spaceAfter="6.0"/>
+        <paraStyle name="Index" fontName="Times-Roman"/>
+    </stylesheet>
+    <story>
+        <para style="Heading">
+            <font face="Times-Roman" size="11.0">Detail of Sales</font>
+        </para>
+        <para style="Heading1">
+            <font face="Times-Roman" size="11.0"> </font>
+        </para>
+        <para style="P12">
+            <font face="Times-Roman" size="11.0">Company: [[ company.name ]]</font>
+        </para>
+        <para style="P12">
+            <font face="Times-Roman" size="11.0">Print Date: [[time.strftime('%Y-%m-%d')]]</font>
+        </para>
+        <para style="P12">
+            <font face="Times-Roman" size="11.0">Period: [[ '%s' % getperiod(objects) ]]</font>
+        </para>
+
+        <blockTable colWidths="80,57,180,40,27,37,37,40,40" style="Tableau8" rowHeights="0.5cm">
+            <tr>
+                <td> <para style="P3">Date</para> </td>
+                <td> <para style="P3">Code</para> </td>
+                <td> <para style="P3">Product</para> </td>
+                <td> <para style="P3">Price</para> </td>
+                <td> <para style="P3">Qty</para> </td>
+                <td> <para style="P3">Disc</para> </td>
+                <td> <para style="P3">VAT(%)</para> </td>
+                <td> <para style="P3">VAT</para> </td>
+                <td> <para style="P3">Invoiced</para> </td>
+            </tr>
+        </blockTable>
+        <section>
+            [[ repeatIn(objects,'o') ]]
+            <blockTable colWidths="80,57,180,40,27,37,37,40,40" style="Tableau6" rowHeights="0.5cm">
+                <tr>
+                    <td>[[ repeatIn(o.lines,'line') ]]<para style="P5">[[line.create_date ]]</para> </td>
+                    <td> </td>
+                    <td> <para style="P5"> [[strip_name(line.product_id.name, 32) ]] </para></td>
+                    <td> <para style="P16"> [[ '%.2f' % (line.price_subtotal,) ]]</para></td>
+                    <td> <para style="P16"> [[ '%d' % line.qty ]]</para></td>
+                    <td> <para style="P16"> [[ '%d%%' % (line.discount) ]]</para></td>
+                    <td> <para style="P16"> [[ len(line.product_id.taxes_id) > 0 and ('%d%%' % (line.product_id.taxes_id[0].amount * 100)) or '' ]] </para></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td> <para style="P5">[[ o.date_order ]] </para></td>
+                    <td> <para style="P5">[[ o.name ]] </para></td>
+                    <td> <para style="P5">[[ o.user_id.name ]] </para></td>
+                    <td> <para style="P17">[[ '%.2f' % (o.amount_total,) ]]</para></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><para style="P16">[[ o.amount_tax ]] </para></td>
+                    <td><para style="P16">[[ o.invoice_id and o.invoice_id.number or '']]</para></td>
+                </tr>
+            </blockTable>
+        </section>
+        <para>
+            <font color="white"> </font>
+        </para>
+        <para>
+            <font color="white"> </font>
+        </para>
+        <blockTable colWidths="238.0,238.0" style="tmpTable2">
+            <tr>
+                <td>
+                    <blockTable colWidths="150,50" style="Tableau8">
+                        <tr>
+                            <td>
+                                <para style="P3">
+                                    <font face="Helvetica-Bold" size="10.0">Mode of Taxes</font>
+                                </para>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>[[ repeatIn(gettaxamount(objects).items(), 'p') ]]
+                            <td>[[ p[0] ]]</td>
+                            <td><para style="P17">[[ '%.2f' % (p[1],) ]]</para></td>
+                        </tr>
+                    </blockTable>
+                    <para style="P2"><font color="white" /> </para>
+                    <blockTable colWidths="150,50" style="Tableau8">
+                        <tr>
+                            <td>
+                                <para style="P3">
+                                    <font face="Helvetica-Bold" size="10.0">Mode of payment</font>
+                                </para>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>[[ repeatIn(getpayments(objects).items(), 'p') ]]
+                            <td>[[ p[0] ]]</td>
+                            <td><para style="P17">[[ '%.2f' % (p[1],) ]]</para></td>
+                        </tr>
+                    </blockTable>
+                </td>
+                <td>
+                    <blockTable colWidths="150.0,50.0" style="Tableau8">
+                        <tr>
+                            <td colspan="2"><para style="P3"><font face="Helvetica-Bold" size="10.0">Summary</font></para></td>
+                        </tr>
+                        <tr>
+                            <td>Sales total</td>
+                            <td><para style="P17">[[ '%d' % getsalestotal(objects) ]]</para></td>
+                        </tr>
+                        <tr>
+                            <td>Qty of product</td>
+                            <td><para style="P17">[[ '%d' % getqtytotal(objects) ]]</para></td>
+                        </tr>
+                        <tr>
+                            <td>Total invoiced</td>
+                            <td><para style="P17">[[ '%.2f' % getsuminvoice(objects) ]]</para></td>
+                        </tr>
+                        <tr>
+                            <td>Total discount</td>
+                            <td><para style="P17">[[ '%.2f' % getsumdisc(objects) ]]</para></td>
+                        </tr>
+                        <tr>
+                            <td>Total paid</td>
+                            <td><para style="P17">[[ '%.2f' % getpaidtotal(objects) ]]</para></td>
+                        </tr>
+                        <tr>
+                            <td>Total of the day</td>
+                            <td><para style="P17">[[ '%.2f' % gettotalofthaday(objects) ]]</para></td>
+                        </tr>
+                    </blockTable>
+                </td>
+            </tr>
+        </blockTable>
+    </story>
+</document>
+

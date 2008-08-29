@@ -76,7 +76,7 @@ class stock_location(osv.osv):
     _description = "Location"
     _parent_name = "location_id"
     _columns = {
-        'name': fields.char('Location Name', size=64, required=True),
+        'name': fields.char('Location Name', size=64, required=True, translate=True),
         'active': fields.boolean('Active'),
         'usage': fields.selection([('supplier','Supplier Location'),('view','View'),('internal','Internal Location'),('customer','Customer Location'),('inventory','Inventory'),('procurement','Procurement'),('production','Production')], 'Location type'),
         'allocation_method': fields.selection([('fifo','FIFO'),('lifo','LIFO'),('nearest','Nearest')], 'Allocation Method', required=True),
@@ -392,7 +392,7 @@ class stock_picking(osv.osv):
             ('assigned','Assigned'),
             ('done','Done'),
             ('cancel','Cancel'),
-            ], 'State', readonly=True, select=True),
+            ], 'Status', readonly=True, select=True),
         'date':fields.datetime('Date create'),
 
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Move lines'),
@@ -402,7 +402,7 @@ class stock_picking(osv.osv):
         'invoice_state':fields.selection([
             ("invoiced","Invoiced"),
             ("2binvoiced","To be invoiced"),
-            ("none","Not from Packing")], "Invoice state", 
+            ("none","Not from Packing")], "Invoice Status", 
             select=True),
     }
     _defaults = {
@@ -476,6 +476,13 @@ class stock_picking(osv.osv):
 
     def test_auto_picking(self, cr, uid, ids):
         # TODO: Check locations to see if in the same location ?
+        return True
+
+    def button_confirm(self, cr, uid, ids, *args):
+        for id in ids:
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'stock.picking', id, 'button_confirm', cr)
+        self.force_assign(cr, uid, ids, *args)
         return True
 
     def action_assign(self, cr, uid, ids, *args):
@@ -606,15 +613,14 @@ class stock_picking(osv.osv):
         for picking in self.browse(cursor, user, ids, context=context):
             if picking.invoice_state != '2binvoiced':
                 continue
-
+            payment_term_id = False
             partner = picking.address_id.partner_id
             if type in ('out_invoice', 'out_refund'):
                 account_id = partner.property_account_receivable.id
+                payment_term_id= picking.sale_id.payment_term.id
             else:
                 account_id = partner.property_account_payable.id
-            payment_term_id = False
-            if partner.property_payment_term:
-                payment_term_id = partner.property_payment_term.id
+#                payment_term_id = picking.purchase_id.payment_term.id
 
             address_contact_id, address_invoice_id = \
                     self._get_address_invoice(cursor, user, picking).values()
@@ -795,7 +801,7 @@ class stock_move(osv.osv):
 
         'note': fields.text('Notes'),
 
-        'state': fields.selection([('draft','Draft'),('waiting','Waiting'),('confirmed','Confirmed'),('assigned','Assigned'),('done','Done'),('cancel','cancel')], 'State', readonly=True, select=True),
+        'state': fields.selection([('draft','Draft'),('waiting','Waiting'),('confirmed','Confirmed'),('assigned','Assigned'),('done','Done'),('cancel','cancel')], 'Status', readonly=True, select=True),
         'price_unit': fields.float('Unit Price',
             digits=(16, int(config['price_accuracy']))),
     }
@@ -1035,7 +1041,7 @@ class stock_inventory(osv.osv):
         'date_done': fields.datetime('Date done'),
         'inventory_line_id': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', readonly=True, states={'draft':[('readonly',False)]}),
         'move_ids': fields.many2many('stock.move', 'stock_inventory_move_rel', 'inventory_id', 'move_id', 'Created Moves'),
-        'state': fields.selection( (('draft','Draft'),('done','Done')), 'State', readonly=True),
+        'state': fields.selection( (('draft','Draft'),('done','Done')), 'Status', readonly=True),
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -1136,6 +1142,8 @@ class product_product(osv.osv):
     # Utiliser browse pour limiter les queries !
     #
     def view_header_get(self, cr, user, view_id, view_type, context):
+        res = super(product_product, self).view_header_get(cr, user, view_id, view_type, context)
+        if res: return res
         if (not context.get('location', False)):
             return False
         cr.execute('select name from stock_location where id=%d', (context['location'],))
@@ -1188,35 +1196,22 @@ product_product()
 #    get confirm or assign stock move lines of partner and put in current picking.
 class stock_picking_move_wizard(osv.osv_memory):
     _name='stock.picking.move.wizard'
-    def _get_picking(self,cr, uid, ctx):
-        if 'action_id' in ctx:
+    def _get_picking(self,cr, uid, ctx):        
+        if ctx.get('action_id',False):
             return ctx['action_id']
-        return False 
-    def _get_move_lines(self,cr,uid,ctx):
-        move_obj=self.pool.get('stock.move')
-        picking_obj=self.pool.get('stock.picking')
-        if 'action_id' in ctx:
-            picking=picking_obj.browse(cr,uid,[ctx['action_id']])
-            if picking and len(picking):
-                move_line_ids=move_obj.search(cr,uid,[('state','in',['confirmed','assigned']),('address_id','=',picking[0].address_id.id)])                
-                move_lines=move_obj.read(cr,uid,move_line_ids)
-                #res=[]
-                #for move_line in move_lines:
-                #    res.append((0,0,move_line))
-                return [{'move_ids':(0,0,move_lines)}]
-        return []
+        return False     
     def _get_picking_address(self,cr,uid,ctx):        
-        picking_obj=self.pool.get('stock.picking')
-        if 'action_id' in ctx:
-            picking=picking_obj.browse(cr,uid,[ctx['action_id']])[0]
-            return picking.address_id and picking.address_id.id
+        picking_obj=self.pool.get('stock.picking')        
+        if ctx.get('action_id',False):
+            picking=picking_obj.browse(cr,uid,[ctx['action_id']])[0]            
+            return picking.address_id and picking.address_id.id or False        
         return False
             
             
     _columns={
         'name':fields.char('Name',size=64,invisible=True),
         #'move_lines': fields.one2many('stock.move', 'picking_id', 'Move lines',readonly=True),
-        'move_ids': fields.many2many('stock.move', 'picking_move_wizard_rel', 'picking_move_wizard_id', 'move_id', 'Move lines'),
+        'move_ids': fields.many2many('stock.move', 'picking_move_wizard_rel', 'picking_move_wizard_id', 'move_id', 'Move lines',required=True),
         'address_id' : fields.many2one('res.partner.address', 'Dest. Address',invisible=True),
         'picking_id': fields.many2one('stock.picking', 'Packing list', select=True,invisible=True),
     }

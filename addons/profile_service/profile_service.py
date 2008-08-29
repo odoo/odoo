@@ -30,67 +30,19 @@
 from osv import fields, osv
 import pooler
 
-##class config_install_extra_modules(osv.osv_memory):
-##    _name='config.install_extra_modules'
-##    def _get_uninstall_modules(self,cr,uid,context=None):
-##        module_obj=self.pool.get('ir.module.module')
-##        line_obj=self.pool.get('config.install_extra_modules.line')
-##        uninstall_module_ids=module_obj.search(cr,uid,[('state', 'in', ['uninstalled', 'uninstallable'])])
-##        res=[]
-##        for id in uninstall_module_ids:
-##            res.append(line_obj.create(cr,uid,{'module_id':id},context=None))
-##        print res
-##        return res
-##    _columns = {
-##        'name':fields.char('Name', size=64),
-##        'module_ids':fields.one2many('config.install_extra_modules.line', 'config_id', 'Modules'),
-##
-##    }
-##    _defaults={
-##       'module_ids':_get_uninstall_modules
-##    }
-##    def action_install(self, cr, uid, ids, context=None):
-##        res=self.read(cr,uid,ids)[0]
-##        mod_obj = self.pool.get('ir.module.module')
-##        line_obj=self.pool.get('config.install_extra_modules.line')
-##        if 'module_ids' in res:
-##            module_ids=res['module_ids']
-##            lines=line_obj.read(cr,uid,module_ids)
-##            for line in lines:
-##                if 'install' in line and 'module_id' and line and line['install']:
-##                    mod_obj.download(cr, uid, [line['module_id']], context=context)
-##                    cr.commit()
-##                    db, pool = pooler.restart_pool(cr.dbname, update_module=True)
-##        return {
-##                'view_type': 'form',
-##                "view_mode": 'form',
-##                'res_model': 'ir.module.module.configuration.wizard',
-##                'type': 'ir.actions.act_window',
-##                'target':'new',
-##            }
-##
-##config_install_extra_modules()
-#
-#class config_install_extra_modules_line(osv.osv_memory):
-#    _name='config.install_extra_modules.line'
-#    _columns = {
-#        'name':fields.char('Name', size=64),
-#        'install':fields.boolean('Install'),
-#        'config_id': fields.many2one('config.install_extra_modules', 'Configuration Module Wizard'),
-#        'module_id':fields.many2one('ir.module.module', 'Module',readonly=True,required=True),
-#
-#    }
-#
-#
-#config_install_extra_modules_line()
-
 class config_install_extra_modules(osv.osv_memory):
     _name='config.install_extra_modules'
+    _rec_name = 'crm_configuration'
     _columns = {
-        'name':fields.char('Name', size=64),
-        'timesheets_module':fields.boolean('Timesheets Management'),
-        'holidays_module':fields.boolean('Hollidays Management'),
-
+        'crm_configuration':fields.boolean('CRM & Calendars', help="This installs the customer relationship features like: leads and opportunities tracking, shared calendar, jobs tracking, bug tracker, and so on."),
+        'hr_timesheet':fields.boolean('Timesheets', help="Timesheets allows you to track time and costs spent on different projects, represented by analytic accounts."),
+        'hr_timesheet_invoice':fields.boolean('Invoice on Timesheets', help="There are different invoicing methods in OpenERP: from sale orders, from shippings, ... Install this module if you plan to invoice your customers based on time spent on projects."),
+        'hr_holidays':fields.boolean('Holidays Management', help="Tracks the full holidays management process, from the employee's request to the global planning."),
+        'hr_expense':fields.boolean('Expenses Tracking', help="Tracks the personal expenses process, from the employee expense encoding, to the reimbursement of the employee up to the reinvoicing to the final customer."),
+        'account_budget_crossover':fields.boolean('Analytic Budgets', help="Allows you to manage analytic budgets by journals. This module is used to manage budgets of your projects."),
+        'project_gtd':fields.boolean('Getting Things Done', help="GTD is a methodology to efficiently organise yourself and your tasks. This module fully integrates GTD principle with OpenERP's project management."),
+        'scrum':fields.boolean('Scrum Methodology', help="Scrum is an 'agile development methodology', mainly used in IT projects. It helps you to manage teams, long term roadmaps, sprints, and so on."),
+        'base_contact':fields.boolean('Contacts Management', help="Allows you to manage partners (enterprises), addresses of partners and contacts of these partners (employee/people). Install this if you plan to manage your relationships with partners and contacts."),
     }
     def action_cancel(self,cr,uid,ids,conect=None):
         return {
@@ -101,18 +53,15 @@ class config_install_extra_modules(osv.osv_memory):
                 'target':'new',
          }
     def action_install(self, cr, uid, ids, context=None):
-        res=self.read(cr,uid,ids)[0]
+        result=self.read(cr,uid,ids)        
         mod_obj = self.pool.get('ir.module.module')
-        if 'timesheets_module' in res and res['timesheets_module']:
-            ids = mod_obj.search(cr, uid, [('name', '=', 'hr_timesheet')])
-            mod_obj.download(cr, uid, ids, context=context)
-            cr.commit()
-            #db, pool = pooler.restart_pool(cr.dbname, update_module=True)
-        if  'hr_holidays_module' in res and res['hr_holidays_module']:
-            ids = mod_obj.search(cr, uid, [('name', '=', 'hr_holidays')])
-            mod_obj.download(cr, uid, ids, context=context)
-            cr.commit()
-            #db, pool = pooler.restart_pool(cr.dbname, update_module=True)
+        for res in result:
+            for r in res:
+                if r<>'id' and res[r]:                
+                    ids = mod_obj.search(cr, uid, [('name', '=', r)])   
+                    mod_obj.action_install(cr,uid,ids,context=context)                       
+        cr.commit()
+        db, pool = pooler.restart_pool(cr.dbname, update_module=True)
         return {
                 'view_type': 'form',
                 "view_mode": 'form',
@@ -120,7 +69,6 @@ class config_install_extra_modules(osv.osv_memory):
                 'type': 'ir.actions.act_window',
                 'target':'new',
             }
-
 config_install_extra_modules()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

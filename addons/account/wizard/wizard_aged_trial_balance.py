@@ -58,7 +58,7 @@ _aged_trial_fields = {
     'period_length': {'string': 'Period length (days)', 'type': 'integer', 'required': True, 'default': lambda *a:30},
     'sorting_on':{'string': 'Sorting On', 'type': 'selection', 'selection': [('partner','By Partner Name (asc)'), ('amount','By Amount (desc)')],'required': True, 'default': lambda *a:'partner'},
     'computation':{'string': 'Computational Method', 'type': 'selection', 'selection': [("\'receivable\'",'On Receivables Only'), ("\'payable\'",'On Payables Only'), ("\'receivable\',\'payable\'",'On Receivables & Payables')], 'required': True, 'default': lambda *a:"\'receivable\'"},
-    'state':{'string':'State','type':'selection','selection': [('draft','Draft'), ('posted','Posted'),('all','All')],}
+    'state':{'string':'Target Moves','type':'selection','selection': [('all','All Entries'),('posted','All Posted Entries')]}
 }
 
 def _calc_dates(self, cr, uid, data, context):

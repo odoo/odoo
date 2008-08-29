@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <terp>
     <data>
-        <!--		<record model="res.groups" id="hr_id">-->
-        <!--			<field name="name">HR</field>-->
-        <!--		</record>-->
         
         <record model="hr.action.reason">
             <field name="name">Start of shift</field>
@@ -29,23 +26,6 @@
             <field name="name">Early exit (work injury)</field>
             <field name="action_type">sign_out</field>
         </record>
-        
-        <record id="status_unpaid" model="hr.holidays.status">
-            <field name="name">Unpaid holidays</field>
-        </record>
-        <record id="ca" model="hr.holidays.status">
-            <field name="name">Annual holidays</field>
-        </record>
-        <record id="status_sick" model="hr.holidays.status">
-            <field name="name">Sickness holidays</field>
-        </record>
-        <record id="ma" model="hr.holidays.status">
-            <field name="name">Maternity holidays</field>
-        </record>
-        <record id="status_unauth" model="hr.holidays.status">
-            <field name="name">Unauthorised holidays</field>
-        </record>
-        
         
         <!-- Example employee -->
         
@@ -129,21 +109,6 @@
             <field name="hour_from">13:00</field>
             <field name="hour_to">18:00</field>
             <field name="tgroup_id" ref="timesheet_group1"/>
-        </record>
-        
-        <record model="hr.holidays">
-            <field name="name">Bali Trip</field>
-            <field name="date_from">2005-05-11 08:00</field>
-            <field name="date_to">2005-05-25 18:00</field>
-            <field name="holiday_status" ref="ca"/>
-            <field name="employee_id" ref="employee1"/>
-        </record>
-        <record model="hr.holidays">
-            <field name="name">Paternity holiday</field>
-            <field name="date_from">2005-06-02 08:00</field>
-            <field name="date_to">2005-06-13 18:00</field>
-            <field name="holiday_status" ref="ma"/>
-            <field name="employee_id" ref="employee1"/>
         </record>
         
         <record id="attendance1" model="hr.attendance">
