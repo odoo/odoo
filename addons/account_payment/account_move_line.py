@@ -84,7 +84,7 @@ class account_move_line(osv.osv):
             return [('id','=','0')]
         return [('id','in',map(lambda x:x[0], res))]
 
-    def line2bank(self, cr, uid, ids, payment_type='manual', context=None):
+    def line2bank(self, cr, uid, ids, payment_type=None, context=None):
         """
         Try to return for each account move line a corresponding bank
         account according to the payment type.  This work using one of
