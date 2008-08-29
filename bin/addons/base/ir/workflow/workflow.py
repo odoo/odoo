@@ -57,31 +57,42 @@ class workflow(osv.osv):
     # scale = [stepx, stepy, posx, posy ]
     #
 
+    
     def graph_get(self, cr, uid, id, scale, context={}):
 
         nodes= []
+        nodes_name = []
         transitions = []
         start = []
         tres = {}
+        no_ancester = []
         workflow = self.browse(cr, uid, id, context)
         for a in workflow.activities:
-            nodes.append((a.id,a.name))
+            nodes_name.append((a.id,a.name))
+            nodes.append(a.id)
             if a.flow_start:
-                start.append((a.id,a.name))
+                start.append(a.id)
+            else:
+                if not a.in_transitions:
+                    no_ancester.append(a.id)
+                        
             for t in a.out_transitions:
-                transitions.append( ((a.id,a.name), (t.act_to.id,t.act_to.name)) )
-                tres[t.id] = (a.id,t.act_to.id)
-        g  = graph(nodes, transitions)
+                transitions.append((a.id, t.act_to.id))
+                tres[t.id] = (a.id, t.act_to.id)
+                
+            
+        g  = graph(nodes, transitions, no_ancester)
         g.process(start)
         g.scale(*scale)
         result = g.result_get()
         results = {}
-
-
-        for r in result.items():
-            r[1]['name'] = r[0][1]
-            results[str(r[0][0])] = r[1]
+        
+        for node in nodes_name:
+            results[str(node[0])] = result[node[0]]
+            results[str(node[0])]['name'] = node[1]
+            
         return {'node': results, 'transition': tres}
+    
 
     def create(self, cr, user, vals, context=None):
         if not context:
