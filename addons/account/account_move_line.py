@@ -378,7 +378,8 @@ class account_move_line(osv.osv):
                 unmerge.append(line.id)
                 total += (line.debit or 0.0) - (line.credit or 0.0)
         if not total:
-            return self.reconcile(cr, uid, merges+unmerge, context=context)
+            res = self.reconcile(cr, uid, merges+unmerge, context=context)
+            return res
         r_id = self.pool.get('account.move.reconcile').create(cr, uid, {
             'type': type,
             'line_partial_ids': map(lambda x: (4,x,False), merges+unmerge)
@@ -578,14 +579,12 @@ class account_move_line(osv.osv):
         if not context:
             context={}
         raise_ex=False
-        account_obj = self.pool.get('account.account')
-        acc=account_obj.browse(cr,uid,ids)[0]
 
         if ('debit' in vals and 'credit' in vals)  and not vals['debit'] and not vals['credit']:
             raise_ex=True
-        if ('debit' in vals and 'credit' not in vals) and  not vals['debit'] and not acc.credit:
+        if ('debit' in vals and 'credit' not in vals) and  not vals['debit']:
             raise_ex=True
-        if ('credit' in vals and 'debit' not in vals) and  not vals['credit'] and not acc.debit:
+        if ('credit' in vals and 'debit' not in vals) and  not vals['credit']:
             raise_ex=True
 
         if raise_ex:

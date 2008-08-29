@@ -927,14 +927,15 @@ class account_move_reconcile(osv.osv):
         'name': lambda self,cr,uid,ctx={}: self.pool.get('ir.sequence').get(cr, uid, 'account.reconcile') or '/',
     }
     def reconcile_partial_check(self, cr, uid, ids, type='auto', context={}):
-        for rec in self.pool.get('account.move.reconcile').browse(cr, uid, ids):
+        for rec in self.browse(cr, uid, ids, context):
             total = 0.0
             for line in rec.line_partial_ids:
                 total += (line.debit or 0.0) - (line.credit or 0.0)
-            if not total:
-                self.write(cr,uid, map(lambda x: x.id, rec.line_partial_ids), {'reconcile_id': rec.id })
-                for line in rec.line_partial_ids:
-                    total += (line.debit or 0.0) - (line.credit or 0.0)
+        if not total:
+            self.pool.get('account.move.line').write(cr, uid,
+                map(lambda x: x.id, rec.line_partial_ids),
+                {'reconcile_id': rec.id }
+            )
         return True
     def name_get(self, cr, uid, ids, context=None):
         result = {}
