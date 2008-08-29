@@ -38,7 +38,7 @@ class workflow(osv.osv):
     _log_access = False
     _columns = {
         'name': fields.char('Name', size=64, required=True),
-        'osv': fields.char('Resource Model', size=64, required=True,select=True),
+        'osv': fields.char('Resource Object', size=64, required=True,select=True),
         'on_create': fields.boolean('On Create', select=True),
         'activities': fields.one2many('workflow.activity', 'wkf_id', 'Activities'),
     }
@@ -145,7 +145,7 @@ class wkf_instance(osv.osv):
         'wkf_id': fields.many2one('workflow', 'Workflow', ondelete='restrict', select=True),
         'uid': fields.integer('User ID'),
         'res_id': fields.integer('Resource ID', select=True),
-        'res_type': fields.char('Resource Model', size=64, select=True),
+        'res_type': fields.char('Resource Object', size=64, select=True),
         'state': fields.char('State', size=32, select=True),
     }
     def _auto_init(self, cr, context={}):
@@ -180,7 +180,7 @@ class wkf_triggers(osv.osv):
     _log_access = False
     _columns = {
         'res_id': fields.integer('Resource ID', size=128),
-        'model': fields.char('Model', size=128),
+        'model': fields.char('Object', size=128),
         'instance_id': fields.many2one('workflow.instance', 'Destination Instance', ondelete="cascade"),
         'workitem_id': fields.many2one('workflow.workitem', 'Workitem', required=True, ondelete="cascade"),
     }

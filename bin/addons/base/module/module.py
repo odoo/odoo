@@ -266,23 +266,6 @@ class module(osv.osv):
                 raise orm.except_orm(_('Error'),
                         _('You try to remove a module that is installed or will be installed'))
         return super(module, self).unlink(cr, uid, ids, context=context)
-
-    def state_change(self, cr, uid, ids, newstate, context={}, level=50):
-        if level<1:
-            raise Exception, _('Recursion error in modules dependencies !')
-        demo = True
-        for module in self.browse(cr, uid, ids):
-            mdemo = True
-            for dep in module.dependencies_id:
-                ids2 = self.search(cr, uid, [('name','=',dep.name)])
-                mdemo = self.state_change(cr, uid, ids2, newstate, context, level-1,)\
-                        and mdemo
-            if not module.dependencies_id:
-                mdemo = module.demo
-            if module.state == 'uninstalled':
-                self.write(cr, uid, [module.id], {'state': newstate, 'demo':mdemo})
-            demo = demo and mdemo
-        return demo
     
     def state_update(self, cr, uid, ids, newstate, states_to_update, context={}, level=50):
         if level<1:
@@ -478,14 +461,14 @@ class module(osv.osv):
             match = re.search('-([a-zA-Z0-9\._-]+)(\.zip)', mod.url, re.I)
             version = '0'
             if match:
-                version = match.group(1)
+                version = match.group(1)            
             if vercmp(mod.installed_version or '0', version) >= 0:
                 continue
             res.append(mod.url)
             if not download:
                 continue
             zipfile = urllib.urlopen(mod.url).read()
-            fname = addons.get_module_path(mod.name+'.zip')
+            fname = addons.get_module_path(mod.name+'.zip')            
             try:
                 fp = file(fname, 'wb')
                 fp.write(zipfile)
@@ -533,6 +516,15 @@ class module(osv.osv):
             p_id = c_id
             categs = categs[1:]
         self.write(cr, uid, [id], {'category_id': p_id})
+
+    def action_install(self,cr,uid,ids,context=None):
+        self.write(cr , uid, ids ,{'state' : 'to install'})        
+        self.download(cr, uid, ids, context=context)
+        for id in ids:
+            cr.execute("select m.id as id from ir_module_module_dependency d inner join ir_module_module m on (m.name=d.name) where d.module_id=%d and m.state='uninstalled'",(id,))
+            dep_ids = map(lambda x:x[0],cr.fetchall())
+            if len(dep_ids):                    
+                self.action_install(cr,uid,dep_ids,context=context)
 module()
 
 class module_dependency(osv.osv):
@@ -595,7 +587,7 @@ class module_configuration(osv.osv_memory):
             item = item_obj.browse(cr, uid, item_ids[0], context=context)
             return item.note
         else:
-            return "Your database is now fully configured.\n\nClick 'Continue' and enyoy your OpenERP experience..."
+            return "Your database is now fully configured.\n\nClick 'Continue' and enjoy your OpenERP experience..."
         return False
 
     def _get_action(self, cr, uid, context={}):
@@ -608,15 +600,20 @@ class module_configuration(osv.osv_memory):
             return item.id
         return False
 
+    def _progress_get(self,cr,uid, context={}):
+        total = self.pool.get('ir.module.module.configuration.step').search_count(cr, uid, [], context)
+        todo = self.pool.get('ir.module.module.configuration.step').search_count(cr, uid, [('state','<>','open')], context)
+        return max(5.0,round(todo*100/total))
+
     _columns = {
         'name': fields.text('Next Wizard',readonly=True),
+        'progress': fields.float('Configuration Progress', readonly=True),
         'item_id':fields.many2one('ir.module.module.configuration.step', 'Next Configuration Wizard',invisible=True, readonly=True),
-
     }
     _defaults={
+        'progress': _progress_get,
         'item_id':_get_action,
         'name':_get_action_name,
-
     }
     def button_skip(self,cr,uid,ids,context=None):
         item_obj = self.pool.get('ir.module.module.configuration.step')

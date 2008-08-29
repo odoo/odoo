@@ -56,7 +56,7 @@ class report_custom(osv.osv):
     _columns = {
         'name': fields.char('Report Name', size=64, required=True, translate=True),
         'type': fields.char('Report Type', size=32, required=True),
-        'model':fields.char('Model', size=64, required=True),
+        'model':fields.char('Object', size=64, required=True),
         'report_id': fields.integer('Report Ref.', required=True),
         'usage': fields.char('Action Usage', size=32),
         'multi': fields.boolean('On multiple doc.', help="If set to true, the action will not be displayed on the right toolbar of a form views.")
@@ -100,7 +100,7 @@ class report_xml(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'type': fields.char('Report Type', size=32, required=True),
-        'model': fields.char('Model', size=64, required=True),
+        'model': fields.char('Object', size=64, required=True),
         'report_name': fields.char('Internal Name', size=64, required=True),
         'report_xsl': fields.char('XSL path', size=256),
         'report_xml': fields.char('XML path', size=256),
@@ -174,8 +174,8 @@ class act_window(osv.osv):
         'view_id': fields.many2one('ir.ui.view', 'View Ref.', ondelete='cascade'),
         'domain': fields.char('Domain Value', size=250),
         'context': fields.char('Context Value', size=250),
-        'res_model': fields.char('Model', size=64),
-        'src_model': fields.char('Source model', size=64),
+        'res_model': fields.char('Object', size=64),
+        'src_model': fields.char('Source Object', size=64),
         'target': fields.selection([('current','Current Window'),('new','New Window')], 'Target Window'),
         'view_type': fields.selection((('tree','Tree'),('form','Form')),string='Type of view'),
         'view_mode': fields.char('Mode of view', size=250),
@@ -372,7 +372,7 @@ class actions_server(osv.osv):
         ], 'Action State', required=True, size=32, change_default=True),
         'code': fields.text('Python Code'),
         'sequence': fields.integer('Sequence'),
-        'model_id': fields.many2one('ir.model', 'Model', required=True),
+        'model_id': fields.many2one('ir.model', 'Object', required=True),
         'trigger_name': fields.char('Trigger Name', size=128),
         'trigger_obj_id': fields.reference('Trigger On', selection=model_get, size=128),
         'message': fields.text('Message', translate=True),

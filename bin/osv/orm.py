@@ -324,7 +324,6 @@ class orm_template(object):
                 'ttype': f._type,
                 'relate': (f.relate and 1) or 0,
                 'relation': f._obj or 'NULL',
-                #'group_name': f.group_name or '',
                 'view_load': (f.view_load and 1) or 0,
                 'select_level': str(f.select or 0)
             }
@@ -639,16 +638,17 @@ class orm_template(object):
         context = context or {}
         lng = context.get('lang', False) or 'en_US'
         trans = self.pool.get('ir.translation')
-        field_error = []
-        field_err_str = []
+        error_msgs = []
         for constraint in self._constraints:
             fun, msg, fields = constraint
             if not fun(self, cr, uid, ids):
-                field_error += fields
-                field_err_str.append(trans._get_source(cr, uid, self._name, 'constraint', lng, source=msg) or msg)
-        if len(field_err_str):
+                translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, source=msg) or msg
+                error_msgs.append(
+                        _("Error occur when validation the fields %s: %s") % (','.join(fields), translated_msg)
+                )      
+        if error_msgs:
             cr.rollback()
-            raise except_orm('ValidateError', ('\n'.join(field_err_str), ','.join(field_error)))
+            raise except_orm('ValidateError', '\n'.join(error_msgs))
 
     def default_get(self, cr, uid, fields_list, context=None):
         return {}
@@ -768,7 +768,7 @@ class orm_template(object):
                 fields[node.getAttribute('name')] = attrs
 
         elif node.nodeType==node.ELEMENT_NODE and node.localName in ('form', 'tree'):
-            result = self.view_header_get(cr, user, False, node.localName, context)
+            result = self.pool.get(self._name).view_header_get(cr, user, False, node.localName, context)
             if result:
                 node.setAttribute('string', result.decode('utf-8'))
         if node.nodeType == node.ELEMENT_NODE and node.hasAttribute('groups'):
@@ -801,28 +801,6 @@ class orm_template(object):
                     trans = tools.translate(cr, self._name, 'view', context['lang'], node.getAttribute('sum').encode('utf8'))
                     if trans:
                         node.setAttribute('sum', trans.decode('utf8'))
-            #
-            # Add view for properties !
-            #
-            if node.localName == 'properties':
-                parent = node.parentNode
-                doc = node.ownerDocument
-                models = map(lambda x: "'"+x+"'", [self._name] + self._inherits.keys())
-                cr.execute('select id,name,group_name from ir_model_fields where model in ('+','.join(models)+') and view_load order by group_name, id')
-                oldgroup = None
-                res = cr.fetchall()
-                for id, fname, gname in res:
-                    if oldgroup != gname:
-                        child = doc.createElement('separator')
-                        child.setAttribute('string', gname.decode('utf-8'))
-                        child.setAttribute('colspan', "4")
-                        oldgroup = gname
-                        parent.insertBefore(child, node)
-
-                    child = doc.createElement('field')
-                    child.setAttribute('name', fname.decode('utf-8'))
-                    parent.insertBefore(child, node)
-                parent.removeChild(node)
 
         if childs:
             for f in node.childNodes:
@@ -983,9 +961,9 @@ class orm_template(object):
                         arch,name,field_parent,id,type,inherit_id
                     FROM
                         ir_ui_view
-                    WHERE 
+                    WHERE
                         model=%s AND
-                        type=%s AND 
+                        type=%s AND
                         inherit_id IS NULL
                     ORDER BY priority''', (self._name, view_type))
             sql_res = cr.fetchone()
@@ -1138,17 +1116,20 @@ class orm_memory(orm_template):
         if not fields:
             fields = self._columns.keys()
         result = []
-        for id in ids:
-            r = {'id': id}
-            for f in fields:
-                r[f] = self.datas[id].get(f, False)
-            result.append(r)
-            self.datas[id]['internal.date_access'] = time.time()
-        fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields)
-        for f in fields_post:
-            res2 = self._columns[f].get_memory(cr, self, ids, f, user, context=context, values=False)
-            for record in result:
-                record[f] = res2[record['id']]
+        if self.datas:
+            for id in ids:
+                r = {'id': id}
+                for f in fields:
+                    if id in self.datas:
+                        r[f] = self.datas[id].get(f, False)
+                result.append(r)
+                if id in self.datas:
+                    self.datas[id]['internal.date_access'] = time.time()
+            fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields)
+            for f in fields_post:
+                res2 = self._columns[f].get_memory(cr, self, ids, f, user, context=context, values=False)
+                for record in result:
+                    record[f] = res2[record['id']]
         return result
 
     def write(self, cr, user, ids, vals, context=None):
@@ -1214,7 +1195,7 @@ class orm_memory(orm_template):
         res = ir_values_obj.get(cr, uid, 'default', False, [self._name])
         for id, field, field_value in res:
             if field in fields_list:
-                fld_def = (field in self._columns)
+                fld_def = (field in self._columns) and self._columns[field] or self._inherit_fields[field][2]
                 if fld_def._type in ('many2one', 'one2one'):
                     obj = self.pool.get(fld_def._obj)
                     if not obj.search(cr, uid, [('id', '=', field_value)]):

@@ -68,7 +68,7 @@ class ir_cron(osv.osv, netsvc.Agent):
         'numbercall': fields.integer('Number of calls', help='Number of time the function is called,\na negative number indicates that the function will always be called'),        
         'doall' : fields.boolean('Repeat missed'),
         'nextcall' : fields.datetime('Next call date', required=True),
-        'model': fields.char('Model', size=64),
+        'model': fields.char('Object', size=64),
         'function': fields.char('Function', size=64),
         'args': fields.text('Arguments'),
         'priority': fields.integer('Priority', help='0=Very Urgent\n10=Not urgent')
