@@ -54,7 +54,7 @@ class configmanager(object):
             'translate_out': None,
             'language': None,
             'pg_path': None,
-            'admin_passwd': 'admin',
+            'admin_passwd': 'root',
             'addons_path': None,
             'root_path': None,
             'debug_mode': False,

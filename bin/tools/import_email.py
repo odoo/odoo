@@ -167,7 +167,7 @@ class ReceiverEmail2Event(object):
 
 
 if __name__ == '__main__':
-    rpc_dispatcher = CommandDispatcher(RPCProxy(4, 'admin'))
+    rpc_dispatcher = CommandDispatcher(RPCProxy(4, 'root'))
     dispatcher = CommandDispatcher(ReceiverEmail2Event(rpc_dispatcher))
     parser = EmailParser(['To', 'Cc', 'From'], dispatcher)
     parser.parse(email.message_from_file(sys.stdin))
