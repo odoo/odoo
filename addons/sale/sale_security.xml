@@ -4,30 +4,6 @@
     </record>
 
 <!--
- Object Groups
--->
-    <record model="ir.model" id="stock.model_stock_move">
-        <field name="type">addons</field>
-    </record>
-    <record model="ir.model" id="account.model_account_invoice">
-        <field name="type">addons</field>
-    </record>
-    <record model="ir.model" id="model_sale_order">
-        <field name="type">addons</field>
-    </record>
-    <record model="ir.model" id="account.model_account_invoice_tax">
-        <field name="type">addons</field>
-    </record>
-    <record model="ir.model" id="model_sale_order_line">
-        <field name="type">addons</field>
-    </record>
-    <record model="ir.model" id="account.model_account_invoice_line">
-        <field name="type">addons</field>
-    </record>
-    <record model="ir.model" id="mrp.model_mrp_procurement">
-        <field name="type">addons</field>
-    </record>
-<!--
  Object Access
 -->
     <record model="ir.model.access" id="access_account_invoice_group_sale_salesman">
@@ -111,10 +87,10 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-    <record model="ir.model.access" id="access_sale_order_base.group_employee">
-        <field name="name">sale_order base.group_employee</field>
+    <record model="ir.model.access" id="access_sale_order_base.group_user">
+        <field name="name">sale_order base.group_user</field>
         <field name="model_id" model="ir.model" ref="model_sale_order"/>
-        <field name="group_id" ref="base.group_employee"/>
+        <field name="group_id" ref="base.group_user"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_create" eval="0"/>
@@ -138,10 +114,10 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-    <record model="ir.model.access" id="access_sale_order_line_base.group_employee">
-        <field name="name">sale_order_line base.group_employee</field>
+    <record model="ir.model.access" id="access_sale_order_line_base.group_user">
+        <field name="name">sale_order_line base.group_user</field>
         <field name="model_id" model="ir.model" ref="model_sale_order_line"/>
-        <field name="group_id" ref="base.group_employee"/>
+        <field name="group_id" ref="base.group_user"/>
         <field name="perm_read" eval="1"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_create" eval="0"/>

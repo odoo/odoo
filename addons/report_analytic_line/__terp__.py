@@ -39,6 +39,7 @@
     ],
     "update_xml" : [
         "report_analytic_line_view.xml",
+        "ir.model.access.csv",
     ],
     "active": False,
     "installable": True

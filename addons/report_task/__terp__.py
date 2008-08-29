@@ -36,6 +36,7 @@
     'init_xml' : [],
     'update_xml': [
         'report_task_view.xml',
+        "ir.model.access.csv",
     ],
     'active': False,
     'installable': True
