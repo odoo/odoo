@@ -64,7 +64,6 @@ class res_currency(osv.osv):
         'accuracy': fields.integer('Computational Accuracy'),
         'rounding': fields.float('Rounding factor', digits=(12,6)),
         'active': fields.boolean('Active'),
-        'company_id' : fields.many2one('res.company', 'Company'),
     }
     _defaults = {
         'active': lambda *a: 1,
