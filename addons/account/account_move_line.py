@@ -52,9 +52,9 @@ class account_move_line(osv.osv):
 
         if context.get('periods', False):
             ids = ','.join([str(x) for x in context['periods']])
-            return obj+".active AND "+obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) AND id in (%s)) %s" % (fiscalyear_clause, ids,where_move_state)
+            return obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) AND id in (%s)) %s" % (fiscalyear_clause, ids,where_move_state)
         else:
-            return obj+".active AND "+obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) %s)" % (fiscalyear_clause,where_move_state)
+            return obj+".state<>'draft' AND "+obj+".period_id in (SELECT id from account_period WHERE fiscalyear_id in (%s) %s)" % (fiscalyear_clause,where_move_state)
 
     def default_get(self, cr, uid, fields, context={}):
         data = self._default_get(cr, uid, fields, context)
@@ -157,7 +157,7 @@ class account_move_line(osv.osv):
         for id in ids:
             cr.execute('SELECT date,account_id FROM account_move_line WHERE id=%d', (id,))
             dt, acc = cr.fetchone()
-            cr.execute('SELECT SUM(debit-credit) FROM account_move_line WHERE account_id=%d AND (date<%s OR (date=%s AND id<=%d)) and active', (acc,dt,dt,id))
+            cr.execute('SELECT SUM(debit-credit) FROM account_move_line WHERE account_id=%d AND (date<%s OR (date=%s AND id<=%d))', (acc,dt,dt,id))
             res[id] = cr.fetchone()[0]
         return res
 
@@ -295,7 +295,6 @@ class account_move_line(osv.osv):
         return dt
     _defaults = {
         'blocked': lambda *a: False,
-        'active': lambda *a: True,
         'centralisation': lambda *a: 'normal',
         'date': _get_date,
         'date_created': lambda *a: time.strftime('%Y-%m-%d'),
