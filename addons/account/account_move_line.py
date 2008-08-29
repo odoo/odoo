@@ -295,7 +295,6 @@ class account_move_line(osv.osv):
         return dt
     _defaults = {
         'blocked': lambda *a: False,
-        'active': lambda *a: True,
         'centralisation': lambda *a: 'normal',
         'date': _get_date,
         'date_created': lambda *a: time.strftime('%Y-%m-%d'),
