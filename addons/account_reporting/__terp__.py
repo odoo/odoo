@@ -9,6 +9,8 @@
     "init_xml" : [ ],
     "demo_xml" : [ ],
     "update_xml" : [
+        "ir.model.access.csv",
+
                     "account_view.xml",
                     "account_report.xml",
                     "account_data.xml",

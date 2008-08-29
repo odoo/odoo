@@ -9,7 +9,9 @@
         "depends" : ['base'],
         "init_xml" : [ ],
         "demo_xml" : [ ],
-        "update_xml" : ['idea_view.xml', 'idea_workflow.xml'],
+        "update_xml" : [
+        "ir.model.access.csv",
+'idea_view.xml', 'idea_workflow.xml'],
         "installable": True
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
