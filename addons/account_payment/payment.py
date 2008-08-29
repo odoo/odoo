@@ -155,15 +155,15 @@ class payment_line(osv.osv):
     _name = 'payment.line'
     _description = 'Payment Line'
 
-    def partner_payable(self, cr, uid, ids, name, args, context={}):
-        if not ids: return {}
-        partners= self.read(cr, uid, ids, ['partner_id'], context)
-        partners= dict(map(lambda x: (x['id'], x['partner_id'][0]), partners))
-        debit = self.pool.get('res.partner')._debit_get(cr, uid,
-                partners.values(), name, args, context)
-        for i in partners:
-            partners[i] = debit[partners[i]]
-        return partners
+    #~ def partner_payable(self, cr, uid, ids, name, args, context={}):
+        #~ if not ids: return {}
+        #~ partners= self.read(cr, uid, ids, ['partner_id'], context)
+        #~ partners= dict(map(lambda x: (x['id'], x['partner_id'][0]), partners))
+        #~ debit = self.pool.get('res.partner')._debit_get(cr, uid,
+                #~ partners.values(), name, args, context)
+        #~ for i in partners:
+            #~ partners[i] = debit[partners[i]]
+        #~ return partners
 
     def translate(self, orig):
         return {
@@ -415,8 +415,7 @@ class payment_line(osv.osv):
         'ml_inv_ref': fields.function(_get_ml_inv_ref, method=True, type='char', string='Invoice Ref'),
         'info_owner': fields.function(info_owner, string="Owner Account", method=True, type="text"),
         'info_partner': fields.function(info_partner, string="Destination Account", method=True, type="text"),
-        'partner_payable': fields.function(partner_payable,
-            string="Partner payable", method=True, type='float'),
+#        'partner_payable': fields.function(partner_payable, string="Partner payable", method=True, type='float'),
 #       'value_date': fields.function(_value_date, string='Value Date',
 #           method=True, type='date'),
         'date': fields.date('Payment Date'),
