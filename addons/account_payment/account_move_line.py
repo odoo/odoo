@@ -103,12 +103,16 @@ class account_move_line(osv.osv):
             if line.invoice and line.invoice.partner_bank:
                 line2bank[line.id] = line.invoice.partner_bank.id
             elif line.partner_id:
+                if not line.partner_id.bank_ids:
+                    raise osv.except_osv(_('Error !'), _('Partner '+ line.partner_id.name+ ' has no bank account defined'))
                 for bank in line.partner_id.bank_ids:
                     if bank.state in bank_type:
                         line2bank[line.id] = bank.id
                         break
                 if line.id not in line2bank and line.partner_id.bank_ids:
                     line2bank[line.id] = line.partner_id.bank_ids[0].id
+            else:
+                raise osv.except_osv(_('Error !'), _('No partner defined on entry line'))
         return line2bank
 
     _columns = {
