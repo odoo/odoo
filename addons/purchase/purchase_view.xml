@@ -3,6 +3,20 @@
     <data>
         <menuitem icon="terp-purchase" id="menu_purchase_root" name="Purchase Management"/>
 
+	   <record model="ir.ui.view" id="purchase_order_calendar">
+			<field name="name">purchase.order.calendar</field>
+			<field name="model">purchase.order</field>
+			<field name="type">calendar</field>
+			<field name="priority" eval="2"/>
+			<field name="arch" type="xml">
+				<calendar string="Calendar View" date_start="minimum_planned_date" color="partner_id">
+					<field name="name"/>
+					<field name="amount_total"/>
+					<field name="partner_id"/>
+				</calendar>
+			</field>
+		</record>
+
         <record id="purchase_order_form" model="ir.ui.view">
             <field name="name">purchase.order.form</field>
             <field name="model">purchase.order</field>
@@ -17,6 +31,7 @@
 						<field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)"/>
 						<field name="origin" select="2"/>
 						<field name="date_order" select="2"/>
+						<field name="minimum_planned_date"/>
 					</group>
                     <notebook colspan="4">
                         <page string="Purchase Order">
@@ -68,7 +83,7 @@
             <field name="name">Purchase Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,calendar,form</field>
         </record>
         <menuitem action="purchase_form_action" id="menu_purchase_form_action" parent="purchase.menu_purchase_root"/>
 
@@ -78,7 +93,7 @@
             <field name="res_model">purchase.order</field>
             <field name="domain">[('state','=','draft')]</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,calendar,form</field>
         </record>
         <menuitem action="purchase_form_action2" id="menu_purchase_order_draft" parent="purchase.menu_purchase_form_action"/>
 
@@ -87,7 +102,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,calendar,form</field>
             <field name="domain">[('state','=','confirmed')]</field>
         </record>
         <menuitem action="purchase_form_action3" id="menu_purchase_form_action3" parent="purchase.menu_purchase_form_action"/>
@@ -97,7 +112,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,calendar,form</field>
             <field name="domain">[('state','=','approved')]</field>
         </record>
         <menuitem action="purchase_form_action4" id="menu_purchase_form_action4" parent="purchase.menu_purchase_form_action"/>
