@@ -37,7 +37,7 @@ class wizard_account_chart(wizard.interface):
         <field name="fiscalyear"/>
         <field name="target_move"/>
     </form>'''
-    
+
     _account_chart_fields = {
             'fiscalyear': {
                 'string': 'Fiscal year',
@@ -46,10 +46,10 @@ class wizard_account_chart(wizard.interface):
                 'help': 'Keep empty for all open fiscal year',
         },
             'target_move': {
-                'string': 'Target Moves', 
-                'type': 'selection', 
-                'selection': [('all','All Entries'),('posted_only','All Posted Entries')], 
-                'required': True, 
+                'string': 'Target Moves',
+                'type': 'selection',
+                'selection': [('all','All Entries'),('posted_only','All Posted Entries')],
+                'required': True,
                 'default': lambda *a:"all",
         },
     }
@@ -68,6 +68,7 @@ class wizard_account_chart(wizard.interface):
         id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
         result = act_obj.read(cr, uid, [id])[0]
         result['context'] = str({'fiscalyear': data['form']['fiscalyear'],'target_move':data['form']['target_move']})
+        result['name']+=':'+pooler.get_pool(cr.dbname).get('account.fiscalyear').read(cr,uid,[data['form']['fiscalyear']])[0]['code']
         return result
 
     states = {

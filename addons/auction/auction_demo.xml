@@ -300,7 +300,7 @@
         <field name="obj_num">2</field>
         <field name="obj_price">1500.00</field>
         <field name="bord_vnd_id" ref="auction_deposit_1" />
-        <!--field name="product_id" ref="monproduit"/-->                                                                              |
+        <!--field name="product_id" ref="monproduit"/-->
         <field name="author_right" ref="auction_tax"/>
         <field name="product_id" model="product.product" search="[]"/>
         <!--<field name="tva" model="account.tax" search="[]"/>-->
@@ -317,7 +317,7 @@
         <field name="obj_num">4</field>
         <field name="obj_price">0.00</field>
         <field name="bord_vnd_id" ref="auction_deposit_2" />
-        <!--field name="product_id" ref="monproduit"/-->                                                    |                            |
+        <!--field name="product_id" ref="monproduit"/-->
         <field name="author_right" ref="auction_tax"/>
         <field name="product_id" model="product.product" search="[]"/>
         <!--<field name="tva" model="account.tax" search="[]"/>-->
@@ -334,7 +334,7 @@
         <field name="obj_num">4</field>
         <field name="obj_price">375</field>
         <field name="bord_vnd_id" ref="auction_deposit_2" />
-        <!--field name="product_id" ref="monproduit"/-->                                                    |                            |
+        <!--field name="product_id" ref="monproduit"/-->
         <field name="author_right" ref="auction_tax"/>
         <field name="product_id" model="product.product" search="[]"/>
         <!--<field name="tva" model="account.tax" search="[]"/>-->
@@ -782,11 +782,11 @@
         <!--demo data for the hr_employee-->
 
         <record model="hr.employee" id="employee2">
-            <field name="name">pritesh</field>
-            <field name="regime">45</field>
+            <field name="name">Demo</field>
+<!--            <field name="regime">45</field>-->
             <field name="user_id" search="[('login','=','admin')]" model="res.users"/>
-            <field name="holiday_max">25</field>
-            <field name="workgroups" ref="timesheet_group1" />
+<!--            <field name="holiday_max">25</field>
+            <field name="workgroups" ref="timesheet_group1" />-->
         </record>
 
 
