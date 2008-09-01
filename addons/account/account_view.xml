@@ -249,8 +249,8 @@
                             <field name="type"/>
                             <field name="view_id"/>
                             <field name="sequence_id"/>
-                            <field name="default_debit_account_id"/>
-                            <field name="default_credit_account_id"/>
+                            <field name="default_debit_account_id" attrs="{'required':[('type','=','cash')]}"/>
+                            <field name="default_credit_account_id" attrs="{'required':[('type','=','cash')]}"/>
                             <field name="currency"/>
                             <field name="user_id" groups="base.group_extended"/>
                             <newline/>
@@ -1488,15 +1488,16 @@
                 <form string="Account Template">
                     <notebook>
                         <page string="General Information">
-                            <field colspan="2" name="name" select="1"/>
-                           <!-- <field name="company_id" colspan="2" />-->
-                            <newline/>
-                            <field name="type" select="1"/>
+                            <field name="name"/>
                             <field name="code" select="1"/>
+                            <newline/>
+                            <field name="parent_id" select="1"/>
+                            <field name="type" select="1"/>
                             <field name="shortcut"/>
                             <field name="sign"/>
                             <field name="currency_id" select="2"/>
                             <field name="reconcile"/>
+                            <field name="tax_ids" colspan="4"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="note" nolabel="1"/>
@@ -1505,6 +1506,18 @@
                 </form>
             </field>
         </record>
+
+		<record id="view_account_template_tree" model="ir.ui.view">
+			<field name="name">account.account.template.tree</field>
+			<field name="model">account.account.template</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<tree string="Account Template">
+					<field name="code"/>
+					<field name="name"/>
+				</tree>
+			</field>
+		</record>
 
         <record id="action_account_template_form" model="ir.actions.act_window">
             <field name="name">Account Templates</field>
@@ -1563,14 +1576,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Account Tax Template">
-                    <field colspan="4" name="name" select="1"/>
+                    <field name="name" select="1"/>
+                    <field name="company_id"/>
                     <newline/>
                     <field name="description" select="1" colspan="4"/>
-                    <newline/>
-                    <field name="sequence" select="1"/>
-                    <field name="type"/>
-                    <field name="domain"/>
                     <field name="tax_group" />
+                    <newline/>
+                    <field name="type"/>
+                    <field name="amount"/>
+                    <field name="domain"/>
                 </form>
             </field>
         </record>
@@ -1580,6 +1594,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Account Tax Template">
+                	<field name="name" />
                     <field name="description"/>
                 </tree>
             </field>
@@ -1592,6 +1607,47 @@
         </record>
 
         <menuitem action="action_account_tax_template_form" id="menu_action_account_tax_template_form" parent="account_account_template_menu"/>
+
+		<!--  Wizard for Multi Charts of Accounts : BOB Import -->
+
+        <record id="view_wizard_multi_chart" model="ir.ui.view">
+			<field name="name">Create Multiple Charts of Accounts</field>
+			<field name="model">wizard.multi.charts.accounts</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Create Multiple Charts of Accounts">
+					<field name="company_id" />
+	                <field name="chart_template_id" />
+		            <field colspan="4" mode="tree" name="bank_accounts_id" nolabel="1" widget="one2many_list">
+						<form string="Bank Information">
+	                    	<field name="acc_no"/>
+		                    <field name="bank_id"/>
+		                    <field name="currency_id"/>
+			            </form>
+						<tree editable="bottom" string="Bank Information">
+							<field name="acc_no"/>
+							<field name="bank_id"/>
+							<field name="currency_id"/>
+						</tree>
+					</field>
+					<group col="4" colspan="4">
+						<button icon="gtk-cancel" special="cancel" type="object" string="Cancel"/>
+						<button icon="gtk-ok" name="action_create" string="Create" type="object"/>
+					</group>
+				</form>
+			</field>
+		</record>
+
+		<record id="action_wizard_multi_chart" model="ir.actions.act_window">
+			<field name="name">Create Multiple Charts of Accounts</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">wizard.multi.charts.accounts</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+		<menuitem parent="account.menu_finance_configuration" action="action_wizard_multi_chart" id="menu_wizard_bob"/>
 
 		<!-- wizard account duplicate chart -->
 		<record id="view_wizard_account_duplicate_chart" model="ir.ui.view">
