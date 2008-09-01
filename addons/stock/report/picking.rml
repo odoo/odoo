@@ -2,7 +2,7 @@
 <document filename="test.pdf">
   <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
     <pageTemplate id="first">
-      <frame id="first" x1="0.0" y1="57.0" width="593" height="728"/>
+      <frame id="first" x1="34.0" y1="45.0" width="516" height="757"/>
     </pageTemplate>
   </template>
   <stylesheet>
@@ -42,7 +42,7 @@
       <lineStyle kind="LINEABOVE" colorName="#cccccc" start="2,0" stop="2,0"/>
       <lineStyle kind="LINEBELOW" colorName="#cccccc" start="2,-1" stop="2,-1"/>
     </blockTableStyle>
-    <blockTableStyle id="Table1">
+    <blockTableStyle id="Move_Line_Header_Table">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
@@ -51,7 +51,7 @@
       <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
     </blockTableStyle>
-    <blockTableStyle id="Table2">
+    <blockTableStyle id="Move_Line_Table_Content">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
@@ -65,10 +65,10 @@
       <paraStyle name="all" alignment="justify"/>
     </initialize>
     <paraStyle name="P1" rightIndent="0.0" leftIndent="7.0" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P2" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P2" fontName="Times-Roman" fontSize="2.0" leading="3"/>
     <paraStyle name="P3" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P4" fontName="Times-Roman" fontSize="2.0" leading="3"/>
-    <paraStyle name="P5" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P4" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P5" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -110,7 +110,7 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="271.0,264.0" style="Shipping_Address_tbl">
+    <blockTable colWidths="284.0,232.0" style="Shipping_Address_tbl">
       <tr>
         <td>
           <para style="P1">
@@ -143,7 +143,7 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="150.0,223.0,141.0" style="packing_ref_header">
+    <blockTable colWidths="200.0,190.0,126.0" style="packing_ref_header">
       <tr>
         <td>
           <para style="terp_tblheader_General_Centre">Customer Ref.</para>
@@ -156,7 +156,7 @@
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="150.0,223.0,141.0" style="packing_ref_content_table">
+    <blockTable colWidths="200.0,190.0,126.0" style="packing_ref_content_table">
       <tr>
         <td>
           <para style="terp_default_Centre_8">[[ (picking.address_id.partner_id.id) or '' ]]</para>
@@ -181,7 +181,7 @@
       <font color="white"> .........</font>
       <font color="white"> .........</font>
     </para>
-    <blockTable colWidths="85.0,195.0,52.0,59.0,123.0" repeatRows="1" style="Table1">
+    <blockTable colWidths="145.0,165.0,45.0,50.0,111.0" repeatRows="1" style="Move_Line_Header_Table">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Product</para>
@@ -201,38 +201,34 @@
       </tr>
     </blockTable>
     <section>
-      <para style="terp_default_8">
-        <font face="Helvetica">[[ repeatIn(picking.move_lines,'move_lines') ]]</font>
-      </para>
-      <blockTable colWidths="84.0,196.0,51.0,29.0,31.0,121.0" style="Table2">
+      <para style="P4">[[ repeatIn(picking.move_lines,'move_lines') ]]</para>
+      <blockTable colWidths="144.0,166.0,44.0,16.0,35.0,110.0" style="Move_Line_Table_Content">
         <tr>
           <td>
-            <para style="P3">[[ move_lines.product_id.default_code ]]</para>
+            <para style="terp_default_8">[[ move_lines.product_id.default_code ]]</para>
           </td>
           <td>
-            <para style="P2">[[ move_lines.product_id.name ]]</para>
+            <para style="terp_default_8">[[ move_lines.product_id.name ]]</para>
           </td>
           <td>
-            <para style="P2">[[ (move_lines.tracking_id and move_lines.tracking_id.name) or '']]</para>
+            <para style="terp_default_8">[[ (move_lines.tracking_id and move_lines.tracking_id.name) or '']]</para>
           </td>
           <td>
-            <para style="P2">[[ move_lines.product_qty ]]</para>
+            <para style="terp_default_8">[[ move_lines.product_qty ]]</para>
           </td>
           <td>
-            <para style="P2">
-              <font face="Helvetica">[[ move_lines.product_uom.name ]]</font>
-            </para>
+            <para style="P5">[[ move_lines.product_uom.name ]]</para>
           </td>
           <td>
-            <para style="P2">[[ (move_lines.location_id and move_lines.location_id.name) or '' ]]</para>
+            <para style="terp_default_8">[[ (move_lines.location_id and move_lines.location_id.name) or '' ]]</para>
           </td>
         </tr>
       </blockTable>
-      <para style="P4">
+      <para style="P2">
         <font color="white"> </font>
       </para>
     </section>
-    <para style="P5">
+    <para style="P3">
       <font color="white"> .........</font>
       <font color="white"> .........</font>
     </para>
