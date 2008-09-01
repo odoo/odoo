@@ -668,9 +668,9 @@ class mrp_procurement(osv.osv):
         'date_close': fields.date('Date Closed'),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_qty': fields.float('Quantity', required=True),
-        'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
-        'product_uos_qty': fields.float('Quantity'),
-        'product_uos': fields.many2one('product.uom', 'Product UOM'),
+        'product_uom': fields.many2one('product.uom', 'Product UoM', required=True),
+        'product_uos_qty': fields.float('UoS Quantity'),
+        'product_uos': fields.many2one('product.uom', 'Product UoS'),
         'move_id': fields.many2one('stock.move', 'Reservation', ondelete='set null'),
 
         'bom_id': fields.many2one('mrp.bom', 'BoM', ondelete='cascade', select=True),

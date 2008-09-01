@@ -389,11 +389,9 @@
 						<field name="product_id" on_change="product_id_change(product_id)" select="1"/>
 						<field name="product_qty"/>
 						<field name="product_uom"/>
-						<group colspan="6" col="6">
-							<label string="" colspan="2"/>
-							<field name="product_uos_qty" groups="product.group_uos"/>
-							<field name="product_uos" groups="product.group_uos"/>
-						</group>
+                        <label string="" colspan="2"/>
+                        <field name="product_uos_qty" groups="product.group_uos"/>
+                        <field name="product_uos" groups="product.group_uos"/>
 					</group>
 
                     <notebook colspan="4">
