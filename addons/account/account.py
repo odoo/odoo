@@ -243,7 +243,6 @@ class account_account(osv.osv):
         'debit': fields.function(__compute, digits=(16,2), method=True, string='Debit', multi='balance'),
         'reconcile': fields.boolean('Reconcile', help="Check this account if the user can make a reconciliation of the entries in this account."),
         'shortcut': fields.char('Shortcut', size=12),
-        'close_method': fields.selection([('none','None'), ('balance','Balance'), ('detail','Detail'),('unreconciled','Unreconciled')], 'Deferral Method', required=True, help="Tell Tiny ERP how to process the entries of this account when you close a fiscal year. None removes all entries to start with an empty account for the new fiscal year. Balance creates only one entry to keep the balance for the new fiscal year. Detail keeps the detail of all entries of the preceeding years. Unreconciled keeps the detail of unreconciled entries only."),
         'tax_ids': fields.many2many('account.tax', 'account_account_tax_default_rel',
             'account_id','tax_id', 'Default Taxes'),
         'note': fields.text('Note'),
@@ -265,7 +264,6 @@ class account_account(osv.osv):
         'sign': lambda *a: 1,
         'type' : lambda *a :'view',
         'reconcile': lambda *a: False,
-        'close_method': lambda *a: 'balance',
         'company_id': _default_company,
         'active': lambda *a: True,
     }

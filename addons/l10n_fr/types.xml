@@ -3,40 +3,44 @@
     <data noupdate="True">
         <!--
 #
-# Plan comptable général pour la France, conforme au 
+# Plan comptable général pour la France, conforme au
 # Règlement n° 99-03 du 29 avril 1999
 # Version applicable au 1er janvier 2005.
 # Règlement disponible sur http://erp-libre.info
 # Mise en forme et paramétrage par http://sisalp.fr et http://nbconseil.net
 # version du fichier : 01-01-2007
 -->
-        
-        
+
+
         <!-- Nouveaux types de comptes -->
         <record id="account_type_dettes" model="account.account.type">
             <field name="name">dettes long terme</field>
             <field name="code">dettes</field>
+            <field name="close_method">balance</field>
         </record>
-        
+
         <record id="account_type_immobilisations" model="account.account.type">
             <field name="name">immobilisations</field>
             <field name="code">immobilisations</field>
+            <field name="close_method">balance</field>
         </record>
-        
+
         <record id="account_type_stocks" model="account.account.type">
             <field name="name">stocks</field>
             <field name="code">stocks</field>
+            <field name="close_method">balance</field>
         </record>
-        
+
         <record id="account_type_cloture" model="account.account.type">
             <field name="name">Cloture</field>
             <field name="code">cloture</field>
+            <field name="close_method">none</field>
         </record>
-        
-        
-        
-        
-        
+
+
+
+
+
         <!-- Journaux de saisie -->
         <record id="operations_journal" model="account.journal">
             <field name="name">Journal des opérations diverses</field>
@@ -55,6 +59,6 @@
             <field name="view_id" ref="account.account_journal_view"/>
             <field name="sequence_id" ref="account.sequence_journal"/>
         </record>
-        
+
     </data>
 </terp>
