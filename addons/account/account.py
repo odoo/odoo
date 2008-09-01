@@ -1827,6 +1827,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         def create_account(obj_acc_root,parent_id,single=False):
 
             find_ids=obj_acc.search(cr,uid,[('name','=',obj_acc_root.name),('code','=',obj_acc_root.code)])
+
             if find_ids:
                 if single:
                     return find_ids[0]
@@ -1872,17 +1873,17 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                         tax_ids.append(tax_id)
                     vals['tax_ids']=[(6,0,tax_ids)]
 
-                    if single:
-                        return obj_acc.create(cr,uid,vals)
+                if single:
+                    return obj_acc.create(cr,uid,vals)
 
-                    if not obj_acc_root.child_parent_ids:
-                        ac_id=obj_acc.create(cr,uid,vals)
-                        return ac_id
-                    else:
-                        ac_id=obj_acc.create(cr,uid,vals)
-                        for child_id in obj_acc_root.child_parent_ids:
-                            parent_id=create_account(child_id,ac_id)
-                        return ac_id
+                if not obj_acc_root.child_parent_ids:
+                    ac_id=obj_acc.create(cr,uid,vals)
+                    return ac_id
+                else:
+                    ac_id=obj_acc.create(cr,uid,vals)
+                    for child_id in obj_acc_root.child_parent_ids:
+                        parent_id=create_account(child_id,ac_id)
+                    return ac_id
         create_account(obj_acc_root,False)
 
         # Creating Journals
