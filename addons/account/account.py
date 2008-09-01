@@ -102,8 +102,6 @@ class account_account_type(osv.osv):
         'name': fields.char('Acc. Type Name', size=64, required=True, translate=True),
         'code': fields.char('Code', size=32, required=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of account types."),
-        'code_from': fields.char('Code From', size=10, help="Gives the range of account code available for this type of account. These fields are given for information and are not used in any constraint."),
-        'code_to': fields.char('Code To', size=10, help="Gives the range of account code available for this type of account. These fields are just given for information and are not used in any constraint."),
         'partner_account': fields.boolean('Partner account'),
         'close_method': fields.selection([('none','None'), ('balance','Balance'), ('detail','Detail'),('unreconciled','Unreconciled')], 'Deferral Method', required=True),
     }
