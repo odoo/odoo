@@ -145,6 +145,9 @@
 				<field name="production_id"/>
 				<field name="workcenter_id"/>
 				<field name="code_id"/>
+				<field name="date_start"/>
+				<field name="date_finished"/>
+				<field name="order_date"/>
 			</tree>
 		</field>
 	</record>
@@ -167,11 +170,25 @@
 		<field name="type">ir.actions.act_window</field>
 		<field name="res_model">mrp_operations.operation</field>
 		<field name="view_type">form</field>
+		<field name="view_mode">tree,calendar,form</field>
 		<field name="view_id" ref="mrp_production_operation_tree_view"/>
 	</record>
-
 	<menuitem name="Operations" parent="mrp.menu_mrp_configuration" id="menu_mrp_production_operation_action" action="mrp_production_operation_action"/>
-
+	
+	<record model="ir.ui.view" id="operation_calendar_view">
+			<field name="name">mrp.perations.calendar</field>
+			<field name="model">mrp_operations.operation</field>
+			<field name="type">calendar</field>
+			<field name="priority" eval="2"/>
+			<field name="arch" type="xml">
+				<calendar string="Calendar View" date_start="order_date" color="workcenter_id">
+					<field name="code_id"/>
+					<field name="production_id"/>
+					<field name="date_start"/>
+					<field name="date_finished"/>
+				</calendar>
+			</field>
+	</record>
 
 </data>
 </terp>

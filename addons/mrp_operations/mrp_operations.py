@@ -133,6 +133,18 @@ mrp_operations_operation_code()
 
 class mrp_operations_operation(osv.osv):
     _name="mrp_operations.operation"
+    
+    def _order_date_search_production(self,cr,uid,ids):
+        operation_ids=self.pool.get('mrp_operations.operation').search(cr,uid,[('production_id','=',ids[0])])
+        return operation_ids
+        
+    def _get_order_date(self, cr, uid, ids, field_name, arg, context):
+        res={}
+        operation_obj=self.browse(cr, uid, ids, context=context)
+        for operation in operation_obj:
+                res[operation.id]=operation.production_id.date_planned
+        return res
+    
     def create(self, cr, uid, vals, context=None):
         wf_service = netsvc.LocalService('workflow')
         code_ids=self.pool.get('mrp_operations.operation.code').search(cr,uid,[('id','=',vals['code_id'])])
@@ -154,6 +166,9 @@ class mrp_operations_operation(osv.osv):
         'production_id':fields.many2one('mrp.production','Production',required=True),
         'workcenter_id':fields.many2one('mrp.workcenter','Workcenter',required=True),
         'code_id':fields.many2one('mrp_operations.operation.code','Code',required=True),
+        'date_start': fields.datetime('Start Date'),
+        'date_finished': fields.datetime('End Date'),
+        'order_date': fields.function(_get_order_date,method=True,string='Order Date',type='date',store={'mrp.production':(['date_planned'],_order_date_search_production)}),
         }
 
 mrp_operations_operation()
