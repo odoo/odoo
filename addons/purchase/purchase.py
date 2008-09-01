@@ -86,6 +86,18 @@ class purchase_order(osv.osv):
             res[id] = cur_obj.round(cr, uid, cur, untax.get(id, 0.0) + tax.get(id, 0.0))
         return res
 
+    def _minimum_planned_date(self, cr, uid, ids, field_name, arg, context):
+        res={}
+        purchase_obj=self.browse(cr, uid, ids, context=context)
+        for purchase in purchase_obj:
+            if purchase.order_line:
+                min_date=purchase.order_line[0].date_planned
+                for line in purchase.order_line:
+                    if line.date_planned < min_date:
+                        min_date=line.date_planned
+                res[purchase.id]=min_date
+        return res
+
     def _invoiced_rate(self, cursor, user, ids, name, arg, context=None):
         res = {}
         for purchase in self.browse(cursor, user, ids, context=context):
@@ -153,7 +165,7 @@ class purchase_order(osv.osv):
         'invoiced':fields.boolean('Invoiced & Paid', readonly=True, select=True),
         'invoiced_rate': fields.function(_invoiced_rate, method=True, string='Invoiced', type='float'),
         'invoice_method': fields.selection([('manual','Manual'),('order','From order'),('picking','From picking')], 'Invoicing Control', required=True),
-
+        'minimum_planned_date':fields.function(_minimum_planned_date, method=True,store=True, string='Minimum Planned Date', type='date', help="Minimum schedule date of all products."),
         'amount_untaxed': fields.function(_amount_untaxed, method=True, string='Untaxed Amount'),
         'amount_tax': fields.function(_amount_tax, method=True, string='Taxes'),
         'amount_total': fields.function(_amount_total, method=True, string='Total'),

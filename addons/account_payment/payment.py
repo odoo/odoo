@@ -62,15 +62,19 @@ class payment_mode(osv.osv):
         'type': fields.many2one('payment.type','Payment type',required=True),
     }
 
-    def suitable_bank_types(self,cr,uid,payment_code= 'manual',context={}):
+    def suitable_bank_types(self,cr,uid,payment_code=None,context={}):
         """Return the codes of the bank type that are suitable
         for the given payment type code"""
+        if not payment_code:
+            return []
         cr.execute(""" select t.code
             from res_partner_bank_type t
             join bank_type_payment_type_rel r on (r.bank_type_id = t.id)
             join payment_type pt on (r.pay_type_id = pt.id)
-            where pt.code = %s """, [payment_code])
+            join payment_mode pm on (pm.type = pt.id)
+            where pm.id = %s """, [payment_code])
         return [x[0] for x in cr.fetchall()]
+
 
 payment_mode()
 
@@ -155,15 +159,15 @@ class payment_line(osv.osv):
     _name = 'payment.line'
     _description = 'Payment Line'
 
-    def partner_payable(self, cr, uid, ids, name, args, context={}):
-        if not ids: return {}
-        partners= self.read(cr, uid, ids, ['partner_id'], context)
-        partners= dict(map(lambda x: (x['id'], x['partner_id'][0]), partners))
-        debit = self.pool.get('res.partner')._debit_get(cr, uid,
-                partners.values(), name, args, context)
-        for i in partners:
-            partners[i] = debit[partners[i]]
-        return partners
+    #~ def partner_payable(self, cr, uid, ids, name, args, context={}):
+        #~ if not ids: return {}
+        #~ partners= self.read(cr, uid, ids, ['partner_id'], context)
+        #~ partners= dict(map(lambda x: (x['id'], x['partner_id'][0]), partners))
+        #~ debit = self.pool.get('res.partner')._debit_get(cr, uid,
+                #~ partners.values(), name, args, context)
+        #~ for i in partners:
+            #~ partners[i] = debit[partners[i]]
+        #~ return partners
 
     def translate(self, orig):
         return {
@@ -232,8 +236,6 @@ class payment_line(osv.osv):
             where pl.id in (%s)"""%
             (self.translate(name), ','.join(map(str,ids))) )
         res = dict(cr.fetchall())
-        print "res: ", res
-        print "name ", name
 
         if name == 'partner_id':
             partner_name = {}
@@ -354,9 +356,7 @@ class payment_line(osv.osv):
         res={}
         for id in self.browse(cr, uid, ids):
             res[id.id] = ""
-            print "test"
             if id.move_line_id:
-                print "blablabl"
                 res[id.id] = "pas de invoice"
                 if id.move_line_id.invoice:
                     res[id.id] = str(id.move_line_id.invoice.number)
@@ -387,7 +387,7 @@ class payment_line(osv.osv):
         'communication': fields.char('Communication', size=64, required=True),
         'communication2': fields.char('Communication 2', size=64),
         'move_line_id': fields.many2one('account.move.line','Entry line', domain=[('reconcile_id','=', False), ('account_id.type', '=','payable')]),
-        'amount_currency': fields.float('Amount', digits=(16,2),
+        'amount_currency': fields.float('Amount in Partner Currency', digits=(16,2),
             required=True, help='Payment amount in the partner currency'),
 #       'to_pay_currency': fields.function(_to_pay_currency, string='To Pay',
 #           method=True, type='float',
@@ -400,7 +400,7 @@ class payment_line(osv.osv):
         'order_id': fields.many2one('payment.order', 'Order', required=True,
             ondelete='cascade', select=True),
         'partner_id': fields.many2one('res.partner', string="Partner",required=True),
-        'amount': fields.function(_amount, string='Amount',
+        'amount': fields.function(_amount, string='Amount in Company Currency',
             method=True, type='float',
             help='Payment amount in the company currency'),
 #       'to_pay': fields.function(select_by_name, string="To Pay", method=True,
@@ -415,8 +415,7 @@ class payment_line(osv.osv):
         'ml_inv_ref': fields.function(_get_ml_inv_ref, method=True, type='char', string='Invoice Ref'),
         'info_owner': fields.function(info_owner, string="Owner Account", method=True, type="text"),
         'info_partner': fields.function(info_partner, string="Destination Account", method=True, type="text"),
-        'partner_payable': fields.function(partner_payable,
-            string="Partner payable", method=True, type='float'),
+#        'partner_payable': fields.function(partner_payable, string="Partner payable", method=True, type='float'),
 #       'value_date': fields.function(_value_date, string='Value Date',
 #           method=True, type='date'),
         'date': fields.date('Payment Date'),
@@ -434,36 +433,36 @@ class payment_line(osv.osv):
         ('name_uniq', 'UNIQUE(name)', 'The payment line name must be unique!'),
     ]
 
-    def onchange_move_line(self,cr,uid,ids,move_line_id,payment_type,context=None):
+    def onchange_move_line(self,cr,uid,ids,move_line_id,payment_type,date_prefered,date_planned,context=None):
         data={}
         data['amount_currency']=data['currency']=data['communication']=data['partner_id']=data['reference']=data['date_created']=data['bank_id']=False
         if move_line_id:
-            line=self.pool.get('account.move.line').browse(cr,uid,move_line_id)
+            line = self.pool.get('account.move.line').browse(cr,uid,move_line_id)
             data['amount_currency']=line.amount_to_pay
             data['partner_id']=line.partner_id.id
             data['currency']=line.currency_id and line.currency_id.id or False
             if not data['currency']:
                 data['currency']=line.invoice and line.invoice.currency_id.id or False
             # calling onchange of partner and updating data dictionary
-            temp_dict=self.onchange_partner(cr,uid,ids,line.partner_id.id)
+            temp_dict=self.onchange_partner(cr,uid,ids,line.partner_id.id,payment_type)
             data.update(temp_dict['value'])
 
             data['reference']=line.ref
-            data['date_created']=line.date_created
+            data['date_created'] = line.date_created
             data['communication']=line.ref
 
-            if payment_type:
-                payment_mode = self.pool.get('payment.mode').browse(cr,uid,payment_type).type.code
-            else:
-                payment_mode=False
-
-#           data['bank_id']=self.pool.get('account.move.line').line2bank(cr, uid,
-#               [move_line_id],
-#               payment_mode or 'manual', context)[move_line_id]
+            if date_prefered == 'now':
+                #no payment date => immediate payment
+                data['date'] = False
+            elif date_prefered == 'due':
+                data['date'] = line.date_maturity
+            elif date_prefered == 'fixed':
+                if date_planned:
+                    data['date'] = date_planned
 
         return {'value': data}
 
-    def onchange_partner(self,cr,uid,ids,partner_id,context=None):
+    def onchange_partner(self,cr,uid,ids,partner_id,payment_type,context=None):
         data={}
         data['info_partner']=data['bank_id']=False
 
@@ -489,8 +488,12 @@ class payment_line(osv.osv):
 
                         data['info_partner']=info
 
-            if part_obj.bank_ids and len(part_obj.bank_ids)==1:
-                data['bank_id']=self.pool.get('res.partner.bank').name_get(cr,uid,[part_obj.bank_ids[0].id])[0][0]
+            if part_obj.bank_ids and payment_type:
+                bank_type = self.pool.get('payment.mode').suitable_bank_types(cr, uid, payment_type, context=context)
+                for bank in part_obj.bank_ids:
+                    if bank.state in bank_type:
+                        data['bank_id'] = bank.id
+                        break
 
         return {'value': data}
 
