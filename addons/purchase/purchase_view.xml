@@ -161,7 +161,7 @@
                             <field name="price_unit"/>
                             <field name="account_analytic_id"/>
                             <field name="price_subtotal" readonly="1"/>
-                            <field colspan="4" name="taxes_id"/>
+                            <field colspan="4" name="taxes_id" domain="[('parent_id','=',False)]"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="notes" nolabel="1"/>

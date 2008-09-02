@@ -141,9 +141,8 @@ class account_account(osv.osv):
             context = {}
         pos = 0
         while pos<len(args):
-            if args[pos][0]=='code' and args[pos][1] in ('like','ilike'):
-                args[pos][1]='=like'
-                args[pos][2]=str(args[pos][2])+'%'
+            if args[pos][0]=='code' and args[pos][1] in ('like','ilike') and args[pos][2]:
+                args[pos] = ('code', '=like', str(args[pos][2].replace('%',''))+'%')
             if args[pos][0]=='journal_id':
                 if not args[pos][2]:
                     del args[pos]
@@ -342,7 +341,7 @@ class account_account(osv.osv):
         for record in reads:
             name = record['name']
             if record['code']:
-                name = record['code']+' - '+name
+                name = record['code']+' '+name
             res.append((record['id'],name ))
         return res
 
@@ -363,10 +362,9 @@ class account_account(osv.osv):
             context={}
         if 'active' in vals and not vals['active']:
             line_obj = self.pool.get('account.move.line')
-            account_ids = self.search(cr, uid, [('parent_id', 'child_of', ids)])
+            account_ids = self.search(cr, uid, [('id', 'child_of', ids)])
             if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
-                vals=vals.copy()
-                del vals['active']
+                raise osv.except_osv(_('Error !'), _('You can not desactivate an account that contains account moves.'))
         return super(account_account, self).write(cr, uid, ids, vals, context=context)
 account_account()
 

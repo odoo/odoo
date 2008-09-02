@@ -130,7 +130,7 @@
                             <newline/>
                             <newline/>
                             <field name="child_consol_ids" colspan="4"/>
-                            <field colspan="4" name="tax_ids"/>
+                            <field colspan="4" name="tax_ids" domain="[('parent_id','=',False)]"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="note" nolabel="1"/>
@@ -140,7 +140,7 @@
             </field>
         </record>
         <record id="action_account_form" model="ir.actions.act_window">
-            <field name="name">Financial Accounts</field>
+            <field name="name">List of Accounts</field>
             <field name="res_model">account.account</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -155,8 +155,8 @@
             <field name="field_parent">child_id</field>
             <field name="arch" type="xml">
                 <tree string="Chart of accounts">
-                    <field name="name"/>
                     <field name="code"/>
+                    <field name="name"/>
                     <field name="debit"/>
                     <field name="credit"/>
                     <field name="balance"/>
@@ -625,16 +625,8 @@
             <field eval="True" name="object"/>
         </record>
 
-        <wizard id="action_move_journal_line_form" menu="False" model="account.move.line" name="account.move.journal" string="Entries by Journal"/>
+        <wizard id="action_move_journal_line_form" menu="False" model="account.move.line" name="account.move.journal" string="Entries Encoding by Line"/>
         <menuitem action="action_move_journal_line_form" id="menu_action_move_journal_line_form" parent="account.menu_finance_entries" type="wizard"/>
-
-        <record id="action_move_journal_period_line_form" model="ir.actions.act_window">
-            <field name="name">Entries in Open Journals</field>
-            <field name="res_model">account.journal.period</field>
-            <field name="view_type">tree</field>
-            <field name="domain">[('state','&lt;&gt;','done')]</field>
-        </record>
-        <menuitem action="action_move_journal_period_line_form" id="menu_action_move_journal_period_line_form" parent="account.menu_action_move_journal_line_form"/>
 
         <!--
     Entries lines
@@ -702,7 +694,7 @@
                             <field name="tax_code_id"/>
                             <field name="tax_amount"/>
                             <newline/>
-                            <field name="account_tax_id"/>
+                            <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
                             <field name="analytic_account_id"/>
 
                             <separator colspan="4" string="State"/>
@@ -752,7 +744,7 @@
                             <field name="date_created"/>
                             <field name="blocked" select="3"/>
                             <newline/>
-                            <field name="account_tax_id"/>
+                            <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
                             <field name="analytic_account_id"/>
 
                             <separator colspan="4" string="State"/>
@@ -1571,7 +1563,7 @@
                     <newline/>
                     <field name="sequence" select="1"/>
                     <field name="type"/>
-                    <field name="domain"/>
+                    <field name="domain" groups="base.group_extended"/>
                     <field name="tax_group" />
                 </form>
             </field>

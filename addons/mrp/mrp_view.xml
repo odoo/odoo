@@ -277,7 +277,7 @@
         <menuitem action="mrp_bom_form_action" id="menu_mrp_bom_form_action" parent="menu_mrp_configuration"/>
         
         <record id="mrp_bom_tree_action" model="ir.actions.act_window">
-            <field name="name">BoM Structure</field>
+            <field name="name">Bill of Material Structure</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.bom</field>
             <field name="view_type">tree</field>
@@ -285,18 +285,27 @@
             <field name="view_id" ref="mrp_bom_tree_view"/>
         </record>
         <menuitem action="mrp_bom_tree_action" id="menu_bom_tree" parent="menu_mrp_bom_form_action"/>
-
-        <record id="mrp_bom_form_action2" model="ir.actions.act_window">
-            <field name="name">BoM Lines</field>
+        <record id="mrp_bom_form_action_new" model="ir.actions.act_window">
+            <field name="name">New Bill of Materials</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.bom</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="mrp_bom_tree_view"/>
+            <field name="view_form">form,tree</field>
+            <field name="domain">[('bom_id','=',False)]</field>
         </record>
-        <menuitem action="mrp_bom_form_action2" id="menu_mrp_bom_form_action2" parent="menu_mrp_bom_form_action"/>
+        <menuitem action="mrp_bom_form_action_new" id="menu_mrp_bom_form_action_new" parent="menu_mrp_bom_form_action"/>
+ 
+        <record id="mrp_bom_form_action2" model="ir.actions.act_window">
+            <field name="name">Bill of Materials Components</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.bom</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('bom_id','<>',False)]</field>
+        </record>
+        <menuitem action="mrp_bom_form_action2" id="menu_mrp_bom_form_action2" parent="menu_mrp_configuration"/>
         
         <record id="action2" model="ir.actions.act_window">
-            <field name="name">Bill of Materials Architecture</field>
+            <field name="name">Bill of Materials Structure</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.bom</field>
             <field name="domain">[('id','in',active_ids)]</field>
@@ -306,7 +315,7 @@
         <record id="ir_bom_architecture_open" model="ir.values">
             <field eval="'client_action_multi'" name="key2"/>
             <field eval="'mrp.bom'" name="model"/>
-            <field name="name">Bill of Material Architecture</field>
+            <field name="name">Bill of Materials Structure</field>
             <field eval="'ir.actions.act_window,'+str(action2)" name="value"/>
             <field eval="True" name="object"/>
         </record>
