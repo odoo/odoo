@@ -783,7 +783,7 @@
         </record>
         
         <record id="action_picking_tree" model="ir.actions.act_window">
-            <field name="name">Sending Goods</field>
+            <field name="name">Sending Products</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -852,7 +852,7 @@
         <menuitem action="action_picking_tree3" id="menu_action_picking_tree3" parent="menu_action_picking_tree"/>
         
         #
-        # Reception of Goods
+        # Reception of Products
         #
         <record id="view_picking_in_tree" model="ir.ui.view">
             <field name="name">stock.picking.in.tree</field>
@@ -946,7 +946,7 @@
         
         
         <record id="action_picking_tree4" model="ir.actions.act_window">
-            <field name="name">Getting Goods</field>
+            <field name="name">Getting Products</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -998,7 +998,6 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
-            <field name="view_id" ref="view_picking_in_form"/>
             <field name="context">{'contact_display': 'partner'}</field>
             <field name="domain">[('type','=','in')]</field>
         </record>

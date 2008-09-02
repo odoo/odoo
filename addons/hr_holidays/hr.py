@@ -46,9 +46,23 @@ def strToDate(dt):
     dt_date=datetime.date(int(dt[0:4]),int(dt[5:7]),int(dt[8:10]))
     return dt_date
 
+class hr_holidays_status(osv.osv):
+    _name = "hr.holidays.status"
+#    _inherit = 'hr.holidays.status'
+    _description = "Holidays Status"
+    _columns = {
+        'name' : fields.char('Holiday Status', size=64, required=True, translate=True),
+        'section_id': fields.many2one('crm.case.section', 'Section'),
+        'color_name' : fields.selection([('red', 'Red'), ('lightgreen', 'Light Green'), ('lightblue','Light Blue'), ('lightyellow', 'Light Yellow'), ('magenta', 'Magenta'),('lightcyan', 'Light Cyan'),('black', 'Black'),('lightpink', 'Light Pink'),('brown', 'Brown'),('violet', 'Violet'),('lightcoral', 'Light Coral'),('lightsalmon', 'Light Salmon'),('lavender', 'Lavender'),('wheat', 'Wheat'),('ivory', 'Ivory')],'Color of the status', required=True),
+    }
+    _defaults = {
+        'color_name': lambda *args: 'red',
+    }
+hr_holidays_status()
+
 class hr_holidays(osv.osv):
     _name = "hr.holidays"
-    _inherit = 'hr.holidays'
+#    _inherit = 'hr.holidays'
     _description = "Holidays"
     _columns = {
         'name' : fields.char('Description', required=True, readonly=True, size=64, states={'draft':[('readonly',False)]}),
@@ -170,20 +184,6 @@ class hr_holidays(osv.osv):
 
         return True
 hr_holidays()
-
-class hr_holidays_status(osv.osv):
-    _name = "hr.holidays.status"
-    _inherit = 'hr.holidays.status'
-    _description = "Holidays Status"
-    _columns = {
-        'name' : fields.char('Holiday Status', size=64, required=True, translate=True),
-        'section_id': fields.many2one('crm.case.section', 'Section'),
-        'color_name' : fields.selection([('red', 'Red'), ('lightgreen', 'Light Green'), ('lightblue','Light Blue'), ('lightyellow', 'Light Yellow'), ('magenta', 'Magenta'),('lightcyan', 'Light Cyan'),('black', 'Black'),('lightpink', 'Light Pink'),('brown', 'Brown'),('violet', 'Violet'),('lightcoral', 'Light Coral'),('lightsalmon', 'Light Salmon'),('lavender', 'Lavender'),('wheat', 'Wheat'),('ivory', 'Ivory')],'Color of the status', required=True),
-    }
-    _defaults = {
-        'color_name': lambda *args: 'red',
-    }
-hr_holidays_status()
 
 
 class hr_holidays_per_user(osv.osv):

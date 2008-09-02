@@ -63,8 +63,11 @@ def search_entries(self, cr, uid, data, context):
 
     # Search for move line to pay:
     line_ids = line_obj.search(cr, uid, [
-        ('reconcile_id', '=', False),
-        ('amount_to_pay', '>', 0),('date_maturity','<=',search_due_date)], context=context)
+            ('reconcile_id', '=', False),
+            ('account_id.type', '=', 'payable'),
+            ('amount_to_pay', '>', 0),
+            ('date_maturity','<=',search_due_date)
+        ], context=context)
         
     
     FORM.string = '''<?xml version="1.0"?>
@@ -84,19 +87,27 @@ def create_payment(self, cr, uid, data, context):
 
     payment = order_obj.browse(cr, uid, data['id'],
             context=context)
-    t = payment.mode and payment.mode.type.code or 'manual'
+    t = payment.mode and payment.mode.type.code or None
     line2bank= pool.get('account.move.line').line2bank(cr, uid,
             line_ids, t, context)
 
     ## Finally populate the current payment with new lines:
     for line in line_obj.browse(cr, uid, line_ids, context=context):
+        if payment.date_prefered == "now":
+            #no payment date => immediate payment
+            date_to_pay = False
+        elif payment.date_prefered == 'due':
+            date_to_pay = line.date_maturity
+        elif payment.date_prefered == 'fixed':
+            date_to_pay = payment.date_planned
         pool.get('payment.line').create(cr,uid,{
             'move_line_id': line.id,
             'amount_currency': line.amount_to_pay,
             'bank_id': line2bank.get(line.id),
             'order_id': payment.id,
             'partner_id': line.partner_id and line.partner_id.id or False,
-            'communication': line.ref or '/'
+            'communication': line.ref or '/',
+            'date': date_to_pay,
             }, context=context)
     return {}
 

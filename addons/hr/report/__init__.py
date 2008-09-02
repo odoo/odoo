@@ -28,7 +28,6 @@
 #
 ##############################################################################
 
-import timesheet
 import bymonth
 import attendance_errors
 

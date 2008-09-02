@@ -31,7 +31,6 @@
 					<newline />
 					<field name="number_of_days" colspan="2"/>
                 </form>
-				</field>
 			</field>
 		</record>
 
@@ -54,7 +53,7 @@
 		<record model="ir.ui.view" id="view_holiday_2">
 			<field name="name">hr.holidays.tree</field>
 			<field name="model">hr.holidays</field>
-			<field name="inherit_id" ref="hr.view_holiday"/>
+			<field name="inherit_id" ref="view_holiday"/>
 			<field name="type">tree</field>
 			<field name="arch" type="xml">
 				<field name="name" position="after">

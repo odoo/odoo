@@ -93,6 +93,7 @@
             <field name="res_model">hr.employee</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
         </record>
         <menuitem
 			action="open_view_employee_list"
@@ -111,9 +112,9 @@
             <field name="domain">[('parent_id.user_id','=',uid)]</field>
         </record>
         <menuitem
-			action="open_view_employee_list_my"
-			id="menu_open_view_employee_list_my"
-			parent="menu_open_view_employee_list"/>
+            action="open_view_employee_list_my"
+            id="menu_open_view_employee_list_my"
+            parent="menu_open_view_employee_list"/>
 
         <record id="open_view_employee_new" model="ir.actions.act_window">
             <field name="name">New Employee</field>

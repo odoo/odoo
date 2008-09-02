@@ -3,8 +3,8 @@
     <data>
 
         <!--
-	 Fiscal Year
-	-->
+     Fiscal Year
+    -->
 
         <menuitem id="base.menu_action_currency_form" parent="menu_finance_configuration" sequence="20"/>
 
@@ -58,7 +58,7 @@
         </record>
         <menuitem id="next_id_23" name="Periods" parent="account.menu_finance_configuration"/><menuitem action="action_account_fiscalyear_form" id="menu_action_account_fiscalyear_form" parent="next_id_23"/>
 
-    <!--
+        <!--
     Period
     -->
 
@@ -101,9 +101,9 @@
         <menuitem action="action_account_period_form" id="menu_action_account_period_form" parent="account.next_id_23"/>
 
 
-    <!--
-	Accounts
-	-->
+        <!--
+    Accounts
+    -->
 
         <record id="view_account_form" model="ir.ui.view">
             <field name="name">account.account.form</field>
@@ -111,21 +111,20 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Account">
-					<group col="6" colspan="4">
-					<field name="name" select="1"/>
-					<field name="code" select="1"/>
-					<field name="type" select="1"/>
-					<field name="company_id" select="2"/>
-					<field name="parent_id"/>
-					<field name="active"/>
-					</group>
+                    <group col="6" colspan="4">
+                    <field name="name" select="1"/>
+                    <field name="code" select="1"/>
+                    <field name="type" select="1"/>
+                    <field name="company_id" select="2"/>
+                    <field name="parent_id"/>
+                    <field name="active"/>
+                    </group>
                     <notebook colspan="4">
                         <page string="General Information">
                             <newline/>
                             <field name="sign"/>
 
                             <field name="currency_id" select="2"/>
-                            <field name="close_method"/>
                             <field name="reconcile"/>
                             <newline/>
                             <newline/>
@@ -174,10 +173,10 @@
         <menuitem action="action_account_tree" id="menu_action_account_tree" parent="account.account_account_menu"/>
 
         <!--
-	Journal
+    Journal
 
-	Account Journal Columns
-	-->
+    Account Journal Columns
+    -->
 
         <record id="view_journal_column_form" model="ir.ui.view">
             <field name="name">account.journal.column.form</field>
@@ -221,8 +220,8 @@
         </record>
 
         <!--
-	# Account Journal
-	-->
+    # Account Journal
+    -->
 
         <record id="view_account_journal_tree" model="ir.ui.view">
             <field name="name">account.journal.tree</field>
@@ -276,7 +275,7 @@
             <field name="view_mode">tree,form</field>
         </record>
         <menuitem id="next_id_25" name="Journal" parent="account.menu_finance_configuration"/>
-		<menuitem action="action_account_journal_form" id="menu_action_account_journal_form" parent="next_id_25"/>
+        <menuitem action="action_account_journal_form" id="menu_action_account_journal_form" parent="next_id_25"/>
 
         <record id="view_bank_statement_tree" model="ir.ui.view">
             <field name="name">account.bank.statement.tree</field>
@@ -410,8 +409,8 @@
             </field>
         </record>
         <!--
-	Account Types
-	-->
+    Account Types
+    -->
         <record id="view_account_type_tree" model="ir.ui.view">
             <field name="name">account.account.type.tree</field>
             <field name="model">account.account.type</field>
@@ -420,8 +419,6 @@
                 <tree string="Account Type">
                     <field name="code"/>
                     <field name="name"/>
-                    <field name="code_from"/>
-                    <field name="code_to"/>
                 </tree>
             </field>
         </record>
@@ -435,8 +432,6 @@
                     <field name="code" select="1"/>
                     <field name="sequence"/>
                     <field name="close_method"/>
-                    <field name="code_from" select="1"/>
-                    <field name="code_to" select="1"/>
                     <field name="partner_account"/>
                 </form>
             </field>
@@ -449,8 +444,8 @@
         </record>
         <menuitem action="action_account_type_form" groups="base.group_extended" id="menu_action_account_type_form" parent="account.account_account_menu"/>
         <!--
-	Entries
-	-->
+    Entries
+    -->
         <record id="view_account_move_tree" model="ir.ui.view">
             <field name="name">account.move.tree</field>
             <field name="model">account.move</field>
@@ -467,8 +462,8 @@
         </record>
 
         <!--
-	Reconcile
-	-->
+    Reconcile
+    -->
 
         <record id="view_move_reconcile_form" model="ir.ui.view">
             <field name="name">account.move.reconcile.form</field>
@@ -487,8 +482,8 @@
         </record>
 
         <!--
-	Tax Codes
-	-->
+    Tax Codes
+    -->
         <record id="view_tax_code_tree" model="ir.ui.view">
             <field name="name">account.tax.code.tree</field>
             <field name="model">account.tax.code</field>
@@ -530,12 +525,12 @@
             <field name="view_id" ref="view_tax_code_tree"/>
         </record>
        <menuitem id="next_id_27" name="Taxes" parent="account.menu_finance_configuration"/>
-		<menuitem action="action_tax_code_list" id="menu_action_tax_code_list" parent="next_id_27" sequence="12"/>
+        <menuitem action="action_tax_code_list" id="menu_action_tax_code_list" parent="next_id_27" sequence="12"/>
 
 
         <!--
-	Tax
-	-->
+    Tax
+    -->
         <record id="view_tax_tree" model="ir.ui.view">
             <field name="name">account.tax.tree</field>
             <field name="model">account.tax</field>
@@ -612,8 +607,8 @@
 
 
         <!--
-	Entries Journal lines
-	-->
+    Entries Journal lines
+    -->
 
         <wizard id="action_move_journal_line_form_select" menu="False" model="account.move.line" name="account.move.journal.select" string="Standard entry"/>
 
@@ -637,8 +632,8 @@
         <menuitem action="action_move_journal_period_line_form" id="menu_action_move_journal_period_line_form" parent="account.menu_action_move_journal_line_form"/>
 
         <!--
-	Entries lines
-	-->
+    Entries lines
+    -->
 
         <record id="view_move_line_tree" model="ir.ui.view">
             <field name="name">account.move.line.tree</field>
@@ -710,7 +705,6 @@
                             <field name="period_id"/>
                             <field name="reconcile_id"/>
                             <field name="reconcile_partial_id"/>
-                            <field name="active" select="2"/>
                             <field name="state" select="2"/>
                         </page>
                         <page string="Analytic Lines">
@@ -779,8 +773,8 @@
         </record>
 
         <!--
-	Account.Entry Edition
-	-->
+    Account.Entry Edition
+    -->
 
         <record id="view_move_tree" model="ir.ui.view">
             <field name="name">account.move.tree</field>
@@ -968,9 +962,9 @@
 
 
         <!--
-	TODO:
-		Print Journal (and change state)
-		Close Journal (and verify that there is no draft move lines)
+    TODO:
+        Print Journal (and change state)
+        Close Journal (and verify that there is no draft move lines)
 -->
 
         <record id="view_journal_period_tree" model="ir.ui.view">
@@ -1000,8 +994,8 @@
         <menuitem action="action_account_budget_post_tree" id="menu_action_account_budget_post_tree" parent="account.menu_finance_reporting"/>
 
         <!--
-	Budgets
-	-->
+    Budgets
+    -->
         <record id="view_budget_post_form" model="ir.ui.view">
             <field name="name">account.budget.post.form</field>
             <field name="model">account.budget.post</field>
@@ -1068,7 +1062,7 @@
 
 
         <!--
-	# Account Models
+    # Account Models
 -->
 
         <record id="view_model_line_tree" model="ir.ui.view">
@@ -1149,7 +1143,7 @@
 
 
         <!--
-	# Payment Terms
+    # Payment Terms
 -->
 
         <record id="view_payment_term_line_tree" model="ir.ui.view">
@@ -1210,7 +1204,7 @@
         <menuitem id="next_id_33" name="Payment Terms" parent="account.menu_finance_configuration"/><menuitem action="action_payment_term_form" id="menu_action_payment_term_form" parent="next_id_33"/>
 
         <!--
-	# Account Subscriptions
+    # Account Subscriptions
 -->
 
         <record id="view_subscription_line_form" model="ir.ui.view">
@@ -1381,8 +1375,8 @@
 
 
         <!--
-	# Admin config
-	-->
+    # Admin config
+    -->
 
         <act_window domain="[('journal_id', '=', active_id)]" id="act_account_journal_2_account_bank_statement" name="Bank statements" res_model="account.bank.statement" src_model="account.journal"/>
 
@@ -1407,8 +1401,8 @@
                     <field name="code"/>
                     <field name="date1"/>
                     <field name="date2"/>
-					<separator string="" colspan="4"/>
-					<label string="" colspan="2"/>
+                    <separator string="" colspan="4"/>
+                    <label string="" colspan="2"/>
                     <group col="4" colspan="4">
                         <button icon="gtk-cancel" special="cancel" string="Don't Create" name="action_cancel" type="object"/>
                         <button icon="gtk-ok" name="action_create" string="Create" type="object"/>
@@ -1481,9 +1475,9 @@
             <field name="state">open</field>
         </record>
 
-		<!-- Account Templates -->
+        <!-- Account Templates -->
 
-		<record id="view_account_template_form" model="ir.ui.view">
+        <record id="view_account_template_form" model="ir.ui.view">
             <field name="name">account.account.template.form</field>
             <field name="model">account.account.template</field>
             <field name="type">form</field>
@@ -1518,9 +1512,9 @@
         <menuitem id="account_account_template_menu" name="Templates" parent="account.menu_finance_configuration"/>
         <menuitem action="action_account_template_form" id="menu_action_account_template_form" parent="account_account_template_menu"/>
 
-		<!-- Chart of Accounts Templates -->
+        <!-- Chart of Accounts Templates -->
 
-		<record id="view_account_chart_template_form" model="ir.ui.view">
+        <record id="view_account_chart_template_form" model="ir.ui.view">
             <field name="name">account.chart.template.form</field>
             <field name="model">account.chart.template</field>
             <field name="type">form</field>
@@ -1558,9 +1552,9 @@
 
         <menuitem action="action_account_chart_template_form" id="menu_action_account_chart_template_form" parent="account_account_template_menu"/>
 
-		<!-- Account Tax Templates -->
+        <!-- Account Tax Templates -->
 
-		<record id="view_account_tax_template_form" model="ir.ui.view">
+        <record id="view_account_tax_template_form" model="ir.ui.view">
             <field name="name">account.tax.template.form</field>
             <field name="model">account.tax.template</field>
             <field name="type">form</field>
@@ -1596,25 +1590,25 @@
 
         <menuitem action="action_account_tax_template_form" id="menu_action_account_tax_template_form" parent="account_account_template_menu"/>
 
-		<!-- wizard account duplicate chart -->
-		<record id="view_wizard_account_duplicate_chart" model="ir.ui.view">
-			<field name="name">wizard.account.chart.duplicate.form</field>
-			<field name="model">wizard.account.chart.duplicate</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Duplicate Chart of Accounts">
-						<field name="account_id"/>
-						<field name="company_id"/>
-						<newline/>
-						<group colspan="4">
-							<button icon="gtk-cancel" special="cancel" type="object" string="Cancel"/>
-	                        <button icon="gtk-ok" name="action_create" string="Create" type="object"/>
-						</group>
-				</form>
-			</field>
-		</record>
+        <!-- wizard account duplicate chart -->
+        <record id="view_wizard_account_duplicate_chart" model="ir.ui.view">
+            <field name="name">wizard.account.chart.duplicate.form</field>
+            <field name="model">wizard.account.chart.duplicate</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Duplicate Chart of Accounts">
+                        <field name="account_id"/>
+                        <field name="company_id"/>
+                        <newline/>
+                        <group colspan="4">
+                            <button icon="gtk-cancel" special="cancel" type="object" string="Cancel"/>
+                            <button icon="gtk-ok" name="action_create" string="Create" type="object"/>
+                        </group>
+                </form>
+            </field>
+        </record>
 
-		<record id="action_wizard_account_duplicate_chart_form" model="ir.actions.act_window">
+        <record id="action_wizard_account_duplicate_chart_form" model="ir.actions.act_window">
             <field name="name">Duplicate Chart of Accounts</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">wizard.account.chart.duplicate</field>

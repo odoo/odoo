@@ -7,7 +7,7 @@
     "website" : "http://tinyerp.com/",
     "description": """Human Ressources: Holidays tracking and workflow
 
-    This module allows you to manage holidays and holidays requests. For each employee, you can also define a number of available holidays per holiday status. 
+    This module allows you to manage holidays and holidays requests. For each employee, you can also define a number of available holidays per holiday status.
 
     Note that:
     - A synchronisation with an internal agenda (use of the crm module) is possible: in order to automaticly create a case when an holiday request is accepted, you have to link the holidays status to a case section. You can set up this info and your color preferencies in
@@ -26,10 +26,15 @@
 """,
     "depends" : ["hr","crm_configuration"],
     "init_xml" : [],
-    "demo_xml" : ["hr_bel_holidays_2008.xml",],
     "update_xml" : [
         "ir.model.access.csv",
-"hr_workflow.xml","hr_view.xml","hr_holidays_report.xml","hr_holidays_wizard.xml",],
+        "hr_workflow.xml",
+        "hr_view.xml",
+        "hr_holidays_report.xml",
+        "hr_holidays_wizard.xml",
+    ],
+#    "demo_xml" : ["hr_bel_holidays_2008.xml",],
+    "demo_xml" : [],
     "active": False,
     "installable": True
 }
