@@ -31,7 +31,7 @@
 					<image name="gtk-dialog-info"/>
 					<group col="2" states="choose" fill="0" height="500">
 						<separator string="Export translation file" colspan="2"/>
-						<field name="lang" width="300" required="1"/>
+						<field name="lang" width="300"/>
 						<field name="format" required="1"/>
 						<field name="modules" width="500" height="200"/>
 						<field name="state" invisible="1"/>
@@ -41,6 +41,7 @@
 						<separator string="Export done"/>
 						<field name="data" readonly="1" nolabel="1"/>
 						<field name="advice" nolabel="1" height="80"/>
+						<field name="name" invisible="True"/>
 					</group>
 					<group col="2" colspan="3" fill="0">
 						<button states="choose" icon="gtk-cancel" name="act_cancel" special="cancel" string="Cancel" type="object"/>
