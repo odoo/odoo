@@ -36,7 +36,10 @@
     "description": "A module that adds new reports based on CRM cases.",
     "init_xml" : [],
     "demo_xml" : [],
-    "update_xml" : ["report_crm_view.xml"],
+    "update_xml" : [
+        "report_crm_view.xml",
+        "ir.model.access.csv",
+    ],
     "active": False,
     "installable": True
 }

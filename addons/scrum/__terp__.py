@@ -56,7 +56,12 @@
     * http://controlchaos.com
     """,
     "demo_xml" : ["scrum_demo.xml"],
-    "update_xml": ["scrum_view.xml","scrum_report.xml", "scrum_wizard.xml"],
+    "update_xml": [
+        "scrum_view.xml",
+        "scrum_report.xml",
+        "scrum_wizard.xml",
+        "ir.model.access.csv",
+    ],
     "active": False,
     "installable": True
 }

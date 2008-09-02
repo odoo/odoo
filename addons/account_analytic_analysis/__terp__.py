@@ -41,6 +41,7 @@ Add menu to show relevant information for each manager.""",
     "update_xml" : [
         "account_analytic_analysis_view.xml",
         "account_analytic_analysis_menu.xml",
+        "ir.model.access.csv",
     ],
     "demo_xml" : [],
     "active": False,

@@ -66,7 +66,6 @@
         "product_data.xml",
         "product_view.xml",
         "account_security.xml",
-        "project/project_security.xml", 
         "account_assert_test.xml",
     ],
     "translations" : {
@@ -77,4 +76,3 @@
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

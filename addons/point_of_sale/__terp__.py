@@ -18,7 +18,9 @@ Main features :
     "depends": ["sale", "purchase", "account", "account_tax_include"],
     "init_xml": [],
     "demo_xml": [],
-    "update_xml": ["pos_report.xml", "pos_wizard.xml", "pos_view.xml", "pos_sequence.xml", "pos_data.xml", "pos_workflow.xml"],
+    "update_xml": [
+        "ir.model.access.csv",
+"pos_report.xml", "pos_wizard.xml", "pos_view.xml", "pos_sequence.xml", "pos_data.xml", "pos_workflow.xml"],
     "installable": True,
 }
 

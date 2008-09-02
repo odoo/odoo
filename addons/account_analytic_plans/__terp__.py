@@ -38,7 +38,9 @@
     ],
     "demo_xml" : [
     ],
-    "update_xml" : ["model_wizard.xml","account_analytic_plans_view.xml",
+    "update_xml" : [
+        "ir.model.access.csv",
+"model_wizard.xml","account_analytic_plans_view.xml",
     "account_analytic_plans_report.xml"],
 
     "active": False,

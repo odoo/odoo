@@ -52,7 +52,6 @@
         - delivery costs
     """,
     "update_xml" : [
-
         "sale_workflow.xml",
         "sale_sequence.xml",
         "sale_data.xml",

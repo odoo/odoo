@@ -51,7 +51,6 @@
         "hr_report.xml", 
         "hr_wizard.xml",
         "hr_department_view.xml",
-        "hr_security.xml",
     ],
     "active": False,
     "installable": True

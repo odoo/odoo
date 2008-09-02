@@ -42,7 +42,10 @@
     """,
     "init_xml" : [],
     "demo_xml" : [],
-    "update_xml" : ["report_stock_view.xml",],
+    "update_xml" : [
+        "report_stock_view.xml",
+        "ir.model.access.csv",
+    ],
     "active": False,
     "installable": True
 }

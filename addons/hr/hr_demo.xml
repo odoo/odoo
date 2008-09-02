@@ -35,7 +35,9 @@
         
         <record id="employee1" model="hr.employee">
             <field name="name">Fabien Pinckaers</field>
-            <field model="res.users" name="user_id" search="[('login','=','admin')]"/>
+            <!--<field name="regime">45</field>-->
+            <field name="user_id" ref="base.user_root"/>
+            <!--<field name="holiday_max">25</field>-->
         </record>
         
         <record model="hr.timesheet">

@@ -36,7 +36,10 @@
     "description": "A module that adds new reports based on analytic accounts.",
     "init_xml" : [],
     "demo_xml" : [],
-    "update_xml" : ["report_analytic_view.xml"],
+    "update_xml" : [
+        "report_analytic_view.xml",
+        "ir.model.access.csv",
+    ],
     "active": False,
     "installable": True
 }

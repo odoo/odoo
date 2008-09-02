@@ -26,6 +26,8 @@
                     "crm_opportunity_data.xml"
                   ],
     "update_xml" : [
+        "ir.model.access.csv",
+
                     "crm_bugs_demo.xml",
                     "crm_jobs_demo.xml",
                     "crm_lead_demo.xml",

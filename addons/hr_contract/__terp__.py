@@ -46,7 +46,8 @@
     "demo_xml" : [],
     "update_xml" : [
         "hr_contract_view.xml",
-        "hr_contract_security.xml"
+        "hr_contract_security.xml",
+        "ir.model.access.csv",
     ],
     "active": False,
     "installable": True
