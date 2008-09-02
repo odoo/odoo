@@ -124,7 +124,7 @@ class view_sc(osv.osv):
     _name = 'ir.ui.view_sc'
     _columns = {
         'name': fields.char('Shortcut Name', size=64, required=True),
-        'res_id': fields.many2one('ir.values','Resource Ref.', ondelete='cascade'),
+        'res_id': fields.many2one('ir.ui.menu','Resource Ref.', ondelete='cascade'),
         'sequence': fields.integer('Sequence'),
         'user_id': fields.many2one('res.users', 'User Ref.', required=True, ondelete='cascade'),
         'resource': fields.char('Resource Name', size=64, required=True)
