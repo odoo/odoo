@@ -111,7 +111,7 @@
         </td>
         <td>
           <para style="terp_default_Bold_9">Shipping Address:</para>
-          <para style="terp_default_9">[[ picking.address_id.partner_id.title ]][[ picking.address_id.partner_id.name ]]</para>
+          <para style="terp_default_9">[[ (picking.address_id and picking.address_id.partner_id and picking.address_id.partner_id.title) or '' ]][[ picking.address_id.partner_id.name ]]</para>
           <para style="terp_default_9">[[ (picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.title) or '' ]] [[ (picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.name) or '' ]] </para>
           <para style="terp_default_9">[[ (picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.street) or '' ]]</para>
           <para style="terp_default_8">[[ (picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.zip) or '' ]][[ (picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.city) or '' ]][[ (picking.address_id.state_id and picking.address_id.state_id.name) or '' ]][[ (picking.address_id.country_id and picking.address_id.country_id.name) or '' ]]</para>
