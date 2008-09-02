@@ -125,7 +125,6 @@
                             <field name="sign"/>
 
                             <field name="currency_id" select="2"/>
-                            <field name="close_method"/>
                             <field name="reconcile"/>
                             <newline/>
                             <newline/>
@@ -420,8 +419,6 @@
                 <tree string="Account Type">
                     <field name="code"/>
                     <field name="name"/>
-                    <field name="code_from"/>
-                    <field name="code_to"/>
                 </tree>
             </field>
         </record>
@@ -435,8 +432,6 @@
                     <field name="code" select="1"/>
                     <field name="sequence"/>
                     <field name="close_method"/>
-                    <field name="code_from" select="1"/>
-                    <field name="code_to" select="1"/>
                     <field name="partner_account"/>
                 </form>
             </field>
