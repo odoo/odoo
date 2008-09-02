@@ -61,7 +61,7 @@ class db(netsvc.Service):
         self.id = 0
         self.id_protect = threading.Semaphore()
 
-    def create(self, password, db_name, demo, lang):
+    def create(self, password, db_name, demo, lang, user_password='admin'):
         security.check_super(password)
         self.id_protect.acquire()
         self.id += 1
@@ -76,7 +76,7 @@ class db(netsvc.Service):
         cr.execute('CREATE DATABASE ' + db_name + ' ENCODING \'unicode\'')
         cr.close()
         class DBInitialize(object):
-            def __call__(self, serv, id, db_name, demo, lang):
+            def __call__(self, serv, id, db_name, demo, lang, user_password='admin'):
                 try:
                     serv.actions[id]['progress'] = 0
                     clean = False
@@ -92,9 +92,11 @@ class db(netsvc.Service):
                         tools.trans_load(db_name, filename, lang)
                     serv.actions[id]['clean'] = True
                     cr = sql_db.db_connect(db_name).cursor()
+                    cr.execute('UPDATE res_users SET password=%s, active=True WHERE login=%s', (
+                        user_password, 'admin'))
                     cr.execute('select login, password, name ' \
                             'from res_users ' \
-                            'where login <> \'root\' order by login')
+                            'order by login')
                     serv.actions[id]['users'] = cr.dictfetchall()
                     cr.close()
                 except Exception, e:
@@ -115,7 +117,7 @@ class db(netsvc.Service):
                 'CREATE DB: %s' % (db_name))
         dbi = DBInitialize()
         create_thread = threading.Thread(target=dbi,
-                args=(self, id, db_name, demo, lang))
+                args=(self, id, db_name, demo, lang, user_password))
         create_thread.start()
         self.actions[id]['thread'] = create_thread
         return id
