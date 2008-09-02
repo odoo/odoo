@@ -229,7 +229,7 @@ def trans_export(lang, modules, buffer, format, dbname=None):
                 _process('po', [mod], modrows, buf, lang, newlang)
 
             tar = tarfile.open(fileobj=buffer, mode='w|gz')
-            tar.add(tmpdir, '/')
+            tar.add(tmpdir, '')
             tar.close()
 
         else:
