@@ -1066,15 +1066,15 @@
 						<page string="Create / Write" attrs="{'invisible':[('state','=','python'),('state','=','dummy'),('state','=','trigger'), ('state','=','sms'), ('state','=','email'), ('state','=','client_action'), ('state','=','other')]}">
 							<separator colspan="4" string="Fields Mapping"/>
 							<field name="otype"/>
-							<field name="srcmodel_id" select="2" attrs="{'readonly':[('type','!=','new'),('type','!=','object_create')]}"/>
+							<field name="srcmodel_id" select="2" attrs="{'readonly':[('type','=','copy'),('state','=','write_create')]}"/>
 							<field name="fields_lines" nolabel="1" select="2" colspan="4">
 								<tree string="Field Mappings" editable="top">
-									<field name="col1" domain="[('model_id','=',parent.srcmodel_id)]"/>
+									<field name="col1" domain="[('model_id','=',parent.srcmodel_id or parent.model_id)]"/>
 									<field name="type"/>
-									<field name="value"/>
+									<field name="value" colsapan="4"/>
 								</tree>
 								<form string="Field Mapping"> 
-									<field name="col1" domain="[('model_id','=',parent.srcmodel_id)]"/>
+									<field name="col1" domain="[('model_id','=',parent.srcmodel_id or parent.model_id)]"/>
 									<field name="type"/>
 									<field name="value" colsapan="4"/>
 								</form>
