@@ -418,7 +418,7 @@ class payment_line(osv.osv):
 #        'partner_payable': fields.function(partner_payable, string="Partner payable", method=True, type='float'),
 #       'value_date': fields.function(_value_date, string='Value Date',
 #           method=True, type='date'),
-        'date': fields.date('Payment Date'),
+        'date': fields.date('Payment Date',help="If no payment date is specified, the bank will treat this payment line direclty"),
         'create_date': fields.datetime('Created' ,readonly=True),
         'state': fields.selection([('normal','Free'), ('structured','Structured')], 'Communication Type', required=True)
     }
@@ -457,8 +457,7 @@ class payment_line(osv.osv):
             elif date_prefered == 'due':
                 data['date'] = line.date_maturity
             elif date_prefered == 'fixed':
-                if date_planned:
-                    data['date'] = date_planned
+                data['date'] = date_planned
 
         return {'value': data}
 
