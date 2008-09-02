@@ -2247,9 +2247,9 @@ class orm(orm_template):
                 else:
                     cr.execute('select max(parent_right) from '+self._table)
                     pleft = cr.fetchone()[0] or 0
-                cr.execute('update '+self._table+' set parent_left=%d,parent_right=%d', (pleft+1,pleft+2))
                 cr.execute('update '+self._table+' set parent_left=parent_left+2 where parent_left>%d', (pleft,))
                 cr.execute('update '+self._table+' set parent_right=parent_right+2 where parent_right>%d', (pleft,))
+                cr.execute('update '+self._table+' set parent_left=%d,parent_right=%d where id=%d', (pleft+1,pleft+2,id_new))
 
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_create(user, self._name, id_new, cr)
