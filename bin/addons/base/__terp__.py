@@ -47,6 +47,7 @@
 		"res/partner/crm_demo.xml",
 	],
 	"update_xml" : [
+        "ir.model.access.csv",
 		"base_update.xml",
 		"ir/wizard/wizard_menu_view.xml",
 		"ir/workflow/workflow_view.xml",
