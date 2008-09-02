@@ -2,10 +2,6 @@
 <terp>
     <data noupdate="True">
 
-        <!--
-	Minimal Tiny ERP Account Chart
-	-->
-
         <record id="minimal_0" model="account.account">
             <field name="code">x 0</field>
             <field name="name">Chart For Automated Tests</field>
@@ -16,8 +12,8 @@
 This chart of account is used for automated testing purpose. It is installed
 only if you selected demo data during your database creation. Modules can
 do black box testing on entries on this chart of account, without modifying
-your own chart of account.
-</field>
+your own accounts.
+            </field>
         </record>
 
         <record id="a_recv" model="account.account">

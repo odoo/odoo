@@ -290,7 +290,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.bom</field>
             <field name="view_type">form</field>
-            <field name="view_form">form,tree</field>
+            <field name="view_mode">form,tree</field>
             <field name="domain">[('bom_id','=',False)]</field>
         </record>
         <menuitem action="mrp_bom_form_action_new" id="menu_mrp_bom_form_action_new" parent="menu_mrp_bom_form_action"/>
@@ -300,10 +300,10 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.bom</field>
             <field name="view_type">form</field>
-            <field name="domain">[('bom_id','<>',False)]</field>
+            <field name="domain">[('bom_id','&lt;&gt;',False)]</field>
         </record>
         <menuitem action="mrp_bom_form_action2" id="menu_mrp_bom_form_action2" parent="menu_mrp_configuration"/>
-        
+
         <record id="action2" model="ir.actions.act_window">
             <field name="name">Bill of Materials Structure</field>
             <field name="type">ir.actions.act_window</field>

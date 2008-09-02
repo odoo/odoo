@@ -1,17 +1,22 @@
 # -*- encoding: utf-8 -*-
 {
-    "name" : "Product Analytic Default",
+    "name" : "Account Analytic Default",
     "version" : "1.0",
     "author" : "Tiny",
     "website" : "http://tinyerp.com",
     "category" : "Generic Modules/product_analytic_default",
     "description": """
-        - add property field on product object and used this field on sale order line and invoice lines..
+Allows to automatically select analytic accounts based on criterions:
+* Product
+* Partner
+* User
+* Company
+* Date
     """,
-    "depends" : ['base','account'],
+    "depends" : ['account'],
     "init_xml" : [],
     "demo_xml" : [],
-    "update_xml" : ["product_analytic_default.xml"],
+    "update_xml" : ["account_analytic_default.xml"],
     "active": False,
     "installable": True
 }
