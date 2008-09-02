@@ -3,7 +3,7 @@
     <data>
         <menuitem icon="terp-partner" id="menu_base_partner" name="Partners" sequence="0"/>
         
-        <menuitem groups="group_admin" id="menu_base_config" name="Configuration" parent="menu_base_partner" sequence="1"/>
+        <menuitem id="menu_base_config" name="Configuration" parent="menu_base_partner" sequence="1"/>
         
         <!--
     ================================
@@ -38,7 +38,7 @@
             <field name="res_model">res.partner.function</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem action="action_partner_function_form" groups="group_admin" id="menu_partner_function_form" parent="base.menu_base_config"/>
+        <menuitem action="action_partner_function_form" id="menu_partner_function_form" parent="base.menu_base_config"/>
         
         <!--
     =====================
@@ -173,7 +173,7 @@
             <field name="res_model">res.partner.title</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem action="action_partner_title" groups="group_admin" id="menu_partner_title" parent="base.menu_base_config"/>
+        <menuitem action="action_partner_title" id="menu_partner_title" parent="base.menu_base_config"/>
         
         <!--
     =======================

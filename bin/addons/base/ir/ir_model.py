@@ -1,7 +1,7 @@
-# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2008 Camptocamp SA
 #
 # $Id$
 #
@@ -50,13 +50,13 @@ class ir_model(osv.osv):
         'model': fields.char('Object Name', size=64, required=True, search=1),
         'info': fields.text('Information'),
         'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True),
-        'state': fields.selection([('manual','Custom Object'),('base','Base Field')],'Manualy Created',readonly=1),
+        'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Manualy Created',readonly=1),
+        'access': fields.one2many('ir.model.access', 'model_id', 'Access'),
     }
     _defaults = {
         'model': lambda *a: 'x_',
         'state': lambda self,cr,uid,ctx={}: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
     }
-    
     def _check_model_name(self, cr, uid, ids):
         for model in self.browse(cr, uid, ids):
             if model.state=='manual':
@@ -96,6 +96,97 @@ class ir_model(osv.osv):
         else:
             x_custom_model._rec_name = x_custom_model._columns.keys()[0]
 ir_model()
+
+
+class ir_model_grid(osv.osv):
+    _name = 'ir.model.grid'
+    _table = 'ir_model'
+    _description = "Objects Security Grid"
+    _rec_name = 'name'
+    _columns = {
+        'name': fields.char('Object', size=64),
+        'model': fields.char('Object Name', size=64),
+    }
+
+    def create(self, cr, uid, vals, context=None):
+        raise osv.except_osv('Error !', 'You cannot add an entry to this view !')
+
+    def unlink(self, *args, **argv):
+        raise osv.except_osv('Error !', 'You cannot add an entry to this view !')
+    
+    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
+        result = super(osv.osv, self).read(cr, uid, ids, fields, context, load)        
+        allgr = self.pool.get('res.groups').search(cr, uid, [], context=context)
+        acc_obj = self.pool.get('ir.model.access')
+        for res in result:
+            rules = acc_obj.search(cr, uid, [('model_id', '=', res['id'])])
+            rules_br = acc_obj.browse(cr, uid, rules, context=context)
+            for g in allgr:
+                res['group_'+str(g)] = ''
+            for rule in rules_br:
+                perm_list = []
+                if rule.perm_read:
+                    perm_list.append('r')
+                if rule.perm_write:
+                    perm_list.append('w')
+                if rule.perm_create:
+                    perm_list.append('c')
+                if rule.perm_unlink:
+                    perm_list.append('u')
+                perms = ",".join(perm_list)
+                res['group_%i'%rule.group_id.id] = perms
+        return result
+
+    #
+    # This function do not write fields from ir.model because
+    # access rights may be different for managing models and
+    # access rights
+    #
+    def write(self, cr, uid, ids, vals, context=None):
+        vals_new = vals.copy()
+        acc_obj = self.pool.get('ir.model.access')
+        for grid in self.browse(cr, uid, ids, context=context):
+            model_id = grid.id
+            perms_rel = ['read','write','create','unlink']
+            for val in vals:
+                if not val[:6]=='group_':
+                    continue
+                group_id = int(val[6:])
+                rules = acc_obj.search(cr, uid, [('model_id', '=', model_id),('group_id', '=', group_id)])
+                if not rules:
+                    rules = [acc_obj.create(cr, uid, {
+                        'name': grid.name,
+                        'model_id':model_id,
+                        'group_id':group_id
+                    }) ]
+                vals = dict(map(lambda x: ('perm_'+x, x[0] in (vals[val] or '')), perms_rel))
+                acc_obj.write(cr, uid, rules, vals, context=context)
+        return True
+
+    def fields_get(self, cr, uid, fields=None, context=None, read_access=True):
+        result = super(ir_model_grid, self).fields_get(cr, uid, fields, context)
+        groups = self.pool.get('res.groups').search(cr, uid, [])
+        groups_br = self.pool.get('res.groups').browse(cr, uid, groups)
+        for group in groups_br:
+            result['group_%i'%group.id] = {'string': '%s'%group.name,'type': 'char','size': 7}
+        return result
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False):
+        result = super(ir_model_grid, self).fields_view_get(cr, uid, view_id, view_type, context=context, toolbar=toolbar)
+        groups = self.pool.get('res.groups').search(cr, uid, [])
+        groups_br = self.pool.get('res.groups').browse(cr, uid, groups)
+        cols = ['model', 'name']
+        xml = '''<?xml version="1.0"?>
+<%s editable="bottom">
+    <field name="name" select="1" readonly="1"/>
+    <field name="model" select="1" readonly="1"/>''' % (view_type,)
+        for group in groups_br:
+            xml += '''<field name="group_%i" sum="%s"/>''' % (group.id, group.name)
+        xml += '''</%s>''' % (view_type,)
+        result['arch'] = xml
+        result['fields'] = self.fields_get(cr, uid, cols, context)
+        return result
+ir_model_grid()
 
 class ir_model_fields(osv.osv):
     _name = 'ir.model.fields'
@@ -176,7 +267,7 @@ class ir_model_access(osv.osv):
         res = False
         grouparr  = group.split('.')
         if grouparr:
-            cr.execute("select * from res_groups_users_rel where uid=" + str(uid) + " and gid in(select res_id from ir_model_data where module='%s' and name='%s')" % (grouparr[0], grouparr[1]))
+            cr.execute("select * from res_groups_users_rel where uid=" + str(uid) + " and gid in(select res_id from ir_model_data where module=%s and name=%s)", (grouparr[0], grouparr[1],))
             r = cr.fetchall()   
             if not r:
                 res = False
@@ -186,30 +277,29 @@ class ir_model_access(osv.osv):
             res = False
         return res
     
+    def check_groups_by_id(self, cr, uid, group_id):
+        cr.execute("select * from res_groups_users_rel where uid=%i and gid=%i", (uid, group_id,))
+        r = cr.fetchall()    
+        if not r:
+            res = False
+        else:
+            res = True
+        return res
+    
     def check(self, cr, uid, model_name, mode='read',raise_exception=True):
-        assert mode in ['read','write','create','unlink'], 'Invalid access mode for security'
-        if uid == 1:
+        # Users root have all access (Todo: exclude xml-rpc requests)
+        if uid==1:
             return True
-
+        
+        assert mode in ['read','write','create','unlink'], 'Invalid access mode'
+        
+        # We check if a specific rule exists
         cr.execute('SELECT MAX(CASE WHEN perm_'+mode+' THEN 1 else 0 END) '
-            'FROM ir_model_access a '
-                'JOIN ir_model m '
-                    'ON (a.model_id=m.id) '
-                'JOIN res_groups_users_rel gu '
-                    'ON (gu.gid = a.group_id) '
-            'WHERE m.model = %s AND gu.uid = %s', (model_name, uid,))
+            'from ir_model_access a join ir_model m on (m.id=a.model_id) '
+                'join res_groups_users_rel gu on (gu.gid = a.group_id) '
+            'where m.model=%s and gu.uid=%s', (model_name, uid,))
         r = cr.fetchall()
-        if r[0][0] == None:
-            cr.execute('SELECT MAX(CASE WHEN perm_'+mode+' THEN 1 else 0 END) '
-                'FROM ir_model_access a '
-                    'JOIN ir_model m '
-                        'ON (a.model_id = m.id) '
-                'WHERE a.group_id IS NULL AND m.model = %s', (model_name,))
-            r= cr.fetchall()
-            if r[0][0] == None:
-                return True # Changed waiting final rules
-                #return False # by default, the user had no access
-
+        
         if not r[0][0]:
             if raise_exception:
                 msgs = {
@@ -218,14 +308,13 @@ class ir_model_access(osv.osv):
                         'create': _('You can not create this kind of document! (%s)'),
                         'unlink': _('You can not delete this document! (%s)'),
                         }
-                # due to the assert at the begin of the function, we will never have a KeyError
                 raise except_orm(_('AccessError'), msgs[mode] % model_name )
         return r[0][0]
 
     check = tools.cache()(check)
 
     #
-    # Methods to clean the cache on the Check Method.
+    # Check rights on actions
     #
     def write(self, cr, uid, *args, **argv):
         res = super(ir_model_access, self).write(cr, uid, *args, **argv)
@@ -237,6 +326,10 @@ class ir_model_access(osv.osv):
         return res
     def unlink(self, cr, uid, *args, **argv):
         res = super(ir_model_access, self).unlink(cr, uid, *args, **argv)
+        self.check()
+        return res
+    def read(self, cr, uid, *args, **argv):
+        res = super(ir_model_access, self).read(cr, uid, *args, **argv)
         self.check()
         return res
 ir_model_access()
@@ -430,6 +523,38 @@ class ir_model_data(osv.osv):
         return True
 ir_model_data()
 
+class ir_model_config(osv.osv):
+    _name = 'ir.model.config'
+    _columns = {
+        'password': fields.char('Password', size=64),
+        'password_check': fields.char('confirmation', size=64),
+    }
+
+    def action_cancel(self, cr, uid, ids, context={}):
+        return {
+            'view_type': 'form',
+            "view_mode": 'form',
+            'res_model': 'ir.module.module.configuration.wizard',
+            'type': 'ir.actions.act_window',
+            'target':'new',
+        }
+    
+    def action_update_pw(self, cr, uid, ids, context={}):
+        res = self.read(cr,uid,ids)[0]
+        root = self.pool.get('res.users').browse(cr, uid, [1])[0]
+        self.unlink(cr, uid, [res['id']])
+        if res['password']!=res['password_check']:
+            raise except_orm(_('Error'), _("Password mismatch !"))
+        elif not res['password']:
+            raise except_orm(_('Error'), _("Password empty !"))
+        self.pool.get('res.users').write(cr, uid, [root.id], {'password':res['password']})
+        return {
+            'view_type': 'form',
+            "view_mode": 'form',
+            'res_model': 'ir.module.module.configuration.wizard',
+            'type': 'ir.actions.act_window',
+            'target':'new',
+        }
+ir_model_config()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

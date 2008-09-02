@@ -29,6 +29,14 @@
                         </page>
                         <page string="Access Rights">
                             <field colspan="4" name="model_access" nolabel="1">
+                                <tree string="Access Rules" editable="top">
+                                    <field name="model_id"/>
+                                    <field name="perm_read"/>
+                                    <field name="perm_write"/>
+                                    <field name="perm_create"/>
+                                    <field name="perm_unlink"/>
+                                    <field name="name"/>
+                                </tree>
                                 <form string="Access Controls">
                                     <field colspan="4" name="name" select="1"/>
                                     <field name="model_id" select="1"/>
@@ -40,8 +48,17 @@
                                 </form>
                             </field>
                         </page>
+                        <page string="Menus">
+                            <field colspan="4" name="menu_access"/>
+                        </page>
                         <page string="Rules">
-                            <field colspan="4" name="rule_groups" nolabel="1"/>
+                            <field colspan="4" name="rule_groups" nolabel="1">
+                                <tree string="Rules">
+                                    <field name="name"/>
+                                    <field name="model_id"/>
+                                    <field name="global"/>
+                                </tree>
+                            </field>
                         </page><page string="Notes">
                             <field colspan="4" name="comment" nolabel="1"/>
                         </page>

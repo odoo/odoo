@@ -965,15 +965,16 @@
             </field>
         </record>
         <record id="ir_access_act" model="ir.actions.act_window">
-            <field name="name">Access controls</field>
+            <field name="name">Access controls List</field>
             <field name="res_model">ir.model.access</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="ir_access_view_tree"/>
         </record>
-        <menuitem action="ir_access_act" id="menu_ir_access_act" parent="base.menu_security"/>
+        <menuitem name="Access Conrols" id="menu_security_access" parent="menu_security"/>
+        <menuitem action="ir_access_act" id="menu_ir_access_act" parent="menu_security_access"/>
 
         <!-- Rules -->
-        
+
         <record id="view_rule_group_form" model="ir.ui.view">
             <field name="name">Record rules</field>
             <field name="model">ir.rule.group</field>
@@ -1147,8 +1148,8 @@
             <field name="context">{'key':'server_action'}</field>
         </record>
         <menuitem action="action_server_action" id="menu_server_action" parent="base.next_id_6"/>
-		
-		<record id="view_model_fields_tree" model="ir.ui.view">
+
+        <record id="view_model_fields_tree" model="ir.ui.view">
             <field name="name">ir.model.fields.tree</field>
             <field name="model">ir.model.fields</field>
             <field name="type">tree</field>
@@ -1161,5 +1162,42 @@
                 </tree>
             </field>
         </record>
+
+
+        <record id="ir_access_view_form" model="ir.ui.view">
+            <field name="name">ir.model.access.form</field>
+            <field name="model">ir.model.access</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Access controls">
+                    <field colspan="4" name="name" select="1"/>
+                    <field name="model_id" select="1"/>
+                    <field name="group_id" select="1"/>
+                    <newline/>
+                    <field name="perm_read"/>
+                    <field name="perm_write"/>
+                    <field name="perm_create"/>
+                    <field name="perm_unlink"/>
+                </form>
+            </field>
+        </record>
+        <record id="ir_access_act" model="ir.actions.act_window">
+            <field name="name">Access controls List</field>
+            <field name="res_model">ir.model.access</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="ir_access_view_tree"/>
+        </record>
+        <menuitem name="Access Conrols" id="menu_security_access" parent="menu_security"/>
+        <menuitem action="ir_access_act" id="menu_ir_access_act" parent="menu_security_access"/>
+
+
+        <record model="ir.actions.act_window" id="action_model_grid_security">
+            <field name="name">Access Controls Grid</field>
+            <field name="res_model">ir.model.grid</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem action="action_model_grid_security" id="menu_ir_access_grid" parent="menu_security_access"/>
+
     </data>
 </terp>
