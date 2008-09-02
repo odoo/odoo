@@ -1276,7 +1276,7 @@
             <field name="type">default</field>
             <field model="res.country" name="country_id" ref="be"/>
         </record>
-        
+       
         <!-- Currencies -->
         <record id="EUR" model="res.currency">
             <field name="name">EUR</field>
@@ -1313,7 +1313,6 @@
             <field name="currency_id" ref="VEB"/>
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
-        
         
         <record id="CAD" model="res.currency">
             <field name="name">CAD</field>
@@ -1485,7 +1484,7 @@
             <field eval="False" name="active"/>
         </record>
         
-        
+        <!-- Basic Company  -->
         <record id="main_company" model="res.company">
             <field name="name">Tiny sprl</field>
             <field name="partner_id" ref="main_partner"/>

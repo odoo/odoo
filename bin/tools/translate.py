@@ -368,6 +368,8 @@ def trans_generate(lang, modules, dbname=None):
 
         elif model=='ir.model.fields':
             field_name = obj.name
+            if not field_name in pool.get(obj.model)._columns:
+                continue
             field_def = pool.get(obj.model)._columns[field_name]
 
             name = obj.model + "," + field_name

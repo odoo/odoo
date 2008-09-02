@@ -295,15 +295,14 @@ class orm_template(object):
     _table = None
 
     def _field_create(self, cr, context={}):
-        cr.execute("SELECT id FROM ir_model WHERE model='%s'" % self._name)
+        cr.execute("SELECT id FROM ir_model_data WHERE name='%s'" % ('model_'+self._name.replace('.','_'),))
         if not cr.rowcount:
-            # reference model in order to have a description of its fonctionnality in custom_report
             cr.execute('SELECT nextval(%s)', ('ir_model_id_seq',))
             id = cr.fetchone()[0]
             cr.execute("INSERT INTO ir_model (id,model, name, info) VALUES (%s, %s, %s, %s)", (id, self._name, self._description, self.__doc__))
             if 'module' in context:
                 cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, now(), now(), %s, %s, %s)", \
-                    ('model_'+self._table, context['module'], 'ir.model', id)
+                    ('model_'+self._name.replace('.','_'), context['module'], 'ir.model', id)
                 )
         cr.commit()
 

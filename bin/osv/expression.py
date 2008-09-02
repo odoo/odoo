@@ -203,6 +203,8 @@ class expression(object):
         return self
 
     def __leaf_to_sql(self, leaf, table):
+        if leaf == self.__DUMMY_LEAF:
+            return ('(1=1)',[])
         left, operator, right = leaf
 
         if operator == 'inselect':
