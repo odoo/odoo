@@ -173,7 +173,10 @@ def create_graph(module_list, force=None):
     for module in module_list:
         if module[-4:]=='.zip':
             module = module[:-4]
-        mod_path = get_module_path(module)
+        try:
+            mod_path = get_module_path(module)
+        except IOError:
+            continue
         terp_file = get_module_resource(module, '__terp__.py')
         if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path):
             try:

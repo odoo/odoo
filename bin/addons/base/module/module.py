@@ -566,7 +566,7 @@ class module_config_wizard_step(osv.osv):
         'note':fields.text('Text'),
         'action_id':fields.many2one('ir.actions.act_window', 'Action', select=True,required=True, ondelete='cascade'),
         'sequence':fields.integer('Sequence'),
-        'state':fields.selection([('open', 'Open'),('done', 'Done'),('skip','Skip')], string='State', required=True)
+        'state':fields.selection([('open', 'Not Started'),('done', 'Done'),('skip','Skipped')], string='State', required=True)
     }
     _defaults={
         'state': lambda *a: 'open',
