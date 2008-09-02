@@ -270,6 +270,13 @@ class graph(object):
                 return edge
         return None   
     
+    
+    def finalize_rank(self, node, level):
+        self.result[node]['y'] = level
+        for destination in self.optimal_edges.get(node, []):
+            self.finalize_rank(destination, level+1)
+            
+    
     def normalize(self):
         """The ranks are normalized by setting the least rank to zero.
         """
@@ -312,16 +319,12 @@ class graph(object):
     def init_order(self, node, level):
         """Initialize orders the nodes in each rank with depth-first search
         """        
-        if not self.result[node]['x']:
-            if self.order.get(level)==0:
-                self.result[node]['x'] = self.order[level]
-                self.order[level] = self.order[level]+1
-            else:
-                self.result[node]['x'] = self.order[level-1]
-                self.order[level-1] = self.order[level-1]+1        
-                           
+        if not self.result[node]['x']:  
+            self.result[node]['x'] = self.order[level]
+            self.order[level] = self.order[level]+1      
+                          
         for sec_end in self.transitions.get(node, []):
-            self.init_order(sec_end, level+1)
+            self.init_order(sec_end, self.result[sec_end]['y'])
             
             
     def order_heuristic(self):
@@ -444,15 +447,17 @@ class graph(object):
         l.reverse()
         no = len(l)        
         if no%2==0:
-            first_half = l[no/2:]       
+            first_half = l[no/2:] 
+            factor = 1      
         else:
             first_half = l[no/2+1:]
+            factor = 0
             
         last_half = l[:no/2]  
        
         i=1
         for child in first_half:
-            self.result[child]['x'] = mid_pos - i
+            self.result[child]['x'] = mid_pos - (i - (factor * 0.5))
             i += 1
             
             if self.transitions.get(child, False):
@@ -461,27 +466,31 @@ class graph(object):
                 last = self.tree_order(child, last)
                 
         if no%2:
-            self.result[l[no/2]]['x'] = mid_pos 
-            if self.transitions.get((l[no/2]), False):
-                self.result[l[no/2]]['x'] = last + len(self.transitions[child])/2 + 1
-                last = self.tree_order(l[no/2])
+            mid_node = l[no/2]
+            self.result[mid_node]['x'] = mid_pos 
+            
+            if self.transitions.get((mid_node), False):
+                if last:
+                    self.result[mid_node]['x'] = last + len(self.transitions[mid_node])/2 + 1
+                last = self.tree_order(mid_node)
             else:
                 if last:
-                    self.result[l[no/2]]['x'] = last + 1
-            self.result[node]['x'] = self.result[l[no/2]]['x']
+                    self.result[mid_node]['x'] = last + 1
+            self.result[node]['x'] = self.result[mid_node]['x']
             mid_pos = self.result[node]['x']          
                 
         i=1        
-        temp = None
+        last_child = None
         for child in last_half:     
-            self.result[child]['x'] = mid_pos + i
-            temp = child     
+            self.result[child]['x'] = mid_pos + (i - (factor * 0.5))
+            last_child = child     
             i += 1
             if self.transitions.get(child, False):
                 if last:
                     self.result[child]['x'] = last + len(self.transitions[child])/2 + 1                
                 last = self.tree_order(child, last)
-        last = self.result[temp]['x']
+        if last_child:
+            last = self.result[last_child]['x']
         return last    
                      
                      
@@ -528,35 +537,35 @@ class graph(object):
                         new_start = node
                         largest_tree = tree
                         
-                self.start_nodes.append(new_start)         
+                self.start_nodes.append(new_start)
+                         
                 for edge in largest_tree:
                     if rem_nodes.__contains__(edge[0]):
                         rem_nodes.remove(edge[0])
                     if rem_nodes.__contains__(edge[1]):
                         rem_nodes.remove(edge[1])
+                        
                 if not rem_nodes:
                     break
 
-
-                                        
+                                           
     def rank(self):
         """Finds the optimized rank of the nodes using Network-simplex algorithm
         
         @param start: starting node of the component
         """
-        
         self.levels = {}    
         self.critical_edges = []
         self.partial_order = {}
         self.links = []
         self.Is_Cyclic = False
         
-        tree = self.make_acyclic(None, self.start, 0, [])
+        tree = self.make_acyclic(None, self.start, 0, []) 
         self.Is_Cyclic = self.rev_edges(tree)        
         self.process_ranking(self.start)
         self.init_rank()
         
-        #make cut values of all tree edges to 0 to optimize ranking
+        #make cut values of all tree edges to 0 to optimize feasible tree
         e = self.leave_edge()   
         
         while e :
@@ -566,9 +575,17 @@ class graph(object):
             else:
                 self.exchange(e,f) 
             e = self.leave_edge()
-
+            
+        #finalize rank using optimum feasible tree
+        self.optimal_edges = {}
+        for edge in self.tree_edges:
+            source = self.optimal_edges.setdefault(edge[0], [])
+            source.append(edge[1])
+            
+        self.finalize_rank(self.start, 0)
+        
         #normalization
-        self.normalize()   
+#        self.normalize()   
         for edge in self.edge_wt:
             self.edge_wt[edge] = self.result[edge[1]]['y'] - self.result[edge[0]]['y']
         
@@ -580,12 +597,12 @@ class graph(object):
         
         self.make_chain()
         self.preprocess_order()
-        
         self.order = {}
-        for i in self.levels:
+        max_rank = max(map(lambda x: x, self.levels.keys()))
+        for i in range(max_rank+1):
             self.order[i] = 0
-
-        self.init_order(self.start, 0)
+        
+        self.init_order(self.start, self.result[self.start]['y'])
         
         for level in self.levels:
             self.levels[level].sort(lambda x,y: cmp(self.result[x]['x'], self.result[y]['x']))
@@ -597,7 +614,7 @@ class graph(object):
                 try:
                     if int(node):
                         continue
-                except e:
+                except ValueError:
                     self.levels[level].remove(node)
                     self.result.__delitem__(node)
         self.process_order()
@@ -612,28 +629,30 @@ class graph(object):
         self.start_nodes = starting_node or []
         self.partial_order = {}  
         self.links = []     
-         
-        if self.start_nodes:
-            #add dummy edges to the nodes which does not have any incoming edges
-            for node in self.no_ancester:
-                self.transitions[self.start_nodes[0]].append(node)
+                               
+        if self.nodes:
+            if self.start_nodes:
+                #add dummy edges to the nodes which does not have any incoming edges
+                for node in self.no_ancester:
+                    self.transitions[self.start_nodes[0]].append(node)
+                
+                
+                tree = self.make_acyclic(None, self.start_nodes[0], 0, [])
             
-            
-            tree = self.make_acyclic(None, self.start_nodes[0], 0, [])
-            
-            # if graph is disconnected than to find starting_node for each component of the node    
+                
+            # if graph is disconnected or no start-node is given 
+            #than to find starting_node for each component of the node    
             if len(self.nodes) > len(self.partial_order):
                 self.find_starts()
-                 
+                
+                     
             self.max_order = 0       
                  
             #for each component of the graph find ranks and order of the nodes
             for s in self.start_nodes:            
                 self.start = s
                 self.rank()   # First step:Netwoek simplex algorithm
-                self.order_in_rank()    #Second step: ordering nodes within ranks
-                      
-        
+                self.order_in_rank()    #Second step: ordering nodes within ranks  
             
 
     def __str__(self):
