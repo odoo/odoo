@@ -37,7 +37,7 @@ class create_model(wizard.interface):
         },
         'endit': {
             'actions': [],
-            'result': {'type':'form', 'arch':'', 'fields':{}, 'state':'end'}
+            'result': {'type':'form', 'arch':'', 'fields':{}, 'state':[('end','OK')]} #FIXME: check
         },
     }
 create_model('create.model')

@@ -300,7 +300,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.bom</field>
             <field name="view_type">form</field>
-            <field name="domain">[('bom_id','&lt;&gt;',False)]</field>
+            <field name="domain">[('bom_id','!=',False)]</field>
         </record>
         <menuitem action="mrp_bom_form_action2" id="menu_mrp_bom_form_action2" parent="menu_mrp_configuration"/>
 
