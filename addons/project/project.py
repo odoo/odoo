@@ -125,16 +125,15 @@ class project(osv.osv):
             ('hour', 'By Hour'),
             ('effective', 'By Effective Hour')
             ], 'Price setting mode'),
-        'partner_id': fields.many2one('res.partner', 'Customer'),
+        'partner_id': fields.many2one('res.partner', 'Partner'),
         'contact_id': fields.many2one('res.partner.address', 'Contact'),
-        'pricelist_id': fields.many2one('product.pricelist', 'Pricelist'),
         'tax_ids': fields.many2many('account.tax', 'project_account_tax_rel', 'project_id','tax_id', 'Applicable taxes'),
         'warn_customer': fields.boolean('Warn customer'),
         'warn_header': fields.text('Mail header'),
         'warn_footer': fields.text('Mail footer'),
         'notes': fields.text('Notes'),
         'timesheet_id': fields.many2one('hr.timesheet.group', 'Working hours'),
-        'state': fields.selection([('open', 'Open'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'Status', required=True),
+        'state': fields.selection([('template', 'Template'), ('open', 'Open'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', required=True, readonly=True),
      }
 
     _defaults = {
@@ -151,10 +150,21 @@ class project(osv.osv):
     ]
 
     # toggle activity of projects, their sub projects and their tasks
-    def toggleActive(self, cr, uid, ids, context={}):
-        for proj in self.browse(cr, uid, ids, context):
-            self.setActive(cr, uid, proj.id, not proj.active, context)
-        return True
+    def settemplate(self, cr, uid, ids, context={}):
+        b_obj = self.browse(cr, uid, ids)[0]
+        task_data = self.pool.get('project.task').search(cr, uid, [('project_id','in',ids)])
+        for id in task_data:
+            self.pool.get('project.task').write(cr, uid, id, {'active':False})
+        return self.write(cr, uid, ids, {'state':'template'})
+    
+    def resetproject(self, cr, uid, ids, context={}):
+        cr.execute('select id from project_task where project_id in ('+','.join(map(str, ids))+')')
+        for id in cr.fetchall():
+            self.pool.get('project.task').write(cr, uid, id[0], {'active':True})
+        return self.write(cr, uid, ids, {'state':'open'})
+    
+    def duplicatetemplate(self, cr, uid, ids, context={}):
+        return self.pool.get('project.project').copy(cr, uid, ids[0], context=context)
 
     # set active value for a project, its sub projects and its tasks
     def setActive(self, cr, uid, id, value, context={}):
@@ -244,8 +254,6 @@ class task(osv.osv):
         'effective_hours': fields.function(_hours_effect, method=True, string='Eff. Hours'),
         'progress_rate': fields.function(_progress_rate, method=True, string='Progress', type='float'),
         'progress': fields.integer('Progress (0-100)'),
-        'billable': fields.boolean('To be invoiced'),
-        'invoice_id': fields.many2one('account.invoice','Generated Invoice'),
         'user_id': fields.many2one('res.users', 'Assigned to'),
         'partner_id': fields.many2one('res.partner', 'Customer'),
         'work_ids': fields.one2many('project.task.work', 'task_id', 'Work done'),
