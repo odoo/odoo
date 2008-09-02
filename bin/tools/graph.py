@@ -28,6 +28,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 import operator
+import math
 
 class graph(object):
     def __init__(self, nodes, transitions, no_ancester=None):
@@ -100,7 +101,7 @@ class graph(object):
         self.init_cutvalues()    
         
         
-    def tight_tree(self,):
+    def tight_tree(self):
         self.reachable_nodes = []
         self.tree_edges = []
         self.reachable_node(self.start) 
@@ -175,6 +176,7 @@ class graph(object):
             for t in self.transitions.get(node, []):
                 self.process_ranking(t, level+1)
                 
+                
     def make_acyclic(self, parent, node, level, tree):
         """Computes Partial-order of the nodes with depth-first search
         """
@@ -209,7 +211,7 @@ class graph(object):
                 self.transitions[src].remove(des)
                 self.transitions.setdefault(des, []).append(src)
                 Is_Cyclic = True
-            elif edge_len > 1:
+            elif math.fabs(edge_len) > 1:
                 Is_Cyclic = True
             i += 1
         
@@ -433,35 +435,56 @@ class graph(object):
                     i += 1
             else:     
                 self.max_order += max_level+1
-                mid_pos = self.result[self.start]['x']  
-    
-    def tree_order(self, node):
+                mid_pos = self.result[self.start]['x'] 
+                
+
+    def tree_order(self, node, last=0):
         mid_pos = self.result[node]['x']
         l = self.transitions[node]
         l.reverse()
-        no = len(l)
+        no = len(l)        
         if no%2==0:
             first_half = l[no/2:]       
         else:
             first_half = l[no/2+1:]
-            self.result[l[no/2]]['x'] = mid_pos 
-            if self.transitions.get((l[no/2]), False):
-                self.tree_order(l[no/2])
+            
         last_half = l[:no/2]  
        
         i=1
         for child in first_half:
-            self.result[child]['x'] = mid_pos - i 
+            self.result[child]['x'] = mid_pos - i
             i += 1
+            
             if self.transitions.get(child, False):
-                self.tree_order(child)
-        i=1
-        for child in last_half:
-            self.result[child]['x'] = mid_pos + i
-            i += 1
-            if self.transitions.get(child, False):
-                self.tree_order(child)
+                if last:
+                    self.result[child]['x'] = last + len(self.transitions[child])/2 + 1
+                last = self.tree_order(child, last)
                 
+        if no%2:
+            self.result[l[no/2]]['x'] = mid_pos 
+            if self.transitions.get((l[no/2]), False):
+                self.result[l[no/2]]['x'] = last + len(self.transitions[child])/2 + 1
+                last = self.tree_order(l[no/2])
+            else:
+                if last:
+                    self.result[l[no/2]]['x'] = last + 1
+            self.result[node]['x'] = self.result[l[no/2]]['x']
+            mid_pos = self.result[node]['x']          
+                
+        i=1        
+        temp = None
+        for child in last_half:     
+            self.result[child]['x'] = mid_pos + i
+            temp = child     
+            i += 1
+            if self.transitions.get(child, False):
+                if last:
+                    self.result[child]['x'] = last + len(self.transitions[child])/2 + 1                
+                last = self.tree_order(child, last)
+        last = self.result[temp]['x']
+        return last    
+                     
+                     
     def process_order(self): 
         """Finds actual-order of the nodes with respect to maximum number of nodes in a rank in component 
         """
@@ -473,8 +496,13 @@ class graph(object):
         
         if self.Is_Cyclic:
             self.graph_order()
-        else:    
-            self.tree_order(self.start)    
+        else:               
+            self.result[self.start]['x'] = 0
+            self.tree_order(self.start, 0)
+            min_order = math.fabs(min(map(lambda x: x['x'], self.result.values())))
+            for node in self.result:
+                self.result[node]['x'] += min_order 
+        
         
     def find_starts(self):    
         """Finds other start nodes of the graph in the case when graph is disconneted
@@ -517,8 +545,7 @@ class graph(object):
         @param start: starting node of the component
         """
         
-        self.levels = {}
-        self.order = {}
+        self.levels = {}    
         self.critical_edges = []
         self.partial_order = {}
         self.links = []
