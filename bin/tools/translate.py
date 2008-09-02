@@ -171,9 +171,12 @@ class TinyPoFile(object):
                                .replace('\n', '\\n"\n"')
 
         plurial = len(modules) > 1 and 's' or ''
-        self.buffer.write("#. module%s: %s\n"     \
-                          "#, python-format\n"  \
-                            % (plurial, ', '.join(modules)))
+        self.buffer.write("#. module%s: %s\n" % (plurial, ', '.join(modules)))
+        
+        if "code" in map(lambda e: e[0], tnrs):
+            # only strings in python code are python formated
+            self.buffer.write("#, python-format\n")
+                            
 
         for type, name, res_id in tnrs:
             self.buffer.write("#: %s:%s:%s\n" % (type, name, str(res_id)))
