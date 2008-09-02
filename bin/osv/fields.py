@@ -211,11 +211,6 @@ class binary(_column):
         if not values:
             values = []
 
-        def convert(b):
-            if not b:
-                return b
-            return '%d bytes' % b
-
         res = {}
         for i in ids:
             val = None
@@ -225,7 +220,7 @@ class binary(_column):
                     break
             res.setdefault(i, val)
             if context.get('get_binary_size', True):
-                res[i] = convert(val) 
+                res[i] = tools.human_size(val) 
 
         return res
 
