@@ -70,7 +70,7 @@ class expression(object):
                         return []
                     ids2 = table.search(cr, uid, [(parent, 'in', ids)], context=context)
                     return ids+rg(ids2, table, parent)
-                return [(left, 'in', rg(ids2, table, parent))]
+                return [(left, 'in', rg(ids, table, parent))]
 
         self.__main_table = table
 

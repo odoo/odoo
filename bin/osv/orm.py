@@ -296,15 +296,14 @@ class orm_template(object):
     _table = None
 
     def _field_create(self, cr, context={}):
-        cr.execute("SELECT id FROM ir_model WHERE model='%s'" % self._name)
+        cr.execute("SELECT id FROM ir_model_data WHERE name='%s'" % ('model_'+self._name.replace('.','_'),))
         if not cr.rowcount:
-            # reference model in order to have a description of its fonctionnality in custom_report
             cr.execute('SELECT nextval(%s)', ('ir_model_id_seq',))
             id = cr.fetchone()[0]
             cr.execute("INSERT INTO ir_model (id,model, name, info) VALUES (%s, %s, %s, %s)", (id, self._name, self._description, self.__doc__))
             if 'module' in context:
                 cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, now(), now(), %s, %s, %s)", \
-                    ('model_'+self._table, context['module'], 'ir.model', id)
+                    ('model_'+self._name.replace('.','_'), context['module'], 'ir.model', id)
                 )
         cr.commit()
 
@@ -1113,22 +1112,26 @@ class orm_memory(orm_template):
             self.unlink(ids)
         return True
 
-    def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
-        if not fields:
-            fields = self._columns.keys()
+    def read(self, cr, user, ids, fields_to_read=None, context=None, load='_classic_read'):
+        if not context:
+            context = {}
+        if not fields_to_read:
+            fields_to_read = self._columns.keys()
         result = []
         if self.datas:
             for id in ids:
                 r = {'id': id}
-                for f in fields:
+                for f in fields_to_read:
                     if id in self.datas:
                         r[f] = self.datas[id].get(f, False)
+                        if r[f] and isinstance(self._columns[f], fields.binary) and context.get('get_binary_size', True):
+                            r[f] = len(r[f])
                 result.append(r)
                 if id in self.datas:
                     self.datas[id]['internal.date_access'] = time.time()
-            fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields)
+            fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields_to_read)
             for f in fields_post:
-                res2 = self._columns[f].get_memory(cr, self, ids, f, user, context=context, values=False)
+                res2 = self._columns[f].get_memory(cr, self, ids, f, user, context=context, values=result)
                 for record in result:
                     record[f] = res2[record['id']]
         return result
@@ -1686,24 +1689,31 @@ class orm(orm_template):
             return result[0]
         return result
 
-    def _read_flat(self, cr, user, ids, fields, context=None, load='_classic_read'):
+    def _read_flat(self, cr, user, ids, fields_to_read, context=None, load='_classic_read'):
         if not context:
             context = {}
         if not ids:
             return []
 
-        if fields == None:
-            fields = self._columns.keys()
+        if fields_to_read == None:
+            fields_to_read = self._columns.keys()
 
         # construct a clause for the rules :
         d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
 
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
-        fields_pre = filter(lambda x: x in self._columns and getattr(self._columns[x], '_classic_write'), fields) + self._inherits.values()
+        fields_pre = filter(lambda x: x in self._columns and getattr(self._columns[x], '_classic_write'), fields_to_read) + self._inherits.values()
 
         res = []
         if len(fields_pre):
-            fields_pre2 = map(lambda x: (x in ('create_date', 'write_date')) and ('date_trunc(\'second\', '+x+') as '+x) or '"'+x+'"', fields_pre)
+            def convert_field(f):
+                if f in ('create_date', 'write_date'):
+                    return "date_trunc('second', %s) as %s" % (f, f)
+                if isinstance(self._columns[f], fields.binary) and context.get('get_binary_size', True):
+                    return "length(%s) as %s" % (f,f)
+                return '"%s"' % (f,)
+            #fields_pre2 = map(lambda x: (x in ('create_date', 'write_date')) and ('date_trunc(\'second\', '+x+') as '+x) or '"'+x+'"', fields_pre)
+            fields_pre2 = map(convert_field, fields_pre)
             for i in range(0, len(ids), cr.IN_MAX):
                 sub_ids = ids[i:i+cr.IN_MAX]
                 if d1:
@@ -1748,7 +1758,7 @@ class orm(orm_template):
                     del record[col]
 
         # all fields which need to be post-processed by a simple function (symbol_get)
-        fields_post = filter(lambda x: x in self._columns and self._columns[x]._symbol_get, fields)
+        fields_post = filter(lambda x: x in self._columns and self._columns[x]._symbol_get, fields_to_read)
         if fields_post:
             # maybe it would be faster to iterate on the fields then on res, so that we wouldn't need
             # to get the _symbol_get in each occurence
@@ -1758,7 +1768,7 @@ class orm(orm_template):
         ids = map(lambda x: x['id'], res)
 
         # all non inherited fields for which the attribute whose name is in load is False
-        fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields)
+        fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields_to_read)
 
         # Compute POST fields
         todo = {}
@@ -2238,9 +2248,9 @@ class orm(orm_template):
                 else:
                     cr.execute('select max(parent_right) from '+self._table)
                     pleft = cr.fetchone()[0] or 0
-                cr.execute('update '+self._table+' set parent_left=%d,parent_right=%d', (pleft+1,pleft+2))
                 cr.execute('update '+self._table+' set parent_left=parent_left+2 where parent_left>%d', (pleft,))
                 cr.execute('update '+self._table+' set parent_right=parent_right+2 where parent_right>%d', (pleft,))
+                cr.execute('update '+self._table+' set parent_left=%d,parent_right=%d where id=%d', (pleft+1,pleft+2,id_new))
 
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_create(user, self._name, id_new, cr)

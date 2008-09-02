@@ -142,7 +142,6 @@ class res_partner(osv.osv):
         'user_id': fields.many2one('res.users', 'Dedicated Salesman', help='The internal user that is in charge of communicating with this partner if any.'),
         'responsible': fields.many2one('res.users', 'Users'),
         'vat': fields.char('VAT',size=32 ,help="Value Added Tax number"),
-        'vat_subject': fields.boolean('Subjected to the VAT'),
         'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
         'website': fields.char('Website',size=64),
         'comment': fields.text('Notes'),
@@ -277,7 +276,7 @@ class res_partner_address(osv.osv):
     _name = 'res.partner.address'
     _order = 'id'
     _columns = {
-        'partner_id': fields.many2one('res.partner', 'Partner', required=True, ondelete='cascade', select=True),
+        'partner_id': fields.many2one('res.partner', 'Partner', ondelete='cascade', select=True),
         'type': fields.selection( [ ('default','Default'),('invoice','Invoice'), ('delivery','Delivery'), ('contact','Contact'), ('other','Other') ],'Address Type'),
         'function': fields.many2one('res.partner.function', 'Function'),
         'title': fields.selection(_contact_title_get, 'Title', size=32),

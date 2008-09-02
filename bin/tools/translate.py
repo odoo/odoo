@@ -324,7 +324,7 @@ def trans_generate(lang, modules, dbname=None):
     _to_translate = []
     def push_translation(module, type, name, id, source):
         tuple = (module, type, name, id, source)
-        if not tuple in _to_translate:
+        if source and tuple not in _to_translate:
             _to_translate.append(tuple)
 
 
@@ -354,7 +354,7 @@ def trans_generate(lang, modules, dbname=None):
 
                     # export arch
                     arch = result['arch']
-                    if not isinstance(arch, UpdateableStr):
+                    if arch and not isinstance(arch, UpdateableStr):
                         d = xml.dom.minidom.parseString(arch)
                         for t in trans_parse_view(d.documentElement):
                             push_translation(module, 'wizard_view', name, 0, t)
@@ -368,6 +368,8 @@ def trans_generate(lang, modules, dbname=None):
 
         elif model=='ir.model.fields':
             field_name = obj.name
+            if not field_name in pool.get(obj.model)._columns:
+                continue
             field_def = pool.get(obj.model)._columns[field_name]
 
             name = obj.model + "," + field_name

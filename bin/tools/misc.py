@@ -672,6 +672,18 @@ def mod10r(number):
     return result + str((10 - report) % 10)
 
 
+def human_size(sz):
+    """
+    Return the size in a human readable format
+    """
+    if not sz:
+        return False
+    units = ('bytes', 'Kb', 'Mb', 'Gb')
+    s, i = float(sz), 0
+    while s >= 1024 and i < len(units)-1:
+        s = s / 1024
+        i = i + 1
+    return "%0.2f %s" % (s, units[i])
 
 
 if __name__ == '__main__':

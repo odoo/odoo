@@ -5,99 +5,106 @@
             <field name="name">Import module</field>
             <field name="wiz_name">base.module.import</field>
         </record>
-        <menuitem action="wizard_base_module_import" id="menu_wizard_module_import" parent="base.menu_management" type="wizard"/>
+        <menuitem action="wizard_base_module_import" id="menu_wizard_module_import" parent="menu_management" type="wizard"/>
         
         <record id="wizard_update" model="ir.actions.wizard">
-            <field name="name">Download module list</field>
+            <field name="name">Update Modules List</field>
             <field name="wiz_name">module.module.update</field>
         </record>
-        <menuitem action="wizard_update" icon="STOCK_CONVERT" id="menu_module_update" parent="base.menu_management" type="wizard"/>
+        <menuitem action="wizard_update" icon="STOCK_CONVERT" id="menu_module_update" parent="menu_management" type="wizard"/>
         
         <wizard id="wizard_upgrade" model="ir.module.module" name="module.upgrade" string="Apply Scheduled Upgrades"/>
-        <menuitem action="wizard_upgrade" id="menu_wizard_upgrade" parent="base.menu_management" type="wizard"/>
+        <menuitem action="wizard_upgrade" id="menu_wizard_upgrade" parent="menu_management" type="wizard"/>
         
         <record id="wizard_lang_install" model="ir.actions.wizard">
             <field name="name">Install new language file</field>
             <field name="wiz_name">module.lang.install</field>
         </record>
-        <menuitem action="wizard_lang_install" id="menu_wizard_lang_install" parent="base.menu_translation" type="wizard"/>
+        <menuitem action="wizard_lang_install" id="menu_wizard_lang_install" parent="menu_translation" type="wizard"/>
 
-		<record id="wizard_lang_export" model="ir.ui.view">
-            <field name="name">Export Language</field>
+        <record id="wizard_lang_export" model="ir.ui.view">
+            <field name="name">Export a Translation File</field>
             <field name="model">wizard.module.lang.export</field>
             <field name="type">form</field>
-			<field name="arch" type="xml">
-				<form col="3" string="Export language">
-					<image name="gtk-dialog-info"/>
-					<group col="2" states="choose" fill="0" height="500">
-						<separator string="Export translation file" colspan="2"/>
-						<field name="lang" width="300"/>
-						<field name="format"/>
-						<field name="modules" width="500" height="200"/>
-						<field name="state" invisible="1"/>
-						<newline/><label/>
-					</group>
-					<group col="1" states="get" fill="0">
-						<separator string="Export done"/>
-						<field name="data" readonly="1" nolabel="1"/>
-						<field name="advice" nolabel="1" height="80"/>
-					</group>
-					<group col="2" colspan="3" fill="0">
-						<button states="choose" icon="gtk-cancel" name="act_cancel" special="cancel" string="Cancel" type="object"/>
-	                    <button states="choose" icon="gtk-ok" name="act_getfile" string="Get file" type="object"/>
-		                <button states="get" icon="gtk-close" name="act_destroy" special="cancel" string="Close" type="object"/>
-					</group>
-				</form>
-			</field>
+            <field name="arch" type="xml">
+                <form col="3" string="Export language">
+                    <image name="gtk-dialog-info"/>
+                    <group col="2" states="choose" fill="0" height="500">
+                        <separator string="Export translation file" colspan="2"/>
+                        <field name="lang" width="300" required="1"/>
+                        <field name="format" required="1"/>
+                        <field name="modules" width="500" height="200"/>
+                        <label colspan="2" string="The official translations pack of all OpenERP/OpenObjects module are
+managed through launchpad. We use their online interface to synchronize
+all translations efforts.
+
+To improve some terms of the official translations of OpenERP, you should
+modify the terms directly on the launchpad interface. If you made lots
+of translations for your own module, you can also publish all your
+translation at once. To do this, you must:
+
+If you created a new module, you must send the generated .pot file by email to
+the translation group: ...  They will review and integrate." align="0.0"/>
+                        <field name="state" invisible="1"/>
+                        <newline/>
+                    </group>
+                    <group col="1" states="get" fill="0">
+                        <separator string="Export done"/>
+                        <field name="data" readonly="1" nolabel="1"/>
+                        <field name="advice" nolabel="1" height="80"/>
+                    </group>
+                    <group col="2" colspan="3" fill="0">
+                        <button states="choose" icon="gtk-cancel" name="act_cancel" special="cancel" string="Cancel" type="object"/>
+                        <button states="choose" icon="gtk-ok" name="act_getfile" string="Get file" type="object"/>
+                        <button states="get" icon="gtk-close" name="act_destroy" special="cancel" string="Close" type="object"/>
+                    </group>
+                </form>
+            </field>
         </record>
-		<record id="action_wizard_lang_export" model="ir.actions.act_window">
-            <field name="name">Export language</field>
+        <record id="action_wizard_lang_export" model="ir.actions.act_window">
+            <field name="name">Export a Translation File</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">wizard.module.lang.export</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-        <menuitem action="action_wizard_lang_export" id="menu_wizard_lang_export" parent="base.menu_translation"/>
+        <menuitem action="action_wizard_lang_export" id="menu_wizard_lang_export" parent="menu_translation_export"/>
 
         <record id="wizard_lang_import" model="ir.actions.wizard">
-            <field name="name">Import language</field>
+            <field name="name">Import a Translation File</field>
             <field name="wiz_name">module.lang.import</field>
         </record>
-        <menuitem action="wizard_lang_import" id="menu_wizard_lang_import" parent="base.menu_translation" type="wizard"/>
-   
-        <record id="wizard_lang_import" model="ir.actions.wizard">
-            <field name="name">Import language</field>
-            <field name="wiz_name">module.lang.import</field>
-        </record>
-        <menuitem action="wizard_lang_import" id="menu_wizard_lang_import" parent="base.menu_translation" type="wizard"/>
- 
- 		<record id="wizard_update_translations" model="ir.ui.view">
+        <menuitem action="wizard_lang_import" id="menu_wizard_lang_import" parent="menu_translation_export" type="wizard"/>
+
+         <record id="wizard_update_translations" model="ir.ui.view">
             <field name="name">Update Translations</field>
             <field name="model">wizard.module.update_translations</field>
             <field name="type">form</field>
-			<field name="arch" type="xml">
-				<form col="3" string="Update Translations">
-					<image name="gtk-dialog-info"/>
-					<group col="2" fill="0" height="500">
-						<field name="lang" width="300"/>
-					</group>
-					<group col="2" colspan="3" fill="0">
-						<button icon="gtk-cancel" name="act_cancel" special="cancel" string="Cancel" type="object"/>
-	                    <button icon="gtk-ok" name="act_update" string="Update" type="object"/>
-					</group>
-				</form>
-			</field>
+            <field name="arch" type="xml">
+                <form col="3" string="Update Translations">
+                    <image name="gtk-dialog-info"/>
+                    <group col="2" fill="0" height="500">
+                        <field name="lang" width="300"/>
+                    </group>
+                    <label align="0.0" colspan="4" string="This wizard will detect new terms in the application so that you can update them manually."/>
+                    <separator colspan="4"/>
+                    <group col="2" colspan="4" fill="0">
+                        <button icon="gtk-cancel" name="act_cancel" special="cancel" string="Cancel" type="object"/>
+                        <button icon="gtk-ok" name="act_update" string="Update" type="object"/>
+                    </group>
+                </form>
+            </field>
         </record>
-		<record id="action_wizard_update_translations" model="ir.actions.act_window">
-            <field name="name">Update Translations</field>
+        <record id="action_wizard_update_translations" model="ir.actions.act_window">
+            <field name="name">Reload Official Translations</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">wizard.module.update_translations</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-        <menuitem action="action_wizard_update_translations" id="menu_wizard_update_translations" parent="base.menu_translation"/>
+        <menuitem action="action_wizard_update_translations" id="menu_wizard_update_translations" parent="menu_translation_app"/>
          
     </data>
 </terp>

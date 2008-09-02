@@ -275,7 +275,7 @@ class module(osv.osv):
             mdemo = True
             for dep in module.dependencies_id:
                 if dep.state == 'unknown':
-                    raise orm.except_orm(_('Error'), _('Unmet dependency: %s') % (dep.name,))
+                    raise orm.except_orm(_('Error'), _('You try to install a module that depends on the module: %s.\nBut this module is not available in your system.') % (dep.name,))
                 if dep.state != newstate:
                     ids2 = self.search(cr, uid, [('name','=',dep.name)])
                     mdemo = self.state_update(cr, uid, ids2, newstate, states_to_update, context, level-1,) and mdemo
@@ -566,7 +566,7 @@ class module_config_wizard_step(osv.osv):
         'note':fields.text('Text'),
         'action_id':fields.many2one('ir.actions.act_window', 'Action', select=True,required=True, ondelete='cascade'),
         'sequence':fields.integer('Sequence'),
-        'state':fields.selection([('open', 'Open'),('done', 'Done'),('skip','Skip')], string='State', required=True)
+        'state':fields.selection([('open', 'Not Started'),('done', 'Done'),('skip','Skipped')], string='State', required=True)
     }
     _defaults={
         'state': lambda *a: 'open',

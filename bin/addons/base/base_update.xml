@@ -6,26 +6,7 @@
     Languages
     ======================
     -->
-        <record id="view_lang" model="ir.ui.view">
-            <field name="name">Languages</field>
-            <field name="model">res.lang</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Language">
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
-                    <field name="translatable"/>
-                    <field name="direction"/>
-                </form>
-            </field>
-        </record>
-        <record id="action_lang" model="ir.actions.act_window">
-            <field name="name">Languages</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.lang</field>
-            <field name="view_type">form</field>
-        </record>
-        <menuitem id="next_id_2" name="Interface" parent="base.menu_custom"/><menuitem action="action_lang" id="menu_action_lang" parent="next_id_2"/>
+        <menuitem id="next_id_2" name="Interface" parent="base.menu_custom"/>
 
         <!--
     ======================

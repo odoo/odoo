@@ -385,7 +385,7 @@ class actions_server(osv.osv):
         'otype': fields.selection([
             ('copy','Create in Same Model'),
             ('new','Create in Other Model')
-        ], 'Create Model', required=True, size=32, change_default=True),
+        ], 'Create Model', size=32, change_default=True),
     }
     _defaults = {
         'state': lambda *a: 'dummy',
@@ -399,7 +399,8 @@ class actions_server(osv.osv):
 #    - uid
 #    - ids
 # If you plan to return an action, assign: action = {...}
-"""
+""",
+        'otype': lambda *a: 'copy',
     }
     
     def get_field_value(self, cr, uid, action, context):
@@ -496,7 +497,6 @@ class actions_server(osv.osv):
                     logger.notifyChannel('sms', netsvc.LOG_INFO, 'SMS successfully send to : %s' % (action.address))
                 else:
                     logger.notifyChannel('sms', netsvc.LOG_ERROR, 'Failed to send SMS to : %s' % (action.address))
-                    
             if action.state == 'other':
                 localdict = {
                     'self': self.pool.get(action.model_id.model),
@@ -535,9 +535,15 @@ class actions_server(osv.osv):
                     else:
                         expr = exp.value
                     res[exp.col1.name] = expr
-                obj_pool = self.pool.get(action.model_id.model)
-                id = context.get('active_id')
-                obj_pool.copy(cr, uid, id, res)
+                
+                obj_pool = None
+                if action.state == 'object_create' and action.otype == 'new':
+                    obj_pool = self.pool.get(action.srcmodel_id.model)
+                    obj_pool.create(cr, uid, res)
+                else:
+                    obj_pool = self.pool.get(action.model_id.model)
+                    id = context.get('active_id')
+                    obj_pool.copy(cr, uid, id, res)
                 
         return False
 actions_server()
