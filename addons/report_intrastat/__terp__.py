@@ -37,8 +37,8 @@
     "init_xml" : ["report_intrastat_data.xml",],
     "demo_xml" : [],
     "update_xml" : [
+        "security/ir.model.access.csv",
         "report_intrastat_view.xml",
-        "ir.model.access.csv",
     ],
     "active": False,
     "installable": True

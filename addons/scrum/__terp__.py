@@ -57,10 +57,10 @@
     """,
     "demo_xml" : ["scrum_demo.xml"],
     "update_xml": [
+        "security/ir.model.access.csv",
         "scrum_view.xml",
         "scrum_report.xml",
         "scrum_wizard.xml",
-        "ir.model.access.csv",
     ],
     "active": False,
     "installable": True

@@ -36,6 +36,7 @@
     "init_xml" : [],
     "demo_xml" : ["stock_demo.xml"],
     "update_xml" : [
+        "security/ir.model.access.csv",
         "stock_workflow.xml", 
         "stock_data.xml", 
         "stock_incoterms.xml",
@@ -46,7 +47,6 @@
         "product_data.xml",
         "product_view.xml",
         "partner_view.xml",
-        "ir.model.access.csv",
     ],
     "active": False,
     "installable": True

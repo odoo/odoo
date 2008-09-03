@@ -15,8 +15,8 @@
         "membership_data.xml",
         ],
     "update_xml" : [
-        "ir.model.access.csv",
-
+        "security/ir.model.access.csv"
+        "security/ir.model.access.csv",
         "membership_view.xml","membership_wizard.xml"
         ],
     "active" : False,

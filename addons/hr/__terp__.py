@@ -47,6 +47,8 @@
         "hr_department_demo.xml",
     ],
     "update_xml" : [
+        "security/ir.model.access.csv",
+        "security/hr_security.xml",
         "hr_view.xml", 
         "hr_report.xml", 
         "hr_wizard.xml",

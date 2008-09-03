@@ -27,7 +27,7 @@
     "depends" : ["hr","crm_configuration"],
     "init_xml" : [],
     "update_xml" : [
-        "ir.model.access.csv",
+        "security/ir.model.access.csv",
         "hr_workflow.xml",
         "hr_view.xml",
         "hr_holidays_report.xml",

@@ -23,8 +23,9 @@
     "init_xml" : [],
     "demo_xml" : [],
     "update_xml" : [
-        "ir.model.access.csv",
-'base_contact_view.xml'],
+        "security/ir.model.access.csv",
+        'base_contact_view.xml'
+    ],
     "active": False,
     "installable": True
 }

@@ -37,8 +37,8 @@
     "init_xml": [],
     "demo_xml": [],
     "update_xml": [
+        "security/ir.model.access.csv",
         "report_mrp_view.xml",
-        "ir.model.access.csv",
     ],
     "installable": True
 }

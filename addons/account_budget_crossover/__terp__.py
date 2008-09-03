@@ -23,8 +23,9 @@
     "init_xml" : [],
     "demo_xml" : [],
     "update_xml" : [
-        "ir.model.access.csv",
-"crossovered_budget_view.xml","crossovered_budget_report.xml","crossovered_budget_workflow.xml"],
+        "security/ir.model.access.csv",
+        "crossovered_budget_view.xml","crossovered_budget_report.xml","crossovered_budget_workflow.xml"
+    ],
     "active": False,
     "installable": True
 }

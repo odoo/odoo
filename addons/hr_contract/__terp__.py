@@ -45,9 +45,9 @@
     "init_xml" : ["hr_contract_data.xml", ],
     "demo_xml" : [],
     "update_xml" : [
+        "security/hr_contract_security.xml",
+        "security/ir.model.access.csv",
         "hr_contract_view.xml",
-        "hr_contract_security.xml",
-        "ir.model.access.csv",
     ],
     "active": False,
     "installable": True

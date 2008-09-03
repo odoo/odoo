@@ -62,12 +62,13 @@
     "init_xml" : [],
     "demo_xml" : ["mrp_demo.xml","mrp_order_point.xml"],
     "update_xml" : [
+        "security/mrp_security.xml",
+        "security/ir.model.access.csv",
         "mrp_workflow.xml", 
         "mrp_data.xml",
         "mrp_view.xml", 
         "mrp_wizard.xml", 
         "mrp_report.xml",
-        "mrp_security.xml",
     ],
     "active": False,
     "installable": True

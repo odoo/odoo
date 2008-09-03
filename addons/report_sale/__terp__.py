@@ -47,9 +47,9 @@
     "init_xml" : [],
     "demo_xml" : [],
     "update_xml" : [
+        "security/ir.model.access.csv",
         "report_sale_view.xml",
         "report_sale_graph.xml",
-        "ir.model.access.csv",
     ],
     "active": False,
     "installable": True

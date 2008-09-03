@@ -49,6 +49,7 @@
     "init_xml" : [],
     "demo_xml" : ["followup_demo.xml"],
     "update_xml" : [
+        "security/ir.model.access.csv",
         "followup_view.xml",
         "followup_report_view.xml"
     ],

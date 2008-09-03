@@ -35,7 +35,7 @@
     "init_xml" : [],
     "demo_xml" : [],
     "update_xml" : [
-        "ir.model.access.csv",
+        "security/ir.model.access.csv",
         "subscription_view.xml"],
     "active": False,
     "installable": True

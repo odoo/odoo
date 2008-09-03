@@ -89,7 +89,7 @@ account_analytic_plan_line()
 
 class account_analytic_plan_instance(osv.osv):
     _name='account.analytic.plan.instance'
-    _description = 'Object for create analytic entries from invoice lines'
+    _description = 'Analytic Plan Instance'
     _columns={
         'name':fields.char('Analytic Distribution',size=64),
         'code':fields.char('Distribution Code',size=16),
@@ -217,7 +217,7 @@ account_analytic_plan_instance()
 
 class account_analytic_plan_instance_line(osv.osv):
     _name='account.analytic.plan.instance.line'
-    _description = 'Object for create analytic entries from invoice lines'
+    _description = 'Analytic Instance Line'
     _columns={
         'plan_id':fields.many2one('account.analytic.plan.instance','Plan Id'),
         'analytic_account_id':fields.many2one('account.analytic.account','Analytic Account', required=True),

@@ -39,7 +39,7 @@ for one account entry.
     "demo_xml" : [
     ],
     "update_xml" : [
-        "ir.model.access.csv",
+        "security/ir.model.access.csv",
     "model_wizard.xml","account_analytic_plans_view.xml",
     "account_analytic_plans_report.xml"],
 

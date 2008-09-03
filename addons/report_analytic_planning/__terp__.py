@@ -39,6 +39,7 @@
         "report_account_analytic.planning.csv"
     ],
     "update_xml" : [
+        "security/ir.model.access.csv",
         "report_analytic_planning_view.xml",
         "report_analytic_planning_report.xml"
     ],

@@ -9,8 +9,9 @@
     "init_xml" : [],
     "demo_xml" : ["project_gtd_demo.xml"],
     "update_xml": [
-        "ir.model.access.csv",
-"project_gtd_view.xml","project_gtd_wizard.xml"],
+        "security/ir.model.access.csv",
+        "project_gtd_view.xml","project_gtd_wizard.xml"
+    ],
     "active": False,
     "installable": True
 }

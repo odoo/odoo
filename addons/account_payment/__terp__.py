@@ -40,13 +40,13 @@
     """,
     "demo_xml": [],
     "update_xml": [
+        "security/ir.model.access.csv",
         "payment_wizard.xml",
         "payment_view.xml",
         "payment_workflow.xml",
         "payment_sequence.xml",
         "account_invoice_view.xml",
         "payment_report.xml",
-        "ir.model.access.csv",
     ],
     "active": False,
     "installable": True

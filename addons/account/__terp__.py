@@ -41,7 +41,6 @@
     "website" : "http://tinyerp.com/module_account.html",
     "category" : "Generic Modules/Accounting",
     "init_xml" : [
-        
     ],
     "demo_xml" : [
         "account_demo.xml",
@@ -50,6 +49,8 @@
         "account_unit_test.xml",
     ],
     "update_xml" : [
+        "security/account_security.xml",
+        "security/ir.model.access.csv",
         "account_wizard.xml",
         "account_view.xml",
         "account_end_fy.xml",
@@ -65,7 +66,6 @@
         "project/project_report.xml",
         "product_data.xml",
         "product_view.xml",
-        "account_security.xml",
         "account_assert_test.xml",
     ],
     "translations" : {
