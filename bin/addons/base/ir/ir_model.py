@@ -113,9 +113,9 @@ class ir_model_grid(osv.osv):
 
     def unlink(self, *args, **argv):
         raise osv.except_osv('Error !', 'You cannot add an entry to this view !')
-    
+
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        result = super(osv.osv, self).read(cr, uid, ids, fields, context, load)        
+        result = super(osv.osv, self).read(cr, uid, ids, fields, context, load)
         allgr = self.pool.get('res.groups').search(cr, uid, [], context=context)
         acc_obj = self.pool.get('ir.model.access')
         for res in result:
@@ -134,7 +134,10 @@ class ir_model_grid(osv.osv):
                 if rule.perm_unlink:
                     perm_list.append('u')
                 perms = ",".join(perm_list)
-                res['group_%i'%rule.group_id.id] = perms
+                if rule.group_id:
+                    res['group_%d'%rule.group_id.id] = perms
+                else:
+                    res['group_0'] = perms
         return result
 
     #
@@ -151,7 +154,7 @@ class ir_model_grid(osv.osv):
             for val in vals:
                 if not val[:6]=='group_':
                     continue
-                group_id = int(val[6:])
+                group_id = int(val[6:]) or False
                 rules = acc_obj.search(cr, uid, [('model_id', '=', model_id),('group_id', '=', group_id)])
                 if not rules:
                     rules = [acc_obj.create(cr, uid, {
@@ -167,8 +170,9 @@ class ir_model_grid(osv.osv):
         result = super(ir_model_grid, self).fields_get(cr, uid, fields, context)
         groups = self.pool.get('res.groups').search(cr, uid, [])
         groups_br = self.pool.get('res.groups').browse(cr, uid, groups)
+        result['group_0'] = {'string': 'All Users','type': 'char','size': 7}
         for group in groups_br:
-            result['group_%i'%group.id] = {'string': '%s'%group.name,'type': 'char','size': 7}
+            result['group_%d'%group.id] = {'string': '%s'%group.name,'type': 'char','size': 7}
         return result
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context={}, toolbar=False):
@@ -179,9 +183,11 @@ class ir_model_grid(osv.osv):
         xml = '''<?xml version="1.0"?>
 <%s editable="bottom">
     <field name="name" select="1" readonly="1"/>
-    <field name="model" select="1" readonly="1"/>''' % (view_type,)
+    <field name="model" select="1" readonly="1"/>
+    <field name="group_0"/>
+    ''' % (view_type,)
         for group in groups_br:
-            xml += '''<field name="group_%i" sum="%s"/>''' % (group.id, group.name)
+            xml += '''<field name="group_%d"/>''' % (group.id, )
         xml += '''</%s>''' % (view_type,)
         result['arch'] = xml
         result['fields'] = self.fields_get(cr, uid, cols, context)
