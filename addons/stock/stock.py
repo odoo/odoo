@@ -277,49 +277,6 @@ class stock_location(osv.osv):
         return False
 stock_location()
 
-
-#----------------------------------------------------------
-# Stock Move
-#----------------------------------------------------------
-
-#class stock_move_lot(osv.osv):
-#   _name = "stock.move.lot"
-#   _description = "Move Lot"
-#   _columns = {
-#       'name': fields.char('Move Description', size=64, required=True),
-#       'active': fields.boolean('Active'),
-#       'state': fields.selection( (('draft','Draft'),('done','Moved')), 'State', readonly=True),
-#       'serial': fields.char('Tracking Number', size=32),
-#       'date_planned': fields.date('Scheduled date'),
-#       'date_moved': fields.date('Actual date'),
-#       'lot_id': fields.many2one('stock.lot','Lot', required=True),
-#       'loc_dest_id': fields.many2one('stock.location', 'Destination Location', required=True),
-#       'address_id': fields.many2one('res.partner.address', 'Destination Address'),
-#       'origin': fields.char('Origin', size=64),
-#   }
-#   _defaults = {
-#       'active': lambda *a: 1,
-#       'state': lambda *a: 'draft',
-#       'date_planned': lambda *a: time.strftime('%Y-%m-%d'),
-#   }
-#   #
-#   # TODO: test if valid
-#   # ERROR: does this function should call action_done instead of doing him self on
-#   # stock.move
-#   #
-#   def action_move(self, cr, uid, ids, context={}):
-#       for move in self.browse(cr, uid, ids, context):
-#           lot_remove = []
-#           for m in move.lot_id.move_ids:
-#               new_id = self.pool.get('stock.move').copy(cr, uid, m.id, {'location_id': m.location_dest_id.id, 'location_dest_id': move.loc_dest_id.id, 'date_moved': time.strftime('%Y-%m-%d'), 'picking_id': False, 'state':'draft','prodlot_id':False, 'tracking_id':False, 'lot_id': False, 'move_history_ids':[], 'move_history_ids2':[]})
-#               self.pool.get('stock.move').action_done(cr, uid, [new_id], context)
-#               cr.execute('insert into stock_move_history_ids (parent_id,child_id) values (%d,%d)', (m.id, new_id))
-#               lot_remove.append(m.id)
-#           self.pool.get('stock.move').write(cr, uid, lot_remove, {'lot_id':False})
-#       self.write(cr,uid, ids, {'state':'done','date_moved':time.strftime('%Y-%m-%d')})
-#       return True
-#stock_move_lot()
-
 class stock_tracking(osv.osv):
     _name = "stock.tracking"
     _description = "Stock Tracking Lots"

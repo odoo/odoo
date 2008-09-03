@@ -37,6 +37,7 @@
     "demo_xml" : ["stock_demo.xml"],
     "update_xml" : [
         "security/ir.model.access.csv",
+        "security/report_stock.xml",
         "stock_workflow.xml", 
         "stock_data.xml", 
         "stock_incoterms.xml",
