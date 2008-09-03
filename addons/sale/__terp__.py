@@ -52,7 +52,7 @@
         - delivery costs
     """,
     "update_xml" : [
-        "security/purchase_security.xml",
+        "security/sale_security.xml",
         "security/ir.model.access.csv",
         "sale_workflow.xml",
         "sale_sequence.xml",
