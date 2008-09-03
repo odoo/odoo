@@ -49,7 +49,6 @@ class graph(object):
             trans[t[0]].append(t[1])
         self.transitions = trans
         self.result = {}
-        self.levels = {}
         
     
     def init_rank(self):
@@ -59,29 +58,25 @@ class graph(object):
         for link in self.links:
             self.edge_wt[link] = self.result[link[1]]['y'] - self.result[link[0]]['y']
         
-        cnt = 0
-        list_node = []
-        list_edge = []
-        
         tot_node = self.partial_order.__len__()
-        #do until all the nodes in the components are searched             
+        #do until all the nodes in the component are searched             
         while self.tight_tree()<tot_node:
-            cnt+=1
             list_node = []
+            list_edge = []
             
             for node in self.nodes:
                 if node not in self.reachable_nodes:
                     list_node.append(node)
-            list_edge = []
             
-            for link in self.edge_wt:
-                 if link not in self.tree_edges:
-                    list_edge.append(link)
+            for edge in self.edge_wt:
+                 if edge not in self.tree_edges:
+                    list_edge.append(edge)
             
             slack = 100
             
             for edge in list_edge:
-                if (self.reachable_nodes.__contains__(edge[0]) and edge[1] not in self.reachable_nodes) or ( self.reachable_nodes.__contains__(edge[1]) and  edge[0] not in self.reachable_nodes):
+                if ((self.reachable_nodes.__contains__(edge[0]) and edge[1] not in self.reachable_nodes) or 
+                    (self.reachable_nodes.__contains__(edge[1]) and  edge[0] not in self.reachable_nodes)):
                     if(slack>self.edge_wt[edge]-1):
                         slack = self.edge_wt[edge]-1
                         new_edge = edge
@@ -95,8 +90,8 @@ class graph(object):
                 if node in self.reachable_nodes:
                     self.result[node]['y'] += delta
                     
-            for link in self.edge_wt:
-                self.edge_wt[link] = self.result[link[1]]['y'] - self.result[link[0]]['y']     
+            for edge in self.edge_wt:
+                self.edge_wt[edge] = self.result[edge[1]]['y'] - self.result[edge[0]]['y']     
         
         self.init_cutvalues()    
         
@@ -107,19 +102,20 @@ class graph(object):
         self.reachable_node(self.start) 
         return self.reachable_nodes.__len__()
     
+    
     def reachable_node(self, node):
         """Find the nodes of the graph which are only 1 rank apart from each other        
         """
         
         if node not in self.reachable_nodes:
             self.reachable_nodes.append(node)
-        for link in self.edge_wt:
-            if link[0]==node:
-                if self.edge_wt[link]==1:
-                    self.tree_edges.append(link)
-                    if link[1] not in self.reachable_nodes:
-                        self.reachable_nodes.append(link[1])
-                    self.reachable_node(link[1])
+        for edge in self.edge_wt:
+            if edge[0]==node:
+                if self.edge_wt[edge]==1:
+                    self.tree_edges.append(edge)
+                    if edge[1] not in self.reachable_nodes:
+                        self.reachable_nodes.append(edge[1])
+                    self.reachable_node(edge[1])
                     
                     
     def init_cutvalues(self):
@@ -157,9 +153,10 @@ class graph(object):
         """
         if node not in self.head_nodes:
             self.head_nodes.append(node)
-        for link in rest_edges:
-            if link[0]==node:       
-                self.head_component(link[1],rest_edges)
+            
+        for edge in rest_edges:
+            if edge[0]==node:       
+                self.head_component(edge[1],rest_edges)
         
 
     def process_ranking(self, node, level=0):
@@ -171,10 +168,11 @@ class graph(object):
         else:
             if level > self.result[node]['y']:
                 self.result[node]['y'] = level
+                
         if self.result[node]['mark']==0:
             self.result[node]['mark'] = 1
-            for t in self.transitions.get(node, []):
-                self.process_ranking(t, level+1)
+            for sec_end in self.transitions.get(node, []):
+                self.process_ranking(sec_end, level+1)
                 
                 
     def make_acyclic(self, parent, node, level, tree):
@@ -188,9 +186,9 @@ class graph(object):
             
         if self.partial_order[node]['mark']==0:
             self.partial_order[node]['mark'] = 1
-            for t in self.transitions.get(node, []):
-                self.links.append((node, t))
-                self.make_acyclic(node, t, level+1, tree)
+            for sec_end in self.transitions.get(node, []):
+                self.links.append((node, sec_end))
+                self.make_acyclic(node, sec_end, level+1, tree)
 
         return tree       
 
@@ -240,11 +238,11 @@ class graph(object):
         self.head_component(self.start, rest_edges)
         
         if self.head_nodes.__contains__(edge[1]):
-            list = []
+            l = []
             for node in self.result:
                 if not self.head_nodes.__contains__(node):
-                    list.append(node)            
-            self.head_nodes = list
+                    l.append(node)            
+            self.head_nodes = l
             
         slack = 100
         new_edge = edge
@@ -254,7 +252,8 @@ class graph(object):
                     if dest_node not in self.head_nodes:
                         if(slack>(self.edge_wt[edge]-1)):
                             slack = self.edge_wt[edge]-1
-                            new_edge = (source_node,dest_node)
+                            new_edge = (source_node, dest_node)
+                            
         return new_edge 
         
 
@@ -268,6 +267,7 @@ class graph(object):
         for edge in self.cut_edges:
             if self.cut_edges[edge]<0:
                 return edge
+            
         return None   
     
     
@@ -337,8 +337,9 @@ class graph(object):
         """
         for level in self.levels:            
             
-            node_median = []            
-            for node in self.levels[level]:             
+            node_median = []
+            nodes = self.levels[level]            
+            for node in nodes:             
                 node_median.append((node, self.median_value(node, level-1)))
 
             sort_list = sorted(node_median, key=operator.itemgetter(1))
@@ -347,7 +348,7 @@ class graph(object):
                 
             self.levels[level] = new_list
             order = 0
-            for node in self.levels[level]:
+            for node in nodes:
                 self.result[node]['x'] = order
                 order +=1
                 
@@ -383,23 +384,25 @@ class graph(object):
         @param adj_rank: rank 1 less than the node's rank 
         """
         
-        pre_level_nodes = self.levels.get(adj_rank)
-        
+        pre_level_nodes = self.levels.get(adj_rank, [])        
         adj_nodes = []
+        
         if pre_level_nodes:
-            for n in pre_level_nodes:
-                if (self.transitions.get(n) and self.transitions[n].__contains__(node)):
-                    adj_nodes.append(self.result[n]['x'])
+            for src in pre_level_nodes:
+                if (self.transitions.get(src) and self.transitions[src].__contains__(node)):
+                    adj_nodes.append(self.result[src]['x'])
                     
         return adj_nodes                     
         
         
     def preprocess_order(self):
         levels = {}
+        
         for r in self.partial_order:
             l = self.result[r]['y']
             levels.setdefault(l,[])
-            levels[l].append(r)         
+            levels[l].append(r)
+                     
         self.levels = levels
     
     
@@ -412,21 +415,22 @@ class graph(object):
         for level in self.levels:
             if level:
                 no = len(self.levels[level])
-                factor = (max_level - no) * 0.10
-                self.levels[level].reverse()
+                factor = (max_level - no) * 0.10                
                 list = self.levels[level] 
+                list.reverse()
                  
                 if no%2==0:
                     first_half = list[no/2:]
                     factor = -factor                
                 else:
                     first_half = list[no/2+1:]
-                    if max_level==1:
+                    if max_level==1:#for the case when horizontal graph is there
                         self.result[list[no/2]]['x'] = mid_pos + (self.result[list[no/2]]['y']%2 * 0.5)
                     else:
                         self.result[list[no/2]]['x'] = mid_pos + factor
                     
-                last_half = list[:no/2]       
+                last_half = list[:no/2]    
+                   
                 i=1
                 for node in first_half:
                     self.result[node]['x'] = mid_pos - (i + factor)
@@ -443,9 +447,10 @@ class graph(object):
 
     def tree_order(self, node, last=0):
         mid_pos = self.result[node]['x']
-        l = self.transitions[node]
+        l = self.transitions.get(node, [])
         l.reverse()
-        no = len(l)        
+        no = len(l)
+                
         if no%2==0:
             first_half = l[no/2:] 
             factor = 1      
@@ -498,6 +503,7 @@ class graph(object):
         """Finds actual-order of the nodes with respect to maximum number of nodes in a rank in component 
         """
         max_level = max(map(lambda x: len(x), self.levels.values()))
+        
         if max_level%2:
             self.result[self.start]['x'] = (max_level+1)/2 + self.max_order
         else:
@@ -505,13 +511,19 @@ class graph(object):
         
         if self.Is_Cyclic:
             self.graph_order()
+            #for flat edges ie sorce an destination nodes are on the same rank
+            for src in self.transitions:
+                for des in self.transitions[src]:
+                    if (self.result[des]['y'] - self.result[src]['y'] == 0):    
+                        self.result[src]['y'] += 0.08
+                        self.result[des]['y'] -= 0.08
         else:               
-            self.result[self.start]['x'] = 0
+            self.result[self.start]['x'] = 1 + self.max_order
             self.tree_order(self.start, 0)
             min_order = math.fabs(min(map(lambda x: x['x'], self.result.values())))
             for node in self.result:
                 self.result[node]['x'] += min_order 
-        
+            self.max_order = max(map(lambda x: x['x'], self.result.values()))
         
     def find_starts(self):    
         """Finds other start nodes of the graph in the case when graph is disconneted
@@ -529,6 +541,7 @@ class graph(object):
                 count = 0
                 new_start = rem_nodes[0]
                 largest_tree = []
+                
                 for node in rem_nodes:
                     self.partial_order = {}
                     tree = self.make_acyclic(None, node, 0, [])
@@ -560,11 +573,11 @@ class graph(object):
         self.links = []
         self.Is_Cyclic = False
         
-        tree = self.make_acyclic(None, self.start, 0, []) 
+        tree = self.make_acyclic(None, self.start, 0, [])
         self.Is_Cyclic = self.rev_edges(tree)        
         self.process_ranking(self.start)
         self.init_rank()
-        
+                
         #make cut values of all tree edges to 0 to optimize feasible tree
         e = self.leave_edge()   
         
@@ -577,15 +590,15 @@ class graph(object):
             e = self.leave_edge()
             
         #finalize rank using optimum feasible tree
-        self.optimal_edges = {}
-        for edge in self.tree_edges:
-            source = self.optimal_edges.setdefault(edge[0], [])
-            source.append(edge[1])
+#        self.optimal_edges = {}
+#        for edge in self.tree_edges:
+#            source = self.optimal_edges.setdefault(edge[0], [])
+#            source.append(edge[1])
             
-        self.finalize_rank(self.start, 0)
+#        self.finalize_rank(self.start, 0)
         
         #normalization
-#        self.normalize()   
+        self.normalize()   
         for edge in self.edge_wt:
             self.edge_wt[edge] = self.result[edge[1]]['y'] - self.result[edge[0]]['y']
         
@@ -599,24 +612,16 @@ class graph(object):
         self.preprocess_order()
         self.order = {}
         max_rank = max(map(lambda x: x, self.levels.keys()))
+        
         for i in range(max_rank+1):
             self.order[i] = 0
         
         self.init_order(self.start, self.result[self.start]['y'])
         
         for level in self.levels:
-            self.levels[level].sort(lambda x,y: cmp(self.result[x]['x'], self.result[y]['x']))
+            self.levels[level].sort(lambda x, y: cmp(self.result[x]['x'], self.result[y]['x']))
         
-        self.order_heuristic()
-        
-        for level in self.levels:
-            for node in self.levels[level]:
-                try:
-                    if int(node):
-                        continue
-                except ValueError:
-                    self.levels[level].remove(node)
-                    self.result.__delitem__(node)
+        self.order_heuristic()        
         self.process_order()
         
     
@@ -647,7 +652,6 @@ class graph(object):
                 
                      
             self.max_order = 0       
-                 
             #for each component of the graph find ranks and order of the nodes
             for s in self.start_nodes:            
                 self.start = s
@@ -667,9 +671,10 @@ class graph(object):
         """Computes actual co-ordiantes of the nodes
         """
         
-        for r in self.result:
-            self.result[r]['x'] = (self.result[r]['x']) * maxx + plusx2
-            self.result[r]['y'] = (self.result[r]['y']) * maxy + plusy2
+        for node in self.result:
+            self.result[node]['x'] = (self.result[node]['x']) * maxx + plusx2
+            self.result[node]['y'] = (self.result[node]['y']) * maxy + plusy2
+                  
 
     def result_get(self):
         return self.result
