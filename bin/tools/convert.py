@@ -226,12 +226,16 @@ class xml_import(object):
     def _test_xml_id(self, xml_id):
         id = xml_id
         if '.' in xml_id:
-            assert len(id.split('.'))==2, """The ID reference '"%s" must contains
+            module, id = xml_id.split('.', 1)
+            assert '.' not in id, """The ID reference "%s" must contains
 maximum one dot. They are used to refer to other modules ID, in the
 form: module.record_id""" % (xml_id,)
-            base, id = xml_id.split('.')
+            if module != self.module: 
+                modcnt = self.pool.get('ir.module.module').search_count(self.cr, self.uid, ['&', ('name', '=', module), ('state', 'in', ['installed'])])
+                assert modcnt == 1, """The ID "%s" refer to an uninstalled module""" % (xml_id,)
+
         if len(id) > 64:
-            self.logger.notifyChannel('init', netsvc.LOG_ERROR, 'id: %s is to long (max: 64)'%xml_id)
+            self.logger.notifyChannel('init', netsvc.LOG_ERROR, 'id: %s is to long (max: 64)'% (id,))
 
     def _tag_delete(self, cr, rec, data_node=None):
         d_model = rec.getAttribute("model")
