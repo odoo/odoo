@@ -29,6 +29,7 @@
 
 from osv import fields,osv
 from osv import orm
+import time
 
 class account_analytic_default(osv.osv):
     _name = 'account.analytic.default'
