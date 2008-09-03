@@ -2043,10 +2043,18 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         property_obj = self.pool.get('ir.property')
         fields_obj = self.pool.get('ir.model.fields')
 
-        todo_list = [('property_account_receivable','res.partner','account.account'), ('property_account_payable','res.partner','account.account'),('property_account_expense_categ','product.category','account.account'),('property_account_income_categ','product.category','account.account'),('property_account_tax','res.partner','account.tax'),('property_account_expense','product.template','account.account'),('property_account_income','product.template','account.account')]
+        todo_list = [
+            ('property_account_receivable','res.partner','account.account'), 
+            ('property_account_payable','res.partner','account.account'),
+            ('property_account_expense_categ','product.category','account.account'),
+            ('property_account_income_categ','product.category','account.account'),
+            ('property_account_tax','res.partner','account.tax'),
+            ('property_account_expense','product.template','account.account'),
+            ('property_account_income','product.template','account.account')
+        ]
         for record in todo_list:
             r = []
-            r = property_obj.search(cr, uid, [('name','like', record[0] ),('company_id','=',company_id)])
+            r = property_obj.search(cr, uid, [('name','=', record[0] ),('company_id','=',company_id)])
             account = getattr(obj_multi.chart_template_id, record[0])
             field = fields_obj.search(cr, uid, [('name','=',record[0]),('model','=',record[1]),('relation','=',record[2])])
             vals = {
@@ -2060,7 +2068,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 property_obj.write(cr, uid, r, vals)
             else:
                 #create the property
-                print "create the property",record[0]," for ",company_id
                 property_obj.create(cr, uid, vals)
 
         return {}
