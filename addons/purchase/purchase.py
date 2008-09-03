@@ -151,7 +151,7 @@ class purchase_order(osv.osv):
 
         'dest_address_id':fields.many2one('res.partner.address', 'Destination Address', states={'posted':[('readonly',True)]}),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', states={'posted':[('readonly',True)]}),
-        'location_id': fields.many2one('stock.location', 'Delivery destination', required=True),
+        'location_id': fields.many2one('stock.location', 'Destination', required=True),
 
         'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, help="The pricelist sets the currency used for this purchase order. It also computes the supplier price for the selected products/quantities."),
 
