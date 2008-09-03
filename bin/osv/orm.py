@@ -644,7 +644,7 @@ class orm_template(object):
                 translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, source=msg) or msg
                 error_msgs.append(
                         _("Error occur when validation the fields %s: %s") % (','.join(fields), translated_msg)
-                )      
+                )
         if error_msgs:
             cr.rollback()
             raise except_orm('ValidateError', '\n'.join(error_msgs))
