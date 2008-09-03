@@ -60,7 +60,6 @@ class account_analytic_default(osv.osv):
         if date:
             domain += ['|',('date_start','<=',date),('date_start','=',False)]
             domain += ['|',('date_stop','>=',date),('date_stop','=',False)]
-        print 'DOMAIN', domain
         best_index = -1
         res = False
         for rec in self.browse(cr, uid, self.search(cr, uid, domain, context=context), context=context):
