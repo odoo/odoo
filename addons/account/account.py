@@ -2068,7 +2068,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 property_obj.write(cr, uid, r, vals)
             else:
                 #create the property
-                print "create the property",record[0]," for ",company_id
                 property_obj.create(cr, uid, vals)
 
         return {}
