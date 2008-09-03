@@ -1753,7 +1753,7 @@ class orm(orm_template):
 
             for record in res:
                 record.update(res3[record[col]])
-                if col not in fields:
+                if col not in fields_to_read:
                     del record[col]
 
         # all fields which need to be post-processed by a simple function (symbol_get)
