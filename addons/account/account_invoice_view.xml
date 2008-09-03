@@ -6,6 +6,17 @@
 		Invoices
 		-->
 
+        <record id="view_invoice_line_calendar" model="ir.ui.view">
+            <field name="name">account.invoice.calendar</field>
+            <field name="model">account.invoice</field>
+            <field name="type">calendar</field>
+            <field name="arch" type="xml">
+                <calendar string="Invoices" color="journal_id" date_start="date_invoice">
+                    <field name="partner_id"/>
+                    <field name="amount_total"/>
+                </calendar>
+            </field>
+        </record>
         <record id="view_invoice_line_tree" model="ir.ui.view">
             <field name="name">account.invoice.line.tree</field>
             <field name="model">account.invoice.line</field>
@@ -263,6 +274,7 @@
             <field name="name">Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field name="view_id" ref="invoice_tree"/>
             <field name="context">{'type':'out_invoice'}</field>
         </record>
@@ -283,7 +295,7 @@
             <field name="name">Customer Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice'}</field>
@@ -293,7 +305,7 @@
             <field name="name">New Customer Invoice</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
+            <field name="view_mode">form,tree,calendar</field>
             <field eval="invoice_form" name="view_id"/>
             <field name="domain">[('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice'}</field>
@@ -304,7 +316,7 @@
             <field name="name">Supplier Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','in_invoice')]</field>
             <field name="context">{'type':'in_invoice'}</field>
@@ -314,7 +326,7 @@
             <field name="name">New Supplier Invoice</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
+            <field name="view_mode">form,tree,calendar</field>
             <field eval="invoice_supplier_form" name="view_id"/>
             <field name="domain">[('type','=','in_invoice')]</field>
             <field name="context">{'type':'in_invoice'}</field>
@@ -325,7 +337,7 @@
             <field name="name">Customer Refunds</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','out_refund')]</field>
             <field name="context">{'type':'out_refund'}</field>
@@ -336,7 +348,7 @@
             <field name="name">New Customer Refund</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
+            <field name="view_mode">form,tree,calendar</field>
             <field eval="invoice_form" name="view_id"/>
             <field name="domain">[('type','=','out_refund')]</field>
             <field name="context">{'type':'out_refund'}</field>
@@ -347,7 +359,7 @@
             <field name="name">Supplier Refunds</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','in_refund')]</field>
             <field name="context">{'type':'in_refund'}</field>
@@ -358,7 +370,7 @@
             <field name="name">New Supplier Refund</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
+            <field name="view_mode">form,tree,calendar</field>
             <field eval="invoice_supplier_form" name="view_id"/>
             <field name="domain">[('type','=','in_refund')]</field>
             <field name="context">{'type':'in_refund'}</field>
