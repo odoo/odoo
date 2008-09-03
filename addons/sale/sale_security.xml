@@ -15,7 +15,7 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-    <record model="ir.model.access" id="access_account_invoice_account.group_sale_manager">
+    <record model="ir.model.access" id="access_account_invoice_account_group_sale_manager">
         <field name="name">account_invoice account.group_sale_manager</field>
         <field name="model_id" model="ir.model" ref="account.model_account_invoice"/>
         <field name="group_id" ref="account.group_sale_manager"/>
@@ -33,7 +33,7 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-    <record model="ir.model.access" id="access_account_invoice_line_account.group_sale_manager">
+    <record model="ir.model.access" id="access_account_invoice_line_account_group_sale_manager">
         <field name="name">account_invoice_line account.group_sale_manager</field>
         <field name="model_id" model="ir.model" ref="account.model_account_invoice_line"/>
         <field name="group_id" ref="account.group_sale_manager"/>
@@ -42,7 +42,7 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-    <record model="ir.model.access" id="access_account_invoice_tax_account.group_sale_manager">
+    <record model="ir.model.access" id="access_account_invoice_tax_account_group_sale_manager">
         <field name="name">account_invoice_tax account.group_sale_manager</field>
         <field name="model_id" model="ir.model" ref="account.model_account_invoice_tax"/>
         <field name="group_id" ref="account.group_sale_manager"/>
@@ -60,7 +60,7 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-    <record model="ir.model.access" id="access_mrp_procurement_account.group_sale_manager">
+    <record model="ir.model.access" id="access_mrp_procurement_account_group_sale_manager">
         <field name="name">mrp_procurement account.group_sale_manager</field>
         <field name="model_id" model="ir.model" ref="mrp.model_mrp_procurement"/>
         <field name="group_id" ref="account.group_sale_manager"/>
@@ -78,7 +78,7 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-    <record model="ir.model.access" id="access_sale_order_account.group_sale_manager">
+    <record model="ir.model.access" id="access_sale_order_account_group_sale_manager">
         <field name="name">sale_order account.group_sale_manager</field>
         <field name="model_id" model="ir.model" ref="model_sale_order"/>
         <field name="group_id" ref="account.group_sale_manager"/>
@@ -87,7 +87,7 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-    <record model="ir.model.access" id="access_sale_order_base.group_user">
+    <record model="ir.model.access" id="access_sale_order_base_group_user">
         <field name="name">sale_order base.group_user</field>
         <field name="model_id" model="ir.model" ref="model_sale_order"/>
         <field name="group_id" ref="base.group_user"/>
@@ -105,7 +105,7 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-    <record model="ir.model.access" id="access_sale_order_line_account.group_sale_manager">
+    <record model="ir.model.access" id="access_sale_order_line_account_group_sale_manager">
         <field name="name">sale_order_line account.group_sale_manager</field>
         <field name="model_id" model="ir.model" ref="model_sale_order_line"/>
         <field name="group_id" ref="account.group_sale_manager"/>
@@ -114,7 +114,7 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_unlink" eval="1"/>
     </record>
-    <record model="ir.model.access" id="access_sale_order_line_base.group_user">
+    <record model="ir.model.access" id="access_sale_order_line_base_group_user">
         <field name="name">sale_order_line base.group_user</field>
         <field name="model_id" model="ir.model" ref="model_sale_order_line"/>
         <field name="group_id" ref="base.group_user"/>
@@ -123,7 +123,7 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_unlink" eval="0"/>
     </record>
-    <record model="ir.model.access" id="access_stock_move_account.group_sale_manager">
+    <record model="ir.model.access" id="access_stock_move_account_group_sale_manager">
         <field name="name">stock_move account.group_sale_manager</field>
         <field name="model_id" model="ir.model" ref="stock.model_stock_move"/>
         <field name="group_id" ref="account.group_sale_manager"/>
