@@ -341,13 +341,21 @@ class account_account(osv.osv):
             res.append((record['id'],name ))
         return res
 
-    def copy(self, cr, uid, id, default={}, context={}):
+    def copy(self, cr, uid, id, default={}, context={},done_list=[]):
         account = self.browse(cr, uid, id, context=context)
         new_child_ids = []
+        if not default:
+            default={}
+        default=default.copy()
         default['parent_id'] = False
+        if account.id in done_list:
+            return False
+        done_list.append(account.id)
         if account:
             for child in account.child_id:
-                new_child_ids.append(self.copy(cr, uid, child.id, default, context=context))
+                child_ids=self.copy(cr, uid, child.id, default, context=context,done_list=done_list)
+                if child_ids:
+                    new_child_ids.append(child_ids)
             default['child_id'] = [(6, 0, new_child_ids)]
         else:
             default['child_id'] = False
@@ -1642,9 +1650,10 @@ class account_tax_template(osv.osv):
 account_tax_template()
 
 class account_account_template(osv.osv):
-    _name='account.account.template'
-    _description ='Templates for Accounts'
     _order = "code"
+    _name = "account.account.template"
+    _description ='Templates for Accounts'
+
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
         'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign', required=True, help='Allows to change the displayed amount of the balance to see positive results instead of negative ones in expenses accounts.'),
@@ -1654,6 +1663,9 @@ class account_account_template(osv.osv):
         'reconcile': fields.boolean('Allow Reconciliation', help="Check this option if the user can make a reconciliation of the entries in this account."),
         'shortcut': fields.char('Shortcut', size=12),
         'note': fields.text('Note'),
+        'parent_id': fields.many2one('account.account.template','Parent Account Template', ondelete='cascade'),
+        'child_parent_ids':fields.one2many('account.account.template','parent_id','Children'),
+        'tax_ids': fields.many2many('account.tax.template', 'account_account_template_tax_rel','account_id','tax_id', 'Default Taxes'),
     }
 
     _defaults = {
@@ -1665,7 +1677,7 @@ class account_account_template(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from account_account_template_rel where child_id in ('+','.join(map(str,ids))+')')
+            cr.execute('select parent_id from account_account_template where id in ('+','.join(map(str,ids))+')')
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -1673,7 +1685,7 @@ class account_account_template(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id'])
+        (_check_recursion, 'Error ! You can not create recursive account templates.', ['parent_id'])
     ]
 
 
@@ -1685,12 +1697,81 @@ class account_account_template(osv.osv):
         for record in reads:
             name = record['name']
             if record['code']:
-                name = record['code']+' - '+name
+                name = record['code']+' '+name
             res.append((record['id'],name ))
         return res
 
-
 account_account_template()
+
+class account_tax_code_template(osv.osv):
+
+    _name = 'account.tax.code.template'
+    _description = 'Tax Code Template'
+    _order = 'code'
+    _columns = {
+        'name': fields.char('Tax Case Name', size=64, required=True),
+        'code': fields.char('Case Code', size=16),
+        'info': fields.text('Description'),
+        'parent_id': fields.many2one('account.tax.code.template', 'Parent Code', select=True),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
+        'sign': fields.float('Sign for parent', required=True),
+    }
+
+    def name_get(self, cr, uid, ids, context=None):
+        if not len(ids):
+            return []
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        reads = self.read(cr, uid, ids, ['name','code'], context, load='_classic_write')
+        return [(x['id'], (x['code'] and x['code'] + ' - ' or '') + x['name']) \
+                for x in reads]
+
+    def _default_company(self, cr, uid, context={}):
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        if user.company_id:
+            return user.company_id.id
+        return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
+    _defaults = {
+        'company_id': _default_company,
+        'sign': lambda *args: 1.0,
+    }
+    def _check_recursion(self, cr, uid, ids):
+        level = 100
+        while len(ids):
+            cr.execute('select distinct parent_id from account_tax_code_template where id in ('+','.join(map(str,ids))+')')
+            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+            if not level:
+                return False
+            level -= 1
+        return True
+
+    _constraints = [
+        (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id'])
+    ]
+    _order = 'code,name'
+account_tax_code_template()
+
+
+class account_chart_template(osv.osv):
+    _name="account.chart.template"
+    _description= "Templates for Account Chart"
+
+    _columns={
+        'name': fields.char('Name', size=64, required=True),
+        'account_root_id': fields.many2one('account.account.template','Root Account',required=True),
+        'tax_code_root_id': fields.many2one('account.tax.code.template','Root Tax Code',required=True,domain=[('parent_id','=',False)]),
+        'tax_template_ids': fields.one2many('account.tax.template', 'chart_template_id', 'Tax Template List', help='List of all the taxes that have to be installed by the wizard'),
+        'bank_account_view_id': fields.many2one('account.account.template','Bank Account',required=True),
+        'property_account_receivable': fields.many2one('account.account.template','Receivable Account'),
+        'property_account_payable': fields.many2one('account.account.template','Payable Account'),
+        'property_account_expense_categ': fields.many2one('account.account.template','Expense Category Account'),
+        'property_account_income_categ': fields.many2one('account.account.template','Income Category Account'),
+        'property_account_tax': fields.many2one('account.account.template','Default Tax on Partner'),
+        'property_account_expense': fields.many2one('account.account.template','Expense Account on Product Template'),
+        'property_account_income': fields.many2one('account.account.template','Income Account on Product Template'),
+    }
+
+account_chart_template()
 
 class account_tax_template(osv.osv):
 
@@ -1698,38 +1779,38 @@ class account_tax_template(osv.osv):
     _description = 'Templates for Taxes'
 
     _columns = {
+        'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', required=True),
         'name': fields.char('Tax Name', size=64, required=True),
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the taxes lines from the lowest sequences to the higher ones. The order is important if you have a tax that have several tax children. In this case, the evaluation order is important."),
-#       'amount': fields.float('Amount', required=True, digits=(14,4)),
+        'amount': fields.float('Amount', required=True, digits=(14,4)),
 #       'type': fields.selection( [('percent','Percent'), ('fixed','Fixed'), ('none','None'), ('code','Python Code')], 'Tax Type', required=True),
         'type': fields.selection( [('percent','Percent'), ('fixed','Fixed'), ('none','None')],'Tax Type', required=True),
-#       'applicable_type': fields.selection( [('true','True'), ('code','Python Code')], 'Applicable Type', required=True),
+        'applicable_type': fields.selection( [('true','True'), ('code','Python Code')], 'Applicable Type', required=True),
         'domain':fields.char('Domain', size=32, help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."),
-#       'account_collected_id':fields.many2one('account.account.template', 'Invoice Tax Account'),
-#       'account_paid_id':fields.many2one('account.account.template', 'Refund Tax Account'),
-#       'parent_id':fields.many2one('account.tax.template', 'Parent Tax Account', select=True),
-#       'child_ids':fields.one2many('account.tax.template', 'parent_id', 'Childs Tax Account'),
-#       'child_depend':fields.boolean('Tax on Childs', help="Indicate if the tax computation is based on the value computed for the computation of child taxes or based on the total amount."),
-#       'python_compute':fields.text('Python Code'),
-#       'python_compute_inv':fields.text('Python Code (reverse)'),
-#       'python_applicable':fields.text('Python Code'),
+        'account_collected_id':fields.many2one('account.account.template', 'Invoice Tax Account'),
+        'account_paid_id':fields.many2one('account.account.template', 'Refund Tax Account'),
+        'parent_id':fields.many2one('account.tax.template', 'Parent Tax Account', select=True),
+        'child_depend':fields.boolean('Tax on Childs', help="Indicate if the tax computation is based on the value computed for the computation of child taxes or based on the total amount."),
+        'python_compute':fields.text('Python Code'),
+        'python_compute_inv':fields.text('Python Code (reverse)'),
+        'python_applicable':fields.text('Python Code'),
         'tax_group': fields.selection([('vat','VAT'),('other','Other')], 'Tax Group', help="If a default tax if given in the partner it only override taxes from account (or product) of the same group."),
 
         #
         # Fields used for the VAT declaration
         #
-#       'base_code_id': fields.many2one('account.tax.code', 'Base Code', help="Use this code for the VAT declaration."),
-#       'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', help="Use this code for the VAT declaration."),
-#       'base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
-#       'tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
+        'base_code_id': fields.many2one('account.tax.code.template', 'Base Code', help="Use this code for the VAT declaration."),
+        'tax_code_id': fields.many2one('account.tax.code.template', 'Tax Code', help="Use this code for the VAT declaration."),
+        'base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
+        'tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
 
         # Same fields for refund invoices
 
-#       'ref_base_code_id': fields.many2one('account.tax.code', 'Base Code', help="Use this code for the VAT declaration."),
-#       'ref_tax_code_id': fields.many2one('account.tax.code', 'Tax Code', help="Use this code for the VAT declaration."),
-#       'ref_base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
-#       'ref_tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
-#       'include_base_amount': fields.boolean('Include in base amount', help="Indicate if the amount of tax must be included in the base amount for the computation of the next taxes."),
+        'ref_base_code_id': fields.many2one('account.tax.code.template', 'Base Code', help="Use this code for the VAT declaration."),
+        'ref_tax_code_id': fields.many2one('account.tax.code.template', 'Tax Code', help="Use this code for the VAT declaration."),
+        'ref_base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
+        'ref_tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
+        'include_base_amount': fields.boolean('Include in base amount', help="Indicate if the amount of tax must be included in the base amount for the computation of the next taxes."),
         'description': fields.char('Internal Name', size=32),
     }
 
@@ -1742,41 +1823,260 @@ class account_tax_template(osv.osv):
             res.append((record['id'],name ))
         return res
 
+    def _default_company(self, cr, uid, context={}):
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        if user.company_id:
+            return user.company_id.id
+        return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
+
     _defaults = {
-#       'python_compute': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or None\n# partner : res.partner object or None\n\nresult = price_unit * 0.10''',
-#       'python_compute_inv': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or False\n\nresult = price_unit * 0.10''',
-#       'applicable_type': lambda *a: 'true',
+        'python_compute': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or None\n# partner : res.partner object or None\n\nresult = price_unit * 0.10''',
+        'python_compute_inv': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or False\n\nresult = price_unit * 0.10''',
+       'applicable_type': lambda *a: 'true',
         'type': lambda *a: 'percent',
-#       'amount': lambda *a: 0,
+        'amount': lambda *a: 0,
         'sequence': lambda *a: 1,
         'tax_group': lambda *a: 'vat',
-#       'ref_tax_sign': lambda *a: 1,
-#       'ref_base_sign': lambda *a: 1,
-#       'tax_sign': lambda *a: 1,
-#       'base_sign': lambda *a: 1,
-#       'include_base_amount': lambda *a: False,
-#       'company_id': _default_company,
+        'ref_tax_sign': lambda *a: 1,
+        'ref_base_sign': lambda *a: 1,
+        'tax_sign': lambda *a: 1,
+        'base_sign': lambda *a: 1,
+        'include_base_amount': lambda *a: False,
     }
     _order = 'sequence'
 
 
 account_tax_template()
 
-class account_chart_template(osv.osv):
-    _name="account.chart.template"
-    _description= "Templates for Account Chart"
+    # Multi charts of Accounts wizard
 
-    _columns={
-        'name': fields.char('Name', size=64, required=True),
-        'account_root_id': fields.many2one('account.account.template','Root Account',required=True),
-        'bank_account_view_id': fields.many2one('account.account.template','Bank Account',required=True),
-        'property_receivable_id': fields.many2one('account.account.template','Receivable Account'),
-        'property_payable_id': fields.many2one('account.account.template','Payable Account'),
-        'property_account_expense_categ_id': fields.many2one('account.account.template','Expense Category Account'),
-        'property_account_income_categ_id': fields.many2one('account.account.template','Income Category Account'),
+class wizard_multi_charts_accounts(osv.osv_memory):
+    _name='wizard.multi.charts.accounts'
+
+    _columns = {
+        'company_id':fields.many2one('res.company','Company',required=True),
+        'chart_template_id': fields.many2one('account.chart.template','Chart Template',required=True),
+        'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Bank Accounts',required=True),
     }
 
-account_chart_template()
+    #global seq
+    #seq=0
+
+    def action_create(self, cr, uid, ids, context=None):
+        obj_multi = self.browse(cr,uid,ids[0])
+        obj_acc = self.pool.get('account.account')
+        obj_acc_tax = self.pool.get('account.tax')
+        obj_journal = self.pool.get('account.journal')
+        obj_acc_template = self.pool.get('account.account.template')
+
+        # Creating Account
+        obj_acc_root = obj_multi.chart_template_id.account_root_id
+        tax_code_root_id = obj_multi.chart_template_id.tax_code_root_id.id
+        company_id = obj_multi.company_id.id
+
+        #new code
+        acc_template_ref = {}
+        tax_template_ref = {}
+        tax_code_template_ref = {}
+        todo_dict = {}
+
+        #create all the tax code
+        children_tax_code_template = self.pool.get('account.tax.code.template').search(cr, uid, [('parent_id','child_of',[tax_code_root_id])], order='id')
+        for tax_code_template in self.pool.get('account.tax.code.template').browse(cr, uid, children_tax_code_template):
+            #if tax_code_root_id == tax_code_template.id:
+            #    name = obj_multi.company_id.name
+            #else:
+            #    name = tax_code_template.name
+            vals={
+                'name': (tax_code_root_id == tax_code_template.id) and obj_multi.company_id.name or tax_code_template.name,
+                'code': tax_code_template.code,
+                'info': tax_code_template.info,
+                'parent_id': tax_code_template.parent_id and tax_code_template_ref[tax_code_template.parent_id.id] or False,
+                'company_id': company_id,
+                'sign': tax_code_template.sign,
+            }
+            new_tax_code = self.pool.get('account.tax.code').create(cr,uid,vals)
+            #recording the new tax code to do the mapping
+            tax_code_template_ref[tax_code_template.id] = new_tax_code
+
+        #create all the tax 
+        for tax in obj_multi.chart_template_id.tax_template_ids:
+            #create it
+            vals_tax = {
+                'name':tax.name,
+                'sequence': tax.sequence,
+                'amount':tax.amount,
+                'type':tax.type,
+                'applicable_type': tax.applicable_type,
+                'domain':tax.domain,
+                'parent_id': tax.parent_id and tax_template_ref[tax.parent_id.id] or False,
+                'child_depend': tax.child_depend,
+                'python_compute': tax.python_compute,
+                'python_compute_inv': tax.python_compute_inv,
+                'python_applicable': tax.python_applicable,
+                'tax_group':tax.tax_group,
+                'base_code_id': tax.base_code_id and tax_code_template_ref[tax.base_code_id.id] or False,
+                'tax_code_id': tax.tax_code_id and tax_code_template_ref[tax.tax_code_id.id] or False,
+                'base_sign': tax.base_sign,
+                'tax_sign': tax.tax_sign,
+                'ref_base_code_id': tax.ref_base_code_id and tax_code_template_ref[tax.ref_base_code_id.id] or False,
+                'ref_tax_code_id': tax.ref_tax_code_id and tax_code_template_ref[tax.ref_tax_code_id.id] or False,
+                'ref_base_sign': tax.ref_base_sign,
+                'ref_tax_sign': tax.ref_tax_sign,
+                'include_base_amount': tax.include_base_amount,
+                'description':tax.description,
+                'company_id': company_id,
+            }
+            new_tax = obj_acc_tax.create(cr,uid,vals_tax)
+            #as the accounts have not been created yet, we have to wait before filling these fields
+            todo_dict[new_tax] = {
+                'account_collected_id': tax.account_collected_id and tax.account_collected_id.id or False,
+                'account_paid_id': tax.account_paid_id and tax.account_paid_id.id or False,
+            }
+            tax_template_ref[tax.id] = new_tax
+
+
+        #desactivate the parent_store functionnality on account_account for rapidity purpose
+        self.pool._init = True
+        children_acc_template = obj_acc_template.search(cr, uid, [('parent_id','child_of',[obj_acc_root.id])])
+        for account_template in obj_acc_template.browse(cr, uid, children_acc_template):
+            tax_ids = []
+            for tax in account_template.tax_ids:
+                tax_ids.append(tax_template_ref[tax.id])
+            #create the account_account
+            vals={
+                'name': (obj_acc_root.id == account_template.id) and obj_multi.company_id.name or account_template.name,
+                'sign': account_template.sign,
+                'currency_id': account_template.currency_id and account_template.currency_id.id or False,
+                'code': account_template.code,
+                'type': account_template.type,
+                'reconcile': account_template.reconcile,
+                'shortcut': account_template.shortcut,
+                'note': account_template.note,
+                'parent_id': account_template.parent_id and acc_template_ref[account_template.parent_id.id] or False,
+                'tax_ids': [(6,0,tax_ids)],
+                'company_id': company_id,
+            }
+            new_account = obj_acc.create(cr,uid,vals)
+            acc_template_ref[account_template.id] = new_account
+
+        #reactivate the parent_store functionnality on account_account
+        self.pool._init = False
+        self.pool.get('account.account')._parent_store_compute(cr)
+
+        for key,value in todo_dict.items():
+            if value['account_collected_id'] or value['account_paid_id']:
+                obj_acc_tax.write(cr, uid, [key], vals={
+                    'account_collected_id': value['account_collected_id'],
+                    'account_paid_id': value['account_paid_id'],
+                })
+
+        # Creating Journals
+        vals_journal={}
+        view_id = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Journal View')])[0]
+        seq_id = self.pool.get('ir.sequence').search(cr,uid,[('code','=','account.journal')])[0]
+        seq_code = self.pool.get('ir.sequence').get(cr, uid, 'account.journal')
+
+        vals_journal['view_id']=view_id
+        vals_journal['sequence_id']=seq_id
+
+        #Sales Journal
+        vals_journal['name'] = 'Sales Journal '+ str(seq_code)
+        vals_journal['type'] = 'sale'
+        vals_journal['code'] = 'SAJ' + str(seq_code)
+
+        if obj_multi.chart_template_id.property_account_receivable:
+            vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_receivable.id]
+            vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_receivable.id]
+
+        obj_journal.create(cr,uid,vals_journal)
+
+        # Purchase Journal
+        vals_journal['name']='Purchase Journal '+ str(seq_code)
+        vals_journal['type']='purchase'
+        vals_journal['code']='EXJ' + str(seq_code)
+
+        if obj_multi.chart_template_id.property_account_payable:
+            vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_payable.id]
+            vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_payable.id]
+
+        obj_journal.create(cr,uid,vals_journal)
+
+        # Bank Journals
+        view_id_cash = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Cash Journal View')])[0]
+        view_id_cur = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Multi-Currency Cash Journal View')])[0]
+        ref_acc_bank = obj_multi.chart_template_id.bank_account_view_id
+
+        current_num = 0
+        for line in obj_multi.bank_accounts_id:
+            #create the account_account for this bank journal
+            tmp = self.pool.get('res.partner.bank').name_get(cr, uid, [line.acc_no.id])[0][1]
+            vals={
+                'name': line.acc_no.bank and line.acc_no.bank.name+' '+tmp or tmp,
+                'sign': ref_acc_bank.sign,
+                'currency_id': line.currency_id and line.currency_id.id or False,
+                'code': ref_acc_bank.code+str(current_num),
+                'type': 'cash',
+                'reconcile': True,
+                'parent_id': acc_template_ref[ref_acc_bank.id] or False,
+                'company_id': company_id,
+            }
+            acc_cash_id  = obj_acc.create(cr,uid,vals)
+
+            #create the bank journal
+            vals_journal['name']='Bank Journal '+ str(current_num)
+            vals_journal['code']='BNK' + str(current_num)
+            vals_journal['sequence_id'] = seq_id
+            vals_journal['type'] = 'cash'
+            if line.currency_id:
+                vals_journal['view_id'] = view_id_cur
+                vals_journal['currency'] = line.currency_id.id
+            else:
+                vals_journal['view_id'] = view_id_cash
+            vals_journal['default_credit_account_id'] = acc_cash_id
+            vals_journal['default_debit_account_id']= acc_cash_id
+            obj_journal.create(cr,uid,vals_journal)
+
+            current_num += 1
+
+        #create the properties
+        property_obj = self.pool.get('ir.property')
+        fields_obj = self.pool.get('ir.model.fields')
+
+        todo_list = [('property_account_receivable','res.partner','account.account'), ('property_account_payable','res.partner','account.account'),('property_account_expense_categ','product.category','account.account'),('property_account_income_categ','product.category','account.account'),('property_account_tax','res.partner','account.tax'),('property_account_expense','product.template','account.account'),('property_account_income','product.template','account.account')]
+        for record in todo_list:
+            r = []
+            r = property_obj.search(cr, uid, [('name','like', record[0] ),('company_id','=',company_id)])
+            account = getattr(obj_multi.chart_template_id, record[0])
+            field = fields_obj.search(cr, uid, [('name','=',record[0]),('model','=',record[1]),('relation','=',record[2])])
+            vals = {
+                'name': record[0],
+                'company_id': company_id,
+                'fields_id': field[0],
+                'value': account and 'account.account,'+str(acc_template_ref[account.id]) or False,
+            }
+            if r:
+                #the property exist: modify it
+                property_obj.write(cr, uid, r, vals)
+            else:
+                #create the property
+                print "create the property",record[0]," for ",company_id
+                property_obj.create(cr, uid, vals)
+
+        return {}
+
+wizard_multi_charts_accounts()
+
+class account_bank_accounts_wizard(osv.osv_memory):
+    _name='account.bank.accounts.wizard'
+
+    _columns = {
+        'acc_no':fields.many2one('res.partner.bank','Account No.',required=True),
+        'bank_account_id':fields.many2one('wizard.multi.charts.accounts', 'Bank Account', required=True),
+        'currency_id':fields.many2one('res.currency', 'Currency'),
+    }
+
+account_bank_accounts_wizard()
 
 class wizard_account_chart_duplicate(osv.osv_memory):
     """
