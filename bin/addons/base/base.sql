@@ -328,6 +328,11 @@ CREATE TABLE ir_model_data (
 ---------------------------------
 -- Users
 ---------------------------------
-insert into res_users (id,login,password,name,action_id,active) values (1,'admin','admin','Administrator',NULL,True);
+
+insert into res_users (id,login,password,name,action_id,active) values (1,'admin',False,'Administrator',NULL,True);
 insert into ir_model_data (name,module,model,noupdate,res_id) values ('user_root','base','res.users',True,1);
+
+-- Compatibility purpose, to remove V6.0
+insert into ir_model_data (name,module,model,noupdate,res_id) values ('user_admin','base','res.users',True,1);
+
 select setval('res_users_id_seq', 2);
