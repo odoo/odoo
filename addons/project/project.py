@@ -220,10 +220,13 @@ class task(osv.osv):
     def _progress_rate(self, cursor, user, ids, name, arg, context=None):
         res = {}
         for task in self.browse(cursor, user, ids, context=context):
-            tot = 0.0
-            if task.state not in ('draft','cancelled'):
-                tot += task.effective_hours * 100.0 / task.planned_hours
-            res[task.id] = tot
+            if task.state in ('cancelled','done'):
+                res[task.id] = 100.0
+            else:
+                if task.planned_hours:
+                    res[task.id] = task.effective_hours * 100.0 / task.planned_hours
+                else:
+                    res[task.id] = 0.0
         return res
 
     _columns = {
