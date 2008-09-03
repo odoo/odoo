@@ -97,6 +97,12 @@ your own chart of account.
             <field eval="'account.account,'+str(a_pay)" name="value"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
+        <record forcecreate="True" id="property_account_supplier_tax" model="ir.property">
+            <field name="name">property_account_supplier_tax</field>
+            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_account_supplier_tax')]"/>
+            <field eval="False" name="value"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
         <record forcecreate="True" id="property_account_tax" model="ir.property">
             <field name="name">property_account_tax</field>
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_account_tax')]"/>

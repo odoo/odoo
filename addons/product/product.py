@@ -295,8 +295,6 @@ class product_template(osv.osv):
         'procure_method': lambda *a: 'make_to_stock',
         'uom_id': _get_uom_id,
         'uom_po_id': _get_uom_id,
-        #'uom_price_id' : _get_uom_id,
-        #'uos_id' : _get_uom_id,
         'uos_coeff' : lambda *a: 1.0,
         'mes_type' : lambda *a: 'fixed',
     }

@@ -202,13 +202,13 @@
                         <field name="number" select="1"/>
                         <field name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term)" select="1"/>
                         <field domain="[('partner_id','=',partner_id)]" name="address_invoice_id"/>
-                        <field name="payment_term" on_change="onchange_payment_term_date_invoice(payment_term, date_invoice)"/>
+                        <field name="currency_id" on_change="onchange_currency_id(currency_id)" select="2"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Invoice">
                             <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" name="account_id"/>
                             <field name="name" select="2"/>
-                            <field name="currency_id" on_change="onchange_currency_id(currency_id)" select="2"/>
+                            <field name="payment_term" on_change="onchange_payment_term_date_invoice(payment_term, date_invoice)"/>
                             <field colspan="4" name="invoice_line" nolabel="1" widget="one2many_list"/>
                             <group col="1" colspan="2">
                                 <field name="tax_line" nolabel="1">
@@ -555,7 +555,7 @@
 
         <menuitem action="action_invoice_tree13" id="menu_action_invoice_tree13" parent="menu_action_invoice_tree4"/>
 
-        <act_window domain="[('partner_id','=',active_id),('state','!=','draft'),('reconciled','=',False)]" id="act_res_partner_2_account_invoice_opened" name="Unpaid invoices" res_model="account.invoice" src_model="res.partner"/>
+        <act_window domain="[('partner_id','=',active_id)]" id="act_res_partner_2_account_invoice_opened" name="Invoices" res_model="account.invoice" src_model="res.partner"/>
 
         <act_window domain="[('journal_id','=',active_id),('state','!=','draft'),('reconciled','=',False)]" id="act_account_journal_2_account_invoice_opened" name="Unpaid invoices" res_model="account.invoice" src_model="account.journal"/>
 

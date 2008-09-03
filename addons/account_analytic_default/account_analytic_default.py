@@ -38,7 +38,7 @@ class account_analytic_default(osv.osv):
     _order = 'sequence'
     _columns = {
         'sequence': fields.integer('Sequence'),
-        'analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True),
+        'analytic_id': fields.many2one('account.analytic.account', 'Analytic Account'),
         'product_id': fields.many2one('product.product', 'Product', ondelete='cascade'),
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='cascade'),
         'user_id': fields.many2one('res.users', 'User', ondelete='cascade'),
@@ -49,14 +49,18 @@ class account_analytic_default(osv.osv):
     def account_get(self, cr, uid, product_id=None, partner_id=None, user_id=None, date=None, context={}):
         domain = []
         if product_id:
-            domain += ['|',('product_id','=',product_id),('product_id','=',False)]
+            domain += ['|',('product_id','=',product_id)]
+        domain += [('product_id','=',False)]
         if partner_id:
-            domain += ['|',('partner_id','=',partner_id),('partner_id','=',False)]
-        if partner_id:
-            domain += ['|',('user_id','=',uid),('user_id','=',False)]
+            domain += ['|',('partner_id','=',partner_id)]
+        domain += [('partner_id','=',False)]
+        if user_id:
+            domain += ['|',('user_id','=',uid)]
+        domain += [('user_id','=',False)]
         if date:
             domain += ['|',('date_start','<=',date),('date_start','=',False)]
             domain += ['|',('date_stop','>=',date),('date_stop','=',False)]
+        print 'DOMAIN', domain
         best_index = -1
         res = False
         for rec in self.browse(cr, uid, self.search(cr, uid, domain, context=context), context=context):
@@ -79,7 +83,7 @@ class account_invoice_line(osv.osv):
         res_prod = super(account_invoice_line,self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, price_unit, address_invoice_id, context)
         rec = self.pool.get('account.analytic.default').account_get(cr, uid, product, partner_id, uid, time.strftime('%Y-%m-%d'), context)
         if rec:
-            res_prod['value'].update({'account_analytic_id':res.account_id.id})
+            res_prod['value'].update({'account_analytic_id':rec.analytic_id.id})
         return res_prod
 account_invoice_line()
 
