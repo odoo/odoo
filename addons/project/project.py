@@ -97,7 +97,10 @@ class project(osv.osv):
         for project in self.browse(cursor, user, ids, context=context):
             tot = 0.0
             if project.state not in ('cancelled'):
-                tot += project.effective_hours * 100.0 / project.planned_hours
+                try:
+                    tot += project.effective_hours * 100.0 / project.planned_hours
+                except:
+                    pass
             res[project.id] = tot
         return res
 

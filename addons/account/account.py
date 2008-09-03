@@ -360,7 +360,7 @@ class account_account(osv.osv):
             line_obj = self.pool.get('account.move.line')
             account_ids = self.search(cr, uid, [('id', 'child_of', ids)])
             if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
-                raise osv.except_osv(_('Error !'), _('You can not desactivate an account that contains account moves.'))
+                raise osv.except_osv(_('Error !'), _('You can not deactivate an account that contains account moves.'))
         return super(account_account, self).write(cr, uid, ids, vals, context=context)
 account_account()
 
@@ -1639,7 +1639,7 @@ account_config_journal_bank_accounts_line()
 
 class account_tax_template(osv.osv):
     _name = 'account.tax.template'
-account_tax()
+account_tax_template()
 
 class account_account_template(osv.osv):
     _name='account.account.template'
