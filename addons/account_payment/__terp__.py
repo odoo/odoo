@@ -40,6 +40,7 @@
     """,
     "demo_xml": [],
     "update_xml": [
+        "security/account_payment_security.xml",
         "security/ir.model.access.csv",
         "payment_wizard.xml",
         "payment_view.xml",
