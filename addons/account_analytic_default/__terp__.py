@@ -16,7 +16,7 @@ Allows to automatically select analytic accounts based on criterions:
     "depends" : ['account'],
     "init_xml" : [],
     "demo_xml" : [],
-    "update_xml" : ["account_analytic_default.xml"],
+    "update_xml" : ["account_analytic_default_view.xml"],
     "active": False,
     "installable": True
 }
