@@ -90,6 +90,7 @@ class purchase_order(osv.osv):
         res={}
         purchase_obj=self.browse(cr, uid, ids, context=context)
         for purchase in purchase_obj:
+            res[purchase.id] = False
             if purchase.order_line:
                 min_date=purchase.order_line[0].date_planned
                 for line in purchase.order_line:
@@ -165,7 +166,7 @@ class purchase_order(osv.osv):
         'invoiced':fields.boolean('Invoiced & Paid', readonly=True, select=True),
         'invoiced_rate': fields.function(_invoiced_rate, method=True, string='Invoiced', type='float'),
         'invoice_method': fields.selection([('manual','Manual'),('order','From order'),('picking','From picking')], 'Invoicing Control', required=True),
-        'minimum_planned_date':fields.function(_minimum_planned_date, method=True,store=True, string='Minimum Planned Date', type='date', help="Minimum schedule date of all products."),
+        'minimum_planned_date':fields.function(_minimum_planned_date, method=True,store=True, string='Planned Date', type='date', help="Minimum schedule date of all products."),
         'amount_untaxed': fields.function(_amount_untaxed, method=True, string='Untaxed Amount'),
         'amount_tax': fields.function(_amount_tax, method=True, string='Taxes'),
         'amount_total': fields.function(_amount_total, method=True, string='Total'),
