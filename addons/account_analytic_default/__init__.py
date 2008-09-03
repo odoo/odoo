@@ -1,1 +1,1 @@
-import product_analytic_default
+import account_analytic_default
