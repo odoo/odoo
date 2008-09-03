@@ -270,20 +270,22 @@ class module(osv.osv):
     def state_update(self, cr, uid, ids, newstate, states_to_update, context={}, level=50):
         if level<1:
             raise orm.except_orm(_('Error'), _('Recursion error in modules dependencies !'))
-        demo = True
+        demo = False
         for module in self.browse(cr, uid, ids):
-            mdemo = True
+            mdemo = False
+            go_deeper = False
             for dep in module.dependencies_id:
                 if dep.state == 'unknown':
                     raise orm.except_orm(_('Error'), _('You try to install a module that depends on the module: %s.\nBut this module is not available in your system.') % (dep.name,))
                 if dep.state != newstate:
+                    go_deeper = True
                     ids2 = self.search(cr, uid, [('name','=',dep.name)])
-                    mdemo = self.state_update(cr, uid, ids2, newstate, states_to_update, context, level-1,) and mdemo
-            if not module.dependencies_id:
+                    mdemo = self.state_update(cr, uid, ids2, newstate, states_to_update, context, level-1,) or mdemo
+            if not go_deeper:
                 mdemo = module.demo
             if module.state in states_to_update:
                 self.write(cr, uid, [module.id], {'state': newstate, 'demo':mdemo})
-            demo = demo and mdemo
+            demo = demo or mdemo
         return demo
 
     def button_install(self, cr, uid, ids, context={}):
