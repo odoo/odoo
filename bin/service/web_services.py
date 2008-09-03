@@ -98,6 +98,7 @@ class db(netsvc.Service):
                             'from res_users ' \
                             'order by login')
                     serv.actions[id]['users'] = cr.dictfetchall()
+                    cr.commit()
                     cr.close()
                 except Exception, e:
                     serv.actions[id]['clean'] = False
