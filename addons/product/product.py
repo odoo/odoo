@@ -422,7 +422,7 @@ class product_product(osv.osv):
         'price_margin': fields.float('Variant Price Margin', digits=(16, int(config['price_accuracy']))),
     }
 
-    def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):        
+    def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
         if uom_id and uom_po_id:
             uom_obj=self.pool.get('product.uom')
             uom=uom_obj.browse(cursor,user,[uom_id])[0]

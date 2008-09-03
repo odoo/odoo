@@ -169,7 +169,7 @@
             <field name="res_model">account.account</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_account_tree"/>
-            <field name="domain">[('code','=','0')]</field>
+            <field name="domain">[('parent_id','=',False)]</field>
         </record>
         <menuitem action="action_account_tree" id="menu_action_account_tree" parent="account.account_account_menu"/>
 

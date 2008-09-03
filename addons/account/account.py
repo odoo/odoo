@@ -356,9 +356,9 @@ class account_account(osv.osv):
                 child_ids=self.copy(cr, uid, child.id, default, context=context,done_list=done_list)
                 if child_ids:
                     new_child_ids.append(child_ids)
-            default['child_id'] = [(6, 0, new_child_ids)]
+            default['child_parent_ids'] = [(6, 0, new_child_ids)]
         else:
-            default['child_id'] = False
+            default['child_parent_ids'] = False
         return super(account_account, self).copy(cr, uid, id, default, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -1899,7 +1899,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             #recording the new tax code to do the mapping
             tax_code_template_ref[tax_code_template.id] = new_tax_code
 
-        #create all the tax 
+        #create all the tax
         for tax in obj_multi.chart_template_id.tax_template_ids:
             #create it
             vals_tax = {
