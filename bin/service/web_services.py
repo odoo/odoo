@@ -85,19 +85,23 @@ class db(netsvc.Service):
                     cr.commit()
                     cr.close()
                     cr = None
-                    pool = pooler.get_pool(db_name, demo,serv.actions[id],
+                    pool = pooler.get_pool(db_name, demo, serv.actions[id],
                             update_module=True)
-                    if lang and lang != 'en_US':
-                        filename = tools.config["root_path"] + "/i18n/" + lang + ".csv"
-                        tools.trans_load(db_name, filename, lang)
-                    serv.actions[id]['clean'] = True
+                    
                     cr = sql_db.db_connect(db_name).cursor()
+                    
+                    if lang:
+                        modobj = pool.get('ir.module.module')
+                        mids = modobj.search(cr, 1, [('state', '=', 'installed')])
+                        modobj.update_translations(cr, 1, mids, lang)
+
                     cr.execute('UPDATE res_users SET password=%s, active=True WHERE login=%s', (
                         user_password, 'admin'))
-                    cr.execute('select login, password, name ' \
-                            'from res_users ' \
-                            'order by login')
+                    cr.execute('SELECT login, password, name ' \
+                               '  FROM res_users ' \
+                               ' ORDER BY login')
                     serv.actions[id]['users'] = cr.dictfetchall()
+                    serv.actions[id]['clean'] = True
                     cr.commit()
                     cr.close()
                 except Exception, e:
@@ -278,13 +282,6 @@ class db(netsvc.Service):
     
     def list_lang(self):
         return tools.scan_languages()
-        import glob
-        file_list = glob.glob(os.path.join(tools.config['root_path'], 'i18n', '*.csv'))
-        def lang_tuple(fname):
-            lang_dict=tools.get_languages()
-            lang = os.path.basename(fname).split(".")[0]
-            return (lang, lang_dict.get(lang, lang))
-        return [lang_tuple(fname) for fname in file_list]
 
     def server_version(self):
         """ Return the version of the server
