@@ -104,10 +104,12 @@ class account_account_type(osv.osv):
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of account types."),
         'partner_account': fields.boolean('Partner account'),
         'close_method': fields.selection([('none','None'), ('balance','Balance'), ('detail','Detail'),('unreconciled','Unreconciled')], 'Deferral Method', required=True),
+        'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign on Reports', required=True, help='Allows to change the displayed amount of the balance in the reports, in order to see positive results instead of negative ones in expenses accounts.'),
     }
     _defaults = {
         'close_method': lambda *a: 'none',
         'sequence': lambda *a: 5,
+        'sign': lambda *a: 1,
     }
     _order = "sequence"
 account_account_type()
@@ -224,10 +226,23 @@ class account_account(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
-        'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign', required=True, help='Allows to change the displayed amount of the balance to see positive results instead of negative ones in expenses accounts'),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Force all moves for this account to have this secondary currency."),
         'code': fields.char('Code', size=64),
-        'type': fields.selection(_code_get, 'Account Type', required=True),
+        'type': fields.selection([
+            ('receivable','Receivable'),
+            ('payable','Payable'),
+            ('view','View'),
+            ('consolidation','Consolidation'),
+            ('income','Income'),
+            ('expense','Expense'),
+            ('tax','Tax'),
+            ('cash','Cash'),
+            #('asset','Asset'),
+            #('equity','Equity'),
+            ('closed','Closed'),
+            ], 'Internal Type', required=True,),
+
+        'user_type': fields.many2one('account.account.type', 'Account Type'),
 #        'parent_id': fields.many2many('account.account', 'account_account_rel', 'child_id', 'parent_id', 'Parents'),
         'parent_id': fields.many2one('account.account','Parent', ondelete='cascade'),
         'child_parent_ids':fields.one2many('account.account','parent_id','Children'),
@@ -258,7 +273,6 @@ class account_account(osv.osv):
         return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
 
     _defaults = {
-        'sign': lambda *a: 1,
         'type' : lambda *a :'view',
         'reconcile': lambda *a: False,
         'company_id': _default_company,
@@ -1656,10 +1670,23 @@ class account_account_template(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
-        'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign', required=True, help='Allows to change the displayed amount of the balance to see positive results instead of negative ones in expenses accounts.'),
+        #'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign', required=True, help='Allows to change the displayed amount of the balance to see positive results instead of negative ones in expenses accounts.'),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Force all moves for this account to have this secondary currency."),
         'code': fields.char('Code', size=64),
-        'type': fields.selection(_code_get, 'Account Type', required=True),
+        'type': fields.selection([
+            ('receivable','Receivable'),
+            ('payable','Payable'),
+            ('view','View'),
+            ('consolidation','Consolidation'),
+            ('income','Income'),
+            ('expense','Expense'),
+            ('tax','Tax'),
+            ('cash','Cash'),
+            #('asset','Asset'),
+            #('equity','Equity'),
+            ('closed','Closed'),
+            ], 'Internal Type', required=True,),
+        'user_type': fields.many2one('account.account.type', 'Account Type'),
         'reconcile': fields.boolean('Allow Reconciliation', help="Check this option if the user can make a reconciliation of the entries in this account."),
         'shortcut': fields.char('Shortcut', size=12),
         'note': fields.text('Note'),
@@ -1669,7 +1696,7 @@ class account_account_template(osv.osv):
     }
 
     _defaults = {
-        'sign': lambda *a: 1,
+        #'sign': lambda *a: 1,
         'reconcile': lambda *a: False,
         'type' : lambda *a :'view',
     }
@@ -1948,10 +1975,11 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             #create the account_account
             vals={
                 'name': (obj_acc_root.id == account_template.id) and obj_multi.company_id.name or account_template.name,
-                'sign': account_template.sign,
+                #'sign': account_template.sign,
                 'currency_id': account_template.currency_id and account_template.currency_id.id or False,
                 'code': account_template.code,
                 'type': account_template.type,
+                'user_type': account_template.user_type or False,
                 'reconcile': account_template.reconcile,
                 'shortcut': account_template.shortcut,
                 'note': account_template.note,
@@ -2015,10 +2043,11 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             tmp = self.pool.get('res.partner.bank').name_get(cr, uid, [line.acc_no.id])[0][1]
             vals={
                 'name': line.acc_no.bank and line.acc_no.bank.name+' '+tmp or tmp,
-                'sign': ref_acc_bank.sign,
+                #'sign': ref_acc_bank.sign,
                 'currency_id': line.currency_id and line.currency_id.id or False,
                 'code': ref_acc_bank.code+str(current_num),
                 'type': 'cash',
+                'user_type': account_template.user_type or False,
                 'reconcile': True,
                 'parent_id': acc_template_ref[ref_acc_bank.id] or False,
                 'company_id': company_id,
