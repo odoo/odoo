@@ -51,7 +51,7 @@ class ir_model(osv.osv):
         'info': fields.text('Information'),
         'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True),
         'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Manualy Created',readonly=1),
-        'access': fields.one2many('ir.model.access', 'model_id', 'Access'),
+        'access_ids': fields.one2many('ir.model.access', 'model_id', 'Access'),
     }
     _defaults = {
         'model': lambda *a: 'x_',

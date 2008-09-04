@@ -673,7 +673,19 @@
                                 <button colspan="2" name="%(act_menu_create)d" string="Create a Menu" type="action" target="new"/>
                             </group>
                         </page>
-                        <page string="Information">
+                        <page string="Access Rights">
+                            <field colspan="4" name="access_ids" select="1">
+                                <tree string="Access Rules" editable="top">
+                                    <field name="group_id"/>
+                                    <field name="perm_read"/>
+                                    <field name="perm_write"/>
+                                    <field name="perm_create"/>
+                                    <field name="perm_unlink"/>
+                                    <field name="name"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Notes">
                             <field colspan="4" name="info" nolabel="1" select="1"/>
                         </page>
                     </notebook>
@@ -973,7 +985,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="ir_access_view_tree"/>
         </record>
-        <menuitem name="Access Conrols" id="menu_security_access" parent="menu_security"/>
+        <menuitem name="Access Controls" id="menu_security_access" parent="menu_security"/>
         <menuitem action="ir_access_act" id="menu_ir_access_act" parent="menu_security_access"/>
 
         <!-- Rules -->
