@@ -92,38 +92,43 @@ class project(osv.osv):
         pricelist = self.pool.get('res.partner').browse(cr, uid, part).property_product_pricelist.id
         return {'value':{'contact_id': addr['contact'], 'pricelist_id': pricelist}}
 
-    def _progress_rate(self, cursor, user, ids, name, arg, context=None):
-        res = {}
-        for project in self.browse(cursor, user, ids, context=context):
-            tot = 0.0
-            if project.state not in ('cancelled'):
-                try:
-                    tot += project.effective_hours * 100.0 / project.planned_hours
-                except:
-                    pass
-            res[project.id] = tot
+    def _progress_rate(self, cr, uid, ids, name, arg, context=None):
+        res = {}.fromkeys(ids, 0.0)
+        if not ids:
+            return res
+        cr.execute('''SELECT
+                project_id, sum(progress*planned_hours), sum(planned_hours) 
+            FROM
+                project_task 
+            WHERE
+                project_id in ('''+','.join(map(str,ids))+''') AND
+                state<>'cancelled'
+            GROUP BY
+                project_id''')
+        for id,prog,tot in cr.fetchall():
+            if tot:
+                res[id] = prog / tot
         return res
 
-
     _columns = {
-        'name': fields.char("Project name", size=128, required=True),
+        'name': fields.char("Project Name", size=128, required=True),
         'active': fields.boolean('Active'),
-        'category_id': fields.many2one('account.analytic.account','Analytic Account'),
+        'category_id': fields.many2one('account.analytic.account','Analytic Account', help="Link this project to an analytic account if you need financial management on projects. It ables to connect projects with budgets, plannings, costs and revenues analysis, timesheet on projects, etc."),
         'priority': fields.integer('Sequence'),
-        'manager': fields.many2one('res.users', 'Project manager'),
-        'warn_manager': fields.boolean('Warn manager'),
-        'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project members'),
+        'manager': fields.many2one('res.users', 'Project Manager'),
+        'warn_manager': fields.boolean('Warn Manager', help="If you check this field, the project manager will receive a request each time a task is completed by his team."),
+        'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members'),
         'tasks': fields.one2many('project.task', 'project_id', "Project tasks"),
-        'parent_id': fields.many2one('project.project', 'Parent project'),
+        'parent_id': fields.many2one('project.project', 'Parent Project'),
         'child_id': fields.one2many('project.project', 'parent_id', 'Subproject'),
         'planned_hours': fields.function(_calc_planned, method=True, string='Planned hours'),
         'effective_hours': fields.function(_calc_effective, method=True, string='Hours spent'),
-        'progress_rate': fields.function(_progress_rate, method=True, string='Progress', type='float'),
-        'date_start': fields.date('Project started on'),
-        'date_end': fields.date('Project should end on'),
-        'partner_id': fields.many2one('res.partner', 'Customer'),
+        'progress_rate': fields.function(_progress_rate, method=True, string='Progress', type='float', help="Percent of tasks closed according to the total of tasks todo."),
+        'date_start': fields.date('Starting Date'),
+        'date_end': fields.date('Expected End'),
+        'partner_id': fields.many2one('res.partner', 'Partner'),
         'contact_id': fields.many2one('res.partner.address', 'Contact'),
-        'warn_customer': fields.boolean('Warn customer'),
+        'warn_customer': fields.boolean('Warn Partner'),
         'warn_header': fields.text('Mail header'),
         'warn_footer': fields.text('Mail footer'),
         'notes': fields.text('Notes'),
@@ -208,18 +213,6 @@ class task(osv.osv):
             res[task_id] = sum
         return res
 
-    def _progress_rate(self, cursor, user, ids, name, arg, context=None):
-        res = {}
-        for task in self.browse(cursor, user, ids, context=context):
-            if task.state in ('cancelled','done'):
-                res[task.id] = 100.0
-            else:
-                if task.planned_hours:
-                    res[task.id] = task.effective_hours * 100.0 / task.planned_hours
-                else:
-                    res[task.id] = 0.0
-        return res
-
     _columns = {
         'active': fields.boolean('Active'),
         'name': fields.char('Task summary', size=128, required=True),
@@ -239,10 +232,9 @@ class task(osv.osv):
         'start_sequence': fields.boolean('Wait for previous sequences'),
         'planned_hours': fields.float('Plan. hours'),
         'effective_hours': fields.function(_hours_effect, method=True, string='Eff. Hours'),
-        'progress_rate': fields.function(_progress_rate, method=True, string='Progress', type='float'),
         'progress': fields.integer('Progress (0-100)'),
         'user_id': fields.many2one('res.users', 'Assigned to'),
-        'partner_id': fields.many2one('res.partner', 'Customer'),
+        'partner_id': fields.many2one('res.partner', 'Partner'),
         'work_ids': fields.one2many('project.task.work', 'task_id', 'Work done'),
     }
     _defaults = {
@@ -312,7 +304,7 @@ class task(osv.osv):
                     'ref_doc1': 'project.task,%d' % task.id,
                     'ref_doc2': 'project.project,%d' % project.id,
                 })
-            self.write(cr, uid, [task.id], {'state': 'cancelled'})
+            self.write(cr, uid, [task.id], {'state': 'cancelled', 'progress':100})
         return True
 
     def do_open(self, cr, uid, ids, *args):
