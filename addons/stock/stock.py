@@ -350,9 +350,9 @@ class stock_picking(osv.osv):
             ('done','Done'),
             ('cancel','Cancel'),
             ], 'Status', readonly=True, select=True),
-        'date':fields.datetime('Date create'),
+        'date':fields.datetime('Date Create'),
 
-        'move_lines': fields.one2many('stock.move', 'picking_id', 'Move lines'),
+        'move_lines': fields.one2many('stock.move', 'picking_id', 'Move Lines'),
 
         'auto_picking': fields.boolean('Auto-Packing'),
         'address_id': fields.many2one('res.partner.address', 'Partner'),
