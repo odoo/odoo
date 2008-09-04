@@ -256,7 +256,7 @@ form: module.record_id""" % (xml_id,)
         for dest,f in (('name','string'),('model','model'),('report_name','name')):
             res[dest] = rec.getAttribute(f).encode('utf8')
             assert res[dest], "Attribute %s of report is empty !" % (f,)
-        for field,dest in (('rml','report_rml'),('xml','report_xml'),('xsl','report_xsl')):
+        for field,dest in (('rml','report_rml'),('xml','report_xml'),('xsl','report_xsl'),('attachment','attachment')):
             if rec.hasAttribute(field):
                 res[dest] = rec.getAttribute(field).encode('utf8')
         if rec.hasAttribute('auto'):

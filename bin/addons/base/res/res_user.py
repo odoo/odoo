@@ -36,6 +36,7 @@ import pytz
 
 class groups(osv.osv):
     _name = "res.groups"
+    _order = 'name'
     _columns = {
         'name': fields.char('Group Name', size=64, required=True),
         'model_access': fields.one2many('ir.model.access', 'group_id', 'Access Controls'),

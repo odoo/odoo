@@ -284,28 +284,13 @@ def load_module_graph(cr, graph, status=None, **kwargs):
             modobj = pool.get('ir.module.module')
             modobj.update_translations(cr, 1, [mid], None)
             
-
-            # check if all model of the module have at least a access rule.
-            # TODO: improve this query which is very slow !!!
-            cr.execute("""  SELECT name 
-                             FROM ir_model m 
-                            WHERE EXISTS (SELECT 1 
-                                            FROM ir_model_data 
-                                           WHERE module = %s 
-                                             AND model = m.name
-                                          ) 
-                              AND NOT EXISTS (SELECT 1
-                                                FROM ir_model_access
-                                               WHERE model_id = m.id
-                                              )
-                       """, (m,))
-
-            for (model,) in cr.fetchall():
-                logger.notifyChannel('init', netsvc.LOG_WARNING, 'addon:%s:object %s has no access rules!' % (m,model,))
-
             cr.commit()
         statusi+=1
 
+    cr.execute("""select model,name from ir_model where id not in (select model_id from ir_model_access)""")
+    for (model,name) in cr.fetchall():
+        logger.notifyChannel('init', netsvc.LOG_WARNING, 'addon:object %s (%s) has no access rules!' % (model,name))
+ 
     pool = pooler.get_pool(cr.dbname)
     cr.execute('select * from ir_model where state=%s', ('manual',))
     for model in cr.dictfetchall():
