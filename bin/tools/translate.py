@@ -442,7 +442,7 @@ def trans_generate(lang, modules, dbname=None):
         return 'base'   # files that are not in a module are considered as being in 'base' module
     
     modobj = pool.get('ir.module.module')
-    for root, dirs, files in os.walk(tools.config['root_path']):
+    for root, dirs, files in tools.oswalksymlinks(tools.config['root_path']):
         for fname in fnmatch.filter(files, '*.py'):
             fabsolutepath = join(root, fname)
             frelativepath = fabsolutepath[len(tools.config['root_path'])+1:]

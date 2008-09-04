@@ -256,6 +256,22 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
     raise IOError, 'File not found : '+str(name)
 
 
+def oswalksymlinks(top, topdown=True, onerror=None):
+	"""
+	same as os.walk but follow symlinks
+	"""
+	for dirpath, dirnames, filenames in os.walk(top, topdown, onerror):
+		symlinks = filter(lambda dirname: os.path.islink(os.path.join(dirpath, dirname)), dirnames)
+		if not topdown:
+			for s in symlinks:
+				for x in oswalksymlinks(os.path.join(dirpath, s), topdown, onerror):
+					yield x
+		yield dirpath, dirnames, filenames
+		if topdown:
+			for s in symlinks:
+				for x in oswalksymlinks(os.path.join(dirpath, s), topdown, onerror):
+					yield x
+
 #----------------------------------------------------------
 # iterables
 #----------------------------------------------------------
