@@ -355,13 +355,10 @@ class payment_line(osv.osv):
     def _get_ml_inv_ref(self, cr, uid, ids, *a):
         res={}
         for id in self.browse(cr, uid, ids):
-            res[id.id] = ""
+            res[id.id] = False
             if id.move_line_id:
-                res[id.id] = "pas de invoice"
                 if id.move_line_id.invoice:
-                    res[id.id] = str(id.move_line_id.invoice.number)
-                    if id.move_line_id.invoice.name: 
-                        res[id.id] += " " + id.move_line_id.invoice.name
+                    res[id.id] = id.move_line_id.invoice.id
         return res
 
     def _get_ml_maturity_date(self, cr, uid, ids, *a):
@@ -412,7 +409,7 @@ class payment_line(osv.osv):
 #       'reference': fields.function(select_by_name, string="Ref", method=True,
 #           type='char'),
         'ml_maturity_date': fields.function(_get_ml_maturity_date, method=True, type='char', string='Maturity Date'),
-        'ml_inv_ref': fields.function(_get_ml_inv_ref, method=True, type='char', string='Invoice Ref'),
+        'ml_inv_ref': fields.function(_get_ml_inv_ref, method=True, type='many2one', relation='account.invoice', string='Invoice Ref'),
         'info_owner': fields.function(info_owner, string="Owner Account", method=True, type="text"),
         'info_partner': fields.function(info_partner, string="Destination Account", method=True, type="text"),
 #        'partner_payable': fields.function(partner_payable, string="Partner payable", method=True, type='float'),
