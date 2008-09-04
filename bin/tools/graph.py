@@ -494,8 +494,10 @@ class graph(object):
                 if last:
                     self.result[child]['x'] = last + len(self.transitions[child])/2 + 1                
                 last = self.tree_order(child, last)
+        
         if last_child:
             last = self.result[last_child]['x']
+            
         return last    
                      
                      
@@ -511,18 +513,22 @@ class graph(object):
         
         if self.Is_Cyclic:
             self.graph_order()
-            #for flat edges ie sorce an destination nodes are on the same rank
+            #for flat edges ie. source an destination nodes are on the same rank
             for src in self.transitions:
                 for des in self.transitions[src]:
                     if (self.result[des]['y'] - self.result[src]['y'] == 0):    
                         self.result[src]['y'] += 0.08
                         self.result[des]['y'] -= 0.08
         else:               
-            self.result[self.start]['x'] = 1 + self.max_order
+            self.result[self.start]['x'] = 0
             self.tree_order(self.start, 0)
             min_order = math.fabs(min(map(lambda x: x['x'], self.result.values())))
-            for node in self.result:
-                self.result[node]['x'] += min_order 
+            min_order += self.max_order + 1
+            
+            for level in self.levels:
+                for node in self.levels[level]:
+                    self.result[node]['x'] += min_order
+
             self.max_order = max(map(lambda x: x['x'], self.result.values()))
         
     def find_starts(self):    
@@ -549,15 +555,20 @@ class graph(object):
                         count = len(tree) + 1
                         new_start = node
                         largest_tree = tree
+                else:
+                    if not largest_tree:
+                        new_start = rem_nodes[0]
+                        rem_nodes.remove(new_start)
                         
                 self.start_nodes.append(new_start)
-                         
+                
+      
                 for edge in largest_tree:
                     if rem_nodes.__contains__(edge[0]):
                         rem_nodes.remove(edge[0])
                     if rem_nodes.__contains__(edge[1]):
                         rem_nodes.remove(edge[1])
-                        
+                    
                 if not rem_nodes:
                     break
 
@@ -648,8 +659,7 @@ class graph(object):
             # if graph is disconnected or no start-node is given 
             #than to find starting_node for each component of the node    
             if len(self.nodes) > len(self.partial_order):
-                self.find_starts()
-                
+                self.find_starts()                
                      
             self.max_order = 0       
             #for each component of the graph find ranks and order of the nodes
