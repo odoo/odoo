@@ -243,13 +243,10 @@ class account_account(osv.osv):
             ], 'Internal Type', required=True,),
 
         'user_type': fields.many2one('account.account.type', 'Account Type'),
-#        'parent_id': fields.many2many('account.account', 'account_account_rel', 'child_id', 'parent_id', 'Parents'),
         'parent_id': fields.many2one('account.account','Parent', ondelete='cascade'),
         'child_parent_ids':fields.one2many('account.account','parent_id','Children'),
         'child_consol_ids':fields.many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', 'Consolidated Children',domain=[('type', '=', 'consolidation')]),
         'child_id': fields.function(_get_child_ids, method=True, type='many2many',relation="account.account",string="Children Accounts"),
-
-#        'child_id': fields.many2many('account.account', 'account_account_rel', 'parent_id', 'child_id', 'Children'),
         'balance': fields.function(__compute, digits=(16,2), method=True, string='Balance', multi='balance'),
         'credit': fields.function(__compute, digits=(16,2), method=True, string='Credit', multi='balance'),
         'debit': fields.function(__compute, digits=(16,2), method=True, string='Debit', multi='balance'),
@@ -279,23 +276,11 @@ class account_account(osv.osv):
         'active': lambda *a: True,
     }
 
-#    def _check_recursion(self, cr, uid, ids):
-#        level = 100
-#        while len(ids):
-#            cr.execute('select distinct parent_id from account_account_rel where child_id in ('+','.join(map(str,ids))+')')
-#            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-#            if not level:
-#                return False
-#            level -= 1
-#        return True
-
     def _check_recursion(self, cr, uid, ids):
         obj_self=self.browse(cr,uid,ids[0])
         p_id=obj_self.parent_id and obj_self.parent_id.id
-
         if (obj_self in obj_self.child_consol_ids) or (p_id and (p_id is obj_self.id)):
             return False
-
         while(ids):
             cr.execute('select distinct child_id from account_account_consol_rel where parent_id in ('+','.join(map(str,ids))+')')
             child_ids = filter(None, map(lambda x:x[0], cr.fetchall()))
@@ -309,7 +294,6 @@ class account_account(osv.osv):
                 c_ids=s_ids
             ids=child_ids
         return True
-
 
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id'])
