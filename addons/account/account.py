@@ -645,6 +645,7 @@ class account_move(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, states={'posted':[('readonly',True)]}),
         'state': fields.selection([('draft','Draft'), ('posted','Posted')], 'Status', required=True, readonly=True),
         'line_id': fields.one2many('account.move.line', 'move_id', 'Entries', states={'posted':[('readonly',True)]}),
+        'to_check': fields.boolean('To Be Verified'),
     }
     _defaults = {
         'state': lambda *a: 'draft',
