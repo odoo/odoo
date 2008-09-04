@@ -1731,10 +1731,12 @@ class account_tax_code_template(osv.osv):
         if user.company_id:
             return user.company_id.id
         return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
+
     _defaults = {
         'company_id': _default_company,
         'sign': lambda *args: 1.0,
     }
+
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
@@ -1746,7 +1748,7 @@ class account_tax_code_template(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id'])
+        (_check_recursion, 'Error ! You can not create recursive Tax Codes.', ['parent_id'])
     ]
     _order = 'code,name'
 account_tax_code_template()
@@ -1832,7 +1834,7 @@ class account_tax_template(osv.osv):
     _defaults = {
         'python_compute': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or None\n# partner : res.partner object or None\n\nresult = price_unit * 0.10''',
         'python_compute_inv': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or False\n\nresult = price_unit * 0.10''',
-       'applicable_type': lambda *a: 'true',
+        'applicable_type': lambda *a: 'true',
         'type': lambda *a: 'percent',
         'amount': lambda *a: 0,
         'sequence': lambda *a: 1,
@@ -1936,7 +1938,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             tax_template_ref[tax.id] = new_tax
 
 
-        #desactivate the parent_store functionnality on account_account for rapidity purpose
+        #deactivate the parent_store functionnality on account_account for rapidity purpose
         self.pool._init = True
         children_acc_template = obj_acc_template.search(cr, uid, [('parent_id','child_of',[obj_acc_root.id])])
         for account_template in obj_acc_template.browse(cr, uid, children_acc_template):
@@ -2044,7 +2046,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         fields_obj = self.pool.get('ir.model.fields')
 
         todo_list = [
-            ('property_account_receivable','res.partner','account.account'), 
+            ('property_account_receivable','res.partner','account.account'),
             ('property_account_payable','res.partner','account.account'),
             ('property_account_expense_categ','product.category','account.account'),
             ('property_account_income_categ','product.category','account.account'),

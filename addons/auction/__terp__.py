@@ -4,7 +4,7 @@
     "version" : "1.0",
     "depends" : ["base","account","l10n_be","hr"],
     "update_xml" : [
-        "security/ir.model.access.csv"
+        "security/ir.model.access.csv",
         "auction_view.xml", "auction_report.xml", "auction_wizard.xml"
     ],
     "demo_xml" : [
