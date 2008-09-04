@@ -115,7 +115,7 @@ class TinyPoFile(object):
                 self.tnrs = []
                 while line:
                     line = self.lines.pop(0).strip()
-                return next()               
+                return self.next()               
                 
             while not line.startswith('msgstr'):
                 if not line:
@@ -166,9 +166,9 @@ class TinyPoFile(object):
                           )
 
     def write(self, modules, tnrs, source, trad):
-        def quote(str):
-            return '"%s"' % str.replace('"','\\"') \
-                               .replace('\n', '\\n"\n"')
+        def quote(s):
+            return '"%s"' % s.replace('"','\\"') \
+                             .replace('\n', '\\n"\n"')
 
         plurial = len(modules) > 1 and 's' or ''
         self.buffer.write("#. module%s: %s\n" % (plurial, ', '.join(modules)))
@@ -178,14 +178,18 @@ class TinyPoFile(object):
             self.buffer.write("#, python-format\n")
                             
 
-        for type, name, res_id in tnrs:
-            self.buffer.write("#: %s:%s:%s\n" % (type, name, str(res_id)))
+        for typy, name, res_id in tnrs:
+            self.buffer.write("#: %s:%s:%s\n" % (typy, name, res_id))
 
-        self.buffer.write("msgid %s\n"      \
-                          "msgstr %s\n\n"   \
-                            % (quote(source), quote(trad))
-                         )
-    
+        if not isinstance(trad, unicode):
+            trad = unicode(trad, 'utf8')
+        if not isinstance(source, unicode):
+            source = unicode(source, 'utf8')
+
+        msg = "msgid %s\n"      \
+              "msgstr %s\n\n"   \
+                  % (quote(source), quote(trad))
+        self.buffer.write(msg.encode('utf8'))
 
 
 # Methods to export the translation file
@@ -462,22 +466,24 @@ def trans_generate(lang, modules, dbname=None):
     cr.close()
     return out
 
-def trans_load(db_name, filename, lang, strict=False):
+def trans_load(db_name, filename, lang, strict=False, verbose=True):
     logger = netsvc.Logger()
     try:
         fileobj = open(filename,'r')
         fileformat = os.path.splitext(filename)[-1][1:].lower()
-        r = trans_load_data(db_name, fileobj, fileformat, lang, strict=False)
+        r = trans_load_data(db_name, fileobj, fileformat, lang, strict=strict, verbose=verbose)
         fileobj.close()
         return r
     except IOError:
-        logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't read file")
+        if verbose:
+            logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't read file")
         return None
 
-def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=None):
+def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=None, verbose=True):
     logger = netsvc.Logger()
-    logger.notifyChannel("init", netsvc.LOG_INFO,
-            'loading translation file for language %s' % (lang))
+    if verbose:
+        logger.notifyChannel("init", netsvc.LOG_INFO,
+                'loading translation file for language %s' % (lang))
     pool = pooler.get_pool(db_name)
     lang_obj = pool.get('res.lang')
     trans_obj = pool.get('ir.translation')
@@ -491,8 +497,7 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
             if not lang_name:
                 lang_name=lang
                 languages=tools.get_languages()
-                if lang in languages:
-                    lang_name=languages[lang]
+                lang_name = languages.get(lang, lang)
             ids = lang_obj.create(cr, uid, {
                 'code': lang,
                 'name': lang_name,
@@ -522,7 +527,6 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
         line = 1
         for row in reader:
             line += 1
-            #try:
             # skip empty rows and rows where the translation field (=last fiefd) is empty
             if (not row) or (not row[-1]):
                 #print "translate: skip %s" % repr(row)
@@ -588,15 +592,10 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
                 else:
                     trans_obj.create(cr, uid, dic)
             cr.commit()
-            #except Exception, e:
-            #   logger.notifyChannel('init', netsvc.LOG_ERROR,
-            #           'Import error: %s on line %d: %s!' % (str(e), line, row))
-            #   cr.rollback()
-            #   cr.close()
-            #   cr = pooler.get_db(db_name).cursor()
         cr.close()
-        logger.notifyChannel("init", netsvc.LOG_INFO,
-                "translation file loaded succesfully")
+        if verbose:
+            logger.notifyChannel("init", netsvc.LOG_INFO,
+                    "translation file loaded succesfully")
     except IOError:
         logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't read file")
 
