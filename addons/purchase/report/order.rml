@@ -93,8 +93,8 @@
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
-    <paraStyle name="P1" rightIndent="0.0" leftIndent="13.0" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P2" rightIndent="0.0" leftIndent="17.0" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P1" rightIndent="0.0" leftIndent="12.0" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P2" rightIndent="0.0" leftIndent="15.0" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
@@ -198,7 +198,7 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="39.0,219.0,54.0,56.0,46.0,56.0,64.0" repeatRows="1" style="Table_Header_Pur_ord_Line">
+    <blockTable colWidths="39.0,215.0,52.0,57.0,44.0,58.0,70.0" repeatRows="1" style="Table_Header_Pur_ord_Line">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Product</para>
@@ -210,7 +210,7 @@
           <para style="terp_tblheader_Details">Taxes</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">Date Req.</para>
+          <para style="terp_tblheader_Details_Centre">Date Req.</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Centre">Qty</para>
@@ -225,7 +225,7 @@
     </blockTable>
     <section>
       <para style="terp_default_8">[[ repeatIn(o.order_line,'line') ]]</para>
-      <blockTable colWidths="40.0,219.0,54.0,56.0,26.0,20.0,56.0,64.0" style="Table_Order_Pur_line_Content">
+      <blockTable colWidths="40.0,215.0,52.0,57.0,24.0,20.0,57.0,70.0" style="Table_Order_Pur_line_Content">
         <tr>
           <td>
             <para style="terp_default_9">[[ line.product_id and get_product_code(line.product_id.id, o.partner_id.id) or '' ]]</para>
@@ -237,7 +237,7 @@
             <para style="terp_default_9">[[ ', '.join(map(lambda x: x.name, line.taxes_id)) ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ time.strftime('%d/%m/%Y', time.strptime( line.date_planned, '%Y-%m-%d')) ]]</para>
+            <para style="terp_default_Centre_9">[[ time.strftime('%d/%m/%Y', time.strptime( line.date_planned, '%Y-%m-%d')) ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ '%.2f' % line.product_qty ]]</para>
@@ -272,7 +272,7 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_Bold_9">Net Total :</para>
+          <para style="terp_default_9">Net Total :</para>
         </td>
         <td>
           <para style="terp_default_Right_9">[[ '%.2f' % o.amount_untaxed  ]]</para>
@@ -307,10 +307,10 @@
           <para style="P2">Total :</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ '%.2f' % o.amount_total ]]</para>
+          <para style="terp_default_Bold_9_Right">[[ '%.2f' % o.amount_total ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ o.pricelist_id.currency_id.name ]]</para>
+          <para style="terp_default_Bold_9_Right">[[ o.pricelist_id.currency_id.name ]]</para>
         </td>
       </tr>
     </blockTable>
