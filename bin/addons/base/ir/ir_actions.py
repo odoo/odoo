@@ -128,8 +128,8 @@ class report_xml(osv.osv):
             ('raw', 'raw'),
             ('sxw', 'sxw'),
             ], string='Type', required=True),
-        'groups_id': fields.many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', 'Groups')
-        
+        'groups_id': fields.many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', 'Groups'),
+        'attachment': fields.char('Save As Attachment Prefix', size=32, help='This is the prefix of the file name the print will be saved as attachement. Keep empty to not save the printed reports')
     }
     _defaults = {
         'type': lambda *a: 'ir.actions.report.xml',
@@ -138,6 +138,7 @@ class report_xml(osv.osv):
         'header': lambda *a: True,
         'report_sxw_content': lambda *a: False,
         'report_type': lambda *a: 'pdf',
+        'attachment': lambda *a: False,
     }
 
 report_xml()
@@ -560,7 +561,3 @@ class act_window_close(osv.osv):
         'type': lambda *a: 'ir.actions.act_window_close',
     }
 act_window_close()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -365,7 +365,7 @@ class ir_model_data(osv.osv):
 
     def _get_id(self,cr, uid, module, xml_id):
         ids = self.search(cr, uid, [('module','=',module),('name','=', xml_id)])
-        assert len(ids)==1, '%d reference(s) to %s. You should have only one !' % (len(ids),xml_id)
+        assert len(ids)==1, '%d reference(s) to %s. You should have one and only one !' % (len(ids),xml_id)
         return ids[0]
     _get_id = tools.cache()(_get_id)
 
