@@ -10,7 +10,7 @@ This module allows you to manage your processus for the end-users.
     """,
     "depends" : ["base"],
     "init_xml" : [],
-    "demo_xml" : [],
+    "demo_xml" : ['processus_data.xml'],
     "update_xml" : [
         "security/ir.model.access.csv",
         'processus_view.xml',

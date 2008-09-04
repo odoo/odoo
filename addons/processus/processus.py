@@ -34,7 +34,7 @@ class processus_processus(osv.osv):
     _name = "processus.processus"
     _description = "Processus"
     _columns = {
-        'name': fields.char('Processus', size=30,required=True),
+        'name': fields.char('Name', size=30,required=True),
         'active': fields.boolean('Active'),
         'note': fields.text('Notes'),
         'node_ids': fields.one2many('processus.node', 'processus_id', 'Nodes')
@@ -48,7 +48,7 @@ class processus_node(osv.osv):
     _name = 'processus.node'
     _description ='Processus Nodes'
     _columns = {
-        'name': fields.char('Processus', size=30,required=True),
+        'name': fields.char('Name', size=30,required=True),
         'processus_id': fields.many2one('processus.processus', 'Processus', required=True),
         'kind': fields.selection([('state','State'),('router','Router'),('subflow','Subflow')],'Kind of Node', required=True),
         'menu_id': fields.many2one('ir.ui.menu', 'Related Menu'),
@@ -70,7 +70,7 @@ class processus_transition(osv.osv):
     _name = 'processus.transition'
     _description ='Processus Transitions'
     _columns = {
-        'name': fields.char('Transitions', size=32, required=True),
+        'name': fields.char('Name', size=32, required=True),
         'node_from_id': fields.many2one('processus.node', 'Origin Node', required=True, ondelete='cascade'),
         'node_to_id': fields.many2one('processus.node', 'Destination Node', required=True, ondelete='cascade'),
         'transition_ids': fields.many2many('workflow.transition', 'processus_transition_ids', 'trans1_id', 'trans2_id', 'Workflow Transitions'),
@@ -85,7 +85,7 @@ class processus_transition_action(osv.osv):
     _name = 'processus.transition.action'
     _description ='Processus Transitions Actions'
     _columns = {
-        'name': fields.char('Transitions', size=32, required=True),
+        'name': fields.char('Name', size=32, required=True),
         'state': fields.selection([('dummy','Dummy'),('method','Object Method'),('workflow','Workflow Trigger'),('action','Action')], 'Type', required=True),
         'action': fields.char('Action ID', size=64, states={
             'dummy':[('readonly',1)],
