@@ -36,6 +36,7 @@ dates_form = '''<?xml version="1.0"?>
 <form string="Select period">
     <field name="company_id" colspan="4"/>
     <field name="fiscalyear" colspan="4"/>
+    <label align="0.7" colspan="6" string="(If you do not select Fiscal year it will take all open fiscal year)"/>
     <newline/>
     <field name="date1"/>
     <field name="date2"/>
@@ -68,7 +69,7 @@ class wizard_report(wizard.interface):
 
     states = {
         'init': {
-            'actions': [_get_defaults], 
+            'actions': [_get_defaults],
             'result': {'type':'form', 'arch':dates_form, 'fields':dates_fields, 'state':[('end','Cancel'),('report','Print') ]}
         },
         'report': {

@@ -104,10 +104,12 @@ class account_account_type(osv.osv):
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of account types."),
         'partner_account': fields.boolean('Partner account'),
         'close_method': fields.selection([('none','None'), ('balance','Balance'), ('detail','Detail'),('unreconciled','Unreconciled')], 'Deferral Method', required=True),
+        'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign on Reports', required=True, help='Allows to change the displayed amount of the balance in the reports, in order to see positive results instead of negative ones in expenses accounts.'),
     }
     _defaults = {
         'close_method': lambda *a: 'none',
         'sequence': lambda *a: 5,
+        'sign': lambda *a: 1,
     }
     _order = "sequence"
 account_account_type()
@@ -224,10 +226,23 @@ class account_account(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
-        'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign', required=True, help='Allows to change the displayed amount of the balance to see positive results instead of negative ones in expenses accounts'),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Force all moves for this account to have this secondary currency."),
         'code': fields.char('Code', size=64),
-        'type': fields.selection(_code_get, 'Account Type', required=True),
+        'type': fields.selection([
+            ('receivable','Receivable'),
+            ('payable','Payable'),
+            ('view','View'),
+            ('consolidation','Consolidation'),
+            ('income','Income'),
+            ('expense','Expense'),
+            ('tax','Tax'),
+            ('cash','Cash'),
+            #('asset','Asset'),
+            #('equity','Equity'),
+            ('closed','Closed'),
+            ], 'Internal Type', required=True,),
+
+        'user_type': fields.many2one('account.account.type', 'Account Type'),
 #        'parent_id': fields.many2many('account.account', 'account_account_rel', 'child_id', 'parent_id', 'Parents'),
         'parent_id': fields.many2one('account.account','Parent', ondelete='cascade'),
         'child_parent_ids':fields.one2many('account.account','parent_id','Children'),
@@ -258,7 +273,6 @@ class account_account(osv.osv):
         return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
 
     _defaults = {
-        'sign': lambda *a: 1,
         'type' : lambda *a :'view',
         'reconcile': lambda *a: False,
         'company_id': _default_company,
@@ -631,6 +645,7 @@ class account_move(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, states={'posted':[('readonly',True)]}),
         'state': fields.selection([('draft','Draft'), ('posted','Posted')], 'Status', required=True, readonly=True),
         'line_id': fields.one2many('account.move.line', 'move_id', 'Entries', states={'posted':[('readonly',True)]}),
+        'to_check': fields.boolean('To Be Verified'),
     }
     _defaults = {
         'state': lambda *a: 'draft',
@@ -1656,10 +1671,23 @@ class account_account_template(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
-        'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign', required=True, help='Allows to change the displayed amount of the balance to see positive results instead of negative ones in expenses accounts.'),
+        #'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign', required=True, help='Allows to change the displayed amount of the balance to see positive results instead of negative ones in expenses accounts.'),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Force all moves for this account to have this secondary currency."),
         'code': fields.char('Code', size=64),
-        'type': fields.selection(_code_get, 'Account Type', required=True),
+        'type': fields.selection([
+            ('receivable','Receivable'),
+            ('payable','Payable'),
+            ('view','View'),
+            ('consolidation','Consolidation'),
+            ('income','Income'),
+            ('expense','Expense'),
+            ('tax','Tax'),
+            ('cash','Cash'),
+            #('asset','Asset'),
+            #('equity','Equity'),
+            ('closed','Closed'),
+            ], 'Internal Type', required=True,),
+        'user_type': fields.many2one('account.account.type', 'Account Type'),
         'reconcile': fields.boolean('Allow Reconciliation', help="Check this option if the user can make a reconciliation of the entries in this account."),
         'shortcut': fields.char('Shortcut', size=12),
         'note': fields.text('Note'),
@@ -1669,7 +1697,7 @@ class account_account_template(osv.osv):
     }
 
     _defaults = {
-        'sign': lambda *a: 1,
+        #'sign': lambda *a: 1,
         'reconcile': lambda *a: False,
         'type' : lambda *a :'view',
     }
@@ -1731,10 +1759,12 @@ class account_tax_code_template(osv.osv):
         if user.company_id:
             return user.company_id.id
         return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
+
     _defaults = {
         'company_id': _default_company,
         'sign': lambda *args: 1.0,
     }
+
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
@@ -1746,7 +1776,7 @@ class account_tax_code_template(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id'])
+        (_check_recursion, 'Error ! You can not create recursive Tax Codes.', ['parent_id'])
     ]
     _order = 'code,name'
 account_tax_code_template()
@@ -1758,7 +1788,7 @@ class account_chart_template(osv.osv):
 
     _columns={
         'name': fields.char('Name', size=64, required=True),
-        'account_root_id': fields.many2one('account.account.template','Root Account',required=True),
+        'account_root_id': fields.many2one('account.account.template','Root Account',required=True,domain=[('parent_id','=',False)]),
         'tax_code_root_id': fields.many2one('account.tax.code.template','Root Tax Code',required=True,domain=[('parent_id','=',False)]),
         'tax_template_ids': fields.one2many('account.tax.template', 'chart_template_id', 'Tax Template List', help='List of all the taxes that have to be installed by the wizard'),
         'bank_account_view_id': fields.many2one('account.account.template','Bank Account',required=True),
@@ -1832,7 +1862,7 @@ class account_tax_template(osv.osv):
     _defaults = {
         'python_compute': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or None\n# partner : res.partner object or None\n\nresult = price_unit * 0.10''',
         'python_compute_inv': lambda *a: '''# price_unit\n# address : res.partner.address object or False\n# product : product.product object or False\n\nresult = price_unit * 0.10''',
-       'applicable_type': lambda *a: 'true',
+        'applicable_type': lambda *a: 'true',
         'type': lambda *a: 'percent',
         'amount': lambda *a: 0,
         'sequence': lambda *a: 1,
@@ -1936,7 +1966,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             tax_template_ref[tax.id] = new_tax
 
 
-        #desactivate the parent_store functionnality on account_account for rapidity purpose
+        #deactivate the parent_store functionnality on account_account for rapidity purpose
         self.pool._init = True
         children_acc_template = obj_acc_template.search(cr, uid, [('parent_id','child_of',[obj_acc_root.id])])
         for account_template in obj_acc_template.browse(cr, uid, children_acc_template):
@@ -1946,10 +1976,11 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             #create the account_account
             vals={
                 'name': (obj_acc_root.id == account_template.id) and obj_multi.company_id.name or account_template.name,
-                'sign': account_template.sign,
+                #'sign': account_template.sign,
                 'currency_id': account_template.currency_id and account_template.currency_id.id or False,
                 'code': account_template.code,
                 'type': account_template.type,
+                'user_type': account_template.user_type or False,
                 'reconcile': account_template.reconcile,
                 'shortcut': account_template.shortcut,
                 'note': account_template.note,
@@ -2013,10 +2044,11 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             tmp = self.pool.get('res.partner.bank').name_get(cr, uid, [line.acc_no.id])[0][1]
             vals={
                 'name': line.acc_no.bank and line.acc_no.bank.name+' '+tmp or tmp,
-                'sign': ref_acc_bank.sign,
+                #'sign': ref_acc_bank.sign,
                 'currency_id': line.currency_id and line.currency_id.id or False,
                 'code': ref_acc_bank.code+str(current_num),
                 'type': 'cash',
+                'user_type': account_template.user_type or False,
                 'reconcile': True,
                 'parent_id': acc_template_ref[ref_acc_bank.id] or False,
                 'company_id': company_id,
@@ -2044,7 +2076,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         fields_obj = self.pool.get('ir.model.fields')
 
         todo_list = [
-            ('property_account_receivable','res.partner','account.account'), 
+            ('property_account_receivable','res.partner','account.account'),
             ('property_account_payable','res.partner','account.account'),
             ('property_account_expense_categ','product.category','account.account'),
             ('property_account_income_categ','product.category','account.account'),

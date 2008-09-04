@@ -88,11 +88,11 @@ def _data_save(self, cr, uid, data, context):
                 obj='account_move_line', context={'fiscalyear': fy_id})
         cr.execute('select id from account_account WHERE active')
         ids = map(lambda x: x[0], cr.fetchall())
-        accnt_type_obj = pool.get('account.account.type')
         for account in pool.get('account.account').browse(cr, uid, ids,
             context={'fiscalyear': fy_id}):
-            accnt_type_ids = accnt_type_obj.search(cr, uid, [('code','=',account.type)])
-            accnt_type_data = accnt_type_obj.browse(cr, uid, accnt_type_ids[0])
+            accnt_type_data = account.user_type
+            if not accnt_type_data:
+                continue
             if accnt_type_data.close_method=='none' or account.type == 'view':
                 continue
             if accnt_type_data.close_method=='balance':

@@ -141,7 +141,7 @@ send_form_fields = {
 }
 
 def _get_default(obj, cursor, user, data, context):
-    return {'report_id': data['id']}
+    return {}
 
 
 class base_report_designer_modify(wizard.interface):
@@ -163,7 +163,10 @@ class base_report_designer_modify(wizard.interface):
     def _get_report(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
         report = pool.get('ir.actions.report.xml').browse(cr, uid, data['form']['report_id'], context)
-        return {'file_sxw': base64.encodestring(report.report_sxw_content)}
+        try:
+            return {'file_sxw': base64.encodestring(report.report_sxw_content)}
+        except:
+             raise Exception, _('Report does not contain the sxw content!')
 
     states = {
         'init': {

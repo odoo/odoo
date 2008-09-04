@@ -120,8 +120,8 @@
                     <notebook colspan="4">
                         <page string="General Information">
                             <newline/>
-                            <field name="sign"/>
-
+                            <!--<field name="sign"/>-->
+                            <field name="user_type" select="1"/>
                             <field name="currency_id" select="2"/>
                             <field name="reconcile"/>
                             <newline/>
@@ -418,8 +418,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Account Type">
-                    <field name="code"/>
                     <field name="name"/>
+                    <field name="code"/>
                 </tree>
             </field>
         </record>
@@ -432,6 +432,7 @@
                     <field name="name" select="1"/>
                     <field name="code" select="1"/>
                     <field name="sequence"/>
+                    <field name="sign"/>
                     <field name="close_method"/>
                     <field name="partner_account"/>
                 </form>
@@ -797,6 +798,7 @@
                     <field name="ref" select="1"/>
                     <field name="period_id" select="2"/>
                     <field name="journal_id" select="1"/>
+                    <field name="to_check" select="2"/>
 
                     <separator colspan="4" string="Entry Lines"/>
                     <field colspan="4" name="line_id" nolabel="1" readonly="1" widget="one2many_list">
@@ -1482,9 +1484,10 @@
                             <field name="code" select="1"/>
                             <newline/>
                             <field name="parent_id" select="1"/>
-                            <field name="type" select="1"/>
                             <field name="shortcut"/>
-                            <field name="sign"/>
+                            <field name="type" select="1"/>
+                            <field name="user_type" select="1"/>
+
                             <field name="currency_id" select="2"/>
                             <field name="reconcile"/>
                             <field name="tax_ids" colspan="4"/>
@@ -1570,7 +1573,7 @@
             <field name="arch" type="xml">
                 <form string="Account Tax Template">
                     <field name="name" select="1"/>
-                    <field name="company_id"/>
+                    <!--<field name="company_id"/>-->
                     <newline/>
                     <field name="description" select="1" colspan="4"/>
                     <field name="tax_group" />

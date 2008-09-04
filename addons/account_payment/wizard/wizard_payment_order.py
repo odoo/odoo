@@ -87,7 +87,7 @@ def create_payment(self, cr, uid, data, context):
 
     payment = order_obj.browse(cr, uid, data['id'],
             context=context)
-    t = payment.mode and payment.mode.type.code or None
+    t = payment.mode and payment.mode.type.id or None
     line2bank= pool.get('account.move.line').line2bank(cr, uid,
             line_ids, t, context)
 
