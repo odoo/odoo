@@ -331,6 +331,46 @@ stock_tracking()
 class stock_picking(osv.osv):
     _name = "stock.picking"
     _description = "Packing list"
+    def _set_minimum_date(self, cr, uid, ids, name, value, arg, context):
+        if value!=False:
+                cr.execute("update stock_picking set min_date='%s' where id in (%d)"%(value,ids))
+    def get_minimum_date(self, cr, uid, ids, field_name, arg, context={}):
+        res = {}
+        for pick in self.browse(cr, uid, ids):
+            res[pick.id] = None
+            cr.execute("select min_date from stock_picking where id =%d"%pick.id)
+            min_date = cr.fetchone()[0]
+            if not min_date:
+                move_ids = [x.id for x in pick.move_lines ]
+                if len(move_ids):
+                    cr.execute("select min(date_planned) from stock_move where id in (" + ','.join(map(str, move_ids)) + ")")
+                    res[pick.id] = cr.fetchone()[0] or None
+            else:
+                res[pick.id]=min_date
+
+        return res
+
+    def _set_maximum_date(self, cr, uid, ids, name, value, arg, context):
+        if value!=False:
+                cr.execute("update stock_picking set max_date='%s' where id in (%d)"%(value,ids))
+    def get_maximum_date(self, cr, uid, ids, field_name, arg, context={}):
+        res = {}
+        for pick in self.browse(cr, uid, ids):
+            res[pick.id] = None
+            cr.execute("select max_date from stock_picking where id =%d"%pick.id)
+            max_date = cr.fetchone()[0]
+            if not max_date:
+                move_ids = [x.id for x in pick.move_lines ]
+                if len(move_ids):
+                    cr.execute("select max(date_planned) from stock_move where id in (" + ','.join(map(str, move_ids)) + ")")
+                    res[pick.id] = cr.fetchone()[0] or None
+            else:
+                res[pick.id]=max_date
+
+        return res
+    
+    
+    
     _columns = {
         'name': fields.char('Packing name', size=64, required=True, select=True),
         'origin': fields.char('Origin', size=64),
@@ -350,8 +390,12 @@ class stock_picking(osv.osv):
             ('done','Done'),
             ('cancel','Cancel'),
             ], 'Status', readonly=True, select=True),
+        'min_date': fields.function(get_minimum_date, fnct_inv=_set_minimum_date,
+                                     method=True,store=True, type='date', string='Min. Date', select=True),
         'date':fields.datetime('Date create'),
 
+        'max_date': fields.function(get_maximum_date, fnct_inv=_set_maximum_date,
+                                     method=True,store=True, type='date', string='Max. Date', select=True),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Move lines'),
 
         'auto_picking': fields.boolean('Auto-Packing'),
