@@ -507,18 +507,13 @@ class graph(object):
         max_level = max(map(lambda x: len(x), self.levels.values()))
         
         if max_level%2:
-            self.result[self.start]['x'] = (max_level+1)/2 + self.max_order
+            self.result[self.start]['x'] = (max_level+1)/2 + self.max_order +1
         else:
-            self.result[self.start]['x'] = (max_level)/2 + self.max_order
+            self.result[self.start]['x'] = (max_level)/2 + self.max_order + 1
         
         if self.Is_Cyclic:
             self.graph_order()
-            #for flat edges ie. source an destination nodes are on the same rank
-            for src in self.transitions:
-                for des in self.transitions[src]:
-                    if (self.result[des]['y'] - self.result[src]['y'] == 0):    
-                        self.result[src]['y'] += 0.08
-                        self.result[des]['y'] -= 0.08
+            
         else:               
             self.result[self.start]['x'] = 0
             self.tree_order(self.start, 0)
@@ -634,7 +629,6 @@ class graph(object):
         
         self.order_heuristic()        
         self.process_order()
-        
     
     def process(self, starting_node):
         """Process the graph to find ranks and order of the nodes
@@ -649,24 +643,29 @@ class graph(object):
         if self.nodes:
             if self.start_nodes:
                 #add dummy edges to the nodes which does not have any incoming edges
+                tree = self.make_acyclic(None, self.start_nodes[0], 0, [])
+                
                 for node in self.no_ancester:
-                    self.transitions[self.start_nodes[0]].append(node)
-                
-                
+                    for sec_node in self.transitions.get(node, []):
+                        if sec_node in self.partial_order.keys():
+                            self.transitions[self.start_nodes[0]].append(node)
+                            break
+                self.partial_order = {}
                 tree = self.make_acyclic(None, self.start_nodes[0], 0, [])
             
                 
             # if graph is disconnected or no start-node is given 
             #than to find starting_node for each component of the node    
             if len(self.nodes) > len(self.partial_order):
-                self.find_starts()                
-                     
+                self.find_starts() 
+                
             self.max_order = 0       
             #for each component of the graph find ranks and order of the nodes
             for s in self.start_nodes:            
                 self.start = s
                 self.rank()   # First step:Netwoek simplex algorithm
                 self.order_in_rank()    #Second step: ordering nodes within ranks  
+            
             
 
     def __str__(self):
@@ -681,6 +680,13 @@ class graph(object):
         """Computes actual co-ordiantes of the nodes
         """
         
+            #for flat edges ie. source an destination nodes are on the same rank
+        for src in self.transitions:
+            for des in self.transitions[src]:
+                if (self.result[des]['y'] - self.result[src]['y'] == 0):    
+                    self.result[src]['y'] += 0.08
+                    self.result[des]['y'] -= 0.08
+                    
         for node in self.result:
             self.result[node]['x'] = (self.result[node]['x']) * maxx + plusx2
             self.result[node]['y'] = (self.result[node]['y']) * maxy + plusy2
