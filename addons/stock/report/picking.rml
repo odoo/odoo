@@ -71,14 +71,6 @@
       <paraStyle name="all" alignment="justify"/>
     </initialize>
     <paraStyle name="P1" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P2" fontName="Times-Roman" fontSize="9.0" leading="11"/>
-    <paraStyle name="P3" fontName="Times-Roman" fontSize="9.0" leading="11"/>
-    <paraStyle name="P4" fontName="Times-Bold" fontSize="10.0" leading="13"/>
-    <paraStyle name="P5" fontName="Times-Roman" fontSize="10.0" leading="13"/>
-    <paraStyle name="P6" fontName="Times-Roman" fontSize="10.0" leading="13"/>
-    <paraStyle name="P7" fontName="Times-Roman" fontSize="10.0" leading="13"/>
-    <paraStyle name="P8" fontName="Times-Roman" fontSize="11.0" leading="14"/>
-    <paraStyle name="P9" fontName="Times-Roman" fontSize="4.0" leading="5"/>
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -126,11 +118,11 @@
         </td>
         <td>
           <para style="terp_default_Bold_9">Shipping Address:</para>
-          <para style="terp_default_9">[[ (picking.address_id and picking.address_id.partner_id and picking.address_id.partner_id.title) or '' ]] [[ picking.address_id.partner_id.name ]]</para>
-          <para style="terp_default_9">[[ (picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.title) or '' ]] [[ (picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.name) or '' ]] </para>
-          <para style="terp_default_9">[[ (picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.street) or '' ]] </para>
-          <para style="terp_default_8">[[ (picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.zip) or '' ]] [[ (picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.city) or '' ]] [[ (picking.address_id.state_id and picking.address_id.state_id.name) or '' ]] </para>
-          <para style="terp_default_8">[[ (picking.address_id.country_id and picking.address_id.country_id.name) or '' ]]</para>
+          <para style="terp_default_9">[[ (picking.address_id and picking.address_id.partner_id and picking.address_id.partner_id.title) or '' ]] [[ picking.address_id and picking.address_id.partner_id and picking.address_id.partner_id.name ]]</para>
+          <para style="terp_default_9">[[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.title) or '' ]] [[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.name) or '' ]] </para>
+          <para style="terp_default_9">[[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.street) or '' ]] </para>
+          <para style="terp_default_8">[[ (picking.sale_id and picking.sale_id_id.partner_shipping_id and picking.sale_id.partner_shipping_id.zip) or '' ]] [[ (picking.sale_id and picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.city) or '' ]] [[ (picking.address_id and picking.address_id.state_id and picking.address_id.state_id.name) or '' ]] </para>
+          <para style="terp_default_8">[[ (picking.address_id and picking.address_id.country_id and picking.address_id.country_id.name) or '' ]]</para>
         </td>
       </tr>
     </blockTable>
