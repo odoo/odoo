@@ -10,28 +10,11 @@
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
     </blockTableStyle>
-    <blockTableStyle id="Tableau1">
+    <blockTableStyle id="address_table">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
     </blockTableStyle>
-    <blockTableStyle id="Tableau2">
-      <blockAlignment value="LEFT"/>
-      <blockValign value="TOP"/>
-      <lineStyle kind="LINEBEFORE" colorName="#c0c0c0" start="0,0" stop="0,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#c0c0c0" start="0,0" stop="0,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#c0c0c0" start="0,-1" stop="0,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#c0c0c0" start="1,0" stop="1,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#c0c0c0" start="1,0" stop="1,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#c0c0c0" start="1,-1" stop="1,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#c0c0c0" start="2,0" stop="2,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#c0c0c0" start="2,0" stop="2,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#c0c0c0" start="2,-1" stop="2,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#c0c0c0" start="3,0" stop="3,-1"/>
-      <lineStyle kind="LINEAFTER" colorName="#c0c0c0" start="3,0" stop="3,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#c0c0c0" start="3,0" stop="3,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#c0c0c0" start="3,-1" stop="3,-1"/>
-    </blockTableStyle>
-    <blockTableStyle id="Tableau3">
+    <blockTableStyle id="Order_ref_header">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
       <lineStyle kind="LINEBEFORE" colorName="#c0c0c0" start="0,0" stop="0,-1"/>
@@ -48,15 +31,32 @@
       <lineStyle kind="LINEABOVE" colorName="#c0c0c0" start="3,0" stop="3,0"/>
       <lineStyle kind="LINEBELOW" colorName="#c0c0c0" start="3,-1" stop="3,-1"/>
     </blockTableStyle>
-    <blockTableStyle id="Tableau4">
+    <blockTableStyle id="obj_ref_content_table">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <lineStyle kind="LINEBELOW" colorName="#666666" start="0,-1" stop="0,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#666666" start="1,-1" stop="1,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#666666" start="2,-1" stop="2,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#666666" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#c0c0c0" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#c0c0c0" start="0,0" stop="0,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#c0c0c0" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#c0c0c0" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#c0c0c0" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#c0c0c0" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#c0c0c0" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#c0c0c0" start="2,0" stop="2,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#c0c0c0" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#c0c0c0" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#c0c0c0" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#c0c0c0" start="3,0" stop="3,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#c0c0c0" start="3,-1" stop="3,-1"/>
     </blockTableStyle>
-    <blockTableStyle id="Tableau5">
+    <blockTableStyle id="Detail_table_header">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
+    </blockTableStyle>
+    <blockTableStyle id="Detail_content_tbl">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
@@ -68,7 +68,6 @@
       <paraStyle name="all" alignment="justify"/>
     </initialize>
     <paraStyle name="P1" rightIndent="0.0" leftIndent="-5.0" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
-    <paraStyle name="P2" fontName="Helvetica" fontSize="7.0" leading="9" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Footer" fontName="Times-Roman"/>
@@ -98,7 +97,6 @@
     <paraStyle name="terp_default_Bold_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Centre_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_default_1" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
   </stylesheet>
   <images/>
   <story>
@@ -106,38 +104,35 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_9">[[ not(o.sale_id) and 'Error, no sale order attached to this picking !' or '' ]]</para>
-    <blockTable colWidths="287.0,254.0" repeatRows="1" style="Tableau1">
+    <para style="terp_default_9">[[ not(o.sale_id) and  'Error, no sale order attached to this picking !' or '' ]]</para>
+    <blockTable colWidths="287.0,254.0" repeatRows="1" style="address_table">
       <tr>
         <td>
           <para style="terp_default_Bold_9">Invoiced to</para>
-          <para style="terp_default_9">[[ o.sale_id and o.sale_id.partner_invoice_id and o.sale_id.partner_invoice_id.name or '']]</para>
-          <para style="terp_default_9">[[ o.sale_id and o.sale_id.partner_invoice_id and o.sale_id.partner_invoice_id.street or '']]</para>
-          <para style="terp_default_9">[[ o.sale_id and o.sale_id.partner_invoice_id and o.sale_id.partner_invoice_id.zip or '']]</para>
-          <para style="terp_default_9">[[ o.sale_id and o.sale_id.partner_invoice_id and o.sale_id.partner_invoice_id.city or '' ]]</para>
-          <para style="terp_default_9">[[ o.sale_id and o.sale_id.partner_invoice_id and o.sale_id.partner_invoice_id.country_id and o.sale_id.partner_invoice_id.country_id.name or '']]</para>
+          <para style="terp_default_9">[[ o.sale_id.partner_invoice_id.name ]]</para>
+          <para style="terp_default_9">[[ o.sale_id.partner_invoice_id.street ]]</para>
+          <para style="terp_default_9">[[ o.sale_id.partner_invoice_id.zip ]]</para>
+          <para style="terp_default_9">[[ o.sale_id.partner_invoice_id.city ]]</para>
+          <para style="terp_default_9">[[ o.sale_id.partner_invoice_id.country_id and o.sale_id.partner_invoice_id.country_id.name ]]</para>
         </td>
         <td>
           <para style="terp_default_Bold_9">Shipped to</para>
-          <para style="terp_default_9">[[ o.sale_id and o.sale_id.partner_shipping_id and o.sale_id.partner_shipping_id.name or '']]</para>
-          <para style="terp_default_9">[[ o.sale_id and o.sale_id.partner_shipping_id and o.sale_id.partner_shipping_id.street or '']]</para>
-          <para style="terp_default_9">[[ o.sale_id and o.sale_id.partner_shipping_id and o.sale_id.partner_shipping_id.zip or '']]</para>
-          <para style="terp_default_9">[[ o.sale_id and o.sale_id.partner_shipping_id and o.sale_id.partner_shipping_id.city or '']]</para>
-          <para style="terp_default_9">[[ o.sale_id and o.sale_id.partner_shipping_id and o.sale_id.partner_shipping_id.country_id and o.sale_id.partner_shipping_id.country_id.name or '']]</para>
+          <para style="terp_default_9">[[ o.sale_id.partner_shipping_id.name ]]</para>
+          <para style="terp_default_9">[[ o.sale_id.partner_shipping_id.street ]]</para>
+          <para style="terp_default_9">[[ o.sale_id.partner_shipping_id.zip ]]</para>
+          <para style="terp_default_9">[[ o.sale_id.partner_shipping_id.city ]]</para>
+          <para style="terp_default_9">[[ o.sale_id.partner_shipping_id.country_id and o.sale_id.partner_shipping_id.country_id.name ]]</para>
         </td>
       </tr>
     </blockTable>
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <para style="P1">Delivery order [[ o.sale_id and o.sale_id.name ]]</para>
+    <para style="P1">Delivery order [[ o.sale_id.name ]]</para>
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_9">
-      <font color="white"> </font>
-    </para>
-    <blockTable colWidths="155.0,127.0,127.0,127.0" style="Tableau2">
+    <blockTable colWidths="155.0,127.0,127.0,127.0" style="Order_ref_header">
       <tr>
         <td>
           <para style="terp_tblheader_General_Centre">Order Ref.</para>
@@ -153,16 +148,16 @@
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="155.0,127.0,127.0,127.0" style="Tableau3">
+    <blockTable colWidths="155.0,127.0,127.0,127.0" style="obj_ref_content_table">
       <tr>
         <td>
-          <para style="terp_default_Centre_8">[[ o.sale_id and o.sale_id.name ]]</para>
+          <para style="terp_default_Centre_8">[[ o.sale_id.name ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ o.sale_id and o.sale_id.date_order or '']]</para>
+          <para style="terp_default_Centre_8">[[ o.sale_id.date_order ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ o.min_date ]]</para>
+          <para style="terp_default_Centre_8">[[ o.date ]]</para>
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ o.carrier_id and o.carrier_id.name or '' ]]</para>
@@ -172,7 +167,7 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="78.0,345.0,91.0,24.0" repeatRows="1" style="Tableau4">
+    <blockTable colWidths="105.0,272.0,94.0,66.0" repeatRows="1" style="Detail_table_header">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Reference</para>
@@ -189,29 +184,46 @@
       </tr>
     </blockTable>
     <section>
-      <para style="P2">[[ repeatIn(o.move_lines, 'line') ]]</para>
-      <blockTable colWidths="77.0,344.0,91.0,24.0" style="Tableau5">
+      <para style="terp_default_9">[[ repeatIn(o.move_lines, 'line') ]]</para>
+      <blockTable colWidths="103.0,272.0,95.0,66.0" style="Detail_content_tbl">
         <tr>
           <td>
-            <para style="terp_default_9">[[line.product_id.code ]]</para>
+            <para style="terp_default_9">[[ line.product_id.code ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ line.product_id and line.product_id.name or '']]</para>
+            <para style="terp_default_9">[[ line.product_id.name ]]</para>
           </td>
           <td>
             <para style="terp_default_Centre_9">[[ line.product_qty ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ line.product_uom and line.product_uom.name ]]</para>
+            <para style="terp_default_9">[[ line.product_uom.name ]]</para>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <para style="terp_default_9">[[ line.product_id.ean13 ]]</para>
+          </td>
+          <td>
+            <para style="terp_default_9">Logistical unit : [[ line.product_packaging.qty ]]</para>
+            <para style="terp_default_9">[[ line.tracking_id and 'Packaging : %d package of %d P' % (1, line.product_packaging.qty) or '' ]]</para>
+            <para style="terp_default_9">[[ line.tracking_id and 'Pallets reference: %s' % line.tracking_id.name or '' ]]</para>
+            <para style="terp_default_9">Batch reference : [[ line.prodlot_id and line.prodlot_id.name or '/' ]]</para>
+          </td>
+          <td>
+            <para style="terp_default_Centre_9">[[ line.product_uos_qty ]]</para>
+          </td>
+          <td>
+            <para style="terp_default_9">[[ line.product_uos.name ]]</para>
           </td>
         </tr>
       </blockTable>
-      <para style="Standard">
-        <font color="white"> </font>
-      </para>
-      <para style="Standard">
+      <para style="terp_default_9">
         <font color="white"> </font>
       </para>
     </section>
+    <para style="terp_default_9">
+      <font color="white"> </font>
+    </para>
   </story>
 </document>
