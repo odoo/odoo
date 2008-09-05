@@ -682,7 +682,7 @@ class account_move_line(osv.osv):
         if ('account_id' in vals):
             account = account_obj.browse(cr, uid, vals['account_id'])
             if journal.type_control_ids:
-                type = account.type
+                type = account.user_type
                 for t in journal.type_control_ids:
                     if type==t.code:
                         ok = True

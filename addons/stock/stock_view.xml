@@ -572,6 +572,7 @@
                     <field name="date" select="1"/>
                     <newline/>
                     <field name="address_id" select="2"/>
+                    <field name="origin" select="2"/>
                     <notebook colspan="4">
                         <page string="General Information">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list">
@@ -616,9 +617,8 @@
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
                         <page string="Others info">
-                            <field name="origin" select="2"/>
-                            <field name="active" select="2"/>
                             <field name="auto_picking"/>
+                            <field name="active" select="2"/>
                             <newline/>
                             <field name="move_type"/>
                         </page>
@@ -727,6 +727,7 @@
                     <field name="date" select="1"/>
                     <newline/>
                     <field name="address_id" select="2"/>
+                    <field name="origin" select="2"/>
                     <notebook colspan="4">
                         <page string="General Information">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list">
@@ -771,7 +772,6 @@
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
                         <page string="Others info">
-                            <field name="origin" select="2"/>
                             <field name="active" select="2"/>
                             <field name="auto_picking"/>
                             <newline/>

@@ -253,7 +253,7 @@ class product_template(osv.osv):
         'categ_id': fields.many2one('product.category','Category', required=True, change_default=True),
         'list_price': fields.float('Sale Price', digits=(16, int(config['price_accuracy']))),
         'standard_price': fields.float('Cost Price', required=True, digits=(16, int(config['price_accuracy']))),
-        'volume': fields.float('Volume'),
+        'volume': fields.float('Volume', help="The weight in Kg."),
         'weight': fields.float('Gross weight'),
         'weight_net': fields.float('Net weight'),
         'cost_method': fields.selection([('standard','Standard Price'), ('average','Average Price')], 'Costing Method', required=True),
