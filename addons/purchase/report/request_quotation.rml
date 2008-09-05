@@ -20,7 +20,6 @@
       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table_Product_Line">
       <blockAlignment value="LEFT"/>
@@ -29,7 +28,6 @@
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table_Product_line_notes">
       <blockAlignment value="LEFT"/>
@@ -87,35 +85,36 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_9">[[ (order.partner_id and order.partner_id.title) or '' ]][[ order.partner_id.name ]]</para>
-          <para style="terp_default_9">[[ (order.partner_address_id and order.partner_address_id.title) or '' ]][[ order.partner_address_id.name ]]</para>
-          <para style="terp_default_9">[[ (order.partner_address_id and order.partner_address_id.street) or '']][[ order.partner_address_id.street2 ]]</para>
-          <para style="terp_default_9">[[ (order.partner_address_id and order.partner_address_id.zip) or '' ]][[ (order.partner_address_id and order.partner_address_id.city) or '' ]]</para>
-          <para style="terp_default_9">[[ order.partner_address_id.state_id.code ]][[ (order.partner_address_id and order.partner_address_id.country_id and order.partner_address_id.country_id.code) or '' ]]</para>
+          <para style="terp_default_9">[[ (order.partner_id and order.partner_id.title) or '' ]] [[ order.partner_id.name ]]</para>
+          <para style="terp_default_9">[[ (order.partner_address_id and order.partner_address_id.title) or '' ]] [[ order.partner_address_id.name ]] </para>
+          <para style="terp_default_9">[[ (order.partner_address_id and order.partner_address_id.street) or '']] [[ order.partner_address_id.street2 ]]</para>
+          <para style="terp_default_9">[[ (order.partner_address_id and order.partner_address_id.zip) or '' ]] [[ (order.partner_address_id and order.partner_address_id.city) or '' ]]</para>
+          <para style="terp_default_9">[[ order.partner_address_id.state_id.code ]] [[ (order.partner_address_id and order.partner_address_id.country_id and order.partner_address_id.country_id.code) or '' ]]</para>
           <para style="terp_default_9">
             <font color="white"> </font>
           </para>
-          <para style="terp_default_9">Tel.�: [[ (order.partner_address_id and order.partner_address_id.phone) or '' ]]</para>
-          <para style="terp_default_9">Fax�: [[ (order.partner_address_id and order.partner_address_id.fax) or '' ]]</para>
-          <para style="terp_default_9">TVA�: [[ (order.partner_id and order.partner_id.vat) or '' ]]</para>
+          <para style="terp_default_9">Tel.: [[ (order.partner_address_id and order.partner_address_id.phone) or '' ]]</para>
+          <para style="terp_default_9">Fax: [[ (order.partner_address_id and order.partner_address_id.fax) or '' ]]</para>
+          <para style="terp_default_9">TVA: [[ (order.partner_id and order.partner_id.vat) or '' ]]</para>
         </td>
       </tr>
     </blockTable>
-    <para style="terp_header">Request for Quotation [[ order.name ]]</para>
-    <para style="terp_default_9">Other reference :[[ order.ref or '' ]]</para>
-    <para style="terp_default_9">Printed: [[ time.strftime('%d/%m/%Y') ]]</para>
-    <para style="terp_default_9">
+    <para style="terp_header">
+      <font color="white"> </font>
+    </para>
+    <para style="terp_header">Request for quotation : [[order.name]]</para>
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    <para style="terp_default_8">
       <font color="white"> </font>
     </para>
     <para style="terp_default_9">Please find hereby a request for quotation.</para>
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="44.0,381.0,60.0,45.0" repeatRows="1" style="Table_Product_Header_Title">
+    <blockTable colWidths="408.0,49.0,73.0" repeatRows="1" style="Table_Product_Header_Title">
       <tr>
-        <td>
-          <para style="terp_tblheader_Details">Product</para>
-        </td>
         <td>
           <para style="terp_tblheader_Details">Description</para>
         </td>
@@ -129,16 +128,13 @@
     </blockTable>
     <section>
       <para style="terp_default_9">[[ repeatIn(order.order_line,'order_line') ]]</para>
-      <blockTable colWidths="44.0,380.0,61.0,33.0,11.0" style="Table_Product_Line">
+      <blockTable colWidths="406.0,52.0,59.0,13.0" style="Table_Product_Line">
         <tr>
-          <td>
-            <para style="terp_default_9">[[ (order_line.product_id and order_line.product_id.default_code) or '']]</para>
-          </td>
           <td>
             <para style="terp_default_9">[[ order_line.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ time.strftime('%d/%m/%Y', time.strptime( order_line.date_planned, '%Y-%m-%d'))  ]]</para>
+            <para style="terp_default_9">[[ time.strftime('%d/%m/%Y', time.strptime( order_line.date_planned, '%Y-%m-%d')) ]]</para>
           </td>
           <td>
             <para style="terp_default_Centre_9">[[ order_line.product_qty or '' ]]</para>
@@ -159,9 +155,7 @@
         </tr>
       </blockTable>
     </section>
-    <para style="terp_default_9">
-      <font color="white"> </font>
-    </para>
+    <para style="terp_default_9"/>
     <para style="terp_default_9">[[ order.notes or '' ]]</para>
     <para style="terp_default_9">
       <font color="white"> </font>
