@@ -29,7 +29,7 @@ class report_crm_case_section_categ2(osv.osv):
               create or replace view report_crm_case_section_categ2 as (
                 select
                     min(c.id) as id,
-                    substring(c.create_date for 7)||'-01' as name,
+                    to_char(c.create_date,'YYYY-MM')||'-01' as name,
                     c.user_id,
                     c.state,
                     c.category2_id,
@@ -40,7 +40,7 @@ class report_crm_case_section_categ2(osv.osv):
                 from
                     crm_case c
                 where c.category2_id is not null
-                group by substring(c.create_date for 7), c.user_id, c.state, c.stage_id, c.category2_id, c.section_id)""")
+                group by to_char(c.create_date,'YYYY-MM'), c.user_id, c.state, c.stage_id, c.category2_id, c.section_id)""")
 
 report_crm_case_section_categ2()
 
@@ -65,7 +65,7 @@ class report_crm_case_section_stage(osv.osv):
               create or replace view report_crm_case_section_stage as (
                 select
                     min(c.id) as id,
-                    substring(c.create_date for 7)||'-01' as name,
+                    to_char(c.create_date,'YYYY-MM')||'-01' as name,
                     c.user_id,
                     c.state,
                     c.stage_id,
@@ -75,7 +75,7 @@ class report_crm_case_section_stage(osv.osv):
                 from
                     crm_case c
                 where c.stage_id is not null
-                group by substring(c.create_date for 7), c.user_id, c.state, c.stage_id, c.section_id)""")
+                group by to_char(c.create_date,'YYYY-MM'), c.user_id, c.state, c.stage_id, c.section_id)""")
 
 report_crm_case_section_stage()
 
@@ -100,7 +100,7 @@ class report_crm_case_section_categ_stage(osv.osv):
               create or replace view report_crm_case_section_categ_stage as (
                 select
                     min(c.id) as id,
-                    substring(c.create_date for 7)||'-01' as name,
+                    to_char(c.create_date,'YYYY-MM')||'-01' as name,
                     c.user_id,
                     c.categ_id,
                     c.state,
@@ -111,7 +111,7 @@ class report_crm_case_section_categ_stage(osv.osv):
                 from
                     crm_case c
                 where c.categ_id is not null AND c.stage_id is not null
-                group by substring(c.create_date for 7), c.user_id, c.categ_id, c.state, c.stage_id, c.section_id)""")
+                group by to_char(c.create_date,'YYYY-MM'), c.user_id, c.categ_id, c.state, c.stage_id, c.section_id)""")
 
 report_crm_case_section_categ_stage()
 
@@ -137,7 +137,7 @@ class report_crm_case_section_categ_categ2(osv.osv):
               create or replace view report_crm_case_section_categ_categ2 as (
                 select
                     min(c.id) as id,
-                    substring(c.create_date for 7)||'-01' as name,
+                    to_char(c.create_date, 'YYYY-MM')||'-01' as name,
                     c.user_id,
                     c.categ_id,
                     c.category2_id,
@@ -149,7 +149,7 @@ class report_crm_case_section_categ_categ2(osv.osv):
                 from
                     crm_case c
                 where c.categ_id is not null AND c.category2_id is not null
-                group by substring(c.create_date for 7), c.user_id, c.categ_id, c.category2_id, c.state, c.stage_id, c.section_id)""")
+                group by to_char(c.create_date,'YYYY-MM'), c.user_id, c.categ_id, c.category2_id, c.state, c.stage_id, c.section_id)""")
 
 report_crm_case_section_categ_categ2()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
