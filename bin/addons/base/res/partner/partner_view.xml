@@ -310,6 +310,14 @@
             <field name="domain">[('supplier','&lt;&gt;',1),('customer','&lt;&gt;',1)]</field>
         </record>
         <menuitem action="action_partner_other_form" id="menu_partner_other_form" parent="menu_partner_form"/>
+        <record id="action_partner_customer_form_new" model="ir.actions.act_window">
+            <field name="name">New Partner</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+        </record>
+        <menuitem action="action_partner_customer_form_new" id="menu_partner_customer_form_new" parent="menu_partner_form"/>
 
         <record id="view_payterm_form" model="ir.ui.view">
             <field name="name">res.payterm</field>

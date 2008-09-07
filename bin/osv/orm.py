@@ -769,7 +769,7 @@ class orm_template(object):
                 fields[node.getAttribute('name')] = attrs
 
         elif node.nodeType==node.ELEMENT_NODE and node.localName in ('form', 'tree'):
-            result = self.pool.get(self._name).view_header_get(cr, user, False, node.localName, context)
+            result = self.view_header_get(cr, user, False, node.localName, context)
             if result:
                 node.setAttribute('string', result.decode('utf-8'))
         if node.nodeType == node.ELEMENT_NODE and node.hasAttribute('groups'):
@@ -1388,8 +1388,10 @@ class orm(orm_template):
                                     iids = ids_lst[:40]
                                     ids_lst = ids_lst[40:]
                                     res = f.get(cr, self, iids, k, 1, {})
-                                    for r in res.items():
-                                        cr.execute("UPDATE \"%s\" SET \"%s\"='%s' where id=%d"% (self._table, k, r[1], r[0]))
+                                    for key,val in res.items():
+                                        if f._multi:
+                                            val = val[k]
+                                        cr.execute("UPDATE \"%s\" SET \"%s\"='%s' where id=%d"% (self._table, k, val, key))
 
                             # and add constraints if needed
                             if isinstance(f, fields.many2one):
@@ -1779,9 +1781,9 @@ class orm(orm_template):
         for key,val in todo.items():
             if key:
                 res2 = self._columns[val[0]].get(cr, self, ids, val, user, context=context, values=res)
-                for pos in range(len(val)):
+                for pos in val:
                     for record in res:
-                        record[val[pos]] = res2[record['id']][pos]
+                        record[pos] = res2[record['id']][pos]
             else:
                 for f in val:
                     res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=res)
