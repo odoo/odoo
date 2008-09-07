@@ -28,13 +28,12 @@
 #
 ##############################################################################
 
+from lxml import etree
 from mx import DateTime
 from mx.DateTime import now
 import time
 
-import netsvc
 from osv import fields, osv
-import ir
 
 class project(osv.osv):
     _name = "project.project"
@@ -65,7 +64,7 @@ class project(osv.osv):
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
         res_sum = {}
         if ids2:
-            cr.execute('SELECT project_id, COALESCE(SUM(planned_hours),0) \
+            cr.execute('SELECT project_id, COALESCE(SUM(total_hours),0) \
                     FROM project_task \
                     WHERE project_id IN (' + ','.join([str(x) for x in ids2]) + ') \
                         AND active \
@@ -97,7 +96,7 @@ class project(osv.osv):
         if not ids:
             return res
         cr.execute('''SELECT
-                project_id, sum(progress*planned_hours), sum(planned_hours) 
+                project_id, sum(progress*total_hours), sum(total_hours) 
             FROM
                 project_task 
             WHERE
@@ -132,7 +131,7 @@ class project(osv.osv):
         'warn_header': fields.text('Mail header'),
         'warn_footer': fields.text('Mail footer'),
         'notes': fields.text('Notes'),
-        'timesheet_id': fields.many2one('hr.timesheet.group', 'Working hours'),
+        'timesheet_id': fields.many2one('hr.timesheet.group', 'Working Time'),
         'state': fields.selection([('open', 'Open'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'Status', required=True),
      }
 
@@ -203,15 +202,29 @@ class task(osv.osv):
                 t3 += map(lambda x: (x,t2[1]+1), t2[0].child_ids)
         return result
 
-    def _hours_effect(self, cr, uid, ids, name, args, context):
+# Compute: effective_hours, total_hours, progress
+    def _hours_get(self, cr, uid, ids, field_names, args, context):
         task_set = ','.join(map(str, ids))
         cr.execute(("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id in (%s) GROUP BY task_id") % (task_set,))
+        hours = dict(cr.fetchall())
         res = {}
-        for id in ids:
-            res[id] = 0.0
-        for task_id, sum in cr.fetchall():
-            res[task_id] = sum
+        for task in self.browse(cr, uid, ids, context=context):
+            res[task.id] = {}
+            res[task.id]['effective_hours'] = hours.get(task.id, 0.0)
+            res[task.id]['total_hours'] = task.remaining_hours + hours.get(task.id, 0.0)
+            if (task.remaining_hours + hours.get(task.id, 0.0)):
+                res[task.id]['progress'] = min(100.0 * hours.get(task.id, 0.0) / res[task.id]['total_hours'], 100)
+            else:
+                res[task.id]['progress'] = 0.0
+            res[task.id]['delay_hours'] = res[task.id]['total_hours'] - task.planned_hours
         return res
+
+    def onchange_planned(self, cr, uid, ids, planned, effective):
+        return {'value':{'remaining_hours': planned-effective}}
+
+    #_sql_constraints = [
+    #    ('remaining_hours', 'CHECK (remaining_hours>=0)', 'Please increase and review remaining hours ! It can not be smaller than 0.'),
+    #]
 
     _columns = {
         'active': fields.boolean('Active'),
@@ -220,7 +233,7 @@ class task(osv.osv):
         'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'), ('0','Very urgent')], 'Importance'),
         'sequence': fields.integer('Sequence'),
         'type': fields.many2one('project.task.type', 'Type'),
-        'state': fields.selection([('draft', 'Draft'),('open', 'Open'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'Status'),
+        'state': fields.selection([('draft', 'Draft'),('open', 'Open'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'Status', readonly=True, required=True),
         'date_start': fields.datetime('Date'),
         'date_deadline': fields.datetime('Deadline'),
         'date_close': fields.datetime('Date Closed', readonly=True),
@@ -230,16 +243,21 @@ class task(osv.osv):
         'history': fields.function(_history_get, method=True, string="Task Details", type="text"),
         'notes': fields.text('Notes'),
         'start_sequence': fields.boolean('Wait for previous sequences'),
-        'planned_hours': fields.float('Plan. hours'),
-        'effective_hours': fields.function(_hours_effect, method=True, string='Eff. Hours'),
-        'progress': fields.integer('Progress (0-100)'),
+
+        'planned_hours': fields.float('Planned Hours', readonly=True, states={'draft':[('readonly',False)]}),
+        'effective_hours': fields.function(_hours_get, method=True, string='Hours Spent', multi='hours', store=True),
+        'remaining_hours': fields.float('Remaining Hours', digits=(16,2)),
+        'total_hours': fields.function(_hours_get, method=True, string='Total Hours', multi='hours', store=True),
+        'progress': fields.function(_hours_get, method=True, string='Progress (%)', multi='hours', store=True),
+        'delay_hours': fields.function(_hours_get, method=True, string='Delay Hours', multi='hours', store=True),
+
         'user_id': fields.many2one('res.users', 'Assigned to'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
-        'work_ids': fields.one2many('project.task.work', 'task_id', 'Work done'),
+        'work_ids': fields.one2many('project.task.work', 'task_id', 'Work done', readonly=False, states={'draft':[('readonly',True)]}),
     }
     _defaults = {
         'user_id': lambda obj,cr,uid,context: uid,
-        'state': lambda *a: 'open',
+        'state': lambda *a: 'draft',
         'priority': lambda *a: '2',
         'progress': lambda *a: 0,
         'sequence': lambda *a: 10,
@@ -248,6 +266,31 @@ class task(osv.osv):
         'start_sequence': lambda *a: True
     }
     _order = "state, sequence, priority, date_deadline, id"
+
+    #
+    # Override view according to the company definition
+    #
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False):
+        tm = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.project_time_mode
+        f = self.pool.get('res.company').fields_get(cr, uid, ['project_time_mode'], context)
+        word = dict(f['project_time_mode']['selection'])[tm]
+
+        res = super(task, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar)
+        if tm=='hours':
+            return res
+        eview = etree.fromstring(res['arch'])
+        def _check_rec(eview, tm):
+            if eview.attrib.get('widget',False) == 'float_time':
+                eview.set('widget','float')
+            for child in eview:
+                _check_rec(child, tm)
+            return True
+        _check_rec(eview, tm)
+        res['arch'] = etree.tostring(eview)
+        for f in res['fields']:
+            if 'Hours' in res['fields'][f]['string']:
+                res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours',word)
+        return res
 
     def do_close(self, cr, uid, ids, *args):
         request = self.pool.get('res.request')
@@ -265,7 +308,7 @@ class task(osv.osv):
                         'ref_doc1': 'project.task,%d'% (task.id,),
                         'ref_doc2': 'project.project,%d'% (project.id,),
                     })
-            self.write(cr, uid, [task.id], {'state': 'done', 'date_close':time.strftime('%Y-%m-%d %H:%M:%S'), 'progress': 100})
+            self.write(cr, uid, [task.id], {'state': 'done', 'date_close':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
             if task.parent_id and task.parent_id.state in ('pending','draft'):
                 self.do_reopen(cr, uid, [task.parent_id.id])
         return True
@@ -304,7 +347,7 @@ class task(osv.osv):
                     'ref_doc1': 'project.task,%d' % task.id,
                     'ref_doc2': 'project.project,%d' % project.id,
                 })
-            self.write(cr, uid, [task.id], {'state': 'cancelled', 'progress':100})
+            self.write(cr, uid, [task.id], {'state': 'cancelled', 'remaining_hours':0.0})
         return True
 
     def do_open(self, cr, uid, ids, *args):
@@ -331,7 +374,7 @@ class project_work(osv.osv):
     _columns = {
         'name': fields.char('Work summary', size=128),
         'date': fields.datetime('Date'),
-        'task_id': fields.many2one('project.task', 'Task', ondelete='cascade'),
+        'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True),
         'hours': fields.float('Hours spent'),
         'user_id': fields.many2one('res.users', 'Done by', required=True),
     }
@@ -340,6 +383,20 @@ class project_work(osv.osv):
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S')
     }
     _order = "date desc"
+    def create(self, cr, uid, vals, *args, **kwargs):
+        if 'task_id' in vals:
+            cr.execute('update project_task set remaining_hours=remaining_hours+%.2f where id=%d', (-vals.get('hours',0.0), vals['task_id']))
+        return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
+
+    def write(self, cr, uid, ids,vals,context={}):
+        for work in self.browse(cr, uid, ids, context):
+            cr.execute('update project_task set remaining_hours=remaining_hours+%.2f+(%.2f) where id=%d', (-vals.get('hours',0.0), work.hours, work.task_id.id))
+        return super(project_work,self).write(cr, uid, ids, vals, context)
+
+    def unlink(self, cr, uid, ids, *args, **kwargs):
+        for work in self.browse(cr, uid, ids):
+            cr.execute('update project_task set remaining_hours=remaining_hours+%.2f where id=%d', (work.hours, work.task_id.id))
+        return super(project_work,self).unlink(cr, uid, ids,*args, **kwargs)
 project_work()
 
 

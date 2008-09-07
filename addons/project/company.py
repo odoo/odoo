@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
 # $Id$
 #
@@ -25,12 +25,26 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-###############################################################################
+#
+##############################################################################
 
-import project
-import company
-import report
-import wizard
+from osv import fields
+from osv import osv
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class res_company(osv.osv):
+    _inherit = 'res.company'
+    _columns = {
+        'project_time_mode': fields.selection(
+            [('hours','Hours'),('day','Days'),('week','Weeks'),('month','Months')],
+            'Project Time Unit',
+            help='This will set the unit of measure used in projects and tasks.\n' \
+"If you use the timesheet linked to projects (project_timesheet module), don't " \
+"forget to setup the right unit of measure in your employees.",
+            required=True,
+        ),
+    }
+    _defaults = {
+        'project_time_mode': lambda *args: 'hours',
+    }
+res_company()
 

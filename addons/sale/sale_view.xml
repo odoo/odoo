@@ -91,9 +91,24 @@
                                     <notebook>
                                         <page string="Order Line">
                                             <separator colspan="4" string="Automatic Declaration"/>
-                                            <field colspan="4" context="partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom" name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], True, parent.date_order)" select="1"/>
-                                            <field context="partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom" name="product_uom_qty" on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order)" select="1"/>
-                                            <field name="product_uom" on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order)"/>
+                                            <field colspan="4"
+                                                context="partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom"
+                                                name="product_id" 
+                                                on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], True, parent.date_order, product_packaging)" 
+                                                select="1"/>
+                                            <field
+                                                context="partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom" 
+                                                name="product_uom_qty" 
+                                                on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order, product_packaging)" 
+                                                select="1"/>
+                                            <field name="product_uom" 
+                                                on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order)"/>
+                                            <field
+                                                name="product_packaging" 
+                                                context="partner_id=parent.partner_id,quantity=product_uom_qty,pricelist=parent.pricelist_id,shop=parent.shop_id,uom=product_uom" 
+                                                on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order, product_packaging)" 
+                                                domain="[('product_id','=',product_id)]"
+                                                groups="base.group_extended"/>
                                             <separator colspan="4" string="Manual Description"/>
                                             <field colspan="4" name="name" select="2"/>
                                             <field name="price_unit" select="2"/>
@@ -112,7 +127,6 @@
                                         <page groups="base.group_extended" string="Extra Info">
                                             <field groups="product.group_uos" name="product_uos_qty" on_change="uos_change(product_uos, product_uos_qty, product_id)"/>
                                             <field groups="product.group_uos" name="product_uos"/>
-                                            <field name="product_packaging"/>
                                             <field name="address_allotment_id" select="2"/>
                                             <separator colspan="4" string="Properties"/>
                                             <field colspan="4" name="property_ids" nolabel="1"/>
@@ -209,7 +223,7 @@
         <menuitem action="action_order_tree_all" id="menu_action_order_tree_all" parent="sale.menu_sale_order"/>
 
         <record id="action_order_tree_new" model="ir.actions.act_window">
-            <field name="name">New Sale Order / Quotation</field>
+            <field name="name">New Quotation</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>

@@ -260,8 +260,8 @@ class product_template(osv.osv):
         'warranty': fields.float('Warranty (months)'),
         'sale_ok': fields.boolean('Can be sold', help="Determine if the product can be visible in the list of product within a selection from a sale order line."),
         'purchase_ok': fields.boolean('Can be Purchased', help="Determine if the product is visible in the list of products within a selection from a purchase order line."),
-        'uom_id': fields.many2one('product.uom', 'Default UOM', required=True),
-        'uom_po_id': fields.many2one('product.uom', 'Purchase UOM', required=True),
+        'uom_id': fields.many2one('product.uom', 'Default UoM', required=True, help="This is the default Unit of Measure used for all stock operation."),
+        'uom_po_id': fields.many2one('product.uom', 'Purchase UoM', required=True),
         'state': fields.selection([('',''),('draft', 'In Development'),('sellable','In Production'),('end','End of Lifecycle'),('obsolete','Obsolete')], 'Status', help="Tells the user if he can use the product or not."),
         'uos_id' : fields.many2one('product.uom', 'Unit of Sale',
             help='Keep empty to use the default UOM'),
@@ -347,10 +347,7 @@ class product_product(osv.osv):
 
     def _get_product_available_func(states, what):
         def _product_available(self, cr, uid, ids, name, arg, context={}):
-            res={}
-            for id in ids:
-                res.setdefault(id, 0.0)
-            return res
+            return {}.fromkeys(ids, 0.0)
         return _product_available
 
     _product_qty_available = _get_product_available_func(('done',), ('in', 'out'))

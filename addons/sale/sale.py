@@ -620,13 +620,6 @@ class sale_order_line(osv.osv):
                 res[line.id] = 1
         return res
 
-    def _get_1st_packaging(self, cr, uid, context={}):
-        cr.execute('select id from product_packaging order by id asc limit 1')
-        res = cr.fetchone()
-        if not res:
-            return False
-        return res[0]
-
     _name = 'sale.order.line'
     _description = 'Sale Order line'
     _columns = {
@@ -667,7 +660,7 @@ class sale_order_line(osv.osv):
         'invoiced': lambda *a: 0,
         'state': lambda *a: 'draft',
         'type': lambda *a: 'make_to_stock',
-        'product_packaging': _get_1st_packaging,
+        'product_packaging': lambda *a: False
     }
     def invoice_line_create(self, cr, uid, ids, context={}):
         def _get_line_qty(line):
@@ -766,7 +759,7 @@ class sale_order_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False):
+            lang=False, update_tax=True, date_order=False, packaging=False):
         product_uom_obj = self.pool.get('product.uom')
         partner_obj = self.pool.get('res.partner')
         product_obj = self.pool.get('product.product')
@@ -776,7 +769,7 @@ class sale_order_line(osv.osv):
         context = {'lang': lang, 'partner_id': partner_id}
 
         if not product:
-            return {'value': {'th_weight' : 0,
+            return {'value': {'th_weight' : 0, 'product_packaging': False,
                 'product_uos_qty': qty}, 'domain': {'product_uom': [],
                     'product_uos': []}}
 
@@ -787,6 +780,16 @@ class sale_order_line(osv.osv):
 
         if not date_order:
             date_order = time.strftime('%Y-%m-%d')
+
+        result = {}
+        product_obj = product_obj.browse(cr, uid, product, context=context)
+        if packaging:
+            default_uom = product_obj.uom_id and product_obj.uom_id.id
+            pack = self.pool.get('product.packaging').browse(cr, uid, packaging, context)
+            q = product_uom_obj._compute_qty(cr, uid, uom, pack.qty, default_uom)
+            qty = qty - qty % q + q
+            result['product_uom_qty'] = qty
+
         price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
                 product, qty or 1.0, partner_id, {
                     'uom': uom,
@@ -797,35 +800,34 @@ class sale_order_line(osv.osv):
                     _("Couldn't find a pricelist line matching this product and quantity.\n"
                         "You have to change either the product, the quantity or the pricelist."))
 
-        product = product_obj.browse(cr, uid, product, context=context)
 
         if uom:
             uom2 = product_uom_obj.browse(cr, uid, uom)
-            if product.uom_id.category_id.id <> uom2.category_id.id:
+            if product_obj.uom_id.category_id.id <> uom2.category_id.id:
                 uom = False
 
         if uos:
-            if product.uos_id:
+            if product_obj.uos_id:
                 uos2 = product_uom_obj.browse(cr, uid, uos)
-                if product.uos_id.category_id.id <> uos2.category_id.id:
+                if product_obj.uos_id.category_id.id <> uos2.category_id.id:
                     uos = False
             else:
                 uos = False
 
-        result = {'price_unit': price, 'type': product.procure_method}
-        if product.description_sale:
-            result['notes'] = product.description_sale
+        result .update({'price_unit': price, 'type': product_obj.procure_method})
+        if product_obj.description_sale:
+            result['notes'] = product_obj.description_sale
 
         if update_tax: #The quantity only have changed
-            result['delay'] = (product.sale_delay or 0.0)
+            result['delay'] = (product_obj.sale_delay or 0.0)
             taxes = self.pool.get('account.tax').browse(cr, uid,
-                    [x.id for x in product.taxes_id])
+                    [x.id for x in product_obj.taxes_id])
             taxep = None
             if partner_id:
                 taxep = self.pool.get('res.partner').browse(cr, uid,
                         partner_id).property_account_tax
             if not taxep or not taxep.id:
-                result['tax_id'] = [x.id for x in product.taxes_id]
+                result['tax_id'] = [x.id for x in product_obj.taxes_id]
             else:
                 res5 = [taxep.id]
                 for t in taxes:
@@ -833,38 +835,39 @@ class sale_order_line(osv.osv):
                         res5.append(t.id)
                 result['tax_id'] = res5
 
-        result['name'] = product.partner_ref
+        result['name'] = product_obj.partner_ref
 
         domain = {}
         if not uom and not uos:
-            result['product_uom'] = product.uom_id.id
-            if product.uos_id:
-                result['product_uos'] = product.uos_id.id
-                result['product_uos_qty'] = qty * product.uos_coeff
-                uos_category_id = product.uos_id.category_id.id
+            result['product_uom'] = product_obj.uom_id.id
+            if product_obj.uos_id:
+                result['product_uos'] = product_obj.uos_id.id
+                result['product_uos_qty'] = qty * product_obj.uos_coeff
+                uos_category_id = product_obj.uos_id.category_id.id
             else:
                 result['product_uos'] = False
                 result['product_uos_qty'] = qty
                 uos_category_id = False
-            result['th_weight'] = qty * product.weight
+            result['th_weight'] = qty * product_obj.weight
             domain = {'product_uom':
-                        [('category_id', '=', product.uom_id.category_id.id)],
+                        [('category_id', '=', product_obj.uom_id.category_id.id)],
                         'product_uos':
                         [('category_id', '=', uos_category_id)]}
         elif uom: # whether uos is set or not
-            default_uom = product.uom_id and product.uom_id.id
+            default_uom = product_obj.uom_id and product_obj.uom_id.id
             q = product_uom_obj._compute_qty(cr, uid, uom, qty, default_uom)
-            if product.uos_id:
-                result['product_uos'] = product.uos_id.id
-                result['product_uos_qty'] = q * product.uos_coeff
+            if product_obj.uos_id:
+                result['product_uos'] = product_obj.uos_id.id
+                result['product_uos_qty'] = q * product_obj.uos_coeff
             else:
                 result['product_uos'] = False
                 result['product_uos_qty'] = q
-            result['th_weight'] = q * product.weight
+            result['th_weight'] = q * product_obj.weight
         elif uos: # only happens if uom is False
-            result['product_uom'] = product.uom_id and product.uom_id.id
-            result['product_uom_qty'] = qty_uos / product.uos_coeff
-            result['th_weight'] = result['product_uom_qty'] * product.weight
+            result['product_uom'] = product_obj.uom_id and product_obj.uom_id.id
+            result['product_uom_qty'] = qty_uos / product_obj.uos_coeff
+            result['th_weight'] = result['product_uom_qty'] * product_obj.weight
+        # Round the quantity up
         return {'value': result, 'domain': domain}
 
     def product_uom_change(self, cursor, user, ids, pricelist, product, qty=0,

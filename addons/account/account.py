@@ -159,15 +159,6 @@ class account_account(osv.osv):
         return super(account_account,self).search(cr, uid, args, offset, limit,
                 order, context=context, count=count)
 
-#    def _credit(self, cr, uid, ids, field_name, arg, context={}):
-#        return self.__compute(cr, uid, ids, field_name, arg, context, 'COALESCE(SUM(l.credit), 0)')
-#
-#    def _debit(self, cr, uid, ids, field_name, arg, context={}):
-#        return self.__compute(cr, uid, ids, field_name, arg, context, 'COALESCE(SUM(l.debit), 0)')
-#
-#    def _balance(self, cr, uid, ids, field_name, arg, context={}):
-#        return self.__compute(cr, uid, ids, field_name, arg, context, 'COALESCE(SUM(l.debit) - SUM(l.credit), 0)')
-
     def __compute(self, cr, uid, ids, field_names, arg, context={}, query=''):
         mapping = {
             'balance': "COALESCE(SUM(l.debit) - SUM(l.credit), 0) as balance ",
@@ -180,7 +171,7 @@ class account_account(osv.osv):
         if ids2:
             query = self.pool.get('account.move.line')._query_get(cr, uid,
                     context=context)
-            cr.execute(("SELECT l.account_id, " +\
+            cr.execute(("SELECT l.account_id as id, " +\
                     ' , '.join(map(lambda x: mapping[x], field_names)) +
                     "FROM " \
                         "account_move_line l " \
@@ -189,19 +180,16 @@ class account_account(osv.osv):
                         "AND " + query + " " \
                     "GROUP BY l.account_id") % (acc_set, ))
 
-            for res in cr.fetchall():
-                accounts[res[0]] = res[1:]
+            for res in cr.dictfetchall():
+                accounts[res['id']] = res
 
         res = {}
         for id in ids:
-            res[id] = map(lambda x: 0.0, field_names)
+            res[id] = {}.fromkeys(field_names, 0.0)
             ids2 = self.search(cr, uid, [('parent_id', 'child_of', [id])])
             for i in ids2:
-                for a in range(len(field_names)):
-                    res[id][a] += accounts.get(i, (0.0,0.0,0.0))[a]
-# TODO: if account.type is consolidation: compute all childs like before +
-# currency conversion
-
+                for a in field_names:
+                    res[id][a] += accounts.get(i, {}).get(a, 0.0)
         return res
 
     def _get_company_currency(self, cr, uid, ids, field_name, arg, context={}):
@@ -233,6 +221,7 @@ class account_account(osv.osv):
             ('payable','Payable'),
             ('view','View'),
             ('consolidation','Consolidation'),
+            ('other','Others'),
             ('closed','Closed'),
         ], 'Internal Type', required=True,),
 
@@ -474,8 +463,8 @@ class account_fiscalyear(osv.osv):
             while ds.strftime('%Y-%m-%d')<fy.date_stop:
                 de = ds + RelativeDateTime(months=interval, days=-1)
                 self.pool.get('account.period').create(cr, uid, {
-                    'name': ds.strftime('%d/%m') + ' - '+de.strftime('%d/%m'),
-                    'code': ds.strftime('%d/%m') + '-'+de.strftime('%d/%m'),
+                    'name': ds.strftime('%m/%Y'),
+                    'code': ds.strftime('%m/%Y'),
                     'date_start': ds.strftime('%Y-%m-%d'),
                     'date_stop': de.strftime('%Y-%m-%d'),
                     'fiscalyear_id': fy.id,

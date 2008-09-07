@@ -49,7 +49,7 @@ your own chart of account.
         <record id="cash" model="account.account">
             <field name="name">Petty Cash</field>
             <field name="code">x 570000</field>
-            <field name="type">cash</field>
+            <field name="type">other</field>
             <field name="user_type" ref="account.account_type_cash_moves"/>
             <field eval="ref('minimal_0')" name="parent_id"/>
             <field name="company_id" ref="base.main_company"/>
@@ -64,7 +64,7 @@ your own chart of account.
         <record id="a_expense" model="account.account">
             <field name="name">Products Purchase</field>
             <field name="code">x 600000</field>
-            <field name="type">expense</field>
+            <field name="type">other</field>
             <field name="user_type" ref="account.account_type_expense"/>
             <field eval="ref('minimal_0')" name="parent_id"/>
             <field name="company_id" ref="base.main_company"/>
@@ -78,7 +78,7 @@ your own chart of account.
         <record id="a_sale" model="account.account">
             <field name="name">Products Sales</field>
             <field name="code">x 701000</field>
-            <field name="type">income</field>
+            <field name="type">other</field>
             <field name="user_type" ref="account.account_type_income"/>
             <field eval="ref('minimal_0')" name="parent_id"/>
             <field name="company_id" ref="base.main_company"/>
