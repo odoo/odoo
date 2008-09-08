@@ -129,11 +129,17 @@ class sale_order(osv.osv):
                 res[r] = 0.0
             else:
                 res[r] = 100.0 * res[r][0] / res[r][1]
+        for order in self.browse(cr, uid, ids, context):
+            if order.shipped:
+                res[order.id] = 100.0
         return res
 
     def _invoiced_rate(self, cursor, user, ids, name, arg, context=None):
         res = {}
         for sale in self.browse(cursor, user, ids, context=context):
+            if sale.invoiced:
+                res[sale.id] = 100.0
+                continue
             tot = 0.0
             for invoice in sale.invoice_ids:
                 if invoice.state not in ('draft','cancel'):
@@ -210,7 +216,7 @@ class sale_order(osv.osv):
         'partner_shipping_id':fields.many2one('res.partner.address', 'Shipping Address', readonly=True, required=True, states={'draft':[('readonly',False)]}),
 
         'incoterm': fields.selection(_incoterm_get, 'Incoterm',size=3),
-        'picking_policy': fields.selection([('direct','Direct Delivery'),('one','All at once')], 'Packing Policy', required=True ),
+        'picking_policy': fields.selection([('direct','Partial Delivery'),('one','Complete Delivery')], 'Packing Policy', required=True ),
         'order_policy': fields.selection([
             ('prepaid','Payment before delivery'),
             ('manual','Shipping & Manual Invoice'),
@@ -322,12 +328,13 @@ class sale_order(osv.osv):
             'comment': order.note,
             'payment_term': pay_term,
         }
+        inv_obj = self.pool.get('account.invoice')
+        inv.update(self._inv_get(cr, uid, order))
+        inv_id = inv_obj.create(cr, uid, inv)
         data = inv_obj.onchange_payment_term_date_invoice(cr, uid, [inv_id],
             pay_term,time.strftime('%Y-%m-%d'))
-        inv.update(data['value'])
-        inv.update(self._inv_get(cr, uid, order))
-        inv_obj = self.pool.get('account.invoice')
-        inv_id = inv_obj.create(cr, uid, inv)
+        if data.get('value',False):
+            inv_obj.write(cr, uid, [inv_id], inv.update(data['value']), context=context)
         inv_obj.button_compute(cr, uid, [inv_id])
         return inv_id
 

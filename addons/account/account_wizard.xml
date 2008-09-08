@@ -22,7 +22,23 @@
         <menuitem id="next_id_20" name="Reconciliation" parent="menu_finance_periodical_processing"/><menuitem action="wizard_automatic_reconcile" id="menu_automatic_reconcile" parent="next_id_20" type="wizard"/>
 
         <!-- Import entry in statement -->
-        <wizard string="Import invoices" model="account.bank.statement" name="populate_payment_from_inv" menu="False" id="wizard_populate_payment_from_inv"/>
+
+        <record id="wizard_populate_payment_from_inv" model="ir.actions.act_window">
+            <field name="name">Entries by Statements</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">new</field>
+        </record>
+
+        <!--
+        <wizard
+            string="Import invoices"
+            model="account.bank.statement"
+            name="populate_payment_from_inv" 
+            menu="False" 
+            id="wizard_populate_payment_from_inv"/>
+        -->
 
 
         <!-- manual reconcile -->

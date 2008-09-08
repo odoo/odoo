@@ -52,13 +52,12 @@ def _compute_tasks(cr, uid, task_list, date_begin):
                 date_start = users[task.user_id.id]
             else:
                 date_start = date_begin
-            if task.start_sequence:
-                sequences.sort()
-                for (seq,dt) in sequences:
-                    if seq<task.sequence:
-                        date_start = max(dt,date_start)
-                    else:
-                        break
+            sequences.sort()
+            for (seq,dt) in sequences:
+                if seq<task.sequence:
+                    date_start = max(dt,date_start)
+                else:
+                    break
 
             if task.date_start:
                 task_date_start = DateTime.strptime(task.date_start, '%Y-%m-%d %H:%M:%S')

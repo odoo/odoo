@@ -328,6 +328,7 @@ class stock_picking(osv.osv):
     _columns = {
         'name': fields.char('Reference', size=64, required=True, select=True),
         'origin': fields.char('Origin', size=64),
+        'backorder_id': fields.many2one('stock.picking', 'Back Order'),
         'type': fields.selection([('out','Sending Goods'),('in','Getting Goods'),('internal','Internal'),('delivery','Delivery')], 'Shipping Type', required=True, select=True),
         'active': fields.boolean('Active'),
         'note': fields.text('Notes'),
