@@ -1562,66 +1562,64 @@ class account_config_fiscalyear(osv.osv_memory):
 
 account_config_fiscalyear()
 
-
-
-class account_config_journal_bank_accounts(osv.osv_memory):
-    _name='account.config.journal.bank.account'
-    _columns = {
-        'name':fields.char('Journal Name', size=64),
-        'lines_id': fields.one2many('account.config.journal.bank.account.line', 'journal_id', 'Journal Lines'),
-    }
-
-    def action_cancel(self,cr,uid,ids,conect=None):
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.module.module.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-        }
-
-    def action_create(self, cr, uid, ids, context=None):
-        config_res=self.read(cr,uid,ids)[0]
-        res_obj = self.pool.get('account.journal')
-        line_obj=self.pool.get('account.config.journal.bank.account.line')
-        if 'lines_id' in config_res and config_res['lines_id']:
-            lines=line_obj.read(cr,uid,config_res['lines_id'])
-            for res in lines:
-                sequence_ids=self.pool.get('ir.sequence').search(cr,uid,[('name','=','Account Journal')])
-                if 'name' in res and 'bank_account_id' in res and 'view_id'  in res and sequence_ids and len(sequence_ids):
-                    vals={
-                          'name':res['name'],
-                          'type':'cash',
-                          'view_id':res['view_id'],
-                          'default_credit_account_id':res['bank_account_id'],
-                          'default_debit_account_id':res['bank_account_id'],
-                          'sequence_id':sequence_ids[0]
-                          }
-                    res_obj.create(cr, uid, vals, context=context)
-        return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'ir.module.module.configuration.wizard',
-                'type': 'ir.actions.act_window',
-                'target':'new',
-            }
-
-account_config_journal_bank_accounts()
-
-class account_config_journal_bank_accounts_line(osv.osv_memory):
-    _name='account.config.journal.bank.account.line'
-    def _journal_view_get(self, cr, uid, context={}):
-        journal_obj = self.pool.get('account.journal.view')
-        ids = journal_obj.search(cr, uid, [])
-        res = journal_obj.read(cr, uid, ids, ['id', 'name'], context)
-        return [(r['id'], r['name']) for r in res]
-    _columns = {
-        'name':fields.char('Journal Name', size=64,required=True),
-        'bank_account_id':fields.many2one('account.account', 'Bank Account', required=True, domain=[('type','=','cash')]),
-        'view_id':fields.selection(_journal_view_get, 'Journal View', required=True),
-        'journal_id':fields.many2one('account.config.journal.bank.account', 'Journal', required=True),
-    }
-account_config_journal_bank_accounts_line()
+#class account_config_journal_bank_accounts(osv.osv_memory):
+#    _name='account.config.journal.bank.account'
+#    _columns = {
+#        'name':fields.char('Journal Name', size=64),
+#        'lines_id': fields.one2many('account.config.journal.bank.account.line', 'journal_id', 'Journal Lines'),
+#    }
+#
+#    def action_cancel(self,cr,uid,ids,conect=None):
+#        return {
+#                'view_type': 'form',
+#                "view_mode": 'form',
+#                'res_model': 'ir.module.module.configuration.wizard',
+#                'type': 'ir.actions.act_window',
+#                'target':'new',
+#        }
+#
+#    def action_create(self, cr, uid, ids, context=None):
+#        config_res=self.read(cr,uid,ids)[0]
+#        res_obj = self.pool.get('account.journal')
+#        line_obj=self.pool.get('account.config.journal.bank.account.line')
+#        if 'lines_id' in config_res and config_res['lines_id']:
+#            lines=line_obj.read(cr,uid,config_res['lines_id'])
+#            for res in lines:
+#                sequence_ids=self.pool.get('ir.sequence').search(cr,uid,[('name','=','Account Journal')])
+#                if 'name' in res and 'bank_account_id' in res and 'view_id'  in res and sequence_ids and len(sequence_ids):
+#                    vals={
+#                          'name':res['name'],
+#                          'type':'cash',
+#                          'view_id':res['view_id'],
+#                          'default_credit_account_id':res['bank_account_id'],
+#                          'default_debit_account_id':res['bank_account_id'],
+#                          'sequence_id':sequence_ids[0]
+#                          }
+#                    res_obj.create(cr, uid, vals, context=context)
+#        return {
+#                'view_type': 'form',
+#                "view_mode": 'form',
+#                'res_model': 'ir.module.module.configuration.wizard',
+#                'type': 'ir.actions.act_window',
+#                'target':'new',
+#            }
+#
+#account_config_journal_bank_accounts()
+#
+#class account_config_journal_bank_accounts_line(osv.osv_memory):
+#    _name='account.config.journal.bank.account.line'
+#    def _journal_view_get(self, cr, uid, context={}):
+#        journal_obj = self.pool.get('account.journal.view')
+#        ids = journal_obj.search(cr, uid, [])
+#        res = journal_obj.read(cr, uid, ids, ['id', 'name'], context)
+#        return [(r['id'], r['name']) for r in res]
+#    _columns = {
+#        'name':fields.char('Journal Name', size=64,required=True),
+#        'bank_account_id':fields.many2one('account.account', 'Bank Account', required=True, domain=[('type','=','cash')]),
+#        'view_id':fields.selection(_journal_view_get, 'Journal View', required=True),
+#        'journal_id':fields.many2one('account.config.journal.bank.account', 'Journal', required=True),
+#    }
+#account_config_journal_bank_accounts_line()
 
 #  ----------------------------------------------
 #   Account Templates : Account, Tax and charts.
