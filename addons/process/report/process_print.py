@@ -9,7 +9,7 @@ import addons
 ROUNDED = 30
 BGCOLOR = (228,233,237)
 TITLECOLOR = (150,70,70)
-FONT = addons.get_module_resource('processus', 'report/sb.ttf')
+FONT = addons.get_module_resource('process', 'report/sb.ttf')
 BOXSIZE = (160,120)
 
 size = 800,600
@@ -129,10 +129,10 @@ class graph(object):
 
     def node(self, x, y, data, start_color=False):
         self.draw.node(x,y,BOXSIZE[0], BOXSIZE[1], data.get('title','Unknown'), start_color and (255,125,125) or BGCOLOR)
-        self.draw.picture(x+35, y+BOXSIZE[1]-5, addons.get_module_resource('processus', 'report/gtk-help.png'))
+        self.draw.picture(x+35, y+BOXSIZE[1]-5, addons.get_module_resource('process', 'report/gtk-help.png'))
         if start_color:
-            self.draw.picture(x+65, y+BOXSIZE[1]-5, addons.get_module_resource('processus', 'report/gtk-open.png'))
-            self.draw.picture(x+95, y+BOXSIZE[1]-5, addons.get_module_resource('processus', 'report/gtk-print.png'))
+            self.draw.picture(x+65, y+BOXSIZE[1]-5, addons.get_module_resource('process', 'report/gtk-open.png'))
+            self.draw.picture(x+95, y+BOXSIZE[1]-5, addons.get_module_resource('process', 'report/gtk-print.png'))
         y = y+25
         menus = data.get('menu','').split('/')
         while menus:
@@ -140,14 +140,14 @@ class graph(object):
             if menu:
                 if menus: menu=menu+' /'
                 self.draw.draw_text(x+23, y, 10, menu, color=(0,0,0), maxlength=BOXSIZE[0] - 25, 
-                    font_name=addons.get_module_resource('processus', 'report/ds.ttf'))
+                    font_name=addons.get_module_resource('process', 'report/ds.ttf'))
                 y+=15
 
     def arrow_role(self, node_from, node_to, role='Hello'):
         start = (node_from[0]+BOXSIZE[0]/2, node_from[1]+BOXSIZE[1]/2)
         stop = (node_to[0]+BOXSIZE[0]/2, node_to[1]+BOXSIZE[1]/2)
         (x,y) = self.draw.arrow_role(start, stop, role)
-        self.draw.picture(x, y-3, addons.get_module_resource('processus', 'report/role.png'))
+        self.draw.picture(x, y-3, addons.get_module_resource('process', 'report/role.png'))
         self.draw.draw_text(x,y-3, 12, 'Salesman', color=(0,0,0), center=True)
 
     def arrow(self, node_from, node_to):

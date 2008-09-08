@@ -34,7 +34,7 @@ import time, os
 import netsvc
 import report,pooler,tools
 
-import processus_print
+import process_print
 import Image
 
 
@@ -42,11 +42,11 @@ class report_graph_instance(object):
     def __init__(self, cr, uid, ids, data):
         current_object = 'sale.order'
         pool = pooler.get_pool(cr.dbname)
-        for processus in pool.get('processus.processus').browse(cr, uid, ids):
+        for process in pool.get('process.process').browse(cr, uid, ids):
             nodes = {}
             start = []
             transitions = {}
-            for node in processus.node_ids:
+            for node in process.node_ids:
                 nodes[node.id] = node
                 if node.flow_start:
                     start.append(node.id)
@@ -57,7 +57,7 @@ class report_graph_instance(object):
             g.scale(250,250, 100, 10)
 
             img = Image.new('RGB',(1024,768),'#ffffff')
-            g2 = processus_print.graph(img)
+            g2 = process_print.graph(img)
             positions = g.result
             for name,node in positions.items():
                 start_color = (nodes[name].model_id.model==current_object)
@@ -99,7 +99,7 @@ class report_graph(report.interface.report_int):
         self.obj = report_graph_instance(cr, uid, ids, data)
         return (self.obj.get(), 'pdf')
 
-report_graph('report.processus.processus.print', 'processus.processus')
+report_graph('report.process.process.print', 'process.process')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

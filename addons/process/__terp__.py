@@ -1,20 +1,20 @@
 # -*- encoding: utf-8 -*-
 {
-    "name" : "Enterprise Processus",
+    "name" : "Enterprise Process",
     "version" : "1.0",
     "author" : "Tiny",
     "website" : "http://tinyerp.com",
     "category" : "Generic Modules/Base",
     "description": """
-This module allows you to manage your processus for the end-users.
+This module allows you to manage your process for the end-users.
     """,
     "depends" : ["base"],
     "init_xml" : [],
-    "demo_xml" : ['processus_data.xml'],
+    "demo_xml" : ['process_data.xml'],
     "update_xml" : [
         "security/ir.model.access.csv",
-        'processus_view.xml',
-        "processus_report.xml"],
+        'process_view.xml',
+        "process_report.xml"],
     "active": False,
     "installable": True
 }

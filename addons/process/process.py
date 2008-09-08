@@ -30,60 +30,60 @@ import netsvc
 from osv import fields, osv
 
 
-class processus_processus(osv.osv):
-    _name = "processus.processus"
-    _description = "Processus"
+class process_process(osv.osv):
+    _name = "process.process"
+    _description = "Process"
     _columns = {
         'name': fields.char('Name', size=30,required=True),
         'active': fields.boolean('Active'),
         'note': fields.text('Notes'),
-        'node_ids': fields.one2many('processus.node', 'processus_id', 'Nodes')
+        'node_ids': fields.one2many('process.node', 'process_id', 'Nodes')
     }
     _defaults = {
         'active' : lambda *a: True,
     }
-processus_processus()
+process_process()
 
-class processus_node(osv.osv):
-    _name = 'processus.node'
-    _description ='Processus Nodes'
+class process_node(osv.osv):
+    _name = 'process.node'
+    _description ='Process Nodes'
     _columns = {
         'name': fields.char('Name', size=30,required=True),
-        'processus_id': fields.many2one('processus.processus', 'Processus', required=True),
+        'process_id': fields.many2one('process.process', 'Process', required=True),
         'kind': fields.selection([('state','State'),('router','Router'),('subflow','Subflow')],'Kind of Node', required=True),
         'menu_id': fields.many2one('ir.ui.menu', 'Related Menu'),
         'note': fields.text('Notes'),
         'model_id': fields.many2one('ir.model', 'Object', ondelete='set null'),
         'model_states': fields.char('States Expression', size=128),
         'flow_start': fields.boolean('Starting Flow'),
-        'transition_in': fields.one2many('processus.transition', 'node_to_id', 'Starting Transitions'),
-        'transition_out': fields.one2many('processus.transition', 'node_from_id', 'Ending Transitions'),
+        'transition_in': fields.one2many('process.transition', 'node_to_id', 'Starting Transitions'),
+        'transition_out': fields.one2many('process.transition', 'node_from_id', 'Ending Transitions'),
     }
     _defaults = {
         'kind': lambda *args: 'state',
         'model_states': lambda *args: False,
         'flow_start': lambda *args: False,
     }
-processus_node()
+process_node()
 
-class processus_transition(osv.osv):
-    _name = 'processus.transition'
-    _description ='Processus Transitions'
+class process_transition(osv.osv):
+    _name = 'process.transition'
+    _description ='Process Transitions'
     _columns = {
         'name': fields.char('Name', size=32, required=True),
-        'node_from_id': fields.many2one('processus.node', 'Origin Node', required=True, ondelete='cascade'),
-        'node_to_id': fields.many2one('processus.node', 'Destination Node', required=True, ondelete='cascade'),
-        'transition_ids': fields.many2many('workflow.transition', 'processus_transition_ids', 'trans1_id', 'trans2_id', 'Workflow Transitions'),
+        'node_from_id': fields.many2one('process.node', 'Origin Node', required=True, ondelete='cascade'),
+        'node_to_id': fields.many2one('process.node', 'Destination Node', required=True, ondelete='cascade'),
+        'transition_ids': fields.many2many('workflow.transition', 'process_transition_ids', 'trans1_id', 'trans2_id', 'Workflow Transitions'),
         'note': fields.text('Description'),
-        'action_ids': fields.one2many('processus.transition.action', 'transition_id', 'Buttons')
+        'action_ids': fields.one2many('process.transition.action', 'transition_id', 'Buttons')
     }
     _defaults = {
     }
-processus_transition()
+process_transition()
 
-class processus_transition_action(osv.osv):
-    _name = 'processus.transition.action'
-    _description ='Processus Transitions Actions'
+class process_transition_action(osv.osv):
+    _name = 'process.transition.action'
+    _description ='Process Transitions Actions'
     _columns = {
         'name': fields.char('Name', size=32, required=True),
         'state': fields.selection([('dummy','Dummy'),('method','Object Method'),('workflow','Workflow Trigger'),('action','Action')], 'Type', required=True),
@@ -93,12 +93,12 @@ class processus_transition_action(osv.osv):
             'workflow':[('required',1)],
             'action':[('required',1)],
         },),
-        'transition_id': fields.many2one('processus.transition', 'Transition', required=True, ondelete='cascade')
+        'transition_id': fields.many2one('process.transition', 'Transition', required=True, ondelete='cascade')
     }
     _defaults = {
         'state': lambda *args: 'dummy',
     }
-processus_transition_action()
+process_transition_action()
 
 
 
