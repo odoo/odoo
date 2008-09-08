@@ -1708,6 +1708,7 @@ class account_tax_code_template(osv.osv):
         'code': fields.char('Case Code', size=16),
         'info': fields.text('Description'),
         'parent_id': fields.many2one('account.tax.code.template', 'Parent Code', select=True),
+        'child_ids': fields.one2many('account.tax.code.template', 'parent_id', 'Childs Codes'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'sign': fields.float('Sign for parent', required=True),
     }
@@ -1780,8 +1781,7 @@ class account_tax_template(osv.osv):
         'name': fields.char('Tax Name', size=64, required=True),
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the taxes lines from the lowest sequences to the higher ones. The order is important if you have a tax that have several tax children. In this case, the evaluation order is important."),
         'amount': fields.float('Amount', required=True, digits=(14,4)),
-#       'type': fields.selection( [('percent','Percent'), ('fixed','Fixed'), ('none','None'), ('code','Python Code')], 'Tax Type', required=True),
-        'type': fields.selection( [('percent','Percent'), ('fixed','Fixed'), ('none','None')],'Tax Type', required=True),
+        'type': fields.selection( [('percent','Percent'), ('fixed','Fixed'), ('none','None'), ('code','Python Code')], 'Tax Type', required=True),
         'applicable_type': fields.selection( [('true','True'), ('code','Python Code')], 'Applicable Type', required=True),
         'domain':fields.char('Domain', size=32, help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."),
         'account_collected_id':fields.many2one('account.account.template', 'Invoice Tax Account'),
@@ -1854,6 +1854,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'company_id':fields.many2one('res.company','Company',required=True),
         'chart_template_id': fields.many2one('account.chart.template','Chart Template',required=True),
         'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Bank Accounts',required=True),
+        'code_digits':fields.integer('No. of Digits for Account Code',required=True),
     }
 
     #global seq
@@ -2100,7 +2101,6 @@ class wizard_account_chart_duplicate(osv.osv_memory):
         'name':fields.char('Name',size=64),
         'account_id':fields.many2one('account.account','Account Chart',required=True,domain=[('parent_id','=',False)]),
         'company_id':fields.many2one('res.company','Company',required=True),
-
     }
 
     def action_create(self, cr, uid,ids, context=None):
