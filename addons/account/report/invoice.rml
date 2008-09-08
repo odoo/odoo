@@ -152,15 +152,20 @@
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="5,-1" stop="5,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="6,-1" stop="6,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="7,-1" stop="7,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#ffffff" start="8,0" stop="8,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#ffffff" start="8,0" stop="8,0"/>
       <lineStyle kind="LINEBELOW" colorName="#ffffff" start="8,-1" stop="8,-1"/>
       <lineStyle kind="LINEBEFORE" colorName="#ffffff" start="9,0" stop="9,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#ffffff" start="9,0" stop="9,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#ffffff" start="9,0" stop="9,0"/>
       <lineStyle kind="LINEBELOW" colorName="#ffffff" start="9,-1" stop="9,-1"/>
       <lineStyle kind="LINEBEFORE" colorName="#ffffff" start="10,0" stop="10,-1"/>
-      <lineStyle kind="LINEAFTER" colorName="#ffffff" start="10,0" stop="10,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#ffffff" start="10,0" stop="10,0"/>
       <lineStyle kind="LINEBELOW" colorName="#ffffff" start="10,-1" stop="10,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#ffffff" start="11,0" stop="11,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#ffffff" start="11,0" stop="11,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#ffffff" start="11,0" stop="11,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#ffffff" start="11,-1" stop="11,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
@@ -174,8 +179,13 @@
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#ffffff" start="0,4" stop="0,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#ffffff" start="0,4" stop="0,4"/>
       <lineStyle kind="LINEBELOW" colorName="#ffffff" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#ffffff" start="1,4" stop="1,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#ffffff" start="1,4" stop="1,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#ffffff" start="1,4" stop="1,4"/>
+      <lineStyle kind="LINEBELOW" colorName="#ffffff" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBEFORE" colorName="#ffffff" start="0,5" stop="0,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#ffffff" start="0,5" stop="0,5"/>
       <lineStyle kind="LINEBELOW" colorName="#ffffff" start="0,-1" stop="0,-1"/>
@@ -215,8 +225,13 @@
     <blockTableStyle id="Table_Format_Line_2">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#ffffff" start="0,0" stop="0,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#ffffff" start="0,0" stop="0,0"/>
       <lineStyle kind="LINEBELOW" colorName="#ffffff" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#ffffff" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#ffffff" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#ffffff" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#ffffff" start="1,-1" stop="1,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table_Format_Table_Line_1">
       <blockAlignment value="LEFT"/>
@@ -509,14 +524,11 @@
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_2">
-      <font color="white"> </font>
-    </para>
-    <blockTable colWidths="520.0" style="Table_Main_Tax_Table">
+    <blockTable colWidths="519.0" style="Table_Main_Tax_Table">
       <tr>
         <td>
-          <para style="terp_default_White_2">[[ o.amount_tax  or removeParentNode('blockTable') ]]</para>
-          <blockTable colWidths="79.0,85.0,75.0" style="Table_Tax_Header">
+          <para style="terp_default_8">[[ format(o.amount_tax or removeParentNode('blockTable')) ]]</para>
+          <blockTable colWidths="70.0,72.0,72.0" style="Table_Tax_Header">
             <tr>
               <td>
                 <para style="terp_tblheader_Details_Centre">Tax</para>
@@ -536,7 +548,7 @@
             <tr>
               <td>
                 <para style="terp_default_8">[[ repeatIn(o.tax_line,'t') ]]</para>
-                <blockTable colWidths="70.0,88.0,75.0" style="Table_Tex_Content_Table">
+                <blockTable colWidths="59.0,75.0,73.0" style="Table_Tex_Content_Table">
                   <tr>
                     <td>
                       <para style="terp_default_Centre_8">[[ t.name ]]</para>
@@ -552,8 +564,13 @@
               </td>
             </tr>
           </blockTable>
-          <blockTable colWidths="527.0" style="Table_Format_Line_2">
+          <blockTable colWidths="258.0,258.0" style="Table_Format_Line_2">
             <tr>
+              <td>
+                <para style="terp_default_2">
+                  <font color="white"> </font>
+                </para>
+              </td>
               <td>
                 <para style="terp_default_2">
                   <font color="white"> </font>
@@ -561,10 +578,10 @@
               </td>
             </tr>
           </blockTable>
-          <para style="terp_default_8">
+          <para style="terp_default_2">
             <font color="white"> </font>
           </para>
-          <blockTable colWidths="258.0,258.0" style="Table_Format_Table_Line_1">
+          <blockTable colWidths="257.0,261.0" style="Table_Format_Table_Line_1">
             <tr>
               <td>
                 <para style="terp_default_2">
@@ -578,7 +595,7 @@
               </td>
             </tr>
           </blockTable>
-          <para style="terp_default_8">
+          <para style="terp_default_2">
             <font color="white"> </font>
           </para>
         </td>
