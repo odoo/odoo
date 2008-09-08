@@ -1867,6 +1867,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_journal = self.pool.get('account.journal')
         obj_acc_template = self.pool.get('account.account.template')
 
+        if obj_multi.code_digits<=5:
+            raise osv.except_osv(_('User Error'), _('Account code should be of more than 5 digits.'))
+
         # Creating Account
         obj_acc_root = obj_multi.chart_template_id.account_root_id
         tax_code_root_id = obj_multi.chart_template_id.tax_code_root_id.id
@@ -1889,7 +1892,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'name': (tax_code_root_id == tax_code_template.id) and obj_multi.company_id.name or tax_code_template.name,
                 'code': tax_code_template.code,
                 'info': tax_code_template.info,
-                'parent_id': tax_code_template.parent_id and tax_code_template_ref[tax_code_template.parent_id.id] or False,
+                'parent_id': tax_code_template.parent_id and ((tax_code_template.parent_id.id in tax_code_template_ref) and tax_code_template_ref[tax_code_template.parent_id.id]) or False,
                 'company_id': company_id,
                 'sign': tax_code_template.sign,
             }
@@ -1907,7 +1910,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'type':tax.type,
                 'applicable_type': tax.applicable_type,
                 'domain':tax.domain,
-                'parent_id': tax.parent_id and tax_template_ref[tax.parent_id.id] or False,
+                'parent_id': tax.parent_id and ((tax.parent_id.id in tax_template_ref) and tax_template_ref[tax.parent_id.id]) or False,
                 'child_depend': tax.child_depend,
                 'python_compute': tax.python_compute,
                 'python_compute_inv': tax.python_compute_inv,
@@ -1933,7 +1936,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             }
             tax_template_ref[tax.id] = new_tax
 
-
         #deactivate the parent_store functionnality on account_account for rapidity purpose
         self.pool._init = True
         children_acc_template = obj_acc_template.search(cr, uid, [('parent_id','child_of',[obj_acc_root.id])])
@@ -1942,17 +1944,23 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             for tax in account_template.tax_ids:
                 tax_ids.append(tax_template_ref[tax.id])
             #create the account_account
+            dig=obj_multi.code_digits
+            code_main=len(account_template.code)
+            code_acc=account_template.code
+            if account_template.type <>'view':
+                if code_main<=dig:
+                    code_acc=str(code_acc) + (str('0'*(dig-code_main)))
             vals={
                 'name': (obj_acc_root.id == account_template.id) and obj_multi.company_id.name or account_template.name,
                 #'sign': account_template.sign,
                 'currency_id': account_template.currency_id and account_template.currency_id.id or False,
-                'code': account_template.code,
+                'code': code_acc[:dig],
                 'type': account_template.type,
                 'user_type': account_template.user_type or False,
                 'reconcile': account_template.reconcile,
                 'shortcut': account_template.shortcut,
                 'note': account_template.note,
-                'parent_id': account_template.parent_id and acc_template_ref[account_template.parent_id.id] or False,
+                'parent_id': account_template.parent_id and ((account_template.parent_id.id in acc_template_ref) and acc_template_ref[account_template.parent_id.id]) or False,
                 'tax_ids': [(6,0,tax_ids)],
                 'company_id': company_id,
             }
@@ -2015,7 +2023,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 #'sign': ref_acc_bank.sign,
                 'currency_id': line.currency_id and line.currency_id.id or False,
                 'code': ref_acc_bank.code+str(current_num),
-                'type': 'cash',
+                'type': 'other',
                 'user_type': account_template.user_type or False,
                 'reconcile': True,
                 'parent_id': acc_template_ref[ref_acc_bank.id] or False,
