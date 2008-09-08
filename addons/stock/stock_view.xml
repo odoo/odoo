@@ -460,7 +460,6 @@
             <field name="arch" type="xml">
                 <tree color="red:state=='cancel'" string="Packing list">
                     <field colspan="4" name="name" select="1"/>
-                    <field name="date" select="1"/>
                     <field name="address_id" select="1"/>
                     <field name="invoice_state" readonly="1"/>
                     <field name="origin" select="1"/>
@@ -479,14 +478,13 @@
                     <notebook>
                         <page string="General Information">
                             <field name="name" select="1"/>
-                            <field name="date" select="1"/>
                             <newline/>
                             <field name="type" select="2"/>
                             <field name="invoice_state" select="2"/>
                             <newline/>
-                            <field name="location_id"/>
 		                   <field name="min_date" select="1"/>
         		           <field name="max_date" select="1"/>
+                            <field name="location_id"/>
                             <field name="location_dest_id"/>
                             <field name="address_id" select="2"/>
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list">
@@ -559,7 +557,6 @@
             <field name="arch" type="xml">
                 <tree color="red:state=='cancel'" string="Packing list">
                     <field colspan="4" name="name" select="1"/>
-                    <field name="date" select="1"/>
                     <field name="address_id" select="1"/>
                     <field name="origin" select="1"/>
                    <field name="min_date" select="1"/>
@@ -576,6 +573,8 @@
                 <form string="Packing list">
                     <field name="name" select="1"/>
                     <field name="date" select="1"/>
+		            <field name="min_date" select="1"/>
+        		    <field name="max_date" select="1"/>
                     <newline/>
                     <field name="address_id" select="2"/>
                     <notebook colspan="4">
@@ -623,8 +622,6 @@
                         </page>
                         <page string="Others info">
                             <field name="origin" select="2"/>
-		                   <field name="min_date" select="1"/>
-        		           <field name="max_date" select="1"/>
                             <field name="active" select="2"/>
                             <field name="auto_picking"/>
                             <newline/>
@@ -717,12 +714,12 @@
             <field name="arch" type="xml">
                 <tree color="red:state=='cancel'" string="Packing list">
                     <field colspan="4" name="name" select="1"/>
-                    <field name="date" select="1"/>
+                   <field name="min_date" select="1"/>
+                   <field name="max_date" select="1"/>
+                    <!--field name="date" select="1"/-->
                     <field name="address_id" select="1"/>
                     <field name="invoice_state" readonly="1"/>
                     <field name="origin" select="1"/>
-                   <field name="min_date" select="1"/>
-                   <field name="max_date" select="1"/>
                     <field name="state" readonly="1"/>
                 </tree>
             </field>
@@ -734,9 +731,10 @@
             <field name="arch" type="xml">
                 <form string="Packing list">
                     <field name="name" select="1"/>
-                    <field name="date" select="1"/>
-                    <newline/>
                     <field name="address_id" select="2"/>
+                    <newline/>
+                   <field name="min_date" select="1"/>
+                   <field name="max_date" select="1"/>
                     <notebook colspan="4">
                         <page string="General Information">
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list">
@@ -782,8 +780,6 @@
                         </page>
                         <page string="Others info">
                             <field name="origin" select="2"/>
-                   <field name="min_date" select="1"/>
-                   <field name="max_date" select="1"/>
                             <field name="active" select="2"/>
                             <field name="auto_picking"/>
                             <newline/>
@@ -873,12 +869,11 @@
             <field name="arch" type="xml">
                 <tree color="red:state=='cancel'" string="Packing list">
                     <field colspan="4" name="name" select="1"/>
-                    <field name="date" select="1"/>
+                   <field name="min_date" select="1"/>
+                   <field name="max_date" select="1"/>
                     <field name="address_id" select="1"/>
                     <field name="invoice_state" readonly="1"/>
                     <field name="origin" select="1"/>
-                   <field name="min_date" select="1"/>
-                   <field name="max_date" select="1"/>
                     <field name="state" readonly="1"/>
                 </tree>
             </field>
@@ -916,7 +911,6 @@
                                     <field groups="product.group_uos" name="product_uos"/>
                                     <field groups="product.group_uos" name="product_uos_qty"/>
                                     <field colspan="4" invisible="1" name="name" select="1"/>
-                                    <field groups="base.group_extended" name="date"/>
                                     <field groups="base.group_extended" name="date_planned"/>
                                     <newline/>
                                     <field name="location_id" select="1"/>
