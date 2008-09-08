@@ -272,6 +272,7 @@ class db(netsvc.Service):
         except:
             res = []
         db.truedb.close()
+        res.sort()
         return res
 
     def change_admin_password(self, old_password, new_password):

@@ -17,7 +17,7 @@
         <menuitem action="wizard_upgrade" id="menu_wizard_upgrade" parent="menu_management" type="wizard"/>
         
         <record id="wizard_lang_install" model="ir.actions.wizard">
-            <field name="name">Install new language file</field>
+            <field name="name">Reload an Official Translation</field>
             <field name="wiz_name">module.lang.install</field>
         </record>
         <menuitem action="wizard_lang_install" id="menu_wizard_lang_install" parent="menu_translation" type="wizard"/>
@@ -28,26 +28,24 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form col="3" string="Export language">
-                    <image name="gtk-dialog-info"/>
+                    <notebook>
+                    <page string="Export Data">
                     <group col="2" states="choose" fill="0" height="500">
                         <separator string="Export translation file" colspan="2"/>
                         <field name="lang" width="300" required="1"/>
                         <field name="format" required="1"/>
                         <field name="modules" width="500" height="200"/>
-                        <label colspan="2" string="The official translations pack of all OpenERP/OpenObjects module are
-managed through launchpad. We use their online interface to synchronize
-all translations efforts.
 
-To improve some terms of the official translations of OpenERP, you should
-modify the terms directly on the launchpad interface. If you made lots
-of translations for your own module, you can also publish all your
-translation at once. To do this, you must:
-
-If you created a new module, you must send the generated .pot file by email to
-the translation group: ...  They will review and integrate." align="0.0"/>
                         <field name="state" invisible="1"/>
-                        <newline/>
                     </group>
+                    </page>
+                    <page string="Help">
+                        <label align="0.0" colspan="4" string="The official translations pack of all OpenERP/OpenObjects module are managed through launchpad. We use their online interface to synchronize all translations efforts."/>
+                        <label align="0.0" colspan="4" string="To improve some terms of the official translations of OpenERP, you should modify the terms directly on the launchpad interface. If you made lots of translations for your own module, you can also publish all your translation at once."/>
+                        <label align="0.0" colspan="4" string="To browse official translations, you can visit this link: "/>
+                        <label align="0.0" colspan="4" string="https://translations.launchpad.net/openobject"/>
+                    </page>
+                    </notebook>
                     <group col="1" states="get" fill="0">
                         <separator string="Export done"/>
                         <field name="data" readonly="1" nolabel="1"/>
@@ -97,7 +95,7 @@ the translation group: ...  They will review and integrate." align="0.0"/>
             </field>
         </record>
         <record id="action_wizard_update_translations" model="ir.actions.act_window">
-            <field name="name">Reload Official Translations</field>
+            <field name="name">Resynchronise Terms</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">wizard.module.update_translations</field>
             <field name="view_type">form</field>

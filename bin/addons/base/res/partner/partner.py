@@ -83,7 +83,7 @@ class res_partner_category(osv.osv):
     _description='Partner Categories'
     _name = 'res.partner.category'
     _columns = {
-        'name': fields.char('Category Name', required=True, size=64),
+        'name': fields.char('Category Name', required=True, size=64, translate=True),
         'parent_id': fields.many2one('res.partner.category', 'Parent Category', select=True),
         'complete_name': fields.function(_name_get_fnc, method=True, type="char", string='Name'),
         'child_ids': fields.one2many('res.partner.category', 'parent_id', 'Childs Category'),
