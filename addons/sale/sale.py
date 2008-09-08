@@ -322,6 +322,9 @@ class sale_order(osv.osv):
             'comment': order.note,
             'payment_term': pay_term,
         }
+        data = inv_obj.onchange_payment_term_date_invoice(cr, uid, [inv_id],
+            pay_term,time.strftime('%Y-%m-%d'))
+        inv.update(data['value'])
         inv.update(self._inv_get(cr, uid, order))
         inv_obj = self.pool.get('account.invoice')
         inv_id = inv_obj.create(cr, uid, inv)

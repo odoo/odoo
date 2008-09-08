@@ -31,7 +31,7 @@ import pooler
 
 
 class config_install_extra_modules(osv.osv_memory):
-    _name='config.install_extra_modules'
+    _name='config.install_extra_modules.mrp'
     _columns = {
         'mrp_jit':fields.boolean('Just in Time Scheduling',
             help="The JIT module allows you to not run the scheduler "\
