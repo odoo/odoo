@@ -331,6 +331,7 @@ class stock_picking(osv.osv):
         'type': fields.selection([('out','Sending Goods'),('in','Getting Goods'),('internal','Internal'),('delivery','Delivery')], 'Shipping Type', required=True, select=True),
         'active': fields.boolean('Active'),
         'note': fields.text('Notes'),
+        'back_order_id' : fields.many2one('stock.picking', 'Back Order', readonly=True),
 
         #'location_id': fields.many2one('stock.location', 'Location'),
         #'location_dest_id': fields.many2one('stock.location', 'Dest. Location'),

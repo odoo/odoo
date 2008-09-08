@@ -153,7 +153,8 @@ def _do_split(self, cr, uid, data, context):
                     {
                         'name' : '%s (splitted)' % pick.name,
                         'move_lines' : [],
-                        'state':'draft'
+                        'state':'draft',
+                        'back_order_id': pick.id
                     })
         new_obj = move_obj.copy(cr, uid, move.id,
                 {
