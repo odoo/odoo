@@ -244,7 +244,7 @@ class task(osv.osv):
         'notes': fields.text('Notes'),
         'start_sequence': fields.boolean('Wait for previous sequences'),
 
-        'planned_hours': fields.float('Planned Hours', readonly=True, states={'draft':[('readonly',False)]}),
+        'planned_hours': fields.float('Planned Hours', readonly=True, states={'draft':[('readonly',False)]}, required=True),
         'effective_hours': fields.function(_hours_get, method=True, string='Hours Spent', multi='hours', store=True),
         'remaining_hours': fields.float('Remaining Hours', digits=(16,2)),
         'total_hours': fields.function(_hours_get, method=True, string='Total Hours', multi='hours', store=True),

@@ -33,8 +33,6 @@
     "category":"Profile",
     "depends":[
         "hr",
-        "hr_timesheet",
-        "hr_timesheet_invoice",
         "crm",
         "project",
         "board_project",
