@@ -7,17 +7,18 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Install Extra Module">
-					<separator string="Manufacturing Management" colspan="4"/>
+                    <separator string="Stock &amp; Manufacturing" colspan="4"/>
+                    <field name="stock_location"/>
                     <field name="mrp_jit"/>
-                    <separator string="Sale Management" colspan="4"/> 
-                    <field name="sale_margin"/>
+                    <field name="mrp_operation"/>
+                    <separator string="Sales Management" colspan="4"/> 
+                    <field name="point_of_sale"/>
                     <field name="sale_journal"/>
+                    <field name="sale_margin"/>
                     <separator string="Relationship Management" colspan="4"/> 
-                    <field name="crm_configuration"/>                    
-                    <separator string="Project Management" colspan="4"/>
-                    <field name="project"/>
-					<separator string="" colspan="4"/>
-					<label string="" colspan="2"/>
+                    <field name="crm_configuration"/>
+                    <separator string="" colspan="4"/>
+                    <label string="" colspan="2"/>
                     <group col="4" colspan="2">
                         <button special="cancel" string="Cancel" name="action_cancel" type="object" icon='gtk-cancel'/>
                         <button name="action_install" string="Install" icon='gtk-ok' type="object"/>
