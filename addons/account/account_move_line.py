@@ -70,12 +70,15 @@ class account_move_line(osv.osv):
         # Compute simple values
         data = super(account_move_line, self).default_get(cr, uid, fields, context)
 
+#        print "fields",fields
+
         if not 'move_id' in fields: #we are not in manual entry
             return data
 
         period_obj = self.pool.get('account.period')
         tax_obj=self.pool.get('account.tax')
 
+#        print "par"
         # Compute the current move
         move_id = False
         partner_id = False
@@ -342,6 +345,7 @@ class account_move_line(osv.osv):
     def onchange_partner_id(self, cr, uid, ids, move_id, partner_id, account_id=None, debit=0, credit=0, date=False, journal=False):
         val = {}
         val['date_maturity'] = False
+#        print "partner_id",partner_id,account_id,debit,credit,date
         if not partner_id:
             return {'value':val}
         if not date:
