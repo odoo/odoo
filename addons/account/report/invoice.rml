@@ -63,10 +63,14 @@
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="5,-1" stop="5,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="6,-1" stop="6,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="7,-1" stop="7,-1"/>
-    </blockTableStyle>
-    <blockTableStyle id="Table_Notes_Content">
-      <blockAlignment value="LEFT"/>
-      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="5,-1" stop="5,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="6,-1" stop="6,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="7,-1" stop="7,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table_Format_2">
       <blockAlignment value="LEFT"/>
@@ -371,7 +375,7 @@
       <blockTable colWidths="211.0,62.0,36.0,27.0,63.0,51.0,46.0,26.0" style="Table_Invoice_Line_Content">
         <tr>
           <td>
-            <para style="terp_default_9">[[ l.name ]]</para>
+            <para style="terp_default_8">[[ l.name ]]</para>
           </td>
           <td>
             <para style="terp_default_9">[[ ', '.join([lt.name for lt in l.invoice_line_tax_id]) ]]</para>
@@ -395,14 +399,45 @@
             <para style="terp_default_Right_9">[[ o.currency_id.code ]]</para>
           </td>
         </tr>
-      </blockTable>
-      <blockTable colWidths="23.0,501.0" style="Table_Notes_Content">
         <tr>
           <td>
-            <para style="terp_default_9">[[ repeatIn((l.note and l.note.splitlines()) or [], 'note') ]]</para>
+            <para style="terp_default_8">[[ repeatIn((l.note and l.note.splitlines()) or [], 'note') ]]</para>
+            <para style="terp_default_9">[[ note or removeParentNode('para') ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ note or removeParentNode('table') ]]</para>
+            <para style="terp_default_9">
+              <font color="white"> </font>
+            </para>
+          </td>
+          <td>
+            <para style="terp_default_Right_9">
+              <font color="white"> </font>
+            </para>
+          </td>
+          <td>
+            <para style="terp_default_Right_9">
+              <font color="white"> </font>
+            </para>
+          </td>
+          <td>
+            <para style="terp_default_Right_9">
+              <font color="white"> </font>
+            </para>
+          </td>
+          <td>
+            <para style="terp_default_Right_9">
+              <font color="white"> </font>
+            </para>
+          </td>
+          <td>
+            <para style="terp_default_Right_9">
+              <font color="white"> </font>
+            </para>
+          </td>
+          <td>
+            <para style="terp_default_Right_9">
+              <font color="white"> </font>
+            </para>
           </td>
         </tr>
       </blockTable>
