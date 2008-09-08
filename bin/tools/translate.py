@@ -436,23 +436,26 @@ def trans_generate(lang, modules, dbname=None):
     # parse source code for _() calls
     def get_module_from_path(path):
         relative_addons_path = tools.config['addons_path'][len(tools.config['root_path'])+1:]
-        if path.startswith(relative_addons_path):
+        if path.startswith(relative_addons_path) and (os.path.dirname(path) != relative_addons_path):
             path = path[len(relative_addons_path)+1:]
             return path.split(os.path.sep)[0]
         return 'base'   # files that are not in a module are considered as being in 'base' module
     
     modobj = pool.get('ir.module.module')
+    installed_modids = modobj.search(cr, uid, [('state', '=', 'installed')])
+    installed_modules = map(lambda m: m['name'], modobj.browse(cr, uid, installed_modids, ['name']))
+
     for root, dirs, files in tools.oswalksymlinks(tools.config['root_path']):
         for fname in fnmatch.filter(files, '*.py'):
             fabsolutepath = join(root, fname)
             frelativepath = fabsolutepath[len(tools.config['root_path'])+1:]
             module = get_module_from_path(frelativepath)
-            is_mod_installed = modobj.search(cr, uid, [('state', '=', 'installed'), ('name', '=', module)]) <> []
+            is_mod_installed = module in installed_modules
             if (('all' in modules) or (module in modules)) and is_mod_installed:
                 code_string = tools.file_open(fabsolutepath, subdir='').read()
                 iter = re.finditer(
                     '[^a-zA-Z0-9_]_\([\s]*["\'](.+?)["\'][\s]*\)',
-                    code_string)
+                    code_string, re.M)
                 for i in iter:
                     push_translation(module, 'code', frelativepath, 0, i.group(1).encode('utf8'))
 
