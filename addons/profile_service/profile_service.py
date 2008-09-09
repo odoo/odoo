@@ -30,8 +30,8 @@
 from osv import fields, osv
 import pooler
 
-class config_install_extra_modules(osv.osv_memory):
-    _name='config.install_extra_modules'
+class profile_service_config_install_modules_wizard(osv.osv_memory):
+    _name='profile.service.config.install_modules_wizard'
     _rec_name = 'crm_configuration'
     _columns = {
         'crm_configuration':fields.boolean('CRM & Calendars', help="This installs the customer relationship features like: leads and opportunities tracking, shared calendar, jobs tracking, bug tracker, and so on."),
@@ -69,7 +69,7 @@ class config_install_extra_modules(osv.osv_memory):
                 'type': 'ir.actions.act_window',
                 'target':'new',
             }
-config_install_extra_modules()
+profile_service_config_install_modules_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

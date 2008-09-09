@@ -868,10 +868,12 @@ class mrp_procurement(osv.osv):
 
     def action_produce_assign_product(self, cr, uid, ids, context={}):
         produce_id = False
+        company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
         for procurement in self.browse(cr, uid, ids):
             res_id = procurement.move_id.id
             loc_id = procurement.location_id.id
             newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d') - DateTime.RelativeDateTime(days=procurement.product_id.product_tmpl_id.produce_delay or 0.0)
+            newdate = newdate - DateTime.RelativeDateTime(days=company.manufacturing_lead)
             produce_id = self.pool.get('mrp.production').create(cr, uid, {
                 'origin': procurement.origin,
                 'product_id': procurement.product_id.id,
@@ -892,8 +894,9 @@ class mrp_procurement(osv.osv):
             wf_service.trg_validate(uid, 'mrp.production', produce_id, 'button_confirm', cr)
         return produce_id
 
-    def action_po_assign(self, cr, uid, ids):
+    def action_po_assign(self, cr, uid, ids, context={}):
         purchase_id = False
+        company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
         for procurement in self.browse(cr, uid, ids):
             res_id = procurement.move_id.id
             partner = procurement.product_id.seller_ids[0].name
@@ -910,6 +913,7 @@ class mrp_procurement(osv.osv):
             price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, False, {'uom': uom_id})[pricelist_id]
 
             newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d') - DateTime.RelativeDateTime(days=procurement.product_id.product_tmpl_id.seller_delay or 0.0)
+            newdate = newdate - DateTime.RelativeDateTime(days=company.po_lead)
             line = {
                 'name': procurement.product_id.name,
                 'product_qty': qty,
@@ -969,45 +973,15 @@ class mrp_procurement(osv.osv):
         for id in ids:
             wf_service.trg_trigger(uid, 'mrp.procurement', id, cr)
         return res
-    def run_scheduler(self, cr, uid, user_id=False, schedule_cycle=1.0,\
-            po_cycle=1.0, po_lead=1.0, security_lead=50.0, picking_lead=1.0,\
-            automatic=False, use_new_cursor=False, context=None):
+    def run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
         '''
         use_new_cursor: False or the dbname
         '''
         if not context:
             context={}
-        self.run_procure_confirm(cr, uid, schedule_cycle=schedule_cycle,\
-                po_cycle=po_cycle, po_lead=po_lead, security_lead=security_lead,\
-                picking_lead=picking_lead, user_id=user_id,\
+        self._procure_confirm(cr, uid, use_new_cursor=use_new_cursor, context=context)
+        self._procure_orderpoint_confirm(cr, uid, automatic=automatic,\
                 use_new_cursor=use_new_cursor, context=context)
-        self.run_orderpoint_confirm(cr, uid, automatic=automatic,\
-                use_new_cursor=use_new_cursor, context=context, user_id=user_id)
-
-    def run_procure_confirm(self, cr, uid, user_id=False, schedule_cycle=1.0,\
-            po_cycle=1.0, po_lead=1.0, security_lead=50.0, picking_lead=1.0, \
-            use_new_cursor=False, context=None):
-        '''
-        use_new_cursor: False or the dbname
-        '''
-        from wizard.schedulers import _procure_confirm
-        if not context:
-            context={}
-        _procure_confirm(self, cr, uid, schedule_cycle=schedule_cycle,\
-                po_cycle=po_cycle, po_lead=po_lead, security_lead=security_lead,\
-                picking_lead=picking_lead, user_id=user_id, use_new_cursor=use_new_cursor,\
-                context=context)
-
-    def run_orderpoint_confirm(self, cr, uid, automatic=False, use_new_cursor=False,\
-            context=None, user_id=False):
-        '''
-        use_new_cursor: False or the dbname
-        '''
-        from wizard.schedulers import _procure_orderpoint_confirm
-        if not context:
-            context={}
-        _procure_orderpoint_confirm(self, cr, uid, automatic=automatic,\
-                use_new_cursor=use_new_cursor, context=context, user_id=user_id)
 mrp_procurement()
 
 

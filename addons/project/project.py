@@ -242,7 +242,6 @@ class task(osv.osv):
         'child_ids': fields.one2many('project.task', 'parent_id', 'Delegated Tasks'),
         'history': fields.function(_history_get, method=True, string="Task Details", type="text"),
         'notes': fields.text('Notes'),
-        'start_sequence': fields.boolean('Wait for previous sequences'),
 
         'planned_hours': fields.float('Planned Hours', readonly=True, states={'draft':[('readonly',False)]}, required=True),
         'effective_hours': fields.function(_hours_get, method=True, string='Hours Spent', multi='hours', store=True),
@@ -263,7 +262,6 @@ class task(osv.osv):
         'sequence': lambda *a: 10,
         'active': lambda *a: True,
         'date_start': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'start_sequence': lambda *a: True
     }
     _order = "state, sequence, priority, date_deadline, id"
 
@@ -375,7 +373,7 @@ class project_work(osv.osv):
         'name': fields.char('Work summary', size=128),
         'date': fields.datetime('Date'),
         'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True),
-        'hours': fields.float('Hours spent'),
+        'hours': fields.float('Time Spent'),
         'user_id': fields.many2one('res.users', 'Done by', required=True),
     }
     _defaults = {

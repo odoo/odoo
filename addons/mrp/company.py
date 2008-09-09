@@ -1,8 +1,8 @@
-# -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
-#                    Fabien Pinckaers <fp@tiny.Be>
+# Copyright (c) 2005-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#
+# $Id:
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,29 +27,29 @@
 #
 ##############################################################################
 
-from osv import fields,osv
-import tools
-import ir
-import pooler
+from osv import osv,fields
 
-
-
-class stock_picking(osv.osv):
-    _name = "stock.picking"
-    _inherit ='stock.picking'
+class company(osv.osv):
+    _inherit = 'res.company'
     _columns = {
-        'back_order_id' : fields.many2one('stock.picking', 'Back Order', readonly=True),
-        'backorder':fields.boolean('Backorder',readonly=True),
-
+        'schedule_range': fields.float('Scheduler Range', required=True,
+            help="This is the time frame analysed by the scheduler when "\
+            "computing procurements. All procurement that are not between "\
+            "today and today+range are skipped for futur computation."),
+        'po_lead': fields.float('Purchase Lead Time', required=True,
+            help="This is the leads/security time for each purchase order."),
+        'security_lead': fields.float('Security Days', required=True,
+            help="This is the days added to what you promise to customers "\
+            "for security purpose"),
+        'manufacturing_lead': fields.float('Manufacturity Lead Time', required=True,
+            help="Security days for each manufacturing operation."),
     }
     _defaults = {
-         'type':lambda *a: 'internal',
-         'backorder':lambda *a: False,
+        'schedule_range': lambda *a: 80.0,
+        'po_lead': lambda *a: 1.0,
+        'security_lead': lambda *a: 5.0,
+        'manufacturing_lead': lambda *a: 1.0,
+    }
+company()
 
-      }
-
-
-stock_picking()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

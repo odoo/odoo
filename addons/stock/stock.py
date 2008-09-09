@@ -368,6 +368,7 @@ class stock_picking(osv.osv):
     _columns = {
         'name': fields.char('Reference', size=64, required=True, select=True),
         'origin': fields.char('Origin', size=64),
+        'backorder_id': fields.many2one('stock.picking', 'Back Order'),
         'type': fields.selection([('out','Sending Goods'),('in','Getting Goods'),('internal','Internal'),('delivery','Delivery')], 'Shipping Type', required=True, select=True),
         'active': fields.boolean('Active'),
         'note': fields.text('Notes'),
@@ -408,10 +409,9 @@ class stock_picking(osv.osv):
         'invoice_state': lambda *a: 'none',
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
-    def copy(self, cr, uid, id, data=None, context={}):
-        data = data or {}
-        data['name'] = '/'
-        return super(stock_picking, self).copy(cr, uid, id, data, context)
+    #def copy(self, cr, uid, id, data=None, context={}):
+    #    data = data or {}
+    #    return super(stock_picking, self).copy(cr, uid, id, data, context)
 
     def onchange_partner_in(self, cr, uid, context, partner_id=None):
         sid = self.pool.get('res.partner.address').browse(cr, uid, partner_id, context).partner_id.property_stock_supplier.id

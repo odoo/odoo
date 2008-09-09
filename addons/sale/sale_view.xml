@@ -43,6 +43,29 @@
         </record>
         <menuitem id="menu_shop_configuration" name="Configuration" parent="sale.menu_sale_root" sequence="1"/>
         <menuitem action="action_shop_form" id="menu_action_shop_form" parent="sale.menu_shop_configuration"/>
+		
+		<record id="view_sale_order_calendar" model="ir.ui.view">
+            <field name="name">sale.order.calendar</field>
+            <field name="model">sale.order</field>
+            <field name="type">calendar</field>
+            <field name="arch" type="xml">
+                <calendar string="Sales orders" color="state" date_start="date_order">
+                    <field name="partner_id"/>
+                    <field name="amount_total"/>
+                </calendar>
+            </field>
+        </record>
+		<record model="ir.ui.view" id="view_sale_order_graph">
+			<field name="name">sale.order.graph</field>
+			<field name="model">sale.order</field>
+			<field name="type">graph</field>
+			<field name="arch" type="xml">
+				<graph string="Sales orders" type="bar">
+					<field name="partner_id"/>
+					<field name="amount_total" operator="+"/>
+				</graph>
+			</field>
+		</record>
 
         <record id="view_order_tree" model="ir.ui.view">
             <field name="name">sale.order.tree</field>
@@ -207,7 +230,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('user_id','=',uid)]</field>
         </record>
         <menuitem action="action_order_tree" id="menu_action_order_tree" parent="sale.menu_sale_order"/>
@@ -218,7 +241,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
         </record>
         <menuitem action="action_order_tree_all" id="menu_action_order_tree_all" parent="sale.menu_sale_order"/>
 
@@ -227,7 +250,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
+            <field name="view_mode">form,tree,calendar,graph</field>
         </record>
         <menuitem action="action_order_tree_new" id="menu_action_order_tree_new" parent="sale.menu_sale_order"/>
 
@@ -237,7 +260,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','in',('shipping_except','invoice_except')]</field>
         </record>
         <menuitem action="action_order_tree2" id="menu_action_order_tree2" parent="menu_action_order_tree_all"/>
@@ -247,7 +270,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','manual')]</field>
         </record>
         <menuitem action="action_order_tree3" id="menu_action_order_tree3" parent="sale.menu_action_order_tree_all"/>
@@ -257,7 +280,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','in',('progress','waiting_date','manual'))]</field>
         </record>
         <menuitem action="action_order_tree4" id="menu_action_order_tree4" parent="sale.menu_action_order_tree_all" sequence="2"/>
@@ -268,7 +291,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','draft')]</field>
         </record>
         <menuitem action="action_order_tree5" id="menu_action_order_tree5" parent="sale.menu_action_order_tree_all" sequence="1"/>
@@ -278,7 +301,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','in',('shipping_except','invoice_except')),('user_id','=',uid)]</field>
         </record>
         <menuitem action="action_order_tree7" id="menu_action_order_tree7" parent="menu_action_order_tree"/>
@@ -288,7 +311,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','manual'),('user_id','=',uid)]</field>
         </record>
         <menuitem action="action_order_tree8" id="menu_action_order_tree8" parent="sale.menu_action_order_tree"/>
@@ -298,7 +321,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','in',('progress','waiting_date','manual')),('user_id','=',uid)]</field>
         </record>
         <menuitem action="action_order_tree9" id="menu_action_order_tree9" parent="sale.menu_action_order_tree" sequence="2"/>
@@ -309,7 +332,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','draft'),('user_id','=',uid)]</field>
         </record>
         <menuitem action="action_order_tree10" id="menu_action_order_tree10" parent="sale.menu_action_order_tree" sequence="1"/>
@@ -404,7 +427,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order.line</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('invoiced','&lt;&gt;', 1),('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]</field>
         </record>
         <menuitem action="action_order_line_tree2" id="menu_action_order_line_tree2" parent="sale.menu_action_order_line_tree1"/>
@@ -414,7 +437,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order.line</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('invoiced','&lt;&gt;', 1),('state','=','done')]</field>
         </record>
         <menuitem action="action_order_line_tree3" id="menu_action_order_line_tree3" parent="sale.menu_action_order_line_tree2"/>
