@@ -702,6 +702,39 @@ def human_size(sz):
         i = i + 1
     return "%0.2f %s" % (s, units[i])
 
+def logged(when):
+    def log(f, res, *args, **kwargs):
+        vector = ['Call -> function: %s' % f]
+        for i, arg in enumerate(args):
+            vector.append( '  arg %02d: %r' % ( i, arg ) )
+        for key, value in kwargs.items():
+            vector.append( '  kwarg %10s: %r' % ( key, value ) )
+        vector.append( '  result: %r' % res )
+        print "\n".join(vector)
+
+    def pre_logged(f):
+        def wrapper(*args, **kwargs):
+            res = f(*args, **kwargs)
+            log(f, res, *args, **kwargs)
+            return res
+        return wrapper
+
+    def post_logged(f):
+        def wrapper(*args, **kwargs):
+            now = time.time()
+            res = None
+            try:
+                res = f(*args, **kwargs)
+                return res
+            finally:
+                log(f, res, *args, **kwargs)
+                print "  time delta: %s" % (time.time() - now)
+        return wrapper
+
+    try:
+        return { "pre" : pre_logged, "post" : post_logged}[when]
+    except KeyError, e:
+        raise ValueError(e), "must to be 'pre' or 'post'"
 
 if __name__ == '__main__':
     import doctest
