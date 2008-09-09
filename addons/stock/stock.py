@@ -372,8 +372,8 @@ class stock_picking(osv.osv):
         'active': fields.boolean('Active'),
         'note': fields.text('Notes'),
 
-        #'location_id': fields.many2one('stock.location', 'Location'),
-        #'location_dest_id': fields.many2one('stock.location', 'Dest. Location'),
+        'location_id': fields.many2one('stock.location', 'Location'),
+        'location_dest_id': fields.many2one('stock.location', 'Dest. Location'),
         'move_type': fields.selection([('direct','Direct Delivery'),('one','All at once')],'Delivery Method', required=True),
         'state': fields.selection([
             ('draft','Draft'),
