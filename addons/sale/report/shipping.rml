@@ -69,8 +69,6 @@
     </initialize>
     <paraStyle name="P1" rightIndent="0.0" leftIndent="-5.0" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="P2" fontName="Helvetica" fontSize="7.0" leading="9" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P3" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
-    <paraStyle name="P4" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Footer" fontName="Times-Roman"/>
@@ -183,7 +181,7 @@
           <para style="terp_tblheader_Details">Designation</para>
         </td>
         <td>
-          <para style="P3">Quantity</para>
+          <para style="terp_tblheader_Details_Centre">Quantity</para>
         </td>
         <td>
           <para style="terp_tblheader_Details">S.U.</para>
@@ -192,7 +190,7 @@
     </blockTable>
     <section>
       <para style="P2">[[ repeatIn(o.move_lines, 'line') ]]</para>
-      <blockTable colWidths="77.0,345.0,90.0,23.0" style="Table1">
+      <blockTable colWidths="78.0,345.0,90.0,23.0" style="Table1">
         <tr>
           <td>
             <para style="terp_default_9">[[line.product_id.code ]]</para>
@@ -201,7 +199,7 @@
             <para style="terp_default_9">[[ line.product_id and line.product_id.name or '']]</para>
           </td>
           <td>
-            <para style="P4">[[ line.product_qty ]]</para>
+            <para style="terp_default_Centre_9">[[ line.product_qty ]]</para>
           </td>
           <td>
             <para style="terp_default_9">[[ line.product_uom and line.product_uom.name ]]</para>
