@@ -53,21 +53,6 @@ class stock_incoterms(osv.osv):
     }
 stock_incoterms()
 
-#class stock_lot(osv.osv):
-#   _name = "stock.lot"
-#   _description = "Lot"
-#   _columns = {
-#       'name': fields.char('Lot Name', size=64, required=True),
-#       'active': fields.boolean('Active'),
-#       'tracking': fields.char('Tracking', size=64),
-#       'move_ids': fields.one2many('stock.move', 'lot_id', 'Move lines'),
-#   }
-#   _defaults = {
-#       'active': lambda *a: True,
-#   }
-#stock_lot()
-
-
 #----------------------------------------------------------
 # Stock Location
 #----------------------------------------------------------
@@ -87,21 +72,30 @@ class stock_location(osv.osv):
 
         'chained_location_id': fields.many2one('stock.location', 'Chained Location If Fixed'),
         'chained_location_type': fields.selection([('','None'),('customer', 'Customer'),('fixed','Fixed Location')], 'Chained Location Type'),
-        'chained_auto_packing': fields.boolean('Chained Auto-Packing'),
+        'chained_auto_packing': fields.selection(
+            [('auto','Automatic Move'), ('manual','Manual Operation'),('transparent','Automatic No Step Added')], 
+            'Automatic Move', 
+            required=True, select=1,
+            help="This is used only if you selected a chained location type.\n" \
+                "The 'Automatic Move' value will create a stock move after the current one that will be "\
+                "validated automatically. With 'Manual Operation', the stock move has to be validated "\
+                "by a worker. With 'Automatic No Step Added', the location is replaced in the original move."
+            ),
         'chained_delay': fields.integer('Chained Delay (days)'),
 
         'address_id': fields.many2one('res.partner.address', 'Location Address'),
 
         'comment': fields.text('Additional Information'),
-        'posx': fields.integer('Corridor (X)', required=True),
-        'posy': fields.integer('Shelves (Y)', required=True),
-        'posz': fields.integer('Height (Z)', required=True),
+        'posx': fields.integer('Corridor (X)'),
+        'posy': fields.integer('Shelves (Y)'),
+        'posz': fields.integer('Height (Z)'),
     }
     _defaults = {
         'active': lambda *a: 1,
         'usage': lambda *a: 'internal',
         'allocation_method': lambda *a: 'fifo',
         'chained_location_type': lambda *a: '',
+        'chained_auto_packing': lambda *a: 'manual',
         'posx': lambda *a: 0,
         'posy': lambda *a: 0,
         'posz': lambda *a: 0,
@@ -110,11 +104,13 @@ class stock_location(osv.osv):
     def chained_location_get(self, cr, uid, location, partner=None, product=None, context={}):
         result = None
         if location.chained_location_type=='customer':
-            result = partner.property_stock_customer
+            if partner:
+                result = partner.property_stock_customer
         elif location.chained_location_type=='fixed':
             result = location.chained_location_id
+        if result:
+            return result, location.chained_auto_packing, location.chained_delay
         return result
-
 
     def picking_type_get(self, cr, uid, from_location, to_location, context={}):
         result = 'internal'
@@ -175,9 +171,7 @@ class stock_location(osv.osv):
         states_str = ','.join(map(lambda s: "'%s'" % s, states))
         if not product_ids:
             product_ids = product_obj.search(cr, uid, [])
-        res = {}
-        for id in product_ids:
-            res[id] = 0.0
+        res = {}.fromkeys(product_ids, 0.0)
         if not ids:
             return res
 
@@ -372,15 +366,14 @@ class stock_picking(osv.osv):
     
     
     _columns = {
-        'name': fields.char('Packing name', size=64, required=True, select=True),
+        'name': fields.char('Reference', size=64, required=True, select=True),
         'origin': fields.char('Origin', size=64),
         'type': fields.selection([('out','Sending Goods'),('in','Getting Goods'),('internal','Internal'),('delivery','Delivery')], 'Shipping Type', required=True, select=True),
         'active': fields.boolean('Active'),
         'note': fields.text('Notes'),
 
-        'location_id': fields.many2one('stock.location', 'Location'),
-        'location_dest_id': fields.many2one('stock.location', 'Dest. Location'),
-
+        #'location_id': fields.many2one('stock.location', 'Location'),
+        #'location_dest_id': fields.many2one('stock.location', 'Dest. Location'),
         'move_type': fields.selection([('direct','Direct Delivery'),('one','All at once')],'Delivery Method', required=True),
         'state': fields.selection([
             ('draft','Draft'),
@@ -407,7 +400,7 @@ class stock_picking(osv.osv):
             select=True),
     }
     _defaults = {
-        'name': lambda *a: '/',
+        'name': lambda self,cr,uid,context: self.pool.get('ir.sequence').get(cr, uid, 'stock.picking'),
         'active': lambda *a: 1,
         'state': lambda *a: 'draft',
         'move_type': lambda *a: 'direct',
@@ -415,64 +408,28 @@ class stock_picking(osv.osv):
         'invoice_state': lambda *a: 'none',
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
+    def copy(self, cr, uid, id, data=None, context={}):
+        data = data or {}
+        data['name'] = '/'
+        return super(stock_picking, self).copy(cr, uid, id, data, context)
+
     def onchange_partner_in(self, cr, uid, context, partner_id=None):
         sid = self.pool.get('res.partner.address').browse(cr, uid, partner_id, context).partner_id.property_stock_supplier.id
-        return {
-            'value': {'location_id':sid}
-        }
+        return { }
 
-    def action_explode(self, cr, uid, ids, *args):
-        return True
+    def action_explode(self, cr, uid, moves, context={}):
+        return moves
 
-    def action_confirm(self, cr, uid, ids, *args):
+    def action_confirm(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'confirmed'})
         todo = []
         for picking in self.browse(cr, uid, ids):
-            if picking.name == self._defaults['name']():
-                number = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.%s' % picking.type)
-                self.write(cr, uid, [picking.id], {'name': number})
             for r in picking.move_lines:
                 if r.state=='draft':
-                    todo.append(r.id)
+                    todo.append(r)
+        todo = self.action_explode(cr, uid, todo, context)
         if len(todo):
-            self.pool.get('stock.move').action_confirm(cr,uid, todo)
-        self.action_explode(cr, uid, ids)
-        for picking in self.browse(cr, uid, ids):
-            todo = []
-            todo.extend( filter( lambda r: r.location_dest_id.chained_location_type, picking.move_lines) )
-            if todo:
-                loc = self.pool.get('stock.location').chained_location_get(cr, uid, todo[0].location_dest_id, todo[0].picking_id and todo[0].picking_id.address_id and todo[0].picking_id.address_id.partner_id, todo[0].product_id)
-                ptype = self.pool.get('stock.location').picking_type_get(cr, uid, todo[0].location_dest_id, loc)
-                pickid = self.pool.get('stock.picking').create(cr, uid, {
-                    'name': picking.name,
-                    'origin': str(picking.origin or ''),
-                    'type': ptype,
-                    'note': picking.note,
-                    'move_type': picking.move_type,
-                    'auto_picking': todo[0].location_dest_id.chained_auto_packing,
-                    'address_id': picking.address_id.id,
-                    'invoice_state': 'none'
-                })
-                for move in todo:
-                    loc = self.pool.get('stock.location').chained_location_get(cr, uid, move.location_dest_id, picking.address_id.partner_id, move.product_id).id
-                    new_id = self.pool.get('stock.move').copy(cr, uid, move.id, {
-                        'location_id': move.location_dest_id.id,
-                        'location_dest_id': loc,
-                        'date_moved': time.strftime('%Y-%m-%d'),
-                        'picking_id': pickid,
-                        'state':'waiting',
-                        'prodlot_id':False,
-                        'tracking_id':False,
-                        'move_history_ids':[],
-                        'date_planned': DateTime.strptime(move.date_planned, '%Y-%m-%d') + DateTime.RelativeDateTime(days=move.location_dest_id.chained_delay or 0),
-                        'move_history_ids2':[]}
-                    )
-                    self.pool.get('stock.move').write(cr, uid, [move.id], {
-                        'move_dest_id': new_id,
-                        'move_history_ids': [(4, new_id)]
-                    })
-                wf_service = netsvc.LocalService("workflow")
-                wf_service.trg_validate(uid, 'stock.picking', pickid, 'button_confirm', cr)
+            self.pool.get('stock.move').action_confirm(cr,uid, todo, context)
         return True
 
     def test_auto_picking(self, cr, uid, ids):
@@ -806,7 +763,23 @@ class stock_move(osv.osv):
         'price_unit': fields.float('Unit Price',
             digits=(16, int(config['price_accuracy']))),
     }
+    def _default_location_destination(self, cr, uid, context={}):
+        if context.get('move_line', []):
+            return context['move_line'][0][2]['location_dest_id']
+        if context.get('address_out_id', False):
+            return self.pool.get('res.partner.address').browse(cr, uid, context['address_out_id'], context).partner_id.property_stock_customer.id
+        return False
+
+    def _default_location_source(self, cr, uid, context={}):
+        if context.get('move_line', []):
+            return context['move_line'][0][2]['location_id']
+        if context.get('address_in_id', False):
+            return self.pool.get('res.partner.address').browse(cr, uid, context['address_in_id'], context).partner_id.property_stock_supplier.id
+        return False
+
     _defaults = {
+        'location_id': _default_location_source,
+        'location_dest_id': _default_location_destination,
         'state': lambda *a: 'draft',
         'priority': lambda *a: '1',
         'product_qty': lambda *a: 1.0,
@@ -839,9 +812,55 @@ class stock_move(osv.osv):
             result['location_dest_id'] = loc_dest_id
         return {'value':result}
 
-    def action_confirm(self, cr, uid, ids, context={}):
+    def _chain_compute(self, cr, uid, moves, context={}):
+        result = {}
+        for m in moves:
+            dest = self.pool.get('stock.location').chained_location_get(cr, uid, m.location_dest_id, m.picking_id and m.picking_id.address_id and m.picking_id.address_id.partner_id, m.product_id, context)
+            if dest:
+                if dest[1]=='transparent':
+                    self.write(cr, uid, [m.id], {
+                        'date_planned': (DateTime.strptime(m.date_planned, '%Y-%m-%d') + \
+                            DateTime.RelativeDateTime(days=dest[2] or 0)).strftime('%Y-%m-%d'),
+                        'location_dest_id': dest[0].id})
+                else:
+                    result.setdefault(m.picking_id, [])
+                    result[m.picking_id].append( (m, dest) )
+        return result
+
+    def action_confirm(self, cr, uid, moves, context={}):
+        ids = map(lambda m: m.id, moves)
         self.write(cr, uid, ids, {'state':'confirmed'})
-        return True
+        for picking, todo in self._chain_compute(cr, uid, moves, context).items():
+            ptype = self.pool.get('stock.location').picking_type_get(cr, uid, todo[0][0].location_dest_id, todo[0][1][0])
+            pickid = self.pool.get('stock.picking').create(cr, uid, {
+                'name': picking.name,
+                'origin': str(picking.origin or ''),
+                'type': ptype,
+                'note': picking.note,
+                'move_type': picking.move_type,
+                'auto_picking': todo[0][1][1]=='auto',
+                'address_id': picking.address_id.id,
+                'invoice_state': 'none'
+            })
+            for move,(loc,auto,delay) in todo:
+                # Is it smart to copy ? May be it's better to recreate ?
+                new_id = self.pool.get('stock.move').copy(cr, uid, move.id, {
+                    'location_id': move.location_dest_id.id,
+                    'location_dest_id': loc.id,
+                    'date_moved': time.strftime('%Y-%m-%d'),
+                    'picking_id': pickid,
+                    'state':'waiting',
+                    'move_history_ids':[],
+                    'date_planned': (DateTime.strptime(move.date_planned, '%Y-%m-%d') + DateTime.RelativeDateTime(days=delay or 0)).strftime('%Y-%m-%d'),
+                    'move_history_ids2':[]}
+                )
+                self.pool.get('stock.move').write(cr, uid, [move.id], {
+                    'move_dest_id': new_id,
+                    'move_history_ids': [(4, new_id)]
+                })
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'stock.picking', pickid, 'button_confirm', cr)
+        return []
 
     def action_assign(self, cr, uid, ids, *args):
         todo = []
@@ -1135,63 +1154,6 @@ class stock_warehouse(osv.osv):
     }
 stock_warehouse()
 
-
-# Product
-class product_product(osv.osv):
-    _inherit = "product.product"
-    #
-    # Utiliser browse pour limiter les queries !
-    #
-    def view_header_get(self, cr, user, view_id, view_type, context):
-        res = super(product_product, self).view_header_get(cr, user, view_id, view_type, context)
-        if res: return res
-        if (not context.get('location', False)):
-            return False
-        cr.execute('select name from stock_location where id=%d', (context['location'],))
-        j = cr.fetchone()[0]
-        if j:
-            return 'Products: '+j
-        return False
-
-    def _get_product_available_func(states, what):
-        def _product_available(self, cr, uid, ids, name, arg, context={}):
-            if context.get('shop', False):
-                cr.execute('select warehouse_id from sale_shop where id=%d', (int(context['shop']),))
-                res2 = cr.fetchone()
-                if res2:
-                    context['warehouse'] = res2[0]
-
-            if context.get('warehouse', False):
-                cr.execute('select lot_stock_id from stock_warehouse where id=%d', (int(context['warehouse']),))
-                res2 = cr.fetchone()
-                if res2:
-                    context['location'] = res2[0]
-
-            if context.get('location', False):
-                location_ids = [context['location']]
-            else:
-                # get the list of ids of the stock location of all warehouses
-                cr.execute("select lot_stock_id from stock_warehouse")
-                location_ids = [id for (id,) in cr.fetchall()]
-                
-            # build the list of ids of children of the location given by id
-            location_ids = self.pool.get('stock.location').search(cr, uid, [('location_id', 'child_of', location_ids)])
-            res = self.pool.get('stock.location')._product_get_multi_location(cr, uid, location_ids, ids, context, states, what)
-            for id in ids:
-                res.setdefault(id, 0.0)
-            return res
-        return _product_available
-    _product_qty_available = _get_product_available_func(('done',), ('in', 'out'))
-    _product_virtual_available = _get_product_available_func(('confirmed','waiting','assigned','done'), ('in', 'out'))
-    _product_outgoing_qty = _get_product_available_func(('confirmed','waiting','assigned'), ('out',))
-    _product_incoming_qty = _get_product_available_func(('confirmed','waiting','assigned'), ('in',))
-    _columns = {
-        'qty_available': fields.function(_product_qty_available, method=True, type='float', string='Real Stock'),
-        'virtual_available': fields.function(_product_virtual_available, method=True, type='float', string='Virtual Stock'),
-        'incoming_qty': fields.function(_product_incoming_qty, method=True, type='float', string='Incoming'),
-        'outgoing_qty': fields.function(_product_outgoing_qty, method=True, type='float', string='Outgoing'),
-    }
-product_product()
 
 # Move wizard : 
 #    get confirm or assign stock move lines of partner and put in current picking.

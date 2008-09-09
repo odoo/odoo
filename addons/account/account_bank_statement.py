@@ -319,7 +319,7 @@ class account_bank_statement(osv.osv):
         cursor.execute('SELECT balance_end_real \
                 FROM account_bank_statement \
                 WHERE journal_id = %d \
-                ORDER BY date DESC LIMIT 1', (journal_id,))
+                ORDER BY date DESC,id DESC LIMIT 1', (journal_id,))
         res = cursor.fetchone()
         balance_start = res and res[0] or 0.0
 
