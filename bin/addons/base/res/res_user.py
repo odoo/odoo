@@ -203,7 +203,7 @@ class users(osv.osv):
         return dataobj.browse(cr, uid, data_id, context).res_id
 
     def action_next(self,cr,uid,ids,context=None):
-        return{
+        return {
                 'view_type': 'form',
                 "view_mode": 'form',
                 'res_model': 'ir.module.module.configuration.wizard',
@@ -218,7 +218,7 @@ class users(osv.osv):
                 'res_model': 'ir.module.module.configuration.wizard',
                 'type': 'ir.actions.act_window',
                 'target':'new',
-               }
+        }
     def action_new(self,cr,uid,ids,context={}):
         return {
                 'view_type': 'form',

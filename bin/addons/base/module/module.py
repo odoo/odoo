@@ -656,6 +656,7 @@ class module_configuration(osv.osv_memory):
                 'state': 'done',
                 }, context=context)
             return{
+                  'view_mode': item.action_id.view_mode,
                   'view_type': item.action_id.view_type,
                   'view_id':item.action_id.view_id and [item.action_id.view_id.id] or False,
                   'res_model': item.action_id.res_model,
@@ -664,9 +665,4 @@ class module_configuration(osv.osv_memory):
             }
         return {'type':'ir.actions.act_window_close' }
 module_configuration()
-
-
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
