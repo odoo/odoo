@@ -650,6 +650,7 @@ class graph(object):
                         if sec_node in self.partial_order.keys():
                             self.transitions[self.start_nodes[0]].append(node)
                             break
+                        
                 self.partial_order = {}
                 tree = self.make_acyclic(None, self.start_nodes[0], 0, [])
             
@@ -665,8 +666,7 @@ class graph(object):
                 self.start = s
                 self.rank()   # First step:Netwoek simplex algorithm
                 self.order_in_rank()    #Second step: ordering nodes within ranks  
-            
-            
+                              
 
     def __str__(self):
         result = ''
@@ -676,7 +676,8 @@ class graph(object):
                 result += '\tPosX: '+ str(self.result[node]['x']) + '  - Node:' + node + "\n"
         return result
 
-    def scale(self, maxx, maxy, plusx2=0, plusy2=0):
+
+    def scale(self, maxx, maxy, nwidth=0, nheight=0, margin=20):
         """Computes actual co-ordiantes of the nodes
         """
         
@@ -687,9 +688,12 @@ class graph(object):
                     self.result[src]['y'] += 0.08
                     self.result[des]['y'] -= 0.08
                     
+        factorX = maxx + nheight
+        factorY = maxy + nwidth  
+                          
         for node in self.result:
-            self.result[node]['x'] = (self.result[node]['x']) * maxx + plusx2
-            self.result[node]['y'] = (self.result[node]['y']) * maxy + plusy2
+            self.result[node]['x'] = (self.result[node]['x']) * factorX + margin
+            self.result[node]['y'] = (self.result[node]['y']) * factorY + margin
                   
 
     def result_get(self):

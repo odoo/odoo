@@ -54,7 +54,7 @@ class workflow(osv.osv):
         return super(workflow, self).write(cr, user, ids, vals, context=context)
 
     #
-    # scale = [stepx, stepy, posx, posy ]
+    # scale =  (vertical-distance, horizontal-distance, min-node-width(optional), min-node-height(optional), margin(default=20))
     #
 
     
@@ -91,7 +91,7 @@ class workflow(osv.osv):
             results[str(node[0])] = result[node[0]]
             results[str(node[0])]['name'] = node[1]
             
-        return {'node': results, 'transition': tres}
+        return {'nodes': results, 'transitions': tres}
     
 
     def create(self, cr, user, vals, context=None):
