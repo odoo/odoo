@@ -33,6 +33,7 @@ import product_stock
 import product_location
 import lot_location
 import ups
+import picking
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -772,7 +772,10 @@ class stock_move(osv.osv):
 
     def _default_location_source(self, cr, uid, context={}):
         if context.get('move_line', []):
-            return context['move_line'][0][2]['location_id']
+            try:
+                return context['move_line'][0][2]['location_id']
+            except:
+                pass
         if context.get('address_in_id', False):
             return self.pool.get('res.partner.address').browse(cr, uid, context['address_in_id'], context).partner_id.property_stock_supplier.id
         return False
