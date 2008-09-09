@@ -308,12 +308,24 @@
                 </calendar>
             </field>
         </record>
+		<record model="ir.ui.view" id="view_project_task_graph">
+			<field name="name">project.task.graph</field>
+			<field name="model">project.task</field>
+			<field name="type">graph</field>
+			<field name="arch" type="xml">
+				<graph string="Project Tasks" type="bar">
+					<field name="project_id"/>
+					<field name="planned_hours" operator="+"/>
+					<field name="delay_hours" operator="+"/>
+				</graph>
+			</field>
+		</record>
 
         <record id="action_view_task" model="ir.actions.act_window">
             <field name="name">All Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field eval="False" name="view_id"/>
         </record>
         <menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_main"/>
@@ -322,7 +334,7 @@
             <field name="name">My Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('user_id', '=', uid)]</field>
         </record>
         <menuitem action="action_view_task4" id="menu_action_view_task4" parent="project.menu_main"/>
@@ -331,7 +343,7 @@
             <field name="name">My Pending Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('user_id', '=', uid),('state','=','pending')]</field>
         </record>
         <menuitem action="action_view_task5_pending" id="menu_tasks_yours_pending" parent="menu_action_view_task4"/>
@@ -340,7 +352,7 @@
             <field name="name">My Open Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('user_id', '=', uid),('state','=','open')]</field>
         </record>
         <menuitem action="action_view_task5" id="menu_tasks_yours" parent="menu_action_view_task4"/>
@@ -349,7 +361,7 @@
             <field name="name">My Tasks in Progress</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('user_id', '=', uid),('state','=','open')]</field>
         </record>
         <menuitem action="action_view_task5_prog" id="menu_tasks_yours_prog" parent="menu_action_view_task4"/>
@@ -358,7 +370,7 @@
             <field name="name">New Task</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
+            <field name="view_mode">form,tree,calendar,graph</field>
         </record>
         <menuitem action="action_view_task_new" id="menu_action_view_task_new" parent="menu_action_view_task4"/>
 
@@ -366,7 +378,7 @@
             <field name="name">Open Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state', '=', 'open')]</field>
         </record>
         <menuitem action="action_view_task6" id="menu_action_view_task6" parent="project.menu_action_view_task"/>
@@ -375,7 +387,7 @@
             <field name="name">Tasks in Progress</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state', '=', 'progress')]</field>
         </record>
         <menuitem action="action_view_task6_prog" id="menu_action_view_task6_prog" parent="project.menu_action_view_task"/>
@@ -384,7 +396,7 @@
             <field name="name">Unassigned Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('user_id', '=', False)]</field>
         </record>
         <menuitem action="action_view_task7" id="menu_action_view_task7" parent="project.menu_action_view_task"/>
@@ -394,7 +406,7 @@
             <field name="res_model">project.task</field>
             <field name="name">Project's tasks</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('project_id', 'child_of', [active_id])]</field>
         </record>
         <record id="ir_project_task_open" model="ir.values">
@@ -443,7 +455,7 @@
             name="All Tasks"
             res_model="project.task"
             src_model="project.project"
-            view_mode="tree,form,calendar"
+            view_mode="tree,form,calendar,graph"
             view_type="form"/>
 
          <act_window
@@ -452,7 +464,7 @@
             name="Open Tasks"
             res_model="project.task"
             src_model="project.project"
-            view_mode="tree,form,calendar"
+            view_mode="tree,form,calendar,graph"
             view_type="form"/>
 
         <record id="task_company" model="ir.ui.view">
