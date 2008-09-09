@@ -117,7 +117,7 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="424.0,62.0,45.0" repeatRows="1" style="Table_Product_Header_Title">
+    <blockTable colWidths="391.0,66.0,73.0" repeatRows="1" style="Table_Product_Header_Title">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Description</para>
@@ -132,7 +132,7 @@
     </blockTable>
     <section>
       <para style="terp_default_9">[[ repeatIn(order.order_line,'order_line') ]]</para>
-      <blockTable colWidths="425.0,60.0,33.0,13.0" style="Table_Product_Line">
+      <blockTable colWidths="402.0,67.0,38.0,23.0" style="Table_Product_Line">
         <tr>
           <td>
             <para style="terp_default_9">[[ order_line.name ]]</para>
@@ -141,10 +141,10 @@
             <para style="terp_default_9">[[ time.strftime('%d/%m/%Y', time.strptime( order_line.date_planned, '%Y-%m-%d')) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Centre_9">[[ order_line.product_qty or '' ]]</para>
+            <para style="terp_default_Right_9">[[ order_line.product_qty or '' ]]</para>
           </td>
           <td>
-            <para style="terp_default_Centre_9">[[ (order_line.product_uom and order_line.product_uom.name) or '' ]]</para>
+            <para style="terp_default_Right_9">[[ (order_line.product_uom and order_line.product_uom.name) or '' ]]</para>
           </td>
         </tr>
         <tr>
