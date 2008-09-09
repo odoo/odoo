@@ -138,25 +138,28 @@
     <blockTableStyle id="Table_Tax_Content_Table">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <lineStyle kind="LINEBEFORE" colorName="#ffffff" start="0,0" stop="0,-1"/>
-      <lineStyle kind="LINEAFTER" colorName="#ffffff" start="0,0" stop="0,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#ffffff" start="0,0" stop="0,0"/>
       <lineStyle kind="LINEBELOW" colorName="#ffffff" start="0,-1" stop="0,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#ffffff" start="4,0" stop="4,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#ffffff" start="4,-1" stop="4,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
-      <lineStyle kind="LINEBEFORE" colorName="#ffffff" start="0,2" stop="0,-1"/>
-      <lineStyle kind="LINEAFTER" colorName="#ffffff" start="0,2" stop="0,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#ffffff" start="0,-1" stop="0,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#ffffff" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#ffffff" start="5,-1" stop="5,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#ffffff" start="6,-1" stop="6,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#ffffff" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#ffffff" start="1,-1" stop="1,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table_Tax_Header">
       <blockAlignment value="LEFT"/>
@@ -172,10 +175,19 @@
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
     </blockTableStyle>
-    <blockTableStyle id="Table_Border_Style">
+    <blockTableStyle id="Table_Format_Border">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
+      <lineStyle kind="LINEBELOW" colorName="#ffffff" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#ffffff" start="1,-1" stop="1,-1"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table_Format_Border_2">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#ffffff" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#ffffff" start="0,0" stop="0,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#ffffff" start="0,0" stop="0,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#ffffff" start="0,-1" stop="0,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table_Coment_Payment_Term">
       <blockAlignment value="LEFT"/>
@@ -188,8 +200,6 @@
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
-    <paraStyle name="P1" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P2" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="List" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -317,7 +327,7 @@
       <blockTable colWidths="211.0,62.0,36.0,27.0,63.0,51.0,46.0,26.0" style="Table_Invoice_Line_Content">
         <tr>
           <td>
-            <para style="terp_default_8">[[ l.name ]]</para>
+            <para style="terp_default_9">[[ l.name ]]</para>
           </td>
           <td>
             <para style="terp_default_9">[[ ', '.join([lt.name for lt in l.invoice_line_tax_id]) ]]</para>
@@ -451,7 +461,7 @@
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="530.0" style="Table_Tax_Content_Table">
+    <blockTable colWidths="196.0,334.0" style="Table_Tax_Content_Table">
       <tr>
         <td>
           <para style="terp_default_8">[[ format(o.amount_tax or removeParentNode('blockTable')) ]]</para>
@@ -472,11 +482,16 @@
             <font color="white"> </font>
           </para>
         </td>
+        <td>
+          <para style="terp_default_8">
+            <font color="white"> </font>
+          </para>
+        </td>
       </tr>
       <tr>
         <td>
           <para style="terp_default_8">[[ repeatIn(o.tax_line,'t') ]]</para>
-          <blockTable colWidths="62.0,61.0,67.0" style="Table_Tax_Content">
+          <blockTable colWidths="64.0,63.0,69.0" style="Table_Tax_Content">
             <tr>
               <td>
                 <para style="terp_default_Centre_8">[[ t.name ]]</para>
@@ -490,9 +505,25 @@
             </tr>
           </blockTable>
         </td>
+        <td>
+          <blockTable colWidths="167.0,167.0" style="Table_Format_Border">
+            <tr>
+              <td>
+                <para style="terp_default_8">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="terp_default_8">
+                  <font color="white"> </font>
+                </para>
+              </td>
+            </tr>
+          </blockTable>
+        </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="530.0" style="Table_Border_Style">
+    <blockTable colWidths="530.0" style="Table_Format_Border_2">
       <tr>
         <td>
           <para style="terp_default_2">
