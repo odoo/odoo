@@ -155,7 +155,7 @@ class act_window(osv.osv):
             if (not act.view_ids):
                 modes = act.view_mode.split(',')
                 find = False
-                if act.view_id.id:
+                if act.view_id:
                     res[act.id].append((act.view_id.id, act.view_id.type))
                 for t in modes:
                     if act.view_id and (t == act.view_id.type) and not find:

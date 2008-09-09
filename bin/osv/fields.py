@@ -612,9 +612,14 @@ class function(_column):
             values = {}
         res = {}
         if self._method:
-            return self._fnct(obj, cr, user, ids, name, self._arg, context)
+            res = self._fnct(obj, cr, user, ids, name, self._arg, context)
         else:
-            return self._fnct(cr, obj._table, ids, name, self._arg, context)
+            res = self._fnct(cr, obj._table, ids, name, self._arg, context)
+        
+        if self._type == 'binary' and context.get('get_binary_size', True):
+            # convert the data returned by the function with the size of that data...
+            res = dict(map(lambda (x, y): (x, tools.human_size(len(y))), res.items()))
+        return res
 
     def set(self, cr, obj, id, name, value, user=None, context=None):
         if not context:
