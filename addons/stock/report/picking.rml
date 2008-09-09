@@ -24,9 +24,15 @@
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="1,0" stop="1,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="2,0" stop="2,-1"/>
-      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="2,0" stop="2,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="2,0" stop="2,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="3,0" stop="3,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="4,0" stop="4,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
     </blockTableStyle>
     <blockTableStyle id="packing_ref_content_table">
       <blockAlignment value="LEFT"/>
@@ -38,9 +44,15 @@
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="1,0" stop="1,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="2,0" stop="2,-1"/>
-      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="2,0" stop="2,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="2,0" stop="2,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="3,0" stop="3,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="4,0" stop="4,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Move_Line_Header">
       <blockAlignment value="LEFT"/>
@@ -65,6 +77,8 @@
       <paraStyle name="all" alignment="justify"/>
     </initialize>
     <paraStyle name="P1" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P2" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="P3" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -128,15 +142,10 @@
     <para style="terp_default_Bold_8">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_9"><font face="Helvetica">Recipient</font><font face="Helvetica">:</font><font face="Times-Roman"/>[[ (picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.title) or '' ]] [[ (picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.name) or '' ]] </para>
-    <para style="terp_default_9">Concerns: [[ picking.name ]]</para>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_8">
-      <font color="white"> </font>
-    </para>
-    <blockTable colWidths="202.0,202.0,124.0" style="packing_ref_header">
+    <blockTable colWidths="137.0,137.0,84.0,84.0,84.0" style="packing_ref_header">
       <tr>
         <td>
           <para style="terp_tblheader_General_Centre">Customer Ref.</para>
@@ -147,9 +156,15 @@
         <td>
           <para style="terp_tblheader_General_Centre">Shipping Date</para>
         </td>
+        <td>
+          <para style="P3">Recipient</para>
+        </td>
+        <td>
+          <para style="P2">C<font face="Helvetica-Bold" size="8.0">oncerns</font></para>
+        </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="202.0,201.0,124.0" style="packing_ref_content_table">
+    <blockTable colWidths="137.0,137.0,84.0,84.0,84.0" style="packing_ref_content_table">
       <tr>
         <td>
           <para style="terp_default_Centre_8">[[ (picking.address_id.partner_id.id) or '' ]]</para>
@@ -158,9 +173,13 @@
           <para style="terp_default_Centre_8">[[ picking.date ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_9">
-            <font color="white"> </font>
-          </para>
+          <para style="terp_default_Centre_9">[[picking.min_date or '']]</para>
+        </td>
+        <td>
+          <para style="terp_default_9"><font face="Times-Roman"/>[[ (picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.title) or '' ]] [[ (picking.sale_id.partner_shipping_id and picking.sale_id.partner_shipping_id.name) or '' ]] </para>
+        </td>
+        <td>
+          <para style="terp_default_9">[[ picking.name ]]</para>
         </td>
       </tr>
     </blockTable>
