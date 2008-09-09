@@ -160,13 +160,13 @@
           <para style="terp_default_9">
             <font color="white"> </font>
           </para>
-          <para style="terp_default_9">Tél. : [[ o.partner_address_id.phone or '' ]]</para>
-          <para style="terp_default_9">Fax : [[ o.partner_address_id.fax or '' ]]</para>
-          <para style="terp_default_9">TVA :[[ o.partner_id.vat or ''  ]]</para>
+          <para style="terp_default_9">TÃ©l.Â : [[ o.partner_address_id.phone or '' ]]</para>
+          <para style="terp_default_9">FaxÂ : [[ o.partner_address_id.fax or '' ]]</para>
+          <para style="terp_default_9">TVAÂ :[[ o.partner_id.vat or ''  ]]</para>
         </td>
       </tr>
     </blockTable>
-    <para style="terp_header">Request for Quotation [[ (o.state=='draft' or removeParentNode('font')) and ''  ]] Order [[ (o.state&lt;&gt;'draft' or removeParentNode('font')) and '' ]] N° :[[ o.name ]]</para>
+    <para style="terp_header">Request for Quotation [[ (o.state=='draft' or removeParentNode('font')) and ''  ]] Order [[ (o.state&lt;&gt;'draft' or removeParentNode('font')) and '' ]] NÂ° [[ o.name ]]</para>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
@@ -208,7 +208,7 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="253.0,52.0,57.0,44.0,58.0,70.0" repeatRows="1" style="Table_Header_Pur_ord_Line">
+    <blockTable colWidths="232.0,44.0,60.0,69.0,58.0,70.0" repeatRows="1" style="Table_Header_Pur_ord_Line">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Description</para>
@@ -232,7 +232,7 @@
     </blockTable>
     <section>
       <para style="terp_default_8">[[ repeatIn(o.order_line,'line') ]]</para>
-      <blockTable colWidths="254.0,52.0,57.0,24.0,20.0,57.0,71.0" style="Table_Order_Pur_line_Content">
+      <blockTable colWidths="231.0,46.0,59.0,51.0,20.0,57.0,70.0" style="Table_Order_Pur_line_Content">
         <tr>
           <td>
             <para style="terp_default_9">[[ line.name ]]</para>

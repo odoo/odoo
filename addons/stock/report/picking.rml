@@ -77,6 +77,8 @@
       <paraStyle name="all" alignment="justify"/>
     </initialize>
     <paraStyle name="P1" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P2" fontName="Courier" fontSize="10.0" leading="13" spaceBefore="0.0" spaceAfter="14.0"/>
+    <paraStyle name="P3" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -107,6 +109,7 @@
     <paraStyle name="terp_default_Bold_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_1" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="Preformatted Text" fontName="Courier" fontSize="10.0" leading="13" spaceBefore="0.0" spaceAfter="0.0"/>
   </stylesheet>
   <images/>
   <story>
@@ -171,12 +174,15 @@
         </td>
         <td>
           <para style="terp_default_Centre_9">[[ picking.name ]]</para>
+          <para style="P2">
+            <font color="white"> </font>
+          </para>
         </td>
         <td>
-          <para style="terp_default_Centre_9">[[ picking.date ]]</para>
+          <para style="P3">[[time.strftime('%d/%m/%Y', time.strptime(picking.min_date, '%Y-%m-%d')) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_9">[[time.strftime('%Y-%m-%d', time.strptime(picking.min_date, '%Y-%m-%d')) ]]</para>
+          <para style="P3">[[time.strftime('%d/%m/%Y %H:%M:%S ', time.strptime(picking.date, '%Y-%m-%d %H:%M:%S')) ]]</para>
         </td>
       </tr>
     </blockTable>
