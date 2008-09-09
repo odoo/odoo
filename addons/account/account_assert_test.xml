@@ -5,10 +5,6 @@
             <test expr="not len(line_id) or line_id[0].state != 'valid' or (sum([l.debit - l.credit for l in line_id]) &lt;= 0.00001)"/>
         </assert>
 
-        <!--assert model="account.invoice" search="[]" string="If the invoice is paid, third party accounting lines must be reconciled">
-			<test expr="not state == 'paid' or ..." />
-		</assert-->
-
         <assert model="account.account" search="[]" string="For all accounts, the balance is equal to the sum of the balance of its childs">
             <test expr="not len(child_id) or (balance - sum([c.balance for c in child_id]) &lt;= 0.00001)"/>
         </assert>

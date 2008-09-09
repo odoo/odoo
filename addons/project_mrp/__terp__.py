@@ -6,7 +6,13 @@
     "website" : "http://tinyerp.com/module_project.html",
     "category" : "Generic Modules/Projects & Services",
     "depends" : ["project", 'mrp'],
-    "description": "Link between project and mrp",
+    "description": """
+This module is used to automatically create tasks base on different
+procurements: sales order, manufacturing order, ...
+
+It is mainly used to invoices services based on tasks by doing sales
+order on services products.
+""",
     "init_xml" : [],
     "demo_xml" : [],
     "update_xml": ["project_workflow.xml"],

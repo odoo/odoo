@@ -33,6 +33,9 @@ import netsvc
 from osv import fields, osv
 from tools.translate import _
 
+import mx.DateTime
+from mx.DateTime import RelativeDateTime, now, DateTime, localtime
+
 class account_move_line(osv.osv):
     _name = "account.move.line"
     _description = "Entry lines"
@@ -336,20 +339,30 @@ class account_move_line(osv.osv):
 
     #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
 
-    def onchange_partner_id(self, cr, uid, ids, move_id, partner_id, account_id=None, debit=0, credit=0, journal=False):
-        if (not partner_id) or account_id:
-            return {}
-        part = self.pool.get('res.partner').browse(cr, uid, partner_id)
-        id1 = part.property_account_payable.id
-        id2 =  part.property_account_receivable.id
+    def onchange_partner_id(self, cr, uid, ids, move_id, partner_id, account_id=None, debit=0, credit=0, date=False, journal=False):
         val = {}
-        if journal:
-            jt = self.pool.get('account.journal').browse(cr, uid, journal).type
-            if jt=='sale':
-                val['account_id'] =  id2
-            elif jt=='purchase':
-                val['account_id'] =  id1
-        # Compute Maturity Date in val !
+        val['date_maturity'] = False
+        if not partner_id:
+            return {'value':val}
+        if not date:
+            date = now().strftime('%Y-%m-%d')
+        part = self.pool.get('res.partner').browse(cr, uid, partner_id)
+        if part.property_payment_term and part.property_payment_term.line_ids:# Compute Maturity Date in val !
+                line = part.property_payment_term.line_ids[0]
+                next_date = mx.DateTime.strptime(date, '%Y-%m-%d') + RelativeDateTime(days=line.days)
+                if line.condition == 'end of month':
+                    next_date += RelativeDateTime(day=-1)
+                next_date = next_date.strftime('%Y-%m-%d')
+                val['date_maturity'] = next_date
+        if not account_id:
+            id1 = part.property_account_payable.id
+            id2 =  part.property_account_receivable.id
+            if journal:
+                jt = self.pool.get('account.journal').browse(cr, uid, journal).type
+                if jt=='sale':
+                    val['account_id'] =  id2
+                elif jt=='purchase':
+                    val['account_id'] =  id1
         return {'value':val}
 
     #
@@ -682,7 +695,7 @@ class account_move_line(osv.osv):
         if ('account_id' in vals):
             account = account_obj.browse(cr, uid, vals['account_id'])
             if journal.type_control_ids:
-                type = account.type
+                type = account.user_type
                 for t in journal.type_control_ids:
                     if type==t.code:
                         ok = True

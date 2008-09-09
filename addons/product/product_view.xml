@@ -166,13 +166,24 @@
                 </form>
             </field>
         </record>
+        <record id="product_category_list_view" model="ir.ui.view">
+            <field name="name">product.category.list</field>
+            <field name="model">product.category</field>
+            <field name="type">tree</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <tree string="Product Categories">
+                    <field name="complete_name"/>
+                </tree>
+            </field>
+        </record>
         <record id="product_category_tree_view" model="ir.ui.view">
             <field name="name">product.category.tree</field>
             <field name="model">product.category</field>
             <field name="type">tree</field>
             <field name="field_parent">child_id</field>
             <field name="arch" type="xml">
-                <tree string="Products Categories">
+                <tree string="Product Categories">
                     <field name="complete_name"/>
                 </tree>
             </field>

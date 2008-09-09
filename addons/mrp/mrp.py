@@ -1124,11 +1124,11 @@ class StockPicking(osv.osv):
     #
     # Explode picking by replacing phantom BoMs
     #
-    def action_explode(self, cr, uid, ids, *args):
-        for pick in self.browse(cr, uid, ids):
+    def action_explode(self, cr, uid, picks, *args):
+        for pick in picks:
             for move in pick.move_lines:
                 self.pool.get('stock.move')._action_explode(cr, uid, move)
-        return True
+        return picks
 
 StockPicking()
 

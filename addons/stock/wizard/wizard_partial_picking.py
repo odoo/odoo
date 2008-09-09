@@ -151,9 +151,8 @@ def _do_split(self, cr, uid, data, context):
         if not new_picking:
             new_picking = pick_obj.copy(cr, uid, pick.id,
                     {
-                        'name' : '%s (splitted)' % pick.name,
                         'move_lines' : [],
-                        'state':'draft'
+                        'state':'draft',
                     })
         new_obj = move_obj.copy(cr, uid, move.id,
                 {
@@ -193,6 +192,7 @@ def _do_split(self, cr, uid, data, context):
         wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_confirm', cr)
     # Then we finish the good picking
     if new_picking:
+        pick_obj.write(cr, uid, [pick.id], {'backorder_id': new_picking})
         pick_obj.action_move(cr, uid, [new_picking])
         wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_done', cr)
         wf_service.trg_write(uid, 'stock.picking', pick.id, cr)

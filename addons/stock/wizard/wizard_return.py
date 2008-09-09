@@ -49,7 +49,7 @@ def _get_returns(self, cr, uid, data, context):
     pick=pick_obj.browse(cr, uid, [data['id']])[0]
     res={}
     fields.clear()
-    arch_lst=['<?xml version="1.0"?>', '<form string="Return lines">', '<label string="Indicate here the quantity of the return line." colspan="4"/>']
+    arch_lst=['<?xml version="1.0"?>', '<form string="Return lines">', '<label string="Provide the quantities of the returned products." colspan="4"/>']
     for m in [line for line in pick.move_lines]:
         quantity=m.product_qty
         arch_lst.append('<field name="return%s"/>\n<newline/>' % (m.id,))
@@ -60,7 +60,7 @@ def _get_returns(self, cr, uid, data, context):
         new_invoice_state='2binvoiced'
     else:
         new_invoice_state=pick.invoice_state
-    fields['invoice_state']={'string':'Invoice state', 'type':'selection', 'default':make_default(new_invoice_state), 'selection':[('2binvoiced', 'to be invoiced'), ('none', 'None')]}
+    fields['invoice_state']={'string':'Invoice state', 'type':'selection', 'default':make_default(new_invoice_state), 'required':True, 'selection':[('2binvoiced', 'to be invoiced'), ('none', 'None')]}
     arch_lst.append('</form>')
     arch.string='\n'.join(arch_lst)
     return res
