@@ -165,7 +165,6 @@ class sale_order(osv.osv):
     def _invoiced_search(self, cursor, user, obj, name, args):
         if not len(args):
             return []
-
         clause = ''
         no_invoiced = False
         for arg in args:
@@ -175,7 +174,6 @@ class sale_order(osv.osv):
                 else:
                     clause += 'AND inv.state <> \'paid\''
                     no_invoiced = True
-
         cursor.execute('SELECT rel.order_id ' \
                 'FROM sale_order_invoice_rel AS rel, account_invoice AS inv ' \
                 'WHERE rel.invoice_id = inv.id ' + clause)
@@ -474,12 +472,14 @@ class sale_order(osv.osv):
 
     def action_ship_create(self, cr, uid, ids, *args):
         picking_id=False
+        company = self.pool.get('res.users').browse(cr, uid, uid).company_id
         for order in self.browse(cr, uid, ids, context={}):
             output_id = order.shop_id.warehouse_id.lot_output_id.id
             picking_id = False
             for line in order.order_line:
                 proc_id=False
-                date_planned = (DateTime.now() + DateTime.RelativeDateTime(days=line.delay or 0.0)).strftime('%Y-%m-%d')
+                date_planned = DateTime.now() + DateTime.RelativeDateTime(days=line.delay or 0.0)
+                date_planned = (date_planned - DateTime.RelativeDateTime(days=company.security_lead)).strftime('%Y-%m-%d')
                 if line.state == 'done':
                     continue
                 if line.product_id and line.product_id.product_tmpl_id.type in ('product', 'consu'):

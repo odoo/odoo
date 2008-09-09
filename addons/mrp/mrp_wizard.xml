@@ -2,19 +2,19 @@
 <terp>
     <data>
         <record id="wiz_mrp_proc0" model="ir.actions.wizard">
-            <field name="name">Compute all schedulers</field>
+            <field name="name">Compute All Schedulers</field>
             <field name="wiz_name">mrp.procurement.compute.all</field>
         </record>
         <menuitem action="wiz_mrp_proc0" id="mrp_Sched_all" parent="mrp.menu_mrp_root" type="wizard"/>
         
         <record id="wiz_mrp_proc1" model="ir.actions.wizard">
-            <field name="name">Compute procurement</field>
+            <field name="name">Compute Procurements Only</field>
             <field name="wiz_name">mrp.procurement.compute</field>
         </record>
         <menuitem action="wiz_mrp_proc1" id="menu_wiz_mrp_proc1" parent="mrp.mrp_Sched_all" type="wizard"/>
         
         <record id="wiz_mrp_proc2" model="ir.actions.wizard">
-            <field name="name">Compute stock minimum rules</field>
+            <field name="name">Compute Stock Minimum Rules Only</field>
             <field name="wiz_name">mrp.procurement.orderpoint.compute</field>
         </record>
         <menuitem action="wiz_mrp_proc2" id="menu_wiz_mrp_proc2" parent="mrp.mrp_Sched_all" type="wizard"/>

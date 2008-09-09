@@ -110,6 +110,7 @@ def _do_split(self, cr, uid, data, context):
     new_moves = []
 
     complete, too_many, too_few = [], [], []
+    pool = pooler.get_pool(cr.dbname)
     for move in move_obj.browse(cr, uid, data['form'].get('moves',[])):
         if move.product_qty == data['form']['move%s' % move.id]:
             complete.append(move)
@@ -120,10 +121,10 @@ def _do_split(self, cr, uid, data, context):
 
         # Average price computation
         if (pick.type == 'in') and (move.product_id.cost_method == 'average'):
-            product_obj = pooler.get_pool(cr.dbname).get('product.product')
-            currency_obj = pooler.get_pool(cr.dbname).get('res.currency')
-            users_obj = pooler.get_pool(cr.dbname).get('res.users')
-            uom_obj = pooler.get_pool(cr.dbname).get('product.uom')
+            product_obj = pool.get('product.product')
+            currency_obj = pool.get('res.currency')
+            users_obj = pool.get('res.users')
+            uom_obj = pool.get('product.uom')
 
             product = product_obj.browse(cr, uid, [move.product_id.id])[0]
             user = users_obj.browse(cr, uid, [uid])[0]
@@ -151,6 +152,7 @@ def _do_split(self, cr, uid, data, context):
         if not new_picking:
             new_picking = pick_obj.copy(cr, uid, pick.id,
                     {
+                        'name': pool.get('ir.sequence').get(cr, uid, 'stock.picking'),
                         'move_lines' : [],
                         'state':'draft',
                     })
