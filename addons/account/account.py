@@ -51,6 +51,7 @@ class account_payment_term(osv.osv):
         'active': lambda *a: 1,
     }
     _order = "name"
+
     def compute(self, cr, uid, id, value, date_ref=False, context={}):
         if not date_ref:
             date_ref = now().strftime('%Y-%m-%d')
@@ -225,7 +226,7 @@ class account_account(osv.osv):
             ('closed','Closed'),
         ], 'Internal Type', required=True,),
 
-        'user_type': fields.many2one('account.account.type', 'Account Type'),
+        'user_type': fields.many2one('account.account.type', 'Account Type', required=True),
         'parent_id': fields.many2one('account.account','Parent', ondelete='cascade'),
         'child_parent_ids':fields.one2many('account.account','parent_id','Children'),
         'child_consol_ids':fields.many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', 'Consolidated Children',domain=[('type', '=', 'consolidation')]),
@@ -1647,15 +1648,10 @@ class account_account_template(osv.osv):
             ('payable','Payable'),
             ('view','View'),
             ('consolidation','Consolidation'),
-            ('income','Income'),
-            ('expense','Expense'),
-            ('tax','Tax'),
-            ('cash','Cash'),
-            ('asset','Asset'),
-            ('equity','Equity'),
+            ('other','Others'),
             ('closed','Closed'),
             ], 'Internal Type', required=True,),
-        'user_type': fields.many2one('account.account.type', 'Account Type'),
+        'user_type': fields.many2one('account.account.type', 'Account Type', required=True),
         'reconcile': fields.boolean('Allow Reconciliation', help="Check this option if the user can make a reconciliation of the entries in this account."),
         'shortcut': fields.char('Shortcut', size=12),
         'note': fields.text('Note'),
