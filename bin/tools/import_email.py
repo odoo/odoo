@@ -110,7 +110,7 @@ class ReceiverEmail2Event(object):
             self.save_mail(msg, subject, partners)
         else:
             warning = MIMEText((warn_msg % (subject,)).encode('utf-8'), 'plain', 'utf-8')
-            warning['Subject'] = 'Message de TinyERP'
+            warning['Subject'] = 'Message de OpenERP'
             warning['From'] = 'erp@steel-sa.com'
             warning['To'] = msg['From']
             s = smtplib.SMTP()

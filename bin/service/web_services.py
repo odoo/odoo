@@ -288,7 +288,7 @@ class db(netsvc.Service):
         """ Return the version of the server
             Used by the client to verify the compatibility with its own version
         """
-        return tinyerp_version
+        return openerp_version
 db()
 
 class common(netsvc.Service):
@@ -354,7 +354,7 @@ GNU Public Licence.
 (c) 2003-TODAY, Fabien Pinckaers - Tiny sprl''')
 
         if extended:
-            return info, tinyerp_version
+            return info, openerp_version
         return info
 
     def timezone_get(self, db, login, password):

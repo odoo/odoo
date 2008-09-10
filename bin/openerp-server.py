@@ -29,8 +29,8 @@
 ###############################################################################
 
 """
-Tiny ERP - Server
-Tiny ERP is an ERP+CRM program for small and medium businesses.
+OpenERP - Server
+OpenERP is an ERP+CRM program for small and medium businesses.
 
 The whole source code is distributed under the terms of the
 GNU Public Licence.
@@ -42,8 +42,8 @@ __author__ = release.author
 __version__ = release.version
 
 import __builtin__
-__builtin__.__dict__['tinyerp_version'] = __version__
-__builtin__.__dict__['tinyerp_version_string'] = "Tiny ERP Server " + __version__
+__builtin__.__dict__['openerp_version'] = __version__
+__builtin__.__dict__['openerp_version_string'] = "OpenERP Server " + __version__
 
 
 
@@ -117,10 +117,10 @@ You need to create it using the command:
 
     createdb --encoding=UNICODE '%s'
 
-When you run tinyerp-server for the first time it will initialise the
+When you run openerp-server for the first time it will initialise the
 database. You may force this behaviour at a later time by using the command:
 
-    ./tinyerp-server --init=all
+    ./openerp-server --init=all
 
 Two accounts will be created by default:
     1. login: admin      password : admin

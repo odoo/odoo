@@ -28,7 +28,7 @@
 ###############################################################################
 
 """
-Miscelleanous tools used by tiny ERP.
+Miscelleanous tools used by OpenERP.
 """
 
 import os, time, sys
@@ -171,7 +171,7 @@ def exec_command_pipe(name, *args):
 #file_path_addons = os.path.join(file_path_root, 'addons')
 
 def file_open(name, mode="r", subdir='addons', pathinfo=False):
-    """Open a file from the Tiny ERP root, using a subdir folder.
+    """Open a file from the OpenERP root, using a subdir folder.
 
     >>> file_open('hr/report/timesheer.xsl')
     >>> file_open('addons/hr/report/timesheet.xsl')

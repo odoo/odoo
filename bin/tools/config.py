@@ -74,10 +74,10 @@ class configmanager(object):
         
         assert_exit_levels = (netsvc.LOG_CRITICAL, netsvc.LOG_ERROR, netsvc.LOG_WARNING, netsvc.LOG_INFO, netsvc.LOG_DEBUG)
 
-        parser = optparse.OptionParser(version=tinyerp_version_string)
+        parser = optparse.OptionParser(version=openerp_version_string)
         
         parser.add_option("-c", "--config", dest="config", help="specify alternate config file")
-        parser.add_option("-s", "--save", action="store_true", dest="save", default=False, help="save configuration to ~/.terp_serverrc")
+        parser.add_option("-s", "--save", action="store_true", dest="save", default=False, help="save configuration to ~/.openerp_serverrc")
         parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False, help="enable debugging")
         parser.add_option("--pidfile", dest="pidfile", help="file where the server pid will be stored")
         parser.add_option("--logfile", dest="logfile", help="file where the server log will be stored")
@@ -121,7 +121,7 @@ class configmanager(object):
         parser.add_option_group(group)
 
         group = optparse.OptionGroup(parser, "Internationalisation options",
-            "Use these options to translate Tiny ERP to another language."
+            "Use these options to translate OpenERP to another language."
             "See i18n section of the user manual. Option '-d' is mandatory."
             "Option '-l' is mandatory in case of importation"
             )
@@ -143,11 +143,11 @@ class configmanager(object):
         # if the server is run by an unprivileged user, he has to specify location of a config file where he has the rights to write,
         # else he won't be able to save the configurations, or even to start the server...
         if os.name == 'nt':
-            rcfilepath = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), 'tinyerp-server.conf')
+            rcfilepath = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), 'openerp-server.conf')
         else:
-            rcfilepath = os.path.expanduser('~/.terp_serverrc')
+            rcfilepath = os.path.expanduser('~/.openerp_serverrc')
 
-        self.rcfile = fname or opt.config or os.environ.get('TERP_SERVER') or rcfilepath
+        self.rcfile = fname or opt.config or os.environ.get('OPENERP_SERVER') or rcfilepath
         self.load()
         
 

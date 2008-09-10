@@ -31,7 +31,7 @@
 
 #
 # This script will automatically test all profiles, localisations and language
-# packs You must start the Tiny ERP server and not have a test database. You
+# packs You must start the OpenERP server and not have a test database. You
 # may also have to change some data in the top of this file.
 #
 

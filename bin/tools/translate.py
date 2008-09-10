@@ -160,7 +160,7 @@ class TinyPoFile(object):
                           % { 'project': release.description,
                               'version': release.version,
                               'modules': reduce(lambda s, m: s + "#\t* %s\n" % m, modules, ""),
-                              'bugmail': 'support@tinyerp.com',     #TODO: use variable from release
+                              'bugmail': 'support@openerp.com',     #TODO: use variable from release
                               'now': mxdt.ISO.strUTC(mxdt.ISO.DateTime.utc()),
                             }
                           )

@@ -1410,7 +1410,7 @@ class orm(orm_template):
                                 try:
                                     cr.execute("ALTER TABLE \"%s\" ALTER COLUMN \"%s\" SET NOT NULL" % (self._table, k))
                                 except:
-                                    logger.notifyChannel('init', netsvc.LOG_WARNING, 'WARNING: unable to set column %s of table %s not null !\nTry to re-run: tinyerp-server.py --update=module\nIf it doesn\'t work, update records and execute manually:\nALTER TABLE %s ALTER COLUMN %s SET NOT NULL' % (k, self._table, self._table, k))
+                                    logger.notifyChannel('init', netsvc.LOG_WARNING, 'WARNING: unable to set column %s of table %s not null !\nTry to re-run: openerp-server.py --update=module\nIf it doesn\'t work, update records and execute manually:\nALTER TABLE %s ALTER COLUMN %s SET NOT NULL' % (k, self._table, self._table, k))
                             cr.commit()
                     elif len(res)==1:
                         f_pg_def = res[0]

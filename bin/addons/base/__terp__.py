@@ -31,9 +31,9 @@
     "name" : "Base",
     "version" : "1.0",
     "author" : "Tiny",
-    "website" : "http://tinyerp.com",
+    "website" : "http://openerp.com",
     "category" : "Generic Modules/Base",
-    "description": "The kernel of Tiny ERP, needed for all installation.",
+    "description": "The kernel of OpenERP, needed for all installation.",
     "depends" : [],
     "init_xml" : [
         "base_data.xml",
