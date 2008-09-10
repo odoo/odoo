@@ -378,6 +378,7 @@ class actions_server(osv.osv):
         'trigger_obj_id': fields.reference('Trigger On', selection=model_get, size=128),
         'message': fields.text('Message', translate=True),
         'address': fields.many2one('ir.model.fields', 'Email From / SMS'),
+        'sms': fields.text('SMS', size=160, translate=True),
         'child_ids': fields.one2many('ir.actions.actions', 'parent_id', 'Others Actions'),
         'usage': fields.char('Action Usage', size=32),
         'type': fields.char('Report Type', size=32, required=True),
@@ -493,7 +494,12 @@ class actions_server(osv.osv):
                 wf_service.trg_validate(uid, model, int(id), action.trigger_name, cr)
                 
             if action.state == 'sms':
-                #TODO: Apply mearge with the field
+                #TODO: set the user and password from the system
+                # for the sms gateway user / password
+                api_id = ''
+                text = action.sms
+                to = self.get_field_value(cr, uid, str(action.message), action, context)
+                #TODO: Apply message mearge with the field
                 if tools.sms_send(user, password, api_id, text, to) == True:
                     logger.notifyChannel('sms', netsvc.LOG_INFO, 'SMS successfully send to : %s' % (action.address))
                 else:
