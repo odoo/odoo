@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@tinyerp.com"
-"POT-Creation-Date: 2008-09-04 08:36:32+0000"
-"PO-Revision-Date: 2008-09-04 08:36:32+0000"
+"Report-Msgid-Bugs-To: support@openerp.com"
+"POT-Creation-Date: 2008-09-10 12:50:44+0000"
+"PO-Revision-Date: 2008-09-10 12:50:44+0000"
 "Last-Translator: <>"
 "Language-Team: "
 "MIME-Version: 1.0"
@@ -38,6 +38,11 @@ msgid "Account5 Id"
 msgstr ""
 
 #. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
+msgid "Analytic Plan Instance"
+msgstr ""
+
+#. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,rate:0
 msgid "Rate (%)"
 msgstr ""
@@ -45,6 +50,11 @@ msgstr ""
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
 msgid "Analytic Distribution Line"
+msgstr ""
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
+msgid "Analytic Instance Line"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -132,10 +142,10 @@ msgid "Analytic Account Ref."
 msgstr ""
 
 #. module: account_analytic_plans
+#: field:account.analytic.default,analytics_id:0
 #: field:account.analytic.plan.instance,name:0
 #: field:account.invoice.line,analytics_id:0
 #: field:account.move.line,analytics_id:0
-#: field:product.product,property_account_distribution:0
 #: view:account.analytic.plan.instance:0
 msgid "Analytic Distribution"
 msgstr ""
@@ -199,11 +209,6 @@ msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: account_analytic_plans
-#: help:product.product,property_account_distribution:0
-msgid "This Analytic Distribution will be use in sale order line and invoice lines"
-msgstr ""
-
-#. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_line
 #: view:account.analytic.plan.line:0
 msgid "Analytic Plan Lines"
@@ -243,12 +248,6 @@ msgstr ""
 #: wizard_field:wizard.crossovered.analytic,init,journal_ids:0
 #: field:account.analytic.plan.instance,journal_id:0
 msgid "Analytic Journal"
-msgstr ""
-
-#. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
-#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
-msgid "Object for create analytic entries from invoice lines"
 msgstr ""
 
 #. module: account_analytic_plans

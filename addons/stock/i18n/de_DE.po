@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@tinyerp.com"
-"POT-Creation-Date: 2008-09-04 08:33:13+0000"
-"PO-Revision-Date: 2008-09-04 08:33:13+0000"
+"Report-Msgid-Bugs-To: support@openerp.com"
+"POT-Creation-Date: 2008-09-10 12:48:25+0000"
+"PO-Revision-Date: 2008-09-10 12:48:25+0000"
 "Last-Translator: <>"
 "Language-Team: "
 "MIME-Version: 1.0"
@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: "
 
 #. module: stock
-#: xsl:stock.picking.list:0
+#: rml:stock.picking.list:0
 msgid "Shipping Address:"
 msgstr ""
 
@@ -28,12 +28,12 @@ msgstr ""
 #. module: stock
 #: selection:stock.location,allocation_method:0
 msgid "LIFO"
-msgstr "LiFo"
+msgstr ""
 
 #. module: stock
 #: selection:stock.picking,move_type:0
 msgid "All at once"
-msgstr "Alles zugleich"
+msgstr ""
 
 #. module: stock
 #: field:stock.location,chained_location_id:0
@@ -52,8 +52,13 @@ msgid "Not from Packing"
 msgstr ""
 
 #. module: stock
-#: view:stock.location:0
-msgid "Chained Locations"
+#: rml:stock.picking.list:0
+msgid "Concerns"
+msgstr ""
+
+#. module: stock
+#: selection:stock.location,chained_auto_packing:0
+msgid "Manual Operation"
 msgstr ""
 
 #. module: stock
@@ -67,9 +72,14 @@ msgid "Stock Management"
 msgstr ""
 
 #. module: stock
+#: view:stock.location:0
+msgid "Chained Locations"
+msgstr ""
+
+#. module: stock
 #: model:ir.actions.report.xml,name:stock.report_product_history
 msgid "Future stock forecast"
-msgstr "Lagervorschau"
+msgstr ""
 
 #. module: stock
 #: selection:stock.picking,type:0
@@ -121,7 +131,12 @@ msgstr ""
 #: field:stock.inventory.line,product_uom:0
 #: field:stock.move,product_uom:0
 msgid "Product UOM"
-msgstr "Maßeinheit"
+msgstr ""
+
+#. module: stock
+#: rml:stock.picking.list:0
+msgid "Customer Ref."
+msgstr ""
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations_partner
@@ -160,7 +175,7 @@ msgid "Stock journal"
 msgstr ""
 
 #. module: stock
-#: xsl:stock.picking.list:0
+#: rml:stock.picking.list:0
 #: field:stock.tracking,name:0
 msgid "Tracking"
 msgstr ""
@@ -172,13 +187,14 @@ msgid "Ok"
 msgstr ""
 
 #. module: stock
-#: view:stock.picking:0
-msgid "Cancel Assignation"
+#: help:product.template,property_stock_account_input:0
+msgid "This account will be used, instead of the default one, to value input stock"
 msgstr ""
 
 #. module: stock
-#: help:product.template,property_stock_account_input:0
-msgid "This account will be used, instead of the default one, to value input stock"
+#, python-format
+#: code:addons/stock/stock.py:0
+msgid "UserError"
 msgstr ""
 
 #. module: stock
@@ -191,6 +207,11 @@ msgstr ""
 #: field:stock.picking,note:0
 #: view:stock.picking:0
 msgid "Notes"
+msgstr ""
+
+#. module: stock
+#: field:stock.picking,max_date:0
+msgid "Max. Date"
 msgstr ""
 
 #. module: stock
@@ -215,6 +236,13 @@ msgid "Packing list"
 msgstr ""
 
 #. module: stock
+#, python-format
+#: code:addons/stock/stock.py:0
+#: code:addons/stock/wizard/wizard_track_line.py:0
+msgid "Error!"
+msgstr ""
+
+#. module: stock
 #: xsl:stock.location.overview:0
 #: xsl:stock.location.overview.all:0
 msgid "Amount"
@@ -228,11 +256,6 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_location_open
 msgid "Products"
-msgstr ""
-
-#. module: stock
-#: model:ir.actions.wizard,name:stock.partial_picking
-msgid "Partial picking"
 msgstr ""
 
 #. module: stock
@@ -256,9 +279,14 @@ msgid "Origin"
 msgstr ""
 
 #. module: stock
-#: model:ir.ui.menu,name:stock.menu_stock_configuration
-msgid "Configuration"
-msgstr "Konfiguration"
+#: model:ir.actions.wizard,name:stock.partial_picking
+msgid "Partial packing"
+msgstr ""
+
+#. module: stock
+#: field:stock.picking,min_date:0
+msgid "Min. Date"
+msgstr ""
 
 #. module: stock
 #: help:stock.move,tracking_id:0
@@ -266,6 +294,12 @@ msgid "Tracking lot is the code that will be put on the logistic unit/pallet"
 msgstr ""
 
 #. module: stock
+#: model:ir.ui.menu,name:stock.menu_stock_configuration
+msgid "Configuration"
+msgstr "Konfiguration"
+
+#. module: stock
+#: field:stock.picking,name:0
 #: field:stock.production.lot,ref:0
 #: field:stock.tracking,serial:0
 msgid "Reference"
@@ -274,12 +308,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move
 msgid "Stock Move"
-msgstr "Lagerbewegung"
+msgstr ""
 
 #. module: stock
 #: selection:stock.picking,type:0
 msgid "Getting Goods"
-msgstr "Waren empfangen"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_picking_move_wizard
@@ -290,7 +324,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.picking,type:0
 msgid "Internal"
-msgstr "Intern"
+msgstr ""
 
 #. module: stock
 #: wizard_field:stock.invoice_onshipping,init,group:0
@@ -332,14 +366,14 @@ msgid "Production lot"
 msgstr ""
 
 #. module: stock
-#: field:stock.picking,name:0
-msgid "Packing name"
-msgstr ""
-
-#. module: stock
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Confirm"
+msgstr ""
+
+#. module: stock
+#: view:stock.picking:0
+msgid "Invoice Control"
 msgstr ""
 
 #. module: stock
@@ -355,12 +389,12 @@ msgstr ""
 #. module: stock
 #: selection:stock.location,usage:0
 msgid "Internal Location"
-msgstr "Interner Lagerort"
+msgstr ""
 
 #. module: stock
 #: selection:stock.location,allocation_method:0
 msgid "FIFO"
-msgstr "FiFo"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree2_delivery
@@ -374,13 +408,19 @@ msgid "Priority"
 msgstr ""
 
 #. module: stock
-#: xsl:stock.picking.list:0
-msgid "State"
+#: selection:stock.move,state:0
+msgid "cancel"
+msgstr ""
+
+#. module: stock
+#: selection:stock.move,state:0
+#: selection:stock.picking,state:0
+msgid "Waiting"
 msgstr ""
 
 #. module: stock
 #: rml:lot.location:0
-#: xsl:stock.picking.list:0
+#: rml:stock.picking.list:0
 #: model:ir.model,name:stock.model_stock_location
 #: field:stock.inventory.line,location_id:0
 #: field:stock.picking,location_id:0
@@ -396,16 +436,16 @@ msgstr ""
 #: model:ir.model,name:stock.model_stock_warehouse
 #: view:stock.warehouse:0
 msgid "Warehouse"
-msgstr "Warenlager"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_lot_location
 msgid "Lots by location"
-msgstr "Chargen je Lagerort"
+msgstr ""
 
 #. module: stock
-#: xsl:stock.picking.list:0
-msgid "Qty"
+#: wizard_button:stock.partial_picking,init,split:0
+msgid "Make Picking"
 msgstr ""
 
 #. module: stock
@@ -419,8 +459,9 @@ msgid "UOM"
 msgstr ""
 
 #. module: stock
-#: field:stock.location,chained_auto_packing:0
-msgid "Chained Auto-Packing"
+#, python-format
+#: code:addons/stock/stock.py:0
+msgid "You can not remove a lot line !"
 msgstr ""
 
 #. module: stock
@@ -439,14 +480,8 @@ msgid "Fixed Location"
 msgstr ""
 
 #. module: stock
-#: view:stock.picking:0
-msgid "Cancel assignation"
-msgstr ""
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.action_location_tree
-#: model:ir.ui.menu,name:stock.menu_action_location_tree
-msgid "Locations Structure"
+#: wizard_view:stock.partial_picking,end2:0
+msgid "Packing result"
 msgstr ""
 
 #. module: stock
@@ -459,11 +494,23 @@ msgstr ""
 #: field:res.partner,property_stock_customer:0
 #: selection:stock.location,usage:0
 msgid "Customer Location"
-msgstr "Kundenlagerort"
+msgstr ""
 
 #. module: stock
 #: view:stock.location:0
 msgid "Stock location tree"
+msgstr ""
+
+#. module: stock
+#, python-format
+#: code:addons/stock/stock.py:0
+msgid "You can only delete draft moves."
+msgstr ""
+
+#. module: stock
+#, python-format
+#: code:addons/stock/wizard/wizard_track_line.py:0
+msgid "No production sequence defined"
 msgstr ""
 
 #. module: stock
@@ -495,7 +542,12 @@ msgstr ""
 #: model:ir.actions.wizard,name:stock.action4
 #: model:ir.actions.wizard,name:stock.action_lot2
 msgid "Downstream traceability"
-msgstr "Downstream Verfolgbarkeit"
+msgstr ""
+
+#. module: stock
+#: view:res.partner:0
+msgid "Sales & Purchases"
+msgstr ""
 
 #. module: stock
 #: constraint:ir.ui.view:0
@@ -503,9 +555,14 @@ msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: stock
-#: field:stock.location,usage:0
-msgid "Location type"
-msgstr "Lagerorttyp"
+#: field:stock.production.lot,revisions:0
+msgid "Revisions"
+msgstr ""
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_customers
+msgid "Customers"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree
@@ -516,17 +573,17 @@ msgstr ""
 #. module: stock
 #: selection:stock.location,allocation_method:0
 msgid "Nearest"
-msgstr "Nächster"
+msgstr ""
 
 #. module: stock
 #: selection:stock.location,usage:0
 msgid "Procurement"
-msgstr "Beschaffung"
+msgstr ""
 
 #. module: stock
 #: field:stock.location,location_id:0
 msgid "Parent Location"
-msgstr "Hauptlagerort"
+msgstr ""
 
 #. module: stock
 #: field:stock.inventory,date:0
@@ -537,8 +594,8 @@ msgid "Date create"
 msgstr ""
 
 #. module: stock
-#: xsl:stock.picking.list:0
-msgid "PACKINGLIST"
+#: view:stock.picking:0
+msgid "Cancel assignation"
 msgstr ""
 
 #. module: stock
@@ -555,11 +612,16 @@ msgstr ""
 #: field:res.partner,property_stock_supplier:0
 #: selection:stock.location,usage:0
 msgid "Supplier Location"
-msgstr "Lieferantenlagerort"
+msgstr ""
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Force Assignation"
+msgstr ""
+
+#. module: stock
+#: view:stock.move:0
+msgid "Moves"
 msgstr ""
 
 #. module: stock
@@ -573,6 +635,12 @@ msgid "Tiny sprl"
 msgstr ""
 
 #. module: stock
+#: field:stock.location,chained_auto_packing:0
+#: selection:stock.location,chained_auto_packing:0
+msgid "Automatic Move"
+msgstr ""
+
+#. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree4
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree4
 msgid "Getting Products"
@@ -582,7 +650,7 @@ msgstr ""
 #: field:stock.move,location_dest_id:0
 #: field:stock.picking,location_dest_id:0
 msgid "Dest. Location"
-msgstr "Ziellagerort"
+msgstr ""
 
 #. module: stock
 #: field:stock.move,product_packaging:0
@@ -592,7 +660,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.move,priority:0
 msgid "Urgent"
-msgstr "Dringend"
+msgstr ""
 
 #. module: stock
 #: help:product.category,property_stock_account_input_categ:0
@@ -600,7 +668,6 @@ msgid "This account will be used to value the input stock"
 msgstr ""
 
 #. module: stock
-#: xsl:stock.picking.list:0
 #: field:stock.production.lot,name:0
 msgid "Serial"
 msgstr ""
@@ -627,17 +694,12 @@ msgstr ""
 #. module: stock
 #: selection:stock.picking,type:0
 msgid "Sending Goods"
-msgstr " Waren versenden"
-
-#. module: stock
-#: model:stock.location,name:stock.stock_location_customers
-msgid "Customers"
 msgstr ""
 
 #. module: stock
 #: field:stock.warehouse,lot_output_id:0
 msgid "Location Output"
-msgstr "Lagerort Output"
+msgstr ""
 
 #. module: stock
 #: help:product.template,property_stock_production:0
@@ -653,7 +715,7 @@ msgstr ""
 #: selection:stock.move,state:0
 #: selection:stock.picking,state:0
 msgid "Confirmed"
-msgstr "Bestätigt"
+msgstr ""
 
 #. module: stock
 #: view:stock.picking:0
@@ -663,7 +725,7 @@ msgstr ""
 #. module: stock
 #: field:stock.location,name:0
 msgid "Location Name"
-msgstr "Lagerort Name"
+msgstr ""
 
 #. module: stock
 #: view:stock.inventory:0
@@ -688,19 +750,20 @@ msgid "Draft"
 msgstr ""
 
 #. module: stock
-#: xsl:stock.picking.list:0
+#: rml:stock.picking.list:0
 msgid "Packing Date"
 msgstr ""
 
 #. module: stock
-#: selection:stock.move,state:0
-msgid "cancel"
-msgstr "Verwerfen"
+#: model:ir.actions.act_window,name:stock.action_location_tree
+#: model:ir.ui.menu,name:stock.menu_action_location_tree
+msgid "Stock Locations Structure"
+msgstr ""
 
 #. module: stock
 #: selection:stock.move,priority:0
 msgid "Not urgent"
-msgstr "Nicht dringend"
+msgstr ""
 
 #. module: stock
 #: field:stock.move,product_uos_qty:0
@@ -727,11 +790,11 @@ msgstr ""
 #. module: stock
 #: field:stock.location,posy:0
 msgid "Shelves (Y)"
-msgstr "Position Y"
+msgstr ""
 
 #. module: stock
-#: xsl:stock.picking.list:0
-msgid "Concerns:"
+#: field:stock.location,usage:0
+msgid "Location type"
 msgstr ""
 
 #. module: stock
@@ -748,8 +811,8 @@ msgid "Make packing"
 msgstr ""
 
 #. module: stock
-#: view:res.partner:0
-msgid "Sales & Purchases"
+#: field:stock.picking,backorder_id:0
+msgid "Back Order"
 msgstr ""
 
 #. module: stock
@@ -775,7 +838,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.picking,move_type:0
 msgid "Direct Delivery"
-msgstr "Sofortige Auslieferung"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.wizard,name:stock.track_line
@@ -789,19 +852,19 @@ msgid "Production Lots"
 msgstr ""
 
 #. module: stock
-#: xsl:stock.picking.list:0
+#: rml:stock.picking.list:0
 msgid "Shipping Date"
 msgstr ""
 
 #. module: stock
-#: xsl:stock.picking.list:0
+#: rml:stock.picking.list:0
 msgid "Recipient"
 msgstr ""
 
 #. module: stock
 #: view:product.template:0
 msgid "Properties"
-msgstr "Eigenschaften"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_incoterms_tree
@@ -825,12 +888,12 @@ msgstr ""
 #. module: stock
 #: field:stock.warehouse,lot_stock_id:0
 msgid "Location Stock"
-msgstr "Lagerort "
+msgstr ""
 
 #. module: stock
 #: field:product.template,property_stock_procurement:0
 msgid "Procurement Location"
-msgstr "Beschaffungslager"
+msgstr ""
 
 #. module: stock
 #: field:stock.incoterms,active:0
@@ -846,8 +909,8 @@ msgid "Tracking prefix"
 msgstr ""
 
 #. module: stock
-#: xsl:stock.picking.list:0
-msgid "Shipping ref."
+#: wizard_view:stock.partial_picking,end2:0
+msgid "The packing has been successfully made !"
 msgstr ""
 
 #. module: stock
@@ -860,7 +923,7 @@ msgstr ""
 #: field:stock.move,address_id:0
 #: field:stock.picking.move.wizard,address_id:0
 msgid "Dest. Address"
-msgstr "Zieladresse"
+msgstr ""
 
 #. module: stock
 #: help:product.template,property_stock_procurement:0
@@ -905,12 +968,12 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_product_location
 msgid "Products Localisations"
-msgstr "Produktlagerort"
+msgstr ""
 
 #. module: stock
 #: field:stock.warehouse,lot_input_id:0
 msgid "Location Input"
-msgstr "Lagerort Input"
+msgstr ""
 
 #. module: stock
 #: field:stock.location,allocation_method:0
@@ -924,15 +987,15 @@ msgid "Locations"
 msgstr ""
 
 #. module: stock
-#: wizard_button:stock.back_order.partial_picking,init,split:0
-msgid "Make Picking"
+#: rml:stock.picking.list:0
+msgid "Qty"
 msgstr ""
 
 #. module: stock
 #: selection:stock.move,state:0
 #: selection:stock.picking,state:0
 msgid "Assigned"
-msgstr "Zugewiesen"
+msgstr ""
 
 #. module: stock
 #: view:stock.picking:0
@@ -942,7 +1005,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.location,usage:0
 msgid "Production"
-msgstr "Produktion"
+msgstr ""
 
 #. module: stock
 #: selection:stock.inventory,state:0
@@ -962,7 +1025,7 @@ msgstr ""
 #. module: stock
 #: wizard_button:stock.picking.make,init,end:0
 #: wizard_button:stock.move.split,init,end:0
-#: wizard_button:stock.back_order.partial_picking,init,end:0
+#: wizard_button:stock.partial_picking,init,end:0
 #: wizard_button:stock.return.picking,init,end:0
 #: wizard_button:stock.move.track,init,end:0
 #: wizard_button:stock.invoice_onshipping,init,end:0
@@ -974,19 +1037,24 @@ msgid "Cancel"
 msgstr ""
 
 #. module: stock
+#: wizard_button:stock.partial_picking,end2,end:0
+msgid "Close"
+msgstr ""
+
+#. module: stock
 #: model:ir.actions.report.xml,name:stock.report_move_labels
 msgid "Print Item Labels"
 msgstr ""
 
 #. module: stock
-#: view:stock.move:0
-msgid "Moves"
+#: help:stock.location,chained_auto_packing:0
+msgid "This is used only if you selected a chained location type.\n"
+"The 'Automatic Move' value will create a stock move after the current one that will be validated automatically. With 'Manual Operation', the stock move has to be validated by a worker. With 'Automatic No Step Added', the location is replaced in the original move."
 msgstr ""
 
 #. module: stock
-#: view:stock.move:0
-#: view:stock.picking:0
-msgid "Move Information"
+#: selection:stock.location,chained_auto_packing:0
+msgid "Automatic No Step Added"
 msgstr ""
 
 #. module: stock
@@ -1017,14 +1085,9 @@ msgid "The Object name must start with x_ and not contain any special character 
 msgstr ""
 
 #. module: stock
-#: view:stock.picking:0
-msgid "Split move lines in two"
-msgstr ""
-
-#. module: stock
 #: field:stock.move,date_planned:0
 msgid "Scheduled date"
-msgstr "Geplantes Datum"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_warehouse_form
@@ -1035,12 +1098,12 @@ msgstr ""
 #. module: stock
 #: field:product.template,property_stock_inventory:0
 msgid "Inventory Location"
-msgstr "Bestandslagerort"
+msgstr ""
 
 #. module: stock
 #: field:stock.location,account_id:0
 msgid "Inventory Account"
-msgstr "Inventurkonto"
+msgstr ""
 
 #. module: stock
 #: view:stock.inventory:0
@@ -1065,8 +1128,8 @@ msgid "Low Level"
 msgstr "Untere Ebene"
 
 #. module: stock
-#: xsl:stock.picking.list:0
-msgid "Customer ref."
+#: view:stock.picking:0
+msgid "Split move lines in two"
 msgstr ""
 
 #. module: stock
@@ -1110,7 +1173,7 @@ msgstr ""
 #: xsl:stock.location.overview:0
 #: xsl:stock.location.overview.all:0
 #: rml:lot.location:0
-#: xsl:stock.picking.list:0
+#: rml:stock.picking.list:0
 #: field:stock.inventory.line,product_id:0
 #: field:stock.move,product_id:0
 msgid "Product"
@@ -1122,7 +1185,7 @@ msgid "Return"
 msgstr ""
 
 #. module: stock
-#: xsl:stock.picking.list:0
+#: rml:stock.picking.list:0
 #: field:stock.production.lot.revision,description:0
 msgid "Description"
 msgstr ""
@@ -1141,14 +1204,14 @@ msgstr ""
 #. module: stock
 #: field:stock.location,posz:0
 msgid "Height (Z)"
-msgstr "Position Z"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action5
 #: model:ir.actions.wizard,name:stock.action2
 #: model:ir.actions.wizard,name:stock.action_lot4
 msgid "Upstream traceability"
-msgstr "Verfolgung Upstream"
+msgstr ""
 
 #. module: stock
 #: view:stock.inventory:0
@@ -1156,10 +1219,9 @@ msgid "Cancel Inventory"
 msgstr ""
 
 #. module: stock
-#: selection:stock.move,state:0
-#: selection:stock.picking,state:0
-msgid "Waiting"
-msgstr "Wartend"
+#: view:stock.picking:0
+msgid "Cancel Assignation"
+msgstr ""
 
 #. module: stock
 #: help:product.category,property_stock_journal:0
@@ -1181,7 +1243,7 @@ msgstr ""
 #. module: stock
 #: field:stock.location,posx:0
 msgid "Corridor (X)"
-msgstr "Position X"
+msgstr ""
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_suppliers
@@ -1227,8 +1289,8 @@ msgid "Revision name"
 msgstr ""
 
 #. module: stock
-#: field:stock.production.lot,revisions:0
-msgid "Revisions"
+#: field:stock.move,product_uos:0
+msgid "Product UOS"
 msgstr ""
 
 #. module: stock
@@ -1239,7 +1301,13 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_location_overview
 msgid "Location Overview"
-msgstr "Lagerorte Übersicht"
+msgstr ""
+
+#. module: stock
+#: view:stock.move:0
+#: view:stock.picking:0
+msgid "Move Information"
+msgstr ""
 
 #. module: stock
 #: view:stock.location:0
@@ -1249,6 +1317,11 @@ msgstr ""
 #. module: stock
 #: view:product.template:0
 msgid "Accounting Entries"
+msgstr ""
+
+#. module: stock
+#: view:stock.picking:0
+msgid "Calendar View"
 msgstr ""
 
 #. module: stock
@@ -1287,12 +1360,12 @@ msgstr ""
 #: field:stock.inventory,name:0
 #: selection:stock.location,usage:0
 msgid "Inventory"
-msgstr "Lagerbestand"
+msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_line
 msgid "Inventory line"
-msgstr "Lagerbestandspos."
+msgstr ""
 
 #. module: stock
 #: field:stock.location,chained_delay:0
@@ -1307,7 +1380,12 @@ msgstr ""
 #. module: stock
 #: field:stock.move,location_id:0
 msgid "Source Location"
-msgstr "Lagerort"
+msgstr ""
+
+#. module: stock
+#: rml:stock.picking.list:0
+msgid "Packing List"
+msgstr ""
 
 #. module: stock
 #: view:stock.picking:0
@@ -1338,18 +1416,19 @@ msgid "Stock Input Account"
 msgstr ""
 
 #. module: stock
-#: field:stock.move,product_uos:0
-msgid "Product UOS"
+#: model:ir.actions.act_window,name:stock.action_picking_calendar_delivery
+#: model:ir.ui.menu,name:stock.menu_picking_calendar_delivery
+msgid "Calendar of Deliveries"
 msgstr ""
 
 #. module: stock
 #: field:stock.location,comment:0
 #: view:stock.location:0
 msgid "Additional Information"
-msgstr "Zusätzliche Informationen"
+msgstr ""
 
 #. module: stock
 #: field:product.template,property_stock_production:0
 msgid "Production Location"
-msgstr "Lagerort Produktion"
+msgstr ""
 

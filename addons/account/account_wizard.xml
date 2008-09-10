@@ -23,23 +23,12 @@
 
         <!-- Import entry in statement -->
 
-        <record id="wizard_populate_payment_from_inv" model="ir.actions.act_window">
-            <field name="name">Entries by Statements</field>
-            <field name="res_model">account.move.line</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="target">new</field>
-        </record>
-
-        <!--
         <wizard
             string="Import invoices"
             model="account.bank.statement"
-            name="populate_payment_from_inv" 
+            name="populate_statement_from_inv" 
             menu="False" 
-            id="wizard_populate_payment_from_inv"/>
-        -->
-
+            id="wizard_populate_statement_from_inv"/>
 
         <!-- manual reconcile -->
         <wizard id="wizard_reconcile" model="account.move.line" name="account.move.line.reconcile" string="Reconcile Entries"/>
@@ -78,8 +67,6 @@
         <wizard id="wizard_invoice_state_confirm" keyword="client_action_multi" model="account.invoice" multi="True" name="account.invoice.state.confirm" string="Confirm draft invoices"/>
         <wizard id="wizard_invoice_state_cancel" keyword="client_action_multi" model="account.invoice" multi="True" name="account.invoice.state.cancel" string="Cancel selected invoices"/>
 
-
-        <wizard id="wizard_account_duplicate" keyword="tree_but_action" model="account.account" name="account.wizard.account.duplicate" string="Duplicate"/>
 
         <!-- account.move validate -->
         <wizard id="wizard_validate_account_moves" menu="False" model="account.move" name="account.move.validate" string="Validate Account Moves"/>

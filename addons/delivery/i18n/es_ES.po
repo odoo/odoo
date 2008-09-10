@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@tinyerp.com"
-"POT-Creation-Date: 2008-09-04 08:34:48+0000"
-"PO-Revision-Date: 2008-09-04 08:34:48+0000"
+"Report-Msgid-Bugs-To: support@openerp.com"
+"POT-Creation-Date: 2008-09-10 12:49:35+0000"
+"PO-Revision-Date: 2008-09-10 12:49:35+0000"
 "Last-Translator: <>"
 "Language-Team: "
 "MIME-Version: 1.0"
@@ -31,6 +31,11 @@ msgid "Delivery Grid"
 msgstr ""
 
 #. module: delivery
+#: view:res.partner:0
+msgid "Sales & Purchases"
+msgstr ""
+
+#. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid "<="
 msgstr ""
@@ -51,6 +56,12 @@ msgid "Create delivery line"
 msgstr ""
 
 #. module: delivery
+#, python-format
+#: code:addons/delivery/wizard/delivery_sale_order.py:0
+msgid "No grid avaible !"
+msgstr ""
+
+#. module: delivery
 #: field:delivery.carrier,partner_id:0
 msgid "Carrier Partner"
 msgstr ""
@@ -61,18 +72,25 @@ msgid "States"
 msgstr ""
 
 #. module: delivery
-#: model:ir.actions.wizard,name:delivery.wizard_deliver_line_add
-msgid "Add delivery line"
-msgstr ""
-
-#. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
 msgid "Delivery"
 msgstr ""
 
 #. module: delivery
+#, python-format
+#: code:addons/delivery/wizard/delivery_sale_order.py:0
+msgid "The order state have to be draft to add delivery lines."
+msgstr ""
+
+#. module: delivery
 #: field:delivery.grid,line_ids:0
 msgid "Grid Line"
+msgstr ""
+
+#. module: delivery
+#, python-format
+#: code:addons/delivery/delivery.py:0
+msgid "No price avaible !"
 msgstr ""
 
 #. module: delivery
@@ -85,6 +103,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:delivery.action_picking_tree5
 #: model:ir.ui.menu,name:delivery.menu_action_picking_tree5
 msgid "Generate Draft Invoices On Receptions"
+msgstr ""
+
+#. module: delivery
+#, python-format
+#: code:addons/delivery/wizard/delivery_sale_order.py:0
+msgid "No grid matching for this carrier !"
 msgstr ""
 
 #. module: delivery
@@ -103,6 +127,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
 #: model:ir.ui.menu,name:delivery.menu_action_picking_tree3
 msgid "Packings to be invoiced"
+msgstr ""
+
+#. module: delivery
+#, python-format
+#: code:addons/delivery/stock.py:0
+msgid "Warning"
 msgstr ""
 
 #. module: delivery
@@ -175,7 +205,7 @@ msgstr ""
 #. module: delivery
 #: view:sale.order:0
 msgid "Notes"
-msgstr "Notas"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid.line,variable_factor:0
@@ -202,11 +232,6 @@ msgid "Carrier"
 msgstr ""
 
 #. module: delivery
-#: view:res.partner:0
-msgid "Properties"
-msgstr ""
-
-#. module: delivery
 #: selection:delivery.grid.line,price_type:0
 msgid "Fixed"
 msgstr ""
@@ -219,6 +244,12 @@ msgstr ""
 #. module: delivery
 #: field:delivery.grid,zip_from:0
 msgid "Start Zip"
+msgstr ""
+
+#. module: delivery
+#, python-format
+#: code:addons/delivery/wizard/delivery_sale_order.py:0
+msgid "Order not in draft state !"
 msgstr ""
 
 #. module: delivery
@@ -244,6 +275,12 @@ msgid "Sale Price"
 msgstr ""
 
 #. module: delivery
+#, python-format
+#: code:addons/delivery/delivery.py:0
+msgid "No line matched this order in the choosed delivery grids !"
+msgstr ""
+
+#. module: delivery
 #: field:delivery.grid,zip_to:0
 msgid "To Zip"
 msgstr ""
@@ -264,11 +301,8 @@ msgid "Complete this field if you plan to invoice the shipping based on packings
 msgstr ""
 
 #. module: delivery
-#: wizard_field:delivery.sale.order,init,carrier_id:0
-#: wizard_view:delivery.sale.order,init:0
-#: field:res.partner,property_delivery_carrier:0
-#: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
-msgid "Delivery Method"
+#: model:ir.actions.wizard,name:delivery.wizard_deliver_line_add
+msgid "Delivery Costs"
 msgstr ""
 
 #. module: delivery
@@ -280,6 +314,20 @@ msgstr ""
 #. module: delivery
 #: view:delivery.grid:0
 msgid "Delivery grids"
+msgstr ""
+
+#. module: delivery
+#: wizard_field:delivery.sale.order,init,carrier_id:0
+#: wizard_view:delivery.sale.order,init:0
+#: field:res.partner,property_delivery_carrier:0
+#: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
+msgid "Delivery Method"
+msgstr ""
+
+#. module: delivery
+#, python-format
+#: code:addons/delivery/stock.py:0
+msgid "The carrier %s (id: %d) has no delivery grid!"
 msgstr ""
 
 #. module: delivery

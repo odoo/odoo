@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@tinyerp.com"
-"POT-Creation-Date: 2008-09-04 08:40:19+0000"
-"PO-Revision-Date: 2008-09-04 08:40:19+0000"
+"Report-Msgid-Bugs-To: support@openerp.com"
+"POT-Creation-Date: 2008-09-10 12:53:38+0000"
+"PO-Revision-Date: 2008-09-10 12:53:38+0000"
 "Last-Translator: <>"
 "Language-Team: "
 "MIME-Version: 1.0"
@@ -16,13 +16,20 @@ msgstr ""
 "Plural-Forms: "
 
 #. module: process
+#: model:ir.actions.act_window,name:process.action_process_node_form
+#: model:ir.ui.menu,name:process.menu_partner_address_form
+#: view:process.node:0
+msgid "Process Node"
+msgstr ""
+
+#. module: process
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: process
-#: model:ir.ui.menu,name:process.menu_process
-msgid "Enterprise Process"
+#: view:process.node:0
+msgid "Node Description"
 msgstr ""
 
 #. module: process
@@ -51,6 +58,11 @@ msgid "Starting Flow"
 msgstr ""
 
 #. module: process
+#: model:ir.model,name:process.model_process_node
+msgid "Process Nodes"
+msgstr ""
+
+#. module: process
 #: field:process.process,node_ids:0
 #: view:process.process:0
 msgid "Nodes"
@@ -74,6 +86,11 @@ msgid "Description"
 msgstr ""
 
 #. module: process
+#: model:ir.model,name:process.model_process_transition_action
+msgid "Process Transitions Actions"
+msgstr ""
+
+#. module: process
 #: field:process.node,model_id:0
 msgid "Object"
 msgstr ""
@@ -84,13 +101,13 @@ msgid "Workflow Transitions"
 msgstr ""
 
 #. module: process
-#: field:process.node,kind:0
-msgid "Kind of Node"
+#: model:ir.actions.report.xml,name:process.report_process
+msgid "Print Process"
 msgstr ""
 
 #. module: process
-#: field:process.transition.action,action:0
-msgid "Action ID"
+#: field:process.process,active:0
+msgid "Active"
 msgstr ""
 
 #. module: process
@@ -111,6 +128,14 @@ msgstr ""
 #. module: process
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
+msgstr ""
+
+#. module: process
+#: field:process.node,name:0
+#: field:process.process,name:0
+#: field:process.transition.action,name:0
+#: field:process.transition,name:0
+msgid "Name"
 msgstr ""
 
 #. module: process
@@ -135,15 +160,13 @@ msgid "Subflow"
 msgstr ""
 
 #. module: process
-#: model:ir.actions.act_window,name:process.action_process_node_form
-#: model:ir.ui.menu,name:process.menu_partner_address_form
 #: view:process.node:0
-msgid "Process Node"
+msgid "Extra Information"
 msgstr ""
 
 #. module: process
-#: model:ir.actions.report.xml,name:process.report_process
-msgid "Print Process"
+#: field:process.transition.action,action:0
+msgid "Action ID"
 msgstr ""
 
 #. module: process
@@ -157,31 +180,20 @@ msgid "Router"
 msgstr ""
 
 #. module: process
-#: view:process.node:0
-msgid "Node Description"
-msgstr ""
-
-#. module: process
-#: field:process.transition.action,name:0
-#: field:process.transition,name:0
-#: view:process.node:0
-#: view:process.transition:0
-msgid "Transitions"
-msgstr ""
-
-#. module: process
 #: field:process.node,transition_out:0
 msgid "Ending Transitions"
 msgstr ""
 
 #. module: process
-#: model:ir.model,name:process.model_process_process
-#: field:process.node,name:0
-#: field:process.node,process_id:0
-#: field:process.process,name:0
-#: model:ir.ui.menu,name:process.menu_process_form
-#: view:process.process:0
-msgid "Process"
+#: model:ir.actions.act_window,name:process.action_transition_open
+#: model:ir.model,name:process.model_process_transition
+#: model:ir.ui.menu,name:process.menu_action_transition_open
+msgid "Process Transitions"
+msgstr ""
+
+#. module: process
+#: model:ir.ui.menu,name:process.menu_process
+msgid "Enterprise Process"
 msgstr ""
 
 #. module: process
@@ -195,34 +207,26 @@ msgid "Origin Node"
 msgstr ""
 
 #. module: process
-#: model:ir.model,name:process.model_process_transition_action
-msgid "Process Transitions Actions"
+#: model:ir.model,name:process.model_process_process
+#: field:process.node,process_id:0
+#: model:ir.ui.menu,name:process.menu_process_form
+#: view:process.process:0
+msgid "Process"
+msgstr ""
+
+#. module: process
+#: field:process.node,kind:0
+msgid "Kind of Node"
 msgstr ""
 
 #. module: process
 #: view:process.node:0
-msgid "Extra Information"
-msgstr ""
-
-#. module: process
-#: model:ir.actions.act_window,name:process.action_transition_open
-#: model:ir.model,name:process.model_process_transition
-#: model:ir.ui.menu,name:process.menu_action_transition_open
-msgid "Process Transitions"
-msgstr ""
-
-#. module: process
-#: model:ir.model,name:process.model_process_node
-msgid "Process Nodes"
+#: view:process.transition:0
+msgid "Transitions"
 msgstr ""
 
 #. module: process
 #: selection:process.transition.action,state:0
 msgid "Object Method"
-msgstr ""
-
-#. module: process
-#: field:process.process,active:0
-msgid "Active"
 msgstr ""
 

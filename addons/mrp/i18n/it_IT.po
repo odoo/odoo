@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@tinyerp.com"
-"POT-Creation-Date: 2008-09-04 08:37:25+0000"
-"PO-Revision-Date: 2008-09-04 08:37:25+0000"
+"Report-Msgid-Bugs-To: support@openerp.com"
+"POT-Creation-Date: 2008-09-10 12:51:18+0000"
+"PO-Revision-Date: 2008-09-10 12:51:18+0000"
 "Last-Translator: <>"
 "Language-Team: "
 "MIME-Version: 1.0"
@@ -18,12 +18,12 @@ msgstr ""
 #. module: mrp
 #: field:mrp.workcenter,time_efficiency:0
 msgid "Time Efficiency"
-msgstr "Efficenza oraria"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.procurement,state:0
 msgid "Confirmed"
-msgstr "Confermato"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.production,move_created_ids:0
@@ -33,7 +33,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom_revision
 msgid "Bill of material revisions"
-msgstr "Revisioni distinta base"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.production:0
@@ -43,7 +43,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom.revision,author_id:0
 msgid "Author"
-msgstr "Autore"
+msgstr ""
 
 #. module: mrp
 #: help:mrp.bom,type:0
@@ -53,7 +53,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle:0
 msgid "Cost per cycle"
-msgstr "Costo per ciclo"
+msgstr ""
 
 #. module: mrp
 #: wizard_view:mrp.procurement.compute.all,init:0
@@ -71,24 +71,24 @@ msgid "BOM"
 msgstr ""
 
 #. module: mrp
-#: wizard_field:mrp.procurement.compute.all,init,user_id:0
-#: wizard_field:mrp.procurement.compute,init,user_id:0
-msgid "Send Result To"
-msgstr "Spedisci il risultato a "
-
-#. module: mrp
 #: field:mrp.bom.revision,indice:0
 msgid "Revision"
-msgstr "Indice"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.workcenter,costs_journal_id:0
 msgid "Analytic Journal"
-msgstr "Giornale Analitico"
+msgstr ""
 
 #. module: mrp
-#: view:mrp.procurement:0
-msgid "Details"
+#: model:ir.actions.wizard,name:mrp.wiz_mrp_proc2
+#: model:ir.ui.menu,name:mrp.menu_wiz_mrp_proc2
+msgid "Compute Stock Minimum Rules Only"
+msgstr ""
+
+#. module: mrp
+#: help:res.company,po_lead:0
+msgid "This is the leads/security time for each purchase order."
 msgstr ""
 
 #. module: mrp
@@ -97,9 +97,8 @@ msgid "Finnished Products Location"
 msgstr ""
 
 #. module: mrp
-#: wizard_field:mrp.procurement.compute.all,init,picking_lead:0
-#: wizard_field:mrp.procurement.compute,init,picking_lead:0
-msgid "Packing Lead Time"
+#: field:mrp.procurement,product_uos_qty:0
+msgid "UoS Quantity"
 msgstr ""
 
 #. module: mrp
@@ -112,18 +111,17 @@ msgstr ""
 #: wizard_button:mrp.procurement.compute,init,compute:0
 #: wizard_button:mrp.procurement.orderpoint.compute,init,compute:0
 msgid "Compute Procurements"
-msgstr "Calcola approvvigionamenti"
+msgstr ""
 
 #. module: mrp
-#: wizard_field:mrp.procurement.compute.all,init,po_lead:0
-#: wizard_field:mrp.procurement.compute,init,po_lead:0
-msgid "PO Lead Time"
-msgstr "tempo riordino"
+#: view:mrp.routing.workcenter:0
+msgid "Routing Workcenters"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.procurement,date_close:0
 msgid "Date Closed"
-msgstr "Data termine"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.production:0
@@ -136,30 +134,30 @@ msgid "UoM"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.procurement,origin:0
-#: field:mrp.production,origin:0
-msgid "Origin"
-msgstr "Causale"
+#: field:mrp.production.product.line,production_id:0
+#: field:mrp.production.workcenter.line,production_id:0
+msgid "Production Order"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,hour:0
 msgid "Nbr of hour"
-msgstr "Nr di ore"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.workcenter,time_start:0
 msgid "Time before prod."
-msgstr "Tempo pre-prod."
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,date_stop:0
 msgid "Valid until"
-msgstr "Valido fino"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing_workcenter
 msgid "Routing workcenter usage"
-msgstr "Fase lavorazione"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
@@ -174,10 +172,10 @@ msgid "Property Categories"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.procurement,purchase_id:0
-#: field:stock.warehouse.orderpoint,procurement_id:0
-msgid "Purchase Order"
-msgstr "Ordine acquisto"
+#: model:ir.actions.wizard,name:mrp.wiz_mrp_proc1
+#: model:ir.ui.menu,name:mrp.menu_wiz_mrp_proc1
+msgid "Compute Procurements Only"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_product_2_mrp_bom
@@ -193,25 +191,25 @@ msgid "Select time unit"
 msgstr ""
 
 #. module: mrp
-#: constraint:mrp.bom:0
-msgid "Error ! You can not create recursive BoM."
+#: wizard_field:product_price,init,number:0
+msgid "Number of products to produce"
 msgstr ""
 
 #. module: mrp
-#: wizard_field:product_price,init,number:0
-msgid "Number of products to produce"
-msgstr "Numero pezzi da produrre"
+#: field:res.company,manufacturing_lead:0
+msgid "Manufacturity Lead Time"
+msgstr ""
 
 #. module: mrp
 #: field:stock.warehouse.orderpoint,logic:0
 msgid "Reordering Mode"
-msgstr "Modo di riordino"
+msgstr ""
 
 #. module: mrp
-#: wizard_view:mrp.procurement.compute.all,init:0
-#: wizard_view:mrp.procurement.compute,init:0
-msgid "Control"
-msgstr "Controlla"
+#: field:mrp.procurement,origin:0
+#: field:mrp.production,origin:0
+msgid "Origin"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action4
@@ -222,15 +220,16 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_reordering
 msgid "Reordering Policy"
-msgstr "Politica di riordino"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.production,move_lines:0
 msgid "Products Consummed"
-msgstr "Movimenti"
+msgstr ""
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_configuration
+#: view:res.company:0
 msgid "Configuration"
 msgstr ""
 
@@ -254,12 +253,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Normal BoM"
-msgstr "distinta base normale"
-
-#. module: mrp
-#: field:mrp.workcenter,time_cycle:0
-msgid "Time for 1 cycle (hour)"
-msgstr "Tempo ciclo (ore)"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,product_uos_qty:0
@@ -276,22 +270,22 @@ msgstr ""
 #. module: mrp
 #: view:mrp.routing:0
 msgid "Workcenter Operations"
-msgstr "Operazioni fase lavoro"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.bom:0
 msgid "Revisions"
-msgstr "Revisioni"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.property,composition:0
 msgid "Properties composition"
-msgstr "Composizione proprietà"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,product_efficiency:0
 msgid "Product Efficiency"
-msgstr "Efficenza prodotto"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse_orderpoint
@@ -302,12 +296,12 @@ msgstr ""
 #: wizard_view:mrp.procurement.compute,init:0
 #: wizard_view:mrp.procurement.orderpoint.compute,init:0
 msgid "Parameters"
-msgstr "Parametri"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.procurement:0
 msgid "Confirm"
-msgstr "Conferma"
+msgstr ""
 
 #. module: mrp
 #: rml:bom.structure:0
@@ -318,23 +312,23 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "In Production"
-msgstr "In produzione"
+msgstr ""
 
 #. module: mrp
 #: field:stock.warehouse.orderpoint,qty_multiple:0
 msgid "Qty Multiple"
-msgstr "Qtà multipla"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_workcenter_line
 msgid "Production workcenters used"
-msgstr "Fasi di produzione utilizzate"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.procurement,priority:0
 #: field:mrp.production,priority:0
 msgid "Priority"
-msgstr "Priorità"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.procurement,state:0
@@ -344,19 +338,19 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production,workcenter_lines:0
 msgid "Workcenters Utilisation"
-msgstr "Utilizzo fasi lavoro"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing
 #: field:mrp.bom,routing_id:0
 #: view:mrp.routing:0
 msgid "Routing"
-msgstr "Lavorazioni"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,product_rounding:0
 msgid "Product Rounding"
-msgstr "Lavorazioni prodotto"
+msgstr ""
 
 #. module: mrp
 #: wizard_button:mrp.workcenter.load,init,report:0
@@ -366,12 +360,12 @@ msgstr ""
 #. module: mrp
 #: selection:stock.warehouse.orderpoint,logic:0
 msgid "Best price (not yet active!)"
-msgstr "Miglior prezzo (non ancora attivato!)"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.workcenter,type:0
 msgid "Type"
-msgstr "Tipo"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.procurement:0
@@ -385,9 +379,14 @@ msgid "New Procurement"
 msgstr ""
 
 #. module: mrp
+#: view:res.company:0
+msgid "MRP & Logistic Scheduler"
+msgstr ""
+
+#. module: mrp
 #: view:mrp.production:0
 msgid "Recreate Picking"
-msgstr "Ricrea raccolta"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -397,12 +396,17 @@ msgstr "Ricrea raccolta"
 #: view:mrp.routing.workcenter:0
 #: view:mrp.workcenter:0
 msgid "General Information"
-msgstr "Generalità"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.workcenter,type:0
 msgid "Tool"
-msgstr "Strumento"
+msgstr ""
+
+#. module: mrp
+#: help:res.company,manufacturing_lead:0
+msgid "Security days for each manufacturing operation."
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,product_qty:0
@@ -410,12 +414,12 @@ msgstr "Strumento"
 #: field:mrp.production,product_qty:0
 #: field:mrp.production,product_uos_qty:0
 msgid "Product Qty"
-msgstr "Qtà prodotto"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.routing.workcenter,cycle_nbr:0
 msgid "Number of cycle"
-msgstr "Numero di cicli"
+msgstr ""
 
 #. module: mrp
 #: rml:bom.structure:0
@@ -434,6 +438,11 @@ msgid "New Bill of Materials"
 msgstr ""
 
 #. module: mrp
+#: field:mrp.workcenter,costs_cycle_account_id:0
+msgid "Cycle Account"
+msgstr ""
+
+#. module: mrp
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr ""
@@ -441,7 +450,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.workcenter,time_stop:0
 msgid "Time after prod."
-msgstr "Tempo post-prod."
+msgstr ""
 
 #. module: mrp
 #: wizard_field:mrp.workcenter.load,init,time_unit:0
@@ -449,30 +458,35 @@ msgid "Type of period"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.workcenter,costs_cycle_account_id:0
-msgid "Cycle Account"
-msgstr "Conto ciclo"
+#: field:mrp.production,picking_id:0
+msgid "Packing list"
+msgstr ""
+
+#. module: mrp
+#: field:res.company,schedule_range:0
+msgid "Scheduler Range"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,date_start:0
 msgid "Valid from"
-msgstr "Valido dal"
+msgstr ""
 
 #. module: mrp
 #: field:stock.warehouse.orderpoint,product_max_qty:0
 msgid "Max Quantity"
-msgstr "Quantità max"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,revision_type:0
 msgid "indice type"
-msgstr "tipo indice"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_procurement
 #: view:mrp.procurement:0
 msgid "Procurement"
-msgstr "Rifornimento"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action
@@ -483,100 +497,89 @@ msgstr ""
 #. module: mrp
 #: view:mrp.workcenter:0
 msgid "Capacity Information"
-msgstr "Informazioni capacità"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property
 msgid "Property"
-msgstr "Proprietà"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.routing.workcenter,routing_id:0
 msgid "Parent Routing"
-msgstr "Lavorazione genitore"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.wizard,name:mrp.wizard_price
 msgid "Product Cost Structure"
-msgstr "Struttura del costo del prodotto"
-
-#. module: mrp
-#: field:mrp.procurement,product_uos_qty:0
-msgid "UoS Quantity"
 msgstr ""
 
 #. module: mrp
-#: model:ir.actions.wizard,name:mrp.wiz_mrp_proc2
-#: model:ir.ui.menu,name:mrp.menu_wiz_mrp_proc2
-msgid "Compute stock minimum rules"
+#: view:mrp.workcenter:0
+msgid "Analytic Accounting"
 msgstr ""
 
 #. module: mrp
 #: field:stock.warehouse.orderpoint,product_min_qty:0
 msgid "Min Quantity"
-msgstr "Quantità min"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.procurement,priority:0
 #: selection:mrp.production,priority:0
 msgid "Urgent"
-msgstr "Urgente"
-
-#. module: mrp
-#: model:ir.ui.menu,name:mrp.menu_mrp_root
-msgid "Production Management"
 msgstr ""
 
 #. module: mrp
 #: selection:mrp.property,composition:0
 msgid "plus"
-msgstr "più"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom.revision,bom_id:0
 #: field:mrp.procurement,bom_id:0
 msgid "BoM"
-msgstr "Distinta base"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.bom:0
 msgid "BoM Structure"
-msgstr "Struttura costi materiali"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.production,date_start:0
 msgid "Start Date"
-msgstr "Data inizio"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.workcenter,timesheet_id:0
 msgid "Timesheet"
-msgstr "Orario"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Waiting Goods"
-msgstr "Beni in attesa"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.workcenter,costs_hour_account_id:0
 msgid "Hour Account"
-msgstr "Conto ore"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.bom,revision_type:0
 msgid "alphabetical indices"
-msgstr "indice alfabetico"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.production,product_lines:0
 msgid "Scheduled goods"
-msgstr "Materiale programmato"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.procurement:0
 msgid "Procurement Lines"
-msgstr "Linee di rifornimento"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_new
@@ -587,35 +590,29 @@ msgstr ""
 #. module: mrp
 #: field:mrp.procurement,purchase_line_id:0
 msgid "Purchase Order Line"
-msgstr "Riga ordine acquisto"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom.revision,last_indice:0
 msgid "last indice"
-msgstr "ultimo indice"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,revision_ids:0
 #: view:mrp.bom.revision:0
 msgid "BoM Revisions"
-msgstr "Revisioni costi materiali"
-
-#. module: mrp
-#: wizard_field:mrp.procurement.compute.all,init,schedule_cycle:0
-#: wizard_field:mrp.procurement.compute,init,schedule_cycle:0
-msgid "Scheduler Cycle"
-msgstr "ciclo tempificazione"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.procurement:0
 msgid "Retry"
-msgstr "Riprova"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.procurement,state:0
 #: selection:mrp.production,state:0
 msgid "Draft"
-msgstr "Bozza"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.bom,type:0
@@ -623,26 +620,24 @@ msgid "Sets / Phantom"
 msgstr ""
 
 #. module: mrp
-#: selection:mrp.procurement,priority:0
-#: selection:mrp.production,priority:0
-msgid "Not urgent"
-msgstr "Non urgente"
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.routing.workcenter,hour_nbr:0
 msgid "Number of hours"
-msgstr "Numero di ore"
+msgstr ""
 
 #. module: mrp
-#: wizard_field:mrp.procurement.compute.all,init,security_lead:0
-#: wizard_field:mrp.procurement.compute,init,security_lead:0
+#: field:res.company,security_lead:0
 msgid "Security Days"
-msgstr "giorni sicurezza"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,position:0
 msgid "Internal Ref."
-msgstr "Rif. interno"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.procurement,state:0
@@ -654,13 +649,13 @@ msgstr ""
 #. module: mrp
 #: wizard_view:product_price,init:0
 msgid "Paid ?"
-msgstr "Pagato?"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.procurement,priority:0
 #: selection:mrp.production,priority:0
 msgid "Normal"
-msgstr "Normale"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action2
@@ -676,7 +671,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Ready to Produce"
-msgstr "Pronto alla produzione"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -684,10 +679,9 @@ msgid "Packing Exception"
 msgstr ""
 
 #. module: mrp
-#: wizard_view:mrp.procurement.compute.all,init:0
-#: wizard_view:mrp.procurement.compute,init:0
-msgid "Time (days)"
-msgstr "Tempo (giorni)"
+#: field:mrp.bom.revision,name:0
+msgid "Modification name"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,active:0
@@ -695,22 +689,17 @@ msgstr "Tempo (giorni)"
 #: field:mrp.workcenter,active:0
 #: field:stock.warehouse.orderpoint,active:0
 msgid "Active"
-msgstr "Attivo"
-
-#. module: mrp
-#: field:mrp.bom.revision,name:0
-msgid "Modification name"
-msgstr "Modifiche"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,type:0
 msgid "BoM Type"
-msgstr "Tipo costo"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,bom_id:0
 msgid "Parent BoM"
-msgstr "Costo genitore"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_action
@@ -727,35 +716,34 @@ msgstr ""
 #. module: mrp
 #: field:mrp.workcenter,costs_hour:0
 msgid "Cost per hour"
-msgstr "Costo orario"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.procurement,date_planned:0
 #: field:mrp.production,date_planned:0
 msgid "Scheduled date"
-msgstr "Data promessa"
+msgstr ""
 
 #. module: mrp
-#: model:ir.actions.wizard,name:mrp.wiz_mrp_proc0
-#: model:ir.ui.menu,name:mrp.mrp_Sched_all
-msgid "Compute all schedulers"
-msgstr "Calcola tutte le scadenze"
+#: selection:mrp.procurement,state:0
+msgid "Exception"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.procurement,priority:0
 #: selection:mrp.production,priority:0
 msgid "Very Urgent"
-msgstr "Molto urgente"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.procurement,procure_method:0
 msgid "Procurement Method"
-msgstr "Metodo rifornimento"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,cycle:0
 msgid "Nbr of cycle"
-msgstr "Nr di cicli"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.procurement:0
@@ -776,19 +764,14 @@ msgid "Run procurement"
 msgstr ""
 
 #. module: mrp
-#: selection:stock.warehouse.orderpoint,logic:0
-msgid "Order to Max"
-msgstr "Ordina al max"
+#: help:res.company,schedule_range:0
+msgid "This is the time frame analysed by the scheduler when computing procurements. All procurement that are not between today and today+range are skipped for futur computation."
+msgstr ""
 
 #. module: mrp
 #: help:mrp.bom,routing_id:0
 msgid "The list of operations (list of workcenters) to produce the finnished product. The routing is mainly used to compute workcenter costs during operations and to plan futur loads on workcenters based on production plannification."
 msgstr ""
-
-#. module: mrp
-#: view:mrp.routing.workcenter:0
-msgid "Routing Workcenters"
-msgstr "Rotazione fasi lavoro"
 
 #. module: mrp
 #: rml:bom.structure:0
@@ -799,7 +782,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:0
 msgid "Production done"
-msgstr "Produzione eseguita"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
@@ -810,7 +793,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.workcenter,costs_general_account_id:0
 msgid "General Account"
-msgstr "Conto Generale"
+msgstr ""
 
 #. module: mrp
 #: rml:bom.structure:0
@@ -831,17 +814,28 @@ msgstr ""
 #: field:mrp.property,group_id:0
 #: field:mrp.property.group,name:0
 msgid "Property Group"
-msgstr "Gruppo di proprietà"
+msgstr ""
+
+#. module: mrp
+#: selection:mrp.procurement,priority:0
+#: selection:mrp.production,priority:0
+msgid "Not urgent"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Confirm Production"
-msgstr "Conferma produzione"
+msgstr ""
+
+#. module: mrp
+#: help:res.company,security_lead:0
+msgid "This is the days added to what you promise to customers for security purpose"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.procurement,procure_method:0
 msgid "from stock"
-msgstr "da giacenza"
+msgstr ""
 
 #. module: mrp
 #: field:stock.move,procurements:0
@@ -852,12 +846,12 @@ msgstr ""
 #: selection:mrp.procurement,state:0
 #: selection:mrp.production,state:0
 msgid "Done"
-msgstr "Fatto"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.production.workcenter.line:0
 msgid "Production Workcenters"
-msgstr "Fasi di produzione"
+msgstr ""
 
 #. module: mrp
 #: wizard_button:product_price,init,end:0
@@ -869,32 +863,22 @@ msgstr "Fasi di produzione"
 #: view:mrp.procurement:0
 #: view:mrp.production:0
 msgid "Cancel"
-msgstr "Cancella"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.procurement,location_id:0
+#: field:stock.warehouse.orderpoint,location_id:0
 msgid "Location"
-msgstr "Luogo"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.procurement,message:0
 msgid "Latest error"
-msgstr "Ultimo errore"
-
-#. module: mrp
-#: model:ir.actions.wizard,name:mrp.wiz_mrp_proc1
-#: model:ir.ui.menu,name:mrp.menu_wiz_mrp_proc1
-msgid "Compute procurement"
 msgstr ""
 
 #. module: mrp
-#: view:mrp.workcenter:0
-msgid "Analytic Accounting"
-msgstr ""
-
-#. module: mrp
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+#: wizard_view:mrp.procurement.compute,init:0
+msgid "This wizard will schedule procurements."
 msgstr ""
 
 #. module: mrp
@@ -903,42 +887,35 @@ msgid "Production scheduled products"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.production.product.line,production_id:0
-#: field:mrp.production.workcenter.line,production_id:0
-msgid "Production Order"
-msgstr "Ordine di produzione"
-
-#. module: mrp
-#: selection:mrp.procurement,state:0
-msgid "Exception"
-msgstr "Eccezione"
+#: field:mrp.workcenter,time_cycle:0
+msgid "Time for 1 cycle (hour)"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.production,move_prod_id:0
 msgid "Move product"
-msgstr "Movimenta prodotto"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.workcenter,type:0
 msgid "Machine"
-msgstr "Macchina"
+msgstr ""
 
 #. module: mrp
 #: field:stock.warehouse.orderpoint,warehouse_id:0
 msgid "Warehouse"
-msgstr "Magazzino"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
 #: field:stock.move,production_id:0
 msgid "Production"
-msgstr "Produzione"
+msgstr ""
 
 #. module: mrp
-#: wizard_field:mrp.procurement.compute.all,init,po_cycle:0
-#: wizard_field:mrp.procurement.compute,init,po_cycle:0
-msgid "PO Cycle"
-msgstr "Ciclo acquisto"
+#: view:mrp.procurement:0
+msgid "Details"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action3
@@ -963,12 +940,12 @@ msgstr ""
 #. module: mrp
 #: field:mrp.procurement,close_move:0
 msgid "Close Move at end"
-msgstr "Sposta in fondo"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.workcenter,capacity_per_cycle:0
 msgid "Capacity per Cycle"
-msgstr "Capacità per ciclo"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,product_id:0
@@ -977,7 +954,7 @@ msgstr "Capacità per ciclo"
 #: field:mrp.production.product.line,product_id:0
 #: field:stock.warehouse.orderpoint,product_id:0
 msgid "Product"
-msgstr "Prodotto"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom.revision,description:0
@@ -990,12 +967,12 @@ msgstr "Prodotto"
 #: view:mrp.routing:0
 #: view:mrp.workcenter:0
 msgid "Description"
-msgstr "Descrizione"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Canceled"
-msgstr "Cancellato"
+msgstr ""
 
 #. module: mrp
 #: rml:bom.structure:0
@@ -1011,7 +988,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.procurement,state:0
 msgid "Running"
-msgstr "Attivo"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,product_uom:0
@@ -1020,7 +997,7 @@ msgstr "Attivo"
 #: field:mrp.production,product_uos:0
 #: field:stock.warehouse.orderpoint,product_uom:0
 msgid "Product UOM"
-msgstr "UM prodotto"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
@@ -1038,17 +1015,22 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom,bom_lines:0
 msgid "BoM Lines"
-msgstr "Righe costi materiali"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.procurement,procure_method:0
 msgid "on order"
-msgstr "ordinazione"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.procurement,move_id:0
 msgid "Reservation"
-msgstr "Prenotazione"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_mrp_root
+msgid "Manufacturing"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action3
@@ -1059,12 +1041,18 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production.lot.line:0
 msgid "Production Products"
-msgstr "Prodotti in produzione"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.production,date_finnished:0
 msgid "End Date"
-msgstr "Data termine"
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.wizard,name:mrp.wiz_mrp_proc0
+#: model:ir.ui.menu,name:mrp.mrp_Sched_all
+msgid "Compute All Schedulers"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_tree_action
@@ -1083,7 +1071,7 @@ msgstr ""
 #: field:mrp.workcenter,name:0
 #: field:stock.warehouse.orderpoint,name:0
 msgid "Name"
-msgstr "Nome"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.wizard,name:mrp.wizard_workcenter_load
@@ -1098,7 +1086,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.property,composition:0
 msgid "max"
-msgstr "max"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action5
@@ -1119,7 +1107,12 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:0
 msgid "Compute Data"
-msgstr "Dati calcolati"
+msgstr ""
+
+#. module: mrp
+#: view:mrp.production.lot.line:0
+msgid "Production Products Consommation"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.procurement,product_uom:0
@@ -1132,22 +1125,23 @@ msgstr ""
 #: field:mrp.routing.workcenter,workcenter_id:0
 #: view:mrp.workcenter:0
 msgid "Workcenter"
-msgstr "Fase lavoro"
+msgstr ""
 
 #. module: mrp
 #: wizard_button:product_price,init,price:0
 msgid "Print product price"
-msgstr "Stampa prezzo prodotto"
+msgstr ""
 
 #. module: mrp
-#: field:mrp.production,picking_id:0
-msgid "Packing list"
-msgstr "Raccolte"
+#: field:mrp.procurement,purchase_id:0
+#: field:stock.warehouse.orderpoint,procurement_id:0
+msgid "Purchase Order"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Start Production"
-msgstr "Inizia produzione"
+msgstr ""
 
 #. module: mrp
 #: wizard_field:mrp.workcenter.load,init,measure_unit:0
@@ -1157,7 +1151,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.bom.revision,date:0
 msgid "Modification Date"
-msgstr "Data modifica"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.property.group:0
@@ -1169,12 +1163,12 @@ msgstr ""
 #: field:mrp.production.workcenter.line,sequence:0
 #: field:mrp.routing.workcenter,sequence:0
 msgid "Sequence"
-msgstr "Sequenza"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.property,composition:0
 msgid "min"
-msgstr "min"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action2
@@ -1189,9 +1183,9 @@ msgid "Scheduled Products"
 msgstr ""
 
 #. module: mrp
-#: view:mrp.production.lot.line:0
-msgid "Production Products Consommation"
-msgstr "Consumo dei prodotti in produzione"
+#: field:res.company,po_lead:0
+msgid "Purchase Lead Time"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1201,10 +1195,15 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.bom,revision_type:0
 msgid "numeric indices"
-msgstr "indice numerico"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.routing,location_id:0
 msgid "Production Location"
-msgstr "Provenienza"
+msgstr ""
+
+#. module: mrp
+#: selection:stock.warehouse.orderpoint,logic:0
+msgid "Order to Max"
+msgstr ""
 

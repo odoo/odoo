@@ -5,9 +5,6 @@
             <test expr="not len(line_id) or line_id[0].state != 'valid' or (sum([l.debit - l.credit for l in line_id]) &lt;= 0.00001)"/>
         </assert>
 
-        <!--assert model="account.invoice" search="[]" string="If the invoice is paid, third party accounting lines must be reconciled">
-			<test expr="not state == 'paid' or ..." />
-		</assert-->
 
    <!--     <assert model="account.account" search="[]" string="For all accounts, the balance is equal to the sum of the balance of its childs">
         <assert model="account.account" search="[]" string="For all accounts, the balance is equal to the sum of the balance of its childs">
@@ -26,8 +23,6 @@
             <test expr="sum([l.debit - l.credit for l in line_id]) &lt;= 0.00001"/>
         </assert>
 
-        <assert model="account.account" search="[]" string="Every account must have at least one parent account of type '0'">
-            <test expr="not parent_id or (code!='0')"/>
-        </assert>-->
+-->
     </data>
 </terp>

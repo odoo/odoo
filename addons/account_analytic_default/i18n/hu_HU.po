@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@tinyerp.com"
-"POT-Creation-Date: 2008-09-04 08:36:32+0000"
-"PO-Revision-Date: 2008-09-04 08:36:32+0000"
+"Report-Msgid-Bugs-To: support@openerp.com"
+"POT-Creation-Date: 2008-09-10 12:50:44+0000"
+"PO-Revision-Date: 2008-09-10 12:50:44+0000"
 "Last-Translator: <>"
 "Language-Team: "
 "MIME-Version: 1.0"
@@ -16,14 +16,8 @@ msgstr ""
 "Plural-Forms: "
 
 #. module: account_analytic_default
-#: model:ir.ui.menu,name:account_analytic_default.menu_analytic_defaul_form
-#: view:account.analytic.default:0
-msgid "Analytic Defaults"
-msgstr ""
-
-#. module: account_analytic_default
-#: field:account.analytic.default,date_stop:0
-msgid "End Date"
+#: field:account.analytic.default,analytic_id:0
+msgid "Analytic Account"
 msgstr ""
 
 #. module: account_analytic_default
@@ -42,15 +36,20 @@ msgid "Seq"
 msgstr ""
 
 #. module: account_analytic_default
-#: field:account.analytic.default,sequence:0
-msgid "Sequence"
+#: field:account.analytic.default,date_stop:0
+msgid "End Date"
 msgstr ""
 
 #. module: account_analytic_default
-#: model:ir.actions.act_window,name:account_analytic_default.analytic_rules_partner_action
-#: model:ir.actions.act_window,name:account_analytic_default.analytic_rules_product_action
-#: model:ir.actions.act_window,name:account_analytic_default.analytic_rules_user_action
+#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
+#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_product
+#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
 msgid "Analytic Rules"
+msgstr ""
+
+#. module: account_analytic_default
+#: field:account.analytic.default,sequence:0
+msgid "Sequence"
 msgstr ""
 
 #. module: account_analytic_default
@@ -59,8 +58,10 @@ msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: account_analytic_default
-#: field:account.analytic.default,analytic_id:0
-msgid "Analytic Account"
+#: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_form
+#: model:ir.ui.menu,name:account_analytic_default.menu_analytic_defaul_form
+#: view:account.analytic.default:0
+msgid "Analytic Defaults"
 msgstr ""
 
 #. module: account_analytic_default

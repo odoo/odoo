@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@tinyerp.com"
-"POT-Creation-Date: 2008-09-04 08:32:29+0000"
-"PO-Revision-Date: 2008-09-04 08:32:29+0000"
+"Report-Msgid-Bugs-To: support@openerp.com"
+"POT-Creation-Date: 2008-09-10 12:47:51+0000"
+"PO-Revision-Date: 2008-09-10 12:47:51+0000"
 "Last-Translator: <>"
 "Language-Team: "
 "MIME-Version: 1.0"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: product
 #: view:product.pricelist.item:0
 msgid "Max. Margin"
-msgstr "Max. marže"
+msgstr ""
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -33,7 +33,7 @@ msgstr ""
 #. module: product
 #: selection:product.template,type:0
 msgid "Service"
-msgstr "Služba"
+msgstr ""
 
 #. module: product
 #: help:product.template,purchase_ok:0
@@ -68,7 +68,7 @@ msgstr ""
 #. module: product
 #: field:product.packaging,width:0
 msgid "Width"
-msgstr "Šířka"
+msgstr ""
 
 #. module: product
 #: field:product.template,procure_method:0
@@ -86,6 +86,11 @@ msgid "Keep empty to use the default UOM"
 msgstr ""
 
 #. module: product
+#: model:product.category,name:product.product_category_4
+msgid "Dello Computer"
+msgstr ""
+
+#. module: product
 #: model:ir.actions.act_window,name:product.product_uom_form_action
 #: model:ir.ui.menu,name:product.menu_product_uom_form_action
 #: model:ir.ui.menu,name:product.next_id_16
@@ -99,8 +104,19 @@ msgid "Standard Price"
 msgstr ""
 
 #. module: product
+#, python-format
+#: code:addons/product/product.py:0
+msgid "Products: "
+msgstr ""
+
+#. module: product
 #: field:product.template,uos_id:0
 msgid "Unit of Sale"
+msgstr ""
+
+#. module: product
+#: model:product.category,name:product.cat1
+msgid "Sellable"
 msgstr ""
 
 #. module: product
@@ -111,12 +127,12 @@ msgstr ""
 #. module: product
 #: field:product.price.type,name:0
 msgid "Price Name"
-msgstr "Název ceny"
+msgstr ""
 
 #. module: product
 #: field:product.product,price:0
 msgid "Customer Price"
-msgstr "Zákazníkova cena"
+msgstr ""
 
 #. module: product
 #: field:product.product,lst_price:0
@@ -135,9 +151,14 @@ msgid "Supplier Lead Time"
 msgstr ""
 
 #. module: product
+#: model:product.category,name:product.product_category_services
+msgid "Services"
+msgstr ""
+
+#. module: product
 #: selection:product.template,type:0
 msgid "Consumable"
-msgstr "Spotřební zboží"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu3_product_template
@@ -147,7 +168,7 @@ msgstr ""
 #. module: product
 #: field:product.pricelist.version,pricelist_id:0
 msgid "Price List"
-msgstr "Ceník"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_pc2_product_template
@@ -157,7 +178,7 @@ msgstr ""
 #. module: product
 #: field:product.product,incoming_qty:0
 msgid "Incoming"
-msgstr "Příchozí"
+msgstr ""
 
 #. module: product
 #: field:product.pricelist.item,price_surcharge:0
@@ -167,7 +188,7 @@ msgstr ""
 #. module: product
 #: field:product.category,child_id:0
 msgid "Childs Categories"
-msgstr "Podřízená kategorie"
+msgstr ""
 
 #. module: product
 #: view:product.product:0
@@ -182,12 +203,12 @@ msgstr ""
 #. module: product
 #: field:product.supplierinfo,qty:0
 msgid "Minimal quantity"
-msgstr "Minimální množství"
+msgstr ""
 
 #. module: product
 #: selection:product.template,mes_type:0
 msgid "Variable"
-msgstr "Variabilní"
+msgstr ""
 
 #. module: product
 #: view:product.product:0
@@ -215,19 +236,25 @@ msgstr ""
 #. module: product
 #: selection:product.template,mes_type:0
 msgid "Fixed"
-msgstr "Fixní"
+msgstr ""
+
+#. module: product
+#, python-format
+#: code:addons/product/pricelist.py:0
+msgid "Warning !"
+msgstr ""
 
 #. module: product
 #: field:product.pricelist.item,price_min_margin:0
 msgid "Price Min. Margin"
-msgstr "Minimální marže"
+msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_type
 #: field:product.pricelist,type:0
 #: view:product.pricelist.type:0
 msgid "Pricelist Type"
-msgstr "Typ ceníku"
+msgstr ""
 
 #. module: product
 #: view:product.product:0
@@ -250,8 +277,9 @@ msgid "Track Lots"
 msgstr ""
 
 #. module: product
-#: field:product.template,uom_po_id:0
-msgid "Purchase UOM"
+#: view:product.product:0
+#: view:product.packaging:0
+msgid "Palette Dimension"
 msgstr ""
 
 #. module: product
@@ -260,8 +288,8 @@ msgid "Rules Test Match"
 msgstr ""
 
 #. module: product
-#: model:product.template,name:product.product_product_26_product_template
-msgid "Kit Keyboard + Mouse"
+#: field:product.template,uom_id:0
+msgid "Default UoM"
 msgstr ""
 
 #. module: product
@@ -277,7 +305,7 @@ msgstr ""
 #. module: product
 #: field:product.pricelist.item,base:0
 msgid "Based on"
-msgstr "Založeno na"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_24_product_template
@@ -312,7 +340,7 @@ msgstr ""
 #. module: product
 #: field:product.template,seller_ids:0
 msgid "Partners"
-msgstr "Partneři"
+msgstr ""
 
 #. module: product
 #: help:product.packaging,ean:0
@@ -334,27 +362,27 @@ msgstr ""
 #: view:product.pricelist.version:0
 #: view:product.pricelist:0
 msgid "Pricelist Version"
-msgstr "Verze ceníku"
+msgstr ""
 
 #. module: product
 #: model:ir.ui.menu,name:product.menu_product_category_action
 msgid "Products by Category"
-msgstr "Produkty podle kategorie"
+msgstr ""
 
 #. module: product
 #: selection:product.template,state:0
 msgid "End of Lifecycle"
-msgstr "Konec životního cyklu"
+msgstr ""
 
 #. module: product
 #: view:product.uom.categ:0
 msgid "Unit of Measure categories"
-msgstr "Kategorie měrných jednotek"
+msgstr ""
 
 #. module: product
 #: selection:product.template,state:0
 msgid "In Production"
-msgstr "V produkci"
+msgstr ""
 
 #. module: product
 #: constraint:ir.ui.view:0
@@ -385,17 +413,17 @@ msgstr ""
 #. module: product
 #: selection:product.ul,type:0
 msgid "Palet"
-msgstr "Paleta"
+msgstr ""
 
 #. module: product
 #: field:product.ul,type:0
 msgid "Type"
-msgstr "Typ"
+msgstr ""
 
 #. module: product
 #: view:product.product:0
 msgid "Product Variant"
-msgstr "Varianta produktu"
+msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
@@ -408,16 +436,21 @@ msgstr ""
 #: model:ir.model,name:product.model_product_category
 #: field:product.pricelist.item,categ_id:0
 msgid "Product Category"
-msgstr "Kategorie produktu"
+msgstr ""
 
 #. module: product
 #: field:product.product,partner_ref:0
 msgid "Customer ref"
-msgstr "Zákazník"
+msgstr ""
 
 #. module: product
 #: help:product.packaging,length:0
 msgid "The length of the palette"
+msgstr ""
+
+#. module: product
+#: model:product.category,name:product.product_category_pc
+msgid "PC"
 msgstr ""
 
 #. module: product
@@ -433,12 +466,12 @@ msgstr ""
 #. module: product
 #: field:product.pricelist.type,key:0
 msgid "Key"
-msgstr "Klíč"
+msgstr ""
 
 #. module: product
 #: field:product.pricelist.item,price_version_id:0
 msgid "Price List Version"
-msgstr "Verze ceníku"
+msgstr ""
 
 #. module: product
 #: field:res.partner,property_product_pricelist:0
@@ -454,13 +487,13 @@ msgstr ""
 #: model:ir.model,name:product.model_product_pricelist
 #: view:product.supplierinfo:0
 msgid "Pricelist"
-msgstr "Ceník"
+msgstr ""
 
 #. module: product
 #: field:product.template,type:0
 #: view:product.product:0
 msgid "Product Type"
-msgstr "Typ produktu"
+msgstr ""
 
 #. module: product
 #: help:product.template,tracking:0
@@ -475,7 +508,7 @@ msgstr ""
 #. module: product
 #: selection:product.ul,type:0
 msgid "Box"
-msgstr "Krabice"
+msgstr ""
 
 #. module: product
 #: field:product.template,state:0
@@ -503,23 +536,28 @@ msgstr ""
 #. module: product
 #: field:product.category,parent_id:0
 msgid "Parent Category"
-msgstr "Nadřazená kategorie"
+msgstr ""
 
 #. module: product
 #: selection:product.template,state:0
 msgid "In Development"
-msgstr "Ve vývoji"
+msgstr ""
+
+#. module: product
+#: model:product.category,name:product.cat0
+msgid "All products"
+msgstr ""
 
 #. module: product
 #: view:product.pricelist:0
 msgid "Products Price List"
-msgstr "Ceník produktů"
+msgstr ""
 
 #. module: product
 #: view:product.product:0
 #: view:product.template:0
 msgid "Procurement"
-msgstr "Dodání"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_hdd1_product_template
@@ -567,6 +605,11 @@ msgid "Supply method"
 msgstr ""
 
 #. module: product
+#: help:product.template,uom_id:0
+msgid "This is the default Unit of Measure used for all stock operation."
+msgstr ""
+
+#. module: product
 #: field:product.supplierinfo,product_code:0
 msgid "Partner product reference"
 msgstr ""
@@ -574,6 +617,11 @@ msgstr ""
 #. module: product
 #: view:product.supplierinfo:0
 msgid "Supplier Information"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_21_product_template
+msgid "RAM on demand"
 msgstr ""
 
 #. module: product
@@ -585,7 +633,7 @@ msgstr ""
 #: field:product.pricelist,currency_id:0
 #: field:product.price.type,currency_id:0
 msgid "Currency"
-msgstr "Měna"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu_gen_product_template
@@ -595,7 +643,7 @@ msgstr ""
 #. module: product
 #: selection:product.ul,type:0
 msgid "Unit"
-msgstr "Jednotka"
+msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_categ_form_action
@@ -606,7 +654,7 @@ msgstr ""
 #. module: product
 #: field:product.pricelist.version,date_start:0
 msgid "Start Date"
-msgstr "Počáteční datum"
+msgstr ""
 
 #. module: product
 #: help:product.template,produce_delay:0
@@ -616,6 +664,11 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_pc1_product_template
 msgid "Basic PC"
+msgstr ""
+
+#. module: product
+#: model:product.category,name:product.product_category_3
+msgid "Computer Stuff"
 msgstr ""
 
 #. module: product
@@ -636,7 +689,7 @@ msgstr ""
 #. module: product
 #: field:product.supplierinfo,delay:0
 msgid "Delivery delay"
-msgstr "Doba dodání"
+msgstr ""
 
 #. module: product
 #: field:product.product,qty_available:0
@@ -646,17 +699,11 @@ msgstr ""
 #. module: product
 #: view:product.category:0
 msgid "Product Categories"
-msgstr "Kategorie produktu"
+msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom
 msgid "Product Unit of Measure"
-msgstr ""
-
-#. module: product
-#: view:product.product:0
-#: view:product.packaging:0
-msgid "Palette Dimension"
 msgstr ""
 
 #. module: product
@@ -672,7 +719,7 @@ msgstr ""
 #. module: product
 #: field:product.template,rental:0
 msgid "Rentable product"
-msgstr "Rentabilní produkt"
+msgstr ""
 
 #. module: product
 #: help:product.packaging,qty:0
@@ -692,7 +739,7 @@ msgstr ""
 #. module: product
 #: field:product.uom,rounding:0
 msgid "Rounding Precision"
-msgstr "Přesnost zaokrouhlení"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu1_product_template
@@ -717,17 +764,17 @@ msgstr ""
 #. module: product
 #: field:product.product,outgoing_qty:0
 msgid "Outgoing"
-msgstr "Odchozí"
+msgstr ""
 
 #. module: product
 #: selection:product.template,supply_method:0
 msgid "Buy"
-msgstr "Nákup"
+msgstr ""
 
 #. module: product
 #: field:product.pricelist.item,price_round:0
 msgid "Price Rounding"
-msgstr "Zaoukrouhlení ceny"
+msgstr ""
 
 #. module: product
 #: model:product.price.type,name:product.list_price
@@ -735,9 +782,19 @@ msgid "Public Price"
 msgstr ""
 
 #. module: product
+#: help:product.template,volume:0
+msgid "The weight in Kg."
+msgstr ""
+
+#. module: product
 #: view:product.pricelist.item:0
 msgid "Min. Margin"
-msgstr "Min. marže"
+msgstr ""
+
+#. module: product
+#: model:product.category,name:product.product_category_10
+msgid "IT components"
+msgstr ""
 
 #. module: product
 #: help:product.packaging,weight_ul:0
@@ -758,7 +815,7 @@ msgstr ""
 #. module: product
 #: view:product.price.type:0
 msgid "Products Price Type"
-msgstr "Typ ceny produktu"
+msgstr ""
 
 #. module: product
 #: field:product.template,product_manager:0
@@ -787,7 +844,7 @@ msgstr ""
 #: field:product.product,active:0
 #: field:product.uom,active:0
 msgid "Active"
-msgstr "Aktivní"
+msgstr ""
 
 #. module: product
 #: field:product.product,price_margin:0
@@ -827,11 +884,6 @@ msgstr ""
 #. module: product
 #: field:product.packaging,rows:0
 msgid "Number of layer"
-msgstr "počet řádků"
-
-#. module: product
-#: field:product.template,uom_id:0
-msgid "Default UOM"
 msgstr ""
 
 #. module: product
@@ -868,7 +920,7 @@ msgstr ""
 #. module: product
 #: selection:product.template,type:0
 msgid "Stockable Product"
-msgstr "Skladovatelný produkt"
+msgstr ""
 
 #. module: product
 #: field:pricelist.partnerinfo,min_quantity:0
@@ -880,11 +932,16 @@ msgstr ""
 #: field:product.product,code:0
 #: field:product.product,default_code:0
 msgid "Code"
-msgstr "Kód"
+msgstr ""
 
 #. module: product
 #: view:product.supplierinfo:0
 msgid "Seq"
+msgstr ""
+
+#. module: product
+#: model:product.category,name:product.product_category_8
+msgid "Phone Help"
 msgstr ""
 
 #. module: product
@@ -905,7 +962,7 @@ msgstr ""
 #. module: product
 #: field:product.packaging,height:0
 msgid "Height"
-msgstr "Výška"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_pc4_product_template
@@ -915,9 +972,10 @@ msgstr ""
 #. module: product
 #: field:pricelist.partnerinfo,suppinfo_id:0
 msgid "Partner Information"
-msgstr "Informace partnera(Partner Information)"
+msgstr ""
 
 #. module: product
+#: model:product.category,name:product.product_category_7
 #: model:product.template,name:product.product_product_1_product_template
 msgid "Onsite Intervention"
 msgstr ""
@@ -930,7 +988,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
 msgid "Pricelist item"
-msgstr "Položka ceníku"
+msgstr ""
 
 #. module: product
 #: model:product.pricelist,name:product.list0
@@ -938,8 +996,8 @@ msgid "Public Pricelist"
 msgstr ""
 
 #. module: product
-#: model:product.template,name:product.product_product_21_product_template
-msgid "RAM on demand"
+#: model:product.category,name:product.product_category_11
+msgid "IT components kits"
 msgstr ""
 
 #. module: product
@@ -956,7 +1014,7 @@ msgstr ""
 #: view:product.product:0
 #: view:product.template:0
 msgid "Information"
-msgstr "Informace"
+msgstr ""
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -974,9 +1032,8 @@ msgid "Sales & Purchases"
 msgstr ""
 
 #. module: product
-#: view:product.product:0
-#: view:product.packaging:0
-msgid "Other Info"
+#: field:product.template,uom_po_id:0
+msgid "Purchase UoM"
 msgstr ""
 
 #. module: product
@@ -987,12 +1044,18 @@ msgstr ""
 #. module: product
 #: field:product.pricelist.version,items_id:0
 msgid "Price List Items"
-msgstr "Položky ceníku"
+msgstr ""
 
 #. module: product
 #: selection:product.template,state:0
 msgid "Obsolete"
-msgstr "Zastaralý"
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+#: view:product.packaging:0
+msgid "Other Info"
+msgstr ""
 
 #. module: product
 #: field:pricelist.partnerinfo,price:0
@@ -1000,15 +1063,20 @@ msgid "Unit Price"
 msgstr ""
 
 #. module: product
+#: model:product.category,name:product.cat2
+msgid "Private"
+msgstr ""
+
+#. module: product
 #: model:ir.model,name:product.model_product_price_type
 msgid "Price type"
-msgstr "Typ ceny"
+msgstr ""
 
 #. module: product
 #: view:product.product:0
 #: view:product.packaging:0
 msgid "Packaging"
-msgstr "Balení"
+msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_product
@@ -1018,7 +1086,7 @@ msgstr "Balení"
 #: view:product.product:0
 #: model:res.request.link,name:product.req_link_product
 msgid "Product"
-msgstr "Produkt"
+msgstr ""
 
 #. module: product
 #: field:pricelist.partnerinfo,name:0
@@ -1026,7 +1094,7 @@ msgstr "Produkt"
 #: field:product.template,description:0
 #: view:product.product:0
 msgid "Description"
-msgstr "Popis"
+msgstr ""
 
 #. module: product
 #: field:product.packaging,ean:0
@@ -1065,9 +1133,14 @@ msgid "Volume"
 msgstr ""
 
 #. module: product
+#: model:product.template,name:product.product_product_26_product_template
+msgid "Kit Keyboard + Mouse"
+msgstr ""
+
+#. module: product
 #: selection:product.template,supply_method:0
 msgid "Produce"
-msgstr "Produkce"
+msgstr ""
 
 #. module: product
 #: selection:product.template,procure_method:0
@@ -1087,12 +1160,12 @@ msgstr ""
 #. module: product
 #: field:product.product,variants:0
 msgid "Variants"
-msgstr "Varianty"
+msgstr ""
 
 #. module: product
 #: field:product.template,warranty:0
 msgid "Warranty (months)"
-msgstr "Záruka (měsíce)"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_mb1_product_template
@@ -1108,7 +1181,7 @@ msgstr ""
 #: view:product.product:0
 #: view:product.template:0
 msgid "Descriptions"
-msgstr "Popisy"
+msgstr ""
 
 #. module: product
 #: field:product.template,loc_case:0
@@ -1118,12 +1191,11 @@ msgstr ""
 #. module: product
 #: field:product.pricelist.version,date_end:0
 msgid "End Date"
-msgstr "Koncové datum"
+msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
 #: model:ir.ui.menu,name:product.menu_product_category_action_form
-#: view:product.category:0
 msgid "Products Categories"
 msgstr ""
 
@@ -1139,7 +1211,7 @@ msgstr ""
 #: field:product.uom.categ,name:0
 #: field:product.uom,name:0
 msgid "Name"
-msgstr "Název"
+msgstr ""
 
 #. module: product
 #: help:product.template,uos_coeff:0
@@ -1150,7 +1222,7 @@ msgstr ""
 #. module: product
 #: field:product.template,purchase_ok:0
 msgid "Can be Purchased"
-msgstr "Lze koupit"
+msgstr ""
 
 #. module: product
 #: field:product.template,uos_coeff:0
@@ -1168,7 +1240,7 @@ msgstr ""
 #: field:product.product,product_tmpl_id:0
 #: view:product.template:0
 msgid "Product Template"
-msgstr "Šablona produktu"
+msgstr ""
 
 #. module: product
 #: field:product.template,cost_method:0
@@ -1189,7 +1261,7 @@ msgstr ""
 #. module: product
 #: field:product.product,virtual_available:0
 msgid "Virtual Stock"
-msgstr "Virtuální sklad"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_tow1_product_template
@@ -1207,11 +1279,16 @@ msgstr ""
 #: field:product.category,sequence:0
 #: field:product.pricelist.item,sequence:0
 msgid "Sequence"
-msgstr "Sekvence"
+msgstr ""
 
 #. module: product
 #: field:product.template,list_price:0
 msgid "Sale Price"
+msgstr ""
+
+#. module: product
+#: model:product.category,name:product.product_category_accessories
+msgid "Accessories"
 msgstr ""
 
 #. module: product
@@ -1222,7 +1299,7 @@ msgstr ""
 #. module: product
 #: field:product.packaging,length:0
 msgid "Length"
-msgstr "Délka"
+msgstr ""
 
 #. module: product
 #: field:product.packaging,ul_qty:0
@@ -1242,7 +1319,7 @@ msgstr ""
 #. module: product
 #: field:product.pricelist.item,min_quantity:0
 msgid "Min. Quantity"
-msgstr "Min. množství"
+msgstr ""
 
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_label
@@ -1252,10 +1329,10 @@ msgstr ""
 #. module: product
 #: field:product.pricelist.item,price_max_margin:0
 msgid "Price Max. Margin"
-msgstr "Maximální marže"
+msgstr ""
 
 #. module: product
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
-msgstr "Sleva"
+msgstr ""
 

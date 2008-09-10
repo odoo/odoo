@@ -93,7 +93,7 @@ class wizard_vat(wizard.interface):
         for p_id in p_id_list:
             record=[] # this holds record per partner
             obj_partner=pooler.get_pool(cr.dbname).get('res.partner').browse(cr,uid,p_id)
-            cr.execute('select a.type,sum(credit)-sum(debit) from account_move_line l left join account_account a on (l.account_id=a.id) where a.type in ('"'income'"','"'tax'"') and l.partner_id=%d and l.date between %s group by a.type'%(p_id,period))
+            cr.execute('select b.code,sum(credit)-sum(debit) from account_move_line l left join account_account a on (l.account_id=a.id) left join account_account_type b on (a.user_type=b.id) where b.code in ('"'produit'"','"'tax'"') and l.partner_id=%d and l.date between %s group by a.type'%(p_id,period))
             line_info=cr.fetchall()
             if not line_info:
                 continue
@@ -108,7 +108,7 @@ class wizard_vat(wizard.interface):
                 else:
                     raise wizard.except_wizard('Data Insufficient!', 'The Partner "'+obj_partner.name + '"'' has no default type address!')
             if len(line_info)==1:
-                if line_info[0][0]=='income':
+                if line_info[0][0]=='produit':
                        record.append(0.00)
                        record.append(line_info[0][1])
                 else:

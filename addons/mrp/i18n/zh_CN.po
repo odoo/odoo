@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@tinyerp.com"
-"POT-Creation-Date: 2008-09-04 08:42:44+0000"
-"PO-Revision-Date: 2008-09-04 08:42:44+0000"
+"Report-Msgid-Bugs-To: support@openerp.com"
+"POT-Creation-Date: 2008-09-10 12:55:22+0000"
+"PO-Revision-Date: 2008-09-10 12:55:22+0000"
 "Last-Translator: <>"
 "Language-Team: "
 "MIME-Version: 1.0"
@@ -18,12 +18,12 @@ msgstr ""
 #. module: mrp
 #: field:mrp.workcenter,time_efficiency:0
 msgid "Time Efficiency"
-msgstr "有效时间"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.procurement,state:0
 msgid "Confirmed"
-msgstr "已审核"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.production,move_created_ids:0
@@ -33,17 +33,17 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom_revision
 msgid "Bill of material revisions"
-msgstr "物料清单版本"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Force Reservation"
-msgstr "强制预留"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom.revision,author_id:0
 msgid "Author"
-msgstr "作者"
+msgstr ""
 
 #. module: mrp
 #: help:mrp.bom,type:0
@@ -53,12 +53,12 @@ msgstr ""
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle:0
 msgid "Cost per cycle"
-msgstr "每期费用"
+msgstr ""
 
 #. module: mrp
 #: wizard_view:mrp.procurement.compute.all,init:0
 msgid "Scheduler Parameters"
-msgstr "计划参数"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.procurement:0
@@ -68,12 +68,6 @@ msgstr ""
 #. module: mrp
 #: rml:bom.structure:0
 msgid "BOM"
-msgstr ""
-
-#. module: mrp
-#: wizard_field:mrp.procurement.compute.all,init,user_id:0
-#: wizard_field:mrp.procurement.compute,init,user_id:0
-msgid "Send Result To"
 msgstr ""
 
 #. module: mrp
@@ -87,8 +81,14 @@ msgid "Analytic Journal"
 msgstr ""
 
 #. module: mrp
-#: view:mrp.procurement:0
-msgid "Details"
+#: model:ir.actions.wizard,name:mrp.wiz_mrp_proc2
+#: model:ir.ui.menu,name:mrp.menu_wiz_mrp_proc2
+msgid "Compute Stock Minimum Rules Only"
+msgstr ""
+
+#. module: mrp
+#: help:res.company,po_lead:0
+msgid "This is the leads/security time for each purchase order."
 msgstr ""
 
 #. module: mrp
@@ -97,33 +97,31 @@ msgid "Finnished Products Location"
 msgstr ""
 
 #. module: mrp
-#: wizard_field:mrp.procurement.compute.all,init,picking_lead:0
-#: wizard_field:mrp.procurement.compute,init,picking_lead:0
-msgid "Packing Lead Time"
+#: field:mrp.procurement,product_uos_qty:0
+msgid "UoS Quantity"
 msgstr ""
 
 #. module: mrp
 #: selection:mrp.workcenter,type:0
 msgid "Human Resource"
-msgstr "人事管理"
+msgstr ""
 
 #. module: mrp
 #: wizard_button:mrp.procurement.compute.all,init,compute:0
 #: wizard_button:mrp.procurement.compute,init,compute:0
 #: wizard_button:mrp.procurement.orderpoint.compute,init,compute:0
 msgid "Compute Procurements"
-msgstr "计算需求"
+msgstr ""
 
 #. module: mrp
-#: wizard_field:mrp.procurement.compute.all,init,po_lead:0
-#: wizard_field:mrp.procurement.compute,init,po_lead:0
-msgid "PO Lead Time"
+#: view:mrp.routing.workcenter:0
+msgid "Routing Workcenters"
 msgstr ""
 
 #. module: mrp
 #: field:mrp.procurement,date_close:0
 msgid "Date Closed"
-msgstr "关闭日期"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.production:0
@@ -136,25 +134,25 @@ msgid "UoM"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.procurement,origin:0
-#: field:mrp.production,origin:0
-msgid "Origin"
+#: field:mrp.production.product.line,production_id:0
+#: field:mrp.production.workcenter.line,production_id:0
+msgid "Production Order"
 msgstr ""
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,hour:0
 msgid "Nbr of hour"
-msgstr "小时数"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.workcenter,time_start:0
 msgid "Time before prod."
-msgstr "生产前时间"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,date_stop:0
 msgid "Valid until"
-msgstr "有效至"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing_workcenter
@@ -174,10 +172,10 @@ msgid "Property Categories"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.procurement,purchase_id:0
-#: field:stock.warehouse.orderpoint,procurement_id:0
-msgid "Purchase Order"
-msgstr "采购订单"
+#: model:ir.actions.wizard,name:mrp.wiz_mrp_proc1
+#: model:ir.ui.menu,name:mrp.menu_wiz_mrp_proc1
+msgid "Compute Procurements Only"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_product_2_mrp_bom
@@ -185,33 +183,33 @@ msgstr "采购订单"
 #: field:mrp.production,bom_id:0
 #: view:mrp.bom:0
 msgid "Bill of Material"
-msgstr "物料清单"
+msgstr ""
 
 #. module: mrp
 #: wizard_view:mrp.workcenter.load,init:0
 msgid "Select time unit"
-msgstr "选择时间单位"
-
-#. module: mrp
-#: constraint:mrp.bom:0
-msgid "Error ! You can not create recursive BoM."
 msgstr ""
 
 #. module: mrp
 #: wizard_field:product_price,init,number:0
 msgid "Number of products to produce"
-msgstr "产品生产数量"
+msgstr ""
+
+#. module: mrp
+#: field:res.company,manufacturing_lead:0
+msgid "Manufacturity Lead Time"
+msgstr ""
 
 #. module: mrp
 #: field:stock.warehouse.orderpoint,logic:0
 msgid "Reordering Mode"
-msgstr "再订货模式"
+msgstr ""
 
 #. module: mrp
-#: wizard_view:mrp.procurement.compute.all,init:0
-#: wizard_view:mrp.procurement.compute,init:0
-msgid "Control"
-msgstr "控制"
+#: field:mrp.procurement,origin:0
+#: field:mrp.production,origin:0
+msgid "Origin"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action4
@@ -222,15 +220,16 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_reordering
 msgid "Reordering Policy"
-msgstr "再定货规则"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.production,move_lines:0
 msgid "Products Consummed"
-msgstr "所消耗的产品"
+msgstr ""
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_configuration
+#: view:res.company:0
 msgid "Configuration"
 msgstr "设置"
 
@@ -254,11 +253,6 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Normal BoM"
-msgstr "普通BOM"
-
-#. module: mrp
-#: field:mrp.workcenter,time_cycle:0
-msgid "Time for 1 cycle (hour)"
 msgstr ""
 
 #. module: mrp
@@ -276,17 +270,17 @@ msgstr ""
 #. module: mrp
 #: view:mrp.routing:0
 msgid "Workcenter Operations"
-msgstr "工作中心操作"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.bom:0
 msgid "Revisions"
-msgstr "修订记录"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.property,composition:0
 msgid "Properties composition"
-msgstr "属性组成"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,product_efficiency:0
@@ -296,29 +290,29 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse_orderpoint
 msgid "Orderpoint minimum rule"
-msgstr "最小采购点法"
+msgstr ""
 
 #. module: mrp
 #: wizard_view:mrp.procurement.compute,init:0
 #: wizard_view:mrp.procurement.orderpoint.compute,init:0
 msgid "Parameters"
-msgstr "参数"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.procurement:0
 msgid "Confirm"
-msgstr "审核"
+msgstr ""
 
 #. module: mrp
 #: rml:bom.structure:0
 #: model:ir.actions.report.xml,name:mrp.report_bom_structure
 msgid "BOM Structure"
-msgstr "物料清单结构"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "In Production"
-msgstr "生产中"
+msgstr ""
 
 #. module: mrp
 #: field:stock.warehouse.orderpoint,qty_multiple:0
@@ -328,13 +322,13 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_workcenter_line
 msgid "Production workcenters used"
-msgstr "所用的工作中心"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.procurement,priority:0
 #: field:mrp.production,priority:0
 msgid "Priority"
-msgstr "优先级"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.procurement,state:0
@@ -351,7 +345,7 @@ msgstr ""
 #: field:mrp.bom,routing_id:0
 #: view:mrp.routing:0
 msgid "Routing"
-msgstr "工艺路线"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,product_rounding:0
@@ -361,17 +355,17 @@ msgstr ""
 #. module: mrp
 #: wizard_button:mrp.workcenter.load,init,report:0
 msgid "Print"
-msgstr "打印"
+msgstr ""
 
 #. module: mrp
 #: selection:stock.warehouse.orderpoint,logic:0
 msgid "Best price (not yet active!)"
-msgstr "最优价（尚未激活!)"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.workcenter,type:0
 msgid "Type"
-msgstr "类型"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.procurement:0
@@ -385,9 +379,14 @@ msgid "New Procurement"
 msgstr ""
 
 #. module: mrp
+#: view:res.company:0
+msgid "MRP & Logistic Scheduler"
+msgstr ""
+
+#. module: mrp
 #: view:mrp.production:0
 msgid "Recreate Picking"
-msgstr "重新创建收货单"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -397,12 +396,17 @@ msgstr "重新创建收货单"
 #: view:mrp.routing.workcenter:0
 #: view:mrp.workcenter:0
 msgid "General Information"
-msgstr "一般信息"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.workcenter,type:0
 msgid "Tool"
-msgstr "工具"
+msgstr ""
+
+#. module: mrp
+#: help:res.company,manufacturing_lead:0
+msgid "Security days for each manufacturing operation."
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,product_qty:0
@@ -410,12 +414,12 @@ msgstr "工具"
 #: field:mrp.production,product_qty:0
 #: field:mrp.production,product_uos_qty:0
 msgid "Product Qty"
-msgstr "货品数量"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.routing.workcenter,cycle_nbr:0
 msgid "Number of cycle"
-msgstr "周期数"
+msgstr ""
 
 #. module: mrp
 #: rml:bom.structure:0
@@ -434,6 +438,11 @@ msgid "New Bill of Materials"
 msgstr ""
 
 #. module: mrp
+#: field:mrp.workcenter,costs_cycle_account_id:0
+msgid "Cycle Account"
+msgstr ""
+
+#. module: mrp
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr ""
@@ -441,27 +450,32 @@ msgstr ""
 #. module: mrp
 #: field:mrp.workcenter,time_stop:0
 msgid "Time after prod."
-msgstr "生产后时间"
+msgstr ""
 
 #. module: mrp
 #: wizard_field:mrp.workcenter.load,init,time_unit:0
 msgid "Type of period"
-msgstr "期间类型"
+msgstr ""
 
 #. module: mrp
-#: field:mrp.workcenter,costs_cycle_account_id:0
-msgid "Cycle Account"
+#: field:mrp.production,picking_id:0
+msgid "Packing list"
+msgstr ""
+
+#. module: mrp
+#: field:res.company,schedule_range:0
+msgid "Scheduler Range"
 msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,date_start:0
 msgid "Valid from"
-msgstr "有效自"
+msgstr ""
 
 #. module: mrp
 #: field:stock.warehouse.orderpoint,product_max_qty:0
 msgid "Max Quantity"
-msgstr "最大数量"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,revision_type:0
@@ -472,7 +486,7 @@ msgstr ""
 #: model:ir.model,name:mrp.model_mrp_procurement
 #: view:mrp.procurement:0
 msgid "Procurement"
-msgstr "采购"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action
@@ -483,49 +497,38 @@ msgstr ""
 #. module: mrp
 #: view:mrp.workcenter:0
 msgid "Capacity Information"
-msgstr "能力信息"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_property
 msgid "Property"
-msgstr "属性"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.routing.workcenter,routing_id:0
 msgid "Parent Routing"
-msgstr "上级工艺路线"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.wizard,name:mrp.wizard_price
 msgid "Product Cost Structure"
-msgstr "产品成本构成"
-
-#. module: mrp
-#: field:mrp.procurement,product_uos_qty:0
-msgid "UoS Quantity"
 msgstr ""
 
 #. module: mrp
-#: model:ir.actions.wizard,name:mrp.wiz_mrp_proc2
-#: model:ir.ui.menu,name:mrp.menu_wiz_mrp_proc2
-msgid "Compute stock minimum rules"
-msgstr "计算最小库存规则"
+#: view:mrp.workcenter:0
+msgid "Analytic Accounting"
+msgstr ""
 
 #. module: mrp
 #: field:stock.warehouse.orderpoint,product_min_qty:0
 msgid "Min Quantity"
-msgstr "最小数量"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.procurement,priority:0
 #: selection:mrp.production,priority:0
 msgid "Urgent"
-msgstr "紧急"
-
-#. module: mrp
-#: model:ir.ui.menu,name:mrp.menu_mrp_root
-msgid "Production Management"
-msgstr "生产管理"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.property,composition:0
@@ -536,27 +539,27 @@ msgstr ""
 #: field:mrp.bom.revision,bom_id:0
 #: field:mrp.procurement,bom_id:0
 msgid "BoM"
-msgstr "物料清单"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.bom:0
 msgid "BoM Structure"
-msgstr "物料清单结构"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.production,date_start:0
 msgid "Start Date"
-msgstr "开始日期"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.workcenter,timesheet_id:0
 msgid "Timesheet"
-msgstr "工作时间表"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Waiting Goods"
-msgstr "等待原料"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.workcenter,costs_hour_account_id:0
@@ -566,17 +569,17 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.bom,revision_type:0
 msgid "alphabetical indices"
-msgstr "字模顺序"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.production,product_lines:0
 msgid "Scheduled goods"
-msgstr "计划中的货品"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.procurement:0
 msgid "Procurement Lines"
-msgstr "需求计划明细"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_new
@@ -587,7 +590,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.procurement,purchase_line_id:0
 msgid "Purchase Order Line"
-msgstr "采购订单明细"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom.revision,last_indice:0
@@ -598,24 +601,18 @@ msgstr ""
 #: field:mrp.bom,revision_ids:0
 #: view:mrp.bom.revision:0
 msgid "BoM Revisions"
-msgstr "物料清单版本"
-
-#. module: mrp
-#: wizard_field:mrp.procurement.compute.all,init,schedule_cycle:0
-#: wizard_field:mrp.procurement.compute,init,schedule_cycle:0
-msgid "Scheduler Cycle"
 msgstr ""
 
 #. module: mrp
 #: view:mrp.procurement:0
 msgid "Retry"
-msgstr "重试"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.procurement,state:0
 #: selection:mrp.production,state:0
 msgid "Draft"
-msgstr "草稿"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.bom,type:0
@@ -623,26 +620,24 @@ msgid "Sets / Phantom"
 msgstr ""
 
 #. module: mrp
-#: selection:mrp.procurement,priority:0
-#: selection:mrp.production,priority:0
-msgid "Not urgent"
-msgstr " 不紧急"
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.routing.workcenter,hour_nbr:0
 msgid "Number of hours"
-msgstr "小时数"
+msgstr ""
 
 #. module: mrp
-#: wizard_field:mrp.procurement.compute.all,init,security_lead:0
-#: wizard_field:mrp.procurement.compute,init,security_lead:0
+#: field:res.company,security_lead:0
 msgid "Security Days"
 msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,position:0
 msgid "Internal Ref."
-msgstr "内部参考"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.procurement,state:0
@@ -654,13 +649,13 @@ msgstr ""
 #. module: mrp
 #: wizard_view:product_price,init:0
 msgid "Paid ?"
-msgstr "已付"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.procurement,priority:0
 #: selection:mrp.production,priority:0
 msgid "Normal"
-msgstr "一般"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action2
@@ -676,7 +671,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Ready to Produce"
-msgstr "准备开工"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -684,10 +679,9 @@ msgid "Packing Exception"
 msgstr ""
 
 #. module: mrp
-#: wizard_view:mrp.procurement.compute.all,init:0
-#: wizard_view:mrp.procurement.compute,init:0
-msgid "Time (days)"
-msgstr "时间（天）"
+#: field:mrp.bom.revision,name:0
+msgid "Modification name"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,active:0
@@ -695,22 +689,17 @@ msgstr "时间（天）"
 #: field:mrp.workcenter,active:0
 #: field:stock.warehouse.orderpoint,active:0
 msgid "Active"
-msgstr "有效"
-
-#. module: mrp
-#: field:mrp.bom.revision,name:0
-msgid "Modification name"
 msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,type:0
 msgid "BoM Type"
-msgstr "物料清单类型"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,bom_id:0
 msgid "Parent BoM"
-msgstr "上级BOM"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_action
@@ -727,25 +716,24 @@ msgstr ""
 #. module: mrp
 #: field:mrp.workcenter,costs_hour:0
 msgid "Cost per hour"
-msgstr "每小时费用"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.procurement,date_planned:0
 #: field:mrp.production,date_planned:0
 msgid "Scheduled date"
-msgstr "计划日期"
+msgstr ""
 
 #. module: mrp
-#: model:ir.actions.wizard,name:mrp.wiz_mrp_proc0
-#: model:ir.ui.menu,name:mrp.mrp_Sched_all
-msgid "Compute all schedulers"
-msgstr "计算所有计划项"
+#: selection:mrp.procurement,state:0
+msgid "Exception"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.procurement,priority:0
 #: selection:mrp.production,priority:0
 msgid "Very Urgent"
-msgstr "非常紧急"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.procurement,procure_method:0
@@ -755,7 +743,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production.workcenter.line,cycle:0
 msgid "Nbr of cycle"
-msgstr "周期数"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.procurement:0
@@ -773,22 +761,17 @@ msgstr ""
 #. module: mrp
 #: view:mrp.procurement:0
 msgid "Run procurement"
-msgstr "运行需求分析"
+msgstr ""
 
 #. module: mrp
-#: selection:stock.warehouse.orderpoint,logic:0
-msgid "Order to Max"
-msgstr "订到最大值"
+#: help:res.company,schedule_range:0
+msgid "This is the time frame analysed by the scheduler when computing procurements. All procurement that are not between today and today+range are skipped for futur computation."
+msgstr ""
 
 #. module: mrp
 #: help:mrp.bom,routing_id:0
 msgid "The list of operations (list of workcenters) to produce the finnished product. The routing is mainly used to compute workcenter costs during operations and to plan futur loads on workcenters based on production plannification."
 msgstr ""
-
-#. module: mrp
-#: view:mrp.routing.workcenter:0
-msgid "Routing Workcenters"
-msgstr "工作中心"
 
 #. module: mrp
 #: rml:bom.structure:0
@@ -799,7 +782,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:0
 msgid "Production done"
-msgstr "生产完成"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
@@ -810,7 +793,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.workcenter,costs_general_account_id:0
 msgid "General Account"
-msgstr "总帐"
+msgstr ""
 
 #. module: mrp
 #: rml:bom.structure:0
@@ -818,7 +801,7 @@ msgstr "总帐"
 #: field:mrp.routing,code:0
 #: field:mrp.workcenter,code:0
 msgid "Code"
-msgstr "编码"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action4
@@ -831,17 +814,28 @@ msgstr ""
 #: field:mrp.property,group_id:0
 #: field:mrp.property.group,name:0
 msgid "Property Group"
-msgstr "属性组"
+msgstr ""
+
+#. module: mrp
+#: selection:mrp.procurement,priority:0
+#: selection:mrp.production,priority:0
+msgid "Not urgent"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Confirm Production"
-msgstr "审核生产单"
+msgstr ""
+
+#. module: mrp
+#: help:res.company,security_lead:0
+msgid "This is the days added to what you promise to customers for security purpose"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.procurement,procure_method:0
 msgid "from stock"
-msgstr "计划生产"
+msgstr ""
 
 #. module: mrp
 #: field:stock.move,procurements:0
@@ -852,12 +846,12 @@ msgstr ""
 #: selection:mrp.procurement,state:0
 #: selection:mrp.production,state:0
 msgid "Done"
-msgstr "完成"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.production.workcenter.line:0
 msgid "Production Workcenters"
-msgstr "工作中心"
+msgstr ""
 
 #. module: mrp
 #: wizard_button:product_price,init,end:0
@@ -869,10 +863,11 @@ msgstr "工作中心"
 #: view:mrp.procurement:0
 #: view:mrp.production:0
 msgid "Cancel"
-msgstr "取消"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.procurement,location_id:0
+#: field:stock.warehouse.orderpoint,location_id:0
 msgid "Location"
 msgstr ""
 
@@ -882,19 +877,8 @@ msgid "Latest error"
 msgstr ""
 
 #. module: mrp
-#: model:ir.actions.wizard,name:mrp.wiz_mrp_proc1
-#: model:ir.ui.menu,name:mrp.menu_wiz_mrp_proc1
-msgid "Compute procurement"
-msgstr "计算需求"
-
-#. module: mrp
-#: view:mrp.workcenter:0
-msgid "Analytic Accounting"
-msgstr "分析科目"
-
-#. module: mrp
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
+#: wizard_view:mrp.procurement.compute,init:0
+msgid "This wizard will schedule procurements."
 msgstr ""
 
 #. module: mrp
@@ -903,15 +887,9 @@ msgid "Production scheduled products"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.production.product.line,production_id:0
-#: field:mrp.production.workcenter.line,production_id:0
-msgid "Production Order"
-msgstr "生产单"
-
-#. module: mrp
-#: selection:mrp.procurement,state:0
-msgid "Exception"
-msgstr "报错"
+#: field:mrp.workcenter,time_cycle:0
+msgid "Time for 1 cycle (hour)"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.production,move_prod_id:0
@@ -921,23 +899,22 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.workcenter,type:0
 msgid "Machine"
-msgstr "机器"
+msgstr ""
 
 #. module: mrp
 #: field:stock.warehouse.orderpoint,warehouse_id:0
 msgid "Warehouse"
-msgstr "仓库"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
 #: field:stock.move,production_id:0
 msgid "Production"
-msgstr "生产"
+msgstr ""
 
 #. module: mrp
-#: wizard_field:mrp.procurement.compute.all,init,po_cycle:0
-#: wizard_field:mrp.procurement.compute,init,po_cycle:0
-msgid "PO Cycle"
+#: view:mrp.procurement:0
+msgid "Details"
 msgstr ""
 
 #. module: mrp
@@ -953,12 +930,12 @@ msgstr ""
 #: model:ir.ui.menu,name:mrp.menu_action_orderpoint_form
 #: view:stock.warehouse.orderpoint:0
 msgid "Minimum Stock Rules"
-msgstr "最小存货规则"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Production orders"
-msgstr "生产单"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.procurement,close_move:0
@@ -968,7 +945,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.workcenter,capacity_per_cycle:0
 msgid "Capacity per Cycle"
-msgstr "每周期能力"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,product_id:0
@@ -977,7 +954,7 @@ msgstr "每周期能力"
 #: field:mrp.production.product.line,product_id:0
 #: field:stock.warehouse.orderpoint,product_id:0
 msgid "Product"
-msgstr "货品"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom.revision,description:0
@@ -990,17 +967,17 @@ msgstr "货品"
 #: view:mrp.routing:0
 #: view:mrp.workcenter:0
 msgid "Description"
-msgstr "说明"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Canceled"
-msgstr "已取消"
+msgstr ""
 
 #. module: mrp
 #: rml:bom.structure:0
 msgid "-"
-msgstr "-"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,product_uos:0
@@ -1011,7 +988,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.procurement,state:0
 msgid "Running"
-msgstr "运行中"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,product_uom:0
@@ -1020,7 +997,7 @@ msgstr "运行中"
 #: field:mrp.production,product_uos:0
 #: field:stock.warehouse.orderpoint,product_uom:0
 msgid "Product UOM"
-msgstr "产品计量单位"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
@@ -1033,22 +1010,27 @@ msgstr ""
 #. module: mrp
 #: view:mrp.procurement:0
 msgid "UOM"
-msgstr "计量单位"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,bom_lines:0
 msgid "BoM Lines"
-msgstr "物料清单明细"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.procurement,procure_method:0
 msgid "on order"
-msgstr "来单生产"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.procurement,move_id:0
 msgid "Reservation"
-msgstr "预定"
+msgstr ""
+
+#. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_mrp_root
+msgid "Manufacturing"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action3
@@ -1059,12 +1041,18 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production.lot.line:0
 msgid "Production Products"
-msgstr "产品生产"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.production,date_finnished:0
 msgid "End Date"
-msgstr "结束日期"
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.wizard,name:mrp.wiz_mrp_proc0
+#: model:ir.ui.menu,name:mrp.mrp_Sched_all
+msgid "Compute All Schedulers"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_tree_action
@@ -1083,12 +1071,12 @@ msgstr ""
 #: field:mrp.workcenter,name:0
 #: field:stock.warehouse.orderpoint,name:0
 msgid "Name"
-msgstr "名称"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.wizard,name:mrp.wizard_workcenter_load
 msgid "Workcenter load"
-msgstr "工作中心负荷"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.procurement:0
@@ -1098,7 +1086,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.property,composition:0
 msgid "max"
-msgstr "最大"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_procurement_action5
@@ -1119,7 +1107,12 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:0
 msgid "Compute Data"
-msgstr "计算"
+msgstr ""
+
+#. module: mrp
+#: view:mrp.production.lot.line:0
+msgid "Production Products Consommation"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.procurement,product_uom:0
@@ -1132,27 +1125,28 @@ msgstr ""
 #: field:mrp.routing.workcenter,workcenter_id:0
 #: view:mrp.workcenter:0
 msgid "Workcenter"
-msgstr "工作中心"
+msgstr ""
 
 #. module: mrp
 #: wizard_button:product_price,init,price:0
 msgid "Print product price"
-msgstr "打印产品价格"
+msgstr ""
 
 #. module: mrp
-#: field:mrp.production,picking_id:0
-msgid "Packing list"
+#: field:mrp.procurement,purchase_id:0
+#: field:stock.warehouse.orderpoint,procurement_id:0
+msgid "Purchase Order"
 msgstr ""
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Start Production"
-msgstr "启动生产"
+msgstr ""
 
 #. module: mrp
 #: wizard_field:mrp.workcenter.load,init,measure_unit:0
 msgid "Amount measuring unit"
-msgstr "金额计量单位"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom.revision,date:0
@@ -1162,19 +1156,19 @@ msgstr ""
 #. module: mrp
 #: view:mrp.property.group:0
 msgid "Properties categories"
-msgstr "属性分类"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,sequence:0
 #: field:mrp.production.workcenter.line,sequence:0
 #: field:mrp.routing.workcenter,sequence:0
 msgid "Sequence"
-msgstr "序号"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.property,composition:0
 msgid "min"
-msgstr "最小"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action2
@@ -1189,8 +1183,8 @@ msgid "Scheduled Products"
 msgstr ""
 
 #. module: mrp
-#: view:mrp.production.lot.line:0
-msgid "Production Products Consommation"
+#: field:res.company,po_lead:0
+msgid "Purchase Lead Time"
 msgstr ""
 
 #. module: mrp
@@ -1206,5 +1200,10 @@ msgstr ""
 #. module: mrp
 #: field:mrp.routing,location_id:0
 msgid "Production Location"
-msgstr "生产地点"
+msgstr ""
+
+#. module: mrp
+#: selection:stock.warehouse.orderpoint,logic:0
+msgid "Order to Max"
+msgstr ""
 
