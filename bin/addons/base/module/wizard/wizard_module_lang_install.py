@@ -57,8 +57,7 @@ class wizard_lang_install(wizard.interface):
     def _lang_install(self, cr, uid, data, context):
         lang = data['form']['lang']
         if lang:
-            pool = pooler.get_pool(cr.dbname)
-            modobj = cr.pool.get('ir.module.module')
+            modobj = pooler.get_pool(cr.dbname).get('ir.module.module')
             mids = modobj.search(cr, uid, [('state', '=', 'installed')])
             modobj.update_translations(cr, uid, mids, lang)
         return {}
