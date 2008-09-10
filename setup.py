@@ -76,8 +76,8 @@ def check_modules():
 
 def find_addons():
     for (dp, dn, names) in os.walk(opj('bin', 'addons')):
-        if '.svn' in dn:
-            dn.remove('.svn')
+        if '.bzr' in dn:
+            dn.remove('.bzr')
         for dirpath, dirnames, filenames in os.walk(dp):
             if '__init__.py' in filenames:
                 modname = dirpath.replace(os.path.sep, '.')
@@ -89,17 +89,17 @@ def data_files():
     if os.name == 'nt':
         os.chdir('bin')
         for (dp,dn,names) in os.walk('addons'):
-            if '.svn' in dn:
-                dn.remove('.svn')
+            if '.bzr' in dn:
+                dn.remove('.bzr')
             files.append((dp, map(lambda x: os.path.join('bin', dp,x), names)))
         for (dp,dn,names) in os.walk('i18n'):
-            if '.svn' in dn:
-                dn.remove('.svn')
+            if '.bzr' in dn:
+                dn.remove('.bzr')
             files.append((dp, map(lambda x: os.path.join('bin', dp,x), names)))
         os.chdir('..')
         for (dp,dn,names) in os.walk('doc'):
-            if '.svn' in dn:
-                dn.remove('.svn')
+            if '.bzr' in dn:
+                dn.remove('.bzr')
             files.append((dp, map(lambda x: os.path.join(dp,x), names)))
     else:
         files.append((opj('share', 'man', 'man1'), ['man/tinyerp-server.1']))
@@ -154,7 +154,7 @@ f.close()
 options = {"py2exe": {
     "compressed": 0,
     "optimize": 2, 
-    "packages": ["encodings","mx.DateTime","wizard","pychart","PIL", "pyparsing", "pydot"],
+    "packages": ["decimal", "xml", "xml.dom", "xml.xpath", "encodings","mx.DateTime","wizard","pychart","PIL", "pyparsing", "pydot"],
     "excludes" : ["Tkconstants","Tkinter","tcl"],
     }}
 
