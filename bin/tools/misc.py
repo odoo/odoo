@@ -256,6 +256,23 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
     raise IOError, 'File not found : '+str(name)
 
 
+def oswalksymlinks(top, topdown=True, onerror=None):
+    """
+    same as os.walk but follow symlinks
+    attention: all symlinks are walked before all normals directories
+    """
+    for dirpath, dirnames, filenames in os.walk(top, topdown, onerror):
+        if topdown:
+            yield dirpath, dirnames, filenames
+
+        symlinks = filter(lambda dirname: os.path.islink(os.path.join(dirpath, dirname)), dirnames)
+        for s in symlinks:
+            for x in oswalksymlinks(os.path.join(dirpath, s), topdown, onerror):
+                yield x
+                
+        if not topdown:
+            yield dirpath, dirnames, filenames
+
 #----------------------------------------------------------
 # iterables
 #----------------------------------------------------------
@@ -638,7 +655,7 @@ def get_languages():
 
 def scan_languages():
     import glob
-    file_list = [os.path.splitext(os.path.basename(f))[0] for f in glob.glob(os.path.join(config['root_path'], 'i18n', '*.csv'))]
+    file_list = [os.path.splitext(os.path.basename(f))[0] for f in glob.glob(os.path.join(config['addons_path'], 'base', 'i18n', '*.po'))]
     lang_dict = get_languages()
     return [(lang, lang_dict.get(lang, lang)) for lang in file_list]
 
@@ -672,6 +689,18 @@ def mod10r(number):
     return result + str((10 - report) % 10)
 
 
+def human_size(sz):
+    """
+    Return the size in a human readable format
+    """
+    if not sz:
+        return False
+    units = ('bytes', 'Kb', 'Mb', 'Gb')
+    s, i = float(sz), 0
+    while s >= 1024 and i < len(units)-1:
+        s = s / 1024
+        i = i + 1
+    return "%0.2f %s" % (s, units[i])
 
 
 if __name__ == '__main__':

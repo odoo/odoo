@@ -70,7 +70,7 @@ class expression(object):
                         return []
                     ids2 = table.search(cr, uid, [(parent, 'in', ids)], context=context)
                     return ids+rg(ids2, table, parent)
-                return [(left, 'in', rg(ids2, table, parent))]
+                return [(left, 'in', rg(ids, table, parent))]
 
         self.__main_table = table
 
@@ -126,7 +126,7 @@ class expression(object):
 
             elif field._type == 'one2many':
                 if isinstance(right, basestring):
-                    ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator)]
+                    ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator,limit=None)]
                 else:
                     ids2 = list(right)
                 if not ids2:
@@ -138,7 +138,7 @@ class expression(object):
                 #FIXME
                 if operator == 'child_of':
                     if isinstance(right, basestring):
-                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'like')]
+                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'like',limit=None)]
                     else:
                         ids2 = list(right)
 
@@ -159,7 +159,7 @@ class expression(object):
             elif field._type == 'many2one':
                 if operator == 'child_of':
                     if isinstance(right, basestring):
-                        ids2 = [x[0] for x in field_obj.search_name(cr, uid, right, [], 'like')]
+                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'like',limit=None)]
                     else:
                         ids2 = list(right)
 
@@ -171,7 +171,7 @@ class expression(object):
                     self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
                 else:
                     if isinstance(right, basestring):
-                        res_ids = field_obj.name_search(cr, uid, right, [], operator)
+                        res_ids = field_obj.name_search(cr, uid, right, [], operator,limit=None)
                         right = map(lambda x: x[0], res_ids)
                         self.__exp[i] = (left, 'in', right)
             else:
