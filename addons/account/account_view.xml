@@ -120,7 +120,6 @@
                     <notebook colspan="4">
                         <page string="General Information">
                             <newline/>
-                            <!--<field name="sign"/>-->
                             <field name="user_type" select="1"/>
                             <field name="currency_id" select="2"/>
                             <field name="reconcile"/>
@@ -1416,42 +1415,7 @@
             <field name="target">new</field>
         </record>
 
-   	<!--	<record id="view_config_journal_bank_account" model="ir.ui.view">
-            <field name="name">Configure Journal of Bank account</field>
-            <field name="model">account.config.journal.bank.account</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Configure Journal of Bank account">
-                    <separator col="4" colspan="4" string="Configure Journal of Bank account"/>
-                    <newline/>
-                    <field colspan="4" mode="tree" name="lines_id" nolabel="1" widget="one2many_list">
-                        <form string="Journal Lines">
-                            <field name="name"/>
-                            <field name="bank_account_id"/>
-                            <field name="view_id"/>
-                        </form>
-                        <tree editable="bottom" string="Account Journals">
-                            <field name="name"/>
-                            <field name="bank_account_id"/>
-                            <field name="view_id"/>
-                        </tree>
-                    </field>
-                    <group col="4" colspan="4">
-                        <button icon="gtk-cancel" special="cancel" name="action_cancel" type="object" string="Cancel"/>
-                        <button icon="gtk-ok" name="action_create" string="Create" type="object"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-
-        <record id="action_config_journal_bank_account" model="ir.actions.act_window">
-            <field name="name">Configure Journal of Bank account</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.config.journal.bank.account</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>-->
+   	
 
         <!-- register configuration wizard -->
 
@@ -1462,12 +1426,6 @@
             <field name="state">open</field>
         </record>
 
-        <!--<record id="config_journal_bank_account" model="ir.module.module.configuration.step">
-            <field name="name">Define journal for bank accounts</field>
-            <field name="note">Define journal for bank accounts</field>
-            <field name="action_id" ref="action_config_journal_bank_account"/>
-            <field name="state">open</field>
-        </record>-->
 
         <!-- Account Templates -->
 
@@ -1719,33 +1677,5 @@
 		<menuitem parent="account.account_account_menu" action="action_wizard_multi_chart" id="menu_wizard"/>
 
 
-        <!-- wizard account duplicate chart -->
-<!--        <record id="view_wizard_account_duplicate_chart" model="ir.ui.view">
-            <field name="name">wizard.account.chart.duplicate.form</field>
-            <field name="model">wizard.account.chart.duplicate</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Duplicate Chart of Accounts">
-                        <field name="account_id"/>
-                        <field name="company_id"/>
-                        <newline/>
-                        <group colspan="4">
-                            <button icon="gtk-cancel" special="cancel" type="object" string="Cancel"/>
-                            <button icon="gtk-ok" name="action_create" string="Create" type="object"/>
-                        </group>
-                </form>
-            </field>
-        </record>
-
-        <record id="action_wizard_account_duplicate_chart_form" model="ir.actions.act_window">
-            <field name="name">Duplicate Chart of Accounts</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">wizard.account.chart.duplicate</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
-        <menuitem action="action_wizard_account_duplicate_chart_form" id="menu_action_wizard_account_duplicate_chart_form" parent="account_account_menu"/>
--->
     </data>
 </terp>
