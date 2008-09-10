@@ -244,6 +244,7 @@ class account_account(osv.osv):
 
         'parent_left': fields.integer('Parent Left', select=1),
         'parent_right': fields.integer('Parent Right', select=1),
+        'check_history': fields.boolean('Display History', help="Check this box if you want to print all entries otherwise it will print balance of this account")
     }
 
     def _default_company(self, cr, uid, context={}):
@@ -257,6 +258,7 @@ class account_account(osv.osv):
         'reconcile': lambda *a: False,
         'company_id': _default_company,
         'active': lambda *a: True,
+        'check_history': lambda *a: True,
     }
 
     def _check_recursion(self, cr, uid, ids):
