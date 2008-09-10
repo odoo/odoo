@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@tinyerp.com"
-"POT-Creation-Date: 2008-09-04 08:39:40+0000"
-"PO-Revision-Date: 2008-09-04 08:39:40+0000"
+"Report-Msgid-Bugs-To: support@openerp.com"
+"POT-Creation-Date: 2008-09-10 12:53:02+0000"
+"PO-Revision-Date: 2008-09-10 12:53:02+0000"
 "Last-Translator: <>"
 "Language-Team: "
 "MIME-Version: 1.0"
@@ -50,6 +50,12 @@ msgid "Sign in / Sign out"
 msgstr ""
 
 #. module: hr_timesheet
+#, python-format
+#: code:addons/hr_timesheet/wizard/sign_in_out.py:0
+msgid "No employee defined for your user !"
+msgstr ""
+
+#. module: hr_timesheet
 #: wizard_button:hr.analytical.timesheet,init,report:0
 #: wizard_button:hr.analytical.timesheet.my,init,report:0
 #: wizard_button:hr.analytical.timesheet_users,init,report:0
@@ -79,6 +85,18 @@ msgstr ""
 #. module: hr_timesheet
 #: wizard_field:hr_timesheet.si_so,sign_in,server_date:0
 msgid "Current Server Date"
+msgstr ""
+
+#. module: hr_timesheet
+#, python-format
+#: code:addons/hr_timesheet/wizard/sign_in_out.py:0
+msgid "No cost unit defined for this employee !"
+msgstr ""
+
+#. module: hr_timesheet
+#, python-format
+#: code:addons/hr_timesheet/hr_timesheet.py:0
+msgid "No analytic journal available for this employee.\nDefine an employee for the selected user and assign an analytic journal."
 msgstr ""
 
 #. module: hr_timesheet
@@ -251,6 +269,12 @@ msgid "Stop Working"
 msgstr ""
 
 #. module: hr_timesheet
+#, python-format
+#: code:addons/hr_timesheet/wizard/sign_in_out.py:0
+msgid "UserError"
+msgstr ""
+
+#. module: hr_timesheet
 #: wizard_view:hr_timesheet.si_so,sign_in:0
 msgid "(Keep empty for current_time)"
 msgstr ""
@@ -345,6 +369,12 @@ msgstr ""
 #. module: hr_timesheet
 #: wizard_button:hr_timesheet.si_so,sign_in,so_result:0
 msgid "Change Work"
+msgstr ""
+
+#. module: hr_timesheet
+#, python-format
+#: code:addons/hr_timesheet/hr_timesheet.py:0
+msgid "ValidateError"
 msgstr ""
 
 #. module: hr_timesheet

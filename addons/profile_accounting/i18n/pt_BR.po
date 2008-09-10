@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@tinyerp.com"
-"POT-Creation-Date: 2008-09-04 08:38:52+0000"
-"PO-Revision-Date: 2008-09-04 08:38:52+0000"
+"Report-Msgid-Bugs-To: support@openerp.com"
+"POT-Creation-Date: 2008-09-10 12:52:27+0000"
+"PO-Revision-Date: 2008-09-10 12:52:27+0000"
 "Last-Translator: <>"
 "Language-Team: "
 "MIME-Version: 1.0"
@@ -21,52 +21,77 @@ msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: profile_accounting
-#: field:config.install_extra_modules,hr_timesheet_invoice:0
-msgid "Invoice on Timesheets"
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: profile_accounting
-#: view:config.install_extra_modules:0
+#: field:profile.accounting.config.install_modules_wizard,name:0
+msgid "Name"
+msgstr ""
+
+#. module: profile_accounting
+#: field:profile.accounting.config.install_modules_wizard,account_payment:0
+msgid "Suppliers Payment Management"
+msgstr ""
+
+#. module: profile_accounting
+#: model:ir.model,name:profile_accounting.model_profile_accounting_config_install_modules_wizard
+msgid "profile.accounting.config.install_modules_wizard"
+msgstr ""
+
+#. module: profile_accounting
+#: view:profile.accounting.config.install_modules_wizard:0
 msgid "Services Management"
 msgstr ""
 
 #. module: profile_accounting
-#: view:config.install_extra_modules:0
-msgid "Resources Management"
+#: field:profile.accounting.config.install_modules_wizard,account_analytic_analysis:0
+msgid "Analytic Accounting"
 msgstr ""
 
 #. module: profile_accounting
-#: help:config.install_extra_modules,account_budget_crossover:0
-msgid "Allows you to manage analytic budgets by journals. This module is used to manage budgets of your projects."
+#: field:profile.accounting.config.install_modules_wizard,account_analytic_plans:0
+msgid "Multiple Analytic Plans"
 msgstr ""
 
 #. module: profile_accounting
-#: view:config.install_extra_modules:0
-msgid "Accounting Management"
-msgstr ""
-
-#. module: profile_accounting
-#: view:config.install_extra_modules:0
-msgid "Install"
-msgstr ""
-
-#. module: profile_accounting
-#: help:config.install_extra_modules,hr_timesheet_invoice:0
-msgid "There are different invoicing methods in OpenERP: from sale orders, from shippings, ... Install this module if you plan to invoice your customers based on time spent on projects."
-msgstr ""
-
-#. module: profile_accounting
-#: view:config.install_extra_modules:0
+#: view:profile.accounting.config.install_modules_wizard:0
 msgid "Cancel"
 msgstr ""
 
 #. module: profile_accounting
-#: view:config.install_extra_modules:0
+#: field:profile.accounting.config.install_modules_wizard,hr_timesheet_invoice:0
+msgid "Invoice on Analytic Entries"
+msgstr ""
+
+#. module: profile_accounting
+#: view:profile.accounting.config.install_modules_wizard:0
+msgid "Accounting Management"
+msgstr ""
+
+#. module: profile_accounting
+#: view:profile.accounting.config.install_modules_wizard:0
+msgid "Install"
+msgstr ""
+
+#. module: profile_accounting
+#: field:profile.accounting.config.install_modules_wizard,account_asset:0
+msgid "Asset Management"
+msgstr ""
+
+#. module: profile_accounting
+#: view:profile.accounting.config.install_modules_wizard:0
+msgid "Resources Management"
+msgstr ""
+
+#. module: profile_accounting
+#: view:profile.accounting.config.install_modules_wizard:0
 msgid "Install Extra Module"
 msgstr ""
 
 #. module: profile_accounting
-#: field:config.install_extra_modules,account_budget_crossover:0
+#: field:profile.accounting.config.install_modules_wizard,account_budget_crossover:0
 msgid "Analytic Budgets"
 msgstr ""
 

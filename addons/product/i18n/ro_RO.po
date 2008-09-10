@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@tinyerp.com"
-"POT-Creation-Date: 2008-09-04 08:40:19+0000"
-"PO-Revision-Date: 2008-09-04 08:40:19+0000"
+"Report-Msgid-Bugs-To: support@openerp.com"
+"POT-Creation-Date: 2008-09-10 12:53:38+0000"
+"PO-Revision-Date: 2008-09-10 12:53:38+0000"
 "Last-Translator: <>"
 "Language-Team: "
 "MIME-Version: 1.0"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: product
 #: view:product.pricelist.item:0
 msgid "Max. Margin"
-msgstr "Marja Max."
+msgstr ""
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -86,6 +86,11 @@ msgid "Keep empty to use the default UOM"
 msgstr ""
 
 #. module: product
+#: model:product.category,name:product.product_category_4
+msgid "Dello Computer"
+msgstr ""
+
+#. module: product
 #: model:ir.actions.act_window,name:product.product_uom_form_action
 #: model:ir.ui.menu,name:product.menu_product_uom_form_action
 #: model:ir.ui.menu,name:product.next_id_16
@@ -99,8 +104,19 @@ msgid "Standard Price"
 msgstr ""
 
 #. module: product
+#, python-format
+#: code:addons/product/product.py:0
+msgid "Products: "
+msgstr ""
+
+#. module: product
 #: field:product.template,uos_id:0
 msgid "Unit of Sale"
+msgstr ""
+
+#. module: product
+#: model:product.category,name:product.cat1
+msgid "Sellable"
 msgstr ""
 
 #. module: product
@@ -116,7 +132,7 @@ msgstr ""
 #. module: product
 #: field:product.product,price:0
 msgid "Customer Price"
-msgstr "Pret client"
+msgstr ""
 
 #. module: product
 #: field:product.product,lst_price:0
@@ -135,6 +151,11 @@ msgid "Supplier Lead Time"
 msgstr ""
 
 #. module: product
+#: model:product.category,name:product.product_category_services
+msgid "Services"
+msgstr ""
+
+#. module: product
 #: selection:product.template,type:0
 msgid "Consumable"
 msgstr ""
@@ -147,7 +168,7 @@ msgstr ""
 #. module: product
 #: field:product.pricelist.version,pricelist_id:0
 msgid "Price List"
-msgstr "Tarife"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_pc2_product_template
@@ -167,7 +188,7 @@ msgstr ""
 #. module: product
 #: field:product.category,child_id:0
 msgid "Childs Categories"
-msgstr "Categorie fiu"
+msgstr ""
 
 #. module: product
 #: view:product.product:0
@@ -197,7 +218,7 @@ msgstr ""
 #. module: product
 #: field:product.pricelist.item,base_pricelist_id:0
 msgid "If Other Pricelist"
-msgstr "Tarif de baza"
+msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
@@ -215,6 +236,12 @@ msgstr ""
 #. module: product
 #: selection:product.template,mes_type:0
 msgid "Fixed"
+msgstr ""
+
+#. module: product
+#, python-format
+#: code:addons/product/pricelist.py:0
+msgid "Warning !"
 msgstr ""
 
 #. module: product
@@ -250,8 +277,9 @@ msgid "Track Lots"
 msgstr ""
 
 #. module: product
-#: field:product.template,uom_po_id:0
-msgid "Purchase UOM"
+#: view:product.product:0
+#: view:product.packaging:0
+msgid "Palette Dimension"
 msgstr ""
 
 #. module: product
@@ -260,8 +288,8 @@ msgid "Rules Test Match"
 msgstr ""
 
 #. module: product
-#: model:product.template,name:product.product_product_26_product_template
-msgid "Kit Keyboard + Mouse"
+#: field:product.template,uom_id:0
+msgid "Default UoM"
 msgstr ""
 
 #. module: product
@@ -277,7 +305,7 @@ msgstr ""
 #. module: product
 #: field:product.pricelist.item,base:0
 msgid "Based on"
-msgstr "Bazat pe "
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_24_product_template
@@ -395,7 +423,7 @@ msgstr ""
 #. module: product
 #: view:product.product:0
 msgid "Product Variant"
-msgstr "Variante de produs"
+msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
@@ -421,6 +449,11 @@ msgid "The length of the palette"
 msgstr ""
 
 #. module: product
+#: model:product.category,name:product.product_category_pc
+msgid "PC"
+msgstr ""
+
+#. module: product
 #: help:product.template,seller_delay:0
 msgid "This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."
 msgstr ""
@@ -438,7 +471,7 @@ msgstr ""
 #. module: product
 #: field:product.pricelist.item,price_version_id:0
 msgid "Price List Version"
-msgstr "Versiuni tarif"
+msgstr ""
 
 #. module: product
 #: field:res.partner,property_product_pricelist:0
@@ -460,7 +493,7 @@ msgstr ""
 #: field:product.template,type:0
 #: view:product.product:0
 msgid "Product Type"
-msgstr "Tip de produs"
+msgstr ""
 
 #. module: product
 #: help:product.template,tracking:0
@@ -503,7 +536,7 @@ msgstr ""
 #. module: product
 #: field:product.category,parent_id:0
 msgid "Parent Category"
-msgstr "Categorie parinte"
+msgstr ""
 
 #. module: product
 #: selection:product.template,state:0
@@ -511,9 +544,14 @@ msgid "In Development"
 msgstr ""
 
 #. module: product
+#: model:product.category,name:product.cat0
+msgid "All products"
+msgstr ""
+
+#. module: product
 #: view:product.pricelist:0
 msgid "Products Price List"
-msgstr "Lista Tarife de produse"
+msgstr ""
 
 #. module: product
 #: view:product.product:0
@@ -567,6 +605,11 @@ msgid "Supply method"
 msgstr ""
 
 #. module: product
+#: help:product.template,uom_id:0
+msgid "This is the default Unit of Measure used for all stock operation."
+msgstr ""
+
+#. module: product
 #: field:product.supplierinfo,product_code:0
 msgid "Partner product reference"
 msgstr ""
@@ -574,6 +617,11 @@ msgstr ""
 #. module: product
 #: view:product.supplierinfo:0
 msgid "Supplier Information"
+msgstr ""
+
+#. module: product
+#: model:product.template,name:product.product_product_21_product_template
+msgid "RAM on demand"
 msgstr ""
 
 #. module: product
@@ -606,7 +654,7 @@ msgstr ""
 #. module: product
 #: field:product.pricelist.version,date_start:0
 msgid "Start Date"
-msgstr "Data de inceput"
+msgstr ""
 
 #. module: product
 #: help:product.template,produce_delay:0
@@ -619,6 +667,11 @@ msgid "Basic PC"
 msgstr ""
 
 #. module: product
+#: model:product.category,name:product.product_category_3
+msgid "Computer Stuff"
+msgstr ""
+
+#. module: product
 #: field:product.template,loc_row:0
 msgid "Row"
 msgstr ""
@@ -626,7 +679,7 @@ msgstr ""
 #. module: product
 #: field:product.template,categ_id:0
 msgid "Category"
-msgstr "Categorie"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_ram_product_template
@@ -641,7 +694,7 @@ msgstr ""
 #. module: product
 #: field:product.product,qty_available:0
 msgid "Real Stock"
-msgstr "Cantitate disponibla"
+msgstr ""
 
 #. module: product
 #: view:product.category:0
@@ -651,12 +704,6 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_product_uom
 msgid "Product Unit of Measure"
-msgstr ""
-
-#. module: product
-#: view:product.product:0
-#: view:product.packaging:0
-msgid "Palette Dimension"
 msgstr ""
 
 #. module: product
@@ -735,9 +782,19 @@ msgid "Public Price"
 msgstr ""
 
 #. module: product
+#: help:product.template,volume:0
+msgid "The weight in Kg."
+msgstr ""
+
+#. module: product
 #: view:product.pricelist.item:0
 msgid "Min. Margin"
-msgstr "Marja Min."
+msgstr ""
+
+#. module: product
+#: model:product.category,name:product.product_category_10
+msgid "IT components"
+msgstr ""
 
 #. module: product
 #: help:product.packaging,weight_ul:0
@@ -787,7 +844,7 @@ msgstr ""
 #: field:product.product,active:0
 #: field:product.uom,active:0
 msgid "Active"
-msgstr "Activ"
+msgstr ""
 
 #. module: product
 #: field:product.product,price_margin:0
@@ -803,7 +860,7 @@ msgstr ""
 #: field:product.template,standard_price:0
 #: model:product.price.type,name:product.standard_price
 msgid "Cost Price"
-msgstr "Pret standard"
+msgstr ""
 
 #. module: product
 #: field:product.template,description_purchase:0
@@ -827,11 +884,6 @@ msgstr ""
 #. module: product
 #: field:product.packaging,rows:0
 msgid "Number of layer"
-msgstr ""
-
-#. module: product
-#: field:product.template,uom_id:0
-msgid "Default UOM"
 msgstr ""
 
 #. module: product
@@ -888,6 +940,11 @@ msgid "Seq"
 msgstr ""
 
 #. module: product
+#: model:product.category,name:product.product_category_8
+msgid "Phone Help"
+msgstr ""
+
+#. module: product
 #: help:product.packaging,rows:0
 msgid "The number of layer on palette"
 msgstr ""
@@ -918,6 +975,7 @@ msgid "Partner Information"
 msgstr ""
 
 #. module: product
+#: model:product.category,name:product.product_category_7
 #: model:product.template,name:product.product_product_1_product_template
 msgid "Onsite Intervention"
 msgstr ""
@@ -938,8 +996,8 @@ msgid "Public Pricelist"
 msgstr ""
 
 #. module: product
-#: model:product.template,name:product.product_product_21_product_template
-msgid "RAM on demand"
+#: model:product.category,name:product.product_category_11
+msgid "IT components kits"
 msgstr ""
 
 #. module: product
@@ -961,7 +1019,7 @@ msgstr ""
 #. module: product
 #: view:product.pricelist.item:0
 msgid "Products Listprices Items"
-msgstr "Linii tarife produs"
+msgstr ""
 
 #. module: product
 #: constraint:ir.model:0
@@ -974,9 +1032,8 @@ msgid "Sales & Purchases"
 msgstr ""
 
 #. module: product
-#: view:product.product:0
-#: view:product.packaging:0
-msgid "Other Info"
+#: field:product.template,uom_po_id:0
+msgid "Purchase UoM"
 msgstr ""
 
 #. module: product
@@ -987,7 +1044,7 @@ msgstr ""
 #. module: product
 #: field:product.pricelist.version,items_id:0
 msgid "Price List Items"
-msgstr "Linii de tarif"
+msgstr ""
 
 #. module: product
 #: selection:product.template,state:0
@@ -995,8 +1052,19 @@ msgid "Obsolete"
 msgstr ""
 
 #. module: product
+#: view:product.product:0
+#: view:product.packaging:0
+msgid "Other Info"
+msgstr ""
+
+#. module: product
 #: field:pricelist.partnerinfo,price:0
 msgid "Unit Price"
+msgstr ""
+
+#. module: product
+#: model:product.category,name:product.cat2
+msgid "Private"
 msgstr ""
 
 #. module: product
@@ -1065,6 +1133,11 @@ msgid "Volume"
 msgstr ""
 
 #. module: product
+#: model:product.template,name:product.product_product_26_product_template
+msgid "Kit Keyboard + Mouse"
+msgstr ""
+
+#. module: product
 #: selection:product.template,supply_method:0
 msgid "Produce"
 msgstr ""
@@ -1082,12 +1155,12 @@ msgstr ""
 #. module: product
 #: view:product.pricelist.item:0
 msgid "Rounding Method"
-msgstr "Metoda de rotunjire"
+msgstr ""
 
 #. module: product
 #: field:product.product,variants:0
 msgid "Variants"
-msgstr "Variante"
+msgstr ""
 
 #. module: product
 #: field:product.template,warranty:0
@@ -1118,12 +1191,11 @@ msgstr ""
 #. module: product
 #: field:product.pricelist.version,date_end:0
 msgid "End Date"
-msgstr "Data de sfirsit"
+msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
 #: model:ir.ui.menu,name:product.menu_product_category_action_form
-#: view:product.category:0
 msgid "Products Categories"
 msgstr ""
 
@@ -1173,7 +1245,7 @@ msgstr ""
 #. module: product
 #: field:product.template,cost_method:0
 msgid "Costing Method"
-msgstr "Methoda de cost"
+msgstr ""
 
 #. module: product
 #: view:product.product:0
@@ -1215,6 +1287,11 @@ msgid "Sale Price"
 msgstr ""
 
 #. module: product
+#: model:product.category,name:product.product_category_accessories
+msgid "Accessories"
+msgstr ""
+
+#. module: product
 #: field:product.packaging,ul:0
 msgid "Type of UL"
 msgstr ""
@@ -1242,7 +1319,7 @@ msgstr ""
 #. module: product
 #: field:product.pricelist.item,min_quantity:0
 msgid "Min. Quantity"
-msgstr "Cantitatea minima"
+msgstr ""
 
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_label

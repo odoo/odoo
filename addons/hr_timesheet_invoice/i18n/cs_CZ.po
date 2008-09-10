@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@tinyerp.com"
-"POT-Creation-Date: 2008-09-04 08:32:29+0000"
-"PO-Revision-Date: 2008-09-04 08:32:29+0000"
+"Report-Msgid-Bugs-To: support@openerp.com"
+"POT-Creation-Date: 2008-09-10 12:47:51+0000"
+"PO-Revision-Date: 2008-09-10 12:47:51+0000"
 "Last-Translator: <>"
 "Language-Team: "
 "MIME-Version: 1.0"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: hr_timesheet_invoice
 #: wizard_field:account.analytic.profit,init,date_from:0
 msgid "From"
-msgstr "Od"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
@@ -41,6 +41,12 @@ msgstr ""
 #: field:account.analytic.account,to_invoice:0
 #: field:account.analytic.line,to_invoice:0
 msgid "Invoicing"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#, python-format
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
+msgid "At least on line have no product !"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -122,7 +128,7 @@ msgstr ""
 #. module: hr_timesheet_invoice
 #: wizard_view:hr.timesheet.invoice.create,init:0
 msgid "Choose accounts you want to invoice"
-msgstr "Vyberte účet který chcete fakturovat."
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
@@ -175,12 +181,24 @@ msgstr ""
 #. module: hr_timesheet_invoice
 #: wizard_view:account.analytic.profit,init:0
 msgid "Choose"
-msgstr "Vybrat"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 #: rml:account.analytic.profit:0
 msgid "to"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#, python-format
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
+msgid "Error"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#, python-format
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
+msgid "Balance product needed"
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -218,13 +236,13 @@ msgstr ""
 #. module: hr_timesheet_invoice
 #: wizard_field:hr.timesheet.invoice.create,init,accounts:0
 msgid "Analytic Accounts"
-msgstr "Analytické účty"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: wizard_button:hr.timesheet.final.invoice.create,init,create:0
 #: wizard_button:hr.timesheet.invoice.create,init,create:0
 msgid "Create invoices"
-msgstr "Vytvořit faktury"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_factor_form
@@ -236,7 +254,7 @@ msgstr ""
 #: wizard_field:hr.timesheet.final.invoice.create,init,time:0
 #: wizard_field:hr.timesheet.invoice.create,init,time:0
 msgid "Time spent"
-msgstr "Strávený čas"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,amount_invoiced:0
@@ -270,6 +288,12 @@ msgid "Type of invoicing"
 msgstr ""
 
 #. module: hr_timesheet_invoice
+#, python-format
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
+msgid "Please fill a Balance product in the wizard"
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_pending_analytic_accounts
 #: model:ir.ui.menu,name:hr_timesheet_invoice.menu_action_pending_analytic_accounts
 msgid "Pending Analytic Accounts"
@@ -296,6 +320,13 @@ msgid "Invoice rate"
 msgstr ""
 
 #. module: hr_timesheet_invoice
+#, python-format
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
+msgid "Analytic account incomplete"
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: wizard_field:hr.timesheet.invoice.account.analytic.account.cost_ledger.report,init,date2:0
 msgid "End of period"
 msgstr ""
@@ -311,6 +342,12 @@ msgid "Balance"
 msgstr ""
 
 #. module: hr_timesheet_invoice
+#, python-format
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:0
+msgid "Error !"
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: wizard_view:hr.timesheet.invoice.account.analytic.account.cost_ledger.report,init:0
 msgid "Select period"
 msgstr ""
@@ -319,7 +356,13 @@ msgstr ""
 #: wizard_field:hr.timesheet.final.invoice.create,init,name:0
 #: wizard_field:hr.timesheet.invoice.create,init,name:0
 msgid "Name of entry"
-msgstr "Název položky"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#, python-format
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:0
+msgid "You can not modify an invoiced analytic line!"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
@@ -329,7 +372,7 @@ msgstr ""
 #. module: hr_timesheet_invoice
 #: wizard_field:account.analytic.profit,init,date_to:0
 msgid "To"
-msgstr "Do"
+msgstr ""
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_open_invoice_analytic_accounts

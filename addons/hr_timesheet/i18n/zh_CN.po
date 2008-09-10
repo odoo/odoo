@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@tinyerp.com"
-"POT-Creation-Date: 2008-09-04 08:42:44+0000"
-"PO-Revision-Date: 2008-09-04 08:42:44+0000"
+"Report-Msgid-Bugs-To: support@openerp.com"
+"POT-Creation-Date: 2008-09-10 12:55:22+0000"
+"PO-Revision-Date: 2008-09-10 12:55:22+0000"
 "Last-Translator: <>"
 "Language-Team: "
 "MIME-Version: 1.0"
@@ -19,7 +19,7 @@ msgstr ""
 #: wizard_view:hr.analytical.timesheet,init:0
 #: wizard_view:hr.analytical.timesheet.my,init:0
 msgid "Choose your month"
-msgstr "选择月份"
+msgstr ""
 
 #. module: hr_timesheet
 #: constraint:ir.model:0
@@ -47,29 +47,35 @@ msgstr ""
 #. module: hr_timesheet
 #: wizard_view:hr_timesheet.si_so,sign_out:0
 msgid "Sign in / Sign out"
-msgstr "签入/签出"
+msgstr ""
+
+#. module: hr_timesheet
+#, python-format
+#: code:addons/hr_timesheet/wizard/sign_in_out.py:0
+msgid "No employee defined for your user !"
+msgstr ""
 
 #. module: hr_timesheet
 #: wizard_button:hr.analytical.timesheet,init,report:0
 #: wizard_button:hr.analytical.timesheet.my,init,report:0
 #: wizard_button:hr.analytical.timesheet_users,init,report:0
 msgid "Print"
-msgstr "打印"
+msgstr ""
 
 #. module: hr_timesheet
 #: wizard_view:hr_timesheet.si_so,sign_out:0
 msgid "(Keep empty for current time)"
-msgstr "（留空表示当前时间）"
+msgstr ""
 
 #. module: hr_timesheet
 #: wizard_field:hr_timesheet.si_so,sign_out,server_date:0
 msgid "Current Date"
-msgstr "当前日期"
+msgstr ""
 
 #. module: hr_timesheet
 #: wizard_view:hr_timesheet.si_so,sign_in:0
 msgid "Sign in status"
-msgstr "签如状态"
+msgstr ""
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,line_id:0
@@ -79,7 +85,19 @@ msgstr ""
 #. module: hr_timesheet
 #: wizard_field:hr_timesheet.si_so,sign_in,server_date:0
 msgid "Current Server Date"
-msgstr "当前状态"
+msgstr ""
+
+#. module: hr_timesheet
+#, python-format
+#: code:addons/hr_timesheet/wizard/sign_in_out.py:0
+msgid "No cost unit defined for this employee !"
+msgstr ""
+
+#. module: hr_timesheet
+#, python-format
+#: code:addons/hr_timesheet/hr_timesheet.py:0
+msgid "No analytic journal available for this employee.\nDefine an employee for the selected user and assign an analytic journal."
+msgstr ""
 
 #. module: hr_timesheet
 #: field:hr.employee,product_id:0
@@ -133,12 +151,12 @@ msgstr ""
 #: wizard_field:hr.analytical.timesheet,init,user_id:0
 #: wizard_field:hr.analytical.timesheet.my,init,user_id:0
 msgid "User"
-msgstr "用户"
+msgstr ""
 
 #. module: hr_timesheet
 #: wizard_view:hr_timesheet.si_so,sign_out:0
 msgid "Sign in"
-msgstr "签入"
+msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_today_form
@@ -149,7 +167,7 @@ msgstr ""
 #. module: hr_timesheet
 #: wizard_view:hr_timesheet.si_so,sign_out:0
 msgid "(local time on the server side)"
-msgstr "（服务器上的时间）"
+msgstr ""
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -160,12 +178,12 @@ msgstr ""
 #: wizard_field:hr_timesheet.si_so,sign_out,date:0
 #: wizard_field:hr_timesheet.si_so,sign_in,date_start:0
 msgid "Starting Date"
-msgstr "起始日"
+msgstr ""
 
 #. module: hr_timesheet
 #: wizard_field:hr_timesheet.si_so,sign_in,date:0
 msgid "Closing Date"
-msgstr "终止日期"
+msgstr ""
 
 #. module: hr_timesheet
 #: constraint:ir.ui.view:0
@@ -190,7 +208,7 @@ msgstr ""
 #. module: hr_timesheet
 #: wizard_view:hr.analytical.timesheet_users,init:0
 msgid "Choose Users"
-msgstr "选择用户"
+msgstr ""
 
 #. module: hr_timesheet
 #: constraint:product.template:0
@@ -211,7 +229,7 @@ msgstr ""
 #: wizard_field:hr_timesheet.si_so,sign_out,state:0
 #: wizard_field:hr_timesheet.si_so,sign_in,state:0
 msgid "Current state"
-msgstr "当前状态"
+msgstr ""
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
@@ -224,13 +242,13 @@ msgstr ""
 #: wizard_field:hr.analytical.timesheet_users,init,month:0
 #: view:account.analytic.account:0
 msgid "Month"
-msgstr "月"
+msgstr ""
 
 #. module: hr_timesheet
 #: wizard_field:hr_timesheet.si_so,sign_out,name:0
 #: wizard_field:hr_timesheet.si_so,sign_in,name:0
 msgid "Employee's name"
-msgstr "员工姓名"
+msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_me_all_form
@@ -248,12 +266,18 @@ msgstr ""
 #. module: hr_timesheet
 #: wizard_button:hr_timesheet.si_so,sign_in,so_result_end:0
 msgid "Stop Working"
-msgstr "停止工作"
+msgstr ""
+
+#. module: hr_timesheet
+#, python-format
+#: code:addons/hr_timesheet/wizard/sign_in_out.py:0
+msgid "UserError"
+msgstr ""
 
 #. module: hr_timesheet
 #: wizard_view:hr_timesheet.si_so,sign_in:0
 msgid "(Keep empty for current_time)"
-msgstr "（留空表示当前时间）"
+msgstr ""
 
 #. module: hr_timesheet
 #: view:hr.employee:0
@@ -263,7 +287,7 @@ msgstr ""
 #. module: hr_timesheet
 #: wizard_button:hr_timesheet.si_so,sign_out,si_result:0
 msgid "Start Working"
-msgstr "开始工作"
+msgstr ""
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -291,12 +315,12 @@ msgstr ""
 #. module: hr_timesheet
 #: wizard_field:hr_timesheet.si_so,sign_in,account_id:0
 msgid "Analytic Account"
-msgstr "分析科目"
+msgstr ""
 
 #. module: hr_timesheet
 #: wizard_view:hr_timesheet.si_so,sign_in:0
 msgid "General Information"
-msgstr "一般信息"
+msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.actions.wizard,name:hr_timesheet.wizard_hr_timesheet_my
@@ -313,14 +337,14 @@ msgstr ""
 #: wizard_field:hr.analytical.timesheet_users,init,user_ids:0
 #: view:account.analytic.account:0
 msgid "Users"
-msgstr "用户"
+msgstr ""
 
 #. module: hr_timesheet
 #: wizard_field:hr.analytical.timesheet,init,year:0
 #: wizard_field:hr.analytical.timesheet.my,init,year:0
 #: wizard_field:hr.analytical.timesheet_users,init,year:0
 msgid "Year"
-msgstr "年"
+msgstr ""
 
 #. module: hr_timesheet
 #: wizard_button:hr_timesheet.si_so,sign_out,end:0
@@ -329,12 +353,12 @@ msgstr "年"
 #: wizard_button:hr.analytical.timesheet.my,init,end:0
 #: wizard_button:hr.analytical.timesheet_users,init,end:0
 msgid "Cancel"
-msgstr "取消"
+msgstr ""
 
 #. module: hr_timesheet
 #: wizard_field:hr_timesheet.si_so,sign_in,info:0
 msgid "Work Description"
-msgstr "工作说明"
+msgstr ""
 
 #. module: hr_timesheet
 #: xsl:hr.analytical.timesheet_users:0
@@ -345,7 +369,13 @@ msgstr ""
 #. module: hr_timesheet
 #: wizard_button:hr_timesheet.si_so,sign_in,so_result:0
 msgid "Change Work"
-msgstr "改变工作"
+msgstr ""
+
+#. module: hr_timesheet
+#, python-format
+#: code:addons/hr_timesheet/hr_timesheet.py:0
+msgid "ValidateError"
+msgstr ""
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0

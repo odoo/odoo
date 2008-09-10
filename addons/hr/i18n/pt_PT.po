@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@tinyerp.com"
-"POT-Creation-Date: 2008-09-04 08:39:40+0000"
-"PO-Revision-Date: 2008-09-04 08:39:40+0000"
+"Report-Msgid-Bugs-To: support@openerp.com"
+"POT-Creation-Date: 2008-09-10 12:53:02+0000"
+"PO-Revision-Date: 2008-09-10 12:53:02+0000"
 "Last-Translator: <>"
 "Language-Team: "
 "MIME-Version: 1.0"
@@ -55,6 +55,11 @@ msgid "Department"
 msgstr ""
 
 #. module: hr
+#: model:ir.actions.act_window,name:hr.action2
+msgid "Hierarchical view of this employee"
+msgstr ""
+
+#. module: hr
 #: field:hr.employee,work_email:0
 msgid "Work Email"
 msgstr ""
@@ -68,7 +73,7 @@ msgstr ""
 #. module: hr
 #: field:hr.timesheet.group,name:0
 msgid "Group name"
-msgstr "Nome do Grupo"
+msgstr ""
 
 #. module: hr
 #: field:hr.department,company_id:0
@@ -79,7 +84,7 @@ msgstr ""
 #. module: hr
 #: selection:hr.timesheet,dayofweek:0
 msgid "Friday"
-msgstr "Sexta-feira"
+msgstr ""
 
 #. module: hr
 #: rml:hr.timesheet.attendance.error:0
@@ -89,7 +94,13 @@ msgstr ""
 #. module: hr
 #: field:hr.action.reason,name:0
 msgid "Reason"
-msgstr "Motivo"
+msgstr ""
+
+#. module: hr
+#, python-format
+#: code:addons/hr/wizard/sign_in_out.py:0
+msgid "The sign-out date must be in the past"
+msgstr ""
 
 #. module: hr
 #: rml:hr.timesheet.attendance.error:0
@@ -99,12 +110,12 @@ msgstr ""
 #. module: hr
 #: view:hr.action.reason:0
 msgid "Attendance reasons"
-msgstr "Definir motivos"
+msgstr ""
 
 #. module: hr
 #: selection:hr.employee,state:0
 msgid "Present"
-msgstr "Presente"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.wizard,name:hr.wizard_attendance_error
@@ -126,7 +137,7 @@ msgstr ""
 #: view:hr.department:0
 #: view:hr.employee:0
 msgid "Notes"
-msgstr "Notas"
+msgstr ""
 
 #. module: hr
 #: wizard_field:hr.si_so,init,state:0
@@ -136,7 +147,7 @@ msgstr ""
 #. module: hr
 #: field:hr.timesheet,hour_from:0
 msgid "Work from"
-msgstr "Trabalha desde"
+msgstr ""
 
 #. module: hr
 #: wizard_view:hr.si_so,so_ask_si:0
@@ -147,6 +158,18 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr.open_view_attendance_reason
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason
 msgid "Attendance Reasons"
+msgstr ""
+
+#. module: hr
+#, python-format
+#: code:addons/hr/hr.py:0
+msgid "You tried to sign with a date anterior to another event !\nTry to contact the administrator to correct attendances."
+msgstr ""
+
+#. module: hr
+#, python-format
+#: code:addons/hr/wizard/sign_in_out.py:0
+msgid "UserError"
 msgstr ""
 
 #. module: hr
@@ -163,12 +186,18 @@ msgstr ""
 #. module: hr
 #: view:hr.attendance:0
 msgid "Employee attendance"
-msgstr "Assiduidade dos colaboradores"
+msgstr ""
 
 #. module: hr
 #: selection:hr.timesheet,dayofweek:0
 msgid "Sunday"
-msgstr "Domingo"
+msgstr ""
+
+#. module: hr
+#, python-format
+#: code:addons/hr/hr.py:0
+msgid "Warning"
+msgstr ""
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -181,8 +210,14 @@ msgid "Operation"
 msgstr ""
 
 #. module: hr
-#: rml:hr.timesheet.attendance.error:0
-msgid "Date Printed:"
+#: view:hr.timesheet.group:0
+msgid "Working Time Category"
+msgstr ""
+
+#. module: hr
+#, python-format
+#: code:addons/hr/wizard/sign_in_out.py:0
+msgid "A sign-in must be right after a sign-out !"
 msgstr ""
 
 #. module: hr
@@ -204,7 +239,7 @@ msgstr ""
 #. module: hr
 #: selection:hr.employee,state:0
 msgid "Absent"
-msgstr "Ausente"
+msgstr ""
 
 #. module: hr
 #: view:hr.department:0
@@ -232,7 +267,7 @@ msgstr ""
 #: field:hr.employee,name:0
 #: view:hr.employee:0
 msgid "Employee"
-msgstr "Colaborador"
+msgstr ""
 
 #. module: hr
 #: wizard_view:hr.print_week,init:0
@@ -243,7 +278,7 @@ msgstr ""
 #. module: hr
 #: field:hr.timesheet.group,manager:0
 msgid "Workgroup manager"
-msgstr "Gestor do Grupo de Trabalho"
+msgstr ""
 
 #. module: hr
 #: field:hr.employee,child_ids:0
@@ -263,11 +298,6 @@ msgstr ""
 #. module: hr
 #: field:hr.action.reason,action_type:0
 msgid "Action's type"
-msgstr "Tipo de acção"
-
-#. module: hr
-#: rml:hr.timesheet.attendance.error:0
-msgid "Report"
 msgstr ""
 
 #. module: hr
@@ -297,9 +327,14 @@ msgid "Divorced"
 msgstr ""
 
 #. module: hr
+#: rml:hr.timesheet.attendance.error:0
+msgid "Min Delay"
+msgstr ""
+
+#. module: hr
 #: view:hr.attendance:0
 msgid "Employee attendances"
-msgstr "Assiduidade dos colaboradores"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
@@ -313,7 +348,7 @@ msgstr ""
 #: selection:hr.attendance,action:0
 #: view:hr.employee:0
 msgid "Sign In"
-msgstr "Entrada"
+msgstr ""
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -323,7 +358,7 @@ msgstr ""
 #. module: hr
 #: field:hr.timesheet,tgroup_id:0
 msgid "Employee's timesheet group"
-msgstr "Grupo de folha de horas"
+msgstr ""
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -331,9 +366,14 @@ msgid "Male"
 msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_categ_form
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
-msgid "Categories of Employee"
+#, python-format
+#: code:addons/hr/wizard/sign_in_out.py:0
+msgid "The Sign-in date must be in the past"
+msgstr ""
+
+#. module: hr
+#: selection:hr.employee,marital:0
+msgid "Unmaried"
 msgstr ""
 
 #. module: hr
@@ -345,7 +385,7 @@ msgstr ""
 #. module: hr
 #: selection:hr.timesheet,dayofweek:0
 msgid "Tuesday"
-msgstr "Terça-feira"
+msgstr ""
 
 #. module: hr
 #: wizard_view:hr.print_month,init:0
@@ -388,10 +428,16 @@ msgid "Note"
 msgstr ""
 
 #. module: hr
+#, python-format
+#: code:addons/hr/hr.py:0
+msgid "You tried to sign in with a date anterior to another event !\nTry to contact the administrator to correct attendances."
+msgstr ""
+
+#. module: hr
 #: model:ir.model,name:hr.model_hr_attendance
 #: field:hr.employee,state:0
 msgid "Attendance"
-msgstr "Assiduidade"
+msgstr ""
 
 #. module: hr
 #: view:hr.employee:0
@@ -401,11 +447,6 @@ msgstr ""
 #. module: hr
 #: model:ir.actions.wizard,name:hr.print_week
 msgid "Print Timesheet by week"
-msgstr "Imprimir folha de horas por semana"
-
-#. module: hr
-#: selection:hr.employee,marital:0
-msgid "Other"
 msgstr ""
 
 #. module: hr
@@ -416,17 +457,12 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,address_id:0
 msgid "Contact address"
-msgstr "Endereço de contacto"
-
-#. module: hr
-#: rml:hr.timesheet.attendance.error:0
-msgid "Avg Delay"
 msgstr ""
 
 #. module: hr
 #: selection:hr.timesheet,dayofweek:0
 msgid "Monday"
-msgstr "Segunda-feira"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_tree
@@ -440,9 +476,15 @@ msgid "Job Information"
 msgstr ""
 
 #. module: hr
+#, python-format
+#: code:addons/hr/wizard/sign_in_out.py:0
+msgid "A sign-out must be right after a sign-in !"
+msgstr ""
+
+#. module: hr
 #: field:hr.timesheet,dayofweek:0
 msgid "Day of week"
-msgstr "Dia da semana"
+msgstr ""
 
 #. module: hr
 #: field:hr.employee,ssnid:0
@@ -452,11 +494,6 @@ msgstr ""
 #. module: hr
 #: field:hr.attendance,name:0
 msgid "Date"
-msgstr "Data"
-
-#. module: hr
-#: rml:hr.timesheet.attendance.error:0
-msgid "To:"
 msgstr ""
 
 #. module: hr
@@ -474,16 +511,17 @@ msgstr ""
 #. module: hr
 #: selection:hr.timesheet,dayofweek:0
 msgid "Wednesday"
-msgstr "Quarta-feira"
+msgstr ""
 
 #. module: hr
 #: field:hr.employee,active:0
 msgid "Active"
-msgstr "Activo"
+msgstr ""
 
 #. module: hr
-#: selection:hr.employee,marital:0
-msgid "Unmaried"
+#: model:ir.actions.act_window,name:hr.open_view_categ_form
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+msgid "Categories of Employee"
 msgstr ""
 
 #. module: hr
@@ -495,12 +533,18 @@ msgstr ""
 #: field:hr.attendance,action:0
 #: selection:hr.attendance,action:0
 msgid "Action"
-msgstr "Acção"
+msgstr ""
 
 #. module: hr
 #: field:hr.timesheet,date_from:0
 msgid "Starting date"
-msgstr "Data de início"
+msgstr ""
+
+#. module: hr
+#, python-format
+#: code:addons/hr/hr.py:0
+msgid "You tried to sign out with a date anterior to another event !\nTry to contact the administrator to correct attendances."
+msgstr ""
 
 #. module: hr
 #: wizard_view:hr.print_week,init:0
@@ -518,8 +562,8 @@ msgid "Marital Status"
 msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.action2
-msgid "Hierarchical view of this employee"
+#: selection:hr.employee,marital:0
+msgid "Other"
 msgstr ""
 
 #. module: hr
@@ -535,7 +579,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model,name:hr.model_hr_timesheet
 msgid "Timesheet Line"
-msgstr "Linha de horário"
+msgstr ""
 
 #. module: hr
 #: view:hr.employee:0
@@ -562,7 +606,7 @@ msgstr ""
 #. module: hr
 #: selection:hr.timesheet,dayofweek:0
 msgid "Thursday"
-msgstr "Quinta-feira"
+msgstr ""
 
 #. module: hr
 #: wizard_button:hr.si_so,so_ask_si,so:0
@@ -579,7 +623,7 @@ msgstr ""
 #. module: hr
 #: field:hr.timesheet,hour_to:0
 msgid "Work to"
-msgstr "Trabalha até"
+msgstr ""
 
 #. module: hr
 #: field:hr.department,parent_id:0
@@ -621,13 +665,13 @@ msgstr ""
 #. module: hr
 #: model:ir.actions.wizard,name:hr.print_month
 msgid "Print Timesheet by month"
-msgstr "Imprimir folha de horapor mês"
+msgstr ""
 
 #. module: hr
 #: selection:hr.attendance,action:0
 #: view:hr.employee:0
 msgid "Sign Out"
-msgstr "Saída"
+msgstr ""
 
 #. module: hr
 #: view:hr.department:0
@@ -642,11 +686,6 @@ msgstr ""
 #. module: hr
 #: view:hr.action.reason:0
 msgid "Define attendance reason"
-msgstr "Definir época de presença"
-
-#. module: hr
-#: rml:hr.timesheet.attendance.error:0
-msgid "From:"
 msgstr ""
 
 #. module: hr
@@ -655,14 +694,9 @@ msgid "Other ID"
 msgstr ""
 
 #. module: hr
-#: view:hr.timesheet.group:0
-msgid "Working Time Category"
-msgstr ""
-
-#. module: hr
 #: field:hr.timesheet,name:0
 msgid "Name"
-msgstr "Nome"
+msgstr ""
 
 #. module: hr
 #: field:hr.employee,gender:0
@@ -685,7 +719,7 @@ msgstr ""
 #: model:ir.model,name:hr.model_hr_action_reason
 #: field:hr.attendance,action_desc:0
 msgid "Action reason"
-msgstr "Motivo da acção "
+msgstr ""
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -716,7 +750,7 @@ msgstr ""
 #. module: hr
 #: selection:hr.timesheet,dayofweek:0
 msgid "Saturday"
-msgstr "Sábado"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_new

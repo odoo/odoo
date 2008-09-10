@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@tinyerp.com"
-"POT-Creation-Date: 2008-09-04 08:37:25+0000"
-"PO-Revision-Date: 2008-09-04 08:37:25+0000"
+"Report-Msgid-Bugs-To: support@openerp.com"
+"POT-Creation-Date: 2008-09-10 12:51:18+0000"
+"PO-Revision-Date: 2008-09-10 12:51:18+0000"
 "Last-Translator: <>"
 "Language-Team: "
 "MIME-Version: 1.0"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.grid,name:0
 msgid "Grid Name"
-msgstr "Nome griglia"
+msgstr ""
 
 #. module: delivery
 #: constraint:ir.model:0
@@ -28,6 +28,11 @@ msgstr ""
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
 msgid "Delivery Grid"
+msgstr ""
+
+#. module: delivery
+#: view:res.partner:0
+msgid "Sales & Purchases"
 msgstr ""
 
 #. module: delivery
@@ -51,6 +56,12 @@ msgid "Create delivery line"
 msgstr ""
 
 #. module: delivery
+#, python-format
+#: code:addons/delivery/wizard/delivery_sale_order.py:0
+msgid "No grid avaible !"
+msgstr ""
+
+#. module: delivery
 #: field:delivery.carrier,partner_id:0
 msgid "Carrier Partner"
 msgstr ""
@@ -58,22 +69,29 @@ msgstr ""
 #. module: delivery
 #: field:delivery.grid,state_ids:0
 msgid "States"
-msgstr "Stati"
-
-#. module: delivery
-#: model:ir.actions.wizard,name:delivery.wizard_deliver_line_add
-msgid "Add delivery line"
-msgstr "Aggiungi una riga di spedizione"
+msgstr ""
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
 msgid "Delivery"
-msgstr "Spedizione"
+msgstr ""
+
+#. module: delivery
+#, python-format
+#: code:addons/delivery/wizard/delivery_sale_order.py:0
+msgid "The order state have to be draft to add delivery lines."
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
 msgid "Grid Line"
-msgstr "Riga griglia"
+msgstr ""
+
+#. module: delivery
+#, python-format
+#: code:addons/delivery/delivery.py:0
+msgid "No price avaible !"
+msgstr ""
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
@@ -88,16 +106,22 @@ msgid "Generate Draft Invoices On Receptions"
 msgstr ""
 
 #. module: delivery
+#, python-format
+#: code:addons/delivery/wizard/delivery_sale_order.py:0
+msgid "No grid matching for this carrier !"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery line of grid"
-msgstr "Riga della griglia di spedizione"
+msgstr ""
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: field:stock.picking,volume:0
 msgid "Volume"
-msgstr "Volume"
+msgstr ""
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
@@ -106,15 +130,21 @@ msgid "Packings to be invoiced"
 msgstr ""
 
 #. module: delivery
+#, python-format
+#: code:addons/delivery/stock.py:0
+msgid "Warning"
+msgstr ""
+
+#. module: delivery
 #: field:delivery.grid.line,grid_id:0
 msgid "Grid"
-msgstr "Griglia"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.carrier,active:0
 #: field:delivery.grid,active:0
 msgid "Active"
-msgstr "Attivo"
+msgstr ""
 
 #. module: delivery
 #: wizard_view:delivery.sale.order,init:0
@@ -130,7 +160,7 @@ msgstr ""
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Weight * Volume"
-msgstr "Peso * Volume"
+msgstr ""
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -145,12 +175,12 @@ msgstr ""
 #. module: delivery
 #: view:delivery.grid.line:0
 msgid "Condition"
-msgstr "Condizione"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_carrier
 msgid "Carrier and delivery grids"
-msgstr "Griglia di spedizione e trasporto"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid.line,standard_price:0
@@ -160,38 +190,38 @@ msgstr ""
 #. module: delivery
 #: view:delivery.grid:0
 msgid "Destination"
-msgstr "Destinazione"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid.line,name:0
 msgid "Name"
-msgstr "Nome"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid,country_ids:0
 msgid "Countries"
-msgstr "Stati"
+msgstr ""
 
 #. module: delivery
 #: view:sale.order:0
 msgid "Notes"
-msgstr "Note"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid.line,variable_factor:0
 msgid "Variable Factor"
-msgstr "Fattore variabile"
+msgstr ""
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
 #: field:delivery.grid.line,type:0
 msgid "Variable"
-msgstr "Variabile"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
 msgid "Operator"
-msgstr "Operatore"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.carrier,name:0
@@ -199,27 +229,28 @@ msgstr "Operatore"
 #: field:stock.picking,carrier_id:0
 #: view:delivery.carrier:0
 msgid "Carrier"
-msgstr "Trasportatore"
-
-#. module: delivery
-#: view:res.partner:0
-msgid "Properties"
 msgstr ""
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
 msgid "Fixed"
-msgstr "Fisso"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
 msgid "Maximum Value"
-msgstr "Valore massimo"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid,zip_from:0
 msgid "Start Zip"
-msgstr "zip partenza"
+msgstr ""
+
+#. module: delivery
+#, python-format
+#: code:addons/delivery/wizard/delivery_sale_order.py:0
+msgid "Order not in draft state !"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.carrier,grids_id:0
@@ -231,12 +262,12 @@ msgstr ""
 #: selection:delivery.grid.line,variable_factor:0
 #: field:stock.picking,weight:0
 msgid "Weight"
-msgstr "Peso"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid,sequence:0
 msgid "Sequence"
-msgstr "Sequenza"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid.line,list_price:0
@@ -244,9 +275,15 @@ msgid "Sale Price"
 msgstr ""
 
 #. module: delivery
+#, python-format
+#: code:addons/delivery/delivery.py:0
+msgid "No line matched this order in the choosed delivery grids !"
+msgstr ""
+
+#. module: delivery
 #: field:delivery.grid,zip_to:0
 msgid "To Zip"
-msgstr "a zip"
+msgstr ""
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -256,11 +293,27 @@ msgstr ""
 #. module: delivery
 #: view:delivery.grid:0
 msgid "Grid definition"
-msgstr "Definizione griglia"
+msgstr ""
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
 msgid "Complete this field if you plan to invoice the shipping based on packings made."
+msgstr ""
+
+#. module: delivery
+#: model:ir.actions.wizard,name:delivery.wizard_deliver_line_add
+msgid "Delivery Costs"
+msgstr ""
+
+#. module: delivery
+#: view:delivery.grid:0
+#: view:delivery.grid.line:0
+msgid "Grid Lines"
+msgstr ""
+
+#. module: delivery
+#: view:delivery.grid:0
+msgid "Delivery grids"
 msgstr ""
 
 #. module: delivery
@@ -272,15 +325,10 @@ msgid "Delivery Method"
 msgstr ""
 
 #. module: delivery
-#: view:delivery.grid:0
-#: view:delivery.grid.line:0
-msgid "Grid Lines"
-msgstr "Righe griglia"
-
-#. module: delivery
-#: view:delivery.grid:0
-msgid "Delivery grids"
-msgstr "Griglie spedizione"
+#, python-format
+#: code:addons/delivery/stock.py:0
+msgid "The carrier %s (id: %d) has no delivery grid!"
+msgstr ""
 
 #. module: delivery
 #: wizard_button:delivery.sale.order,init,end:0
@@ -296,10 +344,10 @@ msgstr ""
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Price"
-msgstr "Prezzo"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
-msgstr "Tipo prezzo"
+msgstr ""
 

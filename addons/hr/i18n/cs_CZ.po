@@ -5,9 +5,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 4.3.0"
-"Report-Msgid-Bugs-To: support@tinyerp.com"
-"POT-Creation-Date: 2008-09-04 08:32:29+0000"
-"PO-Revision-Date: 2008-09-04 08:32:29+0000"
+"Report-Msgid-Bugs-To: support@openerp.com"
+"POT-Creation-Date: 2008-09-10 12:47:51+0000"
+"PO-Revision-Date: 2008-09-10 12:47:51+0000"
 "Last-Translator: <>"
 "Language-Team: "
 "MIME-Version: 1.0"
@@ -41,7 +41,7 @@ msgstr ""
 #: wizard_field:hr.si_so,so_ask_si,name:0
 #: wizard_field:hr.si_so,init,name:0
 msgid "Employee's name"
-msgstr "Jméno zaměstnance(Employee's name)"
+msgstr ""
 
 #. module: hr
 #: wizard_button:hr.print_month,init,print:0
@@ -52,6 +52,11 @@ msgstr ""
 #. module: hr
 #: view:hr.department:0
 msgid "Department"
+msgstr ""
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.action2
+msgid "Hierarchical view of this employee"
 msgstr ""
 
 #. module: hr
@@ -92,6 +97,12 @@ msgid "Reason"
 msgstr ""
 
 #. module: hr
+#, python-format
+#: code:addons/hr/wizard/sign_in_out.py:0
+msgid "The sign-out date must be in the past"
+msgstr ""
+
+#. module: hr
 #: rml:hr.timesheet.attendance.error:0
 msgid "Date Signed"
 msgstr ""
@@ -114,7 +125,7 @@ msgstr ""
 #. module: hr
 #: wizard_field:hr.si_so,si_ask_so,last_time:0
 msgid "Your last sign out"
-msgstr "Naposledy jste se přihlásil(Your last sign out)"
+msgstr ""
 
 #. module: hr
 #: field:hr.employee.category,child_ids:0
@@ -131,7 +142,7 @@ msgstr ""
 #. module: hr
 #: wizard_field:hr.si_so,init,state:0
 msgid "Current state"
-msgstr "Současný stav(Current state)"
+msgstr ""
 
 #. module: hr
 #: field:hr.timesheet,hour_from:0
@@ -141,12 +152,24 @@ msgstr ""
 #. module: hr
 #: wizard_view:hr.si_so,so_ask_si:0
 msgid "You did not signed in the last time. Please enter the date and time you signed in."
-msgstr "Minule jste se neodhlásil. Prosím zadejte datum a čas odhlášení"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_attendance_reason
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason
 msgid "Attendance Reasons"
+msgstr ""
+
+#. module: hr
+#, python-format
+#: code:addons/hr/hr.py:0
+msgid "You tried to sign with a date anterior to another event !\nTry to contact the administrator to correct attendances."
+msgstr ""
+
+#. module: hr
+#, python-format
+#: code:addons/hr/wizard/sign_in_out.py:0
+msgid "UserError"
 msgstr ""
 
 #. module: hr
@@ -158,7 +181,7 @@ msgstr "Konfigurace"
 #: wizard_field:hr.print_week,init,end_date:0
 #: wizard_field:hr.timesheet.attendance.report,init,end_date:0
 msgid "Ending Date"
-msgstr "Koncové datum"
+msgstr ""
 
 #. module: hr
 #: view:hr.attendance:0
@@ -168,6 +191,12 @@ msgstr ""
 #. module: hr
 #: selection:hr.timesheet,dayofweek:0
 msgid "Sunday"
+msgstr ""
+
+#. module: hr
+#, python-format
+#: code:addons/hr/hr.py:0
+msgid "Warning"
 msgstr ""
 
 #. module: hr
@@ -181,8 +210,14 @@ msgid "Operation"
 msgstr ""
 
 #. module: hr
-#: rml:hr.timesheet.attendance.error:0
-msgid "Date Printed:"
+#: view:hr.timesheet.group:0
+msgid "Working Time Category"
+msgstr ""
+
+#. module: hr
+#, python-format
+#: code:addons/hr/wizard/sign_in_out.py:0
+msgid "A sign-in must be right after a sign-out !"
 msgstr ""
 
 #. module: hr
@@ -199,7 +234,7 @@ msgstr ""
 #. module: hr
 #: wizard_view:hr.si_so,init:0
 msgid "You are now ready to sign in or out of the attendance follow up"
-msgstr "Teď jste schopni se přihlašovat/odhlašovat(You are now ready to sign in or out of the attendance follow up)"
+msgstr ""
 
 #. module: hr
 #: selection:hr.employee,state:0
@@ -219,7 +254,7 @@ msgstr ""
 #. module: hr
 #: wizard_field:hr.timesheet.attendance.report,init,max_delay:0
 msgid "Max. Delay (Min)"
-msgstr "Max. zpoždění (minut)"
+msgstr ""
 
 #. module: hr
 #: field:hr.employee,work_location:0
@@ -266,14 +301,9 @@ msgid "Action's type"
 msgstr ""
 
 #. module: hr
-#: rml:hr.timesheet.attendance.error:0
-msgid "Report"
-msgstr ""
-
-#. module: hr
 #: wizard_view:hr.si_so,si_ask_so:0
 msgid "You did not signed out the last time. Please enter the date and time you signed out."
-msgstr "Minule jste se neodhlásil. Prosím zadejte datum a čas odhlášení"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.report.xml,name:hr.attendance_error_report
@@ -284,7 +314,7 @@ msgstr ""
 #: wizard_field:hr.print_week,init,init_date:0
 #: wizard_field:hr.timesheet.attendance.report,init,init_date:0
 msgid "Starting Date"
-msgstr "Počáteční datum"
+msgstr ""
 
 #. module: hr
 #: constraint:ir.ui.view:0
@@ -294,6 +324,11 @@ msgstr ""
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Divorced"
+msgstr ""
+
+#. module: hr
+#: rml:hr.timesheet.attendance.error:0
+msgid "Min Delay"
 msgstr ""
 
 #. module: hr
@@ -331,9 +366,14 @@ msgid "Male"
 msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_categ_form
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
-msgid "Categories of Employee"
+#, python-format
+#: code:addons/hr/wizard/sign_in_out.py:0
+msgid "The Sign-in date must be in the past"
+msgstr ""
+
+#. module: hr
+#: selection:hr.employee,marital:0
+msgid "Unmaried"
 msgstr ""
 
 #. module: hr
@@ -350,7 +390,7 @@ msgstr ""
 #. module: hr
 #: wizard_view:hr.print_month,init:0
 msgid "Select a month"
-msgstr "Vyberte měsíc"
+msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
@@ -380,11 +420,17 @@ msgstr ""
 #: model:ir.actions.wizard,name:hr.si_so
 #: model:ir.ui.menu,name:hr.menu_si_so
 msgid "Sign in / Sign out"
-msgstr "Přihlásit / Odhlásit"
+msgstr ""
 
 #. module: hr
 #: field:hr.department,note:0
 msgid "Note"
+msgstr ""
+
+#. module: hr
+#, python-format
+#: code:addons/hr/hr.py:0
+msgid "You tried to sign in with a date anterior to another event !\nTry to contact the administrator to correct attendances."
 msgstr ""
 
 #. module: hr
@@ -404,11 +450,6 @@ msgid "Print Timesheet by week"
 msgstr ""
 
 #. module: hr
-#: selection:hr.employee,marital:0
-msgid "Other"
-msgstr ""
-
-#. module: hr
 #: view:hr.employee:0
 msgid "Status"
 msgstr ""
@@ -416,11 +457,6 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,address_id:0
 msgid "Contact address"
-msgstr ""
-
-#. module: hr
-#: rml:hr.timesheet.attendance.error:0
-msgid "Avg Delay"
 msgstr ""
 
 #. module: hr
@@ -440,6 +476,12 @@ msgid "Job Information"
 msgstr ""
 
 #. module: hr
+#, python-format
+#: code:addons/hr/wizard/sign_in_out.py:0
+msgid "A sign-out must be right after a sign-in !"
+msgstr ""
+
+#. module: hr
 #: field:hr.timesheet,dayofweek:0
 msgid "Day of week"
 msgstr ""
@@ -455,16 +497,11 @@ msgid "Date"
 msgstr ""
 
 #. module: hr
-#: rml:hr.timesheet.attendance.error:0
-msgid "To:"
-msgstr ""
-
-#. module: hr
 #: wizard_button:hr.si_so,si_ask_so,si:0
 #: wizard_button:hr.si_so,init,si_test:0
 #: selection:hr.action.reason,action_type:0
 msgid "Sign in"
-msgstr "Přihlásit se(Sign in)"
+msgstr ""
 
 #. module: hr
 #: wizard_view:hr.timesheet.attendance.report,init:0
@@ -482,8 +519,9 @@ msgid "Active"
 msgstr ""
 
 #. module: hr
-#: selection:hr.employee,marital:0
-msgid "Unmaried"
+#: model:ir.actions.act_window,name:hr.open_view_categ_form
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+msgid "Categories of Employee"
 msgstr ""
 
 #. module: hr
@@ -503,9 +541,15 @@ msgid "Starting date"
 msgstr ""
 
 #. module: hr
+#, python-format
+#: code:addons/hr/hr.py:0
+msgid "You tried to sign out with a date anterior to another event !\nTry to contact the administrator to correct attendances."
+msgstr ""
+
+#. module: hr
 #: wizard_view:hr.print_week,init:0
 msgid "Select a starting and a end date"
-msgstr "Vybrat počáteční a koncové datum"
+msgstr ""
 
 #. module: hr
 #: field:hr.employee.category,parent_id:0
@@ -518,8 +562,8 @@ msgid "Marital Status"
 msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.action2
-msgid "Hierarchical view of this employee"
+#: selection:hr.employee,marital:0
+msgid "Other"
 msgstr ""
 
 #. module: hr
@@ -530,7 +574,7 @@ msgstr ""
 #: wizard_button:hr.si_so,init,end:0
 #: wizard_button:hr.timesheet.attendance.report,init,end:0
 msgid "Cancel"
-msgstr "Storno"
+msgstr ""
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_timesheet
@@ -569,7 +613,7 @@ msgstr ""
 #: wizard_button:hr.si_so,init,so_test:0
 #: selection:hr.action.reason,action_type:0
 msgid "Sign out"
-msgstr "Odhlásit(Sign out)"
+msgstr ""
 
 #. module: hr
 #: rml:hr.timesheet.attendance.error:0
@@ -594,7 +638,7 @@ msgstr ""
 #. module: hr
 #: wizard_field:hr.print_month,init,month:0
 msgid "Month"
-msgstr "Měsíc"
+msgstr ""
 
 #. module: hr
 #: rml:hr.timesheet.attendance.error:0
@@ -616,7 +660,7 @@ msgstr ""
 #. module: hr
 #: wizard_field:hr.si_so,so_ask_si,last_time:0
 msgid "Your last sign in"
-msgstr "Naposledy jste se přihlásil"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.wizard,name:hr.print_month
@@ -645,18 +689,8 @@ msgid "Define attendance reason"
 msgstr ""
 
 #. module: hr
-#: rml:hr.timesheet.attendance.error:0
-msgid "From:"
-msgstr ""
-
-#. module: hr
 #: field:hr.employee,otherid:0
 msgid "Other ID"
-msgstr ""
-
-#. module: hr
-#: view:hr.timesheet.group:0
-msgid "Working Time Category"
 msgstr ""
 
 #. module: hr
@@ -711,7 +745,7 @@ msgstr ""
 #. module: hr
 #: wizard_field:hr.print_month,init,year:0
 msgid "Year"
-msgstr "Rok"
+msgstr ""
 
 #. module: hr
 #: selection:hr.timesheet,dayofweek:0
