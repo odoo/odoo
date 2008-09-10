@@ -173,7 +173,10 @@ def create_graph(module_list, force=None):
     for module in module_list:
         if module[-4:]=='.zip':
             module = module[:-4]
-        mod_path = get_module_path(module)
+        try:
+            mod_path = get_module_path(module)
+        except IOError:
+            continue
         terp_file = get_module_resource(module, '__terp__.py')
         if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path):
             try:
@@ -235,7 +238,11 @@ def load_module_graph(cr, graph, status=None, **kwargs):
         sys.stdout.flush()
         pool = pooler.get_pool(cr.dbname)
         modules = pool.instanciate(m, cr)
-        cr.execute('select state, demo from ir_module_module where name=%s', (m,))
+        
+        cr.execute('select id from ir_module_module where name=%s', (m,))
+        mid = int(cr.rowcount and cr.fetchone()[0] or 0)
+
+        cr.execute('select state, demo from ir_module_module where id=%d', (mid,))
         (package_state, package_demo) = (cr.rowcount and cr.fetchone()) or ('uninstalled', False)
         idref = {}
         status['progress'] = (float(statusi)+0.4)/len(graph)
@@ -267,31 +274,23 @@ def load_module_graph(cr, graph, status=None, **kwargs):
                         tools.convert_csv_import(cr, m, os.path.basename(xml), tools.file_open(opj(m, xml)).read(), idref, noupdate=True)
                     else:
                         tools.convert_xml_import(cr, m, tools.file_open(opj(m, xml)), idref, noupdate=True, **kwargs)
-                cr.execute('update ir_module_module set demo=%s where name=%s', (True, package.name))
+                cr.execute('update ir_module_module set demo=%s where id=%d', (True, mid))
             package_todo.append(package.name)
-            cr.execute("update ir_module_module set state='installed' where state in ('to upgrade', 'to install') and name=%s", (package.name,))
+            cr.execute("update ir_module_module set state='installed' where state in ('to upgrade', 'to install') and id=%d", (mid,))
 
-            # check if all model of the module have at least a access rule.
-            # TODO: improve this query which is very slow !!!
-            cr.execute("""  SELECT name 
-                             FROM ir_model m 
-                            WHERE EXISTS (SELECT 1 
-                                            FROM ir_model_data 
-                                           WHERE module = %s 
-                                             AND model = m.name
-                                          ) 
-                              AND NOT EXISTS (SELECT 1
-                                                FROM ir_model_access
-                                               WHERE model_id = m.id
-                                              )
-                       """, (m,))
-
-            for (model,) in cr.fetchall():
-                logger.notifyChannel('init', netsvc.LOG_WARNING, 'addon:%s:object %s has no access rules!' % (m,model,))
-
+            cr.commit()
+            
+            # Update translations for all installed languages
+            modobj = pool.get('ir.module.module')
+            modobj.update_translations(cr, 1, [mid], None)
+            
             cr.commit()
         statusi+=1
 
+    cr.execute("""select model,name from ir_model where id not in (select model_id from ir_model_access)""")
+    for (model,name) in cr.fetchall():
+        logger.notifyChannel('init', netsvc.LOG_WARNING, 'addon:object %s (%s) has no access rules!' % (model,name))
+ 
     pool = pooler.get_pool(cr.dbname)
     cr.execute('select * from ir_model where state=%s', ('manual',))
     for model in cr.dictfetchall():

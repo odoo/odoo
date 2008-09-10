@@ -101,14 +101,12 @@ class wizard_info_get(wizard.interface):
         mod_obj.download(cr, uid, ids, context=context)
         cr.commit()
         db, pool = pooler.restart_pool(cr.dbname, update_module=True)
-
-        lang_obj=pool.get('res.lang')
-        lang_ids=lang_obj.search(cr, uid, [])
-        langs=lang_obj.browse(cr, uid, lang_ids)
-        for lang in langs:
-            if lang.code and lang.code != 'en_US':
-                filename=os.path.join(tools.config["root_path"], "i18n", lang.code + ".csv")
-                tools.trans_load(cr.dbname, filename, lang.code)
+        
+        # Update translations for all installed languages
+        cr = db.cursor()
+        modobj = pool.get('ir.module.module')
+        mids = modobj.search(cr, uid, [('state', '=', 'installed')])
+        modobj.update_translations(cr, uid, mids, None)
         return {}
 
     def _config(self, cr, uid, data, context=None):

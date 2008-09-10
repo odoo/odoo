@@ -6,26 +6,7 @@
     Languages
     ======================
     -->
-        <record id="view_lang" model="ir.ui.view">
-            <field name="name">Languages</field>
-            <field name="model">res.lang</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Language">
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
-                    <field name="translatable"/>
-                    <field name="direction"/>
-                </form>
-            </field>
-        </record>
-        <record id="action_lang" model="ir.actions.act_window">
-            <field name="name">Languages</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.lang</field>
-            <field name="view_type">form</field>
-        </record>
-        <menuitem id="next_id_2" name="Interface" parent="base.menu_custom"/><menuitem action="action_lang" id="menu_action_lang" parent="next_id_2"/>
+        <menuitem id="next_id_2" name="Interface" parent="base.menu_custom"/>
 
         <!--
     ======================
@@ -48,6 +29,14 @@
                         </page>
                         <page string="Access Rights">
                             <field colspan="4" name="model_access" nolabel="1">
+                                <tree string="Access Rules" editable="top">
+                                    <field name="model_id"/>
+                                    <field name="perm_read"/>
+                                    <field name="perm_write"/>
+                                    <field name="perm_create"/>
+                                    <field name="perm_unlink"/>
+                                    <field name="name"/>
+                                </tree>
                                 <form string="Access Controls">
                                     <field colspan="4" name="name" select="1"/>
                                     <field name="model_id" select="1"/>
@@ -60,7 +49,13 @@
                             </field>
                         </page>
                         <page string="Rules">
-                            <field colspan="4" name="rule_groups" nolabel="1"/>
+                            <field colspan="4" name="rule_groups" nolabel="1">
+                                <tree string="Rules">
+                                    <field name="name"/>
+                                    <field name="model_id"/>
+                                    <field name="global"/>
+                                </tree>
+                            </field>
                         </page><page string="Notes">
                             <field colspan="4" name="comment" nolabel="1"/>
                         </page>
@@ -162,6 +157,8 @@
                         <page string="Internal Header/Footer">
                             <field colspan="4" name="rml_header2" nolabel="1"/>
                         </page>
+                        <page string="Configuration">
+                        </page>
                     </notebook>
                 </form>
             </field>
@@ -189,6 +186,7 @@
                     <field name="name" select="1"/>
                     <newline/>
                     <field name="login" select="1"/>
+                    <newline/>
                     <field name="password" required="1"/>
                     <field colspan="4" name="signature"/>
                     <separator string="Assign Groups to Define Access Rights" colspan="4"/>

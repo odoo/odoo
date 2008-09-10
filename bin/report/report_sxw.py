@@ -550,11 +550,12 @@ class rml_parse(object):
         return res
 
 class report_sxw(report_rml):
-    def __init__(self, name, table, rml, parser=rml_parse, header=True):
+    def __init__(self, name, table, rml, parser=rml_parse, header=True, store=False):
         report_rml.__init__(self, name, table, rml, '')
         self.name = name
         self.parser = parser
         self.header = header
+        self.store = store
 
     def getObjects(self, cr, uid, ids, context):
         table_obj = pooler.get_pool(cr.dbname).get(self.table)
@@ -572,10 +573,12 @@ class report_sxw(report_rml):
         report_type = 'pdf'
         report_xml = None
         title=''
+        attach = False
         if report_xml_ids:
-            title = ir_actions_report_xml_obj.browse(cr,uid,report_xml_ids)[0].name
             report_xml = ir_actions_report_xml_obj.browse(cr, uid, report_xml_ids[0],
                     context=context)
+            title = report_xml.name
+            attach = report_xml.attachment
             rml = report_xml.report_rml_content
             report_type = report_xml.report_type
         else:
@@ -654,15 +657,24 @@ class report_sxw(report_rml):
             rml_parser.preprocess(objs, data, ids)
             rml_dom = xml.dom.minidom.parseString(rml)
             rml2 = rml_parser._parse(rml_dom, objs, data, header=self.header)
-            #if os.name != "nt":
-            #   f = file("/tmp/debug.rml", "w")
-            #   f.write(rml2)
-            #   f.close()
             if rml_parser.logo:
                 logo = base64.decodestring(rml_parser.logo)
 
         create_doc = self.generators[report_type]
         pdf = create_doc(rml2, logo,title)
+
+        if attach:
+            # TODO: save multiple print with symbolic links in attach
+            pool.get('ir.attachment').create(cr, uid, {
+                'name': title or _('print'),
+                'datas': pdf,
+                'datas_fname': attach+time.strftime('%Y-%m-%d')+'.'+report_type,
+                'res_model': self.table,
+                'res_id': ids[0]
+                }, context=context
+            )
+            cr.commit()
+
         return (pdf, report_type)
 
 

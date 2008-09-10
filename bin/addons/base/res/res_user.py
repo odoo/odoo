@@ -2,6 +2,7 @@
 ##############################################################################
 #
 # Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2008 Camptocamp SA
 #
 # $Id$
 #
@@ -29,11 +30,13 @@
 ##############################################################################
 
 from osv import fields,osv
+from osv.orm import except_orm
 import tools
 import pytz
 
 class groups(osv.osv):
     _name = "res.groups"
+    _order = 'name'
     _columns = {
         'name': fields.char('Group Name', size=64, required=True),
         'model_access': fields.one2many('ir.model.access', 'group_id', 'Access Controls'),
@@ -71,7 +74,8 @@ class roles(osv.osv):
     _columns = {
         'name': fields.char('Role Name', size=64, required=True),
         'parent_id': fields.many2one('res.roles', 'Parent', select=True),
-        'child_id': fields.one2many('res.roles', 'parent_id', 'Childs')
+        'child_id': fields.one2many('res.roles', 'parent_id', 'Childs'),
+        'users': fields.many2many('res.users', 'res_roles_users_rel', 'rid', 'uid', 'Users'),
     }
     _defaults = {
     }
@@ -108,6 +112,7 @@ class users(osv.osv):
         'menu_id': fields.many2one('ir.actions.actions', 'Menu Action'),
         'groups_id': fields.many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', 'Groups'),
         'roles_id': fields.many2many('res.roles', 'res_roles_users_rel', 'uid', 'rid', 'Roles'),
+        'rules_id': fields.many2many('ir.rule.group', 'user_rule_group_rel', 'user_id', 'rule_group_id', 'Rules'),
         'company_id': fields.many2one('res.company', 'Company'),
         'context_lang': fields.selection(_lang_get, 'Language', required=True),
         'context_tz': fields.selection(_tz_get,  'Timezone', size=64)
@@ -164,7 +169,7 @@ class users(osv.osv):
 
     def unlink(self, cr, uid, ids):
         if 1 in ids:
-            raise osv.except_osv(_('Can not remove root user!'), _('You can not remove the root user as it is used internally for resources created by Tiny ERP (updates, module installation, ...)'))
+            raise osv.except_osv(_('Can not remove root user!'), _('You can not remove the admin user as it is used internally for resources created by OpenERP (updates, module installation, ...)'))
         return super(users, self).unlink(cr, uid, ids)
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):
@@ -198,7 +203,7 @@ class users(osv.osv):
         return dataobj.browse(cr, uid, data_id, context).res_id
 
     def action_next(self,cr,uid,ids,context=None):
-        return{
+        return {
                 'view_type': 'form',
                 "view_mode": 'form',
                 'res_model': 'ir.module.module.configuration.wizard',
@@ -213,7 +218,7 @@ class users(osv.osv):
                 'res_model': 'ir.module.module.configuration.wizard',
                 'type': 'ir.actions.act_window',
                 'target':'new',
-               }
+        }
     def action_new(self,cr,uid,ids,context={}):
         return {
                 'view_type': 'form',
@@ -225,7 +230,7 @@ class users(osv.osv):
                }
 users()
 
-class groups2(osv.osv):
+class groups2(osv.osv): ##FIXME: Is there a reason to inherit this object ?
     _inherit = 'res.groups'
     _columns = {
         'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users'),
@@ -271,8 +276,3 @@ class res_config_view(osv.osv_memory):
             }
 
 res_config_view()
-
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
