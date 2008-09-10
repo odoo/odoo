@@ -375,9 +375,10 @@ def trans_generate(lang, modules, dbname=None):
 
         elif model=='ir.model.fields':
             field_name = obj.name
-            if not field_name in pool.get(obj.model)._columns:
+            objmodel = pool.get(obj.model)
+            if not objmodel or not field_name in objmodel._columns:
                 continue
-            field_def = pool.get(obj.model)._columns[field_name]
+            field_def = objmodel._columns[field_name]
 
             name = obj.model + "," + field_name
             push_translation(module, 'field', name, 0, field_def.string.encode('utf8'))
@@ -386,8 +387,8 @@ def trans_generate(lang, modules, dbname=None):
                 push_translation(module, 'help', name, 0, field_def.help.encode('utf8'))
 
             if field_def.translate:
-                ids = pool.get(obj.model).search(cr, uid, [])
-                obj_values = pool.get(obj.model).read(cr, uid, ids, [field_name])
+                ids = objmodel.search(cr, uid, [])
+                obj_values = objmodel.read(cr, uid, ids, [field_name])
                 for obj_value in obj_values:
                     res_id = obj_value['id']
                     if obj.name in ('ir.model', 'ir.ui.menu'):
