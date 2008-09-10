@@ -110,13 +110,20 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="403.0,67.0,61.0" repeatRows="1" style="Table_Product_Header_Title">
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    <para style="terp_default_9">Please find hereby a request for quotation.</para>
+    <para style="terp_default_9">
+      <font color="white"> </font>
+    </para>
+    <blockTable colWidths="391.0,66.0,73.0" repeatRows="1" style="Table_Product_Header_Title">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Description</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Expected Date</para>
+          <para style="terp_tblheader_Details_Centre">Date</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Centre">Qty</para>
@@ -125,7 +132,7 @@
     </blockTable>
     <section>
       <para style="terp_default_9">[[ repeatIn(order.order_line,'order_line') ]]</para>
-      <blockTable colWidths="406.0,63.0,38.0,23.0" style="Table_Product_Line">
+      <blockTable colWidths="402.0,67.0,38.0,23.0" style="Table_Product_Line">
         <tr>
           <td>
             <para style="terp_default_9">[[ order_line.name ]]</para>
@@ -142,7 +149,7 @@
         </tr>
         <tr>
           <td>
-            <para style="terp_default_9">[[ repeatIn((order_line.notes and order_line.notes.splitlines()) or [], 'l') ]]</para>
+            <para style="terp_default_2">[[ repeatIn((order_line.notes and order_line.notes.splitlines()) or [], 'l') ]]</para>
             <para style="P1">[[ l or removeParentNode('table') ]]</para>
           </td>
           <td>
@@ -163,26 +170,15 @@
         </tr>
       </blockTable>
     </section>
-    <para style="terp_default_9"/>
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
+    <para style="terp_default_9">[[ order.notes or '' ]]</para>
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_9">[[ format(order.notes or '') ]]</para>
+    <para style="terp_default_9">Thanks,</para>
     <para style="terp_default_9">
-      <font color="white"> </font>
-    </para>
-    <para style="terp_default_9">
-      <font color="white"> </font>
-    </para>
-    <para style="terp_default_9">regards,</para>
-    <para style="terp_default_9">
-      <font color="white"> </font>
-    </para>
-    <para style="terp_default_9">[[ user.name or '' ]]</para>
-    <para style="terp_default_Bold_8">
       <font color="white"> </font>
     </para>
     <para style="terp_default_9">[[ user.signature or '' ]]</para>
