@@ -203,10 +203,17 @@
     </rng:define>
 
     <rng:start>
-        <rng:element name="terp">
-            <rng:oneOrMore>
-                <rng:ref name="data" />
-            </rng:oneOrMore>
-        </rng:element>
+        <rng:choice>
+            <rng:element name="openerp">
+                <rng:oneOrMore>
+                    <rng:ref name="data" />
+                </rng:oneOrMore>
+            </rng:element>
+            <rng:element name="terp">
+                <rng:oneOrMore>
+                    <rng:ref name="data" />
+                </rng:oneOrMore>
+            </rng:element>
+        </rng:choice>
     </rng:start>
 </rng:grammar>

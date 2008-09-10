@@ -678,6 +678,14 @@ form: module.record_id""" % (xml_id,)
     def parse(self, xmlstr):
         d = xml.dom.minidom.parseString(xmlstr)
         de = d.documentElement
+
+        if not de.nodeName in ['terp', 'openerp']:
+            self.logger.notifyChannel("init", netsvc.LOG_ERROR, "Mismatch xml format" )
+            raise Exception( "Mismatch xml format: only terp or openerp as root tag" )
+
+        if de.nodeName == 'terp':
+            self.logger.notifyChannel("init", netsvc.LOG_WARNING, "The tag <terp /> is deprecated, use <openerp/>")
+
         for n in [i for i in de.childNodes if (i.nodeType == i.ELEMENT_NODE and i.nodeName=="data")]:
             for rec in n.childNodes:
                 if rec.nodeType == rec.ELEMENT_NODE:
