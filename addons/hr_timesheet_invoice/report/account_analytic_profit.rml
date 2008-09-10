@@ -1,236 +1,368 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-<template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
-<pageTemplate id="first">
-<frame id="first" x1="35.0" y1="57.0" width="525" height="728"/>
-</pageTemplate>
-</template>
-<stylesheet>
-<blockTableStyle id="Standard_Outline">
-<blockAlignment value="LEFT"/>
-<blockValign value="TOP"/>
-</blockTableStyle>
-<blockTableStyle id="Table5">
-<blockAlignment value="LEFT"/>
-<blockValign value="TOP"/>
-<blockBackground colorName="#e6e6e6" start="0,0" stop="0,0"/>
-<blockBackground colorName="#e6e6e6" start="1,0" stop="1,0"/>
-<blockBackground colorName="#e6e6e6" start="2,0" stop="2,0"/>
-</blockTableStyle>
-<blockTableStyle id="Table8">
-<blockAlignment value="LEFT"/>
-<blockValign value="TOP"/>
-<lineStyle kind="GRID" colorName="black"/>
-<blockBackground colorName="#e6e6e6" start="0,0" stop="0,0"/>
-<blockBackground colorName="#e6e6e6" start="1,0" stop="1,0"/>
-<blockBackground colorName="#e6e6e6" start="2,0" stop="2,0"/>
-<blockBackground colorName="#e6e6e6" start="3,0" stop="3,0"/>
-<blockBackground colorName="#e6e6e6" start="4,0" stop="4,0"/>
-<blockBackground colorName="#e6e6e6" start="5,0" stop="5,0"/>
-<blockBackground colorName="#e6e6e6" start="6,0" stop="6,0"/>
-<blockBackground colorName="#e6e6e6" start="7,0" stop="7,0"/>
-</blockTableStyle>
-<blockTableStyle id="Table4">
-<blockAlignment value="LEFT"/>
-<blockValign value="TOP"/>
-</blockTableStyle>
-<blockTableStyle id="Table1">
-<blockAlignment value="LEFT"/>
-<blockValign value="TOP"/>
-</blockTableStyle>
-<blockTableStyle id="Table6">
-<blockAlignment value="LEFT"/>
-<blockValign value="TOP"/>
-</blockTableStyle>
-<blockTableStyle id="Table7">
-<blockAlignment value="LEFT"/>
-<blockValign value="TOP"/>
-</blockTableStyle>
-<initialize>
-<paraStyle name="all" alignment="justify"/>
-</initialize>
-<paraStyle name="P1" fontName="Times-Roman" alignment="LEFT"/>
-<paraStyle name="P2" fontName="Times-Bold" fontSize="20.0" leading="25" alignment="CENTER"/>
-<paraStyle name="P3" fontName="Times-Bold" fontSize="10.0" leading="13" alignment="RIGHT"/>
-<paraStyle name="P4" fontName="Times-Roman" fontSize="10.0" leading="13" alignment="RIGHT"/>
-<paraStyle name="P5" fontName="Times-Roman" fontSize="6.0" leading="8"/>
-<paraStyle name="P6" fontName="Times-Roman" alignment="LEFT"/>
-<paraStyle name="P7" fontName="Helvetica-Bold" fontSize="14.0" leading="20"/>
-<paraStyle name="P8" fontName="Times-Roman" alignment="RIGHT"/>
-<paraStyle name="P9" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="LEFT"/>
-<paraStyle name="P10" fontName="Times-Roman" fontSize="11.0" leading="14" alignment="RIGHT"/>
-<paraStyle name="P11" fontName="Times-Roman" fontSize="10.0" leading="13"/>
-<paraStyle name="P12" fontName="Times-Roman" fontSize="10.0" leading="13" alignment="RIGHT"/>
-<paraStyle name="P13" fontName="Times-Roman" fontSize="10.0" leading="13"/>
-<paraStyle name="P14" fontName="Times-Roman" fontSize="10.0" leading="13" alignment="RIGHT"/>
-<paraStyle name="Standard" fontName="Times-Roman"/>
-<paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
-<paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
-<paraStyle name="List" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
-<paraStyle name="Table Contents" fontName="Times-Roman"/>
-<paraStyle name="Table Heading" fontName="Times-Roman" alignment="CENTER"/>
-<paraStyle name="Caption" fontName="Times-Roman" fontSize="12.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/>
-<paraStyle name="Index" fontName="Times-Roman"/>
-<paraStyle name="Preformatted Text" fontName="Courier" fontSize="10.0" leading="13" spaceBefore="0.0" spaceAfter="0.0"/>
-<paraStyle name="Untitled1" fontName="Times-Roman"/>
-</stylesheet>
-<images/>
-<story>
-<blockTable colWidths="145.0,235.0,145.0" repeatRows="1" style="Table5">
-<tr>
-<td>
-<para style="P1">[[ company.name ]]</para>
-</td>
-<td>
-<para style="P2">Invoice rate by user</para>
-</td>
-<td>
-<para style="P3">Period from [[ data['form']['date_from'] ]]</para>
-<para style="P3">to [[ data['form']['date_to'] ]]</para>
-<para style="P4">Currency: [[ company.currency_id.name ]]</para>
-</td>
-</tr>
-</blockTable>
-<para style="P6">
-<font color="white"> </font>
-</para>
-<blockTable colWidths="118.0,44.0,55.0,67.0,68.0,66.0,55.0,50.0" style="Table8">
-<tr>
-<td>
-<para style="P9">Employee</para>
-</td>
-<td>
-<para style="P9">
-<font color="white"> </font>
-</para>
-</td>
-<td>
-<para style="P10">Units</para>
-</td>
-<td>
-<para style="P10">Theorical</para>
-</td>
-<td>
-<para style="P10">Income</para>
-</td>
-<td>
-<para style="P10">Cost</para>
-</td>
-<td>
-<para style="P10">Profit</para>
-</td>
-<td>
-<para style="P10">Eff.</para>
-</td>
-</tr>
-</blockTable>
-<para style="P6">
-<font color="white"> </font>
-</para>
-<section>
-<para style="P5">[[ repeatIn(user_ids(lines(data['form'])), 'e') ]]</para>
-<para style="P7">[[ e.name ]]</para>
-<blockTable colWidths="92.0,433.0" style="Table4">
-<tr>
-<td>
-<para style="P11">[[ repeatIn(journal_ids(data['form'], e.id), 'j') ]]</para>
-<para style="P13">[[ j.name ]]</para>
-</td>
-<td>
-<blockTable colWidths="70.0,55.0,68.0,68.0,66.0,55.0,50.0" style="Table1">
-<tr>
-<td>
-<para style="P14">
-<font color="white"> </font>
-</para>
-</td>
-<td>
-<para style="P12">[[ reduce(lambda x, y: x+y['unit_amount'], line(data['form'], [j.id], [e.id]), 0)]]</para>
-</td>
-<td>
-<para style="P12">[[ reduce(lambda x, y: x+y['amount_th'], line(data['form'], [j.id], [e.id]), 0) ]]</para>
-</td>
-<td>
-<para style="P12">[[ reduce(lambda x, y: x+y['amount'], line(data['form'], [j.id], [e.id]), 0) ]]</para>
-</td>
-<td>
-<para style="P12">[[ reduce(lambda x, y: x+y['cost'], line(data['form'], [j.id], [e.id]), 0) ]]</para>
-</td>
-<td>
-<para style="P12">[[ reduce(lambda x, y: x+y['profit'], line(data['form'], [j.id], [e.id]), 0)]]</para>
-</td>
-<td>
-<para style="P12">[[ '%d' % (-reduce(lambda x, y: x+y['amount'], line(data['form'], [j.id], [e.id]), 0) / reduce(lambda x, y: x+y['cost'], line(data['form'], [j.id], [e.id]), 0) * 100.0,)]] %
-</para>
-</td>
-</tr>
-<tr>
-<td>
-<para style="P12">[[ repeatIn(line(data['form'], [j.id], [e.id]), 'l') ]]</para>
-<para style="P12">[[ l['name'] ]]</para>
-</td>
-<td>
-<para style="P12">[[ l['unit_amount'] ]]</para>
-</td>
-<td>
-<para style="P12">[[ l['amount_th'] ]]</para>
-</td>
-<td>
-<para style="P12">[[ l['amount'] ]]</para>
-</td>
-<td>
-<para style="P12">[[ l['cost'] ]]</para>
-</td>
-<td>
-<para style="P12">[[ l['profit'] ]]</para>
-</td>
-<td>
-<para style="P12">[[ l['eff'] ]] %</para>
-</td>
-</tr>
-</blockTable>
-</td>
-</tr>
-</blockTable>
-</section>
-<blockTable colWidths="103.0,422.0" style="Table6">
-<tr>
-<td>
-<para style="P7">Totals</para>
-</td>
-<td>
-<blockTable colWidths="59.0,55.0,67.0,68.0,66.0,55.0,51.0" style="Table7">
-<tr>
-<td>
-<para style="P12">
-<font color="white"> </font>
-</para>
-</td>
-<td>
-<para style="P12">[[ reduce(lambda x, y: x+y['unit_amount'], line(data['form'], data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0) ]]</para>
-</td>
-<td>
-<para style="P12">
-<font color="white"> </font>
-</para>
-</td>
-<td>
-<para style="P12">[[ reduce(lambda x, y: x+y['amount'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0) ]]</para>
-</td>
-<td>
-<para style="P12">[[ reduce(lambda x, y: x+y['cost'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0) ]]</para>
-</td>
-<td>
-<para style="P12">[[ reduce(lambda x, y: x+y['profit'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0) ]]</para>
-</td>
-<td>
-<para style="P12">[[ '%d' % (-reduce(lambda x, y: x+y['amount'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0)/reduce(lambda x, y: x+y['cost'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0)* 100, )]] %</para>
-</td>
-</tr>
-</blockTable>
-</td>
-</tr>
-</blockTable>
-</story>
+  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+    <pageTemplate id="first">
+      <frame id="first" x1="35.0" y1="57.0" width="525" height="728"/>
+    </pageTemplate>
+  </template>
+  <stylesheet>
+    <blockTableStyle id="Standard_Outline">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table5">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table1">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="0,0" stop="0,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="2,0" stop="2,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table3">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="0,0" stop="0,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="2,0" stop="2,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table8">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="5,-1" stop="5,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="6,-1" stop="6,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="7,-1" stop="7,-1"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table4">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="22,-1" stop="22,-1"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table2">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table6">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table7">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <initialize>
+      <paraStyle name="all" alignment="justify"/>
+    </initialize>
+    <paraStyle name="P1" fontName="Times-Roman" fontSize="10.0" leading="13"/>
+    <paraStyle name="P2" fontName="Times-Roman" fontSize="10.0" leading="13" alignment="RIGHT"/>
+    <paraStyle name="P3" fontName="Times-Roman" fontSize="10.0" leading="13" alignment="RIGHT"/>
+    <paraStyle name="P4" fontName="Times-Bold" fontSize="10.0" leading="13" alignment="RIGHT"/>
+    <paraStyle name="P5" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT"/>
+    <paraStyle name="P6" fontName="Times-Roman" alignment="LEFT"/>
+    <paraStyle name="P7" fontName="Times-Roman" fontSize="10.0" leading="13" alignment="RIGHT"/>
+    <paraStyle name="P8" fontName="Times-Roman" alignment="LEFT"/>
+    <paraStyle name="Standard" fontName="Times-Roman"/>
+    <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="List" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Table Contents" fontName="Times-Roman"/>
+    <paraStyle name="Table Heading" fontName="Times-Roman" alignment="CENTER"/>
+    <paraStyle name="Caption" fontName="Times-Roman" fontSize="12.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="Index" fontName="Times-Roman"/>
+    <paraStyle name="Preformatted Text" fontName="Courier" fontSize="10.0" leading="13" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="Untitled1" fontName="Times-Roman"/>
+    <paraStyle name="Footer" fontName="Times-Roman"/>
+    <paraStyle name="Horizontal Line" fontName="Times-Roman" fontSize="6.0" leading="8" spaceBefore="0.0" spaceAfter="14.0"/>
+    <paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="Heading 9" fontName="Helvetica-Bold" fontSize="75%" leading="NaN" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_General" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Bold_8" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_General_Right" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details_Centre" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details_Right" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_Right_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Centre_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_header_Right" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_address" fontName="Helvetica" fontSize="10.0" leading="13" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Bold_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Centre_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_centre_bold_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+  </stylesheet>
+  <images/>
+  <story>
+    <blockTable colWidths="175.0,175.0,175.0" repeatRows="1" style="Table5">
+      <tr>
+        <td>
+          <para style="terp_default_9">
+            <font color="white"> </font>
+          </para>
+        </td>
+        <td>
+          <para style="terp_header_Centre">Invoice rate by user</para>
+        </td>
+        <td>
+          <para style="P4">
+            <font color="white"> </font>
+          </para>
+          <para style="P3">
+            <font color="white"> </font>
+          </para>
+        </td>
+      </tr>
+    </blockTable>
+    <para style="P6">
+      <font color="white"> </font>
+    </para>
+    <blockTable colWidths="175.0,175.0,175.0" style="Table1">
+      <tr>
+        <td>
+          <para style="terp_default_centre_bold_9">Period from startdate</para>
+        </td>
+        <td>
+          <para style="terp_default_centre_bold_9">Period to enddate</para>
+        </td>
+        <td>
+          <para style="terp_default_centre_bold_9">Currency</para>
+        </td>
+      </tr>
+    </blockTable>
+    <blockTable colWidths="175.0,175.0,175.0" style="Table3">
+      <tr>
+        <td>
+          <para style="terp_default_Centre_9">[[ data['form']['date_from'] ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_9">[[ data['form']['date_to'] ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_9">[[ company.currency_id.name ]]</para>
+        </td>
+      </tr>
+    </blockTable>
+    <para style="P6">
+      <font color="white"> </font>
+    </para>
+    <para style="terp_default_9">
+      <font color="white"> </font>
+    </para>
+    <blockTable colWidths="118.0,44.0,55.0,67.0,71.0,66.0,52.0,50.0" style="Table8">
+      <tr>
+        <td>
+          <para style="terp_tblheader_Details">Employee</para>
+        </td>
+        <td>
+          <para style="terp_default_Bold_9">
+            <font color="white"> </font>
+          </para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">Units</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">Theorical</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">Income</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">Cost</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">Profit</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">Eff.</para>
+        </td>
+      </tr>
+    </blockTable>
+    <para style="P6">
+      <font color="white"> </font>
+    </para>
+    <section>
+      <para style="terp_default_9">[[ repeatIn(user_ids(lines(data['form'])), 'e') ]]</para>
+      <blockTable colWidths="521.0,4.0" style="Table4">
+        <tr>
+          <td>
+            <para style="terp_header">[[ e.name ]]</para>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <para style="P1">[[ repeatIn(journal_ids(data['form'], e.id), 'j') ]]</para>
+            <para style="terp_default_9">[[ j.name ]]</para>
+            <blockTable colWidths="160.0,57.0,66.0,61.0,68.0,52.0,334.0" style="Table2">
+              <tr>
+                <td>
+                  <para style="P7">
+                    <font color="white"> </font>
+                  </para>
+                </td>
+                <td>
+                  <para style="terp_default_9">[[ reduce(lambda x, y: x+y['unit_amount'], line(data['form'], [j.id], [e.id]), 0) ]]</para>
+                </td>
+                <td>
+                  <para style="terp_default_9">[[ reduce(lambda x, y: x+y['amount_th'], line(data['form'], [j.id], [e.id]), 0) ]]</para>
+                </td>
+                <td>
+                  <para style="terp_default_9">[[ reduce(lambda x, y: x+y['amount'], line(data['form'], [j.id], [e.id]), 0)  ]]</para>
+                </td>
+                <td>
+                  <para style="terp_default_9">[[ reduce(lambda x, y: x+y['cost'], line(data['form'], [j.id], [e.id]), 0) ]]</para>
+                </td>
+                <td>
+                  <para style="terp_default_9">[[ reduce(lambda x, y: x+y['profit'], line(data['form'], [j.id], [e.id]), 0) ]]</para>
+                </td>
+                <td>
+                  <para style="terp_default_9">[[ '%d' % (reduce(lambda x, y: x+y['amount'], line(data['form'], [j.id], [e.id]), 0) / reduce(lambda x, y: x+y['cost'], line(data['form'], [j.id], [e.id]), 0) * 100.0,)]] % </para>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <para style="terp_default_9">[[ repeatIn(line(data['form'], [j.id], [e.id]), 'l') ]]</para>
+                  <para style="terp_default_9">[[ l['name'] ]]</para>
+                </td>
+                <td>
+                  <para style="terp_default_9">[[ l['unit_amount'] ]]</para>
+                </td>
+                <td>
+                  <para style="terp_default_9">[[ l['amount_th'] ]]</para>
+                </td>
+                <td>
+                  <para style="terp_default_9">[[ l['amount'] ]]</para>
+                </td>
+                <td>
+                  <para style="terp_default_9">[[ l['cost'] ]]</para>
+                </td>
+                <td>
+                  <para style="terp_default_9">[[ l['profit'] ]]</para>
+                </td>
+                <td>
+                  <para style="terp_default_9">[[ l['eff'] ]] %</para>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <para style="P5">
+                    <font color="white"> </font>
+                  </para>
+                </td>
+                <td>
+                  <para style="P5">
+                    <font color="white"> </font>
+                  </para>
+                </td>
+                <td>
+                  <para style="P5">
+                    <font color="white"> </font>
+                  </para>
+                </td>
+                <td>
+                  <para style="P5">
+                    <font color="white"> </font>
+                  </para>
+                </td>
+                <td>
+                  <para style="P5">
+                    <font color="white"> </font>
+                  </para>
+                </td>
+                <td>
+                  <para style="P5">
+                    <font color="white"> </font>
+                  </para>
+                </td>
+                <td>
+                  <para style="P5">
+                    <font color="white"> </font>
+                  </para>
+                </td>
+              </tr>
+            </blockTable>
+            <para style="terp_default_9">
+              <font color="white"> </font>
+            </para>
+          </td>
+          <td>
+            <para style="Standard">
+              <font color="white"> </font>
+            </para>
+          </td>
+        </tr>
+      </blockTable>
+      <section>
+        <blockTable colWidths="103.0,422.0" style="Table6">
+          <tr>
+            <td>
+              <para style="terp_default_Bold_9">Totals</para>
+            </td>
+            <td>
+              <blockTable colWidths="59.0,56.0,67.0,62.0,67.0,55.0,55.0" style="Table7">
+                <tr>
+                  <td>
+                    <para style="P2">
+                      <font color="white"> </font>
+                    </para>
+                  </td>
+                  <td>
+                    <para style="terp_default_Bold_9">[[ reduce(lambda x, y: x+y['unit_amount'], line(data['form'], data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0) ]]</para>
+                  </td>
+                  <td>
+                    <para style="P2">
+                      <font color="white"> </font>
+                    </para>
+                  </td>
+                  <td>
+                    <para style="terp_default_Bold_9">[[ reduce(lambda x, y: x+y['amount'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0) ]]</para>
+                  </td>
+                  <td>
+                    <para style="terp_default_Bold_9">[[ reduce(lambda x, y: x+y['cost'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0) ]]</para>
+                  </td>
+                  <td>
+                    <para style="terp_default_Bold_9">[[ reduce(lambda x, y: x+y['profit'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0) ]]</para>
+                  </td>
+                  <td>
+                    <para style="terp_default_Bold_9">[[ round(reduce(lambda x, y: x+y['amount'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0)/reduce(lambda x, y: x+y['cost'], line(data['form'],data['form']['journal_ids'][0][2], data['form']['employee_ids'][0][2]), 0)* -100, 2)]] %</para>
+                  </td>
+                </tr>
+              </blockTable>
+              <para style="Table Contents">
+                <font color="white"> </font>
+              </para>
+            </td>
+          </tr>
+        </blockTable>
+        <para style="Standard">
+          <font color="white"> </font>
+        </para>
+      </section>
+    </section>
+  </story>
 </document>
-
