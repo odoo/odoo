@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 4.3.0"
 "Report-Msgid-Bugs-To: support@openerp.com"
-"POT-Creation-Date: 2008-09-04 08:40:19+0000"
-"PO-Revision-Date: 2008-09-04 08:40:19+0000"
+"POT-Creation-Date: 2008-09-10 12:53:38+0000"
+"PO-Revision-Date: 2008-09-10 12:53:38+0000"
 "Last-Translator: <>"
 "Language-Team: "
 "MIME-Version: 1.0"
@@ -108,6 +108,7 @@ msgstr ""
 
 #. module: base
 #: view:res.groups:0
+#: view:ir.model:0
 msgid "Access Rules"
 msgstr ""
 
@@ -170,6 +171,11 @@ msgstr "Workflow"
 #: field:workflow.triggers,model:0
 #: view:ir.model:0
 msgid "Object"
+msgstr ""
+
+#. module: base
+#: view:wizard.module.lang.export:0
+msgid "To browse official translations, you can visit this link: "
 msgstr ""
 
 #. module: base
@@ -436,6 +442,7 @@ msgstr ""
 #. module: base
 #: field:res.partner,comment:0
 #: view:res.groups:0
+#: view:ir.model:0
 #: view:res.partner:0
 msgid "Notes"
 msgstr "Note"
@@ -479,6 +486,11 @@ msgstr ""
 #: field:workflow.transition,act_to:0
 msgid "Destination Activity"
 msgstr "Activitate destinatie"
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_10
+msgid "Open Source Service Company"
+msgstr ""
 
 #. module: base
 #: view:ir.actions.server:0
@@ -599,11 +611,6 @@ msgid "Repositories"
 msgstr ""
 
 #. module: base
-#: view:wizard.module.lang.export:0
-msgid "The official translations pack of all OpenERP/OpenObjects module are managed through launchpad. We use their online interface to synchronize all translations efforts.  To improve some terms of the official translations of OpenERP, you should modify the terms directly on the launchpad interface. If you made lots of translations for your own module, you can also publish all your translation at once. To do this, you must:  If you created a new module, you must send the generated .pot file by email to the translation group: ...  They will review and integrate."
-msgstr ""
-
-#. module: base
 #, python-format
 #: code:addons/base/ir/ir_model.py:0
 msgid "Password mismatch !"
@@ -685,6 +692,11 @@ msgstr ""
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_pvt_ltd
 msgid "Corp."
+msgstr ""
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_16
+msgid "Telecom sector"
 msgstr ""
 
 #. module: base
@@ -1050,12 +1062,6 @@ msgid "System Upgrade"
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_wizard_update_translations
-#: model:ir.ui.menu,name:base.menu_wizard_update_translations
-msgid "Reload Official Translations"
-msgstr ""
-
-#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_REVERT_TO_SAVED"
 msgstr ""
@@ -1404,6 +1410,7 @@ msgstr ""
 
 #. module: base
 #: field:res.partner,supplier:0
+#: model:res.partner.category,name:base.res_partner_category_8
 msgid "Supplier"
 msgstr ""
 
@@ -1439,6 +1446,11 @@ msgstr ""
 #. module: base
 #: wizard_button:res.partner.spam_send,init,send:0
 msgid "Send Email"
+msgstr ""
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_4
+msgid "Basic Partner"
 msgstr ""
 
 #. module: base
@@ -1586,6 +1598,7 @@ msgstr "Interfata utilisator - Visualizari"
 
 #. module: base
 #: view:res.groups:0
+#: view:ir.model:0
 msgid "Access Rights"
 msgstr ""
 
@@ -1718,9 +1731,8 @@ msgid "STOCK_FILE"
 msgstr ""
 
 #. module: base
-#, python-format
-#: code:osv/orm.py:0
-msgid "The copy method is not implemented on this object !"
+#: model:res.partner.category,name:base.res_partner_category_9
+msgid "Components Supplier"
 msgstr ""
 
 #. module: base
@@ -1783,6 +1795,12 @@ msgstr ""
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_OK"
+msgstr ""
+
+#. module: base
+#, python-format
+#: code:report/report_sxw.py:0
+msgid "print"
 msgstr ""
 
 #. module: base
@@ -1915,6 +1933,7 @@ msgstr "XML"
 
 #. module: base
 #: field:res.groups,model_access:0
+#: model:ir.ui.menu,name:base.menu_security_access
 #: view:ir.model.access:0
 #: view:res.groups:0
 msgid "Access Controls"
@@ -2370,7 +2389,6 @@ msgstr "ID resursa"
 
 #. module: base
 #: field:ir.model,info:0
-#: view:ir.model:0
 msgid "Information"
 msgstr ""
 
@@ -2527,6 +2545,11 @@ msgid "The search method is not implemented on this object !"
 msgstr ""
 
 #. module: base
+#: model:ir.model,name:base.model_wizard_ir_model_menu_create
+msgid "wizard.ir.model.menu.create"
+msgstr ""
+
+#. module: base
 #: field:ir.actions.server,address:0
 msgid "Email From / SMS"
 msgstr ""
@@ -2539,6 +2562,11 @@ msgstr ""
 #. module: base
 #: field:ir.report.custom.fields,cumulate:0
 msgid "Cumulate"
+msgstr ""
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_14
+msgid "Bad customers"
 msgstr ""
 
 #. module: base
@@ -2699,6 +2727,17 @@ msgstr ""
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_COPY"
+msgstr ""
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_3
+msgid "Starter Partner"
+msgstr ""
+
+#. module: base
+#: model:ir.actions.wizard,name:base.wizard_lang_install
+#: model:ir.ui.menu,name:base.menu_wizard_lang_install
+msgid "Reload an Official Translation"
 msgstr ""
 
 #. module: base
@@ -2974,6 +3013,7 @@ msgstr "Domeniu"
 
 #. module: base
 #: selection:ir.translation,type:0
+#: view:wizard.module.lang.export:0
 msgid "Help"
 msgstr ""
 
@@ -3246,6 +3286,11 @@ msgid "Tree"
 msgstr ""
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_12
+msgid "Segmentation"
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_CLEAR"
 msgstr ""
@@ -3369,6 +3414,16 @@ msgstr ""
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_PROPERTIES"
+msgstr ""
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_11
+msgid "Textile Suppliers"
+msgstr ""
+
+#. module: base
+#: view:wizard.module.lang.export:0
+msgid "The official translations pack of all OpenERP/OpenObjects module are managed through launchpad. We use their online interface to synchronize all translations efforts."
 msgstr ""
 
 #. module: base
@@ -3779,6 +3834,11 @@ msgid "<="
 msgstr ""
 
 #. module: base
+#: view:wizard.module.lang.export:0
+msgid "Export Data"
+msgstr ""
+
+#. module: base
 #: field:workflow.triggers,instance_id:0
 msgid "Destination Instance"
 msgstr "Instanta"
@@ -3815,6 +3875,11 @@ msgstr ""
 #. module: base
 #: field:ir.report.custom,field_parent:0
 msgid "Child Field"
+msgstr ""
+
+#. module: base
+#: view:wizard.module.lang.export:0
+msgid "https://translations.launchpad.net/openobject"
 msgstr ""
 
 #. module: base
@@ -4022,6 +4087,12 @@ msgid "Field Mappings"
 msgstr ""
 
 #. module: base
+#, python-format
+#: code:osv/orm.py:0
+msgid "The copy method is not implemented on this object !"
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_ADD"
 msgstr ""
@@ -4147,7 +4218,7 @@ msgid "Filename"
 msgstr ""
 
 #. module: base
-#: field:ir.model,access:0
+#: field:ir.model,access_ids:0
 msgid "Access"
 msgstr ""
 
@@ -4230,6 +4301,11 @@ msgid "Email / SMS"
 msgstr ""
 
 #. module: base
+#: field:res.bank,bic:0
+msgid "BIC/Swift code"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_ir_sequence
 msgid "ir.sequence"
 msgstr ""
@@ -4292,12 +4368,6 @@ msgid "Limit"
 msgstr ""
 
 #. module: base
-#: model:ir.actions.wizard,name:base.wizard_lang_install
-#: model:ir.ui.menu,name:base.menu_wizard_lang_install
-msgid "Install new language file"
-msgstr ""
-
-#. module: base
 #: model:ir.actions.act_window,name:base.res_request-act
 #: model:ir.ui.menu,name:base.menu_res_request_act
 #: model:ir.ui.menu,name:base.next_id_12
@@ -4308,6 +4378,11 @@ msgstr ""
 #. module: base
 #: selection:workflow.activity,split_mode:0
 msgid "Or"
+msgstr ""
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_7
+msgid "Openstuff.net"
 msgstr ""
 
 #. module: base
@@ -4427,9 +4502,10 @@ msgid "Email"
 msgstr ""
 
 #. module: base
-#: field:ir.actions.report.xml,auto:0
-msgid "Automatic XSL:RML"
-msgstr "XSL:RML Automat"
+#: model:ir.actions.act_window,name:base.action_wizard_update_translations
+#: model:ir.ui.menu,name:base.menu_wizard_update_translations
+msgid "Resynchronise Terms"
+msgstr ""
 
 #. module: base
 #: field:ir.model.access,perm_create:0
@@ -4503,6 +4579,7 @@ msgstr "Interfete"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_config
 #: view:ir.sequence:0
+#: view:res.company:0
 msgid "Configuration"
 msgstr ""
 
@@ -4572,6 +4649,16 @@ msgid "Not Implemented"
 msgstr ""
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_5
+msgid "Gold Partner"
+msgstr ""
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_15
+msgid "IT sector"
+msgstr ""
+
+#. module: base
 #: view:ir.property:0
 msgid "Property"
 msgstr ""
@@ -4620,6 +4707,11 @@ msgid "Short description"
 msgstr ""
 
 #. module: base
+#: help:ir.actions.report.xml,attachment:0
+msgid "This is the prefix of the file name the print will be saved as attachement. Keep empty to not save the printed reports"
+msgstr ""
+
+#. module: base
 #: field:res.country.state,name:0
 msgid "State Name"
 msgstr "Nume de raport"
@@ -4657,6 +4749,11 @@ msgid "ir.actions.report.xml"
 msgstr ""
 
 #. module: base
+#: view:wizard.module.lang.export:0
+msgid "To improve some terms of the official translations of OpenERP, you should modify the terms directly on the launchpad interface. If you made lots of translations for your own module, you can also publish all your translation at once."
+msgstr ""
+
+#. module: base
 #: view:res.users:0
 msgid "Please note that you will have to logout and relog if you change your password."
 msgstr ""
@@ -4675,13 +4772,18 @@ msgid "Graph"
 msgstr ""
 
 #. module: base
-#: field:res.bank,bic:0
-msgid "BIC/Swift code"
+#: field:ir.module.module,latest_version:0
+msgid "Latest version"
 msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_server
 msgid "ir.actions.server"
+msgstr ""
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_17
+msgid "HR sector"
 msgstr ""
 
 #. module: base
@@ -4714,6 +4816,11 @@ msgstr ""
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_DND_MULTIPLE"
+msgstr ""
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_2
+msgid "OpenERP Partners"
 msgstr ""
 
 #. module: base
@@ -4783,6 +4890,11 @@ msgid "Localisation"
 msgstr ""
 
 #. module: base
+#: selection:ir.report.custom.fields,operation:0
+msgid "Calculate Count"
+msgstr ""
+
+#. module: base
 #: field:ir.module.module,dependencies_id:0
 #: view:ir.module.module:0
 msgid "Dependencies"
@@ -4838,8 +4950,8 @@ msgid "Open Window"
 msgstr ""
 
 #. module: base
-#: model:ir.model,name:base.model_wizard_ir_model_menu_create
-msgid "wizard.ir.model.menu.create"
+#: field:ir.actions.report.xml,attachment:0
+msgid "Save As Attachment Prefix"
 msgstr ""
 
 #. module: base
@@ -4870,11 +4982,6 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_res_partner_som
 msgid "res.partner.som"
-msgstr ""
-
-#. module: base
-#: model:ir.ui.menu,name:base.menu_security_access
-msgid "Access Conrols"
 msgstr ""
 
 #. module: base
@@ -5026,6 +5133,11 @@ msgid "Start Upgrade"
 msgstr ""
 
 #. module: base
+#: model:res.partner.category,name:base.res_partner_category_13
+msgid "Important customers"
+msgstr ""
+
+#. module: base
 #: field:res.partner.som,factor:0
 msgid "Factor"
 msgstr "Factor(Postas)"
@@ -5140,9 +5252,9 @@ msgid "The value \"%s\" for the field \"%s\" is not in the selection"
 msgstr ""
 
 #. module: base
-#: selection:ir.report.custom.fields,operation:0
-msgid "Calculate Count"
-msgstr ""
+#: field:ir.actions.report.xml,auto:0
+msgid "Automatic XSL:RML"
+msgstr "XSL:RML Automat"
 
 #. module: base
 #: view:workflow.workitem:0
@@ -5169,6 +5281,7 @@ msgstr ""
 #. module: base
 #: field:res.partner,customer:0
 #: selection:res.partner.event,partner_type:0
+#: model:res.partner.category,name:base.res_partner_category_0
 msgid "Customer"
 msgstr ""
 
@@ -5255,8 +5368,9 @@ msgid "a4"
 msgstr ""
 
 #. module: base
-#: field:ir.module.module,latest_version:0
-msgid "Latest version"
+#: model:ir.actions.act_window,name:base.action_partner_customer_form_new
+#: model:ir.ui.menu,name:base.menu_partner_customer_form_new
+msgid "New Partner"
 msgstr ""
 
 #. module: base
@@ -5267,6 +5381,11 @@ msgstr ""
 #. module: base
 #: selection:ir.ui.menu,icon:0
 msgid "STOCK_JUSTIFY_RIGHT"
+msgstr ""
+
+#. module: base
+#: model:res.partner.category,name:base.res_partner_category_1
+msgid "Prospect"
 msgstr ""
 
 #. module: base
