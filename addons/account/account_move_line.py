@@ -70,6 +70,33 @@ class account_move_line(osv.osv):
         # Compute simple values
         data = super(account_move_line, self).default_get(cr, uid, fields, context)
 
+        # Starts: Manual entry from account.move form
+        if context.get('lines',[]):
+
+            total_new=0.00
+            for i in context['lines']:
+                total_new +=(i[2]['debit'] or 0.00)- (i[2]['credit'] or 0.00)
+                for item in i[2]:
+                        data[item]=i[2][item]
+            if context['journal']:
+                journal_obj=self.pool.get('account.journal').browse(cr,uid,context['journal'])
+                if journal_obj.type == 'purchase':
+                    if total_new>0:
+                        account = journal_obj.default_credit_account_id
+                    else:
+                        account = journal_obj.default_debit_account_id
+                else:
+                    if total_new>0:
+                        account = journal_obj.default_credit_account_id
+                    else:
+                        account = journal_obj.default_debit_account_id
+                data['account_id'] = account.id
+            s = -total_new
+            data['debit'] = s>0  and s or 0.0
+            data['credit'] = s<0  and -s or 0.0
+            return data
+        # Ends: Manual entry from account.move form
+
         if not 'move_id' in fields: #we are not in manual entry
             return data
 
@@ -649,7 +676,6 @@ class account_move_line(osv.osv):
     def create(self, cr, uid, vals, context=None, check=True):
         if not context:
             context={}
-
         account_obj = self.pool.get('account.account')
         tax_obj=self.pool.get('account.tax')
 
