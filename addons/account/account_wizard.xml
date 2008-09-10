@@ -23,23 +23,12 @@
 
         <!-- Import entry in statement -->
 
-        <record id="wizard_populate_payment_from_inv" model="ir.actions.act_window">
-            <field name="name">Entries by Statements</field>
-            <field name="res_model">account.move.line</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="target">new</field>
-        </record>
-
-        <!--
         <wizard
             string="Import invoices"
             model="account.bank.statement"
             name="populate_payment_from_inv" 
             menu="False" 
-            id="wizard_populate_payment_from_inv"/>
-        -->
-
+            id="wizard_populate_statement_from_inv"/>
 
         <!-- manual reconcile -->
         <wizard id="wizard_reconcile" model="account.move.line" name="account.move.line.reconcile" string="Reconcile Entries"/>
