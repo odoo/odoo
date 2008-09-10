@@ -198,7 +198,7 @@ class mrp_procurement(osv.osv):
             for op in orderpoint_obj.browse(cr, uid, ids):
                 try:
                     prods = location_obj._product_virtual_get(cr, uid,
-                            op.warehouse_id.lot_stock_id.id, [op.product_id.id],
+                            op.location_id.id, [op.product_id.id],
                             {'uom': op.product_uom.id})[op.product_id.id]
                     if prods < op.product_min_qty:
                         qty = max(op.product_min_qty, op.product_max_qty)-prods
