@@ -40,7 +40,7 @@
         </record>
         <record id="user_type_tax" model="account.account.type">
             <field name="name">Tax</field>
-            <field name="code">payable</field>
+            <field name="code">tax</field>
             <field name="close_method">unreconciled</field>
         </record>
         <record id="user_type_financiers" model="account.account.type">
@@ -57,12 +57,8 @@
             <field name="name">Produit</field>
             <field name="code">produit</field>
             <field name="close_method">none</field>
-        </record>        
-        <record id="user_type_charge" model="account.account.type">
-            <field name="name">Charge</field>
-            <field name="code">charge</field>
-            <field name="close_method">none</field>
         </record>
+
 
         <!-- Chart template of l10n_be -->
             <!-- Account template definition -->
