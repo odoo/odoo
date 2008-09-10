@@ -59,7 +59,6 @@
         "account_report.xml",
         "partner_view.xml",
         "data/account_invoice.xml",
-        "data/account_data1.xml",
         "data/account_minimal.xml",
         "data/account_data2.xml",
         "account_invoice_workflow.xml",
