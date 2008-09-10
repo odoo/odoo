@@ -1566,68 +1566,10 @@ class account_config_fiscalyear(osv.osv_memory):
 account_config_fiscalyear()
 
 
-#class account_config_journal_bank_accounts(osv.osv_memory):
-#    _name='account.config.journal.bank.account'
-#    _columns = {
-#        'name':fields.char('Journal Name', size=64),
-#        'lines_id': fields.one2many('account.config.journal.bank.account.line', 'journal_id', 'Journal Lines'),
-#    }
-#
-#    def action_cancel(self,cr,uid,ids,conect=None):
-#        return {
-#                'view_type': 'form',
-#                "view_mode": 'form',
-#                'res_model': 'ir.module.module.configuration.wizard',
-#                'type': 'ir.actions.act_window',
-#                'target':'new',
-#        }
-#
-#    def action_create(self, cr, uid, ids, context=None):
-#        config_res=self.read(cr,uid,ids)[0]
-#        res_obj = self.pool.get('account.journal')
-#        line_obj=self.pool.get('account.config.journal.bank.account.line')
-#        if 'lines_id' in config_res and config_res['lines_id']:
-#            lines=line_obj.read(cr,uid,config_res['lines_id'])
-#            for res in lines:
-#                sequence_ids=self.pool.get('ir.sequence').search(cr,uid,[('name','=','Account Journal')])
-#                if 'name' in res and 'bank_account_id' in res and 'view_id'  in res and sequence_ids and len(sequence_ids):
-#                    vals={
-#                          'name':res['name'],
-#                          'type':'cash',
-#                          'view_id':res['view_id'],
-#                          'default_credit_account_id':res['bank_account_id'],
-#                          'default_debit_account_id':res['bank_account_id'],
-#                          'sequence_id':sequence_ids[0]
-#                          }
-#                    res_obj.create(cr, uid, vals, context=context)
-#        return {
-#                'view_type': 'form',
-#                "view_mode": 'form',
-#                'res_model': 'ir.module.module.configuration.wizard',
-#                'type': 'ir.actions.act_window',
-#                'target':'new',
-#            }
-#
-#account_config_journal_bank_accounts()
-#
-#class account_config_journal_bank_accounts_line(osv.osv_memory):
-#    _name='account.config.journal.bank.account.line'
-#    def _journal_view_get(self, cr, uid, context={}):
-#        journal_obj = self.pool.get('account.journal.view')
-#        ids = journal_obj.search(cr, uid, [])
-#        res = journal_obj.read(cr, uid, ids, ['id', 'name'], context)
-#        return [(r['id'], r['name']) for r in res]
-#    _columns = {
-#        'name':fields.char('Journal Name', size=64,required=True),
-#        'bank_account_id':fields.many2one('account.account', 'Bank Account', required=True, domain=[('type','=','cash')]),
-#        'view_id':fields.selection(_journal_view_get, 'Journal View', required=True),
-#        'journal_id':fields.many2one('account.config.journal.bank.account', 'Journal', required=True),
-#    }
-#account_config_journal_bank_accounts_line()
 
-#  ----------------------------------------------
-#   Account Templates : Account, Tax and charts.
-#  ----------------------------------------------
+#  ---------------------------------------------------------------
+#   Account Templates : Account, Tax, Tax Code and chart. + Wizard
+#  ---------------------------------------------------------------
 
 class account_tax_template(osv.osv):
     _name = 'account.tax.template'
@@ -1640,7 +1582,6 @@ class account_account_template(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
-        #'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign', required=True, help='Allows to change the displayed amount of the balance to see positive results instead of negative ones in expenses accounts.'),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Force all moves for this account to have this secondary currency."),
         'code': fields.char('Code', size=64),
         'type': fields.selection([
@@ -1661,7 +1602,6 @@ class account_account_template(osv.osv):
     }
 
     _defaults = {
-        #'sign': lambda *a: 1,
         'reconcile': lambda *a: False,
         'type' : lambda *a :'view',
     }
@@ -1854,9 +1794,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'code_digits':fields.integer('No. of Digits for Account Code',required=True),
     }
 
-    #global seq
-    #seq=0
-
     def action_create(self, cr, uid, ids, context=None):
         obj_multi = self.browse(cr,uid,ids[0])
         obj_acc = self.pool.get('account.account')
@@ -1881,10 +1818,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         #create all the tax code
         children_tax_code_template = self.pool.get('account.tax.code.template').search(cr, uid, [('parent_id','child_of',[tax_code_root_id])], order='id')
         for tax_code_template in self.pool.get('account.tax.code.template').browse(cr, uid, children_tax_code_template):
-            #if tax_code_root_id == tax_code_template.id:
-            #    name = obj_multi.company_id.name
-            #else:
-            #    name = tax_code_template.name
             vals={
                 'name': (tax_code_root_id == tax_code_template.id) and obj_multi.company_id.name or tax_code_template.name,
                 'code': tax_code_template.code,
@@ -1941,10 +1874,10 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             for tax in account_template.tax_ids:
                 tax_ids.append(tax_template_ref[tax.id])
             #create the account_account
-            dig=obj_multi.code_digits
-            code_main=len(account_template.code)
-            code_acc=account_template.code
-            if code_main<=dig:
+            dig = obj_multi.code_digits
+            code_main = len(account_template.code)
+            code_acc = account_template.code
+            if code_main<=dig and account_template.type != 'view':
                 code_acc=str(code_acc) + (str('0'*(dig-code_main)))
             vals={
                 'name': (obj_acc_root.id == account_template.id) and obj_multi.company_id.name or account_template.name,
@@ -1952,7 +1885,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'currency_id': account_template.currency_id and account_template.currency_id.id or False,
                 'code': code_acc[:dig],
                 'type': account_template.type,
-                'user_type': account_template.user_type or False,
+                'user_type': account_template.user_type and account_template.user_type.id or False,
                 'reconcile': account_template.reconcile,
                 'shortcut': account_template.shortcut,
                 'note': account_template.note,
@@ -2014,13 +1947,17 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         for line in obj_multi.bank_accounts_id:
             #create the account_account for this bank journal
             tmp = self.pool.get('res.partner.bank').name_get(cr, uid, [line.acc_no.id])[0][1]
+            dig = obj_multi.code_digits
+            code_main = len(ref_acc_bank.code+str(current_num))
+            code_acc = ref_acc_bank.code+str(current_num)
+            if code_main<=dig:
+                code_acc=str(code_acc) + (str('0'*(dig-code_main)))
             vals={
                 'name': line.acc_no.bank and line.acc_no.bank.name+' '+tmp or tmp,
-                #'sign': ref_acc_bank.sign,
                 'currency_id': line.currency_id and line.currency_id.id or False,
-                'code': ref_acc_bank.code+str(current_num),
+                'code': code_acc[:dig],
                 'type': 'other',
-                'user_type': account_template.user_type or False,
+                'user_type': account_template.user_type and account_template.user_type.id or False,
                 'reconcile': True,
                 'parent_id': acc_template_ref[ref_acc_bank.id] or False,
                 'company_id': company_id,
