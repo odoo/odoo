@@ -1785,6 +1785,18 @@ account_tax_template()
     # Multi charts of Accounts wizard
 
 class wizard_multi_charts_accounts(osv.osv_memory):
+    """
+    Create a new account chart for a company.
+    Wizards ask:
+        * a company
+        * an account chart template 
+        * a number of digits for formatting code of non-view accounts
+        * a list of bank account owned by the company
+    Then, the wizard:
+        * generates all accounts from the template and assign them to the right company
+        * generates all taxes and tax codes, changing account assignations
+        * generates all accounting properties and assign correctly
+    """
     _name='wizard.multi.charts.accounts'
 
     _columns = {
@@ -2025,59 +2037,6 @@ class account_bank_accounts_wizard(osv.osv_memory):
     }
 
 account_bank_accounts_wizard()
-
-class wizard_account_chart_duplicate(osv.osv_memory):
-    """
-    Create a new account chart for a new company.
-    Wizards ask:
-        * an accuont chart (parent_id,=,False)
-        * a company
-    Then, the wizard:
-        * duplicates all accounts and assign to the right company
-        * duplicates all taxes, changing account assignations
-        * duplicate all accounting properties and assign correctly
-    """
-    _name = 'wizard.account.chart.duplicate'
-    _columns = {
-        'name':fields.char('Name',size=64),
-        'account_id':fields.many2one('account.account','Account Chart',required=True,domain=[('parent_id','=',False)]),
-        'company_id':fields.many2one('res.company','Company',required=True),
-    }
-
-    def action_create(self, cr, uid,ids, context=None):
-        res=self.read(cr,uid,ids)[0]
-        if res.get('account_id',False) and res.get('company_id',False):
-            account_obj=self.pool.get('account.account')
-            account_tax_obj=self.pool.get('account.tax')
-            property_obj=self.pool.get('ir.property')
-            # duplicate all accounts
-            account_obj.copy(cr,uid,res['account_id'],default={'company_id':res['company_id']})
-            # duplicate all taxes
-            tax_ids=account_tax_obj.search(cr,uid,[])
-            for tax in account_tax_obj.browse(cr,uid,tax_ids):
-                val={'company_id':res['company_id']}
-                if tax.account_collected_id:
-                    new_invoice_account_ids=account_obj.search(cr,uid,[('name','=',tax.account_collected_id.name),('company_id','=',res['company_id'])])
-                    val['account_collected_id']=len(new_invoice_account_ids) and new_invoice_account_ids[0] or False
-                if tax.account_paid_id:
-                    new_refund_account_ids=account_obj.search(cr,uid,[('name','=',tax.account_paid_id.name),('company_id','=',res['company_id'])])
-                    val['account_paid_id']=len(new_refund_account_ids) and new_refund_account_ids[0] or False
-                account_tax_obj.copy(cr,uid,tax.id,default=val)
-            # duplicate all accouting properties
-            property_ids=property_obj.search(cr,uid,[('value','=like','account.account,%')])
-            for property in property_obj.browse(cr,uid,property_ids):
-                account=account_obj.browse(cr,uid,property.value[1])
-                if account:
-                    new_account_ids=account_obj.search(cr,uid,[('name','=',account.name),('company_id','=',res['company_id'])])
-                    if len(new_account_ids):
-                        property_obj.copy(cr,uid,property.id,default={
-                                'value':'account.account,'+str(new_account_ids[0]),
-                                'company_id':res['company_id']
-                            })
-
-        return {'type':'ir.actions.act_window_close'}
-
-wizard_account_chart_duplicate()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
