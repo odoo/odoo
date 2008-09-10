@@ -781,12 +781,7 @@ class sale_order_line(osv.osv):
         if not product:
             return {'value': {'th_weight' : 0, 'product_packaging': False,
                 'product_uos_qty': qty}, 'domain': {'product_uom': [],
-                    'product_uos': []}}
-
-        if not pricelist:
-            raise osv.except_osv(_('No Pricelist !'),
-                    _('You have to select a pricelist in the sale form !\n'
-                    'Please set one before choosing a product.'))
+                    'product_uos': []}}        
 
         if not date_order:
             date_order = time.strftime('%Y-%m-%d')
@@ -798,18 +793,7 @@ class sale_order_line(osv.osv):
             pack = self.pool.get('product.packaging').browse(cr, uid, packaging, context)
             q = product_uom_obj._compute_qty(cr, uid, uom, pack.qty, default_uom)
             qty = qty - qty % q + q
-            result['product_uom_qty'] = qty
-
-        price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
-                product, qty or 1.0, partner_id, {
-                    'uom': uom,
-                    'date': date_order,
-                    })[pricelist]
-        if price is False:
-            raise osv.except_osv(_('No valid pricelist line found !'),
-                    _("Couldn't find a pricelist line matching this product and quantity.\n"
-                        "You have to change either the product, the quantity or the pricelist."))
-
+            result['product_uom_qty'] = qty        
 
         if uom:
             uom2 = product_uom_obj.browse(cr, uid, uom)
@@ -824,7 +808,7 @@ class sale_order_line(osv.osv):
             else:
                 uos = False
 
-        result .update({'price_unit': price, 'type': product_obj.procure_method})
+        result .update({'type': product_obj.procure_method})
         if product_obj.description_sale:
             result['notes'] = product_obj.description_sale
 
@@ -878,7 +862,34 @@ class sale_order_line(osv.osv):
             result['product_uom_qty'] = qty_uos / product_obj.uos_coeff
             result['th_weight'] = result['product_uom_qty'] * product_obj.weight
         # Round the quantity up
-        return {'value': result, 'domain': domain}
+
+        # get unit price
+        warning={}
+        if not pricelist:
+            warning={
+                'title':'No Pricelist !',
+                'message':
+                    'You have to select a pricelist in the sale form !\n'
+                    'Please set one before choosing a product.'
+                }
+        else:
+            price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
+                    product, qty or 1.0, partner_id, {
+                        'uom': uom,
+                        'date': date_order,
+                        })[pricelist]
+            if price is False:
+                 warning={
+                    'title':'No valid pricelist line found !',
+                    'message':
+                        "Couldn't find a pricelist line matching this product and quantity.\n"
+                        "You have to change either the product, the quantity or the pricelist."
+                    }                
+            else:
+                result.update({'price_unit': price})
+
+
+        return {'value': result, 'domain': domain,'warning':warning}
 
     def product_uom_change(self, cursor, user, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
