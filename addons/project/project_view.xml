@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data>
         <menuitem icon="terp-project" id="menu_main" name="Project Management"/>
         <menuitem id="menu_definitions" name="Configuration" parent="project.menu_main" sequence="1"/>
@@ -486,4 +486,4 @@
         <act_window domain="[('user_id', '=', active_id),('date', '&gt;=', time.strftime('%Y-%m-01'))]" id="act_res_users_2_project_task_work_month" name="Month works" res_model="project.task.work" src_model="res.users" view_mode="tree,form" view_type="form"/>
 
     </data>
-</terp>
+</openerp>
