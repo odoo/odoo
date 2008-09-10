@@ -9,7 +9,7 @@
         <record id="order" model="sale.order">
             <field name="shop_id" ref="shop"/>
             <field model="product.pricelist" name="pricelist_id" search="[]"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_root"/>
             <field model="res.partner" name="partner_id" search="[]"/>
             <field model="res.partner.address" name="partner_invoice_id" search="[]"/>
             <field model="res.partner.address" name="partner_shipping_id" search="[]"/>

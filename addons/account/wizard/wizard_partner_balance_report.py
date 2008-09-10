@@ -36,7 +36,8 @@ dates_form = '''<?xml version="1.0"?>
 <form string="Select period">
     <field name="company_id" colspan="4"/>
     <newline/>
-    <field name="fiscalyear" colspan="4"/>    
+    <field name="fiscalyear" colspan="4"/>
+    <label align="0.7" colspan="6" string="(If you do not select Fiscal year it will take all open fiscal year)"/>
     <newline/>
     <field name="date1"/>
     <field name="date2"/>

@@ -41,8 +41,7 @@
     "website": "http://erp-libre.info",
     "depends" : ["base", "account", "account_chart", 'base_vat'],
     "init_xml" : [],
-    "update_xml" : ["../account_chart/account_chart.xml", "types.xml",
-        "plan-99-03_societe.xml", "taxes.xml","fr_wizard.xml"],
+    "update_xml" : ["types.xml", "plan-99-03_societe.xml", "taxes.xml","fr_wizard.xml"],
     "demo_xml" : [],
     "installable": True
 }

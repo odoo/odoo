@@ -39,9 +39,16 @@
     * a basic mechanism to easily plug various automated payment.
     """,
     "demo_xml": [],
-    "update_xml": ["payment_wizard.xml", "payment_view.xml",
-        "payment_workflow.xml", "payment_sequence.xml",
-        "account_invoice_view.xml", "payment_report.xml"],
+    "update_xml": [
+        "security/account_payment_security.xml",
+        "security/ir.model.access.csv",
+        "payment_wizard.xml",
+        "payment_view.xml",
+        "payment_workflow.xml",
+        "payment_sequence.xml",
+        "account_invoice_view.xml",
+        "payment_report.xml",
+    ],
     "active": False,
     "installable": True
 }

@@ -39,6 +39,7 @@ Add menu to show relevant information for each manager.""",
     "depends" : ["account","hr_timesheet","hr_timesheet_invoice"],
     "init_xml" : [],
     "update_xml" : [
+        "security/ir.model.access.csv",
         "account_analytic_analysis_view.xml",
         "account_analytic_analysis_menu.xml",
     ],

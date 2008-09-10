@@ -34,7 +34,9 @@
     "depends" : ["base"],
     "init_xml" : [],
     "demo_xml" : [],
-    "update_xml" : ["subscription_view.xml"],
+    "update_xml" : [
+        "security/ir.model.access.csv",
+        "subscription_view.xml"],
     "active": False,
     "installable": True
 }

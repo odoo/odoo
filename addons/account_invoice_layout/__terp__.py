@@ -20,9 +20,10 @@
     "init_xml" : [],
     "demo_xml" : [],
     "update_xml" : [
-                    "account_invoice_layout_view.xml",
-                    "account_invoice_layout_report.xml",
-                    ],
+        "security/ir.model.access.csv",
+        "account_invoice_layout_view.xml",
+        "account_invoice_layout_report.xml",
+    ],
     "active": False,
     "installable": True
 }

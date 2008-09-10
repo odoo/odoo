@@ -6,7 +6,10 @@
     "category":"Profile",
     "depends":["membership", "event", "association_vertical", "board_association"],
     "demo_xml":[],
-    "update_xml":["profile_association.xml"],
+    "update_xml":[
+        "security/ir.model.access.csv",
+        "profile_association.xml"
+    ],
     "active":False,
     "installable":True,
     }

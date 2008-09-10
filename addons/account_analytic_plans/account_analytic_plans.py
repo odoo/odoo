@@ -89,7 +89,7 @@ account_analytic_plan_line()
 
 class account_analytic_plan_instance(osv.osv):
     _name='account.analytic.plan.instance'
-    _description = 'Object for create analytic entries from invoice lines'
+    _description = 'Analytic Plan Instance'
     _columns={
         'name':fields.char('Analytic Distribution',size=64),
         'code':fields.char('Distribution Code',size=16),
@@ -217,7 +217,7 @@ account_analytic_plan_instance()
 
 class account_analytic_plan_instance_line(osv.osv):
     _name='account.analytic.plan.instance.line'
-    _description = 'Object for create analytic entries from invoice lines'
+    _description = 'Analytic Instance Line'
     _columns={
         'plan_id':fields.many2one('account.analytic.plan.instance','Plan Id'),
         'analytic_account_id':fields.many2one('account.analytic.account','Analytic Account', required=True),
@@ -261,12 +261,10 @@ class account_invoice_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, price_unit=False, address_invoice_id=False, context={}):
         res_prod = super(account_invoice_line,self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, price_unit, address_invoice_id, context)
-        if product:
-            res = self.pool.get('product.product').browse(cr, uid, product, context=context)
-            res_prod['value'].update({'analytics_id':res.property_account_distribution.id})
+        rec = self.pool.get('account.analytic.default').account_get(cr, uid, product, partner_id, uid, time.strftime('%Y-%m-%d'), context)
+        if rec and rec.analytics_id:
+            res_prod['value'].update({'analytics_id':rec.analytics_id.id})
         return res_prod
-
-
 account_invoice_line()
 
 class account_move_line(osv.osv):
@@ -374,24 +372,10 @@ class account_analytic_plan(osv.osv):
     }
 account_analytic_plan()
 
-class product_product(osv.osv):
-    _name = 'product.product'
-    _inherit = 'product.product'
-    _description = 'Product'
-
+class analytic_default(osv.osv):
+    _inherit = 'account.analytic.default'
     _columns = {
-        'property_account_distribution': fields.property(
-            'account.analytic.plan.instance',
-            type='many2one',
-            relation='account.analytic.plan.instance',
-            string="Analytic Distribution",
-            method=True,
-            view_load=True,
-            group_name="Accounting Properties",
-            help="This Analytic Distribution will be use in sale order line and invoice lines",
-            ),
-                }
-
-product_product()
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+        'analytics_id': fields.many2one('account.analytic.plan.instance', 'Analytic Distribution'),
+    }
+analytic_default()
 

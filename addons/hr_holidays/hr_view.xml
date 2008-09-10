@@ -97,7 +97,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="open_view_holiday_status" groups="base.group_admin" id="menu_open_view_holiday_status" parent="hr.menu_hr_configuration"/>
+        <menuitem action="open_view_holiday_status" id="menu_open_view_holiday_status" parent="hr.menu_hr_configuration"/>
 
 		<!-- holidays per user -->
 		<record model="ir.ui.view" id="view_holidays_per_user_form">
@@ -227,7 +227,7 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form,graph</field>
 		</record>
-		<menuitem name="Holidays Per Employee" parent="hr.menu_hr_configuration" id="menu_open_holidays_per_user" action="action_holidays_per_user"	groups="base.group_admin"/>
+		<menuitem name="Holidays Per Employee" parent="hr.menu_hr_configuration" id="menu_open_holidays_per_user" action="action_holidays_per_user"/>
 
 		<record model="ir.actions.act_window" id="action_my_holiday_available">
 			<field name="name">My Available Holidays</field>

@@ -90,6 +90,7 @@ class purchase_order(osv.osv):
         res={}
         purchase_obj=self.browse(cr, uid, ids, context=context)
         for purchase in purchase_obj:
+            res[purchase.id] = False
             if purchase.order_line:
                 min_date=purchase.order_line[0].date_planned
                 for line in purchase.order_line:
@@ -150,7 +151,7 @@ class purchase_order(osv.osv):
 
         'dest_address_id':fields.many2one('res.partner.address', 'Destination Address', states={'posted':[('readonly',True)]}),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', states={'posted':[('readonly',True)]}),
-        'location_id': fields.many2one('stock.location', 'Delivery destination', required=True),
+        'location_id': fields.many2one('stock.location', 'Destination', required=True),
 
         'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, help="The pricelist sets the currency used for this purchase order. It also computes the supplier price for the selected products/quantities."),
 
@@ -165,7 +166,7 @@ class purchase_order(osv.osv):
         'invoiced':fields.boolean('Invoiced & Paid', readonly=True, select=True),
         'invoiced_rate': fields.function(_invoiced_rate, method=True, string='Invoiced', type='float'),
         'invoice_method': fields.selection([('manual','Manual'),('order','From order'),('picking','From picking')], 'Invoicing Control', required=True),
-        'minimum_planned_date':fields.function(_minimum_planned_date, method=True,store=True, string='Minimum Planned Date', type='date', help="Minimum schedule date of all products."),
+        'minimum_planned_date':fields.function(_minimum_planned_date, method=True,store=True, string='Planned Date', type='date', help="This is computed as the minimum scheduled date of all purchase order lines' products."),
         'amount_untaxed': fields.function(_amount_untaxed, method=True, string='Untaxed Amount'),
         'amount_tax': fields.function(_amount_tax, method=True, string='Taxes'),
         'amount_total': fields.function(_amount_total, method=True, string='Total'),

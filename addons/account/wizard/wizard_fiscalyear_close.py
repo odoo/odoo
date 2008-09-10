@@ -90,9 +90,12 @@ def _data_save(self, cr, uid, data, context):
         ids = map(lambda x: x[0], cr.fetchall())
         for account in pool.get('account.account').browse(cr, uid, ids,
             context={'fiscalyear': fy_id}):
-            if account.close_method=='none' or account.type == 'view':
+            accnt_type_data = account.user_type
+            if not accnt_type_data:
                 continue
-            if account.close_method=='balance':
+            if accnt_type_data.close_method=='none' or account.type == 'view':
+                continue
+            if accnt_type_data.close_method=='balance':
                 if abs(account.balance)>0.0001:
                     pool.get('account.move.line').create(cr, uid, {
                         'debit': account.balance>0 and account.balance,
@@ -103,7 +106,7 @@ def _data_save(self, cr, uid, data, context):
                         'period_id': period.id,
                         'account_id': account.id
                     }, {'journal_id': new_journal.id, 'period_id':period.id})
-            if account.close_method=='unreconciled':
+            if accnt_type_data.close_method=='unreconciled':
                 offset = 0
                 limit = 100
                 while True:
@@ -130,7 +133,7 @@ def _data_save(self, cr, uid, data, context):
                             'period_id': period.id,
                             })
                     offset += limit
-            if account.close_method=='detail':
+            if accnt_type_data.close_method=='detail':
                 offset = 0
                 limit = 100
                 while True:

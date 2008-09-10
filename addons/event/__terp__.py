@@ -24,6 +24,7 @@
     "demo_xml" : ["event_demo.xml"],
     "init_xml" : ["event_data.xml"],
     "update_xml" : [
+        "security/ir.model.access.csv",
         "event_wizard.xml","event_view.xml","event_sequence.xml"
     ],
     "active" : False,

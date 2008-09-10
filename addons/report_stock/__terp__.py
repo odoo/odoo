@@ -42,7 +42,10 @@
     """,
     "init_xml" : [],
     "demo_xml" : [],
-    "update_xml" : ["report_stock_view.xml",],
+    "update_xml" : [
+        "security/ir.model.access.csv",
+        "report_stock_view.xml",
+    ],
     "active": False,
     "installable": True
 }

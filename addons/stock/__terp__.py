@@ -36,15 +36,18 @@
     "init_xml" : [],
     "demo_xml" : ["stock_demo.xml"],
     "update_xml" : [
+        "security/stock_security.xml",
+        "security/ir.model.access.csv",
         "stock_workflow.xml", 
         "stock_data.xml", 
-        "stock_incoterms.xml","stock_wizard.xml", 
+        "stock_incoterms.xml",
+        "stock_wizard.xml", 
         "stock_view.xml", 
         "stock_report.xml", 
         "stock_sequence.xml", 
         "product_data.xml",
         "product_view.xml",
-        "partner_view.xml"
+        "partner_view.xml",
     ],
     "active": False,
     "installable": True

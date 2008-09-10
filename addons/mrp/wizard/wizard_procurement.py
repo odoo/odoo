@@ -34,38 +34,17 @@ import pooler
 
 parameter_form = '''<?xml version="1.0"?>
 <form string="Parameters" colspan="4">
-    <separator string="Time (days)" colspan="4"/>
-    <field name="po_lead"/>
-    <field name="picking_lead"/>
-    <field name="schedule_cycle"/>
-    <field name="po_cycle"/>
-    <field name="security_lead"/>
-    <separator string="Control" colspan="4"/>
-    <field name="user_id"/>
+    <label string="This wizard will schedule procurements." colspan="4" align="0.0"/>
 </form>'''
 
 parameter_fields = {
-    'schedule_cycle': {'string':'Scheduler Cycle', 'type':'float', 'required':True, 'default': lambda *a: 1.0},
-    'po_cycle': {'string':'PO Cycle', 'type':'float', 'required':True, 'default': lambda *a: 1.0},
-    'po_lead': {'string':'PO Lead Time', 'type':'float', 'required':True, 'default': lambda *a: 1.0},
-    'security_lead': {'string':'Security Days', 'type':'float', 'required':True, 'default': lambda *a: 5.0},
-    'picking_lead': {'string':'Packing Lead Time', 'type':'float', 'required':True, 'default': lambda *a: 1.0},
-    'user_id': {'string':'Send Result To', 'type':'many2one', 'relation':'res.users', 'default': lambda uid,data,state: uid},
 }
 
 def _procure_calculation_procure(self, db_name, uid, data, context):
     db, pool = pooler.get_db_and_pool(db_name)
     cr = db.cursor()
     proc_obj = pool.get('mrp.procurement')
-    schedule_cycle = data['form']['schedule_cycle']
-    po_cycle = data['form']['po_cycle']
-    po_lead = data['form']['po_lead']
-    security_lead = data['form']['security_lead']
-    picking_lead = data['form']['picking_lead']
-    user_id = data['form']['user_id']
-    proc_obj.run_procure_confirm(cr, uid, user_id=user_id, schedule_cycle=schedule_cycle,\
-            po_cycle=po_cycle, po_lead=po_lead, security_lead=security_lead,\
-            picking_lead=picking_lead, use_new_cursor=cr.dbname, context=context)
+    proc_obj._procure_confirm(cr, uid, use_new_cursor=cr.dbname, context=context)
     return {}
 
 def _procure_calculation(self, cr, uid, data, context):

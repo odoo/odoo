@@ -27,7 +27,10 @@ How to use it:
     "depends" : ["base"],
     "init_xml" : [ ],
     "demo_xml" : [ ],
-    "update_xml" : [ "base_module_record_wizard.xml" ],
+    "update_xml" : [
+        "security/ir.model.access.csv",
+         "base_module_record_wizard.xml"
+    ],
     "installable": True
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

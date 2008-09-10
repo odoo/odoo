@@ -34,10 +34,13 @@ import pooler
 from tools.translate import _
 
 _journal_form = '''<?xml version="1.0"?>
-<form string="Standard entries">
+<form string="Validate Account Entries">
+    <separator string="Select Period and Journal for Validation" colspan="4"/>
     <field name="journal_id"/>
     <newline/>
     <field name="period_id"/>
+    <separator string="Information" colspan="4"/>
+    <label string="All draft account entries in this journal and period will be validated. It means you won't be able to modify their accouting fields." colspan="4"/>
 </form>'''
 
 _journal_fields = {

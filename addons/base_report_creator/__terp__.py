@@ -15,7 +15,11 @@ the "Dashboard" menu.
     "depends" : ["base","board"],
     "init_xml" : [],
     "demo_xml" : [],
-    "update_xml" : ["base_report_creator_wizard.xml","base_report_creator_view.xml"],
+    "update_xml" : [
+        "security/ir.model.access.csv",
+        "base_report_creator_wizard.xml",
+        "base_report_creator_view.xml"
+    ],
     "active": False,
     "installable": True
 }

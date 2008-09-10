@@ -34,19 +34,18 @@
 # 
 
 from osv import osv
+from osv import fields
 
 
 class res_partner(osv.osv):
     _inherit = 'res.partner'
-    
+
     def check_vat(self, cr, uid, ids):
         '''
         Check the VAT number depending of the country.
         http://sima-pc.com/nif.php
         '''
         for partner in self.browse(cr, uid, ids):
-            if not partner.vat_subject:
-                continue
             if not partner.vat:
                 continue    #FIXME return False? empty vat numbre is invalid?
 
@@ -58,8 +57,14 @@ class res_partner(osv.osv):
 
         return True
 
+    def vat_change(self, cr, uid, ids, value, context={}):
+        return {'value': {'vat_subjected': bool(value)}}
+
+    _columns = {
+        'vat_subjected': fields.boolean('Subjected', help="Check this box if the partner is subjected to the VAT. It will be used for the VAT legal statement.")
+    }
     _constraints = [(check_vat, "The VAT doesn't seem to be correct.", ["vat"])]
-    
+
     # code from the following methods come from Tryton (B2CK)
     # http://www.tryton.org/hgwebdir.cgi/modules/relationship/file/544d1de586d9/party.py 
     def check_vat_at(self, vat):

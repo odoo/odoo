@@ -35,7 +35,6 @@ import ir
 import pooler
 import mx.DateTime
 from mx.DateTime import RelativeDateTime
-
 from tools import config
 from tools.translate import _
 
@@ -794,6 +793,8 @@ class account_invoice_line(osv.osv):
         return {'price_unit': price_unit,'invoice_line_tax_id': tax_id}
 
     def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, price_unit=False, address_invoice_id=False, context={}):
+        if not partner_id:
+            raise osv.except_osv(_('No Partner Defined !'),_("You must first select a partner !") )
         if not product:
             if type in ('in_invoice', 'in_refund'):
                 return {'domain':{'product_uom':[]}}

@@ -46,7 +46,12 @@ to set up a management by affair.
     "depends" : ["account", "hr", "base",],
     "init_xml" : ["hr_timesheet_data.xml"],
     "demo_xml" : ["hr_timesheet_demo.xml",],
-    "update_xml" : ["hr_timesheet_view.xml", "hr_timesheet_report.xml","hr_timesheet_wizard.xml"],
+    "update_xml" : [
+        "security/ir.model.access.csv",
+        "hr_timesheet_view.xml",
+        "hr_timesheet_report.xml",
+        "hr_timesheet_wizard.xml",
+    ],
     "active": False,
     "installable": True
 }

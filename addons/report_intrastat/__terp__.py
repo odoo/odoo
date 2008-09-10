@@ -36,7 +36,10 @@
     "description": "A module that adds intrastat reports.",
     "init_xml" : ["report_intrastat_data.xml",],
     "demo_xml" : [],
-    "update_xml" : ["report_intrastat_view.xml",],
+    "update_xml" : [
+        "security/ir.model.access.csv",
+        "report_intrastat_view.xml",
+    ],
     "active": False,
     "installable": True
 }

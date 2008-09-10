@@ -30,12 +30,12 @@
 from osv import fields, osv
 import pooler
 
-class config_install_extra_modules(osv.osv_memory):
-    _name='config.install_extra_modules'
+class profile_service_config_install_modules_wizard(osv.osv_memory):
+    _name='profile.service.config.install_modules_wizard'
     _rec_name = 'crm_configuration'
     _columns = {
         'crm_configuration':fields.boolean('CRM & Calendars', help="This installs the customer relationship features like: leads and opportunities tracking, shared calendar, jobs tracking, bug tracker, and so on."),
-        'hr_timesheet':fields.boolean('Timesheets', help="Timesheets allows you to track time and costs spent on different projects, represented by analytic accounts."),
+        'project_timesheet':fields.boolean('Timesheets', help="Timesheets allows you to track time and costs spent on different projects, represented by analytic accounts."),
         'hr_timesheet_invoice':fields.boolean('Invoice on Timesheets', help="There are different invoicing methods in OpenERP: from sale orders, from shippings, ... Install this module if you plan to invoice your customers based on time spent on projects."),
         'hr_holidays':fields.boolean('Holidays Management', help="Tracks the full holidays management process, from the employee's request to the global planning."),
         'hr_expense':fields.boolean('Expenses Tracking', help="Tracks the personal expenses process, from the employee expense encoding, to the reimbursement of the employee up to the reinvoicing to the final customer."),
@@ -69,7 +69,7 @@ class config_install_extra_modules(osv.osv_memory):
                 'type': 'ir.actions.act_window',
                 'target':'new',
             }
-config_install_extra_modules()
+profile_service_config_install_modules_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

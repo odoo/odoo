@@ -35,7 +35,12 @@
     "depends" : ["sale","purchase", "stock",],
     "init_xml" : ["delivery_data.xml"],
     "demo_xml" : ["delivery_demo.xml"],
-    "update_xml" : ["delivery_view.xml","delivery_wizard.xml","partner_view.xml"],
+    "update_xml" : [
+        "security/ir.model.access.csv",
+        "delivery_view.xml",
+        "delivery_wizard.xml",
+        "partner_view.xml",
+    ],
     "active": False,
     "installable": True,
 }

@@ -209,7 +209,7 @@ def fnct_call(fnct):
         pool = pooler.get_pool(args[0])
         mod = pool.get('ir.module.record')
         if mod and mod.recording:
-            if args[4] not in ('default_get','read','fields_view_get','fields_get','search','name_search','name_get','get','request_get', 'get_sc'):
+            if args[4] not in ('default_get','read','fields_view_get','fields_get','search','search_count','name_search','name_get','get','request_get', 'get_sc'):
                 mod.recording_data.append(('query', args, argv,res))
         return res
     return execute

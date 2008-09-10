@@ -38,6 +38,8 @@
                   #"purchase_unit_test.xml"
                   ],
     "update_xml" : [
+        "security/purchase_security.xml",
+        "security/ir.model.access.csv",
         "purchase_workflow.xml", 
         "purchase_sequence.xml", 
         "purchase_data.xml", 
@@ -45,7 +47,6 @@
         "purchase_report.xml", 
         "purchase_wizard.xml",
         "stock_view.xml",
-        "purchase_security.xml",
         "partner_view.xml"
     ],
     "active": False,

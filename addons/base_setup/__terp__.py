@@ -53,6 +53,7 @@
         "base_setup_demo.xml",
     ],
     "update_xml" : [
+        "security/ir.model.access.csv",
         "base_setup_wizard.xml",
     ],
     "active": True,

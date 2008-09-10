@@ -54,22 +54,14 @@
             <field name="arch" type="xml">
                 <form string="My Board">
                     <hpaned>
-                        
                         <child1>
-                            
                             <action colspan="4" height="220" name="%(action_view_task_tree)d" string="My Open Tasks" width="510"/>
-                            
                             <action colspan="4" height="150" name="%(action_view_task_tree_deadline)d" string="My Deadlines"/>
-                            
                             <action colspan="4" height="150" name="%(action_view_board_note_tree)d" string="Public Notes"/>
-                            
                         </child1>
-                        
                         <child2>
                             <action colspan="4" name="%(report_analytic_planning.action_account_analytic_planning_stat_my_form)d" string="My Planning"/>
-                            
                             <action colspan="4" name="%(report_timesheet.action_timesheet_user_stat_my)d" string="My Timesheet"/>
-                            
                         </child2>
                     </hpaned>
                 </form>

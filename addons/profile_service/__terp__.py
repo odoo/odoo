@@ -33,8 +33,6 @@
     "category":"Profile",
     "depends":[
         "hr",
-        "hr_timesheet",
-        "hr_timesheet_invoice",
         "crm",
         "project",
         "board_project",
@@ -43,7 +41,10 @@
     #"board_project",
     #"board_account"],
     "demo_xml":[],
-    "update_xml":["profile_service.xml"],
+    "update_xml":[
+        "security/ir.model.access.csv",
+        "profile_service.xml"
+    ],
     "active":False,
     "installable":True,
 }

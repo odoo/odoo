@@ -31,8 +31,8 @@
 import xmlrpclib
 
 sock = xmlrpclib.ServerProxy('http://localhost:8069/xmlrpc/wizard')
-wiz_id = sock.create('trunk', 3, 'admin', 'mrp.procurement.compute.all')
-sock.execute('trunk', 3, 'admin', wiz_id, {'form': {'po_cycle': 1.0, 'po_lead': 1.0, 'user_id': 3, 'schedule_cycle': 1.0, 'picking_lead': 1.0, 'security_lead': 50.0, 'automatic': False}, 'ids': [], 'report_type': 'pdf', 'model': 'ir.ui.menu', 'id': False}, 'compute', {})
+wiz_id = sock.create('trunk', 1, 'admin', 'mrp.procurement.compute.all')
+sock.execute('trunk', 1, 'admin', wiz_id, {'form': {'po_cycle': 1.0, 'po_lead': 1.0, 'user_id': 3, 'schedule_cycle': 1.0, 'picking_lead': 1.0, 'security_lead': 50.0, 'automatic': False}, 'ids': [], 'report_type': 'pdf', 'model': 'ir.ui.menu', 'id': False}, 'compute', {})
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

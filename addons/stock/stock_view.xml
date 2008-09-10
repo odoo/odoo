@@ -2,7 +2,7 @@
 <terp>
     <data>
         <menuitem icon="terp-stock" id="menu_stock_root" name="Stock Management"/>
-        <menuitem groups="base.group_admin" id="menu_stock_configuration" name="Configuration" parent="menu_stock_root" sequence="1"/>
+        <menuitem id="menu_stock_configuration" name="Configuration" parent="menu_stock_root" sequence="1"/>
         
         =============================
         Inventory Line
@@ -28,8 +28,8 @@
                 <form string="Stock Inventory Lines">
                     <field colspan="4" domain="[('usage','=','internal')]" name="location_id" select="1"/>
                     <field context="location=location_id,uom=product_uom" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom)" select="1"/>
-                    <field name="product_uom"/>
                     <field name="product_qty"/>
+                    <field name="product_uom"/>
                 </form>
             </field>
         </record>
@@ -313,7 +313,7 @@
                     <field name="usage" select="1"/>
                     <field name="account_id" select="1"/>
                     <field name="location_id"/>
-                    <field name="address_id"/>
+                    <field name="address_id" context="{'context_display':'partner'}"/>
                     <group col="2" colspan="2">
                         <separator string="Chained Locations" colspan="2"/>
                         <field name="chained_location_type"/>
@@ -368,7 +368,7 @@
             </field>
         </record>
         <record id="action_location_tree" model="ir.actions.act_window">
-            <field name="name">Locations Structure</field>
+            <field name="name">Stock Locations Structure</field>
             <field name="res_model">stock.location</field>
             <field name="type">ir.actions.act_window</field>
             <field name="domain">[('location_id','=',False)]</field>
@@ -391,7 +391,7 @@
                     <field name="lot_stock_id"/>
                     <field name="lot_output_id"/>
                     <newline/>
-                    <field name="partner_address_id"/>
+                    <field name="partner_address_id" context="{'context_display':'partner'}"/>
                 </form>
             </field>
         </record>
@@ -405,7 +405,7 @@
                     <field name="lot_input_id"/>
                     <field name="lot_stock_id"/>
                     <field name="lot_output_id"/>
-                    <field name="partner_address_id"/>
+                    <field name="partner_address_id" context="{'context_display':'partner'}"/>
                 </tree>
             </field>
         </record>
@@ -427,7 +427,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Move Lines">   
-                    <field name="address_id" invisible="True"/>
+                    <field name="address_id" invisible="True" context="{'context_display':'partner'}"/>
                     <field name="picking_id" invisible="True"/>
                     <field domain="[('picking_id','&lt;&gt;',picking_id),('state','in',['confirmed','assigned'])]" name="move_ids" select="1"/><newline/>
                     <group colspan="4">
@@ -453,18 +453,32 @@
         =============================
         Packing
         =============================
+        <record model="ir.ui.view" id="stock_picking_calendar">
+            <field name="name">stock.picking.calendar</field>
+            <field name="model">stock.picking</field>
+            <field name="type">calendar</field>
+            <field name="priority" eval="2"/>
+            <field name="arch" type="xml">
+                <calendar string="Calendar View" date_start="date" color="state">
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="address_id"/>                    
+                </calendar>
+            </field>
+        </record>
         <record id="vpicktree" model="ir.ui.view">
             <field name="name">stock.picking.tree</field>
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree color="red:state=='cancel'" string="Packing list">
-                    <field colspan="4" name="name" select="1"/>
-                    <field name="date" select="1"/>
+                    <field name="name"/>
                     <field name="address_id" select="1"/>
-                    <field name="invoice_state" readonly="1"/>
-                    <field name="origin" select="1"/>
-                    <field name="state" readonly="1"/>
+                    <field name="invoice_state"/>
+                    <field name="origin"/>
+                    <field name="backorder_id"/>
+                   <field name="min_date" select="1"/>
+                   <field name="max_date" select="1"/>
                 </tree>
             </field>
         </record>
@@ -476,37 +490,40 @@
                 <form string="Packing list">
                     <notebook>
                         <page string="General Information">
-                            <field name="name" select="1"/>
-                            <field name="date" select="1"/>
-                            <newline/>
+                            <group colspan="4" col="6">
+                                <field name="address_id" select="2" context="{'context_display':'partner'}"/>
+                                <field name="type"/>
+                                <field name="name"/>
+                                <field name="date"/>
+                            </group>
                             <field name="type" select="2"/>
                             <field name="invoice_state" select="2"/>
                             <newline/>
+		                   <field name="min_date" select="1"/>
+        		           <field name="max_date" select="1"/>
                             <field name="location_id"/>
                             <field name="location_dest_id"/>
                             <field name="address_id" select="2"/>
-                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list">
+                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_out_id': address_id}">
                                 <form string="Stock Moves">
                                     <separator colspan="4" string="Move Information"/>
-                                    <field colspan="4" context="location=parent.location_id" name="product_id" on_change="onchange_product_id(product_id, parent.location_id, parent.location_dest_id)" select="1"/>
-                                    <field name="product_uom" select="1"/>
+                                    <field name="location_id" select="1" domain="[('usage','=','internal')]"/>
+                                    <field name="location_dest_id" select="1" domain="[('usage','=','internal')]"/>
+                                    <field colspan="4" context="location=location_id" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id)" select="1"/>
                                     <field name="product_qty" select="1"/>
+                                    <field name="product_uom" select="1"/>
                                     <field groups="product.group_uos" name="product_uos"/>
                                     <field groups="product.group_uos" name="product_uos_qty"/>
-                                    <field colspan="4" name="name" select="1"/>
-                                    <field name="date"/>
+                                    <field colspan="4" invisible="1" name="name" select="1"/>
+                                    <field invisible="1" name="date"/>
                                     <field name="date_planned"/>
-                                    <field name="priority"/>
-                                    <field name="location_id" select="1"/>
-                                    <field name="location_dest_id" select="1"/>
-                                    <field name="address_id" select="1"/>
-                                    <field name="product_packaging"/>
+                                    <field name="address_id" select="1" context="{'context_display':'partner'}"/>
+                                    <field groups="base.group_extended" name="product_packaging"/>
                                     <field context="product_id=product_id" name="prodlot_id" select="1"/>
-                                    <field name="tracking_id" select="1"/>
+                                    <field groups="base.group_extended" name="tracking_id" select="1"/>
                                     <newline/>
                                     <label/>
                                     <button name="%(track_line)d" string="Split in production lots" type="action"/>
-                                    
                                     <separator colspan="4" string="Move State"/>
                                     <field name="state" select="1"/>
                                     <group>
@@ -554,11 +571,11 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree color="red:state=='cancel'" string="Packing list">
-                    <field colspan="4" name="name" select="1"/>
-                    <field name="date" select="1"/>
+                    <field name="name"/>
                     <field name="address_id" select="1"/>
-                    <field name="origin" select="1"/>
-                    <field name="state" readonly="1"/>
+                    <field name="origin"/>
+                   <field name="min_date" select="1"/>
+                   <field name="max_date" select="1"/>
                 </tree>
             </field>
         </record>
@@ -570,23 +587,25 @@
                 <form string="Packing list">
                     <field name="name" select="1"/>
                     <field name="date" select="1"/>
+		            <field name="min_date" select="1"/>
+        		    <field name="max_date" select="1"/>
                     <newline/>
-                    <field name="address_id" select="2"/>
-                    <notebook colspan="4">
+                        <field name="backorder_id" select="2"/>
+						<notebook colspan="4">
                         <page string="General Information">
-                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list">
+                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_out_id': address_id}">
                                 <form string="Stock Moves">
                                     <separator colspan="4" string="Move Information"/>
-                                    <field colspan="4" context="location=parent.location_id" name="product_id" on_change="onchange_product_id(product_id, parent.location_id, parent.location_dest_id)" select="1"/>
-                                    <field name="product_uom" select="1"/>
+                                    <field name="location_id" select="1" domain="[('usage','=','internal')]"/>
+                                    <field name="location_dest_id" select="1" domain="[('usage','&lt;&gt;','view')]"/>
+                                    <field colspan="4" context="location=location_id" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id)" select="1"/>
                                     <field name="product_qty" select="1"/>
+                                    <field name="product_uom" select="1"/>
                                     <field groups="product.group_uos" name="product_uos"/>
                                     <field groups="product.group_uos" name="product_uos_qty"/>
                                     <field colspan="4" invisible="1" name="name" select="1"/>
                                     <field invisible="1" name="date"/>
                                     <field name="date_planned"/>
-                                    <field name="location_id" select="1"/>
-                                    <field name="location_dest_id" select="1"/>
                                     <field groups="base.group_extended" name="product_packaging"/>
                                     <field context="product_id=product_id" name="prodlot_id" select="1"/>
                                     <field groups="base.group_extended" name="tracking_id" select="1"/>
@@ -616,9 +635,8 @@
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
                         <page string="Others info">
-                            <field name="origin" select="2"/>
-                            <field name="active" select="2"/>
                             <field name="auto_picking"/>
+                            <field name="active" select="2"/>
                             <newline/>
                             <field name="move_type"/>
                         </page>
@@ -633,7 +651,7 @@
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','delivery')]</field>
             <field name="context">{'contact_display': 'partner'}</field>
         </record>
@@ -657,7 +675,7 @@
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('state','=','assigned'),('type','=','delivery')]</field>
             <field name="context">{'contact_display': 'partner'}</field>
         </record>
@@ -680,7 +698,7 @@
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('state','=','confirmed'),('type','=','delivery')]</field>
             <field name="context">{'contact_display': 'partner'}</field>
         </record>
@@ -697,6 +715,17 @@
             <field name="act_window_id" ref="action_picking_tree3_delivery"/>
         </record>
         <menuitem action="action_picking_tree3_delivery" id="menu_action_picking_tree3_delivery" parent="menu_action_picking_tree_delivery"/>
+
+       <record id="action_picking_calendar_delivery" model="ir.actions.act_window">
+            <field name="name">Calendar of Deliveries</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">calendar,tree,form</field>
+            <field name="domain">[('state','=','assigned'),('type','=','delivery')]</field>
+            <field name="context">{'contact_display': 'partner'}</field>
+        </record>        
+        <menuitem action="action_picking_calendar_delivery" id="menu_picking_calendar_delivery" parent="menu_action_picking_tree_delivery"/>
         
         #
         # Sending Products
@@ -708,12 +737,13 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree color="red:state=='cancel'" string="Packing list">
-                    <field colspan="4" name="name" select="1"/>
-                    <field name="date" select="1"/>
+                    <field name="name"/>
+                   <field name="min_date" select="1"/>
+                   <field name="max_date" select="1"/>
+                    <!--field name="date" select="1"/-->
                     <field name="address_id" select="1"/>
-                    <field name="invoice_state" readonly="1"/>
-                    <field name="origin" select="1"/>
-                    <field name="state" readonly="1"/>
+                    <field name="backorder_id"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -724,24 +754,26 @@
             <field name="arch" type="xml">
                 <form string="Packing list">
                     <field name="name" select="1"/>
-                    <field name="date" select="1"/>
-                    <newline/>
                     <field name="address_id" select="2"/>
+                    <newline/>
+                   <field name="min_date" select="1"/>
+                   <field name="max_date" select="1"/>
+                        <field name="backorder_id" select="2"/>
                     <notebook colspan="4">
                         <page string="General Information">
-                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list">
+                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_out_id': address_id}">
                                 <form string="Stock Moves">
                                     <separator colspan="4" string="Move Information"/>
-                                    <field colspan="4" context="location=parent.location_id" name="product_id" on_change="onchange_product_id(product_id, parent.location_id, parent.location_dest_id)" select="1"/>
-                                    <field name="product_uom" select="1"/>
+                                    <field name="location_id" select="1" domain="[('usage','=','internal')]"/>
+                                    <field name="location_dest_id" select="1" domain="[('usage','&lt;&gt;','view')]"/>
+                                    <field colspan="4" context="location=location_id" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id)" select="1"/>
                                     <field name="product_qty" select="1"/>
+                                    <field name="product_uom" select="1"/>
                                     <field groups="product.group_uos" name="product_uos"/>
                                     <field groups="product.group_uos" name="product_uos_qty"/>
                                     <field colspan="4" invisible="1" name="name" select="1"/>
                                     <field invisible="1" name="date"/>
                                     <field name="date_planned"/>
-                                    <field name="location_id" select="1"/>
-                                    <field name="location_dest_id" select="1"/>
                                     <field groups="base.group_extended" name="product_packaging"/>
                                     <field context="product_id=product_id" name="prodlot_id" select="1"/>
                                     <field groups="base.group_extended" name="tracking_id" select="1"/>
@@ -771,7 +803,6 @@
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
                         <page string="Others info">
-                            <field name="origin" select="2"/>
                             <field name="active" select="2"/>
                             <field name="auto_picking"/>
                             <newline/>
@@ -787,7 +818,7 @@
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','out')]</field>
             <field name="context">{'contact_display': 'partner'}</field>
         </record>
@@ -810,7 +841,7 @@
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('state','=','assigned'),('type','=','out')]</field>
             <field name="context">{'contact_display': 'partner'}</field>
         </record>
@@ -833,7 +864,7 @@
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('state','=','confirmed'),('type','=','out')]</field>
             <field name="context">{'contact_display': 'partner'}</field>
         </record>
@@ -861,10 +892,12 @@
             <field name="arch" type="xml">
                 <tree color="red:state=='cancel'" string="Packing list">
                     <field colspan="4" name="name" select="1"/>
-                    <field name="date" select="1"/>
+                   <field name="min_date" select="1"/>
+                   <field name="max_date" select="1"/>
                     <field name="address_id" select="1"/>
                     <field name="invoice_state" readonly="1"/>
                     <field name="origin" select="1"/>
+                    <field name="backorder_id" select="2"/>
                     <field name="state" readonly="1"/>
                 </tree>
             </field>
@@ -875,15 +908,21 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Input Packing List">
-                    <field name="address_id" on_change="onchange_partner_in(address_id)" select="2"/>
-                    <field name="name" readonly="1" select="1"/>
+                    <group colspan="4" col="6">
+                        <field name="address_id" on_change="onchange_partner_in(address_id)" select="2" context="{'context_display':'partner'}"/>
+                        <field name="origin" select="2"/>
+                        <field name="invoice_state" select="2" string="Invoice Control"/>
+                        <field name="name" readonly="1" select="1"/>
+                    </group>
                     <field name="location_id"/>
                     <field domain="[('usage','=','internal')]" name="location_dest_id"/>
                     <field name="invoice_state" select="2" string="Supplier Invoice Control"/>
                     <field name="origin" select="2"/>
+                    <field name="min_date" select="1"/>
+                    <field name="max_date" select="1"/>
                     <notebook colspan="4">
                         <page string="General Information">
-                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list">
+                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_in_id': address_id}">
                                 <tree string="Stock Moves">
                                     <field name="product_id"/>
                                     <field name="product_qty"/>
@@ -894,17 +933,16 @@
                                 </tree>
                                 <form string="Stock Moves">
                                     <separator colspan="4" string="Move Information"/>
-                                    <field colspan="4" context="location=parent.location_id" name="product_id" on_change="onchange_product_id(product_id, parent.location_id, parent.location_dest_id)" select="1"/>
-                                    <field name="product_uom" select="1"/>
+                                    <field name="location_id" select="1" domain="[('usage','&lt;&gt;','view')]"/>
+                                    <field domain="[('usage','=','internal')]" name="location_dest_id" select="1"/>
+                                    <field colspan="4" context="location=location_id" name="product_id" on_change="onchange_product_id(product_id, location_id, location_dest_id)" select="1"/>
                                     <field name="product_qty" select="1"/>
+                                    <field name="product_uom" select="1"/>
                                     <field groups="product.group_uos" name="product_uos"/>
                                     <field groups="product.group_uos" name="product_uos_qty"/>
                                     <field colspan="4" invisible="1" name="name" select="1"/>
-                                    <field groups="base.group_extended" name="date"/>
                                     <field groups="base.group_extended" name="date_planned"/>
                                     <newline/>
-                                    <field name="location_id" select="1"/>
-                                    <field domain="[('usage','=','internal')]" name="location_dest_id" select="1"/>
                                     <newline/>
                                     <field groups="base.group_extended" name="product_packaging"/>
                                     <newline/>
@@ -950,7 +988,7 @@
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','in')]</field>
             <field name="context">{'contact_display': 'partner'}</field>
         </record>
@@ -974,7 +1012,7 @@
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('state','=','assigned'),('type','=','in')]</field>
             <field name="context">{'contact_display': 'partner'}</field>
         </record>
@@ -1021,7 +1059,7 @@
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','internal')]</field>
             <field name="context">{'contact_display': 'partner'}</field>
         </record>
@@ -1033,7 +1071,7 @@
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('state','=','assigned'),('type','=','internal')]</field>
             <field name="context">{'contact_display': 'partner'}</field>
         </record>
@@ -1044,7 +1082,7 @@
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('state','=','confirmed'),('type','=','internal')]</field>
             <field name="context">{'contact_display': 'partner'}</field>
         </record>
@@ -1055,7 +1093,7 @@
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('state','=','draft'),('type','=','internal')]</field>
             <field name="context">{'contact_display': 'partner'}</field>
         </record>
@@ -1099,16 +1137,16 @@
             <field name="arch" type="xml">
                 <form string="Stock Moves">
                     <separator colspan="4" string="Move Information"/>
+                    <field name="location_id" select="1"/>
+                    <field name="location_dest_id" select="1"/>
+                    <field colspan="4" name="product_id" select="1"/>
+                    <field name="product_qty" select="1"/>
+                    <field name="product_uom" select="1"/>
                     <field colspan="4" name="name" select="1"/>
                     <field name="date"/>
                     <field name="date_planned"/>
-                    <field colspan="4" name="product_id" select="1"/>
-                    <field name="product_uom" select="1"/>
-                    <field name="product_qty" select="1"/>
-                    <field name="location_id" select="1"/>
-                    <field name="location_dest_id" select="1"/>
                     <field name="priority"/>
-                    <field name="address_id" select="1"/>
+                    <field name="address_id" select="1" context="{'context_display':'partner'}"/>
                     <newline/>
                     <field context="product_id=product_id" name="prodlot_id" select="1"/>
                     <field name="tracking_id" select="1"/>

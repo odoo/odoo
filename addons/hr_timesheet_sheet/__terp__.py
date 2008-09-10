@@ -54,7 +54,11 @@ The validation can be configured in te company:
     "depends" : ["hr_timesheet", "hr_timesheet_invoice"],
     "init_xml" : [],
     "demo_xml" : ["hr_timesheet_sheet_demo.xml",],
-    "update_xml" : ["hr_timesheet_sheet_view.xml", "hr_timesheet_workflow.xml"],
+    "update_xml" : [
+        "security/ir.model.access.csv",
+        "hr_timesheet_sheet_view.xml",
+        "hr_timesheet_workflow.xml"
+    ],
     "active": False,
     "installable": True
 }

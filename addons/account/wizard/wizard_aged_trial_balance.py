@@ -41,6 +41,7 @@ _aged_trial_form = """<?xml version="1.0"?>
     <field name="company_id"/>
     <newline/>
     <field name="fiscalyear"/>
+    <label align="0.7" colspan="6" string="(If you do not select Fiscal year it will take all open fiscal year)"/>
     <newline/>
     <field name="period_length"/>
     <newline/>
