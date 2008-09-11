@@ -109,10 +109,10 @@ class fake_cursor:
             self.print_log('into')
         self.obj.close()
 
-        # This force the cursor to be freed, and thus, available again. It is 
-        # important because otherwise we can overload the server very easily 
+        # This force the cursor to be freed, and thus, available again. It is
+        # important because otherwise we can overload the server very easily
         # because of a cursor shortage (because cursors are not garbage
-        # collected as fast as they should). The problem is probably due in 
+        # collected as fast as they should). The problem is probably due in
         # part because browse records keep a reference to the cursor.
         del self.obj
 
@@ -123,7 +123,7 @@ class fakedb:
     def __init__(self, truedb, dbname):
         self.truedb = truedb
         self.dbname = dbname
-        
+
     def cursor(self):
         return fake_cursor(self.truedb, {}, self.dbname)
 

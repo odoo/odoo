@@ -87,9 +87,9 @@ class db(netsvc.Service):
                     cr = None
                     pool = pooler.get_pool(db_name, demo, serv.actions[id],
                             update_module=True)
-                    
+
                     cr = sql_db.db_connect(db_name).cursor()
-                    
+
                     if lang:
                         modobj = pool.get('ir.module.module')
                         mids = modobj.search(cr, 1, [('state', '=', 'installed')])
@@ -119,7 +119,7 @@ class db(netsvc.Service):
                         cr.close()
         logger = netsvc.Logger()
         logger.notifyChannel("web-services", netsvc.LOG_INFO,
-                'CREATE DB: %s' % (db_name))
+                'CREATE DB: %s' % (db_name.lower()))
         dbi = DBInitialize()
         create_thread = threading.Thread(target=dbi,
                 args=(self, id, db_name, demo, lang, user_password))
@@ -280,7 +280,7 @@ class db(netsvc.Service):
         tools.config['admin_passwd'] = new_password
         tools.config.save()
         return True
-    
+
     def list_lang(self):
         return tools.scan_languages()
 
@@ -334,7 +334,7 @@ class common(netsvc.Service):
         res = security.login(db, login, password)
         logger = netsvc.Logger()
         msg = res and 'successful login' or 'bad login or password'
-        logger.notifyChannel("web-service", netsvc.LOG_INFO, "%s from '%s' using database '%s'" % (msg, login, db))
+        logger.notifyChannel("web-service", netsvc.LOG_INFO, "%s from '%s' using database '%s'" % (msg, login, db.lower()))
         return res or False
 
     def about(self, extended=False):
@@ -368,13 +368,13 @@ class objects_proxy(netsvc.Service):
         self.exportMethod(self.execute)
         self.exportMethod(self.exec_workflow)
         self.exportMethod(self.obj_list)
-        
+
     def exec_workflow(self, db, uid, passwd, object, method, id):
         security.check(db, uid, passwd)
         service = netsvc.LocalService("object_proxy")
         res = service.exec_workflow(db, uid, object, method, id)
         return res
-        
+
     def execute(self, db, uid, passwd, object, method, *args):
         security.check(db, uid, passwd)
         service = netsvc.LocalService("object_proxy")
@@ -463,7 +463,7 @@ class report_spool(netsvc.Service):
         if not context:
             context={}
         security.check(db, uid, passwd)
-        
+
         self.id_protect.acquire()
         self.id += 1
         id = self.id
