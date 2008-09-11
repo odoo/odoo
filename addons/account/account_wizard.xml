@@ -6,8 +6,6 @@
 
         <wizard id="wizard_invoice_pay" model="account.invoice" name="account.invoice.pay" string="Pay invoice"/>
 
-        <wizard id="wizard_budget_spread" menu="False" model="account.budget.post" name="account.budget.spread" string="Spread amount"/>
-
         <!-- close year, period, journal -->
         <wizard id="wizard_fiscalyear_close" menu="False" model="account.fiscalyear" name="account.fiscalyear.close" string="Close a Fiscal Year"/>
         <menuitem id="menu_finance" name="Financial Management"/><menuitem action="wizard_fiscalyear_close" id="menu_wizard_fy_close" parent="menu_account_end_year_treatments" sequence="11" type="wizard"/>
@@ -26,8 +24,8 @@
         <wizard
             string="Import invoices"
             model="account.bank.statement"
-            name="populate_statement_from_inv" 
-            menu="False" 
+            name="populate_statement_from_inv"
+            menu="False"
             id="wizard_populate_statement_from_inv"/>
 
         <!-- manual reconcile -->
@@ -61,7 +59,6 @@
         <wizard id="wizard_third_party_ledger" menu="False" model="res.partner" name="account.third_party_ledger.report" string="Partner ledger"/>
         <menuitem icon="STOCK_PRINT" action="wizard_third_party_ledger" id="menu_third_party_ledger" parent="account.next_id_22" type="wizard"/>
 
-        <wizard id="wizard_budget_report" keyword="client_print_multi" model="account.budget.post" name="account.budget.report" string="Budget"/>
         <wizard id="wizard_balance_report" keyword="client_print_multi" model="account.account" name="account.account.balance.report" string="Account balance"/>
         <wizard id="wizard_general_ledger_report" keyword="client_print_multi" model="account.account" name="account.general.ledger.report" string="General ledger"/>
 
