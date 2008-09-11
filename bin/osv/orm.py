@@ -1096,7 +1096,7 @@ class orm_memory(orm_template):
         self.check_id = 0
         cr.execute('delete from wkf_instance where res_type=%s', (self._name,))
 
-    def clear(self):
+    def vaccum(self, cr, uid):
         self.check_id += 1
         if self.check_id % self._check_time:
             return True
@@ -1105,12 +1105,12 @@ class orm_memory(orm_template):
         for id in self.datas:
             if self.datas[id]['internal.date_access'] < max:
                 tounlink.append(id)
-        self.unlink(tounlink)
+        self.unlink(cr, uid, tounlink)
         if len(self.datas)>self._max_count:
             sorted = map(lambda x: (x[1]['internal.date_access'], x[0]), self.datas.items())
             sorted.sort()
             ids = map(lambda x: x[1], sorted[:len(self.datas)-self._max_count])
-            self.unlink(ids)
+            self.unlink(cr, uid, ids)
         return True
 
     def read(self, cr, user, ids, fields_to_read=None, context=None, load='_classic_read'):
@@ -1153,7 +1153,7 @@ class orm_memory(orm_template):
         self._validate(cr, user, [id_new], context)
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_write(user, self._name, id_new, cr)
-        self.clear()
+        self.vaccum(cr, user)
         return id_new
 
     def create(self, cr, user, vals, context=None):
@@ -1179,7 +1179,7 @@ class orm_memory(orm_template):
         self._validate(cr, user, [id_new], context)
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_create(user, self._name, id_new, cr)
-        self.clear()
+        self.vaccum(cr, user)
         return id_new
 
     def default_get(self, cr, uid, fields_list, context=None):
