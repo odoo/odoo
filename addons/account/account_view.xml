@@ -982,80 +982,6 @@
         </record>
         <menuitem action="action_account_journal_period_tree" id="menu_action_account_journal_period_tree" parent="account.menu_finance_reporting"/>
 
-        <record id="action_account_budget_post_tree" model="ir.actions.act_window">
-            <field name="name">Budgets</field>
-            <field name="res_model">account.budget.post</field>
-            <field name="view_type">tree</field>
-        </record>
-        <menuitem action="action_account_budget_post_tree" id="menu_action_account_budget_post_tree" parent="account.menu_finance_reporting"/>
-
-        <!--
-    Budgets
-    -->
-        <record id="view_budget_post_form" model="ir.ui.view">
-            <field name="name">account.budget.post.form</field>
-            <field name="model">account.budget.post</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Master Budget">
-                    <notebook>
-                        <page string="Definition">
-                            <field name="code" select="1"/>
-                            <field name="name" select="1"/>
-                        </page>
-                        <page string="Dotations">
-                            <button name="%(wizard_budget_spread)d" string="Spread" type="action"/>
-                            <field colspan="4" name="dotation_ids" nolabel="1"/>
-                        </page>
-                        <page string="Accounts">
-                            <field colspan="4" name="account_ids" nolabel="1"/>
-                        </page>
-                    </notebook>
-                </form>
-            </field>
-        </record>
-        <record id="view_budget_post_tree" model="ir.ui.view">
-            <field name="name">account.budget.post.tree</field>
-            <field name="model">account.budget.post</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Master Budget">
-                    <field name="code"/>
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
-        <record id="view_budget_post_dotation_form" model="ir.ui.view">
-            <field name="name">account.budget.post.dotation.form</field>
-            <field name="model">account.budget.post.dotation</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Master Budget Expenses">
-                    <field name="period_id"/>
-                    <field name="amount"/>
-                </form>
-            </field>
-        </record>
-        <record id="view_budget_post_dotation_tree" model="ir.ui.view">
-            <field name="name">account.budget.post.dotation.tree</field>
-            <field name="model">account.budget.post.dotation</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Master Budget Expenses">
-                    <field name="period_id"/>
-                    <field name="amount"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="open_budget_post_form" model="ir.actions.act_window">
-            <field name="name">Master Budgets</field>
-            <field name="res_model">account.budget.post</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="view_budget_post_tree"/>
-        </record>
-        <menuitem id="next_id_31" name="Budgets" parent="account.menu_finance_accounting"/><menuitem action="open_budget_post_form" id="menu_budget_post_form" parent="next_id_31"/>
-
 
         <!--
     # Account Models
@@ -1416,7 +1342,7 @@
             <field name="target">new</field>
         </record>
 
-   	
+
 
         <!-- register configuration wizard -->
 
