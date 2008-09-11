@@ -86,7 +86,7 @@ class TinyPoFile(object):
     def next(self):
         def unquote(str):
             return str[1:-1].replace("\\n", "\n")   \
-                            .replace('\\"', "\"")   
+                            .replace('\\"', '"')   
 
         type = name = res_id = source = trad = None
         
@@ -106,7 +106,7 @@ class TinyPoFile(object):
                 line = self.lines.pop(0).strip()
             if not line.startswith('msgid'):
                 raise Exception("malformed file")
-            source = line[7:-1]
+            source = unquote(line[6:])
             line = self.lines.pop(0).strip()
             if not source and self.first:
                 # if the source is "" and it's the first msgid, it's the special 
@@ -123,7 +123,7 @@ class TinyPoFile(object):
                 source += unquote(line)
                 line = self.lines.pop(0).strip()
 
-            trad = line[8:-1]
+            trad = unquote(line[7:])
             line = self.lines.pop(0).strip()
             while line:
                 trad += unquote(line)
@@ -211,7 +211,8 @@ def trans_export(lang, modules, buffer, format, dbname=None):
             for module, type, name, res_id, src, trad in rows:
                 row = grouped_rows.setdefault(src, {})
                 row.setdefault('modules', set()).add(module)
-                row.setdefault('translation', trad)
+                if ('translation' not in row) or (not row['translation']):
+                    row['translation'] = trad
                 row.setdefault('tnrs', []).append((type, name, res_id))
 
             for src, row in grouped_rows.items():
