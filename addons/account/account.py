@@ -1522,8 +1522,6 @@ class account_config_fiscalyear(osv.osv_memory):
 
 account_config_fiscalyear()
 
-
-
 #  ---------------------------------------------------------------
 #   Account Templates : Account, Tax, Tax Code and chart. + Wizard
 #  ---------------------------------------------------------------
@@ -1843,11 +1841,13 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             for tax in account_template.tax_ids:
                 tax_ids.append(tax_template_ref[tax.id])
             #create the account_account
+
             dig = obj_multi.code_digits
             code_main = len(account_template.code)
             code_acc = account_template.code
             if code_main<=dig and account_template.type != 'view':
                 code_acc=str(code_acc) + (str('0'*(dig-code_main)))
+
             vals={
                 'name': (obj_acc_root.id == account_template.id) and obj_multi.company_id.name or account_template.name,
                 #'sign': account_template.sign,
@@ -1924,7 +1924,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             vals={
                 'name': line.acc_no.bank and line.acc_no.bank.name+' '+tmp or tmp,
                 'currency_id': line.currency_id and line.currency_id.id or False,
-                'code': code_acc[:dig],
+                'code': ref_acc_bank.code+str(current_num),
                 'type': 'other',
                 'user_type': account_template.user_type and account_template.user_type.id or False,
                 'reconcile': True,

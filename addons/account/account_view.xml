@@ -802,13 +802,13 @@
                     <field name="to_check" select="2"/>
 
                     <separator colspan="4" string="Entry Lines"/>
-                    <field colspan="4" name="line_id" nolabel="1" readonly="1" widget="one2many_list">
+                    <field colspan="4" name="line_id" nolabel="1" widget="one2many_list" default_get="{'lines':line_id ,'journal':journal_id }">
                         <form string="Account Entry Line">
                             <separator colspan="4" string="General Information"/>
                             <field name="name" select="1"/>
                             <field name="date"/>
                             <field name="account_id"/>
-                            <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
+                            <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date,parent.journal_id)"/>
 
                             <field name="debit" select="1"/>
                             <field name="credit" select="1"/>
@@ -830,7 +830,7 @@
                         <tree editable="top" string="Account Entry Line">
                             <field name="date"/>
                             <field name="name"/>
-                            <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
+                            <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date,parent.journal_id)"/>
                             <field name="account_id"/>
                             <field name="date_maturity"/>
                             <field name="ref"/>
@@ -856,7 +856,18 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_move_tree"/>
         </record>
-        <menuitem id="next_id_29" name="Search Entries" parent="account.menu_finance_accounting"/><menuitem action="action_move_line_form" id="menu_action_move_line_form" parent="next_id_29"/>
+        <menuitem id="next_id_29" name="Search Entries" parent="account.menu_finance_accounting"/>
+        <menuitem action="action_move_line_form" id="menu_action_move_line_form" parent="next_id_29"/>
+
+		<record id="action_move_line_form_encode_by_move" model="ir.actions.act_window">
+            <field name="name">Entries Encoding by Move</field>
+            <field name="res_model">account.move</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_move_tree"/>
+        </record>
+
+        <menuitem action="action_move_line_form_encode_by_move" id="menu_encode_entries_by_move" parent="menu_finance_entries"/>
 
         <record id="action_move_line_search" model="ir.actions.act_window">
             <field name="name">Entry lines</field>
@@ -1341,7 +1352,6 @@
             <field name="view_mode">tree</field>
             <field name="target">new</field>
         </record>
-
 
 
         <!-- register configuration wizard -->

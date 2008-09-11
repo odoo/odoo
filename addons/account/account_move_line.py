@@ -70,6 +70,33 @@ class account_move_line(osv.osv):
         # Compute simple values
         data = super(account_move_line, self).default_get(cr, uid, fields, context)
 
+        # Starts: Manual entry from account.move form
+        if context.get('lines',[]):
+
+            total_new=0.00
+            for i in context['lines']:
+                total_new +=(i[2]['debit'] or 0.00)- (i[2]['credit'] or 0.00)
+                for item in i[2]:
+                        data[item]=i[2][item]
+            if context['journal']:
+                journal_obj=self.pool.get('account.journal').browse(cr,uid,context['journal'])
+                if journal_obj.type == 'purchase':
+                    if total_new>0:
+                        account = journal_obj.default_credit_account_id
+                    else:
+                        account = journal_obj.default_debit_account_id
+                else:
+                    if total_new>0:
+                        account = journal_obj.default_credit_account_id
+                    else:
+                        account = journal_obj.default_debit_account_id
+                data['account_id'] = account.id
+            s = -total_new
+            data['debit'] = s>0  and s or 0.0
+            data['credit'] = s<0  and -s or 0.0
+            return data
+        # Ends: Manual entry from account.move form
+
         if not 'move_id' in fields: #we are not in manual entry
             return data
 
@@ -342,11 +369,13 @@ class account_move_line(osv.osv):
     def onchange_partner_id(self, cr, uid, ids, move_id, partner_id, account_id=None, debit=0, credit=0, date=False, journal=False):
         val = {}
         val['date_maturity'] = False
+
         if not partner_id:
             return {'value':val}
         if not date:
             date = now().strftime('%Y-%m-%d')
         part = self.pool.get('res.partner').browse(cr, uid, partner_id)
+
         if part.property_payment_term and part.property_payment_term.line_ids:# Compute Maturity Date in val !
                 line = part.property_payment_term.line_ids[0]
                 next_date = mx.DateTime.strptime(date, '%Y-%m-%d') + RelativeDateTime(days=line.days)
@@ -647,7 +676,6 @@ class account_move_line(osv.osv):
     def create(self, cr, uid, vals, context=None, check=True):
         if not context:
             context={}
-
         account_obj = self.pool.get('account.account')
         tax_obj=self.pool.get('account.tax')
 
