@@ -40,5 +40,15 @@
 			rml="account_budget_crossover/report/analytic_account_budget_report.rml"
 			auto="False"
 			menu="False"/>
+
+	<!-- moved from account module -->
+		<report auto="False"
+			id="account_budget"
+			menu="False"
+			model="account.budget.post"
+			name="account.budget"
+			rml="account/report/budget_report.rml"
+			string="Print Budget"/>
+
 	</data>
 </openerp>

@@ -1,6 +1,164 @@
 <?xml version="1.0" ?>
 <openerp>
 	<data>
+	<!-- budget form and tree view from account module *********************************** -->
+		<record id="action_account_budget_post_tree" model="ir.actions.act_window">
+            <field name="name">Budgets</field>
+            <field name="res_model">account.budget.post</field>
+            <field name="view_type">tree</field>
+        </record>
+        <menuitem action="action_account_budget_post_tree" id="menu_action_account_budget_post_tree" parent="account.menu_finance_reporting"/>
+
+        <!--
+    Budgets
+    -->
+        <!--<record id="view_budget_post_form" model="ir.ui.view">
+            <field name="name">account.budget.post.form</field>
+            <field name="model">account.budget.post</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Master Budget">
+                    <notebook>
+                        <page string="Definition">
+                            <field name="code" select="1"/>
+                            <field name="name" select="1"/>
+                        </page>
+                        <page string="Dotations">
+                            <button name="%(wizard_budget_spread)d" string="Spread" type="action"/>
+                            <field colspan="4" name="dotation_ids" nolabel="1"/>
+                        </page>
+                        <page string="Accounts">
+                            <field colspan="4" name="account_ids" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>-->
+        <record id="view_budget_post_tree" model="ir.ui.view">
+            <field name="name">account.budget.post.tree</field>
+            <field name="model">account.budget.post</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Master Budget">
+                    <field name="code"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_budget_post_dotation_form" model="ir.ui.view">
+            <field name="name">account.budget.post.dotation.form</field>
+            <field name="model">account.budget.post.dotation</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Master Budget Expenses">
+                    <field name="period_id"/>
+                    <field name="amount"/>
+                    <field name="tot_planned" />
+                </form>
+            </field>
+        </record>
+        <record id="view_budget_post_dotation_tree" model="ir.ui.view">
+            <field name="name">account.budget.post.dotation.tree</field>
+            <field name="model">account.budget.post.dotation</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Master Budget Expenses">
+                    <field name="period_id"/>
+                    <field name="amount"/>
+                    <field name="tot_planned" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="open_budget_post_form" model="ir.actions.act_window">
+            <field name="name">Master Budgets</field>
+            <field name="res_model">account.budget.post</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_budget_post_tree"/>
+        </record>
+        <menuitem id="next_id_31" name="Budgets" parent="account.menu_finance_accounting"/><menuitem action="open_budget_post_form" id="menu_budget_post_form" parent="next_id_31"/>
+
+<!-- ******************************************************************************************************** -->
+		<!--<record model="ir.ui.view" id="view_budget_post_dotation_form_inherit">
+			<field name="name">account.budget.post.dotation.form.inherit</field>
+			<field name="type">form</field>
+			<field name="model">account.budget.post.dotation</field>
+			<field name="inherit_id" ref="account.view_budget_post_dotation_form"/>
+			<field name="arch" type="xml">
+				<field name="period_id" position="after">
+					<field name="tot_planned" />
+				</field>
+			</field>
+		</record>-->
+
+		<!--<record model="ir.ui.view" id="view_budget_post_dotation_tree_inherit">
+			<field name="name">account.budget.post.dotation.tree.inherit</field>
+			<field name="model">account.budget.post.dotation</field>
+			<field name="type">tree</field>
+			<field name="inherit_id" ref="account.view_budget_post_dotation_tree"/>
+			<field name="arch" type="xml">
+				<field name="amount" position="after">
+					<field name="tot_planned" />
+				</field>
+			</field>
+		</record>-->
+
+		<!--<record model="ir.ui.view" id="account.view_budget_post_form">-->
+		<record model="ir.ui.view" id="view_budget_post_form">
+			<field name="name">account.budget.post.form.inherit</field>
+			<field name="model">account.budget.post</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Master Budget">
+					<notebook>
+						<page string="Definition">
+							<field name="code" select="1"/>
+							<field name="name" select="1"/>
+						</page>
+						<page string="Dotations">
+							<button string="Spread" name="%(wizard_budget_spread)d" type="action"/>
+							<field name="dotation_ids" colspan="4" nolabel="1"/>
+						</page>
+						<page string="Accounts">
+							<field name="account_ids" colspan="4" nolabel="1"/>
+						</page>
+						<page string="Budget Lines">
+							<field name="crossovered_budget_line" widget="one2many_list" colspan="4" nolabel="1" mode="tree,graph">
+								<graph type="bar" string="Lines">
+									<field name="analytic_account_id" />
+									<field name="general_budget_id" operator="+" />
+									<field name="planned_amount" operator="+"/>
+									<field group="True" name="general_budget_id"/>
+								</graph>
+								<tree string="Budget Lines"  editable="top">
+									<field name="crossovered_budget_id"/>
+									<field name="analytic_account_id"/>
+									<field name="date_from"/>
+									<field name="date_to"/>
+									<field name="paid_date"/>
+									<field name="planned_amount"/>
+									<field name="practical_amount" select="1"/>
+									<field name="theoritical_amount"/>
+									<field name="percentage"/>
+								</tree>
+								<form string="Budget Lines">
+									<field name="crossovered_budget_id"/>
+									<field name="analytic_account_id"/>
+									<field name="date_from"/>
+									<field name="date_to"/>
+									<field name="paid_date"/>
+									<field name="planned_amount"/>
+									<field name="practical_amount" select="1"/>
+									<field name="theoritical_amount"/>
+									<field name="percentage"/>
+								</form>
+							</field>
+						</page>
+					</notebook>
+				</form>
+			</field>
+		</record>
+<!-- =================== -->
 		<record model="ir.ui.view" id="crossovered_budget_view_form">
 			<field name="name">crossovered.budget.view.form</field>
 			<field name="model">crossovered.budget</field>
@@ -69,7 +227,7 @@
 			<field name="view_mode">tree,form</field>
 			<field name="view_id" ref="crossovered_budget_view_tree"/>
 		</record>
-		<menuitem parent="account.next_id_31"
+		<menuitem parent="next_id_31"
 			id="menu_act_crossovered_budget_view"
 			action="act_crossovered_budget_view" />
 
@@ -119,7 +277,7 @@
 			<field name="view_id" ref="view_crossovered_budget_line_tree"/>
 		</record>
 
-		<menuitem name="Budgets" parent="account.menu_action_account_budget_post_tree"
+		<menuitem name="Budgets" parent="menu_action_account_budget_post_tree"
 			id="menu_financial_reporting_budget_budget"/>
 		<menuitem name="Entries" parent="menu_financial_reporting_budget_budget"
 			id="menu_financial_reporting_budget_budget_entries"/>
@@ -134,84 +292,6 @@
 			src_model="account.analytic.account"
 			id="act_account_analytic_account_cb_lines"/>
 
-		<!--<record model="ir.ui.view" id="view_budget_post_dotation_form_inherit">
-			<field name="name">account.budget.post.dotation.form.inherit</field>
-			<field name="type">form</field>
-			<field name="model">account.budget.post.dotation</field>
-			<field name="inherit_id" ref="account.view_budget_post_dotation_form"/>
-			<field name="arch" type="xml">
-				<field name="period_id" position="after">
-					<field name="tot_planned" />
-				</field>
-			</field>
-		</record>-->
-
-		<record model="ir.ui.view" id="view_budget_post_dotation_tree_inherit">
-			<field name="name">account.budget.post.dotation.tree.inherit</field>
-			<field name="model">account.budget.post.dotation</field>
-			<field name="type">tree</field>
-			<field name="inherit_id" ref="account.view_budget_post_dotation_tree"/>
-			<field name="arch" type="xml">
-				<field name="amount" position="after">
-					<field name="tot_planned" />
-				</field>
-			</field>
-		</record>
-
-		<record model="ir.ui.view" id="account.view_budget_post_form">
-			<field name="name">account.budget.post.form.inherit</field>
-			<field name="model">account.budget.post</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Master Budget">
-					<notebook>
-						<page string="Definition">
-							<field name="code" select="1"/>
-							<field name="name" select="1"/>
-						</page>
-						<page string="Dotations">
-							<button string="Spread" name="%(account.wizard_budget_spread)d" type="action"/>
-							<field name="dotation_ids" colspan="4" nolabel="1"/>
-						</page>
-						<page string="Accounts">
-							<field name="account_ids" colspan="4" nolabel="1"/>
-						</page>
-						<page string="Budget Lines">
-							<field name="crossovered_budget_line" widget="one2many_list" colspan="4" nolabel="1" mode="tree,graph">
-								<graph type="bar" string="Lines">
-									<field name="analytic_account_id" />
-									<field name="general_budget_id" operator="+" />
-									<field name="planned_amount" operator="+"/>
-									<field group="True" name="general_budget_id"/>
-								</graph>
-								<tree string="Budget Lines"  editable="top">
-									<field name="crossovered_budget_id"/>
-									<field name="analytic_account_id"/>
-									<field name="date_from"/>
-									<field name="date_to"/>
-									<field name="paid_date"/>
-									<field name="planned_amount"/>
-									<field name="practical_amount" select="1"/>
-									<field name="theoritical_amount"/>
-									<field name="percentage"/>
-								</tree>
-								<form string="Budget Lines">
-									<field name="crossovered_budget_id"/>
-									<field name="analytic_account_id"/>
-									<field name="date_from"/>
-									<field name="date_to"/>
-									<field name="paid_date"/>
-									<field name="planned_amount"/>
-									<field name="practical_amount" select="1"/>
-									<field name="theoritical_amount"/>
-									<field name="percentage"/>
-								</form>
-							</field>
-						</page>
-					</notebook>
-				</form>
-			</field>
-		</record>
 
 		<record model="ir.ui.view" id="view_account_analytic_account_form_inherit_cci">
 			<field name="name">account.analytic.account.form.inherot.cci</field>
@@ -249,6 +329,16 @@
 				</notebook>
 			</field>
 		</record>
+		<!-- moved from account module -->
+		 <!--Budget -->
+        <!--<report
+ 			id="account_analytic_budget_print"
+			string="Print Budget"
+			model="account.analytic.budget.post"
+			name="account.analytic.budget.print"
+			rml="account/project/report/account_analytic_budget_report.rml"
+			auto="False"
+			menu="False"/>-->
 
 	</data>
 </openerp>

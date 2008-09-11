@@ -10,6 +10,76 @@ import datetime
 def strToDate(dt):
         dt_date=datetime.date(int(dt[0:4]),int(dt[5:7]),int(dt[8:10]))
         return dt_date
+#moved from account/account.py
+# ---------------------------------------------------------
+# Budgets
+# ---------------------------------------------------------
+class account_budget_post(osv.osv):
+    _name = 'account.budget.post'
+    _description = 'Budget item'
+    _columns = {
+        'code': fields.char('Code', size=64, required=True),
+        'name': fields.char('Name', size=256, required=True),
+        'dotation_ids': fields.one2many('account.budget.post.dotation', 'post_id', 'Expenses'),
+        'account_ids': fields.many2many('account.account', 'account_budget_rel', 'budget_id', 'account_id', 'Accounts'),
+        'crossovered_budget_line': fields.one2many('crossovered.budget.lines', 'general_budget_id', 'Budget Lines'),
+    }
+    _defaults = {
+    }
+
+    def spread(self, cr, uid, ids, fiscalyear_id=False, amount=0.0):
+        dobj = self.pool.get('account.budget.post.dotation')
+        for o in self.browse(cr, uid, ids):
+            # delete dotations for this post
+            dobj.unlink(cr, uid, dobj.search(cr, uid, [('post_id','=',o.id)]))
+
+            # create one dotation per period in the fiscal year, and spread the total amount/quantity over those dotations
+            fy = self.pool.get('account.fiscalyear').browse(cr, uid, [fiscalyear_id])[0]
+            num = len(fy.period_ids)
+            for p in fy.period_ids:
+                dobj.create(cr, uid, {'post_id': o.id, 'period_id': p.id, 'amount': amount/num})
+        return True
+account_budget_post()
+
+class account_budget_post_dotation(osv.osv):
+    def _tot_planned(self, cr, uid, ids,name,args,context):
+        res={}
+        for line in self.browse(cr, uid, ids):
+            if line.period_id:
+                obj_period=self.pool.get('account.period').browse(cr, uid,line.period_id.id)
+
+                total_days=strToDate(obj_period.date_stop) - strToDate(obj_period.date_start)
+                budget_id=line.post_id and line.post_id.id or False
+                query="select id from crossovered_budget_lines where  general_budget_id= '"+ str(budget_id) + "' AND (date_from  >='"  +obj_period.date_start +"'  and date_from <= '"+obj_period.date_stop + "') OR (date_to  >='"  +obj_period.date_start +"'  and date_to <= '"+obj_period.date_stop + "') OR (date_from  <'"  +obj_period.date_start +"'  and date_to > '"+obj_period.date_stop + "')"
+                cr.execute(query)
+                res1=cr.fetchall()
+
+                tot_planned=0.00
+                for record in res1:
+                    obj_lines = self.pool.get('crossovered.budget.lines').browse(cr, uid,record[0])
+                    count_days = min(strToDate(obj_period.date_stop),strToDate(obj_lines.date_to)) - max(strToDate(obj_period.date_start), strToDate(obj_lines.date_from))
+                    days_in_period = count_days.days +1
+                    count_days = strToDate(obj_lines.date_to) - strToDate(obj_lines.date_from)
+                    total_days_of_rec = count_days.days +1
+                    tot_planned += obj_lines.planned_amount/total_days_of_rec* days_in_period
+                res[line.id]=tot_planned
+            else:
+                res[line.id]=0.00
+        return res
+
+    _name = 'account.budget.post.dotation'
+    _description = "Budget item endowment"
+    _columns = {
+        'name': fields.char('Name', size=64),
+        'post_id': fields.many2one('account.budget.post', 'Item', select=True),
+        'period_id': fields.many2one('account.period', 'Period'),
+#       'quantity': fields.float('Quantity', digits=(16,2)),
+        'amount': fields.float('Amount', digits=(16,2)),
+        'tot_planned':fields.function(_tot_planned,method=True, string='Total Planned Amount',type='float',store=True),
+    }
+
+account_budget_post_dotation()
+#===
 
 class crossovered_budget(osv.osv):
     _name = "crossovered.budget"
@@ -138,48 +208,50 @@ class crossovered_budget_lines(osv.osv):
     }
 crossovered_budget_lines()
 
-class account_budget_post(osv.osv):
-    _name = 'account.budget.post'
-    _inherit = 'account.budget.post'
-    _columns = {
-    'crossovered_budget_line': fields.one2many('crossovered.budget.lines', 'general_budget_id', 'Budget Lines'),
-    }
-account_budget_post()
 
-class account_budget_post_dotation(osv.osv):
-    _name = 'account.budget.post.dotation'
-    _inherit = 'account.budget.post.dotation'
 
-    def _tot_planned(self, cr, uid, ids,name,args,context):
-        res={}
-        for line in self.browse(cr, uid, ids):
-            if line.period_id:
-                obj_period=self.pool.get('account.period').browse(cr, uid,line.period_id.id)
-
-                total_days=strToDate(obj_period.date_stop) - strToDate(obj_period.date_start)
-                budget_id=line.post_id and line.post_id.id or False
-                query="select id from crossovered_budget_lines where  general_budget_id= '"+ str(budget_id) + "' AND (date_from  >='"  +obj_period.date_start +"'  and date_from <= '"+obj_period.date_stop + "') OR (date_to  >='"  +obj_period.date_start +"'  and date_to <= '"+obj_period.date_stop + "') OR (date_from  <'"  +obj_period.date_start +"'  and date_to > '"+obj_period.date_stop + "')"
-                cr.execute(query)
-                res1=cr.fetchall()
-
-                tot_planned=0.00
-                for record in res1:
-                    obj_lines = self.pool.get('crossovered.budget.lines').browse(cr, uid,record[0])
-                    count_days = min(strToDate(obj_period.date_stop),strToDate(obj_lines.date_to)) - max(strToDate(obj_period.date_start), strToDate(obj_lines.date_from))
-                    days_in_period = count_days.days +1
-                    count_days = strToDate(obj_lines.date_to) - strToDate(obj_lines.date_from)
-                    total_days_of_rec = count_days.days +1
-                    tot_planned += obj_lines.planned_amount/total_days_of_rec* days_in_period
-                res[line.id]=tot_planned
-            else:
-                res[line.id]=0.00
-        return res
-
-    _columns = {
-    'tot_planned':fields.function(_tot_planned,method=True, string='Total Planned Amount',type='float',store=True),
-    }
-
-account_budget_post_dotation()
+#class account_budget_post(osv.osv): #old code
+#    _name = 'account.budget.post'
+#    _inherit = 'account.budget.post'
+#    _columns = {
+#    'crossovered_budget_line': fields.one2many('crossovered.budget.lines', 'general_budget_id', 'Budget Lines'),
+#    }
+#account_budget_post()
+#
+#class account_budget_post_dotation(osv.osv):
+#    _name = 'account.budget.post.dotation'
+#    _inherit = 'account.budget.post.dotation'
+#
+#    def _tot_planned(self, cr, uid, ids,name,args,context):
+#        res={}
+#        for line in self.browse(cr, uid, ids):
+#            if line.period_id:
+#                obj_period=self.pool.get('account.period').browse(cr, uid,line.period_id.id)
+#
+#                total_days=strToDate(obj_period.date_stop) - strToDate(obj_period.date_start)
+#                budget_id=line.post_id and line.post_id.id or False
+#                query="select id from crossovered_budget_lines where  general_budget_id= '"+ str(budget_id) + "' AND (date_from  >='"  +obj_period.date_start +"'  and date_from <= '"+obj_period.date_stop + "') OR (date_to  >='"  +obj_period.date_start +"'  and date_to <= '"+obj_period.date_stop + "') OR (date_from  <'"  +obj_period.date_start +"'  and date_to > '"+obj_period.date_stop + "')"
+#                cr.execute(query)
+#                res1=cr.fetchall()
+#
+#                tot_planned=0.00
+#                for record in res1:
+#                    obj_lines = self.pool.get('crossovered.budget.lines').browse(cr, uid,record[0])
+#                    count_days = min(strToDate(obj_period.date_stop),strToDate(obj_lines.date_to)) - max(strToDate(obj_period.date_start), strToDate(obj_lines.date_from))
+#                    days_in_period = count_days.days +1
+#                    count_days = strToDate(obj_lines.date_to) - strToDate(obj_lines.date_from)
+#                    total_days_of_rec = count_days.days +1
+#                    tot_planned += obj_lines.planned_amount/total_days_of_rec* days_in_period
+#                res[line.id]=tot_planned
+#            else:
+#                res[line.id]=0.00
+#        return res
+#
+#    _columns = {
+#    'tot_planned':fields.function(_tot_planned,method=True, string='Total Planned Amount',type='float',store=True),
+#    }
+#
+#account_budget_post_dotation()
 
 class account_analytic_account(osv.osv):
     _name = 'account.analytic.account'
@@ -191,6 +263,52 @@ class account_analytic_account(osv.osv):
 
 account_analytic_account()
 
+#--------------------------------------------------------------
+# moved from account/project/project.py
+# ---------------------------------------------------------
+# Budgets
+# ---------------------------------------------------------
+
+#class account_analytic_budget_post(osv.osv):
+#   _name = 'account.analytic.budget.post'
+#   _description = 'Budget item'
+#   _columns = {
+#       'code': fields.char('Code', size=64, required=True),
+#       'name': fields.char('Name', size=256, required=True),
+#       'sens': fields.selection( [('charge','Charge'), ('produit','Product')], 'Direction', required=True),
+#       'dotation_ids': fields.one2many('account.analytic.budget.post.dotation', 'post_id', 'Expenses'),
+#       'account_ids': fields.many2many('account.analytic.account', 'account_analytic_budget_rel', 'budget_id', 'account_id', 'Accounts'),
+#   }
+#   _defaults = {
+#       'sens': lambda *a: 'produit',
+#   }
+#
+#   def spread(self, cr, uid, ids, fiscalyear_id=False, quantity=0.0, amount=0.0):
+#
+#       dobj = self.pool.get('account.analytic.budget.post.dotation')
+#       for o in self.browse(cr, uid, ids):
+#           # delete dotations for this post
+#           dobj.unlink(cr, uid, dobj.search(cr, uid, [('post_id','=',o.id)]))
+#
+#           # create one dotation per period in the fiscal year, and spread the total amount/quantity over those dotations
+#           fy = self.pool.get('account.fiscalyear').browse(cr, uid, [fiscalyear_id])[0]
+#           num = len(fy.period_ids)
+#           for p in fy.period_ids:
+#               dobj.create(cr, uid, {'post_id': o.id, 'period_id': p.id, 'quantity': quantity/num, 'amount': amount/num})
+#       return True
+#account_analytic_budget_post()
+#
+#class account_analytic_budget_post_dotation(osv.osv):
+#   _name = 'account.analytic.budget.post.dotation'
+#   _description = "Budget item endowment"
+#   _columns = {
+#       'name': fields.char('Name', size=64),
+#       'post_id': fields.many2one('account.analytic.budget.post', 'Item', select=True),
+#       'period_id': fields.many2one('account.period', 'Period'),
+#       'quantity': fields.float('Quantity', digits=(16,2)),
+#       'amount': fields.float('Amount', digits=(16,2)),
+#   }
+#account_analytic_budget_post_dotation()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
