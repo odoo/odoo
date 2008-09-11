@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data>
 
         <!--
@@ -54,7 +54,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem id="next_id_23" name="Periods" parent="account.menu_finance_accounting"/><menuitem action="action_account_fiscalyear_form" id="menu_action_account_fiscalyear_form" parent="next_id_23"/>
+        <menuitem id="next_id_23" name="Periods" parent="account.menu_finance_accounting"/>
+        <menuitem action="action_account_fiscalyear_form" id="menu_action_account_fiscalyear_form" parent="next_id_23"/>
 
         <!--
     Period
@@ -304,8 +305,8 @@
                     <field name="currency"/>
                     <field name="period_id" select="2"/>
                     <group colspan="2" col="3">
-                        <button name="%(wizard_populate_payment_from_inv)d"
-                            string="Import invoice" type="action" />
+                        <button name="%(wizard_populate_statement_from_inv)d"
+                            string="Import Invoice" type="action" />
                     </group>
                     <newline/>
                     <field name="balance_start"/>
@@ -358,7 +359,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="action_bank_statement_tree" id="menu_bank_statement_tree" parent="menu_finance_entries"/>
+        <menuitem action="action_bank_statement_tree" id="menu_bank_statement_tree" parent="menu_finance_entries" sequence="7"/>
 
         <record id="action_bank_statement_draft_tree" model="ir.actions.act_window">
             <field name="name">Draft statements</field>
@@ -623,7 +624,7 @@
         </record>
 
         <wizard id="action_move_journal_line_form" menu="False" model="account.move.line" name="account.move.journal" string="Entries Encoding by Line"/>
-        <menuitem action="action_move_journal_line_form" id="menu_action_move_journal_line_form" parent="account.menu_finance_entries" type="wizard"/>
+        <menuitem icon="STOCK_JUSTIFY_FILL" action="action_move_journal_line_form" id="menu_action_move_journal_line_form" parent="account.menu_finance_entries" type="wizard" sequence="5"/>
 
         <!--
     Entries lines
@@ -881,7 +882,7 @@
 
         <menuitem id="menu_finance_charts" name="Charts" parent="account.menu_finance" sequence="7"/>
         <wizard id="wizard_account_chart" menu="False" model="account.account" name="account.chart" string="Chart of Accounts"/>
-        <menuitem action="wizard_account_chart" id="menu_action_account_tree2" parent="account.menu_finance_charts" type="wizard"/>
+        <menuitem icon="STOCK_INDENT" action="wizard_account_chart" id="menu_action_account_tree2" parent="account.menu_finance_charts" type="wizard"/>
 
 
 
@@ -1678,4 +1679,4 @@
 
 
     </data>
-</terp>
+</openerp>

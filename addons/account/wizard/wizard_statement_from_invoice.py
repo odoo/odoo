@@ -185,4 +185,4 @@ class PopulateStatementFromInv(wizard.interface):
         },
     },
     }
-PopulateStatementFromInv('populate_payment_from_inv')
+PopulateStatementFromInv('populate_statement_from_inv')

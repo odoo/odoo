@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data>
 
         <menuitem icon="terp-account" id="menu_finance" name="Financial Management"/>
@@ -11,9 +11,9 @@
         <menuitem id="menu_finance_reporting" name="Reporting" parent="account.menu_finance" sequence="8"/>
 
         <menuitem id="menu_finance_entries" name="Entries Encoding" parent="account.menu_finance" sequence="2"/>
-        <menuitem id="account.menu_finance_recurrent_entries" name="Recurrent Entries" parent="account.menu_finance_entries"/>
+        <menuitem id="account.menu_finance_recurrent_entries" name="Recurrent Entries" parent="account.menu_finance_entries" sequence="15"/>
 
         <menuitem id="menu_finance_periodical_processing" name="Periodical Processing" parent="account.menu_finance" sequence="3"/>
         <menuitem id="menu_account_end_year_treatments" name="End of Year Treatments" parent="account.menu_finance_periodical_processing" sequence="20"/>
     </data>
-</terp>
+</openerp>
