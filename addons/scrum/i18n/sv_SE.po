@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 4.3.0"
 "Report-Msgid-Bugs-To: support@openerp.com"
-"POT-Creation-Date: 2008-09-10 12:54:48+0000"
-"PO-Revision-Date: 2008-09-10 12:54:48+0000"
+"POT-Creation-Date: 2008-09-11 15:39:25+0000"
+"PO-Revision-Date: 2008-09-11 15:39:25+0000"
 "Last-Translator: <>"
 "Language-Team: "
 "MIME-Version: 1.0"
@@ -112,7 +112,7 @@ msgstr ""
 #: field:scrum.project,notes:0
 #: field:scrum.task,notes:0
 msgid "Notes"
-msgstr ""
+msgstr "Anteckningar"
 
 #. module: scrum
 #: model:ir.model,name:scrum.model_scrum_product_backlog
@@ -124,7 +124,7 @@ msgstr ""
 #: field:scrum.task,project_id:0
 #: field:scrum.sprint,project_id:0
 msgid "Project"
-msgstr ""
+msgstr "Projekt"
 
 #. module: scrum
 #: help:scrum.project,warn_manager:0
@@ -171,7 +171,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:scrum.action_view_task
 #: model:ir.ui.menu,name:scrum.menu_action_view_task
 msgid "All Tasks"
-msgstr ""
+msgstr "Alla uppgifter"
 
 #. module: scrum
 #: field:scrum.task,date_deadline:0
@@ -194,12 +194,12 @@ msgstr ""
 #. module: scrum
 #: field:scrum.product.backlog,priority:0
 msgid "Priority"
-msgstr ""
+msgstr "Prioritet"
 
 #. module: scrum
 #: view:scrum.sprint:0
 msgid "State"
-msgstr ""
+msgstr "Status"
 
 #. module: scrum
 #: help:scrum.project,progress_rate:0
@@ -214,7 +214,7 @@ msgstr ""
 #. module: scrum
 #: field:scrum.task,type:0
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #. module: scrum
 #: field:scrum.sprint,scrum_master_id:0
@@ -282,7 +282,7 @@ msgstr ""
 #. module: scrum
 #: field:scrum.project,contact_id:0
 msgid "Contact"
-msgstr ""
+msgstr "Kontakt"
 
 #. module: scrum
 #: field:scrum.project,tasks:0
@@ -297,7 +297,7 @@ msgstr ""
 #. module: scrum
 #: view:scrum.product.backlog:0
 msgid "Tasks"
-msgstr ""
+msgstr "Uppgifter"
 
 #. module: scrum
 #: field:scrum.task,child_ids:0
@@ -353,7 +353,7 @@ msgstr ""
 #. module: scrum
 #: view:scrum.sprint:0
 msgid "Review"
-msgstr ""
+msgstr "Granska"
 
 #. module: scrum
 #: model:ir.actions.act_window,name:scrum.action_sprint_open_tree7
@@ -364,7 +364,7 @@ msgstr ""
 #. module: scrum
 #: field:scrum.product.backlog,note:0
 msgid "Note"
-msgstr ""
+msgstr "Anteckning"
 
 #. module: scrum
 #: selection:scrum.task,state:0
@@ -377,7 +377,7 @@ msgstr ""
 #: selection:scrum.task,priority:0
 #: selection:scrum.product.backlog,priority:0
 msgid "Low"
-msgstr ""
+msgstr "Låg"
 
 #. module: scrum
 #: model:ir.actions.act_window,name:scrum.action_view_task5
@@ -446,7 +446,7 @@ msgstr ""
 #. module: scrum
 #: field:scrum.product.backlog,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Användare"
 
 #. module: scrum
 #: field:scrum.task,date_start:0
@@ -474,7 +474,7 @@ msgstr ""
 #: field:scrum.task,active:0
 #: field:scrum.product.backlog,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktiv"
 
 #. module: scrum
 #: model:ir.actions.act_window,name:scrum.action_sprint_backlog_open
@@ -489,7 +489,7 @@ msgstr ""
 #. module: scrum
 #: field:scrum.task,user_id:0
 msgid "Assigned to"
-msgstr ""
+msgstr "Tilldelad till"
 
 #. module: scrum
 #: field:scrum.meeting,question_backlog:0
@@ -603,7 +603,7 @@ msgstr ""
 #. module: scrum
 #: field:scrum.task,description:0
 msgid "Description"
-msgstr ""
+msgstr "Beskrivning"
 
 #. module: scrum
 #: model:ir.actions.act_window,name:scrum.action_product_backlog_form_draft
@@ -614,7 +614,7 @@ msgstr ""
 #. module: scrum
 #: view:scrum.sprint:0
 msgid "Daily Meetings"
-msgstr ""
+msgstr "Dagliga möten"
 
 #. module: scrum
 #: field:scrum.task,work_ids:0
@@ -635,7 +635,7 @@ msgstr ""
 #: field:scrum.product.backlog,progress:0
 #: field:scrum.sprint,progress:0
 msgid "Progress (0-100)"
-msgstr ""
+msgstr "Förlopp (0-100)"
 
 #. module: scrum
 #: model:ir.model,name:scrum.model_scrum_team
@@ -691,7 +691,7 @@ msgstr ""
 #. module: scrum
 #: field:scrum.team,users_id:0
 msgid "Users"
-msgstr ""
+msgstr "Användare"
 
 #. module: scrum
 #: field:scrum.project,priority:0
@@ -709,6 +709,11 @@ msgstr ""
 #. module: scrum
 #: model:ir.actions.wizard,name:scrum.wizard_scrum_backlog_task
 msgid "Created tasks"
+msgstr ""
+
+#. module: scrum
+#: constraint:scrum.project:0
+msgid "Error ! You can not create recursive projects."
 msgstr ""
 
 #. module: scrum

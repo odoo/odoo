@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 4.3.0"
 "Report-Msgid-Bugs-To: support@openerp.com"
-"POT-Creation-Date: 2008-09-10 12:54:14+0000"
-"PO-Revision-Date: 2008-09-10 12:54:14+0000"
+"POT-Creation-Date: 2008-09-11 15:42:52+0000"
+"PO-Revision-Date: 2008-09-11 15:42:52+0000"
 "Last-Translator: <>"
 "Language-Team: "
 "MIME-Version: 1.0"
@@ -41,6 +41,11 @@ msgid "<="
 msgstr ""
 
 #. module: delivery
+#: constraint:product.template:0
+msgid "Error: The default UOM and the purchase UOM must be in the same category."
+msgstr ""
+
+#. module: delivery
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
 msgstr ""
@@ -64,6 +69,11 @@ msgstr ""
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
 msgid "Carrier Partner"
+msgstr ""
+
+#. module: delivery
+#: model:product.template,name:delivery.delivery_product_product_template
+msgid "Delivery by Poste"
 msgstr ""
 
 #. module: delivery
@@ -130,9 +140,8 @@ msgid "Packings to be invoiced"
 msgstr ""
 
 #. module: delivery
-#, python-format
-#: code:addons/delivery/stock.py:0
-msgid "Warning"
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
 msgstr ""
 
 #. module: delivery
@@ -198,6 +207,11 @@ msgid "Name"
 msgstr ""
 
 #. module: delivery
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
+msgstr ""
+
+#. module: delivery
 #: field:delivery.grid,country_ids:0
 msgid "Countries"
 msgstr ""
@@ -205,7 +219,7 @@ msgstr ""
 #. module: delivery
 #: view:sale.order:0
 msgid "Notes"
-msgstr ""
+msgstr "Примечания"
 
 #. module: delivery
 #: field:delivery.grid.line,variable_factor:0
@@ -336,6 +350,12 @@ msgid "Cancel"
 msgstr ""
 
 #. module: delivery
+#, python-format
+#: code:addons/delivery/stock.py:0
+msgid "Warning"
+msgstr ""
+
+#. module: delivery
 #: field:sale.order,carrier_id:0
 msgid "Delivery method"
 msgstr ""
@@ -344,6 +364,11 @@ msgstr ""
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Price"
+msgstr ""
+
+#. module: delivery
+#: constraint:res.partner:0
+msgid "The VAT doesn't seem to be correct."
 msgstr ""
 
 #. module: delivery
