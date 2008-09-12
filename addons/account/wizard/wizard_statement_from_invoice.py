@@ -44,7 +44,7 @@ START_FIELD = {
 }
 START_FORM = '''<?xml version="1.0"?>
 <form string="Import invoices in statement">
-    <label string="Choose invoice type and payment date" colspan="4"
+    <label string="Choose invoice type and payment date" colspan="4"/>
     <field name="date"/>
 </form>'''
 
