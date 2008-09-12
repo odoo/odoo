@@ -66,6 +66,7 @@
     <paraStyle name="terp_default_2" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_8_italic" fontName="Helvetica-Oblique" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Note" rightIndent="0.0" leftIndent="9.0" fontName="Helvetica-Oblique" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="Space bet user and signature" fontName="Helvetica" fontSize="4.0" leading="5" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
   </stylesheet>
   <images/>
   <story>
@@ -74,6 +75,13 @@
     <blockTable colWidths="250.0,59.0,221.0" style="Table_Address_Detail">
       <tr>
         <td>
+          <para style="terp_default_Bold_9">Expected Delivery address:</para>
+          <para style="terp_default_9">[[( order.warehouse_id and order.warehouse_id.name) or order.partner_address_id.partner_id.name]]</para>
+          <para style="terp_default_9">[[ (order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.title) or ' ']] [[ (order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.name) or order.partner_address_id.name ]]</para>
+          <para style="terp_default_9">[[ (order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.street) or order.partner_address_id.street ]]</para>
+          <para style="terp_default_9">[[ (order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.street2) or order.partner_address_id.street2 ]]</para>
+          <para style="terp_default_9">[[ (order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.zip) or order.partner_address_id.zip ]] [[ (order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.city) or order.partner_address_id.city ]]</para>
+          <para style="terp_default_9">[[(order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.state_id and order.warehouse_id.partner_address_id.state_id.name) or order.partner_address_id.state_id.name ]] [[(order.warehouse_id and order.warehouse_id.partner_address_id and order.warehouse_id.partner_address_id.country_id and order.warehouse_id.partner_address_id.country_id.name) or order.partner_address_id.country_id.name ]]</para>
           <para style="terp_default_9">
             <font color="white"> </font>
           </para>
@@ -101,7 +109,7 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <para style="terp_header">Request for quotation : [[order.name]]</para>
+    <para style="terp_header">Request for Quotation : [[order.name]]</para>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
@@ -137,7 +145,7 @@
         </tr>
         <tr>
           <td>
-            <para style="P1">[[ order_line.notes or removeParentNode('tr') ]]</para>
+            <para style="P1">[[ format(order_line.notes or removeParentNode('tr')) ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -150,11 +158,11 @@
       <font color="white"> </font>
     </para>
     <para style="terp_default_9">Regards,</para>
-    <para style="terp_default_9">[[ user.name or '' ]]</para>
-    <para style="terp_default_Bold_8">
+    <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_9">
+    <para style="terp_default_9">[[ user.name or '' ]]</para>
+    <para style="Space bet user and signature">
       <font color="white"> </font>
     </para>
     <para style="terp_default_9">[[ user.signature or '' ]]</para>
