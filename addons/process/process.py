@@ -74,6 +74,18 @@ class process_process(osv.osv):
                 data['source'] = tr.node_from_id.id
                 data['target'] = tr.node_to_id.id
 
+                data['buttons'] = buttons = []
+                for b in tr.action_ids:
+                    button = {}
+                    button['name'] = b.name
+                    buttons.append(button)
+
+                data['roles'] = roles = []
+                for r in tr.transition_ids:
+                    role = {}
+                    role['name'] = r.role_id.name
+                    roles.append(role)
+
                 transitions[tr.id] = data
 
         g = tools.graph(nodes.keys(), map(lambda x: (x['source'], x['target']), transitions.values()))
