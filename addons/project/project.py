@@ -150,31 +150,36 @@ class project(osv.osv):
 
     # toggle activity of projects, their sub projects and their tasks
     def settemplate(self, cr, uid, ids, context={}):
-        b_obj = self.browse(cr, uid, ids)[0]
-        task_data = self.pool.get('project.task').search(cr, uid, [('project_id','in',ids)])
-        for id in task_data:
-            self.pool.get('project.task').write(cr, uid, id, {'active':False})
-        return self.write(cr, uid, ids, {'state':'template'})
-    
+        res = self.setActive(cr, uid, ids, value=False, context=context) 
+        return res   
+       
     def resetproject(self, cr, uid, ids, context={}):
-        cr.execute('select id from project_task where project_id in ('+','.join(map(str, ids))+')')
-        for id in cr.fetchall():
-            self.pool.get('project.task').write(cr, uid, id[0], {'active':True})
-        return self.write(cr, uid, ids, {'state':'open'})
+        res = self.setActive(cr, uid, ids,value=True, context=context)
+        return res
     
     def duplicatetemplate(self, cr, uid, ids, context={}):
-        return self.pool.get('project.project').copy(cr, uid, ids[0], context=context)
+        proj = self.browse(cr, uid, ids[0], context)
+        self.pool.get('project.project').copy(cr, uid, ids[0],default={'state':'template'}, context=context)
+        cr.execute('select id from project_task where project_id=%d', (proj.id,))
+        res = cr.fetchall()
+        tasks_ids = [x[0] for x in res]
+        if tasks_ids:
+            for i in tasks_ids:
+                self.pool.get('project.task').copy(cr, uid, i,default={'active':False}, context=context)
+                project_ids = [x[0] for x in res]
+        return True
 
     # set active value for a project, its sub projects and its tasks
-    def setActive(self, cr, uid, id, value, context={}):
-        proj = self.browse(cr, uid, id, context)
-        self.write(cr, uid, [id], {'active': value}, context)
-        cr.execute('select id from project_task where project_id=%d', (proj.id,))
-        tasks_id = [x[0] for x in cr.fetchall()]
-        self.pool.get('project.task').write(cr, uid, tasks_id, {'active': value}, context)
-        project_ids = [x[0] for x in cr.fetchall()]
-        for child in project_ids:
-            self.setActive(cr, uid, child, value, context)
+    def setActive(self, cr, uid, ids, value=True, context={}):   
+
+        for proj in self.browse(cr, uid, ids, context):
+            self.write(cr, uid, [proj.id], {'state': value and 'open' or 'template'}, context)
+            cr.execute('select id from project_task where project_id=%d', (proj.id,))
+            res = cr.fetchall()
+            tasks_id = [x[0] for x in res]
+            if tasks_id:
+                self.pool.get('project.task').write(cr, uid, tasks_id, {'active': value}, context)
+                project_ids = [x[0] for x in res]
         return True
 project()
 
