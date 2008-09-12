@@ -122,6 +122,7 @@
                     <field name="currency_id"/>
                     <field name="date_invoice"/>
                     <field name="date_due" select="1"/>
+                    <field name="residual"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -181,6 +182,7 @@
                                 <button colspan="2" name="button_compute" states="draft" string="Compute" type="object"/>
                                 <field name="amount_total"/>
                                 <field name="reconciled"/>
+                                <field name="residual"/>
                                 <field name="state" select="2"/>
                                 <group col="3" colspan="4">
                                     <button name="invoice_open" states="draft,proforma" string="Validate"/>
@@ -206,6 +208,9 @@
                             <separator colspan="4" string="Additionnal Information"/>
                             <field colspan="4" name="comment" nolabel="1"/>
                         </page>
+                        <page string="Payments">
+							<field name="move_lines" colspan="4"/>
+						</page>
                     </notebook>
                 </form>
             </field>
@@ -251,6 +256,7 @@
                                 <button colspan="2" name="button_compute" states="draft" string="Compute" type="object"/>
                                 <field name="amount_total"/>
                                 <field name="reconciled"/>
+                                <field name="residual"/>
                                 <field name="state" select="2"/>
                                 <group col="3" colspan="4">
                                     <button name="invoice_proforma" states="draft" string="PRO-FORMA"/>
@@ -276,6 +282,9 @@
                             <separator colspan="4" string="Additionnal Information"/>
                             <field colspan="4" name="comment" nolabel="1"/>
                         </page>
+                        <page string="Payments">
+							<field name="move_lines" colspan="4" nolabel="1"/>
+						</page>
                     </notebook>
                 </form>
             </field>

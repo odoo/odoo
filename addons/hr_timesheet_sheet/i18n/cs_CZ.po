@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 4.3.0"
 "Report-Msgid-Bugs-To: support@openerp.com"
-"POT-Creation-Date: 2008-09-10 12:47:51+0000"
-"PO-Revision-Date: 2008-09-10 12:47:51+0000"
+"POT-Creation-Date: 2008-09-11 15:40:34+0000"
+"PO-Revision-Date: 2008-09-11 15:40:34+0000"
 "Last-Translator: <>"
 "Language-Team: "
 "MIME-Version: 1.0"
@@ -33,12 +33,6 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: constraint:ir.model:0
 msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#, python-format
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
-msgid "You can not modify an entry in a confirmed timesheet !"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -86,6 +80,7 @@ msgid "Draft"
 msgstr ""
 
 #. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form
 #: model:ir.ui.menu,name:hr_timesheet_sheet.next_id_60
 #: view:res.company:0
@@ -147,8 +142,10 @@ msgid "Attendances"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet.account,invoice_rate:0
-msgid "Invoice rate"
+#, python-format
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#: code:addons/hr_timesheet_sheet/wizard/wizard_timesheet_current.py:0
+msgid "Error !"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -272,6 +269,11 @@ msgid "Daily View"
 msgstr ""
 
 #. module: hr_timesheet_sheet
+#: constraint:hr_timesheet_sheet.sheet:0
+msgid "You must select a Current date wich is in the timesheet dates !"
+msgstr ""
+
+#. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "By Day"
 msgstr ""
@@ -299,9 +301,8 @@ msgid "Go to:"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form_all_valid
-#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_all_valid
-msgid "Timesheets To Validate"
+#: field:hr_timesheet_sheet.sheet.account,invoice_rate:0
+msgid "Invoice rate"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -312,8 +313,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #, python-format
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
-#: code:addons/hr_timesheet_sheet/wizard/wizard_timesheet_current.py:0
-msgid "Error !"
+msgid "You can not modify an entry in a confirmed timesheet !"
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -350,7 +350,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: view:res.company:0
 msgid "Configuration"
-msgstr ""
+msgstr "Konfigurace"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form_my
@@ -409,6 +409,12 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,date_current:0
 msgid "Current date"
+msgstr ""
+
+#. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form_all_valid
+#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_all_valid
+msgid "Timesheets To Validate"
 msgstr ""
 
 #. module: hr_timesheet_sheet
