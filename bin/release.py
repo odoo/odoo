@@ -49,5 +49,22 @@ author_email = 'info@tiny.be'
 support_email = 'support@openerp.com'
 license = 'GPL-2'
 
+try:
+    # if the sources are taken from the bzr repository, 
+    # append the revision number and the date of the bzr branch
+    from bzrlib.branch import Branch
+    from bzrlib.osutils import format_date
+    try:
+        from os.path import dirname
+        _branch = Branch.open(dirname(dirname(__file__)))
+        _lastrev = _branch.repository.get_revision(_branch.last_revision())
+        _date = format_date(_lastrev.timestamp, _lastrev.timezone)
+        version = "%s~bzr-%s (%s)" % (version, _branch.revno(), _date)
+    except:
+        # This is not because bzr is installed that openerp is under revision.
+        pass
+except ImportError:
+    pass
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
