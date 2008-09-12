@@ -63,7 +63,7 @@ class budget_report(report_sxw.rml_parse):
             for k in r:
                 res[k] += r[k]
         return [res]
-        
+
     def lines(self, post_obj, date1, date2):
         res = []
         for a in post_obj.account_ids:
@@ -71,7 +71,7 @@ class budget_report(report_sxw.rml_parse):
             achievements = float(self.cr.fetchone()[0]) * (post_obj.sens=='produit' and -1 or 1)
             res.append({'name': a.name, 'code': a.code, 'achievements': achievements})
         return res
-report_sxw.report_sxw('report.account.budget', 'account.budget.post', 'addons/account/report/budget_report.rml',parser=budget_report)
+report_sxw.report_sxw('report.account.budget', 'account.budget.post', 'addons/account_budget/report/budget_report.rml',parser=budget_report)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
