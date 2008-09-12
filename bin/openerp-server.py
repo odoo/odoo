@@ -37,9 +37,6 @@ GNU Public Licence.
 
 (c) 2003-TODAY, Fabien Pinckaers - Tiny sprl
 """
-import release
-__author__ = release.author
-__version__ = release.version
 
 #----------------------------------------------------------
 # python imports
@@ -53,6 +50,11 @@ import sys, os, signal
 _oldxml = '/usr/lib/python%s/site-packages/oldxml' % sys.version[:3]
 if os.path.exists(_oldxml):
     sys.path.append(_oldxml)
+
+
+import release
+__author__ = release.author
+__version__ = release.version
 
 #----------------------------------------------------------
 # get logger
