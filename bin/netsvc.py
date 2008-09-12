@@ -177,6 +177,27 @@ def init_logger():
     logging.getLogger().addHandler(handler)
     logging.getLogger().setLevel(logging.INFO)
 
+    if isinstance(handler, logging.StreamHandler) and os.name != 'nt':
+        # change color of level names
+        # uses of ANSI color codes
+        # see http://pueblo.sourceforge.net/doc/manual/ansi_color_codes.html
+        # maybe use http://code.activestate.com/recipes/574451/
+        colors = ['black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', None, 'default']
+        foreground = lambda f: 30 + colors.index(f)
+        background = lambda f: 40 + colors.index(f)
+        
+        mapping = {
+            'DEBUG': ('blue', 'default'),
+            'INFO': ('green', 'default'),
+            'WARNING': ('yellow', 'default'),
+            'ERROR': ('red', 'default'),
+            'CRITICAL': ('white', 'red'),
+        }
+
+        for level, (fg, bg) in mapping.items():
+            msg = "\x1b[%dm\x1b[%dm%s\x1b[0m" % (foreground(fg), background(bg), level)
+            logging.addLevelName(getattr(logging, level), msg)
+
 
 class Logger(object):
     def notifyChannel(self, name, level, msg):
