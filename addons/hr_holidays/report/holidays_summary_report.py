@@ -66,7 +66,7 @@ def emp_create_xml(self,cr,uid,dept,holiday_type,row_id,empid,name,som,eom):
     return xml
 
 class report_custom(report_rml):
-    def create_xml(self, cr, uid, ids,data, context):
+    def create_xml(self, cr, uid, ids, data, context):
         depts=[]
         emp_id={}
         done={}
@@ -86,7 +86,6 @@ class report_custom(report_rml):
 
         som = strToDate(first_date)
         eom = som+datetime.timedelta(59)
-
         day_diff=eom-som
 
         if data['form']['holiday_type']!='both':
