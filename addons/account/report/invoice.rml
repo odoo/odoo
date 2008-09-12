@@ -195,9 +195,6 @@
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
-    <paraStyle name="P1" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P2" rightIndent="0.0" leftIndent="-88.0" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P3" rightIndent="26.0" leftIndent="0.0" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="List" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -279,7 +276,7 @@
           <para style="terp_tblheader_General_Centre">Invoice Date</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">Partner Code</para>
+          <para style="terp_tblheader_General_Centre">Partner Ref.</para>
         </td>
       </tr>
     </blockTable>
@@ -299,7 +296,7 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="211.0,62.0,63.0,63.0,51.0,74.0" style="Table_Header_Invoice_Line">
+    <blockTable colWidths="211.0,62.0,63.0,63.0,36.0,89.0" style="Table_Header_Invoice_Line">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Description</para>
@@ -317,13 +314,13 @@
           <para style="terp_tblheader_Details_Right">Disc. (%)</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Price</para>
+          <para style="terp_tblheader_Details_Centre">Price</para>
         </td>
       </tr>
     </blockTable>
     <section>
       <para style="terp_default_8">[[ repeatIn(o.invoice_line,'l') ]]</para>
-      <blockTable colWidths="211.0,62.0,36.0,27.0,63.0,51.0,46.0,26.0" style="Table_Invoice_Line_Content">
+      <blockTable colWidths="211.0,62.0,36.0,27.0,63.0,36.0,62.0,26.0" style="Table_Invoice_Line_Content">
         <tr>
           <td>
             <para style="terp_default_9">[[ l.name ]]</para>
@@ -352,41 +349,43 @@
         </tr>
         <tr>
           <td>
-            <para style="terp_default_Note">[[ repeatIn((l.note and l.note.splitlines()) or [], 'note') ]]</para>
-            <para style="terp_default_Note">[[ note or removeParentNode('para') ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_8">
+            <para style="terp_default_Note">[[ format(l.note or removeParentNode('tr')) ]]</para>
+            <para style="terp_default_Note">
               <font color="white"> </font>
             </para>
           </td>
           <td>
-            <para style="terp_default_8">
+            <para style="terp_default_Note">
               <font color="white"> </font>
             </para>
           </td>
           <td>
-            <para style="terp_default_8">
+            <para style="terp_default_Note">
               <font color="white"> </font>
             </para>
           </td>
           <td>
-            <para style="terp_default_8">
+            <para style="terp_default_Note">
               <font color="white"> </font>
             </para>
           </td>
           <td>
-            <para style="terp_default_8">
+            <para style="terp_default_Note">
               <font color="white"> </font>
             </para>
           </td>
           <td>
-            <para style="terp_default_8">
+            <para style="terp_default_Note">
               <font color="white"> </font>
             </para>
           </td>
           <td>
-            <para style="terp_default_8">
+            <para style="terp_default_Note">
+              <font color="white"> </font>
+            </para>
+          </td>
+          <td>
+            <para style="terp_default_Note">
               <font color="white"> </font>
             </para>
           </td>
@@ -502,7 +501,7 @@
       </tr>
       <tr>
         <td>
-          <blockTable colWidths="53.0,61.0,65.0" style="Table_Table_Border_White">
+          <blockTable colWidths="53.0,60.0,65.0" style="Table_Table_Border_White">
             <tr>
               <td>
                 <para style="terp_default_2">
@@ -555,9 +554,6 @@
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_2">
-      <font color="white"> </font>
-    </para>
     <para style="terp_default_2">
       <font color="white"> </font>
     </para>
