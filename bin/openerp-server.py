@@ -41,12 +41,6 @@ import release
 __author__ = release.author
 __version__ = release.version
 
-import __builtin__
-__builtin__.__dict__['openerp_version'] = __version__
-__builtin__.__dict__['openerp_version_string'] = "OpenERP Server " + __version__
-
-
-
 #----------------------------------------------------------
 # python imports
 #----------------------------------------------------------

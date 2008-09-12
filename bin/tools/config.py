@@ -29,7 +29,7 @@
 
 import ConfigParser,optparse,os,sys
 import netsvc,logging
-
+import release
 
 class configmanager(object):
     def __init__(self, fname=None):
@@ -74,7 +74,8 @@ class configmanager(object):
         
         assert_exit_levels = (netsvc.LOG_CRITICAL, netsvc.LOG_ERROR, netsvc.LOG_WARNING, netsvc.LOG_INFO, netsvc.LOG_DEBUG)
 
-        parser = optparse.OptionParser(version=openerp_version_string)
+        version = "%s %s" % (release.description, release.version)
+        parser = optparse.OptionParser(version=version)
         
         parser.add_option("-c", "--config", dest="config", help="specify alternate config file")
         parser.add_option("-s", "--save", action="store_true", dest="save", default=False, help="save configuration to ~/.openerp_serverrc")
