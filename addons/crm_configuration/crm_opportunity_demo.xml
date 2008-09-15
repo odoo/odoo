@@ -87,24 +87,24 @@
 	<record model="ir.actions.act_window" id="crm_case_category_act_oppor11">
 		<field name="name">All Opportunities</field>
 		<field name="res_model">crm.case</field>
-		<field name="view_mode">calendar,tree,form</field>
+		<field name="view_mode">tree,form,calendar</field>
 		<field name="view_id" ref="crm_case_tree_view_oppor"/>
 		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support3)+')]'"/>
 	</record>
 	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_oppor11">
-		<field name="sequence" eval="1"/>
+		<field name="sequence" eval="3"/>
 		<field name="view_mode">calendar</field>
 		<field name="view_id" ref="crm_case_calendar_view_oppor"/>
 		<field name="act_window_id" ref="crm_case_category_act_oppor11"/>
 	</record>
 	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_oppor11">
-		<field name="sequence" eval="2"/>
+		<field name="sequence" eval="1"/>
 		<field name="view_mode">tree</field>
 		<field name="view_id" ref="crm_case_tree_view_oppor"/>
 		<field name="act_window_id" ref="crm_case_category_act_oppor11"/>
 	</record>
 	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_oppor11">
-		<field name="sequence" eval="3"/>
+		<field name="sequence" eval="2"/>
 		<field name="view_mode">form</field>
 		<field name="view_id" ref="crm_case_form_view_oppor"/>
 		<field name="act_window_id" ref="crm_case_category_act_oppor11"/>
@@ -193,18 +193,18 @@
 	<record model="ir.actions.act_window" id="crm_case_category_act_oppor22">
 		<field name="name">My Opportunities</field>
 		<field name="res_model">crm.case</field>
-		<field name="view_mode">calendar,tree,form</field>
+		<field name="view_mode">tree,calendar,form</field>
 		<field name="view_id" ref="crm_case_calendar_view_oppor"/>
 		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support3)+'),(\'user_id\',\'=\',uid)]'"/>
 	</record>
 	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_oppor22">
-		<field name="sequence" eval="1"/>
+		<field name="sequence" eval="2"/>
 		<field name="view_mode">calendar</field>
 		<field name="view_id" ref="crm_case_calendar_view_oppor"/>
 		<field name="act_window_id" ref="crm_case_category_act_oppor22"/>
 	</record>
 	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_oppor22">
-		<field name="sequence" eval="2"/>
+		<field name="sequence" eval="1"/>
 		<field name="view_mode">tree</field>
 		<field name="view_id" ref="crm_case_tree_view_oppor"/>
 		<field name="act_window_id" ref="crm_case_category_act_oppor22"/>

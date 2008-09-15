@@ -41,6 +41,7 @@ import netsvc
 import base64
 import wizard
 import photo_shadow
+from tools import config
 
 def escape(s):
     return str(s or '').replace('<br/>','').decode('latin1','replace').encode('utf-8')
@@ -91,15 +92,13 @@ class auction_catalog(report_rml):
 
     #         promotion element
             promo = doc.createElement('promotion1')
-
-            #fp = file('/home/tiny/terp/4.2/server/bin/addons/auction/report/images/flagey_logo.jpg','r')
-            fp = file('/home/pinky/code/terp/branches/extra_addons/trunk/auction/report/images/flagey_logo.jpg','r')
+            
+            fp = file(config['addons_path']+'/auction/report/images/flagey_logo.jpg','r')
             file_data = fp.read()
             promo.appendChild(doc.createTextNode(base64.encodestring(file_data)))
             catalog.appendChild(promo)
             promo = doc.createElement('promotion2')
-            #fp = file('/home/tiny/terp/4.2/server/bin/addons/auction/report/images/aeko_logo.jpg','r')
-            fp = file('/home/pinky/code/terp/branches/extra_addons/trunk/auction/report/images/flagey_logo.jpg','r')
+            fp = file(config['addons_path']+'/auction/report/images/flagey_logo.jpg','r')
             file_data = fp.read()
             promo.appendChild(doc.createTextNode(base64.encodestring(file_data)))
             catalog.appendChild(promo)
@@ -132,12 +131,10 @@ class auction_catalog(report_rml):
                         infos.appendChild(lnum)
 
                     dest = os.path.join('/tmp/pdf_catalog/',str(cwid),str(cat['obj_desc'])+'.jpg')
-                    print dest
                     if not cat['image']:
-                        print "Cat wiht no Image "
+                        print "Cat with no Image "
 
                     else:
-                            print"in else "
                             import random
                             limg = doc.createElement('photo_small')
                             file_name = '/tmp/image_%d.jpg' % (random.randint(1,1000),)
