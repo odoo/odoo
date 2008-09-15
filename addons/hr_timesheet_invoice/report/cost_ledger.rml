@@ -164,11 +164,6 @@
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
-    <paraStyle name="P1" rightIndent="0.0" leftIndent="-5.0" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P2" rightIndent="0.0" leftIndent="-2.0" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P3" rightIndent="0.0" leftIndent="-4.0" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P4" rightIndent="0.0" leftIndent="-3.0" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P5" rightIndent="0.0" leftIndent="-1.0" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="List" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -199,6 +194,10 @@
     <paraStyle name="terp_default_Centre_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_bold_right_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_bold_8_20" rightIndent="0.0" leftIndent="-6.0" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_bold_9_20" rightIndent="0.0" leftIndent="-6.0" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_bold_9_10" rightIndent="0.0" leftIndent="-3.0" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_bold_8_10" rightIndent="0.0" leftIndent="-3.0" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
   </stylesheet>
   <images/>
   <story>
@@ -297,7 +296,7 @@
       <blockTable colWidths="481.0" style="Table_account_code_name">
         <tr>
           <td>
-            <para style="P4">[[ o.code ]] [[ o.complete_name ]]</para>
+            <para style="terp_default_bold_9_20">[[ o.code ]] [[ o.complete_name ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -312,7 +311,7 @@
               <blockTable colWidths="471.0" style="Table4">
                 <tr>
                   <td>
-                    <para style="P1">[[ move_g['code'] ]] [[ move_g['name'] ]]</para>
+                    <para style="terp_default_bold_8_10">[[ move_g['code'] ]] [[ move_g['name'] ]]</para>
                     <para style="terp_default_8">
                       <font color="white"> </font>
                     </para>
@@ -348,7 +347,7 @@
               <blockTable colWidths="310.0,52.0,57.0,57.0" style="Table_move_repeat">
                 <tr>
                   <td>
-                    <para style="P3">Total ([[ move_g['code'] ]])</para>
+                    <para style="terp_default_bold_9_10">Total ([[ move_g['code'] ]])</para>
                   </td>
                   <td>
                     <para style="terp_default_bold_right_9">[[ '%.2f' % move_g['debit'] ]]</para>
@@ -368,7 +367,7 @@
       <blockTable colWidths="312.0,57.0,57.0,56.0" style="Table_account_code_total">
         <tr>
           <td>
-            <para style="P2">Total ([[ o.code ]])</para>
+            <para style="terp_default_bold_9_10">Total ([[ o.code ]])</para>
           </td>
           <td>
             <para style="terp_default_bold_right_9">[[ '%.2f' % (account_sum_debit(o.id,data['form']['date1'],data['form']['date2']) or 0.0) ]]</para>
@@ -385,7 +384,7 @@
     <blockTable colWidths="311.0,59.0,56.0,57.0" style="Table_account_total">
       <tr>
         <td>
-          <para style="P5">Total</para>
+          <para style="terp_default_bold_9_10">Total</para>
         </td>
         <td>
           <para style="terp_default_bold_right_9">[[ '%.2f' % (sum_debit(objects,data['form']['date1'],data['form']['date2']) or 0.0) ]]</para>
