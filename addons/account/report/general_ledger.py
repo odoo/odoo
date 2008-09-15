@@ -109,7 +109,7 @@ class general_ledger(report_sxw.rml_parse):
             res = []
         return res
 
-    def lines(self, account, form):
+    def lines(self, account, form, history=False):
         self.ids +=[account.id]
         if not account.check_history and not history:
             return []
