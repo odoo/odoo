@@ -1349,7 +1349,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.config.fiscalyear</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
+            <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
 
@@ -1357,8 +1357,8 @@
         <!-- register configuration wizard -->
 
         <record id="config_fiscalyear" model="ir.module.module.configuration.step">
-            <field name="name">Define fiscal years</field>
-            <field name="note">Define fiscal years</field>
+            <field name="name">Define Fiscal Years</field>
+            <field name="note">Define Fiscal Years</field>
             <field name="action_id" ref="action_config_fiscalyear_form"/>
             <field name="state">open</field>
         </record>
