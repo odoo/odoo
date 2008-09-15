@@ -301,7 +301,7 @@ class sale_order(osv.osv):
     def _inv_get(self, cr, uid, order, context={}):
         return {}
 
-    def _make_invoice(self, cr, uid, order, lines):
+    def _make_invoice(self, cr, uid, order, lines, context={}):
         a = order.partner_id.property_account_receivable.id
         if order.payment_term:
             pay_term = order.payment_term.id
@@ -781,7 +781,7 @@ class sale_order_line(osv.osv):
         if not product:
             return {'value': {'th_weight' : 0, 'product_packaging': False,
                 'product_uos_qty': qty}, 'domain': {'product_uom': [],
-                    'product_uos': []}}        
+                    'product_uos': []}}
 
         if not date_order:
             date_order = time.strftime('%Y-%m-%d')
@@ -793,7 +793,7 @@ class sale_order_line(osv.osv):
             pack = self.pool.get('product.packaging').browse(cr, uid, packaging, context)
             q = product_uom_obj._compute_qty(cr, uid, uom, pack.qty, default_uom)
             qty = qty - qty % q + q
-            result['product_uom_qty'] = qty        
+            result['product_uom_qty'] = qty
 
         if uom:
             uom2 = product_uom_obj.browse(cr, uid, uom)
@@ -884,7 +884,7 @@ class sale_order_line(osv.osv):
                     'message':
                         "Couldn't find a pricelist line matching this product and quantity.\n"
                         "You have to change either the product, the quantity or the pricelist."
-                    }                
+                    }
             else:
                 result.update({'price_unit': price})
 
