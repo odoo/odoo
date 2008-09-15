@@ -4,7 +4,7 @@
         <!--
         Partners Extension
     -->
-        
+
         <record id="view_partner_property_form" model="ir.ui.view">
             <field name="name">res.partner.property.form.inherit</field>
             <field name="model">res.partner</field>
@@ -34,7 +34,7 @@
                         <separator string="Supplier Debit" colspan="2"/>
                         <field name="debit" select="2"/>
                     </group>
-                    <field colspan="4" context="address=address" name="bank_ids" nolabel="1">
+                    <field colspan="4" context="address=address" name="bank_ids" nolabel="1" select="2">
                         <form string="Bank account">
                             <field name="state" select="2"/>
                             <newline/>
