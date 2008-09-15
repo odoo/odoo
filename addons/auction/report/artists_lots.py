@@ -38,13 +38,11 @@ class report_artistlot(report_int):
     def create(self,cr, uid, ids, datas, context):
         service = netsvc.LocalService("object_proxy")
         lots = service.execute(cr.dbname,uid, 'auction.lots', 'read', ids, ['artist_id'])
-        print " THE VALUE GET BY THE ARTIST TABLE",lots;
         artists = []
         for lot in lots:
             if lot['artist_id'] and lot['artist_id'] not in artists:
                 artists.append(lot['artist_id'][0])
 
-        print "THE VALUES OF ARTIST LIST",artists;
         if not len(artists):
             raise 'UserError', 'Objects '
 

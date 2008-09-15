@@ -92,7 +92,6 @@ class auction_dates(osv.osv):
     _order = "auction1 desc"
 
     def close(self, cr, uid, ids, *args):
-        print "GGGGGGGGGGGGGGGggg"
         """
         Close an auction date.
 
@@ -107,13 +106,11 @@ class auction_dates(osv.osv):
         ach_uids = {}
         cr.execute('select id from auction_lots where auction_id in ('+','.join(map(str,ids))+') and state=%s and obj_price>0', ('draft',))
         r=self.pool.get('auction.lots').lots_invoice(cr, uid, [x[0] for x in cr.fetchall()],{},None)
-        print "RRRRRRRRRRRRRRRRrrrr",r
         cr.execute('select id from auction_lots where auction_id in ('+','.join(map(str,ids))+') and obj_price>0')
         ids2 = [x[0] for x in cr.fetchall()]
     #   for auction in auction_ids:
         c=self.pool.get('auction.lots').seller_trans_create(cr, uid, ids2,{})
         self.write(cr, uid, ids, {'state':'closed'}) #close the auction
-        print "jjjjjjjjjjjjjjjj"
         return True
 auction_dates()
 
@@ -443,7 +440,7 @@ class auction_lots(osv.osv):
         'ach_login': fields.char('Buyer Username',size=64),
         'ach_uid': fields.many2one('res.partner', 'Buyer'),
         'ach_emp': fields.boolean('Taken Away'),
-        'is_ok': fields.boolean('Buyer s payment'),
+        'is_ok': fields.boolean('Buyer\'s payment'),
         'ach_inv_id': fields.many2one('account.invoice','Buyer Invoice', readonly=True, states={'draft':[('readonly',False)]}),
         'sel_inv_id': fields.many2one('account.invoice','Seller Invoice', readonly=True, states={'draft':[('readonly',False)]}),
         'vnd_lim': fields.float('Seller limit'),
@@ -644,6 +641,8 @@ class auction_lots(osv.osv):
                 res = self.pool.get('res.partner').address_get(cr, uid, [partner_ref], ['contact', 'invoice'])
                 contact_addr_id = res['contact']
                 invoice_addr_id = res['invoice']
+                if not invoice_addr_id:
+                    raise orm.except_orm('No Invoice Address', 'The Buyer "%s" has no Invoice Address.' % (contact_addr_id,))
                 inv = {
                     'name': 'Auction proforma:' +lot.name,
                     'journal_id': lot.auction_id.journal_id.id,
@@ -756,9 +755,7 @@ class auction_lots(osv.osv):
         dt = time.strftime('%Y-%m-%d')
         inv_ref=self.pool.get('account.invoice')
         invoices={}
-        print "KKKKKKKKKKKKKKKKK"
         for lot in self.browse(cr, uid, ids,context):
-            print "LLLLLLLLLLLLLLLL"
         #   partner_ref = lot.ach_uid.id
             if not lot.auction_id.id:
                 continue
@@ -768,6 +765,9 @@ class auction_lots(osv.osv):
             if (lot.auction_id.id,lot.ach_uid.id) in invoices:
                 inv_id = invoices[(lot.auction_id.id,lot.ach_uid.id)]
             else:
+                add = partner_r.read(cr, uid, [lot.ach_uid.id], ['address'])[0]['address']
+                if not len(add):
+                    raise orm.except_orm('Missed Address !', 'The Buyer has no Invoice Address.')
                 price = lot.obj_price or 0.0
                 lot_name =lot.obj_num
                 inv={
@@ -776,13 +776,13 @@ class auction_lots(osv.osv):
                     'journal_id': lot.auction_id.journal_id.id,
                     'partner_id': lot.ach_uid.id,
                     'type': 'out_invoice',
+                    
                 }
                 if invoice_number:
                     inv['number'] = invoice_number
                 inv.update(inv_ref.onchange_partner_id(cr,uid, [], 'out_invoice', lot.ach_uid.id)['value'])
                 #inv['account_id'] = inv['account_id'] and inv['account_id'][0]
                 inv_id = inv_ref.create(cr, uid, inv, context)
-                print "IN>>>>>>>>>>>>ID",inv_id
                 invoices[(lot.auction_id.id,lot.ach_uid.id)] = inv_id
             self.write(cr,uid,[lot.id],{'ach_inv_id':inv_id,'state':'sold'})
             #calcul des taxes
@@ -848,7 +848,10 @@ class auction_bid(osv.osv):
         if not partner_id:
             return {'value': {'contact_tel':False}}
         contact = self.pool.get('res.partner').browse(cr, uid, partner_id)
-        v_contact=contact.address[0] and contact.address[0].phone or False
+        if len(contact.address):
+            v_contact=contact.address[0] and contact.address[0].phone
+        else:
+            v_contact = False
         return {'value': {'contact_tel': v_contact}}
 
 auction_bid()
@@ -876,7 +879,6 @@ class auction_bid_lines(osv.osv):
 #       lots=self.browse(cr,uid,ids)
 #       for lot in lots:
 #           res[lot.id] = lot.lot_id.auction_id.name
-#           print lot.lot_id.auction_id.name
 #       return res
     _columns = {
         'name': fields.char('Bid date',size=64),
@@ -1026,6 +1028,7 @@ class report_seller_auction2(osv.osv):
     _name = "report.seller.auction2"
     _description = "Auction Reporting on seller view2"
     _auto = False
+    _rec_name = 'date'
     _columns = {
         'seller': fields.many2one('res.partner','Seller',readonly=True, select=1),
         'auction': fields.many2one('auction.dates', 'Auction date',readonly=True, select=1),

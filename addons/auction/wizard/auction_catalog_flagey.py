@@ -9,7 +9,6 @@ def _wo_check(self, cr, uid, data, context):
     v_lots=pool.get('auction.lots').search(cr,uid,[('auction_id','=',current_auction.id)])
     v_ids=pool.get('auction.lots').browse(cr,uid,v_lots)
     for ab in v_ids:
-        print ab.auction_id.id
         if not ab.auction_id :
             raise wizard.except_wizard('Error!','No Lots belong to this Auction Date')
     return 'report'

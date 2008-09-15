@@ -59,28 +59,18 @@ class buyer_form_report(report_sxw.rml_parse):
         return amount
     def buyer_info(self):
         objects = [object for object in self.localcontext.get('objects')]
-        print "OBJECTS",objects
         ret_dict = {}
         ret_list = []
         for object in objects:
-            print "Object :",object
-#           print ret_dict
-
             partner = ret_dict.get(object.ach_uid.id,False)
-            print "Partner :",partner
             if not partner:
-
                 ret_dict[object.ach_uid.id] = {'partner' : object.ach_uid or False,'lots':[object]}
             else:
-
                 lots = partner.get('lots')
-                print "Lots :",lots
                 lots.append(object)
-#       print 'ret dict :',ret_dict
 #       buyer_ids=self.pool.get(auction.lots).read(cr,uid,lot)
 
 
-        print "Return ret_dict.values() :",ret_dict.values()
         return ret_dict.values()
 
     def grand_buyer_total(self,o):

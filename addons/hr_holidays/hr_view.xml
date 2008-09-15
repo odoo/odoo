@@ -74,6 +74,8 @@
                     <field colspan="4" name="name" select="1"/>
 					<field name="color_name" select="2"/>
 					<field name="section_id"  select="1" />
+					<field name="limit" select="2"/>
+					<field name="active" select="2"/>
                 </form>
 			</field>
 		</record>
@@ -87,6 +89,8 @@
                     <field name="name"/>
 					<field name="color_name" />
 					<field name="section_id" />
+					<field name="limit" select="2"/>
+					<field name="active" select="2"/>
                 </tree>
 			</field>
 		</record>
@@ -112,6 +116,7 @@
 					<field name="max_leaves" select="2"  colspan="2" />
 					<newline/>
 					<field name="leaves_taken" select="2" colspan="2" />
+					<field name="active" select="2"/>
 					<newline/>
 					<field name="notes" colspan="4" />
 				</form>
@@ -127,6 +132,7 @@
 					<field name="holiday_status"/>
 					<field name="max_leaves"/>
 					<field name="leaves_taken"/>
+					<field name="active" select="2"/>
 				</tree>
 			</field>
 		</record>

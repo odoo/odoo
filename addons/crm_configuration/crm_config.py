@@ -2,7 +2,7 @@
 import time
 import tools
 from osv import fields,osv,orm
-
+import os
 import mx.DateTime
 import base64
 
@@ -49,6 +49,48 @@ class crm_cases(osv.osv):
 
 crm_cases()
 
+class crm_menu_config_wizard(osv.osv_memory):
+    
+    _name='crm.menu.config_wizard'
+    _columns = {
+        'name':fields.char('Name', size=64),
+        'meeting' : fields.boolean('Calendar of Meetings'),
+        'lead' : fields.boolean('Leads'),
+        'opportunity' : fields.boolean('Business Opportunities'),
+        'jobs' : fields.boolean('Jobs Hiring Process'),
+        'bugs' : fields.boolean('Bug Tracking'),
+        'fund' : fields.boolean('Fund Raising Operations'),
+    }
+    
+    def action_create(self, cr, uid, ids, *args):
+        for res in self.read(cr,uid,ids):
+            res.__delitem__('id')
+    #        'update'
+            for section in res :
+                if res[section]:
+                    file_name = 'crm_'+section+'_demo.xml'
+                    try:
+                        tools.convert_xml_import(cr, 'crm_configuration', tools.file_open(os.path.join('crm_configuration',file_name )),  {}, 'init', *args)
+                    except Exception, e:
+                        raise osv.except_osv('Error !', e)
+                        
+        return {
+                'view_type': 'form',
+                "view_mode": 'form',
+                'res_model': 'ir.module.module.configuration.wizard',
+                'type': 'ir.actions.act_window',
+                'target':'new',
+         }
+    def action_cancel(self,cr,uid,ids,conect=None):
+        return {
+                'view_type': 'form',
+                "view_mode": 'form',
+                'res_model': 'ir.module.module.configuration.wizard',
+                'type': 'ir.actions.act_window',
+                'target':'new',
+         }
+        
+crm_menu_config_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
