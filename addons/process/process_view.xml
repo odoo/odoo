@@ -136,7 +136,19 @@
                 <field name="target_node_id" select="1"/>
                 <notebook colspan="4">
                 <page string="Actions">
-                    <field name="action_ids" nolabel="1" colspan="4"/>
+                    <field name="action_ids" nolabel="1" colspan="4">
+                        <tree string="Actions">
+                            <field name="name"/>
+                            <field name="state"/>
+                            <field name="action"/>
+                        </tree>
+                        <form string="Actions">
+                            <field name="name" colspan="4"/>
+                            <newline/>
+                            <field name="state"/>
+                            <field name="action"/>
+                        </form>
+                    </field>
                 </page><page string="Roles">
                     <field name="role_ids" nolabel="1" colspan="4"/>
                 </page><page string="Notes">
