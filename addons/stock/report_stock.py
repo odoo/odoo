@@ -30,8 +30,11 @@
 
 from osv import osv, fields
 
-class report_stock_prodlots(osv.osv):
-    _name = "report.stock.prodlots"
+#
+# Check if it works with UoM ???
+#
+class stock_report_prodlots(osv.osv):
+    _name = "stock.report.prodlots"
     _description = "Stock report by production lots"
     _auto = False
     _columns = {
@@ -42,7 +45,7 @@ class report_stock_prodlots(osv.osv):
     }
     def init(self, cr):
         cr.execute("""
-            create or replace view report_stock_prodlots as (
+            create or replace view stock_report_prodlots as (
                 select max(id) as id,
                     location_id,
                     product_id,
@@ -58,7 +61,6 @@ class report_stock_prodlots(osv.osv):
                     left join stock_location sl
                         on (sl.id = sm.location_id)
                     where state = 'done'
-                        and sl.usage = 'internal'
                     group by sm.location_id, sm.product_id, sm.product_uom, sm.prodlot_id
                     union all
                     select max(sm.id) as id,
@@ -70,43 +72,9 @@ class report_stock_prodlots(osv.osv):
                     left join stock_location sl
                         on (sl.id = sm.location_dest_id)
                     where sm.state = 'done'
-                        and sl.usage = 'internal'
                     group by sm.location_dest_id, sm.product_id, sm.product_uom, sm.prodlot_id
                 ) as report
                 group by location_id, product_id, prodlot_id
             )""")
-report_stock_prodlots()
-
-
-class report_inventory_latest(osv.osv):
-    _name = "report.inventory.latest"
-    _description = "Latest inventories by product."
-    _auto = False
-    _columns = {
-            'name':  fields.datetime('Latest Date',readonly=True),
-            'product': fields.many2one('product.product', 'Product', readonly=True, select=True),
-            'inventory': fields.many2one('stock.inventory', 'Inventory Name', readonly=True, select=True),
-            'qty': fields.float('Quantity', readonly=True, select=True),
-            'uom' : fields.many2one('product.uom', 'UoM', readonly=True),
-#            'date' : fields.datetime('Latest Date',readonly=True),
-    }
-    _order = 'name desc'
-    def init(self, cr):
-        cr.execute("""
-            create or replace view report_inventory_latest as (
-            select  max(l.id) as id,
-            l.product_id as product, 
-            l.product_qty as qty, 
-            l.product_uom as uom ,
-            min(l.inventory_id) as inventory, 
-            i.date as name 
-            from stock_inventory_line l 
-                join stock_inventory i on (l.inventory_id=i.id)
-            group by l.product_uom,l.product_qty,l.product_id,i.date
-            
-            )""")
-report_inventory_latest()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+stock_report_prodlots()
 
