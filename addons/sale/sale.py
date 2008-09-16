@@ -884,7 +884,7 @@ class sale_order_line(osv.osv):
                     'message':
                         "Couldn't find a pricelist line matching this product and quantity.\n"
                         "You have to change either the product, the quantity or the pricelist."
-                    }                
+                    }
             else:
                 result.update({'price_unit': price})
 
@@ -946,5 +946,4 @@ class sale_config_picking_policy(osv.osv_memory):
          }
 sale_config_picking_policy()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

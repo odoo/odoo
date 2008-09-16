@@ -370,7 +370,7 @@ class purchase_order_line(osv.osv):
     _columns = {
         'name': fields.char('Description', size=64, required=True),
         'product_qty': fields.float('Quantity', required=True, digits=(16,2)),
-        'date_planned': fields.date('Scheduled date', required=True),
+        'date_planned': fields.datetime('Scheduled date', required=True),
         'taxes_id': fields.many2many('account.tax', 'purchase_order_taxe', 'ord_id', 'tax_id', 'Taxes'),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok','=',True)], change_default=True),
@@ -416,7 +416,7 @@ class purchase_order_line(osv.osv):
                     'uom': uom,
                     'date': date_order,
                     })[pricelist]
-        dt = (DateTime.now() + DateTime.RelativeDateTime(days=prod['seller_delay'] or 0.0)).strftime('%Y-%m-%d')
+        dt = (DateTime.now() + DateTime.RelativeDateTime(days=prod['seller_delay'] or 0.0)).strftime('%Y-%m-%d %H:%M:%S')
         prod_name = self.pool.get('product.product').name_get(cr, uid, [product], context=context)[0][1]
 
         res = {'value': {'price_unit': price, 'name':prod_name, 'taxes_id':prod['supplier_taxes_id'], 'date_planned': dt,'notes':prod['description_purchase'], 'product_uom': uom}}

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 4.3.0"
 "Report-Msgid-Bugs-To: support@openerp.com"
-"POT-Creation-Date: 2008-09-10 12:48:25+0000"
-"PO-Revision-Date: 2008-09-10 12:48:25+0000"
+"POT-Creation-Date: 2008-09-11 15:38:50+0000"
+"PO-Revision-Date: 2008-09-11 15:38:50+0000"
 "Last-Translator: <>"
 "Language-Team: "
 "MIME-Version: 1.0"
@@ -18,7 +18,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.grid,name:0
 msgid "Grid Name"
-msgstr ""
+msgstr "Matrix Name"
 
 #. module: delivery
 #: constraint:ir.model:0
@@ -38,6 +38,11 @@ msgstr ""
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid "<="
+msgstr ""
+
+#. module: delivery
+#: constraint:product.template:0
+msgid "Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
 
 #. module: delivery
@@ -67,14 +72,19 @@ msgid "Carrier Partner"
 msgstr ""
 
 #. module: delivery
+#: model:product.template,name:delivery.delivery_product_product_template
+msgid "Delivery by Poste"
+msgstr ""
+
+#. module: delivery
 #: field:delivery.grid,state_ids:0
 msgid "States"
-msgstr ""
+msgstr "Staaten"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
 msgid "Delivery"
-msgstr ""
+msgstr "Lieferung"
 
 #. module: delivery
 #, python-format
@@ -85,7 +95,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.grid,line_ids:0
 msgid "Grid Line"
-msgstr ""
+msgstr "Grid Zeile"
 
 #. module: delivery
 #, python-format
@@ -130,21 +140,20 @@ msgid "Packings to be invoiced"
 msgstr ""
 
 #. module: delivery
-#, python-format
-#: code:addons/delivery/stock.py:0
-msgid "Warning"
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
 msgstr ""
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
 msgid "Grid"
-msgstr ""
+msgstr "Grid"
 
 #. module: delivery
 #: field:delivery.carrier,active:0
 #: field:delivery.grid,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktiv"
 
 #. module: delivery
 #: wizard_view:delivery.sale.order,init:0
@@ -195,22 +204,27 @@ msgstr ""
 #. module: delivery
 #: field:delivery.grid.line,name:0
 msgid "Name"
+msgstr "Name"
+
+#. module: delivery
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
 msgstr ""
 
 #. module: delivery
 #: field:delivery.grid,country_ids:0
 msgid "Countries"
-msgstr ""
+msgstr "Länder"
 
 #. module: delivery
 #: view:sale.order:0
 msgid "Notes"
-msgstr ""
+msgstr "Notizen"
 
 #. module: delivery
 #: field:delivery.grid.line,variable_factor:0
 msgid "Variable Factor"
-msgstr ""
+msgstr "Variabl. Faktor"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -221,7 +235,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.grid.line,operator:0
 msgid "Operator"
-msgstr ""
+msgstr "Operator"
 
 #. module: delivery
 #: field:delivery.carrier,name:0
@@ -229,7 +243,7 @@ msgstr ""
 #: field:stock.picking,carrier_id:0
 #: view:delivery.carrier:0
 msgid "Carrier"
-msgstr ""
+msgstr "Frachtführer"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -239,12 +253,12 @@ msgstr ""
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
 msgid "Maximum Value"
-msgstr ""
+msgstr " Max. Wert"
 
 #. module: delivery
 #: field:delivery.grid,zip_from:0
 msgid "Start Zip"
-msgstr ""
+msgstr "Start PLZ"
 
 #. module: delivery
 #, python-format
@@ -267,7 +281,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.grid,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Folge"
 
 #. module: delivery
 #: field:delivery.grid.line,list_price:0
@@ -283,7 +297,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.grid,zip_to:0
 msgid "To Zip"
-msgstr ""
+msgstr "Zu PLZ"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -336,6 +350,12 @@ msgid "Cancel"
 msgstr ""
 
 #. module: delivery
+#, python-format
+#: code:addons/delivery/stock.py:0
+msgid "Warning"
+msgstr ""
+
+#. module: delivery
 #: field:sale.order,carrier_id:0
 msgid "Delivery method"
 msgstr ""
@@ -347,7 +367,12 @@ msgid "Price"
 msgstr ""
 
 #. module: delivery
+#: constraint:res.partner:0
+msgid "The VAT doesn't seem to be correct."
+msgstr ""
+
+#. module: delivery
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
-msgstr ""
+msgstr "Preistyp"
 

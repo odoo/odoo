@@ -1322,49 +1322,6 @@ class account_tax(osv.osv):
 account_tax()
 
 # ---------------------------------------------------------
-# Budgets
-# ---------------------------------------------------------
-
-class account_budget_post(osv.osv):
-    _name = 'account.budget.post'
-    _description = 'Budget item'
-    _columns = {
-        'code': fields.char('Code', size=64, required=True),
-        'name': fields.char('Name', size=256, required=True),
-        'dotation_ids': fields.one2many('account.budget.post.dotation', 'post_id', 'Expenses'),
-        'account_ids': fields.many2many('account.account', 'account_budget_rel', 'budget_id', 'account_id', 'Accounts'),
-    }
-    _defaults = {
-    }
-
-    def spread(self, cr, uid, ids, fiscalyear_id=False, amount=0.0):
-        dobj = self.pool.get('account.budget.post.dotation')
-        for o in self.browse(cr, uid, ids):
-            # delete dotations for this post
-            dobj.unlink(cr, uid, dobj.search(cr, uid, [('post_id','=',o.id)]))
-
-            # create one dotation per period in the fiscal year, and spread the total amount/quantity over those dotations
-            fy = self.pool.get('account.fiscalyear').browse(cr, uid, [fiscalyear_id])[0]
-            num = len(fy.period_ids)
-            for p in fy.period_ids:
-                dobj.create(cr, uid, {'post_id': o.id, 'period_id': p.id, 'amount': amount/num})
-        return True
-account_budget_post()
-
-class account_budget_post_dotation(osv.osv):
-    _name = 'account.budget.post.dotation'
-    _description = "Budget item endowment"
-    _columns = {
-        'name': fields.char('Name', size=64),
-        'post_id': fields.many2one('account.budget.post', 'Item', select=True),
-        'period_id': fields.many2one('account.period', 'Period'),
-#       'quantity': fields.float('Quantity', digits=(16,2)),
-        'amount': fields.float('Amount', digits=(16,2)),
-    }
-account_budget_post_dotation()
-
-
-# ---------------------------------------------------------
 # Account Entries Models
 # ---------------------------------------------------------
 
@@ -1564,8 +1521,6 @@ class account_config_fiscalyear(osv.osv_memory):
         }
 
 account_config_fiscalyear()
-
-
 
 #  ---------------------------------------------------------------
 #   Account Templates : Account, Tax, Tax Code and chart. + Wizard
@@ -1789,7 +1744,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
     Create a new account chart for a company.
     Wizards ask:
         * a company
-        * an account chart template 
+        * an account chart template
         * a number of digits for formatting code of non-view accounts
         * a list of bank account owned by the company
     Then, the wizard:
@@ -1886,11 +1841,13 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             for tax in account_template.tax_ids:
                 tax_ids.append(tax_template_ref[tax.id])
             #create the account_account
+
             dig = obj_multi.code_digits
             code_main = len(account_template.code)
             code_acc = account_template.code
             if code_main<=dig and account_template.type != 'view':
                 code_acc=str(code_acc) + (str('0'*(dig-code_main)))
+
             vals={
                 'name': (obj_acc_root.id == account_template.id) and obj_multi.company_id.name or account_template.name,
                 #'sign': account_template.sign,
@@ -1967,7 +1924,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             vals={
                 'name': line.acc_no.bank and line.acc_no.bank.name+' '+tmp or tmp,
                 'currency_id': line.currency_id and line.currency_id.id or False,
-                'code': code_acc[:dig],
+                'code': ref_acc_bank.code+str(current_num),
                 'type': 'other',
                 'user_type': account_template.user_type and account_template.user_type.id or False,
                 'reconcile': True,

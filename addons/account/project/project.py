@@ -245,51 +245,5 @@ class account_journal(osv.osv):
     }
 account_journal()
 
-
-# ---------------------------------------------------------
-# Budgets
-# ---------------------------------------------------------
-
-#class account_analytic_budget_post(osv.osv):
-#   _name = 'account.analytic.budget.post'
-#   _description = 'Budget item'
-#   _columns = {
-#       'code': fields.char('Code', size=64, required=True),
-#       'name': fields.char('Name', size=256, required=True),
-#       'sens': fields.selection( [('charge','Charge'), ('produit','Product')], 'Direction', required=True),
-#       'dotation_ids': fields.one2many('account.analytic.budget.post.dotation', 'post_id', 'Expenses'),
-#       'account_ids': fields.many2many('account.analytic.account', 'account_analytic_budget_rel', 'budget_id', 'account_id', 'Accounts'),
-#   }
-#   _defaults = {
-#       'sens': lambda *a: 'produit',
-#   }
-#
-#   def spread(self, cr, uid, ids, fiscalyear_id=False, quantity=0.0, amount=0.0):
-#
-#       dobj = self.pool.get('account.analytic.budget.post.dotation')
-#       for o in self.browse(cr, uid, ids):
-#           # delete dotations for this post
-#           dobj.unlink(cr, uid, dobj.search(cr, uid, [('post_id','=',o.id)]))
-#
-#           # create one dotation per period in the fiscal year, and spread the total amount/quantity over those dotations
-#           fy = self.pool.get('account.fiscalyear').browse(cr, uid, [fiscalyear_id])[0]
-#           num = len(fy.period_ids)
-#           for p in fy.period_ids:
-#               dobj.create(cr, uid, {'post_id': o.id, 'period_id': p.id, 'quantity': quantity/num, 'amount': amount/num})
-#       return True
-#account_analytic_budget_post()
-#
-#class account_analytic_budget_post_dotation(osv.osv):
-#   _name = 'account.analytic.budget.post.dotation'
-#   _description = "Budget item endowment"
-#   _columns = {
-#       'name': fields.char('Name', size=64),
-#       'post_id': fields.many2one('account.analytic.budget.post', 'Item', select=True),
-#       'period_id': fields.many2one('account.period', 'Period'),
-#       'quantity': fields.float('Quantity', digits=(16,2)),
-#       'amount': fields.float('Amount', digits=(16,2)),
-#   }
-#account_analytic_budget_post_dotation()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

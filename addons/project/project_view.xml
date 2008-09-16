@@ -22,18 +22,20 @@
                     <notebook colspan="4">
                         <page string="Administration">
                             <field name="priority"/>
-                            <group col="3" colspan="2">
-                                <field name="active" select="2"/>
-                                <button name="toggleActive" string="Toggle activity" type="object"/>
-                            </group>
                             <field name="planned_hours" widget="float_time"/>
                             <field name="effective_hours" widget="float_time"/>
                             <field name="warn_manager"/>
                             <field name="timesheet_id"/>
-                            <field name="state"/>
+                            <field name="active" select="2"/>
                             <newline/>
                             <separator colspan="4" string="Project's members"/>
                             <field colspan="4" name="members" nolabel="1"/>
+                            <group col="6" colspan="8">
+                            	<field name="state"/>
+                                <button name="set_template" string="Set as Template" type="object" states="open"/>
+								<button name="reset_project" string="Reset as Project" type="object" states="template"/>
+								<button name="duplicate_template" string="Duplicate Template" type="object" states="template"/>
+                            </group>
                         </page>
                         <page groups="base.group_extended" string="Partner Info">
                             <field colspan="4" name="partner_id" on_change="onchange_partner_id(partner_id)" select="1"/>
@@ -115,8 +117,7 @@
             <field name="domain">[('parent_id','=',False),('state','=','open')]</field>
             <field name="view_id" ref="view_project"/>
         </record>
-        <menuitem action="open_view_all_project_unclosed_open" id="menu_all_project_unclosed_open" parent="project.menu_all_project_unclosed"/>
-
+        <menuitem action="open_view_all_project_unclosed_open" id="menu_all_project_unclosed_open" parent="project.menu_all_project_unclosed"/>		
 
         <record id="open_view_project_open" model="ir.actions.act_window">
             <field name="name">Open projects</field>
@@ -126,6 +127,15 @@
             <field name="view_id" ref="view_project"/>
         </record>
         <menuitem id="next_id_54" name="Projects" parent="project.menu_definitions"/><menuitem action="open_view_project_open" id="menu_open_view_project_open" parent="next_id_54"/>
+
+		<record id="open_view_template_project" model="ir.actions.act_window">
+            <field name="name">Template projects</field>
+            <field name="res_model">project.project</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('state','=','template')]</field>
+            <field name="view_id" ref="view_project"/>
+        </record>
+        <menuitem action="open_view_template_project" id="menu_template_project" parent="next_id_54"/>
 
 
         <record id="view_task_work_form" model="ir.ui.view">
@@ -466,6 +476,8 @@
             src_model="project.project"
             view_mode="tree,form,calendar,graph"
             view_type="form"/>
+
+        <act_window id="act_project_project_2_project_task_all" name="All tasks" res_model="project.task" src_model="project.project" view_mode="tree,form" view_type="form"/>
 
         <record id="task_company" model="ir.ui.view">
             <field name="name">res.company.task.config</field>

@@ -27,8 +27,9 @@
 ##############################################################################
 
 import netsvc
-from osv import fields, osv
+import pooler, tools
 
+from osv import fields, osv
 
 class process_process(osv.osv):
     _name = "process.process"
@@ -42,6 +43,79 @@ class process_process(osv.osv):
     _defaults = {
         'active' : lambda *a: True,
     }
+
+    def graph_get(self, cr, uid, id, res_model, res_id, scale, context):
+
+        current_object = res_model
+        pool = pooler.get_pool(cr.dbname)
+
+        process = pool.get('process.process').browse(cr, uid, [id])[0]
+
+        nodes = {}
+        start = []
+        transitions = {}
+        for node in process.node_ids:
+
+            data = {}
+
+            data['name'] = node.name
+            data['menu'] = node.menu_id.name
+            data['model'] = node.model_id.model
+
+            nodes[node.id] = data
+
+            if node.flow_start:
+                start.append(node.id)
+
+            for tr in node.transition_out:
+                data = {}
+                
+                data['name'] = tr.name
+                data['source'] = tr.node_from_id.id
+                data['target'] = tr.node_to_id.id
+
+                data['buttons'] = buttons = []
+                for b in tr.action_ids:
+                    button = {}
+                    button['name'] = b.name
+                    buttons.append(button)
+
+                data['roles'] = roles = []
+                for r in tr.transition_ids:
+                    role = {}
+                    role['name'] = r.role_id.name
+                    roles.append(role)
+
+                transitions[tr.id] = data
+
+        g = tools.graph(nodes.keys(), map(lambda x: (x['source'], x['target']), transitions.values()))
+        g.process(start)
+        #g.scale(100, 100, 180, 120)
+        g.scale(*scale)
+
+        graph = g.result_get()
+
+        miny = -1
+
+        for k,v in nodes.items():
+
+            x = graph[k]['y']
+            y = graph[k]['x']
+
+            if miny == -1:
+                miny = y
+
+            miny = min(y, miny)
+
+            v['x'] = x
+            v['y'] = y
+
+        for k, v in nodes.items():
+            y = v['y']
+            v['y'] = min(y - miny + 10, y)
+
+        return dict(nodes=nodes, transitions=transitions)
+
 process_process()
 
 class process_node(osv.osv):

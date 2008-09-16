@@ -132,7 +132,7 @@ class project(osv.osv):
         'warn_footer': fields.text('Mail footer'),
         'notes': fields.text('Notes'),
         'timesheet_id': fields.many2one('hr.timesheet.group', 'Working Time'),
-        'state': fields.selection([('open', 'Open'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'Status', required=True),
+        'state': fields.selection([('template', 'Template'), ('open', 'Open'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', required=True),
      }
 
     _defaults = {
@@ -149,21 +149,42 @@ class project(osv.osv):
     ]
 
     # toggle activity of projects, their sub projects and their tasks
-    def toggleActive(self, cr, uid, ids, context={}):
-        for proj in self.browse(cr, uid, ids, context):
-            self.setActive(cr, uid, proj.id, not proj.active, context)
+    def set_template(self, cr, uid, ids, context={}):
+        res = self.setActive(cr, uid, ids, value=False, context=context) 
+        return res   
+       
+    def reset_project(self, cr, uid, ids, context={}):
+        res = self.setActive(cr, uid, ids,value=True, context=context)
+        return res
+    
+    def duplicate_template(self, cr, uid, ids,context={}):
+        for proj in self.browse(cr, uid, ids):    
+            parent_id=context.get('parent_id',False)        
+            new_id=self.pool.get('project.project').copy(cr, uid, proj.id,default={'name':proj.name+'(copy)','state':'template','parent_id':parent_id})
+            cr.execute('select id from project_task where project_id=%d', (proj.id,))
+            res = cr.fetchall()
+            tasks_ids = [x[0] for x in res]
+            for tasks_id in tasks_ids:            
+                self.pool.get('project.task').copy(cr, uid, tasks_id,default={'project_id':new_id,'active':False}, context=context)
+            cr.execute('select id from project_project where parent_id=%d', (proj.id,))
+            res = cr.fetchall()
+            project_ids = [x[0] for x in res]
+            for child in project_ids:
+                self.duplicate_template(cr, uid, [child],context={'parent_id':new_id}) 
         return True
 
     # set active value for a project, its sub projects and its tasks
-    def setActive(self, cr, uid, id, value, context={}):
-        proj = self.browse(cr, uid, id, context)
-        self.write(cr, uid, [id], {'active': value}, context)
-        cr.execute('select id from project_task where project_id=%d', (proj.id,))
-        tasks_id = [x[0] for x in cr.fetchall()]
-        self.pool.get('project.task').write(cr, uid, tasks_id, {'active': value}, context)
-        project_ids = [x[0] for x in cr.fetchall()]
-        for child in project_ids:
-            self.setActive(cr, uid, child, value, context)
+    def setActive(self, cr, uid, ids, value=True, context={}):   
+        for proj in self.browse(cr, uid, ids, context):            
+            self.write(cr, uid, [proj.id], {'state': value and 'open' or 'template'}, context)
+            cr.execute('select id from project_task where project_id=%d', (proj.id,))
+            tasks_id = [x[0] for x in cr.fetchall()]
+            if tasks_id:
+                self.pool.get('project.task').write(cr, uid, tasks_id, {'active': value}, context)
+            cr.execute('select id from project_project where parent_id=%d', (proj.id,))            
+            project_ids = [x[0] for x in cr.fetchall()]            
+            for child in project_ids:
+                self.setActive(cr, uid, [child], value, context)     		
         return True
 project()
 
