@@ -301,7 +301,7 @@ class sale_order(osv.osv):
     def _inv_get(self, cr, uid, order, context={}):
         return {}
 
-    def _make_invoice(self, cr, uid, order, lines, context={}):
+    def _make_invoice(self, cr, uid, order, lines):
         a = order.partner_id.property_account_receivable.id
         if order.payment_term:
             pay_term = order.payment_term.id

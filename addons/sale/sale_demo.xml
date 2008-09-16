@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-
+        
         <!--
 	Resource: sale.order
 	-->
-
+        
         <record id="order" model="sale.order">
             <field name="shop_id" ref="shop"/>
             <field model="product.pricelist" name="pricelist_id" search="[]"/>
@@ -15,11 +15,11 @@
             <field model="res.partner.address" name="partner_shipping_id" search="[]"/>
             <field model="res.partner.address" name="partner_order_id" search="[]"/>
         </record>
-
+        
         <!--
 	Resource: sale.order.line
 	-->
-
+        
         <record id="line" model="sale.order.line">
             <field name="order_id" ref="order"/>
             <field name="name">New server config + material</field>
@@ -28,7 +28,7 @@
             <field name="price_unit">123</field>
             <field name="type">make_to_stock</field>
         </record>
-
+        
         <record id="line1" model="sale.order.line">
             <field name="order_id" ref="order"/>
             <field name="name">[PC1] Basic PC</field>
@@ -59,14 +59,14 @@
             <field name="product_uos_qty">5</field>
             <field name="type">make_to_stock</field>
         </record>
-
-
-
-
+        
+        
+        
+        
         <!--
 	Resource: sale.order
 	-->
-
+        
         <record id="order2" model="sale.order">
             <field name="shop_id" ref="shop"/>
             <field model="product.pricelist" name="pricelist_id" search="[]"/>
@@ -76,11 +76,11 @@
             <field name="partner_shipping_id" ref="base.res_partner_address_9"/>
             <field name="partner_order_id" ref="base.res_partner_address_9"/>
         </record>
-
+        
         <!--
 	Resource: sale.order.line
 	-->
-
+        
         <record id="line3" model="sale.order.line">
             <field name="order_id" ref="order2"/>
             <field name="name">[PC2] Computer assembled on demand</field>
@@ -99,10 +99,10 @@
             <field name="product_uos_qty">8</field>
             <field name="type">make_to_order</field>
         </record>
-
-
-
-
+        
+        
+        
+        
         <!--
 	Resource: sale.order
 	-->
@@ -136,7 +136,7 @@
             <field name="delay">7</field>
         </record>
         <workflow action="order_confirm" model="sale.order" ref="order3"/>
-
+        
         <!--
 	Resource: sale.order
 	-->
@@ -170,7 +170,7 @@
             <field name="delay">1</field>
         </record>
         <workflow action="order_confirm" model="sale.order" ref="order4"/>
-
+        
         <!--
 	Resource: sale.order
 	-->
@@ -194,22 +194,8 @@
             <field name="delay">15</field>
         </record>
         <workflow action="order_confirm" model="sale.order" ref="order5"/>
-
+        
         <!-- Run all schedulers -->
         <function model="mrp.procurement" name="run_scheduler"/>
-
-
-        <!-- sale advance demo.. -->
-		<!-- Demo Data for Product -->
-		<record id="advance_product_0" model="product.product">
-			<field name="name">Advance Product</field>
-			<field name="categ_id" ref="product.cat1"/>
-			<field name="type">service</field>
-			<field name="list_price">150.0</field>
-			<field name="standard_price">100.0</field>
-			<field name="uom_id" ref="product.product_uom_unit"/>
-			<field name="uom_po_id" ref="product.product_uom_unit"/>
-		</record>
-
     </data>
 </openerp>

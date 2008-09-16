@@ -1238,8 +1238,7 @@
             <field name="view_mode">tree,form</field>
         </record>
         <menuitem action="action_incoterms_tree" id="menu_action_incoterms_tree" parent="menu_stock_configuration"/>
-        
-        <act_window context="{'location': active_id}" domain="[('type','&lt;&gt;','service')]" id="act_product_location_open" name="Products" res_model="product.product" src_model="stock.location"/>
+      <act_window context="{'location': active_id}" domain="[('type','&lt;&gt;','service')]" id="act_product_location_open" name="Products" res_model="product.product" src_model="stock.location"/>
         
         <act_window context="{'location': active_id}" domain="[('product_id','=',active_id)]" id="act_product_stock_move_open" name="Stock Moves" res_model="stock.move" src_model="product.product"/>
         
@@ -1251,6 +1250,18 @@
             <field eval="True" name="object"/>
         </record>     
 
+    <wizard id="open_stock_moves" model="stock.location" name="stock.location.moves" string="Moves by Location"/> 
+      
+      <record id="ir_act_my" model="ir.values">
+            <field name="key2">tree_but_open</field>
+            <field name="model">stock.location</field>
+            <field name="name">Open Moves</field>
+            <field eval="'ir.actions.wizard,%d'%open_stock_moves" name="value"/>
+            <field eval="True" name="object"/>
+        </record>
+   
+   <!-- <menuitem action="open_stock_moves" id="menu_open_stock_moves" type="wizard" parent="menu_stock_root"/> -->
+    
     </data>
 </openerp>
 
