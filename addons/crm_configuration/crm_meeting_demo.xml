@@ -276,5 +276,13 @@
 		<field name="act_window_id" ref="crm_case_category_act_meetall3"/>
 	</record>
 	<menuitem name="Next Deadlines" parent="menu_crm_case_categ_meet" id="menu_crm_case_categ0_act_meetall3" action="crm_case_category_act_meetall3"/>
+
+	<!-- short cut -->
+	<record id="ir_ui_view_sc_mymeetings0" model="ir.ui.view_sc">
+			<field ref="crm_configuration.menu_crm_case_categ_meet_my" name="res_id"/>
+			<field eval="&quot;ir.ui.menu&quot;" name="resource"/>
+			<field eval="&quot;My Meetings&quot;" name="name"/>
+			<field name="user_id" ref="base.user_root"/>
+	</record>
 </data>
 </openerp>
