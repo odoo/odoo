@@ -1125,7 +1125,7 @@ class orm_memory(orm_template):
                 for f in fields_to_read:
                     if id in self.datas:
                         r[f] = self.datas[id].get(f, False)
-                        if r[f] and isinstance(self._columns[f], fields.binary) and context.get('get_binary_size', True):
+                        if r[f] and isinstance(self._columns[f], fields.binary) and context.get('get_binary_size', False):
                             r[f] = len(r[f])
                 result.append(r)
                 if id in self.datas:
@@ -1174,6 +1174,7 @@ class orm_memory(orm_template):
                 upd_todo.append(field)
         self.datas[id_new] = vals2
         self.datas[id_new]['internal.date_access'] = time.time()
+
         for field in upd_todo:
             self._columns[field].set_memory(cr, self, id_new, field, vals[field], user, context)
         self._validate(cr, user, [id_new], context)

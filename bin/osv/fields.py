@@ -223,7 +223,7 @@ class binary(_column):
                     val = v[name]
                     break
             res.setdefault(i, val)
-            if context.get('get_binary_size', True):
+            if context.get('get_binary_size',False):
                 res[i] = tools.human_size(val)
 
         return res
