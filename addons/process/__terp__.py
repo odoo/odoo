@@ -10,7 +10,7 @@ This module allows you to manage your process for the end-users.
     """,
     "depends" : ["base", "sale"],
     "init_xml" : [],
-    "demo_xml" : ['process_data.xml'],
+    "demo_xml" : [],
     "update_xml" : [
         "security/ir.model.access.csv",
         'process_view.xml',
