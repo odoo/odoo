@@ -1,9 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
-#
-# $Id$
+# Copyright (c) 2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
+#                    Fabien Pinckaers <fp@tiny.Be>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -28,13 +27,6 @@
 #
 ##############################################################################
 
-import wizard_orderpoint_procurement
-import wizard_procurement
-import wizard_schedulers_all
-import wizard_price
-import wizard_workcenter_load
-import wizard_track_prod
-import make_procurement
-
+import stock_no_autopicking
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
