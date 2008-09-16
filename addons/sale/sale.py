@@ -770,10 +770,10 @@ class sale_order_line(osv.osv):
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False, packaging=False):
+        warning={}
         product_uom_obj = self.pool.get('product.uom')
         partner_obj = self.pool.get('res.partner')
         product_obj = self.pool.get('product.product')
-
         if partner_id:
             lang = partner_obj.browse(cr, uid, partner_id).lang
         context = {'lang': lang, 'partner_id': partner_id}
@@ -781,7 +781,7 @@ class sale_order_line(osv.osv):
         if not product:
             return {'value': {'th_weight' : 0, 'product_packaging': False,
                 'product_uos_qty': qty}, 'domain': {'product_uom': [],
-                    'product_uos': []}}
+                   'product_uos': []}}
 
         if not date_order:
             date_order = time.strftime('%Y-%m-%d')
@@ -792,9 +792,19 @@ class sale_order_line(osv.osv):
             default_uom = product_obj.uom_id and product_obj.uom_id.id
             pack = self.pool.get('product.packaging').browse(cr, uid, packaging, context)
             q = product_uom_obj._compute_qty(cr, uid, uom, pack.qty, default_uom)
-            qty = qty - qty % q + q
+#            qty = qty - qty % q + q
+            if not (qty % q) == 0 :
+                ean = pack.ean
+                qty_pack = pack.qty
+                type_ul = pack.ul
+                warn_msg = "You selected a quantity of %d Units.\nBut it's not compatible with the selected packaging.\nHere is a proposition of quantities according to the packaging: " % (qty)
+                warn_msg = warn_msg + "\n\nEAN: " + str(ean) + " Quantiny: " + str(qty_pack) + " Type of ul: " + str(type_ul.name)
+                warning={
+                    'title':'Packing Information !',
+                    'message': warn_msg
+                    }
             result['product_uom_qty'] = qty
-
+            
         if uom:
             uom2 = product_uom_obj.browse(cr, uid, uom)
             if product_obj.uom_id.category_id.id <> uom2.category_id.id:
@@ -864,7 +874,7 @@ class sale_order_line(osv.osv):
         # Round the quantity up
 
         # get unit price
-        warning={}
+        
         if not pricelist:
             warning={
                 'title':'No Pricelist !',
@@ -884,10 +894,9 @@ class sale_order_line(osv.osv):
                     'message':
                         "Couldn't find a pricelist line matching this product and quantity.\n"
                         "You have to change either the product, the quantity or the pricelist."
-                    }
+                    }                
             else:
                 result.update({'price_unit': price})
-
 
         return {'value': result, 'domain': domain,'warning':warning}
 
