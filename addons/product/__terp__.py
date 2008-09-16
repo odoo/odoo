@@ -57,7 +57,7 @@
         "security/ir.model.access.csv",
         "product_data.xml","product_report.xml",
         "product_view.xml", "pricelist_view.xml",
-        "partner_view.xml"],
+        "partner_view.xml", "product_wizard.xml"],
     "active": False,
     "installable": True
 }
