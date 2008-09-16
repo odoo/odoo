@@ -50,7 +50,7 @@ else:
 
 from itertools import izip
 
-# initialize a database with base/base.sql 
+# initialize a database with base/base.sql
 def init_db(cr):
     import addons
     f = addons.get_module_resource('base', 'base.sql')
@@ -269,7 +269,7 @@ def oswalksymlinks(top, topdown=True, onerror=None):
         for s in symlinks:
             for x in oswalksymlinks(os.path.join(dirpath, s), topdown, onerror):
                 yield x
-                
+
         if not topdown:
             yield dirpath, dirnames, filenames
 
@@ -279,7 +279,7 @@ def oswalksymlinks(top, topdown=True, onerror=None):
 def flatten(list):
     """Flatten a list of elements into a uniqu list
     Author: Christophe Simonis (christophe@tinyerp.com)
-    
+
     Examples:
     >>> flatten(['a'])
     ['a']
@@ -295,7 +295,7 @@ def flatten(list):
     >>> flatten(t)
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     """
-    
+
     def isiterable(x):
         return hasattr(x, "__iter__")
 
@@ -355,14 +355,14 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
         msg['Message-Id'] = '<'+str(time.time())+'-tinycrm-'+str(tinycrm)+'@'+socket.gethostname()+'>'
     try:
         s = smtplib.SMTP()
-    
+
         if debug:
-            s.debuglevel = 5        
+            s.debuglevel = 5
         if ssl:
             s.ehlo()
             s.starttls()
             s.ehlo()
-      
+
         s.connect(config['smtp_server'], config['smtp_port'])
         if config['smtp_user'] or config['smtp_password']:
             s.login(config['smtp_user'], config['smtp_password'])
@@ -394,10 +394,10 @@ def email_send_attach(email_from, email_to, subject, body, email_cc=None, email_
     from email import Encoders
 
     msg = MIMEMultipart()
-    
+
     if not ssl:
         ssl = config['smtp_ssl']
-        
+
     msg['Subject'] = Header(subject.decode('utf8'), 'utf-8')
     msg['From'] = email_from
     del msg['Reply-To']
@@ -420,14 +420,14 @@ def email_send_attach(email_from, email_to, subject, body, email_cc=None, email_
         msg.attach(part)
     try:
         s = smtplib.SMTP()
-	
+
         if debug:
-            s.debuglevel = 5		
+            s.debuglevel = 5
         if ssl:
             s.ehlo()
             s.starttls()
             s.ehlo()
-      
+
         s.connect(config['smtp_server'], config['smtp_port'])
         if config['smtp_user'] or config['smtp_password']:
             s.login(config['smtp_user'], config['smtp_password'])
@@ -459,7 +459,7 @@ class UpdateableStr(local):
 
     def __init__(self, string=''):
         self.string = string
-    
+
     def __str__(self):
         return str(self.string)
 
@@ -609,7 +609,7 @@ class cache(object):
             kwargs.update(dict(zip(arg_names, args)))
             kwargs = kwargs.items()
             kwargs.sort()
-            
+
             # Work out key as a tuple of ('argname', value) pairs
             key = (('dbname', cr.dbname),) + tuple(kwargs)
 
@@ -696,6 +696,8 @@ def human_size(sz):
     if not sz:
         return False
     units = ('bytes', 'Kb', 'Mb', 'Gb')
+    if isinstance(sz,basestring):
+        sz=len(sz)
     s, i = float(sz), 0
     while s >= 1024 and i < len(units)-1:
         s = s / 1024
