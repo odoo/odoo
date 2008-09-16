@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2004-2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
-# $Id$
+# $Id: stock.py 1005 2005-07-25 08:41:42Z nicoe $
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -28,13 +28,23 @@
 #
 ##############################################################################
 
-import wizard_orderpoint_procurement
-import wizard_procurement
-import wizard_schedulers_all
-import wizard_price
-import wizard_workcenter_load
-import wizard_track_prod
-import make_procurement
+import netsvc
+from osv import fields,osv
 
+class product(osv.osv):
+    _inherit = "product.product"
+    _columns = {
+        'auto_pick': fields.boolean('Auto Picking', help="Auto picking for raw materials of production orders.")
+    }
+    _defaults = {
+        'auto_pick': lambda *args: True
+    }
+product()
+
+class mrp_production(osv.osv):
+    _inherit = "mrp.production"
+    def _get_auto_picking(self, cr, uid, production):
+        return production.product_id.auto_pick
+mrp_production()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
