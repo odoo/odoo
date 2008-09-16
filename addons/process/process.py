@@ -45,11 +45,11 @@ class process_process(osv.osv):
     }
 
     def graph_get(self, cr, uid, id, res_model, res_id, scale, context):
-
-        current_object = res_model
+        
         pool = pooler.get_pool(cr.dbname)
 
         process = pool.get('process.process').browse(cr, uid, [id])[0]
+        current_object = pool.get(res_model).browse(cr, uid, [res_id])[0]
 
         nodes = {}
         start = []
@@ -61,6 +61,21 @@ class process_process(osv.osv):
             data['name'] = node.name
             data['menu'] = node.menu_id.name
             data['model'] = node.model_id.model
+            data['kind'] = node.kind
+            data['active'] = 0
+
+            if node.kind == "state" and node.model_id.model == res_model:
+                states = node.model_states
+                states = (states or []) and states.split(',')
+                data['active'] = (states and current_object.state in states) or not states
+
+            elif node.kind == "router":
+                #TODO:
+                pass
+
+            elif node.kind == "subflow":
+                #TODO: subflow
+                pass
 
             nodes[node.id] = data
 
