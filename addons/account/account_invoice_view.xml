@@ -3,8 +3,8 @@
     <data>
 
         <!--
-		Invoices
-		-->
+        Invoices
+        -->
 
         <record id="view_invoice_line_calendar" model="ir.ui.view">
             <field name="name">account.invoice.calendar</field>
@@ -17,17 +17,17 @@
                 </calendar>
             </field>
         </record>
-		<record model="ir.ui.view" id="view_invoice_graph">
-			<field name="name">account.invoice.graph</field>
-			<field name="model">account.invoice</field>
-			<field name="type">graph</field>
-			<field name="arch" type="xml">
-				<graph string="Invoices" type="bar">
-					<field name="partner_id"/>
-					<field name="amount_total" operator="+"/>
-				</graph>
-			</field>
-		</record>
+        <record model="ir.ui.view" id="view_invoice_graph">
+            <field name="name">account.invoice.graph</field>
+            <field name="model">account.invoice</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Invoices" type="bar">
+                    <field name="partner_id"/>
+                    <field name="amount_total" operator="+"/>
+                </graph>
+            </field>
+        </record>
         <record id="view_invoice_line_tree" model="ir.ui.view">
             <field name="name">account.invoice.line.tree</field>
             <field name="model">account.invoice.line</field>
@@ -209,8 +209,8 @@
                             <field colspan="4" name="comment" nolabel="1"/>
                         </page>
                         <page string="Payments">
-							<field name="move_lines" colspan="4"/>
-						</page>
+                            <field name="move_lines" colspan="4"/>
+                        </page>
                     </notebook>
                 </form>
             </field>
@@ -283,8 +283,8 @@
                             <field colspan="4" name="comment" nolabel="1"/>
                         </page>
                         <page string="Payments">
-							<field name="move_lines" colspan="4" nolabel="1"/>
-						</page>
+                            <field name="move_lines" colspan="4" nolabel="1"/>
+                        </page>
                     </notebook>
                 </form>
             </field>

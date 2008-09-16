@@ -35,6 +35,7 @@ from osv import fields,osv
 import ir
 from tools import config
 from tools.translate import _
+import tools
 
 
 #----------------------------------------------------------
@@ -85,6 +86,8 @@ class stock_location(osv.osv):
 
         'address_id': fields.many2one('res.partner.address', 'Location Address'),
 
+        'icon': fields.selection(tools.icons, 'Icon', size=64),
+
         'comment': fields.text('Additional Information'),
         'posx': fields.integer('Corridor (X)'),
         'posy': fields.integer('Shelves (Y)'),
@@ -99,6 +102,7 @@ class stock_location(osv.osv):
         'posx': lambda *a: 0,
         'posy': lambda *a: 0,
         'posz': lambda *a: 0,
+        'icon': lambda *a: False
     }
 
     def chained_location_get(self, cr, uid, location, partner=None, product=None, context={}):
@@ -325,46 +329,52 @@ stock_tracking()
 class stock_picking(osv.osv):
     _name = "stock.picking"
     _description = "Packing list"
-    def _set_minimum_date(self, cr, uid, ids, name, value, arg, context):
-        if value!=False:
-                cr.execute("update stock_picking set min_date='%s' where id in (%d)"%(value,ids))
-    def get_minimum_date(self, cr, uid, ids, field_name, arg, context={}):
-        res = {}
-        for pick in self.browse(cr, uid, ids):
-            res[pick.id] = None
-            cr.execute("select min_date from stock_picking where id =%d"%pick.id)
-            min_date = cr.fetchone()[0]
-            if not min_date:
-                move_ids = [x.id for x in pick.move_lines ]
-                if len(move_ids):
-                    cr.execute("select min(date_planned) from stock_move where id in (" + ','.join(map(str, move_ids)) + ")")
-                    res[pick.id] = cr.fetchone()[0] or None
-            else:
-                res[pick.id]=min_date
-
-        return res
-
     def _set_maximum_date(self, cr, uid, ids, name, value, arg, context):
-        if value!=False:
-                cr.execute("update stock_picking set max_date='%s' where id in (%d)"%(value,ids))
-    def get_maximum_date(self, cr, uid, ids, field_name, arg, context={}):
-        res = {}
-        for pick in self.browse(cr, uid, ids):
-            res[pick.id] = None
-            cr.execute("select max_date from stock_picking where id =%d"%pick.id)
-            max_date = cr.fetchone()[0]
-            if not max_date:
-                move_ids = [x.id for x in pick.move_lines ]
-                if len(move_ids):
-                    cr.execute("select max(date_planned) from stock_move where id in (" + ','.join(map(str, move_ids)) + ")")
-                    res[pick.id] = cr.fetchone()[0] or None
-            else:
-                res[pick.id]=max_date
+        print 'max', ids, name, value, arg, context
+        if not value: return False
+        for pick in self.browse(cr, uid, ids, context):
+            cr.execute("""update stock_move set
+                    date_planned=%s 
+                where
+                    picking_id=%d and 
+                    (date_planned=%s or date_planned>%s)""", (value,pick.id,pick.max_date,value))
+        print 'Ok'
+        return True
 
+    def _set_minimum_date(self, cr, uid, ids, name, value, arg, context):
+        print 'min', ids, name, value, arg, context
+        if not value: return False
+        for pick in self.browse(cr, uid, ids, context):
+            cr.execute("""update stock_move set
+                    date_planned=%s 
+                where
+                    picking_id=%d and 
+                    (date_planned=%s or date_planned<%s)""", (value,pick.id,pick.min_date,value))
+        print 'Ok'
+        return True
+
+    def get_min_max_date(self, cr, uid, ids, field_name, arg, context={}):
+        res = {}
+        for id in ids:
+            res[id] = {'min_date':False, 'max_date': False}
+        if not ids:
+            return res
+        cr.execute("""select
+                picking_id,
+                min(date_planned),
+                max(date_planned)
+            from
+                stock_move 
+            where
+                picking_id in (""" + ','.join(map(str, ids)) + """)
+            group by
+                picking_id""")
+        for pick, dt1,dt2 in cr.fetchall():
+            res[pick]['min_date'] = dt1
+            res[pick]['max_date'] = dt2
+        print res, ids
         return res
-    
-    
-    
+
     _columns = {
         'name': fields.char('Reference', size=64, required=True, select=True),
         'origin': fields.char('Origin', size=64),
@@ -384,12 +394,11 @@ class stock_picking(osv.osv):
             ('done','Done'),
             ('cancel','Cancel'),
             ], 'Status', readonly=True, select=True),
-        'min_date': fields.function(get_minimum_date, fnct_inv=_set_minimum_date,
-                                     method=True,store=True, type='date', string='Min. Date', select=True),
+        'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
+                 method=True,store=True, type='datetime', string='Planned Date', select=1),
         'date':fields.datetime('Date create'),
-
-        'max_date': fields.function(get_maximum_date, fnct_inv=_set_maximum_date,
-                                     method=True,store=True, type='date', string='Max. Date', select=True),
+        'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
+                 method=True,store=True, type='datetime', string='Max. Planned Date', select=2),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Move lines'),
 
         'auto_picking': fields.boolean('Auto-Packing'),
@@ -677,15 +686,38 @@ class stock_production_lot(osv.osv):
     _name = 'stock.production.lot'
     _description = 'Production lot'
 
+    def _get_stock(self, cr, uid, ids, field_name, arg, context={}):
+        if 'location_id' not in context:
+            locations = self.pool.get('stock.location').search(cr, uid, [('usage','=','internal')], context=context)
+        else:
+            locations = self.pool.get('stock.location').search(cr, uid, [('location_id','child_of', [context['location_id']])], context=context)
+        res = {}.fromkeys(ids, 0.0)
+        cr.execute('''select
+                prodlot_id,
+                sum(name)
+            from
+                stock_report_prodlots
+            where
+                location_id in ('''+','.join(map(str, locations))+''' and
+                prodlot_id in  ('''+','.join(map(str, ids))+'''
+            group by
+                prodlot_id
+        ''')
+        res.update(dict(cr.fetchall()))
+        return res
+
     _columns = {
         'name': fields.char('Serial', size=64, required=True),
-        'ref': fields.char('Reference', size=64),
+        'ref': fields.char('Internal Ref.', size=64),
+        'product_id': fields.many2one('product.product','Product',required=True),
         'date': fields.datetime('Date create', required=True),
+        'stock_available': fields.function(_get_stock, method=True, type="float", string="Available", select="2"),
         'revisions': fields.one2many('stock.production.lot.revision','lot_id','Revisions'),
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'stock.lot.serial'),
+        'product_id': lambda x,y,z,c: c.get('product_id',False),
     }
     _sql_constraints = [
         ('name_ref_uniq', 'unique (name, ref)', 'The serial/ref must be unique !'),
@@ -702,7 +734,7 @@ class stock_production_lot_revision(osv.osv):
         'date': fields.date('Revision date'),
         'indice': fields.char('Revision', size=16),
         'author_id': fields.many2one('res.users', 'Author'),
-        'lot_id': fields.many2one('stock.production.lot', 'Production lot', select=True),
+        'lot_id': fields.many2one('stock.production.lot', 'Production lot', select=True, ondelete='cascade'),
     }
 
     _defaults = {
@@ -732,7 +764,7 @@ class stock_move(osv.osv):
         'priority': fields.selection([('0','Not urgent'),('1','Urgent')], 'Priority'),
 
         'date': fields.datetime('Date Created'),
-        'date_planned': fields.date('Scheduled date', required=True),
+        'date_planned': fields.datetime('Scheduled date', required=True),
 
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
 
@@ -786,7 +818,7 @@ class stock_move(osv.osv):
         'state': lambda *a: 'draft',
         'priority': lambda *a: '1',
         'product_qty': lambda *a: 1.0,
-        'date_planned': lambda *a: time.strftime('%Y-%m-%d'),
+        'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
 
@@ -822,7 +854,7 @@ class stock_move(osv.osv):
             if dest:
                 if dest[1]=='transparent':
                     self.write(cr, uid, [m.id], {
-                        'date_planned': (DateTime.strptime(m.date_planned, '%Y-%m-%d') + \
+                        'date_planned': (DateTime.strptime(m.date_planned, '%Y-%m-%d %H:%M:%S') + \
                             DateTime.RelativeDateTime(days=dest[2] or 0)).strftime('%Y-%m-%d'),
                         'location_dest_id': dest[0].id})
                 else:
@@ -854,7 +886,7 @@ class stock_move(osv.osv):
                     'picking_id': pickid,
                     'state':'waiting',
                     'move_history_ids':[],
-                    'date_planned': (DateTime.strptime(move.date_planned, '%Y-%m-%d') + DateTime.RelativeDateTime(days=delay or 0)).strftime('%Y-%m-%d'),
+                    'date_planned': (DateTime.strptime(move.date_planned, '%Y-%m-%d %H:%M:%S') + DateTime.RelativeDateTime(days=delay or 0)).strftime('%Y-%m-%d'),
                     'move_history_ids2':[]}
                 )
                 self.pool.get('stock.move').write(cr, uid, [move.id], {

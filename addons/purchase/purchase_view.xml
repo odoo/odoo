@@ -16,17 +16,17 @@
                 </calendar>
             </field>
         </record>
-		<record model="ir.ui.view" id="view_purchase_order_graph">
-			<field name="name">purchase.order.graph</field>
-			<field name="model">purchase.order</field>
-			<field name="type">graph</field>
-			<field name="arch" type="xml">
-				<graph string="Purchase Order" type="bar">
-					<field name="partner_id"/>
-					<field name="amount_total" operator="+"/>
-				</graph>
-			</field>
-		</record>
+        <record model="ir.ui.view" id="view_purchase_order_graph">
+            <field name="name">purchase.order.graph</field>
+            <field name="model">purchase.order</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Purchase Order" type="bar">
+                    <field name="partner_id"/>
+                    <field name="amount_total" operator="+"/>
+                </graph>
+            </field>
+        </record>
 
         <record id="purchase_order_form" model="ir.ui.view">
             <field name="name">purchase.order.form</field>
