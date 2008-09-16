@@ -145,7 +145,7 @@ class process_node(osv.osv):
         'model_id': fields.many2one('ir.model', 'Object', ondelete='set null'),
         'model_states': fields.char('States Expression', size=128),
         'flow_start': fields.boolean('Starting Flow'),
-        'transition_ids': fields.one2many('process.transition', 'target_node_id', 'Transitions'),
+        'transition_ids': fields.one2many('process.transition', 'source_node_id', 'Transitions'),
     }
     _defaults = {
         'kind': lambda *args: 'state',
