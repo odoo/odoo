@@ -977,11 +977,11 @@ class stock_move(osv.osv):
         return True
 
     def action_done(self, cr, uid, ids, context=None):
+        track_flag=False
         for move in self.browse(cr, uid, ids):
             if move.move_dest_id.id and (move.state != 'done'):
                 mid = move.move_dest_id.id
-                if move.move_dest_id.id:
-                    cr.execute('insert into stock_move_history_ids (parent_id,child_id) values (%d,%d)', (move.id, move.move_dest_id.id))
+                cr.execute('insert into stock_move_history_ids (parent_id,child_id) values (%d,%d)', (move.id, move.move_dest_id.id))
                 if move.move_dest_id.state in ('waiting','confirmed'):
                     self.write(cr, uid, [move.move_dest_id.id], {'state':'assigned'})
                     if move.move_dest_id.picking_id:
@@ -1069,6 +1069,11 @@ class stock_move(osv.osv):
                                 'line_id': lines,
                                 'ref': ref,
                             })
+            
+                
+            if (move.product_id.tracking and not move.prodlot_id):
+                raise osv.except_osv('Warning ! ','You should put a production lot for : '+move.product_id.name)
+            
         self.write(cr, uid, ids, {'state':'done'})
 
         wf_service = netsvc.LocalService("workflow")
@@ -1234,4 +1239,3 @@ class stock_picking_move_wizard(osv.osv_memory):
 stock_picking_move_wizard()        
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

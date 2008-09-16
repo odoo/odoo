@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+        <!-- configartion view -->
+
+        <record id="view_config_crm_menu" model="ir.ui.view">
+            <field name="name">Configure Menu for Sections</field>
+            <field name="model">crm.menu.config_wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Configure CRM Sections">
+                    <separator col="4" colspan="4" string="Configure CRM Menu for Selected Sections"/>
+                    <newline/>
+                    <field name="meeting"/>
+                    <field name="lead"/>
+                    <field name="opportunity"/>
+                    <field name="jobs"/>
+                    <field name="bugs"/>
+                    <field name="fund"/>
+                    <group col="4" colspan="4">
+                        <button icon="gtk-cancel" name="action_cancel" type="object" special="cancel" string="Cancel"/>
+                        <button icon="gtk-go-forward" name="action_create" string="Next" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_config_crm_menu" model="ir.actions.act_window">
+            <field name="name">Configure Menu for CRM case Section</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">crm.menu.config_wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <!-- register configuration wizard -->
+        <record id="config_wizard_step_case_section_menu" model="ir.module.module.configuration.step">
+            <field name="name">Create Menu for CRM Case Section</field>
+            <field name="note">This Configuration step use to create Menu for Case Sections</field>
+            <field name="action_id" ref="action_view_config_crm_menu"/>
+            <field name="state">open</field>
+        </record>
+	</data>
+</openerp>

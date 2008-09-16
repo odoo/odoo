@@ -147,7 +147,7 @@ class PopulateStatementFromInv(wizard.interface):
                 'fields':START_FIELD,
                 'state': [
                     ('end', '_Cancel'),
-                    ('customer', 'C_ustomer invoices', '', True),
+                    ('customer', '_Customer invoices', '', True),
                     ('supplier', '_Supplier invoices', '', True)
                 ]
             },

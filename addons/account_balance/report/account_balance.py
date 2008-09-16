@@ -396,7 +396,7 @@ class account_balance(report_sxw.rml_parse):
 
             ctx['fiscalyear'] = id
             ctx['periods'] = form['periods'][0][2]
-            ctx['period_manner']=form['select_periods']
+            ctx['period_manner']=form['period_manner']
             tmp = self.pool.get('account.account').browse(self.cr, self.uid, ids, ctx.copy())
 
             if len(tmp):
@@ -454,7 +454,7 @@ class account_balance(report_sxw.rml_parse):
 
             ctx['fiscalyear'] = id
             ctx['periods'] = form['periods'][0][2]
-            ctx['period_manner']=form['select_periods']
+            ctx['period_manner']=form['period_manner']
 
             tmp1 = self.pool.get('account.account').browse(self.cr, self.uid, ids,ctx.copy())
 

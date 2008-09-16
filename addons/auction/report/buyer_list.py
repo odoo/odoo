@@ -81,7 +81,6 @@ class buyer_list(report_sxw.rml_parse):
 #       self.cr.execute('select ach_uid,count(1) as no_lot, sum(obj_price) as adj_price, sum(buyer_price)-sum(obj_price) as buyer_cost ,sum(buyer_price) as to_pay from auction_lots where id in ('+','.join(map(str,self.auc_lot_ids))+') and  auction_id=%d  and ach_uid is not null group by ach_uid '%(auc_date_ids[0]))
         self.cr.execute('select ach_login as ach_uid,count(1) as no_lot, sum(obj_price) as adj_price, sum(buyer_price)-sum(obj_price) as buyer_cost ,sum(buyer_price) as to_pay from auction_lots where  id in ('+','.join(map(str,self.auc_lot_ids))+') and  auction_id=%d and ach_login is not null  group by ach_login order by ach_login'%(auc_date_ids[0]))
         res = self.cr.dictfetchall()
-        print "ressssssssssss",res
         for r in res:
 #           if r['ach_uid']:
 #               tnm=self.pool.get('res.partner').read(self.cr,self.uid,[r['ach_uid']],['name'])#

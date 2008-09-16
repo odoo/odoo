@@ -72,15 +72,18 @@ def _pay_and_reconcile(self, cr, uid, data, context):
     if not abs(data['form']['total'] - (data['form']['amount']+data['form']['amount2']+data['form']['amount3']))<0.01:
         rest=data['form']['total']-(data['form']['amount']+data['form']['amount2']+data['form']['amount3'])
         raise wizard.except_wizard('Payment aborted !', 'You should pay all the total: "%.2f" are missing to accomplish the payment.' %(round(rest,2)))
+    
     pool = pooler.get_pool(cr.dbname)
     lots = pool.get('auction.lots').browse(cr,uid,data['ids'],context)
     ref_bk_s=pooler.get_pool(cr.dbname).get('account.bank.statement.line')
+    
     for lot in lots:
         if data['form']['buyer_id']:
             pool.get('auction.lots').write(cr,uid,[lot.id],{'ach_uid':data['form']['buyer_id']})
         if not lot.auction_id:
             raise wizard.except_wizard('Error !', 'No auction date for "%s": Please set one.'%(lot.name))
         pool.get('auction.lots').write(cr,uid,[lot.id],{'is_ok':True})
+    
     for st,stamount in [('statement_id1','amount'),('statement_id2','amount2'),('statement_id3','amount3')]:
         if data['form'][st]:
             new_id=ref_bk_s.create(cr,uid,{

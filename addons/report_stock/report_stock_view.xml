@@ -24,13 +24,41 @@
             <field name="view_mode">form,tree</field>
         </record>
         
-        <menuitem id="next_id_61" name="Reporting" parent="stock.menu_stock_root"/><menuitem id="next_id_62" name="Traceability" parent="next_id_61"/><menuitem action="action_report_stock_prodlots_form" id="menu_report_stock_prodlots" parent="next_id_62"/>
+        <menuitem id="next_id_61" name="Reporting" parent="stock.menu_stock_root"/><menuitem id="next_id_62" name="Traceability" parent="next_id_61"/>
+        
+        <menuitem action="action_report_stock_prodlots_form" id="menu_report_stock_prodlots" parent="next_id_62"/>
         
         <act_window domain="[('location_id', '=', active_id)]" id="act_stock_location_2_report_stock_prodlots" name="Stock by production lots" res_model="report.stock.prodlots" src_model="stock.location"/>
         
         <act_window domain="[('product_id', '=', active_id)]" id="act_product_product_2_report_stock_prodlots" name="Stock by production lots" res_model="report.stock.prodlots" src_model="product.product"/>
         
         <act_window domain="[('prodlot_id', '=', active_id)]" id="act_stock_production_lot_2_report_stock_prodlots" name="Stock" res_model="report.stock.prodlots" src_model="stock.production.lot"/>
+        
+        <record id="report_stock_latest_tree" model="ir.ui.view">
+            <field name="name">report.inventory.latest.view</field>
+            <field name="model">report.inventory.latest</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Latest inventories by product">
+                    <field name="product" select="1"/>
+                    <field name="qty" select="1"/>
+                    <field name="uom"/>
+                    <field name="inventory"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="action_report_stock_latest_form" model="ir.actions.act_window">
+            <field name="name">Latest Inventories by product</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">report.inventory.latest</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[('name','&gt;=',time.strftime('%Y-%m-01'))]</field>
+        </record>
+        
+        <menuitem action="action_report_stock_latest_form" id="menu_report_stock_latest" parent="next_id_62"/>
         
     </data>
 </openerp>
