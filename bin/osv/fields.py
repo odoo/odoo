@@ -204,7 +204,11 @@ class binary(_column):
     _symbol_set = (_symbol_c, _symbol_f)
 
     _classic_read = False
-    
+
+    def __init__(self, string='unknown', filters=None, **args):
+        _column.__init__(self, string=string, **args)
+        self.filters = filters
+
     def get_memory(self, cr, obj, ids, name, user=None, context=None, values=None):
         if not context:
             context = {}
@@ -220,7 +224,7 @@ class binary(_column):
                     break
             res.setdefault(i, val)
             if context.get('get_binary_size', True):
-                res[i] = tools.human_size(val) 
+                res[i] = tools.human_size(val)
 
         return res
 
@@ -615,7 +619,7 @@ class function(_column):
             res = self._fnct(obj, cr, user, ids, name, self._arg, context)
         else:
             res = self._fnct(cr, obj._table, ids, name, self._arg, context)
-        
+
         if self._type == 'binary' and context.get('get_binary_size', False):
             # convert the data returned by the function with the size of that data...
             res = dict(map(lambda (x, y): (x, tools.human_size(len(y))), res.items()))
