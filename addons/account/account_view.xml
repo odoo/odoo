@@ -1525,13 +1525,13 @@
             </field>
         </record>
         <record id="action_account_tax_template_form" model="ir.actions.act_window">
-            <field name="name">Account Tax Templates</field>
+            <field name="name">Tax Templates</field>
             <field name="res_model">account.tax.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem action="action_account_tax_template_form" id="menu_action_account_tax_template_form" parent="next_id_27"/>
+        <menuitem action="action_account_tax_template_form" id="menu_action_account_tax_template_form" parent="next_id_27" sequence="13"/>
 
 		<!-- Account Tax Code Templates -->
 		<record id="view_tax_code_template_tree" model="ir.ui.view">
@@ -1565,12 +1565,12 @@
         </record>
 
         <record id="action_account_tax_code_template_form" model="ir.actions.act_window">
-            <field name="name">Account Tax Code Templates</field>
+            <field name="name">Tax Code Templates</field>
             <field name="res_model">account.tax.code.template</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="action_account_tax_code_template_form" id="menu_action_account_tax_code_template_form" parent="next_id_27"/>
+        <menuitem action="action_account_tax_code_template_form" id="menu_action_account_tax_code_template_form" parent="next_id_27" sequence="14"/>
 
 
 		<!--  Wizard for Multi Charts of Accounts -->
