@@ -93,60 +93,26 @@ logger.notifyChannel("init", netsvc.LOG_INFO, 'connecting to database')
 import psycopg
 import pooler
 
-# try to connect to the database
-try:
-#   pooler.init()
-    pass
-except psycopg.OperationalError, err:
-    logger.notifyChannel("init", netsvc.LOG_ERROR, "could not connect to database '%s'!" % (tools.config["db_name"],))
-
-    msg = str(err).replace("FATAL:", "").strip()
-    db_msg = "database \"%s\" does not exist" % (tools.config["db_name"],)
-
-    # Note: this is ugly but since psycopg only uses one exception for all errors
-    # I don't think it's possible to do differently
-    if msg == db_msg:
-        print """
-    this database does not exist
-
-You need to create it using the command:
-
-    createdb --encoding=UNICODE '%s'
-
-When you run openerp-server for the first time it will initialise the
-database. You may force this behaviour at a later time by using the command:
-
-    ./openerp-server --init=all
-
-Two accounts will be created by default:
-    1. login: admin      password : admin
-    2. login: demo       password : demo
-
-""" % (tools.config["db_name"])
-    else:
-        print "\n    "+msg+"\n"
-    sys.exit(1)
-
 db_name = tools.config["db_name"]
 
 # test whether it is needed to initialize the db (the db is empty)
-try:
-    cr = pooler.get_db_only(db_name).cursor()
-except psycopg.OperationalError:
-    logger.notifyChannel("init", netsvc.LOG_INFO, "could not connect to database '%s'!" % db_name,)
-    cr = None
-if cr:
-    cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname='ir_ui_menu'")
-    if len(cr.fetchall())==0:
-#if False:
-        logger.notifyChannel("init", netsvc.LOG_INFO, "init db")
-        tools.init_db(cr)
-        # in that case, force --init=all
-        tools.config["init"]["all"] = 1
-        tools.config['update']['all'] = 1
-        if not tools.config['without_demo']:
-            tools.config["demo"]['all'] = 1
-    cr.close()
+#try:
+#    cr = pooler.get_db_only(db_name).cursor()
+#except psycopg.OperationalError:
+#    logger.notifyChannel("init", netsvc.LOG_INFO, "could not connect to database '%s'!" % db_name,)
+#    cr = None
+#if cr:
+#    cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname='ir_ui_menu'")
+#    if len(cr.fetchall())==0:
+##if False:
+#        logger.notifyChannel("init", netsvc.LOG_INFO, "init db")
+#        tools.init_db(cr)
+#        # in that case, force --init=all
+#        tools.config["init"]["all"] = 1
+#        tools.config['update']['all'] = 1
+#        if not tools.config['without_demo']:
+#            tools.config["demo"]['all'] = 1
+#    cr.close()
 
 #----------------------------------------------------------
 # launch modules install/upgrade/removes if needed

@@ -31,6 +31,7 @@
 from osv import fields, osv
 from osv.orm import browse_null, browse_record
 import re
+import tools
 
 def one_in(setA, setB):
     """Check the presence of an element of setA in setB
@@ -39,34 +40,6 @@ def one_in(setA, setB):
         if x in setB:
             return True
     return False
-
-icons = map(lambda x: (x,x), ['STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
-'STOCK_CANCEL', 'STOCK_CDROM', 'STOCK_CLEAR', 'STOCK_CLOSE', 'STOCK_COLOR_PICKER',
-'STOCK_CONNECT', 'STOCK_CONVERT', 'STOCK_COPY', 'STOCK_CUT', 'STOCK_DELETE',
-'STOCK_DIALOG_AUTHENTICATION', 'STOCK_DIALOG_ERROR', 'STOCK_DIALOG_INFO',
-'STOCK_DIALOG_QUESTION', 'STOCK_DIALOG_WARNING', 'STOCK_DIRECTORY', 'STOCK_DISCONNECT',
-'STOCK_DND', 'STOCK_DND_MULTIPLE', 'STOCK_EDIT', 'STOCK_EXECUTE', 'STOCK_FILE',
-'STOCK_FIND', 'STOCK_FIND_AND_REPLACE', 'STOCK_FLOPPY', 'STOCK_GOTO_BOTTOM',
-'STOCK_GOTO_FIRST', 'STOCK_GOTO_LAST', 'STOCK_GOTO_TOP', 'STOCK_GO_BACK',
-'STOCK_GO_DOWN', 'STOCK_GO_FORWARD', 'STOCK_GO_UP', 'STOCK_HARDDISK',
-'STOCK_HELP', 'STOCK_HOME', 'STOCK_INDENT', 'STOCK_INDEX', 'STOCK_ITALIC',
-'STOCK_JUMP_TO', 'STOCK_JUSTIFY_CENTER', 'STOCK_JUSTIFY_FILL',
-'STOCK_JUSTIFY_LEFT', 'STOCK_JUSTIFY_RIGHT', 'STOCK_MEDIA_FORWARD',
-'STOCK_MEDIA_NEXT', 'STOCK_MEDIA_PAUSE', 'STOCK_MEDIA_PLAY',
-'STOCK_MEDIA_PREVIOUS', 'STOCK_MEDIA_RECORD', 'STOCK_MEDIA_REWIND',
-'STOCK_MEDIA_STOP', 'STOCK_MISSING_IMAGE', 'STOCK_NETWORK', 'STOCK_NEW',
-'STOCK_NO', 'STOCK_OK', 'STOCK_OPEN', 'STOCK_PASTE', 'STOCK_PREFERENCES',
-'STOCK_PRINT', 'STOCK_PRINT_PREVIEW', 'STOCK_PROPERTIES', 'STOCK_QUIT',
-'STOCK_REDO', 'STOCK_REFRESH', 'STOCK_REMOVE', 'STOCK_REVERT_TO_SAVED',
-'STOCK_SAVE', 'STOCK_SAVE_AS', 'STOCK_SELECT_COLOR', 'STOCK_SELECT_FONT',
-'STOCK_SORT_ASCENDING', 'STOCK_SORT_DESCENDING', 'STOCK_SPELL_CHECK',
-'STOCK_STOP', 'STOCK_STRIKETHROUGH', 'STOCK_UNDELETE', 'STOCK_UNDERLINE',
-'STOCK_UNDO', 'STOCK_UNINDENT', 'STOCK_YES', 'STOCK_ZOOM_100',
-'STOCK_ZOOM_FIT', 'STOCK_ZOOM_IN', 'STOCK_ZOOM_OUT',
-'terp-account', 'terp-crm', 'terp-mrp', 'terp-product', 'terp-purchase',
-'terp-sale', 'terp-tools', 'terp-administration', 'terp-hr', 'terp-partner',
-'terp-project', 'terp-report', 'terp-stock', 'terp-calendar', 'terp-graph',
-])
 
 class many2many_unique(fields.many2many):
     def set(self, cr, obj, id, name, values, user=None, context=None):
@@ -186,7 +159,7 @@ class ir_ui_menu(osv.osv):
         for m in self.browse(cr, uid, ids, context=context):
             res[m.id] = ('stock', (m.icon,'ICON_SIZE_MENU'))
         return res
-    
+
     def onchange_icon(self, cr, uid, ids, icon):
         if not icon:
             return {}
@@ -201,7 +174,7 @@ class ir_ui_menu(osv.osv):
             'menu_id', 'gid', 'Groups'),
         'complete_name': fields.function(_get_full_name, method=True,
             string='Complete Name', type='char', size=128),
-        'icon': fields.selection(icons, 'Icon', size=64),
+        'icon': fields.selection(tools.icons, 'Icon', size=64),
         'icon_pict': fields.function(_get_icon_pict, method=True, type='picture'),
         'action': fields.function(_action, fnct_inv=_action_inv,
             method=True, type='reference', string='Action',
