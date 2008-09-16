@@ -109,5 +109,55 @@
         action="action_process_form"
         parent="menu_process"/>
 
+    <!-- Transitions -->
+
+    <record model="ir.ui.view" id="view_process_transition_tree">
+        <field name="name">process.transition.tree</field>
+        <field name="model">process.transition</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Process Transition">
+                <field name="name"/>
+                <field name="source_node_id"/>
+                <field name="target_node_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_process_transition_form">
+        <field name="name">process.transition.form</field>
+        <field name="model">process.transition</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Process Transition">
+                <field name="name" select="1"/>
+                <newline/>
+                <field name="source_node_id" select="1"/>
+                <field name="target_node_id" select="1"/>
+                <notebook colspan="4">
+                <page string="Actions">
+                    <field name="action_ids" nolabel="1" colspan="4"/>
+                </page><page string="Roles">
+                    <field name="role_ids" nolabel="1" colspan="4"/>
+                </page><page string="Notes">
+                    <field name="note" nolabel="1" colspan="4"/>
+                </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_process_transition_form">
+        <field name="name">Process Transitions</field>
+        <field name="res_model">process.transition</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem
+        id="menu_process_transition_form"
+        action="action_process_transition_form"
+        parent="menu_process"/>
+
+
 </data>
 </openerp>
