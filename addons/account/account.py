@@ -1758,7 +1758,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'company_id':fields.many2one('res.company','Company',required=True),
         'chart_template_id': fields.many2one('account.chart.template','Chart Template',required=True),
         'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Bank Accounts',required=True),
-        'code_digits':fields.integer('No. of Digits for Account Code',required=True),
+        'code_digits':fields.integer('# of Digits',required=True,help="No. of Digits to use for account code"),
     }
 
     def action_create(self, cr, uid, ids, context=None):
@@ -1980,7 +1980,22 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 #create the property
                 property_obj.create(cr, uid, vals)
 
-        return {}
+        return {
+                'view_type': 'form',
+                "view_mode": 'form',
+                'res_model': 'ir.module.module.configuration.wizard',
+                'type': 'ir.actions.act_window',
+                'target':'new',
+        }
+    def action_cancel(self,cr,uid,ids,conect=None):
+        return {
+                'view_type': 'form',
+                "view_mode": 'form',
+                'res_model': 'ir.module.module.configuration.wizard',
+                'type': 'ir.actions.act_window',
+                'target':'new',
+        }    
+        
 
 wizard_multi_charts_accounts()
 
