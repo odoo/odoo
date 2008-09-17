@@ -8,7 +8,8 @@
     "demo_xml" : ["hr_attendance_demo.xml"],
     "update_xml" : [
        "hr_attendance_view.xml",
-       "hr_attendance_wizard.xml"
+       "hr_attendance_wizard.xml",
+       "hr_attendance_report.xml"
     ],
     "active": False,
     "installable": True,
