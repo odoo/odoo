@@ -1,20 +1,20 @@
-.TH tinyerp_server 1
+.TH openerp_server 1
 
 .SH NAME
-tinyerp_server \- Server for Tiny ERP 
+openerp_server \- Server for OpenERP 
 
 .SH SYNOPSIS
-.B tinyerp_server.py [options]
+.B openerp_server.py [options]
 
 .SH DESCRIPTION
-TinyERP is an Enterprise Resource Planning and Customer Relationship
+OpenERP is an Enterprise Resource Planning and Customer Relationship
 Management software package. It is developed to meet changing needs. 
 The main functional features are: CRM and SRM, analytic and financial 
 accounting, double-entry stock management, sales and purchases management, 
 tasks automation, a help desk, marketing campaigns, and vertical modules 
 for very specific businesses. Technical features include a distributed 
 server, flexible workflows, an object database, a dynamic GUI, customizable 
-reports, and a SOAP and XML-RPC interface.
+reports, and a NET-RPC and XML-RPC interface.
 
 .SH OPTIONS
 
@@ -28,11 +28,11 @@ Print the program's version number and exit.
 
 .TP
 .B \-c \fIFILE\fB, \-\-config=\fIFILE\fB
-Specify an alternate config file. By default, tinyerp server uses ~/.terp_serverrc
+Specify an alternate config file. By default, openerp server uses ~/.openerp_serverrc
 
 .TP
 .B \-s, \-\-save
-Save the configuration to ~/.terp_serverrc. By default, the options given on the command line are not saved.
+Save the configuration to ~/.openerp_serverrc. By default, the options given on the command line are not saved.
 
 .TP
 .B \-p \fIPORT\fB, \-\-port=\fIPORT\fB
@@ -66,7 +66,7 @@ Enable verbose mode.
 
 .SH INTERNATIONALISATION OPTIONS
 
-Use these options to translate Tiny ERP in another language. See the i18n
+Use these options to translate OpenERP in another language. See the i18n
 section of the user manual. Option '-l' is mandatory.
 
 .TP 
@@ -83,18 +83,16 @@ Export all sentences to be translated to \fIFILEPATH\fR.
 Import the CSV file at \fIFILEPATH\fR. It should contain the translations for the language specified with the \fI-l\fR option.
 
 .SH FILES
-~/.terp_serverrc
+~/.openerp_serverrc
 
 .SH AUTHORS
 
-Tiny ERP is a product of \fBTiny.be\fR (\fIhttp://www.tiny.be\fR)
+OpenERP is a product of \fBTiny.be\fR (\fIhttp://www.tiny.be\fR)
 
 .SH SEE ALSO
-terp_serverrc(5)
-tinyerp(1)
+openerp_serverrc(5)
+openerp(1)
 .br
-\fIhttp://www.tinyerp.com\fR : Tiny ERP functional description
-.br
-\fIhttp://www.tinyerp.org\fR : Tiny ERP developer zone
+\fIhttp://www.openerp.com\fR : OpenERP functional description
 
 

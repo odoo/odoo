@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data noupdate="1">
         <record id="user_demo" model="res.users">
             <field name="login">demo</field>
@@ -10,7 +10,7 @@
             <field name="menu_id" ref="action_menu_admin"/>
             <field name="address_id" ref="main_address"/>
             <field name="company_id" ref="main_company"/>
+            <field name="groups_id" eval="('base.group_user')"/> 
         </record>
-        
     </data>
-</terp>
+</openerp>

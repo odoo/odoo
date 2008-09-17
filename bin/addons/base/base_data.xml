@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data noupdate="1">
         <record id="view_menu" model="ir.ui.view">
             <field name="name">ir.ui.menu.tree</field>
@@ -21,17 +21,6 @@
             <field name="res_model">ir.ui.menu</field>
             <field name="view_type">tree</field>
             <field eval="'[(\'parent_id\',\'=\',False)]'" name="domain"/>
-        </record>
-        
-        <record id="group_admin" model="res.groups">
-            <field name="name">Administration/Administrator</field>
-        </record>
-        
-        <record id="group_extended" model="res.groups">
-            <field name="name">Extended View</field>
-        </record>
-        <record id="group_no_one" model="res.groups">
-            <field name="name">No One</field>
         </record>
         
         <record id="lang_en" model="res.lang">
@@ -1309,7 +1298,7 @@
             <field name="accuracy">4</field>
         </record>
         <record id="rateVEB" model="res.currency.rate">
-            <field name="rate">1.0</field>
+            <field name="rate">3132.9</field>
             <field name="currency_id" ref="VEB"/>
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
@@ -1498,17 +1487,5 @@
             <test expr="currency_id.code == 'eur'.upper()"/>
             <test expr="name">Tiny sprl</test>
         </assert>
-        
-        <record id="user_admin" model="res.users">
-            <field name="login">admin</field>
-            <field name="password">admin</field>
-            <field name="name">Administrator</field>
-            <field name="signature">Administrator</field>
-            <field name="action_id" ref="action_menu_admin"/>
-            <field name="menu_id" ref="action_menu_admin"/>
-            <field name="address_id" ref="main_address"/>
-            <field eval="[(6,0,[group_admin])]" name="groups_id"/>
-            <field name="company_id" ref="main_company"/>
-        </record>
     </data>
-</terp>
+</openerp>

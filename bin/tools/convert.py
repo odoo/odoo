@@ -226,12 +226,16 @@ class xml_import(object):
     def _test_xml_id(self, xml_id):
         id = xml_id
         if '.' in xml_id:
-            assert len(id.split('.'))==2, """The ID reference '"%s" must contains
+            module, id = xml_id.split('.', 1)
+            assert '.' not in id, """The ID reference "%s" must contains
 maximum one dot. They are used to refer to other modules ID, in the
 form: module.record_id""" % (xml_id,)
-            base, id = xml_id.split('.')
+            if module != self.module: 
+                modcnt = self.pool.get('ir.module.module').search_count(self.cr, self.uid, ['&', ('name', '=', module), ('state', 'in', ['installed'])])
+                assert modcnt == 1, """The ID "%s" refer to an uninstalled module""" % (xml_id,)
+
         if len(id) > 64:
-            self.logger.notifyChannel('init', netsvc.LOG_ERROR, 'id: %s is to long (max: 64)'%xml_id)
+            self.logger.notifyChannel('init', netsvc.LOG_ERROR, 'id: %s is to long (max: 64)'% (id,))
 
     def _tag_delete(self, cr, rec, data_node=None):
         d_model = rec.getAttribute("model")
@@ -252,7 +256,7 @@ form: module.record_id""" % (xml_id,)
         for dest,f in (('name','string'),('model','model'),('report_name','name')):
             res[dest] = rec.getAttribute(f).encode('utf8')
             assert res[dest], "Attribute %s of report is empty !" % (f,)
-        for field,dest in (('rml','report_rml'),('xml','report_xml'),('xsl','report_xsl')):
+        for field,dest in (('rml','report_rml'),('xml','report_xml'),('xsl','report_xsl'),('attachment','attachment')):
             if rec.hasAttribute(field):
                 res[dest] = rec.getAttribute(field).encode('utf8')
         if rec.hasAttribute('auto'):
@@ -674,6 +678,14 @@ form: module.record_id""" % (xml_id,)
     def parse(self, xmlstr):
         d = xml.dom.minidom.parseString(xmlstr)
         de = d.documentElement
+
+        if not de.nodeName in ['terp', 'openerp']:
+            self.logger.notifyChannel("init", netsvc.LOG_ERROR, "Mismatch xml format" )
+            raise Exception( "Mismatch xml format: only terp or openerp as root tag" )
+
+        if de.nodeName == 'terp':
+            self.logger.notifyChannel("init", netsvc.LOG_WARNING, "The tag <terp /> is deprecated, use <openerp/>")
+
         for n in [i for i in de.childNodes if (i.nodeType == i.ELEMENT_NODE and i.nodeName=="data")]:
             for rec in n.childNodes:
                 if rec.nodeType == rec.ELEMENT_NODE:

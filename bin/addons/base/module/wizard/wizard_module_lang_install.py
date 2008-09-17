@@ -30,6 +30,7 @@
 
 import wizard
 import tools
+import pooler
 
 view_form_end = """<?xml version="1.0"?>
 <form string="Language file loaded.">
@@ -55,9 +56,10 @@ view_form = """<?xml version="1.0"?>
 class wizard_lang_install(wizard.interface):
     def _lang_install(self, cr, uid, data, context):
         lang = data['form']['lang']
-        if lang and lang != 'en_US':
-            filename = tools.config["root_path"] + "/i18n/" + lang + ".csv"
-            tools.trans_load(cr.dbname, filename, lang)
+        if lang:
+            modobj = pooler.get_pool(cr.dbname).get('ir.module.module')
+            mids = modobj.search(cr, uid, [('state', '=', 'installed')])
+            modobj.update_translations(cr, uid, mids, lang)
         return {}
 
     def _get_language(sel, cr, uid, context):

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data noupdate="1">
         
         <!--
@@ -58,7 +58,7 @@
             <field name="name">Prospect</field>
         </record>
         <record id="res_partner_category_2" model="res.partner.category">
-            <field name="name">Tiny ERP Partners</field>
+            <field name="name">OpenERP Partners</field>
             <field name="parent_id" ref="res_partner_category_0"/>
         </record>
         <record id="res_partner_category_3" model="res.partner.category">
@@ -195,7 +195,7 @@
         <record id="res_partner_11" model="res.partner">
             <field name="name">Leclerc</field>
             <field eval="1200.00" name="credit_limit"/>
-            <field name="user_id" ref="user_admin"/>
+            <field name="user_id" ref="user_demo"/>
             <field eval="[(6, 0, [ref('res_partner_category_0')])]" name="category_id"/>
         </record>
         <record id="res_partner_14" model="res.partner">
@@ -210,7 +210,7 @@
             <field name="ean13">3020178570171</field>
             <field name="parent_id" ref="res_partner_14"/>
             <field eval="1500.00" name="credit_limit"/>
-            <field name="user_id" ref="user_admin"/>
+            <field name="user_id" ref="user_demo"/>
             <field eval="[(6, 0, [ref('res_partner_category_11')])]" name="category_id"/>
         </record>
         
@@ -357,4 +357,4 @@
         </record>
         
     </data>
-</terp>
+</openerp>

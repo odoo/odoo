@@ -44,7 +44,7 @@ def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False)
         db = db_dic[db_name]
     else:
         logger = netsvc.Logger()
-        logger.notifyChannel('pooler', netsvc.LOG_INFO, 'Connecting to %s' % (db_name))
+        logger.notifyChannel('pooler', netsvc.LOG_INFO, 'Connecting to %s' % (db_name.lower()))
         db = sql_db.db_connect(db_name)
         db_dic[db_name] = db
 

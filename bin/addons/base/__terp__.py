@@ -2,6 +2,7 @@
 ##############################################################################
 #
 # Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2008 Camptocamp SA
 #
 # $Id$
 #
@@ -30,13 +31,15 @@
     "name" : "Base",
     "version" : "1.0",
     "author" : "Tiny",
-    "website" : "http://tinyerp.com",
+    "website" : "http://openerp.com",
     "category" : "Generic Modules/Base",
-    "description": "The kernel of Tiny ERP, needed for all installation.",
+    "description": "The kernel of OpenERP, needed for all installation.",
     "depends" : [],
     "init_xml" : [
         "base_data.xml",
         "base_menu.xml",
+        "base_security.xml",
+        "res/res_security.xml",
     ],
     "demo_xml" : [
         "base_demo.xml",
@@ -44,6 +47,7 @@
         "res/partner/crm_demo.xml",
     ],
     "update_xml" : [
+        "ir.model.access.csv",
         "base_update.xml",
         "ir/wizard/wizard_menu_view.xml",
         "ir/ir.xml",
@@ -68,6 +72,3 @@
     "active": True,
     "installable": True,
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

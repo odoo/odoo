@@ -40,6 +40,8 @@ import zipimport
 
 import wizard
 import addons
+import pooler
+import netsvc
 
 ver_regexp = re.compile("^(\\d+)((\\.\\d+)*)([a-z]?)((_(pre|p|beta|alpha|rc)\\d*)*)(-r(\\d+))?$")
 suffix_regexp = re.compile("^(alpha|beta|rc|pre|p)(\\d*)$")
@@ -270,20 +272,23 @@ class module(osv.osv):
     def state_update(self, cr, uid, ids, newstate, states_to_update, context={}, level=50):
         if level<1:
             raise orm.except_orm(_('Error'), _('Recursion error in modules dependencies !'))
-        demo = True
+        demo = False
         for module in self.browse(cr, uid, ids):
-            mdemo = True
+            mdemo = False
             for dep in module.dependencies_id:
                 if dep.state == 'unknown':
                     raise orm.except_orm(_('Error'), _('You try to install a module that depends on the module: %s.\nBut this module is not available in your system.') % (dep.name,))
+                ids2 = self.search(cr, uid, [('name','=',dep.name)])
                 if dep.state != newstate:
-                    ids2 = self.search(cr, uid, [('name','=',dep.name)])
-                    mdemo = self.state_update(cr, uid, ids2, newstate, states_to_update, context, level-1,) and mdemo
+                    mdemo = self.state_update(cr, uid, ids2, newstate, states_to_update, context, level-1,) or mdemo
+                else:
+                    od = self.browse(cr, uid, ids2)[0]
+                    mdemo = od.demo or mdemo
             if not module.dependencies_id:
                 mdemo = module.demo
             if module.state in states_to_update:
                 self.write(cr, uid, [module.id], {'state': newstate, 'demo':mdemo})
-            demo = demo and mdemo
+            demo = demo or mdemo
         return demo
 
     def button_install(self, cr, uid, ids, context={}):
@@ -317,19 +322,8 @@ class module(osv.osv):
     def button_upgrade_cancel(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'installed'})
         return True
-    def button_update_translations(self, cr, uid, ids, context={}):
-        cr.execute('select code from res_lang where translatable=TRUE')
-        langs = [l[0] for l in cr.fetchall()]
-        modules = self.read(cr, uid, ids, ['name'])
-        for module in modules:
-            files = self.get_module_info(module['name']).get('translations', {})
-            for lang in langs:
-                if files.has_key(lang):
-                    filepath = files[lang]
-                    # if filepath does not contain :// we prepend the path of the module
-                    if filepath.find('://') == -1:
-                        filepath = addons.get_module_resource(module['name'], filepath)
-                    tools.trans_load(filepath, lang)
+    def button_update_translations(self, cr, uid, ids, context=None):
+        self.update_translations(cr, uid, ids)
         return True
 
     # update the list of available packages
@@ -525,6 +519,28 @@ class module(osv.osv):
             dep_ids = map(lambda x:x[0],cr.fetchall())
             if len(dep_ids):                    
                 self.action_install(cr,uid,dep_ids,context=context)
+
+    def update_translations(self, cr, uid, ids, filter_lang=None):
+        logger = netsvc.Logger()
+
+        if not filter_lang:
+            pool = pooler.get_pool(cr.dbname)
+            lang_obj=pool.get('res.lang')
+            lang_ids=lang_obj.search(cr, uid, [('translatable', '=', True)])
+            filter_lang= [lang.code for lang in lang_obj.browse(cr, uid, lang_ids)]
+        elif not isinstance(filter_lang, (list, tuple)):
+            filter_lang = [filter_lang]
+
+        for mod in self.browse(cr, uid, ids):
+            if mod.state != 'installed':
+                continue
+            
+            for lang in filter_lang:
+                f = os.path.join(tools.config['addons_path'], mod.name, 'i18n', lang + '.po')
+                if os.path.exists(f):
+                    logger.notifyChannel("init", netsvc.LOG_INFO, 'addons %s: loading translation file for language %s' % (mod.name, lang))
+                    tools.trans_load(cr.dbname, f, lang, verbose=False)
+
 module()
 
 class module_dependency(osv.osv):
@@ -566,7 +582,7 @@ class module_config_wizard_step(osv.osv):
         'note':fields.text('Text'),
         'action_id':fields.many2one('ir.actions.act_window', 'Action', select=True,required=True, ondelete='cascade'),
         'sequence':fields.integer('Sequence'),
-        'state':fields.selection([('open', 'Open'),('done', 'Done'),('skip','Skip')], string='State', required=True)
+        'state':fields.selection([('open', 'Not Started'),('done', 'Done'),('skip','Skipped')], string='State', required=True)
     }
     _defaults={
         'state': lambda *a: 'open',
@@ -641,6 +657,7 @@ class module_configuration(osv.osv_memory):
                 'state': 'done',
                 }, context=context)
             return{
+                  'view_mode': item.action_id.view_mode,
                   'view_type': item.action_id.view_type,
                   'view_id':item.action_id.view_id and [item.action_id.view_id.id] or False,
                   'res_model': item.action_id.res_model,
@@ -649,9 +666,6 @@ class module_configuration(osv.osv_memory):
             }
         return {'type':'ir.actions.act_window_close' }
 module_configuration()
-
-
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

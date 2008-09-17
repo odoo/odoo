@@ -103,6 +103,7 @@
             <rng:optional><rng:attribute name="xsl"/></rng:optional>
             <rng:optional> <rng:attribute name="auto" /> </rng:optional>
             <rng:optional> <rng:attribute name="header" /> </rng:optional>
+            <rng:optional> <rng:attribute name="attachment" /> </rng:optional>
             <rng:empty />
         </rng:element>
     </rng:define>
@@ -202,10 +203,17 @@
     </rng:define>
 
     <rng:start>
-        <rng:element name="terp">
-            <rng:oneOrMore>
-                <rng:ref name="data" />
-            </rng:oneOrMore>
-        </rng:element>
+        <rng:choice>
+            <rng:element name="openerp">
+                <rng:oneOrMore>
+                    <rng:ref name="data" />
+                </rng:oneOrMore>
+            </rng:element>
+            <rng:element name="terp">
+                <rng:oneOrMore>
+                    <rng:ref name="data" />
+                </rng:oneOrMore>
+            </rng:element>
+        </rng:choice>
     </rng:start>
 </rng:grammar>

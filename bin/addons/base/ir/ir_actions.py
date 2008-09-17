@@ -128,8 +128,8 @@ class report_xml(osv.osv):
             ('raw', 'raw'),
             ('sxw', 'sxw'),
             ], string='Type', required=True),
-        'groups_id': fields.many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', 'Groups')
-        
+        'groups_id': fields.many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', 'Groups'),
+        'attachment': fields.char('Save As Attachment Prefix', size=32, help='This is the prefix of the file name the print will be saved as attachement. Keep empty to not save the printed reports')
     }
     _defaults = {
         'type': lambda *a: 'ir.actions.report.xml',
@@ -138,6 +138,7 @@ class report_xml(osv.osv):
         'header': lambda *a: True,
         'report_sxw_content': lambda *a: False,
         'report_type': lambda *a: 'pdf',
+        'attachment': lambda *a: False,
     }
 
 report_xml()
@@ -154,7 +155,7 @@ class act_window(osv.osv):
             if (not act.view_ids):
                 modes = act.view_mode.split(',')
                 find = False
-                if act.view_id.id:
+                if act.view_id:
                     res[act.id].append((act.view_id.id, act.view_id.type))
                 for t in modes:
                     if act.view_id and (t == act.view_id.type) and not find:
@@ -376,7 +377,8 @@ class actions_server(osv.osv):
         'trigger_name': fields.char('Trigger Name', size=128),
         'trigger_obj_id': fields.reference('Trigger On', selection=model_get, size=128),
         'message': fields.text('Message', translate=True),
-        'address': fields.many2one('ir.model.fields', 'Email From / SMS'),
+        'address': fields.many2one('ir.model.fields', 'Email / Mobile'),
+        'sms': fields.char('SMS', size=160, translate=True),
         'child_ids': fields.one2many('ir.actions.actions', 'parent_id', 'Others Actions'),
         'usage': fields.char('Action Usage', size=32),
         'type': fields.char('Report Type', size=32, required=True),
@@ -492,7 +494,12 @@ class actions_server(osv.osv):
                 wf_service.trg_validate(uid, model, int(id), action.trigger_name, cr)
                 
             if action.state == 'sms':
-                #TODO: Apply mearge with the field
+                #TODO: set the user and password from the system
+                # for the sms gateway user / password
+                api_id = ''
+                text = action.sms
+                to = self.get_field_value(cr, uid, str(action.message), action, context)
+                #TODO: Apply message mearge with the field
                 if tools.sms_send(user, password, api_id, text, to) == True:
                     logger.notifyChannel('sms', netsvc.LOG_INFO, 'SMS successfully send to : %s' % (action.address))
                 else:
@@ -560,7 +567,3 @@ class act_window_close(osv.osv):
         'type': lambda *a: 'ir.actions.act_window_close',
     }
 act_window_close()
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

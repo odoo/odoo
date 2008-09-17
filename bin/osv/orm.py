@@ -493,6 +493,8 @@ class orm_template(object):
                         (prefix == field[0:len(prefix)]):
                     if fields_def[field[len(prefix)]]['type'] == 'integer':
                         res = line[i] and int(line[i])
+                    elif fields_def[field[len(prefix)]]['type'] == 'boolean':
+                        res = line[i] and eval(line[i])
                     elif fields_def[field[len(prefix)]]['type'] == 'float':
                         res = line[i] and float(line[i])
                     elif fields_def[field[len(prefix)]]['type'] == 'selection':
@@ -644,7 +646,7 @@ class orm_template(object):
                 translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, source=msg) or msg
                 error_msgs.append(
                         _("Error occur when validation the fields %s: %s") % (','.join(fields), translated_msg)
-                )      
+                )
         if error_msgs:
             cr.rollback()
             raise except_orm('ValidateError', '\n'.join(error_msgs))
@@ -684,7 +686,7 @@ class orm_template(object):
             if not read_access:
                 res[f]['readonly'] = True
                 res[f]['states'] = {}
-            for arg in ('digits', 'invisible'):
+            for arg in ('digits', 'invisible','filters'):
                 if hasattr(self._columns[f], arg) \
                         and getattr(self._columns[f], arg):
                     res[f][arg] = getattr(self._columns[f], arg)
@@ -767,7 +769,7 @@ class orm_template(object):
                 fields[node.getAttribute('name')] = attrs
 
         elif node.nodeType==node.ELEMENT_NODE and node.localName in ('form', 'tree'):
-            result = self.pool.get(self._name).view_header_get(cr, user, False, node.localName, context)
+            result = self.view_header_get(cr, user, False, node.localName, context)
             if result:
                 node.setAttribute('string', result.decode('utf-8'))
         if node.nodeType == node.ELEMENT_NODE and node.hasAttribute('groups'):
@@ -1073,7 +1075,7 @@ class orm_template(object):
     def name_get(self, cr, user, ids, context=None):
         raise _('The name_get method is not implemented on this object !')
 
-    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=None):
         raise _('The name_search method is not implemented on this object !')
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -1094,7 +1096,7 @@ class orm_memory(orm_template):
         self.check_id = 0
         cr.execute('delete from wkf_instance where res_type=%s', (self._name,))
 
-    def clear(self):
+    def vaccum(self, cr, uid):
         self.check_id += 1
         if self.check_id % self._check_time:
             return True
@@ -1103,30 +1105,34 @@ class orm_memory(orm_template):
         for id in self.datas:
             if self.datas[id]['internal.date_access'] < max:
                 tounlink.append(id)
-        self.unlink(tounlink)
+        self.unlink(cr, uid, tounlink)
         if len(self.datas)>self._max_count:
             sorted = map(lambda x: (x[1]['internal.date_access'], x[0]), self.datas.items())
             sorted.sort()
             ids = map(lambda x: x[1], sorted[:len(self.datas)-self._max_count])
-            self.unlink(ids)
+            self.unlink(cr, uid, ids)
         return True
 
-    def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
-        if not fields:
-            fields = self._columns.keys()
+    def read(self, cr, user, ids, fields_to_read=None, context=None, load='_classic_read'):
+        if not context:
+            context = {}
+        if not fields_to_read:
+            fields_to_read = self._columns.keys()
         result = []
         if self.datas:
             for id in ids:
                 r = {'id': id}
-                for f in fields:
+                for f in fields_to_read:
                     if id in self.datas:
                         r[f] = self.datas[id].get(f, False)
+                        if r[f] and isinstance(self._columns[f], fields.binary) and context.get('get_binary_size', False):
+                            r[f] = len(r[f])
                 result.append(r)
                 if id in self.datas:
                     self.datas[id]['internal.date_access'] = time.time()
-            fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields)
+            fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields_to_read)
             for f in fields_post:
-                res2 = self._columns[f].get_memory(cr, self, ids, f, user, context=context, values=False)
+                res2 = self._columns[f].get_memory(cr, self, ids, f, user, context=context, values=result)
                 for record in result:
                     record[f] = res2[record['id']]
         return result
@@ -1147,7 +1153,7 @@ class orm_memory(orm_template):
         self._validate(cr, user, [id_new], context)
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_write(user, self._name, id_new, cr)
-        self.clear()
+        self.vaccum(cr, user)
         return id_new
 
     def create(self, cr, user, vals, context=None):
@@ -1168,12 +1174,13 @@ class orm_memory(orm_template):
                 upd_todo.append(field)
         self.datas[id_new] = vals2
         self.datas[id_new]['internal.date_access'] = time.time()
+
         for field in upd_todo:
             self._columns[field].set_memory(cr, self, id_new, field, vals[field], user, context)
         self._validate(cr, user, [id_new], context)
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_create(user, self._name, id_new, cr)
-        self.clear()
+        self.vaccum(cr, user)
         return id_new
 
     def default_get(self, cr, uid, fields_list, context=None):
@@ -1382,8 +1389,10 @@ class orm(orm_template):
                                     iids = ids_lst[:40]
                                     ids_lst = ids_lst[40:]
                                     res = f.get(cr, self, iids, k, 1, {})
-                                    for r in res.items():
-                                        cr.execute("UPDATE \"%s\" SET \"%s\"='%s' where id=%d"% (self._table, k, r[1], r[0]))
+                                    for key,val in res.items():
+                                        if f._multi:
+                                            val = val[k]
+                                        cr.execute("UPDATE \"%s\" SET \"%s\"='%s' where id=%d"% (self._table, k, val, key))
 
                             # and add constraints if needed
                             if isinstance(f, fields.many2one):
@@ -1402,7 +1411,7 @@ class orm(orm_template):
                                 try:
                                     cr.execute("ALTER TABLE \"%s\" ALTER COLUMN \"%s\" SET NOT NULL" % (self._table, k))
                                 except:
-                                    logger.notifyChannel('init', netsvc.LOG_WARNING, 'WARNING: unable to set column %s of table %s not null !\nTry to re-run: tinyerp-server.py --update=module\nIf it doesn\'t work, update records and execute manually:\nALTER TABLE %s ALTER COLUMN %s SET NOT NULL' % (k, self._table, self._table, k))
+                                    logger.notifyChannel('init', netsvc.LOG_WARNING, 'WARNING: unable to set column %s of table %s not null !\nTry to re-run: openerp-server.py --update=module\nIf it doesn\'t work, update records and execute manually:\nALTER TABLE %s ALTER COLUMN %s SET NOT NULL' % (k, self._table, self._table, k))
                             cr.commit()
                     elif len(res)==1:
                         f_pg_def = res[0]
@@ -1684,24 +1693,31 @@ class orm(orm_template):
             return result[0]
         return result
 
-    def _read_flat(self, cr, user, ids, fields, context=None, load='_classic_read'):
+    def _read_flat(self, cr, user, ids, fields_to_read, context=None, load='_classic_read'):
         if not context:
             context = {}
         if not ids:
             return []
 
-        if fields == None:
-            fields = self._columns.keys()
+        if fields_to_read == None:
+            fields_to_read = self._columns.keys()
 
         # construct a clause for the rules :
         d1, d2 = self.pool.get('ir.rule').domain_get(cr, user, self._name)
 
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
-        fields_pre = filter(lambda x: x in self._columns and getattr(self._columns[x], '_classic_write'), fields) + self._inherits.values()
+        fields_pre = filter(lambda x: x in self._columns and getattr(self._columns[x], '_classic_write'), fields_to_read) + self._inherits.values()
 
         res = []
         if len(fields_pre):
-            fields_pre2 = map(lambda x: (x in ('create_date', 'write_date')) and ('date_trunc(\'second\', '+x+') as '+x) or '"'+x+'"', fields_pre)
+            def convert_field(f):
+                if f in ('create_date', 'write_date'):
+                    return "date_trunc('second', %s) as %s" % (f, f)
+                if isinstance(self._columns[f], fields.binary) and context.get('get_binary_size', True):
+                    return "length(%s) as %s" % (f,f)
+                return '"%s"' % (f,)
+            #fields_pre2 = map(lambda x: (x in ('create_date', 'write_date')) and ('date_trunc(\'second\', '+x+') as '+x) or '"'+x+'"', fields_pre)
+            fields_pre2 = map(convert_field, fields_pre)
             for i in range(0, len(ids), cr.IN_MAX):
                 sub_ids = ids[i:i+cr.IN_MAX]
                 if d1:
@@ -1730,7 +1746,7 @@ class orm(orm_template):
 
         for table in self._inherits:
             col = self._inherits[table]
-            cols = intersect(self._inherit_fields.keys(), fields)
+            cols = intersect(self._inherit_fields.keys(), fields_to_read)
             if not cols:
                 continue
             res2 = self.pool.get(table).read(cr, user, [x[col] for x in res], cols, context, load)
@@ -1742,11 +1758,11 @@ class orm(orm_template):
 
             for record in res:
                 record.update(res3[record[col]])
-                if col not in fields:
+                if col not in fields_to_read:
                     del record[col]
 
         # all fields which need to be post-processed by a simple function (symbol_get)
-        fields_post = filter(lambda x: x in self._columns and self._columns[x]._symbol_get, fields)
+        fields_post = filter(lambda x: x in self._columns and self._columns[x]._symbol_get, fields_to_read)
         if fields_post:
             # maybe it would be faster to iterate on the fields then on res, so that we wouldn't need
             # to get the _symbol_get in each occurence
@@ -1756,7 +1772,7 @@ class orm(orm_template):
         ids = map(lambda x: x['id'], res)
 
         # all non inherited fields for which the attribute whose name is in load is False
-        fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields)
+        fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields_to_read)
 
         # Compute POST fields
         todo = {}
@@ -1766,9 +1782,9 @@ class orm(orm_template):
         for key,val in todo.items():
             if key:
                 res2 = self._columns[val[0]].get(cr, self, ids, val, user, context=context, values=res)
-                for pos in range(len(val)):
+                for pos in val:
                     for record in res:
-                        record[val[pos]] = res2[record['id']][pos]
+                        record[pos] = res2[record['id']][pos]
             else:
                 for f in val:
                     res2 = self._columns[f].get(cr, self, ids, f, user, context=context, values=res)
@@ -2236,9 +2252,9 @@ class orm(orm_template):
                 else:
                     cr.execute('select max(parent_right) from '+self._table)
                     pleft = cr.fetchone()[0] or 0
-                cr.execute('update '+self._table+' set parent_left=%d,parent_right=%d', (pleft+1,pleft+2))
                 cr.execute('update '+self._table+' set parent_left=parent_left+2 where parent_left>%d', (pleft,))
                 cr.execute('update '+self._table+' set parent_right=parent_right+2 where parent_right>%d', (pleft,))
+                cr.execute('update '+self._table+' set parent_left=%d,parent_right=%d where id=%d', (pleft+1,pleft+2,id_new))
 
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_create(user, self._name, id_new, cr)
@@ -2382,7 +2398,7 @@ class orm(orm_template):
         return [(r['id'], str(r[self._rec_name])) for r in self.read(cr, user, ids,
             [self._rec_name], context, load='_classic_write')]
 
-    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=80):
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=None):
         if not args:
             args = []
         if not context:

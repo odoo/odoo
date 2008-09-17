@@ -86,7 +86,7 @@ class TinyPoFile(object):
     def next(self):
         def unquote(str):
             return str[1:-1].replace("\\n", "\n")   \
-                            .replace('\\"', "\"")   
+                            .replace('\\"', '"')   
 
         type = name = res_id = source = trad = None
         
@@ -106,7 +106,7 @@ class TinyPoFile(object):
                 line = self.lines.pop(0).strip()
             if not line.startswith('msgid'):
                 raise Exception("malformed file")
-            source = line[7:-1]
+            source = unquote(line[6:])
             line = self.lines.pop(0).strip()
             if not source and self.first:
                 # if the source is "" and it's the first msgid, it's the special 
@@ -115,7 +115,7 @@ class TinyPoFile(object):
                 self.tnrs = []
                 while line:
                     line = self.lines.pop(0).strip()
-                return next()               
+                return self.next()               
                 
             while not line.startswith('msgstr'):
                 if not line:
@@ -123,7 +123,7 @@ class TinyPoFile(object):
                 source += unquote(line)
                 line = self.lines.pop(0).strip()
 
-            trad = line[8:-1]
+            trad = unquote(line[7:])
             line = self.lines.pop(0).strip()
             while line:
                 trad += unquote(line)
@@ -160,29 +160,36 @@ class TinyPoFile(object):
                           % { 'project': release.description,
                               'version': release.version,
                               'modules': reduce(lambda s, m: s + "#\t* %s\n" % m, modules, ""),
-                              'bugmail': 'support@tinyerp.com',     #TODO: use variable from release
+                              'bugmail': release.support_email,
                               'now': mxdt.ISO.strUTC(mxdt.ISO.DateTime.utc()),
                             }
                           )
 
     def write(self, modules, tnrs, source, trad):
-        def quote(str):
-            return '"%s"' % str.replace('"','\\"') \
-                               .replace('\n', '\\n"\n"')
+        def quote(s):
+            return '"%s"' % s.replace('"','\\"') \
+                             .replace('\n', '\\n"\n"')
 
         plurial = len(modules) > 1 and 's' or ''
-        self.buffer.write("#. module%s: %s\n"     \
-                          "#, python-format\n"  \
-                            % (plurial, ', '.join(modules)))
+        self.buffer.write("#. module%s: %s\n" % (plurial, ', '.join(modules)))
+        
+        if "code" in map(lambda e: e[0], tnrs):
+            # only strings in python code are python formated
+            self.buffer.write("#, python-format\n")
+                            
 
-        for type, name, res_id in tnrs:
-            self.buffer.write("#: %s:%s:%s\n" % (type, name, str(res_id)))
+        for typy, name, res_id in tnrs:
+            self.buffer.write("#: %s:%s:%s\n" % (typy, name, res_id))
 
-        self.buffer.write("msgid %s\n"      \
-                          "msgstr %s\n\n"   \
-                            % (quote(source), quote(trad))
-                         )
-    
+        if not isinstance(trad, unicode):
+            trad = unicode(trad, 'utf8')
+        if not isinstance(source, unicode):
+            source = unicode(source, 'utf8')
+
+        msg = "msgid %s\n"      \
+              "msgstr %s\n\n"   \
+                  % (quote(source), quote(trad))
+        self.buffer.write(msg.encode('utf8'))
 
 
 # Methods to export the translation file
@@ -204,7 +211,8 @@ def trans_export(lang, modules, buffer, format, dbname=None):
             for module, type, name, res_id, src, trad in rows:
                 row = grouped_rows.setdefault(src, {})
                 row.setdefault('modules', set()).add(module)
-                row.setdefault('translation', trad)
+                if ('translation' not in row) or (not row['translation']):
+                    row['translation'] = trad
                 row.setdefault('tnrs', []).append((type, name, res_id))
 
             for src, row in grouped_rows.items():
@@ -226,7 +234,7 @@ def trans_export(lang, modules, buffer, format, dbname=None):
                 _process('po', [mod], modrows, buf, lang, newlang)
 
             tar = tarfile.open(fileobj=buffer, mode='w|gz')
-            tar.add(tmpdir, '/')
+            tar.add(tmpdir, '')
             tar.close()
 
         else:
@@ -324,7 +332,7 @@ def trans_generate(lang, modules, dbname=None):
     _to_translate = []
     def push_translation(module, type, name, id, source):
         tuple = (module, type, name, id, source)
-        if not tuple in _to_translate:
+        if source and tuple not in _to_translate:
             _to_translate.append(tuple)
 
 
@@ -354,7 +362,7 @@ def trans_generate(lang, modules, dbname=None):
 
                     # export arch
                     arch = result['arch']
-                    if not isinstance(arch, UpdateableStr):
+                    if arch and not isinstance(arch, UpdateableStr):
                         d = xml.dom.minidom.parseString(arch)
                         for t in trans_parse_view(d.documentElement):
                             push_translation(module, 'wizard_view', name, 0, t)
@@ -368,9 +376,10 @@ def trans_generate(lang, modules, dbname=None):
 
         elif model=='ir.model.fields':
             field_name = obj.name
-            if not field_name in pool.get(obj.model)._columns:
+            objmodel = pool.get(obj.model)
+            if not objmodel or not field_name in objmodel._columns:
                 continue
-            field_def = pool.get(obj.model)._columns[field_name]
+            field_def = objmodel._columns[field_name]
 
             name = obj.model + "," + field_name
             push_translation(module, 'field', name, 0, field_def.string.encode('utf8'))
@@ -379,8 +388,8 @@ def trans_generate(lang, modules, dbname=None):
                 push_translation(module, 'help', name, 0, field_def.help.encode('utf8'))
 
             if field_def.translate:
-                ids = pool.get(obj.model).search(cr, uid, [])
-                obj_values = pool.get(obj.model).read(cr, uid, ids, [field_name])
+                ids = objmodel.search(cr, uid, [])
+                obj_values = objmodel.read(cr, uid, ids, [field_name])
                 for obj_value in obj_values:
                     res_id = obj_value['id']
                     if obj.name in ('ir.model', 'ir.ui.menu'):
@@ -429,23 +438,26 @@ def trans_generate(lang, modules, dbname=None):
     # parse source code for _() calls
     def get_module_from_path(path):
         relative_addons_path = tools.config['addons_path'][len(tools.config['root_path'])+1:]
-        if path.startswith(relative_addons_path):
+        if path.startswith(relative_addons_path) and (os.path.dirname(path) != relative_addons_path):
             path = path[len(relative_addons_path)+1:]
             return path.split(os.path.sep)[0]
         return 'base'   # files that are not in a module are considered as being in 'base' module
     
     modobj = pool.get('ir.module.module')
-    for root, dirs, files in os.walk(tools.config['root_path']):
+    installed_modids = modobj.search(cr, uid, [('state', '=', 'installed')])
+    installed_modules = map(lambda m: m['name'], modobj.browse(cr, uid, installed_modids, ['name']))
+
+    for root, dirs, files in tools.oswalksymlinks(tools.config['root_path']):
         for fname in fnmatch.filter(files, '*.py'):
             fabsolutepath = join(root, fname)
             frelativepath = fabsolutepath[len(tools.config['root_path'])+1:]
             module = get_module_from_path(frelativepath)
-            is_mod_installed = modobj.search(cr, uid, [('state', '=', 'installed'), ('name', '=', module)]) <> []
+            is_mod_installed = module in installed_modules
             if (('all' in modules) or (module in modules)) and is_mod_installed:
                 code_string = tools.file_open(fabsolutepath, subdir='').read()
                 iter = re.finditer(
                     '[^a-zA-Z0-9_]_\([\s]*["\'](.+?)["\'][\s]*\)',
-                    code_string)
+                    code_string, re.M)
                 for i in iter:
                     push_translation(module, 'code', frelativepath, 0, i.group(1).encode('utf8'))
 
@@ -459,22 +471,24 @@ def trans_generate(lang, modules, dbname=None):
     cr.close()
     return out
 
-def trans_load(db_name, filename, lang, strict=False):
+def trans_load(db_name, filename, lang, strict=False, verbose=True):
     logger = netsvc.Logger()
     try:
         fileobj = open(filename,'r')
         fileformat = os.path.splitext(filename)[-1][1:].lower()
-        r = trans_load_data(db_name, fileobj, fileformat, lang, strict=False)
+        r = trans_load_data(db_name, fileobj, fileformat, lang, strict=strict, verbose=verbose)
         fileobj.close()
         return r
     except IOError:
-        logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't read file")
+        if verbose:
+            logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't read file")
         return None
 
-def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=None):
+def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=None, verbose=True):
     logger = netsvc.Logger()
-    logger.notifyChannel("init", netsvc.LOG_INFO,
-            'loading translation file for language %s' % (lang))
+    if verbose:
+        logger.notifyChannel("init", netsvc.LOG_INFO,
+                'loading translation file for language %s' % (lang))
     pool = pooler.get_pool(db_name)
     lang_obj = pool.get('res.lang')
     trans_obj = pool.get('ir.translation')
@@ -488,8 +502,7 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
             if not lang_name:
                 lang_name=lang
                 languages=tools.get_languages()
-                if lang in languages:
-                    lang_name=languages[lang]
+                lang_name = languages.get(lang, lang)
             ids = lang_obj.create(cr, uid, {
                 'code': lang,
                 'name': lang_name,
@@ -519,7 +532,6 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
         line = 1
         for row in reader:
             line += 1
-            #try:
             # skip empty rows and rows where the translation field (=last fiefd) is empty
             if (not row) or (not row[-1]):
                 #print "translate: skip %s" % repr(row)
@@ -585,15 +597,10 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
                 else:
                     trans_obj.create(cr, uid, dic)
             cr.commit()
-            #except Exception, e:
-            #   logger.notifyChannel('init', netsvc.LOG_ERROR,
-            #           'Import error: %s on line %d: %s!' % (str(e), line, row))
-            #   cr.rollback()
-            #   cr.close()
-            #   cr = pooler.get_db(db_name).cursor()
         cr.close()
-        logger.notifyChannel("init", netsvc.LOG_INFO,
-                "translation file loaded succesfully")
+        if verbose:
+            logger.notifyChannel("init", netsvc.LOG_INFO,
+                    "translation file loaded succesfully")
     except IOError:
         logger.notifyChannel("init", netsvc.LOG_ERROR, "couldn't read file")
 

@@ -28,7 +28,7 @@
 ###############################################################################
 
 """
-Miscelleanous tools used by tiny ERP.
+Miscelleanous tools used by OpenERP.
 """
 
 import os, time, sys
@@ -50,7 +50,7 @@ else:
 
 from itertools import izip
 
-# initialize a database with base/base.sql 
+# initialize a database with base/base.sql
 def init_db(cr):
     import addons
     f = addons.get_module_resource('base', 'base.sql')
@@ -171,7 +171,7 @@ def exec_command_pipe(name, *args):
 #file_path_addons = os.path.join(file_path_root, 'addons')
 
 def file_open(name, mode="r", subdir='addons', pathinfo=False):
-    """Open a file from the Tiny ERP root, using a subdir folder.
+    """Open a file from the OpenERP root, using a subdir folder.
 
     >>> file_open('hr/report/timesheer.xsl')
     >>> file_open('addons/hr/report/timesheet.xsl')
@@ -256,13 +256,30 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
     raise IOError, 'File not found : '+str(name)
 
 
+def oswalksymlinks(top, topdown=True, onerror=None):
+    """
+    same as os.walk but follow symlinks
+    attention: all symlinks are walked before all normals directories
+    """
+    for dirpath, dirnames, filenames in os.walk(top, topdown, onerror):
+        if topdown:
+            yield dirpath, dirnames, filenames
+
+        symlinks = filter(lambda dirname: os.path.islink(os.path.join(dirpath, dirname)), dirnames)
+        for s in symlinks:
+            for x in oswalksymlinks(os.path.join(dirpath, s), topdown, onerror):
+                yield x
+
+        if not topdown:
+            yield dirpath, dirnames, filenames
+
 #----------------------------------------------------------
 # iterables
 #----------------------------------------------------------
 def flatten(list):
     """Flatten a list of elements into a uniqu list
     Author: Christophe Simonis (christophe@tinyerp.com)
-    
+
     Examples:
     >>> flatten(['a'])
     ['a']
@@ -278,7 +295,7 @@ def flatten(list):
     >>> flatten(t)
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     """
-    
+
     def isiterable(x):
         return hasattr(x, "__iter__")
 
@@ -338,14 +355,14 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
         msg['Message-Id'] = '<'+str(time.time())+'-tinycrm-'+str(tinycrm)+'@'+socket.gethostname()+'>'
     try:
         s = smtplib.SMTP()
-    
+
         if debug:
-            s.debuglevel = 5        
+            s.debuglevel = 5
         if ssl:
             s.ehlo()
             s.starttls()
             s.ehlo()
-      
+
         s.connect(config['smtp_server'], config['smtp_port'])
         if config['smtp_user'] or config['smtp_password']:
             s.login(config['smtp_user'], config['smtp_password'])
@@ -377,10 +394,10 @@ def email_send_attach(email_from, email_to, subject, body, email_cc=None, email_
     from email import Encoders
 
     msg = MIMEMultipart()
-    
+
     if not ssl:
         ssl = config['smtp_ssl']
-        
+
     msg['Subject'] = Header(subject.decode('utf8'), 'utf-8')
     msg['From'] = email_from
     del msg['Reply-To']
@@ -403,14 +420,14 @@ def email_send_attach(email_from, email_to, subject, body, email_cc=None, email_
         msg.attach(part)
     try:
         s = smtplib.SMTP()
-	
+
         if debug:
-            s.debuglevel = 5		
+            s.debuglevel = 5
         if ssl:
             s.ehlo()
             s.starttls()
             s.ehlo()
-      
+
         s.connect(config['smtp_server'], config['smtp_port'])
         if config['smtp_user'] or config['smtp_password']:
             s.login(config['smtp_user'], config['smtp_password'])
@@ -442,7 +459,7 @@ class UpdateableStr(local):
 
     def __init__(self, string=''):
         self.string = string
-    
+
     def __str__(self):
         return str(self.string)
 
@@ -592,7 +609,7 @@ class cache(object):
             kwargs.update(dict(zip(arg_names, args)))
             kwargs = kwargs.items()
             kwargs.sort()
-            
+
             # Work out key as a tuple of ('argname', value) pairs
             key = (('dbname', cr.dbname),) + tuple(kwargs)
 
@@ -638,7 +655,7 @@ def get_languages():
 
 def scan_languages():
     import glob
-    file_list = [os.path.splitext(os.path.basename(f))[0] for f in glob.glob(os.path.join(config['root_path'], 'i18n', '*.csv'))]
+    file_list = [os.path.splitext(os.path.basename(f))[0] for f in glob.glob(os.path.join(config['addons_path'], 'base', 'i18n', '*.po'))]
     lang_dict = get_languages()
     return [(lang, lang_dict.get(lang, lang)) for lang in file_list]
 
@@ -671,6 +688,83 @@ def mod10r(number):
             report = codec[ (int(digit) + report) % 10 ]
     return result + str((10 - report) % 10)
 
+
+def human_size(sz):
+    """
+    Return the size in a human readable format
+    """
+    if not sz:
+        return False
+    units = ('bytes', 'Kb', 'Mb', 'Gb')
+    if isinstance(sz,basestring):
+        sz=len(sz)
+    s, i = float(sz), 0
+    while s >= 1024 and i < len(units)-1:
+        s = s / 1024
+        i = i + 1
+    return "%0.2f %s" % (s, units[i])
+
+def logged(when):
+    def log(f, res, *args, **kwargs):
+        vector = ['Call -> function: %s' % f]
+        for i, arg in enumerate(args):
+            vector.append( '  arg %02d: %r' % ( i, arg ) )
+        for key, value in kwargs.items():
+            vector.append( '  kwarg %10s: %r' % ( key, value ) )
+        vector.append( '  result: %r' % res )
+        print "\n".join(vector)
+
+    def pre_logged(f):
+        def wrapper(*args, **kwargs):
+            res = f(*args, **kwargs)
+            log(f, res, *args, **kwargs)
+            return res
+        return wrapper
+
+    def post_logged(f):
+        def wrapper(*args, **kwargs):
+            now = time.time()
+            res = None
+            try:
+                res = f(*args, **kwargs)
+                return res
+            finally:
+                log(f, res, *args, **kwargs)
+                print "  time delta: %s" % (time.time() - now)
+        return wrapper
+
+    try:
+        return { "pre" : pre_logged, "post" : post_logged}[when]
+    except KeyError, e:
+        raise ValueError(e), "must to be 'pre' or 'post'"
+
+icons = map(lambda x: (x,x), ['STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
+'STOCK_CANCEL', 'STOCK_CDROM', 'STOCK_CLEAR', 'STOCK_CLOSE', 'STOCK_COLOR_PICKER',
+'STOCK_CONNECT', 'STOCK_CONVERT', 'STOCK_COPY', 'STOCK_CUT', 'STOCK_DELETE',
+'STOCK_DIALOG_AUTHENTICATION', 'STOCK_DIALOG_ERROR', 'STOCK_DIALOG_INFO',
+'STOCK_DIALOG_QUESTION', 'STOCK_DIALOG_WARNING', 'STOCK_DIRECTORY', 'STOCK_DISCONNECT',
+'STOCK_DND', 'STOCK_DND_MULTIPLE', 'STOCK_EDIT', 'STOCK_EXECUTE', 'STOCK_FILE',
+'STOCK_FIND', 'STOCK_FIND_AND_REPLACE', 'STOCK_FLOPPY', 'STOCK_GOTO_BOTTOM',
+'STOCK_GOTO_FIRST', 'STOCK_GOTO_LAST', 'STOCK_GOTO_TOP', 'STOCK_GO_BACK',
+'STOCK_GO_DOWN', 'STOCK_GO_FORWARD', 'STOCK_GO_UP', 'STOCK_HARDDISK',
+'STOCK_HELP', 'STOCK_HOME', 'STOCK_INDENT', 'STOCK_INDEX', 'STOCK_ITALIC',
+'STOCK_JUMP_TO', 'STOCK_JUSTIFY_CENTER', 'STOCK_JUSTIFY_FILL',
+'STOCK_JUSTIFY_LEFT', 'STOCK_JUSTIFY_RIGHT', 'STOCK_MEDIA_FORWARD',
+'STOCK_MEDIA_NEXT', 'STOCK_MEDIA_PAUSE', 'STOCK_MEDIA_PLAY',
+'STOCK_MEDIA_PREVIOUS', 'STOCK_MEDIA_RECORD', 'STOCK_MEDIA_REWIND',
+'STOCK_MEDIA_STOP', 'STOCK_MISSING_IMAGE', 'STOCK_NETWORK', 'STOCK_NEW',
+'STOCK_NO', 'STOCK_OK', 'STOCK_OPEN', 'STOCK_PASTE', 'STOCK_PREFERENCES',
+'STOCK_PRINT', 'STOCK_PRINT_PREVIEW', 'STOCK_PROPERTIES', 'STOCK_QUIT',
+'STOCK_REDO', 'STOCK_REFRESH', 'STOCK_REMOVE', 'STOCK_REVERT_TO_SAVED',
+'STOCK_SAVE', 'STOCK_SAVE_AS', 'STOCK_SELECT_COLOR', 'STOCK_SELECT_FONT',
+'STOCK_SORT_ASCENDING', 'STOCK_SORT_DESCENDING', 'STOCK_SPELL_CHECK',
+'STOCK_STOP', 'STOCK_STRIKETHROUGH', 'STOCK_UNDELETE', 'STOCK_UNDERLINE',
+'STOCK_UNDO', 'STOCK_UNINDENT', 'STOCK_YES', 'STOCK_ZOOM_100',
+'STOCK_ZOOM_FIT', 'STOCK_ZOOM_IN', 'STOCK_ZOOM_OUT',
+'terp-account', 'terp-crm', 'terp-mrp', 'terp-product', 'terp-purchase',
+'terp-sale', 'terp-tools', 'terp-administration', 'terp-hr', 'terp-partner',
+'terp-project', 'terp-report', 'terp-stock', 'terp-calendar', 'terp-graph',
+])
 
 
 

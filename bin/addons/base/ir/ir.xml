@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data>
         
         <!-- Values -->
@@ -49,8 +49,8 @@
             <field name="context">{'read':'default'}</field>
         </record>
         
-		<menuitem id="next_id_4" name="Low Level" parent="menu_custom"/>
-		<menuitem action="act_values_form" id="menu_values_form" parent="next_id_4"/>
+        <menuitem id="next_id_4" name="Low Level" parent="menu_custom"/>
+        <menuitem action="act_values_form" id="menu_values_form" parent="next_id_4"/>
         
         <!-- Sequences -->
         
@@ -97,7 +97,8 @@
             <field name="view_id" ref="sequence_view_tree"/>
             <field name="context">{'active_test': False}</field>
         </record>
-        <menuitem id="next_id_5" name="Sequences" parent="base.menu_custom"/><menuitem action="ir_sequence_form" id="menu_ir_sequence_form" parent="next_id_5"/>
+        <menuitem id="next_id_5" name="Sequences" parent="base.menu_custom"/>
+        <menuitem action="ir_sequence_form" id="menu_ir_sequence_form" parent="next_id_5"/>
         
         <!-- Sequences Types -->
         
@@ -112,7 +113,7 @@
                 </form>
             </field>
         </record>
-        	
+            
         <record id="ir_sequence_type" model="ir.actions.act_window">
             <field name="name">Sequence Types</field>
             <field name="type">ir.actions.act_window</field>
@@ -157,7 +158,8 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="action_view_tree"/>
         </record>
-        <menuitem id="next_id_6" name="Actions" parent="base.next_id_4"/><menuitem action="ir_sequence_actions" id="menu_ir_sequence_actions" parent="next_id_6"/>
+        <menuitem id="next_id_6" name="Actions" parent="base.next_id_4"/>
+        <menuitem action="ir_sequence_actions" id="menu_ir_sequence_actions" parent="next_id_6"/>
         
         <record id="act_report_custom_view" model="ir.ui.view">
             <field name="name">ir.actions.report.custom</field>
@@ -209,6 +211,7 @@
                     <field name="usage"/>
                     <field name="header"/>
                     <field name="report_type"/>
+                    <field name="attachment"/>
                     <field colspan="4" name="groups_id"/>
                 </form>
             </field>
@@ -222,6 +225,8 @@
                     <field name="name"/>
                     <field name="type"/>
                     <field name="report_name"/>
+                    <field name="report_type"/>
+                    <field name="attachment"/>
                 </tree>
             </field>
         </record>
@@ -608,8 +613,8 @@
             <field name="view_id" ref="view_report_custom_form"/>
         </record>
         <!--
-	<menuitem name="Administration/Report/Report Custom" action="action_report_custom"/>
-	-->
+    <menuitem name="Administration/Report/Report Custom" action="action_report_custom"/>
+    -->
         
         <!-- model -->
         <record id="view_model_form" model="ir.ui.view">
@@ -634,21 +639,32 @@
                                     <field name="state"/>
                                 </tree>
                                 <form string="Fields Description">
-                                    <field name="name" select="1"/>
-                                    <field colspan="4" name="field_description" select="1"/>
-                                    <field name="ttype" select="1"/>
-                                    <field name="relation" select="1"/>
-                                    
-                                    <field name="required" select="2"/>
-                                    <field name="readonly" select="2"/>
-                                    
-                                    <field name="size" select="1"/>
-                                    <field name="on_delete" select="1"/>
-                                    <field name="select_level" select="2"/>
-                                    <field name="translate"/>
-                                    <field name="selection"/>
-                                    <field name="domain"/>
-                                    <field name="state" readonly="1"/>
+                                    <group colspan="4" col="4">
+                                        <field name="name" select="1"/>
+                                        <field colspan="4" name="field_description" select="2"/>
+                                    </group>
+
+                                    <group colspan="2" col="2">
+                                        <separator string="Field Type" colspan="2"/>
+                                        <field name="ttype" select="2"/>
+                                        <field name="relation" select="2"/>
+                                        <field name="selection"/>
+                                        <field name="size"/>
+                                        <field name="state"/>
+                                        <field name="domain"/>
+                                    </group>
+
+                                    <group colspan="2" col="2">
+                                        <separator string="Properties" colspan="2"/>
+                                        <field name="required" select="2"/>
+                                        <field name="readonly" select="2"/>
+                                        <field name="select_level"/>
+                                        <field name="translate"/>
+                                        <field name="relate"/>
+                                        <field name="on_delete"/>
+                                    </group>
+                                    <separator string="Security on Groups" colspan="4"/>
+                                    <field name="groups" colspan="4" nolabel="1"/>
                                 </form>
                             </field>
                             <separator colspan="4" string="Status"/>
@@ -657,7 +673,19 @@
                                 <button colspan="2" name="%(act_menu_create)d" string="Create a Menu" type="action" target="new"/>
                             </group>
                         </page>
-                        <page string="Information">
+                        <page string="Access Rights">
+                            <field colspan="4" name="access_ids" select="1" nolabel="1">
+                                <tree string="Access Rules" editable="bottom" colspan="4">
+                                    <field name="group_id"/>
+                                    <field name="perm_read"/>
+                                    <field name="perm_write"/>
+                                    <field name="perm_create"/>
+                                    <field name="perm_unlink"/>
+                                    <field name="name"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Notes">
                             <field colspan="4" name="info" nolabel="1" select="1"/>
                         </page>
                     </notebook>
@@ -686,22 +714,33 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Fields">
-                    <field name="name" select="1"/>
-                    <field name="model_id" readonly="1"/>
-                    <field colspan="4" name="field_description" select="2"/>
-                    <field name="ttype" select="2"/>
-                    <field name="relation" select="2"/>
-                    
-                    <field name="required" select="2"/>
-                    <field name="readonly" select="2"/>
-                    
-                    <field name="size" select="1"/>
-                    <field name="on_delete" select="1"/>
-                    <field name="select_level" select="2"/>
-                    <field name="translate"/>
-                    <field name="selection"/>
-                    <field name="domain"/>
-                    <field name="state" readonly="1"/>
+                    <group colspan="4" col="6">
+                        <field name="name" select="1"/>
+                        <field colspan="4" name="field_description" select="2"/>
+                        <field name="model_id" readonly="1"/>
+                    </group>
+
+                    <group colspan="2" col="2">
+                        <separator string="Field Type" colspan="2"/>
+                        <field name="ttype" select="2"/>
+                        <field name="relation" select="2"/>
+                        <field name="selection"/>
+                        <field name="size"/>
+                        <field name="state"/>
+                        <field name="domain"/>
+                    </group>
+
+                    <group colspan="2" col="2">
+                        <separator string="Properties" colspan="2"/>
+                        <field name="required" select="2"/>
+                        <field name="readonly" select="2"/>
+                        <field name="select_level"/>
+                        <field name="translate"/>
+                        <field name="relate"/>
+                        <field name="on_delete"/>
+                    </group>
+                    <separator string="Security on Groups" colspan="4"/>
+                    <field name="groups" colspan="4" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -727,7 +766,7 @@
             <field name="view_id" ref="view_model_tree"/>
         </record>
         <menuitem id="next_id_9" name="Database Structure" parent="base.menu_custom"/>
-		<menuitem action="action_model_model" id="ir_model_model_menu" parent="next_id_9"/>
+        <menuitem action="action_model_model" id="ir_model_model_menu" parent="next_id_9"/>
         
         <record id="action_model_fields" model="ir.actions.act_window">
             <field name="name">Fields</field>
@@ -776,13 +815,21 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_translation_tree"/>
         </record>
-        <menuitem action="action_translation" id="menu_action_translation" parent="base.menu_translation"/>
-        
+        <menuitem action="action_translation" id="menu_action_translation" parent="base.menu_translation_app"/>
+        <record id="action_translation_untrans" model="ir.actions.act_window">
+            <field name="name">Untranslated terms</field>
+            <field name="res_model">ir.translation</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_translation_tree"/>
+            <field name="domain">[('value','=','')]</field>
+        </record>
+        <menuitem action="action_translation_untrans" id="menu_action_translation_untrans" parent="menu_action_translation"/>
+
         <!--
-	=============================================================
-	Menu Edition
-	=============================================================
-	-->
+    =============================================================
+    Menu Edition
+    =============================================================
+    -->
         
         <record id="shortcut_form" model="ir.ui.view">
             <field name="name">ir.ui.view_sc</field>
@@ -831,8 +878,8 @@
                     <field colspan="4" name="parent_id" select="1"/>
                     <field name="action"/>
                     <field colspan="4" name="groups_id"/>
-					<field name="icon" on_change="onchange_icon(icon)"/>
-					<field name="icon_pict" widget="picture" nolabel="1"/>
+                    <field name="icon" on_change="onchange_icon(icon)"/>
+                    <field name="icon_pict" widget="picture" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -845,10 +892,10 @@
         <menuitem action="grant_menu_access" id="menu_grant_menu_access" parent="base.menu_security"/>
         
         <!--
-	=============================================================
-	Cron Jobs
-	=============================================================
-	-->
+    =============================================================
+    Cron Jobs
+    =============================================================
+    -->
         <record id="ir_cron_view_tree" model="ir.ui.view">
             <field name="name">ir.cron.tree</field>
             <field name="model">ir.cron</field>
@@ -863,7 +910,7 @@
                 </tree>
             </field>
         </record>
-        	<record id="ir_cron_view" model="ir.ui.view">
+            <record id="ir_cron_view" model="ir.ui.view">
             <field name="name">ir.cron.form</field>
             <field name="model">ir.cron</field>
             <field name="type">form</field>
@@ -895,7 +942,8 @@
             <field name="context">{'active_test': False}</field>
             <field name="view_id" ref="ir_cron_view_tree"/>
         </record>
-        <menuitem id="next_id_10" name="Scheduler" parent="base.menu_custom"/><menuitem action="ir_cron_act" id="menu_ir_cron_act" parent="next_id_10"/>
+        <menuitem id="next_id_10" name="Scheduler" parent="base.menu_custom"/>
+        <menuitem action="ir_cron_act" id="menu_ir_cron_act" parent="next_id_10"/>
         
         
         <record id="ir_access_view_tree" model="ir.ui.view">
@@ -903,7 +951,7 @@
             <field name="model">ir.model.access</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Access controls">
+                <tree string="Access Controls">
                     <field name="name"/>
                     <field name="model_id"/>
                     <field name="group_id"/>
@@ -919,7 +967,7 @@
             <field name="model">ir.model.access</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Access controls">
+                <form string="Access Controls">
                     <field colspan="4" name="name" select="1"/>
                     <field name="model_id" select="1"/>
                     <field name="group_id" select="1"/>
@@ -932,15 +980,16 @@
             </field>
         </record>
         <record id="ir_access_act" model="ir.actions.act_window">
-            <field name="name">Access controls</field>
+            <field name="name">Access Controls List</field>
             <field name="res_model">ir.model.access</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="ir_access_view_tree"/>
         </record>
-        <menuitem action="ir_access_act" id="menu_ir_access_act" parent="base.menu_security"/>
+        <menuitem name="Access Controls" id="menu_security_access" parent="menu_security"/>
+        <menuitem action="ir_access_act" id="menu_ir_access_act" parent="menu_security_access"/>
 
         <!-- Rules -->
-        
+
         <record id="view_rule_group_form" model="ir.ui.view">
             <field name="name">Record rules</field>
             <field name="model">ir.rule.group</field>
@@ -1039,54 +1088,55 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Server Action">
-                	<field name="name" select="1"/>
+                    <field name="name" select="1"/>
                     <field name="state" select="1"/>
                     <field name="model_id" select="1"/>
                     <field name="sequence" select="2"/>
-                	<notebook colspan="4">
-                		<page string="Python Code" attrs="{'invisible':[('state','!=','python')]}">
-		                    <separator colspan="4" string="Python code"/>
-		                    <field name="code" colspan="4" nolabel="1" />
-						</page>
-						
-						<page string="Trigger" attrs="{'invisible':[('state','!=','trigger')]}">
-							<separator colspan="4" string="Trigger Configuration"/>
-		                    <field name="trigger_obj_id" select="2" colspan="4"/>
-		                    <field name="trigger_name" select="2"/>
-						</page>
-						
-						<page string="Email / SMS" attrs="{'invisible':[('state','=','python'),('state','=','dummy'),('state','=','trigger'), ('state','=','object_create'), ('state','=','object_write'), ('state','=','client_action'), ('state','=','other')]}">
-							<separator colspan="4" string="Email Configuration"/>
-							<field name="address" domain="[('model_id','=',model_id)]"/>
-							<field name="message" select="2" colspan="4" widget="html_tag"/>
-							<newline/>
-							<label colspan="4" string="Access all the fields related to the current object easily just by defining name of the attribute, i.e. [[partner_id.name]] for Invoice Object"/>
-						</page>
-						
-						<page string="Create / Write" attrs="{'invisible':[('state','=','python'),('state','=','dummy'),('state','=','trigger'), ('state','=','sms'), ('state','=','email'), ('state','=','client_action'), ('state','=','other')]}">
-							<separator colspan="4" string="Fields Mapping"/>
-							<field name="otype"/>
-							<field name="srcmodel_id" select="2" attrs="{'readonly':[('type','=','copy'),('state','=','write_create')]}"/>
-							<field name="fields_lines" nolabel="1" select="2" colspan="4">
-								<tree string="Field Mappings" editable="top">
-									<field name="col1" domain="[('model_id','=',parent.srcmodel_id or parent.model_id)]"/>
-									<field name="type"/>
-									<field name="value" colsapan="4"/>
-								</tree>
-								<form string="Field Mapping"> 
-									<field name="col1" domain="[('model_id','=',parent.srcmodel_id or parent.model_id)]"/>
-									<field name="type"/>
-									<field name="value" colsapan="4"/>
-								</form>
-							</field>
-						</page>
-						
-						<page string="Other Actions" attrs="{'invisible':[('state','!=','other')]}">
-							<separator colspan="4" string="Other Actions Configuration"/>
-                    		<field name="child_ids" nolabel="1" colspan="4" />
-						</page>
-						
-					</notebook>
+                    <notebook colspan="4">
+                        <page string="Python Code" attrs="{'invisible':[('state','!=','python')]}">
+                            <separator colspan="4" string="Python code"/>
+                            <field name="code" colspan="4" nolabel="1" />
+                        </page>
+                        
+                        <page string="Trigger" attrs="{'invisible':[('state','!=','trigger')]}">
+                            <separator colspan="4" string="Trigger Configuration"/>
+                            <field name="trigger_obj_id" select="2" colspan="4"/>
+                            <field name="trigger_name" select="2"/>
+                        </page>
+                        
+                        <page string="Email / SMS" attrs="{'invisible':[('state','=','python'),('state','=','dummy'),('state','=','trigger'), ('state','=','object_create'), ('state','=','object_write'), ('state','=','client_action'), ('state','=','other')]}">
+                            <separator colspan="4" string="Email Configuration"/>
+                            <field name="address" domain="[('model_id','=',model_id)]"/>
+                            <field name="sms" colspan="4" attrs="{'readonly':[('state','=','python'), ('state','=','email'), ('state','=','dummy'),('state','=','trigger'), ('state','=','object_create'), ('state','=','object_write'), ('state','=','client_action'), ('state','=','other')]}"/>
+                            <field name="message" select="2" colspan="4" attrs="{'readonly':[('state','=','python'), ('state','=','dummy'),('state','=','trigger'), ('state','=','object_create'), ('state','=','object_write'), ('state','=','sms'), ('state','=','client_action'), ('state','=','other')]}" />
+                            <newline/>
+                            <label colspan="4" string="Access all the fields related to the current object easily just by defining name of the attribute, i.e. [[partner_id.name]] for Invoice Object"/>
+                        </page>
+                        
+                        <page string="Create / Write" attrs="{'invisible':[('state','=','python'),('state','=','dummy'),('state','=','trigger'), ('state','=','sms'), ('state','=','email'), ('state','=','client_action'), ('state','=','other')]}">
+                            <separator colspan="4" string="Fields Mapping"/>
+                            <field name="otype"/>
+                            <field name="srcmodel_id" select="2" attrs="{'readonly':[('type','=','copy'),('state','=','write_create')]}"/>
+                            <field name="fields_lines" nolabel="1" select="2" colspan="4">
+                                <tree string="Field Mappings" editable="top">
+                                    <field name="col1" domain="[('model_id','=',parent.srcmodel_id or parent.model_id)]"/>
+                                    <field name="type"/>
+                                    <field name="value" colsapan="4"/>
+                                </tree>
+                                <form string="Field Mapping"> 
+                                    <field name="col1" domain="[('model_id','=',parent.srcmodel_id or parent.model_id)]"/>
+                                    <field name="type"/>
+                                    <field name="value" colsapan="4"/>
+                                </form>
+                            </field>
+                        </page>
+                        
+                        <page string="Other Actions" attrs="{'invisible':[('state','!=','other')]}">
+                            <separator colspan="4" string="Other Actions Configuration"/>
+                            <field name="child_ids" nolabel="1" colspan="4" />
+                        </page>
+                        
+                    </notebook>
                     <field name="usage"/>
                     <field name="type"/>
                 </form>
@@ -1114,19 +1164,28 @@
             <field name="context">{'key':'server_action'}</field>
         </record>
         <menuitem action="action_server_action" id="menu_server_action" parent="base.next_id_6"/>
-		
-		<record id="view_model_fields_tree" model="ir.ui.view">
+
+        <record id="view_model_fields_tree" model="ir.ui.view">
             <field name="name">ir.model.fields.tree</field>
             <field name="model">ir.model.fields</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Fields">
-                	<field name="complete_name"/>
-                	<field name="model_id"/>
+                    <field name="complete_name"/>
+                    <field name="model_id"/>
                     <field name="name"/>
                     <field name="field_description"/>
                 </tree>
             </field>
         </record>
+
+        <record model="ir.actions.act_window" id="action_model_grid_security">
+            <field name="name">Access Controls Grid</field>
+            <field name="res_model">ir.model.grid</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem action="action_model_grid_security" id="menu_ir_access_grid" parent="menu_security_access"/>
+
     </data>
-</terp>
+</openerp>

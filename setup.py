@@ -76,12 +76,12 @@ def check_modules():
 
 def find_addons():
     for (dp, dn, names) in os.walk(opj('bin', 'addons')):
-        if '.svn' in dn:
-            dn.remove('.svn')
+        if '.bzr' in dn:
+            dn.remove('.bzr')
         for dirpath, dirnames, filenames in os.walk(dp):
             if '__init__.py' in filenames:
                 modname = dirpath.replace(os.path.sep, '.')
-                yield modname.replace('bin', 'tinyerp-server', 1)
+                yield modname.replace('bin', 'openerp-server', 1)
 
 def data_files():
     '''Build list of data files to be installed'''
@@ -89,49 +89,49 @@ def data_files():
     if os.name == 'nt':
         os.chdir('bin')
         for (dp,dn,names) in os.walk('addons'):
-            if '.svn' in dn:
-                dn.remove('.svn')
+            if '.bzr' in dn:
+                dn.remove('.bzr')
             files.append((dp, map(lambda x: os.path.join('bin', dp,x), names)))
         for (dp,dn,names) in os.walk('i18n'):
-            if '.svn' in dn:
-                dn.remove('.svn')
+            if '.bzr' in dn:
+                dn.remove('.bzr')
             files.append((dp, map(lambda x: os.path.join('bin', dp,x), names)))
         os.chdir('..')
         for (dp,dn,names) in os.walk('doc'):
-            if '.svn' in dn:
-                dn.remove('.svn')
+            if '.bzr' in dn:
+                dn.remove('.bzr')
             files.append((dp, map(lambda x: os.path.join(dp,x), names)))
     else:
-        files.append((opj('share', 'man', 'man1'), ['man/tinyerp-server.1']))
-        files.append((opj('share', 'man', 'man5'), ['man/terp_serverrc.5']))
-        files.append((opj('share','doc', 'tinyerp-server-%s' % version), [f for
+        files.append((opj('share', 'man', 'man1'), ['man/openerp-server.1']))
+        files.append((opj('share', 'man', 'man5'), ['man/openerp_serverrc.5']))
+        files.append((opj('share','doc', 'openerp-server-%s' % version), [f for
             f in glob.glob('doc/*') if os.path.isfile(f)]))
-        files.append((opj('share','doc', 'tinyerp-server-%s' % version,
+        files.append((opj('share','doc', 'openerp-server-%s' % version,
             'migrate', '3.3.0-3.4.0'), [f for f in
                 glob.glob('doc/migrate/3.3.0-3.4.0/*') if os.path.isfile(f)]))
-        files.append((opj('share','doc', 'tinyerp-server-%s' % version,
+        files.append((opj('share','doc', 'openerp-server-%s' % version,
             'migrate', '3.4.0-4.0.0'), [f for f in
                 glob.glob('doc/migrate/3.4.0-4.0.0/*') if os.path.isfile(f)]))
         files.append((opj('lib','python%s' % py_short_version, 'site-packages',
-            'tinyerp-server', 'i18n'), glob.glob('bin/i18n/*')))
+            'openerp-server', 'i18n'), glob.glob('bin/i18n/*')))
         files.append((opj('lib', 'python%s' % py_short_version, 'site-packages',
-            'tinyerp-server', 'addons', 'custom'),
+            'openerp-server', 'addons', 'custom'),
             glob.glob('bin/addons/custom/*xml') +
             glob.glob('bin/addons/custom/*rml') +
             glob.glob('bin/addons/custom/*xsl')))
         for addon in find_addons():
-            add_path = addon.replace('.', os.path.sep).replace('tinyerp-server', 'bin',
+            add_path = addon.replace('.', os.path.sep).replace('openerp-server', 'bin',
                                                                1)
             pathfiles = [(opj('lib', 'python%s' % py_short_version, 'site-packages', 
-                              add_path.replace('bin', 'tinyerp-server', 1)),
+                              add_path.replace('bin', 'openerp-server', 1)),
                           glob.glob(opj(add_path, '*xml')) +
                           glob.glob(opj(add_path, '*csv')) +
                           glob.glob(opj(add_path, '*sql'))),
                          (opj('lib', 'python%s' % py_short_version, 'site-packages',
-                              add_path.replace('bin', 'tinyerp-server', 1), 'data'),
+                              add_path.replace('bin', 'openerp-server', 1), 'data'),
                           glob.glob(opj(add_path, 'data', '*xml'))), 
                          (opj('lib', 'python%s' % py_short_version, 'site-packages',
-                              add_path.replace('bin', 'tinyerp-server', 1), 'report'),
+                              add_path.replace('bin', 'openerp-server', 1), 'report'),
                           glob.glob(opj(add_path, 'report', '*xml')) +
                           glob.glob(opj(add_path, 'report', '*rml')) +
                           glob.glob(opj(add_path, 'report', '*sxw')) +
@@ -144,17 +144,17 @@ check_modules()
 # create startup script
 start_script = \
 "#!/bin/sh\n\
-cd %s/lib/python%s/site-packages/tinyerp-server\n\
-exec %s ./tinyerp-server.py $@" % (sys.prefix, py_short_version, sys.executable)
+cd %s/lib/python%s/site-packages/openerp-server\n\
+exec %s ./openerp-server.py $@" % (sys.prefix, py_short_version, sys.executable)
 # write script
-f = open('tinyerp-server', 'w')
+f = open('openerp-server', 'w')
 f.write(start_script)
 f.close()
 
 options = {"py2exe": {
     "compressed": 0,
     "optimize": 2, 
-    "packages": ["encodings","mx.DateTime","wizard","pychart","PIL", "pyparsing", "pydot"],
+    "packages": ["decimal", "xml", "xml.dom", "xml.xpath", "encodings","mx.DateTime","wizard","pychart","PIL", "pyparsing", "pydot"],
     "excludes" : ["Tkconstants","Tkinter","tcl"],
     }}
 
@@ -168,22 +168,22 @@ setup(name             = name,
       classifiers      = filter(None, classifiers.split("\n")),
       license          = license,
       data_files       = data_files(),
-      scripts          = ['tinyerp-server'],
-      packages         = ['tinyerp-server', 'tinyerp-server.addons',
-                          'tinyerp-server.ir',
-                          'tinyerp-server.osv',
-                          'tinyerp-server.ssl',
-                          'tinyerp-server.service', 'tinyerp-server.tools',
-                          'tinyerp-server.pychart', 'tinyerp-server.pychart.afm',
-                          'tinyerp-server.report',
-                          'tinyerp-server.report.printscreen',
-                          'tinyerp-server.report.render',
-                          'tinyerp-server.report.render.rml2pdf',
-                          'tinyerp-server.report.render.rml2html',
-                          'tinyerp-server.wizard', 'tinyerp-server.workflow'] + \
+      scripts          = ['openerp-server'],
+      packages         = ['openerp-server', 'openerp-server.addons',
+                          'openerp-server.ir',
+                          'openerp-server.osv',
+                          'openerp-server.ssl',
+                          'openerp-server.service', 'openerp-server.tools',
+                          'openerp-server.pychart', 'openerp-server.pychart.afm',
+                          'openerp-server.report',
+                          'openerp-server.report.printscreen',
+                          'openerp-server.report.render',
+                          'openerp-server.report.render.rml2pdf',
+                          'openerp-server.report.render.rml2html',
+                          'openerp-server.wizard', 'openerp-server.workflow'] + \
                          list(find_addons()),
-      package_dir      = {'tinyerp-server': 'bin'},
-      console = [{"script":"bin\\tinyerp-server.py", "icon_resources":[(1,"pixmaps\\tinyerp.ico")]}],
+      package_dir      = {'openerp-server': 'bin'},
+      console = [{"script":"bin\\openerp-server.py", "icon_resources":[(1,"pixmaps\\openerp.ico")]}],
       options = options,
       )
 
