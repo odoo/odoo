@@ -67,8 +67,6 @@ class stock_location(osv.osv):
 
     def _complete_name(self, cr, uid, ids, name, args, context):
         def _get_one_full_name(location, level=4):
-            if level<=0:
-                return '...'
             if location.location_id:
                 parent_path = _get_one_full_name(location.location_id, level-1) + "/"
             else:
@@ -79,6 +77,15 @@ class stock_location(osv.osv):
             res[m.id] = _get_one_full_name(m)
         return res
 
+    def _product_qty_available(self, cr, uid, ids, name, arg, context={}):
+        res = {}.fromkeys(ids, 0.0)
+        if 'product_id' not in context:
+            return res
+        for id in ids:
+            location_ids = self.search(cr, uid, [('location_id', 'child_of', [id])])
+            res[id] = self._product_get_multi_location(cr, uid, location_ids, [context['product_id']], context, ('done',), ('in','out'))[context['product_id']]
+        return res
+
     _columns = {
         'name': fields.char('Location Name', size=64, required=True, translate=True),
         'active': fields.boolean('Active'),
@@ -86,11 +93,12 @@ class stock_location(osv.osv):
         'allocation_method': fields.selection([('fifo','FIFO'),('lifo','LIFO'),('nearest','Nearest')], 'Allocation Method', required=True),
 
         'complete_name': fields.function(_complete_name, method=True, type='char', size=100, string="Location Name"),
-        #'qty_available': fields.function(_product_qty_available, method=True, type='float', string='Real Stock'),
-        #'virtual_available': fields.function(_product_virtual_available, method=True, type='float', string='Virtual Stock'),
+
+        'stock_real': fields.function(_product_qty_available, method=True, type='float', string='Real Stock'),
+        'stock_virtual': fields.function(_product_qty_available, method=True, type='float', string='Virtual Stock'),
 
         'account_id': fields.many2one('account.account', string='Inventory Account', domain=[('type','!=','view')]),
-        'location_id': fields.many2one('stock.location', 'Parent Location', select=True),
+        'location_id': fields.many2one('stock.location', 'Parent Location', select=True, ondelete='cascade'),
         'child_ids': fields.one2many('stock.location', 'location_id', 'Contains'),
 
         'chained_location_id': fields.many2one('stock.location', 'Chained Location If Fixed'),
@@ -105,15 +113,16 @@ class stock_location(osv.osv):
                 "by a worker. With 'Automatic No Step Added', the location is replaced in the original move."
             ),
         'chained_delay': fields.integer('Chained Delay (days)'),
-
         'address_id': fields.many2one('res.partner.address', 'Location Address'),
-
         'icon': fields.selection(tools.icons, 'Icon', size=64),
 
         'comment': fields.text('Additional Information'),
         'posx': fields.integer('Corridor (X)'),
         'posy': fields.integer('Shelves (Y)'),
         'posz': fields.integer('Height (Z)'),
+
+        'parent_left': fields.integer('Left Parent', select=1),
+        'parent_right': fields.integer('Right Parent', select=1),
     }
     _defaults = {
         'active': lambda *a: 1,
