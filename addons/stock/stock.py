@@ -106,7 +106,7 @@ class stock_location(osv.osv):
         'chained_auto_packing': fields.selection(
             [('auto','Automatic Move'), ('manual','Manual Operation'),('transparent','Automatic No Step Added')], 
             'Automatic Move', 
-            required=True, select=1,
+            required=True,
             help="This is used only if you selected a chained location type.\n" \
                 "The 'Automatic Move' value will create a stock move after the current one that will be "\
                 "validated automatically. With 'Manual Operation', the stock move has to be validated "\

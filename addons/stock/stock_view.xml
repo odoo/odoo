@@ -357,11 +357,11 @@
             <field name="model">stock.location</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Stock location" colors="blue:usage=='internal'">
+                <tree string="Stock location" colors="blue:usage=='view';darkred:usage=='internal'">
                     <field name="complete_name"/>
                     <field name="usage"/>
-                    <field name="stock_real"/>
-                    <field name="stock_virtual"/>
+                    <field name="stock_real" invisible="'product_id' not in context"/>
+                    <field name="stock_virtual" invisible="'product_id' not in context"/>
                 </tree>
             </field>
         </record>
