@@ -65,7 +65,7 @@ class process_process(osv.osv):
             if node.kind == "state" and node.model_id and node.model_id.model == res_model:
                 states = node.model_states
                 states = (states or []) and states.split(',')
-                data['active'] = (states and current_object.state in states) or not states
+                data['active'] = not states or current_object.state in states
 
             elif node.kind == "router":
                 #TODO:
