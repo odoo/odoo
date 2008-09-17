@@ -48,19 +48,19 @@ view_form_profit = """<?xml version="1.0"?>
     </group>
 </form>"""
 
-view_form_charts = """<?xml version="1.0"?>
-<form string="Setup">
-    <image name="gtk-dialog-info" colspan="2"/>
-    <group>
-        <separator string="Select a Chart of Accounts" colspan="2"/>
-        <newline/>
-        <field name="charts" align="0.0"/>
-        <newline/>
-        <label string="There are much more charts of accounts available on the OpenERP website." colspan="2" align="0.0"/>
-        <newline/>
-        <label string="If you don't select one now, you'll be able to install another one through the Administration menu." colspan="2" align="0.0"/>
-    </group>
-</form>"""
+#view_form_charts = """<?xml version="1.0"?>
+#<form string="Setup">
+#    <image name="gtk-dialog-info" colspan="2"/>
+#    <group>
+#        <separator string="Select a Chart of Accounts" colspan="2"/>
+#        <newline/>
+#        <field name="charts" align="0.0"/>
+#        <newline/>
+#        <label string="There are much more charts of accounts available on the OpenERP website." colspan="2" align="0.0"/>
+#        <newline/>
+#        <label string="If you don't select one now, you'll be able to install another one through the Administration menu." colspan="2" align="0.0"/>
+#    </group>
+#</form>"""
 
 view_form_company = """<?xml version="1.0"?>
 <form string="Setup">
@@ -389,36 +389,36 @@ IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701""",
             'result': {'type': 'form', 'arch': view_form_profit, 'fields': fields,
                 'state': [
                     ('menu', 'Cancel', 'gtk-cancel'),
-                    ('next', 'Next', 'gtk-go-forward', True)
-                ]
-            }
-        },
-        'next': {
-            'actions': [],
-            'result': {'type': 'choice', 'next_state': _next}
-        },
-        'charts':{
-            'actions': [],
-            'result': {'type': 'form', 'arch': view_form_charts, 'fields': fields,
-                'state':[
-                    ('init', 'Previous', 'gtk-go-back'),
                     ('company', 'Next', 'gtk-go-forward', True)
                 ]
             }
         },
+#        'next': {
+#            'actions': [],
+#            'result': {'type': 'choice', 'next_state': _next}
+#        },
+#        'charts':{
+#            'actions': [],
+#            'result': {'type': 'form', 'arch': view_form_charts, 'fields': fields,
+#                'state':[
+#                    ('init', 'Previous', 'gtk-go-back'),
+#                    ('company', 'Next', 'gtk-go-forward', True)
+#                ]
+#            }
+#        },
         'company':{
             'actions': [],
             'result': {'type': 'form', 'arch': view_form_company, 'fields': fields,
                 'state': [
-                    ('previous', 'Previous', 'gtk-go-back'),
+                    ('init', 'Previous', 'gtk-go-back'),
                     ('update', 'Next', 'gtk-go-forward', True)
                 ]
             }
         },
-        'previous':{
-            'actions': [],
-            'result': {'type': 'choice', 'next_state': _previous}
-        },
+#        'previous':{
+#            'actions': [],
+#            'result': {'type': 'choice', 'next_state': _previous}
+#        },
         'update':{
             'actions': [],
             'result': {'type': 'form', 'arch': view_form_update, 'fields': fields,

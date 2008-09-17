@@ -33,7 +33,7 @@ from osv import fields, osv
 
 from tools.misc import currency
 from tools.translate import _
-
+import pooler
 import mx.DateTime
 from mx.DateTime import RelativeDateTime, now, DateTime, localtime
 
@@ -1521,6 +1521,61 @@ class account_config_fiscalyear(osv.osv_memory):
         }
 
 account_config_fiscalyear()
+
+class account_config_charts(osv.osv_memory):
+    _name = 'account.config.charts'
+    
+    def _get_charts(self, cr, uid, context):
+        module_obj=self.pool.get('ir.module.module')
+        ids=module_obj.search(cr, uid, [('category_id', '=', 'Account charts'), ('state', '<>', 'installed')])
+        res=[(m.id, m.shortdesc) for m in module_obj.browse(cr, uid, ids)]
+        res.append((-1, 'None'))
+        res.sort(lambda x,y: cmp(x[1],y[1]))
+        return res
+    
+    _columns = {
+                'charts' : fields.selection(_get_charts, 'Select Charts of Account',required=True)
+                }
+    
+    def action_cancel(self,cr,uid,ids,conect=None):
+        return {
+                'view_type': 'form',
+                "view_mode": 'form',
+                'res_model': 'ir.module.module.configuration.wizard',
+                'type': 'ir.actions.act_window',
+                'target':'new',
+        }
+        
+    def action_create(self, cr, uid,ids, context=None):
+        res=self.read(cr,uid,ids)[0]
+        id = res['charts']
+        def install(id):
+            mod_obj = self.pool.get('ir.module.module')
+            mod_obj.write(cr , uid, [id] ,{'state' : 'to install'})
+            mod_obj.download(cr, uid, [id], context=context)
+            cr.commit()
+            cr.execute("select m.id as id from ir_module_module_dependency d inner join ir_module_module m on (m.name=d.name) where d.module_id=%d and m.state='uninstalled'",(id,))
+            ret = cr.fetchall()
+            if len(ret):
+                for r in ret:
+                    install(r[0])
+            else:
+                mod_obj.write(cr , uid, [id] ,{'state' : 'to install'})
+                mod_obj.download(cr, uid, [id], context=context)
+                cr.commit()
+        install(id)
+        cr.commit()
+        db, pool = pooler.restart_pool(cr.dbname, update_module=True)
+        
+        return {
+                'view_type': 'form',
+                "view_mode": 'form',
+                'res_model': 'ir.module.module.configuration.wizard',
+                'type': 'ir.actions.act_window',
+                'target':'new',
+        }
+
+account_config_charts()
 
 #  ---------------------------------------------------------------
 #   Account Templates : Account, Tax, Tax Code and chart. + Wizard
