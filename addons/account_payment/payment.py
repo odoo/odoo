@@ -430,12 +430,15 @@ class payment_line(osv.osv):
         ('name_uniq', 'UNIQUE(name)', 'The payment line name must be unique!'),
     ]
 
-    def onchange_move_line(self,cr,uid,ids,move_line_id,payment_type,date_prefered,date_planned,context=None):
+    def onchange_move_line(self,cr,uid,ids,move_line_id,payment_type,date_prefered,date_planned,currency=False,company_currency=False,context=None):
         data={}
-        data['amount_currency']=data['currency']=data['communication']=data['partner_id']=data['reference']=data['date_created']=data['bank_id']=False
+        data['amount_currency']=data['currency']=data['communication']=data['partner_id']=data['reference']=data['date_created']=data['bank_id']=data['amount']=False
         if move_line_id:
             line = self.pool.get('account.move.line').browse(cr,uid,move_line_id)
             data['amount_currency']=line.amount_to_pay
+            res = self.onchange_amount(cr, uid, ids, data['amount_currency'], currency, company_currency, context)
+            if res:
+                data['amount'] = res['value']['amount']
             data['partner_id']=line.partner_id.id
             data['currency']=line.currency_id and line.currency_id.id or False
             if not data['currency']:
@@ -457,6 +460,15 @@ class payment_line(osv.osv):
                 data['date'] = date_planned
 
         return {'value': data}
+
+    def onchange_amount(self,cr,uid,ids,amount,currency,cmpny_currency,context=None):
+        if not amount:
+            return {}
+        res = {}
+        currency_obj = self.pool.get('res.currency')
+        company_amount = currency_obj.compute(cr, uid, currency, cmpny_currency,amount)
+        res['amount'] = company_amount
+        return {'value': res}
 
     def onchange_partner(self,cr,uid,ids,partner_id,payment_type,context=None):
         data={}

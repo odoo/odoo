@@ -178,7 +178,7 @@ class purchase_order(osv.osv):
         'invoiced':fields.boolean('Invoiced & Paid', readonly=True, select=True),
         'invoiced_rate': fields.function(_invoiced_rate, method=True, string='Invoiced', type='float'),
         'invoice_method': fields.selection([('manual','Manual'),('order','From order'),('picking','From picking')], 'Invoicing Control', required=True),
-        'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, method=True,store=True, string='Planned Date', type='date', help="This is computed as the minimum scheduled date of all purchase order lines' products."),
+        'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, method=True,store=True, string='Planned Date', type='datetime', help="This is computed as the minimum scheduled date of all purchase order lines' products."),
         'amount_untaxed': fields.function(_amount_untaxed, method=True, string='Untaxed Amount'),
         'amount_tax': fields.function(_amount_tax, method=True, string='Taxes'),
         'amount_total': fields.function(_amount_total, method=True, string='Total'),
