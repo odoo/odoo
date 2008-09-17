@@ -28,7 +28,6 @@
 #
 ##############################################################################
 
-import budget_report
 import central_journal
 import general_journal
 import account_journal

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<terp>
+<openerp>
 <data>
-	<menuitem name="Auction Management" id="menu_root" icon="terp-purchase"/>
-	<menuitem name="Auction Management/Configuration" groups="base.group_admin"/>
+	<menuitem name="Auction Management" id="auction_menu_root" icon="terp-purchase"/>
+	<menuitem name="Configuration" parent="auction_menu_root" id="auction_config_menu" sequence="1"/>
 
 	=======================================================
 	Auction Management/Configuration/artist
@@ -39,7 +39,7 @@
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_auction_artist_tree"/>
 	</record>
-	<menuitem name="Auction Management/Configuration/Define Artists" action="action_auction_artist" id="menu_auction_artist"/>
+	<menuitem name="Define Artists" parent="auction_config_menu" action="action_auction_artist" id="menu_auction_artist"/>
 
 	=======================================================
 	Auction Management/Configuration/objectcategories
@@ -74,7 +74,7 @@
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_auction_object_categories_tree"/>
 	</record>
-	<menuitem name="Auction Management/Configuration/Object Categories" action="action_auction_object_categories" id="menu_auction_object_cat"/>
+	<menuitem name="Object Categories" parent="auction_config_menu" action="action_auction_object_categories" id="menu_auction_object_cat"/>
 	=======================================================
 Auction Management/Auction Dates/New Auction Dates
 	=======================================================
@@ -126,7 +126,9 @@ Auction Management/Auction Dates/New Auction Dates
 		<field name="domain">[('state','=','draft')]</field>
 		<field name="view_id" eval="False"/>
 	</record>
-	<menuitem name="Auction Management/Auction Dates/Next Auction Dates" id="menu_auction_dates_next1" action="action_auction_dates_next"/>
+	
+	<menuitem name="Auction Dates" parent="auction_menu_root" id="auction_date_menu"/>
+	<menuitem name="Next Auction Dates" parent="auction_date_menu" id="menu_auction_dates_next1" action="action_auction_dates_next"/>
 	=======================================================
 	Auction Management/Auction Dates/Old Auction Dates
 	=======================================================
@@ -137,15 +139,14 @@ Auction Management/Auction Dates/New Auction Dates
 		<field name="domain">[('state','=','closed')]</field>
 		<field name="view_id" ref="view_auction_dates_tree"/>
 	</record>
-	<menuitem name="Auction Management/Auction Dates/Old Auction Dates" id="menu_auction_dates_old" action="action_auction_dates_old"/>
+	<menuitem parent="auction_date_menu" name="Old Auction Dates" id="menu_auction_dates_old" action="action_auction_dates_old"/>
 
 	<record model="ir.actions.act_window" id="action_auction_dates1">
 		<field name="res_model">auction.dates</field>
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_auction_dates_form"/>
 	</record>
-	<menuitem name="Auction Management/Auction Dates"/>
-	<menuitem name="Auction Management/Auction Dates/New Auction Dates" id="menu_auction_dates_new"  action="action_auction_dates1"/>
+	<menuitem name="New Auction Dates" parent="auction_date_menu" id="menu_auction_dates_new"  action="action_auction_dates1"/>
 
 
 
@@ -288,10 +289,9 @@ Auction Management/Auction Dates/Reporting
 				 	<group col="4" colspan="2">
 						<button name="button_bought" string="Sold" states="draft" type="object"/>
 						<button name="button_not_bought" string="Not sold" states="draft" type="object"/>
+						<button name="button_taken_away" string="Taken away" states="sold" type="object"/>
 						<button name="button_draft" string="Set to draft" states="sold,unsold" type="object"/>
 						<button name="button_unpaid" string="Set to draft" states="paid" type="object"/>
-						<button name="button_taken_away" string="Taken away" states="sold" type="object"/>
-
 					</group>
 				</page>
 
@@ -359,16 +359,22 @@ Auction Management/Auction Dates/Reporting
 
 
 
+	<record model="ir.actions.act_window" id="action_all_objects">
+		<field name="res_model">auction.lots</field>
+		<field name="view_type">form</field>
+		<field name="view_mode">tree,form</field>
+	</record>
 
 	<record model="ir.actions.act_window" id="action_all_objects_sold">
 		<field name="res_model">auction.lots</field>
 		<field name="view_type">form</field>
 		<field name="domain">[('state','=','sold')]</field>
 	</record>
-	<menuitem
-		name="Auction Management/Objects/All objects/Sold Objects"
-		action="action_all_objects_sold"
-		id="menu_all_objects_sold1"/>
+	
+	<menuitem name="Objects" parent="auction_menu_root" id="auction_objects_menu"/>
+	<menuitem name="All objects" action="action_all_objects" parent="auction_objects_menu" id="auction_all_objects_menu"/>
+	
+	<menuitem name="Sold Objects" parent="auction_all_objects_menu" action="action_all_objects_sold" id="menu_all_objects_sold1"/>
 
 	<record model="ir.actions.act_window" id="action_all_objects_to_sell">
 		<field name="res_model">auction.lots</field>
@@ -376,7 +382,7 @@ Auction Management/Auction Dates/Reporting
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('state','&lt;&gt;','sold')]</field>
 	</record>
-	<menuitem name="Auction Management/Objects/All objects/Objects to sell" action="action_all_objects_to_sell" id="menu_all_objects_to_sell"/>
+	<menuitem name="Objects to sell" parent="auction_all_objects_menu" action="action_all_objects_to_sell" id="menu_all_objects_to_sell"/>
 
 	<record model="ir.actions.act_window" id="action_all_objects_unplanned">
 		<field name="res_model">auction.lots</field>
@@ -384,15 +390,7 @@ Auction Management/Auction Dates/Reporting
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('auction_id','=', False),('state','=','draft')]</field>
 	</record>
-	<menuitem name="Auction Management/Objects/All objects/Unplanned objects" action="action_all_objects_unplanned" id="menu_all_objects_unplanned1"/>
-
-
-	<record model="ir.actions.act_window" id="action_all_objects">
-		<field name="res_model">auction.lots</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-	</record>
-	<menuitem name="Auction Management/Objects/All objects"	action="action_all_objects" id="menu_auction_all_objects" menu="menu_action_all_objects"/>
+	<menuitem name="Unplanned objects" parent="auction_all_objects_menu" action="action_all_objects_unplanned" id="menu_all_objects_unplanned1"/>
 
 
 	<!--		for the sold object  start-->
@@ -404,7 +402,8 @@ Auction Management/Auction Dates/Reporting
 		<field name="domain">[('state','=','unsold')]</field>
 	</record>
 	<menuitem
-		name="Auction Management/Objects/All objects/Unsold Objects"
+		name="Unsold Objects"
+		parent="auction_all_objects_menu"
 		action="action_all_objects_unsold"
 		id="menu_all_objects_unsold"/>
 
@@ -481,7 +480,7 @@ Auction Management/Auction Dates/Reporting
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,form</field>
 	 </record>
-	<menuitem name="Auction Management/Objects/All objects/Unclassified objects" action="action_unclassified_objects" id="menu_all_objects_unclassified"/>
+	<menuitem name="Unclassified objects" parent="auction_all_objects_menu" action="action_unclassified_objects" id="menu_all_objects_unclassified"/>
 
 	<record model="ir.ui.view" id="v12">
 		<field name="name">Auction.deposit.tree</field>
@@ -599,8 +598,9 @@ Auction Management/Auction Dates/Reporting
 		<field name="view_type">form</field>
 		<field name="view_id" ref="view_deposit_border_tree2"/>
 	</record>
-	<menuitem name="Auction Management/Sellers"/>
-	<menuitem name="Auction Management/Sellers/Deposit border" action="action_deposit_border" id="menu_auction_deposit_border"/>
+	
+	<menuitem name="Sellers" id="auction_seller_menu" parent="auction_menu_root"/>
+	<menuitem name="Deposit border" parent="auction_seller_menu" action="action_deposit_border" id="menu_auction_deposit_border"/>
 
 	=======================================================
 		"Auction Management/Buyers/Bids
@@ -640,8 +640,6 @@ Auction Management/Auction Dates/Reporting
 		<field name="res_model">auction.bid</field>
 		<field name="view_type">form</field>
 	</record>
-		<!--<menuitem name="Auction Management/Buyers" groups="base.group_admin"/>-->
-		<!--menuitem name="Auction Management/Buyers/Bids Form"  action="b11"/>-->
 
 
 	=======================================================
@@ -696,7 +694,9 @@ Auction Management/Auction Dates/Reporting
 		<field name="res_model">auction.bid</field>
 		<field name="view_mode">tree,form</field>
 	</record>
-	<menuitem name="Auction Management/Buyers/Bids" action="action_bid_open" id="menu_action_bid_open"/>
+	
+	<menuitem name="Buyers" id="auction_buyers_menu" parent="auction_menu_root"/>
+	<menuitem name="Bids" parent="auction_buyers_menu" action="action_bid_open" id="menu_action_bid_open"/>
 
 
 	<record model="ir.actions.act_window" id="action_bids_form">
@@ -705,7 +705,7 @@ Auction Management/Auction Dates/Reporting
 		<field name="view_mode">tree,form</field>
 	</record>
 
-	<menuitem name="Auction Management/Buyers/Bids/Bids line" action="action_bids_form" id="menu_action_bids_form"/>
+	<menuitem name="Bids line" parent="menu_action_bid_open" action="action_bids_form" id="menu_action_bids_form"/>
 
 
 <!--start : creating auction Reporting menu for the auction by pmo-->
@@ -743,7 +743,8 @@ Auction Management/Auction Dates/Reporting
 			</form>
 		</field>
 	</record>
-	<menuitem name="Auction Management/Reporting"/>
+	
+	<menuitem name="Reporting" id="auction_report_menu" parent="auction_menu_root"/>
 
 
 <record model="ir.actions.act_window" id="action_auction_report_allmonth_view1">
@@ -753,7 +754,8 @@ Auction Management/Auction Dates/Reporting
 		<field name="view_mode">tree</field>
 		<!--field name="domain">[('auction_id','=', active_id)]</field-->
 	</record>
-   <menuitem name="Auction Management/Reporting/Auction/Auction's summary" action="action_auction_report_allmonth_view1" id="menu_auction_allmonth_view1"/>
+	<menuitem name="Auction" id="auction_report_auction_menu" parent="auction_report_menu"/>
+   <menuitem name="Auction's Summary"  parent="auction_report_auction_menu" action="action_auction_report_allmonth_view1" id="menu_auction_allmonth_view1"/>
 
 
 
@@ -799,7 +801,9 @@ Auction Management/Auction Dates/Reporting
 		<field name="view_mode">tree</field>
 		<field name="domain">[('date','ilike',time.strftime('%Y-%m'))]</field>
 	</record>
-<!--	<menuitem name="Auction Management/Reporting/Auction/This Month/Result of Auction" action="action_auction_report_thismonth_view2" id="menu_auction_thismonth_view2"/-->
+
+<!--	<menuitem name="This Month" id="auction_report_thismonth_menu" parent="auction_report_menu"/>   -->
+<!--	<menuitem name="Result of Auction" action="action_auction_report_thismonth_view2" id="menu_auction_thismonth_view2" parent="auction_report_thismonth_menu"/> -->
 
 
 <record model="ir.actions.act_window" id="action_auction_report_allmonth_view2">
@@ -808,7 +812,7 @@ Auction Management/Auction Dates/Reporting
 		<field name="view_type">form</field>
 		<field name="view_mode">tree</field>
 	</record>
-	<menuitem name="Auction Management/Reporting/Auction/Auction's revenues" action="action_auction_report_allmonth_view2" id="menu_auction_allmonth_view2"/>
+	<menuitem name="Auction's Revenues" parent="auction_report_auction_menu" action="action_auction_report_allmonth_view2" id="menu_auction_allmonth_view2"/>
 
 <!--start : creating seller Reporting menu for the selller by pmo-->
 
@@ -865,14 +869,15 @@ Auction Management/Auction Dates/Reporting
 		<field name="view_mode">tree,graph</field>
 		<field name="domain">[('date','ilike',time.strftime('%Y-%m'))]</field>
 	</record>
-		<!--menuitem name="Auction Management/Reporting/seller/This Month/Seller object details" action="action_auction_reporting1" id="menu_seller_thismonth_view1"/-->
 	<record model="ir.actions.act_window" id="action_auction_reporting_all1">
 		<field name="name">Seller's auction</field>
 		<field name="res_model">report.seller.auction</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,graph</field>
 	</record>
-	<menuitem name="Auction Management/Reporting/Seller/Seller's summary" action="action_auction_reporting_all1" id="menu_seller_allmonth_view1"/>
+		<menuitem name="Sellers" id="auction_report_seller_menu" parent="auction_report_menu"/>
+	<menuitem name="Seller's Summary" action="action_auction_reporting_all1" id="menu_seller_allmonth_view1" parent="auction_report_seller_menu"/>
+	
 <record model="ir.ui.view" id="view_auction_form2">
 		<field name="name">Seller's auction</field>
 		<field name="model">report.seller.auction2</field>
@@ -926,7 +931,7 @@ Auction Management/Auction Dates/Reporting
 		<field name="view_mode">tree,graph</field>
 		<field name="domain">[('date','ilike',time.strftime('%Y-%m'))]</field>
 	</record>
-	<menuitem name="Auction Management/Reporting/Seller/Seller's revenues" action="action_auction_reporting_all2" id="menu_seller_allmonth_view2"/>
+	<menuitem name="Seller's Revenues" action="action_auction_reporting_all2" id="menu_seller_allmonth_view2" parent="auction_report_seller_menu"/>
 
 <record model="ir.ui.view" id="view_auction_buyer_form">
 		<field name="name">Buyer's auction</field>
@@ -964,7 +969,7 @@ Auction Management/Auction Dates/Reporting
 		<field name="view_mode">tree</field>
 		<field name="domain">[('date','ilike',time.strftime('%Y-%m'))]</field>
 	</record>
-		<!--menuitem name="Auction Management/Reporting/Buyer/This Month/Buyer's details " action="action_auction_buyer_reporting" id="menu_buyer_thismonth_view1"/-->
+	
 <record model="ir.ui.view" id="view_auction_buyer_form2">
 		<field name="name">Buyer's auction</field>
 		<field name="model">report.buyer.auction2</field>
@@ -1003,7 +1008,6 @@ Auction Management/Auction Dates/Reporting
 		<field name="view_mode">tree</field>
 		<field name="domain">[('date','ilike',time.strftime('%Y-%m'))]</field>
 	</record>
-		<!--menuitem name="Auction Management/Reporting/Buyer/This Month/Buyer's results " action="action_auction_buyer_reporting2" id="menu_buyer_thismonth_view2"/-->
 
 	<record model="ir.actions.act_window" id="action_auction_buyer_reporting_all1">
 		<field name="name">Buyer's auction</field>
@@ -1011,17 +1015,19 @@ Auction Management/Auction Dates/Reporting
 		<field name="view_type">form</field>
 		<field name="view_mode">tree</field>
 	</record>
-	<menuitem name="Auction Management/Reporting/Buyer/Buyer's summary" action="action_auction_buyer_reporting_all1" id="menu_buyer_allmonth_view1"/>
+	<menuitem name="Buyer" id="auction_report_buyer_menu" parent="auction_report_menu"/>
+	<menuitem name="Buyer's Summary" action="action_auction_buyer_reporting_all1" id="menu_buyer_allmonth_view1" parent="auction_report_buyer_menu"/>
+	
 	<record model="ir.actions.act_window" id="action_auction_buyer_reporting_all2">
 		<field name="name">Buyer's auction for all months</field>
 		<field name="res_model">report.buyer.auction2</field>
 		<field name="view_type">form</field>
 		<field name="view_mode">tree</field>
 	</record>
-<menuitem name="Auction Management/Reporting/Buyer/Buyer's revenues" action="action_auction_buyer_reporting_all2" id="menu_buyer_allmonth_view2"/>
-
-
-
+	
+	
+	
+<menuitem name="Buyer's Revenues" action="action_auction_buyer_reporting_all2" id="menu_buyer_allmonth_view2" parent="auction_report_buyer_menu"/>
 
 <!--end : creating buyer Reporting menu for the buyer by pmo-->
 
@@ -1126,13 +1132,16 @@ estimation.adj.category
 		<field name="view_mode">graph,tree</field>
 		<field name="domain">[('date','like',time.strftime('%Y-%m')),('user_id','=',uid)]</field>
 	</record>
-<menuitem name="Auction Management/Reporting/Employees/Comparison of estimations" action="action_report_auction_estimation_adj_category_member_tree" id="menu_report_auction_estimation_adj_category_member"/>
-	<menuitem name="Auction Management/Reporting/Manager/Comparison of estimations"  action="action_report_auction_estimation_adj_category_manager_tree" id="menu_report_auction_estimation_adj_category_manager"/>
+
+<menuitem name="Employees" id="auction_report_employees_menu" parent="auction_report_menu"/>
+<menuitem name="Comparison of estimations" action="action_report_auction_estimation_adj_category_member_tree" id="menu_report_auction_estimation_adj_category_member" parent="auction_report_employees_menu"/>
+<menuitem name="Manager" id="auction_report_manager_menu" parent="auction_report_menu"/>
+<menuitem name="Comparison of estimations"  action="action_report_auction_estimation_adj_category_manager_tree" id="menu_report_auction_estimation_adj_category_manager" parent="auction_report_manager_menu"/>
 
 
-=<!--=============================
+<!--=============================
 sign in sign out report by user
-==============================
+============================== 
 
 	<record model="ir.ui.view" id="view_report_auction_sign_in_out_tree">
 		<field name="name">report.auction.user.pointing.tree</field>
@@ -1170,12 +1179,10 @@ sign in sign out report by user
 		<field name="view_type">form</field>
 		<field name="view_mode">tree,graph</field>
 	</record>
-	<menuitem name="Auction Management/Reporting/Member/Summury of Sign_in Sign_out" action="action_report_auction_sign_in_out_member_tree" id="menu_report_auction_sign_in_out_member_tree"/>
-	<menuitem name="Auction Management/Reporting/Manager/Summury of Sign_in Sign_out"  action="action_report_auction_sign_in_out_manager_tree" id="menu_report_auction_sign_in_out_manager_tree"/>
+	<menuitem name="Summury of Sign_in Sign_out" action="action_report_auction_sign_in_out_member_tree" id="menu_report_auction_sign_in_out_member_tree" parent="auction_report_manager_menu"/>
+	<menuitem name="Summury of Sign_in Sign_out"  action="action_report_auction_sign_in_out_manager_tree" id="menu_report_auction_sign_in_out_manager_tree" parent="auction_report_manager_menu"/>
 
 -->
-
-
 	<record model="ir.ui.view" id="view_report_auction_sign_in_out_tree1">
 		<field name="name">report attendance</field>
 		<field name="model">report.attendance</field>
@@ -1212,7 +1219,7 @@ sign in sign out report by user
 		<field name="domain"> [('employee_id','=',uid)]</field>
 		<!--<field name="domain"> [('name','ilike',time.strftime('%Y-%m'))]</field>-->
 	</record>
-	<menuitem name="Auction Management/Reporting/Employees/Attendance" action="action_report_auction_sign_in_out_member_tree1" id="menu_report_auction_sign_in_out_member_tree1"/>
+	<menuitem name="Attendance" action="action_report_auction_sign_in_out_member_tree1" id="menu_report_auction_sign_in_out_member_tree1" parent="auction_report_employees_menu"/>
 
 
 	<record model="ir.actions.act_window" id="action_report_auction_sign_in_out_manager_tree1">
@@ -1222,7 +1229,7 @@ sign in sign out report by user
 		<field name="domain"> [('name','ilike',time.strftime('%Y-%m-%d'))]</field>
 	</record>
 
-	<menuitem name="Auction Management/Reporting/Manager/Attendance"  action="action_report_auction_sign_in_out_manager_tree1" id="menu_report_auction_sign_in_out_manager_tree1"/>
+	<menuitem name="Attendance"  action="action_report_auction_sign_in_out_manager_tree1" id="menu_report_auction_sign_in_out_manager_tree1" parent="auction_report_manager_menu"/>
 
 ==============================
 My Latest Objects
@@ -1233,7 +1240,7 @@ My Latest Objects
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('create_uid','=',uid)]</field>
 	</record>
-	<!--menuitem name="Auction Management/Reporting/Member/My Latest Objects" action="action_report_latest_objects_tree" id="menu_report_latest_objects_tree"/-->
+	
 	<record model="ir.actions.act_window" id="action_report_latest_objects_manager_tree">
 		<field name="res_model">auction.lots</field>
 		<field name="view_type">form</field>
@@ -1252,7 +1259,7 @@ My Latest Deposit
 		<field name="view_mode">tree,form</field>
 		<field name="domain">[('create_uid','=',uid)]</field>
 	</record>
-	<menuitem name="Auction Management/Reporting/Employees/My Latest Deposits" action="action_report_latest_doposit_tree" id="menu_report_latest_doposit_tree"/>
+	<menuitem name="My Latest Deposits" action="action_report_latest_doposit_tree" id="menu_report_latest_doposit_tree" parent="auction_report_employees_menu"/>
 
 	<record model="ir.actions.act_window" id="action_report_latest_doposit_manager_tree">
 		<field name="res_model">auction.deposit</field>
@@ -1260,7 +1267,7 @@ My Latest Deposit
 		<field name="view_mode">tree,form</field>
 	</record>
 
-	<menuitem name="Auction Management/Reporting/Manager/Latest Deposits" action="action_report_latest_doposit_manager_tree" id="menu_report_latest_doposit_tree_manager"/>
+	<menuitem name="Latest Deposits" action="action_report_latest_doposit_manager_tree" id="menu_report_latest_doposit_tree_manager" parent="auction_report_manager_menu"/>
 =============================
 Objects per Day
 ==============================
@@ -1319,13 +1326,15 @@ Objects per Day
 		<field name="domain">[('month','=',time.strftime('%Y-%m-01'))]</field>
 	</record>
 	<menuitem
-		name="Auction Management/Reporting/Manager/Encoded Objects Per Day"
+		name="Encoded Objects Per Day"
 		action="action_report_auction_object_date_tree"
-		id="menu_report_auction_object_date_tree"/>
+		id="menu_report_auction_object_date_tree"
+		parent="auction_report_manager_menu"/>
 	<menuitem
-		name="Auction Management/Reporting/Employees/My Encoded Objects Per Day"
+		name="My Encoded Objects Per Day"
 		action="action_report_auction_object_date_tree_my"
-		id="menu_report_auction_object_date_tree1_my"/>
+		id="menu_report_auction_object_date_tree1_my"
+		parent="auction_report_employees_menu"/>
 
 
 	<record model="ir.actions.act_window" id="view_report_object_by_auction">
@@ -1376,9 +1385,10 @@ Objects per Day
 		<field name="view_type">tree</field>
 		<field name="domain">[('state','=', 'draft')]</field>
 	</record>
-	<menuitem name="Auction Management/Objects/Objects by Auction"
+	<menuitem name="Objects by Auction" 
+		parent="auction_objects_menu"
 		id="menu_auction_dates_next_by_auction"
-		action="action_report_object_by_auction"/>
+		action="action_report_object_by_auction" sequence="11"/>
 
 	<act_window name="Open lots"
 		domain="[('auction_id', '=', active_id)]"
@@ -1423,9 +1433,8 @@ Auction adjudication
 		<field name="view_type">form</field>
 		<field name="view_mode">graph,tree</field>
 	</record>
-	<menuitem name="Auction Management/Reporting/Manager/Adjudication by Auction" action="action_report_auction_adjudication_tree" id="menu_report_auction_adjudication_tree"/>
+	<menuitem name="Adjudication by Auction" action="action_report_auction_adjudication_tree" id="menu_report_auction_adjudication_tree" parent="auction_report_manager_menu"/>
 
-	<!--menuitem name="Auction Management/Reporting/Member/Auction Adjudication" action="action_report_auction_adjudication_tree" id="menu_report_auction_adjudication_tree1"/-->
 
 	<record model="ir.ui.view" id="view_auction_deposit_tree">
 		<field name="name">Depositer's statistics</field>
@@ -1446,8 +1455,8 @@ Auction adjudication
 		<field name="view_type">form</field>
 		<field name="view_mode">tree</field>
 	</record>
-	<menuitem name="Auction Management/Reporting/Manager/ Depositer's Statistics" action="menu_view_auction_deposit_tree" id="menu_report_deposit_tree_m"/>
-	<menuitem name="Auction Management/Reporting/Employees/ Depositer's Statistics" action="menu_view_auction_deposit_tree" id="menu_report_deposit_tree_member"/>
+	<menuitem name="Depositer's Statistics" action="menu_view_auction_deposit_tree" id="menu_report_deposit_tree_m" parent="auction_report_manager_menu"/>
+	<menuitem name="Depositer's Statistics" action="menu_view_auction_deposit_tree" id="menu_report_deposit_tree_member" parent="auction_report_employees_menu"/>
 =============================
 Object encoded
 ==============================
@@ -1521,8 +1530,6 @@ Object encoded
 		<field name="domain"> [('user_id','=',uid),('date','ilike',time.strftime('%Y-%m'))]</field>
 	</record>
 
-	<!--menuitem name="Auction Management/Reporting/Member/Objects Statistics" action="action_report_object_encoded_member_tree" id="menu_report_objects_tree_member"/-->
-
 
 	<record model="ir.ui.view" id="view_report_object_encoded_manager_tree">
 		<field name="name">report.object.encoded.tree</field>
@@ -1567,7 +1574,6 @@ Object encoded
 		<field name="domain">[('date','ilike',time.strftime('%Y-%m'))]</field>
 	</record>
 
-	<!--menuitem name="Auction Management/Reporting/Manager/Objects Statistics" action="action_report_object_encoded_manager_tree" id="menu_report_objects_tree_manager"/-->
 	<record model="ir.ui.view" id="view_report_unclassified_objects">
 		<field name="name">report.unclassified.objects</field>
 		<field name="model">report.unclassified.objects</field>
@@ -1597,4 +1603,4 @@ Object encoded
 		id="act_auction_lot_open_deposit"/>
 
 </data>
-</terp>
+</openerp>

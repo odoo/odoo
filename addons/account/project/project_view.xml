@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data>
 
         <record id="view_account_analytic_account_list" model="ir.ui.view">
@@ -75,8 +75,8 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_account_analytic_account_tree"/>
         </record>
-        <menuitem id="next_id_39" name="Analytic Accounts" parent="account.menu_finance_configuration"/>
-        <menuitem action="action_account_analytic_account_form" id="account_analytic_def_account" parent="next_id_39"/>
+        <!--<menuitem id="menu_analytic_account" name="Analytic Accounts" parent="account.menu_analytic_accounting"/>-->
+        <menuitem action="action_account_analytic_account_form" id="account_analytic_def_account" parent="account.menu_analytic_accounting"/>
 
         <record id="action_account_analytic_account_tree2" model="ir.actions.act_window">
             <field name="name">Analytic Chart of Accounts</field>
@@ -89,8 +89,17 @@
         <menuitem
             action="action_account_analytic_account_tree2"
             id="account_analytic_def_chart"
-            parent="account.next_id_39"/>
+            parent="account.account_analytic_def_account"/>
         <menuitem action="action_account_analytic_account_tree2" id="account_analytic_chart" parent="account.menu_finance_charts"/>
+
+		<record id="analytic_account_form" model="ir.actions.act_window">
+            <field name="name">New Analytic Account</field>
+            <field name="res_model">account.analytic.account</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field eval="view_account_analytic_account_form" name="view_id"/>
+        </record>
+        <menuitem action="analytic_account_form" id="account_analytic_form" parent="account.account_analytic_def_account"/>
 
         <menuitem id="next_id_40" name="Analytic" parent="account.menu_finance_reporting"/><menuitem action="action_account_analytic_account_tree2" id="account_analytic_chart_balance" parent="next_id_40"/>
 
@@ -221,7 +230,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem action="action_account_analytic_journal_form" id="account_def_analytic_journal" parent="account.next_id_25"/>
+        <menuitem action="action_account_analytic_journal_form" id="account_def_analytic_journal" parent="account.menu_analytic_accounting"/>
 
         #
         # Open journal entries
@@ -345,4 +354,4 @@
         </record>
 
     </data>
-</terp>
+</openerp>

@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data>
 
         <!--
-		Invoices
-		-->
+        Invoices
+        -->
 
+        <record id="view_invoice_line_calendar" model="ir.ui.view">
+            <field name="name">account.invoice.calendar</field>
+            <field name="model">account.invoice</field>
+            <field name="type">calendar</field>
+            <field name="arch" type="xml">
+                <calendar string="Invoices" color="journal_id" date_start="date_invoice">
+                    <field name="partner_id"/>
+                    <field name="amount_total"/>
+                </calendar>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_invoice_graph">
+            <field name="name">account.invoice.graph</field>
+            <field name="model">account.invoice</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Invoices" type="bar">
+                    <field name="partner_id"/>
+                    <field name="amount_total" operator="+"/>
+                </graph>
+            </field>
+        </record>
         <record id="view_invoice_line_tree" model="ir.ui.view">
             <field name="name">account.invoice.line.tree</field>
             <field name="model">account.invoice.line</field>
@@ -40,7 +62,7 @@
                             <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id)]" name="account_analytic_id"/>
                             <newline/>
                             <field name="price_subtotal"/>
-                            <field colspan="4" name="invoice_line_tax_id"/>
+                            <field colspan="4" name="invoice_line_tax_id" domain="[('parent_id','=',False)]"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="note" nolabel="1"/>
@@ -100,6 +122,7 @@
                     <field name="currency_id"/>
                     <field name="date_invoice"/>
                     <field name="date_due" select="1"/>
+                    <field name="residual"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -159,6 +182,7 @@
                                 <button colspan="2" name="button_compute" states="draft" string="Compute" type="object"/>
                                 <field name="amount_total"/>
                                 <field name="reconciled"/>
+                                <field name="residual"/>
                                 <field name="state" select="2"/>
                                 <group col="3" colspan="4">
                                     <button name="invoice_open" states="draft,proforma" string="Validate"/>
@@ -184,6 +208,18 @@
                             <separator colspan="4" string="Additionnal Information"/>
                             <field colspan="4" name="comment" nolabel="1"/>
                         </page>
+                        <page string="Payments">
+							<field name="payment_ids" colspan="4" nolabel="1">
+								<tree string="Payments">
+									<field name="date"/>
+									<field name="ref"/>
+									<field name="name"/>
+									<field name="journal_id"/>
+									<field name="debit"/>
+									<field name="credit"/>
+								</tree>
+							</field>
+						</page>
                     </notebook>
                 </form>
             </field>
@@ -202,13 +238,13 @@
                         <field name="number" select="1"/>
                         <field name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term)" select="1"/>
                         <field domain="[('partner_id','=',partner_id)]" name="address_invoice_id"/>
-                        <field name="payment_term" on_change="onchange_payment_term_date_invoice(payment_term, date_invoice)"/>
+                        <field name="currency_id" on_change="onchange_currency_id(currency_id)" select="2"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Invoice">
                             <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id),('journal_id','=',journal_id)]" name="account_id"/>
                             <field name="name" select="2"/>
-                            <field name="currency_id" on_change="onchange_currency_id(currency_id)" select="2"/>
+                            <field name="payment_term" on_change="onchange_payment_term_date_invoice(payment_term, date_invoice)"/>
                             <field colspan="4" name="invoice_line" nolabel="1" widget="one2many_list"/>
                             <group col="1" colspan="2">
                                 <field name="tax_line" nolabel="1">
@@ -229,6 +265,7 @@
                                 <button colspan="2" name="button_compute" states="draft" string="Compute" type="object"/>
                                 <field name="amount_total"/>
                                 <field name="reconciled"/>
+                                <field name="residual"/>
                                 <field name="state" select="2"/>
                                 <group col="3" colspan="4">
                                     <button name="invoice_proforma" states="draft" string="PRO-FORMA"/>
@@ -254,6 +291,18 @@
                             <separator colspan="4" string="Additionnal Information"/>
                             <field colspan="4" name="comment" nolabel="1"/>
                         </page>
+                        <page string="Payments">
+							<field name="payment_ids" colspan="4" nolabel="1">
+								<tree string="Payments">
+									<field name="date"/>
+									<field name="ref"/>
+									<field name="name"/>
+									<field name="journal_id"/>
+									<field name="debit"/>
+									<field name="credit"/>
+								</tree>
+							</field>
+						</page>
                     </notebook>
                 </form>
             </field>
@@ -263,6 +312,7 @@
             <field name="name">Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="view_id" ref="invoice_tree"/>
             <field name="context">{'type':'out_invoice'}</field>
         </record>
@@ -283,7 +333,7 @@
             <field name="name">Customer Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice'}</field>
@@ -293,7 +343,7 @@
             <field name="name">New Customer Invoice</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
+            <field name="view_mode">form,tree,calendar,graph</field>
             <field eval="invoice_form" name="view_id"/>
             <field name="domain">[('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice'}</field>
@@ -304,7 +354,7 @@
             <field name="name">Supplier Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','in_invoice')]</field>
             <field name="context">{'type':'in_invoice'}</field>
@@ -314,7 +364,7 @@
             <field name="name">New Supplier Invoice</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
+            <field name="view_mode">form,tree,calendar,graph</field>
             <field eval="invoice_supplier_form" name="view_id"/>
             <field name="domain">[('type','=','in_invoice')]</field>
             <field name="context">{'type':'in_invoice'}</field>
@@ -325,7 +375,7 @@
             <field name="name">Customer Refunds</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','out_refund')]</field>
             <field name="context">{'type':'out_refund'}</field>
@@ -336,7 +386,7 @@
             <field name="name">New Customer Refund</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
+            <field name="view_mode">form,tree,calendar,graph</field>
             <field eval="invoice_form" name="view_id"/>
             <field name="domain">[('type','=','out_refund')]</field>
             <field name="context">{'type':'out_refund'}</field>
@@ -347,7 +397,7 @@
             <field name="name">Supplier Refunds</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field eval="False" name="view_id"/>
             <field name="domain">[('type','=','in_refund')]</field>
             <field name="context">{'type':'in_refund'}</field>
@@ -358,7 +408,7 @@
             <field name="name">New Supplier Refund</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
+            <field name="view_mode">form,tree,calendar,graph</field>
             <field eval="invoice_supplier_form" name="view_id"/>
             <field name="domain">[('type','=','in_refund')]</field>
             <field name="context">{'type':'in_refund'}</field>
@@ -555,11 +605,11 @@
 
         <menuitem action="action_invoice_tree13" id="menu_action_invoice_tree13" parent="menu_action_invoice_tree4"/>
 
-        <act_window domain="[('partner_id','=',active_id),('state','!=','draft'),('reconciled','=',False)]" id="act_res_partner_2_account_invoice_opened" name="Unpaid invoices" res_model="account.invoice" src_model="res.partner"/>
+        <act_window domain="[('partner_id','=',active_id)]" id="act_res_partner_2_account_invoice_opened" name="Invoices" res_model="account.invoice" src_model="res.partner"/>
 
         <act_window domain="[('journal_id','=',active_id),('state','!=','draft'),('reconciled','=',False)]" id="act_account_journal_2_account_invoice_opened" name="Unpaid invoices" res_model="account.invoice" src_model="account.journal"/>
 
         <act_window domain="[('account_analytic_id', '=', active_id)]" id="act_account_analytic_account_2_account_invoice_line" name="Invoice lines" res_model="account.invoice.line" src_model="account.analytic.account"/>
 
     </data>
-</terp>
+</openerp>

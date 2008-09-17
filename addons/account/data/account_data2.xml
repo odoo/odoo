@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data noupdate="1">
 
         <!--
@@ -328,50 +328,5 @@
             <field eval="1" name="number_increment"/>
         </record>
 
-        <!--
-		Account Journal
-		-->
-
-        <record id="sales_journal" model="account.journal">
-            <field name="name">Sales Journal</field>
-            <field name="code">SAJ</field>
-            <field name="type">sale</field>
-            <field name="view_id" ref="account_journal_view"/>
-            <field name="sequence_id" ref="sequence_journal"/>
-            <field model="account.account" name="default_credit_account_id" search="[('type','=','receivable')]"/>
-            <field model="account.account" name="default_debit_account_id" search="[('type','=','receivable')]"/>
-            <field name="user_id" ref="base.user_admin"/>
-        </record>
-        <record id="expenses_journal" model="account.journal">
-            <field name="name">Expenses Journal</field>
-            <field name="code">EXJ</field>
-            <field name="type">purchase</field>
-            <field name="view_id" ref="account_journal_view"/>
-            <field name="sequence_id" ref="sequence_journal"/>
-            <field model="account.account" name="default_debit_account_id" search="[('type','=','payable')]"/>
-            <field model="account.account" name="default_credit_account_id" search="[('type','=','payable')]"/>
-            <field name="user_id" ref="base.user_admin"/>
-        </record>
-
-        <record id="bank_journal" model="account.journal">
-            <field name="name">Bank Journal</field>
-            <field name="code">BNK</field>
-            <field name="type">cash</field>
-            <field name="view_id" ref="account_journal_bank_view"/>
-            <field name="sequence_id" ref="sequence_journal"/>
-            <field model="account.account" name="default_debit_account_id" search="[('type','=','cash')]"/>
-            <field model="account.account" name="default_credit_account_id" search="[('type','=','cash')]"/>
-            <field name="user_id" ref="base.user_admin"/>
-        </record>
-
-        <record forcecreate="1" id="stock_journal" model="account.journal">
-            <field name="name">Stock Journal</field>
-            <field name="code">STJ</field>
-            <field name="type">general</field>
-            <field name="view_id" ref="account_journal_view"/>
-            <field name="sequence_id" ref="sequence_journal"/>
-            <field name="user_id" ref="base.user_admin"/>
-        </record>
-
     </data>
-</terp>
+</openerp>

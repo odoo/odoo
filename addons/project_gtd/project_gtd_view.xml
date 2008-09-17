@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<terp>
+<openerp>
 	<data>
 
 
@@ -107,7 +107,7 @@
 			<field name="arch" type="xml">
 				<tree string="Tasks" editable="bottom" colors="blue:timebox_id">
 					<field name="name"/>
-					<field name="timebox_id" required="1"/>
+					<field name="timebox_id" required="1" domain="[('user_id','=',uid)]"/>
 					<field name="context_id" required="1"/>
 					<field name="date_start"/>
 					<field name="priority"/>
@@ -160,7 +160,7 @@
 		<field name="arch" type="xml">
 			<field name="date_close" position="after">
 				<newline/>
-				<field name="timebox_id" select="1"/>
+				<field name="timebox_id" select="1" domain="[('user_id', '=', uid)]"/>
 				<field name="context_id" select="2"/>
 			</field>
 		</field>
@@ -207,4 +207,4 @@
 
 
 	</data>
-</terp>
+</openerp>

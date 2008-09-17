@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<terp>
+<openerp>
 	<data>
 
 		<wizard string="Refund Orders" model="pos.order"
@@ -8,14 +8,14 @@
 		<wizard string="Payment" model="pos.order"
 				name="pos.payment" id="pos_payment" menu="False"/>
 
-		<wizard string="Create Invoices" model="pos.order"
-				name="pos.create_invoice" id="pos_invoice" multi="True"/>
+			<!--<wizard string="Create Invoices" model="pos.order"
+				name="pos.create_invoice" id="pos_invoice" multi="True"/>-->
 
 		<wizard string="Add products" model="pos.order"
 				name="pos.add_product" id="pos_add_product"  menu="False"/>
 
-		<wizard string="Cancel" model="pos.order"
-				name="pos.cancel" id="pos_cancel" multi="True"/>
+			<!--<wizard string="Cancel" model="pos.order"
+				name="pos.cancel" id="pos_cancel" multi="True"/>-->
 
 		<wizard string="Confirm" model="pos.order"
 				name="pos.confirm" id="pos_confirm" multi="True"/>
@@ -27,4 +27,4 @@
 				name="pos.sale.get" id="pos_sale_get"/>
 
 	</data>
-</terp>
+</openerp>

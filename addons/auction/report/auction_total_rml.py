@@ -75,12 +75,10 @@ class auction_total_rml(report_sxw.rml_parse):
     def sum_taxes(self,auction_id):
             self.cr.execute("select count(1) from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%d group by auction_id "%(auction_id))
             res = self.cr.fetchone()
-            print "GGGGGGGGGgg",res[0]
             return res[0]
     def sold_item(self, object_id):
         self.cr.execute("select count(1) from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%d and state in ('unsold') "%(object_id,))
         res = self.cr.fetchone()
-        print "SOLD" ,res
         return str(res[0])
 
 
@@ -110,15 +108,11 @@ class auction_total_rml(report_sxw.rml_parse):
         res = self.cr.fetchone()
         return str(res[0])
     def check_paid_seller(self,auction_id):
-        print "hhhhhhh"
         self.cr.execute("select sum(seller_price) from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%d and paid_vnd != 'T' "%(auction_id))
         res = self.cr.fetchone()
-        print ">>>>>>>>>>>>>>",res
         return str(res[0]) or 0.0
 
     def sum_credit(self,auction_id):
-        print "object",auction_id
-
         self.cr.execute("select sum(buyer_price) from auction_lots where id in ("+",".join(map(str,self.total_obj))+") and auction_id=%d "%(auction_id))
         res = self.cr.fetchone()
         return str(res[0])
@@ -143,7 +137,6 @@ class auction_total_rml(report_sxw.rml_parse):
     def sum_minadj(self, auction_id):
         self.cr.execute('select sum(lot_est1) from auction_lots where id in ('+','.join(map(str,self.total_obj))+') and auction_id=%d '%(auction_id))
         res = self.cr.fetchone()
-        print "min est",res[0]
         return str(res[0]) or 0
 
     def sum_maxadj(self, auction_id):

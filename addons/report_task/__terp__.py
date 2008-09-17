@@ -35,6 +35,7 @@
     'description': 'Gives statistics on tasks by user on projects to check the pipeline of users.',
     'init_xml' : [],
     'update_xml': [
+        "security/ir.model.access.csv",
         'report_task_view.xml',
     ],
     'active': False,

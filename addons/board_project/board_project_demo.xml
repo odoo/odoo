@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data noupdate="1">
         
         
@@ -14,15 +14,15 @@
             <field name="sequence">3</field>
             <field name="res_id" ref="menu_board_project"/>
         </record>
-        <record id="base.user_admin" model="res.users">
+        <record id="base.user_root" model="res.users">
             <field name="action_id" ref="open_board_project"/>
         </record>
         
         <record id="note_project" model="board.note">
             <field name="name">Don't forget the new development policies.</field>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="type">Project</field>
         </record>
         
     </data>
-</terp>
+</openerp>

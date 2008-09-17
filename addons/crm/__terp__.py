@@ -52,7 +52,13 @@ between mails and Tiny ERP.""",
     "depends" : ["base"],
     "init_xml" : ["crm_data.xml"],
     "demo_xml" : ["crm_demo.xml"],
-    "update_xml" : ["crm_view.xml", "crm_report.xml", "crm_wizard.xml", "crm_security.xml"],
+    "update_xml" : [
+        "security/crm_security.xml",
+        "security/ir.model.access.csv",
+        "crm_view.xml",
+        "crm_report.xml",
+        "crm_wizard.xml",
+    ],
     "active": False,
     "installable": True
 }

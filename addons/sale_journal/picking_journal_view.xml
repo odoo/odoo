@@ -1,4 +1,4 @@
-<terp>
+<openerp>
 <data>
 
 	<record model="ir.ui.view" id="view_picking_journal_form">
@@ -56,7 +56,7 @@
 		<field name="view_mode">tree,form</field>
 	</record>
 	
-	<menuitem name="Configuration" id="menu_definition_journal_configuration" parent="sale_wo_production.menu_sale_wo_inventory"/>
+	<menuitem name="Configuration" id="menu_definition_journal_configuration"/>
 	<menuitem name="Packings Journals" id="menu_definition_journal_picking" parent="menu_definition_journal_configuration" action="action_definition_picking_journal"/>
 
 	<record model="ir.actions.act_window" id="action_definition_picking_journal_tree">
@@ -67,7 +67,7 @@
 		<field name="domain">[]</field>
 	</record>
 	
-	<menuitem name="Packing Lists" id="menu_definition_journal_packing_lists" parent="sale_wo_production.menu_sale_wo_inventory"/>
+	<menuitem name="Packing Lists" id="menu_definition_journal_packing_lists"/>
 	<menuitem name="Packings by Journal" id="menu_definition_journal_picking_byjournal" parent="menu_definition_journal_packing_lists" action="action_definition_picking_journal_tree"/>
 
 	<record model="ir.actions.act_window" id="action_definition_picking_journal_tree_my">
@@ -119,4 +119,4 @@
 	</record>
 
 </data>
-</terp>
+</openerp>

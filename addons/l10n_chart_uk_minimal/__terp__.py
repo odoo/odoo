@@ -72,7 +72,7 @@
     "depends" : ["base", "account", "base_iban", "base_vat", "account_chart"],
     "init_xml" : [],
     "demo_xml" : [],
-    "update_xml" : ["../account_chart/account_chart.xml", "account_chart.xml",
+    "update_xml" : ["account_chart.xml",
         "account_tax.xml"],
     "installable": True
 }

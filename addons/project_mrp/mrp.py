@@ -36,15 +36,27 @@ class mrp_procurement(osv.osv):
     
     def action_produce_assign_service(self, cr, uid, ids, context={}):
         for procurement in self.browse(cr, uid, ids):
+            sline = self.pool.get('sale.order.line')
+            sale_ids = sline.search(cr, uid, [('procurement_id','=',procurement.id)], context)
+            content = ''
+            l = None
+            for line in sline.browse(cr, uid, sale_ids, context=context):
+                content += (line.notes or '')
+                l = line
+
             self.write(cr, uid, [procurement.id], {'state':'running'})
             task_id = self.pool.get('project.task').create(cr, uid, {
-                'name': procurement.name,
+                'name': procurement.origin+': '+procurement.name,
                 'date_deadline': procurement.date_planned,
-                'state': 'open',
                 'planned_hours': procurement.product_qty,
+                'remaining_hours': procurement.product_qty,
                 'user_id': procurement.product_id.product_manager.id,
-                'notes': procurement.origin,
-                'procurement_id': procurement.id
+                'notes': l and l.order_id.note or '',
+                'procurement_id': procurement.id,
+                'description': content,
+                'date_deadline': procurement.date_planned,
+                'state': 'draft',
+                'partner_id': l and l.order_id.partner_id.id or False
             })
         return task_id
 mrp_procurement()

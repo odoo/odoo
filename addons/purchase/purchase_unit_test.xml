@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<terp>
+<openerp>
     <data>
         <!-- Resource: purchase.order -->
         <!--
@@ -75,7 +75,7 @@
             <test expr="state">confirmed</test>
         </assert>
         
-        <workflow model="purchase.order" ref="test_purchase_1" action="purchase_approve" uid="base.user_admin" />
+        <workflow model="purchase.order" ref="test_purchase_1" action="purchase_approve" uid="base.user_root" />
         
         <assert model="purchase.order" id="test_purchase_1" string="Test purchase is now in progress">
             <test expr="state">approved</test>
@@ -137,5 +137,5 @@
             <test expr="state">done</test>
         </assert>
     </data>
-</terp>
+</openerp>
  

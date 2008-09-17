@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data>
         
         <record id="view_account_followup_followup_line_form" model="ir.ui.view">
@@ -38,7 +38,7 @@
             <field name="res_model">account_followup.followup</field>
             <field name="view_type">form</field>
         </record>
-        <menuitem action="action_account_followup_definition_form" id="account_followup_menu" parent="account.next_id_33"/>
+        <menuitem action="action_account_followup_definition_form" id="account_followup_menu" parent="account.menu_finance_configuration"/>
         
         <report auto="False" id="account_followup_followup_report" menu="False" model="account_followup.followup" name="account_followup.followup.print" rml="account_followup/report/rappel.rml" string="Followup Report"/>
         
@@ -109,4 +109,4 @@
         
         
     </data>
-</terp>
+</openerp>

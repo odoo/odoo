@@ -1,4 +1,4 @@
-<terp>
+<openerp>
 <data>
 
 	#
@@ -57,7 +57,7 @@
 		<field name="domain">[('name','=',time.strftime('%Y-%m-01'))]</field>
 	</record>
 	
-	<menuitem name="Reporting" id="menu_definition_journal_reporting" parent="sale_wo_production.menu_sale_wo_inventory"/>
+	<menuitem name="Reporting" id="menu_definition_journal_reporting"/>
 	<menuitem name="This Month" id="menu_definition_journal_reporting_this" parent="menu_definition_journal_reporting"/>
 	<menuitem name="Packings by Invoice Method" id="menu_invoice_type_picking_stats_open_menu" parent="menu_definition_journal_reporting_this" action="action_invoice_type_picking_stats_open_menu_month"/>
 
@@ -131,4 +131,4 @@
 	<menuitem name="Packings by Journal" id="menu_picking_picking_stats_open_all" parent="menu_definition_journal_reporting_all" action="action_picking_picking_stats_open_menu_all"/>
 
 </data>
-</terp>
+</openerp>

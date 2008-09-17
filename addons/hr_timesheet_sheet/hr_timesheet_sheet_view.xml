@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data>
         <record id="hr_timesheet_sheet_tree" model="ir.ui.view">
             <field name="name">hr.timesheet.sheet.tree</field>
@@ -150,16 +150,16 @@
                             <field name="total_difference" widget="float_time"/>
                         </page>
                         <!--
-					<page string="By account">
-						<field name="account_ids" colspan="4" nolabel="1">
-							<tree string="Analytic accounts">
-								<field name="name"/>
-								<field name="total" widget="float_time"/>
-								<field name="invoice_rate"/>
-							</tree>
-						</field>
-					</page>
-					-->
+                    <page string="By account">
+                        <field name="account_ids" colspan="4" nolabel="1">
+                            <tree string="Analytic accounts">
+                                <field name="name"/>
+                                <field name="total" widget="float_time"/>
+                                <field name="invoice_rate"/>
+                            </tree>
+                        </field>
+                    </page>
+                    -->
                     </notebook>
                     <field name="state"/>
                     <group col="4" colspan="2">
@@ -238,8 +238,8 @@
         <menuitem action="act_hr_timesheet_sheet_form_all_valid" id="menu_act_hr_timesheet_sheet_form_all_valid" parent="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form"/>
         
         <!--
-			Company inheritancy
-		-->
+            Company inheritancy
+        -->
         
         <record id="hr_timesheet_sheet_company" model="ir.ui.view">
             <field name="name">res.company.sheet</field>
@@ -247,18 +247,18 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
-                <field name="rml_footer2" position="after">
-                    <newline/>
+                <page string="Configuration" position="inside">
+                    <separator string="Timesheets" colspan="4"/>
                     <field name="timesheet_range"/>
                     <field name="timesheet_max_difference"/>
                     <newline/>
-                </field>
+                </page>
             </field>
         </record>
         
         <!--
-			hr.analytic.timesheet inheritancy
-		-->
+            hr.analytic.timesheet inheritancy
+        -->
         
         <record id="hr_timesheet_line_form" model="ir.ui.view">
             <field name="name">hr.analytic.timesheet.form</field>
@@ -271,10 +271,9 @@
                 </field>
             </field>
         </record>
-        
         <!--
-			hr.attendance inheritancy
-		-->
+            hr.attendance inheritancy
+        -->
         
         <record id="view_attendance_form" model="ir.ui.view">
             <field name="name">hr.attendance.form</field>
@@ -334,4 +333,4 @@
         
         <menuitem action="act_hr_timesheet_sheet_unvalidate" id="menu_hr_timesheet_sheet_unvalidate" parent="hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form"/>
     </data>
-</terp>
+</openerp>

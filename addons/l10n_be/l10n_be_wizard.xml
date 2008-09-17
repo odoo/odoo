@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
-<terp>
+<openerp>
 	<data>
 	<wizard
 			string="Enlist Vat Details"
 			model="res.partner"
 			name="list.vat.detail"
 			menu="False"
-			id="partner.wizard_vat"/>
+			id="base.partner_wizard_vat"/>
 	<menuitem
 			name="Financial Management/Reporting/Listing of VAT Customers"
-			action="partner.wizard_vat"
+			action="base.partner_wizard_vat"
 			type="wizard"
-			id="partner.wizard_vat_menu"/>
+			id="base.partner_wizard_vat_menu"/>
 	<wizard
 			string="VAT Declaration"
 			name="wizard.account.vat.declaration"
@@ -24,5 +24,13 @@
 			type="wizard"
 			id="account_wizard_vat_declaration"/>
 
+	<record id="config_call_account_template" model="ir.module.module.configuration.step">
+            <field name="name">Generate Chart of Accounts from a Chart Template</field>
+            <field name="note">Generate Chart of Accounts from a Chart Template. You will be asked to pass the name of the company, the chart template to follow, the no. of digits to generate the code for your accounts and Bank account, currency to create Journals. Thus,the pure copy of chart Template is generated.
+This is the same wizard that runs from Financial Managament/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template.</field>
+            <field name="action_id" ref="account.action_wizard_multi_chart"/>
+            <field name="state">open</field>
+    </record>
+
 	</data>
-</terp>
+</openerp>

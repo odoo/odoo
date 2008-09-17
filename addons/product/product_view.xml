@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data>
         
         <menuitem icon="terp-product" id="menu_main_product" name="Products"/>
-        <menuitem groups="base.group_admin" id="menu_config_product" name="Configuration" parent="product.menu_main_product" sequence="1"/>
+        <menuitem id="menu_config_product" name="Configuration" parent="product.menu_main_product" sequence="1"/>
         
         <record id="product_product_tree_view" model="ir.ui.view">
             <field name="name">product.product.tree</field>
@@ -44,7 +44,7 @@
                         <field name="purchase_ok" select="2"/>
                         <field groups="base.group_extended" name="rental" select="2"/>
                     </group>
-                    <notebook>
+                    <notebook colspan="4">
                         <page string="Information">
                             <group colspan="2" col="2">
                                 <separator string="Procurement" colspan="2"/>
@@ -53,11 +53,11 @@
                                 <field name="supply_method"/>
                             </group>
 
-                            <group colspan="2" col="2">
+                            <group colspan="2" col="2" groups="base.group_extended">
                                 <separator string="Weigths" colspan="2"/>
-                                <field digits="(14, 3)" groups="base.group_extended" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
-                                <field digits="(14, 3)" groups="base.group_extended" name="weight" attrs="{'readonly':[('type','=','service')]}"/>
-                                <field digits="(14, 3)" groups="base.group_extended" name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
+                                <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
+                                <field digits="(14, 3)" name="weight" attrs="{'readonly':[('type','=','service')]}"/>
+                                <field digits="(14, 3)" name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
                             </group>
 
                             <group colspan="2" col="2" name="status">
@@ -74,7 +74,7 @@
                                 <field name="tracking"/>
                             </group>
 
-                            <group colspan="2" col="2" name="uom">
+                            <group colspan="2" col="2" name="uos" groups="product.group_uos">
                                 <separator string="Second UoM" colspan="2"/>
                                 <field name="uos_id"/>
                                 <field name="uos_coeff"/>
@@ -108,7 +108,7 @@
                             <field name="list_price"/>
                             <field groups="base.group_extended" name="cost_method"/>
                             <newline/>
-                            <field colspan="4" name="seller_ids" nolabel="1" mode="form,tree"/>
+                            <field colspan="4" name="seller_ids" nolabel="1"/>
                         </page>
                         <page string="Descriptions">
                             <separator string="Description"/>
@@ -166,13 +166,24 @@
                 </form>
             </field>
         </record>
+        <record id="product_category_list_view" model="ir.ui.view">
+            <field name="name">product.category.list</field>
+            <field name="model">product.category</field>
+            <field name="type">tree</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <tree string="Product Categories">
+                    <field name="complete_name"/>
+                </tree>
+            </field>
+        </record>
         <record id="product_category_tree_view" model="ir.ui.view">
             <field name="name">product.category.tree</field>
             <field name="model">product.category</field>
             <field name="type">tree</field>
             <field name="field_parent">child_id</field>
             <field name="arch" type="xml">
-                <tree string="Products Categories">
+                <tree string="Product Categories">
                     <field name="complete_name"/>
                 </tree>
             </field>
@@ -481,4 +492,4 @@
         
         
     </data>
-</terp>
+</openerp>

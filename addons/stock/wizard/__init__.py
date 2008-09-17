@@ -37,6 +37,8 @@ import wizard_split_lot_line
 import wizard_track_line
 import wizard_ups
 import wizard_invoice_onshipping
+import inventory_merge
+import inventory_merge_zero
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

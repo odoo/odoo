@@ -11,7 +11,12 @@
     "depends" : ["stock","sale"],
     "demo_xml" : ['sale_journal_demo.xml'],
     "init_xml" : ['sale_journal_data.xml'],
-    "update_xml" : ["sale_journal_view.xml","picking_journal_view.xml","picking_journal_view_report.xml"],
+    "update_xml" : [
+        "security/ir.model.access.csv",
+        "sale_journal_view.xml",
+        "picking_journal_view.xml",
+        "picking_journal_view_report.xml"
+    ],
     "description" : """
     The sale journal modules allows you to categorize your
     sales and deliveries (packing lists) between different journals.

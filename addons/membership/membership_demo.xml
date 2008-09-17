@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<terp>
+<openerp>
 	<data>
 
 <!-- Demo Data for Membership Product -->
@@ -51,10 +51,11 @@
 		<field name="name">membership account</field>
 		<field name="code">1254</field>
 		<field name="company_id" ref="base.main_company"/>
-		<field eval="1" name="sign"/>
+		<!--<field eval="1" name="sign"/>-->
 		<field eval="1" name="active"/>
-		<field name="type">asset</field>
+		<field name="type">other</field>
 		<field eval="1" name="reconcile"/>
+		<field name="user_type" ref="account.account_type_expense"/>
 	</record>
 
 <!-- Demo data for Invoices -->
@@ -194,4 +195,4 @@
 	</record>
 
 	</data>
-</terp>
+</openerp>

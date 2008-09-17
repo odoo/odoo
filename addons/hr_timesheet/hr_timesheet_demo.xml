@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data noupdate="1">
         
         <record id="uom_categ_wtime" model="product.uom.categ">
@@ -44,7 +44,7 @@
             <field model="account.analytic.account" name="account_id" search="[('name','=', 'Administratif')]"/>
             <field name="product_id" ref="hr_timesheet.product_consultant"/>
             <field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="journal_id" ref="analytic_journal"/>
             <field name="general_account_id" ref="account.a_recv"/>
         </record>
@@ -56,7 +56,7 @@
             <field model="account.analytic.account" name="account_id" search="[('name','=', 'Seagate P1')]"/>
             <field name="product_id" ref="hr_timesheet.product_consultant"/>
             <field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="journal_id" ref="analytic_journal"/>
             <field name="general_account_id" ref="account.a_recv"/>
         </record>
@@ -68,7 +68,7 @@
             <field model="account.analytic.account" name="account_id" search="[('name','=', 'Seagate P2')]"/>
             <field name="product_id" ref="hr_timesheet.product_consultant"/>
             <field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="journal_id" ref="analytic_journal"/>
             <field name="general_account_id" ref="account.a_recv"/>
         </record>
@@ -80,7 +80,7 @@
             <field model="account.analytic.account" name="account_id" search="[('name','=', 'Seagate P1')]"/>
             <field name="product_id" ref="hr_timesheet.product_consultant"/>
             <field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="journal_id" ref="analytic_journal"/>
             <field name="general_account_id" ref="account.a_recv"/>
         </record>
@@ -92,7 +92,7 @@
             <field model="account.analytic.account" name="account_id" search="[('name','=', 'Seagate P1')]"/>
             <field name="product_id" ref="hr_timesheet.product_consultant"/>
             <field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="journal_id" ref="analytic_journal"/>
             <field name="general_account_id" ref="account.a_recv"/>
         </record>
@@ -104,7 +104,7 @@
             <field model="account.analytic.account" name="account_id" search="[('name','=', 'Sednacom')]"/>
             <field name="product_id" ref="hr_timesheet.product_consultant"/>
             <field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="journal_id" ref="analytic_journal"/>
             <field name="general_account_id" ref="account.a_recv"/>
         </record>
@@ -116,7 +116,7 @@
             <field name="account_id" ref="base.res_partner_c2c"/>
             <field name="product_id" ref="hr_timesheet.product_consultant"/>
             <field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="journal_id" ref="analytic_journal"/>
             <field name="general_account_id" ref="account.a_recv"/>
         </record>
@@ -128,7 +128,7 @@
             <field model="account.analytic.account" name="account_id" search="[('name','=', 'Agrolait')]"/>
             <field name="product_id" ref="hr_timesheet.product_consultant"/>
             <field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="journal_id" ref="analytic_journal"/>
             <field name="general_account_id" ref="account.a_recv"/>
         </record>
@@ -140,7 +140,7 @@
             <field model="account.analytic.account" name="account_id" search="[('name','=', 'Agrolait')]"/>
             <field name="product_id" ref="hr_timesheet.product_consultant"/>
             <field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="journal_id" ref="analytic_journal"/>
             <field name="general_account_id" ref="account.a_recv"/>
         </record>
@@ -153,9 +153,9 @@
             <field name="account_id" ref="account.analytic_agrolait"/>
             <field name="product_id" ref="hr_timesheet.product_consultant"/>
             <field name="product_uom_id" ref="hr_timesheet.uom_hour"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="journal_id" ref="analytic_journal"/>
             <field name="general_account_id" ref="account.a_recv"/>
         </record>
     </data>
-</terp>
+</openerp>

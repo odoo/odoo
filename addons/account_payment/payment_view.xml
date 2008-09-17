@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data>
 
         <!-- View used in the wizard -->
@@ -97,7 +97,7 @@
                                         <field name="currency" nolabel="1"/>
                                     </group>
                                     <field name="partner_id" on_change="onchange_partner(partner_id,parent.mode)" select="1"/>
-                                    <field domain="[('partner_id','=',partner_id)]" name="bank_id" required="1"/>
+                                    <field domain="[('partner_id','=',partner_id)]" name="bank_id"/>
                                     <separator colspan="2" string="Owner Account"/>
                                     <separator colspan="2" string="Desitination Account"/>
                                     <field colspan="2" name="info_owner" nolabel="1"/>
@@ -241,7 +241,7 @@
                             <!--<field name="currency"/>-->
                                 <field name="company_currency" nolabel="1"/>
                             </group>
-                            <field name="partner_payable"/>
+                            <!--<field name="partner_payable"/>-->
                             <separator colspan="4" string="Entry Information"/>
                             <field name="create_date"/>
                             <field name="ml_maturity_date"/>
@@ -277,7 +277,7 @@
                     <field name="move_line_id" on_change="onchange_move_line(move_line_id,parent.mode)"/>
                     <!--domain="[('partner_id','=',partner_id),('reconcile_id', '=', False), ('credit', '>', 0),('amount_to_pay','>',0)]"/>-->
                     <field domain="[('partner_id', '=', partner_id)]" name="bank_id"/>
-                    <field name="partner_payable"/>
+                    <!--<field name="partner_payable"/>-->
                     <field name="create_date"/>
                     <field name="name"/>
                     <!--<field name="communication"/>
@@ -301,13 +301,13 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
-                <field name="period_id" position="after">
-                    <button colspan="2" name="%(wizard_populate_statement)d" string="Import payment lines" type="action"/>
-                </field>
+                <group colspan="2" col="3" position="inside">
+                    <button name="%(wizard_populate_statement)d" string="Import payment lines" type="action"/>
+                </group>
             </field>
         </record>
         
         <act_window domain="[('move_line_id.move_id.id', '=', move_id)]" id="act_account_invoice_2_payment_line" name="Payment Lines" res_model="payment.line" src_model="account.invoice"/>
         
     </data>
-</terp>
+</openerp>

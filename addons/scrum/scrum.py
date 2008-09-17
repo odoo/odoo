@@ -94,7 +94,7 @@ class scrum_sprint(osv.osv):
                 res[sprint.id] += bl.planned_hours
         return res
     _columns = {
-        'name' : fields.char('Sprint Name', size=64),
+        'name' : fields.char('Sprint Name', required=True, size=64),
         'date_start': fields.date('Starting Date', required=True),
         'date_stop': fields.date('Ending Date', required=True),
         'project_id': fields.many2one('scrum.project', 'Project', required=True, domain=[('scrum','=',1)]),
@@ -166,7 +166,7 @@ class scrum_product_backlog(osv.osv):
                 res[bl.id] += task.planned_hours
         return res
     _columns = {
-        'name' : fields.char('Feature', size=64),
+        'name' : fields.char('Feature', size=64, required=True),
         'note' : fields.text('Note'),
         'active' : fields.boolean('Active'),
         'project_id': fields.many2one('scrum.project', 'Scrum Project', required=True, domain=[('scrum','=',1)]),

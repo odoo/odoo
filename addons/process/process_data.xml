@@ -1,0 +1,92 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data>
+		<record id="process_process_salesworkflow0" model="process.process">
+			<field eval="1" name="active"/>
+			<field eval="&quot;&quot;&quot;Sales flow for services companies.&quot;&quot;&quot;" name="note"/>
+			<field eval="&quot;&quot;&quot;Sales Workflow&quot;&quot;&quot;" name="name"/>
+		</record>
+	</data>
+	<data>
+		<record id="process_node_quotation0" model="process.node">
+			<field name="menu_id" ref="sale.menu_action_order_tree10"/>
+			<field name="process_id" ref="process_process_salesworkflow0"/>
+			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+			<field eval="&quot;&quot;&quot;Quotation&quot;&quot;&quot;" name="name"/>
+			<field name="model_id" ref="sale.model_sale_order"/>
+			<field eval="1" name="flow_start"/>
+		</record>
+	</data>
+	<data>
+		<record id="process_node_saleorder0" model="process.node">
+			<field name="menu_id" ref="sale.menu_action_order_tree9"/>
+			<field name="process_id" ref="process_process_salesworkflow0"/>
+			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+			<field eval="&quot;&quot;&quot;Sale Order&quot;&quot;&quot;" name="name"/>
+			<field name="model_id" ref="sale.model_sale_order"/>
+			<field eval="0" name="flow_start"/>
+		</record>
+	</data>
+	<data>
+		<record id="process_node_packinglist0" model="process.node">
+			<field name="menu_id" ref="stock.menu_picking_waiting"/>
+			<field name="process_id" ref="process_process_salesworkflow0"/>
+			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+			<field eval="&quot;&quot;&quot;Packing List&quot;&quot;&quot;" name="name"/>
+			<field name="model_id" ref="stock.model_stock_picking"/>
+			<field eval="0" name="flow_start"/>
+		</record>
+	</data>
+	<data>
+		<record id="process_node_deliveryorder0" model="process.node">
+			<field name="menu_id" ref="stock.menu_picking_waiting_delivery"/>
+			<field name="process_id" ref="process_process_salesworkflow0"/>
+			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+			<field eval="&quot;&quot;&quot;Delivery Order&quot;&quot;&quot;" name="name"/>
+			<field name="model_id" ref="stock.model_stock_picking"/>
+			<field eval="0" name="flow_start"/>
+		</record>
+	</data>
+	<data>
+		<record id="process_node_invoice0" model="process.node">
+			<field name="menu_id" ref="account.menu_invoice_draft"/>
+			<field name="process_id" ref="process_process_salesworkflow0"/>
+			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+			<field eval="&quot;&quot;&quot;Invoice&quot;&quot;&quot;" name="name"/>
+			<field name="model_id" ref="account.model_account_invoice"/>
+			<field eval="0" name="flow_start"/>
+		</record>
+	</data>
+	<data>
+		<record id="process_transition_confirmquotation0" model="process.transition">
+			<field eval="[(6,0,[])]" name="transition_ids"/>
+			<field eval="&quot;&quot;&quot;Confirm Quotation&quot;&quot;&quot;" name="name"/>
+			<field name="node_from_id" ref="process_node_quotation0"/>
+			<field name="node_to_id" ref="process_node_saleorder0"/>
+		</record>
+	</data>
+	<data>
+		<record id="process_transition_packing0" model="process.transition">
+			<field eval="[(6,0,[])]" name="transition_ids"/>
+			<field eval="&quot;&quot;&quot;Packing&quot;&quot;&quot;" name="name"/>
+			<field name="node_from_id" ref="process_node_saleorder0"/>
+			<field name="node_to_id" ref="process_node_packinglist0"/>
+		</record>
+	</data>
+	<data>
+		<record id="process_transition_deliver0" model="process.transition">
+			<field eval="[(6,0,[])]" name="transition_ids"/>
+			<field eval="&quot;&quot;&quot;Deliver&quot;&quot;&quot;" name="name"/>
+			<field name="node_from_id" ref="process_node_packinglist0"/>
+			<field name="node_to_id" ref="process_node_deliveryorder0"/>
+		</record>
+	</data>
+	<data>
+		<record id="process_transition_invoice0" model="process.transition">
+			<field eval="[(6,0,[])]" name="transition_ids"/>
+			<field eval="&quot;&quot;&quot;Invoice&quot;&quot;&quot;" name="name"/>
+			<field name="node_from_id" ref="process_node_saleorder0"/>
+			<field name="node_to_id" ref="process_node_invoice0"/>
+		</record>
+	</data>
+</openerp>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_account_analytic_default_tree" model="ir.ui.view">
+            <field name="name">account.analytic.default.tree</field>
+            <field name="model">account.analytic.default</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Analytic Defaults" editable="bottom">
+                    <field name="sequence" string="Seq"/>
+                    <field name="analytic_id" select="1" required="1"/>
+                    <field name="product_id" select="2"/>
+                    <field name="partner_id" select="2"/>
+                    <field name="user_id" select="2"/>
+                    <field name="company_id" select="2"/>
+                    <field name="date_start"/>
+                    <field name="date_stop"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_account_analytic_default_form" model="ir.ui.view">
+            <field name="name">account.analytic.default.form</field>
+            <field name="model">account.analytic.default</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Analytic Defaults">
+                    <field name="analytic_id" select="1" required="1"/>
+                    <field name="sequence"/>
+                    <separator string="Conditions" colspan="4"/>
+                    <field name="product_id" select="2"/>
+                    <field name="partner_id" select="2"/>
+                    <field name="user_id" select="2"/>
+                    <field name="company_id" select="2"/>
+                    <field name="date_start"/>
+                    <field name="date_stop"/>
+                </form>
+            </field>
+        </record>
+        <record id="action_analytic_default_form" model="ir.actions.act_window">
+            <field name="name">Analytic Defaults</field>
+            <field name="res_model">account.analytic.default</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem
+            action="action_analytic_default_form"
+            id="menu_analytic_defaul_form"
+            parent="account.menu_analytic_accounting"/>
+
+        <act_window
+            domain="[('account_id', '=', active_id)]" id="act_account_acount_move_line_open" name="Entries" res_model="account.move.line" src_model="account.account"/>
+        <act_window
+            name="Analytic Rules"
+            id="analytic_rule_action_partner"
+            res_model="account.analytic.default"
+            src_model="res.partner"
+            domain="[('partner_id','=',active_id)]"/>
+        <act_window
+            name="Analytic Rules"
+            id="analytic_rule_action_user"
+            res_model="account.analytic.default"
+            src_model="res.users"
+            domain="[('user_id','=',active_id)]"/>
+        <act_window
+            name="Analytic Rules"
+            res_model="account.analytic.default"
+            id="analytic_rule_action_product"
+            src_model="product.product"
+            domain="[('product_id','=',active_id)]"/>
+
+    </data>
+</openerp>

@@ -38,7 +38,7 @@ from tools.misc import UpdateableStr
 
 _lot_arch = """<?xml version="1.0"?>
 <form string="Mark Lots" height="500" width="1000">
-    <label string="Selectionner les lots qui sont livres" colspan="4"/>
+    <label string="Select lots which are Sold" colspan="4"/>
     <field name="lot_ids" nolabel="1" colspan="4" domain="[('state','=','sold')]"/>
 </form>
 """
@@ -69,7 +69,7 @@ class wizard_reprint(wizard.interface):
                 'arch': _lot_arch,
                 'fields': _lot_fields,
                 'state': [
-                    ('valid','       Valider       ')
+                    ('valid','       OK       ')
                 ],
             }
         }

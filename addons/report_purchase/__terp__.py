@@ -35,7 +35,10 @@
     "category" : "Generic Modules/Sales & Purchases",
     "init_xml" : [],
     "demo_xml" : [],
-    "update_xml" : ["report_purchase_view.xml"],
+    "update_xml" : [
+        "security/ir.model.access.csv",
+        "report_purchase_view.xml",
+    ],
     "active": False,
     "installable": True
 }

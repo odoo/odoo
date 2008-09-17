@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data>
         
         <!-- Statistics report on timesheet by user -->
@@ -77,7 +77,7 @@
             <field name="view_id" ref="view_timesheet_account_date_graph_account"/>
             <field name="domain">[('name','&gt;=',time.strftime('%Y-%m-01')), ('user_id','=',uid)]</field>
         </record>
-        <menuitem action="action_timesheet_user_stat_my" id="menu_report_timesheet_user_my" parent="report_timesheet.next_id_69"/>
+        <menuitem action="action_timesheet_user_stat_my" id="menu_report_timesheet_user_my" parent="next_id_69"/>
         
         
         <record id="action_timesheet_user_stat_all" model="ir.actions.act_window">
@@ -138,7 +138,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
         </record>
-        <menuitem action="action_timesheet_invoice_stat_all" id="menu_report_timesheet_invoice_all" parent="report_timesheet.next_id_70"/>
+        <menuitem action="action_timesheet_invoice_stat_all" id="menu_report_timesheet_invoice_all" parent="next_id_70"/>
         
         <record id="action_timesheet_invoice_stat_my" model="ir.actions.act_window">
             <field name="name">My timesheets to invoice</field>
@@ -147,7 +147,7 @@
             <field name="view_mode">graph,tree</field>
             <field name="domain">[('manager_id','=',uid)]</field>
         </record>
-        <menuitem action="action_timesheet_invoice_stat_my" id="menu_report_timesheet_invoice_my" parent="report_timesheet.next_id_69"/>
+        <menuitem action="action_timesheet_invoice_stat_my" id="menu_report_timesheet_invoice_my" parent="next_id_69"/>
         
         <!-- Statistics report on daily timesheets per account -->
         
@@ -198,7 +198,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
         </record>
-        <menuitem action="action_timesheet_account_date_stat_all" id="menu_report_timesheet_account_date_all" parent="report_timesheet.next_id_70"/>
+        <menuitem action="action_timesheet_account_date_stat_all" id="menu_report_timesheet_account_date_all" parent="next_id_70"/>
         
         <record id="action_timesheet_account_date_stat_my" model="ir.actions.act_window">
             <field name="name">My daily timesheets by account</field>
@@ -207,7 +207,7 @@
             <field name="view_mode">graph,tree</field>
             <field name="domain">[('user_id','=',uid)]</field>
         </record>
-        <menuitem action="action_timesheet_account_date_stat_my" id="menu_report_timesheet_account_date_my" parent="report_timesheet.next_id_69"/>
+        <menuitem action="action_timesheet_account_date_stat_my" id="menu_report_timesheet_account_date_my" parent="next_id_69"/>
         
         <!-- Statistics report on timesheets per account -->
         
@@ -259,7 +259,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
         </record>
-        <menuitem action="action_timesheet_account_stat_all" id="menu_report_timesheet_account_all" parent="report_timesheet.next_id_70"/>
+        <menuitem action="action_timesheet_account_stat_all" id="menu_report_timesheet_account_all" parent="next_id_70"/>
         
         <record id="action_timesheet_account_stat_my" model="ir.actions.act_window">
             <field name="name">My timesheets by account</field>
@@ -268,7 +268,7 @@
             <field name="view_mode">graph,tree</field>
             <field name="domain">[('user_id','=',uid)]</field>
         </record>
-        <menuitem action="action_timesheet_account_stat_my" id="menu_report_timesheet_account_my" parent="report_timesheet.next_id_69"/>
+        <menuitem action="action_timesheet_account_stat_my" id="menu_report_timesheet_account_my" parent="next_id_69"/>
         
         <act_window domain="[('user_id', '=', active_id)]" id="act_res_users_2_report_timesheet_user" name="Timesheets per day" res_model="report_timesheet.user" src_model="res.users"/>
         
@@ -276,7 +276,7 @@
         
         <act_window domain="[('account_id', '=', active_id)]" id="act_account_analytic_account_2_report_timehsheet_account" name="Timesheets" res_model="report_timesheet.account" src_model="account.analytic.account"/>
         
-        <act_window domain="[('manager_id', '=', active_id)]" id="act_res_users_2_report_timesheet.invoice" name="Costs to invoice" res_model="report_timesheet.invoice" src_model="res.users"/>
+        <act_window domain="[('manager_id', '=', active_id)]" id="act_res_users_2_report_timesheet_invoice" name="Costs to invoice" res_model="report_timesheet.invoice" src_model="res.users"/>
         
     </data>
-</terp>
+</openerp>

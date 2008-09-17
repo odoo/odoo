@@ -1,21 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data>
         <menuitem icon="terp-purchase" id="menu_purchase_root" name="Purchase Management"/>
 
-	   <record model="ir.ui.view" id="purchase_order_calendar">
-			<field name="name">purchase.order.calendar</field>
-			<field name="model">purchase.order</field>
-			<field name="type">calendar</field>
-			<field name="priority" eval="2"/>
-			<field name="arch" type="xml">
-				<calendar string="Calendar View" date_start="minimum_planned_date" color="partner_id">
-					<field name="name"/>
-					<field name="amount_total"/>
-					<field name="partner_id"/>
-				</calendar>
-			</field>
-		</record>
+       <record model="ir.ui.view" id="purchase_order_calendar">
+            <field name="name">purchase.order.calendar</field>
+            <field name="model">purchase.order</field>
+            <field name="type">calendar</field>
+            <field name="priority" eval="2"/>
+            <field name="arch" type="xml">
+                <calendar string="Calendar View" date_start="minimum_planned_date" color="partner_id">
+                    <field name="name"/>
+                    <field name="amount_total"/>
+                    <field name="partner_id"/>
+                </calendar>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_purchase_order_graph">
+            <field name="name">purchase.order.graph</field>
+            <field name="model">purchase.order</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Purchase Order" type="bar">
+                    <field name="partner_id"/>
+                    <field name="amount_total" operator="+"/>
+                </graph>
+            </field>
+        </record>
 
         <record id="purchase_order_form" model="ir.ui.view">
             <field name="name">purchase.order.form</field>
@@ -23,16 +34,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Purchase Order">
-					<group col="6" colspan="4">
-						<field name="name" select="1"/>
-						<field name="shipped" select="2"/>
-						<field name="invoiced" select="2"/>
-						<newline/>
-						<field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)"/>
-						<field name="origin" select="2"/>
-						<field name="date_order" select="2"/>
-						<field name="minimum_planned_date"/>
-					</group>
+                    <group col="6" colspan="4">
+                        <field name="name" select="1"/>
+                        <field name="date_order" select="2"/>
+                        <field name="invoiced" select="2"/>
+                        <newline/>
+                        <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)"/>
+                        <field name="origin" select="2"/>
+                        <field name="shipped" select="2"/>
+                    </group>
                     <notebook colspan="4">
                         <page string="Purchase Order">
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" domain="[('supplier','=', 1)]"/>
@@ -61,13 +71,18 @@
                             </group>
                         </page>
                         <page string="Delivery &amp; Invoices">
-							<separator string="Delivery" colspan="2"/>
-							<separator string="Invoice Control" colspan="2"/>
-                            <field name="dest_address_id" on_change="onchange_dest_address_id(dest_address_id)"/>
-                            <field name="invoice_method"/>
-                            <field name="location_id"/>
+                            <group colspan="2" col="2">
+                                <separator string="Delivery" colspan="2"/>
+                                <field name="dest_address_id" on_change="onchange_dest_address_id(dest_address_id)"/>
+                                <field name="minimum_planned_date"/>
+                                <field name="location_id"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="Invoice Control" colspan="2"/>
+                                <field name="invoice_method"/>
+                            </group>
                             <newline/>
-							<separator string="Purchase Control" colspan="4"/>
+                            <separator string="Purchase Control" colspan="4"/>
                             <field name="validator"/>
                             <field name="date_approve"/>
                         </page>
@@ -83,7 +98,7 @@
             <field name="name">Purchase Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
-            <field name="view_mode">tree,calendar,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
         </record>
         <menuitem action="purchase_form_action" id="menu_purchase_form_action" parent="purchase.menu_purchase_root"/>
 
@@ -93,7 +108,7 @@
             <field name="res_model">purchase.order</field>
             <field name="domain">[('state','=','draft')]</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,calendar,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
         </record>
         <menuitem action="purchase_form_action2" id="menu_purchase_order_draft" parent="purchase.menu_purchase_form_action"/>
 
@@ -102,7 +117,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,calendar,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','confirmed')]</field>
         </record>
         <menuitem action="purchase_form_action3" id="menu_purchase_form_action3" parent="purchase.menu_purchase_form_action"/>
@@ -112,7 +127,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,calendar,form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','approved')]</field>
         </record>
         <menuitem action="purchase_form_action4" id="menu_purchase_form_action4" parent="purchase.menu_purchase_form_action"/>
@@ -132,8 +147,9 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Purchase Order">
-                    <field name="name"/>
+                    <field name="name" string="Reference"/>
                     <field name="date_order"/>
+                    <field name="minimum_planned_date"/>
                     <field name="partner_id"/>
                     <field name="location_id"/>
                     <field name="invoiced_rate" widget="progressbar"/>
@@ -161,7 +177,7 @@
                             <field name="price_unit"/>
                             <field name="account_analytic_id"/>
                             <field name="price_subtotal" readonly="1"/>
-                            <field colspan="4" name="taxes_id"/>
+                            <field colspan="4" name="taxes_id" domain="[('parent_id','=',False)]"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="notes" nolabel="1"/>
@@ -190,4 +206,4 @@
 
         <act_window context="{'partner_id': active_id}" domain="[('partner_id', '=', active_id)]" id="act_res_partner_2_purchase_order" name="Purchase orders" res_model="purchase.order" src_model="res.partner"/>
     </data>
-</terp>
+</openerp>

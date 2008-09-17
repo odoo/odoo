@@ -42,6 +42,7 @@ reports, eso.""",
         'hr_timesheet_invoice_demo.xml'
     ],
     "update_xml" : [
+        "security/ir.model.access.csv",
         'hr_timesheet_invoice_view.xml',
         'hr_timesheet_invoice_wizard.xml',
         'hr_timesheet_invoice_report.xml'

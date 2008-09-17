@@ -37,11 +37,12 @@
     "init_xml" : [],
     "demo_xml" : ["project_demo.xml"],
     "update_xml": [
+        "security/project_security.xml",
+        "security/ir.model.access.csv",
         "project_data.xml", 
         "project_wizard.xml", 
         "project_view.xml", 
         "project_report.xml", 
-        "project_security.xml"
     ],
     "active": False,
     "installable": True

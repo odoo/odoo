@@ -105,11 +105,9 @@ def _catalog_send(uname, passwd, lang, did, catalog):
         conn = httplib.HTTPConnection(host)
         conn.request("POST", '/bin/catalog.cgi', body, headers = headers)
         response = conn.getresponse()
-        print response.read()
         val = response.status
         conn.close()
         return val
-    print 'catalog_send !!'
     return post_multipart('auction-in-europe.com', "/bin/catalog.cgi", (('uname',uname),('password',passwd),('did',did),('lang',lang)),(('file',catalog),))
 
 def _photo_bin_send(uname, passwd, ref, did, photo_name, photo_data):
@@ -150,8 +148,6 @@ def _photo_bin_send(uname, passwd, ref, did, photo_name, photo_data):
 
 
 def _photos_send(cr,uid, uname, passwd, did, ids):
-    print '_photos_send'
-    print "********************START****************"
     for (ref,id) in ids:
         service = netsvc.LocalService("object_proxy")
 #       ids_attach = service.execute(db_name,uid, 'ir.attachment', 'search', [('res_model','=','auction.lots'), ('res_id', '=',id)])
@@ -160,17 +156,13 @@ def _photos_send(cr,uid, uname, passwd, did, ids):
             bin = base64.decodestring(datas[0]['image'])
             fname = datas[0]['name']
             _photo_bin_send(uname, passwd, ref, did, fname, bin)
-            print 'SENDING PHOTO...............', ref
-        print "***************COMPLETE**********"
 
 def _get_dates(self,cr,uid, datas,context={}):
     global send_fields
     import httplib
     conn = httplib.HTTPConnection('www.auction-in-europe.com')
     conn.request("GET", "/aie_upload/dates_get.php?uname=%s&passwd=%s" % (datas['form']['uname'], datas['form']['password']))
-    print "FET DATS"
     response = conn.getresponse()
-    print response.status
     if response.status == 200:
         def _date_decode(x):
             return (x.split(' - ')[0], (' - '.join(x.split(' - ')[1:]).decode('latin1','replace').encode('utf-8','replace')))
@@ -184,13 +176,11 @@ def _send(self,db_name,uid, datas,context={}):
     #cr = pooler.get_db(cr.dbname).cursor()
 
 #   cr=sql_db.db.cursor()
-    print "...................send function Opened..................."
     cr = pooler.get_db(db_name).cursor()
 
     cr.execute('select name,aie_categ from auction_lot_category')
     vals = dict(cr.fetchall())
     cr.close()
-    print vals
 
     service = netsvc.LocalService("object_proxy")
     lots = service.execute(cr.dbname,uid, 'auction.lots', 'read', datas['ids'],  ['obj_num','lot_num','obj_desc','bord_vnd_id','lot_est1','lot_est2','artist_id','lot_type','aie_categ'])
@@ -217,11 +207,9 @@ def _send(self,db_name,uid, datas,context={}):
         l['aie_categ'] = vals.get(l['lot_type'], False)
         ids.append((l['ref'], l['id']))
     args = pickle.dumps(lots)
-    print thread.start_new_thread(_catalog_send, (datas['form']['uname'],datas['form']['password'],datas['form']['lang'],datas['form']['dates'], args))
+    thread.start_new_thread(_catalog_send, (datas['form']['uname'],datas['form']['password'],datas['form']['lang'],datas['form']['dates'], args))
     if(datas['form']['img_send']==True):
-        print "SSSSSSSSSSSSSSSSSsss"
-        print thread.start_new_thread(_photos_send, (cr.dbname,uid, datas['form']['uname'],datas['form']['password'],datas['form']['dates'], ids))
-    print "...................send function closed..................."
+        thread.start_new_thread(_photos_send, (cr.dbname,uid, datas['form']['uname'],datas['form']['password'],datas['form']['dates'], ids))
     return {}
 
 def _send_pdf(self, cr, uid, data, context):

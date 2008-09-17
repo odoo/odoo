@@ -89,7 +89,7 @@ account_analytic_plan_line()
 
 class account_analytic_plan_instance(osv.osv):
     _name='account.analytic.plan.instance'
-    _description = 'Object for create analytic entries from invoice lines'
+    _description = 'Analytic Plan Instance'
     _columns={
         'name':fields.char('Analytic Distribution',size=64),
         'code':fields.char('Distribution Code',size=16),
@@ -203,12 +203,12 @@ class account_analytic_plan_instance(osv.osv):
             self.pool.get('account.invoice.line').write(cr, uid, list, {'analytics_id':temp_id}, context)
 
             #and finally modify the old model to be not a model anymore
-            vals['plan_id'] = False 
-            if not vals.has_key['name']:
+            vals['plan_id'] = False
+            if not vals.has_key('name'):
                 vals['name'] = this.name+'*'
-            if not vals.has_key['code']:
+            if not vals.has_key('code'):
                 vals['code'] = this.code+'*'
-            return self.write(cr, uid, [this.id],vals, context)        
+            return self.write(cr, uid, [this.id],vals, context)
         else:
             #this plan instance isn't a model, so a simple write is fine
             return super(account_analytic_plan_instance, self).write(cr, uid, ids, vals, context)
@@ -217,7 +217,7 @@ account_analytic_plan_instance()
 
 class account_analytic_plan_instance_line(osv.osv):
     _name='account.analytic.plan.instance.line'
-    _description = 'Object for create analytic entries from invoice lines'
+    _description = 'Analytic Instance Line'
     _columns={
         'plan_id':fields.many2one('account.analytic.plan.instance','Plan Id'),
         'analytic_account_id':fields.many2one('account.analytic.account','Analytic Account', required=True),
@@ -261,56 +261,64 @@ class account_invoice_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, price_unit=False, address_invoice_id=False, context={}):
         res_prod = super(account_invoice_line,self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, price_unit, address_invoice_id, context)
-        if product:
-            res = self.pool.get('product.product').browse(cr, uid, product, context=context)
-            res_prod['value'].update({'analytics_id':res.property_account_distribution.id})
+        rec = self.pool.get('account.analytic.default').account_get(cr, uid, product, partner_id, uid, time.strftime('%Y-%m-%d'), context)
+        if rec and rec.analytics_id:
+            res_prod['value'].update({'analytics_id':rec.analytics_id.id})
         return res_prod
-
-
 account_invoice_line()
 
 class account_move_line(osv.osv):
+
     _inherit='account.move.line'
     _name='account.move.line'
     _columns = {
         'analytics_id':fields.many2one('account.analytic.plan.instance','Analytic Distribution'),
     }
-#   def _analytic_update(self, cr, uid, ids, context):
-#       for line in self.browse(cr, uid, ids, context):
-#           if line.analytics_id:
-#               print "line.analytics_id",line,"now",line.analytics_id
-#               toremove = self.pool.get('account.analytic.line').search(cr, uid, [('move_id','=',line.id)], context=context)
-#               print "toremove",toremove
-#               if toremove:
-#                   obj_line=self.pool.get('account.analytic.line')
-#                   self.pool.get('account.analytic.line').unlink(cr, uid, toremove, context=context)
-#               for line2 in line.analytics_id.account_ids:
-#                   val = (line.debit or 0.0) - (line.credit or  0.0)
-#                   amt=val * (line2.rate/100)
-#                   al_vals={
-#                       'name': line.name,
-#                       'date': line.date,
-#                       'unit_amount':1,
-#                       'product_id':12,
-#                       'account_id': line2.analytic_account_id.id,
-#                       'amount': amt,
-#                       'general_account_id': line.account_id.id,
-#                       'move_id': line.id,
-#                       'journal_id': line.analytics_id.journal_id.id,
-#                       'ref': line.ref,
-#                   }
-#                   ali_id=self.pool.get('account.analytic.line').create(cr,uid,al_vals)
-#       return True
-#
-#   def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
-#       result = super(account_move_line, self).write(cr, uid, ids, vals, context, check, update_check)
-#       self._analytic_update(cr, uid, ids, context)
-#       return result
-#
-#   def create(self, cr, uid, vals, context=None, check=True):
-#       result = super(account_move_line, self).create(cr, uid, vals, context, check)
-#       self._analytic_update(cr, uid, [result], context)
-#       return result
+
+    def _analytic_update(self, cr, uid, ids, context):
+       if self.called:
+           self.called=False
+           return False
+
+       obj_line=self.pool.get('account.analytic.line')
+
+       for line in self.browse(cr, uid, ids, context):
+           if line.analytics_id:
+               toremove = obj_line.search(cr, uid, [('move_id','=',line.id)], context=context)
+               if toremove:
+                   obj_line.unlink(cr, uid, toremove, context=context)
+
+               for line2 in line.analytics_id.account_ids:
+                   val = (line.debit or 0.0) - (line.credit or  0.0)
+                   amt=val * (line2.rate/100)
+                   al_vals={
+                       'name': line.name,
+                       'date': line.date,
+                       'unit_amount':1,
+                       'product_id':12,
+                       'account_id': line2.analytic_account_id.id,
+                       'amount': amt,
+                       'general_account_id': line.account_id.id,
+                       'move_id': line.id,
+                       'journal_id': line.analytics_id.journal_id.id,
+                       'ref': line.ref,
+                   }
+                   ali_id=self.pool.get('account.analytic.line').create(cr,uid,al_vals)
+       self.called=True
+       return True
+
+    def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
+        self.called=False
+        result = super(account_move_line, self).write(cr, uid, ids, vals, context, check, update_check)
+        self._analytic_update(cr, uid, ids, context)
+        return result
+
+    def create(self, cr, uid, vals, context=None, check=True):
+        self.called=False
+        result = super(account_move_line, self).create(cr, uid, vals, context, check)
+        self._analytic_update(cr, uid, [result], context)
+        return result
+
 account_move_line()
 
 class account_invoice(osv.osv):
@@ -374,24 +382,10 @@ class account_analytic_plan(osv.osv):
     }
 account_analytic_plan()
 
-class product_product(osv.osv):
-    _name = 'product.product'
-    _inherit = 'product.product'
-    _description = 'Product'
-
+class analytic_default(osv.osv):
+    _inherit = 'account.analytic.default'
     _columns = {
-        'property_account_distribution': fields.property(
-            'account.analytic.plan.instance',
-            type='many2one',
-            relation='account.analytic.plan.instance',
-            string="Analytic Distribution",
-            method=True,
-            view_load=True,
-            group_name="Accounting Properties",
-            help="This Analytic Distribution will be use in sale order line and invoice lines",
-            ),
-                }
-
-product_product()
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+        'analytics_id': fields.many2one('account.analytic.plan.instance', 'Analytic Distribution'),
+    }
+analytic_default()
 

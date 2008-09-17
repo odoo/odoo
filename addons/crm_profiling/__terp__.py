@@ -21,8 +21,9 @@
     "init_xml" : [],
     "demo_xml" : ["crm_profiling_demo.xml"],
     "update_xml" : [
-                    "crm_profiling_view.xml",
-                    ],
+        "security/ir.model.access.csv",
+        "crm_profiling_view.xml",
+    ],
     "active": False,
     "installable": True
 }

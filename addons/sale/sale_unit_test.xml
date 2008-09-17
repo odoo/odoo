@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data>
         <!-- Resource: sale.order -->
         <record id="test_order_1" model="sale.order">
             <field name="shop_id" ref="shop"/>
             <field model="product.pricelist" name="pricelist_id" search="[]"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_root"/>
             <field model="res.partner" name="partner_id" search="[]"/>
             <field model="res.partner.address" name="partner_invoice_id" search="[]"/>
             <field model="res.partner.address" name="partner_shipping_id" search="[]"/>
@@ -43,7 +43,7 @@
             <test expr="state">manual</test>
         </assert>
         
-        <workflow action="manual_invoice" model="sale.order" ref="test_order_1" uid="base.user_admin"/>
+        <workflow action="manual_invoice" model="sale.order" ref="test_order_1" uid="base.user_root"/>
         
         <assert id="test_order_1" model="sale.order" string="the sale order is now in progress">
             <test expr="state">progress</test>
@@ -118,4 +118,4 @@
             <test expr="state">done</test>
         </assert>
     </data>
-</terp>
+</openerp>

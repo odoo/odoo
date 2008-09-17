@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data>
         <record id="account_analytic_account_form_form" model="ir.ui.view">
             <field name="name">account.analytic.account.invoice.form</field>
@@ -17,7 +17,7 @@
                 </field>
             </field>
         </record>
-        
+
         <record id="hr_timesheet_line_form" model="ir.ui.view">
             <field name="name">hr.analytic.timesheet.form</field>
             <field name="model">hr.analytic.timesheet</field>
@@ -30,7 +30,7 @@
                 </field>
             </field>
         </record>
-        
+
         <record id="hr_timesheet_line_form2" model="ir.ui.view">
             <field name="name">hr.analytic.timesheet.form2</field>
             <field name="model">hr.analytic.timesheet</field>
@@ -42,7 +42,7 @@
                 </field>
             </field>
         </record>
-        
+
         <record id="hr_timesheet_line_tree" model="ir.ui.view">
             <field name="name">hr.analytic.timesheet.tree</field>
             <field name="model">hr.analytic.timesheet</field>
@@ -54,22 +54,22 @@
                 </field>
             </field>
         </record>
-        
+
         <record id="hr_timesheet_line_tree2" model="ir.ui.view">
             <field name="name">hr.analytic.timesheet.tree2</field>
             <field name="model">hr.analytic.timesheet</field>
             <field name="type">tree</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
             <field name="arch" type="xml">
-                
+
                 <field name="account_id" position="replace">
                     <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id)"/>
                 </field>
             </field>
         </record>
-        
+
         <!-- Inherits for account analytic lines -->
-        
+
         <record id="view_account_analytic_line_tree_inherit" model="ir.ui.view">
             <field name="name">account.analytic.line.tree.to_invoice</field>
             <field name="model">account.analytic.line</field>
@@ -81,7 +81,7 @@
                 </field>
             </field>
         </record>
-        
+
         <record id="view_account_analytic_line_form_inherit" model="ir.ui.view">
             <field name="name">account.analytic.line.form.to_invoice</field>
             <field name="model">account.analytic.line</field>
@@ -93,7 +93,7 @@
                 </field>
             </field>
         </record>
-        
+
         <!-- Menus -->
         <record id="action_hr_analytic_timesheet_open_tree" model="ir.actions.act_window">
             <field name="name">Entries to invoice</field>
@@ -103,9 +103,9 @@
             <field name="domain">[('to_invoice','&lt;&gt;',False)]</field>
         </record>
         <menuitem action="action_hr_analytic_timesheet_open_tree" id="menu_hr_analytic_timesheet_tree" parent="account.menu_finance_periodical_processing"/>
-         
-        
-        
+
+
+
         <record id="action_hr_analytic_timesheet_tree_invoiced" model="ir.actions.act_window">
             <field name="name">Uninvoiced Entries</field>
             <field name="res_model">account.analytic.line</field>
@@ -114,9 +114,9 @@
             <field name="domain">[('invoice_id','=',False),('to_invoice','!=',False)]</field>
         </record>
         <menuitem action="action_hr_analytic_timesheet_tree_invoiced" id="menu_hr_analytic_timesheet_tree_invoiced" parent="menu_hr_analytic_timesheet_tree"/>
-         
-        
-        
+
+
+
         <record id="action_hr_analytic_timesheet_tree_invoiced_my" model="ir.actions.act_window">
             <field name="name">My Uninvoiced Entries</field>
             <field name="res_model">account.analytic.line</field>
@@ -125,8 +125,8 @@
             <field name="domain">[('invoice_id','=',False),('to_invoice','!=',False),('user_id','=',uid)]</field>
         </record>
         <menuitem action="action_hr_analytic_timesheet_tree_invoiced_my" id="menu_hr_analytic_timesheet_tree_invoiced_my" parent="menu_hr_analytic_timesheet_tree"/>
-         
-        
+
+
         <record id="action_open_analytic_accounts" model="ir.actions.act_window">
             <field name="name">Open Analytic Accounts</field>
             <field name="res_model">account.analytic.account</field>
@@ -135,8 +135,8 @@
             <field name="domain">[('state','&lt;&gt;','close'),('type','&lt;&gt;','view')]</field>
         </record>
         <menuitem action="action_open_analytic_accounts" id="menu_action_open_analytic_accounts" parent="account.account_analytic_def_chart"/>
-         
-        
+
+
         <record id="action_open_invoice_analytic_accounts" model="ir.actions.act_window">
             <field name="name">Unclosed Invoiceable Accounts</field>
             <field name="res_model">account.analytic.account</field>
@@ -145,9 +145,9 @@
             <field name="domain">[('state','&lt;&gt;','close'),('type','&lt;&gt;','view'),('pricelist_id','&lt;&gt;',False)]</field>
         </record>
         <menuitem action="action_open_invoice_analytic_accounts" id="menu_action_open_invoice_analytic_accounts" parent="hr_timesheet_invoice.menu_action_open_analytic_accounts"/>
-         
-        
-        
+
+
+
         <record id="action_draft_analytic_accounts" model="ir.actions.act_window">
             <field name="name">Draft Analytic Accounts</field>
             <field name="res_model">account.analytic.account</field>
@@ -156,9 +156,9 @@
             <field name="domain">[('state','=','draft'),('type','&lt;&gt;','view')]</field>
         </record>
         <menuitem action="action_draft_analytic_accounts" id="menu_action_draft_analytic_accounts" parent="account.account_analytic_def_chart"/>
-         
-        
-        
+
+
+
         <record id="action_pending_analytic_accounts" model="ir.actions.act_window">
             <field name="name">Pending Analytic Accounts</field>
             <field name="res_model">account.analytic.account</field>
@@ -167,11 +167,11 @@
             <field name="domain">[('state','=','pending'),('type','&lt;&gt;','view')]</field>
         </record>
         <menuitem action="action_pending_analytic_accounts" id="menu_action_pending_analytic_accounts" parent="account.account_analytic_def_chart"/>
-         
-        
-        
-        
-        
+
+
+
+
+
         <record id="view_hr_timesheet_invoice_factor_form" model="ir.ui.view">
             <field name="name">hr_timesheet_invoice.factor.form</field>
             <field name="model">hr_timesheet_invoice.factor</field>
@@ -203,7 +203,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_hr_timesheet_invoice_factor_tree"/>
         </record>
-        <menuitem action="action_hr_timesheet_invoice_factor_form" id="hr_timesheet_invoice_factor_view" parent="account.next_id_39"/>
-        
+        <menuitem action="action_hr_timesheet_invoice_factor_form" id="hr_timesheet_invoice_factor_view" parent="account.account_analytic_def_account"/>
+
     </data>
-</terp>
+</openerp>

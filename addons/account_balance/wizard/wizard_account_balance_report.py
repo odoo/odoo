@@ -43,6 +43,7 @@ dates_form = '''<?xml version="1.0"?>
     <notebook tabpos="up">
         <page string="Report Options">
             <separator string="Select Fiscal Year(s)(Maximum Three Years)" colspan="4"/>
+            <label align="0.7" colspan="6" string="(If you do not select Fiscal year it will take all open fiscal year)"/>
             <field name="fiscalyear" colspan="5" nolabel="1"/>
             <field name="landscape" colspan="4"/>
             <field name="show_columns" colspan="4"/>
@@ -54,7 +55,7 @@ dates_form = '''<?xml version="1.0"?>
         </page>
 
         <page string="Select Period">
-            <field name="select_periods" colspan="4"/>
+            <field name="period_manner" colspan="4"/>
             <separator string="Select Period(s)" colspan="4"/>
             <field name="periods" colspan="4" nolabel="1"/>
         </page>
@@ -69,18 +70,18 @@ dates_fields = {
     'landscape': {'string': 'Show Report in Landscape Form', 'type': 'boolean'},
     'format_perc': {'string': 'Show Comparision in %', 'type': 'boolean'},
     'compare_pattern':{'string':"Compare Selected Years In Terms Of",'type':'selection','selection':[('bal_cash','Cash'),('bal_perc','Percentage'),('none','Don'+ "'" +'t Compare')]},
-    'select_periods':{'string':"Select Invoices Based on Their",'type':'selection','selection':[('actual','Actual Period (Duration)'),('created','Creation Date')]},
+    'period_manner':{'string':"Entries Selection Based on",'type':'selection','selection':[('actual','Financial Period'),('created','Creation Date')]},
     'periods': {'string': 'Periods', 'type': 'many2many', 'relation': 'account.period', 'help': 'All periods if empty'}
 }
 
 back_form='''<?xml version="1.0"?>
 <form string="Notification">
-<separator string="You might have done following mistakes.Please correct them and try again." colspan="4"/>
+<separator string="You might have done following mistakes. Please correct them and try again." colspan="4"/>
 <separator string="1. You have selected more than 3 years in any case." colspan="4"/>
-<separator string="2. You have not selected 'Percentage' option,but you have selected more than 2 years." colspan="4"/>
-<label string="You can select maximum 3 years.Please check again." colspan="4"/>
-<separator string="3. You have selected 'Percentage' option with more than 2 years,but you have not selected landscape format." colspan="4"/>
-<label string="You have to select 'Landscape' option.Please Check it." colspan="4"/>
+<separator string="2. You have not selected 'Percentage' option, but you have selected more than 2 years." colspan="4"/>
+<label string="You can select maximum 3 years. Please check again." colspan="4"/>
+<separator string="3. You have selected 'Percentage' option with more than 2 years, but you have not selected landscape format." colspan="4"/>
+<label string="You have to select 'Landscape' option. Please Check it." colspan="4"/>
 </form>'''
 
 back_fields={
@@ -145,7 +146,7 @@ class wizard_report(wizard.interface):
 #       data['form']['periods']=p_ids
         data['form']['compare_pattern']='none'
         data['form']['account_choice']='moves'
-        data['form']['select_periods']='actual'
+        data['form']['period_manner']='actual'
         return data['form']
 
 

@@ -55,13 +55,12 @@ class res_partner(osv.osv):
             'credit': 'receivable',
             'debit': 'payable'
         }
-        maps = {}
-        for i in range(len(field_names)):
-            maps[{'credit': 'receivable', 'debit': 'payable' }[field_names[i]]] = i
-        res = {}.fromkeys(ids, map(lambda x: 0.0, field_names))
+        maps = {'receivable':'credit', 'payable':'debit' }
+        res = {}
+        for id in ids:
+            res[id] = {}.fromkeys(field_names, 0)
         for pid,type,val in cr.fetchall():
-            if type in maps:
-                res[pid][maps[type]] = val
+            res[pid][maps[type]] = val
         return res
 
     def _credit_search(self, cr, uid, obj, name, args):

@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<terp>
+<openerp>
 	<data>
 		<wizard string="Project"
 			model="event.event"
@@ -19,13 +19,13 @@
 			name="wizard_event_registration"
 			id="wizard_event_registration"/>
 
-		<wizard
+		<!--<wizard
 			string="New child event"
 			model="event.event"
 			name="wizard_event_new"
 			keyword="client_action_multi"
 			menu="False"
-			id="wizard_event_new"/>
+			id="wizard_event_new"/>-->
 
 		<wizard
 			string="List Register Partners"
@@ -38,7 +38,8 @@
 					name="event.reg_make_invoice"
 					id="event_reg_invoice"
 					menu="True"
-		/>
+					/>
+		<!--
 		<record model="ir.values" id="ir_open_new_event">
 			<field name="key2">tree_but_open</field>
 			<field name="model">event.event</field>
@@ -46,6 +47,6 @@
 			<field name="value" eval="'ir.actions.wizard,%d'%wizard_event_new"/>
 			<field name="object" eval="True"/>
 		</record>
-
+		-->
 	</data>
-</terp>
+</openerp>

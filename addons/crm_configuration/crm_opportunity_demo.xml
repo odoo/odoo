@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<terp>
+<openerp>
 <data noupdate="1">
 	<record model="crm.case.section" id="section_support3">
 		<field name="name">Opportunities</field>
@@ -87,24 +87,24 @@
 	<record model="ir.actions.act_window" id="crm_case_category_act_oppor11">
 		<field name="name">All Opportunities</field>
 		<field name="res_model">crm.case</field>
-		<field name="view_mode">calendar,tree,form</field>
+		<field name="view_mode">tree,form,calendar</field>
 		<field name="view_id" ref="crm_case_tree_view_oppor"/>
 		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support3)+')]'"/>
 	</record>
 	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_oppor11">
-		<field name="sequence" eval="1"/>
+		<field name="sequence" eval="3"/>
 		<field name="view_mode">calendar</field>
 		<field name="view_id" ref="crm_case_calendar_view_oppor"/>
 		<field name="act_window_id" ref="crm_case_category_act_oppor11"/>
 	</record>
 	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_oppor11">
-		<field name="sequence" eval="2"/>
+		<field name="sequence" eval="1"/>
 		<field name="view_mode">tree</field>
 		<field name="view_id" ref="crm_case_tree_view_oppor"/>
 		<field name="act_window_id" ref="crm_case_category_act_oppor11"/>
 	</record>
 	<record model="ir.actions.act_window.view" id="action_crm_tag_form_view_oppor11">
-		<field name="sequence" eval="3"/>
+		<field name="sequence" eval="2"/>
 		<field name="view_mode">form</field>
 		<field name="view_id" ref="crm_case_form_view_oppor"/>
 		<field name="act_window_id" ref="crm_case_category_act_oppor11"/>
@@ -193,18 +193,18 @@
 	<record model="ir.actions.act_window" id="crm_case_category_act_oppor22">
 		<field name="name">My Opportunities</field>
 		<field name="res_model">crm.case</field>
-		<field name="view_mode">calendar,tree,form</field>
+		<field name="view_mode">tree,calendar,form</field>
 		<field name="view_id" ref="crm_case_calendar_view_oppor"/>
 		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support3)+'),(\'user_id\',\'=\',uid)]'"/>
 	</record>
 	<record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view_oppor22">
-		<field name="sequence" eval="1"/>
+		<field name="sequence" eval="2"/>
 		<field name="view_mode">calendar</field>
 		<field name="view_id" ref="crm_case_calendar_view_oppor"/>
 		<field name="act_window_id" ref="crm_case_category_act_oppor22"/>
 	</record>
 	<record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_oppor22">
-		<field name="sequence" eval="2"/>
+		<field name="sequence" eval="1"/>
 		<field name="view_mode">tree</field>
 		<field name="view_id" ref="crm_case_tree_view_oppor"/>
 		<field name="act_window_id" ref="crm_case_category_act_oppor22"/>
@@ -313,6 +313,13 @@
 		<field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support3)+')]'"/>
 	</record>
 	<menuitem name="Cases by Section, Category and Category2" parent="menu_action_report_crm_case_oppor" action="action_report_crm_case_oppor_categ_categ2" id="menu_action_report_crm_case_oppor_categ_categ2"/>
+	<!-- short cut -->
+	<record id="ir_ui_view_sc_openopportunities0" model="ir.ui.view_sc">
+			<field ref="crm_configuration.menu_crm_case_categ0_act_oppor1" name="res_id"/>
+			<field eval="&quot;ir.ui.menu&quot;" name="resource"/>
+			<field eval="&quot;Open Opportunities&quot;" name="name"/>
+			<field name="user_id" ref="base.user_root"/>
+	</record>
 
 </data>
-</terp>
+</openerp>

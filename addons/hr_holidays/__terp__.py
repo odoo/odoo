@@ -26,9 +26,15 @@
 """,
     "depends" : ["hr","crm_configuration"],
     "init_xml" : [],
+    "update_xml" : [
+        "security/ir.model.access.csv",
+        "hr_workflow.xml",
+        "hr_view.xml",
+        "hr_holidays_report.xml",
+        "hr_holidays_wizard.xml",
+    ],
 #    "demo_xml" : ["hr_bel_holidays_2008.xml",],
     "demo_xml" : [],
-    "update_xml" : ["hr_workflow.xml","hr_view.xml","hr_holidays_report.xml","hr_holidays_wizard.xml",],
     "active": False,
     "installable": True
 }

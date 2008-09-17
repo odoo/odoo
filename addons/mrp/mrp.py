@@ -318,7 +318,7 @@ class mrp_production(osv.osv):
         'location_src_id': fields.many2one('stock.location', 'Raw Products Location', required=True),
         'location_dest_id': fields.many2one('stock.location', 'Finnished Products Location', required=True),
 
-        'date_planned': fields.date('Scheduled date', required=True),
+        'date_planned': fields.datetime('Scheduled date', required=True, select=1),
         'date_start': fields.datetime('Start Date'),
         'date_finnished': fields.datetime('End Date'),
 
@@ -337,7 +337,7 @@ class mrp_production(osv.osv):
     _defaults = {
         'priority': lambda *a: '1',
         'state': lambda *a: 'draft',
-        'date_planned': lambda *a: time.strftime('%Y-%m-%d'),
+        'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'product_qty':  lambda *a: 1.0,
         'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'mrp.production') or '/',
     }
@@ -664,13 +664,13 @@ class mrp_procurement(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'origin': fields.char('Origin', size=64),
         'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority', required=True),
-        'date_planned': fields.date('Scheduled date', required=True),
-        'date_close': fields.date('Date Closed'),
+        'date_planned': fields.datetime('Scheduled date', required=True),
+        'date_close': fields.datetime('Date Closed'),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_qty': fields.float('Quantity', required=True),
-        'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
-        'product_uos_qty': fields.float('Quantity'),
-        'product_uos': fields.many2one('product.uom', 'Product UOM'),
+        'product_uom': fields.many2one('product.uom', 'Product UoM', required=True),
+        'product_uos_qty': fields.float('UoS Quantity'),
+        'product_uos': fields.many2one('product.uom', 'Product UoS'),
         'move_id': fields.many2one('stock.move', 'Reservation', ondelete='set null'),
 
         'bom_id': fields.many2one('mrp.bom', 'BoM', ondelete='cascade', select=True),
@@ -690,7 +690,7 @@ class mrp_procurement(osv.osv):
     _defaults = {
         'state': lambda *a: 'draft',
         'priority': lambda *a: '1',
-        'date_planned': lambda *a: time.strftime('%Y-%m-%d'),
+        'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'close_move': lambda *a: 0,
         'procure_method': lambda *a: 'make_to_order',
     }
@@ -868,10 +868,12 @@ class mrp_procurement(osv.osv):
 
     def action_produce_assign_product(self, cr, uid, ids, context={}):
         produce_id = False
+        company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
         for procurement in self.browse(cr, uid, ids):
             res_id = procurement.move_id.id
             loc_id = procurement.location_id.id
-            newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d') - DateTime.RelativeDateTime(days=procurement.product_id.product_tmpl_id.produce_delay or 0.0)
+            newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S') - DateTime.RelativeDateTime(days=procurement.product_id.product_tmpl_id.produce_delay or 0.0)
+            newdate = newdate - DateTime.RelativeDateTime(days=company.manufacturing_lead)
             produce_id = self.pool.get('mrp.production').create(cr, uid, {
                 'origin': procurement.origin,
                 'product_id': procurement.product_id.id,
@@ -892,8 +894,9 @@ class mrp_procurement(osv.osv):
             wf_service.trg_validate(uid, 'mrp.production', produce_id, 'button_confirm', cr)
         return produce_id
 
-    def action_po_assign(self, cr, uid, ids):
+    def action_po_assign(self, cr, uid, ids, context={}):
         purchase_id = False
+        company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
         for procurement in self.browse(cr, uid, ids):
             res_id = procurement.move_id.id
             partner = procurement.product_id.seller_ids[0].name
@@ -909,14 +912,15 @@ class mrp_procurement(osv.osv):
 
             price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, False, {'uom': uom_id})[pricelist_id]
 
-            newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d') - DateTime.RelativeDateTime(days=procurement.product_id.product_tmpl_id.seller_delay or 0.0)
+            newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S') - DateTime.RelativeDateTime(days=procurement.product_id.product_tmpl_id.seller_delay or 0.0)
+            newdate = newdate - DateTime.RelativeDateTime(days=company.po_lead)
             line = {
                 'name': procurement.product_id.name,
                 'product_qty': qty,
                 'product_id': procurement.product_id.id,
                 'product_uom': uom_id,
                 'price_unit': price,
-                'date_planned': newdate.strftime('%Y-%m-%d'),
+                'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
                 'taxes_id': [(6, 0, [x.id for x in procurement.product_id.product_tmpl_id.supplier_taxes_id])],
                 'move_dest_id': res_id,
             }
@@ -969,45 +973,15 @@ class mrp_procurement(osv.osv):
         for id in ids:
             wf_service.trg_trigger(uid, 'mrp.procurement', id, cr)
         return res
-    def run_scheduler(self, cr, uid, user_id=False, schedule_cycle=1.0,\
-            po_cycle=1.0, po_lead=1.0, security_lead=50.0, picking_lead=1.0,\
-            automatic=False, use_new_cursor=False, context=None):
+    def run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
         '''
         use_new_cursor: False or the dbname
         '''
         if not context:
             context={}
-        self.run_procure_confirm(cr, uid, schedule_cycle=schedule_cycle,\
-                po_cycle=po_cycle, po_lead=po_lead, security_lead=security_lead,\
-                picking_lead=picking_lead, user_id=user_id,\
+        self._procure_confirm(cr, uid, use_new_cursor=use_new_cursor, context=context)
+        self._procure_orderpoint_confirm(cr, uid, automatic=automatic,\
                 use_new_cursor=use_new_cursor, context=context)
-        self.run_orderpoint_confirm(cr, uid, automatic=automatic,\
-                use_new_cursor=use_new_cursor, context=context, user_id=user_id)
-
-    def run_procure_confirm(self, cr, uid, user_id=False, schedule_cycle=1.0,\
-            po_cycle=1.0, po_lead=1.0, security_lead=50.0, picking_lead=1.0, \
-            use_new_cursor=False, context=None):
-        '''
-        use_new_cursor: False or the dbname
-        '''
-        from wizard.schedulers import _procure_confirm
-        if not context:
-            context={}
-        _procure_confirm(self, cr, uid, schedule_cycle=schedule_cycle,\
-                po_cycle=po_cycle, po_lead=po_lead, security_lead=security_lead,\
-                picking_lead=picking_lead, user_id=user_id, use_new_cursor=use_new_cursor,\
-                context=context)
-
-    def run_orderpoint_confirm(self, cr, uid, automatic=False, use_new_cursor=False,\
-            context=None, user_id=False):
-        '''
-        use_new_cursor: False or the dbname
-        '''
-        from wizard.schedulers import _procure_orderpoint_confirm
-        if not context:
-            context={}
-        _procure_orderpoint_confirm(self, cr, uid, automatic=automatic,\
-                use_new_cursor=use_new_cursor, context=context, user_id=user_id)
 mrp_procurement()
 
 
@@ -1019,6 +993,7 @@ class stock_warehouse_orderpoint(osv.osv):
         'active': fields.boolean('Active'),
         'logic': fields.selection([('max','Order to Max'),('price','Best price (not yet active!)')], 'Reordering Mode', required=True),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
+        'location_id': fields.many2one('stock.location', 'Location', required=True),
         'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type','=','product')]),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True ),
         'product_min_qty': fields.float('Min Quantity', required=True),
@@ -1033,9 +1008,15 @@ class stock_warehouse_orderpoint(osv.osv):
         'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'mrp.warehouse.orderpoint') or '',
         'product_uom': lambda sel, cr, uid, context: context.get('product_uom', False),
     }
+    def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context={}):
+        if warehouse_id:
+            w=self.pool.get('stock.warehouse').browse(cr,uid,warehouse_id, context)
+            v = {'location_id':w.lot_stock_id.id}
+            return {'value': v}
+        return {}
     def onchange_product_id(self, cr, uid, ids, product_id, context={}):
         if product_id:
-            prod=self.pool.get('product.product').browse(cr,uid,[product_id])[0]
+            prod=self.pool.get('product.product').browse(cr,uid,product_id)
             v = {'product_uom':prod.uom_id.id}
             return {'value': v}
         return {}
@@ -1124,11 +1105,10 @@ class StockPicking(osv.osv):
     #
     # Explode picking by replacing phantom BoMs
     #
-    def action_explode(self, cr, uid, ids, *args):
-        for pick in self.browse(cr, uid, ids):
-            for move in pick.move_lines:
-                self.pool.get('stock.move')._action_explode(cr, uid, move)
-        return True
+    def action_explode(self, cr, uid, picks, *args):
+        for move in picks:
+            self.pool.get('stock.move')._action_explode(cr, uid, move)
+        return picks
 
 StockPicking()
 

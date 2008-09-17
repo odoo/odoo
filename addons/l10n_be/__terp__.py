@@ -34,8 +34,25 @@
     "depends" : ["account", "account_report", "base_vat", "base_iban",
         "account_chart"],
     "init_xml" : [],
-    "demo_xml" : ["account_demo.xml","account.report.report.csv"],
-    "update_xml" : ["../account_chart/account_chart.xml", "account_pcmn_belgium.xml","l10n_be_wizard.xml", "l10n_be_sequence.xml"],
+    "description": """
+    This is the base module to manage the accounting chart for Belgium in Tiny ERP.
+
+    After Installing this module,The Configuration wizard for accounting is launched.
+    * We have the account templates which can be helpful to generate Charts of Accounts.
+    * On that particular wizard,You will be asked to pass the name of the company,the chart template to follow,the no. of digits to generate the code for your account and Bank account,currency  to create Journals.
+        Thus,the pure copy of Chart Template is generated.
+    * This is the same wizard that runs from Financial Managament/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template.
+
+    Wizards provided by this module:
+    * Enlist the partners with their related VAT  and invoiced amounts.Prepares an XML file format.Path to access : Financial Management/Reporting/Listing of VAT Customers.
+    * Prepares an XML file for Vat Declaration of the Main company of the User currently Logged in.Path to access : Financial Management/Reporting/Listing of VAT Customers.
+
+    """,
+    "demo_xml" : [
+#        "account_demo.xml",
+        "account.report.report.csv"
+    ],
+    "update_xml" : ["account_pcmn_belgium.xml","l10n_be_wizard.xml", "l10n_be_sequence.xml"],
     "installable": True
 }
 

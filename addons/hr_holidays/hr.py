@@ -54,9 +54,12 @@ class hr_holidays_status(osv.osv):
         'name' : fields.char('Holiday Status', size=64, required=True, translate=True),
         'section_id': fields.many2one('crm.case.section', 'Section'),
         'color_name' : fields.selection([('red', 'Red'), ('lightgreen', 'Light Green'), ('lightblue','Light Blue'), ('lightyellow', 'Light Yellow'), ('magenta', 'Magenta'),('lightcyan', 'Light Cyan'),('black', 'Black'),('lightpink', 'Light Pink'),('brown', 'Brown'),('violet', 'Violet'),('lightcoral', 'Light Coral'),('lightsalmon', 'Light Salmon'),('lavender', 'Lavender'),('wheat', 'Wheat'),('ivory', 'Ivory')],'Color of the status', required=True),
+        'limit' : fields.boolean('Allow to override Limit'),
+        'active' : fields.boolean('Active')
     }
     _defaults = {
         'color_name': lambda *args: 'red',
+        'active' : lambda *a: True,
     }
 hr_holidays_status()
 
@@ -64,6 +67,20 @@ class hr_holidays(osv.osv):
     _name = "hr.holidays"
 #    _inherit = 'hr.holidays'
     _description = "Holidays"
+    
+    def _get_days(self,cr, uid,ids, name, *args):
+        res = {}
+        for val in self.browse(cr, uid, ids):
+            date_from = val.date_from
+            date_to = val.date_to
+            if date_from:
+               if date_to:
+                   from_dt = time.mktime(time.strptime(date_from,'%Y-%m-%d %H:%M:%S'))
+                   to_dt = time.mktime(time.strptime(date_to,'%Y-%m-%d %H:%M:%S'))
+                   diff_day = (to_dt-from_dt)/(3600*24)
+                   res[val.id] = round(diff_day)+1
+        return res
+    
     _columns = {
         'name' : fields.char('Description', required=True, readonly=True, size=64, states={'draft':[('readonly',False)]}),
         'state': fields.selection([('draft', 'draft'), ('confirm', 'Confirmed'), ('refuse', 'Refused'), ('validate', 'Validate'), ('cancel', 'Cancel')], 'Status', readonly=True),
@@ -74,7 +91,7 @@ class hr_holidays(osv.osv):
         'user_id':fields.many2one('res.users', 'Employee_id', states={'draft':[('readonly',False)]}, select=True, readonly=True),
         'manager_id' : fields.many2one('hr.employee', 'Holiday manager', invisible=False, readonly=True),
         'notes' : fields.text('Notes',readonly=True, states={'draft':[('readonly',False)]}),
-        'number_of_days': fields.float('Number of Days in this Holiday Request',required=True, states={'draft':[('readonly',False)]}, readonly=True),
+        'number_of_days': fields.function(_get_days, method=True,store=True, type='float', string='Number of Days in this Holiday Request'),
         'case_id':fields.many2one('crm.case', 'Case'),
     }
     _defaults = {
@@ -152,8 +169,9 @@ class hr_holidays(osv.osv):
                 if holiday_id:
                     obj_holidays_per_user=self.pool.get('hr.holidays.per.user').browse(cr, uid,holiday_id[0])
                     leaves_rest=obj_holidays_per_user.max_leaves - obj_holidays_per_user.leaves_taken
-                    if leaves_rest < leave_asked:
-                        raise osv.except_osv('Attention!','You Cannot Validate leaves while available leaves are less than asked leaves.')
+                    if not obj_holidays_per_user.holiday_status.limit:
+                        if leaves_rest < leave_asked:
+                            raise osv.except_osv('Attention!','You Cannot Validate leaves while available leaves are less than asked leaves.')
                     self.pool.get('hr.holidays.per.user').write(cr,uid,obj_holidays_per_user.id,{'leaves_taken':obj_holidays_per_user.leaves_taken + leave_asked})
                 if record.holiday_status.section_id:
                     vals={}
@@ -195,9 +213,12 @@ class hr_holidays_per_user(osv.osv):
         'holiday_status' : fields.many2one("hr.holidays.status", "Holiday's Status", required=True),
         'max_leaves' : fields.float('Maximum Leaves Allowed',required=True),
         'leaves_taken' : fields.float('Leaves Already Taken',readonly=True),
+        'active' : fields.boolean('Active'),
         'notes' : fields.text('Notes'),
     }
-
+    _defaults = {
+        'active' : lambda *a: True,
+    }
     def create(self, cr, uid, vals, *args, **kwargs):
 
         if vals['employee_id']:

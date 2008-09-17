@@ -38,6 +38,7 @@
     "demo_xml" : [
     ],
     "update_xml" : [
+        "security/ir.model.access.csv",
         "report_analytic_line_view.xml",
     ],
     "active": False,

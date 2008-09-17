@@ -196,7 +196,7 @@ class product_category(osv.osv):
     _name = "product.category"
     _description = "Product Category"
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Name', size=64, required=True, translate=True),
         'complete_name': fields.function(_name_get_fnc, method=True, type="char", string='Name'),
         'parent_id': fields.many2one('product.category','Parent Category', select=True),
         'child_id': fields.one2many('product.category', 'parent_id', string='Childs Categories'),
@@ -253,15 +253,15 @@ class product_template(osv.osv):
         'categ_id': fields.many2one('product.category','Category', required=True, change_default=True),
         'list_price': fields.float('Sale Price', digits=(16, int(config['price_accuracy']))),
         'standard_price': fields.float('Cost Price', required=True, digits=(16, int(config['price_accuracy']))),
-        'volume': fields.float('Volume'),
+        'volume': fields.float('Volume', help="The weight in Kg."),
         'weight': fields.float('Gross weight'),
         'weight_net': fields.float('Net weight'),
         'cost_method': fields.selection([('standard','Standard Price'), ('average','Average Price')], 'Costing Method', required=True),
         'warranty': fields.float('Warranty (months)'),
         'sale_ok': fields.boolean('Can be sold', help="Determine if the product can be visible in the list of product within a selection from a sale order line."),
         'purchase_ok': fields.boolean('Can be Purchased', help="Determine if the product is visible in the list of products within a selection from a purchase order line."),
-        'uom_id': fields.many2one('product.uom', 'Default UOM', required=True),
-        'uom_po_id': fields.many2one('product.uom', 'Purchase UOM', required=True),
+        'uom_id': fields.many2one('product.uom', 'Default UoM', required=True, help="This is the default Unit of Measure used for all stock operation."),
+        'uom_po_id': fields.many2one('product.uom', 'Purchase UoM', required=True),
         'state': fields.selection([('',''),('draft', 'In Development'),('sellable','In Production'),('end','End of Lifecycle'),('obsolete','Obsolete')], 'Status', help="Tells the user if he can use the product or not."),
         'uos_id' : fields.many2one('product.uom', 'Unit of Sale',
             help='Keep empty to use the default UOM'),
@@ -295,8 +295,6 @@ class product_template(osv.osv):
         'procure_method': lambda *a: 'make_to_stock',
         'uom_id': _get_uom_id,
         'uom_po_id': _get_uom_id,
-        #'uom_price_id' : _get_uom_id,
-        #'uos_id' : _get_uom_id,
         'uos_coeff' : lambda *a: 1.0,
         'mes_type' : lambda *a: 'fixed',
     }
@@ -349,10 +347,7 @@ class product_product(osv.osv):
 
     def _get_product_available_func(states, what):
         def _product_available(self, cr, uid, ids, name, arg, context={}):
-            res={}
-            for id in ids:
-                res.setdefault(id, 0.0)
-            return res
+            return {}.fromkeys(ids, 0.0)
         return _product_available
 
     _product_qty_available = _get_product_available_func(('done',), ('in', 'out'))
@@ -424,7 +419,7 @@ class product_product(osv.osv):
         'price_margin': fields.float('Variant Price Margin', digits=(16, int(config['price_accuracy']))),
     }
 
-    def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):        
+    def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
         if uom_id and uom_po_id:
             uom_obj=self.pool.get('product.uom')
             uom=uom_obj.browse(cursor,user,[uom_id])[0]

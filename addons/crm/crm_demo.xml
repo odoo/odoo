@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data noupdate="1">
 
         <!--
@@ -181,7 +181,7 @@
             <field eval="time.strftime('%Y-%m-08')" name="date"/>
             <field eval="time.strftime('%Y-%m-28')" name="date_deadline"/>
             <field model="res.partner.canal" name="canal_id" search="[]"/>
-            <field model="res.users" name="user_id" search="[('login','=','admin')]"/>
+            <field name="user_id" ref="base.user_root"/>
         </record>
         <function model="crm.case" name="case_open">
             <value eval="[ref('case5')]" model="crm.case"/>
@@ -228,7 +228,7 @@
             <field eval="time.strftime('%Y-%m-06')" name="date"/>
             <field eval="time.strftime('%Y-%m-18')" name="date_deadline"/>
             <field model="res.partner.canal" name="canal_id" search="[]"/>
-            <field model="res.users" name="user_id" search="[('login','=','admin')]"/>
+            <field name="user_id" ref="base.user_root"/>
         </record>
         <function model="crm.case" name="case_open">
             <value eval="[ref('case7')]" model="crm.case"/>
@@ -274,7 +274,7 @@
             <field eval="time.strftime('%Y-%m-06')" name="date"/>
             <field eval="time.strftime('%Y-%m-24')" name="date_deadline"/>
             <field model="res.partner.canal" name="canal_id" search="[]"/>
-            <field model="res.users" name="user_id" search="[('login','=','admin')]"/>
+            <field name="user_id" ref="base.user_root"/>
         </record>
         <function model="crm.case" name="case_open">
             <value eval="[ref('case9')]" model="crm.case"/>
@@ -367,7 +367,7 @@
             <field eval="0.10" name="probability"/>
             <field eval="time.strftime('%Y-%m-26')" name="date"/>
             <field model="res.partner.canal" name="canal_id" search="[]"/>
-            <field model="res.users" name="user_id" search="[('login','=','admin')]"/>
+            <field name="user_id" ref="base.user_root"/>
         </record>
         <function model="crm.case" name="case_open">
             <value eval="[ref('case13')]" model="crm.case"/>
@@ -415,7 +415,7 @@
             <field eval="0.30" name="probability"/>
             <field eval="time.strftime('%Y-%m-17')" name="date"/>
             <field model="res.partner.canal" name="canal_id" search="[]"/>
-            <field model="res.users" name="user_id" search="[('login','=','admin')]"/>
+            <field name="user_id" ref="base.user_root"/>
         </record>
         <function model="crm.case" name="case_open">
             <value eval="[ref('case15')]" model="crm.case"/>
@@ -481,4 +481,4 @@
         </function>
 
     </data>
-</terp>
+</openerp>

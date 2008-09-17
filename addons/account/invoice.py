@@ -35,7 +35,6 @@ import ir
 import pooler
 import mx.DateTime
 from mx.DateTime import RelativeDateTime
-
 from tools import config
 from tools.translate import _
 
@@ -99,6 +98,55 @@ class account_invoice(osv.osv):
     def _get_reference_type(self, cursor, user, context=None):
         return [('none', 'Free Reference')]
 
+    def _amount_residual(self, cr, uid, ids, name, args, context={}):
+        res = {}
+        data_inv = self.browse(cr, uid, ids)
+        for inv in data_inv:
+            paid_amt = 0.0
+            to_pay = inv.amount_total
+            for lines in inv.move_lines:
+                paid_amt = paid_amt + lines.credit
+            res[inv.id] = to_pay - paid_amt
+        return res
+
+    def _get_lines(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for id in ids:
+            move_lines = self.move_line_id_payment_get(cr,uid,[id])
+            if not move_lines:
+                res[id] = []
+                continue
+            data_lines = self.pool.get('account.move.line').browse(cr,uid,move_lines)
+            for line in data_lines:
+                ids_line = []
+                if line.reconcile_id:
+                    ids_line = line.reconcile_id.line_id
+                elif line.reconcile_partial_id:
+                    ids_line = line.reconcile_partial_id.line_partial_ids
+                l = map(lambda x: x.id, ids_line)
+                res[id]=[x for x in l if x <> line.id]
+        return res
+    
+    def _compute_lines(self, cr, uid, ids, name, args, context={}):
+        result = {}
+        print 'ICI 0'
+        for invoice in self.browse(cr, uid, ids, context):
+            moves = self.move_line_id_payment_get(cr, uid, [invoice.id])
+            src = []
+            print 'ICI 1'
+            lines = []
+            for m in self.pool.get('account.move.line').browse(cr, uid, moves, context):
+                print 'ICI 2'
+                if m.reconcile_id:
+                    lines += map(lambda x: x.id, m.reconcile_id.line_id)
+                elif m.reconcile_partial_id:
+                    lines += map(lambda x: x.id, m.reconcile_partial_id.line_partial_ids)
+                src.append(m.id)
+                print 'ICI 3'
+            lines = filter(lambda x: x not in src, lines)
+            result[invoice.id] = lines
+        return result
+
     _name = "account.invoice"
     _description = 'Invoice'
     _order = "number"
@@ -152,6 +200,9 @@ class account_invoice(osv.osv):
         'reconciled': fields.function(_reconciled, method=True, string='Paid/Reconciled', type='boolean'),
         'partner_bank': fields.many2one('res.partner.bank', 'Bank Account',
             help='The bank account to pay to or to be paid from'),
+        'move_lines':fields.function(_get_lines , method=True,type='many2many' , relation='account.move.line',string='Move Lines'),
+        'residual': fields.function(_amount_residual, method=True, digits=(16,2),string='Residual', store=True),
+        'payment_ids': fields.function(_compute_lines, method=True, relation='account.move.line', type="many2many", string='Payments'),
     }
     _defaults = {
         'type': _get_type,
@@ -794,6 +845,8 @@ class account_invoice_line(osv.osv):
         return {'price_unit': price_unit,'invoice_line_tax_id': tax_id}
 
     def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, price_unit=False, address_invoice_id=False, context={}):
+        if not partner_id:
+            raise osv.except_osv(_('No Partner Defined !'),_("You must first select a partner !") )
         if not product:
             if type in ('in_invoice', 'in_refund'):
                 return {'domain':{'product_uom':[]}}
@@ -803,11 +856,10 @@ class account_invoice_line(osv.osv):
         context.update({'lang': lang})
         res = self.pool.get('product.product').browse(cr, uid, product, context=context)
         taxep=None
-        if partner_id:
-            lang=self.pool.get('res.partner').read(cr, uid, [partner_id])[0]['lang']
+        lang=self.pool.get('res.partner').read(cr, uid, [partner_id])[0]['lang']
         tax_obj = self.pool.get('account.tax')
         if type in ('out_invoice', 'out_refund'):
-            taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_supplier_tax
+            taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_tax
             if not taxep or not taxep.id:
                 tax_id = map(lambda x: x.id, res.taxes_id)
             else:
@@ -816,7 +868,7 @@ class account_invoice_line(osv.osv):
                     if not t.tax_group==taxep.tax_group:
                         tax_id.append(t.id)
         else:
-            taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_tax
+            taxep = self.pool.get('res.partner').browse(cr, uid, partner_id).property_account_supplier_tax
             if not taxep or not taxep.id:
                 tax_id = map(lambda x: x.id, res.supplier_taxes_id)
             else:

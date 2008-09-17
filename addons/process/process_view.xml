@@ -1,0 +1,177 @@
+<?xml version="1.0" ?>
+<openerp>
+<data>
+
+    <menuitem
+        id="menu_process"
+        name="Enterprise Process"
+        parent="base.menu_custom"/>
+
+    <!-- Views for Process -->
+    <record model="ir.ui.view" id="view_process_form">
+        <field name="name">process.process.form</field>
+        <field name="model">process.process</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Process">
+                <group colspan="4" string="Details">
+                    <field name="name" select="1"/>
+                    <field name="active" select="2"/>
+                </group>
+                <notebook colspan="4">
+                    <page string="Nodes">
+                        <field name="node_ids" colspan="4" nolabel="1">
+                            <form string="Process Node">
+                                <group colspan="4" string="Details">
+                                    <field name="name" select="1"/>
+                                    <field name="flow_start"/>
+                                    <newline/>                                    
+                                    <field name="model_id" select="1"/>
+                                    <field name="menu_id" select="2"/>                                    
+                                    <newline/>
+                                    <field name="kind" select="1"/>
+                                    <field name="model_states"/>
+                                </group>
+                                <notebook colspan="4">
+                                    <page string="Outgoing Transitions">
+                                        <field name="transition_out" colspan="4" nolabel="1">
+                                            <tree string="Transitions">
+                                                <field name="name"/>
+                                                <field name="target_node_id"/>
+                                            </tree>
+                                            <form string="Transition">
+                                                <group colspan="4" string="Details">
+                                                    <field name="name"/>
+                                                    <newline/>
+                                                    <field name="target_node_id"/>
+                                                </group>
+                                                <notebook colspan="4">
+                                                    <page string="Buttons">
+                                                        <field name="action_ids" colspan="4" nolabel="1">
+                                                            <tree string="Actions">
+                                                                <field name="name"/>
+                                                                <field name="state"/>
+                                                                <field name="action"/>
+                                                            </tree>
+                                                            <form string="Actions">
+                                                                <field name="name" colspan="4"/>
+                                                                <newline/>
+                                                                <field name="state"/>
+                                                                <field name="action"/>
+                                                            </form>               
+                                                        </field>
+                                                    </page>
+                                                    <page string="Roles Required">
+                                                        <field name="transition_ids" colspan="4" nolabel="1"/>
+                                                    </page>
+                                                    <page string="Extra Information">
+                                                        <field name="note" colspan="4" nolabel="1"/>
+                                                    </page>
+                                                </notebook>
+                                            </form>
+                                        </field>
+                                    </page>
+                                    <page string="Extra Information">
+                                        <field name="note" nolabel="1" colspan="4"/>
+                                    </page>
+                                </notebook>
+                            </form>                            
+                        </field>
+                    </page>
+                    <page string="Extra Information">
+                        <field name="note" colspan="4" nolabel="1"/>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_process_tree">
+        <field name="name">process.process.tree</field>
+        <field name="model">process.process</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Process">
+                <field name="name"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_process_form">
+        <field name="name">Process</field>
+        <field name="res_model">process.process</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem
+        id="menu_process_form"
+        action="action_process_form"
+        parent="menu_process"/>
+
+    <!-- Transitions -->
+
+    <record model="ir.ui.view" id="view_process_transition_tree">
+        <field name="name">process.transition.tree</field>
+        <field name="model">process.transition</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Process Transition">
+                <field name="name"/>
+                <field name="source_node_id"/>
+                <field name="target_node_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_process_transition_form">
+        <field name="name">process.transition.form</field>
+        <field name="model">process.transition</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Process Transition">
+                <group string="Details">
+                    <field name="name" select="1"/>
+                    <newline/>
+                    <field name="source_node_id" select="1"/>
+                    <field name="target_node_id" select="1"/>
+                </group>
+                <notebook colspan="4">
+                    <page string="Actions">
+                        <field name="action_ids" nolabel="1" colspan="4">
+                            <tree string="Actions">
+                                <field name="name"/>
+                                <field name="state"/>
+                                <field name="action"/>
+                            </tree>
+                            <form string="Actions">
+                                <field name="name" colspan="4"/>
+                                <newline/>
+                                <field name="state"/>
+                                <field name="action"/>
+                            </form>
+                        </field>
+                    </page>
+                    <page string="Roles">
+                        <field name="transition_ids" nolabel="1" colspan="4"/>
+                    </page><page string="Notes">
+                        <field name="note" nolabel="1" colspan="4"/>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_process_transition_form">
+        <field name="name">Process Transitions</field>
+        <field name="res_model">process.transition</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem
+        id="menu_process_transition_form"
+        action="action_process_transition_form"
+        parent="menu_process"/>
+
+</data>
+</openerp>

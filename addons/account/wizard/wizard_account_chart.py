@@ -35,6 +35,7 @@ class wizard_account_chart(wizard.interface):
     _account_chart_arch = '''<?xml version="1.0"?>
     <form string="Account charts">
         <field name="fiscalyear"/>
+        <label align="0.7" colspan="6" string="(If you do not select Fiscal year it will take all open fiscal year)"/>
         <field name="target_move"/>
     </form>'''
 
@@ -68,7 +69,8 @@ class wizard_account_chart(wizard.interface):
         id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
         result = act_obj.read(cr, uid, [id])[0]
         result['context'] = str({'fiscalyear': data['form']['fiscalyear'],'target_move':data['form']['target_move']})
-        result['name']+=':'+pooler.get_pool(cr.dbname).get('account.fiscalyear').read(cr,uid,[data['form']['fiscalyear']])[0]['code']
+        if data['form']['fiscalyear']:
+            result['name']+=':'+pooler.get_pool(cr.dbname).get('account.fiscalyear').read(cr,uid,[data['form']['fiscalyear']])[0]['code']
         return result
 
     states = {

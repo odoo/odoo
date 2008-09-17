@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data>
         
-        <menuitem icon="terp-mrp" id="menu_mrp_root" name="Production Management"/>
+        <menuitem icon="terp-mrp" id="menu_mrp_root" name="Manufacturing"/>
         
         <!--
     Property / Property Group
@@ -27,7 +27,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem groups="base.group_admin" id="menu_mrp_configuration" name="Configuration" parent="menu_mrp_root"/>
+        <menuitem id="menu_mrp_configuration" name="Configuration" parent="menu_mrp_root"/>
         <menuitem id="menu_mrp_property_group_action_prop" name="Properties" parent="menu_mrp_configuration"/>
         <menuitem action="mrp_property_group_action" id="menu_mrp_property_group_action" parent="menu_mrp_property_group_action_prop"/>
         
@@ -134,7 +134,7 @@
     Routings
     -->
         
-        <record id="mrp_routing_workcenter_tree.view" model="ir.ui.view">
+        <record id="mrp_routing_workcenter_tree_view" model="ir.ui.view">
             <field name="name">mrp.routing.workcenter.tree</field>
             <field name="model">mrp.routing.workcenter</field>
             <field name="type">tree</field>
@@ -148,7 +148,7 @@
             </field>
         </record>
         
-        <record id="mrp_routing_workcenter_form.view" model="ir.ui.view">
+        <record id="mrp_routing_workcenter_form_view" model="ir.ui.view">
             <field name="name">mrp.routing.workcenter.form</field>
             <field name="model">mrp.routing.workcenter</field>
             <field name="type">form</field>
@@ -277,7 +277,7 @@
         <menuitem action="mrp_bom_form_action" id="menu_mrp_bom_form_action" parent="menu_mrp_configuration"/>
         
         <record id="mrp_bom_tree_action" model="ir.actions.act_window">
-            <field name="name">BoM Structure</field>
+            <field name="name">Bill of Material Structure</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.bom</field>
             <field name="view_type">tree</field>
@@ -285,18 +285,27 @@
             <field name="view_id" ref="mrp_bom_tree_view"/>
         </record>
         <menuitem action="mrp_bom_tree_action" id="menu_bom_tree" parent="menu_mrp_bom_form_action"/>
-
-        <record id="mrp_bom_form_action2" model="ir.actions.act_window">
-            <field name="name">BoM Lines</field>
+        <record id="mrp_bom_form_action_new" model="ir.actions.act_window">
+            <field name="name">New Bill of Materials</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.bom</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="mrp_bom_tree_view"/>
+            <field name="view_mode">form,tree</field>
+            <field name="domain">[('bom_id','=',False)]</field>
         </record>
-        <menuitem action="mrp_bom_form_action2" id="menu_mrp_bom_form_action2" parent="menu_mrp_bom_form_action"/>
-        
+        <menuitem action="mrp_bom_form_action_new" id="menu_mrp_bom_form_action_new" parent="menu_mrp_bom_form_action"/>
+ 
+        <record id="mrp_bom_form_action2" model="ir.actions.act_window">
+            <field name="name">Bill of Materials Components</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.bom</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('bom_id','!=',False)]</field>
+        </record>
+        <menuitem action="mrp_bom_form_action2" id="menu_mrp_bom_form_action2" parent="menu_mrp_configuration"/>
+
         <record id="action2" model="ir.actions.act_window">
-            <field name="name">Bill of Materials Architecture</field>
+            <field name="name">Bill of Materials Structure</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.bom</field>
             <field name="domain">[('id','in',active_ids)]</field>
@@ -306,7 +315,7 @@
         <record id="ir_bom_architecture_open" model="ir.values">
             <field eval="'client_action_multi'" name="key2"/>
             <field eval="'mrp.bom'" name="model"/>
-            <field name="name">Bill of Material Architecture</field>
+            <field name="name">Bill of Materials Structure</field>
             <field eval="'ir.actions.act_window,'+str(action2)" name="value"/>
             <field eval="True" name="object"/>
         </record>
@@ -373,6 +382,18 @@
                 </calendar>
             </field>
         </record>
+
+		<record model="ir.ui.view" id="view_production_graph">
+			<field name="name">mrp.production.graph</field>
+			<field name="model">mrp.production</field>
+			<field name="type">graph</field>
+			<field name="arch" type="xml">
+				<graph string="Production orders" type="bar">
+					<field name="product_id"/>
+					<field name="product_qty" operator="+"/>
+				</graph>
+			</field>
+		</record>
         
         
         <record id="mrp_production_form_view" model="ir.ui.view">
@@ -381,29 +402,26 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Production orders">
-					<group colspan="4" col="6">
-						<field name="name" select="1"/>
-						<field name="date_planned" select="1"/>
-						<field name="priority"/>
-						
-						<field name="product_id" on_change="product_id_change(product_id)" select="1"/>
-						<field name="product_qty"/>
-						<field name="product_uom"/>
-						<group colspan="6" col="6">
-							<label string="" colspan="2"/>
-							<field name="product_uos_qty" groups="product.group_uos"/>
-							<field name="product_uos" groups="product.group_uos"/>
-						</group>
-					</group>
+                    <group colspan="4" col="6">
+                        <field name="name" select="1"/>
+                        <field name="date_planned" select="1"/>
+                        <field name="priority"/>
+                        
+                        <field name="product_id" on_change="product_id_change(product_id)" select="1"/>
+                        <field name="product_qty"/>
+                        <field name="product_uom"/>
+                        <label string="" colspan="2"/>
+                        <field name="product_uos_qty" groups="product.group_uos"/>
+                        <field name="product_uos" groups="product.group_uos"/>
+                    </group>
 
                     <notebook colspan="4">
                         <page string="Consumed Products">
                             <field name="location_src_id" select="2"/>
                             <field name="location_dest_id"/>
-                            <field name="bom_id" select="2"/>
+                            <field name="bom_id" select="2" domain="[('product_id','=',product_id),('bom_id','=',False)]"/>
                             <field name="origin" select="1"/>
                             <newline/>
-                            
                             <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list"/>
                             <group col="9" colspan="4">
                                 <field name="state" select="2"/>
@@ -440,7 +458,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="view_id" eval="False"/>
         </record>
         <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_root"/>
@@ -450,7 +468,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','ready')]</field>
         </record>
         <menuitem action="mrp_production_action2" id="menu_production_orders_start" parent="menu_mrp_production_action"/>
@@ -459,7 +477,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','in_production')]</field>
         </record>
         <menuitem action="mrp_production_action3" id="menu_mrp_production_action3" parent="menu_mrp_production_action"/>
@@ -468,7 +486,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('state','=','confirmed')]</field>
         </record>
         <menuitem action="mrp_production_action4" id="menu_production_orders_waiting4" parent="mrp.menu_mrp_production_action"/>
@@ -478,7 +496,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form,tree,calendar</field>
+            <field name="view_mode">form,tree,calendar,graph</field>
         </record>
         <menuitem action="mrp_production_new" id="menu_production_orders_new" parent="mrp.menu_mrp_production_action"/>
         
@@ -604,51 +622,51 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Procurement">
-					<notebook>
-					<page string="Procurement Details">
-						<group col="2" colspan="2">
-							<separator colspan="2" string="References"/>
-							<field name="name" select="1" string="Procurement Reason"/>
-							<field name="origin" select="2"/>
-						</group>
-						<group col="2" colspan="2">
-							<separator colspan="2" string="Planification"/>
-							<field name="date_planned" select="1"/>
-							<field name="procure_method" select="2"/>
-							<field name="priority"/>
-						</group>
+                    <notebook>
+                    <page string="Procurement Details">
+                        <group col="2" colspan="2">
+                            <separator colspan="2" string="References"/>
+                            <field name="name" select="1" string="Procurement Reason"/>
+                            <field name="origin" select="2"/>
+                        </group>
+                        <group col="2" colspan="2">
+                            <separator colspan="2" string="Planification"/>
+                            <field name="date_planned" select="1"/>
+                            <field name="procure_method" select="2"/>
+                            <field name="priority"/>
+                        </group>
 
-						<separator colspan="4" string="Product &amp; Location"/>
-						<field name="product_id" select="1"/>
-						<field name="location_id" select="2"/>
-						<field name="product_qty"/>
-						<field name="product_uom"/>
+                        <separator colspan="4" string="Product &amp; Location"/>
+                        <field name="product_id" select="1"/>
+                        <field name="location_id" select="2"/>
+                        <field name="product_qty"/>
+                        <field name="product_uom"/>
 
-						<field name="product_uos_qty" groups="product.group_uos"/>
-						<field name="product_uos" groups="product.group_uos"/>
+                        <field name="product_uos_qty" groups="product.group_uos"/>
+                        <field name="product_uos" groups="product.group_uos"/>
 
-						<separator colspan="4" string="Status"/>
-						<field colspan="4" name="message" readonly="1"/>
-						<field name="state" readonly="1" select="2"/>
-						<group col="7" colspan="2">
-							<button name="button_confirm" states="draft" string="Confirm"/>
-							<button name="button_restart" states="exception" string="Retry"/>
-							<button name="button_cancel" states="exception,waiting" string="Cancel"/>
-							<button name="button_check" states="confirmed" string="Run procurement"/>
-							<button name="button_cancel" states="draft,running" string="Cancel"/>
-						</group>
-					</page>
-					<page string="Extra Information">
-						<separator colspan="4" string="Details"/>
-						<field name="bom_id" select="2"/>
-						<field name="move_id"/>
-						<field name="date_close" select="2"/>
-						<field name="close_move"/>
-						<field name="purchase_id"/>
-						<separator colspan="4" string="Properties"/>
-						<field colspan="4" name="property_ids" nolabel="1"/>
-					</page>
-					</notebook>
+                        <separator colspan="4" string="Status"/>
+                        <field colspan="4" name="message" readonly="1"/>
+                        <field name="state" readonly="1" select="2"/>
+                        <group col="7" colspan="2">
+                            <button name="button_confirm" states="draft" string="Confirm"/>
+                            <button name="button_restart" states="exception" string="Retry"/>
+                            <button name="button_cancel" states="exception,waiting" string="Cancel"/>
+                            <button name="button_check" states="confirmed" string="Run procurement"/>
+                            <button name="button_cancel" states="draft,running" string="Cancel"/>
+                        </group>
+                    </page>
+                    <page string="Extra Information">
+                        <separator colspan="4" string="Details"/>
+                        <field name="bom_id" select="2"/>
+                        <field name="move_id"/>
+                        <field name="date_close" select="2"/>
+                        <field name="close_move"/>
+                        <field name="purchase_id"/>
+                        <separator colspan="4" string="Properties"/>
+                        <field colspan="4" name="property_ids" nolabel="1"/>
+                    </page>
+                    </notebook>
                 </form>
             </field>
         </record>
@@ -743,7 +761,8 @@
                 <form string="Minimum Stock Rules">
                     <field name="name" select="1"/>
                     <field name="active" select="1"/>
-                    <field name="warehouse_id" select="1"/>
+                    <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" select="1"/>
+                    <field name="location_id" select="2"/>
                     <field name="product_id" on_change="onchange_product_id(product_id)" select="1"/>
                     <field name="product_uom"/>
                     <field name="product_min_qty"/>
@@ -770,4 +789,4 @@
 
         <act_window domain="[('product_id', '=', active_id),('bom_id','=',False)]" id="act_product_product_2_mrp_bom" name="Bill of Material" res_model="mrp.bom" src_model="product.product"/>
     </data>
-</terp>
+</openerp>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<terp>
+<openerp>
     <data noupdate="1">
         
         <!-- Resource: scrum.project -->
@@ -19,7 +19,7 @@
             <field name="date_stop">2005-12-20</field>
             <field name="name">Sprint for V3.2.0</field>
             <field model="res.users" name="scrum_master_id" search="[('login','=','demo')]"/>
-            <field model="res.users" name="product_owner_id" search="[('login','=','admin')]"/>
+            <field name="product_owner_id" ref="base.user_root"/>
             <field name="project_id" ref="scrum_project_1"/>
             <field name="state">open</field>
         </record>
@@ -190,4 +190,4 @@
         </record>
         
     </data>
-</terp>
+</openerp>

@@ -36,7 +36,11 @@
     "category" : "Generic Modules/Accounting",
     "init_xml" : [ ],
     "demo_xml" : [ ],
-    "update_xml" : [ "account_view.xml","account_report.xml" ],
+    "update_xml" : [
+        "security/ir.model.access.csv",
+        "account_view.xml",
+        "account_report.xml",
+    ],
 #   "translations" : {
 #       "fr": "i18n/french_fr.csv"
 #   },

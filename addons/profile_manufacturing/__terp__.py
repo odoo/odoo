@@ -33,7 +33,10 @@
     "category":"Profile",
     "depends":["mrp", "crm", "sale", "delivery","board_manufacturing"],
     "demo_xml":[],
-    "update_xml":["profile_manufacturing.xml"],
+    "update_xml":[
+        "security/ir.model.access.csv",
+        "profile_manufacturing.xml"
+    ],
     "active":False,
     "installable":True,
 }

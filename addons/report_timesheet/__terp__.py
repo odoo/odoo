@@ -35,7 +35,9 @@
     "category" : "Generic Modules/Human Ressources",
     "init_xml" : [],
     "demo_xml" : [],
-    "update_xml" : ["report_timesheet_view.xml"],
+    "update_xml" : [
+        "security/ir.model.access.csv",
+        "report_timesheet_view.xml"],
     "active": False,
     "installable": True
 }

@@ -30,6 +30,60 @@
 
 from osv import fields, osv
 
+class product_product(osv.osv):
+    _inherit = "product.product"
+#    def view_header_get(self, cr, user, view_id, view_type, context):
+#        print self, cr, user
+#        res = super(product_product, self).view_header_get(cr, user, view_id, view_type, context)
+#        if res: return res
+#        if (not context.get('location', False)):
+#            return False
+#        cr.execute('select name from stock_location where id=%d', (context['location'],))
+#        j = cr.fetchone()[0]
+#        if j:
+#            return 'Products: '+j
+#        return False
+#
+    def _get_product_available_func(states, what):
+        def _product_available(self, cr, uid, ids, name, arg, context={}):
+            if context.get('shop', False):
+                cr.execute('select warehouse_id from sale_shop where id=%d', (int(context['shop']),))
+                res2 = cr.fetchone()
+                if res2:
+                    context['warehouse'] = res2[0]
+
+            if context.get('warehouse', False):
+                cr.execute('select lot_stock_id from stock_warehouse where id=%d', (int(context['warehouse']),))
+                res2 = cr.fetchone()
+                if res2:
+                    context['location'] = res2[0]
+
+            if context.get('location', False):
+                location_ids = [context['location']]
+            else:
+                cr.execute("select lot_stock_id from stock_warehouse")
+                location_ids = [id for (id,) in cr.fetchall()]
+
+            # build the list of ids of children of the location given by id
+            location_ids = self.pool.get('stock.location').search(cr, uid, [('location_id', 'child_of', location_ids)])
+            res = self.pool.get('stock.location')._product_get_multi_location(cr, uid, location_ids, ids, context, states, what)
+            for id in ids:
+                res.setdefault(id, 0.0)
+            return res
+        return _product_available
+
+    _product_qty_available = _get_product_available_func(('done',), ('in', 'out'))
+    _product_virtual_available = _get_product_available_func(('confirmed','waiting','assigned','done'), ('in', 'out'))
+    _product_outgoing_qty = _get_product_available_func(('confirmed','waiting','assigned'), ('out',))
+    _product_incoming_qty = _get_product_available_func(('confirmed','waiting','assigned'), ('in',))
+    _columns = {
+        'qty_available': fields.function(_product_qty_available, method=True, type='float', string='Real Stock'),
+        'virtual_available': fields.function(_product_virtual_available, method=True, type='float', string='Virtual Stock'),
+        'incoming_qty': fields.function(_product_incoming_qty, method=True, type='float', string='Incoming'),
+        'outgoing_qty': fields.function(_product_outgoing_qty, method=True, type='float', string='Outgoing'),
+    }
+product_product()
+
 
 class product_product(osv.osv):
     _name = 'product.template'

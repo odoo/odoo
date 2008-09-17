@@ -10,42 +10,49 @@
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
     </blockTableStyle>
-    <blockTableStyle id="Tableau1">
+    <blockTableStyle id="Table1">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <blockBackground colorName="#c0c0c0" start="0,0" stop="0,0"/>
-      <blockBackground colorName="#c0c0c0" start="1,0" stop="1,0"/>
-      <blockBackground colorName="#c0c0c0" start="2,0" stop="2,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
     </blockTableStyle>
-    <blockTableStyle id="Tableau2">
+    <blockTableStyle id="tbl_detail">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <lineStyle kind="GRID" colorName="black"/>
-      <blockBackground colorName="#ff9966" start="0,0" stop="0,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="5,-1" stop="5,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
     </blockTableStyle>
-    <blockTableStyle id="Tableau3">
+    <blockTableStyle id="tbl_header">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <lineStyle kind="GRID" colorName="black"/>
-      <blockBackground colorName="#ffcc99" start="0,0" stop="0,0"/>
-      <blockBackground colorName="#ffcc99" start="1,0" stop="1,0"/>
-      <blockBackground colorName="#ffcc99" start="2,0" stop="2,0"/>
-      <blockBackground colorName="#ffcc99" start="3,0" stop="3,0"/>
-      <blockBackground colorName="#ffcc99" start="4,0" stop="4,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
     </blockTableStyle>
-    <blockTableStyle id="Tableau4">
+    <blockTableStyle id="Table3">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <lineStyle kind="GRID" colorName="black"/>
-      <blockBackground colorName="#e6e6ff" start="1,0" stop="1,0"/>
-      <blockBackground colorName="#e6e6ff" start="2,0" stop="2,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#ffffff" start="0,0" stop="0,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#ffffff" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#ffffff" start="2,0" stop="2,0"/>
     </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
-    <paraStyle name="P1" fontName="Times-Roman" fontSize="22.0" leading="27" alignment="CENTER"/>
-    <paraStyle name="P2" fontName="Times-Roman" alignment="RIGHT"/>
-    <paraStyle name="P3" fontName="Times-Roman" fontSize="14.0" leading="17" alignment="CENTER"/>
+    <paraStyle name="P1" fontName="Helvetica-Oblique" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
@@ -53,98 +60,88 @@
     <paraStyle name="Table Contents" fontName="Times-Roman"/>
     <paraStyle name="Caption" fontName="Times-Roman" fontSize="12.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="Index" fontName="Times-Roman"/>
+    <paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="14.0" leading="17" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details_Centre" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_Centre_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Centre_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Bold_8" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Bold_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Centre_9_Bold" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
   </stylesheet>
+  <images/>
   <story>
-    <blockTable colWidths="122.0,269.0,91.0" style="Tableau1">
+    <para style="terp_default_8">[[ repeatIn(objects,'employee') ]]</para>
+    <para style="terp_header_Centre">Attendance Errors</para>
+    <para style="terp_header">[[ employee.name ]]</para>
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    <blockTable colWidths="60.0,114.0,146.0,85.0,77.0" style="Table1">
       <tr>
         <td>
-          <para style="Table Contents">Report</para>
-          <para style="Table Contents">From: [[ data['form']['init_date'] ]]</para>
-          <para style="Table Contents">To: [[ data['form']['end_date'] ]]</para>
+          <para style="terp_tblheader_Details">Operation</para>
         </td>
         <td>
-          <para style="P1">Attendance Errors</para>
+          <para style="terp_tblheader_Details_Centre">Date Signed</para>
         </td>
         <td>
-          <para style="P2">Date Printed:</para>
-          <para style="P2">[[ time.strftime('%Y/%m/%d') ]]</para>
+          <para style="terp_tblheader_Details_Centre">Date Recorded</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Centre">Delay</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Centre">Min Delay</para>
         </td>
       </tr>
     </blockTable>
-    <para style="Standard">
+    <blockTable colWidths="482.0" style="tbl_detail">
+      <tr>
+        <td>
+          <para style="P1">[[ repeatIn(lst(employee.id,data['form']['init_date'], data['form']['end_date'], data['form']['max_delay']), 'att') ]]</para>
+          <blockTable colWidths="58.0,114.0,143.0,93.0,69.0" style="tbl_header">
+            <tr>
+              <td>
+                <para style="terp_default_9">[[ att['action']  ]]</para>
+              </td>
+              <td>
+                <para style="terp_default_Centre_9">[[  att['date']  ]]</para>
+              </td>
+              <td>
+                <para style="terp_default_Centre_9">[[ att['create_date'] ]]</para>
+              </td>
+              <td>
+                <para style="terp_default_Centre_9">[[ att['delay']  ]]</para>
+              </td>
+              <td>
+                <para style="terp_default_Centre_9">[[ att['delay2']  ]]</para>
+              </td>
+            </tr>
+          </blockTable>
+        </td>
+      </tr>
+    </blockTable>
+    <blockTable colWidths="319.0,99.0,63.0" style="Table3">
+      <tr>
+        <td>
+          <para style="terp_default_Bold_9">Total period:</para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_9_Bold">[[ total(employee.id,data['form']['init_date'], data['form']['end_date'], data['form']['max_delay'])[0]  ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_9_Bold">[[ total(employee.id,data['form']['init_date'], data['form']['end_date'], data['form']['max_delay'])[1]  ]]</para>
+        </td>
+      </tr>
+    </blockTable>
+    <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <section>
-      <para style="Standard">[[ repeatIn(objects, 'employee') ]]</para>
-      <blockTable colWidths="482.0" repeatRows="1" style="Tableau2">
-        <tr>
-          <td>
-            <para style="P3">[[ employee.name ]]</para>
-          </td>
-        </tr>
-      </blockTable>
-      <blockTable colWidths="67.0,106.0,134.0,85.0,90.0" style="Tableau3">
-        <tr>
-          <td>
-            <para style="Table Contents">Operation</para>
-          </td>
-          <td>
-            <para style="Table Contents">Date Signed</para>
-          </td>
-          <td>
-            <para style="Table Contents">Date Recorded</para>
-          </td>
-          <td>
-            <para style="Table Contents">Delay</para>
-          </td>
-          <td>
-            <para style="Table Contents">Avg Delay</para>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <para style="Table Contents"><font face="Times-Roman">[[repeatIn(lst(employee.id,data['form']['init_date'], data['form']['end_date'], data['form']['max_delay']), 'att') ]]</font> [[att['action'] ]]</para>
-          </td>
-          <td>
-            <para style="Table Contents">[[ att['date'] ]]</para>
-          </td>
-          <td>
-            <para style="Table Contents">[[ att['create_date'] ]]</para>
-          </td>
-          <td>
-            <para style="Table Contents">[[ att['delay'] ]]</para>
-          </td>
-          <td>
-            <para style="Table Contents">[[ att['delay2'] ]]</para>
-          </td>
-        </tr>
-      </blockTable>
-      <blockTable colWidths="307.0,85.0,90.0" style="Tableau4">
-        <tr>
-          <td>
-            <para style="Table Contents">Total period:</para>
-          </td>
-          <td>
-            <para style="Table Contents">
-              <font face="Times-Roman">[[total(employee.id,data['form']['init_date'], data['form']['end_date'], data['form']['max_delay'])[0] ]]</font>
-            </para>
-          </td>
-          <td>
-            <para style="Table Contents">
-              <font face="Times-Roman">[[total(employee.id,data['form']['init_date'], data['form']['end_date'], data['form']['max_delay'])[1] ]]</font>
-            </para>
-          </td>
-        </tr>
-      </blockTable>
-      <para style="Standard">
-        <font color="white"> </font>
-      </para>
-    </section>
-    <para style="Standard">
-      <font color="white"> </font>
-    </para>
-    <para style="Standard">(*) A positive delay means that the employee worked less than recorded.</para>
-    <para style="Standard">(*) A negative delay means that the employee worked more than encoded.</para>
+    <para style="terp_default_9">(*) A positive delay means that the employee worked less than recorded.</para>
+    <para style="terp_default_9">(*) A negative delay means that the employee worked more than encoded.</para>
   </story>
 </document>
-
