@@ -550,9 +550,10 @@
                                 <label colspan="6"/>
                                 <button name="%(move_split)d" string="Split move lines in two" type="action"/>
                             </group>
-                            <group col="8" colspan="4">
+                            <group col="10" colspan="4">
                                 <field name="state" readonly="1"/>
-                                <button name="button_confirm" states="draft" string="Confirm"/>
+                                <button name="draft_force_assign" states="draft" string="Process Later" type="object"/>
+                                <button name="draft_validate" states="draft" string="Process Now" type="object"/>
                                 <button name="action_assign" states="confirmed" string="Assign" type="object"/>
                                 <button name="force_assign" states="confirmed" string="Force Assignation" type="object"/>
                                 <button name="cancel_assign" states="assigned" string="Cancel Assignation" type="object"/>
@@ -638,9 +639,10 @@
                                 <label colspan="6"/>
                                 <button name="%(move_split)d" string="Split in Two" type="action"/>
                             </group>
-                            <group col="8" colspan="4">
+                            <group col="10" colspan="4">
                                 <field name="state" readonly="1"/>
-                                <button name="button_confirm" states="draft" string="Confirm"/>
+                                <button name="draft_force_assign" states="draft" string="Process Later" type="object"/>
+                                <button name="draft_validate" states="draft" string="Process Now" type="object"/>
                                 <button name="action_assign" states="confirmed" string="Assign" type="object"/>
                                 <button name="force_assign" states="confirmed" string="Force Assignation" type="object"/>
                                 <button name="cancel_assign" states="assigned" string="Cancel Assignation" type="object"/>
@@ -806,9 +808,10 @@
                                 <label colspan="6"/>
                                 <button name="%(move_split)d" string="Split in Two" type="action"/>
                             </group>
-                            <group col="8" colspan="4">
+                            <group col="10" colspan="4">
                                 <field name="state" readonly="1"/>
-                                <button name="button_confirm" states="draft" string="Confirm"/>
+                                <button name="draft_force_assign" states="draft" string="Process Later" type="object"/>
+                                <button name="draft_validate" states="draft" string="Process Now" type="object"/>
                                 <button name="action_assign" states="confirmed" string="Assign" type="object"/>
                                 <button name="force_assign" states="confirmed" string="Force Assignation" type="object"/>
                                 <button name="cancel_assign" states="assigned" string="Cancel Assignation" type="object"/>
@@ -975,9 +978,10 @@
                                 <label colspan="5"/>
                                 <button name="%(act_stock_picking_move_wizard)d" string="Fill From Unreceived Products" type="action"/>
                             </group>
-                            <group col="8" colspan="4">
+                            <group col="10" colspan="4">
                                 <field name="state" readonly="1"/>
-                                <button name="button_confirm" states="draft" string="Confirm" type="object"/>
+                                <button name="draft_force_assign" states="draft" string="Process Later" type="object"/>
+                                <button name="draft_validate" states="draft" string="Process Now" type="object"/>
                                 <button name="action_assign" states="confirmed" string="Assign" type="object"/>
                                 <button name="force_assign" states="confirmed" string="Force Assignation" type="object"/>
                                 <button name="cancel_assign" states="assigned" string="Cancel Assignation" type="object"/>
