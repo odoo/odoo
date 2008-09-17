@@ -479,7 +479,7 @@ class sale_order(osv.osv):
             for line in order.order_line:
                 proc_id=False
                 date_planned = DateTime.now() + DateTime.RelativeDateTime(days=line.delay or 0.0)
-                date_planned = (date_planned - DateTime.RelativeDateTime(days=company.security_lead)).strftime('%Y-%m-%d')
+                date_planned = (date_planned - DateTime.RelativeDateTime(days=company.security_lead)).strftime('%Y-%m-%d %H:%M:%S')
                 if line.state == 'done':
                     continue
                 if line.product_id and line.product_id.product_tmpl_id.type in ('product', 'consu'):
