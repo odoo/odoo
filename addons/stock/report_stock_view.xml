@@ -1,36 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        
+
         <record id="stock_report_prodlots_tree" model="ir.ui.view">
             <field name="name">stock.report.prodlots.view</field>
             <field name="model">stock.report.prodlots</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Stock by production lots">
-                    <field name="location_id" select="1"/>
-                    <field name="product_id" select="1"/>
-                    <field name="prodlot_id" select="1"/>
+                <tree string="Stock by Lots">
+                    <field name="location_id"/>
+                    <field name="product_id"/>
+                    <field name="prodlot_id"/>
                     <field name="name"/>
                 </tree>
             </field>
         </record>
-        
         <record id="action_stock_report_prodlots_form" model="ir.actions.act_window">
-            <field name="name">Stock by production lots</field>
+            <field name="name">Stock by Lots</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.report.prodlots</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
         </record>
-        
-        <menuitem id="next_id_61" name="Reporting" parent="stock.menu_stock_root"/><menuitem id="next_id_62" name="Traceability" parent="next_id_61"/><menuitem action="action_stock_report_prodlots_form" id="menu_stock_report_prodlots" parent="next_id_62"/>
-        
-        <act_window domain="[('location_id', '=', active_id)]" id="act_stock_location_2_stock_report_prodlots" name="Stock by production lots" res_model="stock.report.prodlots" src_model="stock.location"/>
-        
-        <act_window domain="[('product_id', '=', active_id)]" id="act_product_product_2_stock_report_prodlots" name="Stock by production lots" res_model="stock.report.prodlots" src_model="product.product"/>
-        
-        <act_window domain="[('prodlot_id', '=', active_id)]" id="act_stock_production_lot_2_stock_report_prodlots" name="Stock" res_model="stock.report.prodlots" src_model="stock.production.lot"/>
-        
+
+        <menuitem
+            id="next_id_61"
+            name="Reporting"
+            parent="stock.menu_stock_root"/>
+
+        <menuitem
+            id="next_id_62"
+            name="Traceability"
+            parent="next_id_61"/>
+
+        <menuitem
+            action="action_stock_report_prodlots_form"
+            id="menu_stock_report_prodlots"
+            parent="next_id_62"/>
+
+        <act_window
+            context="{'product_id': active_id}"
+            id="act_stock_product_location_open"
+            name="Stock by Location"
+            res_model="stock.location"
+            src_model="product.product"/>
+
+        <act_window
+            domain="[('location_id', '=', active_id)]"
+            id="act_stock_location_2_stock_report_prodlots"
+            name="Stock by Lots"
+            res_model="stock.report.prodlots"
+            src_model="stock.location"/>
+
+        <act_window
+            domain="[('product_id','=',active_id)]"
+            id="act_product_product_2_stock_report_prodlots"
+            name="Stock by Lots"
+            res_model="stock.report.prodlots"
+            src_model="product.product"/>
+
+        <act_window
+            domain="[('prodlot_id', '=', active_id)]" 
+            id="act_stock_production_lot_2_stock_report_prodlots" 
+            name="Stock" res_model="stock.report.prodlots"
+            src_model="stock.production.lot"/>
+
     </data>
 </openerp>

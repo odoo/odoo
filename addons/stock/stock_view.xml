@@ -81,15 +81,22 @@
         </record>
         <menuitem action="action_inventory_form" id="menu_action_inventory_form" parent="menu_stock_root"/>
 
-        <record id="action_inventory_line_form" model="ir.actions.act_window">
-            <field name="name">Inventory Lines</field>
+        <record id="action_inventory_form_draft" model="ir.actions.act_window">
+            <field name="name">Draft Physical Inventories</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">stock.inventory.line</field>
+            <field name="res_model">stock.inventory</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="stock_inventory_line_tree"/>
+            <field name="domain">[('state','=','draft')]</field>
         </record>
-        <menuitem action="action_inventory_line_form" groups="base.group_extended" id="menu_action_inventory_line_form" parent="menu_action_inventory_form"/>
+        <menuitem action="action_inventory_form_draft" id="menu_action_inventory_form_draft" parent="menu_action_inventory_form"/>
+        <record id="action_inventory_form_new" model="ir.actions.act_window">
+            <field name="name">New Physical Inventory</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.inventory</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+        </record>
+        <menuitem action="action_inventory_form_new" id="menu_action_inventory_form_new" parent="menu_action_inventory_form"/>
 
 
         =============================
@@ -350,8 +357,8 @@
             <field name="model">stock.location</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Stock location">
-                    <field name="name"/>
+                <tree string="Stock location" colors="blue:usage=='internal'">
+                    <field name="complete_name"/>
                     <field name="usage"/>
                     <field name="account_id"/>
                     <field name="active"/>
@@ -923,7 +930,7 @@
                         <field name="origin" select="2"/>
                         <field name="invoice_state" select="2" string="Invoice Control"/>
                         <field name="name" readonly="1" select="1"/>
-                        <field name="min_date" select="2"/>
+                        <field name="min_date" select="2" readonly="1"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">

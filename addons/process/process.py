@@ -45,12 +45,9 @@ class process_process(osv.osv):
     }
 
     def graph_get(self, cr, uid, id, res_model, res_id, scale, context):
-        
         pool = pooler.get_pool(cr.dbname)
-
         process = pool.get('process.process').browse(cr, uid, [id])[0]
         current_object = pool.get(res_model).browse(cr, uid, [res_id])[0]
-
         nodes = {}
         start = []
         transitions = {}
@@ -78,57 +75,45 @@ class process_process(osv.osv):
                 pass
 
             nodes[node.id] = data
-
             if node.flow_start:
                 start.append(node.id)
 
             for tr in node.transition_ids:
                 data = {}
-                
                 data['name'] = tr.name
                 data['source'] = tr.source_node_id.id
                 data['target'] = tr.target_node_id.id
-
                 data['buttons'] = buttons = []
                 for b in tr.action_ids:
                     button = {}
                     button['name'] = b.name
                     buttons.append(button)
-
                 data['roles'] = roles = []
                 for r in tr.role_ids:
                     role = {}
                     role['name'] = r.name
                     roles.append(role)
-                    
                 transitions[tr.id] = data
 
         g = tools.graph(nodes.keys(), map(lambda x: (x['source'], x['target']), transitions.values()))
         g.process(start)
         #g.scale(100, 100, 180, 120)
         g.scale(*scale)
-
         graph = g.result_get()
-
         miny = -1
 
         for k,v in nodes.items():
-
             x = graph[k]['y']
             y = graph[k]['x']
-
             if miny == -1:
                 miny = y
-
             miny = min(y, miny)
-
             v['x'] = x
             v['y'] = y
 
         for k, v in nodes.items():
             y = v['y']
             v['y'] = min(y - miny + 10, y)
-
         return dict(nodes=nodes, transitions=transitions)
 
 process_process()
@@ -165,8 +150,6 @@ class process_transition(osv.osv):
         'role_ids': fields.many2many('res.roles', 'process_transition_roles_rel', 'process_transition_id', 'role_id', 'Roles Required'),
         'note': fields.text('Description'),
     }
-    _defaults = {
-    }
 process_transition()
 
 class process_transition_action(osv.osv):
@@ -190,9 +173,4 @@ class process_transition_action(osv.osv):
         'state': lambda *args: 'dummy',
     }
 process_transition_action()
-
-
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -61,11 +61,33 @@ class stock_location(osv.osv):
     _name = "stock.location"
     _description = "Location"
     _parent_name = "location_id"
+    _parent_store = True
+    _parent_order = 'name'
+    _order = 'parent_left'
+
+    def _complete_name(self, cr, uid, ids, name, args, context):
+        def _get_one_full_name(location, level=4):
+            if level<=0:
+                return '...'
+            if location.location_id:
+                parent_path = _get_one_full_name(location.location_id, level-1) + "/"
+            else:
+                parent_path = ''
+            return parent_path + location.name
+        res = {}
+        for m in self.browse(cr, uid, ids, context=context):
+            res[m.id] = _get_one_full_name(m)
+        return res
+
     _columns = {
         'name': fields.char('Location Name', size=64, required=True, translate=True),
         'active': fields.boolean('Active'),
-        'usage': fields.selection([('supplier','Supplier Location'),('view','View'),('internal','Internal Location'),('customer','Customer Location'),('inventory','Inventory'),('procurement','Procurement'),('production','Production')], 'Location type'),
+        'usage': fields.selection([('supplier','Supplier Location'),('view','View'),('internal','Internal Location'),('customer','Customer Location'),('inventory','Inventory'),('procurement','Procurement'),('production','Production')], 'Location type', required=True),
         'allocation_method': fields.selection([('fifo','FIFO'),('lifo','LIFO'),('nearest','Nearest')], 'Allocation Method', required=True),
+
+        'complete_name': fields.function(_complete_name, method=True, type='char', size=100, string="Location Name"),
+        #'qty_available': fields.function(_product_qty_available, method=True, type='float', string='Real Stock'),
+        #'virtual_available': fields.function(_product_virtual_available, method=True, type='float', string='Virtual Stock'),
 
         'account_id': fields.many2one('account.account', string='Inventory Account', domain=[('type','!=','view')]),
         'location_id': fields.many2one('stock.location', 'Parent Location', select=True),
@@ -377,7 +399,7 @@ class stock_picking(osv.osv):
 
     _columns = {
         'name': fields.char('Reference', size=64, required=True, select=True),
-        'origin': fields.char('Origin', size=64),
+        'origin': fields.char('Origin Reference', size=64),
         'backorder_id': fields.many2one('stock.picking', 'Back Order'),
         'type': fields.selection([('out','Sending Goods'),('in','Getting Goods'),('internal','Internal'),('delivery','Delivery')], 'Shipping Type', required=True, select=True),
         'active': fields.boolean('Active'),
@@ -407,7 +429,7 @@ class stock_picking(osv.osv):
             ("invoiced","Invoiced"),
             ("2binvoiced","To be invoiced"),
             ("none","Not from Packing")], "Invoice Status", 
-            select=True),
+            select=True, required=True),
     }
     _defaults = {
         'name': lambda self,cr,uid,context: self.pool.get('ir.sequence').get(cr, uid, 'stock.picking'),
