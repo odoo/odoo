@@ -102,6 +102,15 @@ class res_partner_job(osv.osv):
             res[id.id] = id.address_id.partner_id.id
         return res
 
+    def search(self, cr, user, args, offset=0, limit=None, order=None,
+            context=None, count=False):
+        for arg in args:
+            if arg[0]=='address_id':
+                self._order = 'sequence_partner'
+            if arg[0]=='contact_id':
+                self._order = 'sequence_contact'
+        return super(res_partner_job,self).search(cr, user, args, offset, limit, order, context, count)
+
     _name = 'res.partner.job'
     _description ='Contact Function'
     _order = 'sequence_contact'

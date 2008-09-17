@@ -1336,7 +1336,7 @@
                     <field name="date2"/>
                     <separator string="" colspan="4"/>
                     <label string="" colspan="2"/>
-                    <group col="4" colspan="4">
+                    <group col="2" colspan="2">
                         <button icon="gtk-cancel" special="cancel" string="Don't Create" name="action_cancel" type="object"/>
                         <button icon="gtk-ok" name="action_create" string="Create" type="object"/>
                     </group>
@@ -1576,15 +1576,16 @@
 		<!--  Wizard for Multi Charts of Accounts -->
 
         <record id="view_wizard_multi_chart" model="ir.ui.view">
-			<field name="name">Create Multiple Charts of Accounts</field>
+			<field name="name">Generate Chart of Accounts from a Chart Template</field>
 			<field name="model">wizard.multi.charts.accounts</field>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
-				<form string="Create Multiple Charts of Accounts">
+				<form string="Generate Chart of Accounts from a Chart Template">
+					<separator col="4" colspan="4" string="Generate Chart of Accounts from a Chart Template"/>
 					<field name="company_id" />
-	                <field name="chart_template_id" />
-					<field name ="code_digits" />
-		            <field colspan="4" mode="tree" name="bank_accounts_id" nolabel="1" widget="one2many_list">
+                    <field name ="code_digits" />
+	                <field name="chart_template_id" colspan="4"/>					
+		            <field colspan="4" mode="tree" name="bank_accounts_id" nolabel="1" widget="one2many_list">						
 						<form string="Bank Information">
 	                    	<field name="acc_no"/>
 		                    <field name="currency_id"/>
@@ -1594,8 +1595,10 @@
 							<field name="currency_id"/>
 						</tree>
 					</field>
-					<group col="4" colspan="4">
-						<button icon="gtk-cancel" special="cancel" type="object" string="Cancel"/>
+                    <separator string="" colspan="4"/>
+					<label string="" colspan="2"/>
+					<group col="2" colspan="2">
+						<button icon="gtk-cancel" special="cancel" type="object" name="action_cancel" string="Cancel"/>
 						<button icon="gtk-ok" name="action_create" string="Create" type="object"/>
 					</group>
 				</form>

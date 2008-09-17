@@ -33,8 +33,8 @@
                                     <field name="model_states"/>
                                 </group>
                                 <notebook colspan="4">
-                                    <page string="Transitions">
-                                        <field name="transition_ids" colspan="4" nolabel="1">
+                                    <page string="Outgoing Transitions">
+                                        <field name="transition_out" colspan="4" nolabel="1">
                                             <tree string="Transitions">
                                                 <field name="name"/>
                                                 <field name="target_node_id"/>
@@ -62,7 +62,7 @@
                                                         </field>
                                                     </page>
                                                     <page string="Roles Required">
-                                                        <field name="role_ids" colspan="4" nolabel="1"/>
+                                                        <field name="transition_ids" colspan="4" nolabel="1"/>
                                                     </page>
                                                     <page string="Extra Information">
                                                         <field name="note" colspan="4" nolabel="1"/>
@@ -130,30 +130,33 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Process Transition">
-                <field name="name" select="1"/>
-                <newline/>
-                <field name="source_node_id" select="1"/>
-                <field name="target_node_id" select="1"/>
+                <group string="Details">
+                    <field name="name" select="1"/>
+                    <newline/>
+                    <field name="source_node_id" select="1"/>
+                    <field name="target_node_id" select="1"/>
+                </group>
                 <notebook colspan="4">
-                <page string="Actions">
-                    <field name="action_ids" nolabel="1" colspan="4">
-                        <tree string="Actions">
-                            <field name="name"/>
-                            <field name="state"/>
-                            <field name="action"/>
-                        </tree>
-                        <form string="Actions">
-                            <field name="name" colspan="4"/>
-                            <newline/>
-                            <field name="state"/>
-                            <field name="action"/>
-                        </form>
-                    </field>
-                </page><page string="Roles">
-                    <field name="role_ids" nolabel="1" colspan="4"/>
-                </page><page string="Notes">
-                    <field name="note" nolabel="1" colspan="4"/>
-                </page>
+                    <page string="Actions">
+                        <field name="action_ids" nolabel="1" colspan="4">
+                            <tree string="Actions">
+                                <field name="name"/>
+                                <field name="state"/>
+                                <field name="action"/>
+                            </tree>
+                            <form string="Actions">
+                                <field name="name" colspan="4"/>
+                                <newline/>
+                                <field name="state"/>
+                                <field name="action"/>
+                            </form>
+                        </field>
+                    </page>
+                    <page string="Roles">
+                        <field name="transition_ids" nolabel="1" colspan="4"/>
+                    </page><page string="Notes">
+                        <field name="note" nolabel="1" colspan="4"/>
+                    </page>
                 </notebook>
             </form>
         </field>
@@ -169,7 +172,6 @@
         id="menu_process_transition_form"
         action="action_process_transition_form"
         parent="menu_process"/>
-
 
 </data>
 </openerp>
