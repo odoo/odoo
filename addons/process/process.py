@@ -97,10 +97,11 @@ class process_process(osv.osv):
 
                 data['roles'] = roles = []
                 for r in tr.transition_ids:
-                    role = {}
-                    role['name'] = r.role_id.name
-                    roles.append(role)
-                    
+                    if r.role_id:
+                        role = {}
+                        role['name'] = r.role_id.name
+                        roles.append(role)
+            
                 transitions[tr.id] = data
 
         g = tools.graph(nodes.keys(), map(lambda x: (x['source'], x['target']), transitions.values()))
