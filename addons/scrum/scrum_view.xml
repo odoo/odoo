@@ -381,8 +381,8 @@
         -->
 
         <record id="view_task_form2" model="ir.ui.view">
-            <field name="name">project.task.form</field>
-            <field name="model">project.task</field>
+            <field name="name">scrum.task.form</field>
+            <field name="model">scrum.task</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
@@ -396,7 +396,7 @@
 
         <record id="action_view_task" model="ir.actions.act_window">
             <field name="name">All Tasks</field>
-            <field name="res_model">project.task</field>
+            <field name="res_model">scrum.task</field>
             <field name="view_type">form</field>
             <field name="domain">[('scrum','=',1)]</field>
         </record>
@@ -404,7 +404,7 @@
         
         <record id="action_view_task4" model="ir.actions.act_window">
             <field name="name">My tasks</field>
-            <field name="res_model">project.task</field>
+            <field name="res_model">scrum.task</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('user_id', '=', uid),('scrum','=',1)]</field>
@@ -413,7 +413,7 @@
         
         <record id="action_view_task5" model="ir.actions.act_window">
             <field name="name">My opened tasks</field>
-            <field name="res_model">project.task</field>
+            <field name="res_model">scrum.task</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('user_id','=',uid),('state','=','open'),('scrum','=',1)]</field>
@@ -422,11 +422,12 @@
         
         <record id="action_view_task6" model="ir.actions.act_window">
             <field name="name">Opened tasks</field>
-            <field name="res_model">project.task</field>
+            <field name="res_model">scrum.task</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','open'),('scrum','=',1)]</field>
         </record>
         <menuitem action="action_view_task6" id="menu_action_view_task6" parent="project.menu_action_view_task"/>
+    
     </data>
 </openerp>

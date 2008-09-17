@@ -30,8 +30,8 @@ from osv import fields, osv
 import pooler
 
 
-class config_install_extra_modules(osv.osv_memory):
-    _name='config.install_extra_modules.mrp'
+class profile_manufacturing_config_install_modules_wizard(osv.osv_memory):
+    _name='profile.manufacturing.config.install_modules_wizard'
     _columns = {
         'mrp_jit':fields.boolean('Just in Time Scheduling',
             help="The JIT module allows you to not run the scheduler "\
@@ -94,7 +94,7 @@ class config_install_extra_modules(osv.osv_memory):
                 'type': 'ir.actions.act_window',
                 'target':'new',
             }
-config_install_extra_modules()
+profile_manufacturing_config_install_modules_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

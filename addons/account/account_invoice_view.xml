@@ -3,8 +3,8 @@
     <data>
 
         <!--
-		Invoices
-		-->
+        Invoices
+        -->
 
         <record id="view_invoice_line_calendar" model="ir.ui.view">
             <field name="name">account.invoice.calendar</field>
@@ -17,17 +17,17 @@
                 </calendar>
             </field>
         </record>
-		<record model="ir.ui.view" id="view_invoice_graph">
-			<field name="name">account.invoice.graph</field>
-			<field name="model">account.invoice</field>
-			<field name="type">graph</field>
-			<field name="arch" type="xml">
-				<graph string="Invoices" type="bar">
-					<field name="partner_id"/>
-					<field name="amount_total" operator="+"/>
-				</graph>
-			</field>
-		</record>
+        <record model="ir.ui.view" id="view_invoice_graph">
+            <field name="name">account.invoice.graph</field>
+            <field name="model">account.invoice</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Invoices" type="bar">
+                    <field name="partner_id"/>
+                    <field name="amount_total" operator="+"/>
+                </graph>
+            </field>
+        </record>
         <record id="view_invoice_line_tree" model="ir.ui.view">
             <field name="name">account.invoice.line.tree</field>
             <field name="model">account.invoice.line</field>
@@ -209,7 +209,16 @@
                             <field colspan="4" name="comment" nolabel="1"/>
                         </page>
                         <page string="Payments">
-							<field name="move_lines" colspan="4"/>
+							<field name="payment_ids" colspan="4" nolabel="1">
+								<tree string="Payments">
+									<field name="date"/>
+									<field name="ref"/>
+									<field name="name"/>
+									<field name="journal_id"/>
+									<field name="debit"/>
+									<field name="credit"/>
+								</tree>
+							</field>
 						</page>
                     </notebook>
                 </form>
@@ -283,7 +292,16 @@
                             <field colspan="4" name="comment" nolabel="1"/>
                         </page>
                         <page string="Payments">
-							<field name="move_lines" colspan="4" nolabel="1"/>
+							<field name="payment_ids" colspan="4" nolabel="1">
+								<tree string="Payments">
+									<field name="date"/>
+									<field name="ref"/>
+									<field name="name"/>
+									<field name="journal_id"/>
+									<field name="debit"/>
+									<field name="credit"/>
+								</tree>
+							</field>
 						</page>
                     </notebook>
                 </form>

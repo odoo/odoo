@@ -30,7 +30,6 @@
 
 #import lot_overview
 import product_stock
-import product_location
 import lot_location
 import ups
 import picking

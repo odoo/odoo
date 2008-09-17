@@ -75,7 +75,7 @@ def search_entries(self, cr, uid, data, context):
     <field name="entries" colspan="4" height="300" width="800" nolabel="1"
         domain="[('id', 'in', [%s])]" %s/>
 </form>''' % (','.join([str(x) for x in line_ids]), ctx)
-    return {'entries': line_ids}
+    return {}
 
 def create_payment(self, cr, uid, data, context):
     line_ids= data['form']['entries'][0][2]
@@ -88,7 +88,7 @@ def create_payment(self, cr, uid, data, context):
     payment = order_obj.browse(cr, uid, data['id'],
             context=context)
     t = payment.mode and payment.mode.type.id or None
-    line2bank= pool.get('account.move.line').line2bank(cr, uid,
+    line2bank = pool.get('account.move.line').line2bank(cr, uid,
             line_ids, t, context)
 
     ## Finally populate the current payment with new lines:

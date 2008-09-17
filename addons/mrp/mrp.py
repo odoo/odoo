@@ -318,7 +318,7 @@ class mrp_production(osv.osv):
         'location_src_id': fields.many2one('stock.location', 'Raw Products Location', required=True),
         'location_dest_id': fields.many2one('stock.location', 'Finnished Products Location', required=True),
 
-        'date_planned': fields.date('Scheduled date', required=True),
+        'date_planned': fields.datetime('Scheduled date', required=True, select=1),
         'date_start': fields.datetime('Start Date'),
         'date_finnished': fields.datetime('End Date'),
 
@@ -337,7 +337,7 @@ class mrp_production(osv.osv):
     _defaults = {
         'priority': lambda *a: '1',
         'state': lambda *a: 'draft',
-        'date_planned': lambda *a: time.strftime('%Y-%m-%d'),
+        'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'product_qty':  lambda *a: 1.0,
         'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'mrp.production') or '/',
     }
@@ -664,8 +664,8 @@ class mrp_procurement(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'origin': fields.char('Origin', size=64),
         'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority', required=True),
-        'date_planned': fields.date('Scheduled date', required=True),
-        'date_close': fields.date('Date Closed'),
+        'date_planned': fields.datetime('Scheduled date', required=True),
+        'date_close': fields.datetime('Date Closed'),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_qty': fields.float('Quantity', required=True),
         'product_uom': fields.many2one('product.uom', 'Product UoM', required=True),
@@ -690,7 +690,7 @@ class mrp_procurement(osv.osv):
     _defaults = {
         'state': lambda *a: 'draft',
         'priority': lambda *a: '1',
-        'date_planned': lambda *a: time.strftime('%Y-%m-%d'),
+        'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'close_move': lambda *a: 0,
         'procure_method': lambda *a: 'make_to_order',
     }
@@ -872,7 +872,7 @@ class mrp_procurement(osv.osv):
         for procurement in self.browse(cr, uid, ids):
             res_id = procurement.move_id.id
             loc_id = procurement.location_id.id
-            newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d') - DateTime.RelativeDateTime(days=procurement.product_id.product_tmpl_id.produce_delay or 0.0)
+            newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S') - DateTime.RelativeDateTime(days=procurement.product_id.product_tmpl_id.produce_delay or 0.0)
             newdate = newdate - DateTime.RelativeDateTime(days=company.manufacturing_lead)
             produce_id = self.pool.get('mrp.production').create(cr, uid, {
                 'origin': procurement.origin,
@@ -912,7 +912,7 @@ class mrp_procurement(osv.osv):
 
             price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, False, {'uom': uom_id})[pricelist_id]
 
-            newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d') - DateTime.RelativeDateTime(days=procurement.product_id.product_tmpl_id.seller_delay or 0.0)
+            newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S') - DateTime.RelativeDateTime(days=procurement.product_id.product_tmpl_id.seller_delay or 0.0)
             newdate = newdate - DateTime.RelativeDateTime(days=company.po_lead)
             line = {
                 'name': procurement.product_id.name,
@@ -920,7 +920,7 @@ class mrp_procurement(osv.osv):
                 'product_id': procurement.product_id.id,
                 'product_uom': uom_id,
                 'price_unit': price,
-                'date_planned': newdate.strftime('%Y-%m-%d'),
+                'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
                 'taxes_id': [(6, 0, [x.id for x in procurement.product_id.product_tmpl_id.supplier_taxes_id])],
                 'move_dest_id': res_id,
             }

@@ -29,6 +29,13 @@
             <field eval="'ir.actions.wizard,%d'%wizard_price" name="value"/>
             <field eval="True" name="object"/>
         </record>
-        
+       
+	<wizard
+		string="Create Procurement"
+		model="product.product"
+		name="product.product.procurement"
+		keyword="client_action_multi"
+		id="product_procurement_wizard"/>
+
     </data>
 </openerp>

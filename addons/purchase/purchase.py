@@ -86,6 +86,18 @@ class purchase_order(osv.osv):
             res[id] = cur_obj.round(cr, uid, cur, untax.get(id, 0.0) + tax.get(id, 0.0))
         return res
 
+    def _set_minimum_planned_date(self, cr, uid, ids, name, value, arg, context):
+        if not value: return False
+        if type(ids)!=type([]):
+            ids=[ids]
+        for po in self.browse(cr, uid, ids, context):
+            cr.execute("""update purchase_order_line set
+                    date_planned=%s
+                where
+                    order_id=%d and
+                    (date_planned=%s or date_planned<%s)""", (value,po.id,po.minimum_planned_date,value))
+        return True
+
     def _minimum_planned_date(self, cr, uid, ids, field_name, arg, context):
         res={}
         purchase_obj=self.browse(cr, uid, ids, context=context)
@@ -166,7 +178,7 @@ class purchase_order(osv.osv):
         'invoiced':fields.boolean('Invoiced & Paid', readonly=True, select=True),
         'invoiced_rate': fields.function(_invoiced_rate, method=True, string='Invoiced', type='float'),
         'invoice_method': fields.selection([('manual','Manual'),('order','From order'),('picking','From picking')], 'Invoicing Control', required=True),
-        'minimum_planned_date':fields.function(_minimum_planned_date, method=True,store=True, string='Planned Date', type='date', help="This is computed as the minimum scheduled date of all purchase order lines' products."),
+        'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, method=True,store=True, string='Planned Date', type='datetime', help="This is computed as the minimum scheduled date of all purchase order lines' products."),
         'amount_untaxed': fields.function(_amount_untaxed, method=True, string='Untaxed Amount'),
         'amount_tax': fields.function(_amount_tax, method=True, string='Taxes'),
         'amount_total': fields.function(_amount_total, method=True, string='Total'),
@@ -370,7 +382,7 @@ class purchase_order_line(osv.osv):
     _columns = {
         'name': fields.char('Description', size=64, required=True),
         'product_qty': fields.float('Quantity', required=True, digits=(16,2)),
-        'date_planned': fields.date('Scheduled date', required=True),
+        'date_planned': fields.datetime('Scheduled date', required=True),
         'taxes_id': fields.many2many('account.tax', 'purchase_order_taxe', 'ord_id', 'tax_id', 'Taxes'),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok','=',True)], change_default=True),
@@ -416,7 +428,7 @@ class purchase_order_line(osv.osv):
                     'uom': uom,
                     'date': date_order,
                     })[pricelist]
-        dt = (DateTime.now() + DateTime.RelativeDateTime(days=prod['seller_delay'] or 0.0)).strftime('%Y-%m-%d')
+        dt = (DateTime.now() + DateTime.RelativeDateTime(days=prod['seller_delay'] or 0.0)).strftime('%Y-%m-%d %H:%M:%S')
         prod_name = self.pool.get('product.product').name_get(cr, uid, [product], context=context)[0][1]
 
         res = {'value': {'price_unit': price, 'name':prod_name, 'taxes_id':prod['supplier_taxes_id'], 'date_planned': dt,'notes':prod['description_purchase'], 'product_uom': uom}}

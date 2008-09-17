@@ -112,12 +112,14 @@
                         <newline/>
                         <field name="job_ids" mode="tree, form" colspan="4">
                             <tree string="Contacts" editable="top">
+	                            <field name="sequence_partner"/>
                                 <field name="contact_id"/>
                                 <field name="function_id"/>
                                 <field name="phone"/>
                                 <field name="email"/>
                             </tree>
                             <form string="Contacts">
+	                            <field name="sequence_partner"/>
                                 <field name="contact_id"/>
                                 <field name="function_id"/>
                                 <field name="phone"/>
@@ -277,6 +279,7 @@
                         <field name="email" select="2"/>
                         <field name="phone" select="2"/>
                         <field name="sequence_contact" select="2"/>
+                        <field name="sequence_partner" select="2"/>
                     </page>
                 </notebook>
             </form>

@@ -43,8 +43,8 @@
         </record>
         <menuitem id="menu_shop_configuration" name="Configuration" parent="sale.menu_sale_root" sequence="1"/>
         <menuitem action="action_shop_form" id="menu_action_shop_form" parent="sale.menu_shop_configuration"/>
-		
-		<record id="view_sale_order_calendar" model="ir.ui.view">
+        
+        <record id="view_sale_order_calendar" model="ir.ui.view">
             <field name="name">sale.order.calendar</field>
             <field name="model">sale.order</field>
             <field name="type">calendar</field>
@@ -55,17 +55,17 @@
                 </calendar>
             </field>
         </record>
-		<record model="ir.ui.view" id="view_sale_order_graph">
-			<field name="name">sale.order.graph</field>
-			<field name="model">sale.order</field>
-			<field name="type">graph</field>
-			<field name="arch" type="xml">
-				<graph string="Sales orders" type="bar">
-					<field name="partner_id"/>
-					<field name="amount_total" operator="+"/>
-				</graph>
-			</field>
-		</record>
+        <record model="ir.ui.view" id="view_sale_order_graph">
+            <field name="name">sale.order.graph</field>
+            <field name="model">sale.order</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Sales orders" type="bar">
+                    <field name="partner_id"/>
+                    <field name="amount_total" operator="+"/>
+                </graph>
+            </field>
+        </record>
 
         <record id="view_order_tree" model="ir.ui.view">
             <field name="name">sale.order.tree</field>
@@ -91,14 +91,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sales order">
-					<group col="6" colspan="4">
-						<field name="name" select="1"/>
-						<field name="client_order_ref"/>
-						<field name="shipped" select="2"/>
-						<field name="shop_id" on_change="onchange_shop_id(shop_id)" select="2"/>
-						<field name="date_order" select="1"/>
-						<field name="invoiced" select="2"/>
-					</group>
+                    <group col="6" colspan="4">
+                        <field name="name" select="1"/>
+                        <field name="client_order_ref"/>
+                        <field name="shipped" select="2"/>
+                        <field name="shop_id" on_change="onchange_shop_id(shop_id)" select="2"/>
+                        <field name="date_order" select="1"/>
+                        <field name="invoiced" select="2"/>
+                    </group>
                     <notebook colspan="4">
                         <page string="Sale Order">
 
@@ -157,11 +157,11 @@
                                         <page string="Notes">
                                             <field colspan="4" name="notes" nolabel="1"/>
                                         </page>
-                                        <page string="History">
+                                        <page string="History" groups="base.group_extended">
                                             <separator colspan="4" string="Invoice Lines"/>
                                             <field colspan="4" name="invoice_lines" nolabel="1"/>
                                             <separator colspan="4" string="Stock Moves"/>
-                                            <field colspan="4" name="move_ids" nolabel="1"/>
+                                            <field colspan="4" name="move_ids" nolabel="1" widget="many2many"/>
                                         </page>
                                     </notebook>
                                 </form>
@@ -204,7 +204,7 @@
                             <field name="order_policy"/>
                             <field groups="base.group_extended" name="origin"/>
                             <field groups="base.group_extended" name="invoice_quantity" attrs="{'readonly':[('order_policy','=','picking')]}"/>
-							<field name="payment_term"/>
+                            <field name="payment_term"/>
                             <separator colspan="4" string="Notes"/>
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>

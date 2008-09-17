@@ -69,7 +69,7 @@
         "mrp_view.xml", 
         "mrp_wizard.xml", 
         "mrp_report.xml",
-        "company_view.xml"
+        "company_view.xml",
     ],
     "active": False,
     "installable": True
