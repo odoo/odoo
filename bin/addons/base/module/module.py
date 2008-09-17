@@ -317,8 +317,24 @@ class module(osv.osv):
     def button_uninstall_cancel(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'installed'})
         return True
+
     def button_upgrade(self, cr, uid, ids, context=None):
-        return self.state_update(cr, uid, ids, 'to upgrade', ['installed'], context)
+        depobj = self.pool.get('ir.module.module.dependency')
+        todo = self.browse(cr, uid, ids, context=context)
+        i = 0
+        while i<len(todo):
+            mod = todo[i]
+            i += 1
+            if mod.state not in ('installed','to upgrade'):
+                raise orm.except_orm(_('Error'),
+                        _("Can not upgrade module '%s'. It is not installed.") % (mod.name,))
+            iids = depobj.search(cr, uid, [('name', '=', mod.name)], context=context)
+            for dep in depobj.browse(cr, uid, iids, context=context):
+                if dep.module_id.state=='installed':
+                    todo.append(dep.module_id)
+        self.write(cr,uid, map(lambda x: x.id, todo), {'state':'to upgrade'}, context=context)
+        return True
+
     def button_upgrade_cancel(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'installed'})
         return True
