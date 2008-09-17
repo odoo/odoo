@@ -59,6 +59,7 @@ class process_process(osv.osv):
             data['menu'] = (node.menu_id or None) and node.menu_id.name
             data['model'] = (node.model_id or None) and node.model_id.model
             data['kind'] = node.kind
+            data['notes'] = node.note
             data['active'] = 0
 
             if node.kind == "state" and node.model_id and node.model_id.model == res_model:
@@ -83,10 +84,13 @@ class process_process(osv.osv):
                 data['name'] = tr.name
                 data['source'] = tr.source_node_id.id
                 data['target'] = tr.target_node_id.id
+                data['notes'] = tr.note
                 data['buttons'] = buttons = []
                 for b in tr.action_ids:
                     button = {}
                     button['name'] = b.name
+                    button['state'] = b.state
+                    button['action'] = b.action
                     buttons.append(button)
                 data['roles'] = roles = []
                 for r in tr.transition_ids:
