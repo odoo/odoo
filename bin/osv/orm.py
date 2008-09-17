@@ -1125,7 +1125,7 @@ class orm_memory(orm_template):
                 for f in fields_to_read:
                     if id in self.datas:
                         r[f] = self.datas[id].get(f, False)
-                        if r[f] and isinstance(self._columns[f], fields.binary) and context.get('get_binary_size', False):
+                        if r[f] and isinstance(self._columns[f], fields.binary) and context.get('get_binary_size', True):
                             r[f] = len(r[f])
                 result.append(r)
                 if id in self.datas:
