@@ -3,6 +3,18 @@
     <data>
 
         <!-- View used in the wizard -->
+        <record id="view_move_line_form" model="ir.ui.view">
+            <field name="name">account.move.line.form.inherit</field>
+            <field name="model">account.move.line</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_move_line_form"/>
+            <field name="arch" type="xml">
+                <field name="reconcile_partial_id" position="after">
+                    <field name="amount_to_pay" select="2"/>
+                </field>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="view_move_line_tree_wiz">
             <field name="name">account.move.line.tree</field>
             <field name="model">account.move.line</field>
@@ -17,6 +29,7 @@
                     <field name="date"/>
                     <field name="debit" sum="Total debit"/>
                     <field name="credit" sum="Total credit"/>
+                    <field name="amount_to_pay"/>
                     <field name="amount_currency"/>
                     <field name="currency_id"/>
                 </tree>
@@ -88,8 +101,7 @@
                         <form string="Payment Line">
                             <notebook>
                                 <page string="Payment">
-                                    <field name="move_line_id" on_change="onchange_move_line(move_line_id,parent.mode,parent.date_prefered,parent.date_planned,currency,company_currency)" select="1"/>
-                                    <!--domain="[('reconcile_id','=', False), ('credit', '>',0),('amount_to_pay','>',0)] "/>-->
+                                    <field name="move_line_id" on_change="onchange_move_line(move_line_id,parent.mode,parent.date_prefered,parent.date_planned,currency,company_currency)" select="1" domain="[('reconcile_id','=', False), ('credit', '>',0),('amount_to_pay','>',0)] "/>
                                     <separator colspan="4" string="Transaction Information"/>
                                     <field name="date"/>
                                     <group colspan="2">
@@ -102,7 +114,6 @@
                                     <separator colspan="2" string="Desitination Account"/>
                                     <field colspan="2" name="info_owner" nolabel="1"/>
                                     <field colspan="2" name="info_partner" nolabel="1"/>
-
                                     <field colspan="4" name="communication"/>
                                     <field colspan="4" name="communication2"/>
                                     <field name="name"/>
@@ -115,34 +126,23 @@
                                         <field name="amount"/>
                                         <field name="company_currency" nolabel="1"/>
                                     </group>
-                                    <!--<field name="partner_payable"/>-->
                                     <separator colspan="4" string="Entry Information"/>
                                     <field name="create_date" readonly="1"/>
                                     <field name="ml_maturity_date"/>
                                     <field name="ml_inv_ref"/>
-                                    <!--<field name="to_pay_currency"/>
-                                    <field name="to_pay"/>-->
                                 </page>
                             </notebook>
                         </form>
-                        <tree string="Payment Line"> <!-- editable="bottom"  colors="red:to_pay_currency&lt;amount_currency" -->
+                        <tree string="Payment Line"> 
                             <field name="ml_inv_ref" />
                             <field name="partner_id" select="1"/>
-                            <field name="bank_id" domain="[('partner_id', '=', partner_id)]" required="1"/>
+                            <field name="bank_id" domain="[('partner_id', '=', partner_id)]"/>
                             <field name="ml_maturity_date"/>
                             <field name="date"/>
-                            <!--<field name="value_date"/>-->
-                            <!--<field name="amount" sum="Amount Total"/>-->
-                            <field name="amount_currency" sum="Currency Amount Total" select="2" string="Amount"/>
+                            <field name="amount_currency" select="2" string="Amount"/>
                             <field name="currency"/>
-                            <!--<field name="to_pay_currency"/>
-                            <field name="to_pay"/>-->
-                            <!--domain="[('partner_id','=',partner_id),('reconcile_id', '=', False), ('credit', '>', 0),('amount_to_pay','>',0)]"/>-->
                             <field name="name"/>
-                            <!--<field name="communication"/>
-                            <field name="state"/>
-                            <field name="date"/>-->
-                            <!-- <field invisible="1" name="to_pay_currency"/>-->
+                            <field name="amount" sum="Total in Company Currency" invisible="1"/>
                         </tree>
                     </field>
                     <field name="date_created" select="2"/>
@@ -167,7 +167,6 @@
                 <tree string="Payment order">
                     <field name="reference"/>
                     <field name="mode"/>
-                    <!--<field name="line_ids"/>-->
                     <field name="date_planned"/>
                     <field name="date_created" select="2"/>
                     <field name="date_done" select="2"/>
@@ -212,9 +211,7 @@
                     <notebook>
                         <page string="Payment">
                             <field name="order_id" select="1"/>
-                            <!--<field name="reference" />-->
-                            <field name="move_line_id" on_change="onchange_move_line(move_line_id,parent.mode,currency,company_currency)" select="1"/>
-                            <!--domain="[('reconcile_id','=', False), ('credit', '>',0),('amount_to_pay','>',0)] "/>-->
+                            <field name="move_line_id" on_change="onchange_move_line(move_line_id,parent.mode, currency, company_currency)" select="1" domain="[('reconcile_id','=', False), ('credit', '>',0),('amount_to_pay','>',0)] "/>
                             <separator colspan="4" string="Transaction Information"/>
                             <field name="date"/>
                             <group colspan="2">
@@ -222,7 +219,7 @@
                                 <field name="currency" nolabel="1"/>
                             </group>
                             <field name="partner_id" on_change="onchange_partner(partner_id)" select="1"/>
-                            <field domain="[('partner_id','=',partner_id)]" name="bank_id" required="1"/>
+                            <field domain="[('partner_id','=',partner_id)]" name="bank_id"/>
                             <separator colspan="2" string="Owner Account"/>
                             <separator colspan="2" string="Desitination Account"/>
                             <field colspan="2" name="info_owner" nolabel="1"/>
@@ -238,18 +235,12 @@
                             <separator colspan="4" string="General Information"/>
                             <group colspan="2">
                                 <field name="amount" select="1"/>
-                            <!--<field name="currency"/>-->
                                 <field name="company_currency" nolabel="1"/>
                             </group>
-                            <!--<field name="partner_payable"/>-->
                             <separator colspan="4" string="Entry Information"/>
                             <field name="create_date"/>
                             <field name="ml_maturity_date"/>
                             <field name="ml_inv_ref"/>
-
-                            <!--<field name="due_date"/>-->
-                            <!--<field name="to_pay_currency"/>
-                            <field name="to_pay"/>-->
                         </page>
                     </notebook>
                 </form>
@@ -261,30 +252,19 @@
             <field name="type">tree</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Payment Line"> <!-- editable="bottom"  colors="red:to_pay_currency&lt;amount_currency" -->
+                <tree string="Payment Line"> 
                     <field name="order_id"/>
                     <field name="ml_inv_ref" />
                     <field name="ml_maturity_date"/>
-                    <!--<field name="value_date"/>-->
                     <field name="partner_id" select="1"/>
                     <field name="amount" sum="Amount Total"/>
                     <field name="amount_currency" sum="Currency Amount Total" select="2" />
                     <field name="currency"/>
-                    <field name="bank_id" domain="[('partner_id', '=', partner_id)]" required="1"/>
-                    <!--<field name="to_pay_currency"/>
-                    <field name="to_pay"/>-->
-
+                    <field name="bank_id" domain="[('partner_id', '=', partner_id)]"/>
                     <field name="move_line_id" on_change="onchange_move_line(move_line_id,parent.mode)"/>
-                    <!--domain="[('partner_id','=',partner_id),('reconcile_id', '=', False), ('credit', '>', 0),('amount_to_pay','>',0)]"/>-->
                     <field domain="[('partner_id', '=', partner_id)]" name="bank_id"/>
-                    <!--<field name="partner_payable"/>-->
                     <field name="create_date"/>
                     <field name="name"/>
-                    <!--<field name="communication"/>
-                    <field name="state"/>
-                    <field name="date"/>-->
-                    <!-- <field invisible="1" name="to_pay_currency"/>-->
-
                 </tree>
             </field>
         </record>

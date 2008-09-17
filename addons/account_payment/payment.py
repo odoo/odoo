@@ -391,8 +391,8 @@ class payment_line(osv.osv):
 #           help='Amount to pay in the partner currency'),
 #       'currency': fields.function(_currency, string='Currency',
 #           method=True, type='many2one', obj='res.currency'),
-        'currency': fields.many2one('res.currency','Currency',required=True),
-        'company_currency': fields.many2one('res.currency','Currency',readonly=True),
+        'currency': fields.many2one('res.currency','Partner Currency',required=True),
+        'company_currency': fields.many2one('res.currency','Company Currency',readonly=True),
         'bank_id': fields.many2one('res.partner.bank', 'Destination Bank account'),
         'order_id': fields.many2one('payment.order', 'Order', required=True,
             ondelete='cascade', select=True),
@@ -432,17 +432,23 @@ class payment_line(osv.osv):
 
     def onchange_move_line(self,cr,uid,ids,move_line_id,payment_type,date_prefered,date_planned,currency=False,company_currency=False,context=None):
         data={}
-        data['amount_currency']=data['currency']=data['communication']=data['partner_id']=data['reference']=data['date_created']=data['bank_id']=data['amount']=False
+
+        data['amount_currency']=data['communication']=data['partner_id']=data['reference']=data['date_created']=data['bank_id']=data['amount']=False
+
         if move_line_id:
             line = self.pool.get('account.move.line').browse(cr,uid,move_line_id)
             data['amount_currency']=line.amount_to_pay
-            res = self.onchange_amount(cr, uid, ids, data['amount_currency'], currency, company_currency, context)
+            res = self.onchange_amount(cr, uid, ids, data['amount_currency'], currency, company_currency, 
             if res:
                 data['amount'] = res['value']['amount']
             data['partner_id']=line.partner_id.id
-            data['currency']=line.currency_id and line.currency_id.id or False
-            if not data['currency']:
-                data['currency']=line.invoice and line.invoice.currency_id.id or False
+            temp = line.currency_id and line.currency_id.id or False
+            if not temp:
+                if line.invoice:
+                    data['currency'] = line.invoice.currency_id.id
+            else:
+                data['currency'] = temp
+
             # calling onchange of partner and updating data dictionary
             temp_dict=self.onchange_partner(cr,uid,ids,line.partner_id.id,payment_type)
             data.update(temp_dict['value'])
