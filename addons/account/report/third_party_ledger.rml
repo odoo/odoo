@@ -86,13 +86,13 @@
     </initialize>
     <paraStyle name="P1" fontName="Helvetica" fontSize="20.0" leading="25" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P2" fontName="Helvetica" fontSize="10.0" leading="13" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P3" fontName="Helvetica" fontSize="7.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P4" fontName="Helvetica" fontSize="7.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P5" fontName="Helvetica" fontSize="7.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P3" fontName="Helvetica" fontSize="7.5" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P4" fontName="Helvetica" fontSize="7.5" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P5" fontName="Helvetica" fontSize="7.5" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P6" fontName="Helvetica" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P7" fontName="Helvetica" fontSize="8.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P8" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="Balance" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P8" fontName="Helvetica-Bold" fontSize="8.5" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Balance" fontName="Helvetica-Bold" fontSize="8.5" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P9" fontName="Helvetica-Bold" alignment="CENTER" fontSize="14.5" leftIndent="-5.0"/>
     <paraStyle name="P9a" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P9c" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -103,7 +103,7 @@
     <paraStyle name="P12" fontName="Helvetica" fontSize="8.0" leading="12" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P13" fontName="Helvetica" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P14" fontName="Helvetica-Bold" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P15" rightIndent="17.0" leftIndent="-0.0" fontName="Helvetica" fontSize="7.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P15" rightIndent="17.0" leftIndent="-0.0" fontName="Helvetica" fontSize="7.5" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P16" fontName="Helvetica" fontSize="8.0" leading="12" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Standard" fontName="Helvetica"/>
     <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -120,7 +120,7 @@
 </para>
      <para>
     	<font color="white">[[ data['form']['page_split'] == True or removeParentNode('para') ]] </font>
-    	<font color="white">[[ repeatIn(objects, 'p') ]]</font>
+    	<font color="white">[[ repeatIn(objects, 'p') ]] [[ setLang(p.partner_id.lang) ]]</font>
     </para>
    <blockTable colWidths="45.0,37.0,120.0,135.0,69.0,72.0,63.0"  style="tbl_heading">
   	 <tr>
@@ -169,7 +169,7 @@
 
  		<para >
 	    	
-       		<font color="white">[[ repeatIn(objects, 'p') ]]</font>
+       		<font color="white">[[ repeatIn(objects, 'p') ]] </font>
     	</para>
 	   	
     	<blockTable colWidths="200.0,137.0,69.0,72.0,63.0"  repeatRows="1" style="Table5">

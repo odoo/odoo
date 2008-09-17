@@ -63,28 +63,20 @@ class third_party_ledger(report_sxw.rml_parse):
 	#
 	def transform_period_into_date_array(self,data):
 		## Get All Period Date
-		
 		if not data['form']['periods'][0][2] :
 			periods_id =  self.pool.get('account.period').search(self.cr, self.uid, [('fiscalyear_id','=',data['form']['fiscalyear'])])
-			
 		else:
 			periods_id = data['form']['periods'][0][2]
-			
 		date_array = [] 
 		for period_id in periods_id:
 			period_obj = self.pool.get('account.period').browse(self.cr, self.uid, period_id)
 			date_array = date_array + self.date_range(period_obj.date_start,period_obj.date_stop)
-			
 		self.date_lst = date_array
-		print"self.date_lst[len(self.date_lst)-1]",self.date_lst[len(self.date_lst)-1]
 		self.date_lst.sort()
-		
 			
 	def transform_date_into_date_array(self,data):
-		
 		return_array = self.date_range(data['form']['date1'],data['form']['date2'])
 		self.date_lst = return_array
-		
 		self.date_lst.sort()
 
 	def comma_me(self,amount):
@@ -96,7 +88,6 @@ class third_party_ledger(report_sxw.rml_parse):
 		     return ' '
 		orig = amount
 		new = re.sub("^(-?\d+)(\d{3})", "\g<1>'\g<2>", amount)
-		
 		if orig == new:
 			return new
 		else:
@@ -108,17 +99,12 @@ class third_party_ledger(report_sxw.rml_parse):
 		return string_map
 	
 	def preprocess(self, objects, data, ids):
-		print"====objects====",objects
-		for o in objects:
-			print o.id
 		PARTNER_REQUEST = ''
 		if (data['model'] == 'res.partner'):
 			print"data['model']",data['model']
 			## Si on imprime depuis les partenaires
 			if ids:
-				print"ids",ids
 				PARTNER_REQUEST =  "AND line.partner_id IN (" + ','.join(map(str, ids)) + ")"
-				print"PARTNER_REQUEST",PARTNER_REQUEST
 		# Transformation des date
 		#
 		#
@@ -147,11 +133,8 @@ class third_party_ledger(report_sxw.rml_parse):
 				" " + ACCOUNT_TYPE + " " \
 				"AND a.active", (data['form']['company_id'],))
 		self.account_ids = ','.join([str(a) for (a,) in self.cr.fetchall()])
-
 		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
 		partner_to_use = []
-		print"self.account_ids",self.account_ids
-		
 		if data['form']['soldeinit'] :
 			self.cr.execute(
 				"SELECT DISTINCT line.partner_id " \
@@ -178,26 +161,18 @@ class third_party_ledger(report_sxw.rml_parse):
 					"AND account.active " ,
 				(data['form']['company_id']))
 		res = self.cr.dictfetchall()
-		print"===res===",res
 		for res_line in res:
 		    partner_to_use.append(res_line['partner_id'])
-		    print"====partner_to_use====",partner_to_use
 		res = self.cr.dictfetchall()
 		
 		for res_line in res:
 			    partner_to_use.append(res_line['partner_id'])
-			    print"====partner_to_use====",partner_to_use
-
-
 		new_ids = partner_to_use
-		print"new_ids",new_ids
 		self.partner_ids = ','.join(map(str, new_ids))
 		objects = self.pool.get('res.partner').browse(self.cr, self.uid, new_ids)
-		print"objects",objects
 		super(third_party_ledger, self).preprocess(objects, data, new_ids)
 
 	def lines(self, partner,data):
-		print"====partner====",partner
 		account_move_line_obj = pooler.get_pool(self.cr.dbname).get('account.move.line')
 		full_account = []
 		if data['form']['reconcil'] :
