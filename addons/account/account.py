@@ -1762,6 +1762,11 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'code_digits':fields.integer('# of Digits',required=True,help="No. of Digits to use for account code"),
     }
 
+    _defaults = {
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr,uid,[uid],c)[0].company_id.id,
+        'code_digits': lambda *a:6,
+    }
+
     def action_create(self, cr, uid, ids, context=None):
         obj_multi = self.browse(cr,uid,ids[0])
         obj_acc = self.pool.get('account.account')
@@ -1887,9 +1892,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         vals_journal['sequence_id']=seq_id
 
         #Sales Journal
-        vals_journal['name'] = 'Sales Journal '+ str(seq_code)
+        vals_journal['name'] = _('Sales Journal')
         vals_journal['type'] = 'sale'
-        vals_journal['code'] = 'SAJ' + str(seq_code)
+        vals_journal['code'] = _('SAJ')
 
         if obj_multi.chart_template_id.property_account_receivable:
             vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_receivable.id]
@@ -1898,9 +1903,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_journal.create(cr,uid,vals_journal)
 
         # Purchase Journal
-        vals_journal['name']='Purchase Journal '+ str(seq_code)
+        vals_journal['name']=_('Purchase Journal')
         vals_journal['type']='purchase'
-        vals_journal['code']='EXJ' + str(seq_code)
+        vals_journal['code']=_('EXJ')
 
         if obj_multi.chart_template_id.property_account_payable:
             vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_payable.id]
@@ -1913,19 +1918,15 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         view_id_cur = self.pool.get('account.journal.view').search(cr,uid,[('name','=','Multi-Currency Cash Journal View')])[0]
         ref_acc_bank = obj_multi.chart_template_id.bank_account_view_id
 
-        current_num = 0
+        current_num = 1
         for line in obj_multi.bank_accounts_id:
             #create the account_account for this bank journal
             tmp = self.pool.get('res.partner.bank').name_get(cr, uid, [line.acc_no.id])[0][1]
             dig = obj_multi.code_digits
-            code_main = len(ref_acc_bank.code+str(current_num))
-            code_acc = ref_acc_bank.code+str(current_num)
-            if code_main<=dig:
-                code_acc=str(code_acc) + (str('0'*(dig-code_main)))
             vals={
                 'name': line.acc_no.bank and line.acc_no.bank.name+' '+tmp or tmp,
                 'currency_id': line.currency_id and line.currency_id.id or False,
-                'code': ref_acc_bank.code+str(current_num),
+                'code': str(int(ref_acc_bank.code.ljust(dig,'0')) + current_num),
                 'type': 'other',
                 'user_type': account_template.user_type and account_template.user_type.id or False,
                 'reconcile': True,
@@ -1935,8 +1936,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             acc_cash_id  = obj_acc.create(cr,uid,vals)
 
             #create the bank journal
-            vals_journal['name']='Bank Journal '+ str(current_num)
-            vals_journal['code']='BNK' + str(current_num)
+            vals_journal['name']= vals['name']
+            vals_journal['code']= _('BNK') + str(current_num)
             vals_journal['sequence_id'] = seq_id
             vals_journal['type'] = 'cash'
             if line.currency_id:
