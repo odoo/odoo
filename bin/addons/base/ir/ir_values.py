@@ -144,7 +144,7 @@ class ir_values(osv.osv):
                 m,res_id = m
             else:
                 res_id=False
-            
+
             where1 = ['key=%s','model=%s']
             where2 = [key,str(m)]
             where_opt = []
@@ -171,7 +171,6 @@ class ir_values(osv.osv):
 
 #           if not without_user:
             where_opt.append('user_id=%d' % (uid,))
-
 
             result = []
             ok = True
@@ -200,7 +199,7 @@ class ir_values(osv.osv):
                     'and (company_id is null or company_id = %d) '\
                 'ORDER BY user_id', (cid,))
         result = cr.fetchall()
-                        
+
         def _result_get(x, keys):
             if x[1] in keys:
                 return False
@@ -233,20 +232,20 @@ class ir_values(osv.osv):
         res = filter(bool, map(lambda x: _result_get(x, keys), list(result)))
         res2 = res[:]
         for r in res:
-            if type(r) == type([]):
-                if r[2]['type'] == 'ir.actions.report.xml' or r[2]['type'] == 'ir.actions.report.xml':
-                    print 
-                    if r[2].has_key('groups_id'):
-                        groups = r[2]['groups_id']
-                        if len(groups) > 0:
-                            group_ids = ','.join([ str(x) for x in r[2]['groups_id']])
-                            cr.execute("select count(*) from res_groups_users_rel where gid in (%s) and uid='%s'" % (group_ids, uid))
-                            gr_ids = cr.fetchall()
-                            if not gr_ids[0][0] > 0:
-                                res2.remove(r)
-                    else:
-                        #raise osv.except_osv('Error !','You have not permission to perform operation !!!')
-                        res2.remove(r)
+            if r[2]['type'] in ('ir.actions.report.xml','ir.actions.act_window','ir.actions.wizard'):
+                if r[2].has_key('groups_id'):
+                    groups = r[2]['groups_id']
+                    if len(groups) > 0:
+                        group_ids = ','.join([ str(x) for x in r[2]['groups_id']])
+                        cr.execute("select count(*) from res_groups_users_rel where gid in (%s) and uid='%s'" % (group_ids, uid))
+                        gr_ids = cr.fetchall()
+                        if not gr_ids[0][0] > 0:
+                            res2.remove(r)
+                        if r[1]=='Menuitem' and not res2:
+                              raise osv.except_osv('Error !','You do not have the permission to perform this operation !!!')
+#                else:
+#                    #raise osv.except_osv('Error !','You have not permission to perform operation !!!')
+#                    res2.remove(r)
         return res2
 ir_values()
 
