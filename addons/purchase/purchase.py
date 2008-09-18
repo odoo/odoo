@@ -411,7 +411,7 @@ class purchase_order_line(osv.osv):
         if not pricelist:
             raise osv.except_osv(_('No Pricelist !'), _('You have to select a pricelist in the purchase form !\nPlease set one before choosing a product.'))
         if not product:
-            return {'value': {'price_unit': 0.0, 'name':'','notes':''}, 'domain':{'product_uom':[]}}
+            return {'value': {'price_unit': 0.0, 'name':'','notes':'', 'product_uom' : False}, 'domain':{'product_uom':[]}}
         lang=False
         if partner_id:
             lang=self.pool.get('res.partner').read(cr, uid, [partner_id])[0]['lang']

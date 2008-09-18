@@ -1,9 +1,7 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
-#
-# $Id$
+# Copyright (c) 2006 TINY SPRL. (http://tiny.be) All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -28,18 +26,17 @@
 #
 ##############################################################################
 
-import stock_traceability
-import wizard_partial_picking
-import wizard_picking_make
-import wizard_replacement
-import wizard_return
-import wizard_split_lot_line
-import wizard_track_line
-import wizard_ups
-import wizard_invoice_onshipping
-import wizard_move_by_location
-import wizard_inventory
-import inventory_merge_zero
-import inventory_merge
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+import time
+from report import report_sxw
+from osv import osv
+import pooler
 
+class order(report_sxw.rml_parse):
+    def __init__(self, cr, uid, name, context):
+        super(order, self).__init__(cr, uid, name, context)
+        self.localcontext.update({
+            'time': time,
+        })
+
+
+report_sxw.report_sxw('report.mrp.production.order','mrp.production','addons/mrp/report/order.rml',parser=order)

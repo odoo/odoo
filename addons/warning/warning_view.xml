@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+         <record id="view_partner_warning_form" model="ir.ui.view">
+            <field name="name">res.partner.warning.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <notebook>
+                    <page string="Messages" position="inside">
+                        <newline/>
+                            <field name="sale_warn"/>
+                            <field name="sale_warn_msg"/>
+                             <field name="purchase_warn"/>
+                            <field name="purchase_warn_msg"/>
+                             <field name="picking_warn"/>
+                            <field name="picking_warn_msg"/>
+                             <field name="invoice_warn"/>
+                            <field name="invoice_warn_msg"/>
+                </page>
+                </notebook>
+            </field>
+        </record>
+        
+        
+        <record id="product_warning_form_view" model="ir.ui.view">
+            <field name="name">product.warning.form.inherit</field>
+            <field name="model">product.product</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Messages">
+                    	 <field name="sale_line_warn"/>
+                         <field name="sale_line_warn_msg"/>
+                         <field name="purchase_line_warn"/>
+                         <field name="purchase_line_warn_msg"/>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+        
+    </data>
+</openerp>

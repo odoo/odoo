@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2004-2008 TINY SPRL. (http://tiny.be) All Rights Reserved.
+# Copyright (c) 2004-2008 Tiny SPRL (http://tiny.be) All Rights Reserved.
 #
 # $Id$
 #
@@ -25,21 +25,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-#
-##############################################################################
+###############################################################################
+{
+    "name":"Module for Warnings form onchange Event",
+    "version":"1.0",
+    "author":"Tiny",
+    "category":"Tools",
+    "depends":["base","sale"],
+    "demo_xml":[],
+    "update_xml":[
+        "warning_view.xml"],
+    "description": "Module for Warnings form onchange Event.",
+    "active":False,
+    "installable":True,
+}
 
-import stock_traceability
-import wizard_partial_picking
-import wizard_picking_make
-import wizard_replacement
-import wizard_return
-import wizard_split_lot_line
-import wizard_track_line
-import wizard_ups
-import wizard_invoice_onshipping
-import wizard_move_by_location
-import wizard_inventory
-import inventory_merge_zero
-import inventory_merge
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

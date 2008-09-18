@@ -28,18 +28,7 @@
 #
 ##############################################################################
 
-import stock_traceability
-import wizard_partial_picking
-import wizard_picking_make
-import wizard_replacement
-import wizard_return
-import wizard_split_lot_line
-import wizard_track_line
-import wizard_ups
-import wizard_invoice_onshipping
-import wizard_move_by_location
-import wizard_inventory
-import inventory_merge_zero
-import inventory_merge
+import warning
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

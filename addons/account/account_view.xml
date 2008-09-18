@@ -1352,6 +1352,35 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
+        
+         <record id="view_config_charts_form" model="ir.ui.view">
+            <field name="name">Select Charts of Account</field>
+            <field name="model">account.config.charts</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Select Charts of Account">
+                	<separator colspan="2" string="Install Charts of Account"/>
+                	<newline/>
+                    <field name="charts"/>
+                    <newline/>
+                    <separator string="" colspan="2"/>
+                    <newline/>
+                    <group col="2" colspan="2">
+                        <button icon="gtk-cancel" special="cancel" string="Skip Step" name="action_cancel" type="object"/>
+                        <button icon="gtk-ok" name="action_create" string="Install" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_config_charts_form" model="ir.actions.act_window">
+            <field name="name">Install Charts of Account</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.config.charts</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
 
 
         <!-- register configuration wizard -->
@@ -1360,6 +1389,13 @@
             <field name="name">Define Fiscal Years</field>
             <field name="note">Define Fiscal Years</field>
             <field name="action_id" ref="action_config_fiscalyear_form"/>
+            <field name="state">open</field>
+        </record>
+        
+        <record id="config_charts" model="ir.module.module.configuration.step">
+            <field name="name">Select Charts of Account</field>
+            <field name="note">There are much more charts of accounts available on the OpenERP website.If you don't select one now, you'll be able to install another one through the Administration menu.</field>
+            <field name="action_id" ref="action_config_charts_form"/>
             <field name="state">open</field>
         </record>
 

@@ -497,7 +497,25 @@ class stock_picking(osv.osv):
             self.pool.get('stock.move').force_assign(cr, uid, move_ids)
             wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
         return True
-
+    
+    def draft_force_assign(self, cr, uid, ids, *args):
+        wf_service = netsvc.LocalService("workflow")
+        for pick in self.browse(cr, uid, ids):
+            wf_service.trg_validate(uid, 'stock.picking', pick.id,
+                'button_confirm', cr)
+            move_ids = [x.id for x in pick.move_lines]
+            self.pool.get('stock.move').force_assign(cr, uid, move_ids)
+            wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
+        return True
+    
+    def draft_validate(self, cr, uid, ids, *args):
+        wf_service = netsvc.LocalService("workflow")
+        self.draft_force_assign(cr, uid, ids)
+        for pick in self.browse(cr, uid, ids):
+            self.action_move(cr, uid, [pick.id])
+            wf_service.trg_validate(uid, 'stock.picking', pick.id , 'button_done', cr)
+        return True
+    
     def cancel_assign(self, cr, uid, ids, *args):
         wf_service = netsvc.LocalService("workflow")
         for pick in self.browse(cr, uid, ids):
@@ -607,7 +625,8 @@ class stock_picking(osv.osv):
         invoice_line_obj = self.pool.get('account.invoice.line')
         invoices_group = {}
         res = {}
-
+        sale_line_obj = self.pool.get('sale.order.line')
+        
         for picking in self.browse(cursor, user, ids, context=context):
             if picking.invoice_state != '2binvoiced':
                 continue
@@ -645,7 +664,51 @@ class stock_picking(osv.osv):
                         context=context)
                 invoices_group[partner.id] = invoice_id
             res[picking.id] = invoice_id
-
+            
+            sale_line_ids = sale_line_obj.search(cursor, user, [('order_id','=',picking.sale_id.id)])
+            sale_lines = sale_line_obj.browse(cursor, user, sale_line_ids, context=context)
+            
+            for sale_line in sale_lines:
+                if sale_line.product_id.type == 'service' and sale_line.invoiced == False:
+                    if group:
+                        name = picking.name + '-' + sale_line.name
+                    else:
+                        name = sale_line.name
+                    if type in ('out_invoice', 'out_refund'):
+                        account_id = sale_line.product_id.product_tmpl_id.\
+                                property_account_income.id
+                        if not account_id:
+                            account_id = sale_line.product_id.categ_id.\
+                                    property_account_income_categ.id
+                    else:
+                        account_id = sale_line.product_id.product_tmpl_id.\
+                                property_account_expense.id
+                        if not account_id:
+                            account_id = sale_line.product_id.categ_id.\
+                                    property_account_expense_categ.id
+                    price_unit = self._get_price_unit_invoice(cursor, user,
+                            sale_line, type)
+                    discount = self._get_discount_invoice(cursor, user, sale_line)
+                    tax_ids = self._get_taxes_invoice(cursor, user, sale_line, type)
+                    account_analytic_id = self._get_account_analytic_invoice(cursor,
+                            user, picking, sale_line)
+    
+                    invoice_line_id = invoice_line_obj.create(cursor, user, {
+                        'name': name,
+                        'invoice_id': invoice_id,
+                        'uos_id': sale_line.product_uos.id or sale_line.product_uom.id,
+                        'product_id': sale_line.product_id.id,
+                        'account_id': account_id,
+                        'price_unit': price_unit,
+                        'discount': discount,
+                        'quantity': sale_line.product_uos_qty,
+                        'invoice_line_tax_id': [(6, 0, tax_ids)],
+                        'account_analytic_id': account_analytic_id,
+                        }, context=context)
+                    sale_line_obj.write(cursor, user, [sale_line.id], {'invoiced':True,
+                        'invoice_lines': [(6, 0, [invoice_line_id])],
+                        })
+                    
             for move_line in picking.move_lines:
                 if group:
                     name = picking.name + '-' + move_line.name
