@@ -79,12 +79,14 @@ class process_process(osv.osv):
         for node in process.node_ids:
             data = {}
             data['name'] = node.name
-            data['menu'] = (node.menu_id or None) and node.menu_id.name
             data['model'] = (node.model_id or None) and node.model_id.model
             data['kind'] = node.kind
             data['notes'] = node.note
             data['active'] = 0
             data['gray'] = 0
+
+            if node.menu_id:
+                data['menu'] = {'name': node.menu_id.complete_name, 'id': node.menu_id.id}
             
             if node.kind == "state" and node.model_id and node.model_id.model == res_model:
                 try:
