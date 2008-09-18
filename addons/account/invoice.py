@@ -126,23 +126,19 @@ class account_invoice(osv.osv):
                 l = map(lambda x: x.id, ids_line)
                 res[id]=[x for x in l if x <> line.id]
         return res
-    
+
     def _compute_lines(self, cr, uid, ids, name, args, context={}):
         result = {}
-        print 'ICI 0'
         for invoice in self.browse(cr, uid, ids, context):
             moves = self.move_line_id_payment_get(cr, uid, [invoice.id])
             src = []
-            print 'ICI 1'
             lines = []
             for m in self.pool.get('account.move.line').browse(cr, uid, moves, context):
-                print 'ICI 2'
                 if m.reconcile_id:
                     lines += map(lambda x: x.id, m.reconcile_id.line_id)
                 elif m.reconcile_partial_id:
                     lines += map(lambda x: x.id, m.reconcile_partial_id.line_partial_ids)
                 src.append(m.id)
-                print 'ICI 3'
             lines = filter(lambda x: x not in src, lines)
             result[invoice.id] = lines
         return result
