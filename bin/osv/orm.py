@@ -1441,6 +1441,12 @@ class orm(orm_template):
                                         cr.execute("UPDATE \"%s\" SET \"%s\"=temp_change_size::VARCHAR(%d)" % (self._table, k, f.size))
                                         cr.execute("ALTER TABLE \"%s\" DROP COLUMN temp_change_size" % (self._table,))
                                         cr.commit()
+                            if f_pg_type == 'date' and f._type == 'datetime':
+                                        cr.execute("ALTER TABLE \"%s\" RENAME COLUMN \"%s\" TO temp_change_type" % (self._table, k))
+                                        cr.execute("ALTER TABLE \"%s\" ADD COLUMN \"%s\" TIMESTAMP " % (self._table, k))
+                                        cr.execute("UPDATE \"%s\" SET \"%s\"=temp_change_type::TIMESTAMP" % (self._table, k))
+                                        cr.execute("ALTER TABLE \"%s\" DROP COLUMN temp_change_type" % (self._table,))
+                                        cr.commit()
                             # if the field is required and hasn't got a NOT NULL constraint
                             if f.required and f_pg_notnull == 0:
                                 # set the field to the default value if any
