@@ -204,12 +204,12 @@ class process_transition_action(osv.osv):
     _columns = {
         'name': fields.char('Name', size=32, required=True),
         'state': fields.selection([('dummy','Dummy'),
-                                   ('method','Object Method'),
+                                   ('object','Object Method'),
                                    ('workflow','Workflow Trigger'),
                                    ('action','Action')], 'Type', required=True),
         'action': fields.char('Action ID', size=64, states={
             'dummy':[('readonly',1)],
-            'method':[('required',1)],
+            'object':[('required',1)],
             'workflow':[('required',1)],
             'action':[('required',1)],
         },),
