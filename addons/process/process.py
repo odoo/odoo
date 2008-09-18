@@ -32,15 +32,23 @@ import pooler, tools
 from osv import fields, osv
 
 class Env(dict):
-
-    def __init__(self, parent):
-        self.__parent = parent
-
+    
+    def __init__(self, obj, user):
+        self.__obj = obj
+        self.__usr = user
+        
     def __getitem__(self, name):
-        if name == '__parent':
-            return super(Env, self).__getitem__(name)
-
-        return self.__parent[name]
+        
+        if name in ('__obj', '__user'):
+            return super(ExprContext, self).__getitem__(name)
+        
+        if name == 'user':
+            return self.__user
+        
+        if name == 'object':
+            return self.__obj
+        
+        return self.__obj[name]
 
 class process_process(osv.osv):
     _name = "process.process"
@@ -60,6 +68,9 @@ class process_process(osv.osv):
         
         process = pool.get('process.process').browse(cr, uid, [id])[0]
         current_object = pool.get(res_model).browse(cr, uid, [res_id])[0]
+        current_user = pool.get('res.users').browse(cr, uid, [uid])[0]
+        
+        expr_context = Env(current_object, current_user)
         
         nodes = {}
         start = []
@@ -77,7 +88,7 @@ class process_process(osv.osv):
             
             if node.kind == "state" and node.model_id and node.model_id.model == res_model:
                 try:
-                    data['active'] = eval(node.model_states, Env(current_object));
+                    data['active'] = eval(node.model_states, expr_context);
                 except Exception, e:
                     # waring: invalid state expression
                     pass
@@ -87,7 +98,7 @@ class process_process(osv.osv):
                     gray = False
                     for cond in node.condition_ids:
                         if cond.model_id and cond.model_id.model == res_model:
-                            gray = gray or eval(cond.model_states, Env(current_object))
+                            gray = gray or eval(cond.model_states, expr_context)
                     data['gray'] = gray
                 except:
                     pass
