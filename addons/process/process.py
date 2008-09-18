@@ -67,8 +67,8 @@ class process_process(osv.osv):
         pool = pooler.get_pool(cr.dbname)
         
         process = pool.get('process.process').browse(cr, uid, [id])[0]
-        current_object = pool.get(res_model).browse(cr, uid, [res_id])[0]
-        current_user = pool.get('res.users').browse(cr, uid, [uid])[0]
+        current_object = pool.get(res_model).browse(cr, uid, [res_id], context)[0]
+        current_user = pool.get('res.users').browse(cr, uid, [uid], context)[0]
         
         expr_context = Env(current_object, current_user)
         
@@ -90,7 +90,8 @@ class process_process(osv.osv):
             
             if node.kind == "state" and node.model_id and node.model_id.model == res_model:
                 try:
-                    data['active'] = eval(node.model_states, expr_context);
+                    if eval(node.model_states, expr_context):
+                        data['active'] = current_object.name_get(context)[0][1]
                 except Exception, e:
                     # waring: invalid state expression
                     pass
